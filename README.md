@@ -1,24 +1,44 @@
-# FieldKit 1.2.2 — Compact Coordinate HUD
+# Minecraft Mod Build Hub
 
-Minecraft **1.21.1**, NeoForge **21.1.262**, Java **21**. Built with **ModDevGradle 2.0.148**.
+Reusable CI workspace for Minecraft mods. The repository contains a first project (**FieldKit 1.2.2**) in its root directory as the bootstrap project. Future independent projects live in `projects/<mod-id>/`, each with its own real Gradle project and `build-profile.json`.
 
-This is a client-only mod with an unobtrusive upper-left HUD at **50%** text size. Shows **XYZ**, and optionally direction, world time, and looked-at block/entity. Displays a temporary waypoint distance/direction.
+## Build a mod
 
-- **H** — HUD on/off.
-- **V** — coordinates-only / detailed HUD.
-- **B** — mark waypoint at crosshair target (or player position).
-- **N** — remove waypoint.
+Open [Actions](../../actions/workflows/build.yml) → **Minecraft Mod Build Hub** → **Run workflow**.
 
-There is **no bottom/right equipment panel**, no prominent colored bar, and no gameplay items or recipes.
+Enter `.` for FieldKit, or `projects/<mod-id>` for another mod. The workflow reads the project's declared versions of Java and Gradle, downloads its actual mod loader/Minecraft dependencies, performs `gradle clean build`, checks the real JAR, and publishes a **pre-release** on [Releases](../../releases).
 
-## Real build
+Builds triggered by a push to main use the default project (`.`). Pull requests compile and verify but **do not publish** a release.
 
-GitHub Actions: open the **Actions** tab, select **FieldKit NeoForge JAR**, then download the compiled JAR artifact after a successful run.
+No fake Minecraft APIs and no manual bytecode name remapping.
 
-Locally with Java 21 and Gradle 9.2.1: `gradle --no-daemon clean build`.
+## Project contract
 
-The production JAR is `build/libs/fieldkit-1.2.2.jar`.
+Each mod directory requires:
+- `settings.gradle` (or `.kts`) and `build.gradle` (or `.kts`).
+- `build-profile.json` declaring `slug`, `version`, `minecraft`, `loader` (`neoforge`, `forge`, `fabric`), `java` (17 or 21), `gradle` and `jar_glob`.
+- `src/main/resources/pack.mcmeta` plus the loader's metadata.
+- Optional `tools/verify_release.py` to perform project-specific bytecode checks.
 
-GitHub CI compiles against **real NeoForge + Minecraft libraries**, never handwritten stubs. It also checks the package and JVM constant-pool reference types. A successful compile/static validation is **not equivalent** to a fully tested in-game release: run the JAR in an actual Minecraft/NeoForge client before final release.
+Example profile:
+```json
+{
+  "slug": "fieldkit",
+  "version": "1.2.2",
+  "minecraft": "1.21.1",
+  "loader": "neoforge",
+  "java": "21",
+  "gradle": "9.2.1",
+  "jar_glob": "fieldkit-1.2.2.jar"
+}
+```
 
-The release is marked **prerelease** until it has also been tested inside an actual Minecraft 1.21.1 client.
+The profile's Java and Gradle versions are used by CI. Actual dependencies and mappings remain defined in the mod's Gradle files. Therefore individual Forge/NeoForge/Fabric projects are **not** treated as interchangeable.
+
+## Verification scope
+
+Success means: genuine Gradle compilation, valid ZIP/JAR, required metadata, no bundled fake Minecraft classes, a single selected binary and optional per-project static validation. Success does **not** imply that the mod passed an in-game Minecraft client test. Always test runtime UI, keybinds, startup, and server/client separation before marking a build production-ready.
+
+## Why Releases?
+
+The linked account reached its GitHub Actions artifact storage quota. This workflow publishes JARs as pre-releases instead of using `actions/upload-artifact`.

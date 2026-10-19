@@ -1,10 +1,16 @@
-name: FieldKit NeoForge JAR
+name: Minecraft Mod Build Hub
 
 on:
   push:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      project_dir:
+        description: 'Project location: . or projects/modname'
+        required: true
+        default: '.'
+        type: string
 
 permissions:
   contents: write
@@ -12,50 +18,78 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
-      - name: Checkout project
+      - name: Checkout sources
         uses: actions/checkout@v4
-      - name: Install Java 21
+
+      - name: Validate mod build profile
+        id: profile
+        shell: bash
+        env:
+          REQUESTED_DIR: ${{ inputs.project_dir || '.' }}
+        run: |
+          set -euo pipefail
+          python3 tools/resolve_project.py "$REQUESTED_DIR" >> "$GITHUB_OUTPUT"
+
+      - name: Install project Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
-      - name: Install official Gradle 9.2.1
+          java-version: ${{ steps.profile.outputs.java }}
+
+      - name: Install project Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '9.2.1'
+          gradle-version: ${{ steps.profile.outputs.gradle }}
           cache-read-only: ${{ github.event_name == 'pull_request' }}
-      - name: Compile production JAR with NeoForge
+
+      - name: Compile JAR with real mod loader dependencies
         shell: bash
+        env:
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: |
-          set -o pipefail
-          gradle --no-daemon --stacktrace clean build 2>&1 | tee build-output.log
-      - name: Verify JAR archive and JVM references
-        run: python3 tools/verify_release.py build/libs/fieldkit-1.2.2.jar
-      - name: Create release checksum
-        run: sha256sum build/libs/fieldkit-1.2.2.jar > build/libs/fieldkit-1.2.2.jar.sha256
-      # The account hit the Actions artifact-storage quota; GitHub Releases does not use Actions artifacts.
-      - name: Publish compiled JAR as GitHub prerelease
+          set -euo pipefail
+          cd "$PROJECT_DIR"
+          gradle --no-daemon --stacktrace clean build 2>&1 | tee "$GITHUB_WORKSPACE/build-output.log"
+
+      - name: Verify resulting JAR
+        id: verify
+        shell: bash
+        env:
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
+        run: |
+          set -euo pipefail
+          python3 tools/verify_build_output.py "$PROJECT_DIR"
+
+      - name: Publish tested build output to GitHub Releases
         if: github.event_name != 'pull_request'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          JAR_PATH: ${{ steps.verify.outputs.jar_path }}
+          CHECKSUM_PATH: ${{ steps.verify.outputs.checksum_path }}
+          MOD_SLUG: ${{ steps.profile.outputs.slug }}
+          MOD_VERSION: ${{ steps.profile.outputs.version }}
+          MOD_LOADER: ${{ steps.profile.outputs.loader }}
+          MC_VERSION: ${{ steps.profile.outputs.minecraft }}
         run: |
           set -euo pipefail
-          tag="fieldkit-1.2.2-ci-${GITHUB_RUN_NUMBER}"
-          gh release create "$tag" \
-            build/libs/fieldkit-1.2.2.jar \
-            build/libs/fieldkit-1.2.2.jar.sha256 \
+          tag="ci-${MOD_SLUG}-${MOD_VERSION}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
+          gh release create "$tag" "$JAR_PATH" "$CHECKSUM_PATH" \
             --target "$GITHUB_SHA" \
-            --title "FieldKit 1.2.2 - CI build ${GITHUB_RUN_NUMBER}" \
-            --notes "Compiled using Java 21 and NeoForge 21.1.262 via ModDevGradle. Static JAR validator passed. In-game client testing is still required." \
+            --title "${MOD_SLUG} ${MOD_VERSION} (Minecraft ${MC_VERSION}, ${MOD_LOADER}) — CI ${GITHUB_RUN_NUMBER}" \
+            --notes "Compiled by Minecraft Mod Build Hub using official dependencies. Static JAR checks passed. In-game testing has NOT been performed." \
             --prerelease
-          echo "### Download compiled JAR" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Compiled mod JAR" >> "$GITHUB_STEP_SUMMARY"
           echo "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${tag}" >> "$GITHUB_STEP_SUMMARY"
-      - name: Report build failure
+
+      - name: Show first relevant build errors
         if: failure()
-        shell: bash
         run: |
-          echo "Build failed. Open the Compile / Verify / Release step logs in this run." >> "$GITHUB_STEP_SUMMARY"
-          if [ -f build-output.log ]; then tail -n 70 build-output.log >> "$GITHUB_STEP_SUMMARY"; fi
+          if [ -f build-output.log ]; then
+            echo "### Last 80 Gradle log lines" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 80 build-output.log >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
