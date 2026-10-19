@@ -38,8 +38,8 @@ def read_profile(relative):
         raise ValueError("Invalid Minecraft version")
     if p["loader"] not in ("neoforge", "forge", "fabric"):
         raise ValueError("Loader must be neoforge, forge, or fabric")
-    if p["java"] not in ("17", "21"):
-        raise ValueError("Java must be 17 or 21")
+    if p["java"] not in ("17", "21", "25"):
+        raise ValueError("Java must be 17, 21, or 25")
     if not GRADLE.fullmatch(p["gradle"]):
         raise ValueError("Invalid Gradle version")
     glob = p["jar_glob"]

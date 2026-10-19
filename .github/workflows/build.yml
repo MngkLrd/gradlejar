@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       project_dir:
-        description: 'Project location: . or projects/modname'
+        description: 'Project: . or projects/fieldkit-26.3'
         required: true
         default: '.'
         type: string
@@ -16,55 +16,57 @@ permissions:
   contents: write
 
 jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      project_dirs: ${{ steps.select.outputs.project_dirs }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: select
+        env:
+          PROJECT_DIR: ${{ github.event_name == 'workflow_dispatch' && inputs.project_dir || '' }}
+        run: python3 tools/plan_builds.py "$PROJECT_DIR"
+
   build:
+    needs: plan
+    strategy:
+      fail-fast: false
+      matrix:
+        project_dir: ${{ fromJSON(needs.plan.outputs.project_dirs) }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
-
-      - name: Validate mod build profile
+      - name: Validate profile
         id: profile
-        shell: bash
         env:
-          REQUESTED_DIR: ${{ inputs.project_dir || '.' }}
-        run: |
-          set -euo pipefail
-          python3 tools/resolve_project.py "$REQUESTED_DIR" >> "$GITHUB_OUTPUT"
-
+          REQUESTED_DIR: ${{ matrix.project_dir }}
+        run: python3 tools/resolve_project.py "$REQUESTED_DIR" >> "$GITHUB_OUTPUT"
       - name: Install project Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: ${{ steps.profile.outputs.java }}
-
       - name: Install project Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: ${{ steps.profile.outputs.gradle }}
           cache-read-only: ${{ github.event_name == 'pull_request' }}
-
-      - name: Compile JAR with real mod loader dependencies
-        shell: bash
+      - name: Compile production mod
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: |
           set -euo pipefail
           cd "$PROJECT_DIR"
-          gradle --no-daemon --stacktrace clean build 2>&1 | tee "$GITHUB_WORKSPACE/build-output.log"
-
-      - name: Verify resulting JAR
+          gradle --no-daemon --stacktrace clean build 2>&1 | tee "$GITHUB_WORKSPACE/build-output-${{ strategy.job-index }}.log"
+      - name: Verify JAR
         id: verify
-        shell: bash
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
-        run: |
-          set -euo pipefail
-          python3 tools/verify_build_output.py "$PROJECT_DIR"
-
-      - name: Publish tested build output to GitHub Releases
+        run: python3 tools/verify_build_output.py "$PROJECT_DIR"
+      - name: Publish JAR to GitHub prerelease
         if: github.event_name != 'pull_request'
-        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           JAR_PATH: ${{ steps.verify.outputs.jar_path }}
@@ -75,21 +77,15 @@ jobs:
           MC_VERSION: ${{ steps.profile.outputs.minecraft }}
         run: |
           set -euo pipefail
-          tag="ci-${MOD_SLUG}-${MOD_VERSION}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
+          tag="ci-${MOD_SLUG}-mc${MC_VERSION}-${MOD_LOADER}-${MOD_VERSION}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
           gh release create "$tag" "$JAR_PATH" "$CHECKSUM_PATH" \
             --target "$GITHUB_SHA" \
             --title "${MOD_SLUG} ${MOD_VERSION} (Minecraft ${MC_VERSION}, ${MOD_LOADER}) — CI ${GITHUB_RUN_NUMBER}" \
-            --notes "Compiled by Minecraft Mod Build Hub using official dependencies. Static JAR checks passed. In-game testing has NOT been performed." \
+            --notes "Compiled with official Minecraft/NeoForge dependencies. Static validation passed. Client gameplay untested." \
             --prerelease
-          echo "### Compiled mod JAR" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Download compiled JAR" >> "$GITHUB_STEP_SUMMARY"
           echo "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${tag}" >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Show first relevant build errors
+      - name: Build failure summary
         if: failure()
         run: |
-          if [ -f build-output.log ]; then
-            echo "### Last 80 Gradle log lines" >> "$GITHUB_STEP_SUMMARY"
-            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
-            tail -n 80 build-output.log >> "$GITHUB_STEP_SUMMARY"
-            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
-          fi
+          echo "See the first failed Gradle task above; full logs are in the build step." >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,23 @@
+{
+  "key.categories.fieldkit": "FieldKit",
+  "key.fieldkit.toggle": "Toggle Coordinate HUD",
+  "key.fieldkit.mark": "Mark waypoint (look at block)",
+  "key.fieldkit.clear": "Clear waypoint",
+  "key.fieldkit.compact": "Toggle extra info",
+  "hud.fieldkit.coords": "XYZ  %s / %s / %s",
+  "hud.fieldkit.facing": "Dir  %s",
+  "hud.fieldkit.time": "Time  %s",
+  "hud.fieldkit.target": "Look at  %s",
+  "hud.fieldkit.waypoint": "WP  %s m %s",
+  "hud.fieldkit.other_dimension": "Waypoint in another dimension",
+  "direction.fieldkit.north": "North",
+  "direction.fieldkit.south": "South",
+  "direction.fieldkit.east": "East",
+  "direction.fieldkit.west": "West",
+  "message.fieldkit.hud": "HUD: %s",
+  "message.fieldkit.compact": "Extra info: %s",
+  "message.fieldkit.on": "ON",
+  "message.fieldkit.off": "OFF",
+  "message.fieldkit.marked": "Waypoint marked: %s / %s / %s",
+  "message.fieldkit.cleared": "Waypoint cleared"
+}

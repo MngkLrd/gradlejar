@@ -1,0 +1,21 @@
+license="MIT"
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="FieldKit"
+authors="FieldKit"
+description="Client-side compact coordinate HUD, look at, facing, time, and waypoints."
+
+[[dependencies.fieldkit]]
+modId="neoforge"
+type="required"
+versionRange="[26.3.0.90,)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.fieldkit]]
+modId="minecraft"
+type="required"
+versionRange="[26.3]"
+ordering="NONE"
+side="CLIENT"
