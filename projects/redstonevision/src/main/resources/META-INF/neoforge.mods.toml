@@ -1,0 +1,23 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+[[mods]]
+modId="redstonevision"
+version="0.2.0-alpha"
+displayName="Redstone Vision"
+authors="MineMods"
+description="Engineer goggles with redstone-powered circuit inspection."
+[[mixins]]
+config="redstonevision.mixins.json"
+[[dependencies.redstonevision]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.262,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.redstonevision]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
