@@ -14,7 +14,7 @@ public final class ClientInput {
 
     public static void onClientTick(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.level == null || mc.screen != null) return;
+        if (mc.player == null || mc.level == null || mc.gui.isPausing()) return;
 
         while (ClientRegistration.TOGGLE_HUD.consumeClick()) {
             ClientState.toggleHud();
@@ -34,12 +34,11 @@ public final class ClientInput {
                 pos = hit.getBlockPos();
             }
             ClientState.mark(pos, mc.level.dimension());
-            mc.player.displayClientMessage(
-                Component.translatable("message.fieldkit.marked", pos.getX(), pos.getY(), pos.getZ()), true);
+            mc.player.sendOverlayMessage(Component.translatable("message.fieldkit.marked", pos.getX(), pos.getY(), pos.getZ()));
         }
         while (ClientRegistration.CLEAR_POINT.consumeClick()) {
             ClientState.clearWaypoint();
-            mc.player.displayClientMessage(Component.translatable("message.fieldkit.cleared"), true);
+            mc.player.sendOverlayMessage(Component.translatable("message.fieldkit.cleared"));
         }
     }
 
@@ -49,7 +48,7 @@ public final class ClientInput {
 
     private static void notifyPlayer(Minecraft mc, String key, Component status) {
         if (mc.player != null) {
-            mc.player.displayClientMessage(Component.translatable(key, status), true);
+            mc.player.sendOverlayMessage(Component.translatable(key, status));
         }
     }
 }
