@@ -8,7 +8,7 @@ REPO = Path(__file__).resolve().parents[1]
 NAME = re.compile(r"^[a-z][a-z0-9_-]{0,60}$")
 VERSION = re.compile(r"^[0-9A-Za-z][0-9A-Za-z._-]{0,63}$")
 GRADLE = re.compile(r"^[0-9]+\.[0-9]+(?:\.[0-9]+)?$")
-MINECRAFT = re.compile(r"^1\.[0-9]+(?:\.[0-9]+)?$")
+MINECRAFT = re.compile(r"^[0-9]+\.[0-9]+(?:\.[0-9]+)?$")
 
 
 def read_profile(relative):
