@@ -12,7 +12,7 @@ MINECRAFT = re.compile(r"^1\.[0-9]+(?:\.[0-9]+)?$")
 
 
 def read_profile(relative):
-    if relative != "." and not re.fullmatch(r"projects/[a-z][a-z0-9_-]{0,60}", relative):
+    if relative != "." and (".." in relative or not re.fullmatch(r"projects/[a-z][a-z0-9_.-]{0,60}", relative)):
         raise ValueError("Project must be '.' or 'projects/<slug>'")
     base = (REPO / relative).resolve()
     if not base.is_relative_to(REPO):
