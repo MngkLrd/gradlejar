@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -33,16 +33,29 @@ jobs:
           gradle --no-daemon --stacktrace clean build 2>&1 | tee build-output.log
       - name: Verify JAR archive and JVM references
         run: python3 tools/verify_release.py build/libs/fieldkit-1.2.2.jar
-      - name: Publish compiled JAR
-        uses: actions/upload-artifact@v4
-        with:
-          name: FieldKit-1.2.2-NeoForge-JAR
-          path: build/libs/fieldkit-1.2.2.jar
-          if-no-files-found: error
-      - name: Publish build log on failure
+      - name: Create release checksum
+        run: sha256sum build/libs/fieldkit-1.2.2.jar > build/libs/fieldkit-1.2.2.jar.sha256
+      # The account hit the Actions artifact-storage quota; GitHub Releases does not use Actions artifacts.
+      - name: Publish compiled JAR as GitHub prerelease
+        if: github.event_name != 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="fieldkit-1.2.2-ci-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" \
+            build/libs/fieldkit-1.2.2.jar \
+            build/libs/fieldkit-1.2.2.jar.sha256 \
+            --target "$GITHUB_SHA" \
+            --title "FieldKit 1.2.2 - CI build ${GITHUB_RUN_NUMBER}" \
+            --notes "Compiled using Java 21 and NeoForge 21.1.262 via ModDevGradle. Static JAR validator passed. In-game client testing is still required." \
+            --prerelease
+          echo "### Download compiled JAR" >> "$GITHUB_STEP_SUMMARY"
+          echo "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${tag}" >> "$GITHUB_STEP_SUMMARY"
+      - name: Report build failure
         if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: FieldKit-build-failure-log
-          path: build-output.log
-          if-no-files-found: ignore
+        shell: bash
+        run: |
+          echo "Build failed. Open the Compile / Verify / Release step logs in this run." >> "$GITHUB_STEP_SUMMARY"
+          if [ -f build-output.log ]; then tail -n 70 build-output.log >> "$GITHUB_STEP_SUMMARY"; fi
