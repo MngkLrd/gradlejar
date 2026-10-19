@@ -10,7 +10,7 @@ import net.minecraft.world.*;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.SimpleMenuProvider;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.tags.BlockTags;
@@ -47,7 +47,7 @@ public final class ForgeEvents {
             : data.level() >= 3 ? ChatFormatting.BLUE : data.level() >= 1 ? ChatFormatting.GREEN : data.level() < 0
             ? ChatFormatting.RED : ChatFormatting.GRAY;
         event.getToolTip().add(Component.translatable("tooltip.anvilborn.quality", data.level()).withStyle(color));
-        event.getToolTip().add(Component.translatable("tooltip.anvilborn.hits", data.hits(), ForgeRules.TARGET_HITS())
+        event.getToolTip().add(Component.translatable("tooltip.anvilborn.hits", data.hits(), ForgeRules.TARGET_HITS)
             .withStyle(ChatFormatting.DARK_GRAY));
         for (ForgeData.Roll roll : data.aspects()) {
             Aspect a = Aspects.byId(roll.id());
