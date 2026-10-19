@@ -1,0 +1,17 @@
+{
+  "item.redstonevision.engineer_goggles": "Engineer's Goggles",
+  "key.redstonevision.toggle": "Toggle redstone vision",
+  "key.categories.redstonevision": "Redstone Vision",
+  "screen.redstonevision.title": "Goggles Charging",
+  "screen.redstonevision.load": "Charge",
+  "screen.redstonevision.remaining": "Charge: %s",
+  "screen.redstonevision.insert": "Insert redstone dust",
+  "message.redstonevision.need_goggles": "Wear Engineer's Goggles first",
+  "message.redstonevision.need_fuel": "Recharge goggles with redstone",
+  "message.redstonevision.empty": "Goggles depleted",
+  "message.redstonevision.on": "Vision ON",
+  "message.redstonevision.off": "Vision OFF",
+  "tooltip.redstonevision.fuel": "Fuel: %s / %s seconds",
+  "tooltip.redstonevision.open": "Sneak + right-click to charge",
+  "hud.redstonevision.active": "REDSTONE VISION · %s s"
+}
