@@ -117,11 +117,16 @@ public final class ForgeEvents {
     public void bonusExperience(BlockEvent.BreakEvent event) {
         if (event.isCanceled() || event.getPlayer() == null || event.getPlayer().level().isClientSide) return;
         ItemStack stack = event.getPlayer().getMainHandItem();
-        double bonus = Math.max(0, sum(stack, "xp"));
-        if (bonus > 0 && event.getExpToDrop() > 0) {
-            event.setExpToDrop(Math.min(200, (int)Math.ceil(event.getExpToDrop() * (1 + bonus))));
-        }
         applyDurabilityAspect(event.getPlayer(), stack);
+    }
+
+    @SubscribeEvent
+    public void bonusBlockExperience(net.neoforged.neoforge.event.level.BlockDropsEvent event) {
+        if (event.isCanceled() || !(event.getBreaker() instanceof Player)) return;
+        int base = event.getDroppedExperience();
+        double bonus = Math.max(0, sum(event.getTool(), "xp"));
+        if (bonus > 0 && base > 0)
+            event.setDroppedExperience(Math.min(200, (int)Math.ceil(base * (1 + bonus))));
     }
 
     @SubscribeEvent
