@@ -1,4 +1,5 @@
 package dev.minemods.redstonevision.client;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.minemods.redstonevision.network.ToggleVisionPayload;
 import net.minecraft.client.KeyMapping;
@@ -11,6 +12,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
+
 public final class VisionKeys {
     private static final KeyMapping TOGGLE=new KeyMapping("key.redstonevision.toggle",
         InputConstants.Type.KEYSYM,GLFW.GLFW_KEY_V,"key.categories.redstonevision");
@@ -27,7 +29,7 @@ public final class VisionKeys {
                 if (!VisionState.hasGoggles()) {
                     if (mc.player!=null) mc.player.displayClientMessage(
                         Component.translatable("message.redstonevision.need_goggles"),true);
-                } else PacketDistributor.sendToServer(new ToggleVisionPayload());
+                } else PacketDistributor.sendToServer(new ToggleVisionPayload(mc.player.isShiftKeyDown()));
             }
             if (mc.level!=null && mc.player!=null) CircuitScanner.tick(mc);
         }

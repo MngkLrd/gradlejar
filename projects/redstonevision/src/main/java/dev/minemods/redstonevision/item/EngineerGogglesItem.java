@@ -1,7 +1,9 @@
 package dev.minemods.redstonevision.item;
 
+import dev.minemods.redstonevision.client.ClientGogglesExtensions;
 import dev.minemods.redstonevision.menu.GogglesChargeMenu;
 import java.util.List;
+import java.util.function.Consumer;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,11 +19,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.Nullable;
 
 public final class EngineerGogglesItem extends ArmorItem {
     public EngineerGogglesItem(Holder<ArmorMaterial> material, Properties properties) {
         super(material, ArmorItem.Type.HELMET, properties);
+    }
+    @Override
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        ClientGogglesExtensions.initialize(consumer);
     }
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
@@ -32,8 +39,8 @@ public final class EngineerGogglesItem extends ArmorItem {
                 @Override public Component getDisplayName() {
                     return Component.translatable("screen.redstonevision.title");
                 }
-                @Nullable @Override public AbstractContainerMenu createMenu(int id, Inventory inv, Player viewer) {
-                    return new GogglesChargeMenu(id, inv, hand);
+                @Nullable @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player viewer) {
+                    return new GogglesChargeMenu(id, inventory, hand);
                 }
             });
         }
@@ -45,6 +52,7 @@ public final class EngineerGogglesItem extends ArmorItem {
         int seconds = (GogglesPower.ticks(stack) + 19) / 20;
         tooltip.add(Component.translatable("tooltip.redstonevision.fuel", seconds, GogglesPower.MAX_TICKS / 20));
         tooltip.add(Component.translatable("tooltip.redstonevision.open"));
+        tooltip.add(Component.translatable("tooltip.redstonevision.worn"));
     }
     @Override public boolean isBarVisible(ItemStack stack) { return true; }
     @Override public int getBarWidth(ItemStack stack) {

@@ -1,26 +1,41 @@
-# Redstone Vision 0.2.0-alpha
+# Redstone Vision 0.3.0-alpha
 
-Minecraft 1.21.1 | NeoForge 21.1.262 | Java 21 | Gradle 9.2.1
+Minecraft **1.21.1**, **NeoForge 21.1.262**, **Java 21**, Gradle **9.2.1**.
 
-Engineer's Goggles provide redstone component discovery and diagnostics while the
-player wears the goggles. Shift + right-click with the goggles in the hand opens
-the charging menu. Each redstone dust fuels 60 server ticks (3 seconds), maximum
-64 dust (3m 12s). Press V to toggle, spending one fuel tick per active tick.
+## How to use
+1. Craft Engineer's Goggles or run `/give @p redstonevision:engineer_goggles`.
+2. **Hold the goggles and Shift + right-click** to open the charger. Put redstone
+   in its slot: charging happens automatically (no button required).
+3. Alternatively **wear the goggles and press Shift+V** to charge them without
+   taking them off.
+4. Goggles now **activate automatically when equipped with fuel**.
+   Press `V` to switch the vision on/off manually.
+5. Redstone drains at **1 dust per 60 server ticks (3 seconds)** only while
+   vision is enabled; 64 dust gives at most 192 seconds.
+
+HUD always shows the charge while goggles are equipped, including when off.
+After the charge runs out, goggles turn off and require additional redstone.
+
+## Visual design
+Separate custom humanoid head model (front-mounted paired lenses, bridge,
+side straps). Texture: 64x32 authored armor UV + 32x32 item icon.
+
+## Important limitations
+- The experimental world-transparency mixin still alters chunk render layers
+  rather than individual block materials. It is **not guaranteed** to make every
+  block precisely 70% transparent. Shader compatibility remains uncertain.
+- Full Minecraft client and dedicated-server launch tests are still required.
+- Full-bright, no-depth redstone component overlays should remain visible through
+  ordinary world geometry while vision is active.
 
 ## Build
-Run `gradle clean build` from this directory; expected output:
-`build/libs/redstonevision-0.2.0-alpha.jar`.
+`gradle clean build` produces `build/libs/redstonevision-0.3.0-alpha.jar`.
 
-## Rendering limitations
-The transparent terrain hook is EXPERIMENTAL. It targets chunk render layers and
-does not provide reliable block-selective 70% opacity. Shader and renderer mod
-compatibility remains untested. No gameplay run has been completed. Java classes
-are separated by common, server, client, rendering, network and menu concerns.
-
-## Tests after building
-- Start a clean client with NeoForge and no other mods.
-- Check goggles and charging menu, including Shift+click and closing with dust inside.
-- Load exactly one redstone, enable vision and confirm 60 server ticks usage.
-- Remove helmet, change dimension, disconnect/reconnect, charge and re-equip.
-- Build hidden circuits and compare their highlights and terrain with and without shaders.
-- Dedicated server should load without client classes being referenced.
+## Manual test checklist
+- Equip empty: visible low-charge HUD and Shift+V hint.
+- Put 1 dust in charger: 60 ticks; no need to press the old button.
+- Equip charged goggles: auto-on and redstone highlighting.
+- Press V: off; press V: on; confirm off mode does not burn fuel.
+- Shift+V: charge worn goggles; close menu; dust not duplicated.
+- View from third person: goggles sit on face, not above player's head.
+- Test second player and dedicated server, other helmets, different shaders.

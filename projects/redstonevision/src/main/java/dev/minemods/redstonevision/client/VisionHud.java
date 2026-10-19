@@ -3,7 +3,6 @@ package dev.minemods.redstonevision.client;
 import java.util.Optional;
 import dev.minemods.redstonevision.item.GogglesPower;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,11 +18,18 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 public final class VisionHud {
     private VisionHud() {}
     @SubscribeEvent public static void hud(RenderGuiEvent.Post event) {
-        if (!VisionState.active()) return;
+        if (!VisionState.hasGoggles()) return;
         Minecraft mc=Minecraft.getInstance();
+        boolean active=VisionState.active();
         int seconds=(GogglesPower.ticks(mc.player.getItemBySlot(EquipmentSlot.HEAD))+19)/20;
         event.getGuiGraphics().drawString(mc.font,
-            Component.translatable("hud.redstonevision.active",seconds),8,8,0xFFDD5544,true);
+            Component.translatable(active ? "hud.redstonevision.active" : "hud.redstonevision.inactive",seconds),
+            8,8,active?0xFF65E6E3:0xFFDD8770,true);
+        if (!active) {
+            event.getGuiGraphics().drawString(mc.font,
+                Component.translatable("hud.redstonevision.controls"),8,20,0xFFCCCCCC,true);
+            return;
+        }
         Vec3 start=mc.player.getEyePosition();
         Vec3 end=start.add(mc.player.getLookAngle().scale(VisionState.RANGE));
         double nearest=Double.MAX_VALUE;

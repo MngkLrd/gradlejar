@@ -3,10 +3,10 @@ loaderVersion="[1,)"
 license="MIT"
 [[mods]]
 modId="redstonevision"
-version="0.2.0-alpha"
+version="0.3.0-alpha"
 displayName="Redstone Vision"
 authors="MineMods"
-description="Engineer goggles with redstone-powered circuit inspection."
+description="Wearable engineer goggles: automatic redstone vision, integrated dust-powered charging and circuit diagnostics."
 [[mixins]]
 config="redstonevision.mixins.json"
 [[dependencies.redstonevision]]
