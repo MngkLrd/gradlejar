@@ -15,7 +15,7 @@ Independent project in the Minecraft Mod Build Hub.
 - Vanilla/modded damageable items are accepted; unknown items receive general aspects.
 
 ## Caveats for 0.1.0 alpha
-Not every aspect is yet connected to gameplay. The stat and combat effects are implemented; the XP, durability preservation and fall reduction effect families need dedicated gameplay hooks. These are visible as experimental aspect definitions, not claimed to be completed features.
+All 50 named aspects are selectable and route to implemented attribute/combat/mining/durability/XP/fall effect families; several share an effect family with different strengths and rarities. The result is a 50-aspect starting catalog, not 50 wholly unique active skills. Gameplay testing of balance and compatibility is still pending.
 No custom wav/ogg assets yet: the mod reuses vanilla anvil sounds, and the GUI is code-drawn in Minecraft's pixel style. No game-client testing claimed.
 
 ## CI build

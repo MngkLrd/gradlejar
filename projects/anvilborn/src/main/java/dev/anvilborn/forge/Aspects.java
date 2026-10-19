@@ -70,6 +70,14 @@ public final class Aspects {
     public static ForgeData.Roll roll(RandomSource random, String family, List<ForgeData.Roll> existing, boolean cursed, int level) {
         List<Aspect> pool = VALUES.stream()
             .filter(a -> a.supports(family) && a.harmful() == cursed)
+            // Universal curses must still have a real impact on the rolled item category.
+            .filter(a -> !a.harmful() || switch (family) {
+                case "armor" -> a.effect().equals("movement") || a.effect().equals("guard");
+                case "weapon" -> a.effect().equals("damage") || a.effect().equals("preserve") || a.effect().equals("movement");
+                case "tool" -> a.effect().equals("mining") || a.effect().equals("preserve") || a.effect().equals("movement");
+                case "ranged" -> a.effect().equals("preserve") || a.effect().equals("movement");
+                default -> a.effect().equals("movement") || a.effect().equals("preserve");
+            })
             .filter(a -> existing.stream().noneMatch(r -> r.id().equals(a.id())))
             .toList();
         int weight = pool.stream().mapToInt(Aspect::weight).sum();

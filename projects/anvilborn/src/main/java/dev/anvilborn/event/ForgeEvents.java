@@ -19,7 +19,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 
 public final class ForgeEvents {
     @SubscribeEvent
@@ -93,9 +94,12 @@ public final class ForgeEvents {
                               String kind, ItemStack stack, EquipmentSlotGroup slot) {
         double power = sum(stack, kind);
         if (power == 0) return;
+        AttributeModifier.Operation operation =
+            kind.equals("luck") || kind.equals("resistance") || kind.equals("knockback") || kind.equals("toughness")
+                ? AttributeModifier.Operation.ADD_VALUE : AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
         if (kind.equals("luck")) power *= 3.0;
         event.addModifier(attr, new AttributeModifier(ResourceLocation.fromNamespaceAndPath("anvilborn", kind),
-            power, AttributeModifier.Operation.ADD_MULTIPLIED_BASE), slot);
+            power, operation), slot);
     }
 
     @SubscribeEvent
@@ -108,6 +112,40 @@ public final class ForgeEvents {
         event.setNewSpeed(Math.max(0, event.getNewSpeed() * (1.0f + (float)bonus)));
     }
 
+
+    @SubscribeEvent
+    public void bonusExperience(BlockEvent.BreakEvent event) {
+        if (event.isCanceled() || event.getPlayer() == null || event.getPlayer().level().isClientSide) return;
+        ItemStack stack = event.getPlayer().getMainHandItem();
+        double bonus = Math.max(0, sum(stack, "xp"));
+        if (bonus > 0 && event.getExpToDrop() > 0) {
+            event.setExpToDrop(Math.min(200, (int)Math.ceil(event.getExpToDrop() * (1 + bonus))));
+        }
+        applyDurabilityAspect(event.getPlayer(), stack);
+    }
+
+    @SubscribeEvent
+    public void softenFall(LivingFallEvent event) {
+        if (!(event.getEntity() instanceof Player player) || player.level().isClientSide) return;
+        double softness = 0;
+        for (ItemStack piece : player.getArmorSlots()) softness += Math.max(0, sum(piece, "fall"));
+        if (softness > 0)
+            event.setDamageMultiplier(event.getDamageMultiplier() * Math.max(0.50f, 1.0f - (float)softness));
+    }
+
+    private static void applyDurabilityAspect(Player player, ItemStack item) {
+        if (!item.isDamageableItem()) return;
+        double value = sum(item, "preserve");
+        int wear = item.getDamageValue();
+        if (value > 0 && wear > 0 && player.getRandom().nextDouble() < Math.min(0.3, value)) {
+            // Refund one durability just before the normal action consumes its durability.
+            item.setDamageValue(wear - 1);
+        } else if (value < 0 && wear + 2 < item.getMaxDamage()
+                   && player.getRandom().nextDouble() < Math.min(0.3, -value)) {
+            item.setDamageValue(wear + 1);
+        }
+    }
+
     @SubscribeEvent
     public void damage(LivingDamageEvent.Pre event) {
         if (event.getEntity().level().isClientSide) return;
@@ -118,9 +156,10 @@ public final class ForgeEvents {
             ItemStack weapon = attacker.getMainHandItem();
             ForgeData data = ForgeRules.data(weapon);
             if (ranged) amount *= 1.0f + (float)sum(weapon, "ranged");
-            else amount *= 1.0f + (float)sum(weapon, "damage");
+            // Melee damage comes from ItemAttributeModifierEvent already; avoid double application.
             if (event.getEntity().getHealth() <= event.getEntity().getMaxHealth() * 0.35f)
                 amount *= 1.0f + (float)sum(weapon, "execute");
+            if (attacker instanceof Player player && !ranged) applyDurabilityAspect(player, weapon);
             if (!weapon.isEmpty() && data.level() > 0) {
                 double fire = sum(weapon, "fire");
                 double bleed = sum(weapon, "bleed");
