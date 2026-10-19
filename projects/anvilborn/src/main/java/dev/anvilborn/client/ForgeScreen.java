@@ -45,6 +45,13 @@ public final class ForgeScreen extends AbstractContainerScreen<ForgeMenu> {
         g.fill(x + 7, y + 21, x + 169, y + 86, 0xff2d3034);
         drawSlot(g, x + 79, y + 37);
         g.drawString(font, "ANVILBORN", x + 9, y + 23, 0xfff3cb86, false);
+        // Pixel hammer: the frame shifts briefly after every server-confirmed strike.
+        int hx = x + 43;
+        int hy = y + 36 + (flashTicks > 5 ? 7 : 0);
+        g.fill(hx + 1, hy, hx + 15, hy + 7, 0xff55565d);
+        g.fill(hx + 2, hy + 1, hx + 14, hy + 5, 0xffb8bdc5);
+        g.fill(hx + 6, hy + 6, hx + 10, hy + 23, 0xff483629);
+        g.fill(hx + 7, hy + 8, hx + 9, hy + 22, 0xffc69257);
 
         ItemStack stack = menu.workpiece();
         ForgeData data = ForgeRules.data(stack);
@@ -52,14 +59,24 @@ public final class ForgeScreen extends AbstractContainerScreen<ForgeMenu> {
         g.fill(x + 12, y + 72, x + 12 + Math.round(152 * data.hits() / (float)ForgeRules.TARGET_HITS), y + 78,
             data.frenzy() > 0 ? 0xffffb236 : 0xffda914c);
         int chance = data.frenzy() > 0 ? 0 : ForgeRules.breakChance(data.level());
-        g.drawString(font, stack.isEmpty() ? "Insert equipment" : "Quality: " + data.level() + "   Break: " + chance + "%",
+        g.drawString(font, stack.isEmpty()
+            ? Component.translatable("screen.anvilborn.insert")
+            : Component.translatable("screen.anvilborn.status", data.level(), chance),
             x + 10, y + 61, chance >= 20 ? 0xffff9d9d : 0xffe5e5e5, false);
         if (data.frenzy() > 0) g.drawString(font, "FRENZY " + data.frenzy(), x + 107, y + 24, 0xffffc258, false);
         if (flashTicks > 0) {
+            int sx = x + 74, sy = y + 42;
+            g.fill(sx - 7, sy - 11, sx - 4, sy - 8, 0xffffd36f);
+            g.fill(sx + 6, sy - 9, sx + 8, sy - 6, 0xffffa53f);
+            g.fill(sx - 10, sy + 5, sx - 7, sy + 8, 0xffffc164);
             int c = switch (menu.resultCode()) {
                 case 1, 2 -> 0x55f5c46b; case 3, 4 -> 0x66ef5555; default -> 0x33ffffff;
             };
             g.fill(x + 7, y + 21, x + 169, y + 86, c);
+        }
+        if (menu.sequence() > 0) {
+            Component feedback = Component.translatable("screen.anvilborn.result." + menu.resultCode());
+            g.drawString(font, feedback, x + 10, y + 81, 0xffecc98b, false);
         }
         for (int row=0; row<3; row++) for (int col=0; col<9; col++)
             drawSlot(g, x + 7 + col * 18, y + 102 + row * 18);

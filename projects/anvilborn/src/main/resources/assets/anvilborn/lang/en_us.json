@@ -52,5 +52,13 @@
   "aspect.anvilborn.brittle": "Brittle",
   "aspect.anvilborn.heavy": "Heavy",
   "aspect.anvilborn.unstable": "Unstable",
-  "aspect.anvilborn.blunted": "Blunted"
+  "aspect.anvilborn.blunted": "Blunted",
+  "screen.anvilborn.insert": "Insert equipment",
+  "screen.anvilborn.status": "Tier: %s   Break: %s%%",
+  "screen.anvilborn.result.0": "No change",
+  "screen.anvilborn.result.1": "Improved",
+  "screen.anvilborn.result.2": "Great success!",
+  "screen.anvilborn.result.3": "Damaged",
+  "screen.anvilborn.result.4": "SHATTERED",
+  "screen.anvilborn.result.5": "Max quality"
 }

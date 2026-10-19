@@ -126,7 +126,12 @@ public final class ForgeEvents {
         int base = event.getDroppedExperience();
         double bonus = Math.max(0, sum(event.getTool(), "xp"));
         if (bonus > 0 && base > 0)
-            event.setDroppedExperience(Math.min(200, (int)Math.ceil(base * (1 + bonus))));
+            {
+            double extra = base * bonus;
+            int whole = (int)Math.floor(extra);
+            if (((Player)event.getBreaker()).getRandom().nextDouble() < extra - whole) whole++;
+            event.setDroppedExperience(Math.min(200, base + whole));
+        }
     }
 
     @SubscribeEvent
@@ -164,7 +169,7 @@ public final class ForgeEvents {
             // Melee damage comes from ItemAttributeModifierEvent already; avoid double application.
             if (event.getEntity().getHealth() <= event.getEntity().getMaxHealth() * 0.35f)
                 amount *= 1.0f + (float)sum(weapon, "execute");
-            if (attacker instanceof Player player && !ranged) applyDurabilityAspect(player, weapon);
+            if (attacker instanceof Player player) applyDurabilityAspect(player, weapon);
             if (!weapon.isEmpty() && data.level() > 0) {
                 double fire = sum(weapon, "fire");
                 double bleed = sum(weapon, "bleed");
@@ -184,7 +189,10 @@ public final class ForgeEvents {
         }
         if (event.getEntity() instanceof Player victim) {
             double guard = 0;
-            for (ItemStack armor : victim.getArmorSlots()) guard += sum(armor, "guard");
+            for (ItemStack armor : victim.getArmorSlots()) {
+                guard += sum(armor, "guard");
+                applyDurabilityAspect(victim, armor);
+            }
             amount *= Math.max(0.65f, 1.0f - (float)guard);
         }
         event.setNewDamage(Math.max(0.0f, amount));

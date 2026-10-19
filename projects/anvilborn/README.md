@@ -22,3 +22,11 @@ No custom wav/ogg assets yet: the mod reuses vanilla anvil sounds, and the GUI i
 Actions > Minecraft Mod Build Hub > Run workflow > `projects/anvilborn`.
 On main push, autodiscovery builds all projects. PR builds validate only and do not publish.
 Release JAR: `build/libs/anvilborn-0.1.0.jar`.
+
+## Manual runtime checklist
+1. Sneak-right-click an anvil and forge a sword. Check the bar and hammer sound.
+2. Confirm XP level is consumed exactly once per strike, except creative mode.
+3. Take the item out, close the GUI, reopen, and verify quality/aspects/frenzy persist.
+4. Try inventory shift-click, closing with an occupied slot, and breaking the anvil while open.
+5. Try an enchanted item, modded damageable item, bow, pickaxe and armor.
+6. Verify tooltips and visual quality colors, fail outcome, item shatter, multiplayer server sync.

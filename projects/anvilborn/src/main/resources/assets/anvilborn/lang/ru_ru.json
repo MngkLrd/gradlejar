@@ -52,5 +52,13 @@
   "aspect.anvilborn.brittle": "Хрупкость",
   "aspect.anvilborn.heavy": "Тяжесть",
   "aspect.anvilborn.unstable": "Нестабильность",
-  "aspect.anvilborn.blunted": "Затупленность"
+  "aspect.anvilborn.blunted": "Затупленность",
+  "screen.anvilborn.insert": "Поместите предмет",
+  "screen.anvilborn.status": "Качество: %s   Риск: %s%%",
+  "screen.anvilborn.result.0": "Без изменений",
+  "screen.anvilborn.result.1": "Улучшено",
+  "screen.anvilborn.result.2": "Большой успех!",
+  "screen.anvilborn.result.3": "Качество снижено",
+  "screen.anvilborn.result.4": "РАЗРУШЕНО",
+  "screen.anvilborn.result.5": "Предел качества"
 }
