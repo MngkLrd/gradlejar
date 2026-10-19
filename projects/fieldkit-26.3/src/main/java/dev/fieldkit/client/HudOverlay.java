@@ -32,8 +32,8 @@ public final class HudOverlay {
 
     public static void render(GuiGraphicsExtractor gfx, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
-        if (!ClientState.isHudVisible() || mc.options.hideGui || mc.player == null || mc.level == null
-            || mc.screen != null || mc.getDebugOverlay().showDebugScreen()) return;
+        if (!ClientState.isHudVisible() || mc.player == null || mc.level == null
+            || mc.getDebugOverlay().showDebugScreen()) return;
 
         List<Line> lines = new ArrayList<>();
         BlockPos playerPos = mc.player.blockPosition();
@@ -43,7 +43,7 @@ public final class HudOverlay {
         if (!ClientState.isCompact()) {
             lines.add(new Line(Component.translatable("hud.fieldkit.facing",
                 Component.translatable("direction.fieldkit." + mc.player.getDirection().getSerializedName())), MUTED));
-            long day = Math.floorMod(mc.level.getDayTime(), 24000L);
+            long day = Math.floorMod(mc.level.getOverworldClockTime(), 24000L);
             int minutes = (int) (((day + 6000) % 24000) * 60 / 1000);
             lines.add(new Line(Component.translatable("hud.fieldkit.time",
                 String.format(Locale.ROOT, "%02d:%02d", minutes / 60, minutes % 60)), MUTED));
