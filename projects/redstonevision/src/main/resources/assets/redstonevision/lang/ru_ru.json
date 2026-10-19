@@ -1,17 +1,21 @@
 {
   "item.redstonevision.engineer_goggles": "Инженерные очки",
-  "key.redstonevision.toggle": "Переключить редстоун-зрение",
+  "key.redstonevision.toggle": "Переключить редстоун-зрение / Shift+V: зарядка",
   "key.categories.redstonevision": "Redstone Vision",
   "screen.redstonevision.title": "Зарядка очков",
   "screen.redstonevision.load": "Зарядить",
   "screen.redstonevision.remaining": "Заряд: %s",
-  "screen.redstonevision.insert": "Помести редстоун",
+  "screen.redstonevision.insert": "Добавь редстоун (загрузка автоматическая)",
   "message.redstonevision.need_goggles": "Сначала надень инженерные очки",
-  "message.redstonevision.need_fuel": "Заряди очки редстоуном",
+  "message.redstonevision.need_fuel": "Очки разряжены. Нажми Shift+V для зарядки",
   "message.redstonevision.empty": "Заряд очков закончился",
-  "message.redstonevision.on": "Зрение включено",
-  "message.redstonevision.off": "Зрение выключено",
+  "message.redstonevision.auto": "Редстоун-зрение включено автоматически. V - выкл.",
+  "message.redstonevision.on": "Редстоун-зрение включено",
+  "message.redstonevision.off": "Редстоун-зрение выключено",
   "tooltip.redstonevision.fuel": "Заряд: %s / %s секунд",
-  "tooltip.redstonevision.open": "Shift + ПКМ для зарядки",
-  "hud.redstonevision.active": "REDSTONE VISION · %s сек"
+  "tooltip.redstonevision.open": "Shift + ПКМ: зарядка в руке",
+  "tooltip.redstonevision.worn": "Надеть для включения · V: режим · Shift+V: зарядка",
+  "hud.redstonevision.active": "REDSTONE VISION · %s сек",
+  "hud.redstonevision.inactive": "REDSTONE VISION ВЫКЛ · %s сек",
+  "hud.redstonevision.controls": "V - включить · Shift+V - зарядить"
 }

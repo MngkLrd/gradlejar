@@ -1,17 +1,21 @@
 {
   "item.redstonevision.engineer_goggles": "Engineer's Goggles",
-  "key.redstonevision.toggle": "Toggle redstone vision",
+  "key.redstonevision.toggle": "Toggle Redstone Vision / Shift+V: charge",
   "key.categories.redstonevision": "Redstone Vision",
   "screen.redstonevision.title": "Goggles Charging",
   "screen.redstonevision.load": "Charge",
   "screen.redstonevision.remaining": "Charge: %s",
-  "screen.redstonevision.insert": "Insert redstone dust",
-  "message.redstonevision.need_goggles": "Wear Engineer's Goggles first",
-  "message.redstonevision.need_fuel": "Recharge goggles with redstone",
+  "screen.redstonevision.insert": "Insert redstone (auto-load)",
+  "message.redstonevision.need_goggles": "Put on Engineer's Goggles first",
+  "message.redstonevision.need_fuel": "No charge. Press Shift+V to load redstone",
   "message.redstonevision.empty": "Goggles depleted",
+  "message.redstonevision.auto": "Vision auto-enabled. V to toggle",
   "message.redstonevision.on": "Vision ON",
   "message.redstonevision.off": "Vision OFF",
-  "tooltip.redstonevision.fuel": "Fuel: %s / %s seconds",
-  "tooltip.redstonevision.open": "Sneak + right-click to charge",
-  "hud.redstonevision.active": "REDSTONE VISION · %s s"
+  "tooltip.redstonevision.fuel": "Charge: %s / %s seconds",
+  "tooltip.redstonevision.open": "Shift + right-click to charge in hand",
+  "tooltip.redstonevision.worn": "Wear to auto-enable · V: toggle · Shift+V: charge",
+  "hud.redstonevision.active": "REDSTONE VISION · %s s",
+  "hud.redstonevision.inactive": "REDSTONE VISION OFF · %s s",
+  "hud.redstonevision.controls": "V - toggle · Shift+V - recharge"
 }
