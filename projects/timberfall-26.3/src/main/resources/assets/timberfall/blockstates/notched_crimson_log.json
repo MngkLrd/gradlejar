@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "facing=north,stage=1": {
+      "model": "timberfall:block/notched_crimson_stage1",
+      "y": 0
+    },
+    "facing=east,stage=1": {
+      "model": "timberfall:block/notched_crimson_stage1",
+      "y": 90
+    },
+    "facing=south,stage=1": {
+      "model": "timberfall:block/notched_crimson_stage1",
+      "y": 180
+    },
+    "facing=west,stage=1": {
+      "model": "timberfall:block/notched_crimson_stage1",
+      "y": 270
+    },
+    "facing=north,stage=2": {
+      "model": "timberfall:block/notched_crimson_stage2",
+      "y": 0
+    },
+    "facing=east,stage=2": {
+      "model": "timberfall:block/notched_crimson_stage2",
+      "y": 90
+    },
+    "facing=south,stage=2": {
+      "model": "timberfall:block/notched_crimson_stage2",
+      "y": 180
+    },
+    "facing=west,stage=2": {
+      "model": "timberfall:block/notched_crimson_stage2",
+      "y": 270
+    },
+    "facing=north,stage=3": {
+      "model": "timberfall:block/notched_crimson_stage3",
+      "y": 0
+    },
+    "facing=east,stage=3": {
+      "model": "timberfall:block/notched_crimson_stage3",
+      "y": 90
+    },
+    "facing=south,stage=3": {
+      "model": "timberfall:block/notched_crimson_stage3",
+      "y": 180
+    },
+    "facing=west,stage=3": {
+      "model": "timberfall:block/notched_crimson_stage3",
+      "y": 270
+    }
+  }
+}

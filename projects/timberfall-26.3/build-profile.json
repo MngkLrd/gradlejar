@@ -1,0 +1,9 @@
+{
+  "slug": "timberfall",
+  "version": "0.1.0",
+  "minecraft": "26.3",
+  "loader": "neoforge",
+  "java": "25",
+  "gradle": "9.2.1",
+  "jar_glob": "timberfall-0.1.0.jar"
+}
