@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "side": "openmotion:block/item_cannon_side",
+    "front": "openmotion:block/item_cannon_front",
+    "top": "openmotion:block/item_cannon_top"
+  }
+}

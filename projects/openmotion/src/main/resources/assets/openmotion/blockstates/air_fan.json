@@ -1,0 +1,36 @@
+{
+  "variants": {
+    "facing=north,powered=false": {
+      "model": "openmotion:block/air_fan",
+      "y": 0
+    },
+    "facing=north,powered=true": {
+      "model": "openmotion:block/air_fan",
+      "y": 0
+    },
+    "facing=east,powered=false": {
+      "model": "openmotion:block/air_fan",
+      "y": 90
+    },
+    "facing=east,powered=true": {
+      "model": "openmotion:block/air_fan",
+      "y": 90
+    },
+    "facing=south,powered=false": {
+      "model": "openmotion:block/air_fan",
+      "y": 180
+    },
+    "facing=south,powered=true": {
+      "model": "openmotion:block/air_fan",
+      "y": 180
+    },
+    "facing=west,powered=false": {
+      "model": "openmotion:block/air_fan",
+      "y": 270
+    },
+    "facing=west,powered=true": {
+      "model": "openmotion:block/air_fan",
+      "y": 270
+    }
+  }
+}
