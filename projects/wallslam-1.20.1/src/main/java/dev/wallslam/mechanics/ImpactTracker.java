@@ -1,91 +1,129 @@
 package dev.wallslam.mechanics;
 
-import java.util.Collections;
-import java.util.IdentityHashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.WeakHashMap;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.phys.AABB;
 
 /**
- * Small server-only collision combat mechanic.
+ * Authoritative wall collision after real melee damage.
  *
- * A qualifying LivingKnockBackEvent arms an entity for a short window.
- * A genuine horizontal world collision during that window inflicts a
- * capped amount of additional damage once. No block scanning, ray
- * tracing, entity ticking loops, packets, or custom client renderers.
+ * Fixes v0.1.1: ordinary hits were ignored if LivingKnockBackEvent strength
+ * was low, and horizontalCollision alone missed mobs touching a wall.
+ * Now a melee strike arms the victim regardless of enchantments; the next
+ * few post-movement ticks probe only real block collision in the push direction.
  */
 public final class ImpactTracker {
-    private static final float MIN_KNOCKBACK = 0.29f;
-    private static final int MAX_TICKS_AFTER_HIT = 10;
-    private static final int RETRIGGER_DELAY_TICKS = 12;
-
-    private static final Map<LivingEntity, Tracked> ACTIVE = new WeakHashMap<>();
-    private static final Map<LivingEntity, Long> LAST_IMPACT_TICKS = new WeakHashMap<>();
-    private static final Set<LivingEntity> APPLYING_DAMAGE =
-        Collections.newSetFromMap(new IdentityHashMap<>());
+    private static final int MAX_TICKS_AFTER_HIT = 9;
+    private static final int IMPACT_COOLDOWN_TICKS = 10;
+    private static final double WALL_PROBE_DISTANCE = 0.31D;
+    private static final double MIN_DIRECTION_SQ = 0.0001D;
+    private static final Map<LivingEntity, PendingImpact> PENDING = new WeakHashMap<>();
+    private static final Map<LivingEntity, Long> LAST_IMPACT = new WeakHashMap<>();
 
     private ImpactTracker() {}
 
-    public static void arm(LivingEntity entity, float strength) {
-        if (!(entity instanceof Mob) || !(entity.level() instanceof ServerLevel server)) return;
-        if (!entity.isAlive() || strength < MIN_KNOCKBACK || APPLYING_DAMAGE.contains(entity)) return;
+    /** Called from LivingHurtEvent, before vanilla starts the regular knockback. */
+    public static void armFromMeleeHit(LivingEntity victim, DamageSource source, float damage) {
+        if (!(victim instanceof Mob) || !(victim.level() instanceof ServerLevel level)) return;
+        if (damage <= 0 || !victim.isAlive()) return;
+        // The direct damage dealer must be the attacking entity, not a projectile.
+        if (!(source.getDirectEntity() instanceof LivingEntity attacker) || attacker == victim
+                || source.getEntity() != attacker) return;
 
-        long now = server.getGameTime();
-        Long lastImpact = LAST_IMPACT_TICKS.get(entity);
-        if (lastImpact != null && now - lastImpact < RETRIGGER_DELAY_TICKS) return;
+        long now = level.getGameTime();
+        Long last = LAST_IMPACT.get(victim);
+        if (last != null && now - last < IMPACT_COOLDOWN_TICKS) return;
 
-        ACTIVE.put(entity, new Tracked(Math.min(strength, 2.0f)));
+        double dx = victim.getX() - attacker.getX();
+        double dz = victim.getZ() - attacker.getZ();
+        double sq = dx * dx + dz * dz;
+        if (sq < MIN_DIRECTION_SQ) {
+            // For mounted or overlapping entities, take the attacker's look vector.
+            dx = attacker.getLookAngle().x;
+            dz = attacker.getLookAngle().z;
+            sq = dx * dx + dz * dz;
+        }
+        if (sq < MIN_DIRECTION_SQ) return;
+        double inv = 1.0D / Math.sqrt(sq);
+
+        // Actual attack attributes include the equipped tool and modded modifiers.
+        // Incoming damage also accounts for critical and custom combat modifiers.
+        float weaponPower = (float) Math.max(1.0D, attacker.getAttributeValue(Attributes.ATTACK_DAMAGE));
+        float power = Math.min(12.0F, 0.65F * weaponPower + 0.35F * damage);
+        float slamDamage = Math.max(0.65F, Math.min(3.25F, 0.45F + power * 0.23F));
+        float knockBonus = Math.max(0.0F, Math.min(0.25F, (weaponPower - 1.0F) * 0.025F));
+
+        PENDING.put(victim, new PendingImpact(dx * inv, dz * inv, now, slamDamage, knockBonus));
     }
 
-    /** Called only for an entity being ticked, never for all loaded entities. */
-    public static void tick(LivingEntity entity) {
-        Tracked hit = ACTIVE.get(entity);
-        if (hit == null) return;
+    /**
+     * Optional amplification of the vanilla knockback event.
+     * A fist works without it; a heavy weapon pushes somewhat further.
+     */
+    public static float knockbackBonus(LivingEntity victim) {
+        PendingImpact impact = PENDING.get(victim);
+        if (impact == null || !(victim.level() instanceof ServerLevel level)
+                || level.getGameTime() - impact.createdAt > 1) return 0;
+        return impact.knockbackBonus;
+    }
 
-        hit.ticks++;
-        if (!entity.isAlive() || !(entity.level() instanceof ServerLevel level)
-                || hit.ticks > MAX_TICKS_AFTER_HIT) {
-            ACTIVE.remove(entity);
+    /** Runs on entity post-tick. Only tracked entities do any collision work. */
+    public static void tick(LivingEntity entity) {
+        PendingImpact state = PENDING.get(entity);
+        if (state == null) return;
+
+        if (!(entity.level() instanceof ServerLevel level) || !entity.isAlive()) {
+            PENDING.remove(entity);
             return;
         }
+        long age = level.getGameTime() - state.createdAt;
+        if (age > MAX_TICKS_AFTER_HIT) {
+            PENDING.remove(entity);
+            return;
+        }
+        if (age < 0) return;
+        if (!wallInImpactDirection(entity, level, state)) return;
 
-        if (!entity.horizontalCollision) return;
-        ACTIVE.remove(entity);
-        LAST_IMPACT_TICKS.put(entity, level.getGameTime());
-
-        // Fixed and capped wall damage: strength 0.4 -> 1.8 health points.
-        // Stronger knockback increases the impact without one-shotting normal mobs.
-        float damage = Math.min(4.0f, 1.0f + hit.strength * 2.0f);
-        if (!APPLYING_DAMAGE.add(entity)) return;
+        PENDING.remove(entity);
+        LAST_IMPACT.put(entity, level.getGameTime());
+        // Distinct server-side collision damage, separate from the original hit.
+        // The original hit normally enables the short vanilla hurt immunity.
         try {
-            // The triggering melee strike normally granted hurt invulnerability.
-            // A real wall collision is a separate event that must be allowed to hurt.
             entity.invulnerableTime = 0;
-            if (entity.hurt(entity.damageSources().flyIntoWall(), damage)) {
+            boolean hurt = entity.hurt(entity.damageSources().flyIntoWall(), state.impactDamage);
+            if (hurt) {
+                // Audible and visible even when an enemy begins directly at the wall.
                 level.playSound(null, entity.blockPosition(),
-                    SoundEvents.STONE_BREAK, SoundSource.HOSTILE, 0.6f, 0.8f);
+                    SoundEvents.STONE_BREAK, SoundSource.BLOCKS, 0.95F, 0.68F);
+                level.sendParticles(ParticleTypes.POOF,
+                    entity.getX(), entity.getY() + entity.getBbHeight() * 0.55D, entity.getZ(),
+                    17, 0.27D, 0.29D, 0.27D, 0.055D);
                 level.sendParticles(ParticleTypes.CRIT,
-                    entity.getX(), entity.getY() + entity.getBbHeight() * 0.55, entity.getZ(),
-                    7, 0.3, 0.2, 0.3, 0.09);
+                    entity.getX(), entity.getY() + entity.getBbHeight() * 0.55D, entity.getZ(),
+                    9, 0.18D, 0.19D, 0.18D, 0.1D);
             }
         } finally {
-            APPLYING_DAMAGE.remove(entity);
+            // Never allow one melee hit to produce more than one collision.
+            PENDING.remove(entity);
         }
     }
 
-    private static final class Tracked {
-        final float strength;
-        int ticks;
-
-        Tracked(float strength) {
-            this.strength = strength;
-        }
+    /** Probes the actual voxel shapes of nearby blocks, not entities or a wall flag. */
+    private static boolean wallInImpactDirection(LivingEntity entity, ServerLevel level, PendingImpact state) {
+        AABB ahead = entity.getBoundingBox().move(
+            state.directionX * WALL_PROBE_DISTANCE, 0, state.directionZ * WALL_PROBE_DISTANCE);
+        return level.getBlockCollisions(entity, ahead).iterator().hasNext();
     }
+
+    private record PendingImpact(double directionX, double directionZ, long createdAt,
+                                 float impactDamage, float knockbackBonus) {}
 }
