@@ -1,6 +1,6 @@
 {
   "menu.anvilborn.forge": "Наковальня: ковка",
-  "button.anvilborn.strike": "Ударить",
+  "button.anvilborn.strike": "УДАРИТЬ  •  1 УР.",
   "tooltip.anvilborn.quality": "Качество ковки: %+d",
   "tooltip.anvilborn.hits": "Ковка: %s/%s ударов",
   "aspect.anvilborn.cleaver": "Рассечение",
@@ -60,5 +60,18 @@
   "screen.anvilborn.result.2": "Большой успех!",
   "screen.anvilborn.result.3": "Качество снижено",
   "screen.anvilborn.result.4": "РАЗРУШЕНО",
-  "screen.anvilborn.result.5": "Предел качества"
+  "screen.anvilborn.result.5": "Предел качества",
+  "screen.anvilborn.empty": "Пустой слот",
+  "screen.anvilborn.no_aspects": "Нет свойств",
+  "screen.anvilborn.break_risk": "РИСК СЛОМА  %s%%",
+  "screen.anvilborn.frenzy": "FRENZY: %s",
+  "screen.anvilborn.heat": "НАКАЛ КОВКИ",
+  "screen.anvilborn.frenzy_short": "FRENZY",
+  "screen.anvilborn.extra_aspects": "+%s",
+  "tier.anvilborn.damaged": "Повреждённое",
+  "tier.anvilborn.common": "Обычное",
+  "tier.anvilborn.uncommon": "Необычное",
+  "tier.anvilborn.rare": "Редкое",
+  "tier.anvilborn.epic": "Эпическое",
+  "tier.anvilborn.legendary": "Легендарное"
 }

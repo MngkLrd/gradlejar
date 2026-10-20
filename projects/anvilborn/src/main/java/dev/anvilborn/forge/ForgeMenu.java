@@ -27,16 +27,16 @@ public final class ForgeMenu extends AbstractContainerMenu {
         this.level = inventory.player.level();
         this.pos = pos;
         this.serverMenu = serverMenu;
-        addSlot(new Slot(input, 0, 80, 38) {
+        addSlot(new Slot(input, 0, 53, 69) {
             @Override public boolean mayPlace(ItemStack stack) { return ForgeRules.eligible(stack); }
             @Override public int getMaxStackSize() { return 1; }
         });
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlot(new Slot(inventory, x + y * 9 + 9, 8 + x * 18, 103 + y * 18));
+                addSlot(new Slot(inventory, x + y * 9 + 9, 34 + x * 18, 175 + y * 18));
             }
         }
-        for (int x = 0; x < 9; x++) addSlot(new Slot(inventory, x, 8 + x * 18, 161));
+        for (int x = 0; x < 9; x++) addSlot(new Slot(inventory, x, 34 + x * 18, 233));
         addDataSlots(feedback);
     }
 
