@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'idea'
-    id 'net.neoforged.moddev.legacyforge' version '2.0.91'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.147'
 }
 group = mod_group_id
 version = mod_version
@@ -12,6 +12,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 legacyForge {
     enable {
         neoForgeVersion = project.minecraft_version + '-' + project.forge_version
+        disableRecompilation = true
     }
     runs {
         client { client() }
