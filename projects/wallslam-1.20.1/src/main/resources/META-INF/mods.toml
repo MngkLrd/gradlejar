@@ -3,7 +3,7 @@ loaderVersion="[47,)"
 license="MIT"
 [[mods]]
 modId="wallslam"
-version="0.2.0"
+version="0.3.0"
 displayName="Wallslam"
 authors="Wallslam Project"
 description="Knock mobs into walls for a small bonus impact hit."

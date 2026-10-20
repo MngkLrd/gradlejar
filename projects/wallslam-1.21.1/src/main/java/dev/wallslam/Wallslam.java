@@ -1,19 +1,18 @@
 package dev.wallslam;
 
 import dev.wallslam.mechanics.ImpactTracker;
+import dev.wallslam.mechanics.StunManager;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
-/**
- * Wallslam — turn an ordinary melee hit into a kinetic collision when the
- * target is driven against actual block collision in the direction of impact.
- * Server-authoritative; no custom network packets or client dependencies.
- */
+/** Lightweight, server-authoritative melee wall impact. */
 @Mod(Wallslam.MOD_ID)
 public final class Wallslam {
     public static final String MOD_ID = "wallslam";
@@ -22,23 +21,28 @@ public final class Wallslam {
         NeoForge.EVENT_BUS.addListener(Wallslam::onMeleeHurt);
         NeoForge.EVENT_BUS.addListener(Wallslam::onKnockback);
         NeoForge.EVENT_BUS.addListener(Wallslam::onEntityTick);
+        NeoForge.EVENT_BUS.addListener(Wallslam::onEntityJoin);
+        NeoForge.EVENT_BUS.addListener(Wallslam::onEntityLeave);
     }
 
     private static void onMeleeHurt(LivingDamageEvent.Pre event) {
-        ImpactTracker.armFromMeleeHit(event.getEntity(), event.getSource(), event.getNewDamage());
+        ImpactTracker.onMeleeDamage(event.getEntity(), event.getSource(), event.getNewDamage());
     }
 
     private static void onKnockback(LivingKnockBackEvent event) {
-        // A weapon adds a small extra push, but any ordinary vanilla hit can slam.
         float bonus = ImpactTracker.knockbackBonus(event.getEntity());
-        if (bonus > 0.0f) {
-            event.setStrength(event.getStrength() + bonus);
-        }
+        if (bonus > 0.0F) event.setStrength(event.getStrength() + bonus);
     }
 
     private static void onEntityTick(EntityTickEvent.Post event) {
-        if (event.getEntity() instanceof LivingEntity living) {
-            ImpactTracker.tick(living);
-        }
+        if (event.getEntity() instanceof LivingEntity living) ImpactTracker.tick(living);
+    }
+
+    private static void onEntityJoin(EntityJoinLevelEvent event) {
+        StunManager.onEntityJoin(event.getEntity());
+    }
+
+    private static void onEntityLeave(EntityLeaveLevelEvent event) {
+        StunManager.onEntityLeave(event.getEntity());
     }
 }

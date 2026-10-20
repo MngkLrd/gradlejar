@@ -1,40 +1,19 @@
-# Wallslam 0.2.0 — Minecraft 26.3
+# Wallslam 0.3.0 — Minecraft 26.3 / NeoForge
 
-Small server-side combat mod for Minecraft 26.3 / NeoForge.
+**Fix:** the previous implementation had effectively invisible impact feedback whenever the secondary damage event was rejected by vanilla hurt immunity or another mod. The new version resolves feedback separately from damage and applies a half-second AI stun.
 
-Ordinary bare-handed attacks can slam a zombie, pig, villager or any living mob into a **solid wall**, without Knockback enchantments. Weapon attack power changes the collision damage and adds a small physical knockback bonus.
+On a successful melee hit against a wall, Wallslam:
+- scans only a short 0.50-block probe of real block collision shapes in the knockback direction, during an 11-tick window;
+- emits a large cloud, electric sparks, critical particles, and two impact sounds regardless of whether the secondary damage is accepted;
+- applies 0.7–3.3 bonus HP of collision damage depending on weapon attack attributes;
+- freezes the target mob's AI for **10 ticks / 0.5 seconds** and shows electric sparks above its head;
+- restores normal AI automatically after the timer, after a chunk/entity unload and when loading a saved stunned mob;
+- leaves naturally NoAI mobs unchanged.
 
-## Behavior
+**No Knockback enchantment required.** Only actual melee strikes arm the slam. Target players are excluded, but zombies, pigs and villagers are included.
 
-- On an actual melee hit, record the direction from the attacker to the victim.
-- For up to 9 game ticks, check *solid block collision shapes* in that direction (31 cm ahead of the bounding box) after each mob's tick.
-- On a wall contact: deal 0.65–3.25 additional health points (scales with actual attack damage attributes), play a clear stone crash sound, and emit POOF and critical particles.
-- Additional weapon push: up to +0.25 knockback strength for high-power weapons; fists also work.
-- Ten-tick individual cooldown prevents spam.
-- No client-only classes. Only living Mob targets get collision damage (does not damage other players).
-- Does not rely on the deprecated single-frame horizontalCollision flag or on a minimum LivingKnockBackEvent strength.
+Build with **Java 25**, **Gradle 9.2.1**, official NeoForge and `gradle clean build`. Expected JAR: `build/libs/wallslam-26.3-0.3.0.jar`.
 
-## Balance examples (approx.)
+**Manual checks:** test regular melee against full-block stone and dirt walls, with fist and iron sword; test target away from the wall; verify audio and cloud/spark particles on impact, AI pauses about 0.5 seconds, and mob AI resumes. Also test persistent NoAI mobs, dedicated server and reload during stun.
 
-- Unarmed base attack (~1): 0.68 health impact
-- Stone sword (~5): ~1.60 health impact
-- Iron sword (~6): ~1.83 health impact
-- Netherite sword (~8): ~2.29 health impact
-
-In-game damage can vary with enchantments, attack modifiers and target armor.
-
-## Version and build
-
-- Minecraft 26.3, NeoForge, Java 25, Gradle 9.2.1.
-- `gradle clean build`
-- Expected JAR `build/libs/wallslam-26.3-0.2.0.jar`
-
-## Manual smoke testing
-
-1. Spawn a zombie, pig and villager adjacent to a full stone/dirt wall; hit each toward that wall with an empty hand and then a sword. An audible crash and burst of particles should occur.
-2. Repeat with wood, stone, iron, diamond and netherite weapons to compare force and impact damage.
-3. Repeat with a mob in open air: no Wallslam particle/sound or extra collision damage.
-4. Strike a mob while next to a wall but *away* from the wall: no impact.
-5. Test on a dedicated NeoForge server and client; test high knockback resistance and modded mob hitboxes.
-
-GitHub CI builds against real official Minecraft/NeoForge dependencies and validates the JAR. It does not actually launch the client; gameplay must still be verified.
+GitHub CI verifies actual compilation and mod packaging. Gameplay is not yet smoke-tested in a real game client.
