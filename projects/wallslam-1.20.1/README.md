@@ -1,4 +1,4 @@
-# Wallslam 0.1.0 — Minecraft 1.20.1
+# Wallslam 0.1.1 — Minecraft 1.20.1
 
 A small server-authoritative NeoForge combat mod. Punch or strike a mob with enough knockback and slam it against solid terrain: the mob takes an additional **1–4 HP** based on knockback strength, a stone impact sound plays, and a few critical-hit particles appear.
 
@@ -19,7 +19,7 @@ A small server-authoritative NeoForge combat mod. Punch or strike a mob with eno
 - Java: 17
 - Gradle: 8.14.5
 - Command: `gradle clean build`
-- Result: `build/libs/wallslam-1.20.1-0.1.0.jar`
+- Result: `build/libs/wallslam-1.20.1-0.1.1.jar`
 
 ## Testing checklist
 
@@ -36,3 +36,7 @@ A small server-authoritative NeoForge combat mod. Punch or strike a mob with eno
 
 Note: NeoForge's Minecraft 1.20.1 builds retain the legacy `net.minecraftforge` package names and a `META-INF/mods.toml` descriptor. That does not mean this specific module is a 1.21+ NeoForge API port.
 
+
+## Loading metadata
+
+Legacy NeoForge/Forge-compatible `META-INF/mods.toml` explicitly declares `modLoader="javafml"` and `loaderVersion="[47,)"`. The shared CI verifier checks the packaged TOML and the expected loader schema before publishing a JAR.
