@@ -1,4 +1,4 @@
-# OpenMotion 0.1.0
+# OpenMotion 0.1.2
 
 A lightweight, independent NeoForge mod inspired by the lost utility-machine era of Minecraft.
 **This code and every bundled texture are original.** No OpenBlocks/OpenModsLib files or assets are included.
@@ -29,7 +29,7 @@ From inside this directory:
 gradle --no-daemon clean build
 ```
 
-Output: `build/libs/openmotion-1.21.1-0.1.0.jar`. The repository CI uses `build-profile.json` with Java 21 / Gradle 9.2.1.
+Output: `build/libs/openmotion-1.21.1-0.1.2.jar`. The repository CI uses `build-profile.json` with Java 21 / Gradle 9.2.1.
 
 ## Test checklist
 1. `/give @s openmotion:air_fan` and `/give @s openmotion:item_cannon`; confirm textures and creative Redstone tab.
@@ -51,7 +51,7 @@ Released under MIT. Original code, block textures and design by OpenMotion contr
 The historical OpenBlocks project is an inspiration, not a dependency or source of bundled content. Not an official OpenBlocks port.
 
 
-## 0.1.1 - real 3D models
+## 0.1.1 - first 3D models
 
 Replaces the original flat orientable cubes with detailed baked Java Edition block models.
 The fan now has an open frame, recessed four-blade rotor, grille, raised motor and status lamp.
@@ -61,3 +61,10 @@ Models are stored as editable JSON in `assets/openmotion/models/block/` and can 
 This release has static geometry: blade rotation animation is NOT implemented yet.
 Collision and selection shapes are reduced to fit the new compact mesh.
 No original OpenBlocks asset files or code are used.
+
+## 0.1.2 - visual redesign
+- Replaced tiny competing cuboids with clean, purpose-built mechanical silhouettes.
+- Air Fan: open housing, 32x32 teal rotor, motor enclosure, clear state indicator.
+- Item Cannon: hollow brass muzzle, copper barrel straps, top loading chamber, steel carriage.
+- 15 original pixel-art material textures, 32x32. Static baked JSON models (no rotor animation yet).
+- Core machine logic unchanged. Can open exported model JSON in Blockbench for editing.
