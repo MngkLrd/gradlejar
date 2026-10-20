@@ -10,7 +10,7 @@ base.archivesName = "${mod_id}-${minecraft_version}"
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 legacyForge {
-    version = project.minecraft_version + '-' + project.forge_version
+    neoForgeVersion = project.minecraft_version + '-' + project.forge_version
     runs {
         client { client() }
         server { server() }
