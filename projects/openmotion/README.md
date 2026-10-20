@@ -1,4 +1,4 @@
-# OpenMotion 0.1.2
+# OpenMotion 0.1.4
 
 A lightweight, independent NeoForge mod inspired by the lost utility-machine era of Minecraft.
 **This code and every bundled texture are original.** No OpenBlocks/OpenModsLib files or assets are included.
@@ -29,7 +29,7 @@ From inside this directory:
 gradle --no-daemon clean build
 ```
 
-Output: `build/libs/openmotion-1.21.1-0.1.2.jar`. The repository CI uses `build-profile.json` with Java 21 / Gradle 9.2.1.
+Output: `build/libs/openmotion-1.21.1-0.1.4.jar`. The repository CI uses `build-profile.json` with Java 21 / Gradle 9.2.1.
 
 ## Test checklist
 1. `/give @s openmotion:air_fan` and `/give @s openmotion:item_cannon`; confirm textures and creative Redstone tab.
@@ -78,3 +78,10 @@ No original OpenBlocks asset files or code are used.
 - Audible failure click on an empty cannon.
 - A dispenser or hopper above is treated as a supply inventory, not an automatic trigger. Power the cannon itself.
 - Static rotor for now. Actual spinning animation still not implemented.
+
+## 0.1.4 industrial visual refresh
+- Air Fan uses a static refrigeration grille: five physical louvers, a recessed duct, a steel frame and a redstone lamp. There is no rotor or spinning animation.
+- Item Cannon has a hollow brass muzzle, copper bands, a blue-steel carriage and a top loading chamber.
+- The 20 new hand-selected 32x32 pixel material tiles are derived from the approved visual concepts. No OpenBlocks assets are included.
+- Gameplay stays identical to 0.1.3; redstone ON powers airflow and cannon fires on rising pulses.
+- Real client gameplay still requires testing beyond Gradle compilation.
