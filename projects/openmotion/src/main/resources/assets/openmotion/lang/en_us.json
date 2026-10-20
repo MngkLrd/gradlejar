@@ -1,4 +1,6 @@
 {
   "block.openmotion.air_fan": "Air Fan",
-  "block.openmotion.item_cannon": "Item Cannon"
+  "block.openmotion.item_cannon": "Item Cannon",
+  "block.openmotion.vacuum_hopper": "Vacuum Hopper",
+  "block.openmotion.sprinkler": "Sprinkler"
 }

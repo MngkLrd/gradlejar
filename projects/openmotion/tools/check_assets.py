@@ -28,3 +28,20 @@ assert 'air_fan_item' in (res/'assets/openmotion/models/item/air_fan.json').read
 assert (root/'src/main/java/dev/minemods/openmotion/client/FanRotorRenderer.java').exists()
 for f in res.rglob('*.json'):json.loads(f.read_text())
 print('OpenMotion v0.1.5 resources OK')
+
+# 0.2.0: additional baked block models and registrations
+for name in ('vacuum_hopper', 'sprinkler', 'sprinkler_inactive'):
+    path = res / f'assets/openmotion/models/block/{name}.json'
+    j = json.loads(path.read_text('utf8'))
+    assert len(j['elements']) >= 15, (name, len(j['elements']))
+    for elem in j['elements']:
+        assert all(0 <= x <= 16 for x in elem['from'] + elem['to'])
+        assert all(a < b for a,b in zip(elem['from'], elem['to']))
+        for face in elem['faces'].values():
+            assert face['texture'].startswith('#')
+            assert face['texture'][1:] in j['textures']
+for name in ('vacuum_hopper', 'sprinkler'):
+    assert (res / f'assets/openmotion/models/item/{name}.json').exists()
+    assert (res / f'data/openmotion/recipe/{name}.json').exists()
+    assert (res / f'data/openmotion/loot_table/blocks/{name}.json').exists()
+print('0.2.0 collector and sprinkler assets: PASS')

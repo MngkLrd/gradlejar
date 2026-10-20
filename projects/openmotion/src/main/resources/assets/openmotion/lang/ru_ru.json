@@ -1,4 +1,6 @@
 {
   "block.openmotion.air_fan": "Вентилятор",
-  "block.openmotion.item_cannon": "Предметная пушка"
+  "block.openmotion.item_cannon": "Предметная пушка",
+  "block.openmotion.vacuum_hopper": "Вакуумная воронка",
+  "block.openmotion.sprinkler": "Разбрызгиватель"
 }

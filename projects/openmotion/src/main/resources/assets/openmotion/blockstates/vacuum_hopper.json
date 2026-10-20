@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "openmotion:block/vacuum_hopper"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-# OpenMotion 0.1.5
+# OpenMotion 0.2.0
 
 A lightweight, independent NeoForge mod inspired by the lost utility-machine era of Minecraft.
 **This code and every bundled texture are original.** No OpenBlocks/OpenModsLib files or assets are included.
@@ -29,7 +29,7 @@ From inside this directory:
 gradle --no-daemon clean build
 ```
 
-Output: `build/libs/openmotion-1.21.1-0.1.5.jar`. The repository CI uses `build-profile.json` with Java 21 / Gradle 9.2.1.
+Output: `build/libs/openmotion-1.21.1-0.2.0.jar`. The repository CI uses `build-profile.json` with Java 21 / Gradle 9.2.1.
 
 ## Test checklist
 1. `/give @s openmotion:air_fan` and `/give @s openmotion:item_cannon`; confirm textures and creative Redstone tab.
@@ -79,16 +79,38 @@ No original OpenBlocks asset files or code are used.
 - A dispenser or hopper above is treated as a supply inventory, not an automatic trigger. Power the cannon itself.
 - Static rotor for now. Actual spinning animation still not implemented.
 
-## 0.1.5 industrial visual refresh
+## 0.2.0 industrial visual refresh
 - Air Fan uses a static refrigeration grille: five physical louvers, a recessed duct, a steel frame and a redstone lamp. There is no rotor or spinning animation.
 - Item Cannon has a hollow brass muzzle, copper bands, a blue-steel carriage and a top loading chamber.
 - The 20 new hand-selected 32x32 pixel material tiles are derived from the approved visual concepts. No OpenBlocks assets are included.
 - Gameplay stays identical to 0.1.3; redstone ON powers airflow and cannon fires on rising pulses.
 - Real client gameplay still requires testing beyond Gradle compilation.
 
-## 0.1.5 - 3D animated fan and richer material study
+## 0.2.0 - 3D animated fan and richer material study
 - Four client-rendered rotor blades turn while redstone powers the fan, without extra server blockstate updates.
 - Inventory model includes static blades, while the world model uses BlockEntityRenderer.
 - 20 custom 32x32 material panels with directional lighting, rivets, panel joints, rear vents and metalwork.
 - Item Cannon gameplay remains rising-edge firing; continuous hold fire is not yet implemented.
 - Gameplay must be tested in a real Minecraft client.
+
+## OpenMotion 0.2.0 - next two machines
+
+### Vacuum Hopper
+- Collects dropped items within approximately 3.5 blocks while respecting solid walls.
+- Nine persistent slots; auto-sends items to the inventory immediately underneath via NeoForge's item-handler capability.
+- Compatible with Item Cannon when placed directly behind or above the cannon (redstone triggers its launch).
+- Right-click with an empty main hand to remove the first stored stack.
+- Redstone power **pauses** collection and export. Breaking the hopper spills its contents.
+- No GUI in this initial release; small capped entity checks for performance.
+
+### Sprinkler
+- Static industrial irrigation nozzle with visible water particles.
+- Requires a nearby **water source block** within two horizontal blocks and from the same level to two blocks below.
+- Automatic when supplied with water; **redstone pauses** irrigation.
+- Searches a four-block horizontal radius and up to three blocks below.
+- Uses the standard BonemealableBlock contract, so many modded crops work with no direct dependency.
+- Processes at most one successful growth operation every five seconds, without consuming water.
+
+### Quick start
+`/give @s openmotion:vacuum_hopper` and `/give @s openmotion:sprinkler`.
+Crafting is enabled for both. Test on NeoForge 21.1.262, Java 21.

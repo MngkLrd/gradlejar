@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "openmotion:air_fan",
-    "openmotion:item_cannon"
+    "openmotion:item_cannon",
+    "openmotion:vacuum_hopper",
+    "openmotion:sprinkler"
   ]
 }
