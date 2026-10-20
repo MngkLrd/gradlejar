@@ -5,7 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
@@ -24,8 +24,8 @@ public final class Wallslam {
         NeoForge.EVENT_BUS.addListener(Wallslam::onEntityTick);
     }
 
-    private static void onMeleeHurt(LivingHurtEvent event) {
-        ImpactTracker.armFromMeleeHit(event.getEntity(), event.getSource(), event.getAmount());
+    private static void onMeleeHurt(LivingDamageEvent.Pre event) {
+        ImpactTracker.armFromMeleeHit(event.getEntity(), event.getSource(), event.getNewDamage());
     }
 
     private static void onKnockback(LivingKnockBackEvent event) {
