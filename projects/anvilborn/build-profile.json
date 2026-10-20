@@ -1,9 +1,9 @@
 {
   "slug": "anvilborn",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "anvilborn-0.1.0.jar"
+  "jar_glob": "anvilborn-0.1.1.jar"
 }

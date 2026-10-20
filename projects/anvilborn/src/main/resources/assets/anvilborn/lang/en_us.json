@@ -1,6 +1,6 @@
 {
   "menu.anvilborn.forge": "Anvil Forging",
-  "button.anvilborn.strike": "STRIKE",
+  "button.anvilborn.strike": "STRIKE  •  1 LVL",
   "tooltip.anvilborn.quality": "Forging quality: %+d",
   "tooltip.anvilborn.hits": "Forging: %s/%s hits",
   "aspect.anvilborn.cleaver": "Cleaver",
@@ -60,5 +60,18 @@
   "screen.anvilborn.result.2": "Great success!",
   "screen.anvilborn.result.3": "Damaged",
   "screen.anvilborn.result.4": "SHATTERED",
-  "screen.anvilborn.result.5": "Max quality"
+  "screen.anvilborn.result.5": "Max quality",
+  "screen.anvilborn.empty": "Empty slot",
+  "screen.anvilborn.no_aspects": "No aspects",
+  "screen.anvilborn.break_risk": "BREAK RISK  %s%%",
+  "screen.anvilborn.frenzy": "FRENZY  %s safe",
+  "screen.anvilborn.heat": "FORGE HEAT",
+  "screen.anvilborn.frenzy_short": "FRENZY",
+  "screen.anvilborn.extra_aspects": " +%s",
+  "tier.anvilborn.damaged": "Damaged",
+  "tier.anvilborn.common": "Common",
+  "tier.anvilborn.uncommon": "Uncommon",
+  "tier.anvilborn.rare": "Rare",
+  "tier.anvilborn.epic": "Epic",
+  "tier.anvilborn.legendary": "Legendary"
 }
