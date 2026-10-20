@@ -2,7 +2,8 @@ package dev.minemods.openmotion.block;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -72,7 +73,8 @@ public final class SprinklerBlock extends Block {
                 if (dx * dx + dz * dz > 16) continue;
                 BlockPos farmPos = pos.offset(dx, -(1 + random.nextInt(3)), dz);
                 BlockState crop = level.getBlockState(farmPos);
-                if (crop.getBlock() instanceof BonemealableBlock growable
+                if ((crop.is(BlockTags.CROPS) || crop.getBlock() instanceof CropBlock)
+                        && crop.getBlock() instanceof BonemealableBlock growable
                         && growable.isValidBonemealTarget(level, farmPos, crop)
                         && growable.isBonemealSuccess(level, random, farmPos, crop)) {
                     growable.performBonemeal(level, random, farmPos, crop);
