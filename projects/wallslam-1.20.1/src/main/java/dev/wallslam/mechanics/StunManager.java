@@ -10,66 +10,84 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 
 /**
- * 10-tick AI stun. Unlike Slowness, this also interrupts mob attacks.
- * Uses a persistent marker for reload recovery; only unfreezes AI that
- * Wallslam itself switched off. Entity unload clears the transient state.
+ * Transient 10-tick movement / targeting stun.
+ *
+ * NEVER modifies a mob's NoAI flag. Changing NoAI left some mobs
+ * permanently frozen after a wall impact in Wallslam 0.3.0.
+ *
+ * Recovery of stale 0.3.0 markers is limited to mobs Wallslam marked.
+ * No stun state is saved, so chunks/worlds can never retain a new freeze.
  */
 public final class StunManager {
-    private static final String MARKER = "WallslamManagedStun";
-    private static final Map<Mob, Integer> REMAINING = new WeakHashMap<>();
+    private static final String LEGACY_MARKER = "WallslamManagedStun";
+    private static final Map<Mob, Long> STUN_ENDS = new WeakHashMap<>();
 
     private StunManager() {}
 
-    public static void apply(LivingEntity target, int duration) {
-        if (!(target instanceof Mob mob) || !(mob.level() instanceof ServerLevel)) return;
-        if (!mob.isAlive() || duration <= 0) return;
+    public static void apply(LivingEntity target, int durationTicks) {
+        if (!(target instanceof Mob mob) || !(mob.level() instanceof ServerLevel level)) return;
+        if (!mob.isAlive() || durationTicks <= 0) return;
 
-        // Never override a mob that was intentionally spawned with NoAI.
-        if (!REMAINING.containsKey(mob) && mob.isNoAi()) return;
-        if (!mob.isNoAi()) {
-            mob.setNoAi(true);
-            mob.getPersistentData().putBoolean(MARKER, true);
-        }
-        REMAINING.put(mob, Math.max(duration, REMAINING.getOrDefault(mob, 0)));
-        mob.setDeltaMovement(0, mob.getDeltaMovement().y, 0);
+        restoreLegacyNoAi(mob);
+        if (mob.isNoAi()) return; // Respect mapmaker-created immobile mobs.
+        long expires = level.getGameTime() + Math.min(10, durationTicks);
+        STUN_ENDS.merge(mob, expires, Math::max);
+        interrupt(mob);
     }
 
+    /** Called after each mob's server tick. No permanent change is made. */
     public static void tick(LivingEntity living) {
         if (!(living instanceof Mob mob)) return;
-        Integer ticks = REMAINING.get(mob);
-        if (ticks == null) return;
-
-        if (!(mob.level() instanceof ServerLevel level) || !mob.isAlive()) {
-            restore(mob);
+        if (!(mob.level() instanceof ServerLevel level)) {
+            STUN_ENDS.remove(mob);
             return;
         }
 
-        mob.setDeltaMovement(0.0D, mob.getDeltaMovement().y, 0.0D);
-        if (ticks % 2 == 0) {
-            level.sendParticles(ParticleTypes.ELECTRIC_SPARK,
-                mob.getX(), mob.getY() + mob.getBbHeight() + 0.12D, mob.getZ(),
-                4, 0.25D, 0.08D, 0.25D, 0.015D);
+        // Automatically clean up mobs saved while 0.3.0 owned their NoAI flag.
+        restoreLegacyNoAi(mob);
+
+        Long until = STUN_ENDS.get(mob);
+        if (until == null) return;
+        if (!mob.isAlive() || level.getGameTime() >= until) {
+            STUN_ENDS.remove(mob);
+            return;
         }
 
-        if (ticks <= 1) restore(mob);
-        else REMAINING.put(mob, ticks - 1);
+        interrupt(mob);
+        if ((until - level.getGameTime()) % 2 == 0) {
+            level.sendParticles(ParticleTypes.ELECTRIC_SPARK,
+                mob.getX(), mob.getY() + mob.getBbHeight() + 0.12D, mob.getZ(),
+                4, 0.23D, 0.09D, 0.23D, 0.015D);
+        }
     }
 
+    private static void interrupt(Mob mob) {
+        // Stop AI navigation and cancel horizontal velocity, preserving gravity.
+        // Do not touch NoAI and do not teleport or clip entities into blocks.
+        mob.getNavigation().stop();
+        mob.setTarget(null);
+        mob.setDeltaMovement(0.0D, mob.getDeltaMovement().y, 0.0D);
+    }
+
+    /** Recover existing victims of the 0.3.0 bug on world/chunk load. */
     public static void onEntityJoin(Entity entity) {
-        if (!(entity instanceof Mob mob) || !(mob.level() instanceof ServerLevel)) return;
-        // Saved during a freeze or loaded after a crash/restart: restore AI.
-        // Do not touch genuine vanilla/custom NoAI mobs without our marker.
-        if (mob.getPersistentData().contains(MARKER)) restore(mob);
+        if (entity instanceof Mob mob && mob.level() instanceof ServerLevel) {
+            STUN_ENDS.remove(mob);
+            restoreLegacyNoAi(mob);
+        }
     }
 
     public static void onEntityLeave(Entity entity) {
-        if (entity instanceof Mob mob && mob.level() instanceof ServerLevel) restore(mob);
+        if (entity instanceof Mob mob) {
+            STUN_ENDS.remove(mob);
+            // Defensive cleanup for mobs transitioning dimensions or unloading.
+            restoreLegacyNoAi(mob);
+        }
     }
 
-    private static void restore(Mob mob) {
-        REMAINING.remove(mob);
-        if (mob.getPersistentData().contains(MARKER)) {
-            mob.getPersistentData().remove(MARKER);
+    private static void restoreLegacyNoAi(Mob mob) {
+        if (mob.getPersistentData().contains(LEGACY_MARKER)) {
+            mob.getPersistentData().remove(LEGACY_MARKER);
             mob.setNoAi(false);
         }
     }
