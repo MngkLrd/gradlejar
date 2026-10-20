@@ -14,6 +14,8 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -22,6 +24,7 @@ import net.minecraft.world.phys.Vec3;
 /** Blows light entities away in a narrow cone, no block entity or per-entity allocations kept. */
 public final class AirFanBlock extends HorizontalMachineBlock {
     public static final MapCodec<AirFanBlock> CODEC = simpleCodec(AirFanBlock::new);
+    private static final VoxelShape SHAPE = Block.box(1.5, 0, 1, 14.5, 14.5, 15.5);
 
     @Override
     protected MapCodec<AirFanBlock> codec() {
@@ -34,6 +37,12 @@ public final class AirFanBlock extends HorizontalMachineBlock {
 
     public AirFanBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level,
+                                  BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
     @Override

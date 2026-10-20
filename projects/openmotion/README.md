@@ -49,3 +49,15 @@ Output: `build/libs/openmotion-1.21.1-0.1.0.jar`. The repository CI uses `build-
 ## Licence / credits
 Released under MIT. Original code, block textures and design by OpenMotion contributors.
 The historical OpenBlocks project is an inspiration, not a dependency or source of bundled content. Not an official OpenBlocks port.
+
+
+## 0.1.1 - real 3D models
+
+Replaces the original flat orientable cubes with detailed baked Java Edition block models.
+The fan now has an open frame, recessed four-blade rotor, grille, raised motor and status lamp.
+The cannon has a physically hollow square barrel, muzzle rim, external copper bands, chassis and top-loading chamber.
+The item models reference the full 3D block geometry. Redstone states change status indicator colors.
+Models are stored as editable JSON in `assets/openmotion/models/block/` and can be imported in Blockbench.
+This release has static geometry: blade rotation animation is NOT implemented yet.
+Collision and selection shapes are reduced to fit the new compact mesh.
+No original OpenBlocks asset files or code are used.

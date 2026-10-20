@@ -5,7 +5,7 @@
       "y": 0
     },
     "facing=north,powered=true": {
-      "model": "openmotion:block/item_cannon",
+      "model": "openmotion:block/item_cannon_powered",
       "y": 0
     },
     "facing=east,powered=false": {
@@ -13,7 +13,7 @@
       "y": 90
     },
     "facing=east,powered=true": {
-      "model": "openmotion:block/item_cannon",
+      "model": "openmotion:block/item_cannon_powered",
       "y": 90
     },
     "facing=south,powered=false": {
@@ -21,7 +21,7 @@
       "y": 180
     },
     "facing=south,powered=true": {
-      "model": "openmotion:block/item_cannon",
+      "model": "openmotion:block/item_cannon_powered",
       "y": 180
     },
     "facing=west,powered=false": {
@@ -29,7 +29,7 @@
       "y": 270
     },
     "facing=west,powered=true": {
-      "model": "openmotion:block/item_cannon",
+      "model": "openmotion:block/item_cannon_powered",
       "y": 270
     }
   }

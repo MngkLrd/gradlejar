@@ -16,11 +16,11 @@ public final class ModBlocks {
 
     public static final DeferredBlock<AirFanBlock> AIR_FAN = BLOCKS.registerBlock(
             "air_fan", AirFanBlock::new,
-            BlockBehaviour.Properties.of().strength(2.5F).sound(SoundType.METAL).requiresCorrectToolForDrops());
+            BlockBehaviour.Properties.of().strength(2.5F).sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops());
 
     public static final DeferredBlock<ItemCannonBlock> ITEM_CANNON = BLOCKS.registerBlock(
             "item_cannon", ItemCannonBlock::new,
-            BlockBehaviour.Properties.of().strength(2.5F).sound(SoundType.METAL).requiresCorrectToolForDrops());
+            BlockBehaviour.Properties.of().strength(2.5F).sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops());
 
     static {
         ITEMS.registerSimpleBlockItem(AIR_FAN, new Item.Properties());

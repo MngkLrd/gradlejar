@@ -16,6 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -24,6 +26,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 /** Launch an item by hand, or extract an item from the container directly behind on a redstone rising edge. */
 public final class ItemCannonBlock extends HorizontalMachineBlock {
     public static final MapCodec<ItemCannonBlock> CODEC = simpleCodec(ItemCannonBlock::new);
+    private static final VoxelShape SHAPE = Block.box(2, 0, 0, 14, 15.5, 16);
 
     @Override
     protected MapCodec<ItemCannonBlock> codec() {
@@ -32,6 +35,12 @@ public final class ItemCannonBlock extends HorizontalMachineBlock {
 
     public ItemCannonBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level,
+                                  BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
     @Override
