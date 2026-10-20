@@ -3,6 +3,7 @@ package dev.anvilborn.client;
 import dev.anvilborn.Anvilborn;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +18,11 @@ public final class ForgeStrikeButton extends AbstractButton {
     public ForgeStrikeButton(int x, int y, int width, int height, Component label, Runnable action) {
         super(x, y, width, height, label);
         this.action = action;
+    }
+
+    @Override
+    public void updateWidgetNarration(NarrationElementOutput output) {
+        defaultButtonNarrationText(output);
     }
 
     @Override

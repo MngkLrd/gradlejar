@@ -42,7 +42,7 @@ public final class ForgeScreen extends AbstractContainerScreen<ForgeMenu> {
         titleLabelX = 27;
         titleLabelY = 12;
         inventoryLabelX = 34;
-        inventoryLabelY = 164;
+        inventoryLabelY = 165;
     }
 
     @Override
