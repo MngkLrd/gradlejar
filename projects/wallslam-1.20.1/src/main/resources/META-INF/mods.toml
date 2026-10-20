@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+[[mods]]
+modId="wallslam"
+version="0.1.0"
+displayName="Wallslam"
+authors="Wallslam Project"
+description="Knock mobs into walls for a small bonus impact hit."
+[[dependencies.wallslam]]
+modId="forge"
+mandatory=true
+versionRange="[47.1.106,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.wallslam]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.20.2)"
+ordering="NONE"
+side="BOTH"

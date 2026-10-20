@@ -1,0 +1,24 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.91'
+}
+group = mod_group_id
+version = mod_version
+base.archivesName = "${mod_id}-${minecraft_version}"
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+legacyForge {
+    version = project.minecraft_version + '-' + project.forge_version
+    runs {
+        client { client() }
+        server { server() }
+    }
+    mods { "${mod_id}" { sourceSet(sourceSets.main) } }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 17
+}
