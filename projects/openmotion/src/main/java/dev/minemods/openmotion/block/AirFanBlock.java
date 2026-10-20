@@ -1,5 +1,7 @@
 package dev.minemods.openmotion.block;
 
+import com.mojang.serialization.MapCodec;
+
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,6 +21,13 @@ import net.minecraft.world.phys.Vec3;
 
 /** Blows light entities away in a narrow cone, no block entity or per-entity allocations kept. */
 public final class AirFanBlock extends HorizontalMachineBlock {
+    public static final MapCodec<AirFanBlock> CODEC = simpleCodec(AirFanBlock::new);
+
+    @Override
+    protected MapCodec<AirFanBlock> codec() {
+        return CODEC;
+    }
+
     private static final int UPDATE_TICKS = 3;
     private static final double RANGE = 5.0;
     private static final double HALF_WIDTH = 0.85;

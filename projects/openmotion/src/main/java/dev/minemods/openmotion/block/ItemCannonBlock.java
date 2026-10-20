@@ -1,5 +1,7 @@
 package dev.minemods.openmotion.block;
 
+import com.mojang.serialization.MapCodec;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -21,6 +23,13 @@ import net.neoforged.neoforge.items.IItemHandler;
 
 /** Launch an item by hand, or extract an item from the container directly behind on a redstone rising edge. */
 public final class ItemCannonBlock extends HorizontalMachineBlock {
+    public static final MapCodec<ItemCannonBlock> CODEC = simpleCodec(ItemCannonBlock::new);
+
+    @Override
+    protected MapCodec<ItemCannonBlock> codec() {
+        return CODEC;
+    }
+
     public ItemCannonBlock(Properties properties) {
         super(properties);
     }
