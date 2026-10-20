@@ -49,26 +49,34 @@ public final class AirFanBlock extends HorizontalMachineBlock {
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
         if (!level.isClientSide && !oldState.is(state.getBlock())) {
-            level.scheduleTick(pos, this, UPDATE_TICKS);
+            syncPoweredState(level, pos, state);
+            level.scheduleTick(pos, this, 1);
         }
     }
 
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block fromBlock, BlockPos fromPos, boolean isMoving) {
         if (level.isClientSide) return;
-        boolean powered = level.hasNeighborSignal(pos);
-        if (state.getValue(POWERED) != powered) {
-            level.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_CLIENTS);
-        }
+        syncPoweredState(level, pos, state);
+        level.scheduleTick(pos, this, 1);
     }
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        // The fan is normally active. Redstone powers it OFF, allowing simple shutoff switches.
-        if (!state.getValue(POWERED)) {
+        // Redstone ON = airflow ON.
+        boolean powered = syncPoweredState(level, pos, state);
+        if (powered) {
             blow(level, pos, state.getValue(FACING));
         }
         level.scheduleTick(pos, this, UPDATE_TICKS);
+    }
+
+    private static boolean syncPoweredState(Level level, BlockPos pos, BlockState state) {
+        boolean powered = level.hasNeighborSignal(pos);
+        if (state.getValue(POWERED) != powered) {
+            level.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_ALL);
+        }
+        return powered;
     }
 
     private static void blow(ServerLevel level, BlockPos pos, Direction facing) {

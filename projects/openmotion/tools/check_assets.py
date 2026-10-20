@@ -34,3 +34,13 @@ for block in ("air_fan", "item_cannon"):
 for file in res.rglob("*.json"):
     json.loads(file.read_text("utf8"))
 print("OpenMotion 3D models and pixel textures: PASS")
+
+# 0.1.3: a visible modeled rotor, with correctly reversed redstone states.
+fan = json.loads((res / 'assets/openmotion/models/block/air_fan.json').read_text('utf8'))
+blades = [e for e in fan['elements'] if any(f['texture'] == '#om_blade' for f in e['faces'].values())]
+assert len(blades) == 4
+assert all(3.0 < e['from'][2] < 5.5 for e in blades)
+assert (res / 'assets/openmotion/textures/block/om_blade.png').is_file()
+states = json.loads((res / 'assets/openmotion/blockstates/air_fan.json').read_text('utf8'))['variants']
+assert all(v['model'].endswith('air_fan' if 'powered=true' in k else 'air_fan_stopped') for k,v in states.items())
+print('0.1.3 redstone and rotor assets: PASS')

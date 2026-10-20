@@ -17,7 +17,8 @@
     "om_rotor": "openmotion:block/om_rotor",
     "om_rubber": "openmotion:block/om_rubber",
     "om_steel": "openmotion:block/om_steel",
-    "om_vent": "openmotion:block/om_vent"
+    "om_vent": "openmotion:block/om_vent",
+    "om_blade": "openmotion:block/om_blade"
   },
   "elements": [
     {
@@ -54,12 +55,12 @@
     },
     {
       "from": [
-        2.3,
+        2.35,
         1.7,
-        7.2
+        7.55
       ],
       "to": [
-        13.7,
+        13.65,
         14,
         14
       ],
@@ -71,7 +72,7 @@
           "texture": "#om_steel"
         },
         "north": {
-          "texture": "#om_motor"
+          "texture": "#om_gunmetal"
         },
         "south": {
           "texture": "#om_vent"
@@ -86,39 +87,33 @@
     },
     {
       "from": [
-        3.8,
-        3.4,
-        6.87
+        5.25,
+        10.8,
+        13.65
       ],
       "to": [
-        12.2,
-        12.2,
-        7.2
+        10.75,
+        13.2,
+        15.1
       ],
       "faces": {
         "down": {
-          "texture": "#om_rotor"
+          "texture": "#om_motor"
         },
         "up": {
-          "texture": "#om_rotor"
+          "texture": "#om_motor"
         },
         "north": {
-          "texture": "#om_rotor",
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ]
+          "texture": "#om_motor"
         },
         "south": {
-          "texture": "#om_rotor"
+          "texture": "#om_vent"
         },
         "west": {
-          "texture": "#om_rotor"
+          "texture": "#om_motor"
         },
         "east": {
-          "texture": "#om_rotor"
+          "texture": "#om_motor"
         }
       }
     },
@@ -126,12 +121,12 @@
       "from": [
         1.65,
         1.9,
-        1.95
+        1.65
       ],
       "to": [
         4,
-        14.25,
-        7.5
+        14.3,
+        7.75
       ],
       "faces": {
         "down": {
@@ -158,12 +153,12 @@
       "from": [
         12,
         1.9,
-        1.95
+        1.65
       ],
       "to": [
         14.35,
-        14.25,
-        7.5
+        14.3,
+        7.75
       ],
       "faces": {
         "down": {
@@ -190,12 +185,12 @@
       "from": [
         4,
         12,
-        1.95
+        1.65
       ],
       "to": [
         12,
-        14.25,
-        7.5
+        14.3,
+        7.75
       ],
       "faces": {
         "down": {
@@ -222,172 +217,276 @@
       "from": [
         4,
         1.9,
-        1.95
+        1.65
       ],
       "to": [
         12,
-        4.05,
+        4.15,
+        7.75
+      ],
+      "faces": {
+        "down": {
+          "texture": "#om_frame"
+        },
+        "up": {
+          "texture": "#om_frame"
+        },
+        "north": {
+          "texture": "#om_frame"
+        },
+        "south": {
+          "texture": "#om_frame"
+        },
+        "west": {
+          "texture": "#om_frame"
+        },
+        "east": {
+          "texture": "#om_frame"
+        }
+      }
+    },
+    {
+      "from": [
+        4.15,
+        4.15,
+        7
+      ],
+      "to": [
+        11.85,
+        11.85,
         7.5
       ],
       "faces": {
         "down": {
-          "texture": "#om_frame"
+          "texture": "#om_gunmetal"
         },
         "up": {
-          "texture": "#om_frame"
+          "texture": "#om_gunmetal"
         },
         "north": {
-          "texture": "#om_frame"
+          "texture": "#om_gunmetal"
         },
         "south": {
-          "texture": "#om_frame"
+          "texture": "#om_gunmetal"
         },
         "west": {
-          "texture": "#om_frame"
+          "texture": "#om_gunmetal"
         },
         "east": {
-          "texture": "#om_frame"
+          "texture": "#om_gunmetal"
         }
       }
     },
     {
       "from": [
-        4,
-        4,
-        7
+        7.05,
+        7.05,
+        5.3
       ],
       "to": [
-        12,
-        4.5,
-        7.7
+        8.95,
+        8.95,
+        7.15
       ],
       "faces": {
         "down": {
-          "texture": "#om_rubber"
+          "texture": "#om_steel"
         },
         "up": {
-          "texture": "#om_rubber"
+          "texture": "#om_steel"
         },
         "north": {
-          "texture": "#om_rubber"
+          "texture": "#om_steel"
         },
         "south": {
-          "texture": "#om_rubber"
+          "texture": "#om_steel"
         },
         "west": {
-          "texture": "#om_rubber"
+          "texture": "#om_steel"
         },
         "east": {
-          "texture": "#om_rubber"
+          "texture": "#om_steel"
         }
       }
     },
     {
       "from": [
-        4,
-        11.8,
-        7
+        8.18,
+        8.5,
+        3.75
       ],
       "to": [
-        12,
-        12.2,
-        7.7
+        10.1,
+        11.55,
+        5.05
       ],
       "faces": {
         "down": {
-          "texture": "#om_rubber"
+          "texture": "#om_blade"
         },
         "up": {
-          "texture": "#om_rubber"
+          "texture": "#om_blade"
         },
         "north": {
-          "texture": "#om_rubber"
+          "texture": "#om_blade"
         },
         "south": {
-          "texture": "#om_rubber"
+          "texture": "#om_blade"
         },
         "west": {
-          "texture": "#om_rubber"
+          "texture": "#om_blade"
         },
         "east": {
-          "texture": "#om_rubber"
+          "texture": "#om_blade"
         }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          4.4
+        ],
+        "axis": "z",
+        "angle": -22.5,
+        "rescale": true
       }
     },
     {
       "from": [
-        4.3,
-        6,
-        1.58
+        8.5,
+        5.9,
+        3.75
       ],
       "to": [
-        11.7,
-        6.55,
-        2.1
+        11.55,
+        7.82,
+        5.05
       ],
       "faces": {
         "down": {
-          "texture": "#om_gunframe"
+          "texture": "#om_blade"
         },
         "up": {
-          "texture": "#om_gunframe"
+          "texture": "#om_blade"
         },
         "north": {
-          "texture": "#om_gunframe"
+          "texture": "#om_blade"
         },
         "south": {
-          "texture": "#om_gunframe"
+          "texture": "#om_blade"
         },
         "west": {
-          "texture": "#om_gunframe"
+          "texture": "#om_blade"
         },
         "east": {
-          "texture": "#om_gunframe"
+          "texture": "#om_blade"
         }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          4.4
+        ],
+        "axis": "z",
+        "angle": -22.5,
+        "rescale": true
       }
     },
     {
       "from": [
-        7.72,
-        3.9,
-        1.58
+        5.9,
+        4.45,
+        3.75
       ],
       "to": [
-        8.28,
-        12,
-        2.1
+        7.82,
+        7.5,
+        5.05
       ],
       "faces": {
         "down": {
-          "texture": "#om_gunframe"
+          "texture": "#om_blade"
         },
         "up": {
-          "texture": "#om_gunframe"
+          "texture": "#om_blade"
         },
         "north": {
-          "texture": "#om_gunframe"
+          "texture": "#om_blade"
         },
         "south": {
-          "texture": "#om_gunframe"
+          "texture": "#om_blade"
         },
         "west": {
-          "texture": "#om_gunframe"
+          "texture": "#om_blade"
         },
         "east": {
-          "texture": "#om_gunframe"
+          "texture": "#om_blade"
         }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          4.4
+        ],
+        "axis": "z",
+        "angle": -22.5,
+        "rescale": true
+      }
+    },
+    {
+      "from": [
+        4.45,
+        8.18,
+        3.75
+      ],
+      "to": [
+        7.5,
+        10.1,
+        5.05
+      ],
+      "faces": {
+        "down": {
+          "texture": "#om_blade"
+        },
+        "up": {
+          "texture": "#om_blade"
+        },
+        "north": {
+          "texture": "#om_blade"
+        },
+        "south": {
+          "texture": "#om_blade"
+        },
+        "west": {
+          "texture": "#om_blade"
+        },
+        "east": {
+          "texture": "#om_blade"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          4.4
+        ],
+        "axis": "z",
+        "angle": -22.5,
+        "rescale": true
       }
     },
     {
       "from": [
         6.75,
-        6.65,
-        1.39
+        6.75,
+        3.15
       ],
       "to": [
         9.25,
-        9.15,
-        3.7
+        9.25,
+        5.35
       ],
       "faces": {
         "down": {
@@ -413,13 +512,13 @@
     {
       "from": [
         7.35,
-        7.25,
-        1.25
+        7.35,
+        2.95
       ],
       "to": [
         8.65,
-        8.55,
-        1.43
+        8.65,
+        3.2
       ],
       "faces": {
         "down": {
@@ -439,19 +538,147 @@
         },
         "east": {
           "texture": "#om_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        7.55,
+        4.25,
+        1.15
+      ],
+      "to": [
+        8.45,
+        11.95,
+        1.65
+      ],
+      "faces": {
+        "down": {
+          "texture": "#om_gunframe"
+        },
+        "up": {
+          "texture": "#om_gunframe"
+        },
+        "north": {
+          "texture": "#om_gunframe"
+        },
+        "south": {
+          "texture": "#om_gunframe"
+        },
+        "west": {
+          "texture": "#om_gunframe"
+        },
+        "east": {
+          "texture": "#om_gunframe"
+        }
+      }
+    },
+    {
+      "from": [
+        4.4,
+        7.55,
+        1.15
+      ],
+      "to": [
+        11.6,
+        8.45,
+        1.65
+      ],
+      "faces": {
+        "down": {
+          "texture": "#om_gunframe"
+        },
+        "up": {
+          "texture": "#om_gunframe"
+        },
+        "north": {
+          "texture": "#om_gunframe"
+        },
+        "south": {
+          "texture": "#om_gunframe"
+        },
+        "west": {
+          "texture": "#om_gunframe"
+        },
+        "east": {
+          "texture": "#om_gunframe"
+        }
+      }
+    },
+    {
+      "from": [
+        4.45,
+        4.95,
+        1.32
+      ],
+      "to": [
+        11.55,
+        5.3,
+        1.62
+      ],
+      "faces": {
+        "down": {
+          "texture": "#om_rubber"
+        },
+        "up": {
+          "texture": "#om_rubber"
+        },
+        "north": {
+          "texture": "#om_rubber"
+        },
+        "south": {
+          "texture": "#om_rubber"
+        },
+        "west": {
+          "texture": "#om_rubber"
+        },
+        "east": {
+          "texture": "#om_rubber"
+        }
+      }
+    },
+    {
+      "from": [
+        4.45,
+        10.7,
+        1.32
+      ],
+      "to": [
+        11.55,
+        11.05,
+        1.62
+      ],
+      "faces": {
+        "down": {
+          "texture": "#om_rubber"
+        },
+        "up": {
+          "texture": "#om_rubber"
+        },
+        "north": {
+          "texture": "#om_rubber"
+        },
+        "south": {
+          "texture": "#om_rubber"
+        },
+        "west": {
+          "texture": "#om_rubber"
+        },
+        "east": {
+          "texture": "#om_rubber"
         }
       }
     },
     {
       "from": [
         12.05,
-        12.35,
+        12.15,
         1.15
       ],
       "to": [
-        13.9,
-        14.12,
-        2
+        13.85,
+        13.95,
+        1.95
       ],
       "faces": {
         "down": {
@@ -471,70 +698,6 @@
         },
         "east": {
           "texture": "#om_off"
-        }
-      }
-    },
-    {
-      "from": [
-        4.5,
-        4.5,
-        13.8
-      ],
-      "to": [
-        11.5,
-        11.5,
-        15.35
-      ],
-      "faces": {
-        "down": {
-          "texture": "#om_motor"
-        },
-        "up": {
-          "texture": "#om_motor"
-        },
-        "north": {
-          "texture": "#om_motor"
-        },
-        "south": {
-          "texture": "#om_vent"
-        },
-        "west": {
-          "texture": "#om_motor"
-        },
-        "east": {
-          "texture": "#om_motor"
-        }
-      }
-    },
-    {
-      "from": [
-        6.5,
-        11.5,
-        14.1
-      ],
-      "to": [
-        9.5,
-        13.3,
-        15.35
-      ],
-      "faces": {
-        "down": {
-          "texture": "#om_gunframe"
-        },
-        "up": {
-          "texture": "#om_gunframe"
-        },
-        "north": {
-          "texture": "#om_gunframe"
-        },
-        "south": {
-          "texture": "#om_gunframe"
-        },
-        "west": {
-          "texture": "#om_gunframe"
-        },
-        "east": {
-          "texture": "#om_gunframe"
         }
       }
     }

@@ -13,7 +13,7 @@ A lightweight, independent NeoForge mod inspired by the lost utility-machine era
 
 ### Air Fan
 - Place the fan facing an open corridor. It automatically blows items, creatures, and players up to 5 blocks away.
-- **Redstone ON = fan OFF.** Use a lever to disable it. No block entity or GUI.
+- **Redstone ON = fan ON.** Use a lever to disable it. No block entity or GUI.
 - Solid collision blocks block airflow. Server computes motion every 3 ticks; capped entity checks.
 
 ### Item Cannon
@@ -68,3 +68,13 @@ No original OpenBlocks asset files or code are used.
 - Item Cannon: hollow brass muzzle, copper barrel straps, top loading chamber, steel carriage.
 - 15 original pixel-art material textures, 32x32. Static baked JSON models (no rotor animation yet).
 - Core machine logic unchanged. Can open exported model JSON in Blockbench for editing.
+
+## 0.1.3 - redstone and fan internals
+
+- Air Fan requires redstone (powered ON, unpowered OFF); reconciles on placement, neighbor change and server ticks.
+- Four *real* 3D rotor vanes, 3D axle, raised central hub, grille foremost, dark cavity behind the blades.
+- Item Cannon extracts one item from rear or top inventory per redstone rising edge; no repeated shots on held signal.
+- Native vanilla Container fallback for dispenser; modded sided item capabilities respected.
+- Audible failure click on an empty cannon.
+- A dispenser or hopper above is treated as a supply inventory, not an automatic trigger. Power the cannon itself.
+- Static rotor for now. Actual spinning animation still not implemented.

@@ -4,6 +4,9 @@ import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -27,6 +30,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 public final class ItemCannonBlock extends HorizontalMachineBlock {
     public static final MapCodec<ItemCannonBlock> CODEC = simpleCodec(ItemCannonBlock::new);
     private static final VoxelShape SHAPE = Block.box(2, 0, 0, 14, 15.5, 16);
+    private static final int SIGNAL_SCAN_TICKS = 5;
 
     @Override
     protected MapCodec<ItemCannonBlock> codec() {
@@ -46,21 +50,43 @@ public final class ItemCannonBlock extends HorizontalMachineBlock {
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
-        if (!level.isClientSide && !oldState.is(state.getBlock())) {
-            boolean powered = level.hasNeighborSignal(pos);
-            if (state.getValue(POWERED) != powered) {
-                level.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_CLIENTS);
-            }
+        if (level.isClientSide || oldState.is(state.getBlock())) return;
+        boolean powered = level.hasNeighborSignal(pos);
+        if (state.getValue(POWERED) != powered) {
+            level.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_ALL);
         }
+        // Placement next to an already-on torch counts as the initial positive edge.
+        if (powered && level instanceof ServerLevel server) {
+            fireOrClick(server, pos, state.getValue(FACING));
+        }
+        level.scheduleTick(pos, this, SIGNAL_SCAN_TICKS);
     }
 
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block fromBlock, BlockPos fromPos, boolean isMoving) {
-        if (level.isClientSide) return;
+        if (!level.isClientSide) syncSignal(level, pos, state);
+    }
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        // Fallback reconciliation for chunk/modded redstone changes.
+        syncSignal(level, pos, state);
+        level.scheduleTick(pos, this, SIGNAL_SCAN_TICKS);
+    }
+
+    private static void syncSignal(Level level, BlockPos pos, BlockState state) {
         boolean powered = level.hasNeighborSignal(pos);
         if (powered == state.getValue(POWERED)) return;
-        level.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_CLIENTS);
-        if (powered && level instanceof ServerLevel server) fireFromInventory(server, pos, state.getValue(FACING));
+        level.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_ALL);
+        if (powered && level instanceof ServerLevel server) {
+            fireOrClick(server, pos, state.getValue(FACING));
+        }
+    }
+
+    private static void fireOrClick(ServerLevel level, BlockPos pos, Direction facing) {
+        if (!fireFromAttachedInventory(level, pos, facing)) {
+            level.playSound(null, pos, SoundEvents.DISPENSER_FAIL, SoundSource.BLOCKS, 0.6F, 1.2F);
+        }
     }
 
     @Override
@@ -78,22 +104,53 @@ public final class ItemCannonBlock extends HorizontalMachineBlock {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide && level instanceof ServerLevel server) {
-            if (!fireFromInventory(server, pos, state.getValue(FACING))) {
+            if (!fireFromAttachedInventory(server, pos, state.getValue(FACING))) {
                 level.playSound(null, pos, SoundEvents.DISPENSER_FAIL, SoundSource.BLOCKS, 0.65F, 1.0F);
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
-    private static boolean fireFromInventory(ServerLevel level, BlockPos cannonPos, Direction facing) {
-        BlockPos inventoryPos = cannonPos.relative(facing.getOpposite());
-        IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, inventoryPos, facing);
-        if (handler == null) return false;
-        for (int slot = 0; slot < handler.getSlots(); slot++) {
-            ItemStack simulated = handler.extractItem(slot, 1, true);
-            if (simulated.isEmpty()) continue;
-            ItemStack extracted = handler.extractItem(slot, 1, false);
+    private static boolean fireFromAttachedInventory(ServerLevel level, BlockPos cannonPos, Direction facing) {
+        // Rear input first, top input second.
+        return fireFromInventoryAt(level, cannonPos, facing, cannonPos.relative(facing.getOpposite()), facing)
+                || fireFromInventoryAt(level, cannonPos, facing, cannonPos.above(), Direction.DOWN);
+    }
+
+    private static boolean fireFromInventoryAt(ServerLevel level, BlockPos cannonPos, Direction facing,
+                                               BlockPos inventoryPos, Direction extractionSide) {
+        // Respect the actual machine-facing side for modded inventories.
+        IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, inventoryPos, extractionSide);
+        if (handler != null) {
+            for (int slot = 0; slot < handler.getSlots(); slot++) {
+                ItemStack simulated = handler.extractItem(slot, 1, true);
+                if (simulated.isEmpty()) continue;
+                ItemStack extracted = handler.extractItem(slot, 1, false);
+                if (extracted.isEmpty()) continue;
+                launch(level, cannonPos, facing, extracted);
+                return true;
+            }
+            return false;
+        }
+
+        // Vanilla dispenser and other Containers that do not expose item capabilities.
+        if (!(level.getBlockEntity(inventoryPos) instanceof Container container)) return false;
+        int[] slots;
+        if (container instanceof WorldlyContainer sided) {
+            slots = sided.getSlotsForFace(extractionSide);
+        } else {
+            slots = new int[container.getContainerSize()];
+            for (int i = 0; i < slots.length; i++) slots[i] = i;
+        }
+        for (int slot : slots) {
+            if (slot < 0 || slot >= container.getContainerSize()) continue;
+            ItemStack stack = container.getItem(slot);
+            if (stack.isEmpty()) continue;
+            if (container instanceof WorldlyContainer sided
+                    && !sided.canTakeItemThroughFace(slot, stack, extractionSide)) continue;
+            ItemStack extracted = container.removeItem(slot, 1);
             if (extracted.isEmpty()) continue;
+            container.setChanged();
             launch(level, cannonPos, facing, extracted);
             return true;
         }
