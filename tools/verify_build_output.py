@@ -32,7 +32,9 @@ def verify(relative):
         if z.testzip():
             raise ValueError("Corrupt JAR ZIP entry")
         names = set(z.namelist())
-        meta = MOD_META[profile["loader"]]
+        meta = ("META-INF/mods.toml" if profile["loader"] == "neoforge"
+                and profile["minecraft"] == "1.20.1"
+                else MOD_META[profile["loader"]])
         if meta not in names:
             raise ValueError(f"Missing {meta}")
         if "pack.mcmeta" not in names:
