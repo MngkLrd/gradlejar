@@ -1,9 +1,9 @@
 {
   "slug": "openmotion",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "openmotion-1.21.1-0.1.4.jar"
+  "jar_glob": "openmotion-1.21.1-0.1.5.jar"
 }

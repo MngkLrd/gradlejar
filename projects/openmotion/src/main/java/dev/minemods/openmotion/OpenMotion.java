@@ -1,6 +1,7 @@
 package dev.minemods.openmotion;
 
 import dev.minemods.openmotion.registry.ModBlocks;
+import dev.minemods.openmotion.registry.ModBlockEntities;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -12,6 +13,7 @@ public final class OpenMotion {
 
     public OpenMotion(IEventBus modBus) {
         ModBlocks.register(modBus);
+        ModBlockEntities.register(modBus);
         modBus.addListener(OpenMotion::addCreativeItems);
     }
 

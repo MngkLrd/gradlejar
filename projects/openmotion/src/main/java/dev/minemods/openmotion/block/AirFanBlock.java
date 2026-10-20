@@ -22,13 +22,18 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 /** Blows light entities away in a narrow cone, no block entity or per-entity allocations kept. */
-public final class AirFanBlock extends HorizontalMachineBlock {
+public final class AirFanBlock extends HorizontalMachineBlock implements net.minecraft.world.level.block.EntityBlock {
     public static final MapCodec<AirFanBlock> CODEC = simpleCodec(AirFanBlock::new);
     private static final VoxelShape SHAPE = Block.box(1.5, 0, 1, 14.5, 14.5, 15.5);
 
     @Override
     protected MapCodec<AirFanBlock> codec() {
         return CODEC;
+    }
+
+    @Override
+    public net.minecraft.world.level.block.entity.BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new dev.minemods.openmotion.blockentity.FanRotorBlockEntity(pos, state);
     }
 
     private static final int UPDATE_TICKS = 3;
