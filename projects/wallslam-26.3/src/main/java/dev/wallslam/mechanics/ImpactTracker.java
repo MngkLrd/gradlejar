@@ -112,7 +112,7 @@ public final class ImpactTracker {
 
         // Two distinct, audible vanilla layers plus a highly visible burst.
         level.playSound(null, victim.blockPosition(),
-            SoundEvents.GENERIC_EXPLODE, SoundSource.HOSTILE, 0.95F, 1.42F);
+            SoundEvents.GENERIC_EXPLODE.value(), SoundSource.HOSTILE, 0.95F, 1.42F);
         level.playSound(null, victim.blockPosition(),
             SoundEvents.STONE_BREAK, SoundSource.HOSTILE, 0.48F, 1.8F);
 
