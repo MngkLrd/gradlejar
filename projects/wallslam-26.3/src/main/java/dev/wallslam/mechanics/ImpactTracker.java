@@ -114,7 +114,7 @@ public final class ImpactTracker {
         level.playSound(null, victim.blockPosition(),
             SoundEvents.GENERIC_EXPLODE, SoundSource.HOSTILE, 0.95F, 1.42F);
         level.playSound(null, victim.blockPosition(),
-            SoundEvents.ANVIL_LAND, SoundSource.HOSTILE, 0.48F, 1.8F);
+            SoundEvents.STONE_BREAK, SoundSource.HOSTILE, 0.48F, 1.8F);
 
         level.sendParticles(ParticleTypes.EXPLOSION, x, y, z,
             2, 0.07D, 0.16D, 0.07D, 0.01D);
