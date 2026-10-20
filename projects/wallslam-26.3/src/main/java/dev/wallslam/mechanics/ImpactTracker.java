@@ -67,8 +67,8 @@ public final class ImpactTracker {
         try {
             // The triggering melee strike normally granted hurt invulnerability.
             // A real wall collision is a separate event that must be allowed to hurt.
-            entity.invulnerableTime = 0;
-            if (entity.hurt(entity.damageSources().flyIntoWall(), damage)) {
+            entity.setInvulnerableTime(0);
+            if (entity.hurtServer(level, entity.damageSources().flyIntoWall(), damage)) {
                 level.playSound(null, entity.blockPosition(),
                     SoundEvents.STONE_BREAK, SoundSource.HOSTILE, 0.6f, 0.8f);
                 level.sendParticles(ParticleTypes.CRIT,
