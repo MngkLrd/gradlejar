@@ -31,7 +31,7 @@ with ZipFile(jar) as z:
         ("forge_widgets.png", (256, 128)),
     ):
         data = z.read(f"assets/anvilborn/textures/gui/{asset}")
-        if data[:8] != b"\\x89PNG\\r\\n\\x1a\\n":
+        if data[:8] != b"\x89PNG\r\n\x1a\n":
             raise SystemExit(f"Invalid PNG signature: {asset}")
         import struct
         actual = struct.unpack(">II", data[16:24])
