@@ -9,6 +9,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
@@ -18,6 +19,7 @@ public final class Wallslam {
     public static final String MOD_ID = "wallslam";
 
     public Wallslam(IEventBus modBus) {
+        NeoForge.EVENT_BUS.addListener(Wallslam::onIncomingDamage);
         NeoForge.EVENT_BUS.addListener(Wallslam::onMeleeHurt);
         NeoForge.EVENT_BUS.addListener(Wallslam::onKnockback);
         NeoForge.EVENT_BUS.addListener(Wallslam::onEntityTick);
@@ -25,8 +27,13 @@ public final class Wallslam {
         NeoForge.EVENT_BUS.addListener(Wallslam::onEntityLeave);
     }
 
+    private static void onIncomingDamage(LivingIncomingDamageEvent event) {
+        if (!event.isCanceled())
+            ImpactTracker.onMeleeDamage(event.getEntity(), event.getSource(), event.getAmount());
+    }
+
     private static void onMeleeHurt(LivingDamageEvent.Pre event) {
-        ImpactTracker.onMeleeDamage(event.getEntity(), event.getSource(), event.getNewDamage());
+        ImpactTracker.confirmMeleeDamage(event.getEntity(), event.getSource(), event.getNewDamage());
     }
 
     private static void onKnockback(LivingKnockBackEvent event) {
