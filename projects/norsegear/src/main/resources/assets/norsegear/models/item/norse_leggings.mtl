@@ -1,0 +1,5 @@
+newmtl norsegear_material
+Kd 1.0 1.0 1.0
+Ka 1.0 1.0 1.0
+illum 1
+map_Kd #texture0
