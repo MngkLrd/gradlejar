@@ -2,5 +2,8 @@
   "block.openmotion.air_fan": "Вентилятор",
   "block.openmotion.item_cannon": "Предметная пушка",
   "block.openmotion.vacuum_hopper": "Вакуумная воронка",
-  "block.openmotion.sprinkler": "Разбрызгиватель"
+  "block.openmotion.sprinkler": "Разбрызгиватель",
+  "block.openmotion.water_pipe": "Водопроводная труба",
+  "block.openmotion.water_valve": "Водяной клапан",
+  "block.openmotion.water_pump": "Водяной насос"
 }

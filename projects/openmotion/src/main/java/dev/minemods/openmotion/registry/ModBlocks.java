@@ -5,6 +5,9 @@ import dev.minemods.openmotion.block.AirFanBlock;
 import dev.minemods.openmotion.block.ItemCannonBlock;
 import dev.minemods.openmotion.block.VacuumHopperBlock;
 import dev.minemods.openmotion.block.SprinklerBlock;
+import dev.minemods.openmotion.block.WaterPipeBlock;
+import dev.minemods.openmotion.block.WaterValveBlock;
+import dev.minemods.openmotion.block.WaterPumpBlock;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -34,11 +37,29 @@ public final class ModBlocks {
             BlockBehaviour.Properties.of().strength(2.2F).sound(SoundType.METAL)
                     .noOcclusion().requiresCorrectToolForDrops());
 
+    public static final DeferredBlock<WaterPipeBlock> WATER_PIPE = BLOCKS.registerBlock(
+            "water_pipe", WaterPipeBlock::new,
+            BlockBehaviour.Properties.of().strength(2.0F).sound(SoundType.COPPER)
+                    .noOcclusion().requiresCorrectToolForDrops());
+
+    public static final DeferredBlock<WaterValveBlock> WATER_VALVE = BLOCKS.registerBlock(
+            "water_valve", WaterValveBlock::new,
+            BlockBehaviour.Properties.of().strength(2.6F).sound(SoundType.METAL)
+                    .noOcclusion().requiresCorrectToolForDrops());
+
+    public static final DeferredBlock<WaterPumpBlock> WATER_PUMP = BLOCKS.registerBlock(
+            "water_pump", WaterPumpBlock::new,
+            BlockBehaviour.Properties.of().strength(3.0F).sound(SoundType.METAL)
+                    .noOcclusion().requiresCorrectToolForDrops());
+
     static {
         ITEMS.registerSimpleBlockItem(AIR_FAN, new Item.Properties());
         ITEMS.registerSimpleBlockItem(ITEM_CANNON, new Item.Properties());
         ITEMS.registerSimpleBlockItem(VACUUM_HOPPER, new Item.Properties());
         ITEMS.registerSimpleBlockItem(SPRINKLER, new Item.Properties());
+        ITEMS.registerSimpleBlockItem(WATER_PIPE, new Item.Properties());
+        ITEMS.registerSimpleBlockItem(WATER_VALVE, new Item.Properties());
+        ITEMS.registerSimpleBlockItem(WATER_PUMP, new Item.Properties());
     }
 
     public static void register(IEventBus bus) {

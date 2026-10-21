@@ -30,8 +30,9 @@ public final class WaterNetwork {
                 || block instanceof SprinklerBlock;
     }
 
-    private static boolean conducting(BlockState state) {
-        if (state.getBlock() instanceof WaterValveBlock) return WaterValveBlock.canFlow(state);
+    private static boolean conducting(ServerLevel level, BlockPos pos, BlockState state) {
+        if (state.getBlock() instanceof WaterValveBlock)
+            return !state.getValue(WaterValveBlock.CLOSED) && !level.hasNeighborSignal(pos);
         return state.getBlock() instanceof WaterPipeBlock || state.getBlock() instanceof WaterPumpBlock;
     }
 
@@ -85,13 +86,13 @@ public final class WaterNetwork {
         while (!wave.isEmpty()) {
             BlockPos pos = wave.removeFirst();
             BlockState state = component.get(pos);
-            if (state == null || !conducting(state)) continue; // sprinkler is a terminal
+            if (state == null || !conducting(level, pos, state)) continue; // sprinkler is a terminal
             for (Direction direction : Direction.values()) {
                 BlockPos next = pos.relative(direction);
                 BlockState ns = component.get(next);
                 if (ns == null || fed.contains(next)) continue;
                 // A closed valve cannot receive or transmit water.
-                if (ns.getBlock() instanceof WaterValveBlock && !conducting(ns)) continue;
+                if (ns.getBlock() instanceof WaterValveBlock && !conducting(level, next, ns)) continue;
                 if (ns.getBlock() instanceof SprinklerBlock && level.hasNeighborSignal(next)) continue;
                 fed.add(next);
                 wave.add(next);

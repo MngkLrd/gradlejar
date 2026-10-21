@@ -2,5 +2,8 @@
   "block.openmotion.air_fan": "Air Fan",
   "block.openmotion.item_cannon": "Item Cannon",
   "block.openmotion.vacuum_hopper": "Vacuum Hopper",
-  "block.openmotion.sprinkler": "Sprinkler"
+  "block.openmotion.sprinkler": "Sprinkler",
+  "block.openmotion.water_pipe": "Water Pipe",
+  "block.openmotion.water_valve": "Water Valve",
+  "block.openmotion.water_pump": "Water Pump"
 }

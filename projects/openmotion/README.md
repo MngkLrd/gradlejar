@@ -1,4 +1,4 @@
-# OpenMotion 0.2.1
+# OpenMotion 0.3.0
 
 A lightweight, independent NeoForge mod inspired by the lost utility-machine era of Minecraft.
 **This code and every bundled texture are original.** No OpenBlocks/OpenModsLib files or assets are included.
@@ -29,7 +29,7 @@ From inside this directory:
 gradle --no-daemon clean build
 ```
 
-Output: `build/libs/openmotion-1.21.1-0.2.1.jar`. The repository CI uses `build-profile.json` with Java 21 / Gradle 9.2.1.
+Output: `build/libs/openmotion-1.21.1-0.3.0.jar`. The repository CI uses `build-profile.json` with Java 21 / Gradle 9.2.1.
 
 ## Test checklist
 1. `/give @s openmotion:air_fan` and `/give @s openmotion:item_cannon`; confirm textures and creative Redstone tab.
@@ -115,7 +115,7 @@ No original OpenBlocks asset files or code are used.
 `/give @s openmotion:vacuum_hopper` and `/give @s openmotion:sprinkler`.
 Crafting is enabled for both. Test on NeoForge 21.1.262, Java 21.
 
-## 0.2.1 Visual polish and collector fixes
+## 0.3.0 Visual polish and collector fixes
 
 - Vacuum Hopper V1+V2: sloped intake, open copper-rimmed funnel, dense collector base and nine persistent slots.
 - Sprinkler S1+S2: four large directional nozzles, central blue pipe, heavy industrial base, active/inactive lamp.
@@ -124,3 +124,28 @@ Crafting is enabled for both. Test on NeoForge 21.1.262, Java 21.
 - Sprinkler collisions follow the base, central riser and cross-arm head, not a solid block.
 - Removed unused ingredient symbol from air fan shaped recipe.
 - Server-authoritative inventory and crop logic preserved; game-world testing is still required.
+
+## 0.3.0 - Water Supply (MVP)
+
+- Place a **Water Pump** on the shore, next to or above an existing water **source** block.
+- Connect it with Water Pipes along horizontal or vertical corridors, even underground. Tee and cross junctions connect automatically.
+- Use a **Water Valve** inline. Right-click its built-in lever to close/open; neighboring redstone signal also closes the valve. This affects only branches that require passage through it.
+- One pump can supply multiple Sprinklers. Sprinklers no longer irrigate from nearby free-standing water; a connected pump and live water line are mandatory.
+- **Blue animated inspection windows** indicate live water flow; dry pipes are dark. Blue fluid is a modeled visual indicator, not vanilla flowing water blocks.
+- Pump needs a source-water block within 2 horizontally and 2 below; the source is not consumed. Redstone on the pump disables it.
+- Pipe network recomputes through a bounded component of up to 384 nodes without loading chunks.
+- Existing item machines work unchanged. No tanks, buckets of delivered water or fluid APIs in this MVP; water is a network transport state.
+
+### Creative commands
+`/give @s openmotion:water_pump`
+`/give @s openmotion:water_pipe 32`
+`/give @s openmotion:water_valve`
+
+### Smoke tests
+1. Pump at lake; link 12 pipes to Sprinkler, confirm blue flow and crop growth.
+2. Break middle pipe: downstream dries, sprinkler stops. Reattach: resumes.
+3. Branch into two sprinklers. Insert Valve in one branch; closing it stops only that branch.
+4. Put lever on solid block next to valve, redstone ON closes, OFF reopens if manual lever open.
+5. Remove water source; all indicators dry within next network refresh.
+6. Place water pipes underground and across chunk boundary; only loaded sections process.
+7. Restart world, check connections and valve mode persist; repeat on dedicated server.

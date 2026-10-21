@@ -2,6 +2,7 @@ package dev.minemods.openmotion.block;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import dev.minemods.openmotion.water.WaterNetwork;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,7 +21,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Nullable;
 
-/** Low-cost water-source-powered irrigation machine. No tanks, pipes or client-only code. */
+/** Pipe-fed irrigation machine. It will not function from adjacent lake water alone. */
 public final class SprinklerBlock extends Block {
     public static final MapCodec<SprinklerBlock> CODEC = simpleCodec(SprinklerBlock::new);
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
@@ -49,7 +50,7 @@ public final class SprinklerBlock extends Block {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState().setValue(ACTIVE, hasSource(context.getLevel(), context.getClickedPos()));
+        return defaultBlockState().setValue(ACTIVE, false);
     }
 
     @Override
@@ -67,7 +68,8 @@ public final class SprinklerBlock extends Block {
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        boolean active = hasSource(level, pos) && !level.hasNeighborSignal(pos);
+        WaterNetwork.refresh(level, pos);
+        boolean active = level.getBlockState(pos).getValue(ACTIVE);
         if (state.getValue(ACTIVE) != active)
             level.setBlock(pos, state.setValue(ACTIVE, active), Block.UPDATE_ALL);
         if (active) {
@@ -91,19 +93,6 @@ public final class SprinklerBlock extends Block {
                     5, .7, .3, .7, .07);
         }
         level.scheduleTick(pos, this, INTERVAL);
-    }
-
-    private static boolean hasSource(Level level, BlockPos pos) {
-        // Searches local irrigation sources; no liquid is created or consumed.
-        for (int y = -2; y <= 0; y++)
-            for (int x = -2; x <= 2; x++)
-                for (int z = -2; z <= 2; z++) {
-                    if (x * x + z * z > 4) continue;
-                    if (level.getFluidState(pos.offset(x, y, z)).isSource()
-                            && level.getFluidState(pos.offset(x, y, z)).is(net.minecraft.tags.FluidTags.WATER))
-                        return true;
-                }
-        return false;
     }
 
     @Override

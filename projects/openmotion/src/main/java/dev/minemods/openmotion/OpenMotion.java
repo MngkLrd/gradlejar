@@ -31,6 +31,9 @@ public final class OpenMotion {
             event.accept(ModBlocks.ITEM_CANNON.get());
             event.accept(ModBlocks.VACUUM_HOPPER.get());
             event.accept(ModBlocks.SPRINKLER.get());
+            event.accept(ModBlocks.WATER_PIPE.get());
+            event.accept(ModBlocks.WATER_VALVE.get());
+            event.accept(ModBlocks.WATER_PUMP.get());
         }
     }
 }

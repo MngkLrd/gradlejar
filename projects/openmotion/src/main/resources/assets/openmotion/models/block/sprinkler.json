@@ -9,7 +9,7 @@
     "sp_off": "openmotion:block/sp_off",
     "sp_on": "openmotion:block/sp_on",
     "sp_steel": "openmotion:block/sp_steel",
-    "sp_water": "openmotion:block/sp_water",
+    "sp_water": "openmotion:block/pipe_flow",
     "sp_dark": "openmotion:block/sp_dark",
     "vh_beacon": "openmotion:block/vh_beacon",
     "vh_copper": "openmotion:block/vh_copper",
