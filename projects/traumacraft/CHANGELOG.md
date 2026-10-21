@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0 - complete medical expansion
+- Added 15 functional medical items: Sterile Patch, Compression Wrap, Hemostatic Gel, Tourniquet, Fracture Brace, Bone Mender, Compact Medkit, Field Medkit, Advanced Trauma Kit, Surgical Kit, Recovery Serum, Adrenaline Injector, Guardian Injector, Focus Injector, Endurance Injector.
+- Added 5 craftable materials: Sterile Fabric, Herbal Extract, Antiseptic Solution, Empty Injector, Medical Polymer.
+- Added 20 survival recipes, 20 original pixel-art textures and item models.
+- Added item information pages through the optional JEI plugin for all 23 mod items.
+- All 15 new treatments work both via right-click and exact anatomical targeting inside the pre-existing inventory GUI.
+- The previous 3 medical items retain the same effects.
+- The combat/trauma HP system, injury calculations, item hit locations, world interaction, character UI and HUD remain unchanged.
+- Java 21 / NeoForge 21.1.262 / Minecraft 1.21.1 build passed in pull request #15.
+- Client gameplay testing is still required.
+
 ## 0.2.0 - anatomical UI
 - Shift standard survival inventory to accommodate a 128-pixel integrated body status panel.
 - Display seven separate local HP pools with green / amber / red / destroyed visualization.
