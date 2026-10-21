@@ -37,7 +37,7 @@ jobs:
           python3 - <<'PY'
           import zipfile
           from pathlib import Path
-          jar = Path('build/libs/potiontimerbar-0.1.0.jar')
+          jar = Path('build/libs/potiontimerbar-0.2.0.jar')
           assert jar.exists() and jar.stat().st_size > 5000, 'Missing or empty mod JAR'
           with zipfile.ZipFile(jar) as z:
               files = set(z.namelist())
@@ -52,10 +52,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tag="ci-potiontimerbar-mc1.21.1-neoforge-0.1.0-${GITHUB_RUN_NUMBER}"
-          gh release create "$tag" projects/potiontimerbar/build/libs/potiontimerbar-0.1.0.jar \
+          tag="ci-potiontimerbar-mc1.21.1-neoforge-0.2.0-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" projects/potiontimerbar/build/libs/potiontimerbar-0.2.0.jar \
             --target "$GITHUB_SHA" \
-            --title "Potion Timer Bar 0.1.0 | Minecraft 1.21.1 NeoForge" \
-            --notes "Client-only effect timer HUD. Compiled with real Minecraft 1.21.1 + NeoForge 21.1.1. Java 21. Build and JAR validation passed; in-game behavior still needs testing." \
+            --title "Potion Timer Bar 0.2.0 | Minecraft 1.21.1 NeoForge" \
+            --notes "One continuous 81px Alchemy Strip, longest remaining effect, invisible without active effects. Compiled with real Minecraft 1.21.1 + NeoForge 21.1.1. Java 21. Build and JAR validation passed; in-game behavior still needs testing." \
             --prerelease
           echo "https://github.com/${GITHUB_REPOSITORY}/releases/tag/$tag" >> "$GITHUB_STEP_SUMMARY"

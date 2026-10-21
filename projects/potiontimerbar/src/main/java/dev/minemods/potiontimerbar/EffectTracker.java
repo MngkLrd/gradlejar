@@ -8,54 +8,70 @@ import java.util.Set;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 
+/** Selects the effect that will expire LAST, regardless of type or source. */
 final class EffectTracker {
     private static final Map<Holder<MobEffect>, Timer> TIMERS = new HashMap<>();
     private static ClientLevel lastLevel;
+    private static Player lastPlayer;
 
-    static Selection select(Player player, ClientLevel level, boolean prioritizeHarmful) {
-        if (lastLevel != level) {
+    static Selection select(Player player, ClientLevel level) {
+        // Never allow history to leak into a different world, dimension or player life.
+        if (lastLevel != level || lastPlayer != player) {
             TIMERS.clear();
             lastLevel = level;
+            lastPlayer = player;
         }
+
         Set<Holder<MobEffect>> present = new HashSet<>();
-        MobEffectInstance best = null;
-        int bestRank = Integer.MAX_VALUE;
-        int bestDuration = Integer.MAX_VALUE;
+        MobEffectInstance latestExpiring = null;
+        long longestRemaining = Long.MIN_VALUE;
 
         for (MobEffectInstance effect : player.getActiveEffects()) {
-            if (effect.isInfiniteDuration() || effect.getDuration() <= 0 || !effect.showIcon()) {
+            if (!effect.isInfiniteDuration() && effect.getDuration() <= 0) {
                 continue;
             }
+
+            // Infinite effects beat finite effects and display a full, steady strip.
+            long remaining = effect.isInfiniteDuration() ? Long.MAX_VALUE : effect.getDuration();
+            if (remaining > longestRemaining) {
+                longestRemaining = remaining;
+                latestExpiring = effect;
+            }
+
+            if (effect.isInfiniteDuration()) {
+                continue;
+            }
+
             Holder<MobEffect> id = effect.getEffect();
             present.add(id);
-            int left = effect.getDuration();
+            int ticks = effect.getDuration();
             Timer timer = TIMERS.get(id);
-            if (timer == null || left > timer.lastDuration + 2 || effect.getAmplifier() != timer.amplifier) {
-                timer = new Timer(left, left, effect.getAmplifier());
-                TIMERS.put(id, timer);
+
+            // A refreshed/reapplied effect must refill its line, not keep the old maximum.
+            if (timer == null || ticks > timer.lastDuration + 1 ||
+                effect.getAmplifier() != timer.amplifier) {
+                TIMERS.put(id, new Timer(ticks, ticks, effect.getAmplifier()));
             } else {
-                timer.lastDuration = left;
-            }
-            int rank = prioritizeHarmful && id.value().getCategory() != MobEffectCategory.HARMFUL ? 1 : 0;
-            if (best == null || rank < bestRank || rank == bestRank && left < bestDuration) {
-                best = effect;
-                bestRank = rank;
-                bestDuration = left;
+                timer.lastDuration = ticks;
             }
         }
+
         TIMERS.keySet().retainAll(present);
 
-        if (best == null) {
+        if (latestExpiring == null) {
             return null;
         }
-        Timer timer = TIMERS.get(best.getEffect());
-        float remainingFraction = Math.max(0.0f, Math.min(1.0f,
-            best.getDuration() / (float) Math.max(1, timer.initialDuration)));
-        return new Selection(best, remainingFraction);
+        if (latestExpiring.isInfiniteDuration()) {
+            return new Selection(latestExpiring, 1.0f);
+        }
+
+        Timer timer = TIMERS.get(latestExpiring.getEffect());
+        float fraction = Math.max(0.0f, Math.min(1.0f,
+            latestExpiring.getDuration() / (float) Math.max(1, timer.initialDuration)));
+        return new Selection(latestExpiring, fraction);
     }
 
     record Selection(MobEffectInstance effect, float fraction) {}
