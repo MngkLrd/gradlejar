@@ -3,7 +3,7 @@ loaderVersion="[4,)"
 license="MIT"
 [[mods]]
 modId="witchhunted"
-version="0.1.0-alpha"
+version="0.1.1-alpha"
 displayName="Witch Hunted"
 authors="Witch Hunted"
 description="A forbidden pocket dimension, oppressive watchers, cursed witch hats and two handmade haunted ruins."

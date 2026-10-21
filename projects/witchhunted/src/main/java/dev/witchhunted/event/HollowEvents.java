@@ -67,7 +67,6 @@ public final class HollowEvents {
                 mob=zombie;
             }
             mob.moveTo(pos.getX()+0.5D,pos.getY(),pos.getZ()+0.5D,level.random.nextFloat()*360,0);
-            mob.setPersistenceRequired();
             mob.setTarget(player);
             level.addFreshEntity(mob);
             if(level.random.nextInt(4)==0)

@@ -1,4 +1,4 @@
-# Witch Hunted, Alpha 0.1.0
+# Witch Hunted, Alpha 0.1.1
 
 Minecraft **1.21.1 / NeoForge / Java 21**. A pocket nightmare inspired by Orwellian surveillance and cosmic horror.
 
@@ -25,7 +25,7 @@ Minecraft **1.21.1 / NeoForge / Java 21**. A pocket nightmare inspired by Orwell
 
 ## Build
 Install Java 21 and Gradle 9.2.1, then run `gradle clean build`.
-JAR: `build/libs/witchhunted-1.21.1-0.1.0-alpha.jar`.
+JAR: `build/libs/witchhunted-1.21.1-0.1.1-alpha.jar`.
 
 ## Sanity test
 - Start a new world, summon witches, check rare hat drops.

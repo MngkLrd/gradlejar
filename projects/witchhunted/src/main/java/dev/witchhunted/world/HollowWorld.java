@@ -68,6 +68,55 @@ public final class HollowWorld {
             place(level,x,2,z,Blocks.CRYING_OBSIDIAN.defaultBlockState());
             place(level,x,3,z,Blocks.SHROOMLIGHT.defaultBlockState());
         }
+        createGrove(level);
+    }
+
+    /**
+     * A ring of impossibly crooked stems, violet glass fungus and gravestones.
+     * Deterministic coordinates prevent random rebuilding or enormous worldgen.
+     */
+    private static void createGrove(ServerLevel level) {
+        for (int i=0; i<96; i++) {
+            double angle=i*2.399963229728653; // golden angle
+            int radius=17+((i*29)%80);
+            int x=(int)Math.round(Math.cos(angle)*radius);
+            int z=(int)Math.round(Math.sin(angle)*radius);
+            if (Math.abs(z)<11 && Math.abs(x)<60) continue;
+            int height=4+(i%5), lean=(i%3)-1;
+            BlockState wood=i%3==0 ? Blocks.CRIMSON_STEM.defaultBlockState()
+                                   : Blocks.WARPED_STEM.defaultBlockState();
+            for (int y=2; y<=height+2; y++) {
+                int shift = y>height/2+2 ? lean : 0;
+                place(level,x+shift,y,z,wood);
+            }
+            // Upper canopy: mostly wart growth rather than noisy leaf blocks.
+            for (int dy=-1;dy<=2;dy++) for(int dx=-2;dx<=2;dx++) for(int dz=-2;dz<=2;dz++) {
+                int d=Math.abs(dx)+Math.abs(dz)+Math.abs(dy);
+                if(d>4 || (dx==0 && dz==0 && dy<=0))continue;
+                if(((dx*7+dy*13+dz*17+i)&7)==0)continue;
+                BlockState canopy=i%4==0 ? Blocks.NETHER_WART_BLOCK.defaultBlockState()
+                    : (i%4==1 ? Blocks.WARPED_WART_BLOCK.defaultBlockState()
+                    : Blocks.DARK_OAK_LEAVES.defaultBlockState());
+                place(level,x+lean+dx,height+2+dy,z+dz,canopy);
+            }
+            if(i%6==0){
+                place(level,x+lean,height+5,z,Blocks.PURPLE_STAINED_GLASS.defaultBlockState());
+                place(level,x+lean,height+6,z,Blocks.SHROOMLIGHT.defaultBlockState());
+            }
+        }
+
+        // Rows of abandoned grave markers form a second layer of silhouettes.
+        for (int i=0;i<40;i++){
+            double a=i*2.399963229728653;
+            int radius=12+((i*17)%65);
+            int x=(int)Math.round(Math.cos(a)*radius);
+            int z=(int)Math.round(Math.sin(a)*radius);
+            if(Math.abs(z)<9 && Math.abs(x)<60) continue;
+            place(level,x,1,z,Blocks.SOUL_SAND.defaultBlockState());
+            place(level,x,2,z,Blocks.COBBLED_DEEPSLATE_WALL.defaultBlockState());
+            place(level,x,3,z,Blocks.CHISELED_DEEPSLATE.defaultBlockState());
+            if(i%5==0)place(level,x+1,2,z,Blocks.COBWEB.defaultBlockState());
+        }
     }
 
     private static void createCrypt(ServerLevel level, int cx, int cz, boolean archive) {
