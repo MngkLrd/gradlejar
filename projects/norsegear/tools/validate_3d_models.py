@@ -10,7 +10,7 @@ models=base/'models/item';tex=base/'textures/item'
 def png(path):
     data=path.read_bytes()
     assert data[:8]==b'\x89PNG\r\n\x1a\n',path
-    assert struct.unpack('>II',data[16:24])==(32,32),path
+    assert struct.unpack('>II',data[16:24])==(16,16),path
 
 for name in ('round_shield','celtic_shield','bossed_shield'):
     m=json.loads((models/f'{name}.json').read_text())
@@ -27,10 +27,10 @@ png(tex/'norse_weapon_materials.png')
 assert (tex/'stone_projectile.png').exists()
 stone=json.loads((models/'stone_shot.json').read_text())
 assert stone['textures']['layer0']=='norsegear:item/stone_shot'
-assert len(stone['elements'])>=1 and all(f['texture']=='#stone' for f in stone['elements'][0]['faces'].values())
+assert stone['parent']=='minecraft:item/generated', 'Stone ammo must look like a pebble in inventory'
 for n in ('round_shield','celtic_shield','bossed_shield'):
     d=json.loads((models/f'{n}.json').read_text())['display']
-    assert d['thirdperson_lefthand']['translation'][0] <= -2.5
+    assert d['thirdperson_lefthand']['translation'][0] >= 2.5
 for name in ('spear','javelin','throwing_axe'):
     m=json.loads((models/f'{name}.json').read_text())
     assert len(m['elements'])>=7,(name,len(m['elements']))

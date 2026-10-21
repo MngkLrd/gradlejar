@@ -2,6 +2,7 @@ package dev.norsegear.client;
 
 import dev.norsegear.NorseGear;
 import dev.norsegear.client.model.NorseArmorModel;
+import dev.norsegear.client.model.SlingStoneModel;
 import dev.norsegear.client.renderer.ThrownWeaponRenderer;
 import dev.norsegear.client.renderer.SlingStoneRenderer;
 import dev.norsegear.registry.ModEntities;
@@ -25,9 +26,13 @@ public final class ClientRegistration {
     public static final ModelLayerLocation ARMOR_LAYER = new ModelLayerLocation(
         ResourceLocation.fromNamespaceAndPath(NorseGear.MODID, "volumetric_armor"), "main");
 
+    public static final ModelLayerLocation SLING_STONE_LAYER = new ModelLayerLocation(
+        ResourceLocation.fromNamespaceAndPath(NorseGear.MODID, "sling_stone"), "main");
+
     @SubscribeEvent
     public static void registerLayer(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(ARMOR_LAYER, NorseArmorModel::createLayer);
+        event.registerLayerDefinition(SLING_STONE_LAYER, SlingStoneModel::createLayer);
     }
 
     @SubscribeEvent

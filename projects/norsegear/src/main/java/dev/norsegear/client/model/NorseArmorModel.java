@@ -26,13 +26,13 @@ public final class NorseArmorModel extends HumanoidModel<LivingEntity> {
             .addBox(-4.5F, -6.6F, -4.9F, 9.0F, 1.25F, 1.05F),
             net.minecraft.client.model.geom.PartPose.ZERO);
         head.addOrReplaceChild("nasal_guard", CubeListBuilder.create().texOffs(30, 16)
-            .addBox(-0.62F, -5.8F, -5.2F, 1.24F, 4.2F, 1.1F),
+            .addBox(-0.5F, -5.6F, -5.05F, 1.0F, 3.2F, 0.9F),
             net.minecraft.client.model.geom.PartPose.ZERO);
         head.addOrReplaceChild("left_temple", CubeListBuilder.create().texOffs(30, 16)
-            .addBox(3.65F, -6.25F, -3.7F, 0.9F, 4.25F, 6.8F),
+            .addBox(3.65F, -6.25F, -2.9F, 0.9F, 3.5F, 6.0F),
             net.minecraft.client.model.geom.PartPose.ZERO);
         head.addOrReplaceChild("right_temple", CubeListBuilder.create().texOffs(30, 16)
-            .addBox(-4.55F, -6.25F, -3.7F, 0.9F, 4.25F, 6.8F),
+            .addBox(-4.55F, -6.25F, -2.9F, 0.9F, 3.5F, 6.0F),
             net.minecraft.client.model.geom.PartPose.ZERO);
         head.addOrReplaceChild("back_rim", CubeListBuilder.create().texOffs(16, 16)
             .addBox(-3.75F, -6.3F, 3.55F, 7.5F, 2.6F, 1.0F),
@@ -65,9 +65,9 @@ public final class NorseArmorModel extends HumanoidModel<LivingEntity> {
             net.minecraft.client.model.geom.PartPose.ZERO);
 
         root.getChild("right_arm").addOrReplaceChild("pauldron", CubeListBuilder.create().texOffs(16, 16)
-            .addBox(-4.6F, -2.3F, -2.9F, 5.8F, 4.2F, 5.8F), net.minecraft.client.model.geom.PartPose.ZERO);
+            .addBox(-4.25F, -2.1F, -2.75F, 5.35F, 3.6F, 5.5F), net.minecraft.client.model.geom.PartPose.ZERO);
         root.getChild("left_arm").addOrReplaceChild("pauldron", CubeListBuilder.create().texOffs(16, 16)
-            .addBox(-1.2F, -2.3F, -2.9F, 5.8F, 4.2F, 5.8F), net.minecraft.client.model.geom.PartPose.ZERO);
+            .addBox(-1.1F, -2.1F, -2.75F, 5.35F, 3.6F, 5.5F), net.minecraft.client.model.geom.PartPose.ZERO);
         root.getChild("left_leg").addOrReplaceChild("knee_plate", CubeListBuilder.create().texOffs(30, 16)
             .addBox(-2.35F, 5.1F, -2.95F, 4.7F, 3.2F, 1.2F), net.minecraft.client.model.geom.PartPose.ZERO);
         root.getChild("right_leg").addOrReplaceChild("knee_plate", CubeListBuilder.create().texOffs(30, 16)
