@@ -23,3 +23,11 @@ clipping or equipment offsets for a focused follow-up.
 - View round shield from front/back; verify painted panels, raised boss, leather grip, no gaps and held offset.
 - Equip helmet and chestplate with Steve and slim Alex. Check open face, nose guard, pauldron animation and mail transparency.
 - Compare preview images with client output. The preview is software rasterization of real model data, not a Minecraft screenshot.
+
+## 0.3.3 all-item OBJ smoke
+- Confirm all 24 item slots display native 3D meshes in creative, survival and JEI. No missing-model purple boxes.
+- Inspect each weapon in GUI, first person, third person and item frame. Verify outlines, metal/wood seams and transforms.
+- Inspect Celtic/Bossed/Round shields from front, back and both hands. Verify bosses, rivets and straps, and test actual damage blocking.
+- View worn armor separately: head/chest/legs/feet, Steve and slim Alex, crouching/running and arm animations. Inventory OBJ icons must not replace wearable body rendering.
+- Throw spear, javelin and throwing axe, check flight orientation and drops. Test Better Combat installed and absent.
+- Create world with new chunks; mine bog iron; test all 24 crafting recipes and ordinary JEI; connect to dedicated server.

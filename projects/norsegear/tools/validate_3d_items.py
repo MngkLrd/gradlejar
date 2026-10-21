@@ -10,7 +10,7 @@ tex=ROOT/'src/main/resources/assets/norsegear/textures/item'
 assert struct.unpack('>II',(tex/'norse_3d_materials.png').read_bytes()[16:24])==(64,64)
 for item in sorted(items):
  d=json.loads((models/(item+'.json')).read_text())
- if item in ('round_shield','spear','javelin'):
+ if item in items:
   assert d.get('loader') == 'neoforge:obj',item
   assert d['textures']['texture0'] == 'norsegear:item/norse_showcase_materials',item
   assert 'gui' in d['display']
@@ -36,4 +36,4 @@ expected={'seax':'dagger','bearded_axe':'axe','dane_axe':'heavy_axe','viking_swo
 for n,v in expected.items():
  assert json.loads((attrs/(n+'.json')).read_text())=={'parent':'bettercombat:'+v}
 assert struct.unpack('>II',(tex/'norse_showcase_materials.png').read_bytes()[16:24])==(256,256)
-print('PASS: 24 real item meshes; upgraded five-item showcase with 256px texture atlas; optional Better Combat profiles')
+print('PASS: 24 real OBJ inventory meshes, existing material atlas and 7 optional Better Combat profiles')

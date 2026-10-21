@@ -1,4 +1,4 @@
-# Norse Gear 0.3.1 — 3D Concept-to-Playable Models
+# Norse Gear 0.3.3 — Unified 24-item 3D OBJ collection
 
 Minecraft **1.21.1**, **NeoForge 21.1.262** (tested compile target), **Java 21**, **ModDevGradle 2.0.148**, **Gradle 9.2.1**.
 
@@ -42,3 +42,14 @@ Optional animation installation and honest limitations: see [ANIMATION_COMPAT.md
 - Distinct 256x256 UV pixels for each worn-armor structural detail.
 - Inspect PREVIEW_3D_ACTUAL_032.png and PREVIEW_ARMOR_ACTUAL_032.png, both source-rendered.
 - Optional Better Combat support, all original gameplay/recipes/worldgen preserved.
+
+
+## 0.3.3 — full 3D inventory unification
+- All **24** registered inventory item models now have distinct native Wavefront OBJ meshes using the same 256×256 pixel material atlas. Includes seven redesigned combat objects, utility items, four armor icons and resource materials.
+- Celtic and bossed shields are no longer rectangular stair-step bodies. Polygonal circular shield faces, iron/bronze rims, raised bosses, rivets and separate rear grips.
+- Sword, seax and all axes have recognisable blade contours rather than rectangular cube heads. Utility items have physically shaped meshes, not flat billboard placeholders.
+- **Worn armor is still animated Java ModelPart armor**. The new OBJ armor meshes are for the inventory, hand and item-frame visuals. They do not replace the animated wearable model.
+- Existing crafting, item IDs, damage, projectile entities, 3D flight renderers, bog iron worldgen, JEI and optional Better Combat profiles are unchanged.
+- Static tests: `python3 tools/validate_obj_033.py`, `validate_3d_items.py`, `validate_3d_models.py`, `validate_16_art.py`, `validate_recipe_data.py`, `validate_gear_render.py`.
+- Build: Java 21, Gradle 9.2.1, `gradle --no-daemon clean build` → `build/libs/norsegear-0.3.3.jar`.
+- A server smoke test validates datapack loading, **not** OpenGL display transforms; GUI and hands must still be inspected in a real client.
