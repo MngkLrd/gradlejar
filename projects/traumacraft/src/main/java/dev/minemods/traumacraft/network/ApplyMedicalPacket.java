@@ -35,7 +35,7 @@ public record ApplyMedicalPacket(int bodyPartOrdinal) implements CustomPacketPay
         if (cursor.isEmpty() || !(cursor.getItem() instanceof MedicalItem medical)) return;
         BodyPart part = BodyPart.values()[packet.bodyPartOrdinal];
         BodyState state = player.getData(ModAttachments.BODY.get());
-        if (!MedicalAction.apply(state, medical.medicalType(), part)) {
+        if (!MedicalAction.apply(player, state, medical.medicalType(), part)) {
             player.displayClientMessage(Component.translatable("message.traumacraft.not_applicable"), true);
             return;
         }

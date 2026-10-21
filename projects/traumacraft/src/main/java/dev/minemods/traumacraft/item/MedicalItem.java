@@ -12,10 +12,20 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+/** Server-side treatment logic is shared between RMB and body-panel clicks. */
 public final class MedicalItem extends Item {
-    public enum Type { BANDAGE, SPLINT, MEDKIT }
+    public enum Type {
+        BANDAGE, SPLINT, MEDKIT,
+        STERILE_PATCH, COMPRESSION_WRAP, HEMOSTATIC_GEL, TOURNIQUET,
+        FRACTURE_BRACE, BONE_MENDER, COMPACT_MEDKIT, FIELD_MEDKIT,
+        TRAUMA_KIT, SURGICAL_KIT, RECOVERY_SERUM,
+        ADRENALINE_INJECTOR, GUARDIAN_INJECTOR, FOCUS_INJECTOR, ENDURANCE_INJECTOR
+    }
     private final Type type;
-    public MedicalItem(Properties properties, Type type) { super(properties); this.type = type; }
+    public MedicalItem(Properties properties, Type type) {
+        super(properties);
+        this.type = type;
+    }
     public Type medicalType() { return type; }
 
     @Override
@@ -23,12 +33,8 @@ public final class MedicalItem extends Item {
         ItemStack stack = player.getItemInHand(hand);
         if (level.isClientSide()) return InteractionResultHolder.success(stack);
         BodyState state = player.getData(ModAttachments.BODY.get());
-        BodyPart target = switch (type) {
-            case BANDAGE -> state.mostBleeding();
-            case SPLINT -> state.firstFracture();
-            case MEDKIT -> state.mostDamaged();
-        };
-        if (target == null || !MedicalAction.apply(state, type, target)) {
+        BodyPart target = MedicalAction.autoTarget(state, type);
+        if (target == null || !MedicalAction.apply(player, state, type, target)) {
             player.displayClientMessage(Component.translatable("message.traumacraft.no_injury"), true);
             return InteractionResultHolder.fail(stack);
         }

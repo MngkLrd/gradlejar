@@ -17,9 +17,8 @@ public final class ModCreativeTabs {
                     .title(Component.translatable("itemGroup.traumacraft.medical"))
                     .icon(() -> ModItems.MEDKIT.get().getDefaultInstance())
                     .displayItems((params, output) -> {
-                        output.accept(ModItems.BANDAGE.get());
-                        output.accept(ModItems.SPLINT.get());
-                        output.accept(ModItems.MEDKIT.get());
+                        for (var supply : ModItems.COMPONENTS) output.accept(supply.get());
+                        for (var treatment : ModItems.MEDICINE) output.accept(treatment.get());
                     })
                     .build());
 

@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-/** Optional JEI plugin. Standard crafting recipes are discovered automatically by JEI. */
+/** Optional JEI pages. Crafting recipes are discovered by JEI automatically. */
 @JeiPlugin
 public final class TraumaJeiPlugin implements IModPlugin {
     @Override
@@ -18,11 +18,15 @@ public final class TraumaJeiPlugin implements IModPlugin {
     }
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        registration.addItemStackInfo(new ItemStack(ModItems.BANDAGE.get()),
-                Component.translatable("jei.traumacraft.bandage"));
-        registration.addItemStackInfo(new ItemStack(ModItems.SPLINT.get()),
-                Component.translatable("jei.traumacraft.splint"));
-        registration.addItemStackInfo(new ItemStack(ModItems.MEDKIT.get()),
-                Component.translatable("jei.traumacraft.medkit"));
+        for (var item : ModItems.MEDICINE) {
+            var id = item.getId().getPath();
+            registration.addItemStackInfo(new ItemStack(item.get()),
+                    Component.translatable("jei.traumacraft." + id));
+        }
+        for (var item : ModItems.COMPONENTS) {
+            var id = item.getId().getPath();
+            registration.addItemStackInfo(new ItemStack(item.get()),
+                    Component.translatable("jei.traumacraft." + id));
+        }
     }
 }
