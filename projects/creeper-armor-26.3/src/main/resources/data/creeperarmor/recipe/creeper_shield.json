@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "PPP",
+    "PSP",
+    " G "
+  ],
+  "key": {
+    "P": {
+      "item": "creeperarmor:creeper_plate"
+    },
+    "S": {
+      "item": "minecraft:shield"
+    },
+    "G": {
+      "item": "minecraft:gunpowder"
+    }
+  },
+  "result": {
+    "id": "creeperarmor:creeper_shield",
+    "count": 1
+  }
+}

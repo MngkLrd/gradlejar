@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PG",
+    "II"
+  ],
+  "key": {
+    "P": {
+      "item": "creeperarmor:creeper_powder"
+    },
+    "G": {
+      "item": "minecraft:gunpowder"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "id": "creeperarmor:creeper_plate",
+    "count": 1
+  }
+}
