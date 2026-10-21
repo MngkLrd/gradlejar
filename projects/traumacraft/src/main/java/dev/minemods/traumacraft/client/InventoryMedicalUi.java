@@ -10,10 +10,10 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 
-@Mod.EventBusSubscriber(modid = TraumaCraft.MOD_ID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = TraumaCraft.MOD_ID, value = Dist.CLIENT)
 public final class InventoryMedicalUi {
     private InventoryMedicalUi() {}
     private static boolean hasRoom(InventoryScreen screen) {
