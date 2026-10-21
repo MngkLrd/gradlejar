@@ -24,7 +24,7 @@ public final class MedicalHud {
         if (mc.player == null) { ClientBodyCache.clear(); return; }
         if (mc.screen != null || mc.options.hideGui || !ClientBodyCache.ready()) return;
         int x = 6;
-        int y = g.guiHeight() - 92;
+        int y = g.guiHeight() - (g.guiWidth() < 400 ? 150 : 92);
         if (y < 3) return;
         // Semi-transparent, smaller than vanilla health/food hotbar; no new hearts.
         g.fill(x, y, x + 83, y + 79, 0x88090F11);
