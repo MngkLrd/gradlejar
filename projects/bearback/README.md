@@ -26,3 +26,6 @@ JAR: `build/libs/bearback-1.21.1-0.1.0.jar`
 - Bear movement uses authoritative server ride packets and may need smoothing in high-latency multiplayer.
 - Attack while mounted is keyed to R; vanilla paw raising is used for the animation.
 - Existing RideablePolarBears is not required or integrated.
+
+### CI
+This module has its own build-profile.json and is selectable via project_dir=projects/bearback.
