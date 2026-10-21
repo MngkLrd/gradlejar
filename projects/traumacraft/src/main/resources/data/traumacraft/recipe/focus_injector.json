@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " L ",
+    " H ",
+    " S "
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "H": {
+      "item": "traumacraft:herbal_extract"
+    },
+    "S": {
+      "item": "traumacraft:syringe_body"
+    }
+  },
+  "result": {
+    "id": "traumacraft:focus_injector",
+    "count": 1
+  }
+}
