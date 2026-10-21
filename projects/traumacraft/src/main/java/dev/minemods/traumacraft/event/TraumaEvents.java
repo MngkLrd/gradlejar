@@ -14,6 +14,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import dev.minemods.traumacraft.network.MedicalNetworking;
 
 public final class TraumaEvents {
     private static final ResourceLocation LIMPING_ID =
@@ -21,6 +23,13 @@ public final class TraumaEvents {
     private static final ThreadLocal<Boolean> BLEEDING_DAMAGE = ThreadLocal.withInitial(() -> false);
 
     private TraumaEvents() {}
+
+    public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) MedicalNetworking.sync(player);
+    }
+    public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) MedicalNetworking.sync(player);
+    }
 
     public static void onDamage(LivingDamageEvent.Pre event) {
         if (!(event.getEntity() instanceof ServerPlayer victim) || BLEEDING_DAMAGE.get()) return;
@@ -72,6 +81,7 @@ public final class TraumaEvents {
         if (player.tickCount % 20 != 0) return;
         BodyState state = player.getData(ModAttachments.BODY.get());
         updateMovement(player, state.legPenalty());
+        if (state.takeDirty()) MedicalNetworking.sync(player);
 
         if (player.tickCount % 40 == 0 && state.hasBleeding()) {
             int severity = 0;

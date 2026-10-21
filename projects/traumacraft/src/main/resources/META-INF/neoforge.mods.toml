@@ -1,13 +1,15 @@
 modLoader="javafml"
 loaderVersion="[4,)"
 license="MIT"
-
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
 displayName="TraumaCraft Prototype"
 authors="Minemods"
-description='''Localized body damage, fractures and bleeding. Early gameplay prototype.'''
+description='''Location-based body health, bleeding, fractures, inventory medical GUI and HUD.'''
+
+[[mixins]]
+config="traumacraft.mixins.json"
 
 [[dependencies.traumacraft]]
 modId="neoforge"
@@ -15,7 +17,6 @@ type="required"
 versionRange="[21.1.0,)"
 ordering="NONE"
 side="BOTH"
-
 [[dependencies.traumacraft]]
 modId="minecraft"
 type="required"
