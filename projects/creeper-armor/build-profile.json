@@ -5,5 +5,5 @@
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "creeperarmor-0.1.0.jar"
+  "jar_glob": "creeperarmor-0.2.0.jar"
 }
