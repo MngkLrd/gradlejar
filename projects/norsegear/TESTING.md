@@ -102,7 +102,7 @@
 7. With JEI (without incompatible JEI++), inspect 24 crafting recipes, enter/leave the same world twice.
 8. Server boot test validates registry/worldgen and recipe parsing only. It does **not** render anything.
 
-### 0.1.14 targeted in-game regressions
+### 0.1.15 targeted in-game regressions
 
 - Equip head, chest, legs and boots one at a time, then together; look for ghost pieces or missing children.
 - Walk, sprint, crouch, swing both arms: breastplate/pauldrons/greaves must follow animations.
@@ -111,3 +111,9 @@
 - Test throwing a spear at 1 durability: it should not make an immortal projectile or duplicate the item.
 - Verify blocked hits using all three shields and the umbon shield offhand +2 armor; sound from war horn.
 - Test fresh world and reopening saved world with standard JEI only (known incompatibility with JEI++ is external).
+
+### 0.1.15 regression checks
+
+- `python3 tools/validate_3d_models.py` checks 3 shield models and 3 projectile item models.
+- Inventory crash from latest(6).log points to `jei_plus_plus` and missing JEI, **not** Norse Gear. Remove JEI++ and duplicate old Norse Gear JAR before reproducing.
+- Server smoke test does not exercise client UI models or inventory screen. Client screenshot/live testing is required before marking art verified.

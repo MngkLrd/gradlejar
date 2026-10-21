@@ -76,7 +76,7 @@ Actual UV-mapped in-game vanilla humanoid equipment uses 128×64 textures `asset
 - Additional errors for recipes from OpenMotion are outside this project.
 
 
-## 0.1.14: combat and 3D armor prototype
+## 0.1.15: combat and 3D armor prototype
 
 - Cubic custom worn armor on a normal humanoid renderer (NeoForge client extensions; no optional renderer library). Head guard, shoulder volumes, shaped chest, belt, leg/knee/boot details follow normal arm/leg animations. Uses conventional 64x32 UV armor sheets. This is an initial client-facing volumetric model and must be evaluated in actual game for clipping with slim skins/other armor.
 - Charging (hold use at least 10 ticks) for all three spear-like/throwable weapons: melee spear, javelin and throwing axe. Melee spear now throws its own stack, with a +1 durability cost on return; launched item can be recovered where it lands. Throws spawn server-side only.
@@ -88,7 +88,7 @@ Actual UV-mapped in-game vanilla humanoid equipment uses 128×64 textures `asset
 **Test in game:** third-person armor front/rear and slim/default skins; charge/release, recover stacked javelins and throwing axe; throw worn spear and retrieve without duplicates; listen to war horn; blocking stance and item models in both hands.
 
 
-## 0.1.14: combat and 3D armor prototype
+## 0.1.15: combat and 3D armor prototype
 
 - Cubic custom worn armor on a normal humanoid renderer (NeoForge client extensions; no optional renderer library). Head guard, shoulder volumes, shaped chest, belt, leg/knee/boot details follow normal arm/leg animations. Uses conventional 64x32 UV armor sheets. This is an initial client-facing volumetric model and must be evaluated in actual game for clipping with slim skins/other armor.
 - Charging (hold use at least 10 ticks) for all three spear-like/throwable weapons: melee spear, javelin and throwing axe. Melee spear now throws its own stack, with a +1 durability cost on return; launched item can be recovered where it lands. Throws spawn server-side only.
@@ -100,7 +100,7 @@ Actual UV-mapped in-game vanilla humanoid equipment uses 128×64 textures `asset
 **Test in game:** third-person armor front/rear and slim/default skins; charge/release, recover stacked javelins and throwing axe; throw worn spear and retrieve without duplicates; listen to war horn; blocking stance and item models in both hands.
 
 
-## 0.1.14: combat and 3D armor prototype
+## 0.1.15: combat and 3D armor prototype
 
 - Cubic custom worn armor on a normal humanoid renderer (NeoForge client extensions; no optional renderer library). Head guard, shoulder volumes, shaped chest, belt, leg/knee/boot details follow normal arm/leg animations. Uses conventional 64x32 UV armor sheets. This is an initial client-facing volumetric model and must be evaluated in actual game for clipping with slim skins/other armor.
 - Charging (hold use at least 10 ticks) for all three spear-like/throwable weapons: melee spear, javelin and throwing axe. Melee spear now throws its own stack, with a +1 durability cost on return; launched item can be recovered where it lands. Throws spawn server-side only.
@@ -112,7 +112,7 @@ Actual UV-mapped in-game vanilla humanoid equipment uses 128×64 textures `asset
 **Test in game:** third-person armor front/rear and slim/default skins; charge/release, recover stacked javelins and throwing axe; throw worn spear and retrieve without duplicates; listen to war horn; blocking stance and item models in both hands.
 
 
-## 0.1.14: combat and 3D armor prototype
+## 0.1.15: combat and 3D armor prototype
 
 - Cubic custom worn armor on a normal humanoid renderer (NeoForge client extensions; no optional renderer library). Head guard, shoulder volumes, shaped chest, belt, leg/knee/boot details follow normal arm/leg animations. Uses conventional 64x32 UV armor sheets. This is an initial client-facing volumetric model and must be evaluated in actual game for clipping with slim skins/other armor.
 - Charging (hold use at least 10 ticks) for all three spear-like/throwable weapons: melee spear, javelin and throwing axe. Melee spear now throws its own stack, with a +1 durability cost on return; launched item can be recovered where it lands. Throws spawn server-side only.
@@ -124,7 +124,7 @@ Actual UV-mapped in-game vanilla humanoid equipment uses 128×64 textures `asset
 **Test in game:** third-person armor front/rear and slim/default skins; charge/release, recover stacked javelins and throwing axe; throw worn spear and retrieve without duplicates; listen to war horn; blocking stance and item models in both hands.
 
 
-## 0.1.14: combat and 3D armor prototype
+## 0.1.15: combat and 3D armor prototype
 
 - Cubic custom worn armor on a normal humanoid renderer (NeoForge client extensions; no optional renderer library). Head guard, shoulder volumes, shaped chest, belt, leg/knee/boot details follow normal arm/leg animations. Uses conventional 64x32 UV armor sheets. This is an initial client-facing volumetric model and must be evaluated in actual game for clipping with slim skins/other armor.
 - Charging (hold use at least 10 ticks) for all three spear-like/throwable weapons: melee spear, javelin and throwing axe. Melee spear now throws its own stack, with a +1 durability cost on return; launched item can be recovered where it lands. Throws spawn server-side only.
@@ -135,7 +135,7 @@ Actual UV-mapped in-game vanilla humanoid equipment uses 128×64 textures `asset
 
 **Test in game:** third-person armor front/rear and slim/default skins; charge/release, recover stacked javelins and throwing axe; throw worn spear and retrieve without duplicates; listen to war horn; blocking stance and item models in both hands.
 
-## 0.1.14 — equipment animation and flight orientation fixes
+## 0.1.15 — equipment animation and flight orientation fixes
 
 - Armor renderer copies the current vanilla humanoid animated pose (crouch, walking, swings) into the custom model before drawing it.
 - All extra armor ModelPart children have explicit per-slot visibility, so drawing boots after leggings or a helmet after a chestplate cannot carry stale visibility.
@@ -143,3 +143,18 @@ Actual UV-mapped in-game vanilla humanoid equipment uses 128×64 textures `asset
 - Spear throw refuses a nearly-broken spear rather than silently clamping projectile damage at max-1.
 - No new dependencies. 24 items/recipes, JEI support, worldgen and original art remain unchanged.
 - Build and server smoke do **not** verify appearance in a real client. Check Steve/Alex, crouching, walking, in-flight models and shields in-game.
+
+## 0.1.15 visual model / inventory-crash triage
+
+- Three 3D shield JSONs now use **dedicated fully opaque 32x32 front-face UV atlases** instead of sampling transparent inventory sprites into horizontal cuboids. The decorative top and bottom gray tab strips have been removed; the central bosses and shield thickness remain. The original 24 inventory sprite files and gameplay shield mechanics are untouched.
+- The spear and javelin now have **distinct modeled silhouettes**, a wood-grain shaft, leather bindings, socket, tapered steel head and pronounced metal highlight using a newly authored `norse_weapon_materials.png`. The throwing axe receives a matching faceted blade with a downward beard. These are actual model elements, not a flat `item/generated` billboard; the existing entity renderer displays the 3D baked item in flight.
+- All new assets use the exact 32x32 pixel grid and 100% opaque 3D-face textures. No extra rendering library is required.
+- `tools/validate_3d_models.py` checks the geometry/material connections and guards against the removed gray top rim reappearing.
+- **Important: the user's observed inventory crash is external to Norse Gear**: `jei_plus_plus` calls the missing `mezz.jei.api.ingredients.IIngredientType` because standard JEI is missing. The user's test folder also included both Norse Gear 0.1.11 and 0.1.14 simultaneously. Before testing, remove `jei_plus_plus-1.0.7-1.21.1.jar` and every older `norsegear` JAR, then install only 0.1.15. Standard JEI is optional. This mod cannot safely patch JEI++'s missing dependency.
+
+### Test in a client
+
+1. Launch Minecraft 1.21.1 / NeoForge 21.1.x with only one Norse Gear JAR and JEI++ removed. Enter a new/existing test world. Open inventory in both Survival and Creative, several times.
+2. Equip each of three shields in the offhand; look at front/back/top in first/third person, check blocking pose and for any gray horizontal bar or alpha bleed. These should no longer come from the model.
+3. Charge and throw spear and javelin. Confirm the shaft and point are 3D in flight and returned item is retrievable, with no gray monochrome rectangle. Check top/bottom orientations and throwing axe rotation.
+4. Visually inspect equipped armor: 0.1.14's cubic model remains unchanged in this release; armor shader/clipping is a separate user-client visual review.
