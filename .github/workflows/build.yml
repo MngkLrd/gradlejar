@@ -68,6 +68,19 @@ jobs:
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: python3 tools/verify_build_output.py "$PROJECT_DIR"
+      - name: Upload compiled JAR artifact for PR builds
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.profile.outputs.slug }}-${{ steps.profile.outputs.version }}-jar
+          path: |
+            ${{ steps.verify.outputs.jar_path }}
+            ${{ steps.verify.outputs.checksum_path }}
+          if-no-files-found: error
+          retention-days: 14
+      - name: Validate TraumaCraft medical icons
+        if: matrix.project_dir == 'projects/traumacraft'
+        run: python3 projects/traumacraft/tools/check_assets.py
       - name: Publish JAR to GitHub prerelease
         if: github.event_name != 'pull_request'
         env:
