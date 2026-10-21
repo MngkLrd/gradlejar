@@ -6,12 +6,8 @@
     " S "
   ],
   "key": {
-    "F": {
-      "item": "traumacraft:sterile_fabric"
-    },
-    "S": {
-      "item": "minecraft:string"
-    }
+    "F": "traumacraft:sterile_fabric",
+    "S": "minecraft:string"
   },
   "result": {
     "id": "traumacraft:compression_wrap",

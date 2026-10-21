@@ -7,15 +7,9 @@
     " S "
   ],
   "key": {
-    "L": {
-      "item": "minecraft:lapis_lazuli"
-    },
-    "H": {
-      "item": "traumacraft:herbal_extract"
-    },
-    "S": {
-      "item": "traumacraft:syringe_body"
-    }
+    "L": "minecraft:lapis_lazuli",
+    "H": "traumacraft:herbal_extract",
+    "S": "traumacraft:syringe_body"
   },
   "result": {
     "id": "traumacraft:focus_injector",

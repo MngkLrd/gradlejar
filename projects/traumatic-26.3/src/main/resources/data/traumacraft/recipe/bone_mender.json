@@ -7,15 +7,9 @@
     " S "
   ],
   "key": {
-    "G": {
-      "item": "minecraft:glowstone_dust"
-    },
-    "A": {
-      "item": "traumacraft:antiseptic"
-    },
-    "S": {
-      "item": "traumacraft:syringe_body"
-    }
+    "G": "minecraft:glowstone_dust",
+    "A": "traumacraft:antiseptic",
+    "S": "traumacraft:syringe_body"
   },
   "result": {
     "id": "traumacraft:bone_mender",

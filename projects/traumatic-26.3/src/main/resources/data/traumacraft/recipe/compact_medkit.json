@@ -7,12 +7,8 @@
     " F "
   ],
   "key": {
-    "F": {
-      "item": "traumacraft:sterile_fabric"
-    },
-    "H": {
-      "item": "traumacraft:herbal_extract"
-    }
+    "F": "traumacraft:sterile_fabric",
+    "H": "traumacraft:herbal_extract"
   },
   "result": {
     "id": "traumacraft:compact_medkit",

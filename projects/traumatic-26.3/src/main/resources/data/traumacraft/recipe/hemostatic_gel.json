@@ -7,15 +7,9 @@
     " B "
   ],
   "key": {
-    "R": {
-      "item": "minecraft:redstone"
-    },
-    "A": {
-      "item": "traumacraft:antiseptic"
-    },
-    "B": {
-      "item": "minecraft:glass_bottle"
-    }
+    "R": "minecraft:redstone",
+    "A": "traumacraft:antiseptic",
+    "B": "minecraft:glass_bottle"
   },
   "result": {
     "id": "traumacraft:hemostatic_gel",

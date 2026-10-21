@@ -7,18 +7,10 @@
     "GFG"
   ],
   "key": {
-    "G": {
-      "item": "minecraft:gold_nugget"
-    },
-    "F": {
-      "item": "traumacraft:sterile_fabric"
-    },
-    "A": {
-      "item": "traumacraft:antiseptic"
-    },
-    "M": {
-      "item": "traumacraft:medkit"
-    }
+    "G": "minecraft:gold_nugget",
+    "F": "traumacraft:sterile_fabric",
+    "A": "traumacraft:antiseptic",
+    "M": "traumacraft:medkit"
   },
   "result": {
     "id": "traumacraft:field_medkit",

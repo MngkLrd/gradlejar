@@ -7,15 +7,9 @@
     " S "
   ],
   "key": {
-    "G": {
-      "item": "minecraft:ghast_tear"
-    },
-    "H": {
-      "item": "traumacraft:herbal_extract"
-    },
-    "S": {
-      "item": "traumacraft:syringe_body"
-    }
+    "G": "minecraft:ghast_tear",
+    "H": "traumacraft:herbal_extract",
+    "S": "traumacraft:syringe_body"
   },
   "result": {
     "id": "traumacraft:recovery_serum",

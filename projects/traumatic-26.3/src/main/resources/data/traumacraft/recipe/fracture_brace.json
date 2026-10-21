@@ -7,15 +7,9 @@
     "I I"
   ],
   "key": {
-    "I": {
-      "item": "minecraft:iron_nugget"
-    },
-    "S": {
-      "item": "minecraft:stick"
-    },
-    "F": {
-      "item": "traumacraft:sterile_fabric"
-    }
+    "I": "minecraft:iron_nugget",
+    "S": "minecraft:stick",
+    "F": "traumacraft:sterile_fabric"
   },
   "result": {
     "id": "traumacraft:fracture_brace",
