@@ -1,0 +1,28 @@
+name: Bearback minimum NeoForge compatibility
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/bearback-min-compat.yml"
+      - "projects/bearback/**"
+permissions:
+  contents: read
+jobs:
+  compile-old-loader:
+    strategy:
+      fail-fast: false
+      matrix:
+        neoforge: ["21.1.1", "21.1.50", "21.1.100", "21.1.200"]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "9.2.1"
+      - name: Compile Bearback against old NeoForge API
+        working-directory: projects/bearback
+        run: gradle --no-daemon clean compileJava -Pneo_version=${{ matrix.neoforge }}
