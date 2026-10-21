@@ -7,9 +7,15 @@
     " S "
   ],
   "key": {
-    "L": "norsegear:leather_binding",
-    "S": "minecraft:string",
-    "T": "minecraft:stick"
+    "L": {
+      "item": "norsegear:leather_binding"
+    },
+    "S": {
+      "item": "minecraft:string"
+    },
+    "T": {
+      "item": "minecraft:stick"
+    }
   },
   "result": {
     "id": "norsegear:sling",

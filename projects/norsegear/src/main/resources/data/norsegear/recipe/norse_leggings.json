@@ -7,7 +7,9 @@
     "F F"
   ],
   "key": {
-    "F": "norsegear:forged_iron"
+    "F": {
+      "item": "norsegear:forged_iron"
+    }
   },
   "result": {
     "id": "norsegear:norse_leggings",

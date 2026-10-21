@@ -6,8 +6,12 @@
     " S"
   ],
   "key": {
-    "F": "norsegear:forged_iron",
-    "S": "minecraft:stick"
+    "F": {
+      "item": "norsegear:forged_iron"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
   },
   "result": {
     "id": "norsegear:throwing_axe",

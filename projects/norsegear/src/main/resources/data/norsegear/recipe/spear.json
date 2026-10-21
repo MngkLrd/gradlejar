@@ -7,9 +7,15 @@
     "L  "
   ],
   "key": {
-    "F": "norsegear:forged_iron",
-    "S": "minecraft:stick",
-    "L": "norsegear:leather_binding"
+    "F": {
+      "item": "norsegear:forged_iron"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "L": {
+      "item": "norsegear:leather_binding"
+    }
   },
   "result": {
     "id": "norsegear:spear",

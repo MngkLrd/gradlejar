@@ -1,9 +1,9 @@
 {
   "slug": "norsegear",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "norsegear-0.1.11.jar"
+  "jar_glob": "norsegear-0.1.12.jar"
 }

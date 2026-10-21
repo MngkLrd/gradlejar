@@ -24,6 +24,9 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.2.1'
+      - name: Validate 1.21.1 recipe JSON
+        working-directory: projects/norsegear
+        run: python3 tools/validate_recipe_data.py
       - name: Compile mod
         working-directory: projects/norsegear
         run: gradle --no-daemon build
@@ -44,7 +47,7 @@ jobs:
               ready=1
               break
             fi
-            if grep -Eq 'Failed to load registries|Failed to parse norsegear:worldgen|No key block|Unbound values in registry' server-smoke.log; then
+            if grep -Eq 'Failed to load registries|Failed to parse norsegear:worldgen|No key block|Unbound values in registry|Parsing error loading recipe norsegear:' server-smoke.log; then
               echo 'Worldgen registry load failed:'
               tail -n 140 server-smoke.log
               exit 1
@@ -61,7 +64,7 @@ jobs:
             tail -n 140 server-smoke.log
             exit 1
           fi
-          if grep -Eq 'Failed to load registries|Failed to parse norsegear:worldgen|No key block|Unbound values in registry' server-smoke.log; then
+          if grep -Eq 'Failed to load registries|Failed to parse norsegear:worldgen|No key block|Unbound values in registry|Parsing error loading recipe norsegear:' server-smoke.log; then
             tail -n 140 server-smoke.log
             exit 1
           fi

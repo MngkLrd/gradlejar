@@ -7,9 +7,15 @@
     " LH"
   ],
   "key": {
-    "L": "norsegear:leather_binding",
-    "H": "norsegear:forged_iron",
-    "C": "norsegear:carved_horn"
+    "L": {
+      "item": "norsegear:leather_binding"
+    },
+    "H": {
+      "item": "norsegear:forged_iron"
+    },
+    "C": {
+      "item": "norsegear:carved_horn"
+    }
   },
   "result": {
     "id": "norsegear:war_horn",

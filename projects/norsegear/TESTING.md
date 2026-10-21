@@ -39,3 +39,10 @@
 4. Create a new world with NeoForge 21.1.264 and confirm no `configured_feature/bog_iron` errors.
 5. Keep a separate test save; the improved worldgen is newly generated chunks only.
 6. Verify equipped armor in third-person and on an armor stand; render appearance is not confirmed by the CI smoke test.
+
+### v0.1.12 regression
+- Remove incompatible JEI++ temporarily; keep JEI itself installed.
+- Reenter an existing world twice; verify no crash.
+- Confirm JEI displays recipes for seax, shield, sword, axes and armor.
+- On dedicated server, scan log for `Parsing error loading recipe norsegear:` (must be absent).
+- Armor visuals still use vanilla geometry; custom 3D armor redesign is not part of this emergency recipe hotfix.

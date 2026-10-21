@@ -7,9 +7,15 @@
     "PLP"
   ],
   "key": {
-    "P": "minecraft:oak_planks",
-    "L": "norsegear:leather_binding",
-    "F": "norsegear:forged_iron"
+    "P": {
+      "item": "minecraft:oak_planks"
+    },
+    "L": {
+      "item": "norsegear:leather_binding"
+    },
+    "F": {
+      "item": "norsegear:forged_iron"
+    }
   },
   "result": {
     "id": "norsegear:celtic_shield",

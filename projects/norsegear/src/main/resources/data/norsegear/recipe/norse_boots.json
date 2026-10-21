@@ -6,8 +6,12 @@
     "L L"
   ],
   "key": {
-    "F": "norsegear:forged_iron",
-    "L": "norsegear:leather_binding"
+    "F": {
+      "item": "norsegear:forged_iron"
+    },
+    "L": {
+      "item": "norsegear:leather_binding"
+    }
   },
   "result": {
     "id": "norsegear:norse_boots",

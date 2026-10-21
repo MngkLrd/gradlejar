@@ -7,8 +7,12 @@
     " F "
   ],
   "key": {
-    "F": "norsegear:forged_iron",
-    "R": "norsegear:round_shield"
+    "F": {
+      "item": "norsegear:forged_iron"
+    },
+    "R": {
+      "item": "norsegear:round_shield"
+    }
   },
   "result": {
     "id": "norsegear:bossed_shield",

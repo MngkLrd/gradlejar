@@ -7,9 +7,15 @@
     " L "
   ],
   "key": {
-    "F": "minecraft:flint",
-    "S": "minecraft:stone",
-    "L": "norsegear:leather_binding"
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "S": {
+      "item": "minecraft:stone"
+    },
+    "L": {
+      "item": "norsegear:leather_binding"
+    }
   },
   "result": {
     "id": "norsegear:field_whetstone",

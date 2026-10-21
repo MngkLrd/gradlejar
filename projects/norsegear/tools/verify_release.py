@@ -54,6 +54,15 @@ def run(jar):
         outputs = set()
         for rec in recipes:
             recipe = json.loads(z.read(rec))
+            if recipe["type"] == "minecraft:crafting_shaped":
+                assert all(isinstance(ingredient, (dict, list)) for ingredient in recipe["key"].values()), \
+                    f"Minecraft 1.21.1 ingredient must be object/array, not string: {rec}"
+                for ingredient in recipe["key"].values():
+                    for entry in (ingredient if isinstance(ingredient,list) else [ingredient]):
+                        assert isinstance(entry, dict) and ("item" in entry or "tag" in entry), f"Invalid shaped ingredient in {rec}: {entry}"
+            if recipe["type"] == "minecraft:crafting_shapeless":
+                assert all(isinstance(ingredient, (dict, list)) for ingredient in recipe["ingredients"]), \
+                    f"Minecraft 1.21.1 shapeless ingredient must be object/array: {rec}"
             if recipe["type"] == "norsegear:bog_iron_refining":
                 outputs.add("minecraft:iron_ingot")
             else:

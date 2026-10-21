@@ -1,4 +1,4 @@
-# Norse Gear 0.1.11 — Complete 24-item 32x32 Art Pass
+# Norse Gear 0.1.12 — 1.21.1 Recipe Hotfix
 
 One standalone mod. Minecraft 1.21.1, NeoForge 21.1.262, Java 21; build with Gradle 9.2.1.
 
@@ -16,7 +16,7 @@ One standalone mod. Minecraft 1.21.1, NeoForge 21.1.262, Java 21; build with Gra
 gradle --no-daemon clean build
 ```
 
-Expected: `build/libs/norsegear-0.1.11.jar`. Sources include `build-profile.json` for the MngkLrd/gradlejar CI. NeoForge ModDevGradle 2.0.148 and JEI 19.51.0.418 API (compileOnly, not bundled). The worldgen is data-driven via NeoForge biome modifier; pack authors can adjust chance, count, deposit size, surface depth and overworld biome tags. **New chunks only** for natural deposits. `/setblock ~ ~ ~ norsegear:bog_iron_deposit` allows testing in existing worlds.
+Expected: `build/libs/norsegear-0.1.12.jar`. Sources include `build-profile.json` for the MngkLrd/gradlejar CI. NeoForge ModDevGradle 2.0.148 and JEI 19.51.0.418 API (compileOnly, not bundled). The worldgen is data-driven via NeoForge biome modifier; pack authors can adjust chance, count, deposit size, surface depth and overworld biome tags. **New chunks only** for natural deposits. `/setblock ~ ~ ~ norsegear:bog_iron_deposit` allows testing in existing worlds.
 
 ### JEI integrity
 
@@ -66,3 +66,11 @@ Actual UV-mapped in-game vanilla humanoid equipment uses 128×64 textures `asset
 - **All 24 item inventory icons now 32x32.** The environmental `bog_iron_deposit` block has its own separate terrain texture and is not one of the 24 items. Armor-on-player UV textures remain 128x64.
 - Retains 0.1.10 critical world-creation fix (`minecraft:block_match` singular `block`), data-driven Overworld generation and gameplay systems.
 - CI `verify_release.py` now rejects non-32x32 item sprites. The release is not gameplay-certified until the actual client tests described in TESTING.md.
+
+## 0.1.12 recipe hotfix
+
+- Fixes 17 invalid shaped recipes using string ingredients in the `key` map. Minecraft 1.21.1 requires structured ingredients such as `{ "item": "norsegear:forged_iron" }`.
+- Leaves all 24 texture designs, gameplay and worldgen untouched.
+- Adds CI validation of recipe ingredient formats to prevent silent recipe failures when a world loads.
+- The user-reported client crash in `latest(5).log` comes from **JEI++ 1.0.7** applying an incompatible mixin to **JEI 19.64.0.455**; remove JEI++ or install a version explicitly compatible with the user's JEI. This is not a Norse Gear mixin problem.
+- Additional errors for recipes from OpenMotion are outside this project.

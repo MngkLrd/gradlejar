@@ -7,9 +7,15 @@
     "OTO"
   ],
   "key": {
-    "O": "minecraft:oak_planks",
-    "F": "norsegear:forged_iron",
-    "T": "norsegear:pitch_flask"
+    "O": {
+      "item": "minecraft:oak_planks"
+    },
+    "F": {
+      "item": "norsegear:forged_iron"
+    },
+    "T": {
+      "item": "norsegear:pitch_flask"
+    }
   },
   "result": {
     "id": "norsegear:round_shield",
