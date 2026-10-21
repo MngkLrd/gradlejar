@@ -53,27 +53,22 @@ public final class NorseArmorModel extends HumanoidModel<LivingEntity> {
         return LayerDefinition.create(mesh, 64, 32);
     }
 
-    /** Avoid rendering the complete suit when only one piece is equipped. */
+    /** Set the visible humanoid parts AND the accessory geometry for each slot. */
     public void onlyPiece(net.minecraft.world.entity.EquipmentSlot slot) {
         setAllVisible(false);
-        switch (slot) {
-            case HEAD -> head.visible = true;
-            case CHEST -> {
-                body.visible = true;
-                rightArm.visible = true;
-                leftArm.visible = true;
-            }
-            case LEGS -> {
-                body.visible = true;
-                rightLeg.visible = true;
-                leftLeg.visible = true;
-                // Torso shown for belt; disable pauldrons by keeping arms hidden.
-            }
-            case FEET -> {
-                rightLeg.visible = true;
-                leftLeg.visible = true;
-            }
-            default -> { }
+        boolean helmet = slot == net.minecraft.world.entity.EquipmentSlot.HEAD;
+        boolean chest = slot == net.minecraft.world.entity.EquipmentSlot.CHEST;
+        boolean legs = slot == net.minecraft.world.entity.EquipmentSlot.LEGS;
+        boolean boots = slot == net.minecraft.world.entity.EquipmentSlot.FEET;
+        head.visible = helmet;
+        body.visible = chest;
+        leftArm.visible = chest;
+        rightArm.visible = chest;
+        leftLeg.visible = legs || boots;
+        rightLeg.visible = legs || boots;
+        for (ModelPart leg : new ModelPart[]{leftLeg, rightLeg}) {
+            leg.getChild("knee_plate").visible = legs;
+            leg.getChild("boot_toe").visible = boots;
         }
     }
 }
