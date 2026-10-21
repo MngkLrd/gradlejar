@@ -35,7 +35,6 @@ public final class ThrownWeaponRenderer extends EntityRenderer<ThrownWeaponEntit
             pose.mulPose(Axis.ZP.rotationDegrees((entity.tickCount + partialTick) * 31.0F));
         }
         // JSON model is real cuboid geometry, not an item-generated billboard.
-        pose.translate(-0.5D, -0.5D, -0.5D);
         ItemStack stack = entity.getItem();
         itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED, light,
             OverlayTexture.NO_OVERLAY, pose, buffers, entity.level(), entity.getId());
