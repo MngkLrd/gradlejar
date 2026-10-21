@@ -34,7 +34,7 @@ def run(jar):
             assert model in contents, f"Missing item model: {item}"
             assert texture in contents, f"Missing PNG: {item}"
             parsed = json.loads(z.read(model))
-            if item in ("round_shield", "spear", "javelin"):
+            if item in ITEMS:
                 assert parsed["loader"] == "neoforge:obj"
                 assert parsed["textures"]["texture0"] == "norsegear:item/norse_showcase_materials"
                 assert BASE + f"models/item/{item}.obj" in contents, f"Missing OBJ mesh: {item}"
@@ -50,7 +50,7 @@ def run(jar):
         # Cuboid weapons and shield faces remain 3D, even when all registered item sprites are 16px.
         for name in ("spear", "javelin", "throwing_axe", "round_shield", "celtic_shield", "bossed_shield"):
             model = json.loads(z.read(BASE + f"models/item/{name}.json"))
-            if name in ("round_shield", "spear", "javelin"):
+            if name in ITEMS:
                 assert model.get("loader") == "neoforge:obj", f"Missing triangle mesh: {name}"
             else:
                 assert len(model.get("elements", [])) >= 4, f"Missing 3D cuboids: {name}"
@@ -146,7 +146,7 @@ def run(jar):
             "dev/norsegear/integration/jei/NorseJeiPlugin.class",
         ):
             assert class_file in contents, f"Missing compiled feature: {class_file}"
-    print(f"PASS: Norse Gear JAR content verified: {len(ITEMS)} items, 24 recipes, bog iron worldgen + JEI, 3D armor & weapon geometry")
+    print(f"PASS: Norse Gear JAR verified: {len(ITEMS)} textured OBJ items, 24 recipes, JEI, worldgen and animated worn armor")
 
 if __name__ == "__main__":
     run(Path(sys.argv[1]))

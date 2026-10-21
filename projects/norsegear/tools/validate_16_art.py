@@ -17,7 +17,7 @@ for name in icons:
     assert struct.unpack(">II",raw[16:24])==(16,16),name
     # Confirm the intended Minecraft-style crisp alpha edge and useful color variety.
     model=json.loads((models/f"{name}.json").read_text())
-    if name in ("round_shield", "spear", "javelin"):
+    if name in icons:
         assert model.get("loader") == "neoforge:obj",name
         assert model["textures"].get("texture0") == "norsegear:item/norse_showcase_materials",name
     else:
