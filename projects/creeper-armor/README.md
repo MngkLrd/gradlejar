@@ -29,3 +29,9 @@ Refined 128x64 worn armor texture with additional tonal steps on broad green pan
 - Existing armor graphics, items, recipes, durability and explosion behavior remain unchanged.
 
 Test: third person offhand, mainhand, holding right-click (both hands), GUI preview, dedicated server.
+
+### 0.3.3 acceptance checklist
+- [ ] Offhand: Creeper face points away from player, shield rests on forearm, not in free air.
+- [ ] Mainhand: identical native shield attachment with inward-facing grip.
+- [ ] Raised shield: vanilla 1.21.1 blocking transforms and projectile coverage.
+- [ ] Other mechanics unchanged: 500 durability, 50 per blast, full armor set explosion immunity.
