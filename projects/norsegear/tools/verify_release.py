@@ -36,13 +36,13 @@ def run(jar):
             assert parsed["textures"]["layer0"] == f"norsegear:item/{item}"
             raw = z.read(texture)
             assert raw[:8] == b"\x89PNG\r\n\x1a\n"
-            expected_size = (32, 32) if item in {"seax", "bearded_axe", "dane_axe", "celtic_shield", "bossed_shield", "viking_sword", "spear", "javelin", "throwing_axe", "round_shield"} else (16, 16)
+            expected_size = (32, 32) if item in {"seax", "bearded_axe", "dane_axe", "celtic_shield", "bossed_shield", "viking_sword", "spear", "javelin", "throwing_axe", "round_shield", "norse_helmet", "norse_chestplate", "norse_leggings", "norse_boots"} else (16, 16)
             assert struct.unpack(">II", raw[16:24]) == expected_size, f"Wrong sprite size: {item}"
         for layer in (1, 2):
             tex = BASE + f"textures/models/armor/ironweave_layer_{layer}.png"
             assert tex in contents, f"Missing worn armor texture layer {layer}"
             raw = z.read(tex)
-            assert struct.unpack(">II", raw[16:24]) == (64, 32)
+            assert struct.unpack(">II", raw[16:24]) == (128, 64)
         for lang in ("en_us", "ru_ru"):
             p = BASE + f"lang/{lang}.json"
             assert p in contents
