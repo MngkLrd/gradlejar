@@ -62,6 +62,19 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
         dirty = true;
         return true;
     }
+    public BodyPart mostDamaged() {
+        BodyPart target = null;
+        float lowest = 1.0f;
+        for (BodyPart part : BodyPart.values()) {
+            if (percent(part) < lowest) { target = part; lowest = percent(part); }
+        }
+        return target;
+    }
+    public void heal(BodyPart part, float amount) {
+        int i = part.ordinal();
+        health[i] = Math.min(part.maximum, health[i] + Math.max(0, amount));
+        dirty = true;
+    }
     public boolean healMostDamaged(float amount) {
         BodyPart target = null;
         float worst = 1.0f;

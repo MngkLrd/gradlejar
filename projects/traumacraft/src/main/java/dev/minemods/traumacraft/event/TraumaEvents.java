@@ -5,6 +5,8 @@ import dev.minemods.traumacraft.combat.HitLocation;
 import dev.minemods.traumacraft.health.BodyPart;
 import dev.minemods.traumacraft.health.BodyState;
 import dev.minemods.traumacraft.registry.ModAttachments;
+import dev.minemods.traumacraft.network.ModNetwork;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
@@ -76,6 +78,10 @@ public final class TraumaEvents {
         }
     }
 
+    public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) ModNetwork.sync(player);
+    }
+
     public static void onPlayerTick(EntityTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (player.tickCount % 20 != 0) return;
@@ -93,6 +99,9 @@ public final class TraumaEvents {
             } finally {
                 BLEEDING_DAMAGE.set(false);
             }
+        }
+        if (state.takeDirty() || player.tickCount % 40 == 0) {
+            ModNetwork.sync(player);
         }
         if (player.tickCount % 100 == 0 && (state.hasBleeding() || state.hasFracturedLeg())) {
             player.displayClientMessage(Component.literal("Trauma: " + summarize(state) + " | /trauma"), true);

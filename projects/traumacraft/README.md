@@ -1,26 +1,59 @@
 # TraumaCraft 0.2.0
 
-Minecraft 1.21.1 / NeoForge 21.1.262 / Java 21.
+Minecraft **1.21.1** · **NeoForge 21.1.262** · **Java 21** · Gradle **8.14.3**
 
-## GUI
-- Press E. The vanilla inventory moves left, making room for a pixel-styled body health panel to its right.
-- Seven body zones show local HP and damage colors (green, pale green, amber, red, black).
-- Red squares indicate bleeding, yellow squares indicate fractures.
-- Mouse over a zone for its exact HP, bleeding severity and fractures.
-- Left click bandage, splint or medkit in a vanilla inventory slot to **pick it up on your cursor**. Then left-click the body zone (either silhouette or corresponding HP row) to apply it. The server checks and consumes the item. Left-click back on a slot to put remaining medicine down.
-- When inventory is closed, translucent injury silhouette + local HP bars appears in the bottom left of the gameplay HUD.
-- HUD and medical screen are client-side only. Local HP data syncs from server on login, respawn and damage/treatment.
+Seven local body health pools and injury mechanics, plus a vanilla-style inventory health panel.
 
-## Existing gameplay
-Seven independently saved HP zones (440 combined), approximate projectile and melee zone damage, leg fractures and slowdown, bleeding, medical items and /trauma commands.
+## Features
 
-## Prototype limitations
-- The display is an extra panel attached to the right of vanilla inventory, not a complete inventory retexture. The extended panel needs at least 312 logical pixels horizontally; at lower resolutions the normal inventory remains unchanged.
-- Some inventory modifications (recipe books and mods replacing InventoryScreen) might require compatibility adapters.
-- Vanilla hearts still govern normal survival and death.
-- Textures for medical items are vanilla placeholders.
-- Body damage / hit detection are early prototypes and need gameplay QA.
+- 7 localized HP pools (total 440) with bleeding, fractures, location-based hits and leg slowdown
+- Vanilla inventory expands **to the right** with an anatomy mannequin, status bars and mouse-over injury details
+- Pick up a medical item with the mouse and **left/right-click an anatomy zone** to treat that exact zone
+- Server validates the actual carried stack and body-part bounds, then consumes item on success
+- Semi-transparent lower-left anatomy HUD
+- Independent **TraumaCraft | Medicine** Creative inventory tab
+- Optional **Just Enough Items (JEI)** plugin: standard crafting recipes + per-item usage info pages; JEI is not a required dependency
+
+## Items
+- Bandage: stops bleeding on one zone
+- Splint: fixes a fracture
+- Medkit: restores 25 HP on one zone
+
+Right-click with item in hand to auto-select an appropriate injured zone.
+
+## Controls
+
+1. Open survival inventory (E).
+2. Pick up Bandage / Splint / Medkit from a vanilla inventory slot with the mouse cursor.
+3. Click a body part or its HP bar on the new right panel.
+4. No applicable trauma? Treatment is rejected without consuming the item.
+
+The normal crafting slots, armor slots, inventory and recipe book remain vanilla.
+
+## Tests
+
+Operator commands:
+- `/trauma`
+- `/trauma hit left_leg 50`
+- `/trauma fracture right_leg`
+- `/trauma bleed left_arm 2`
+- `/trauma reset`
+
+1. Run command to injure; inspect updated bar / HUD.
+2. Carry a medical item over matching zone; click; check count and updated HP.
+3. Close/open inventory, relog and respawn; verify sync.
+4. Remove JEI entirely; TraumaCraft should still start.
+5. Install JEI 19.x for Minecraft 1.21.1 NeoForge; check info and recipes in JEI.
+6. Check dedicated server no client classes loaded.
+7. Test inventory with GUI Scale 2-4 and recipe book.
 
 ## Build
-Run `gradle --no-daemon clean build` with Java 21 and Gradle 8.14.3.
-Output: `build/libs/traumacraft-0.2.0.jar`
+`gradle --no-daemon clean build`
+
+Expected: `build/libs/traumacraft-0.2.0.jar`
+
+## Scope limits
+- Local HP supplements vanilla hearts in this phase.
+- Impact point for melee is approximated from attack ray.
+- This build is a gameplay prototype, not a final medical overhaul.
+- Other GUI overhaul mods may conflict with the InventoryScreen replacement.
