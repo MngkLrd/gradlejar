@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " R ",
+    " H ",
+    " S "
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "H": {
+      "item": "traumacraft:herbal_extract"
+    },
+    "S": {
+      "item": "traumacraft:syringe_body"
+    }
+  },
+  "result": {
+    "id": "traumacraft:adrenaline_injector",
+    "count": 1
+  }
+}
