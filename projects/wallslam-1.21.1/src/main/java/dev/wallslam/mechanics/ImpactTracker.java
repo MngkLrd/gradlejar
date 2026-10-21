@@ -2,6 +2,8 @@ package dev.wallslam.mechanics;
 
 import java.util.Map;
 import java.util.WeakHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -20,7 +22,9 @@ import net.minecraft.world.phys.AABB;
 public final class ImpactTracker {
     private static final int HIT_WINDOW = 11;
     private static final int COOLDOWN_TICKS = 12;
-    private static final double WALL_REACH = 0.50D;
+    private static final double WALL_REACH = 0.65D;
+    private static final Logger LOGGER = LoggerFactory.getLogger("wallslam");
+    private static int traceCount;
 
     private static final Map<LivingEntity, Pending> PENDING = new WeakHashMap<>();
     private static final Map<LivingEntity, Long> COOLDOWNS = new WeakHashMap<>();
@@ -53,8 +57,34 @@ public final class ImpactTracker {
         float impactDamage = Math.min(3.3F, Math.max(0.7F, 0.45F + relativePower * 0.23F));
         float knockbackBonus = Math.min(0.22F, Math.max(0.0F, (float)((attackAttribute - 1.0D) * 0.024D)));
 
-        PENDING.put(victim, new Pending(
-            dirX / distance, dirZ / distance, now, impactDamage, knockbackBonus));
+        Pending prepared = new Pending(dirX / distance, dirZ / distance,
+            now, impactDamage, knockbackBonus, false);
+        PENDING.put(victim, prepared);
+        trace("incoming", victim, prepared, 0);
+    }
+
+    /** Final positive damage is required before any wall-impact effects can fire. */
+    public static void confirmMeleeDamage(LivingEntity victim, DamageSource source, float damage) {
+        if (damage <= 0.0F || !(source.getDirectEntity() instanceof LivingEntity)) {
+            PENDING.remove(victim);
+            return;
+        }
+        onMeleeDamage(victim, source, damage);
+        Pending pending = PENDING.get(victim);
+        if (pending != null) {
+            Pending confirmed = new Pending(pending.directionX, pending.directionZ,
+                pending.time, pending.impactDamage, pending.bonus, true);
+            PENDING.put(victim, confirmed);
+            trace("confirmed", victim, confirmed, 0);
+        }
+    }
+
+    private static void trace(String stage, LivingEntity victim, Pending pending, long elapsed) {
+        if (traceCount++ < 24) {
+            LOGGER.info("Wallslam diagnostic: stage={}, target={}, confirmed={}, elapsed={}, pos={}, dir=({}, {})",
+                stage, victim.getType(), pending.confirmed, elapsed,
+                victim.blockPosition(), pending.directionX, pending.directionZ);
+        }
     }
 
     public static float knockbackBonus(LivingEntity victim) {
@@ -77,18 +107,21 @@ public final class ImpactTracker {
         long elapsed = level.getGameTime() - impact.time;
         if (elapsed < 0 || elapsed > HIT_WINDOW) {
             PENDING.remove(victim);
+            if (impact.confirmed) trace("no-wall", victim, impact, elapsed);
             return;
         }
+        if (!impact.confirmed) return;
 
         // The victim can already be touching a wall on the hit tick, or travel
         // into one over the following movement ticks. A collision shape, not
         // horizontalCollision, verifies that there is a genuine solid obstacle.
-        AABB probe = victim.getBoundingBox().move(
+        AABB probe = victim.getBoundingBox().expandTowards(
             impact.directionX * WALL_REACH, 0.0D, impact.directionZ * WALL_REACH);
         if (!level.getBlockCollisions(victim, probe).iterator().hasNext()) return;
 
         PENDING.remove(victim);
         COOLDOWNS.put(victim, level.getGameTime());
+        trace("impact", victim, impact, elapsed);
 
         // The collision is the trigger. Feedback must not depend on the extra
         // damage being accepted by hurt-invulnerability or another mod.
@@ -127,5 +160,5 @@ public final class ImpactTracker {
     }
 
     private record Pending(double directionX, double directionZ,
-                           long time, float impactDamage, float bonus) {}
+                           long time, float impactDamage, float bonus, boolean confirmed) {}
 }
