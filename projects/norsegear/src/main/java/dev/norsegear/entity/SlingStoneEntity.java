@@ -58,13 +58,13 @@ public final class SlingStoneEntity extends ThrowableItemProjectile {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putFloat("NorseImpactDamage", impactDamage);
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("NorseImpactDamage")) setImpactDamage(tag.getFloat("NorseImpactDamage"));
     }
