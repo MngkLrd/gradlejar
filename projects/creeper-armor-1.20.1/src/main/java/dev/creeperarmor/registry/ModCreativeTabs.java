@@ -5,9 +5,9 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.Registries;
 public final class ModCreativeTabs {
-    public static final DeferredRegister<CreativeModeTab> TABS=DeferredRegister.create(ForgeRegistries.CREATIVE_MODE_TABS,CreeperArmorMod.MOD_ID);
+    public static final DeferredRegister<CreativeModeTab> TABS=DeferredRegister.create(Registries.CREATIVE_MODE_TAB,CreeperArmorMod.MOD_ID);
     public static final RegistryObject<CreativeModeTab> CREEPER_ARMOR=TABS.register("creeper_armor",()->CreativeModeTab.builder()
         .title(Component.translatable("itemGroup.creeperarmor.creeper_armor"))
         .icon(()->new ItemStack(ModItems.CREEPER_CHESTPLATE.get()))
