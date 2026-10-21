@@ -6,9 +6,7 @@
     "P P"
   ],
   "key": {
-    "P": {
-      "item": "creeperarmor:creeper_plate"
-    }
+    "P": "creeperarmor:creeper_plate"
   },
   "result": {
     "id": "creeperarmor:creeper_boots",

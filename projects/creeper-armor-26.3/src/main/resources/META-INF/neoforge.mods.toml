@@ -1,7 +1,7 @@
 license="MIT"
 [[mods]]
 modId="creeperarmor"
-version="1.0.0"
+version="1.0.1"
 displayName="Creeper Armor"
 authors="Creeper Armor Project"
 description="Creeper armor, powder, plates, explosive rescue and explosive shield."

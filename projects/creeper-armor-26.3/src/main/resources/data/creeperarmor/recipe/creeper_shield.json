@@ -7,15 +7,9 @@
     " G "
   ],
   "key": {
-    "P": {
-      "item": "creeperarmor:creeper_plate"
-    },
-    "S": {
-      "item": "minecraft:shield"
-    },
-    "G": {
-      "item": "minecraft:gunpowder"
-    }
+    "P": "creeperarmor:creeper_plate",
+    "S": "minecraft:shield",
+    "G": "minecraft:gunpowder"
   },
   "result": {
     "id": "creeperarmor:creeper_shield",

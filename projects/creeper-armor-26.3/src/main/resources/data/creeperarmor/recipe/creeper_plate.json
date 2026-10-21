@@ -6,15 +6,9 @@
     "II"
   ],
   "key": {
-    "P": {
-      "item": "creeperarmor:creeper_powder"
-    },
-    "G": {
-      "item": "minecraft:gunpowder"
-    },
-    "I": {
-      "item": "minecraft:iron_ingot"
-    }
+    "P": "creeperarmor:creeper_powder",
+    "G": "minecraft:gunpowder",
+    "I": "minecraft:iron_ingot"
   },
   "result": {
     "id": "creeperarmor:creeper_plate",
