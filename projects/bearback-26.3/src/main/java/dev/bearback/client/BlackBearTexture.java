@@ -31,7 +31,7 @@ public final class BlackBearTexture {
                 }
                 image.setPixel(x,y,(a<<24)|(bb<<16)|(gg<<8)|rr);
             }
-            cached=Minecraft.getInstance().getTextureManager().register("bearback_black_bear",new DynamicTexture(()->"bearback black bear",image));
+            cached=Minecraft.getInstance().getTextureManager().register(Identifier.fromNamespaceAndPath("bearback","black_bear"),new DynamicTexture(()->"bearback black bear",image));
         }catch(Exception ex){cached=VANILLA;}
         return cached;
     }
