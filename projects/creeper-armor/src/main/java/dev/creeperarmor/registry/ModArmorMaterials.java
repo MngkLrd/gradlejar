@@ -21,19 +21,19 @@ public final class ModArmorMaterials {
     public static final Holder<ArmorMaterial> CREEPER = MATERIALS.register("creeper", () ->
             new ArmorMaterial(
                     Util.make(new EnumMap<>(ArmorItem.Type.class), defense -> {
-                        defense.put(ArmorItem.Type.HELMET, 2);
-                        defense.put(ArmorItem.Type.CHESTPLATE, 6);
-                        defense.put(ArmorItem.Type.LEGGINGS, 5);
-                        defense.put(ArmorItem.Type.BOOTS, 2);
-                        defense.put(ArmorItem.Type.BODY, 5);
+                        defense.put(ArmorItem.Type.HELMET, 3);
+                        defense.put(ArmorItem.Type.CHESTPLATE, 8);
+                        defense.put(ArmorItem.Type.LEGGINGS, 6);
+                        defense.put(ArmorItem.Type.BOOTS, 3);
+                        defense.put(ArmorItem.Type.BODY, 8);
                     }),
                     13,
                     SoundEvents.ARMOR_EQUIP_CHAIN,
                     () -> Ingredient.of(ModItems.CREEPER_PLATE.get()),
                     List.of(new ArmorMaterial.Layer(
                             ResourceLocation.fromNamespaceAndPath(CreeperArmorMod.MOD_ID, "creeper"))),
-                    0.0F,
-                    0.0F
+                    2.5F,
+                    0.05F
             ));
 
     private ModArmorMaterials() {}

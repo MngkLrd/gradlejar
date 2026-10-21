@@ -13,6 +13,7 @@ public final class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(CreeperArmorMod.MOD_ID);
 
     public static final DeferredItem<Item> CREEPER_PLATE = ITEMS.registerSimpleItem("creeper_plate");
+    public static final DeferredItem<Item> CREEPER_POWDER = ITEMS.registerSimpleItem("creeper_powder");
     public static final DeferredItem<ArmorItem> CREEPER_HELMET = armor("creeper_helmet", ArmorItem.Type.HELMET, 165);
     public static final DeferredItem<ArmorItem> CREEPER_CHESTPLATE = armor("creeper_chestplate", ArmorItem.Type.CHESTPLATE, 240);
     public static final DeferredItem<ArmorItem> CREEPER_LEGGINGS = armor("creeper_leggings", ArmorItem.Type.LEGGINGS, 225);
@@ -29,6 +30,7 @@ public final class ModItems {
     public static void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(CREEPER_PLATE);
+            event.accept(CREEPER_POWDER);
         }
         if (event.getTabKey() == CreativeModeTabs.COMBAT) {
             event.accept(CREEPER_HELMET);

@@ -75,6 +75,9 @@ public final class CreeperGameplayEvents {
         int amount = creeper.isPowered() ? 2 : 1;
         event.getDrops().add(new ItemEntity(level, creeper.getX(), creeper.getY() + 0.3D,
                 creeper.getZ(), new ItemStack(ModItems.CREEPER_PLATE.get(), amount)));
+        // Additional material for the new chestplate recipe; original plate drop stays intact.
+        event.getDrops().add(new ItemEntity(level, creeper.getX(), creeper.getY() + 0.3D,
+                creeper.getZ(), new ItemStack(ModItems.CREEPER_POWDER.get(), amount)));
     }
 
     public static boolean hasCompleteSet(ServerPlayer player) {

@@ -1,31 +1,25 @@
-# Creeper Armor 0.1.0
+# Creeper Armor 0.2.0
 
 Minecraft 1.21.1 / NeoForge 21.1.262 / Java 21.
 
-**Status:** first playable mechanics build, placeholder sprites only.
-
-## Mechanics
-- One Creeper Plate drops from a killed creeper; charged creepers drop two.
-- Four craftable Creeper armor pieces, iron-ish defense.
-- Full armor set blocks all explosion damage and vanilla explosion knockback.
-- Any equipped Creeper armor piece acts as a one-use emergency charge: if a hit would leave health below 2 HP, that hit deals zero health damage, one piece is consumed in the order boots, leggings, chestplate, helmet and a block-breaking explosion is created. This blast cannot hurt its owner.
-- Creeper Shield blocks like a vanilla shield. After holding right-click for 12 ticks, its forward explosion is activated once per hold, with block destruction and owner immunity, and costs 50 of 500 durability.
-- Crafting recipes are provided in data/creeperarmor/recipe.
-- Asset textures are placeholders, not final visual design.
+## Changes
+- Original 16x16 item textures for Creeper Plate, Creeper Powder, helmet, chestplate, leggings, boots and shield.
+- Vanilla-compatible 64x32 worn armor texture UVs in textures/models/armor/creeper_layer_1.png and creeper_layer_2.png. Worn armor renders on standard Minecraft's cubic player model, not as a flat inventory sprite.
+- Cuboid 3D model of Creeper Shield with back and edge textures, visible when held or in inventory.
+- Total armor value 20 (helmet 3, chestplate 8, leggings 6, boots 3), and toughness 2.5 per piece: above diamond (2), below netherite (3). Knockback resistance 0.05 per piece.
+- New Creeper Powder drops from creepers in addition to existing Creeper Plate (normal: 1 each; charged: 2 each).
+- Chestplate is crafted in a 2x2 pattern: PG / II. P = Creeper Powder, G = Gunpowder, I = Iron Ingot.
+- Full four-piece armor set blocks explosion damage; each surviving armor piece can be consumed to avert a critical hit and launch a player-safe explosion.
+- Creeper Shield: 500 durability, right-click hold triggers block-breaking directional blast, costing 50 durability.
 
 ## Build
-`gradle --no-daemon clean build`
+```sh
+gradle --no-daemon clean build
+```
+Expected JAR: `build/libs/creeperarmor-0.2.0.jar`.
 
-Expected JAR: `build/libs/creeperarmor-0.1.0.jar`.
+## Testing
+Equip all armor in third person, verify 64x32 texture placement and visor. View the 3D shield in inventory, hand and raised to block, confirm correct positioning. Test drops, new chestplate recipe, explosion resistance, automatic armor-piece consumption, and shield durability in a dedicated server.
 
-## Manual tests
-1. Spawn creepers and charged creepers, kill them and verify drops.
-2. Craft armor and shield, verify their creative tab placement.
-3. With all four armor pieces equipped, stand near TNT and creeper explosions and verify zero damage / zero knockback.
-4. Reduce health to 3 HP, take a fatal hit and verify one armor piece disappears, player survives and surrounding blocks are damaged.
-5. Repeat for each remaining armor piece; once all are gone, vanilla damage resumes.
-6. Hold shield to block attacks, then verify forward blast and 50 durability consumption.
-7. Check both hands, shield breaking after ten blasts and behavior on multiplayer dedicated server.
-
-## Known limitations
-This iteration is mechanics-first. The shield uses a placeholder flat item sprite. The armor texture UVs are placeholders. Blast destruction obeys world explosion gamerules/configuration.
+## Note
+The item PNGs are exact pixel art, not downsized AI renders. The worn armor model is vanilla biped geometry with original UV textures; the shield is a baked 3D JSON cuboid model. In-game client visual verification is still required.

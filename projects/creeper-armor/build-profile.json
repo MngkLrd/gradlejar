@@ -1,6 +1,6 @@
 {
   "slug": "creeperarmor",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
