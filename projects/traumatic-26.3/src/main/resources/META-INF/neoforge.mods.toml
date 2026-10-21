@@ -1,0 +1,19 @@
+license="MIT"
+[[mods]]
+modId="traumacraft"
+version="0.3.1"
+displayName="Traumatic"
+authors="Minemods"
+description="Localized body health, medical items and playable injuries."
+[[dependencies.traumacraft]]
+modId="neoforge"
+type="required"
+versionRange="[26.3.0.90,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.traumacraft]]
+modId="minecraft"
+type="required"
+versionRange="[26.3]"
+ordering="NONE"
+side="BOTH"

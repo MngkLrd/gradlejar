@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " G ",
+    " H ",
+    " S "
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:ghast_tear"
+    },
+    "H": {
+      "item": "traumacraft:herbal_extract"
+    },
+    "S": {
+      "item": "traumacraft:syringe_body"
+    }
+  },
+  "result": {
+    "id": "traumacraft:recovery_serum",
+    "count": 1
+  }
+}
