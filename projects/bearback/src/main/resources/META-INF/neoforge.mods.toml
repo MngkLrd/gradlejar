@@ -3,14 +3,14 @@ loaderVersion="[4,)"
 license="MIT"
 [[mods]]
 modId="bearback"
-version="0.2.0"
+version="0.2.1"
 displayName="Bearback"
 authors="Bearback"
 description="Ride polar and black bears, defend your owner, and carry cargo in craftable leather saddlebags."
 [[dependencies.bearback]]
 modId="neoforge"
 type="required"
-versionRange="[21.1,)"
+versionRange="[21.1.197,)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.bearback]]

@@ -1,4 +1,4 @@
-# Bearback 0.2.0 - Saddlebags (NeoForge 1.21.1)
+# Bearback 0.2.1 - Saddlebags (NeoForge 1.21.1)
 
 Adds independently craftable **Bear Saddlebags** for tamed black and vanilla polar bears. All previous saddle, riding, attack, defensive behavior and black-bear visuals are retained.
 
@@ -22,6 +22,6 @@ Leather   .     Leather
 - Player inventories are unaffected when not riding a bear with bags.
 - A weak-key cache stores a weak bear reference to prevent world-memory retention.
 - Existing worlds/bears from 0.1.2 remain compatible. Packs must be equipped separately.
-- Java 21; NeoForge build version 21.1.262, runtime range [21.1,) in metadata.
-- Build: `gradle clean build` -> `build/libs/bearback-1.21.1-0.2.0.jar`.
+- Java 21; NeoForge build version 21.1.197, runtime range [21.1.197,) in metadata.
+- Build: `gradle clean build` -> `build/libs/bearback-1.21.1-0.2.1.jar`.
 - Test dedicated server, multiplayer permissions, full slots, Shift-click, reload, player death vs bear death, GUI open from riding E and ground.
