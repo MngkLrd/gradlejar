@@ -1,0 +1,61 @@
+name: Build Potion Timer Bar
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'projects/potiontimerbar/**'
+      - '.github/workflows/potiontimerbar.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: potiontimerbar-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+      - name: Compile with real Minecraft and NeoForge dependencies
+        working-directory: projects/potiontimerbar
+        run: gradle --no-daemon --stacktrace clean build
+      - name: Validate mod JAR
+        working-directory: projects/potiontimerbar
+        run: |
+          python3 - <<'PY'
+          import zipfile
+          from pathlib import Path
+          jar = Path('build/libs/potiontimerbar-0.1.0.jar')
+          assert jar.exists() and jar.stat().st_size > 5000, 'Missing or empty mod JAR'
+          with zipfile.ZipFile(jar) as z:
+              files = set(z.namelist())
+              assert 'META-INF/neoforge.mods.toml' in files
+              assert 'dev/minemods/potiontimerbar/PotionTimerBar.class' in files
+              assert 'dev/minemods/potiontimerbar/PotionHudOverlay.class' in files
+              assert 'dev/minemods/potiontimerbar/EffectTracker.class' in files
+              assert 'dev/minemods/potiontimerbar/HudConfig.class' in files
+              print('Validated:', jar, jar.stat().st_size, 'bytes')
+          PY
+      - name: Publish compiled JAR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="ci-potiontimerbar-mc1.21.1-neoforge-0.1.0-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" projects/potiontimerbar/build/libs/potiontimerbar-0.1.0.jar \
+            --target "$GITHUB_SHA" \
+            --title "Potion Timer Bar 0.1.0 | Minecraft 1.21.1 NeoForge" \
+            --notes "Client-only effect timer HUD. Compiled with real Minecraft 1.21.1 + NeoForge 21.1.1. Java 21. Build and JAR validation passed; in-game behavior still needs testing." \
+            --prerelease
+          echo "https://github.com/${GITHUB_REPOSITORY}/releases/tag/$tag" >> "$GITHUB_STEP_SUMMARY"
