@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.PolarBearRenderer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ClientTickEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -47,7 +47,8 @@ public final class ClientHooks {
     private static void logout(net.minecraftforge.client.event.ClientPlayerNetworkEvent.LoggingOut e){
         SADDLES.clear();
     }
-    private static void clientTick(ClientTickEvent.Post e){
+    private static void clientTick(TickEvent.ClientTickEvent e){
+        if(e.phase!=TickEvent.Phase.END)return;
         Minecraft mc=Minecraft.getInstance();
         if(mc.player==null||mc.level==null||mc.screen!=null||!(mc.player.getVehicle() instanceof PolarBear))return;
         boolean attack=SWIPE.consumeClick();
