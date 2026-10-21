@@ -25,7 +25,7 @@ public final class SaddleLayer extends RenderLayer<PolarBearRenderState,PolarBea
                                  PolarBearRenderState state,float yaw,float pitch){
         if(!(state instanceof BearRenderState custom)||!custom.bearbackSaddled||state.isBaby||state.isInvisible)return;
         collector.submitModel(saddleModel,state,pose,RenderTypes.entityCutout(TEXTURE),
-                light,LivingEntityRenderer.getOverlayCoords(state,0f),-1,null,state.outlineColor,null);
+                light,LivingEntityRenderer.getOverlayCoords(state,0f),-1);
     }
     private static LayerDefinition mesh(){
         MeshDefinition mesh=new MeshDefinition();

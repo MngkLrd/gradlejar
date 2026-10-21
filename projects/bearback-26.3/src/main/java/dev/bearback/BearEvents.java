@@ -57,10 +57,10 @@ public final class BearEvents {
         } else if(held.is(Items.SADDLE)&&!isSaddled(bear)){
             bear.getPersistentData().putBoolean(SADDLED,true);BearNetwork.sync(bear);
             if(!p.getAbilities().instabuild)held.shrink(1);
-            bear.level().playSound(null,bear.blockPosition(),SoundEvents.HORSE_SADDLE,SoundSource.NEUTRAL,1,1);
+            bear.level().playSound(null,bear.blockPosition(),SoundEvents.HORSE_SADDLE.value(),SoundSource.NEUTRAL,1,1);
         } else if(held.is(Items.SHEARS)&&p.isShiftKeyDown()&&isSaddled(bear)){
             bear.getPersistentData().putBoolean(SADDLED,false);BearNetwork.sync(bear);
-            bear.spawnAtLocation(Items.SADDLE);
+            bear.spawnAtLocation((ServerLevel)bear.level(),Items.SADDLE);
         } else if(held.isEmpty()&&!p.isShiftKeyDown()&&isSaddled(bear)){
             p.startRiding(bear);bear.getNavigation().stop();
         }
@@ -107,14 +107,14 @@ public final class BearEvents {
         double dz=(Math.cos(angle)*f+Math.sin(angle)*s)*speed;
         b.setYRot(yaw);b.yBodyRot=yaw;b.yHeadRot=yaw;b.getNavigation().stop();
         double vy=b.getDeltaMovement().y;if(jump&&b.onGround())vy=.43;
-        b.setDeltaMovement(dx,vy,dz);b.hasImpulse=true;
+        b.setDeltaMovement(dx,vy,dz);
         if(attack)swipe(b,p);
     }
     private static void swipe(PolarBear bear,ServerPlayer rider){
         CompoundTag data=bear.getPersistentData();long time=bear.level().getGameTime();
         if(time-data.getLongOr(LAST_SWIPE,0)<30)return;
         data.putLong(LAST_SWIPE,time);data.putLong(STAND_UNTIL,time+13);bear.setStanding(true);
-        bear.level().playSound(null,bear.blockPosition(),SoundEvents.POLAR_BEAR_WARNING,SoundSource.NEUTRAL,.9F,.9F);
+        bear.level().playSound(null,bear.blockPosition(),SoundEvents.POLAR_BEAR_WARNING.value(),SoundSource.NEUTRAL,.9F,.9F);
         for(LivingEntity target:bear.level().getEntitiesOfClass(LivingEntity.class,bear.getBoundingBox().inflate(3),
                 x->x!=bear&&x!=rider&&x.isAlive())){
             if(bear.distanceToSqr(target)>12.25)continue;
@@ -122,7 +122,7 @@ public final class BearEvents {
             double dot=-Math.sin(Math.toRadians(bear.getYRot()))*x+Math.cos(Math.toRadians(bear.getYRot()))*z;
             if(dot<.4)continue;
             if(target.hurtServer((ServerLevel)bear.level(),bear.damageSources().mobAttack(bear),6))
-                target.knockback(.85,-x,-z);
+                target.knockback(.85,-x,-z,bear.damageSources().mobAttack(bear),0f);
         }
     }
 }

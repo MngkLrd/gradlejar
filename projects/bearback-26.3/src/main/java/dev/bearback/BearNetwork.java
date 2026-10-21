@@ -7,6 +7,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.animal.polarbear.PolarBear;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -22,7 +23,7 @@ public final class BearNetwork {
                 dev.bearback.client.ClientHooks.syncSaddle(payload.id,payload.saddled));
     }
     public static void ride(float forward,float strafe,boolean jump,boolean attack,float yaw){
-        PacketDistributor.sendToServer(new Ride(forward,strafe,jump,attack,yaw));
+        ClientPacketDistributor.sendToServer(new Ride(forward,strafe,jump,attack,yaw));
     }
     public static void sync(PolarBear bear){
         if(!bear.level().isClientSide())

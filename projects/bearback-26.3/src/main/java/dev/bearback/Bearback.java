@@ -10,7 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.minecraft.world.item.SpawnEggItem;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
@@ -30,7 +30,7 @@ public class Bearback {
                     builder->builder.sized(1.4F,1.4F).clientTrackingRange(8));
     public static final DeferredRegister.Items ITEMS=DeferredRegister.createItems(MOD_ID);
     public static final Supplier<Item> BLACK_BEAR_EGG=ITEMS.register("black_bear_spawn_egg",
-            ()->new DeferredSpawnEggItem(BLACK_BEAR,0x242528,0xb9a184,new Item.Properties()));
+            ()->new SpawnEggItem(new Item.Properties().spawnEgg(BLACK_BEAR.get())));
 
     public Bearback(IEventBus bus){
         ENTITIES.register(bus);ITEMS.register(bus);
