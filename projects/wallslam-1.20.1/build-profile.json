@@ -1,9 +1,9 @@
 {
   "slug": "wallslam",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "minecraft": "1.20.1",
-  "loader": "neoforge",
+  "loader": "forge",
   "java": "17",
   "gradle": "8.14.5",
-  "jar_glob": "wallslam-1.20.1-0.3.1.jar"
+  "jar_glob": "wallslam-1.20.1-0.3.2.jar"
 }

@@ -1,14 +1,14 @@
 license="MIT"
 [[mods]]
 modId="wallslam"
-version="0.3.1"
+version="0.3.2"
 displayName="Wallslam"
 authors="Wallslam Project"
 description="Knock mobs into walls for a small bonus impact hit."
 [[dependencies.wallslam]]
 modId="neoforge"
 type="required"
-versionRange="[26.3.0.90,)"
+versionRange="[26.3.0.76,)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.wallslam]]
