@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "norsegear:block/bog_iron_deposit"
+  }
+}

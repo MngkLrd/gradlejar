@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "F F",
+    "FLF",
+    "FFF"
+  ],
+  "key": {
+    "F": "norsegear:forged_iron",
+    "L": "norsegear:leather_binding"
+  },
+  "result": {
+    "id": "norsegear:norse_chestplate",
+    "count": 1
+  }
+}

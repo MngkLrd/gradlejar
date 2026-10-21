@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  F",
+    " S ",
+    "L  "
+  ],
+  "key": {
+    "F": "norsegear:forged_iron",
+    "S": "minecraft:stick",
+    "L": "norsegear:leather_binding"
+  },
+  "result": {
+    "id": "norsegear:spear",
+    "count": 1
+  }
+}

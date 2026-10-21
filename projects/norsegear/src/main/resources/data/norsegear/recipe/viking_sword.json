@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " F ",
+    " F ",
+    " L "
+  ],
+  "key": {
+    "F": "norsegear:forged_iron",
+    "L": "norsegear:leather_binding"
+  },
+  "result": {
+    "id": "norsegear:viking_sword",
+    "count": 1
+  }
+}

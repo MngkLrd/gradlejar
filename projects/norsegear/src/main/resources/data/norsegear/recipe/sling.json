@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " L ",
+    "STS",
+    " S "
+  ],
+  "key": {
+    "L": "norsegear:leather_binding",
+    "S": "minecraft:string",
+    "T": "minecraft:stick"
+  },
+  "result": {
+    "id": "norsegear:sling",
+    "count": 1
+  }
+}

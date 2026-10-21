@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "OOO",
+    "OFO",
+    "OTO"
+  ],
+  "key": {
+    "O": "minecraft:oak_planks",
+    "F": "norsegear:forged_iron",
+    "T": "norsegear:pitch_flask"
+  },
+  "result": {
+    "id": "norsegear:round_shield",
+    "count": 1
+  }
+}

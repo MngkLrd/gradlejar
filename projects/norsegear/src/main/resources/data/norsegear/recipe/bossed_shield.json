@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " F ",
+    "FRF",
+    " F "
+  ],
+  "key": {
+    "F": "norsegear:forged_iron",
+    "R": "norsegear:round_shield"
+  },
+  "result": {
+    "id": "norsegear:bossed_shield",
+    "count": 1
+  }
+}
