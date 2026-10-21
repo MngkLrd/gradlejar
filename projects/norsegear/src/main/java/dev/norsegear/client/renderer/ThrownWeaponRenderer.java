@@ -29,8 +29,11 @@ public final class ThrownWeaponRenderer extends EntityRenderer<ThrownWeaponEntit
         pose.pushPose();
         float interpolatedYaw = Mth.lerp(partialTick, entity.yRotO, entity.getYRot());
         float interpolatedPitch = Mth.lerp(partialTick, entity.xRotO, entity.getXRot());
-        pose.mulPose(Axis.YP.rotationDegrees(180.0F - interpolatedYaw));
-        pose.mulPose(Axis.XP.rotationDegrees(90.0F - interpolatedPitch));
+        // Model shaft is aligned with local +Y. Rotate it to the actual
+        // velocity direction: yaw=0 looks +Z and positive pitch looks down.
+        // The old (180-yaw, 90-pitch) transform pointed it backwards/upwards.
+        pose.mulPose(Axis.YP.rotationDegrees(-interpolatedYaw));
+        pose.mulPose(Axis.XP.rotationDegrees(90.0F + interpolatedPitch));
         if (!entity.isSpearShape()) {
             pose.mulPose(Axis.ZP.rotationDegrees((entity.tickCount + partialTick) * 31.0F));
         }

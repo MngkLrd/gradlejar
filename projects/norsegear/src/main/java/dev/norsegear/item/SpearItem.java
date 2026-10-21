@@ -36,9 +36,12 @@ public final class SpearItem extends SwordItem {
     public void releaseUsing(ItemStack stack, Level level, LivingEntity user, int timeLeft) {
         if (!(user instanceof Player player) || level.isClientSide) return;
         if (getUseDuration(stack, user) - timeLeft < 10 || player.getCooldowns().isOnCooldown(this)) return;
+        // A thrown spear must have at least one durability point left after
+        // the throw. The old clamp could keep a nearly broken spear immortal.
+        if (stack.getDamageValue() >= stack.getMaxDamage() - 1) return;
         ThrownWeaponEntity projectile = new ThrownWeaponEntity(ModEntities.JAVELIN.get(), player, level);
         ItemStack thrown = stack.copyWithCount(1);
-        thrown.setDamageValue(Math.min(thrown.getMaxDamage() - 1, thrown.getDamageValue() + 1));
+        thrown.setDamageValue(thrown.getDamageValue() + 1);
         projectile.setItem(thrown);
         projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 2.65F, 0.6F);
         if (level.addFreshEntity(projectile)) {

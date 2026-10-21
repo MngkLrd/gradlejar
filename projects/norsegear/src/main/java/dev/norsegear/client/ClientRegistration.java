@@ -47,10 +47,21 @@ public final class ClientRegistration {
                     ItemStack stack, EquipmentSlot slot, HumanoidModel<?> original) {
                 if (model == null) model = new NorseArmorModel(
                     Minecraft.getInstance().getEntityModels().bakeLayer(ARMOR_LAYER));
+                // NeoForge may request the same model for all four equipment slots.
+                // Copy the entity's CURRENT animated pose before exposing individual parts.
+                // Without this the extra shoulder/leg geometry can remain in a bind pose.
+                copyArmorPose(original, model);
                 model.onlyPiece(slot);
                 return model;
             }
         }, ModItems.NORSE_HELMET.get(), ModItems.NORSE_CHESTPLATE.get(),
            ModItems.NORSE_LEGGINGS.get(), ModItems.NORSE_BOOTS.get());
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static void copyArmorPose(HumanoidModel<?> source, NorseArmorModel target) {
+        // The source and target share the vanilla humanoid part layout.
+        // Generics differ only in their entity type, not in their pose data.
+        ((HumanoidModel) source).copyPropertiesTo(target);
     }
 }

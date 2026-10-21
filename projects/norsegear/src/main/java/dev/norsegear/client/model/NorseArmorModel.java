@@ -53,17 +53,33 @@ public final class NorseArmorModel extends HumanoidModel<LivingEntity> {
         return LayerDefinition.create(mesh, 64, 32);
     }
 
-    /** Set the visible humanoid parts AND the accessory geometry for each slot. */
+    /**
+     * Slot masking must be reversible. Individual ModelPart children hold the
+     * volumetric details, and must be switched back on after a previous slot
+     * hid them. Otherwise the first armor piece to render can affect the next.
+     */
     public void onlyPiece(net.minecraft.world.entity.EquipmentSlot slot) {
         setAllVisible(false);
         boolean helmet = slot == net.minecraft.world.entity.EquipmentSlot.HEAD;
         boolean chest = slot == net.minecraft.world.entity.EquipmentSlot.CHEST;
         boolean legs = slot == net.minecraft.world.entity.EquipmentSlot.LEGS;
         boolean boots = slot == net.minecraft.world.entity.EquipmentSlot.FEET;
+
         head.visible = helmet;
+        hat.visible = false; // Never overlay an extra vanilla hat on the helmet.
+        for (String part : new String[]{"nasal_guard", "brow", "helm_crown", "left_cheek", "right_cheek"}) {
+            head.getChild(part).visible = helmet;
+        }
+
         body.visible = chest;
+        for (String part : new String[]{"breast_plate", "belt", "belt_buckle", "back_plate"}) {
+            body.getChild(part).visible = chest;
+        }
         leftArm.visible = chest;
         rightArm.visible = chest;
+        leftArm.getChild("pauldron").visible = chest;
+        rightArm.getChild("pauldron").visible = chest;
+
         leftLeg.visible = legs || boots;
         rightLeg.visible = legs || boots;
         for (ModelPart leg : new ModelPart[]{leftLeg, rightLeg}) {

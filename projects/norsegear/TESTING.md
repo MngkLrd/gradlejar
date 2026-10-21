@@ -68,3 +68,46 @@
 6. War Horn produces audible goat horn music and only buffs allied nearby players.
 7. With JEI (without incompatible JEI++), inspect 24 crafting recipes, enter/leave the same world twice.
 8. Server boot test validates registry/worldgen and recipe parsing only. It does **not** render anything.
+
+
+### Norse Gear 0.1.13 3D render regression tests
+1. Wear one piece at a time and then full set. Ensure armor does not render whole suit when a single part is equipped. Inspect Steve, Alex, crouching, running and swimming.
+2. Hold Javelin for 10+ ticks then release; short tap must NOT spawn projectile. Recover thrown item from ground. Test inventory stack in survival/creative.
+3. Hold Spear then throw and retrieve. Verify no extra copy, no unintentional double consumption, correct durability.
+4. Hold Throwing Axe; release, observe spin and recovery. All three need visible 3D geometry from front and side.
+5. Block with all three shields (right mouse) and verify held-model thickness, the boss, damage prevention and +2 armor while bossed shield is in offhand.
+6. War Horn produces audible goat horn music and only buffs allied nearby players.
+7. With JEI (without incompatible JEI++), inspect 24 crafting recipes, enter/leave the same world twice.
+8. Server boot test validates registry/worldgen and recipe parsing only. It does **not** render anything.
+
+
+### Norse Gear 0.1.13 3D render regression tests
+1. Wear one piece at a time and then full set. Ensure armor does not render whole suit when a single part is equipped. Inspect Steve, Alex, crouching, running and swimming.
+2. Hold Javelin for 10+ ticks then release; short tap must NOT spawn projectile. Recover thrown item from ground. Test inventory stack in survival/creative.
+3. Hold Spear then throw and retrieve. Verify no extra copy, no unintentional double consumption, correct durability.
+4. Hold Throwing Axe; release, observe spin and recovery. All three need visible 3D geometry from front and side.
+5. Block with all three shields (right mouse) and verify held-model thickness, the boss, damage prevention and +2 armor while bossed shield is in offhand.
+6. War Horn produces audible goat horn music and only buffs allied nearby players.
+7. With JEI (without incompatible JEI++), inspect 24 crafting recipes, enter/leave the same world twice.
+8. Server boot test validates registry/worldgen and recipe parsing only. It does **not** render anything.
+
+
+### Norse Gear 0.1.13 3D render regression tests
+1. Wear one piece at a time and then full set. Ensure armor does not render whole suit when a single part is equipped. Inspect Steve, Alex, crouching, running and swimming.
+2. Hold Javelin for 10+ ticks then release; short tap must NOT spawn projectile. Recover thrown item from ground. Test inventory stack in survival/creative.
+3. Hold Spear then throw and retrieve. Verify no extra copy, no unintentional double consumption, correct durability.
+4. Hold Throwing Axe; release, observe spin and recovery. All three need visible 3D geometry from front and side.
+5. Block with all three shields (right mouse) and verify held-model thickness, the boss, damage prevention and +2 armor while bossed shield is in offhand.
+6. War Horn produces audible goat horn music and only buffs allied nearby players.
+7. With JEI (without incompatible JEI++), inspect 24 crafting recipes, enter/leave the same world twice.
+8. Server boot test validates registry/worldgen and recipe parsing only. It does **not** render anything.
+
+### 0.1.14 targeted in-game regressions
+
+- Equip head, chest, legs and boots one at a time, then together; look for ghost pieces or missing children.
+- Walk, sprint, crouch, swing both arms: breastplate/pauldrons/greaves must follow animations.
+- Throw a spear/javelin forward, diagonally upward and downward; tip must face velocity, not backwards.
+- Throw an axe and observe end-over-end tumble; test block hit, mob hit and dropped stack pickup.
+- Test throwing a spear at 1 durability: it should not make an immortal projectile or duplicate the item.
+- Verify blocked hits using all three shields and the umbon shield offhand +2 armor; sound from war horn.
+- Test fresh world and reopening saved world with standard JEI only (known incompatibility with JEI++ is external).

@@ -27,6 +27,9 @@ jobs:
       - name: Validate 1.21.1 recipe JSON
         working-directory: projects/norsegear
         run: python3 tools/validate_recipe_data.py
+      - name: Validate armor and projectile render source invariants
+        working-directory: projects/norsegear
+        run: python3 tools/validate_gear_render.py
       - name: Compile mod
         working-directory: projects/norsegear
         run: gradle --no-daemon build
