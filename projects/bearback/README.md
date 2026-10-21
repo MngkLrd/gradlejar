@@ -1,4 +1,4 @@
-# Bearback 0.1.2 (NeoForge 1.21.1)
+# Bearback 0.2.0 (NeoForge 1.21.1)
 
 Adds black bears and allows taming, saddling and riding polar bears and black bears. No dependency on Rideable Polar Bears. Java 21.
 
@@ -13,7 +13,7 @@ Adds black bears and allows taming, saddling and riding polar bears and black be
 
 ## Build
 Java 21, Gradle 9.2.1: `gradle clean build`.
-JAR: `build/libs/bearback-1.21.1-0.1.2.jar`
+JAR: `build/libs/bearback-1.21.1-0.2.0.jar`
 
 ## Testing
 - New world spawn of black bear; `/summon bearback:black_bear`.
@@ -29,3 +29,6 @@ JAR: `build/libs/bearback-1.21.1-0.1.2.jar`
 
 ### CI
 This module has its own build-profile.json and is selectable via project_dir=projects/bearback.
+
+## 0.2.0: Saddlebags
+See README_CARGO.md for craft, 18 slots, E while riding, sneak-right click, persistence, and death drops.

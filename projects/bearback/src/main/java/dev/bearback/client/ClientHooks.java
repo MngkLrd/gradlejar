@@ -3,6 +3,9 @@ package dev.bearback.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.bearback.BearRidePacket;
 import dev.bearback.Bearback;
+import dev.bearback.OpenCargoPacket;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
@@ -26,6 +29,7 @@ public final class ClientHooks {
 
     static {
         NeoForge.EVENT_BUS.addListener(ClientHooks::onClientTick);
+        NeoForge.EVENT_BUS.addListener(ClientHooks::onScreenOpening);
     }
 
     @SubscribeEvent
@@ -42,8 +46,20 @@ public final class ClientHooks {
     public static void layers(EntityRenderersEvent.AddLayers event) {
         PolarBearRenderer polar = event.getRenderer(EntityType.POLAR_BEAR);
         if (polar != null) polar.addLayer(new SaddleLayer(polar));
+        if (polar != null) polar.addLayer(new SaddlebagsLayer(polar));
         PolarBearRenderer black = event.getRenderer(Bearback.BLACK_BEAR.get());
         if (black != null) black.addLayer(new SaddleLayer(black));
+        if (black != null) black.addLayer(new SaddlebagsLayer(black));
+    }
+
+    private static void onScreenOpening(ScreenEvent.Opening event) {
+        if (!(event.getNewScreen() instanceof InventoryScreen)) return;
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null && mc.player.getVehicle() instanceof PolarBear bear
+                && bear.getData(Bearback.BAGS.get())) {
+            event.setCanceled(true);
+            PacketDistributor.sendToServer(new OpenCargoPacket(bear.getId()));
+        }
     }
 
     private static void onClientTick(ClientTickEvent.Post event) {

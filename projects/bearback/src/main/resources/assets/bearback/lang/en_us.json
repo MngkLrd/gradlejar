@@ -2,5 +2,7 @@
   "entity.bearback.black_bear": "Black Bear",
   "item.bearback.black_bear_spawn_egg": "Black Bear Spawn Egg",
   "key.categories.bearback": "Bearback",
-  "key.bearback.swipe": "Bear Paw Swipe"
+  "key.bearback.swipe": "Bear Paw Swipe",
+  "item.bearback.saddlebags": "Bear Saddlebags",
+  "container.bearback.saddlebags": "Bear Saddlebags"
 }
