@@ -1,0 +1,19 @@
+license="MIT"
+[[mods]]
+modId="bearback"
+version="0.1.2"
+displayName="Bearback"
+authors="Bearback"
+description="Ride polar and black bears, with taming, 3D saddles, owner defense and a powerful paw swipe."
+[[dependencies.bearback]]
+modId="neoforge"
+type="required"
+versionRange="[26.3.0.76,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.bearback]]
+modId="minecraft"
+type="required"
+versionRange="[26.3]"
+ordering="NONE"
+side="BOTH"
