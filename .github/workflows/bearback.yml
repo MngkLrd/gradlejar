@@ -29,15 +29,15 @@ jobs:
         working-directory: projects/bearback
         run: gradle --no-daemon --stacktrace clean build
       - name: Publish JAR to GitHub Releases
-        if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'fix/bearback-saddle-v011')
+        if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'fix/bearback-fit-v012')
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_NUMBER: ${{ github.run_number }}
           TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          tag="ci-bearback-mc1.21.1-0.1.1-${RUN_NUMBER}"
-          gh release create "$tag" projects/bearback/build/libs/bearback-1.21.1-0.1.1.jar \
+          tag="ci-bearback-mc1.21.1-0.1.2-${RUN_NUMBER}"
+          gh release create "$tag" projects/bearback/build/libs/bearback-1.21.1-0.1.2.jar \
             --target "$TARGET_SHA" \
-            --title "Bearback 0.1.1 | Minecraft 1.21.1 NeoForge" \
+            --title "Bearback 0.1.2 | Minecraft 1.21.1 NeoForge" \
             --notes "Compiled on GitHub Actions. Build-verified with NeoForge 1.21.1; gameplay awaits in-game check." \
             --prerelease
