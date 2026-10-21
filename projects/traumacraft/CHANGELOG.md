@@ -15,3 +15,8 @@ Note: A prototype. Core vanilla survival health and medical consumables remain a
 ## 0.1.0 - injury simulation foundation
 - Seven persisted body zones with local HP, fractures, bleeding and three medical items.
 - Approximate hit selection and /trauma debug commands.
+
+### 0.2.0 integration details
+- JEI: optional ingredient information pages for Bandage, Splint and Medkit; crafting recipes remain discoverable normally.
+- Separate TraumaCraft | Medicine creative inventory category for all treatment items.
+- Original 16x16 medical icons and per-limb cursor treatment through the inventory panel.
