@@ -41,7 +41,7 @@ public class Bearback {
             DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MOD_ID);
     public static final Supplier<AttachmentType<Boolean>> SADDLED = ATTACHMENTS.register("saddled",
             () -> AttachmentType.builder(() -> false)
-                    .serialize(Codec.BOOL.fieldOf("value"))
+                    .serialize(Codec.BOOL)
                     .sync(ByteBufCodecs.BOOL).build());
 
     public Bearback(IEventBus bus) {

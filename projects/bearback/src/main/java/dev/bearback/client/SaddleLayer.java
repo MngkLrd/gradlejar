@@ -12,7 +12,7 @@ import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.joml.AxisAngle4f;
+
 import com.mojang.math.Axis;
 
 public final class SaddleLayer extends RenderLayer<PolarBear, PolarBearModel<PolarBear>> {
@@ -28,8 +28,9 @@ public final class SaddleLayer extends RenderLayer<PolarBear, PolarBearModel<Pol
                        float ageInTicks, float netHeadYaw, float headPitch) {
         if (!bear.getData(Bearback.SADDLED.get())) return;
         pose.pushPose();
-        this.getParentModel().body.translateAndRotate(pose);
-        pose.translate(0, -0.39, 0.06);
+        float standing = bear.getStandingAnimationScale(partialTick);
+        pose.translate(0.0, -0.28 + standing * 0.1, 0.06 + standing * 0.12);
+        
         pose.mulPose(Axis.XP.rotationDegrees(90));
         pose.scale(1.3F, 1.3F, 1.3F);
         Minecraft.getInstance().getItemRenderer().renderStatic(
