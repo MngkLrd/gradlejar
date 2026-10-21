@@ -30,3 +30,12 @@
 5. Test `setblock ~ ~ ~ norsegear:bog_iron_deposit` then mine with a stone shovel.
 6. Open a newly generated Overworld chunk and verify natural deposits under soil (not replacing grass blocks).
 7. Verify 5 batch 4 inventory sprites appear at native 32x32 and all armor icon/UV assets remain unchanged.
+
+### 0.1.11 art and runtime regression
+
+1. Confirm all 24 inventory textures render and none are purple/black missing-texture squares.
+2. Open creative inventory and survival inventory (1x, GUI Scale 2/3) to check silhouette and color contrast.
+3. Check carved horn vs war horn and bog iron vs forged iron visually.
+4. Create a new world with NeoForge 21.1.264 and confirm no `configured_feature/bog_iron` errors.
+5. Keep a separate test save; the improved worldgen is newly generated chunks only.
+6. Verify equipped armor in third-person and on an armor stand; render appearance is not confirmed by the CI smoke test.

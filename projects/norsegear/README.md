@@ -1,4 +1,4 @@
-# Norse Gear 0.1.10 — 32x32 weapon silhouettes (batch 1)
+# Norse Gear 0.1.11 — Complete 24-item 32x32 Art Pass
 
 One standalone mod. Minecraft 1.21.1, NeoForge 21.1.262, Java 21; build with Gradle 9.2.1.
 
@@ -16,7 +16,7 @@ One standalone mod. Minecraft 1.21.1, NeoForge 21.1.262, Java 21; build with Gra
 gradle --no-daemon clean build
 ```
 
-Expected: `build/libs/norsegear-0.1.10.jar`. Sources include `build-profile.json` for the MngkLrd/gradlejar CI. NeoForge ModDevGradle 2.0.148 and JEI 19.51.0.418 API (compileOnly, not bundled). The worldgen is data-driven via NeoForge biome modifier; pack authors can adjust chance, count, deposit size, surface depth and overworld biome tags. **New chunks only** for natural deposits. `/setblock ~ ~ ~ norsegear:bog_iron_deposit` allows testing in existing worlds.
+Expected: `build/libs/norsegear-0.1.11.jar`. Sources include `build-profile.json` for the MngkLrd/gradlejar CI. NeoForge ModDevGradle 2.0.148 and JEI 19.51.0.418 API (compileOnly, not bundled). The worldgen is data-driven via NeoForge biome modifier; pack authors can adjust chance, count, deposit size, surface depth and overworld biome tags. **New chunks only** for natural deposits. `/setblock ~ ~ ~ norsegear:bog_iron_deposit` allows testing in existing worlds.
 
 ### JEI integrity
 
@@ -54,8 +54,15 @@ Actual UV-mapped in-game vanilla humanoid equipment uses 128×64 textures `asset
 ## Design batch 4 + worldgen hotfix (0.1.10)
 
 - Added five original manually-authored native 32×32 transparent RGBA sprites: sling, stone shot, war horn, field whetstone, and travel ration. They are pixel-grid drawings, not AI renders resized from larger images.
-- Preserved all existing registered items, recipes, gameplay systems, and equip armor UV textures. 19 of 24 item icons now use approved-style 32×32 art; 5 icons remain placeholders.
+- Preserved all existing registered items, recipes, gameplay systems, and equip armor UV textures. All 24 registered item icons use hand-authored 32×32 art; no 16×16 inventory placeholders remain.
 - Fixed the **verified runtime world-creation crash** from 0.1.9: `minecraft:block_match` must use singular `block`, **not** `blocks`, in each entry of `data/norsegear/worldgen/configured_feature/bog_iron.json`. Verified against the actual user-provided Minecraft 1.21.1 crash log and vanilla examples.
 - The resource still replaces only `minecraft:dirt`, `minecraft:mud`, `minecraft:clay`, excluding grassy surface blocks. Generation remains biome-tag-based across the Overworld.
 - Enhanced JAR verification to assert correctly encoded worldgen block match predicates and all 19 full-size item textures.
 - This build requires live client world-creation test, because static Gradle compilation alone cannot test data-driven worldgen.
+
+## 0.1.11 - Final five item textures
+
+- Complete native 32x32 (RGBA) art for `pitch_flask`, `bog_iron`, `forged_iron`, `leather_binding`, `carved_horn`. Each is constructed from colored pixel polygons on the target grid with one-pixel outlines and no image resampling.
+- **All 24 item inventory icons now 32x32.** The environmental `bog_iron_deposit` block has its own separate terrain texture and is not one of the 24 items. Armor-on-player UV textures remain 128x64.
+- Retains 0.1.10 critical world-creation fix (`minecraft:block_match` singular `block`), data-driven Overworld generation and gameplay systems.
+- CI `verify_release.py` now rejects non-32x32 item sprites. The release is not gameplay-certified until the actual client tests described in TESTING.md.
