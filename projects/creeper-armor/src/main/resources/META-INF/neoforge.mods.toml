@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="Creeper Armor"
+authors="Creeper Armor Project"
+description='''Creeper-themed armor, reactive life-saving blasts and an explosive shield.'''
+
+[[dependencies.creeperarmor]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.262,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.creeperarmor]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
