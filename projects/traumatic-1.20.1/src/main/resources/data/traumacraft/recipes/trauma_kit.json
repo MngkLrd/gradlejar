@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "FMF",
+    "AGA",
+    "IFI"
+  ],
+  "key": {
+    "F": {
+      "item": "traumacraft:sterile_fabric"
+    },
+    "M": {
+      "item": "traumacraft:field_medkit"
+    },
+    "A": {
+      "item": "traumacraft:antiseptic"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "traumacraft:trauma_kit"
+  }
+}

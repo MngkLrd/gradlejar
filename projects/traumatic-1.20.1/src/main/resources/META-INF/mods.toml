@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+[[mods]]
+modId="traumacraft"
+version="0.3.1"
+displayName="Traumatic"
+authors="Minemods"
+description='''Seven-part localized injury and medical survival system with 23 craftable supplies and JEI support.'''
+[[dependencies.traumacraft]]
+modId="forge"
+mandatory=true
+versionRange="[47.4.10,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.traumacraft]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.20.2)"
+ordering="NONE"
+side="BOTH"
