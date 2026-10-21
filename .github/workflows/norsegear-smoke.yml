@@ -32,6 +32,8 @@ jobs:
         run: |
           python3 tools/validate_gear_render.py
           python3 tools/validate_3d_models.py
+          python3 tools/validate_obj_032.py
+          python3 tools/validate_3d_items.py
           python3 tools/validate_3d_items.py
           python3 tools/validate_16_art.py
       - name: Compile mod

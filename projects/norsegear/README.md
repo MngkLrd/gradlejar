@@ -33,3 +33,12 @@ Optional animation installation and honest limitations: see [ANIMATION_COMPAT.md
 **Five-item concept translation:** Rebuilt bearded axe, Dane axe, spear, javelin and round shield as real detailed JSON cuboid geometry with a separate 256px UV texture; upgraded the worn-armor ModelPart geometry and rebuilt its 256px UVs. Genuine source-driven previews: `PREVIEW_3D_ACTUAL_031.png` and `PREVIEW_ARMOR_ACTUAL_031.png`. Preview code in `tools/render_showcase031.py`. This first model translation is intentionally more blocky than the generated concept art; it is not a promise of 1:1 sculpt fidelity.
 
 **Known limitation:** static GL rendering and real animated Better Combat behaviour have not yet been directly tested in Minecraft client by the build process. The supplied `PREVIEW_3D.png` is a Python orthographic schematic, not an actual game screenshot.
+
+
+## 0.3.2 Concept-to-Game Geometry
+- Rebuilt spear/javelin leaf with faceted, stepped steel sections and raised spine.
+- Round shield gains 12 iron rim rivets, inset clamps, layered umbon and reverse grip.
+- Worn armor adds animated helmet bands, cheek rims, armor straps, chest plate, pauldrons and greaves.
+- Distinct 256x256 UV pixels for each worn-armor structural detail.
+- Inspect PREVIEW_3D_ACTUAL_032.png and PREVIEW_ARMOR_ACTUAL_032.png, both source-rendered.
+- Optional Better Combat support, all original gameplay/recipes/worldgen preserved.

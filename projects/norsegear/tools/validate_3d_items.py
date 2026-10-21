@@ -10,8 +10,13 @@ tex=ROOT/'src/main/resources/assets/norsegear/textures/item'
 assert struct.unpack('>II',(tex/'norse_3d_materials.png').read_bytes()[16:24])==(64,64)
 for item in sorted(items):
  d=json.loads((models/(item+'.json')).read_text())
+ if item in ('round_shield','spear','javelin'):
+  assert d.get('loader') == 'neoforge:obj',item
+  assert d['textures']['texture0'] == 'norsegear:item/norse_showcase_materials',item
+  assert 'gui' in d['display']
+  continue
  assert len(d['elements'])>=3,item
- assert len(d['elements'])<=100,item
+ assert len(d['elements']) <= (140 if item == 'round_shield' else 100),item
  if item in ('bearded_axe','dane_axe','spear','javelin','round_shield'):
   assert d['textures']['atlas']=='norsegear:item/norse_showcase_materials',item
   assert len(d['elements'])>=10,item

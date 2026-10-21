@@ -34,8 +34,15 @@ def run(jar):
             assert model in contents, f"Missing item model: {item}"
             assert texture in contents, f"Missing PNG: {item}"
             parsed = json.loads(z.read(model))
-            assert (parsed["textures"].get("mat") == "norsegear:item/norse_3d_materials" or parsed["textures"].get("atlas") == "norsegear:item/norse_showcase_materials")
-            assert len(parsed["elements"])>=3, f"Missing proper 3D mesh: {item}"
+            if item in ("round_shield", "spear", "javelin"):
+                assert parsed["loader"] == "neoforge:obj"
+                assert parsed["textures"]["texture0"] == "norsegear:item/norse_showcase_materials"
+                assert BASE + f"models/item/{item}.obj" in contents, f"Missing OBJ mesh: {item}"
+                assert BASE + f"models/item/{item}.mtl" in contents, f"Missing MTL: {item}"
+                assert b"map_Kd #texture0" in z.read(BASE + f"models/item/{item}.mtl")
+            else:
+                assert (parsed["textures"].get("mat") == "norsegear:item/norse_3d_materials" or parsed["textures"].get("atlas") == "norsegear:item/norse_showcase_materials")
+                assert len(parsed["elements"])>=3, f"Missing proper 3D mesh: {item}"
             raw = z.read(texture)
             assert raw[:8] == b"\x89PNG\r\n\x1a\n"
             expected_size = (16, 16)  # All 24 inventory items now have hand-drawn native 16x16 pixel art.
@@ -43,7 +50,10 @@ def run(jar):
         # Cuboid weapons and shield faces remain 3D, even when all registered item sprites are 16px.
         for name in ("spear", "javelin", "throwing_axe", "round_shield", "celtic_shield", "bossed_shield"):
             model = json.loads(z.read(BASE + f"models/item/{name}.json"))
-            assert len(model.get("elements", [])) >= 4, f"Missing 3D cuboids: {name}"
+            if name in ("round_shield", "spear", "javelin"):
+                assert model.get("loader") == "neoforge:obj", f"Missing triangle mesh: {name}"
+            else:
+                assert len(model.get("elements", [])) >= 4, f"Missing 3D cuboids: {name}"
         for name in ("dev/norsegear/client/model/NorseArmorModel.class",
                      "dev/norsegear/client/model/SlingStoneModel.class",
                      "dev/norsegear/client/renderer/ThrownWeaponRenderer.class",

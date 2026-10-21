@@ -102,6 +102,87 @@ public final class NorseArmorModel extends HumanoidModel<LivingEntity> {
         root.getChild("left_arm").addOrReplaceChild("pauldron_rim", CubeListBuilder.create().texOffs(1, 27)
             .addBox(-1.22F, -2.22F, -2.70F, 5.46F, 0.8F, 5.45F),
             net.minecraft.client.model.geom.PartPose.ZERO);
+        head.addOrReplaceChild("crown_upper_band", CubeListBuilder.create().texOffs(25, 27)
+            .addBox(-4.34F, -8.60F, -4.35F, 8.68F, 0.48F, 8.70F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        head.addOrReplaceChild("crown_lower_band", CubeListBuilder.create().texOffs(62, 27)
+            .addBox(-4.35F, -6.45F, -4.52F, 8.70F, 0.48F, 8.90F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        head.addOrReplaceChild("nasal_crest", CubeListBuilder.create().texOffs(100, 27)
+            .addBox(-0.36F, -6.65F, -5.35F, 0.72F, 4.35F, 0.42F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        head.addOrReplaceChild("left_cheek_rim", CubeListBuilder.create().texOffs(105, 27)
+            .addBox(3.72F, -4.10F, -4.24F, 0.62F, 2.35F, 1.50F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        head.addOrReplaceChild("right_cheek_rim", CubeListBuilder.create().texOffs(112, 27)
+            .addBox(-4.34F, -4.10F, -4.24F, 0.62F, 2.35F, 1.50F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        head.addOrReplaceChild("back_brow_stud", CubeListBuilder.create().texOffs(119, 27)
+            .addBox(-0.55F, -6.56F, 4.25F, 1.10F, 0.70F, 0.42F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        head.addOrReplaceChild("headband_stud_left", CubeListBuilder.create().texOffs(125, 27)
+            .addBox(-3.15F, -6.78F, -5.16F, 0.65F, 0.63F, 0.46F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        head.addOrReplaceChild("headband_stud_right", CubeListBuilder.create().texOffs(130, 27)
+            .addBox(2.55F, -6.78F, -5.16F, 0.65F, 0.63F, 0.46F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        body.addOrReplaceChild("left_chest_strap", CubeListBuilder.create().texOffs(135, 27)
+            .addBox(-3.58F, 1.60F, -3.95F, 0.92F, 6.18F, 0.58F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        body.addOrReplaceChild("right_chest_strap", CubeListBuilder.create().texOffs(140, 27)
+            .addBox(2.65F, 1.60F, -3.95F, 0.92F, 6.18F, 0.58F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        body.addOrReplaceChild("left_armor_rail", CubeListBuilder.create().texOffs(145, 27)
+            .addBox(-4.15F, 3.00F, -3.66F, 0.66F, 4.60F, 0.64F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        body.addOrReplaceChild("right_armor_rail", CubeListBuilder.create().texOffs(150, 27)
+            .addBox(3.49F, 3.00F, -3.66F, 0.66F, 4.60F, 0.64F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        body.addOrReplaceChild("chest_heart_plate", CubeListBuilder.create().texOffs(155, 27)
+            .addBox(-1.35F, 3.35F, -4.33F, 2.70F, 1.65F, 0.58F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        body.addOrReplaceChild("belt_lower_trim", CubeListBuilder.create().texOffs(164, 27)
+            .addBox(-4.33F, 9.75F, -3.16F, 8.66F, 0.50F, 6.32F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        body.addOrReplaceChild("left_mail_tab", CubeListBuilder.create().texOffs(196, 27)
+            .addBox(-3.80F, 10.10F, -3.01F, 2.00F, 2.80F, 0.85F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        body.addOrReplaceChild("right_mail_tab", CubeListBuilder.create().texOffs(204, 27)
+            .addBox(1.80F, 10.10F, -3.01F, 2.00F, 2.80F, 0.85F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        body.addOrReplaceChild("back_horizontal_strap", CubeListBuilder.create().texOffs(212, 27)
+            .addBox(-3.90F, 4.55F, 3.34F, 7.80F, 0.90F, 0.75F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        root.getChild("right_arm").addOrReplaceChild("pauldron_top_plate", CubeListBuilder.create().texOffs(1, 39)
+            .addBox(-4.23F, -2.48F, -2.75F, 5.38F, 1.05F, 5.50F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        root.getChild("left_arm").addOrReplaceChild("pauldron_top_plate", CubeListBuilder.create().texOffs(25, 39)
+            .addBox(-1.15F, -2.48F, -2.75F, 5.38F, 1.05F, 5.50F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        root.getChild("right_arm").addOrReplaceChild("upper_arm_plate", CubeListBuilder.create().texOffs(49, 39)
+            .addBox(-3.70F, 1.00F, -2.55F, 4.85F, 2.30F, 5.07F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        root.getChild("left_arm").addOrReplaceChild("upper_arm_plate", CubeListBuilder.create().texOffs(71, 39)
+            .addBox(-1.14F, 1.00F, -2.55F, 4.85F, 2.30F, 5.07F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        root.getChild("right_arm").addOrReplaceChild("arm_bracer", CubeListBuilder.create().texOffs(93, 39)
+            .addBox(-3.52F, 6.05F, -2.37F, 4.44F, 2.00F, 4.74F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        root.getChild("left_arm").addOrReplaceChild("arm_bracer", CubeListBuilder.create().texOffs(114, 39)
+            .addBox(-0.92F, 6.05F, -2.37F, 4.44F, 2.00F, 4.74F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        root.getChild("right_leg").addOrReplaceChild("greave_front", CubeListBuilder.create().texOffs(135, 39)
+            .addBox(-2.28F, 7.05F, -3.04F, 4.56F, 2.30F, 0.82F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        root.getChild("left_leg").addOrReplaceChild("greave_front", CubeListBuilder.create().texOffs(148, 39)
+            .addBox(-2.28F, 7.05F, -3.04F, 4.56F, 2.30F, 0.82F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        root.getChild("right_leg").addOrReplaceChild("shin_band", CubeListBuilder.create().texOffs(161, 39)
+            .addBox(-2.35F, 8.85F, -3.09F, 4.70F, 0.56F, 1.13F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
+        root.getChild("left_leg").addOrReplaceChild("shin_band", CubeListBuilder.create().texOffs(175, 39)
+            .addBox(-2.35F, 8.85F, -3.09F, 4.70F, 0.56F, 1.13F),
+            net.minecraft.client.model.geom.PartPose.ZERO);
         return LayerDefinition.create(mesh, 256, 256);
     }
 
@@ -118,12 +199,14 @@ public final class NorseArmorModel extends HumanoidModel<LivingEntity> {
         boolean boots = slot == net.minecraft.world.entity.EquipmentSlot.FEET;
 
         head.visible = helmet;
+        for (String detail : new String[]{"crown_upper_band", "crown_lower_band", "nasal_crest", "left_cheek_rim", "right_cheek_rim", "back_brow_stud", "headband_stud_left", "headband_stud_right"}) head.getChild(detail).visible = helmet;
         hat.visible = false; // Never overlay an extra vanilla hat on the helmet.
         for (String part : new String[]{"nasal_guard", "brow", "helm_cap", "left_temple", "right_temple", "back_rim", "helm_ridge", "brow_emblem", "back_strap"}) {
             head.getChild(part).visible = helmet;
         }
 
         body.visible = chest;
+        for (String detail : new String[]{"left_chest_strap", "right_chest_strap", "left_armor_rail", "right_armor_rail", "chest_heart_plate", "belt_lower_trim", "left_mail_tab", "right_mail_tab", "back_horizontal_strap"}) body.getChild(detail).visible = chest;
         for (String part : new String[]{"mail_front", "left_leather_edge", "right_leather_edge", "upper_chest_strap", "belt", "belt_buckle", "back_plate", "fur_collar", "cross_chest_plate", "chest_buckle"}) {
             body.getChild(part).visible = chest;
         }
@@ -131,14 +214,22 @@ public final class NorseArmorModel extends HumanoidModel<LivingEntity> {
         rightArm.visible = chest;
         leftArm.getChild("pauldron").visible = chest;
         leftArm.getChild("pauldron_rim").visible = chest;
+        leftArm.getChild("pauldron_top_plate").visible = chest;
+        leftArm.getChild("upper_arm_plate").visible = chest;
+        leftArm.getChild("arm_bracer").visible = chest;
         rightArm.getChild("pauldron").visible = chest;
         rightArm.getChild("pauldron_rim").visible = chest;
+        rightArm.getChild("pauldron_top_plate").visible = chest;
+        rightArm.getChild("upper_arm_plate").visible = chest;
+        rightArm.getChild("arm_bracer").visible = chest;
 
         leftLeg.visible = legs || boots;
         rightLeg.visible = legs || boots;
         for (ModelPart leg : new ModelPart[]{leftLeg, rightLeg}) {
             leg.getChild("knee_plate").visible = legs;
             leg.getChild("boot_toe").visible = boots;
+            leg.getChild("greave_front").visible = legs;
+            leg.getChild("shin_band").visible = legs;
         }
     }
 }

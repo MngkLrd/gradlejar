@@ -268,5 +268,275 @@
       0.8,
       5.45
     ]
+  },
+  {
+    "name": "crown_upper_band",
+    "u": 25,
+    "v": 27,
+    "size": [
+      8.68,
+      0.48,
+      8.7
+    ]
+  },
+  {
+    "name": "crown_lower_band",
+    "u": 62,
+    "v": 27,
+    "size": [
+      8.7,
+      0.48,
+      8.9
+    ]
+  },
+  {
+    "name": "nasal_crest",
+    "u": 100,
+    "v": 27,
+    "size": [
+      0.72,
+      4.35,
+      0.42
+    ]
+  },
+  {
+    "name": "left_cheek_rim",
+    "u": 105,
+    "v": 27,
+    "size": [
+      0.62,
+      2.35,
+      1.5
+    ]
+  },
+  {
+    "name": "right_cheek_rim",
+    "u": 112,
+    "v": 27,
+    "size": [
+      0.62,
+      2.35,
+      1.5
+    ]
+  },
+  {
+    "name": "back_brow_stud",
+    "u": 119,
+    "v": 27,
+    "size": [
+      1.1,
+      0.7,
+      0.42
+    ]
+  },
+  {
+    "name": "headband_stud_left",
+    "u": 125,
+    "v": 27,
+    "size": [
+      0.65,
+      0.63,
+      0.46
+    ]
+  },
+  {
+    "name": "headband_stud_right",
+    "u": 130,
+    "v": 27,
+    "size": [
+      0.65,
+      0.63,
+      0.46
+    ]
+  },
+  {
+    "name": "left_chest_strap",
+    "u": 135,
+    "v": 27,
+    "size": [
+      0.92,
+      6.18,
+      0.58
+    ]
+  },
+  {
+    "name": "right_chest_strap",
+    "u": 140,
+    "v": 27,
+    "size": [
+      0.92,
+      6.18,
+      0.58
+    ]
+  },
+  {
+    "name": "left_armor_rail",
+    "u": 145,
+    "v": 27,
+    "size": [
+      0.66,
+      4.6,
+      0.64
+    ]
+  },
+  {
+    "name": "right_armor_rail",
+    "u": 150,
+    "v": 27,
+    "size": [
+      0.66,
+      4.6,
+      0.64
+    ]
+  },
+  {
+    "name": "chest_heart_plate",
+    "u": 155,
+    "v": 27,
+    "size": [
+      2.7,
+      1.65,
+      0.58
+    ]
+  },
+  {
+    "name": "belt_lower_trim",
+    "u": 164,
+    "v": 27,
+    "size": [
+      8.66,
+      0.5,
+      6.32
+    ]
+  },
+  {
+    "name": "left_mail_tab",
+    "u": 196,
+    "v": 27,
+    "size": [
+      2.0,
+      2.8,
+      0.85
+    ]
+  },
+  {
+    "name": "right_mail_tab",
+    "u": 204,
+    "v": 27,
+    "size": [
+      2.0,
+      2.8,
+      0.85
+    ]
+  },
+  {
+    "name": "back_horizontal_strap",
+    "u": 212,
+    "v": 27,
+    "size": [
+      7.8,
+      0.9,
+      0.75
+    ]
+  },
+  {
+    "name": "pauldron_top_plate",
+    "u": 1,
+    "v": 39,
+    "size": [
+      5.38,
+      1.05,
+      5.5
+    ]
+  },
+  {
+    "name": "pauldron_top_plate",
+    "u": 25,
+    "v": 39,
+    "size": [
+      5.38,
+      1.05,
+      5.5
+    ]
+  },
+  {
+    "name": "upper_arm_plate",
+    "u": 49,
+    "v": 39,
+    "size": [
+      4.85,
+      2.3,
+      5.07
+    ]
+  },
+  {
+    "name": "upper_arm_plate",
+    "u": 71,
+    "v": 39,
+    "size": [
+      4.85,
+      2.3,
+      5.07
+    ]
+  },
+  {
+    "name": "arm_bracer",
+    "u": 93,
+    "v": 39,
+    "size": [
+      4.44,
+      2.0,
+      4.74
+    ]
+  },
+  {
+    "name": "arm_bracer",
+    "u": 114,
+    "v": 39,
+    "size": [
+      4.44,
+      2.0,
+      4.74
+    ]
+  },
+  {
+    "name": "greave_front",
+    "u": 135,
+    "v": 39,
+    "size": [
+      4.56,
+      2.3,
+      0.82
+    ]
+  },
+  {
+    "name": "greave_front",
+    "u": 148,
+    "v": 39,
+    "size": [
+      4.56,
+      2.3,
+      0.82
+    ]
+  },
+  {
+    "name": "shin_band",
+    "u": 161,
+    "v": 39,
+    "size": [
+      4.7,
+      0.56,
+      1.13
+    ]
+  },
+  {
+    "name": "shin_band",
+    "u": 175,
+    "v": 39,
+    "size": [
+      4.7,
+      0.56,
+      1.13
+    ]
   }
 ]
