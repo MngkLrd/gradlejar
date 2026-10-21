@@ -28,16 +28,33 @@ jobs:
       - name: Build NeoForge JAR
         working-directory: projects/bearback
         run: gradle --no-daemon --stacktrace clean build
+      - name: Verify Minecraft 1.21.1 recipe and packed resource
+        working-directory: projects/bearback
+        run: |
+          python3 - <<'PY'
+          import json, zipfile
+          from pathlib import Path
+          src=Path("src/main/resources/data/bearback/recipe/saddlebags.json")
+          data=json.loads(src.read_text())
+          assert data["type"]=="minecraft:crafting_shaped"
+          assert data["pattern"]==["L L","SCS","L L"]
+          assert data["key"]=={"L":{"item":"minecraft:leather"},"S":{"item":"minecraft:string"},"C":{"item":"minecraft:chest"}}
+          assert data["result"]["id"]=="bearback:saddlebags"
+          with zipfile.ZipFile("build/libs/bearback-1.21.1-0.2.2.jar") as jar:
+              packed=json.loads(jar.read("data/bearback/recipe/saddlebags.json"))
+              assert packed==data
+          print("PASS: 1.21.1 recipe syntax and JAR resource")
+          PY
       - name: Publish JAR to GitHub Releases
-        if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'fix/bearback-minimum-021')
+        if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'fix/bearback-recipe-022')
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_NUMBER: ${{ github.run_number }}
           TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          tag="ci-bearback-mc1.21.1-0.2.1-${RUN_NUMBER}"
-          gh release create "$tag" projects/bearback/build/libs/bearback-1.21.1-0.2.1.jar \
+          tag="ci-bearback-mc1.21.1-0.2.2-${RUN_NUMBER}"
+          gh release create "$tag" projects/bearback/build/libs/bearback-1.21.1-0.2.2.jar \
             --target "$TARGET_SHA" \
-            --title "Bearback 0.2.1 | Minecraft 1.21.1 NeoForge" \
+            --title "Bearback 0.2.2 | Minecraft 1.21.1 NeoForge" \
             --notes "Compiled on GitHub Actions. Build-verified with NeoForge 1.21.1; gameplay awaits in-game check." \
             --prerelease
