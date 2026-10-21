@@ -28,7 +28,7 @@ public final class TraumaEvents {
         if (event.getEntity() instanceof ServerPlayer player) ModNetwork.sync(player);
     }
     public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) MedicalNetworking.sync(player);
+        if (event.getEntity() instanceof ServerPlayer player) ModNetwork.sync(player);
     }
 
     public static void onDamage(LivingDamageEvent.Pre event) {
