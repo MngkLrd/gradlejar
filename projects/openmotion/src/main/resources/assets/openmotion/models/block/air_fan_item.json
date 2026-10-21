@@ -11,7 +11,8 @@
     "v15_air_trim": "openmotion:block/v15_air_trim",
     "v15_air_base": "openmotion:block/v15_air_base",
     "v15_air_inner": "openmotion:block/v15_air_inner",
-    "v15_gun_steel": "openmotion:block/v15_gun_steel"
+    "v15_gun_steel": "openmotion:block/v15_gun_steel",
+    "v15_air_blade": "openmotion:block/v15_air_blade"
   },
   "elements": [
     {
