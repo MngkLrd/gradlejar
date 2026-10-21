@@ -24,6 +24,13 @@ for name in ('round_shield','celtic_shield','bossed_shield'):
     assert not any(e['from'][1]>14 and (e['to'][0]-e['from'][0])>6 for e in m['elements']),'stray horizontal top trim'
 
 png(tex/'norse_weapon_materials.png')
+assert (tex/'stone_projectile.png').exists()
+stone=json.loads((models/'stone_shot.json').read_text())
+assert stone['textures']['layer0']=='norsegear:item/stone_shot'
+assert len(stone['elements'])>=1 and all(f['texture']=='#stone' for f in stone['elements'][0]['faces'].values())
+for n in ('round_shield','celtic_shield','bossed_shield'):
+    d=json.loads((models/f'{n}.json').read_text())['display']
+    assert d['thirdperson_lefthand']['translation'][0] <= -2.5
 for name in ('spear','javelin','throwing_axe'):
     m=json.loads((models/f'{name}.json').read_text())
     assert len(m['elements'])>=7,(name,len(m['elements']))

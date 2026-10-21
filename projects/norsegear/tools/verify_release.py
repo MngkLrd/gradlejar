@@ -23,6 +23,7 @@ def run(jar):
         assert "dev/norsegear/NorseGear.class" in contents, "Missing Java entrypoint"
         assert "dev/norsegear/entity/ThrownWeaponEntity.class" in contents, "Missing thrown entity"
         assert "dev/norsegear/entity/SlingStoneEntity.class" in contents, "Missing sling projectile"
+        assert "dev/norsegear/client/renderer/SlingStoneRenderer.class" in contents, "Missing 3D stone renderer"
         assert "dev/norsegear/item/SlingItem.class" in contents, "Missing sling weapon"
         assert "dev/norsegear/item/BossedShieldItem.class" in contents, "Missing bonus shield"
         assert "META-INF/neoforge.mods.toml" in contents, "Missing mod metadata"
@@ -48,6 +49,27 @@ def run(jar):
             assert model.get("elements") and len(model["elements"]) >= 4, f"No cuboid geometry: {name}"
         for name in ("dev/norsegear/client/model/NorseArmorModel.class", "dev/norsegear/client/renderer/ThrownWeaponRenderer.class", "dev/norsegear/item/SpearItem.class"):
             assert name in contents, f"Missing 3D class: {name}"
+        for name in ("spear", "javelin", "throwing_axe", "round_shield", "celtic_shield", "bossed_shield"):
+            model = json.loads(z.read(BASE + f"models/item/{name}.json"))
+            assert model.get("elements") and len(model["elements"]) >= 4, f"No cuboid geometry: {name}"
+        for name in ("dev/norsegear/client/model/NorseArmorModel.class", "dev/norsegear/client/renderer/ThrownWeaponRenderer.class", "dev/norsegear/item/SpearItem.class"):
+            assert name in contents, f"Missing 3D class: {name}"
+        for name in ("spear", "javelin", "throwing_axe", "round_shield", "celtic_shield", "bossed_shield"):
+            model = json.loads(z.read(BASE + f"models/item/{name}.json"))
+            assert model.get("elements") and len(model["elements"]) >= 4, f"No cuboid geometry: {name}"
+        for name in ("dev/norsegear/client/model/NorseArmorModel.class", "dev/norsegear/client/renderer/ThrownWeaponRenderer.class", "dev/norsegear/item/SpearItem.class"):
+            assert name in contents, f"Missing 3D class: {name}"
+        for name in ("spear", "javelin", "throwing_axe", "round_shield", "celtic_shield", "bossed_shield"):
+            model = json.loads(z.read(BASE + f"models/item/{name}.json"))
+            assert model.get("elements") and len(model["elements"]) >= 4, f"No cuboid geometry: {name}"
+        for name in ("dev/norsegear/client/model/NorseArmorModel.class", "dev/norsegear/client/renderer/ThrownWeaponRenderer.class", "dev/norsegear/item/SpearItem.class"):
+            assert name in contents, f"Missing 3D class: {name}"
+        assert "assets/norsegear/textures/item/stone_projectile.png" in contents, "Missing physical stone material"
+        stone_model = json.loads(z.read(BASE + "models/item/stone_shot.json"))
+        assert len(stone_model.get("elements", [])) > 0, "Flat sling projectile model"
+        for shield in ("round_shield", "celtic_shield", "bossed_shield"):
+            display = json.loads(z.read(BASE + f"models/item/{shield}.json"))["display"]
+            assert display["thirdperson_lefthand"]["translation"][0] <= -2.5, "Shield is buried in offhand"
         for layer in (1, 2):
             tex = BASE + f"textures/models/armor/ironweave_layer_{layer}.png"
             assert tex in contents, f"Missing worn armor texture layer {layer}"

@@ -117,3 +117,13 @@
 - `python3 tools/validate_3d_models.py` checks 3 shield models and 3 projectile item models.
 - Inventory crash from latest(6).log points to `jei_plus_plus` and missing JEI, **not** Norse Gear. Remove JEI++ and duplicate old Norse Gear JAR before reproducing.
 - Server smoke test does not exercise client UI models or inventory screen. Client screenshot/live testing is required before marking art verified.
+
+
+## 0.1.16 Visual/gameplay hotfix
+- Simplified armor surfaces. Open-face Norse helmet uses no opaque vanilla head cube.
+- Chest chainmail renders with individual transparent pixel holes and its own thin cuboid geometry instead of a solid torso shell.
+- Corrected grip offsets for all 3 shields; seax third-person and first-person orientation revised.
+- 3D stone projectile now spins as a small cuboid; hitbox enlarged to 0.28 blocks. Actual collision remains in SlingStoneEntity.
+- Javelin uses vanilla arrow shoot, spear uses trident throw; throwing axe audio and spin unchanged.
+- Simplified weapon 3D palette while preserving the approved 32x32 inventory PNG art.
+- Requires visual testing in game: helmet profile, armor transparency, left-hand shield hold, seax blade edge and stone hit consistency.

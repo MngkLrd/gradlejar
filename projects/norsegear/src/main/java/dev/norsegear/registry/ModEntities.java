@@ -24,7 +24,7 @@ public final class ModEntities {
 
     public static final DeferredHolder<EntityType<?>, EntityType<SlingStoneEntity>> SLING_STONE =
         ENTITIES.register("sling_stone", () -> EntityType.Builder.<SlingStoneEntity>of(
-            SlingStoneEntity::new, MobCategory.MISC).sized(0.19F, 0.19F)
+            SlingStoneEntity::new, MobCategory.MISC).sized(0.28F, 0.28F)
             .clientTrackingRange(4).updateInterval(10).build("norsegear:sling_stone"));
 
     private ModEntities() {}

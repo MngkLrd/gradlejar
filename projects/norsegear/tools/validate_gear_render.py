@@ -8,9 +8,12 @@ projectiles = (ROOT / "client/renderer/ThrownWeaponRenderer.java").read_text()
 spear = (ROOT / "item/SpearItem.java").read_text()
 assert "copyArmorPose(original, model);" in client
 assert "copyPropertiesTo(target)" in client
-for part in ("nasal_guard", "brow", "helm_crown", "left_cheek", "right_cheek",
-             "breast_plate", "belt_buckle", "back_plate", "pauldron", "knee_plate", "boot_toe"):
+for part in ("nasal_guard", "brow", "helm_cap", "left_temple", "right_temple",
+             "mail_front", "upper_chest_strap", "belt_buckle", "back_plate", "pauldron", "knee_plate", "boot_toe"):
     assert part in armor, f"Missing armor geometry/mask: {part}"
+assert 'head = root.addOrReplaceChild("head", CubeListBuilder.create()' in armor
+assert 'body = root.addOrReplaceChild("body", CubeListBuilder.create()' in armor
+assert 'SlingStoneRenderer::new' in client
 assert "rotationDegrees(-interpolatedYaw)" in projectiles
 assert "rotationDegrees(90.0F + interpolatedPitch)" in projectiles
 assert "stack.getDamageValue() >= stack.getMaxDamage() - 1" in spear

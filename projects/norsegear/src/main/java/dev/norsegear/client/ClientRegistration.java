@@ -3,12 +3,12 @@ package dev.norsegear.client;
 import dev.norsegear.NorseGear;
 import dev.norsegear.client.model.NorseArmorModel;
 import dev.norsegear.client.renderer.ThrownWeaponRenderer;
+import dev.norsegear.client.renderer.SlingStoneRenderer;
 import dev.norsegear.registry.ModEntities;
 import dev.norsegear.registry.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,7 +34,7 @@ public final class ClientRegistration {
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.JAVELIN.get(), ThrownWeaponRenderer::new);
         event.registerEntityRenderer(ModEntities.THROWING_AXE.get(), ThrownWeaponRenderer::new);
-        event.registerEntityRenderer(ModEntities.SLING_STONE.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(ModEntities.SLING_STONE.get(), SlingStoneRenderer::new);
     }
 
     @SubscribeEvent

@@ -158,3 +158,13 @@ Actual UV-mapped in-game vanilla humanoid equipment uses 128×64 textures `asset
 2. Equip each of three shields in the offhand; look at front/back/top in first/third person, check blocking pose and for any gray horizontal bar or alpha bleed. These should no longer come from the model.
 3. Charge and throw spear and javelin. Confirm the shaft and point are 3D in flight and returned item is retrievable, with no gray monochrome rectangle. Check top/bottom orientations and throwing axe rotation.
 4. Visually inspect equipped armor: 0.1.14's cubic model remains unchanged in this release; armor shader/clipping is a separate user-client visual review.
+
+
+## 0.1.16 Visual/gameplay hotfix
+- Simplified armor surfaces. Open-face Norse helmet uses no opaque vanilla head cube.
+- Chest chainmail renders with individual transparent pixel holes and its own thin cuboid geometry instead of a solid torso shell.
+- Corrected grip offsets for all 3 shields; seax third-person and first-person orientation revised.
+- 3D stone projectile now spins as a small cuboid; hitbox enlarged to 0.28 blocks. Actual collision remains in SlingStoneEntity.
+- Javelin uses vanilla arrow shoot, spear uses trident throw; throwing axe audio and spin unchanged.
+- Simplified weapon 3D palette while preserving the approved 32x32 inventory PNG art.
+- Requires visual testing in game: helmet profile, armor transparency, left-hand shield hold, seax blade edge and stone hit consistency.
