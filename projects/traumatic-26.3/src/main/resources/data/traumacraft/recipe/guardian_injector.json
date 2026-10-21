@@ -7,15 +7,9 @@
     " S "
   ],
   "key": {
-    "B": {
-      "item": "minecraft:blaze_powder"
-    },
-    "A": {
-      "item": "traumacraft:antiseptic"
-    },
-    "S": {
-      "item": "traumacraft:syringe_body"
-    }
+    "B": "minecraft:blaze_powder",
+    "A": "traumacraft:antiseptic",
+    "S": "traumacraft:syringe_body"
   },
   "result": {
     "id": "traumacraft:guardian_injector",

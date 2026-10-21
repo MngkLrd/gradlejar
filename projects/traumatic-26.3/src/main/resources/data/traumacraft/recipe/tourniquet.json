@@ -6,12 +6,8 @@
     "RS"
   ],
   "key": {
-    "R": {
-      "item": "traumacraft:medical_polymer"
-    },
-    "S": {
-      "item": "minecraft:iron_nugget"
-    }
+    "R": "traumacraft:medical_polymer",
+    "S": "minecraft:iron_nugget"
   },
   "result": {
     "id": "traumacraft:tourniquet",

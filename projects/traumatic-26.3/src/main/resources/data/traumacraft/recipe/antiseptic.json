@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:glass_bottle"
-    },
-    {
-      "item": "minecraft:honey_bottle"
-    },
-    {
-      "item": "minecraft:nether_wart"
-    }
+    "minecraft:glass_bottle",
+    "minecraft:honey_bottle",
+    "minecraft:nether_wart"
   ],
   "result": {
     "id": "traumacraft:antiseptic",

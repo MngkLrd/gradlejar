@@ -7,12 +7,8 @@
     " P "
   ],
   "key": {
-    "P": {
-      "item": "minecraft:paper"
-    },
-    "F": {
-      "item": "traumacraft:sterile_fabric"
-    }
+    "P": "minecraft:paper",
+    "F": "traumacraft:sterile_fabric"
   },
   "result": {
     "id": "traumacraft:sterile_patch",

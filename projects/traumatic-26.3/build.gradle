@@ -11,3 +11,43 @@ neoForge {
 repositories { maven { url = 'https://maven.blamejared.com/' } }
 dependencies { compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}" }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=25 }
+
+tasks.register('validateRecipeFormat') {
+    group = 'verification'
+    description = 'Validates 26.3 medical crafting recipes before packaging.'
+    inputs.dir('src/main/resources/data/traumacraft/recipe')
+    doLast {
+        def recipes = fileTree('src/main/resources/data/traumacraft/recipe') { include '*.json' }.files
+        if (recipes.size() != 23) throw new GradleException('Expected 23 Traumatic recipes, got ' + recipes.size())
+        def parser = new groovy.json.JsonSlurper()
+        recipes.each { File file ->
+            def r = parser.parse(file)
+            def fail = { String message -> throw new GradleException(file.name + ': ' + message) }
+            if (!(r.result instanceof Map) || r.result.id != 'traumacraft:' + file.name.replace('.json','')) fail('invalid result.id')
+            if (r.type == 'minecraft:crafting_shaped') {
+                if (!(r.pattern instanceof List) || r.pattern.isEmpty() || r.pattern.size() > 3) fail('bad pattern')
+                if (!(r.key instanceof Map) || r.key.isEmpty()) fail('missing key')
+                r.key.each { symbol, ingredient ->
+                    if (!(symbol instanceof String) || symbol.length() != 1 || !(ingredient instanceof String) || !ingredient.contains(':'))
+                        fail('shaped key must use 26.3 string item IDs')
+                }
+                r.pattern.each { row ->
+                    if (!(row instanceof String) || row.length() == 0 || row.length() > 3) fail('invalid pattern row')
+                    for (int i=0;i<row.length();i++) {
+                        String key = row.substring(i,i+1)
+                        if (key != ' ' && !r.key.containsKey(key)) fail('undefined pattern key ' + key)
+                    }
+                }
+            } else if (r.type == 'minecraft:crafting_shapeless') {
+                if (!(r.ingredients instanceof List) || r.ingredients.size() < 1 || r.ingredients.size() > 9)
+                    fail('invalid shapeless ingredients')
+                r.ingredients.each { ingredient ->
+                    if (!(ingredient instanceof String) || !ingredient.contains(':'))
+                        fail('shapeless ingredient must use 26.3 string item IDs')
+                }
+            } else fail('unknown recipe type')
+        }
+        println 'Validated ' + recipes.size() + ' Traumatic recipes for Minecraft 26.3.'
+    }
+}
+tasks.named('processResources') { dependsOn tasks.named('validateRecipeFormat') }

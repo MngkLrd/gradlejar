@@ -7,15 +7,9 @@
     " C "
   ],
   "key": {
-    "I": {
-      "item": "minecraft:iron_nugget"
-    },
-    "G": {
-      "item": "minecraft:glass_pane"
-    },
-    "C": {
-      "item": "minecraft:copper_ingot"
-    }
+    "I": "minecraft:iron_nugget",
+    "G": "minecraft:glass_pane",
+    "C": "minecraft:copper_ingot"
   },
   "result": {
     "id": "traumacraft:syringe_body",

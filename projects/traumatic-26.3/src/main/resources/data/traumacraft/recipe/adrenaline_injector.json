@@ -7,15 +7,9 @@
     " S "
   ],
   "key": {
-    "R": {
-      "item": "minecraft:redstone"
-    },
-    "H": {
-      "item": "traumacraft:herbal_extract"
-    },
-    "S": {
-      "item": "traumacraft:syringe_body"
-    }
+    "R": "minecraft:redstone",
+    "H": "traumacraft:herbal_extract",
+    "S": "traumacraft:syringe_body"
   },
   "result": {
     "id": "traumacraft:adrenaline_injector",

@@ -7,21 +7,11 @@
     "IRI"
   ],
   "key": {
-    "I": {
-      "item": "minecraft:iron_ingot"
-    },
-    "C": {
-      "item": "traumacraft:medical_polymer"
-    },
-    "A": {
-      "item": "traumacraft:antiseptic"
-    },
-    "D": {
-      "item": "minecraft:diamond"
-    },
-    "R": {
-      "item": "traumacraft:syringe_body"
-    }
+    "I": "minecraft:iron_ingot",
+    "C": "traumacraft:medical_polymer",
+    "A": "traumacraft:antiseptic",
+    "D": "minecraft:diamond",
+    "R": "traumacraft:syringe_body"
   },
   "result": {
     "id": "traumacraft:surgical_kit",

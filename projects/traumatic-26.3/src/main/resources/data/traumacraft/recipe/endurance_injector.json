@@ -7,15 +7,9 @@
     " S "
   ],
   "key": {
-    "H": {
-      "item": "traumacraft:herbal_extract"
-    },
-    "U": {
-      "item": "minecraft:sugar"
-    },
-    "S": {
-      "item": "traumacraft:syringe_body"
-    }
+    "H": "traumacraft:herbal_extract",
+    "U": "minecraft:sugar",
+    "S": "traumacraft:syringe_body"
   },
   "result": {
     "id": "traumacraft:endurance_injector",
