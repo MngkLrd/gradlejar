@@ -44,7 +44,7 @@ public class Bearback {
         bus.addListener(Bearback::creative);
         BearNetwork.init();
         MinecraftForge.EVENT_BUS.addListener(BearEvents::interact);
-        MinecraftForge.EVENT_BUS.addListener(BearEvents::tick);
+        MinecraftForge.EVENT_BUS.addListener(BearEvents::livingTick);
         MinecraftForge.EVENT_BUS.addListener(BearEvents::changeTarget);
         MinecraftForge.EVENT_BUS.addListener(BearEvents::track);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> dev.bearback.client.ClientHooks.init(bus));
