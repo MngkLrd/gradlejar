@@ -1,5 +1,15 @@
 {
   "item.traumacraft.bandage": "Bandage",
   "item.traumacraft.splint": "Splint",
-  "item.traumacraft.medkit": "Medkit"
+  "item.traumacraft.medkit": "Medkit",
+  "itemGroup.traumacraft.medical": "TraumaCraft | Medicine",
+  "screen.traumacraft.body": "BODY STATUS",
+  "screen.traumacraft.drag_to_treat": "Hold item + click body",
+  "screen.traumacraft.click_to_treat": "Click to treat this part",
+  "message.traumacraft.no_injury": "No treatable injury",
+  "message.traumacraft.not_applicable": "This item cannot treat that injury",
+  "message.traumacraft.treated": "Treated: %s",
+  "jei.traumacraft.bandage": "Stops light or heavy bleeding on one selected body part. Pick up a bandage in inventory and click a body part in the TraumaCraft anatomy panel, or right-click to automatically treat the worst bleeding.",
+  "jei.traumacraft.splint": "Fixes one broken limb. Pick up a splint and click the fractured body part in your inventory anatomy panel, or right-click to treat the first fracture.",
+  "jei.traumacraft.medkit": "Restores 25 local HP to one body part. Hold on inventory cursor and click a body part in the anatomy panel to select it, or right-click to treat your most damaged body part."
 }

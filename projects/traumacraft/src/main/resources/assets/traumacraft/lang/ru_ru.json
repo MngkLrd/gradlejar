@@ -1,5 +1,15 @@
 {
   "item.traumacraft.bandage": "Бинт",
   "item.traumacraft.splint": "Шина",
-  "item.traumacraft.medkit": "Аптечка"
+  "item.traumacraft.medkit": "Аптечка",
+  "itemGroup.traumacraft.medical": "TraumaCraft | Медицина",
+  "screen.traumacraft.body": "СОСТОЯНИЕ ТЕЛА",
+  "screen.traumacraft.drag_to_treat": "Предмет + клик по телу",
+  "screen.traumacraft.click_to_treat": "Нажми для лечения этой части тела",
+  "message.traumacraft.no_injury": "Нет подходящей травмы",
+  "message.traumacraft.not_applicable": "Предмет не подходит для этой травмы",
+  "message.traumacraft.treated": "Лечение: %s",
+  "jei.traumacraft.bandage": "Останавливает лёгкое или сильное кровотечение на выбранной части тела. Возьми бинт курсором в инвентаре и нажми на нужную часть тела. ПКМ автоматически обработает самое сильное кровотечение.",
+  "jei.traumacraft.splint": "Устраняет перелом одной конечности. Возьми шину курсором и нажми на повреждённую часть тела. ПКМ лечит первый найденный перелом.",
+  "jei.traumacraft.medkit": "Восстанавливает 25 HP выбранной части тела. Возьми аптечку курсором и нажми на нужную зону в панели тела. ПКМ восстанавливает самую повреждённую часть."
 }
