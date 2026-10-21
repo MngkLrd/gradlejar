@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+[[mods]]
+modId="spidercentaur"
+version="0.1.0"
+displayName="Spider Centaur"
+authors="MineMods"
+description="A swift eight-legged skeleton-spider archer that stalks the Overworld at night."
+[[dependencies.spidercentaur]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.spidercentaur]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
