@@ -27,9 +27,20 @@ public final class CreeperGameplayEvents {
     @SubscribeEvent
     public void onExplosionDetonate(ExplosionEvent.Detonate event) {
         if (!(event.getLevel() instanceof ServerLevel)) return;
-        event.getAffectedEntities().removeIf(entity ->
-                entity instanceof ServerPlayer player
-                        && (BlastProtection.isOwnBlastActive(player) || hasCompleteSet(player)));
+        // A full set prevents health damage and knockback, but its armor still wears.
+        // Do this once per explosion because canceling damage suppresses vanilla wear.
+        event.getAffectedEntities().removeIf(entity -> {
+            if (!(entity instanceof ServerPlayer player)) return false;
+            if (BlastProtection.isOwnBlastActive(player)) return true;
+            if (!hasCompleteSet(player)) return false;
+            for (EquipmentSlot slot : CONSUMPTION_ORDER) {
+                ItemStack piece = player.getItemBySlot(slot);
+                if (!piece.isEmpty()) {
+                    piece.hurtAndBreak(4, player, slot);
+                }
+            }
+            return true;
+        });
     }
 
     @SubscribeEvent

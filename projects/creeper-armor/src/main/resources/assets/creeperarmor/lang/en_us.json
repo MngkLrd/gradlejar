@@ -5,5 +5,9 @@
   "item.creeperarmor.creeper_leggings": "Creeper Leggings",
   "item.creeperarmor.creeper_boots": "Creeper Boots",
   "item.creeperarmor.creeper_shield": "Creeper Shield",
-  "item.creeperarmor.creeper_powder": "Creeper Powder"
+  "item.creeperarmor.creeper_powder": "Creeper Powder",
+  "itemGroup.creeperarmor.creeper_armor": "Creeper Armor",
+  "jei.creeperarmor.armor_info": "Full Creeper Armor prevents explosion damage, but the pieces still lose durability. When a hit would leave less than one heart, one armor piece detonates and saves you. Four charges maximum.",
+  "jei.creeperarmor.shield_info": "Blocks like a normal shield. Hold use for 0.6 s to trigger one block-breaking directional blast, costing 50 of its 500 durability. Release and raise again to fire another.",
+  "jei.creeperarmor.material_info": "Creeper Plate and Creeper Powder drop from defeated creepers; charged creepers drop double. Use them in equipment recipes."
 }

@@ -3,9 +3,7 @@ package dev.creeperarmor.registry;
 import dev.creeperarmor.CreeperArmorMod;
 import dev.creeperarmor.item.CreeperShieldItem;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -25,20 +23,6 @@ public final class ModItems {
         return ITEMS.registerItem(id,
                 props -> new ArmorItem(ModArmorMaterials.CREEPER, type, props),
                 new Item.Properties().durability(durability));
-    }
-
-    public static void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
-            event.accept(CREEPER_PLATE);
-            event.accept(CREEPER_POWDER);
-        }
-        if (event.getTabKey() == CreativeModeTabs.COMBAT) {
-            event.accept(CREEPER_HELMET);
-            event.accept(CREEPER_CHESTPLATE);
-            event.accept(CREEPER_LEGGINGS);
-            event.accept(CREEPER_BOOTS);
-            event.accept(CREEPER_SHIELD);
-        }
     }
 
     private ModItems() {}

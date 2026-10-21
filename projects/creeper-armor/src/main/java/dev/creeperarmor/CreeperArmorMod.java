@@ -2,6 +2,7 @@ package dev.creeperarmor;
 
 import dev.creeperarmor.gameplay.CreeperGameplayEvents;
 import dev.creeperarmor.registry.ModArmorMaterials;
+import dev.creeperarmor.registry.ModCreativeTabs;
 import dev.creeperarmor.registry.ModItems;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -14,7 +15,7 @@ public final class CreeperArmorMod {
     public CreeperArmorMod(IEventBus modBus) {
         ModArmorMaterials.MATERIALS.register(modBus);
         ModItems.ITEMS.register(modBus);
-        modBus.addListener(ModItems::addToCreativeTabs);
+        ModCreativeTabs.TABS.register(modBus);
         NeoForge.EVENT_BUS.register(new CreeperGameplayEvents());
     }
 }

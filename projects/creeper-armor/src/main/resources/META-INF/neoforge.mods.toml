@@ -22,3 +22,10 @@ type="required"
 versionRange="[1.21.1,1.21.2)"
 ordering="NONE"
 side="BOTH"
+
+[[dependencies.creeperarmor]]
+modId="jei"
+type="optional"
+versionRange="[19.21,)"
+ordering="AFTER"
+side="CLIENT"
