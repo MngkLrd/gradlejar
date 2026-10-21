@@ -10,7 +10,7 @@ description="Tame and ride polar and black bears, saddles, defense and paw swipe
 [[dependencies.bearback]]
 modId="forge"
 mandatory=true
-versionRange="[47.1.0,)"
+versionRange="[47.1.5,)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.bearback]]
