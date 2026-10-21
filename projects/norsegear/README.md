@@ -1,4 +1,4 @@
-# Norse Gear 0.1.9 — 32x32 weapon silhouettes (batch 1)
+# Norse Gear 0.1.10 — 32x32 weapon silhouettes (batch 1)
 
 One standalone mod. Minecraft 1.21.1, NeoForge 21.1.262, Java 21; build with Gradle 9.2.1.
 
@@ -16,7 +16,7 @@ One standalone mod. Minecraft 1.21.1, NeoForge 21.1.262, Java 21; build with Gra
 gradle --no-daemon clean build
 ```
 
-Expected: `build/libs/norsegear-0.1.9.jar`. Sources include `build-profile.json` for the MngkLrd/gradlejar CI. NeoForge ModDevGradle 2.0.148 and JEI 19.51.0.418 API (compileOnly, not bundled). The worldgen is data-driven via NeoForge biome modifier; pack authors can adjust chance, count, deposit size, surface depth and overworld biome tags. **New chunks only** for natural deposits. `/setblock ~ ~ ~ norsegear:bog_iron_deposit` allows testing in existing worlds.
+Expected: `build/libs/norsegear-0.1.10.jar`. Sources include `build-profile.json` for the MngkLrd/gradlejar CI. NeoForge ModDevGradle 2.0.148 and JEI 19.51.0.418 API (compileOnly, not bundled). The worldgen is data-driven via NeoForge biome modifier; pack authors can adjust chance, count, deposit size, surface depth and overworld biome tags. **New chunks only** for natural deposits. `/setblock ~ ~ ~ norsegear:bog_iron_deposit` allows testing in existing worlds.
 
 ### JEI integrity
 
@@ -24,7 +24,7 @@ The JEI shapeless recipe is display-only; the actual crafting recipe is `norsege
 
 ### Status
 
-Source JSON, asset integrity and static invariants checked locally. **No real Gradle compilation / Minecraft gameplay verification performed in this environment.** Real client and dedicated-server runs still required.
+Source JSON, asset integrity and static invariants checked locally. **v0.1.9 compiled in GitHub Actions, but crashed during world creation due to an invalid `block_match` JSON key. v0.1.10 fixes that resource; CI build and world creation testing are required to verify the fix.**
 
 ### Art iteration 0.1.9 (32×32, first five items)
 
@@ -50,3 +50,12 @@ Hand-drawn native RGBA 32x32 sprites for Viking Sword, Spear, Javelin, Throwing 
 ## Equipped armor visuals in v0.1.9
 
 Actual UV-mapped in-game vanilla humanoid equipment uses 128×64 textures `assets/norsegear/textures/models/armor/ironweave_layer_1.png` (helmet/chest/boots) and `ironweave_layer_2.png` (leggings). They are not screenshots or generated promotional 3D renders. Vanilla model geometry; no custom protruding shoulders or rigid geometry. Four 32×32 armor inventory icons replace placeholders. Verify on normal/slim players and armor stands in a running Minecraft client.
+
+## Design batch 4 + worldgen hotfix (0.1.10)
+
+- Added five original manually-authored native 32×32 transparent RGBA sprites: sling, stone shot, war horn, field whetstone, and travel ration. They are pixel-grid drawings, not AI renders resized from larger images.
+- Preserved all existing registered items, recipes, gameplay systems, and equip armor UV textures. 19 of 24 item icons now use approved-style 32×32 art; 5 icons remain placeholders.
+- Fixed the **verified runtime world-creation crash** from 0.1.9: `minecraft:block_match` must use singular `block`, **not** `blocks`, in each entry of `data/norsegear/worldgen/configured_feature/bog_iron.json`. Verified against the actual user-provided Minecraft 1.21.1 crash log and vanilla examples.
+- The resource still replaces only `minecraft:dirt`, `minecraft:mud`, `minecraft:clay`, excluding grassy surface blocks. Generation remains biome-tag-based across the Overworld.
+- Enhanced JAR verification to assert correctly encoded worldgen block match predicates and all 19 full-size item textures.
+- This build requires live client world-creation test, because static Gradle compilation alone cannot test data-driven worldgen.

@@ -1,4 +1,4 @@
-# Norse Gear 0.1.9 testing checklist
+# Norse Gear 0.1.10 testing checklist
 
 1. Gradle: `gradle --no-daemon clean build` under Java 21. Inspect first compiler error if failed.
 2. Start client with only NeoForge + Norse Gear (no JEI). Confirm loading without `ClassNotFoundException` from JEI plugin.
@@ -20,3 +20,13 @@
 3. Compare bearded vs Dane axe icons at a glance; head size, beard and handle should read differently.
 4. Verify celtic/bossed shield textures are shown in the item inventory; their 3D held shield render remains a future task.
 5. Verify the remaining 19 item textures and world-generation resources were not changed in this visual pass.
+
+## Regression: worldgen crash on creating world (0.1.9)
+
+1. Install the new 0.1.10 JAR, REMOVE 0.1.9.
+2. Start Minecraft 1.21.1 NeoForge 21.1.264 (player-tested environment).
+3. **Create a new world** and verify it loads fully: 0.1.9 failed here while decoding `norsegear:bog_iron`.
+4. Check `latest.log` for an absence of `Failed to parse norsegear:worldgen/configured_feature/bog_iron.json`, `Unbound values`, or `No key block`.
+5. Test `setblock ~ ~ ~ norsegear:bog_iron_deposit` then mine with a stone shovel.
+6. Open a newly generated Overworld chunk and verify natural deposits under soil (not replacing grass blocks).
+7. Verify 5 batch 4 inventory sprites appear at native 32x32 and all armor icon/UV assets remain unchanged.

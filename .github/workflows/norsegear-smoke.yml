@@ -1,0 +1,72 @@
+name: Norse Gear worldgen smoke
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'projects/norsegear/**'
+      - '.github/workflows/norsegear-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  worldgen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+      - name: Compile mod
+        working-directory: projects/norsegear
+        run: gradle --no-daemon build
+      - name: Boot dedicated Minecraft server with Norse Gear worldgen
+        working-directory: projects/norsegear
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p runs/server
+          printf 'eula=true\n' > runs/server/eula.txt
+          printf 'online-mode=false\nmotd=Norse Gear worldgen smoke\n' > runs/server/server.properties
+          gradle --no-daemon runServer > server-smoke.log 2>&1 &
+          process=$!
+          trap 'kill "$process" 2>/dev/null || true' EXIT
+          ready=0
+          for _ in $(seq 1 165); do
+            if grep -Eq 'Done \([0-9.]+s\)!' server-smoke.log; then
+              ready=1
+              break
+            fi
+            if grep -Eq 'Failed to load registries|Failed to parse norsegear:worldgen|No key block|Unbound values in registry' server-smoke.log; then
+              echo 'Worldgen registry load failed:'
+              tail -n 140 server-smoke.log
+              exit 1
+            fi
+            if ! kill -0 "$process" 2>/dev/null; then
+              echo 'The server process exited before world ready:'
+              tail -n 140 server-smoke.log
+              exit 1
+            fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then
+            echo 'Server did not finish world boot before timeout:'
+            tail -n 140 server-smoke.log
+            exit 1
+          fi
+          if grep -Eq 'Failed to load registries|Failed to parse norsegear:worldgen|No key block|Unbound values in registry' server-smoke.log; then
+            tail -n 140 server-smoke.log
+            exit 1
+          fi
+          echo 'PASS: Dedicated server created a world with Norse Gear worldgen registries loaded.'
+      - name: Print worldgen log on failure
+        if: failure()
+        working-directory: projects/norsegear
+        run: test ! -e server-smoke.log || tail -n 160 server-smoke.log

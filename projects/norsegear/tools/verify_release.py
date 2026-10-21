@@ -36,7 +36,7 @@ def run(jar):
             assert parsed["textures"]["layer0"] == f"norsegear:item/{item}"
             raw = z.read(texture)
             assert raw[:8] == b"\x89PNG\r\n\x1a\n"
-            expected_size = (32, 32) if item in {"seax", "bearded_axe", "dane_axe", "celtic_shield", "bossed_shield", "viking_sword", "spear", "javelin", "throwing_axe", "round_shield", "norse_helmet", "norse_chestplate", "norse_leggings", "norse_boots"} else (16, 16)
+            expected_size = (32, 32) if item in {"seax", "bearded_axe", "dane_axe", "celtic_shield", "bossed_shield", "viking_sword", "spear", "javelin", "throwing_axe", "round_shield", "sling", "stone_shot", "war_horn", "field_whetstone", "travel_ration", "norse_helmet", "norse_chestplate", "norse_leggings", "norse_boots"} else (16, 16)
             assert struct.unpack(">II", raw[16:24]) == expected_size, f"Wrong sprite size: {item}"
         for layer in (1, 2):
             tex = BASE + f"textures/models/armor/ironweave_layer_{layer}.png"
@@ -77,7 +77,8 @@ def run(jar):
         assert cfg["type"] == "minecraft:ore"
         assert cfg["config"]["size"] == 4
         assert cfg["config"]["discard_chance_on_air_exposure"] == 1.0
-        targets = {t["target"]["blocks"] for t in cfg["config"]["targets"]}
+        assert all(t["target"].get("predicate_type") == "minecraft:block_match" and "blocks" not in t["target"] for t in cfg["config"]["targets"]), "Minecraft 1.21.1 block_match requires singular block key"
+        targets = {t["target"]["block"] for t in cfg["config"]["targets"]}
         assert targets == {"minecraft:dirt", "minecraft:mud", "minecraft:clay"}, "No grass-block replacement allowed"
         mods = placement["placement"]
         assert mods[0] == {"type": "minecraft:rarity_filter", "chance": 2}
