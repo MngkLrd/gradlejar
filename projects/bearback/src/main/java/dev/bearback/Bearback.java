@@ -37,14 +37,14 @@ public class Bearback {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MOD_ID);
     public static final Supplier<Item> BLACK_BEAR_EGG = ITEMS.register("black_bear_spawn_egg",
             () -> new DeferredSpawnEggItem(BLACK_BEAR, 0x26201c, 0x84684e, new Item.Properties()));
-    public static final DeferredRegister<AttachmentType<?>> ATTACHMENTS =
+    public static final Supplier<Item> SADDLEBAGS = ITEMS.register("saddlebags",\n            () -> new Item(new Item.Properties().stacksTo(16)));\n    public static final DeferredRegister<AttachmentType<?>> ATTACHMENTS =
             DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MOD_ID);
     public static final Supplier<AttachmentType<Boolean>> SADDLED = ATTACHMENTS.register("saddled",
             () -> AttachmentType.builder(() -> false)
                     .serialize(Codec.BOOL)
                     .sync(ByteBufCodecs.BOOL).build());
 
-    public Bearback(IEventBus bus) {
+    public static final Supplier<AttachmentType<Boolean>> BAGS = ATTACHMENTS.register("bags",\n            () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL)\n                    .sync(ByteBufCodecs.BOOL).build());\n\n    public Bearback(IEventBus bus) {
         ENTITIES.register(bus);
         ITEMS.register(bus);
         ATTACHMENTS.register(bus);
@@ -54,7 +54,7 @@ public class Bearback {
         bus.addListener(this::network);
         NeoForge.EVENT_BUS.addListener(BearEvents::interact);
         NeoForge.EVENT_BUS.addListener(BearEvents::tick);
-        NeoForge.EVENT_BUS.addListener(BearEvents::changeTarget);
+        NeoForge.EVENT_BUS.addListener(BearEvents::changeTarget);\n        NeoForge.EVENT_BUS.addListener(BearCargo::onDrops);
     }
 
     private void attributes(EntityAttributeCreationEvent event) {
@@ -74,6 +74,6 @@ public class Bearback {
     }
 
     private void network(RegisterPayloadHandlersEvent event) {
-        event.registrar("1").playToServer(BearRidePacket.TYPE, BearRidePacket.CODEC, BearRidePacket::receive);
+        var registrar = event.registrar("1");\n        registrar.playToServer(BearRidePacket.TYPE, BearRidePacket.CODEC, BearRidePacket::receive);\n        registrar.playToServer(OpenCargoPacket.TYPE, OpenCargoPacket.CODEC, OpenCargoPacket::receive);
     }
 }

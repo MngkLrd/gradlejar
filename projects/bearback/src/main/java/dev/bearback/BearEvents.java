@@ -48,7 +48,7 @@ public final class BearEvents {
         // Keep ordinary naming, leash and other item interactions intact.
         if (!tame && !fish) return;
         if (tame && !owner) return;
-        if (tame && !fish && !held.is(Items.SADDLE) && !held.is(Items.SHEARS) && !held.isEmpty()) return;
+        if (tame && !fish && !held.is(Items.SADDLE) && !held.is(Items.SHEARS) && !held.is(Bearback.SADDLEBAGS.get()) && !held.isEmpty()) return;
         if (bear.isBaby()) return;
 
         event.setCanceled(true);
