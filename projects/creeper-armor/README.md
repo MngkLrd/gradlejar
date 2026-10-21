@@ -1,4 +1,4 @@
-# Creeper Armor 0.3.3
+# Creeper Armor 0.3.4
 
 Minecraft 1.21.1, NeoForge 21.1.262, Java 21.
 
@@ -35,3 +35,10 @@ Test: third person offhand, mainhand, holding right-click (both hands), GUI prev
 - [ ] Mainhand: identical native shield attachment with inward-facing grip.
 - [ ] Raised shield: vanilla 1.21.1 blocking transforms and projectile coverage.
 - [ ] Other mechanics unchanged: 500 durability, 50 per blast, full armor set explosion immunity.
+
+## 0.3.4 hotfix
+- Original 11-part custom Creeper Shield shape restored, with custom model layer built around the vanilla ShieldModel handle pivot; exact existing Minecraft 1.21.1 hand and blocking poses preserved.
+- The face is outward, the handle is inward, using a purpose-built green 64x64 RGBA texture atlas.
+- Creeper Plate now crafted from 1 Creeper Powder + 1 Gunpowder + 2 Iron Ingots (PG / II).
+- Creeper Chestplate craft restored to 8 Creeper Plates (P P / PPP / PPP).
+- JEI uses normal recipe JSON; armor and blast mechanics unchanged.

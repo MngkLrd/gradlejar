@@ -2,18 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "pattern": [
-    "PG",
-    "II"
+    "P P",
+    "PPP",
+    "PPP"
   ],
   "key": {
     "P": {
-      "item": "creeperarmor:creeper_powder"
-    },
-    "G": {
-      "item": "minecraft:gunpowder"
-    },
-    "I": {
-      "item": "minecraft:iron_ingot"
+      "item": "creeperarmor:creeper_plate"
     }
   },
   "result": {

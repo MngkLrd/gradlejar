@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.creeperarmor.CreeperArmorMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ShieldModel;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -24,7 +23,7 @@ public final class CreeperShieldRenderer extends BlockEntityWithoutLevelRenderer
     public CreeperShieldRenderer() {
         super(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
                 Minecraft.getInstance().getEntityModels());
-        shield = new ShieldModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.SHIELD));
+        shield = new ShieldModel(Minecraft.getInstance().getEntityModels().bakeLayer(CreeperShieldGeometry.LAYER));
     }
 
     @Override
