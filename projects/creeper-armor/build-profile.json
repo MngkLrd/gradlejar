@@ -1,9 +1,11 @@
 {
   "slug": "creeperarmor",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "creeperarmor-0.3.4.jar"
+  "jar_glob": "creeperarmor-0.3.5.jar",
+  "minimum_loader_version": "21.1.1",
+  "compile_loader_version": "21.1.1"
 }

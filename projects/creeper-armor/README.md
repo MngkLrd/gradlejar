@@ -42,3 +42,7 @@ Test: third person offhand, mainhand, holding right-click (both hands), GUI prev
 - Creeper Plate now crafted from 1 Creeper Powder + 1 Gunpowder + 2 Iron Ingots (PG / II).
 - Creeper Chestplate craft restored to 8 Creeper Plates (P P / PPP / PPP).
 - JEI uses normal recipe JSON; armor and blast mechanics unchanged.
+
+
+## Loader minimum (compatibility release 0.3.5)
+Build and verification target: NeoForge 21.1.1; metadata minimum 21.1.1. The declared minimum is no longer automatically tied to the newest installer. Keep compile-loader and minimum-loader separate; do not increase either without API or runtime evidence. In-game smoke test on the minimum loader still recommended.

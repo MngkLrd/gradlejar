@@ -1,14 +1,14 @@
 license="MIT"
 [[mods]]
 modId="creeperarmor"
-version="1.0.1"
+version="1.0.2"
 displayName="Creeper Armor"
 authors="Creeper Armor Project"
 description="Creeper armor, powder, plates, explosive rescue and explosive shield."
 [[dependencies.creeperarmor]]
 modId="neoforge"
 type="required"
-versionRange="[26.3.0.90,)"
+versionRange="[26.3.0.76,)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.creeperarmor]]

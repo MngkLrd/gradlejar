@@ -3,14 +3,14 @@ loaderVersion="[47,)"
 license="MIT"
 [[mods]]
 modId="creeperarmor"
-version="1.0.0"
+version="1.0.1"
 displayName="Creeper Armor"
 authors="Creeper Armor Project"
 description="Explosive armor and a directional Creeper Shield."
 [[dependencies.creeperarmor]]
 modId="forge"
 mandatory=true
-versionRange="[47.4.10,)"
+versionRange="[47.1.0,)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.creeperarmor]]
