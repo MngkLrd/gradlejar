@@ -68,13 +68,6 @@ jobs:
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: python3 tools/verify_build_output.py "$PROJECT_DIR"
-      - name: Attach Creeper Armor test JAR to PR run
-        if: github.event_name == 'pull_request' && matrix.project_dir == 'projects/creeper-armor'
-        uses: actions/upload-artifact@v4
-        with:
-          name: creeperarmor-0.3.1-jar
-          path: ${{ steps.verify.outputs.jar_path }}
-          if-no-files-found: error
       - name: Publish JAR to GitHub prerelease
         if: github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && matrix.project_dir == 'projects/creeper-armor' && github.head_ref == 'creeperarmor-release-0.3.1')
         env:
