@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+[[mods]]
+modId="bearback"
+version="0.1.2"
+displayName="Bearback"
+authors="Bearback"
+description="Tame and ride polar and black bears, saddles, defense and paw swipe."
+[[dependencies.bearback]]
+modId="forge"
+mandatory=true
+versionRange="[47.1.5,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.bearback]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.20.2)"
+ordering="NONE"
+side="BOTH"
