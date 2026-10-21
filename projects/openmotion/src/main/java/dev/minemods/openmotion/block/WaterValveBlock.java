@@ -72,6 +72,6 @@ public final class WaterValveBlock extends WaterPipeBlock {
             level.setBlock(pos, state, Block.UPDATE_CLIENTS);
         }
         WaterNetwork.refresh(level, pos);
-        level.scheduleTick(pos, this, 80 + random.nextInt(40));
+        // Refresh on changes only. Pumps handle periodic network reconciliation.
     }
 }

@@ -1,4 +1,4 @@
-# OpenMotion 0.3.0
+# OpenMotion 0.3.1
 
 A lightweight, independent NeoForge mod inspired by the lost utility-machine era of Minecraft.
 **This code and every bundled texture are original.** No OpenBlocks/OpenModsLib files or assets are included.
@@ -29,7 +29,7 @@ From inside this directory:
 gradle --no-daemon clean build
 ```
 
-Output: `build/libs/openmotion-1.21.1-0.3.0.jar`. The repository CI uses `build-profile.json` with Java 21 / Gradle 9.2.1.
+Output: `build/libs/openmotion-1.21.1-0.3.1.jar`. The repository CI uses `build-profile.json` with Java 21 / Gradle 9.2.1.
 
 ## Test checklist
 1. `/give @s openmotion:air_fan` and `/give @s openmotion:item_cannon`; confirm textures and creative Redstone tab.
@@ -149,3 +149,35 @@ Crafting is enabled for both. Test on NeoForge 21.1.262, Java 21.
 5. Remove water source; all indicators dry within next network refresh.
 6. Place water pipes underground and across chunk boundary; only loaded sections process.
 7. Restart world, check connections and valve mode persist; repeat on dedicated server.
+
+## OpenMotion 0.3.1 - Farm Automation & Stability
+
+### Air Fan automatic harvest
+- Powered Air Fan breaks SAPLINGS and MATURE CROPS along its horizontal output lane.
+- Immature crops are not broken. Uses standard block loot/drop logic; plant seeds are not replanted.
+- Only one block is harvested per configurable scan, by default every 12 ticks.
+- Placing a Vacuum Hopper at the end of the fan's airflow creates a simple item farm.
+- Datapacks can add plants to `#openmotion:fan_harvestable` or protect them with `#openmotion:fan_protected`.
+- To prevent sapling cutting, set `fan.breakSaplings=false` in the generated config.
+
+### Vacuum Hopper and Item Cannon
+- Sneak + right-click Vacuum Hopper **with an item** to set an exact-item pickup filter (item not consumed).
+- Sneak + empty-hand right-click to clear the filter; normal empty-hand click extracts its next stored stack.
+- Filter and 9-slot inventory persist across game saves and are server-owned.
+- Item Cannon base throw speed is now configurable; stronger redstone signals increase range.
+- Vacuum collection interval and radius are configurable.
+
+### Water graph & diagnostics
+- Water pipes recompute on topology changes; no periodic standalone tick per pipe.
+- Pumps and sprinklers periodically reconcile networks. All gameplay logic stays server-side.
+- Deterministic graph traversal: a closed valve blocks only paths through that valve.
+- Network capacity is configurable (default 4096 loaded nodes). Oversized components fail dry.
+- No new chunk loading; pump water sources must be in loaded chunks.
+- Right-click pump, pipe or sprinkler with an empty hand for a short status hint.
+- Fluid is still a **transport state**, not millibucket storage. Full fluid capabilities remain future work.
+
+### Build and tests
+- Minecraft 1.21.1, NeoForge 21.1.262, Java 21, Gradle 9.2.1.
+- Run `gradle --no-daemon clean build`; JUnit 5 hydraulic graph unit tests run in CI.
+- CI also runs `python3 tools/check_assets.py` to validate textures, models, recipes and blockstates.
+- Verify crops, saplings, hopper filtering, branch valves, save/reload and dedicated server in game.

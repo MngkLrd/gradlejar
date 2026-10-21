@@ -7,6 +7,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -60,11 +64,29 @@ public final class VacuumHopperBlock extends BaseEntityBlock {
     }
 
     @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
+                                              BlockPos pos, Player player, InteractionHand hand,
+                                              BlockHitResult hit) {
+        if (!player.isShiftKeyDown() || stack.isEmpty()) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof VacuumHopperBlockEntity hopper) {
+            hopper.setFilter(stack);
+            player.displayClientMessage(Component.translatable("message.openmotion.filter_set",
+                    stack.getHoverName()), true);
+        }
+        return ItemInteractionResult.SUCCESS;
+    }
+
+    @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
                                                 Player player, BlockHitResult hit) {
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof VacuumHopperBlockEntity hopper) {
             // Empty hand retrieves the first nonempty slot; no custom GUI is required.
-            if (player.getMainHandItem().isEmpty()) {
+            if (player.isShiftKeyDown()) {
+                hopper.setFilter(ItemStack.EMPTY);
+                player.displayClientMessage(Component.translatable("message.openmotion.filter_cleared"), true);
+            } else if (player.getMainHandItem().isEmpty()) {
                 ItemStack extracted = hopper.takeFirstStack();
                 if (!extracted.isEmpty()) player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, extracted);
             }

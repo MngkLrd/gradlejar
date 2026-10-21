@@ -3,6 +3,10 @@ package dev.minemods.openmotion.block;
 import com.mojang.serialization.MapCodec;
 import dev.minemods.openmotion.water.WaterNetwork;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -34,6 +38,19 @@ public final class WaterPumpBlock extends Block {
 
     @Override protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+                                               BlockHitResult hit) {
+        if (!level.isClientSide && level instanceof ServerLevel server) {
+            String key = level.hasNeighborSignal(pos) ? "message.openmotion.pump_redstone"
+                    : !WaterNetwork.hasSourceWater(server, pos) ? "message.openmotion.pump_no_water"
+                    : state.getValue(RUNNING) ? "message.openmotion.pump_running"
+                    : "message.openmotion.pump_wait";
+            player.displayClientMessage(Component.translatable(key), true);
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override

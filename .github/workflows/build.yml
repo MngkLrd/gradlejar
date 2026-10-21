@@ -60,6 +60,9 @@ jobs:
           set -euo pipefail
           cd "$PROJECT_DIR"
           gradle --no-daemon --stacktrace clean build 2>&1 | tee "$GITHUB_WORKSPACE/build-output-${{ strategy.job-index }}.log"
+      - name: Check model, texture and datapack assets
+        if: matrix.project_dir == 'projects/openmotion'
+        run: python3 projects/openmotion/tools/check_assets.py
       - name: Verify JAR
         id: verify
         env:

@@ -3,7 +3,7 @@ loaderVersion="[4,)"
 license="MIT"
 [[mods]]
 modId="openmotion"
-version="0.3.0"
+version="0.3.1"
 displayName="OpenMotion"
 authors="OpenMotion contributors"
 description="Compact utility machines with moving items and irrigated farms, plus a connectable water pump, pipe and valve system."

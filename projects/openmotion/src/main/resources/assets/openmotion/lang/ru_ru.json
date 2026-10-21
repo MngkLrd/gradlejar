@@ -5,5 +5,15 @@
   "block.openmotion.sprinkler": "Разбрызгиватель",
   "block.openmotion.water_pipe": "Водопроводная труба",
   "block.openmotion.water_valve": "Водяной клапан",
-  "block.openmotion.water_pump": "Водяной насос"
+  "block.openmotion.water_pump": "Водяной насос",
+  "message.openmotion.filter_set": "Фильтр воронки: %s",
+  "message.openmotion.filter_cleared": "Фильтр воронки очищен",
+  "message.openmotion.sprinkler_on": "Полив: ВКЛ (вода поступает)",
+  "message.openmotion.sprinkler_off": "Полив: ВЫКЛ (проверьте насос, трубу, клапан или редстоун)",
+  "message.openmotion.pipe_wet": "Труба: вода течёт",
+  "message.openmotion.pipe_dry": "Труба: СУХАЯ",
+  "message.openmotion.pump_redstone": "Насос отключён редстоуном",
+  "message.openmotion.pump_no_water": "Насос: поблизости нет источника воды",
+  "message.openmotion.pump_running": "Насос: вода подаётся",
+  "message.openmotion.pump_wait": "Насос: ожидание обновления сети"
 }

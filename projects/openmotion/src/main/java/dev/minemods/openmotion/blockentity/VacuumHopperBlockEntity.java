@@ -1,6 +1,11 @@
 package dev.minemods.openmotion.blockentity;
 
 import dev.minemods.openmotion.registry.ModBlockEntities;
+import dev.minemods.openmotion.config.OpenMotionConfig;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -26,6 +31,7 @@ import java.util.List;
 public final class VacuumHopperBlockEntity extends BlockEntity {
     private static final int MAX_TARGETS = 18;
     private static final AABB LOCAL_BOUNDS = new AABB(-3.5, -2.2, -3.5, 4.5, 3.1, 4.5);
+    private Item filterItem = Items.AIR;
     private final ItemStackHandler items = new ItemStackHandler(9) {
         @Override protected void onContentsChanged(int slot) {
             VacuumHopperBlockEntity.this.setChanged();
@@ -37,6 +43,17 @@ public final class VacuumHopperBlockEntity extends BlockEntity {
     }
 
     public ItemStackHandler inventory() { return items; }
+
+    public void setFilter(ItemStack example) {
+        this.filterItem = example.isEmpty() ? Items.AIR : example.getItem();
+        setChanged();
+    }
+
+    public Item getFilterItem() { return filterItem; }
+
+    private boolean accepts(ItemStack stack) {
+        return filterItem == Items.AIR || stack.is(filterItem);
+    }
 
     public ItemStack takeFirstStack() {
         for (int slot = 0; slot < items.getSlots(); slot++) {
@@ -51,6 +68,8 @@ public final class VacuumHopperBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.put("Inventory", items.serializeNBT(registries));
+        if (filterItem != Items.AIR)
+            tag.putString("Filter", BuiltInRegistries.ITEM.getKey(filterItem).toString());
     }
 
     @Override
@@ -59,27 +78,36 @@ public final class VacuumHopperBlockEntity extends BlockEntity {
         if (tag.contains("Inventory", Tag.TAG_COMPOUND)) {
             items.deserializeNBT(registries, tag.getCompound("Inventory"));
         }
+        filterItem = Items.AIR;
+        if (tag.contains("Filter", Tag.TAG_STRING)) {
+            ResourceLocation id = ResourceLocation.tryParse(tag.getString("Filter"));
+            if (id != null && BuiltInRegistries.ITEM.containsKey(id))
+                filterItem = BuiltInRegistries.ITEM.get(id);
+        }
     }
 
+        // Filter is independent of the nine-slot storage.
     public static void serverTick(Level level, BlockPos pos, BlockState state, VacuumHopperBlockEntity blockEntity) {
         if (!(level instanceof ServerLevel server)) return;
         // Redstone blocks the collector, allowing players to pause farms.
         if (level.hasNeighborSignal(pos)) return;
         long tick = level.getGameTime();
-        if (tick % 4 == 0) blockEntity.collect(server, pos);
+        if (tick % OpenMotionConfig.HOPPER_INTERVAL.get() == 0) blockEntity.collect(server, pos);
         if (tick % 8 == 0) blockEntity.output(server, pos);
     }
 
     private void collect(ServerLevel level, BlockPos pos) {
-        Vec3 target = Vec3.atCenterOf(pos).add(0, .45, 0);
-        List<ItemEntity> entities = level.getEntitiesOfClass(ItemEntity.class, LOCAL_BOUNDS.move(pos),
-                item -> item.isAlive() && !item.getItem().isEmpty());
+        Vec3 target = Vec3.atCenterOf(pos).add(0, .47, 0);
+        double range = OpenMotionConfig.HOPPER_RADIUS.get();
+        AABB scan = new AABB(pos).inflate(range, 2.0, range);
+        List<ItemEntity> entities = level.getEntitiesOfClass(ItemEntity.class, scan,
+                item -> item.isAlive() && !item.getItem().isEmpty() && accepts(item.getItem()));
         int processed = 0;
         for (ItemEntity item : entities) {
             if (processed++ >= MAX_TARGETS) break;
             Vec3 offset = target.subtract(item.position());
             double distanceSq = offset.lengthSqr();
-            if (distanceSq > 25 || distanceSq < 0.00001) continue;
+            if (distanceSq > range * range || distanceSq < 0.00001) continue;
             // A hit against this collector is expected; only foreign blocks obstruct suction.
             BlockHitResult hit = level.clip(new ClipContext(item.position(), target,
                     ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, item));

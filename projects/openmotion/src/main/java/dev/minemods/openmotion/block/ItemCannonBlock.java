@@ -1,6 +1,7 @@
 package dev.minemods.openmotion.block;
 
 import com.mojang.serialization.MapCodec;
+import dev.minemods.openmotion.config.OpenMotionConfig;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -161,7 +162,10 @@ public final class ItemCannonBlock extends HorizontalMachineBlock {
         Vec3 direction = Vec3.atLowerCornerOf(facing.getNormal());
         Vec3 muzzle = Vec3.atCenterOf(pos).add(direction.scale(0.82));
         ItemEntity item = new ItemEntity(level, muzzle.x, muzzle.y - 0.18, muzzle.z, stack);
-        item.setDeltaMovement(direction.scale(0.90).add(0, 0.10, 0));
+        // Manual use is a short shot; stronger input signal increases throw distance.
+        int power = level.getBestNeighborSignal(pos);
+        double launchSpeed = OpenMotionConfig.CANNON_SPEED.get() + Math.max(0, power - 1) * 0.045;
+        item.setDeltaMovement(direction.scale(launchSpeed).add(0, 0.12, 0));
         item.setDefaultPickUpDelay();
         level.addFreshEntity(item);
         level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 0.8F, 0.85F);

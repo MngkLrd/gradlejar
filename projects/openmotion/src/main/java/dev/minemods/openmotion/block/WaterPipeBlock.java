@@ -3,6 +3,10 @@ package dev.minemods.openmotion.block;
 import com.mojang.serialization.MapCodec;
 import dev.minemods.openmotion.water.WaterNetwork;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -65,7 +69,11 @@ public class WaterPipeBlock extends Block {
     @Override
     protected BlockState updateShape(BlockState state, Direction facing, BlockState neighborState,
                                      LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
-        return state.setValue(link(facing), WaterNetwork.isNetworkNode(neighborState));
+        boolean connect=WaterNetwork.isNetworkNode(neighborState);
+        if(state.getValue(link(facing))==connect)return state;
+        if(level instanceof Level real && !real.isClientSide)
+            real.scheduleTick(pos,this,2);
+        return state.setValue(link(facing),connect);
     }
 
     @Override
@@ -96,6 +104,16 @@ public class WaterPipeBlock extends Block {
     }
 
     @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+                                               BlockHitResult hit) {
+        if (!level.isClientSide) {
+            player.displayClientMessage(Component.translatable(state.getValue(FLOWING)
+                    ? "message.openmotion.pipe_wet" : "message.openmotion.pipe_dry"), true);
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean moving) {
         super.onPlace(state, level, pos, oldState, moving);
         if (!level.isClientSide) level.scheduleTick(pos, this, 2);
@@ -109,7 +127,7 @@ public class WaterPipeBlock extends Block {
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         WaterNetwork.refresh(level, pos);
-        level.scheduleTick(pos, this, 80 + random.nextInt(40));
+        // Pipe state is refreshed on edits and by the pump/sprinkler clock. No perpetual per-pipe ticking.
     }
 
     @Override

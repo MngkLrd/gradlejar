@@ -5,5 +5,15 @@
   "block.openmotion.sprinkler": "Sprinkler",
   "block.openmotion.water_pipe": "Water Pipe",
   "block.openmotion.water_valve": "Water Valve",
-  "block.openmotion.water_pump": "Water Pump"
+  "block.openmotion.water_pump": "Water Pump",
+  "message.openmotion.filter_set": "Vacuum filter: %s",
+  "message.openmotion.filter_cleared": "Vacuum filter cleared",
+  "message.openmotion.sprinkler_on": "Irrigation: ON (water supplied)",
+  "message.openmotion.sprinkler_off": "Irrigation: OFF (check pump, pipes, valve or redstone)",
+  "message.openmotion.pipe_wet": "Pipe: water flowing",
+  "message.openmotion.pipe_dry": "Pipe: DRY",
+  "message.openmotion.pump_redstone": "Pump disabled by redstone",
+  "message.openmotion.pump_no_water": "Pump: no source water nearby",
+  "message.openmotion.pump_running": "Pump: supplying water",
+  "message.openmotion.pump_wait": "Pump: waiting for network update"
 }

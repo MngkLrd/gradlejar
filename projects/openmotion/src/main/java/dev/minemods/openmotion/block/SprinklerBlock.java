@@ -1,6 +1,11 @@
 package dev.minemods.openmotion.block;
 
 import com.mojang.serialization.MapCodec;
+import dev.minemods.openmotion.config.OpenMotionConfig;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import dev.minemods.openmotion.water.WaterNetwork;
 import net.minecraft.tags.BlockTags;
@@ -74,10 +79,11 @@ public final class SprinklerBlock extends Block {
             level.setBlock(pos, state.setValue(ACTIVE, active), Block.UPDATE_ALL);
         if (active) {
             // One supported target per five seconds: noticeable but safe for modded crops.
+            int radius = OpenMotionConfig.SPRINKLER_RADIUS.get();
             for (int trial = 0; trial < 24; trial++) {
-                int dx = random.nextInt(9) - 4;
-                int dz = random.nextInt(9) - 4;
-                if (dx * dx + dz * dz > 16) continue;
+                int dx = random.nextInt(radius * 2 + 1) - radius;
+                int dz = random.nextInt(radius * 2 + 1) - radius;
+                if (dx * dx + dz * dz > radius * radius) continue;
                 BlockPos farmPos = pos.offset(dx, -(1 + random.nextInt(3)), dz);
                 BlockState crop = level.getBlockState(farmPos);
                 if ((crop.is(BlockTags.CROPS) || crop.getBlock() instanceof CropBlock)
@@ -92,7 +98,18 @@ public final class SprinklerBlock extends Block {
                     pos.getX() + .5, pos.getY() + .95, pos.getZ() + .5,
                     5, .7, .3, .7, .07);
         }
-        level.scheduleTick(pos, this, INTERVAL);
+        level.scheduleTick(pos, this, OpenMotionConfig.SPRINKLER_INTERVAL.get());
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+                                               BlockHitResult hit) {
+        if (!level.isClientSide) {
+            player.displayClientMessage(Component.translatable(
+                    state.getValue(ACTIVE) ? "message.openmotion.sprinkler_on"
+                            : "message.openmotion.sprinkler_off"), true);
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override

@@ -3,6 +3,15 @@ package dev.minemods.openmotion.block;
 import com.mojang.serialization.MapCodec;
 
 import java.util.List;
+import dev.minemods.openmotion.config.OpenMotionConfig;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -39,6 +48,10 @@ public final class AirFanBlock extends HorizontalMachineBlock implements net.min
     private static final int UPDATE_TICKS = 3;
     private static final double RANGE = 5.0;
     private static final double HALF_WIDTH = 0.85;
+    private static final TagKey<Block> FAN_HARVESTABLE = BlockTags.create(
+            ResourceLocation.fromNamespaceAndPath("openmotion", "fan_harvestable"));
+    private static final TagKey<Block> FAN_PROTECTED = BlockTags.create(
+            ResourceLocation.fromNamespaceAndPath("openmotion", "fan_protected"));
 
     public AirFanBlock(Properties properties) {
         super(properties);
@@ -72,6 +85,8 @@ public final class AirFanBlock extends HorizontalMachineBlock implements net.min
         boolean powered = syncPoweredState(level, pos, state);
         if (powered) {
             blow(level, pos, state.getValue(FACING));
+            if (level.getGameTime() % OpenMotionConfig.FAN_HARVEST_INTERVAL.get() == 0)
+                harvestPlants(level, pos, state.getValue(FACING));
         }
         level.scheduleTick(pos, this, UPDATE_TICKS);
     }
@@ -82,6 +97,42 @@ public final class AirFanBlock extends HorizontalMachineBlock implements net.min
             level.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_ALL);
         }
         return powered;
+    }
+
+    /**
+     * Break saplings and mature crop plants in a single row along the wind lane.
+     * Never harvest young crops. Limit to ONE broken block per interval for farms/server TPS.
+     */
+    private static void harvestPlants(ServerLevel level, BlockPos pos, Direction facing) {
+        int range = OpenMotionConfig.FAN_HARVEST_RANGE.get();
+        for (int d = 1; d <= range; d++) {
+            BlockPos target = pos.relative(facing, d);
+            if (!level.hasChunkAt(target)) break;
+            BlockState plant = level.getBlockState(target);
+            if (plant.is(FAN_PROTECTED)) continue;
+            boolean sapling = OpenMotionConfig.FAN_BREAK_SAPLINGS.get() && plant.is(BlockTags.SAPLINGS);
+            boolean crop = false;
+            if (OpenMotionConfig.FAN_HARVEST_CROPS.get()) {
+                if (plant.getBlock() instanceof CropBlock standard) {
+                    crop = standard.isMaxAge(plant);
+                } else if (plant.is(FAN_HARVESTABLE) || plant.is(BlockTags.CROPS)) {
+                    // Modded/datapack crops may use an age property instead of CropBlock.
+                    for (Property<?> property : plant.getProperties()) {
+                        if (property instanceof IntegerProperty age && "age".equals(property.getName())) {
+                            crop = plant.getValue(age) >= age.getPossibleValues().stream()
+                                    .mapToInt(Integer::intValue).max().orElse(Integer.MAX_VALUE);
+                            break;
+                        }
+                    }
+                }
+            }
+            if (sapling || crop) {
+                level.destroyBlock(target, true); // vanilla loot tables and modded drops
+                return;
+            }
+            // Non-plants stop the cutting airflow; crops and saplings have empty collision.
+            if (!plant.getCollisionShape(level, target).isEmpty()) break;
+        }
     }
 
     private static void blow(ServerLevel level, BlockPos pos, Direction facing) {

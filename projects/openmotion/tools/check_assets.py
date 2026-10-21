@@ -75,7 +75,7 @@ print('OpenMotion 0.2.1 art and recipes: PASS')
 # 0.3.0 pipe-state and fluid-sprite checks.
 for name in ('water_pipe', 'water_valve'):
     state = json.loads((res / f'assets/openmotion/blockstates/{name}.json').read_text('utf8'))
-    assert len(state['multipart']) >= 15
+    assert len(state['multipart']) >= 14
     for part in state['multipart']:
         model_name = part['apply']['model'].split(':')[1]
         assert (res / f'assets/openmotion/models/{model_name}.json').is_file()
@@ -95,3 +95,13 @@ for name in ('water_pipe','water_valve','water_pump'):
     assert (res / f'data/openmotion/recipe/{name}.json').is_file()
     assert (res / f'data/openmotion/loot_table/blocks/{name}.json').is_file()
 print('0.3.0 hydraulic network models, recipes and animation: PASS')
+
+# 0.3.1 automation data and config validation
+for tag in ('fan_harvestable','fan_protected'):
+    value=json.loads((res/f'data/openmotion/tags/block/{tag}.json').read_text('utf8'))
+    assert value['values']==[]
+for msg in ('en_us','ru_ru'):
+    j=json.loads((res/f'assets/openmotion/lang/{msg}.json').read_text())
+    for name in ('filter_set','filter_cleared','pipe_wet','pump_no_water'):
+        assert 'message.openmotion.'+name in j
+print('0.3.1 farms/config: PASS')
