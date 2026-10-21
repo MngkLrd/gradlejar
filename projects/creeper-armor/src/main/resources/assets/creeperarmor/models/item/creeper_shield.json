@@ -427,70 +427,78 @@
     "thirdperson_righthand": {
       "rotation": [
         0,
-        0,
+        90,
         0
       ],
       "translation": [
-        -1,
-        4,
-        1
+        10,
+        6,
+        -4
       ],
       "scale": [
-        0.88,
-        0.88,
-        0.88
+        1,
+        1,
+        1
       ]
     },
     "thirdperson_lefthand": {
       "rotation": [
         0,
-        0,
+        90,
         0
       ],
       "translation": [
-        1,
-        4,
-        1
+        10,
+        6,
+        12
       ],
       "scale": [
-        0.88,
-        0.88,
-        0.88
+        1,
+        1,
+        1
       ]
     },
     "firstperson_righthand": {
       "rotation": [
         0,
-        0,
-        0
+        180,
+        5
       ],
       "translation": [
-        -5,
-        1,
-        -7
+        -10,
+        2,
+        -10
       ],
       "scale": [
-        1,
-        1,
-        1
+        1.25,
+        1.25,
+        1.25
       ]
     },
     "firstperson_lefthand": {
       "rotation": [
         0,
-        0,
-        0
+        180,
+        5
       ],
       "translation": [
-        5,
-        1,
-        -7
+        10,
+        0,
+        -10
       ],
       "scale": [
-        1,
-        1,
-        1
+        1.25,
+        1.25,
+        1.25
       ]
     }
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "creeperarmor:blocking": 1
+      },
+      "model": "creeperarmor:item/creeper_shield_blocking"
+    }
+  ]
 }
