@@ -74,3 +74,27 @@ Actual UV-mapped in-game vanilla humanoid equipment uses 128×64 textures `asset
 - Adds CI validation of recipe ingredient formats to prevent silent recipe failures when a world loads.
 - The user-reported client crash in `latest(5).log` comes from **JEI++ 1.0.7** applying an incompatible mixin to **JEI 19.64.0.455**; remove JEI++ or install a version explicitly compatible with the user's JEI. This is not a Norse Gear mixin problem.
 - Additional errors for recipes from OpenMotion are outside this project.
+
+
+## 0.1.13: combat and 3D armor prototype
+
+- Cubic custom worn armor on a normal humanoid renderer (NeoForge client extensions; no optional renderer library). Head guard, shoulder volumes, shaped chest, belt, leg/knee/boot details follow normal arm/leg animations. Uses conventional 64x32 UV armor sheets. This is an initial client-facing volumetric model and must be evaluated in actual game for clipping with slim skins/other armor.
+- Charging (hold use at least 10 ticks) for all three spear-like/throwable weapons: melee spear, javelin and throwing axe. Melee spear now throws its own stack, with a +1 durability cost on return; launched item can be recovered where it lands. Throws spawn server-side only.
+- New in-flight renderer aligns projectiles along heading and spins throwing axes. JSON cuboid item models replace flat billboard visuals for spear/javelin/throwing axe; three shields also get thick wooden model + central metal boss. Existing 32x32 inventory PNGs preserved as model texture resources.
+- War horn plays a real vanilla goat horn variant instead of an empty synthetic sound event. Carved horn outline darkened to close open edges.
+- 0.1.12 recipe fixes and 0.1.10 worldgen fix retained.
+- Requires Minecraft 1.21.1, NeoForge 21.1.x, Java 21.
+
+**Test in game:** third-person armor front/rear and slim/default skins; charge/release, recover stacked javelins and throwing axe; throw worn spear and retrieve without duplicates; listen to war horn; blocking stance and item models in both hands.
+
+
+## 0.1.13: combat and 3D armor prototype
+
+- Cubic custom worn armor on a normal humanoid renderer (NeoForge client extensions; no optional renderer library). Head guard, shoulder volumes, shaped chest, belt, leg/knee/boot details follow normal arm/leg animations. Uses conventional 64x32 UV armor sheets. This is an initial client-facing volumetric model and must be evaluated in actual game for clipping with slim skins/other armor.
+- Charging (hold use at least 10 ticks) for all three spear-like/throwable weapons: melee spear, javelin and throwing axe. Melee spear now throws its own stack, with a +1 durability cost on return; launched item can be recovered where it lands. Throws spawn server-side only.
+- New in-flight renderer aligns projectiles along heading and spins throwing axes. JSON cuboid item models replace flat billboard visuals for spear/javelin/throwing axe; three shields also get thick wooden model + central metal boss. Existing 32x32 inventory PNGs preserved as model texture resources.
+- War horn plays a real vanilla goat horn variant instead of an empty synthetic sound event. Carved horn outline darkened to close open edges.
+- 0.1.12 recipe fixes and 0.1.10 worldgen fix retained.
+- Requires Minecraft 1.21.1, NeoForge 21.1.x, Java 21.
+
+**Test in game:** third-person armor front/rear and slim/default skins; charge/release, recover stacked javelins and throwing axe; throw worn spear and retrieve without duplicates; listen to war horn; blocking stance and item models in both hands.

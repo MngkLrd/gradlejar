@@ -7,6 +7,7 @@ import dev.norsegear.item.BogIronItem;
 import dev.norsegear.item.BossedShieldItem;
 import dev.norsegear.item.WarHornItem;
 import dev.norsegear.item.ThrownWeaponItem;
+import dev.norsegear.item.SpearItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.AxeItem;
@@ -39,8 +40,8 @@ public final class ModItems {
     public static final DeferredItem<SwordItem> VIKING_SWORD = ITEMS.register("viking_sword", () ->
         new SwordItem(Tiers.IRON, new Item.Properties()
             .attributes(SwordItem.createAttributes(Tiers.IRON, 3.0F, -2.4F)).durability(270)));
-    public static final DeferredItem<SwordItem> SPEAR = ITEMS.register("spear", () ->
-        new SwordItem(Tiers.IRON, new Item.Properties()
+    public static final DeferredItem<SpearItem> SPEAR = ITEMS.register("spear", () ->
+        new SpearItem(Tiers.IRON, new Item.Properties()
             .attributes(SwordItem.createAttributes(Tiers.IRON, 3.5F, -2.9F)).durability(240)));
 
     // Two different recoverable thrown projectiles.

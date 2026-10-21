@@ -20,7 +20,9 @@ public final class ThrownWeaponEntity extends ThrowableItemProjectile {
         super(type, owner, level);
     }
 
-    private boolean isJavelin() { return this.getType() == ModEntities.JAVELIN.get(); }
+    public boolean isSpearShape() { return this.getType() == ModEntities.JAVELIN.get(); }
+
+    private boolean isJavelin() { return isSpearShape(); }
 
     @Override
     protected Item getDefaultItem() {

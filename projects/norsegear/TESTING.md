@@ -46,3 +46,25 @@
 - Confirm JEI displays recipes for seax, shield, sword, axes and armor.
 - On dedicated server, scan log for `Parsing error loading recipe norsegear:` (must be absent).
 - Armor visuals still use vanilla geometry; custom 3D armor redesign is not part of this emergency recipe hotfix.
+
+
+### Norse Gear 0.1.13 3D render regression tests
+1. Wear one piece at a time and then full set. Ensure armor does not render whole suit when a single part is equipped. Inspect Steve, Alex, crouching, running and swimming.
+2. Hold Javelin for 10+ ticks then release; short tap must NOT spawn projectile. Recover thrown item from ground. Test inventory stack in survival/creative.
+3. Hold Spear then throw and retrieve. Verify no extra copy, no unintentional double consumption, correct durability.
+4. Hold Throwing Axe; release, observe spin and recovery. All three need visible 3D geometry from front and side.
+5. Block with all three shields (right mouse) and verify held-model thickness, the boss, damage prevention and +2 armor while bossed shield is in offhand.
+6. War Horn produces audible goat horn music and only buffs allied nearby players.
+7. With JEI (without incompatible JEI++), inspect 24 crafting recipes, enter/leave the same world twice.
+8. Server boot test validates registry/worldgen and recipe parsing only. It does **not** render anything.
+
+
+### Norse Gear 0.1.13 3D render regression tests
+1. Wear one piece at a time and then full set. Ensure armor does not render whole suit when a single part is equipped. Inspect Steve, Alex, crouching, running and swimming.
+2. Hold Javelin for 10+ ticks then release; short tap must NOT spawn projectile. Recover thrown item from ground. Test inventory stack in survival/creative.
+3. Hold Spear then throw and retrieve. Verify no extra copy, no unintentional double consumption, correct durability.
+4. Hold Throwing Axe; release, observe spin and recovery. All three need visible 3D geometry from front and side.
+5. Block with all three shields (right mouse) and verify held-model thickness, the boss, damage prevention and +2 armor while bossed shield is in offhand.
+6. War Horn produces audible goat horn music and only buffs allied nearby players.
+7. With JEI (without incompatible JEI++), inspect 24 crafting recipes, enter/leave the same world twice.
+8. Server boot test validates registry/worldgen and recipe parsing only. It does **not** render anything.

@@ -38,11 +38,21 @@ def run(jar):
             assert raw[:8] == b"\x89PNG\r\n\x1a\n"
             expected_size = (32, 32)  # All 24 inventory items now have final 32x32 pixel art.
             assert struct.unpack(">II", raw[16:24]) == expected_size, f"Wrong sprite size: {item}"
+        for name in ("spear", "javelin", "throwing_axe", "round_shield", "celtic_shield", "bossed_shield"):
+            model = json.loads(z.read(BASE + f"models/item/{name}.json"))
+            assert model.get("elements") and len(model["elements"]) >= 4, f"No cuboid geometry: {name}"
+        for name in ("dev/norsegear/client/model/NorseArmorModel.class", "dev/norsegear/client/renderer/ThrownWeaponRenderer.class", "dev/norsegear/item/SpearItem.class"):
+            assert name in contents, f"Missing 3D class: {name}"
+        for name in ("spear", "javelin", "throwing_axe", "round_shield", "celtic_shield", "bossed_shield"):
+            model = json.loads(z.read(BASE + f"models/item/{name}.json"))
+            assert model.get("elements") and len(model["elements"]) >= 4, f"No cuboid geometry: {name}"
+        for name in ("dev/norsegear/client/model/NorseArmorModel.class", "dev/norsegear/client/renderer/ThrownWeaponRenderer.class", "dev/norsegear/item/SpearItem.class"):
+            assert name in contents, f"Missing 3D class: {name}"
         for layer in (1, 2):
             tex = BASE + f"textures/models/armor/ironweave_layer_{layer}.png"
             assert tex in contents, f"Missing worn armor texture layer {layer}"
             raw = z.read(tex)
-            assert struct.unpack(">II", raw[16:24]) == (128, 64)
+            assert struct.unpack(">II", raw[16:24]) == (64, 32)
         for lang in ("en_us", "ru_ru"):
             p = BASE + f"lang/{lang}.json"
             assert p in contents
@@ -105,7 +115,7 @@ def run(jar):
             "dev/norsegear/integration/jei/NorseJeiPlugin.class",
         ):
             assert class_file in contents, f"Missing compiled feature: {class_file}"
-    print(f"PASS: Norse Gear JAR content verified: {len(ITEMS)} items, 24 recipes, bog iron worldgen + JEI integration, dual locale + armor layers")
+    print(f"PASS: Norse Gear JAR content verified: {len(ITEMS)} items, 24 recipes, bog iron worldgen + JEI, 3D armor & weapon geometry")
 
 if __name__ == "__main__":
     run(Path(sys.argv[1]))

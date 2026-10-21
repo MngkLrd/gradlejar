@@ -35,7 +35,7 @@ public final class WarHornItem extends Item {
             player.getCooldowns().addCooldown(this, 900);
             stack.hurtAndBreak(1, player, hand == InteractionHand.MAIN_HAND
                 ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
-            server.playSound(null, player.blockPosition(), SoundEvents.GOAT_HORN_PLAY,
+            server.playSound(null, player.blockPosition(), SoundEvents.GOAT_HORN_SOUND_VARIANTS.get(0).value(),
                 SoundSource.PLAYERS, 1.3F, 0.95F);
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
