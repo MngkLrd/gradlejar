@@ -131,8 +131,10 @@ def load_equipped_armor_from_java():
     box_from('mannequin-torso',[4,3,6],[12,15,10])
     box_from('mannequin-left-arm',[12,3,6],[16,13,10])
     box_from('mannequin-right-arm',[0,3,6],[4,13,10])
+    box_from('mannequin-left-leg',[8,-9,6],[12,3,10])
+    box_from('mannequin-right-leg',[4,-9,6],[8,3,10])
     assert len(els)>25,('Java armor parsing failed',len(els))
-    return {'elements':els},np.array(armor),len(els)-4
+    return {'elements':els},np.array(armor),len(els)-6
 
 if __name__=='__main__':
  canvas=Image.new('RGBA',(1450,1140),'#0e1720')
