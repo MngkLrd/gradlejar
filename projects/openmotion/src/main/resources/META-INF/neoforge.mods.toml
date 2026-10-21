@@ -3,7 +3,7 @@ loaderVersion="[4,)"
 license="MIT"
 [[mods]]
 modId="openmotion"
-version="0.2.0"
+version="0.2.1"
 displayName="OpenMotion"
 authors="OpenMotion contributors"
 description="Compact physics utility machines: a directional fan and an item cannon. Inspired by the utility-mod era, built from scratch."

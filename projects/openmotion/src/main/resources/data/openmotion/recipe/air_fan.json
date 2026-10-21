@@ -15,9 +15,6 @@
     },
     "R": {
       "item": "minecraft:redstone"
-    },
-    "D": {
-      "item": "minecraft:dispenser"
     }
   },
   "result": {

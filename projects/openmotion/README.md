@@ -1,4 +1,4 @@
-# OpenMotion 0.2.0
+# OpenMotion 0.2.1
 
 A lightweight, independent NeoForge mod inspired by the lost utility-machine era of Minecraft.
 **This code and every bundled texture are original.** No OpenBlocks/OpenModsLib files or assets are included.
@@ -29,7 +29,7 @@ From inside this directory:
 gradle --no-daemon clean build
 ```
 
-Output: `build/libs/openmotion-1.21.1-0.2.0.jar`. The repository CI uses `build-profile.json` with Java 21 / Gradle 9.2.1.
+Output: `build/libs/openmotion-1.21.1-0.2.1.jar`. The repository CI uses `build-profile.json` with Java 21 / Gradle 9.2.1.
 
 ## Test checklist
 1. `/give @s openmotion:air_fan` and `/give @s openmotion:item_cannon`; confirm textures and creative Redstone tab.
@@ -114,3 +114,13 @@ No original OpenBlocks asset files or code are used.
 ### Quick start
 `/give @s openmotion:vacuum_hopper` and `/give @s openmotion:sprinkler`.
 Crafting is enabled for both. Test on NeoForge 21.1.262, Java 21.
+
+## 0.2.1 Visual polish and collector fixes
+
+- Vacuum Hopper V1+V2: sloped intake, open copper-rimmed funnel, dense collector base and nine persistent slots.
+- Sprinkler S1+S2: four large directional nozzles, central blue pipe, heavy industrial base, active/inactive lamp.
+- Sixteen purpose-designed 32x32 pixel-art texture tiles, no antialiasing and no original OpenBlocks assets.
+- Collector collision shape leaves the intake physically open; raycast ignores the collector itself but respects other walls.
+- Sprinkler collisions follow the base, central riser and cross-arm head, not a solid block.
+- Removed unused ingredient symbol from air fan shaped recipe.
+- Server-authoritative inventory and crop logic preserved; game-world testing is still required.

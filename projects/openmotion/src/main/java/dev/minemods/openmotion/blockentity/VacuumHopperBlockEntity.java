@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -79,8 +80,10 @@ public final class VacuumHopperBlockEntity extends BlockEntity {
             Vec3 offset = target.subtract(item.position());
             double distanceSq = offset.lengthSqr();
             if (distanceSq > 25 || distanceSq < 0.00001) continue;
-            if (level.clip(new ClipContext(item.position(), target, ClipContext.Block.COLLIDER,
-                    ClipContext.Fluid.NONE, item)).getType() != HitResult.Type.MISS) continue;
+            // A hit against this collector is expected; only foreign blocks obstruct suction.
+            BlockHitResult hit = level.clip(new ClipContext(item.position(), target,
+                    ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, item));
+            if (hit.getType() != HitResult.Type.MISS && !hit.getBlockPos().equals(pos)) continue;
             if (distanceSq <= 0.85) {
                 ItemStack remainder = tryInsert(item.getItem());
                 if (remainder.getCount() == item.getItem().getCount()) continue;

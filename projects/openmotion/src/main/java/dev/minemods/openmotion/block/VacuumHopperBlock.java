@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -27,7 +28,13 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class VacuumHopperBlock extends BaseEntityBlock {
     public static final MapCodec<VacuumHopperBlock> CODEC = simpleCodec(VacuumHopperBlock::new);
-    private static final VoxelShape SHAPE = box(1, 0, 1, 15, 14, 15);
+    // Hollow intake: a solid full cube here would prevent dropped items reaching the collector.
+    private static final VoxelShape SHAPE = Shapes.or(
+            box(4.3, 0, 4.3, 11.7, 8.4, 11.7),
+            box(1.5, 12.8, 1.5, 14.5, 14.9, 3.1),
+            box(1.5, 12.8, 12.9, 14.5, 14.9, 14.5),
+            box(1.5, 12.8, 3.1, 3.1, 14.9, 12.9),
+            box(12.9, 12.8, 3.1, 14.5, 14.9, 12.9));
 
     public VacuumHopperBlock(Properties properties) { super(properties); }
 

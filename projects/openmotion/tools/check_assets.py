@@ -45,3 +45,26 @@ for name in ('vacuum_hopper', 'sprinkler'):
     assert (res / f'data/openmotion/recipe/{name}.json').exists()
     assert (res / f'data/openmotion/loot_table/blocks/{name}.json').exists()
 print('0.2.0 collector and sprinkler assets: PASS')
+
+# 0.2.1: validate the approved 3D designs, high-quality materials and recipe symbols.
+for name in ('vacuum_hopper', 'sprinkler', 'sprinkler_inactive'):
+    model = json.loads((res / f'assets/openmotion/models/block/{name}.json').read_text('utf8'))
+    assert 18 <= len(model['elements']) <= 36, (name, len(model['elements']))
+    for elem in model['elements']:
+        assert all(0 <= a <= 16 for a in elem['from'] + elem['to'])
+        for face in elem['faces'].values():
+            tex = model['textures'][face['texture'][1:]]
+            ns, resource = tex.split(':')
+            p = res / f'assets/{ns}/textures/{resource}.png'
+            assert p.is_file(), p
+            assert struct.unpack('>II', p.read_bytes()[16:24]) == (32, 32), p
+sprinkler = json.loads((res / 'assets/openmotion/models/block/sprinkler.json').read_text('utf8'))
+assert any(e['faces']['north']['texture'] == '#sp_water' for e in sprinkler['elements'])
+funnel = json.loads((res / 'assets/openmotion/models/block/vacuum_hopper.json').read_text('utf8'))
+assert sum('rotation' in e for e in funnel['elements']) == 4
+for recipe in (res / 'data/openmotion/recipe').glob('*.json'):
+    j = json.loads(recipe.read_text('utf8'))
+    if j.get('type') == 'minecraft:crafting_shaped':
+        symbols = set(''.join(j['pattern'])) - {' '}
+        assert symbols == set(j['key']), (recipe, symbols, set(j['key']))
+print('OpenMotion 0.2.1 art and recipes: PASS')

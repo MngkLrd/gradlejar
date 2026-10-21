@@ -17,13 +17,18 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Nullable;
 
 /** Low-cost water-source-powered irrigation machine. No tanks, pipes or client-only code. */
 public final class SprinklerBlock extends Block {
     public static final MapCodec<SprinklerBlock> CODEC = simpleCodec(SprinklerBlock::new);
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
-    private static final VoxelShape SHAPE = box(1.5, 0, 1.5, 14.5, 15.5, 14.5);
+    private static final VoxelShape SHAPE = Shapes.or(
+            box(2, 0, 2, 14, 3.7, 14),
+            box(6.0, 3.7, 6.0, 10, 13.65, 10),
+            box(1, 10.8, 6.2, 15, 13.6, 9.8),
+            box(6.2, 10.8, 1, 9.8, 13.6, 15));
     private static final int INTERVAL = 100;
 
     public SprinklerBlock(Properties properties) {
