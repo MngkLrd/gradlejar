@@ -1,4 +1,4 @@
-# Bearback 0.1.0 (NeoForge 1.21.1)
+# Bearback 0.1.1 (NeoForge 1.21.1)
 
 Adds black bears and allows taming, saddling and riding polar bears and black bears. No dependency on Rideable Polar Bears. Java 21.
 
@@ -8,12 +8,12 @@ Adds black bears and allows taming, saddling and riding polar bears and black be
 - WASD to ride, Space to jump, R to perform a powerful paw swipe while mounted (1.5s cooldown).
 - Owned bears defend against attackers of their owner and follow when the owner moves away.
 - Heal by feeding fish. Sneak + shears remove saddle.
-- The black bear reuses vanilla polar bear model/animations; its black fur is generated at runtime by recoloring the installed game's polar bear texture, with no bundled Mojang textures.
+- The black bear reuses vanilla polar bear model/animations; charcoal fur and a beige chest marking are generated from the installed game's vanilla skin, with no bundled Mojang textures.
 - Black bears spawn in forest/taiga biomes, or use the creative spawn egg.
 
 ## Build
 Java 21, Gradle 9.2.1: `gradle clean build`.
-JAR: `build/libs/bearback-1.21.1-0.1.0.jar`
+JAR: `build/libs/bearback-1.21.1-0.1.1.jar`
 
 ## Testing
 - New world spawn of black bear; `/summon bearback:black_bear`.
@@ -22,7 +22,7 @@ JAR: `build/libs/bearback-1.21.1-0.1.0.jar`
 - Dedicated server launch (client code isolated).
 
 ## Known limitations
-- Native item-rendered saddle is a compact visual prototype, not custom fitted high-poly geometry.
+- A dedicated leather saddle is made of fitted 3D cubes and inherits the vanilla torso animation. Final fit must be tested in the game.
 - Bear movement uses authoritative server ride packets and may need smoothing in high-latency multiplayer.
 - Attack while mounted is keyed to R; vanilla paw raising is used for the animation.
 - Existing RideablePolarBears is not required or integrated.
