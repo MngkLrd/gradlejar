@@ -1,0 +1,9 @@
+{
+  "slug": "witchhunted",
+  "version": "0.1.0-alpha",
+  "minecraft": "1.21.1",
+  "loader": "neoforge",
+  "java": "21",
+  "gradle": "9.2.1",
+  "jar_glob": "witchhunted-1.21.1-0.1.0-alpha.jar"
+}

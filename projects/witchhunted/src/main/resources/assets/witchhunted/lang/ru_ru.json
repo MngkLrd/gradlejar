@@ -1,0 +1,9 @@
+{
+  "block.witchhunted.witch_hat": "Шляпа преследуемой ведьмы",
+  "item.witchhunted.observer_eye": "Око Наблюдателя",
+  "itemGroup.witchhunted": "Witch Hunted",
+  "message.witchhunted.enter": "ПУСТОТА СЛЕДИТ ЗА ТОБОЙ.",
+  "message.witchhunted.leave": "Ты сбежал. Пока что.",
+  "message.witchhunted.no_dimension": "Измерение Пустоты не загрузилось.",
+  "message.witchhunted.seen": "НАБЛЮДАТЕЛИ НАШЛИ ТЕБЯ."
+}
