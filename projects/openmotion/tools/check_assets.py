@@ -57,7 +57,10 @@ for name in ('vacuum_hopper', 'sprinkler', 'sprinkler_inactive'):
             ns, resource = tex.split(':')
             p = res / f'assets/{ns}/textures/{resource}.png'
             assert p.is_file(), p
-            assert struct.unpack('>II', p.read_bytes()[16:24]) == (32, 32), p
+            dims = struct.unpack('>II', p.read_bytes()[16:24])
+            assert dims[0] == 32 and dims[1] in (32, 128), (p, dims)
+            if dims[1] > 32:
+                assert (p.parent / (p.name + '.mcmeta')).exists(), p
 sprinkler = json.loads((res / 'assets/openmotion/models/block/sprinkler.json').read_text('utf8'))
 assert any(e['faces']['north']['texture'] == '#sp_water' for e in sprinkler['elements'])
 funnel = json.loads((res / 'assets/openmotion/models/block/vacuum_hopper.json').read_text('utf8'))

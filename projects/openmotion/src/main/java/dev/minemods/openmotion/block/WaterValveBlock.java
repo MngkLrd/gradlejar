@@ -14,6 +14,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /** Built-in lever can toggle water manually; neighboring redstone power also closes the gate. */
 public final class WaterValveBlock extends WaterPipeBlock {
@@ -32,6 +36,16 @@ public final class WaterValveBlock extends WaterPipeBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(CLOSED, LOCKED);
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos,
+                                  CollisionContext context) {
+        return Shapes.or(super.getShape(state, level, pos, context),
+                Block.box(4, 4, 4, 12, 13, 12),
+                state.getValue(CLOSED)
+                        ? Block.box(7, 12, 7, 14, 14.5, 9)
+                        : Block.box(6, 12, 7, 10, 15.5, 9));
     }
 
     public static boolean canFlow(BlockState state) {
