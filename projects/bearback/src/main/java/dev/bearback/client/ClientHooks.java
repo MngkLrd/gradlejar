@@ -2,7 +2,10 @@ package dev.bearback.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.bearback.BearRidePacket;
-import dev.bearback.Bearback;\nimport dev.bearback.OpenCargoPacket;\nimport net.minecraft.client.gui.screens.inventory.InventoryScreen;\nimport net.neoforged.neoforge.client.event.ScreenEvent;
+import dev.bearback.Bearback;
+import dev.bearback.OpenCargoPacket;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
@@ -25,7 +28,8 @@ public final class ClientHooks {
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, "key.categories.bearback");
 
     static {
-        NeoForge.EVENT_BUS.addListener(ClientHooks::onClientTick);\n        NeoForge.EVENT_BUS.addListener(ClientHooks::onScreenOpening);
+        NeoForge.EVENT_BUS.addListener(ClientHooks::onClientTick);
+        NeoForge.EVENT_BUS.addListener(ClientHooks::onScreenOpening);
     }
 
     @SubscribeEvent
@@ -41,9 +45,11 @@ public final class ClientHooks {
     @SubscribeEvent
     public static void layers(EntityRenderersEvent.AddLayers event) {
         PolarBearRenderer polar = event.getRenderer(EntityType.POLAR_BEAR);
-        if (polar != null) polar.addLayer(new SaddleLayer(polar));\n        if (polar != null) polar.addLayer(new SaddlebagsLayer(polar));
+        if (polar != null) polar.addLayer(new SaddleLayer(polar));
+        if (polar != null) polar.addLayer(new SaddlebagsLayer(polar));
         PolarBearRenderer black = event.getRenderer(Bearback.BLACK_BEAR.get());
-        if (black != null) black.addLayer(new SaddleLayer(black));\n        if (black != null) black.addLayer(new SaddlebagsLayer(black));
+        if (black != null) black.addLayer(new SaddleLayer(black));
+        if (black != null) black.addLayer(new SaddlebagsLayer(black));
     }
 
     private static void onScreenOpening(ScreenEvent.Opening event) {

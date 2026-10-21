@@ -70,7 +70,16 @@ public final class BearEvents {
             }
             return;
         }
-        if (fish) {
+        if (held.is(Bearback.SADDLEBAGS.get()) && !bear.getData(Bearback.BAGS.get())) {
+            bear.setData(Bearback.BAGS.get(), true);
+            bear.syncData(Bearback.BAGS.get());
+            if (!player.getAbilities().instabuild) held.shrink(1);
+            bear.level().playSound(null, bear.blockPosition(), SoundEvents.HORSE_SADDLE,
+                    SoundSource.NEUTRAL, .8F, 1.25F);
+        } else if (held.isEmpty() && player.isShiftKeyDown()
+                && bear.getData(Bearback.BAGS.get())) {
+            if (player instanceof ServerPlayer serverPlayer) BearCargo.open(serverPlayer, bear);
+        } else if (fish) {
             if (bear.getHealth() < bear.getMaxHealth()) {
                 bear.heal(5.0F);
                 if (!player.getAbilities().instabuild) held.shrink(1);
