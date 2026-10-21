@@ -69,7 +69,7 @@ jobs:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: python3 tools/verify_build_output.py "$PROJECT_DIR"
       - name: Publish JAR to GitHub prerelease
-        if: github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && matrix.project_dir == 'projects/creeper-armor' && github.head_ref == 'creeperarmor-release-0.3.1')
+        if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
           JAR_PATH: ${{ steps.verify.outputs.jar_path }}
@@ -81,13 +81,8 @@ jobs:
         run: |
           set -euo pipefail
           tag="ci-${MOD_SLUG}-mc${MC_VERSION}-${MOD_LOADER}-${MOD_VERSION}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
-          target="$GITHUB_SHA"
-          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
-            tag="ci-${MOD_SLUG}-mc${MC_VERSION}-${MOD_LOADER}-${MOD_VERSION}-pr${{ github.event.pull_request.number }}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
-            target="${{ github.event.pull_request.head.sha }}"
-          fi
           gh release create "$tag" "$JAR_PATH" "$CHECKSUM_PATH" \
-            --target "$target" \
+            --target "$GITHUB_SHA" \
             --title "${MOD_SLUG} ${MOD_VERSION} (Minecraft ${MC_VERSION}, ${MOD_LOADER}) — CI ${GITHUB_RUN_NUMBER}" \
             --notes "Compiled with official Minecraft/NeoForge dependencies. Static validation passed. Client gameplay untested." \
             --prerelease
