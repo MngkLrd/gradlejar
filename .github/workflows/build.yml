@@ -69,7 +69,7 @@ jobs:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: python3 tools/verify_build_output.py "$PROJECT_DIR"
       - name: Publish JAR to GitHub prerelease
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || matrix.project_dir == 'projects/traumatic-26.3'
         env:
           GH_TOKEN: ${{ github.token }}
           JAR_PATH: ${{ steps.verify.outputs.jar_path }}
