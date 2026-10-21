@@ -114,7 +114,7 @@ public final class BearEvents {
         CompoundTag data=bear.getPersistentData();long time=bear.level().getGameTime();
         if(time-data.getLongOr(LAST_SWIPE,0)<30)return;
         data.putLong(LAST_SWIPE,time);data.putLong(STAND_UNTIL,time+13);bear.setStanding(true);
-        bear.level().playSound(null,bear.blockPosition(),SoundEvents.POLAR_BEAR_WARNING.value(),SoundSource.NEUTRAL,.9F,.9F);
+        bear.level().playSound(null,bear.blockPosition(),SoundEvents.POLAR_BEAR_WARNING,SoundSource.NEUTRAL,.9F,.9F);
         for(LivingEntity target:bear.level().getEntitiesOfClass(LivingEntity.class,bear.getBoundingBox().inflate(3),
                 x->x!=bear&&x!=rider&&x.isAlive())){
             if(bear.distanceToSqr(target)>12.25)continue;
