@@ -55,7 +55,7 @@ public final class ThrownWeaponItem extends Item {
         if (level.addFreshEntity(projectile)) {
             if (!player.getAbilities().instabuild) stack.shrink(1);
             player.getCooldowns().addCooldown(this, javelin ? 11 : 15);
-            level.playSound(null, player.blockPosition(), SoundEvents.TRIDENT_THROW,
+            level.playSound(null, player.blockPosition(), SoundEvents.TRIDENT_THROW.value(),
                 SoundSource.PLAYERS, 0.85F, javelin ? 1.15F : 0.72F);
         }
     }

@@ -44,7 +44,7 @@ public final class SpearItem extends SwordItem {
         if (level.addFreshEntity(projectile)) {
             if (!player.getAbilities().instabuild) stack.shrink(1);
             player.getCooldowns().addCooldown(this, 12);
-            level.playSound(null, player.blockPosition(), SoundEvents.TRIDENT_THROW,
+            level.playSound(null, player.blockPosition(), SoundEvents.TRIDENT_THROW.value(),
                 SoundSource.PLAYERS, 1.0F, 0.9F);
         }
     }
