@@ -6,7 +6,6 @@ import dev.minemods.traumacraft.health.BodyPart;
 import dev.minemods.traumacraft.health.BodyState;
 import dev.minemods.traumacraft.registry.ModAttachments;
 import dev.minemods.traumacraft.network.ModNetwork;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
@@ -17,7 +16,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import dev.minemods.traumacraft.network.MedicalNetworking;
 
 public final class TraumaEvents {
     private static final ResourceLocation LIMPING_ID =
@@ -27,7 +25,7 @@ public final class TraumaEvents {
     private TraumaEvents() {}
 
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) MedicalNetworking.sync(player);
+        if (event.getEntity() instanceof ServerPlayer player) ModNetwork.sync(player);
     }
     public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) MedicalNetworking.sync(player);
@@ -78,16 +76,11 @@ public final class TraumaEvents {
         }
     }
 
-    public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) ModNetwork.sync(player);
-    }
-
     public static void onPlayerTick(EntityTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (player.tickCount % 20 != 0) return;
         BodyState state = player.getData(ModAttachments.BODY.get());
         updateMovement(player, state.legPenalty());
-        if (state.takeDirty()) MedicalNetworking.sync(player);
 
         if (player.tickCount % 40 == 0 && state.hasBleeding()) {
             int severity = 0;
