@@ -1,0 +1,129 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "openmotion:block/pipe_core"
+      }
+    },
+    {
+      "when": {
+        "flowing": "true"
+      },
+      "apply": {
+        "model": "openmotion:block/pipe_core_flow"
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "openmotion:block/pipe_arm"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "flowing": "true"
+      },
+      "apply": {
+        "model": "openmotion:block/pipe_arm_flow"
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "openmotion:block/pipe_arm",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "flowing": "true"
+      },
+      "apply": {
+        "model": "openmotion:block/pipe_arm_flow",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "openmotion:block/pipe_arm",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "flowing": "true"
+      },
+      "apply": {
+        "model": "openmotion:block/pipe_arm_flow",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "openmotion:block/pipe_arm",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "flowing": "true"
+      },
+      "apply": {
+        "model": "openmotion:block/pipe_arm_flow",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "openmotion:block/pipe_arm",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "flowing": "true"
+      },
+      "apply": {
+        "model": "openmotion:block/pipe_arm_flow",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "openmotion:block/pipe_arm",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "flowing": "true"
+      },
+      "apply": {
+        "model": "openmotion:block/pipe_arm_flow",
+        "x": 270
+      }
+    }
+  ]
+}

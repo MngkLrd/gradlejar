@@ -1,0 +1,385 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": true,
+  "textures": {
+    "shell": "openmotion:block/pipe_shell",
+    "copper": "openmotion:block/pipe_copper",
+    "dry": "openmotion:block/pipe_dry",
+    "water": "openmotion:block/pipe_flow",
+    "grille": "openmotion:block/pump_grille",
+    "pump": "openmotion:block/pump_body",
+    "switch": "openmotion:block/valve_switch",
+    "dark": "openmotion:block/sp_dark",
+    "metal": "openmotion:block/sp_steel",
+    "brass": "openmotion:block/sp_nozzle",
+    "base": "openmotion:block/sp_base",
+    "glow": "openmotion:block/sp_on",
+    "off": "openmotion:block/sp_off",
+    "particle": "openmotion:block/pipe_shell"
+  },
+  "elements": [
+    {
+      "from": [
+        4.6,
+        4.6,
+        4.6
+      ],
+      "to": [
+        11.4,
+        11.6,
+        11.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pump"
+        },
+        "south": {
+          "texture": "#pump"
+        },
+        "east": {
+          "texture": "#pump"
+        },
+        "west": {
+          "texture": "#pump"
+        },
+        "up": {
+          "texture": "#shell"
+        },
+        "down": {
+          "texture": "#pump"
+        }
+      }
+    },
+    {
+      "from": [
+        3.9,
+        5.5,
+        4.2
+      ],
+      "to": [
+        5,
+        10.5,
+        11.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#copper"
+        },
+        "south": {
+          "texture": "#copper"
+        },
+        "east": {
+          "texture": "#copper"
+        },
+        "west": {
+          "texture": "#copper"
+        },
+        "up": {
+          "texture": "#copper"
+        },
+        "down": {
+          "texture": "#copper"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        5.5,
+        4.2
+      ],
+      "to": [
+        12.1,
+        10.5,
+        11.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#copper"
+        },
+        "south": {
+          "texture": "#copper"
+        },
+        "east": {
+          "texture": "#copper"
+        },
+        "west": {
+          "texture": "#copper"
+        },
+        "up": {
+          "texture": "#copper"
+        },
+        "down": {
+          "texture": "#copper"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        11.55,
+        5
+      ],
+      "to": [
+        11,
+        12.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#copper"
+        },
+        "south": {
+          "texture": "#copper"
+        },
+        "east": {
+          "texture": "#copper"
+        },
+        "west": {
+          "texture": "#copper"
+        },
+        "up": {
+          "texture": "#shell"
+        },
+        "down": {
+          "texture": "#copper"
+        }
+      }
+    },
+    {
+      "from": [
+        6.15,
+        12.5,
+        6.15
+      ],
+      "to": [
+        9.85,
+        13,
+        9.85
+      ],
+      "faces": {
+        "north": {
+          "texture": "#switch"
+        },
+        "south": {
+          "texture": "#switch"
+        },
+        "east": {
+          "texture": "#switch"
+        },
+        "west": {
+          "texture": "#switch"
+        },
+        "up": {
+          "texture": "#switch"
+        },
+        "down": {
+          "texture": "#switch"
+        }
+      }
+    },
+    {
+      "from": [
+        5.1,
+        4,
+        5.1
+      ],
+      "to": [
+        10.9,
+        4.65,
+        10.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal"
+        },
+        "south": {
+          "texture": "#metal"
+        },
+        "east": {
+          "texture": "#metal"
+        },
+        "west": {
+          "texture": "#metal"
+        },
+        "up": {
+          "texture": "#metal"
+        },
+        "down": {
+          "texture": "#metal"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        6,
+        1
+      ],
+      "to": [
+        10,
+        10,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#shell"
+        },
+        "south": {
+          "texture": "#shell"
+        },
+        "east": {
+          "texture": "#shell"
+        },
+        "west": {
+          "texture": "#shell"
+        },
+        "up": {
+          "texture": "#shell"
+        },
+        "down": {
+          "texture": "#shell"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        6,
+        10
+      ],
+      "to": [
+        10,
+        10,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#shell"
+        },
+        "south": {
+          "texture": "#shell"
+        },
+        "east": {
+          "texture": "#shell"
+        },
+        "west": {
+          "texture": "#shell"
+        },
+        "up": {
+          "texture": "#shell"
+        },
+        "down": {
+          "texture": "#shell"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        12.9,
+        7.5
+      ],
+      "to": [
+        8.5,
+        15.3,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#copper"
+        },
+        "south": {
+          "texture": "#copper"
+        },
+        "east": {
+          "texture": "#copper"
+        },
+        "west": {
+          "texture": "#copper"
+        },
+        "up": {
+          "texture": "#copper"
+        },
+        "down": {
+          "texture": "#copper"
+        }
+      }
+    },
+    {
+      "from": [
+        6.2,
+        14.55,
+        7.4
+      ],
+      "to": [
+        9.8,
+        15.5,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#switch"
+        },
+        "south": {
+          "texture": "#switch"
+        },
+        "east": {
+          "texture": "#switch"
+        },
+        "west": {
+          "texture": "#switch"
+        },
+        "up": {
+          "texture": "#switch"
+        },
+        "down": {
+          "texture": "#switch"
+        }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.83,
+        0.83,
+        0.83
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.55,
+        0.55,
+        0.55
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        0.7,
+        0.7,
+        0.7
+      ]
+    }
+  }
+}

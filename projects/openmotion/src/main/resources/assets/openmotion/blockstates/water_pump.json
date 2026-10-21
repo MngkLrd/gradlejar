@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "running=false": {
+      "model": "openmotion:block/water_pump_idle"
+    },
+    "running=true": {
+      "model": "openmotion:block/water_pump_running"
+    }
+  }
+}

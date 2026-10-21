@@ -68,3 +68,27 @@ for recipe in (res / 'data/openmotion/recipe').glob('*.json'):
         symbols = set(''.join(j['pattern'])) - {' '}
         assert symbols == set(j['key']), (recipe, symbols, set(j['key']))
 print('OpenMotion 0.2.1 art and recipes: PASS')
+
+# 0.3.0 pipe-state and fluid-sprite checks.
+for name in ('water_pipe', 'water_valve'):
+    state = json.loads((res / f'assets/openmotion/blockstates/{name}.json').read_text('utf8'))
+    assert len(state['multipart']) >= 15
+    for part in state['multipart']:
+        model_name = part['apply']['model'].split(':')[1]
+        assert (res / f'assets/openmotion/models/{model_name}.json').is_file()
+for name in ('pipe_core','pipe_core_flow','pipe_arm','pipe_arm_flow','valve_core',
+             'valve_handle_open','valve_handle_closed','pipe_item','valve_item',
+             'water_pump_idle','water_pump_running'):
+    model = json.loads((res / f'assets/openmotion/models/block/{name}.json').read_text('utf8'))
+    assert model['elements'], name
+    for tex in model['textures'].values():
+        ns, path = tex.split(':')
+        assert (res / f'assets/{ns}/textures/{path}.png').exists(), (name, tex)
+raw = (res / 'assets/openmotion/textures/block/pipe_flow.png').read_bytes()
+assert struct.unpack('>II', raw[16:24]) == (32, 128)
+sprite = json.loads((res / 'assets/openmotion/textures/block/pipe_flow.png.mcmeta').read_text())
+assert sprite['animation']['frametime'] > 0
+for name in ('water_pipe','water_valve','water_pump'):
+    assert (res / f'data/openmotion/recipe/{name}.json').is_file()
+    assert (res / f'data/openmotion/loot_table/blocks/{name}.json').is_file()
+print('0.3.0 hydraulic network models, recipes and animation: PASS')

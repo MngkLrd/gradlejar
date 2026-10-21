@@ -1,0 +1,129 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": true,
+  "textures": {
+    "shell": "openmotion:block/pipe_shell",
+    "copper": "openmotion:block/pipe_copper",
+    "dry": "openmotion:block/pipe_dry",
+    "water": "openmotion:block/pipe_flow",
+    "grille": "openmotion:block/pump_grille",
+    "pump": "openmotion:block/pump_body",
+    "switch": "openmotion:block/valve_switch",
+    "dark": "openmotion:block/sp_dark",
+    "metal": "openmotion:block/sp_steel",
+    "brass": "openmotion:block/sp_nozzle",
+    "base": "openmotion:block/sp_base",
+    "glow": "openmotion:block/sp_on",
+    "off": "openmotion:block/sp_off",
+    "particle": "openmotion:block/valve_switch"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        12.9,
+        7.5
+      ],
+      "to": [
+        8.5,
+        15.3,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#copper"
+        },
+        "south": {
+          "texture": "#copper"
+        },
+        "east": {
+          "texture": "#copper"
+        },
+        "west": {
+          "texture": "#copper"
+        },
+        "up": {
+          "texture": "#copper"
+        },
+        "down": {
+          "texture": "#copper"
+        }
+      }
+    },
+    {
+      "from": [
+        6.2,
+        14.55,
+        7.4
+      ],
+      "to": [
+        9.8,
+        15.5,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#switch"
+        },
+        "south": {
+          "texture": "#switch"
+        },
+        "east": {
+          "texture": "#switch"
+        },
+        "west": {
+          "texture": "#switch"
+        },
+        "up": {
+          "texture": "#switch"
+        },
+        "down": {
+          "texture": "#switch"
+        }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.83,
+        0.83,
+        0.83
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.55,
+        0.55,
+        0.55
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        0.7,
+        0.7,
+        0.7
+      ]
+    }
+  }
+}
