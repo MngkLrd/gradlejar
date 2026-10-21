@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-bearback:
@@ -28,9 +28,16 @@ jobs:
       - name: Build NeoForge JAR
         working-directory: projects/bearback
         run: gradle --no-daemon --stacktrace clean build
-      - name: Upload Bearback JAR
-        uses: actions/upload-artifact@v4
-        with:
-          name: bearback-1.21.1-0.1.0
-          path: projects/bearback/build/libs/bearback-1.21.1-0.1.0.jar
-          if-no-files-found: error
+      - name: Publish JAR to GitHub Releases
+        if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'ci/bearback-artifact')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_NUMBER: ${{ github.run_number }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          tag="ci-bearback-mc1.21.1-0.1.0-${RUN_NUMBER}"
+          gh release create "$tag" projects/bearback/build/libs/bearback-1.21.1-0.1.0.jar \
+            --target "$TARGET_SHA" \
+            --title "Bearback 0.1.0 | Minecraft 1.21.1 NeoForge" \
+            --notes "Compiled on GitHub Actions. Client gameplay not yet tested." \
+            --prerelease
