@@ -24,4 +24,4 @@ Wallslam 0.3.0 used `setNoAi(true)`, which could leave mobs permanently frozen. 
 
 ## 0.3.2 — wider loader compatibility
 
-Minimum targeted Forge: **47.1.0** (previously 47.1.106). This project is compiled against that lower version instead of restricting players to the newer pinned build. CI build verifies compilation and packaging; runtime behavior on older loaders should still be checked in-game. No gameplay changes.
+Minimum targeted Forge: **47.1.0** (previously 47.1.106). This port compiles against Forge 47.1.106 because the legacy ModDevGradle plugin cannot resolve Forge 47.1.0 through its NeoForge Maven coordinates. The mod metadata permits Forge 47.1.0 and newer, but runtime support below 47.1.106 remains unverified; test this in-game before claiming full compatibility. CI verifies compilation and packaging. No gameplay changes.
