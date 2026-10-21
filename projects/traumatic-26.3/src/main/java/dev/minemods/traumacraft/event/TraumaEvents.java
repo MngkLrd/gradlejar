@@ -55,7 +55,7 @@ public final class TraumaEvents {
         BodyStates.save(player,state);
         ModNetwork.sync(player);
         if(state.hasBleeding()||state.hasFracturedLeg())
-            player.displayClientMessage(Component.literal("Trauma: "+summary(state)+" | /trauma"),true);
+            player.sendSystemMessage(Component.literal("Trauma: "+summary(state)+" | /trauma"));
     }
     private static void apply(BodyState state,ServerPlayer p,BodyPart part,float value,boolean falling,boolean blunt) {
         state.damage(part,value);
@@ -79,7 +79,7 @@ public final class TraumaEvents {
         }
         if(player.tickCount%40==0)ModNetwork.sync(player);
         if(player.tickCount%100==0&&(state.hasBleeding()||state.hasFracturedLeg()))
-            player.displayClientMessage(Component.literal("Trauma: "+summary(state)+" | /trauma"),true);
+            player.sendSystemMessage(Component.literal("Trauma: "+summary(state)+" | /trauma"));
     }
     public static void updateMovement(ServerPlayer player,float penalty){
         AttributeInstance attr=player.getAttribute(Attributes.MOVEMENT_SPEED);

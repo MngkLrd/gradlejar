@@ -8,7 +8,7 @@ public final class TraumaHud {
     private TraumaHud(){}
     public static void render(GuiGraphicsExtractor gui){
         var mc=Minecraft.getInstance();
-        if(mc.player==null||mc.options.hideGui||mc.screen!=null||!ClientBodyState.hasReceived())return;
+        if(mc.player==null||mc.gui.screen()!=null||!ClientBodyState.hasReceived())return;
         int x=gui.guiWidth()/2-157,y=gui.guiHeight()-68;
         boolean bad=ClientBodyState.hasAnyInjuries();
         gui.fill(x,y,x+56,y+61,bad?0xA90D1822:0x620D1822);

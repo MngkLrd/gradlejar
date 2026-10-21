@@ -16,7 +16,7 @@ public final class TraumaCommands {
     public static void register(RegisterCommandsEvent event) {
         var root = Commands.literal("trauma")
                 .executes(ctx -> show(ctx.getSource().getPlayerOrException()))
-                .then(Commands.literal("reset").requires(source -> source.hasPermission(2))
+                .then(Commands.literal("reset").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .executes(ctx -> {
                             ServerPlayer p = ctx.getSource().getPlayerOrException();
                             BodyState body=BodyStates.get(p);
@@ -27,7 +27,7 @@ public final class TraumaCommands {
                             return 1;
                         }));
         for (BodyPart part : BodyPart.values()) {
-            root.then(Commands.literal("hit").requires(source -> source.hasPermission(2))
+            root.then(Commands.literal("hit").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                     .then(Commands.literal(part.name().toLowerCase())
                             .then(Commands.argument("points", FloatArgumentType.floatArg(1, 440))
                                     .executes(ctx -> {
@@ -39,7 +39,7 @@ public final class TraumaCommands {
                                         p.sendSystemMessage(Component.literal("Applied " + points + " HP to " + part.label));
                                         return show(p);
                                     }))));
-            root.then(Commands.literal("bleed").requires(source -> source.hasPermission(2))
+            root.then(Commands.literal("bleed").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                     .then(Commands.literal(part.name().toLowerCase())
                             .then(Commands.argument("severity", IntegerArgumentType.integer(1, 2))
                                     .executes(ctx -> {
@@ -49,7 +49,7 @@ public final class TraumaCommands {
                                         BodyStates.save(p,state);
                                         return show(p);
                                     }))));
-            root.then(Commands.literal("fracture").requires(source -> source.hasPermission(2))
+            root.then(Commands.literal("fracture").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                     .then(Commands.literal(part.name().toLowerCase())
                             .executes(ctx -> {
                                 ServerPlayer p = ctx.getSource().getPlayerOrException();

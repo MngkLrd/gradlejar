@@ -24,12 +24,12 @@ public final class MedicalItem extends Item {
         BodyState state=BodyStates.get(player);
         BodyPart target=MedicalAction.autoTarget(state,type);
         if(target==null||!MedicalAction.apply(player,state,type,target)){
-            player.displayClientMessage(Component.translatable("message.traumacraft.no_injury"),true);
+            player.sendSystemMessage(Component.translatable("message.traumacraft.no_injury"));
             return InteractionResult.FAIL;
         }
         BodyStates.save(player,state);
         if(!player.getAbilities().instabuild)stack.shrink(1);
-        player.displayClientMessage(Component.translatable("message.traumacraft.treated",target.label),true);
+        player.sendSystemMessage(Component.translatable("message.traumacraft.treated",target.label));
         return InteractionResult.SUCCESS_SERVER;
     }
 }

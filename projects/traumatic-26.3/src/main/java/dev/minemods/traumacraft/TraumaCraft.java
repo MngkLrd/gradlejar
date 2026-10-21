@@ -24,6 +24,6 @@ public final class TraumaCraft {
         NeoForge.EVENT_BUS.addListener(TraumaEvents::onRespawn);
         NeoForge.EVENT_BUS.addListener(TraumaEvents::onClone);
         NeoForge.EVENT_BUS.addListener(TraumaCommands::register);
-        if(FMLEnvironment.dist==Dist.CLIENT)ClientEvents.register(bus);
+        if(FMLEnvironment.getDist()==Dist.CLIENT)ClientEvents.register(bus);
     }
 }

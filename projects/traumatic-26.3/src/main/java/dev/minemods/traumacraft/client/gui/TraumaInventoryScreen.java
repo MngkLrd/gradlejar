@@ -8,14 +8,15 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import java.util.ArrayList;
 import java.util.Locale;
 
 public final class TraumaInventoryScreen extends InventoryScreen {
     private static final int PANEL_X=177,PANEL_WIDTH=141;
     private BodyPart hovered;
-    public TraumaInventoryScreen(Player player){super(player);this.imageWidth=320;}
+    public TraumaInventoryScreen(Player player){super(player);}
+    @Override protected void init(){super.init();this.leftPos=(this.width-320)/2;}
     private int panelX(){return leftPos+PANEL_X;}
 
     @Override
@@ -71,16 +72,16 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         gui.setComponentTooltipForNextFrame(font,tooltip,mouseX,mouseY);
     }
     @Override
-    public boolean mouseClicked(MouseButtonEvent event){
+    public boolean mouseClicked(MouseButtonEvent event,boolean doubleClick){
         if(event.button()==0||event.button()==1){
             BodyPart p=findPart((int)event.x(),(int)event.y());
             if(p!=null){
                 if(menu.getCarried().getItem() instanceof MedicalItem)
-                    PacketDistributor.sendToServer(new ApplyMedicalPacket(p.ordinal()));
+                    ClientPacketDistributor.sendToServer(new ApplyMedicalPacket(p.ordinal()));
                 return true;
             }
         }
-        return super.mouseClicked(event);
+        return super.mouseClicked(event,doubleClick);
     }
     private BodyPart findPart(int mx,int my){
         int x=panelX(),y=topPos;
