@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " S ",
+    "ARA",
+    "III"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:string"
+    },
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "id": "phantomlure:phantom_lure",
+    "count": 1
+  }
+}
