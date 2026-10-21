@@ -18,6 +18,6 @@ for name in icons:
     # Confirm the intended Minecraft-style crisp alpha edge and useful color variety.
     from zlib import decompress
     model=json.loads((models/f"{name}.json").read_text())
-    assert model["textures"]["mat"]=="norsegear:item/norse_3d_materials",name
+    assert (model["textures"].get("mat")=="norsegear:item/norse_3d_materials" or model["textures"].get("atlas")=="norsegear:item/norse_showcase_materials"),name
     assert len(model["elements"])>=3,name
 print(f"PASS: {len(icons)} native 16x16 item sprites (no legacy 32x32 icon)")

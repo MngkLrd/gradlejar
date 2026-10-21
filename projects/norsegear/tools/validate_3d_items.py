@@ -11,19 +11,24 @@ assert struct.unpack('>II',(tex/'norse_3d_materials.png').read_bytes()[16:24])==
 for item in sorted(items):
  d=json.loads((models/(item+'.json')).read_text())
  assert len(d['elements'])>=3,item
- assert len(d['elements'])<=50,item
- assert d['textures']['mat']=='norsegear:item/norse_3d_materials',item
+ assert len(d['elements'])<=100,item
+ if item in ('bearded_axe','dane_axe','spear','javelin','round_shield'):
+  assert d['textures']['atlas']=='norsegear:item/norse_showcase_materials',item
+  assert len(d['elements'])>=10,item
+ else:
+  assert d['textures']['mat']=='norsegear:item/norse_3d_materials',item
  assert 'gui' in d['display'] and 'thirdperson_lefthand' in d['display'],item
  for e in d['elements']:
   assert all(0<=n<=16 for n in e['from']+e['to']),item
   assert all(e['from'][i]<e['to'][i] for i in range(3)),item
   assert set(e['faces'])=={'north','south','east','west','up','down'},item
   for face in e['faces'].values():
-   assert face['texture']=='#mat' and len(face['uv'])==4 and all(0<=u<=16 for u in face['uv']),item
+   assert face['texture'] in ('#mat','#atlas') and len(face['uv'])==4 and all(0<=u<=16 for u in face['uv']),item
  # Keep current 16x16 sprite, as fallback for future resource pack authors.
  assert struct.unpack('>II',(tex/(item+'.png')).read_bytes()[16:24])==(16,16),item
 attrs=ROOT/'src/main/resources/data/norsegear/weapon_attributes'
 expected={'seax':'dagger','bearded_axe':'axe','dane_axe':'heavy_axe','viking_sword':'sword','spear':'spear','javelin':'spear','throwing_axe':'axe'}
 for n,v in expected.items():
  assert json.loads((attrs/(n+'.json')).read_text())=={'parent':'bettercombat:'+v}
-print('PASS: 24 nonflat 3D item models, 64x64 material atlas, 7 Better Combat animation assignments')
+assert struct.unpack('>II',(tex/'norse_showcase_materials.png').read_bytes()[16:24])==(256,256)
+print('PASS: 24 real item meshes; upgraded five-item showcase with 256px texture atlas; optional Better Combat profiles')

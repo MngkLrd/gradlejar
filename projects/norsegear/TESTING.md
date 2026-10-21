@@ -16,3 +16,10 @@
 
 Server startup CI is not a substitute for these client visuals. Give screenshots of any
 clipping or equipment offsets for a focused follow-up.
+
+## 0.3.1 model regression checks
+- Inspect bearded vs Dane axe silhouettes at GUI, first-person and third-person scales.
+- Inspect spear and javelin flight orientation and Better Combat integration.
+- View round shield from front/back; verify painted panels, raised boss, leather grip, no gaps and held offset.
+- Equip helmet and chestplate with Steve and slim Alex. Check open face, nose guard, pauldron animation and mail transparency.
+- Compare preview images with client output. The preview is software rasterization of real model data, not a Minecraft screenshot.
