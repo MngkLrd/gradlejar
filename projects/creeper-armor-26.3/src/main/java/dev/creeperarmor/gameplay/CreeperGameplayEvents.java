@@ -70,7 +70,7 @@ public final class CreeperGameplayEvents {
             player.setHealth(CRITICAL_HEALTH);
         }
         player.setItemSlot(toConsume, ItemStack.EMPTY);
-        serverLevel.playSound(null, player.blockPosition(), SoundEvents.ITEM_BREAK,
+        serverLevel.playSound(null, player.blockPosition(), SoundEvents.ITEM_BREAK.value(),
                 SoundSource.PLAYERS, 1.0F, 0.85F);
 
         BlastProtection.explodeSafely(serverLevel, player,

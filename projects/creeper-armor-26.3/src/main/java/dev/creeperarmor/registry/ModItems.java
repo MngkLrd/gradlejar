@@ -13,7 +13,7 @@ public final class ModItems {
     public static final DeferredItem<Item> CREEPER_CHESTPLATE=armor("creeper_chestplate",ArmorType.CHESTPLATE);
     public static final DeferredItem<Item> CREEPER_LEGGINGS=armor("creeper_leggings",ArmorType.LEGGINGS);
     public static final DeferredItem<Item> CREEPER_BOOTS=armor("creeper_boots",ArmorType.BOOTS);
-    public static final DeferredItem<CreeperShieldItem> CREEPER_SHIELD=ITEMS.registerItem("creeper_shield",CreeperShieldItem::new, props->props.durability(500));
+    public static final DeferredItem<CreeperShieldItem> CREEPER_SHIELD=ITEMS.registerItem("creeper_shield",CreeperShieldItem::new, props->props.durability(500).repairable(ModArmorMaterials.REPAIR));
     private static DeferredItem<Item> armor(String id,ArmorType type) {
         return ITEMS.registerItem(id,props->new Item(props.humanoidArmor(ModArmorMaterials.CREEPER,type)));
     }

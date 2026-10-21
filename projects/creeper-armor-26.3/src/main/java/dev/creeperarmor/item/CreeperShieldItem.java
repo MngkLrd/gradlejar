@@ -38,8 +38,4 @@ public final class CreeperShieldItem extends ShieldItem {
         stack.hurtAndBreak(EXPLOSION_DURABILITY_COST, player, equipmentSlot);
     }
 
-    @Override
-    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-        return repair.is(ModItems.CREEPER_PLATE.get());
-    }
 }
