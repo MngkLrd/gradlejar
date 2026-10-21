@@ -13,6 +13,8 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 
@@ -40,27 +42,34 @@ public final class BearCargo {
 
         CargoContainer cargo = inventory(bear);
         player.openMenu(new SimpleMenuProvider(
-                (windowId, inventory, user) -> ChestMenu.twoRows(windowId, inventory, cargo),
+                (windowId, inventory, user) -> new ChestMenu(MenuType.GENERIC_9x2, windowId, inventory, cargo, 2),
                 Component.translatable("container.bearback.saddlebags")));
     }
 
     public static void onDrops(LivingDropsEvent event) {
-        if (!(event.getEntity() instanceof PolarBear bear) || bear.level().isClientSide()
-                || !bear.getData(Bearback.BAGS.get())) return;
+        if (!(event.getEntity() instanceof PolarBear bear) || bear.level().isClientSide()) return;
 
-        CargoContainer cargo = inventory(bear);
-        for (int slot = 0; slot < SLOTS; slot++) {
-            ItemStack stack = cargo.removeItemNoUpdate(slot);
-            if (!stack.isEmpty()) {
-                event.getDrops().add(new ItemEntity(bear.level(),
-                        bear.getX(), bear.getY() + 0.35D, bear.getZ(), stack));
+        // Dropped as ordinary ground items, not tied to vanilla mob-loot tables.
+        if (bear.getData(Bearback.BAGS.get())) {
+            CargoContainer cargo = inventory(bear);
+            for (int slot = 0; slot < SLOTS; slot++) {
+                ItemStack stack = cargo.removeItemNoUpdate(slot);
+                if (!stack.isEmpty()) {
+                    event.getDrops().add(new ItemEntity(bear.level(),
+                            bear.getX(), bear.getY() + 0.35D, bear.getZ(), stack));
+                }
             }
+            cargo.setChanged(); // Prevent duplicate drops if death processing is retried.
+            event.getDrops().add(new ItemEntity(bear.level(),
+                    bear.getX(), bear.getY() + 0.35D, bear.getZ(),
+                    new ItemStack(Bearback.SADDLEBAGS.get())));
+            bear.setData(Bearback.BAGS.get(), false);
         }
-        cargo.setChanged(); // Persist empty slots before the mob is removed.
-        event.getDrops().add(new ItemEntity(bear.level(),
-                bear.getX(), bear.getY() + 0.35D, bear.getZ(),
-                new ItemStack(Bearback.SADDLEBAGS.get())));
-        bear.setData(Bearback.BAGS.get(), false);
+        if (bear.getData(Bearback.SADDLED.get())) {
+            event.getDrops().add(new ItemEntity(bear.level(),
+                    bear.getX(), bear.getY() + 0.35D, bear.getZ(), new ItemStack(Items.SADDLE)));
+            bear.setData(Bearback.SADDLED.get(), false);
+        }
     }
 
     public static final class CargoContainer extends SimpleContainer {
