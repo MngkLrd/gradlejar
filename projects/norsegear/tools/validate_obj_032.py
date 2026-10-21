@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Verify NeoForge 1.21.1 OBJ model resources and corresponding texture atlas."""
 from pathlib import Path
-from PIL import Image
+import struct
 import json,re
 base=Path(__file__).resolve().parents[1]
 asset_dir=base/'src/main/resources/assets/norsegear'
@@ -31,5 +31,8 @@ for name in ('round_shield','spear','javelin'):
  for xyz in vs:assert all(-.01<=x<=1.01 for x in xyz),(name,xyz)
  for uv in vts:assert all(-.01<=u<=1.01 for u in uv),(name,uv)
  print('PASS',name,len(faces),'textured faces, NeoForge OBJ loader')
-assert Image.open(asset_dir/'textures/item/norse_showcase_materials.png').size==(256,256)
+png = (asset_dir/'textures/item/norse_showcase_materials.png').read_bytes()
+assert png[:8] == b'\x89PNG\r\n\x1a\n'
+assert png[12:16] == b'IHDR'
+assert struct.unpack('>II', png[16:24]) == (256, 256)
 print('PASS: OBJ geometry files, MTL atlas references and 256px pixel texture')

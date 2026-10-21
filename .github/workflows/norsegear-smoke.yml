@@ -34,7 +34,6 @@ jobs:
           python3 tools/validate_3d_models.py
           python3 tools/validate_obj_032.py
           python3 tools/validate_3d_items.py
-          python3 tools/validate_3d_items.py
           python3 tools/validate_16_art.py
       - name: Compile mod
         working-directory: projects/norsegear
