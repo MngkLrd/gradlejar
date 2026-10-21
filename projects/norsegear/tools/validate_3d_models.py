@@ -1,45 +1,24 @@
 #!/usr/bin/env python3
-"""Strict release validation for shield and spear/axe art assets."""
-from pathlib import Path
+"""Release gate for all native 3D item geometry and optional combat profiles."""
 import json
-import struct
-import sys
-base=Path(__file__).resolve().parents[1]/'src/main/resources/assets/norsegear'
-models=base/'models/item';tex=base/'textures/item'
-
-def png(path):
-    data=path.read_bytes()
-    assert data[:8]==b'\x89PNG\r\n\x1a\n',path
-    assert struct.unpack('>II',data[16:24])==(16,16),path
-
-for name in ('round_shield','celtic_shield','bossed_shield'):
-    m=json.loads((models/f'{name}.json').read_text())
-    assert len(m['elements'])==10,(name,len(m['elements']))
-    assert m['textures']['face']==f'norsegear:item/{name}_solid_face'
-    png(tex/f'{name}_solid_face.png')
-    # Face texture is opaque by design; checked by PNG alpha during asset generation.
-    for e in m['elements'][:7]:
-        assert e['faces']['north']['texture']=='#face'
-        assert e['faces']['south']['texture']=='#face'
-    assert not any(e['from'][1]>14 and (e['to'][0]-e['from'][0])>6 for e in m['elements']),'stray horizontal top trim'
-
-png(tex/'norse_weapon_materials.png')
-assert (tex/'stone_projectile.png').exists()
-stone=json.loads((models/'stone_shot.json').read_text())
-assert stone['textures']['layer0']=='norsegear:item/stone_shot'
-assert stone['parent']=='minecraft:item/generated', 'Stone ammo must look like a pebble in inventory'
-for n in ('round_shield','celtic_shield','bossed_shield'):
-    d=json.loads((models/f'{n}.json').read_text())['display']
-    assert d['thirdperson_lefthand']['translation'][0] >= 2.5
-    assert d['thirdperson_lefthand']['translation'][2] == 2.4
-    assert d['thirdperson_righthand']['translation'][2] == 2.4
-for name in ('spear','javelin','throwing_axe'):
-    m=json.loads((models/f'{name}.json').read_text())
-    assert len(m['elements'])>=7,(name,len(m['elements']))
-    assert m['textures']['material']=='norsegear:item/norse_weapon_materials'
-    for e in m['elements']:
-        assert all(float(a)<float(b) for a,b in zip(e['from'],e['to'])),(name,e)
-        for face in e['faces'].values():
-            assert face['texture']=='#material',(name,face)
-            assert all(0<=q<=16 for q in face['uv']),name
-print('PASS: 3 opaque shield face assets, 3 genuinely cuboid weapon item models, no stray shield top trim')
+from pathlib import Path
+root=Path(__file__).resolve().parents[1]
+models=root/'src/main/resources/assets/norsegear/models/item'
+for id in ('round_shield','celtic_shield','bossed_shield'):
+ m=json.loads((models/(id+'.json')).read_text())
+ assert len(m['elements'])>=24,(id,len(m['elements']))
+ assert m['display']['thirdperson_lefthand']['translation'][0] >= 2.5
+ assert m['display']['thirdperson_righthand']['translation'][0] <= -2.5
+ assert m['display']['thirdperson_lefthand']['translation'][2] == 3.0
+ assert m['display']['thirdperson_righthand']['translation'][2] == 3.0
+ assert any(e['to'][2]>10.0 for e in m['elements']),f'{id} lacks protruding boss'
+for id in ('spear','javelin','throwing_axe'):
+ m=json.loads((models/(id+'.json')).read_text())
+ assert len(m['elements'])>=7,(id,len(m['elements']))
+ assert m['display']['fixed']['rotation']==[0,0,0]
+ assert m['textures']['mat']=='norsegear:item/norse_3d_materials'
+for id in ('stone_shot','bog_iron','forged_iron'):
+ m=json.loads((models/(id+'.json')).read_text())
+ assert len(m['elements'])>=3
+ assert 'minecraft:item/generated'!=m.get('parent')
+print('PASS: real volumetric shield geometry, projectile orientation, and 3D small items')

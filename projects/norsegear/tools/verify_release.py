@@ -34,7 +34,8 @@ def run(jar):
             assert model in contents, f"Missing item model: {item}"
             assert texture in contents, f"Missing PNG: {item}"
             parsed = json.loads(z.read(model))
-            assert parsed["textures"]["layer0"] == f"norsegear:item/{item}"
+            assert parsed["textures"]["mat"] == "norsegear:item/norse_3d_materials"
+            assert len(parsed["elements"])>=3, f"Missing proper 3D mesh: {item}"
             raw = z.read(texture)
             assert raw[:8] == b"\x89PNG\r\n\x1a\n"
             expected_size = (16, 16)  # All 24 inventory items now have hand-drawn native 16x16 pixel art.
@@ -53,13 +54,19 @@ def run(jar):
                      "round_shield_solid_face", "celtic_shield_solid_face", "bossed_shield_solid_face"):
             raw = z.read(BASE + f"textures/item/{name}.png")
             assert struct.unpack(">II", raw[16:24]) == (16,16), f"Wrong 3D material dimensions: {name}"
+        atlas = z.read(BASE + "textures/item/norse_3d_materials.png")
+        assert struct.unpack(">II", atlas[16:24])==(64,64), "3D material atlas must be 64px"
         stone = json.loads(z.read(BASE + "models/item/stone_shot.json"))
-        assert stone["parent"] == "minecraft:item/generated", "Stone should be pebble sprite in inventory"
+        assert len(stone["elements"]) >= 5, "Stone projectile icon needs irregular 3D geometry"
+        for weapon in ("seax", "viking_sword", "bearded_axe", "dane_axe", "spear", "javelin", "throwing_axe"):
+            data_path = "data/norsegear/weapon_attributes/" + weapon + ".json"
+            assert data_path in contents, f"Missing optional combat animations: {weapon}"
+            assert json.loads(z.read(data_path))["parent"].startswith("bettercombat:")
         for shield in ("round_shield", "celtic_shield", "bossed_shield"):
             display = json.loads(z.read(BASE + f"models/item/{shield}.json"))["display"]
             assert display["thirdperson_lefthand"]["translation"][0] >= 2.5, "Offhand shield not outboard"
             assert display["thirdperson_righthand"]["translation"][0] <= -2.5, "Right shield not outboard"
-            assert display["thirdperson_lefthand"]["translation"][2] == 2.4, "Offhand shield offset not backwards"
+            assert display["thirdperson_lefthand"]["translation"][2] == 3.0, "Offhand shield offset not backwards"
         for layer in (1, 2):
             tex = BASE + f"textures/models/armor/ironweave_layer_{layer}.png"
             assert tex in contents, f"Missing worn armor texture layer {layer}"
