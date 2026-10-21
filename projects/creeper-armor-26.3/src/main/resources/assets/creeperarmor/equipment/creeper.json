@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "creeperarmor:creeper"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "creeperarmor:creeper"
+      }
+    ]
+  }
+}

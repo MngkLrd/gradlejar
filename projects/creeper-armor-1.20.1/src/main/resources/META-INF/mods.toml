@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+[[mods]]
+modId="creeperarmor"
+version="1.0.0"
+displayName="Creeper Armor"
+authors="Creeper Armor Project"
+description="Explosive armor and a directional Creeper Shield."
+[[dependencies.creeperarmor]]
+modId="forge"
+mandatory=true
+versionRange="[47.4.10,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.creeperarmor]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.20.2)"
+ordering="NONE"
+side="BOTH"
