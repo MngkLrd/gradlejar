@@ -2,7 +2,7 @@ package dev.minemods.potiontimerbar;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.util.DeltaTracker;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.world.entity.LivingEntity;
 
 public final class PotionHudOverlay {
