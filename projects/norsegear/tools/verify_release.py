@@ -69,7 +69,9 @@ def run(jar):
         new_atlas = z.read(BASE + "textures/item/norse_showcase_materials.png")
         assert struct.unpack(">II",new_atlas[16:24])==(256,256), "Detailed 3D material atlas must be 256px"
         stone = json.loads(z.read(BASE + "models/item/stone_shot.json"))
-        assert len(stone["elements"]) >= 5, "Stone projectile icon needs irregular 3D geometry"
+        assert stone["loader"] == "neoforge:obj", "Stone shot must use a real OBJ mesh"
+        stone_mesh = z.read(BASE + "models/item/stone_shot.obj")
+        assert sum(1 for line in stone_mesh.splitlines() if line.startswith(b"f ")) >= 25, "Stone projectile needs irregular polygon geometry"
         for weapon in ("seax", "viking_sword", "bearded_axe", "dane_axe", "spear", "javelin", "throwing_axe"):
             data_path = "data/norsegear/weapon_attributes/" + weapon + ".json"
             assert data_path in contents, f"Missing optional combat animations: {weapon}"
