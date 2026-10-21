@@ -1,4 +1,4 @@
-# Bearback 0.1.1 (NeoForge 1.21.1)
+# Bearback 0.1.2 (NeoForge 1.21.1)
 
 Adds black bears and allows taming, saddling and riding polar bears and black bears. No dependency on Rideable Polar Bears. Java 21.
 
@@ -13,7 +13,7 @@ Adds black bears and allows taming, saddling and riding polar bears and black be
 
 ## Build
 Java 21, Gradle 9.2.1: `gradle clean build`.
-JAR: `build/libs/bearback-1.21.1-0.1.1.jar`
+JAR: `build/libs/bearback-1.21.1-0.1.2.jar`
 
 ## Testing
 - New world spawn of black bear; `/summon bearback:black_bear`.
@@ -22,7 +22,7 @@ JAR: `build/libs/bearback-1.21.1-0.1.1.jar`
 - Dedicated server launch (client code isolated).
 
 ## Known limitations
-- A dedicated leather saddle is made of fitted 3D cubes and inherits the vanilla torso animation. Final fit must be tested in the game.
+- Saddle uses the exact polar bear body UV/model coordinates (back height z=4, center x=2). Full-width blanket, low leather pad and straps follow the animated torso. Final visual fit should still be tested in-game.
 - Bear movement uses authoritative server ride packets and may need smoothing in high-latency multiplayer.
 - Attack while mounted is keyed to R; vanilla paw raising is used for the animation.
 - Existing RideablePolarBears is not required or integrated.
