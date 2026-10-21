@@ -59,6 +59,7 @@ def run(jar):
             display = json.loads(z.read(BASE + f"models/item/{shield}.json"))["display"]
             assert display["thirdperson_lefthand"]["translation"][0] >= 2.5, "Offhand shield not outboard"
             assert display["thirdperson_righthand"]["translation"][0] <= -2.5, "Right shield not outboard"
+            assert display["thirdperson_lefthand"]["translation"][2] == 2.4, "Offhand shield offset not backwards"
         for layer in (1, 2):
             tex = BASE + f"textures/models/armor/ironweave_layer_{layer}.png"
             assert tex in contents, f"Missing worn armor texture layer {layer}"

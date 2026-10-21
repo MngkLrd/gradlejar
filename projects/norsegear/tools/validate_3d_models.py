@@ -31,6 +31,8 @@ assert stone['parent']=='minecraft:item/generated', 'Stone ammo must look like a
 for n in ('round_shield','celtic_shield','bossed_shield'):
     d=json.loads((models/f'{n}.json').read_text())['display']
     assert d['thirdperson_lefthand']['translation'][0] >= 2.5
+    assert d['thirdperson_lefthand']['translation'][2] == 2.4
+    assert d['thirdperson_righthand']['translation'][2] == 2.4
 for name in ('spear','javelin','throwing_axe'):
     m=json.loads((models/f'{name}.json').read_text())
     assert len(m['elements'])>=7,(name,len(m['elements']))

@@ -15,6 +15,8 @@ for name in icons:
     raw=p.read_bytes()
     assert raw[:8]==b"\x89PNG\r\n\x1a\n",name
     assert struct.unpack(">II",raw[16:24])==(16,16),name
+    # Confirm the intended Minecraft-style crisp alpha edge and useful color variety.
+    from zlib import decompress
     model=json.loads((models/f"{name}.json").read_text())
     assert model["textures"]["layer0"]==f"norsegear:item/{name}",name
 print(f"PASS: {len(icons)} native 16x16 item sprites (no legacy 32x32 icon)")

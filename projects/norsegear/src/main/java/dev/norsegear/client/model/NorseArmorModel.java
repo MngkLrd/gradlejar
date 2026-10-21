@@ -65,9 +65,9 @@ public final class NorseArmorModel extends HumanoidModel<LivingEntity> {
             net.minecraft.client.model.geom.PartPose.ZERO);
 
         root.getChild("right_arm").addOrReplaceChild("pauldron", CubeListBuilder.create().texOffs(16, 16)
-            .addBox(-4.25F, -2.1F, -2.75F, 5.35F, 3.6F, 5.5F), net.minecraft.client.model.geom.PartPose.ZERO);
+            .addBox(-4.1F, -2.05F, -2.6F, 5.2F, 3.4F, 5.2F), net.minecraft.client.model.geom.PartPose.ZERO);
         root.getChild("left_arm").addOrReplaceChild("pauldron", CubeListBuilder.create().texOffs(16, 16)
-            .addBox(-1.1F, -2.1F, -2.75F, 5.35F, 3.6F, 5.5F), net.minecraft.client.model.geom.PartPose.ZERO);
+            .addBox(-1.1F, -2.05F, -2.6F, 5.2F, 3.4F, 5.2F), net.minecraft.client.model.geom.PartPose.ZERO);
         root.getChild("left_leg").addOrReplaceChild("knee_plate", CubeListBuilder.create().texOffs(30, 16)
             .addBox(-2.35F, 5.1F, -2.95F, 4.7F, 3.2F, 1.2F), net.minecraft.client.model.geom.PartPose.ZERO);
         root.getChild("right_leg").addOrReplaceChild("knee_plate", CubeListBuilder.create().texOffs(30, 16)
