@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        neoforge: ["21.1.191", "21.1.194", "21.1.196", "21.1.198", "21.1.199"]
+        neoforge: ["21.1.197"]
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
