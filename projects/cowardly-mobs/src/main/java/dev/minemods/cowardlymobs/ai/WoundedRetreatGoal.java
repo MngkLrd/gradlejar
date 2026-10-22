@@ -32,10 +32,7 @@ public final class WoundedRetreatGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (mob.isPassenger() || mob.tickCount < nextEvaluationTick || mob.tickCount < ralliedUntilTick) {
-            return false;
-        }
-        nextEvaluationTick = mob.tickCount + AiBalance.FEAR_EVALUATION_INTERVAL_TICKS;
+        if (mob.isPassenger() || mob.tickCount < ralliedUntilTick) return false;
         if (!(mob.getTarget() instanceof Player player)
                 || !ThreatAssessment.isDangerous(player)
                 || mob.getHealth() > mob.getMaxHealth() * AiBalance.MORALE_HEALTH_LIMIT
@@ -43,15 +40,25 @@ public final class WoundedRetreatGoal extends Goal {
             return false;
         }
 
+        // Attacks from a dangerous player bypass the normal 80-tick polling
+        // delay. After the hit resolves, assess the mob's new health.
+        boolean recentHit = FearSignals.pending(mob, player);
+        if (!recentHit && mob.tickCount < nextEvaluationTick) return false;
+        nextEvaluationTick = mob.tickCount + AiBalance.FEAR_EVALUATION_INTERVAL_TICKS;
+
         MoraleSystem.Evaluation morale = MoraleSystem.assess(mob, player);
-        if (!morale.shouldConsiderRetreat()
-                || mob.getRandom().nextFloat() >= morale.retreatChance()) {
-            return false;
-        }
+        if (recentHit) FearSignals.acknowledge(mob);
+        if (!morale.shouldConsiderRetreat()) return false;
+
+        double fleeChance = Math.min(0.95D,
+                morale.retreatChance() + (recentHit ? 0.35D : 0.0D));
+        if (mob.getRandom().nextDouble() >= fleeChance) return false;
 
         Vec3 location = findSafeGroup(mob, player);
         if (location == null) {
-            location = DefaultRandomPos.getPosAway(mob, 12, 7, player.position());
+            for (int attempt = 0; attempt < 3 && location == null; attempt++) {
+                location = DefaultRandomPos.getPosAway(mob, 12, 7, player.position());
+            }
         }
         if (location == null) {
             return false;
