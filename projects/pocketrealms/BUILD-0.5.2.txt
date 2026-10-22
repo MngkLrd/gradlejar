@@ -1,0 +1,1 @@
+Pocket Realms 0.5.2: wall-safe 3D hands and original Void Pursuer model. Uses the 0.5.1 pursuer_idle/pursuer_chase custom OGG event names. Build on NeoForge 21.1.209 Minecraft 1.21.1.
