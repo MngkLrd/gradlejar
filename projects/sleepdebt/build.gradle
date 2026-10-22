@@ -28,3 +28,13 @@ tasks.register('generateSleepAssets', Exec) {
  outputs.dir('src/main/resources/assets/sleepdebt/textures')
 }
 tasks.named('processResources') { dependsOn('generateSleepAssets') }
+
+repositories {
+ maven {
+  name = 'Modrinth'
+  url = 'https://api.modrinth.com/maven'
+ }
+}
+dependencies {
+ compileOnly 'maven.modrinth:jade:15.10.6+neoforge'
+}

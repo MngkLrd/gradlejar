@@ -9,3 +9,6 @@ gradle clean build
 build/libs/sleepdebt-1.21.1-2.2.0-alpha.2.jar
 ## Limitations
 Compilation is CI-only; test client/server, sleeping mods, JEI+EMI simultaneously. Pillow and mask are normal items and have no bonuses yet. No old-version save migration tested.
+
+## Jade integration
+Jade is required on client and server. Hover a vanilla bed to see the sleep-quality hint (Jade extension compiled against 15.10.6 NeoForge API).

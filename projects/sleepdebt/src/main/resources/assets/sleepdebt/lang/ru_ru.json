@@ -12,5 +12,6 @@
   "item.sleepdebt.strong_coffee.tooltip": "Сильное действие. Быстрее накапливает перегрузку.",
   "item.sleepdebt.long_coffee.tooltip": "Действует дольше, но всё равно вызывает привыкание.",
   "item.sleepdebt.energy_drink.tooltip": "Мощная стимуляция и повышенный риск отката.",
-  "item.sleepdebt.warm_milk.tooltip": "Немного снижает усталость и помогает подготовиться ко сну."
+  "item.sleepdebt.warm_milk.tooltip": "Немного снижает усталость и помогает подготовиться ко сну.",
+  "sleepdebt.jade.bed_hint": "Под крышей сон восстанавливает больше сил."
 }
