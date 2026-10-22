@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -48,7 +49,7 @@ public final class WoundedRetreatGoal extends Goal {
             return false;
         }
 
-        Vec3 location = findSafePack(mob, player);
+        Vec3 location = findSafeGroup(mob, player);
         if (location == null) {
             location = DefaultRandomPos.getPosAway(mob, 12, 7, player.position());
         }
@@ -80,9 +81,9 @@ public final class WoundedRetreatGoal extends Goal {
     public void tick() {
         if (danger == null) return;
 
-        // A pack of at least three zombies (including the fleeing one) provides
+        // A group of at least three mobs of one kind (including the fleeing one) provides
         // enough cover to end retreat. Keep hysteresis to prevent flee/attack loops.
-        if (mob instanceof Zombie
+        if ((mob instanceof Zombie || mob instanceof AbstractSkeleton)
                 && mob.distanceToSqr(danger) > square(AiBalance.RALLY_PLAYER_SAFE_DISTANCE)
                 && MoraleSystem.countNearbyAllies(
                        mob, danger, AiBalance.RALLY_NEIGHBOR_RADIUS) >= 2) {
@@ -93,7 +94,7 @@ public final class WoundedRetreatGoal extends Goal {
         }
 
         if (mob.getNavigation().isDone() && mob.tickCount % 15 == 0) {
-            Vec3 group = findSafePack(mob, danger);
+            Vec3 group = findSafeGroup(mob, danger);
             retreatSpot = group != null ? group
                     : DefaultRandomPos.getPosAway(mob, 12, 7, danger.position());
             navigateToRetreatSpot();
@@ -115,37 +116,50 @@ public final class WoundedRetreatGoal extends Goal {
     }
 
     /**
-     * Find an allied zombie in a small local pack, not one isolated ally next
-     * to the player. Search only loaded entities in a bounded AABB.
+     * Choose a small safe group of the mob's own kind rather than rushing
+     * toward a lone teammate standing next to the player.
+     * Both zombie packs and skeleton groups can provide a rally point.
      */
-    private static Vec3 findSafePack(PathfinderMob mob, Player player) {
-        if (!(mob instanceof Zombie zombie)) return null;
+    private static Vec3 findSafeGroup(PathfinderMob mob, Player player) {
+        List<? extends PathfinderMob> nearby;
+        if (mob instanceof Zombie zombie) {
+            nearby = zombie.level().getEntitiesOfClass(
+                    Zombie.class, zombie.getBoundingBox().inflate(AiBalance.RALLY_SEARCH_RADIUS),
+                    other -> other != zombie && other.isAlive()
+                            && (other.getTarget() == null || other.getTarget() == player)
+                            && other.distanceToSqr(player)
+                                  >= square(AiBalance.RALLY_PLAYER_SAFE_DISTANCE));
+        } else if (mob instanceof AbstractSkeleton skeleton) {
+            nearby = skeleton.level().getEntitiesOfClass(
+                    AbstractSkeleton.class,
+                    skeleton.getBoundingBox().inflate(AiBalance.RALLY_SEARCH_RADIUS),
+                    other -> other != skeleton && other.isAlive()
+                            && other.getTarget() == player
+                            && other.distanceToSqr(player)
+                                  >= square(AiBalance.RALLY_PLAYER_SAFE_DISTANCE));
+        } else {
+            return null;
+        }
 
-        List<Zombie> nearby = zombie.level().getEntitiesOfClass(
-                Zombie.class, zombie.getBoundingBox().inflate(AiBalance.RALLY_SEARCH_RADIUS),
-                other -> other != zombie && other.isAlive()
-                        && (other.getTarget() == null || other.getTarget() == player)
-                        && other.distanceToSqr(player)
-                              >= square(AiBalance.RALLY_PLAYER_SAFE_DISTANCE));
-        // Bounded scan even when encountering dense mob farms.
+        // Bounded pair checks even in densely populated mob farms.
         int limit = Math.min(24, nearby.size());
-        Zombie best = null;
+        PathfinderMob best = null;
         double bestDistance = Double.MAX_VALUE;
         for (int i = 0; i < limit; i++) {
-            Zombie ally = nearby.get(i);
-            int partners = 0;
+            PathfinderMob ally = nearby.get(i);
+            boolean hasPartner = false;
             for (int j = 0; j < limit; j++) {
-                Zombie neighbor = nearby.get(j);
+                PathfinderMob neighbor = nearby.get(j);
                 if (neighbor != ally && ally.distanceToSqr(neighbor)
                         <= square(AiBalance.RALLY_NEIGHBOR_RADIUS)) {
-                    partners++;
-                    if (partners >= 1) break;
+                    hasPartner = true;
+                    break;
                 }
             }
-            if (partners == 0) continue;
-            double dist = zombie.distanceToSqr(ally);
-            if (dist < bestDistance && dist > square(2.0D)) {
-                bestDistance = dist;
+            if (!hasPartner) continue;
+            double distance = mob.distanceToSqr(ally);
+            if (distance < bestDistance && distance > square(2.0D)) {
+                bestDistance = distance;
                 best = ally;
             }
         }
