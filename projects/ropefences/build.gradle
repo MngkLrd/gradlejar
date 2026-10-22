@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
+}
+group = mod_group_id
+version = mod_version
+base { archivesName = mod_id }
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+minecraft {
+    mappings channel: 'official', version: minecraft_version
+    copyIdeResources = true
+    runs {
+        client {
+            workingDirectory project.file('run')
+            mods { ropefences { source sourceSets.main } }
+        }
+        server {
+            workingDirectory project.file('run')
+            args '--nogui'
+            mods { ropefences { source sourceSets.main } }
+        }
+    }
+}
+repositories {}
+dependencies { minecraft "net.minecraftforge:forge:1.21.1-52.1.0" }
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+tasks.register('decodeRopeTexture') {
+    def destination = file("$buildDir/generated/ropeassets/assets/ropefences/textures/block/rope.png")
+    inputs.file('src/main/resources/assets/ropefences/textures/block/rope.png.b64')
+    outputs.file(destination)
+    doLast {
+        destination.parentFile.mkdirs()
+        destination.bytes = Base64.decoder.decode(
+                file('src/main/resources/assets/ropefences/textures/block/rope.png.b64').text.trim())
+    }
+}
+tasks.named('processResources').configure {
+    dependsOn 'decodeRopeTexture'
+    from("$buildDir/generated/ropeassets")
+    exclude '**/*.png.b64'
+}
+jar {
+    manifest.attributes([
+       'Specification-Title': 'Rope Fences',
+       'Specification-Vendor': 'MineMods',
+       'Implementation-Title': project.name,
+       'Implementation-Version': project.version
+    ])
+    finalizedBy 'reobfJar'
+}
