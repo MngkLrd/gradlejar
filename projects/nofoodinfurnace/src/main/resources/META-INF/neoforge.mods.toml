@@ -4,7 +4,7 @@ license="MIT"
 
 [[mods]]
 modId="nofoodinfurnace"
-version="1.0.0"
+version="1.0.1"
 displayName="No Food in Furnace"
 authors="MineMods"
 description="No cooking edible food in the ordinary furnace. Works with vanilla and modded food; smokers and campfires still work."
