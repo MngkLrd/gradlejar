@@ -95,6 +95,19 @@ jobs:
         run: |
           python3 tools/unpack_screenshotmanager.py
           python3 tools/port_screenshotmanager_26x.py "${{ matrix.project_dir }}"
+      - name: Inspect Pocket Realms gameplay and entity sources
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: |
+          find projects/pocketrealms/src/main/java/com/kirill/pocketrealms -type f -name '*.java' | sort
+          for group in world event entity client registry block; do
+            for file in projects/pocketrealms/src/main/java/com/kirill/pocketrealms/$group/*.java; do
+              if [ -f "$file" ]; then
+                echo "@@@SOURCE:$file"
+                cat "$file"
+                echo "@@@END:$file"
+              fi
+            done
+          done
       - name: Validate profile
         id: profile
         env:
