@@ -24,11 +24,13 @@ public final class TreatmentManager {
 
     public static int duration(MedicalItem.Type type) {
         return switch (type) {
-            case STERILE_PATCH, RAG_DRESSING -> 30;
+            case RAG_DRESSING -> 20;
+            case STERILE_PATCH -> 30;
             case BANDAGE, COMPRESSION_WRAP, HEMOSTATIC_GEL, TOURNIQUET -> 40;
             case SPLINT, FRACTURE_BRACE, BONE_MENDER -> 60;
             case MEDKIT, COMPACT_MEDKIT, FIELD_MEDKIT -> 80;
             case TRAUMA_KIT, RECOVERY_SERUM -> 100;
+            case ANALGESIC_TABLETS -> 24;
             case SURGICAL_KIT -> 160;
             case ADRENALINE_INJECTOR, GUARDIAN_INJECTOR, FOCUS_INJECTOR, ENDURANCE_INJECTOR -> 20;
         };
@@ -69,8 +71,10 @@ public final class TreatmentManager {
         if (p == null) return;
         if (!player.isAlive() || player.isSpectator() || player.isSprinting()
                 || (p.cursor() && player.containerMenu != player.inventoryMenu)
-                || (Math.abs(player.getX() - p.x()) > 1.5 || Math.abs(player.getZ() - p.z()) > 1.5)
-                || player.getHealth() + .01f < p.startingHealth()) {
+                || (p.treatment() == MedicalItem.Type.SURGICAL_KIT &&
+                    (Math.abs(player.getX() - p.x()) > 1.5 || Math.abs(player.getZ() - p.z()) > 1.5))
+                || player.getHealth() + .01f < p.startingHealth()
+                || (!p.cursor() && !player.isUsingItem())) {
             cancel(player);
             return;
         }

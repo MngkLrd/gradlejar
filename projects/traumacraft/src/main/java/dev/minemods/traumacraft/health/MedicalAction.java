@@ -31,7 +31,7 @@ public final class MedicalAction {
                     state.health(part) < part.maximum || state.bleeding(part) > 0 || state.fractured(part);
             case SURGICAL_KIT -> state.health(part) == 0;
             case RECOVERY_SERUM -> anyRecoverable(state);
-            case ADRENALINE_INJECTOR, GUARDIAN_INJECTOR, FOCUS_INJECTOR, ENDURANCE_INJECTOR -> true;
+            case ADRENALINE_INJECTOR, GUARDIAN_INJECTOR, FOCUS_INJECTOR, ENDURANCE_INJECTOR, ANALGESIC_TABLETS -> true;
         };
     }
 
@@ -71,7 +71,7 @@ public final class MedicalAction {
             }
             case MEDKIT, FIELD_MEDKIT -> state.mostDamaged();
             case RECOVERY_SERUM, ADRENALINE_INJECTOR, GUARDIAN_INJECTOR,
-                 FOCUS_INJECTOR, ENDURANCE_INJECTOR -> BodyPart.CHEST;
+                 FOCUS_INJECTOR, ENDURANCE_INJECTOR, ANALGESIC_TABLETS -> BodyPart.CHEST;
         };
     }
 
@@ -137,6 +137,10 @@ public final class MedicalAction {
             case ENDURANCE_INJECTOR -> {
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 1200, 0));
                 player.addEffect(new MobEffectInstance(MobEffects.JUMP, 1200, 1));
+            }
+            case ANALGESIC_TABLETS -> {
+                state.setPainkillerTicks(2400);
+                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 200, 0));
             }
         }
         return true;

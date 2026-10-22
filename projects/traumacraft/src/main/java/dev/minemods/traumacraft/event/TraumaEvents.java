@@ -66,6 +66,10 @@ public final class TraumaEvents {
     private static void apply(BodyState state, ServerPlayer player, BodyPart part,
                               float points, boolean falling, boolean blunt) {
         state.damage(part, points);
+        // Head injuries may cause a temporary concussion even without a fracture.
+        if (part == BodyPart.HEAD && points >= 12f && player.getRandom().nextFloat() < 0.45f) {
+            state.addConcussion(600);
+        }
         if (falling && part.isLeg() && points >= 17.0f) {
             state.setFractured(part, true);
         } else if (!falling && blunt && part.isLeg() && points >= 22f && player.getRandom().nextFloat() < 0.4f) {
@@ -82,6 +86,7 @@ public final class TraumaEvents {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         TreatmentManager.tick(player);
         VitalityBridge.synchronize(player);
+        if (player.tickCount % 20 == 0) player.getData(ModAttachments.BODY.get()).tickMedicalEffects();
         if (player.tickCount % 20 != 0) return;
         BodyState state = player.getData(ModAttachments.BODY.get());
         updateMovement(player, state.legPenalty());

@@ -10,7 +10,24 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
     private final byte[] bleeding = new byte[BodyPart.values().length];
     private final boolean[] fractured = new boolean[BodyPart.values().length];
     private boolean dirty;
+    private int concussionTicks;
+    private int painkillerTicks;
     private boolean vitalityLinked; 
+    public int concussionTicks() { return concussionTicks; }
+    public int painkillerTicks() { return painkillerTicks; }
+    public void addConcussion(int ticks) {
+        concussionTicks = Math.max(concussionTicks, ticks);
+        dirty = true;
+    }
+    public void setPainkillerTicks(int ticks) {
+        painkillerTicks = Math.max(0, ticks);
+        dirty = true;
+    }
+    /** Advance temporary screen effects in one-second increments. */
+    public void tickMedicalEffects() {
+        if (concussionTicks > 0) { concussionTicks = Math.max(0, concussionTicks - 20); dirty = true; }
+        if (painkillerTicks > 0) { painkillerTicks = Math.max(0, painkillerTicks - 20); dirty = true; }
+    }
     public boolean isVitalityLinked() { return vitalityLinked; }
     public void markVitalityLinked() { vitalityLinked = true; dirty = true; }
 
@@ -100,6 +117,8 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
     }
     public void reset() {
         vitalityLinked = false;
+        concussionTicks = 0;
+        painkillerTicks = 0;
         for (BodyPart part : BodyPart.values()) {
             int i = part.ordinal();
             health[i] = part.maximum;
@@ -117,6 +136,8 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag result = new CompoundTag();
         result.putBoolean("vitalityLinked", vitalityLinked);
+        result.putInt("concussionTicks", concussionTicks);
+        result.putInt("painkillerTicks", painkillerTicks);
         for (BodyPart part : BodyPart.values()) {
             CompoundTag zone = new CompoundTag();
             zone.putFloat("hp", health(part));
@@ -130,6 +151,8 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         reset();
         vitalityLinked = nbt.getBoolean("vitalityLinked");
+        concussionTicks = Math.max(0, nbt.getInt("concussionTicks"));
+        painkillerTicks = Math.max(0, nbt.getInt("painkillerTicks"));
         for (BodyPart part : BodyPart.values()) {
             if (!nbt.contains(part.name(), 10)) continue;
             CompoundTag zone = nbt.getCompound(part.name());

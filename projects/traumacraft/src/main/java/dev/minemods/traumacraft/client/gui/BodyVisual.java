@@ -60,11 +60,8 @@ public final class BodyVisual {
         float fraction = ClientBodyState.fraction(part);
         int rgb;
         if (fraction <= 0f) rgb = 0x38343D;
-        else if (ClientBodyState.bleeding(part) == 2) rgb = 0xB83B47;
         else if (fraction <= 0.15f) rgb = 0xB83B47;
-        else if (ClientBodyState.bleeding(part) == 1) rgb = 0xC96C50;
         else if (fraction <= 0.40f) rgb = 0xD1844D;
-        else if (ClientBodyState.fractured(part)) rgb = 0xD0AA5C;
         else if (fraction <= 0.75f) rgb = 0xC7B56A;
         else rgb = 0x75A98A;
         return (translucent ? 0xB0000000 : 0xFF000000) | rgb;

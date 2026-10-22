@@ -8,6 +8,8 @@ public final class ClientBodyState {
     private static final byte[] BLEEDING = new byte[BodyPart.values().length];
     private static final boolean[] FRACTURE = new boolean[BodyPart.values().length];
     private static boolean received;
+    private static int concussionTicks;
+    private static int painkillerTicks;
 
     private ClientBodyState() {}
     public static void accept(SyncBodyStatePacket packet) {
@@ -17,10 +19,14 @@ public final class ClientBodyState {
             BLEEDING[i] = (byte)Math.max(0, Math.min(2, packet.bleeding()[i]));
             FRACTURE[i] = packet.fracture()[i];
         }
+        concussionTicks = packet.concussion();
+        painkillerTicks = packet.painkiller();
         received = true;
     }
+    public static int concussionTicks() { return received ? concussionTicks : 0; }
+    public static int painkillerTicks() { return received ? painkillerTicks : 0; }
     public static boolean hasReceived() { return received; }
-    public static void clear() { received = false; }
+    public static void clear() { received = false; concussionTicks = 0; painkillerTicks = 0; }
     public static float hp(BodyPart part) { return received ? HP[part.ordinal()] : part.maximum; }
     public static float fraction(BodyPart part) { return hp(part) / part.maximum; }
     public static int bleeding(BodyPart part) { return received ? BLEEDING[part.ordinal()] : 0; }
