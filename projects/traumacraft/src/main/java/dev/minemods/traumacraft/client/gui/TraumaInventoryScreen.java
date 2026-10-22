@@ -148,6 +148,7 @@ public final class TraumaInventoryScreen extends InventoryScreen {
     @Override
     public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         super.render(gui, mouseX, mouseY, partialTick);
+        TreatmentRing.render(gui);
         if (hovered == null) return;
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(Component.literal(hovered.label));

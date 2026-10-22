@@ -6,6 +6,8 @@ import dev.minemods.traumacraft.health.BodyPart;
 import dev.minemods.traumacraft.health.BodyState;
 import dev.minemods.traumacraft.registry.ModAttachments;
 import dev.minemods.traumacraft.network.ModNetwork;
+import dev.minemods.traumacraft.health.VitalityBridge;
+import dev.minemods.traumacraft.medical.TreatmentManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -26,13 +28,17 @@ public final class TraumaEvents {
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) ModNetwork.sync(player);
     }
+    public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) TreatmentManager.forget(player);
+    }
     public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) ModNetwork.sync(player);
+        if (event.getEntity() instanceof ServerPlayer player) { TreatmentManager.forget(player); ModNetwork.sync(player); }
     }
 
     public static void onDamage(LivingDamageEvent.Pre event) {
         if (!(event.getEntity() instanceof ServerPlayer victim) || BLEEDING_DAMAGE.get()) return;
         float amount = event.getNewDamage();
+        TreatmentManager.cancel(victim);
         if (amount <= 0) return;
         BodyState state = victim.getData(ModAttachments.BODY.get());
 
@@ -74,6 +80,8 @@ public final class TraumaEvents {
 
     public static void onPlayerTick(EntityTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        TreatmentManager.tick(player);
+        VitalityBridge.synchronize(player);
         if (player.tickCount % 20 != 0) return;
         BodyState state = player.getData(ModAttachments.BODY.get());
         updateMovement(player, state.legPenalty());
@@ -82,9 +90,20 @@ public final class TraumaEvents {
             int severity = 0;
             for (BodyPart part : BodyPart.values()) severity += state.bleeding(part);
             float bloodLoss = Math.min(3.0f, severity * 0.5f);
+            // Blood loss damages the same body regions so vanilla hearts cannot
+            // regenerate independently of the localized wounds.
+            if (severity > 0) for (BodyPart part : BodyPart.values()) {
+                if (state.bleeding(part) > 0) {
+                    state.damage(part, 22f * bloodLoss * state.bleeding(part) / severity);
+                }
+            }
             try {
                 BLEEDING_DAMAGE.set(true);
-                player.hurt(player.damageSources().magic(), bloodLoss);
+                if (state.health(BodyPart.HEAD) <= 0 || state.health(BodyPart.CHEST) <= 0) {
+                    player.hurt(player.damageSources().magic(), Math.max(bloodLoss, player.getHealth() + player.getAbsorptionAmount() + 1f));
+                } else {
+                    player.hurt(player.damageSources().magic(), bloodLoss);
+                }
             } finally {
                 BLEEDING_DAMAGE.set(false);
             }

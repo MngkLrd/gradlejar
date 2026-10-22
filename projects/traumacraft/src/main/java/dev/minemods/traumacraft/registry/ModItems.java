@@ -27,6 +27,7 @@ public final class ModItems {
     public static final DeferredHolder<Item, Item> MEDICAL_POLYMER = supply("medical_polymer", 64);
 
     // Existing 0.2.0 items keep their registry IDs and effects.
+    public static final DeferredHolder<Item, Item> RAG_DRESSING = medical("rag_dressing", MedicalItem.Type.RAG_DRESSING, 32);
     public static final DeferredHolder<Item, Item> BANDAGE = medical("bandage", MedicalItem.Type.BANDAGE, 16);
     public static final DeferredHolder<Item, Item> SPLINT = medical("splint", MedicalItem.Type.SPLINT, 16);
     public static final DeferredHolder<Item, Item> MEDKIT = medical("medkit", MedicalItem.Type.MEDKIT, 8);
@@ -66,7 +67,7 @@ public final class ModItems {
     public static final List<DeferredHolder<Item, Item>> COMPONENTS = List.of(
             STERILE_FABRIC, HERBAL_EXTRACT, ANTISEPTIC, SYRINGE_BODY, MEDICAL_POLYMER);
     public static final List<DeferredHolder<Item, Item>> MEDICINE = List.of(
-            BANDAGE, SPLINT, MEDKIT, STERILE_PATCH, COMPRESSION_WRAP, HEMOSTATIC_GEL,
+            RAG_DRESSING, BANDAGE, SPLINT, MEDKIT, STERILE_PATCH, COMPRESSION_WRAP, HEMOSTATIC_GEL,
             TOURNIQUET, FRACTURE_BRACE, BONE_MENDER, COMPACT_MEDKIT, FIELD_MEDKIT,
             TRAUMA_KIT, SURGICAL_KIT, RECOVERY_SERUM, ADRENALINE_INJECTOR,
             GUARDIAN_INJECTOR, FOCUS_INJECTOR, ENDURANCE_INJECTOR);

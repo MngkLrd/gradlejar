@@ -4,6 +4,7 @@ import dev.minemods.traumacraft.TraumaCraft;
 import dev.minemods.traumacraft.health.BodyPart;
 import dev.minemods.traumacraft.health.BodyState;
 import dev.minemods.traumacraft.health.MedicalAction;
+import dev.minemods.traumacraft.medical.TreatmentManager;
 import dev.minemods.traumacraft.item.MedicalItem;
 import dev.minemods.traumacraft.registry.ModAttachments;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -34,17 +35,8 @@ public record ApplyMedicalPacket(int bodyPartOrdinal) implements CustomPacketPay
         ItemStack cursor = player.containerMenu.getCarried();
         if (cursor.isEmpty() || !(cursor.getItem() instanceof MedicalItem medical)) return;
         BodyPart part = BodyPart.values()[packet.bodyPartOrdinal];
-        BodyState state = player.getData(ModAttachments.BODY.get());
-        if (!MedicalAction.apply(player, state, medical.medicalType(), part)) {
+        if (!TreatmentManager.begin(player, medical, part, true, null)) {
             player.displayClientMessage(Component.translatable("message.traumacraft.not_applicable"), true);
-            return;
         }
-        if (!player.getAbilities().instabuild) {
-            cursor.shrink(1);
-            player.containerMenu.setCarried(cursor);
-            player.containerMenu.broadcastChanges();
-        }
-        player.displayClientMessage(Component.translatable("message.traumacraft.treated", part.label), true);
-        ModNetwork.sync(player);
     }
 }

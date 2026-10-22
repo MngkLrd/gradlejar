@@ -10,6 +10,9 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
     private final byte[] bleeding = new byte[BodyPart.values().length];
     private final boolean[] fractured = new boolean[BodyPart.values().length];
     private boolean dirty;
+    private boolean vitalityLinked; 
+    public boolean isVitalityLinked() { return vitalityLinked; }
+    public void markVitalityLinked() { vitalityLinked = true; dirty = true; }
 
     public BodyState() { reset(); }
 
@@ -96,6 +99,7 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
         return null;
     }
     public void reset() {
+        vitalityLinked = false;
         for (BodyPart part : BodyPart.values()) {
             int i = part.ordinal();
             health[i] = part.maximum;
@@ -112,6 +116,7 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
     @Override
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag result = new CompoundTag();
+        result.putBoolean("vitalityLinked", vitalityLinked);
         for (BodyPart part : BodyPart.values()) {
             CompoundTag zone = new CompoundTag();
             zone.putFloat("hp", health(part));
@@ -124,6 +129,7 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         reset();
+        vitalityLinked = nbt.getBoolean("vitalityLinked");
         for (BodyPart part : BodyPart.values()) {
             if (!nbt.contains(part.name(), 10)) continue;
             CompoundTag zone = nbt.getCompound(part.name());
