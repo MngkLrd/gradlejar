@@ -36,10 +36,11 @@ body=pursuer.read_text(encoding="utf8")
 for old,new in [
     ("ModSounds.PURSUER_AMBIENT.get()","ModSounds.PURSUER_IDLE.get()"),
     ("ModSounds.PURSUER_HURT.get()","net.minecraft.sounds.SoundEvents.WARDEN_HURT"),
-    # Attack/death use the same original event name and are patched below.]:
+]:
     if body.count(old)!=1:raise SystemExit("Missing 0.5.2 sound reference: "+old)
     body=body.replace(old,new,1)
-if body.count("ModSounds.PURSUER_ATTACK.get()")!=2:raise SystemExit("Missing death + hit sound references")\nbody=body.replace("ModSounds.PURSUER_ATTACK.get()","net.minecraft.sounds.SoundEvents.WARDEN_DEATH",1)
+if body.count("ModSounds.PURSUER_ATTACK.get()")!=2:raise SystemExit("Missing death + hit sound references")
+body=body.replace("ModSounds.PURSUER_ATTACK.get()","net.minecraft.sounds.SoundEvents.WARDEN_DEATH",1)
 body=body.replace("ModSounds.PURSUER_ATTACK.get()","net.minecraft.sounds.SoundEvents.WARDEN_ATTACK_IMPACT",1)
 pursuer.write_text(body,encoding="utf8")
 director=root/"src/main/java/com/kirill/pocketrealms/world/RiftThreatDirector.java"
