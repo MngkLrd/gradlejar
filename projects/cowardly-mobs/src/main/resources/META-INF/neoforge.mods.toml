@@ -4,10 +4,10 @@ license="MIT"
 
 [[mods]]
 modId="cowardlymobs"
-version="0.1.0"
+version="0.2.0"
 displayName="Cowardly Mobs"
 authors="Minemods"
-description="Injured mobs sometimes fear well-equipped players. Bow skeletons keep their distance and form loose firing groups."
+description="Wounded mobs retreat, bow skeletons group up, and hungry zombies gather dropped meat to heal."
 
 [[dependencies.cowardlymobs]]
 modId="neoforge"
