@@ -59,7 +59,6 @@ public final class BedrockMiningEvents {
         level.levelEvent(2001, pos, Block.getId(state));
         int used = tool.getDamageValue() + 1;
         if (used >= tool.getMaxDamage()) {
-            player.broadcastBreakEvent(InteractionHand.MAIN_HAND);
             tool.shrink(1);
         } else {
             tool.setDamageValue(used);
