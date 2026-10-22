@@ -78,7 +78,7 @@ public final class Knocker extends Monster {
         }
         if(dist<2.3 && getAttackCooldown()==0 && !p.isCreative()){
             p.hurt(world.damageSources().mobAttack(this),5F);
-            recovery=22;
+            recovery=28;
         }
     }
     private int getAttackCooldown(){return recovery;}
