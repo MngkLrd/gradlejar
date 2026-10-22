@@ -12,10 +12,11 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-public final class SleeplessEntity extends Monster {
- public SleeplessEntity(EntityType<? extends Monster> type,Level level){super(type,level);}
+public final class SleeplessEntity extends Zombie {
+ public SleeplessEntity(EntityType<? extends Zombie> type,Level level){super(type,level);}
  public static AttributeSupplier.Builder createAttributes(){
   return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,22)
    .add(Attributes.ATTACK_DAMAGE,5).add(Attributes.MOVEMENT_SPEED,.27)
