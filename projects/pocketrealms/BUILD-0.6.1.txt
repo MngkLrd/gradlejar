@@ -1,0 +1,1 @@
+Pocket Realms 0.6.1: six new architectural blocks, 32x32 handcrafted UV textures, honest open collision meshes, slab variants, server-side crumbling floor trap. Compile NeoForge 1.21.1 Java 21 and publish JAR.
