@@ -1,25 +1,25 @@
-# Spider Centaur 0.2.2 Alpha
+# Spider Centaur 0.2.3
 
-Minecraft 1.21.1 / NeoForge / Java 21. Original single-entity spider-skeleton monster.
+NeoForge Minecraft 1.21.1, Java 21.
 
-## Audio redesign 0.2.2
-The original quiet/sandy hiss is replaced with distinctly sharper, threatening audio:
-- Two randomized ambient variants: sudden brittle bone snaps, scraping metallic resonance, unsettling high-frequency squeal; 1.24-1.36 seconds.
-- Two randomized hurt variants: immediate loud bone-breaking transient followed by a short distressed metal rasp; 0.62-0.64 seconds.
-- Audio was synthesized from scratch using deterministic standard-library Python and encoded as 24 kHz mono Ogg/Vorbis using FFmpeg (no third-party samples).
-- Minecraft playback volumes ambient 0.66-0.68 and hurt 0.83-0.86, versus 0.36 / 0.55 in previous version. Intentional dramatic transients, normalized peak -0.6 dBFS.
-- Four variants live inside the JAR. No Python or FFmpeg needed to **play** the mod.
-- Movement particles remain barely visible. All model, red eye, cowboy hat, spawn, damage and AI logic unchanged.
+## Audio
+- Replaces alien/high-pitched 0.2.2 sounds with the **exact Bone Hunter (B)** ambient and hurt algorithms approved in the user preview (same seed 99, filter bands, synthesis and normalizing chain).
+- No unnatural metallic whining, electronic sounds or fake reverb.
+- Alternates occasionally with the **vanilla skeleton ambient and hurt** events to keep the vanilla undead identity.
+- Surface-aware footsteps use `BlockState.getSoundType(level, pos, entity).getStepSound()`, preserving grass, dirt, stone, sand, snow, wood and modded blocks automatically.
+- Low-volume vanilla skeleton bone-step accents plus a short cropped section of B walking audio occur occasionally; no continuous overlapping loops.
+- All cosmetic assets, bow mechanics, movement-only light purple particles and spawn behavior remain unchanged.
 
 ## Testing
-1. Remove earlier `spidercentaur` JARs, install `spidercentaur-1.21.1-0.2.2.jar`, NeoForge Minecraft 1.21.1, Java 21.
-2. Summon with `/summon spidercentaur:spider_centaur ~ ~ ~`.
-3. With hostile creature sound slider near 70-100%, listen for ambient snap+scrape.
-4. Strike the entity several times to hear randomized high-impact hit clips. Volume should be strong but should not clip on normal settings.
-5. Confirm particles are still minimal, bow behavior and natural spawns unchanged.
+1. Remove 0.2.2, install `spidercentaur-1.21.1-0.2.3.jar` and NeoForge 21.1.x, Java 21.
+2. Spawn: `/summon spidercentaur:spider_centaur ~ ~ ~`.
+3. Walk the mob over stone, grass, dirt, sand, snow, wood and modded surfaces. Listen for the primary material sound with sparse bone clicks on top.
+4. Hit the mob repeatedly to sample both B's dry hurt clip and vanilla skeleton hurt; allow time for idle ambient sounds.
+5. Confirm dedicated-server loading, arrow AI and model are unchanged.
 
 ## Build
-`gradle clean build` with Java 21 + Gradle 9.2.1 + Python 3 + FFmpeg on PATH. Build pipeline automatically installs FFmpeg. Output `build/libs/spidercentaur-1.21.1-0.2.2.jar`.
+`gradle clean build` from this directory. Output `build/libs/spidercentaur-1.21.1-0.2.3.jar`.
+Building from source requires Python 3.12, numpy==1.26.4, scipy==1.14.1, soundfile==0.12.1 and FFmpeg. CI installs these for this project only. No Python or sound libraries needed to run the JAR.
 
-## Known limitations
-Audio mix and sound spatialization should be judged by an in-game listening test; static build/codec checks are not a runtime test.
+## Limitations
+Needs an in-game listening test to tune gait frequency and loudness. GitHub CI confirms source compilation and valid resources, not subjective audio realism.

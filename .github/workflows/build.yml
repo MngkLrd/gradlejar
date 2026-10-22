@@ -55,6 +55,14 @@ jobs:
         with:
           gradle-version: ${{ steps.profile.outputs.gradle }}
           cache-read-only: ${{ github.event_name == 'pull_request' }}
+      - name: Install Bone Hunter Python synthesis dependencies
+        if: matrix.project_dir == 'projects/spidercentaur'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Bone Hunter synthesis libraries
+        if: matrix.project_dir == 'projects/spidercentaur'
+        run: python3 -m pip install --disable-pip-version-check numpy==1.26.4 scipy==1.14.1 soundfile==0.12.1
       - name: Install audio encoder for Spider Centaur
         if: matrix.project_dir == 'projects/spidercentaur'
         run: |

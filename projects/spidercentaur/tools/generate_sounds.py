@@ -1,150 +1,174 @@
 #!/usr/bin/env python3
-"""Generate original, deliberately sharp/brittle Spider Centaur horror audio.
+"""The exact accepted Bone Hunter (B) Foley synthesis used for preview.
 
-Uses Python stdlib and FFmpeg at build time. Produces deterministic Ogg Vorbis
-assets for NeoForge. No runtime dependencies or sampled third-party audio.
+Outputs 3 short, reproducible Minecraft Ogg sounds from the same seeded sequence:
+ambient (dry skeletal joints), hurt (bone snaps), step_bone (quiet foot clicks).
+Only build-time dependencies: numpy, scipy, soundfile and FFmpeg.
 """
+from pathlib import Path
 import math
-import random
-import shutil
-import struct
 import subprocess
 import sys
 import tempfile
-import wave
-from pathlib import Path
 
-RATE = 24000
-TWOPI = math.tau
+import numpy as np
+from scipy import signal
+import soundfile as sf
 
-
-def clamp(x):
-    return max(-1.0, min(1.0, x))
-
-
-def decayed(t, at, speed):
-    return math.exp(-(t - at) * speed) if t >= at else 0.0
+SR = 44100
+B = dict(seed=99, heavy=.85, clack=1.04, scruff=.61,
+         step_rate=.130, hollow=.48, eerie=.25, count=6)
 
 
-def burst(t, at, length, attack=0.001):
-    if t < at or t >= at + length:
-        return 0.0
-    d = t - at
-    return min(1.0, d / attack, (at + length - t) / 0.035)
+def filtfilt_noise(rng, n, lo=None, hi=None):
+    x = rng.standard_normal(n)
+    if lo is not None and hi is not None:
+        sos = signal.butter(2, [lo, hi], fs=SR, btype="bandpass", output="sos")
+    elif hi is not None:
+        sos = signal.butter(2, hi, fs=SR, btype="lowpass", output="sos")
+    else:
+        sos = signal.butter(2, lo, fs=SR, btype="highpass", output="sos")
+    y = signal.sosfilt(sos, x)
+    r = np.sqrt(np.mean(y * y))
+    return y / max(r, 1e-8)
 
 
-def transient(t, at, noise, strength=1.0, pitch=1.0):
-    """A bone snap: near-instant full-spectrum attack + 3 inharmonic rings."""
-    d = t - at
-    if d < 0.0 or d > 0.18:
-        return 0.0
-    # No rounded / sandy attack: sub-millisecond impulse + hard early decay.
-    hit = noise * math.exp(-d * 65) * (1.0 if d > 0.00055 else d / 0.00055)
-    ring = (0.39 * math.sin(TWOPI * 1730 * pitch * d) +
-            0.27 * math.sin(TWOPI * 2870 * pitch * d) +
-            0.19 * math.sin(TWOPI * 4690 * pitch * d)) * math.exp(-d * 29)
-    knock = 0.27 * math.sin(TWOPI * (320 - 130 * d) * d) * math.exp(-d * 37)
-    return (1.15 * hit + ring + knock) * strength
+def overlay(out, clip, start, volume=1):
+    i = int(round(start * SR))
+    if i >= len(out):
+        return
+    src, dst = max(0, -i), max(0, i)
+    n = min(len(out)-dst, len(clip)-src)
+    if n > 0:
+        out[dst:dst+n] += clip[src:src+n] * volume
 
 
-def scrape(t, start, length, noise, flavor):
-    """Tight high-frequency scraped-metal howl with nonharmonic movement."""
-    env = burst(t, start, length, 0.016)
-    if env <= 0.0:
-        return 0.0
-    d = t - start
-    # Shifting inharmonic peaks feel strained and uncanny, not musical.
-    f = 1040.0 + flavor * 140 + 620.0 * d / length + 105 * math.sin(d * 13)
-    phase = TWOPI * (f * d + 95 * d * d)
-    harmonic = math.sin(phase) * 0.33 + math.sin(phase * 1.59 + 0.7) * 0.27
-    broken = math.sin(phase * 2.78 + 0.3) * 0.22
-    stutter = 0.7 + 0.3 * max(0.0, math.sin(TWOPI * (20 + flavor * 3) * d))
-    return env * stutter * (0.49 * noise + harmonic + broken)
+def bone_hit(rng, weight=.55, sharp=.75, roundness=.35):
+    n = int(SR * .155)
+    t = np.arange(n) / SR
+    crack = filtfilt_noise(rng, n, lo=780, hi=6800)
+    head = crack * np.exp(-t/(.009+weight*.003))
+    grain = filtfilt_noise(rng, n, lo=210, hi=1700) * np.exp(-t/(.025+weight*.011))
+    offsets = rng.uniform(.94, 1.07, 3)
+    modes = (np.sin(2*np.pi*(410*offsets[0])*t)*np.exp(-t/.024)*.17 +
+             np.sin(2*np.pi*(830*offsets[1])*t)*np.exp(-t/.014)*.10 +
+             np.sin(2*np.pi*(1470*offsets[2])*t)*np.exp(-t/.008)*.055)
+    hollow = np.sin(2*np.pi*(175*rng.uniform(.93, 1.07))*t) * np.exp(
+        -t/(.028+.012*weight)) * roundness
+    click = head*(.21+sharp*.22) + grain*(.068+.018*weight) + modes*.43 + hollow*.26
+    cracklets = 0.0
+    for loc in [rng.uniform(.017, .028), rng.uniform(.033, .052)]:
+        d = t-loc
+        cracklets += np.where(d >= 0, np.exp(-np.maximum(d, 0)/.006)*crack, 0) * (.025+sharp*.015)
+    return click+cracklets
 
 
-def mix_sample(t, variant, white, bright):
-    """Brittle snap front, rasping high dissonance behind, brief cold tail."""
-    if variant == 'ambient':
-        x = (transient(t, 0.075, bright, 0.78, 1.00) +
-             transient(t, 0.168, bright, 0.66, 1.21) +
-             transient(t, 0.241, bright, 0.48, 0.91) +
-             transient(t, 0.683, bright, 1.05, 1.08))
-        x += 0.69 * scrape(t, 0.30, 0.58, bright, 1)
-        x += 0.29 * scrape(t, 0.79, 0.39, white, 2)
-    elif variant == 'ambient_alt':
-        x = (transient(t, 0.056, bright, 0.96, 1.19) +
-             transient(t, 0.182, bright, 0.89, 0.94) +
-             transient(t, 0.492, bright, 0.66, 1.07) +
-             transient(t, 0.625, bright, 0.86, 1.25))
-        x += 0.83 * scrape(t, 0.23, 0.70, bright, 3)
-    elif variant == 'hurt':
-        x = (transient(t, 0.004, bright, 1.38, 1.15) +
-             transient(t, 0.028, bright, 1.11, 1.44) +
-             transient(t, 0.082, bright, 0.78, 0.93))
-        x += 1.00 * scrape(t, 0.022, 0.44, bright, 4)
-        x += 0.35 * scrape(t, 0.17, 0.25, white, 2)
-    else:  # hurt_alt
-        x = (transient(t, 0.003, bright, 1.43, 0.97) +
-             transient(t, 0.045, bright, 0.99, 1.42) +
-             transient(t, 0.123, bright, 0.85, 1.14))
-        x += 1.1 * scrape(t, 0.015, 0.49, bright, 5)
-    return x
+def ground_contact(rng, style, weak=False):
+    n = int(SR * .16)
+    t = np.arange(n)/SR
+    dirt = filtfilt_noise(rng, n, lo=170, hi=2200)
+    sand = filtfilt_noise(rng, n, lo=1200, hi=6400)
+    thud = filtfilt_noise(rng, n, hi=390)
+    env = (1-np.exp(-t/.002))*np.exp(-t/.030)
+    grit = np.zeros(n)
+    count = 5 if style["scruff"] < .7 else 7
+    for _ in range(count):
+        start = rng.uniform(.006, .075)
+        width = rng.uniform(.003, .012)
+        grit += np.exp(-.5*((t-start)/width)**2) * rng.uniform(.04, .11)
+    weight = .57 if weak else 1.
+    return weight * (dirt*env*.063*style["scruff"] +
+                     sand*grit*.10*style["scruff"] +
+                     thud*env*.087*style["heavy"])
 
 
-def synth(name, seconds):
-    count = round(seconds * RATE)
-    rng = random.Random(210122 + {'ambient': 0, 'ambient_alt': 17,
-                                  'hurt': 31, 'hurt_alt': 47}[name])
-    # Bright noise is high-passed rather than low-passed: no soft sand rustle.
-    slow = 0.0
-    samples = []
-    for i in range(count):
-        t = i / RATE
-        white = rng.uniform(-1.0, 1.0)
-        slow += 0.11 * (white - slow)
-        bright = (white - slow) * 1.22
-        x = mix_sample(t, name, white, bright)
-        # Light waveshaping adds break-up, but transient stays intelligible.
-        samples.append(math.tanh(1.34 * x))
-    # Dry, short slapback reflections, not a washed-out reverb.
-    for delay_ms, gain in ((49, 0.11), (103, 0.075), (161, 0.045)):
-        delay = round(RATE * delay_ms / 1000)
-        for i in range(delay, count):
-            samples[i] += gain * samples[i - delay]
-    peak = max(1e-7, max(abs(x) for x in samples))
-    return [clamp(0.93 * x / peak) for x in samples]
+def scrape(rng, duration=.15, intensity=.16):
+    n = int(SR*duration)
+    t = np.arange(n)/SR
+    x = filtfilt_noise(rng, n, lo=380, hi=2400)
+    hiss = filtfilt_noise(rng, n, lo=1800, hi=4500)
+    rough = np.interp(t, np.linspace(0, duration, 32), rng.uniform(.2, 1, 32))
+    env = np.sin(np.pi*np.minimum(1, t/duration))**.9
+    return intensity*env*rough*(x*.19+hiss*.04)
 
 
-def write_wav(path, values):
-    with wave.open(str(path), 'wb') as wav:
-        wav.setnchannels(1)
-        wav.setsampwidth(2)
-        wav.setframerate(RATE)
-        wav.writeframes(b''.join(struct.pack('<h', round(v * 32767)) for v in values))
+def ambient_clip(rng, s):
+    out = np.zeros(int(SR*1.38))
+    at = [.12, .155, .25, .33, .48, .54]
+    for j, t in enumerate(at):
+        overlay(out, bone_hit(rng, weight=s["heavy"], sharp=s["clack"],
+                              roundness=s["hollow"]), t,
+                s["clack"]*(.66 if j%2 else .83))
+    overlay(out, scrape(rng, .27, .18+s["eerie"]*.19), .44)
+    overlay(out, scrape(rng, .23, .19), .78)
+    return out
+
+
+def steps_clip(rng, s):
+    out = np.zeros(int(SR*2.04))
+    offsets = [.0, .035, .071, .109]
+    cursor, k = .06, 0
+    while cursor < 1.84:
+        group = cursor
+        strength = .78 if k%2 else 1.0
+        for p, offset in enumerate(offsets):
+            if p >= 2 and k%2:
+                continue
+            t = group + offset + rng.uniform(-.006, .006)
+            overlay(out, ground_contact(rng, s, weak=p > 1), t, .67*strength)
+            overlay(out, bone_hit(rng, weight=s["heavy"]*.65,
+                                  sharp=s["clack"]*.81, roundness=s["hollow"]),
+                    t+.009, .16*s["clack"]*strength)
+        if k%3 == 0:
+            overlay(out, scrape(rng, .16, .13*s["scruff"]), group+.035)
+        cursor += s["step_rate"]*2.65
+        k += 1
+    return out
+
+
+def hurt_clip(rng, s):
+    out = np.zeros(int(SR*.88))
+    for k, t in enumerate([.037, .088, .17]):
+        overlay(out, bone_hit(rng, weight=.86, sharp=s["clack"]*1.16,
+                              roundness=s["hollow"]*.85),
+                t, (1.22, .81, .51)[k])
+    overlay(out, scrape(rng, .19, .17+.08*s["eerie"]), .11)
+    overlay(out, ground_contact(rng, s), .049, .22)
+    return out
+
+
+def ogg(out_dir, label, audio, temp):
+    clip = audio*(.83/max(np.max(np.abs(audio)), 1e-6))
+    compressed = np.tanh(clip*2.8)
+    compressed *= .85/max(np.max(np.abs(compressed)), 1e-6)
+    wav = Path(temp)/f"{label}.wav"
+    target = out_dir/f"{label}.ogg"
+    sf.write(wav, compressed, SR, subtype="PCM_16")
+    subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+                    "-i", str(wav), "-c:a", "libvorbis", "-q:a", "4",
+                    str(target)], check=True)
+    if not target.is_file() or target.stat().st_size < 1000:
+        raise RuntimeError(f"Invalid generated audio {target}")
+    print(f"Generated {target.name}: {target.stat().st_size} bytes")
 
 
 def main():
     if len(sys.argv) != 2:
-        raise SystemExit('Usage: generate_sounds.py OUTPUT_RESOURCE_DIRECTORY')
-    ffmpeg = shutil.which('ffmpeg')
-    if ffmpeg is None:
-        raise SystemExit('FFmpeg is required only when building from source')
-    dest = Path(sys.argv[1]) / 'assets/spidercentaur/sounds/mob/spider_centaur'
-    dest.mkdir(parents=True, exist_ok=True)
+        raise SystemExit("Usage: generate_sounds.py OUTPUT_RESOURCES_DIR")
+    out = Path(sys.argv[1])/"assets/spidercentaur/sounds/mob/spider_centaur"
+    out.mkdir(parents=True, exist_ok=True)
+    rng = np.random.default_rng(B["seed"])
+    # The sequence/order is the SAME as accepted 'B_bone_hunter' preview:
+    ambient = ambient_clip(rng, B)
+    walking = steps_clip(rng, B)
+    hurt = hurt_clip(rng, B)
     with tempfile.TemporaryDirectory() as temp:
-        for name, seconds in [('ambient', 1.36), ('ambient_alt', 1.24),
-                              ('hurt', 0.62), ('hurt_alt', 0.64)]:
-            wav = Path(temp) / (name + '.wav')
-            samples = synth(name, seconds)
-            write_wav(wav, samples)
-            output = dest / (name + '.ogg')
-            subprocess.run([ffmpeg, '-hide_banner', '-loglevel', 'error', '-y', '-i', str(wav),
-                            '-c:a', 'libvorbis', '-q:a', '4', str(output)], check=True)
-            if not output.is_file() or output.stat().st_size < 1000:
-                raise RuntimeError(f'Ogg output missing or broken: {output}')
-            rms = math.sqrt(sum(s * s for s in samples) / len(samples))
-            print(f'Generated {output.name} ({output.stat().st_size} bytes, peak 0.93, RMS {rms:.3f})')
+        ogg(out, "ambient", ambient, temp)
+        ogg(out, "hurt", hurt, temp)
+        # Extract one short four-leg group, not the 2-second preview sequence,
+        # to avoid muddy overlapping sounds at Minecraft step cadence.
+        ogg(out, "step_bone", walking[:int(SR*.27)], temp)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

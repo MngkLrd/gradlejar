@@ -48,6 +48,10 @@ public final class SpiderCentaurMod {
             SOUNDS.register("spider_centaur_hurt", () -> SoundEvent.createVariableRangeEvent(
                     ResourceLocation.fromNamespaceAndPath(MOD_ID, "spider_centaur_hurt")));
 
+    public static final DeferredHolder<SoundEvent, SoundEvent> STEP_BONE =
+            SOUNDS.register("spider_centaur_step_bone", () -> SoundEvent.createVariableRangeEvent(
+                    ResourceLocation.fromNamespaceAndPath(MOD_ID, "spider_centaur_step_bone")));
+
     public SpiderCentaurMod(IEventBus bus) {
         ENTITIES.register(bus);
         ITEMS.register(bus);
