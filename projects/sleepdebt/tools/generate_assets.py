@@ -228,3 +228,62 @@ save("field_guide",rows(
 "................"
 ),BOOK)
 print("Generated",len(list(OUT.glob("*.png"))),"sprites")
+
+# Sleepless skin: a custom 64x64 humanoid UV texture for vanilla ZombieModel.
+# Hard-edged original pixel clusters; no copyrighted vanilla texture bytes.
+ENTITY_DIR=Path("src/main/resources/assets/sleepdebt/textures/entity")
+ENTITY_DIR.mkdir(parents=True,exist_ok=True)
+W=H=64
+skin=[[(0,0,0,0) for _ in range(W)] for __ in range(H)]
+def rgb(s):
+    return tuple(bytes.fromhex(s[1:]))+(255,)
+def area(x1,y1,x2,y2,color):
+    c=rgb(color)
+    for yy in range(y1,y2):
+        for xx in range(x1,x2):
+            skin[yy][xx]=c
+# Solid muted cloak / desaturated skin to ensure no missing-looking faces.
+for xx,yy,w,h in ((0,0,32,16),(16,16,40,16),(0,16,16,16),(32,0,32,16),(0,32,64,16)):
+    area(xx,yy,xx+w,yy+h,"#25242d")
+# hood top, front, head cheeks, hanging shadow.
+area(8,8,16,16,"#363441")
+area(9,10,15,15,"#171923")
+area(8,8,16,9,"#505061")
+area(10,11,12,12,"#a47d86")
+area(13,11,15,12,"#a47d86")
+area(10,12,12,13,"#69485a")
+area(13,12,15,13,"#69485a")
+area(11,14,14,15,"#161921")
+# Tunic front and stitched seam.
+area(20,20,28,32,"#35333d")
+area(21,21,22,32,"#5b5157")
+area(25,20,26,32,"#514b56")
+area(22,22,25,23,"#68616a")
+area(23,26,24,30,"#786469")
+# Arms in dark sleeves and pale bony hand shapes.
+area(44,20,48,32,"#292a36")
+area(44,27,48,32,"#81737b")
+area(36,20,40,32,"#31303a")
+area(36,28,40,32,"#82717b")
+# Lower legs boots.
+area(4,20,8,32,"#322d35")
+area(4,27,8,32,"#1b1a22")
+area(20,52,24,64,"#34303b")
+area(20,59,24,64,"#1b1a22")
+# Crack-like sparse highlights, never smooth.
+for xx,yy in ((9,8),(11,9),(16,9),(21,24),(27,28),(45,22),(5,24)):
+    skin[yy][xx]=rgb("#66606c")
+raw=bytearray()
+for yy in range(H):
+    raw.append(0)
+    for xx in range(W):
+        raw.extend(bytes(skin[yy][xx]))
+def echunk(kind,data):
+    return struct.pack(">I",len(data))+kind+data+struct.pack(">I",zlib.crc32(kind+data)&0xffffffff)
+png=b"\x89PNG\r\n\x1a\n"
+png+=echunk(b"IHDR",struct.pack(">IIBBBBB",W,H,8,6,0,0,0))
+png+=echunk(b"IDAT",zlib.compress(bytes(raw),9))
+png+=echunk(b"IEND",b"")
+(ENTITY_DIR/"sleepless.png").write_bytes(png)
+print("Generated Sleepless skin",W,H)
+

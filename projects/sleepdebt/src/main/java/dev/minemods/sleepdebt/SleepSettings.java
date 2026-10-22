@@ -1,27 +1,28 @@
 package dev.minemods.sleepdebt;
 import net.neoforged.neoforge.common.ModConfigSpec;
-
 public final class SleepSettings {
- private static final ModConfigSpec.Builder B = new ModConfigSpec.Builder();
- public static final ModConfigSpec.IntValue TICKS_PER_POINT;
- public static final ModConfigSpec.IntValue BASE_RECOVERY;
- public static final ModConfigSpec.BooleanValue KEEP_ON_DEATH;
- public static final ModConfigSpec.BooleanValue PENALTIES;
- public static final ModConfigSpec.BooleanValue SHELTER_BONUS;
- public static final ModConfigSpec.BooleanValue MONSTER_PENALTY;
+ private static final ModConfigSpec.Builder B=new ModConfigSpec.Builder();
+ public static final ModConfigSpec.IntValue TICKS_PER_POINT,BASE_RECOVERY,SLEEPLESS_THRESHOLD;
+ public static final ModConfigSpec.BooleanValue KEEP_ON_DEATH,PENALTIES,SHELTER_BONUS,MONSTER_PENALTY,ENABLE_SLEEPLESS,ENABLE_CAMP_REST;
  public static final ModConfigSpec SPEC;
  static {
   B.push("fatigue");
-  TICKS_PER_POINT = B.comment("Ticks awake per one fatigue point.").defineInRange("ticksPerPoint",60,20,2400);
-  BASE_RECOVERY = B.comment("Debt removed by a real sleep.").defineInRange("baseSleepRecovery",550,0,1000);
-  KEEP_ON_DEATH = B.define("persistAfterDeath",true);
-  PENALTIES = B.define("enableDebuffs",true);
+  TICKS_PER_POINT=B.defineInRange("ticksPerPoint",60,20,2400);
+  BASE_RECOVERY=B.defineInRange("baseSleepRecovery",550,0,1000);
+  KEEP_ON_DEATH=B.define("persistAfterDeath",true);
+  PENALTIES=B.define("enableDebuffs",true);
   B.pop();
   B.push("sleep_quality");
-  SHELTER_BONUS = B.comment("Sheltered beds heal an additional 15% debt.").define("shelterBonus",true);
-  MONSTER_PENALTY = B.comment("Nearby hostiles reduce sleep quality. Vanilla normally blocks sleeping anyway.").define("hostilePenalty",true);
+  SHELTER_BONUS=B.define("shelterBonus",true);
+  MONSTER_PENALTY=B.define("hostilePenalty",true);
+  ENABLE_CAMP_REST=B.define("allowCampRest",true);
+  B.pop();
+  B.push("sleepless");
+  ENABLE_SLEEPLESS=B.comment("Enable rare hostile encounters for severely sleep-deprived players.").define("enabled",true);
+  SLEEPLESS_THRESHOLD=B.defineInRange("minimumSleepDebt",830,500,1000);
   B.pop();
   SPEC=B.build();
  }
  private SleepSettings(){}
 }
+

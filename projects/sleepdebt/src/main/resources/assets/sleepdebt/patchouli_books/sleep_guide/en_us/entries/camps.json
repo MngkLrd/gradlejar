@@ -1,0 +1,19 @@
+{
+  "name": "Field Camping",
+  "category": "sleepdebt:recovery",
+  "icon": "sleepdebt:camp_bedroll",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Build a field camp from a bedroll, an awning and a campfire. Right-click the bedroll to recover some fatigue and stress. The awning adds cover, and the fire strengthens recovery."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:camp_bedroll"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:camp_awning"
+    }
+  ]
+}

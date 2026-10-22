@@ -13,5 +13,13 @@
   "item.sleepdebt.long_coffee.tooltip": "Действует дольше, но всё равно вызывает привыкание.",
   "item.sleepdebt.energy_drink.tooltip": "Мощная стимуляция и повышенный риск отката.",
   "item.sleepdebt.warm_milk.tooltip": "Немного снижает усталость и помогает подготовиться ко сну.",
-  "sleepdebt.jade.bed_hint": "Под крышей сон восстанавливает больше сил."
+  "sleepdebt.jade.bed_hint": "Под крышей сон восстанавливает больше сил.",
+  "block.sleepdebt.coffee_machine": "Медная кофеварка",
+  "block.sleepdebt.camp_bedroll": "Походный спальник",
+  "block.sleepdebt.camp_awning": "Походный навес",
+  "entity.sleepdebt.sleepless": "Бессонный",
+  "container.sleepdebt.coffee_machine": "Кофеварка: вода / помол / уголь / результат",
+  "message.sleepdebt.camp_rest": "Отдых в лагере (+%s)",
+  "message.sleepdebt.camp_cooldown": "Пока слишком рано отдыхать снова.",
+  "sleepdebt.jade.camp": "Отдых снижает физическую усталость"
 }

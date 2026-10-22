@@ -1,0 +1,15 @@
+{
+  "name": "Night Terrors",
+  "category": "sleepdebt:fatigue",
+  "icon": "minecraft:phantom_membrane",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Sleep debt now has consequences in the world. At severe levels, small shadowy shapes may appear in the edge of your vision. These are only visions; they cannot harm you."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "In darkness, the real Sleepless may emerge. Unlike a vision, it can attack you. Bright light and daytime drive it away. Rest before exploring at night."
+    }
+  ]
+}
