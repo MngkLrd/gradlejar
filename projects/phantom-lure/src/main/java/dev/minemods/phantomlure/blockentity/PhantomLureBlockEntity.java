@@ -33,8 +33,15 @@ public final class PhantomLureBlockEntity extends BlockEntity {
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, PhantomLureBlockEntity entity) {
         if (!(level instanceof ServerLevel server)) return;
-        if (!isLureNight(level) || hasNearbySleeper(server, pos)) {
-            server.removeBlock(pos, false); // No dropped lure or diamond on sleeping/daylight cancellation.
+        if (hasNearbySleeper(server, pos)) {
+            server.removeBlock(pos, false); // Sleeping cancels even an unarmed lure. No item drops.
+            return;
+        }
+
+        if (!isLureNight(level)) {
+            // Newly placed daytime lures wait in the world for the next night.
+            // A countdown started at night must not roll over to a later night.
+            if (entity.remainingTicks < SUMMON_DELAY) server.removeBlock(pos, false);
             return;
         }
 

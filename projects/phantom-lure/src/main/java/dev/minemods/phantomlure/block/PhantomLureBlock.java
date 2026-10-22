@@ -11,7 +11,6 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -59,16 +58,8 @@ public final class PhantomLureBlock extends BaseEntityBlock {
         return SHAPE;
     }
 
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Level level = context.getLevel();
-        // A lure is a nighttime outdoor trap. Refuse placement instead of consuming it in daylight.
-        if (!PhantomLureBlockEntity.isLureNight(level) || !level.canSeeSky(context.getClickedPos().above())) {
-            return null;
-        }
-        return defaultBlockState();
-    }
+    // Use the standard block placement logic: the lure can be placed in daylight
+    // and under cover. Server ticking, not placement, controls when it summons.
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

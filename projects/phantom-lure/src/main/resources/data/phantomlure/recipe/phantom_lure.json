@@ -4,7 +4,7 @@
   "pattern": [
     " S ",
     "ARA",
-    "III"
+    "EDE"
   ],
   "key": {
     "S": {
@@ -16,8 +16,11 @@
     "R": {
       "item": "minecraft:redstone"
     },
-    "I": {
-      "item": "minecraft:iron_ingot"
+    "E": {
+      "item": "minecraft:ender_pearl"
+    },
+    "D": {
+      "item": "minecraft:diamond"
     }
   },
   "result": {
