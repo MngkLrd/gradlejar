@@ -38,7 +38,8 @@ public final class SkeletonFormationGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (skeleton.tickCount < nextPlanTick) return false;
+        // Mounted skeletons keep the vanilla spider-jockey ranged AI.
+        if (skeleton.isPassenger() || skeleton.tickCount < nextPlanTick) return false;
         nextPlanTick = skeleton.tickCount + 16 + skeleton.getRandom().nextInt(12);
 
         if (!skeleton.getMainHandItem().is(Items.BOW)
@@ -160,7 +161,7 @@ public final class SkeletonFormationGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (!pathStarted || target == null || !target.isAlive()
+        if (skeleton.isPassenger() || !pathStarted || target == null || !target.isAlive()
                 || skeleton.getTarget() != target
                 || skeleton.tickCount >= planEndsTick
                 || skeleton.getNavigation().isDone()) {
