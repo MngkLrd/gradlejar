@@ -32,7 +32,7 @@ public final class WoundedRetreatGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (mob.tickCount < nextEvaluationTick || mob.tickCount < ralliedUntilTick) {
+        if (mob.isPassenger() || mob.tickCount < nextEvaluationTick || mob.tickCount < ralliedUntilTick) {
             return false;
         }
         nextEvaluationTick = mob.tickCount + AiBalance.FEAR_EVALUATION_INTERVAL_TICKS;
@@ -64,7 +64,7 @@ public final class WoundedRetreatGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return !rallied
+        return !rallied && !mob.isPassenger()
                 && danger != null && danger.isAlive() && mob.getTarget() == danger
                 && mob.tickCount < retreatEndTick
                 && mob.distanceToSqr(danger) < square(19.0D);
