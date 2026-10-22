@@ -22,7 +22,7 @@ import net.minecraft.world.entity.animal.PolarBear;
  * (-2,9,12) and animated together with the bear torso, as with SaddleLayer.
  */
 public final class SaddlebagsLayer extends RenderLayer<PolarBear, PolarBearModel<PolarBear>> {
-    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
+    private static final ResourceLocation TEXTURE = new ResourceLocation(
             Bearback.MOD_ID, "textures/entity/bear_saddlebags.png");
     private final PouchPoseModel poseModel = new PouchPoseModel();
     private final ModelPart bags = mesh().bakeRoot().getChild("bags");
