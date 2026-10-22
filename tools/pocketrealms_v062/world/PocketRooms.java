@@ -56,6 +56,13 @@ public final class PocketRooms {
         for(Room r:rooms) if(Math.abs(x-r.cx)<=r.rx+3 && Math.abs(z-r.cz)<=r.rz+3)return true;
         return false;
     }
+    public boolean overlapsArena(int x,int z) {
+        for(Room room:rooms) {
+            if(Math.abs(x-room.cx)<=room.rx+7 && Math.abs(z-room.cz)<=room.rz+7)
+                return true;
+        }
+        return false;
+    }
     public boolean nearRoom(int x,int z) {
         for(Room r:rooms) if(r.surrounds(x,z))return true;
         return false;
