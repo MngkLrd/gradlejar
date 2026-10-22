@@ -1,11 +1,11 @@
 {
   "slug": "hungrymining",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "hungrymining-1.21.1-1.0.0.jar",
+  "jar_glob": "hungrymining-1.21.1-1.1.0.jar",
   "minimum_loader_version": "21.1.0",
   "compile_loader_version": "21.1.262"
 }
