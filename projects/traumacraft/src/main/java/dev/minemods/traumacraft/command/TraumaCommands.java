@@ -15,6 +15,7 @@ public final class TraumaCommands {
     private TraumaCommands() {}
     public static void register(RegisterCommandsEvent event) {
         var root = Commands.literal("trauma")
+                .requires(source -> source.hasPermission(2))
                 .executes(ctx -> show(ctx.getSource().getPlayerOrException()))
                 .then(Commands.literal("reset").requires(source -> source.hasPermission(2))
                         .executes(ctx -> {

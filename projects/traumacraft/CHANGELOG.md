@@ -1,3 +1,12 @@
+# Traumatic 0.3.4 | Survival-first injury feedback
+
+- Removed the automatic action-bar text "Trauma: ... | /trauma" on damage and its recurring repeat every five seconds.
+- The anatomical HP panel and injury HUD remain the sole normal gameplay indicators; all existing server-side injury syncing remains unchanged.
+- Restricted the optional /trauma command and its diagnostic subcommands to operators (permission level 2). Useful for QA; invisible to normal survival players.
+- No changes to health, damage, blood loss, fractures, movement penalties, body attachment, medical effects, item IDs, recipes, UI or JEI.
+
+Main development version: Minecraft 1.21.1, NeoForge 21.1.x, Java 21. Ports are made from tested mainline releases.
+
 # Traumatic 0.3.3 | NeoForge 1.21.1 UI hotfix
 
 - Removed an obsolete second medical GUI and HUD that were rendering over the current anatomy inventory and showing a different body state cache. The only GUI is now TraumaInventoryScreen, and the only HUD is TraumaHud.
