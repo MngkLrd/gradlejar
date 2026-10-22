@@ -1,5 +1,3 @@
 {
-  "item.voidchisel.void_chisel": "Кирка Бездны",
-  "tooltip.voidchisel.description": "Удерживайте ЛКМ для добычи бедрока. Без дропа.",
-  "tooltip.voidchisel.charges": "Осталось применений: %s"
+  "item.voidchisel.void_chisel": "Кирка Бездны"
 }

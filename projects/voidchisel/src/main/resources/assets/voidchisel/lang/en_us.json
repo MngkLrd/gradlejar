@@ -1,5 +1,3 @@
 {
-  "item.voidchisel.void_chisel": "Void Pickaxe",
-  "tooltip.voidchisel.description": "Hold attack to mine bedrock. No bedrock drops.",
-  "tooltip.voidchisel.charges": "Uses remaining: %s"
+  "item.voidchisel.void_chisel": "Void Pickaxe"
 }

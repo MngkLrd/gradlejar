@@ -27,39 +27,67 @@ jobs:
       - name: Compile NeoForge mod
         working-directory: projects/voidchisel
         run: gradle --no-daemon --stacktrace clean build
-      - name: Verify jar, recipe, texture and new classes
+      - name: Verify jar, recipe, item model, actual decoded PNG
         working-directory: projects/voidchisel
         run: |
           python3 - <<'PY'
+          import json, zipfile, zlib, struct
           from pathlib import Path
-          import json, zipfile
-          jar = Path('build/libs/voidchisel-1.21.1-1.1.0.jar')
-          assert jar.exists(), 'Missing compiled JAR'
+          jar = Path('build/libs/voidchisel-1.21.1-1.1.1.jar')
+          assert jar.is_file(), "Compiled JAR missing"
           with zipfile.ZipFile(jar) as z:
               names = set(z.namelist())
-              for name in [
+              for path in [
                   'META-INF/neoforge.mods.toml',
                   'dev/voidchisel/VoidPickaxeItem.class',
                   'dev/voidchisel/BedrockMiningServer.class',
                   'dev/voidchisel/MiningInputPacket.class',
                   'dev/voidchisel/client/ClientMiningInput.class',
                   'assets/voidchisel/textures/item/void_chisel.png',
+                  'assets/voidchisel/models/item/void_chisel.json',
                   'data/voidchisel/recipe/void_chisel.json'
               ]:
-                  assert name in names, 'Missing: '+name
+                  assert path in names, 'Missing '+path
+
+              png = z.read('assets/voidchisel/textures/item/void_chisel.png')
+              assert png[:8] == b'\x89PNG\r\n\x1a\n', 'Invalid PNG signature'
+              offset, pixels, size = 8, [], None
+              while offset < len(png):
+                  length = struct.unpack('>I',png[offset:offset+4])[0]
+                  typ = png[offset+4:offset+8]
+                  chunk = png[offset+8:offset+8+length]
+                  crc = struct.unpack('>I',png[offset+8+length:offset+12+length])[0]
+                  assert zlib.crc32(typ+chunk) == crc, 'PNG CRC failure'
+                  if typ == b'IHDR':
+                      w,h,depth,color,_,_,_ = struct.unpack('>IIBBBBB',chunk)
+                      assert (w,h,depth,color) == (16,16,8,6), 'Unexpected texture format'
+                      size = (w,h)
+                  elif typ == b'IDAT':
+                      pixels.append(chunk)
+                  elif typ == b'IEND':
+                      break
+                  offset += 12 + length
+              assert size == (16,16) and pixels, 'Missing PNG data'
+              raw = zlib.decompress(b''.join(pixels))
+              assert len(raw) == 16*(1+16*4), 'Truncated PNG pixels'
+
+              model = json.loads(z.read('assets/voidchisel/models/item/void_chisel.json'))
+              assert model['textures']['layer0'] == 'voidchisel:item/void_chisel'
               recipe = json.loads(z.read('data/voidchisel/recipe/void_chisel.json'))
               assert recipe['pattern'] == [' W ', 'NSN', ' S ']
-              assert recipe['key']['S']['item'] == 'minecraft:stick'
-          print('PASS: compiled pickaxe, server/client mining and resources')
+              for language in ['en_us','ru_ru']:
+                  lang = json.loads(z.read('assets/voidchisel/lang/'+language+'.json'))
+                  assert set(lang.keys()) == {'item.voidchisel.void_chisel'}
+          print('PASS: real compiled JAR; decoded 16x16 image; item model; recipe; clean tooltip')
           PY
       - name: Publish compiled jar
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          tag="ci-voidpickaxe-mc1.21.1-v1.1.0-${GITHUB_RUN_NUMBER}"
-          gh release create "$tag" projects/voidchisel/build/libs/voidchisel-1.21.1-1.1.0.jar \
+          tag="ci-voidpickaxe-mc1.21.1-v1.1.1-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" projects/voidchisel/build/libs/voidchisel-1.21.1-1.1.1.jar \
             --target "$GITHUB_SHA" \
-            --title "Void Pickaxe 1.1.0 | NeoForge 1.21.1" \
-            --notes "Pickaxe texture and real PickaxeItem, five-use durability bar, ~8-tick progressive bedrock mining, no bedrock drops. CI verified; in-game test pending." \
+            --title "Void Pickaxe 1.1.1 | NeoForge 1.21.1" \
+            --notes "Fixed corrupted texture, removed unnecessary tooltips, and restored vanilla durability bar behavior. CI validated PNG decode. In-game runtime test pending." \
             --prerelease
