@@ -1,0 +1,24 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.147'
+}
+group = 'dev.minemods.snowleopard'
+version = project.mod_version
+base.archivesName = "snowleopard-1.20.1-forge"
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+legacyForge {
+    enable {
+        neoForgeVersion = project.minecraft_version + '-' + project.forge_version
+        disableRecompilation = true
+    }
+    runs {
+        client { client() }
+        server { server() }
+    }
+    mods { snowleopard { sourceSet(sourceSets.main) } }
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding='UTF-8'
+    options.release=17
+}

@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+[[mods]]
+modId="snowleopard"
+version="1.0.0"
+displayName="Snow Leopard"
+authors="MineMods"
+description="Snow leopard with original 3D model."
+[[dependencies.snowleopard]]
+modId="forge"
+mandatory=true
+versionRange="[47.1.5,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.snowleopard]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.20.2)"
+ordering="NONE"
+side="BOTH"
