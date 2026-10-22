@@ -1,0 +1,1 @@
+Pocket Realms 0.6.1: six 32x32-textured architectural blocks with real pillar/grate collision, complete item registration, live crumble trap, room integration; Java 21, MC 1.21.1 NeoForge 21.1.209. Exact SHA256-verified source overlay.
