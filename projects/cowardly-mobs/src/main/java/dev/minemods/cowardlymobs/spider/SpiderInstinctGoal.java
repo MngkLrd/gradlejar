@@ -386,6 +386,14 @@ public final class SpiderInstinctGoal extends Goal {
                 wall.block.getX() + 0.5D,
                 wall.startY + 3.4D,
                 wall.block.getZ() + 0.5D, NORMAL_SPEED);
+        // Assist vanilla climbing only after a real horizontal collision
+        // with the selected solid face. This is physical vertical movement,
+        // not a teleport or an air jump from flat ground.
+        if (spider.horizontalCollision && spider.getY() < wall.startY + 3.0D) {
+            Vec3 motion = spider.getDeltaMovement();
+            spider.setDeltaMovement(motion.x, Math.max(motion.y, 0.16D), motion.z);
+            spider.hasImpulse = true;
+        }
     }
 
     private void abortClimb() {
