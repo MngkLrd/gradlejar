@@ -1,0 +1,11 @@
+{
+  "slug": "snowleopard263",
+  "version": "1.0.0",
+  "minecraft": "26.3",
+  "loader": "neoforge",
+  "java": "25",
+  "gradle": "9.2.1",
+  "jar_glob": "snowleopard-26.3-neoforge-1.0.0.jar",
+  "minimum_loader_version": "26.2.0.0",
+  "compile_loader_version": "26.3.0.83"
+}
