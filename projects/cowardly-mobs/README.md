@@ -1,61 +1,90 @@
-# Cowardly Mobs 0.2.0
+# Cowardly Mobs 0.3.0
 
-Server-side Minecraft 1.21.1 / NeoForge mod, built using Java 21. **Zombie Hunger 1.0.0 is now integrated directly into Cowardly Mobs.** Install only the new Cowardly Mobs JAR, not both separate mods. The existing Zombie Hunger project and JAR remain independent for users who still need them.
+Minecraft **1.21.1**, **NeoForge 21.1.x**, **Java 21**. Lightweight **server-side** zombie and skeleton AI. No custom items, blocks, client UI or networking. No movement-speed buffs or bow fire-rate changes.
 
-## Original Cowardly Mobs AI
-- Wounded zombies and skeletons (under 40% HP) sometimes retreat from survival players with strong armor or weapons.
-- Bow skeletons move at normal speed, try to stay about 11 blocks away, spread out and loosely regroup around a common player target.
-- Vanilla ranged and melee attacks, including wither skeleton melee behavior, remain.
+This is one JAR containing the original Cowardly Mobs AI and the full integrated Zombie Hunger 1.0.0 behavior. **Do not install a second Zombie Hunger JAR.**
 
-## Integrated Zombie Hunger AI (source mechanics preserved)
-- Ordinary zombies prioritize dropped rotten flesh, which distracts them even during pursuit.
-- Raw/cooked meat can be eaten while idle; wounded zombies can seek raw meat while fighting if conditions allow.
-- Each meal takes 30 ticks, consumes **one** item and restores **2 HP** (one heart), capped at max HP.
-- 100-tick cooldown between meals. Being hit by a player interrupts eating and suppresses food-seeking for 100 ticks.
-- Several zombies can compete for the same item. Only the winner consumes it; no duplication.
-- Hungry zombies send a nearby 6-block food alert.
-- Husks ignore cooked meat, detect food only nearby and are less likely to abandon combat.
-- Drowned prefer floating/underwater meat and only chase nearby rotten flesh on land.
-- Vanilla eating sound and 6 small item particles play after a completed meal.
-- Existing vanilla equipment pickup remains untouched. Scanning is periodic, localized and bounded.
+## New in 0.3.0
 
-## AI interaction rules
-- One server-side registration handler attaches goals only once per entity, including when chunks reload.
-- Priority 1: wounded retreat; priority 2: food seeking for zombies / formation for skeletons.
-- Fear can interrupt an ongoing eating attempt. Following retreat, a zombie can look for food again.
-- There is no artificial movement speed multiplier.
+### 1. Morale System
 
-## Config
-NeoForge COMMON config: `config/cowardlymobs-common.toml` in the `zombie_hunger` section. Original Zombie Hunger config parameters and defaults are preserved.
+A server-side numeric courage score from 0 to 1 is calculated *only when a wounded mob considers fleeing* (every ~80 ticks with cooldown).
 
-## Datapack compatibility
-Legacy tags remain available with exactly the same identifiers:
-- `#zombiehunger:rotten_meat`
-- `#zombiehunger:raw_meat`
-- `#zombiehunger:cooked_meat`
+```text
+courage = clamp(0.22 + 0.55 * health_fraction
+                - 0.42 * player_armor_fraction
+                - 0.40 * player_attack_damage_fraction
+                + ally_bonus, 0, 1)
+```
 
-The raw/cooked tags include vanilla items and optional `#c:foods/raw_meat` / `#c:foods/cooked_meat`. Existing datapacks can add modded meat using these legacy tags without changes. Fish and vegetables are ignored by default.
+Armor is normalized to 20 points; damage is normalized against 1–10 attack damage. Nearby allied zombies add **+0.17 courage** each, bow/melee skeletons add **+0.09** each (maximum four). A survival player must still have either 12+ armor points or 6+ attack damage to trigger a fear reaction. Only mobs at or below **65% HP** are eligible for fear; when courage is below **0.36**, their chance to retreat is 25–70% depending on danger. The normal cooldown prevents rapid fear toggling.
 
-## Build
-From `projects/cowardly-mobs` with JDK 21 and Gradle 9.2.1:
+### 2. Zombie Pack Courage
+
+Nearby zombies of the same kind provide morale support within a 9-block radius. A wounded lone zombie is more likely to retreat from an armed player than one in a pack. The pack bonus affects only fleeing decisions: **no damage, speed or armor bonuses**.
+
+### 3. Skeleton Firing Line
+
+Bow-armed skeletons pursuing the **same player** form an opportunistic line of up to five near allies. They:
+- keep about **11.5 blocks** from the target when safe to reposition;
+- spread roughly **3.4 blocks** laterally, using stable UUID-based positions;
+- sidestep an allied skeleton directly blocking their line of fire;
+- back off if the target is within 8 blocks;
+- surrender movement back to vanilla bow AI after at most 50 ticks, with a pause before repositioning again;
+- skip squad positioning if the target is out of sight, to preserve normal vanilla pursuit.
+
+This is a loose, terrain-dependent firing line, **not simultaneous volleys** and **not guaranteed friendly-fire immunity**. Wither skeletons carrying swords retain vanilla melee positioning.
+
+### 4. Group Rally
+
+An injured zombie or skeleton that chooses to retreat may look for a **nearby safe group of its own mob type**. If it reaches a group containing at least two allies within 5.5 blocks and is more than 8 blocks from the player, it regains its nerve:
+- immediately stops retreating;
+- resumes vanilla attack/target goals;
+- suppresses a new fear decision for **220 ticks** (11 seconds).
+
+If there is no suitable group, it simply retreats away from the player, as before. Pathfinding never teleports mobs or increases their speed.
+
+## Zombie Hunger remains included
+
+- Rotten flesh distracts ordinary zombies even when in combat.
+- Raw/cooked meat feeds idle zombies; injured zombies may seek raw meat when engaged.
+- One meat item eaten per meal, **+2 HP**, 30-tick chewing, 100-tick meal cooldown.
+- A player hit interrupts eating and blocks further food seeking for 100 ticks.
+- Nearby hunger alerts, competition over dropped food, vanilla eating sound and six item particles.
+- Husks avoid cooked meat; drowned prioritize meat in water.
+- Tags and datapack compatibility preserved:
+  - `#zombiehunger:rotten_meat`
+  - `#zombiehunger:raw_meat`
+  - `#zombiehunger:cooked_meat`
+  - optional common `#c:foods/raw_meat` and `#c:foods/cooked_meat`.
+
+Eating has AI goal priority 2, below retreat (priority 1), so fear takes precedence over food. The Zombie Hunger config remains `config/cowardlymobs-common.toml` with the original `zombie_hunger` section and parameters. Balance constants for the new tactical AI live in `ai/AiBalance.java`; a dedicated configurable morale file is not included in 0.3.0.
+
+## Building
+
+JDK 21, Gradle 9.2.1:
 
 ```bash
+cd projects/cowardly-mobs
 gradle --no-daemon clean build
 ```
 
-Expected JAR: `build/libs/cowardlymobs-1.21.1-0.2.0.jar`.
-GitHub Actions: `Minecraft Mod Build Hub` with project_dir `projects/cowardly-mobs`. Production releases are published by push-to-main CI.
+Output: `build/libs/cowardlymobs-1.21.1-0.3.0.jar`.
 
-## Gameplay checks
-1. Start NeoForge 1.21.1 single-player and a dedicated server, without the separate Zombie Hunger JAR.
-2. Drop rotten flesh near a pursuing regular zombie: it should divert to the dropped item.
-3. Drop raw/cooked meat when the zombie is idle; verify it walks over and eats.
-4. Wound zombie below 40% HP and equip strong armor. Confirm retreat occasionally interrupts eating and does not increase movement speed.
-5. Count items in a stack; precisely one should disappear after chewing; healing should be 2 HP.
-6. Hit zombie while chewing: eating must be interrupted and the food ignored for 100 ticks.
-7. Spawn three zombies competing for one piece of meat and ensure no item duplication.
-8. Verify nearby-zombie food alerts, husk preference, drowned underwater behavior.
-9. Verify eating sound, particles, skeleton ranged spacing and shooting.
-10. Test an external datapack adding meat to legacy tags; test chunk unload/reload and dedicated server.
+The repository build hub also builds and verifies this project on pull requests and publishes a prerelease JAR on main updates.
 
-Note: GitHub CI verifies compilation and JAR structure, not in-game behavior.
+## Gameplay test checklist
+
+1. Load Minecraft 1.21.1 / NeoForge on a client and a dedicated server.
+2. Compare one injured zombie versus four injured zombies when a player wears iron armor. The group should retreat less often.
+3. Confirm bare-handed, unarmored player does not trigger morale retreat.
+4. Change player armor or held weapon and repeat; fear chance should change.
+5. Place a separated squad of bow skeletons in sight of the same player. Observe loose lateral spacing and continued arrow shots.
+6. Let one skeleton block another's shot; observe limited sidestepping (no forced terrain clipping).
+7. Approach within 8 blocks: bow skeletons retreat at **normal speed**.
+8. Retreating wounded zombie approaches two allies more than 8 blocks from player; it should rally and resume aggression without immediate re-fleeing.
+9. Repeat group rally with skeletons and confirm sword-wielding wither skeletons still attack in melee.
+10. Toss rotten flesh during combat and attack a chewing zombie: older Zombie Hunger behavior should still work, as should husk/drowned rules and datapack tags.
+11. Test many mobs in a farm, chunk unload/reload and dimension transfer for duplicate AI or tick performance issues.
+
+**Limitations:** The line is opportunistic, not rigid formation AI. Group selection is local. Compile/JAR verification is not a substitute for in-game behavior testing.
