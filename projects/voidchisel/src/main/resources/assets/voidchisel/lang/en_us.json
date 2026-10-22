@@ -1,0 +1,5 @@
+{
+  "item.voidchisel.void_chisel": "Void Chisel",
+  "tooltip.voidchisel.description": "Left-click bedrock to destroy it. No block drops.",
+  "tooltip.voidchisel.charges": "Charges left: %s"
+}

@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+[[mods]]
+modId="voidchisel"
+version="1.0.0"
+displayName="Void Chisel"
+authors="Void Chisel"
+description="A five-use tool that shatters bedrock without dropping it."
+[[dependencies.voidchisel]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.voidchisel]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
