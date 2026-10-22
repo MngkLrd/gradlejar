@@ -3,7 +3,6 @@ package dev.minemods.cowardlymobs.spider;
 import java.util.EnumSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
@@ -61,6 +60,7 @@ public final class SpiderInstinctGoal extends Goal {
         if (!SpiderInstinctConfig.ENABLED.get()
                 || spider.isPassenger() || !spider.isAlive()) return false;
         target = findTarget();
+        if (isSkeletonJockey() && !SpiderInstinctConfig.JOCKEY_TACTICS.get()) return false;
         return validTarget(target) && spider.distanceToSqr(target)
                 <= square(MAX_HUNT_DISTANCE);
     }
@@ -68,6 +68,7 @@ public final class SpiderInstinctGoal extends Goal {
     @Override
     public boolean canContinueToUse() {
         return SpiderInstinctConfig.ENABLED.get()
+                && (!isSkeletonJockey() || SpiderInstinctConfig.JOCKEY_TACTICS.get())
                 && spider.isAlive() && !spider.isPassenger()
                 && validTarget(findTarget())
                 && spider.distanceToSqr(target) <= square(MAX_HUNT_DISTANCE + 4.0D);
@@ -97,10 +98,6 @@ public final class SpiderInstinctGoal extends Goal {
         spider.getLookControl().setLookAt(target, 25.0F, 25.0F);
 
         if (isSkeletonJockey()) {
-            if (!SpiderInstinctConfig.JOCKEY_TACTICS.get()) {
-                // Release our MOVE goal on the following tick so vanilla AI takes over.
-                return;
-            }
             tactic = Tactic.JOCKEY;
             wall = null;
             steerJockey();
@@ -258,7 +255,8 @@ public final class SpiderInstinctGoal extends Goal {
                 .add(look.z * lateral, 0, -look.x * lateral);
         if (!spider.getNavigation().moveTo(
                 position.x, target.getY(), position.z, NORMAL_SPEED)) {
-            spider.getNavigation().moveTo(target, NORMAL_SPEED);
+            // Do not charge into melee when a lateral firing route is blocked.
+            spider.getNavigation().stop();
         }
     }
 
