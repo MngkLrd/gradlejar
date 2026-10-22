@@ -59,7 +59,7 @@ public final class CampEvents {
         if(event.getLevel().isClientSide() || !(event.getEntity() instanceof Animal animal)) return;
         boolean installed=animal.goalSelector.getAvailableGoals().stream()
           .anyMatch(g->g.getGoal() instanceof ProvokedAnimalGoal);
-        if(!installed) animal.goalSelector.addGoal(1,new ProvokedAnimalGoal(animal));
+        if(!installed) animal.goalSelector.addGoal(0,new ProvokedAnimalGoal(animal));
     }
     @SubscribeEvent
     public void serverStopped(ServerStoppedEvent event) {
