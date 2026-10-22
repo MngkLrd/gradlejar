@@ -25,7 +25,7 @@ public final class MedicalAction {
             case HEMOSTATIC_GEL, TOURNIQUET -> state.bleeding(part) == 2;
             case SPLINT, FRACTURE_BRACE, BONE_MENDER -> state.fractured(part);
             case MEDKIT, FIELD_MEDKIT -> state.health(part) < part.maximum;
-            case STERILE_PATCH, COMPACT_MEDKIT ->
+            case RAG_DRESSING, STERILE_PATCH, COMPACT_MEDKIT ->
                     state.health(part) > 0 && state.health(part) < part.maximum;
             case TRAUMA_KIT ->
                     state.health(part) < part.maximum || state.bleeding(part) > 0 || state.fractured(part);
@@ -53,7 +53,7 @@ public final class MedicalAction {
                 }
                 yield target;
             }
-            case STERILE_PATCH, COMPACT_MEDKIT -> {
+            case RAG_DRESSING, STERILE_PATCH, COMPACT_MEDKIT -> {
                 BodyPart result = null;
                 float lowest = 1f;
                 for (BodyPart zone : BodyPart.values()) {
@@ -83,6 +83,7 @@ public final class MedicalAction {
             case SPLINT -> state.setFractured(part, false);
             case MEDKIT -> state.heal(part, 25);
 
+            case RAG_DRESSING -> state.heal(part, 4);
             case STERILE_PATCH -> state.heal(part, 10);
             case COMPRESSION_WRAP -> {
                 state.stopBleeding(part);
@@ -106,13 +107,11 @@ public final class MedicalAction {
             case FIELD_MEDKIT -> {
                 state.heal(part, 42);
                 state.stopBleeding(part);
-                player.heal(2f);
             }
             case TRAUMA_KIT -> {
                 state.heal(part, 60);
                 state.stopBleeding(part);
                 state.setFractured(part, false);
-                player.heal(6f);
             }
             case SURGICAL_KIT -> {
                 state.heal(part, 35);

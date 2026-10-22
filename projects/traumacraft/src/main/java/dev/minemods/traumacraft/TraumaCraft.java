@@ -3,6 +3,7 @@ package dev.minemods.traumacraft;
 import dev.minemods.traumacraft.client.ClientEvents;
 import dev.minemods.traumacraft.command.TraumaCommands;
 import dev.minemods.traumacraft.event.TraumaEvents;
+import dev.minemods.traumacraft.health.VitalityBridge;
 import dev.minemods.traumacraft.network.ModNetwork;
 import dev.minemods.traumacraft.registry.ModAttachments;
 import dev.minemods.traumacraft.registry.ModCreativeTabs;
@@ -23,6 +24,7 @@ public final class TraumaCraft {
         ModCreativeTabs.register(modBus);
         modBus.addListener(ModNetwork::register);
         NeoForge.EVENT_BUS.addListener(TraumaEvents::onDamage);
+        NeoForge.EVENT_BUS.addListener(VitalityBridge::onHeal);
         NeoForge.EVENT_BUS.addListener(TraumaEvents::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(TraumaEvents::onLogin);
         NeoForge.EVENT_BUS.addListener(TraumaEvents::onRespawn);

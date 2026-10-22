@@ -12,6 +12,7 @@ public final class TraumaHud {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.options.hideGui || mc.screen != null
                 || !ClientBodyState.hasReceived()) return;
+        TreatmentRing.render(gui);
         int x = Math.max(3, gui.guiWidth() / 2 - 91 - 64);
         int y = gui.guiHeight() - 65;
         int totalBleeding = 0;

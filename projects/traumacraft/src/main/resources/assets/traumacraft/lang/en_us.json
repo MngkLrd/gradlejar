@@ -51,5 +51,7 @@
   "item.traumacraft.focus_injector": "Focus Injector",
   "jei.traumacraft.focus_injector": "Grants Haste II and Night Vision for 90 seconds.",
   "item.traumacraft.endurance_injector": "Endurance Injector",
-  "jei.traumacraft.endurance_injector": "Grants Speed I and Jump Boost II for 60 seconds."
+  "jei.traumacraft.endurance_injector": "Grants Speed I and Jump Boost II for 60 seconds.",
+  "item.traumacraft.rag_dressing": "Improvised Dressing",
+  "jei.traumacraft.rag_dressing": "Cheap dressing made from paper and string. Restores 4 local HP to a damaged living body part (not 0 HP). Takes 1.5 seconds to apply."
 }

@@ -51,5 +51,7 @@
   "item.traumacraft.focus_injector": "Инъектор концентрации",
   "jei.traumacraft.focus_injector": "Спешка II и Ночное зрение на 90 секунд.",
   "item.traumacraft.endurance_injector": "Инъектор выносливости",
-  "jei.traumacraft.endurance_injector": "Скорость I и Прыгучесть II на 60 секунд."
+  "jei.traumacraft.endurance_injector": "Скорость I и Прыгучесть II на 60 секунд.",
+  "item.traumacraft.rag_dressing": "Самодельная повязка",
+  "jei.traumacraft.rag_dressing": "Дешёвая повязка из бумаги и нити. Восстанавливает 4 локальных HP повреждённой части тела; не лечит уничтоженные (0 HP) части. Применение 1,5 секунды."
 }
