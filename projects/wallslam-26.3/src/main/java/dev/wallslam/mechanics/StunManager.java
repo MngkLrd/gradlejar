@@ -3,6 +3,8 @@ package dev.wallslam.mechanics;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import dev.wallslam.config.WallslamConfig;
+
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -10,7 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 
 /**
- * Transient 10-tick movement / targeting stun.
+ * Transient movement stun, preserving targeting and persistent NoAI.
  *
  * NEVER modifies a mob's NoAI flag. Changing NoAI left some mobs
  * permanently frozen after a wall impact in Wallslam 0.3.0.
@@ -30,7 +32,7 @@ public final class StunManager {
 
         restoreLegacyNoAi(mob);
         if (mob.isNoAi()) return; // Respect mapmaker-created immobile mobs.
-        long expires = level.getGameTime() + Math.min(10, durationTicks);
+        long expires = level.getGameTime() + Math.min(40, durationTicks);
         STUN_ENDS.merge(mob, expires, Math::max);
         interrupt(mob);
     }
@@ -65,7 +67,6 @@ public final class StunManager {
         // Stop AI navigation and cancel horizontal velocity, preserving gravity.
         // Do not touch NoAI and do not teleport or clip entities into blocks.
         mob.getNavigation().stop();
-        mob.setTarget(null);
         mob.setDeltaMovement(0.0D, mob.getDeltaMovement().y, 0.0D);
     }
 

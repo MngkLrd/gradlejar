@@ -1,10 +1,13 @@
 package dev.wallslam;
 
+import dev.wallslam.config.WallslamConfig;
 import dev.wallslam.mechanics.ImpactTracker;
 import dev.wallslam.mechanics.StunManager;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
@@ -13,14 +16,15 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
-/** Lightweight, server-authoritative melee wall impact. */
+/** WallSlam 1.0: server-authoritative wall collision bonus for melee hits. */
 @Mod(Wallslam.MOD_ID)
 public final class Wallslam {
     public static final String MOD_ID = "wallslam";
 
-    public Wallslam(IEventBus modBus) {
+    public Wallslam(IEventBus modBus, ModContainer container) {
+        container.registerConfig(ModConfig.Type.SERVER, WallslamConfig.SPEC);
         NeoForge.EVENT_BUS.addListener(Wallslam::onIncomingDamage);
-        NeoForge.EVENT_BUS.addListener(Wallslam::onMeleeHurt);
+        NeoForge.EVENT_BUS.addListener(Wallslam::onMeleeDamage);
         NeoForge.EVENT_BUS.addListener(Wallslam::onKnockback);
         NeoForge.EVENT_BUS.addListener(Wallslam::onEntityTick);
         NeoForge.EVENT_BUS.addListener(Wallslam::onEntityJoin);
@@ -29,11 +33,11 @@ public final class Wallslam {
 
     private static void onIncomingDamage(LivingIncomingDamageEvent event) {
         if (!event.isCanceled())
-            ImpactTracker.onMeleeDamage(event.getEntity(), event.getSource(), event.getAmount());
+            ImpactTracker.prepareMeleeHit(event.getEntity(), event.getSource(), event.getAmount());
     }
 
-    private static void onMeleeHurt(LivingDamageEvent.Pre event) {
-        ImpactTracker.confirmMeleeDamage(event.getEntity(), event.getSource(), event.getNewDamage());
+    private static void onMeleeDamage(LivingDamageEvent.Pre event) {
+        ImpactTracker.confirmMeleeHit(event.getEntity(), event.getSource(), event.getNewDamage());
     }
 
     private static void onKnockback(LivingKnockBackEvent event) {
@@ -42,7 +46,8 @@ public final class Wallslam {
     }
 
     private static void onEntityTick(EntityTickEvent.Post event) {
-        if (event.getEntity() instanceof LivingEntity living) ImpactTracker.tick(living);
+        if (event.getEntity() instanceof LivingEntity living)
+            ImpactTracker.tick(living);
     }
 
     private static void onEntityJoin(EntityJoinLevelEvent event) {
@@ -51,5 +56,7 @@ public final class Wallslam {
 
     private static void onEntityLeave(EntityLeaveLevelEvent event) {
         StunManager.onEntityLeave(event.getEntity());
+        if (event.getEntity() instanceof LivingEntity living)
+            ImpactTracker.onEntityLeave(living);
     }
 }
