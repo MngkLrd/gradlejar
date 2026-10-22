@@ -32,6 +32,9 @@ public class Bearback {
     public static final Supplier<Item> BLACK_BEAR_EGG=ITEMS.register("black_bear_spawn_egg",
             ()->new SpawnEggItem(new Item.Properties().spawnEgg(BLACK_BEAR.get())));
 
+    public static final Supplier<Item> SADDLEBAGS=ITEMS.register("saddlebags",
+            ()->new Item(new Item.Properties().stacksTo(16)));
+
     public Bearback(IEventBus bus){
         ENTITIES.register(bus);ITEMS.register(bus);
         bus.addListener(Bearback::attributes);
@@ -42,6 +45,7 @@ public class Bearback {
         NeoForge.EVENT_BUS.addListener(BearEvents::tick);
         NeoForge.EVENT_BUS.addListener(BearEvents::changeTarget);
         NeoForge.EVENT_BUS.addListener(BearEvents::track);
+        NeoForge.EVENT_BUS.addListener(BearCargo::onDrops);
         if(net.neoforged.fml.loading.FMLEnvironment.getDist()==net.neoforged.api.distmarker.Dist.CLIENT)
             dev.bearback.client.ClientHooks.register(bus);
     }
@@ -56,5 +60,6 @@ public class Bearback {
     }
     private static void creative(BuildCreativeModeTabContentsEvent e){
         if(e.getTabKey().equals(CreativeModeTabs.SPAWN_EGGS))e.accept(BLACK_BEAR_EGG.get());
+        if(e.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES))e.accept(SADDLEBAGS.get());
     }
 }

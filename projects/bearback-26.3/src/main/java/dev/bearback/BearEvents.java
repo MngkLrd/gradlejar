@@ -19,11 +19,14 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import java.util.UUID;
 
 public final class BearEvents {
-    private static final String OWNER="BearbackOwner",SADDLED="BearbackSaddled",
+    private static final String OWNER="BearbackOwner",SADDLED="BearbackSaddled",BAGS="BearbackBags",
             LAST_SWIPE="BearbackSwipe",STAND_UNTIL="BearbackStandUntil";
     private BearEvents(){}
 
     public static boolean isSaddled(PolarBear b){return b.getPersistentData().getBooleanOr(SADDLED,false);}
+    public static boolean hasBags(PolarBear bear){
+        return bear.getPersistentData().getBooleanOr(BAGS,false);
+    }
     private static UUID ownerId(PolarBear b){
         String id=b.getPersistentData().getStringOr(OWNER,"");
         try {return UUID.fromString(id);}catch(IllegalArgumentException x){return null;}
@@ -39,7 +42,7 @@ public final class BearEvents {
         boolean tamed=ownerId(bear)!=null;
         boolean fish=held.is(Items.COD)||held.is(Items.SALMON);
         if(!tamed&&!fish||tamed&&!ownedBy(bear,p))return;
-        if(tamed&&!fish&&!held.is(Items.SADDLE)&&!held.is(Items.SHEARS)&&!held.isEmpty())return;
+        if(tamed&&!fish&&!held.is(Items.SADDLE)&&!held.is(Items.SHEARS)&&!held.is(Bearback.SADDLEBAGS.get())&&!held.isEmpty())return;
         if(bear.isBaby())return;
         e.setCanceled(true);e.setCancellationResult(InteractionResult.SUCCESS);
         if(p.level().isClientSide())return;
@@ -50,6 +53,13 @@ public final class BearEvents {
             if(p.level() instanceof ServerLevel world)
                 world.sendParticles(good?ParticleTypes.HEART:ParticleTypes.SMOKE,
                     bear.getX(),bear.getY()+1.4,bear.getZ(),7,.6,.4,.6,.01);
+        } else if(held.is(Bearback.SADDLEBAGS.get())&&!hasBags(bear)){
+            bear.getPersistentData().putBoolean(BAGS,true);
+            BearNetwork.sync(bear);
+            if(!p.getAbilities().instabuild)held.shrink(1);
+            bear.level().playSound(null,bear.blockPosition(),SoundEvents.HORSE_SADDLE.value(),SoundSource.NEUTRAL,.8F,1.25F);
+        } else if(held.isEmpty()&&p.isShiftKeyDown()&&hasBags(bear)){
+            if(p instanceof ServerPlayer player)BearCargo.open(player,bear);
         } else if(fish){
             if(bear.getHealth()<bear.getMaxHealth()){
                 bear.heal(5);if(!p.getAbilities().instabuild)held.shrink(1);
