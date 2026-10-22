@@ -24,7 +24,11 @@ with tarfile.open(fileobj=io.BytesIO(lzma.decompress(raw)),mode="r:") as arc:
 if patch is None:raise SystemExit("Missing generator patch")
 # 0.5.3 CI patched away a deprecated wayfinding comment. Apply that one call change
 # by exact text replacement rather than relying on its obsolete diff context.
-patch=re.sub(rb"^@@ -85,7 \\+88,7 @@.*?(?=^@@ |\\Z)",b"",patch,flags=re.MULTILINE|re.DOTALL)
+hunk=b"@@ -85,7 +88,7 @@"
+if patch.count(hunk)!=1:raise SystemExit("Missing legacy route hunk")
+start=patch.index(hunk)
+stop=patch.index(b"@@ -166,32 +169,6 @@",start+len(hunk))
+patch=patch[:start]+patch[stop:]
 check=subprocess.run(["patch","--dry-run","--fuzz=0","-p1"],input=patch,cwd=root,capture_output=True)
 if check.returncode:
     raise SystemExit("Room generator source conflict:\n"+check.stdout.decode()+check.stderr.decode())
