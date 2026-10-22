@@ -6,6 +6,6 @@
   "java": "25",
   "gradle": "9.2.1",
   "jar_glob": "snowleopard-26.2-neoforge-1.0.0.jar",
-  "minimum_loader_version": "26.2.0.0",
+  "minimum_loader_version": "26.2.0.93",
   "compile_loader_version": "26.2.0.93"
 }
