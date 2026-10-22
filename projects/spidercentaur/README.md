@@ -20,6 +20,9 @@ Minecraft 1.21.1 • NeoForge • Java 21.
 
 ## Build
 
+The build workflow selects only projects changed in the push, keeping independent mod CI isolated.
+
+
 Run `gradle clean build`. Output at `build/libs/spidercentaur-1.21.1-0.2.1.jar`.
 Building from *source* also requires Python 3 and FFmpeg on PATH to generate the two Ogg assets. The GitHub Actions runner performs this generation automatically. The installed compiled JAR requires neither.
 

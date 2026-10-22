@@ -5,6 +5,7 @@ The GitHub push event payload enumerates changed paths without requiring git his
 """
 import json
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -13,7 +14,17 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def changed_paths_from_push():
     event_path = os.environ.get("GITHUB_EVENT_PATH", "")
-    if os.environ.get("GITHUB_EVENT_NAME") != "push" or not event_path:
+    if os.environ.get("GITHUB_EVENT_NAME") != "push":
+        return None
+    # Use the checked-out commit's real diff, not the GitHub event's
+    # sometimes missing 'commits[].modified' lists. Plan job fetches depth=2.
+    diff = subprocess.run(
+        ["git", "diff", "--name-only", "HEAD^", "HEAD"],
+        cwd=ROOT, capture_output=True, text=True, check=False
+    )
+    if diff.returncode == 0 and diff.stdout.strip():
+        return sorted(set(diff.stdout.splitlines()))
+    if not event_path:
         return None
     try:
         event = json.loads(Path(event_path).read_text(encoding="utf8"))

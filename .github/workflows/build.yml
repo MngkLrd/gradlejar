@@ -22,6 +22,8 @@ jobs:
       project_dirs: ${{ steps.select.outputs.project_dirs }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - id: select
         env:
           PROJECT_DIR: ${{ github.event_name == 'workflow_dispatch' && inputs.project_dir || '' }}
