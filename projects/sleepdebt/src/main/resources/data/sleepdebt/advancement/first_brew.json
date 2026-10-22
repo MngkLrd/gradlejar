@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "id": "sleepdebt:coffee"
+    },
+    "title": {
+      "translate": "advancements.sleepdebt.first_brew.title"
+    },
+    "description": {
+      "translate": "advancements.sleepdebt.first_brew.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "sleepdebt:first_camp",
+  "criteria": {
+    "coffee": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sleepdebt:coffee"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "coffee"
+    ]
+  ]
+}

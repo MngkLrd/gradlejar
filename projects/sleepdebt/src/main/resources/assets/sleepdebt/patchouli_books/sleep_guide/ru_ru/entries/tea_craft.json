@@ -1,0 +1,23 @@
+{
+  "name": "Травяные настои",
+  "category": "sleepdebt:stimulants",
+  "icon": "sleepdebt:herbal_tea",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Высуши папоротник в печи. Сушёные травы можно заварить в медной кофеварке с водой и углём. В результате получится травяной чай."
+    },
+    {
+      "type": "patchouli:smelting",
+      "recipe": "sleepdebt:dried_herbs"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:bitter_tonic"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:dream_tea"
+    }
+  ]
+}

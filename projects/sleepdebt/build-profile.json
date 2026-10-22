@@ -1,9 +1,9 @@
 {
   "slug": "sleepdebt",
-  "version": "2.3.0-alpha.2",
+  "version": "2.4.0-alpha.1",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "sleepdebt-1.21.1-2.3.0-alpha.2.jar"
+  "jar_glob": "sleepdebt-1.21.1-2.4.0-alpha.1.jar"
 }

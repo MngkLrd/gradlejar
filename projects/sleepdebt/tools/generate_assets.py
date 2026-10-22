@@ -287,3 +287,100 @@ png+=echunk(b"IEND",b"")
 (ENTITY_DIR/"sleepless.png").write_bytes(png)
 print("Generated Sleepless skin",W,H)
 
+
+
+# Sleep Debt 2.4: high-detail, hard-edged sprites and original stitched block textures.
+# Everything here is deterministic, in the original 16x16 native pixel resolution.
+OUT=Path("src/main/resources/assets/sleepdebt/textures/item")
+OUT.mkdir(parents=True,exist_ok=True)
+def pixel_sprite(name, painter):
+    pix=[["." for _ in range(16)] for _ in range(16)]
+    palette={"X":"#30282a","D":"#59443a","C":"#88674f","L":"#bf966c",
+      "H":"#ead1a1","S":"#8d9986","V":"#665e87","Q":"#ad91bb",
+      "G":"#587a50","F":"#8ca45f","W":"#e6d8ba","B":"#3b424e"}
+    def put(x,y,k):
+        if 0<=x<16 and 0<=y<16:pix[y][x]=k
+    def fill(a,b,c,d,k):
+        for yy in range(b,d+1):
+            for xx in range(a,c+1):put(xx,yy,k)
+    painter(put,fill)
+    save(name,["".join(row) for row in pix],palette)
+
+def herbs(p,f):
+    f(7,2,8,13,"D")
+    for x,y in ((5,7),(9,7),(4,9),(10,9),(5,4),(9,3)):
+        f(x,y,x+2,y+2,"X");f(x+1,y,x+2,y+1,"G");p(x+1,y+1,"F")
+    f(6,12,9,13,"C"); f(7,13,8,14,"H")
+pixel_sprite("dried_herbs",herbs)
+
+def crystal(p,f):
+    f(7,1,8,2,"H");f(6,3,9,10,"X")
+    f(7,3,8,11,"V");f(6,5,6,10,"Q");f(9,6,9,10,"B")
+    f(7,12,8,14,"X");p(7,8,"H");p(8,4,"H")
+    for x,y in ((3,5),(12,7),(11,2)):p(x,y,"Q")
+pixel_sprite("dream_shard",crystal)
+
+def mug(p,f,liquid,band):
+    f(3,5,11,12,"X");f(4,6,10,12,"W")
+    f(5,5,9,6,liquid);f(4,9,10,9,band)
+    f(11,7,13,10,"X");f(12,8,12,9,"W")
+    f(5,13,10,13,"D")
+    p(6,2,"W");p(7,1,"H");p(10,2,"W");p(9,3,"S")
+pixel_sprite("herbal_tea",lambda p,f:mug(p,f,"G","F"))
+pixel_sprite("dream_tea",lambda p,f:mug(p,f,"V","Q"))
+pixel_sprite("caramel_coffee",lambda p,f:mug(p,f,"D","L"))
+
+def tonic(p,f):
+    f(6,2,9,3,"X");f(7,2,8,2,"C")
+    f(5,4,10,13,"X");f(6,5,9,12,"B")
+    f(6,7,9,10,"G");f(7,8,8,8,"F")
+    f(6,11,9,11,"L");p(7,5,"W");p(8,12,"S")
+pixel_sprite("bitter_tonic",tonic)
+
+def biscuit(p,f):
+    f(3,5,11,12,"X");f(4,4,10,12,"C")
+    f(5,5,10,10,"L")
+    for x,y in ((5,7),(8,5),(9,9),(6,11),(10,7)):
+        p(x,y,"D");p(x+1,y,"X")
+    p(4,8,"H");p(7,10,"H");p(9,6,"H")
+pixel_sprite("cocoa_biscuit",biscuit)
+
+OUT=Path("src/main/resources/assets/sleepdebt/textures/block")
+OUT.mkdir(parents=True,exist_ok=True)
+def block_cluster(name, palette, seed, variant):
+    rows=[]
+    shades=list(palette.keys())
+    for y in range(16):
+        rr=[]
+        for x in range(16):
+            k=(x//3+seed*3+y//3*5)%7
+            c=shades[0] if k<4 else shades[1]
+            if variant=="canvas":
+                if x%5==0:c=shades[2]
+                if (y%7==0 and 2<x<14):c=shades[3]
+            elif variant=="fabric":
+                if y in (3,11):c=shades[2]
+                if x%4==0 and y%2==0:c=shades[3]
+            elif variant=="metal":
+                if x in (1,2,12,13):c=shades[2]
+                if (x+y)%11==0:c=shades[3]
+            elif variant=="screen":
+                if 3<x<12 and 4<y<11:c=shades[2] if (x+y)%5 else shades[3]
+                if y in (2,13):c=shades[1]
+            elif variant=="weave":
+                if (x+y)%5==0 or (x-y)%7==0:c=shades[2]
+                if (x*y)%11==0:c=shades[3]
+            elif variant=="lamp":
+                if 3<=x<=12 and 3<=y<=12:c=shades[2]
+                if (x+y)%4==0 and 5<x<11:c=shades[3]
+            rr.append(c)
+        rows.append("".join(rr))
+    save(name,rows,palette)
+block_cluster("copper_machine",{"D":"#724632","C":"#946344","L":"#bd8858","H":"#dbaf73"},2,"metal")
+block_cluster("iron_rim",{"D":"#717477","C":"#9b9a99","L":"#c5c0b3","H":"#e1dbcc"},3,"metal")
+block_cluster("coffee_screen",{"D":"#31282d","C":"#524444","L":"#72594a","H":"#d2ac76"},4,"screen")
+block_cluster("stitched_fabric",{"D":"#683d40","C":"#895354","L":"#b47e70","H":"#d1a89a"},2,"fabric")
+block_cluster("camp_canvas",{"D":"#4c5743","C":"#687c56","L":"#91a67b","H":"#b4bea0"},5,"canvas")
+block_cluster("rest_lamp",{"D":"#9d7246","C":"#c3965d","L":"#f6ce85","H":"#ffe8b0"},3,"lamp")
+block_cluster("dream_woven",{"D":"#413541","C":"#615166","L":"#9f8298","H":"#cab2bf"},2,"weave")
+print("Sleep Debt 2.4: extra sprite and block textures generated")

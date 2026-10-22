@@ -28,6 +28,30 @@ public final class SleepEngine {
   PacketDistributor.sendToPlayer(p,new SleepStatusPayload(read(t,"debt"),read(t,"mask"),read(t,"crash"),read(t,"caffeine"),read(t,"fatigue"),read(t,"stress")));
  }
  public static int getDebt(ServerPlayer p){return read(data(p),"debt");}
+ public static int getFatigue(ServerPlayer p){return read(data(p),"fatigue");}
+ public static int getStress(ServerPlayer p){return read(data(p),"stress");}
+ public static int getCaffeine(ServerPlayer p){return read(data(p),"caffeine");}
+ public static void setNeeds(ServerPlayer p,int debt,int fatigue,int stress){
+  CompoundTag t=data(p);
+  t.putInt("debt",Math.max(0,Math.min(1000,debt)));
+  t.putInt("fatigue",Math.max(0,Math.min(1000,fatigue)));
+  t.putInt("stress",Math.max(0,Math.min(1000,stress)));
+  save(p,t);sync(p,t);
+ }
+ public static int useDreamcatcher(ServerPlayer p,BlockPos pos){
+  CompoundTag t=data(p);
+  long now=p.serverLevel().getGameTime();
+  if(t.contains("dreamcatcherLast") && now>=t.getLong("dreamcatcherLast") && now-t.getLong("dreamcatcherLast")<3600)return 0;
+  if(pos.distSqr(p.blockPosition())>64)return 0;
+  int removed=Math.min(225,read(t,"stress"));
+  t.putInt("stress",Math.max(0,read(t,"stress")-225));
+  t.putInt("fatigue",Math.max(0,read(t,"fatigue")-80));
+  t.putLong("dreamcatcherLast",now);
+  save(p,t);sync(p,t);
+  p.level().playSound(null,pos,net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME,
+    net.minecraft.sounds.SoundSource.BLOCKS,.6f,1.1f);
+  return removed;
+ }
  public static int restAtCamp(ServerPlayer p,BlockPos pos){
   if(!SleepSettings.ENABLE_CAMP_REST.get())return 0;
   CompoundTag t=data(p);
@@ -35,16 +59,19 @@ public final class SleepEngine {
   if(t.contains("lastCampRest") && now-prev<2400 && now>=prev)return 0;
   // No expensive per-tick scans: the area is inspected only when using a bedroll.
   boolean sheltered=!p.serverLevel().canSeeSky(pos.above());
+  boolean lantern=BlockPos.betweenClosedStream(pos.offset(-4,-2,-4),pos.offset(4,3,4))
+   .anyMatch(q->p.level().getBlockState(q).is(ModBlocks.CAMP_LANTERN.get()));
   boolean campfire=BlockPos.betweenClosedStream(pos.offset(-3,-1,-3),pos.offset(3,2,3))
     .anyMatch(q->p.level().getBlockState(q).is(Blocks.CAMPFIRE)||p.level().getBlockState(q).is(Blocks.SOUL_CAMPFIRE));
   int recovered=campfire?120:75;
   if(sheltered)recovered+=50;
+  if(lantern)recovered+=40;
   boolean pillow=p.getInventory().items.stream().anyMatch(stack->stack.is(ModItems.PILLOW.get()));
   boolean mask=p.getInventory().items.stream().anyMatch(stack->stack.is(ModItems.MASK.get()));
   if(pillow)recovered+=20;
   if(mask)recovered+=15;
   t.putInt("fatigue",Math.max(0,read(t,"fatigue")-recovered*3));
-  t.putInt("stress",Math.max(0,read(t,"stress")-(campfire?220:110)-(mask?75:0)));
+  t.putInt("stress",Math.max(0,read(t,"stress")-(campfire?220:110)-(mask?75:0)-(lantern?110:0)));
   t.putInt("debt",Math.max(0,read(t,"debt")-Math.min(recovered,95)));
   t.putLong("lastCampRest",now);
   save(p,t);sync(p,t);
@@ -63,6 +90,8 @@ public final class SleepEngine {
     if(SleepSettings.SHELTER_BONUS.get()&&!p.level().canSeeSky(p.blockPosition()))recovery=(int)(recovery*1.15);
     if(SleepSettings.MONSTER_PENALTY.get() && !p.level().getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(12)).isEmpty())recovery=(int)(recovery*.85);
     if(read(t,"calm")>0)recovery=(int)(recovery*1.10);
+    if(BlockPos.betweenClosedStream(p.blockPosition().offset(-5,-2,-5),p.blockPosition().offset(5,3,5))
+      .anyMatch(q->p.level().getBlockState(q).is(ModBlocks.DREAMCATCHER.get())))recovery=(int)(recovery*1.18);
     if(slept<85)recovery=Math.min(recovery,180);
     int before=read(t,"debt");
     int after=Math.max(0,before-recovery);
@@ -82,7 +111,7 @@ public final class SleepEngine {
   if(p.tickCount%20==0){
    boolean exerting=p.isSprinting()||p.isSwimming()||p.getAttackStrengthScale(0)<.6f;
    t.putInt("fatigue",Math.max(0,Math.min(1000,read(t,"fatigue")+(exerting?3:-1))));
-   boolean threatened=!p.level().getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(9)).isEmpty();
+   boolean threatened=p.hurtTime>0||!p.level().getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(9)).isEmpty();
    t.putInt("stress",Math.max(0,Math.min(1000,read(t,"stress")+(threatened?4:-2))));
    int mask=read(t,"mask");
    if(mask>0){
@@ -122,7 +151,11 @@ public final class SleepEngine {
    t.putInt("crash",0);
   }else{
    t.putInt("debt",Math.max(0,read(t,"debt")-heal));
-   if(calm>0){t.putInt("calm",6000);t.putInt("stress",Math.max(0,read(t,"stress")-130));}
+   if(calm>0){
+    t.putInt("calm",6000+calm*1800);
+    t.putInt("stress",Math.max(0,read(t,"stress")-130*calm));
+    t.putInt("fatigue",Math.max(0,read(t,"fatigue")-40*calm));
+   }
   }
   save(p,t);sync(p,t);
  }

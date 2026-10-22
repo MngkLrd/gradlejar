@@ -1,0 +1,15 @@
+{
+  "name": "Медная кофеварка",
+  "category": "sleepdebt:crafting",
+  "icon": "sleepdebt:coffee_machine",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Открой интерфейс кофеварки. В первый слот положи ведро воды, во второй молотый кофе или травы, в третий уголь. Через десять секунд результат появится в четвёртом слоте."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:coffee_machine"
+    }
+  ]
+}

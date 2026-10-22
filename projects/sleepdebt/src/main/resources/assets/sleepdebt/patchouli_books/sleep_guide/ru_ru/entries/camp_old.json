@@ -1,0 +1,19 @@
+{
+  "name": "Походный лагерь",
+  "category": "sleepdebt:recovery",
+  "icon": "sleepdebt:camp_bedroll",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Поставь спальник, затем навес и обычный костёр. Нажми ПКМ по спальнику для короткого привала. Подушка и маска для сна в инвентаре усиливают отдых. Есть кулдаун."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:camp_bedroll"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:camp_awning"
+    }
+  ]
+}

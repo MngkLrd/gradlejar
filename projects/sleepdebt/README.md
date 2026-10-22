@@ -1,20 +1,31 @@
-# Sleep Debt 2.3.0-alpha.2 (Minecraft 1.21.1 NeoForge / Java 21)
-## New systems
-- 3D copper coffee maker: 27-slot vanilla-style chest screen. Water bucket slot 1, coffee grounds slot 2, coal slot 3, product slot 4; brewing runs 200 ticks with real server smoke + sound. Ingredients persist, contents drop on machine break.
-- Player-built field camps with bedroll + awning + vanilla campfire. Camp resting has a 2-minute cooldown. Shelter, campfire, pillow and sleep mask improve recovery.
-- Physical fatigue and stress join persistent sleep debt. Sprinting, swimming and nearby monsters affect them. HUD shows all three.
-- Client hallucinations: small peripheral eye shapes and dark eyelid borders under critical fatigue. Non-interactive, server never spawns illusions.
-- The Sleepless: an actual hostile humanoid with custom 64x64 skin, server AI targeting sleep-deprived players, nighttime spawning under low light and daylight retreat.
-- Patchouli in-game guide pages for camps, brewing and night terrors.
-- Jade hints for beds/bedroll and coffee maker; standard recipes accessible in JEI and EMI.
+# Sleep Debt 2.4.0-alpha.1 — Field Survival Expansion
+
+**Minecraft:** 1.21.1 · **Loader:** NeoForge · **Java:** 21 · **Gradle:** 9.2.1
+
+## Features
+- Three persistent stats: Sleep Debt, Fatigue, Stress. Client-synced native survival HUD.
+- New four-slot copper coffee maker with native-themed GUI, 200-tick progress, ingredients, coal/charcoal fuel, output-only slot and inventory drops on break.
+- Brewing coffee and herbal tea. Dried herbs from ferns. Caramel coffee, dream tea, bitter tonic, cocoa biscuit and Dream Shard.
+- New 3D blocks: copper coffee maker, camp bedroll, camp awning, Rest Lantern and Dreamcatcher.
+- Bedroll recovery from shelter, fire, lantern, pillow and mask, with cooldown. Dreamcatcher provides a stress-recovery interaction and bed bonus.
+- Night hallucinations: native pixel shadow silhouettes and local soul particles on the client. Configurable off.
+- The Sleepless mob: hostile only to severely tired players, darkness spawning, daylight retreat, spawn egg and rare Dream Shard loot.
+- Server operator commands: `/sleepdebt status` and `/sleepdebt debug set 950 800 700`.
+- Patchouli guide EN/RU and progression advancements, with JEI / EMI and Jade metadata.
+- Original 16x16 pixel sprite generator for item and block textures and humanoid skin.
+
 ## Dependencies
-NeoForge 21.1.x + Java 21 + JEI, EMI, Jade and Patchouli. Comforts optional, no direct API override.
+Required: NeoForge 21.1.x; JEI, EMI and Jade on client; Jade and Patchouli according to mod metadata. Comforts is optional via vanilla sleep observation.
+
 ## Build
+```bash
 gradle clean build
-build/libs/sleepdebt-1.21.1-2.3.0-alpha.2.jar
-## Limits
-- Camp structures are crafted and placed by the player, not world-generated.
-- Coffee maker UI reuses a vanilla chest layout, not a bespoke four-slot machine screen.
-- Hallucinations are HUD illusions, not fake 3D entities in the world.
-- The Sleepless shares a vanilla humanoid animation rig.
-- Tested through CI compilation and JAR verification; dedicated-server/client runtime tests pending.
+```
+Expected JAR: `build/libs/sleepdebt-1.21.1-2.4.0-alpha.1.jar`
+
+## Testing
+Read `CONTENT_2_4.md`. This CI tests Gradle compile and JAR structure only. Test dedicated server, client, and modpack compatibility manually. The camp is player-built, not worldgen. The Sleepless shares a vanilla zombie humanoid rig. Halo/hallucinations are client effects, not interactive mobs.
+
+## Persistence
+Old item and block IDs are preserved. Player state remains under NBT `sleepdebt_v2`. Old world compatibility is not yet verified in runtime.
+

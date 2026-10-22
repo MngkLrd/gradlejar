@@ -95,16 +95,6 @@ jobs:
         run: |
           python3 tools/unpack_screenshotmanager.py
           python3 tools/port_screenshotmanager_26x.py "${{ matrix.project_dir }}"
-      - name: Restore Screenshot Manager Fabric sources
-        if: startsWith(matrix.project_dir, 'projects/screenshotmanagerfabric')
-        run: |
-          python3 tools/unpack_screenshotmanager.py
-          if [[ "${{ matrix.project_dir }}" == "projects/screenshotmanagerfabric262" ]]; then
-            python3 tools/port_screenshotmanager_26x.py projects/screenshotmanager262
-          elif [[ "${{ matrix.project_dir }}" == "projects/screenshotmanagerfabric263" ]]; then
-            python3 tools/port_screenshotmanager_26x.py projects/screenshotmanager263
-          fi
-          python3 tools/port_screenshotmanager_fabric.py "${{ matrix.project_dir }}"
       - name: Validate profile
         id: profile
         env:

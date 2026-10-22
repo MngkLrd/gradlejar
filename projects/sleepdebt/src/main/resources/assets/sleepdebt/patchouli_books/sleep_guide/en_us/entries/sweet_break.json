@@ -1,0 +1,19 @@
+{
+  "name": "Sweet Breaks",
+  "category": "sleepdebt:crafting",
+  "icon": "sleepdebt:cocoa_biscuit",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Your expedition provisions now include cocoa biscuits and a caramel coffee. Biscuits restore hunger, while caramel coffee is a flavorful stimulant with longer coverage."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:cocoa_biscuit"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:caramel_coffee"
+    }
+  ]
+}

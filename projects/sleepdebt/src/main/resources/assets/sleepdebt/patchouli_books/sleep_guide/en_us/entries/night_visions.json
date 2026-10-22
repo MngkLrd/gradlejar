@@ -1,0 +1,15 @@
+{
+  "name": "Night Visions",
+  "category": "sleepdebt:fatigue",
+  "icon": "minecraft:phantom_membrane",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "At severe sleep debt your perception changes. Small silhouettes flicker near the edge of your sight. They are not real mobs. Your controls and hitboxes remain untouched."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Strong exhaustion can attract The Sleepless in dark areas. Carry a light, build a sheltered camp, or find a bed. The Sleepless will retreat from very bright environments."
+    }
+  ]
+}

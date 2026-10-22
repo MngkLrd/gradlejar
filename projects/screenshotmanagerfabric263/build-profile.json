@@ -1,9 +1,0 @@
-{
-  "slug": "screenshotmanager",
-  "version": "0.2.0-fabric-26.3",
-  "minecraft": "26.3",
-  "loader": "fabric",
-  "java": "25",
-  "gradle": "9.7.0",
-  "jar_glob": "screenshotmanager-0.2.0-fabric-26.3.jar"
-}

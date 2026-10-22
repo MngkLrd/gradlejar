@@ -1,10 +1,10 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "blanket": "minecraft:block/red_wool",
+    "blanket": "sleepdebt:block/stitched_fabric",
     "edge": "minecraft:block/brown_wool",
     "pillow": "minecraft:block/white_wool",
-    "seam": "minecraft:block/gray_wool"
+    "seam": "sleepdebt:block/stitched_fabric"
   },
   "elements": [
     {
@@ -107,44 +107,12 @@
       "from": [
         2,
         3,
-        10
-      ],
-      "to": [
-        14,
-        3.6,
         11
       ],
-      "faces": {
-        "north": {
-          "texture": "#seam"
-        },
-        "south": {
-          "texture": "#seam"
-        },
-        "east": {
-          "texture": "#seam"
-        },
-        "west": {
-          "texture": "#seam"
-        },
-        "up": {
-          "texture": "#seam"
-        },
-        "down": {
-          "texture": "#seam"
-        }
-      }
-    },
-    {
-      "from": [
-        2,
-        3,
-        13
-      ],
       "to": [
         14,
         3.6,
-        14
+        12
       ],
       "faces": {
         "north": {
@@ -181,9 +149,9 @@
         0
       ],
       "scale": [
-        0.65,
-        0.65,
-        0.65
+        0.72,
+        0.72,
+        0.72
       ]
     },
     "ground": {
@@ -198,35 +166,6 @@
         0.7,
         0.7,
         0.7
-      ]
-    },
-    "thirdperson_righthand": {
-      "rotation": [
-        75,
-        45,
-        0
-      ],
-      "translation": [
-        0,
-        2.5,
-        0
-      ],
-      "scale": [
-        0.375,
-        0.375,
-        0.375
-      ]
-    },
-    "firstperson_righthand": {
-      "rotation": [
-        0,
-        45,
-        0
-      ],
-      "scale": [
-        0.4,
-        0.4,
-        0.4
       ]
     }
   }
