@@ -27,6 +27,7 @@ Expected output: `build/libs/cowardlymobs-1.21.1-0.1.0.jar`.
 5. Spawn 3–4 bow skeletons 8–12 blocks apart with a shared player target; watch them collect into a loose firing group without stacking on one coordinate.
 6. Confirm skeletons still shoot when not repositioning, and melee wither skeletons keep their vanilla attacks.
 7. Verify reload/chunk reentry does not duplicate goals or crash.
+8. Confirm obstructed paths don't crash the server or permanently disable bow attacks.
 
 All changes are server-side; the mod belongs on the server in multiplayer. Client installation is not required for AI synchronization.
 
