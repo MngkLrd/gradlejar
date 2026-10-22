@@ -1,11 +1,19 @@
-# Void Chisel 1.0.0
+# Void Pickaxe 1.1.0
 
-NeoForge 1.21.1 | Java 21 | Gradle 9.2.1
+Minecraft 1.21.1 · NeoForge 21.1+ · Java 21
 
-Craft with a Nether Star at top center, two netherite ingots on middle-left and middle-right, and two sticks down the center. The chisel removes exactly five bedrock blocks. Bedrock never drops.
+This mod upgrades the original Void Chisel item into **Void Pickaxe**. Its registry ID stays `voidchisel:void_chisel` to avoid breaking existing save inventories.
 
-Recipe:
-```
+- A **real PickaxeItem** with Netherite-tier ordinary block mining.
+- Bedrock breaks after holding the attack key for 8 server ticks (about 0.4 s).
+- Mining cracks appear while holding. Releasing, switching targets, or losing line of sight cancels progress.
+- Each successfully destroyed bedrock block consumes one of five durability points. Bedrock never drops.
+- The durability bar is shown even when unused, and the tooltip shows the exact remaining uses.
+- The item is not repairable; ordinary block mining also uses durability.
+- Server checks held tool, permissions, reach, targeting and protection cancellation.
+
+Recipe unchanged:
+```text
  . W .
  N S N
  . S .
@@ -15,10 +23,16 @@ W = Nether Star, N = Netherite Ingot, S = Stick.
 ### Build
 
 `gradle --no-daemon clean build`
-Output: `build/libs/voidchisel-1.21.1-1.0.0.jar`
 
-### Test
+JAR: `build/libs/voidchisel-1.21.1-1.1.0.jar`.
 
-In Survival, hold the chisel and left-click vanilla bedrock. One successful removal consumes one of five charges; no drops. Attempting non-bedrock blocks or protected blocks must not consume charges. Test dedicated server, multiplayer, and claims separately. Successful CI compilation does not replace an in-game test.
+### Manual testing checklist
 
-NeoForge 21.1.197 is used to compile; metadata requires NeoForge 21.1.0 or later. No JEI hard dependency; recipe is standard vanilla crafting.
+- Survival: hold attack on bedrock for ~0.4s; cracks, then block disappears.
+- Release early, change the target, or swap the item: mining stops and cracks clear.
+- After 5 successful bedrock blocks the pickaxe breaks; durability bar is visible on fresh items.
+- Bedrock yields no items or XP. Bedrock is not removed when unheld or out of range.
+- Ordinary stone and ores mine as expected for a Netherite-tier pickaxe (durability also decreases).
+- Try on a dedicated server, near claims, with high latency, and across dimension changes.
+
+Compilation and JAR checks run in GitHub Actions. This is **not** a substitute for running the game.

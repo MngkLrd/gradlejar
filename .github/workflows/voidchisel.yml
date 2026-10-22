@@ -1,4 +1,4 @@
-name: Void Chisel JAR
+name: Void Pickaxe JAR
 
 on:
   push:
@@ -27,36 +27,39 @@ jobs:
       - name: Compile NeoForge mod
         working-directory: projects/voidchisel
         run: gradle --no-daemon --stacktrace clean build
-      - name: Verify jar, recipe and texture
+      - name: Verify jar, recipe, texture and new classes
         working-directory: projects/voidchisel
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import json, zipfile
-          jar = Path('build/libs/voidchisel-1.21.1-1.0.0.jar')
-          assert jar.exists(), 'Missing compiled mod JAR'
+          jar = Path('build/libs/voidchisel-1.21.1-1.1.0.jar')
+          assert jar.exists(), 'Missing compiled JAR'
           with zipfile.ZipFile(jar) as z:
               names = set(z.namelist())
               for name in [
                   'META-INF/neoforge.mods.toml',
-                  'dev/voidchisel/BedrockMiningEvents.class',
+                  'dev/voidchisel/VoidPickaxeItem.class',
+                  'dev/voidchisel/BedrockMiningServer.class',
+                  'dev/voidchisel/MiningInputPacket.class',
+                  'dev/voidchisel/client/ClientMiningInput.class',
                   'assets/voidchisel/textures/item/void_chisel.png',
                   'data/voidchisel/recipe/void_chisel.json'
               ]:
-                  assert name in names, f'Missing resource: {name}'
+                  assert name in names, 'Missing: '+name
               recipe = json.loads(z.read('data/voidchisel/recipe/void_chisel.json'))
-              assert recipe['pattern'] == [' W ', 'NSN', ' S '], recipe
+              assert recipe['pattern'] == [' W ', 'NSN', ' S ']
               assert recipe['key']['S']['item'] == 'minecraft:stick'
-          print('Verified compiled JAR, recipe and textures')
+          print('PASS: compiled pickaxe, server/client mining and resources')
           PY
       - name: Publish compiled jar
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          tag="ci-voidchisel-mc1.21.1-v1.0.0-${GITHUB_RUN_NUMBER}"
-          gh release create "$tag" projects/voidchisel/build/libs/voidchisel-1.21.1-1.0.0.jar \
+          tag="ci-voidpickaxe-mc1.21.1-v1.1.0-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" projects/voidchisel/build/libs/voidchisel-1.21.1-1.1.0.jar \
             --target "$GITHUB_SHA" \
-            --title "Void Chisel 1.0.0 | NeoForge 1.21.1" \
-            --notes "Five-use bedrock tool. Crafted with Nether Star, 2 Netherite Ingots and 2 Sticks. Compiled in GitHub Actions; in-game playtest pending." \
+            --title "Void Pickaxe 1.1.0 | NeoForge 1.21.1" \
+            --notes "Pickaxe texture and real PickaxeItem, five-use durability bar, ~8-tick progressive bedrock mining, no bedrock drops. CI verified; in-game test pending." \
             --prerelease
