@@ -27,15 +27,30 @@ public final class BearNetwork {
                     if(player!=null)ctx.enqueueWork(()->BearEvents.ride(player,m.forward,m.strafe,m.jump,m.attack,m.yaw));
                     ctx.setPacketHandled(true);
                 });
-        CHANNEL.registerMessage(1, Saddle.class,
-                (m,b)->{b.writeVarInt(m.id);b.writeBoolean(m.saddled);},
-                b->new Saddle(b.readVarInt(),b.readBoolean()),
+        CHANNEL.registerMessage(1, Equipment.class,
+                (m,b)->{b.writeVarInt(m.id);b.writeBoolean(m.saddled);b.writeBoolean(m.bags);},
+                b->new Equipment(b.readVarInt(),b.readBoolean(),b.readBoolean()),
                 (m,s)->{
                     NetworkEvent.Context ctx=s.get();
                     ctx.enqueueWork(()->net.minecraftforge.fml.DistExecutor.unsafeRunWhenOn(
-                        net.minecraftforge.api.distmarker.Dist.CLIENT,()->()->dev.bearback.client.ClientHooks.syncSaddle(m.id,m.saddled)));
+                        net.minecraftforge.api.distmarker.Dist.CLIENT,()->()->dev.bearback.client.ClientHooks.syncEquipment(m.id,m.saddled,m.bags)));
                     ctx.setPacketHandled(true);
                 });
+        CHANNEL.registerMessage(2, OpenCargo.class,
+                (m,b)->b.writeVarInt(m.entityId),
+                b->new OpenCargo(b.readVarInt()),
+                (m,s)->{
+                    NetworkEvent.Context context=s.get();
+                    ServerPlayer player=context.getSender();
+                    if(player!=null)context.enqueueWork(()->{
+                        if(player.getVehicle() instanceof PolarBear bear && bear.getId()==m.entityId)
+                            BearCargo.open(player,bear);
+                    });
+                    context.setPacketHandled(true);
+                });
+    }
+    public static void openCargo(int entityId) {
+        CHANNEL.sendToServer(new OpenCargo(entityId));
     }
     public static void ride(float forward,float strafe,boolean jump,boolean attack,float yaw){
         CHANNEL.sendToServer(new Ride(forward,strafe,jump,attack,yaw));
@@ -43,12 +58,13 @@ public final class BearNetwork {
     public static void sync(PolarBear bear) {
         if(!bear.level().isClientSide)
             CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(()->bear),
-                    new Saddle(bear.getId(),BearEvents.isSaddled(bear)));
+                    new Equipment(bear.getId(),BearEvents.isSaddled(bear),BearEvents.hasBags(bear)));
     }
     public static void syncTo(PolarBear bear,ServerPlayer player) {
         CHANNEL.send(PacketDistributor.PLAYER.with(()->player),
                 new Saddle(bear.getId(),BearEvents.isSaddled(bear)));
     }
     public record Ride(float forward,float strafe,boolean jump,boolean attack,float yaw){}
-    public record Saddle(int id,boolean saddled){}
+    public record Equipment(int id,boolean saddled,boolean bags){}
+    public record OpenCargo(int entityId){}
 }

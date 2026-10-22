@@ -3,7 +3,7 @@ loaderVersion="[47,)"
 license="MIT"
 [[mods]]
 modId="bearback"
-version="0.1.2"
+version="0.2.2"
 displayName="Bearback"
 authors="Bearback"
 description="Tame and ride polar and black bears, saddles, defense and paw swipe."
