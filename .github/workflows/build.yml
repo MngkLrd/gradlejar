@@ -64,6 +64,11 @@ jobs:
       - name: Restore Pocket Realms 0.5.1 custom sounds
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/unpack_pocketrealms_v051.py
+      - name: Add distorted Pursuer sound effects
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends ffmpeg; fi
+          python3 tools/grime_pocketrealms_audio_v051.py
       - name: Polish Pocket Realms 0.5.1 visuals and portal
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/polish_pocketrealms_v051.py
