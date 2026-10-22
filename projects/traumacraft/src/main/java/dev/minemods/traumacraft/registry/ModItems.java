@@ -2,6 +2,7 @@ package dev.minemods.traumacraft.registry;
 
 import dev.minemods.traumacraft.TraumaCraft;
 import dev.minemods.traumacraft.item.MedicalItem;
+import dev.minemods.traumacraft.item.MedicalPouchItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
@@ -19,6 +20,10 @@ public final class ModItems {
     private static DeferredHolder<Item, Item> supply(String id, int stack) {
         return ITEMS.register(id, () -> new Item(new Item.Properties().stacksTo(stack)));
     }
+    public static final DeferredHolder<Item, Item> MEDICAL_POUCH = ITEMS.register("medical_pouch",
+            () -> new MedicalPouchItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> OVERSIZED_MEDKIT = medical("oversized_medkit", MedicalItem.Type.TRAUMA_KIT, 1);
+
     // 5 newly craftable medical components.
     public static final DeferredHolder<Item, Item> STERILE_FABRIC = supply("sterile_fabric", 64);
     public static final DeferredHolder<Item, Item> HERBAL_EXTRACT = supply("herbal_extract", 32);
@@ -70,7 +75,7 @@ public final class ModItems {
             STERILE_FABRIC, HERBAL_EXTRACT, ANTISEPTIC, SYRINGE_BODY, MEDICAL_POLYMER);
     public static final List<DeferredHolder<Item, Item>> MEDICINE = List.of(
             ANALGESIC_TABLETS, RAG_DRESSING, BANDAGE, SPLINT, MEDKIT, STERILE_PATCH, COMPRESSION_WRAP, HEMOSTATIC_GEL,
-            TOURNIQUET, FRACTURE_BRACE, BONE_MENDER, COMPACT_MEDKIT, FIELD_MEDKIT,
+            TOURNIQUET, FRACTURE_BRACE, BONE_MENDER, COMPACT_MEDKIT, FIELD_MEDKIT, OVERSIZED_MEDKIT, MEDICAL_POUCH,
             TRAUMA_KIT, SURGICAL_KIT, RECOVERY_SERUM, ADRENALINE_INJECTOR,
             GUARDIAN_INJECTOR, FOCUS_INJECTOR, ENDURANCE_INJECTOR);
 

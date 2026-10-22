@@ -8,6 +8,7 @@ import dev.minemods.traumacraft.network.ModNetwork;
 import dev.minemods.traumacraft.registry.ModAttachments;
 import dev.minemods.traumacraft.registry.ModCreativeTabs;
 import dev.minemods.traumacraft.registry.ModItems;
+import dev.minemods.traumacraft.registry.ModMenus;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -21,6 +22,7 @@ public final class TraumaCraft {
         if (FMLEnvironment.dist == Dist.CLIENT) ClientEvents.register(modBus);
         ModAttachments.register(modBus);
         ModItems.register(modBus);
+        ModMenus.register(modBus);
         ModCreativeTabs.register(modBus);
         modBus.addListener(ModNetwork::register);
         NeoForge.EVENT_BUS.addListener(TraumaEvents::onDamage);

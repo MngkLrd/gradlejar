@@ -56,5 +56,10 @@
   "jei.traumacraft.rag_dressing": "Improvised wool dressing. Craft 2 from 1 wool block. Applies in 1 second and restores 4 local HP, less than a Sterile Patch (10 HP). Cannot restore a destroyed body part by itself.",
   "item.traumacraft.analgesic_tablets": "Analgesic Tablets",
   "jei.traumacraft.analgesic_tablets": "Temporary pain relief. Grants Resistance I for 10 seconds and a subtle warm visual effect for 2 minutes. Does not cure fractures or bleeding.",
-  "tooltip.traumacraft.use_time": "Application: %s s"
+  "tooltip.traumacraft.use_time": "Application: %s s",
+  "item.traumacraft.medical_pouch": "Field Medical Pouch",
+  "item.traumacraft.oversized_medkit": "Large Trauma Medkit",
+  "container.traumacraft.medical_pouch": "Field Medical Pouch",
+  "jei.traumacraft.medical_pouch": "Four medical-only inventory cells. Right-click while held to open. A large medkit occupies a 1x2 column inside this pouch.",
+  "jei.traumacraft.oversized_medkit": "Large emergency medkit. Restores 60 local HP, treats bleeding and fractures in one part (5 seconds). Occupies a 1x2 column in a medical pouch. Uses one ordinary slot outside the pouch."
 }
