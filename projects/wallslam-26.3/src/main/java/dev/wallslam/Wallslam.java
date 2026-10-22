@@ -22,7 +22,7 @@ public final class Wallslam {
     public static final String MOD_ID = "wallslam";
 
     public Wallslam(IEventBus modBus, ModContainer container) {
-        container.registerConfig(ModConfig.Type.SERVER, WallslamConfig.SPEC);
+        container.registerConfig(ModConfig.Type.SYNCED, WallslamConfig.SPEC);
         NeoForge.EVENT_BUS.addListener(Wallslam::onIncomingDamage);
         NeoForge.EVENT_BUS.addListener(Wallslam::onMeleeDamage);
         NeoForge.EVENT_BUS.addListener(Wallslam::onKnockback);

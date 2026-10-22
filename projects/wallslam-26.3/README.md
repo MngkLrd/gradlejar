@@ -10,7 +10,7 @@ A lightweight server-authoritative melee wall-impact mod. A successful melee hit
 - Preserve the mob's attack target during the movement stun; never write new NoAI state.
 - Clean up combat state when mobs unload, leave a dimension or die.
 - Material-specific vanilla block particles, along with existing explosion/cloud/spark visuals and impact audio.
-- World/server config `wallslam-server.toml`: damageMultiplier (default 1.0), stunTicks (10), particleMultiplier (1.0), debug (false).
+- World/server config `wallslam-synced.toml`: damageMultiplier (default 1.0), stunTicks (10), particleMultiplier (1.0), debug (false).
 
 ## Build
 
