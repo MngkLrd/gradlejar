@@ -24,7 +24,7 @@ The build workflow selects only projects changed in the push, keeping independen
 
 
 Run `gradle clean build`. Output at `build/libs/spidercentaur-1.21.1-0.2.1.jar`.
-Building from *source* also requires Python 3 and FFmpeg on PATH to generate the two Ogg assets. The GitHub Actions runner performs this generation automatically. The installed compiled JAR requires neither.
+Building from *source* also requires Python 3 and FFmpeg on PATH to generate the two Ogg assets. The GitHub Actions runner installs FFmpeg for this project and performs audio generation automatically. The installed compiled JAR requires neither.
 
 ## Known limitations
 

@@ -55,6 +55,11 @@ jobs:
         with:
           gradle-version: ${{ steps.profile.outputs.gradle }}
           cache-read-only: ${{ github.event_name == 'pull_request' }}
+      - name: Install audio encoder for Spider Centaur
+        if: matrix.project_dir == 'projects/spidercentaur'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg
       - name: Compile production mod
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
