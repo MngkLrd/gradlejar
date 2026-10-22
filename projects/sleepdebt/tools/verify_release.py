@@ -54,7 +54,8 @@ with zipfile.ZipFile(jar) as z:
         raw=data(n)
         if raw[:8]!=b"\x89PNG\r\n\x1a\n":raise ValueError(f"Invalid PNG magic: {n}")
         width,height=struct.unpack(">II",raw[16:24])
-        target=(64,64) if "entity/sleepless.png" in n else (16,16)
+        target=((64,64) if "entity/sleepless.png" in n else
+                (176,166) if "textures/gui/coffee_maker.png" in n else (16,16))
         if (width,height)!=target:raise ValueError(f"{n}: size {(width,height)} not {target}")
     for locale in ("en_us","ru_ru"):
         entries=[n for n in names if f"/patchouli_books/sleep_guide/{locale}/entries/" in n and n.endswith(".json")]

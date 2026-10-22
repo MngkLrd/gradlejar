@@ -33,3 +33,6 @@ Old item and block IDs are preserved. Player state remains under NBT `sleepdebt_
 ## Showcase
 Operator command: `/sleepdebt showcase` creates an isolated demo camp without replacing existing blocks. The coffee maker is supplied with ingredients. `/sleepdebt debug set 950 800 700` rapidly tests fatigue and hallucinations. JEI and EMI have native machine-brewing categories.
 
+
+## Sleep Debt 2.5
+Client-side world-space mirage players with vanilla Steve/Alex geometry, gaze-triggered vanishing and no server entities. Procedural session-only hallucinations. Pixel-perfect GUI atlas. Awning post/roof collision instead of solid invisible cube, compass-oriented coffee maker. Optional Accessories API integration: mask in the face slot confers real camp-rest benefit when equipped. No hard dependency on Accessories.

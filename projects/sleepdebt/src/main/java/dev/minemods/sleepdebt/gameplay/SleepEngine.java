@@ -6,6 +6,8 @@ import dev.minemods.sleepdebt.registry.ModBlocks;
 import dev.minemods.sleepdebt.registry.ModItems;
 import dev.minemods.sleepdebt.registry.ModEntities;
 import dev.minemods.sleepdebt.entity.SleeplessEntity;
+import dev.minemods.sleepdebt.integration.SleepAccessoriesBridge;
+import net.neoforged.fml.ModList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -73,6 +75,7 @@ public final class SleepEngine {
   if(lantern)recovered+=40;
   boolean pillow=p.getInventory().items.stream().anyMatch(stack->stack.is(ModItems.PILLOW.get()));
   boolean mask=p.getInventory().items.stream().anyMatch(stack->stack.is(ModItems.MASK.get()));
+  if(!mask && ModList.get().isLoaded("accessories"))mask=SleepAccessoriesBridge.hasMask(p);
   if(pillow)recovered+=20;
   if(mask)recovered+=15;
   t.putInt("fatigue",Math.max(0,read(t,"fatigue")-recovered*3));
