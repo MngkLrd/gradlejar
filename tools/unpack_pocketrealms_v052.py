@@ -30,4 +30,20 @@ with (root/"README.md").open("a",encoding="utf8") as fh:
              "- Void Pursuer: now extends Monster instead of Zombie and renders a completely new "
              "asymmetric, long-limbed ModelPart mesh (not ZombieModel), with unique 128x128 UV skin "
              "and 0.78 x 2.55 hitbox.\n")
+# Source overlay must use the SAME sound IDs as 0.5.1's two OGG files.
+pursuer=root/"src/main/java/com/kirill/pocketrealms/entity/VoidPursuer.java"
+body=pursuer.read_text(encoding="utf8")
+for old,new in [
+    ("ModSounds.PURSUER_AMBIENT.get()","ModSounds.PURSUER_IDLE.get()"),
+    ("ModSounds.PURSUER_HURT.get()","net.minecraft.sounds.SoundEvents.WARDEN_HURT"),
+    ("ModSounds.PURSUER_ATTACK.get()","net.minecraft.sounds.SoundEvents.WARDEN_DEATH")]:
+    if body.count(old)!=1:raise SystemExit("Missing 0.5.2 sound reference: "+old)
+    body=body.replace(old,new,1)
+if body.count("ModSounds.PURSUER_ATTACK.get()")!=1:raise SystemExit("Missing hit impact sound")
+body=body.replace("ModSounds.PURSUER_ATTACK.get()","net.minecraft.sounds.SoundEvents.WARDEN_ATTACK_IMPACT",1)
+pursuer.write_text(body,encoding="utf8")
+director=root/"src/main/java/com/kirill/pocketrealms/world/RiftThreatDirector.java"
+d=director.read_text(encoding="utf8")
+if d.count("ModSounds.PURSUER_AMBIENT.get()")!=1:raise SystemExit("Missing director sound ref")
+director.write_text(d.replace("ModSounds.PURSUER_AMBIENT.get()","ModSounds.PURSUER_IDLE.get()",1),encoding="utf8")
 print("Pocket Realms 0.5.2 sources restored and client model layers wired.")
