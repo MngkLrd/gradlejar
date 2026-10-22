@@ -2,13 +2,39 @@
   "spider_centaur_ambient": {
     "subtitle": "subtitles.spidercentaur.ambient",
     "sounds": [
-      { "name": "spidercentaur:mob/spider_centaur/ambient", "volume": 0.36, "pitch": 0.94, "attenuation_distance": 12 }
+      {
+        "name": "spidercentaur:mob/spider_centaur/ambient",
+        "volume": 0.68,
+        "pitch": 1,
+        "weight": 1,
+        "attenuation_distance": 14
+      },
+      {
+        "name": "spidercentaur:mob/spider_centaur/ambient_alt",
+        "volume": 0.66,
+        "pitch": 0.98,
+        "weight": 1,
+        "attenuation_distance": 14
+      }
     ]
   },
   "spider_centaur_hurt": {
     "subtitle": "subtitles.spidercentaur.hurt",
     "sounds": [
-      { "name": "spidercentaur:mob/spider_centaur/hurt", "volume": 0.55, "pitch": 0.98, "attenuation_distance": 12 }
+      {
+        "name": "spidercentaur:mob/spider_centaur/hurt",
+        "volume": 0.86,
+        "pitch": 1,
+        "weight": 1,
+        "attenuation_distance": 14
+      },
+      {
+        "name": "spidercentaur:mob/spider_centaur/hurt_alt",
+        "volume": 0.83,
+        "pitch": 1.02,
+        "weight": 1,
+        "attenuation_distance": 14
+      }
     ]
   }
 }

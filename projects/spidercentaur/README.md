@@ -1,34 +1,25 @@
-# Spider Centaur 0.2.1 Alpha
+# Spider Centaur 0.2.2 Alpha
 
-Minecraft 1.21.1 • NeoForge • Java 21.
+Minecraft 1.21.1 / NeoForge / Java 21. Original single-entity spider-skeleton monster.
 
-## 0.2.1 updates
+## Audio redesign 0.2.2
+The original quiet/sandy hiss is replaced with distinctly sharper, threatening audio:
+- Two randomized ambient variants: sudden brittle bone snaps, scraping metallic resonance, unsettling high-frequency squeal; 1.24-1.36 seconds.
+- Two randomized hurt variants: immediate loud bone-breaking transient followed by a short distressed metal rasp; 0.62-0.64 seconds.
+- Audio was synthesized from scratch using deterministic standard-library Python and encoded as 24 kHz mono Ogg/Vorbis using FFmpeg (no third-party samples).
+- Minecraft playback volumes ambient 0.66-0.68 and hurt 0.83-0.86, versus 0.36 / 0.55 in previous version. Intentional dramatic transients, normalized peak -0.6 dBFS.
+- Four variants live inside the JAR. No Python or FFmpeg needed to **play** the mod.
+- Movement particles remain barely visible. All model, red eye, cowboy hat, spawn, damage and AI logic unchanged.
 
-- One faint vanilla `WITCH` purple particle approximately once every 17 ticks **only while moving**. It appears just behind the spider body; no constant smoke cloud, trail emitter, or server packet spam.
-- Two original short procedurally generated sounds: quiet bone clicks / obsidian hiss (ambient), sharper brief brittle hurt.
-- Audio is deterministically generated during the Gradle build from a small Python standard-library script, encoded to Ogg/Vorbis with FFmpeg. Both Ogg files are included in the final JAR; no runtime Python or FFmpeg requirement.
-- The cowboy hat, red eye, obsidian geometry, bow AI, spawn behavior and existing loot remain intact.
-
-## Install/test
-
-1. Remove old `spidercentaur-1.21.1-0.2.0.jar` from your `mods` folder.
-2. Install this `spidercentaur-1.21.1-0.2.1.jar` with NeoForge 21.1.x on Minecraft 1.21.1, Java 21.
-3. Spawn using `/summon spidercentaur:spider_centaur ~ ~ ~`.
-4. Watch the **moving** spider from behind in darkness: extremely sparse violet sparkles at abdomen height.
-5. Enable Minecraft subtitles: listen to the quiet ambient rattle, then hit the mob once to hear the distinct hurt crack.
-6. Verify the sounds and particles vanish when the mob is gone; test dedicated servers and vanilla gameplay.
+## Testing
+1. Remove earlier `spidercentaur` JARs, install `spidercentaur-1.21.1-0.2.2.jar`, NeoForge Minecraft 1.21.1, Java 21.
+2. Summon with `/summon spidercentaur:spider_centaur ~ ~ ~`.
+3. With hostile creature sound slider near 70-100%, listen for ambient snap+scrape.
+4. Strike the entity several times to hear randomized high-impact hit clips. Volume should be strong but should not clip on normal settings.
+5. Confirm particles are still minimal, bow behavior and natural spawns unchanged.
 
 ## Build
-
-The build workflow selects only projects changed in the push, keeping independent mod CI isolated.
-
-
-Run `gradle clean build`. Output at `build/libs/spidercentaur-1.21.1-0.2.1.jar`.
-Building from *source* also requires Python 3 and FFmpeg on PATH to generate the two Ogg assets. The GitHub Actions runner installs FFmpeg for this project and performs audio generation automatically. The installed compiled JAR requires neither.
+`gradle clean build` with Java 21 + Gradle 9.2.1 + Python 3 + FFmpeg on PATH. Build pipeline automatically installs FFmpeg. Output `build/libs/spidercentaur-1.21.1-0.2.2.jar`.
 
 ## Known limitations
-
-- Particle emission respects Minecraft's particle settings; shaders and very dark environments can make the deliberately subtle dust hard to spot.
-
-
-First-pass sound balance and cosmetic placement have not yet been checked inside Minecraft; CI verifies the build and resulting resources.
+Audio mix and sound spatialization should be judged by an in-game listening test; static build/codec checks are not a runtime test.

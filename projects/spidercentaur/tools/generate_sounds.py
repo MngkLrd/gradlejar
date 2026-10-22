@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Reproducible original Ogg/Vorbis creature audio using only Python stdlib + ffmpeg.
+"""Generate original, deliberately sharp/brittle Spider Centaur horror audio.
 
-Produces ambient and hurt Ogg files at the resource paths required by sounds.json.
-This script runs ONLY during Gradle build; the distributed JAR has no runtime dependencies.
+Uses Python stdlib and FFmpeg at build time. Produces deterministic Ogg Vorbis
+assets for NeoForge. No runtime dependencies or sampled third-party audio.
 """
 import math
 import random
@@ -14,87 +14,137 @@ import tempfile
 import wave
 from pathlib import Path
 
-SAMPLE_RATE = 16000
-RNG = random.Random(210121)
+RATE = 24000
+TWOPI = math.tau
 
 
-def lowpass(source, cutoff):
-    ratio = 1.0 - math.exp(-2.0 * math.pi * cutoff / SAMPLE_RATE)
-    state = 0.0
-    result = []
-    for sample in source:
-        state += ratio * (sample - state)
-        result.append(state)
-    return result
+def clamp(x):
+    return max(-1.0, min(1.0, x))
 
 
-def band_noise(length, lo, hi):
-    source = [RNG.uniform(-1.0, 1.0) for _ in range(length)]
-    high = lowpass(source, hi)
-    low = lowpass(high, lo)
-    result = [a - b for a, b in zip(high, low)]
-    rms = math.sqrt(sum(x * x for x in result) / length)
-    return [x / max(0.0001, rms) for x in result]
+def decayed(t, at, speed):
+    return math.exp(-(t - at) * speed) if t >= at else 0.0
 
 
-def envelope(t, start, duration, attack, release):
-    if t < start or t > start + duration:
+def burst(t, at, length, attack=0.001):
+    if t < at or t >= at + length:
         return 0.0
-    return min(1.0, (t - start) / attack, (start + duration - t) / release)
+    d = t - at
+    return min(1.0, d / attack, (at + length - t) / 0.035)
+
+
+def transient(t, at, noise, strength=1.0, pitch=1.0):
+    """A bone snap: near-instant full-spectrum attack + 3 inharmonic rings."""
+    d = t - at
+    if d < 0.0 or d > 0.18:
+        return 0.0
+    # No rounded / sandy attack: sub-millisecond impulse + hard early decay.
+    hit = noise * math.exp(-d * 65) * (1.0 if d > 0.00055 else d / 0.00055)
+    ring = (0.39 * math.sin(TWOPI * 1730 * pitch * d) +
+            0.27 * math.sin(TWOPI * 2870 * pitch * d) +
+            0.19 * math.sin(TWOPI * 4690 * pitch * d)) * math.exp(-d * 29)
+    knock = 0.27 * math.sin(TWOPI * (320 - 130 * d) * d) * math.exp(-d * 37)
+    return (1.15 * hit + ring + knock) * strength
+
+
+def scrape(t, start, length, noise, flavor):
+    """Tight high-frequency scraped-metal howl with nonharmonic movement."""
+    env = burst(t, start, length, 0.016)
+    if env <= 0.0:
+        return 0.0
+    d = t - start
+    # Shifting inharmonic peaks feel strained and uncanny, not musical.
+    f = 1040.0 + flavor * 140 + 620.0 * d / length + 105 * math.sin(d * 13)
+    phase = TWOPI * (f * d + 95 * d * d)
+    harmonic = math.sin(phase) * 0.33 + math.sin(phase * 1.59 + 0.7) * 0.27
+    broken = math.sin(phase * 2.78 + 0.3) * 0.22
+    stutter = 0.7 + 0.3 * max(0.0, math.sin(TWOPI * (20 + flavor * 3) * d))
+    return env * stutter * (0.49 * noise + harmonic + broken)
+
+
+def mix_sample(t, variant, white, bright):
+    """Brittle snap front, rasping high dissonance behind, brief cold tail."""
+    if variant == 'ambient':
+        x = (transient(t, 0.075, bright, 0.78, 1.00) +
+             transient(t, 0.168, bright, 0.66, 1.21) +
+             transient(t, 0.241, bright, 0.48, 0.91) +
+             transient(t, 0.683, bright, 1.05, 1.08))
+        x += 0.69 * scrape(t, 0.30, 0.58, bright, 1)
+        x += 0.29 * scrape(t, 0.79, 0.39, white, 2)
+    elif variant == 'ambient_alt':
+        x = (transient(t, 0.056, bright, 0.96, 1.19) +
+             transient(t, 0.182, bright, 0.89, 0.94) +
+             transient(t, 0.492, bright, 0.66, 1.07) +
+             transient(t, 0.625, bright, 0.86, 1.25))
+        x += 0.83 * scrape(t, 0.23, 0.70, bright, 3)
+    elif variant == 'hurt':
+        x = (transient(t, 0.004, bright, 1.38, 1.15) +
+             transient(t, 0.028, bright, 1.11, 1.44) +
+             transient(t, 0.082, bright, 0.78, 0.93))
+        x += 1.00 * scrape(t, 0.022, 0.44, bright, 4)
+        x += 0.35 * scrape(t, 0.17, 0.25, white, 2)
+    else:  # hurt_alt
+        x = (transient(t, 0.003, bright, 1.43, 0.97) +
+             transient(t, 0.045, bright, 0.99, 1.42) +
+             transient(t, 0.123, bright, 0.85, 1.14))
+        x += 1.1 * scrape(t, 0.015, 0.49, bright, 5)
+    return x
 
 
 def synth(name, seconds):
-    length = int(seconds * SAMPLE_RATE)
-    hiss = band_noise(length, 800, 4600)
-    rattle = band_noise(length, 350, 3900)
-    breath = band_noise(length, 110, 950)
-    out = []
-    for i in range(length):
-        t = i / SAMPLE_RATE
-        if name == "ambient":
-            crack = sum(s * envelope(t, start, dur, 0.004, 0.052)
-                        for start, dur, s in [
-                            (0.12, 0.07, 0.13), (0.27, 0.085, 0.115),
-                            (0.67, 0.07, 0.11), (0.92, 0.060, 0.08)])
-            x = crack * rattle[i]
-            x += 0.064 * hiss[i] * envelope(t, 0.18, 0.74, 0.22, 0.2)
-            x += 0.085 * breath[i] * envelope(t, 0.11, 0.93, 0.15, 0.27)
-            x += 0.042 * math.sin(2 * math.pi * (83 * t + 8 * t * t)) * envelope(t, 0.22, 0.68, 0.09, 0.22)
-        else:
-            x = 0.24 * rattle[i] * envelope(t, 0.01, 0.22, 0.003, 0.16)
-            x += 0.125 * hiss[i] * envelope(t, 0.035, 0.40, 0.013, 0.19)
-            x += 0.077 * math.sin(2 * math.pi * (223 * t - 93 * t * t)) * envelope(t, 0.023, 0.36, 0.01, 0.2)
-        out.append(max(-0.72, min(0.72, math.tanh(x))))
-    return out
+    count = round(seconds * RATE)
+    rng = random.Random(210122 + {'ambient': 0, 'ambient_alt': 17,
+                                  'hurt': 31, 'hurt_alt': 47}[name])
+    # Bright noise is high-passed rather than low-passed: no soft sand rustle.
+    slow = 0.0
+    samples = []
+    for i in range(count):
+        t = i / RATE
+        white = rng.uniform(-1.0, 1.0)
+        slow += 0.11 * (white - slow)
+        bright = (white - slow) * 1.22
+        x = mix_sample(t, name, white, bright)
+        # Light waveshaping adds break-up, but transient stays intelligible.
+        samples.append(math.tanh(1.34 * x))
+    # Dry, short slapback reflections, not a washed-out reverb.
+    for delay_ms, gain in ((49, 0.11), (103, 0.075), (161, 0.045)):
+        delay = round(RATE * delay_ms / 1000)
+        for i in range(delay, count):
+            samples[i] += gain * samples[i - delay]
+    peak = max(1e-7, max(abs(x) for x in samples))
+    return [clamp(0.93 * x / peak) for x in samples]
 
 
 def write_wav(path, values):
-    with wave.open(str(path), "wb") as wav:
+    with wave.open(str(path), 'wb') as wav:
         wav.setnchannels(1)
         wav.setsampwidth(2)
-        wav.setframerate(SAMPLE_RATE)
-        wav.writeframes(b"".join(struct.pack("<h", round(x * 32767)) for x in values))
+        wav.setframerate(RATE)
+        wav.writeframes(b''.join(struct.pack('<h', round(v * 32767)) for v in values))
 
 
 def main():
     if len(sys.argv) != 2:
-        raise SystemExit("Usage: generate_sounds.py OUTPUT_RESOURCE_DIRECTORY")
-    ffmpeg = shutil.which("ffmpeg")
+        raise SystemExit('Usage: generate_sounds.py OUTPUT_RESOURCE_DIRECTORY')
+    ffmpeg = shutil.which('ffmpeg')
     if ffmpeg is None:
-        raise SystemExit("FFmpeg required to build source; packaged JAR has no requirement")
-    out = Path(sys.argv[1]) / "assets/spidercentaur/sounds/mob/spider_centaur"
-    out.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory() as tmp:
-        for name, seconds in [("ambient", 1.25), ("hurt", 0.56)]:
-            wav_path = Path(tmp) / (name + ".wav")
-            write_wav(wav_path, synth(name, seconds))
-            subprocess.run([ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
-                            "-i", str(wav_path), "-c:a", "libvorbis", "-q:a", "2",
-                            str(out / (name + ".ogg"))], check=True)
-            if not (out / (name + ".ogg")).is_file():
-                raise RuntimeError(f"Missing generated Ogg: {name}")
-            print(f"Generated {name}.ogg ({(out / (name + '.ogg')).stat().st_size} bytes)")
+        raise SystemExit('FFmpeg is required only when building from source')
+    dest = Path(sys.argv[1]) / 'assets/spidercentaur/sounds/mob/spider_centaur'
+    dest.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory() as temp:
+        for name, seconds in [('ambient', 1.36), ('ambient_alt', 1.24),
+                              ('hurt', 0.62), ('hurt_alt', 0.64)]:
+            wav = Path(temp) / (name + '.wav')
+            samples = synth(name, seconds)
+            write_wav(wav, samples)
+            output = dest / (name + '.ogg')
+            subprocess.run([ffmpeg, '-hide_banner', '-loglevel', 'error', '-y', '-i', str(wav),
+                            '-c:a', 'libvorbis', '-q:a', '4', str(output)], check=True)
+            if not output.is_file() or output.stat().st_size < 1000:
+                raise RuntimeError(f'Ogg output missing or broken: {output}')
+            rms = math.sqrt(sum(s * s for s in samples) / len(samples))
+            print(f'Generated {output.name} ({output.stat().st_size} bytes, peak 0.93, RMS {rms:.3f})')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

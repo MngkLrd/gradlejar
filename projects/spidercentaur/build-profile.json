@@ -1,9 +1,9 @@
 {
   "slug": "spidercentaur",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "spidercentaur-1.21.1-0.2.1.jar"
+  "jar_glob": "spidercentaur-1.21.1-0.2.2.jar"
 }
