@@ -28,6 +28,8 @@ else:
                 raise SystemExit(f"Unsafe archive member: {member.name}")
             output = PROJECT / member_path
             output.parent.mkdir(parents=True, exist_ok=True)
+            if output.is_file():
+                continue  # Allow separately committed CI fixes to override the base bundle
             with archive.extractfile(member) as fh:
                 output.write_bytes(fh.read())
     print(f"Restored Pocket Realms source project; sha256={digest}")
