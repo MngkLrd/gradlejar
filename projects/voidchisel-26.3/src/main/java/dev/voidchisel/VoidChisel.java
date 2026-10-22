@@ -12,7 +12,7 @@ public final class VoidChisel {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MOD_ID);
     public static final DeferredItem<Item> VOID_CHISEL = ITEMS.registerItem("void_chisel",
             props -> new Item(props.pickaxe(ToolMaterial.NETHERITE, 1.0F, -2.8F)
-                    .durability(5).setNoRepair().rarity(Rarity.EPIC)));
+                    .durability(5).rarity(Rarity.EPIC)));
     public VoidChisel(IEventBus bus) {
         ITEMS.register(bus);
         bus.addListener(VoidChisel::creativeTab);

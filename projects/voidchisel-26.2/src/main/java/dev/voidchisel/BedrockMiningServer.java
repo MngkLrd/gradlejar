@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.HashMap;
@@ -119,7 +119,7 @@ public final class BedrockMiningServer {
 
         BlockState old = level.getBlockState(pos);
         // Protection mods may veto the break. Do not spend charges if blocked.
-        BlockEvent.BreakEvent breakEvent = new BlockEvent.BreakEvent(level, pos, old, player);
+        BreakBlockEvent breakEvent = new BreakBlockEvent(level, pos, old, player);
         NeoForge.EVENT_BUS.post(breakEvent);
         if (breakEvent.isCanceled() || !level.getBlockState(pos).is(Blocks.BEDROCK)) return;
 

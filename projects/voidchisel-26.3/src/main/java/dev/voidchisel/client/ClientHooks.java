@@ -25,7 +25,7 @@ public final class ClientHooks {
         Minecraft mc = Minecraft.getInstance();
         BlockPos next = null;
 
-        if (mc.player != null && mc.level != null && mc.screen == null
+        if (mc.player != null && mc.level != null && mc.gui.screen() == null
                 && mc.options.keyAttack.isDown()
                 && mc.player.getMainHandItem().is(VoidChisel.VOID_CHISEL.get())
                 && mc.hitResult instanceof BlockHitResult hit
