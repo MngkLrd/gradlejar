@@ -33,7 +33,7 @@ jobs:
           python3 - <<'PY'
           import json, zipfile, zlib, struct
           from pathlib import Path
-          jar = Path('build/libs/voidchisel-1.21.1-1.1.1.jar')
+          jar = Path('build/libs/voidchisel-1.21.1-1.1.2.jar')
           assert jar.is_file(), "Compiled JAR missing"
           with zipfile.ZipFile(jar) as z:
               names = set(z.namelist())
@@ -60,16 +60,16 @@ jobs:
                   assert zlib.crc32(typ+chunk) == crc, 'PNG CRC failure'
                   if typ == b'IHDR':
                       w,h,depth,color,_,_,_ = struct.unpack('>IIBBBBB',chunk)
-                      assert (w,h,depth,color) == (16,16,8,6), 'Unexpected texture format'
+                      assert (w,h,depth,color) == (32,32,8,6), 'Unexpected texture format'
                       size = (w,h)
                   elif typ == b'IDAT':
                       pixels.append(chunk)
                   elif typ == b'IEND':
                       break
                   offset += 12 + length
-              assert size == (16,16) and pixels, 'Missing PNG data'
+              assert size == (32,32) and pixels, 'Missing PNG data'
               raw = zlib.decompress(b''.join(pixels))
-              assert len(raw) == 16*(1+16*4), 'Truncated PNG pixels'
+              assert len(raw) == 32*(1+32*4), 'Truncated PNG pixels'
 
               model = json.loads(z.read('assets/voidchisel/models/item/void_chisel.json'))
               assert model['textures']['layer0'] == 'voidchisel:item/void_chisel'
@@ -78,16 +78,16 @@ jobs:
               for language in ['en_us','ru_ru']:
                   lang = json.loads(z.read('assets/voidchisel/lang/'+language+'.json'))
                   assert set(lang.keys()) == {'item.voidchisel.void_chisel'}
-          print('PASS: real compiled JAR; decoded 16x16 image; item model; recipe; clean tooltip')
+          print('PASS: real compiled JAR; decoded 32x32 image; item model; recipe; clean tooltip')
           PY
       - name: Publish compiled jar
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          tag="ci-voidpickaxe-mc1.21.1-v1.1.1-${GITHUB_RUN_NUMBER}"
-          gh release create "$tag" projects/voidchisel/build/libs/voidchisel-1.21.1-1.1.1.jar \
+          tag="ci-voidpickaxe-mc1.21.1-v1.1.2-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" projects/voidchisel/build/libs/voidchisel-1.21.1-1.1.2.jar \
             --target "$GITHUB_SHA" \
-            --title "Void Pickaxe 1.1.1 | NeoForge 1.21.1" \
-            --notes "Fixed corrupted texture, removed unnecessary tooltips, and restored vanilla durability bar behavior. CI validated PNG decode. In-game runtime test pending." \
+            --title "Void Pickaxe 1.1.2 | NeoForge 1.21.1" \
+            --notes "Replaced sprite with approved pickaxe design as validated 32x32 PNG; preserved the existing gameplay and vanilla durability bar behavior. CI validated PNG decode. In-game runtime test pending." \
             --prerelease
