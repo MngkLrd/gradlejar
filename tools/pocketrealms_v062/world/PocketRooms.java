@@ -83,6 +83,8 @@ public final class PocketRooms {
             int x=rx+4+random.nextInt(n-2*(rx+4));
             int z=rz+4+random.nextInt(n-2*(rz+4));
             if(x-rx<=3 && z-rz<=3)continue;
+            // Preserve a boss-sized terminal district in the distant maze quadrant.
+            if (Math.abs(x-29)<=rx+8 && Math.abs(z-29)<=rz+8) continue;
             Room room=new Room(x,z,rx,rz,theme,random.nextBoolean());
             boolean collides=false;
             for(Room other:result.rooms) {
@@ -107,6 +109,8 @@ public final class PocketRooms {
                 }
             }
         }
+        // Ensure at least one reachable candidate can host the final 13x13 arena.
+        open[29][29]=true;
         result.reconnectAll(open);
         return result;
     }
