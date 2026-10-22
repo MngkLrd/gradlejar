@@ -104,6 +104,9 @@ jobs:
       - name: Integrate Pocket Realms 0.6.4 predatory haunting and equipment
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/upgrade_pocketrealms_v064.py
+      - name: Integrate Pocket Realms 0.7.0 multistage and new predators
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/upgrade_pocketrealms_v070.py
       - name: Validate profile
         id: profile
         env:
@@ -142,9 +145,9 @@ jobs:
       - name: Check model, texture and datapack assets
         if: matrix.project_dir == 'projects/openmotion'
         run: python3 projects/openmotion/tools/check_assets.py
-      - name: Verify Pocket Realms 0.6.4 physical JAR artifacts
+      - name: Verify Pocket Realms 0.7.0 stage and custom meshes
         if: matrix.project_dir == 'projects/pocketrealms'
-        run: python3 tools/verify_pocketrealms_v064.py
+        run: python3 tools/verify_pocketrealms_v070.py
       - name: Verify JAR
         id: verify
         env:
