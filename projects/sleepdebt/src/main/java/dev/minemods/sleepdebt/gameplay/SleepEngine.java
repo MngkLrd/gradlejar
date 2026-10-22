@@ -31,6 +31,11 @@ public final class SleepEngine {
  public static int getFatigue(ServerPlayer p){return read(data(p),"fatigue");}
  public static int getStress(ServerPlayer p){return read(data(p),"stress");}
  public static int getCaffeine(ServerPlayer p){return read(data(p),"caffeine");}
+ public static void addStress(ServerPlayer p,int amount){
+  CompoundTag t=data(p);
+  t.putInt("stress",Math.max(0,Math.min(1000,read(t,"stress")+amount)));
+  save(p,t);sync(p,t);
+ }
  public static void setNeeds(ServerPlayer p,int debt,int fatigue,int stress){
   CompoundTag t=data(p);
   t.putInt("debt",Math.max(0,Math.min(1000,debt)));
@@ -183,4 +188,5 @@ public final class SleepEngine {
  }
  private SleepEngine(){}
 }
+
 

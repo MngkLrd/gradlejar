@@ -16,6 +16,7 @@ public final class ClientBootstrap {
   container.registerConfig(ModConfig.Type.CLIENT,ClientSettings.SPEC);
   bus.addListener(ClientBootstrap::onGui);
   bus.addListener(ClientBootstrap::renderers);
+  bus.addListener(ClientBootstrap::layers);
   bus.addListener(ClientBootstrap::screens);
   NeoForge.EVENT_BUS.addListener(ClientHallucinations::tick);
  }
@@ -26,9 +27,13 @@ public final class ClientBootstrap {
  private static void screens(RegisterMenuScreensEvent e){
   e.register(ModMenus.COFFEE.get(),CoffeeScreen::new);
  }
+ private static void layers(EntityRenderersEvent.RegisterLayerDefinitions e){
+  e.registerLayerDefinition(SleeplessModel.LAYER,SleeplessModel::createLayer);
+ }
  private static void renderers(EntityRenderersEvent.RegisterRenderers e){
   e.registerEntityRenderer(ModEntities.SLEEPLESS.get(),SleeplessRenderer::new);
  }
  private ClientBootstrap(){}
 }
+
 
