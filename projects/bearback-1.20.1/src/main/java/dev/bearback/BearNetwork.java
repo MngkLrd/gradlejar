@@ -62,7 +62,7 @@ public final class BearNetwork {
     }
     public static void syncTo(PolarBear bear,ServerPlayer player) {
         CHANNEL.send(PacketDistributor.PLAYER.with(()->player),
-                new Saddle(bear.getId(),BearEvents.isSaddled(bear)));
+                new Equipment(bear.getId(),BearEvents.isSaddled(bear),BearEvents.hasBags(bear)));
     }
     public record Ride(float forward,float strafe,boolean jump,boolean attack,float yaw){}
     public record Equipment(int id,boolean saddled,boolean bags){}
