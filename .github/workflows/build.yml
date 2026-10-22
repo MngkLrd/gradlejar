@@ -78,6 +78,9 @@ jobs:
       - name: Apply Pocket Realms 0.5.3 living nightmare patch
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/apply_pocketrealms_v053.py
+      - name: Restore Pocket Realms 0.6.0 chamber architecture
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/unpack_pocketrealms_v060.py
       - name: Validate profile
         id: profile
         env:
