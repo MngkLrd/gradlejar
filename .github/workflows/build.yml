@@ -84,6 +84,9 @@ jobs:
       - name: Align ceiling nests and room lighting with new height
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/fix_pocketrealms_v060_height.py
+      - name: Restore Screenshot Manager sources
+        if: matrix.project_dir == 'projects/screenshotmanager'
+        run: python3 tools/unpack_screenshotmanager.py
       - name: Validate profile
         id: profile
         env:
