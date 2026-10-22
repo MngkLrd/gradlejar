@@ -30,6 +30,8 @@ tasks.register('generateSleepAssets', Exec) {
 tasks.named('processResources') { dependsOn('generateSleepAssets') }
 
 repositories {
+ maven { name = 'BlameJared'; url = 'https://maven.blamejared.com' }
+ maven { name = 'EMI'; url = 'https://maven.terraformersmc.com/releases/' }
  maven {
   name = 'Modrinth'
   url = 'https://api.modrinth.com/maven'
@@ -37,4 +39,8 @@ repositories {
 }
 dependencies {
  compileOnly 'maven.modrinth:jade:15.10.6+neoforge'
+ compileOnly 'mezz.jei:jei-1.21.1-common-api:19.21.0.247'
+ compileOnly 'mezz.jei:jei-1.21.1-neoforge-api:19.21.0.247'
+ compileOnly 'dev.emi:emi-neoforge:1.1.24+1.21.1:api'
 }
+
