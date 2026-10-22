@@ -38,7 +38,7 @@ public final class DepthsEncounterDirector {
             int count=level.getEntitiesOfClass(Knocker.class,sector).size()
                     +level.getEntitiesOfClass(CeilingLurker.class,sector).size()
                     +level.getEntitiesOfClass(ChoirWraith.class,sector).size();
-            if(count>=4)return;
+            if(count>=4)continue;
             boolean knocker=level.getEntitiesOfClass(Knocker.class,sector).isEmpty();
             boolean lurker=level.getEntitiesOfClass(CeilingLurker.class,sector).isEmpty();
             boolean choir=level.getEntitiesOfClass(ChoirWraith.class,sector).isEmpty();
