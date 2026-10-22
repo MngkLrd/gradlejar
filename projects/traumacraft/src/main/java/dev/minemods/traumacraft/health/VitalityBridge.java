@@ -17,7 +17,10 @@ public final class VitalityBridge {
     public static float targetHealth(BodyState state, float maximum) {
         float total = 0f;
         for (BodyPart part : BodyPart.values()) total += state.health(part);
-        return Math.max(1.0f, Math.min(maximum, maximum * total / 440f));
+        float aggregate = Math.max(1.0f, Math.min(maximum, maximum * total / 440f));
+        // A destroyed vital zone is an emergency even though other limbs
+        // may still have full HP; show no more than 30% of vanilla hearts.
+        return state.vitalDestroyed() ? Math.min(aggregate, Math.max(1f, maximum * 0.30f)) : aggregate;
     }
 
     public static void synchronize(ServerPlayer player) {

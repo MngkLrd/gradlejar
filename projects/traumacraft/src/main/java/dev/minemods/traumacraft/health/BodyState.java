@@ -12,9 +12,33 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
     private boolean dirty;
     private int concussionTicks;
     private int painkillerTicks;
+    // Stored across relogs: no reset of the emergency treatment window by reconnecting.
+    private int criticalGraceTicks;
     private boolean vitalityLinked; 
     public int concussionTicks() { return concussionTicks; }
     public int painkillerTicks() { return painkillerTicks; }
+
+    /** Seconds are displayed in the UI; internal countdown is in server ticks. */
+    public int criticalGraceTicks() { return criticalGraceTicks; }
+
+    public boolean vitalDestroyed() {
+        return health(BodyPart.HEAD) <= 0f || health(BodyPart.CHEST) <= 0f;
+    }
+
+    /** Called once when bleeding, rather than an external hit, blacks a vital zone. */
+    public void startCriticalGrace(int ticks) {
+        if (criticalGraceTicks > 0 || !vitalDestroyed()) return;
+        criticalGraceTicks = Math.max(1, ticks);
+        dirty = true;
+    }
+
+    /** Returns true only once, when the final critical tick expires. */
+    public boolean tickCriticalGrace() {
+        if (criticalGraceTicks <= 0) return false;
+        criticalGraceTicks--;
+        if (criticalGraceTicks % 20 == 0) dirty = true;
+        return criticalGraceTicks == 0;
+    }
     public void addConcussion(int ticks) {
         concussionTicks = Math.max(concussionTicks, ticks);
         dirty = true;
@@ -79,6 +103,7 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
         if (amount <= 0 || health(part) >= part.maximum) return false;
         int i = part.ordinal();
         health[i] = Math.min(part.maximum, health[i] + amount);
+        if (!vitalDestroyed() && criticalGraceTicks > 0) criticalGraceTicks = 0;
         dirty = true;
         return true;
     }
@@ -119,6 +144,7 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
         vitalityLinked = false;
         concussionTicks = 0;
         painkillerTicks = 0;
+        criticalGraceTicks = 0;
         for (BodyPart part : BodyPart.values()) {
             int i = part.ordinal();
             health[i] = part.maximum;
@@ -138,6 +164,7 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
         result.putBoolean("vitalityLinked", vitalityLinked);
         result.putInt("concussionTicks", concussionTicks);
         result.putInt("painkillerTicks", painkillerTicks);
+        result.putInt("criticalGraceTicks", criticalGraceTicks);
         for (BodyPart part : BodyPart.values()) {
             CompoundTag zone = new CompoundTag();
             zone.putFloat("hp", health(part));
@@ -153,6 +180,7 @@ public final class BodyState implements INBTSerializable<CompoundTag> {
         vitalityLinked = nbt.getBoolean("vitalityLinked");
         concussionTicks = Math.max(0, nbt.getInt("concussionTicks"));
         painkillerTicks = Math.max(0, nbt.getInt("painkillerTicks"));
+        criticalGraceTicks = Math.max(0, nbt.getInt("criticalGraceTicks"));
         for (BodyPart part : BodyPart.values()) {
             if (!nbt.contains(part.name(), 10)) continue;
             CompoundTag zone = nbt.getCompound(part.name());
