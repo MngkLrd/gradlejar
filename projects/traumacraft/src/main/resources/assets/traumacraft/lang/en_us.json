@@ -53,5 +53,8 @@
   "item.traumacraft.endurance_injector": "Endurance Injector",
   "jei.traumacraft.endurance_injector": "Grants Speed I and Jump Boost II for 60 seconds.",
   "item.traumacraft.rag_dressing": "Improvised Dressing",
-  "jei.traumacraft.rag_dressing": "Cheap dressing made from paper and string. Restores 4 local HP to a damaged living body part (not 0 HP). Takes 1.5 seconds to apply."
+  "jei.traumacraft.rag_dressing": "Improvised wool dressing. Craft 2 from 1 wool block. Applies in 1 second and restores 4 local HP, less than a Sterile Patch (10 HP). Cannot restore a destroyed body part by itself.",
+  "item.traumacraft.analgesic_tablets": "Analgesic Tablets",
+  "jei.traumacraft.analgesic_tablets": "Temporary pain relief. Grants Resistance I for 10 seconds and a subtle warm visual effect for 2 minutes. Does not cure fractures or bleeding.",
+  "tooltip.traumacraft.use_time": "Application: %s s"
 }

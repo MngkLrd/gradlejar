@@ -7,11 +7,11 @@ import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
 
 /**
  * Seven local HP pools are authoritative; vanilla hearts are their aggregate display.
- * Food regeneration is deliberately ~10 times slower. Vanilla effect healing
+ * Passive food regeneration is deliberately three times slower. Vanilla effect healing
  * is routed into one injured region instead of independently restoring hearts.
  */
 public final class VitalityBridge {
-    private static final float FOOD_HEAL_FACTOR = 0.10f;
+    private static final float FOOD_HEAL_FACTOR = 1.0f / 3.0f;
     private VitalityBridge() {}
 
     public static float targetHealth(BodyState state, float maximum) {
@@ -57,13 +57,19 @@ public final class VitalityBridge {
         event.setAmount(healedVanilla);
         BodyPart part = null;
         float lowest = 1f;
+        // A blacked-out limb can recover a little through food, without curing
+        // bleeding or fracture. Head/chest destruction remains critical.
         for (BodyPart zone : BodyPart.values()) {
-            if (body.health(zone) > 0 && body.percent(zone) < lowest) {
+            if (body.health(zone) <= 0 && zone != BodyPart.HEAD && zone != BodyPart.CHEST) {
+                part = zone; break;
+            }
+            if (body.percent(zone) < lowest && body.health(zone) > 0) {
                 part = zone; lowest = body.percent(zone);
             }
         }
         if (part != null) {
-            body.heal(part, healedVanilla * 22f);
+            float factor = body.health(part) <= 0 ? 0.50f : 1f;
+            body.heal(part, healedVanilla * 22f * factor);
         }
     }
 }

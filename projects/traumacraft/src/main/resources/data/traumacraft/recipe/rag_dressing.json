@@ -3,10 +3,7 @@
   "category": "equipment",
   "ingredients": [
     {
-      "item": "minecraft:paper"
-    },
-    {
-      "item": "minecraft:string"
+      "tag": "minecraft:wool"
     }
   ],
   "result": {

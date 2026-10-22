@@ -9,7 +9,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 /** Seven local HP values and injury flags; server -> player only. */
-public record SyncBodyStatePacket(float[] hp, byte[] bleeding, boolean[] fracture) implements CustomPacketPayload {
+public record SyncBodyStatePacket(float[] hp, byte[] bleeding, boolean[] fracture, int concussion, int painkiller) implements CustomPacketPayload {
     public static final Type<SyncBodyStatePacket> TYPE =
             new Type<>(ResourceLocation.fromNamespaceAndPath(TraumaCraft.MOD_ID, "body_sync"));
     public static final StreamCodec<RegistryFriendlyByteBuf, SyncBodyStatePacket> STREAM_CODEC =
@@ -19,6 +19,8 @@ public record SyncBodyStatePacket(float[] hp, byte[] bleeding, boolean[] fractur
                     buf.writeByte(packet.bleeding[i]);
                     buf.writeBoolean(packet.fracture[i]);
                 }
+                buf.writeVarInt(packet.concussion);
+                buf.writeVarInt(packet.painkiller);
             }, buf -> {
                 int n = BodyPart.values().length;
                 float[] h = new float[n];
@@ -29,7 +31,7 @@ public record SyncBodyStatePacket(float[] hp, byte[] bleeding, boolean[] fractur
                     b[i] = buf.readByte();
                     f[i] = buf.readBoolean();
                 }
-                return new SyncBodyStatePacket(h, b, f);
+                return new SyncBodyStatePacket(h, b, f, buf.readVarInt(), buf.readVarInt());
             });
 
     public static SyncBodyStatePacket from(BodyState state) {
@@ -43,7 +45,7 @@ public record SyncBodyStatePacket(float[] hp, byte[] bleeding, boolean[] fractur
             b[i] = (byte) state.bleeding(part);
             f[i] = state.fractured(part);
         }
-        return new SyncBodyStatePacket(h, b, f);
+        return new SyncBodyStatePacket(h, b, f, state.concussionTicks(), state.painkillerTicks());
     }
     @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
 }

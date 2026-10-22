@@ -3,6 +3,7 @@ package dev.minemods.traumacraft.client;
 import dev.minemods.traumacraft.TraumaCraft;
 import dev.minemods.traumacraft.client.gui.TraumaInventoryScreen;
 import dev.minemods.traumacraft.client.gui.TraumaHud;
+import dev.minemods.traumacraft.client.gui.TraumaticScreenEffects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.resources.ResourceLocation;
@@ -25,6 +26,7 @@ public final class ClientEvents {
         }
     }
     private static void registerLayers(RegisterGuiLayersEvent event) {
+        event.registerAboveAll(ResourceLocation.fromNamespaceAndPath(TraumaCraft.MOD_ID,"injury_screen_effects"), TraumaticScreenEffects::render);
         event.registerAboveAll(ResourceLocation.fromNamespaceAndPath(TraumaCraft.MOD_ID, "trauma_hud"),
                 TraumaHud::render);
     }
