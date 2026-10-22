@@ -3,7 +3,7 @@ loaderVersion="[52,)"
 license="MIT"
 [[mods]]
 modId="ropefences"
-version="${file.jarVersion}"
+version="1.0.0"
 displayName="Rope Fences"
 authors="MineMods"
 description='''Connect vanilla fences with real, collidable lead ropes.'''
