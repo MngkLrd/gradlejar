@@ -181,4 +181,12 @@ for lang,desc in [("en_us","The exit is somewhere beyond the darkness."),("ru_ru
     "Lower light frequency, stronger breathing vignette, rare short Darkness effects. "
     "Door portal uses vanilla RenderType.endPortal via client-only block entity renderer, "
     "parallel to the shut door rather than attached to its swung leaf.\n")
+# Low-pitched, spatial, layered voice remains frightening even without an audio encoder.
+snd=java/"world/PocketSoundDirector.java"
+voice=snd.read_text(encoding="utf8")
+for a,b in [("SoundSource.HOSTILE, 1.1F, 1.0F","SoundSource.HOSTILE, 1.1F, .78F"),
+            ("SoundSource.HOSTILE, .9F, 1.0F","SoundSource.HOSTILE, .9F, .72F")]:
+    if voice.count(a)!=1:raise RuntimeError("Pursuer sound pitch patch needs original "+a)
+    voice=voice.replace(a,b,1)
+snd.write_text(voice,encoding="utf8")
 print("Pocket Realms visual and terror polish applied.")
