@@ -61,6 +61,9 @@ jobs:
       - name: Fix Pocket Realms 0.5.0 NeoForge API details
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/fix_pocketrealms_v050.py
+      - name: Restore Pocket Realms 0.5.1 custom sounds
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/unpack_pocketrealms_v051.py
       - name: Validate profile
         id: profile
         env:
