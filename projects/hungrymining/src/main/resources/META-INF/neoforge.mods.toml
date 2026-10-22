@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+modId="hungrymining"
+version="1.0.0"
+displayName="Hungry Mining"
+authors="MineMods"
+description="Your hunger level changes how quickly you mine. Mine slowly when hungry, or get a small boost when well fed."
+
+[[dependencies.hungrymining]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.hungrymining]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
