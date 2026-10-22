@@ -12,7 +12,10 @@ legacyForge {
         neoForgeVersion = project.minecraft_version + '-' + project.forge_version
         disableRecompilation = true
     }
-    runs { client { client() } server { server() } }
+    runs {
+        client { client() }
+        server { server() }
+    }
     mods { snowleopard { sourceSet(sourceSets.main) } }
 }
 tasks.withType(JavaCompile).configureEach {
