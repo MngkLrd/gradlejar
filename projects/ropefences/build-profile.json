@@ -1,0 +1,9 @@
+{
+  "slug": "ropefences",
+  "version": "1.0.0",
+  "minecraft": "1.21.1",
+  "loader": "forge",
+  "java": "21",
+  "gradle": "8.10.2",
+  "jar_glob": "ropefences-1.0.0.jar"
+}
