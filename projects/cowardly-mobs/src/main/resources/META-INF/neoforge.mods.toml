@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+modId="cowardlymobs"
+version="0.1.0"
+displayName="Cowardly Mobs"
+authors="Minemods"
+description="Injured mobs sometimes fear well-equipped players. Bow skeletons keep their distance and form loose firing groups."
+
+[[dependencies.cowardlymobs]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.cowardlymobs]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
