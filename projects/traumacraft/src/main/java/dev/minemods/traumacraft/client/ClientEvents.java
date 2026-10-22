@@ -3,6 +3,9 @@ package dev.minemods.traumacraft.client;
 import dev.minemods.traumacraft.TraumaCraft;
 import dev.minemods.traumacraft.client.gui.TraumaInventoryScreen;
 import dev.minemods.traumacraft.client.gui.TraumaHud;
+import dev.minemods.traumacraft.client.gui.MedicalPouchScreen;
+import dev.minemods.traumacraft.registry.ModMenus;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import dev.minemods.traumacraft.client.gui.TraumaticScreenEffects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -16,7 +19,11 @@ public final class ClientEvents {
     private ClientEvents() {}
     public static void register(IEventBus modBus) {
         modBus.addListener(ClientEvents::registerLayers);
+        modBus.addListener(ClientEvents::registerScreens);
         NeoForge.EVENT_BUS.addListener(ClientEvents::onOpening);
+    }
+    private static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(ModMenus.MEDICAL_POUCH.get(), MedicalPouchScreen::new);
     }
     private static void onOpening(ScreenEvent.Opening event) {
         if (event.getNewScreen() instanceof InventoryScreen

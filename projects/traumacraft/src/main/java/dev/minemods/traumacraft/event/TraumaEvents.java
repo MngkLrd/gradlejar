@@ -10,6 +10,7 @@ import dev.minemods.traumacraft.health.VitalityBridge;
 import dev.minemods.traumacraft.medical.TreatmentManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -59,7 +60,18 @@ public final class TraumaEvents {
             }
         } else {
             BodyPart impacted = thermal ? BodyPart.CHEST : HitLocation.locate(victim, event.getSource());
-            apply(state, victim, impacted, amount * 8.0f, false, blunt || thermal);
+            // LivingDamageEvent.Pre already includes vanilla armor and resistance.
+            // A ×8 conversion made zombies lethal even through netherite.
+            boolean projectile = event.getSource().is(DamageTypeTags.IS_PROJECTILE);
+            float multiplier = projectile ? 4.0f : 3.0f;
+            float protectedFactor = 1.0f - Math.min(0.30f, victim.getArmorValue() * 0.015f);
+            EquipmentSlot slot = switch (impacted) {
+                case HEAD -> EquipmentSlot.HEAD;
+                case CHEST, STOMACH, LEFT_ARM, RIGHT_ARM -> EquipmentSlot.CHEST;
+                case LEFT_LEG, RIGHT_LEG -> EquipmentSlot.LEGS;
+            };
+            if (!victim.getItemBySlot(slot).isEmpty()) protectedFactor *= 0.78f;
+            apply(state, victim, impacted, amount * multiplier * protectedFactor, false, blunt || thermal);
         }
 
         if (state.health(BodyPart.HEAD) <= 0 || state.health(BodyPart.CHEST) <= 0) {
