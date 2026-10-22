@@ -20,4 +20,5 @@ replace("entity/VoidPursuer.java",[
 ("EntityType<? extends Monster> type","EntityType<? extends Zombie> type"),
 ("p -> !p.isCreative() && !p.isSpectator()",
  "p -> p instanceof Player target && !target.isCreative() && !target.isSpectator()")])
+replace("entity/VoidPursuer.java", [("return Monster.createMonsterAttributes()", "return Zombie.createAttributes()")])
 print("NeoForge 1.21.1 compatibility changes applied to hand mob and pursuer.")
