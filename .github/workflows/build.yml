@@ -90,6 +90,9 @@ jobs:
       - name: Restore Pocket Realms 0.6.1 architectural blocks
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/unpack_pocketrealms_v061.py
+      - name: Build Pocket Realms 0.6.1 blocks and dungeon architecture
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/upgrade_pocketrealms_v061.py
       - name: Validate profile
         id: profile
         env:
