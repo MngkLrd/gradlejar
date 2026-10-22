@@ -67,11 +67,8 @@ jobs:
       - name: Add distorted Pursuer sound effects
         if: matrix.project_dir == 'projects/pocketrealms'
         run: |
-          if command -v ffmpeg >/dev/null 2>&1; then
-            python3 tools/grime_pocketrealms_audio_v051.py
-          else
-            echo "ffmpeg unavailable; use low-pitched runtime OGG variations instead"
-          fi
+          python3 -m pip install --disable-pip-version-check imageio-ffmpeg==0.6.0
+          python3 tools/grime_pocketrealms_audio_v051.py
       - name: Polish Pocket Realms 0.5.1 visuals and portal
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/polish_pocketrealms_v051.py
