@@ -83,6 +83,9 @@ def main():
         s=s.replace("public boolean mouseReleased(double mouseX, double mouseY, int button) {",
                     "public boolean mouseReleased(MouseButtonEvent event) {\n        double mouseX = event.x();\n        double mouseY = event.y();\n        int button = event.button();")
         s=s.replace("return super.mouseReleased(mouseX, mouseY, button);", "return super.mouseReleased(event);")
+        # SDL3 uses 1 for the left mouse button on 26.3 (GLFW used 0).
+        # Use the version-defined constant rather than a literal.
+        s = s.replace("button == 0", "button == com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_LEFT")
         s = s.replace("Minecraft.getInstance().setScreen(", "Minecraft.getInstance().gui.setScreen(")
         if filename == "ScreenshotEditorScreen.java":
             s = s.replace("import net.minecraft.Util;", "import java.awt.Desktop;")
