@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.monster.Zombie;
@@ -18,7 +19,8 @@ public final class CampProtection {
     public static boolean protectedFrom(Mob mob, ServerPlayer player, ServerLevel level) {
         if (!ServerConfig.PROTECTION.get() || level.isDay()) return false;
         if (!ServerConfig.OTHER_DIMENSIONS.get() && level.dimension() != Level.OVERWORLD) return false;
-        if (!(mob instanceof Zombie || mob instanceof Skeleton || mob instanceof Spider)) return false;
+        if (!(mob instanceof Zombie || mob instanceof Skeleton || mob instanceof Spider || mob instanceof Creeper)) return false;
+        if (RetaliationTracker.isProvoked(mob,player,level)) return false;
         int radius = ServerConfig.PROTECTION_RADIUS.get();
         for (BlockPos pos : CampSavedData.get(level).positions()) {
             if (!level.hasChunkAt(pos)) continue;
