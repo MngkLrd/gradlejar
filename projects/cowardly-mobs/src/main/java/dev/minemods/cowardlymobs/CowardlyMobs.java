@@ -3,6 +3,7 @@ package dev.minemods.cowardlymobs;
 import dev.minemods.cowardlymobs.ai.MobAiRegistration;
 import dev.minemods.cowardlymobs.hunger.config.ZombieHungerConfig;
 import dev.minemods.cowardlymobs.hunger.event.ZombieHungerEvents;
+import dev.minemods.cowardlymobs.jockey.SpiderJockeyConfig;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
@@ -14,6 +15,8 @@ public final class CowardlyMobs {
 
     public CowardlyMobs(ModContainer container) {
         container.registerConfig(ModConfig.Type.COMMON, ZombieHungerConfig.SPEC);
+        container.registerConfig(ModConfig.Type.COMMON, SpiderJockeyConfig.SPEC,
+                "cowardlymobs-jockey-common.toml");
         NeoForge.EVENT_BUS.addListener(MobAiRegistration::onEntityJoin);
         NeoForge.EVENT_BUS.addListener(ZombieHungerEvents::onHurt);
     }

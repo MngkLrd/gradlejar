@@ -1,66 +1,51 @@
-# Cowardly Mobs 0.3.0
+# Cowardly Mobs 0.4.0: Dynamic Spider Jockeys
 
-Minecraft **1.21.1**, **NeoForge 21.1.x**, **Java 21**. Lightweight **server-side** zombie and skeleton AI. No custom items, blocks, client UI or networking. No movement-speed buffs or bow fire-rate changes.
+Minecraft **1.21.1** · **NeoForge 21.1.x** · **Java 21**
 
-This is one JAR containing the original Cowardly Mobs AI and the full integrated Zombie Hunger 1.0.0 behavior. **Do not install a second Zombie Hunger JAR.**
+A lightweight AI overhaul: morale, Zombie Hunger, tactical skeleton firing lines and dynamic spider jockeys. No new models, textures, blocks, item recipes or GeckoLib dependency.
 
-## New in 0.3.0
+## What's new: skeletons mount spiders
 
-### 1. Morale System
+- An **ordinary vanilla skeleton** can detect an **unoccupied ordinary spider** within 6 blocks.
+- 15% roll per encounter by default, with a 30-second cooldown before another roll. This is not a chance rolled every game tick.
+- A wounded, frightened skeleton facing a dangerous player has a 35% chance instead. This gives morale a purpose during mount decisions.
+- The skeleton approaches using vanilla pathfinding and **normal movement speed**.
+- Once near the spider, it performs a real physical jump with approximately 0.39 vertical velocity and modest horizontal velocity. It visibly spends multiple ticks airborne **before** a vanilla `startRiding()` call.
+- Short vanilla cloud particles emphasize takeoff and landing; no custom sound files.
+- The client-only animation smoothly leans and bobs a previously observed walking skeleton into riding pose after landing. The real jump is independently replicated by vanilla Minecraft movement.
+- Dynamic mounting is limited to **normal skeletons and normal spiders** in this version. Cave spiders, wither skeletons and strays aren't included.
+- Only free spiders with headroom and out of water are eligible. Pathfinding fails safely when unreachable, the target disappears or the rider/target dies.
+- Once mounted, foot-specific retreat/formation AI is suspended so vanilla spider-jockey navigation and bow attacks can resume. When dismounted, the original goals become available again.
+- The new mount goal takes precedence over retreat if a chance roll succeeds; otherwise morale and formation work as before.
 
-A server-side numeric courage score from 0 to 1 is calculated *only when a wounded mob considers fleeing* (every ~80 ticks with cooldown).
+### Client and server installation
 
-```text
-courage = clamp(0.22 + 0.55 * health_fraction
-                - 0.42 * player_armor_fraction
-                - 0.40 * player_attack_damage_fraction
-                + ally_bonus, 0, 1)
-```
+The **gameplay and jump physics run entirely on the server**, so a dedicated server with the JAR also works with vanilla clients (the leap and passenger mounting are visible via vanilla entity updates).
 
-Armor is normalized to 20 points; damage is normalized against 1–10 attack damage. Nearby allied zombies add **+0.17 courage** each, bow/melee skeletons add **+0.09** each (maximum four). A survival player must still have either 12+ armor points or 6+ attack damage to trigger a fear reaction. Only mobs at or below **65% HP** are eligible for fear; when courage is below **0.36**, their chance to retreat is 25–70% depending on danger. The normal cooldown prevents rapid fear toggling.
+For the **extra lean/bob landing animation**, install the same JAR on **both client and server**. Only the client uses `client/SpiderMountRenderEvents`, subscribed on `Dist.CLIENT`. No client classes are loaded by common/server code.
 
-### 2. Zombie Pack Courage
+### Settings
 
-Nearby zombies of the same kind provide morale support within a 9-block radius. A wounded lone zombie is more likely to retreat from an armed player than one in a pack. The pack bonus affects only fleeing decisions: **no damage, speed or armor bonuses**.
+`config/cowardlymobs-jockey-common.toml`:
+- `spider_jockey.enabled` = true
+- `spider_jockey.mountChance` = 0.15
+- `spider_jockey.frightenedMountChance` = 0.35
+- `spider_jockey.searchRadius` = 6
+- `spider_jockey.retryCooldownTicks` = 600
 
-### 3. Skeleton Firing Line
+The existing integrated Zombie Hunger configuration remains in `config/cowardlymobs-common.toml`. Existing datapacks using `#zombiehunger:raw_meat`, `#zombiehunger:cooked_meat`, and `#zombiehunger:rotten_meat` still work.
 
-Bow-armed skeletons pursuing the **same player** form an opportunistic line of up to five near allies. They:
-- keep about **11.5 blocks** from the target when safe to reposition;
-- spread roughly **3.4 blocks** laterally, using stable UUID-based positions;
-- sidestep an allied skeleton directly blocking their line of fire;
-- back off if the target is within 8 blocks;
-- surrender movement back to vanilla bow AI after at most 50 ticks, with a pause before repositioning again;
-- skip squad positioning if the target is out of sight, to preserve normal vanilla pursuit.
+## Preserved systems
 
-This is a loose, terrain-dependent firing line, **not simultaneous volleys** and **not guaranteed friendly-fire immunity**. Wither skeletons carrying swords retain vanilla melee positioning.
+- **Morale System:** dynamic health, player damage/armor and allied mob courage, with fear cooldowns.
+- **Zombie Pack Courage:** extra nearby zombies make an injured zombie less likely to retreat.
+- **Skeleton Firing Line:** non-riding bow skeletons move laterally into a loose firing line, avoid shooting through teammates, retreat at normal speed.
+- **Group Rally:** fleeing zombies/skeletons can regroup with nearby friendly mobs and return to battle.
+- **Zombie Hunger:** dropped meat and rotten flesh, 2 HP heal per item, chewing/interruption, contest over drops, neighbor alerts, husks/drowned preferences, sounds and particles.
 
-### 4. Group Rally
+Do **not** install the standalone Zombie Hunger JAR alongside Cowardly Mobs.
 
-An injured zombie or skeleton that chooses to retreat may look for a **nearby safe group of its own mob type**. If it reaches a group containing at least two allies within 5.5 blocks and is more than 8 blocks from the player, it regains its nerve:
-- immediately stops retreating;
-- resumes vanilla attack/target goals;
-- suppresses a new fear decision for **220 ticks** (11 seconds).
-
-If there is no suitable group, it simply retreats away from the player, as before. Pathfinding never teleports mobs or increases their speed.
-
-## Zombie Hunger remains included
-
-- Rotten flesh distracts ordinary zombies even when in combat.
-- Raw/cooked meat feeds idle zombies; injured zombies may seek raw meat when engaged.
-- One meat item eaten per meal, **+2 HP**, 30-tick chewing, 100-tick meal cooldown.
-- A player hit interrupts eating and blocks further food seeking for 100 ticks.
-- Nearby hunger alerts, competition over dropped food, vanilla eating sound and six item particles.
-- Husks avoid cooked meat; drowned prioritize meat in water.
-- Tags and datapack compatibility preserved:
-  - `#zombiehunger:rotten_meat`
-  - `#zombiehunger:raw_meat`
-  - `#zombiehunger:cooked_meat`
-  - optional common `#c:foods/raw_meat` and `#c:foods/cooked_meat`.
-
-Eating has AI goal priority 2, below retreat (priority 1), so fear takes precedence over food. The Zombie Hunger config remains `config/cowardlymobs-common.toml` with the original `zombie_hunger` section and parameters. Balance constants for the new tactical AI live in `ai/AiBalance.java`; a dedicated configurable morale file is not included in 0.3.0.
-
-## Building
+## Build
 
 JDK 21, Gradle 9.2.1:
 
@@ -69,22 +54,21 @@ cd projects/cowardly-mobs
 gradle --no-daemon clean build
 ```
 
-Output: `build/libs/cowardlymobs-1.21.1-0.3.0.jar`.
+Expected: `build/libs/cowardlymobs-1.21.1-0.4.0.jar`.
 
-The repository build hub also builds and verifies this project on pull requests and publishes a prerelease JAR on main updates.
+## In-game testing
 
-## Gameplay test checklist
+1. Start a NeoForge 1.21.1 client **with the mod** and a dedicated server **with the mod**.
+2. Summon a regular skeleton and regular spider on flat ground during nighttime. To reliably observe, set mountChance to 1.0 and retryCooldownTicks to 60 in the server config; reboot/reload as needed.
+3. Watch the skeleton approach, make a real physical jump, then ride the spider. Watch the extra pose lean on the client.
+4. Repeat with a client without the mod: vanilla leap and passenger mounting should remain visible, without the extra client pose animation.
+5. Verify mounted skeleton continues firing arrows at a player while spider moves. After spider death/dismount, ordinary skeleton morale and formation should resume.
+6. Test a spider with an existing passenger: it must be ignored.
+7. Test a cave spider, stray and wither skeleton: no dynamic mounting should occur.
+8. Test low ceilings and water: the AI must avoid unsuitable mounts.
+9. Kill spider while the skeleton is approaching or airborne: no crash, no stuck goal.
+10. Test simultaneous skeletons competing for one spider: no passenger duplication.
+11. Test chunk unloading/dimension re-entry, multiple nearby mobs and dedicated server headless startup.
+12. Retest morale, Group Rally, Spider Jockey prevention of foot formation, and **all Zombie Hunger features**.
 
-1. Load Minecraft 1.21.1 / NeoForge on a client and a dedicated server.
-2. Compare one injured zombie versus four injured zombies when a player wears iron armor. The group should retreat less often.
-3. Confirm bare-handed, unarmored player does not trigger morale retreat.
-4. Change player armor or held weapon and repeat; fear chance should change.
-5. Place a separated squad of bow skeletons in sight of the same player. Observe loose lateral spacing and continued arrow shots.
-6. Let one skeleton block another's shot; observe limited sidestepping (no forced terrain clipping).
-7. Approach within 8 blocks: bow skeletons retreat at **normal speed**.
-8. Retreating wounded zombie approaches two allies more than 8 blocks from player; it should rally and resume aggression without immediate re-fleeing.
-9. Repeat group rally with skeletons and confirm sword-wielding wither skeletons still attack in melee.
-10. Toss rotten flesh during combat and attack a chewing zombie: older Zombie Hunger behavior should still work, as should husk/drowned rules and datapack tags.
-11. Test many mobs in a farm, chunk unload/reload and dimension transfer for duplicate AI or tick performance issues.
-
-**Limitations:** The line is opportunistic, not rigid formation AI. Group selection is local. Compile/JAR verification is not a substitute for in-game behavior testing.
+**Limitation:** The client landing effect animates whole-body lean/bob, not separately rigged arms/legs. The airborne trajectory comes from real entity physics and the vanilla model animates normally. A bespoke per-bone animation would require a deeper rendering hook and separate further runtime tests. CI checks compilation/JAR integrity, not Minecraft in-game behavior.
