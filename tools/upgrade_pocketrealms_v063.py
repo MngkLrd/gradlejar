@@ -120,7 +120,7 @@ for cracking in (False,True):
         "textures":{"all":f"pocketrealms:block/{name}"}})
 dump("blockstates/unstable_void_bricks.json",{"variants":{
     "cracking=false":{"model":"pocketrealms:block/unstable_void_bricks"},
-    "cracking=true":{"model":"pocketrealms:block/unstable_void_bricks_cracking"}})
+    "cracking=true":{"model":"pocketrealms:block/unstable_void_bricks_cracking"}}})
 dump("models/item/unstable_void_bricks.json",{"parent":"pocketrealms:block/unstable_void_bricks"})
 
 properties=ROOT/"gradle.properties"
