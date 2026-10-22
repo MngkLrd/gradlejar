@@ -55,8 +55,14 @@ public final class VitalityBridge {
         boolean enhanced = player.hasEffect(MobEffects.REGENERATION);
         float healedVanilla = event.getAmount() * (enhanced ? 1f : FOOD_HEAL_FACTOR);
         event.setAmount(healedVanilla);
-        BodyPart part = body.mostDamaged();
-        if (part != null && body.health(part) > 0f) {
+        BodyPart part = null;
+        float lowest = 1f;
+        for (BodyPart zone : BodyPart.values()) {
+            if (body.health(zone) > 0 && body.percent(zone) < lowest) {
+                part = zone; lowest = body.percent(zone);
+            }
+        }
+        if (part != null) {
             body.heal(part, healedVanilla * 22f);
         }
     }

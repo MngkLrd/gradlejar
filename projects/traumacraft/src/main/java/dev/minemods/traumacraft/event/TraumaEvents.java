@@ -28,8 +28,11 @@ public final class TraumaEvents {
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) ModNetwork.sync(player);
     }
+    public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) TreatmentManager.forget(player);
+    }
     public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) ModNetwork.sync(player);
+        if (event.getEntity() instanceof ServerPlayer player) { TreatmentManager.forget(player); ModNetwork.sync(player); }
     }
 
     public static void onDamage(LivingDamageEvent.Pre event) {
@@ -96,7 +99,11 @@ public final class TraumaEvents {
             }
             try {
                 BLEEDING_DAMAGE.set(true);
-                player.hurt(player.damageSources().magic(), bloodLoss);
+                if (state.health(BodyPart.HEAD) <= 0 || state.health(BodyPart.CHEST) <= 0) {
+                    player.hurt(player.damageSources().magic(), Math.max(bloodLoss, player.getHealth() + player.getAbsorptionAmount() + 1f));
+                } else {
+                    player.hurt(player.damageSources().magic(), bloodLoss);
+                }
             } finally {
                 BLEEDING_DAMAGE.set(false);
             }

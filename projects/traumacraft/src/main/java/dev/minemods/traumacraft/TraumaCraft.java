@@ -28,6 +28,7 @@ public final class TraumaCraft {
         NeoForge.EVENT_BUS.addListener(TraumaEvents::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(TraumaEvents::onLogin);
         NeoForge.EVENT_BUS.addListener(TraumaEvents::onRespawn);
+        NeoForge.EVENT_BUS.addListener(TraumaEvents::onLogout);
         NeoForge.EVENT_BUS.addListener(TraumaCommands::register);
     }
 }

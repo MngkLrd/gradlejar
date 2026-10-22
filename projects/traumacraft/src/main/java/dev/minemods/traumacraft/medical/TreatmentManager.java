@@ -55,6 +55,11 @@ public final class TreatmentManager {
         return cursor ? player.containerMenu.getCarried() : player.getItemInHand(hand);
     }
 
+    /** Cleanup on logout or respawn without sending packets to a closed connection. */
+    public static void forget(ServerPlayer player) {
+        ACTIVE.remove(player.getUUID());
+    }
+
     public static void cancel(ServerPlayer player) {
         if (ACTIVE.remove(player.getUUID()) != null) ModNetwork.progress(player, 0, 0);
     }
