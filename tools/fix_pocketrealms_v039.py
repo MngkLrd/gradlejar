@@ -34,3 +34,29 @@ s = living.read_text(encoding="utf8")
 s = s.replace("SoundEvents.SCULK_SENSOR_CLICKING", "SoundEvents.SCULK_BLOCK_BREAK")
 living.write_text(s, encoding="utf8")
 print("Applied Minecraft 1.21.1 entity registry and sound fixes")
+
+# Let a player who fell from a collapsed floor die in the void, not escape by orphan rescue.
+events = base / "event/PocketServerEvents.java"
+old = "                    if (data.findRunAt(player.blockPosition()).isEmpty()) {"
+new = """                    boolean stillInActiveColumn = data.allRuns().stream().anyMatch(run ->
+                            !run.completed && !run.retiring
+                            && player.blockPosition().getX() >= run.minX && player.blockPosition().getX() <= run.maxX
+                            && player.blockPosition().getZ() >= run.minZ && player.blockPosition().getZ() <= run.maxZ);
+                    if (data.findRunAt(player.blockPosition()).isEmpty() && !stillInActiveColumn) {"""
+text = events.read_text(encoding="utf8")
+if old not in text: raise SystemExit("Missing orphan rescue patch position")
+events.write_text(text.replace(old,new),encoding="utf8")
+
+collapse = base / "world/CollapseController.java"
+old = """            if (run.collapseCursor >= run.collapseBlocks.size()) {
+                run.retiring = true;
+                run.completed = true;
+            }"""
+new = """            if (run.collapseCursor >= run.collapseBlocks.size() && !ownerInside) {
+                // Do not turn a failed run into a free escape when the maze has vanished.
+                run.retiring = true;
+                run.completed = true;
+            }"""
+text = collapse.read_text(encoding="utf8")
+if old not in text: raise SystemExit("Missing final collapse patch position")
+collapse.write_text(text.replace(old,new),encoding="utf8")
