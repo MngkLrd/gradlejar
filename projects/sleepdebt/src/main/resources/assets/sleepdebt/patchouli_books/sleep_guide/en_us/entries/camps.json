@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Build a field camp from a bedroll, an awning and a campfire. Right-click the bedroll to recover some fatigue and stress. The awning adds cover, and the fire strengthens recovery."
+      "text": "Build a field camp from a bedroll, an awning and a campfire. Right-click the bedroll to recover fatigue and stress. Having a pillow or sleep mask in your inventory strengthens the recovery. The awning adds cover, and the fire reduces stress."
     },
     {
       "type": "patchouli:crafting",
