@@ -4,6 +4,6 @@
   "minecraft": "1.21.1",
   "loader": "fabric",
   "java": "21",
-  "gradle": "9.6.0",
+  "gradle": "9.7.0",
   "jar_glob": "screenshotmanager-0.2.0-fabric-1.21.1.jar"
 }
