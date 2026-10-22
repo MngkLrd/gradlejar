@@ -384,3 +384,61 @@ block_cluster("camp_canvas",{"D":"#4c5743","C":"#687c56","L":"#91a67b","H":"#b4b
 block_cluster("rest_lamp",{"D":"#9d7246","C":"#c3965d","L":"#f6ce85","H":"#ffe8b0"},3,"lamp")
 block_cluster("dream_woven",{"D":"#413541","C":"#615166","L":"#9f8298","H":"#cab2bf"},2,"weave")
 print("Sleep Debt 2.4: extra sprite and block textures generated")
+
+# A true pixel-grid GUI texture at native 176x166 resolution.
+# No hand-drawn text: native Minecraft font draws labels on top at runtime.
+GUI_DIR=Path("src/main/resources/assets/sleepdebt/textures/gui")
+GUI_DIR.mkdir(parents=True,exist_ok=True)
+GW,GH=176,166
+canvas=[[(0,0,0,0) for _ in range(GW)] for _ in range(GH)]
+def gbox(x1,y1,x2,y2,rgb):
+    for yy in range(max(0,y1),min(GH,y2)):
+        for xx in range(max(0,x1),min(GW,x2)):
+            canvas[yy][xx]=rgb+(255,)
+def slot(x,y):
+    gbox(x-1,y-1,x+18,y+18,(55,55,55))
+    gbox(x,y,x+18,y+18,(255,255,255))
+    gbox(x,y,x+17,y+17,(139,139,139))
+    gbox(x+1,y+1,x+17,y+17,(141,141,141))
+    gbox(x,y,x+17,y+1,(55,55,55))
+    gbox(x,y,x+1,y+17,(55,55,55))
+gbox(0,0,GW,GH,(44,44,44))
+gbox(1,1,GW-1,GH-1,(198,198,198))
+gbox(3,3,GW-3,GH-3,(198,198,198))
+# Vanilla gray beveled plate top and carefully separate container from inventory.
+gbox(7,19,169,67,(143,143,143))
+gbox(8,20,168,66,(172,172,172))
+gbox(7,68,169,69,(255,255,255))
+gbox(7,69,169,70,(85,85,85))
+# Copper minimalist accents in a Minecraft-style hard pixel cluster.
+gbox(8,21,168,23,(154,100,66))
+gbox(8,64,168,66,(108,73,57))
+for s in (28,55,82,136):
+    slot(s,44)
+for row in range(3):
+    for col in range(9):
+        slot(8+col*18,84+row*18)
+for col in range(9):
+    slot(8+col*18,142)
+# Pixel arrow frame, progress starts at x=109 and fills to x=131.
+gbox(105,47,133,55,(75,68,61))
+gbox(107,48,131,54,(82,81,77))
+gbox(131,46,136,56,(75,68,61))
+gbox(133,48,138,54,(123,110,97))
+# Tiny separators under ingredient slots (no cramped text).
+gbox(30,37,42,39,(159,101,65))
+gbox(58,37,69,39,(124,99,73))
+gbox(85,37,96,39,(96,92,86))
+gbox(139,37,150,39,(172,132,86))
+raw=bytearray()
+for row in canvas:
+    raw.append(0)
+    for pixel in row:
+        raw.extend(bytes(pixel))
+png=b"\x89PNG\r\n\x1a\n"
+png+=echunk(b"IHDR",struct.pack(">IIBBBBB",GW,GH,8,6,0,0,0))
+png+=echunk(b"IDAT",zlib.compress(bytes(raw),9))
+png+=echunk(b"IEND",b"")
+(GUI_DIR/"coffee_maker.png").write_bytes(png)
+print("Sleep Debt native coffee GUI created",GW,GH)
+
