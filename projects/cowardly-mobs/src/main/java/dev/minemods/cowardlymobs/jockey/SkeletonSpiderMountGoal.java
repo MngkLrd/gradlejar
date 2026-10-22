@@ -24,10 +24,10 @@ import net.minecraft.world.phys.Vec3;
 public final class SkeletonSpiderMountGoal extends Goal {
     private static final int SCAN_INTERVAL = 80;
     private static final int APPROACH_TIMEOUT = 100;
-    private static final int LEAP_TIMEOUT = 16;
-    private static final int MIN_LEAP_TICKS = 6;
-    private static final double START_LEAP_DISTANCE_SQR = 5.3D;
-    private static final double MAX_LANDING_DISTANCE_SQR = 7.0D;
+    private static final int LEAP_TIMEOUT = 20;
+    private static final int MIN_LEAP_TICKS = 5;
+    private static final double START_LEAP_DISTANCE_SQR = 7.3D;
+    private static final double MAX_LANDING_DISTANCE_SQR = 11.0D;
 
     private final Skeleton skeleton;
     private Spider spider;
@@ -38,7 +38,7 @@ public final class SkeletonSpiderMountGoal extends Goal {
 
     public SkeletonSpiderMountGoal(Skeleton skeleton) {
         this.skeleton = skeleton;
-        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP));
+        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         this.nextScanTick = skeleton.tickCount + skeleton.getRandom().nextInt(SCAN_INTERVAL);
     }
 
@@ -54,7 +54,8 @@ public final class SkeletonSpiderMountGoal extends Goal {
         int radius = SpiderJockeyConfig.SEARCH_RADIUS.get();
         List<Spider> candidates = skeleton.level().getEntitiesOfClass(
                 Spider.class, skeleton.getBoundingBox().inflate(radius),
-                other -> available(other) && skeleton.distanceToSqr(other) < radius * radius);
+                other -> available(other) && !SpiderMountClaims.isReserved(other)
+                        && skeleton.distanceToSqr(other) < radius * radius);
         Spider nearest = candidates.stream()
                 .min(Comparator.comparingDouble(skeleton::distanceToSqr)).orElse(null);
         if (nearest == null) return false;
@@ -70,6 +71,7 @@ public final class SkeletonSpiderMountGoal extends Goal {
         }
         if (skeleton.getRandom().nextDouble() >= chance) return false;
 
+        if (!SpiderMountClaims.reserve(nearest, skeleton)) return false;
         spider = nearest;
         return true;
     }
@@ -77,7 +79,7 @@ public final class SkeletonSpiderMountGoal extends Goal {
     @Override
     public boolean canContinueToUse() {
         if (skeleton.isPassenger() || spider == null || !available(spider)
-                || !skeleton.isAlive()) return false;
+                || !skeleton.isAlive() || !SpiderMountClaims.isOwner(spider, skeleton)) return false;
         if (jumping) return leapTicks < LEAP_TIMEOUT;
         return skeleton.tickCount - startedTick < APPROACH_TIMEOUT;
     }
@@ -94,8 +96,14 @@ public final class SkeletonSpiderMountGoal extends Goal {
 
     @Override
     public void tick() {
-        if (spider == null || !available(spider)) return;
+        if (spider == null || !available(spider)
+                || !SpiderMountClaims.reserve(spider, skeleton)) return;
         skeleton.getLookControl().setLookAt(spider, 30.0F, 25.0F);
+        // Suspend the mount's own navigation while the skeleton boards.
+        // The spider instinct goal yields to the same reservation.
+        if (skeleton.distanceToSqr(spider) <= 16.0D || jumping) {
+            spider.getNavigation().stop();
+        }
         if (!jumping) {
             if (skeleton.distanceToSqr(spider) < START_LEAP_DISTANCE_SQR
                     && skeleton.onGround()) {
@@ -134,7 +142,7 @@ public final class SkeletonSpiderMountGoal extends Goal {
         Vec3 previous = skeleton.getDeltaMovement();
         skeleton.setDeltaMovement(
                 toward.x * 0.19D + previous.x * 0.15D,
-                0.39D,
+                0.36D,
                 toward.z * 0.19D + previous.z * 0.15D);
         skeleton.hasImpulse = true;
         if (skeleton.level() instanceof ServerLevel level) {
@@ -147,6 +155,7 @@ public final class SkeletonSpiderMountGoal extends Goal {
     @Override
     public void stop() {
         skeleton.getNavigation().stop();
+        if (spider != null) SpiderMountClaims.release(spider, skeleton);
         spider = null;
         jumping = false;
     }
