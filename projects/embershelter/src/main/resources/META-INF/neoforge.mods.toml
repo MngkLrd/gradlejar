@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+modId="embershelter"
+version="1.0.0"
+displayName="Ember Shelter"
+authors="Kirill"
+description="Build a small wilderness shelter from a Camp Kit, one block at a time."
+
+[[dependencies.embershelter]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.embershelter]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
