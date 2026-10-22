@@ -23,8 +23,8 @@ import java.util.Optional;
 
 /**
  * Client-only Ender Pearl prediction with a PUBG-like dashed world-space preview.
- * Physical simulation stays at the real thrown-pearl origin, while the FIRST-PERSON
- * preview begins forward of the camera, precisely along the crosshair's ray.
+ * The simulation and rendering use the real, face-height pearl spawn position.
+ * In first person only the very short near-camera piece is clipped for readability.
  */
 final class PearlTrajectoryRenderer {
     private static final int MAX_TICKS = 150;
@@ -33,8 +33,9 @@ final class PearlTrajectoryRenderer {
     private static final double GRAVITY = 0.03;
     private static final double PEARL_RADIUS = 0.125;
 
-    // Do not draw from the camera's near plane! That was the long line from the hotbar.
-    private static final double CROSSHAIR_START_DISTANCE = 1.05;
+    // Hide only the face-to-near-plane section to avoid large foreground line artifacts.
+    // This is a clipping distance along the *real projectile path*, not a reticle anchor.
+    private static final double FACE_CLIP_DISTANCE = 0.45;
     private static final double DASH_LENGTH = 0.35;
     private static final double DASH_GAP = 0.21;
 
@@ -62,20 +63,21 @@ final class PearlTrajectoryRenderer {
         Trajectory prediction = trace(level, player, physicalStart, velocity);
         if (prediction.points().size() < 2) return;
 
-        // Keep the physical simulation untouched. Only replace the NEAR-CAMERA
-        // presentation of the first segment. The in-game trajectory still collides
-        // with blocks and entities from the vanilla launch position.
-        List<Vec3> visible = new ArrayList<>(prediction.points().size());
+        // Begin at the actual pearl origin next to the player's face. Never add
+        // a fake camera/crosshair point: this would pull the preview into the HUD.
+        List<Vec3> visible = new ArrayList<>(prediction.points());
         if (mc.options.getCameraType().isFirstPerson()) {
-            Vec3 firstTravelPoint = prediction.points().get(1);
-            double forward = firstTravelPoint.subtract(camera).dot(look);
-            if (forward > CROSSHAIR_START_DISTANCE) {
-                // This projects exactly to the crosshair in first person.
-                visible.add(camera.add(look.scale(CROSSHAIR_START_DISTANCE)));
+            // The camera is inside the face. Trim a tiny part of the FIRST physical
+            // segment so it cannot be drawn across the entire foreground screen.
+            // The rest of the arc, its collision point and its physics are unchanged.
+            Vec3 face = visible.get(0);
+            Vec3 first = visible.get(1);
+            Vec3 firstSegment = first.subtract(face);
+            double length = firstSegment.length();
+            if (length > 1.0e-6) {
+                double clip = Math.min(FACE_CLIP_DISTANCE, length * 0.9);
+                visible.set(0, face.add(firstSegment.scale(clip / length)));
             }
-        }
-        for (int i = 1; i < prediction.points().size(); i++) {
-            visible.add(prediction.points().get(i));
         }
 
         PoseStack pose = event.getPoseStack();
