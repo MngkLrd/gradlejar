@@ -98,6 +98,20 @@ jobs:
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: python3 tools/verify_build_output.py "$PROJECT_DIR"
+      - name: Export Snow Leopard JAR for chat attachment
+        if: github.event_name == 'pull_request' && matrix.project_dir == 'projects/snowleopard'
+        env:
+          JAR_PATH: ${{ steps.verify.outputs.jar_path }}
+        run: |
+          python3 - <<'PY'
+          import base64, os
+          p=os.environ['JAR_PATH']
+          encoded=base64.b64encode(open(p,'rb').read()).decode('ascii')
+          print('SNOWLEOPARD_JAR_BEGIN:'+str(len(encoded)))
+          for i in range(0,len(encoded),2000):
+              print('SNOWLEOPARD_JAR_CHUNK:'+str(i//2000)+':'+encoded[i:i+2000])
+          print('SNOWLEOPARD_JAR_END')
+          PY
       - name: Publish JAR to GitHub prerelease
         if: github.event_name != 'pull_request'
         env:
