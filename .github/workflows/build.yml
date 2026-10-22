@@ -95,6 +95,12 @@ jobs:
         run: |
           python3 tools/unpack_screenshotmanager.py
           python3 tools/port_screenshotmanager_26x.py "${{ matrix.project_dir }}"
+      - name: Restore Pocket Realms 0.6.2 horror systems
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/upgrade_pocketrealms_v062.py
+      - name: Integrate Pocket Realms 0.6.3 sanctuary and dread
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/upgrade_pocketrealms_v063.py
       - name: Validate profile
         id: profile
         env:
@@ -133,6 +139,9 @@ jobs:
       - name: Check model, texture and datapack assets
         if: matrix.project_dir == 'projects/openmotion'
         run: python3 projects/openmotion/tools/check_assets.py
+      - name: Verify Pocket Realms 0.6.3 packaged mechanics and sprites
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/verify_pocketrealms_v063.py
       - name: Verify JAR
         id: verify
         env:
