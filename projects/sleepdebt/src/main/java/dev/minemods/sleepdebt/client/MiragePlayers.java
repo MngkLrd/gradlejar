@@ -66,7 +66,7 @@ public final class MiragePlayers {
    Vec3 to=p.position().add(0,1.5,0).subtract(eye);
    double length=to.length();
    double dot=length<.01?1:to.x*sight.x()/length+to.y*sight.y()/length+to.z*sight.z()/length;
-   if(time-p.born()>p.lifetime() || length<7 || (dot>.984&&length<34)){
+   if(time-p.born()>p.lifetime() || length<7 || (time-p.born()>24 && dot>.9985 && length<27)){
     iterator.remove();
    }
   }
@@ -76,10 +76,11 @@ public final class MiragePlayers {
   if(mc.level.random.nextInt(100)>Math.min(90,18+(ClientState.debt-650)/5+ClientState.stress/20))return;
   int count=2+mc.level.random.nextInt(3+(ClientState.debt>=900?2:0));
   count=Math.min(ClientSettings.MIRAGE_MAX.get(),count);
-  double first=mc.level.random.nextDouble()*Math.PI*2;
+  Vec3 look=mc.player.getLookAngle();
+  double first=Math.atan2(look.z,look.x);
   for(int i=0;i<count;i++){
-   double angle=first+i*(Math.PI*2/count)+mc.level.random.nextGaussian()*.24;
-   double range=17+mc.level.random.nextDouble()*17;
+   double angle=first+(i-(count-1)*.5)*.39+mc.level.random.nextGaussian()*.12;
+   double range=19+mc.level.random.nextDouble()*14;
    int x=Mth.floor(mc.player.getX()+Math.cos(angle)*range);
    int z=Mth.floor(mc.player.getZ()+Math.sin(angle)*range);
    // Only use loaded chunks; never generate or demand chunks for a visual effect.

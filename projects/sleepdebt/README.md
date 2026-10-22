@@ -36,3 +36,11 @@ Operator command: `/sleepdebt showcase` creates an isolated demo camp without re
 
 ## Sleep Debt 2.5
 Client-side world-space mirage players with vanilla Steve/Alex geometry, gaze-triggered vanishing and no server entities. Procedural session-only hallucinations. Pixel-perfect GUI atlas. Awning post/roof collision instead of solid invisible cube, compass-oriented coffee maker. Optional Accessories API integration: mask in the face slot confers real camp-rest benefit when equipped. No hard dependency on Accessories.
+
+## Sleep Debt 2.5 Alpha 2: perception and recovery
+- World-space player figures cluster ahead; Steve/Alex skins and full 3D models.
+- The Sleepless freezes under direct observation at a distance.
+- Biome temperature and exposed rainfall now affect sleep recovery.
+- Dreamcatchers ward off natural Sleepless appearances.
+- Optional Accessories face slot can hold a functional sleep mask.
+- Vanilla pixel UI background, matching block collision and directional coffee maker.

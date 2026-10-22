@@ -1,0 +1,15 @@
+{
+  "name": "Figures in the Fog",
+  "category": "sleepdebt:fatigue",
+  "icon": "minecraft:player_head",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "After nights without sleep, figures that look like Steve or Alex can stand in the fog far ahead. They have real 3D geometry, but no hitbox. When you approach or stare directly at them, they vanish."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "These visions are client-side only. No impostor players join the server. The real Sleepless behaves differently: it freezes when watched from afar, then stalks you when you turn away. Dreamcatchers and bright lanterns help defend camps."
+    }
+  ]
+}

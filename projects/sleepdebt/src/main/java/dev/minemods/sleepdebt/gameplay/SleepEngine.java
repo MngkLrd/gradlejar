@@ -98,6 +98,11 @@ public final class SleepEngine {
     if(SleepSettings.SHELTER_BONUS.get()&&!p.level().canSeeSky(p.blockPosition()))recovery=(int)(recovery*1.15);
     if(SleepSettings.MONSTER_PENALTY.get() && !p.level().getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(12)).isEmpty())recovery=(int)(recovery*.85);
     if(read(t,"calm")>0)recovery=(int)(recovery*1.10);
+    float temperature=p.level().getBiome(p.blockPosition()).value().getBaseTemperature();
+    boolean outside=p.level().canSeeSky(p.blockPosition().above());
+    if(outside && p.serverLevel().isRainingAt(p.blockPosition().above()))recovery=(int)(recovery*.82);
+    if(outside && temperature<.15f)recovery=(int)(recovery*.83);
+    if(outside && temperature>1.8f)recovery=(int)(recovery*.91);
     if(BlockPos.betweenClosedStream(p.blockPosition().offset(-5,-2,-5),p.blockPosition().offset(5,3,5))
       .anyMatch(q->p.level().getBlockState(q).is(ModBlocks.DREAMCATCHER.get())))recovery=(int)(recovery*1.18);
     if(slept<85)recovery=Math.min(recovery,180);
@@ -137,6 +142,9 @@ public final class SleepEngine {
  private static void spawnSleepless(ServerPlayer p,CompoundTag t){
   if(read(t,"debt")<SleepSettings.SLEEPLESS_THRESHOLD.get()||!(p.level() instanceof ServerLevel level)||level.isDay())return;
   if(level.random.nextInt(4)!=0)return;
+  if(BlockPos.betweenClosedStream(p.blockPosition().offset(-7,-3,-7),
+    p.blockPosition().offset(7,4,7))
+    .anyMatch(q->level.getBlockState(q).is(ModBlocks.DREAMCATCHER.get())))return;
   if(!level.getEntitiesOfClass(SleeplessEntity.class,p.getBoundingBox().inflate(32)).isEmpty())return;
   double angle=level.random.nextDouble()*Math.PI*2;
   int x=p.getBlockX()+(int)(Math.cos(angle)*20);

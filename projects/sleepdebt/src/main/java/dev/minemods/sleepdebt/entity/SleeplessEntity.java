@@ -21,6 +21,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 public final class SleeplessEntity extends Zombie {
  public SleeplessEntity(EntityType<? extends Zombie> type,Level level){super(type,level);}
  public static AttributeSupplier.Builder createAttributes(){
@@ -52,6 +53,17 @@ public final class SleeplessEntity extends Zombie {
  @Override protected SoundEvent getDeathSound(){return SoundEvents.WITHER_SKELETON_DEATH;}
  @Override public void tick(){
   super.tick();
+  if(!level().isClientSide && tickCount%5==0 && getTarget() instanceof ServerPlayer target){
+   Vec3 fromTarget=position().add(0,1.2,0).subtract(target.getEyePosition());
+   double distance=fromTarget.length();
+   if(distance>8 && distance<26){
+    double gaze=target.getLookAngle().normalize().dot(fromTarget.normalize());
+    if(gaze>.965 && target.hasLineOfSight(this)){
+     getNavigation().stop();
+     getLookControl().setLookAt(target);
+    }
+   }
+  }
   if(!level().isClientSide && tickCount%40==0 && (level().isDay()||level().getMaxLocalRawBrightness(blockPosition())>=13)){
     if(tickCount>100)discard();
   }
