@@ -4,10 +4,10 @@ license="MIT"
 
 [[mods]]
 modId="hungrymining"
-version="1.0.0"
+version="1.1.0"
 displayName="Hungry Mining"
 authors="MineMods"
-description="Your hunger level changes how quickly you mine. Mine slowly when hungry, or get a small boost when well fed."
+description="Progressive hunger-based mining: keep your full-hunger bonus until food drops by three points, then mine more slowly as you starve."
 
 [[dependencies.hungrymining]]
 modId="neoforge"
