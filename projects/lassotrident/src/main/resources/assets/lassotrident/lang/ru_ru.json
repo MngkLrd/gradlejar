@@ -1,0 +1,6 @@
+{
+  "lassotrident.tooltip.ready": "Поводок закреплён | После попадания зажми ПКМ, чтобы подтянуться",
+  "lassotrident.message.attached": "Трезубец закрепился. Зажми ПКМ для подъёма.",
+  "lassotrident.message.released": "Трезубец сорвался с крепления.",
+  "lassotrident.message.expired": "Трезубец отцепился."
+}

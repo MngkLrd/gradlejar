@@ -65,7 +65,7 @@ def verify(relative):
                 if not isinstance(version_range, str) or not version_range.strip():
                     raise ValueError(f"{meta}: Missing loaderVersion")
             deps = manifest.get("dependencies", {})
-            required = ("forge" if mc == "1.20.1" else "neoforge")
+            required = ("forge" if profile["loader"] == "forge" or mc == "1.20.1" else "neoforge")
             if not isinstance(deps, dict) or info["modId"] not in deps:
                 raise ValueError(f"{meta}: missing mod dependencies")
             dep_ids = {d.get("modId") for d in deps[info["modId"]]}
