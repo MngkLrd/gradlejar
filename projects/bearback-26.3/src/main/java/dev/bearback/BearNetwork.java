@@ -38,7 +38,7 @@ public final class BearNetwork {
             PacketDistributor.sendToPlayersTrackingEntityAndSelf(bear,new Saddle(bear.getId(),BearEvents.isSaddled(bear),BearEvents.hasBags(bear)));
     }
     public static void syncTo(PolarBear bear,ServerPlayer player){
-        PacketDistributor.sendToPlayer(player,new Saddle(bear.getId(),BearEvents.isSaddled(bear)));
+        PacketDistributor.sendToPlayer(player,new Saddle(bear.getId(),BearEvents.isSaddled(bear),BearEvents.hasBags(bear)));
     }
     public record Ride(float forward,float strafe,boolean jump,boolean attack,float yaw) implements CustomPacketPayload{
         public static final Type<Ride> TYPE=new Type<>(Identifier.fromNamespaceAndPath(Bearback.MOD_ID,"ride"));
