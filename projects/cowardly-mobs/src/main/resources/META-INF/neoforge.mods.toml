@@ -4,10 +4,10 @@ license="MIT"
 
 [[mods]]
 modId="cowardlymobs"
-version="0.4.0"
+version="0.5.0"
 displayName="Cowardly Mobs"
 authors="Minemods"
-description="Cowardly AI, integrated Zombie Hunger, morale, firing lines, group rally, and dynamic skeleton-to-spider jockey leaps."
+description="Smarter spiders flank, evade a player\u0027s gaze, climb walls for aerial attacks and reposition skeleton jockeys. Includes morale and Zombie Hunger."
 
 [[dependencies.cowardlymobs]]
 modId="neoforge"
