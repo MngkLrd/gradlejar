@@ -5,7 +5,7 @@ plugins {
 group = 'com.kirill.screenshotmanager'
 version = project.mod_version
 base.archivesName = 'screenshotmanager'
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.officialMojangMappings()

@@ -68,6 +68,10 @@ def main():
                 "    private static void onClientTickPost(Minecraft minecraft) {")
     if "ClientTickEvent.Post event" in s or "IEventBus" in s:
         raise RuntimeError("Incomplete Fabric migration")
+    if mc != "1.21.1":
+        s=s.replace("net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper",
+                    "net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper")
+        s=s.replace("KeyBindingHelper.registerKeyBinding(", "KeyMappingHelper.registerKeyMapping(")
     f.write_text(s,encoding="utf8")
     metadata={"schemaVersion":1,"id":"screenshotmanager","version":"$"+"{version}",
               "name":"Screenshot Manager","description":"Screenshot capture, editing and clipboard sharing.",
