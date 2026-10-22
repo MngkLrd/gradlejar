@@ -98,6 +98,13 @@ jobs:
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: python3 tools/verify_build_output.py "$PROJECT_DIR"
+      - name: Export Snow Leopard JAR for direct attachment
+        if: github.event_name == 'pull_request' && github.head_ref == 'export/snowleopard-ports-chat'
+        uses: actions/upload-artifact@v4
+        with:
+          name: snowleopard-${{ steps.profile.outputs.minecraft }}-${{ steps.profile.outputs.loader }}-${{ strategy.job-index }}
+          path: ${{ steps.verify.outputs.jar_path }}
+          retention-days: 1
       - name: Publish JAR to GitHub prerelease
         if: github.event_name != 'pull_request'
         env:
