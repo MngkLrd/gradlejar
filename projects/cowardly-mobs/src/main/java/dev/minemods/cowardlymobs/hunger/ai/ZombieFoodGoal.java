@@ -107,7 +107,11 @@ public final class ZombieFoodGoal extends Goal {
     public void start() {
         chewingTicks = 0;
         walkingTicks = 0;
-        if (food == null || !zombie.getNavigation().moveTo(food, 1.0)) {
+        if (food == null) return;
+        // When food lands at the zombie's feet there may be no navigation
+        // path because it is already within eating reach; still allow chewing.
+        if (zombie.distanceToSqr(food) > 3.24D
+                && !zombie.getNavigation().moveTo(food, 1.0D)) {
             food = null;
             scanCooldown = 40;
             return;
