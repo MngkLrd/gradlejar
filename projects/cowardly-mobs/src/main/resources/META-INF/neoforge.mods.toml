@@ -4,10 +4,10 @@ license="MIT"
 
 [[mods]]
 modId="cowardlymobs"
-version="0.2.0"
+version="0.3.0"
 displayName="Cowardly Mobs"
 authors="Minemods"
-description="Wounded mobs retreat, bow skeletons group up, and hungry zombies gather dropped meat to heal."
+description="Dynamic mob morale, zombie pack courage, skeleton firing lines, group rally and integrated Zombie Hunger."
 
 [[dependencies.cowardlymobs]]
 modId="neoforge"
