@@ -12,7 +12,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.PayloadChannel;
+import net.minecraftforge.network.Channel;
 
 public final class TetherNetwork {
     private TetherNetwork() {}
@@ -33,7 +33,7 @@ public final class TetherNetwork {
         @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
     }
 
-    private static final PayloadChannel CHANNEL = ChannelBuilder
+    private static final Channel<CustomPacketPayload> CHANNEL = ChannelBuilder
             .named(ResourceLocation.fromNamespaceAndPath(LassoTrident.MOD_ID, "network"))
             .networkProtocolVersion(1)
             .payloadChannel()
