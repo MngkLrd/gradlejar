@@ -52,5 +52,4 @@ jar {
        'Implementation-Title': project.name,
        'Implementation-Version': project.version
     ])
-    finalizedBy 'reobfJar'
 }
