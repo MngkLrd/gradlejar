@@ -21,6 +21,7 @@ public final class CowardlyMobs {
         container.registerConfig(ModConfig.Type.COMMON, SpiderInstinctConfig.SPEC,
                 "cowardlymobs-spiders-common.toml");
         NeoForge.EVENT_BUS.addListener(MobAiRegistration::onEntityJoin);
+        NeoForge.EVENT_BUS.addListener(MobAiRegistration::onIncomingDamage);
         NeoForge.EVENT_BUS.addListener(ZombieHungerEvents::onHurt);
     }
 }

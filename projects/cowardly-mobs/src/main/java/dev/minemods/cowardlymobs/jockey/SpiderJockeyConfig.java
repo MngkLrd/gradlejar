@@ -17,13 +17,13 @@ public final class SpiderJockeyConfig {
         ENABLED = builder.comment("Let ordinary skeletons mount nearby free spiders.")
                 .define("enabled", true);
         CHANCE = builder.comment("Chance per eligible meeting (not every tick).")
-                .defineInRange("mountChance", 0.15D, 0.0D, 1.0D);
+                .defineInRange("mountChance", 0.30D, 0.0D, 1.0D);
         FEAR_CHANCE = builder.comment("Mount chance if the skeleton is wounded and fears its target.")
-                .defineInRange("frightenedMountChance", 0.35D, 0.0D, 1.0D);
+                .defineInRange("frightenedMountChance", 0.55D, 0.0D, 1.0D);
         SEARCH_RADIUS = builder.comment("Max local radius of searches, in blocks.")
                 .defineInRange("searchRadius", 6, 2, 16);
-        RETRY_COOLDOWN = builder.comment("Ticks before another roll after a spider encounter; 600 = 30 seconds.")
-                .defineInRange("retryCooldownTicks", 600, 60, 3600);
+        RETRY_COOLDOWN = builder.comment("Ticks before another roll after a spider encounter; 200 = 10 seconds.")
+                .defineInRange("retryCooldownTicks", 200, 60, 3600);
         builder.pop();
         SPEC = builder.build();
     }

@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Spider;
+import dev.minemods.cowardlymobs.jockey.SpiderMountClaims;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
@@ -58,7 +59,8 @@ public final class SpiderInstinctGoal extends Goal {
     @Override
     public boolean canUse() {
         if (!SpiderInstinctConfig.ENABLED.get()
-                || spider.isPassenger() || !spider.isAlive()) return false;
+                || spider.isPassenger() || !spider.isAlive()
+                || SpiderMountClaims.isReserved(spider)) return false;
         target = findTarget();
         if (isSkeletonJockey() && !SpiderInstinctConfig.JOCKEY_TACTICS.get()) return false;
         return validTarget(target) && spider.distanceToSqr(target)
@@ -70,6 +72,7 @@ public final class SpiderInstinctGoal extends Goal {
         return SpiderInstinctConfig.ENABLED.get()
                 && (!isSkeletonJockey() || SpiderInstinctConfig.JOCKEY_TACTICS.get())
                 && spider.isAlive() && !spider.isPassenger()
+                && !SpiderMountClaims.isReserved(spider)
                 && validTarget(findTarget())
                 && spider.distanceToSqr(target) <= square(MAX_HUNT_DISTANCE + 4.0D);
     }
@@ -215,6 +218,11 @@ public final class SpiderInstinctGoal extends Goal {
         }
     }
 
+    /**
+     * Two-step flank, with a real lateral waypoint when the spider starts
+     * inside the player's frontal half-plane. A direct path to the behind
+     * point often crossed the player's face and looked like a frontal rush.
+     */
     private void steerFlank() {
         if (spider.tickCount < nextMoveTick) return;
         nextMoveTick = spider.tickCount + NAVIGATION_REFRESH;
@@ -224,15 +232,33 @@ public final class SpiderInstinctGoal extends Goal {
             return;
         }
 
-        Vec3 look = horizontalLook(target);
-        double lateral = leftSide ? 2.0D : -2.0D;
-        Vec3 behind = target.position().subtract(look.scale(3.8D))
-                .add(look.z * lateral, 0, -look.x * lateral);
-        if (spider.position().distanceToSqr(behind) < square(2.2D)) {
+        Vec3 forward = horizontalLook(target);
+        Vec3 side = new Vec3(-forward.z, 0.0D, forward.x);
+        double direction = leftSide ? 1.0D : -1.0D;
+        Vec3 relative = spider.position().subtract(target.position());
+        double front = relative.dot(forward);
+        double lateral = relative.dot(side);
+
+        // Stage 1: go around the viewing cone instead of pathing through it.
+        Vec3 flank = target.position().add(side.scale(direction * 5.2D))
+                .add(forward.scale(1.0D));
+        // Stage 2: use the rear quadrant, keeping modest side separation.
+        Vec3 rear = target.position().subtract(forward.scale(3.3D))
+                .add(side.scale(direction * 2.3D));
+
+        boolean needSideStep = front > -0.6D
+                && lateral * direction < 4.2D;
+        Vec3 desired = needSideStep ? flank : rear;
+
+        if (spider.position().distanceToSqr(rear) < square(2.7D)
+                || (front < -1.5D
+                    && spider.distanceToSqr(target) < ATTACK_REACH_SQR * 2.0D)) {
+            // Already behind the player: finish with ordinary melee pursuit.
             spider.getNavigation().moveTo(target, NORMAL_SPEED);
         } else if (!spider.getNavigation().moveTo(
-                behind.x, target.getY(), behind.z, NORMAL_SPEED)) {
-            // Safe vanilla fallback when terrain blocks the behind-player slot.
+                desired.x, target.getY(), desired.z, NORMAL_SPEED)) {
+            // Try the opposite side once before reverting to vanilla pathing.
+            leftSide = !leftSide;
             spider.getNavigation().moveTo(target, NORMAL_SPEED);
         }
     }
@@ -322,33 +348,51 @@ public final class SpiderInstinctGoal extends Goal {
         return null;
     }
 
+    /**
+     * First path to the foot of the wall at the spider's current elevation;
+     * only then press into the solid face with an upward movement goal.
+     * Asking ground pathfinding for an air node three blocks up did not
+     * cause vanilla spiders to climb.
+     */
     private void climbOrPounce() {
         if (wall == null || spider.tickCount - wallStartTick > WALL_CLIMB_TIMEOUT) {
             abortClimb();
             return;
         }
-        double toWallSq = spider.position().distanceToSqr(
-                new Vec3(wall.aim.x, spider.getY(), wall.aim.z));
 
+        double x = wall.aim.x - spider.getX();
+        double z = wall.aim.z - spider.getZ();
+        double horizontalDistanceSq = x * x + z * z;
         if (spider.getY() >= wall.startY + 1.8D
                 && spider.distanceToSqr(target) < square(10.0D)
-                && toWallSq < square(3.0D)) {
+                && horizontalDistanceSq <= square(2.5D)) {
             beginDive();
             return;
         }
 
-        // Let vanilla wall-climbing physics work by steering toward the face.
-        // Do not teleport or assign any upward climbing velocity.
-        if (spider.tickCount >= nextMoveTick) {
-            nextMoveTick = spider.tickCount + NAVIGATION_REFRESH;
-            spider.getNavigation().moveTo(
-                    wall.aim.x, wall.aim.y, wall.aim.z, NORMAL_SPEED);
+        if (horizontalDistanceSq > square(1.45D)) {
+            if (spider.tickCount >= nextMoveTick) {
+                nextMoveTick = spider.tickCount + NAVIGATION_REFRESH;
+                spider.getNavigation().moveTo(
+                        wall.aim.x, spider.getY(), wall.aim.z, NORMAL_SPEED);
+            }
+            return;
         }
-        if (toWallSq < square(3.0D)) {
-            spider.getMoveControl().setWantedPosition(
-                    wall.block.getX() + 0.5D,
-                    wall.aim.y,
-                    wall.block.getZ() + 0.5D, NORMAL_SPEED);
+
+        // Vanilla Spider climbing sets its climbing flag after pushing against
+        // a solid horizontal collision. The wanted Y is above the wall foot.
+        spider.getNavigation().stop();
+        spider.getMoveControl().setWantedPosition(
+                wall.block.getX() + 0.5D,
+                wall.startY + 3.4D,
+                wall.block.getZ() + 0.5D, NORMAL_SPEED);
+        // Assist vanilla climbing only after a real horizontal collision
+        // with the selected solid face. This is physical vertical movement,
+        // not a teleport or an air jump from flat ground.
+        if (spider.horizontalCollision && spider.getY() < wall.startY + 3.0D) {
+            Vec3 motion = spider.getDeltaMovement();
+            spider.setDeltaMovement(motion.x, Math.max(motion.y, 0.16D), motion.z);
+            spider.hasImpulse = true;
         }
     }
 
