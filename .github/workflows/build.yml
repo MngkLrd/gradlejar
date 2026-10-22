@@ -40,6 +40,9 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
+      - name: Restore Pocket Realms sources
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/unpack_pocketrealms.py
       - name: Validate profile
         id: profile
         env:
