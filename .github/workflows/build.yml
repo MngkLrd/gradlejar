@@ -64,6 +64,9 @@ jobs:
       - name: Restore Pocket Realms 0.5.1 custom sounds
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/unpack_pocketrealms_v051.py
+      - name: Polish Pocket Realms 0.5.1 visuals and portal
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/polish_pocketrealms_v051.py
       - name: Validate profile
         id: profile
         env:
