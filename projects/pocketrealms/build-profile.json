@@ -1,11 +1,11 @@
 {
   "slug": "pocketrealms",
-  "version": "0.1.1",
+  "version": "0.3.9",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "8.14.3",
-  "jar_glob": "pocketrealms-0.1.1.jar",
+  "jar_glob": "pocketrealms-0.3.9.jar",
   "minimum_loader_version": "21.1.0",
   "compile_loader_version": "21.1.209"
 }
