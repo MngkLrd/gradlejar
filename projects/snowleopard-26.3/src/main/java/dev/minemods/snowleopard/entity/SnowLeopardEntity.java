@@ -4,7 +4,7 @@ import dev.minemods.snowleopard.SnowLeopardMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
@@ -70,16 +70,16 @@ public class SnowLeopardEntity extends Animal {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.CAT_AMBIENT;
+        return SoundEvent.createVariableRangeEvent(Identifier.withDefaultNamespace("entity.cat.ambient"));
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.CAT_HURT;
+        return SoundEvent.createVariableRangeEvent(Identifier.withDefaultNamespace("entity.cat.hurt"));
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.CAT_DEATH;
+        return SoundEvent.createVariableRangeEvent(Identifier.withDefaultNamespace("entity.cat.death"));
     }
 }
