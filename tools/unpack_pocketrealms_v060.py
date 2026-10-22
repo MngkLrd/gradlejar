@@ -1,6 +1,6 @@
 """Restore Pocket Realms 0.6.0 hand-built architectural rooms and block textures."""
 from pathlib import Path
-import base64,hashlib,io,tarfile,lzma,subprocess,json
+import base64,hashlib,io,tarfile,lzma,subprocess,json,re
 repo=Path(__file__).resolve().parents[1]
 root=repo/"projects/pocketrealms"
 parts=[root/f"upgrade-v060-{i:02d}.b64" for i in range(4)]
@@ -22,11 +22,19 @@ with tarfile.open(fileobj=io.BytesIO(lzma.decompress(raw)),mode="r:") as arc:
             dst.parent.mkdir(parents=True,exist_ok=True)
             dst.write_bytes(contents)
 if patch is None:raise SystemExit("Missing generator patch")
+# 0.5.3 CI patched away a deprecated wayfinding comment. Apply that one call change
+# by exact text replacement rather than relying on its obsolete diff context.
+patch=re.sub(rb"^@@ -85,7 \\+88,7 @@.*?(?=^@@ |\\Z)",b"",patch,flags=re.MULTILINE|re.DOTALL)
 check=subprocess.run(["patch","--dry-run","--fuzz=0","-p1"],input=patch,cwd=root,capture_output=True)
 if check.returncode:
     raise SystemExit("Room generator source conflict:\n"+check.stdout.decode()+check.stderr.decode())
 apply=subprocess.run(["patch","--fuzz=0","-p1"],input=patch,cwd=root,capture_output=True)
 if apply.returncode:raise SystemExit(apply.stdout.decode()+apply.stderr.decode())
+gen=root/"src/main/java/com/kirill/pocketrealms/world/PocketGenerator.java"
+text=gen.read_text("utf8")
+old="buildLivingPassages(entry, open, centerX, centerZ, random);"
+if text.count(old)!=1:raise SystemExit("Could not install room-safe passage builder")
+gen.write_text(text.replace(old,"buildLivingPassages(entry, open, centerX, centerZ, random, rooms);"),encoding="utf8")
 blocks=root/"src/main/java/com/kirill/pocketrealms/registry/ModBlocks.java"
 s=blocks.read_text("utf8")
 needle="    public static final DeferredBlock<Block> CORRUPTION_NEST = BLOCKS.register("
