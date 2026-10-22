@@ -17,8 +17,11 @@ public final class ClientBootstrap {
   bus.addListener(ClientBootstrap::onGui);
   bus.addListener(ClientBootstrap::renderers);
   bus.addListener(ClientBootstrap::layers);
+  bus.addListener(MiragePlayers::modelBake);
   bus.addListener(ClientBootstrap::screens);
   NeoForge.EVENT_BUS.addListener(ClientHallucinations::tick);
+  NeoForge.EVENT_BUS.addListener(MiragePlayers::clientTick);
+  NeoForge.EVENT_BUS.addListener(MiragePlayers::renderWorld);
  }
  private static void onGui(RegisterGuiLayersEvent e){
   e.registerAbove(VanillaGuiLayers.FOOD_LEVEL,
@@ -35,5 +38,6 @@ public final class ClientBootstrap {
  }
  private ClientBootstrap(){}
 }
+
 
 

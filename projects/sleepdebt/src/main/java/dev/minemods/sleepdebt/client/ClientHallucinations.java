@@ -25,7 +25,7 @@ public final class ClientHallucinations {
  public static void render(GuiGraphics g){
   Minecraft mc=Minecraft.getInstance();
   if(!ClientSettings.HALLUCINATIONS.get()||mc.player==null||mc.level==null||mc.options.hideGui||mc.screen!=null)return;
-  if(ClientState.debt<620||ClientState.maskTicks>0)return;
+  if(ClientState.debt<620||ClientState.maskTicks>0||ClientSettings.MIRAGE_PLAYERS.get())return;
   long t=mc.level.getGameTime(),phase=t/190;
   long seed=(phase*37291L+mc.player.getUUID().getMostSignificantBits())&0x7fffffff;
   if(seed%7!=0||t%190>26)return;
@@ -51,4 +51,5 @@ public final class ClientHallucinations {
  }
  private ClientHallucinations(){}
 }
+
 
