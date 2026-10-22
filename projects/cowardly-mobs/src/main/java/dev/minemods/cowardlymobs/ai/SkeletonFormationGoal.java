@@ -1,5 +1,6 @@
 package dev.minemods.cowardlymobs.ai;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
@@ -11,126 +12,179 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Simple ranged positioning for skeletons with vanilla bows:
- * back off from close targets, keep personal space, gather with nearby allies.
- * Pathfinding speed stays at 1.0; no artificial speed or firing buffs.
+ * A loose firing line, not a scripted squad or a ranged attack replacement.
+ * Skeletons spread across the player's view at regular intervals, retreat
+ * when approached, and sidestep allies obscuring their shot.
+ *
+ * Only MOVE is reserved; pathing uses normal vanilla mob speed.
+ * Repositioning expires quickly to let the vanilla bow goal fire.
  */
 public final class SkeletonFormationGoal extends Goal {
-    private enum Plan { NONE, RETREAT, SPREAD, JOIN }
+    private enum Plan { NONE, RETREAT, LINE, CLEAR_SHOT }
 
     private final AbstractSkeleton skeleton;
-    private Player player;
-    private AbstractSkeleton ally;
-    private Vec3 escapeSpot;
+    private Player target;
+    private Vec3 destination;
     private Plan plan = Plan.NONE;
     private int nextPlanTick;
     private int planEndsTick;
+    private boolean pathStarted;
 
     public SkeletonFormationGoal(AbstractSkeleton skeleton) {
         this.skeleton = skeleton;
         this.setFlags(EnumSet.of(Flag.MOVE));
-        this.nextPlanTick = skeleton.tickCount + skeleton.getRandom().nextInt(20);
+        nextPlanTick = skeleton.tickCount + skeleton.getRandom().nextInt(16);
     }
 
     @Override
     public boolean canUse() {
-        if (skeleton.tickCount < nextPlanTick) {
-            return false;
-        }
-        nextPlanTick = skeleton.tickCount + 12 + skeleton.getRandom().nextInt(10);
+        if (skeleton.tickCount < nextPlanTick) return false;
+        nextPlanTick = skeleton.tickCount + 16 + skeleton.getRandom().nextInt(12);
+
         if (!skeleton.getMainHandItem().is(Items.BOW)
-                || !(skeleton.getTarget() instanceof Player target)
-                || !target.isAlive() || target.isCreative() || target.isSpectator()) {
+                || !(skeleton.getTarget() instanceof Player player)
+                || !player.isAlive() || player.isCreative() || player.isSpectator()) {
             return false;
         }
 
-        player = target;
-        double toPlayer = skeleton.distanceToSqr(target);
+        target = player;
+        double toPlayer = skeleton.distanceToSqr(player);
         if (toPlayer < square(AiBalance.SKELETON_RETREAT_START)) {
             plan = Plan.RETREAT;
-            escapeSpot = DefaultRandomPos.getPosAway(skeleton, 12, 6, target.position());
-            return escapeSpot != null;
+            destination = DefaultRandomPos.getPosAway(skeleton, 12, 6, player.position());
+            return destination != null;
         }
 
-        // Only allies engaging this exact target are treated as the same squad.
-        List<AbstractSkeleton> nearby = skeleton.level().getEntitiesOfClass(
-                AbstractSkeleton.class, skeleton.getBoundingBox().inflate(15.0D),
+        // Preserve vanilla pathfinding when the player is far away.
+        if (toPlayer > square(23.0D)
+                || !skeleton.getSensing().hasLineOfSight(player)) return false;
+
+        List<AbstractSkeleton> squad = new ArrayList<>(skeleton.level().getEntitiesOfClass(
+                AbstractSkeleton.class,
+                skeleton.getBoundingBox().inflate(AiBalance.SKELETON_LINE_SEARCH_RADIUS),
                 other -> other != skeleton && other.isAlive()
-                        && other.getTarget() == target
-                        && other.getMainHandItem().is(Items.BOW));
-        if (nearby.isEmpty()) {
-            return false;
+                        && other.getMainHandItem().is(Items.BOW)
+                        && other.getTarget() == player));
+        if (squad.isEmpty()) return false;
+
+        squad.sort(Comparator.comparingDouble(skeleton::distanceToSqr));
+        if (squad.size() >= AiBalance.SKELETON_LINE_MAX_MEMBERS) {
+            squad = new ArrayList<>(squad.subList(
+                    0, AiBalance.SKELETON_LINE_MAX_MEMBERS - 1));
+        }
+        squad.add(skeleton);
+        // UUID sorting assigns stable left-to-right slots across refreshes.
+        squad.sort(Comparator.comparing(s -> s.getUUID().toString()));
+
+        double centerX = 0.0D;
+        double centerZ = 0.0D;
+        for (AbstractSkeleton member : squad) {
+            centerX += member.getX();
+            centerZ += member.getZ();
+        }
+        centerX /= squad.size();
+        centerZ /= squad.size();
+
+        double awayX = centerX - player.getX();
+        double awayZ = centerZ - player.getZ();
+        double length = Math.sqrt(awayX * awayX + awayZ * awayZ);
+        if (length < 0.01D) {
+            awayX = skeleton.getX() - player.getX();
+            awayZ = skeleton.getZ() - player.getZ();
+            length = Math.sqrt(awayX * awayX + awayZ * awayZ);
+        }
+        if (length < 0.01D) return false;
+        awayX /= length;
+        awayZ /= length;
+
+        double tangentX = -awayZ;
+        double tangentZ = awayX;
+        int slot = squad.indexOf(skeleton);
+        double lateral = (slot - (squad.size() - 1) / 2.0D)
+                * AiBalance.SKELETON_LINE_SPACING;
+        double formationX = player.getX() + awayX * AiBalance.SKELETON_LINE_RANGE
+                + tangentX * lateral;
+        double formationZ = player.getZ() + awayZ * AiBalance.SKELETON_LINE_RANGE
+                + tangentZ * lateral;
+        Vec3 lineSpot = new Vec3(formationX, skeleton.getY(), formationZ);
+
+        boolean blockedByAlly = hasAllyBlockingShot(squad, player);
+        // Sidestep a teammate blocking the view rather than shooting into them.
+        if (blockedByAlly && skeleton.position().distanceToSqr(lineSpot)
+                < square(AiBalance.SKELETON_LINE_TOLERANCE)) {
+            double side = slot % 2 == 0 ? 1.0D : -1.0D;
+            destination = skeleton.position().add(
+                    tangentX * side * AiBalance.SKELETON_LINE_SPACING,
+                    0.0D,
+                    tangentZ * side * AiBalance.SKELETON_LINE_SPACING);
+            plan = Plan.CLEAR_SHOT;
+            return true;
         }
 
-        ally = nearby.stream()
-                .min(Comparator.comparingDouble(skeleton::distanceToSqr))
-                .orElse(null);
-        if (ally == null) {
-            return false;
-        }
-        double toAlly = skeleton.distanceToSqr(ally);
-
-        if (toAlly < square(AiBalance.SKELETON_SPREAD_START)) {
-            plan = Plan.SPREAD;
-            escapeSpot = DefaultRandomPos.getPosAway(skeleton, 7, 4, ally.position());
-            return escapeSpot != null;
-        }
-
-        // Gather only when this can be done without charging into melee range.
-        if (toAlly > square(AiBalance.SKELETON_JOIN_START)
-                && toAlly < square(15.0D)
-                && toPlayer > square(12.0D)
-                && toPlayer < square(22.0D)
-                && ally.distanceToSqr(target) > square(10.0D)) {
-            plan = Plan.JOIN;
+        if (skeleton.position().distanceToSqr(lineSpot)
+                > square(AiBalance.SKELETON_LINE_TOLERANCE)) {
+            destination = lineSpot;
+            plan = Plan.LINE;
             return true;
         }
         return false;
     }
 
-    @Override
-    public boolean canContinueToUse() {
-        if (player == null || !player.isAlive()
-                || skeleton.tickCount >= planEndsTick
-                || skeleton.getNavigation().isDone()) {
-            return false;
-        }
+    private boolean hasAllyBlockingShot(List<AbstractSkeleton> squad, Player player) {
+        double dx = player.getX() - skeleton.getX();
+        double dz = player.getZ() - skeleton.getZ();
+        double lenSquared = dx * dx + dz * dz;
+        if (lenSquared < 1.0D) return false;
 
-        return switch (plan) {
-            case RETREAT -> skeleton.distanceToSqr(player)
-                    < square(AiBalance.SKELETON_RETREAT_END);
-            case SPREAD -> ally != null && ally.isAlive()
-                    && skeleton.distanceToSqr(ally) < square(AiBalance.SKELETON_SPREAD_END);
-            case JOIN -> ally != null && ally.isAlive()
-                    && skeleton.distanceToSqr(ally) > square(AiBalance.SKELETON_JOIN_END)
-                    && skeleton.distanceToSqr(player) > square(9.0D);
-            case NONE -> false;
-        };
+        for (AbstractSkeleton other : squad) {
+            if (other == skeleton || Math.abs(other.getY() - skeleton.getY()) > 3.0D) {
+                continue;
+            }
+            double ox = other.getX() - skeleton.getX();
+            double oz = other.getZ() - skeleton.getZ();
+            double t = (ox * dx + oz * dz) / lenSquared;
+            if (t < 0.08D || t > 0.92D) continue;
+            double perpendicularSquared = square(ox - t * dx) + square(oz - t * dz);
+            if (perpendicularSquared < square(1.55D)) return true;
+        }
+        return false;
     }
 
     @Override
     public void start() {
         planEndsTick = skeleton.tickCount + AiBalance.SKELETON_REPOSITION_TIMEOUT_TICKS;
-        if (plan == Plan.JOIN && ally != null) {
-            skeleton.getNavigation().moveTo(ally, AiBalance.NORMAL_PATHFINDING_SPEED);
-        } else if (escapeSpot != null) {
-            skeleton.getNavigation().moveTo(escapeSpot.x, escapeSpot.y, escapeSpot.z,
-                    AiBalance.NORMAL_PATHFINDING_SPEED);
+        pathStarted = destination != null && skeleton.getNavigation().moveTo(
+                destination.x, destination.y, destination.z,
+                AiBalance.NORMAL_PATHFINDING_SPEED);
+    }
+
+    @Override
+    public boolean canContinueToUse() {
+        if (!pathStarted || target == null || !target.isAlive()
+                || skeleton.getTarget() != target
+                || skeleton.tickCount >= planEndsTick
+                || skeleton.getNavigation().isDone()) {
+            return false;
         }
+        if (plan == Plan.RETREAT) {
+            return skeleton.distanceToSqr(target)
+                    < square(AiBalance.SKELETON_RETREAT_END);
+        }
+        return destination != null
+                && skeleton.position().distanceToSqr(destination)
+                    > square(AiBalance.SKELETON_LINE_TOLERANCE);
     }
 
     @Override
     public void stop() {
         skeleton.getNavigation().stop();
-        // Give the default bow AI a chance to aim and shoot between moves.
-        nextPlanTick = skeleton.tickCount + 25 + skeleton.getRandom().nextInt(15);
         plan = Plan.NONE;
-        player = null;
-        ally = null;
-        escapeSpot = null;
+        target = null;
+        destination = null;
+        pathStarted = false;
+        // Brief bow-AI window between tactical movements.
+        nextPlanTick = skeleton.tickCount + 35 + skeleton.getRandom().nextInt(20);
     }
 
-    private static double square(double number) {
-        return number * number;
-    }
+    private static double square(double v) { return v * v; }
 }
