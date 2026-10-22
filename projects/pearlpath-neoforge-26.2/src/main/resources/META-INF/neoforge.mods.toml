@@ -1,0 +1,20 @@
+license="MIT"
+[[mods]]
+modId="pearlpath"
+version="1.0.2"
+displayName="PearlPath"
+displayTest="IGNORE_ALL_VERSION"
+authors="Minemods"
+description="A client-side Ender Pearl trajectory preview with a dashed cyan-purple line."
+[[dependencies.pearlpath]]
+modId="neoforge"
+type="required"
+versionRange="[26.2.0.1-beta,)"
+ordering="NONE"
+side="CLIENT"
+[[dependencies.pearlpath]]
+modId="minecraft"
+type="required"
+versionRange="[26.2]"
+ordering="NONE"
+side="CLIENT"
