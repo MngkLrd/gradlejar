@@ -1,0 +1,6 @@
+{
+  "key.quickstacknearby.stack": "Сложить в ближайшие сундуки",
+  "key.categories.quickstacknearby": "Quick Stack Nearby",
+  "message.quickstacknearby.moved": "Перемещено предметов: %s; сундуков: %s",
+  "message.quickstacknearby.none": "В ближайших сундуках нет подходящих стаков"
+}
