@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+modId="pearlpath"
+version="1.0.0"
+displayName="PearlPath"
+displayTest="IGNORE_ALL_VERSION"
+authors="Minemods"
+description='''Shows the predicted Ender Pearl flight as an actual colored path in the world before throwing. Client-side only.'''
+
+[[dependencies.pearlpath]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.0,)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.pearlpath]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="CLIENT"
