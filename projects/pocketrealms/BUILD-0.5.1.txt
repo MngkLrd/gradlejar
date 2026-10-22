@@ -1,3 +1,5 @@
 Pocket Realms 0.5.1: native End Portal renderer, horror audio cues, no route breadcrumbs. Full source applied by tools/unpack_pocketrealms_v051.py and tools/polish_pocketrealms_v051.py during CI. Minecraft 1.21.1 NeoForge Java 21.
 
 CI marker: run Pocket Realms 0.5.1 with vanilla portal BER, darker maze and sound events.
+
+Bundled FFmpeg wheel generates processed and degraded Void Pursuer OGG assets.
