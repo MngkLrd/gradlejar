@@ -1,4 +1,4 @@
-# Sleep Debt 2.4.0-alpha.1 — Field Survival Expansion
+# Sleep Debt 2.4.0-alpha.2 — Field Survival Expansion
 
 **Minecraft:** 1.21.1 · **Loader:** NeoForge · **Java:** 21 · **Gradle:** 9.2.1
 
@@ -21,11 +21,15 @@ Required: NeoForge 21.1.x; JEI, EMI and Jade on client; Jade and Patchouli accor
 ```bash
 gradle clean build
 ```
-Expected JAR: `build/libs/sleepdebt-1.21.1-2.4.0-alpha.1.jar`
+Expected JAR: `build/libs/sleepdebt-1.21.1-2.4.0-alpha.2.jar`
 
 ## Testing
 Read `CONTENT_2_4.md`. This CI tests Gradle compile and JAR structure only. Test dedicated server, client, and modpack compatibility manually. The camp is player-built, not worldgen. The Sleepless shares a vanilla zombie humanoid rig. Halo/hallucinations are client effects, not interactive mobs.
 
 ## Persistence
 Old item and block IDs are preserved. Player state remains under NBT `sleepdebt_v2`. Old world compatibility is not yet verified in runtime.
+
+
+## Showcase
+Operator command: `/sleepdebt showcase` creates an isolated demo camp without replacing existing blocks. The coffee maker is supplied with ingredients. `/sleepdebt debug set 950 800 700` rapidly tests fatigue and hallucinations. JEI and EMI have native machine-brewing categories.
 

@@ -6,6 +6,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+
 public final class SleepCommands {
  public static void register(CommandDispatcher<CommandSourceStack> dispatcher){
   dispatcher.register(Commands.literal("sleepdebt")
@@ -15,6 +16,13 @@ public final class SleepCommands {
      "Sleep Debt "+SleepEngine.getDebt(p)+"/1000 | Fatigue "+SleepEngine.getFatigue(p)+"/1000 | Stress "+
      SleepEngine.getStress(p)+"/1000 | Caffeine "+SleepEngine.getCaffeine(p)+"/100"),false);
     return 1;
+   }))
+   .then(Commands.literal("showcase").requires(source->source.hasPermission(2)).executes(ctx->{
+    boolean good=ShowcaseBuilder.create(ctx.getSource().getPlayerOrException());
+    ctx.getSource().sendSuccess(()->Component.literal(good?
+      "Sleep Debt showcase placed: campsite, coffee maker and dreamcatcher.":
+      "Cannot place the showcase: choose level ground with empty space 4 blocks away."),false);
+    return good?1:0;
    }))
    .then(Commands.literal("debug").requires(source->source.hasPermission(2))
     .then(Commands.literal("set")
@@ -33,3 +41,4 @@ public final class SleepCommands {
  }
  private SleepCommands(){}
 }
+

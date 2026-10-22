@@ -27,3 +27,9 @@ Legacy worlds: new items and blocks use new unique ids; old player status can st
 8. Check non-hostile hallucinations in client and client/server sync after death
 9. Verify Patchouli English/Russian pages and recipes; ensure required libs.
 
+
+## Showcase command (operators only)
+Run /sleepdebt showcase on level terrain with empty blocks around the player.
+The command places a bedroll, awning, Rest Lantern, Dreamcatcher and prefilled Coffee Maker.
+It never replaces existing blocks. Use /sleepdebt debug set 950 800 700 to test the HUD and night terrors.
+
