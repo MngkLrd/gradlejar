@@ -49,6 +49,9 @@ jobs:
       - name: Patch Pocket Realms 1.21.1 APIs
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/fix_pocketrealms_v039.py
+      - name: Restore Pocket Realms 0.4.0 quality fixes
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/unpack_pocketrealms_v040.py
       - name: Validate profile
         id: profile
         env:
