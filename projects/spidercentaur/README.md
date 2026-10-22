@@ -1,27 +1,28 @@
-# Spider Centaur 0.2.0 Alpha
+# Spider Centaur 0.2.1 Alpha
 
-NeoForge 1.21.1, Java 21, Minecraft's vanilla SkeletonModel + SpiderModel composed into a single entity.
+Minecraft 1.21.1 • NeoForge • Java 21.
 
-## New in 0.2.0
-- Custom cowboy hat model, fully procedurally built using Java ModelParts: turned-up brim, tall crown, obsidian-dark band.
-- Sparse purple-black obsidian growths over part of the skeleton skull, ribs, spider back and thorax.
-- Fine magical purple cracks and exactly one emissive red eye (other eye remains vanilla).
-- All custom artwork consists of manually generated pixel-cluster texture PNGs; no Blockbench export or external model dependency.
-- Hat and skull growths follow skeleton head animations, chest growths follow skeleton body; spider plates render on its back.
-- No changes to 26 HP, speed, bow AI, night spawn, wall climb, loot, or spawn egg.
+## 0.2.1 updates
 
-## Testing in Minecraft
-1. Use Minecraft 1.21.1, NeoForge 21.1.x, Java 21.
-2. Replace previous Spider Centaur jar with 0.2.0 in the mods folder.
-3. Spawn with `/summon spidercentaur:spider_centaur ~ ~ ~`.
-4. Inspect hat brim (no clipping), single red glowing eye, asymmetrical skull plates, purple cracks, and spider back growths.
-5. Verify skull ornaments follow head when shooting, and that eight legs still animate correctly.
-6. Check regular spawning at night, bow damage and wall climbing on a dedicated server.
+- One faint vanilla `WITCH` purple particle approximately once every 17 ticks **only while moving**. It appears just behind the spider body; no constant smoke cloud, trail emitter, or server packet spam.
+- Two original short procedurally generated sounds: quiet bone clicks / obsidian hiss (ambient), sharper brief brittle hurt.
+- Audio is deterministically generated during the Gradle build from a small Python standard-library script, encoded to Ogg/Vorbis with FFmpeg. Both Ogg files are included in the final JAR; no runtime Python or FFmpeg requirement.
+- The cowboy hat, red eye, obsidian geometry, bow AI, spawn behavior and existing loot remain intact.
+
+## Install/test
+
+1. Remove old `spidercentaur-1.21.1-0.2.0.jar` from your `mods` folder.
+2. Install this `spidercentaur-1.21.1-0.2.1.jar` with NeoForge 21.1.x on Minecraft 1.21.1, Java 21.
+3. Spawn using `/summon spidercentaur:spider_centaur ~ ~ ~`.
+4. Watch the **moving** spider from behind in darkness: extremely sparse violet sparkles at abdomen height.
+5. Enable Minecraft subtitles: listen to the quiet ambient rattle, then hit the mob once to hear the distinct hurt crack.
+6. Verify the sounds and particles vanish when the mob is gone; test dedicated servers and vanilla gameplay.
 
 ## Build
-Run `gradle clean build` from this directory. Output:
-`build/libs/spidercentaur-1.21.1-0.2.0.jar`.
-This repository's Minecraft Mod Build Hub publishes a GitHub pre-release after CI success.
+
+Run `gradle clean build`. Output at `build/libs/spidercentaur-1.21.1-0.2.1.jar`.
+Building from *source* also requires Python 3 and FFmpeg on PATH to generate the two Ogg assets. The GitHub Actions runner performs this generation automatically. The installed compiled JAR requires neither.
 
 ## Known limitations
-The first iteration intentionally reuses vanilla body skins with custom decorative geometry. Growth/hat fit must be visually checked inside a Minecraft client. CI verifies compilation and jar metadata but not gameplay/rendering.
+
+First-pass sound balance and cosmetic placement have not yet been checked inside Minecraft; CI verifies the build and resulting resources.

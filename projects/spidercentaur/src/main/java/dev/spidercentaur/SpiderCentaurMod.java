@@ -2,11 +2,11 @@ package dev.spidercentaur;
 
 import dev.spidercentaur.entity.SpiderCentaurEntity;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -39,9 +39,19 @@ public final class SpiderCentaurMod {
             ITEMS.register("spider_centaur_spawn_egg",
                     () -> new DeferredSpawnEggItem(SPIDER_CENTAUR, 0x211B21, 0xC4C0AD, new Item.Properties()));
 
+    public static final DeferredRegister<SoundEvent> SOUNDS =
+            DeferredRegister.create(Registries.SOUND_EVENT, MOD_ID);
+    public static final DeferredHolder<SoundEvent, SoundEvent> AMBIENT_SOUND =
+            SOUNDS.register("spider_centaur_ambient", () -> SoundEvent.createVariableRangeEvent(
+                    ResourceLocation.fromNamespaceAndPath(MOD_ID, "spider_centaur_ambient")));
+    public static final DeferredHolder<SoundEvent, SoundEvent> HURT_SOUND =
+            SOUNDS.register("spider_centaur_hurt", () -> SoundEvent.createVariableRangeEvent(
+                    ResourceLocation.fromNamespaceAndPath(MOD_ID, "spider_centaur_hurt")));
+
     public SpiderCentaurMod(IEventBus bus) {
         ENTITIES.register(bus);
         ITEMS.register(bus);
+        SOUNDS.register(bus);
         bus.addListener(this::attributes);
         bus.addListener(this::spawnPlacements);
         bus.addListener(this::creativeTabs);

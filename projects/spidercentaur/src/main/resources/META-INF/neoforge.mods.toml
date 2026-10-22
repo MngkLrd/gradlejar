@@ -3,10 +3,10 @@ loaderVersion="[4,)"
 license="MIT"
 [[mods]]
 modId="spidercentaur"
-version="0.2.0"
+version="0.2.1"
 displayName="Spider Centaur"
 authors="MineMods"
-description="A swift skeleton-spider archer with a cowboy hat, obsidian growths and a single red eye."
+description="A swift skeleton-spider archer with a cowboy hat, obsidian growths, a red eye and subtle cursed dust."
 [[dependencies.spidercentaur]]
 modId="neoforge"
 type="required"

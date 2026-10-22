@@ -16,6 +16,16 @@ neoForge {
     }
     mods { "${mod_id}" { sourceSet(sourceSets.main) } }
 }
+
+def generatedSounds = layout.buildDirectory.dir('generated/spidercentaur-sounds')
+tasks.register('generateOriginalSounds', Exec) {
+    inputs.file('tools/generate_sounds.py')
+    outputs.dir(generatedSounds)
+    commandLine 'python3', 'tools/generate_sounds.py', generatedSounds.get().asFile.absolutePath
+}
+sourceSets.main.resources.srcDir(generatedSounds)
+tasks.named('processResources') { dependsOn(tasks.named('generateOriginalSounds')) }
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     options.release = 21

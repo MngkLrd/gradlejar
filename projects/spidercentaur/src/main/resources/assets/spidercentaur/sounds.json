@@ -1,0 +1,14 @@
+{
+  "spider_centaur_ambient": {
+    "subtitle": "subtitles.spidercentaur.ambient",
+    "sounds": [
+      { "name": "spidercentaur:mob/spider_centaur/ambient", "volume": 0.36, "pitch": 0.94, "attenuation_distance": 12 }
+    ]
+  },
+  "spider_centaur_hurt": {
+    "subtitle": "subtitles.spidercentaur.hurt",
+    "sounds": [
+      { "name": "spidercentaur:mob/spider_centaur/hurt", "volume": 0.55, "pitch": 0.98, "attenuation_distance": 12 }
+    ]
+  }
+}

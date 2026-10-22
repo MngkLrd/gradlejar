@@ -1,4 +1,6 @@
 {
   "entity.spidercentaur.spider_centaur": "Spider Centaur",
-  "item.spidercentaur.spider_centaur_spawn_egg": "Spider Centaur Spawn Egg"
+  "item.spidercentaur.spider_centaur_spawn_egg": "Spider Centaur Spawn Egg",
+  "subtitles.spidercentaur.ambient": "Spider Centaur rattles",
+  "subtitles.spidercentaur.hurt": "Spider Centaur cracks"
 }

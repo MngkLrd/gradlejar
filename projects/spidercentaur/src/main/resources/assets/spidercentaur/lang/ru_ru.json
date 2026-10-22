@@ -1,4 +1,6 @@
 {
   "entity.spidercentaur.spider_centaur": "Паук-кентавр",
-  "item.spidercentaur.spider_centaur_spawn_egg": "Яйцо призыва паука-кентавра"
+  "item.spidercentaur.spider_centaur_spawn_egg": "Яйцо призыва паука-кентавра",
+  "subtitles.spidercentaur.ambient": "Паук-кентавр скрежещет",
+  "subtitles.spidercentaur.hurt": "Паук-кентавр трещит"
 }
