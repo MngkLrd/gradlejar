@@ -41,6 +41,13 @@ def main():
                 InputConstants.KEY_O,
                 category
         );''')
+    # Minecraft 26.2 still uses KEYSYM; 26.3 renamed the device to KEYBOARD.
+    if mc == "26.2":
+        s = s.replace("InputConstants.Type.KEYBOARD", "InputConstants.Type.KEYSYM")
+    s = s.replace("minecraft.setScreen(", "minecraft.gui.setScreen(")
+    s = s.replace("minecraft.screen == null", "minecraft.gui.screen() == null")
+    s = s.replace("minecraft.player.displayClientMessage(Component.literal(message), false)",
+                  "minecraft.player.sendSystemMessage(Component.literal(message))")
     f.write_text(s,encoding="utf8")
 
     f = client_dir / "ImageTexture.java"
@@ -76,6 +83,17 @@ def main():
         s=s.replace("public boolean mouseReleased(double mouseX, double mouseY, int button) {",
                     "public boolean mouseReleased(MouseButtonEvent event) {\n        double mouseX = event.x();\n        double mouseY = event.y();\n        int button = event.button();")
         s=s.replace("return super.mouseReleased(mouseX, mouseY, button);", "return super.mouseReleased(event);")
+        s = s.replace("Minecraft.getInstance().setScreen(", "Minecraft.getInstance().gui.setScreen(")
+        if filename == "ScreenshotEditorScreen.java":
+            s = s.replace("import net.minecraft.Util;", "import java.awt.Desktop;")
+            s = s.replace("Util.getPlatform().openFile(folder.toFile());", '''try {
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(folder.toFile());
+            }
+        } catch (IOException | UnsupportedOperationException exception) {
+            status = "Could not open screenshot folder: " + exception.getMessage();
+            return;
+        }''')
         f.write_text(s,encoding="utf8")
 
     lang = dest / "src/main/resources/assets/screenshotmanager/lang/en_us.json"
