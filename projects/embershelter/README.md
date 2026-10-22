@@ -1,47 +1,21 @@
-# Ember Shelter 1.0.0
+# Ember Shelter 1.0.1
 
-**NeoForge 1.21.1 / Java 21.** A survival camp builder based on one usable Camp Kit.
+NeoForge 1.21.1 / Java 21. One Camp Kit includes its building supplies; no extra inventory checkout.
 
-## How to use
+## Crafting
+First craft Camp Bundle with 8 logs around 1 chest. Then craft Camp Kit with Camp Bundle, 2 logs, 4 white wool, 1 campfire, and 1 torch. Total cost: **10 logs, 4 wool, 1 chest, 1 campfire, 1 torch**. Recipes appear in JEI and vanilla recipe book.
 
-1. Craft a Camp Kit (leather, string, oak plank).
-2. Find a **flat, open 7x7 area**, with firm ground and at least 4 blocks of clearance.
-3. Right-click the **top of a block** with the Camp Kit. The center becomes a lit campfire.
-4. Fences, tent posts, white-wool shelter, chest, seat and torches appear in stages.
-5. In survival, default `consumeMaterials=true` requires the blocks to be present in the main inventory, in addition to the kit. The exact amounts are counted from the blueprint, including the campfire.
-6. For a test: `/give @s embershelter:camp_kit` and change the server config below if you want free building.
+## Use
+Right-click a solid block from above. The 7x7 footprint must be flat and solid at the floor and allow 4 layers of replaceable blocks above it. A stone cave floor is fine and is NEVER mined. Water, lava, waterlogged blocks or hard obstacles abort the whole build before consuming the kit. After validation, grass/flowers/logs/leaves inside the airspace are cleared, then camp is built in stages. WARNING: player-placed logs in the campsite airspace can also be cleared; player-placed stone, machinery, chests and other hard blocks are never touched.
 
-## Controls / balance
-
-- No automatic trigger on vanilla campfire placement; only the Camp Kit activates.
-- If any campsite voxel is occupied (apart from optional replaceable plants or snow), **nothing is built or charged**.
-- Builds are server-side, with particle and sound broadcasts, every `buildDelayTicks` ticks.
-- Camp Kit is consumed once construction is accepted. Creative mode never pays.
-- If a new obstruction is detected while building, remaining steps are abandoned instead of overwriting it. On a still-active server, their reserved building blocks are returned to the player's inventory when online, or dropped at camp if offline.
-- Nighttime anti-aggro (Zombie, Skeleton, Spider, including common variants) applies only to finished kit camps with lit campfires, not all vanilla campfires. Bosses, witches, raiders and other mobs unaffected.
-- Dedicated server supported. Install on client and server (new item and assets).
+## Protection
+At night and near a completed lit campfire, basic zombies, husks, drowned, skeletons, strays, spiders and creepers drop targets for protected players. Does not affect Wither, Ender Dragon, Warden, Wither Skeleton, witches or raid mobs. An enemy that the player intentionally damaged can retaliate for ten seconds. Passive land animals also defend themselves when injured by a player (basic pursuit and 2HP attack); they otherwise remain peaceful.
 
 ## Server config
-
-`<world>/serverconfig/embershelter-server.toml` (created after first launch):
-
-- `consumeMaterials=true`
-- `allowReplacingGrass=true`
-- `allowReplacingFlowers=false`
-- `buildDelayTicks=5`
-- `maxActiveCampsPerPlayer=1`
-- `protectCampFromWeakMobs=true`
-- `protectionRadius=7`
-- `allowProtectionOutsideOverworld=false`
+`<world>/serverconfig/embershelter-server.toml` contains `allowReplacingGrass`, `allowReplacingFlowers`, `clearLogs`, `clearLeaves`, `buildDelayTicks`, `maxActiveCampsPerPlayer`, `protectCampFromWeakMobs`, `protectionRadius`, `allowProtectionOutsideOverworld`. Obsolete `consumeMaterials` from 1.0.0 is ignored.
 
 ## Build
+Java 21, Gradle 9.2.1: `gradle --no-daemon clean build`. Output `build/libs/embershelter-1.21.1-1.0.1.jar`. Needs installation on both client and dedicated server.
 
-Run `gradle --no-daemon clean build` with Java 21, Gradle 9.2.1. Result: `build/libs/embershelter-1.21.1-1.0.0.jar`.
-
-## Known limits
-
-- Active animation queues are not saved across server restarts. Placed blocks remain; an interrupted build will not resume automatically.
-- Anti-aggro prevents eligible mobs from choosing protected players as their targets. It is not a physical force field; neutral wandering mobs can still pass the fence.
-- Vanilla `mayInteract` is checked for placement; third-party protection plugins may enforce extra restrictions differently. Test on claim servers before deployment.
-- No custom JEI integration is necessary for one standard shaped crafting recipe; JEI and EMI show it through vanilla recipe lookup.
-- No direct in-game client test is claimed by this source package.
+## Limits
+No in-game QA guaranteed. Active build tasks are not saved across restart. Kits are spent once a full valid build begins, even if interrupted afterwards. Manual ignition of a creeper is not blocked. Modded animal AI may require separate integrations.

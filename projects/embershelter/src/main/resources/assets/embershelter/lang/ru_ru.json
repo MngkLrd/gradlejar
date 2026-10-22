@@ -1,7 +1,8 @@
 {
   "item.embershelter.camp_kit": "Походный набор",
-  "message.embershelter.blocked": "Недостаточно свободного места для лагеря.",
-  "message.embershelter.missing": "Не хватает материалов: %s",
+  "item.embershelter.camp_bundle": "Свёрток для лагеря",
+  "message.embershelter.blocked": "Недостаточно ровного и свободного места для лагеря.",
+  "message.embershelter.water": "Нельзя ставить лагерь в воде или над водой.",
   "message.embershelter.started": "Строительство лагеря началось.",
   "message.embershelter.busy": "Сначала завершите строительство текущего лагеря.",
   "message.embershelter.interrupted": "Строительство прервано: территория изменилась."

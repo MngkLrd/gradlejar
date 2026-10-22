@@ -2,19 +2,25 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "pattern": [
-    "LSL",
-    "SPS",
-    "LLL"
+    "WLW",
+    "TBC",
+    "WLW"
   ],
   "key": {
+    "W": {
+      "item": "minecraft:white_wool"
+    },
     "L": {
-      "item": "minecraft:leather"
+      "tag": "minecraft:logs"
     },
-    "S": {
-      "item": "minecraft:string"
+    "T": {
+      "item": "minecraft:torch"
     },
-    "P": {
-      "item": "minecraft:oak_planks"
+    "B": {
+      "item": "embershelter:camp_bundle"
+    },
+    "C": {
+      "item": "minecraft:campfire"
     }
   },
   "result": {

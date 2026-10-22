@@ -4,7 +4,7 @@ license="MIT"
 
 [[mods]]
 modId="embershelter"
-version="1.0.0"
+version="1.0.1"
 displayName="Ember Shelter"
 authors="Kirill"
 description="Build a small wilderness shelter from a Camp Kit, one block at a time."
