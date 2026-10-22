@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import import net.minecraft.resources.ResourceLocation;;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * One active melee wall check per target. Only a near-contact block collision
