@@ -22,12 +22,17 @@ import java.util.UUID;
 public final class BearEvents {
     private static final String OWNER="BearbackOwner";
     private static final String SADDLED="BearbackSaddled";
+    private static final String BAGS="BearbackBags";
     private static final String LAST_SWIPE="BearbackSwipe";
     private static final String STAND_UNTIL="BearbackStandUntil";
     private BearEvents(){}
 
     public static boolean isSaddled(PolarBear bear) {
         return bear.getPersistentData().getBoolean(SADDLED);
+    }
+
+    public static boolean hasBags(PolarBear bear) {
+        return bear.getPersistentData().getBoolean(BAGS);
     }
 
     public static boolean ownedBy(PolarBear bear,Player player){
@@ -49,7 +54,7 @@ public final class BearEvents {
         boolean fish=held.is(Items.COD)||held.is(Items.SALMON);
         if(!tamed&&!fish)return;
         if(tamed&&!ownedBy(bear,player))return;
-        if(tamed&&!fish&&!held.is(Items.SADDLE)&&!held.is(Items.SHEARS)&&!held.isEmpty())return;
+        if(tamed&&!fish&&!held.is(Items.SADDLE)&&!held.is(Items.SHEARS)&&!held.is(Bearback.SADDLEBAGS.get())&&!held.isEmpty())return;
         if(bear.isBaby())return;
         event.setCanceled(true);
         event.setCancellationResult(InteractionResult.SUCCESS);
@@ -67,7 +72,15 @@ public final class BearEvents {
                     bear.getX(),bear.getY()+1.4D,bear.getZ(),7,.6,.4,.6,.01);
             return;
         }
-        if(fish){
+        if(held.is(Bearback.SADDLEBAGS.get())&&!hasBags(bear)){
+            bear.getPersistentData().putBoolean(BAGS,true);
+            BearNetwork.sync(bear);
+            if(!player.getAbilities().instabuild)held.shrink(1);
+            bear.level().playSound(null,bear.blockPosition(),
+                 SoundEvents.HORSE_SADDLE,SoundSource.NEUTRAL,.8F,1.25F);
+        } else if(held.isEmpty()&&player.isShiftKeyDown()&&hasBags(bear)){
+            if(player instanceof ServerPlayer serverPlayer)BearCargo.open(serverPlayer,bear);
+        } else if(fish){
             if(bear.getHealth()<bear.getMaxHealth()){
                 bear.heal(5);if(!player.getAbilities().instabuild)held.shrink(1);
             }

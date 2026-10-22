@@ -43,9 +43,32 @@ jobs:
           MC: ${{ matrix.mc }}
           DIR: ${{ matrix.dir }}
         run: |
-          test -s "$DIR/build/libs/bearback-$MC-0.1.2.jar"
+          test -s "$DIR/build/libs/bearback-$MC-0.2.2.jar"
+      - name: Verify saddlebags recipe and embedded resources
+        env:
+          DIR: ${{ matrix.dir }}
+          MC: ${{ matrix.mc }}
+        run: |
+          python3 - <<'PY'
+          import json, os, zipfile
+          from pathlib import Path
+          directory=Path(os.environ["DIR"])
+          mc=os.environ["MC"]
+          folder="recipes" if mc=="1.20.1" else "recipe"
+          path=f"data/bearback/{folder}/saddlebags.json"
+          jar=directory/"build/libs"/f"bearback-{mc}-0.2.2.jar"
+          assert jar.is_file()
+          with zipfile.ZipFile(jar) as z:
+              recipe=json.loads(z.read(path))
+              assert recipe["pattern"]==["L L","SCS","L L"]
+              assert recipe["result"]["item" if mc=="1.20.1" else "id"]=="bearback:saddlebags"
+              for asset in ["assets/bearback/textures/item/saddlebags.png",
+                            "assets/bearback/textures/entity/bear_saddlebags.png"]:
+                  assert len(z.read(asset))>100
+          print(f"PASS {mc}: packed recipe and two texture assets")
+          PY
       - name: Publish port JAR as GitHub prerelease
-        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'feat/bearback-ports-v012')
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'port/bearback-cargo-022')
         env:
           GH_TOKEN: ${{ github.token }}
           MC: ${{ matrix.mc }}
@@ -55,9 +78,9 @@ jobs:
           NUMBER: ${{ github.run_number }}
         run: |
           set -euo pipefail
-          jar="$DIR/build/libs/bearback-$MC-0.1.2.jar"
-          tag="ci-bearback-mc$MC-$LOADER-0.1.2-$NUMBER"
+          jar="$DIR/build/libs/bearback-$MC-0.2.2.jar"
+          tag="ci-bearback-mc$MC-$LOADER-0.2.2-$NUMBER"
           gh release create "$tag" "$jar" --target "$TARGET_SHA" \
-            --title "Bearback 0.1.2 | Minecraft $MC ($LOADER)" \
+            --title "Bearback 0.2.2 | Minecraft $MC ($LOADER)" \
             --notes "Compiled against the minimum available supported loader. In-game visual/gameplay checks still required." \
             --prerelease

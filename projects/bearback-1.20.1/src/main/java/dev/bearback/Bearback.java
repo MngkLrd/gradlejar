@@ -35,6 +35,9 @@ public class Bearback {
     public static final RegistryObject<Item> BLACK_BEAR_EGG = ITEMS.register("black_bear_spawn_egg",
             () -> new ForgeSpawnEggItem(BLACK_BEAR, 0x242528, 0xb9a184, new Item.Properties()));
 
+    public static final RegistryObject<Item> SADDLEBAGS = ITEMS.register("saddlebags",
+            () -> new Item(new Item.Properties().stacksTo(16)));
+
     public Bearback() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         ENTITIES.register(bus);
@@ -47,6 +50,7 @@ public class Bearback {
         MinecraftForge.EVENT_BUS.addListener(BearEvents::livingTick);
         MinecraftForge.EVENT_BUS.addListener(BearEvents::changeTarget);
         MinecraftForge.EVENT_BUS.addListener(BearEvents::track);
+        MinecraftForge.EVENT_BUS.addListener(BearCargo::onDrops);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> dev.bearback.client.ClientHooks.init(bus));
     }
 
@@ -62,5 +66,6 @@ public class Bearback {
 
     private static void creative(BuildCreativeModeTabContentsEvent e) {
         if (e.getTabKey().equals(CreativeModeTabs.SPAWN_EGGS)) e.accept(BLACK_BEAR_EGG.get());
+        if (e.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) e.accept(SADDLEBAGS.get());
     }
 }

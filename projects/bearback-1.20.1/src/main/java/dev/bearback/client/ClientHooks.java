@@ -11,6 +11,8 @@ import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -23,6 +25,7 @@ public final class ClientHooks {
     private static final KeyMapping SWIPE=new KeyMapping("key.bearback.swipe",
         InputConstants.Type.KEYSYM,GLFW.GLFW_KEY_R,"key.categories.bearback");
     private static final Map<Integer,Boolean> SADDLES=new HashMap<>();
+    private static final Map<Integer,Boolean> BAGS=new HashMap<>();
     private ClientHooks(){}
 
     public static void init(IEventBus bus){
@@ -31,6 +34,7 @@ public final class ClientHooks {
         bus.addListener(ClientHooks::layers);
         MinecraftForge.EVENT_BUS.addListener(ClientHooks::clientTick);
         MinecraftForge.EVENT_BUS.addListener(ClientHooks::logout);
+        MinecraftForge.EVENT_BUS.addListener(ClientHooks::onInventory);
     }
     private static void renderers(EntityRenderersEvent.RegisterRenderers e){
         e.registerEntityRenderer(Bearback.BLACK_BEAR.get(),BlackBearRenderer::new);
@@ -38,15 +42,25 @@ public final class ClientHooks {
     private static void keybind(RegisterKeyMappingsEvent e){e.register(SWIPE);}
     private static void layers(EntityRenderersEvent.AddLayers e){
         PolarBearRenderer white=e.getRenderer(EntityType.POLAR_BEAR);
-        if(white!=null)white.addLayer(new SaddleLayer(white));
+        if(white!=null){white.addLayer(new SaddleLayer(white));white.addLayer(new SaddlebagsLayer(white));}
         PolarBearRenderer black=e.getRenderer(Bearback.BLACK_BEAR.get());
-        if(black!=null)black.addLayer(new SaddleLayer(black));
+        if(black!=null){black.addLayer(new SaddleLayer(black));black.addLayer(new SaddlebagsLayer(black));}
     }
-    public static void syncSaddle(int id,boolean saddled){SADDLES.put(id,saddled);}
+    public static void syncEquipment(int id,boolean saddled,boolean bags){SADDLES.put(id,saddled);BAGS.put(id,bags);}
+    public static boolean hasBags(PolarBear bear){return BAGS.getOrDefault(bear.getId(),false);}
     public static boolean isSaddled(PolarBear bear){return SADDLES.getOrDefault(bear.getId(),false);}
     private static void logout(net.minecraftforge.client.event.ClientPlayerNetworkEvent.LoggingOut e){
-        SADDLES.clear();
+        SADDLES.clear();BAGS.clear();
     }
+    private static void onInventory(ScreenEvent.Opening event) {
+        if(!(event.getNewScreen() instanceof InventoryScreen))return;
+        Minecraft mc=Minecraft.getInstance();
+        if(mc.player!=null&&mc.player.getVehicle() instanceof PolarBear bear&&hasBags(bear)){
+            event.setCanceled(true);
+            BearNetwork.openCargo(bear.getId());
+        }
+    }
+
     private static void clientTick(TickEvent.ClientTickEvent e){
         if(e.phase!=TickEvent.Phase.END)return;
         Minecraft mc=Minecraft.getInstance();
