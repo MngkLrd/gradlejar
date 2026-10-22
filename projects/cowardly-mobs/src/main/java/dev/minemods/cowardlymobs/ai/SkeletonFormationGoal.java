@@ -56,7 +56,8 @@ public final class SkeletonFormationGoal extends Goal {
         }
 
         // Preserve vanilla pathfinding when the player is far away.
-        if (toPlayer > square(23.0D)) return false;
+        if (toPlayer > square(23.0D)
+                || !skeleton.getSensing().hasLineOfSight(player)) return false;
 
         List<AbstractSkeleton> squad = new ArrayList<>(skeleton.level().getEntitiesOfClass(
                 AbstractSkeleton.class,
