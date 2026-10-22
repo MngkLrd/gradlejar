@@ -12,7 +12,7 @@ config="leashwrap.mixins.json"
 [[dependencies.leashwrap]]
 modId="neoforge"
 type="required"
-versionRange="[21.1.262,)"
+versionRange="[21.1.209,)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.leashwrap]]
