@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
@@ -40,7 +40,7 @@ final class PearlTrajectory {
         if (!player.getMainHandItem().is(Items.ENDER_PEARL)
                 && !player.getOffhandItem().is(Items.ENDER_PEARL)) return;
 
-        Vec3 camera = mc.gameRenderer.getMainCamera().getPosition();
+        Vec3 camera = mc.gameRenderer.mainCamera().position();
         Vec3 look = player.getViewVector(1.0f).normalize();
         Vec3 initial = player.getEyePosition().add(0.0, -0.10, 0.0);
         Vec3 playerVelocity = player.getDeltaMovement();
@@ -65,7 +65,7 @@ final class PearlTrajectory {
         stack.pushPose();
         stack.translate(-camera.x, -camera.y, -camera.z);
         event.getSubmitNodeCollector().submitCustomGeometry(
-                stack, RenderType.lines(),
+                stack, RenderTypes.lines(),
                 (pose, vertex) -> strokes.forEach(s ->
                         line(vertex, pose, s.a, s.b, s.r, s.g, s.bColor)));
         stack.popPose();
