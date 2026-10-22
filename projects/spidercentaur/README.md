@@ -25,4 +25,7 @@ Building from *source* also requires Python 3 and FFmpeg on PATH to generate the
 
 ## Known limitations
 
+- Particle emission respects Minecraft's particle settings; shaders and very dark environments can make the deliberately subtle dust hard to spot.
+
+
 First-pass sound balance and cosmetic placement have not yet been checked inside Minecraft; CI verifies the build and resulting resources.
