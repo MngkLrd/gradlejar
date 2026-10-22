@@ -1,0 +1,16 @@
+{
+  "item.sleepdebt.roasted_cocoa_beans": "Обжаренные какао-бобы",
+  "item.sleepdebt.coffee_grounds": "Молотый кофе",
+  "item.sleepdebt.coffee": "Кофе",
+  "item.sleepdebt.strong_coffee": "Крепкий кофе",
+  "item.sleepdebt.long_coffee": "Долгий кофе",
+  "item.sleepdebt.energy_drink": "Энергетик",
+  "item.sleepdebt.warm_milk": "Тёплое молоко",
+  "item.sleepdebt.pillow": "Подушка",
+  "item.sleepdebt.sleep_mask": "Маска для сна",
+  "item.sleepdebt.coffee.tooltip": "Временно скрывает симптомы. Долг сна остаётся.",
+  "item.sleepdebt.strong_coffee.tooltip": "Сильное действие. Быстрее накапливает перегрузку.",
+  "item.sleepdebt.long_coffee.tooltip": "Действует дольше, но всё равно вызывает привыкание.",
+  "item.sleepdebt.energy_drink.tooltip": "Мощная стимуляция и повышенный риск отката.",
+  "item.sleepdebt.warm_milk.tooltip": "Немного снижает усталость и помогает подготовиться ко сну."
+}

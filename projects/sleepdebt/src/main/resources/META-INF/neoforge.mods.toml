@@ -1,0 +1,38 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="All Rights Reserved"
+[[mods]]
+modId="sleepdebt"
+version="2.2.0-alpha.2"
+displayName="Sleep Debt"
+description='''Minecraft-native sleep fatigue, caffeine, drink crafting and a survival guide.'''
+[[dependencies.sleepdebt]]
+modId="neoforge"
+type="required"
+versionRange="[21.1,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.sleepdebt]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.sleepdebt]]
+modId="jei"
+type="required"
+versionRange="[19.21,)"
+ordering="NONE"
+side="CLIENT"
+[[dependencies.sleepdebt]]
+modId="emi"
+type="required"
+versionRange="[1.1.22,)"
+ordering="NONE"
+side="CLIENT"
+[[dependencies.sleepdebt]]
+modId="patchouli"
+type="required"
+versionRange="[1.21,)"
+ordering="NONE"
+side="BOTH"

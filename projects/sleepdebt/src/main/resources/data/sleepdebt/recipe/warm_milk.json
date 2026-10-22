@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:shapeless",
+  "category": "food",
+  "ingredients": [
+    {
+      "item": "minecraft:milk_bucket"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "result": {
+    "id": "sleepdebt:warm_milk",
+    "count": 1
+  }
+}

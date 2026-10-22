@@ -1,0 +1,15 @@
+{
+  "name": "Fatigue Stages",
+  "category": "sleepdebt:fatigue",
+  "icon": "minecraft:clock",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Staying awake adds sleep debt. At 120 points you feel drowsy; at 250 mining slows; at 420 movement suffers; at 620 combat becomes harder; and at 830 you are severely exhausted."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The small HUD above your hunger shows ten sleep segments. Caffeine hides symptoms for a time, but does not remove the debt itself."
+    }
+  ]
+}

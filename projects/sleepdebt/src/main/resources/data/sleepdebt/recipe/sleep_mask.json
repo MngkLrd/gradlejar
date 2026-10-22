@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:shaped",
+  "category": "misc",
+  "pattern": [
+    "SWS",
+    " L "
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:string"
+    },
+    "W": {
+      "item": "minecraft:black_wool"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "id": "sleepdebt:sleep_mask",
+    "count": 1
+  }
+}

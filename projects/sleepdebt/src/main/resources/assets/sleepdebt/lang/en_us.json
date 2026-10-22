@@ -1,0 +1,16 @@
+{
+  "item.sleepdebt.roasted_cocoa_beans": "Roasted Cocoa Beans",
+  "item.sleepdebt.coffee_grounds": "Ground Coffee",
+  "item.sleepdebt.coffee": "Coffee",
+  "item.sleepdebt.strong_coffee": "Strong Coffee",
+  "item.sleepdebt.long_coffee": "Long Coffee",
+  "item.sleepdebt.energy_drink": "Energy Drink",
+  "item.sleepdebt.warm_milk": "Warm Milk",
+  "item.sleepdebt.pillow": "Pillow",
+  "item.sleepdebt.sleep_mask": "Sleep Mask",
+  "item.sleepdebt.coffee.tooltip": "Temporarily hides symptoms. Sleep debt remains.",
+  "item.sleepdebt.strong_coffee.tooltip": "Intense stimulation. Faster overload.",
+  "item.sleepdebt.long_coffee.tooltip": "Lasts longer, but still builds tolerance.",
+  "item.sleepdebt.energy_drink.tooltip": "Powerful boost with a significant crash risk.",
+  "item.sleepdebt.warm_milk.tooltip": "Relieves some fatigue and prepares you for rest."
+}
