@@ -52,6 +52,9 @@ jobs:
       - name: Restore Pocket Realms 0.4.0 quality fixes
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/unpack_pocketrealms_v040.py
+      - name: Apply Pocket Realms 0.4.1 combat and lighting balance
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/patch_pocketrealms_v041.py
       - name: Validate profile
         id: profile
         env:
