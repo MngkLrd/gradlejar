@@ -2,6 +2,7 @@ package dev.spidercentaur.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import dev.spidercentaur.entity.SpiderCentaurEntity;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.SkeletonModel;
@@ -16,7 +17,6 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemDisplayContext;
-import com.mojang.math.Axis;
 
 public final class SkeletonUpperLayer
         extends RenderLayer<SpiderCentaurEntity, SpiderModel<SpiderCentaurEntity>> {
@@ -26,24 +26,23 @@ public final class SkeletonUpperLayer
 
     private final SkeletonModel<SpiderCentaurEntity> skeleton;
     private final ItemInHandRenderer itemRenderer;
+    private final SkeletonDecorations decorations;
 
     public SkeletonUpperLayer(RenderLayerParent<SpiderCentaurEntity, SpiderModel<SpiderCentaurEntity>> parent,
-                              ModelPart root,
-                              ItemInHandRenderer itemRenderer) {
+                              ModelPart root, ItemInHandRenderer itemRenderer) {
         super(parent);
         this.skeleton = new SkeletonModel<>(root);
         this.skeleton.leftLeg.visible = false;
         this.skeleton.rightLeg.visible = false;
         this.itemRenderer = itemRenderer;
+        this.decorations = new SkeletonDecorations();
     }
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource buffer, int light,
                        SpiderCentaurEntity entity, float limbSwing, float limbSwingAmount,
                        float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (entity.isInvisible()) {
-            return;
-        }
+        if (entity.isInvisible()) return;
 
         this.skeleton.attackTime = getParentModel().attackTime;
         this.skeleton.riding = getParentModel().riding;
@@ -54,13 +53,14 @@ public final class SkeletonUpperLayer
         this.skeleton.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
         poseStack.pushPose();
-        // Skeleton upper half springs out of the spider's forward thorax.
-        // The legs are hidden, while the chest, neck, skull, and both arms remain.
         poseStack.translate(0.0D, 0.19D, -0.26D);
 
+        int overlay = LivingEntityRenderer.getOverlayCoords(entity, 0.0F);
         VertexConsumer vertices = buffer.getBuffer(RenderType.entityCutoutNoCull(SKELETON_TEXTURE));
-        this.skeleton.renderToBuffer(poseStack, vertices, light,
-                LivingEntityRenderer.getOverlayCoords(entity, 0.0F));
+        this.skeleton.renderToBuffer(poseStack, vertices, light, overlay);
+
+        // All accessories follow the animated skeleton torso/head, not the world axes.
+        this.decorations.render(skeleton, poseStack, buffer, light, overlay);
 
         if (!entity.getMainHandItem().isEmpty()) {
             poseStack.pushPose();
@@ -72,7 +72,6 @@ public final class SkeletonUpperLayer
                     ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, false, poseStack, buffer, light);
             poseStack.popPose();
         }
-
         poseStack.popPose();
     }
 }
