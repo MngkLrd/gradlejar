@@ -64,6 +64,17 @@ jobs:
       - name: Restore Pocket Realms 0.5.1 custom sounds
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/unpack_pocketrealms_v051.py
+      - name: Add distorted Pursuer sound effects
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: |
+          if command -v ffmpeg >/dev/null 2>&1; then
+            python3 tools/grime_pocketrealms_audio_v051.py
+          else
+            echo "ffmpeg unavailable; use low-pitched runtime OGG variations instead"
+          fi
+      - name: Polish Pocket Realms 0.5.1 visuals and portal
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/polish_pocketrealms_v051.py
       - name: Validate profile
         id: profile
         env:
