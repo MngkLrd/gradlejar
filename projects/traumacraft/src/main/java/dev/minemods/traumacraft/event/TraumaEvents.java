@@ -6,7 +6,6 @@ import dev.minemods.traumacraft.health.BodyPart;
 import dev.minemods.traumacraft.health.BodyState;
 import dev.minemods.traumacraft.registry.ModAttachments;
 import dev.minemods.traumacraft.network.ModNetwork;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -56,9 +55,6 @@ public final class TraumaEvents {
         if (state.health(BodyPart.HEAD) <= 0 || state.health(BodyPart.CHEST) <= 0) {
             event.setNewDamage(Math.max(amount, victim.getHealth() + victim.getAbsorptionAmount() + 1f));
         }
-        if (state.hasBleeding() || state.hasFracturedLeg()) {
-            victim.displayClientMessage(Component.literal("Trauma: " + summarize(state) + " | /trauma"), true);
-        }
     }
 
     private static void apply(BodyState state, ServerPlayer player, BodyPart part,
@@ -96,9 +92,6 @@ public final class TraumaEvents {
         if (state.takeDirty() || player.tickCount % 40 == 0) {
             ModNetwork.sync(player);
         }
-        if (player.tickCount % 100 == 0 && (state.hasBleeding() || state.hasFracturedLeg())) {
-            player.displayClientMessage(Component.literal("Trauma: " + summarize(state) + " | /trauma"), true);
-        }
     }
 
     public static void updateMovement(ServerPlayer player, float penalty) {
@@ -113,10 +106,4 @@ public final class TraumaEvents {
         }
     }
 
-    private static String summarize(BodyState state) {
-        int bleeding = 0;
-        for (BodyPart part : BodyPart.values()) bleeding += state.bleeding(part);
-        return (bleeding > 0 ? "bleeding x" + bleeding : "no bleeding")
-                + (state.hasFracturedLeg() ? ", fractured leg" : "");
-    }
 }
