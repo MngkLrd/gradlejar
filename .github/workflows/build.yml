@@ -43,6 +43,16 @@ jobs:
       - name: Restore Pocket Realms sources
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/unpack_pocketrealms.py
+      - name: Stage Pocket Realms sources on feature branch
+        if: matrix.project_dir == 'projects/pocketrealms' && github.event_name == 'pull_request' && github.head_ref == 'feature/pocketrealms-corruption'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add projects/pocketrealms/src/main
+          git commit -m 'Unpack original Pocket Realms sources for horror update' || true
+          git push https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:feature/pocketrealms-corruption
       - name: Validate profile
         id: profile
         env:
