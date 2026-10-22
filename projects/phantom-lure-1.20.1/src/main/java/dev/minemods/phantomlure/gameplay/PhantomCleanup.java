@@ -5,13 +5,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Phantom;
-import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 
 /** Remove ONLY lure-created phantoms before they can burn and drop membranes at sunrise. */
 public final class PhantomCleanup {
     public static final String LURE_TAG = "phantomlure.summoned";
 
-    public static void onTick(TickEvent.LivingTickEvent event) {
+    public static void onTick(LivingEvent.LivingTickEvent event) {
         Entity entity = event.getEntity();
         if (!(entity instanceof Phantom phantom)
             || !(phantom.level() instanceof ServerLevel level)

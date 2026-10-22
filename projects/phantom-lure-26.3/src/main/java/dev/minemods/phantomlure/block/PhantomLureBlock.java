@@ -1,6 +1,5 @@
 package dev.minemods.phantomlure.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.minemods.phantomlure.blockentity.PhantomLureBlockEntity;
 import dev.minemods.phantomlure.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -29,7 +28,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public final class PhantomLureBlock extends BaseEntityBlock {
-    public static final MapCodec<PhantomLureBlock> CODEC = simpleCodec(PhantomLureBlock::new);
     public static final BooleanProperty CHARGED = BooleanProperty.create("charged");
     private static final VoxelShape SHAPE = Shapes.or(
         Block.box(1, 0, 1, 15, 3, 15),
@@ -45,7 +43,6 @@ public final class PhantomLureBlock extends BaseEntityBlock {
         registerDefaultState(stateDefinition.any().setValue(CHARGED, false));
     }
 
-    @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
     @Override protected RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
 
     @Override
@@ -69,7 +66,7 @@ public final class PhantomLureBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null
+        return level.isClientSide() ? null
             : createTickerHelper(type, ModBlockEntities.LURE.get(), PhantomLureBlockEntity::serverTick);
     }
 
@@ -78,7 +75,7 @@ public final class PhantomLureBlock extends BaseEntityBlock {
                                               BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!stack.is(Items.DIAMOND)) return InteractionResult.TRY_WITH_EMPTY_HAND;
         if (state.getValue(CHARGED)) return InteractionResult.FAIL;
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (!player.getAbilities().instabuild) stack.shrink(1);
             level.setBlock(pos, state.setValue(CHARGED, true), Block.UPDATE_ALL);
             level.levelEvent(2005, pos.above(), 0);

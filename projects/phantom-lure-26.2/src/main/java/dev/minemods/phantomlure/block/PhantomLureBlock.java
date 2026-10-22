@@ -69,7 +69,7 @@ public final class PhantomLureBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null
+        return level.isClientSide() ? null
             : createTickerHelper(type, ModBlockEntities.LURE.get(), PhantomLureBlockEntity::serverTick);
     }
 
@@ -78,7 +78,7 @@ public final class PhantomLureBlock extends BaseEntityBlock {
                                               BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!stack.is(Items.DIAMOND)) return InteractionResult.TRY_WITH_EMPTY_HAND;
         if (state.getValue(CHARGED)) return InteractionResult.FAIL;
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (!player.getAbilities().instabuild) stack.shrink(1);
             level.setBlock(pos, state.setValue(CHARGED, true), Block.UPDATE_ALL);
             level.levelEvent(2005, pos.above(), 0);

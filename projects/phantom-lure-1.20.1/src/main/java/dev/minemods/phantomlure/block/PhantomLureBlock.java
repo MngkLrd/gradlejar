@@ -43,7 +43,7 @@ public final class PhantomLureBlock extends BaseEntityBlock {
         registerDefaultState(stateDefinition.any().setValue(CHARGED, false));
     }
 
-    @Override protected RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
+    @Override public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -51,7 +51,7 @@ public final class PhantomLureBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 

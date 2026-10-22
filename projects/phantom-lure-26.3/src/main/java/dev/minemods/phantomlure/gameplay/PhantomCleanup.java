@@ -15,7 +15,7 @@ public final class PhantomCleanup {
         Entity entity = event.getEntity();
         if (!(entity instanceof Phantom phantom)
             || !(phantom.level() instanceof ServerLevel level)
-            || !phantom.getTags().contains(LURE_TAG)) return;
+            || !phantom.getPersistentData().getBoolean(LURE_TAG)) return;
 
         if (!PhantomLureBlockEntity.isLureNight(level)) {
             phantom.discard();

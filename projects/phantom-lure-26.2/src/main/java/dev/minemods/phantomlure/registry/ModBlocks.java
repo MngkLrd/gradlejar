@@ -15,12 +15,12 @@ public final class ModBlocks {
 
     public static final DeferredBlock<PhantomLureBlock> PHANTOM_LURE = BLOCKS.registerBlock(
         "phantom_lure", PhantomLureBlock::new,
-        BlockBehaviour.Properties.of().strength(1.8F).sound(SoundType.AMETHYST)
+        props -> props.strength(1.8F).sound(SoundType.AMETHYST)
             .noOcclusion().lightLevel(state -> state.getValue(PhantomLureBlock.CHARGED) ? 6 : 2)
     );
 
     static {
-        ITEMS.registerSimpleBlockItem(PHANTOM_LURE, new Item.Properties());
+        ITEMS.registerSimpleBlockItem(PHANTOM_LURE, props -> props);
     }
 
     public static void register(IEventBus modBus) {

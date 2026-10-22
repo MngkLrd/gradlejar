@@ -13,9 +13,7 @@ public final class ModBlockEntities {
         DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, PhantomLure.MOD_ID);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PhantomLureBlockEntity>> LURE =
-        TYPES.register("phantom_lure", () -> BlockEntityType.Builder.of(
-            PhantomLureBlockEntity::new, ModBlocks.PHANTOM_LURE.get()
-        ).build());
+        TYPES.register("phantom_lure", () -> new BlockEntityType<>(PhantomLureBlockEntity::new, ModBlocks.PHANTOM_LURE.get()));
 
     public static void register(IEventBus modBus) {
         TYPES.register(modBus);

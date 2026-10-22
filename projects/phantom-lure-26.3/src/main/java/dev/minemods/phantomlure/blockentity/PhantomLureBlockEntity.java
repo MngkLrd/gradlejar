@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -27,7 +27,7 @@ public final class PhantomLureBlockEntity extends BlockEntity {
     }
 
     public static boolean isLureNight(Level level) {
-        long time = Math.floorMod(level.getDayTime(), 24000L);
+        long time = Math.floorMod(level.getOverworldClockTime(), 24000L);
         return level.dimension() == Level.OVERWORLD && time >= 13000 && time <= 22000;
     }
 
@@ -55,23 +55,23 @@ public final class PhantomLureBlockEntity extends BlockEntity {
         }
 
         boolean charged = state.getValue(PhantomLureBlock.CHARGED);
-        int count = charged ? 3 + server.random.nextInt(3) : 1;
+        int count = charged ? 3 + server.getRandom().nextInt(3) : 1;
         Player nearest = server.getNearestPlayer(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, 64, false);
         int spawned = 0;
 
         // Summon above the exposed ground rather than inside caves or trees.
         for (int i = 0; i < count; i++) {
-            int dx = server.random.nextInt(19) - 9;
-            int dz = server.random.nextInt(19) - 9;
+            int dx = server.getRandom().nextInt(19) - 9;
+            int dz = server.getRandom().nextInt(19) - 9;
             double x = pos.getX() + .5 + dx;
             double z = pos.getZ() + .5 + dz;
             int surface = server.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 (int) Math.floor(x), (int) Math.floor(z));
-            double y = Math.min(server.getMaxBuildHeight() - 2, Math.max(pos.getY() + 10, surface + 12));
-            Phantom phantom = new Phantom(EntityType.PHANTOM, server);
+            double y = Math.min(server.getMaxY() - 2, Math.max(pos.getY() + 10, surface + 12));
+            Phantom phantom = new Phantom(EntityTypes.PHANTOM, server);
             phantom.setPos(x, y, z);
             if (nearest != null) phantom.setTarget(nearest);
-            phantom.addTag(PhantomCleanup.LURE_TAG);
+            phantom.getPersistentData().putBoolean(PhantomCleanup.LURE_TAG, true);
             if (server.addFreshEntity(phantom)) spawned++;
         }
 
