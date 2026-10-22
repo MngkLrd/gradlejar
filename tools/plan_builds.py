@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def changed_paths_from_push():
     event_path = os.environ.get("GITHUB_EVENT_PATH", "")
-    if os.environ.get("GITHUB_EVENT_NAME") != "push":
+    if os.environ.get("GITHUB_EVENT_NAME") not in ("push", "pull_request"):
         return None
     # Use the checked-out commit's real diff, not the GitHub event's
     # sometimes missing 'commits[].modified' lists. Plan job fetches depth=2.
