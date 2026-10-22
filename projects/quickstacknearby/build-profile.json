@@ -1,0 +1,9 @@
+{
+  "slug": "quickstacknearby",
+  "version": "1.0.0",
+  "minecraft": "1.21.1",
+  "loader": "forge",
+  "java": "21",
+  "gradle": "8.8",
+  "jar_glob": "quickstacknearby-forge-1.21.1-1.0.0.jar"
+}

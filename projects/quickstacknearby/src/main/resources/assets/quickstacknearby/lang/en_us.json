@@ -1,0 +1,6 @@
+{
+  "key.quickstacknearby.stack": "Quick Stack Nearby",
+  "key.categories.quickstacknearby": "Quick Stack Nearby",
+  "message.quickstacknearby.moved": "Moved %s items into %s chests",
+  "message.quickstacknearby.none": "No matching stacks in nearby chests"
+}
