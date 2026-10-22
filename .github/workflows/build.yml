@@ -55,6 +55,9 @@ jobs:
       - name: Apply Pocket Realms 0.4.1 combat and lighting balance
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/patch_pocketrealms_v041.py
+      - name: Restore Pocket Realms 0.5.0 monster update
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/unpack_pocketrealms_v050.py
       - name: Validate profile
         id: profile
         env:
