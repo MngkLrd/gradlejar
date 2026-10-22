@@ -305,7 +305,9 @@ public final class SpiderInstinctGoal extends Goal {
                         break;
                     }
                 }
-                if (!solid || spider.level().getBlockState(block.above(3)).isAir() == false
+                // Tall cave walls are valid too; the spider launches from the face,
+                // it does not need to find the top of the wall.
+                if (!solid || !spider.level().getBlockState(face.above(3)).isAir()
                         || target.distanceToSqr(block.getX() + 0.5D,
                                 block.getY() + 1.5D, block.getZ() + 0.5D)
                                 < square(3.0D)) continue;
