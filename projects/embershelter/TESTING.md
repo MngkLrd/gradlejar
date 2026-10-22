@@ -1,10 +1,12 @@
-# Ember Shelter in-game QA
+# Ember Shelter 1.0.1 test plan
 
-1. Start NeoForge 1.21.1 using Java 21 with the produced JAR on client and server.
-2. Run `/give @s embershelter:camp_kit` and test a flat 7x7 field with clear sky.
-3. Verify item icon, recipe, staged fences, logs, wool, chest and torches.
-4. Verify a blocked area refuses construction and consumes neither kit nor materials.
-5. With `consumeMaterials=true`, verify full materials are required, charged once, and creative mode bypasses costs.
-6. Confirm a camp lit at night causes basic zombies, skeletons and spiders to stop choosing the protected player as a target; test extinguished camp and daytime.
-7. Restart server, check finished camp protection persists; break campfire and verify protection stops.
-8. Repeat tests with a dedicated server (no client-only references in common code).
+1. Check Camp Bundle + Camp Kit recipes in JEI and crafting table, and confirm both icons in inventory.
+2. On flat dirt, grass, under tree cover and on flat stone in cave, activate Camp Kit. Confirm tree logs/leaves/grass are cleared within 7x7x4; all 7x7 floor stays intact.
+3. On waterlogged block, underwater and above water: placement rejected with no kit loss.
+4. With solid stone, chest, bed or machine occupying airspace: reject placement without destroying any block.
+5. In survival have NO extra resources; after crafting Kit, deployment succeeds and only Kit is used.
+6. Zombie, Skeleton, Spider, Creeper stop targeting player inside finished lit camp at night; daytime and extinguished camp do not protect.
+7. Player hits zombie/skeleton/creeper: struck creature retaliates. Other creatures remain calm.
+8. Hit a cow, pig or sheep: it briefly chases and attacks you; otherwise passive.
+9. Wither, Wither Skeleton, Ender Dragon, Warden, Witch, raid mobs stay hostile.
+10. Restart server after completed camp and test persistence; check dedicated server classloading.

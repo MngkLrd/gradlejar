@@ -1,8 +1,9 @@
 {
   "item.embershelter.camp_kit": "Camp Kit",
-  "message.embershelter.blocked": "Not enough clear space to build a camp.",
-  "message.embershelter.missing": "Missing materials: %s",
+  "item.embershelter.camp_bundle": "Camp Bundle",
+  "message.embershelter.blocked": "Not enough flat, clear space for a camp.",
+  "message.embershelter.water": "Cannot build a camp in or over water.",
   "message.embershelter.started": "Camp construction started.",
-  "message.embershelter.busy": "Finish your current camp before placing another.",
+  "message.embershelter.busy": "Finish your current camp first.",
   "message.embershelter.interrupted": "Camp construction stopped because the area changed."
 }

@@ -11,17 +11,15 @@ public final class CampBuildTask {
     public final ResourceKey<Level> dimension;
     public final BlockPos center;
     public final List<CampBuildStep> steps;
-    public final boolean paid;
     public long nextTick;
     public int index;
 
     public CampBuildTask(UUID owner, ResourceKey<Level> dimension, BlockPos center,
-                         List<CampBuildStep> steps, boolean paid, long nextTick) {
+                         List<CampBuildStep> steps, long nextTick) {
         this.owner = owner;
         this.dimension = dimension;
         this.center = center;
         this.steps = steps;
-        this.paid = paid;
         this.nextTick = nextTick;
     }
 }
