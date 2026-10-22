@@ -22,8 +22,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Client-only Ender Pearl launch prediction. Rendered directly in world space:
- * the line follows the player camera/aim and stops at the earliest block/entity impact.
+ * Client-only Ender Pearl prediction with a PUBG-like dashed world-space preview.
+ * Physical simulation stays at the real thrown-pearl origin, while the FIRST-PERSON
+ * preview begins forward of the camera, precisely along the crosshair's ray.
  */
 final class PearlTrajectoryRenderer {
     private static final int MAX_TICKS = 150;
@@ -31,6 +32,11 @@ final class PearlTrajectoryRenderer {
     private static final double DRAG = 0.99;
     private static final double GRAVITY = 0.03;
     private static final double PEARL_RADIUS = 0.125;
+
+    // Do not draw from the camera's near plane! That was the long line from the hotbar.
+    private static final double CROSSHAIR_START_DISTANCE = 1.05;
+    private static final double DASH_LENGTH = 0.35;
+    private static final double DASH_GAP = 0.21;
 
     private PearlTrajectoryRenderer() {}
 
@@ -44,59 +50,109 @@ final class PearlTrajectoryRenderer {
         if (!player.getMainHandItem().is(Items.ENDER_PEARL)
                 && !player.getOffhandItem().is(Items.ENDER_PEARL)) return;
 
-        PoseStack stack = event.getPoseStack();
-        if (stack == null) return;
-
-        float partial = event.getPartialTick().getGameTimeDeltaPartialTick(false);
-        Vec3 start = player.getEyePosition(partial).add(0.0, -0.10, 0.0);
-        Vec3 view = player.getViewVector(partial).normalize();
-
-        // Vanilla shootFromRotation adds the thrower's horizontal velocity.
-        Vec3 movement = player.getDeltaMovement();
-        Vec3 velocity = view.scale(INITIAL_SPEED).add(
-                movement.x, player.onGround() ? 0.0 : movement.y, movement.z);
-
-        List<Vec3> points = trace(level, player, start, velocity);
-        if (points.size() < 2) return;
-
+        float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(false);
         Vec3 camera = event.getCamera().getPosition();
-        stack.pushPose();
-        stack.translate(-camera.x, -camera.y, -camera.z);
+        Vec3 look = player.getViewVector(partialTick).normalize();
+        Vec3 physicalStart = player.getEyePosition(partialTick).add(0.0, -0.10, 0.0);
+
+        Vec3 motion = player.getDeltaMovement();
+        Vec3 velocity = look.scale(INITIAL_SPEED).add(
+                motion.x, player.onGround() ? 0.0 : motion.y, motion.z);
+
+        Trajectory prediction = trace(level, player, physicalStart, velocity);
+        if (prediction.points().size() < 2) return;
+
+        // Keep the physical simulation untouched. Only replace the NEAR-CAMERA
+        // presentation of the first segment. The in-game trajectory still collides
+        // with blocks and entities from the vanilla launch position.
+        List<Vec3> visible = new ArrayList<>(prediction.points().size());
+        if (mc.options.getCameraType().isFirstPerson()) {
+            Vec3 firstTravelPoint = prediction.points().get(1);
+            double forward = firstTravelPoint.subtract(camera).dot(look);
+            if (forward > CROSSHAIR_START_DISTANCE) {
+                // This projects exactly to the crosshair in first person.
+                visible.add(camera.add(look.scale(CROSSHAIR_START_DISTANCE)));
+            }
+        }
+        for (int i = 1; i < prediction.points().size(); i++) {
+            visible.add(prediction.points().get(i));
+        }
+
+        PoseStack pose = event.getPoseStack();
+        pose.pushPose();
+        pose.translate(-camera.x, -camera.y, -camera.z);
         try {
-            Matrix4f matrix = stack.last().pose();
+            Matrix4f matrix = pose.last().pose();
             MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
             VertexConsumer lines = buffers.getBuffer(RenderType.lines());
 
-            for (int i = 1; i < points.size(); ++i) {
-                float t = i / (float) (points.size() - 1);
-                // Cyan near the player, pale amethyst toward the impact.
-                int red = (int) (55 + t * 110);
-                int green = (int) (229 - t * 88);
-                int blue = 245;
-                addLine(lines, matrix, points.get(i - 1), points.get(i),
-                        red, green, blue, 235);
+            drawDashedTrajectory(lines, matrix, visible);
+
+            if (prediction.hitSomething()) {
+                Vec3 impact = prediction.points().get(prediction.points().size() - 1);
+                double r = 0.12;
+                addLine(lines, matrix, impact.add(-r, 0.0, 0.0),
+                        impact.add(r, 0.0, 0.0), 190, 115, 245, 255);
+                addLine(lines, matrix, impact.add(0.0, -r, 0.0),
+                        impact.add(0.0, r, 0.0), 190, 115, 245, 255);
+                addLine(lines, matrix, impact.add(0.0, 0.0, -r),
+                        impact.add(0.0, 0.0, r), 190, 115, 245, 255);
             }
-            // Tiny cross at the predicted first contact point.
-            Vec3 end = points.get(points.size() - 1);
-            double r = 0.14;
-            addLine(lines, matrix, end.add(-r, 0, 0), end.add(r, 0, 0), 198, 116, 255, 255);
-            addLine(lines, matrix, end.add(0, -r, 0), end.add(0, r, 0), 198, 116, 255, 255);
-            addLine(lines, matrix, end.add(0, 0, -r), end.add(0, 0, r), 198, 116, 255, 255);
             buffers.endBatch(RenderType.lines());
         } finally {
-            stack.popPose();
+            pose.popPose();
         }
     }
 
-    private static List<Vec3> trace(Level level, LocalPlayer thrower, Vec3 start, Vec3 velocity) {
+    private static void drawDashedTrajectory(VertexConsumer lines, Matrix4f matrix, List<Vec3> points) {
+        double totalLength = 0.0;
+        for (int i = 1; i < points.size(); i++) {
+            totalLength += points.get(i).distanceTo(points.get(i - 1));
+        }
+        if (totalLength < 1.0e-6) return;
+
+        final double period = DASH_LENGTH + DASH_GAP;
+        double travelled = 0.0;
+        for (int i = 1; i < points.size(); i++) {
+            Vec3 from = points.get(i - 1);
+            Vec3 to = points.get(i);
+            Vec3 displacement = to.subtract(from);
+            double length = displacement.length();
+            if (length < 1.0e-6) continue;
+
+            double offset = 0.0;
+            while (offset < length - 1.0e-6) {
+                double phase = (travelled + offset) % period;
+                boolean dash = phase < DASH_LENGTH;
+                double step = Math.min(length - offset,
+                        dash ? DASH_LENGTH - phase : period - phase);
+                if (step < 1.0e-6) {
+                    offset += 1.0e-5;
+                    continue;
+                }
+                if (dash) {
+                    double progress = (travelled + offset) / totalLength;
+                    // Mint cyan fading into a subdued light-purple landing tip.
+                    int red = (int) (100.0 + progress * 82.0);
+                    int green = (int) (225.0 - progress * 78.0);
+                    int blue = 240;
+                    Vec3 a = from.add(displacement.scale(offset / length));
+                    Vec3 b = from.add(displacement.scale((offset + step) / length));
+                    addLine(lines, matrix, a, b, red, green, blue, 205);
+                }
+                offset += step;
+            }
+            travelled += length;
+        }
+    }
+
+    private static Trajectory trace(Level level, LocalPlayer thrower, Vec3 start, Vec3 velocity) {
         List<Vec3> path = new ArrayList<>(MAX_TICKS + 1);
         Vec3 pos = start;
         path.add(pos);
 
         for (int tick = 0; tick < MAX_TICKS; ++tick) {
             Vec3 next = pos.add(velocity);
-
-            // Actual world collision shapes, not just visual full blocks.
             BlockHitResult block = level.clip(new ClipContext(
                     pos, next, ClipContext.Block.COLLIDER,
                     ClipContext.Fluid.NONE, thrower));
@@ -104,7 +160,6 @@ final class PearlTrajectoryRenderer {
             double bestDistSq = pos.distanceToSqr(end);
             boolean hit = block.getType() != HitResult.Type.MISS;
 
-            // Include living mobs and other hittable entities in the path.
             AABB sweep = new AABB(pos, next).inflate(PEARL_RADIUS + 0.15);
             for (Entity target : level.getEntities(thrower, sweep,
                     entity -> entity.isPickable() && !entity.isSpectator())) {
@@ -121,29 +176,28 @@ final class PearlTrajectoryRenderer {
             }
 
             path.add(end);
-            if (hit || next.y < level.getMinBuildHeight() - 16) break;
+            if (hit) return new Trajectory(path, true);
+            if (next.y < level.getMinBuildHeight() - 16) break;
 
             pos = next;
-            // The pearl has vanilla air drag and gravity.
             velocity = velocity.scale(DRAG).add(0.0, -GRAVITY, 0.0);
         }
-        return path;
+        return new Trajectory(path, false);
     }
 
     private static void addLine(VertexConsumer buffer, Matrix4f matrix,
                                 Vec3 a, Vec3 b, int red, int green, int blue, int alpha) {
-        Vec3 delta = b.subtract(a);
-        float nx = (float) delta.x;
-        float ny = (float) delta.y;
-        float nz = (float) delta.z;
-        float length = (float) delta.length();
-        if (length < 0.00001f) return;
-        nx /= length;
-        ny /= length;
-        nz /= length;
+        Vec3 difference = b.subtract(a);
+        float length = (float) difference.length();
+        if (length < 1.0e-5f) return;
+        float nx = (float) difference.x / length;
+        float ny = (float) difference.y / length;
+        float nz = (float) difference.z / length;
         buffer.addVertex(matrix, (float) a.x, (float) a.y, (float) a.z)
                 .setColor(red, green, blue, alpha).setNormal(nx, ny, nz);
         buffer.addVertex(matrix, (float) b.x, (float) b.y, (float) b.z)
                 .setColor(red, green, blue, alpha).setNormal(nx, ny, nz);
     }
+
+    private record Trajectory(List<Vec3> points, boolean hitSomething) {}
 }
