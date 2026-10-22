@@ -3,7 +3,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public final class SleepSettings {
  private static final ModConfigSpec.Builder B=new ModConfigSpec.Builder();
  public static final ModConfigSpec.IntValue TICKS_PER_POINT,BASE_RECOVERY,SLEEPLESS_THRESHOLD;
- public static final ModConfigSpec.BooleanValue KEEP_ON_DEATH,PENALTIES,SHELTER_BONUS,MONSTER_PENALTY,ENABLE_SLEEPLESS,ENABLE_CAMP_REST;
+ public static final ModConfigSpec.BooleanValue KEEP_ON_DEATH,PENALTIES,SHELTER_BONUS,MONSTER_PENALTY,ENABLE_SLEEPLESS,ENABLE_CAMP_REST,MICROSLEEPS;
  public static final ModConfigSpec SPEC;
  static {
   B.push("fatigue");
@@ -11,6 +11,7 @@ public final class SleepSettings {
   BASE_RECOVERY=B.defineInRange("baseSleepRecovery",550,0,1000);
   KEEP_ON_DEATH=B.define("persistAfterDeath",true);
   PENALTIES=B.define("enableDebuffs",true);
+  MICROSLEEPS=B.comment("Brief warning micro-sleeps during extreme exhaustion.").define("microSleeps",true);
   B.pop();
   B.push("sleep_quality");
   SHELTER_BONUS=B.define("shelterBonus",true);

@@ -28,18 +28,19 @@ with zipfile.ZipFile(jar) as z:
         "coffee","strong_coffee","long_coffee","energy_drink","warm_milk",
         "herbal_tea","dream_tea","caramel_coffee","bitter_tonic","cocoa_biscuit",
         "pillow","sleep_mask","sleepless_spawn_egg",
-        "coffee_machine","camp_bedroll","camp_awning","camp_lantern","dreamcatcher",
+        "sleep_journal","herbal_poultice","incense_bundle",
+        "coffee_machine","camp_bedroll","camp_awning","camp_lantern","dreamcatcher","incense_burner",
     ]
     for lang in ("en_us","ru_ru"):
         l=js(f"assets/sleepdebt/lang/{lang}.json")
         for item in item_ids:
-            key=("block" if item in {"coffee_machine","camp_bedroll","camp_awning","camp_lantern","dreamcatcher"} else "item")
+            key=("block" if item in {"coffee_machine","camp_bedroll","camp_awning","camp_lantern","dreamcatcher","incense_burner"} else "item")
             k=f"{key}.sleepdebt.{item}"
             if k not in l:raise ValueError(f"Missing translation {lang}:{k}")
     for item in item_ids:
         m=js(f"assets/sleepdebt/models/item/{item}.json")
         if not m.get("parent"):raise ValueError(f"Item {item} has no parent model")
-    block_names=("coffee_machine","camp_bedroll","camp_awning","camp_lantern","dreamcatcher")
+    block_names=("coffee_machine","camp_bedroll","camp_awning","camp_lantern","dreamcatcher","incense_burner")
     for b in block_names:
         js(f"assets/sleepdebt/blockstates/{b}.json")
         js(f"assets/sleepdebt/models/block/{b}.json")
@@ -68,4 +69,5 @@ with zipfile.ZipFile(jar) as z:
                     if f"data/sleepdebt/recipe/{recipe}.json" not in names and not page["recipe"].startswith("minecraft:"):
                         raise ValueError(f"{entry} points to missing recipe {page['recipe']}")
     print("Sleep Debt production assets OK:",len(item_ids),"items,",len(block_names),"blocks,",len(pngs),"PNG textures")
+
 

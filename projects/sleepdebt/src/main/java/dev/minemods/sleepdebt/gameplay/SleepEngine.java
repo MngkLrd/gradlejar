@@ -30,6 +30,26 @@ public final class SleepEngine {
   PacketDistributor.sendToPlayer(p,new SleepStatusPayload(read(t,"debt"),read(t,"mask"),read(t,"crash"),read(t,"caffeine"),read(t,"fatigue"),read(t,"stress")));
  }
  public static int getDebt(ServerPlayer p){return read(data(p),"debt");}
+ public static int getLastQuality(ServerPlayer p){return read(data(p),"lastSleepQuality");}
+ public static int getLastRecovery(ServerPlayer p){return read(data(p),"lastSleepRecovery");}
+ public static boolean usePoultice(ServerPlayer p){
+  CompoundTag t=data(p);
+  long now=p.serverLevel().getGameTime();
+  if(t.contains("poulticeAt") && now>=t.getLong("poulticeAt")
+      && now-t.getLong("poulticeAt")<1800)return false;
+  if(read(t,"stress")<60 && read(t,"fatigue")<60)return false;
+  t.putInt("stress",Math.max(0,read(t,"stress")-215));
+  t.putInt("fatigue",Math.max(0,read(t,"fatigue")-135));
+  t.putLong("poulticeAt",now);
+  save(p,t);sync(p,t);return true;
+ }
+ public static void soothe(ServerPlayer player,int stress,int fatigue){
+  CompoundTag t=data(player);
+  if(read(t,"stress")==0&&read(t,"fatigue")==0)return;
+  t.putInt("stress",Math.max(0,read(t,"stress")-stress));
+  t.putInt("fatigue",Math.max(0,read(t,"fatigue")-fatigue));
+  save(player,t);
+ }
  public static int getFatigue(ServerPlayer p){return read(data(p),"fatigue");}
  public static int getStress(ServerPlayer p){return read(data(p),"stress");}
  public static int getCaffeine(ServerPlayer p){return read(data(p),"caffeine");}
@@ -94,20 +114,31 @@ public final class SleepEngine {
   int slept=read(t,"sleepTicks");
   if(slept>0){
    if(slept>=40){
-    int recovery=SleepSettings.BASE_RECOVERY.get();
-    if(SleepSettings.SHELTER_BONUS.get()&&!p.level().canSeeSky(p.blockPosition()))recovery=(int)(recovery*1.15);
-    if(SleepSettings.MONSTER_PENALTY.get() && !p.level().getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(12)).isEmpty())recovery=(int)(recovery*.85);
-    if(read(t,"calm")>0)recovery=(int)(recovery*1.10);
+    int quality=100;
+    if(SleepSettings.SHELTER_BONUS.get()&&!p.level().canSeeSky(p.blockPosition()))quality+=15;
+    if(SleepSettings.MONSTER_PENALTY.get() && !p.level().getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(12)).isEmpty())quality-=15;
+    if(read(t,"calm")>0)quality+=10;
     float temperature=p.level().getBiome(p.blockPosition()).value().getBaseTemperature();
     boolean outside=p.level().canSeeSky(p.blockPosition().above());
-    if(outside && p.serverLevel().isRainingAt(p.blockPosition().above()))recovery=(int)(recovery*.82);
-    if(outside && temperature<.15f)recovery=(int)(recovery*.83);
-    if(outside && temperature>1.8f)recovery=(int)(recovery*.91);
+    if(outside && p.serverLevel().isRainingAt(p.blockPosition().above()))quality-=18;
+    if(outside && temperature<.15f)quality-=17;
+    if(outside && temperature>1.8f)quality-=9;
     if(BlockPos.betweenClosedStream(p.blockPosition().offset(-5,-2,-5),p.blockPosition().offset(5,3,5))
-      .anyMatch(q->p.level().getBlockState(q).is(ModBlocks.DREAMCATCHER.get())))recovery=(int)(recovery*1.18);
+      .anyMatch(q->p.level().getBlockState(q).is(ModBlocks.DREAMCATCHER.get())))quality+=18;
+    if(BlockPos.betweenClosedStream(p.blockPosition().offset(-5,-2,-5),p.blockPosition().offset(5,3,5))
+      .anyMatch(q->p.level().getBlockEntity(q) instanceof dev.minemods.sleepdebt.blockentity.IncenseBurnerBlockEntity be
+         && be.remainingTicks()>0))quality+=12;
+    if(p.getInventory().items.stream().anyMatch(s->s.is(ModItems.PILLOW.get())))quality+=6;
+    if(p.getInventory().items.stream().anyMatch(s->s.is(ModItems.MASK.get())))quality+=6;
+    int recovery=SleepSettings.BASE_RECOVERY.get()*Math.max(35,Math.min(145,quality))/100;
     if(slept<85)recovery=Math.min(recovery,180);
     int before=read(t,"debt");
     int after=Math.max(0,before-recovery);
+    t.putInt("lastSleepQuality",Math.max(35,Math.min(145,quality)));
+    t.putInt("lastSleepRecovery",before-after);
+    t.putLong("lastSleepAt",p.serverLevel().getGameTime());
+    p.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+      "message.sleepdebt.sleep_report",Math.max(35,Math.min(145,quality)),before-after),true);
     t.putInt("debt",after);t.putInt("progress",0);t.putInt("mask",0);t.putInt("crash",0);t.putInt("calm",0);
     t.putInt("fatigue",Math.max(0,read(t,"fatigue")-650));
     t.putInt("stress",Math.max(0,read(t,"stress")-500));
@@ -136,6 +167,12 @@ public final class SleepEngine {
    if(p.tickCount%600==0&&read(t,"caffeine")>0)t.putInt("caffeine",read(t,"caffeine")-1);
   }
   if(p.tickCount%100==0){apply(p,t);sync(p,t);}
+  if(SleepSettings.MICROSLEEPS.get() && p.tickCount%600==0
+      && read(t,"debt")>=850 && read(t,"fatigue")>=650 && read(t,"mask")==0
+      && p.getRandom().nextInt(3)==0) {
+   p.addEffect(new MobEffectInstance(MobEffects.DARKNESS,36,0,true,false,true));
+   p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,36,0,true,false,true));
+  }
   if(p.tickCount%400==0&&SleepSettings.ENABLE_SLEEPLESS.get())spawnSleepless(p,t);
   save(p,t);
  }

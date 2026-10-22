@@ -1,46 +1,30 @@
-# Sleep Debt 2.4.0-alpha.2 — Field Survival Expansion
+# Sleep Debt 2.6.0-alpha.1
 
-**Minecraft:** 1.21.1 · **Loader:** NeoForge · **Java:** 21 · **Gradle:** 9.2.1
+Minecraft 1.21.1, NeoForge 21.1.x, Java 21.
 
-## Features
-- Three persistent stats: Sleep Debt, Fatigue, Stress. Client-synced native survival HUD.
-- New four-slot copper coffee maker with native-themed GUI, 200-tick progress, ingredients, coal/charcoal fuel, output-only slot and inventory drops on break.
-- Brewing coffee and herbal tea. Dried herbs from ferns. Caramel coffee, dream tea, bitter tonic, cocoa biscuit and Dream Shard.
-- New 3D blocks: copper coffee maker, camp bedroll, camp awning, Rest Lantern and Dreamcatcher.
-- Bedroll recovery from shelter, fire, lantern, pillow and mask, with cooldown. Dreamcatcher provides a stress-recovery interaction and bed bonus.
-- Night hallucinations: native pixel shadow silhouettes and local soul particles on the client. Configurable off.
-- The Sleepless mob: hostile only to severely tired players, darkness spawning, daylight retreat, spawn egg and rare Dream Shard loot.
-- Server operator commands: `/sleepdebt status` and `/sleepdebt debug set 950 800 700`.
-- Patchouli guide EN/RU and progression advancements, with JEI / EMI and Jade metadata.
-- Original 16x16 pixel sprite generator for item and block textures and humanoid skin.
+## What's new
+- **Clay Incense Burner**: fueled 3D block, burns for up to 10 minutes, consumes incense bundles or dried herbs. Every 2 seconds it calms players within seven blocks, including multiple players, without accumulating permanent negative effects. Flame/smoke uses vanilla particles.
+- **Incense Bundle**: craftable fuel lasting 120 seconds.
+- **Herbal Poultice**: a quick, cooldown-restricted emergency treatment for Stress and Fatigue, but *never* a replacement for sleep.
+- **Sleep Journal**: report of current Sleep Debt / Fatigue / Stress, and the last recorded sleep quality and amount recovered. No custom non-native font, chat-based server report.
+- **Real sleep assessment**: roof, safety, wet weather, biome temperature, dreamcatcher, pillow, mask, active incense and calming effects all contribute to a quality score. An on-screen wake-up report shows the result.
+- **Microsleeps** at extreme exhaustion: short darkness/movement disruption, only while off stimulants; configurable in server TOML. Never forces the player to lose items, teleport or sleep involuntarily.
+- Tags at data/sleepdebt/tags/item/incense_fuels.json support modpack recipes and compatible modded incense.
+- Three new 16x16 item textures and original block textures. New Patchouli EN/RU chapter and recipes; JEI/EMI standard recipes.
+- Existing world IDs, NBT storage key (sleepdebt_v2), old model IDs, old recipes and the four core integration declarations preserved.
 
 ## Dependencies
-Required: NeoForge 21.1.x; JEI, EMI and Jade on client; Jade and Patchouli according to mod metadata. Comforts is optional via vanilla sleep observation.
+JEI and EMI client-required; Jade and Patchouli as in META-INF/neoforge.mods.toml. Accessories remains optional for the mask. Comforts is optional.
 
 ## Build
-```bash
-gradle clean build
-```
-Expected JAR: `build/libs/sleepdebt-1.21.1-2.4.0-alpha.2.jar`
+`gradle clean build`
+Expected: `build/libs/sleepdebt-1.21.1-2.6.0-alpha.1.jar`
 
-## Testing
-Read `CONTENT_2_4.md`. This CI tests Gradle compile and JAR structure only. Test dedicated server, client, and modpack compatibility manually. The camp is player-built, not worldgen. The Sleepless shares a vanilla zombie humanoid rig. Halo/hallucinations are client effects, not interactive mobs.
+## Test
+`/sleepdebt debug set 940 840 880` to simulate deprivation.
+Craft and place incense burner. Right click while holding fuel to add 30 seconds from herbs or 120 seconds from an incense bundle. Empty hand shows remaining burn time.
+Wait in its 7-block radius and use `/sleepdebt status` to check Stress/Fatigue reduction.
+Use journal to see last night report. Sleep outside in rain versus indoors and test differences. Poultice: use while stressed, check 90-second cooldown.
+Use JEI/EMI, Patchouli, Jade, with and without Accessories. Check dedicated-server startup.
+CI compilation and JAR verification do **not** substitute for in-game testing.
 
-## Persistence
-Old item and block IDs are preserved. Player state remains under NBT `sleepdebt_v2`. Old world compatibility is not yet verified in runtime.
-
-
-## Showcase
-Operator command: `/sleepdebt showcase` creates an isolated demo camp without replacing existing blocks. The coffee maker is supplied with ingredients. `/sleepdebt debug set 950 800 700` rapidly tests fatigue and hallucinations. JEI and EMI have native machine-brewing categories.
-
-
-## Sleep Debt 2.5
-Client-side world-space mirage players with vanilla Steve/Alex geometry, gaze-triggered vanishing and no server entities. Procedural session-only hallucinations. Pixel-perfect GUI atlas. Awning post/roof collision instead of solid invisible cube, compass-oriented coffee maker. Optional Accessories API integration: mask in the face slot confers real camp-rest benefit when equipped. No hard dependency on Accessories.
-
-## Sleep Debt 2.5 Alpha 2: perception and recovery
-- World-space player figures cluster ahead; Steve/Alex skins and full 3D models.
-- The Sleepless freezes under direct observation at a distance.
-- Biome temperature and exposed rainfall now affect sleep recovery.
-- Dreamcatchers ward off natural Sleepless appearances.
-- Optional Accessories face slot can hold a functional sleep mask.
-- Vanilla pixel UI background, matching block collision and directional coffee maker.

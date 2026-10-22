@@ -1,0 +1,31 @@
+{
+  "name": "Походное спокойствие",
+  "category": "sleepdebt:recovery",
+  "icon": "sleepdebt:incense_burner",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Глиняная курильница создаёт настоящую спокойную зону. ПКМ с благовонием или сушёными травами заправляет её. Одной связки хватает на две минуты. Игроки в радиусе семи блоков постепенно избавляются от стресса и физической усталости."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:incense_burner"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:incense_bundle"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Травяная повязка быстро снижает стресс и усталость, но не долг сна. Дневник сна показывает текущее состояние, качество предыдущего сна и объём восстановления."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:herbal_poultice"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:sleep_journal"
+    }
+  ]
+}

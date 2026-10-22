@@ -46,6 +46,8 @@ public final class SleepDebtMod {
   if(e.getTabKey()==CreativeModeTabs.FOOD_AND_DRINKS){
    e.accept(ModItems.ROASTED.get());e.accept(ModItems.GROUNDS.get());
    e.accept(ModItems.DRIED_HERBS.get());
+   e.accept(ModItems.INCENSE_BUNDLE.get());
+   e.accept(ModItems.HERBAL_POULTICE.get());
    e.accept(ModItems.COFFEE.get());e.accept(ModItems.STRONG.get());
    e.accept(ModItems.LONG.get());e.accept(ModItems.ENERGY.get());
    e.accept(ModItems.WARM_MILK.get());e.accept(ModItems.HERBAL_TEA.get());
@@ -55,11 +57,12 @@ public final class SleepDebtMod {
   if(e.getTabKey()==CreativeModeTabs.FUNCTIONAL_BLOCKS){
    e.accept(ModItems.COFFEE_MACHINE.get());e.accept(ModItems.BEDROLL.get());
    e.accept(ModItems.AWNING.get());e.accept(ModItems.CAMP_LANTERN.get());
+   e.accept(ModItems.INCENSE_BURNER.get());
    e.accept(ModItems.DREAMCATCHER.get());
   }
   if(e.getTabKey()==CreativeModeTabs.TOOLS_AND_UTILITIES){
    e.accept(ModItems.PILLOW.get());e.accept(ModItems.MASK.get());
-   e.accept(ModItems.DREAM_SHARD.get());
+   e.accept(ModItems.DREAM_SHARD.get());e.accept(ModItems.SLEEP_JOURNAL.get());
   }
   if(e.getTabKey()==CreativeModeTabs.SPAWN_EGGS){
    e.accept(ModItems.SLEEPLESS_EGG.get());

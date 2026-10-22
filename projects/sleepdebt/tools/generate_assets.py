@@ -442,3 +442,33 @@ png+=echunk(b"IEND",b"")
 (GUI_DIR/"coffee_maker.png").write_bytes(png)
 print("Sleep Debt native coffee GUI created",GW,GH)
 
+# Sleep Debt 2.6 / material-rich 16x16 vanilla pixel clusters, no anti-aliasing.
+OUT=Path("src/main/resources/assets/sleepdebt/textures/item")
+OUT.mkdir(parents=True,exist_ok=True)
+def journal_sprite(p,f):
+    f(3,2,12,14,"X");f(4,3,11,13,"C");f(5,3,10,12,"L")
+    f(6,5,9,9,"D");f(7,6,8,8,"B")
+    f(5,4,5,12,"H");f(4,12,12,13,"D")
+    f(7,11,10,11,"H");p(10,4,"H")
+pixel_sprite("sleep_journal",journal_sprite)
+def poultice_sprite(p,f):
+    f(2,4,13,11,"X");f(3,5,12,10,"W")
+    f(5,6,10,9,"G");f(6,6,9,8,"F")
+    f(3,7,12,7,"H");f(7,5,7,10,"C")
+    p(4,5,"L");p(11,10,"D")
+pixel_sprite("herbal_poultice",poultice_sprite)
+def incense_sprite(p,f):
+    f(3,5,12,13,"X");f(4,6,11,12,"C")
+    f(5,7,10,11,"D");f(4,10,11,10,"L")
+    f(5,12,10,13,"H")
+    for xx,yy in ((4,3),(6,2),(9,4),(11,2)):
+        p(xx,yy,"S")
+    f(7,4,8,5,"G");f(6,8,9,9,"G")
+    p(8,8,"F");p(7,6,"H")
+pixel_sprite("incense_bundle",incense_sprite)
+OUT=Path("src/main/resources/assets/sleepdebt/textures/block")
+OUT.mkdir(parents=True,exist_ok=True)
+block_cluster("incense_clay",{"D":"#765549","C":"#966d59","L":"#b28c72","H":"#d0ab86"},3,"metal")
+block_cluster("incense_coals",{"D":"#302a2a","C":"#4c3b38","L":"#8c5140","H":"#c9814a"},1,"screen")
+print("Sleep Debt 2.6: journal, poultice, incense and clay block textures generated")
+

@@ -3,11 +3,18 @@ import dev.minemods.sleepdebt.SleepDebtMod;
 import dev.minemods.sleepdebt.item.RestDrinkItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
+import net.minecraft.tags.TagKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import dev.minemods.sleepdebt.item.SleepJournalItem;
+import dev.minemods.sleepdebt.item.HerbalPoulticeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.SpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 public final class ModItems {
+ public static final TagKey<Item> INCENSE_FUELS=TagKey.create(Registries.ITEM,
+  ResourceLocation.fromNamespaceAndPath(SleepDebtMod.MOD_ID,"incense_fuels"));
  public static final DeferredRegister.Items ITEMS=DeferredRegister.createItems(SleepDebtMod.MOD_ID);
  public static final DeferredItem<Item> ROASTED=ITEMS.registerSimpleItem("roasted_cocoa_beans",new Item.Properties());
  public static final DeferredItem<Item> GROUNDS=ITEMS.registerSimpleItem("coffee_grounds",new Item.Properties());
@@ -24,8 +31,16 @@ public final class ModItems {
  public static final DeferredItem<RestDrinkItem> BITTER_TONIC=ITEMS.register("bitter_tonic",()->new RestDrinkItem(new Item.Properties().stacksTo(16),4000,13,0,2));
  public static final DeferredItem<Item> COCOA_BISCUIT=ITEMS.registerSimpleItem("cocoa_biscuit",new Item.Properties()
   .food(new FoodProperties.Builder().nutrition(3).saturationModifier(.35f).build()));
+ public static final DeferredItem<Item> INCENSE_BUNDLE=
+   ITEMS.registerSimpleItem("incense_bundle",new Item.Properties().stacksTo(32));
+ public static final DeferredItem<SleepJournalItem> SLEEP_JOURNAL=
+   ITEMS.register("sleep_journal",()->new SleepJournalItem(new Item.Properties().stacksTo(1)));
+ public static final DeferredItem<HerbalPoulticeItem> HERBAL_POULTICE=
+   ITEMS.register("herbal_poultice",()->new HerbalPoulticeItem(new Item.Properties().stacksTo(16)));
  public static final DeferredItem<Item> PILLOW=ITEMS.registerSimpleItem("pillow",new Item.Properties().stacksTo(16));
  public static final DeferredItem<Item> MASK=ITEMS.registerSimpleItem("sleep_mask",new Item.Properties().stacksTo(1));
+ public static final DeferredItem<BlockItem> INCENSE_BURNER=ITEMS.register(
+  "incense_burner",()->new BlockItem(ModBlocks.INCENSE_BURNER.get(),new Item.Properties()));
  public static final DeferredItem<BlockItem> COFFEE_MACHINE=ITEMS.register("coffee_machine",()->new BlockItem(ModBlocks.COFFEE_MACHINE.get(),new Item.Properties()));
  public static final DeferredItem<BlockItem> BEDROLL=ITEMS.register("camp_bedroll",()->new BlockItem(ModBlocks.CAMP_BEDROLL.get(),new Item.Properties()));
  public static final DeferredItem<BlockItem> AWNING=ITEMS.register("camp_awning",()->new BlockItem(ModBlocks.CAMP_AWNING.get(),new Item.Properties()));
