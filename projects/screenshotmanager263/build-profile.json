@@ -1,0 +1,9 @@
+{
+  "slug": "screenshotmanager263",
+  "version": "0.2.0-26.3",
+  "minecraft": "26.3",
+  "loader": "neoforge",
+  "java": "25",
+  "gradle": "9.2.1",
+  "jar_glob": "screenshotmanager-0.2.0-26.3.jar"
+}
