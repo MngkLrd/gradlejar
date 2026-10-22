@@ -46,6 +46,9 @@ public final class SleepDebtMod {
   if(e.getTabKey()==CreativeModeTabs.FOOD_AND_DRINKS){
    e.accept(ModItems.ROASTED.get());e.accept(ModItems.GROUNDS.get());
    e.accept(ModItems.DRIED_HERBS.get());
+   e.accept(ModItems.COFFEE_SEEDS.get());
+   e.accept(ModItems.COFFEE_BERRIES.get());
+   e.accept(ModItems.ROASTED_COFFEE_BEANS.get());
    e.accept(ModItems.INCENSE_BUNDLE.get());
    e.accept(ModItems.HERBAL_POULTICE.get());
    e.accept(ModItems.COFFEE.get());e.accept(ModItems.STRONG.get());
@@ -69,4 +72,5 @@ public final class SleepDebtMod {
   }
  }
 }
+
 

@@ -66,5 +66,10 @@
   "message.sleepdebt.poultice_cooldown": "You don't need another poultice yet.",
   "item.sleepdebt.sleep_journal.tooltip": "Right-click for your latest rest report.",
   "item.sleepdebt.herbal_poultice.tooltip": "Relieves stress and fatigue. Does not replace sleep.",
-  "item.sleepdebt.incense_bundle.tooltip": "Fuel for the incense burner; creates a tranquil area."
+  "item.sleepdebt.incense_bundle.tooltip": "Fuel for the incense burner; creates a tranquil area.",
+  "item.sleepdebt.coffee_seeds": "Coffee Seeds",
+  "item.sleepdebt.coffee_berries": "Coffee Cherries",
+  "item.sleepdebt.roasted_coffee_beans": "Roasted Coffee Beans",
+  "block.sleepdebt.coffee_bush": "Coffee Bush",
+  "item.sleepdebt.coffee_seeds.tooltip": "Plant on farmland; pick the ripe cherries by right-clicking."
 }

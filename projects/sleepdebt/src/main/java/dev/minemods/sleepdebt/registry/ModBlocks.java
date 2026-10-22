@@ -6,6 +6,7 @@ import dev.minemods.sleepdebt.block.CoffeeMachineBlock;
 import dev.minemods.sleepdebt.block.DreamcatcherBlock;
 import dev.minemods.sleepdebt.block.CampLanternBlock;
 import dev.minemods.sleepdebt.block.IncenseBurnerBlock;
+import dev.minemods.sleepdebt.block.CoffeeBushBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -20,6 +21,9 @@ public final class ModBlocks {
   ()->new CampBedrollBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).strength(.4f).sound(SoundType.WOOL).noOcclusion()));
  public static final DeferredBlock<Block> CAMP_AWNING=BLOCKS.register("camp_awning",
   ()->new CampAwningBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).strength(1.2f).sound(SoundType.WOOL).noOcclusion()));
+ public static final DeferredBlock<Block> COFFEE_BUSH=BLOCKS.register("coffee_bush",
+   ()->new CoffeeBushBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT)
+     .noCollission().randomTicks().instabreak().sound(SoundType.CROP)));
  public static final DeferredBlock<Block> INCENSE_BURNER=BLOCKS.register(
   "incense_burner",()->new IncenseBurnerBlock(BlockBehaviour.Properties.of()
     .mapColor(MapColor.TERRACOTTA_RED).strength(1.3f).sound(SoundType.DECORATED_POT).noOcclusion()));
@@ -29,4 +33,5 @@ public final class ModBlocks {
   ()->new DreamcatcherBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(.4f).sound(SoundType.WOOD).noOcclusion()));
  private ModBlocks(){}
 }
+
 

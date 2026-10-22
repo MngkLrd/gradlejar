@@ -3,7 +3,7 @@ loaderVersion="[4,)"
 license="All Rights Reserved"
 [[mods]]
 modId="sleepdebt"
-version="2.6.0-alpha.1"
+version="2.6.0-alpha.2"
 displayName="Sleep Debt"
 description='''Minecraft-native sleep fatigue, caffeine, drink crafting and a survival guide.'''
 [[dependencies.sleepdebt]]
@@ -52,4 +52,3 @@ type="optional"
 versionRange="[1.1.0,)"
 ordering="NONE"
 side="BOTH"
-

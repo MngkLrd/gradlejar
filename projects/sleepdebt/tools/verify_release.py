@@ -29,6 +29,7 @@ with zipfile.ZipFile(jar) as z:
         "herbal_tea","dream_tea","caramel_coffee","bitter_tonic","cocoa_biscuit",
         "pillow","sleep_mask","sleepless_spawn_egg",
         "sleep_journal","herbal_poultice","incense_bundle",
+        "coffee_seeds","coffee_berries","roasted_coffee_beans",
         "coffee_machine","camp_bedroll","camp_awning","camp_lantern","dreamcatcher","incense_burner",
     ]
     for lang in ("en_us","ru_ru"):
@@ -46,6 +47,10 @@ with zipfile.ZipFile(jar) as z:
         js(f"assets/sleepdebt/models/block/{b}.json")
         js(f"data/sleepdebt/loot_table/blocks/{b}.json")
         js(f"data/sleepdebt/recipe/{b}.json")
+    js("assets/sleepdebt/blockstates/coffee_bush.json")
+    js("data/sleepdebt/loot_table/blocks/coffee_bush.json")
+    for n in range(8):
+        js(f"assets/sleepdebt/models/block/coffee_bush_stage_{n}.json")
     for name in names:
         if (name.startswith("assets/sleepdebt/") or name.startswith("data/sleepdebt/")) and name.endswith(".json"):
             js(name)
@@ -69,5 +74,6 @@ with zipfile.ZipFile(jar) as z:
                     if f"data/sleepdebt/recipe/{recipe}.json" not in names and not page["recipe"].startswith("minecraft:"):
                         raise ValueError(f"{entry} points to missing recipe {page['recipe']}")
     print("Sleep Debt production assets OK:",len(item_ids),"items,",len(block_names),"blocks,",len(pngs),"PNG textures")
+
 
 

@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import dev.minemods.sleepdebt.item.SleepJournalItem;
 import dev.minemods.sleepdebt.item.HerbalPoulticeItem;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.SpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -31,6 +32,13 @@ public final class ModItems {
  public static final DeferredItem<RestDrinkItem> BITTER_TONIC=ITEMS.register("bitter_tonic",()->new RestDrinkItem(new Item.Properties().stacksTo(16),4000,13,0,2));
  public static final DeferredItem<Item> COCOA_BISCUIT=ITEMS.registerSimpleItem("cocoa_biscuit",new Item.Properties()
   .food(new FoodProperties.Builder().nutrition(3).saturationModifier(.35f).build()));
+ public static final DeferredItem<ItemNameBlockItem> COFFEE_SEEDS=ITEMS.register(
+  "coffee_seeds",()->new ItemNameBlockItem(ModBlocks.COFFEE_BUSH.get(),new Item.Properties()));
+ public static final DeferredItem<Item> COFFEE_BERRIES=ITEMS.registerSimpleItem(
+  "coffee_berries",new Item.Properties()
+     .food(new FoodProperties.Builder().nutrition(1).saturationModifier(.1f).build()));
+ public static final DeferredItem<Item> ROASTED_COFFEE_BEANS=ITEMS.registerSimpleItem(
+  "roasted_coffee_beans",new Item.Properties());
  public static final DeferredItem<Item> INCENSE_BUNDLE=
    ITEMS.registerSimpleItem("incense_bundle",new Item.Properties().stacksTo(32));
  public static final DeferredItem<SleepJournalItem> SLEEP_JOURNAL=
@@ -50,4 +58,5 @@ public final class ModItems {
   ()->new SpawnEggItem(ModEntities.SLEEPLESS.get(),0x26232F,0xBB8498,new Item.Properties()));
  private ModItems(){}
 }
+
 

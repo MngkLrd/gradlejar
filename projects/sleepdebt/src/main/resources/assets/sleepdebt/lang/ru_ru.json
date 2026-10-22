@@ -66,5 +66,10 @@
   "message.sleepdebt.poultice_cooldown": "Пока новая повязка не нужна.",
   "item.sleepdebt.sleep_journal.tooltip": "ПКМ — отчёт о последнем сне и самочувствии.",
   "item.sleepdebt.herbal_poultice.tooltip": "Снимает стресс и усталость, но не заменяет сон.",
-  "item.sleepdebt.incense_bundle.tooltip": "Топливо для курильницы; успокаивает находящихся рядом."
+  "item.sleepdebt.incense_bundle.tooltip": "Топливо для курильницы; успокаивает находящихся рядом.",
+  "item.sleepdebt.coffee_seeds": "Семена кофе",
+  "item.sleepdebt.coffee_berries": "Кофейные ягоды",
+  "item.sleepdebt.roasted_coffee_beans": "Обжаренные кофейные зёрна",
+  "block.sleepdebt.coffee_bush": "Кофейный куст",
+  "item.sleepdebt.coffee_seeds.tooltip": "Посади на грядке. Собирай ягоды ПКМ, не ломая куст."
 }

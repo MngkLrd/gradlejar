@@ -1,4 +1,4 @@
-# Sleep Debt 2.6.0-alpha.1
+# Sleep Debt 2.6.0-alpha.2
 
 Minecraft 1.21.1, NeoForge 21.1.x, Java 21.
 
@@ -18,7 +18,7 @@ JEI and EMI client-required; Jade and Patchouli as in META-INF/neoforge.mods.tom
 
 ## Build
 `gradle clean build`
-Expected: `build/libs/sleepdebt-1.21.1-2.6.0-alpha.1.jar`
+Expected: `build/libs/sleepdebt-1.21.1-2.6.0-alpha.2.jar`
 
 ## Test
 `/sleepdebt debug set 940 840 880` to simulate deprivation.
@@ -28,3 +28,11 @@ Use journal to see last night report. Sleep outside in rain versus indoors and t
 Use JEI/EMI, Patchouli, Jade, with and without Accessories. Check dedicated-server startup.
 CI compilation and JAR verification do **not** substitute for in-game testing.
 
+
+## Cultivation expansion (Alpha 2)
+- **Coffee Bush**: 8 age stages grown on vanilla farmland with bonemeal compatibility.
+- **Coffee Seeds**: crafted for a reachable progression entry point using jungle sapling, wheat seeds and cocoa.
+- **Coffee Cherries**: ripe bushes yield 2–4 by right-click, and continue growing from age 3 instead of requiring replanting.
+- **Roasted Coffee Beans**: smelt actual cherries and grind into 2 coffee grounds (paper crafting route).
+- Eight original 16x16 crop-stage textures, seed/cherry/bean sprites and cross block models; loot table and Patchouli guides EN/RU.
+- Legacy cocoa-derived coffee remains accessible for compatibility with old worlds; the new plant is the intended path.

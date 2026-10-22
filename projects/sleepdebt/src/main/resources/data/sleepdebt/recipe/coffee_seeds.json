@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:jungle_sapling"
+    },
+    {
+      "item": "minecraft:cocoa_beans"
+    },
+    {
+      "item": "minecraft:wheat_seeds"
+    }
+  ],
+  "result": {
+    "id": "sleepdebt:coffee_seeds",
+    "count": 2
+  }
+}

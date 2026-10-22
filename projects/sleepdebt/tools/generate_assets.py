@@ -472,3 +472,59 @@ block_cluster("incense_clay",{"D":"#765549","C":"#966d59","L":"#b28c72","H":"#d0
 block_cluster("incense_coals",{"D":"#302a2a","C":"#4c3b38","L":"#8c5140","H":"#c9814a"},1,"screen")
 print("Sleep Debt 2.6: journal, poultice, incense and clay block textures generated")
 
+# Real coffee crop: eight vanilla-resolution 16x16 stages, deterministic hard pixels.
+OUT=Path("src/main/resources/assets/sleepdebt/textures/item")
+OUT.mkdir(parents=True,exist_ok=True)
+def sprite_from_art(name,fun):
+    p=[["." for x in range(16)] for y in range(16)]
+    pal={"X":"#322b25","D":"#6e4b30","C":"#9d6942","L":"#c79a68","H":"#f2d9a0",
+         "G":"#3d6c3d","F":"#6c9648","R":"#ad4545","B":"#672f34"}
+    def pixel(x,y,k):
+        if 0<=x<16 and 0<=y<16:p[y][x]=k
+    def fill(x0,y0,x1,y1,k):
+        for yy in range(y0,y1+1):
+            for xx in range(x0,x1+1):pixel(xx,yy,k)
+    fun(pixel,fill)
+    save(name,["".join(row) for row in p],pal)
+def seeds_art(p,f):
+    for x,y in ((5,7),(10,5),(8,10)):
+        f(x-1,y-1,x+1,y+1,"X");f(x,y-1,x+1,y,"C")
+        p(x,y,"L");p(x+1,y+1,"D")
+sprite_from_art("coffee_seeds",seeds_art)
+def berries_art(p,f):
+    f(4,5,7,10,"X");f(5,6,6,9,"R");p(5,6,"H")
+    f(8,6,12,11,"X");f(9,7,11,10,"R");p(9,7,"H")
+    f(6,2,11,3,"G");f(8,3,9,6,"D")
+    p(7,2,"F");p(10,3,"F");p(10,9,"B")
+sprite_from_art("coffee_berries",berries_art)
+def bean_art(p,f):
+    f(3,3,7,10,"X");f(4,4,6,9,"C");p(5,5,"H");f(5,6,5,9,"D")
+    f(8,5,12,12,"X");f(9,6,11,11,"D");p(10,7,"L")
+    f(10,8,10,11,"X")
+sprite_from_art("roasted_coffee_beans",bean_art)
+OUT=Path("src/main/resources/assets/sleepdebt/textures/block")
+OUT.mkdir(parents=True,exist_ok=True)
+PAL={"X":"#2c4327","D":"#365b30","G":"#527f42","L":"#79a454","R":"#a94743","H":"#d58b66"}
+for stage in range(8):
+    p=[["." for x in range(16)] for y in range(16)]
+    def dot(x,y,k):
+        if 0<=x<16 and 0<=y<16:p[y][x]=k
+    height=4+stage
+    for y in range(15,15-height,-1):
+        dot(7,y,"D");dot(8,y,"D" if y%3 else "G")
+    canopy=max(1,stage//2+1)
+    for a in range(canopy):
+        y=13-a*2-(stage//4)
+        spread=min(5,1+stage//2+a%2)
+        for x in range(7-spread,9+spread):
+            if abs(x-8)==spread and (x+y)%2==0:continue
+            if 0<=x<=15:
+                dot(x,y,["G","D","L","X"][(x+y+stage)%4])
+    if stage>=5:
+        for x,y in ((5,9),(10,8),(8,6),(11,11),(5,12)):
+            if y>=6 and stage>=6:dot(x,y,"R")
+        if stage>=7:
+            dot(6,8,"H");dot(9,10,"R");dot(11,10,"H")
+    save("coffee_bush_stage_"+str(stage),["".join(row) for row in p],PAL)
+print("Sleep Debt: eight live coffee bush growth sprites and three ingredient textures")
+
