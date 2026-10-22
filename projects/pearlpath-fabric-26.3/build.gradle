@@ -1,0 +1,11 @@
+plugins { id 'net.fabricmc.fabric-loom' version '1.18-SNAPSHOT'; id 'maven-publish' }
+group = 'dev.minemods'
+version = '1.0.2'
+base.archivesName = 'pearlpath-fabric-26.3'
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+dependencies {
+  minecraft 'com.mojang:minecraft:26.3'
+  modImplementation 'net.fabricmc:fabric-loader:0.19.5'
+  modImplementation 'net.fabricmc.fabric-api:fabric-api:0.164.0+26.3'
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 25 }
