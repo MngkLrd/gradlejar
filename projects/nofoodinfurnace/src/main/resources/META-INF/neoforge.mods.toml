@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+modId="nofoodinfurnace"
+version="1.0.0"
+displayName="No Food in Furnace"
+authors="MineMods"
+description="No cooking edible food in the ordinary furnace. Works with vanilla and modded food; smokers and campfires still work."
+
+[[mixins]]
+config="nofoodinfurnace.mixins.json"
+
+[[dependencies.nofoodinfurnace]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.nofoodinfurnace]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"

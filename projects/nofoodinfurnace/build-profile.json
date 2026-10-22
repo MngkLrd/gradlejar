@@ -1,0 +1,11 @@
+{
+  "slug": "nofoodinfurnace",
+  "version": "1.0.0",
+  "minecraft": "1.21.1",
+  "loader": "neoforge",
+  "java": "21",
+  "gradle": "9.2.1",
+  "jar_glob": "nofoodinfurnace-1.21.1-1.0.0.jar",
+  "minimum_loader_version": "21.1.0",
+  "compile_loader_version": "21.1.262"
+}
