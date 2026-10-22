@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " S ",
+    "ARA",
+    "EDE"
+  ],
+  "key": {
+    "S": "minecraft:string",
+    "A": "minecraft:amethyst_shard",
+    "R": "minecraft:redstone",
+    "E": "minecraft:ender_pearl",
+    "D": "minecraft:diamond"
+  },
+  "result": {
+    "id": "phantomlure:phantom_lure",
+    "count": 1
+  }
+}

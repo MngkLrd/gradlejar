@@ -1,0 +1,9 @@
+{
+  "slug": "phantomlure-263",
+  "version": "0.1.1",
+  "minecraft": "26.3",
+  "loader": "neoforge",
+  "java": "25",
+  "gradle": "9.2.1",
+  "jar_glob": "phantomlure-26.3-0.1.1.jar"
+}
