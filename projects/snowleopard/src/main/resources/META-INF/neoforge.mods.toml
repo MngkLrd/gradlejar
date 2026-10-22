@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+[[mods]]
+modId="snowleopard"
+version="1.0.0"
+displayName="Snow Leopard"
+authors="MineMods"
+description="Adds a snow leopard with a bespoke 3D model to snowy mountain biomes."
+[[dependencies.snowleopard]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.snowleopard]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
