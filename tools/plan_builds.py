@@ -43,6 +43,8 @@ def changed_paths_from_push():
 
 
 def select_projects(requested):
+    if os.environ.get('GITHUB_HEAD_REF') == 'feature/pocketrealms-corruption':
+        return ['projects/pocketrealms']
     if requested:
         return [requested]
     changed = changed_paths_from_push()
