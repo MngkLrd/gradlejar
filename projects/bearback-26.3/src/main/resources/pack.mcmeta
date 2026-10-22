@@ -1,10 +1,17 @@
 {
   "pack": {
-    "description": "Bearback 26.3 resources",
+    "description": "Bearback resources for Minecraft 26.3",
     "min_format": [
       97,
       1
     ],
-    "max_format": 97
-  }
+    "max_format": [
+      97,
+      1
+    ]
+  },
+  "supported_formats": [
+    97,
+    97
+  ]
 }

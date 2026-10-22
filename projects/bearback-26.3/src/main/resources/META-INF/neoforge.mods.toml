@@ -1,7 +1,7 @@
 license="MIT"
 [[mods]]
 modId="bearback"
-version="0.1.2"
+version="0.2.2"
 displayName="Bearback"
 authors="Bearback"
 description="Ride polar and black bears, with taming, 3D saddles, owner defense and a powerful paw swipe."
