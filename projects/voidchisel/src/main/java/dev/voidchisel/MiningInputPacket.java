@@ -16,7 +16,7 @@ public record MiningInputPacket(long pos, boolean active) implements CustomPacke
 
     public static final StreamCodec<RegistryFriendlyByteBuf, MiningInputPacket> CODEC =
             StreamCodec.composite(
-                    ByteBufCodecs.LONG, MiningInputPacket::pos,
+                    ByteBufCodecs.VAR_LONG, MiningInputPacket::pos,
                     ByteBufCodecs.BOOL, MiningInputPacket::active,
                     MiningInputPacket::new);
 
