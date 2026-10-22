@@ -1,0 +1,23 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+[[mods]]
+modId="leashwrap"
+version="1.0.0"
+displayName="LeashWrap"
+authors="MineMods"
+description='''Attach vanilla lead ropes to tree trunks and other solid blocks by right-clicking with a lead while leading animals. Shift-right-click with a lead to untie.'''
+[[mixins]]
+config="leashwrap.mixins.json"
+[[dependencies.leashwrap]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.262,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.leashwrap]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"

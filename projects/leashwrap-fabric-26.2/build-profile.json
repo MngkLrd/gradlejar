@@ -1,0 +1,9 @@
+{
+  "slug": "leashwrap-fabric-26.2",
+  "version": "1.0.0",
+  "minecraft": "26.2",
+  "loader": "fabric",
+  "java": "25",
+  "gradle": "9.5.1",
+  "jar_glob": "leashwrap-fabric-26.2-1.0.0.jar"
+}

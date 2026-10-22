@@ -1,0 +1,15 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+group = 'dev.minemods'
+version = '1.0.0'
+base.archivesName = 'leashwrap-neoforge-26.2'
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+neoForge {
+    version = '26.2.0.93'
+    runs { client { client() } }
+    mods { leashwrap { sourceSet(sourceSets.main) } }
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 25 }
