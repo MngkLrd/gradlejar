@@ -1,0 +1,8 @@
+{
+  "block.ropefences.rope_span": "Верёвочная ограда",
+  "message.ropefences.first": "Первый столб выбран. Присядь и нажми ПКМ с поводком на втором.",
+  "message.ropefences.canceled": "Установка отменена.",
+  "message.ropefences.distance": "Столбы должны стоять на одной высоте по прямой, на расстоянии 2-12 блоков.",
+  "message.ropefences.obstructed": "Между столбами должно быть пусто.",
+  "message.ropefences.created": "Верёвочная ограда натянута."
+}

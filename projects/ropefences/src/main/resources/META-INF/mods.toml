@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[52,)"
+license="MIT"
+[[mods]]
+modId="ropefences"
+version="${file.jarVersion}"
+displayName="Rope Fences"
+authors="MineMods"
+description='''Connect vanilla fences with real, collidable lead ropes.'''
+[[dependencies.ropefences]]
+modId="forge"
+mandatory=true
+versionRange="[52,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.ropefences]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
