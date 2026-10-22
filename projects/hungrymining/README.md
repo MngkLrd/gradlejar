@@ -1,19 +1,30 @@
-# Hungry Mining
+# Hungry Mining 1.1.0
 
 Small survival gameplay mod for **Minecraft 1.21.1 / NeoForge / Java 21**.
 
-Digging speed is modified by the vanilla food meter. There are no new items,
-textures, keybinds, HUD elements, network packets or external mod dependencies.
+Digging speed changes smoothly based on the vanilla food meter. No new items,
+textures, keybinds, HUD elements, network packets, or external mod dependencies.
 
-| Food points (0–20) | Mining speed | Effect |
+**Balance:** The first two lost food points cause no change. Once three
+food points have been lost (20 to 17), the mining bonus goes away. Every
+further lost food point slows digging progressively.
+
+| Food points (0–20) | Mining speed | Compared to normal |
 | --- | --- | --- |
-| 0–4 | 60% | -40% |
-| 5–9 | 80% | -20% |
-| 10–15 | 100% | Normal |
-| 16–19 | 105% | +5% |
-| 20 | 108% | +8% |
+| 18–20 | 108% | +8% |
+| 17 | 100% | normal |
+| 15 | 91.8% | -8.2% |
+| 12 | 79.4% | -20.6% |
+| 9 | 67.1% | -32.9% |
+| 6 | 54.7% | -45.3% |
+| 3 | 42.4% | -57.6% |
+| 0 | 30% | -70% |
 
-One food point is half a hunger drumstick. Saturation does not affect the multiplier.
+A food point is half a hunger drumstick. Hunger/saturation are not the
+same: the speed modifier depends on food level only, not hidden saturation.
+
+At 0 food, mining is **half as fast as in Hungry Mining 1.0.0** (30% vs 60%).
+The transition from 17 to 0 is linear; every food point has its own speed.
 
 ## Build
 Use JDK 21 and Gradle 9.2.1:
@@ -22,27 +33,27 @@ Use JDK 21 and Gradle 9.2.1:
 gradle clean build
 ```
 
-Output: `build/libs/hungrymining-1.21.1-1.0.0.jar`
+Output: `build/libs/hungrymining-1.21.1-1.1.0.jar`
 
-This standalone Gradle project also builds through the repository's
-Minecraft Mod Build Hub (project directory: `projects/hungrymining`).
+Repository build hub project: `projects/hungrymining`.
 
 ## How it works
-The common NeoForge `PlayerEvent.BreakSpeed` event adjusts the existing mining
-speed, preserving other mods' earlier adjustments. Creative and Spectator
-are unaffected. The handler is safe to run on both logical sides so that
-client mining animation and server block-breaking calculations agree.
+Common NeoForge `PlayerEvent.BreakSpeed` scales the current mining speed,
+preserving previously applied multipliers from other mods. Creative and
+Spectator are unaffected. The handler runs on both logical sides, so
+client prediction and server calculations can agree.
 
-Install on both the client and dedicated server for multiplayer.
+Install on **both client and dedicated server** for multiplayer.
 
 ## Quick test
-1. Start a survival world; mine the same stone block type with the same pickaxe.
-2. Compare food=20 with food=12 (8% bonus vs baseline).
-3. Compare food=8 (-20%) and food=2 (-40%).
-4. Repeat with an Efficiency-enchanted pickaxe and under Haste/Fatigue.
-5. Verify Creative instant mining is not slowed.
-6. Confirm single-player and a dedicated server with the mod on both ends.
+1. Mine the same stone block with the same pickaxe at food=20, 19, 18.
+   Speed should remain identical.
+2. At food=17 verify the first reduction (108% to 100%).
+3. At food=12 verify about 79.4% of unmodified speed.
+4. At food=0 verify 30% of unmodified speed (half of v1.0 at zero food).
+5. Repeat with Efficiency, Haste and Mining Fatigue.
+6. Verify Creative instant mining is unchanged.
+7. Verify dedicated server and client with the same mod JAR.
 
-Known limitation: the small positive bonus may be difficult to perceive on
-blocks which already break in one tick. Very low food levels can also
-be influenced by Minecraft's built-in conditions and other mods.
+Known limitation: small differences may be imperceptible on blocks already
+mined within one game tick. Other mods may also modify dig speed.
