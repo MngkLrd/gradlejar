@@ -2,6 +2,7 @@ package dev.minemods.cowardlymobs.ai;
 
 import dev.minemods.cowardlymobs.hunger.ai.ZombieFoodGoal;
 import dev.minemods.cowardlymobs.jockey.SkeletonSpiderMountGoal;
+import dev.minemods.cowardlymobs.jockey.SpiderBoardingHoldGoal;
 import dev.minemods.cowardlymobs.spider.SpiderInstinctGoal;
 import java.util.Collections;
 import java.util.Set;
@@ -35,6 +36,7 @@ public final class MobAiRegistration {
         } else if (event.getEntity() instanceof Spider spider) {
             if (!REGISTERED.add(spider)) return;
             // Priority 2 outranks vanilla leaps/melee movement, but float/swim stays higher.
+            spider.goalSelector.addGoal(0, new SpiderBoardingHoldGoal(spider));
             spider.goalSelector.addGoal(1, new SpiderInstinctGoal(spider));
         } else if (event.getEntity() instanceof AbstractSkeleton skeleton) {
             if (!REGISTERED.add(skeleton)) return;
