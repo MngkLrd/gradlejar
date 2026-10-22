@@ -1,0 +1,8 @@
+{
+  "item.embershelter.camp_kit": "Походный набор",
+  "message.embershelter.blocked": "Недостаточно свободного места для лагеря.",
+  "message.embershelter.missing": "Не хватает материалов: %s",
+  "message.embershelter.started": "Строительство лагеря началось.",
+  "message.embershelter.busy": "Сначала завершите строительство текущего лагеря.",
+  "message.embershelter.interrupted": "Строительство прервано: территория изменилась."
+}
