@@ -4,10 +4,10 @@ license="MIT"
 
 [[mods]]
 modId="cowardlymobs"
-version="0.3.0"
+version="0.4.0"
 displayName="Cowardly Mobs"
 authors="Minemods"
-description="Dynamic mob morale, zombie pack courage, skeleton firing lines, group rally and integrated Zombie Hunger."
+description="Cowardly AI, integrated Zombie Hunger, morale, firing lines, group rally, and dynamic skeleton-to-spider jockey leaps."
 
 [[dependencies.cowardlymobs]]
 modId="neoforge"
