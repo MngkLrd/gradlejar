@@ -22,6 +22,10 @@ public final class TraumaEvents {
     private static final ResourceLocation LIMPING_ID =
             ResourceLocation.fromNamespaceAndPath(TraumaCraft.MOD_ID, "limping");
     private static final ThreadLocal<Boolean> BLEEDING_DAMAGE = ThreadLocal.withInitial(() -> false);
+    private static final int BLEED_INTERVAL_TICKS = 40;
+    private static final int VITAL_GRACE_TICKS = 30 * 20;
+    private static final float LIGHT_BLEED_LOSS = 0.35f;
+    private static final float HEAVY_BLEED_LOSS = 1.20f;
 
     private TraumaEvents() {}
 
@@ -87,31 +91,52 @@ public final class TraumaEvents {
         TreatmentManager.tick(player);
         VitalityBridge.synchronize(player);
         if (player.tickCount % 20 == 0) player.getData(ModAttachments.BODY.get()).tickMedicalEffects();
-        if (player.tickCount % 20 != 0) return;
         BodyState state = player.getData(ModAttachments.BODY.get());
-        updateMovement(player, state.legPenalty());
-
-        if (player.tickCount % 40 == 0 && state.hasBleeding()) {
-            int severity = 0;
-            for (BodyPart part : BodyPart.values()) severity += state.bleeding(part);
-            float bloodLoss = Math.min(3.0f, severity * 0.5f);
-            // Blood loss damages the same body regions so vanilla hearts cannot
-            // regenerate independently of the localized wounds.
-            if (severity > 0) for (BodyPart part : BodyPart.values()) {
-                if (state.bleeding(part) > 0) {
-                    state.damage(part, 22f * bloodLoss * state.bleeding(part) / severity);
-                }
-            }
+        if (state.tickCriticalGrace() && state.vitalDestroyed()) {
+            // Only blood-loss-induced vital collapse receives this grace window.
+            // A new direct hit to a destroyed head/chest is still lethal.
             try {
                 BLEEDING_DAMAGE.set(true);
-                if (state.health(BodyPart.HEAD) <= 0 || state.health(BodyPart.CHEST) <= 0) {
-                    player.hurt(player.damageSources().magic(), Math.max(bloodLoss, player.getHealth() + player.getAbsorptionAmount() + 1f));
-                } else {
-                    player.hurt(player.damageSources().magic(), bloodLoss);
-                }
+                player.hurt(player.damageSources().magic(),
+                        Math.max(40f, player.getHealth() + player.getAbsorptionAmount() + 1f));
             } finally {
                 BLEEDING_DAMAGE.set(false);
             }
+            ModNetwork.sync(player);
+            return;
+        }
+        if (player.tickCount % 20 != 0) return;
+        updateMovement(player, state.legPenalty());
+
+        if (player.tickCount % BLEED_INTERVAL_TICKS == 0 && state.hasBleeding()) {
+            boolean vitalWasDestroyed = state.vitalDestroyed();
+            float systemicLoss = 0f;
+            for (BodyPart part : BodyPart.values()) {
+                int severity = state.bleeding(part);
+                if (severity <= 0) continue;
+                // A heavy bleed is serious, but no longer removes 22 HP every 2 seconds.
+                float loss = severity == 2 ? HEAVY_BLEED_LOSS : LIGHT_BLEED_LOSS;
+                float before = state.health(part);
+                if (before > 0f) state.damage(part, loss);
+                // At 0 local HP, blood loss must still affect circulation;
+                // otherwise a bleeding blacked-out arm could bleed forever harmlessly.
+                float remainder = Math.max(0f, loss - before);
+                systemicLoss += remainder * 0.35f;
+            }
+            if (systemicLoss > 0f) {
+                BodyPart reserve = state.health(BodyPart.STOMACH) > 0f ? BodyPart.STOMACH
+                        : state.health(BodyPart.CHEST) > 0f ? BodyPart.CHEST
+                        : BodyPart.HEAD;
+                state.damage(reserve, systemicLoss);
+            }
+            // Preserve Tarkov-like fatal direct hits, but allow emergency surgery
+            // after a vital zone reaches 0 exclusively from ongoing bleeding.
+            if (!vitalWasDestroyed && state.vitalDestroyed()) {
+                state.startCriticalGrace(VITAL_GRACE_TICKS);
+            }
+            // Do not call player.hurt here: local HP already drive vanilla hearts
+            // through VitalityBridge. Doing both double-counts blood loss and can
+            // make held medical treatments impossible.
         }
         if (state.takeDirty() || player.tickCount % 40 == 0) {
             ModNetwork.sync(player);

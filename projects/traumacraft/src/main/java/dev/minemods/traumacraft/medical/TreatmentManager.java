@@ -73,8 +73,10 @@ public final class TreatmentManager {
                 || (p.cursor() && player.containerMenu != player.inventoryMenu)
                 || (p.treatment() == MedicalItem.Type.SURGICAL_KIT &&
                     (Math.abs(player.getX() - p.x()) > 1.5 || Math.abs(player.getZ() - p.z()) > 1.5))
-                || player.getHealth() + .01f < p.startingHealth()
                 || (!p.cursor() && !player.isUsingItem())) {
+            // Real outside damage cancels treatment from TraumaEvents.onDamage.
+            // Never cancel merely because VitalityBridge adjusted the displayed
+            // hearts while the patient was bleeding.
             cancel(player);
             return;
         }

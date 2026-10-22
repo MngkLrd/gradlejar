@@ -1,3 +1,34 @@
+# Traumatic 0.4.2 | Blood-loss survival hotfix
+
+Mainline: Minecraft 1.21.1, NeoForge 21.1.262, Java 21.
+
+## The bug
+Before this update blood loss damaged local body HP by up to 22 points per 2 seconds, then separately called vanilla player.hurt(), and an empty head or chest caused an immediate forced kill. The additional damage also interrupted medical applications based on a displayed-heart comparison.
+
+## New behavior
+- Mild bleeding: 0.35 local HP every 40 ticks (2 seconds).
+- Heavy bleeding: 1.20 local HP every 40 ticks (2 seconds).
+- Only a direct hit that destroys head or chest remains immediately lethal.
+- If head/chest reaches 0 HP because of *ongoing bleeding*, a **30-second critical-surgery window** begins. During this time emergency surgery can restore the zone and cancel the pending collapse. Bandaging alone stops future bleeding but does not revive an already destroyed vital zone.
+- Critical countdown is stored in player NBT to prevent reconnect-reset exploits.
+- Critical vitality is shown as at most 30% of vanilla maximum hearts even when undamaged limbs are healthy.
+- Bleeding now subtracts local HP only, allowing VitalityBridge to update hearts once; no duplicate LivingDamageEvent or player.hurt per bleed tick.
+- Bleeding from already-blackened limbs causes slow secondary circulatory damage to the torso, not instant death or harmless infinite bleeding.
+- Treatment is interrupted by genuine incoming damage via TraumaEvents; passive blood loss or routine heart synchronization does **not** cancel the ongoing bandage/surgery.
+- Unchanged: damage location, fracture generation, medical items, treatments, textures, inventory/HUD, JEI, and direct-hit fatality rules.
+
+## QA scenarios
+1. Create heavy head bleed with surviving head HP; use stopwatch to confirm ~1.2 local HP lost every 2s, not 22.
+2. Once bleeding blacks the head, confirm the player stays alive long enough to finish an 8-second surgical treatment within the 30-second window.
+3. Apply a bandage while bleeding: countdown completes without passive blood loss canceling the action.
+4. Black head/chest by direct impact: it should remain immediately fatal.
+5. Bleed a 0HP limb: ensure circulatory damage continues slowly but no sudden one-shot.
+6. Quit/rejoin during the vital 30-second countdown; remaining timer should persist in player state.
+7. Verify medical recovery clears critical status only after both head and chest have positive HP.
+8. Verify synced HUD, vanishing food-healing mismatch, JEI, dedicated-server load, and respawn.
+
+Build: `gradle --no-daemon clean build`. Output: `build/libs/traumacraft-0.4.2.jar`.
+
 # Traumatic 0.4.1 - Medical Polish
 
 **Mainline:** Minecraft 1.21.1 / NeoForge / Java 21.
