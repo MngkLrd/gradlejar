@@ -1,4 +1,28 @@
-# Cowardly Mobs 0.5.0 — Spider Instinct
+# Cowardly Mobs 0.5.1 — Spider Instinct
+
+## 0.5.1 in-game QA hotfix (2026-10-22)
+
+After testing 0.5.0, several AI conflicts were confirmed by player reports. This patch addresses the causes without removing the original features:
+
+- **Rotten flesh distraction:** `ZombieFoodGoal` now has a higher MOVE priority than vanilla zombie melee chasing. It remains below morale retreat. Food already at the zombie's feet can be eaten without requiring a valid movement path.
+- **Reaction to player damage:** player hits are recorded briefly. Wounded zombies and skeletons evaluate morale on their next AI tick instead of waiting for the 80-tick polling window; a successful retreat remains probabilistic, with an increased chance immediately after damage. A normal healthy mob still does not flee solely because it was struck.
+- **Skeletons mounting spiders:** a selected spider is reserved to one skeleton at a time. A short high-priority spider holding goal prevents it running away during approach/leap. Mounting is attempted after five airborne ticks when near the spider. Improved pickup distance and testability.
+- **Default mount chance increased** from 0.15 to 0.30, frightened chance from 0.35 to 0.55, retry cooldown from 600 to 200 ticks. **Existing generated TOML files keep their old settings**: manually edit them or rename the file before starting the game to get new defaults.
+- **Spider rear flanking:** two-stage side waypoint then rear point; stops the old direct path through the player's front.
+- **Wall ambush:** the spider first pathfinds to the ground-level face of a wall, then presses against solid collision to climb; a small physical upward assist only when actually colliding with the wall prevents stalls. It then makes the existing airborne pounce.
+
+### Targeted retest steps
+
+1. On a **nighttime Survival world**, equip iron armor and attack a lone zombie, reducing it to ~6 HP. Over multiple tries the zombie should sometimes flee immediately after the hit. Repeat with a wounded skeleton. Group support still reduces panic.
+2. Toss rotten flesh roughly 3–6 blocks ahead of a zombie **actively chasing you**. The zombie should break off to the item. Confirm eating sound, one consumed item and +2 HP.
+3. For a deterministic mount test, in `config/cowardlymobs-jockey-common.toml` use `mountChance = 1.0`, `frightenedMountChance = 1.0`, `retryCooldownTicks = 60`. Restart, summon a free normal spider and an ordinary skeleton on flat open terrain, and observe a jump followed by mounting. Then re-test with the normal settings.
+4. To test rear flanking, turn your back to a hostile spider at night. Observe sideways movement around the player rather than a path through the front. Face the spider for >10 ticks to test gaze escape.
+5. In `config/cowardlymobs-spiders-common.toml`, temporarily use `wallAmbushChancePercent = 100` and `diveCooldownTicks = 40`. Fight near a solid wall **4+ blocks high** with space in front, while not staring at the spider. Observe a real climb then a physical jump.
+6. Test one spider and three skeletons competing to mount, loaded/unloaded chunks, and a rider shooting while its spider adjusts range.
+7. Test `gradle runServer` and all original Zombie Hunger, skeleton firing line, group rally and client-only skeleton pose features.
+
+The new wall-path logic and moving mount coordination pass code compilation, but gameplay visuals and navigation behavior still require explicit player testing.
+
 
 **Minecraft 1.21.1 | NeoForge 21.1.x | Java 21**
 
@@ -67,7 +91,7 @@ cd projects/cowardly-mobs
 gradle --no-daemon clean build
 ```
 
-Output: `build/libs/cowardlymobs-1.21.1-0.5.0.jar`.
+Output: `build/libs/cowardlymobs-1.21.1-0.5.1.jar`.
 
 ## Manual gameplay testing (CI is compilation only)
 
