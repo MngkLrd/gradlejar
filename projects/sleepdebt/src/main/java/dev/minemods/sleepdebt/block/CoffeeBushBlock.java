@@ -7,7 +7,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemLike;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -22,7 +22,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public final class CoffeeBushBlock extends CropBlock {
  public static final MapCodec<CoffeeBushBlock> CODEC=simpleCodec(CoffeeBushBlock::new);
  public CoffeeBushBlock(Properties properties){super(properties);}
- @Override protected MapCodec<? extends CropBlock> codec(){return CODEC;}
+ @Override public MapCodec<? extends CropBlock> codec(){return CODEC;}
  @Override protected ItemLike getBaseSeedId(){return ModItems.COFFEE_SEEDS.get();}
  @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,
    Player player,BlockHitResult hit){
