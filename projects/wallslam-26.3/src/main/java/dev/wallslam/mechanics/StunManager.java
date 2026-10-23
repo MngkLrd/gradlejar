@@ -3,8 +3,6 @@ package dev.wallslam.mechanics;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import dev.wallslam.config.WallslamConfig;
-
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -12,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 
 /**
- * Transient movement stun, preserving targeting and persistent NoAI.
+ * Transient one-second movement and melee stun; preserves AI targets and NoAI.
  *
  * NEVER modifies a mob's NoAI flag. Changing NoAI left some mobs
  * permanently frozen after a wall impact in Wallslam 0.3.0.
@@ -25,6 +23,15 @@ public final class StunManager {
     private static final Map<Mob, Long> STUN_ENDS = new WeakHashMap<>();
 
     private StunManager() {}
+
+    /** A server-side check that expires automatically on the next world tick. */
+    public static boolean isStunned(LivingEntity living) {
+        if (!(living instanceof Mob mob)
+            || !(mob.level() instanceof ServerLevel level)
+            || !mob.isAlive()) return false;
+        Long until = STUN_ENDS.get(mob);
+        return until != null && level.getGameTime() < until;
+    }
 
     public static void apply(LivingEntity target, int durationTicks) {
         if (!(target instanceof Mob mob) || !(mob.level() instanceof ServerLevel level)) return;

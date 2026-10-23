@@ -1,7 +1,7 @@
 license="MIT"
 [[mods]]
 modId="wallslam"
-version="1.0.0"
+version="1.0.1"
 displayName="Wallslam"
 authors="Wallslam Project"
 description="Knock mobs into walls for a small bonus impact hit."

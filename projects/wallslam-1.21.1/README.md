@@ -1,6 +1,6 @@
-# WallSlam 1.0.0 — Minecraft 1.21.1 / NeoForge
+# WallSlam 1.0.1 — Minecraft 1.21.1 / NeoForge
 
-A lightweight server-authoritative melee wall-impact mod. A successful melee hit that knocks a mob into a solid wall triggers a small bonus hit, 10 ticks of movement stun, vanilla sounds and particle effects (including wall-material dust). No items, blocks, keybinds, shaders or hard dependencies.
+A lightweight server-authoritative melee wall-impact mod. A successful melee hit that knocks a mob into a solid wall triggers a small bonus hit, 20 ticks (1 second) of movement and melee stun, vanilla sounds and particle effects (including wall-material dust). No items, blocks, keybinds, shaders or hard dependencies.
 
 ## What changed since 0.3.3
 
@@ -14,10 +14,20 @@ A lightweight server-authoritative melee wall-impact mod. A successful melee hit
 
 ## Build
 
-Java 21, Gradle 9.2.1, NeoForge 21.1.100 or newer within Minecraft 1.21.1. Run `gradle clean build` in this project folder. JAR: `build/libs/wallslam-1.21.1-1.0.0.jar`.
+Java 21, Gradle 9.2.1, NeoForge 21.1.100 or newer within Minecraft 1.21.1. Run `gradle clean build` in this project folder. JAR: `build/libs/wallslam-1.21.1-1.0.1.jar`.
 
 ## User acceptance check
 
 Place a zombie in front of a full-block wall; attack with an iron sword and also try bare hands. Verify exactly one impact visual/audio burst, bonus health loss and temporary pause followed by normal pursuit. Repeat with no wall, fences/slabs, varied armor, strong knockback, multiple simultaneous targets, peaceful mobs, two players, world save/reload and dedicated server. Do not ship as stable if gameplay fails.
 
 CI compilation and JAR validation run on GitHub; a successful build is not a substitute for in-game testing. Gameplay reference is WallSlam 0.3.3 on 1.21.1.
+
+## 1.0.1 — visible and functional stun
+
+- The new default `stunTicks` is **20** (1 second; previous default 10 ticks).
+- During stun, the mob retains its original AI target, but cannot deal new direct melee damage. Projectiles are unaffected.
+- Navigation and horizontal velocity are stopped each server tick as before; `NoAI` is never enabled.
+- Existing world/server configuration files can retain the old `stunTicks = 10` value after updating. Set it to `20` manually in the generated WallSlam config and restart/reopen the world to test the intended balance.
+- Damage, wall detection and impact visual effects are unchanged.
+
+A successful Gradle build does not replace an actual client/server combat check.

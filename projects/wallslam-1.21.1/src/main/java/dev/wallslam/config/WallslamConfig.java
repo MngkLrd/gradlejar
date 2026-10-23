@@ -2,7 +2,7 @@ package dev.wallslam.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-/** Server-synced gameplay options; defaults preserve WallSlam 0.3.3's balance. */
+/** Gameplay configuration: a more visible 20-tick default stun in 1.0.1. */
 public final class WallslamConfig {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
@@ -11,8 +11,8 @@ public final class WallslamConfig {
         .defineInRange("damageMultiplier", 1.0, 0.0, 3.0);
 
     public static final ModConfigSpec.IntValue STUN_TICKS = BUILDER
-        .comment("How many ticks a mob pauses after a wall impact; 0 disables stun.")
-        .defineInRange("stunTicks", 10, 0, 40);
+        .comment("Stun duration in ticks (20 = 1 second); stunned mobs cannot melee attack; 0 disables stun.")
+        .defineInRange("stunTicks", 20, 0, 40);
 
     public static final ModConfigSpec.DoubleValue PARTICLE_MULTIPLIER = BUILDER
         .comment("Visual intensity of wall impacts; 0 hides particles, sounds remain.")

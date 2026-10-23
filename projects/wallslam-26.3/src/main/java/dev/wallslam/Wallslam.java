@@ -16,7 +16,7 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
-/** WallSlam 1.0: server-authoritative wall collision bonus for melee hits. */
+/** WallSlam 1.0.1: server-authoritative wall collision bonus for melee hits. */
 @Mod(Wallslam.MOD_ID)
 public final class Wallslam {
     public static final String MOD_ID = "wallslam";
@@ -32,8 +32,17 @@ public final class Wallslam {
     }
 
     private static void onIncomingDamage(LivingIncomingDamageEvent event) {
-        if (!event.isCanceled())
-            ImpactTracker.prepareMeleeHit(event.getEntity(), event.getSource(), event.getAmount());
+        if (event.isCanceled()) return;
+
+        // A stunned mob may still animate an attack, but cannot hurt its target.
+        // Projectiles and other indirect sources are deliberately unaffected.
+        if (event.getSource().getDirectEntity() instanceof net.minecraft.world.entity.Mob mob
+            && event.getSource().getEntity() == mob && StunManager.isStunned(mob)) {
+            event.setCanceled(true);
+            return;
+        }
+
+        ImpactTracker.prepareMeleeHit(event.getEntity(), event.getSource(), event.getAmount());
     }
 
     private static void onMeleeDamage(LivingDamageEvent.Pre event) {
