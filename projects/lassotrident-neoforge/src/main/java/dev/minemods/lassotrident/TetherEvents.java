@@ -37,6 +37,7 @@ public final class TetherEvents {
         final Vec3 position;
         final Vec3 safeTarget;
         final long startTick;
+        double ropeLength;
         boolean pulling;
         boolean pressedBefore;
 
@@ -85,6 +86,7 @@ public final class TetherEvents {
         trident.pickup = net.minecraft.world.entity.projectile.AbstractArrow.Pickup.DISALLOWED;
         Anchor anchor = new Anchor(trident.getId(), blockHit.getBlockPos(), struck,
                 blockHit.getDirection(), level.getGameTime());
+        anchor.ropeLength = Math.max(2.0, player.getEyePosition().distanceTo(anchor.safeTarget));
         ANCHORS.put(player.getUUID(), anchor);
         TetherNetwork.sendSync(player, trident.getId());
         player.displayClientMessage(Component.translatable("lassotrident.message.attached"), true);
@@ -127,19 +129,44 @@ public final class TetherEvents {
         trident.setDeltaMovement(Vec3.ZERO);
         trident.setPos(anchor.position.x, anchor.position.y, anchor.position.z);
 
-        if (!anchor.pulling || player.isPassenger() || player.getAbilities().flying) return;
-        Vec3 direction = anchor.safeTarget.subtract(player.getEyePosition());
-        double distance = direction.length();
-        if (distance < 1.1) {
-            anchor.pulling = false;
-            player.setDeltaMovement(player.getDeltaMovement().scale(0.25));
-            return;
+
+        if (player.isPassenger() || player.getAbilities().flying) return;
+        Vec3 eyeToAnchor = anchor.safeTarget.subtract(player.getEyePosition());
+        double distance = eyeToAnchor.length();
+        if (distance < 1.0e-4) return;
+        Vec3 inward = eyeToAnchor.scale(1.0 / distance);
+        Vec3 velocity = player.getDeltaMovement();
+        boolean changed = false;
+
+        if (anchor.pulling) {
+            if (distance <= 1.25) {
+                // Reaching the wall does not detach the trident.
+                anchor.pulling = false;
+            } else {
+                // Winch in the rope gradually rather than teleporting or fixing velocity.
+                anchor.ropeLength = Math.max(1.5, anchor.ropeLength - 0.34);
+                double speed = net.minecraft.util.Mth.clamp(distance * 0.085, 0.18, 0.48);
+                Vec3 desired = inward.scale(speed);
+                velocity = velocity.scale(0.70).add(desired.scale(0.30));
+                changed = true;
+            }
         }
-        Vec3 velocity = direction.normalize().scale(0.46);
-        if (velocity.y > 0.0) velocity = new Vec3(velocity.x, Math.max(0.18, velocity.y), velocity.z);
-        player.setDeltaMovement(velocity);
-        player.hurtMarked = true;
-        player.fallDistance = 0.0F;
+
+        // When the rope reaches full extension, it becomes a soft radial constraint.
+        // Tangential velocity remains, so the player can swing rather than freeze.
+        double extension = distance - anchor.ropeLength;
+        if (extension > 0.0) {
+            double outwardSpeed = -velocity.dot(inward);
+            if (outwardSpeed > 0.0) velocity = velocity.add(inward.scale(outwardSpeed * 0.92));
+            velocity = velocity.add(inward.scale(Math.min(0.16, extension * 0.19)));
+            changed = true;
+        }
+
+        if (changed) {
+            player.setDeltaMovement(velocity);
+            player.hurtMarked = true;
+            player.fallDistance = 0.0F;
+        }
     }
 
     @SubscribeEvent
