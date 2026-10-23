@@ -1,6 +1,6 @@
 plugins { id 'net.fabricmc.fabric-loom' version '1.18-SNAPSHOT'; id 'maven-publish' }
 group = 'dev.minemods'
-version = '1.0.0'
+version = '1.0.1'
 base.archivesName = 'leashwrap-fabric-26.3'
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 dependencies {

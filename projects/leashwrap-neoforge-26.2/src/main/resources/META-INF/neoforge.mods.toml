@@ -3,10 +3,10 @@ loaderVersion="[1,)"
 license="MIT"
 [[mods]]
 modId="leashwrap"
-version="1.0.0"
+version="1.0.1"
 displayName="LeashWrap"
 authors="MineMods"
-description='''Attach vanilla lead ropes to tree trunks and other solid blocks by right-clicking with a lead while leading animals. Shift-right-click with a lead to untie.'''
+description='''Attach vanilla leads around tree logs and solid blocks, with a visible 3D rope band.'''
 [[mixins]]
 config="leashwrap.mixins.json"
 [[dependencies.leashwrap]]

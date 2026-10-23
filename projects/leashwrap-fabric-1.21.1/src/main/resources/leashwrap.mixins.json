@@ -6,6 +6,9 @@
   "mixins": [
     "LeashKnotMixin"
   ],
+  "client": [
+    "LeashKnotRendererMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

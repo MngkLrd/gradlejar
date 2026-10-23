@@ -4,7 +4,7 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.148'
 }
 group = 'dev.minemods'
-version = '1.0.0'
+version = '1.0.1'
 base.archivesName = 'leashwrap-neoforge-26.3'
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 neoForge {
