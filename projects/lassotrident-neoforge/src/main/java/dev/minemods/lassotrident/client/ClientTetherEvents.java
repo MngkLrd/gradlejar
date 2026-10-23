@@ -5,9 +5,13 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.minemods.lassotrident.LassoTrident;
 import dev.minemods.lassotrident.TetherNetwork;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -16,8 +20,11 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
 
+/** A vanilla-shaded leash mesh: no emissive debug lines or extra textures. */
 @EventBusSubscriber(modid = LassoTrident.MOD_ID, value = Dist.CLIENT)
 public final class ClientTetherEvents {
+    private static final int SEGMENTS = 24;
+    private static final double HALF_WIDTH = 0.016;
     private static int anchorEntityId = -1;
     private static boolean lastKeyDown;
 
@@ -54,10 +61,18 @@ public final class ClientTetherEvents {
         Entity anchor = mc.level.getEntity(anchorEntityId);
         if (anchor == null) return;
 
-        float partial = event.getPartialTick().getGameTimeDeltaPartialTick(false);
+        float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(false);
         Vec3 camera = event.getCamera().getPosition();
-        Vec3 start = mc.player.getEyePosition(partial).add(0.0, -0.25, 0.0);
-        Vec3 end = anchor.getPosition(partial);
+        Vec3 start = mc.player.getEyePosition(partialTick).add(0, -0.22, 0);
+        Vec3 end = anchor.getPosition(partialTick).add(0, 0.03, 0);
+        if (start.distanceToSqr(end) < 0.05) return;
+
+        int startBlock = mc.level.getBrightness(LightLayer.BLOCK, BlockPos.containing(start));
+        int endBlock = mc.level.getBrightness(LightLayer.BLOCK, BlockPos.containing(end));
+        int startSky = mc.level.getBrightness(LightLayer.SKY, BlockPos.containing(start));
+        int endSky = mc.level.getBrightness(LightLayer.SKY, BlockPos.containing(end));
+        double time = mc.level.getGameTime() + partialTick;
+        Vec3 momentum = mc.player.getDeltaMovement();
 
         PoseStack poses = event.getPoseStack();
         poses.pushPose();
@@ -65,26 +80,55 @@ public final class ClientTetherEvents {
         try {
             Matrix4f matrix = poses.last().pose();
             MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
-            VertexConsumer line = buffers.getBuffer(RenderType.lines());
-            draw(line, matrix, start, end, 145, 109, 62);
-            draw(line, matrix, start.add(0.02, 0, 0), end.add(0.02, 0, 0), 206, 176, 115);
-            buffers.endBatch(RenderType.lines());
+            VertexConsumer vertices = buffers.getBuffer(RenderType.leash());
+
+            Vec3 axis = end.subtract(start).normalize();
+            Vec3 sideways = axis.cross(new Vec3(0, 1, 0));
+            if (sideways.lengthSqr() < 1.0e-5) sideways = axis.cross(new Vec3(1, 0, 0));
+            sideways = sideways.normalize().scale(HALF_WIDTH);
+            Vec3 up = axis.cross(sideways).normalize().scale(HALF_WIDTH);
+            Vec3[] centres = new Vec3[SEGMENTS + 1];
+
+            double sag = Mth.clamp(start.distanceTo(end) * 0.012, 0.07, 0.28);
+            for (int i = 0; i <= SEGMENTS; i++) {
+                double t = (double) i / SEGMENTS;
+                double envelope = 4.0 * t * (1.0 - t);
+                // Small catenary-like sag plus delayed sway following player motion.
+                double phase = time * 0.13 + t * 6.5;
+                Vec3 sway = sideways.normalize().scale(envelope * 0.045 * Math.sin(phase));
+                centres[i] = start.lerp(end, t)
+                        .add(momentum.x * envelope * -0.12, -sag * envelope, momentum.z * envelope * -0.12)
+                        .add(sway);
+            }
+
+            // Two crossed ribbons are visible from every camera angle, even when vertical.
+            renderStrip(vertices, matrix, centres, sideways, startBlock, endBlock, startSky, endSky, 1.0F);
+            renderStrip(vertices, matrix, centres, up, startBlock, endBlock, startSky, endSky, 0.78F);
+            buffers.endBatch(RenderType.leash());
         } finally {
             poses.popPose();
         }
     }
 
-    private static void draw(VertexConsumer buffer, Matrix4f matrix, Vec3 start, Vec3 end,
-                             int red, int green, int blue) {
-        Vec3 delta = end.subtract(start);
-        double len = delta.length();
-        if (len < 1.0e-6) return;
-        float nx = (float) (delta.x / len);
-        float ny = (float) (delta.y / len);
-        float nz = (float) (delta.z / len);
-        buffer.addVertex(matrix, (float) start.x, (float) start.y, (float) start.z)
-                .setColor(red, green, blue, 255).setNormal(nx, ny, nz);
-        buffer.addVertex(matrix, (float) end.x, (float) end.y, (float) end.z)
-                .setColor(red, green, blue, 255).setNormal(nx, ny, nz);
+    private static void renderStrip(VertexConsumer vertices, Matrix4f matrix, Vec3[] centres,
+                                    Vec3 width, int blockStart, int blockEnd, int skyStart, int skyEnd,
+                                    float tint) {
+        for (int i = 0; i <= SEGMENTS; i++) {
+            float t = (float) i / SEGMENTS;
+            int block = Mth.clamp(Math.round(Mth.lerp(t, blockStart, blockEnd)), 0, 15);
+            int sky = Mth.clamp(Math.round(Mth.lerp(t, skyStart, skyEnd)), 0, 15);
+            int light = LightTexture.pack(block, sky);
+            float shade = ((i & 1) == 0 ? 1.0F : 0.83F) * tint;
+            int r = (int) (153 * shade);
+            int g = (int) (116 * shade);
+            int b = (int) (72 * shade);
+            Vec3 centre = centres[i];
+            Vec3 a = centre.subtract(width);
+            Vec3 c = centre.add(width);
+            vertices.addVertex(matrix, (float) a.x, (float) a.y, (float) a.z)
+                    .setColor(r, g, b, 255).setLight(light);
+            vertices.addVertex(matrix, (float) c.x, (float) c.y, (float) c.z)
+                    .setColor(r, g, b, 255).setLight(light);
+        }
     }
 }

@@ -4,7 +4,7 @@ license="MIT"
 
 [[mods]]
 modId="lassotrident"
-version="0.1.0"
+version="0.2.0"
 displayName="Lasso Trident"
 description='''Attach a lead to your vanilla trident. Throw, anchor, climb, and retrieve the trident.'''
 
