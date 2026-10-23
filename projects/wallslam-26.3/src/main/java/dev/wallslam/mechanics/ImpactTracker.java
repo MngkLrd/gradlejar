@@ -24,7 +24,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 
 /**
- * One active melee wall check per target. Only a near-contact block collision
+ * One active melee wall check per target. A swept collision shape
  * can trigger the slam; no AI changes and no scan across all world entities.
  * Gameplay is authoritative on the logical server.
  */
@@ -35,8 +35,7 @@ public final class ImpactTracker {
     private static final Logger LOGGER = LoggerFactory.getLogger("wallslam");
     private static final int HIT_WINDOW = 11;
     private static final int COOLDOWN_TICKS = 12;
-    private static final double CONTACT_REACH = 0.095D;
-    private static final double COLLISION_FALLBACK_REACH = 0.25D;
+    private static final double WALL_REACH = 0.65D;
 
     private static final Map<LivingEntity, Pending> PENDING = new WeakHashMap<>();
     private static final Map<LivingEntity, Long> COOLDOWNS = new WeakHashMap<>();
@@ -117,20 +116,12 @@ public final class ImpactTracker {
         }
         if (!pending.confirmed) return;
 
-        AABB box = victim.getBoundingBox();
-        AABB contact = box.expandTowards(
-            pending.dx * CONTACT_REACH, 0.0D, pending.dz * CONTACT_REACH);
-        boolean atWall = level.getBlockCollisions(victim, contact).iterator().hasNext();
-
-        // Some mobs report horizontalCollision just before touching a thin shape
-        // (fences / walls). Keep this fallback narrow and direction-sensitive.
-        if (!atWall && victim.horizontalCollision) {
-            AABB previousMovement = box.expandTowards(
-                pending.dx * COLLISION_FALLBACK_REACH, 0.0D,
-                pending.dz * COLLISION_FALLBACK_REACH);
-            atWall = level.getBlockCollisions(victim, previousMovement).iterator().hasNext();
-        }
-        if (!atWall) return;
+        // Restore the 0.3.3 collision sweep verified in real gameplay.
+        // The 0.095-block check introduced in 1.0.0 missed normal knockback:
+        // the target can stop just shy of the wall between entity ticks.
+        AABB probe = victim.getBoundingBox().expandTowards(
+            pending.dx * WALL_REACH, 0.0D, pending.dz * WALL_REACH);
+        if (!level.getBlockCollisions(victim, probe).iterator().hasNext()) return;
 
         PENDING.remove(victim);
         COOLDOWNS.put(victim, level.getGameTime());

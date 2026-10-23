@@ -1,11 +1,11 @@
-# WallSlam 1.0.1 — Minecraft 26.3 / NeoForge
+# WallSlam 1.0.2 — Minecraft 26.3 / NeoForge
 
 A lightweight server-authoritative melee wall-impact mod. A successful melee hit that knocks a mob into a solid wall triggers a small bonus hit, 20 ticks (1 second) of movement and melee stun, vanilla sounds and particle effects (including wall-material dust). No items, blocks, keybinds, shaders or hard dependencies.
 
 ## What changed since 0.3.3
 
 - Confirm melee hits before any wall collision effects.
-- Detect actual near-contact collision geometry (0.095 block tolerance), with horizontalCollision fallback for thin shapes.
+- Restore the verified 0.3.3 forward sweep (0.65 blocks) using solid block collision shapes.
 - Use the dedicated `wallslam:collision` datapack damage type tagged `minecraft:bypasses_cooldown`. This no longer edits the mob's invulnerable-time field, and is subject to regular armor and effect reductions.
 - Preserve the mob's attack target during the movement stun; never write new NoAI state.
 - Clean up combat state when mobs unload, leave a dimension or die.
@@ -14,7 +14,7 @@ A lightweight server-authoritative melee wall-impact mod. A successful melee hit
 
 ## Build
 
-Java 25, Gradle 9.2.1, NeoForge 26.3.0.76 or newer within Minecraft 26.3. Run `gradle clean build` in this project folder. JAR: `build/libs/wallslam-26.3-1.0.1.jar`.
+Java 25, Gradle 9.2.1, NeoForge 26.3.0.76 or newer within Minecraft 26.3. Run `gradle clean build` in this project folder. JAR: `build/libs/wallslam-26.3-1.0.2.jar`.
 
 ## User acceptance check
 
@@ -31,3 +31,7 @@ CI compilation and JAR validation run on GitHub; a successful build is not a sub
 - Damage, wall detection and impact visual effects are unchanged.
 
 A successful Gradle build does not replace an actual client/server combat check.
+
+## 1.0.2 — restore successful wall impacts
+
+Fixes a regression from 1.0.0/1.0.1: the very tight 0.095-block contact check made most ordinary knockback wall impacts fail to register. Uses the gameplay-tested 0.3.3 solid-block sweep of 0.65 blocks instead. Existing 1.0.1 additions are kept: 20-tick default stun, suppression of direct melee attacks while stunned, configurable intensity and collision damage type. NoAI remains untouched. Both NeoForge ports are compiled in CI; actual gameplay confirmation is pending.
