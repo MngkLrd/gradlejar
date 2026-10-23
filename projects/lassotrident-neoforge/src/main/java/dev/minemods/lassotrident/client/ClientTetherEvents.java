@@ -102,8 +102,8 @@ public final class ClientTetherEvents {
             }
 
             // Two crossed ribbons are visible from every camera angle, even when vertical.
-            renderStrip(vertices, matrix, centres, sideways, startBlock, endBlock, startSky, endSky, 1.0F);
-            renderStrip(vertices, matrix, centres, up, startBlock, endBlock, startSky, endSky, 0.78F);
+            renderStrip(vertices, matrix, centres, sideways, startBlock, endBlock, startSky, endSky, 1.0F, false);
+            renderStrip(vertices, matrix, centres, up, startBlock, endBlock, startSky, endSky, 0.78F, true);
             buffers.endBatch(RenderType.leash());
         } finally {
             poses.popPose();
@@ -112,8 +112,9 @@ public final class ClientTetherEvents {
 
     private static void renderStrip(VertexConsumer vertices, Matrix4f matrix, Vec3[] centres,
                                     Vec3 width, int blockStart, int blockEnd, int skyStart, int skyEnd,
-                                    float tint) {
-        for (int i = 0; i <= SEGMENTS; i++) {
+                                    float tint, boolean reverse) {
+        for (int step = 0; step <= SEGMENTS; step++) {
+            int i = reverse ? SEGMENTS - step : step;
             float t = (float) i / SEGMENTS;
             int block = Mth.clamp(Math.round(Mth.lerp(t, blockStart, blockEnd)), 0, 15);
             int sky = Mth.clamp(Math.round(Mth.lerp(t, skyStart, skyEnd)), 0, 15);
