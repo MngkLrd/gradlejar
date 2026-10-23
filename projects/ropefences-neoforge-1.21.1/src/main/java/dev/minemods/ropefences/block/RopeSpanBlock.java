@@ -28,12 +28,18 @@ public final class RopeSpanBlock extends Block {
     public static final int MAX_SPAN = 12;
     private static final ThreadLocal<Boolean> MUTATING = ThreadLocal.withInitial(() -> false);
 
-    private static final VoxelShape X_CENTER = Block.box(0, 0, 7, 16, 24, 9);
-    private static final VoxelShape X_NEG = Block.box(-8, 0, 7, 0, 24, 9);
-    private static final VoxelShape X_POS = Block.box(16, 0, 7, 24, 24, 9);
-    private static final VoxelShape Z_CENTER = Block.box(7, 0, 0, 9, 24, 16);
-    private static final VoxelShape Z_NEG = Block.box(7, 0, -8, 9, 24, 0);
-    private static final VoxelShape Z_POS = Block.box(7, 0, 16, 9, 24, 24);
+    // Hit outline follows the actual two strands, not the invisible collision wall.
+    private static final VoxelShape X_OUTLINE = Shapes.or(
+            Block.box(0, 6, 7.25, 16, 7.5, 8.75),
+            Block.box(0, 13, 7.25, 16, 14.5, 8.75));
+    private static final VoxelShape Z_OUTLINE = Shapes.or(
+            Block.box(7.25, 6, 0, 8.75, 7.5, 16),
+            Block.box(7.25, 13, 0, 8.75, 14.5, 16));
+
+    // Independent collision: animals and players cannot squeeze between the ropes.
+    // Collision is confined to the air gap; the post already owns its own collision.
+    private static final VoxelShape X_COLLISION = Block.box(0, 0, 7.25, 16, 24, 8.75);
+    private static final VoxelShape Z_COLLISION = Block.box(7.25, 0, 0, 8.75, 24, 16);
 
     public RopeSpanBlock() {
         super(BlockBehaviour.Properties.of().strength(0.4F).sound(SoundType.WOOL).noOcclusion());
@@ -50,16 +56,12 @@ public final class RopeSpanBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
-        return getCollisionShape(state, level, pos, ctx);
+        return state.getValue(AXIS) == Direction.Axis.X ? X_OUTLINE : Z_OUTLINE;
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
-        boolean x = state.getValue(AXIS) == Direction.Axis.X;
-        VoxelShape shape = x ? X_CENTER : Z_CENTER;
-        if (state.getValue(NEG_END)) shape = Shapes.or(shape, x ? X_NEG : Z_NEG);
-        if (state.getValue(POS_END)) shape = Shapes.or(shape, x ? X_POS : Z_POS);
-        return shape;
+        return state.getValue(AXIS) == Direction.Axis.X ? X_COLLISION : Z_COLLISION;
     }
 
     public static boolean isRopeOnAxis(BlockState state, Direction.Axis axis) {

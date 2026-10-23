@@ -8,13 +8,13 @@
     {
       "from": [
         0,
-        4,
-        7
-      ],
-      "to": [
-        16,
         6,
-        9
+        7.25
+      ],
+      "to": [
+        16,
+        7.5,
+        8.75
       ],
       "faces": {
         "north": {
@@ -40,45 +40,13 @@
     {
       "from": [
         0,
-        12,
-        7
+        13,
+        7.25
       ],
       "to": [
         16,
-        14,
-        9
-      ],
-      "faces": {
-        "north": {
-          "texture": "#rope"
-        },
-        "south": {
-          "texture": "#rope"
-        },
-        "east": {
-          "texture": "#rope"
-        },
-        "west": {
-          "texture": "#rope"
-        },
-        "up": {
-          "texture": "#rope"
-        },
-        "down": {
-          "texture": "#rope"
-        }
-      }
-    },
-    {
-      "from": [
-        0,
-        20,
-        7
-      ],
-      "to": [
-        16,
-        22,
-        9
+        14.5,
+        8.75
       ],
       "faces": {
         "north": {

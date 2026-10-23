@@ -5,7 +5,7 @@ This is a **NeoForge** port of the Forge Rope Fences mod with the same mod ID (`
 ## Use
 - Place two vanilla fence posts in line, on the same level, with 1-11 air blocks between them (2-12 blocks apart).
 - With a vanilla lead in your main hand, sneak and right-click the first post; do the same on the second.
-- One lead is consumed in Survival. The span has three rendered rope strands and a solid, thin 1.5-block collision plane.
+- One lead is consumed in Survival. The span has two rendered neutral-brown rope strands and a solid, thin 1.5-block collision plane.
 - Break a rope segment or a supporting post to dismantle the entire line and recover one lead in Survival.
 - Selecting the same post twice cancels the action. Selection expires after 60 seconds.
 - Connecting several separate spans to one fence is possible.
@@ -16,11 +16,11 @@ This is a **NeoForge** port of the Forge Rope Fences mod with the same mod ID (`
 - Java: **21**
 - Gradle: **9.2.1**
 - Command: `gradle --no-daemon clean build`
-- JAR: `build/libs/ropefences-neoforge-1.21.1-1.0.0.jar`
+- JAR: `build/libs/ropefences-neoforge-1.21.1-1.0.1.jar`
 - Build Hub project: `projects/ropefences-neoforge-1.21.1`
 
 ## Implementation
-The original Forge project remains at `projects/ropefences`. This port uses NeoForge's mod event bus, gameplay event bus and deferred block registry. No custom items, networking or libraries. The block model and localization resources match the Forge edition.
+V1.0.1 removes the bright red/green texture artifacts from the old resource, keeps short one-air-block spans, supports multiple links meeting at the same post, and draws a slim selection outline around the strands instead of the invisible collision wall. The legacy end blockstates remain for existing world compatibility, but the end geometry is just a continuation of the rope and has no decorative caps.\n\nThe original Forge project remains at `projects/ropefences`. This port uses NeoForge's mod event bus, gameplay event bus and deferred block registry. No custom items, networking or libraries. The block model and localization resources match the Forge edition.
 
 ## Test plan
 1. Client and dedicated server launch without errors.
@@ -32,3 +32,9 @@ The original Forge project remains at `projects/ropefences`. This port uses NeoF
 7. Test in multiplayer and with a second mod affecting vanilla leads.
 
 Known limitation: diagonal and sloped spans are not currently supported. This port does not make vanilla leads attachable to non-fence blocks.
+
+## 1.0.1 visual regression checks
+- Every direction and each shared support post uses only muted vanilla-like rope colors (no colored bands).
+- The one-empty-block span between two fence posts shows two continuous cables on both sides.
+- Cross-shaped arrangements with one central support show clean connections.
+- Pointing at ropes selects only the strands, while the collision plane remains impassable.
