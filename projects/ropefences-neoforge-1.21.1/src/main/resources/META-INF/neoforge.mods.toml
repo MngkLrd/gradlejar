@@ -4,10 +4,10 @@ license="MIT"
 
 [[mods]]
 modId="ropefences"
-version="1.0.0"
+version="1.0.1"
 displayName="Rope Fences"
 authors="MineMods"
-description='''Connect two vanilla fence posts with a solid, three-strand lead rope. Break a section to recover your lead.'''
+description='''Connect two vanilla fence posts with a solid, two-strand lead rope. Break a section to recover your lead.'''
 
 [[dependencies.ropefences]]
 modId="neoforge"
