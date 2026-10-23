@@ -1,0 +1,9 @@
+{
+  "slug": "lassotrident",
+  "version": "0.1.0",
+  "minecraft": "1.21.1",
+  "loader": "neoforge",
+  "java": "21",
+  "gradle": "9.2.1",
+  "jar_glob": "lassotrident-neoforge-1.21.1-0.1.0.jar"
+}
