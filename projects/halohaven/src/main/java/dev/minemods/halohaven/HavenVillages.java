@@ -17,6 +17,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -110,7 +114,8 @@ public final class HavenVillages {
             skybridge(level,cx+x*35,cz+x*13,cx+x*62,cz+x*24);
         }
         observatory(level,cx-33,cz-8);
-        sanctuary(level,cx+10,cz+32);
+        sanctuary(level,cx,cz+34);
+        HeavenArchitecture.generate(level,cx,cz,random);
         for (int x : new int[]{-36,36}) for (int z : new int[]{-9,9}) {
             monument(level,cx+x,cz+z);
         }
@@ -141,30 +146,50 @@ public final class HavenVillages {
         place(l,x,TOP_Y+1,z,Blocks.AIR);
     }
     private static void house(ServerLevel l,int cx,int cz,Random rand,int sx,int sz) {
-        int w=6,d=5;
+        int w=5+rand.nextInt(2),d=4+rand.nextInt(2);
+        boolean moonHouse=rand.nextInt(5)==0;
         for(int x=-w;x<=w;x++)for(int z=-d;z<=d;z++){
             place(l,cx+x,TOP_Y,cz+z,HaloHaven.AZURE_PLANKS.get());
             for(int y=TOP_Y+1;y<=TOP_Y+6;y++){
                 boolean wall = Math.abs(x)==w || Math.abs(z)==d;
                 if(!wall) { place(l,cx+x,y,cz+z,Blocks.AIR); continue; }
-                Block b = HaloHaven.PEARL_BRICKS.get();
+                Block b = moonHouse ? HaloHaven.MOONSTONE.get() : HaloHaven.PEARL_BRICKS.get();
                 if (x == 0 && z == -d && y<=TOP_Y+3) b=Blocks.AIR;
                 if (y==TOP_Y+3 && ((Math.abs(x)==w && Math.abs(z)==2) || (Math.abs(z)==d && Math.abs(x)==3)))
-                    b=HaloHaven.AURORA_GLASS.get();
+                    b=moonHouse ? HaloHaven.DAWN_GLASS.get() : HaloHaven.AURORA_GLASS.get();
                 if ((Math.abs(x)==w && Math.abs(z)==d) || (Math.abs(x)==w && y==TOP_Y+6))
                     b=HaloHaven.AZURE_PLANKS.get();
                 place(l,cx+x,y,cz+z,b);
             }
         }
-        // Architectural stepped pagoda roofs (including a generous overhang).
-        for(int tier=0;tier<3;tier++) {
+        // Four tier roof: real shaped stairs and warm glazed eaves instead of full cubes.
+        for(int tier=0;tier<4;tier++){
             int rw=w+2-tier,rd=d+2-tier,y=TOP_Y+7+tier;
             for(int x=-rw;x<=rw;x++)for(int z=-rd;z<=rd;z++){
-                place(l,cx+x,y,cz+z,Math.abs(x)==rw||Math.abs(z)==rd
-                    ?HaloHaven.SUNGOLD_TILES.get():HaloHaven.AZURE_PLANKS.get());
+                if(Math.abs(x)==rw||Math.abs(z)==rd){
+                    Direction direction=Math.abs(z)==rd?
+                        (z<0?Direction.NORTH:Direction.SOUTH):
+                        (x<0?Direction.WEST:Direction.EAST);
+                    l.setBlock(new BlockPos(cx+x,y,cz+z),
+                        HaloHaven.SUNGOLD_STAIRS.get().defaultBlockState()
+                            .setValue(StairBlock.FACING,direction)
+                            .setValue(StairBlock.HALF,Half.BOTTOM),2);
+                } else if(tier==3 || x%3==0 || z%3==0){
+                    place(l,cx+x,y,cz+z,moonHouse?HaloHaven.MOONSTONE.get():HaloHaven.AZURE_PLANKS.get());
+                }
             }
         }
-        place(l,cx,TOP_Y+10,cz,HaloHaven.STARSHADE.get());
+        place(l,cx,TOP_Y+11,cz,HaloHaven.STARSHADE.get());
+        for(int x=-w-1;x<=w+1;x++){
+            if(Math.abs(x)<2)continue;
+            place(l,cx+x,TOP_Y+1,cz-d-2,HaloHaven.PEARL_SLAB.get());
+            place(l,cx+x,TOP_Y+2,cz-d-2,HaloHaven.AZURE_FENCE.get());
+        }
+        for(int x:new int[]{-w,w})for(int z:new int[]{-d,d}){
+            for(int y=TOP_Y+1;y<=TOP_Y+6;y++)
+                place(l,cx+x,y,cz+z,HaloHaven.GILDED_PILLAR.get());
+            place(l,cx+x,TOP_Y+7,cz+z,HaloHaven.CLOUD_LANTERN.get());
+        }
         for(int z=-d-1;z<=-d+1;z++)for(int x=-1;x<=1;x++)
             place(l,cx+x,TOP_Y+1,cz+z,HaloHaven.PEARL_BRICKS.get());
         place(l,cx+3,TOP_Y+1,cz+1,Blocks.CHEST);
@@ -212,9 +237,15 @@ public final class HavenVillages {
     }
     private static void tree(ServerLevel l,int x,int z) {
         for(int y=TOP_Y+1;y<=TOP_Y+5;y++)place(l,x,y,z,Blocks.CHERRY_LOG);
-        for(int dx=-3;dx<=3;dx++)for(int dz=-3;dz<=3;dz++)for(int dy=0;dy<=3;dy++) {
-            if(dx*dx+dz*dz+(dy-1)*(dy-1) > 10) continue;
-            place(l,x+dx,TOP_Y+5+dy,z+dz,Blocks.CHERRY_LEAVES);
+        for(int dx=-4;dx<=4;dx++)for(int dz=-4;dz<=4;dz++)for(int dy=-1;dy<=3;dy++) {
+            if(dx*dx+dz*dz+(dy-1)*(dy-1)>18)continue;
+            l.setBlock(new BlockPos(x+dx,TOP_Y+5+dy,z+dz),
+                HaloHaven.SKY_LEAVES.get().defaultBlockState()
+                    .setValue(LeavesBlock.PERSISTENT,true),2);
+        }
+        for(int dx=-3;dx<=3;dx++)for(int dz=-3;dz<=3;dz++){
+            if(Math.abs(dx)+Math.abs(dz)==4)
+                place(l,x+dx,TOP_Y+1,z+dz,HaloHaven.CELESTIAL_BLOOM.get());
         }
     }
     private static void spawnVillager(ServerLevel l,double x,double y,double z){
