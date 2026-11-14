@@ -3,6 +3,8 @@ package dev.minemods.halohaven.client;
 import dev.minemods.halohaven.HaloEntities;
 import dev.minemods.halohaven.HaloHaven;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.RabbitRenderer;
 import net.minecraft.client.renderer.entity.AllayRenderer;
@@ -41,6 +43,11 @@ public final class HaloClient {
         @Override public ResourceLocation getTextureLocation(Villager v) {
             return HaloHaven.id("textures/entity/skyfolk.png");
         }
+        @Override
+        public void render(Villager e,float yaw,float partial,PoseStack pose,MultiBufferSource buffer,int light){
+            super.render(e,yaw,partial,pose,buffer,light);
+            CelestialHalo.draw(e,partial,pose,buffer,0.44f,2.20f,247,207,135);
+        }
     }
     public static final class CloudhareRenderer extends RabbitRenderer {
         public CloudhareRenderer(EntityRendererProvider.Context c) { super(c); }
@@ -53,17 +60,32 @@ public final class HaloClient {
         @Override public ResourceLocation getTextureLocation(Allay e) {
             return HaloHaven.id("textures/entity/lumen.png");
         }
+        @Override
+        public void render(Allay e,float yaw,float partial,PoseStack pose,MultiBufferSource buffer,int light){
+            super.render(e,yaw,partial,pose,buffer,light);
+            CelestialHalo.draw(e,partial,pose,buffer,0.25f,0.9f,135,245,223);
+        }
     }
     public static final class GuardianRenderer extends IronGolemRenderer {
         public GuardianRenderer(EntityRendererProvider.Context c) { super(c); }
         @Override public ResourceLocation getTextureLocation(IronGolem e) {
             return HaloHaven.id("textures/entity/dawn_guardian.png");
         }
+        @Override
+        public void render(IronGolem e,float yaw,float partial,PoseStack pose,MultiBufferSource buffer,int light){
+            super.render(e,yaw,partial,pose,buffer,light);
+            CelestialHalo.draw(e,partial,pose,buffer,0.75f,3.06f,255,228,173);
+        }
     }
     public static final class WraithRenderer extends VexRenderer {
         public WraithRenderer(EntityRendererProvider.Context c) { super(c); }
         @Override public ResourceLocation getTextureLocation(Vex e) {
             return HaloHaven.id("textures/entity/dusk_wraith.png");
+        }
+        @Override
+        public void render(Vex e,float yaw,float partial,PoseStack pose,MultiBufferSource buffer,int light){
+            super.render(e,yaw,partial,pose,buffer,light);
+            CelestialHalo.draw(e,partial,pose,buffer,0.34f,1.0f,141,119,213);
         }
     }
 }
