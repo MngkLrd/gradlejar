@@ -40,10 +40,10 @@ public final class SkyOasis {
         final int x,z,top;
         int tick;
         boolean landed;
-        Ascent(ServerPlayer p,int y){
+        Ascent(ServerPlayer p,int cx,int cz,int y){
             player=p.getUUID();
             level=p.serverLevel();
-            x=p.getBlockX();z=p.getBlockZ();top=y;
+            x=cx;z=cz;top=y;
         }
     }
 
@@ -66,12 +66,15 @@ public final class SkyOasis {
             player.displayClientMessage(Component.translatable("message.halohaven.skyseed_too_high"),true);
             return false;
         }
-        int x=player.getBlockX(),z=player.getBlockZ();
+        // The island grows 19 blocks EAST of the ascent column.
+        // Player rises in clear air alongside it instead of slamming into
+        // its solid underside as the rings are created.
+        int x=player.getBlockX()+19,z=player.getBlockZ();
         if(!clear(level,x,z,floor)){
             player.displayClientMessage(Component.translatable("message.halohaven.skyseed_obstructed"),true);
             return false;
         }
-        Ascent ascent=new Ascent(player,floor);
+        Ascent ascent=new Ascent(player,x,z,floor);
         ASCENTS.put(player.getUUID(),ascent);
         player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING,20*18,0,false,false));
         player.setDeltaMovement(0,1.3,0);
@@ -120,7 +123,9 @@ public final class SkyOasis {
             ServerPlayer player=level.getServer().getPlayerList().getPlayer(a.player);
             if(player!=null && player.level()==level && !a.landed){
                 if(player.getY()>=a.top+0.2 && a.tick>=21){
-                    player.teleportTo(level,a.x+6.5,a.top+1.1,a.z+0.5,
+                    // Shift gently onto the west-side landing court only
+                    // after rising above the entire solid island shell.
+                    player.teleportTo(level,a.x-10.5,a.top+1.1,a.z+0.5,
                         player.getYRot(),player.getXRot());
                     player.setDeltaMovement(0,0,0);
                     player.fallDistance=0;
