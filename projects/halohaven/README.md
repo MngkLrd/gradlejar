@@ -1,4 +1,4 @@
-# Halo Haven 1.2.0 – the Celestial Courts
+# Halo Haven 1.3.0 – Skyseed & True UV
 
 **Minecraft 1.21.1 | NeoForge 21.1.x | Java 21.**
 
@@ -6,12 +6,86 @@ A bright fantasy pocket of the skies, now with a cohesive architectural language
 
 ## Installation and build
 
-- Copy `halohaven-1.21.1-1.2.0.jar` to `mods/`.
+- Copy `halohaven-1.21.1-1.3.0.jar` to `mods/`.
 - **NeoForge 21.1.197** is used to compile; runtime metadata requests **at least 21.1.80**, not the newest patch.
 - Java 21, Gradle 9.2.1.
 - Build: `gradle --no-daemon clean build`.
-- Output: `build/libs/halohaven-1.21.1-1.2.0.jar`.
+- Output: `build/libs/halohaven-1.21.1-1.3.0.jar`.
 - Client and server both require the mod. No extra assets or resource packs.
+
+## Creative inventory
+
+All 27+ registered mod blocks and items, materials, mob eggs and entry tools
+now appear in a **dedicated Halo Haven tab**, identified by the Skyseed icon.
+They no longer clutter the vanilla Building Blocks, Tools or Food tabs.
+Both English and Russian tab labels are included.
+
+## Skyseed: a second way to reach the portal
+
+**Skyseed / Семя небосвода** is a new, consumable item with a bespoke feather-and-eye icon.
+
+Craft on a 3×3 table:
+
+```
+FEF
+QGQ
+ A
+```
+
+- **F** = Feather (2)
+- **E** = Eye of Ender (2)
+- **Q** = Quartz Block (2)
+- **G** = Ghast Tear (1)
+- **A** = Amethyst Shard (1)
+
+Use it in the **Overworld under an open sky**. The item takes one charge,
+places an oasis around 19 blocks to the east of the launch column so that your
+ascending player cannot crash against the new island's underside, and lifts
+the player through a visible column of cloud and enchanted particles.
+
+The small floating island is assembled over roughly 20-25 game ticks:
+cloudstone underside, skygrass top, sky orchard, a tiny sealed pond,
+a carved marble ceremonial dais, surrounding lanterns and flowers.
+Its centre already contains the ritual **quartz foundation** and four
+**diagonal amethyst blocks**. The player places only a **Bell** on the central
+quartz, and uses the **Ascension Sigil** as before.
+
+The terrace is at least Y=183 and automatically goes higher over tall terrain.
+There is a collision / space check before consumption to avoid overwriting
+existing builds. If construction is blocked, no Skyseed is spent.
+
+## Portal animation
+
+- Every time a ritual is completed by hand placing the final relevant
+  block (quartz, corner amethyst or bell), a server-driven spiral forms
+  around the bell, rising for about 55 ticks with amethyst chimes.
+- Right-clicking a valid ritual bell with the Ascension Sigil plays a
+  48-tick portal-opening sequence before teleporting the player.
+- Portal preparation is visible to all nearby clients, because particles
+  originate on the server. If the bell is broken or the player walks
+  far away during activation, the pending transfer is cancelled safely.
+
+## Correct model UV maps
+
+Old Halo Haven textures painted motifs across arbitrary rectangular regions
+and often landed on the WRONG parts of the model. The faulty painting was
+removed. One dedicated `uvtextures.gradle` module now draws only mapped
+cuboid faces, with explicit named parts and empty/unused pixels transparent.
+
+| Creature | Exact PNG dimensions | Defined mapped parts |
+| --- | --- | --- |
+| Skyfolk | 64×64 | Villager head, nose, hood, robe, coat, folded arms and legs |
+| Cloud Hare | 64×32 | Rabbit head, ears, body, paws, legs and tail |
+| Lumen | 32×32 | Allay head, chest, arms and individual flat wings |
+| Dawn Guardian | 128×128 | Iron Golem head, torso, arms, leg sections and breastplate |
+| Dusk Wraith | 32×32 | Vex head, torso, arms and wings |
+| Eclipse Revenant | 32×32 | Vex head, mask, torso, arms and wings |
+
+Model-part mapping is tied to the corresponding Mojang cuboid UV offsets,
+not random pixel placement. The generator also clears stray pixels outside
+registered face regions; this can be checked in its Gradle output.
+It does **not** claim that the custom-rigged 3D animation models already exist;
+those are still vanilla-derived shapes with custom textures and halos.
 
 ## Ascension ritual
 
