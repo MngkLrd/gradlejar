@@ -1,0 +1,86 @@
+name: Halo Haven 1.21.1 Dedicated Server Smoke
+
+on:
+  push:
+    paths:
+      - 'projects/halohaven/**'
+      - '.github/workflows/halohaven-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  game-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+      - name: Compile & validate embedded textures
+        working-directory: projects/halohaven
+        run: |
+          gradle --no-daemon clean build
+          python3 - <<'PY'
+          from zipfile import ZipFile
+          import json, glob, os
+          path = glob.glob('build/libs/halohaven-1.21.1-1.1.0.jar')[0]
+          blocks = ('cloudstone skygrass pearl_bricks sungold_tiles azure_planks aurora_glass starshade dawn_glass moonstone celestial_mosaic gilded_pillar cloud_lantern waystone star_ore pilgrim_altar').split()
+          mobs = ('skyfolk cloudhare lumen dawn_guardian dusk_wraith').split()
+          with ZipFile(path) as jar:
+              names=set(jar.namelist())
+              required=set()
+              for name in blocks:
+                  required |= {f'assets/halohaven/textures/block/{name}.png',
+                              f'assets/halohaven/models/block/{name}.json',
+                              f'assets/halohaven/models/item/{name}.json',
+                              f'assets/halohaven/blockstates/{name}.json',
+                              f'data/halohaven/loot_table/blocks/{name}.json'}
+              for name in mobs: required.add(f'assets/halohaven/textures/entity/{name}.png')
+              for suffix in ['data/halohaven/dimension/heaven.json',
+                              'data/halohaven/dimension_type/heaven.json',
+                              'data/halohaven/worldgen/biome/cloud_gardens.json',
+                              'data/halohaven/worldgen/noise_settings/heaven_islands.json']:
+                  required.add(suffix)
+              missing=required-names
+              if missing: raise RuntimeError('Missing mod files: '+repr(sorted(missing)))
+              for name in ['aurora_glass','dawn_glass']:
+                  model=json.loads(jar.read(f'assets/halohaven/models/block/{name}.json'))
+                  assert model['render_type']=='minecraft:translucent'
+              print('PASS: embedded blocks, models, textures, mobs, dimensions, translucent glass:', len(required), 'files')
+          PY
+      - name: Start NeoForge dedicated server (headless)
+        working-directory: projects/halohaven
+        run: |
+          mkdir -p run
+          printf 'eula=true\n' > run/eula.txt
+          set +e
+          timeout --signal=SIGINT --kill-after=10 145s gradle --no-daemon runServer > server-smoke.log 2>&1
+          result=$?
+          set -e
+          tail -n 110 server-smoke.log
+          if grep -Eiq 'Errors in currently selected data packs|Failed to load registries|Exception in server tick loop|A critical error occurred|Failure during server start' server-smoke.log; then
+            echo 'FAIL: server reported startup errors'
+            exit 1
+          fi
+          if grep -Eq 'Done \([0-9.,]+s\)!|Done \(' server-smoke.log; then
+            echo 'PASS: NeoForge dedicated server reached ready state'
+            exit 0
+          fi
+          echo "FAIL: NeoForge server did not reach ready state (exit: $result)"
+          exit 1
+      - name: Upload smoke logs when failing
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: halohaven-smoke-log
+          path: |
+            projects/halohaven/server-smoke.log
+            projects/halohaven/run/logs/latest.log
+            projects/halohaven/run/crash-reports/
