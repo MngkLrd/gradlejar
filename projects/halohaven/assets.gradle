@@ -206,14 +206,14 @@ tasks.register('generateHaloAssets') {
         recipe('starshade',[' G ','GSG',' G '],[
             G:[item:'minecraft:glowstone_dust'],S:[item:'halohaven:aurora_glass']],4)
         // Explicit large-format, UV-friendly skins. Pixel-art is hand composed by zones.
-        def skin={ String name,int width,int height,int background,int highlight,int dark,int gold,int glow ->
+        def skin={ String name,int width,int height,long background,long highlight,long dark,long gold,long glow ->
             BufferedImage im=new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB)
             for(int y=0;y<height;y++)for(int x=0;x<width;x++){
                 int n=Math.floorMod((x*71)^(y*113)^(x*y*7),19)
-                int c=n<3?highlight:n<6?dark:background
+                long c=n<3?highlight:n<6?dark:background
                 im.setRGB(x,y,(int)(0xff000000L|c))
             }
-            def rect={int x1,int y1,int x2,int y2,int c ->
+            def rect={int x1,int y1,int x2,int y2,long c ->
                 for(int py=Math.max(0,y1);py<=Math.min(height-1,y2);py++)
                 for(int px=Math.max(0,x1);px<=Math.min(width-1,x2);px++)
                     im.setRGB(px,py,(int)(0xff000000L|c))
@@ -288,10 +288,11 @@ tasks.register('generateHaloAssets') {
         skin('dawn_guardian',128,128,0xffe2ddd0,0xfff7efdd,0xffacaea8,0xffd7b46c,0xffe9fcfc)
         skin('dusk_wraith',64,64,0xff353958,0xff47446f,0xff22283d,0xffa28cb5,0xff6cfafa)
         // Items are separate 32px silhouettes, with transparent backgrounds.
-        def icon={String name,int color,int outline,int center ->
+        def icon={String name,long color,long outline,long center ->
             BufferedImage img=new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB)
             for(int y=0;y<32;y++)for(int x=0;x<32;x++){
-                int dx=Math.abs(x-15),dy=Math.abs(y-15),c=0
+                int dx=Math.abs(x-15),dy=Math.abs(y-15)
+                long c=0
                 if(name=='stardust' || name=='sunshard'){
                     if((dx<=2&&dy<=12)||(dy<=2&&dx<=12)||(dx==dy&&dx<=7))c=outline
                     if(dx+dy<11)c=color
@@ -322,7 +323,7 @@ tasks.register('generateHaloAssets') {
         icon('aether_tonic',0xff99dfd8,0xff789bb4,0xffecfff4)
         Map eggs=[skyfolk:0xff739dac,cloudhare:0xffeadce2,lumen:0xffb8eee0,
             dawn_guardian:0xffd8c38a,dusk_wraith:0xff4c476b]
-        eggs.each { String n,int col ->
+        eggs.each { String n,long col ->
             // Vanilla's spawn egg item template handles egg tinting.
             writeJson('assets/halohaven/models/item/'+n+'_spawn_egg.json',
                 [parent:'minecraft:item/template_spawn_egg'])
