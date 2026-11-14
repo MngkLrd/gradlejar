@@ -311,7 +311,7 @@ tasks.register('generateHaloAssets') {
                     if(x>=13&&x<=18&&y>=7&&y<=13)c=outline
                     if(x>=12&&x<=19&&y==8)c=0xfff9df9b
                 }
-                img.setRGB(x,y,c)
+                img.setRGB(x,y,(int)c)
             }
             writePng('assets/halohaven/textures/item/'+name+'.png',img)
             writeJson('assets/halohaven/models/item/'+name+'.json',[
