@@ -34,7 +34,32 @@ public final class HavenVillages {
 
     public static void onPlayerTick(PlayerTickEvent.Post e) {
         if (!(e.getEntity() instanceof ServerPlayer p)) return;
+        // The Aether Feather is functional equipment, not a decorative icon.
+        // Offhand support allows mining while descending over the void.
+        if(p.tickCount%6==0 && !p.onGround() && p.getDeltaMovement().y<0
+            && (p.getMainHandItem().is(HaloHaven.AETHER_FEATHER.get())
+                || p.getOffhandItem().is(HaloHaven.AETHER_FEATHER.get()))) {
+            p.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 24, 0, true, false));
+        }
         if (!p.level().dimension().equals(HaloHaven.HEAVEN)) return;
+        // Low-density ambient magic for the four distinct celestial silhouettes.
+        if(p.tickCount%32==0) {
+            ServerLevel world=(ServerLevel)p.level();
+            for(Skyfolk npc : world.getEntitiesOfClass(Skyfolk.class,p.getBoundingBox().inflate(20))) {
+                world.sendParticles(net.minecraft.core.particles.ParticleTypes.ENCHANT,
+                    npc.getX(),npc.getY()+2.3,npc.getZ(),2,0.22,0.08,0.22,0.005);
+            }
+            for(Allay lumen : world.getEntitiesOfClass(Allay.class,p.getBoundingBox().inflate(18),
+                a->a.getType()==HaloEntities.LUMEN.get())) {
+                world.sendParticles(net.minecraft.core.particles.ParticleTypes.END_ROD,
+                    lumen.getX(),lumen.getY()+0.3,lumen.getZ(),2,0.18,0.25,0.18,0.014);
+            }
+            for(Vex shade : world.getEntitiesOfClass(Vex.class,p.getBoundingBox().inflate(18),
+                a->a.getType()==HaloEntities.DUSK_WRAITH.get())) {
+                world.sendParticles(net.minecraft.core.particles.ParticleTypes.SOUL_FIRE_FLAME,
+                    shade.getX(),shade.getY()+0.4,shade.getZ(),2,0.22,0.3,0.22,0.013);
+            }
+        }
         // The Dawn Guardian's restorative aura makes a village a useful refuge.
         if(p.tickCount % 140 == 0) {
             boolean protectedHere=!p.level().getEntitiesOfClass(IronGolem.class,
