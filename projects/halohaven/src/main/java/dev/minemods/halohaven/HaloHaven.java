@@ -11,6 +11,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.TransparentBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.core.BlockPos;
@@ -63,9 +66,26 @@ public final class HaloHaven {
         BlockBehaviour.Properties.of().strength(3f, 8f).lightLevel(s -> 12).sound(SoundType.AMETHYST));
     public static final DeferredBlock<Block> STAR_ORE = BLOCKS.registerSimpleBlock("star_ore",
         BlockBehaviour.Properties.of().strength(3f, 6f).lightLevel(s -> 4).sound(SoundType.STONE));
+    public static final DeferredBlock<StairBlock> SUNGOLD_STAIRS = BLOCKS.register("sungold_stairs",
+        () -> new StairBlock(SUNGOLD_TILES.get().defaultBlockState(),
+            BlockBehaviour.Properties.of().strength(2f,6f).sound(SoundType.METAL)));
+    public static final DeferredBlock<SlabBlock> SUNGOLD_SLAB = BLOCKS.register("sungold_slab",
+        () -> new SlabBlock(BlockBehaviour.Properties.of().strength(2f,6f).sound(SoundType.METAL)));
+    public static final DeferredBlock<StairBlock> PEARL_STAIRS = BLOCKS.register("pearl_stairs",
+        () -> new StairBlock(PEARL_BRICKS.get().defaultBlockState(),
+            BlockBehaviour.Properties.of().strength(1.8f,6f).sound(SoundType.CALCITE)));
+    public static final DeferredBlock<SlabBlock> PEARL_SLAB = BLOCKS.register("pearl_slab",
+        () -> new SlabBlock(BlockBehaviour.Properties.of().strength(1.8f,6f).sound(SoundType.CALCITE)));
+    public static final DeferredBlock<FenceBlock> AZURE_FENCE = BLOCKS.register("azure_fence",
+        () -> new FenceBlock(BlockBehaviour.Properties.of().strength(2f,5f).sound(SoundType.WOOD)));
     public static final DeferredBlock<Block> STARSHADE = BLOCKS.registerSimpleBlock("starshade",
         BlockBehaviour.Properties.of().strength(1f).lightLevel(s -> 15).sound(SoundType.AMETHYST));
 
+    public static final DeferredItem<BlockItem> SUNGOLD_STAIRS_ITEM=ITEMS.registerSimpleBlockItem("sungold_stairs",SUNGOLD_STAIRS);
+    public static final DeferredItem<BlockItem> SUNGOLD_SLAB_ITEM=ITEMS.registerSimpleBlockItem("sungold_slab",SUNGOLD_SLAB);
+    public static final DeferredItem<BlockItem> PEARL_STAIRS_ITEM=ITEMS.registerSimpleBlockItem("pearl_stairs",PEARL_STAIRS);
+    public static final DeferredItem<BlockItem> PEARL_SLAB_ITEM=ITEMS.registerSimpleBlockItem("pearl_slab",PEARL_SLAB);
+    public static final DeferredItem<BlockItem> AZURE_FENCE_ITEM=ITEMS.registerSimpleBlockItem("azure_fence",AZURE_FENCE);
     public static final DeferredItem<BlockItem> CLOUDSTONE_ITEM = ITEMS.registerSimpleBlockItem("cloudstone", CLOUDSTONE);
     public static final DeferredItem<BlockItem> SKYGRASS_ITEM = ITEMS.registerSimpleBlockItem("skygrass", SKYGRASS);
     public static final DeferredItem<BlockItem> PEARL_BRICKS_ITEM = ITEMS.registerSimpleBlockItem("pearl_bricks", PEARL_BRICKS);
@@ -81,6 +101,8 @@ public final class HaloHaven {
     public static final DeferredItem<BlockItem> WAYSTONE_ITEM = ITEMS.registerSimpleBlockItem("waystone", WAYSTONE);
     public static final DeferredItem<BlockItem> PILGRIM_ALTAR_ITEM = ITEMS.registerSimpleBlockItem("pilgrim_altar", PILGRIM_ALTAR);
     public static final DeferredItem<BlockItem> STAR_ORE_ITEM = ITEMS.registerSimpleBlockItem("star_ore", STAR_ORE);
+    public static final DeferredItem<Item> AETHER_FEATHER=ITEMS.registerSimpleItem("aether_feather",
+        new Item.Properties().stacksTo(1));
     public static final DeferredItem<Item> STARDUST = ITEMS.registerSimpleItem("stardust", new Item.Properties());
     public static final DeferredItem<Item> SUNSHARD = ITEMS.registerSimpleItem("sunshard", new Item.Properties());
     public static final DeferredItem<Item> SKY_COMPASS = ITEMS.register("sky_compass",
@@ -130,6 +152,11 @@ public final class HaloHaven {
             event.accept(WAYSTONE_ITEM);
             event.accept(PILGRIM_ALTAR_ITEM);
             event.accept(STAR_ORE_ITEM);
+            event.accept(SUNGOLD_STAIRS_ITEM);
+            event.accept(SUNGOLD_SLAB_ITEM);
+            event.accept(PEARL_STAIRS_ITEM);
+            event.accept(PEARL_SLAB_ITEM);
+            event.accept(AZURE_FENCE_ITEM);
         }
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(ASCENSION_SIGIL);
@@ -137,6 +164,7 @@ public final class HaloHaven {
             event.accept(AETHER_TONIC);
             event.accept(STARDUST);
             event.accept(SUNSHARD);
+            event.accept(AETHER_FEATHER);
             event.accept(SKYFOLK_EGG);
             event.accept(CLOUDHARE_EGG);
             event.accept(LUMEN_EGG);
