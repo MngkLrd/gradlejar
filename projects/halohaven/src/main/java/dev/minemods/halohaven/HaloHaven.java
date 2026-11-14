@@ -131,6 +131,8 @@ public final class HaloHaven {
         () -> new SpawnEggItem(HaloEntities.DAWN_GUARDIAN.get(),0xe3d9c6,0xc3974e,new Item.Properties()));
     public static final DeferredItem<SpawnEggItem> WRAITH_EGG=ITEMS.register("dusk_wraith_spawn_egg",
         () -> new SpawnEggItem(HaloEntities.DUSK_WRAITH.get(),0x363c61,0x78eaf0,new Item.Properties()));
+    public static final DeferredItem<SpawnEggItem> ECLIPSE_EGG=ITEMS.register("eclipse_revenant_spawn_egg",
+        () -> new SpawnEggItem(HaloEntities.ECLIPSE_REVENANT.get(),0x2e2348,0xe9b68c,new Item.Properties()));
     public static final DeferredItem<Item> ASCENSION_SIGIL = ITEMS.register("ascension_sigil",
         () -> new AscensionSigilItem(new Item.Properties().stacksTo(1)));
     public static final DeferredItem<Item> SKYBERRY = ITEMS.registerSimpleItem("skyberry", new Item.Properties()
@@ -187,6 +189,7 @@ public final class HaloHaven {
             event.accept(LUMEN_EGG);
             event.accept(GUARDIAN_EGG);
             event.accept(WRAITH_EGG);
+            event.accept(ECLIPSE_EGG);
         }
         if (event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
             event.accept(SKYBERRY);
