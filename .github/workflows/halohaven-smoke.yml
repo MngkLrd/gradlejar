@@ -32,7 +32,7 @@ jobs:
           import json, glob, os
           path = glob.glob('build/libs/halohaven-1.21.1-1.2.0.jar')[0]
           blocks = ('cloudstone skygrass pearl_bricks sungold_tiles azure_planks aurora_glass starshade dawn_glass moonstone celestial_mosaic gilded_pillar cloud_lantern waystone star_ore pilgrim_altar').split()
-          mobs = ('skyfolk cloudhare lumen dawn_guardian dusk_wraith').split()
+          mobs = ('skyfolk cloudhare lumen dawn_guardian dusk_wraith eclipse_revenant').split()
           with ZipFile(path) as jar:
               names=set(jar.namelist())
               required=set()
@@ -51,6 +51,11 @@ jobs:
                                f'assets/halohaven/models/block/{name}.json',
                                f'assets/halohaven/models/item/{name}.json'}
               required.add('assets/halohaven/textures/item/aether_feather.png')
+              required.add('assets/halohaven/textures/item/eclipse_seal.png')
+              required.add('assets/halohaven/textures/item/sunward_relic.png')
+              required.add('assets/halohaven/textures/entity/halo_ring.png')
+              required.add('data/halohaven/loot_table/entities/eclipse_revenant.json')
+              required.add('data/halohaven/recipe/sunward_relic.json')
               for suffix in ['data/halohaven/dimension/heaven.json',
                               'data/halohaven/dimension_type/heaven.json',
                               'data/halohaven/worldgen/biome/cloud_gardens.json',

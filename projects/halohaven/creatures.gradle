@@ -269,6 +269,13 @@ tasks.named('generateHaloAssets').configure {
                 data['item.halohaven.sunward_relic']='Реликвия солнечной клятвы'
                 data['message.halohaven.trial_wraith']='Испытание пройдено: повержено призраков %s. Получена благосклонность.'
                 data['message.halohaven.eclipse_defeated']='Затменный ревенант повержен. +20 благосклонности!'
+                data['message.halohaven.region_0']='Открыто новое место: Жемчужные дворы. +4 благосклонности.'
+                data['message.halohaven.region_1']='Открыто новое место: Цветущие кроны. +4 благосклонности.'
+                data['message.halohaven.region_2']='Открыто новое место: Грань затмения. +4 благосклонности.'
+                data['region.halohaven.0']='Жемчужные дворы'
+                data['region.halohaven.1']='Цветущие кроны'
+                data['region.halohaven.2']='Грань затмения'
+                data['message.halohaven.compass']='Поселение X: %s Z: %s | %s м | %s° | Благосклонность: %s | %s'
             }else{
                 data['entity.halohaven.eclipse_revenant']='Eclipse Revenant'
                 data['item.halohaven.eclipse_revenant_spawn_egg']='Spawn Eclipse Revenant'
@@ -276,6 +283,13 @@ tasks.named('generateHaloAssets').configure {
                 data['item.halohaven.sunward_relic']='Sunward Oath Relic'
                 data['message.halohaven.trial_wraith']='Trial milestone: %s wraiths defeated. Heavenly Favor earned.'
                 data['message.halohaven.eclipse_defeated']='Eclipse Revenant defeated. +20 Heavenly Favor!'
+                data['message.halohaven.region_0']='Discovered Pearl Court. +4 Heavenly Favor.'
+                data['message.halohaven.region_1']='Discovered Blooming Canopy. +4 Heavenly Favor.'
+                data['message.halohaven.region_2']='Discovered Eclipse Verge. +4 Heavenly Favor.'
+                data['region.halohaven.0']='Pearl Court'
+                data['region.halohaven.1']='Blooming Canopy'
+                data['region.halohaven.2']='Eclipse Verge'
+                data['message.halohaven.compass']='Village X: %s Z: %s | %sm | %s° | Favor: %s | %s'
             }
             j('assets/halohaven/lang/'+lang+'.json',data)
         }
