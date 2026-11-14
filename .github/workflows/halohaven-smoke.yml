@@ -87,7 +87,7 @@ jobs:
               }
               for name,expected in expected_uv.items():
                   raw=jar.read(f'assets/halohaven/textures/entity/{name}.png')
-                  assert raw[:8]==b'\\x89PNG\\r\\n\\x1a\\n'
+                  assert raw[:8]==b'\x89PNG\r\n\x1a\n'
                   actual=struct.unpack('>II',raw[16:24])
                   assert actual==expected, f'{name} UV atlas: {actual} != {expected}'
               assert json.loads(jar.read('data/halohaven/recipe/skyseed.json'))['result']['id']=='halohaven:skyseed'
