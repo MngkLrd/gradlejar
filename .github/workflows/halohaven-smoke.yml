@@ -30,7 +30,7 @@ jobs:
           python3 - <<'PY'
           from zipfile import ZipFile
           import json, glob, os
-          path = glob.glob('build/libs/halohaven-1.21.1-1.1.0.jar')[0]
+          path = glob.glob('build/libs/halohaven-1.21.1-1.2.0.jar')[0]
           blocks = ('cloudstone skygrass pearl_bricks sungold_tiles azure_planks aurora_glass starshade dawn_glass moonstone celestial_mosaic gilded_pillar cloud_lantern waystone star_ore pilgrim_altar').split()
           mobs = ('skyfolk cloudhare lumen dawn_guardian dusk_wraith').split()
           with ZipFile(path) as jar:
@@ -43,6 +43,14 @@ jobs:
                               f'assets/halohaven/blockstates/{name}.json',
                               f'data/halohaven/loot_table/blocks/{name}.json'}
               for name in mobs: required.add(f'assets/halohaven/textures/entity/{name}.png')
+              for name in ('sungold_stairs','sungold_slab','pearl_stairs','pearl_slab','azure_fence'):
+                  required |= {f'assets/halohaven/models/item/{name}.json',
+                               f'assets/halohaven/blockstates/{name}.json'}
+              for name in ('sky_leaves','celestial_bloom'):
+                  required |= {f'assets/halohaven/textures/block/{name}.png',
+                               f'assets/halohaven/models/block/{name}.json',
+                               f'assets/halohaven/models/item/{name}.json'}
+              required.add('assets/halohaven/textures/item/aether_feather.png')
               for suffix in ['data/halohaven/dimension/heaven.json',
                               'data/halohaven/dimension_type/heaven.json',
                               'data/halohaven/worldgen/biome/cloud_gardens.json',
