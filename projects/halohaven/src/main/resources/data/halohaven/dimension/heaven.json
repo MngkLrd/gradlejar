@@ -1,0 +1,11 @@
+{
+  "type": "halohaven:heaven",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "halohaven:heaven_islands",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "halohaven:cloud_gardens"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+[[mods]]
+modId="halohaven"
+version="1.0.0"
+displayName="Halo Haven"
+authors="MineMods"
+description='''A handcrafted sky-heaven realm with floating islands, celestial villages, original pixel-art blocks, and a bell-of-ascension ritual.'''
+[[dependencies.halohaven]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.80,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.halohaven]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"

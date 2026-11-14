@@ -1,0 +1,155 @@
+import groovy.json.JsonOutput
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
+
+def generatedHaloAssets = layout.buildDirectory.dir('generated/haloassets')
+tasks.register('generateHaloAssets') {
+    outputs.dir(generatedHaloAssets)
+    doLast {
+        File base = generatedHaloAssets.get().asFile
+        def writeJson = { String path, Object data ->
+            File f = new File(base, path); f.parentFile.mkdirs()
+            f.setText(JsonOutput.prettyPrint(JsonOutput.toJson(data)), 'UTF-8')
+        }
+        def writePng = { String path, BufferedImage image ->
+            File f = new File(base,path); f.parentFile.mkdirs(); ImageIO.write(image,'PNG',f)
+        }
+        List blocks=['cloudstone','skygrass','pearl_bricks','sungold_tiles','azure_planks','aurora_glass','starshade']
+        Map palettes=[
+            cloudstone:[0xe4f2f0,0xeaf5f1,0xf8faf2,0xcedfdc,0xe6e5dc],
+            skygrass:[0x9ad9c2,0x9edfc8,0xb8ebd4,0x86c8b2,0xa7e7cf],
+            pearl_bricks:[0xebebe2,0xf4f2e8,0xd3dfe0,0xffffff,0xe6e9e3],
+            sungold_tiles:[0xc89b51,0xdbac60,0xeac77e,0xf0d595,0xb68b4d],
+            azure_planks:[0x72afb8,0x85c1c5,0x98d2d0,0x71aaa7,0xa0d2d4],
+            aurora_glass:[0x9acfd9,0xb6dfe3,0xd8f3f3,0xb6d9ef,0xc7e8db],
+            starshade:[0x304c79,0x395a86,0x4a6598,0x536ca0,0x3c5480]
+        ]
+        blocks.eachWithIndex { String name,int seed ->
+            BufferedImage image=new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB)
+            List palette=palettes[name]
+            for(int y=0;y<32;y++)for(int x=0;x<32;x++){
+                int noise=Math.floorMod((x*19273)^(y*49199)^(x*y*617)^(seed*7411),29)
+                int c=(int)palette[noise<3?3:noise<11?0:noise<17?1:noise<24?2:4]
+                if(name=='cloudstone'){
+                    if((x+2*y)%19==0 && y%7==2)c=0xc6d9e0
+                    if(y%16==0 && x%8<2)c=0xffffff
+                }else if(name=='skygrass'){
+                    if((x%11==4&&y%13==6)||(x%13==8&&y%11==5))c=0xe1fff1
+                    if(x%13==9&&y%11==5)c=0xffd8dc
+                    if(x%7==4&&y%5==2)c=0x7cbba8
+                }else if(name=='pearl_bricks'){
+                    int shift=((int)(y/10)%2)*8
+                    if(y%10<2||(x+shift)%16==0)c=0xaabdc1
+                    else if(y%10==2||(x+shift)%16==1)c=0xfffefa
+                    else if((x+y)%17==0)c=0xf6dca0
+                }else if(name=='sungold_tiles'){
+                    if(x%16==0||y%16==0)c=0x9e7845
+                    else if(x%16==1||y%16==1)c=0xffe4a3
+                    else if(x%16==8&&y%16==8)c=0xfff1c9
+                    else if((x+y)%23==0)c=0xffd993
+                }else if(name=='azure_planks'){
+                    if(y%8==0)c=0x487989
+                    else if(y%8==1)c=0xb5dfdc
+                    else if(y%8==7)c=0x689da9
+                    if((x==3||x==27)&&y%8==4)c=0xd8e7df
+                }else if(name=='aurora_glass'){
+                    if(x%16==0||y%16==0)c=0x609baf
+                    else if(x%16==1||y%16==1)c=0xe6faff
+                    else if((x+y)%22<3)c=0xdff9f5
+                    else if((x-y+32)%19<3)c=0x91c0d9
+                }else if(name=='starshade'){
+                    int dx=x-15,dy=y-15,dist=Math.abs(dx)+Math.abs(dy)
+                    if((Math.abs(dx)<2&&Math.abs(dy)<12)||(Math.abs(dy)<2&&Math.abs(dx)<12)||(dist<10&&Math.abs(dx)==Math.abs(dy)))c=0xe3f5ee
+                    if(dist<5)c=0xffedb3
+                    if(dist<2)c=0xffffff
+                    if(x%15==5&&y%13==3)c=0xffffff
+                }
+                image.setRGB(x,y,(int)(0xff000000L|c))
+            }
+            writePng('assets/halohaven/textures/block/'+name+'.png',image)
+            writeJson('assets/halohaven/blockstates/'+name+'.json',[variants:['':[model:'halohaven:block/'+name]]])
+            writeJson('assets/halohaven/models/block/'+name+'.json',[parent:'minecraft:block/cube_all',textures:[all:'halohaven:block/'+name]])
+            writeJson('assets/halohaven/models/item/'+name+'.json',[parent:'halohaven:block/'+name])
+            writeJson('data/halohaven/loot_table/blocks/'+name+'.json',[
+                type:'minecraft:block',pools:[[rolls:1,entries:[[type:'minecraft:item',name:'halohaven:'+name]]]]
+            ])
+        }
+        BufferedImage sigil=new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB)
+        for(int y=0;y<32;y++)for(int x=0;x<32;x++){
+            double d=Math.sqrt((x-15.5)*(x-15.5)+(y-15.5)*(y-15.5))
+            int col=0,dx=Math.abs(x-16),dy=Math.abs(y-16)
+            if(d>=9&&d<=12)col=0xffc68b38
+            if(d>=9.5&&d<=10.4)col=0xffffe3a0
+            if(d<7.5&&d>6.7)col=0xff8de9ef
+            if((dx<=1&&dy<=8)||(dy<=1&&dx<=8)||(dx==dy&&dx<=5))col=0xffe0fff7
+            if(dx<=2&&dy<=2)col=0xffffecae
+            if(dx<=1&&dy<=1)col=0xffffffff
+            sigil.setRGB(x,y,col)
+        }
+        writePng('assets/halohaven/textures/item/ascension_sigil.png',sigil)
+        BufferedImage berry=new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB)
+        for(int y=0;y<32;y++)for(int x=0;x<32;x++){
+            int col=0
+            for(List spec : [[12,17,6],[20,18,6],[16,23,6]]){
+                int dx=x-(int)spec[0],dy=y-(int)spec[1],r=(int)spec[2]
+                if(dx*dx+dy*dy<=r*r)col=dx+dy<-3?0xffd9b8ee:0xff816eab
+                if(dx*dx+dy*dy<r*r&&(dx+y)%6==1)col=0xff9a84c7
+                if(dx==-2&&dy==-2)col=0xfff6e5ff
+            }
+            if(y>=8&&y<=15&&Math.abs(x-16)<=1)col=0xff457665
+            if(y>=8&&y<=12&&x>=9&&x<=16&&x+y>=21)col=0xff6fc5a2
+            if(y>=8&&y<=12&&x>=16&&x<=24&&x-y>=5)col=0xff91dcc0
+            berry.setRGB(x,y,col)
+        }
+        writePng('assets/halohaven/textures/item/skyberry.png',berry)
+        ['ascension_sigil','skyberry'].each { String n ->
+            writeJson('assets/halohaven/models/item/'+n+'.json',[parent:'minecraft:item/generated',textures:[layer0:'halohaven:item/'+n]])
+        }
+        Map en=[cloudstone:'Cloudstone',skygrass:'Sky Meadow',pearl_bricks:'Pearl Bricks',
+            sungold_tiles:'Sungold Tiles',azure_planks:'Azurewood Planks',aurora_glass:'Aurora Glass',
+            starshade:'Starshade Lantern',ascension_sigil:'Ascension Sigil',skyberry:'Skyberries']
+        Map ru=[cloudstone:'Облачный камень',skygrass:'Небесный луг',pearl_bricks:'Жемчужные кирпичи',
+            sungold_tiles:'Солнечная черепица',azure_planks:'Лазурные доски',aurora_glass:'Авроральное стекло',
+            starshade:'Звёздный светильник',ascension_sigil:'Печать вознесения',skyberry:'Небесные ягоды']
+        [en_us:en,ru_ru:ru].each { String lang,Map names ->
+            Map lines=[:]
+            names.each { String n,String label ->
+                lines[(blocks.contains(n)?'block':'item')+'.halohaven.'+n]=label
+            }
+            if(lang=='ru_ru'){
+                lines['message.halohaven.altar']='Колокол выше Y=170, кварц под ним и аметист по четырём углам платформы. Небо должно быть открыто.'
+                lines['message.halohaven.welcome']='Вы достигли Небесной обители. Нажмите ПКМ с печатью в воздухе, чтобы вернуться.'
+            }else{
+                lines['message.halohaven.altar']='Bell above Y=170, quartz beneath, amethyst in all four platform corners, open sky required.'
+                lines['message.halohaven.welcome']='Welcome to Halo Haven. Right-click the air holding the sigil to return.'
+            }
+            writeJson('assets/halohaven/lang/'+lang+'.json',lines)
+        }
+        def recipe={ String n,List pat,Map keys,int count ->
+            writeJson('data/halohaven/recipe/'+n+'.json',[
+                type:'minecraft:crafting_shaped',category:'misc',pattern:pat,key:keys,
+                result:[id:'halohaven:'+n,count:count]
+            ])
+        }
+        recipe('ascension_sigil',['AFA','EGE','AFA'],[
+            A:[item:'minecraft:amethyst_shard'],F:[item:'minecraft:feather'],
+            E:[item:'minecraft:ender_pearl'],G:[item:'minecraft:ghast_tear']],1)
+        recipe('pearl_bricks',['CC','CC'],[C:[item:'halohaven:cloudstone']],4)
+        recipe('sungold_tiles',['GGG','GPG','GGG'],[
+            G:[item:'minecraft:gold_nugget'],P:[item:'halohaven:pearl_bricks']],8)
+        recipe('azure_planks',['CBC'],[
+            C:[item:'halohaven:cloudstone'],B:[item:'minecraft:birch_planks']],4)
+        recipe('aurora_glass',['GGG','GAG','GGG'],[
+            G:[item:'minecraft:glass'],A:[item:'minecraft:amethyst_shard']],8)
+        recipe('starshade',[' G ','GSG',' G '],[
+            G:[item:'minecraft:glowstone_dust'],S:[item:'halohaven:aurora_glass']],4)
+        writeJson('data/minecraft/tags/block/mineable/pickaxe.json',[
+            replace:false,values:['halohaven:cloudstone','halohaven:pearl_bricks',
+                'halohaven:sungold_tiles','halohaven:aurora_glass','halohaven:starshade']])
+        writeJson('data/minecraft/tags/block/mineable/axe.json',[replace:false,values:['halohaven:azure_planks']])
+        writeJson('data/minecraft/tags/block/dirt.json',[replace:false,values:['halohaven:skygrass']])
+        writeJson('data/minecraft/tags/block/animals_spawnable_on.json',[replace:false,values:['halohaven:skygrass']])
+    }
+}
+sourceSets.main.resources.srcDir generatedHaloAssets
+tasks.named('processResources').configure { dependsOn 'generateHaloAssets' }
