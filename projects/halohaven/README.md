@@ -1,76 +1,89 @@
-# Halo Haven 1.1.0 — Minecraft 1.21.1 / NeoForge
+# Halo Haven 1.2.0 – the Celestial Courts
 
-A fully self-contained heavenly sky-realm expansion for Minecraft 1.21.1. Requires Java 21. **Compiles against NeoForge 21.1.197 but does not demand the newest NeoForge build.** The mod dependency in `neoforge.mods.toml` accepts NeoForge `[21.1.80,)`, together with Minecraft `[1.21.1,1.21.2)`.
+**Minecraft 1.21.1 | NeoForge 21.1.x | Java 21.**
 
-## Entering Halo Haven
+A bright fantasy pocket of the skies, now with a cohesive architectural language (pearl/aged brass/turquoise), shaped roofs, hand-painted materials, sky gardens, three district styles, boss encounters, a craftable endgame relic, translucent glass, and heavenly inhabitants.
 
-1. Craft the **Ascension Sigil** from 4 amethyst shards, 2 feathers, 2 ender pearls and 1 ghast tear.
-2. Build a 3×3 platform **at Y=170 or higher**. A quartz block must sit in the centre of the platform and amethyst blocks must occupy the four diagonal corners.
-3. Put a bell on top of the central quartz. Leave the sky directly above the bell unobstructed.
-4. Right-click the bell while holding the sigil. You arrive on the central village island in Halo Haven.
-5. Right-click in the air with the sigil in Heaven to return to your stored Overworld position.
+## Installation and build
 
-## Regions and exploration
+- Copy `halohaven-1.21.1-1.2.0.jar` to `mods/`.
+- **NeoForge 21.1.197** is used to compile; runtime metadata requests **at least 21.1.80**, not the newest patch.
+- Java 21, Gradle 9.2.1.
+- Build: `gradle --no-daemon clean build`.
+- Output: `build/libs/halohaven-1.21.1-1.2.0.jar`.
+- Client and server both require the mod. No extra assets or resource packs.
 
-The sky realm has its own dimension type, pastel biome, daylight ambience and vast floating cloudstone islands. In addition to background End-noise islands, settlements are created programmatically on self-supporting islands around points spaced 512 blocks apart. Villages appear on first approach, with deterministic positions. This is not vanilla village worldgen.
+## Ascension ritual
 
-Each village is built from an original pale-mint/gold/pearl architecture and includes:
-- Four furnished houses with windows, varied roofs, workstations, rare supply chests and special inhabitants
-- A sunlit circular fountain and paved crossroads
-- Gold-and-glass observatory with an explorer's supply chest and spyglass
-- Sacred meadow and Pilgrim Altar with constellation lights
-- Cherry groves, flower gardens, pillars and meadow wildlife
-- Ruined satellites with Dusk Wraiths, rare chests and suspended glazed bridges
-- A portal-like Aether Waystone atop a small ceremonial structure
+The original ascension ritual remains unchanged: craft the Ascension Sigil from 4 amethyst shards, 2 feathers, 2 ender pearls and 1 ghast tear. Above world Y=170, place a bell on quartz with four amethyst blocks diagonally beneath the corners, and keep the sky open. Right-click the bell with the Sigil. Right-click the air with the Sigil in Heaven to return home.
 
-**Aether Waystones:** Right-click to travel to the next village along the X axis. Sneak and right-click to go the other direction. Distances are exactly 512 blocks. The destination generates before the teleport.
+### Explore
 
-**Skybound Compass:** Right-click in Halo Haven to show the nearest settlement's coordinates, distance, angle and your Heavenly Favor.
+The initial sky village is at X=0 Z=0, with further settlements every 512 blocks. Aether Waystones send you 512 blocks along X; sneak for the opposite direction. The Skybound Compass shows the nearest village, direction, distance, Favor and district.
 
-## New creatures
+Each district has its own ground treatment, garden density and building palette:
 
-| Entity ID | Identity | Behavior |
-| --- | --- | --- |
-| `halohaven:skyfolk` | Skyfolk / Celestial villager | Merchant with unique trades for Skyberries, Stardust and Sunshards. Wears an original painted celestial tunic; no vanilla villager clothing overlays |
-| `halohaven:cloudhare` | Cloud Hare | Gentle rabbit-like island wildlife. Offer dandelions to receive Favor |
-| `halohaven:lumen` | Lumen | Floating luminous helper based on Allay behavior; accepts Skyberries and returns Stardust, once every 3 minutes per creature |
-| `halohaven:dawn_guardian` | Dawn Guardian | Golem village protector. Nearby players gain a short periodic regeneration aura |
-| `halohaven:dusk_wraith` | Dusk Wraith | Aggressive aerial ruin guardian based on Vex behavior. Drops Stardust |
+- **Pearl Court:** ivory architecture, warm gold, airy arcades.
+- **Blooming Canopy:** exuberant turquoise canopy trees, floral paths and gardens.
+- **Eclipse Verge:** rarer trees, violet moonstone paving and dark stained-glass accents.
 
-Each has **a custom UV-specific pixel-art texture**. Spawn eggs are in the creative inventory. Vanilla Overworld villagers are not retextured; only Skyfolk have the new look.
+First discovery of each district grants 4 Heavenly Favor. Districts follow a deterministic pattern from coordinates, not random volatile mobs.
 
-## Heavenly Favor and rewards
+A new settlement is assembled on first approach only and marked to prevent regeneration. Existing settlements from 1.0/1.1 stay intact: new basilicas, roofs and plants appear in **newly generated villages**. Old 1.0 vanilla inhabitants are migrated nearby to Skyfolk without deleting player builds.
 
-The Pilgrim Altar appears in the sacred garden. Offer one **Skyberry** to receive one Favor. Give a Cloud Hare a dandelion for another point, or visit Lumens to exchange Skyberries for Stardust.
+### Architecture and pixel art
 
-At 12 Favor, right-click the altar with an empty hand to redeem **two Sunshards**. The balance persists on the player.
+- Full-colour 64×64 *designed* textures for cloudstone, sky meadows, pearl bricks, scalloped sungold roofs, azurewood, violet moonstone, marbled mosaic, fluted brass pillars, lanterns, crystals, ore and ritual sites.
+- Both Aurora and Dawn Glass use true semitransparent PNGs with stained-glass traceries, the translucent rendering layer, and nonoccluding `TransparentBlock` behavior.
+- 3D JSON models for lanterns, Starshade crystals, Aether Waystones and Pilgrim Altars, instead of fully opaque full cubes.
+- Real `StairBlock` / `SlabBlock` construction sets for sungold and pearl materials. Interconnecting azurewood fences for balconies.
+- New cutout rendered Sky Crown Leaves (woodland trees) and Celestial Bloom cross-plane flowers.
+- Fresher silhouettes: curved domed basilicas, stained-glass arches, multi-tier garden terraces, observatories, bridges to satellite wraith ruins, furnished houses and central plazas.
+- Every new block/item/entity has a model, a texture and en_US/ru_RU naming, including spawn egg models.
 
-You can also mine **Star Ore** on the island's lower stone layers, or fight Dusk Wraiths. Stardust is used to craft new equipment and travel supplies.
+### Creatures
 
-## Blocks and supplies
+- **Skyfolk:** custom painted face, pale robe, gold embroidery, animated three-dimensional nimbus; trade Skyberries, Stardust and Sunshards.
+- **Cloud Hare:** pastel hare with gentle wildlife behavior and flower interactions.
+- **Lumen:** luminous flying companion with pale opaline wings and turquoise halo; Skyberry offerings yield Stardust, with a personal cooldown.
+- **Dawn Guardian:** massive ivory golem with a gold breastplate, glowing turquoise motifs and restorative aura.
+- **Dusk Wraith:** violet nightmare from the satellite ruins, dark custom skin and subtle magical traces.
+- **Eclipse Revenant:** enlarged mid-boss with boss healthbar and nimbus. Its second phase summons two wraiths at 55% HP. Spawns in some ruins and drops a mandatory Eclipse Seal.
 
-### 15 fully registered blocks
-Cloudstone, Sky Meadow, Pearl Bricks, Sungold Tiles, Azurewood Planks, Aurora Glass, Starshade Lantern, Dawn Glass, Moonstone, Celestial Mosaic, Gilded Pillar, Cloud Lantern, Aether Waystone, Star Ore and Pilgrim Altar.
+For stability and compatibility, most mob geometry inherits familiar **vanilla skeletons**, but textures, visual attachments, spawning, placement and gameplay are mod-specific. This is not yet full bespoke rig/animation work.
 
-**Glass has proper transparency:** both Aurora and Dawn Glass use `TransparentBlock`, `noOcclusion()`, truly transparent PNG pixels and explicit `minecraft:translucent` block-model render types. No opaque solid colored cubes.
+### Gameplay loop
 
-All blocks have generated 32×32 PNG textures, blockstate JSON, block/item models, language names and loot tables. Mob textures are 64×64 (128×128 guardian). Spawn egg models and item icons are included in the JAR. Sources produce assets at build time and embed them directly in the mod JAR; players do not need an extra texture pack.
+1. Perform the bell ritual and explore the central floating village.
+2. Talk to Skyfolk, visit the basilica and observatory, discover new districts.
+3. Mine Star Ore, feed Lumens with Skyberries, and make offerings to the Pilgrim Altar.
+4. Earn Heavenly Favor (Skyberries, dandelions fed to Cloud Hares, wraith trial milestones, first discovery of each region). Exchange 12 Favor at the altar for 2 Sunshards.
+5. Traverse glazed bridges to hostile moonstone ruins. Defeat Dusk Wraiths (3 and 8 defeat milestones) and the Eclipse Revenant.
+6. Forge the **Sunward Oath Relic** from an Eclipse Seal, four Sunshards and four Stardust. Right-click to gain Slow Falling, Absorption, Regeneration and Fire Resistance on a **90 second cooldown**.
+7. Craft the **Feather of the Open Sky** from a feather and four Sunshards. Holding it in either hand mitigates falls over the void.
 
-### Items
-Ascension Sigil, Skyberries, Stardust, Sunshard, Skybound Compass and Aether Tonic. The tonic grants slow falling, jump boost and speed. Stardust comes from Star Ore, Dusk Wraiths and Lumen exchanges. Skyfolk have custom offers.
+Aether Tonic remains a consumable air-travel aid with Slow Falling, Speed and Jump Boost. Ruin chests, basilica archives, villager trades and active boss encounters supply useful materials.
 
-## Build and install
+## Tests performed
 
-- Minecraft: **1.21.1**
-- Loader: **NeoForge** (compile: 21.1.197; minimum declared: 21.1.80)
-- Java: **21**
-- Gradle: **9.2.1**
-- `gradle --no-daemon clean build`
-- Output: `build/libs/halohaven-1.21.1-1.1.0.jar`
-- Copy the JAR to your game's `mods` folder on both client and dedicated server.
+GitHub Actions compiles the mod and checks texture/model/blockstate recipes, real PNG files, the correct glass render type and biome/dimension JSON. A separate job starts a NeoForge 1.21.1 dedicated server and verifies readiness.
 
-## QA and limitations
+## In-game QA checklist
 
-Automated CI validates the Gradle build, resulting JAR and resource files. Gameplay must still be checked in a real client (especially pack/model rendering and positioning). Existing 1.0 Skyfolk villages retain terrain and house structures to avoid destroying builds; old vanilla villagers in Halo Haven migrate to Skyfolk upon nearby player activity. New ruins, bridges and shrines appear in newly generated settlements.
+- On a **new world**, enter the Heaven dimension using the Sigil and check the central region renders at X=0/Z=0 around Y=111.
+- Verify both glass types are transparent from inside/outside with other blocks visible through them.
+- Inspect the rounded basilica, arches, pitched roofs, fences, illuminated trees and sky bridge from nearby and at render distance.
+- Check no pink/black missing-texture faces on Skyfolk, Eclipse Revenant, Lumen and the other mobs.
+- Kill a few Dusk Wraiths, then test Eclipse Revenant's bossbar, two-phase summon and guaranteed Seal drop.
+- Craft/use the Sunward Oath Relic, test cooldown and the Aether Feather.
+- Teleport using a Waystone along X to visit 3 district styles, monitor reward messages and Skybound Compass.
+- Try a dedicated multiplayer server. Teleport, trading, Favor, loot and structure generation must all be server-side.
 
-Known limitations: mob models reuse familiar vanilla rigs (Allay, Rabbit, Iron Golem, Villager, Vex), with fully custom skins and contextual gameplay. The dimension has one biome and is not yet a multi-biome worldgen system. Village generation is performed synchronously on first approach and can cause a brief pause. Waystones currently link along X only. No unique music, boss encounter or custom animation rig in this version.
+## Known limitations
+
+- Dedicated server start is verified, but this pipeline cannot establish gameplay visuals against a real interactive client. Final aesthetics need an in-game visual check and screenshot review.
+- Original entity skeletons are still used, with hand-painted UV textures and custom 3D halos. Future improvement would include bespoke rigging and animation.
+- Region variation is currently **code-driven district palettes**, not three independently registered noise biomes. Ambient sky is a single biome.
+- First-time generation of a complex village can still cause synchronous chunk updates and a short pause.
+- Altars and waystones have multi-element visual models but retain full-block collision.
+- Waystones link in the X direction; there is no multidirectional travel UI yet.

@@ -56,6 +56,12 @@ jobs:
               required.add('assets/halohaven/textures/entity/halo_ring.png')
               required.add('data/halohaven/loot_table/entities/eclipse_revenant.json')
               required.add('data/halohaven/recipe/sunward_relic.json')
+              for n in ('sungold_stairs','sungold_slab','pearl_stairs','pearl_slab','azure_fence'):
+                  required.add(f'data/halohaven/loot_table/blocks/{n}.json')
+              for n in ('sky_leaves','celestial_bloom'):
+                  required.add(f'data/halohaven/loot_table/blocks/{n}.json')
+              required.add('assets/halohaven/models/block/waystone.json')
+              required.add('assets/halohaven/models/block/pilgrim_altar.json')
               for suffix in ['data/halohaven/dimension/heaven.json',
                               'data/halohaven/dimension_type/heaven.json',
                               'data/halohaven/worldgen/biome/cloud_gardens.json',
