@@ -10,7 +10,7 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.GlassBlock;
+import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.core.BlockPos;
@@ -41,12 +41,12 @@ public final class HaloHaven {
         BlockBehaviour.Properties.of().strength(2f, 6f).sound(SoundType.METAL));
     public static final DeferredBlock<Block> AZURE_PLANKS = BLOCKS.registerSimpleBlock("azure_planks",
         BlockBehaviour.Properties.of().strength(2f, 5f).sound(SoundType.WOOD));
-    public static final DeferredBlock<GlassBlock> AURORA_GLASS = BLOCKS.register("aurora_glass",
-        () -> new GlassBlock(BlockBehaviour.Properties.of().strength(0.3f).noOcclusion()
+    public static final DeferredBlock<TransparentBlock> AURORA_GLASS = BLOCKS.register("aurora_glass",
+        () -> new TransparentBlock(BlockBehaviour.Properties.of().strength(0.3f).noOcclusion()
             .isViewBlocking((s,w,p) -> false).isSuffocating((s,w,p) -> false)
             .lightLevel(s -> 5).sound(SoundType.GLASS)));
-    public static final DeferredBlock<GlassBlock> DAWN_GLASS = BLOCKS.register("dawn_glass",
-        () -> new GlassBlock(BlockBehaviour.Properties.of().strength(0.3f).noOcclusion()
+    public static final DeferredBlock<TransparentBlock> DAWN_GLASS = BLOCKS.register("dawn_glass",
+        () -> new TransparentBlock(BlockBehaviour.Properties.of().strength(0.3f).noOcclusion()
             .isViewBlocking((s,w,p) -> false).isSuffocating((s,w,p) -> false)
             .lightLevel(s -> 6).sound(SoundType.GLASS)));
     public static final DeferredBlock<Block> MOONSTONE = BLOCKS.registerSimpleBlock("moonstone",
