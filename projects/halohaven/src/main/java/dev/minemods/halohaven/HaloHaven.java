@@ -4,7 +4,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.Items;
@@ -23,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -133,6 +131,8 @@ public final class HaloHaven {
         () -> new SpawnEggItem(HaloEntities.DUSK_WRAITH.get(),0x363c61,0x78eaf0,new Item.Properties()));
     public static final DeferredItem<SpawnEggItem> ECLIPSE_EGG=ITEMS.register("eclipse_revenant_spawn_egg",
         () -> new SpawnEggItem(HaloEntities.ECLIPSE_REVENANT.get(),0x2e2348,0xe9b68c,new Item.Properties()));
+    public static final DeferredItem<Item> SKYSEED = ITEMS.register("skyseed",
+        () -> new SkyseedItem(new Item.Properties().stacksTo(16)));
     public static final DeferredItem<Item> ASCENSION_SIGIL = ITEMS.register("ascension_sigil",
         () -> new AscensionSigilItem(new Item.Properties().stacksTo(1)));
     public static final DeferredItem<Item> SKYBERRY = ITEMS.registerSimpleItem("skyberry", new Item.Properties()
@@ -143,57 +143,15 @@ public final class HaloHaven {
         ITEMS.register(bus);
         HaloEntities.ENTITIES.register(bus);
         bus.addListener(HaloEntities::registerAttributes);
-        bus.addListener(this::onCreativeTab);
+        HavenCreativeTab.register(bus);
         NeoForge.EVENT_BUS.addListener(HavenVillages::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(HavenEvents::onRightClick);
         NeoForge.EVENT_BUS.addListener(HavenEvents::onEntityInteract);
         NeoForge.EVENT_BUS.addListener(HavenEvents::onLivingDeath);
+        NeoForge.EVENT_BUS.addListener(PortalRituals::onBlockPlaced);
+        NeoForge.EVENT_BUS.addListener(PortalRituals::onLevelTick);
+        NeoForge.EVENT_BUS.addListener(SkyOasis::onLevelTick);
     }
 
-    private void onCreativeTab(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
-            event.accept(CLOUDSTONE_ITEM);
-            event.accept(SKYGRASS_ITEM);
-            event.accept(PEARL_BRICKS_ITEM);
-            event.accept(SUNGOLD_TILES_ITEM);
-            event.accept(AZURE_PLANKS_ITEM);
-            event.accept(AURORA_GLASS_ITEM);
-            event.accept(STARSHADE_ITEM);
-            event.accept(DAWN_GLASS_ITEM);
-            event.accept(MOONSTONE_ITEM);
-            event.accept(CELESTIAL_MOSAIC_ITEM);
-            event.accept(GILDED_PILLAR_ITEM);
-            event.accept(CLOUD_LANTERN_ITEM);
-            event.accept(WAYSTONE_ITEM);
-            event.accept(PILGRIM_ALTAR_ITEM);
-            event.accept(STAR_ORE_ITEM);
-            event.accept(SUNGOLD_STAIRS_ITEM);
-            event.accept(SUNGOLD_SLAB_ITEM);
-            event.accept(PEARL_STAIRS_ITEM);
-            event.accept(PEARL_SLAB_ITEM);
-            event.accept(AZURE_FENCE_ITEM);
-            event.accept(SKY_LEAVES_ITEM);
-            event.accept(CELESTIAL_BLOOM_ITEM);
-        }
-        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            event.accept(ASCENSION_SIGIL);
-            event.accept(SKY_COMPASS);
-            event.accept(AETHER_TONIC);
-            event.accept(STARDUST);
-            event.accept(SUNSHARD);
-            event.accept(AETHER_FEATHER);
-            event.accept(ECLIPSE_SEAL);
-            event.accept(SUNWARD_RELIC);
-            event.accept(SKYFOLK_EGG);
-            event.accept(CLOUDHARE_EGG);
-            event.accept(LUMEN_EGG);
-            event.accept(GUARDIAN_EGG);
-            event.accept(WRAITH_EGG);
-            event.accept(ECLIPSE_EGG);
-        }
-        if (event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
-            event.accept(SKYBERRY);
-        }
-    }
     public static ResourceLocation id(String path) { return ResourceLocation.fromNamespaceAndPath(ID, path); }
 }
