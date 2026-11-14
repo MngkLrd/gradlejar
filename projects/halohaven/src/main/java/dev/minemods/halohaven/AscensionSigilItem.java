@@ -35,26 +35,11 @@ public final class AscensionSigilItem extends Item {
             sp.displayClientMessage(Component.translatable("message.halohaven.altar"), true);
             return InteractionResult.SUCCESS;
         }
-        ServerLevel destination = sp.getServer().getLevel(HaloHaven.HEAVEN);
-        if (destination == null) {
-            sp.displayClientMessage(Component.literal("Halo Haven dimension is missing. Check the datapack."), false);
-            return InteractionResult.FAIL;
-        }
-        sp.getPersistentData().putDouble("halohaven_return_x", sp.getX());
-        sp.getPersistentData().putDouble("halohaven_return_y", sp.getY());
-        sp.getPersistentData().putDouble("halohaven_return_z", sp.getZ());
-        ((ServerLevel) context.getLevel()).sendParticles(ParticleTypes.END_ROD,
-            bell.getX()+0.5, bell.getY()+0.8, bell.getZ()+0.5, 110, 1.2, 2, 1.2, 0.06);
-        sp.level().playSound(null, bell, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.2f, 1.4f);
-        HavenVillages.ensure(destination, 0, 0);
-        sp.teleportTo(destination, 0.5, HavenVillages.WALK_Y + 1.0, 5.5, sp.getYRot(), sp.getXRot());
-        sp.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 400, 0, false, true));
-        sp.getCooldowns().addCooldown(this, 50);
-        sp.displayClientMessage(Component.translatable("message.halohaven.welcome"), false);
+        PortalRituals.activate(sp, bell);
         return InteractionResult.SUCCESS;
     }
 
-    private static boolean ritualReady(ServerLevel world, BlockPos bell) {
+    public static boolean ritualReady(ServerLevel world, BlockPos bell) {
         if (bell.getY() < 170 || !world.canSeeSky(bell.above())) return false;
         if (!world.getBlockState(bell.below()).is(Blocks.QUARTZ_BLOCK)) return false;
         for (int dx : new int[]{-1,1}) for (int dz : new int[]{-1,1}) {
