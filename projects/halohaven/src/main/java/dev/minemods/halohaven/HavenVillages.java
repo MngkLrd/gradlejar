@@ -32,6 +32,12 @@ public final class HavenVillages {
     private static final int SPACING = 512;
     private static final int TOP_Y = 110;
 
+    // Consecutive Aether Waystone stops cycle three visual districts.
+    // Region 0 = Pearlescent Court, 1 = Blooming Canopy, 2 = Eclipse Verge.
+    public static int region(int cx,int cz){
+        return Math.floorMod((cx/SPACING)*7+(cz/SPACING)*11,3);
+    }
+
     public static void onPlayerTick(PlayerTickEvent.Post e) {
         if (!(e.getEntity() instanceof ServerPlayer p)) return;
         // The Aether Feather is functional equipment, not a decorative icon.
@@ -85,6 +91,15 @@ public final class HavenVillages {
         int cz = Math.round(p.getBlockZ() / (float) SPACING) * SPACING;
         if (Math.abs(p.getBlockX() - cx) < 108 && Math.abs(p.getBlockZ() - cz) < 108) {
             ensure((ServerLevel) p.level(), cx, cz);
+            int style=region(cx,cz);
+            int visited=p.getPersistentData().getInt("halohaven_region_discoveries");
+            if((visited & (1<<style))==0){
+                p.getPersistentData().putInt("halohaven_region_discoveries",visited | (1<<style));
+                int favor=p.getPersistentData().getInt("halohaven_favor");
+                p.getPersistentData().putInt("halohaven_favor",favor+4);
+                p.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                    "message.halohaven.region_"+style),false);
+            }
         }
     }
 
@@ -93,6 +108,7 @@ public final class HavenVillages {
         BlockPos marker = new BlockPos(cx, 93, cz);
         if (level.getBlockState(marker).is(Blocks.BEDROCK)) return;
         Random random = new Random(level.getSeed() ^ (cx * 71057317L) ^ (cz * 117135737L));
+        int district=region(cx,cz);
 
         // Each settlement rests on a deliberately sculpted island high above the lower islands.
         for (int dx = -47; dx <= 47; dx++) for (int dz = -47; dz <= 47; dz++) {
@@ -104,11 +120,16 @@ public final class HavenVillages {
             for (int y = TOP_Y - deep; y < TOP_Y; y++) {
                 place(level, x, y, z, HaloHaven.CLOUDSTONE.get());
             }
-            place(level, x, TOP_Y, z, HaloHaven.SKYGRASS.get());
-            if (d > 25 && random.nextInt(85) == 0) {
-                place(level, x, TOP_Y+1, z, random.nextBoolean() ? Blocks.AZURE_BLUET : Blocks.PINK_TULIP);
+            place(level,x,TOP_Y,z,(district==2 && random.nextInt(8)==0)?
+                HaloHaven.MOONSTONE.get():HaloHaven.SKYGRASS.get());
+            int bloomFrequency=district==1?28:district==2?120:78;
+            if(d>24 && random.nextInt(bloomFrequency)==0){
+                place(level,x,TOP_Y+1,z,district==1?HaloHaven.CELESTIAL_BLOOM.get():
+                    district==2?Blocks.LILY_OF_THE_VALLEY:
+                    (random.nextBoolean()?Blocks.AZURE_BLUET:Blocks.PINK_TULIP));
             }
-            if (d > 24 && random.nextInt(320) == 0) tree(level, x, z);
+            int treeFrequency=district==1?135:district==2?640:320;
+            if(d>26 && random.nextInt(treeFrequency)==0)tree(level,x,z);
         }
         // Star ore appears below the grass within the island shell.
         for (int n=0;n<230;n++) {
@@ -126,7 +147,7 @@ public final class HavenVillages {
         }
         for (int sx : new int[]{-1,1}) for (int sz : new int[]{-1,1}) {
             // All four homes share the same village vocabulary, rotated by their placement.
-            house(level, cx+sx*20, cz+sz*20, random, sx, sz);
+            house(level, cx+sx*20, cz+sz*20, random, sx, sz, district);
             for (int v=5;v<20;v++) {
                 path(level,cx+sx*v,cz+sz*20,v%5==0);
                 path(level,cx+sx*20,cz+sz*v,v%5==0);
@@ -170,9 +191,9 @@ public final class HavenVillages {
         place(l,x,TOP_Y,z,accent ? HaloHaven.SUNGOLD_TILES.get() : HaloHaven.PEARL_BRICKS.get());
         place(l,x,TOP_Y+1,z,Blocks.AIR);
     }
-    private static void house(ServerLevel l,int cx,int cz,Random rand,int sx,int sz) {
+    private static void house(ServerLevel l,int cx,int cz,Random rand,int sx,int sz,int district) {
         int w=5+rand.nextInt(2),d=4+rand.nextInt(2);
-        boolean moonHouse=rand.nextInt(5)==0;
+        boolean moonHouse=district==2 || (district==0 && rand.nextInt(6)==0);
         for(int x=-w;x<=w;x++)for(int z=-d;z<=d;z++){
             place(l,cx+x,TOP_Y,cz+z,HaloHaven.AZURE_PLANKS.get());
             for(int y=TOP_Y+1;y<=TOP_Y+6;y++){
@@ -396,8 +417,7 @@ public final class HavenVillages {
         }
         for(int n=0;n<2;n++)
             spawn(l,HaloEntities.DUSK_WRAITH.get(),cx+5*n-3,TOP_Y+4,cz-4);
-        // Fallen astral court: roughly half the ruined islets are guarded
-        // by a real two-phase mini-boss (never on the central safe village).
+        // Boss density increases on the violet Eclipse Verge islands.
         if(rand.nextInt(2)==0){
             spawn(l,HaloEntities.ECLIPSE_REVENANT.get(),cx,TOP_Y+5,cz-1);
         }
