@@ -59,6 +59,8 @@ public final class HaloHaven {
         BlockBehaviour.Properties.of().strength(1.1f).lightLevel(s -> 15).sound(SoundType.GLASS));
     public static final DeferredBlock<Block> WAYSTONE = BLOCKS.registerSimpleBlock("waystone",
         BlockBehaviour.Properties.of().strength(4f, 1200f).lightLevel(s -> 12).sound(SoundType.AMETHYST));
+    public static final DeferredBlock<Block> PILGRIM_ALTAR = BLOCKS.registerSimpleBlock("pilgrim_altar",
+        BlockBehaviour.Properties.of().strength(3f, 8f).lightLevel(s -> 12).sound(SoundType.AMETHYST));
     public static final DeferredBlock<Block> STAR_ORE = BLOCKS.registerSimpleBlock("star_ore",
         BlockBehaviour.Properties.of().strength(3f, 6f).lightLevel(s -> 4).sound(SoundType.STONE));
     public static final DeferredBlock<Block> STARSHADE = BLOCKS.registerSimpleBlock("starshade",
@@ -77,6 +79,7 @@ public final class HaloHaven {
     public static final DeferredItem<BlockItem> GILDED_PILLAR_ITEM = ITEMS.registerSimpleBlockItem("gilded_pillar", GILDED_PILLAR);
     public static final DeferredItem<BlockItem> CLOUD_LANTERN_ITEM = ITEMS.registerSimpleBlockItem("cloud_lantern", CLOUD_LANTERN);
     public static final DeferredItem<BlockItem> WAYSTONE_ITEM = ITEMS.registerSimpleBlockItem("waystone", WAYSTONE);
+    public static final DeferredItem<BlockItem> PILGRIM_ALTAR_ITEM = ITEMS.registerSimpleBlockItem("pilgrim_altar", PILGRIM_ALTAR);
     public static final DeferredItem<BlockItem> STAR_ORE_ITEM = ITEMS.registerSimpleBlockItem("star_ore", STAR_ORE);
     public static final DeferredItem<Item> STARDUST = ITEMS.registerSimpleItem("stardust", new Item.Properties());
     public static final DeferredItem<Item> SUNSHARD = ITEMS.registerSimpleItem("sunshard", new Item.Properties());
@@ -107,6 +110,7 @@ public final class HaloHaven {
         bus.addListener(this::onCreativeTab);
         NeoForge.EVENT_BUS.addListener(HavenVillages::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(HavenEvents::onRightClick);
+        NeoForge.EVENT_BUS.addListener(HavenEvents::onEntityInteract);
     }
 
     private void onCreativeTab(BuildCreativeModeTabContentsEvent event) {
@@ -124,6 +128,7 @@ public final class HaloHaven {
             event.accept(GILDED_PILLAR_ITEM);
             event.accept(CLOUD_LANTERN_ITEM);
             event.accept(WAYSTONE_ITEM);
+            event.accept(PILGRIM_ALTAR_ITEM);
             event.accept(STAR_ORE_ITEM);
         }
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {

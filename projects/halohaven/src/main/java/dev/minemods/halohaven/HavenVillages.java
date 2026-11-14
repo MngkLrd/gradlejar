@@ -9,6 +9,9 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -27,7 +30,28 @@ public final class HavenVillages {
 
     public static void onPlayerTick(PlayerTickEvent.Post e) {
         if (!(e.getEntity() instanceof ServerPlayer p)) return;
-        if (!p.level().dimension().equals(HaloHaven.HEAVEN) || p.tickCount % 100 != 0) return;
+        if (!p.level().dimension().equals(HaloHaven.HEAVEN)) return;
+        // The Dawn Guardian's restorative aura makes a village a useful refuge.
+        if(p.tickCount % 140 == 0) {
+            boolean protectedHere=!p.level().getEntitiesOfClass(IronGolem.class,
+                p.getBoundingBox().inflate(9), g -> g.getType()==HaloEntities.DAWN_GUARDIAN.get()).isEmpty();
+            if(protectedHere) p.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 180, 0, true, false));
+        }
+        if(p.tickCount % 100 != 0) return;
+        // Existing Halo Haven 1.0 settlements migrate vanilla villagers to skyfolk
+        // without erasing player builds or regenerating the village.
+        if(p.tickCount % 200 == 0) {
+            for(Villager old : p.level().getEntitiesOfClass(Villager.class,
+                    p.getBoundingBox().inflate(40), v -> v.getType()==EntityType.VILLAGER)){
+                Skyfolk sky=HaloEntities.SKYFOLK.get().create((ServerLevel)p.level());
+                if(sky==null)continue;
+                sky.moveTo(old.getX(),old.getY(),old.getZ(),old.getYRot(),old.getXRot());
+                sky.populateSkyTrades();
+                sky.setPersistenceRequired();
+                p.level().addFreshEntity(sky);
+                old.discard();
+            }
+        }
         int cx = Math.round(p.getBlockX() / (float) SPACING) * SPACING;
         int cz = Math.round(p.getBlockZ() / (float) SPACING) * SPACING;
         if (Math.abs(p.getBlockX() - cx) < 108 && Math.abs(p.getBlockZ() - cz) < 108) {
@@ -273,9 +297,9 @@ public final class HavenVillages {
             if(d>4.5&&d<5.6 && (dx+dz)%3==0)
                 place(l,cx+dx,TOP_Y+1,cz+dz,Blocks.LILY_OF_THE_VALLEY);
         }
-        for(int y=TOP_Y+1;y<=TOP_Y+4;y++)
-            place(l,cx,y,cz,HaloHaven.MOONSTONE.get());
-        place(l,cx,TOP_Y+5,cz,HaloHaven.STARSHADE.get());
+        place(l,cx,TOP_Y,cz,HaloHaven.CELESTIAL_MOSAIC.get());
+        place(l,cx,TOP_Y+1,cz,HaloHaven.PILGRIM_ALTAR.get());
+        place(l,cx,TOP_Y+5,cz,HaloHaven.CLOUD_LANTERN.get());
         for(int dx : new int[]{-6,6})for(int dz:new int[]{-6,6}){
             for(int y=TOP_Y+1;y<=TOP_Y+3;y++)
                 place(l,cx+dx,y,cz+dz,HaloHaven.PEARL_BRICKS.get());

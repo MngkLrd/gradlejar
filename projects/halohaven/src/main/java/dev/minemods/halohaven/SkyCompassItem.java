@@ -25,7 +25,8 @@ public final class SkyCompassItem extends Item {
         int z=Math.round(p.getZ()/512f)*512;
         double bearing=Math.toDegrees(Math.atan2(z+0.5-p.getZ(),x+0.5-p.getX()));
         sp.displayClientMessage(Component.literal("Sky Haven  X: "+x+"  Z: "+z+
-            "  | "+(int)Math.hypot(x-p.getX(),z-p.getZ())+"m   | "+(int)bearing+"°"),true);
+            "  | "+(int)Math.hypot(x-p.getX(),z-p.getZ())+"m   | "+(int)bearing+"°"+
+            "   | Favor: "+sp.getPersistentData().getInt("halohaven_favor")),true);
         sp.getCooldowns().addCooldown(this, 15);
         return InteractionResultHolder.success(held);
     }
