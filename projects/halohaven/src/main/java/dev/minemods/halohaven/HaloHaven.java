@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -83,6 +84,16 @@ public final class HaloHaven {
         () -> new SkyCompassItem(new Item.Properties().stacksTo(1)));
     public static final DeferredItem<Item> AETHER_TONIC = ITEMS.register("aether_tonic",
         () -> new AetherTonicItem(new Item.Properties().stacksTo(16)));
+    public static final DeferredItem<SpawnEggItem> SKYFOLK_EGG=ITEMS.register("skyfolk_spawn_egg",
+        () -> new SpawnEggItem(HaloEntities.SKYFOLK.get(),0x719ba8,0xe7cd92,new Item.Properties()));
+    public static final DeferredItem<SpawnEggItem> CLOUDHARE_EGG=ITEMS.register("cloudhare_spawn_egg",
+        () -> new SpawnEggItem(HaloEntities.CLOUDHARE.get(),0xeadfe7,0xcab6dd,new Item.Properties()));
+    public static final DeferredItem<SpawnEggItem> LUMEN_EGG=ITEMS.register("lumen_spawn_egg",
+        () -> new SpawnEggItem(HaloEntities.LUMEN.get(),0xb9ece0,0xfde9b1,new Item.Properties()));
+    public static final DeferredItem<SpawnEggItem> GUARDIAN_EGG=ITEMS.register("dawn_guardian_spawn_egg",
+        () -> new SpawnEggItem(HaloEntities.DAWN_GUARDIAN.get(),0xe3d9c6,0xc3974e,new Item.Properties()));
+    public static final DeferredItem<SpawnEggItem> WRAITH_EGG=ITEMS.register("dusk_wraith_spawn_egg",
+        () -> new SpawnEggItem(HaloEntities.DUSK_WRAITH.get(),0x363c61,0x78eaf0,new Item.Properties()));
     public static final DeferredItem<Item> ASCENSION_SIGIL = ITEMS.register("ascension_sigil",
         () -> new AscensionSigilItem(new Item.Properties().stacksTo(1)));
     public static final DeferredItem<Item> SKYBERRY = ITEMS.registerSimpleItem("skyberry", new Item.Properties()
@@ -121,6 +132,11 @@ public final class HaloHaven {
             event.accept(AETHER_TONIC);
             event.accept(STARDUST);
             event.accept(SUNSHARD);
+            event.accept(SKYFOLK_EGG);
+            event.accept(CLOUDHARE_EGG);
+            event.accept(LUMEN_EGG);
+            event.accept(GUARDIAN_EGG);
+            event.accept(WRAITH_EGG);
         }
         if (event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
             event.accept(SKYBERRY);
