@@ -30,7 +30,7 @@ tasks.named('generateHaloAssets').configure {
         for(int y=8;y<=26;y++){
             int x1=6+(int)(3*Math.sin((y-5)*Math.PI/27.0))
             int x2=25-(int)(3*Math.sin((y-5)*Math.PI/27.0))
-            int w=Math.max(1,4-(Math.abs(y-17)/5))
+            int w=Math.max(1,4-Math.floorDiv(Math.abs(y-17),5))
             for(int k=0;k<w;k++){
                 plot(x1-k,y,(int)0xff669fb0)
                 plot(x1-k+1,y,(int)0xffe7f7ec)
