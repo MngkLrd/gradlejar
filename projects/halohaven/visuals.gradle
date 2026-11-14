@@ -435,6 +435,68 @@ tasks.named('generateHaloAssets').configure {
         fg.dispose();png(mid+'textures/item/aether_feather.png',feather)
         json(mid+'models/item/aether_feather.json',[
             parent:'minecraft:item/generated',textures:[layer0:'halohaven:item/aether_feather']])
+        // Leaf crowns and meadow flowers: purpose-drawn cutout pixels, not tinted cubes.
+        BufferedImage canopy=new BufferedImage(64,64,BufferedImage.TYPE_INT_ARGB)
+        Graphics2D cg=canopy.createGraphics()
+        for(int y=0;y<64;y+=8)for(int x=0;x<64;x+=8){
+            int seed=(x*17+y*37+x*y*3)
+            int tint=Math.floorMod(seed,4)
+            int c=tint==0?0xff81b7ab:tint==1?0xffa6c8bd:tint==2?0xffc6ddd0:0xff6c9e9c
+            if((x+y)%5==0)continue
+            fill(cg,c,x+1,y+1,6,5)
+            fill(cg,0xffd7e9d7,x+2,y,3,2)
+            fill(cg,0xff598d93,x+4,y+5,3,1)
+            if((x+y)%4==0){
+                fill(cg,0xfff2d8ae,x+2,y+2,2,2)
+                fill(cg,0xffffeac7,x+3,y+2,1,1)
+            }
+        }
+        cg.dispose()
+        png('assets/halohaven/textures/block/sky_leaves.png',canopy)
+        json('assets/halohaven/blockstates/sky_leaves.json',[
+            variants:['':[model:'halohaven:block/sky_leaves']]])
+        json('assets/halohaven/models/block/sky_leaves.json',[
+            parent:'minecraft:block/cube_all',render_type:'minecraft:cutout_mipped',
+            textures:[all:'halohaven:block/sky_leaves']])
+        json('assets/halohaven/models/item/sky_leaves.json',[
+            parent:'halohaven:block/sky_leaves'])
+        // Blossoms use a cross plane, so the silhouette really is a plant.
+        BufferedImage flower=new BufferedImage(64,64,BufferedImage.TYPE_INT_ARGB)
+        Graphics2D fl=flower.createGraphics()
+        fill(fl,0xff567c6c,31,31,3,32)
+        fill(fl,0xffb6deb7,28,40,4,13);fill(fl,0xff86beab,34,44,6,10)
+        for(int petal=0;petal<7;petal++){
+            double theta=2*Math.PI*petal/7
+            int x=(int)(32+Math.cos(theta)*14),y=(int)(22+Math.sin(theta)*12)
+            fill(fl,0xffd7bad3,x-5,y-3,10,8)
+            fill(fl,0xfff1cfe0,x-4,y-3,7,5)
+            fill(fl,0xffffedf2,x-1,y-2,3,2)
+        }
+        fill(fl,0xffe4bc75,27,18,10,9)
+        fill(fl,0xffffedb2,30,19,5,6)
+        fl.dispose()
+        png('assets/halohaven/textures/block/celestial_bloom.png',flower)
+        json('assets/halohaven/blockstates/celestial_bloom.json',[
+            variants:['':[model:'halohaven:block/celestial_bloom']]])
+        json('assets/halohaven/models/block/celestial_bloom.json',[
+            parent:'minecraft:block/cross',render_type:'minecraft:cutout',
+            textures:[cross:'halohaven:block/celestial_bloom']])
+        json('assets/halohaven/models/item/celestial_bloom.json',[
+            parent:'minecraft:item/generated',render_type:'minecraft:cutout',
+            textures:[layer0:'halohaven:block/celestial_bloom']])
+        ['sky_leaves','celestial_bloom'].each{String n->
+            json('data/halohaven/loot_table/blocks/'+n+'.json',[
+                type:'minecraft:block',pools:[[rolls:1,entries:[[type:'minecraft:item',name:'halohaven:'+n]]]]])
+        }
+        ['en_us','ru_ru'].each{String lang->
+            File f=new File(out,'assets/halohaven/lang/'+lang+'.json')
+            Map data=new groovy.json.JsonSlurper().parse(f)
+            data['block.halohaven.sky_leaves']=lang=='ru_ru'?'Небесная лиственная крона':'Sky Crown Leaves'
+            data['block.halohaven.celestial_bloom']=lang=='ru_ru'?'Цветок эфира':'Celestial Bloom'
+            json('assets/halohaven/lang/'+lang+'.json',data)
+        }
+        def hoeTag='data/minecraft/tags/block/mineable/hoe.json'
+        json(hoeTag,[replace:false,values:['halohaven:sky_leaves']])
         // Keep the mining tool tags aligned with the new construction sets.
         def pickaxe='data/minecraft/tags/block/mineable/pickaxe.json'
         Map mine=new groovy.json.JsonSlurper().parse(new File(out,pickaxe))
