@@ -356,13 +356,18 @@ tasks.register('generateHaloAssets') {
         ['en_us','ru_ru'].each { lang ->
             File f=new File(base,'assets/halohaven/lang/'+lang+'.json')
             Map data=new groovy.json.JsonSlurper().parse(f)
-            Map entries=lang=='ru_ru'?[
-                skyfolk:'Небесный житель',cloudhare:'Облачный заяц',lumen:'Люмен',
-                dawn_guardian:'Рассветный страж',dusk_wraith:'Сумеречный призрак'
-            ]:[
-                skyfolk:'Skyfolk',cloudhare:'Cloud Hare',lumen:'Lumen',
-                dawn_guardian:'Dawn Guardian',dusk_wraith:'Dusk Wraith'
-            ]
+            Map entries
+            if(lang=='ru_ru') {
+                entries=[
+                    skyfolk:'Небесный житель',cloudhare:'Облачный заяц',lumen:'Люмен',
+                    dawn_guardian:'Рассветный страж',dusk_wraith:'Сумеречный призрак'
+                ]
+            } else {
+                entries=[
+                    skyfolk:'Skyfolk',cloudhare:'Cloud Hare',lumen:'Lumen',
+                    dawn_guardian:'Dawn Guardian',dusk_wraith:'Dusk Wraith'
+                ]
+            }
             entries.each { String n,String v ->
                 data['entity.halohaven.'+n]=v
                 data['item.halohaven.'+n+'_spawn_egg']=(lang=='ru_ru'?'Яйцо призыва: ':'Spawn ')+v
