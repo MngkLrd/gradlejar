@@ -24,6 +24,7 @@ tasks.withType(JavaCompile).configureEach {
 apply from: 'assets.gradle'
 apply from: 'visuals.gradle'
 apply from: 'creatures.gradle'
+apply from: 'uvtextures.gradle'
 jar {
     manifest.attributes([
         'Specification-Title': 'Halo Haven',
