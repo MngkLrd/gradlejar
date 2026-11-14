@@ -1,6 +1,10 @@
 package dev.minemods.halohaven;
 
 import net.minecraft.server.level.ServerPlayer;
+import java.util.List;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -22,5 +26,11 @@ public final class SkyseedItem extends Item {
             sp.getCooldowns().addCooldown(this,90);
         }
         return InteractionResultHolder.success(held);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+        tooltip.add(Component.translatable("tooltip.halohaven.skyseed").withStyle(ChatFormatting.AQUA));
+        tooltip.add(Component.translatable("tooltip.halohaven.skyseed_bell").withStyle(ChatFormatting.GRAY));
     }
 }

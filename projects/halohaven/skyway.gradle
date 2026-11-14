@@ -64,6 +64,9 @@ tasks.named('generateHaloAssets').configure {
             if(lang=='ru_ru'){
                 loc['itemGroup.halohaven.heaven']='Halo Haven | Небесная обитель'
                 loc['item.halohaven.skyseed']='Семя небосвода'
+                loc['tooltip.halohaven.skyseed']='Взмывает в небо и выращивает парящий остров с алтарём.'
+                loc['tooltip.halohaven.skyseed_bell']='На кварц нужно поставить колокол. ПКМ с Печатью вознесения.'
+                loc['tooltip.halohaven.sigil']='ПКМ по колоколу над облаками: открыть путь в Небесную обитель.'
                 loc['message.halohaven.skyseed_overworld']='Семя небосвода нужно использовать в обычном мире.'
                 loc['message.halohaven.skyseed_busy']='Оазис уже формируется.'
                 loc['message.halohaven.skyseed_open_sky']='Выйди под открытое небо.'
@@ -77,6 +80,9 @@ tasks.named('generateHaloAssets').configure {
             }else{
                 loc['itemGroup.halohaven.heaven']='Halo Haven | Celestial Court'
                 loc['item.halohaven.skyseed']='Skyseed'
+                loc['tooltip.halohaven.skyseed']='Launch upward while a sky island forms with a ritual dais.'
+                loc['tooltip.halohaven.skyseed_bell']='Place a bell on the quartz; activate it with an Ascension Sigil.'
+                loc['tooltip.halohaven.sigil']='Right-click the sky bell to open your way into Halo Haven.'
                 loc['message.halohaven.skyseed_overworld']='Use the Skyseed in the Overworld.'
                 loc['message.halohaven.skyseed_busy']='Your floating oasis is already forming.'
                 loc['message.halohaven.skyseed_open_sky']='Go outside under an open sky.'

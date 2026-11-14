@@ -49,7 +49,7 @@ public final class SkyOasis {
 
     public static boolean begin(ServerPlayer player){
         ServerLevel level=player.serverLevel();
-        if(level.dimension().equals(HaloHaven.HEAVEN)){
+        if(!level.dimension().equals(net.minecraft.world.level.Level.OVERWORLD)){
             player.displayClientMessage(Component.translatable("message.halohaven.skyseed_overworld"),true);
             return false;
         }
@@ -91,10 +91,10 @@ public final class SkyOasis {
     private static boolean clear(ServerLevel level,int cx,int cz,int floor){
         // Only reject actual solids around the build envelope.
         // In vanilla Overworld at Y=183 most of this is free space.
-        for(int dx=-ISLAND_RADIUS;dx<=ISLAND_RADIUS;dx+=2)
-        for(int dz=-ISLAND_RADIUS;dz<=ISLAND_RADIUS;dz+=2){
+        for(int dx=-ISLAND_RADIUS;dx<=ISLAND_RADIUS;dx++)
+        for(int dz=-ISLAND_RADIUS;dz<=ISLAND_RADIUS;dz++){
             if(dx*dx+dz*dz>(ISLAND_RADIUS+1)*(ISLAND_RADIUS+1))continue;
-            for(int dy=-7;dy<=17;dy+=3){
+            for(int dy=-8;dy<=17;dy++){
                 if(!level.isEmptyBlock(new BlockPos(cx+dx,floor+dy,cz+dz)))return false;
             }
         }

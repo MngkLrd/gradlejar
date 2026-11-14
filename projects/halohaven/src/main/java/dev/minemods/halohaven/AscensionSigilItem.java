@@ -1,5 +1,8 @@
 package dev.minemods.halohaven;
 
+import java.util.List;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -67,4 +70,9 @@ public final class AscensionSigilItem extends Item {
         overworld.playSound(null, sp.blockPosition(), SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 0.8f, 1.2f);
         return InteractionResultHolder.success(stack);
     }
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag){
+        tooltip.add(Component.translatable("tooltip.halohaven.sigil").withStyle(ChatFormatting.GOLD));
+    }
+
 }
