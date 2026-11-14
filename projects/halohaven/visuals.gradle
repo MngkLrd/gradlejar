@@ -259,7 +259,7 @@ tasks.named('generateHaloAssets').configure {
             }
         },0xff778ba1,0xff9eaeb8,0xff677b94)
         // Real translucency: inside is < 55 alpha, gold/cyan tracery remains solid.
-        def stained = {String name,int rim,int accent,int tint ->
+        def stained = {name,rim,accent,tint ->
             BufferedImage img=new BufferedImage(64,64,BufferedImage.TYPE_INT_ARGB)
             Graphics2D g=img.createGraphics()
             fill(g,(int)((48L<<24)|(tint&0xffffff)),0,0,64,64)
