@@ -31,6 +31,7 @@ public final class HaloClient {
         event.registerEntityRenderer(HaloEntities.LUMEN.get(), LumenRenderer::new);
         event.registerEntityRenderer(HaloEntities.DAWN_GUARDIAN.get(), GuardianRenderer::new);
         event.registerEntityRenderer(HaloEntities.DUSK_WRAITH.get(), WraithRenderer::new);
+        event.registerEntityRenderer(HaloEntities.ECLIPSE_REVENANT.get(), EclipseRenderer::new);
     }
 
     public static final class SkyfolkRenderer extends VillagerRenderer {
@@ -75,6 +76,20 @@ public final class HaloClient {
         public void render(IronGolem e,float yaw,float partial,PoseStack pose,MultiBufferSource buffer,int light){
             super.render(e,yaw,partial,pose,buffer,light);
             CelestialHalo.draw(e,partial,pose,buffer,0.75f,3.06f,255,228,173);
+        }
+    }
+    public static final class EclipseRenderer extends VexRenderer {
+        public EclipseRenderer(EntityRendererProvider.Context ctx){super(ctx);}
+        @Override public ResourceLocation getTextureLocation(Vex e){
+            return HaloHaven.id("textures/entity/eclipse_revenant.png");
+        }
+        @Override
+        public void render(Vex e,float yaw,float partial,PoseStack pose,MultiBufferSource buffer,int light){
+            pose.pushPose();
+            pose.scale(1.8f,1.8f,1.8f);
+            super.render(e,yaw,partial,pose,buffer,light);
+            CelestialHalo.draw(e,partial,pose,buffer,0.46f,1.02f,227,113,218);
+            pose.popPose();
         }
     }
     public static final class WraithRenderer extends VexRenderer {

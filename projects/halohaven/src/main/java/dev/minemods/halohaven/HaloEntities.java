@@ -6,6 +6,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.monster.Vex;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.Villager;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -38,11 +39,22 @@ public final class HaloEntities {
         ENTITIES.register("dusk_wraith", () -> EntityType.Builder.of(Vex::new, MobCategory.MONSTER)
             .sized(0.4f, 0.8f).clientTrackingRange(8).build("halohaven:dusk_wraith"));
 
+    public static final DeferredHolder<EntityType<?>,EntityType<EclipseRevenant>> ECLIPSE_REVENANT=
+        ENTITIES.register("eclipse_revenant",()->EntityType.Builder.of(
+            EclipseRevenant::new,MobCategory.MONSTER).sized(0.8f,1.45f)
+            .clientTrackingRange(12).build("halohaven:eclipse_revenant"));
+
     public static void registerAttributes(EntityAttributeCreationEvent e) {
         e.put(SKYFOLK.get(), Villager.createAttributes().build());
         e.put(CLOUDHARE.get(), Rabbit.createAttributes().build());
         e.put(LUMEN.get(), Allay.createAttributes().build());
         e.put(DAWN_GUARDIAN.get(), IronGolem.createAttributes().build());
         e.put(DUSK_WRAITH.get(), Vex.createAttributes().build());
+        e.put(ECLIPSE_REVENANT.get(),
+            Vex.createAttributes()
+                .add(Attributes.MAX_HEALTH,80.0)
+                .add(Attributes.ATTACK_DAMAGE,8.0)
+                .add(Attributes.MOVEMENT_SPEED,0.42)
+                .build());
     }
 }

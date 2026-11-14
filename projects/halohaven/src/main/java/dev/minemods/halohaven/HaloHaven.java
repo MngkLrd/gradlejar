@@ -111,6 +111,10 @@ public final class HaloHaven {
     public static final DeferredItem<BlockItem> STAR_ORE_ITEM = ITEMS.registerSimpleBlockItem("star_ore", STAR_ORE);
     public static final DeferredItem<Item> AETHER_FEATHER=ITEMS.registerSimpleItem("aether_feather",
         new Item.Properties().stacksTo(1));
+    public static final DeferredItem<Item> ECLIPSE_SEAL=ITEMS.registerSimpleItem("eclipse_seal",
+        new Item.Properties().stacksTo(16));
+    public static final DeferredItem<Item> SUNWARD_RELIC=ITEMS.register("sunward_relic",
+        ()->new SunwardRelicItem(new Item.Properties().stacksTo(1)));
     public static final DeferredItem<Item> STARDUST = ITEMS.registerSimpleItem("stardust", new Item.Properties());
     public static final DeferredItem<Item> SUNSHARD = ITEMS.registerSimpleItem("sunshard", new Item.Properties());
     public static final DeferredItem<Item> SKY_COMPASS = ITEMS.register("sky_compass",
@@ -141,6 +145,7 @@ public final class HaloHaven {
         NeoForge.EVENT_BUS.addListener(HavenVillages::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(HavenEvents::onRightClick);
         NeoForge.EVENT_BUS.addListener(HavenEvents::onEntityInteract);
+        NeoForge.EVENT_BUS.addListener(HavenEvents::onLivingDeath);
     }
 
     private void onCreativeTab(BuildCreativeModeTabContentsEvent event) {
@@ -175,6 +180,8 @@ public final class HaloHaven {
             event.accept(STARDUST);
             event.accept(SUNSHARD);
             event.accept(AETHER_FEATHER);
+            event.accept(ECLIPSE_SEAL);
+            event.accept(SUNWARD_RELIC);
             event.accept(SKYFOLK_EGG);
             event.accept(CLOUDHARE_EGG);
             event.accept(LUMEN_EGG);
