@@ -5,7 +5,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.world.entity.animal.allay.Allay;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -53,8 +57,14 @@ public final class HavenVillages {
             }
             if (d > 24 && random.nextInt(320) == 0) tree(level, x, z);
         }
-        // Invisible and unbreakable generation marker below the actual island.
-        place(level, cx, 93, cz, Blocks.BEDROCK);
+        // Star ore appears below the grass within the island shell.
+        for (int n=0;n<230;n++) {
+            int dx=random.nextInt(77)-38, dz=random.nextInt(77)-38;
+            if(dx*dx+dz*dz>36*36)continue;
+            int y=TOP_Y-1-random.nextInt(4);
+            if(level.getBlockState(new BlockPos(cx+dx,y,cz+dz)).is(HaloHaven.CLOUDSTONE.get()))
+                place(level,cx+dx,y,cz+dz,HaloHaven.STAR_ORE.get());
+        }
         // Carved roads: a luminous marble cross with metallic inlays.
         for (int t=-38; t<=38; t++) for (int s=-2; s<=2; s++) {
             if (Math.abs(t) > 37 || Math.sqrt(t*t+s*s)>40) continue;
@@ -70,6 +80,12 @@ public final class HavenVillages {
             }
         }
         plaza(level, cx, cz);
+        // Exploration loop: star-wraith ruins, an observatory, a suspended sanctuary.
+        for (int x : new int[]{-1,1}) {
+            ruin(level,cx+x*62,cz+x*24,random);
+        }
+        observatory(level,cx-33,cz-8);
+        sanctuary(level,cx+10,cz+32);
         for (int x : new int[]{-36,36}) for (int z : new int[]{-9,9}) {
             monument(level,cx+x,cz+z);
         }
@@ -79,6 +95,18 @@ public final class HavenVillages {
                 place(level,cx+dx,TOP_Y+1,cz+dz,random.nextBoolean()?Blocks.ALLIUM:Blocks.LILY_OF_THE_VALLEY);
             }
         }
+        // Small ambient wildlife; spawned exactly once with the village marker.
+        for(int n=0;n<6;n++){
+            double angle=2*Math.PI*n/6.0;
+            int dx=(int)(Math.cos(angle)*33),dz=(int)(Math.sin(angle)*33);
+            spawn(level,HaloEntities.CLOUDHARE.get(),cx+dx,TOP_Y+2,cz+dz);
+        }
+        for(int n=0;n<3;n++){
+            spawn(level,HaloEntities.LUMEN.get(),cx+5+n*4,TOP_Y+5,cz-10);
+        }
+        spawn(level,HaloEntities.DAWN_GUARDIAN.get(),cx-5,TOP_Y+2,cz+5);
+        // Persist only after ALL components have been built.
+        place(level,cx,93,cz,Blocks.BEDROCK);
         level.sendParticles(net.minecraft.core.particles.ParticleTypes.END_ROD,
             cx + .5, TOP_Y+8, cz+.5, 90, 10, 3, 10, 0.02);
     }
@@ -119,11 +147,13 @@ public final class HavenVillages {
         if(be instanceof ChestBlockEntity chest){
             chest.setItem(0,new ItemStack(HaloHaven.SKYBERRY.get(),3+rand.nextInt(6)));
             chest.setItem(1,new ItemStack(Items.EMERALD,1+rand.nextInt(3)));
-            chest.setItem(2,new ItemStack(HaloHaven.ASCENSION_SIGIL.get()));
+            chest.setItem(2,new ItemStack(HaloHaven.STARDUST.get(),1+rand.nextInt(4)));
+            if(rand.nextInt(5)==0)chest.setItem(3,new ItemStack(HaloHaven.AETHER_TONIC.get()));
         }
         place(l,cx-3,TOP_Y+1,cz+1,Blocks.CRAFTING_TABLE);
         place(l,cx-3,TOP_Y+1,cz+2,HaloHaven.STARSHADE.get());
         spawnVillager(l,cx,TOP_Y+2,cz-3);
+        spawnVillager(l,cx+2,TOP_Y+2,cz-3);
     }
     private static void plaza(ServerLevel l,int cx,int cz) {
         for(int x=-6;x<=6;x++)for(int z=-6;z<=6;z++)
@@ -137,8 +167,15 @@ public final class HavenVillages {
         for(int y=TOP_Y+1;y<=TOP_Y+5;y++)place(l,cx,y,cz,HaloHaven.PEARL_BRICKS.get());
         place(l,cx,TOP_Y+6,cz,HaloHaven.STARSHADE.get());
         for(int x : new int[]{-5,5})for(int z:new int[]{-5,5}) {
-            place(l,cx+x,TOP_Y+1,cz+z,HaloHaven.STARSHADE.get());
+            place(l,cx+x,TOP_Y+1,cz+z,HaloHaven.CLOUD_LANTERN.get());
         }
+        // Cross-island waystone; right-click to go forward, shift-click backwards.
+        for(int x=8;x<=12;x++)for(int z=-2;z<=2;z++)
+            place(l,cx+x,TOP_Y,cz+z,HaloHaven.CELESTIAL_MOSAIC.get());
+        for(int y=TOP_Y+1;y<=TOP_Y+3;y++)place(l,cx+10,y,cz,HaloHaven.GILDED_PILLAR.get());
+        place(l,cx+10,TOP_Y+4,cz,HaloHaven.WAYSTONE.get());
+        for(int z : new int[]{-2,2})
+            place(l,cx+10,TOP_Y+1,cz+z,HaloHaven.STARSHADE.get());
     }
     private static void monument(ServerLevel l,int x,int z) {
         for(int y=TOP_Y+1;y<=TOP_Y+5;y++)
@@ -156,8 +193,101 @@ public final class HavenVillages {
         }
     }
     private static void spawnVillager(ServerLevel l,double x,double y,double z){
-        Villager v=EntityType.VILLAGER.create(l);
-        if(v!=null){v.moveTo(x+0.5,y,z+0.5,0,0);l.addFreshEntity(v);}
+        Skyfolk v=HaloEntities.SKYFOLK.get().create(l);
+        if(v!=null){
+            v.moveTo(x+0.5,y,z+0.5,0,0);
+            v.populateSkyTrades();
+            v.setPersistenceRequired();
+            l.addFreshEntity(v);
+        }
+    }
+
+    private static <T extends Mob> void spawn(ServerLevel l,EntityType<T> type,double x,double y,double z) {
+        T entity=type.create(l);
+        if(entity==null)return;
+        entity.moveTo(x+0.5,y,z+0.5,0,0);
+        entity.setPersistenceRequired();
+        l.addFreshEntity(entity);
+    }
+
+    private static void observatory(ServerLevel l,int cx,int cz){
+        // Open gazebo with a vaulted canopy and functional telescope (spyglass loot).
+        for(int dx=-6;dx<=6;dx++)for(int dz=-6;dz<=6;dz++){
+            if(dx*dx+dz*dz>36)continue;
+            place(l,cx+dx,TOP_Y,cz+dz,HaloHaven.CELESTIAL_MOSAIC.get());
+        }
+        for(int dx : new int[]{-4,4})for(int dz : new int[]{-4,4}){
+            for(int y=TOP_Y+1;y<=TOP_Y+7;y++)
+                place(l,cx+dx,y,cz+dz,HaloHaven.GILDED_PILLAR.get());
+            place(l,cx+dx,TOP_Y+8,cz+dz,HaloHaven.CLOUD_LANTERN.get());
+        }
+        for(int dx=-6;dx<=6;dx++)for(int dz=-6;dz<=6;dz++){
+            if(dx*dx+dz*dz<45 && dx*dx+dz*dz>22)continue;
+            if(dx*dx+dz*dz<=22)
+                place(l,cx+dx,TOP_Y+8,cz+dz,HaloHaven.DAWN_GLASS.get());
+        }
+        place(l,cx,TOP_Y+1,cz,Blocks.LECTERN);
+        place(l,cx+1,TOP_Y+1,cz,Blocks.CHEST);
+        BlockEntity entity=l.getBlockEntity(new BlockPos(cx+1,TOP_Y+1,cz));
+        if(entity instanceof ChestBlockEntity chest){
+            chest.setItem(0,new ItemStack(Items.SPYGLASS));
+            chest.setItem(1,new ItemStack(HaloHaven.SKY_COMPASS.get()));
+            chest.setItem(2,new ItemStack(HaloHaven.STARDUST.get(),4));
+        }
+    }
+
+    private static void sanctuary(ServerLevel l,int cx,int cz) {
+        // Sacred garden: pale stone rings, sky berries and lanterns.
+        for(int dx=-8;dx<=8;dx++)for(int dz=-8;dz<=8;dz++){
+            double d=Math.sqrt(dx*dx+dz*dz);
+            if(d<7.8&&d>6.3)place(l,cx+dx,TOP_Y,cz+dz,HaloHaven.SUNGOLD_TILES.get());
+            if(d<5.9)place(l,cx+dx,TOP_Y,cz+dz,HaloHaven.SKYGRASS.get());
+            if(d>4.5&&d<5.6 && (dx+dz)%3==0)
+                place(l,cx+dx,TOP_Y+1,cz+dz,Blocks.LILY_OF_THE_VALLEY);
+        }
+        for(int y=TOP_Y+1;y<=TOP_Y+4;y++)
+            place(l,cx,y,cz,HaloHaven.MOONSTONE.get());
+        place(l,cx,TOP_Y+5,cz,HaloHaven.STARSHADE.get());
+        for(int dx : new int[]{-6,6})for(int dz:new int[]{-6,6}){
+            for(int y=TOP_Y+1;y<=TOP_Y+3;y++)
+                place(l,cx+dx,y,cz+dz,HaloHaven.PEARL_BRICKS.get());
+            place(l,cx+dx,TOP_Y+4,cz+dz,HaloHaven.CLOUD_LANTERN.get());
+        }
+    }
+
+    private static void ruin(ServerLevel l,int cx,int cz,Random rand){
+        // Independent satellite island connected to the village by a suspended bridge.
+        for(int dx=-15;dx<=15;dx++)for(int dz=-15;dz<=15;dz++){
+            int r2=dx*dx+dz*dz;
+            if(r2>210)continue;
+            int depth=2+(int)(4*Math.max(0,1-r2/210.0));
+            for(int y=TOP_Y-depth;y<TOP_Y;y++)
+                place(l,cx+dx,y,cz+dz,HaloHaven.MOONSTONE.get());
+            place(l,cx+dx,TOP_Y,cz+dz,rand.nextInt(8)==0?
+                HaloHaven.CELESTIAL_MOSAIC.get():HaloHaven.CLOUDSTONE.get());
+            if(r2>100&&rand.nextInt(13)==0)
+                place(l,cx+dx,TOP_Y+1,cz+dz,Blocks.SHORT_GRASS);
+        }
+        for(int x=-6;x<=6;x++)for(int z=-6;z<=6;z++)
+            if((Math.abs(x)==6||Math.abs(z)==6) && rand.nextInt(6)!=0)
+                for(int y=TOP_Y+1;y<=TOP_Y+2+rand.nextInt(5);y++)
+                    place(l,cx+x,y,cz+z,HaloHaven.MOONSTONE.get());
+        for(int x=-3;x<=3;x++)for(int z=-3;z<=3;z++){
+            if(x*x+z*z<10)
+                place(l,cx+x,TOP_Y,cz+z,HaloHaven.CELESTIAL_MOSAIC.get());
+        }
+        for(int y=TOP_Y+1;y<=TOP_Y+7;y++)
+            place(l,cx,y,cz,HaloHaven.GILDED_PILLAR.get());
+        place(l,cx,TOP_Y+8,cz,HaloHaven.STARSHADE.get());
+        place(l,cx+3,TOP_Y+1,cz+2,Blocks.CHEST);
+        BlockEntity entity=l.getBlockEntity(new BlockPos(cx+3,TOP_Y+1,cz+2));
+        if(entity instanceof ChestBlockEntity chest){
+            chest.setItem(0,new ItemStack(HaloHaven.STARDUST.get(),4+rand.nextInt(4)));
+            chest.setItem(1,new ItemStack(HaloHaven.SUNSHARD.get(),1+rand.nextInt(2)));
+            if(rand.nextInt(3)==0)chest.setItem(2,new ItemStack(Items.ENCHANTED_GOLDEN_APPLE));
+        }
+        for(int n=0;n<2;n++)
+            spawn(l,HaloEntities.DUSK_WRAITH.get(),cx+5*n-3,TOP_Y+4,cz-4);
     }
     private static void place(ServerLevel l,int x,int y,int z,Block b) {
         l.setBlock(new BlockPos(x,y,z),b.defaultBlockState(),2);
