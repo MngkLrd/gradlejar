@@ -11,6 +11,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 
 public final class HavenEvents {
     private HavenEvents() {}
@@ -66,6 +67,30 @@ public final class HavenEvents {
     private static void complete(PlayerInteractEvent.RightClickBlock event){
         event.setCancellationResult(InteractionResult.SUCCESS);
         event.setCanceled(true);
+    }
+
+    public static void onLivingDeath(LivingDeathEvent event){
+        if(event.getEntity().level().isClientSide())return;
+        if(!(event.getSource().getEntity() instanceof ServerPlayer p))return;
+        if(!p.level().dimension().equals(HaloHaven.HEAVEN))return;
+        if(event.getEntity().getType()==HaloEntities.DUSK_WRAITH.get()){
+            int defeated=p.getPersistentData().getInt("halohaven_wraith_defeats")+1;
+            p.getPersistentData().putInt("halohaven_wraith_defeats",defeated);
+            if(defeated==3 || defeated==8){
+                int favor=p.getPersistentData().getInt("halohaven_favor");
+                p.getPersistentData().putInt("halohaven_favor",favor+(defeated==3?6:12));
+                p.displayClientMessage(Component.translatable("message.halohaven.trial_wraith",defeated),false);
+            }
+        }else if(event.getEntity().getType()==HaloEntities.ECLIPSE_REVENANT.get()){
+            int killed=p.getPersistentData().getInt("halohaven_eclipse_defeats")+1;
+            p.getPersistentData().putInt("halohaven_eclipse_defeats",killed);
+            int favor=p.getPersistentData().getInt("halohaven_favor");
+            p.getPersistentData().putInt("halohaven_favor",favor+20);
+            p.displayClientMessage(Component.translatable("message.halohaven.eclipse_defeated"),false);
+            ((ServerLevel)p.level()).sendParticles(ParticleTypes.END_ROD,
+                event.getEntity().getX(),event.getEntity().getY(),event.getEntity().getZ(),
+                140,2,2,2,0.08);
+        }
     }
 
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {

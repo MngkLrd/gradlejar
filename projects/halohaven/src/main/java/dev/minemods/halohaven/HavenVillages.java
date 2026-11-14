@@ -396,6 +396,11 @@ public final class HavenVillages {
         }
         for(int n=0;n<2;n++)
             spawn(l,HaloEntities.DUSK_WRAITH.get(),cx+5*n-3,TOP_Y+4,cz-4);
+        // Fallen astral court: roughly half the ruined islets are guarded
+        // by a real two-phase mini-boss (never on the central safe village).
+        if(rand.nextInt(2)==0){
+            spawn(l,HaloEntities.ECLIPSE_REVENANT.get(),cx,TOP_Y+5,cz-1);
+        }
     }
     private static void place(ServerLevel l,int x,int y,int z,Block b) {
         l.setBlock(new BlockPos(x,y,z),b.defaultBlockState(),2);
