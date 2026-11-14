@@ -83,6 +83,7 @@ public final class HavenVillages {
         // Exploration loop: star-wraith ruins, an observatory, a suspended sanctuary.
         for (int x : new int[]{-1,1}) {
             ruin(level,cx+x*62,cz+x*24,random);
+            skybridge(level,cx+x*35,cz+x*13,cx+x*62,cz+x*24);
         }
         observatory(level,cx-33,cz-8);
         sanctuary(level,cx+10,cz+32);
@@ -208,6 +209,33 @@ public final class HavenVillages {
         entity.moveTo(x+0.5,y,z+0.5,0,0);
         entity.setPersistenceRequired();
         l.addFreshEntity(entity);
+    }
+
+    private static void skybridge(ServerLevel l,int x1,int z1,int x2,int z2) {
+        int steps=Math.max(Math.abs(x2-x1),Math.abs(z2-z1))*2;
+        double dd=Math.hypot(x2-x1,z2-z1);
+        double perpX=-(z2-z1)/dd,perpZ=(x2-x1)/dd;
+        for(int s=0;s<=steps;s++){
+            double t=s/(double)steps;
+            double px=x1+(x2-x1)*t,pz=z1+(z2-z1)*t;
+            for(int lane=-1;lane<=1;lane++){
+                int x=(int)Math.round(px+perpX*lane);
+                int z=(int)Math.round(pz+perpZ*lane);
+                place(l,x,TOP_Y,z, s%10==0 ?
+                    HaloHaven.SUNGOLD_TILES.get():HaloHaven.CELESTIAL_MOSAIC.get());
+                place(l,x,TOP_Y-1,z,HaloHaven.GILDED_PILLAR.get());
+                for(int h=1;h<=3;h++)place(l,x,TOP_Y+h,z,Blocks.AIR);
+            }
+            // Two side glass balustrades, with lamps at intervals.
+            if(s%2==0){
+                for(int side : new int[]{-2,2}){
+                    int x=(int)Math.round(px+perpX*side),z=(int)Math.round(pz+perpZ*side);
+                    place(l,x,TOP_Y,z,HaloHaven.PEARL_BRICKS.get());
+                    place(l,x,TOP_Y+1,z,s%16==0 ?
+                        HaloHaven.CLOUD_LANTERN.get():HaloHaven.AURORA_GLASS.get());
+                }
+            }
+        }
     }
 
     private static void observatory(ServerLevel l,int cx,int cz){
