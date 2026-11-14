@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.core.BlockPos;
@@ -78,6 +79,11 @@ public final class HaloHaven {
         () -> new SlabBlock(BlockBehaviour.Properties.of().strength(1.8f,6f).sound(SoundType.CALCITE)));
     public static final DeferredBlock<FenceBlock> AZURE_FENCE = BLOCKS.register("azure_fence",
         () -> new FenceBlock(BlockBehaviour.Properties.of().strength(2f,5f).sound(SoundType.WOOD)));
+    public static final DeferredBlock<LeavesBlock> SKY_LEAVES = BLOCKS.register("sky_leaves",
+        () -> new LeavesBlock(BlockBehaviour.Properties.of().strength(0.2f).randomTicks()
+            .noOcclusion().sound(SoundType.GRASS)));
+    public static final DeferredBlock<Block> CELESTIAL_BLOOM = BLOCKS.registerSimpleBlock("celestial_bloom",
+        BlockBehaviour.Properties.of().noCollission().instabreak().noOcclusion().sound(SoundType.GRASS));
     public static final DeferredBlock<Block> STARSHADE = BLOCKS.registerSimpleBlock("starshade",
         BlockBehaviour.Properties.of().strength(1f).lightLevel(s -> 15).sound(SoundType.AMETHYST));
 
@@ -86,6 +92,8 @@ public final class HaloHaven {
     public static final DeferredItem<BlockItem> PEARL_STAIRS_ITEM=ITEMS.registerSimpleBlockItem("pearl_stairs",PEARL_STAIRS);
     public static final DeferredItem<BlockItem> PEARL_SLAB_ITEM=ITEMS.registerSimpleBlockItem("pearl_slab",PEARL_SLAB);
     public static final DeferredItem<BlockItem> AZURE_FENCE_ITEM=ITEMS.registerSimpleBlockItem("azure_fence",AZURE_FENCE);
+    public static final DeferredItem<BlockItem> SKY_LEAVES_ITEM=ITEMS.registerSimpleBlockItem("sky_leaves",SKY_LEAVES);
+    public static final DeferredItem<BlockItem> CELESTIAL_BLOOM_ITEM=ITEMS.registerSimpleBlockItem("celestial_bloom",CELESTIAL_BLOOM);
     public static final DeferredItem<BlockItem> CLOUDSTONE_ITEM = ITEMS.registerSimpleBlockItem("cloudstone", CLOUDSTONE);
     public static final DeferredItem<BlockItem> SKYGRASS_ITEM = ITEMS.registerSimpleBlockItem("skygrass", SKYGRASS);
     public static final DeferredItem<BlockItem> PEARL_BRICKS_ITEM = ITEMS.registerSimpleBlockItem("pearl_bricks", PEARL_BRICKS);
@@ -157,6 +165,8 @@ public final class HaloHaven {
             event.accept(PEARL_STAIRS_ITEM);
             event.accept(PEARL_SLAB_ITEM);
             event.accept(AZURE_FENCE_ITEM);
+            event.accept(SKY_LEAVES_ITEM);
+            event.accept(CELESTIAL_BLOOM_ITEM);
         }
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(ASCENSION_SIGIL);
