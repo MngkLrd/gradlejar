@@ -29,8 +29,8 @@ jobs:
           gradle --no-daemon clean build
           python3 - <<'PY'
           from zipfile import ZipFile
-          import json, glob, os
-          path = glob.glob('build/libs/halohaven-1.21.1-1.2.0.jar')[0]
+          import json, glob, os, struct
+          path = glob.glob('build/libs/halohaven-1.21.1-1.3.0.jar')[0]
           blocks = ('cloudstone skygrass pearl_bricks sungold_tiles azure_planks aurora_glass starshade dawn_glass moonstone celestial_mosaic gilded_pillar cloud_lantern waystone star_ore pilgrim_altar').split()
           mobs = ('skyfolk cloudhare lumen dawn_guardian dusk_wraith eclipse_revenant').split()
           with ZipFile(path) as jar:
@@ -56,6 +56,13 @@ jobs:
               required.add('assets/halohaven/textures/entity/halo_ring.png')
               required.add('data/halohaven/loot_table/entities/eclipse_revenant.json')
               required.add('data/halohaven/recipe/sunward_relic.json')
+              required |= {
+                  'assets/halohaven/models/item/skyseed.json',
+                  'assets/halohaven/textures/item/skyseed.png',
+                  'data/halohaven/recipe/skyseed.json',
+                  'assets/halohaven/lang/en_us.json',
+                  'assets/halohaven/lang/ru_ru.json',
+              }
               for n in ('sungold_stairs','sungold_slab','pearl_stairs','pearl_slab','azure_fence'):
                   required.add(f'data/halohaven/loot_table/blocks/{n}.json')
               for n in ('sky_leaves','celestial_bloom'):
@@ -72,7 +79,23 @@ jobs:
               for name in ['aurora_glass','dawn_glass']:
                   model=json.loads(jar.read(f'assets/halohaven/models/block/{name}.json'))
                   assert model['render_type']=='minecraft:translucent'
-              print('PASS: embedded blocks, models, textures, mobs, dimensions, translucent glass:', len(required), 'files')
+              # Pixel-accurate texture atlases: no more fake 64x64 Allay or Rabbit UV.
+              expected_uv={
+                  'skyfolk': (64,64), 'cloudhare': (64,32), 'lumen':(32,32),
+                  'dawn_guardian':(128,128), 'dusk_wraith':(32,32),
+                  'eclipse_revenant':(32,32),
+              }
+              for name,expected in expected_uv.items():
+                  raw=jar.read(f'assets/halohaven/textures/entity/{name}.png')
+                  assert raw[:8]==b'\\x89PNG\\r\\n\\x1a\\n'
+                  actual=struct.unpack('>II',raw[16:24])
+                  assert actual==expected, f'{name} UV atlas: {actual} != {expected}'
+              assert json.loads(jar.read('data/halohaven/recipe/skyseed.json'))['result']['id']=='halohaven:skyseed'
+              for lang in ('en_us','ru_ru'):
+                  text=json.loads(jar.read(f'assets/halohaven/lang/{lang}.json'))
+                  assert 'itemGroup.halohaven.heaven' in text
+                  assert 'item.halohaven.skyseed' in text
+              print('PASS: built-in item, creative tab, six mapped UV atlases, dimension, transparent glass:', len(required))
           PY
       - name: Start NeoForge dedicated server (headless)
         working-directory: projects/halohaven
