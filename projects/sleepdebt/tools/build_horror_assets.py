@@ -30,7 +30,13 @@ CC0={
  "growl":("monsters/monster-growl.mp3",
           "3dbe8bc3d34ca576daf19aa727c66c1f65d3bf34"),
  "strike":("heartbeat-breath/choking.mp3",
-           "b9de7cbbde6427dee2250a2c1a785e9dccb6fc49")
+           "b9de7cbbde6427dee2250a2c1a785e9dccb6fc49"),
+ "rattle":("monsters/demon-choking-dying.mp3",
+           "1c9ab77a469bc4a63d3092777a5ebad7a59682b2"),
+ "screech":("screams/blood-curdling-scream.mp3",
+           "f24320c9bb461cb700d9e567145bda4ba674c7fb"),
+ "skitter":("house/creepy-footsteps.mp3",
+           "8b74ce1a407754c37c4a140cabce7a8cc734d2eb")
 }
 W,H=256,128
 image=bytearray(W*H*4)
@@ -64,36 +70,36 @@ def streak(x0,y0,x1,y1,shade,thick=1):
         rect(x,y,x+thick,y+thick,shade)
 
 # Skin is dead-grey, accented by old wounds rather than a conventional robe.
-# Skull/front face coordinates derive from skull's real cube UV, not a guessed sprite.
-# Skull: texOffs(0,0), width=10, depth=10 -> frontal UV x=[20,30), y=[10,25).
-rect(20,10,30,25,(38,35,41))
+# Vanilla CubeListBuilder: frontal UV is U+depth .. U+depth+width.
+# Skull texOffs(0,0), width=10, depth=10 => FRONT x=[10,20), y=[10,25).
+rect(10,10,20,25,(38,35,41))
 # Shallow cheekbone streaks around a void where the center of the face should be.
-streak(20,14,24,12,(118,110,107))
-streak(25,12,29,14,(107,99,99))
-rect(22,15,25,19,(5,5,10))
-rect(26,14,29,18,(4,4,8))
-rect(23,17,24,19,(179,164,149))
-rect(27,16,28,18,(146,134,135))
-rect(23,20,28,25,(2,2,5))
-streak(22,20,23,24,(109,85,88))
-streak(29,19,28,24,(126,104,95))
-for x in (23,25,27):
+streak(10,14,14,12,(118,110,107))
+streak(15,12,19,14,(107,99,99))
+rect(12,15,15,19,(5,5,10))
+rect(16,14,19,18,(4,4,8))
+rect(13,17,14,19,(179,164,149))
+rect(17,16,18,18,(146,134,135))
+rect(13,20,18,25,(2,2,5))
+streak(12,20,13,24,(109,85,88))
+streak(19,19,18,24,(126,104,95))
+for x in (13,15,17):
     rect(x,20,x+1,23,(165,150,130))
 # Hairline and cracks across skull sides.
 for (x0,y0,x1,y1) in ((2,11,7,18),(12,13,15,21),(32,11,39,15),(3,23,8,19)):
     streak(x0,y0,x1,y1,(117,107,103))
-# Split mandible, UV front side near texOffs(112,0): depth 2 + width 9
-rect(123,3,132,10,(7,7,11))
-for x in range(124,131,2):
+# Split mandible: texOffs(112,0), depth 2, width 9 => FRONT x=[114,123).
+rect(114,2,123,9,(7,7,11))
+for x in range(115,122,2):
     rect(x,4,x+1,8,(166,150,132))
-rect(124,8,132,10,(55,31,38))
-# Open chest cavity: torso u=0,v=50 w7,d5 => frontal x=[12,19), y=[55,71)
-rect(12,56,19,71,(15,12,18))
-streak(12,57,14,69,(108,89,91))
-streak(18,56,17,70,(99,80,84))
+rect(115,8,122,9,(55,31,38))
+# Open chest cavity: torso u=0,v=50 w7,d5 => FRONT x=[5,12), y=[55,71)
+rect(5,56,12,71,(15,12,18))
+streak(5,57,7,69,(108,89,91))
+streak(11,56,10,70,(99,80,84))
 for y in (57,60,63,66,69):
-    streak(12,y,18,y-1,(134,122,112))
-    rect(14,y+1,17,y+2,(36,20,28))
+    streak(5,y,11,y-1,(134,122,112))
+    rect(7,y+1,10,y+2,(36,20,28))
 # Bone rib plates and ashen scarred limbs throughout unique UV regions.
 for sx,sy in ((58,0),(82,0),(48,52),(70,52),(70,73),(82,73),
               (96,72),(142,51),(146,51),(157,51)):
@@ -145,10 +151,25 @@ def synth_heartbeat(path):
             payload.extend(struct.pack("<h",value))
         wav.writeframes(payload)
 
-def encode(ffmpeg,source,dest):
-    subprocess.run([ffmpeg,"-hide_banner","-nostdin","-loglevel","error",
-       "-y","-i",str(source),"-vn","-ac","1","-ar","24000",
-       "-c:a","libvorbis","-q:a","3",str(dest)],check=True)
+def encode(ffmpeg,source,dest,name=""):
+    # Shape acoustic timbre, instead of simply playing unprocessed stock MP3s.
+    if name=="screech":
+        fx="aresample=24000,asetrate=18500,aresample=24000,highpass=f=150,lowpass=f=4200,aecho=0.72:0.48:80|205:0.35|0.18,volume=0.85"
+    elif name=="rattle":
+        fx="aresample=24000,asetrate=17000,aresample=24000,highpass=f=68,lowpass=f=3000,aecho=0.70:0.38:130:0.22,volume=1.05"
+    elif name=="skitter":
+        fx="highpass=f=160,lowpass=f=3200,volume=1.1"
+    elif name=="breath":
+        fx="aresample=24000,asetrate=20700,aresample=24000,lowpass=f=2700,volume=0.9"
+    elif name=="whisper":
+        fx="aresample=24000,asetrate=21000,aresample=24000,highpass=f=175,lowpass=f=3300,aecho=0.65:0.35:105:0.22"
+    else:
+        fx="aresample=24000,highpass=f=60,lowpass=f=5500"
+    args=[ffmpeg,"-hide_banner","-nostdin","-loglevel","error",
+       "-y","-i",str(source),"-vn","-ac","1","-af",fx]
+    if name=="skitter":args.extend(["-t","1.1"])
+    args.extend(["-ar","24000","-c:a","libvorbis","-q:a","3",str(dest)])
+    subprocess.run(args,check=True)
     if dest.stat().st_size<1000:raise RuntimeError("Empty or invalid OGG "+str(dest))
 
 def download(name,rel,sha):
@@ -169,16 +190,15 @@ with tempfile.TemporaryDirectory() as tmp:
     temp=Path(tmp)
     for name,(rel,sha) in CC0.items():
         dest=SOUNDS/(name+".ogg")
-        if dest.exists() and dest.stat().st_size>1000:
-            continue
+        # Always re-render from pinned sources so versioned effects are deterministic.
         mp3=temp/(name+".mp3")
         mp3.write_bytes(download(name,rel,sha))
-        encode(ffmpeg,mp3,dest)
-        print("CC0 remix:",name,dest.stat().st_size,"bytes")
+        encode(ffmpeg,mp3,dest,name)
+        print("CC0 horror remix:",name,dest.stat().st_size,"bytes")
     heartbeat=SOUNDS/"heartbeat.ogg"
     if not heartbeat.exists() or heartbeat.stat().st_size<1000:
         wav=temp/"heartbeat.wav"
         synth_heartbeat(wav)
-        encode(ffmpeg,wav,heartbeat)
+        encode(ffmpeg,wav,heartbeat,"heartbeat")
         print("Original heartbeat:",heartbeat.stat().st_size,"bytes")
 print("Sleepless textures and sound bank complete.")

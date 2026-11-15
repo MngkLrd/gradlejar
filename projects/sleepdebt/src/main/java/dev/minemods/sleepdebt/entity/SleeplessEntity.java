@@ -83,6 +83,11 @@ public final class SleeplessEntity extends Zombie {
     level().playSound(null,blockPosition(),ModSounds.STRIKE.get(),
       SoundSource.HOSTILE,.82f,.58f);
    }
+   if(successfulHits%4==0){
+    // The harsh sound is intentionally rare; a looped scream is not frightening.
+    level().playSound(null,blockPosition(),ModSounds.SCREECH.get(),
+      SoundSource.HOSTILE,.66f,.72f+random.nextFloat()*.12f);
+   }
    SleepEngine.addStress(player,95);
    player.serverLevel().sendParticles(ParticleTypes.LARGE_SMOKE,player.getX(),
      player.getY()+1,player.getZ(),18,.65,.65,.65,.015);
@@ -90,6 +95,9 @@ public final class SleeplessEntity extends Zombie {
   return hit;
  }
  @Override protected SoundEvent getAmbientSound(){return ModSounds.BREATH.get();}
+ // Replace recognisable zombie footsteps instead of layering over them.
+ @Override protected void playStepSound(net.minecraft.core.BlockPos pos,
+    net.minecraft.world.level.block.state.BlockState state) {}
  @Override protected SoundEvent getHurtSound(DamageSource damage){return ModSounds.GROWL.get();}
  @Override protected SoundEvent getDeathSound(){return ModSounds.STRIKE.get();}
  @Override protected boolean isSunSensitive(){return false;}
@@ -134,10 +142,12 @@ public final class SleeplessEntity extends Zombie {
        SoundSource.HOSTILE,.34f,.69f);
     }
    }
-   if(tickCount%20==0 && getDeltaMovement().horizontalDistanceSqr()>.0008 && length<24){
-    // Audible, isolated steps; deliberately slower than a player's running rhythm.
-    level().playSound(null,blockPosition(),SoundEvents.SOUL_SAND_STEP,
-      SoundSource.HOSTILE,.72f,.62f+random.nextFloat()*.16f);
+   if(tickCount%31==0 && getDeltaMovement().horizontalDistanceSqr()>.0008 && length<24){
+    // Unnatural uneven steps without recognisable vanilla soul-sand audio.
+    if(random.nextInt(4)!=0)
+     level().playSound(null,blockPosition(),ModSounds.SKITTER.get(),
+       SoundSource.HOSTILE,.40f+random.nextFloat()*.22f,
+       .71f+random.nextFloat()*.23f);
    }
   }
   if(tickCount%20==0 && (level().isDay()||level().getMaxLocalRawBrightness(blockPosition())>=13)){

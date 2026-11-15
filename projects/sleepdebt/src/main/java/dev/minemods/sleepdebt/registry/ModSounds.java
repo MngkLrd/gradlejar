@@ -20,5 +20,8 @@ public final class ModSounds {
  public static final DeferredHolder<SoundEvent,SoundEvent> GROWL=sound("sleepless.growl");
  public static final DeferredHolder<SoundEvent,SoundEvent> STRIKE=sound("sleepless.strike");
  public static final DeferredHolder<SoundEvent,SoundEvent> HEARTBEAT=sound("sleepless.heartbeat");
+ public static final DeferredHolder<SoundEvent,SoundEvent> RATTLE=sound("sleepless.rattle");
+ public static final DeferredHolder<SoundEvent,SoundEvent> SCREECH=sound("sleepless.screech");
+ public static final DeferredHolder<SoundEvent,SoundEvent> SKITTER=sound("sleepless.skitter");
  private ModSounds(){}
 }

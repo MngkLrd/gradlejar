@@ -109,7 +109,7 @@ with zipfile.ZipFile(jar) as z:
                                 raise ValueError(f"Transparent Sleepless UV at {px},{py}")
 
     sounds=js("assets/sleepdebt/sounds.json")
-    for cue in ("breath","whisper","growl","strike","heartbeat"):
+    for cue in ("breath","whisper","growl","strike","heartbeat","rattle","screech","skitter"):
         key="sleepless."+cue
         if key not in sounds:raise ValueError("Missing custom Sleepless sound "+key)
         ogg=data("assets/sleepdebt/sounds/sleepless/"+cue+".ogg")
