@@ -63,7 +63,7 @@ with zipfile.ZipFile(jar) as z:
         raw=data(n)
         if raw[:8]!=b"\x89PNG\r\n\x1a\n":raise ValueError(f"Invalid PNG magic: {n}")
         width,height=struct.unpack(">II",raw[16:24])
-        target=((128,64) if "entity/sleepless.png" in n else
+        target=((256,128) if "entity/sleepless.png" in n else
                 (176,166) if "textures/gui/coffee_maker.png" in n else
                 (228,188) if "textures/gui/sleep_journal.png" in n else
                 (158,68) if "textures/gui/sleep_hud.png" in n else (16,16))
@@ -85,18 +85,21 @@ with zipfile.ZipFile(jar) as z:
         if cursor!=len(raw):raise ValueError(f"Invalid trailing bytes in PNG: {n}")
         if n.endswith("entity/sleepless.png"):
             rawpixels=zlib.decompress(image_data)
-            stride=128*4
-            if len(rawpixels)!=(stride+1)*64:
+            stride=256*4
+            if len(rawpixels)!=(stride+1)*128:
                 raise ValueError("Sleepless atlas has invalid raw RGBA payload")
             # Each UV box from SleeplessModel, including front/back, top/bottom and sides.
-            parts=[(0,0,8,10,8),(37,0,9,11,9),(0,26,7,13,4),
-                   (26,26,3,16,3),(42,26,3,16,3),
-                   (58,26,3,12,3),(74,26,3,12,3)]
+            # Distinct real UVs in the new anatomically distorted 256x128 mesh.
+            parts=[(0,0,10,15,10),(112,0,9,7,2),
+                   (142,0,3,8,2),(158,0,2,8,2),(173,0,2,10,2),
+                   (0,50,7,16,5),(58,0,4,20,4),(82,0,4,18,4),
+                   (48,52,3,14,3),(70,52,3,14,3),
+                   (70,73,2,11,3),(82,73,2,10,3)]
             for u,v,w,h,d in parts:
                 faces=[(u,v+d,d,h),(u+d,v+d,w,h),(u+d+w,v+d,d,h),
                        (u+2*d+w,v+d,w,h),(u+d,v,w,d),(u+d+w,v,w,d)]
                 for x,y,fw,fh in faces:
-                    if x<0 or y<0 or x+fw>128 or y+fh>64:
+                    if x<0 or y<0 or x+fw>256 or y+fh>128:
                         raise ValueError("Sleepless UV outside atlas")
                     for py in range(y,y+fh):
                         if rawpixels[py*(stride+1)]!=0:
@@ -105,6 +108,13 @@ with zipfile.ZipFile(jar) as z:
                             if rawpixels[py*(stride+1)+1+px*4+3]<240:
                                 raise ValueError(f"Transparent Sleepless UV at {px},{py}")
 
+    sounds=js("assets/sleepdebt/sounds.json")
+    for cue in ("breath","whisper","growl","strike","heartbeat"):
+        key="sleepless."+cue
+        if key not in sounds:raise ValueError("Missing custom Sleepless sound "+key)
+        ogg=data("assets/sleepdebt/sounds/sleepless/"+cue+".ogg")
+        if not ogg.startswith(b"OggS") or len(ogg)<1000:
+            raise ValueError("Invalid Vorbis OGG "+key)
     # Validate all block model geometry and references to the source texture atlas.
     for model_path in sorted(n for n in names
                              if n.startswith("assets/sleepdebt/models/block/")

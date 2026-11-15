@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.11
+# Sleep Debt: Restless Nights — 3.0.0-alpha.12
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.11.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.12.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -152,3 +152,27 @@ Replaced 45 authentic 16x16 PNGs: 15 block materials, 8 coffee crop stages and 2
   respawn still grants 3600 ticks of protection. Vanilla bed rules remain.
 - Hunter attacks use variable post-hit pauses, prolonged darkness, smoke and
   thicker distance-dependent vignette. Spawn probes no longer load chunks.
+
+## Alpha 12 — The Unwelcome Shape (adult horror art and sound pass)
+
+- Complete 256x128 authored-for-UV skin and a radically altered skeletal silhouette:
+  asymmetrical elongated skull, independent open jaw, torn chest, exposed ribs,
+  broken elbows/knees, extremely long fingers and breathing/twitch animations.
+- Rendering scales the creature vertically. Its collision box was updated to
+  0.77 x 2.75 blocks; natural spawns now require 3 blocks of clear headroom.
+- **Custom black-violet fog** via NeoForge ViewportEvent.ComputeFogColor and
+  RenderFog. Fog reaches around 12 blocks at maximum threat, keeping the player
+  able to navigate while shrouding the surrounding world. No vanilla Darkness/
+  Blindness status effect is used by the Sleepless itself.
+- 9-layer dynamic black vignette and localized hit pulse; server gameplay remains
+  separate from client-only visual and audio effects.
+- Four real CC0 audio recordings (breathing, whispers, growl, strike) remixed into
+  OGG at build time from pinned, verified GitHub raw files plus one original
+  synthesized low heartbeat. Provenance and links: AUDIO_CREDITS.md.
+- Two optional client settings: sleeplessHorrorAudio and sleeplessFogStrength
+  (0 to 1.5). Existing sleeplessNearVignette toggle now covers fog and vignette.
+- Build prerequisites in addition to Java 21/Gradle: Python 3 + ffmpeg + network
+  access to pinned CC0 sources on first build. CI will package all OGG files into
+  the JAR, so **end users install only the JAR** and require none of these tools.
+- Existing mod ID, saved NBT schema, item IDs, recipes and optional integrations
+  remain unchanged. Manual in-game visual/audio QA required.

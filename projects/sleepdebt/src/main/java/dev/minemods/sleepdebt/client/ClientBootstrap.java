@@ -21,6 +21,9 @@ public final class ClientBootstrap {
   bus.addListener(SleeplessApparitions::bake);
   bus.addListener(ClientBootstrap::screens);
   NeoForge.EVENT_BUS.addListener(ClientHallucinations::tick);
+  NeoForge.EVENT_BUS.addListener(SleeplessDread::tick);
+  NeoForge.EVENT_BUS.addListener(SleeplessDread::renderFog);
+  NeoForge.EVENT_BUS.addListener(SleeplessDread::colorFog);
   NeoForge.EVENT_BUS.addListener(MiragePlayers::clientTick);
   NeoForge.EVENT_BUS.addListener(SleeplessApparitions::tick);
   NeoForge.EVENT_BUS.addListener(MiragePlayers::renderWorld);

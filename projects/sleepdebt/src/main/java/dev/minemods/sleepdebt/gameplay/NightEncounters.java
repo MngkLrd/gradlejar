@@ -48,6 +48,7 @@ final class NightEncounters {
    if(Math.abs(y-player.getY())>9 ||
       !level.getBlockState(spawn).isAir() ||
       !level.getBlockState(spawn.above()).isAir() ||
+      !level.getBlockState(spawn.above(2)).isAir() ||
       !level.getFluidState(spawn).isEmpty() ||
       level.getMaxLocalRawBrightness(spawn)>9)continue;
    SleeplessEntity hunter=ModEntities.SLEEPLESS.get().create(level);

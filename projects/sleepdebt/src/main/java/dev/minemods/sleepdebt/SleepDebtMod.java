@@ -7,6 +7,7 @@ import dev.minemods.sleepdebt.gameplay.CampRestSessions;
 import dev.minemods.sleepdebt.gameplay.VanillaSleepIntegration;
 import dev.minemods.sleepdebt.network.SleepNetworking;
 import dev.minemods.sleepdebt.registry.ModItems;
+import dev.minemods.sleepdebt.registry.ModSounds;
 import dev.minemods.sleepdebt.registry.ModBlocks;
 import dev.minemods.sleepdebt.registry.ModBlockEntities;
 import dev.minemods.sleepdebt.registry.ModEntities;
@@ -30,6 +31,7 @@ public final class SleepDebtMod {
   ModBlocks.BLOCKS.register(bus);
   ModBlockEntities.BLOCK_ENTITIES.register(bus);
   ModEntities.ENTITIES.register(bus);
+  ModSounds.SOUNDS.register(bus);
   ModMenus.MENUS.register(bus);
   ModItems.ITEMS.register(bus);
   ModCreativeTabs.TABS.register(bus);
