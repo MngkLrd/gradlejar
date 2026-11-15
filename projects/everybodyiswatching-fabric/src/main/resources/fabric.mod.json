@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "everybodyiswatching",
+  "version": "0.1.0",
+  "name": "Everybody Is Watching",
+  "description": "Villagers sometimes freeze and stare at the player after entering a village.",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.minemods.everybodyiswatching.EverybodyIsWatchingFabric"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.17.3",
+    "minecraft": "1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
