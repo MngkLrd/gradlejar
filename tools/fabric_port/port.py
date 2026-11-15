@@ -146,7 +146,7 @@ for mc in ("1.20.1","1.21.1"):
         "    options.encoding='UTF-8'\n"
         "    options.release="+str(java)+"\n"
         "}\n"
-        "loom { runs { client { client() }; server { server() } } }\n")
+        "")
     (dest/"README.md").write_text(
         "# Blowpipes 1.4.0, Fabric "+mc+"\n\n"
         "Java "+str(java)+" for Minecraft; Fabric Loader 0.16+ and Fabric API required.\n"
