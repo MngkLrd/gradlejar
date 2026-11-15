@@ -91,7 +91,8 @@ public final class HavenVillages {
         int cz = Math.round(p.getBlockZ() / (float) SPACING) * SPACING;
         if (Math.abs(p.getBlockX() - cx) < 108 && Math.abs(p.getBlockZ() - cz) < 108) {
             ensure((ServerLevel) p.level(), cx, cz);
-            int style=region(cx,cz);
+            int style=HavenLandmarks.index((ServerLevel)p.level(),cx,cz);
+            if(style<0)style=region(cx,cz);
             int visited=p.getPersistentData().getInt("halohaven_region_discoveries");
             if((visited & (1<<style))==0){
                 p.getPersistentData().putInt("halohaven_region_discoveries",visited | (1<<style));
@@ -107,8 +108,13 @@ public final class HavenVillages {
         // Bedrock is a persistent marker, so a saved world never rebuilds villages.
         BlockPos marker = new BlockPos(cx, 93, cz);
         if (level.getBlockState(marker).is(Blocks.BEDROCK)) return;
+        int biome=HavenLandmarks.index(level,cx,cz);
+        if(HavenLandmarks.needsOutpost(level,cx,cz)){
+            HavenLandmarks.generate(level,cx,cz,biome);
+            return;
+        }
         Random random = new Random(level.getSeed() ^ (cx * 71057317L) ^ (cz * 117135737L));
-        int district=region(cx,cz);
+        int district=biome==2?1:biome==1?0:region(cx,cz);
 
         // Each settlement rests on a deliberately sculpted island high above the lower islands.
         for (int dx = -47; dx <= 47; dx++) for (int dz = -47; dz <= 47; dz++) {

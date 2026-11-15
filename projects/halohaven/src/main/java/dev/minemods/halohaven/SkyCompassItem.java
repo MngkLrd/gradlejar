@@ -24,7 +24,8 @@ public final class SkyCompassItem extends Item {
         int x=Math.round(p.getX()/512f)*512;
         int z=Math.round(p.getZ()/512f)*512;
         double bearing=Math.toDegrees(Math.atan2(z+0.5-p.getZ(),x+0.5-p.getX()));
-        int style=HavenVillages.region(x,z);
+        int style=HavenLandmarks.index(sp.serverLevel(),x,z);
+        if(style<0)style=HavenVillages.region(x,z);
         sp.displayClientMessage(Component.translatable("message.halohaven.compass",
             x,z,(int)Math.hypot(x-p.getX(),z-p.getZ()),(int)bearing,
             sp.getPersistentData().getInt("halohaven_favor"),
