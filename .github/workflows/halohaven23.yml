@@ -136,6 +136,52 @@ jobs:
               assert z.read('META-INF/neoforge.mods.toml').count(b'[[mods]]')==2
           print('UNIFIED JAR:',out,'bytes:',out.stat().st_size,'sha256:',sha,'entries:',len(entries))
           PY
+      - name: Server smoke test with original dimension and complete expansion
+        working-directory: projects/halohaven
+        timeout-minutes: 9
+        run: |
+          set -euo pipefail
+          mkdir -p run/mods
+          cp ../halohaven-alpha21/build/libs/halohavenalpha2-*.jar run/mods/
+          printf 'eula=true\n' > run/eula.txt
+          cat > run/server.properties <<'EOF'
+          online-mode=false
+          enable-rcon=true
+          rcon.port=25576
+          rcon.password=halo-ci-private-test
+          server-port=25565
+          level-seed=halo-qa-2.3
+          max-tick-time=120000
+          view-distance=6
+          simulation-distance=4
+          EOF
+          set +e
+          timeout --signal=SIGINT --kill-after=12 370s gradle --no-daemon runServer > run/hh23-server.log 2>&1 &
+          server_pid=$!
+          python3 ci/worldgen_probe.py > run/hh23-probe.log 2>&1
+          probe_status=$?
+          if [ "$probe_status" -ne 0 ]; then kill -INT "$server_pid" 2>/dev/null || true; fi
+          wait "$server_pid"
+          set -e
+          tail -n 85 run/hh23-server.log
+          cat run/hh23-probe.log
+          if grep -Eiq 'Errors in currently selected data packs|Failed to load registries|Exception in server tick loop|A critical error occurred|Failure during server start|Failed to parse' run/hh23-server.log; then
+              echo 'FAIL: runtime registry errors'
+              exit 1
+          fi
+          [ "$probe_status" -eq 0 ]
+          grep -q 'PASS: generated/ticked 3 real Halo Haven positions' run/hh23-probe.log
+      - name: Upload server log and error reports when failing
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: HaloHaven-2.3-Server-Diagnostics
+          path: |
+            projects/halohaven/run/hh23-server.log
+            projects/halohaven/run/hh23-probe.log
+            projects/halohaven/run/logs/latest.log
+            projects/halohaven/run/crash-reports/
+          if-no-files-found: warn
       - uses: actions/upload-artifact@v4
         with:
           name: HaloHaven-2.3-Kingdom-Reclamation
