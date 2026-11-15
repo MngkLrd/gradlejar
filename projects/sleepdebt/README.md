@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.7
+# Sleep Debt: Restless Nights — 3.0.0-alpha.8
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.7.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.8.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -96,3 +96,23 @@ Every one of the 22 item textures has an individual 16x16 pixel-art sprite, incl
 
 ## Alpha 7 | Cluster Discipline Art Pass
 Replaced 45 authentic 16x16 PNGs: 15 block materials, 8 coffee crop stages and 22 item icons. Rebuilt clusters and broken organic edges, focused material textures, corrected shading on fabrics/pillows, controlled banding and tile rhythm. The exact authored PNG files are committed in assets/sleepdebt/textures; old generators cannot overwrite them. A new PNG/palette QA test runs against every CI-built JAR. See ART_DIRECTION_V7.md.
+
+## Alpha 8: Dedicated Creative Tab + fast testing
+- Added a separate Creative Mode tab **Sleep Debt**, next to vanilla Food & Drinks,
+  featuring all 29 registered inventory items in a deliberate gameplay order.
+- Retired legacy injection into vanilla Creative tabs. Existing item registry IDs,
+  NBT and saves are unchanged.
+- Added OP-only test presets:
+  - `/sleepdebt debug preset rested` = 0/0/0
+  - `/sleepdebt debug preset tired` = 450/350/200
+  - `/sleepdebt debug preset exhausted` = 780/700/650
+  - `/sleepdebt debug preset critical` = 960/900/950
+- Existing fine-grained command: `/sleepdebt debug set <debt> <fatigue> <stress>`.
+- `/sleepdebt status` additionally displays the predicted rest quality here.
+- Creative mode bypasses the per-tick fatigue simulation. For an actual
+  test set `/gamemode survival`, then use the presets.
+- Optional vanilla accelerated tick speed: `/tick rate 100` and restore
+  `/tick rate 20`. Increasing TPS affects the whole world; presets are safer.
+- To test the mob/hallucinations in a loaded open space at night:
+  `/time set midnight`, `/sleepdebt debug preset critical`.
+- For visual block test: `/sleepdebt showcase` (OP, needs suitable ground).

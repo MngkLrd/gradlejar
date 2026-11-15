@@ -90,5 +90,6 @@
   "gui.sleepdebt.reason.stress": "Stress interfered with recovery.",
   "gui.sleepdebt.reason.protected": "Your dreamcatcher made sleep safer.",
   "gui.sleepdebt.esc": "Press ESC to close",
-  "gui.sleepdebt.forecast": "Sleep quality here: %s%%"
+  "gui.sleepdebt.forecast": "Sleep quality here: %s%%",
+  "itemGroup.sleepdebt.main": "Sleep Debt"
 }
