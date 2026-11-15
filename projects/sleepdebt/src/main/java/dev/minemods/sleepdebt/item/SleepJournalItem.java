@@ -1,6 +1,8 @@
 package dev.minemods.sleepdebt.item;
 
 import dev.minemods.sleepdebt.gameplay.SleepEngine;
+import dev.minemods.sleepdebt.network.SleepReportPayload;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -15,15 +17,10 @@ public final class SleepJournalItem extends Item {
  @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){
   ItemStack held=player.getItemInHand(hand);
   if(!level.isClientSide &&player instanceof ServerPlayer server){
-   server.sendSystemMessage(Component.translatable("message.sleepdebt.journal_heading"));
-   server.sendSystemMessage(Component.translatable("message.sleepdebt.journal_stats",
-     SleepEngine.getDebt(server),SleepEngine.getFatigue(server),SleepEngine.getStress(server)));
-   server.sendSystemMessage(Component.translatable("message.sleepdebt.journal_last",
-     SleepEngine.getLastQuality(server),SleepEngine.getLastRecovery(server)));
-   server.sendSystemMessage(Component.translatable("message.sleepdebt.journal_advice",
-     SleepEngine.getDebt(server)>=620?"§c":"§a",
-     SleepEngine.getDebt(server)>=620?Component.translatable("message.sleepdebt.advice_sleep"):
-       Component.translatable("message.sleepdebt.advice_rest")));
+   PacketDistributor.sendToPlayer(server,new SleepReportPayload(
+    SleepEngine.getDebt(server),SleepEngine.getFatigue(server),
+    SleepEngine.getStress(server),SleepEngine.getLastQuality(server),
+    SleepEngine.getLastRecovery(server),SleepEngine.getLastReasons(server)));
   }
   return InteractionResultHolder.sidedSuccess(held,level.isClientSide);
  }

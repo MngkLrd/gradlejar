@@ -2,239 +2,240 @@ package dev.minemods.sleepdebt.gameplay;
 
 import dev.minemods.sleepdebt.SleepSettings;
 import dev.minemods.sleepdebt.network.SleepStatusPayload;
-import dev.minemods.sleepdebt.registry.ModBlocks;
-import dev.minemods.sleepdebt.registry.ModItems;
-import dev.minemods.sleepdebt.registry.ModEntities;
-import dev.minemods.sleepdebt.entity.SleeplessEntity;
-import dev.minemods.sleepdebt.integration.SleepAccessoriesBridge;
-import net.neoforged.fml.ModList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+/** Long-term player state. Saves under the legacy key for world migration. */
 public final class SleepEngine {
  private static final String KEY="sleepdebt_v2";
- private static int read(CompoundTag tag,String k){return tag.getInt(k);}
+ private static final int MAX=1000;
+ private static int clamp(int v){return Math.max(0,Math.min(MAX,v));}
  private static CompoundTag data(ServerPlayer p){return p.getPersistentData().getCompound(KEY);}
- private static void save(ServerPlayer p,CompoundTag t){p.getPersistentData().put(KEY,t);}
- private static void sync(ServerPlayer p,CompoundTag t){
-  PacketDistributor.sendToPlayer(p,new SleepStatusPayload(read(t,"debt"),read(t,"mask"),read(t,"crash"),read(t,"caffeine"),read(t,"fatigue"),read(t,"stress")));
+ private static void save(ServerPlayer p,CompoundTag state){p.getPersistentData().put(KEY,state);}
+ private static void sync(ServerPlayer p,CompoundTag state){
+  PacketDistributor.sendToPlayer(p,new SleepStatusPayload(
+   state.getInt("debt"),state.getInt("mask"),state.getInt("crash"),
+   state.getInt("caffeine"),state.getInt("fatigue"),state.getInt("stress")));
  }
- public static int getDebt(ServerPlayer p){return read(data(p),"debt");}
- public static int getLastQuality(ServerPlayer p){return read(data(p),"lastSleepQuality");}
- public static int getLastRecovery(ServerPlayer p){return read(data(p),"lastSleepRecovery");}
+ public static int getDebt(ServerPlayer p){return data(p).getInt("debt");}
+ public static int getFatigue(ServerPlayer p){return data(p).getInt("fatigue");}
+ public static int getStress(ServerPlayer p){return data(p).getInt("stress");}
+ public static int getCaffeine(ServerPlayer p){return data(p).getInt("caffeine");}
+ public static int getLastQuality(ServerPlayer p){return data(p).getInt("lastSleepQuality");}
+ public static int getLastRecovery(ServerPlayer p){return data(p).getInt("lastSleepRecovery");}
+ public static int getLastReasons(ServerPlayer p){return data(p).getInt("lastSleepReasons");}
+ public static int getCurrentQuality(ServerPlayer p){
+  return RestEnvironment.evaluate(p,p.blockPosition()).quality();
+ }
+ public static int daysSinceSleep(ServerPlayer p){
+  CompoundTag state=data(p);
+  if(!state.contains("lastSleepAt"))return 0;
+  long elapsed=Math.max(0,p.serverLevel().getGameTime()-state.getLong("lastSleepAt"));
+  return (int)Math.min(99,elapsed/24000L);
+ }
+
+ public static void setNeeds(ServerPlayer p,int debt,int fatigue,int stress){
+  CompoundTag t=data(p);
+  t.putInt("debt",clamp(debt));
+  t.putInt("fatigue",clamp(fatigue));
+  t.putInt("stress",clamp(stress));
+  save(p,t);sync(p,t);
+ }
+ public static void addStress(ServerPlayer p,int amount){
+  CompoundTag t=data(p);
+  t.putInt("stress",clamp(t.getInt("stress")+amount));
+  save(p,t);sync(p,t);
+ }
+ public static void addFatigue(ServerPlayer p,int amount){
+  CompoundTag t=data(p);
+  t.putInt("fatigue",clamp(t.getInt("fatigue")+amount));
+  save(p,t);
+ }
+ public static void soothe(ServerPlayer p,int stress,int fatigue){
+  CompoundTag t=data(p);
+  if(t.getInt("stress")==0&&t.getInt("fatigue")==0)return;
+  t.putInt("stress",clamp(t.getInt("stress")-stress));
+  t.putInt("fatigue",clamp(t.getInt("fatigue")-fatigue));
+  save(p,t);
+ }
+ public static void onBlockBreak(BlockEvent.BreakEvent e){
+  if(e.getPlayer() instanceof ServerPlayer p&&!p.getAbilities().instabuild){
+   addFatigue(p,3);
+  }
+ }
+ public static void onAttack(AttackEntityEvent e){
+  if(e.getEntity() instanceof ServerPlayer p&&!p.getAbilities().instabuild){
+   addFatigue(p,11);
+   addStress(p,4);
+  }
+ }
  public static boolean usePoultice(ServerPlayer p){
   CompoundTag t=data(p);
   long now=p.serverLevel().getGameTime();
-  if(t.contains("poulticeAt") && now>=t.getLong("poulticeAt")
-      && now-t.getLong("poulticeAt")<1800)return false;
-  if(read(t,"stress")<60 && read(t,"fatigue")<60)return false;
-  t.putInt("stress",Math.max(0,read(t,"stress")-215));
-  t.putInt("fatigue",Math.max(0,read(t,"fatigue")-135));
+  if(t.contains("poulticeAt")&&now>=t.getLong("poulticeAt")
+      &&now-t.getLong("poulticeAt")<1800)return false;
+  if(t.getInt("stress")<60&&t.getInt("fatigue")<60)return false;
+  t.putInt("stress",clamp(t.getInt("stress")-215));
+  t.putInt("fatigue",clamp(t.getInt("fatigue")-135));
   t.putLong("poulticeAt",now);
-  save(p,t);sync(p,t);return true;
- }
- public static void soothe(ServerPlayer player,int stress,int fatigue){
-  CompoundTag t=data(player);
-  if(read(t,"stress")==0&&read(t,"fatigue")==0)return;
-  t.putInt("stress",Math.max(0,read(t,"stress")-stress));
-  t.putInt("fatigue",Math.max(0,read(t,"fatigue")-fatigue));
-  save(player,t);
- }
- public static int getFatigue(ServerPlayer p){return read(data(p),"fatigue");}
- public static int getStress(ServerPlayer p){return read(data(p),"stress");}
- public static int getCaffeine(ServerPlayer p){return read(data(p),"caffeine");}
- public static void addStress(ServerPlayer p,int amount){
-  CompoundTag t=data(p);
-  t.putInt("stress",Math.max(0,Math.min(1000,read(t,"stress")+amount)));
   save(p,t);sync(p,t);
- }
- public static void setNeeds(ServerPlayer p,int debt,int fatigue,int stress){
-  CompoundTag t=data(p);
-  t.putInt("debt",Math.max(0,Math.min(1000,debt)));
-  t.putInt("fatigue",Math.max(0,Math.min(1000,fatigue)));
-  t.putInt("stress",Math.max(0,Math.min(1000,stress)));
-  save(p,t);sync(p,t);
+  return true;
  }
  public static int useDreamcatcher(ServerPlayer p,BlockPos pos){
   CompoundTag t=data(p);
   long now=p.serverLevel().getGameTime();
-  if(t.contains("dreamcatcherLast") && now>=t.getLong("dreamcatcherLast") && now-t.getLong("dreamcatcherLast")<3600)return 0;
+  if(t.contains("dreamcatcherLast")&&now>=t.getLong("dreamcatcherLast")
+      &&now-t.getLong("dreamcatcherLast")<3600)return 0;
   if(pos.distSqr(p.blockPosition())>64)return 0;
-  int removed=Math.min(225,read(t,"stress"));
-  t.putInt("stress",Math.max(0,read(t,"stress")-225));
-  t.putInt("fatigue",Math.max(0,read(t,"fatigue")-80));
+  int removed=Math.min(225,t.getInt("stress"));
+  t.putInt("stress",clamp(t.getInt("stress")-225));
+  t.putInt("fatigue",clamp(t.getInt("fatigue")-80));
   t.putLong("dreamcatcherLast",now);
   save(p,t);sync(p,t);
   p.level().playSound(null,pos,net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME,
-    net.minecraft.sounds.SoundSource.BLOCKS,.6f,1.1f);
+   net.minecraft.sounds.SoundSource.BLOCKS,.6f,1.1f);
   return removed;
  }
- public static int restAtCamp(ServerPlayer p,BlockPos pos){
+
+ /** Called by the multi-second, interruptible rest session, not block use. */
+ public static int finishCampRest(ServerPlayer p,BlockPos pos){
   if(!SleepSettings.ENABLE_CAMP_REST.get())return 0;
+  var site=RestEnvironment.evaluate(p,pos);
   CompoundTag t=data(p);
-  long now=p.serverLevel().getGameTime(),prev=t.getLong("lastCampRest");
-  if(t.contains("lastCampRest") && now-prev<2400 && now>=prev)return 0;
-  // No expensive per-tick scans: the area is inspected only when using a bedroll.
-  boolean sheltered=!p.serverLevel().canSeeSky(pos.above());
-  boolean lantern=BlockPos.betweenClosedStream(pos.offset(-4,-2,-4),pos.offset(4,3,4))
-   .anyMatch(q->p.level().getBlockState(q).is(ModBlocks.CAMP_LANTERN.get()));
-  boolean campfire=BlockPos.betweenClosedStream(pos.offset(-3,-1,-3),pos.offset(3,2,3))
-    .anyMatch(q->p.level().getBlockState(q).is(Blocks.CAMPFIRE)||p.level().getBlockState(q).is(Blocks.SOUL_CAMPFIRE));
-  int recovered=campfire?120:75;
-  if(sheltered)recovered+=50;
-  if(lantern)recovered+=40;
-  boolean pillow=p.getInventory().items.stream().anyMatch(stack->stack.is(ModItems.PILLOW.get()));
-  boolean mask=p.getInventory().items.stream().anyMatch(stack->stack.is(ModItems.MASK.get()));
-  if(!mask && ModList.get().isLoaded("accessories"))mask=SleepAccessoriesBridge.hasMask(p);
-  if(pillow)recovered+=20;
-  if(mask)recovered+=15;
-  t.putInt("fatigue",Math.max(0,read(t,"fatigue")-recovered*3));
-  t.putInt("stress",Math.max(0,read(t,"stress")-(campfire?220:110)-(mask?75:0)-(lantern?110:0)));
-  t.putInt("debt",Math.max(0,read(t,"debt")-Math.min(recovered,95)));
-  t.putLong("lastCampRest",now);
+  int fatigueRecovery=Math.min(520,165*site.quality()/100+(site.warm()?55:0));
+  int stressRecovery=Math.min(420,100*site.quality()/100+(site.incense()?80:0));
+  int debtRecovery=Math.min(85,50*site.quality()/100);
+  t.putInt("fatigue",clamp(t.getInt("fatigue")-fatigueRecovery));
+  t.putInt("stress",clamp(t.getInt("stress")-stressRecovery));
+  t.putInt("debt",clamp(t.getInt("debt")-debtRecovery));
+  t.putLong("lastCampRest",p.serverLevel().getGameTime());
   save(p,t);sync(p,t);
-  return recovered;
+  return fatigueRecovery;
  }
- public static void tick(PlayerTickEvent.Post e){
-  if(!(e.getEntity() instanceof ServerPlayer p)||p.isSpectator()||p.getAbilities().instabuild)return;
+
+ public static void drink(ServerPlayer p,int duration,int caffeine,int relief,int calm){
   CompoundTag t=data(p);
+  if(caffeine>0){
+   int load=t.getInt("caffeine");
+   int effect=Math.max(25,100-load);
+   t.putInt("mask",Math.max(t.getInt("mask"),duration*effect/100));
+   t.putInt("caffeine",Math.min(100,load+caffeine));
+   t.putInt("crash",0);
+  }else{
+   // Tea and warm milk calm you; they do not magically undo hours awake.
+   t.putInt("fatigue",clamp(t.getInt("fatigue")-relief*2));
+   t.putInt("stress",clamp(t.getInt("stress")-relief-calm*55));
+   t.putInt("debt",clamp(t.getInt("debt")-Math.min(35,relief/5)));
+   if(calm>0)t.putInt("calm",6000+calm*1800);
+  }
+  save(p,t);sync(p,t);
+ }
+
+ public static void tick(PlayerTickEvent.Post e){
+  if(!(e.getEntity() instanceof ServerPlayer p)||p.isSpectator())return;
+  CampRestSessions.tick(p);
+  if(p.getAbilities().instabuild)return;
+  CompoundTag t=data(p);
+  if(!t.contains("lastSleepAt"))t.putLong("lastSleepAt",p.serverLevel().getGameTime());
   if(p.isSleeping()){
-   t.putInt("sleepTicks",Math.min(500,read(t,"sleepTicks")+1));save(p,t);return;
+   t.putInt("sleepTicks",Math.min(500,t.getInt("sleepTicks")+1));
+   save(p,t);return;
   }
-  int slept=read(t,"sleepTicks");
+  int slept=t.getInt("sleepTicks");
   if(slept>0){
-   if(slept>=40){
-    int quality=100;
-    if(SleepSettings.SHELTER_BONUS.get()&&!p.level().canSeeSky(p.blockPosition()))quality+=15;
-    if(SleepSettings.MONSTER_PENALTY.get() && !p.level().getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(12)).isEmpty())quality-=15;
-    if(read(t,"calm")>0)quality+=10;
-    float temperature=p.level().getBiome(p.blockPosition()).value().getBaseTemperature();
-    boolean outside=p.level().canSeeSky(p.blockPosition().above());
-    if(outside && p.serverLevel().isRainingAt(p.blockPosition().above()))quality-=18;
-    if(outside && temperature<.15f)quality-=17;
-    if(outside && temperature>1.8f)quality-=9;
-    if(BlockPos.betweenClosedStream(p.blockPosition().offset(-5,-2,-5),p.blockPosition().offset(5,3,5))
-      .anyMatch(q->p.level().getBlockState(q).is(ModBlocks.DREAMCATCHER.get())))quality+=18;
-    if(BlockPos.betweenClosedStream(p.blockPosition().offset(-5,-2,-5),p.blockPosition().offset(5,3,5))
-      .anyMatch(q->p.level().getBlockEntity(q) instanceof dev.minemods.sleepdebt.blockentity.IncenseBurnerBlockEntity be
-         && be.remainingTicks()>0))quality+=12;
-    if(p.getInventory().items.stream().anyMatch(s->s.is(ModItems.PILLOW.get())))quality+=6;
-    if(p.getInventory().items.stream().anyMatch(s->s.is(ModItems.MASK.get())))quality+=6;
-    int recovery=SleepSettings.BASE_RECOVERY.get()*Math.max(35,Math.min(145,quality))/100;
-    if(slept<85)recovery=Math.min(recovery,180);
-    int before=read(t,"debt");
-    int after=Math.max(0,before-recovery);
-    t.putInt("lastSleepQuality",Math.max(35,Math.min(145,quality)));
-    t.putInt("lastSleepRecovery",before-after);
-    t.putLong("lastSleepAt",p.serverLevel().getGameTime());
-    p.displayClientMessage(net.minecraft.network.chat.Component.translatable(
-      "message.sleepdebt.sleep_report",Math.max(35,Math.min(145,quality)),before-after),true);
-    t.putInt("debt",after);t.putInt("progress",0);t.putInt("mask",0);t.putInt("crash",0);t.putInt("calm",0);
-    t.putInt("fatigue",Math.max(0,read(t,"fatigue")-650));
-    t.putInt("stress",Math.max(0,read(t,"stress")-500));
-    t.putInt("caffeine",Math.max(0,read(t,"caffeine")-30));
-    if(after==0&&before>0)p.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED,1600,0,true,true));
-   }
-   t.putInt("sleepTicks",0);sync(p,t);
+   if(slept>=40)recoverFromSleep(p,t,slept);
+   t.putInt("sleepTicks",0);
+   sync(p,t);
   }
-  int progress=read(t,"progress")+1;
-  if(progress>=SleepSettings.TICKS_PER_POINT.get()){
-   progress=0;t.putInt("debt",Math.min(1000,read(t,"debt")+1));
+  int progress=t.getInt("progress")+1;
+  int interval=SleepSettings.TICKS_PER_POINT.get();
+  if(p.isSprinting()||p.isSwimming())interval=Math.max(20,(int)(interval*.78f));
+  if(progress>=interval){
+   progress=0;
+   t.putInt("debt",clamp(t.getInt("debt")+1));
   }
   t.putInt("progress",progress);
   if(p.tickCount%20==0){
    boolean exerting=p.isSprinting()||p.isSwimming()||p.getAttackStrengthScale(0)<.6f;
-   t.putInt("fatigue",Math.max(0,Math.min(1000,read(t,"fatigue")+(exerting?3:-1))));
-   boolean threatened=p.hurtTime>0||!p.level().getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(9)).isEmpty();
-   t.putInt("stress",Math.max(0,Math.min(1000,read(t,"stress")+(threatened?4:-2))));
-   int mask=read(t,"mask");
+   t.putInt("fatigue",clamp(t.getInt("fatigue")+(exerting?4:-2)));
+   boolean threatened=p.hurtTime>0||!p.level().getEntitiesOfClass(
+     net.minecraft.world.entity.monster.Monster.class,p.getBoundingBox().inflate(9)).isEmpty();
+   boolean dark=!p.level().isDay()&&p.level().getMaxLocalRawBrightness(p.blockPosition())<5;
+   t.putInt("stress",clamp(t.getInt("stress")+(threatened?5:dark?1:-2)));
+   int mask=t.getInt("mask");
    if(mask>0){
-    mask=Math.max(0,mask-20);t.putInt("mask",mask);
-    if(mask==0&&read(t,"caffeine")>=55)t.putInt("crash",1800);
+    mask=Math.max(0,mask-20);
+    t.putInt("mask",mask);
+    if(mask==0&&t.getInt("caffeine")>=55)t.putInt("crash",1800);
    }
-   if(read(t,"crash")>0)t.putInt("crash",Math.max(0,read(t,"crash")-20));
-   if(read(t,"calm")>0)t.putInt("calm",Math.max(0,read(t,"calm")-20));
-   if(p.tickCount%600==0&&read(t,"caffeine")>0)t.putInt("caffeine",read(t,"caffeine")-1);
+   if(t.getInt("crash")>0)t.putInt("crash",Math.max(0,t.getInt("crash")-20));
+   if(t.getInt("calm")>0)t.putInt("calm",Math.max(0,t.getInt("calm")-20));
+   if(p.tickCount%600==0&&t.getInt("caffeine")>0)
+    t.putInt("caffeine",t.getInt("caffeine")-1);
   }
-  if(p.tickCount%100==0){apply(p,t);sync(p,t);}
-  if(SleepSettings.MICROSLEEPS.get() && p.tickCount%600==0
-      && read(t,"debt")>=850 && read(t,"fatigue")>=650 && read(t,"mask")==0
-      && p.getRandom().nextInt(3)==0) {
+  if(p.tickCount%100==0){
+   SleepEffects.apply(p,t);
+   sync(p,t);
+  }
+  if(SleepSettings.MICROSLEEPS.get()&&p.tickCount%600==0&&
+     t.getInt("debt")>=850&&t.getInt("fatigue")>=650&&t.getInt("mask")==0&&
+     p.getRandom().nextInt(3)==0){
    p.addEffect(new MobEffectInstance(MobEffects.DARKNESS,36,0,true,false,true));
    p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,36,0,true,false,true));
   }
-  if(p.tickCount%400==0&&SleepSettings.ENABLE_SLEEPLESS.get())spawnSleepless(p,t);
+  if(p.tickCount%400==0)NightEncounters.trySpawn(p,t.getInt("debt"));
   save(p,t);
  }
- private static void spawnSleepless(ServerPlayer p,CompoundTag t){
-  if(read(t,"debt")<SleepSettings.SLEEPLESS_THRESHOLD.get()||!(p.level() instanceof ServerLevel level)||level.isDay())return;
-  if(level.random.nextInt(4)!=0)return;
-  if(BlockPos.betweenClosedStream(p.blockPosition().offset(-7,-3,-7),
-    p.blockPosition().offset(7,4,7))
-    .anyMatch(q->level.getBlockState(q).is(ModBlocks.DREAMCATCHER.get())))return;
-  if(!level.getEntitiesOfClass(SleeplessEntity.class,p.getBoundingBox().inflate(32)).isEmpty())return;
-  double angle=level.random.nextDouble()*Math.PI*2;
-  int x=p.getBlockX()+(int)(Math.cos(angle)*20);
-  int z=p.getBlockZ()+(int)(Math.sin(angle)*20);
-  int y=level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);
-  BlockPos pos=new BlockPos(x,y,z);
-  if(level.getMaxLocalRawBrightness(pos)>7 || !level.getBlockState(pos).isAir())return;
-  SleeplessEntity mob=ModEntities.SLEEPLESS.get().create(level);
-  if(mob==null)return;
-  mob.moveTo(x+.5,y,z+.5,level.random.nextFloat()*360,0);
-  level.addFreshEntity(mob);
- }
- public static void drink(ServerPlayer p,int duration,int caffeine,int heal,int calm){
-  CompoundTag t=data(p);
-  if(caffeine>0){
-   int load=read(t,"caffeine");
-   int effective=Math.max(25,100-load);
-   t.putInt("mask",Math.max(read(t,"mask"),duration*effective/100));
-   t.putInt("caffeine",Math.min(100,load+caffeine));
-   t.putInt("crash",0);
-  }else{
-   t.putInt("debt",Math.max(0,read(t,"debt")-heal));
-   if(calm>0){
-    t.putInt("calm",6000+calm*1800);
-    t.putInt("stress",Math.max(0,read(t,"stress")-130*calm));
-    t.putInt("fatigue",Math.max(0,read(t,"fatigue")-40*calm));
-   }
+
+ private static void recoverFromSleep(ServerPlayer p,CompoundTag t,int slept){
+  var site=RestEnvironment.evaluate(p,p.blockPosition());
+  int quality=site.quality();
+  int base=SleepSettings.BASE_RECOVERY.get();
+  int recovery=base*quality/100;
+  if(slept<85)recovery=Math.min(recovery,180);
+  int before=t.getInt("debt");
+  int after=clamp(before-recovery);
+  t.putInt("lastSleepQuality",quality);
+  t.putInt("lastSleepRecovery",before-after);
+  t.putInt("lastSleepReasons",site.reasons());
+  t.putLong("lastSleepAt",p.serverLevel().getGameTime());
+  t.putInt("debt",after);
+  t.putInt("progress",0);
+  t.putInt("mask",0);
+  t.putInt("crash",0);
+  t.putInt("calm",0);
+  t.putInt("fatigue",clamp(t.getInt("fatigue")-650*quality/100));
+  t.putInt("stress",clamp(t.getInt("stress")-500*quality/100));
+  t.putInt("caffeine",Math.max(0,t.getInt("caffeine")-30));
+  p.displayClientMessage(Component.translatable("message.sleepdebt.sleep_report",
+   quality,before-after),true);
+  if(after==0&&before>0){
+   p.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED,1600,0,true,true));
   }
-  save(p,t);sync(p,t);
  }
- private static void apply(ServerPlayer p,CompoundTag t){
-  if(!SleepSettings.PENALTIES.get())return;
-  int debt=read(t,"debt"),fatigue=read(t,"fatigue");
-  boolean masked=read(t,"mask")>0;
-  if(!masked&& (debt>=250||fatigue>700))
-    p.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,125,debt>=620?1:0,true,false,true));
-  if(!masked&&(debt>=420||fatigue>850))
-    p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,125,debt>=830?1:0,true,false,true));
-  if((!masked&&debt>=620)||read(t,"crash")>0)
-    p.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,125,0,true,false,true));
-  if(read(t,"caffeine")>=95)
-    p.addEffect(new MobEffectInstance(MobEffects.CONFUSION,125,0,true,false,true));
- }
+
  public static void clonePlayer(PlayerEvent.Clone e){
   if(!(e.getEntity() instanceof ServerPlayer p))return;
+  CampRestSessions.discard(p);
   CompoundTag old=e.getOriginal().getPersistentData().getCompound(KEY).copy();
-  if(e.isWasDeath()&&!SleepSettings.KEEP_ON_DEATH.get()){old.putInt("debt",0);old.putInt("progress",0);old.putInt("fatigue",0);old.putInt("stress",0);}
-  old.putInt("sleepTicks",0);p.getPersistentData().put(KEY,old);
+  if(e.isWasDeath()&&!SleepSettings.KEEP_ON_DEATH.get()){
+   old.putInt("debt",0);old.putInt("progress",0);
+   old.putInt("fatigue",0);old.putInt("stress",0);
+  }
+  old.putInt("sleepTicks",0);
+  p.getPersistentData().put(KEY,old);
  }
  public static void onLogin(PlayerEvent.PlayerLoggedInEvent e){
-  if(e.getEntity() instanceof ServerPlayer p)sync(p,data(p));
+  if(e.getEntity() instanceof ServerPlayer p){CampRestSessions.discard(p);sync(p,data(p));}
  }
  private SleepEngine(){}
 }
-
-

@@ -21,7 +21,7 @@ with zipfile.ZipFile(jar) as z:
     metadata=tomllib.loads(data("META-INF/neoforge.mods.toml").decode("utf-8"))
     deps=metadata.get("dependencies",{}).get("sleepdebt",[])
     dep_names={x.get("modId") for x in deps if x.get("type")=="required"}
-    if not {"neoforge","minecraft","jei","emi","jade","patchouli"}.issubset(dep_names):
+    if not {"neoforge","minecraft"}.issubset(dep_names):
         raise ValueError(f"Required dependencies missing: {dep_names}")
     item_ids=[
         "roasted_cocoa_beans","coffee_grounds","dried_herbs","dream_shard",
@@ -51,6 +51,8 @@ with zipfile.ZipFile(jar) as z:
     js("data/sleepdebt/loot_table/blocks/coffee_bush.json")
     for n in range(8):
         js(f"assets/sleepdebt/models/block/coffee_bush_stage_{n}.json")
+    for img in ("sleep_journal.png","sleep_hud.png","coffee_maker.png"):
+        data("assets/sleepdebt/textures/gui/"+img)
     for name in names:
         if (name.startswith("assets/sleepdebt/") or name.startswith("data/sleepdebt/")) and name.endswith(".json"):
             js(name)
@@ -61,7 +63,9 @@ with zipfile.ZipFile(jar) as z:
         if raw[:8]!=b"\x89PNG\r\n\x1a\n":raise ValueError(f"Invalid PNG magic: {n}")
         width,height=struct.unpack(">II",raw[16:24])
         target=((64,64) if "entity/sleepless.png" in n else
-                (176,166) if "textures/gui/coffee_maker.png" in n else (16,16))
+                (176,166) if "textures/gui/coffee_maker.png" in n else
+                (228,188) if "textures/gui/sleep_journal.png" in n else
+                (138,58) if "textures/gui/sleep_hud.png" in n else (16,16))
         if (width,height)!=target:raise ValueError(f"{n}: size {(width,height)} not {target}")
     for locale in ("en_us","ru_ru"):
         entries=[n for n in names if f"/patchouli_books/sleep_guide/{locale}/entries/" in n and n.endswith(".json")]
@@ -74,6 +78,3 @@ with zipfile.ZipFile(jar) as z:
                     if f"data/sleepdebt/recipe/{recipe}.json" not in names and not page["recipe"].startswith("minecraft:"):
                         raise ValueError(f"{entry} points to missing recipe {page['recipe']}")
     print("Sleep Debt production assets OK:",len(item_ids),"items,",len(block_names),"blocks,",len(pngs),"PNG textures")
-
-
-

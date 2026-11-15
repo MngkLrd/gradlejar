@@ -21,7 +21,7 @@ public final class CoffeeScreen extends AbstractContainerScreen<CoffeeMenu> {
   titleLabelX=8;titleLabelY=7;inventoryLabelY=72;
  }
  @Override protected void renderBg(GuiGraphics gui,float partial,int mouseX,int mouseY){
-  gui.blit(BACKGROUND,leftPos,topPos,0,0,imageWidth,imageHeight);
+  gui.blit(BACKGROUND,leftPos,topPos,0f,0f,imageWidth,imageHeight,imageWidth,imageHeight);
   int progress=Math.min(22,Math.max(0,menu.progress()*22/menu.total()));
   if(progress>0)gui.fill(leftPos+109,topPos+48,leftPos+109+progress,topPos+54,0xFFB7834F);
  }
@@ -35,4 +35,3 @@ public final class CoffeeScreen extends AbstractContainerScreen<CoffeeMenu> {
   renderTooltip(gui,mouseX,mouseY);
  }
 }
-

@@ -1,7 +1,7 @@
 package dev.minemods.sleepdebt.block;
 
 import com.mojang.serialization.MapCodec;
-import dev.minemods.sleepdebt.gameplay.SleepEngine;
+import dev.minemods.sleepdebt.gameplay.CampRestSessions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,8 +22,7 @@ public final class CampBedrollBlock extends Block {
  @Override protected VoxelShape getShape(BlockState s,BlockGetter l,BlockPos p,CollisionContext c){return SHAPE;}
  @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit){
   if(player instanceof ServerPlayer sp) {
-   int restored=SleepEngine.restAtCamp(sp,pos);
-   sp.displayClientMessage(Component.translatable(restored>0?"message.sleepdebt.camp_rest":"message.sleepdebt.camp_cooldown",restored),true);
+   CampRestSessions.begin(sp,pos);
   }
   return InteractionResult.sidedSuccess(level.isClientSide);
  }

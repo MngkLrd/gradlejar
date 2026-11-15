@@ -3,9 +3,9 @@ loaderVersion="[4,)"
 license="All Rights Reserved"
 [[mods]]
 modId="sleepdebt"
-version="2.6.0-alpha.2"
-displayName="Sleep Debt"
-description='''Minecraft-native sleep fatigue, caffeine, drink crafting and a survival guide.'''
+version="3.0.0-alpha.1"
+displayName="Sleep Debt: Restless Nights"
+description='''An immersive rest, fatigue and night-survival experience with real preparation, hostile nights and configurable hallucinations.'''
 [[dependencies.sleepdebt]]
 modId="neoforge"
 type="required"
@@ -20,26 +20,26 @@ ordering="NONE"
 side="BOTH"
 [[dependencies.sleepdebt]]
 modId="jei"
-type="required"
+type="optional"
 versionRange="[19.21,)"
 ordering="NONE"
 side="CLIENT"
 [[dependencies.sleepdebt]]
 modId="emi"
-type="required"
+type="optional"
 versionRange="[1.1.22,)"
 ordering="NONE"
 side="CLIENT"
 [[dependencies.sleepdebt]]
 modId="patchouli"
-type="required"
+type="optional"
 versionRange="[1.21,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.sleepdebt]]
 modId="jade"
-type="required"
+type="optional"
 versionRange="[15.10.0,)"
 ordering="NONE"
 side="BOTH"
