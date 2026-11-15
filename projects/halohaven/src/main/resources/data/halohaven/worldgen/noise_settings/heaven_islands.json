@@ -519,7 +519,7 @@
           "then_run": {
             "type": "minecraft:block",
             "result_state": {
-              "Name": "minecraft:calcite"
+              "Name": "halohaven:chalkstone"
             }
           }
         }
@@ -544,7 +544,7 @@
           "then_run": {
             "type": "minecraft:block",
             "result_state": {
-              "Name": "minecraft:moss_block"
+              "Name": "halohaven:canopy_loam"
             }
           }
         }
@@ -569,7 +569,7 @@
           "then_run": {
             "type": "minecraft:block",
             "result_state": {
-              "Name": "minecraft:tuff"
+              "Name": "halohaven:resonant_shale"
             }
           }
         }
@@ -594,7 +594,7 @@
           "then_run": {
             "type": "minecraft:block",
             "result_state": {
-              "Name": "halohaven:moonstone"
+              "Name": "halohaven:choirstone"
             }
           }
         }
@@ -619,7 +619,32 @@
           "then_run": {
             "type": "minecraft:block",
             "result_state": {
-              "Name": "minecraft:deepslate"
+              "Name": "halohaven:umbral_silt"
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "halohaven:dawn_gardens"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:stone_depth",
+            "offset": 0,
+            "add_surface_depth": false,
+            "secondary_depth_range": 0,
+            "surface_type": "floor"
+          },
+          "then_run": {
+            "type": "minecraft:block",
+            "result_state": {
+              "Name": "halohaven:sunlit_loam"
             }
           }
         }

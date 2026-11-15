@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "halohaven:skygrass"
+    "halohaven:skygrass",
+    "halohaven:sunlit_loam",
+    "halohaven:canopy_loam"
   ]
 }
