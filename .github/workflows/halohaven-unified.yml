@@ -29,7 +29,7 @@ jobs:
       - name: Install art and NBT preparation dependencies
         run: |
           python3 -m pip install --disable-pip-version-check pillow==11.3.0 nbtlib==2.0.4
-          command -v ffmpeg
+          command -v ffmpeg || { sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends ffmpeg; }
       - name: Patch Halo Haven 2.2 art, sound and doors
         run: python3 tools/patch_halohaven_v22.py
       - name: Compile original Halo Haven 1.8
