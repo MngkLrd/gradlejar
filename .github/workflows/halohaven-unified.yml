@@ -1,4 +1,4 @@
-name: Halo Haven 2.1 Unified JAR
+name: Halo Haven 2.2 Worldgen and Creature Repairs
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
       - ".github/workflows/halohaven-unified.yml"
       - "projects/halohaven/**"
       - "projects/halohaven-alpha21/**"
+      - "tools/patch_halohaven_v22.py"
   workflow_dispatch:
 
 permissions:
@@ -25,11 +26,17 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.2.1'
+      - name: Install art and NBT preparation dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check pillow==11.3.0 nbtlib==2.0.4
+          command -v ffmpeg
+      - name: Patch Halo Haven 2.2 art, sound and doors
+        run: python3 tools/patch_halohaven_v22.py
       - name: Compile original Halo Haven 1.8
         run: |
           cd projects/halohaven
           gradle --no-daemon clean build
-      - name: Compile Halo Haven 2.1 expansion
+      - name: Compile updated Halo Haven ecosystem
         run: |
           cd projects/halohaven-alpha21
           gradle --no-daemon clean build
@@ -42,7 +49,7 @@ jobs:
           assert core.exists(), core
           assert len(addons)==1, addons
           addon=addons[0]
-          out=pathlib.Path('dist/HaloHaven-2.1.0-Alpha-NeoForge-1.21.1-Standalone.jar')
+          out=pathlib.Path('dist/HaloHaven-2.2.0-Alpha-NeoForge-1.21.1-Standalone.jar')
           out.parent.mkdir(exist_ok=True)
           banned={'META-INF/MANIFEST.MF','META-INF/neoforge.mods.toml','pack.mcmeta'}
           entries={}
@@ -61,7 +68,7 @@ jobs:
               addon_toml=z.read('META-INF/neoforge.mods.toml').decode('utf-8')
           assert 'modId="halohaven"' in core_toml
           assert 'modId="halohavenalpha2"' in addon_toml
-          core_toml=re.sub(r'(modId="halohaven"\s*\nversion=")[^"]+(")',r'\g<1>2.1.0-alpha\2',core_toml,count=1)
+          core_toml=re.sub(r'(modId="halohaven"\s*\nversion=")[^"]+(")',r'\g<1>2.2.0-alpha\2',core_toml,count=1)
           addon_mods=addon_toml[addon_toml.index('[[mods]]'):]
           # Mod IDs can coexist in a single NeoForge mod file, their registry namespaces remain intact.
           # The self-contained package satisfies halohavenalpha2's dependency internally.
@@ -69,6 +76,10 @@ jobs:
           entries['META-INF/neoforge.mods.toml']=merged_toml.encode()
           entries['pack.mcmeta']=core_pack
           assert 'dev/halohaven/alpha2/HaloHavenAlpha2.class' in entries
+          assert 'dev/halohaven/alpha2/HavenSounds.class' in entries
+          assert any(k.endswith('skyfolk.ogg') for k in entries), 'Missing skyfolk voice'
+          assert sum(k.endswith('.ogg') for k in entries)>=21, 'Missing creature voices'
+          assert len([k for k in entries if k.endswith('_door_face.json') and 'blockstates/' in k])>=3
           assert len([k for k in entries if k.startswith('assets/halohavenalpha2/textures/entity/') and k.endswith('.png')]) >= 20
           assert len([k for k in entries if k.startswith('data/halohavenalpha2/structure/') and k.endswith('.nbt')]) >= 25
           with zipfile.ZipFile(out,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=8) as z:
@@ -84,7 +95,7 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: HaloHaven-2.1-Alpha-Standalone
+          name: HaloHaven-2.2-Alpha-Standalone
           path: dist/*
           if-no-files-found: error
           retention-days: 30
@@ -92,5 +103,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tag="halohaven-2.1-alpha-standalone-${GITHUB_RUN_NUMBER}"
-          gh release create "$tag" dist/*.jar dist/*.sha256 --target "$GITHUB_SHA" --title "Halo Haven 2.1 Alpha — Standalone NeoForge 1.21.1" --notes "One file contains the original Halo Haven dimension and the Alpha 2.1 expansion. Static build verified; gameplay not yet tested." --prerelease
+          tag="halohaven-2.2-alpha-standalone-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" dist/*.jar dist/*.sha256 --target "$GITHUB_SHA" --title "Halo Haven 2.2 Alpha — Standalone NeoForge 1.21.1" --notes "One file contains the original Halo Haven dimension and the Alpha 2.2 repaired expansion. Static build verified; gameplay not yet tested." --prerelease
