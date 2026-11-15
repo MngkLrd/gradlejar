@@ -119,6 +119,142 @@ update(model, "body.y=species.flight?13+Mth.sin(ageInTicks*.13f)*.6f:13;",
                          species.form==HavenSpecies.Form.CAT || species.form==HavenSpecies.Form.BEAST ||
                          species.form==HavenSpecies.Form.MANTA || species.form==HavenSpecies.Form.WHALE;""")
 
+
+# Species-specific topology and proportions: quadrupeds, birds, manta, whale, humanoids and insects.
+new_layer = r'''        public static LayerDefinition layer(HavenSpecies s){
+            MeshDefinition mesh=new MeshDefinition(); PartDefinition root=mesh.getRoot();
+            int[] dim = switch(s.form){
+                case DEER -> new int[]{7,6,14};
+                case FOX, CAT -> new int[]{7,6,12};
+                case BEAST -> new int[]{15,10,16};
+                case TURTLE -> new int[]{11,5,14};
+                case CRAB -> new int[]{10,4,10};
+                case MANTA -> new int[]{17,3,12};
+                case WHALE -> new int[]{20,12,24};
+                case WISP -> new int[]{5,5,5};
+                case SPIRIT -> new int[]{6,9,6};
+                case GOLEM -> new int[]{12,14,8};
+                case ROBED -> new int[]{8,14,6};
+                case STALKER -> new int[]{6,13,6};
+                case SPIDER -> new int[]{9,5,12};
+                case BAT -> new int[]{4,4,6};
+                case MOTH -> new int[]{4,5,7};
+                case BIRD -> new int[]{4,5,7};
+                case WINGED -> new int[]{5,4,9};
+                case ROUND -> new int[]{8,7,9};
+            };
+            int bw=dim[0],bh=dim[1],bd=dim[2];
+            boolean upright=s.form==HavenSpecies.Form.ROBED || s.form==HavenSpecies.Form.GOLEM ||
+                            s.form==HavenSpecies.Form.STALKER;
+            int by=upright?11:13;
+            int[] hdim = switch(s.form){
+                case GOLEM -> new int[]{8,8,8};
+                case BEAST -> new int[]{8,7,8};
+                case WHALE,MANTA -> new int[]{4,3,4};
+                case BAT,BIRD,MOTH,WISP -> new int[]{4,4,4};
+                case DEER -> new int[]{5,5,6};
+                default -> new int[]{6,6,6};
+            };
+            int hw=hdim[0],hh=hdim[1],hd=hdim[2];
+            PartDefinition body=add(root,"body",CubeListBuilder.create().texOffs(0,32)
+               .addBox(-bw/2f,-bh/2f,-bd/2f,bw,bh,bd),0,by,0);
+            int headY=upright?(by-bh/2-hh/2):(by-3);
+            if(s.form==HavenSpecies.Form.DEER)headY-=3;
+            int headZ=upright?-1:(-bd/2-hd/2+1);
+            add(root,"head",CubeListBuilder.create().texOffs(0,0)
+                .addBox(-hw/2f,-hh/2f,-hd/2f,hw,hh,hd),0,headY,headZ);
+            int legH=Math.max(4,24-(by+bh/2));
+            int legW=s.form==HavenSpecies.Form.DEER?2:
+                (s.form==HavenSpecies.Form.BEAST||s.form==HavenSpecies.Form.GOLEM)?4:3;
+            int xoff=Math.max(2,bw/2-2);
+            int zoff=Math.max(2,bd/2-2);
+            for(int i=0;i<4;i++){
+                int x=i%2==0?-xoff:xoff,z=i<2?-zoff:zoff;
+                add(root,i==0?"frontLeft":i==1?"frontRight":i==2?"backLeft":"backRight",
+                    CubeListBuilder.create().texOffs(0,72)
+                    .addBox(-legW/2f,0,-legW/2f,legW,legH,legW),x,by+bh/2,z);
+            }
+            int ww = switch(s.form){
+                case MANTA -> 18;
+                case WHALE -> 10;
+                case MOTH -> 13;
+                case BAT -> 11;
+                case BIRD -> 9;
+                case WINGED -> 11;
+                default -> 4;
+            };
+            int wd = switch(s.form){
+                case MANTA -> 13;
+                case MOTH -> 10;
+                case WHALE -> 8;
+                case BAT -> 8;
+                case BIRD -> 6;
+                default -> 6;
+            };
+            add(root,"wingLeft",CubeListBuilder.create().texOffs(38,72)
+                .addBox(0,-1,0,ww,2,wd),bw/2,by-3,-wd/2);
+            add(root,"wingRight",CubeListBuilder.create().texOffs(38,72).mirror()
+                .addBox(-ww,-1,0,ww,2,wd),-bw/2,by-3,-wd/2);
+            int tw=s.form==HavenSpecies.Form.WHALE?6:s.form==HavenSpecies.Form.FOX?5:3;
+            int th=s.form==HavenSpecies.Form.WHALE?4:3;
+            int td=s.form==HavenSpecies.Form.WHALE?13:s.form==HavenSpecies.Form.FOX?10:8;
+            add(root,"tail",CubeListBuilder.create().texOffs(0,100)
+                .addBox(-tw/2f,-th/2f,0,tw,th,td),0,by,bd/2);
+            if(s.form==HavenSpecies.Form.DEER){
+                add(root,"neck",CubeListBuilder.create().texOffs(100,0)
+                    .addBox(-2,-7,-2,4,8,4),0,by-4,-bd/2);
+                for(int i : new int[]{-1,1}){
+                    add(root,i<0?"antlerL":"antlerR",
+                        CubeListBuilder.create().texOffs(100,24)
+                        .addBox(-1,-10,-1,2,10,2),i*3,headY-4,headZ);
+                    add(root,i<0?"antlerForkL":"antlerForkR",
+                        CubeListBuilder.create().texOffs(100,0)
+                        .addBox(i<0?-5:0,-2,0,6,2,2),i*3,headY-11,headZ);
+                }
+            }
+            if(s.form==HavenSpecies.Form.TURTLE || s.form==HavenSpecies.Form.CRAB){
+                add(body,"shell",CubeListBuilder.create().texOffs(0,52)
+                    .addBox(-bw/2f,-bh/2f-3,-bd/2f,bw,4,bd),0,0,0);
+            }
+            if(s.form==HavenSpecies.Form.BEAST){
+                for(int i=0;i<4;i++)add(body,"spine"+i,
+                    CubeListBuilder.create().texOffs(100,0).addBox(-2,-5,-2,4,5,4),
+                    (i-1)*3,-bh/2,-bd/3+i*3);
+            }
+            if(s.form==HavenSpecies.Form.SPIDER || s.form==HavenSpecies.Form.CRAB){
+                for(int i=0;i<4;i++){
+                    int z=i*3-5;
+                    add(root,"legExtraL"+i,CubeListBuilder.create().texOffs(100,0)
+                        .addBox(0,0,-1,9,2,2),bw/2,by,z);
+                    add(root,"legExtraR"+i,CubeListBuilder.create().texOffs(100,0)
+                        .addBox(-9,0,-1,9,2,2),-bw/2,by,z);
+                }
+            }
+            if(s.form==HavenSpecies.Form.ROUND || s.form==HavenSpecies.Form.FOX ||
+               s.form==HavenSpecies.Form.CAT || s.form==HavenSpecies.Form.BAT ||
+               s.form==HavenSpecies.Form.MOTH){
+                int ear=s.form==HavenSpecies.Form.ROUND?7:4;
+                for(int i : new int[]{-1,1})add(root,i<0?"earL":"earR",
+                   CubeListBuilder.create().texOffs(100,0)
+                   .addBox(-1,-ear,-1,2,ear,2),i*2,headY-hh/2,headZ);
+            }
+            if(upright){
+                for(int i : new int[]{-1,1})add(body,i<0?"shoulderL":"shoulderR",
+                    CubeListBuilder.create().texOffs(100,24)
+                    .addBox(-2,0,-2,4,bh/2,4),i*(bw/2+1),-bh/2,0);
+            }
+            if(s.form==HavenSpecies.Form.SPIRIT || s.form==HavenSpecies.Form.WISP){
+                add(body,"glowCore",CubeListBuilder.create().texOffs(100,0)
+                    .addBox(-2,-2,-2,4,4,4),0,0,-bd/2-1);
+            }
+            return LayerDefinition.create(mesh,128,128);
+        }
+'''
+text=model.read_text(encoding="utf-8")
+start=text.index("        public static LayerDefinition layer(HavenSpecies s){")
+end=text.index("        @Override public void renderToBuffer",start)
+model.write_text(text[:start]+new_layer+text[end:],encoding="utf-8")
+
 # Each face is designed in pixel-clusters per material. Not random isolated pixels.
 from PIL import Image, ImageDraw
 palette={
@@ -170,8 +306,8 @@ def image_for(name):
                 d.line((x0+2,y,x0+w-3,y),fill=pal[4])
     kind="stone" if name in hard else "feather" if name in feather else "arcane" if name in spectral else "fur"
     # Full cube UV spans, with independently shaded head, trunk, legs, wing membrane and tail.
-    for args in [(0,0,25,14),(0,32,72,20),(0,52,72,17),(0,72,18,18),
-                 (38,72,60,18),(0,100,32,18),(100,0,27,19),(100,24,27,15)]:
+    for args in [(0,0,37,20),(0,32,96,38),(0,52,72,17),(0,72,18,18),
+                 (38,72,65,20),(0,100,44,22),(100,0,27,19),(100,24,27,16)]:
         region(*args,kind)
     # Distinct 6x6 head, UV front face lies within (6..11, 6..11).
     d=ImageDraw.Draw(im)
