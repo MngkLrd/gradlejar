@@ -106,6 +106,12 @@ jobs:
               assert densities['noise_router']['vegetation']=='halohaven:climate_vegetation'
               assert densities['noise_router']['final_density']['type']=='minecraft:max'
               print('PASS: 6 actual climate biomes and separate terrain density + ecology')
+              for variant in ('skygrass_sparse','skygrass_dense'):
+                  assert f'assets/halohaven/textures/block/{variant}.png' in names
+                  assert f'assets/halohaven/models/block/{variant}.json' in names
+              grass=json.loads(jar.read('assets/halohaven/blockstates/skygrass.json'))
+              assert len(grass['variants'][''])==3
+              assert sum(v['weight'] for v in grass['variants'][''])==10
               for name in ['aurora_glass','dawn_glass']:
                   model=json.loads(jar.read(f'assets/halohaven/models/block/{name}.json'))
                   assert model['render_type']=='minecraft:translucent'
