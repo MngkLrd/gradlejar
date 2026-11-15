@@ -1,6 +1,7 @@
 package dev.minemods.sleepdebt.entity;
 
 import dev.minemods.sleepdebt.gameplay.SleepEngine;
+import dev.minemods.sleepdebt.registry.ModSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -64,24 +65,23 @@ public final class SleeplessEntity extends Zombie {
   if(hit&&target instanceof ServerPlayer player){
    successfulHits++;
    // Darkness lingers for nine seconds, and repeat blows renew its duration.
-   player.addEffect(new MobEffectInstance(MobEffects.DARKNESS,240+Math.min(120,successfulHits*24),
-     0,false,true,true));
+   // Custom client fog handles visual darkness; do not stack vanilla Darkness.
    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,70,0,false,false,true));
    if(successfulHits%3==0){
     player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,120,0,false,false,true));
     player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,100,0,false,false,true));
     SleepEngine.addFatigue(player,75);
-    level().playSound(null,blockPosition(),SoundEvents.WARDEN_HEARTBEAT,
-      SoundSource.HOSTILE,1.1f,.65f);
+    level().playSound(null,blockPosition(),ModSounds.GROWL.get(),
+      SoundSource.HOSTILE,1.0f,.66f);
    }else if(successfulHits%2==0){
     // Brief total obscuration creates a panic beat, not permanent blindness.
-    player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS,30,0,false,false,true));
+    // No full vanilla blindness: preserve a small navigable visible radius.
     player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,85,0,false,false,true));
-    level().playSound(null,blockPosition(),SoundEvents.WARDEN_HEARTBEAT,
-      SoundSource.HOSTILE,1.1f,.65f);
+    level().playSound(null,blockPosition(),ModSounds.STRIKE.get(),
+      SoundSource.HOSTILE,.90f,.78f);
    }else{
-    level().playSound(null,blockPosition(),SoundEvents.SCULK_SHRIEKER_SHRIEK,
-      SoundSource.HOSTILE,.42f,.68f);
+    level().playSound(null,blockPosition(),ModSounds.STRIKE.get(),
+      SoundSource.HOSTILE,.82f,.58f);
    }
    SleepEngine.addStress(player,95);
    player.serverLevel().sendParticles(ParticleTypes.LARGE_SMOKE,player.getX(),
@@ -89,17 +89,18 @@ public final class SleeplessEntity extends Zombie {
   }
   return hit;
  }
- @Override protected SoundEvent getAmbientSound(){return SoundEvents.WITHER_SKELETON_AMBIENT;}
- @Override protected SoundEvent getHurtSound(DamageSource damage){return SoundEvents.PHANTOM_HURT;}
- @Override protected SoundEvent getDeathSound(){return SoundEvents.WITHER_SKELETON_DEATH;}
+ @Override protected SoundEvent getAmbientSound(){return ModSounds.BREATH.get();}
+ @Override protected SoundEvent getHurtSound(DamageSource damage){return ModSounds.GROWL.get();}
+ @Override protected SoundEvent getDeathSound(){return ModSounds.STRIKE.get();}
+ @Override protected boolean isSunSensitive(){return false;}
  @Override public void tick(){
   super.tick();
   if(level().isClientSide){
    if(tickCount%3==0){
-    for(int i=0;i<3;i++){
+    for(int i=0;i<5;i++){
      double dx=(random.nextDouble()-.5)*1.5,dz=(random.nextDouble()-.5)*1.5;
      level().addParticle(ParticleTypes.LARGE_SMOKE,
-       getX()+dx,getY()+random.nextDouble()*1.9,getZ()+dz,
+       getX()+dx,getY()+random.nextDouble()*2.75,getZ()+dz,
        dx*.015,-.006+random.nextDouble()*.012,dz*.015);
     }
    }
@@ -128,9 +129,9 @@ public final class SleeplessEntity extends Zombie {
       !target.isCreative() && target.hasLineOfSight(this)){
     SleepEngine.addStress(target,22);
     if(length<7){
-     target.addEffect(new MobEffectInstance(MobEffects.DARKNESS,76,0,false,false,true));
-     level().playSound(null,blockPosition(),SoundEvents.WARDEN_HEARTBEAT,
-       SoundSource.HOSTILE,.32f,.62f);
+     // Fog/impact and whisper are handled by the separate client dread renderer.
+     level().playSound(null,blockPosition(),ModSounds.WHISPER.get(),
+       SoundSource.HOSTILE,.34f,.69f);
     }
    }
    if(tickCount%20==0 && getDeltaMovement().horizontalDistanceSqr()>.0008 && length<24){

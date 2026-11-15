@@ -1,0 +1,47 @@
+{
+  "sleepless.breath": {
+    "sounds": [
+      {
+        "name": "sleepdebt:sleepless/breath",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.sleepdebt.breath"
+  },
+  "sleepless.whisper": {
+    "sounds": [
+      {
+        "name": "sleepdebt:sleepless/whisper",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.sleepdebt.whisper"
+  },
+  "sleepless.growl": {
+    "sounds": [
+      {
+        "name": "sleepdebt:sleepless/growl",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.sleepdebt.growl"
+  },
+  "sleepless.strike": {
+    "sounds": [
+      {
+        "name": "sleepdebt:sleepless/strike",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.sleepdebt.strike"
+  },
+  "sleepless.heartbeat": {
+    "sounds": [
+      {
+        "name": "sleepdebt:sleepless/heartbeat",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.sleepdebt.heartbeat"
+  }
+}
