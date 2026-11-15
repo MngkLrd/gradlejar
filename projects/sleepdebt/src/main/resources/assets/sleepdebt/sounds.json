@@ -43,5 +43,32 @@
       }
     ],
     "subtitle": "subtitles.sleepdebt.heartbeat"
+  },
+  "sleepless.rattle": {
+    "sounds": [
+      {
+        "name": "sleepdebt:sleepless/rattle",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.sleepdebt.rattle"
+  },
+  "sleepless.screech": {
+    "sounds": [
+      {
+        "name": "sleepdebt:sleepless/screech",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.sleepdebt.screech"
+  },
+  "sleepless.skitter": {
+    "sounds": [
+      {
+        "name": "sleepdebt:sleepless/skitter",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.sleepdebt.skitter"
   }
 }

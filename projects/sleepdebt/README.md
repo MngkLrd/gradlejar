@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.12
+# Sleep Debt: Restless Nights — 3.0.0-alpha.13
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.12.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.13.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -176,3 +176,18 @@ Replaced 45 authentic 16x16 PNGs: 15 block materials, 8 coffee crop stages and 2
   the JAR, so **end users install only the JAR** and require none of these tools.
 - Existing mod ID, saved NBT schema, item IDs, recipes and optional integrations
   remain unchanged. Manual in-game visual/audio QA required.
+
+## Alpha 13: horror audit corrections
+- Fixed UV mapping: face, void eyes, jaw and open chest now paint the actual FRONT
+  faces of the new model rather than the adjacent side of the cube.
+- Added three high-intensity CC0 recordings from documented Freesound creators,
+  with reproducible pinned blobs and OGG processing: demonic throat rattle,
+  screamed strike and isolated skitter steps. See AUDIO_CREDITS.md.
+- Every sourced sound now uses carefully tuned filtering/pitch and optional echo.
+- Reduced predictable audio looping: throat sound arrives infrequently and from
+  behind, footsteps vary and sometimes fall silent; scream is only on every
+  fourth successful strike. Removed the recognisable vanilla soul-sand step.
+- Fixed client config bug: disabling sleeplessNearVignette no longer silently
+  disables sleeplessHorrorAudio. Disabling it does disable both fog and overlay.
+- Server/player state, recipes, blocks and mod ID unchanged. Gameplay and sound
+  volumes need an in-client QA pass before release.

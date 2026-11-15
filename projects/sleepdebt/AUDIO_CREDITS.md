@@ -1,4 +1,4 @@
-# Sleepless audio provenance (3.0.0-alpha.12)
+# Sleepless audio provenance (3.0.0-alpha.13)
 
 The following audio recordings are **CC0 1.0** (public domain dedication).
 They are downloaded at build time from a pinned, publicly available GitHub
@@ -25,3 +25,21 @@ and checks each source's Git blob SHA-1 before encoding.
 These recordings are not taken from Minecraft. The model/skin texture,
 world fog and animations are also original. The GitHub mirror and the original
 Freesound creators do not endorse Sleep Debt.
+
+## Alpha 13: additional high-intensity event recordings
+
+All CC0 1.0, verified on the individual Freesound pages:
+
+- `rattle.ogg`: **Demon Dying 1.wav** by Osiruswaltz,
+  https://freesound.org/people/Osiruswaltz/sounds/362676/
+  Used as a deep, unstable nightmare throat rattle.
+- `screech.ogg`: **scream14.mp3** by Grez1,
+  https://freesound.org/people/Grez1/sounds/485802/
+  Slowed, damped, and delayed; triggered rarely at the fourth strike.
+- `skitter.ogg`: **Footsteps on Wooden Floor.aif** by ftpalad,
+  https://freesound.org/people/ftpalad/sounds/119914/
+  Cropped to a short unnerving rhythm; replaces the previous Soul Sand steps.
+
+New and existing CC0 recordings receive deliberate pitch, reverb,
+frequency and volume adjustments during the build. The creator names and
+links are retained as credit even where not legally required.

@@ -19,17 +19,17 @@ import net.neoforged.neoforge.client.event.ViewportEvent;
 public final class SleeplessDread {
  private static Object world,playerId;
  private static float presence,impact;
- private static int lastScanTick=-100,closestTick=-100;
+ private static int lastScanTick=-100;
  private static float nearest=64f;
  private static int lastHurt;
- private static long nextHeartbeat,nextWhisper,nextBreath;
+ private static long nextHeartbeat,nextWhisper,nextBreath,nextRattle;
 
  public static void tick(ClientTickEvent.Post e){
   Minecraft mc=Minecraft.getInstance();
   if(mc.level!=world||mc.player!=playerId){
    world=mc.level;playerId=mc.player;
    presence=0;impact=0;nearest=64;lastScanTick=-100;lastHurt=0;
-   nextHeartbeat=0;nextWhisper=0;nextBreath=0;
+   nextHeartbeat=0;nextWhisper=0;nextBreath=0;nextRattle=0;
   }
   if(mc.level==null||mc.player==null)return;
   if(mc.player.tickCount-lastScanTick>=4){
@@ -42,12 +42,13 @@ public final class SleeplessDread {
     }
    }
   }
-  boolean enabled=ClientSettings.SLEEPLESS_AURA.get();
   float proximity=Mth.clamp((38-nearest)/33f,0f,1f);
-  float target=(enabled&&!mc.level.isDay())?proximity:0f;
+  // Audio and visual intensity are independent toggles. Alpha 12 incorrectly
+  // disabled all monster audio when players disabled the visual vignette.
+  float target=(!mc.level.isDay()&&!mc.player.isSleeping())?proximity:0f;
   presence+= (target-presence)*(target>presence?.095f:.18f);
   if(presence<.0001f)presence=0;
-  if(enabled&&lastHurt==0&&mc.player.hurtTime>0&&nearest<8)
+  if(lastHurt==0&&mc.player.hurtTime>0&&nearest<8)
    impact=Math.max(impact,.8f);
   lastHurt=mc.player.hurtTime;
   impact*=.90f;
@@ -67,14 +68,24 @@ public final class SleeplessDread {
      ModSounds.BREATH.get(),SoundSource.AMBIENT,.15f+.24f*presence,.72f,false);
   }
   if(presence>.73f&&t>=nextWhisper){
-   nextWhisper=t+210+mc.level.random.nextInt(220);
+   nextWhisper=t+210+mc.level.random.nextInt(320);
    mc.level.playLocalSound(mc.player.getX(),mc.player.getY(),mc.player.getZ(),
      ModSounds.WHISPER.get(),SoundSource.AMBIENT,.11f+.23f*presence,
      .67f+mc.level.random.nextFloat()*.09f,false);
   }
+  if(presence>.67f&&t>=nextRattle){
+   // Directional paranoia: a rare sound arrives from behind the listener.
+   nextRattle=t+170+mc.level.random.nextInt(240);
+   var look=mc.player.getLookAngle();
+   mc.level.playLocalSound(mc.player.getX()-look.x*3.1,
+     mc.player.getY()+.5,mc.player.getZ()-look.z*3.1,
+     ModSounds.RATTLE.get(),SoundSource.AMBIENT,.24f+.33f*presence,
+     .72f+mc.level.random.nextFloat()*.13f,false);
+  }
  }
 
  public static void renderFog(ViewportEvent.RenderFog e){
+  if(!ClientSettings.SLEEPLESS_AURA.get())return;
   float p=presence*ClientSettings.DREAD_STRENGTH.get().floatValue();
   if(p<.012f||e.getType()!=FogType.NONE)return;
   p=Mth.clamp(p,0f,1f);
@@ -86,6 +97,7 @@ public final class SleeplessDread {
   e.setCanceled(true);
  }
  public static void colorFog(ViewportEvent.ComputeFogColor e){
+  if(!ClientSettings.SLEEPLESS_AURA.get())return;
   float p=presence*ClientSettings.DREAD_STRENGTH.get().floatValue();
   if(p<.012f||e.getCamera().getFluidInCamera()!=FogType.NONE)return;
   p=Mth.clamp(p*p*.98f,0f,.98f);
