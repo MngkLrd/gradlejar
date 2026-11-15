@@ -1,0 +1,84 @@
+name: Blowpipes Forge 1.20.1 release
+on:
+  push:
+    branches: [release/blowpipes-26x-forge-ports]
+    paths: ['tools/blowpipes_ports/generate_forge_120.py','.github/workflows/blowpipes-forge-120.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Download released Fabric 1.20.1 source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p source
+          gh release download blowpipes-fabric-1.20.1-v1.4.0-2 -p 'Blowpipes_Fabric_1.20.1_v1.4.0_source.zip' -D source
+          unzip -q source/Blowpipes_Fabric_1.20.1_v1.4.0_source.zip -d source/unpacked
+      - name: Generate Forge 1.20.1 port
+        run: python3 tools/blowpipes_ports/generate_forge_120.py source/unpacked blowpipes-forge-1.20.1
+      - name: Forge Gradle production build
+        working-directory: blowpipes-forge-1.20.1
+        run: gradle --no-daemon --stacktrace build
+      - name: Verify real Forge jar, 3D dart files, nine recipes
+        run: |
+          python3 - <<'PY'
+          import zipfile,json
+          from pathlib import Path
+          p=Path('blowpipes-forge-1.20.1/build/libs/blowpipes-forge-1.20.1-1.4.1.jar')
+          assert p.is_file(),p
+          with zipfile.ZipFile(p) as z:
+            assert z.testzip() is None
+            n=set(z.namelist())
+            for item in ('bamboo_blowpipe','hunting_blowpipe','reinforced_blowpipe','plain_dart','iron_dart','poison_dart','slowness_dart','fire_dart','sleep_dart'):
+              assert 'data/blowpipes/recipes/'+item+'.json' in n,item
+              assert 'assets/blowpipes/models/item/'+item+'.json' in n,item
+            for cls in ('Blowpipes','BlowpipeItem','DartProjectile','DartModel','DartRenderer','BlowpipeEvents'):
+              assert 'dev/minemods/blowpipes/'+cls+'.class' in n,cls
+            assert 'META-INF/mods.toml' in n and 'fabric.mod.json' not in n
+            manifest=z.read('META-INF/MANIFEST.MF').decode()
+            assert 'MixinConfigs: blowpipes.mixins.json' in manifest,manifest
+            assert 'blowpipes.mixins.json' in n
+          print('FORGE VERIFIED',p,p.stat().st_size)
+          PY
+      - name: Start dedicated server and validate datapacks
+        working-directory: blowpipes-forge-1.20.1
+        continue-on-error: true
+        run: |
+          set +e
+          timeout --kill-after=5s 75s gradle --no-daemon runServer > /tmp/forgeblow.log 2>&1
+          tail -75 /tmp/forgeblow.log
+          if grep -Ei 'Parsing error loading recipe|Failed to parse recipe|MixinApplyError|InvalidMixinException|ModLoadingException' /tmp/forgeblow.log; then exit 1; fi
+      - name: Package source project
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+          src=Path('blowpipes-forge-1.20.1')
+          with zipfile.ZipFile('Blowpipes_Forge_1.20.1_v1.4.1_source.zip','w',zipfile.ZIP_DEFLATED) as z:
+            for f in ('build.gradle','settings.gradle','gradle.properties'):
+              z.write(src/f,arcname=f)
+            for file in (src/'src').rglob('*'):
+              if file.is_file():z.write(file,arcname=str(file.relative_to(src)))
+          PY
+      - name: Publish Forge JAR and sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="blowpipes-forge-1.20.1-v1.4.1-$GITHUB_RUN_NUMBER"
+          gh release create "$tag" \
+            blowpipes-forge-1.20.1/build/libs/blowpipes-forge-1.20.1-1.4.1.jar \
+            Blowpipes_Forge_1.20.1_v1.4.1_source.zip --target "$GITHUB_SHA" \
+            --title 'Blowpipes 1.4.1 Forge 1.20.1' \
+            --notes 'Forge (not NeoForge), Java 17. 3D darts, staged arm poses, six ammo, upgraded weapons, Sleep Dart AI stop, 9 recipes and JEI optional.' --prerelease
