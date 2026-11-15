@@ -23,7 +23,7 @@ public final class BlowpipeItem extends BlowpipeInfoItem {
  @Override public InteractionResult use(Level level,Player player,InteractionHand hand){
   if(player.isShiftKeyDown()){if(!level.isClientSide())cycle(player);return InteractionResult.SUCCESS;}
   if(!player.getAbilities().instabuild&&ammo(player).isEmpty()){
-   if(!level.isClientSide())player.displayClientMessage(Component.translatable("message.blowpipes.no_ammo"),true);
+   if(!level.isClientSide())player.sendSystemMessage(Component.translatable("message.blowpipes.no_ammo"));
    return InteractionResult.FAIL;
   }
   player.startUsingItem(hand);
@@ -70,11 +70,11 @@ public final class BlowpipeItem extends BlowpipeInfoItem {
   int old=-1;for(int i=0;i<TYPES.length;i++)if(TYPES[i].equals(SELECTED.get(p.getUUID())))old=i;
   for(int step=1;step<=TYPES.length;step++){
    String next=TYPES[(old+step)%TYPES.length];
-   if(next.equals(id(p.getOffhandItem()))){SELECTED.put(p.getUUID(),next);p.displayClientMessage(Component.translatable("item.blowpipes."+next),true);return;}
+   if(next.equals(id(p.getOffhandItem()))){SELECTED.put(p.getUUID(),next);p.sendSystemMessage(Component.translatable("item.blowpipes."+next));return;}
    for(int i=0;i<p.getInventory().getContainerSize();i++)if(next.equals(id(p.getInventory().getItem(i)))){
-    SELECTED.put(p.getUUID(),next);p.displayClientMessage(Component.translatable("item.blowpipes."+next),true);return;
+    SELECTED.put(p.getUUID(),next);p.sendSystemMessage(Component.translatable("item.blowpipes."+next));return;
    }
   }
-  p.displayClientMessage(Component.translatable("message.blowpipes.no_ammo"),true);
+  p.sendSystemMessage(Component.translatable("message.blowpipes.no_ammo"));
  }
 }
