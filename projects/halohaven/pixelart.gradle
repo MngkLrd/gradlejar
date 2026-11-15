@@ -1,0 +1,114 @@
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
+
+// Final Halo Haven pixel-art layer. All pixels come from manually authored
+// 16×16 art/pixel_atlas.json. This does not draw lines, shapes, random noise,
+// gradients, decorative rectangles, or image-processing effects.
+tasks.named('generateHaloAssets').configure {
+    doLast {
+        File out=layout.buildDirectory.dir('generated/haloassets').get().asFile
+        Map atlas=(Map)new JsonSlurper().parse(new File(projectDir,'art/pixel_atlas.json'))
+        if(atlas.resolution!=16||atlas.tiles.size()!=24)
+            throw new GradleException('Halo Pixel Atelier expects 24 authored 16×16 maps')
+        def json={String name,Object content->
+            File f=new File(out,name);f.parentFile.mkdirs()
+            f.setText(JsonOutput.prettyPrint(JsonOutput.toJson(content))+'\n','UTF-8')
+        }
+        atlas.tiles.each{String name,Object tile->
+            List colors=(List)atlas.palettes[tile.palette]
+            if(colors.size()<4||colors.size()>9)
+                throw new GradleException(name+': palette exceeds material budget')
+            List rows=(List)tile.rows
+            if(rows.size()!=16)throw new GradleException(name+': expected 16 rows')
+            BufferedImage image=new BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB)
+            Set<Integer> distinct=[] as Set
+            int alphaCount=0
+            for(int y=0;y<16;y++){
+                String row=rows[y]
+                if(row.length()!=16)
+                    throw new GradleException(name+': row '+y+' has '+row.length()+' columns')
+                for(int x=0;x<16;x++){
+                    char code=row.charAt(x)
+                    int rgba=0
+                    if(code!='.'){
+                        int i=Character.digit(code,10)
+                        if(i<0||i>=colors.size())
+                            throw new GradleException(name+': invalid palette index '+code)
+                        rgba=(int)Long.parseLong((String)colors[i],16)
+                    }
+                    image.setRGB(x,y,rgba)
+                    distinct.add(rgba)
+                    if((rgba>>>24)==0)alphaCount++
+                }
+            }
+            if(distinct.size()>9)throw new GradleException(name+': too many colors')
+            if(name.startsWith('sky_leaves') && (alphaCount<35||alphaCount>195))
+                throw new GradleException(name+': foliage alpha count '+alphaCount)
+            if(name=='celestial_bloom' && (alphaCount<100||alphaCount>240))
+                throw new GradleException(name+': flower alpha count '+alphaCount)
+            if(name.endsWith('_glass') && (alphaCount<35||alphaCount>195))
+                throw new GradleException(name+': glass alpha count '+alphaCount)
+            File target=new File(out,'assets/halohaven/textures/block/'+name+'.png')
+            target.parentFile.mkdirs()
+            if(!ImageIO.write(image,'PNG',target))throw new GradleException('PNG error: '+name)
+            println('HALO PIXEL ART: '+name+' 16×16 '+distinct.size()+
+                ' colors '+alphaCount+' transparent pixels')
+        }
+        // Proper face orientation; important motifs are not tiled on all faces.
+        json('assets/halohaven/models/block/cloudstone.json',[
+            parent:'minecraft:block/cube_bottom_top',
+            textures:[top:'halohaven:block/cloudstone_top',
+                      bottom:'halohaven:block/cloudstone',
+                      side:'halohaven:block/cloudstone']
+        ])
+        json('assets/halohaven/models/block/celestial_mosaic.json',[
+            parent:'minecraft:block/cube_bottom_top',
+            textures:[top:'halohaven:block/celestial_mosaic',
+                      bottom:'halohaven:block/celestial_mosaic_side',
+                      side:'halohaven:block/celestial_mosaic_side']
+        ])
+        json('assets/halohaven/models/block/gilded_pillar.json',[
+            parent:'minecraft:block/cube_column',
+            textures:[end:'halohaven:block/gilded_pillar_top',
+                      side:'halohaven:block/gilded_pillar']
+        ])
+        for(String variant:['skygrass','skygrass_sparse','skygrass_dense']){
+            json('assets/halohaven/models/block/'+variant+'.json',[
+                parent:'minecraft:block/cube_bottom_top',
+                textures:[top:'halohaven:block/'+variant,
+                          bottom:'halohaven:block/cloudstone',
+                          side:'halohaven:block/skygrass_side']
+            ])
+        }
+        json('assets/halohaven/blockstates/skygrass.json',[
+            variants:['':[
+                [model:'halohaven:block/skygrass',weight:5],
+                [model:'halohaven:block/skygrass_sparse',weight:3],
+                [model:'halohaven:block/skygrass_dense',weight:2]
+            ]]
+        ])
+        for(String variant:['sky_leaves','sky_leaves_alt']){
+            json('assets/halohaven/models/block/'+variant+'.json',[
+                parent:'minecraft:block/cube_all',
+                render_type:'minecraft:cutout_mipped',
+                textures:[all:'halohaven:block/'+variant]
+            ])
+        }
+        json('assets/halohaven/blockstates/sky_leaves.json',[
+            variants:['':[
+                [model:'halohaven:block/sky_leaves',weight:3],
+                [model:'halohaven:block/sky_leaves_alt',weight:2]
+            ]]
+        ])
+        json('assets/halohaven/models/block/celestial_bloom.json',[
+            parent:'minecraft:block/cross',render_type:'minecraft:cutout',
+            textures:[cross:'halohaven:block/celestial_bloom']
+        ])
+        json('assets/halohaven/models/item/celestial_bloom.json',[
+            parent:'minecraft:item/generated',render_type:'minecraft:cutout',
+            textures:[layer0:'halohaven:block/celestial_bloom']
+        ])
+    }
+}

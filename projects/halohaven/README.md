@@ -1,4 +1,4 @@
-# Halo Haven 1.4.1 – Worldgen II & Art Bible
+# Halo Haven 1.5.0 – Worldgen II & Art Bible
 
 **Minecraft 1.21.1 | NeoForge 21.1.x | Java 21.**
 
@@ -9,18 +9,38 @@ A bright fantasy pocket of the skies, now with a cohesive architectural language
 The Build Hub publishes the JAR to GitHub Releases when repository permissions
 allow. It also uploads the exact JAR and SHA256 as a **GitHub Actions artifact**
 for 30 days, including when the GitHub Release API rejects publishing.
-Look for `jar-halohaven-1.4.1` in the latest successful Build Hub run.
+Look for `jar-halohaven-1.5.0` in the latest successful Build Hub run.
 
 ## Installation and build
 
-- Copy `halohaven-1.21.1-1.4.1.jar` to `mods/`.
+- Copy `halohaven-1.21.1-1.5.0.jar` to `mods/`.
 - **NeoForge 21.1.197** is used to compile; runtime metadata requests **at least 21.1.80**, not the newest patch.
 - Java 21, Gradle 9.2.1.
 - Build: `gradle --no-daemon clean build`.
-- Output: `build/libs/halohaven-1.21.1-1.4.1.jar`.
+- Output: `build/libs/halohaven-1.21.1-1.5.0.jar`.
 - Client and server both require the mod. No extra assets or resource packs.
 
-## 1.4.1 worldgen hardening
+## 1.5.0: real pixel-cluster art assets
+
+The 22 registered blocks are now rendered from 24 authored 16×16
+indexed bitmap surfaces stored in `art/pixel_atlas.json`.
+No random colored pixels, mathematical painting or rectangle/line fill
+algorithms participate in the final material textures.
+The build-only `pixelart.gradle` writes RGBA PNGs pixel-for-pixel.
+
+The atlas includes 3 turf compositions, 2 asymmetric transparent leaf canopies,
+independent Cloudstone top and side, an inlaid top-only Celestial Mosaic,
+a separately illustrated column top, 2 stained glass variants and
+pixel-cluster mineral and wood surfaces.
+Stairs, slabs and fences inherit their base materials: all 22 blocks have
+consistent 16px textures in the final JAR.
+
+A resource build is not artistic acceptance. Test in Minecraft both as a
+single block and as 5×5 repeated surfaces, with shaders disabled.
+Existing worlds keep their registered block IDs; explored chunks will not
+regenerate. Only art and compatible blockstates have changed.
+
+## 1.5.0 worldgen hardening
 
 The first worldgen QA now goes beyond parsing JSON: an isolated NeoForge
 server is accessed through RCON and forced to generate and tick three chunks
