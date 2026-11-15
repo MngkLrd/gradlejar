@@ -27,13 +27,13 @@ public final class ClientSettings {
   B.comment("Independent Sleepless near-black compositor. Not vanilla Darkness/fog.")
    .define("sleeplessVoidEnabled",true);
  public static final ModConfigSpec.BooleanValue VOID_GPU=
-  B.comment("Add animated GLSL detail. False forces the reliable CPU compositor.")
-   .define("sleeplessVoidGpu",true);
+  B.comment("Legacy experimental GLSL flag, kept for TOML compatibility; standalone darkness needs no shader.")
+   .define("sleeplessVoidGpu",false);
  public static final ModConfigSpec.DoubleValue VOID_STRENGTH=
   B.comment("Alpha 16 blackness strength: 1.0 is severe; 1.35 nearly opaque.")
    .defineInRange("sleeplessVoidStrength",1.0,0.0,1.35);
  public static final ModConfigSpec.BooleanValue VOID_DEBUG=
-  B.comment("Show local Sleepless distance and actual blackness intensity on HUD.")
+  B.comment("Show actual GUI render-event counts and nearest real Sleepless. F9 also toggles.")
    .define("sleeplessVoidDiagnostics",false);
  public static final ModConfigSpec.IntValue MIRAGE_MAX=B.comment("Hard cap for fake players; performance control.").defineInRange("maxFakePlayers",5,1,8);
  public static final ModConfigSpec.IntValue OFFSET=B.defineInRange("verticalOffset",0,-55,70);

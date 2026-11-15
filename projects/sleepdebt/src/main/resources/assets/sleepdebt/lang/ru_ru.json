@@ -91,5 +91,8 @@
   "gui.sleepdebt.reason.protected": "Ловец снов защитил отдых.",
   "gui.sleepdebt.esc": "ESC — закрыть",
   "gui.sleepdebt.forecast": "Качество сна здесь: %s%%",
-  "itemGroup.sleepdebt.main": "Sleep Debt"
+  "itemGroup.sleepdebt.main": "Sleep Debt",
+  "key.categories.sleepdebt": "Sleep Debt",
+  "key.sleepdebt.test_void": "Включить тестовую тьму",
+  "key.sleepdebt.void_diagnostics": "Диагностика тьмы"
 }

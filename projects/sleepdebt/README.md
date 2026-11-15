@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.16
+# Sleep Debt: Restless Nights — 3.0.0-alpha.17
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.16.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.17.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -270,3 +270,25 @@ OP repeatable QA: /sleepdebt debug vanish_sleepless after
 /sleepdebt debug spawn_sleepless. This forces the retreat/teleport sequence.
 F1 still hides GUI layers; full level post-processing is future work. A live
 game test is needed: CI can compile but cannot observe actual display output.
+
+
+## Alpha 17 - Independent darkness event with diagnostics
+
+Replaces the two unverified GUI-layer/GLSL routes with NeoForge 1.21.1
+RenderGuiEvent.Pre (GAME bus), direct GuiGraphics.fill and an explicit flush.
+It independently scans client-tracked real Sleepless entities each render tick,
+so no audio/client tick data or server-only NBT is required.
+
+- F8 in-game: FORCE near-total blackness, including daylight/no Sleepless,
+  even with shaders and client config disabled. Press again to restore.
+- F9: in-game counters for Pre/Post render events, real entity count,
+  nearest distance, opacity target, smoothed pressure and final fill alpha.
+- The old custom shader is no longer registered or rendered. Sound assets,
+  monster texture, AI and existing resources are unchanged.
+- If F8 works but natural darkness does not, F9 identifies missing tracked
+  entity or an explicitly disabled setting. If F8 does not work, the remaining
+  fault is in the render event/GUI pipeline itself.
+- F1 still hides vanilla HUD rendering and may suppress this event.
+
+CI validates build, JAR and static wiring. Client-side graphical operation
+is not verified by CI and needs the next in-game test.

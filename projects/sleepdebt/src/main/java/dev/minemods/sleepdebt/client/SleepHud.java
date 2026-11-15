@@ -29,10 +29,6 @@ public final class SleepHud {
  public static void render(GuiGraphics g,DeltaTracker delta){
   Minecraft mc=Minecraft.getInstance();
   if(mc.options.hideGui||mc.player==null||mc.player.isSpectator())return;
-  // The existing Sleep HUD is confirmed visible in-game. Render the blackout
-  // on THIS reliable layer instead of relying on a separate, earlier GUI layer
-  // that in Alpha 15 silently produced no darkness with some render pipelines.
-  SleeplessVoidShader.render(g,delta);
   ClientHallucinations.render(g);
   if(!ClientSettings.VISIBLE.get())return;
   if(ClientState.debt==0&&ClientState.fatigue==0&&ClientState.stress==0&&

@@ -10,7 +10,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.event.RegisterShadersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 public final class ClientBootstrap {
  public static void register(IEventBus bus,ModContainer container){
@@ -21,17 +21,19 @@ public final class ClientBootstrap {
   bus.addListener(MiragePlayers::modelBake);
   bus.addListener(SleeplessApparitions::bake);
   bus.addListener(ClientBootstrap::screens);
-  bus.addListener(SleeplessVoidShader::register);
+  bus.addListener(SleeplessVoidOverlay::registerKeys);
   NeoForge.EVENT_BUS.addListener(ClientHallucinations::tick);
   NeoForge.EVENT_BUS.addListener(SleeplessDread::tick);
+  NeoForge.EVENT_BUS.addListener(SleeplessVoidOverlay::tickKeys);
+  NeoForge.EVENT_BUS.addListener(SleeplessVoidOverlay::renderPre);
+  NeoForge.EVENT_BUS.addListener(SleeplessVoidOverlay::renderPost);
   NeoForge.EVENT_BUS.addListener(MiragePlayers::clientTick);
   NeoForge.EVENT_BUS.addListener(SleeplessApparitions::tick);
   NeoForge.EVENT_BUS.addListener(MiragePlayers::renderWorld);
   NeoForge.EVENT_BUS.addListener(SleeplessApparitions::render);
  }
  private static void onGui(RegisterGuiLayersEvent e){
-  // Void compositor is intentionally hosted by the known-working SleepHud
-  // render layer; registering a second layer risks skipped/double rendering.
+  // Blackness now executes directly in RenderGuiEvent.Pre, before HUD layers.
   e.registerAbove(VanillaGuiLayers.FOOD_LEVEL,
     ResourceLocation.fromNamespaceAndPath(SleepDebtMod.MOD_ID,"sleep_hud"),SleepHud::render);
  }
