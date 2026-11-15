@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.3
+# Sleep Debt: Restless Nights — 3.0.0-alpha.4
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.3.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.4.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -81,3 +81,7 @@ players may see one extra phantom (never more than four in the requested group).
 Minecraft's insomnia gamerule, skylight and natural spawn checks still apply.
 The new vanilla.integratePhantoms setting disables this integration.
 This uses NeoForge PlayerSpawnPhantomsEvent, not invasive mixins.
+
+## 3.0 Alpha 4 — Visual Overhaul
+New reviewed block/item GUI artwork and the 128x64 Sleepless atlas are now version-controlled. Six blocks have per-face UVs, lantern translucent glass, dreamcatcher cutout net, and eight redesigned crop stages. See VISUAL_V4.md. Existing block/item IDs and gameplay NBT are unchanged.
+

@@ -26,7 +26,7 @@ public final class CoffeeScreen extends AbstractContainerScreen<CoffeeMenu> {
   if(progress>0)gui.fill(leftPos+109,topPos+48,leftPos+109+progress,topPos+54,0xFFB7834F);
  }
  @Override protected void renderLabels(GuiGraphics g,int mouseX,int mouseY){
-  g.drawString(font,title,8,7,0xFF3F342C,false);
+  g.drawString(font,title,8,7,0xFFF1E1C4,false);
   g.drawString(font,playerInventoryTitle,8,72,0xFF40372D,false);
  }
  @Override public void render(GuiGraphics gui,int mouseX,int mouseY,float partial){

@@ -21,20 +21,20 @@ public final class SleeplessModel extends HumanoidModel<SleeplessEntity> {
   MeshDefinition mesh=HumanoidModel.createMesh(CubeDeformation.NONE,0.0f);
   PartDefinition root=mesh.getRoot();
   root.addOrReplaceChild("head",CubeListBuilder.create().texOffs(0,0)
-    .addBox(-4f,-10f,-4f,8f,11f,8f),PartPose.ZERO);
-  root.addOrReplaceChild("hat",CubeListBuilder.create().texOffs(32,0)
-    .addBox(-4.5f,-10.5f,-4.5f,9f,12f,9f),PartPose.ZERO);
-  root.addOrReplaceChild("body",CubeListBuilder.create().texOffs(16,16)
+    .addBox(-4f,-10f,-4f,8f,10f,8f),PartPose.ZERO);
+  root.addOrReplaceChild("hat",CubeListBuilder.create().texOffs(37,0)
+    .addBox(-4.5f,-10.5f,-4.5f,9f,11f,9f),PartPose.ZERO);
+  root.addOrReplaceChild("body",CubeListBuilder.create().texOffs(0,26)
     .addBox(-3.5f,0f,-2f,7f,13f,4f),PartPose.ZERO);
-  root.addOrReplaceChild("right_arm",CubeListBuilder.create().texOffs(40,16)
+  root.addOrReplaceChild("right_arm",CubeListBuilder.create().texOffs(26,26)
     .addBox(-1.5f,-2f,-1.5f,3f,16f,3f),PartPose.offset(-4.5f,2f,0f));
-  root.addOrReplaceChild("left_arm",CubeListBuilder.create().texOffs(40,36)
+  root.addOrReplaceChild("left_arm",CubeListBuilder.create().texOffs(42,26)
     .addBox(-1.5f,-2f,-1.5f,3f,16f,3f),PartPose.offset(4.5f,2f,0f));
-  root.addOrReplaceChild("right_leg",CubeListBuilder.create().texOffs(0,20)
+  root.addOrReplaceChild("right_leg",CubeListBuilder.create().texOffs(58,26)
     .addBox(-1.5f,0f,-1.5f,3f,12f,3f),PartPose.offset(-1.9f,12f,0f));
-  root.addOrReplaceChild("left_leg",CubeListBuilder.create().texOffs(14,40)
+  root.addOrReplaceChild("left_leg",CubeListBuilder.create().texOffs(74,26)
     .addBox(-1.5f,0f,-1.5f,3f,12f,3f),PartPose.offset(1.9f,12f,0f));
-  return LayerDefinition.create(mesh,64,64);
+  return LayerDefinition.create(mesh,128,64);
  }
 }
 

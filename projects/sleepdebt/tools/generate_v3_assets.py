@@ -36,7 +36,8 @@ class Canvas:
         result += chunk(b"IHDR",struct.pack(">IIBBBBB",self.w,self.h,8,6,0,0,0))
         result += chunk(b"IDAT",zlib.compress(bytes(raw),9))
         result += chunk(b"IEND",b"")
-        dest.write_bytes(result)
+        # Do not replace the reviewed, version-controlled GUI assets.
+        if not dest.exists(): dest.write_bytes(result)
 
 INK=(67,48,40,255)
 LEATHER=(74,51,43,255)

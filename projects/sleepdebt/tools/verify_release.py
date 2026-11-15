@@ -7,6 +7,7 @@ import struct
 import sys
 import zipfile
 import tomllib
+import zlib
 from pathlib import Path
 
 jar=Path(sys.argv[1])
@@ -62,11 +63,70 @@ with zipfile.ZipFile(jar) as z:
         raw=data(n)
         if raw[:8]!=b"\x89PNG\r\n\x1a\n":raise ValueError(f"Invalid PNG magic: {n}")
         width,height=struct.unpack(">II",raw[16:24])
-        target=((64,64) if "entity/sleepless.png" in n else
+        target=((128,64) if "entity/sleepless.png" in n else
                 (176,166) if "textures/gui/coffee_maker.png" in n else
                 (228,188) if "textures/gui/sleep_journal.png" in n else
                 (138,58) if "textures/gui/sleep_hud.png" in n else (16,16))
         if (width,height)!=target:raise ValueError(f"{n}: size {(width,height)} not {target}")
+
+        # Parse PNG chunks rather than trusting the ZIP CRC or just the PNG header.
+        cursor=8
+        image_data=bytearray()
+        while cursor<len(raw):
+            length=struct.unpack(">I",raw[cursor:cursor+4])[0]
+            typ=raw[cursor+4:cursor+8]
+            payload=raw[cursor+8:cursor+8+length]
+            stored=struct.unpack(">I",raw[cursor+8+length:cursor+12+length])[0]
+            if zlib.crc32(typ+payload)&0xffffffff!=stored:
+                raise ValueError(f"PNG chunk CRC mismatch: {n}")
+            if typ==b"IDAT":image_data.extend(payload)
+            cursor+=12+length
+            if typ==b"IEND":break
+        if cursor!=len(raw):raise ValueError(f"Invalid trailing bytes in PNG: {n}")
+        if n.endswith("entity/sleepless.png"):
+            rawpixels=zlib.decompress(image_data)
+            stride=128*4
+            if len(rawpixels)!=(stride+1)*64:
+                raise ValueError("Sleepless atlas has invalid raw RGBA payload")
+            # Each UV box from SleeplessModel, including front/back, top/bottom and sides.
+            parts=[(0,0,8,10,8),(37,0,9,11,9),(0,26,7,13,4),
+                   (26,26,3,16,3),(42,26,3,16,3),
+                   (58,26,3,12,3),(74,26,3,12,3)]
+            for u,v,w,h,d in parts:
+                faces=[(u,v+d,d,h),(u+d,v+d,w,h),(u+d+w,v+d,d,h),
+                       (u+2*d+w,v+d,w,h),(u+d,v,w,d),(u+d+w,v,w,d)]
+                for x,y,fw,fh in faces:
+                    if x<0 or y<0 or x+fw>128 or y+fh>64:
+                        raise ValueError("Sleepless UV outside atlas")
+                    for py in range(y,y+fh):
+                        if rawpixels[py*(stride+1)]!=0:
+                            raise ValueError("Sleepless UV audit expects PNG filter type 0")
+                        for px in range(x,x+fw):
+                            if rawpixels[py*(stride+1)+1+px*4+3]<240:
+                                raise ValueError(f"Transparent Sleepless UV at {px},{py}")
+
+    # Validate all block model geometry and references to the source texture atlas.
+    for model_path in sorted(n for n in names
+                             if n.startswith("assets/sleepdebt/models/block/")
+                             and n.endswith(".json")):
+        item=js(model_path)
+        textures=item.get("textures",{})
+        for alias,ref in textures.items():
+            if ref.startswith("sleepdebt:"):
+                data("assets/sleepdebt/textures/"+ref.split(":",1)[1]+".png")
+        for piece in item.get("elements",[]):
+            frm=piece["from"];to=piece["to"]
+            if any(not (0<=a<b<=16) for a,b in zip(frm,to)):
+                raise ValueError(f"Invalid cuboid dimensions: {model_path}")
+            for side,face in piece["faces"].items():
+                token=face.get("texture","")
+                if token.startswith("#") and token[1:] not in textures:
+                    raise ValueError(f"Unknown texture alias {token} in {model_path}")
+                uv=face.get("uv")
+                if uv is not None and (len(uv)!=4 or
+                       any(not 0<=float(value)<=16 for value in uv)):
+                    raise ValueError(f"Invalid UV range in {model_path}/{side}")
+
     for locale in ("en_us","ru_ru"):
         entries=[n for n in names if f"/patchouli_books/sleep_guide/{locale}/entries/" in n and n.endswith(".json")]
         if len(entries)<6:raise ValueError(f"{locale}: insufficient Patchouli content")

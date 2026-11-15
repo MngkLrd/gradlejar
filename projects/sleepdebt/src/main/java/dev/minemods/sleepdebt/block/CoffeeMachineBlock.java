@@ -32,7 +32,8 @@ public final class CoffeeMachineBlock extends BaseEntityBlock {
  private static final VoxelShape SHAPE=Shapes.or(
   net.minecraft.world.level.block.Block.box(2,0,2,14,2,14),
   net.minecraft.world.level.block.Block.box(3,2,3,13,12,13),
-  net.minecraft.world.level.block.Block.box(2,12,2,14,14,14));
+  net.minecraft.world.level.block.Block.box(2,12,2,14,14,14),
+  net.minecraft.world.level.block.Block.box(6,14,6,10,15,10));
  public CoffeeMachineBlock(Properties p){
   super(p);
   registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH));

@@ -16,6 +16,11 @@ CLOTH={"X":"#332c33","D":"#4a3f52","C":"#6e6072","L":"#9a8791","H":"#c2aca9","S"
 BAG={"X":"#3b2922","D":"#684637","C":"#ad7751","L":"#d3a16b","H":"#ead0a1","W":"#b8a282","S":"#795e46"}
 BOOK={"X":"#342a27","D":"#54382f","C":"#825541","L":"#ad8060","H":"#d7b88b","S":"#a58f68","W":"#eee0b9","B":"#4b4d55"}
 
+def preserve_authored(path, payload):
+    """New reviewed pixels are committed to resources; only fill missing legacy files."""
+    if not path.is_file():
+        path.write_bytes(payload)
+
 def rgba(color):
     return bytes.fromhex(color[1:])+b"\xff"
 
@@ -32,7 +37,7 @@ def save(name, pixels, pal):
     data=b"\x89PNG\r\n\x1a\n"
     data+=chunk(b"IHDR",struct.pack(">IIBBBBB",16,16,8,6,0,0,0))
     data+=chunk(b"IDAT",zlib.compress(bytes(raw),9))+chunk(b"IEND",b"")
-    (OUT/(name+".png")).write_bytes(data)
+    preserve_authored(OUT/(name+".png"),data)
 
 def rows(*lines):
     # Pad cleanly to 16 columns; left-to-right character maps.
@@ -284,7 +289,7 @@ png=b"\x89PNG\r\n\x1a\n"
 png+=echunk(b"IHDR",struct.pack(">IIBBBBB",W,H,8,6,0,0,0))
 png+=echunk(b"IDAT",zlib.compress(bytes(raw),9))
 png+=echunk(b"IEND",b"")
-(ENTITY_DIR/"sleepless.png").write_bytes(png)
+preserve_authored(ENTITY_DIR/"sleepless.png",png)
 print("Generated Sleepless skin",W,H)
 
 
@@ -439,7 +444,7 @@ png=b"\x89PNG\r\n\x1a\n"
 png+=echunk(b"IHDR",struct.pack(">IIBBBBB",GW,GH,8,6,0,0,0))
 png+=echunk(b"IDAT",zlib.compress(bytes(raw),9))
 png+=echunk(b"IEND",b"")
-(GUI_DIR/"coffee_maker.png").write_bytes(png)
+preserve_authored(GUI_DIR/"coffee_maker.png",png)
 print("Sleep Debt native coffee GUI created",GW,GH)
 
 # Sleep Debt 2.6 / material-rich 16x16 vanilla pixel clusters, no anti-aliasing.

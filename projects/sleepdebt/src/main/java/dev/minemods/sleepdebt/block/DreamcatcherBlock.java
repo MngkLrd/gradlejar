@@ -18,7 +18,7 @@ public final class DreamcatcherBlock extends Block {
  public DreamcatcherBlock(Properties p){super(p);}
  @Override protected MapCodec<? extends Block> codec(){return CODEC;}
  @Override protected VoxelShape getShape(BlockState s,BlockGetter l,BlockPos p,CollisionContext c){
-  return Block.box(4,0,4,12,16,12);
+  return Block.box(3,0,7,13,16,9);
  }
  @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit){
   if(player instanceof ServerPlayer sp){
