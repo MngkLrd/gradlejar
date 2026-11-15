@@ -21,6 +21,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -221,7 +226,7 @@ public final class HavenVillages {
                 boolean wall = Math.abs(x)==w || Math.abs(z)==d;
                 if(!wall) { place(l,cx+x,y,cz+z,Blocks.AIR); continue; }
                 Block b = moonHouse ? HaloHaven.MOONSTONE.get() : HaloHaven.PEARL_BRICKS.get();
-                if (x == 0 && z == -d && y<=TOP_Y+3) b=Blocks.AIR;
+                if (x == 0 && z == -sz*d && y<=TOP_Y+3) b=Blocks.AIR;
                 if (y==TOP_Y+3 && ((Math.abs(x)==w && Math.abs(z)==2) || (Math.abs(z)==d && Math.abs(x)==3)))
                     b=moonHouse ? HaloHaven.DAWN_GLASS.get() : HaloHaven.AURORA_GLASS.get();
                 if ((Math.abs(x)==w && Math.abs(z)==d) || (Math.abs(x)==w && y==TOP_Y+6))
@@ -257,8 +262,19 @@ public final class HavenVillages {
                 place(l,cx+x,y,cz+z,HaloHaven.GILDED_PILLAR.get());
             place(l,cx+x,TOP_Y+7,cz+z,HaloHaven.CLOUD_LANTERN.get());
         }
-        for(int z=-d-1;z<=-d+1;z++)for(int x=-1;x<=1;x++)
-            place(l,cx+x,TOP_Y+1,cz+z,HaloHaven.PEARL_BRICKS.get());
+        // Entrance is a grounded floor-level ramp, not three rows of blocks sealing the doorway.
+        int entranceZ=-sz*d;
+        for(int step=-2;step<=1;step++) for(int x=-1;x<=1;x++){
+            place(l,cx+x,TOP_Y,cz+entranceZ+step*(-sz),HaloHaven.PEARL_BRICKS.get());
+            if(step<=0)for(int yy=1;yy<=3;yy++) place(l,cx+x,TOP_Y+yy,cz+entranceZ+step*(-sz),Blocks.AIR);
+        }
+        Block door=nativeWoodDoor(district==2?"veilwood_door_face":district==1?"heartwood_door_face":"dawnwood_door_face");
+        Direction entranceFacing=sz>0?Direction.NORTH:Direction.SOUTH;
+        BlockState lower=door.defaultBlockState().setValue(DoorBlock.FACING,entranceFacing)
+            .setValue(DoorBlock.HALF,DoubleBlockHalf.LOWER);
+        l.setBlock(new BlockPos(cx,TOP_Y+1,cz+entranceZ),lower,3);
+        l.setBlock(new BlockPos(cx,TOP_Y+2,cz+entranceZ),
+            lower.setValue(DoorBlock.HALF,DoubleBlockHalf.UPPER),3);
         place(l,cx+3,TOP_Y+1,cz+1,Blocks.CHEST);
         BlockEntity be=l.getBlockEntity(new BlockPos(cx+3,TOP_Y+1,cz+1));
         if(be instanceof ChestBlockEntity chest){
@@ -302,8 +318,17 @@ public final class HavenVillages {
             place(l,x,TOP_Y,z+d,HaloHaven.SUNGOLD_TILES.get());
         }
     }
+    public static Block nativeWood(String id){
+        return BuiltInRegistries.BLOCK.getOptional(ResourceLocation.fromNamespaceAndPath("halohavenalpha2",id))
+            .orElse(Blocks.OAK_LOG);
+    }
+    private static Block nativeWoodDoor(String id) {
+        Block block=BuiltInRegistries.BLOCK.getOptional(ResourceLocation.fromNamespaceAndPath("halohavenalpha2",id))
+            .orElse(Blocks.BIRCH_DOOR);
+        return block instanceof DoorBlock?block:Blocks.BIRCH_DOOR;
+    }
     private static void tree(ServerLevel l,int x,int z) {
-        for(int y=TOP_Y+1;y<=TOP_Y+5;y++)place(l,x,y,z,Blocks.CHERRY_LOG);
+        for(int y=TOP_Y+1;y<=TOP_Y+5;y++)place(l,x,y,z,nativeWood("heartwood_log"));
         for(int dx=-4;dx<=4;dx++)for(int dz=-4;dz<=4;dz++)for(int dy=-1;dy<=3;dy++) {
             if(dx*dx+dz*dz+(dy-1)*(dy-1)>18)continue;
             l.setBlock(new BlockPos(x+dx,TOP_Y+5+dy,z+dz),
