@@ -105,7 +105,7 @@ jobs:
 
           # Core generated assets may override author-approved textures. Source overlays are final.
           for namespace in ('halohaven','halohavenalpha2'):
-              root=pathlib.Path('projects/halohaven/src/main/resources/assets' if namespace=='halohaven'
+              root=pathlib.Path('projects/halohaven/art23_overlay/assets' if namespace=='halohaven'
                   else 'projects/halohaven-alpha21/src/main/resources/assets')/namespace
               if root.exists():
                   for file in root.rglob('*'):
