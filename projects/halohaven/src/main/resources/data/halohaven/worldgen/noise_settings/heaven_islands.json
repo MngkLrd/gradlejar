@@ -75,12 +75,12 @@
         },
         "argument2": {
           "type": "minecraft:range_choice",
-          "input": "minecraft:overworld/temperature",
+          "input": "halohaven:climate_temperature",
           "min_inclusive": -1.2,
           "max_exclusive": -0.35,
           "when_in_range": {
             "type": "minecraft:range_choice",
-            "input": "minecraft:overworld/vegetation",
+            "input": "halohaven:climate_vegetation",
             "min_inclusive": -1.2,
             "max_exclusive": 0,
             "when_in_range": {
@@ -114,12 +114,12 @@
           },
           "when_out_of_range": {
             "type": "minecraft:range_choice",
-            "input": "minecraft:overworld/temperature",
+            "input": "halohaven:climate_temperature",
             "min_inclusive": -0.35,
             "max_exclusive": 0.35,
             "when_in_range": {
               "type": "minecraft:range_choice",
-              "input": "minecraft:overworld/vegetation",
+              "input": "halohaven:climate_vegetation",
               "min_inclusive": -1.2,
               "max_exclusive": 0,
               "when_in_range": {
@@ -148,7 +148,7 @@
             },
             "when_out_of_range": {
               "type": "minecraft:range_choice",
-              "input": "minecraft:overworld/vegetation",
+              "input": "halohaven:climate_vegetation",
               "min_inclusive": -1.2,
               "max_exclusive": 0,
               "when_in_range": {
@@ -190,12 +190,12 @@
         "type": "minecraft:range_choice",
         "input": {
           "type": "minecraft:range_choice",
-          "input": "minecraft:overworld/temperature",
+          "input": "halohaven:climate_temperature",
           "min_inclusive": -1.2,
           "max_exclusive": -0.35,
           "when_in_range": {
             "type": "minecraft:range_choice",
-            "input": "minecraft:overworld/vegetation",
+            "input": "halohaven:climate_vegetation",
             "min_inclusive": 0,
             "max_exclusive": 1.2,
             "when_in_range": 1,
@@ -309,12 +309,12 @@
         },
         "argument2": {
           "type": "minecraft:range_choice",
-          "input": "minecraft:overworld/temperature",
+          "input": "halohaven:climate_temperature",
           "min_inclusive": -1.2,
           "max_exclusive": -0.35,
           "when_in_range": {
             "type": "minecraft:range_choice",
-            "input": "minecraft:overworld/vegetation",
+            "input": "halohaven:climate_vegetation",
             "min_inclusive": -1.2,
             "max_exclusive": 0,
             "when_in_range": {
@@ -348,12 +348,12 @@
           },
           "when_out_of_range": {
             "type": "minecraft:range_choice",
-            "input": "minecraft:overworld/temperature",
+            "input": "halohaven:climate_temperature",
             "min_inclusive": -0.35,
             "max_exclusive": 0.35,
             "when_in_range": {
               "type": "minecraft:range_choice",
-              "input": "minecraft:overworld/vegetation",
+              "input": "halohaven:climate_vegetation",
               "min_inclusive": -1.2,
               "max_exclusive": 0,
               "when_in_range": {
@@ -382,7 +382,7 @@
             },
             "when_out_of_range": {
               "type": "minecraft:range_choice",
-              "input": "minecraft:overworld/vegetation",
+              "input": "halohaven:climate_vegetation",
               "min_inclusive": -1.2,
               "max_exclusive": 0,
               "when_in_range": {
@@ -424,12 +424,12 @@
         "type": "minecraft:range_choice",
         "input": {
           "type": "minecraft:range_choice",
-          "input": "minecraft:overworld/temperature",
+          "input": "halohaven:climate_temperature",
           "min_inclusive": -1.2,
           "max_exclusive": -0.35,
           "when_in_range": {
             "type": "minecraft:range_choice",
-            "input": "minecraft:overworld/vegetation",
+            "input": "halohaven:climate_vegetation",
             "min_inclusive": 0,
             "max_exclusive": 1.2,
             "when_in_range": 1,
@@ -487,8 +487,8 @@
     },
     "lava": 0,
     "ridges": "minecraft:overworld/ridges",
-    "temperature": "minecraft:overworld/temperature",
-    "vegetation": "minecraft:overworld/vegetation",
+    "temperature": "halohaven:climate_temperature",
+    "vegetation": "halohaven:climate_vegetation",
     "vein_gap": 0,
     "vein_ridged": 0,
     "vein_toggle": 0
