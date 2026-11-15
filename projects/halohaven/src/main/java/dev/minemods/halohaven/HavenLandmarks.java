@@ -54,8 +54,8 @@ public final class HavenLandmarks {
         if(biome<3)return;
         Random rng=new Random(l.getSeed()^(cx*71889371L)^(cz*1333877L));
         int floor=HavenVillages.WALK_Y-1;
-        Block face=biome==3?Blocks.TUFF:biome==4?HaloHaven.MOONSTONE.get():Blocks.DEEPSLATE_TILES;
-        Block wall=biome==3?Blocks.CALCITE:biome==4?HaloHaven.PEARL_BRICKS.get():HaloHaven.MOONSTONE.get();
+        Block face=biome==3?HavenBiomeBlocks.RESONANT_SHALE.get():biome==4?HavenBiomeBlocks.CHOIRSTONE.get():HavenBiomeBlocks.UMBRAL_SILT.get();
+        Block wall=biome==3?HavenBiomeBlocks.CHALK_STRATA.get():biome==4?HavenBiomeBlocks.CHOIR_TILES.get():HavenBiomeBlocks.VEILSTONE.get();
         int radius=biome==3?33:biome==4?30:29;
         // Rock shell is shaped, thick in the interior and scalloped at the rim.
         // In the gorges, a true void canyon divides two land masses.
@@ -71,7 +71,7 @@ public final class HavenLandmarks {
             p(l,cx+dx,floor,cz+dz,face);
             if(d>16&&d<radius-4&&rng.nextInt(biome==3?100:biome==4?80:46)==0)
                 p(l,cx+dx,floor+1,cz+dz,
-                    biome==5?Blocks.AMETHYST_CLUSTER:HaloHaven.CELESTIAL_BLOOM.get());
+                    biome==5?HavenBiomeBlocks.VEIL_LICHEN.get():biome==4?HavenBiomeBlocks.MOURNING_BLOOM.get():HavenBiomeBlocks.GORGE_THISTLE.get());
         }
         // Waystone anchor and the safe central crossing never generate over a void.
         for(int x=-3;x<=3;x++)for(int z=-3;z<=3;z++){
@@ -129,7 +129,7 @@ public final class HavenLandmarks {
                     double theta=a*Math.PI/24;
                     int x=cx+(int)Math.round(ring*Math.cos(theta));
                     int z=cz+(int)Math.round(ring*Math.sin(theta));
-                    if(a%5!=0)p(l,x,floor+1,z,HaloHaven.MOONSTONE.get());
+                    if(a%5!=0)p(l,x,floor+1,z,(ring%8==0?HavenBiomeBlocks.VEILSTONE.get():HaloHaven.MOONSTONE.get()));
                 }
             }
             for(int x:new int[]{-17,17})for(int z:new int[]{-17,17}){
