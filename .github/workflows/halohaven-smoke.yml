@@ -133,25 +133,52 @@ jobs:
                   assert 'item.halohaven.skyseed' in text
               print('PASS: built-in item, creative tab, six mapped UV atlases, dimension, transparent glass:', len(required))
           PY
-      - name: Start NeoForge dedicated server (headless)
+      - name: Start server and generate real Halo Haven chunks (RCON)
         working-directory: projects/halohaven
+        timeout-minutes: 6
         run: |
           mkdir -p run
           printf 'eula=true\n' > run/eula.txt
+          cat > run/server.properties <<'EOF'
+          online-mode=false
+          enable-rcon=true
+          rcon.port=25576
+          rcon.password=halo-ci-private-test
+          server-port=25565
+          level-seed=halo-qa-1.4
+          max-tick-time=120000
+          view-distance=6
+          simulation-distance=4
+          EOF
           set +e
-          timeout --signal=SIGINT --kill-after=10 145s gradle --no-daemon runServer > server-smoke.log 2>&1
-          result=$?
+          timeout --signal=SIGINT --kill-after=10 190s gradle --no-daemon runServer > server-smoke.log 2>&1 &
+          game_pid=$!
+          python3 ci/worldgen_probe.py > worldgen-probe.log 2>&1
+          probe_status=$?
+          # Probe issues 'stop' via RCON; force termination for failures.
+          if [ "$probe_status" -ne 0 ]; then kill -INT "$game_pid" 2>/dev/null || true; fi
+          wait "$game_pid"
+          game_status=$?
           set -e
-          tail -n 110 server-smoke.log
-          if grep -Eiq 'Errors in currently selected data packs|Failed to load registries|Exception in server tick loop|A critical error occurred|Failure during server start' server-smoke.log; then
-            echo 'FAIL: server reported startup errors'
+          tail -n 100 server-smoke.log
+          cat worldgen-probe.log
+          if grep -Eiq 'Errors in currently selected data packs|Failed to load registries|Exception in server tick loop|A critical error occurred|Failure during server start|The following entities have not registered to the RegisterSpawnPlacementsEvent' server-smoke.log; then
+            echo 'FAIL: server registry, tick, or spawn placement errors'
+            exit 1
+          fi
+          if [ "$probe_status" -ne 0 ]; then
+            echo 'FAIL: Heaven chunk generation / RCON validation failed'
+            exit 1
+          fi
+          if ! grep -q 'PASS: generated/ticked 3 real Halo Haven positions' worldgen-probe.log; then
+            echo 'FAIL: chunk generation proof not found'
             exit 1
           fi
           if grep -Eq 'Done \([0-9.,]+s\)!|Done \(' server-smoke.log; then
-            echo 'PASS: NeoForge dedicated server reached ready state'
+            echo 'PASS: NeoForge server loaded and generated 3 real Heaven chunks'
             exit 0
           fi
-          echo "FAIL: NeoForge server did not reach ready state (exit: $result)"
+          echo "FAIL: server did not reach ready state (exit: $game_status)"
           exit 1
       - name: Upload smoke logs when failing
         if: failure()
@@ -160,5 +187,6 @@ jobs:
           name: halohaven-smoke-log
           path: |
             projects/halohaven/server-smoke.log
+            projects/halohaven/worldgen-probe.log
             projects/halohaven/run/logs/latest.log
             projects/halohaven/run/crash-reports/
