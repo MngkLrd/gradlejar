@@ -27,6 +27,7 @@ jobs:
         working-directory: projects/halohaven
         run: |
           gradle --no-daemon clean build
+          python3 ci/art_quality.py
           python3 - <<'PY'
           from zipfile import ZipFile
           import json, glob, os, struct
