@@ -1,3 +1,4 @@
+import groovy.json.JsonOutput
 import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.RenderingHints
@@ -68,6 +69,30 @@ tasks.named('generateHaloAssets').configure {
             }
             rr(g,0xffa1ceb0,3,21,4,2)
             rr(g,0xff9acbab,16,6,6,3)
+        }
+        // Two authored compositions avoid identical clover stamps on each cube.
+        paint('skygrass_sparse',0xff8cbfa5){g->
+            rr(g,0xff94c8a9,0,0,15,4)
+            rr(g,0xff99caab,3,4,6,3)
+            rr(g,0xff9ccdaf,23,18,9,5)
+            rr(g,0xff74b397,1,26,7,2)
+            ln(g,0xff5b987e,6,17,6,11)
+            rr(g,0xffb0d8b8,3,12,3,2)
+            rr(g,0xff6fac90,7,11,3,2)
+            rr(g,0xffe7eac6,5,10,2,1)
+        }
+        paint('skygrass_dense',0xff8cbfa5){g->
+            rr(g,0xff99cdae,0,2,21,6)
+            rr(g,0xffa1d4b3,14,5,18,4)
+            rr(g,0xff7eb89c,18,22,14,5)
+            for(List<Integer> xy:[[5,20],[14,13],[25,16],[29,27]]){
+                int x=xy[0],y=xy[1]
+                ln(g,0xff578e79,x,y+2,x,y-3)
+                rr(g,0xffb9dfc2,x-3,y-1,3,2)
+                rr(g,0xff6caf8e,x+1,y-3,3,2)
+                px(g,0xfff8e9b8,x,y-4)
+            }
+            rr(g,0xffabd6b4,9,25,8,3)
         }
         paint('skygrass_side',0xffd9e7db){g->
             rr(g,0xff9acbab,0,0,32,5)
@@ -238,14 +263,32 @@ tasks.named('generateHaloAssets').configure {
         }
         glass('aurora_glass',0xff57899c,0xccd4f6ed,0xdd91c9c6)
         glass('dawn_glass',0xff98764d,0xccffe5b4,0xddcca777)
-        paint('sky_leaves',0xff79b79c){g->
-            for(List<Integer> m:[[0,0],[16,0],[0,16],[16,16]]){
-                int x=m[0],y=m[1]
-                rr(g,0xff94d0ae,x+2,y+2,12,6)
-                rr(g,0xff61a58e,x+1,y+8,13,5)
-                rr(g,0xffb0dac1,x+5,y+1,5,3)
-                rr(g,0xff73ba9b,x+7,y+9,5,5)
-            }
+        // A natural canopy, not a repeated four-square electronic pattern.
+        // Broad overlapping clusters hold shape from afar; asymmetric edge
+        // strokes and muted leaf shadow avoid noisy speckles.
+        paint('sky_leaves',0xff6fae93){g->
+            rr(g,0xff5b9981,0,0,14,11)
+            rr(g,0xff8dc7a5,2,2,10,5)
+            rr(g,0xffacd9b7,5,1,6,3)
+            rr(g,0xff6fae93,12,0,15,8)
+            rr(g,0xff98cead,16,2,13,5)
+            rr(g,0xffb6ddbd,22,1,7,3)
+            rr(g,0xff4f8c7b,26,7,6,10)
+            rr(g,0xff83c09e,20,10,9,7)
+            rr(g,0xff9cd4b0,23,9,6,3)
+            rr(g,0xff528f79,0,17,10,15)
+            rr(g,0xff85c29f,1,19,14,8)
+            rr(g,0xffb1dcbc,2,17,8,4)
+            rr(g,0xff5c9d84,12,12,13,16)
+            rr(g,0xff76b69b,13,15,14,10)
+            rr(g,0xffa3d5b5,16,14,6,5)
+            rr(g,0xff8ac8a8,23,23,9,9)
+            rr(g,0xffb0dcb9,24,26,6,4)
+            rr(g,0xff65a68a,8,29,14,3)
+            // Short shadow boundaries read as layered leaf clumps.
+            ln(g,0xff4f8c7b,4,10,10,10)
+            ln(g,0xff569780,16,25,24,25)
+            ln(g,0xffacd9b7,17,4,27,4)
         }
         // A cutout plane: stem below, two leaf pairs, five petals at the apex.
         paint('celestial_bloom',0x00000000){g->
@@ -258,5 +301,27 @@ tasks.named('generateHaloAssets').configure {
             rr(g,0xffb7d9cf,18,10,5,4)
             rr(g,0xffffefc2,15,10,3,3)
         }
+        // Multiple cohesive soil compositions, sampled via weighted blockstates.
+        // Models share the same sandstone underside and grass side: no UV seams.
+        def json={String path,Object value->
+            File dest=new File(root,path)
+            dest.parentFile.mkdirs()
+            dest.setText(JsonOutput.prettyPrint(JsonOutput.toJson(value)),'UTF-8')
+        }
+        for(String variant:['skygrass_sparse','skygrass_dense']){
+            json('assets/halohaven/models/block/'+variant+'.json',[
+                parent:'minecraft:block/cube_bottom_top',
+                textures:[top:'halohaven:block/'+variant,
+                          bottom:'halohaven:block/cloudstone',
+                          side:'halohaven:block/skygrass_side']
+            ])
+        }
+        json('assets/halohaven/blockstates/skygrass.json',[
+            variants:['':[
+                [model:'halohaven:block/skygrass',weight:5],
+                [model:'halohaven:block/skygrass_sparse',weight:3],
+                [model:'halohaven:block/skygrass_dense',weight:2]
+            ]]
+        ])
     }
 }
