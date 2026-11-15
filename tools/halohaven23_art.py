@@ -287,6 +287,16 @@ public final class HavenRegionalLamp extends Block{
                element([3,2,9],[13,14,10],"field",("north","south")),
                element([7,2,5],[9,14,11],"core",("west","east")),
            ]}
+        # The two stacked blocks form ONE rift: no middle crossbar and no gap
+        # in the animated field between the lower and upper block models.
+        if half=="lower":
+            obj["elements"]=[e for e in obj["elements"] if e["from"]!=[2,14,5]]
+            for e in obj["elements"]:
+                if e["from"] in ([2,2,7],[3,2,9],[7,2,5]):e["to"][1]=16
+        else:
+            obj["elements"]=[e for e in obj["elements"] if e["from"]!=[2,0,5]]
+            for e in obj["elements"]:
+                if e["from"] in ([2,2,7],[3,2,9],[7,2,5]):e["from"][1]=0
         write(asset_core/"models/block"/("ascension_gateway_"+half+".json"),obj)
 
     # Remove runtime full-cube occlusion from a lamp whose visual shape is a smaller lantern.
