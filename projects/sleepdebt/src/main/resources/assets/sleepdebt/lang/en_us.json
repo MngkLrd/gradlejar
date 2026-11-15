@@ -91,5 +91,8 @@
   "gui.sleepdebt.reason.protected": "Your dreamcatcher made sleep safer.",
   "gui.sleepdebt.esc": "Press ESC to close",
   "gui.sleepdebt.forecast": "Sleep quality here: %s%%",
-  "itemGroup.sleepdebt.main": "Sleep Debt"
+  "itemGroup.sleepdebt.main": "Sleep Debt",
+  "key.categories.sleepdebt": "Sleep Debt",
+  "key.sleepdebt.test_void": "Force blackout for QA",
+  "key.sleepdebt.void_diagnostics": "Show darkness diagnostics"
 }
