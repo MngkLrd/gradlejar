@@ -78,10 +78,18 @@ public final class HaloHaven {
     public static final DeferredBlock<FenceBlock> AZURE_FENCE = BLOCKS.register("azure_fence",
         () -> new FenceBlock(BlockBehaviour.Properties.of().strength(2f,5f).sound(SoundType.WOOD)));
     public static final DeferredBlock<LeavesBlock> SKY_LEAVES = BLOCKS.register("sky_leaves",
-        () -> new LeavesBlock(BlockBehaviour.Properties.of().strength(0.2f).randomTicks()
+        () -> new StableSkyLeavesBlock(BlockBehaviour.Properties.of().strength(0.2f)
             .noOcclusion().sound(SoundType.GRASS)));
     public static final DeferredBlock<Block> CELESTIAL_BLOOM = BLOCKS.registerSimpleBlock("celestial_bloom",
         BlockBehaviour.Properties.of().noCollission().instabreak().noOcclusion().sound(SoundType.GRASS));
+    // An actual, visible ritual field, not a one-shot particle illusion.
+    // No item is registered: this block is temporary, non-colliding, and
+    // self-cleans if a portal ritual is interrupted or a server restarts.
+    public static final DeferredBlock<TemporaryGatewayBlock> ASCENSION_GATEWAY = BLOCKS.register("ascension_gateway",
+        () -> new TemporaryGatewayBlock(BlockBehaviour.Properties.of()
+            .noCollission().noOcclusion().noLootTable().strength(-1f, 3600000f)
+            .lightLevel(s -> 12).isViewBlocking((s,w,p) -> false)
+            .isSuffocating((s,w,p) -> false).sound(SoundType.AMETHYST)));
     public static final DeferredBlock<Block> STARSHADE = BLOCKS.registerSimpleBlock("starshade",
         BlockBehaviour.Properties.of().strength(1f).lightLevel(s -> 15).sound(SoundType.AMETHYST));
 

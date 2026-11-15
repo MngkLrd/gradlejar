@@ -43,7 +43,13 @@ public final class AscensionSigilItem extends Item {
     }
 
     public static boolean ritualReady(ServerLevel world, BlockPos bell) {
-        if (bell.getY() < 170 || !world.canSeeSky(bell.above())) return false;
+        if (bell.getY() < 170 || !world.canSeeSky(bell.above(3))) return false;
+        // A temporary transparent portal is allowed directly above the bell,
+        // but permanent blocks and decorations must not obstruct the ritual.
+        for(int dy=1;dy<=2;dy++){
+            var above=world.getBlockState(bell.above(dy));
+            if(!above.isAir() && !above.is(HaloHaven.ASCENSION_GATEWAY.get()))return false;
+        }
         if (!world.getBlockState(bell.below()).is(Blocks.QUARTZ_BLOCK)) return false;
         for (int dx : new int[]{-1,1}) for (int dz : new int[]{-1,1}) {
             if (!world.getBlockState(bell.offset(dx, -1, dz)).is(Blocks.AMETHYST_BLOCK)) return false;

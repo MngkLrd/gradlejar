@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -29,8 +31,9 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 public final class PortalRituals {
     private PortalRituals() {}
 
-    private record Animation(BlockPos bell, UUID playerId, int tick, boolean entering) {
-        private Animation next(){return new Animation(bell,playerId,tick+1,entering);}
+    private record Animation(BlockPos bell, UUID playerId, int tick, boolean entering,
+                             ResourceKey<Level> origin) {
+        private Animation next(){return new Animation(bell,playerId,tick+1,entering,origin);}
     }
     private static final Map<GlobalPos,Animation> BUILDING=new HashMap<>();
     private static final Map<UUID,Animation> ENTERING=new HashMap<>();
@@ -47,7 +50,7 @@ public final class PortalRituals {
             if(!AscensionSigilItem.ritualReady(level,bell))continue;
             GlobalPos key=GlobalPos.of(level.dimension(),bell);
             if(!BUILDING.containsKey(key)){
-                BUILDING.put(key,new Animation(bell,null,0,false));
+                BUILDING.put(key,new Animation(bell,null,0,false,level.dimension()));
                 level.playSound(null,bell,SoundEvents.AMETHYST_BLOCK_CHIME,SoundSource.BLOCKS,1.3f,0.8f);
             }
             return;
@@ -61,7 +64,15 @@ public final class PortalRituals {
             player.displayClientMessage(Component.translatable("message.halohaven.missing_dimension"),true);
             return;
         }
-        ENTERING.put(player.getUUID(),new Animation(bell,player.getUUID(),0,true));
+        // The gate now has a real, visible two-block-high portal surface.
+        // The source bell remains untouched; expired fields clear themselves.
+        ServerLevel origin=player.serverLevel();
+        for(int dy=1;dy<=2;dy++){
+            BlockPos at=bell.above(dy);
+            origin.setBlock(at,HaloHaven.ASCENSION_GATEWAY.get().defaultBlockState(),3);
+            origin.scheduleTick(at,HaloHaven.ASCENSION_GATEWAY.get(),100);
+        }
+        ENTERING.put(player.getUUID(),new Animation(bell,player.getUUID(),0,true,player.serverLevel().dimension()));
         player.getCooldowns().addCooldown(HaloHaven.ASCENSION_SIGIL.get(),65);
         player.level().playSound(null,bell,SoundEvents.BEACON_ACTIVATE,SoundSource.BLOCKS,1.1f,0.7f);
         player.displayClientMessage(Component.translatable("message.halohaven.portal_opening"),true);
@@ -91,10 +102,15 @@ public final class PortalRituals {
         while(entry.hasNext()){
             var e=entry.next();
             Animation a=e.getValue();
+            // NeoForge ticks EACH dimension in succession. Previously a tick
+            // in Nether or another modded dimension cancelled every ritual
+            // started in the Overworld before it could reach 48 ticks.
+            if(!a.origin.equals(level.dimension()))continue;
             ServerPlayer player=level.getServer().getPlayerList().getPlayer(e.getKey());
             if(player==null || player.level()!=level ||
                 player.distanceToSqr(a.bell.getX()+0.5,a.bell.getY()+0.5,a.bell.getZ()+0.5)>56 ||
                 !AscensionSigilItem.ritualReady(level,a.bell)){
+                eraseGate(level,a.bell);
                 if(player!=null && player.level()==level)
                     player.displayClientMessage(Component.translatable("message.halohaven.portal_interrupted"),true);
                 entry.remove();continue;
@@ -106,6 +122,7 @@ public final class PortalRituals {
             if(a.tick>=48){
                 // Remove BEFORE invoking worldgen / teleport to prevent duplicate entry.
                 entry.remove();
+                eraseGate(level,a.bell);
                 ServerLevel heaven=level.getServer().getLevel(HaloHaven.HEAVEN);
                 if(heaven==null)continue;
                 player.getPersistentData().putDouble("halohaven_return_x",player.getX());
@@ -120,6 +137,14 @@ public final class PortalRituals {
             }else{
                 e.setValue(a.next());
             }
+        }
+    }
+
+    private static void eraseGate(ServerLevel level,BlockPos bell) {
+        for(int dy=1;dy<=2;dy++){
+            BlockPos at=bell.above(dy);
+            if(level.getBlockState(at).is(HaloHaven.ASCENSION_GATEWAY.get()))
+                level.removeBlock(at,false);
         }
     }
 
