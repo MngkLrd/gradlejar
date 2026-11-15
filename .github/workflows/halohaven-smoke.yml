@@ -80,7 +80,7 @@ jobs:
                   required.add(f'data/halohaven/worldgen/biome/{biome}.json')
               for n in (1,2,8,11):
                   required.add(f'data/halohaven/worldgen/placed_feature/sky_bloom_patch_{n}.json')
-              for n in (1,2,9):
+              for n in (1,2,4,9):
                   required.add(f'data/halohaven/worldgen/placed_feature/sky_crown_tree_{n}.json')
               required |= {
                   'data/halohaven/worldgen/configured_feature/sky_bloom_patch.json',

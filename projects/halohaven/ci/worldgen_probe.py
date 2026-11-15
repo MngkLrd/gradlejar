@@ -113,6 +113,19 @@ def main() -> int:
             )
             if "force" not in result.lower():
                 raise RuntimeError(f"Chunk at {x} {z} was not forced: {result}")
+        # A registered biome might still be unreachable if the six climate
+        # parameter ranges do not match the density-router output. Locate two
+        # opposing climate corners to prove the sampler reaches both.
+        for biome in ("chalk_terraces", "lower_veil"):
+            started = time.monotonic()
+            result = command(
+                sock, f"execute in halohaven:heaven run locate biome halohaven:{biome}"
+            )
+            if ("could not find" in result.lower()
+                or "not found" in result.lower()
+                or "halohaven:" + biome not in result.lower()):
+                raise RuntimeError(f"Registered biome not reachable: {biome}: {result}")
+            print(f"PASS: located {biome} in {time.monotonic() - started:.1f}s", flush=True)
         # Cleanup persistent forceload markers in CI.
         for x, z in positions:
             command(sock, f"execute in halohaven:heaven run forceload remove {x} {z}")
