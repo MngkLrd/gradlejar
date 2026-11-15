@@ -69,7 +69,8 @@ public final class PortalRituals {
         ServerLevel origin=player.serverLevel();
         for(int dy=1;dy<=2;dy++){
             BlockPos at=bell.above(dy);
-            origin.setBlock(at,HaloHaven.ASCENSION_GATEWAY.get().defaultBlockState(),3);
+            origin.setBlock(at,HaloHaven.ASCENSION_GATEWAY.get().defaultBlockState()
+                .setValue(TemporaryGatewayBlock.UPPER,dy==2),3);
             origin.scheduleTick(at,HaloHaven.ASCENSION_GATEWAY.get(),100);
         }
         ENTERING.put(player.getUUID(),new Animation(bell,player.getUUID(),0,true,player.serverLevel().dimension()));
