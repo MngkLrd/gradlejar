@@ -36,6 +36,7 @@ import java.util.EnumSet;
 public final class SleeplessEntity extends Zombie {
  private int watchedPause;
  private int successfulHits;
+ private int lastStrikeTick=-100;
  public SleeplessEntity(EntityType<? extends Zombie> type,Level level){super(type,level);}
  public static AttributeSupplier.Builder createAttributes(){
   return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,24)
@@ -56,14 +57,22 @@ public final class SleeplessEntity extends Zombie {
  }
  @Override public boolean doHurtTarget(Entity target){
   if(target instanceof ServerPlayer player && SleepEngine.hasSleeplessGrace(player))return false;
+  if(tickCount-lastStrikeTick<32)return false;
   boolean hit=super.doHurtTarget(target);
+  if(hit)lastStrikeTick=tickCount;
   if(hit&&target instanceof ServerPlayer player){
    successfulHits++;
    // Darkness lingers for nine seconds, and repeat blows renew its duration.
    player.addEffect(new MobEffectInstance(MobEffects.DARKNESS,200+Math.min(120,successfulHits*22),
      0,false,true,true));
    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,70,0,false,false,true));
-   if(successfulHits%2==0){
+   if(successfulHits%3==0){
+    player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,120,0,false,false,true));
+    player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,100,0,false,false,true));
+    SleepEngine.addFatigue(player,75);
+    level().playSound(null,blockPosition(),SoundEvents.WARDEN_HEARTBEAT,
+      SoundSource.HOSTILE,1.1f,.65f);
+   }else if(successfulHits%2==0){
     // Brief total obscuration creates a panic beat, not permanent blindness.
     player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS,30,0,false,false,true));
     player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,85,0,false,false,true));
@@ -110,6 +119,15 @@ public final class SleeplessEntity extends Zombie {
     }
    }
    if(watchedPause>0)getNavigation().stop();
+   if(tickCount%70==0 && length<11 && length>2.5 &&
+      !target.isCreative() && target.hasLineOfSight(this)){
+    SleepEngine.addStress(target,22);
+    if(length<7){
+     target.addEffect(new MobEffectInstance(MobEffects.DARKNESS,76,0,false,false,true));
+     level().playSound(null,blockPosition(),SoundEvents.WARDEN_HEARTBEAT,
+       SoundSource.HOSTILE,.32f,.62f);
+    }
+   }
    if(tickCount%20==0 && getDeltaMovement().horizontalDistanceSqr()>.0008 && length<24){
     // Audible, isolated steps; deliberately slower than a player's running rhythm.
     level().playSound(null,blockPosition(),SoundEvents.SOUL_SAND_STEP,
