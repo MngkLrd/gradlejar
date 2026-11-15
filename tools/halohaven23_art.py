@@ -119,7 +119,7 @@ with tempfile.TemporaryDirectory() as td:
             # wood grain maps have separate top cross-section and side; leaf families are clustered.
             if name.endswith("_leaves"):
                 blocktex(images,name,color,kind,i)
-                simple_block_assets(root,name)
+                simple_block_assets(root/"src/main/resources",name)
             else:
                 blocktex(images,name+"_log",color,"wood",i)
                 top=paint(color,"stone",i)
@@ -144,7 +144,7 @@ with tempfile.TemporaryDirectory() as td:
                 write(asset/"models/item"/(name+"_log.json"),{"parent":"halohavenalpha2:block/"+name+"_log"})
         else:
             blocktex(images,name,color,kind,i)
-            simple_block_assets(root,name)
+            simple_block_assets(root/"src/main/resources",name)
     src=root/"src/main/java/dev/halohaven/alpha2/HaloHavenAlpha2.java"
     code=src.read_text(encoding="utf8")
     add=[]
@@ -206,6 +206,7 @@ with tempfile.TemporaryDirectory() as td:
     d.rectangle((4,5,11,10),fill=(249,225,168,255))
     d.rectangle((5,6,10,9),fill=(255,241,207,255))
     d.line((4,4,11,4),fill=(117,160,161,255))
+    core_tex.mkdir(parents=True,exist_ok=True)
     base.save(core_tex/"cloud_lantern.png")
     # Decorative made-for-lamp face with standard cube geometry, but no transparent center.
     asset_core=CORE/"resources/assets/halohaven"
