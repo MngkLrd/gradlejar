@@ -3,7 +3,7 @@ loaderVersion="[1,)"
 license="MIT"
 [[mods]]
 modId="cowtipping"
-version="1.0.0"
+version="1.0.1"
 displayName="Cow Tipping"
 description='''Tip cows with an empty-hand right click; nearby cows gather to watch.'''
 [[mixins]]
