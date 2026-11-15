@@ -1,9 +1,9 @@
 {
   "slug": "halohaven",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "halohaven-1.21.1-1.5.0.jar"
+  "jar_glob": "halohaven-1.21.1-1.6.0.jar"
 }

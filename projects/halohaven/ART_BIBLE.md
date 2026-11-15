@@ -1,4 +1,4 @@
-# Halo Haven: Art Bible / 1.5.0
+# Halo Haven: Art Bible / 1.6.0
 
 ## Identity
 A once-great kingdom suspended in the sky, slowly reclaimed by nature.
@@ -17,6 +17,26 @@ and glass with a deliberate gold/blue lead framework.
 Real climate selection uses Minecraft 1.21.1 `multi_noise` with custom temperature
 and humidity density functions. The terrain density router has six region-specific
 morphology expressions, not only surface color changes.
+
+## Vanilla visual convergence / 1.6.0
+
+**Visual baseline:** Minecraft Java 1.21 16x block family, especially
+limestone/calcite, moss, stone bricks, planks and green foliage. We author
+original pixels, not copies of Mojang's textures. The overall sensation
+must be game-native: small connected chips on matte stone, continuous grain
+along wooden boards, 1px mortar joints, high readability without shaders.
+Avoid oversized mural-like panels on terrain materials. Ornament stays
+on scarce crafted blocks and interactive relics; it does not cover the
+landscape.
+
+The 33 native16px atlas faces are organized by substance with intentionally
+limited saturation and restrained highlights. Material geometry and block
+repetition must look right under vanilla lighting and AO.
+
+For the 1.6.0 greenery, persistent Sky Crown Leaves are functional leaves;
+new crowns must not spontaneously decay and become dropped item storms.
+The blue-green biomes are calmer. Hostile regions use darker, less
+reflective mineral tones to distinguish terrain from crafted landmarks.
 
 ## Production in 1.5.0
 

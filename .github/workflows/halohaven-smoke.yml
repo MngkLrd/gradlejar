@@ -30,7 +30,7 @@ jobs:
           python3 - <<'PY'
           from zipfile import ZipFile
           import json, glob, os, struct
-          path = glob.glob('build/libs/halohaven-1.21.1-1.5.0.jar')[0]
+          path = glob.glob('build/libs/halohaven-1.21.1-1.6.0.jar')[0]
           blocks = ('cloudstone skygrass pearl_bricks sungold_tiles azure_planks aurora_glass starshade dawn_glass moonstone celestial_mosaic gilded_pillar cloud_lantern waystone star_ore pilgrim_altar').split()
           mobs = ('skyfolk cloudhare lumen dawn_guardian dusk_wraith eclipse_revenant').split()
           with ZipFile(path) as jar:
@@ -92,7 +92,7 @@ jobs:
                   'assets/halohaven/textures/block/skygrass_side.png',
               }
               art=json.load(open('art/pixel_atlas.json',encoding='utf-8'))
-              assert art['resolution']==16 and len(art['tiles'])==32
+              assert art['resolution']==16 and len(art['tiles'])==33
               import hashlib
               art_sha=set()
               for name,entry in art['tiles'].items():
@@ -106,7 +106,27 @@ jobs:
                       assert raw[:8]==bytes((137,80,78,71,13,10,26,10)), name
                       assert struct.unpack('>II',raw[16:24])==(16,16), name
                       art_sha.add(hashlib.sha256(raw).hexdigest())
-              assert len(art_sha)>=28,'Unexpected duplicate material surfaces'
+              assert len(art_sha)>=29,'Unexpected duplicate material surfaces'
+              # Actual visible portal block has no obtainable item or loot.
+              required |= {
+                  'assets/halohaven/textures/block/ascension_gateway.png',
+                  'assets/halohaven/blockstates/ascension_gateway.json',
+                  'assets/halohaven/models/block/ascension_gateway.json'
+              }
+              gate=json.loads(jar.read('assets/halohaven/models/block/ascension_gateway.json'))
+              assert gate['parent']=='minecraft:block/cross'
+              assert gate['render_type']=='minecraft:translucent'
+              tree=json.loads(jar.read('data/halohaven/worldgen/configured_feature/sky_crown_tree.json'))
+              assert tree['config']['foliage_provider']['state']['Properties']['persistent']=='true'
+              for region in six:
+                  biome=json.loads(jar.read(f'data/halohaven/worldgen/biome/{region}.json'))
+                  assert any('scatter' in f or 'fragments' in f or 'scree' in f
+                             or 'masonry' in f or 'cairns' in f
+                             for f in biome['features'][9]), region
+              for name in ('cloudstone_scatter','chalk_fragments','tuff_scree',
+                           'fallen_masonry','moonstone_cairns'):
+                  required.add(f'data/halohaven/worldgen/configured_feature/{name}.json')
+                  required.add(f'data/halohaven/worldgen/placed_feature/{name}.json')
               missing=required-names
               if missing: raise RuntimeError('Missing mod files: '+repr(sorted(missing)))
               dimension=json.loads(jar.read('data/halohaven/dimension/heaven.json'))
@@ -141,7 +161,7 @@ jobs:
                            'moonstone_alt','moonstone_fractured','star_ore_alt',
                            'sky_leaves_sparse'):
                   assert f'assets/halohaven/models/block/{name}.json' in names
-              print('PASS: 32 authored native16px block textures, 22 registered block materials')
+              print('PASS: 33 authored native16px block textures, 22 user-facing block materials + 1 internal gateway')
               for name in ['aurora_glass','dawn_glass']:
                   model=json.loads(jar.read(f'assets/halohaven/models/block/{name}.json'))
                   assert model['render_type']=='minecraft:translucent'

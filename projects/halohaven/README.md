@@ -1,4 +1,4 @@
-# Halo Haven 1.5.0 – Worldgen II & Art Bible
+# Halo Haven 1.6.0 – Evergreen Fix, Real Gateway & Vanilla Pixel Art
 
 **Minecraft 1.21.1 | NeoForge 21.1.x | Java 21.**
 
@@ -9,16 +9,61 @@ A bright fantasy pocket of the skies, now with a cohesive architectural language
 The Build Hub publishes the JAR to GitHub Releases when repository permissions
 allow. It also uploads the exact JAR and SHA256 as a **GitHub Actions artifact**
 for 30 days, including when the GitHub Release API rejects publishing.
-Look for `jar-halohaven-1.5.0` in the latest successful Build Hub run.
+Look for `jar-halohaven-1.6.0` in the latest successful Build Hub run.
 
 ## Installation and build
 
-- Copy `halohaven-1.21.1-1.5.0.jar` to `mods/`.
+- Copy `halohaven-1.21.1-1.6.0.jar` to `mods/`.
 - **NeoForge 21.1.197** is used to compile; runtime metadata requests **at least 21.1.80**, not the newest patch.
 - Java 21, Gradle 9.2.1.
 - Build: `gradle --no-daemon clean build`.
 - Output: `build/libs/halohaven-1.21.1-1.5.0.jar`.
 - Client and server both require the mod. No extra assets or resource packs.
+
+## 1.6.0: first gameplay and visual repair pass
+
+**Evergreen canopy:** Sky Crown Leaves are a special LeavesBlock subclass
+that never spontaneously decays; new configured trees also explicitly create
+persistent=true leaf states. This avoids the high-volume leaf-item storms that
+lagged players and stripped trees of their crowns. Very large piles of leftover
+Sky Crown Leaves items from old save files are discarded near players, but
+small normal harvested stacks are left untouched.
+
+**Real visible portal:** Ascension Sigil activation now raises a two-block
+translucent, non-colliding Gateway field above the ritual bell. Its scheduled
+cleanup is fail-safe if the player leaves the ritual or disconnects.
+Crucially, an opening in one dimension can no longer be cancelled by tick
+events from Nether, another Overworld or another modded dimension.
+The portal automatically takes the player into `halohaven:heaven` after
+48 ticks when the source bell remains intact and the player stays close.
+The field is an internal block with no obtainable item.
+
+**Biomes:** Dawn Gardens, Chalk Terraces, Eternal Canopy, Ringing Gorges,
+Forgotten Choirs and Lower Veil now feature worldgen geology piles appropriate
+to each region (stone outcrops, white calcite, tuff scree, ruined masonry,
+moonstone cairns). Region-aware spawn checks permit creatures on their actual
+surface blocks, rather than only Skygrass. Ringing Gorges is now a hostile
+borderlands biome, while Forgotten Choirs and Lower Veil receive denser
+Dusk Wraith encounters. Hostiles remain disabled on Peaceful difficulty.
+
+**Art:** The same 22 obtainable construction/plant blocks keep their registry
+IDs, but natural materials have been substantially repainted toward vanilla
+Minecraft's 16×16 material vocabulary. Muted limestone, proper grassy turf,
+directional wood grain, crisp mossy foliage and compact ore clusters replace
+the glossy, oversized stained-glass-like shapes of 1.5.0. The gateway adds
+one internal registered block, for 23 technically registered blocks total.
+The authored atlas now contains 33 textures including the gateway surface.
+
+**Compatibility:** Existing block IDs remain stable. Previously explored
+chunks keep their generated geometry; new worldgen decorations only appear
+in newly generated chunks. The leaf and portal fixes apply on existing saves.
+An older 1.5.0 sky island may already have dropped leaves; the new version
+prevents further decay and helps clear only abnormal debris piles.
+
+**QA note:** The CI dedicated server can verify the new gateway is registered,
+the art atlas contains all textures, biome/feature codecs are valid and Heaven
+chunks load. Without a connected graphical Minecraft client with a real player,
+it cannot certify visual lighting or complete player-driven ritual travel.
 
 ## 1.5.0: real pixel-cluster art assets
 

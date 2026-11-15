@@ -126,6 +126,15 @@ def main() -> int:
                 or "halohaven:" + biome not in result.lower()):
                 raise RuntimeError(f"Registered biome not reachable: {biome}: {result}")
             print(f"PASS: located {biome} in {time.monotonic() - started:.1f}s", flush=True)
+        # Verify the internal visible portal block resolves in a loaded Heaven
+        # chunk. This exercises block registration and blockstate availability.
+        # A client-side renderer and player-driven teleport require manual QA.
+        command(sock, "execute in halohaven:heaven run setblock 0 160 0 halohaven:ascension_gateway")
+        gate = command(sock, "execute in halohaven:heaven if block 0 160 0 halohaven:ascension_gateway run say HALO_GATE_REGISTERED")
+        if "HALO_GATE_REGISTERED" not in gate:
+            raise RuntimeError("Internal gateway block could not be found after placement")
+        command(sock, "execute in halohaven:heaven run setblock 0 160 0 minecraft:air")
+        print("PASS: gateway resource exists and can be placed in real dimension", flush=True)
         # Cleanup persistent forceload markers in CI.
         for x, z in positions:
             command(sock, f"execute in halohaven:heaven run forceload remove {x} {z}")
