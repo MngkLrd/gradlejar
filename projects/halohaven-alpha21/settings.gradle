@@ -30,3 +30,16 @@ print('Halo Haven 2.1 extracted: Java, models, PNG, NBT and worldgen')
 '''
 def cmd=new ProcessBuilder('python3','-c',pythonScript).directory(settingsDir).inheritIO().start()
 if(cmd.waitFor()!=0)throw new GradleException('Halo Haven source extraction failed')
+
+
+def fixJava = { String rel, String before, String after ->
+    File file = new File(settingsDir, 'src/main/java/dev/halohaven/alpha2/' + rel)
+    if (!file.isFile()) throw new GradleException('Missing Java source: '+rel)
+    String contents=file.getText('UTF-8')
+    if (!contents.contains(before)) throw new GradleException('Missing required Java signature: '+before)
+    file.setText(contents.replace(before,after),'UTF-8')
+}
+fixJava('HaloHavenAlpha2.java','new BushBlock(', 'new Block(')
+fixJava('HaloHavenAlpha2.java','new GlassBlock(', 'new TransparentBlock(')
+fixJava('HavenCreature.java','@Override protected InteractionResult mobInteract','@Override public InteractionResult mobInteract')
+println('Halo Haven 2.1 NeoForge API compatibility patch applied')
