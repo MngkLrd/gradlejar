@@ -46,7 +46,7 @@ public final class SleeplessDread {
   // Audio and visual intensity are independent toggles. Alpha 12 incorrectly
   // disabled all monster audio when players disabled the visual vignette.
   float target=(!mc.level.isDay()&&!mc.player.isSleeping())?proximity:0f;
-  presence+= (target-presence)*(target>presence?.095f:.18f);
+  presence+= (target-presence)*(target>presence?.18f:.22f);
   if(presence<.0001f)presence=0;
   if(lastHurt==0&&mc.player.hurtTime>0&&nearest<8)
    impact=Math.max(impact,.8f);
@@ -90,9 +90,9 @@ public final class SleeplessDread {
   if(p<.012f||e.getType()!=FogType.NONE)return;
   p=Mth.clamp(p,0f,1f);
   float originalFar=e.getFarPlaneDistance();
-  float far=Mth.lerp(p*p,originalFar,12f);
-  float near=Mth.lerp(p*p,e.getNearPlaneDistance(),1.6f);
-  e.setFarPlaneDistance(Math.max(7f,far));
+  float far=Mth.lerp(p*p,originalFar,6.5f);
+  float near=Mth.lerp(p*p,e.getNearPlaneDistance(),.8f);
+  e.setFarPlaneDistance(Math.max(5f,far));
   e.setNearPlaneDistance(Math.min(near,Math.max(0f,far-2f)));
   e.setCanceled(true);
  }
@@ -100,7 +100,7 @@ public final class SleeplessDread {
   if(!ClientSettings.SLEEPLESS_AURA.get())return;
   float p=presence*ClientSettings.DREAD_STRENGTH.get().floatValue();
   if(p<.012f||e.getCamera().getFluidInCamera()!=FogType.NONE)return;
-  p=Mth.clamp(p*p*.98f,0f,.98f);
+  p=Mth.clamp(p*p*.995f,0f,.995f);
   // Desaturated, almost black indigo. Light sources nearby remain visible.
   e.setRed(Mth.lerp(p,e.getRed(),.013f));
   e.setGreen(Mth.lerp(p,e.getGreen(),.011f));
@@ -115,14 +115,19 @@ public final class SleeplessDread {
   int w=g.guiWidth(),h=g.guiHeight();
   float rhythm=.9f+.1f*(float)Math.sin(mc.player.tickCount*.21f);
   // Multiple nonlinear inward rings, not a flat black image slapped over the HUD.
-  for(int layer=9;layer>=1;layer--){
-   float norm=layer/9f;
-   int x=Math.max(1,(int)(w*.34f*norm*p));
-   int y=Math.max(1,(int)(h*.41f*norm*p));
-   int alpha=(int)(Mth.clamp(p*p*(1f-norm*.32f)*rhythm,0f,1f)*31);
+  for(int layer=11;layer>=1;layer--){
+   float norm=layer/11f;
+   int x=Math.max(1,(int)(w*.42f*norm*p));
+   int y=Math.max(1,(int)(h*.45f*norm*p));
+   int alpha=(int)(Mth.clamp(p*p*(1f-norm*.25f)*rhythm,0f,1f)*43);
    int col=(alpha<<24)|0x06060B;
    g.fill(0,0,x,h,col);g.fill(w-x,0,w,h,col);
    g.fill(0,0,w,y,col);g.fill(0,h-y,w,h,col);
+  }
+  // Dense center haze ties screen darkness to the actual world fog.
+  if(p>.64f){
+   int shade=(int)((p-.64f)/.36f*79);
+   g.fill(0,0,w,h,(Math.min(82,shade)<<24)|0x040408);
   }
   // Heartbeat shock on a strike, with quick decay. The core remains readable.
   float pulse=Mth.clamp(impact,0f,1f);

@@ -51,9 +51,12 @@ public final class SleepCommands {
      var mob=ModEntities.SLEEPLESS.get().create(world);
      if(mob==null)return 0;
      mob.moveTo(x+.5,y,z+.5,world.random.nextFloat()*360,0);
-     world.addFreshEntity(mob);
+     if(!world.addFreshEntity(mob))return 0;
+     // Deterministic QA: bypass vanilla target selection and respawn grace.
+     mob.beginDebugHunt(p);
      ctx.getSource().sendSuccess(()->Component.literal(
-       "The Sleepless spawned 9 blocks ahead (debug; ignores natural spawn conditions)."),false);
+       "Sleepless hunter engaged. Creative: follows without damage; Survival: attacks. "
+       +"Debug ignores respawn grace, natural hunters do not."),false);
      return 1;
     }))
     .then(Commands.literal("why_no_sleepless").executes(ctx->{
@@ -67,6 +70,7 @@ public final class SleepCommands {
        +" night="+!p.level().isDay()
        +" protected="+shielded
        +" respawnGrace="+SleepEngine.hasSleeplessGrace(p)
+       +" creative="+p.isCreative()
        +" enabled="+SleepSettings.ENABLE_SLEEPLESS.get()
        +" spawnCheckEvery="+SleepSettings.SPAWN_INTERVAL_TICKS.get()+" ticks"
        +" (real spawn also requires loaded dark ground)."),false);

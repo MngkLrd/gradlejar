@@ -54,7 +54,7 @@ final class NightEncounters {
    SleeplessEntity hunter=ModEntities.SLEEPLESS.get().create(level);
    if(hunter==null)return;
    hunter.moveTo(x+.5,y,z+.5,level.random.nextFloat()*360,0);
-   level.addFreshEntity(hunter);
+   if(level.addFreshEntity(hunter))hunter.beginNaturalHunt(player);
    return;
   }
  }
