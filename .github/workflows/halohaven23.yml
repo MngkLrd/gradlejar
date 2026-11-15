@@ -4,6 +4,7 @@ on:
   push:
     branches: [halohaven-alpha23-overhaul]
     paths:
+      - ".github/workflows/halohaven23.yml"
       - ".github/workflows/halohaven-unified.yml"
       - "projects/halohaven/**"
       - "projects/halohaven-alpha21/**"
