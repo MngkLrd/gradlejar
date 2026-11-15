@@ -5,11 +5,12 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "After nights without sleep, figures that look like Steve or Alex can stand in the fog far ahead. They have real 3D geometry, but no hitbox. When you approach or stare directly at them, they vanish."
+      "text": "Sleep Debt first makes you imagine the hunter: its distant silhouette may appear behind you at 570+ debt, briefly standing in the fog until you hold your gaze on it. This apparition is client-side only and cannot hit you."
     },
     {
       "type": "patchouli:text",
-      "text": "These visions are client-side only. No impostor players join the server. The real Sleepless behaves differently: it freezes when watched from afar, then stalks you when you turn away. Dreamcatchers and bright lanterns help defend camps."
+      "text": "The REAL Sleepless starts hunting at 830 debt by default, only at night and in the dark. It approaches from behind, leaves isolated footsteps and gathers a dark smoke haze. On hit, darkness lingers and each second attack may briefly blind you. A nearby dreamcatcher prevents natural spawning. After death the hunter gives you temporary grace even if Sleep Debt persists."
     }
   ]
 }
+

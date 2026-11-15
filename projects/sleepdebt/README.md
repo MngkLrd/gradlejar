@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.8
+# Sleep Debt: Restless Nights — 3.0.0-alpha.9
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.8.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.9.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -116,3 +116,16 @@ Replaced 45 authentic 16x16 PNGs: 15 block materials, 8 coffee crop stages and 2
 - To test the mob/hallucinations in a loaded open space at night:
   `/time set midnight`, `/sleepdebt debug preset critical`.
 - For visual block test: `/sleepdebt showcase` (OP, needs suitable ground).
+
+## Alpha 9: Hunter's Shadow and vanilla art
+- The real Sleepless has more reliable loaded-chunk nighttime spawn attempts (every 200 ticks, 1/3 chance, multiple candidate sites), still at 830+ debt by default and one hunter per area.
+- New client-side Sleepless apparitions at 570+ debt stand 19-30 blocks away, mostly behind the player. They last 6-10 seconds and vanish after ~11 ticks of focused gaze; separate from real AI and hitboxes.
+- Real Sleepless stalks and flanks more slowly, pauses under gaze, has its own periodic isolated soul-sand steps and black smoke.
+- Successful blows apply much longer darkness, slowing, and on alternate hits brief blindness/weakness and new horror sound cues.
+- A distance-dependent darkened edge vignette grows as the real Sleepless approaches; optional client config.
+- A death grants a configurable 3600-tick (3 minute) grace from hunting. Existing persistAfterDeath semantics remain, but Fatigue/Stress fall somewhat on respawn.
+- Diagnostics: /sleepdebt debug why_no_sleepless and /sleepdebt debug spawn_sleepless.
+- A full vanilla-art pass redoes 45 original 16x16 material/item/crop sprites and HUD wood frame, respecting the source PNGs' alpha/material roles. (See ART_ALPHA9.md).
+- New client config: sleeplessApparitions, apparitionMinDebt, sleeplessNearVignette.
+- Java 21, NeoForge 21.1.x, Minecraft 1.21.1.
+

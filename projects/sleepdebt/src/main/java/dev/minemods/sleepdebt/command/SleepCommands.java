@@ -3,6 +3,11 @@ package dev.minemods.sleepdebt.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import dev.minemods.sleepdebt.gameplay.SleepEngine;
+import dev.minemods.sleepdebt.registry.ModEntities;
+import dev.minemods.sleepdebt.registry.ModBlocks;
+import dev.minemods.sleepdebt.SleepSettings;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -31,6 +36,42 @@ public final class SleepCommands {
     return good?1:0;
    }))
    .then(Commands.literal("debug").requires(source->source.hasPermission(2))
+    .then(Commands.literal("spawn_sleepless").executes(ctx->{
+     ServerPlayer p=ctx.getSource().getPlayerOrException();
+     var world=p.serverLevel();
+     var look=p.getLookAngle();
+     int x=p.getBlockX()+(int)Math.round(look.x*9);
+     int z=p.getBlockZ()+(int)Math.round(look.z*9);
+     var spot=new BlockPos(x,p.getBlockY(),z);
+     if(!world.hasChunkAt(spot)){
+      ctx.getSource().sendFailure(Component.literal("The target chunk is not loaded."));
+      return 0;
+     }
+     int y=world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);
+     var mob=ModEntities.SLEEPLESS.get().create(world);
+     if(mob==null)return 0;
+     mob.moveTo(x+.5,y,z+.5,world.random.nextFloat()*360,0);
+     world.addFreshEntity(mob);
+     ctx.getSource().sendSuccess(()->Component.literal(
+       "The Sleepless spawned 9 blocks ahead (debug; ignores natural spawn conditions)."),false);
+     return 1;
+    }))
+    .then(Commands.literal("why_no_sleepless").executes(ctx->{
+     ServerPlayer p=ctx.getSource().getPlayerOrException();
+     boolean shielded=BlockPos.betweenClosedStream(
+       p.blockPosition().offset(-7,-3,-7),p.blockPosition().offset(7,4,7))
+       .anyMatch(pos->p.level().getBlockState(pos).is(ModBlocks.DREAMCATCHER.get()));
+     ctx.getSource().sendSuccess(()->Component.literal(
+       "Sleepless debug: debt="+SleepEngine.getDebt(p)
+       +" threshold="+SleepSettings.SLEEPLESS_THRESHOLD.get()
+       +" night="+!p.level().isDay()
+       +" protected="+shielded
+       +" respawnGrace="+SleepEngine.hasSleeplessGrace(p)
+       +" enabled="+SleepSettings.ENABLE_SLEEPLESS.get()
+       +" spawnCheckEvery="+SleepSettings.SPAWN_INTERVAL_TICKS.get()+" ticks"
+       +" (real spawn also requires loaded dark ground)."),false);
+     return 1;
+    }))
     .then(Commands.literal("set")
      .then(Commands.argument("debt",IntegerArgumentType.integer(0,1000))
       .then(Commands.argument("fatigue",IntegerArgumentType.integer(0,1000))

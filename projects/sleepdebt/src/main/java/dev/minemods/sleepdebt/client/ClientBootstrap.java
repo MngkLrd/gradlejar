@@ -18,10 +18,13 @@ public final class ClientBootstrap {
   bus.addListener(ClientBootstrap::renderers);
   bus.addListener(ClientBootstrap::layers);
   bus.addListener(MiragePlayers::modelBake);
+  bus.addListener(SleeplessApparitions::bake);
   bus.addListener(ClientBootstrap::screens);
   NeoForge.EVENT_BUS.addListener(ClientHallucinations::tick);
   NeoForge.EVENT_BUS.addListener(MiragePlayers::clientTick);
+  NeoForge.EVENT_BUS.addListener(SleeplessApparitions::tick);
   NeoForge.EVENT_BUS.addListener(MiragePlayers::renderWorld);
+  NeoForge.EVENT_BUS.addListener(SleeplessApparitions::render);
  }
  private static void onGui(RegisterGuiLayersEvent e){
   e.registerAbove(VanillaGuiLayers.FOOD_LEVEL,

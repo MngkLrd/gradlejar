@@ -1,12 +1,61 @@
 package dev.minemods.sleepdebt.client;
 
 import net.minecraft.client.Minecraft;
+import dev.minemods.sleepdebt.entity.SleeplessEntity;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.particles.ParticleTypes;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** Purely client-side fatigue feedback; all silhouettes are non-interactive. */
 public final class ClientHallucinations {
+ private static float presence;
+ private static int lastScan=-1;
+ private static Object levelId;
+ private static float closest=25;
+ /**
+  * Screen-space smoke vignette. Tied to REAL nearby Sleepless entities, not
+  * only the numerical sleep debt. No shaders, postprocessors or mixins.
+  */
+ private static void renderApproach(GuiGraphics g,Minecraft mc){
+  if(!ClientSettings.SLEEPLESS_AURA.get())return;
+  if(levelId!=mc.level){levelId=mc.level;presence=0;lastScan=-1;}
+  if(lastScan<0||mc.player.tickCount-lastScan>=5){
+   lastScan=mc.player.tickCount;
+   closest=25;
+   for(SleeplessEntity mob:mc.level.getEntitiesOfClass(SleeplessEntity.class,
+       mc.player.getBoundingBox().inflate(23))){
+    if(mob.isAlive()){
+     closest=Math.min(closest,(float)mc.player.distanceTo(mob));
+    }
+   }
+  }
+  float target=Math.max(0,Math.min(1,(19-closest)/18f));
+  presence+=(target-presence)*.18f;
+  if(presence<.015f)return;
+  int w=g.guiWidth(),h=g.guiHeight();
+  float beat=.87f+.13f*(float)Math.sin(mc.player.tickCount*.13);
+  int density=Math.max(0,Math.min(125,(int)(presence*presence*112*beat)));
+  int edge=Math.min(Math.min(w,h)/4,Math.max(6,(int)(18+presence*58)));
+  for(int i=0;i<5;i++){
+   int size=Math.max(1,edge*(5-i)/5);
+   int alpha=Math.max(1,density*(5-i)/14);
+   int color=(alpha<<24)|0x0E0B12;
+   g.fill(0,0,size,h,color);g.fill(w-size,0,w,h,color);
+   g.fill(0,0,w,size/2,color);g.fill(0,h-size/2,w,h,color);
+  }
+  // Short dark smoke streaks around the periphery; no random screen noise.
+  if(presence>.38f){
+   int alpha=Math.min(95,(int)(presence*65));
+   int mist=(alpha<<24)|0x26232A;
+   long t=mc.player.tickCount/5;
+   int y1=(int)(h*.28)+(int)(t%17);
+   int y2=(int)(h*.71)-(int)(t%13);
+   g.fill(0,y1,(int)(presence*28),y1+3,mist);
+   g.fill(w-(int)(presence*38),y2,w,y2+2,mist);
+  }
+ }
+
  public static void tick(ClientTickEvent.Post event){
   Minecraft mc=Minecraft.getInstance();
   if(!ClientSettings.HALLUCINATIONS.get()||mc.level==null||mc.player==null||mc.screen!=null)return;
@@ -24,7 +73,9 @@ public final class ClientHallucinations {
  }
  public static void render(GuiGraphics g){
   Minecraft mc=Minecraft.getInstance();
-  if(!ClientSettings.HALLUCINATIONS.get()||mc.player==null||mc.level==null||mc.options.hideGui||mc.screen!=null)return;
+  if(mc.player==null||mc.level==null||mc.options.hideGui||mc.screen!=null)return;
+  renderApproach(g,mc);
+  if(!ClientSettings.HALLUCINATIONS.get())return;
   if(ClientState.debt<620||ClientState.maskTicks>0||ClientSettings.MIRAGE_PLAYERS.get())return;
   long t=mc.level.getGameTime(),phase=t/190;
   long seed=(phase*37291L+mc.player.getUUID().getMostSignificantBits())&0x7fffffff;

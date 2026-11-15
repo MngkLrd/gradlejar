@@ -27,6 +27,9 @@ public final class SleepEngine {
    state.getInt("caffeine"),state.getInt("fatigue"),state.getInt("stress")));
  }
  public static int getDebt(ServerPlayer p){return data(p).getInt("debt");}
+ public static boolean hasSleeplessGrace(ServerPlayer p){
+  return p.serverLevel().getGameTime()<data(p).getLong("sleeplessGraceUntil");
+ }
  public static int getFatigue(ServerPlayer p){return data(p).getInt("fatigue");}
  public static int getStress(ServerPlayer p){return data(p).getInt("stress");}
  public static int getCaffeine(ServerPlayer p){return data(p).getInt("caffeine");}
@@ -192,7 +195,8 @@ public final class SleepEngine {
    p.addEffect(new MobEffectInstance(MobEffects.DARKNESS,36,0,true,false,true));
    p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,36,0,true,false,true));
   }
-  if(p.tickCount%400==0)NightEncounters.trySpawn(p,t.getInt("debt"));
+  if(p.tickCount%SleepSettings.SPAWN_INTERVAL_TICKS.get()==0)
+   NightEncounters.trySpawn(p,t.getInt("debt"));
   save(p,t);
  }
 
@@ -232,6 +236,12 @@ public final class SleepEngine {
   if(!(e.getEntity() instanceof ServerPlayer p))return;
   CampRestSessions.discard(p);
   CompoundTag old=e.getOriginal().getPersistentData().getCompound(KEY).copy();
+  if(e.isWasDeath()){
+   old.putLong("sleeplessGraceUntil",p.serverLevel().getGameTime()+
+     SleepSettings.RESPAWN_GRACE_TICKS.get());
+   old.putInt("stress",Math.max(0,old.getInt("stress")-180));
+   old.putInt("fatigue",Math.max(0,old.getInt("fatigue")-120));
+  }
   if(e.isWasDeath()&&!SleepSettings.KEEP_ON_DEATH.get()){
    old.putInt("debt",0);old.putInt("progress",0);
    old.putInt("fatigue",0);old.putInt("stress",0);
