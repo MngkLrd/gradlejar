@@ -156,6 +156,54 @@ with tempfile.TemporaryDirectory() as td:
     code=code.replace("    public static final DeferredRegister<CreativeModeTab> TABS","".join(add)+"    public static final DeferredRegister<CreativeModeTab> TABS")
     src.write_text(code,encoding="utf8")
 
+    # Six luminous materials each tied to its own region, with a physical lantern
+    # instead of a generic opaque cube or vanilla lamp on a floating post.
+    lamps={
+      "dawn":("dawnstar_lamp","#edcfa3"),
+      "chalk":("chalk_moon_lamp","#e5e4c9"),
+      "canopy":("canopy_firefly_lamp","#98c6a1"),
+      "gorge":("gorge_resonance_lamp","#90cbd4"),
+      "choir":("choir_reliquary_lamp","#d9b5cb"),
+      "veil":("veil_lament_lamp","#aaa2c8")
+    }
+    snippets=[]
+    for idx,(biome,(name,tint)) in enumerate(lamps.items()):
+        blocktex(images,name,tint,"crystal",idx+15)
+        model={"ambientocclusion":False,"render_type":"minecraft:solid",
+               "textures":{"all":"halohavenalpha2:block/"+name},"elements":[]}
+        for lo,hi in (([4,0,4],[12,2,12]),([5,2,5],[11,11,11]),([4,11,4],[12,13,12]),
+                      ([6,13,6],[10,16,10])):
+            model["elements"].append({"from":lo,"to":hi,"faces":{
+                d:{"texture":"#all"} for d in ("north","south","east","west","up","down")}})
+        write(asset/"models/block"/(name+".json"),model)
+        write(asset/"blockstates"/(name+".json"),{
+            "variants":{"":{"model":"halohavenalpha2:block/"+name}}})
+        write(asset/"models/item"/(name+".json"),{
+            "parent":"halohavenalpha2:block/"+name})
+        snippets.append('    public static final DeferredBlock<Block> '+name.upper()+
+                        ' = BLOCKS.register("'+name+'", () -> new HavenRegionalLamp('+
+                        'BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN)'+
+                        '.strength(1.2F).noOcclusion().lightLevel(s -> 14)));\n')
+    code=src.read_text(encoding="utf8")
+    code=code.replace("    public static final DeferredRegister<CreativeModeTab> TABS",
+                      "".join(snippets)+"    public static final DeferredRegister<CreativeModeTab> TABS")
+    src.write_text(code,encoding="utf8")
+    (src.parent/"HavenRegionalLamp.java").write_text("""package dev.halohaven.alpha2;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+public final class HavenRegionalLamp extends Block{
+    private static final VoxelShape SHAPE=Block.box(4,0,4,12,16,12);
+    public HavenRegionalLamp(Properties props){super(props);}
+    @Override protected VoxelShape getShape(BlockState s,BlockGetter l,BlockPos p,CollisionContext c){
+        return SHAPE;
+    }
+}
+""",encoding="utf8")
+
     # Vanilla-like 16px carved doors: upper and lower panels are not duplicated anymore.
     for i,wood in enumerate(("dawnwood","heartwood","veilwood")):
         col=designs[wood][0]
