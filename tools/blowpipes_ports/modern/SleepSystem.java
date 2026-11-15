@@ -19,6 +19,14 @@ public final class SleepSystem {
   Saved old=SLEEPING.remove(mob);
   if(old!=null)mob.setNoAi(old.noAi);
  }
+ public static void check(Mob mob){
+  Saved saved=SLEEPING.get(mob);
+  if(saved==null)return;
+  if(!(mob.level() instanceof ServerLevel level)||!mob.isAlive()||level.getGameTime()>=saved.end){
+   wake(mob);return;
+  }
+  mob.setTarget(null);mob.getNavigation().stop();mob.setNoAi(true);
+ }
  public static void tick(MinecraftServer server){
   var it=SLEEPING.entrySet().iterator();
   while(it.hasNext()){
