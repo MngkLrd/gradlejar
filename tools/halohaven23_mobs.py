@@ -110,14 +110,40 @@ def make(spec,data,seed):
         draw_region(img,rect,material,color,seed+idx*7,zone)
     d=ImageDraw.Draw(img)
     eye_color=rgb(eye)+(255,)
-    # UV head front surface: coordinates within head texOffs(0,0).
-    for x in (13,19):
-        d.rectangle((x,9,x+2,11),fill=p[0])
-        d.rectangle((x+1,9,x+1,10),fill=eye_color)
-        d.point((x+1,9),fill=u[6])
-    # Lower muzzle marks, nose, jaw seam.
-    d.rectangle((15,15,19,16),fill=p[2])
-    d.point((17,15),fill=eye_color)
+    # CubeListBuilder.texOffs(0,0) head UV: actual NORTH face starts
+    # at x=depth, y=depth and spans width×height. Do NOT paint eyes at
+    # fixed x=13/19: those positions land on WEST/SOUTH faces on 6px heads.
+    HEAD_DIMS={
+        "dawnstag":(5,5,6),"mossback":(8,7,8),"resonant":(8,7,8),
+        "choir_sentinel":(8,8,8),"veilmanta":(4,3,4),
+        "cloud_wanderer":(4,3,4),
+        "chimewing":(4,4,4),"sky_swallow":(4,4,4),
+        "pollenwing":(4,4,4),"memory_wisp":(4,4,4)}
+    w,h,depth=HEAD_DIMS.get(spec,(6,6,6))
+    fx,fy=depth,depth
+    # Fine dark edge, lighter cheeks, two distinct eye pixels in the actual face.
+    d.rectangle((fx,fy,fx+w-1,fy+h-1),fill=u[3],outline=p[1])
+    if w>=6:
+        d.rectangle((fx+1,fy+1,fx+w-2,fy+2),fill=u[4])
+        eyes=(fx+1,fx+w-2)
+    else:
+        eyes=(fx,fx+w-1)
+    ey=fy+max(1,(h-1)//2)
+    if spec in ("silentchorister","barkstalker","shadowstalker"):
+        d.line((fx,fy+1,fx+w-1,fy+1),fill=p[0])
+    for ex in eyes:
+        d.point((ex,ey),fill=eye_color)
+        if ey+1<=fy+h-2:d.point((ex,ey+1),fill=p[0])
+    if h>=5:
+        d.line((fx+w//2-1,fy+h-2,fx+w//2,fy+h-2),fill=p[1])
+    if spec in ("crownfox","cliffprowler","dawnstag","sunpuff","mossback"):
+        # A small centered muzzle, not the misplaced side-face rectangle.
+        d.rectangle((fx+w//2-1,fy+h-2,fx+w//2,fy+h-1),fill=a[3])
+        d.point((fx+w//2,fy+h-2),fill=p[0])
+    elif spec=="choir_sentinel":
+        d.rectangle((fx+w//2-1,fy+h-2,fx+w//2+1,fy+h-2),fill=a[5])
+    elif spec=="littlechime":
+        d.point((fx+w//2,fy+h-2),fill=a[5])
     if material=="shell":
         for x,y in ((15,43),(31,47),(50,43),(66,50)):
             d.polygon(((x,y),(x+5,y-2),(x+9,y),(x+6,y+4),(x+1,y+4)),outline=a[1],fill=a[4])
