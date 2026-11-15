@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.13
+# Sleep Debt: Restless Nights — 3.0.0-alpha.14
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.13.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.14.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -191,3 +191,29 @@ Replaced 45 authentic 16x16 PNGs: 15 block materials, 8 coffee crop stages and 2
   disables sleeplessHorrorAudio. Disabling it does disable both fog and overlay.
 - Server/player state, recipes, blocks and mod ID unchanged. Gameplay and sound
   volumes need an in-client QA pass before release.
+
+
+## Alpha 14: Active Sleepless and coherent cluster remaster
+
+- Replaced the ineffective Zombie melee and targeting goals with an independent
+  five-stage Sleepless controller: WATCH, STALK, FLANK, PURSUE, RUSH.
+- Debug spawn now explicitly targets the invoker, even in Creative for
+  demonstration. Damage only works in Survival/Adventure. Natural spawns
+  still respect death grace, debt, night/day and survival mode.
+- Watching a hunter freezes it briefly, never indefinitely. It can accelerate,
+  pursue, approach from the flank and relocate to valid loaded dark ground
+  behind the player after poor pathing or a long failed rush. No force-loaded
+  chunks, blind teleports into walls, daylight hunts or spawn-kill loops.
+- Stronger native world fog: visibility can fall to around 6.5 blocks on
+  maximum threat, with an 11-ring custom dark vignette and hit response.
+  No use of vanilla Darkness for the hunter's approach.
+- Remastered every non-Sleepless texture: 15 detailed block materials,
+  8 crop stages, 22 original item icons, and the HUD/Journal/Coffee GUIs.
+  A uniform cabinet palette connects cloth, walnut, brass, parchment and
+  oxidized copper without texture noise. The real mob's 256x128 skin and
+  the Alpha 13 sound bank remain unchanged.
+- The complete 29-item catalog remains in its own Sleep Debt creative tab,
+  now positioned before Tools & Utilities for easier discovery.
+- Legacy generators run first; the new tools/remaster_assets.py deterministically
+  rewrites the reviewed non-mob art during Gradle. Saves, recipes and registry
+  IDs remain stable. Java 21, Gradle 9.2.1, NeoForge 21.1.x, Minecraft 1.21.1.
