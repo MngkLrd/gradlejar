@@ -49,6 +49,11 @@ for mc in ("1.20.1","1.21.1"):
                 "ResourceLocation.fromNamespaceAndPath(ID, name)"
             s=s.replace("/*VERSION_LOCATION*/",resolution)
         (java_path/(name+".java")).write_text(s,encoding="utf-8")
+    if not old:
+        client_file=java_path/"BlowpipesClient.java"
+        client_source=client_file.read_text(encoding="utf-8")
+        assert "(stack, context, lines) ->" in client_source
+        client_file.write_text(client_source.replace("(stack, context, lines) ->", "(stack, context, tooltipType, lines) ->"),encoding="utf-8")
     curves_path=java_path/"client/BlowpipeAnimationCurves.java"
     curves_path.parent.mkdir(parents=True,exist_ok=True)
     shutil.copyfile(common_source/"client/BlowpipeAnimationCurves.java",curves_path)
