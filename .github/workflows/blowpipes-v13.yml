@@ -77,44 +77,44 @@ jobs:
           original=client.read_text()
           assert 'HumanoidModel.ArmPose.TOOT_HORN' in original
           client.write_text("""package dev.minemods.blowpipes;
-
-import dev.minemods.blowpipes.client.BlowpipeArmPose;
-import dev.minemods.blowpipes.client.BlowpipeFirstPersonRenderer;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-import net.neoforged.neoforge.common.NeoForge;
-
-@EventBusSubscriber(modid=Blowpipes.ID,bus=EventBusSubscriber.Bus.MOD,value=Dist.CLIENT)
-public final class BlowpipesClient {
-    private static final IClientItemExtensions EXT = new IClientItemExtensions() {
-        @Override public HumanoidModel.ArmPose getArmPose(LivingEntity user, InteractionHand hand, ItemStack stack) {
-            if (user.isUsingItem() && user.getUsedItemHand()==hand && user.getUseItem().is(stack.getItem()))
-                return BlowpipeArmPose.POSE.getValue();
-            if (!user.isUsingItem() && user.swinging && user.getAttackAnim(0.0F)>0.0F)
-                return BlowpipeArmPose.POSE.getValue();
-            return null;
-        }
-    };
-    @SubscribeEvent public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(Blowpipes.DART.get(),DartRenderer::new);
-    }
-    @SubscribeEvent public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(DartRenderer.LAYER,DartModel::createBodyLayer);
-    }
-    @SubscribeEvent public static void registerItemExtensions(RegisterClientExtensionsEvent event) {
-        event.registerItem(EXT,Blowpipes.BAMBOO.get(),Blowpipes.HUNTING.get(),Blowpipes.REINFORCED.get());
-        NeoForge.EVENT_BUS.addListener(BlowpipeFirstPersonRenderer::renderHand);
-    }
-}
-""")
+          
+          import dev.minemods.blowpipes.client.BlowpipeArmPose;
+          import dev.minemods.blowpipes.client.BlowpipeFirstPersonRenderer;
+          import net.minecraft.client.model.HumanoidModel;
+          import net.minecraft.world.InteractionHand;
+          import net.minecraft.world.entity.LivingEntity;
+          import net.minecraft.world.item.ItemStack;
+          import net.neoforged.api.distmarker.Dist;
+          import net.neoforged.bus.api.SubscribeEvent;
+          import net.neoforged.fml.common.EventBusSubscriber;
+          import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+          import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+          import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+          import net.neoforged.neoforge.common.NeoForge;
+          
+          @EventBusSubscriber(modid=Blowpipes.ID,bus=EventBusSubscriber.Bus.MOD,value=Dist.CLIENT)
+          public final class BlowpipesClient {
+              private static final IClientItemExtensions EXT = new IClientItemExtensions() {
+                  @Override public HumanoidModel.ArmPose getArmPose(LivingEntity user, InteractionHand hand, ItemStack stack) {
+                      if (user.isUsingItem() && user.getUsedItemHand()==hand && user.getUseItem().is(stack.getItem()))
+                          return BlowpipeArmPose.POSE.getValue();
+                      if (!user.isUsingItem() && user.swinging && user.getAttackAnim(0.0F)>0.0F)
+                          return BlowpipeArmPose.POSE.getValue();
+                      return null;
+                  }
+              };
+              @SubscribeEvent public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+                  event.registerEntityRenderer(Blowpipes.DART.get(),DartRenderer::new);
+              }
+              @SubscribeEvent public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+                  event.registerLayerDefinition(DartRenderer.LAYER,DartModel::createBodyLayer);
+              }
+              @SubscribeEvent public static void registerItemExtensions(RegisterClientExtensionsEvent event) {
+                  event.registerItem(EXT,Blowpipes.BAMBOO.get(),Blowpipes.HUNTING.get(),Blowpipes.REINFORCED.get());
+                  NeoForge.EVENT_BUS.addListener(BlowpipeFirstPersonRenderer::renderHand);
+              }
+          }
+          """)
           resources=root/'src/main/resources'
           toml=resources/'META-INF/neoforge.mods.toml'
           s=toml.read_text().replace('version="1.2.0"','version="1.3.0"')
