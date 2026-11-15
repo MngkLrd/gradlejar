@@ -10,6 +10,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 public final class ClientBootstrap {
  public static void register(IEventBus bus,ModContainer container){
@@ -20,16 +21,19 @@ public final class ClientBootstrap {
   bus.addListener(MiragePlayers::modelBake);
   bus.addListener(SleeplessApparitions::bake);
   bus.addListener(ClientBootstrap::screens);
+  bus.addListener(SleeplessVoidShader::register);
   NeoForge.EVENT_BUS.addListener(ClientHallucinations::tick);
   NeoForge.EVENT_BUS.addListener(SleeplessDread::tick);
-  NeoForge.EVENT_BUS.addListener(SleeplessDread::renderFog);
-  NeoForge.EVENT_BUS.addListener(SleeplessDread::colorFog);
   NeoForge.EVENT_BUS.addListener(MiragePlayers::clientTick);
   NeoForge.EVENT_BUS.addListener(SleeplessApparitions::tick);
   NeoForge.EVENT_BUS.addListener(MiragePlayers::renderWorld);
   NeoForge.EVENT_BUS.addListener(SleeplessApparitions::render);
  }
  private static void onGui(RegisterGuiLayersEvent e){
+  // Render before vanilla HUD: darkness obscures the GAME WORLD, not items/health.
+  e.registerBelow(VanillaGuiLayers.HOTBAR,
+   ResourceLocation.fromNamespaceAndPath(SleepDebtMod.MOD_ID,"void_veil"),
+   SleeplessVoidShader::render);
   e.registerAbove(VanillaGuiLayers.FOOD_LEVEL,
     ResourceLocation.fromNamespaceAndPath(SleepDebtMod.MOD_ID,"sleep_hud"),SleepHud::render);
  }
