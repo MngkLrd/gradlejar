@@ -1,0 +1,135 @@
+name: Blowpipes Fabric 1.4.0 dual port
+on:
+  push:
+    branches: [release/blowpipes-fabric-1.4.0]
+    paths:
+      - 'tools/fabric_port/**'
+      - '.github/workflows/blowpipes-fabric-v14.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {mc: '1.20.1', target_java: 17}
+          - {mc: '1.21.1', target_java: 21}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            17
+            21
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.14.5'
+      - name: Download source from released NeoForge 1.4.0
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p reference
+          gh release download blowpipes-neoforge-1.21.1-v1.4.0-1 -p "Blowpipes_NeoForge_1.21.1_v1.4.0_source.zip" -D reference
+          unzip -q reference/Blowpipes_NeoForge_1.21.1_v1.4.0_source.zip -d reference/unpacked
+          test -f reference/unpacked/src/main/java/dev/minemods/blowpipes/BlowpipeItem.java
+      - name: Generate Fabric Java and datapacks
+        run: python3 tools/fabric_port/port.py --source reference/unpacked --output .
+      - name: Compile and remap Fabric JAR
+        working-directory: blowpipes-fabric-${{ matrix.mc }}
+        run: gradle --no-daemon --stacktrace clean build
+      - name: Validate versions, models, recipes, classes and tooltips
+        env:
+          MC: ${{ matrix.mc }}
+          JAVA: ${{ matrix.target_java }}
+        run: |
+          python3 - <<'PY'
+          import json,zipfile,struct,os
+          from pathlib import Path
+          mc=os.environ['MC'];jav=int(os.environ['JAVA'])
+          jar=Path(f'blowpipes-fabric-{mc}/build/libs/blowpipes-fabric-{mc}-1.4.0.jar')
+          assert jar.is_file() and jar.stat().st_size>15000,jar
+          with zipfile.ZipFile(jar) as z:
+            assert z.testzip() is None
+            names=set(z.namelist())
+            for cls in ('Blowpipes','BlowpipeItem','DartProjectile','DartModel','DartRenderer',
+                        'BlowpipeEvents','SleepState','BlowpipesClient'):
+              p='dev/minemods/blowpipes/'+cls+'.class'
+              assert p in names,p
+              major=struct.unpack('>H',z.read(p)[6:8])[0]
+              assert major<=jav+44,(p,major)
+            for cls in ('MobSleepMixin','client/FirstPersonMixin','client/ThirdPersonMixin'):
+              assert 'dev/minemods/blowpipes/mixin/'+cls+'.class' in names
+            mix=json.loads(z.read('blowpipes.mixins.json'))
+            assert mix['mixins']==['MobSleepMixin']
+            assert len(mix['client'])==2
+            meta=json.loads(z.read('fabric.mod.json'))
+            assert meta['version']=='1.4.0' and meta['depends']['minecraft']=='~'+mc
+            assert 'jei' not in meta['depends'] and 'emi' not in meta['depends']
+            items=('bamboo_blowpipe','hunting_blowpipe','reinforced_blowpipe','plain_dart',
+                   'iron_dart','poison_dart','slowness_dart','fire_dart','sleep_dart')
+            for item in items:
+              prefix='assets/blowpipes/'
+              assert prefix+'models/item/'+item+'.json' in names
+              png=prefix+'textures/item/'+item+'.png'
+              assert struct.unpack('>II',z.read(png)[16:24])==(16,16)
+              p='data/blowpipes/'+('recipes' if mc=='1.20.1' else 'recipe')+'/'+item+'.json'
+              recipe=json.loads(z.read(p))
+              assert recipe['result']['item' if mc=='1.20.1' else 'id']=='blowpipes:'+item
+              a='data/blowpipes/'+('advancements' if mc=='1.20.1' else 'advancement')+'/recipes/combat/'+item+'.json'
+              assert a in names,a
+              for lang in ('ru_ru','en_us'):
+                d=json.loads(z.read(prefix+'lang/'+lang+'.json'))
+                assert 'tooltip.blowpipes.'+item+'.primary' in d
+                assert 'tooltip.blowpipes.'+item+'.secondary' in d
+            for dart in items[3:]:
+              assert prefix+'textures/entity/dart/'+dart+'.png' in names
+          print('VALIDATED',jar,jar.stat().st_size,'bytes, Java target',jav)
+          PY
+      - name: Smoke test Fabric client startup in virtual display
+        continue-on-error: true
+        working-directory: blowpipes-fabric-${{ matrix.mc }}
+        run: |
+          set +e
+          timeout --signal=SIGINT --kill-after=8s 110s xvfb-run -a gradle --no-daemon runClient > /tmp/fabric-blowpipes.log 2>&1
+          status=$?
+          echo "Client smoke exit=$status"
+          tail -75 /tmp/fabric-blowpipes.log
+      - name: Verify smoke test for mixin failures
+        run: |
+          if test -f /tmp/fabric-blowpipes.log; then
+            if grep -Eqi 'MixinApplyError|InvalidMixinException|InjectionError|Critical injection failure|NoClassDefFoundError|Could not execute entrypoint' /tmp/fabric-blowpipes.log; then
+              tail -90 /tmp/fabric-blowpipes.log
+              exit 1
+            fi
+            grep -Ei 'blowpipes|Fabric Loader|Minecraft' /tmp/fabric-blowpipes.log | tail -8 || true
+          fi
+      - name: Package editable complete source
+        env:
+          MC: ${{ matrix.mc }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile,os
+          mc=os.environ['MC'];root=Path('blowpipes-fabric-'+mc)
+          dest=Path('Blowpipes_Fabric_'+mc+'_v1.4.0_source.zip')
+          with zipfile.ZipFile(dest,'w',zipfile.ZIP_DEFLATED) as z:
+            for f in ('README.md','build.gradle','settings.gradle','gradle.properties','build-profile.json'):
+              z.write(root/f,f)
+            for f in sorted((root/'src').rglob('*')):
+              if f.is_file():z.write(f,f.relative_to(root))
+          print('Source project packaged',dest,dest.stat().st_size)
+          PY
+      - name: Release JAR and source ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MC: ${{ matrix.mc }}
+        run: |
+          tag="blowpipes-fabric-$MC-v1.4.0-$GITHUB_RUN_NUMBER"
+          jar="blowpipes-fabric-$MC/build/libs/blowpipes-fabric-$MC-1.4.0.jar"
+          src="Blowpipes_Fabric_$MC"_v1.4.0_source.zip
+          gh release create "$tag" "$jar" "$src" --target "$GITHUB_SHA" --title "Blowpipes 1.4.0 - Fabric $MC" --notes "Fabric port of NeoForge 1.4.0. Custom staged 1P and 3P blowpipe animations, 3D flying darts, six balanced ammo types, Sleep Dart with mob AI suspension and wake-up, tooltips and vanilla JEI/EMI recipes. Java per Minecraft version. Requires Fabric API. Compiled and assets tested; in-game combat testing is advised." --prerelease
