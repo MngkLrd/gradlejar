@@ -3,7 +3,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public final class SleepSettings {
  private static final ModConfigSpec.Builder B=new ModConfigSpec.Builder();
  public static final ModConfigSpec.IntValue TICKS_PER_POINT,BASE_RECOVERY,SLEEPLESS_THRESHOLD;
- public static final ModConfigSpec.BooleanValue KEEP_ON_DEATH,PENALTIES,SHELTER_BONUS,MONSTER_PENALTY,ENABLE_SLEEPLESS,ENABLE_CAMP_REST,MICROSLEEPS;
+ public static final ModConfigSpec.BooleanValue KEEP_ON_DEATH,PENALTIES,SHELTER_BONUS,MONSTER_PENALTY,ENABLE_SLEEPLESS,ENABLE_CAMP_REST,MICROSLEEPS,PHANTOM_SYNC;
  public static final ModConfigSpec SPEC;
  static {
   B.push("fatigue");
@@ -17,6 +17,9 @@ public final class SleepSettings {
   SHELTER_BONUS=B.define("shelterBonus",true);
   MONSTER_PENALTY=B.define("hostilePenalty",true);
   ENABLE_CAMP_REST=B.define("allowCampRest",true);
+  B.pop();
+  B.push("vanilla");
+  PHANTOM_SYNC=B.comment("Use Sleep Debt to suppress vanilla phantoms for rested players; dreamcatchers ward them off.").define("integratePhantoms",true);
   B.pop();
   B.push("sleepless");
   ENABLE_SLEEPLESS=B.comment("Enable rare hostile encounters for severely sleep-deprived players.").define("enabled",true);

@@ -4,6 +4,7 @@ import dev.minemods.sleepdebt.client.ClientBootstrap;
 import dev.minemods.sleepdebt.entity.SleeplessEntity;
 import dev.minemods.sleepdebt.gameplay.SleepEngine;
 import dev.minemods.sleepdebt.gameplay.CampRestSessions;
+import dev.minemods.sleepdebt.gameplay.VanillaSleepIntegration;
 import dev.minemods.sleepdebt.network.SleepNetworking;
 import dev.minemods.sleepdebt.registry.ModItems;
 import dev.minemods.sleepdebt.registry.ModBlocks;
@@ -43,6 +44,7 @@ public final class SleepDebtMod {
   NeoForge.EVENT_BUS.addListener(SleepEngine::onBlockBreak);
   NeoForge.EVENT_BUS.addListener(SleepEngine::onAttack);
   NeoForge.EVENT_BUS.addListener(CampRestSessions::onLogout);
+  NeoForge.EVENT_BUS.addListener(VanillaSleepIntegration::onPhantoms);
   NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent e)->SleepCommands.register(e.getDispatcher()));
  }
  private static void attributes(EntityAttributeCreationEvent e){e.put(ModEntities.SLEEPLESS.get(),SleeplessEntity.createAttributes().build());}

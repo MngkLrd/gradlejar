@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.2
+# Sleep Debt: Restless Nights — 3.0.0-alpha.3
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.2.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.3.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -73,3 +73,11 @@ The sleep journal now shows both last sleep quality and an on-demand forecast of
 the current location, including environmental warnings. Repeated full-bed sleeps
 within 6000 ticks are capped at 90 debt recovery to deter sleep spamming.
 Core compatibility flags for shelter/hostile penalties are respected in quality calculation.
+
+## Alpha 3: Minecraft Phantom integration
+Vanilla phantom spawn attempts now respect Sleep Debt (under 250 = deny),
+and a dreamcatcher in a nearby camp prevents an attempt. Extremely sleep-deprived
+players may see one extra phantom (never more than four in the requested group).
+Minecraft's insomnia gamerule, skylight and natural spawn checks still apply.
+The new vanilla.integratePhantoms setting disables this integration.
+This uses NeoForge PlayerSpawnPhantomsEvent, not invasive mixins.
