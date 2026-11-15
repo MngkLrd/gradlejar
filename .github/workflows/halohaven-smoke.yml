@@ -137,6 +137,30 @@ jobs:
                   definition=json.loads(jar.read(f'data/halohaven/worldgen/biome/{biome}.json'))
                   assert len(definition['features'])==11
                   assert 'effects' in definition
+              # Check feature order globally: inconsistent relative order
+              # between biome step lists crashes the chunk feature sorter.
+              for generation_step in range(11):
+                  edges={}
+                  nodes=set()
+                  for region in six:
+                      features=json.loads(
+                          jar.read(f'data/halohaven/worldgen/biome/{region}.json')
+                      )['features'][generation_step]
+                      nodes.update(features)
+                      for left,right in zip(features,features[1:]):
+                          edges.setdefault(left,set()).add(right)
+                  visiting=set()
+                  visited=set()
+                  def walk(node):
+                      if node in visiting:
+                          raise RuntimeError(f'Feature order cycle in step {generation_step}: {node}')
+                      if node in visited: return
+                      visiting.add(node)
+                      for other in edges.get(node,set()): walk(other)
+                      visiting.remove(node)
+                      visited.add(node)
+                  for node in nodes: walk(node)
+              print('PASS: feature order is acyclic across all six biomes')
               densities=json.loads(jar.read('data/halohaven/worldgen/noise_settings/heaven_islands.json'))
               assert densities['noise_router']['temperature']=='halohaven:climate_temperature'
               assert densities['noise_router']['vegetation']=='halohaven:climate_vegetation'
