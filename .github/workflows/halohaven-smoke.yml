@@ -31,7 +31,7 @@ jobs:
           python3 - <<'PY'
           from zipfile import ZipFile
           import json, glob, os, struct
-          path = glob.glob('build/libs/halohaven-1.21.1-1.7.0.jar')[0]
+          path = glob.glob('build/libs/halohaven-1.21.1-1.8.0.jar')[0]
           blocks = ('cloudstone skygrass pearl_bricks sungold_tiles azure_planks aurora_glass starshade dawn_glass moonstone celestial_mosaic gilded_pillar cloud_lantern waystone star_ore pilgrim_altar').split()
           mobs = ('skyfolk cloudhare lumen dawn_guardian dusk_wraith eclipse_revenant').split()
           with ZipFile(path) as jar:
@@ -128,6 +128,71 @@ jobs:
                            'fallen_masonry','moonstone_cairns'):
                   required.add(f'data/halohaven/worldgen/configured_feature/{name}.json')
                   required.add(f'data/halohaven/worldgen/placed_feature/{name}.json')
+              # Biome Atelier 1.8: 18 registered decorative/natural blocks
+              # across six existing biome registries, not merely loose PNGs.
+              regional=[
+                  ('dawnstone','sunlit_loam','sunpetal'),
+                  ('chalkstone','chalk_strata','chalk_blossom'),
+                  ('canopy_loam','ancient_bark','canopy_fern'),
+                  ('resonant_shale','echo_crystal','gorge_thistle'),
+                  ('choirstone','choir_tiles','mourning_bloom'),
+                  ('veilstone','umbral_silt','veil_lichen')
+              ]
+              biome_art=json.load(open('art/biome_pixel_atlas.json',encoding='utf-8'))
+              assert biome_art['resolution']==16 and len(biome_art['tiles'])==30
+              for name,entry in biome_art['tiles'].items():
+                  assert len(entry['rows'])==16, name
+                  assert all(len(row)==16 for row in entry['rows']), name
+                  pal=biome_art['palettes'][entry['palette']]
+                  assert 4<=len(pal)<=9
+                  assert all(ch.isdigit() and int(ch)<len(pal)
+                             for row in entry['rows'] for ch in row), name
+                  img=f'assets/halohaven/textures/block/{name}.png'
+                  required.add(img)
+                  if img in names:
+                      assert struct.unpack('>II',jar.read(img)[16:24])==(16,16), img
+              for triplet in regional:
+                  for name in triplet:
+                      required |= {
+                          f'assets/halohaven/textures/block/{name}.png',
+                          f'assets/halohaven/models/block/{name}.json',
+                          f'assets/halohaven/models/item/{name}.json',
+                          f'assets/halohaven/blockstates/{name}.json',
+                          f'data/halohaven/loot_table/blocks/{name}.json'
+                      }
+              for half in ('lower','upper'):
+                  prefix='assets/halohaven/textures/block/ascension_gateway_'+half+'.png'
+                  required.add(prefix)
+                  required.add(prefix+'.mcmeta')
+                  required.add(f'assets/halohaven/models/block/ascension_gateway_{half}.json')
+                  if prefix in names:
+                      assert struct.unpack('>II',jar.read(prefix)[16:24])==(16,48)
+              gate_states=json.loads(jar.read('assets/halohaven/blockstates/ascension_gateway.json'))
+              assert set(gate_states['variants'])=={'upper=false','upper=true'}
+              extra_features=(
+                  'sunpetal_patch','chalk_blossom_patch','canopy_fern_patch',
+                  'gorge_thistle_patch','mourning_bloom_patch','veil_lichen_patch',
+                  'dawnstone_cairns','chalk_strata_scree','ancient_canopy_tree',
+                  'resonant_crystal_floes','choir_tile_ruins','veilstone_clusters'
+              )
+              for feature in extra_features:
+                  required.add(f'data/halohaven/worldgen/configured_feature/{feature}.json')
+                  required.add(f'data/halohaven/worldgen/placed_feature/{feature}.json')
+              worldgen=json.loads(jar.read('data/halohaven/worldgen/noise_settings/heaven_islands.json'))
+              painted={
+                  rule['if_true']['biome_is'][0]:
+                      rule['then_run']['then_run']['result_state']['Name']
+                  for rule in worldgen['surface_rule']['sequence']
+                  if rule.get('if_true',{}).get('type')=='minecraft:biome'
+              }
+              expected={
+                  'dawn_gardens':'sunlit_loam','chalk_terraces':'chalkstone',
+                  'eternal_canopy':'canopy_loam','ringing_gorges':'resonant_shale',
+                  'forgotten_choirs':'choirstone','lower_veil':'umbral_silt'
+              }
+              for region,block in expected.items():
+                  assert painted['halohaven:'+region]=='halohaven:'+block
+              print('PASS: 18 original local block families, 30 art maps, 6 new biome surfaces, animated 32px rift')
               missing=required-names
               if missing: raise RuntimeError('Missing mod files: '+repr(sorted(missing)))
               dimension=json.loads(jar.read('data/halohaven/dimension/heaven.json'))
