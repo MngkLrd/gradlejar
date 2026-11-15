@@ -70,7 +70,7 @@ jobs:
           assert 'modId="halohavenalpha2"' in addon_toml
           core_toml=re.sub(r'(modId="halohaven"\s*\nversion=")[^"]+(")',r'\g<1>2.2.0-alpha\2',core_toml,count=1)
           addon_mods=addon_toml[addon_toml.index('[[mods]]'):]
-          addon_mods=re.sub(r'(modId="halohavenalpha2"\\s*\\nversion=")[^"]+(")',r'\\g<1>2.2.0-alpha\\2',addon_mods,count=1)
+          addon_mods=addon_mods.replace('version="2.1.0-alpha"','version="2.2.0-alpha"',1)
           addon_mods=addon_mods.replace('Halo Haven Alpha 2.1 Ecosystem Expansion','Halo Haven 2.2 Living Skies')
           # Mod IDs can coexist in a single NeoForge mod file, their registry namespaces remain intact.
           # The self-contained package satisfies halohavenalpha2's dependency internally.
