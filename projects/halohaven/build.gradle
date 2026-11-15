@@ -29,6 +29,7 @@ apply from: 'skyway.gradle'
 apply from: 'atelier.gradle'
 apply from: 'worldlabels.gradle'
 apply from: 'pixelart.gradle'
+apply from: 'biomeart.gradle'
 jar {
     manifest.attributes([
         'Specification-Title': 'Halo Haven',
