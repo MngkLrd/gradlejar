@@ -15,7 +15,7 @@ jobs:
       matrix:
         include:
           - {dir: blowpipes-neoforge-1.20.1, java: '17', gradle: '8.14.5', loader: neoforge, mc: '1.20.1'}
-          - {dir: blowpipes-fabric-1.20.1, java: '17', gradle: '8.14.5', loader: fabric, mc: '1.20.1'}
+          - {dir: blowpipes-fabric-1.20.1, java: '21', gradle: '8.14.5', loader: fabric, mc: '1.20.1'}
           - {dir: blowpipes-neoforge-1.21.1, java: '21', gradle: '8.14.5', loader: neoforge, mc: '1.21.1'}
           - {dir: blowpipes-fabric-1.21.1, java: '21', gradle: '8.14.5', loader: fabric, mc: '1.21.1'}
     runs-on: ubuntu-latest
@@ -38,6 +38,15 @@ jobs:
           PY
           sed -i 's@ROOT = Path(__file__).resolve().parent@ROOT = Path(__file__).resolve().parent.parent@' tools/blowpipes_generate.py
           python3 tools/blowpipes_generate.py
+          python3 - <<'PY'
+          from pathlib import Path
+          for folder in ['blowpipes-fabric-1.21.1','blowpipes-neoforge-1.21.1']:
+            p=Path(folder)/'src/main/java/dev/minemods/blowpipes/DartProjectile.java'
+            s=p.read_text(encoding='utf-8')
+            s=s.replace('@Override protected float getGravity(){return 0.025f;}', '')
+            s=s.replace('target.setSecondsOnFire(3)', 'target.igniteForSeconds(3)')
+            p.write_text(s,encoding='utf-8')
+          PY
           mkdir -p output
       - name: Gradle compile
         working-directory: ${{ matrix.dir }}
