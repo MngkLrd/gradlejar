@@ -149,6 +149,7 @@ public final class HaloHaven {
     public HaloHaven(IEventBus bus) {
         BLOCKS.register(bus);
         ITEMS.register(bus);
+        HavenBiomeBlocks.register(bus);
         HaloEntities.ENTITIES.register(bus);
         bus.addListener(HaloEntities::registerAttributes);
         bus.addListener(HaloEntities::registerSpawnPlacements);
