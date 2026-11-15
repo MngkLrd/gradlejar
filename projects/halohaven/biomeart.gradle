@@ -1,0 +1,185 @@
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
+
+/**
+ * Halo Haven 1.8 biome art. Output textures are direct rasterizations of the
+ * frozen 16x16 indexed atlas in art/biome_pixel_atlas.json. This file does
+ * not add procedural noise, fake pixels, blurred scaling or color gradients.
+ */
+tasks.named('generateHaloAssets').configure {
+    doLast {
+        File targetRoot=layout.buildDirectory.dir('generated/haloassets').get().asFile
+        Map atlas=(Map)new JsonSlurper().parse(new File(projectDir,'art/biome_pixel_atlas.json'))
+        if(atlas.resolution!=16||atlas.tiles.size()!=30)
+            throw new GradleException('Biome atelier expected exactly 30 hand-composed 16x16 face maps')
+
+        def writeJson={String path,Object data->
+            File target=new File(targetRoot,path)
+            target.parentFile.mkdirs()
+            target.setText(JsonOutput.prettyPrint(JsonOutput.toJson(data))+'\n','UTF-8')
+        }
+        def writeTexture={String path,BufferedImage img->
+            File target=new File(targetRoot,path)
+            target.parentFile.mkdirs()
+            if(!ImageIO.write(img,'PNG',target))throw new GradleException('Could not write '+path)
+        }
+
+        Map<String,BufferedImage> composed=[:]
+        atlas.tiles.each{String name,Object tile->
+            List palette=(List)atlas.palettes[tile.palette]
+            if(palette==null||palette.size()<4||palette.size()>9)
+                throw new GradleException(name+': invalid material palette')
+            List rows=(List)tile.rows
+            if(rows.size()!=16 || rows.any{it.length()!=16})
+                throw new GradleException(name+': malformed logical-pixel canvas')
+            BufferedImage img=new BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB)
+            for(int y=0;y<16;y++)for(int x=0;x<16;x++){
+                int index=Character.digit(rows[y].charAt(x),10)
+                if(index<0||index>=palette.size())
+                    throw new GradleException(name+': undefined indexed color '+index)
+                int argb=(int)Long.parseLong((String)palette[index],16)
+                img.setRGB(x,y,argb)
+            }
+            composed[name]=img
+            writeTexture('assets/halohaven/textures/block/'+name+'.png',img)
+            println('HALO BIOME ART: '+name+' native16px '+palette.size()+' swatches')
+        }
+
+        // 3 keyframed slices each = genuine animated 16x16 icon sheets.
+        // Top and bottom are separate halves of the same 2-block-high rift.
+        for(String half:['lower','upper']){
+            BufferedImage strip=new BufferedImage(16,48,BufferedImage.TYPE_INT_ARGB)
+            for(int f=0;f<3;f++){
+                BufferedImage frame=composed['rift_'+half+'_'+f]
+                if(frame==null)throw new GradleException('Rift '+half+' missing frame '+f)
+                for(int y=0;y<16;y++)for(int x=0;x<16;x++)
+                    strip.setRGB(x,y+16*f,frame.getRGB(x,y))
+            }
+            String id='ascension_gateway_'+half
+            writeTexture('assets/halohaven/textures/block/'+id+'.png',strip)
+            writeJson('assets/halohaven/textures/block/'+id+'.png.mcmeta',
+                [animation:[frametime:(int)atlas.animation.frametime,interpolate:false]])
+            writeJson('assets/halohaven/models/block/'+id+'.json',[
+                parent:'minecraft:block/cross',
+                render_type:'minecraft:translucent',
+                textures:[cross:'halohaven:block/'+id]
+            ])
+        }
+        writeJson('assets/halohaven/blockstates/ascension_gateway.json',[
+            variants:[
+                'upper=false':[model:'halohaven:block/ascension_gateway_lower'],
+                'upper=true':[model:'halohaven:block/ascension_gateway_upper']
+            ]
+        ])
+
+        // Mosaic is real chipped stone tesserae and disjoint aqua/brass
+        // inlays, not a central diamond decal. The side is restrained masonry.
+        writeJson('assets/halohaven/models/block/celestial_mosaic.json',[
+            parent:'minecraft:block/cube_bottom_top',
+            textures:[
+                top:'halohaven:block/celestial_mosaic',
+                bottom:'halohaven:block/celestial_mosaic_side',
+                side:'halohaven:block/celestial_mosaic_side'
+            ]
+        ])
+
+        Map<String,String> groundBases=[
+            sunlit_loam:'dawnstone',
+            canopy_loam:'cloudstone',
+            umbral_silt:'veilstone'
+        ]
+        List<String> solids=[
+            'dawnstone','sunlit_loam','chalkstone','chalk_strata',
+            'canopy_loam','ancient_bark','resonant_shale','echo_crystal',
+            'choirstone','choir_tiles','veilstone','umbral_silt'
+        ]
+        List<String> plants=[
+            'sunpetal','chalk_blossom','canopy_fern',
+            'gorge_thistle','mourning_bloom','veil_lichen'
+        ]
+        for(String id:solids){
+            Map model
+            if(groundBases.containsKey(id)){
+                model=[
+                    parent:'minecraft:block/cube_bottom_top',
+                    textures:[
+                        top:'halohaven:block/'+id,
+                        side:'halohaven:block/'+id+'_side',
+                        bottom:'halohaven:block/'+groundBases[id]
+                    ]
+                ]
+            }else if(id=='ancient_bark'){
+                model=[
+                    parent:'minecraft:block/cube_column',
+                    textures:[side:'halohaven:block/ancient_bark',
+                              end:'halohaven:block/ancient_bark_top']
+                ]
+            }else{
+                model=[parent:'minecraft:block/cube_all',
+                       textures:[all:'halohaven:block/'+id]]
+            }
+            writeJson('assets/halohaven/models/block/'+id+'.json',model)
+            writeJson('assets/halohaven/blockstates/'+id+'.json',
+                [variants:['':[model:'halohaven:block/'+id]]])
+            writeJson('assets/halohaven/models/item/'+id+'.json',
+                [parent:'halohaven:block/'+id])
+        }
+        for(String id:plants){
+            writeJson('assets/halohaven/models/block/'+id+'.json',[
+                parent:'minecraft:block/cross',
+                render_type:'minecraft:cutout',
+                textures:[cross:'halohaven:block/'+id]
+            ])
+            writeJson('assets/halohaven/models/item/'+id+'.json',[
+                parent:'minecraft:item/generated',
+                textures:[layer0:'halohaven:block/'+id]
+            ])
+            writeJson('assets/halohaven/blockstates/'+id+'.json',
+                [variants:['':[model:'halohaven:block/'+id]]])
+            // A biome plant should visibly be a thin crossed sprite,
+            // not a full cubic block with a flower painted on each side.
+        }
+        for(String id:solids+plants){
+            writeJson('data/halohaven/loot_table/blocks/'+id+'.json',[
+                type:'minecraft:block',
+                pools:[[rolls:1,entries:[[type:'minecraft:item',name:'halohaven:'+id]],
+                        conditions:[[condition:'minecraft:survives_explosion']]]]
+            ])
+        }
+
+        Map en=[
+            dawnstone:'Dawnstone',sunlit_loam:'Sunlit Loam',
+            sunpetal:'Sunpetal',chalkstone:'Chalkstone',
+            chalk_strata:'Chalk Strata',chalk_blossom:'Chalk Blossom',
+            canopy_loam:'Canopy Loam',ancient_bark:'Ancient Bark',
+            canopy_fern:'Canopy Fern',resonant_shale:'Resonant Shale',
+            echo_crystal:'Echo Crystal',gorge_thistle:'Gorge Thistle',
+            choirstone:'Choirstone',choir_tiles:'Choir Tiles',
+            mourning_bloom:'Mourning Bloom',veilstone:'Veilstone',
+            umbral_silt:'Umbral Silt',veil_lichen:'Veil Lichen'
+        ]
+        Map ru=[
+            dawnstone:'Камень рассвета',sunlit_loam:'Солнечный дёрн',
+            sunpetal:'Солнцелепестник',chalkstone:'Меловик',
+            chalk_strata:'Слоистый мел',chalk_blossom:'Меловой цветок',
+            canopy_loam:'Древний лесной дёрн',ancient_bark:'Древняя кора',
+            canopy_fern:'Небесный папоротник',resonant_shale:'Звенящий сланец',
+            echo_crystal:'Эхо-кристалл',gorge_thistle:'Ущельный чертополох',
+            choirstone:'Хоровой камень',choir_tiles:'Плитка хоров',
+            mourning_bloom:'Цветок скорби',veilstone:'Камень Завесы',
+            umbral_silt:'Теневой ил',veil_lichen:'Лишайник Завесы'
+        ]
+        for(String lang:['en_us','ru_ru']){
+            File file=new File(targetRoot,'assets/halohaven/lang/'+lang+'.json')
+            Map existing=(Map)new JsonSlurper().parse(file)
+            Map translations=lang=='ru_ru'?ru:en
+            translations.each{String id,String label->
+                existing['block.halohaven.'+id]=label
+            }
+            file.setText(JsonOutput.prettyPrint(JsonOutput.toJson(existing))+'\n','UTF-8')
+        }
+        println('HALO BIOME ART PASS: 18 new blocks, 30 bitmap faces, two animated portal slices, six biome families')
+    }
+}
