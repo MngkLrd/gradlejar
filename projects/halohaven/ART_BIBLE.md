@@ -20,7 +20,7 @@ morphology expressions, not only surface color changes.
 
 ## Production in 1.5.0
 
-Art is stored as 24 directly authored indexed 16×16 maps in
+Art is stored as 32 directly authored indexed 16×16 maps in
 `art/pixel_atlas.json`. Their coordinates are deliberate pixel placements,
 not outputs of noise functions or parametric shapes. `pixelart.gradle` solely
 translates color indexes to PNG files, and overwrites the older prototype

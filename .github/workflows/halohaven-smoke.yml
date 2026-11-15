@@ -92,7 +92,7 @@ jobs:
                   'assets/halohaven/textures/block/skygrass_side.png',
               }
               art=json.load(open('art/pixel_atlas.json',encoding='utf-8'))
-              assert art['resolution']==16 and len(art['tiles'])==24
+              assert art['resolution']==16 and len(art['tiles'])==32
               import hashlib
               art_sha=set()
               for name,entry in art['tiles'].items():
@@ -106,7 +106,7 @@ jobs:
                       assert raw[:8]==bytes((137,80,78,71,13,10,26,10)), name
                       assert struct.unpack('>II',raw[16:24])==(16,16), name
                       art_sha.add(hashlib.sha256(raw).hexdigest())
-              assert len(art_sha)>=21,'Unexpected duplicate material surfaces'
+              assert len(art_sha)>=28,'Unexpected duplicate material surfaces'
               missing=required-names
               if missing: raise RuntimeError('Missing mod files: '+repr(sorted(missing)))
               dimension=json.loads(jar.read('data/halohaven/dimension/heaven.json'))
@@ -126,15 +126,22 @@ jobs:
                   assert f'assets/halohaven/textures/block/{variant}.png' in names
                   assert f'assets/halohaven/models/block/{variant}.json' in names
               grass=json.loads(jar.read('assets/halohaven/blockstates/skygrass.json'))
-              assert len(grass['variants'][''])==3
-              assert sum(v['weight'] for v in grass['variants'][''])==10
+              assert len(grass['variants'][''])==6
+              assert sum(v['weight'] for v in grass['variants'][''])==20
               foliage=json.loads(jar.read('assets/halohaven/blockstates/sky_leaves.json'))
-              assert len(foliage['variants'][''])==2
+              assert len(foliage['variants'][''])==6
               for name in ('cloudstone','celestial_mosaic'):
                   model=json.loads(jar.read(f'assets/halohaven/models/block/{name}.json'))
                   assert model['parent']=='minecraft:block/cube_bottom_top'
               assert json.loads(jar.read('assets/halohaven/models/block/gilded_pillar.json'))['parent']=='minecraft:block/cube_column'
-              print('PASS: 24 authored native16px block textures, 22 registered block materials')
+              for block in ('cloudstone','moonstone','star_ore'):
+                  variants=json.loads(jar.read(f'assets/halohaven/blockstates/{block}.json'))['variants']['']
+                  assert len(variants)>=4, (block, len(variants))
+              for name in ('cloudstone_alt','cloudstone_fractured',
+                           'moonstone_alt','moonstone_fractured','star_ore_alt',
+                           'sky_leaves_sparse'):
+                  assert f'assets/halohaven/models/block/{name}.json' in names
+              print('PASS: 32 authored native16px block textures, 22 registered block materials')
               for name in ['aurora_glass','dawn_glass']:
                   model=json.loads(jar.read(f'assets/halohaven/models/block/{name}.json'))
                   assert model['render_type']=='minecraft:translucent'

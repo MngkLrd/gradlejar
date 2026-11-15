@@ -10,8 +10,8 @@ tasks.named('generateHaloAssets').configure {
     doLast {
         File out=layout.buildDirectory.dir('generated/haloassets').get().asFile
         Map atlas=(Map)new JsonSlurper().parse(new File(projectDir,'art/pixel_atlas.json'))
-        if(atlas.resolution!=16||atlas.tiles.size()!=24)
-            throw new GradleException('Halo Pixel Atelier expects 24 authored 16×16 maps')
+        if(atlas.resolution!=16||atlas.tiles.size()!=32)
+            throw new GradleException('Halo Pixel Atelier expects 32 authored 16×16 maps')
         def json={String name,Object content->
             File f=new File(out,name);f.parentFile.mkdirs()
             f.setText(JsonOutput.prettyPrint(JsonOutput.toJson(content))+'\n','UTF-8')
@@ -74,22 +74,75 @@ tasks.named('generateHaloAssets').configure {
             textures:[end:'halohaven:block/gilded_pillar_top',
                       side:'halohaven:block/gilded_pillar']
         ])
+        // Real, pre-painted natural surface alternatives. A blockstate chooses
+        // one of several AUTHOR-DRAWN maps, not new algorithm-generated pixels.
+        for(String variant:['cloudstone_alt','cloudstone_fractured']){
+            json('assets/halohaven/models/block/'+variant+'.json',[
+                parent:'minecraft:block/cube_bottom_top',
+                textures:[
+                    top:'halohaven:block/cloudstone_top_alt',
+                    side:'halohaven:block/'+variant,
+                    bottom:'halohaven:block/cloudstone'
+                ]
+            ])
+        }
+        json('assets/halohaven/blockstates/cloudstone.json',[
+            variants:['':[
+                [model:'halohaven:block/cloudstone',weight:5],
+                [model:'halohaven:block/cloudstone_alt',weight:3],
+                [model:'halohaven:block/cloudstone_fractured',weight:2],
+                [model:'halohaven:block/cloudstone',y:90,weight:3],
+                [model:'halohaven:block/cloudstone_alt',y:180,weight:2],
+                [model:'halohaven:block/cloudstone_fractured',y:270,weight:2]
+            ]]
+        ])
+        for(String variant:['moonstone_alt','moonstone_fractured']){
+            json('assets/halohaven/models/block/'+variant+'.json',[
+                parent:'minecraft:block/cube_all',
+                textures:[all:'halohaven:block/'+variant]
+            ])
+        }
+        json('assets/halohaven/blockstates/moonstone.json',[
+            variants:['':[
+                [model:'halohaven:block/moonstone',weight:4],
+                [model:'halohaven:block/moonstone_alt',weight:3],
+                [model:'halohaven:block/moonstone_fractured',weight:3],
+                [model:'halohaven:block/moonstone',y:180,weight:3],
+                [model:'halohaven:block/moonstone_alt',y:90,weight:2],
+                [model:'halohaven:block/moonstone_fractured',y:270,weight:2]
+            ]]
+        ])
+        json('assets/halohaven/models/block/star_ore_alt.json',[
+            parent:'minecraft:block/cube_all',
+            textures:[all:'halohaven:block/star_ore_alt']
+        ])
+        json('assets/halohaven/blockstates/star_ore.json',[
+            variants:['':[
+                [model:'halohaven:block/star_ore',weight:4],
+                [model:'halohaven:block/star_ore_alt',weight:3],
+                [model:'halohaven:block/star_ore',y:180,weight:2],
+                [model:'halohaven:block/star_ore_alt',y:90,weight:2]
+            ]]
+        ])
         for(String variant:['skygrass','skygrass_sparse','skygrass_dense']){
             json('assets/halohaven/models/block/'+variant+'.json',[
                 parent:'minecraft:block/cube_bottom_top',
                 textures:[top:'halohaven:block/'+variant,
                           bottom:'halohaven:block/cloudstone',
-                          side:'halohaven:block/skygrass_side']
+                          side:(variant=='skygrass_dense' ? 'halohaven:block/skygrass_side_alt' : 'halohaven:block/skygrass_side')]
             ])
         }
         json('assets/halohaven/blockstates/skygrass.json',[
             variants:['':[
                 [model:'halohaven:block/skygrass',weight:5],
                 [model:'halohaven:block/skygrass_sparse',weight:3],
-                [model:'halohaven:block/skygrass_dense',weight:2]
+                [model:'halohaven:block/skygrass_dense',weight:2],
+                [model:'halohaven:block/skygrass',y:90,weight:5],
+                [model:'halohaven:block/skygrass_sparse',y:180,weight:3],
+                [model:'halohaven:block/skygrass_dense',y:270,weight:2]
             ]]
         ])
-        for(String variant:['sky_leaves','sky_leaves_alt']){
+        for(String variant:['sky_leaves','sky_leaves_alt','sky_leaves_sparse']){
             json('assets/halohaven/models/block/'+variant+'.json',[
                 parent:'minecraft:block/cube_all',
                 render_type:'minecraft:cutout_mipped',
@@ -99,7 +152,11 @@ tasks.named('generateHaloAssets').configure {
         json('assets/halohaven/blockstates/sky_leaves.json',[
             variants:['':[
                 [model:'halohaven:block/sky_leaves',weight:3],
-                [model:'halohaven:block/sky_leaves_alt',weight:2]
+                [model:'halohaven:block/sky_leaves_alt',weight:2],
+                [model:'halohaven:block/sky_leaves_sparse',weight:1],
+                [model:'halohaven:block/sky_leaves',y:90,weight:3],
+                [model:'halohaven:block/sky_leaves_alt',y:180,weight:2],
+                [model:'halohaven:block/sky_leaves_sparse',y:270,weight:1]
             ]]
         ])
         json('assets/halohaven/models/block/celestial_bloom.json',[

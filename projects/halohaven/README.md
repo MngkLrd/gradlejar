@@ -22,16 +22,19 @@ Look for `jar-halohaven-1.5.0` in the latest successful Build Hub run.
 
 ## 1.5.0: real pixel-cluster art assets
 
-The 22 registered blocks are now rendered from 24 authored 16×16
+The 22 registered blocks are now rendered from 32 authored 16×16
 indexed bitmap surfaces stored in `art/pixel_atlas.json`.
 No random colored pixels, mathematical painting or rectangle/line fill
 algorithms participate in the final material textures.
 The build-only `pixelart.gradle` writes RGBA PNGs pixel-for-pixel.
 
-The atlas includes 3 turf compositions, 2 asymmetric transparent leaf canopies,
+The atlas includes 3 turf compositions and 3 asymmetric leaf canopies,
 independent Cloudstone top and side, an inlaid top-only Celestial Mosaic,
 a separately illustrated column top, 2 stained glass variants and
 pixel-cluster mineral and wood surfaces.
+Cloudstone, Moonstone and Star Ore each also use alternative painted
+natural forms with weighted blockstates and angle rotations so broad
+landscapes do not repeat one obvious patch every 16 pixels.
 Stairs, slabs and fences inherit their base materials: all 22 blocks have
 consistent 16px textures in the final JAR.
 
