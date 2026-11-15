@@ -141,4 +141,4 @@ with zipfile.ZipFile(jar) as z:
 
 # Additional authored pixel-art quality gate, independently decodes PNG pixels.
 import subprocess
-subprocess.run([sys.executable,"tools/verify_pixel_art.py",str(jar)],check=True)
+subprocess.run([sys.executable,str(Path(__file__).resolve().parent/"verify_pixel_art.py"),str(jar)],check=True)
