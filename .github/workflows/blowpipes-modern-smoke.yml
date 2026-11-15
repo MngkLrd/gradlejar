@@ -1,0 +1,62 @@
+name: Blowpipes 26.x dedicated-server recipe smoke
+on:
+  push:
+    branches: [release/blowpipes-26x-forge-ports]
+    paths: ['.github/workflows/blowpipes-modern-smoke.yml']
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {loader: neoforge, mc: '26.2', gradle: '9.2.1'}
+          - {loader: neoforge, mc: '26.3', gradle: '9.2.1'}
+          - {loader: fabric, mc: '26.2', gradle: '9.7.0'}
+          - {loader: fabric, mc: '26.3', gradle: '9.7.0'}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ matrix.gradle }}
+      - name: Get sources and generate 26.x content
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p reference
+          gh release download blowpipes-neoforge-1.21.1-v1.4.0-1 -p 'Blowpipes_NeoForge_1.21.1_v1.4.0_source.zip' -D reference
+          unzip -q reference/Blowpipes_NeoForge_1.21.1_v1.4.0_source.zip -d reference/unpacked
+          python3 tools/blowpipes_ports/generate_modern.py reference/unpacked .
+      - name: Launch genuine dedicated Minecraft server and load recipes
+        env:
+          MC: ${{ matrix.mc }}
+          LOADER: ${{ matrix.loader }}
+        run: |
+          set +e
+          project="blowpipes-$LOADER-$MC"
+          cd "$project"
+          mkdir -p run
+          printf 'eula=true\n' > run/eula.txt
+          printf 'eula=true\n' > eula.txt
+          timeout --signal=SIGINT --kill-after=10s 145s gradle --no-daemon runServer > ../server-$LOADER-$MC.log 2>&1
+          code=$?
+          cd ..
+          echo "Server runner exit code: $code (124 indicates time limit)"
+          tail -115 "server-$LOADER-$MC.log"
+          if grep -Eqi 'Failed to parse recipe|Error loading recipe|Parsing error loading recipe|Failed to load registries|Missing required data pack|Errors in currently selected data packs|Could not load data packs|MixinApplyError|Critical injection failure|ModLoadingException|Could not execute entrypoint|Exception in server tick loop' "server-$LOADER-$MC.log"; then
+            echo "CRITICAL: recipe/registry/mod startup failure";exit 1
+          fi
+          if grep -Eqi 'Done \([0-9]|Done preparing|For help, type|Starting minecraft server version' "server-$LOADER-$MC.log"; then
+            echo "SERVER STARTUP: reached Minecraft startup and no recipe parse errors reported"
+          else
+            echo "SERVER STARTUP: no recognized startup signal, investigate logs";exit 1
+          fi
+          if [ "$code" -ne 124 ] && [ "$code" -ne 130 ] && [ "$code" -ne 137 ]; then
+            echo "SERVER EXIT UNEXPECTED: $code";exit 1
+          fi
