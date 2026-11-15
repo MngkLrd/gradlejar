@@ -53,3 +53,4 @@ final class NightEncounters {
   }
  }
  private NightEncounters(){}
+}
