@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.15
+# Sleep Debt: Restless Nights — 3.0.0-alpha.16
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.15.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.16.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -239,3 +239,34 @@ including all 8 licensed/independently synthesized OGG samples.
 Shaderpack conflicts and the current F1 GUI-layer visibility remain known
 runtime limitations. Automated CI cannot evaluate the fear factor or verify
 shader reload behavior in a live client.
+
+
+## Alpha 16: FIXED darkness and frequent vanishing
+
+**Root cause found:** Alpha 15 only drew its standalone CPU overlay when the
+optional GLSL pass failed to load; a shader that linked but rendered nothing
+left ZERO blackness. Alpha 16 always draws the compositor, then optionally
+adds GLSL distortion, through the existing and working Sleep HUD render layer.
+No shaders, shaderpacks or vanilla fog are needed to blacken the world.
+An all-black base and animated coherent shadow sheets cover bright blocks and
+torches, approaching 98% opacity up close. The effect survives missing GLSL.
+
+Fresh CLIENT config keys intentionally bypass any stale Alpha 15 values:
+- sleeplessVoidEnabled=true
+- sleeplessVoidGpu=true (disable to test independent CPU-only compositor)
+- sleeplessVoidStrength=1.0 (up to 1.35)
+- sleeplessVoidDiagnostics=false (shows nearest REAL hunter and pressure)
+
+The former nearVignette and fogStrength settings are retained for compatible
+TOML parsing but no longer gate the new effect. Audio files and texture assets
+are untouched. The hunter now deliberately enters a 27-tick sequence:
+**backs away -> disappears into darkness -> teleports (40% ahead, 60% behind)
+-> reappears and rushes**, with loaded-chunk and physical collision checks.
+Typical server cadence is configurable in sleepless.teleportIntervalTicks,
+default 95 ticks with a small randomized extension. This is independent from
+the previous rare 'stuck' relocation and works on caves and hills.
+
+OP repeatable QA: /sleepdebt debug vanish_sleepless after
+/sleepdebt debug spawn_sleepless. This forces the retreat/teleport sequence.
+F1 still hides GUI layers; full level post-processing is future work. A live
+game test is needed: CI can compile but cannot observe actual display output.

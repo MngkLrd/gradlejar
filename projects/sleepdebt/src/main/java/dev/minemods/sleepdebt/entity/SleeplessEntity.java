@@ -35,11 +35,12 @@ import java.util.UUID;
  * remain Survival-only. Natural hunting respects debt, bed, grace and daylight.
  */
 public final class SleeplessEntity extends Monster {
- private enum Mode { WATCH, STALK, FLANK, PURSUE, RUSH }
+ private enum Mode { WATCH, STALK, FLANK, PURSUE, RUSH, VANISH }
  private Mode mode=Mode.WATCH;
  private int modeTicks=54, lookPause, lookCooldown;
  private int hitPause, hits, lastStrike=-120;
- private int teleportCooldown=180, stuckTicks;
+ private int teleportCooldown=90, stuckTicks;
+ private boolean relocatedDuringVanish;
  private double lastDistance=999;
  private UUID debugTarget;
 
@@ -66,7 +67,7 @@ public final class SleeplessEntity extends Monster {
   setTarget(player);
   mode=Mode.PURSUE;
   modeTicks=90;
-  teleportCooldown=75;
+  teleportCooldown=44;
   lookCooldown=110;
   getNavigation().stop();
  }
@@ -77,6 +78,7 @@ public final class SleeplessEntity extends Monster {
   setTarget(player);
   mode=Mode.WATCH;
   modeTicks=40+random.nextInt(36);
+  teleportCooldown=75+random.nextInt(30);
  }
 
  private boolean isForcedTarget(ServerPlayer p){
@@ -109,6 +111,61 @@ public final class SleeplessEntity extends Monster {
   mode=next;
   modeTicks=ticks;
   getNavigation().stop();
+ }
+
+ public void forceVanish(ServerPlayer player){
+  // A deterministic debug path to verify displacement even while in Creative.
+  debugTarget=player.getUUID();
+  setTarget(player);
+  beginVanish();
+ }
+
+ private void beginVanish(){
+  mode=Mode.VANISH;
+  modeTicks=27;
+  relocatedDuringVanish=false;
+  setInvisible(false);
+  teleportCooldown=dev.minemods.sleepdebt.SleepSettings.TELEPORT_INTERVAL_TICKS.get()
+    +random.nextInt(49);
+  getNavigation().stop();
+ }
+
+ private void advanceVanish(ServerPlayer target){
+  // 27..19: retreat a few metres, deliberately letting the player hear/see it.
+  if(modeTicks>18 && modeTicks%5==0){
+   Vec3 away=position().subtract(target.position());
+   if(away.horizontalDistanceSqr()>.1){
+    Vec3 dir=new Vec3(away.x,0,away.z).normalize();
+    getNavigation().moveTo(getX()+dir.x*4,getY(),getZ()+dir.z*4,.94);
+   }
+  }
+  if(modeTicks==18){
+   setInvisible(true);
+   getNavigation().stop();
+   if(level() instanceof ServerLevel server)
+    server.sendParticles(ParticleTypes.LARGE_SMOKE,getX(),getY()+1.2,getZ(),
+      38,.55,1.35,.55,.009);
+  }
+  if(modeTicks==9 && !relocatedDuringVanish){
+   // Ahead is deliberately less common; the result is never an unavoidable
+   // point-blank attack. Front 40%, behind 60%, retry the opposite arc.
+   boolean front=random.nextFloat()<.40f;
+   relocatedDuringVanish=relocateNear(target,front)
+      ||relocateNear(target,!front);
+   if(!relocatedDuringVanish){
+    setInvisible(false);
+    shiftMode(Mode.PURSUE,45);
+    teleportCooldown=28;
+    return;
+   }
+  }
+  if(modeTicks<=3){
+   setInvisible(false);
+  }
+  if(modeTicks<=0){
+   setInvisible(false);
+   shiftMode(Mode.RUSH,42+random.nextInt(39));
+  }
  }
 
  @Override public boolean doHurtTarget(Entity victim){
@@ -174,6 +231,7 @@ public final class SleeplessEntity extends Monster {
   if(teleportCooldown>0)teleportCooldown--;
 
   if(!(getTarget() instanceof ServerPlayer target) || !eligible(target)){
+   setInvisible(false);
    setTarget(null);
    getNavigation().stop();
    if(tickCount%15==0)acquireTarget();
@@ -182,6 +240,7 @@ public final class SleeplessEntity extends Monster {
 
   double distance=Math.sqrt(distanceToSqr(target));
   if(distance>64){
+   setInvisible(false);
    setTarget(null);getNavigation().stop();return;
   }
   if(tickCount%7==0){
@@ -197,6 +256,10 @@ public final class SleeplessEntity extends Monster {
    }
   }
   if(modeTicks>0)modeTicks--;
+  if(mode==Mode.VANISH){
+   advanceVanish(target);
+   return;
+  }
   if(modeTicks<=0){
    switch(mode){
     case WATCH -> shiftMode(Mode.STALK,55+random.nextInt(52));
@@ -204,6 +267,7 @@ public final class SleeplessEntity extends Monster {
     case FLANK -> shiftMode(Mode.PURSUE,76+random.nextInt(36));
     case PURSUE -> shiftMode(Mode.RUSH,65+random.nextInt(42));
     case RUSH -> shiftMode(Mode.STALK,40+random.nextInt(55));
+    case VANISH -> shiftMode(Mode.PURSUE,55);
    }
   }
   if(mode==Mode.WATCH && distance<14)shiftMode(Mode.FLANK,30);
@@ -216,13 +280,14 @@ public final class SleeplessEntity extends Monster {
    lastDistance=distance;
   }else if(distance<=6)stuckTicks=0;
 
-  if(teleportCooldown<=0 && distance>9 &&
-     (stuckTicks>85 || (mode==Mode.RUSH&&distance>17 && random.nextInt(3)==0))){
-   if(relocateBehind(target)){
-    teleportCooldown=165+random.nextInt(140);
-    stuckTicks=0;
-    shiftMode(Mode.PURSUE,60+random.nextInt(50));
-   }else teleportCooldown=70;
+  // This is now a deliberate behavioural phase, NOT a rare stuck-AI recovery.
+  // Near the player, it withdraws into the same blackness covering the screen,
+  // disappears and relocates ahead or behind after a brief suspense beat.
+  if(teleportCooldown<=0 && distance>3 && distance<36 &&
+     (mode==Mode.FLANK || mode==Mode.PURSUE || mode==Mode.RUSH
+       || stuckTicks>65)){
+   beginVanish();
+   return;
   }
 
   if((mode==Mode.PURSUE||mode==Mode.RUSH) && distance<3.05 &&
@@ -239,32 +304,46 @@ public final class SleeplessEntity extends Monster {
   }
  }
 
- private boolean relocateBehind(ServerPlayer target){
+
+ /**
+  * Reposition near the player's horizontal direction. Search nearby Y levels
+  * rather than only the heightmap surface, so caves and uneven terrain work.
+  * Reject unloaded chunks and any collision/fluid/headroom conflicts.
+  */
+ private boolean relocateNear(ServerPlayer target,boolean inFront){
   if(!(level() instanceof ServerLevel server))return false;
   Vec3 look=target.getLookAngle();
-  double direction=Math.atan2(look.z,look.x)+Math.PI;
-  for(int i=0;i<15;i++){
-   double angle=direction+(random.nextDouble()-.5)*1.9;
-   int radius=8+random.nextInt(9);
-   int x=Mth.floor(target.getX()+Math.cos(angle)*radius);
-   int z=Mth.floor(target.getZ()+Math.sin(angle)*radius);
+  double heading=Math.atan2(look.z,look.x)+(inFront?0:Math.PI);
+  for(int i=0;i<34;i++){
+   double arc=heading+(random.nextDouble()-.5)*(inFront?1.25:2.0);
+   int radius=(inFront?8:7)+random.nextInt(inFront?7:8);
+   int x=Mth.floor(target.getX()+Math.cos(arc)*radius);
+   int z=Mth.floor(target.getZ()+Math.sin(arc)*radius);
    if(!server.getChunkSource().hasChunk(x>>4,z>>4))continue;
-   int y=server.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);
-   if(Math.abs(y-target.getY())>5)continue;
-   BlockPos foot=new BlockPos(x,y,z);
-   if(!server.getBlockState(foot).isAir() ||
-      !server.getBlockState(foot.above()).isAir() ||
-      !server.getBlockState(foot.above(2)).isAir() ||
-      server.getBlockState(foot.below()).getCollisionShape(server,foot.below()).isEmpty() ||
-      !server.getFluidState(foot).isEmpty() ||
-      server.getMaxLocalRawBrightness(foot)>10)continue;
-   server.sendParticles(ParticleTypes.LARGE_SMOKE,getX(),getY()+1.2,getZ(),
-    14,.35,1.1,.35,.015);
-   teleportTo(x+.5,y,z+.5);
-   server.sendParticles(ParticleTypes.LARGE_SMOKE,getX(),getY()+1.2,getZ(),
-    19,.35,1.1,.35,.015);
-   server.playSound(null,foot,ModSounds.WHISPER.get(),SoundSource.HOSTILE,.44f,.64f);
-   return true;
+   int baseline=Mth.floor(target.getY());
+   for(int delta:new int[]{0,-1,1,-2,2,-3,3,-4,4}){
+    int y=baseline+delta;
+    BlockPos foot=new BlockPos(x,y,z);
+    if(!server.getBlockState(foot).isAir() ||
+       !server.getBlockState(foot.above()).isAir() ||
+       !server.getBlockState(foot.above(2)).isAir() ||
+       server.getBlockState(foot.below()).getCollisionShape(server,foot.below()).isEmpty() ||
+       !server.getFluidState(foot).isEmpty() ||
+       !server.getFluidState(foot.below()).isEmpty())continue;
+    // Actual 2.75-block entity collision, including modded half-block shapes.
+    net.minecraft.world.phys.AABB destination=getBoundingBox()
+      .move(x+.5-getX(),y-getY(),z+.5-getZ());
+    if(!server.noCollision(this,destination))continue;
+    server.sendParticles(ParticleTypes.LARGE_SMOKE,getX(),getY()+1.0,getZ(),
+      13,.32,.85,.32,.008);
+    teleportTo(x+.5,y,z+.5);
+    server.sendParticles(ParticleTypes.LARGE_SMOKE,getX(),getY()+1.0,getZ(),
+      27,.5,1.12,.5,.014);
+    server.playSound(null,foot,ModSounds.WHISPER.get(),
+      SoundSource.HOSTILE,.42f,.65f);
+    stuckTicks=0;
+    return true;
+   }
   }
   return false;
  }
@@ -285,7 +364,7 @@ public final class SleeplessEntity extends Monster {
    if(!(hunter.getTarget() instanceof ServerPlayer target))return;
    hunter.getLookControl().setLookAt(target,38,38);
    if(hunter.lookPause>0 || hunter.hitPause>0 ||
-      hunter.mode==Mode.WATCH){
+      hunter.mode==Mode.WATCH || hunter.mode==Mode.VANISH){
     hunter.getNavigation().stop();return;
    }
    if(--repath>0)return;

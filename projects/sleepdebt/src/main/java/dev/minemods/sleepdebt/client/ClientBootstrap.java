@@ -30,10 +30,8 @@ public final class ClientBootstrap {
   NeoForge.EVENT_BUS.addListener(SleeplessApparitions::render);
  }
  private static void onGui(RegisterGuiLayersEvent e){
-  // Render before vanilla HUD: darkness obscures the GAME WORLD, not items/health.
-  e.registerBelow(VanillaGuiLayers.HOTBAR,
-   ResourceLocation.fromNamespaceAndPath(SleepDebtMod.MOD_ID,"void_veil"),
-   SleeplessVoidShader::render);
+  // Void compositor is intentionally hosted by the known-working SleepHud
+  // render layer; registering a second layer risks skipped/double rendering.
   e.registerAbove(VanillaGuiLayers.FOOD_LEVEL,
     ResourceLocation.fromNamespaceAndPath(SleepDebtMod.MOD_ID,"sleep_hud"),SleepHud::render);
  }

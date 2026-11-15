@@ -43,7 +43,10 @@ public final class SleeplessDread {
   // Audio and visual intensity are independent toggles. Alpha 12 incorrectly
   // disabled all monster audio when players disabled the visual vignette.
   float target=(!mc.level.isDay()&&!mc.player.isSleeping())?proximity:0f;
-  presence+= (target-presence)*(target>presence?.18f:.22f);
+  // Fast onset makes the approaching hunter immediately threatening. The
+  // blackness deliberately lingers through short invisible/teleport phases.
+  float easing=target>presence?.30f:(mc.level.isDay()?.25f:.045f);
+  presence+=(target-presence)*easing;
   if(presence<.0001f)presence=0;
   if(lastHurt==0&&mc.player.hurtTime>0&&nearest<8)
    impact=Math.max(impact,.8f);
@@ -85,9 +88,11 @@ public final class SleeplessDread {
  /** Server entity proximity is read separately from vanilla fog/lighting.
   *  The GLSL pass uses this intensity to cover ALREADY rendered world pixels. */
  public static float density(){
-  if(!ClientSettings.SLEEPLESS_AURA.get())return 0f;
-  return Mth.clamp(presence*ClientSettings.DREAD_STRENGTH.get().floatValue(),0f,1f);
+  if(!ClientSettings.VOID_ENABLED.get())return 0f;
+  float force=ClientSettings.VOID_STRENGTH.get().floatValue();
+  return Mth.clamp(presence*force,0f,1f);
  }
+ public static float nearestDistance(){return nearest;}
  public static float shock(){return Mth.clamp(impact,0f,1f);}
  private SleeplessDread(){}
 }
