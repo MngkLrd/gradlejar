@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+modId="theothercursor"
+version="1.0.0"
+displayName="The Other Cursor"
+authors="MngkLrd"
+description='''A second cursor watches your inventory, flinches when approached, studies valuable items, and sometimes pretends to steal one. All interactions are client-side illusions.'''
+
+[[dependencies.theothercursor]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.theothercursor]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
