@@ -2,21 +2,22 @@
   "resolution": 16,
   "palettes": {
     "cloud": [
-      "FFD5DDD6",
-      "FFE7EADF",
-      "FFB7C4BE",
-      "FF91A6A5",
-      "FF738A91",
-      "FFD7C9B7"
+      "FFD3DFD9",
+      "FFE9EDE6",
+      "FFB9C8C2",
+      "FFA2B4B2",
+      "FF899D9D",
+      "FFDAD6C7",
+      "FFF3F1E8"
     ],
     "grass": [
-      "FF71A87C",
-      "FF98C293",
-      "FF4E8E74",
-      "FF356E60",
-      "FFBED4AA",
-      "FF82B49A",
-      "FFB8AE84"
+      "FF71A87A",
+      "FF91BC8A",
+      "FF5D9871",
+      "FF477F60",
+      "FFB5D09D",
+      "FF7FAF7D",
+      "FF396D54"
     ],
     "turf": [
       "FF71A87C",
@@ -29,13 +30,13 @@
       "FFC4BBA7"
     ],
     "leaves": [
-      "FF447F61",
-      "FF619775",
-      "FF85B18A",
-      "FF2F634E",
-      "FFB0C99B",
-      "FF6B9D87",
-      "FF8D9369",
+      "FF5B9473",
+      "FF81AC85",
+      "FFA3C69A",
+      "FF376B55",
+      "FFC0D5AC",
+      "FF6D9C79",
+      "FF879D77",
       "00000000"
     ],
     "pearl": [
@@ -63,21 +64,23 @@
       "FF6D8E87"
     ],
     "moon": [
-      "FF676A84",
-      "FF9093AD",
-      "FF50566E",
-      "FF333B54",
-      "FFB9B7CF",
-      "FF7999AD"
+      "FF727791",
+      "FF969BB6",
+      "FF5E657F",
+      "FF444C64",
+      "FFBBB8CC",
+      "FF7F91A5",
+      "FF333B54"
     ],
     "ore": [
-      "FFD2DAD2",
-      "FFE8EAE1",
-      "FFAABDB8",
-      "FF738D94",
-      "FF559BA3",
-      "FF94CFCD",
-      "FFE4EED9"
+      "FFCFD9D1",
+      "FFE8EBE2",
+      "FFB1C1BD",
+      "FF92A5A6",
+      "FF5D9DA8",
+      "FF93CDD1",
+      "FFE4F0DE",
+      "FF56808B"
     ],
     "mosaic": [
       "FFD8D9CF",
