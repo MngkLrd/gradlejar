@@ -1,0 +1,54 @@
+# Halo Haven: Art Bible / 1.4.0
+
+## Identity
+A once-great kingdom suspended in the sky, slowly reclaimed by nature.
+The style is archaeological fantasy, not a random collection of glowing cubes.
+Architecture is ivory carved limestone, timeworn brass, antique turquoise,
+and glass with a deliberate gold/blue lead framework.
+
+## Six regions
+- Dawn Gardens (warm / humid): connected emerald meadows, gardens and intact city districts.
+- Chalk Terraces (warm / dry): white mineral plateaus, open skies and sparse vegetation.
+- Eternal Canopy (temperate / humid): thick large-trunk sky trees and dense emerald crown cover.
+- Ringing Gorges (temperate / dry): ravines, fractured ledges, elevated aqueduct fragments.
+- Forgotten Choirs (cold / dry): broken rose windows and ruined sanctuaries.
+- Lower Veil (cold / humid): a dark geology and a supplementary hanging lower-island layer.
+
+Real climate selection uses Minecraft 1.21.1 `multi_noise` with custom temperature
+and humidity density functions. The terrain density router has six region-specific
+morphology expressions, not only surface color changes.
+
+## Material standard
+Logical pixel canvas: 32×32, exported as crisp nearest-neighbor 64×64 PNG for
+the existing model references. Approximately 70% quiet material / 25% structural
+grains, seams or mineral cleavages / 5% accents.
+
+These are hand-designed **patterns in code**, not randomly scattered pixels:
+- Cloudstone: visible horizontal bedding and selective fractures.
+- Pearl brick: consistent staggered mortar with a dressed bevel.
+- Azurewood: parallel grain constrained to actual plank boards.
+- Skygrass: clover clumps and turf over a sedimentary vertical side.
+- Sungold: staggered overlapping tiles with geometric wear.
+- Moonstone: two mineral strata and 3 long cleavage planes.
+- Glass: tinted translucent pane, leading grid, legible jewel inset.
+- Architectural columns: vertical ribs plus capitals; caps use separate textures.
+
+An individual atlas must have <=12 RGBA colors (enforced by Gradle).
+Avoid high-frequency noise, color speckle, and meaningless detached pixels.
+UV maps for creatures are handled separately by uvtextures.gradle.
+
+## Generation order
+1. Geography: climate noises partition regions, with smooth large-scale sampling.
+2. Geomorphology: main floating landforms and shape-distinct ridge/terrace/veil densities.
+3. Geology: biome-specific natural surface rules.
+4. Ecology: configured/placed features for crown trees and flower patches.
+5. Civilization: intact settlements only in livable biomes; ruined landmarks
+   in gorge, choir and veil regions.
+
+## QA
+Test on a **new world**: existing chunks preserve old generation.
+Validate all 6 F3 biome names, 3 dangerous landmark silhouettes, sky-tree
+growth on custom soil, crystal and crown appearance at daytime, stained glass
+transparency from both directions, and dense-forest performance.
+Automated CI confirms Gradle compilation, PNG presence and dedicated-server
+datapack registry loading. It does not certify screenshot-level art quality.

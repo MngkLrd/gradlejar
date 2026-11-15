@@ -3,10 +3,10 @@ loaderVersion="[1,)"
 license="MIT"
 [[mods]]
 modId="halohaven"
-version="1.3.0"
+version="1.4.0"
 displayName="Halo Haven"
 authors="MineMods"
-description='''A handcrafted sky-heaven realm with floating islands, celestial villages, original pixel-art blocks, and a bell-of-ascension ritual.'''
+description='''An ancient sky kingdom reclaimed by nature, with six distinct climatic biomes, floating strata, wandering wildlife, art-directed stones and ruins.'''
 [[dependencies.halohaven]]
 modId="neoforge"
 type="required"

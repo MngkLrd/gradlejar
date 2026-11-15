@@ -1,4 +1,4 @@
-# Halo Haven 1.3.0 – Skyseed & True UV
+# Halo Haven 1.4.0 – Worldgen II & Art Bible
 
 **Minecraft 1.21.1 | NeoForge 21.1.x | Java 21.**
 
@@ -6,12 +6,47 @@ A bright fantasy pocket of the skies, now with a cohesive architectural language
 
 ## Installation and build
 
-- Copy `halohaven-1.21.1-1.3.0.jar` to `mods/`.
+- Copy `halohaven-1.21.1-1.4.0.jar` to `mods/`.
 - **NeoForge 21.1.197** is used to compile; runtime metadata requests **at least 21.1.80**, not the newest patch.
 - Java 21, Gradle 9.2.1.
 - Build: `gradle --no-daemon clean build`.
-- Output: `build/libs/halohaven-1.21.1-1.3.0.jar`.
+- Output: `build/libs/halohaven-1.21.1-1.4.0.jar`.
 - Client and server both require the mod. No extra assets or resource packs.
+
+## Worldgen II: six genuine biomes and landmark geography
+
+This release is the first environmental restructuring of Halo Haven.
+`heaven.json` now uses a six-entry `minecraft:multi_noise` biome source.
+Two 1.21.1 `shifted_noise` climate densities determine dry/wet and
+warm/mid/cold regions. Their six intersections are **registered biomes**:
+
+- Dawn Gardens: green gardens and livable, luminous villages
+- Chalk Terraces: calcite plateaus, sparse crown trees
+- Eternal Canopy: moss beds, dense tall sky-crown forests
+- Ringing Gorges: fractured, tuff-faced land and sky aqueduct ruins
+- Forgotten Choirs: purple mineral ground, broken rose windows and sanctuaries
+- Lower Veil: deepslate surfaces and a separate low-lying isle stratum
+
+The density router adds biome-dependent continental/ridge deformation; the
+Lower Veil receives a secondary suspended layer.
+Flowers and towering crown trees are placed during normal *chunk generation*.
+In dangerous regions, 512-block waypoints contain unique hostile ruins rather
+than the same four repetitive houses. The main X=0/Z=0 arrival sanctuary stays
+intact for safe entry. The Sky Compass and discovery messages report the real
+biome, not a repeating coordinate-based fake district.
+
+### New texture production standard
+
+`atelier.gradle` now draws 18+ block face textures from deliberate
+material structures and exports scaled 64px RGBA textures from a consistent
+32px logical pixel grid. No hash-based noise or stochastic color speckle
+is in the final 1.4 block texture assets. Palette cardinality is checked
+at asset-generation time (<=12 RGBA colors per tile).
+See [ART_BIBLE.md](ART_BIBLE.md) for the six-region landscape grammar,
+material templates and visual QA rules.
+
+**Migration:** generate a fresh world (or explore fresh chunks) for new biomes.
+Old settlements and explored terrain do not automatically re-generate.
 
 ## Creative inventory
 

@@ -27,6 +27,7 @@ apply from: 'creatures.gradle'
 apply from: 'uvtextures.gradle'
 apply from: 'skyway.gradle'
 apply from: 'atelier.gradle'
+apply from: 'worldlabels.gradle'
 jar {
     manifest.attributes([
         'Specification-Title': 'Halo Haven',
