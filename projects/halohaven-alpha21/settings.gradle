@@ -1,0 +1,32 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url = 'https://maven.neoforged.net/releases' }
+        mavenCentral()
+    }
+}
+rootProject.name='halohavenalpha2'
+def pythonScript = '''from pathlib import Path
+import tarfile
+root=Path.cwd().resolve()
+bundle=root/'bundle.tar.xz'
+if not bundle.is_file():raise SystemExit('Missing Alpha 2.1 sources bundle')
+with tarfile.open(bundle,'r:xz') as archive:
+    for info in archive:
+        if not info.isfile():continue
+        name=Path(info.name)
+        if not info.name.startswith('src/') or '..' in name.parts or name.is_absolute():
+            raise SystemExit('Unsafe archive member '+info.name)
+        dest=(root/name).resolve()
+        if not dest.is_relative_to(root/'src'):
+            raise SystemExit('Outside source directory '+info.name)
+        dest.parent.mkdir(parents=True,exist_ok=True)
+        with archive.extractfile(info) as incoming,dest.open('wb') as outgoing:
+            while True:
+                part=incoming.read(65536)
+                if not part:break
+                outgoing.write(part)
+print('Halo Haven 2.1 extracted: Java, models, PNG, NBT and worldgen')
+'''
+def cmd=new ProcessBuilder('python3','-c',pythonScript).directory(settingsDir).inheritIO().start()
+if(cmd.waitFor()!=0)throw new GradleException('Halo Haven source extraction failed')
