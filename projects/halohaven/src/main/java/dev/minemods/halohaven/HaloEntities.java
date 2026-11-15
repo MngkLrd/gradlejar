@@ -1,6 +1,9 @@
 package dev.minemods.halohaven;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.block.Blocks;
@@ -50,6 +53,23 @@ public final class HaloEntities {
             .clientTrackingRange(12).build("halohaven:eclipse_revenant"));
 
 
+    private static final ResourceKey<Biome> GORGES =
+        ResourceKey.create(Registries.BIOME,HaloHaven.id("ringing_gorges"));
+    private static final ResourceKey<Biome> CHOIRS =
+        ResourceKey.create(Registries.BIOME,HaloHaven.id("forgotten_choirs"));
+    private static final ResourceKey<Biome> VEIL =
+        ResourceKey.create(Registries.BIOME,HaloHaven.id("lower_veil"));
+
+    private static boolean safeSkyGround(BlockState ground){
+        return ground.is(HaloHaven.SKYGRASS.get())
+            || ground.is(HaloHaven.CLOUDSTONE.get())
+            || ground.is(Blocks.MOSS_BLOCK)
+            || ground.is(Blocks.CALCITE)
+            || ground.is(Blocks.TUFF)
+            || ground.is(Blocks.GRASS_BLOCK)
+            || ground.is(Blocks.DIRT);
+    }
+
     /**
      * Natural biome spawns must never appear in the void or embedded in a cliff.
      * These three entities are explicitly referenced by Halo Haven biomes.
@@ -62,8 +82,7 @@ public final class HaloEntities {
             (type, level, reason, pos, random) ->
                 level.getLevel().dimension().equals(HaloHaven.HEAVEN)
                 && level.getBlockState(pos).isAir()
-                && (level.getBlockState(pos.below()).is(HaloHaven.SKYGRASS.get())
-                    || level.getBlockState(pos.below()).is(Blocks.MOSS_BLOCK)),
+                && safeSkyGround(level.getBlockState(pos.below())),
             RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
         e.register(LUMEN.get(),
@@ -72,9 +91,7 @@ public final class HaloEntities {
             (type, level, reason, pos, random) ->
                 level.getLevel().dimension().equals(HaloHaven.HEAVEN)
                 && level.getBlockState(pos).isAir()
-                && (level.getBlockState(pos.below()).is(HaloHaven.SKYGRASS.get())
-                    || level.getBlockState(pos.below()).is(Blocks.MOSS_BLOCK)
-                    || level.getBlockState(pos.below()).is(Blocks.CALCITE)),
+                && safeSkyGround(level.getBlockState(pos.below())),
             RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
         e.register(DUSK_WRAITH.get(),
@@ -84,9 +101,14 @@ public final class HaloEntities {
                 level.getLevel().dimension().equals(HaloHaven.HEAVEN)
                 && level.getDifficulty()!=Difficulty.PEACEFUL
                 && level.getBlockState(pos).isAir()
-                && (level.getBlockState(pos.below()).is(HaloHaven.MOONSTONE.get())
+                && (level.getBiome(pos).is(GORGES)
+                    || level.getBiome(pos).is(CHOIRS)
+                    || level.getBiome(pos).is(VEIL))
+                && (safeSkyGround(level.getBlockState(pos.below()))
+                    || level.getBlockState(pos.below()).is(HaloHaven.MOONSTONE.get())
                     || level.getBlockState(pos.below()).is(Blocks.DEEPSLATE)
-                    || level.getBlockState(pos.below()).is(Blocks.DEEPSLATE_TILES)),
+                    || level.getBlockState(pos.below()).is(Blocks.DEEPSLATE_TILES)
+                    || level.getBlockState(pos.below()).is(Blocks.CRACKED_STONE_BRICKS)),
             RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 

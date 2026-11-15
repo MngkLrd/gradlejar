@@ -5,6 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
+import java.util.List;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.animal.allay.Allay;
@@ -48,6 +50,19 @@ public final class HavenVillages {
             p.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 24, 0, true, false));
         }
         if (!p.level().dimension().equals(HaloHaven.HEAVEN)) return;
+        // Heal existing 1.5 worlds affected by crown leaf decay. Only clean up
+        // when there is a clearly abnormal pile of leaf drops in proximity;
+        // ordinary player-harvested items are left intact.
+        if(p.tickCount%200==0){
+            List<ItemEntity> debris=p.level().getEntitiesOfClass(ItemEntity.class,
+                p.getBoundingBox().inflate(64),item ->
+                item.getItem().is(HaloHaven.SKY_LEAVES_ITEM.get()));
+            if(debris.size()>32){
+                for(ItemEntity item:debris)
+                    if(item.tickCount>200)item.discard();
+            }
+        }
+
         // Low-density ambient magic for the four distinct celestial silhouettes.
         if(p.tickCount%32==0) {
             ServerLevel world=(ServerLevel)p.level();

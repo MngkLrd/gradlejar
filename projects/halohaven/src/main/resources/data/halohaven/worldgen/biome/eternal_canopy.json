@@ -15,7 +15,8 @@
     [],
     [
       "halohaven:sky_bloom_patch_11",
-      "halohaven:sky_crown_tree_4"
+      "halohaven:sky_crown_tree_4",
+      "halohaven:cloudstone_scatter"
     ],
     []
   ],
@@ -33,13 +34,13 @@
     "creature": [
       {
         "type": "halohaven:cloudhare",
-        "weight": 12,
+        "weight": 20,
         "minCount": 1,
         "maxCount": 3
       },
       {
         "type": "halohaven:lumen",
-        "weight": 7,
+        "weight": 12,
         "minCount": 1,
         "maxCount": 2
       }

@@ -161,11 +161,16 @@ public final class HavenLandmarks {
             chest.setItem(1,new ItemStack(HaloHaven.SKYBERRY.get(),2+rng.nextInt(4)));
             chest.setItem(2,new ItemStack(HaloHaven.SUNSHARD.get()));
         }
-        if(biome>=4){
-            for(int i=0;i<2;i++){
+        // The cliffs, abandoned cathedral and veil now have distinctly
+        // dangerous encounters. Peaceful difficulty never creates attackers.
+        if(biome>=3 && l.getDifficulty()!=net.minecraft.world.Difficulty.PEACEFUL){
+            int count=biome==3?2:biome==4?3:4;
+            for(int i=0;i<count;i++){
                 Mob wraith=HaloEntities.DUSK_WRAITH.get().create(l);
                 if(wraith!=null){
-                    wraith.moveTo(cx+(i==0?-12:12)+.5,floor+2,cz+(i==0?-6:6)+.5,0,0);
+                    double angle=2*Math.PI*i/count;
+                    wraith.moveTo(cx+Math.cos(angle)*14+.5,
+                        floor+3,cz+Math.sin(angle)*14+.5,0,0);
                     wraith.setPersistenceRequired();
                     l.addFreshEntity(wraith);
                 }

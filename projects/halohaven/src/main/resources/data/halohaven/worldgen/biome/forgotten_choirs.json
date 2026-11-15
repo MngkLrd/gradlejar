@@ -13,7 +13,10 @@
     [],
     [],
     [],
-    [],
+    [
+      "halohaven:fallen_masonry",
+      "halohaven:moonstone_cairns"
+    ],
     []
   ],
   "effects": {
@@ -32,7 +35,7 @@
     "monster": [
       {
         "type": "halohaven:dusk_wraith",
-        "weight": 10,
+        "weight": 14,
         "minCount": 1,
         "maxCount": 2
       }
