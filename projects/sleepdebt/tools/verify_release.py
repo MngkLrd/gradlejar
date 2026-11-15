@@ -66,7 +66,7 @@ with zipfile.ZipFile(jar) as z:
         target=((128,64) if "entity/sleepless.png" in n else
                 (176,166) if "textures/gui/coffee_maker.png" in n else
                 (228,188) if "textures/gui/sleep_journal.png" in n else
-                (138,58) if "textures/gui/sleep_hud.png" in n else (16,16))
+                (158,68) if "textures/gui/sleep_hud.png" in n else (16,16))
         if (width,height)!=target:raise ValueError(f"{n}: size {(width,height)} not {target}")
 
         # Parse PNG chunks rather than trusting the ZIP CRC or just the PNG header.
