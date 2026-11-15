@@ -8,12 +8,21 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 
 public final class Skyfolk extends Villager {
     public Skyfolk(EntityType<? extends Villager> type, Level level) {
         super(type, level);
         this.setCustomName(Component.translatable("entity.halohaven.skyfolk"));
         this.setCustomNameVisible(false);
+    }
+    @Override protected SoundEvent getAmbientSound() {
+        return BuiltInRegistries.SOUND_EVENT.getOptional(
+            ResourceLocation.fromNamespaceAndPath("halohavenalpha2", "mob_skyfolk")
+        ).orElse(SoundEvents.VILLAGER_AMBIENT);
     }
     public void populateSkyTrades() {
         if (!this.getOffers().isEmpty()) return;

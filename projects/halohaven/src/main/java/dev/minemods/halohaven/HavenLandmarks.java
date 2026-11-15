@@ -43,7 +43,7 @@ public final class HavenLandmarks {
     }
 
     private static void p(ServerLevel level,int x,int y,int z,Block block){
-        level.setBlock(new BlockPos(x,y,z),block.defaultBlockState(),2);
+        level.setBlock(new BlockPos(x,y,z),block.defaultBlockState(),3);
     }
 
     private static void column(ServerLevel l,int x,int y,int z,int h,Block block){

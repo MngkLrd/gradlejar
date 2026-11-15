@@ -29,7 +29,7 @@ public final class HeavenArchitecture {
         torchesAndArcades(level,cx,cz);
     }
     private static void p(ServerLevel l,int x,int y,int z,Block block) {
-        l.setBlock(new BlockPos(x,y,z),block.defaultBlockState(),2);
+        l.setBlock(new BlockPos(x,y,z),block.defaultBlockState(),3);
     }
     private static void stairs(ServerLevel l,int x,int y,int z,Direction outward) {
         l.setBlock(new BlockPos(x,y,z),
@@ -131,7 +131,7 @@ public final class HeavenArchitecture {
             }
             // A distinctive tree with its own foliage, glowing fruitlike lanterns.
             int trunk=5;
-            for(int h=1;h<=trunk;h++)p(l,x,GROUND+h,z,Blocks.CHERRY_LOG);
+            for(int h=1;h<=trunk;h++)p(l,x,GROUND+h,z,HavenVillages.nativeWood("heartwood_log"));
             for(int dx=-4;dx<=4;dx++)for(int dz=-4;dz<=4;dz++)for(int dy=-2;dy<=3;dy++){
                 if(dx*dx+dz*dz+dy*dy>20)continue;
                 BlockPos at=new BlockPos(x+dx,GROUND+trunk+dy,z+dz);
