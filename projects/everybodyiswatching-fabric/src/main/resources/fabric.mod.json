@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "everybodyiswatching",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "name": "Everybody Is Watching",
   "description": "Villagers sometimes freeze and stare at the player after entering a village.",
   "environment": "*",

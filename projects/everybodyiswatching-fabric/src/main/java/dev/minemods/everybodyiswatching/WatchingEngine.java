@@ -11,12 +11,14 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,36 +27,49 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
-/** Common 1.21.1 Mojang-mapped logic, called from the server tick on either loader. */
+/**
+ * Server-authoritative staged horror event:
+ * GATHERING (normal AI + forced navigation) -> STARING (immobile + synced head/body tracking).
+ * Shared Mojang-mapped 1.21.1 implementation for NeoForge and Fabric.
+ */
 public final class WatchingEngine {
     private static final String LOCK_TAG = "eiw_temporary_ai_lock";
-    /** Movement only. Unlike NoAI, this keeps vanilla head/rotation controllers alive. */
     private static final ResourceLocation FREEZE_SPEED_ID =
             ResourceLocation.fromNamespaceAndPath("everybodyiswatching", "watching_freeze");
-    private static final AttributeModifier FREEZE_SPEED = new AttributeModifier(
-            FREEZE_SPEED_ID, -1.0D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    private static final AttributeModifier FREEZE_SPEED =
+            new AttributeModifier(FREEZE_SPEED_ID, -1.0D,
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+
+    private static final int RADIUS = 48;
+    private static final int MAX_SPECTATORS = 24;
+    private static final int MIN_VILLAGERS = 4;
+    private static final int GATHER_MIN = 140;       // 7 seconds
+    private static final int GATHER_EXTRA = 61;     // up to 10 seconds
+    private static final int ARRIVAL_STAGGER = 61;  // stagger departures by 0-3 seconds
+    private static final int REPATH_INTERVAL = 20;  // one path request per villager per second
+    private static final float WALK_SPEED = 0.88F;  // normal-speed, not a chase
+    private static final double ARRIVAL_DISTANCE_SQR = 5.0D;
+    private static final double TOO_CLOSE_SQR = 12.25D; // don't crowd inside 3.5 blocks
     private static final int MIN_STARE_TICKS = 200; // 10 seconds
     private static final int EXTRA_STARE_TICKS = 81; // up to 14 seconds
-    private static final float BODY_TURN_DEGREES_PER_TICK = 9.0F;
-    private static final float HEAD_TURN_DEGREES_PER_TICK = 20.0F;
-    private static final int RADIUS = 48;
-    private static final int MIN_VILLAGERS = 4;
+    private static final float BODY_TURN_STEP = 9.0F;
+    private static final float HEAD_TURN_STEP = 20.0F;
     private static final int ENTRY_DELAY_MIN = 60;
     private static final int ENTRY_DELAY_EXTRA = 101;
     private static final int REENTRY_COOLDOWN = 4 * 60 * 20;
     private static final double ENTRY_CHANCE = 0.65D;
+
     private final Random random = new Random();
     private final Map<UUID, Visit> visits = new HashMap<>();
     private final Map<ResourceKey<Level>, StareEvent> active = new HashMap<>();
-    private final Map<UUID, FrozenVillager> frozen = new HashMap<>();
+    private final Map<UUID, Spectator> participants = new HashMap<>();
     private long tick;
 
     public void serverTick(MinecraftServer server) {
         tick++;
-        for (StareEvent event : new ArrayList<>(active.values())) {
-            tickEvent(event);
-        }
+        for (StareEvent event : new ArrayList<>(active.values())) tickEvent(event);
         if (tick % 20 != 0) return;
+
         Set<UUID> online = new HashSet<>();
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             online.add(player.getUUID());
@@ -66,8 +81,7 @@ public final class WatchingEngine {
     private void checkEntry(ServerPlayer player) {
         Visit visit = visits.computeIfAbsent(player.getUUID(), ignored -> new Visit());
         ServerLevel level = player.serverLevel();
-        boolean village = level.isVillage(player.blockPosition());
-        if (!village) {
+        if (!level.isVillage(player.blockPosition())) {
             if (++visit.outsideChecks >= 6) {
                 visit.inside = false;
                 visit.attempted = false;
@@ -75,6 +89,7 @@ public final class WatchingEngine {
             }
             return;
         }
+
         visit.outsideChecks = 0;
         if (!visit.inside) {
             visit.inside = true;
@@ -97,45 +112,64 @@ public final class WatchingEngine {
         }
         visit.attempted = true;
         visit.cooldownUntil = tick + REENTRY_COOLDOWN;
-        if (random.nextDouble() < ENTRY_CHANCE) begin(player, villagers);
+        if (random.nextDouble() < ENTRY_CHANCE) begin(player, villagers, false);
     }
 
     private List<Villager> findVillagers(ServerPlayer player) {
         AABB box = player.getBoundingBox().inflate(RADIUS);
         return player.serverLevel().getEntitiesOfClass(Villager.class, box,
                 villager -> villager.isAlive() && !villager.isNoAi()
-                        && !frozen.containsKey(villager.getUUID())
+                        && !participants.containsKey(villager.getUUID())
                         && villager.distanceToSqr(player) <= RADIUS * RADIUS);
     }
 
     public int force(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
-        StareEvent current = active.remove(level.dimension());
+        return force(player, false);
+    }
+
+    /** Diagnostic: skip gathering to verify head tracking independently. */
+    public int forceStare(ServerPlayer player) {
+        return force(player, true);
+    }
+
+    private int force(ServerPlayer player, boolean immediateStare) {
+        StareEvent current = active.remove(player.serverLevel().dimension());
         if (current != null) stop(current);
         List<Villager> villagers = findVillagers(player);
         if (villagers.isEmpty()) return 0;
-        begin(player, villagers);
-        return villagers.size();
+        return begin(player, villagers, immediateStare);
     }
 
-    private void begin(ServerPlayer player, List<Villager> villagers) {
-        int duration = MIN_STARE_TICKS + random.nextInt(EXTRA_STARE_TICKS); // 10-14 seconds
-        boolean lastOne = villagers.size() >= 2 && random.nextInt(4) == 0;
-        UUID lingering = lastOne ? villagers.get(random.nextInt(villagers.size())).getUUID() : null;
+    private int begin(ServerPlayer player, List<Villager> villagers, boolean immediateStare) {
+        long gatherUntil = tick + GATHER_MIN + random.nextInt(GATHER_EXTRA);
         StareEvent event = new StareEvent(player.serverLevel(), player.getUUID(),
-                player.position(), tick + duration, tick + duration + 60 + random.nextInt(41), lingering);
+                player.position(), gatherUntil);
+        villagers.sort(Comparator.comparingDouble(v -> v.distanceToSqr(player)));
         for (Villager villager : villagers) {
-            if (villager.isNoAi()) continue;
-            if (villager.getTradingPlayer() instanceof ServerPlayer trader) trader.closeContainer();
-            villager.getNavigation().stop();
-            frozen.put(villager.getUUID(), new FrozenVillager(villager));
-            villager.addTag(LOCK_TAG);
-            AttributeInstance speed = villager.getAttribute(Attributes.MOVEMENT_SPEED);
-            if (speed != null) speed.addOrUpdateTransientModifier(FREEZE_SPEED);
-            event.members.add(villager.getUUID());
-            aimAt(villager, player);
+            if (event.members.size() >= MAX_SPECTATORS) break;
+            recruit(event, villager);
         }
+        if (event.members.isEmpty()) return 0;
         active.put(player.serverLevel().dimension(), event);
+        if (immediateStare) enterStare(event, player);
+        return event.members.size();
+    }
+
+    private void recruit(StareEvent event, Villager villager) {
+        if (!villager.isAlive() || villager.isNoAi()
+                || participants.containsKey(villager.getUUID())) return;
+        if (villager.getTradingPlayer() instanceof ServerPlayer trader) trader.closeContainer();
+
+        // Distributed ring positions prevent every villager from colliding at one point.
+        int index = event.members.size();
+        double angle = index * 2.399963229728653D + random.nextDouble() * 0.28D;
+        double ringRadius = 5.0D + random.nextDouble() * 2.0D;
+        long startAt = Math.min(event.gatherUntil - 12,
+                tick + random.nextInt(ARRIVAL_STAGGER));
+        Spectator spectator = new Spectator(villager, angle, ringRadius, startAt);
+        participants.put(villager.getUUID(), spectator);
+        event.members.add(villager.getUUID());
+        villager.addTag(LOCK_TAG);
     }
 
     private void tickEvent(StareEvent event) {
@@ -146,33 +180,108 @@ public final class WatchingEngine {
             stop(event);
             return;
         }
+        if (event.phase == Phase.GATHERING) {
+            if (tick % 20 == 0) gatherMore(event, player);
+            if (tick >= event.gatherUntil) {
+                enterStare(event, player);
+            } else {
+                for (UUID id : new ArrayList<>(event.members)) {
+                    Spectator spectator = participants.get(id);
+                    if (spectator == null || !spectator.villager.isAlive()
+                            || spectator.villager.isRemoved()) {
+                        release(event, id);
+                        continue;
+                    }
+                    approach(spectator, player);
+                }
+                if (event.members.isEmpty()) active.remove(event.level.dimension());
+                return;
+            }
+        }
         for (UUID id : new ArrayList<>(event.members)) {
-            FrozenVillager lock = frozen.get(id);
+            Spectator spectator = participants.get(id);
             boolean linger = id.equals(event.lingering) && tick < event.lingerUntil;
-            if (lock == null || !lock.villager.isAlive() || lock.villager.isRemoved()
-                    || (tick >= event.endAt && !linger)) {
-                thaw(id);
-                event.members.remove(id);
+            if (spectator == null || !spectator.villager.isAlive()
+                    || spectator.villager.isRemoved()
+                    || (tick >= event.stareUntil && !linger)) {
+                release(event, id);
                 continue;
             }
-            Villager villager = lock.villager;
-            // Villagers use Brain AI, not only goal selectors. Kill the pending walk
-            // target as well as navigation so a fresh Brain path cannot keep moving.
-            villager.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
-            villager.getBrain().eraseMemory(MemoryModuleType.PATH);
-            villager.getNavigation().stop();
-            Vec3 velocity = villager.getDeltaMovement();
-            villager.setDeltaMovement(0, velocity.y, 0);
-            aimAt(villager, player);
+            stopWalking(spectator);
+            aimAt(spectator.villager, player);
         }
         if (event.members.isEmpty()) active.remove(event.level.dimension());
     }
 
-    /**
-     * Rotate a real, AI-enabled villager in the vanilla synced rotation fields.
-     * The head leads; the torso follows when the target is out of neck range.
-     * This is invoked after entity ticks, so the Brain cannot overwrite our look.
-     */
+    /** Find villagers entering the loaded village during the gathering phase. */
+    private void gatherMore(StareEvent event, ServerPlayer player) {
+        if (event.members.size() >= MAX_SPECTATORS) return;
+        List<Villager> newcomers = findVillagers(player);
+        newcomers.sort(Comparator.comparingDouble(v -> v.distanceToSqr(player)));
+        for (Villager villager : newcomers) {
+            if (event.members.size() >= MAX_SPECTATORS) break;
+            recruit(event, villager);
+        }
+    }
+
+    /** Gently override the Brain's walk target using ordinary pathfinding. */
+    private void approach(Spectator spectator, ServerPlayer player) {
+        Villager villager = spectator.villager;
+        if (tick < spectator.startAt) return;
+
+        Vec3 goal = new Vec3(player.getX() + Math.cos(spectator.angle) * spectator.radius,
+                player.getY(), player.getZ() + Math.sin(spectator.angle) * spectator.radius);
+
+        if (spectator.arrived || villager.position().distanceToSqr(goal) <= ARRIVAL_DISTANCE_SQR
+                || villager.distanceToSqr(player) <= TOO_CLOSE_SQR) {
+            spectator.arrived = true;
+            stopWalking(spectator);
+            return;
+        }
+        if (tick < spectator.nextPathAt) return;
+        spectator.nextPathAt = tick + REPATH_INTERVAL;
+        // WALK_TARGET cooperates with villagers' Brain, while navigation.moveTo
+        // takes control immediately if a vanilla job behavior changes its goal.
+        villager.getBrain().setMemory(MemoryModuleType.WALK_TARGET,
+                new WalkTarget(goal, WALK_SPEED, 2));
+        villager.getNavigation().moveTo(goal.x, goal.y, goal.z, WALK_SPEED);
+    }
+
+    private void enterStare(StareEvent event, ServerPlayer player) {
+        event.phase = Phase.STARING;
+        event.stareUntil = tick + MIN_STARE_TICKS + random.nextInt(EXTRA_STARE_TICKS);
+        if (event.members.size() >= 2 && random.nextInt(4) == 0) {
+            int choice = random.nextInt(event.members.size());
+            event.lingering = new ArrayList<>(event.members).get(choice);
+            event.lingerUntil = event.stareUntil + 60 + random.nextInt(41);
+        }
+        for (UUID id : new ArrayList<>(event.members)) {
+            Spectator spectator = participants.get(id);
+            if (spectator == null || !spectator.villager.isAlive() ||
+                    spectator.villager.isRemoved()) {
+                release(event, id);
+                continue;
+            }
+            stopWalking(spectator);
+            aimAt(spectator.villager, player);
+        }
+    }
+
+    /** Stops position movement without disabling AI, so head and body still rotate. */
+    private static void stopWalking(Spectator spectator) {
+        Villager villager = spectator.villager;
+        villager.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
+        villager.getBrain().eraseMemory(MemoryModuleType.PATH);
+        villager.getNavigation().stop();
+        Vec3 oldSpeed = villager.getDeltaMovement();
+        villager.setDeltaMovement(0.0D, oldSpeed.y, 0.0D);
+        if (!spectator.immobilized) {
+            AttributeInstance speed = villager.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (speed != null) speed.addOrUpdateTransientModifier(FREEZE_SPEED);
+            spectator.immobilized = true;
+        }
+    }
+
     private static void aimAt(Villager villager, ServerPlayer player) {
         Vec3 from = villager.getEyePosition();
         Vec3 to = player.getEyePosition();
@@ -184,54 +293,55 @@ public final class WatchingEngine {
 
         float targetYaw = (float) (Math.toDegrees(Math.atan2(dz, dx)) - 90.0D);
         float targetPitch = (float) -Math.toDegrees(Math.atan2(dy, horizontal));
-
-        // Keep vanilla LookControl informed while doing our own precise tracking.
         villager.getLookControl().setLookAt(player, 180.0F, 90.0F);
-
-        float body = approachDegrees(villager.yBodyRot, targetYaw, BODY_TURN_DEGREES_PER_TICK);
+        float body = approachDegrees(villager.yBodyRot, targetYaw, BODY_TURN_STEP);
         float headTarget = body + Mth.clamp(Mth.wrapDegrees(targetYaw - body), -75.0F, 75.0F);
-        float head = approachDegrees(villager.getYHeadRot(), headTarget, HEAD_TURN_DEGREES_PER_TICK);
-        float pitch = Mth.clamp(targetPitch, -40.0F, 40.0F);
-
-        // Head and body both must rotate, particularly when the player is behind.
+        float head = approachDegrees(villager.getYHeadRot(), headTarget, HEAD_TURN_STEP);
         villager.setYRot(body);
         villager.setYBodyRot(body);
         villager.setYHeadRot(head);
-        villager.setXRot(pitch);
+        villager.setXRot(Mth.clamp(targetPitch, -40.0F, 40.0F));
     }
 
     private static float approachDegrees(float current, float target, float maxStep) {
         return current + Mth.clamp(Mth.wrapDegrees(target - current), -maxStep, maxStep);
     }
 
+    private void release(StareEvent event, UUID id) {
+        thaw(id);
+        event.members.remove(id);
+    }
+
     private void thaw(UUID id) {
-        FrozenVillager lock = frozen.remove(id);
-        if (lock == null) return;
-        Villager villager = lock.villager;
+        Spectator spectator = participants.remove(id);
+        if (spectator == null) return;
+        Villager villager = spectator.villager;
+        villager.getNavigation().stop();
+        villager.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
+        villager.getBrain().eraseMemory(MemoryModuleType.PATH);
         AttributeInstance speed = villager.getAttribute(Attributes.MOVEMENT_SPEED);
         if (speed != null) speed.removeModifier(FREEZE_SPEED_ID);
         villager.removeTag(LOCK_TAG);
-        // Keep the last orientation; vanilla AI will naturally resume looking around.
     }
 
     private void stop(StareEvent event) {
-        for (UUID id : event.members) thaw(id);
-        event.members.clear();
+        for (UUID id : new ArrayList<>(event.members)) release(event, id);
     }
 
-    /** Called on chunk/entity load. Repairs a lock left behind by a crash. */
+    /** Crash recovery and compatibility with the old 0.1.0 NoAI tag. */
     public void entityLoaded(Entity entity) {
         if (entity instanceof Villager villager && villager.getTags().contains(LOCK_TAG)
-                && !frozen.containsKey(villager.getUUID())) {
-            // Restore villagers saved by 0.1.0 with NoAI, too.
+                && !participants.containsKey(villager.getUUID())) {
             villager.setNoAi(false);
+            villager.getNavigation().stop();
+            villager.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
+            villager.getBrain().eraseMemory(MemoryModuleType.PATH);
             AttributeInstance speed = villager.getAttribute(Attributes.MOVEMENT_SPEED);
             if (speed != null) speed.removeModifier(FREEZE_SPEED_ID);
             villager.removeTag(LOCK_TAG);
         }
     }
 
-    /** Called before an entity unloads so NoAI never persists when a chunk is saved. */
     public void entityUnloaded(Entity entity) {
         if (entity instanceof Villager villager) thaw(villager.getUUID());
     }
@@ -254,6 +364,11 @@ public final class WatchingEngine {
         return "village=" + player.serverLevel().isVillage(player.blockPosition())
                 + ", nearbyVillagers=" + findVillagers(player).size()
                 + ", active=" + activeForPlayer
+                + ", phase=" + (activeForPlayer ? event.phase : "NONE")
+                + ", spectators=" + (activeForPlayer ? event.members.size() : 0)
+                + ", phaseSecondsLeft=" + (activeForPlayer
+                        ? Math.max(0, ((event.phase == Phase.GATHERING
+                                ? event.gatherUntil : event.stareUntil) - tick + 19) / 20) : 0)
                 + ", entryChecked=" + (visit != null && visit.attempted)
                 + ", pendingSeconds=" + (visit != null && visit.inside && !visit.attempted ? seconds : 0)
                 + ", cooldownSeconds=" + cooldown;
@@ -261,12 +376,14 @@ public final class WatchingEngine {
 
     public void shutdown() {
         for (StareEvent event : new ArrayList<>(active.values())) stop(event);
-        for (UUID id : new ArrayList<>(frozen.keySet())) thaw(id);
+        for (UUID id : new ArrayList<>(participants.keySet())) thaw(id);
         active.clear();
         visits.clear();
-        frozen.clear();
+        participants.clear();
         tick = 0;
     }
+
+    private enum Phase { GATHERING, STARING }
 
     private static final class Visit {
         boolean inside;
@@ -276,10 +393,20 @@ public final class WatchingEngine {
         long cooldownUntil;
     }
 
-    private static final class FrozenVillager {
+    private static final class Spectator {
         final Villager villager;
-        FrozenVillager(Villager villager) {
+        final double angle;
+        final double radius;
+        final long startAt;
+        long nextPathAt;
+        boolean arrived;
+        boolean immobilized;
+
+        Spectator(Villager villager, double angle, double radius, long startAt) {
             this.villager = villager;
+            this.angle = angle;
+            this.radius = radius;
+            this.startAt = startAt;
         }
     }
 
@@ -287,18 +414,18 @@ public final class WatchingEngine {
         final ServerLevel level;
         final UUID target;
         final Vec3 center;
-        final long endAt;
-        final long lingerUntil;
-        final UUID lingering;
+        final long gatherUntil;
         final Set<UUID> members = new HashSet<>();
-        StareEvent(ServerLevel level, UUID target, Vec3 center, long endAt,
-                   long lingerUntil, UUID lingering) {
+        Phase phase = Phase.GATHERING;
+        long stareUntil;
+        long lingerUntil;
+        UUID lingering;
+
+        StareEvent(ServerLevel level, UUID target, Vec3 center, long gatherUntil) {
             this.level = level;
             this.target = target;
             this.center = center;
-            this.endAt = endAt;
-            this.lingerUntil = lingerUntil;
-            this.lingering = lingering;
+            this.gatherUntil = gatherUntil;
         }
     }
 }

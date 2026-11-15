@@ -1,47 +1,50 @@
-# Everybody Is Watching 0.1.1
+# Everybody Is Watching 0.2.0
 
-Minecraft 1.21.1 (Java 21), NeoForge / Fabric, Mojang official mappings.
-No items, blocks or custom assets. Server-side game logic (both client and server must install the mod).
+Minecraft 1.21.1, Java 21, NeoForge / Fabric. Mojang official mappings.
+No blocks, items, new models, assets, screen effects or mandatory client-only code.
 
-## Natural event
+## Gameplay
 
-- Checks loaded players once every second.
-- Detects a village with ServerLevel#isVillage (occupied points of interest).
-- After first village entry, waits 3–8 seconds, then makes **one 65% roll** if at least four eligible villagers are within 48 blocks.
-- Villagers freeze for 10–14 seconds; their heads track the player, while their original body yaw is preserved.
-- In 25% of events, one villager watches another 3–5 seconds.
-- After each entry roll, a 4-minute cooldown applies; leaving village detection for 6 seconds rearms entry detection.
-- No global chat messages, sounds, extra textures or screen effects.
-- Natural events are independent from command trigger events.
+A village encounter unfolds in two distinct phases:
 
-## Commands (operator permission 2 / singleplayer cheats)
+1. **GATHERING (7-10 s)**: villagers begin approaching with a randomized 0-3 s departure spread. They use normal vanilla pathfinding, not teleporting. They stop near a loose 5-7 block ring around the moving player. More loaded villagers who come into range during gathering can join, up to 24.
+2. **STARING (10-14 s)**: all participants freeze at once and lock head/body rotation to the player. They continue tracking the player while standing. In 25% of events one villager watches for 3-5 extra seconds.
 
-- `/watching trigger`: force event instantly on 1+ eligible villagers within 48 blocks. Works outside villages and ignores normal cooldown.
-- `/watching status`: shows village detection, nearby eligible villagers, pending delay and cooldown.
-- `/watching reset`: reset tracking and cooldown for the issuing player. If the player's event is active, restore affected villagers.
+The arrival stage is designed to feel gradual and unnatural, while the final stare stays synchronous. Obstacles, doors, missing paths, and the limited gathering time can prevent individual villagers from reaching the player; these villagers stare from wherever they end up. No teleportation or block manipulation.
+
+- Natural trigger: 65% roll after a 3-8 second wait on village entry (if 4+ eligible villagers are nearby).
+- Re-entry requires 6 seconds outside village detection and respects a 4-minute per-player cooldown.
+- Event detection radius: 48 blocks; participant cap: 24; one active event per dimension.
+- Works from server-side hooks on both loader versions. No dependencies other than Fabric API on Fabric.
+- Villager movement speed is temporarily modified only once they stop. Normal AI remains on to keep head/body rotation network-visible.
+- Event cleanup restores speed and AI navigation on timeout, unload, reset, disconnection and server shutdown. Crash-recovery tag retained.
+
+## Commands (cheats/operator level 2)
+
+- `/watching trigger`: full sequence (gathering then staring). Works outside villages and ignores cooldown, requires 1+ eligible villagers within 48 blocks.
+- `/watching stare`: skip the gathering phase to test the direct look animation.
+- `/watching status`: village detection, phase, spectator count, remaining phase time and cooldown.
+- `/watching reset`: cancel this player's event and reset entry/cooldown state.
 
 ## Test
 
-1. Create a 1.21.1 creative world with cheats enabled and find a village.
-2. Spawn four villagers with `/summon minecraft:villager ~ ~ ~` if desired.
-3. Run `/watching trigger`. All eligible villagers in radius should stop and look at you.
-4. Move while they are frozen: heads should follow within vanilla head rotation limits.
-5. Wait up to 10 seconds: they should resume. Occasionally one keeps watching longer.
-6. Run `/watching status`; leave the village at least 6 sec, return, and observe a chance-based event.
-7. Try an open trading interface and `/watching trigger` from another operator; trading closes for affected villagers.
-8. Test on a dedicated server with two players, leaving chunks, and after reconnect.
+1. Create an open village in Minecraft 1.21.1 with 4-12 villagers separated by several blocks.
+2. Run `/watching trigger`; watch the staggered approach and use `/watching status` to confirm GATHERING.
+3. Once the approach timer expires, villagers should simultaneously stop and turn to track you; confirm STARING.
+4. Walk around to verify persistent turning for 10-14 seconds; optionally note a delayed final villager.
+5. Run `/watching stare` to test just the synchronized gaze.
+6. Test inside and outside villages, unreachable participants, closed trade screens, chunk unload/reload, server reload, and multiplayer.
 
 ## Build
 
-- JDK 21.
-- NeoForge: `gradle clean build` (Gradle 9.2.1).
-- Fabric: `gradle clean build` (Gradle 8.14.3).
-- Output: `build/libs/everybodyiswatching-<loader>-1.21.1-0.1.1.jar`.
+Requires Java 21.
+- NeoForge: Gradle 9.2.1; `gradle clean build`.
+- Fabric: Gradle 8.14.3; `gradle clean build`.
+- Output: `build/libs/everybodyiswatching-<loader>-1.21.1-0.2.0.jar`.
 
 ## Known limitations
 
-- Vanilla model limits head turning to 85 degrees relative to the body.
-- Detects real villages via occupied POIs; manually spawned groups outside villages work via command.
-- One event per dimension at a time.
-- Crash-recovery through temporary entity tags.
-- Commands require a player execution context, not server console.
+- Paths must be physically accessible; villagers do not teleport or phase through obstacles.
+- A strongly obstructed villager may fail to approach, but will still stare from its current position.
+- One event per dimension at a time. Commands require a player context.
+- Gradle compilation does not replace real in-game testing.

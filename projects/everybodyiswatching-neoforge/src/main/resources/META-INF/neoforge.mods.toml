@@ -4,7 +4,7 @@ license="MIT"
 
 [[mods]]
 modId="everybodyiswatching"
-version="0.1.1"
+version="0.2.0"
 displayName="Everybody Is Watching"
 description='''Villagers sometimes stop and stare at you when you enter a village.'''
 

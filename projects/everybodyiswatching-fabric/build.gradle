@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
 }
 group = 'dev.minemods'
-version = '0.1.1'
+version = '0.2.0'
 base.archivesName = 'everybodyiswatching-fabric-1.21.1'
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 dependencies {

@@ -16,7 +16,15 @@ public final class WatchingCommands {
                     ServerPlayer player = context.getSource().getPlayerOrException();
                     int count = engine.force(player);
                     context.getSource().sendSuccess(() -> Component.literal(count > 0
-                            ? "Everybody Is Watching: staring villagers=" + count
+                            ? "Everybody Is Watching: gathering spectators=" + count
+                            : "No eligible villagers within 48 blocks."), false);
+                    return count > 0 ? 1 : 0;
+                }))
+                .then(Commands.literal("stare").executes(context -> {
+                    ServerPlayer player = context.getSource().getPlayerOrException();
+                    int count = engine.forceStare(player);
+                    context.getSource().sendSuccess(() -> Component.literal(count > 0
+                            ? "Everybody Is Watching: immediate stare, spectators=" + count
                             : "No eligible villagers within 48 blocks."), false);
                     return count > 0 ? 1 : 0;
                 }))
