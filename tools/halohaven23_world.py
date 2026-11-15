@@ -170,8 +170,12 @@ def arch(txt):
         l.setBlock(pos,block.defaultBlockState(),3);
     }''')
     # never suspend decorations: every hanging chandelier must be on a post or under an actual roof.
-    txt=txt.replace('p(l,x+dx,GROUND+4,z+dz,HaloHaven.CLOUD_LANTERN.get());',
-        'p(l,x+dx,GROUND+1,z+dz,HaloHaven.GILDED_PILLAR.get());\n                p(l,x+dx,GROUND+2,z+dz,HaloHaven.CLOUD_LANTERN.get());')
+    txt=txt.replace('''            for(int dx : new int[]{-4,4})for(int dz:new int[]{-3,3})
+                p(l,x+dx,GROUND+4,z+dz,HaloHaven.CLOUD_LANTERN.get());''',
+        '''            for(int dx : new int[]{-4,4})for(int dz:new int[]{-3,3}){
+                p(l,x+dx,GROUND+1,z+dz,HaloHaven.GILDED_PILLAR.get());
+                p(l,x+dx,GROUND+2,z+dz,HaloHaven.CLOUD_LANTERN.get());
+            }''')
     # continuous garden enclosure instead of four distant isolated "fence posts".
     txt=replace(txt,
         '''            for(int dx:new int[]{-7,7})for(int dz:new int[]{-5,5}){
