@@ -1,4 +1,4 @@
-# Halo Haven: Art Bible / 1.4.0
+# Halo Haven: Art Bible / 1.4.1
 
 ## Identity
 A once-great kingdom suspended in the sky, slowly reclaimed by nature.

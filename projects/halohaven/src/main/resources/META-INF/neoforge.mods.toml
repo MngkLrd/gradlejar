@@ -3,7 +3,7 @@ loaderVersion="[1,)"
 license="MIT"
 [[mods]]
 modId="halohaven"
-version="1.4.0"
+version="1.4.1"
 displayName="Halo Haven"
 authors="MineMods"
 description='''An ancient sky kingdom reclaimed by nature, with six distinct climatic biomes, floating strata, wandering wildlife, art-directed stones and ruins.'''

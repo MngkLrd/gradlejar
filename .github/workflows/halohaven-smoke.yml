@@ -30,7 +30,7 @@ jobs:
           python3 - <<'PY'
           from zipfile import ZipFile
           import json, glob, os, struct
-          path = glob.glob('build/libs/halohaven-1.21.1-1.4.0.jar')[0]
+          path = glob.glob('build/libs/halohaven-1.21.1-1.4.1.jar')[0]
           blocks = ('cloudstone skygrass pearl_bricks sungold_tiles azure_planks aurora_glass starshade dawn_glass moonstone celestial_mosaic gilded_pillar cloud_lantern waystone star_ore pilgrim_altar').split()
           mobs = ('skyfolk cloudhare lumen dawn_guardian dusk_wraith eclipse_revenant').split()
           with ZipFile(path) as jar:

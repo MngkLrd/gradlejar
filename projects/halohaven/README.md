@@ -1,4 +1,4 @@
-# Halo Haven 1.4.0 – Worldgen II & Art Bible
+# Halo Haven 1.4.1 – Worldgen II & Art Bible
 
 **Minecraft 1.21.1 | NeoForge 21.1.x | Java 21.**
 
@@ -9,16 +9,35 @@ A bright fantasy pocket of the skies, now with a cohesive architectural language
 The Build Hub publishes the JAR to GitHub Releases when repository permissions
 allow. It also uploads the exact JAR and SHA256 as a **GitHub Actions artifact**
 for 30 days, including when the GitHub Release API rejects publishing.
-Look for `jar-halohaven-1.4.0` in the latest successful Build Hub run.
+Look for `jar-halohaven-1.4.1` in the latest successful Build Hub run.
 
 ## Installation and build
 
-- Copy `halohaven-1.21.1-1.4.0.jar` to `mods/`.
+- Copy `halohaven-1.21.1-1.4.1.jar` to `mods/`.
 - **NeoForge 21.1.197** is used to compile; runtime metadata requests **at least 21.1.80**, not the newest patch.
 - Java 21, Gradle 9.2.1.
 - Build: `gradle --no-daemon clean build`.
-- Output: `build/libs/halohaven-1.21.1-1.4.0.jar`.
+- Output: `build/libs/halohaven-1.21.1-1.4.1.jar`.
 - Client and server both require the mod. No extra assets or resource packs.
+
+## 1.4.1 worldgen hardening
+
+The first worldgen QA now goes beyond parsing JSON: an isolated NeoForge
+server is accessed through RCON and forced to generate and tick three chunks
+in `halohaven:heaven` (X/Z 0/0, 512/0, 0/512). CI also verifies that both
+Chalk Terraces and Lower Veil can be found with Minecraft's real
+`/locate biome` command.
+
+- Natural Cloud Hare, Lumen and Dusk Wraith spawns now use
+  `RegisterSpawnPlacementsEvent`, so they no longer spawn in the void.
+- Dense Eternal Canopy tree placement is reduced from 9 to 4 attempts/chunk
+  to reduce excessive crowns overlapping and costly decoration.
+- Trees preserve the art-directed Skygrass block beneath their trunks
+  rather than forcibly replacing it with ordinary dirt.
+- Sky Crown Leaves use actual transparent silhouettes, not solid green cubes;
+  the texture build checks alpha coverage at the logical-pixel level.
+- These tests are server-side. They cannot guarantee lighting, animation,
+  occlusion or overall visual composition in a graphical Minecraft client.
 
 ## Worldgen II: six genuine biomes and landmark geography
 
