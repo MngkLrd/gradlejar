@@ -117,7 +117,7 @@ jobs:
           """)
           resources=root/'src/main/resources'
           toml=resources/'META-INF/neoforge.mods.toml'
-          s=toml.read_text().replace('version="1.2.0"','version="1.3.0"')
+          s=toml.read_text().replace('version="1.0.0"','version="1.3.0"').replace('version="1.1.0"','version="1.3.0"').replace('version="1.2.0"','version="1.3.0"')
           if 'enumExtensions=' not in s:
             assert 'authors="Minemods"' in s
             s=s.replace('authors="Minemods"','authors="Minemods"\nenumExtensions="META-INF/blowpipes-enum-extensions.json"')
@@ -165,6 +165,25 @@ jobs:
               assert 'assets/blowpipes/textures/entity/dart/'+dart+'.png' in files
           print('VERIFIED full v1.3 JAR:',jar,'size:',jar.stat().st_size)
           PY
+      - name: Smoke-test client initialization under virtual display
+        continue-on-error: true
+        working-directory: blowpipes-neoforge-1.21.1
+        run: |
+          set +e
+          timeout --signal=SIGINT --kill-after=10s 105s xvfb-run -a gradle --no-daemon runClient > /tmp/blowpipes-client-smoke.log 2>&1
+          status=$?
+          tail -100 /tmp/blowpipes-client-smoke.log
+          echo "Client runner exit status $status (124/130 indicates test window elapsed)"
+          if grep -Ei 'ModLoadingException|java.lang.ExceptionInInitializerError|java.lang.NoClassDefFoundError|enum extension.*(failed|error)|Failed to load mods|Minecraft crashed|Crash report saved' /tmp/blowpipes-client-smoke.log; then
+            echo "Client startup detected an exception"
+            exit 1
+          fi
+          if grep -E 'ModLauncher|NeoForge|Minecraft' /tmp/blowpipes-client-smoke.log >/dev/null; then
+            echo "Client initialization reached the loader"
+          else
+            echo "No reliable client startup signal in log"
+            exit 1
+          fi
       - name: Publish release jar
         env:
           GH_TOKEN: ${{ github.token }}
