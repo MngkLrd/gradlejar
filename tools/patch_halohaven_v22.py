@@ -100,7 +100,7 @@ update(model, "CubeListBuilder.create().texOffs(64,20)", "CubeListBuilder.create
 update(model, "CubeListBuilder.create().texOffs(64,40)", "CubeListBuilder.create().texOffs(0,100)")
 update(model, "CubeListBuilder.create().texOffs(96,42)", "CubeListBuilder.create().texOffs(100,0)")
 update(model, "CubeListBuilder.create().texOffs(110,42)", "CubeListBuilder.create().texOffs(100,24)")
-update(model, 'add(body,"shell",CubeListBuilder.create().texOffs(0,18)',
+update(model, 'add(body,"shell",CubeListBuilder.create().texOffs(0,32)',
        'add(body,"shell",CubeListBuilder.create().texOffs(0,52)')
 update(model, "wingLeft.visible=species.flight || species.form==HavenSpecies.Form.FOX;",
        "wingLeft.visible=species.flight || species.id.equals(\"sunpuff\");")
