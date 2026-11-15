@@ -19,21 +19,26 @@ final class NightEncounters {
       debt<SleepSettings.SLEEPLESS_THRESHOLD.get() ||
       SleepEngine.hasSleeplessGrace(player))return;
   var level=player.serverLevel();
-  if(level.isDay() || level.random.nextInt(3)!=0 || player.isSleeping())return;
+  if(level.isDay() || player.isSleeping())return;
+  int stress=SleepEngine.getStress(player);
+  // Higher debt and stress make an encounter more likely, but never guarantee
+  // one near the player: avoid cheap unavoidable spawn-kills.
+  int roll=debt>=930&&stress>=750?2:3;
+  if(level.random.nextInt(roll)!=0)return;
   if(!level.getEntitiesOfClass(SleeplessEntity.class,
     player.getBoundingBox().inflate(46)).isEmpty())return;
   for(BlockPos pos:BlockPos.betweenClosed(player.blockPosition().offset(-7,-3,-7),
       player.blockPosition().offset(7,4,7))){
    if(level.getBlockState(pos).is(ModBlocks.DREAMCATCHER.get()))return;
   }
-  for(int attempt=0;attempt<10;attempt++){
+  for(int attempt=0;attempt<18;attempt++){
    double angle=level.random.nextDouble()*Math.PI*2;
    // More often behind or to the side of a moving player.
    if(attempt<7){
     var look=player.getLookAngle();
     angle=Math.atan2(look.z,look.x)+Math.PI+(level.random.nextDouble()-.5)*2.4;
    }
-   int radius=17+level.random.nextInt(13);
+   int radius=19+level.random.nextInt(13);
    int x=player.getBlockX()+(int)(Math.cos(angle)*radius);
    int z=player.getBlockZ()+(int)(Math.sin(angle)*radius);
    BlockPos probe=new BlockPos(x,player.getBlockY(),z);
@@ -44,7 +49,7 @@ final class NightEncounters {
       !level.getBlockState(spawn).isAir() ||
       !level.getBlockState(spawn.above()).isAir() ||
       !level.getFluidState(spawn).isEmpty() ||
-      level.getMaxLocalRawBrightness(spawn)>7)continue;
+      level.getMaxLocalRawBrightness(spawn)>9)continue;
    SleeplessEntity hunter=ModEntities.SLEEPLESS.get().create(level);
    if(hunter==null)return;
    hunter.moveTo(x+.5,y,z+.5,level.random.nextFloat()*360,0);
