@@ -1,0 +1,103 @@
+name: Blowpipes modern 26.2 and 26.3 builds
+on:
+  push:
+    branches: [release/blowpipes-26x-forge-ports]
+    paths: ['tools/blowpipes_ports/modern/**','tools/blowpipes_ports/generate_modern.py','.github/workflows/blowpipes-modern-ports.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {mc: '26.2', loader: neoforge}
+          - {mc: '26.3', loader: neoforge}
+          - {mc: '26.2', loader: fabric}
+          - {mc: '26.3', loader: fabric}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+      - name: Download verified 1.4.0 source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p reference
+          gh release download blowpipes-neoforge-1.21.1-v1.4.0-1 -p 'Blowpipes_NeoForge_1.21.1_v1.4.0_source.zip' -D reference
+          unzip -q reference/Blowpipes_NeoForge_1.21.1_v1.4.0_source.zip -d reference/unpacked
+          test -f reference/unpacked/src/main/resources/data/blowpipes/recipe/hunting_blowpipe.json
+      - name: Generate four version-specific projects
+        run: python3 tools/blowpipes_ports/generate_modern.py reference/unpacked .
+      - name: Gradle production build
+        working-directory: blowpipes-${{ matrix.loader }}-${{ matrix.mc }}
+        run: gradle --no-daemon --stacktrace clean build
+      - name: Validate binary and 26.x recipe format
+        env:
+          MC: ${{ matrix.mc }}
+          LOADER: ${{ matrix.loader }}
+        run: |
+          python3 - <<'PY'
+          import json,os,struct,zipfile
+          from pathlib import Path
+          mc=os.environ['MC'];loader=os.environ['LOADER']
+          jar=Path(f'blowpipes-{loader}-{mc}/build/libs/blowpipes-{loader}-{mc}-1.4.1.jar')
+          assert jar.is_file() and jar.stat().st_size>7000,jar
+          with zipfile.ZipFile(jar) as z:
+            assert z.testzip() is None
+            names=set(z.namelist())
+            for cl in ['Blowpipes','BlowpipesClient','BlowpipeItem','BlowpipeInfoItem','DartProjectile','SleepSystem']:
+              path='dev/minemods/blowpipes/'+cl+'.class'
+              assert path in names,path
+              assert struct.unpack('>H',z.read(path)[6:8])[0]<=69,path
+            for item in ['bamboo_blowpipe','hunting_blowpipe','reinforced_blowpipe','plain_dart','iron_dart','poison_dart','slowness_dart','fire_dart','sleep_dart']:
+              p='assets/blowpipes/'
+              assert p+'textures/item/'+item+'.png' in names
+              assert p+'models/item/'+item+'.json' in names
+              assert p+'items/'+item+'.json' in names
+              recipe=json.loads(z.read('data/blowpipes/recipe/'+item+'.json'))
+              assert recipe['result']['id']=='blowpipes:'+item
+              assert recipe['type']=='minecraft:crafting_shaped'
+              assert all(isinstance(v,str) for v in recipe['key'].values())
+            for kind in ['plain_dart','iron_dart','poison_dart','slowness_dart','fire_dart','sleep_dart']:
+              assert 'assets/blowpipes/items/flight_'+kind+'.json' in names
+              assert 'assets/blowpipes/models/item/flight_'+kind+'.json' in names
+            assert ('META-INF/neoforge.mods.toml' if loader=='neoforge' else 'fabric.mod.json') in names
+            assert json.loads(z.read('pack.mcmeta'))['pack']['min_format']==([88,0] if mc=='26.2' else [97,1])
+            assert not any(n.startswith('data/blowpipes/advancement') for n in names)
+          print('VERIFIED',jar,jar.stat().st_size)
+          PY
+      - name: Package source
+        env:
+          MC: ${{ matrix.mc }}
+          LOADER: ${{ matrix.loader }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile,os
+          mc=os.environ['MC'];loader=os.environ['LOADER']
+          project=Path(f'blowpipes-{loader}-{mc}')
+          out=Path(f'Blowpipes_{loader}_{mc}_v1.4.1_source.zip')
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED) as z:
+            for root in ['README.md','build.gradle','gradle.properties','settings.gradle']:z.write(project/root,root)
+            for f in sorted((project/'src').rglob('*')):
+              if f.is_file():z.write(f,f.relative_to(project))
+          PY
+      - name: Publish JAR and editable project
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOADER: ${{ matrix.loader }}
+          MC: ${{ matrix.mc }}
+        run: |
+          tag="blowpipes-$LOADER-$MC-v1.4.1-$GITHUB_RUN_NUMBER"
+          jar="blowpipes-$LOADER-$MC/build/libs/blowpipes-$LOADER-$MC-1.4.1.jar"
+          src="Blowpipes_"$LOADER"_"$MC"_v1.4.1_source.zip"
+          gh release create "$tag" "$jar" "$src" --target "$GITHUB_SHA" --title "Blowpipes 1.4.1 $LOADER Minecraft $MC" --notes "Java 25. Four-loader release: Minecraft 26.x native 9 recipes, 15 item-model dispatchers and 3D dart item geometries. 1.21 recipe-unlocked advancements not copied to avoid broken codecs. Build validated; in-game combat test pending." --prerelease
