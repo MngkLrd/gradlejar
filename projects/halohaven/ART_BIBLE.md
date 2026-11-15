@@ -1,4 +1,4 @@
-# Halo Haven: Art Bible / 1.6.0
+# Halo Haven: Art Bible / 1.7.0
 
 ## Identity
 A once-great kingdom suspended in the sky, slowly reclaimed by nature.
@@ -18,7 +18,24 @@ Real climate selection uses Minecraft 1.21.1 `multi_noise` with custom temperatu
 and humidity density functions. The terrain density router has six region-specific
 morphology expressions, not only surface color changes.
 
-## Vanilla visual convergence / 1.6.0
+## Audited vanilla pixel-art redesign / 1.7.0
+
+Full material-family breakdown, reference statistics, failed-example analysis,
+and acceptance criteria: `art/VANILLA_STUDY.md`.
+
+The primary mistakes of 1.6.0 were large empty 16px patches and using
+3 shades on surfaces that deserved dense, closely spaced small clusters.
+Correcting that is not scattering noise: our new faces use restrained tonal
+shifts, small grouped material marks, stone chips, fiber direction, leaf
+micro-clumps and properly integrated ore veins.
+A 7-color texture can still fail art review if it exhibits synchronized
+45-degree stripes or obvious repeated decals.
+
+New `ci/art_quality.py` runs on every worldgen smoke check to catch
+regressions toward blank textures. Always perform visual 4×4 tiling review
+before approving a design; numeric QA does not replace it.
+
+## Vanilla visual convergence / 1.7.0
 
 **Visual baseline:** Minecraft Java 1.21 16x block family, especially
 limestone/calcite, moss, stone bricks, planks and green foliage. We author
@@ -33,7 +50,7 @@ The 33 native16px atlas faces are organized by substance with intentionally
 limited saturation and restrained highlights. Material geometry and block
 repetition must look right under vanilla lighting and AO.
 
-For the 1.6.0 greenery, persistent Sky Crown Leaves are functional leaves;
+For the 1.7.0 greenery, persistent Sky Crown Leaves are functional leaves;
 new crowns must not spontaneously decay and become dropped item storms.
 The blue-green biomes are calmer. Hostile regions use darker, less
 reflective mineral tones to distinguish terrain from crafted landmarks.

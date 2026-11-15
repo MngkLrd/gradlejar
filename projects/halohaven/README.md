@@ -1,4 +1,4 @@
-# Halo Haven 1.6.0 – Evergreen Fix, Real Gateway & Vanilla Pixel Art
+# Halo Haven 1.7.0 – Evergreen Fix, Real Gateway & Vanilla Pixel Art
 
 **Minecraft 1.21.1 | NeoForge 21.1.x | Java 21.**
 
@@ -9,18 +9,58 @@ A bright fantasy pocket of the skies, now with a cohesive architectural language
 The Build Hub publishes the JAR to GitHub Releases when repository permissions
 allow. It also uploads the exact JAR and SHA256 as a **GitHub Actions artifact**
 for 30 days, including when the GitHub Release API rejects publishing.
-Look for `jar-halohaven-1.6.0` in the latest successful Build Hub run.
+Look for `jar-halohaven-1.7.0` in the latest successful Build Hub run.
 
 ## Installation and build
 
-- Copy `halohaven-1.21.1-1.6.0.jar` to `mods/`.
+- Copy `halohaven-1.21.1-1.7.0.jar` to `mods/`.
 - **NeoForge 21.1.197** is used to compile; runtime metadata requests **at least 21.1.80**, not the newest patch.
 - Java 21, Gradle 9.2.1.
 - Build: `gradle --no-daemon clean build`.
 - Output: `build/libs/halohaven-1.21.1-1.5.0.jar`.
 - Client and server both require the mod. No extra assets or resource packs.
 
-## 1.6.0: first gameplay and visual repair pass
+## 1.7.0: detailed vanilla texture reconstruction
+
+The texture language has been re-authored from **Minecraft Java 1.21.1**
+references, not from generic fantasy-pixel-art icon design. We measured
+Stone, Calcite, Tuff, Moss, Planks, Bricks, Iron Ore and Oak Leaves, and
+reviewed the Blockbench Minecraft Style Guide. All source observations
+and pixel statistics are documented in `art/VANILLA_STUDY.md`.
+
+**Previously:** Cloudstone used one flat color for 66% of a 16×16 face,
+Skygrass for 70%, Moonstone for 67%. Some empty connected patches
+exceeded 170 pixels; these looked like flat vector colors.
+
+**Now:** five Cloudstone faces, three Moonstone and three Skygrass tops
+use finer but connected original rock, mineral and vegetation clusters.
+Original cutout leaves use small distributed windows instead of a symmetric
+round/heart-like silhouette. Ore keeps the same parent-stone shading
+with a small embedded teal mineral rather than a pasted decoration.
+Turquoise timber was redrawn as real four-course grain; pearl bricks now
+have proper offset mortar courses; golden roof tiles carry material wear.
+The exposed turf side shares the Cloudstone mineral grammar.
+
+Ancient panels, mosaics, pillars, lamps and Waystones retain distinctive
+architecture but have localized edge highlights, nicks, worn sections and
+surface details. The gateway and celestial flower silhouettes were also
+cleaned up. Colored glass genuinely allows visibility through its pane.
+
+All 33 original 16×16 atlas faces are embedded in the JAR, and derived
+slabs, stairs and fence models keep using the same textures. The final
+pixel array is frozen in `art/pixel_atlas.json`; no noise or generated
+pixel placements are computed by the resource compiler.
+
+New regression checks in `ci/art_quality.py` run as part of server smoke
+testing: palette use, local transitions, largest mono-color clusters, foliage
+cutouts, and glass transparency. As the official Minecraft textures
+demonstrate, this does **not** mean every material requires eight colors.
+A rendered 4×4 repeat still needs human art review.
+
+**Art sources and method:** see `art/VANILLA_STUDY.md`. No Mojang image
+bytes or copied vanilla pixel patterns are shipped.
+
+## 1.7.0: first gameplay and visual repair pass
 
 **Evergreen canopy:** Sky Crown Leaves are a special LeavesBlock subclass
 that never spontaneously decays; new configured trees also explicitly create
