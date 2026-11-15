@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.9
+# Sleep Debt: Restless Nights — 3.0.0-alpha.10
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.9.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.10.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -129,3 +129,13 @@ Replaced 45 authentic 16x16 PNGs: 15 block materials, 8 coffee crop stages and 2
 - New client config: sleeplessApparitions, apparitionMinDebt, sleeplessNearVignette.
 - Java 21, NeoForge 21.1.x, Minecraft 1.21.1.
 
+
+## Alpha 10: The Pursuit, stronger fog and vanilla HUD
+- Distant non-interactive Sleepless hallucinations pause, then slowly stalk from behind without being added to world entities.
+- Actual hunter has a faster nocturnal encounter cadence (160 ticks), lower initial threshold (760 debt), and stress-adjusted probability.
+- Genuine attacks now have three distinct beats: long darkness and slowing; periodic blindness; periodic weakness/mining fatigue. Attack gap is at least 32 ticks.
+- A hostile hunter within 11 blocks creates ambient dread; within 7 blocks, darkness pulses before physical attacks. Darkness and stress persist across multiple strikes.
+- Stronger, pixel-aligned peripheral dark smoke overlay reacts to the real hunter's distance.
+- Hand-designed, vanilla-oriented oak HUD panel in native 158x68 PNG format with separated labels, custom corners and intentional wood grain clusters. The original 45 item/block texture pass from Alpha 9 remains intact.
+- Death grants 3600 ticks of protection, including for previously active hunters. Existing NBT, recipes, block IDs and optional mod integrations are retained.
+- Real nightly encounters still require a dark loaded area and can be blocked by nearby dreamcatchers.
