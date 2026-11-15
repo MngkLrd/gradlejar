@@ -130,10 +130,12 @@ def main() -> int:
         # chunk. This exercises block registration and blockstate availability.
         # A client-side renderer and player-driven teleport require manual QA.
         command(sock, "execute in halohaven:heaven run setblock 0 160 0 halohaven:ascension_gateway")
-        gate = command(sock, "execute in halohaven:heaven if block 0 160 0 halohaven:ascension_gateway run say HALO_GATE_REGISTERED")
-        if "HALO_GATE_REGISTERED" not in gate:
-            raise RuntimeError("Internal gateway block could not be found after placement")
-        command(sock, "execute in halohaven:heaven run setblock 0 160 0 minecraft:air")
+        # RCON does not return /say broadcast chat as a command result.
+        # Instead, conditionally replace the gateway. A "Changed the block"
+        # response proves the condition matched the actual block state.
+        gate = command(sock, "execute in halohaven:heaven if block 0 160 0 halohaven:ascension_gateway run setblock 0 160 0 minecraft:air")
+        if "changed the block" not in gate.lower():
+            raise RuntimeError(f"Gateway blockstate test failed: {gate!r}")
         print("PASS: gateway resource exists and can be placed in real dimension", flush=True)
         # Cleanup persistent forceload markers in CI.
         for x, z in positions:
