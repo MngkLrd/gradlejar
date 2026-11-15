@@ -14,9 +14,11 @@
     [],
     [],
     [
+      "halohaven:cloudstone_scatter",
+      "halohaven:gorge_thistle_patch",
+      "halohaven:resonant_crystal_floes",
       "halohaven:sky_bloom_patch_1",
-      "halohaven:tuff_scree",
-      "halohaven:cloudstone_scatter"
+      "halohaven:tuff_scree"
     ],
     []
   ],
