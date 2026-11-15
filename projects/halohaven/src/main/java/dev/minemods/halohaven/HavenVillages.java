@@ -36,7 +36,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 public final class HavenVillages {
     private HavenVillages() {}
     public static final int WALK_Y = 111;
-    private static final int SPACING = 512;
+    private static final int SPACING = 320;
     private static final int TOP_Y = 110;
 
     // Consecutive Aether Waystone stops cycle three visual districts.
@@ -49,10 +49,16 @@ public final class HavenVillages {
         if (!(e.getEntity() instanceof ServerPlayer p)) return;
         // The Aether Feather is functional equipment, not a decorative icon.
         // Offhand support allows mining while descending over the void.
-        if(p.tickCount%6==0 && !p.onGround() && p.getDeltaMovement().y<0
+        // Sky air currents are physical, not a continuously expiring potion debuff.
+        // The Aether Feather grants a reliable 0.21 b/t terminal fall speed in Heaven.
+        if(p.level().dimension().equals(HaloHaven.HEAVEN) && !p.onGround()
             && (p.getMainHandItem().is(HaloHaven.AETHER_FEATHER.get())
                 || p.getOffhandItem().is(HaloHaven.AETHER_FEATHER.get()))) {
-            p.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 24, 0, true, false));
+            net.minecraft.world.phys.Vec3 vel=p.getDeltaMovement();
+            if(vel.y < -0.21){
+                p.setDeltaMovement(vel.x,-0.21,vel.z);
+                p.fallDistance=0.0f;
+            }
         }
         if (!p.level().dimension().equals(HaloHaven.HEAVEN)) return;
         // Heal existing 1.5 worlds affected by crown leaf decay. Only clean up
