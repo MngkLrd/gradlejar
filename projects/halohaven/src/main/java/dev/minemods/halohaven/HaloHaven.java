@@ -143,6 +143,7 @@ public final class HaloHaven {
         ITEMS.register(bus);
         HaloEntities.ENTITIES.register(bus);
         bus.addListener(HaloEntities::registerAttributes);
+        bus.addListener(HaloEntities::registerSpawnPlacements);
         HavenCreativeTab.register(bus);
         NeoForge.EVENT_BUS.addListener(HavenVillages::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(HavenEvents::onRightClick);

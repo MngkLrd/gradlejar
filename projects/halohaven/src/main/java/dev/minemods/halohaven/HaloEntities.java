@@ -1,6 +1,11 @@
 package dev.minemods.halohaven;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.SpawnPlacementTypes;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.Difficulty;
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.animal.Rabbit;
@@ -43,6 +48,47 @@ public final class HaloEntities {
         ENTITIES.register("eclipse_revenant",()->EntityType.Builder.of(
             EclipseRevenant::new,MobCategory.MONSTER).sized(0.8f,1.45f)
             .clientTrackingRange(12).build("halohaven:eclipse_revenant"));
+
+
+    /**
+     * Natural biome spawns must never appear in the void or embedded in a cliff.
+     * These three entities are explicitly referenced by Halo Haven biomes.
+     * Direct spawn eggs and structure-set spawns remain unaffected.
+     */
+    public static void registerSpawnPlacements(RegisterSpawnPlacementsEvent e) {
+        e.register(CLOUDHARE.get(),
+            SpawnPlacementTypes.ON_GROUND,
+            Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+            (type, level, reason, pos, random) ->
+                level.getLevel().dimension().equals(HaloHaven.HEAVEN)
+                && level.getBlockState(pos).isAir()
+                && (level.getBlockState(pos.below()).is(HaloHaven.SKYGRASS.get())
+                    || level.getBlockState(pos.below()).is(Blocks.MOSS_BLOCK)),
+            RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
+        e.register(LUMEN.get(),
+            SpawnPlacementTypes.ON_GROUND,
+            Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+            (type, level, reason, pos, random) ->
+                level.getLevel().dimension().equals(HaloHaven.HEAVEN)
+                && level.getBlockState(pos).isAir()
+                && (level.getBlockState(pos.below()).is(HaloHaven.SKYGRASS.get())
+                    || level.getBlockState(pos.below()).is(Blocks.MOSS_BLOCK)
+                    || level.getBlockState(pos.below()).is(Blocks.CALCITE)),
+            RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
+        e.register(DUSK_WRAITH.get(),
+            SpawnPlacementTypes.ON_GROUND,
+            Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+            (type, level, reason, pos, random) ->
+                level.getLevel().dimension().equals(HaloHaven.HEAVEN)
+                && level.getDifficulty()!=Difficulty.PEACEFUL
+                && level.getBlockState(pos).isAir()
+                && (level.getBlockState(pos.below()).is(HaloHaven.MOONSTONE.get())
+                    || level.getBlockState(pos.below()).is(Blocks.DEEPSLATE)
+                    || level.getBlockState(pos.below()).is(Blocks.DEEPSLATE_TILES)),
+            RegisterSpawnPlacementsEvent.Operation.REPLACE);
+    }
 
     public static void registerAttributes(EntityAttributeCreationEvent e) {
         e.put(SKYFOLK.get(), Villager.createAttributes().build());
