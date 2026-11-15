@@ -37,7 +37,7 @@ class Canvas:
         result += chunk(b"IDAT",zlib.compress(bytes(raw),9))
         result += chunk(b"IEND",b"")
         # Do not replace the reviewed, version-controlled GUI assets.
-        if not dest.exists(): dest.write_bytes(result)
+        if dest.name=="sleep_hud.png" or not dest.exists(): dest.write_bytes(result)
 
 INK=(67,48,40,255)
 LEATHER=(74,51,43,255)
@@ -82,25 +82,51 @@ for xx,yy in ((184,13),(207,16),(209,8),(191,20)):
     j.point(xx,yy,(148,103,62,255))
 j.png(OUT/"sleep_journal.png")
 
-# Compact top-left HUD, solid border and transparent in-game backing.
-h=Canvas(138,58)
-h.rect(0,0,138,58,(25,23,25,0))
-h.rect(0,0,138,57,(32,29,30,225))
-h.rect(1,1,137,56,(80,60,48,237))
-h.rect(3,3,135,54,(39,36,39,237))
-h.rect(4,4,134,16,(59,47,42,235))
-h.rect(5,16,133,17,(154,109,70,235))
-h.rect(5,17,133,53,(43,39,41,231))
-h.rect(8,20,130,22,(95,76,65,230))
-h.rect(8,32,130,34,(95,76,65,230))
-h.rect(8,44,130,46,(95,76,65,230))
-for xx in (5,130):
-    for yy in (5,49):
-        h.rect(xx,yy,xx+3,yy+3,(153,113,71,255))
-# Three bar slots occupy x 57-127, inner color supplied at render time.
-for yy in (24,36,48):
-    h.rect(57,yy,128,yy+5,(24,23,27,255))
-    h.rect(58,yy+1,127,yy+4,(75,69,67,255))
+# Precisely pixel-authored oak HUD: deliberately spaced grain and quiet dark panel.
+# Regenerated on every build to guarantee valid PNG bytes even if SCM transfer
+# changes binary assets. Font and bar colors are drawn in Minecraft at runtime.
+h=Canvas(158,68)
+INK=(38,30,26,255)
+WOOD=(91,64,49,255)
+MID=(121,84,59,255)
+LIGHT=(149,107,72,255)
+GRAIN=(170,128,83,255)
+WARM=(185,153,104,255)
+PANEL=(41,39,41,255)
+DARK=(21,23,25,255)
+SHADOW=(66,51,41,255)
+h.rect(0,0,158,68,INK)
+h.rect(1,1,157,67,WOOD)
+h.rect(2,2,156,66,MID)
+h.rect(3,3,155,65,SHADOW)
+h.rect(5,5,153,63,PANEL)
+h.rect(4,4,154,5,LIGHT)
+h.rect(4,4,5,64,LIGHT)
+h.rect(153,4,154,64,SHADOW)
+h.rect(4,63,154,64,INK)
+for xx,yy in ((2,2),(150,2),(2,60),(150,60)):
+    h.rect(xx,yy,xx+6,yy+6,INK)
+    h.rect(xx+1,yy+1,xx+5,yy+5,MID)
+    h.point(xx+2,yy+2,WARM)
+    h.point(xx+3,yy+3,SHADOW)
+h.rect(9,19,149,21,INK)
+h.rect(11,19,147,20,LIGHT)
+for xx,yy,length in ((7,12,7),(7,33,11),(8,51,8),
+                     (150,11,5),(149,36,9),(150,54,5)):
+    h.rect(xx,yy,xx+1,yy+length,MID)
+for yy,fragments in ((2,((16,33),(41,55),(82,94),(121,141))),
+                     (65,((20,29),(36,59),(76,85),(107,136)))):
+    for a,b in fragments:
+        h.rect(a,yy,b+1,yy+1,LIGHT)
+        if b-a>10:h.rect(a+4,yy+1,b-2,yy+2,WOOD)
+for yy in (28,41,54):
+    h.rect(73,yy,148,yy+7,DARK)
+    h.rect(74,yy+1,147,yy+2,(54,51,55,255))
+    h.rect(73,yy+6,148,yy+7,(97,82,71,255))
+for yy in (27,40,53):
+    h.rect(10,yy+1,13,yy+4,(146,116,81,255))
+    h.point(11,yy+1,(209,174,127,255))
+for xx,yy in ((12,2),(145,2),(11,65),(145,65)):
+    h.point(xx,yy,WARM)
 h.png(OUT/"sleep_hud.png")
-
-print("Sleep Debt V3 GUI: native 228x188 journal and 138x58 HUD generated")
+print("Sleep Debt V3 GUI: native 228x188 journal, 158x68 vanilla oak HUD generated")
