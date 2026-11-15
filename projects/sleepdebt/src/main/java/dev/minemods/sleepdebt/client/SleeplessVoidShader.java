@@ -33,12 +33,20 @@ public final class SleeplessVoidShader {
     ResourceLocation.fromNamespaceAndPath(SleepDebtMod.MOD_ID,"sleepless_void");
  private static boolean shaderFailed;
 
- public static void register(RegisterShadersEvent event) throws IOException {
-  event.registerShader(new ShaderInstance(event.getResourceProvider(),ID,
-    DefaultVertexFormat.POSITION_TEX), shader -> {
-      active=shader;
-      shaderFailed=false;
-    });
+ public static void register(RegisterShadersEvent event) {
+  try {
+   event.registerShader(new ShaderInstance(event.getResourceProvider(),ID,
+     DefaultVertexFormat.POSITION_TEX), shader -> {
+       active=shader;
+       shaderFailed=false;
+     });
+  }catch(IOException exception){
+   // A missing or rejected program must not crash world loading.
+   // The separate alpha-compositor fallback remains available.
+   active=null;
+   shaderFailed=true;
+   System.err.println("[Sleep Debt] Custom Void shader unavailable: "+exception);
+  }
  }
 
  public static void render(GuiGraphics gui,DeltaTracker frame){
