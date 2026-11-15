@@ -403,7 +403,7 @@ tasks.register('generateHaloAssets') {
                 'halohaven:gilded_pillar','halohaven:cloud_lantern','halohaven:waystone','halohaven:star_ore',
                 'halohaven:pilgrim_altar']])
         writeJson('data/minecraft/tags/block/mineable/axe.json',[replace:false,values:['halohaven:azure_planks']])
-        writeJson('data/minecraft/tags/block/dirt.json',[replace:false,values:['halohaven:skygrass']])
+        // Skygrass dirt tag now maintained as a source resource for custom worldgen trees.
         writeJson('data/minecraft/tags/block/animals_spawnable_on.json',[replace:false,values:['halohaven:skygrass']])
     }
 }
