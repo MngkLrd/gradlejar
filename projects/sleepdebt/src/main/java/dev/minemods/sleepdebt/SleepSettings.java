@@ -2,7 +2,7 @@ package dev.minemods.sleepdebt;
 import net.neoforged.neoforge.common.ModConfigSpec;
 public final class SleepSettings {
  private static final ModConfigSpec.Builder B=new ModConfigSpec.Builder();
- public static final ModConfigSpec.IntValue TICKS_PER_POINT,BASE_RECOVERY,SLEEPLESS_THRESHOLD,RESPAWN_GRACE_TICKS,SPAWN_INTERVAL_TICKS;
+ public static final ModConfigSpec.IntValue TICKS_PER_POINT,BASE_RECOVERY,SLEEPLESS_THRESHOLD,RESPAWN_GRACE_TICKS,SPAWN_INTERVAL_TICKS,TELEPORT_INTERVAL_TICKS;
  public static final ModConfigSpec.BooleanValue KEEP_ON_DEATH,PENALTIES,SHELTER_BONUS,MONSTER_PENALTY,ENABLE_SLEEPLESS,ENABLE_CAMP_REST,MICROSLEEPS,PHANTOM_SYNC;
  public static final ModConfigSpec SPEC;
  static {
@@ -26,6 +26,8 @@ public final class SleepSettings {
   SLEEPLESS_THRESHOLD=B.defineInRange("minimumSleepDebt",760,500,1000);
   SPAWN_INTERVAL_TICKS=B.comment("How often each player rolls for an encounter at night.")
     .defineInRange("spawnIntervalTicks",160,80,1200);
+  TELEPORT_INTERVAL_TICKS=B.comment("Typical ticks between the Sleepless's retreat/vanish/relocation sequences; smaller means more frequent.")
+    .defineInRange("teleportIntervalTicks",95,40,360);
   RESPAWN_GRACE_TICKS=B.comment("Temporary protection after a death to avoid spawn-killing.")
     .defineInRange("respawnGraceTicks",3600,0,24000);
   B.pop();

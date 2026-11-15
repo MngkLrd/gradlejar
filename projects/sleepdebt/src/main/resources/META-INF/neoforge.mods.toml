@@ -3,7 +3,7 @@ loaderVersion="[4,)"
 license="All Rights Reserved"
 [[mods]]
 modId="sleepdebt"
-version="3.0.0-alpha.15"
+version="3.0.0-alpha.16"
 displayName="Sleep Debt: Restless Nights"
 description='''An immersive rest, fatigue and night-survival experience with real preparation, hostile nights and configurable hallucinations.'''
 [[dependencies.sleepdebt]]

@@ -59,6 +59,23 @@ public final class SleepCommands {
        +"Debug ignores respawn grace, natural hunters do not."),false);
      return 1;
     }))
+    .then(Commands.literal("vanish_sleepless").executes(ctx->{
+     ServerPlayer p=ctx.getSource().getPlayerOrException();
+     var hunters=p.serverLevel().getEntitiesOfClass(
+       dev.minemods.sleepdebt.entity.SleeplessEntity.class,
+       p.getBoundingBox().inflate(48));
+     if(hunters.isEmpty()){
+      ctx.getSource().sendFailure(Component.literal(
+        "No real Sleepless nearby. Use /sleepdebt debug spawn_sleepless first."));
+      return 0;
+     }
+     hunters.sort(java.util.Comparator.comparingDouble(p::distanceToSqr));
+     hunters.getFirst().forceVanish(p);
+     ctx.getSource().sendSuccess(()->Component.literal(
+       "Sleepless retreat -> fade -> teleport sequence forced; watch ahead/behind."),
+       false);
+     return 1;
+    }))
     .then(Commands.literal("why_no_sleepless").executes(ctx->{
      ServerPlayer p=ctx.getSource().getPlayerOrException();
      boolean shielded=BlockPos.betweenClosedStream(
@@ -73,6 +90,7 @@ public final class SleepCommands {
        +" creative="+p.isCreative()
        +" enabled="+SleepSettings.ENABLE_SLEEPLESS.get()
        +" spawnCheckEvery="+SleepSettings.SPAWN_INTERVAL_TICKS.get()+" ticks"
+       +" vanishEvery~="+SleepSettings.TELEPORT_INTERVAL_TICKS.get()+" ticks"
        +" (real spawn also requires loaded dark ground)."),false);
      return 1;
     }))
