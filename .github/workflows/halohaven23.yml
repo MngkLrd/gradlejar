@@ -12,6 +12,7 @@ on:
       - "tools/halohaven23_world.py"
       - "tools/halohaven23_art.py"
       - "tools/halohaven23_structures.py"
+      - "tools/halohaven23_mobs.py"
   workflow_dispatch:
 
 permissions:
@@ -40,6 +41,8 @@ jobs:
         run: python3 tools/halohaven23_world.py
       - name: Paint architecture, functional lighting and the dimensional gateway
         run: python3 tools/halohaven23_art.py
+      - name: Repaint 20 anatomically distinctive mobs
+        run: python3 tools/halohaven23_mobs.py
       - name: Generate eighteen new regional structures
         run: python3 tools/halohaven23_structures.py
       - name: Audit Halo Haven 2.3 resource registries
