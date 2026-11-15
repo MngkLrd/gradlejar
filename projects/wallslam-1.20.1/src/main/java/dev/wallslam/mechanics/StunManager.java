@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 
 /**
- * Transient 10-tick movement / targeting stun.
+ * Transient one-second movement and melee stun; preserves AI targets and NoAI.
  *
  * NEVER modifies a mob's NoAI flag. Changing NoAI left some mobs
  * permanently frozen after a wall impact in Wallslam 0.3.0.
@@ -24,13 +24,22 @@ public final class StunManager {
 
     private StunManager() {}
 
+    /** A server-side check that expires automatically on the next world tick. */
+    public static boolean isStunned(LivingEntity living) {
+        if (!(living instanceof Mob mob)
+            || !(mob.level() instanceof ServerLevel level)
+            || !mob.isAlive()) return false;
+        Long until = STUN_ENDS.get(mob);
+        return until != null && level.getGameTime() < until;
+    }
+
     public static void apply(LivingEntity target, int durationTicks) {
         if (!(target instanceof Mob mob) || !(mob.level() instanceof ServerLevel level)) return;
         if (!mob.isAlive() || durationTicks <= 0) return;
 
         restoreLegacyNoAi(mob);
         if (mob.isNoAi()) return; // Respect mapmaker-created immobile mobs.
-        long expires = level.getGameTime() + Math.min(10, durationTicks);
+        long expires = level.getGameTime() + Math.min(40, durationTicks);
         STUN_ENDS.merge(mob, expires, Math::max);
         interrupt(mob);
     }
@@ -65,7 +74,6 @@ public final class StunManager {
         // Stop AI navigation and cancel horizontal velocity, preserving gravity.
         // Do not touch NoAI and do not teleport or clip entities into blocks.
         mob.getNavigation().stop();
-        mob.setTarget(null);
         mob.setDeltaMovement(0.0D, mob.getDeltaMovement().y, 0.0D);
     }
 

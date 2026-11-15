@@ -1,27 +1,45 @@
-# Wallslam 0.3.2 — Minecraft 1.20.1 / NeoForge
+# WallSlam 1.0.2 — Minecraft 1.20.1 / Forge
 
-**Fix:** the previous implementation had effectively invisible impact feedback whenever the secondary damage event was rejected by vanilla hurt immunity or another mod. The new version resolves feedback separately from damage and applies a half-second AI stun.
+An accurate port of the NeoForge 1.0.2 wall-impact mechanic to Forge 1.20.1.
+No hard dependency on NeoForge, APIs, libraries, client rendering mods or the latest Forge.
 
-On a successful melee hit against a wall, Wallslam:
-- scans only a short 0.50-block probe of real block collision shapes in the knockback direction, during an 11-tick window;
-- emits a large cloud, electric sparks, critical particles, and two impact sounds regardless of whether the secondary damage is accepted;
-- applies 0.7–3.3 bonus HP of collision damage depending on weapon attack attributes;
-- interrupts movement and targeting for **10 ticks / 0.5 seconds** and shows electric sparks above its head;
-- does not modify NoAI or persist stun state; a mob resumes moving normally after the timer;
-- leaves naturally NoAI mobs unchanged.
+## Mechanics
+- A melee attack against a living mob arms a knockback event.
+- During the next 11 server ticks, a forward 0.65-block sweep detects real block collision shapes.
+- On collision, plays vanilla impact audio and explosion/cloud/spark/critical particles,
+  plus material-colored block particles.
+- Delivers a separate capped 0.7–3.3 HP collision hit using
+  `wallslam:collision` damage type tagged `minecraft:bypasses_cooldown`.
+- Applies 20 ticks (1 second) of stun: stops mob navigation and horizontal velocity,
+  keeps its target, and cancels new direct melee attacks while stunned.
+- Never sets NoAI; old WallSlam 0.3.0 NoAI markers are repaired safely.
+- Excludes player victims, but supports any vanilla or modded Mob.
+- All gameplay checks are server-side. No global entity searches.
 
-**No Knockback enchantment required.** Only actual melee strikes arm the slam. Target players are excluded, but zombies, pigs and villagers are included.
+## Configuration
+Forge SERVER config per world: `serverconfig/wallslam-server.toml`.
+- `damageMultiplier = 1.0` (0.0–3.0)
+- `stunTicks = 20` (0–40; existing saves may retain older values)
+- `particleMultiplier = 1.0` (0.0–2.0)
+- `debug = false` (true writes impact stages to latest.log)
 
-Build with **Java 17**, **Gradle 8.14.5**, official Forge and `gradle clean build`. Expected JAR: `build/libs/wallslam-1.20.1-0.3.2.jar`.
+## Version and compatibility
+- Minecraft: **1.20.1**
+- Loader: **Forge**, metadata minimum **47.1.0+**, NOT pinned to newest 47.3+/47.4+.
+- Build dependency: **Forge 47.1.106** because the existing legacy ModDevGradle
+  coordinates could not resolve 47.1.0. This affects compilation only; metadata
+  accepts Forge 47.1.0 and later. Runtime compatibility below 47.1.106
+  requires an actual game launch to confirm.
+- Java **17**; Gradle **8.14.5**.
+- Build: `gradle clean build`, expected output:
+  `build/libs/wallslam-1.20.1-1.0.2.jar`.
 
-**Manual checks:** test regular melee against full-block stone and dirt walls, with fist and iron sword; test target away from the wall; verify audio and cloud/spark particles on impact, AI pauses about 0.5 seconds, and mob AI resumes. Also test persistent NoAI mobs, dedicated server and reload during stun.
+## Verification after installing
+Replace old WallSlam jars; launch with Forge 47.1.0, 47.1.106 or another
+compatible 47.x loader. Slam a zombie against a stone wall with an iron sword:
+one explosion effect, custom wall particles, extra health loss, and a 1-second
+stun; the zombie must resume chasing after stun. Also test an open area (no
+wall impact), slabs/fences, mobs with NoAI, different weapons, dedicated server
+and other combat mods.
 
-GitHub CI verifies actual compilation and mod packaging. Gameplay is not yet smoke-tested in a real game client.
-
-## 0.3.1 — permanent-stun hotfix
-
-Wallslam 0.3.0 used `setNoAi(true)`, which could leave mobs permanently frozen. This version **never disables the NoAI flag**, tracks a 10-tick deadline in server time, stops navigation/targeting temporarily, and clears transient state when a mob leaves its level. It also automatically restores AI for old affected mobs that carry the persistent `WallslamManagedStun` marker on chunk/world load. Existing intentionally NoAI mobs without that marker stay untouched.
-
-## 0.3.2 — wider loader compatibility
-
-Minimum targeted Forge: **47.1.0** (previously 47.1.106). This port compiles against Forge 47.1.106 because the legacy ModDevGradle plugin cannot resolve Forge 47.1.0 through its NeoForge Maven coordinates. The mod metadata permits Forge 47.1.0 and newer, but runtime support below 47.1.106 remains unverified; test this in-game before claiming full compatibility. CI verifies compilation and packaging. No gameplay changes.
+CI verifies Gradle compile and assembled JAR; it does not simulate gameplay.
