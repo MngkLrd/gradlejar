@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.14
+# Sleep Debt: Restless Nights — 3.0.0-alpha.15
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.14.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.15.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -217,3 +217,25 @@ Replaced 45 authentic 16x16 PNGs: 15 block materials, 8 coffee crop stages and 2
 - Legacy generators run first; the new tools/remaster_assets.py deterministically
   rewrites the reviewed non-mob art during Gradle. Saves, recipes and registry
   IDs remain stable. Java 21, Gradle 9.2.1, NeoForge 21.1.x, Minecraft 1.21.1.
+
+
+## Alpha 15: Black Void shader and full-resolution Sleepless skin
+
+This release replaces vanilla fog-driven rendering with a standalone full
+screen fragment shader registered through NeoForge. The shader paints the
+already-rendered world, under the HUD. It uses animated black flow,
+distorted filaments, narrow central visibility and a near-total impact pulse.
+There are no RenderFog/ComputeFogColor handlers or standard Darkness potion
+effects from the real Sleepless.
+
+The monster now has an independently painted 2048x1024 RGBA anatomical atlas.
+The Java model still declares 256x128 UV coordinates: each of those UV
+units now samples 8x8 physical pixels. The art depicts cavities, broken
+bone, pale collagen, damaged teeth and exposed ribs, not vanilla textures.
+
+Client settings sleeplessNearVignette, sleeplessFogStrength and
+sleeplessHorrorAudio remain usable. Audio bank unchanged from Alpha 14,
+including all 8 licensed/independently synthesized OGG samples.
+Shaderpack conflicts and the current F1 GUI-layer visibility remain known
+runtime limitations. Automated CI cannot evaluate the fear factor or verify
+shader reload behavior in a live client.

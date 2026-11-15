@@ -63,7 +63,7 @@ with zipfile.ZipFile(jar) as z:
         raw=data(n)
         if raw[:8]!=b"\x89PNG\r\n\x1a\n":raise ValueError(f"Invalid PNG magic: {n}")
         width,height=struct.unpack(">II",raw[16:24])
-        target=((256,128) if "entity/sleepless.png" in n else
+        target=((2048,1024) if "entity/sleepless.png" in n else
                 (176,166) if "textures/gui/coffee_maker.png" in n else
                 (228,188) if "textures/gui/sleep_journal.png" in n else
                 (158,68) if "textures/gui/sleep_hud.png" in n else (16,16))
@@ -85,8 +85,8 @@ with zipfile.ZipFile(jar) as z:
         if cursor!=len(raw):raise ValueError(f"Invalid trailing bytes in PNG: {n}")
         if n.endswith("entity/sleepless.png"):
             rawpixels=zlib.decompress(image_data)
-            stride=256*4
-            if len(rawpixels)!=(stride+1)*128:
+            stride=2048*4
+            if len(rawpixels)!=(stride+1)*1024:
                 raise ValueError("Sleepless atlas has invalid raw RGBA payload")
             # Each UV box from SleeplessModel, including front/back, top/bottom and sides.
             # Distinct real UVs in the new anatomically distorted 256x128 mesh.
@@ -101,13 +101,20 @@ with zipfile.ZipFile(jar) as z:
                 for x,y,fw,fh in faces:
                     if x<0 or y<0 or x+fw>256 or y+fh>128:
                         raise ValueError("Sleepless UV outside atlas")
-                    for py in range(y,y+fh):
+                    for py in range(y*8,(y+fh)*8):
                         if rawpixels[py*(stride+1)]!=0:
                             raise ValueError("Sleepless UV audit expects PNG filter type 0")
-                        for px in range(x,x+fw):
+                        for px in range(x*8,(x+fw)*8):
                             if rawpixels[py*(stride+1)+1+px*4+3]<240:
                                 raise ValueError(f"Transparent Sleepless UV at {px},{py}")
 
+    shader=js("assets/sleepdebt/shaders/core/sleepless_void.json")
+    if not {"vertex","fragment","uniforms"}.issubset(shader):
+        raise ValueError("Standalone Sleepless shader JSON incomplete")
+    for ext in ("vsh","fsh"):
+        src=data("assets/sleepdebt/shaders/core/sleepless_void."+ext)
+        if b"#version 150" not in src or b"void main()" not in src:
+            raise ValueError("Standalone Sleepless shader GLSL invalid")
     sounds=js("assets/sleepdebt/sounds.json")
     for cue in ("breath","whisper","growl","strike","heartbeat","rattle","screech","skitter"):
         key="sleepless."+cue
