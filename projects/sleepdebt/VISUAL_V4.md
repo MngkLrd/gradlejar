@@ -1,4 +1,4 @@
-# Sleep Debt Visual Overhaul 3.0 Alpha 4
+# Sleep Debt Visual Overhaul 3.0 Alpha 5
 
 ## Why this asset pass exists
 The previous models had mismatched arm/leg/hood UVs and mostly formulaic textures.
@@ -42,4 +42,8 @@ every face looks right under Minecraft lighting. Test:
 
 ## Non-goals
 No new mandatory dependencies, unrelated gameplay rewrite, or changed block/item IDs.
+
+
+## Final 3D refinement
+The Dreamcatcher was revised after a second isometric geometry preview to use an octagonal frame, genuinely perforated mesh, a centered suspension loop and three feather pendants. This model uses 16 cuboids with explicit face UV coordinates.
 
