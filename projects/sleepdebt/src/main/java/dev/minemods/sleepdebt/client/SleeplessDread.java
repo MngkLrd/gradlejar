@@ -3,12 +3,9 @@ package dev.minemods.sleepdebt.client;
 import dev.minemods.sleepdebt.entity.SleeplessEntity;
 import dev.minemods.sleepdebt.registry.ModSounds;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.material.FogType;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.ViewportEvent;
 
 /**
  * A self-contained proximity horror renderer.
@@ -84,57 +81,13 @@ public final class SleeplessDread {
   }
  }
 
- public static void renderFog(ViewportEvent.RenderFog e){
-  if(!ClientSettings.SLEEPLESS_AURA.get())return;
-  float p=presence*ClientSettings.DREAD_STRENGTH.get().floatValue();
-  if(p<.012f||e.getType()!=FogType.NONE)return;
-  p=Mth.clamp(p,0f,1f);
-  float originalFar=e.getFarPlaneDistance();
-  float far=Mth.lerp(p*p,originalFar,6.5f);
-  float near=Mth.lerp(p*p,e.getNearPlaneDistance(),.8f);
-  e.setFarPlaneDistance(Math.max(5f,far));
-  e.setNearPlaneDistance(Math.min(near,Math.max(0f,far-2f)));
-  e.setCanceled(true);
+
+ /** Server entity proximity is read separately from vanilla fog/lighting.
+  *  The GLSL pass uses this intensity to cover ALREADY rendered world pixels. */
+ public static float density(){
+  if(!ClientSettings.SLEEPLESS_AURA.get())return 0f;
+  return Mth.clamp(presence*ClientSettings.DREAD_STRENGTH.get().floatValue(),0f,1f);
  }
- public static void colorFog(ViewportEvent.ComputeFogColor e){
-  if(!ClientSettings.SLEEPLESS_AURA.get())return;
-  float p=presence*ClientSettings.DREAD_STRENGTH.get().floatValue();
-  if(p<.012f||e.getCamera().getFluidInCamera()!=FogType.NONE)return;
-  p=Mth.clamp(p*p*.995f,0f,.995f);
-  // Desaturated, almost black indigo. Light sources nearby remain visible.
-  e.setRed(Mth.lerp(p,e.getRed(),.013f));
-  e.setGreen(Mth.lerp(p,e.getGreen(),.011f));
-  e.setBlue(Mth.lerp(p,e.getBlue(),.021f));
- }
- public static void render(GuiGraphics g){
-  Minecraft mc=Minecraft.getInstance();
-  if(mc.player==null||mc.level==null||mc.screen!=null||
-    mc.options.hideGui||!ClientSettings.SLEEPLESS_AURA.get())return;
-  float p=Mth.clamp(presence*ClientSettings.DREAD_STRENGTH.get().floatValue(),0f,1f);
-  if(p<.025f)return;
-  int w=g.guiWidth(),h=g.guiHeight();
-  float rhythm=.9f+.1f*(float)Math.sin(mc.player.tickCount*.21f);
-  // Multiple nonlinear inward rings, not a flat black image slapped over the HUD.
-  for(int layer=11;layer>=1;layer--){
-   float norm=layer/11f;
-   int x=Math.max(1,(int)(w*.42f*norm*p));
-   int y=Math.max(1,(int)(h*.45f*norm*p));
-   int alpha=(int)(Mth.clamp(p*p*(1f-norm*.25f)*rhythm,0f,1f)*43);
-   int col=(alpha<<24)|0x06060B;
-   g.fill(0,0,x,h,col);g.fill(w-x,0,w,h,col);
-   g.fill(0,0,w,y,col);g.fill(0,h-y,w,h,col);
-  }
-  // Dense center haze ties screen darkness to the actual world fog.
-  if(p>.64f){
-   int shade=(int)((p-.64f)/.36f*79);
-   g.fill(0,0,w,h,(Math.min(82,shade)<<24)|0x040408);
-  }
-  // Heartbeat shock on a strike, with quick decay. The core remains readable.
-  float pulse=Mth.clamp(impact,0f,1f);
-  if(pulse>.02f){
-   int shade=(int)(pulse*95);
-   g.fill(0,0,w,h,(shade<<24)|0x080509);
-  }
- }
+ public static float shock(){return Mth.clamp(impact,0f,1f);}
  private SleeplessDread(){}
 }

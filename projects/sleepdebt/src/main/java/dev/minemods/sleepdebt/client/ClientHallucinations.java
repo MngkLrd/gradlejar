@@ -88,7 +88,6 @@ public final class ClientHallucinations {
  public static void render(GuiGraphics g){
   Minecraft mc=Minecraft.getInstance();
   if(mc.player==null||mc.level==null||mc.options.hideGui||mc.screen!=null)return;
-  SleeplessDread.render(g);
   if(!ClientSettings.HALLUCINATIONS.get())return;
   if(ClientState.debt<620||ClientState.maskTicks>0||ClientSettings.MIRAGE_PLAYERS.get())return;
   long t=mc.level.getGameTime(),phase=t/190;
