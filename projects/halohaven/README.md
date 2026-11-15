@@ -1,4 +1,4 @@
-# Halo Haven 1.7.0 – Evergreen Fix, Real Gateway & Vanilla Pixel Art
+# Halo Haven 1.8.0 – Biome Material Expansion & Animated Gateway
 
 **Minecraft 1.21.1 | NeoForge 21.1.x | Java 21.**
 
@@ -9,16 +9,63 @@ A bright fantasy pocket of the skies, now with a cohesive architectural language
 The Build Hub publishes the JAR to GitHub Releases when repository permissions
 allow. It also uploads the exact JAR and SHA256 as a **GitHub Actions artifact**
 for 30 days, including when the GitHub Release API rejects publishing.
-Look for `jar-halohaven-1.7.0` in the latest successful Build Hub run.
+Look for `jar-halohaven-1.8.0` in the latest successful Build Hub run.
 
 ## Installation and build
 
-- Copy `halohaven-1.21.1-1.7.0.jar` to `mods/`.
+- Copy `halohaven-1.21.1-1.8.0.jar` to `mods/`.
 - **NeoForge 21.1.197** is used to compile; runtime metadata requests **at least 21.1.80**, not the newest patch.
 - Java 21, Gradle 9.2.1.
 - Build: `gradle --no-daemon clean build`.
-- Output: `build/libs/halohaven-1.21.1-1.5.0.jar`.
+- Output: `build/libs/halohaven-1.21.1-1.8.0.jar`.
 - Client and server both require the mod. No extra assets or resource packs.
+
+## 1.8.0: six complete biome material families
+
+**40 obtainable blocks** (22 existing, 18 new), plus one temporary
+non-obtainable Ascension Gateway block. All 22 original registered block IDs
+and the existing world dimension/biome IDs remain unchanged.
+
+| Biome | Regional surface | Secondary material | Vegetation |
+| --- | --- | --- | --- |
+| Dawn Gardens | Sunlit Loam | Dawnstone | Sunpetal |
+| Chalk Terraces | Chalkstone | Chalk Strata | Chalk Blossom |
+| Eternal Canopy | Canopy Loam | Ancient Bark | Canopy Fern |
+| Ringing Gorges | Resonant Shale | Echo Crystal | Gorge Thistle |
+| Forgotten Choirs | Choirstone | Choir Tiles | Mourning Bloom |
+| Lower Veil | Umbral Silt | Veilstone | Veil Lichen |
+
+Each region now has native surface rules in the Heaven density generator, and
+its own flower patches and scattered mineral formations. Ancient Canopy trees
+use original Ancient Bark trunks rather than vanilla Cherry logs. Hostile
+outposts use their regional building stones, not just reused vanilla
+calcite/tuff/deepslate. Vegetation checks for actual supporting terrain.
+
+**Portal art:** the 2-block Ascension Gateway uses distinct upper/lower
+blockstates, 3 hand-composed pixel frames per half and a real 16×48 animated
+PNG with a resource-pack animation manifest. The rift does not block
+movement or drop items, and it still auto-cleans after the ritual.
+
+**Celestial Mosaic:** replaced the former centered icon with worn pearl
+tesserae, asymmetrical aquamarine/brass inlays, small fracture marks and a
+distinct restrained masonry side face. All other 1.7 textures were retained.
+
+Artwork is checked in as 30 frozen 16×16 indexed pixel surfaces in
+`art/biome_pixel_atlas.json`. The resource compiler `biomeart.gradle`
+only exports exact palette indexes and animations; no noise or live
+texture synthesis. Including the older 33-face atlas, the project now
+contains **63 source texture faces**, plus assembled animated portal sprites.
+
+**Compatibility:** models, translations, loot tables, Creative tab entries,
+surface rules, vegetation and landmark materials are packaged in the JAR.
+Texture changes work on existing blocks immediately. New environmental
+features only appear in previously *unexplored* chunks, so use a new
+world or travel far beyond already generated terrain to review biome detail.
+
+**Verification:** Gradle build plus dedicated NeoForge 1.21.1 server/worldgen
+smoke, including registry and feature-order checks. Client-only visuals,
+shader interactions and player-controlled portal walkthroughs still require
+manual testing in an actual Minecraft client.
 
 ## 1.7.0: detailed vanilla texture reconstruction
 
