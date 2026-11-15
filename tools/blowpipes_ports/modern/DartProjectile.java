@@ -29,10 +29,10 @@ public final class DartProjectile extends ThrowableItemProjectile {
   if(!(target instanceof LivingEntity living))return;
   switch(name){
    case "poison_dart"->living.addEffect(new MobEffectInstance(MobEffects.POISON,Math.round(160f*mult),tier==2?1:0));
-   case "slowness_dart"->living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,Math.round(160f*mult),2));
+   case "slowness_dart"->living.addEffect(new MobEffectInstance(MobEffects.SLOWNESS,Math.round(160f*mult),2));
    case "sleep_dart"->{
     if(living instanceof Mob mob)SleepSystem.sleep(mob,Math.round(100f*mult));
-    else living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,50,2));
+    else living.addEffect(new MobEffectInstance(MobEffects.SLOWNESS,50,2));
    }
    default->{}
   }
