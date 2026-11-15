@@ -210,10 +210,14 @@ with tempfile.TemporaryDirectory() as td:
     base.save(core_tex/"cloud_lantern.png")
     # Decorative made-for-lamp face with standard cube geometry, but no transparent center.
     asset_core=CORE/"resources/assets/halohaven"
-    model=read(asset_core/"models/block/cloud_lantern.json")
-    model["render_type"]="minecraft:solid"
-    model["ambientocclusion"]=False
-    # Remove texture planes at y=0 causing grass to look like a full glass cube.
+    model={"ambientocclusion":False,"render_type":"minecraft:solid",
+           "textures":{"all":"halohaven:block/cloud_lantern",
+                       "particle":"halohaven:block/cloud_lantern"},
+           "elements":[]}
+    for lower,upper in (([4,0,4],[12,2,12]),([5,2,5],[11,12,11]),
+                        ([4,12,4],[12,14,12]),([6,14,6],[10,16,10])):
+        model["elements"].append({"from":lower,"to":upper,"faces":{
+            f:{"texture":"#all"} for f in ("north","east","south","west","up","down")}})
     write(asset_core/"models/block/cloud_lantern.json",model)
 
     # Volumetric portal: deep planar field + inner displaced sheet, a gilded rim,
