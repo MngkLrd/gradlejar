@@ -1,0 +1,100 @@
+name: Blowpipes NeoForge 1.21.1 Animation and 3D Darts
+on:
+  push:
+    branches:
+      - feature/blowpipes-neo121-animation-v12
+    paths:
+      - tools/blowpipes_v12_code.b85
+      - .github/workflows/blowpipes-v12.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install Gradle 8.14.5
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.14.5
+      - name: Reconstruct source and vanilla-style 16px models
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import zlib,base64
+          src=zlib.decompress(base64.b64decode(Path('tools/blowpipes_generator.b64').read_text()))
+          Path('tools/blowpipes_generate.py').write_bytes(src)
+          PY
+          sed -i 's@ROOT = Path(__file__).resolve().parent@ROOT = Path(__file__).resolve().parent.parent@' tools/blowpipes_generate.py
+          python3 tools/blowpipes_generate.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('blowpipes-neoforge-1.21.1/src/main/java/dev/minemods/blowpipes/DartProjectile.java')
+          s=p.read_text()
+          s=s.replace('@Override protected float getGravity(){return 0.025f;}', '')
+          s=s.replace('target.setSecondsOnFire(3)','target.igniteForSeconds(3)')
+          p.write_text(s)
+          PY
+          python3 tools/blowpipes_style_guided.py blowpipes-neoforge-1.21.1
+      - name: Apply v1.2 gameplay and 3D animation overlay
+        run: |
+          python3 - <<'PY'
+          import base64,hashlib,io,zipfile,zlib
+          from pathlib import Path
+          encoded=Path('tools/blowpipes_v12_code.b85').read_text().strip()
+          data=zlib.decompress(base64.b85decode(encoded))
+          assert hashlib.sha256(data).hexdigest()=='e5b019bbf623b8cba1e778a92e0f4826557de334f648e25667768fd7f1f8952b', 'Overlay checksum mismatch'
+          root=Path('blowpipes-neoforge-1.21.1')
+          with zipfile.ZipFile(io.BytesIO(data)) as z:
+            for entry in z.namelist():
+              assert not entry.startswith('/') and '..' not in Path(entry).parts
+              dest=root/entry
+              dest.parent.mkdir(parents=True,exist_ok=True)
+              dest.write_bytes(z.read(entry))
+          for p in (root/'build.gradle',root/'src/main/resources/META-INF/neoforge.mods.toml',root/'build-profile.json'):
+            p.write_text(p.read_text().replace('1.0.0','1.2.0').replace('1.1.0','1.2.0'))
+          print('Validated overlay checksum and extracted custom rendering files')
+          PY
+      - name: Compile real NeoForge mod JAR
+        working-directory: blowpipes-neoforge-1.21.1
+        run: gradle --no-daemon --stacktrace clean build
+      - name: Verify JAR is compiled and contains animation and full 3D meshes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,zipfile,struct
+          jar=Path('blowpipes-neoforge-1.21.1/build/libs/blowpipes-neoforge-1.21.1-1.2.0.jar')
+          assert jar.is_file() and jar.stat().st_size>18000,jar
+          with zipfile.ZipFile(jar) as z:
+            assert z.testzip() is None
+            names=set(z.namelist())
+            for cls in ('Blowpipes','BlowpipeItem','BlowpipesClient','DartProjectile','DartModel','DartRenderer'):
+              assert f'dev/minemods/blowpipes/{cls}.class' in names,cls
+            ids=['plain_dart','iron_dart','poison_dart','slowness_dart','fire_dart','sleep_dart']
+            for item in ids:
+              png=f'assets/blowpipes/textures/entity/dart/{item}.png'
+              assert png in names,png
+              assert struct.unpack('>II',z.read(png)[16:24])==(32,32),png
+              png=f'assets/blowpipes/textures/item/{item}.png'
+              assert struct.unpack('>II',z.read(png)[16:24])==(16,16),png
+            for tube in ['bamboo_blowpipe','hunting_blowpipe','reinforced_blowpipe']:
+              model=json.loads(z.read('assets/blowpipes/models/item/'+tube+'.json'))
+              assert 3<=len(model.get('elements',[]))<=5,tube
+            assert 'version="1.2.0"' in z.read('META-INF/neoforge.mods.toml').decode('utf-8')
+          print('JAR SUCCESS:',jar,jar.stat().st_size,'bytes, meshes and textures verified')
+          PY
+      - name: Publish compiled JAR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="blowpipes-neoforge-1.21.1-v1.2.0-$GITHUB_RUN_NUMBER"
+          gh release create "$tag" "blowpipes-neoforge-1.21.1/build/libs/blowpipes-neoforge-1.21.1-1.2.0.jar" \
+            --target "$GITHUB_SHA" --title "Blowpipes 1.2.0 | NeoForge 1.21.1" \
+            --notes "True velocity-aligned 3D flying dart model with six variant 32x32 UV atlases (1 texel per model pixel), horn-style raise-to-mouth use animation, seven-tick blow/release mechanic, soft recoil and poof. Java 21, NeoForge 21.1.x. Compiled and resource-validated in GitHub Actions; in-game visual check still needed." --prerelease
