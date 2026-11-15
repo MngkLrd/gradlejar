@@ -38,7 +38,7 @@ public final class Blowpipes implements ModInitializer {
       .sized(.16f,.16f).clientTrackingRange(6).updateInterval(2).build(key));
   ResourceKey<CreativeModeTab> tabKey=ResourceKey.create(Registries.CREATIVE_MODE_TAB,Identifier.fromNamespaceAndPath(ID,"main"));
   Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB,tabKey,
-      CreativeModeTab.builder().title(Component.translatable("itemGroup.blowpipes.main"))
+      CreativeModeTab.builder(CreativeModeTab.Row.TOP,7).title(Component.translatable("itemGroup.blowpipes.main"))
           .icon(()->new ItemStack(ALL.get("hunting_blowpipe")))
           .displayItems((params,out)->{for(Item item:ALL.values())out.accept(item);}).build());
   ServerTickEvents.END_SERVER_TICK.register(SleepSystem::tick);
