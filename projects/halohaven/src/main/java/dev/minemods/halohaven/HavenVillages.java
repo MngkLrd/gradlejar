@@ -469,6 +469,6 @@ public final class HavenVillages {
         }
     }
     private static void place(ServerLevel l,int x,int y,int z,Block b) {
-        l.setBlock(new BlockPos(x,y,z),b.defaultBlockState(),2);
+        l.setBlock(new BlockPos(x,y,z),b.defaultBlockState(),3);
     }
 }
