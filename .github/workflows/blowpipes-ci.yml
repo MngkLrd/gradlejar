@@ -1,0 +1,73 @@
+name: Blowpipes four-version build
+on:
+  push:
+    branches: [feature/blowpipes-four-builds]
+    paths:
+      - 'tools/blowpipes_generator.b64'
+      - '.github/workflows/blowpipes-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {dir: blowpipes-neoforge-1.20.1, java: '17', gradle: '8.14.5', loader: neoforge, mc: '1.20.1'}
+          - {dir: blowpipes-fabric-1.20.1, java: '17', gradle: '8.14.5', loader: fabric, mc: '1.20.1'}
+          - {dir: blowpipes-neoforge-1.21.1, java: '21', gradle: '8.14.5', loader: neoforge, mc: '1.21.1'}
+          - {dir: blowpipes-fabric-1.21.1, java: '21', gradle: '8.14.5', loader: fabric, mc: '1.21.1'}
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ matrix.gradle }}
+      - name: Extract four complete Gradle source trees
+        run: |
+          python3 - <<'PY'
+          import zlib,base64,pathlib
+          script=zlib.decompress(base64.b64decode(pathlib.Path('tools/blowpipes_generator.b64').read_text()))
+          pathlib.Path('tools/blowpipes_generate.py').write_bytes(script)
+          PY
+          python3 tools/blowpipes_generate.py
+          mkdir -p output
+      - name: Gradle compile
+        working-directory: ${{ matrix.dir }}
+        run: gradle --no-daemon --stacktrace clean build
+      - name: Verify JAR resources and class files
+        env:
+          MC: ${{ matrix.mc }}
+          LOADER: ${{ matrix.loader }}
+          DIR: ${{ matrix.dir }}
+        run: |
+          python3 - <<'PY'
+          import os,zipfile
+          from pathlib import Path
+          folder=os.environ['DIR'];jar=Path(folder)/'build/libs'/(folder+'-1.0.0.jar')
+          assert jar.is_file() and jar.stat().st_size>3000,jar
+          with zipfile.ZipFile(jar) as z:
+            assert z.testzip() is None
+            n=set(z.namelist())
+            for f in ('dev/minemods/blowpipes/Blowpipes.class','dev/minemods/blowpipes/BlowpipeItem.class','dev/minemods/blowpipes/DartProjectile.class','pack.mcmeta'):
+              assert f in n, f
+            for item in ('bamboo_blowpipe','hunting_blowpipe','reinforced_blowpipe','plain_dart','iron_dart','poison_dart','slowness_dart','fire_dart','sleep_dart'):
+              assert 'assets/blowpipes/textures/item/'+item+'.png' in n,item
+          print('VERIFIED',jar,jar.stat().st_size)
+          PY
+      - name: Publish verified JAR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MC: ${{ matrix.mc }}
+          LOADER: ${{ matrix.loader }}
+          DIR: ${{ matrix.dir }}
+        run: |
+          jar="$DIR/build/libs/$DIR-1.0.0.jar"
+          tag="ci-blowpipes-$LOADER-$MC-1.0.0-$GITHUB_RUN_NUMBER-$GITHUB_RUN_ATTEMPT"
+          gh release create "$tag" "$jar" --target "$GITHUB_SHA" --title "Blowpipes 1.0.0 | $LOADER $MC" --notes "Official loader Gradle compilation and asset verification passed; gameplay in client not tested." --prerelease
