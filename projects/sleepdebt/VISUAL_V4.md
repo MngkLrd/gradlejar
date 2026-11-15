@@ -1,4 +1,4 @@
-# Sleep Debt Visual Overhaul 3.0 Alpha 5
+# Sleep Debt Visual Overhaul 3.0 Alpha 6
 
 ## Why this asset pass exists
 The previous models had mismatched arm/leg/hood UVs and mostly formulaic textures.
@@ -46,4 +46,8 @@ No new mandatory dependencies, unrelated gameplay rewrite, or changed block/item
 
 ## Final 3D refinement
 The Dreamcatcher was revised after a second isometric geometry preview to use an octagonal frame, genuinely perforated mesh, a centered suspension loop and three feather pendants. This model uses 16 cuboids with explicit face UV coordinates.
+
+
+## Inventory consistency pass
+All 22 registered items with standalone PNG models have reviewed native 16x16 icon art. Strong, long, caramel and standard coffee have different silhouettes; herbal and dream teas have distinct marks. Cloth, medicine, botanicals and ingredients are rendered as readable item clusters without anti-aliasing. Original block items continue to inherit the revised 3D block models.
 

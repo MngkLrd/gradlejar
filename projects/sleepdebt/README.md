@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.5
+# Sleep Debt: Restless Nights — 3.0.0-alpha.6
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.5.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.6.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -88,4 +88,8 @@ New reviewed block/item GUI artwork and the 128x64 Sleepless atlas are now versi
 
 ## Alpha 5 detail pass
 The Dreamcatcher frame is now a stepped octagon with separate open mesh and three independent suspended feathers. The older square silhouette was removed after visual model preview.
+
+
+## Alpha 6: Complete item icon remaster
+Every one of the 22 item textures has an individual 16x16 pixel-art sprite, including all coffee variants, teas, milk, herbs, dream materials, mask, pillow, poultice, journal and incense. The existing 16x16 texture names and item model references are preserved for save/resource-pack compatibility.
 
