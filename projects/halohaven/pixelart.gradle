@@ -48,8 +48,13 @@ tasks.named('generateHaloAssets').configure {
                 throw new GradleException(name+': foliage alpha count '+alphaCount)
             if(name=='celestial_bloom' && (alphaCount<100||alphaCount>240))
                 throw new GradleException(name+': flower alpha count '+alphaCount)
-            if(name.endsWith('_glass') && (alphaCount<35||alphaCount>195))
-                throw new GradleException(name+': glass alpha count '+alphaCount)
+            if(name.endsWith('_glass')){
+                int translucentCount=0
+                for(int y=0;y<16;y++)for(int x=0;x<16;x++)
+                    if((image.getRGB(x,y)>>>24)<255)translucentCount++
+                if(translucentCount<100||translucentCount>240)
+                    throw new GradleException(name+': stained glass transparency '+translucentCount)
+            }
             File target=new File(out,'assets/halohaven/textures/block/'+name+'.png')
             target.parentFile.mkdirs()
             if(!ImageIO.write(image,'PNG',target))throw new GradleException('PNG error: '+name)
