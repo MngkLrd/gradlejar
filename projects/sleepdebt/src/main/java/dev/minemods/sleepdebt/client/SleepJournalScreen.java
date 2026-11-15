@@ -46,18 +46,20 @@ public final class SleepJournalScreen extends Screen {
   if(report.quality()>0){
    gui.drawString(font,Component.translatable("gui.sleepdebt.last_sleep",
      report.quality(),report.recovered()),x+16,y+125,0xFF4A382D,false);
-   String reason="gui.sleepdebt.reason.safe";
-   int r=report.reasons();
-   if((r&RestEnvironment.HOSTILES)!=0)reason="gui.sleepdebt.reason.danger";
-   else if((r&RestEnvironment.RAIN)!=0)reason="gui.sleepdebt.reason.rain";
-   else if((r&RestEnvironment.COLD)!=0)reason="gui.sleepdebt.reason.cold";
-   else if((r&RestEnvironment.CAFFEINE)!=0)reason="gui.sleepdebt.reason.caffeine";
-   else if((r&RestEnvironment.STRESS)!=0)reason="gui.sleepdebt.reason.stress";
-   else if((r&RestEnvironment.PROTECTION)!=0)reason="gui.sleepdebt.reason.protected";
-   gui.drawString(font,text(reason),x+16,y+144,0xFF625446,false);
   }else{
-   gui.drawString(font,text("gui.sleepdebt.no_sleep"),x+16,y+130,0xFF625446,false);
+   gui.drawString(font,text("gui.sleepdebt.no_sleep"),x+16,y+125,0xFF625446,false);
   }
+  gui.drawString(font,Component.translatable("gui.sleepdebt.forecast",report.forecast()),
+    x+16,y+140,0xFF4A382D,false);
+  String reason="gui.sleepdebt.reason.safe";
+  int r=report.forecastReasons();
+  if((r&RestEnvironment.HOSTILES)!=0)reason="gui.sleepdebt.reason.danger";
+  else if((r&RestEnvironment.RAIN)!=0)reason="gui.sleepdebt.reason.rain";
+  else if((r&RestEnvironment.COLD)!=0)reason="gui.sleepdebt.reason.cold";
+  else if((r&RestEnvironment.CAFFEINE)!=0)reason="gui.sleepdebt.reason.caffeine";
+  else if((r&RestEnvironment.STRESS)!=0)reason="gui.sleepdebt.reason.stress";
+  else if((r&RestEnvironment.PROTECTION)!=0)reason="gui.sleepdebt.reason.protected";
+  gui.drawString(font,text(reason),x+16,y+155,0xFF625446,false);
   gui.drawCenteredString(font,text("gui.sleepdebt.esc"),x+114,y+171,0xFF716457);
   super.render(gui,mouseX,mouseY,partial);
  }

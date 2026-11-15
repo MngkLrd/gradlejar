@@ -1,5 +1,6 @@
 package dev.minemods.sleepdebt.gameplay;
 
+import dev.minemods.sleepdebt.SleepSettings;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -17,7 +18,7 @@ public final class CampRestSessions {
  private static final Map<UUID,Session> SESSIONS=new HashMap<>();
  private record Session(BlockPos bedroll,Vec3 origin,String dimension,long started,double health){}
  public static void begin(ServerPlayer player,BlockPos pos){
-  if(player.isSpectator()){return;}
+  if(player.isSpectator()||!SleepSettings.ENABLE_CAMP_REST.get()){return;}
   if(player.distanceToSqr(Vec3.atCenterOf(pos))>16){
    player.displayClientMessage(Component.translatable("message.sleepdebt.camp_far"),true);
    return;

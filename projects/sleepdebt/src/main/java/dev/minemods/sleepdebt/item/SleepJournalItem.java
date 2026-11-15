@@ -1,6 +1,7 @@
 package dev.minemods.sleepdebt.item;
 
 import dev.minemods.sleepdebt.gameplay.SleepEngine;
+import dev.minemods.sleepdebt.gameplay.RestEnvironment;
 import dev.minemods.sleepdebt.network.SleepReportPayload;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.minecraft.network.chat.Component;
@@ -17,10 +18,12 @@ public final class SleepJournalItem extends Item {
  @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){
   ItemStack held=player.getItemInHand(hand);
   if(!level.isClientSide &&player instanceof ServerPlayer server){
+   var quality=RestEnvironment.evaluate(server,server.blockPosition());
    PacketDistributor.sendToPlayer(server,new SleepReportPayload(
     SleepEngine.getDebt(server),SleepEngine.getFatigue(server),
     SleepEngine.getStress(server),SleepEngine.getLastQuality(server),
-    SleepEngine.getLastRecovery(server),SleepEngine.getLastReasons(server)));
+    SleepEngine.getLastRecovery(server),SleepEngine.getLastReasons(server),
+    quality.quality(),quality.reasons()));
   }
   return InteractionResultHolder.sidedSuccess(held,level.isClientSide);
  }

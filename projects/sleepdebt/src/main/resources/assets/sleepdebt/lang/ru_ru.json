@@ -89,5 +89,6 @@
   "gui.sleepdebt.reason.caffeine": "Кофеин мешал восстановлению.",
   "gui.sleepdebt.reason.stress": "Стресс ухудшил восстановление.",
   "gui.sleepdebt.reason.protected": "Ловец снов защитил отдых.",
-  "gui.sleepdebt.esc": "ESC — закрыть"
+  "gui.sleepdebt.esc": "ESC — закрыть",
+  "gui.sleepdebt.forecast": "Качество сна здесь: %s%%"
 }

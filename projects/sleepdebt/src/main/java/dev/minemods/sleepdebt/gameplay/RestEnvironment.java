@@ -1,6 +1,7 @@
 package dev.minemods.sleepdebt.gameplay;
 
 import dev.minemods.sleepdebt.registry.ModBlocks;
+import dev.minemods.sleepdebt.SleepSettings;
 import dev.minemods.sleepdebt.registry.ModItems;
 import dev.minemods.sleepdebt.blockentity.IncenseBurnerBlockEntity;
 import dev.minemods.sleepdebt.integration.SleepAccessoriesBridge;
@@ -49,8 +50,8 @@ public final class RestEnvironment {
   }
   boolean warm=campfire||lantern;
   int quality=100,reasons=0;
-  if(sheltered){quality+=14;reasons|=COMFORT;}else{quality-=8;reasons|=OPEN_AIR;}
-  if(threatened){quality-=24;reasons|=HOSTILES;}
+  if(sheltered){if(SleepSettings.SHELTER_BONUS.get())quality+=14;reasons|=COMFORT;}else{quality-=8;reasons|=OPEN_AIR;}
+  if(threatened){if(SleepSettings.MONSTER_PENALTY.get())quality-=24;reasons|=HOSTILES;}
   if(rain){quality-=18;reasons|=RAIN;}
   if(cold){quality-=17;reasons|=COLD;}
   if(hot){quality-=10;reasons|=HEAT;}

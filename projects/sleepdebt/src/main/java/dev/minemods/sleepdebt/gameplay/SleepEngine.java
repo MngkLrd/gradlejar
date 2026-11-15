@@ -202,8 +202,13 @@ public final class SleepEngine {
   int base=SleepSettings.BASE_RECOVERY.get();
   int recovery=base*quality/100;
   if(slept<85)recovery=Math.min(recovery,180);
+  long now=p.serverLevel().getGameTime();
+  // Anti-spam: multiple partial bed sleeps cannot replace a real night.
+  if(t.contains("lastFullSleepAt")&&now>=t.getLong("lastFullSleepAt")
+      &&now-t.getLong("lastFullSleepAt")<6000)recovery=Math.min(recovery,90);
   int before=t.getInt("debt");
   int after=clamp(before-recovery);
+  t.putLong("lastFullSleepAt",now);
   t.putInt("lastSleepQuality",quality);
   t.putInt("lastSleepRecovery",before-after);
   t.putInt("lastSleepReasons",site.reasons());

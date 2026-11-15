@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Build a field camp from a bedroll, an awning and a campfire. Right-click the bedroll to recover fatigue and stress. Having a pillow or sleep mask in your inventory strengthens the recovery. The awning adds cover, and the fire reduces stress."
+      "text": "A field bedroll starts a seven-second rest, not an instant heal. Stay still and avoid damage. Shelter, a campfire, an incense burner, a pillow and sleep mask can improve recovery. A two-minute cooldown prevents repeated abuse. Use the journal to preview the quality of your resting spot."
     },
     {
       "type": "patchouli:crafting",

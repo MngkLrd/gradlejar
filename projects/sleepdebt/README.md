@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.1
+# Sleep Debt: Restless Nights — 3.0.0-alpha.2
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.1.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.2.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -67,3 +67,9 @@ GitHub CI validates Java compilation, jar packaging, models, textures, guides an
 translation JSON. It **does not execute Minecraft gameplay**. Native GUI appearance,
 client world rendering, multiplayer and optional-mod startup combinations require
 manual in-game checks before declaring this a stable release.
+
+## Alpha 2: predictive planning
+The sleep journal now shows both last sleep quality and an on-demand forecast of
+the current location, including environmental warnings. Repeated full-bed sleeps
+within 6000 ticks are capped at 90 debt recovery to deter sleep spamming.
+Core compatibility flags for shelter/hostile penalties are respected in quality calculation.
