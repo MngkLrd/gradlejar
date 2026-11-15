@@ -1,0 +1,48 @@
+{
+  "has_precipitation": true,
+  "temperature": 0.39,
+  "downfall": 0.75,
+  "carvers": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "halohaven:sky_bloom_patch_2",
+      "halohaven:sky_crown_tree_2"
+    ],
+    []
+  ],
+  "effects": {
+    "fog_color": 7433111,
+    "sky_color": 7829927,
+    "water_color": 9094872,
+    "water_fog_color": 5537172,
+    "grass_color": 6717318,
+    "foliage_color": 7308432
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [
+      {
+        "type": "halohaven:dusk_wraith",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {}
+}

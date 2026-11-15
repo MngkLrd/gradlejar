@@ -4,8 +4,189 @@
     "type": "minecraft:noise",
     "settings": "halohaven:heaven_islands",
     "biome_source": {
-      "type": "minecraft:fixed",
-      "biome": "halohaven:cloud_gardens"
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "halohaven:dawn_gardens",
+          "parameters": {
+            "temperature": [
+              0.35,
+              1.2
+            ],
+            "humidity": [
+              0,
+              1.2
+            ],
+            "continentalness": [
+              -1.2,
+              1.2
+            ],
+            "erosion": [
+              -1.2,
+              1.2
+            ],
+            "weirdness": [
+              -1.2,
+              1.2
+            ],
+            "depth": [
+              -1.2,
+              1.2
+            ],
+            "offset": 0
+          }
+        },
+        {
+          "biome": "halohaven:chalk_terraces",
+          "parameters": {
+            "temperature": [
+              0.35,
+              1.2
+            ],
+            "humidity": [
+              -1.2,
+              0
+            ],
+            "continentalness": [
+              -1.2,
+              1.2
+            ],
+            "erosion": [
+              -1.2,
+              1.2
+            ],
+            "weirdness": [
+              -1.2,
+              1.2
+            ],
+            "depth": [
+              -1.2,
+              1.2
+            ],
+            "offset": 0
+          }
+        },
+        {
+          "biome": "halohaven:eternal_canopy",
+          "parameters": {
+            "temperature": [
+              -0.35,
+              0.35
+            ],
+            "humidity": [
+              0,
+              1.2
+            ],
+            "continentalness": [
+              -1.2,
+              1.2
+            ],
+            "erosion": [
+              -1.2,
+              1.2
+            ],
+            "weirdness": [
+              -1.2,
+              1.2
+            ],
+            "depth": [
+              -1.2,
+              1.2
+            ],
+            "offset": 0
+          }
+        },
+        {
+          "biome": "halohaven:ringing_gorges",
+          "parameters": {
+            "temperature": [
+              -0.35,
+              0.35
+            ],
+            "humidity": [
+              -1.2,
+              0
+            ],
+            "continentalness": [
+              -1.2,
+              1.2
+            ],
+            "erosion": [
+              -1.2,
+              1.2
+            ],
+            "weirdness": [
+              -1.2,
+              1.2
+            ],
+            "depth": [
+              -1.2,
+              1.2
+            ],
+            "offset": 0
+          }
+        },
+        {
+          "biome": "halohaven:forgotten_choirs",
+          "parameters": {
+            "temperature": [
+              -1.2,
+              -0.35
+            ],
+            "humidity": [
+              -1.2,
+              0
+            ],
+            "continentalness": [
+              -1.2,
+              1.2
+            ],
+            "erosion": [
+              -1.2,
+              1.2
+            ],
+            "weirdness": [
+              -1.2,
+              1.2
+            ],
+            "depth": [
+              -1.2,
+              1.2
+            ],
+            "offset": 0
+          }
+        },
+        {
+          "biome": "halohaven:lower_veil",
+          "parameters": {
+            "temperature": [
+              -1.2,
+              -0.35
+            ],
+            "humidity": [
+              0,
+              1.2
+            ],
+            "continentalness": [
+              -1.2,
+              1.2
+            ],
+            "erosion": [
+              -1.2,
+              1.2
+            ],
+            "weirdness": [
+              -1.2,
+              1.2
+            ],
+            "depth": [
+              -1.2,
+              1.2
+            ],
+            "offset": 0
+          }
+        }
+      ]
     }
   }
 }

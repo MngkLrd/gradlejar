@@ -16,54 +16,55 @@
   },
   "noise_router": {
     "barrier": 0,
-    "continents": 0,
+    "continents": "minecraft:overworld/continents",
     "depth": 0,
-    "erosion": {
-      "type": "minecraft:cache_2d",
-      "argument": {
-        "type": "minecraft:end_islands"
-      }
-    },
+    "erosion": "minecraft:overworld/erosion",
     "final_density": {
-      "type": "minecraft:squeeze",
-      "argument": {
-        "type": "minecraft:mul",
-        "argument1": 0.64,
-        "argument2": {
-          "type": "minecraft:interpolated",
+      "type": "minecraft:max",
+      "argument1": {
+        "type": "minecraft:add",
+        "argument1": {
+          "type": "minecraft:squeeze",
           "argument": {
-            "type": "minecraft:blend_density",
-            "argument": {
-              "type": "minecraft:add",
-              "argument1": -0.234375,
-              "argument2": {
-                "type": "minecraft:mul",
-                "argument1": {
-                  "type": "minecraft:y_clamped_gradient",
-                  "from_value": 0,
-                  "from_y": 4,
-                  "to_value": 1,
-                  "to_y": 32
-                },
-                "argument2": {
+            "type": "minecraft:mul",
+            "argument1": 0.64,
+            "argument2": {
+              "type": "minecraft:interpolated",
+              "argument": {
+                "type": "minecraft:blend_density",
+                "argument": {
                   "type": "minecraft:add",
-                  "argument1": 0.234375,
+                  "argument1": -0.234375,
                   "argument2": {
-                    "type": "minecraft:add",
-                    "argument1": -23.4375,
+                    "type": "minecraft:mul",
+                    "argument1": {
+                      "type": "minecraft:y_clamped_gradient",
+                      "from_value": 0,
+                      "from_y": 4,
+                      "to_value": 1,
+                      "to_y": 32
+                    },
                     "argument2": {
-                      "type": "minecraft:mul",
-                      "argument1": {
-                        "type": "minecraft:y_clamped_gradient",
-                        "from_value": 1,
-                        "from_y": 56,
-                        "to_value": 0,
-                        "to_y": 312
-                      },
+                      "type": "minecraft:add",
+                      "argument1": 0.234375,
                       "argument2": {
                         "type": "minecraft:add",
-                        "argument1": 23.4375,
-                        "argument2": "minecraft:end/sloped_cheese"
+                        "argument1": -23.4375,
+                        "argument2": {
+                          "type": "minecraft:mul",
+                          "argument1": {
+                            "type": "minecraft:y_clamped_gradient",
+                            "from_value": 1,
+                            "from_y": 56,
+                            "to_value": 0,
+                            "to_y": 312
+                          },
+                          "argument2": {
+                            "type": "minecraft:add",
+                            "argument1": 23.4375,
+                            "argument2": "minecraft:end/sloped_cheese"
+                          }
+                        }
                       }
                     }
                   }
@@ -71,61 +72,423 @@
               }
             }
           }
-        }
-      }
-    },
-    "fluid_level_floodedness": 0,
-    "fluid_level_spread": 0,
-    "initial_density_without_jaggedness": {
-      "type": "minecraft:add",
-      "argument1": -0.234375,
-      "argument2": {
-        "type": "minecraft:mul",
-        "argument1": {
-          "type": "minecraft:y_clamped_gradient",
-          "from_value": 0,
-          "from_y": 4,
-          "to_value": 1,
-          "to_y": 32
         },
         "argument2": {
-          "type": "minecraft:add",
-          "argument1": 0.234375,
-          "argument2": {
-            "type": "minecraft:add",
-            "argument1": -23.4375,
-            "argument2": {
-              "type": "minecraft:mul",
-              "argument1": {
-                "type": "minecraft:y_clamped_gradient",
-                "from_value": 1,
-                "from_y": 56,
-                "to_value": 0,
-                "to_y": 312
-              },
+          "type": "minecraft:range_choice",
+          "input": "minecraft:overworld/temperature",
+          "min_inclusive": -1.2,
+          "max_exclusive": -0.35,
+          "when_in_range": {
+            "type": "minecraft:range_choice",
+            "input": "minecraft:overworld/vegetation",
+            "min_inclusive": -1.2,
+            "max_exclusive": 0,
+            "when_in_range": {
+              "type": "minecraft:add",
+              "argument1": -0.075,
               "argument2": {
-                "type": "minecraft:add",
-                "argument1": 23.4375,
+                "type": "minecraft:mul",
+                "argument1": 0.13,
                 "argument2": {
-                  "type": "minecraft:add",
-                  "argument1": -0.703125,
+                  "type": "minecraft:noise",
+                  "noise": "minecraft:continentalness",
+                  "xz_scale": 0.6,
+                  "y_scale": 0
+                }
+              }
+            },
+            "when_out_of_range": {
+              "type": "minecraft:add",
+              "argument1": -0.12,
+              "argument2": {
+                "type": "minecraft:mul",
+                "argument1": 0.23,
+                "argument2": {
+                  "type": "minecraft:noise",
+                  "noise": "minecraft:erosion",
+                  "xz_scale": 0.6,
+                  "y_scale": 0
+                }
+              }
+            }
+          },
+          "when_out_of_range": {
+            "type": "minecraft:range_choice",
+            "input": "minecraft:overworld/temperature",
+            "min_inclusive": -0.35,
+            "max_exclusive": 0.35,
+            "when_in_range": {
+              "type": "minecraft:range_choice",
+              "input": "minecraft:overworld/vegetation",
+              "min_inclusive": -1.2,
+              "max_exclusive": 0,
+              "when_in_range": {
+                "type": "minecraft:add",
+                "argument1": -0.11,
+                "argument2": {
+                  "type": "minecraft:mul",
+                  "argument1": 0.35,
+                  "argument2": "minecraft:overworld/ridges"
+                }
+              },
+              "when_out_of_range": {
+                "type": "minecraft:add",
+                "argument1": 0.07,
+                "argument2": {
+                  "type": "minecraft:mul",
+                  "argument1": 0.1,
                   "argument2": {
-                    "type": "minecraft:cache_2d",
+                    "type": "minecraft:noise",
+                    "noise": "minecraft:vegetation",
+                    "xz_scale": 0.38,
+                    "y_scale": 0
+                  }
+                }
+              }
+            },
+            "when_out_of_range": {
+              "type": "minecraft:range_choice",
+              "input": "minecraft:overworld/vegetation",
+              "min_inclusive": -1.2,
+              "max_exclusive": 0,
+              "when_in_range": {
+                "type": "minecraft:add",
+                "argument1": 0.1,
+                "argument2": {
+                  "type": "minecraft:mul",
+                  "argument1": 0.27,
+                  "argument2": {
+                    "type": "minecraft:abs",
                     "argument": {
-                      "type": "minecraft:end_islands"
+                      "type": "minecraft:noise",
+                      "noise": "minecraft:erosion",
+                      "xz_scale": 0.29,
+                      "y_scale": 0
                     }
+                  }
+                }
+              },
+              "when_out_of_range": {
+                "type": "minecraft:add",
+                "argument1": 0.01,
+                "argument2": {
+                  "type": "minecraft:mul",
+                  "argument1": 0.08,
+                  "argument2": {
+                    "type": "minecraft:noise",
+                    "noise": "minecraft:continentalness",
+                    "xz_scale": 0.4,
+                    "y_scale": 0
                   }
                 }
               }
             }
           }
         }
+      },
+      "argument2": {
+        "type": "minecraft:range_choice",
+        "input": {
+          "type": "minecraft:range_choice",
+          "input": "minecraft:overworld/temperature",
+          "min_inclusive": -1.2,
+          "max_exclusive": -0.35,
+          "when_in_range": {
+            "type": "minecraft:range_choice",
+            "input": "minecraft:overworld/vegetation",
+            "min_inclusive": 0,
+            "max_exclusive": 1.2,
+            "when_in_range": 1,
+            "when_out_of_range": 0
+          },
+          "when_out_of_range": 0
+        },
+        "min_inclusive": 0.5,
+        "max_exclusive": 1.5,
+        "when_in_range": {
+          "type": "minecraft:min",
+          "argument1": {
+            "type": "minecraft:add",
+            "argument1": {
+              "type": "minecraft:mul",
+              "argument1": 0.56,
+              "argument2": {
+                "type": "minecraft:noise",
+                "noise": "minecraft:continentalness",
+                "xz_scale": 1.4,
+                "y_scale": 0
+              }
+            },
+            "argument2": {
+              "type": "minecraft:y_clamped_gradient",
+              "from_y": 5,
+              "to_y": 23,
+              "from_value": -0.9,
+              "to_value": 0.24
+            }
+          },
+          "argument2": {
+            "type": "minecraft:add",
+            "argument1": {
+              "type": "minecraft:mul",
+              "argument1": 0.56,
+              "argument2": {
+                "type": "minecraft:noise",
+                "noise": "minecraft:continentalness",
+                "xz_scale": 1.4,
+                "y_scale": 0
+              }
+            },
+            "argument2": {
+              "type": "minecraft:y_clamped_gradient",
+              "from_y": 39,
+              "to_y": 68,
+              "from_value": 0.24,
+              "to_value": -0.9
+            }
+          }
+        },
+        "when_out_of_range": -100
+      }
+    },
+    "fluid_level_floodedness": 0,
+    "fluid_level_spread": 0,
+    "initial_density_without_jaggedness": {
+      "type": "minecraft:max",
+      "argument1": {
+        "type": "minecraft:add",
+        "argument1": {
+          "type": "minecraft:squeeze",
+          "argument": {
+            "type": "minecraft:mul",
+            "argument1": 0.64,
+            "argument2": {
+              "type": "minecraft:interpolated",
+              "argument": {
+                "type": "minecraft:blend_density",
+                "argument": {
+                  "type": "minecraft:add",
+                  "argument1": -0.234375,
+                  "argument2": {
+                    "type": "minecraft:mul",
+                    "argument1": {
+                      "type": "minecraft:y_clamped_gradient",
+                      "from_value": 0,
+                      "from_y": 4,
+                      "to_value": 1,
+                      "to_y": 32
+                    },
+                    "argument2": {
+                      "type": "minecraft:add",
+                      "argument1": 0.234375,
+                      "argument2": {
+                        "type": "minecraft:add",
+                        "argument1": -23.4375,
+                        "argument2": {
+                          "type": "minecraft:mul",
+                          "argument1": {
+                            "type": "minecraft:y_clamped_gradient",
+                            "from_value": 1,
+                            "from_y": 56,
+                            "to_value": 0,
+                            "to_y": 312
+                          },
+                          "argument2": {
+                            "type": "minecraft:add",
+                            "argument1": 23.4375,
+                            "argument2": "minecraft:end/sloped_cheese"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "argument2": {
+          "type": "minecraft:range_choice",
+          "input": "minecraft:overworld/temperature",
+          "min_inclusive": -1.2,
+          "max_exclusive": -0.35,
+          "when_in_range": {
+            "type": "minecraft:range_choice",
+            "input": "minecraft:overworld/vegetation",
+            "min_inclusive": -1.2,
+            "max_exclusive": 0,
+            "when_in_range": {
+              "type": "minecraft:add",
+              "argument1": -0.075,
+              "argument2": {
+                "type": "minecraft:mul",
+                "argument1": 0.13,
+                "argument2": {
+                  "type": "minecraft:noise",
+                  "noise": "minecraft:continentalness",
+                  "xz_scale": 0.6,
+                  "y_scale": 0
+                }
+              }
+            },
+            "when_out_of_range": {
+              "type": "minecraft:add",
+              "argument1": -0.12,
+              "argument2": {
+                "type": "minecraft:mul",
+                "argument1": 0.23,
+                "argument2": {
+                  "type": "minecraft:noise",
+                  "noise": "minecraft:erosion",
+                  "xz_scale": 0.6,
+                  "y_scale": 0
+                }
+              }
+            }
+          },
+          "when_out_of_range": {
+            "type": "minecraft:range_choice",
+            "input": "minecraft:overworld/temperature",
+            "min_inclusive": -0.35,
+            "max_exclusive": 0.35,
+            "when_in_range": {
+              "type": "minecraft:range_choice",
+              "input": "minecraft:overworld/vegetation",
+              "min_inclusive": -1.2,
+              "max_exclusive": 0,
+              "when_in_range": {
+                "type": "minecraft:add",
+                "argument1": -0.11,
+                "argument2": {
+                  "type": "minecraft:mul",
+                  "argument1": 0.35,
+                  "argument2": "minecraft:overworld/ridges"
+                }
+              },
+              "when_out_of_range": {
+                "type": "minecraft:add",
+                "argument1": 0.07,
+                "argument2": {
+                  "type": "minecraft:mul",
+                  "argument1": 0.1,
+                  "argument2": {
+                    "type": "minecraft:noise",
+                    "noise": "minecraft:vegetation",
+                    "xz_scale": 0.38,
+                    "y_scale": 0
+                  }
+                }
+              }
+            },
+            "when_out_of_range": {
+              "type": "minecraft:range_choice",
+              "input": "minecraft:overworld/vegetation",
+              "min_inclusive": -1.2,
+              "max_exclusive": 0,
+              "when_in_range": {
+                "type": "minecraft:add",
+                "argument1": 0.1,
+                "argument2": {
+                  "type": "minecraft:mul",
+                  "argument1": 0.27,
+                  "argument2": {
+                    "type": "minecraft:abs",
+                    "argument": {
+                      "type": "minecraft:noise",
+                      "noise": "minecraft:erosion",
+                      "xz_scale": 0.29,
+                      "y_scale": 0
+                    }
+                  }
+                }
+              },
+              "when_out_of_range": {
+                "type": "minecraft:add",
+                "argument1": 0.01,
+                "argument2": {
+                  "type": "minecraft:mul",
+                  "argument1": 0.08,
+                  "argument2": {
+                    "type": "minecraft:noise",
+                    "noise": "minecraft:continentalness",
+                    "xz_scale": 0.4,
+                    "y_scale": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "argument2": {
+        "type": "minecraft:range_choice",
+        "input": {
+          "type": "minecraft:range_choice",
+          "input": "minecraft:overworld/temperature",
+          "min_inclusive": -1.2,
+          "max_exclusive": -0.35,
+          "when_in_range": {
+            "type": "minecraft:range_choice",
+            "input": "minecraft:overworld/vegetation",
+            "min_inclusive": 0,
+            "max_exclusive": 1.2,
+            "when_in_range": 1,
+            "when_out_of_range": 0
+          },
+          "when_out_of_range": 0
+        },
+        "min_inclusive": 0.5,
+        "max_exclusive": 1.5,
+        "when_in_range": {
+          "type": "minecraft:min",
+          "argument1": {
+            "type": "minecraft:add",
+            "argument1": {
+              "type": "minecraft:mul",
+              "argument1": 0.56,
+              "argument2": {
+                "type": "minecraft:noise",
+                "noise": "minecraft:continentalness",
+                "xz_scale": 1.4,
+                "y_scale": 0
+              }
+            },
+            "argument2": {
+              "type": "minecraft:y_clamped_gradient",
+              "from_y": 5,
+              "to_y": 23,
+              "from_value": -0.9,
+              "to_value": 0.24
+            }
+          },
+          "argument2": {
+            "type": "minecraft:add",
+            "argument1": {
+              "type": "minecraft:mul",
+              "argument1": 0.56,
+              "argument2": {
+                "type": "minecraft:noise",
+                "noise": "minecraft:continentalness",
+                "xz_scale": 1.4,
+                "y_scale": 0
+              }
+            },
+            "argument2": {
+              "type": "minecraft:y_clamped_gradient",
+              "from_y": 39,
+              "to_y": 68,
+              "from_value": 0.24,
+              "to_value": -0.9
+            }
+          }
+        },
+        "when_out_of_range": -100
       }
     },
     "lava": 0,
-    "ridges": 0,
-    "temperature": 0,
-    "vegetation": 0,
+    "ridges": "minecraft:overworld/ridges",
+    "temperature": "minecraft:overworld/temperature",
+    "vegetation": "minecraft:overworld/vegetation",
     "vein_gap": 0,
     "vein_ridged": 0,
     "vein_toggle": 0
@@ -136,6 +499,131 @@
   "surface_rule": {
     "type": "minecraft:sequence",
     "sequence": [
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "halohaven:chalk_terraces"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:stone_depth",
+            "offset": 0,
+            "add_surface_depth": false,
+            "secondary_depth_range": 0,
+            "surface_type": "floor"
+          },
+          "then_run": {
+            "type": "minecraft:block",
+            "result_state": {
+              "Name": "minecraft:calcite"
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "halohaven:eternal_canopy"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:stone_depth",
+            "offset": 0,
+            "add_surface_depth": false,
+            "secondary_depth_range": 0,
+            "surface_type": "floor"
+          },
+          "then_run": {
+            "type": "minecraft:block",
+            "result_state": {
+              "Name": "minecraft:moss_block"
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "halohaven:ringing_gorges"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:stone_depth",
+            "offset": 0,
+            "add_surface_depth": false,
+            "secondary_depth_range": 0,
+            "surface_type": "floor"
+          },
+          "then_run": {
+            "type": "minecraft:block",
+            "result_state": {
+              "Name": "minecraft:tuff"
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "halohaven:forgotten_choirs"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:stone_depth",
+            "offset": 0,
+            "add_surface_depth": false,
+            "secondary_depth_range": 0,
+            "surface_type": "floor"
+          },
+          "then_run": {
+            "type": "minecraft:block",
+            "result_state": {
+              "Name": "halohaven:moonstone"
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "halohaven:lower_veil"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:stone_depth",
+            "offset": 0,
+            "add_surface_depth": false,
+            "secondary_depth_range": 0,
+            "surface_type": "floor"
+          },
+          "then_run": {
+            "type": "minecraft:block",
+            "result_state": {
+              "Name": "minecraft:deepslate"
+            }
+          }
+        }
+      },
       {
         "type": "minecraft:condition",
         "if_true": {
