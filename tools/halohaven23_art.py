@@ -196,7 +196,7 @@ with tempfile.TemporaryDirectory() as td:
 
     # Remap the aesthetic face of existing core lanterns to a coherent shallow lantern casing.
     # No alpha in solid lantern art, and no giant billboard particle.
-    core_tex=CORE/"resources/assets/halohaven/textures/block"
+    core_tex=P/"art23_overlay/assets/halohaven/textures/block"
     base=Image.new("RGBA",(16,16),(50,83,87,255));d=ImageDraw.Draw(base)
     d.rectangle((2,0,13,15),fill=(75,111,114,255))
     d.rectangle((3,2,12,13),fill=(147,179,157,255))
@@ -209,7 +209,7 @@ with tempfile.TemporaryDirectory() as td:
     core_tex.mkdir(parents=True,exist_ok=True)
     base.save(core_tex/"cloud_lantern.png")
     # Decorative made-for-lamp face with standard cube geometry, but no transparent center.
-    asset_core=CORE/"resources/assets/halohaven"
+    asset_core=P/"art23_overlay/assets/halohaven"
     model={"ambientocclusion":False,"render_type":"minecraft:solid",
            "textures":{"all":"halohaven:block/cloud_lantern",
                        "particle":"halohaven:block/cloud_lantern"},
