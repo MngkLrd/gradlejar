@@ -36,10 +36,12 @@ public final class SleeplessApparitions {
  private static Object lastLevel,lastPlayer;
  private static long nextTry,lastFootstep;
  private static final class Apparition{
-  final Vec3 at;final float facing;final long born;final int lifetime;
+  Vec3 at;final float facing;final long born;final int lifetime;
   int stareTicks;
+  long lastMoveTick;
   Apparition(Vec3 at,float facing,long born,int lifetime){
    this.at=at;this.facing=facing;this.born=born;this.lifetime=lifetime;
+   this.lastMoveTick=born;
   }
  }
  public static void bake(EntityRenderersEvent.AddLayers e){
@@ -68,6 +70,19 @@ public final class SleeplessApparitions {
    double dist=to.length();
    double gaze=dist>0.01?mc.player.getLookAngle().dot(to.scale(1/dist)):0;
    if(tick-ghost.born>40&&dist<38&&gaze>.985)ghost.stareTicks++;
+   // A distant client-only apparition follows slowly after a brief pause.
+   long age=tick-ghost.born;
+   if(age>72 && ghost.lastMoveTick!=tick && dist>8 && gaze<.95){
+    Vec3 toward=mc.player.position().subtract(ghost.at).multiply(1,0,1);
+    if(toward.lengthSqr()>.01){
+     Vec3 next=ghost.at.add(toward.normalize().scale(.095));
+     BlockPos candidate=BlockPos.containing(next);
+     if(mc.level.hasChunkAt(candidate) &&
+        mc.level.getBlockState(candidate).getCollisionShape(mc.level,candidate).isEmpty())
+      ghost.at=next;
+    }
+    ghost.lastMoveTick=tick;
+   }
    else ghost.stareTicks=Math.max(0,ghost.stareTicks-1);
    if(tick-ghost.born>ghost.lifetime||dist<5||ghost.stareTicks>=11)it.remove();
   }
@@ -79,7 +94,7 @@ public final class SleeplessApparitions {
        ghost.at.y+mc.level.random.nextDouble()*1.7,
        ghost.at.z+(mc.level.random.nextDouble()-.5)*1.2,0,.008,0);
     }
-    if(tick-lastFootstep>42&&mc.level.random.nextInt(4)==0){
+    if(tick-ghost.born>65&&tick-lastFootstep>19+mc.level.random.nextInt(10)){
      lastFootstep=tick;
      mc.level.playLocalSound(ghost.at.x,ghost.at.y,ghost.at.z,
        SoundEvents.SOUL_SAND_STEP,SoundSource.AMBIENT,.56f,.72f,false);
