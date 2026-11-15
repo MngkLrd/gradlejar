@@ -215,7 +215,8 @@ public final class HavenVillages {
 
     private static void path(ServerLevel l,int x,int z,boolean accent) {
         place(l,x,TOP_Y,z,accent ? HaloHaven.SUNGOLD_TILES.get() : HaloHaven.PEARL_BRICKS.get());
-        place(l,x,TOP_Y+1,z,Blocks.AIR);
+        if(!(l.getBlockState(new BlockPos(x,TOP_Y+1,z)).getBlock() instanceof DoorBlock))
+            place(l,x,TOP_Y+1,z,Blocks.AIR);
     }
     private static void house(ServerLevel l,int cx,int cz,Random rand,int sx,int sz,int district) {
         int w=5+rand.nextInt(2),d=4+rand.nextInt(2);
