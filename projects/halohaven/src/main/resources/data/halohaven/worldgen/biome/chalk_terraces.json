@@ -14,10 +14,12 @@
     [],
     [],
     [
-      "halohaven:sky_bloom_patch_2",
-      "halohaven:sky_crown_tree_1",
+      "halohaven:chalk_blossom_patch",
       "halohaven:chalk_fragments",
-      "halohaven:cloudstone_scatter"
+      "halohaven:chalk_strata_scree",
+      "halohaven:cloudstone_scatter",
+      "halohaven:sky_bloom_patch_2",
+      "halohaven:sky_crown_tree_1"
     ],
     []
   ],
