@@ -51,3 +51,6 @@ The Dreamcatcher was revised after a second isometric geometry preview to use an
 ## Inventory consistency pass
 All 22 registered items with standalone PNG models have reviewed native 16x16 icon art. Strong, long, caramel and standard coffee have different silhouettes; herbal and dream teas have distinct marks. Cloth, medicine, botanicals and ingredients are rendered as readable item clusters without anti-aliasing. Original block items continue to inherit the revised 3D block models.
 
+
+## Alpha 7 | Cluster Art Direction
+An additional 45 PNGs have been revised at the actual native pixel level: cluster masses, material shading, strategic contour breaks and independent plant silhouettes, avoiding synthetic noise, pillow shading and uniform bands. See ART_DIRECTION_V7.md.

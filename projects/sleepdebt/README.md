@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.6
+# Sleep Debt: Restless Nights — 3.0.0-alpha.7
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.6.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.7.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -93,3 +93,6 @@ The Dreamcatcher frame is now a stepped octagon with separate open mesh and thre
 ## Alpha 6: Complete item icon remaster
 Every one of the 22 item textures has an individual 16x16 pixel-art sprite, including all coffee variants, teas, milk, herbs, dream materials, mask, pillow, poultice, journal and incense. The existing 16x16 texture names and item model references are preserved for save/resource-pack compatibility.
 
+
+## Alpha 7 | Cluster Discipline Art Pass
+Replaced 45 authentic 16x16 PNGs: 15 block materials, 8 coffee crop stages and 22 item icons. Rebuilt clusters and broken organic edges, focused material textures, corrected shading on fabrics/pillows, controlled banding and tile rhythm. The exact authored PNG files are committed in assets/sleepdebt/textures; old generators cannot overwrite them. A new PNG/palette QA test runs against every CI-built JAR. See ART_DIRECTION_V7.md.

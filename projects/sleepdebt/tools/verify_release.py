@@ -138,3 +138,7 @@ with zipfile.ZipFile(jar) as z:
                     if f"data/sleepdebt/recipe/{recipe}.json" not in names and not page["recipe"].startswith("minecraft:"):
                         raise ValueError(f"{entry} points to missing recipe {page['recipe']}")
     print("Sleep Debt production assets OK:",len(item_ids),"items,",len(block_names),"blocks,",len(pngs),"PNG textures")
+
+# Additional authored pixel-art quality gate, independently decodes PNG pixels.
+import subprocess
+subprocess.run([sys.executable,"tools/verify_pixel_art.py",str(jar)],check=True)
