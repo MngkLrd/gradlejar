@@ -10,8 +10,8 @@ tasks.named('generateHaloAssets').configure {
     doLast {
         File out=layout.buildDirectory.dir('generated/haloassets').get().asFile
         Map atlas=(Map)new JsonSlurper().parse(new File(projectDir,'art/pixel_atlas.json'))
-        if(atlas.resolution!=16||atlas.tiles.size()!=32)
-            throw new GradleException('Halo Pixel Atelier expects 32 authored 16×16 maps')
+        if(atlas.resolution!=16||atlas.tiles.size()!=33)
+            throw new GradleException('Halo Pixel Atelier expects 33 authored 16×16 maps')
         def json={String name,Object content->
             File f=new File(out,name);f.parentFile.mkdirs()
             f.setText(JsonOutput.prettyPrint(JsonOutput.toJson(content))+'\n','UTF-8')
@@ -56,6 +56,13 @@ tasks.named('generateHaloAssets').configure {
             println('HALO PIXEL ART: '+name+' 16×16 '+distinct.size()+
                 ' colors '+alphaCount+' transparent pixels')
         }
+        json('assets/halohaven/blockstates/ascension_gateway.json',[
+            variants:['':[model:'halohaven:block/ascension_gateway']]
+        ])
+        json('assets/halohaven/models/block/ascension_gateway.json',[
+            parent:'minecraft:block/cross',render_type:'minecraft:translucent',
+            textures:[cross:'halohaven:block/ascension_gateway']
+        ])
         // Proper face orientation; important motifs are not tiled on all faces.
         json('assets/halohaven/models/block/cloudstone.json',[
             parent:'minecraft:block/cube_bottom_top',
