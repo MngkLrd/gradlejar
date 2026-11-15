@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "cowtipping",
+  "version": "${version}",
+  "name": "Cow Tipping",
+  "description": "Tip cows with an empty-hand right click; nearby cows gather to watch.",
+  "authors": [
+    "Cow Tipping contributors"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.cowtipping.CowTippingFabric"
+    ]
+  },
+  "mixins": [
+    "cowtipping.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "1.21.1",
+    "java": ">=21"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "dev.cowtipping.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "CowMixin",
+    "CowStatusMixin"
+  ],
+  "client": [
+    "client.CowRenderMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
