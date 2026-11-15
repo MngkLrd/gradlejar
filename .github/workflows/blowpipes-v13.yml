@@ -1,0 +1,174 @@
+name: Blowpipes NeoForge 1.21.1 Quality Animation v1.3
+on:
+  push:
+    branches:
+      - feature/blowpipes-neo121-animation-v13
+    paths:
+      - tools/blowpipes_v13_clients.b85
+      - .github/workflows/blowpipes-v13.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.14.5
+      - name: Generate previous complete mod and 16px textures
+        run: |
+          python3 - <<'PY'
+          import zlib,base64
+          from pathlib import Path
+          script=zlib.decompress(base64.b64decode(Path('tools/blowpipes_generator.b64').read_text()))
+          Path('tools/blowpipes_generate.py').write_bytes(script)
+          PY
+          sed -i 's@ROOT = Path(__file__).resolve().parent@ROOT = Path(__file__).resolve().parent.parent@' tools/blowpipes_generate.py
+          python3 tools/blowpipes_generate.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('blowpipes-neoforge-1.21.1/src/main/java/dev/minemods/blowpipes/DartProjectile.java')
+          s=p.read_text().replace('@Override protected float getGravity(){return 0.025f;}', '').replace('target.setSecondsOnFire(3)','target.igniteForSeconds(3)')
+          p.write_text(s)
+          PY
+          python3 tools/blowpipes_style_guided.py blowpipes-neoforge-1.21.1
+      - name: Apply compiled v1.2 3D darts patch
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import io,hashlib,base64,zlib,zipfile
+          raw=zlib.decompress(base64.b85decode(Path('tools/blowpipes_v12_code.b85').read_text().strip()))
+          assert hashlib.sha256(raw).hexdigest()=='e5b019bbf623b8cba1e778a92e0f4826557de334f648e25667768fd7f1f8952b'
+          root=Path('blowpipes-neoforge-1.21.1')
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+            for name in z.namelist():
+              assert not name.startswith('/') and '..' not in Path(name).parts
+              path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(z.read(name))
+          PY
+      - name: Install multi-phase animation rig and models
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,zlib,zipfile,io,hashlib,json
+          root=Path('blowpipes-neoforge-1.21.1')
+          raw=zlib.decompress(base64.b85decode(Path('tools/blowpipes_v13_clients.b85').read_text().strip()))
+          assert hashlib.sha256(raw).hexdigest()=='db96baebb0bdbc7f2469bf0399dc0478564a219cb3a2ea03c1e3a8f06593bb80'
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+            assert len(z.namelist()) == 3, z.namelist()
+            for name in z.namelist():
+              assert name.startswith('src/main/java/dev/minemods/blowpipes/client/')
+              dest=root/name;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(z.read(name))
+          code=root/'src/main/java/dev/minemods/blowpipes'
+          item=code/'BlowpipeItem.java'
+          s=item.read_text()
+          assert 'BREATH_TICKS = 7' in s
+          s=s.replace('BREATH_TICKS = 7','BREATH_TICKS = 10')
+          s=s.replace('UseAnim.TOOT_HORN','UseAnim.NONE')
+          s=s.replace('SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 0.20F, 1.85F','SoundEvents.BREEZE_SHOOT, SoundSource.PLAYERS, 0.25F, 1.65F')
+          item.write_text(s)
+          client=code/'BlowpipesClient.java'
+          original=client.read_text()
+          assert 'HumanoidModel.ArmPose.TOOT_HORN' in original
+          client.write_text("""package dev.minemods.blowpipes;
+
+import dev.minemods.blowpipes.client.BlowpipeArmPose;
+import dev.minemods.blowpipes.client.BlowpipeFirstPersonRenderer;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.common.NeoForge;
+
+@EventBusSubscriber(modid=Blowpipes.ID,bus=EventBusSubscriber.Bus.MOD,value=Dist.CLIENT)
+public final class BlowpipesClient {
+    private static final IClientItemExtensions EXT = new IClientItemExtensions() {
+        @Override public HumanoidModel.ArmPose getArmPose(LivingEntity user, InteractionHand hand, ItemStack stack) {
+            if (user.isUsingItem() && user.getUsedItemHand()==hand && user.getUseItem().is(stack.getItem()))
+                return BlowpipeArmPose.POSE.getValue();
+            if (!user.isUsingItem() && user.swinging && user.getAttackAnim(0.0F)>0.0F)
+                return BlowpipeArmPose.POSE.getValue();
+            return null;
+        }
+    };
+    @SubscribeEvent public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(Blowpipes.DART.get(),DartRenderer::new);
+    }
+    @SubscribeEvent public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(DartRenderer.LAYER,DartModel::createBodyLayer);
+    }
+    @SubscribeEvent public static void registerItemExtensions(RegisterClientExtensionsEvent event) {
+        event.registerItem(EXT,Blowpipes.BAMBOO.get(),Blowpipes.HUNTING.get(),Blowpipes.REINFORCED.get());
+        NeoForge.EVENT_BUS.addListener(BlowpipeFirstPersonRenderer::renderHand);
+    }
+}
+""")
+          resources=root/'src/main/resources'
+          toml=resources/'META-INF/neoforge.mods.toml'
+          s=toml.read_text().replace('version="1.2.0"','version="1.3.0"')
+          if 'enumExtensions=' not in s:
+            assert 'authors="Minemods"' in s
+            s=s.replace('authors="Minemods"','authors="Minemods"\nenumExtensions="META-INF/blowpipes-enum-extensions.json"')
+          toml.write_text(s)
+          enum={"entries":[{"enum":"net/minecraft/client/model/HumanoidModel$ArmPose","name":"BLOWPIPES_BLOWING","constructor":"(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V","parameters":{"class":"dev/minemods/blowpipes/client/BlowpipeArmPose","field":"POSE"}}]}
+          (resources/'META-INF/blowpipes-enum-extensions.json').write_text(json.dumps(enum,indent=2)+'\n')
+          gd=root/'build.gradle'
+          gd.write_text(gd.read_text().replace("version='1.0.0'","version='1.3.0'").replace("version='1.2.0'","version='1.3.0'"))
+          for tube in ('bamboo_blowpipe','hunting_blowpipe','reinforced_blowpipe'):
+            p=resources/'assets/blowpipes/models/item'/(tube+'.json')
+            m=json.loads(p.read_text())
+            m['display']['firstperson_righthand']={'rotation':[0,0,0],'translation':[0,0,0],'scale':[0.79,0.79,0.79]}
+            m['display']['firstperson_lefthand']={'rotation':[0,0,0],'translation':[0,0,0],'scale':[0.79,0.79,0.79]}
+            m['display']['thirdperson_righthand']={'rotation':[10,-30,70],'translation':[0,1,0],'scale':[0.68,0.68,0.68]}
+            m['display']['thirdperson_lefthand']={'rotation':[10,30,-70],'translation':[0,1,0],'scale':[0.68,0.68,0.68]}
+            p.write_text(json.dumps(m,indent=2)+'\n')
+          print('V1.3 patched: 3 new classes, custom arm pose, item use, models, enum meta')
+          PY
+      - name: Build NeoForge 1.21.1
+        working-directory: blowpipes-neoforge-1.21.1
+        run: gradle --no-daemon --stacktrace clean build
+      - name: Validate compiled animation classes and assets
+        run: |
+          python3 - <<'PY'
+          import zipfile,json,struct
+          from pathlib import Path
+          jar=Path('blowpipes-neoforge-1.21.1/build/libs/blowpipes-neoforge-1.21.1-1.3.0.jar')
+          assert jar.is_file() and jar.stat().st_size>20000,jar
+          with zipfile.ZipFile(jar) as z:
+            assert z.testzip() is None
+            files=set(z.namelist())
+            for cls in ('Blowpipes','BlowpipeItem','BlowpipesClient','DartModel','DartRenderer','DartProjectile'):
+              assert 'dev/minemods/blowpipes/'+cls+'.class' in files,cls
+            for cls in ('BlowpipeArmPose','BlowpipeFirstPersonRenderer','BlowpipeAnimationCurves'):
+              assert 'dev/minemods/blowpipes/client/'+cls+'.class' in files,cls
+            assert 'META-INF/blowpipes-enum-extensions.json' in files
+            assert b'enumExtensions="META-INF/blowpipes-enum-extensions.json"' in z.read('META-INF/neoforge.mods.toml')
+            assert b'1.3.0' in z.read('META-INF/neoforge.mods.toml')
+            for tube in ('bamboo_blowpipe','hunting_blowpipe','reinforced_blowpipe'):
+              png='assets/blowpipes/textures/item/'+tube+'.png'
+              assert struct.unpack('>II',z.read(png)[16:24])==(16,16)
+              m=json.loads(z.read('assets/blowpipes/models/item/'+tube+'.json'))
+              assert len(m['elements'])>=3
+            for dart in ('plain_dart','iron_dart','poison_dart','slowness_dart','fire_dart','sleep_dart'):
+              assert 'assets/blowpipes/textures/entity/dart/'+dart+'.png' in files
+          print('VERIFIED full v1.3 JAR:',jar,'size:',jar.stat().st_size)
+          PY
+      - name: Publish release jar
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          jar="blowpipes-neoforge-1.21.1/build/libs/blowpipes-neoforge-1.21.1-1.3.0.jar"
+          tag="blowpipes-neoforge-1.21.1-v1.3.0-$GITHUB_RUN_NUMBER"
+          gh release create "$tag" "$jar" --target "$GITHUB_SHA" --title "Blowpipes 1.3.0 - NeoForge 1.21.1" --notes "Custom two-hand staged animation rig, smoothed first-person arm and 3D tube, NeoForge client arm pose and all 3D darts. Compiled and resource-validated; final placement needs in-game testing." --prerelease
