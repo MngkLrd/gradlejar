@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "RR",
+    "RS"
+  ],
+  "key": {
+    "R": "traumacraft:medical_polymer",
+    "S": "minecraft:iron_nugget"
+  },
+  "result": {
+    "id": "traumacraft:tourniquet",
+    "count": 1
+  }
+}

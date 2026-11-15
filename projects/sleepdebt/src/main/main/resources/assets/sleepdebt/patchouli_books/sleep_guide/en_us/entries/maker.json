@@ -1,0 +1,15 @@
+{
+  "name": "Copper Coffee Maker",
+  "category": "sleepdebt:crafting",
+  "icon": "sleepdebt:coffee_machine",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "A real brewing machine. Insert a water bucket in slot 1, ground coffee in slot 2 and coal in slot 3. Wait ten seconds. Finished coffee appears in slot 4. Steam rises while the machine runs."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:coffee_machine"
+    }
+  ]
+}

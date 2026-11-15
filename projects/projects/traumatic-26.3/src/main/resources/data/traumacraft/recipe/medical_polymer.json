@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:slime_ball",
+    "minecraft:paper",
+    "minecraft:string"
+  ],
+  "result": {
+    "id": "traumacraft:medical_polymer",
+    "count": 3
+  }
+}

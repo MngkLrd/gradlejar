@@ -1,0 +1,32 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+group = mod_group_id
+version = mod_version
+base.archivesName = "${mod_id}-${minecraft_version}"
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+neoForge {
+    version = project.neo_version
+    runs {
+        client { client() }
+        server { server() }
+    }
+    mods { "${mod_id}" { sourceSet(sourceSets.main) } }
+}
+
+def generatedSounds = layout.buildDirectory.dir('generated/spidercentaur-sounds')
+tasks.register('generateOriginalSounds', Exec) {
+    inputs.file('tools/generate_sounds.py')
+    outputs.dir(generatedSounds)
+    commandLine 'python3', 'tools/generate_sounds.py', generatedSounds.get().asFile.absolutePath
+}
+sourceSets.main.resources.srcDir(generatedSounds)
+tasks.named('processResources') { dependsOn(tasks.named('generateOriginalSounds')) }
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}

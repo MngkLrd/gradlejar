@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=true": {
+      "model": "openmotion:block/sprinkler"
+    },
+    "active=false": {
+      "model": "openmotion:block/sprinkler_inactive"
+    }
+  }
+}

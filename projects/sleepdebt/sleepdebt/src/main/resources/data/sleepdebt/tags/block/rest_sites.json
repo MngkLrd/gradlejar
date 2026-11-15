@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:beds",
+    "sleepdebt:camp_bedroll"
+  ]
+}

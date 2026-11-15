@@ -1,0 +1,22 @@
+license="MIT"
+
+[[mods]]
+modId="hungrymining"
+version="1.1.0"
+displayName="Hungry Mining"
+authors="MineMods"
+description="Food-based mining speed. Food 18-20: 108%; 17: 100%; 0: 30% with a linear slope from 17 down to 0."
+
+[[dependencies.hungrymining]]
+modId="neoforge"
+type="required"
+versionRange="[26.2.0.1-beta,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.hungrymining]]
+modId="minecraft"
+type="required"
+versionRange="[26.2]"
+ordering="NONE"
+side="BOTH"

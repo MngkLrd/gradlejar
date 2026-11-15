@@ -1,0 +1,267 @@
+name: Halo Haven 1.21.1 Dedicated Server Smoke
+
+on:
+  push:
+    paths:
+      - 'projects/halohaven/**'
+      - '.github/workflows/halohaven-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  game-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+      - name: Compile & validate embedded textures
+        working-directory: projects/halohaven
+        run: |
+          gradle --no-daemon clean build
+          python3 ci/art_quality.py
+          python3 - <<'PY'
+          from zipfile import ZipFile
+          import json, glob, os, struct
+          path = glob.glob('build/libs/halohaven-1.21.1-1.7.0.jar')[0]
+          blocks = ('cloudstone skygrass pearl_bricks sungold_tiles azure_planks aurora_glass starshade dawn_glass moonstone celestial_mosaic gilded_pillar cloud_lantern waystone star_ore pilgrim_altar').split()
+          mobs = ('skyfolk cloudhare lumen dawn_guardian dusk_wraith eclipse_revenant').split()
+          with ZipFile(path) as jar:
+              names=set(jar.namelist())
+              required=set()
+              for name in blocks:
+                  required |= {f'assets/halohaven/textures/block/{name}.png',
+                              f'assets/halohaven/models/block/{name}.json',
+                              f'assets/halohaven/models/item/{name}.json',
+                              f'assets/halohaven/blockstates/{name}.json',
+                              f'data/halohaven/loot_table/blocks/{name}.json'}
+              for name in mobs: required.add(f'assets/halohaven/textures/entity/{name}.png')
+              for name in ('sungold_stairs','sungold_slab','pearl_stairs','pearl_slab','azure_fence'):
+                  required |= {f'assets/halohaven/models/item/{name}.json',
+                               f'assets/halohaven/blockstates/{name}.json'}
+              for name in ('sky_leaves','celestial_bloom'):
+                  required |= {f'assets/halohaven/textures/block/{name}.png',
+                               f'assets/halohaven/models/block/{name}.json',
+                               f'assets/halohaven/models/item/{name}.json'}
+              required.add('assets/halohaven/textures/item/aether_feather.png')
+              required.add('assets/halohaven/textures/item/eclipse_seal.png')
+              required.add('assets/halohaven/textures/item/sunward_relic.png')
+              required.add('assets/halohaven/textures/entity/halo_ring.png')
+              required.add('data/halohaven/loot_table/entities/eclipse_revenant.json')
+              required.add('data/halohaven/recipe/sunward_relic.json')
+              required |= {
+                  'assets/halohaven/models/item/skyseed.json',
+                  'assets/halohaven/textures/item/skyseed.png',
+                  'data/halohaven/recipe/skyseed.json',
+                  'assets/halohaven/lang/en_us.json',
+                  'assets/halohaven/lang/ru_ru.json',
+              }
+              for n in ('sungold_stairs','sungold_slab','pearl_stairs','pearl_slab','azure_fence'):
+                  required.add(f'data/halohaven/loot_table/blocks/{n}.json')
+              for n in ('sky_leaves','celestial_bloom'):
+                  required.add(f'data/halohaven/loot_table/blocks/{n}.json')
+              required.add('assets/halohaven/models/block/waystone.json')
+              required.add('assets/halohaven/models/block/pilgrim_altar.json')
+              for suffix in ['data/halohaven/dimension/heaven.json',
+                              'data/halohaven/dimension_type/heaven.json',
+                              'data/halohaven/worldgen/biome/cloud_gardens.json',
+                              'data/halohaven/worldgen/noise_settings/heaven_islands.json']:
+                  required.add(suffix)
+              six=('dawn_gardens','chalk_terraces','eternal_canopy',
+                   'ringing_gorges','forgotten_choirs','lower_veil')
+              for biome in six:
+                  required.add(f'data/halohaven/worldgen/biome/{biome}.json')
+              for n in (1,2,8,11):
+                  required.add(f'data/halohaven/worldgen/placed_feature/sky_bloom_patch_{n}.json')
+              for n in (1,2,4,9):
+                  required.add(f'data/halohaven/worldgen/placed_feature/sky_crown_tree_{n}.json')
+              required |= {
+                  'data/halohaven/worldgen/configured_feature/sky_bloom_patch.json',
+                  'data/halohaven/worldgen/configured_feature/sky_crown_tree.json',
+                  'data/halohaven/worldgen/density_function/climate_temperature.json',
+                  'data/halohaven/worldgen/density_function/climate_vegetation.json',
+                  'data/minecraft/tags/block/dirt.json',
+                  'assets/halohaven/textures/block/gilded_pillar_top.png',
+                  'assets/halohaven/textures/block/skygrass_side.png',
+              }
+              art=json.load(open('art/pixel_atlas.json',encoding='utf-8'))
+              assert art['resolution']==16 and len(art['tiles'])==33
+              import hashlib
+              art_sha=set()
+              for name,entry in art['tiles'].items():
+                  assert len(entry['rows'])==16, name
+                  assert all(len(r)==16 for r in entry['rows']), name
+                  assert len(art['palettes'][entry['palette']])<=9
+                  file=f'assets/halohaven/textures/block/{name}.png'
+                  required.add(file)
+                  if file in names:
+                      raw=jar.read(file)
+                      assert raw[:8]==bytes((137,80,78,71,13,10,26,10)), name
+                      assert struct.unpack('>II',raw[16:24])==(16,16), name
+                      art_sha.add(hashlib.sha256(raw).hexdigest())
+              assert len(art_sha)>=29,'Unexpected duplicate material surfaces'
+              # Actual visible portal block has no obtainable item or loot.
+              required |= {
+                  'assets/halohaven/textures/block/ascension_gateway.png',
+                  'assets/halohaven/blockstates/ascension_gateway.json',
+                  'assets/halohaven/models/block/ascension_gateway.json'
+              }
+              gate=json.loads(jar.read('assets/halohaven/models/block/ascension_gateway.json'))
+              assert gate['parent']=='minecraft:block/cross'
+              assert gate['render_type']=='minecraft:translucent'
+              tree=json.loads(jar.read('data/halohaven/worldgen/configured_feature/sky_crown_tree.json'))
+              assert tree['config']['foliage_provider']['state']['Properties']['persistent']=='true'
+              for region in six:
+                  biome=json.loads(jar.read(f'data/halohaven/worldgen/biome/{region}.json'))
+                  assert any('scatter' in f or 'fragments' in f or 'scree' in f
+                             or 'masonry' in f or 'cairns' in f
+                             for f in biome['features'][9]), region
+              for name in ('cloudstone_scatter','chalk_fragments','tuff_scree',
+                           'fallen_masonry','moonstone_cairns'):
+                  required.add(f'data/halohaven/worldgen/configured_feature/{name}.json')
+                  required.add(f'data/halohaven/worldgen/placed_feature/{name}.json')
+              missing=required-names
+              if missing: raise RuntimeError('Missing mod files: '+repr(sorted(missing)))
+              dimension=json.loads(jar.read('data/halohaven/dimension/heaven.json'))
+              source=dimension['generator']['biome_source']
+              assert source['type']=='minecraft:multi_noise'
+              assert {entry['biome'].split(':')[1] for entry in source['biomes']}==set(six)
+              for biome in six:
+                  definition=json.loads(jar.read(f'data/halohaven/worldgen/biome/{biome}.json'))
+                  assert len(definition['features'])==11
+                  assert 'effects' in definition
+              # Check feature order globally: inconsistent relative order
+              # between biome step lists crashes the chunk feature sorter.
+              for generation_step in range(11):
+                  edges={}
+                  nodes=set()
+                  for region in six:
+                      features=json.loads(
+                          jar.read(f'data/halohaven/worldgen/biome/{region}.json')
+                      )['features'][generation_step]
+                      nodes.update(features)
+                      for left,right in zip(features,features[1:]):
+                          edges.setdefault(left,set()).add(right)
+                  visiting=set()
+                  visited=set()
+                  def walk(node):
+                      if node in visiting:
+                          raise RuntimeError(f'Feature order cycle in step {generation_step}: {node}')
+                      if node in visited: return
+                      visiting.add(node)
+                      for other in edges.get(node,set()): walk(other)
+                      visiting.remove(node)
+                      visited.add(node)
+                  for node in nodes: walk(node)
+              print('PASS: feature order is acyclic across all six biomes')
+              densities=json.loads(jar.read('data/halohaven/worldgen/noise_settings/heaven_islands.json'))
+              assert densities['noise_router']['temperature']=='halohaven:climate_temperature'
+              assert densities['noise_router']['vegetation']=='halohaven:climate_vegetation'
+              assert densities['noise_router']['final_density']['type']=='minecraft:max'
+              print('PASS: 6 actual climate biomes and separate terrain density + ecology')
+              for variant in ('skygrass_sparse','skygrass_dense'):
+                  assert f'assets/halohaven/textures/block/{variant}.png' in names
+                  assert f'assets/halohaven/models/block/{variant}.json' in names
+              grass=json.loads(jar.read('assets/halohaven/blockstates/skygrass.json'))
+              assert len(grass['variants'][''])==6
+              assert sum(v['weight'] for v in grass['variants'][''])==20
+              foliage=json.loads(jar.read('assets/halohaven/blockstates/sky_leaves.json'))
+              assert len(foliage['variants'][''])==6
+              for name in ('cloudstone','celestial_mosaic'):
+                  model=json.loads(jar.read(f'assets/halohaven/models/block/{name}.json'))
+                  assert model['parent']=='minecraft:block/cube_bottom_top'
+              assert json.loads(jar.read('assets/halohaven/models/block/gilded_pillar.json'))['parent']=='minecraft:block/cube_column'
+              for block in ('cloudstone','moonstone','star_ore'):
+                  variants=json.loads(jar.read(f'assets/halohaven/blockstates/{block}.json'))['variants']['']
+                  assert len(variants)>=4, (block, len(variants))
+              for name in ('cloudstone_alt','cloudstone_fractured',
+                           'moonstone_alt','moonstone_fractured','star_ore_alt',
+                           'sky_leaves_sparse'):
+                  assert f'assets/halohaven/models/block/{name}.json' in names
+              print('PASS: 33 authored native16px block textures, 22 user-facing block materials + 1 internal gateway')
+              for name in ['aurora_glass','dawn_glass']:
+                  model=json.loads(jar.read(f'assets/halohaven/models/block/{name}.json'))
+                  assert model['render_type']=='minecraft:translucent'
+              # Pixel-accurate texture atlases: no more fake 64x64 Allay or Rabbit UV.
+              expected_uv={
+                  'skyfolk': (64,64), 'cloudhare': (64,32), 'lumen':(32,32),
+                  'dawn_guardian':(128,128), 'dusk_wraith':(32,32),
+                  'eclipse_revenant':(32,32),
+              }
+              for name,expected in expected_uv.items():
+                  raw=jar.read(f'assets/halohaven/textures/entity/{name}.png')
+                  assert raw[:8]==b'\x89PNG\r\n\x1a\n'
+                  actual=struct.unpack('>II',raw[16:24])
+                  assert actual==expected, f'{name} UV atlas: {actual} != {expected}'
+              assert json.loads(jar.read('data/halohaven/recipe/skyseed.json'))['result']['id']=='halohaven:skyseed'
+              for lang in ('en_us','ru_ru'):
+                  text=json.loads(jar.read(f'assets/halohaven/lang/{lang}.json'))
+                  assert 'itemGroup.halohaven.heaven' in text
+                  assert 'item.halohaven.skyseed' in text
+              print('PASS: built-in item, creative tab, six mapped UV atlases, dimension, transparent glass:', len(required))
+          PY
+      - name: Start server and generate real Halo Haven chunks (RCON)
+        working-directory: projects/halohaven
+        timeout-minutes: 6
+        run: |
+          mkdir -p run
+          printf 'eula=true\n' > run/eula.txt
+          cat > run/server.properties <<'EOF'
+          online-mode=false
+          enable-rcon=true
+          rcon.port=25576
+          rcon.password=halo-ci-private-test
+          server-port=25565
+          level-seed=halo-qa-1.4
+          max-tick-time=120000
+          view-distance=6
+          simulation-distance=4
+          EOF
+          set +e
+          timeout --signal=SIGINT --kill-after=10 190s gradle --no-daemon runServer > server-smoke.log 2>&1 &
+          game_pid=$!
+          python3 ci/worldgen_probe.py > worldgen-probe.log 2>&1
+          probe_status=$?
+          # Probe issues 'stop' via RCON; force termination for failures.
+          if [ "$probe_status" -ne 0 ]; then kill -INT "$game_pid" 2>/dev/null || true; fi
+          wait "$game_pid"
+          game_status=$?
+          set -e
+          tail -n 100 server-smoke.log
+          cat worldgen-probe.log
+          if grep -Eiq 'Errors in currently selected data packs|Failed to load registries|Exception in server tick loop|A critical error occurred|Failure during server start|The following entities have not registered to the RegisterSpawnPlacementsEvent' server-smoke.log; then
+            echo 'FAIL: server registry, tick, or spawn placement errors'
+            exit 1
+          fi
+          if [ "$probe_status" -ne 0 ]; then
+            echo 'FAIL: Heaven chunk generation / RCON validation failed'
+            exit 1
+          fi
+          if ! grep -q 'PASS: generated/ticked 3 real Halo Haven positions' worldgen-probe.log; then
+            echo 'FAIL: chunk generation proof not found'
+            exit 1
+          fi
+          if grep -Eq 'Done \([0-9.,]+s\)!|Done \(' server-smoke.log; then
+            echo 'PASS: NeoForge server loaded and generated 3 real Heaven chunks'
+            exit 0
+          fi
+          echo "FAIL: server did not reach ready state (exit: $game_status)"
+          exit 1
+      - name: Upload smoke logs when failing
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: halohaven-smoke-log
+          path: |
+            projects/halohaven/server-smoke.log
+            projects/halohaven/worldgen-probe.log
+            projects/halohaven/run/logs/latest.log
+            projects/halohaven/run/crash-reports/

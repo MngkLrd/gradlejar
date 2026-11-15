@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:white_wool",
+    "minecraft:paper",
+    "minecraft:string"
+  ],
+  "result": {
+    "id": "traumacraft:sterile_fabric",
+    "count": 4
+  }
+}

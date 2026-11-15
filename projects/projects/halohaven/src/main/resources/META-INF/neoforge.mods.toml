@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+[[mods]]
+modId="halohaven"
+version="1.7.0"
+displayName="Halo Haven"
+authors="MineMods"
+description='''An ancient sky kingdom reclaimed by nature, with six distinct climatic biomes, floating strata, wandering wildlife, art-directed stones and ruins.'''
+[[dependencies.halohaven]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.80,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.halohaven]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"

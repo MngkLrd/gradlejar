@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:glass_bottle",
+    "minecraft:dandelion",
+    "minecraft:kelp",
+    "minecraft:sugar"
+  ],
+  "result": {
+    "id": "traumacraft:herbal_extract",
+    "count": 2
+  }
+}

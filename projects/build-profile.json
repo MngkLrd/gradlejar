@@ -1,0 +1,9 @@
+{
+  "slug": "fieldkit",
+  "version": "1.2.2",
+  "minecraft": "1.21.1",
+  "loader": "neoforge",
+  "java": "21",
+  "gradle": "9.2.1",
+  "jar_glob": "fieldkit-1.2.2.jar"
+}

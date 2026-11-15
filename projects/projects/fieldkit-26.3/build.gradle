@@ -1,0 +1,41 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+group = mod_group_id
+version = mod_version
+base.archivesName = mod_id
+
+// Minecraft 26.3 requires Java 25.
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+neoForge {
+    version = project.neo_version
+    runs {
+        client { client() }
+    }
+    mods {
+        "${mod_id}" { sourceSet(sourceSets.main) }
+    }
+}
+
+tasks.register('generateModMetadata', ProcessResources) {
+    def replacements = [
+        mod_id: mod_id,
+        mod_version: mod_version,
+        neo_version: neo_version,
+        minecraft_version: minecraft_version
+    ]
+    inputs.properties replacements
+    expand replacements
+    from 'src/main/templates'
+    into 'build/generated/sources/modMetadata'
+}
+sourceSets.main.resources.srcDir tasks.named('generateModMetadata')
+neoForge.ideSyncTask tasks.named('generateModMetadata')
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 25
+}

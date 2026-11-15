@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "sleepdebt:coffee",
+    "sleepdebt:strong_coffee",
+    "sleepdebt:long_coffee",
+    "sleepdebt:energy_drink",
+    "sleepdebt:caramel_coffee",
+    "sleepdebt:bitter_tonic"
+  ]
+}

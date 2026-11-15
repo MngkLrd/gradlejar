@@ -1,0 +1,166 @@
+package dev.minemods.halohaven;
+
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.TransparentBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+@Mod(HaloHaven.ID)
+public final class HaloHaven {
+    public static final String ID = "halohaven";
+    public static final ResourceKey<Level> HEAVEN = ResourceKey.create(Registries.DIMENSION, id("heaven"));
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ID);
+
+    public static final DeferredBlock<Block> CLOUDSTONE = BLOCKS.registerSimpleBlock("cloudstone",
+        BlockBehaviour.Properties.of().strength(1.5f, 6f).sound(SoundType.CALCITE));
+    public static final DeferredBlock<Block> SKYGRASS = BLOCKS.registerSimpleBlock("skygrass",
+        BlockBehaviour.Properties.of().strength(0.7f).sound(SoundType.GRASS));
+    public static final DeferredBlock<Block> PEARL_BRICKS = BLOCKS.registerSimpleBlock("pearl_bricks",
+        BlockBehaviour.Properties.of().strength(1.8f, 6f).sound(SoundType.CALCITE));
+    public static final DeferredBlock<Block> SUNGOLD_TILES = BLOCKS.registerSimpleBlock("sungold_tiles",
+        BlockBehaviour.Properties.of().strength(2f, 6f).sound(SoundType.METAL));
+    public static final DeferredBlock<Block> AZURE_PLANKS = BLOCKS.registerSimpleBlock("azure_planks",
+        BlockBehaviour.Properties.of().strength(2f, 5f).sound(SoundType.WOOD));
+    public static final DeferredBlock<TransparentBlock> AURORA_GLASS = BLOCKS.register("aurora_glass",
+        () -> new TransparentBlock(BlockBehaviour.Properties.of().strength(0.3f).noOcclusion()
+            .isViewBlocking((s,w,p) -> false).isSuffocating((s,w,p) -> false)
+            .lightLevel(s -> 5).sound(SoundType.GLASS)));
+    public static final DeferredBlock<TransparentBlock> DAWN_GLASS = BLOCKS.register("dawn_glass",
+        () -> new TransparentBlock(BlockBehaviour.Properties.of().strength(0.3f).noOcclusion()
+            .isViewBlocking((s,w,p) -> false).isSuffocating((s,w,p) -> false)
+            .lightLevel(s -> 6).sound(SoundType.GLASS)));
+    public static final DeferredBlock<Block> MOONSTONE = BLOCKS.registerSimpleBlock("moonstone",
+        BlockBehaviour.Properties.of().strength(2.0f, 6f).sound(SoundType.AMETHYST));
+    public static final DeferredBlock<Block> CELESTIAL_MOSAIC = BLOCKS.registerSimpleBlock("celestial_mosaic",
+        BlockBehaviour.Properties.of().strength(2.0f, 6f).sound(SoundType.CALCITE));
+    public static final DeferredBlock<Block> GILDED_PILLAR = BLOCKS.registerSimpleBlock("gilded_pillar",
+        BlockBehaviour.Properties.of().strength(2.3f, 6f).sound(SoundType.METAL));
+    public static final DeferredBlock<Block> CLOUD_LANTERN = BLOCKS.registerSimpleBlock("cloud_lantern",
+        BlockBehaviour.Properties.of().strength(1.1f).lightLevel(s -> 15).sound(SoundType.GLASS));
+    public static final DeferredBlock<Block> WAYSTONE = BLOCKS.registerSimpleBlock("waystone",
+        BlockBehaviour.Properties.of().strength(4f, 1200f).lightLevel(s -> 12).sound(SoundType.AMETHYST));
+    public static final DeferredBlock<Block> PILGRIM_ALTAR = BLOCKS.registerSimpleBlock("pilgrim_altar",
+        BlockBehaviour.Properties.of().strength(3f, 8f).lightLevel(s -> 12).sound(SoundType.AMETHYST));
+    public static final DeferredBlock<Block> STAR_ORE = BLOCKS.registerSimpleBlock("star_ore",
+        BlockBehaviour.Properties.of().strength(3f, 6f).lightLevel(s -> 4).sound(SoundType.STONE));
+    public static final DeferredBlock<StairBlock> SUNGOLD_STAIRS = BLOCKS.register("sungold_stairs",
+        () -> new StairBlock(SUNGOLD_TILES.get().defaultBlockState(),
+            BlockBehaviour.Properties.of().strength(2f,6f).sound(SoundType.METAL)));
+    public static final DeferredBlock<SlabBlock> SUNGOLD_SLAB = BLOCKS.register("sungold_slab",
+        () -> new SlabBlock(BlockBehaviour.Properties.of().strength(2f,6f).sound(SoundType.METAL)));
+    public static final DeferredBlock<StairBlock> PEARL_STAIRS = BLOCKS.register("pearl_stairs",
+        () -> new StairBlock(PEARL_BRICKS.get().defaultBlockState(),
+            BlockBehaviour.Properties.of().strength(1.8f,6f).sound(SoundType.CALCITE)));
+    public static final DeferredBlock<SlabBlock> PEARL_SLAB = BLOCKS.register("pearl_slab",
+        () -> new SlabBlock(BlockBehaviour.Properties.of().strength(1.8f,6f).sound(SoundType.CALCITE)));
+    public static final DeferredBlock<FenceBlock> AZURE_FENCE = BLOCKS.register("azure_fence",
+        () -> new FenceBlock(BlockBehaviour.Properties.of().strength(2f,5f).sound(SoundType.WOOD)));
+    public static final DeferredBlock<LeavesBlock> SKY_LEAVES = BLOCKS.register("sky_leaves",
+        () -> new StableSkyLeavesBlock(BlockBehaviour.Properties.of().strength(0.2f)
+            .noOcclusion().sound(SoundType.GRASS)));
+    public static final DeferredBlock<Block> CELESTIAL_BLOOM = BLOCKS.registerSimpleBlock("celestial_bloom",
+        BlockBehaviour.Properties.of().noCollission().instabreak().noOcclusion().sound(SoundType.GRASS));
+    // An actual, visible ritual field, not a one-shot particle illusion.
+    // No item is registered: this block is temporary, non-colliding, and
+    // self-cleans if a portal ritual is interrupted or a server restarts.
+    public static final DeferredBlock<TemporaryGatewayBlock> ASCENSION_GATEWAY = BLOCKS.register("ascension_gateway",
+        () -> new TemporaryGatewayBlock(BlockBehaviour.Properties.of()
+            .noCollission().noOcclusion().noLootTable().strength(-1f, 3600000f)
+            .lightLevel(s -> 12).isViewBlocking((s,w,p) -> false)
+            .isSuffocating((s,w,p) -> false).sound(SoundType.AMETHYST)));
+    public static final DeferredBlock<Block> STARSHADE = BLOCKS.registerSimpleBlock("starshade",
+        BlockBehaviour.Properties.of().strength(1f).lightLevel(s -> 15).sound(SoundType.AMETHYST));
+
+    public static final DeferredItem<BlockItem> SUNGOLD_STAIRS_ITEM=ITEMS.registerSimpleBlockItem("sungold_stairs",SUNGOLD_STAIRS);
+    public static final DeferredItem<BlockItem> SUNGOLD_SLAB_ITEM=ITEMS.registerSimpleBlockItem("sungold_slab",SUNGOLD_SLAB);
+    public static final DeferredItem<BlockItem> PEARL_STAIRS_ITEM=ITEMS.registerSimpleBlockItem("pearl_stairs",PEARL_STAIRS);
+    public static final DeferredItem<BlockItem> PEARL_SLAB_ITEM=ITEMS.registerSimpleBlockItem("pearl_slab",PEARL_SLAB);
+    public static final DeferredItem<BlockItem> AZURE_FENCE_ITEM=ITEMS.registerSimpleBlockItem("azure_fence",AZURE_FENCE);
+    public static final DeferredItem<BlockItem> SKY_LEAVES_ITEM=ITEMS.registerSimpleBlockItem("sky_leaves",SKY_LEAVES);
+    public static final DeferredItem<BlockItem> CELESTIAL_BLOOM_ITEM=ITEMS.registerSimpleBlockItem("celestial_bloom",CELESTIAL_BLOOM);
+    public static final DeferredItem<BlockItem> CLOUDSTONE_ITEM = ITEMS.registerSimpleBlockItem("cloudstone", CLOUDSTONE);
+    public static final DeferredItem<BlockItem> SKYGRASS_ITEM = ITEMS.registerSimpleBlockItem("skygrass", SKYGRASS);
+    public static final DeferredItem<BlockItem> PEARL_BRICKS_ITEM = ITEMS.registerSimpleBlockItem("pearl_bricks", PEARL_BRICKS);
+    public static final DeferredItem<BlockItem> SUNGOLD_TILES_ITEM = ITEMS.registerSimpleBlockItem("sungold_tiles", SUNGOLD_TILES);
+    public static final DeferredItem<BlockItem> AZURE_PLANKS_ITEM = ITEMS.registerSimpleBlockItem("azure_planks", AZURE_PLANKS);
+    public static final DeferredItem<BlockItem> AURORA_GLASS_ITEM = ITEMS.registerSimpleBlockItem("aurora_glass", AURORA_GLASS);
+    public static final DeferredItem<BlockItem> STARSHADE_ITEM = ITEMS.registerSimpleBlockItem("starshade", STARSHADE);
+    public static final DeferredItem<BlockItem> DAWN_GLASS_ITEM = ITEMS.registerSimpleBlockItem("dawn_glass", DAWN_GLASS);
+    public static final DeferredItem<BlockItem> MOONSTONE_ITEM = ITEMS.registerSimpleBlockItem("moonstone", MOONSTONE);
+    public static final DeferredItem<BlockItem> CELESTIAL_MOSAIC_ITEM = ITEMS.registerSimpleBlockItem("celestial_mosaic", CELESTIAL_MOSAIC);
+    public static final DeferredItem<BlockItem> GILDED_PILLAR_ITEM = ITEMS.registerSimpleBlockItem("gilded_pillar", GILDED_PILLAR);
+    public static final DeferredItem<BlockItem> CLOUD_LANTERN_ITEM = ITEMS.registerSimpleBlockItem("cloud_lantern", CLOUD_LANTERN);
+    public static final DeferredItem<BlockItem> WAYSTONE_ITEM = ITEMS.registerSimpleBlockItem("waystone", WAYSTONE);
+    public static final DeferredItem<BlockItem> PILGRIM_ALTAR_ITEM = ITEMS.registerSimpleBlockItem("pilgrim_altar", PILGRIM_ALTAR);
+    public static final DeferredItem<BlockItem> STAR_ORE_ITEM = ITEMS.registerSimpleBlockItem("star_ore", STAR_ORE);
+    public static final DeferredItem<Item> AETHER_FEATHER=ITEMS.registerSimpleItem("aether_feather",
+        new Item.Properties().stacksTo(1));
+    public static final DeferredItem<Item> ECLIPSE_SEAL=ITEMS.registerSimpleItem("eclipse_seal",
+        new Item.Properties().stacksTo(16));
+    public static final DeferredItem<Item> SUNWARD_RELIC=ITEMS.register("sunward_relic",
+        ()->new SunwardRelicItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<Item> STARDUST = ITEMS.registerSimpleItem("stardust", new Item.Properties());
+    public static final DeferredItem<Item> SUNSHARD = ITEMS.registerSimpleItem("sunshard", new Item.Properties());
+    public static final DeferredItem<Item> SKY_COMPASS = ITEMS.register("sky_compass",
+        () -> new SkyCompassItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<Item> AETHER_TONIC = ITEMS.register("aether_tonic",
+        () -> new AetherTonicItem(new Item.Properties().stacksTo(16)));
+    public static final DeferredItem<SpawnEggItem> SKYFOLK_EGG=ITEMS.register("skyfolk_spawn_egg",
+        () -> new SpawnEggItem(HaloEntities.SKYFOLK.get(),0x719ba8,0xe7cd92,new Item.Properties()));
+    public static final DeferredItem<SpawnEggItem> CLOUDHARE_EGG=ITEMS.register("cloudhare_spawn_egg",
+        () -> new SpawnEggItem(HaloEntities.CLOUDHARE.get(),0xeadfe7,0xcab6dd,new Item.Properties()));
+    public static final DeferredItem<SpawnEggItem> LUMEN_EGG=ITEMS.register("lumen_spawn_egg",
+        () -> new SpawnEggItem(HaloEntities.LUMEN.get(),0xb9ece0,0xfde9b1,new Item.Properties()));
+    public static final DeferredItem<SpawnEggItem> GUARDIAN_EGG=ITEMS.register("dawn_guardian_spawn_egg",
+        () -> new SpawnEggItem(HaloEntities.DAWN_GUARDIAN.get(),0xe3d9c6,0xc3974e,new Item.Properties()));
+    public static final DeferredItem<SpawnEggItem> WRAITH_EGG=ITEMS.register("dusk_wraith_spawn_egg",
+        () -> new SpawnEggItem(HaloEntities.DUSK_WRAITH.get(),0x363c61,0x78eaf0,new Item.Properties()));
+    public static final DeferredItem<SpawnEggItem> ECLIPSE_EGG=ITEMS.register("eclipse_revenant_spawn_egg",
+        () -> new SpawnEggItem(HaloEntities.ECLIPSE_REVENANT.get(),0x2e2348,0xe9b68c,new Item.Properties()));
+    public static final DeferredItem<Item> SKYSEED = ITEMS.register("skyseed",
+        () -> new SkyseedItem(new Item.Properties().stacksTo(16)));
+    public static final DeferredItem<Item> ASCENSION_SIGIL = ITEMS.register("ascension_sigil",
+        () -> new AscensionSigilItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<Item> SKYBERRY = ITEMS.registerSimpleItem("skyberry", new Item.Properties()
+        .food(new net.minecraft.world.food.FoodProperties.Builder().nutrition(5).saturationModifier(0.7f).build()));
+
+    public HaloHaven(IEventBus bus) {
+        BLOCKS.register(bus);
+        ITEMS.register(bus);
+        HaloEntities.ENTITIES.register(bus);
+        bus.addListener(HaloEntities::registerAttributes);
+        bus.addListener(HaloEntities::registerSpawnPlacements);
+        HavenCreativeTab.register(bus);
+        NeoForge.EVENT_BUS.addListener(HavenVillages::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(HavenEvents::onRightClick);
+        NeoForge.EVENT_BUS.addListener(HavenEvents::onEntityInteract);
+        NeoForge.EVENT_BUS.addListener(HavenEvents::onLivingDeath);
+        NeoForge.EVENT_BUS.addListener(PortalRituals::onBlockPlaced);
+        NeoForge.EVENT_BUS.addListener(PortalRituals::onLevelTick);
+        NeoForge.EVENT_BUS.addListener(SkyOasis::onLevelTick);
+    }
+
+    public static ResourceLocation id(String path) { return ResourceLocation.fromNamespaceAndPath(ID, path); }
+}

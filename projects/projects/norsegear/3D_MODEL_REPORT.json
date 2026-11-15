@@ -1,0 +1,122 @@
+[
+  {
+    "name": "seax",
+    "elements": 10,
+    "materials": 23
+  },
+  {
+    "name": "bearded_axe",
+    "elements": 10,
+    "materials": 23
+  },
+  {
+    "name": "dane_axe",
+    "elements": 10,
+    "materials": 23
+  },
+  {
+    "name": "viking_sword",
+    "elements": 10,
+    "materials": 23
+  },
+  {
+    "name": "spear",
+    "elements": 7,
+    "materials": 23
+  },
+  {
+    "name": "javelin",
+    "elements": 7,
+    "materials": 23
+  },
+  {
+    "name": "throwing_axe",
+    "elements": 10,
+    "materials": 23
+  },
+  {
+    "name": "round_shield",
+    "elements": 34,
+    "materials": 23
+  },
+  {
+    "name": "sling",
+    "elements": 8,
+    "materials": 23
+  },
+  {
+    "name": "stone_shot",
+    "elements": 5,
+    "materials": 23
+  },
+  {
+    "name": "celtic_shield",
+    "elements": 36,
+    "materials": 23
+  },
+  {
+    "name": "bossed_shield",
+    "elements": 35,
+    "materials": 23
+  },
+  {
+    "name": "norse_helmet",
+    "elements": 7,
+    "materials": 23
+  },
+  {
+    "name": "norse_chestplate",
+    "elements": 8,
+    "materials": 23
+  },
+  {
+    "name": "norse_leggings",
+    "elements": 6,
+    "materials": 23
+  },
+  {
+    "name": "norse_boots",
+    "elements": 6,
+    "materials": 23
+  },
+  {
+    "name": "field_whetstone",
+    "elements": 3,
+    "materials": 23
+  },
+  {
+    "name": "war_horn",
+    "elements": 8,
+    "materials": 23
+  },
+  {
+    "name": "travel_ration",
+    "elements": 4,
+    "materials": 23
+  },
+  {
+    "name": "pitch_flask",
+    "elements": 5,
+    "materials": 23
+  },
+  {
+    "name": "bog_iron",
+    "elements": 4,
+    "materials": 23
+  },
+  {
+    "name": "forged_iron",
+    "elements": 3,
+    "materials": 23
+  },
+  {
+    "name": "leather_binding",
+    "elements": 4,
+    "materials": 23
+  },
+  {
+    "name": "carved_horn",
+    "elements": 8,
+    "materials": 23
+  }
+]

@@ -1,0 +1,225 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": true,
+  "textures": {
+    "shell": "openmotion:block/pipe_shell",
+    "copper": "openmotion:block/pipe_copper",
+    "dry": "openmotion:block/pipe_dry",
+    "water": "openmotion:block/pipe_flow",
+    "grille": "openmotion:block/pump_grille",
+    "pump": "openmotion:block/pump_body",
+    "switch": "openmotion:block/valve_switch",
+    "dark": "openmotion:block/sp_dark",
+    "metal": "openmotion:block/sp_steel",
+    "brass": "openmotion:block/sp_nozzle",
+    "base": "openmotion:block/sp_base",
+    "glow": "openmotion:block/sp_on",
+    "off": "openmotion:block/sp_off",
+    "particle": "openmotion:block/pipe_shell"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        6,
+        0
+      ],
+      "to": [
+        10,
+        10,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#shell"
+        },
+        "south": {
+          "texture": "#shell"
+        },
+        "east": {
+          "texture": "#shell"
+        },
+        "west": {
+          "texture": "#shell"
+        },
+        "up": {
+          "texture": "#shell"
+        },
+        "down": {
+          "texture": "#shell"
+        }
+      }
+    },
+    {
+      "from": [
+        5.55,
+        5.55,
+        0.8
+      ],
+      "to": [
+        10.45,
+        10.45,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#shell"
+        },
+        "south": {
+          "texture": "#copper"
+        },
+        "east": {
+          "texture": "#copper"
+        },
+        "west": {
+          "texture": "#copper"
+        },
+        "up": {
+          "texture": "#copper"
+        },
+        "down": {
+          "texture": "#copper"
+        }
+      }
+    },
+    {
+      "from": [
+        5.8,
+        5.8,
+        4.6
+      ],
+      "to": [
+        10.2,
+        10.2,
+        5.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#copper"
+        },
+        "south": {
+          "texture": "#copper"
+        },
+        "east": {
+          "texture": "#copper"
+        },
+        "west": {
+          "texture": "#copper"
+        },
+        "up": {
+          "texture": "#copper"
+        },
+        "down": {
+          "texture": "#copper"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        10.01,
+        2.1
+      ],
+      "to": [
+        9,
+        10.17,
+        4.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dry"
+        },
+        "south": {
+          "texture": "#dry"
+        },
+        "east": {
+          "texture": "#dry"
+        },
+        "west": {
+          "texture": "#dry"
+        },
+        "up": {
+          "texture": "#dry"
+        },
+        "down": {
+          "texture": "#dry"
+        }
+      }
+    },
+    {
+      "from": [
+        10.01,
+        7,
+        2.1
+      ],
+      "to": [
+        10.17,
+        9,
+        4.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dry"
+        },
+        "south": {
+          "texture": "#dry"
+        },
+        "east": {
+          "texture": "#dry"
+        },
+        "west": {
+          "texture": "#dry"
+        },
+        "up": {
+          "texture": "#dry"
+        },
+        "down": {
+          "texture": "#dry"
+        }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.83,
+        0.83,
+        0.83
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.55,
+        0.55,
+        0.55
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        0.7,
+        0.7,
+        0.7
+      ]
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "spider_centaur_ambient": {
+    "subtitle": "subtitles.spidercentaur.ambient",
+    "sounds": [
+      {
+        "name": "spidercentaur:mob/spider_centaur/ambient",
+        "volume": 0.58,
+        "pitch": 1,
+        "attenuation_distance": 14
+      }
+    ]
+  },
+  "spider_centaur_hurt": {
+    "subtitle": "subtitles.spidercentaur.hurt",
+    "sounds": [
+      {
+        "name": "spidercentaur:mob/spider_centaur/hurt",
+        "volume": 0.74,
+        "pitch": 1,
+        "attenuation_distance": 14
+      }
+    ]
+  },
+  "spider_centaur_step_bone": {
+    "sounds": [
+      {
+        "name": "spidercentaur:mob/spider_centaur/step_bone",
+        "volume": 0.65,
+        "pitch": 1,
+        "attenuation_distance": 12
+      }
+    ]
+  }
+}

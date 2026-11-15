@@ -1,0 +1,19 @@
+{
+  "name": "Field Camping",
+  "category": "sleepdebt:recovery",
+  "icon": "sleepdebt:camp_bedroll",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "A field bedroll starts a seven-second rest, not an instant heal. Stay still and avoid damage. Shelter, a campfire, an incense burner, a pillow and sleep mask can improve recovery. A two-minute cooldown prevents repeated abuse. Use the journal to preview the quality of your resting spot."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:camp_bedroll"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:camp_awning"
+    }
+  ]
+}

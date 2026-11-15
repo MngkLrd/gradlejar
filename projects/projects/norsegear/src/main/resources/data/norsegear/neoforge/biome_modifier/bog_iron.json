@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#norsegear:has_bog_iron",
+  "features": "norsegear:bog_iron",
+  "step": "underground_ores"
+}

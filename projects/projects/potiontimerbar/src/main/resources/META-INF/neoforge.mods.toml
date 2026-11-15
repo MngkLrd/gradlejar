@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="Potion Timer Bar"
+displayTest="IGNORE_ALL_VERSION"
+authors="Minemods"
+description='''A minimal, pixel-perfect client HUD timer for your most important active status effect.'''
+
+[[dependencies.potiontimerbar]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.1,)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.potiontimerbar]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="CLIENT"

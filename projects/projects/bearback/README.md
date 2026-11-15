@@ -1,0 +1,38 @@
+# Bearback 0.2.2 (NeoForge 1.21.1)
+
+Adds black bears and allows taming, saddling and riding polar bears and black bears. No dependency on Rideable Polar Bears. Java 21.
+
+## Mechanics
+- Feed an adult wild bear cod/salmon (25% chance per fish). Hearts mean it is tamed.
+- Use a vanilla saddle on an owned bear. Right click with empty hand to ride.
+- WASD to ride, Space to jump, R to perform a powerful paw swipe while mounted (1.5s cooldown).
+- Owned bears defend against attackers of their owner and follow when the owner moves away.
+- Heal by feeding fish. Sneak + shears remove saddle.
+- The black bear reuses vanilla polar bear model/animations; charcoal fur and a beige chest marking are generated from the installed game's vanilla skin, with no bundled Mojang textures.
+- Black bears spawn in forest/taiga biomes, or use the creative spawn egg.
+
+## Build
+Java 21, Gradle 9.2.1: `gradle clean build`.
+JAR: `build/libs/bearback-1.21.1-0.2.2.jar`
+
+## Testing
+- New world spawn of black bear; `/summon bearback:black_bear`.
+- Tame both bear species; saddle, mount, dismount, jump, fight.
+- Test visibility of saddle, wolf and hostile mob defense, multiplayer ownership and game reload.
+- Dedicated server launch (client code isolated).
+
+## Known limitations
+- Saddle uses the exact polar bear body UV/model coordinates (back height z=4, center x=2). Full-width blanket, low leather pad and straps follow the animated torso. Final visual fit should still be tested in-game.
+- Bear movement uses authoritative server ride packets and may need smoothing in high-latency multiplayer.
+- Attack while mounted is keyed to R; vanilla paw raising is used for the animation.
+- Existing RideablePolarBears is not required or integrated.
+
+### CI
+This module has its own build-profile.json and is selectable via project_dir=projects/bearback.
+
+## 0.2.2: Saddlebags
+See README_CARGO.md for craft, 18 slots, E while riding, sneak-right click, persistence, and death drops.
+
+Loader minimum: NeoForge 21.1.197 (compile verified; 21.1.196 fails due missing synced attachments API).
+
+Fix 0.2.2: use proper 1.21.1 shaped recipe ingredient objects; the pattern remains L L / SCS / L L.

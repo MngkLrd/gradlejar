@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "P P",
+    "P P"
+  ],
+  "key": {
+    "P": {
+      "item": "creeperarmor:creeper_plate"
+    }
+  },
+  "result": {
+    "item": "creeperarmor:creeper_boots",
+    "count": 1
+  }
+}

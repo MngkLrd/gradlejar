@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "timberfall:notched_oak_log",
+    "timberfall:notched_spruce_log",
+    "timberfall:notched_birch_log",
+    "timberfall:notched_jungle_log",
+    "timberfall:notched_acacia_log",
+    "timberfall:notched_dark_oak_log",
+    "timberfall:notched_mangrove_log",
+    "timberfall:notched_cherry_log",
+    "timberfall:notched_pale_oak_log",
+    "timberfall:notched_poplar_log",
+    "timberfall:notched_crimson_log",
+    "timberfall:notched_warped_log"
+  ]
+}

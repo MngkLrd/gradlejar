@@ -1,0 +1,40 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+group = mod_group_id
+version = mod_version
+base.archivesName = 'ropefences-neoforge-1.21.1'
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    version = project.neo_version
+    runs {
+        client { client() }
+        server { server() }
+    }
+    mods {
+        ropefences { sourceSet(sourceSets.main) }
+    }
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+tasks.register('decodeRopeTexture') {
+    def destination = layout.buildDirectory.file('generated/ropeassets/assets/ropefences/textures/block/rope.png')
+    inputs.file('src/main/resources/assets/ropefences/textures/block/rope.png.b64')
+    outputs.file(destination)
+    doLast {
+        def target = destination.get().asFile
+        target.parentFile.mkdirs()
+        target.bytes = Base64.decoder.decode(
+            file('src/main/resources/assets/ropefences/textures/block/rope.png.b64').text.trim())
+    }
+}
+tasks.named('processResources', ProcessResources).configure {
+    dependsOn 'decodeRopeTexture'
+    from(layout.buildDirectory.dir('generated/ropeassets'))
+    exclude '**/*.png.b64'
+}

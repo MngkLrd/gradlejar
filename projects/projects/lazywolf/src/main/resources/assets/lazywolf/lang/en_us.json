@@ -1,0 +1,7 @@
+{
+  "item.lazywolf.wolf_harness": "Wolf Harness",
+  "item.lazywolf.leash_belt": "Leash Belt",
+  "menu.lazywolf.wolf_pack": "Wolf's Satchel",
+  "message.lazywolf.limit": "This belt can handle only 10 leads.",
+  "message.lazywolf.need_lead": "Keep a lead in your inventory to attach this wolf."
+}

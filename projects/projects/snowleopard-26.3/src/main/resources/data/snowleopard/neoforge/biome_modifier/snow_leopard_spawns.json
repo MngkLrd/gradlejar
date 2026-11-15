@@ -1,0 +1,18 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "minecraft:snowy_slopes",
+    "minecraft:jagged_peaks",
+    "minecraft:frozen_peaks",
+    "minecraft:grove"
+  ],
+  "spawners": {
+    "type": "snowleopard:snow_leopard",
+    "weight": 5,
+    "count": {
+      "type": "minecraft:uniform",
+      "min_inclusive": 1,
+      "max_inclusive": 1
+    }
+  }
+}

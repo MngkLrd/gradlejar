@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "id": "sleepdebt:camp_bedroll"
+    },
+    "title": {
+      "translate": "advancements.sleepdebt.first_camp.title"
+    },
+    "description": {
+      "translate": "advancements.sleepdebt.first_camp.description"
+    },
+    "background": "minecraft:textures/block/spruce_planks.png",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "bedroll": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sleepdebt:camp_bedroll"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "bedroll"
+    ]
+  ]
+}

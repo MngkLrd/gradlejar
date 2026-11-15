@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:paper",
+    "minecraft:white_wool"
+  ],
+  "result": {
+    "id": "traumacraft:bandage",
+    "count": 2
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "WGW",
+    "SCS"
+  ],
+  "key": {
+    "W": {
+      "item": "minecraft:wheat"
+    },
+    "G": {
+      "item": "sleepdebt:coffee_grounds"
+    },
+    "S": {
+      "item": "minecraft:sugar"
+    },
+    "C": {
+      "item": "minecraft:cocoa_beans"
+    }
+  },
+  "result": {
+    "id": "sleepdebt:cocoa_biscuit",
+    "count": 4
+  }
+}

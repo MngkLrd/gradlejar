@@ -1,0 +1,19 @@
+{
+  "name": "Сладкий привал",
+  "category": "sleepdebt:crafting",
+  "icon": "sleepdebt:cocoa_biscuit",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Какао-печенье утоляет голод во время путешествия. Карамельный кофе продлевает бодрящий эффект, но не заменяет сон."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:cocoa_biscuit"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:caramel_coffee"
+    }
+  ]
+}

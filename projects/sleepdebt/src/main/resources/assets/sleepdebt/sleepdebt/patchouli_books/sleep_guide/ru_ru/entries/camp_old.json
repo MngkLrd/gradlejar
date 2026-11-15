@@ -1,0 +1,19 @@
+{
+  "name": "Походный лагерь",
+  "category": "sleepdebt:recovery",
+  "icon": "sleepdebt:camp_bedroll",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ПКМ по походному спальнику запускает семисекундный привал, а не мгновенное исцеление. Не двигайся и не получай урон. Укрытие, костёр, курильница, подушка и маска повышают качество отдыха. Повторить привал можно через две минуты. Дневник сна заранее покажет качество ночлега."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:camp_bedroll"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:camp_awning"
+    }
+  ]
+}

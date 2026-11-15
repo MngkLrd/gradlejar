@@ -1,0 +1,44 @@
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+
+// Names and discoveries correspond to ACTUAL registered biomes, not arithmetic
+// coloring of equally spaced settlements. Applied last in the asset pipeline.
+tasks.named('generateHaloAssets').configure {
+    doLast {
+        File root=layout.buildDirectory.dir('generated/haloassets').get().asFile
+        Map en=[
+            'dawn_gardens':['Dawn Gardens','Dawn Gardens: a living celestial sanctuary'],
+            'chalk_terraces':['Chalk Terraces','Chalk Terraces: white layered plateaus'],
+            'eternal_canopy':['Eternal Canopy','Eternal Canopy: primeval sky forest'],
+            'ringing_gorges':['Ringing Gorges','Ringing Gorges: broken bridges and hanging cliffs'],
+            'forgotten_choirs':['Forgotten Choirs','Forgotten Choirs: fallen sanctuaries'],
+            'lower_veil':['Lower Veil','Lower Veil: abyssal island terraces']
+        ]
+        Map ru=[
+            'dawn_gardens':['Сады Рассвета','Сады Рассвета: живые сады небесного царства'],
+            'chalk_terraces':['Меловые Террасы','Меловые Террасы: белые ярусные плато'],
+            'eternal_canopy':['Лес Вечных Крон','Лес Вечных Крон: древний небесный лес'],
+            'ringing_gorges':['Звонкие Ущелья','Звонкие Ущелья: мосты и разломанные скалы'],
+            'forgotten_choirs':['Забытые Хоры','Забытые Хоры: падшие святилища'],
+            'lower_veil':['Нижняя Завеса','Нижняя Завеса: сумрачные нижние террасы']
+        ]
+        for(String lang:['en_us','ru_ru']){
+            File loc=new File(root,'assets/halohaven/lang/'+lang+'.json')
+            Map data=(Map)new JsonSlurper().parse(loc)
+            Map records=lang=='ru_ru'?ru:en
+            int index=0
+            records.each{String id,List desc->
+                data['biome.halohaven.'+id]=desc[0]
+                data['region.halohaven.'+index]=desc[0]
+                data['message.halohaven.region_'+index]=lang=='ru_ru'?
+                    ('Открыт биом: '+desc[0]+'. +4 благосклонности.'):
+                    ('New biome discovered: '+desc[0]+'. +4 Heavenly Favor.')
+                index++
+            }
+            data['message.halohaven.compass']=lang=='ru_ru'?
+                'Небесная точка X: %s Z: %s | %s блоков | %s° | Благосклонность: %s | %s':
+                'Celestial waypoint X: %s Z: %s | %s blocks | %s° | Favor: %s | %s'
+            loc.setText(JsonOutput.prettyPrint(JsonOutput.toJson(data)),'UTF-8')
+        }
+    }
+}

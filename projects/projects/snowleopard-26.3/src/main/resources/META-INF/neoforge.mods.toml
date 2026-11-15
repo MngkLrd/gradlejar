@@ -1,0 +1,19 @@
+license="MIT"
+[[mods]]
+modId="snowleopard"
+version="1.0.0"
+displayName="Snow Leopard"
+authors="MineMods"
+description="Snow leopard with a custom 3D model and snowy mountain spawning."
+[[dependencies.snowleopard]]
+modId="neoforge"
+type="required"
+versionRange="[26.3.0.83,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.snowleopard]]
+modId="minecraft"
+type="required"
+versionRange="[26.3]"
+ordering="NONE"
+side="BOTH"

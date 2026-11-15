@@ -1,0 +1,15 @@
+{
+  "name": "Свет лагеря",
+  "category": "sleepdebt:recovery",
+  "icon": "sleepdebt:camp_lantern",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Походный светильник освещает лагерь и отпугивает ночные угрозы. Светильник рядом со спальником усиливает восстановление во время привала."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:camp_lantern"
+    }
+  ]
+}

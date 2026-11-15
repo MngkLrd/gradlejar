@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " LH",
+    "LCL",
+    " LH"
+  ],
+  "key": {
+    "L": {
+      "item": "norsegear:leather_binding"
+    },
+    "H": {
+      "item": "norsegear:forged_iron"
+    },
+    "C": {
+      "item": "norsegear:carved_horn"
+    }
+  },
+  "result": {
+    "id": "norsegear:war_horn",
+    "count": 1
+  }
+}

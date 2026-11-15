@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "norsegear:norse_helmet",
+    "norsegear:norse_chestplate",
+    "norsegear:norse_leggings",
+    "norsegear:norse_boots"
+  ]
+}

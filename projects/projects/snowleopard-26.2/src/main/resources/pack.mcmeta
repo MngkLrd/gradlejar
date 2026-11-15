@@ -1,0 +1,13 @@
+{
+  "pack": {
+    "description": "Snow Leopard 26.2 resources",
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ]
+  }
+}

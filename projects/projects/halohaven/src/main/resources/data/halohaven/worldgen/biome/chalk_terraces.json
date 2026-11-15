@@ -1,0 +1,56 @@
+{
+  "has_precipitation": false,
+  "temperature": 0.74,
+  "downfall": 0.18,
+  "carvers": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "halohaven:sky_bloom_patch_2",
+      "halohaven:sky_crown_tree_1",
+      "halohaven:chalk_fragments",
+      "halohaven:cloudstone_scatter"
+    ],
+    []
+  ],
+  "effects": {
+    "fog_color": 15918025,
+    "sky_color": 11391972,
+    "water_color": 9094872,
+    "water_fog_color": 5537172,
+    "grass_color": 13359558,
+    "foliage_color": 11848126
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [
+      {
+        "type": "halohaven:cloudhare",
+        "weight": 9,
+        "minCount": 1,
+        "maxCount": 3
+      },
+      {
+        "type": "halohaven:lumen",
+        "weight": 4,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {}
+}

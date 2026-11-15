@@ -1,0 +1,332 @@
+# Halo Haven 1.7.0 – Evergreen Fix, Real Gateway & Vanilla Pixel Art
+
+**Minecraft 1.21.1 | NeoForge 21.1.x | Java 21.**
+
+A bright fantasy pocket of the skies, now with a cohesive architectural language (pearl/aged brass/turquoise), shaped roofs, hand-painted materials, sky gardens, three district styles, boss encounters, a craftable endgame relic, translucent glass, and heavenly inhabitants.
+
+## Download builds
+
+The Build Hub publishes the JAR to GitHub Releases when repository permissions
+allow. It also uploads the exact JAR and SHA256 as a **GitHub Actions artifact**
+for 30 days, including when the GitHub Release API rejects publishing.
+Look for `jar-halohaven-1.7.0` in the latest successful Build Hub run.
+
+## Installation and build
+
+- Copy `halohaven-1.21.1-1.7.0.jar` to `mods/`.
+- **NeoForge 21.1.197** is used to compile; runtime metadata requests **at least 21.1.80**, not the newest patch.
+- Java 21, Gradle 9.2.1.
+- Build: `gradle --no-daemon clean build`.
+- Output: `build/libs/halohaven-1.21.1-1.5.0.jar`.
+- Client and server both require the mod. No extra assets or resource packs.
+
+## 1.7.0: detailed vanilla texture reconstruction
+
+The texture language has been re-authored from **Minecraft Java 1.21.1**
+references, not from generic fantasy-pixel-art icon design. We measured
+Stone, Calcite, Tuff, Moss, Planks, Bricks, Iron Ore and Oak Leaves, and
+reviewed the Blockbench Minecraft Style Guide. All source observations
+and pixel statistics are documented in `art/VANILLA_STUDY.md`.
+
+**Previously:** Cloudstone used one flat color for 66% of a 16×16 face,
+Skygrass for 70%, Moonstone for 67%. Some empty connected patches
+exceeded 170 pixels; these looked like flat vector colors.
+
+**Now:** five Cloudstone faces, three Moonstone and three Skygrass tops
+use finer but connected original rock, mineral and vegetation clusters.
+Original cutout leaves use small distributed windows instead of a symmetric
+round/heart-like silhouette. Ore keeps the same parent-stone shading
+with a small embedded teal mineral rather than a pasted decoration.
+Turquoise timber was redrawn as real four-course grain; pearl bricks now
+have proper offset mortar courses; golden roof tiles carry material wear.
+The exposed turf side shares the Cloudstone mineral grammar.
+
+Ancient panels, mosaics, pillars, lamps and Waystones retain distinctive
+architecture but have localized edge highlights, nicks, worn sections and
+surface details. The gateway and celestial flower silhouettes were also
+cleaned up. Colored glass genuinely allows visibility through its pane.
+
+All 33 original 16×16 atlas faces are embedded in the JAR, and derived
+slabs, stairs and fence models keep using the same textures. The final
+pixel array is frozen in `art/pixel_atlas.json`; no noise or generated
+pixel placements are computed by the resource compiler.
+
+New regression checks in `ci/art_quality.py` run as part of server smoke
+testing: palette use, local transitions, largest mono-color clusters, foliage
+cutouts, and glass transparency. As the official Minecraft textures
+demonstrate, this does **not** mean every material requires eight colors.
+A rendered 4×4 repeat still needs human art review.
+
+**Art sources and method:** see `art/VANILLA_STUDY.md`. No Mojang image
+bytes or copied vanilla pixel patterns are shipped.
+
+## 1.7.0: first gameplay and visual repair pass
+
+**Evergreen canopy:** Sky Crown Leaves are a special LeavesBlock subclass
+that never spontaneously decays; new configured trees also explicitly create
+persistent=true leaf states. This avoids the high-volume leaf-item storms that
+lagged players and stripped trees of their crowns. Very large piles of leftover
+Sky Crown Leaves items from old save files are discarded near players, but
+small normal harvested stacks are left untouched.
+
+**Real visible portal:** Ascension Sigil activation now raises a two-block
+translucent, non-colliding Gateway field above the ritual bell. Its scheduled
+cleanup is fail-safe if the player leaves the ritual or disconnects.
+Crucially, an opening in one dimension can no longer be cancelled by tick
+events from Nether, another Overworld or another modded dimension.
+The portal automatically takes the player into `halohaven:heaven` after
+48 ticks when the source bell remains intact and the player stays close.
+The field is an internal block with no obtainable item.
+
+**Biomes:** Dawn Gardens, Chalk Terraces, Eternal Canopy, Ringing Gorges,
+Forgotten Choirs and Lower Veil now feature worldgen geology piles appropriate
+to each region (stone outcrops, white calcite, tuff scree, ruined masonry,
+moonstone cairns). Region-aware spawn checks permit creatures on their actual
+surface blocks, rather than only Skygrass. Ringing Gorges is now a hostile
+borderlands biome, while Forgotten Choirs and Lower Veil receive denser
+Dusk Wraith encounters. Hostiles remain disabled on Peaceful difficulty.
+
+**Art:** The same 22 obtainable construction/plant blocks keep their registry
+IDs, but natural materials have been substantially repainted toward vanilla
+Minecraft's 16×16 material vocabulary. Muted limestone, proper grassy turf,
+directional wood grain, crisp mossy foliage and compact ore clusters replace
+the glossy, oversized stained-glass-like shapes of 1.5.0. The gateway adds
+one internal registered block, for 23 technically registered blocks total.
+The authored atlas now contains 33 textures including the gateway surface.
+
+**Compatibility:** Existing block IDs remain stable. Previously explored
+chunks keep their generated geometry; new worldgen decorations only appear
+in newly generated chunks. The leaf and portal fixes apply on existing saves.
+An older 1.5.0 sky island may already have dropped leaves; the new version
+prevents further decay and helps clear only abnormal debris piles.
+
+**QA note:** The CI dedicated server can verify the new gateway is registered,
+the art atlas contains all textures, biome/feature codecs are valid and Heaven
+chunks load. Without a connected graphical Minecraft client with a real player,
+it cannot certify visual lighting or complete player-driven ritual travel.
+
+## 1.5.0: real pixel-cluster art assets
+
+The 22 registered blocks are now rendered from 32 authored 16×16
+indexed bitmap surfaces stored in `art/pixel_atlas.json`.
+No random colored pixels, mathematical painting or rectangle/line fill
+algorithms participate in the final material textures.
+The build-only `pixelart.gradle` writes RGBA PNGs pixel-for-pixel.
+
+The atlas includes 3 turf compositions and 3 asymmetric leaf canopies,
+independent Cloudstone top and side, an inlaid top-only Celestial Mosaic,
+a separately illustrated column top, 2 stained glass variants and
+pixel-cluster mineral and wood surfaces.
+Cloudstone, Moonstone and Star Ore each also use alternative painted
+natural forms with weighted blockstates and angle rotations so broad
+landscapes do not repeat one obvious patch every 16 pixels.
+Stairs, slabs and fences inherit their base materials: all 22 blocks have
+consistent 16px textures in the final JAR.
+
+A resource build is not artistic acceptance. Test in Minecraft both as a
+single block and as 5×5 repeated surfaces, with shaders disabled.
+Existing worlds keep their registered block IDs; explored chunks will not
+regenerate. Only art and compatible blockstates have changed.
+
+## 1.5.0 worldgen hardening
+
+The first worldgen QA now goes beyond parsing JSON: an isolated NeoForge
+server is accessed through RCON and forced to generate and tick three chunks
+in `halohaven:heaven` (X/Z 0/0, 512/0, 0/512). CI also verifies that both
+Chalk Terraces and Lower Veil can be found with Minecraft's real
+`/locate biome` command.
+
+- Natural Cloud Hare, Lumen and Dusk Wraith spawns now use
+  `RegisterSpawnPlacementsEvent`, so they no longer spawn in the void.
+- Dense Eternal Canopy tree placement is reduced from 9 to 4 attempts/chunk
+  to reduce excessive crowns overlapping and costly decoration.
+- Trees preserve the art-directed Skygrass block beneath their trunks
+  rather than forcibly replacing it with ordinary dirt.
+- Sky Crown Leaves use actual transparent silhouettes, not solid green cubes;
+  the texture build checks alpha coverage at the logical-pixel level.
+- These tests are server-side. They cannot guarantee lighting, animation,
+  occlusion or overall visual composition in a graphical Minecraft client.
+
+## Worldgen II: six genuine biomes and landmark geography
+
+This release is the first environmental restructuring of Halo Haven.
+`heaven.json` now uses a six-entry `minecraft:multi_noise` biome source.
+Two 1.21.1 `shifted_noise` climate densities determine dry/wet and
+warm/mid/cold regions. Their six intersections are **registered biomes**:
+
+- Dawn Gardens: green gardens and livable, luminous villages
+- Chalk Terraces: calcite plateaus, sparse crown trees
+- Eternal Canopy: moss beds, dense tall sky-crown forests
+- Ringing Gorges: fractured, tuff-faced land and sky aqueduct ruins
+- Forgotten Choirs: purple mineral ground, broken rose windows and sanctuaries
+- Lower Veil: deepslate surfaces and a separate low-lying isle stratum
+
+The density router adds biome-dependent continental/ridge deformation; the
+Lower Veil receives a secondary suspended layer.
+Flowers and towering crown trees are placed during normal *chunk generation*.
+In dangerous regions, 512-block waypoints contain unique hostile ruins rather
+than the same four repetitive houses. The main X=0/Z=0 arrival sanctuary stays
+intact for safe entry. The Sky Compass and discovery messages report the real
+biome, not a repeating coordinate-based fake district.
+
+### New texture production standard
+
+`atelier.gradle` now draws 18+ block face textures from deliberate
+material structures and exports scaled 64px RGBA textures from a consistent
+32px logical pixel grid. No hash-based noise or stochastic color speckle
+is in the final 1.4 block texture assets. Palette cardinality is checked
+at asset-generation time (<=12 RGBA colors per tile).
+See [ART_BIBLE.md](ART_BIBLE.md) for the six-region landscape grammar,
+material templates and visual QA rules.
+
+**Migration:** generate a fresh world (or explore fresh chunks) for new biomes.
+Old settlements and explored terrain do not automatically re-generate.
+
+## Creative inventory
+
+All 27+ registered mod blocks and items, materials, mob eggs and entry tools
+now appear in a **dedicated Halo Haven tab**, identified by the Skyseed icon.
+They no longer clutter the vanilla Building Blocks, Tools or Food tabs.
+Both English and Russian tab labels are included.
+
+## Skyseed: a second way to reach the portal
+
+**Skyseed / Семя небосвода** is a new, consumable item with a bespoke feather-and-eye icon.
+
+Craft on a 3×3 table:
+
+```
+FEF
+QGQ
+ A
+```
+
+- **F** = Feather (2)
+- **E** = Eye of Ender (2)
+- **Q** = Quartz Block (2)
+- **G** = Ghast Tear (1)
+- **A** = Amethyst Shard (1)
+
+Use it in the **Overworld under an open sky**. The item takes one charge,
+places an oasis around 19 blocks to the east of the launch column so that your
+ascending player cannot crash against the new island's underside, and lifts
+the player through a visible column of cloud and enchanted particles.
+
+The small floating island is assembled over roughly 20-25 game ticks:
+cloudstone underside, skygrass top, sky orchard, a tiny sealed pond,
+a carved marble ceremonial dais, surrounding lanterns and flowers.
+Its centre already contains the ritual **quartz foundation** and four
+**diagonal amethyst blocks**. The player places only a **Bell** on the central
+quartz, and uses the **Ascension Sigil** as before.
+
+The terrace is at least Y=183 and automatically goes higher over tall terrain.
+There is a collision / space check before consumption to avoid overwriting
+existing builds. If construction is blocked, no Skyseed is spent.
+
+## Portal animation
+
+- Every time a ritual is completed by hand placing the final relevant
+  block (quartz, corner amethyst or bell), a server-driven spiral forms
+  around the bell, rising for about 55 ticks with amethyst chimes.
+- Right-clicking a valid ritual bell with the Ascension Sigil plays a
+  48-tick portal-opening sequence before teleporting the player.
+- Portal preparation is visible to all nearby clients, because particles
+  originate on the server. If the bell is broken or the player walks
+  far away during activation, the pending transfer is cancelled safely.
+
+## Correct model UV maps
+
+Old Halo Haven textures painted motifs across arbitrary rectangular regions
+and often landed on the WRONG parts of the model. The faulty painting was
+removed. One dedicated `uvtextures.gradle` module now draws only mapped
+cuboid faces, with explicit named parts and empty/unused pixels transparent.
+
+| Creature | Exact PNG dimensions | Defined mapped parts |
+| --- | --- | --- |
+| Skyfolk | 64×64 | Villager head, nose, hood, robe, coat, folded arms and legs |
+| Cloud Hare | 64×32 | Rabbit head, ears, body, paws, legs and tail |
+| Lumen | 32×32 | Allay head, chest, arms and individual flat wings |
+| Dawn Guardian | 128×128 | Iron Golem head, torso, arms, leg sections and breastplate |
+| Dusk Wraith | 32×32 | Vex head, torso, arms and wings |
+| Eclipse Revenant | 32×32 | Vex head, mask, torso, arms and wings |
+
+Model-part mapping is tied to the corresponding Mojang cuboid UV offsets,
+not random pixel placement. The generator also clears stray pixels outside
+registered face regions; this can be checked in its Gradle output.
+It does **not** claim that the custom-rigged 3D animation models already exist;
+those are still vanilla-derived shapes with custom textures and halos.
+
+## Ascension ritual
+
+The original ascension ritual remains unchanged: craft the Ascension Sigil from 4 amethyst shards, 2 feathers, 2 ender pearls and 1 ghast tear. Above world Y=170, place a bell on quartz with four amethyst blocks diagonally beneath the corners, and keep the sky open. Right-click the bell with the Sigil. Right-click the air with the Sigil in Heaven to return home.
+
+### Explore
+
+The initial sky village is at X=0 Z=0, with further settlements every 512 blocks. Aether Waystones send you 512 blocks along X; sneak for the opposite direction. The Skybound Compass shows the nearest village, direction, distance, Favor and district.
+
+Each district has its own ground treatment, garden density and building palette:
+
+- **Pearl Court:** ivory architecture, warm gold, airy arcades.
+- **Blooming Canopy:** exuberant turquoise canopy trees, floral paths and gardens.
+- **Eclipse Verge:** rarer trees, violet moonstone paving and dark stained-glass accents.
+
+First discovery of each district grants 4 Heavenly Favor. Districts follow a deterministic pattern from coordinates, not random volatile mobs.
+
+A new settlement is assembled on first approach only and marked to prevent regeneration. Existing settlements from 1.0/1.1 stay intact: new basilicas, roofs and plants appear in **newly generated villages**. Old 1.0 vanilla inhabitants are migrated nearby to Skyfolk without deleting player builds.
+
+### Architecture and pixel art
+
+- Full-colour 64×64 *designed* textures for cloudstone, sky meadows, pearl bricks, scalloped sungold roofs, azurewood, violet moonstone, marbled mosaic, fluted brass pillars, lanterns, crystals, ore and ritual sites.
+- Both Aurora and Dawn Glass use true semitransparent PNGs with stained-glass traceries, the translucent rendering layer, and nonoccluding `TransparentBlock` behavior.
+- 3D JSON models for lanterns, Starshade crystals, Aether Waystones and Pilgrim Altars, instead of fully opaque full cubes.
+- Real `StairBlock` / `SlabBlock` construction sets for sungold and pearl materials. Interconnecting azurewood fences for balconies.
+- New cutout rendered Sky Crown Leaves (woodland trees) and Celestial Bloom cross-plane flowers.
+- Fresher silhouettes: curved domed basilicas, stained-glass arches, multi-tier garden terraces, observatories, bridges to satellite wraith ruins, furnished houses and central plazas.
+- Every new block/item/entity has a model, a texture and en_US/ru_RU naming, including spawn egg models.
+
+### Creatures
+
+- **Skyfolk:** custom painted face, pale robe, gold embroidery, animated three-dimensional nimbus; trade Skyberries, Stardust and Sunshards.
+- **Cloud Hare:** pastel hare with gentle wildlife behavior and flower interactions.
+- **Lumen:** luminous flying companion with pale opaline wings and turquoise halo; Skyberry offerings yield Stardust, with a personal cooldown.
+- **Dawn Guardian:** massive ivory golem with a gold breastplate, glowing turquoise motifs and restorative aura.
+- **Dusk Wraith:** violet nightmare from the satellite ruins, dark custom skin and subtle magical traces.
+- **Eclipse Revenant:** enlarged mid-boss with boss healthbar and nimbus. Its second phase summons two wraiths at 55% HP. Spawns in some ruins and drops a mandatory Eclipse Seal.
+
+For stability and compatibility, most mob geometry inherits familiar **vanilla skeletons**, but textures, visual attachments, spawning, placement and gameplay are mod-specific. This is not yet full bespoke rig/animation work.
+
+### Gameplay loop
+
+1. Perform the bell ritual and explore the central floating village.
+2. Talk to Skyfolk, visit the basilica and observatory, discover new districts.
+3. Mine Star Ore, feed Lumens with Skyberries, and make offerings to the Pilgrim Altar.
+4. Earn Heavenly Favor (Skyberries, dandelions fed to Cloud Hares, wraith trial milestones, first discovery of each region). Exchange 12 Favor at the altar for 2 Sunshards.
+5. Traverse glazed bridges to hostile moonstone ruins. Defeat Dusk Wraiths (3 and 8 defeat milestones) and the Eclipse Revenant.
+6. Forge the **Sunward Oath Relic** from an Eclipse Seal, four Sunshards and four Stardust. Right-click to gain Slow Falling, Absorption, Regeneration and Fire Resistance on a **90 second cooldown**.
+7. Craft the **Feather of the Open Sky** from a feather and four Sunshards. Holding it in either hand mitigates falls over the void.
+
+Aether Tonic remains a consumable air-travel aid with Slow Falling, Speed and Jump Boost. Ruin chests, basilica archives, villager trades and active boss encounters supply useful materials.
+
+## Tests performed
+
+GitHub Actions compiles the mod and checks texture/model/blockstate recipes, real PNG files, the correct glass render type and biome/dimension JSON. A separate job starts a NeoForge 1.21.1 dedicated server and verifies readiness.
+
+## In-game QA checklist
+
+- On a **new world**, enter the Heaven dimension using the Sigil and check the central region renders at X=0/Z=0 around Y=111.
+- Verify both glass types are transparent from inside/outside with other blocks visible through them.
+- Inspect the rounded basilica, arches, pitched roofs, fences, illuminated trees and sky bridge from nearby and at render distance.
+- Check no pink/black missing-texture faces on Skyfolk, Eclipse Revenant, Lumen and the other mobs.
+- Kill a few Dusk Wraiths, then test Eclipse Revenant's bossbar, two-phase summon and guaranteed Seal drop.
+- Craft/use the Sunward Oath Relic, test cooldown and the Aether Feather.
+- Teleport using a Waystone along X to visit 3 district styles, monitor reward messages and Skybound Compass.
+- Try a dedicated multiplayer server. Teleport, trading, Favor, loot and structure generation must all be server-side.
+
+## Known limitations
+
+- Dedicated server start is verified, but this pipeline cannot establish gameplay visuals against a real interactive client. Final aesthetics need an in-game visual check and screenshot review.
+- Original entity skeletons are still used, with hand-painted UV textures and custom 3D halos. Future improvement would include bespoke rigging and animation.
+- Region variation is currently **code-driven district palettes**, not three independently registered noise biomes. Ambient sky is a single biome.
+- First-time generation of a complex village can still cause synchronous chunk updates and a short pause.
+- Altars and waystones have multi-element visual models but retain full-block collision.
+- Waystones link in the X direction; there is no multidirectional travel UI yet.

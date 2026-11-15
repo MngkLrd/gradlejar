@@ -1,0 +1,15 @@
+{
+  "name": "Dreamcatcher",
+  "category": "sleepdebt:recovery",
+  "icon": "sleepdebt:dreamcatcher",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Place a dreamcatcher near your bed. It increases sleep recovery. Use the dreamcatcher itself to soothe stress, with a cooldown so the benefit cannot be spammed."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:dreamcatcher"
+    }
+  ]
+}

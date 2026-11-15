@@ -1,0 +1,13 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#bearback:black_bear_spawns",
+  "spawners": {
+    "type": "bearback:black_bear",
+    "weight": 6,
+    "count": {
+      "type": "minecraft:uniform",
+      "min_inclusive": 1,
+      "max_inclusive": 2
+    }
+  }
+}

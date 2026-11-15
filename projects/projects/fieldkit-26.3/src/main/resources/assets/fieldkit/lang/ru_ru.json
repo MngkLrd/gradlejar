@@ -1,0 +1,23 @@
+{
+  "key.categories.fieldkit": "FieldKit",
+  "key.fieldkit.toggle": "Включить/выключить HUD координат",
+  "key.fieldkit.mark": "Поставить путевую точку",
+  "key.fieldkit.clear": "Удалить путевую точку",
+  "key.fieldkit.compact": "Переключить доп. информацию",
+  "hud.fieldkit.coords": "XYZ  %s / %s / %s",
+  "hud.fieldkit.facing": "Напр.  %s",
+  "hud.fieldkit.time": "Время  %s",
+  "hud.fieldkit.target": "Под приц.  %s",
+  "hud.fieldkit.waypoint": "WP  %s м %s",
+  "hud.fieldkit.other_dimension": "Метка в другом измерении",
+  "direction.fieldkit.north": "Север",
+  "direction.fieldkit.south": "Юг",
+  "direction.fieldkit.east": "Восток",
+  "direction.fieldkit.west": "Запад",
+  "message.fieldkit.hud": "Интерфейс: %s",
+  "message.fieldkit.compact": "Доп. информация: %s",
+  "message.fieldkit.on": "ВКЛ",
+  "message.fieldkit.off": "ВЫКЛ",
+  "message.fieldkit.marked": "Точка установлена: %s / %s / %s",
+  "message.fieldkit.cleared": "Путевая точка удалена"
+}

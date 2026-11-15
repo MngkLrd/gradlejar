@@ -1,0 +1,9 @@
+{
+  "slug": "pearlpath",
+  "version": "1.0.2",
+  "minecraft": "1.21.1",
+  "loader": "fabric",
+  "java": "21",
+  "gradle": "8.14.3",
+  "jar_glob": "pearlpath-fabric-1.21.1-1.0.2.jar"
+}

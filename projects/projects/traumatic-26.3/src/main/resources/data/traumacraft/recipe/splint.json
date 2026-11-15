@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:stick",
+    "minecraft:string"
+  ],
+  "result": {
+    "id": "traumacraft:splint",
+    "count": 1
+  }
+}

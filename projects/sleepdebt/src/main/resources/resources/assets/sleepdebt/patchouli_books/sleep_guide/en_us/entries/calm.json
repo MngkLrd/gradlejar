@@ -1,0 +1,15 @@
+{
+  "name": "Warm Milk",
+  "category": "sleepdebt:recovery",
+  "icon": "sleepdebt:warm_milk",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Warm milk is the slow, steady alternative: it directly reduces a small amount of debt and improves your next rest. It does not cause a caffeine crash."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:warm_milk"
+    }
+  ]
+}

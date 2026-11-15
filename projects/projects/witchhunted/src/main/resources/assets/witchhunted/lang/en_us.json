@@ -1,0 +1,9 @@
+{
+  "block.witchhunted.witch_hat": "The Hunted Hat",
+  "item.witchhunted.observer_eye": "The Observer's Eye",
+  "itemGroup.witchhunted": "Witch Hunted",
+  "message.witchhunted.enter": "THE HOLLOW IS WATCHING.",
+  "message.witchhunted.leave": "You have escaped. For now.",
+  "message.witchhunted.no_dimension": "The Hollow has not been loaded.",
+  "message.witchhunted.seen": "THE WATCHERS HAVE FOUND YOU."
+}

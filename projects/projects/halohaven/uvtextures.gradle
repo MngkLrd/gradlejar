@@ -1,0 +1,230 @@
+import java.awt.Color
+import java.awt.Graphics2D
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
+
+// UV-accurate creature atlases (Minecraft 1.21.1).
+// Do not spray ornament across the entire image: every painted pixel belongs
+// to an explicit cube face or a named wing / garment overlay surface.
+// Model dimensions: villager 64x64, rabbit 64x32, allay/vex 32x32,
+// iron golem 128x128. Maps: Mojang Bedrock model geometry and Java VillagerModel.
+tasks.named('generateHaloAssets').configure {
+    doLast {
+        File out=layout.buildDirectory.dir('generated/haloassets').get().asFile
+        def rgb={ value -> new Color((int)value,true) }
+        def rect={Graphics2D g,color,int x,int y,int w,int h->
+            if(w>0&&h>0){g.setColor(rgb(color));g.fillRect(x,y,w,h)}
+        }
+        def stroke={Graphics2D g,color,int x1,int y1,int x2,int y2->
+            g.setColor(rgb(color));g.drawLine(x1,y1,x2,y2)
+        }
+        Map<BufferedImage,List<List<Integer>>> occupied=new IdentityHashMap<>()
+        def patch={BufferedImage img,Graphics2D g,color,int x,int y,int w,int h ->
+            if(w<=0||h<=0)return
+            rect(g,color,x,y,w,h)
+            if(!occupied.containsKey(img))occupied[img]=[]
+            occupied[img].add([x,y,w,h])
+        }
+        def face={BufferedImage img,Graphics2D g,int x,int y,int w,int h,base,highlight,shade->
+            if(w<=0||h<=0)return
+            patch(img,g,base,x,y,w,h)
+            rect(g,highlight,x,y,w,1)
+            rect(g,shade,x,y+h-1,w,1)
+            if(w>2 && h>2)rect(g,highlight,x+1,y+1,1,h-2)
+        }
+        // texOffs(u,v), addBox(...,w,h,d) cube unfold:
+        // top(u+d,v), bottom(u+d+w,v), side(u,v+d),
+        // front(u+d,v+d), side(u+d+w,v+d), back(u+2*d+w,v+d).
+        def cube={BufferedImage img,Graphics2D g,int u,int v,int w,int h,int d,base,light,shadow->
+            face(img,g,u+d,v,w,d,light,light,base)
+            face(img,g,u+d+w,v,w,d,shadow,base,shadow)
+            face(img,g,u,v+d,d,h,shadow,base,shadow)
+            face(img,g,u+d,v+d,w,h,base,light,shadow)
+            face(img,g,u+d+w,v+d,d,h,base,light,shadow)
+            face(img,g,u+2*d+w,v+d,w,h,shadow,base,shadow)
+        }
+        def overlay={BufferedImage img,Graphics2D g,int x,int y,int w,int h,color->
+            patch(img,g,color,x,y,w,h)
+        }
+        def export={String name,BufferedImage img,Graphics2D g->
+            g.dispose()
+            // Pixels painted accidentally outside ANY modeled cuboid are removed.
+            // This is deliberate; unsupported areas must be fully transparent.
+            List<List<Integer>> regions=occupied[img]?:[]
+            int erased=0
+            for(int y=0;y<img.height;y++)for(int x=0;x<img.width;x++){
+                boolean allowed=false
+                for(List<Integer> r:regions){
+                    if(x>=r[0]&&x<r[0]+r[2]&&y>=r[1]&&y<r[1]+r[3]){allowed=true;break}
+                }
+                if(!allowed&&img.getRGB(x,y)!=0){img.setRGB(x,y,0);erased++}
+            }
+            File dest=new File(out,'assets/halohaven/textures/entity/'+name+'.png')
+            dest.parentFile.mkdirs();ImageIO.write(img,'PNG',dest)
+            println "Halo Haven UV: "+name+" "+img.width+"x"+img.height+
+                ", mapped="+regions.size()+", extraneous cleared="+erased
+        }
+
+        // 1. SKYFOLK: head, nose, body, coat, folded arms, two legs and headgear.
+        BufferedImage villager=new BufferedImage(64,64,BufferedImage.TYPE_INT_ARGB)
+        Graphics2D vg=villager.createGraphics()
+        cube(villager,vg,0,0,8,10,8,0xfff2ddbd,0xffffebcc,0xffd1b18f) // skin/head
+        cube(villager,vg,24,0,2,4,2,0xffe6c39e,0xfff4d8ab,0xffb8937a) // long nose
+        cube(villager,vg,16,20,8,12,6,0xff577e83,0xff739da1,0xff375862) // tunic
+        cube(villager,vg,0,38,8,18,6,0xff7da2a3,0xff90bbb8,0xff3b6673) // long robe
+        cube(villager,vg,44,22,4,8,4,0xff6e939b,0xffa5c6bb,0xff496d78) // sleeves
+        cube(villager,vg,40,38,8,4,4,0xff507b83,0xff87afb0,0xff355d67) // folded arms
+        cube(villager,vg,0,22,4,12,4,0xff3c6872,0xff5c8590,0xff244450) // shared leg UV
+        // FACE exact rectangle u=8..15, v=8..17.
+        rect(vg,0xffcaa56d,8,8,8,2) // hairline
+        rect(vg,0xff8b9b97,9,10,6,1)
+        rect(vg,0xff536a76,9,12,2,1);rect(vg,0xff536a76,13,12,2,1)
+        rect(vg,0xff233647,10,12,1,1);rect(vg,0xff233647,14,12,1,1)
+        rect(vg,0xffbc877a,11,16,3,1)
+        // NOSE frontal surface u=26..27,v=2..5.
+        rect(vg,0xfffbe4c0,26,2,2,2)
+        rect(vg,0xffc79f83,26,5,2,1)
+        // Tunic front u=22..29 / v=26..37.
+        rect(vg,0xffebcd8f,22,26,8,2)
+        rect(vg,0xffedebd0,24,29,4,2)
+        rect(vg,0xffe9c77f,25,32,2,3)
+        rect(vg,0xfff9f2cd,25,32,1,2)
+        rect(vg,0xff3b5668,22,35,8,2)
+        rect(vg,0xffe8bc78,22,36,8,1)
+        // Robe front: u=6..13, v=44..61. Gold hems, asymmetrical panel.
+        rect(vg,0xffb7d5c9,8,46,4,9)
+        rect(vg,0xffe6c280,6,55,8,2)
+        rect(vg,0xffc8975f,6,59,8,1)
+        rect(vg,0xffffe5a9,9,49,2,4)
+        rect(vg,0xffe3d4b0,10,49,1,4)
+        // Boot front u=4..7,v=26..37.
+        rect(vg,0xffe0c28c,4,33,4,1)
+        rect(vg,0xff243e50,4,35,4,3)
+        // Hat overlay is SPARSE: only lace, gold brow, sides and top.
+        // It intentionally DOES NOT fill the face; nose and eyes stay visible.
+        overlay(villager,vg,40,0,8,8,0xfff1d7a9) // gold top cap
+        overlay(villager,vg,32,8,2,10,0xffb7986e) // left hood side
+        overlay(villager,vg,54,8,2,10,0xffb7986e) // right hood side
+        overlay(villager,vg,40,8,8,1,0xfff9e6b2) // rim above face
+        overlay(villager,vg,40,9,1,8,0xffeac98d)
+        overlay(villager,vg,47,9,1,8,0xffeac98d)
+        overlay(villager,vg,56,8,8,10,0xffe9d1a5) // hood back
+        rect(vg,0xffd7b575,57,13,6,2)
+        export('skyfolk',villager,vg)
+
+        // 2. CLOUD HARE. 1.21 rabbit model uses 64x32, not 64x64.
+        BufferedImage hare=new BufferedImage(64,32,BufferedImage.TYPE_INT_ARGB)
+        Graphics2D hg=hare.createGraphics()
+        cube(hare,hg,0,0,6,5,10,0xfff0e6f0,0xfffaf4f8,0xffd2c1dc) // body
+        cube(hare,hg,32,0,5,4,5,0xfff9f0f4,0xfffff9fb,0xffdecfe7) // head
+        cube(hare,hg,52,0,2,5,1,0xffdcc5e3,0xfff6e7f4,0xffba9dc4) // ear left
+        cube(hare,hg,58,0,2,5,1,0xffdcc5e3,0xfff6e7f4,0xffba9dc4) // ear right
+        cube(hare,hg,32,9,1,1,1,0xffe4b2c8,0xffffe8e9,0xffc48da9) // nose
+        cube(hare,hg,52,6,3,3,2,0xfff5eaf4,0xfffff6fa,0xffd6c2df) // tail
+        cube(hare,hg,0,15,2,7,2,0xffd9c7df,0xfff4e9f0,0xffab9cb9) // front right leg
+        cube(hare,hg,8,15,2,7,2,0xffd9c7df,0xfff4e9f0,0xffab9cb9) // front left leg
+        cube(hare,hg,16,15,2,4,5,0xffe8d8ec,0xfff5e9f4,0xffb7a7cb) // haunch left
+        cube(hare,hg,30,15,2,4,5,0xffe8d8ec,0xfff5e9f4,0xffb7a7cb) // haunch right
+        cube(hare,hg,8,24,2,1,7,0xffe8d8e9,0xfff9eef4,0xffbdaec7) // hind foot left
+        cube(hare,hg,26,24,2,1,7,0xffe8d8e9,0xfff9eef4,0xffbdaec7) // hind foot right
+        // Head frontal face is x37..41, y5..8.
+        rect(hg,0xff4c5b78,37,6,1,1);rect(hg,0xff4c5b78,40,6,1,1)
+        rect(hg,0xffecb5ca,38,8,2,1)
+        // Both ears have 2px visible front strips (not wide random rectangles).
+        rect(hg,0xffe9a4c6,53,1,2,4);rect(hg,0xffe9a4c6,59,1,2,4)
+        export('cloudhare',hare,hg)
+
+        // 3. LUMEN (Allay). Exact atlas 32x32 from Mojang allay.geo.json.
+        BufferedImage lumen=new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB)
+        Graphics2D lg=lumen.createGraphics()
+        cube(lumen,lg,0,0,5,5,5,0xffd1f9e9,0xffeffff1,0xff8ac2c4) // head
+        cube(lumen,lg,0,10,3,4,2,0xff80babe,0xffa4ded2,0xff569aaf) // upper body
+        cube(lumen,lg,0,16,3,5,2,0xff6cb3c1,0xff86c9c5,0xff4b889c) // coat
+        cube(lumen,lg,23,0,1,4,2,0xff7ac4c6,0xff9be3d5,0xff518da4)
+        cube(lumen,lg,23,6,1,4,2,0xff7ac4c6,0xff9be3d5,0xff518da4)
+        // Wing is a flat plane UV x16..23, y14..18. Two sides share it.
+        overlay(lumen,lg,16,14,8,5,0xff95dad1)
+        rect(lg,0xffdafff4,16,14,8,1)
+        rect(lg,0xffe4f4d3,18,16,4,1)
+        rect(lg,0xff75b4ca,16,18,8,1)
+        // Head face x5..9 y5..9.
+        rect(lg,0xff4c7396,6,7,1,1);rect(lg,0xff4c7396,8,7,1,1)
+        rect(lg,0xfff5d9a5,7,9,1,1)
+        // Coat chest x2..4 y18..22.
+        rect(lg,0xffe5f9e0,3,19,1,2)
+        export('lumen',lumen,lg)
+
+        // 4. DAWN GUARDIAN. 128x128 and mapped 3D parts, not random stripes.
+        BufferedImage golem=new BufferedImage(128,128,BufferedImage.TYPE_INT_ARGB)
+        Graphics2D gg=golem.createGraphics()
+        cube(golem,gg,0,0,8,10,8,0xffeee8d9,0xfffcf6e7,0xffbaa78e) // head
+        cube(golem,gg,24,0,2,4,2,0xffdcc69e,0xfff0e0b8,0xffab8c6c) // nose
+        cube(golem,gg,0,40,18,12,11,0xffd4dbd6,0xfff2f1e5,0xffa6b9b6) // torso
+        cube(golem,gg,0,70,9,5,6,0xffb4ccc7,0xffe6ede3,0xff809f9b) // belt overlay
+        cube(golem,gg,60,21,4,30,6,0xffdde3dc,0xfff5efe3,0xffa6b5b1) // right arm
+        cube(golem,gg,60,58,4,30,6,0xffdde3dc,0xfff5efe3,0xffa6b5b1) // left arm
+        cube(golem,gg,37,0,6,16,5,0xffb8c8c5,0xffe6e8da,0xff788f92) // right leg
+        cube(golem,gg,60,0,6,16,5,0xffb8c8c5,0xffe6e8da,0xff788f92) // left leg
+        // Head front x8..15, y8..17.
+        rect(gg,0xffd3b579,8,8,8,2)
+        rect(gg,0xff79bdc2,9,12,2,2);rect(gg,0xff79bdc2,13,12,2,2)
+        rect(gg,0xffffffff,10,12,1,1);rect(gg,0xffffffff,14,12,1,1)
+        // Chest plate FRONT: u=11..28, v=51..62.
+        rect(gg,0xffa18459,11,51,18,2)
+        rect(gg,0xffffe5a6,13,52,14,1)
+        rect(gg,0xffe6ddca,13,54,14,8)
+        rect(gg,0xffab895c,13,56,14,1)
+        rect(gg,0xff6baeba,18,55,5,5)
+        rect(gg,0xffc6ffff,19,56,3,3)
+        rect(gg,0xffffffff,20,56,1,1)
+        // Both arms: body-specific front surfaces u66..69, y27..56 / 64..93.
+        for(int y0:[27,64]){
+            rect(gg,0xffd4b176,66,y0+3,4,2)
+            rect(gg,0xff8ebdc1,66,y0+11,4,4)
+            rect(gg,0xffb19b77,66,y0+24,4,2)
+            rect(gg,0xfff1dcab,67,y0+25,2,1)
+        }
+        // Leg fronts (37+5=42..47 y5..20, 60+5=65..70 y5..20).
+        for(int xx:[42,65]){
+            rect(gg,0xffd6b580,xx,5,6,2)
+            rect(gg,0xffb5c6c2,xx,12,6,5)
+            rect(gg,0xff8c9fa3,xx,18,6,2)
+        }
+        export('dawn_guardian',golem,gg)
+
+        // 5-6. DUSK WRAITH & ECLIPSE REVENANT. Vex uses 32x32.
+        def spirit={String name,boolean boss ->
+            BufferedImage img=new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB)
+            Graphics2D g=img.createGraphics()
+            cube(img,g,0,0,5,5,5,boss?0xff453252:0xff343752,
+                boss?0xff765b84:0xff536182,boss?0xff241d3c:0xff22273e)
+            cube(img,g,0,10,3,4,2,boss?0xff5e4569:0xff353c60,
+                boss?0xff916a8d:0xff546989,boss?0xff2d2344:0xff1f2645)
+            cube(img,g,0,16,3,5,2,boss?0xff423558:0xff313852,
+                boss?0xff675073:0xff4f5a79,boss?0xff211d35:0xff20283f)
+            cube(img,g,23,0,2,4,2,boss?0xff6a4b7d:0xff3b4a6d,
+                boss?0xff91699b:0xff7188a3,boss?0xff342541:0xff262b4e)
+            cube(img,g,23,6,2,4,2,boss?0xff6a4b7d:0xff3b4a6d,
+                boss?0xff91699b:0xff7188a3,boss?0xff342541:0xff262b4e)
+            // Vex wings: flat planes UV x16..23, y22..26.
+            overlay(img,g,16,22,8,5,boss?0xff765b87:0xff62628b)
+            rect(g,boss?0xffe5b6a2:0xff96caca,16,22,8,1)
+            rect(g,boss?0xffad7396:0xff8c90b9,16,25,8,1)
+            // Exact front x5..9,y5..9.
+            rect(g,boss?0xffffc7a0:0xff86e4e8,5,6,2,1)
+            rect(g,boss?0xffffc7a0:0xff86e4e8,8,6,2,1)
+            rect(g,0xffffffff,6,6,1,1);rect(g,0xffffffff,9,6,1,1)
+            if(boss){
+                rect(g,0xfff7dca7,5,5,5,1)
+                rect(g,0xffb08a6b,7,8,1,1)
+                rect(g,0xffe7be8f,2,12,3,1)
+            }else{
+                rect(g,0xffa6a1d7,6,9,3,1)
+                rect(g,0xff7fbbc8,2,13,2,1)
+            }
+            export(name,img,g)
+        }
+        spirit('dusk_wraith',false)
+        spirit('eclipse_revenant',true)
+    }
+}

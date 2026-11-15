@@ -1,0 +1,6 @@
+{
+  "lassotrident.tooltip.ready": "Lasso attached | Right-click to climb when lodged",
+  "lassotrident.message.attached": "Trident anchored. Hold right-click to climb.",
+  "lassotrident.message.released": "The rope is released.",
+  "lassotrident.message.expired": "The trident came loose."
+}

@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 4,
+    "discard_chance_on_air_exposure": 1.0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:dirt"
+        },
+        "state": {
+          "Name": "norsegear:bog_iron_deposit"
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:mud"
+        },
+        "state": {
+          "Name": "norsegear:bog_iron_deposit"
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:clay"
+        },
+        "state": {
+          "Name": "norsegear:bog_iron_deposit"
+        }
+      }
+    ]
+  }
+}

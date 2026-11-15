@@ -1,0 +1,15 @@
+{
+  "name": "Resting Properly",
+  "category": "sleepdebt:recovery",
+  "icon": "minecraft:red_bed",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "To clear sleep debt, actually sleep in a bed. Rest in a sheltered place grants a small bonus. Dangerous areas offer less recovery."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Very short naps give limited relief. A full night's rest remains the most reliable solution. Modded sleeping items, including Comforts, can trigger the normal sleeping state without custom overrides."
+    }
+  ]
+}

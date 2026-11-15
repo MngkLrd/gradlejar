@@ -1,0 +1,190 @@
+name: Minecraft Mod Build Hub
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      project_dir:
+        description: 'Project: . or projects/fieldkit-26.3'
+        required: true
+        default: '.'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      project_dirs: ${{ steps.select.outputs.project_dirs }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - id: select
+        env:
+          PROJECT_DIR: ${{ github.event_name == 'workflow_dispatch' && inputs.project_dir || '' }}
+        run: python3 tools/plan_builds.py "$PROJECT_DIR"
+
+  build:
+    needs: plan
+    strategy:
+      fail-fast: false
+      matrix:
+        project_dir: ${{ fromJSON(needs.plan.outputs.project_dirs) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+      - name: Restore Pocket Realms sources
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/unpack_pocketrealms.py
+      - name: Restore Pocket Realms 0.3.9 update
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/unpack_pocketrealms_v039.py
+      - name: Patch Pocket Realms 1.21.1 APIs
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/fix_pocketrealms_v039.py
+      - name: Restore Pocket Realms 0.4.0 quality fixes
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/unpack_pocketrealms_v040.py
+      - name: Apply Pocket Realms 0.4.1 combat and lighting balance
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/patch_pocketrealms_v041.py
+      - name: Restore Pocket Realms 0.5.0 monster update
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/unpack_pocketrealms_v050.py
+      - name: Fix Pocket Realms 0.5.0 NeoForge API details
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/fix_pocketrealms_v050.py
+      - name: Restore Pocket Realms 0.5.1 custom sounds
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/unpack_pocketrealms_v051.py
+      - name: Add distorted Pursuer sound effects
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: |
+          python3 -m pip install --disable-pip-version-check imageio-ffmpeg==0.6.0
+          python3 tools/grime_pocketrealms_audio_v051.py
+      - name: Polish Pocket Realms 0.5.1 visuals and portal
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/polish_pocketrealms_v051.py
+      - name: Restore Pocket Realms 0.5.2 custom models
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/unpack_pocketrealms_v052.py
+      - name: Apply Pocket Realms 0.5.3 living nightmare patch
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/apply_pocketrealms_v053.py
+      - name: Restore Pocket Realms 0.6.0 chamber architecture
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/unpack_pocketrealms_v060.py
+      - name: Align ceiling nests and room lighting with new height
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/fix_pocketrealms_v060_height.py
+      - name: Restore Screenshot Manager sources
+        if: matrix.project_dir == 'projects/screenshotmanager'
+        run: python3 tools/unpack_screenshotmanager.py
+      - name: Restore Pocket Realms 0.6.1 architectural blocks
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/unpack_pocketrealms_v061.py
+      - name: Restore Screenshot Manager 26.x sources
+        if: matrix.project_dir == 'projects/screenshotmanager262' || matrix.project_dir == 'projects/screenshotmanager263'
+        run: |
+          python3 tools/unpack_screenshotmanager.py
+          python3 tools/port_screenshotmanager_26x.py "${{ matrix.project_dir }}"
+      - name: Restore Pocket Realms 0.6.2 horror systems
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/upgrade_pocketrealms_v062.py
+      - name: Integrate Pocket Realms 0.6.3 sanctuary and dread
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/upgrade_pocketrealms_v063.py
+      - name: Integrate Pocket Realms 0.6.4 predatory haunting and equipment
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/upgrade_pocketrealms_v064.py
+      - name: Integrate Pocket Realms 0.7.0 multistage and new predators
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/upgrade_pocketrealms_v070.py
+      - name: Validate profile
+        id: profile
+        env:
+          REQUESTED_DIR: ${{ matrix.project_dir }}
+        run: python3 tools/resolve_project.py "$REQUESTED_DIR" >> "$GITHUB_OUTPUT"
+      - name: Install project Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.profile.outputs.java }}
+      - name: Install project Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ steps.profile.outputs.gradle }}
+          cache-read-only: ${{ github.event_name == 'pull_request' }}
+      - name: Install Bone Hunter Python synthesis dependencies
+        if: matrix.project_dir == 'projects/spidercentaur'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Bone Hunter synthesis libraries
+        if: matrix.project_dir == 'projects/spidercentaur'
+        run: python3 -m pip install --disable-pip-version-check numpy==1.26.4 scipy==1.14.1 soundfile==0.12.1
+      - name: Install audio encoder for Spider Centaur
+        if: matrix.project_dir == 'projects/spidercentaur'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Compile production mod
+        env:
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
+        run: |
+          set -euo pipefail
+          cd "$PROJECT_DIR"
+          gradle --no-daemon --stacktrace clean build 2>&1 | tee "$GITHUB_WORKSPACE/build-output-${{ strategy.job-index }}.log"
+      - name: Check model, texture and datapack assets
+        if: matrix.project_dir == 'projects/openmotion'
+        run: python3 projects/openmotion/tools/check_assets.py
+      - name: Verify Pocket Realms 0.7.0 stage and custom meshes
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/verify_pocketrealms_v070.py
+      - name: Verify JAR
+        id: verify
+        env:
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
+        run: python3 tools/verify_build_output.py "$PROJECT_DIR"
+      - name: Upload compiled JAR as workflow artifact (release fallback)
+        if: steps.verify.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: jar-${{ steps.profile.outputs.slug }}-${{ steps.profile.outputs.version }}
+          path: |
+            ${{ steps.verify.outputs.jar_path }}
+            ${{ steps.verify.outputs.checksum_path }}
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish JAR to GitHub prerelease
+        if: github.event_name != 'pull_request'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JAR_PATH: ${{ steps.verify.outputs.jar_path }}
+          CHECKSUM_PATH: ${{ steps.verify.outputs.checksum_path }}
+          MOD_SLUG: ${{ steps.profile.outputs.slug }}
+          MOD_VERSION: ${{ steps.profile.outputs.version }}
+          MOD_LOADER: ${{ steps.profile.outputs.loader }}
+          MC_VERSION: ${{ steps.profile.outputs.minecraft }}
+        run: |
+          set -euo pipefail
+          tag="ci-${MOD_SLUG}-mc${MC_VERSION}-${MOD_LOADER}-${MOD_VERSION}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
+          gh release create "$tag" "$JAR_PATH" "$CHECKSUM_PATH" \
+            --target "$GITHUB_SHA" \
+            --title "${MOD_SLUG} ${MOD_VERSION} (Minecraft ${MC_VERSION}, ${MOD_LOADER}) — CI ${GITHUB_RUN_NUMBER}" \
+            --notes "Compiled with official Minecraft/NeoForge dependencies. Static validation passed. Client gameplay untested." \
+            --prerelease
+          echo "### Download compiled JAR" >> "$GITHUB_STEP_SUMMARY"
+          echo "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${tag}" >> "$GITHUB_STEP_SUMMARY"
+      - name: Build failure summary
+        if: failure()
+        run: |
+          echo "See the first failed Gradle task above; full logs are in the build step." >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,86 @@
+name: Bearback ports (Forge and NeoForge)
+on:
+  pull_request:
+    paths:
+      - 'projects/bearback-1.20.1/**'
+      - 'projects/bearback-26.3/**'
+      - '.github/workflows/bearback-ports.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dir: projects/bearback-1.20.1
+            java: '17'
+            gradle: '8.14.5'
+            mc: '1.20.1'
+            loader: forge
+          - dir: projects/bearback-26.3
+            java: '25'
+            gradle: '9.2.1'
+            mc: '26.3'
+            loader: neoforge
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ matrix.gradle }}
+      - name: Compile Bearback port
+        working-directory: ${{ matrix.dir }}
+        run: gradle --no-daemon clean build
+      - name: Verify mod JAR exists
+        env:
+          MC: ${{ matrix.mc }}
+          DIR: ${{ matrix.dir }}
+        run: |
+          test -s "$DIR/build/libs/bearback-$MC-0.2.2.jar"
+      - name: Verify saddlebags recipe and embedded resources
+        env:
+          DIR: ${{ matrix.dir }}
+          MC: ${{ matrix.mc }}
+        run: |
+          python3 - <<'PY'
+          import json, os, zipfile
+          from pathlib import Path
+          directory=Path(os.environ["DIR"])
+          mc=os.environ["MC"]
+          folder="recipes" if mc=="1.20.1" else "recipe"
+          path=f"data/bearback/{folder}/saddlebags.json"
+          jar=directory/"build/libs"/f"bearback-{mc}-0.2.2.jar"
+          assert jar.is_file()
+          with zipfile.ZipFile(jar) as z:
+              recipe=json.loads(z.read(path))
+              assert recipe["pattern"]==["L L","SCS","L L"]
+              assert recipe["result"]["item" if mc=="1.20.1" else "id"]=="bearback:saddlebags"
+              for asset in ["assets/bearback/textures/item/saddlebags.png",
+                            "assets/bearback/textures/entity/bear_saddlebags.png"]:
+                  assert len(z.read(asset))>100
+          print(f"PASS {mc}: packed recipe and two texture assets")
+          PY
+      - name: Publish port JAR as GitHub prerelease
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'port/bearback-cargo-022')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MC: ${{ matrix.mc }}
+          LOADER: ${{ matrix.loader }}
+          DIR: ${{ matrix.dir }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          NUMBER: ${{ github.run_number }}
+        run: |
+          set -euo pipefail
+          jar="$DIR/build/libs/bearback-$MC-0.2.2.jar"
+          tag="ci-bearback-mc$MC-$LOADER-0.2.2-$NUMBER"
+          gh release create "$tag" "$jar" --target "$TARGET_SHA" \
+            --title "Bearback 0.2.2 | Minecraft $MC ($LOADER)" \
+            --notes "Compiled against the minimum available supported loader. In-game visual/gameplay checks still required." \
+            --prerelease

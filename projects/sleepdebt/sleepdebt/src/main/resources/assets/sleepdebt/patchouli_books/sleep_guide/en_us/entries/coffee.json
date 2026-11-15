@@ -1,0 +1,23 @@
+{
+  "name": "Coffee",
+  "category": "sleepdebt:stimulants",
+  "icon": "sleepdebt:coffee",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Roast cocoa beans, grind them, then prepare coffee. Ordinary coffee gives a moderate symptom-masking effect. Strong coffee boosts harder; long coffee lasts longer."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:coffee"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:strong_coffee"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:long_coffee"
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "minecraft:block/warped_stem",
+    "bark": "minecraft:block/warped_stem",
+    "end": "minecraft:block/warped_stem_top",
+    "heart": "timberfall:block/cut_heart_warped"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bark"
+        },
+        "south": {
+          "texture": "#bark"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#end"
+        },
+        "down": {
+          "texture": "#end"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        13,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bark"
+        },
+        "south": {
+          "texture": "#bark"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#end"
+        },
+        "down": {
+          "texture": "#end"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        3,
+        2
+      ],
+      "to": [
+        16,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#heart"
+        },
+        "south": {
+          "texture": "#bark"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#heart"
+        },
+        "down": {
+          "texture": "#heart"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        5,
+        5
+      ],
+      "to": [
+        16,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#heart"
+        },
+        "south": {
+          "texture": "#bark"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#heart"
+        },
+        "down": {
+          "texture": "#heart"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        9
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#heart"
+        },
+        "south": {
+          "texture": "#bark"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#heart"
+        },
+        "down": {
+          "texture": "#heart"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        9,
+        5
+      ],
+      "to": [
+        16,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#heart"
+        },
+        "south": {
+          "texture": "#bark"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#heart"
+        },
+        "down": {
+          "texture": "#heart"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        11,
+        2
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#heart"
+        },
+        "south": {
+          "texture": "#bark"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#heart"
+        },
+        "down": {
+          "texture": "#heart"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "From Coffee Seed to Cup",
+  "category": "sleepdebt:crafting",
+  "icon": "sleepdebt:coffee_seeds",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Coffee starts as a real cultivated plant. Craft seeds, plant them on hydrated farmland, and let the bush grow. At maturity, right-click it to gather two to four Coffee Cherries without destroying the plant; it regrows from age 3. Roast the cherries into coffee beans and grind them into grounds. Existing cocoa recipes remain compatible with older worlds."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:coffee_seeds"
+    },
+    {
+      "type": "patchouli:smelting",
+      "recipe": "sleepdebt:roasted_coffee_beans"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:coffee_grounds_from_coffee"
+    }
+  ]
+}

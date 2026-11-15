@@ -1,0 +1,15 @@
+{
+  "name": "Camp Lighting",
+  "category": "sleepdebt:recovery",
+  "icon": "sleepdebt:camp_lantern",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The copper Rest Lantern casts a warm light that drives back night threats. Set one close to a camp bedroll to enhance the recovery gained when resting."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:camp_lantern"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+[[mods]]
+modId="phantomlure"
+version="0.1.1"
+displayName="Phantom Lure"
+authors="Minemods"
+description="Nighttime phantom lure; use a diamond for a swarm."
+[[dependencies.phantomlure]]
+modId="forge"
+mandatory=true
+versionRange="[47.1.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.phantomlure]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.20.2)"
+ordering="NONE"
+side="BOTH"

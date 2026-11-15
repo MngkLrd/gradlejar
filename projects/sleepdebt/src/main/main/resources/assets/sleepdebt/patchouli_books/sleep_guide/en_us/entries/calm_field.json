@@ -1,0 +1,31 @@
+{
+  "name": "Tranquil Field Supplies",
+  "category": "sleepdebt:recovery",
+  "icon": "sleepdebt:incense_burner",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Clay Incense Burner makes a real, persistent calm zone. Right-click it with incense bundles or dried herbs to fuel it; a burning bundle lasts two minutes. Players within seven blocks gradually lose Stress and Fatigue. You can right-click empty-handed to check remaining time."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:incense_burner"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:incense_bundle"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "A Herbal Poultice relieves stress and fatigue on demand, but does not remove Sleep Debt. Its cooldown prevents spam. A Sleep Journal reports your current three stats, last rest quality and recovered debt."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:herbal_poultice"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:sleep_journal"
+    }
+  ]
+}

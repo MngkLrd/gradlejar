@@ -1,0 +1,15 @@
+{
+  "name": "Ловец снов",
+  "category": "sleepdebt:recovery",
+  "icon": "sleepdebt:dreamcatcher",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Поставь ловец снов около кровати: он повышает качество сна. Нажми ПКМ по блоку, чтобы снять часть стресса. Повторное использование требует времени."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:dreamcatcher"
+    }
+  ]
+}

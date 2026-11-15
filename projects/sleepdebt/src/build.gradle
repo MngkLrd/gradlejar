@@ -1,0 +1,56 @@
+plugins {
+ id 'java-library'
+ id 'idea'
+ id 'net.neoforged.moddev' version '2.0.148'
+}
+
+group = 'dev.minemods.sleepdebt'
+version = project.mod_version
+base.archivesName = 'sleepdebt-' + project.minecraft_version
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+ version = project.neo_version
+ runs {
+  client { client() }
+  server { server() }
+ }
+ mods {
+  sleepdebt { sourceSet(sourceSets.main) }
+ }
+}
+tasks.withType(JavaCompile).configureEach {
+ options.encoding = 'UTF-8'
+ options.release = 21
+}
+tasks.register('generateSleepAssets', Exec) {
+ commandLine 'python3', 'tools/generate_assets.py'
+ outputs.dir('src/main/resources/assets/sleepdebt/textures')
+}
+tasks.named('processResources') { dependsOn('generateSleepAssets') }
+
+repositories {
+ maven { name = 'WispForest'; url = 'https://maven.wispforest.io/releases' }
+ maven { name = 'Su5ed'; url = 'https://maven.su5ed.dev/releases' }
+ maven { name = 'BlameJared'; url = 'https://maven.blamejared.com' }
+ maven { name = 'EMI'; url = 'https://maven.terraformersmc.com/releases/' }
+ maven {
+  name = 'Modrinth'
+  url = 'https://api.modrinth.com/maven'
+ }
+}
+dependencies {
+ compileOnly 'maven.modrinth:jade:15.10.6+neoforge'
+ compileOnly 'io.wispforest:accessories-neoforge:1.1.0-beta.53+1.21.1'
+ compileOnly 'mezz.jei:jei-1.21.1-common-api:19.21.0.247'
+ compileOnly 'mezz.jei:jei-1.21.1-neoforge-api:19.21.0.247'
+ compileOnly 'dev.emi:emi-neoforge:1.1.24+1.21.1:api'
+}
+
+
+tasks.register('generateSleepV3Assets', Exec) {
+ commandLine 'python3', 'tools/generate_v3_assets.py'
+ outputs.dir('src/main/resources/assets/sleepdebt/textures/gui')
+ dependsOn tasks.named('generateSleepAssets')
+}
+tasks.named('processResources') { dependsOn('generateSleepV3Assets') }

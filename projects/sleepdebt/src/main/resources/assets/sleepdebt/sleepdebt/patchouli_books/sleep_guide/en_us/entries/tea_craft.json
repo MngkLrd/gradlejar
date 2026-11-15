@@ -1,0 +1,23 @@
+{
+  "name": "Herbal Remedies",
+  "category": "sleepdebt:stimulants",
+  "icon": "sleepdebt:herbal_tea",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Smelt ferns into dried herbs, then use those herbs in your copper coffee machine with a water bucket and coal or charcoal. The result is herbal tea rather than coffee."
+    },
+    {
+      "type": "patchouli:smelting",
+      "recipe": "sleepdebt:dried_herbs"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:bitter_tonic"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:dream_tea"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0.46,6.2)'
+}
+group = mod_group_id
+version = mod_version
+base { archivesName = mod_id + '-forge-' + minecraft_version }
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+minecraft {
+    mappings channel: 'official', version: minecraft_version
+    reobf = false
+    copyIdeResources = true
+    runs {
+        client {
+            workingDirectory project.file('run')
+            mods { lassotrident { source sourceSets.main } }
+        }
+        server {
+            workingDirectory project.file('run')
+            mods { lassotrident { source sourceSets.main } }
+        }
+    }
+}
+repositories { mavenCentral() }
+dependencies { minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}" }
+tasks.named('processResources', ProcessResources).configure {
+    def props = [mod_id: mod_id, mod_name: mod_name, mod_version: mod_version]
+    inputs.properties props
+    filesMatching('META-INF/mods.toml') { expand props }
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}

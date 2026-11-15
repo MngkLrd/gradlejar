@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " G ",
+    " A ",
+    " S "
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "A": {
+      "item": "traumacraft:antiseptic"
+    },
+    "S": {
+      "item": "traumacraft:syringe_body"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "traumacraft:bone_mender"
+  }
+}

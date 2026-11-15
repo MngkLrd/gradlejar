@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [" W ", "NSN", " S "],
+  "key": {
+    "W": {"item": "minecraft:nether_star"},
+    "N": {"item": "minecraft:netherite_ingot"},
+    "S": {"item": "minecraft:stick"}
+  },
+  "result": {"id": "voidchisel:void_chisel", "count": 1}
+}

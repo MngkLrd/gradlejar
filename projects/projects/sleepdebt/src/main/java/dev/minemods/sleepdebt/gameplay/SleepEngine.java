@@ -1,0 +1,256 @@
+package dev.minemods.sleepdebt.gameplay;
+
+import dev.minemods.sleepdebt.SleepSettings;
+import dev.minemods.sleepdebt.network.SleepStatusPayload;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+
+/** Long-term player state. Saves under the legacy key for world migration. */
+public final class SleepEngine {
+ private static final String KEY="sleepdebt_v2";
+ private static final int MAX=1000;
+ private static int clamp(int v){return Math.max(0,Math.min(MAX,v));}
+ private static CompoundTag data(ServerPlayer p){return p.getPersistentData().getCompound(KEY);}
+ private static void save(ServerPlayer p,CompoundTag state){p.getPersistentData().put(KEY,state);}
+ private static void sync(ServerPlayer p,CompoundTag state){
+  PacketDistributor.sendToPlayer(p,new SleepStatusPayload(
+   state.getInt("debt"),state.getInt("mask"),state.getInt("crash"),
+   state.getInt("caffeine"),state.getInt("fatigue"),state.getInt("stress")));
+ }
+ public static int getDebt(ServerPlayer p){return data(p).getInt("debt");}
+ public static boolean hasSleeplessGrace(ServerPlayer p){
+  return p.serverLevel().getGameTime()<data(p).getLong("sleeplessGraceUntil");
+ }
+ public static int getFatigue(ServerPlayer p){return data(p).getInt("fatigue");}
+ public static int getStress(ServerPlayer p){return data(p).getInt("stress");}
+ public static int getCaffeine(ServerPlayer p){return data(p).getInt("caffeine");}
+ public static int getLastQuality(ServerPlayer p){return data(p).getInt("lastSleepQuality");}
+ public static int getLastRecovery(ServerPlayer p){return data(p).getInt("lastSleepRecovery");}
+ public static int getLastReasons(ServerPlayer p){return data(p).getInt("lastSleepReasons");}
+ public static int getCurrentQuality(ServerPlayer p){
+  return RestEnvironment.evaluate(p,p.blockPosition()).quality();
+ }
+ public static int daysSinceSleep(ServerPlayer p){
+  CompoundTag state=data(p);
+  if(!state.contains("lastSleepAt"))return 0;
+  long elapsed=Math.max(0,p.serverLevel().getGameTime()-state.getLong("lastSleepAt"));
+  return (int)Math.min(99,elapsed/24000L);
+ }
+
+ public static void setNeeds(ServerPlayer p,int debt,int fatigue,int stress){
+  CompoundTag t=data(p);
+  t.putInt("debt",clamp(debt));
+  t.putInt("fatigue",clamp(fatigue));
+  t.putInt("stress",clamp(stress));
+  save(p,t);sync(p,t);
+ }
+ public static void addStress(ServerPlayer p,int amount){
+  CompoundTag t=data(p);
+  t.putInt("stress",clamp(t.getInt("stress")+amount));
+  save(p,t);sync(p,t);
+ }
+ public static void addFatigue(ServerPlayer p,int amount){
+  CompoundTag t=data(p);
+  t.putInt("fatigue",clamp(t.getInt("fatigue")+amount));
+  save(p,t);
+ }
+ public static void soothe(ServerPlayer p,int stress,int fatigue){
+  CompoundTag t=data(p);
+  if(t.getInt("stress")==0&&t.getInt("fatigue")==0)return;
+  t.putInt("stress",clamp(t.getInt("stress")-stress));
+  t.putInt("fatigue",clamp(t.getInt("fatigue")-fatigue));
+  save(p,t);
+ }
+ public static void onBlockBreak(BlockEvent.BreakEvent e){
+  if(e.getPlayer() instanceof ServerPlayer p&&!p.getAbilities().instabuild){
+   addFatigue(p,3);
+  }
+ }
+ public static void onAttack(AttackEntityEvent e){
+  if(e.getEntity() instanceof ServerPlayer p&&!p.getAbilities().instabuild){
+   addFatigue(p,11);
+   addStress(p,4);
+  }
+ }
+ public static boolean usePoultice(ServerPlayer p){
+  CompoundTag t=data(p);
+  long now=p.serverLevel().getGameTime();
+  if(t.contains("poulticeAt")&&now>=t.getLong("poulticeAt")
+      &&now-t.getLong("poulticeAt")<1800)return false;
+  if(t.getInt("stress")<60&&t.getInt("fatigue")<60)return false;
+  t.putInt("stress",clamp(t.getInt("stress")-215));
+  t.putInt("fatigue",clamp(t.getInt("fatigue")-135));
+  t.putLong("poulticeAt",now);
+  save(p,t);sync(p,t);
+  return true;
+ }
+ public static int useDreamcatcher(ServerPlayer p,BlockPos pos){
+  CompoundTag t=data(p);
+  long now=p.serverLevel().getGameTime();
+  if(t.contains("dreamcatcherLast")&&now>=t.getLong("dreamcatcherLast")
+      &&now-t.getLong("dreamcatcherLast")<3600)return 0;
+  if(pos.distSqr(p.blockPosition())>64)return 0;
+  int removed=Math.min(225,t.getInt("stress"));
+  t.putInt("stress",clamp(t.getInt("stress")-225));
+  t.putInt("fatigue",clamp(t.getInt("fatigue")-80));
+  t.putLong("dreamcatcherLast",now);
+  save(p,t);sync(p,t);
+  p.level().playSound(null,pos,net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME,
+   net.minecraft.sounds.SoundSource.BLOCKS,.6f,1.1f);
+  return removed;
+ }
+
+ /** Called by the multi-second, interruptible rest session, not block use. */
+ public static int finishCampRest(ServerPlayer p,BlockPos pos){
+  if(!SleepSettings.ENABLE_CAMP_REST.get())return 0;
+  var site=RestEnvironment.evaluate(p,pos);
+  CompoundTag t=data(p);
+  int fatigueRecovery=Math.min(520,165*site.quality()/100+(site.warm()?55:0));
+  int stressRecovery=Math.min(420,100*site.quality()/100+(site.incense()?80:0));
+  int debtRecovery=Math.min(85,50*site.quality()/100);
+  t.putInt("fatigue",clamp(t.getInt("fatigue")-fatigueRecovery));
+  t.putInt("stress",clamp(t.getInt("stress")-stressRecovery));
+  t.putInt("debt",clamp(t.getInt("debt")-debtRecovery));
+  t.putLong("lastCampRest",p.serverLevel().getGameTime());
+  save(p,t);sync(p,t);
+  return fatigueRecovery;
+ }
+
+ public static void drink(ServerPlayer p,int duration,int caffeine,int relief,int calm){
+  CompoundTag t=data(p);
+  if(caffeine>0){
+   int load=t.getInt("caffeine");
+   int effect=Math.max(25,100-load);
+   t.putInt("mask",Math.max(t.getInt("mask"),duration*effect/100));
+   t.putInt("caffeine",Math.min(100,load+caffeine));
+   t.putInt("crash",0);
+  }else{
+   // Tea and warm milk calm you; they do not magically undo hours awake.
+   t.putInt("fatigue",clamp(t.getInt("fatigue")-relief*2));
+   t.putInt("stress",clamp(t.getInt("stress")-relief-calm*55));
+   t.putInt("debt",clamp(t.getInt("debt")-Math.min(35,relief/5)));
+   if(calm>0)t.putInt("calm",6000+calm*1800);
+  }
+  save(p,t);sync(p,t);
+ }
+
+ public static void tick(PlayerTickEvent.Post e){
+  if(!(e.getEntity() instanceof ServerPlayer p)||p.isSpectator())return;
+  CampRestSessions.tick(p);
+  if(p.getAbilities().instabuild)return;
+  CompoundTag t=data(p);
+  if(!t.contains("lastSleepAt"))t.putLong("lastSleepAt",p.serverLevel().getGameTime());
+  if(p.isSleeping()){
+   t.putInt("sleepTicks",Math.min(500,t.getInt("sleepTicks")+1));
+   save(p,t);return;
+  }
+  int slept=t.getInt("sleepTicks");
+  if(slept>0){
+   if(slept>=40)recoverFromSleep(p,t,slept);
+   t.putInt("sleepTicks",0);
+   sync(p,t);
+  }
+  int progress=t.getInt("progress")+1;
+  int interval=SleepSettings.TICKS_PER_POINT.get();
+  if(p.isSprinting()||p.isSwimming())interval=Math.max(20,(int)(interval*.78f));
+  if(progress>=interval){
+   progress=0;
+   t.putInt("debt",clamp(t.getInt("debt")+1));
+  }
+  t.putInt("progress",progress);
+  if(p.tickCount%20==0){
+   boolean exerting=p.isSprinting()||p.isSwimming()||p.getAttackStrengthScale(0)<.6f;
+   t.putInt("fatigue",clamp(t.getInt("fatigue")+(exerting?4:-2)));
+   boolean threatened=p.hurtTime>0||!p.level().getEntitiesOfClass(
+     net.minecraft.world.entity.monster.Monster.class,p.getBoundingBox().inflate(9)).isEmpty();
+   boolean dark=!p.level().isDay()&&p.level().getMaxLocalRawBrightness(p.blockPosition())<5;
+   t.putInt("stress",clamp(t.getInt("stress")+(threatened?5:dark?1:-2)));
+   int mask=t.getInt("mask");
+   if(mask>0){
+    mask=Math.max(0,mask-20);
+    t.putInt("mask",mask);
+    if(mask==0&&t.getInt("caffeine")>=55)t.putInt("crash",1800);
+   }
+   if(t.getInt("crash")>0)t.putInt("crash",Math.max(0,t.getInt("crash")-20));
+   if(t.getInt("calm")>0)t.putInt("calm",Math.max(0,t.getInt("calm")-20));
+   if(p.tickCount%600==0&&t.getInt("caffeine")>0)
+    t.putInt("caffeine",t.getInt("caffeine")-1);
+  }
+  if(p.tickCount%100==0){
+   SleepEffects.apply(p,t);
+   sync(p,t);
+  }
+  if(SleepSettings.MICROSLEEPS.get()&&p.tickCount%600==0&&
+     t.getInt("debt")>=850&&t.getInt("fatigue")>=650&&t.getInt("mask")==0&&
+     p.getRandom().nextInt(3)==0){
+   p.addEffect(new MobEffectInstance(MobEffects.DARKNESS,36,0,true,false,true));
+   p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,36,0,true,false,true));
+  }
+  if(p.tickCount%SleepSettings.SPAWN_INTERVAL_TICKS.get()==0)
+   NightEncounters.trySpawn(p,t.getInt("debt"));
+  save(p,t);
+ }
+
+ private static void recoverFromSleep(ServerPlayer p,CompoundTag t,int slept){
+  var site=RestEnvironment.evaluate(p,p.blockPosition());
+  int quality=site.quality();
+  int base=SleepSettings.BASE_RECOVERY.get();
+  int recovery=base*quality/100;
+  if(slept<85)recovery=Math.min(recovery,180);
+  long now=p.serverLevel().getGameTime();
+  // Anti-spam: multiple partial bed sleeps cannot replace a real night.
+  if(t.contains("lastFullSleepAt")&&now>=t.getLong("lastFullSleepAt")
+      &&now-t.getLong("lastFullSleepAt")<6000)recovery=Math.min(recovery,90);
+  int before=t.getInt("debt");
+  int after=clamp(before-recovery);
+  t.putLong("lastFullSleepAt",now);
+  t.putInt("lastSleepQuality",quality);
+  t.putInt("lastSleepRecovery",before-after);
+  t.putInt("lastSleepReasons",site.reasons());
+  t.putLong("lastSleepAt",p.serverLevel().getGameTime());
+  t.putInt("debt",after);
+  t.putInt("progress",0);
+  t.putInt("mask",0);
+  t.putInt("crash",0);
+  t.putInt("calm",0);
+  t.putInt("fatigue",clamp(t.getInt("fatigue")-650*quality/100));
+  t.putInt("stress",clamp(t.getInt("stress")-500*quality/100));
+  t.putInt("caffeine",Math.max(0,t.getInt("caffeine")-30));
+  p.displayClientMessage(Component.translatable("message.sleepdebt.sleep_report",
+   quality,before-after),true);
+  if(after==0&&before>0){
+   p.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED,1600,0,true,true));
+  }
+ }
+
+ public static void clonePlayer(PlayerEvent.Clone e){
+  if(!(e.getEntity() instanceof ServerPlayer p))return;
+  CampRestSessions.discard(p);
+  CompoundTag old=e.getOriginal().getPersistentData().getCompound(KEY).copy();
+  if(e.isWasDeath()){
+   old.putLong("sleeplessGraceUntil",p.serverLevel().getGameTime()+
+     SleepSettings.RESPAWN_GRACE_TICKS.get());
+   old.putInt("stress",Math.max(0,old.getInt("stress")-180));
+   old.putInt("fatigue",Math.max(0,old.getInt("fatigue")-120));
+  }
+  if(e.isWasDeath()&&!SleepSettings.KEEP_ON_DEATH.get()){
+   old.putInt("debt",0);old.putInt("progress",0);
+   old.putInt("fatigue",0);old.putInt("stress",0);
+  }
+  old.putInt("sleepTicks",0);
+  p.getPersistentData().put(KEY,old);
+ }
+ public static void onLogin(PlayerEvent.PlayerLoggedInEvent e){
+  if(e.getEntity() instanceof ServerPlayer p){CampRestSessions.discard(p);sync(p,data(p));}
+ }
+ private SleepEngine(){}
+}

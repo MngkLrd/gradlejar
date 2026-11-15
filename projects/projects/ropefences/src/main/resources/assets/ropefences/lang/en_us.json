@@ -1,0 +1,8 @@
+{
+  "block.ropefences.rope_span": "Rope fence",
+  "message.ropefences.first": "First fence post selected. Sneak-right-click another post with a lead.",
+  "message.ropefences.canceled": "Rope placement canceled.",
+  "message.ropefences.distance": "Posts must be level, in a straight line, 2-12 blocks apart.",
+  "message.ropefences.obstructed": "The space between posts must be empty.",
+  "message.ropefences.created": "Rope fence connected."
+}

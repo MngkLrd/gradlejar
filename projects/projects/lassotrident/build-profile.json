@@ -1,0 +1,9 @@
+{
+  "slug": "lassotrident",
+  "version": "0.1.0",
+  "minecraft": "1.21.1",
+  "loader": "forge",
+  "java": "21",
+  "gradle": "8.8",
+  "jar_glob": "lassotrident-forge-1.21.1-0.1.0.jar"
+}

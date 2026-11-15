@@ -1,0 +1,15 @@
+{
+  "name": "The New Survival Loop",
+  "category": "sleepdebt:fatigue",
+  "icon": "minecraft:clock",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Sleep Debt 2.4 tracks three different pressures. Sleep Debt is your long-term sleeplessness. Fatigue measures recent effort, and Stress rises near danger. Rest treats each differently."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The HUD shows ten sleep-debt marks, a copper fatigue line, and a violet stress line. Coffee can hide symptoms; only actual rest significantly reduces your long-term sleep debt."
+    }
+  ]
+}

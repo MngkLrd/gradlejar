@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="Timberfall"
+authors="Timberfall"
+description="Directional tree felling with modeled three-stage 3D axe notches and toppling animation."
+[[dependencies.timberfall]]
+modId="neoforge"
+type="required"
+versionRange="[26.3.0.90,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.timberfall]]
+modId="minecraft"
+type="required"
+versionRange="[26.3]"
+ordering="NONE"
+side="BOTH"

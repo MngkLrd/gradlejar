@@ -1,0 +1,19 @@
+{
+  "name": "Rest Supplies",
+  "category": "sleepdebt:crafting",
+  "icon": "sleepdebt:pillow",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Craft a pillow and sleep mask while preparing your shelter. These supplies are a foundation for future bed-quality upgrades. They are currently crafting items, not wearable equipment."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:pillow"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:sleep_mask"
+    }
+  ]
+}

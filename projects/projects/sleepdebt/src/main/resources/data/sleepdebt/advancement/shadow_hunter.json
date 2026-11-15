@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "sleepdebt:dream_shard"
+    },
+    "title": {
+      "translate": "advancements.sleepdebt.shadow_hunter.title"
+    },
+    "description": {
+      "translate": "advancements.sleepdebt.shadow_hunter.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "parent": "sleepdebt:first_brew",
+  "criteria": {
+    "victory": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "sleepdebt:sleepless"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "victory"
+    ]
+  ]
+}

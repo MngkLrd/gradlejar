@@ -1,0 +1,23 @@
+{
+  "name": "От семечка до чашки",
+  "category": "sleepdebt:crafting",
+  "icon": "sleepdebt:coffee_seeds",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Кофе теперь выращивается по-настоящему. Изготовь семена, посади их на увлажнённой грядке и дождись созревания. ПКМ соберёт две-четыре кофейные ягоды, не разрушая куст: он продолжит расти с третьей стадии. Обжарь ягоды в печи, затем изготовь молотый кофе. Старые рецепты на какао сохранены для совместимости."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:coffee_seeds"
+    },
+    {
+      "type": "patchouli:smelting",
+      "recipe": "sleepdebt:roasted_coffee_beans"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:coffee_grounds_from_coffee"
+    }
+  ]
+}

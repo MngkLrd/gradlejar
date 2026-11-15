@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.minemods.leashwrap.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "LeashKnotMixin"
+  ],
+  "client": [
+    "LeashKnotRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

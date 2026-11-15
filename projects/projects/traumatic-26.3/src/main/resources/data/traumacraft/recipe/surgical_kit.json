@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "ICI",
+    "ADA",
+    "IRI"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "C": "traumacraft:medical_polymer",
+    "A": "traumacraft:antiseptic",
+    "D": "minecraft:diamond",
+    "R": "traumacraft:syringe_body"
+  },
+  "result": {
+    "id": "traumacraft:surgical_kit",
+    "count": 1
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:paper",
+    "minecraft:redstone",
+    "minecraft:iron_nugget"
+  ],
+  "result": {
+    "id": "traumacraft:medkit",
+    "count": 1
+  }
+}

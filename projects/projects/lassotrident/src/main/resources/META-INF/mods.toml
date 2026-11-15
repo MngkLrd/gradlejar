@@ -1,0 +1,20 @@
+modLoader="javafml"
+loaderVersion="[52,)"
+license="MIT"
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+description='''Attach a lead to your vanilla trident, throw it into a wall and climb the rope.'''
+[[dependencies.lassotrident]]
+modId="forge"
+mandatory=true
+versionRange="[52.1.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.lassotrident]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"

@@ -1,0 +1,15 @@
+{
+  "name": "Caffeine Overload",
+  "category": "sleepdebt:stimulants",
+  "icon": "sleepdebt:energy_drink",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Repeated caffeine use raises your caffeine load. High load causes reduced drink efficiency, and after the boost ends may trigger a weakness crash."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "sleepdebt:energy_drink"
+    }
+  ]
+}

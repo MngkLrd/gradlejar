@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "sleepdebt:herbal_tea"
+    },
+    {
+      "item": "sleepdebt:coffee_grounds"
+    }
+  ],
+  "result": {
+    "id": "sleepdebt:bitter_tonic",
+    "count": 1
+  }
+}

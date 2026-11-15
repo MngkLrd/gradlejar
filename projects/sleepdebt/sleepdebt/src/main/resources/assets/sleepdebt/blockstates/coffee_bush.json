@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "sleepdebt:block/coffee_bush_stage_0"
+    },
+    "age=1": {
+      "model": "sleepdebt:block/coffee_bush_stage_1"
+    },
+    "age=2": {
+      "model": "sleepdebt:block/coffee_bush_stage_2"
+    },
+    "age=3": {
+      "model": "sleepdebt:block/coffee_bush_stage_3"
+    },
+    "age=4": {
+      "model": "sleepdebt:block/coffee_bush_stage_4"
+    },
+    "age=5": {
+      "model": "sleepdebt:block/coffee_bush_stage_5"
+    },
+    "age=6": {
+      "model": "sleepdebt:block/coffee_bush_stage_6"
+    },
+    "age=7": {
+      "model": "sleepdebt:block/coffee_bush_stage_7"
+    }
+  }
+}

@@ -1,0 +1,100 @@
+import groovy.json.JsonOutput
+import java.awt.Color
+import java.awt.Graphics2D
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
+
+tasks.named('generateHaloAssets').configure {
+    doLast {
+        File base=layout.buildDirectory.dir('generated/haloassets').get().asFile
+        def json={ String path,Object data ->
+            File out=new File(base,path);out.parentFile.mkdirs()
+            out.setText(JsonOutput.prettyPrint(JsonOutput.toJson(data)),'UTF-8')
+        }
+        // One comprehensible icon silhouette: a ring of ancient sun-gold,
+        // a central cyan Eye-of-Ender and two pale feathers.
+        BufferedImage icon=new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB)
+        Graphics2D g=icon.createGraphics()
+        def plot={int x,int y,int rgba->
+            if(x>=0&&x<32&&y>=0&&y<32)icon.setRGB(x,y,rgba)
+        }
+        for(int y=2;y<30;y++)for(int x=2;x<30;x++){
+            double r=Math.hypot(x-15.5,y-15.5)
+            if(r>=10.5&&r<=12.1){
+                plot(x,y,(int)(r>11.5?0xff916e42:0xfff2d092))
+            }else if(r>=9.5&&r<10.5){
+                plot(x,y,(int)0xffffebae)
+            }
+        }
+        // Two white curved feather wings, each outlined in sky-blue.
+        for(int y=8;y<=26;y++){
+            int x1=6+(int)(3*Math.sin((y-5)*Math.PI/27.0))
+            int x2=25-(int)(3*Math.sin((y-5)*Math.PI/27.0))
+            int w=Math.max(1,4-Math.floorDiv(Math.abs(y-17),5))
+            for(int k=0;k<w;k++){
+                plot(x1-k,y,(int)0xff669fb0)
+                plot(x1-k+1,y,(int)0xffe7f7ec)
+                plot(x2+k,y,(int)0xff669fb0)
+                plot(x2+k-1,y,(int)0xfff4e9d8)
+            }
+        }
+        // Ender eye placed exactly in the centre of the sigil.
+        for(int y=10;y<=21;y++)for(int x=10;x<=21;x++){
+            double d=(x-15.5)*(x-15.5)+(y-15.5)*(y-15.5)
+            if(d<35)plot(x,y,(int)0xff315f6a)
+            if(d<23)plot(x,y,(int)0xff6dd8b9)
+            if(d<10)plot(x,y,(int)0xfff7e5a3)
+            if(d<4)plot(x,y,(int)0xffffffff)
+        }
+        g.dispose()
+        File png=new File(base,'assets/halohaven/textures/item/skyseed.png')
+        png.parentFile.mkdirs();ImageIO.write(icon,'PNG',png)
+        json('assets/halohaven/models/item/skyseed.json',[
+            parent:'minecraft:item/generated',textures:[layer0:'halohaven:item/skyseed']])
+        json('data/halohaven/recipe/skyseed.json',[
+            type:'minecraft:crafting_shaped',category:'equipment',
+            pattern:['FEF','QGQ',' A '],
+            key:[F:[item:'minecraft:feather'],E:[item:'minecraft:ender_eye'],
+                 Q:[item:'minecraft:quartz_block'],G:[item:'minecraft:ghast_tear'],
+                 A:[item:'minecraft:amethyst_shard']],
+            result:[id:'halohaven:skyseed',count:1]])
+        ['ru_ru','en_us'].each {String lang ->
+            String path='assets/halohaven/lang/'+lang+'.json'
+            Map loc=new groovy.json.JsonSlurper().parse(new File(base,path))
+            if(lang=='ru_ru'){
+                loc['itemGroup.halohaven.heaven']='Halo Haven | Небесная обитель'
+                loc['item.halohaven.skyseed']='Семя небосвода'
+                loc['tooltip.halohaven.skyseed']='Взмывает в небо и выращивает парящий остров с алтарём.'
+                loc['tooltip.halohaven.skyseed_bell']='На кварц нужно поставить колокол. ПКМ с Печатью вознесения.'
+                loc['tooltip.halohaven.sigil']='ПКМ по колоколу над облаками: открыть путь в Небесную обитель.'
+                loc['message.halohaven.skyseed_overworld']='Семя небосвода нужно использовать в обычном мире.'
+                loc['message.halohaven.skyseed_busy']='Оазис уже формируется.'
+                loc['message.halohaven.skyseed_open_sky']='Выйди под открытое небо.'
+                loc['message.halohaven.skyseed_too_high']='Здесь слишком высоко для небесного оазиса.'
+                loc['message.halohaven.skyseed_obstructed']='Над тобой недостаточно свободного места: остров не может здесь появиться.'
+                loc['message.halohaven.skyseed_flight']='Семя проснулось. Небесный оазис появляется над тобой!'
+                loc['message.halohaven.skyseed_ready']='Оазис готов. Поставь колокол на центральный кварц и используй Печать вознесения.'
+                loc['message.halohaven.portal_opening']='Колокол пробуждается. Портал откроется через мгновение...'
+                loc['message.halohaven.portal_interrupted']='Ритуал прерван. Останься рядом с колоколом.'
+                loc['message.halohaven.missing_dimension']='Небесное измерение не загрузилось. Проверь файлы мода.'
+            }else{
+                loc['itemGroup.halohaven.heaven']='Halo Haven | Celestial Court'
+                loc['item.halohaven.skyseed']='Skyseed'
+                loc['tooltip.halohaven.skyseed']='Launch upward while a sky island forms with a ritual dais.'
+                loc['tooltip.halohaven.skyseed_bell']='Place a bell on the quartz; activate it with an Ascension Sigil.'
+                loc['tooltip.halohaven.sigil']='Right-click the sky bell to open your way into Halo Haven.'
+                loc['message.halohaven.skyseed_overworld']='Use the Skyseed in the Overworld.'
+                loc['message.halohaven.skyseed_busy']='Your floating oasis is already forming.'
+                loc['message.halohaven.skyseed_open_sky']='Go outside under an open sky.'
+                loc['message.halohaven.skyseed_too_high']='The sky is too high here to form the oasis.'
+                loc['message.halohaven.skyseed_obstructed']='There is not enough clear space overhead for a floating oasis.'
+                loc['message.halohaven.skyseed_flight']='The Skyseed is awakening. Your sky oasis is forming above!'
+                loc['message.halohaven.skyseed_ready']='Oasis ready! Place a bell upon the central quartz and use the Ascension Sigil.'
+                loc['message.halohaven.portal_opening']='The bell awakens. A portal is opening...'
+                loc['message.halohaven.portal_interrupted']='Ritual interrupted. Remain close to the bell.'
+                loc['message.halohaven.missing_dimension']='The sky dimension is missing. Check the mod datapack.'
+            }
+            json(path,loc)
+        }
+    }
+}

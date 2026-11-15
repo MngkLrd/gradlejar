@@ -1,0 +1,107 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "minecraft:block/spruce_log",
+    "bark": "minecraft:block/spruce_log",
+    "end": "minecraft:block/spruce_log_top",
+    "heart": "timberfall:block/cut_heart_spruce"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bark"
+        },
+        "south": {
+          "texture": "#bark"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#end"
+        },
+        "down": {
+          "texture": "#end"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        9,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bark"
+        },
+        "south": {
+          "texture": "#bark"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#end"
+        },
+        "down": {
+          "texture": "#end"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        2
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#heart"
+        },
+        "south": {
+          "texture": "#bark"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#heart"
+        },
+        "down": {
+          "texture": "#heart"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+group = mod_group_id
+version = mod_version
+base.archivesName = "halohaven-${minecraft_version}"
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+neoForge {
+    version = project.neo_version
+    runs {
+        client { client() }
+        server { server(); programArgument '--nogui' }
+    }
+    mods {
+        "${mod_id}" { sourceSet(sourceSets.main) }
+    }
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+apply from: 'assets.gradle'
+apply from: 'visuals.gradle'
+apply from: 'creatures.gradle'
+apply from: 'uvtextures.gradle'
+apply from: 'skyway.gradle'
+apply from: 'atelier.gradle'
+apply from: 'worldlabels.gradle'
+apply from: 'pixelart.gradle'
+jar {
+    manifest.attributes([
+        'Specification-Title': 'Halo Haven',
+        'Specification-Vendor': 'MineMods',
+        'Implementation-Title': 'Halo Haven',
+        'Implementation-Version': project.version
+    ])
+}

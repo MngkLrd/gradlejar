@@ -1,0 +1,928 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": true,
+  "textures": {
+    "particle": "openmotion:block/v15_gun_body",
+    "v15_gun_brass": "openmotion:block/v15_gun_brass",
+    "v15_gun_copper": "openmotion:block/v15_gun_copper",
+    "v15_gun_bore": "openmotion:block/v15_gun_bore",
+    "v15_air_lamp_off": "openmotion:block/v15_air_lamp_off",
+    "v15_gun_side": "openmotion:block/v15_gun_side",
+    "v15_gun_top": "openmotion:block/v15_gun_top",
+    "v15_gun_body": "openmotion:block/v15_gun_body",
+    "v15_gun_rubber": "openmotion:block/v15_gun_rubber",
+    "v15_gun_carriage": "openmotion:block/v15_gun_carriage",
+    "v15_gun_steel": "openmotion:block/v15_gun_steel",
+    "v15_gun_hopper": "openmotion:block/v15_gun_hopper",
+    "v15_gun_rear": "openmotion:block/v15_gun_rear"
+  },
+  "elements": [
+    {
+      "from": [
+        1.8,
+        0,
+        3.4
+      ],
+      "to": [
+        14.2,
+        1.65,
+        14.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_rubber"
+        },
+        "south": {
+          "texture": "#v15_gun_rubber"
+        },
+        "east": {
+          "texture": "#v15_gun_rubber"
+        },
+        "west": {
+          "texture": "#v15_gun_rubber"
+        },
+        "up": {
+          "texture": "#v15_gun_carriage"
+        },
+        "down": {
+          "texture": "#v15_gun_rubber"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        1.65,
+        4.4
+      ],
+      "to": [
+        13,
+        2.6,
+        14.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_carriage"
+        },
+        "south": {
+          "texture": "#v15_gun_carriage"
+        },
+        "east": {
+          "texture": "#v15_gun_carriage"
+        },
+        "west": {
+          "texture": "#v15_gun_carriage"
+        },
+        "up": {
+          "texture": "#v15_gun_carriage"
+        },
+        "down": {
+          "texture": "#v15_gun_carriage"
+        }
+      }
+    },
+    {
+      "from": [
+        6.05,
+        2.6,
+        8.4
+      ],
+      "to": [
+        9.95,
+        7.7,
+        12.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_steel"
+        },
+        "south": {
+          "texture": "#v15_gun_steel"
+        },
+        "east": {
+          "texture": "#v15_gun_steel"
+        },
+        "west": {
+          "texture": "#v15_gun_steel"
+        },
+        "up": {
+          "texture": "#v15_gun_steel"
+        },
+        "down": {
+          "texture": "#v15_gun_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        6.4,
+        8.7
+      ],
+      "to": [
+        12,
+        8,
+        13.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_rubber"
+        },
+        "south": {
+          "texture": "#v15_gun_rubber"
+        },
+        "east": {
+          "texture": "#v15_gun_rubber"
+        },
+        "west": {
+          "texture": "#v15_gun_rubber"
+        },
+        "up": {
+          "texture": "#v15_gun_rubber"
+        },
+        "down": {
+          "texture": "#v15_gun_rubber"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        8,
+        8
+      ],
+      "to": [
+        12.5,
+        13.8,
+        14.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_body"
+        },
+        "south": {
+          "texture": "#v15_gun_rear"
+        },
+        "east": {
+          "texture": "#v15_gun_side"
+        },
+        "west": {
+          "texture": "#v15_gun_side"
+        },
+        "up": {
+          "texture": "#v15_gun_top"
+        },
+        "down": {
+          "texture": "#v15_gun_body"
+        }
+      }
+    },
+    {
+      "from": [
+        4.45,
+        13.8,
+        9.25
+      ],
+      "to": [
+        11.55,
+        15.05,
+        13.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_hopper"
+        },
+        "south": {
+          "texture": "#v15_gun_hopper"
+        },
+        "east": {
+          "texture": "#v15_gun_hopper"
+        },
+        "west": {
+          "texture": "#v15_gun_hopper"
+        },
+        "up": {
+          "texture": "#v15_gun_top"
+        },
+        "down": {
+          "texture": "#v15_gun_hopper"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        11.85,
+        9.65
+      ],
+      "to": [
+        3.45,
+        13.1,
+        13.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_copper"
+        },
+        "south": {
+          "texture": "#v15_gun_copper"
+        },
+        "east": {
+          "texture": "#v15_gun_copper"
+        },
+        "west": {
+          "texture": "#v15_gun_copper"
+        },
+        "up": {
+          "texture": "#v15_gun_copper"
+        },
+        "down": {
+          "texture": "#v15_gun_copper"
+        }
+      }
+    },
+    {
+      "from": [
+        12.55,
+        11.85,
+        9.65
+      ],
+      "to": [
+        13,
+        13.1,
+        13.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_copper"
+        },
+        "south": {
+          "texture": "#v15_gun_copper"
+        },
+        "east": {
+          "texture": "#v15_gun_copper"
+        },
+        "west": {
+          "texture": "#v15_gun_copper"
+        },
+        "up": {
+          "texture": "#v15_gun_copper"
+        },
+        "down": {
+          "texture": "#v15_gun_copper"
+        }
+      }
+    },
+    {
+      "from": [
+        4.9,
+        10.75,
+        1.6
+      ],
+      "to": [
+        11.1,
+        12.2,
+        9.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_body"
+        },
+        "south": {
+          "texture": "#v15_gun_body"
+        },
+        "east": {
+          "texture": "#v15_gun_body"
+        },
+        "west": {
+          "texture": "#v15_gun_body"
+        },
+        "up": {
+          "texture": "#v15_gun_top"
+        },
+        "down": {
+          "texture": "#v15_gun_body"
+        }
+      }
+    },
+    {
+      "from": [
+        4.9,
+        7.55,
+        1.6
+      ],
+      "to": [
+        11.1,
+        8.95,
+        9.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_body"
+        },
+        "south": {
+          "texture": "#v15_gun_body"
+        },
+        "east": {
+          "texture": "#v15_gun_body"
+        },
+        "west": {
+          "texture": "#v15_gun_body"
+        },
+        "up": {
+          "texture": "#v15_gun_body"
+        },
+        "down": {
+          "texture": "#v15_gun_body"
+        }
+      }
+    },
+    {
+      "from": [
+        4.9,
+        8.95,
+        1.6
+      ],
+      "to": [
+        6.1,
+        10.75,
+        9.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_side"
+        },
+        "south": {
+          "texture": "#v15_gun_side"
+        },
+        "east": {
+          "texture": "#v15_gun_side"
+        },
+        "west": {
+          "texture": "#v15_gun_side"
+        },
+        "up": {
+          "texture": "#v15_gun_side"
+        },
+        "down": {
+          "texture": "#v15_gun_side"
+        }
+      }
+    },
+    {
+      "from": [
+        9.9,
+        8.95,
+        1.6
+      ],
+      "to": [
+        11.1,
+        10.75,
+        9.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_side"
+        },
+        "south": {
+          "texture": "#v15_gun_side"
+        },
+        "east": {
+          "texture": "#v15_gun_side"
+        },
+        "west": {
+          "texture": "#v15_gun_side"
+        },
+        "up": {
+          "texture": "#v15_gun_side"
+        },
+        "down": {
+          "texture": "#v15_gun_side"
+        }
+      }
+    },
+    {
+      "from": [
+        6.1,
+        8.95,
+        8
+      ],
+      "to": [
+        9.9,
+        10.75,
+        8.15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_bore"
+        },
+        "south": {
+          "texture": "#v15_gun_bore"
+        },
+        "east": {
+          "texture": "#v15_gun_bore"
+        },
+        "west": {
+          "texture": "#v15_gun_bore"
+        },
+        "up": {
+          "texture": "#v15_gun_bore"
+        },
+        "down": {
+          "texture": "#v15_gun_bore"
+        }
+      }
+    },
+    {
+      "from": [
+        4.55,
+        11.95,
+        3.85
+      ],
+      "to": [
+        11.45,
+        12.5,
+        4.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_copper"
+        },
+        "south": {
+          "texture": "#v15_gun_copper"
+        },
+        "east": {
+          "texture": "#v15_gun_copper"
+        },
+        "west": {
+          "texture": "#v15_gun_copper"
+        },
+        "up": {
+          "texture": "#v15_gun_copper"
+        },
+        "down": {
+          "texture": "#v15_gun_copper"
+        }
+      }
+    },
+    {
+      "from": [
+        4.55,
+        7.25,
+        3.85
+      ],
+      "to": [
+        11.45,
+        7.75,
+        4.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_copper"
+        },
+        "south": {
+          "texture": "#v15_gun_copper"
+        },
+        "east": {
+          "texture": "#v15_gun_copper"
+        },
+        "west": {
+          "texture": "#v15_gun_copper"
+        },
+        "up": {
+          "texture": "#v15_gun_copper"
+        },
+        "down": {
+          "texture": "#v15_gun_copper"
+        }
+      }
+    },
+    {
+      "from": [
+        4.55,
+        7.75,
+        3.85
+      ],
+      "to": [
+        5.05,
+        11.95,
+        4.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_copper"
+        },
+        "south": {
+          "texture": "#v15_gun_copper"
+        },
+        "east": {
+          "texture": "#v15_gun_copper"
+        },
+        "west": {
+          "texture": "#v15_gun_copper"
+        },
+        "up": {
+          "texture": "#v15_gun_copper"
+        },
+        "down": {
+          "texture": "#v15_gun_copper"
+        }
+      }
+    },
+    {
+      "from": [
+        10.95,
+        7.75,
+        3.85
+      ],
+      "to": [
+        11.45,
+        11.95,
+        4.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_copper"
+        },
+        "south": {
+          "texture": "#v15_gun_copper"
+        },
+        "east": {
+          "texture": "#v15_gun_copper"
+        },
+        "west": {
+          "texture": "#v15_gun_copper"
+        },
+        "up": {
+          "texture": "#v15_gun_copper"
+        },
+        "down": {
+          "texture": "#v15_gun_copper"
+        }
+      }
+    },
+    {
+      "from": [
+        4.55,
+        11.95,
+        7.1
+      ],
+      "to": [
+        11.45,
+        12.5,
+        7.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_copper"
+        },
+        "south": {
+          "texture": "#v15_gun_copper"
+        },
+        "east": {
+          "texture": "#v15_gun_copper"
+        },
+        "west": {
+          "texture": "#v15_gun_copper"
+        },
+        "up": {
+          "texture": "#v15_gun_copper"
+        },
+        "down": {
+          "texture": "#v15_gun_copper"
+        }
+      }
+    },
+    {
+      "from": [
+        4.55,
+        7.25,
+        7.1
+      ],
+      "to": [
+        11.45,
+        7.75,
+        7.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_copper"
+        },
+        "south": {
+          "texture": "#v15_gun_copper"
+        },
+        "east": {
+          "texture": "#v15_gun_copper"
+        },
+        "west": {
+          "texture": "#v15_gun_copper"
+        },
+        "up": {
+          "texture": "#v15_gun_copper"
+        },
+        "down": {
+          "texture": "#v15_gun_copper"
+        }
+      }
+    },
+    {
+      "from": [
+        4.55,
+        7.75,
+        7.1
+      ],
+      "to": [
+        5.05,
+        11.95,
+        7.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_copper"
+        },
+        "south": {
+          "texture": "#v15_gun_copper"
+        },
+        "east": {
+          "texture": "#v15_gun_copper"
+        },
+        "west": {
+          "texture": "#v15_gun_copper"
+        },
+        "up": {
+          "texture": "#v15_gun_copper"
+        },
+        "down": {
+          "texture": "#v15_gun_copper"
+        }
+      }
+    },
+    {
+      "from": [
+        10.95,
+        7.75,
+        7.1
+      ],
+      "to": [
+        11.45,
+        11.95,
+        7.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_copper"
+        },
+        "south": {
+          "texture": "#v15_gun_copper"
+        },
+        "east": {
+          "texture": "#v15_gun_copper"
+        },
+        "west": {
+          "texture": "#v15_gun_copper"
+        },
+        "up": {
+          "texture": "#v15_gun_copper"
+        },
+        "down": {
+          "texture": "#v15_gun_copper"
+        }
+      }
+    },
+    {
+      "from": [
+        4.1,
+        11.9,
+        0.65
+      ],
+      "to": [
+        11.9,
+        13.1,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_brass"
+        },
+        "south": {
+          "texture": "#v15_gun_brass"
+        },
+        "east": {
+          "texture": "#v15_gun_brass"
+        },
+        "west": {
+          "texture": "#v15_gun_brass"
+        },
+        "up": {
+          "texture": "#v15_gun_brass"
+        },
+        "down": {
+          "texture": "#v15_gun_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        4.1,
+        6.55,
+        0.65
+      ],
+      "to": [
+        11.9,
+        7.85,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_brass"
+        },
+        "south": {
+          "texture": "#v15_gun_brass"
+        },
+        "east": {
+          "texture": "#v15_gun_brass"
+        },
+        "west": {
+          "texture": "#v15_gun_brass"
+        },
+        "up": {
+          "texture": "#v15_gun_brass"
+        },
+        "down": {
+          "texture": "#v15_gun_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        4.1,
+        7.85,
+        0.65
+      ],
+      "to": [
+        5.45,
+        11.9,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_brass"
+        },
+        "south": {
+          "texture": "#v15_gun_brass"
+        },
+        "east": {
+          "texture": "#v15_gun_brass"
+        },
+        "west": {
+          "texture": "#v15_gun_brass"
+        },
+        "up": {
+          "texture": "#v15_gun_brass"
+        },
+        "down": {
+          "texture": "#v15_gun_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        10.55,
+        7.85,
+        0.65
+      ],
+      "to": [
+        11.9,
+        11.9,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_brass"
+        },
+        "south": {
+          "texture": "#v15_gun_brass"
+        },
+        "east": {
+          "texture": "#v15_gun_brass"
+        },
+        "west": {
+          "texture": "#v15_gun_brass"
+        },
+        "up": {
+          "texture": "#v15_gun_brass"
+        },
+        "down": {
+          "texture": "#v15_gun_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        12.5,
+        11.3,
+        10.15
+      ],
+      "to": [
+        13.08,
+        12.65,
+        11.95
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_gun_rubber"
+        },
+        "south": {
+          "texture": "#v15_gun_rubber"
+        },
+        "east": {
+          "texture": "#v15_gun_rubber"
+        },
+        "west": {
+          "texture": "#v15_gun_rubber"
+        },
+        "up": {
+          "texture": "#v15_gun_rubber"
+        },
+        "down": {
+          "texture": "#v15_gun_rubber"
+        }
+      }
+    },
+    {
+      "from": [
+        13.08,
+        11.6,
+        10.4
+      ],
+      "to": [
+        13.29,
+        12.3,
+        11.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#v15_air_lamp_off"
+        },
+        "south": {
+          "texture": "#v15_air_lamp_off"
+        },
+        "east": {
+          "texture": "#v15_air_lamp_off"
+        },
+        "west": {
+          "texture": "#v15_air_lamp_off"
+        },
+        "up": {
+          "texture": "#v15_air_lamp_off"
+        },
+        "down": {
+          "texture": "#v15_air_lamp_off"
+        }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.78,
+        0.78,
+        0.78
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.55,
+        0.55,
+        0.55
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        0.7,
+        0.7,
+        0.7
+      ]
+    }
+  }
+}

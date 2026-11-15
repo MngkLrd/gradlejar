@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "openmotion:air_fan",
+    "openmotion:item_cannon",
+    "openmotion:vacuum_hopper",
+    "openmotion:sprinkler",
+    "openmotion:water_pipe",
+    "openmotion:water_valve",
+    "openmotion:water_pump"
+  ]
+}

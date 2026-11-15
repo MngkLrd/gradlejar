@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:shapeless",
+  "category": "food",
+  "ingredients": [
+    {
+      "item": "sleepdebt:strong_coffee"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    }
+  ],
+  "result": {
+    "id": "sleepdebt:energy_drink",
+    "count": 1
+  }
+}

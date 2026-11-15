@@ -1,0 +1,23 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+[[mods]]
+modId="leashwrap"
+version="1.0.1"
+displayName="LeashWrap"
+authors="MineMods"
+description='''Attach vanilla leads around tree logs and solid blocks, with a visible 3D rope band.'''
+[[mixins]]
+config="leashwrap.mixins.json"
+[[dependencies.leashwrap]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.209,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.leashwrap]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"

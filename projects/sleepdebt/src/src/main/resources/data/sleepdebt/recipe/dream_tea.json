@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "sleepdebt:herbal_tea"
+    },
+    {
+      "item": "sleepdebt:dream_shard"
+    },
+    {
+      "item": "minecraft:honey_bottle"
+    }
+  ],
+  "result": {
+    "id": "sleepdebt:dream_tea",
+    "count": 1
+  }
+}

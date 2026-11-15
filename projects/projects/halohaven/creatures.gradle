@@ -1,0 +1,129 @@
+import groovy.json.JsonOutput
+import java.awt.Color
+import java.awt.Graphics2D
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
+
+// UV-aware hand-painted creature textures, generated without third-party libraries.
+// These DO NOT replace vanilla mobs, only Halo Haven's new entity IDs.
+tasks.named('generateHaloAssets').configure {
+    doLast {
+        File assets=layout.buildDirectory.dir('generated/haloassets').get().asFile
+        def c={ value ->new Color((int)value,true)}
+        def f={ Graphics2D g,color,int x,int y,int width,int height ->
+            g.setColor(c(color)); g.fillRect(x,y,width,height)
+        }
+        def ln={Graphics2D g,color,int x1,int y1,int x2,int y2->
+            g.setColor(c(color));g.drawLine(x1,y1,x2,y2)
+        }
+        def save={String name,BufferedImage img->
+            File dest=new File(assets,'assets/halohaven/textures/entity/'+name+'.png')
+            dest.parentFile.mkdirs();ImageIO.write(img,'PNG',dest)
+        }
+        // Creature skin painting lives exclusively in uvtextures.gradle.
+        // Each Java model has its own documented atlas dimensions and cuboid
+        // coordinates, with fully transparent pixels outside occupied faces.
+        // Keep this task limited to drops, item icons, boss assets and halo ring.
+
+        // Distinct inventory silhouettes, never fallback magenta-black item icons.
+        def drawItem={name,Closure painting->
+            BufferedImage item=new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB)
+            Graphics2D ig=item.createGraphics();painting(ig);ig.dispose()
+            File dest=new File(assets,'assets/halohaven/textures/item/'+name+'.png')
+            dest.parentFile.mkdirs();ImageIO.write(item,'PNG',dest)
+            File model=new File(assets,'assets/halohaven/models/item/'+name+'.json')
+            model.parentFile.mkdirs()
+            model.setText(JsonOutput.prettyPrint(JsonOutput.toJson([
+                parent:'minecraft:item/generated',textures:[layer0:'halohaven:item/'+name]
+            ])),'UTF-8')
+        }
+        drawItem('eclipse_seal',{ig->
+            for(int dy=-13;dy<=13;dy++)for(int dx=-13;dx<=13;dx++){
+                int d=Math.abs(dx)+Math.abs(dy)
+                int x=16+dx,y=16+dy
+                if(d==14||d==13)f(ig,0xff9e76a6,x,y,1,1)
+                if(d==12)f(ig,0xffe0aec4,x,y,1,1)
+                if(d<12)f(ig,0xff3c355d,x,y,1,1)
+                if((Math.abs(dx)<2&&Math.abs(dy)<9)||(Math.abs(dy)<2&&Math.abs(dx)<9))
+                    f(ig,0xffe6b990,x,y,1,1)
+                if(d<4)f(ig,0xfff4e1f2,x,y,1,1)
+            }
+        })
+        drawItem('sunward_relic',{ig->
+            for(int y=3;y<30;y++)for(int x=3;x<30;x++){
+                int dx=x-16,dy=y-16,d=dx*dx+dy*dy
+                if(d<156&&d>=127)f(ig,0xffae793e,x,y,1,1)
+                if(d<127&&d>=94)f(ig,0xffffde91,x,y,1,1)
+                if(d<94&&d>=56)f(ig,0xff45788a,x,y,1,1)
+                if(d<56)f(ig,0xff9ae3db,x,y,1,1)
+                if(d<19)f(ig,0xffffefbd,x,y,1,1)
+            }
+            for(int i=-12;i<=12;i+=4){
+                f(ig,0xfff9d99b,15,16+i,3,2)
+                f(ig,0xfff9d99b,16+i,15,2,3)
+            }
+            f(ig,0xffffffff,15,15,3,3)
+        })
+        def j={String path,Object data->
+            File dest=new File(assets,path)
+            dest.parentFile.mkdirs()
+            dest.setText(JsonOutput.prettyPrint(JsonOutput.toJson(data)),'UTF-8')
+        }
+        j('assets/halohaven/models/item/eclipse_revenant_spawn_egg.json',[
+            parent:'minecraft:item/template_spawn_egg'])
+        Map lootSeal=[type:'minecraft:item',name:'halohaven:eclipse_seal']
+        Map lootDust=[type:'minecraft:item',name:'halohaven:stardust',
+            functions:[[function:'minecraft:set_count',count:[type:'minecraft:uniform',min:4,max:8]]]]
+        j('data/halohaven/loot_table/entities/eclipse_revenant.json',[
+            type:'minecraft:entity',
+            pools:[[rolls:1,entries:[lootSeal]],[rolls:1,entries:[lootDust]]]])
+        j('data/halohaven/recipe/sunward_relic.json',[
+            type:'minecraft:crafting_shaped',category:'equipment',
+            pattern:['DSD','SES','DSD'],
+            key:[D:[item:'halohaven:stardust'],S:[item:'halohaven:sunshard'],E:[item:'halohaven:eclipse_seal']],
+            result:[id:'halohaven:sunward_relic',count:1]])
+        ['en_us','ru_ru'].each{String lang->
+            File loc=new File(assets,'assets/halohaven/lang/'+lang+'.json')
+            Map data=new groovy.json.JsonSlurper().parse(loc)
+            if(lang=='ru_ru'){
+                data['entity.halohaven.eclipse_revenant']='Затменный ревенант'
+                data['item.halohaven.eclipse_revenant_spawn_egg']='Яйцо призыва: затменный ревенант'
+                data['item.halohaven.eclipse_seal']='Печать затмения'
+                data['item.halohaven.sunward_relic']='Реликвия солнечной клятвы'
+                data['message.halohaven.trial_wraith']='Испытание пройдено: повержено призраков %s. Получена благосклонность.'
+                data['message.halohaven.eclipse_defeated']='Затменный ревенант повержен. +20 благосклонности!'
+                data['message.halohaven.region_0']='Открыто новое место: Жемчужные дворы. +4 благосклонности.'
+                data['message.halohaven.region_1']='Открыто новое место: Цветущие кроны. +4 благосклонности.'
+                data['message.halohaven.region_2']='Открыто новое место: Грань затмения. +4 благосклонности.'
+                data['region.halohaven.0']='Жемчужные дворы'
+                data['region.halohaven.1']='Цветущие кроны'
+                data['region.halohaven.2']='Грань затмения'
+                data['message.halohaven.compass']='Поселение X: %s Z: %s | %s м | %s° | Благосклонность: %s | %s'
+            }else{
+                data['entity.halohaven.eclipse_revenant']='Eclipse Revenant'
+                data['item.halohaven.eclipse_revenant_spawn_egg']='Spawn Eclipse Revenant'
+                data['item.halohaven.eclipse_seal']='Eclipse Seal'
+                data['item.halohaven.sunward_relic']='Sunward Oath Relic'
+                data['message.halohaven.trial_wraith']='Trial milestone: %s wraiths defeated. Heavenly Favor earned.'
+                data['message.halohaven.eclipse_defeated']='Eclipse Revenant defeated. +20 Heavenly Favor!'
+                data['message.halohaven.region_0']='Discovered Pearl Court. +4 Heavenly Favor.'
+                data['message.halohaven.region_1']='Discovered Blooming Canopy. +4 Heavenly Favor.'
+                data['message.halohaven.region_2']='Discovered Eclipse Verge. +4 Heavenly Favor.'
+                data['region.halohaven.0']='Pearl Court'
+                data['region.halohaven.1']='Blooming Canopy'
+                data['region.halohaven.2']='Eclipse Verge'
+                data['message.halohaven.compass']='Village X: %s Z: %s | %sm | %s° | Favor: %s | %s'
+            }
+            j('assets/halohaven/lang/'+lang+'.json',data)
+        }
+        // A small twinkling ring texture, built for the 3D halo geometry.
+        BufferedImage ring=new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB)
+        Graphics2D halo=ring.createGraphics()
+        for(int y=0;y<32;y++)for(int x=0;x<32;x++){
+            int glow= y<3||y>28 ? 40 : y<7||y>24?120 : 225
+            int r=Math.min(255,209+(31-y)%24),gr=Math.min(255,176+x%39),b=120+y%25
+            ring.setRGB(x,y,(glow<<24)|(r<<16)|(gr<<8)|b)
+        }
+        halo.dispose();save('halo_ring',ring)
+    }
+}

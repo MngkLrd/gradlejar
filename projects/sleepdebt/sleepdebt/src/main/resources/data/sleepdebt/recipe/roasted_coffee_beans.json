@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": {
+    "item": "sleepdebt:coffee_berries"
+  },
+  "result": {
+    "id": "sleepdebt:roasted_coffee_beans",
+    "count": 1
+  },
+  "experience": 0.15,
+  "cookingtime": 120
+}

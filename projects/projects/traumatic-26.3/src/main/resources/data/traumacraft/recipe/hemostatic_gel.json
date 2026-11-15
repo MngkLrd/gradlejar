@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " R ",
+    " A ",
+    " B "
+  ],
+  "key": {
+    "R": "minecraft:redstone",
+    "A": "traumacraft:antiseptic",
+    "B": "minecraft:glass_bottle"
+  },
+  "result": {
+    "id": "traumacraft:hemostatic_gel",
+    "count": 2
+  }
+}

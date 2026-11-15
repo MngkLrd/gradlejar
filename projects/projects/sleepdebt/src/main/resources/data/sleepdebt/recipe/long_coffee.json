@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:shapeless",
+  "category": "food",
+  "ingredients": [
+    {
+      "item": "sleepdebt:coffee"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "result": {
+    "id": "sleepdebt:long_coffee",
+    "count": 1
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:shapeless",
+  "category": "food",
+  "ingredients": [
+    {
+      "item": "sleepdebt:coffee_grounds"
+    },
+    {
+      "item": "minecraft:potion"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "result": {
+    "id": "sleepdebt:coffee",
+    "count": 1
+  }
+}

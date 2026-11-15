@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+modId="zombiehunger"
+version="1.0.0"
+displayName="Zombie Hunger"
+authors="Minemods"
+description="Zombies pursue, compete for and eat dropped meat. Rotten flesh can lure them away. Husks and drowned behave differently."
+
+[[dependencies.zombiehunger]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.zombiehunger]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"

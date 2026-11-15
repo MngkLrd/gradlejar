@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "GFG",
+    "AMA",
+    "GFG"
+  ],
+  "key": {
+    "G": "minecraft:gold_nugget",
+    "F": "traumacraft:sterile_fabric",
+    "A": "traumacraft:antiseptic",
+    "M": "traumacraft:medkit"
+  },
+  "result": {
+    "id": "traumacraft:field_medkit",
+    "count": 1
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "axis": "x"
+      },
+      "apply": {
+        "model": "ropefences:block/rope_x"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "neg_end": "true"
+      },
+      "apply": {
+        "model": "ropefences:block/rope_x_neg"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "pos_end": "true"
+      },
+      "apply": {
+        "model": "ropefences:block/rope_x_pos"
+      }
+    },
+    {
+      "when": {
+        "axis": "z"
+      },
+      "apply": {
+        "model": "ropefences:block/rope_z"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "neg_end": "true"
+      },
+      "apply": {
+        "model": "ropefences:block/rope_z_neg"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "pos_end": "true"
+      },
+      "apply": {
+        "model": "ropefences:block/rope_z_pos"
+      }
+    }
+  ]
+}

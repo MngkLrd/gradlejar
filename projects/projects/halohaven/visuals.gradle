@@ -1,0 +1,511 @@
+import groovy.json.JsonOutput
+import java.awt.Color
+import java.awt.Graphics2D
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
+
+// Art direction: carved ivory / oxidised turquoise / warm brushed brass / deep violet.
+// Purposefully designed tile patterns replace all speckled placeholder textures.
+// 64x64 pixel sources are committed indirectly: generated at build, embedded in the JAR.
+tasks.named('generateHaloAssets').configure {
+    doLast {
+        File out = layout.buildDirectory.dir('generated/haloassets').get().asFile
+        def json = { String path,Object data ->
+            File target=new File(out,path); target.parentFile.mkdirs()
+            target.setText(JsonOutput.prettyPrint(JsonOutput.toJson(data)),'UTF-8')
+        }
+        def png = { String path,BufferedImage img ->
+            File target=new File(out,path); target.parentFile.mkdirs()
+            ImageIO.write(img,'PNG',target)
+        }
+        def color = { Object rgba -> new Color((int)rgba,true) }
+        def fill = { Graphics2D g,Object rgb,int x,int y,int w,int h ->
+            g.setColor(color(rgb));g.fillRect(x,y,w,h)
+        }
+        def line = { Graphics2D g,Object rgb,int x1,int y1,int x2,int y2 ->
+            g.setColor(color(rgb));g.drawLine(x1,y1,x2,y2)
+        }
+        def tile = {String name, Closure decoration, Object base,Object pale,Object deep ->
+            BufferedImage img=new BufferedImage(64,64,BufferedImage.TYPE_INT_ARGB)
+            Graphics2D g=img.createGraphics()
+            fill(g,base,0,0,64,64)
+            // Larger soft-hued material deposits, not per-pixel TV noise.
+            for(int cy=0;cy<16;cy++)for(int cx=0;cx<16;cx++){
+                int n=Math.floorMod((cx*11867)^(cy*7507)^(cx*cy*29)^(name.hashCode()),83)
+                if(n<8)fill(g,pale,cx*4,cy*4,4,4)
+                if(n==82)fill(g,deep,cx*4,cy*4,4,4)
+            }
+            decoration(g)
+            g.dispose()
+            png('assets/halohaven/textures/block/'+name+'.png',img)
+        }
+        // CHISELLED TRAVERTINE. Hand-placed weathering and hairline fractures.
+        tile('cloudstone',{g->
+            for(int y=5;y<64;y+=13){
+                line(g,0xffc5d8da,0,y,63,y+1)
+                line(g,0xfff8f8ed,0,y+2,63,y+3)
+            }
+            for(int x=6;x<64;x+=19) {
+                int o=x%3*3
+                line(g,0xffd0dfdc,x,7+o,x+3,10+o)
+                line(g,0xffcbd6da,x+3,10+o,x+7,14+o)
+            }
+            for(int i=0;i<14;i++) {
+                int x=(i*29+13)%64, y=(i*41+9)%64
+                fill(g,0xffbdcdca,x,y,2,1)
+                fill(g,0xfffbfff8,x,y+2,3,1)
+            }
+        },0xffe5ece5,0xfff4f4e9,0xffd0dedc)
+        // SKY MEADOW. Tiny clover leaves, gold pollen, soft white blossoms.
+        tile('skygrass',{g->
+            for(int i=0;i<30;i++){
+                int x=(i*37+11)%62,y=(i*23+7)%62
+                fill(g,0xff6fae92,x,y,1,4)
+                fill(g,0xffc3e4af,x-2,y-1,2,2)
+                fill(g,0xffb9ddad,x+1,y-2,2,2)
+                if(i%4==0){
+                    fill(g,0xfff4e2a4,x,y,2,2)
+                    fill(g,0xfffff0d3,x-1,y-1,1,1)
+                    fill(g,0xfffff0d3,x+2,y+2,1,1)
+                }
+            }
+        },0xff9acbae,0xffb0d9ba,0xff7bb899)
+        tile('skygrass_side',{g->
+            fill(g,0xffd6e8d3,0,0,64,8)
+            fill(g,0xff90c8aa,0,0,64,13)
+            for(int x=0;x<64;x+=5){
+                int h=5+(x*7%8)
+                fill(g,0xffb4deb9,x,13,2,h)
+                fill(g,0xff79b699,x+2,12,1,3)
+                fill(g,0xff82ae9d,x+1,22+h,3,2)
+            }
+            for(int y=26;y<64;y+=17){
+                line(g,0xffe4eade,0,y,63,y)
+                line(g,0xffcadbd3,0,y+1,63,y+1)
+            }
+        },0xffc2d9d0,0xffd9e5dc,0xffb3d0c7)
+        // POLISHED PEARL MASONRY. Off-center courses and bevel highlights.
+        tile('pearl_bricks',{g->
+            for(int row=0;row<4;row++){
+                int y=row*16,shift=row%2==0?0:16
+                fill(g,0xff9bbabe,0,y,64,2)
+                fill(g,0xfff9f8ee,0,y+2,64,2)
+                for(int j=-1;j<4;j++){
+                    int x=j*32+shift
+                    fill(g,0xffa4b7b7,x,y,2,16)
+                    fill(g,0xfffbfff4,x+2,y+3,2,10)
+                    if((row+j)%3==0){
+                        fill(g,0xffeac992,x+18,y+7,5,2)
+                        fill(g,0xfff7e6b1,x+20,y+5,1,6)
+                    }
+                }
+                line(g,0xffd5dedd,4,y+14,63,y+14)
+            }
+        },0xffe6ebe4,0xfff3f5ed,0xffd9e0db)
+        // SCALLOPED GILT ROOF. 8-bit clay-tile geometry with individual glaze ridges.
+        tile('sungold_tiles',{g->
+            for(int row=0;row<8;row++){
+                int y=row*8,shift=(row%2)*4
+                fill(g,0xff8c633e,0,y+7,64,1)
+                for(int x=-8+shift;x<68;x+=8){
+                    fill(g,0xff986b43,x,y+1,8,1)
+                    fill(g,0xfff4cd84,x+1,y+1,6,2)
+                    fill(g,0xffd8a862,x+1,y+3,6,2)
+                    fill(g,0xffb7834c,x+2,y+5,4,1)
+                    fill(g,0xfffce6ae,x+2,y+1,2,1)
+                    fill(g,0xff956842,x+7,y+2,1,4)
+                }
+            }
+        },0xffc79752,0xffe8bb6b,0xffb78146)
+        // TRUE AZURE WOOD. Wood pores, hardware and repeated joinery.
+        tile('azure_planks',{g->
+            for(int row=0;row<8;row++){
+                int y=row*8
+                fill(g,0xff437b81,0,y,64,2)
+                fill(g,0xffbbd8cb,0,y+2,64,1)
+                fill(g,0xff649ea3,0,y+7,64,1)
+                for(int k=0;k<3;k++){
+                    int yy=y+3+k
+                    line(g,k==1?0xff7eb9ba:0xff99c9c5,4+k*3,yy,55-k*5,yy)
+                }
+                for(int x : [8+(row%2)*16,40+(row%2)*16]) {
+                    fill(g,0xffe4cf9b,x,y+4,2,2)
+                    fill(g,0xff5f9697,x+2,y+4,1,2)
+                }
+            }
+        },0xff7caeb0,0xff95c4be,0xff679ba0)
+        // LUNAR SCHIST. Broad facets with sharp decorative mineral veins.
+        tile('moonstone',{g->
+            line(g,0xffc0b2db,1,49,16,34);line(g,0xffdbcdec,16,34,37,42)
+            line(g,0xff5a588b,38,42,52,23);line(g,0xffd3bbdc,51,23,63,11)
+            line(g,0xffae8abc,7,8,29,23);line(g,0xffeadcf0,30,22,41,11)
+            for(int x : [9,28,44,56]){
+                int y=(x*7)%53+4
+                fill(g,0xfff0e4fa,x,y,3,3)
+                fill(g,0xff9f98c5,x+1,y+3,3,2)
+            }
+        },0xff7678a1,0xff8b8cbb,0xff60628c)
+        // INLAID CELESTIAL MEDALLIONS. Architectural stone with quatrefoil stars.
+        tile('celestial_mosaic',{g->
+            for(int sx=0;sx<64;sx+=32)for(int sy=0;sy<64;sy+=32){
+                fill(g,0xffbba26e,sx,sy,32,2)
+                fill(g,0xffd7bc85,sx,sy,2,32)
+                line(g,0xffe7cb89,sx+5,sy+16,sx+27,sy+16)
+                line(g,0xffe7cb89,sx+16,sy+5,sx+16,sy+27)
+                for(int dx=-10;dx<=10;dx++)for(int dy=-10;dy<=10;dy++){
+                    int d=Math.abs(dx)+Math.abs(dy)
+                    if(d==11||d==12)
+                        fill(g,0xffad874e,sx+16+dx,sy+16+dy,1,1)
+                    if(d==9)
+                        fill(g,0xffffe6ac,sx+16+dx,sy+16+dy,1,1)
+                }
+                fill(g,0xff73b4b6,sx+13,sy+13,7,7)
+                fill(g,0xffdef9ee,sx+15,sy+15,3,3)
+            }
+        },0xffe8e4d7,0xfff5f1e4,0xffd3dddc)
+        // FLUTED BRASS COLUMN.
+        tile('gilded_pillar',{g->
+            for(int i=0;i<8;i++){
+                int x=i*8
+                fill(g,0xff89613d,x,0,2,64)
+                fill(g,0xffffe3a1,x+2,0,1,64)
+                fill(g,0xffd9af6f,x+3,0,3,64)
+                fill(g,0xffa77a48,x+6,0,2,64)
+            }
+            for(int y : [1,5,57,61]){
+                fill(g,0xffffd891,0,y,64,2)
+                fill(g,0xff87603b,0,y+2,64,1)
+            }
+        },0xffc59a5b,0xffdbb873,0xff9e7749)
+        tile('gilded_pillar_top',{g->
+            for(int i=0;i<5;i++){
+                int o=i*5
+                g.setColor(color(i%2==0?0xffe2c083:0xffa77c49))
+                g.drawRect(o,o,63-o*2,63-o*2)
+            }
+            fill(g,0xfff8e5b3,27,27,10,10)
+            fill(g,0xff96d8d2,30,30,4,4)
+        },0xffad824e,0xffe7c387,0xff996c3d)
+        // ART-DECO LAMPS. The detailed body is 3D in JSON; texture is radiant glass.
+        tile('cloud_lantern',{g->
+            fill(g,0xffb08350,0,0,64,6)
+            fill(g,0xff7fa5a4,0,6,64,3)
+            for(int x=0;x<64;x+=16){
+                fill(g,0xff8d6746,x,0,3,64)
+                fill(g,0xffffe9aa,x+3,0,1,64)
+            }
+            for(int y=16;y<49;y+=9){
+                line(g,0xffeafff0,5,y,60,y)
+            }
+            fill(g,0xffffffd6,28,25,8,11)
+            fill(g,0xffffffff,30,28,4,4)
+            fill(g,0xffb08350,0,58,64,6)
+        },0xffa2ded4,0xffc5f6e4,0xff6fa9a8)
+        tile('starshade',{g->
+            for(int i=0;i<13;i++){
+                int x=(i*47+9)%64,y=(i*19+13)%64
+                fill(g,0xffe5e9ff,x,y,1,3)
+                fill(g,0xffe5e9ff,x-1,y+1,3,1)
+            }
+            for(int dx=-16;dx<=16;dx++)for(int dy=-16;dy<=16;dy++){
+                int dist=Math.abs(dx)+Math.abs(dy)
+                int x=32+dx,y=32+dy
+                if(dist==17||dist==16)fill(g,0xffd1ae67,x,y,1,1)
+                if((Math.abs(dx)<3&&Math.abs(dy)<19)||(Math.abs(dy)<3&&Math.abs(dx)<19))
+                    fill(g,0xffa8e6ee,x,y,1,1)
+                if(dist<6)fill(g,0xffffefc5,x,y,1,1)
+            }
+            fill(g,0xffffffff,30,30,4,4)
+        },0xff354763,0xff455a7d,0xff22344f)
+        tile('waystone',{g->
+            for(int dx=-26;dx<=26;dx++)for(int dy=-26;dy<=26;dy++){
+                int d=Math.abs(dx)+Math.abs(dy)
+                if(d==27)fill(g,0xffefc982,32+dx,32+dy,1,1)
+                if(d==25)fill(g,0xff9f7c4f,32+dx,32+dy,1,1)
+                if(d<18&&d>16)fill(g,0xffa4e2dc,32+dx,32+dy,1,1)
+            }
+            fill(g,0xfffbe6af,29,11,6,42)
+            fill(g,0xfffbe6af,11,29,42,6)
+            fill(g,0xff76d4df,27,27,10,10)
+            fill(g,0xffffffff,30,30,4,4)
+        },0xff3a577c,0xff4c6e93,0xff293d5d)
+        tile('pilgrim_altar',{g->
+            for(int d=0;d<4;d++){
+                g.setColor(color(d%2==0?0xffd4b879:0xff7f9ba8))
+                g.drawRect(3+d*3,3+d*3,57-d*6,57-d*6)
+            }
+            for(int dx=-19;dx<=19;dx++)for(int dy=-19;dy<=19;dy++){
+                int r=Math.abs(dx)+Math.abs(dy)
+                if(r==20||r==18)fill(g,0xffe9c88b,32+dx,32+dy,1,1)
+                if(r==14)fill(g,0xff76c5d0,32+dx,32+dy,1,1)
+                if((Math.abs(dx)<2&&Math.abs(dy)<13)||(Math.abs(dy)<2&&Math.abs(dx)<13))
+                    fill(g,0xfff1ebca,32+dx,32+dy,1,1)
+            }
+            fill(g,0xffccfdf8,28,28,8,8)
+            fill(g,0xffffffff,30,30,4,4)
+        },0xff3f6073,0xff597d8e,0xff294657)
+        tile('star_ore',{g->
+            for(int i=0;i<11;i++){
+                int x=(i*47+7)%60,y=(i*23+9)%60
+                line(g,0xff4c6182,x,y,x+4,y+4)
+                line(g,0xffd4d6e6,x+4,y+4,x+7,y+4)
+            }
+            for(int i=0;i<5;i++){
+                int x=(i*19+7)%54,y=(i*31+5)%56
+                fill(g,0xff4d879a,x-1,y-1,10,11)
+                fill(g,0xff94e6e4,x,y,8,8)
+                fill(g,0xfff7ffff,x+2,y+1,3,5)
+                fill(g,0xff5c8aab,x+6,y+6,3,3)
+            }
+        },0xff778ba1,0xff9eaeb8,0xff677b94)
+        // Real translucency: inside is < 55 alpha, gold/cyan tracery remains solid.
+        def stained = {name,rim,accent,tint ->
+            BufferedImage img=new BufferedImage(64,64,BufferedImage.TYPE_INT_ARGB)
+            Graphics2D g=img.createGraphics()
+            fill(g,(int)((48L<<24)|(tint&0xffffff)),0,0,64,64)
+            for(int x=0;x<64;x++)for(int y=0;y<64;y++){
+                int cx=Math.abs(x-32),cy=Math.abs(y-32),d=cx+cy
+                if(d<16 && (x+y)%4<2)img.setRGB(x,y,(int)((26L<<24)|(tint&0xffffff)))
+            }
+            for(int o=0;o<3;o++){
+                g.setColor(color(o==0?rim:accent))
+                g.drawRect(o,o,63-o*2,63-o*2)
+            }
+            fill(g,rim,30,0,4,10);fill(g,rim,30,54,4,10)
+            fill(g,rim,0,30,10,4);fill(g,rim,54,30,10,4)
+            for(int a=-10;a<=10;a++)for(int b=-10;b<=10;b++){
+                int d=Math.abs(a)+Math.abs(b)
+                if(d==11||d==12)fill(g,accent,32+a,32+b,1,1)
+            }
+            fill(g,accent,29,29,6,6)
+            fill(g,0xffffffff,31,31,2,2)
+            g.dispose();png('assets/halohaven/textures/block/'+name+'.png',img)
+        }
+        stained('aurora_glass',0xff6e9eae,0xffd2e9dd,0x99d6d2)
+        stained('dawn_glass',0xffaa8553,0xfff6d69b,0xffe5b88e)
+        // Extra 3D textures for each material's face and an engraved ceiling panel.
+        def mid='assets/halohaven/'
+        json(mid+'models/block/skygrass.json',[
+            parent:'minecraft:block/cube_bottom_top',
+            textures:[top:'halohaven:block/skygrass',bottom:'halohaven:block/cloudstone',side:'halohaven:block/skygrass_side']])
+        json(mid+'models/block/gilded_pillar.json',[
+            parent:'minecraft:block/cube_column',
+            textures:[end:'halohaven:block/gilded_pillar_top',side:'halohaven:block/gilded_pillar']])
+        // Cuboids are smaller than 16 units to give silhouette / multiple layers.
+        def multipart = {String name,List cuboids,String texture,String type ->
+            List elems = cuboids.collect { List b ->
+                [from:b.subList(0,3),to:b.subList(3,6),
+                 faces:[down:[texture:'#all'],up:[texture:'#all'],north:[texture:'#all'],
+                        south:[texture:'#all'],west:[texture:'#all'],east:[texture:'#all']]]
+            }
+            json(mid+'models/block/'+name+'.json',[
+                ambientocclusion:false,
+                render_type:type,
+                textures:[all:'halohaven:block/'+texture,particle:'halohaven:block/'+texture],
+                elements:elems,
+                display:[gui:[rotation:[25,35,0],translation:[0,0,0],scale:[0.8,0.8,0.8]]]
+            ])
+        }
+        multipart('cloud_lantern',[
+            [5,0,5,11,2,11],[4,2,4,12,4,12],[5,4,5,11,12,11],
+            [4,12,4,12,14,12],[6,14,6,10,16,10]
+        ],'cloud_lantern','minecraft:solid')
+        multipart('starshade',[
+            [4,0,4,12,3,12],[6,3,6,10,13,10],[3,6,6,13,10,10],
+            [6,6,3,10,10,13],[7,13,7,9,16,9]
+        ],'starshade','minecraft:solid')
+        multipart('waystone',[
+            [1,0,1,15,2,15],[3,2,3,13,4,13],[5,4,5,11,12,11],
+            [3,12,3,13,14,13],[6,14,6,10,16,10]
+        ],'waystone','minecraft:solid')
+        multipart('pilgrim_altar',[
+            [1,0,1,15,3,15],[3,3,3,13,6,13],[2,6,2,14,8,14],
+            [5,8,5,11,10,11],[7,10,7,9,15,9]
+        ],'pilgrim_altar','minecraft:solid')
+        // True stairs, slabs and connected railings replace full-cube architecture.
+        def variants=[:]
+        ['sungold','pearl'].each { String family ->
+            String material=family=='sungold'?'sungold_tiles':'pearl_bricks'
+            String stairs=family+'_stairs', slab=family+'_slab'
+            String full='halohaven:block/'+material
+            Map tex=[top:full,bottom:full,side:full]
+            ['stairs':'minecraft:block/stairs',
+             'inner_stairs':'minecraft:block/inner_stairs',
+             'outer_stairs':'minecraft:block/outer_stairs'].each { suffix,parent ->
+                json(mid+'models/block/'+stairs+(suffix=='stairs'?'':'_'+suffix)+'.json',
+                    [parent:parent,textures:tex])
+            }
+            def states=[:]
+            Map rotation=[north:270,east:0,south:90,west:180]
+            for(String facing : ['north','east','south','west'])
+            for(String half : ['bottom','top'])
+            for(String shape : ['straight','inner_left','inner_right','outer_left','outer_right']){
+                String suffix=shape=='straight'?'':(shape.startsWith('inner')?'_inner_stairs':'_outer_stairs')
+                int y=(int)rotation[facing]
+                int x=half=='top'?180:0
+                if(shape.endsWith('right')) y=(y+90)%360
+                if(half=='top')y=(y+180)%360
+                Map state=[model:'halohaven:block/'+stairs+suffix]
+                if(x!=0)state.x=x
+                if(y!=0)state.y=y
+                state.uvlock=true
+                states['facing='+facing+',half='+half+',shape='+shape]=state
+            }
+            json(mid+'blockstates/'+stairs+'.json',[variants:states])
+            json(mid+'models/item/'+stairs+'.json',[parent:'halohaven:block/'+stairs])
+            json(mid+'models/block/'+slab+'.json',
+                [parent:'minecraft:block/slab',textures:tex])
+            json(mid+'models/block/'+slab+'_top.json',
+                [parent:'minecraft:block/slab_top',textures:tex])
+            json(mid+'blockstates/'+slab+'.json',[
+                variants:['type=bottom':[model:'halohaven:block/'+slab],
+                          'type=top':[model:'halohaven:block/'+slab+'_top'],
+                          'type=double':[model:'halohaven:block/'+material]]])
+            json(mid+'models/item/'+slab+'.json',[parent:'halohaven:block/'+slab])
+            [stairs,slab].each {String b ->
+                json('data/halohaven/loot_table/blocks/'+b+'.json',[
+                    type:'minecraft:block',pools:[[rolls:1,entries:[[type:'minecraft:item',name:'halohaven:'+b]]]]])
+            }
+            json('data/halohaven/recipe/'+stairs+'.json',[
+                type:'minecraft:crafting_shaped',category:'building',
+                pattern:['B  ','BB ','BBB'],key:[B:[item:'halohaven:'+material]],
+                result:[id:'halohaven:'+stairs,count:4]])
+            json('data/halohaven/recipe/'+slab+'.json',[
+                type:'minecraft:crafting_shaped',category:'building',
+                pattern:['BBB'],key:[B:[item:'halohaven:'+material]],
+                result:[id:'halohaven:'+slab,count:6]])
+        }
+        json(mid+'models/block/azure_fence_post.json',[
+            parent:'minecraft:block/fence_post',textures:[texture:'halohaven:block/azure_planks']])
+        json(mid+'models/block/azure_fence_side.json',[
+            parent:'minecraft:block/fence_side',textures:[texture:'halohaven:block/azure_planks']])
+        json(mid+'models/block/azure_fence_inventory.json',[
+            parent:'minecraft:block/fence_inventory',textures:[texture:'halohaven:block/azure_planks']])
+        json(mid+'models/item/azure_fence.json',[parent:'halohaven:block/azure_fence_inventory'])
+        json(mid+'blockstates/azure_fence.json',[
+            multipart:[[apply:[model:'halohaven:block/azure_fence_post']],
+                [when:[north:'true'],apply:[model:'halohaven:block/azure_fence_side',uvlock:true]],
+                [when:[east:'true'],apply:[model:'halohaven:block/azure_fence_side',y:90,uvlock:true]],
+                [when:[south:'true'],apply:[model:'halohaven:block/azure_fence_side',y:180,uvlock:true]],
+                [when:[west:'true'],apply:[model:'halohaven:block/azure_fence_side',y:270,uvlock:true]]
+            ]])
+        json('data/halohaven/loot_table/blocks/azure_fence.json',[
+            type:'minecraft:block',pools:[[rolls:1,entries:[[type:'minecraft:item',name:'halohaven:azure_fence']]]]])
+        json('data/halohaven/recipe/azure_fence.json',[
+            type:'minecraft:crafting_shaped',category:'building',
+            pattern:['BSB','BSB'],key:[B:[item:'halohaven:azure_planks'],S:[item:'minecraft:stick']],
+            result:[id:'halohaven:azure_fence',count:3]])
+        def locals=[
+            en_us:[sungold_stairs:'Sungold Roof Stairs',sungold_slab:'Sungold Roof Slab',
+                   pearl_stairs:'Pearl Stair',pearl_slab:'Pearl Slab',azure_fence:'Azurewood Balustrade',
+                   aether_feather:'Feather of the Open Sky'],
+            ru_ru:[sungold_stairs:'Солнечные кровельные ступени',sungold_slab:'Солнечная кровельная плита',
+                   pearl_stairs:'Жемчужные ступени',pearl_slab:'Жемчужная плита',azure_fence:'Лазурная балюстрада',
+                   aether_feather:'Перо открытого неба']
+        ]
+        locals.each{String lang,Map labels ->
+            File target=new File(out,mid+'lang/'+lang+'.json')
+            Map contents=new groovy.json.JsonSlurper().parse(target)
+            labels.each {String name,String label ->
+                contents[(name=='aether_feather'?'item':'block')+'.halohaven.'+name]=label
+            }
+            contents['message.halohaven.feather']=lang=='ru_ru'?
+                'Перо обители удерживает тебя при падении.':'The sky feather cushions your fall.'
+            json(mid+'lang/'+lang+'.json',contents)
+        }
+        json('data/halohaven/recipe/aether_feather.json',[
+            type:'minecraft:crafting_shaped',category:'equipment',
+            pattern:[' S ','SFS',' S '],
+            key:[S:[item:'halohaven:sunshard'],F:[item:'minecraft:feather']],
+            result:[id:'halohaven:aether_feather',count:1]])
+        BufferedImage feather=new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB)
+        Graphics2D fg=feather.createGraphics()
+        for(int y=4;y<29;y++){
+            int w=(int)(9*Math.sin((y-3)/30d*Math.PI))+1
+            int cx=(int)(25-y*0.43)
+            fg.setColor(color(0xff7ac5d4))
+            fg.drawLine(cx-w,y,cx+w,y)
+            fg.setColor(color(0xffeafcf0))
+            fg.drawLine(cx,y,cx+1,y)
+            if(y%3==0){
+                fg.setColor(color(0xffcaa56b))
+                fg.drawLine(cx-2,y,cx+2,y)
+            }
+        }
+        fg.dispose();png(mid+'textures/item/aether_feather.png',feather)
+        json(mid+'models/item/aether_feather.json',[
+            parent:'minecraft:item/generated',textures:[layer0:'halohaven:item/aether_feather']])
+        // Leaf crowns and meadow flowers: purpose-drawn cutout pixels, not tinted cubes.
+        BufferedImage canopy=new BufferedImage(64,64,BufferedImage.TYPE_INT_ARGB)
+        Graphics2D cg=canopy.createGraphics()
+        for(int y=0;y<64;y+=8)for(int x=0;x<64;x+=8){
+            int seed=(x*17+y*37+x*y*3)
+            int tint=Math.floorMod(seed,4)
+            int c=tint==0?0xff81b7ab:tint==1?0xffa6c8bd:tint==2?0xffc6ddd0:0xff6c9e9c
+            if((x+y)%5==0)continue
+            fill(cg,c,x+1,y+1,6,5)
+            fill(cg,0xffd7e9d7,x+2,y,3,2)
+            fill(cg,0xff598d93,x+4,y+5,3,1)
+            if((x+y)%4==0){
+                fill(cg,0xfff2d8ae,x+2,y+2,2,2)
+                fill(cg,0xffffeac7,x+3,y+2,1,1)
+            }
+        }
+        cg.dispose()
+        png('assets/halohaven/textures/block/sky_leaves.png',canopy)
+        json('assets/halohaven/blockstates/sky_leaves.json',[
+            variants:['':[model:'halohaven:block/sky_leaves']]])
+        json('assets/halohaven/models/block/sky_leaves.json',[
+            parent:'minecraft:block/cube_all',render_type:'minecraft:cutout_mipped',
+            textures:[all:'halohaven:block/sky_leaves']])
+        json('assets/halohaven/models/item/sky_leaves.json',[
+            parent:'halohaven:block/sky_leaves'])
+        // Blossoms use a cross plane, so the silhouette really is a plant.
+        BufferedImage flower=new BufferedImage(64,64,BufferedImage.TYPE_INT_ARGB)
+        Graphics2D fl=flower.createGraphics()
+        fill(fl,0xff567c6c,31,31,3,32)
+        fill(fl,0xffb6deb7,28,40,4,13);fill(fl,0xff86beab,34,44,6,10)
+        for(int petal=0;petal<7;petal++){
+            double theta=2*Math.PI*petal/7
+            int x=(int)(32+Math.cos(theta)*14),y=(int)(22+Math.sin(theta)*12)
+            fill(fl,0xffd7bad3,x-5,y-3,10,8)
+            fill(fl,0xfff1cfe0,x-4,y-3,7,5)
+            fill(fl,0xffffedf2,x-1,y-2,3,2)
+        }
+        fill(fl,0xffe4bc75,27,18,10,9)
+        fill(fl,0xffffedb2,30,19,5,6)
+        fl.dispose()
+        png('assets/halohaven/textures/block/celestial_bloom.png',flower)
+        json('assets/halohaven/blockstates/celestial_bloom.json',[
+            variants:['':[model:'halohaven:block/celestial_bloom']]])
+        json('assets/halohaven/models/block/celestial_bloom.json',[
+            parent:'minecraft:block/cross',render_type:'minecraft:cutout',
+            textures:[cross:'halohaven:block/celestial_bloom']])
+        json('assets/halohaven/models/item/celestial_bloom.json',[
+            parent:'minecraft:item/generated',render_type:'minecraft:cutout',
+            textures:[layer0:'halohaven:block/celestial_bloom']])
+        ['sky_leaves','celestial_bloom'].each{String n->
+            json('data/halohaven/loot_table/blocks/'+n+'.json',[
+                type:'minecraft:block',pools:[[rolls:1,entries:[[type:'minecraft:item',name:'halohaven:'+n]]]]])
+        }
+        ['en_us','ru_ru'].each{String lang->
+            File f=new File(out,'assets/halohaven/lang/'+lang+'.json')
+            Map data=new groovy.json.JsonSlurper().parse(f)
+            data['block.halohaven.sky_leaves']=lang=='ru_ru'?'Небесная лиственная крона':'Sky Crown Leaves'
+            data['block.halohaven.celestial_bloom']=lang=='ru_ru'?'Цветок эфира':'Celestial Bloom'
+            json('assets/halohaven/lang/'+lang+'.json',data)
+        }
+        def hoeTag='data/minecraft/tags/block/mineable/hoe.json'
+        json(hoeTag,[replace:false,values:['halohaven:sky_leaves']])
+        // Keep the mining tool tags aligned with the new construction sets.
+        def pickaxe='data/minecraft/tags/block/mineable/pickaxe.json'
+        Map mine=new groovy.json.JsonSlurper().parse(new File(out,pickaxe))
+        mine.values.addAll(['halohaven:sungold_stairs','halohaven:sungold_slab',
+                            'halohaven:pearl_stairs','halohaven:pearl_slab'])
+        json(pickaxe,mine)
+        def axe='data/minecraft/tags/block/mineable/axe.json'
+        Map cut=new groovy.json.JsonSlurper().parse(new File(out,axe))
+        cut.values.add('halohaven:azure_fence')
+        json(axe,cut)
+    }
+}

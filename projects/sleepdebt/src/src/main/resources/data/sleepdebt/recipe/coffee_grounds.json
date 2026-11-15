@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "sleepdebt:roasted_cocoa_beans"
+    },
+    {
+      "item": "minecraft:paper"
+    }
+  ],
+  "result": {
+    "id": "sleepdebt:coffee_grounds",
+    "count": 1
+  }
+}

@@ -1,0 +1,57 @@
+name: Void Pickaxe NeoForge 26.2 and 26.3
+on:
+  push:
+    branches: [main]
+    paths: ['projects/voidchisel-26.2/**','projects/voidchisel-26.3/**','.github/workflows/voidpickaxe-ports.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        minecraft: ['26.2','26.3']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+      - name: Compile
+        working-directory: projects/voidchisel-${{ matrix.minecraft }}
+        run: gradle --no-daemon --stacktrace clean build
+      - name: Verify real jar
+        env:
+          MC: ${{ matrix.minecraft }}
+        run: |
+          python3 - <<'PY'
+          import json, os, zipfile, struct
+          from pathlib import Path
+          mc=os.environ['MC']
+          jar=Path(f'projects/voidchisel-{mc}/build/libs/voidchisel-{mc}-1.1.2.jar')
+          assert jar.exists()
+          with zipfile.ZipFile(jar) as z:
+              for n in ['dev/voidchisel/VoidChisel.class','dev/voidchisel/MiningInputPacket.class','dev/voidchisel/BedrockMiningServer.class','dev/voidchisel/client/ClientHooks.class','assets/voidchisel/items/void_chisel.json','assets/voidchisel/textures/item/void_chisel.png','data/voidchisel/recipe/void_chisel.json']:
+                  assert n in z.namelist(), n
+              recipe=json.loads(z.read('data/voidchisel/recipe/void_chisel.json'))
+              assert recipe['pattern']==[' W ','NSN',' S ']
+              assert recipe['key']=={'W':'minecraft:nether_star','N':'minecraft:netherite_ingot','S':'minecraft:stick'}
+              tex=z.read('assets/voidchisel/textures/item/void_chisel.png')
+              assert tex[:8]==b'\x89PNG\r\n\x1a\n'
+              assert struct.unpack('>II',tex[16:24])==(32,32)
+              assert z.testzip() is None
+              print('PASS',mc)
+          PY
+      - name: Publish JAR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MC: ${{ matrix.minecraft }}
+        run: |
+          tag="ci-voidpickaxe-mc${MC}-neoforge-1.1.2-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
+          gh release create "$tag" "projects/voidchisel-${MC}/build/libs/voidchisel-${MC}-1.1.2.jar" --target "$GITHUB_SHA" --title "Void Pickaxe 1.1.2 | NeoForge ${MC}" --notes "Compiled with official NeoForge and Java 25; recipe and packed assets validated. Gameplay not tested in client." --prerelease

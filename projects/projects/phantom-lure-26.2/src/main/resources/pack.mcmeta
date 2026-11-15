@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": "Phantom Lure 26.2 resources",
+    "min_format": [
+      65,
+      0
+    ],
+    "max_format": 150
+  }
+}

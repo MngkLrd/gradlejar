@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+modId="cowardlymobs"
+version="0.5.1"
+displayName="Cowardly Mobs"
+authors="Minemods"
+description="Smarter spiders, skeleton spider jockeys, morale and Zombie Hunger. Fixes retreat reactions, rotten-flesh distraction, flanking and wall attacks."
+
+[[dependencies.cowardlymobs]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.cowardlymobs]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
