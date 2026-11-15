@@ -43,6 +43,22 @@ def exchange(sock: socket.socket, request_id: int, kind: int, body: str) -> str:
         raise PermissionError("RCON auth rejected")
     if returned_id != request_id:
         raise ValueError(f"Unexpected RCON id {returned_id} ({returned_type})")
+    if kind == 3 and returned_type == 0:
+        # Minecraft/Source RCON authentication emits an empty RESPONSE_VALUE
+        # (type 0) before the actual AUTH_RESPONSE (type 2). Consume both.
+        sock.settimeout(3)
+        try:
+            n2 = struct.unpack("<i", read_exact(sock, 4))[0]
+            if n2 < 10 or n2 > 4096:
+                raise ValueError(f"Invalid auth reply length {n2}")
+            second = read_exact(sock, n2)
+            second_id, second_type = struct.unpack("<ii", second[:8])
+            if second_id == -1 or second_id != request_id or second_type != 2:
+                raise PermissionError("Unexpected second RCON auth response")
+        except socket.timeout:
+            print("RCON sent only one auth packet; continuing", flush=True)
+        finally:
+            sock.settimeout(COMMAND_TIMEOUT)
     return payload[8:-2].decode("utf-8", "replace")
 
 
