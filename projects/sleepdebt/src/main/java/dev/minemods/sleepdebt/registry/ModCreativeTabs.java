@@ -21,7 +21,7 @@ public final class ModCreativeTabs {
  public static final DeferredHolder<CreativeModeTab,CreativeModeTab> SLEEP_DEBT =
   TABS.register("main", () -> CreativeModeTab.builder()
     .title(Component.translatable("itemGroup.sleepdebt.main"))
-    .withTabsBefore(CreativeModeTabs.FOOD_AND_DRINKS)
+    .withTabsBefore(CreativeModeTabs.TOOLS_AND_UTILITIES)
     .icon(() -> new ItemStack(ModItems.SLEEP_JOURNAL.get()))
     .displayItems((params, output) -> {
      // Planting, harvesting and initial production.
