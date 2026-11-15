@@ -36,6 +36,7 @@ jobs:
           script=zlib.decompress(base64.b64decode(pathlib.Path('tools/blowpipes_generator.b64').read_text()))
           pathlib.Path('tools/blowpipes_generate.py').write_bytes(script)
           PY
+          sed -i 's@ROOT = Path(__file__).resolve().parent@ROOT = Path(__file__).resolve().parent.parent@' tools/blowpipes_generate.py
           python3 tools/blowpipes_generate.py
           mkdir -p output
       - name: Gradle compile
