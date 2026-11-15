@@ -22,7 +22,10 @@ class Design:
         self.base,self.inlay,self.post,self.door=palette[biome]
         self.base=ID+":"+self.base;self.inlay=ID+":"+self.inlay
         self.post=ID+":"+self.post;self.door=ID+":"+self.door
-        self.light=ID+":undersky_glow"
+        lamp_by_biome={"dawn":"dawnstar_lamp","chalk":"chalk_moon_lamp",
+                       "canopy":"canopy_firefly_lamp","gorge":"gorge_resonance_lamp",
+                       "choir":"choir_reliquary_lamp","veil":"veil_lament_lamp"}
+        self.light=ID+":"+lamp_by_biome[biome]
     def p(self,x,y,z,id,props=None,nbt=None):
         if not (0<=x<17 and 0<=y<15 and 0<=z<17):
             raise ValueError((self.biome,self.kind,x,y,z))
