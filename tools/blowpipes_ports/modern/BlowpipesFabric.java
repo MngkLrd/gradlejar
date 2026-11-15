@@ -1,7 +1,7 @@
 package dev.minemods.blowpipes;
 import java.util.*;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.itemgroup.v1.CreativeModeTabEvents;
+import net.minecraft.network.chat.Component;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -36,7 +36,11 @@ public final class Blowpipes implements ModInitializer {
   ResourceKey<EntityType<?>> key=ResourceKey.create(Registries.ENTITY_TYPE,Identifier.fromNamespaceAndPath(ID,"dart"));
   dart=Registry.register(BuiltInRegistries.ENTITY_TYPE,key,EntityType.Builder.<DartProjectile>of(DartProjectile::new,MobCategory.MISC)
       .sized(.16f,.16f).clientTrackingRange(6).updateInterval(2).build(key));
-  CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.COMBAT).register(out->{for(Item item:ALL.values())out.accept(item);});
+  ResourceKey<CreativeModeTab> tabKey=ResourceKey.create(Registries.CREATIVE_MODE_TAB,Identifier.fromNamespaceAndPath(ID,"main"));
+  Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB,tabKey,
+      CreativeModeTab.builder().title(Component.translatable("itemGroup.blowpipes.main"))
+          .icon(()->new ItemStack(ALL.get("hunting_blowpipe")))
+          .displayItems((params,out)->{for(Item item:ALL.values())out.accept(item);}).build());
   ServerTickEvents.END_SERVER_TICK.register(SleepSystem::tick);
   ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity,source,damage)->{
    if(entity instanceof Mob mob)SleepSystem.wake(mob);return true;
