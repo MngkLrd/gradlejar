@@ -23,9 +23,9 @@ public final class SleepSettings {
   B.pop();
   B.push("sleepless");
   ENABLE_SLEEPLESS=B.comment("Enable rare hostile encounters for severely sleep-deprived players.").define("enabled",true);
-  SLEEPLESS_THRESHOLD=B.defineInRange("minimumSleepDebt",830,500,1000);
+  SLEEPLESS_THRESHOLD=B.defineInRange("minimumSleepDebt",760,500,1000);
   SPAWN_INTERVAL_TICKS=B.comment("How often each player rolls for an encounter at night.")
-    .defineInRange("spawnIntervalTicks",200,80,1200);
+    .defineInRange("spawnIntervalTicks",160,80,1200);
   RESPAWN_GRACE_TICKS=B.comment("Temporary protection after a death to avoid spawn-killing.")
     .defineInRange("respawnGraceTicks",3600,0,24000);
   B.pop();
