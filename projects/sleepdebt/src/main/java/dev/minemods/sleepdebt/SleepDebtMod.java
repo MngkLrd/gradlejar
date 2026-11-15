@@ -39,6 +39,7 @@ public final class SleepDebtMod {
   if(FMLEnvironment.dist==Dist.CLIENT)ClientBootstrap.register(bus,container);
   NeoForge.EVENT_BUS.addListener(SleepEngine::tick);
   NeoForge.EVENT_BUS.addListener(SleepEngine::clonePlayer);
+  NeoForge.EVENT_BUS.addListener(SleepEngine::onDeath);
   NeoForge.EVENT_BUS.addListener(SleepEngine::onLogin);
   NeoForge.EVENT_BUS.addListener(SleepEngine::onBlockBreak);
   NeoForge.EVENT_BUS.addListener(SleepEngine::onAttack);

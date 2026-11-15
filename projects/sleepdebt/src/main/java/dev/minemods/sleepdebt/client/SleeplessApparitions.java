@@ -54,7 +54,7 @@ public final class SleeplessApparitions {
    nextTry=0;lastFootstep=0;
   }
   if(mc.level==null||mc.player==null||mc.player.isSpectator()||
-     mc.player.isSleeping()||mc.screen!=null||
+     mc.player.isSleeping()||mc.level.isDay()||mc.screen!=null||
      !ClientSettings.HALLUCINATIONS.get()||
      !ClientSettings.SLEEPLESS_VISIONS.get()||
      ClientState.maskTicks>0||
@@ -69,10 +69,13 @@ public final class SleeplessApparitions {
    Vec3 to=ghost.at.add(0,1.45,0).subtract(eye);
    double dist=to.length();
    double gaze=dist>0.01?mc.player.getLookAngle().dot(to.scale(1/dist)):0;
-   if(tick-ghost.born>40&&dist<38&&gaze>.985)ghost.stareTicks++;
-   // A distant client-only apparition follows slowly after a brief pause.
    long age=tick-ghost.born;
-   if(age>72 && ghost.lastMoveTick!=tick && dist>8 && gaze<.95){
+   // Alpha 10 immediately cancelled stareTicks in the movement branch's else.
+   // Keep a minimum reveal before the player's gaze starts dissolving the figure.
+   boolean staring=age>=36 && dist<38 && gaze>.982;
+   if(staring)ghost.stareTicks=Math.min(12,ghost.stareTicks+1);
+   else ghost.stareTicks=Math.max(0,ghost.stareTicks-2);
+   if(age>72 && ghost.lastMoveTick!=tick && dist>8 && !staring && gaze<.95){
     Vec3 toward=mc.player.position().subtract(ghost.at).multiply(1,0,1);
     if(toward.lengthSqr()>.01){
      Vec3 next=ghost.at.add(toward.normalize().scale(.095));
@@ -83,8 +86,7 @@ public final class SleeplessApparitions {
     }
     ghost.lastMoveTick=tick;
    }
-   else ghost.stareTicks=Math.max(0,ghost.stareTicks-1);
-   if(tick-ghost.born>ghost.lifetime||dist<5||ghost.stareTicks>=11)it.remove();
+   if(age>ghost.lifetime||dist<5||ghost.stareTicks>=11)it.remove();
   }
   if(!VISIONS.isEmpty()){
    for(Apparition ghost:VISIONS){
@@ -111,8 +113,10 @@ public final class SleeplessApparitions {
   Vec3 look=mc.player.getLookAngle();
   for(int attempt=0;attempt<10;attempt++){
    // Mostly behind; occasionally flank to the player's left or right.
-   double offset=(attempt<7?Math.PI:Math.PI*.55) +
-     (mc.level.random.nextDouble()-.5)*1.55*(mc.level.random.nextBoolean()?1:-1);
+   // Mostly behind, sometimes just outside peripheral vision.
+   double offset=(mc.level.random.nextFloat()<.68f?Math.PI:Math.PI*.32) +
+     (mc.level.random.nextDouble()-.5)*.68;
+   if(mc.level.random.nextBoolean())offset=-offset;
    double angle=Math.atan2(look.z,look.x)+offset;
    int radius=19+mc.level.random.nextInt(12);
    int x=Mth.floor(mc.player.getX()+Math.cos(angle)*radius);

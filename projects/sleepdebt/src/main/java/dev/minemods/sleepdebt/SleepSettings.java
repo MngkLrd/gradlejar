@@ -9,7 +9,7 @@ public final class SleepSettings {
   B.push("fatigue");
   TICKS_PER_POINT=B.defineInRange("ticksPerPoint",60,20,2400);
   BASE_RECOVERY=B.defineInRange("baseSleepRecovery",550,0,1000);
-  KEEP_ON_DEATH=B.define("persistAfterDeath",true);
+  KEEP_ON_DEATH=B.comment("Keep accumulated debt on death; default resets to prevent repeated spawn-kills.").define("persistAfterDeath",false);
   PENALTIES=B.define("enableDebuffs",true);
   MICROSLEEPS=B.comment("Brief warning micro-sleeps during extreme exhaustion.").define("microSleeps",true);
   B.pop();

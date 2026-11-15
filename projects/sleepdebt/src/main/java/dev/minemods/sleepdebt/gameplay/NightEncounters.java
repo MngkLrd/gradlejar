@@ -31,7 +31,7 @@ final class NightEncounters {
       player.blockPosition().offset(7,4,7))){
    if(level.getBlockState(pos).is(ModBlocks.DREAMCATCHER.get()))return;
   }
-  for(int attempt=0;attempt<18;attempt++){
+  for(int attempt=0;attempt<24;attempt++){
    double angle=level.random.nextDouble()*Math.PI*2;
    // More often behind or to the side of a moving player.
    if(attempt<7){
@@ -42,7 +42,7 @@ final class NightEncounters {
    int x=player.getBlockX()+(int)(Math.cos(angle)*radius);
    int z=player.getBlockZ()+(int)(Math.sin(angle)*radius);
    BlockPos probe=new BlockPos(x,player.getBlockY(),z);
-   if(!level.hasChunkAt(probe))continue;
+   if(!level.getChunkSource().hasChunk(x>>4,z>>4))continue;
    int y=level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);
    BlockPos spawn=new BlockPos(x,y,z);
    if(Math.abs(y-player.getY())>9 ||

@@ -1,6 +1,7 @@
 package dev.minemods.sleepdebt.gameplay;
 
 import dev.minemods.sleepdebt.SleepSettings;
+import dev.minemods.sleepdebt.entity.SleeplessEntity;
 import dev.minemods.sleepdebt.network.SleepStatusPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -9,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -150,6 +152,11 @@ public final class SleepEngine {
   CompoundTag t=data(p);
   if(!t.contains("lastSleepAt"))t.putLong("lastSleepAt",p.serverLevel().getGameTime());
   if(p.isSleeping()){
+   if(t.getInt("sleepTicks")==0){
+    // Vanilla still decides if the bed can be entered; successful sleep ends pursuit.
+    dismissNearbyHunters(p);
+    t.putLong("sleeplessGraceUntil",p.serverLevel().getGameTime()+1200);
+   }
    t.putInt("sleepTicks",Math.min(500,t.getInt("sleepTicks")+1));
    save(p,t);return;
   }
@@ -232,11 +239,22 @@ public final class SleepEngine {
   }
  }
 
+ private static void dismissNearbyHunters(ServerPlayer p){
+  for(SleeplessEntity hunter:p.serverLevel().getEntitiesOfClass(SleeplessEntity.class,
+      p.getBoundingBox().inflate(48))){
+   if(hunter.getTarget()==p||hunter.distanceToSqr(p)<576)hunter.discard();
+  }
+ }
+ /** Hunter cleanup runs at the death location, including distant respawns. */
+ public static void onDeath(LivingDeathEvent e){
+  if(e.getEntity() instanceof ServerPlayer p)dismissNearbyHunters(p);
+ }
  public static void clonePlayer(PlayerEvent.Clone e){
   if(!(e.getEntity() instanceof ServerPlayer p))return;
   CampRestSessions.discard(p);
   CompoundTag old=e.getOriginal().getPersistentData().getCompound(KEY).copy();
   if(e.isWasDeath()){
+   dismissNearbyHunters(p);
    old.putLong("sleeplessGraceUntil",p.serverLevel().getGameTime()+
      SleepSettings.RESPAWN_GRACE_TICKS.get());
    old.putInt("stress",Math.max(0,old.getInt("stress")-180));
@@ -245,6 +263,7 @@ public final class SleepEngine {
   if(e.isWasDeath()&&!SleepSettings.KEEP_ON_DEATH.get()){
    old.putInt("debt",0);old.putInt("progress",0);
    old.putInt("fatigue",0);old.putInt("stress",0);
+   old.putInt("mask",0);old.putInt("crash",0);
   }
   old.putInt("sleepTicks",0);
   p.getPersistentData().put(KEY,old);

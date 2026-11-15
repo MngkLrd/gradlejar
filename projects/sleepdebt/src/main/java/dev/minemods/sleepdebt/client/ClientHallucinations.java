@@ -34,12 +34,12 @@ public final class ClientHallucinations {
   presence+=(target-presence)*.18f;
   if(presence<.015f)return;
   int w=g.guiWidth(),h=g.guiHeight();
-  float beat=.87f+.13f*(float)Math.sin(mc.player.tickCount*.13);
-  int density=Math.max(0,Math.min(195,(int)(presence*presence*165*beat)));
-  int edge=Math.min(Math.min(w,h)/4,Math.max(6,(int)(20+presence*88)));
-  for(int i=0;i<5;i++){
-   int size=Math.max(1,edge*(5-i)/5);
-   int alpha=Math.max(1,density*(5-i)/14);
+  float beat=.80f+.20f*(float)Math.sin(mc.player.tickCount*.13);
+  int density=Math.max(0,Math.min(220,(int)(presence*presence*218*beat)));
+  int edge=Math.min(Math.min(w,h)/3,Math.max(8,(int)(24+presence*115)));
+  for(int i=0;i<6;i++){
+   int size=Math.max(1,edge*(6-i)/6);
+   int alpha=Math.max(1,density*(6-i)/15);
    int color=(alpha<<24)|0x0E0B12;
    g.fill(0,0,size,h,color);g.fill(w-size,0,w,h,color);
    g.fill(0,0,w,size/2,color);g.fill(0,h-size/2,w,h,color);
@@ -54,8 +54,8 @@ public final class ClientHallucinations {
    g.fill(w/7,0,w/7+21,Math.max(1,(int)(presence*13)),cloud);
    g.fill(w*4/5,h-Math.max(1,(int)(presence*16)),w*4/5+30,h,cloud);
   }
-  if(presence>.84f){
-   int shade=Math.min(65,(int)((presence-.84f)*370));
+  if(presence>.74f){
+   int shade=Math.min(86,(int)((presence-.74f)*330));
    g.fill(0,0,w,h,(shade<<24)|0x100E17);
   }
   // Short dark smoke streaks around the periphery; no random screen noise.

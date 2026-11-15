@@ -1,4 +1,4 @@
-# Sleep Debt: Restless Nights — 3.0.0-alpha.10
+# Sleep Debt: Restless Nights — 3.0.0-alpha.11
 
 **Minecraft:** 1.21.1 | **NeoForge:** 21.1.x | **Java:** 21 | **Gradle:** 9.2.1
 
@@ -46,7 +46,7 @@ The core mod does not require any of these libraries.
 ```bash
 gradle clean build
 ```
-Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.10.jar`.
+Result: `build/libs/sleepdebt-1.21.1-3.0.0-alpha.11.jar`.
 `src/main/resources/assets/sleepdebt/textures` are generated deterministically
 by Python scripts during the Gradle resource-processing task.
 
@@ -139,3 +139,16 @@ Replaced 45 authentic 16x16 PNGs: 15 block materials, 8 coffee crop stages and 2
 - Hand-designed, vanilla-oriented oak HUD panel in native 158x68 PNG format with separated labels, custom corners and intentional wood grain clusters. The original 45 item/block texture pass from Alpha 9 remains intact.
 - Death grants 3600 ticks of protection, including for previously active hunters. Existing NBT, recipes, block IDs and optional mod integrations are retained.
 - Real nightly encounters still require a dark loaded area and can be blocked by nearby dreamcatchers.
+
+
+## Alpha 11: Gaze, death cleanup, and horror polish
+- Fixed the cancelled gaze counter on client-only apparitions. Sightings stay
+  visible for at least 1.8 seconds before dissolving under direct observation.
+- Ghosts are more often behind the player, occasionally near peripheral vision,
+  and never appear during daylight, even at high stress.
+- New server config defaults to persistAfterDeath=false; previously saved server
+  TOML files still honor their saved value. Set it to false for debt reset.
+- Real hunters are dismissed at the death site or on successful bed entry;
+  respawn still grants 3600 ticks of protection. Vanilla bed rules remain.
+- Hunter attacks use variable post-hit pauses, prolonged darkness, smoke and
+  thicker distance-dependent vignette. Spawn probes no longer load chunks.

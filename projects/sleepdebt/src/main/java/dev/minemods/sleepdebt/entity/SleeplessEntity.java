@@ -35,6 +35,7 @@ import java.util.EnumSet;
  */
 public final class SleeplessEntity extends Zombie {
  private int watchedPause;
+ private int postStrikePause;
  private int successfulHits;
  private int lastStrikeTick=-100;
  public SleeplessEntity(EntityType<? extends Zombie> type,Level level){super(type,level);}
@@ -57,13 +58,13 @@ public final class SleeplessEntity extends Zombie {
  }
  @Override public boolean doHurtTarget(Entity target){
   if(target instanceof ServerPlayer player && SleepEngine.hasSleeplessGrace(player))return false;
-  if(tickCount-lastStrikeTick<32)return false;
+  if(tickCount-lastStrikeTick<38||postStrikePause>0)return false;
   boolean hit=super.doHurtTarget(target);
-  if(hit)lastStrikeTick=tickCount;
+  if(hit){lastStrikeTick=tickCount;postStrikePause=27+random.nextInt(20);}
   if(hit&&target instanceof ServerPlayer player){
    successfulHits++;
    // Darkness lingers for nine seconds, and repeat blows renew its duration.
-   player.addEffect(new MobEffectInstance(MobEffects.DARKNESS,200+Math.min(120,successfulHits*22),
+   player.addEffect(new MobEffectInstance(MobEffects.DARKNESS,240+Math.min(120,successfulHits*24),
      0,false,true,true));
    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,70,0,false,false,true));
    if(successfulHits%3==0){
@@ -83,6 +84,8 @@ public final class SleeplessEntity extends Zombie {
       SoundSource.HOSTILE,.42f,.68f);
    }
    SleepEngine.addStress(player,95);
+   player.serverLevel().sendParticles(ParticleTypes.LARGE_SMOKE,player.getX(),
+     player.getY()+1,player.getZ(),18,.65,.65,.65,.015);
   }
   return hit;
  }
@@ -102,9 +105,11 @@ public final class SleeplessEntity extends Zombie {
    }
    return;
   }
+  if(level().isDay()){discard();return;}
   if(watchedPause>0)watchedPause--;
+  if(postStrikePause>0){postStrikePause--;getNavigation().stop();}
   if(getTarget() instanceof ServerPlayer target){
-   if(SleepEngine.hasSleeplessGrace(target)){
+   if(target.isSleeping()||SleepEngine.hasSleeplessGrace(target)){
     setTarget(null);getNavigation().stop();
     if(distanceToSqr(target)<256)discard();
     return;
@@ -118,7 +123,7 @@ public final class SleeplessEntity extends Zombie {
      getLookControl().setLookAt(target);
     }
    }
-   if(watchedPause>0)getNavigation().stop();
+   if(watchedPause>0||postStrikePause>0)getNavigation().stop();
    if(tickCount%70==0 && length<11 && length>2.5 &&
       !target.isCreative() && target.hasLineOfSight(this)){
     SleepEngine.addStress(target,22);
@@ -135,7 +140,7 @@ public final class SleeplessEntity extends Zombie {
    }
   }
   if(tickCount%20==0 && (level().isDay()||level().getMaxLocalRawBrightness(blockPosition())>=13)){
-   if(tickCount>50)discard();
+   discard();
   }
  }
  private static final class ShadowPursuitGoal extends Goal {
@@ -145,7 +150,8 @@ public final class SleeplessEntity extends Zombie {
    this.mob=mob;setFlags(EnumSet.of(Flag.MOVE,Flag.LOOK));
   }
   @Override public boolean canUse(){
-   return mob.watchedPause==0 && mob.getTarget() instanceof ServerPlayer p &&
+   return mob.watchedPause==0 && mob.postStrikePause==0 &&
+      mob.getTarget() instanceof ServerPlayer p &&
       !SleepEngine.hasSleeplessGrace(p) && mob.distanceToSqr(p)>80 &&
       mob.distanceToSqr(p)<1600;
   }
