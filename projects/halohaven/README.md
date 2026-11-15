@@ -4,6 +4,13 @@
 
 A bright fantasy pocket of the skies, now with a cohesive architectural language (pearl/aged brass/turquoise), shaped roofs, hand-painted materials, sky gardens, three district styles, boss encounters, a craftable endgame relic, translucent glass, and heavenly inhabitants.
 
+## Download builds
+
+The Build Hub publishes the JAR to GitHub Releases when repository permissions
+allow. It also uploads the exact JAR and SHA256 as a **GitHub Actions artifact**
+for 30 days, including when the GitHub Release API rejects publishing.
+Look for `jar-halohaven-1.4.0` in the latest successful Build Hub run.
+
 ## Installation and build
 
 - Copy `halohaven-1.21.1-1.4.0.jar` to `mods/`.
