@@ -29,7 +29,7 @@ public final class HeavenArchitecture {
         torchesAndArcades(level,cx,cz);
     }
     private static void p(ServerLevel l,int x,int y,int z,Block block) {
-        l.setBlock(new BlockPos(x,y,z),block.defaultBlockState(),2);
+        l.setBlock(new BlockPos(x,y,z),block.defaultBlockState(),3);
     }
     private static void stairs(ServerLevel l,int x,int y,int z,Direction outward) {
         l.setBlock(new BlockPos(x,y,z),
