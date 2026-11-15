@@ -1,4 +1,4 @@
-# Everybody Is Watching 0.1.0
+# Everybody Is Watching 0.1.1
 
 Minecraft 1.21.1 (Java 21), NeoForge / Fabric, Mojang official mappings.
 No items, blocks or custom assets. Server-side game logic (both client and server must install the mod).
@@ -8,8 +8,8 @@ No items, blocks or custom assets. Server-side game logic (both client and serve
 - Checks loaded players once every second.
 - Detects a village with ServerLevel#isVillage (occupied points of interest).
 - After first village entry, waits 3–8 seconds, then makes **one 65% roll** if at least four eligible villagers are within 48 blocks.
-- Villagers freeze for 3–6 seconds; their heads track the player, while their original body yaw is preserved.
-- In 25% of events, one villager watches another 2–4 seconds.
+- Villagers freeze for 10–14 seconds; their heads track the player, while their original body yaw is preserved.
+- In 25% of events, one villager watches another 3–5 seconds.
 - After each entry roll, a 4-minute cooldown applies; leaving village detection for 6 seconds rearms entry detection.
 - No global chat messages, sounds, extra textures or screen effects.
 - Natural events are independent from command trigger events.
@@ -36,7 +36,7 @@ No items, blocks or custom assets. Server-side game logic (both client and serve
 - JDK 21.
 - NeoForge: `gradle clean build` (Gradle 9.2.1).
 - Fabric: `gradle clean build` (Gradle 8.14.3).
-- Output: `build/libs/everybodyiswatching-<loader>-1.21.1-0.1.0.jar`.
+- Output: `build/libs/everybodyiswatching-<loader>-1.21.1-0.1.1.jar`.
 
 ## Known limitations
 

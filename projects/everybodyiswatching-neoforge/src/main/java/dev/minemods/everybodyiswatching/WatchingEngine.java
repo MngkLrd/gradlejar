@@ -1,11 +1,16 @@
 package dev.minemods.everybodyiswatching;
 
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -23,6 +28,15 @@ import java.util.UUID;
 /** Common 1.21.1 Mojang-mapped logic, called from the server tick on either loader. */
 public final class WatchingEngine {
     private static final String LOCK_TAG = "eiw_temporary_ai_lock";
+    /** Movement only. Unlike NoAI, this keeps vanilla head/rotation controllers alive. */
+    private static final ResourceLocation FREEZE_SPEED_ID =
+            ResourceLocation.fromNamespaceAndPath("everybodyiswatching", "watching_freeze");
+    private static final AttributeModifier FREEZE_SPEED = new AttributeModifier(
+            FREEZE_SPEED_ID, -1.0D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    private static final int MIN_STARE_TICKS = 200; // 10 seconds
+    private static final int EXTRA_STARE_TICKS = 81; // up to 14 seconds
+    private static final float BODY_TURN_DEGREES_PER_TICK = 9.0F;
+    private static final float HEAD_TURN_DEGREES_PER_TICK = 20.0F;
     private static final int RADIUS = 48;
     private static final int MIN_VILLAGERS = 4;
     private static final int ENTRY_DELAY_MIN = 60;
@@ -105,20 +119,21 @@ public final class WatchingEngine {
     }
 
     private void begin(ServerPlayer player, List<Villager> villagers) {
-        int duration = 60 + random.nextInt(61); // 3-6 seconds
+        int duration = MIN_STARE_TICKS + random.nextInt(EXTRA_STARE_TICKS); // 10-14 seconds
         boolean lastOne = villagers.size() >= 2 && random.nextInt(4) == 0;
         UUID lingering = lastOne ? villagers.get(random.nextInt(villagers.size())).getUUID() : null;
         StareEvent event = new StareEvent(player.serverLevel(), player.getUUID(),
-                player.position(), tick + duration, tick + duration + 40 + random.nextInt(41), lingering);
+                player.position(), tick + duration, tick + duration + 60 + random.nextInt(41), lingering);
         for (Villager villager : villagers) {
             if (villager.isNoAi()) continue;
             if (villager.getTradingPlayer() instanceof ServerPlayer trader) trader.closeContainer();
             villager.getNavigation().stop();
             frozen.put(villager.getUUID(), new FrozenVillager(villager));
             villager.addTag(LOCK_TAG);
-            villager.setNoAi(true);
+            AttributeInstance speed = villager.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (speed != null) speed.addOrUpdateTransientModifier(FREEZE_SPEED);
             event.members.add(villager.getUUID());
-            aimAt(villager, player, frozen.get(villager.getUUID()));
+            aimAt(villager, player);
         }
         active.put(player.serverLevel().dimension(), event);
     }
@@ -140,42 +155,63 @@ public final class WatchingEngine {
                 event.members.remove(id);
                 continue;
             }
-            Vec3 velocity = lock.villager.getDeltaMovement();
-            lock.villager.setDeltaMovement(0, velocity.y, 0);
-            aimAt(lock.villager, player, lock);
+            Villager villager = lock.villager;
+            // Villagers use Brain AI, not only goal selectors. Kill the pending walk
+            // target as well as navigation so a fresh Brain path cannot keep moving.
+            villager.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
+            villager.getBrain().eraseMemory(MemoryModuleType.PATH);
+            villager.getNavigation().stop();
+            Vec3 velocity = villager.getDeltaMovement();
+            villager.setDeltaMovement(0, velocity.y, 0);
+            aimAt(villager, player);
         }
         if (event.members.isEmpty()) active.remove(event.level.dimension());
     }
 
-    private static void aimAt(Villager villager, ServerPlayer player, FrozenVillager lock) {
+    /**
+     * Rotate a real, AI-enabled villager in the vanilla synced rotation fields.
+     * The head leads; the torso follows when the target is out of neck range.
+     * This is invoked after entity ticks, so the Brain cannot overwrite our look.
+     */
+    private static void aimAt(Villager villager, ServerPlayer player) {
         Vec3 from = villager.getEyePosition();
         Vec3 to = player.getEyePosition();
-        double x = to.x - from.x;
-        double z = to.z - from.z;
-        double y = to.y - from.y;
-        float toward = (float) (Math.toDegrees(Math.atan2(z, x)) - 90.0D);
-        // The vanilla model cannot rotate its head 180 degrees; preserve body direction.
-        float difference = Mth.wrapDegrees(toward - lock.bodyYaw);
-        float headYaw = lock.bodyYaw + Mth.clamp(difference, -85.0F, 85.0F);
-        float pitch = (float) -Math.toDegrees(Math.atan2(y, Math.sqrt(x * x + z * z)));
-        villager.setYRot(lock.entityYaw);
-        villager.setYBodyRot(lock.bodyYaw);
-        villager.setYHeadRot(headYaw);
-        villager.setXRot(Mth.clamp(pitch, -35.0F, 35.0F));
+        double dx = to.x - from.x;
+        double dz = to.z - from.z;
+        double dy = to.y - from.y;
+        double horizontal = Math.sqrt(dx * dx + dz * dz);
+        if (horizontal < 0.001D) return;
+
+        float targetYaw = (float) (Math.toDegrees(Math.atan2(dz, dx)) - 90.0D);
+        float targetPitch = (float) -Math.toDegrees(Math.atan2(dy, horizontal));
+
+        // Keep vanilla LookControl informed while doing our own precise tracking.
+        villager.getLookControl().setLookAt(player, 180.0F, 90.0F);
+
+        float body = approachDegrees(villager.yBodyRot, targetYaw, BODY_TURN_DEGREES_PER_TICK);
+        float headTarget = body + Mth.clamp(Mth.wrapDegrees(targetYaw - body), -75.0F, 75.0F);
+        float head = approachDegrees(villager.getYHeadRot(), headTarget, HEAD_TURN_DEGREES_PER_TICK);
+        float pitch = Mth.clamp(targetPitch, -40.0F, 40.0F);
+
+        // Head and body both must rotate, particularly when the player is behind.
+        villager.setYRot(body);
+        villager.setYBodyRot(body);
+        villager.setYHeadRot(head);
+        villager.setXRot(pitch);
+    }
+
+    private static float approachDegrees(float current, float target, float maxStep) {
+        return current + Mth.clamp(Mth.wrapDegrees(target - current), -maxStep, maxStep);
     }
 
     private void thaw(UUID id) {
         FrozenVillager lock = frozen.remove(id);
         if (lock == null) return;
         Villager villager = lock.villager;
-        villager.setNoAi(false);
+        AttributeInstance speed = villager.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed != null) speed.removeModifier(FREEZE_SPEED_ID);
         villager.removeTag(LOCK_TAG);
-        if (!villager.isRemoved()) {
-            villager.setYRot(lock.entityYaw);
-            villager.setYBodyRot(lock.bodyYaw);
-            villager.setYHeadRot(lock.headYaw);
-            villager.setXRot(lock.pitch);
-        }
+        // Keep the last orientation; vanilla AI will naturally resume looking around.
     }
 
     private void stop(StareEvent event) {
@@ -187,7 +223,10 @@ public final class WatchingEngine {
     public void entityLoaded(Entity entity) {
         if (entity instanceof Villager villager && villager.getTags().contains(LOCK_TAG)
                 && !frozen.containsKey(villager.getUUID())) {
+            // Restore villagers saved by 0.1.0 with NoAI, too.
             villager.setNoAi(false);
+            AttributeInstance speed = villager.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (speed != null) speed.removeModifier(FREEZE_SPEED_ID);
             villager.removeTag(LOCK_TAG);
         }
     }
@@ -239,16 +278,8 @@ public final class WatchingEngine {
 
     private static final class FrozenVillager {
         final Villager villager;
-        final float bodyYaw;
-        final float headYaw;
-        final float entityYaw;
-        final float pitch;
         FrozenVillager(Villager villager) {
             this.villager = villager;
-            this.bodyYaw = villager.yBodyRot;
-            this.headYaw = villager.getYHeadRot();
-            this.entityYaw = villager.getYRot();
-            this.pitch = villager.getXRot();
         }
     }
 

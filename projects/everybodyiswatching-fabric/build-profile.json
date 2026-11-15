@@ -1,9 +1,9 @@
 {
   "slug": "everybodyiswatching",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "minecraft": "1.21.1",
   "loader": "fabric",
   "java": "21",
   "gradle": "8.14.3",
-  "jar_glob": "everybodyiswatching-fabric-1.21.1-0.1.0.jar"
+  "jar_glob": "everybodyiswatching-fabric-1.21.1-0.1.1.jar"
 }
