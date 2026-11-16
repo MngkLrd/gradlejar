@@ -18,6 +18,6 @@ public abstract class FurnaceScreenMixin {
   if(!((Object)this instanceof FurnaceScreen screen))return;
   var level=Minecraft.getInstance().level;
   if(level==null||!FoodRules.forbidden(level,screen.getMenu().getSlot(0).getItem()))return;
-  graphics.blitSprite(RenderPipelines.GUI_TEXTURED,nofoodinfurnace$CROSS,screen.getGuiLeft()+77,screen.getGuiTop()+33,28,21);
+  graphics.blitSprite(RenderPipelines.GUI_TEXTURED,nofoodinfurnace$CROSS,((FurnacePosition)(Object)screen).nofoodinfurnace$getLeft()+77,((FurnacePosition)(Object)screen).nofoodinfurnace$getTop()+33,28,21);
  }
 }

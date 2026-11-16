@@ -1,7 +1,7 @@
 package dev.minemods.nofoodinfurnace.mixin;
 import dev.minemods.nofoodinfurnace.FoodRules;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.ServerLevel;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
