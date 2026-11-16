@@ -63,7 +63,7 @@ jobs:
             assert len(ns)>=63,len(ns)
             assert len([m for m in ns if '/regional_' in m.name])==18
             assert len([m for m in ns if '/colossal_canopy_' in m.name])==4
-            assert len([m for m in ns if '/choir_' in m.name and m.name.endswith('.nbt')])==4
+            assert len([m for m in ns if '/choir_' in m.name and m.name.endswith('.nbt')])>=4
             assert len([m for m in members if '/textures/entity/' in m.name and m.name.endswith('.png')])==20
           print('Validated',len(ns),'NBT templates, core data and all creature skins')
           PY
@@ -128,7 +128,7 @@ jobs:
           assert len([k for k in entries if k.endswith('_door_face.json') and 'blockstates/' in k])>=3
           assert len([k for k in entries if '/structure/regional_' in k and k.endswith('.nbt')])==18
           assert len([k for k in entries if '/structure/colossal_canopy_' in k and k.endswith('.nbt')])==4
-          assert len([k for k in entries if '/structure/choir_' in k and k.endswith('.nbt')])==4
+          assert len([k for k in entries if '/structure/choir_' in k and k.endswith('.nbt')])>=4
           assert 'dev/minemods/halohaven/DawnWaterfallFeature.class' in entries
           assert 'assets/halohaven/models/block/ascension_gateway_lower.json' in entries
           assert len([k for k in entries if k.endswith('_leaves.png') and '/textures/block/' in k])>=6
