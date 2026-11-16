@@ -1,0 +1,105 @@
+name: Halo Haven 2.8 Island Biome QA
+on:
+  push:
+    branches: [halohaven-alpha28-broad-mesas]
+    paths:
+      - ".github/workflows/halohaven28.yml"
+      - "tools/halohaven28_*.py"
+      - "tools/halohaven27_*.py"
+      - "tools/halohaven27_*.sh"
+      - "tools/halohaven26_*.py"
+      - "tools/halohaven25_*.py"
+      - "tools/halohaven25_*.sh"
+      - "projects/halohaven/ci/worldgen_probe.py"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+      - name: Prepare artwork and structure build dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check pillow==11.3.0 nbtlib==2.0.4
+          command -v ffmpeg || { sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends ffmpeg; }
+      - name: Rebuild Halo Haven 2.4 base and content (preserved)
+        run: |
+          python3 tools/patch_halohaven_v22.py
+          python3 tools/halohaven23_world.py
+          python3 tools/halohaven23_art.py
+          python3 tools/halohaven23_mobs.py
+          python3 tools/halohaven23_structures.py
+          python3 tools/halohaven24_world.py
+          python3 tools/halohaven24_structures.py
+      - name: Separate connected islands by biome without new blocks
+        run: python3 tools/halohaven25_island_regions.py
+      - name: Resculpt six visually distinct island geographies and native cliffs
+        run: python3 tools/halohaven26_regions.py
+      - name: Rebuild regional forests and eliminate suspended grid settlements
+        run: python3 tools/halohaven26_ecology.py
+      - name: Fill the void with walkable mist and ground-validated templates
+        run: python3 tools/halohaven27_cloud_world.py
+      - name: Sculpt wide rounded islands and high Chalk terraces
+        run: python3 tools/halohaven28_landmass.py
+      - name: Check native structure supports and contiguous cloud geometry
+        run: python3 tools/halohaven28_surface_qa.py
+      - name: Validate changes to all six biomes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,tarfile
+          root=Path('projects/halohaven/src/main/resources/data/halohaven')
+          for name in ('dawn_gardens','chalk_terraces','eternal_canopy','ringing_gorges','forgotten_choirs','lower_veil'):
+              features=json.loads((root/'worldgen/biome'/f'{name}.json').read_text())['features'][9]
+              assert 'halohaven:sky_clouds' in features
+              assert 'halohaven:grounded_ruins' in features
+          settings=json.loads((root/'worldgen/noise_settings/heaven_islands.json').read_text())
+          assert settings['noise']['height']==256
+          assert 'halohaven:sky_clouds_chalk' in json.loads((root/'worldgen/biome/chalk_terraces.json').read_text())['features'][9]
+          with tarfile.open('projects/halohaven-alpha21/bundle.tar.xz','r:xz') as z:
+              assert not any('/worldgen/structure_set/' in m.name for m in z)
+              assert sum('/structure/' in m.name and m.name.endswith('.nbt') for m in z)>=63
+          print('Validated clouds, natural structures and original 63+ NBT resources')
+          PY
+      - name: Compile original dimension via Gradle
+        working-directory: projects/halohaven
+        run: gradle --no-daemon clean build
+      - name: Compile ecosystem expansion via Gradle
+        working-directory: projects/halohaven-alpha21
+        run: gradle --no-daemon clean build
+      - name: Package one self-contained JAR
+        run: python3 tools/halohaven28_pack.py
+      - name: Test six biomes and world generation on real NeoForge server
+        timeout-minutes: 9
+        run: bash tools/halohaven25_smoke.sh
+      - name: Upload runtime diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: HaloHaven-2.8-Diagnostics
+          path: |
+            projects/halohaven/run/halo25-server.log
+            projects/halohaven/run/halo25-probe.log
+            projects/halohaven/run/logs/latest.log
+          if-no-files-found: warn
+      - name: Upload installable mod
+        uses: actions/upload-artifact@v4
+        with:
+          name: HaloHaven-2.8-Cloud-Bridges
+          path: dist/*
+          if-no-files-found: error
+      - name: Publish prerelease on GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="halohaven-2.8-broad-mesas-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" dist/*.jar dist/*.sha256 --target "$GITHUB_SHA" --title "Halo Haven 2.8 Alpha - Broad Islands and High Chalk" --notes "Broad cohesive 3D island bodies; reduced thin strands and isolated fragments; 256-block worldgen height; enormous 8-tier Chalk Terraces rising well above all other biomes; coherent sky mist and elevated clouds near mesas; ground-validated ruins and trees. Fresh chunks required. NeoForge server smoke-tested." --prerelease
