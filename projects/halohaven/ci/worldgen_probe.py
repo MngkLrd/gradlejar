@@ -139,7 +139,7 @@ def main() -> int:
         # Adjacent worldgen chunks may be unloaded after decoration.
         command(sock,f"execute in halohaven:heaven run forceload add {cx} {cz}")
         time.sleep(2)
-        response=command(sock,f"execute in halohaven:heaven if block {cx} {cy} {cz} halohaven:sky_mist run setblock {cx} {cy} {cz} halohaven:sky_mist")
+        response=command(sock,f"execute in halohaven:heaven if block {cx} {cy} {cz} halohaven:sky_mist run setblock {cx} {cy} {cz} minecraft:air")
         if "changed the block" not in response.lower():
             raise RuntimeError(f"Worldgen mist block absent at {cx},{cy},{cz}: {response}")
         print(f"PASS: generated walkable sky mist naturally at {cx},{cy},{cz}",flush=True)
