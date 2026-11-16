@@ -165,7 +165,7 @@ jobs:
         if: steps.verify.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: jar-${{ steps.profile.outputs.slug }}-${{ steps.profile.outputs.loader }}-${{ steps.profile.outputs.version }}
+          name: jar-${{ steps.profile.outputs.slug }}-${{ steps.profile.outputs.minecraft }}-${{ steps.profile.outputs.loader }}-${{ steps.profile.outputs.version }}-${{ strategy.job-index }}
           path: |
             ${{ steps.verify.outputs.jar_path }}
             ${{ steps.verify.outputs.checksum_path }}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "snowleopard",
+  "version": "1.0.0",
+  "name": "Snow Leopard",
+  "description": "A rare snow leopard with a custom 3D model, animated tail and natural mountain spawns.",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.minemods.snowleopard.SnowLeopardMod"
+    ],
+    "client": [
+      "dev.minemods.snowleopard.client.SnowLeopardClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
