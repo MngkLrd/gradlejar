@@ -1,0 +1,9 @@
+{
+  "slug": "shieldbashlite",
+  "version": "1.0.4",
+  "minecraft": "1.20.1",
+  "loader": "forge",
+  "java": "17",
+  "gradle": "8.14.5",
+  "jar_glob": "shieldbashlite-forge-1.20.1-1.0.4.jar"
+}
