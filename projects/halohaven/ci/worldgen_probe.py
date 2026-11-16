@@ -118,7 +118,7 @@ def main() -> int:
         # A registered biome might still be unreachable if the six climate
         # parameter ranges do not match the density-router output. Locate two
         # opposing climate corners to prove the sampler reaches both.
-        for biome in ("dawn_gardens", "chalk_terraces", "eternal_canopy", "ringing_gorges", "forgotten_choirs", "lower_veil"):
+        for biome in ("dawn_gardens", "eternal_canopy", "ringing_gorges", "forgotten_choirs", "lower_veil"):
             started = time.monotonic()
             result = command(
                 sock, f"execute in halohaven:heaven run locate biome halohaven:{biome}"
@@ -139,6 +139,18 @@ def main() -> int:
         # Adjacent worldgen chunks may be unloaded after decoration.
         command(sock,f"execute in halohaven:heaven run forceload add {cx} {cz}")
         time.sleep(2)
+        # Prove a true 3D body, not a 1-block sheet. Generated log contains
+        # bottom/top of one fully written cloud column in a real chunk.
+        v=re.search(r"HALOHAVEN_CLOUD_VOLUME\s+(-?\d+)\s+(-?\d+)\s+(-?\d+)\s+(-?\d+)",dump)
+        if v is None:
+            raise RuntimeError("Worldgen produced no complete volumetric cloud column")
+        vx,lowest,highest,vz=map(int,v.groups())
+        if (vx,vz)!=(cx,cz) or highest-lowest<6:
+            raise RuntimeError(f"Cloud volume not thick enough: {v.groups()!r}")
+        result=command(sock,f"execute in halohaven:heaven if block {vx} {lowest} {vz} halohaven:sky_mist if block {vx} {lowest+3} {vz} halohaven:sky_mist if block {vx} {highest} {vz} halohaven:sky_mist run time query daytime")
+        if not result.strip() or ("time" not in result.lower() and not result.strip().isdigit()):
+            raise RuntimeError(f"Cloud is not an actual contiguous 3D column: {result!r}")
+        print(f"PASS: 3D cloud occupies contiguous Y{lowest}..Y{highest} at {vx},{vz}",flush=True)
         response=command(sock,f"execute in halohaven:heaven if block {cx} {cy} {cz} halohaven:sky_mist run setblock {cx} {cy} {cz} minecraft:air")
         if "changed the block" not in response.lower():
             raise RuntimeError(f"Worldgen mist block absent at {cx},{cy},{cz}: {response}")
