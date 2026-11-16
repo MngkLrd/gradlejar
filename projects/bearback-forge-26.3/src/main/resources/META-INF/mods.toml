@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[66,)"
+license="MIT"
+[[mods]]
+modId="bearback"
+version="0.2.2"
+displayName="Bearback"
+authors="Minemods"
+description="Ride and tame polar and black bears with leather saddles and cargo bags."
+[[dependencies.bearback]]
+modId="forge"
+mandatory=true
+versionRange="[66.0.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.bearback]]
+modId="minecraft"
+mandatory=true
+versionRange="[26.3,26.4)"
+ordering="NONE"
+side="BOTH"
