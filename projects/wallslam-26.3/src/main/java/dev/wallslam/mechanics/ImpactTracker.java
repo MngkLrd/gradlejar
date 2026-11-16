@@ -33,6 +33,7 @@ public final class ImpactTracker {
         Registries.DAMAGE_TYPE, Identifier.fromNamespaceAndPath("wallslam", "collision"));
 
     private static final Logger LOGGER = LoggerFactory.getLogger("wallslam");
+    private static boolean loggedCollisionFailure;
     private static final int HIT_WINDOW = 11;
     private static final int COOLDOWN_TICKS = 12;
     private static final double WALL_REACH = 0.65D;
@@ -137,7 +138,19 @@ public final class ImpactTracker {
         float extra = (float) (pending.impactDamage *
             WallslamConfig.DAMAGE_MULTIPLIER.get());
         if (extra > 0.001F && victim.isAlive()) {
-            victim.hurtServer(level, victim.damageSources().source(COLLISION_DAMAGE), extra);
+            DamageSource collisionSource;
+            try {
+                collisionSource = victim.damageSources().source(COLLISION_DAMAGE);
+            } catch (RuntimeException error) {
+                logCollisionFailure("Custom wallslam:collision damage type not found; using vanilla wall damage", error);
+                collisionSource = victim.damageSources().flyIntoWall();
+            }
+            try {
+                victim.hurtServer(level, collisionSource, extra);
+            } catch (RuntimeException error) {
+                // An incompatible damage hook must not terminate the server tick.
+                logCollisionFailure("Failed to apply collision damage; impact and stun remain active", error);
+            }
         }
     }
 
@@ -174,6 +187,13 @@ public final class ImpactTracker {
             level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, block),
                 x, y, z, (int) Math.round(13 * intensity),
                 0.22D, 0.21D, 0.22D, 0.07D);
+        }
+    }
+
+    private static void logCollisionFailure(String message, RuntimeException error) {
+        if (!loggedCollisionFailure) {
+            loggedCollisionFailure = true;
+            LOGGER.error("WallSlam 1.0.3: {}", message, error);
         }
     }
 
