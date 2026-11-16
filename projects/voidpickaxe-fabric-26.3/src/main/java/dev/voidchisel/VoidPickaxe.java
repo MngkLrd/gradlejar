@@ -1,6 +1,6 @@
 package dev.voidchisel;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.*;
@@ -17,7 +17,7 @@ public final class VoidPickaxe implements ModInitializer{
                 .durability(5).rarity(Rarity.EPIC)));
     }
     @Override public void onInitialize(){
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
             .register(entries->entries.accept(PICKAXE));
     }
 }
