@@ -135,12 +135,12 @@ for key in ("final_density","initial_density_without_jaggedness"):
 # SAME bright cloudstone, so one biome looked like another from a distance.
 # Use existing 2.3/2.4 material blocks for both surface and rock walls.
 native={
- "dawn_gardens":"halohaven:sunlit_loam",
- "chalk_terraces":"halohaven:chalkstone",
+ "dawn_gardens":"halohaven:dawnstone",
+ "chalk_terraces":"halohaven:chalk_strata",
  "eternal_canopy":"halohaven:canopy_loam",
  "ringing_gorges":"halohaven:resonant_shale",
  "forgotten_choirs":"halohaven:choirstone",
- "lower_veil":"halohaven:umbral_silt"
+ "lower_veil":"halohaven:veilstone"
 }
 rules=settings["surface_rule"]["sequence"]
 assert len(rules)>=6
