@@ -484,11 +484,18 @@ rootProject.name='biotrails-{mc}-{loader}'
  put(root,'gradle.properties',f'org.gradle.jvmargs=-Xmx2G\norg.gradle.daemon=false\n')
  dump(root,'build-profile.json',{'slug':'biotrails','version':VERSION,'minecraft':mc,'loader':loader,'java':str(jdk),'gradle':gradle,'jar_glob':f'biotrails-{mc}-{loader}-{VERSION}.jar'})
  prefix=Path('src/main/java/dev/biotrails')
- put(root,prefix/'block/TrailBlock.java',JAVA_TRAIL_BLOCK)
+ block_java=JAVA_TRAIL_BLOCK
+ if mc.startswith('26.'):
+  block_java=block_java.replace('import net.minecraft.world.level.block.state.properties.DirectionProperty;', 'import net.minecraft.world.level.block.state.properties.EnumProperty;').replace('DirectionProperty FACING', 'EnumProperty<Direction> FACING')
+ put(root,prefix/'block/TrailBlock.java',block_java)
  engine_java=JAVA_ENGINE.replace('RESOURCE_ID',model)
+ if mc.startswith('26.') and loader!='forge':
+  engine_java=engine_java.replace('player.serverLevel()', '(ServerLevel)player.level()').replace('player.isInWaterOrBubble()', 'player.isInWater()')
  if mc=='1.20.1': engine_java=engine_java.replace('ResourceLocation.fromNamespaceAndPath(', 'new ResourceLocation(')
  put(root,prefix/'gameplay/TrailEngine.java',engine_java)
  main_java=fabric_main(mc) if loader=='fabric' else forge_main(mc,loader=='neoforge')
+ if mc.startswith('26.') and loader!='forge':
+  main_java=main_java.replace('noCollission()', 'noCollision()')
  if loader=='forge' and mc.startswith('26.'):
   main_java=main_java.replace('import net.minecraft.world.level.block.Block;', 'import net.minecraft.world.level.block.Block;\nimport net.minecraft.resources.Identifier;\nimport net.minecraft.resources.ResourceKey;\nimport net.minecraft.core.registries.Registries;')
   main_java=main_java.replace('new TrailBlock(BlockBehaviour.Properties.of().', 'new TrailBlock(BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(MODID,name))).')
