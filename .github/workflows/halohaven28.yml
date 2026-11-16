@@ -82,15 +82,15 @@ jobs:
         run: python3 tools/halohaven28_pack.py
       - name: Test six biomes and world generation on real NeoForge server
         timeout-minutes: 9
-        run: bash tools/halohaven25_smoke.sh
+        run: bash tools/halohaven28_smoke.sh
       - name: Upload runtime diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: HaloHaven-2.8-Diagnostics
           path: |
-            projects/halohaven/run/halo25-server.log
-            projects/halohaven/run/halo25-probe.log
+            projects/halohaven/run/halo28-server.log
+            projects/halohaven/run/halo28-probe.log
             projects/halohaven/run/logs/latest.log
           if-no-files-found: warn
       - name: Upload installable mod
