@@ -171,6 +171,11 @@ jobs:
             ${{ steps.verify.outputs.checksum_path }}
           if-no-files-found: error
           retention-days: 30
+      - name: Validate WallSlam collision resources
+        if: startsWith(matrix.project_dir, 'projects/wallslam-')
+        env:
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
+        run: python3 tools/verify_wallslam_release.py "$PROJECT_DIR"
       - name: Publish JAR to GitHub prerelease
         if: github.event_name != 'pull_request'
         continue-on-error: true
