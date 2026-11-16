@@ -52,7 +52,7 @@ public final class ShieldBashLogic {
 
         Vec3 velocity = attacker.getDeltaMovement();
         attacker.setDeltaMovement(0.0D, Math.min(velocity.y, 0.05D), 0.0D);
-        attacker.knockback(KNOCKBACK, player.getX() - attacker.getX(), player.getZ() - attacker.getZ());
+        attacker.knockback(KNOCKBACK, player.getX() - attacker.getX(), player.getZ() - attacker.getZ(), source, 0.0F);
 
         attacker.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, STUN_TICKS, 7, false, false, false));
         attacker.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, STUN_TICKS, 0, false, false, false));
