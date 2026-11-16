@@ -8,6 +8,8 @@ a disposable CI world; it is never packaged into the production JAR.
 from __future__ import annotations
 
 import os
+import re
+from pathlib import Path
 import socket
 import struct
 import sys
@@ -126,6 +128,18 @@ def main() -> int:
                 or "halohaven:" + biome not in result.lower()):
                 raise RuntimeError(f"Registered biome not reachable: {biome}: {result}")
             print(f"PASS: located {biome} in {time.monotonic() - started:.1f}s", flush=True)
+        # 2.7 must NATURALLY produce a walkable cloud, not merely register
+        # the block in the game's registries.
+        server_log=Path("run/halo25-server.log")
+        dump=server_log.read_text(encoding="utf-8",errors="replace")
+        cloud=re.search(r"HALOHAVEN_CLOUD_GENERATED\s+(-?\d+)\s+(-?\d+)\s+(-?\d+)",dump)
+        if cloud is None:
+            raise RuntimeError("No naturally generated mist platforms found in real Heaven chunks")
+        cx,cy,cz=map(int,cloud.groups())
+        response=command(sock,f"execute in halohaven:heaven if block {cx} {cy} {cz} halohaven:sky_mist run setblock {cx} {cy} {cz} halohaven:sky_mist")
+        if "changed the block" not in response.lower():
+            raise RuntimeError(f"Worldgen mist block absent at {cx},{cy},{cz}: {response}")
+        print(f"PASS: generated walkable sky mist naturally at {cx},{cy},{cz}",flush=True)
         # Verify the internal visible portal block resolves in a loaded Heaven
         # chunk. This exercises block registration and blockstate availability.
         # A client-side renderer and player-driven teleport require manual QA.
