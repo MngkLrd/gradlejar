@@ -1,5 +1,6 @@
 package dev.minemods.phantomlure.block;
 
+import com.mojang.serialization.MapCodec;
 import dev.minemods.phantomlure.blockentity.PhantomLureBlockEntity;
 import dev.minemods.phantomlure.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -27,6 +28,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public final class PhantomLureBlock extends BaseEntityBlock {
+    public static final MapCodec<PhantomLureBlock> CODEC = simpleCodec(PhantomLureBlock::new);
     public static final BooleanProperty CHARGED = BooleanProperty.create("charged");
     private static final VoxelShape SHAPE = Shapes.or(
         Block.box(1, 0, 1, 15, 3, 15),
@@ -41,6 +43,8 @@ public final class PhantomLureBlock extends BaseEntityBlock {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(CHARGED, false));
     }
+
+    @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
 
     @Override protected RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
 
