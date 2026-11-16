@@ -1,6 +1,6 @@
 package dev.bearback;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
@@ -61,20 +61,20 @@ public final class BearNetwork {
     }
     public record Ride(float forward,float strafe,boolean jump,boolean attack,float yaw) implements CustomPacketPayload{
         public static final Type<Ride> TYPE=new Type<>(Identifier.fromNamespaceAndPath(Bearback.ID,"ride"));
-        public static final StreamCodec<FriendlyByteBuf,Ride> CODEC=StreamCodec.of(
+        public static final StreamCodec<RegistryFriendlyByteBuf,Ride> CODEC=StreamCodec.of(
             (buf,p)->{buf.writeFloat(p.forward);buf.writeFloat(p.strafe);buf.writeBoolean(p.jump);buf.writeBoolean(p.attack);buf.writeFloat(p.yaw);},
             buf->new Ride(buf.readFloat(),buf.readFloat(),buf.readBoolean(),buf.readBoolean(),buf.readFloat()));
         @Override public Type<? extends CustomPacketPayload> type(){return TYPE;}
     }
     public record OpenCargo(int bearEntityId) implements CustomPacketPayload{
         public static final Type<OpenCargo> TYPE=new Type<>(Identifier.fromNamespaceAndPath(Bearback.ID,"open_cargo"));
-        public static final StreamCodec<FriendlyByteBuf,OpenCargo> CODEC=StreamCodec.of(
+        public static final StreamCodec<RegistryFriendlyByteBuf,OpenCargo> CODEC=StreamCodec.of(
             (buf,p)->buf.writeVarInt(p.bearEntityId),buf->new OpenCargo(buf.readVarInt()));
         @Override public Type<? extends CustomPacketPayload> type(){return TYPE;}
     }
     public record Saddle(int id,boolean saddled,boolean bags) implements CustomPacketPayload{
         public static final Type<Saddle> TYPE=new Type<>(Identifier.fromNamespaceAndPath(Bearback.ID,"saddle"));
-        public static final StreamCodec<FriendlyByteBuf,Saddle> CODEC=StreamCodec.of(
+        public static final StreamCodec<RegistryFriendlyByteBuf,Saddle> CODEC=StreamCodec.of(
             (buf,p)->{buf.writeVarInt(p.id);buf.writeBoolean(p.saddled);buf.writeBoolean(p.bags);},
             buf->new Saddle(buf.readVarInt(),buf.readBoolean(),buf.readBoolean()));
         @Override public Type<? extends CustomPacketPayload> type(){return TYPE;}
