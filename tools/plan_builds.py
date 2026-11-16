@@ -51,6 +51,10 @@ def select_projects(requested):
         # Keep other project profiles independent: a broken mod should not block all builds.
         return ["."]
     projects = set()
+    if any(path == "tools/generate_biotrails.py" for path in changed):
+        for mc in ("1.20.1", "1.21.1", "26.2", "26.3"):
+            for loader in ("forge", "neoforge", "fabric"):
+                projects.add(f"projects/biotrails-{mc}-{loader}")
     for path in changed:
         parts = Path(path).parts
         if len(parts) >= 3 and parts[0] == "projects":
