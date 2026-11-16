@@ -39,7 +39,7 @@ jobs:
           python3 tools/halohaven24_world.py
           python3 tools/halohaven24_structures.py
       - name: Separate connected islands by biome without new blocks
-        run: python3 tools/halohaven26_island_regions.py
+        run: python3 tools/halohaven25_island_regions.py
       - name: Resculpt six visually distinct island geographies and native cliffs
         run: python3 tools/halohaven26_regions.py
       - name: Rebuild regional forests and eliminate suspended grid settlements
@@ -54,7 +54,7 @@ jobs:
         run: python3 tools/halohaven26_pack.py
       - name: Test six biomes and world generation on real NeoForge server
         timeout-minutes: 9
-        run: bash tools/halohaven26_smoke.sh
+        run: bash tools/halohaven25_smoke.sh
       - name: Upload runtime diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -76,4 +76,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           tag="halohaven-2.6-island-biomes-${GITHUB_RUN_NUMBER}"
-          gh release create "$tag" dist/*.jar dist/*.sha256 --target "$GITHUB_SHA" --title "Halo Haven 2.6 Alpha - One biome per island" --notes "Fixes region-mixing in the 2.4 world generator. Exclusive region profiles; full-height air gaps at biome borders; compact coherent biome scale; lower universal land density. No new blocks, items or structures. Dedicated server smoke tested." --prerelease
+          gh release create "$tag" dist/*.jar dist/*.sha256 --target "$GITHUB_SHA" --title "Halo Haven 2.6 Alpha - Distinct Celestial Regions" --notes "Fixes region-mixing in the 2.4 world generator. Exclusive region profiles; full-height air gaps at biome borders; compact coherent biome scale; lower universal land density. No new blocks, items or structures. Dedicated server smoke tested." --prerelease
