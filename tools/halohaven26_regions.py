@@ -70,7 +70,7 @@ def island_field(cfreq,efreq,weight=.68,secondary=.32,bias=-.02):
 # Vertical geometry: true flying rock with narrowing UNDERsides rather than
 # y-independent walls from End sloped_cheese. Typical top: Y100-119, base Y70.
 bottom=grad(52,85,-1.0,1.1)
-top=grad(72,136,1.0,-1.0)
+top=grad(64,132,1.0,-1.0)
 taper=grad(55,105,.56,0.0)
 
 # Identities are also shaped by the physical island field, not simply the
