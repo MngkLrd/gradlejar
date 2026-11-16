@@ -3,3 +3,5 @@
 Build source is archived as `source.tar.xz` to retain its PNG textures. GitHub Actions restores it before Gradle builds, then uploads the verified JAR. Java 21 / Gradle 9.2.1.
 
 The 1.21.1 Java compatibility fixes are applied during CI source restore: correct TamableAnimal package and public codec() override.
+
+CI checks the exact MapCodec<LanternBlock> return type required by Minecraft 1.21.1.
