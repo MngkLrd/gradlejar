@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+
+[[mods]]
+modId="shieldbashlite"
+version="1.0.4"
+displayName="Shield Bash Lite"
+authors="Kirill"
+description='''Perfectly timed shield blocks stagger melee mobs for 2 seconds.'''
+
+[[dependencies.shieldbashlite]]
+modId="neoforge"
+type="required"
+versionRange="[26.2.0.93,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.shieldbashlite]]
+modId="minecraft"
+type="required"
+versionRange="[26.2,26.3)"
+ordering="NONE"
+side="BOTH"
