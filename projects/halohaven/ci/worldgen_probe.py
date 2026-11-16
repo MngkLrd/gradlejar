@@ -136,10 +136,14 @@ def main() -> int:
         if cloud is None:
             raise RuntimeError("No naturally generated mist platforms found in real Heaven chunks")
         cx,cy,cz=map(int,cloud.groups())
+        # Adjacent worldgen chunks may be unloaded after decoration.
+        command(sock,f"execute in halohaven:heaven run forceload add {cx} {cz}")
+        time.sleep(2)
         response=command(sock,f"execute in halohaven:heaven if block {cx} {cy} {cz} halohaven:sky_mist run setblock {cx} {cy} {cz} halohaven:sky_mist")
         if "changed the block" not in response.lower():
             raise RuntimeError(f"Worldgen mist block absent at {cx},{cy},{cz}: {response}")
         print(f"PASS: generated walkable sky mist naturally at {cx},{cy},{cz}",flush=True)
+        command(sock,f"execute in halohaven:heaven run forceload remove {cx} {cz}")
         # Verify the internal visible portal block resolves in a loaded Heaven
         # chunk. This exercises block registration and blockstate availability.
         # A client-side renderer and player-driven teleport require manual QA.
