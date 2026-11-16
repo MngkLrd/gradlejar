@@ -12,7 +12,7 @@ public final class FoodRules {
     if(item.isEmpty()) return false;
     if(item.has(DataComponents.FOOD)) return true;
     if(!(level instanceof ServerLevel server)) return false;
-    var recipe=server.getRecipeManager().getRecipeFor(RecipeType.SMELTING,new SingleRecipeInput(item),level);
+    var recipe=server.getServer().getRecipeManager().getRecipeFor(RecipeType.SMELTING,new SingleRecipeInput(item),level);
     if(recipe.isEmpty()) return false;
     var r=recipe.get().value();
     return r.category()==CookingBookCategory.FOOD || r.assemble(new SingleRecipeInput(item)).has(DataComponents.FOOD);
