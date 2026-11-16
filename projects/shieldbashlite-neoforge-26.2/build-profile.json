@@ -1,0 +1,9 @@
+{
+  "slug": "shieldbashlite",
+  "version": "1.0.4",
+  "minecraft": "26.2",
+  "loader": "neoforge",
+  "java": "25",
+  "gradle": "9.2.1",
+  "jar_glob": "shieldbashlite-neoforge-26.2-1.0.4.jar"
+}
