@@ -36,21 +36,30 @@ assert source["type"]=="minecraft:multi_noise"
 ids={"dawn_gardens","chalk_terraces","eternal_canopy",
      "ringing_gorges","forgotten_choirs","lower_veil"}
 assert {b["biome"].split(":")[-1] for b in source["biomes"]}==ids
+# An island cluster must be large enough to feel like a territory, but not
+# a multi-kilometer large-biomes world. 2.5 sampled all six within ~150 blocks.
+for config,scale in (("climate_temperature",1.15),("climate_vegetation",.95)):
+    file=BASE/"worldgen/density_function"/(config+".json")
+    climate=get(file)
+    assert climate["type"]=="minecraft:shifted_noise"
+    climate["xz_scale"]=scale
+    put(file,climate)
+
 for entry in source["biomes"]:
     biome=entry["biome"].split(":")[-1]
     if biome in ("dawn_gardens","chalk_terraces"):
-        entry["parameters"]["temperature"]=[.17,1.2]
+        entry["parameters"]["temperature"]=[.14,1.2]
     elif biome in ("eternal_canopy","ringing_gorges"):
-        entry["parameters"]["temperature"]=[-.17,.17]
+        entry["parameters"]["temperature"]=[-.14,.14]
     else:
-        entry["parameters"]["temperature"]=[-1.2,-.17]
+        entry["parameters"]["temperature"]=[-1.2,-.14]
 put(DIM,dimension)
 
 T="halohaven:climate_temperature"
 V="halohaven:climate_vegetation"
 def boundary(q,threshold):
     return clamp(mul(35.0,add(ab(add(q,-threshold)),-.034)))
-safe=minimum(minimum(boundary(T,-.17),boundary(T,.17)),boundary(V,0))
+safe=minimum(minimum(boundary(T,-.14),boundary(T,.14)),boundary(V,0))
 # Entirely empty along biome changes, not a sliced platform or vertical wall.
 coastal_cap=plus(-6,mul(16,safe))
 
@@ -111,8 +120,8 @@ profiles=[
 # contiguous land into independent islands whenever a biome border crosses it.
 def choose_regions():
     dawn,chalk,canopy,gorge,choir,veil=profiles
-    return rc(T,-2.0,-.17,rc(V,-2.0,0,choir,veil),
-              rc(T,-.17,.17,rc(V,-2.0,0,gorge,canopy),
+    return rc(T,-2.0,-.14,rc(V,-2.0,0,choir,veil),
+              rc(T,-.14,.14,rc(V,-2.0,0,gorge,canopy),
                  rc(V,-2.0,0,chalk,dawn)))
 
 land=minimum(choose_regions(),coastal_cap)
