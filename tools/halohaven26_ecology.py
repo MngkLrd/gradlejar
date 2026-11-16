@@ -39,12 +39,23 @@ for name in biomes:
     p=get(file)
     assert p["feature"]=="halohaven:regional_tree_"+name
     count={"dawn_gardens":3,"chalk_terraces":1,
-           "eternal_canopy":7,"ringing_gorges":1,
+           "eternal_canopy":2,"ringing_gorges":1,
            "forgotten_choirs":1,"lower_veil":3}[name]
     p["placement"]=[{"type":"minecraft:count","count":count},
                   {"type":"minecraft:in_square"},
                   {"type":"minecraft:heightmap","heightmap":"WORLD_SURFACE_WG"},
                   {"type":"minecraft:biome"}]
+    # Reject tree roots on giant-tree leaves, roofs, pillars and empty air.
+    # Tree trunk growth is allowed only above genuine region soil.
+    soil={"dawn_gardens":"halohaven:sunlit_loam",
+          "chalk_terraces":"halohaven:chalkstone",
+          "eternal_canopy":"halohaven:canopy_loam",
+          "ringing_gorges":"halohaven:resonant_shale",
+          "forgotten_choirs":"halohaven:choirstone",
+          "lower_veil":"halohaven:umbral_silt"}[name]
+    p["placement"].insert(-1,{"type":"minecraft:block_predicate_filter",
+                              "predicate":{"type":"minecraft:matching_blocks",
+                              "offset":[0,-1,0],"blocks":[soil]}})
     if name in ("chalk_terraces","ringing_gorges","forgotten_choirs"):
         # Place fewer trees on open stone. Rainforest dominates only its biome.
         p["placement"].insert(0,{"type":"minecraft:rarity_filter",
@@ -91,7 +102,7 @@ with tempfile.TemporaryDirectory() as td:
     giant=world/"structure_set/canopy_colossal.json"
     g=get(giant);place=g["placement"]
     assert place["type"]=="minecraft:random_spread"
-    place["spacing"]=8;place["separation"]=4
+    place["spacing"]=7;place["separation"]=4
     place["exclusion_zone"]["chunk_count"]=5
     put(giant,g)
 
@@ -149,5 +160,5 @@ with tempfile.TemporaryDirectory() as td:
             if p.is_file():tar.add(p,arcname=p.relative_to(root).as_posix())
 
 print("PASS: old Y110 suspended village grid removed beyond central starter island")
-print("PASS: Canopy = 7 tall trees/chunk plus a non-overlapping colossal grove every ~8 chunks")
+print("PASS: Canopy = 7 tall trees/chunk plus a non-overlapping colossal grove every ~7 chunks")
 print("PASS: Choir monuments weighted higher, regional ruin starts projected to terrain")
