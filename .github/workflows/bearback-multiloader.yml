@@ -85,7 +85,15 @@ jobs:
                   assert len(jar.read(a))>100,a
           print("Resources and crafting schema OK")
           PY
+      - name: Upload compiled JAR for download
+        uses: actions/upload-artifact@v4
+        with:
+          name: bearback-${{ matrix.loader }}-mc${{ matrix.mc }}-0.2.2
+          path: ${{ matrix.dir }}/build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 14
       - name: Publish JAR to GitHub Releases
+        continue-on-error: true
         if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'feat/bearback-all-loaders-022')
         env:
           GH_TOKEN: ${{ github.token }}
