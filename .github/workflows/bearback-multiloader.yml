@@ -24,6 +24,16 @@ jobs:
             loader: fabric
             java: '21'
             gradle: '9.2.1'
+          - dir: projects/bearback-fabric-26.2
+            mc: '26.2'
+            loader: fabric
+            java: '25'
+            gradle: '9.5.1'
+          - dir: projects/bearback-fabric-26.3
+            mc: '26.3'
+            loader: fabric
+            java: '25'
+            gradle: '9.7.1'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
