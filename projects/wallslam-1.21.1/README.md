@@ -1,4 +1,4 @@
-# WallSlam 1.0.2 — Minecraft 1.21.1 / NeoForge
+# WallSlam 1.0.3 — Minecraft 1.21.1 / NeoForge
 
 A lightweight server-authoritative melee wall-impact mod. A successful melee hit that knocks a mob into a solid wall triggers a small bonus hit, 20 ticks (1 second) of movement and melee stun, vanilla sounds and particle effects (including wall-material dust). No items, blocks, keybinds, shaders or hard dependencies.
 
@@ -14,7 +14,7 @@ A lightweight server-authoritative melee wall-impact mod. A successful melee hit
 
 ## Build
 
-Java 21, Gradle 9.2.1, NeoForge 21.1.100 or newer within Minecraft 1.21.1. Run `gradle clean build` in this project folder. JAR: `build/libs/wallslam-1.21.1-1.0.2.jar`.
+Java 21, Gradle 9.2.1, NeoForge 21.1.100 or newer within Minecraft 1.21.1. Run `gradle clean build` in this project folder. JAR: `build/libs/wallslam-1.21.1-1.0.3.jar`.
 
 ## User acceptance check
 
@@ -35,3 +35,7 @@ A successful Gradle build does not replace an actual client/server combat check.
 ## 1.0.2 — restore successful wall impacts
 
 Fixes a regression from 1.0.0/1.0.1: the very tight 0.095-block contact check made most ordinary knockback wall impacts fail to register. Uses the gameplay-tested 0.3.3 solid-block sweep of 0.65 blocks instead. Existing 1.0.1 additions are kept: 20-tick default stun, suppression of direct melee attacks while stunned, configurable intensity and collision damage type. NoAI remains untouched. Both NeoForge ports are compiled in CI; actual gameplay confirmation is pending.
+
+## 1.0.3 — crash hardening on wall impact
+
+Potential impact crash: a missing `wallslam:collision` damage type previously threw an unchecked exception. The custom source is now resolved safely, falls back to vanilla `flyIntoWall` damage on lookup failure, and reports an error once in `latest.log`. Exceptions from modded damage handlers are isolated so the impact visual and stun survive. Pack metadata now includes both the resource format 34 and datapack format 48. Original game crash reports are still needed to confirm the exact failure.

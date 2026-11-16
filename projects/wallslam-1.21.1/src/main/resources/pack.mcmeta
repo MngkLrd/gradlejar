@@ -1,6 +1,10 @@
 {
   "pack": {
     "pack_format": 34,
-    "description": "Wallslam resources"
+    "description": "Wallslam resources",
+    "supported_formats": [
+      34,
+      48
+    ]
   }
 }
