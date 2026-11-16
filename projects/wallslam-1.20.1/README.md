@@ -1,4 +1,4 @@
-# WallSlam 1.0.2 — Minecraft 1.20.1 / Forge
+# WallSlam 1.0.3 — Minecraft 1.20.1 / Forge
 
 An accurate port of the NeoForge 1.0.2 wall-impact mechanic to Forge 1.20.1.
 No hard dependency on NeoForge, APIs, libraries, client rendering mods or the latest Forge.
@@ -32,7 +32,7 @@ Forge SERVER config per world: `serverconfig/wallslam-server.toml`.
   requires an actual game launch to confirm.
 - Java **17**; Gradle **8.14.5**.
 - Build: `gradle clean build`, expected output:
-  `build/libs/wallslam-1.20.1-1.0.2.jar`.
+  `build/libs/wallslam-1.20.1-1.0.3.jar`.
 
 ## Verification after installing
 Replace old WallSlam jars; launch with Forge 47.1.0, 47.1.106 or another
@@ -43,3 +43,7 @@ wall impact), slabs/fences, mobs with NoAI, different weapons, dedicated server
 and other combat mods.
 
 CI verifies Gradle compile and assembled JAR; it does not simulate gameplay.
+
+## 1.0.3 — collision-crash hardening
+
+A missing custom `wallslam:collision` damage source could throw an unchecked exception on the exact impact tick. The lookup now safely falls back to vanilla `flyIntoWall` damage and logs the problem once. Exceptions in modded damage integrations are isolated to preserve impact visuals and stun. Forge 47.1.0 remains the mod's declared minimum; build Forge remains 47.1.106. Original game crash reports are still required to confirm the exact failure.
