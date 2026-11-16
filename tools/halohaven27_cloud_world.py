@@ -47,9 +47,6 @@ public final class HavenMistBlock extends Block {
     @Override protected boolean skipRendering(BlockState current, BlockState other, Direction dir){
         return other.is(this) || super.skipRendering(current,other,dir);
     }
-    @Override protected int getLightBlock(BlockState state, BlockGetter world, BlockPos pos){
-        return 0; // Mist cannot turn the underside of a celestial island pitch black.
-    }
 }
 ''')
 
@@ -189,7 +186,7 @@ public final class HavenGroundedTemplateFeature extends Feature<NoneFeatureConfi
             int sy=level.getHeight(Heightmap.Types.WORLD_SURFACE_WG,px,pz);
             if(sy<82 || sy>121 || Math.abs(sy-y)>3)return false;
             if(!level.getBlockState(new BlockPos(px,sy-1,pz)).is(soil))return false;
-            if(!level.getBiome(new BlockPos(px,sy-1,pz)).is(level.getBiome(groundPos)))return false;
+            if(!level.getBiome(new BlockPos(px,sy-1,pz)).unwrapKey().equals(level.getBiome(groundPos).unwrapKey()))return false;
         }
         RandomSource rng=ctx.random();
         String path;
@@ -251,6 +248,38 @@ save(asset/"blockstates/sky_mist.json",{"variants":{"":{"model":"halohaven:block
 save(asset/"models/item/sky_mist.json",{"parent":"halohaven:block/sky_mist"})
 save(RES/"data/halohaven/loot_table/blocks/sky_mist.json",{"type":"minecraft:block","pools":[
     {"rolls":1,"entries":[{"type":"minecraft:item","name":"halohaven:sky_mist"}]}]})
+# Widen the natural island margins, without relaxing one-biome-per-island air seams.
+settings_file=RES/"data/halohaven/worldgen/noise_settings/heaven_islands.json"
+settings=obj(settings_file)
+for key in ("final_density","initial_density_without_jaggedness"):
+    root=settings["noise_router"][key]
+    touched=[0]
+    def nudge(node):
+        if isinstance(node,list):
+            for val in node:nudge(val)
+        elif isinstance(node,dict):
+            if (node.get("type")=="minecraft:min" and
+                isinstance(node.get("argument2"),dict) and
+                node["argument2"].get("type")=="minecraft:add" and
+                isinstance(node["argument2"].get("argument2"),dict) and
+                node["argument2"]["argument2"].get("type")=="minecraft:mul" and
+                node["argument2"]["argument2"].get("argument1")==-1):
+                field=node["argument2"]["argument1"]
+                node["argument2"]["argument1"]={"type":"minecraft:add",
+                   "argument1":field,"argument2":0.072}
+                touched[0]+=1
+            for val in list(node.values()):nudge(val)
+    nudge(root)
+    assert touched[0]==6,(key,touched)
+save(settings_file,settings)
+
+tab=JAVA/"HavenCreativeTab.java"
+creative=tab.read_text(encoding="utf8")
+assert 'output.accept(HaloHaven.CLOUDSTONE_ITEM.get());' in creative
+creative=creative.replace('output.accept(HaloHaven.CLOUDSTONE_ITEM.get());',
+                        'output.accept(HaloHaven.CLOUDSTONE_ITEM.get());\n                output.accept(HaloHaven.SKY_MIST_ITEM.get());')
+tab.write_text(creative,encoding="utf8")
+
 # Data-driven placed features on every one of the 6 regions.
 for name,feature,placement in [
  ("sky_clouds","sky_clouds",[{"type":"minecraft:count","count":2},
