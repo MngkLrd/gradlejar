@@ -89,8 +89,8 @@ jobs:
         with:
           name: HaloHaven-2.8-Diagnostics
           path: |
-            projects/halohaven/run/halo28-server.log
-            projects/halohaven/run/halo28-probe.log
+            projects/halohaven/run/halo25-server.log
+            projects/halohaven/run/halo25-probe.log
             projects/halohaven/run/logs/latest.log
           if-no-files-found: warn
       - name: Upload installable mod
