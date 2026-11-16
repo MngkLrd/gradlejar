@@ -47,3 +47,12 @@ CI verifies Gradle compile and assembled JAR; it does not simulate gameplay.
 ## 1.0.3 — collision-crash hardening
 
 A missing custom `wallslam:collision` damage source could throw an unchecked exception on the exact impact tick. The lookup now safely falls back to vanilla `flyIntoWall` damage and logs the problem once. Exceptions in modded damage integrations are isolated to preserve impact visuals and stun. Forge 47.1.0 remains the mod's declared minimum; build Forge remains 47.1.106. Original game crash reports are still required to confirm the exact failure.
+
+### Report a crash after a wall impact
+
+For accurate diagnosis, include the exact Minecraft version, loader build,
+WallSlam jar version, `crash-reports/crash-*.txt` (if created), and
+`logs/latest.log`. If the error says `wallslam:collision` is missing,
+check the datapack registration and `pack.mcmeta` formats. A successful
+Gradle compilation and archive verification do not validate runtime world
+registries or mod conflicts.

@@ -39,3 +39,12 @@ Fixes a regression from 1.0.0/1.0.1: the very tight 0.095-block contact check ma
 ## 1.0.3 — crash hardening on wall impact
 
 Potential impact crash: a missing `wallslam:collision` damage type previously threw an unchecked exception. The custom source is now resolved safely, falls back to vanilla `flyIntoWall` damage on lookup failure, and reports an error once in `latest.log`. Exceptions from modded damage handlers are isolated so the impact visual and stun survive. Pack metadata now includes both the resource format 34 and datapack format 48. Original game crash reports are still needed to confirm the exact failure.
+
+### Report a crash after a wall impact
+
+For accurate diagnosis, include the exact Minecraft version, loader build,
+WallSlam jar version, `crash-reports/crash-*.txt` (if created), and
+`logs/latest.log`. If the error says `wallslam:collision` is missing,
+check the datapack registration and `pack.mcmeta` formats. A successful
+Gradle compilation and archive verification do not validate runtime world
+registries or mod conflicts.
