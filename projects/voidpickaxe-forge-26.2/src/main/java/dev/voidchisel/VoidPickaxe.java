@@ -4,7 +4,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.*;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.FMLModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -18,7 +18,7 @@ public final class VoidPickaxe{
                 .pickaxe(ToolMaterial.NETHERITE,1.0F,-2.8F)
                 .durability(5).rarity(Rarity.EPIC));
     });
-    public VoidPickaxe(FMLJavaModLoadingContext context){
+    public VoidPickaxe(FMLModLoadingContext context){
         ITEMS.register(context.getModEventBus());
     }
 }
