@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "phantomlure",
+  "version": "0.1.1",
+  "name": "Phantom Lure",
+  "description": "Summon phantoms with a ritual lure. Add a diamond for a swarm.",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.minemods.phantomlure.PhantomLure"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.17.3",
+    "minecraft": "1.20.1",
+    "java": ">=17",
+    "fabric-api": "*"
+  }
+}

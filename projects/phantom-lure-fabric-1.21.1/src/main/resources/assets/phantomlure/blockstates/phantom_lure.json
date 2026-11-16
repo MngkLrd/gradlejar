@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "charged=false": {
+      "model": "phantomlure:block/phantom_lure"
+    },
+    "charged=true": {
+      "model": "phantomlure:block/phantom_lure_charged"
+    }
+  }
+}
