@@ -1,18 +1,14 @@
 # Shield Bash Lite 1.0.4 — Minecraft 1.20.1 Fabric
 
-This project is an independent port, reusing the 1.21.1 Fabric logic.
+- Runtime **Java 17**; Gradle build JVM **Java 21** because Loom 1.11 needs it.
+- Bytecode compiled using Java 17 toolchain and `options.release = 17`.
+- Fabric Loader 0.17.3, Fabric API 0.92.12+1.20.1.
+- Fabric API 1.20.1 has no `ServerLivingEntityEvents.AFTER_DAMAGE` event. This port instead injects at the RETURN of vanilla `LivingEntity.isDamageSourceBlocked` and triggers only when it returns true, on the server, with vanilla shield raised.
+- Perfect window: 20 ticks; stun (Slowness+Weakness): 40 ticks; knockback 0.175; cooldown 30 ticks.
+- White CLOUD particles, no custom sounds; excludes ranged mobs/projectiles.
+- No added items, recipes, textures or client-only code.
 
-- Game runtime **Java 17**; build Gradle runs on **Java 21** because Loom 1.11.8 requires it.
-- A Java 17 JDK toolchain is used to compile the mod and `options.release = 17`.
-- Fabric Loader 0.17.3; Fabric API 0.92.12+1.20.1.
-- A successful vanilla shield block during the first **20 ticks** (1 second) stuns the attacker with Slowness and Weakness for **40 ticks** (2 seconds).
-- Knockback: **0.175**; cooldown: **30 ticks**; success particles: white CLOUD.
-- No custom sounds, items, recipes, or client-only code.
-- Does not trigger from ranged mobs or projectile attacks, bosses excluded.
-- Note: the stun uses effects; it is not a complete AI/action freeze.
+Build: `gradle clean build`
+JAR: `build/libs/shieldbashlite-fabric-1.20.1-1.0.4.jar`
 
-Compile: `gradle clean build`
-Expected output: `build/libs/shieldbashlite-fabric-1.20.1-1.0.4.jar`
-
-CI uses build-profile Java 21 to run Gradle, while the compiled jar remains Java 17 compatible.
-Tests: block zombie melee within the first second; check particles, reduced movement, light knockback; verify arrows don't activate it. For dedicated servers install Fabric Loader and Fabric API.
+**Testing:** On survival, hold the vanilla shield and let a zombie hit it within one second; particles must appear and zombie should be slowed. Hold shield for longer than 1 second: no bash. Skeleton arrows must not activate it. A compiled JAR does not guarantee gameplay results, test in client/server.
