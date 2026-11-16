@@ -75,6 +75,13 @@ for key in ("final_density","initial_density_without_jaggedness"):
 # while preserving the full dimension's original 0..255 logical height.
 assert setting["noise"]["height"]==256
 setting["noise"]["height"]=192
+# The original surface painter still has a Chalk-only condition even after
+# the biome source and density graph are rewritten. Retire it as well.
+surface=setting["surface_rule"]["sequence"]
+chalk_surface=[rule for rule in surface if "chalk_terraces" in json.dumps(rule)]
+assert chalk_surface, "Expected at least one legacy Chalk surface rule"
+setting["surface_rule"]["sequence"]=[
+    rule for rule in surface if "chalk_terraces" not in json.dumps(rule)]
 put(SET,setting)
 
 # Remove actual active biome and its attached decorated features; do not
