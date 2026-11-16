@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "L L",
+    "SCS",
+    "L L"
+  ],
+  "key": {
+    "L": "minecraft:leather",
+    "S": "minecraft:string",
+    "C": "minecraft:chest"
+  },
+  "result": {
+    "id": "bearback:saddlebags",
+    "count": 1
+  }
+}
