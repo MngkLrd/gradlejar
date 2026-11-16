@@ -1,0 +1,112 @@
+name: Bearback multi-loader builds
+on:
+  pull_request:
+    paths:
+      - 'projects/bearback-fabric-*/**'
+      - 'projects/bearback-forge-*/**'
+      - '.github/workflows/bearback-multiloader.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dir: projects/bearback-fabric-1.21.1
+            mc: '1.21.1'
+            loader: fabric
+            java: '21'
+            gradle: '9.2.1'
+          - dir: projects/bearback-fabric-1.21
+            mc: '1.21'
+            loader: fabric
+            java: '21'
+            gradle: '9.2.1'
+          - dir: projects/bearback-fabric-26.2
+            mc: '26.2'
+            loader: fabric
+            java: '25'
+            gradle: '9.5.1'
+          - dir: projects/bearback-fabric-26.3
+            mc: '26.3'
+            loader: fabric
+            java: '25'
+            gradle: '9.7.1'
+          - dir: projects/bearback-forge-26.3
+            mc: '26.3'
+            loader: forge
+            java: '25'
+            gradle: '9.7.1'
+          - dir: projects/bearback-forge-26.2
+            mc: '26.2'
+            loader: forge
+            java: '25'
+            gradle: '9.7.1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ matrix.gradle }}
+      - name: Compile and package JAR
+        working-directory: ${{ matrix.dir }}
+        run: gradle --no-daemon clean build
+      - name: Validate saddlebags recipe and textures inside JAR
+        env:
+          MOD_DIR: ${{ matrix.dir }}
+          MC: ${{ matrix.mc }}
+          LOADER: ${{ matrix.loader }}
+        run: |
+          python3 - <<'PY'
+          import json, zipfile, os
+          from pathlib import Path
+          p=Path(os.environ["MOD_DIR"])
+          mc=os.environ["MC"]; loader=os.environ["LOADER"]
+          jars=list((p/"build/libs").glob("*.jar"))
+          jars=[j for j in jars if not j.name.endswith("-sources.jar") and not j.name.endswith("-dev.jar")]
+          assert len(jars)==1,jars
+          with zipfile.ZipFile(jars[0]) as jar:
+              r=json.loads(jar.read("data/bearback/recipe/saddlebags.json"))
+              assert r["pattern"]==["L L","SCS","L L"]
+              if mc in ("1.21", "1.21.1"):
+                  assert isinstance(r["key"]["L"],dict)
+              else:
+                  assert isinstance(r["key"]["L"],str)
+              for a in ("assets/bearback/textures/entity/bear_saddlebags.png",
+                        "assets/bearback/textures/item/saddlebags.png",
+                        "assets/bearback/textures/entity/bear_saddle.png"):
+                  assert len(jar.read(a))>100,a
+          print("Resources and crafting schema OK")
+          PY
+      - name: Upload compiled JAR for download
+        uses: actions/upload-artifact@v4
+        with:
+          name: bearback-${{ matrix.loader }}-mc${{ matrix.mc }}-0.2.2
+          path: ${{ matrix.dir }}/build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 14
+      - name: Publish JAR to GitHub Releases
+        continue-on-error: true
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'feat/bearback-all-loaders-022')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MC: ${{ matrix.mc }}
+          LOADER: ${{ matrix.loader }}
+          DIR: ${{ matrix.dir }}
+          NUMBER: ${{ github.run_number }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          jar=$(find "$DIR/build/libs" -maxdepth 1 -name '*.jar' ! -name '*sources.jar' ! -name '*dev.jar' | head -1)
+          test -s "$jar"
+          tag="ci-bearback-$LOADER-mc$MC-0.2.2-$NUMBER"
+          gh release create "$tag" "$jar" --target "$TARGET_SHA" \
+            --title "Bearback 0.2.2 | $MC $LOADER" \
+            --notes "Built by GitHub Actions; in-game compatibility testing is still needed." --prerelease

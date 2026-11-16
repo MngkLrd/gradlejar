@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "bearback",
+  "version": "0.2.2",
+  "name": "Bearback",
+  "description": "Tame, ride and haul with black and polar bears.",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.bearback.Bearback"
+    ],
+    "client": [
+      "dev.bearback.client.ClientHooks"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}

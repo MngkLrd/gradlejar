@@ -1,0 +1,9 @@
+{
+  "slug": "bearback-fabric",
+  "version": "0.2.2",
+  "minecraft": "26.3",
+  "loader": "fabric",
+  "java": "25",
+  "gradle": "9.7.1",
+  "jar_glob": "bearback-fabric-mc26.3-0.2.2.jar"
+}
