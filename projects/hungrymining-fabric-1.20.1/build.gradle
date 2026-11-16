@@ -7,7 +7,8 @@ group = 'dev.hungrymining'
 version = '1.1.0'
 base.archivesName = 'hungrymining-fabric-1.20.1'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+// Loom 1.11.8 requires Java 21 for Gradle, but the produced mod targets Java 17.
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 dependencies {
     minecraft 'com.mojang:minecraft:1.20.1'
