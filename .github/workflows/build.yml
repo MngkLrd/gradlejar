@@ -107,6 +107,9 @@ jobs:
       - name: Integrate Pocket Realms 0.7.0 multistage and new predators
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/upgrade_pocketrealms_v070.py
+      - name: Restore Simple Sorter 1.21.1 rework
+        if: matrix.project_dir == 'projects/simplesorter-1.21.1'
+        run: tar -xJf projects/simplesorter-1.21.1/source.tar.xz -C projects/simplesorter-1.21.1 --strip-components=1
       - name: Validate profile
         id: profile
         env:
