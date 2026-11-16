@@ -42,9 +42,9 @@ jobs:
       - name: Separate connected islands by biome without new blocks
         run: python3 tools/halohaven25_island_regions.py
       - name: Resculpt six visually distinct island geographies and native cliffs
-        run: python3 tools/halohaven27_regions.py
+        run: python3 tools/halohaven26_regions.py
       - name: Rebuild regional forests and eliminate suspended grid settlements
-        run: python3 tools/halohaven27_ecology.py
+        run: python3 tools/halohaven26_ecology.py
       - name: Fill the void with walkable mist and ground-validated templates
         run: python3 tools/halohaven27_cloud_world.py
       - name: Validate changes to all six biomes
