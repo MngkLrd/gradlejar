@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": "Phantom Lure Fabric 26.2",
+    "min_format": [
+      65,
+      0
+    ],
+    "max_format": 150
+  }
+}
