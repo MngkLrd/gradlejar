@@ -1,0 +1,207 @@
+name: Halo Haven 2.4 WorldGen
+
+on:
+  push:
+    branches: [halohaven-alpha24-worldgen]
+    paths:
+      - ".github/workflows/halohaven24.yml"
+      - ".github/workflows/halohaven-unified.yml"
+      - "projects/halohaven/**"
+      - "projects/halohaven-alpha21/**"
+      - "tools/patch_halohaven_v22.py"
+      - "tools/halohaven23_world.py"
+      - "tools/halohaven23_art.py"
+      - "tools/halohaven23_structures.py"
+      - "tools/halohaven23_mobs.py"
+      - "tools/halohaven24_world.py"
+      - "tools/halohaven24_structures.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compile-and-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+      - name: Install art and NBT preparation dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check pillow==11.3.0 nbtlib==2.0.4
+          command -v ffmpeg || { sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends ffmpeg; }
+      - name: Patch Halo Haven 2.4 art, sound and doors
+        run: python3 tools/patch_halohaven_v22.py
+      - name: Rebuild Halo Haven geography and regional ecology
+        run: python3 tools/halohaven23_world.py
+      - name: Paint architecture, functional lighting and the dimensional gateway
+        run: python3 tools/halohaven23_art.py
+      - name: Repaint 20 anatomically distinctive mobs
+        run: python3 tools/halohaven23_mobs.py
+      - name: Generate eighteen new regional structures
+        run: python3 tools/halohaven23_structures.py
+      - name: Build WorldGen 2.4 without new blocks or items
+        run: |
+          python3 tools/halohaven24_world.py
+          python3 tools/halohaven24_structures.py
+      - name: Audit Halo Haven 2.4 resource registries
+        run: |
+          python3 - <<'PY'
+          import json,tarfile,pathlib
+          base=pathlib.Path('projects/halohaven/src/main/resources/data/halohaven')
+          for p in base.rglob('*.json'): json.loads(p.read_text())
+          with tarfile.open('projects/halohaven-alpha21/bundle.tar.xz','r:xz') as z:
+            members=z.getmembers()
+            ns=[m for m in members if m.name.endswith('.nbt') and '/structure/' in m.name]
+            assert len(ns)>=63,len(ns)
+            assert len([m for m in ns if '/regional_' in m.name])==18
+            assert len([m for m in ns if '/colossal_canopy_' in m.name])==4
+            assert len([m for m in ns if '/choir_' in m.name and m.name.endswith('.nbt')])==4
+            assert len([m for m in members if '/textures/entity/' in m.name and m.name.endswith('.png')])==20
+          print('Validated',len(ns),'NBT templates, core data and all creature skins')
+          PY
+      - name: Compile original Halo Haven 1.8
+        run: |
+          cd projects/halohaven
+          gradle --no-daemon clean build
+      - name: Compile updated Halo Haven ecosystem
+        run: |
+          cd projects/halohaven-alpha21
+          gradle --no-daemon clean build
+      - name: Assemble one installable JAR with both NeoForge mod IDs
+        run: |
+          python3 - <<'PY'
+          import zipfile, pathlib, re, hashlib
+          core=pathlib.Path('projects/halohaven/build/libs/halohaven-1.21.1-1.8.0.jar')
+          addons=list(pathlib.Path('projects/halohaven-alpha21/build/libs').glob('halohavenalpha2-*.jar'))
+          assert core.exists(), core
+          assert len(addons)==1, addons
+          addon=addons[0]
+          out=pathlib.Path('dist/HaloHaven-2.4.0-Alpha-NeoForge-1.21.1-Standalone.jar')
+          out.parent.mkdir(exist_ok=True)
+          banned={'META-INF/MANIFEST.MF','META-INF/neoforge.mods.toml','pack.mcmeta'}
+          entries={}
+          with zipfile.ZipFile(core) as z:
+              for name in z.namelist():
+                  if name.endswith('/') or name in banned or name.startswith('META-INF/') and name.upper().endswith(('.SF','.RSA','.DSA')):
+                      continue
+                  entries[name]=z.read(name)
+              core_toml=z.read('META-INF/neoforge.mods.toml').decode('utf-8')
+              core_pack=z.read('pack.mcmeta')
+          with zipfile.ZipFile(addon) as z:
+              for name in z.namelist():
+                  if name.endswith('/') or name in banned or name.startswith('META-INF/') and name.upper().endswith(('.SF','.RSA','.DSA')):
+                      continue
+                  entries[name]=z.read(name)
+              addon_toml=z.read('META-INF/neoforge.mods.toml').decode('utf-8')
+          assert 'modId="halohaven"' in core_toml
+          assert 'modId="halohavenalpha2"' in addon_toml
+          core_toml=re.sub(r'(modId="halohaven"\s*\nversion=")[^"]+(")',r'\g<1>2.4.0-alpha\2',core_toml,count=1)
+          addon_mods=addon_toml[addon_toml.index('[[mods]]'):]
+          addon_mods=addon_mods.replace('version="2.1.0-alpha"','version="2.4.0-alpha"',1)
+          addon_mods=addon_mods.replace('Halo Haven Alpha 2.1 Ecosystem Expansion','Halo Haven 2.4 Living Skies')
+          # Mod IDs can coexist in a single NeoForge mod file, their registry namespaces remain intact.
+          # The self-contained package satisfies halohavenalpha2's dependency internally.
+          merged_toml=core_toml.rstrip()+'\n\n'+addon_mods.strip()+'\n'
+
+          # Core generated assets may override author-approved textures. Source overlays are final.
+          for namespace in ('halohaven','halohavenalpha2'):
+              root=pathlib.Path('projects/halohaven/art23_overlay/assets' if namespace=='halohaven'
+                  else 'projects/halohaven-alpha21/src/main/resources/assets')/namespace
+              if root.exists():
+                  for file in root.rglob('*'):
+                      if file.is_file():
+                          entries['assets/'+namespace+'/'+str(file.relative_to(root))]=file.read_bytes()
+          entries['META-INF/neoforge.mods.toml']=merged_toml.encode()
+          entries['pack.mcmeta']=core_pack
+          assert 'dev/halohaven/alpha2/HaloHavenAlpha2.class' in entries
+          assert 'dev/halohaven/alpha2/HavenSounds.class' in entries
+          assert any(k.endswith('skyfolk.ogg') for k in entries), 'Missing skyfolk voice'
+          assert sum(k.endswith('.ogg') for k in entries)>=21, 'Missing creature voices'
+          assert len([k for k in entries if k.endswith('_door_face.json') and 'blockstates/' in k])>=3
+          assert len([k for k in entries if '/structure/regional_' in k and k.endswith('.nbt')])==18
+          assert len([k for k in entries if '/structure/colossal_canopy_' in k and k.endswith('.nbt')])==4
+          assert len([k for k in entries if '/structure/choir_' in k and k.endswith('.nbt')])==4
+          assert 'dev/minemods/halohaven/DawnWaterfallFeature.class' in entries
+          assert 'assets/halohaven/models/block/ascension_gateway_lower.json' in entries
+          assert len([k for k in entries if k.endswith('_leaves.png') and '/textures/block/' in k])>=6
+          assert 'dev/minemods/halohaven/HavenLightBlock.class' in entries
+          assert 'assets/halohavenalpha2/textures/block/undersky_glow.png' in entries
+          assert len([k for k in entries if k.startswith('assets/halohavenalpha2/textures/entity/') and k.endswith('.png')]) >= 20
+          assert len([k for k in entries if k.startswith('data/halohavenalpha2/structure/') and k.endswith('.nbt')]) >= 25
+          with zipfile.ZipFile(out,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=8) as z:
+              for name in sorted(entries):
+                  z.writestr(name,entries[name])
+          sha=hashlib.sha256(out.read_bytes()).hexdigest()
+          (out.parent/(out.name+'.sha256')).write_text(sha+'  '+out.name+'\n')
+          with zipfile.ZipFile(out) as z:
+              assert z.testzip() is None
+              assert b'[[mods]]' in z.read('META-INF/neoforge.mods.toml')
+              assert z.read('META-INF/neoforge.mods.toml').count(b'[[mods]]')==2
+          print('UNIFIED JAR:',out,'bytes:',out.stat().st_size,'sha256:',sha,'entries:',len(entries))
+          PY
+      - name: Server smoke test with original dimension and complete expansion
+        working-directory: projects/halohaven
+        timeout-minutes: 9
+        run: |
+          set -euo pipefail
+          mkdir -p run/mods
+          cp ../halohaven-alpha21/build/libs/halohavenalpha2-*.jar run/mods/
+          printf 'eula=true\n' > run/eula.txt
+          cat > run/server.properties <<'EOF'
+          online-mode=false
+          enable-rcon=true
+          rcon.port=25576
+          rcon.password=halo-ci-private-test
+          server-port=25565
+          level-seed=halo-qa-2.4
+          max-tick-time=120000
+          view-distance=6
+          simulation-distance=4
+          EOF
+          set +e
+          timeout --signal=SIGINT --kill-after=12 370s gradle --no-daemon runServer > run/hh23-server.log 2>&1 &
+          server_pid=$!
+          python3 ci/worldgen_probe.py > run/hh23-probe.log 2>&1
+          probe_status=$?
+          if [ "$probe_status" -ne 0 ]; then kill -INT "$server_pid" 2>/dev/null || true; fi
+          wait "$server_pid"
+          set -e
+          tail -n 85 run/hh23-server.log
+          cat run/hh23-probe.log
+          if grep -Eiq 'Errors in currently selected data packs|Failed to load registries|Exception in server tick loop|A critical error occurred|Failure during server start|Failed to parse' run/hh23-server.log; then
+              echo 'FAIL: runtime registry errors'
+              exit 1
+          fi
+          [ "$probe_status" -eq 0 ]
+          grep -q 'PASS: generated/ticked 3 real Halo Haven positions' run/hh23-probe.log
+      - name: Upload server log and error reports when failing
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: HaloHaven-2.4-Server-Diagnostics
+          path: |
+            projects/halohaven/run/hh23-server.log
+            projects/halohaven/run/hh23-probe.log
+            projects/halohaven/run/logs/latest.log
+            projects/halohaven/run/crash-reports/
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HaloHaven-2.4-Kingdom-Reclamation
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish downloadable prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="halohaven-2.4-alpha-worldgen-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" dist/*.jar dist/*.sha256 --target "$GITHUB_SHA" --title "Halo Haven 2.4 Alpha — Standalone NeoForge 1.21.1" --notes "One file contains the original Halo Haven dimension and the 2.4 WorldGen expansion. Server biome/structure smoke verified; client visuals not yet tested." --prerelease
