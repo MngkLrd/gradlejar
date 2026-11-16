@@ -52,6 +52,8 @@ jobs:
         run: python3 tools/halohaven28_landmass.py
       - name: Check native structure supports and contiguous cloud geometry
         run: python3 tools/halohaven28_surface_qa.py
+      - name: Build chunk-safe seamlessly joined sky mist fields
+        run: python3 tools/halohaven28_cloud_fix.py
       - name: Validate changes to all six biomes
         run: |
           python3 - <<'PY'
