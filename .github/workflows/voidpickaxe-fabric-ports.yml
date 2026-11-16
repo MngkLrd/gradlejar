@@ -15,16 +15,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {mc: '1.20.1', java: '21'}
-          - {mc: '1.21.1', java: '21'}
-          - {mc: '26.2', java: '25'}
-          - {mc: '26.3', java: '25'}
+          - {mc: '1.20.1', java: '21', gradle: '9.2.1'}
+          - {mc: '1.21.1', java: '21', gradle: '9.2.1'}
+          - {mc: '26.2', java: '25', gradle: '9.7.1'}
+          - {mc: '26.3', java: '25', gradle: '9.7.1'}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with: {distribution: temurin, java-version: '${{ matrix.java }}'}
       - uses: gradle/actions/setup-gradle@v4
-        with: {gradle-version: '9.2.1'}
+        with: {gradle-version: '${{ matrix.gradle }}'}
       - name: Compile and remap
         working-directory: projects/voidpickaxe-fabric-${{ matrix.mc }}
         run: gradle --no-daemon --stacktrace clean build
