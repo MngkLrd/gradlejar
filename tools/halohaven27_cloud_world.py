@@ -84,6 +84,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
  * Asymmetric lobes preserve a readable boundary while still bridging islands.
  */
 public final class HavenMistFeature extends Feature<NoneFeatureConfiguration> {
+    private static final java.util.concurrent.atomic.AtomicBoolean FIRST_CLOUD = new java.util.concurrent.atomic.AtomicBoolean(false);
     public HavenMistFeature(Codec<NoneFeatureConfiguration> codec){super(codec);}
     @Override public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> ctx) {
         WorldGenLevel world=ctx.level();
@@ -114,6 +115,10 @@ public final class HavenMistFeature extends Feature<NoneFeatureConfiguration> {
                 if(world.ensureCanWrite(below) && world.getBlockState(below).isAir())
                     world.setBlock(below,HaloHaven.SKY_MIST.get().defaultBlockState(),2);
             }
+        }
+        if(placed>35 && FIRST_CLOUD.compareAndSet(false,true)){
+            // Print exactly once per server for the automated real-worldgen probe.
+            System.out.println("HALOHAVEN_CLOUD_GENERATED "+x+" "+(y+1)+" "+z);
         }
         return placed>35;
     }
