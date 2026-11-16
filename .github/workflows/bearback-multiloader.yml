@@ -34,6 +34,11 @@ jobs:
             loader: fabric
             java: '25'
             gradle: '9.7.1'
+          - dir: projects/bearback-forge-26.3
+            mc: '26.3'
+            loader: forge
+            java: '25'
+            gradle: '9.7.1'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
