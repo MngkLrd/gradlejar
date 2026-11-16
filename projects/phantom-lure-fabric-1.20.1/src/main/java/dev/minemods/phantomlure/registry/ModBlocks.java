@@ -8,7 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 public final class ModBlocks {
- private static final ResourceLocation ID=ResourceLocation.fromNamespaceAndPath("phantomlure","phantom_lure");
+ private static final ResourceLocation ID=new ResourceLocation("phantomlure","phantom_lure");
  public static final PhantomLureBlock PHANTOM_LURE=Registry.register(BuiltInRegistries.BLOCK,ID,
      new PhantomLureBlock(BlockBehaviour.Properties.of().strength(1.8F)
        .sound(SoundType.AMETHYST).noOcclusion().lightLevel(s->s.getValue(PhantomLureBlock.CHARGED)?6:2)));

@@ -82,12 +82,12 @@ public final class PhantomLureBlock extends BaseEntityBlock {
     }
 
     @Override
-    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         // Manual dismantling returns the diamond; timed/sleep cancellation does not.
         if (!level.isClientSide && !player.getAbilities().instabuild && state.getValue(CHARGED)) {
             popResource(level, pos, new ItemStack(Items.DIAMOND));
         }
-        return super.playerWillDestroy(level, pos, state, player);
+        super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
