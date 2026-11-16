@@ -116,6 +116,8 @@ jobs:
           tar -xJf projects/lurelantern-1.21.1/source.tar.xz -C projects/lurelantern-1.21.1
           sed -i 's/import net.minecraft.world.entity.animal.TamableAnimal;/import net.minecraft.world.entity.TamableAnimal;/' projects/lurelantern-1.21.1/src/main/java/com/kirill/lurelantern/blockentity/LureLanternBlockEntity.java
           sed -i 's/protected MapCodec<? extends LanternBlock> codec()/public MapCodec<? extends LanternBlock> codec()/' projects/lurelantern-1.21.1/src/main/java/com/kirill/lurelantern/block/LureLanternBlock.java
+          sed -i 's/MapCodec<LureLanternBlock> CODEC = simpleCodec/MapCodec<LanternBlock> CODEC = simpleCodec/' projects/lurelantern-1.21.1/src/main/java/com/kirill/lurelantern/block/LureLanternBlock.java
+          sed -i 's/public MapCodec<? extends LanternBlock> codec()/public MapCodec<LanternBlock> codec()/' projects/lurelantern-1.21.1/src/main/java/com/kirill/lurelantern/block/LureLanternBlock.java
       - name: Validate profile
         id: profile
         env:
