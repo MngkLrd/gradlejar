@@ -47,7 +47,7 @@ world=get(NOISE)
 dimension=get(DIM)
 assert world["noise"]["height"]==128
 assert dimension["generator"]["settings"]=="halohaven:heaven_islands"
-dimension_type=BASE.parent/"dimension_type/heaven.json"
+dimension_type=BASE/"dimension_type/heaven.json"
 kind=get(dimension_type)
 assert kind["height"]==256 and kind["logical_height"]==256
 world["noise"]["height"]=256
