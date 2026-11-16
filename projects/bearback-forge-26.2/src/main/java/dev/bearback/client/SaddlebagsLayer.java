@@ -22,7 +22,7 @@ public final class SaddlebagsLayer extends RenderLayer<PolarBearRenderState,Pola
                                  PolarBearRenderState state,float yaw,float pitch){
         if(!(state instanceof BearRenderState custom)||!custom.bearbackBags||state.isBaby||state.isInvisible)return;
         collector.submitModel(model,state,pose,RenderTypes.entityCutout(TEXTURE),
-                light,LivingEntityRenderer.getOverlayCoords(state,0f),-1);
+                light,LivingEntityRenderer.getOverlayCoords(state,0f),-1,null);
     }
     private static LayerDefinition mesh(){
         MeshDefinition mesh=new MeshDefinition();var root=mesh.getRoot();
