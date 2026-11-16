@@ -116,7 +116,7 @@ def main() -> int:
         # A registered biome might still be unreachable if the six climate
         # parameter ranges do not match the density-router output. Locate two
         # opposing climate corners to prove the sampler reaches both.
-        for biome in ("chalk_terraces", "lower_veil"):
+        for biome in ("dawn_gardens", "chalk_terraces", "eternal_canopy", "ringing_gorges", "forgotten_choirs", "lower_veil"):
             started = time.monotonic()
             result = command(
                 sock, f"execute in halohaven:heaven run locate biome halohaven:{biome}"
