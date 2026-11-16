@@ -279,8 +279,10 @@ import net.minecraftforge.event.TickEvent;
  public static final RegistryObject<Block> LICHEN = register("lichen_trail");
  private static RegistryObject<Block> register(String name){return BLOCKS.register(name, ()->new TrailBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().replaceable().instabreak().lightLevel(s->s.getValue(TrailBlock.AGE)>1?1:3)));}
 '''
-   cons='''public BioTrails(){BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus()); MinecraftForge.EVENT_BUS.addListener(this::tick);}
- private void tick(TickEvent.ServerTickEvent.Post event){engine.tick(event.getServer());}'''
+   cons='''public BioTrails(FMLJavaModLoadingContext context){
+   BLOCKS.register(context.getModBusGroup());
+   TickEvent.ServerTickEvent.Post.BUS.addListener(event -> engine.tick(event.server()));
+ }'''
  return f'''package dev.biotrails;
 import dev.biotrails.block.TrailBlock;
 import dev.biotrails.gameplay.TrailEngine;
@@ -489,12 +491,12 @@ rootProject.name='biotrails-{mc}-{loader}'
   block_java=block_java.replace('import net.minecraft.world.level.block.state.properties.DirectionProperty;', 'import net.minecraft.world.level.block.state.properties.EnumProperty;').replace('DirectionProperty FACING', 'EnumProperty<Direction> FACING')
  put(root,prefix/'block/TrailBlock.java',block_java)
  engine_java=JAVA_ENGINE.replace('RESOURCE_ID',model)
- if mc.startswith('26.') and loader!='forge':
+ if mc.startswith('26.'):
   engine_java=engine_java.replace('player.serverLevel()', '(ServerLevel)player.level()').replace('player.isInWaterOrBubble()', 'player.isInWater()')
  if mc=='1.20.1': engine_java=engine_java.replace('ResourceLocation.fromNamespaceAndPath(', 'new ResourceLocation(')
  put(root,prefix/'gameplay/TrailEngine.java',engine_java)
  main_java=fabric_main(mc) if loader=='fabric' else forge_main(mc,loader=='neoforge')
- if mc.startswith('26.') and loader!='forge':
+ if mc.startswith('26.'):
   main_java=main_java.replace('noCollission()', 'noCollision()')
  if loader=='forge' and mc.startswith('26.'):
   main_java=main_java.replace('import net.minecraft.world.level.block.Block;', 'import net.minecraft.world.level.block.Block;\nimport net.minecraft.resources.Identifier;\nimport net.minecraft.resources.ResourceKey;\nimport net.minecraft.core.registries.Registries;')
