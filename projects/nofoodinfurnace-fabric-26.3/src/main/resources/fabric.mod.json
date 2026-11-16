@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "nofoodinfurnace",
+  "version": "1.1.0",
+  "name": "No Food in Furnace",
+  "description": "Blocks food cooking in a vanilla furnace and displays a red X.",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.minemods.nofoodinfurnace.NoFoodInFurnace"
+    ]
+  },
+  "mixins": [
+    "nofoodinfurnace.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}

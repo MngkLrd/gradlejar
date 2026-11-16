@@ -1,0 +1,21 @@
+license="MIT"
+[[mods]]
+modId="nofoodinfurnace"
+version="1.1.0"
+displayName="No Food in Furnace"
+authors="MineMods"
+description="No food in ordinary furnaces; supports vanilla and modded food; shows red anvil X."
+[[mixins]]
+config="nofoodinfurnace.mixins.json"
+[[dependencies.nofoodinfurnace]]
+modId="neoforge"
+type="required"
+versionRange="[26.3.0.1-beta,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.nofoodinfurnace]]
+modId="minecraft"
+type="required"
+versionRange="[26.3]"
+ordering="NONE"
+side="BOTH"
