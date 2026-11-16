@@ -37,8 +37,8 @@ assert field in entries
 j=json.loads(entries[field])
 for key in ("final_density","initial_density_without_jaggedness"):
     assert j["noise_router"][key]["type"]=="minecraft:min"
-assert json.loads(entries["data/halohaven/worldgen/density_function/climate_temperature.json"])["xz_scale"]==1.15
-assert json.loads(entries["data/halohaven/worldgen/density_function/climate_vegetation.json"])["xz_scale"]==0.95
+assert json.loads(entries["data/halohaven/worldgen/density_function/climate_temperature.json"])["xz_scale"]==0.53
+assert json.loads(entries["data/halohaven/worldgen/density_function/climate_vegetation.json"])["xz_scale"]==0.49
 assert len([n for n in entries if n.endswith(".nbt") and "/structure/" in n])>=63
 assert 'dev/minemods/halohaven/HavenMistFeature.class' in entries
 assert 'dev/minemods/halohaven/HavenGroundedTemplateFeature.class' in entries
