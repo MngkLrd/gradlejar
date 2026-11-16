@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "hungrymining",
+  "version": "1.1.0",
+  "name": "Hungry Mining",
+  "description": "Mining speed changes with hunger. No slowdown until three food points are lost; at zero food, mining is 70% slower.",
+  "authors": [
+    "MineMods"
+  ],
+  "environment": "*",
+  "mixins": [
+    "hungrymining.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.2",
+    "java": ">=25"
+  }
+}
