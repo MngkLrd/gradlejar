@@ -4,7 +4,7 @@ import dev.bearback.BearNetwork;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -19,7 +19,7 @@ public final class ClientHooks implements ClientModInitializer {
  private static final KeyMapping SWIPE=new KeyMapping("key.bearback.swipe",82,KeyMapping.Category.GAMEPLAY);
  private static boolean opening;
  @Override public void onInitializeClient(){
-    KeyBindingHelper.registerKeyBinding(SWIPE);
+    KeyMappingHelper.registerKeyMapping(SWIPE);
     EntityRendererRegistry.register(EntityTypes.POLAR_BEAR,BearPolarRenderer::new);
     EntityRendererRegistry.register(Bearback.BLACK_BEAR,BlackBearRenderer::new);
     ClientPlayNetworking.registerGlobalReceiver(BearNetwork.Equipment.TYPE,(packet,context)->
@@ -33,12 +33,12 @@ public final class ClientHooks implements ClientModInitializer {
  public static boolean bags(PolarBear b){return BAGS.getOrDefault(b.getId(),false);}
  private static void tick(Minecraft mc){
     if(mc.player==null)return;
-    if(mc.player.getVehicle() instanceof PolarBear b && mc.screen instanceof InventoryScreen && bags(b)){
-       mc.setScreen(null);
+    if(mc.player.getVehicle() instanceof PolarBear b && mc.gui.screen() instanceof InventoryScreen && bags(b)){
+       mc.gui.setScreen(null);
        if(!opening){opening=true;ClientPlayNetworking.send(new BearNetwork.OpenCargo(b.getId()));}
        return;
     }
-    if(mc.screen!=null){opening=false;return;}
+    if(mc.gui.screen()!=null){opening=false;return;}
     opening=false;
     if(!(mc.player.getVehicle() instanceof PolarBear))return;
     float f=(mc.options.keyUp.isDown()?1:0)-(mc.options.keyDown.isDown()?1:0);

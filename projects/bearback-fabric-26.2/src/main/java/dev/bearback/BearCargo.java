@@ -42,7 +42,7 @@ public final class BearCargo {
             CargoContainer cargo=inventory(bear);
             for(int i=0;i<SLOTS;i++){
                 ItemStack stack=cargo.removeItemNoUpdate(i);
-                if(!stack.isEmpty())event.getDrops().add(new ItemEntity(bear.level(),
+                if(!stack.isEmpty())bear.level().addFreshEntity(new ItemEntity(bear.level(),
                         bear.getX(),bear.getY()+.35,bear.getZ(),stack));
             }
             cargo.setChanged();

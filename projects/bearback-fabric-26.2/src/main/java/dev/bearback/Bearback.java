@@ -57,7 +57,7 @@ public class Bearback implements ModInitializer {
     UseEntityCallback.EVENT.register((player,world,hand,entity,hit)->BearEvents.interact(player,hand,entity));
     ServerEntityEvents.ENTITY_LOAD.register((entity,world)->{if(entity instanceof PolarBear b)LOADED.add(b);});
     ServerEntityEvents.ENTITY_UNLOAD.register((entity,world)->{if(entity instanceof PolarBear b)LOADED.remove(b);});
-    ServerTickEvents.END_WORLD_TICK.register(world->{
+    ServerTickEvents.END_LEVEL_TICK.register(world->{
         for(PolarBear bear:LOADED.toArray(PolarBear[]::new))
             if(bear.level()==world&&bear.isAlive())BearEvents.tick(bear);
     });

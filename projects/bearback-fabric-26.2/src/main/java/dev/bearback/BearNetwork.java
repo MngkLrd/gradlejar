@@ -5,16 +5,16 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.animal.PolarBear;
+import net.minecraft.world.entity.animal.polarbear.PolarBear;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public final class BearNetwork {
  private BearNetwork(){}
  public static void register(){
-   PayloadTypeRegistry.playC2S().register(Ride.TYPE,Ride.CODEC);
-   PayloadTypeRegistry.playC2S().register(OpenCargo.TYPE,OpenCargo.CODEC);
-   PayloadTypeRegistry.playS2C().register(Equipment.TYPE,Equipment.CODEC);
+   PayloadTypeRegistry.serverboundPlay().register(Ride.TYPE,Ride.CODEC);
+   PayloadTypeRegistry.serverboundPlay().register(OpenCargo.TYPE,OpenCargo.CODEC);
+   PayloadTypeRegistry.clientboundPlay().register(Equipment.TYPE,Equipment.CODEC);
    ServerPlayNetworking.registerGlobalReceiver(Ride.TYPE,(packet,context)->
            context.server().execute(()->BearEvents.ride(context.player(),packet.f,packet.s,packet.jump,packet.attack,packet.yaw)));
    ServerPlayNetworking.registerGlobalReceiver(OpenCargo.TYPE,(packet,context)->

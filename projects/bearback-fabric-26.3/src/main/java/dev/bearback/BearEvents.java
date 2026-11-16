@@ -68,7 +68,7 @@ public final class BearEvents {
            }
        }
    }
-   if(bear.isStanding()&&data.getLongOr(STAND,0L)!=0&&now>=data.getLong(STAND)){
+   if(bear.isStanding()&&data.getLongOr(STAND,0L)!=0&&now>=data.getLongOr(STAND,0L)){
        bear.setStanding(false);data.remove(STAND);BearData.changed(bear);
    }
  }
