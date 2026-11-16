@@ -472,7 +472,9 @@ def gen_project(mc,loader):
  if loader=='forge' and jdk!=25: gradle='8.9'
  if loader=='neoforge' and mc=='1.20.1':gradle='8.9'
  # Fabric 1.20.1 requires Gradle 8.9 for old loom; Fabric 1.21.1 uses Gradle 8.9.
- if loader=='fabric' and jdk!=25:gradle='8.9'
+ if loader=='fabric' and mc=='1.20.1':gradle='8.9'
+ if loader=='fabric' and mc=='1.21.1':gradle='8.14.3'
+ if loader=='fabric' and mc=='26.3':gradle='9.7.0'
  root=ROOT/'projects'/f'biotrails-{mc}-{loader}'
  model='Identifier' if mc.startswith('26.') else 'ResourceLocation'
  put(root,'build.gradle',gradle_build(mc,loader))
