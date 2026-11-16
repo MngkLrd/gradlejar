@@ -1,15 +1,73 @@
-name: Halo Haven 2.5 Island QA
+name: Halo Haven 2.5 Island Biome QA
 on:
   push:
     branches: [halohaven-alpha25-island-biomes]
     paths:
-      - '.github/workflows/halohaven25.yml'
-      - 'tools/halohaven25_island_regions.py'
+      - ".github/workflows/halohaven25.yml"
+      - "tools/halohaven25_*.py"
+      - "tools/halohaven25_*.sh"
+      - "projects/halohaven/ci/worldgen_probe.py"
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
-      - name: Validate source
-        run: python3 -m py_compile tools/halohaven25_island_regions.py
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+      - name: Prepare artwork and structure build dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check pillow==11.3.0 nbtlib==2.0.4
+          command -v ffmpeg || { sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends ffmpeg; }
+      - name: Rebuild Halo Haven 2.4 base and content (preserved)
+        run: |
+          python3 tools/patch_halohaven_v22.py
+          python3 tools/halohaven23_world.py
+          python3 tools/halohaven23_art.py
+          python3 tools/halohaven23_mobs.py
+          python3 tools/halohaven23_structures.py
+          python3 tools/halohaven24_world.py
+          python3 tools/halohaven24_structures.py
+      - name: Separate connected islands by biome without new blocks
+        run: python3 tools/halohaven25_island_regions.py
+      - name: Compile original dimension via Gradle
+        working-directory: projects/halohaven
+        run: gradle --no-daemon clean build
+      - name: Compile ecosystem expansion via Gradle
+        working-directory: projects/halohaven-alpha21
+        run: gradle --no-daemon clean build
+      - name: Package one self-contained JAR
+        run: python3 tools/halohaven25_pack.py
+      - name: Test real NeoForge dimension, 6 biomes and 3 generated chunks
+        timeout-minutes: 9
+        run: bash tools/halohaven25_smoke.sh
+      - name: Upload runtime diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: HaloHaven-2.5-Diagnostics
+          path: |
+            projects/halohaven/run/halo25-server.log
+            projects/halohaven/run/halo25-probe.log
+            projects/halohaven/run/logs/latest.log
+          if-no-files-found: warn
+      - name: Upload installable mod
+        uses: actions/upload-artifact@v4
+        with:
+          name: HaloHaven-2.5-Island-Regions
+          path: dist/*
+          if-no-files-found: error
+      - name: Publish prerelease on GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="halohaven-2.5-island-biomes-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" dist/*.jar dist/*.sha256 --target "$GITHUB_SHA" --title "Halo Haven 2.5 Alpha - One biome per island" --notes "Fixes region-mixing in the 2.4 world generator. Exclusive region profiles; full-height air gaps at biome borders; compact coherent biome scale; lower universal land density. No new blocks, items or structures. Dedicated server smoke tested." --prerelease
