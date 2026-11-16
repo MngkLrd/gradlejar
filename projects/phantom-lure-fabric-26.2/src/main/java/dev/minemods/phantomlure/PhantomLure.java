@@ -18,7 +18,7 @@ public final class PhantomLure implements ModInitializer {
    ModBlockEntities.initialize();
    CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS)
      .register(entries->entries.accept(ModBlocks.PHANTOM_LURE));
-   ServerTickEvents.END_WORLD_TICK.register(PhantomCleanup::onWorldTick);
+   ServerTickEvents.END_LEVEL_TICK.register(PhantomCleanup::onWorldTick);
    PlayerBlockBreakEvents.AFTER.register((level,player,pos,state,blockEntity)->{
      if(!level.isClientSide() && state.is(ModBlocks.PHANTOM_LURE)
        && state.getValue(PhantomLureBlock.CHARGED) && !player.getAbilities().instabuild) {
