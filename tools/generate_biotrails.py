@@ -1,5 +1,27 @@
 from pathlib import Path
-from PIL import Image
+import struct, zlib
+class _PNGImage:
+    def __init__(self, mode, size, background):
+        assert mode == 'RGBA'
+        self.width, self.height = size
+        self.pixels = [background for _ in range(self.width * self.height)]
+    def putpixel(self, pos, rgba):
+        x, y = pos
+        self.pixels[y * self.width + x] = tuple(rgba)
+    def save(self, filename):
+        def chunk(kind, body):
+            return struct.pack('>I', len(body)) + kind + body + struct.pack('>I', zlib.crc32(kind + body) & 0xffffffff)
+        data = bytearray()
+        for y in range(self.height):
+            data.append(0)
+            for px in self.pixels[y*self.width:(y+1)*self.width]:
+                data.extend(px)
+        ihdr = struct.pack('>2I5B', self.width, self.height, 8, 6, 0, 0, 0)
+        Path(filename).write_bytes(b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', ihdr) + chunk(b'IDAT', zlib.compress(bytes(data), 9)) + chunk(b'IEND', b''))
+class Image:
+    @staticmethod
+    def new(mode, size, background):
+        return _PNGImage(mode, size, background)
 import json, textwrap, os, zipfile, hashlib, shutil
 
 ROOT=Path(__file__).resolve().parents[1]
