@@ -1,0 +1,15 @@
+name: Halo Haven 2.5 Island QA
+on:
+  push:
+    branches: [halohaven-alpha25-island-biomes]
+    paths:
+      - '.github/workflows/halohaven25.yml'
+      - 'tools/halohaven25_island_regions.py'
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate source
+        run: python3 -m py_compile tools/halohaven25_island_regions.py
