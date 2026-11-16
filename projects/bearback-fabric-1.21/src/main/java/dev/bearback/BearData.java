@@ -10,9 +10,9 @@ import java.util.UUID;
 
 /** Fabric persistence on the bear entity, never on a global shared inventory. */
 public final class BearData {
-    public static final AttachmentType<CompoundTag> STATE=AttachmentRegistry.create(
-            ResourceLocation.fromNamespaceAndPath("bearback","state"),
-            builder->builder.persistent(CompoundTag.CODEC).initializer(CompoundTag::new));
+    public static final AttachmentType<CompoundTag> STATE=AttachmentRegistry.<CompoundTag>builder()
+            .persistent(CompoundTag.CODEC).initializer(CompoundTag::new)
+            .buildAndRegister(ResourceLocation.fromNamespaceAndPath("bearback","state"));
     private BearData(){}
     public static CompoundTag get(PolarBear bear){return ((AttachmentTarget)bear).getAttachedOrCreate(STATE);}
     public static void changed(PolarBear bear){((AttachmentTarget)bear).setAttached(STATE,get(bear).copy());}
