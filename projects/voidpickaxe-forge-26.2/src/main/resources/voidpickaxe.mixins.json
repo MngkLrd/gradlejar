@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.voidchisel.mixin",
+  "mixins": [
+    "BedrockProgressMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

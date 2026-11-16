@@ -1,0 +1,21 @@
+plugins {
+ id 'java-library'
+ id 'idea'
+ id 'net.neoforged.moddev.legacyforge' version '2.0.147'
+}
+group='dev.voidchisel'
+version='1.1.3'
+base.archivesName='voidpickaxe-neoforge-mc1.20.1'
+java.toolchain.languageVersion=JavaLanguageVersion.of(17)
+legacyForge {
+ enable {
+   neoForgeVersion='1.20.1-47.1.106'
+   disableRecompilation=true
+ }
+ runs { client { client() }; server { server() } }
+ mods { voidchisel { sourceSet(sourceSets.main) } }
+}
+dependencies { annotationProcessor 'org.spongepowered:mixin:0.8.5:processor' }
+mixin { add sourceSets.main,'voidpickaxe.refmap.json'; config 'voidpickaxe.mixins.json' }
+tasks.named('jar',Jar) { manifest { attributes['MixinConfigs']='voidpickaxe.mixins.json' } }
+tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8';options.release=17 }

@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[65,)"
+license="MIT"
+[[mods]]
+modId="voidchisel"
+version="1.1.3"
+displayName="Void Pickaxe"
+authors="Minemods"
+description="Five-use pickaxe that mines bedrock progressively without dropping it."
+[[dependencies.voidchisel]]
+modId="forge"
+mandatory=true
+versionRange="[65,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.voidchisel]]
+modId="minecraft"
+mandatory=true
+versionRange="[26.2,26.3)"
+ordering="NONE"
+side="BOTH"

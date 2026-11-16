@@ -1,0 +1,9 @@
+{
+  "slug": "voidpickaxe-forge",
+  "version": "1.1.3",
+  "minecraft": "26.2",
+  "loader": "forge",
+  "java": 25,
+  "gradle": "9.2.1",
+  "jar_glob": "voidpickaxe-forge-mc26.2-1.1.3.jar"
+}

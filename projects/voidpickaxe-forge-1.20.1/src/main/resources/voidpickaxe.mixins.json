@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.voidchisel.mixin",
+  "mixins": [
+    "BedrockProgressMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "voidpickaxe.refmap.json",
+  "compatibilityLevel": "JAVA_17"
+}
