@@ -17,7 +17,6 @@ minecraft {
 repositories { minecraft.mavenizer(it); maven fg.forgeMaven; maven fg.minecraftLibsMaven; mavenCentral() }
 dependencies {
     implementation minecraft.dependency('net.minecraftforge:forge:26.3-66.1.8')
-    annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
     annotationProcessor 'net.minecraftforge:eventbus-validator:7.0.5'
 }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8';options.release=25 }
