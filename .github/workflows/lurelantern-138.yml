@@ -1,0 +1,75 @@
+name: Lure Lantern 1.3.8 Verified JAR
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'projects/lurelantern-1.3.7/**'
+      - '.github/workflows/lurelantern-138.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: projects/lurelantern-1.3.7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+          cache-disabled: true
+      - name: Compile NeoForge 1.21.1
+        run: gradle --no-daemon clean build --stacktrace
+      - name: Test survival drop and saved mob roundtrip
+        run: gradle --no-daemon runGameTestServer --stacktrace
+      - name: Verify metadata, package and checksum
+        run: python3 ../../tools/verify_build_output.py projects/lurelantern-1.3.7
+      - name: Verify hand renderer, recolored Basic and 16-pixel assets
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          jar=Path("build/libs/lurelantern-1.3.8.jar")
+          assert jar.is_file(),jar
+          with ZipFile(jar) as z:
+              names=set(z.namelist())
+              expected=[
+                "com/kirill/lurelantern/client/AdvancedLanternHandMesh.class",
+                "com/kirill/lurelantern/client/AdvancedLanternItemRenderer.class",
+                "com/kirill/lurelantern/logic/SafeLanternDrops.class",
+                "assets/lurelantern/models/block/lure_lantern.json",
+                "assets/lurelantern/models/block/hanging_lure_lantern.json",
+                "assets/lurelantern/textures/block/lure_lantern_glass.png",
+                "assets/lurelantern/textures/block/lure_lantern_glass_active.png",
+                "assets/lurelantern/models/block/advanced_lure_lantern.json",
+                "META-INF/neoforge.mods.toml",
+              ]
+              assert not [n for n in expected if n not in names], [n for n in expected if n not in names]
+              assert b'version="1.3.8"' in z.read("META-INF/neoforge.mods.toml")
+          print("Verified Lure Lantern 1.3.8:",jar.stat().st_size,"bytes")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lurelantern-1.3.8-neoforge-1.21.1
+          path: |
+            projects/lurelantern-1.3.7/build/libs/lurelantern-1.3.8.jar
+            projects/lurelantern-1.3.7/build/libs/lurelantern-1.3.8.jar.sha256
+          if-no-files-found: error
+      - name: Publish verified JAR
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="lurelantern-1.3.8-${GITHUB_SHA:0:9}"
+          gh release create "$tag" build/libs/lurelantern-1.3.8.jar \
+            --target "$GITHUB_SHA" \
+            --title "Lure Lantern 1.3.8 (NeoForge 1.21.1)" \
+            --notes "User-tested 1.3.7 follow-up: compact hand render; true metal-entity-glass transparency; matching violet basic model; mineable full-size outline and saved NBT drops. Build, static checks, and server GameTests passed. Client shader appearance still requires a manual smoke test." \
+            --prerelease
