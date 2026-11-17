@@ -7,7 +7,9 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
-/** Uses the same Blockbench cubes and UV atlas as the placed Advanced Lantern. */
+/** Uses the same Blockbench cubes and UV atlas as the placed Advanced Lantern.
+ * Held glass uses the item translucent pipeline so the world and captive remain visible.
+ */
 public final class AdvancedLanternHandMesh {
     private static final ResourceLocation METAL = tex("advanced_lure_lantern");
     private static final ResourceLocation METAL_ACTIVE = tex("advanced_lure_lantern_active");
@@ -37,7 +39,7 @@ public final class AdvancedLanternHandMesh {
         draw(FRAME,buffers.getBuffer(RenderType.entitySolid(active ? METAL_ACTIVE : METAL)),pose.last().pose(),light,overlay,false);
     }
     public static void renderGlass(boolean active, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
-        draw(WINDOW,buffers.getBuffer(RenderType.entityTranslucent(active ? GLASS_ACTIVE : GLASS)),pose.last().pose(),light,overlay,true);
+        draw(WINDOW,buffers.getBuffer(RenderType.itemEntityTranslucentCull(active ? GLASS_ACTIVE : GLASS)),pose.last().pose(),light,overlay,true);
     }
     private static void draw(Cube[] cubes, VertexConsumer out, Matrix4f mat, int light, int overlay, boolean glassOnlySides) {
         for(Cube c:cubes) {
