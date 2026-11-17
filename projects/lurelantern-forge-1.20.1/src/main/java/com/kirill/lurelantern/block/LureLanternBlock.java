@@ -43,7 +43,7 @@ public class LureLanternBlock extends LanternBlock implements EntityBlock {
             Block.box(4, 1, 4, 12, 11, 12), Block.box(6, 11, 6, 10, 15, 10));
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos,
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos,
                                   CollisionContext context) {
         return state.getValue(HANGING) ? HANGING_OUTLINE : FLOOR_OUTLINE;
     }

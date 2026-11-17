@@ -176,7 +176,7 @@ public class LureLanternBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void load(CompoundTag data) {
+    public void load(CompoundTag data) {
         super.load(data);
         capturedMobTag = data.contains(STORED_MOB_KEY, 10)
                 ? data.getCompound(STORED_MOB_KEY).copy() : null;
