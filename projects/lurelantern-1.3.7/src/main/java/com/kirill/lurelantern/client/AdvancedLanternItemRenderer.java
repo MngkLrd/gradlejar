@@ -6,7 +6,7 @@ import com.kirill.lurelantern.util.CapturedMobData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -54,7 +54,7 @@ public final class AdvancedLanternItemRenderer extends BlockEntityWithoutLevelRe
                 if (cachedMob != null) {
                     try {
                         CapturedMobRenderer.renderMiniature(cachedMob, level,
-                                minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true),
+                                minecraft.getTimer().getGameTimeDeltaPartialTick(true),
                                 false, pose, buffers, minecraft.getEntityRenderDispatcher(), hash);
                     } catch (RuntimeException ignored) {
                         // Modded entity previews must not crash the client.
