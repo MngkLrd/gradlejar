@@ -1,0 +1,105 @@
+name: Breakable Frames 1.0.1 hotfix JAR bundle
+on:
+  push:
+    branches: [breakableframes-11-ports]
+    paths:
+      - '.github/workflows/breakableframes-hotfix-bundle.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: true}
+      - name: Download previously compiled version 1.0.0 JAR binaries
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/breakableframes-original-jars
+          while read -r mc loader; do
+            [[ -z "$mc" ]] && continue
+            file="breakableframes-${mc}-${loader}-1.0.0.jar"
+            tag="ci-breakableframes-mc${mc}-${loader}-1.0.0-3"
+            gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "$file" --dir /tmp/breakableframes-original-jars
+            test -s "/tmp/breakableframes-original-jars/$file"
+          done <<'PORTS'
+          1.20.1 forge
+          1.20.1 neoforge
+          1.20.1 fabric
+          1.21.1 neoforge
+          1.21.1 fabric
+          26.1.2 neoforge
+          26.1.2 fabric
+          26.2 neoforge
+          26.2 fabric
+          26.3 neoforge
+          26.3 fabric
+          PORTS
+      - name: Patch only loader metadata, verify JARs, create ZIP
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import pathlib, zipfile, json, hashlib, re
+          orig=pathlib.Path('/tmp/breakableframes-original-jars')
+          patched=pathlib.Path('/tmp/breakableframes-1.0.1-patched')
+          patched.mkdir()
+          targets=[('1.20.1','forge'),('1.20.1','neoforge'),('1.20.1','fabric'),
+                   ('1.21.1','neoforge'),('1.21.1','fabric'),
+                   ('26.1.2','neoforge'),('26.1.2','fabric'),
+                   ('26.2','neoforge'),('26.2','fabric'),
+                   ('26.3','neoforge'),('26.3','fabric')]
+          for mc,loader in targets:
+              p=orig/f'breakableframes-{mc}-{loader}-1.0.0.jar'
+              out=patched/f'breakableframes-{mc}-{loader}-1.0.1.jar'
+              meta='fabric.mod.json' if loader=='fabric' else ('META-INF/mods.toml' if mc=='1.20.1' else 'META-INF/neoforge.mods.toml')
+              with zipfile.ZipFile(p) as z, zipfile.ZipFile(out,'w') as w:
+                  assert z.testzip() is None
+                  assert meta in z.namelist(),(p,meta)
+                  for entry in z.infolist():
+                      b=z.read(entry.filename)
+                      if entry.filename==meta:
+                          txt=b.decode('utf-8')
+                          if loader=='fabric':
+                              doc=json.loads(txt)
+                              assert doc['id']=='breakableframes' and doc['version']=='1.0.0'
+                              doc['version']='1.0.1'
+                              txt=json.dumps(doc,indent=2,ensure_ascii=False)+'\n'
+                          else:
+                              pattern='versionRange="['+mc+','+mc+']"'
+                              assert pattern in txt,(p,txt)
+                              txt=txt.replace(pattern,'versionRange="['+mc+']"').replace('version="1.0.0"','version="1.0.1"')
+                              assert pattern not in txt
+                          b=txt.encode('utf-8')
+                      w.writestr(entry,b)
+              with zipfile.ZipFile(out) as z:
+                  assert z.testzip() is None
+                  assert 'breakableframes.mixins.json' in z.namelist()
+                  assert 'dev/minemods/breakableframes/mixin/FrameStateMixin.class' in z.namelist()
+                  txt=z.read(meta).decode('utf-8')
+                  if loader=='fabric':assert json.loads(txt)['version']=='1.0.1'
+                  else:assert 'versionRange="['+mc+']"' in txt and 'version="1.0.1"' in txt
+              print(out.name,out.stat().st_size)
+          dist=pathlib.Path('dist')
+          dist.mkdir(exist_ok=True)
+          target=dist/'Breakable-End-Portal-Frames-1.0.1-ALL-11-JARS.zip'
+          with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for p in sorted(patched.glob('*.jar')):z.write(p,p.name)
+          with zipfile.ZipFile(target) as z:
+              assert len(z.namelist())==11
+              assert z.testzip() is None
+          (dist/'Breakable-End-Portal-Frames-1.0.1-ALL-11-JARS.sha256').write_text(hashlib.sha256(target.read_bytes()).hexdigest()+'  '+target.name+'\n')
+          print('PASS',target,target.stat().st_size)
+          PY
+      - name: Commit ZIP to repository for direct download
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist/Breakable-End-Portal-Frames-1.0.1-ALL-11-JARS.zip dist/Breakable-End-Portal-Frames-1.0.1-ALL-11-JARS.sha256
+          git commit -m 'Publish Breakable End Portal Frames 1.0.1 patched binary ZIP'
+          git push origin HEAD:breakableframes-11-ports
