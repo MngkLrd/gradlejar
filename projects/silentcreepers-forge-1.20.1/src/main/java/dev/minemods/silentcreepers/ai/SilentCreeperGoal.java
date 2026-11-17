@@ -35,17 +35,26 @@ public final class SilentCreeperGoal extends Goal {
     }
 
     @Override public boolean canUse() {
-        if (!(mob.getTarget() instanceof Player target)) return false;
-        if (target.isCreative() || target.isSpectator() || !target.isAlive()) return false;
-        if (mob.distanceToSqr(target) > MAX_TARGET_DISTANCE_SQR) return false;
-        player = target;
+        // Never rely solely on vanilla target memory: stalking behind cover
+        // must continue when the normal creeper target selector loses LOS.
+        Player nearest = null;
+        double bestDistanceSqr = MAX_TARGET_DISTANCE_SQR;
+        for (Player candidate : mob.level().players()) {
+            if (!candidate.isAlive() || candidate.isCreative() || candidate.isSpectator()) continue;
+            double distanceSqr = mob.distanceToSqr(candidate);
+            if (distanceSqr < bestDistanceSqr) {
+                bestDistanceSqr = distanceSqr;
+                nearest = candidate;
+            }
+        }
+        if (nearest == null) return false;
+        player = nearest;
         return true;
     }
 
     @Override public boolean canContinueToUse() {
         return player != null && player.isAlive() && !player.isCreative()
-                && !player.isSpectator() && mob.getTarget() == player
-                && mob.distanceToSqr(player) <= MAX_TARGET_DISTANCE_SQR;
+                && !player.isSpectator() && mob.distanceToSqr(player) <= MAX_TARGET_DISTANCE_SQR;
     }
 
     @Override public void start() {
