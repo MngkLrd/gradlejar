@@ -34,15 +34,15 @@ public final class AdvancedLanternHandMesh {
         return ResourceLocation.fromNamespaceAndPath("lurelantern","textures/block/"+name+".png");
     }
     public static void renderFrame(boolean active, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
-        draw(FRAME,buffers.getBuffer(RenderType.entitySolid(active ? METAL_ACTIVE : METAL)),pose.last().pose(),light,overlay);
+        draw(FRAME,buffers.getBuffer(RenderType.entitySolid(active ? METAL_ACTIVE : METAL)),pose.last().pose(),light,overlay,false);
     }
     public static void renderGlass(boolean active, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
-        draw(WINDOW,buffers.getBuffer(RenderType.entityTranslucent(active ? GLASS_ACTIVE : GLASS)),pose.last().pose(),light,overlay);
+        draw(WINDOW,buffers.getBuffer(RenderType.entityTranslucent(active ? GLASS_ACTIVE : GLASS)),pose.last().pose(),light,overlay,true);
     }
-    private static void draw(Cube[] cubes, VertexConsumer out, Matrix4f mat, int light, int overlay) {
+    private static void draw(Cube[] cubes, VertexConsumer out, Matrix4f mat, int light, int overlay, boolean glassOnlySides) {
         for(Cube c:cubes) {
             float x0=c.x0()/16f,y0=c.y0()/16f,z0=c.z0()/16f,x1=c.x1()/16f,y1=c.y1()/16f,z1=c.z1()/16f;
-            for(int side=0;side<6;side++) {
+            for(int side=0;side<(glassOnlySides ? 4 : 6);side++) {
                 float[] uv=c.uv()[side];
                 float u0=uv[0]/16f,v0=uv[1]/16f,u1=uv[2]/16f,v1=uv[3]/16f;
                 switch(side) {

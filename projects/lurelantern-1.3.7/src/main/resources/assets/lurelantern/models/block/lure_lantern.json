@@ -190,24 +190,6 @@
             9
           ],
           "texture": "#glass"
-        },
-        "up": {
-          "uv": [
-            5,
-            3,
-            11,
-            9
-          ],
-          "texture": "#glass"
-        },
-        "down": {
-          "uv": [
-            5,
-            3,
-            11,
-            9
-          ],
-          "texture": "#glass"
         }
       }
     },
