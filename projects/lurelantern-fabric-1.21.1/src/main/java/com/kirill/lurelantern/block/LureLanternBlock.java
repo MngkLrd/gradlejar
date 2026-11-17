@@ -128,13 +128,7 @@ public class LureLanternBlock extends LanternBlock implements EntityBlock {
         }
     }
 
-    @Override public ItemStack getCloneItemStack(BlockState state, HitResult target,
-            LevelReader level, BlockPos pos, Player player) {
-        ItemStack stack = new ItemStack(this);
-        if (isAdvancedLantern(state) && level.getBlockEntity(pos) instanceof LureLanternBlockEntity lantern)
-            lantern.saveCapturedMobToStack(stack);
-        return stack;
-    }
+    // Fabric vanilla mappings do not expose NeoForge's extended getCloneItemStack override.
 
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new LureLanternBlockEntity(pos, state);
