@@ -74,7 +74,7 @@ public final class CapturedMobRenderer implements BlockEntityRenderer<LureLanter
     pose.pushPose();
     try{
       pose.translate(.5,state.hanging?.375:.3125,.5);
-      pose.rotateDegrees(Axis.YP,state.spin);
+      pose.mulPose(Axis.YP.rotationDegrees(state.spin));
       pose.translate(0,-state.scaledHeight*.5,0);
       pose.scale(state.scale,state.scale,state.scale);
       dispatcher.submit(state.displayEntity,camera,0,0,0,pose,collector);
