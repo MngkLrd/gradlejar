@@ -131,7 +131,12 @@ public class LureLanternBlockEntity extends BlockEntity {
                 }
                 mob.moveTo(target.getX() + 0.5D, target.getY() + 0.01D, target.getZ() + 0.5D,
                         mob.getYRot(), mob.getXRot());
-                if (!level.noCollision(mob)) continue;
+                boolean clear = level.noCollision(mob);
+                System.out.println("LL137 target=" + target + " ground="
+                        + level.getBlockState(target.below()).getBlock()
+                        + " at=" + level.getBlockState(target).getBlock()
+                        + " clear=" + clear + " box=" + mob.getBoundingBox());
+                if (!clear) continue;
                 if (level.addFreshEntity(mob)) {
                     capturedMobTag = null;
                     previewRevision++;
