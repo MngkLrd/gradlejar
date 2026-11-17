@@ -4,6 +4,6 @@
   "minecraft": "1.20.1",
   "loader": "fabric",
   "java": "17",
-  "gradle": "8.14.3",
+  "gradle": "8.8",
   "jar_glob": "simplesorter-0.8.0-fabric.jar"
 }
