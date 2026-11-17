@@ -1,6 +1,7 @@
 package com.kirill.lurelantern.test;
 
 import com.kirill.lurelantern.blockentity.LureLanternBlockEntity;
+import com.kirill.lurelantern.block.LureLanternBlock;
 import com.kirill.lurelantern.registry.ModBlocks;
 import com.kirill.lurelantern.registry.ModItems;
 import com.kirill.lurelantern.util.CapturedMobData;
@@ -43,7 +44,8 @@ public final class LureLanternPersistenceTests {
         cow.putInt("Age", -100);
         ItemStack filledStack = new ItemStack(ModItems.ADVANCED_LURE_LANTERN.get());
         CapturedMobData.setCapturedMobTag(filledStack, cow);
-        lantern.loadCapturedMobFromStack(filledStack);
+        // Exercise the real placed-item hook rather than directly calling the Block Entity.
+        ((LureLanternBlock) state.getBlock()).setPlacedBy(level, pos, state, null, filledStack);
         helper.assertTrue(lantern.hasCapturedMob(), "Cow NBT not loaded into block entity");
         helper.assertTrue(level.destroyBlock(pos, true), "DestroyBlock returned false");
 
@@ -68,7 +70,7 @@ public final class LureLanternPersistenceTests {
                 helper.fail("Replaced lantern has no block entity");
                 return;
             }
-            replaced.loadCapturedMobFromStack(droppedStack);
+            ((LureLanternBlock) state.getBlock()).setPlacedBy(level, pos, state, null, droppedStack);
             helper.assertTrue(replaced.hasCapturedMob(), "Replacement lantern lost saved cow");
             CompoundTag tile = replaced.getUpdateTag(level.registryAccess());
             helper.assertTrue(tile.contains("CapturedMob", 10), "Block Entity NBT missing cow");
