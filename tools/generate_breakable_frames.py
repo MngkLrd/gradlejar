@@ -104,10 +104,11 @@ def build_gradle(mc,loader):
  if loader=='fabric':
   # Loom remap on 1.20.1/1.21.1, native for 26.x.
   modern=mc.startswith('26.')
-  plugin='net.fabricmc.fabric-loom' if modern else 'net.fabricmc.fabric-loom-remap'
+  plugin='net.fabricmc.fabric-loom' if modern else 'fabric-loom'
+  loom_version='1.18.2' if modern else '1.7.4' if mc=='1.20.1' else '1.10-SNAPSHOT'
   dep='implementation' if modern else 'modImplementation'
   mappings='' if modern else '    mappings loom.officialMojangMappings()\n'
-  return f'''plugins {{ id '{plugin}' version '1.18.2' }}
+  return f'''plugins {{ id '{plugin}' version '{loom_version}' }}
 version = '1.0.0'
 group = 'dev.minemods'
 base.archivesName = 'breakableframes-{mc}-{loader}'
@@ -117,7 +118,7 @@ dependencies {{
 {mappings}    {dep} 'net.fabricmc:fabric-loader:0.19.5'
     {dep} 'net.fabricmc.fabric-api:fabric-api:{FABRIC_API[mc]}'
 }}
-java.toolchain.languageVersion = JavaLanguageVersion.of({jdk})
+java.toolchain.languageVersion = JavaLanguageVersion.of({max(21,jdk)})
 tasks.withType(JavaCompile).configureEach {{ options.encoding='UTF-8'; options.release={jdk} }}
 '''
  if mc=='1.20.1':
@@ -214,7 +215,7 @@ def gen(mc,loader):
  put(root,'settings.gradle',"pluginManagement { repositories { maven { url 'https://maven.minecraftforge.net' }; maven { url 'https://maven.neoforged.net/releases' }; maven { url 'https://maven.fabricmc.net/' }; maven { url 'https://repo.spongepowered.org/repository/maven-public/' }; gradlePluginPortal() } }\nrootProject.name = 'breakableframes'\n")
  put(root,'build.gradle',build_gradle(mc,loader))
  put(root,'gradle.properties','org.gradle.jvmargs=-Xmx2G\norg.gradle.daemon=false\n')
- gradle='8.14.5' if mc=='1.20.1' and loader!='fabric' else '9.7.1' if loader=='fabric' else '9.2.1'
+ gradle='8.14.5' if mc in ('1.20.1','1.21.1') and loader=='fabric' or mc=='1.20.1' else '9.7.1' if loader=='fabric' else '9.2.1'
  gradle_java=21 if mc=='1.20.1' and loader=='fabric' else JDK[mc]
  put(root,'build-profile.json',{'slug':'breakableframes','version':'1.0.0','minecraft':mc,'loader':loader,'java':str(gradle_java),'gradle':gradle,'jar_glob':f'breakableframes-{mc}-{loader}-1.0.0.jar'})
  put(root,'src/main/java/dev/minemods/breakableframes/mixin/FrameStateMixin.java',mixin(mc))

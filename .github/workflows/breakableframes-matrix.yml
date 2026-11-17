@@ -18,9 +18,9 @@ jobs:
         include:
           - {mc: '1.20.1', loader: 'forge', java: '17', gradle: '8.14.5'}
           - {mc: '1.20.1', loader: 'neoforge', java: '17', gradle: '8.14.5'}
-          - {mc: '1.20.1', loader: 'fabric', java: '21', gradle: '9.7.1'}
+          - {mc: '1.20.1', loader: 'fabric', java: '21', gradle: '8.14.5'}
           - {mc: '1.21.1', loader: 'neoforge', java: '21', gradle: '9.2.1'}
-          - {mc: '1.21.1', loader: 'fabric', java: '21', gradle: '9.7.1'}
+          - {mc: '1.21.1', loader: 'fabric', java: '21', gradle: '8.14.5'}
           - {mc: '26.1.2', loader: 'neoforge', java: '25', gradle: '9.2.1'}
           - {mc: '26.1.2', loader: 'fabric', java: '25', gradle: '9.7.1'}
           - {mc: '26.2', loader: 'neoforge', java: '25', gradle: '9.2.1'}
