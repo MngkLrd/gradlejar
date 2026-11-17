@@ -26,7 +26,7 @@ import json, textwrap, os, zipfile, hashlib, shutil
 
 ROOT=Path(__file__).resolve().parents[1]
 ROOT.mkdir(parents=True,exist_ok=True)
-VERSION='0.1.0'
+VERSION='0.2.0'
 SOURCES={'lava':('minecraft:lava','Lava','Лава'), 'slime':('minecraft:slime_block','Slime','Слизь'), 'lichen':('minecraft:glow_lichen','Glow Lichen','Светящийся лишайник')}
 # Vanilla-style deliberately clustered 16x16 art. Restricted ramps, no AA/noise.
 PALETTES={
@@ -222,7 +222,7 @@ public final class BioTrails {
  public static final RegistryObject<Block> SLIME = register("slime_trail");
  public static final RegistryObject<Block> LICHEN = register("lichen_trail");
  private final TrailEngine engine = new TrailEngine(LAVA,SLIME,LICHEN);
- private static RegistryObject<Block> register(String name){return BLOCKS.register(name, ()->new TrailBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().replaceable().instabreak().lightLevel(s->s.getValue(TrailBlock.AGE)>1?1:3)));}
+ private static RegistryObject<Block> register(String name){return BLOCKS.register(name, ()->new TrailBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().replaceable().instabreak().lightLevel(TrailBlock::lightLevel)));}
  public BioTrails(){ BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus()); NeoForge.EVENT_BUS.addListener(this::tick); }
  private void tick(TickEvent.ServerTickEvent event){ if(event.phase == TickEvent.Phase.END) engine.tick(event.getServer()); }
 }
@@ -239,7 +239,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
  public static final DeferredBlock<TrailBlock> LAVA = BLOCKS.registerBlock("lava_trail",TrailBlock::new, BioTrails::props);
  public static final DeferredBlock<TrailBlock> SLIME = BLOCKS.registerBlock("slime_trail",TrailBlock::new, BioTrails::props);
  public static final DeferredBlock<TrailBlock> LICHEN = BLOCKS.registerBlock("lichen_trail",TrailBlock::new, BioTrails::props);
- private static BlockBehaviour.Properties props(){return BlockBehaviour.Properties.of().noCollission().noOcclusion().replaceable().instabreak().lightLevel(s->s.getValue(TrailBlock.AGE)>1?1:3);}
+ private static BlockBehaviour.Properties props(){return BlockBehaviour.Properties.of().noCollission().noOcclusion().replaceable().instabreak().lightLevel(TrailBlock::lightLevel);}
 '''
   cons='''public BioTrails(IEventBus modBus){BLOCKS.register(modBus); NeoForge.EVENT_BUS.addListener(this::tick);}
  private void tick(ServerTickEvent.Post event){engine.tick(event.getServer());}'''
@@ -259,7 +259,7 @@ import net.minecraftforge.event.TickEvent;
  public static final RegistryObject<Block> LAVA = register("lava_trail");
  public static final RegistryObject<Block> SLIME = register("slime_trail");
  public static final RegistryObject<Block> LICHEN = register("lichen_trail");
- private static RegistryObject<Block> register(String name){return BLOCKS.register(name, ()->new TrailBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().replaceable().instabreak().lightLevel(s->s.getValue(TrailBlock.AGE)>1?1:3)));}
+ private static RegistryObject<Block> register(String name){return BLOCKS.register(name, ()->new TrailBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().replaceable().instabreak().lightLevel(TrailBlock::lightLevel)));}
 '''
    cons='''public BioTrails(){BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus()); MinecraftForge.EVENT_BUS.addListener(this::tick);}
  private void tick(TickEvent.ServerTickEvent event){if(event.phase == TickEvent.Phase.END) engine.tick(event.getServer());}'''
@@ -268,7 +268,7 @@ import net.minecraftforge.event.TickEvent;
  public static final RegistryObject<Block> LAVA = register("lava_trail");
  public static final RegistryObject<Block> SLIME = register("slime_trail");
  public static final RegistryObject<Block> LICHEN = register("lichen_trail");
- private static RegistryObject<Block> register(String name){return BLOCKS.register(name, ()->new TrailBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().replaceable().instabreak().lightLevel(s->s.getValue(TrailBlock.AGE)>1?1:3)));}
+ private static RegistryObject<Block> register(String name){return BLOCKS.register(name, ()->new TrailBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().replaceable().instabreak().lightLevel(TrailBlock::lightLevel)));}
 '''
    cons='''public BioTrails(){BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus()); MinecraftForge.EVENT_BUS.addListener(this::tick);}
  private void tick(TickEvent.ServerTickEvent event){if(event.phase == TickEvent.Phase.END) engine.tick(event.getServer());}'''
@@ -277,7 +277,7 @@ import net.minecraftforge.event.TickEvent;
  public static final RegistryObject<Block> LAVA = register("lava_trail");
  public static final RegistryObject<Block> SLIME = register("slime_trail");
  public static final RegistryObject<Block> LICHEN = register("lichen_trail");
- private static RegistryObject<Block> register(String name){return BLOCKS.register(name, ()->new TrailBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().replaceable().instabreak().lightLevel(s->s.getValue(TrailBlock.AGE)>1?1:3)));}
+ private static RegistryObject<Block> register(String name){return BLOCKS.register(name, ()->new TrailBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().replaceable().instabreak().lightLevel(TrailBlock::lightLevel)));}
 '''
    cons='''public BioTrails(FMLJavaModLoadingContext context){
    BLOCKS.register(context.getModBusGroup());
@@ -301,7 +301,7 @@ public final class BioTrails {{
 def fabric_main(mc):
  new=mc.startswith('26.'); ident='Identifier' if new else 'ResourceLocation'
  factory=f'{ident}.fromNamespaceAndPath(MODID,name)' if mc!='1.20.1' else f'new {ident}(MODID,name)'
- key=f'BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK, id)).noCollission().noOcclusion().replaceable().instabreak().lightLevel(s->s.getValue(TrailBlock.AGE)>1?1:3)' if new else 'BlockBehaviour.Properties.of().noCollission().noOcclusion().replaceable().instabreak().lightLevel(s->s.getValue(TrailBlock.AGE)>1?1:3)'
+ key=f'BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK, id)).noCollission().noOcclusion().replaceable().instabreak().lightLevel(TrailBlock::lightLevel)' if new else 'BlockBehaviour.Properties.of().noCollission().noOcclusion().replaceable().instabreak().lightLevel(TrailBlock::lightLevel)'
  # For 1.21.1: create 1.21 vanilla resource keys? leave at first
  return f'''package dev.biotrails;
 import dev.biotrails.block.TrailBlock;
@@ -360,7 +360,7 @@ modId="biotrails"
 version="{VERSION}"
 displayName="Bio-Trails"
 authors="BioTrails Contributors"
-description="Vanilla-style glowing footprints after walking on lava, slime or glow lichen."
+description="Vanilla-style glowing footprints after walking on lava, slime, honey, glow lichen or water."
 [[dependencies.biotrails]]
 modId="neoforge"
 type="required"
@@ -385,7 +385,7 @@ modId="biotrails"
 version="{VERSION}"
 displayName="Bio-Trails"
 authors="BioTrails Contributors"
-description="Vanilla-style glowing footprints after walking on lava, slime or glow lichen."
+description="Vanilla-style glowing footprints after walking on lava, slime, honey, glow lichen or water."
 [[dependencies.biotrails]]
 modId="forge"
 mandatory=true
@@ -495,7 +495,7 @@ rootProject.name='biotrails-{mc}-{loader}'
   engine_java=engine_java.replace('player.serverLevel()', '(ServerLevel)player.level()').replace('player.isInWaterOrBubble()', 'player.isInWater()')
  if mc=='1.20.1': engine_java=engine_java.replace('ResourceLocation.fromNamespaceAndPath(', 'new ResourceLocation(')
  put(root,prefix/'gameplay/TrailEngine.java',engine_java)
- main_java=fabric_main(mc) if loader=='fabric' else forge_main(mc,loader=='neoforge')
+ main_java=upgrade_main(fabric_main(mc) if loader=='fabric' else forge_main(mc,loader=='neoforge'))
  if mc.startswith('26.'):
   main_java=main_java.replace('noCollission()', 'noCollision()')
  if loader=='forge' and mc.startswith('26.'):
@@ -504,7 +504,9 @@ rootProject.name='biotrails-{mc}-{loader}'
  put(root,prefix/'BioTrails.java',main_java)
  if loader=='fabric':
   client=fabric_client(mc)
-  if client: put(root,prefix/'client/BioTrailsClient.java',client)
+  if client:
+   client=client.replace('BlockRenderLayerMap.INSTANCE.putBlock(BioTrails.LICHEN,RenderType.cutout());', 'BlockRenderLayerMap.INSTANCE.putBlock(BioTrails.LICHEN,RenderType.cutout());\n   BlockRenderLayerMap.INSTANCE.putBlock(BioTrails.HONEY,RenderType.cutout());\n   BlockRenderLayerMap.INSTANCE.putBlock(BioTrails.WATER,RenderType.cutout());')
+   put(root,prefix/'client/BioTrailsClient.java',client)
   dump(root,'src/main/resources/fabric.mod.json',{'schemaVersion':1,'id':'biotrails','version':VERSION,'name':'Bio-Trails','description':'Vanilla-style temporary glowing footprints.','environment':'*','entrypoints':{'main':['dev.biotrails.BioTrails'],**({'client':['dev.biotrails.client.BioTrailsClient']} if client else {})},'depends':{'fabricloader':'>=0.15.0' if jdk==17 else '>=0.16.0' if jdk==21 else '>=0.19.0','minecraft':mc,'java':'>='+str(jdk),'fabric-api':'*'}})
  else:
   put(root,'src/main/resources/META-INF/'+('neoforge.mods.toml' if loader=='neoforge' and mc!='1.20.1' else 'mods.toml'),neo_mod_toml(mc) if loader=='neoforge' and mc!='1.20.1' else (forge_mod_toml(mc).replace('[47.3.0,)', '[47.1.106,)') if loader=='neoforge' and mc=='1.20.1' else forge_mod_toml(mc)))
@@ -516,10 +518,11 @@ rootProject.name='biotrails-{mc}-{loader}'
   states={}
   for age in range(4):
    for facing,angle in [('north',0),('east',90),('south',180),('west',270)]:
-    states[f'age={age},facing={facing}']={'model':f'biotrails:block/{source}_{age}','y':angle}
+    for submerged in ('false','true'):
+     states[f'age={age},facing={facing},waterlogged={submerged}']={'model':f'biotrails:block/{source}_{age}','y':angle}
   dump(root,assets/f'blockstates/{source}_trail.json',{'variants':states})
   for age in range(4):
-   model_obj={'ambientocclusion':False,'render_type':'minecraft:cutout','textures':{'trace':f'biotrails:block/{source}_{age}','particle':f'biotrails:block/{source}_{age}'},'elements':[{'from':[0,0.03125,0],'to':[16,0.03125,16],'faces':{'up':{'texture':'#trace','uv':[0,0,16,16]}}}]}
+   model_obj={'ambientocclusion':False,'render_type':'minecraft:cutout','textures':{'trace':f'biotrails:block/{source}_{age}','particle':f'biotrails:block/{source}_{age}'},'elements':[{'from':[0,0,0],'to':[16,0.25,16],'faces':{'up':{'texture':'#trace','uv':[0,0,16,16]}}}]}
    dump(root,assets/f'models/block/{source}_{age}.json',model_obj)
    im=Image.new('RGBA',(16,16),(0,0,0,0))
    pts=LEFT+RIGHT; colors=PALETTES[source]
@@ -541,8 +544,34 @@ rootProject.name='biotrails-{mc}-{loader}'
  for lang,trans in [('en_us',{f'block.biotrails.{s}_trail':SOURCES[s][1]+' Footprint' for s in SOURCES}),('ru_ru',{f'block.biotrails.{s}_trail':SOURCES[s][2]+' (след)' for s in SOURCES})]:
   dump(root,assets/f'lang/{lang}.json',trans)
  put(root,'README.md',f'''# Bio-Trails {VERSION} / Minecraft {mc} / {loader}
-\nRequires **Java {jdk}** and **Gradle {gradle}**. Build with `gradle --no-daemon clean build` in this directory.\nResult: `build/libs/biotrails-{mc}-{loader}-{VERSION}.jar`. Install on **server and client**. Fabric needs Fabric API.\n\n## Gameplay\nWalk on lava, slime blocks or glow lichen to charge your soles for 120 seconds. Footprint pairs appear on supported solid surfaces every ~0.6 block traveled. Each trace casts block-light level 1-3 and fades over four 8-second phases (32 seconds).\n\nSource blocks are controlled by datapack block tags in `data/biotrails/tags/`. No items, recipes, loot or new dimensions.\n\nLimitations: traces do not appear on half-height slabs, in water or where a block/plant already occupies their space. There is no in-game status HUD. Light recalculation has a cost: do not increase the frequency without testing servers. This source has not been runtime-tested in the actual game.\n''')
+\nRequires **Java {jdk}** and **Gradle {gradle}**. Build with `gradle --no-daemon clean build` in this directory.\nResult: `build/libs/biotrails-{mc}-{loader}-{VERSION}.jar`. Install on **server and client**. Fabric needs Fabric API.\n\n## Gameplay\nContact with lava, slime, honey, glow lichen or water triggers a one-shot 30-second effect. Standing on a source never refreshes the timer; exit and re-enter to activate again. Footprints emit block light level 12 to 3, decay in four 2-second phases, and disappear when their supporting block is destroyed. All tracks from an activation disappear at its hard 30-second deadline.\n\nSource blocks are controlled by datapack block tags in `data/biotrails/tags/`. No items, recipes, loot or new dimensions.\n\nLimitations: traces cannot cover plants and require support beneath, but can appear on submerged floors. There is no in-game status HUD. Light recalculation has a cost: do not increase the frequency without testing servers. This source has not been runtime-tested in the actual game.\n''')
  return root
+
+
+# Bio-Trails 0.2.0 gameplay and deterministic materials.
+SOURCES.update({
+    'honey': ('minecraft:honey_block', 'Honey', 'Мёд'),
+    'water': ('minecraft:water', 'Wet', 'Вода'),
+})
+PALETTES.update({
+    'honey': ['#74512b','#966b36','#ad8349','#c69c5c'],
+    'water': ['#315b79','#437391','#5786a2','#6f9cb1'],
+})
+JAVA_TRAIL_BLOCK=(Path(__file__).parent/'biotrails_v2'/'TrailBlock.java').read_text(encoding='utf-8')
+JAVA_ENGINE=(Path(__file__).parent/'biotrails_v2'/'TrailEngine.java').read_text(encoding='utf-8')
+
+def upgrade_main(s):
+    result=[]
+    for line in s.splitlines():
+        result.append(line)
+        if ' LICHEN =' in line and ('register(' in line or 'registerBlock(' in line):
+            result.append(line.replace('LICHEN','HONEY').replace('lichen_trail','honey_trail'))
+            result.append(line.replace('LICHEN','WATER').replace('lichen_trail','water_trail'))
+    return ('\n'.join(result)+'\n').replace(
+        'new TrailEngine(LAVA,SLIME,LICHEN)',
+        'new TrailEngine(LAVA,SLIME,LICHEN,HONEY,WATER)').replace(
+        'new TrailEngine(()->LAVA,()->SLIME,()->LICHEN)',
+        'new TrailEngine(()->LAVA,()->SLIME,()->LICHEN,()->HONEY,()->WATER)')
 
 for mc in ('1.20.1','1.21.1','26.2','26.3'):
  for loader in ('forge','neoforge','fabric'):
