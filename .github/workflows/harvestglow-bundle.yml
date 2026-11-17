@@ -1,0 +1,65 @@
+name: Harvest Glow 1.1.0 — 11-port release bundle
+
+on:
+  workflow_run:
+    workflows: ["Minecraft Mod Build Hub"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bundle:
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout all Harvest Glow Gradle projects
+        uses: actions/checkout@v4
+
+      - name: Bundle all eleven verified release JARs and source projects
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release/compiled
+
+          # First six canonical 26.x ports are from Build Hub 706.
+          # Five legacy 1.20.1/1.21.1 ports are from Build Hub 705.
+          declare -a versions=(
+            "1.21.1 neoforge 705"
+            "1.21.1 fabric 705"
+            "1.20.1 forge 705"
+            "1.20.1 neoforge 705"
+            "1.20.1 fabric 705"
+            "26.1.2 neoforge 706"
+            "26.1.2 fabric 706"
+            "26.2 neoforge 706"
+            "26.2 fabric 706"
+            "26.3 neoforge 706"
+            "26.3 fabric 706"
+          )
+          for row in "${versions[@]}"; do
+            read -r mc loader number <<< "$row"
+            tag="ci-harvestglow-mc${mc}-${loader}-1.1.0-${number}-1"
+            echo "Fetching $tag"
+            gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*.jar" --dir release/compiled
+            [[ -s "release/compiled/harvestglow-${loader}-mc${mc}-1.1.0.jar" ]] || exit 1
+          done
+
+          [[ "$(find release/compiled -maxdepth 1 -name '*.jar' | wc -l)" -eq 11 ]] || exit 1
+          cd release
+          zip -q -j HarvestGlow-1.1.0-all-11-JARs.zip compiled/*.jar
+          cd ..
+          zip -q -r release/HarvestGlow-1.1.0-all-11-sources.zip projects/harvestglow-*
+          sha256sum release/*.zip > release/SHA256SUMS.txt
+
+          gh release create harvestglow-v1.1.0-all-11 \
+            release/HarvestGlow-1.1.0-all-11-JARs.zip \
+            release/HarvestGlow-1.1.0-all-11-sources.zip \
+            release/SHA256SUMS.txt \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Harvest Glow 1.1.0 — all 11 Minecraft builds" \
+            --notes "Eleven compiled, statically verified JARs (Java 17/21/25), plus eleven complete standalone Gradle sources. Client gameplay tests still pending." \
+            --latest=false
