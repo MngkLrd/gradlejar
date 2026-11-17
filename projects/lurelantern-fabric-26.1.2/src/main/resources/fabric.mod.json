@@ -11,6 +11,9 @@
   "entrypoints": {
     "main": [
       "com.kirill.lurelantern.LureLanternMod"
+    ],
+    "client": [
+      "com.kirill.lurelantern.client.ClientRenderRegistration"
     ]
   },
   "depends": {

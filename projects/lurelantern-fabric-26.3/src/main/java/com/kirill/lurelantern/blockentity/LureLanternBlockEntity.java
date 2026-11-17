@@ -26,6 +26,7 @@ public final class LureLanternBlockEntity extends BlockEntity {
  private int waitTicks=5;
  public LureLanternBlockEntity(BlockPos pos,BlockState state){super(ModBlockEntities.LURE.get(),pos,state);}
  public boolean hasMob(){return mob!=null;}
+ public CompoundTag previewMobTag(){return mob==null?null:mob.copy();}
  public String mobName(){return mob==null?"":mob.getStringOr("id","");}
  public Mode mode(){return mode;}
  public void setMode(Mode m){mode=m;sync();}
