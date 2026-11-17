@@ -1,0 +1,9 @@
+{
+  "slug": "bigfrogs",
+  "version": "0.1.1",
+  "minecraft": "1.21.1",
+  "loader": "neoforge",
+  "java": "21",
+  "gradle": "9.2.1",
+  "jar_glob": "bigfrogs-neoforge-1.21.1-0.1.1.jar"
+}

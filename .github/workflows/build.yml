@@ -119,6 +119,9 @@ jobs:
           sed -i 's/MapCodec<LureLanternBlock> CODEC = simpleCodec/MapCodec<LanternBlock> CODEC = simpleCodec/' projects/lurelantern-1.21.1/src/main/java/com/kirill/lurelantern/block/LureLanternBlock.java
           sed -i 's/public MapCodec<? extends LanternBlock> codec()/public MapCodec<LanternBlock> codec()/' projects/lurelantern-1.21.1/src/main/java/com/kirill/lurelantern/block/LureLanternBlock.java
           python3 projects/lurelantern-1.21.1/tools/rebuild_textures.py
+      - name: Restore Big Frogs 1.21.1 sources
+        if: matrix.project_dir == 'projects/bigfrogs'
+        run: tar -xJf projects/bigfrogs/source.tar.xz -C projects/bigfrogs
       - name: Validate profile
         id: profile
         env:
