@@ -1,0 +1,9 @@
+{
+  "slug": "harvestglow",
+  "version": "1.1.0",
+  "minecraft": "1.21.1",
+  "loader": "fabric",
+  "java": "21",
+  "gradle": "9.2.1",
+  "jar_glob": "harvestglow-fabric-mc1.21.1-1.1.0.jar"
+}

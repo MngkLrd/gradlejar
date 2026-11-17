@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "harvestglow",
+  "version": "1.1.0",
+  "name": "Harvest Glow",
+  "description": "Nearby ready crops are highlighted with subtle animated green orbiting sparkles. Efficient, incremental, nearest-first client-side scanning.",
+  "authors": [
+    "MineMods"
+  ],
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.kirill.harvestglow.HarvestGlow"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}

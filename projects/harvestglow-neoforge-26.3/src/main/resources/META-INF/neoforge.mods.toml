@@ -1,0 +1,23 @@
+license="MIT"
+
+[[mods]]
+modId="harvestglow"
+version="1.1.0"
+displayName="Harvest Glow"
+authors="MineMods"
+displayTest="IGNORE_SERVER_VERSION"
+description='''Client-side nearest-first mature crop highlights with a bounded scan and animated vanilla particles.'''
+
+[[dependencies.harvestglow]]
+modId="neoforge"
+type="required"
+versionRange="[26.3.0.101,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.harvestglow]]
+modId="minecraft"
+type="required"
+versionRange="[26.3]"
+ordering="NONE"
+side="BOTH"

@@ -1,0 +1,18 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+group = 'com.kirill.harvestglow'
+version = '1.1.0'
+base.archivesName = 'harvestglow-neoforge-mc1.21.1'
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+neoForge {
+    version = '21.1.262'
+    runs { client { client() } }
+    mods { harvestglow { sourceSet(sourceSets.main) } }
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
