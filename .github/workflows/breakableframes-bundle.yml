@@ -1,0 +1,81 @@
+name: Breakable End Portal Frames - 11 JAR ZIP
+on:
+  push:
+    branches: [breakableframes-11-ports]
+    paths:
+      - '.github/workflows/breakableframes-bundle.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download verified compiled release JARs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p bundle-jars
+          while read -r mc loader; do
+            [[ -z "$mc" ]] && continue
+            file="breakableframes-${mc}-${loader}-1.0.0.jar"
+            tag="ci-breakableframes-mc${mc}-${loader}-1.0.0-3"
+            echo "Downloading $file from $tag"
+            gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "$file" --dir bundle-jars
+            test -s "bundle-jars/$file"
+          done <<'PORTS'
+          1.20.1 forge
+          1.20.1 neoforge
+          1.20.1 fabric
+          1.21.1 neoforge
+          1.21.1 fabric
+          26.1.2 neoforge
+          26.1.2 fabric
+          26.2 neoforge
+          26.2 fabric
+          26.3 neoforge
+          26.3 fabric
+          PORTS
+      - name: Package and verify all JARs
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+          import hashlib
+          jars=sorted(Path('bundle-jars').glob('*.jar'))
+          assert len(jars)==11, f'Expected 11 actual jars, got {len(jars)}'
+          for j in jars:
+              with ZipFile(j,'r') as x:
+                  assert x.testzip() is None, j
+                  n=set(x.namelist())
+                  assert 'breakableframes.mixins.json' in n, j
+                  assert ('fabric.mod.json' in n or
+                          'META-INF/mods.toml' in n or
+                          'META-INF/neoforge.mods.toml' in n), j
+          out=Path('Breakable-End-Portal-Frames-1.0.0-ALL-11-JARS.zip')
+          with ZipFile(out,'w',ZIP_DEFLATED,compresslevel=9) as x:
+              for j in jars:
+                  x.write(j,j.name)
+          with ZipFile(out,'r') as x:
+              assert len(x.namelist())==11
+              assert x.testzip() is None
+          print('READY:',out, 'bytes:',out.stat().st_size)
+          print('SHA256:',hashlib.sha256(out.read_bytes()).hexdigest())
+          print('CONTENTS:')
+          for j in jars: print(' ',j.name,j.stat().st_size)
+          PY
+      - name: Publish combined ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="ci-breakableframes-all-11-jars-1.0.0"
+          file="Breakable-End-Portal-Frames-1.0.0-ALL-11-JARS.zip"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$tag" "$file" --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$tag" "$file" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "Breakable End Portal Frames 1.0.0 - all 11 JARs" --notes "All 11 Gradle-compiled JARs for Minecraft 1.20.1, 1.21.1, 26.1.2, 26.2 and 26.3 (Forge / NeoForge / Fabric as requested). CI verified the JAR archives; gameplay testing remains outstanding." --prerelease
+          fi
