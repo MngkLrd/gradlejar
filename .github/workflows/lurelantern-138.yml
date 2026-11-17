@@ -1,4 +1,4 @@
-name: Lure Lantern 1.3.8 Verified JAR
+name: Lure Lantern Verified JAR
 on:
   push:
     branches: [main]
@@ -31,12 +31,12 @@ jobs:
         run: gradle --no-daemon runGameTestServer --stacktrace
       - name: Verify metadata, package and checksum
         run: python3 ../../tools/verify_build_output.py projects/lurelantern-1.3.7
-      - name: Verify hand renderer, recolored Basic and 16-pixel assets
+      - name: Verify hand renderer, translucent Basic and Advanced glass
         run: |
           python3 - <<'PY'
           from pathlib import Path
           from zipfile import ZipFile
-          jar=Path("build/libs/lurelantern-1.3.8.jar")
+          jar=Path("build/libs/lurelantern-1.3.9.jar")
           assert jar.is_file(),jar
           with ZipFile(jar) as z:
               names=set(z.namelist())
@@ -52,24 +52,24 @@ jobs:
                 "META-INF/neoforge.mods.toml",
               ]
               assert not [n for n in expected if n not in names], [n for n in expected if n not in names]
-              assert b'version="1.3.8"' in z.read("META-INF/neoforge.mods.toml")
-          print("Verified Lure Lantern 1.3.8:",jar.stat().st_size,"bytes")
+              assert b'version="1.3.9"' in z.read("META-INF/neoforge.mods.toml")
+          print("Verified Lure Lantern 1.3.9:",jar.stat().st_size,"bytes")
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: lurelantern-1.3.8-neoforge-1.21.1
+          name: lurelantern-1.3.9-neoforge-1.21.1
           path: |
-            projects/lurelantern-1.3.7/build/libs/lurelantern-1.3.8.jar
-            projects/lurelantern-1.3.7/build/libs/lurelantern-1.3.8.jar.sha256
+            projects/lurelantern-1.3.7/build/libs/lurelantern-1.3.9.jar
+            projects/lurelantern-1.3.7/build/libs/lurelantern-1.3.9.jar.sha256
           if-no-files-found: error
       - name: Publish verified JAR
         if: github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tag="lurelantern-1.3.8-${GITHUB_SHA:0:9}"
-          gh release create "$tag" build/libs/lurelantern-1.3.8.jar \
+          tag="lurelantern-1.3.9-${GITHUB_SHA:0:9}"
+          gh release create "$tag" build/libs/lurelantern-1.3.9.jar \
             --target "$GITHUB_SHA" \
-            --title "Lure Lantern 1.3.8 (NeoForge 1.21.1)" \
+            --title "Lure Lantern 1.3.9 (NeoForge 1.21.1)" \
             --notes "User-tested 1.3.7 follow-up: compact hand render; true metal-entity-glass transparency; matching violet basic model; mineable full-size outline and saved NBT drops. Build, static checks, and server GameTests passed. Client shader appearance still requires a manual smoke test." \
             --prerelease
