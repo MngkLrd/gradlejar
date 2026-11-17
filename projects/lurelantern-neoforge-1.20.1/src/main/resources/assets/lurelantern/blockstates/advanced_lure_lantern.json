@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "active=false,hanging=false,waterlogged=false": {
+      "model": "lurelantern:block/advanced_lure_lantern"
+    },
+    "active=false,hanging=false,waterlogged=true": {
+      "model": "lurelantern:block/advanced_lure_lantern"
+    },
+    "active=false,hanging=true,waterlogged=false": {
+      "model": "lurelantern:block/hanging_advanced_lure_lantern"
+    },
+    "active=false,hanging=true,waterlogged=true": {
+      "model": "lurelantern:block/hanging_advanced_lure_lantern"
+    },
+    "active=true,hanging=false,waterlogged=false": {
+      "model": "lurelantern:block/advanced_lure_lantern_active"
+    },
+    "active=true,hanging=false,waterlogged=true": {
+      "model": "lurelantern:block/advanced_lure_lantern_active"
+    },
+    "active=true,hanging=true,waterlogged=false": {
+      "model": "lurelantern:block/hanging_advanced_lure_lantern_active"
+    },
+    "active=true,hanging=true,waterlogged=true": {
+      "model": "lurelantern:block/hanging_advanced_lure_lantern_active"
+    }
+  }
+}
