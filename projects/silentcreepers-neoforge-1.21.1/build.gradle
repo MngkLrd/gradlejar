@@ -1,0 +1,18 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+group = 'dev.minemods'
+version = '1.0.0'
+base.archivesName = "silentcreepers-neoforge-mc${minecraft_version}"
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+neoForge {
+    version = project.neo_version
+    runs { client { client() }; server { server() } }
+    mods { silentcreepers { sourceSet(sourceSets.main) } }
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}

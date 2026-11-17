@@ -1,0 +1,17 @@
+plugins {
+    id 'fabric-loom' version '1.11.8'
+    id 'maven-publish'
+}
+group = 'dev.minemods'
+version = '1.0.0'
+base.archivesName = 'silentcreepers-fabric-mc1.21.1'
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+dependencies {
+    minecraft 'com.mojang:minecraft:1.21.1'
+    mappings loom.officialMojangMappings()
+    modImplementation 'net.fabricmc:fabric-loader:0.17.3'
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}

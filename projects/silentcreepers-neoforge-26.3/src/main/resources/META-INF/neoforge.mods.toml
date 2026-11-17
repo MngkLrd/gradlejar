@@ -1,0 +1,21 @@
+license="MIT"
+[[mixins]]
+config="silentcreepers.mixins.json"
+[[mods]]
+modId="silentcreepers"
+version="1.0.0"
+displayName="Silent Creepers"
+authors="MineMods"
+description="Creepers hide behind objects, stalk players from behind and retreat when observed, with no fuse hiss."
+[[dependencies.silentcreepers]]
+modId="neoforge"
+type="required"
+versionRange="[26.3.0.101,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.silentcreepers]]
+modId="minecraft"
+type="required"
+versionRange="[26.3]"
+ordering="NONE"
+side="BOTH"

@@ -1,0 +1,31 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.147'
+}
+group = 'dev.minemods'
+version = '1.0.0'
+base.archivesName = 'silentcreepers-forge-mc1.20.1'
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+legacyForge {
+    enable {
+        forgeVersion = '1.20.1-47.3.0'
+        disableRecompilation = true
+    }
+    runs { client { client() }; server { server() } }
+    mods { silentcreepers { sourceSet(sourceSets.main) } }
+}
+dependencies {
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+mixin {
+    add sourceSets.main, 'silentcreepers.refmap.json'
+    config 'silentcreepers.mixins.json'
+}
+jar {
+    manifest.attributes(['MixinConfigs': 'silentcreepers.mixins.json'])
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 17
+}

@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.minemods.silentcreepers.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "CreeperMixin",
+    "EntitySoundMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
