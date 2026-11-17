@@ -1,0 +1,9 @@
+{
+  "slug": "lurelantern",
+  "version": "1.3.10",
+  "minecraft": "26.1.2",
+  "loader": "fabric",
+  "java": "25",
+  "gradle": "9.5.1",
+  "jar_glob": "lurelantern-fabric-mc26.1.2-1.3.10.jar"
+}

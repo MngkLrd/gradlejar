@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lurelantern",
+  "version": "1.3.10",
+  "name": "Lure Lantern",
+  "description": "Lure friendly mobs and capture them in reusable lanterns.",
+  "authors": [
+    "Kirill"
+  ],
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.kirill.lurelantern.LureLanternMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.1.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
