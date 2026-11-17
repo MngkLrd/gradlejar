@@ -215,7 +215,7 @@ def gen(mc,loader):
  put(root,'settings.gradle',"pluginManagement { repositories { maven { url 'https://maven.minecraftforge.net' }; maven { url 'https://maven.neoforged.net/releases' }; maven { url 'https://maven.fabricmc.net/' }; maven { url 'https://repo.spongepowered.org/repository/maven-public/' }; gradlePluginPortal() } }\nrootProject.name = 'breakableframes'\n")
  put(root,'build.gradle',build_gradle(mc,loader))
  put(root,'gradle.properties','org.gradle.jvmargs=-Xmx2G\norg.gradle.daemon=false\n')
- gradle='8.14.5' if mc in ('1.20.1','1.21.1') and loader=='fabric' or mc=='1.20.1' else '9.7.1' if loader=='fabric' else '9.2.1'
+ gradle='8.8' if mc=='1.20.1' and loader=='fabric' else '8.14.5' if mc=='1.20.1' or mc=='1.21.1' and loader=='fabric' else '9.7.1' if loader=='fabric' else '9.2.1'
  gradle_java=21 if mc=='1.20.1' and loader=='fabric' else JDK[mc]
  put(root,'build-profile.json',{'slug':'breakableframes','version':'1.0.0','minecraft':mc,'loader':loader,'java':str(gradle_java),'gradle':gradle,'jar_glob':f'breakableframes-{mc}-{loader}-1.0.0.jar'})
  put(root,'src/main/java/dev/minemods/breakableframes/mixin/FrameStateMixin.java',mixin(mc))
