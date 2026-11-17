@@ -1,0 +1,88 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+group = mod_group_id
+version = mod_version
+base.archivesName = mod_id
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    version = neo_version
+    runs {
+        client { client() }
+        server { server(); programArgument '--nogui' }
+        gameTestServer { type = 'gameTestServer'; systemProperty 'neoforge.enabledGameTestNamespaces', 'lurelantern' }
+    }
+    mods {
+        "${mod_id}" { sourceSet(sourceSets.main) }
+    }
+}
+
+// Original public June 2026 1.3.2 release (same JAR as the user's attachment).
+// CI downloads the immutable exact CurseForge file through CurseMaven.
+// Local distribution may instead use its bundled original binary.
+repositories {
+    maven { url = 'https://www.cursemaven.com' }
+}
+configurations { originalJar }
+dependencies {
+    if (file('libs/lurelantern-1.3.2.jar').exists()) {
+        originalJar files('libs/lurelantern-1.3.2.jar')
+    } else {
+        originalJar 'curse.maven:lure-lantern-1576424:8253179'
+    }
+}
+
+configurations.compileOnly.extendsFrom(configurations.originalJar)
+
+import java.security.MessageDigest
+
+tasks.register('verifyOriginal') {
+    doLast {
+        def binary = configurations.originalJar.singleFile
+        def hash = MessageDigest.getInstance('SHA-256').digest(binary.bytes).encodeHex().toString()
+        if (hash != '36365af25e45282dfa2ef79e69f57ad698ce289e605fd82319a52d46a1ee308f') {
+            throw new GradleException("The original 1.3.2 JAR is different than the user-provided reference: " + hash)
+        }
+    }
+}
+
+tasks.named('compileJava') { dependsOn tasks.named('verifyOriginal') }
+
+
+tasks.named('jar', Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    dependsOn tasks.named('verifyOriginal')
+    from({ configurations.originalJar.collect { zipTree(it) } }) {
+        include 'com/kirill/lurelantern/**/*.class', 'assets/**', 'data/**', 'pack.mcmeta'
+        exclude 'com/kirill/lurelantern/block/LureLanternBlock.class'
+        exclude 'com/kirill/lurelantern/blockentity/LureLanternBlockEntity.class'
+        exclude 'com/kirill/lurelantern/registry/ModBlocks.class'
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+
+// Keep original 1.3.2 runtime classes available to the dev GameTest server.
+tasks.register('unpackOriginalRuntimeClasses', Copy) {
+    dependsOn tasks.named('compileJava')
+    from({ zipTree(configurations.originalJar.singleFile) }) {
+        include 'com/kirill/lurelantern/**/*.class'
+        exclude 'com/kirill/lurelantern/block/LureLanternBlock.class'
+        exclude 'com/kirill/lurelantern/blockentity/LureLanternBlockEntity.class'
+        exclude 'com/kirill/lurelantern/registry/ModBlocks.class'
+    }
+    into(layout.buildDirectory.dir('classes/java/main'))
+}
+tasks.named('runGameTestServer') { dependsOn tasks.named('unpackOriginalRuntimeClasses') }
+tasks.named('jar', Jar) {
+    exclude 'com/kirill/lurelantern/test/**'
+    exclude 'data/lurelantern/structure/lure_roundtrip.nbt'
+}
