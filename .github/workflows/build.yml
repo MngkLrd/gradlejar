@@ -24,6 +24,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
+      - name: Materialize Bio-Trails build profiles
+        run: python3 tools/generate_biotrails.py
       - id: select
         env:
           PROJECT_DIR: ${{ github.event_name == 'workflow_dispatch' && inputs.project_dir || '' }}
@@ -122,6 +124,9 @@ jobs:
       - name: Restore Big Frogs 1.21.1 sources
         if: matrix.project_dir == 'projects/bigfrogs'
         run: tar -xJf projects/bigfrogs/source.tar.xz -C projects/bigfrogs
+      - name: Generate Bio-Trails source projects
+        if: startsWith(matrix.project_dir, 'projects/biotrails-')
+        run: python3 tools/generate_biotrails.py
       - name: Validate profile
         id: profile
         env:
