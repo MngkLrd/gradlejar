@@ -1,6 +1,7 @@
 package com.kirill.lurelantern.block;
 import com.kirill.lurelantern.blockentity.LureLanternBlockEntity;
 import com.kirill.lurelantern.registry.ModBlocks;
+import com.kirill.lurelantern.registry.ModBlockEntities;
 import com.kirill.lurelantern.util.CapturedMobData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -40,13 +41,13 @@ public final class LureLanternBlock extends LanternBlock implements EntityBlock 
     if(be.hasMob()){
       if(player.isShiftKeyDown()){
        boolean released=be.release(server,pos);
-       player.displayClientMessage(Component.literal(released?"Released captured mob":"No safe release position"),true);
-      }else player.displayClientMessage(Component.literal(be.mobName()),true);
+       player.sendSystemMessage(Component.literal(released?"Released captured mob":"No safe release position"));
+      }else player.sendSystemMessage(Component.literal(be.mobName()));
       return;
     }
     var next=be.mode().next();be.setMode(next);
     level.setBlock(pos,state.setValue(ACTIVE,next!=LureLanternBlockEntity.Mode.OFF),3);
-    player.displayClientMessage(Component.literal(next.name()),true);return;
+    player.sendSystemMessage(Component.literal(next.name()));return;
   }
   level.setBlock(pos,state.setValue(ACTIVE,!state.getValue(ACTIVE)),3);
  }

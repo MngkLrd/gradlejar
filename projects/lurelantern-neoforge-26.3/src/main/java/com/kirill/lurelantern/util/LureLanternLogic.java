@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.villager.AbstractVillager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.TagValueOutput;
@@ -39,7 +39,7 @@ public final class LureLanternLogic {
   try{
    String name=nbt.getStringOr("id","minecraft:pig");
    var id=net.minecraft.resources.Identifier.parse(name);
-   EntityType<?> type=net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(id);
+   EntityType<?> type=net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(id).map(net.minecraft.core.Holder::value).orElse(null);
    return type==null?null:EntityType.loadEntityRecursive(type,nbt.copy(),level,EntitySpawnReason.LOAD,e->e);
   }catch(RuntimeException e){return null;}
  }
@@ -52,7 +52,7 @@ public final class LureLanternLogic {
   for(int[] offset:spots)for(int dy=0;dy<=2;dy++){
    BlockPos p=pos.offset(offset[0],-dy,offset[1]);
    if(!level.hasChunkAt(p)||!level.getBlockState(p.below()).isFaceSturdy(level,p.below(),Direction.UP))continue;
-   mob.moveTo(p.getX()+.5,p.getY()+.01,p.getZ()+.5,mob.getYRot(),mob.getXRot());
+   mob.snapTo(new Vec3(p.getX()+.5,p.getY()+.01,p.getZ()+.5),mob.getYRot(),mob.getXRot());
    if(!level.noCollision(mob))continue;
    if(level.addFreshEntity(mob)){CapturedMobData.clearMob(stack);return true;}
    return false;
