@@ -1,0 +1,87 @@
+name: Package Silent Creepers v1.0.0 (all 11 JARs)
+
+on:
+  push:
+    paths:
+      - '.github/workflows/package-silentcreepers.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch the 11 verified JARs from build #703
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p jar_files
+          for version_loader in \
+            1.20.1-forge 1.20.1-neoforge 1.20.1-fabric \
+            1.21.1-neoforge 1.21.1-fabric \
+            26.1.2-neoforge 26.1.2-fabric \
+            26.2-neoforge 26.2-fabric \
+            26.3-neoforge 26.3-fabric
+          do
+            mc="${version_loader%-*}"
+            loader="${version_loader##*-}"
+            tag="ci-silentcreepers-mc${mc}-${loader}-1.0.0-703-1"
+            jar="silentcreepers-${loader}-mc${mc}-1.0.0.jar"
+            gh release download "$tag" --repo "$REPOSITORY" \
+              --pattern "$jar" --pattern "$jar.sha256" --dir jar_files
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, zipfile
+          folder=Path("jar_files")
+          jars=list(folder.glob("*.jar"))
+          assert len(jars)==11, f"Expected exactly 11 JARs; got {len(jars)}"
+          for jar in jars:
+              checksum=folder/(jar.name+".sha256")
+              assert checksum.exists(), f"Missing checksum for {jar.name}"
+              expected=checksum.read_text().split()[0]
+              actual=hashlib.sha256(jar.read_bytes()).hexdigest()
+              assert actual==expected, f"SHA256 mismatch: {jar.name}"
+              with zipfile.ZipFile(jar) as z:
+                  assert z.testzip() is None, f"Corrupted JAR: {jar.name}"
+          print("Verified 11 JARs, all SHA-256 and ZIP contents valid")
+          PY
+
+      - name: Create a single ZIP with all JARs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+          output=Path("silentcreepers-1.0.0-all-11-jars.zip")
+          with zipfile.ZipFile(output,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for jar in sorted(Path("jar_files").glob("*.jar")):
+                  z.write(jar,jar.name)
+          print(f"{output}: {output.stat().st_size} bytes")
+          PY
+          sha256sum silentcreepers-1.0.0-all-11-jars.zip > silentcreepers-1.0.0-all-11-jars.zip.sha256
+
+      - name: Publish combined ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="silentcreepers-v1.0.0-all-11"
+          if gh release view "$tag" --repo "$REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$tag" silentcreepers-1.0.0-all-11-jars.zip silentcreepers-1.0.0-all-11-jars.zip.sha256 \
+              --repo "$REPOSITORY" --clobber
+          else
+            gh release create "$tag" silentcreepers-1.0.0-all-11-jars.zip silentcreepers-1.0.0-all-11-jars.zip.sha256 \
+              --repo "$REPOSITORY" \
+              --target "$GITHUB_SHA" \
+              --title "Silent Creepers 1.0.0 | All 11 JARs" \
+              --notes "Combined ZIP of 11 GitHub Actions build #703 releases: Forge/NeoForge/Fabric Minecraft 1.20.1; NeoForge/Fabric 1.21.1, 26.1.2, 26.2, 26.3. JAR checksums verified."
+          fi
