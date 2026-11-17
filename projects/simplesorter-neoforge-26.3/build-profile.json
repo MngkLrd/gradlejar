@@ -4,6 +4,6 @@
   "minecraft": "26.3",
   "loader": "neoforge",
   "java": "25",
-  "gradle": "9.6",
+  "gradle": "9.5.1",
   "jar_glob": "simplesorter-0.9.3-neoforge.jar"
 }
