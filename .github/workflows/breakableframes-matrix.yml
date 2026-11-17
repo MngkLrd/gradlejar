@@ -50,7 +50,7 @@ jobs:
           import os,zipfile
           from pathlib import Path
           mc=os.environ['MC']; loader=os.environ['LOADER']
-          p=Path(f'projects/breakableframes-bundle/breakableframes-{mc}-{loader}/build/libs/breakableframes-{mc}-{loader}-1.0.0.jar')
+          p=Path(f'projects/breakableframes-bundle/breakableframes-{mc}-{loader}/build/libs/breakableframes-{mc}-{loader}-1.0.1.jar')
           assert p.is_file() and p.stat().st_size>1500,p
           with zipfile.ZipFile(p) as z:
               ns=set(z.namelist())
@@ -67,7 +67,7 @@ jobs:
           MC: ${{ matrix.mc }}
           LOADER: ${{ matrix.loader }}
         run: |
-          jar="projects/breakableframes-bundle/breakableframes-${MC}-${LOADER}/build/libs/breakableframes-${MC}-${LOADER}-1.0.0.jar"
-          tag="ci-breakableframes-mc${MC}-${LOADER}-1.0.0-${GITHUB_RUN_NUMBER}"
-          gh release create "$tag" "$jar" --target "$GITHUB_SHA" --title "Breakable End Portal Frames 1.0.0 | ${MC} ${LOADER}" --notes "Compiled with Gradle. Static JAR checks passed. Not yet tested in-game." --prerelease
+          jar="projects/breakableframes-bundle/breakableframes-${MC}-${LOADER}/build/libs/breakableframes-${MC}-${LOADER}-1.0.1.jar"
+          tag="ci-breakableframes-mc${MC}-${LOADER}-1.0.1-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" "$jar" --target "$GITHUB_SHA" --title "Breakable End Portal Frames 1.0.1 | ${MC} ${LOADER}" --notes "Compiled with Gradle. Static JAR checks passed. Not yet tested in-game." --prerelease
           echo "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${tag}" >> "$GITHUB_STEP_SUMMARY"

@@ -109,7 +109,7 @@ def build_gradle(mc,loader):
   dep='implementation' if modern else 'modImplementation'
   mappings='' if modern else '    mappings loom.officialMojangMappings()\n'
   return f'''plugins {{ id '{plugin}' version '{loom_version}' }}
-version = '1.0.0'
+version = '1.0.1'
 group = 'dev.minemods'
 base.archivesName = 'breakableframes-{mc}-{loader}'
 repositories {{ mavenCentral() }}
@@ -128,7 +128,7 @@ tasks.withType(JavaCompile).configureEach {{ options.encoding='UTF-8'; options.r
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.spongepowered.mixin' version '0.7.+'
 }}
-version = '1.0.0'
+version = '1.0.1'
 group = 'dev.minemods'
 base.archivesName = 'breakableframes-{mc}-{loader}'
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -146,7 +146,7 @@ jar {{ manifest {{ attributes('MixinConfigs': 'breakableframes.mixins.json') }} 
 tasks.withType(JavaCompile).configureEach {{ options.encoding='UTF-8'; options.release=17 }}
 '''
  return f'''plugins {{ id 'java-library'; id 'net.neoforged.moddev' version '2.0.148'; id 'idea' }}
-version='1.0.0'
+version='1.0.1'
 group='dev.minemods'
 base.archivesName='breakableframes-{mc}-{loader}'
 java.toolchain.languageVersion=JavaLanguageVersion.of({jdk})
@@ -161,7 +161,7 @@ tasks.withType(JavaCompile).configureEach {{ options.encoding='UTF-8'; options.r
 def meta(mc,loader):
  if loader=='fabric':
   return {
-   'schemaVersion':1,'id':'breakableframes','version':'1.0.0',
+   'schemaVersion':1,'id':'breakableframes','version':'1.0.1',
    'name':'Breakable End Portal Frames',
    'description':'Mine and reclaim vanilla End Portal Frames. Eyes drop separately and existing portals close when a frame is broken.',
    'authors':['MineMods'],'license':'MIT',
@@ -176,13 +176,13 @@ loaderVersion="[47,)"
 license="MIT"
 [[mods]]
 modId="breakableframes"
-version="1.0.0"
+version="1.0.1"
 displayName="Breakable End Portal Frames"
 description="Mine and reclaim End Portal Frames; eyes are returned and the portal closes."
 [[dependencies.breakableframes]]
 modId="minecraft"
 mandatory=true
-versionRange="[{mc},{mc}]"
+versionRange="[{mc}]"
 ordering="NONE"
 side="BOTH"
 '''
@@ -191,7 +191,7 @@ loaderVersion="[1,)"
 license="MIT"
 [[mods]]
 modId="breakableframes"
-version="1.0.0"
+version="1.0.1"
 displayName="Breakable End Portal Frames"
 description="Mine and reclaim End Portal Frames; eyes are returned and the portal closes."
 [[mixins]]
@@ -205,7 +205,7 @@ side="BOTH"
 [[dependencies.breakableframes]]
 modId="minecraft"
 type="required"
-versionRange="[{mc},{mc}]"
+versionRange="[{mc}]"
 ordering="NONE"
 side="BOTH"
 '''
@@ -217,7 +217,7 @@ def gen(mc,loader):
  put(root,'gradle.properties','org.gradle.jvmargs=-Xmx2G\norg.gradle.daemon=false\n')
  gradle='8.8' if mc=='1.20.1' and loader=='fabric' else '8.14.5' if mc=='1.20.1' or mc=='1.21.1' and loader=='fabric' else '9.7.1' if loader=='fabric' else '9.2.1'
  gradle_java=21 if mc=='1.20.1' and loader=='fabric' else JDK[mc]
- put(root,'build-profile.json',{'slug':'breakableframes','version':'1.0.0','minecraft':mc,'loader':loader,'java':str(gradle_java),'gradle':gradle,'jar_glob':f'breakableframes-{mc}-{loader}-1.0.0.jar'})
+ put(root,'build-profile.json',{'slug':'breakableframes','version':'1.0.1','minecraft':mc,'loader':loader,'java':str(gradle_java),'gradle':gradle,'jar_glob':f'breakableframes-{mc}-{loader}-1.0.1.jar'})
  put(root,'src/main/java/dev/minemods/breakableframes/mixin/FrameStateMixin.java',mixin(mc))
  if loader=='fabric':
   put(root,'src/main/java/dev/minemods/breakableframes/BreakableFrames.java','''package dev.minemods.breakableframes;
@@ -240,12 +240,12 @@ public final class BreakableFrames {{
  else:put(root, 'src/main/resources/META-INF/'+('mods.toml' if mc=='1.20.1' else 'neoforge.mods.toml'),meta(mc,loader))
  put(root,'src/main/resources/pack.mcmeta',{'pack':{'pack_format':PACK[mc],'description':'Breakable End Portal Frames - native mining tags'}})
  put(root,'src/main/resources/data/minecraft/tags/block/mineable/pickaxe.json',{'replace':False,'values':['minecraft:end_portal_frame']})
- put(root,'README.md',f'''# Breakable End Portal Frames 1.0.0 (Minecraft {mc} {loader})
+ put(root,'README.md',f'''# Breakable End Portal Frames 1.0.1 (Minecraft {mc} {loader})
 Mine vanilla End Portal Frames at hardness 5.0, drop the End Portal Frame block and (when present) one Eye of Ender. Upon removing a frame, nearby active End Portal blocks are cleared. No recipes or textures, no custom item.
 
 ## Build
 Requires Java {JDK[mc]} for Minecraft ({gradle_java} for build tools), Gradle {gradle}.
-`gradle --no-daemon clean build` -> `build/libs/breakableframes-{mc}-{loader}-1.0.0.jar`.
+`gradle --no-daemon clean build` -> `build/libs/breakableframes-{mc}-{loader}-1.0.1.jar`.
 
 ## Tests
 * Launch client and dedicated server; mod loads and no Mixin errors.
@@ -263,8 +263,8 @@ Client/server side should match for correct breaking progress, and loaders are n
 for mc,loaders in VERSIONS.items():
  for loader in loaders:gen(mc,loader)
 put(ROOT,'README.md','# Breakable End Portal Frames - 11 independently buildable ports\n\nMinecraft 1.20.1 Forge/NeoForge/Fabric, 1.21.1 NeoForge/Fabric, 26.1.2 NeoForge/Fabric, 26.2 NeoForge/Fabric, 26.3 NeoForge/Fabric.\n\nEach folder is self-contained and compatible with the MngkLrd/gradlejar Build Hub. Download a compiled JAR from successful GitHub Actions releases after CI builds. Source ZIP alone is not a compiled mod.\n')
-put(ROOT,'build-manifest.json',{'mod':'breakableframes','version':'1.0.0','targets':[{'mc':mc,'loader':loader}for mc,ls in VERSIONS.items() for loader in ls]})
-zipname=ROOT.parent/'BreakableEndPortalFrames-1.0.0-all-11-source.zip'
+put(ROOT,'build-manifest.json',{'mod':'breakableframes','version':'1.0.1','targets':[{'mc':mc,'loader':loader}for mc,ls in VERSIONS.items() for loader in ls]})
+zipname=ROOT.parent/'BreakableEndPortalFrames-1.0.1-all-11-source.zip'
 with zipfile.ZipFile(zipname,'w',zipfile.ZIP_DEFLATED,compresslevel=8) as z:
  for f in ROOT.rglob('*'):
   if f.is_file():z.write(f,f.relative_to(ROOT.parent))
