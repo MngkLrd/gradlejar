@@ -67,7 +67,7 @@ public final class GlowTracker {
             int x = center.getX() + offset.x;
             int y = center.getY() + offset.y;
             int z = center.getZ() + offset.z;
-            if (y < world.getMinBuildHeight() || y >= world.getMaxBuildHeight()) continue;
+            if (world.isOutsideBuildHeight(y)) continue;
             scratch.set(x, y, z);
             if (!world.hasChunkAt(scratch)) continue;
             long key = scratch.asLong();
