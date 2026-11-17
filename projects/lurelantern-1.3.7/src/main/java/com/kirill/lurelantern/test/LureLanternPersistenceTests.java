@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.EntityType;
 import com.kirill.lurelantern.blockentity.LureLanternBlockEntity.LureMode;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -32,6 +33,7 @@ public final class LureLanternPersistenceTests {
     public static void capturedCowSurvivesBreakAndReplace(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         BlockPos pos = helper.absolutePos(new BlockPos(2, 1, 2));
+        prepareFloor(level, pos);
         BlockState state = ModBlocks.ADVANCED_LURE_LANTERN.get().defaultBlockState();
         helper.assertTrue(level.setBlock(pos, state, 3), "Failed to place advanced lantern");
         helper.assertTrue(state.getDestroySpeed(level, pos) >= 0.0F,
@@ -96,6 +98,7 @@ public final class LureLanternPersistenceTests {
     public static void lureOnlyNeverCapturesAndAutoModeCapturesCow(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         BlockPos pos = helper.absolutePos(new BlockPos(2, 1, 2));
+        prepareFloor(level, pos);
         BlockState state = ModBlocks.ADVANCED_LURE_LANTERN.get().defaultBlockState()
                 .setValue(LureLanternBlock.ACTIVE, true);
         helper.assertTrue(level.setBlock(pos, state, 3), "Failed to place advanced lantern");
@@ -131,6 +134,7 @@ public final class LureLanternPersistenceTests {
     public static void rabbitSpawnsBesideLanternAndNotInside(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         BlockPos pos = helper.absolutePos(new BlockPos(2, 1, 2));
+        prepareFloor(level, pos);
         BlockState state = ModBlocks.ADVANCED_LURE_LANTERN.get().defaultBlockState();
         helper.assertTrue(level.setBlock(pos, state, 3), "Could not place advanced lantern");
         LureLanternBlockEntity lantern = (LureLanternBlockEntity) level.getBlockEntity(pos);
@@ -151,5 +155,14 @@ public final class LureLanternPersistenceTests {
         }
         helper.assertTrue(!lantern.hasCapturedMob(), "Rabbit NBT was not cleared");
         helper.succeed();
+    }
+
+    /** The tiny game-test template can be placed above an air cavity; build explicit support. */
+    private static void prepareFloor(ServerLevel level, BlockPos center) {
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                level.setBlock(center.offset(dx, -1, dz), Blocks.STONE.defaultBlockState(), 3);
+            }
+        }
     }
 }

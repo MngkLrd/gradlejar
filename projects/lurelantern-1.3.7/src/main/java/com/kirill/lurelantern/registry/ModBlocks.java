@@ -5,6 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -26,6 +27,7 @@ public final class ModBlocks {
                 .strength(3.5F)
                 .sound(SoundType.LANTERN)
                 .noOcclusion()
+                .pushReaction(PushReaction.DESTROY)
                 .lightLevel(state -> state.getValue(LureLanternBlock.ACTIVE) ? 15 : idleLight);
     }
 
