@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": "Lure Lantern 26.3 port",
+    "min_format": [
+      97,
+      1
+    ],
+    "max_format": 97
+  }
+}
