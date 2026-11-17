@@ -122,6 +122,9 @@ jobs:
       - name: Restore Big Frogs 1.21.1 sources
         if: matrix.project_dir == 'projects/bigfrogs'
         run: tar -xJf projects/bigfrogs/source.tar.xz -C projects/bigfrogs
+      - name: Restore Simple Sorter NeoForge 26.x projects
+        if: startsWith(matrix.project_dir, 'projects/simplesorter-neoforge-26.')
+        run: tar -xJf projects/simplesorter-neoforge-bundle.tar.xz -C projects
       - name: Validate profile
         id: profile
         env:
