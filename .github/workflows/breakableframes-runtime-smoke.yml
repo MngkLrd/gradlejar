@@ -37,8 +37,10 @@ jobs:
           echo 'eula=true' > server/eula.txt
           echo 'online-mode=false' > run/server.properties
           echo 'online-mode=false' > runs/server/server.properties
-          timeout --signal=SIGINT 230s gradle --no-daemon runServer > /tmp/server-stdout.log 2>&1
+          set +e
+          timeout --signal=SIGINT 160s gradle --no-daemon runServer > /tmp/server-stdout.log 2>&1
           status=$?
+          set -e
           tail -n 180 /tmp/server-stdout.log || true
           echo "Gradle runServer exit status: $status"
           find . -type f \( -name 'latest.log' -o -name '*-crash.txt' \) -print -exec tail -n 120 {} \; || true
