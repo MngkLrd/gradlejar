@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " A ",
+    "ELE",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "E": {
+      "item": "minecraft:emerald"
+    },
+    "L": {
+      "item": "lurelantern:lure_lantern"
+    }
+  },
+  "result": {
+    "item": "lurelantern:advanced_lure_lantern",
+    "count": 1
+  }
+}
