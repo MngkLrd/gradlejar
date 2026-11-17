@@ -1,0 +1,7 @@
+plugins {id 'java-library';id 'idea';id 'net.neoforged.moddev' version '2.0.148'}
+group='com.kirill.lurelantern'
+version='1.3.10'
+base.archivesName='lurelantern-neoforge-mc26.1.2'
+java.toolchain.languageVersion=JavaLanguageVersion.of(25)
+neoForge { version=project.neo_version; runs {client {client()};server {server();programArgument '--nogui'}};mods {lurelantern {sourceSet(sourceSets.main)}} }
+tasks.withType(JavaCompile).configureEach {options.encoding='UTF-8';options.release=25}

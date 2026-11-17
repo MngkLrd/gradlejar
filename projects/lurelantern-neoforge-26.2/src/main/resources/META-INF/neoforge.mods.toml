@@ -1,0 +1,19 @@
+license="MIT"
+[[mods]]
+modId="lurelantern"
+version="1.3.10"
+displayName="Lure Lantern"
+authors="Kirill"
+description="Friendly creature lure and advanced capture lantern."
+[[dependencies.lurelantern]]
+modId="neoforge"
+type="required"
+versionRange="[26.2.0.90,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.lurelantern]]
+modId="minecraft"
+type="required"
+versionRange="[26.2]"
+ordering="NONE"
+side="BOTH"
