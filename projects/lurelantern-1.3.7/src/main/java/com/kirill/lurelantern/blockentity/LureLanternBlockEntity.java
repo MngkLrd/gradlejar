@@ -123,12 +123,16 @@ public class LureLanternBlockEntity extends BlockEntity {
         for (int[] offset : spots) {
             BlockPos target = pos.offset(offset[0], 0, offset[1]);
             // Do not spawn over pits or unsafe, unloaded chunks.
+            System.err.println("LL137 release candidate " + target + " loaded=" + level.hasChunkAt(target)
+                    + " floor=" + level.getBlockState(target.below())
+                    + " sturdy=" + level.getBlockState(target.below()).isFaceSturdy(level, target.below(), Direction.UP));
             if (!level.hasChunkAt(target)
                     || !level.getBlockState(target.below()).isFaceSturdy(level, target.below(), Direction.UP)) {
                 continue;
             }
             mob.moveTo(target.getX() + 0.5D, target.getY() + 0.01D, target.getZ() + 0.5D,
                     mob.getYRot(), mob.getXRot());
+            System.err.println("LL137 collision=" + level.noCollision(mob) + " box=" + mob.getBoundingBox());
             if (!level.noCollision(mob)) continue;
             if (level.addFreshEntity(mob)) {
                 capturedMobTag = null;
