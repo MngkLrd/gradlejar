@@ -1,0 +1,65 @@
+name: Breakable Frames 1.20.1 Forge and NeoForge startup test
+on:
+  push:
+    branches: [breakableframes-11-ports]
+    paths: ['.github/workflows/breakableframes-forge120-runtime.yml']
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        loader: [forge, neoforge]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '17'}
+      - uses: gradle/actions/setup-gradle@v4
+        with: {gradle-version: '8.14.5'}
+      - name: Generate sources
+        run: python3 tools/generate_breakable_frames.py
+      - name: Configure development server launch
+        env: {LOADER: '${{ matrix.loader }}'}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          p=Path(f'projects/breakableframes-bundle/breakableframes-1.20.1-{os.environ["LOADER"]}/build.gradle')
+          s=p.read_text()
+          old="minecraft { mappings channel: 'official', version: '1.20.1' }"
+          assert old in s
+          new="""minecraft {
+              mappings channel: 'official', version: '1.20.1'
+              runs {
+                  server {
+                      workingDirectory project.file('run')
+                      mods {
+                          breakableframes {
+                              source sourceSets.main
+                          }
+                      }
+                  }
+              }
+          }"""
+          p.write_text(s.replace(old,new))
+          PY
+      - name: Launch server and check for crashes
+        working-directory: projects/breakableframes-bundle/breakableframes-1.20.1-${{ matrix.loader }}
+        shell: bash
+        run: |
+          set +e
+          mkdir -p run
+          echo eula=true > run/eula.txt
+          timeout --signal=SIGINT 145s gradle --no-daemon runServer > /tmp/server.log 2>&1
+          st=$?
+          set -e
+          tail -n 130 /tmp/server.log
+          echo "exit=$st"
+          if grep -Eiq '(MixinApplyError|InvalidMixinException|InjectionError|Critical injection failure|MixinTransformerError|NoClassDefFoundError|NoSuchMethodError|ExceptionInInitializerError|Failed to start|InvalidVersionSpecificationException)' /tmp/server.log; then
+              echo "::error::Runtime crash"
+              exit 1
+          fi
+          grep -Eiq '(Done \(|You need to agree to the EULA|Preparing level|Starting minecraft server|Starting Minecraft server)' /tmp/server.log || { echo "::error::No server startup"; exit 1; }
+          echo "PASS: Minecraft 1.20.1 ${{ matrix.loader }}"
