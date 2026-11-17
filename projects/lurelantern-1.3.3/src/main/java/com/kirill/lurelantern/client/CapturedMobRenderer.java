@@ -49,7 +49,7 @@ public final class CapturedMobRenderer implements BlockEntityRenderer<LureLanter
             }
         }
         pose.pushPose();
-        pose.translate(0.5D, 0.24D, 0.5D);
+        pose.translate(0.22D, 0.04D, 0.22D);
         pose.scale(0.56F, 0.56F, 0.56F);
         try {
             double spin = (level.getGameTime() + partialTick) * 2.0D;
