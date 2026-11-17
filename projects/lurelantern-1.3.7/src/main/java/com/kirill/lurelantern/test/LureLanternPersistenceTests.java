@@ -162,6 +162,11 @@ public final class LureLanternPersistenceTests {
         for (int dx = -2; dx <= 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
                 level.setBlock(center.offset(dx, -1, dz), Blocks.STONE.defaultBlockState(), 3);
+                // The GameTest template is solid stone at mob height. Clear an actual
+                // spawnable pocket, as a player would have around a farm lantern.
+                for (int dy = 0; dy <= 3; dy++) {
+                    level.setBlock(center.offset(dx, dy, dz), Blocks.AIR.defaultBlockState(), 3);
+                }
             }
         }
     }
