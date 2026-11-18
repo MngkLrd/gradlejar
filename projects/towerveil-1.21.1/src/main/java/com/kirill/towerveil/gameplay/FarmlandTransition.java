@@ -129,7 +129,7 @@ public final class FarmlandTransition {
 
         boolean ok = player.teleportTo(destination,
                 tag.getDouble("x"), tag.getDouble("y"), tag.getDouble("z"),
-                Set.of(), tag.getFloat("yaw"), tag.getFloat("pitch"));
+                Set.of(), tag.getFloat("yaw"), 0.0F);
         if (ok) player.getPersistentData().remove(RETURN_TAG);
         return ok;
     }
