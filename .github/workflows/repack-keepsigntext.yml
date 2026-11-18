@@ -1,0 +1,68 @@
+name: Keep Sign Text - Flat JAR-only ZIP
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/repack-keepsigntext.yml'
+  workflow_dispatch:
+permissions:
+  actions: read
+  contents: write
+jobs:
+  package-flat:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download verified 11 JARs from successful build #751
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 44213793455 --repo "${GITHUB_REPOSITORY}" --pattern "jar-keepsigntext-*" --dir downloaded
+      - name: Flatten and sort 11 compiled JARs by loader
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p flat
+          declare -a mc=("1.20.1" "1.21.1" "26.1.2" "26.2" "26.3")
+          idx=0
+          for loader in forge neoforge fabric; do
+            for version in "${mc[@]}"; do
+              if [[ "$loader" == "forge" && "$version" != "1.20.1" ]]; then continue; fi
+              ((idx+=1))
+              source_file="keepsigntext-${loader}-mc${version}-1.0.0.jar"
+              mapfile -t found < <(find downloaded -type f -name "${source_file}")
+              if [[ "${#found[@]}" -ne 1 ]]; then
+                echo "Expected exactly one ${source_file}, got ${#found[@]}" >&2
+                exit 1
+              fi
+              printf -v prefix "%02d" "$idx"
+              cp "${found[0]}" "flat/${prefix}-KeepSignText-${loader}-mc${version}-1.0.0.jar"
+            done
+          done
+          [[ "$idx" -eq 11 ]]
+          ( cd flat && zip -q -9 ../KeepSignText-11-JARs-ONLY.zip ./*.jar )
+          python3 - <<'PY'
+          import zipfile
+          p = 'KeepSignText-11-JARs-ONLY.zip'
+          with zipfile.ZipFile(p) as z:
+              items = sorted(z.namelist())
+              assert len(items) == 11, f'Expected 11 JARs, got {len(items)}'
+              assert all('/' not in x and x.endswith('.jar') for x in items), items
+              assert [x[:2] for x in items] == [f'{i:02}' for i in range(1,12)], items
+              for name in items:
+                  with zipfile.ZipFile(z.open(name)) as jar:
+                      files = jar.namelist()
+                      assert any(f.endswith('.class') for f in files), name
+                      assert 'pack.mcmeta' in files, name
+              print('Verified: 11 actual mod JARs, flat ZIP root, ordered Forge -> NeoForge -> Fabric')
+              print('\n'.join(items))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KeepSignText-11-JARs-ONLY
+          path: KeepSignText-11-JARs-ONLY.zip
+          retention-days: 30
+      - name: Publish direct download link
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "keepsigntext-v1.0.0-flat" KeepSignText-11-JARs-ONLY.zip --repo "${GITHUB_REPOSITORY}" --target "${GITHUB_SHA}" --title "Keep Sign Text 1.0.0 - 11 JARs only" --notes "Exactly 11 compiled JAR files at the ZIP root, numbered Forge, NeoForge, Fabric. No sources, folders or extra files. In-game behavior has not been tested." --prerelease
