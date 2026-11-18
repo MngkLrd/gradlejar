@@ -4,10 +4,11 @@ license="MIT"
 
 [[mods]]
 modId="keepsigntext"
-version="1.0.0"
+version="1.0.1"
 displayName="Keep Sign Text"
 authors="MineMods"
-description='''Sign items preserve both sides of text and sign settings when broken.'''
+description='''Preserves sign text on break and restores it on placement.'''
+
 
 [[dependencies.keepsigntext]]
 modId="forge"

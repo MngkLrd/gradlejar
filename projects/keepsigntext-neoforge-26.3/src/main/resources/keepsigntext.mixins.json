@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.kirill.keepsigntext.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "SignPlacementMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

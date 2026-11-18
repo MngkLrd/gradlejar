@@ -4,7 +4,8 @@
   "package": "com.kirill.keepsigntext.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "SignDropsMixin"
+    "SignDropsMixin",
+    "SignPlacementMixin"
   ],
   "injectors": {
     "defaultRequire": 1

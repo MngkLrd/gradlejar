@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
 }
 group = 'com.kirill.keepsigntext'
-version = '1.0.0'
+version = '1.0.1'
 base.archivesName = 'keepsigntext-fabric-mc26.2'
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 

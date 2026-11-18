@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "keepsigntext",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "Keep Sign Text",
-  "description": "Breaking a sign preserves front and back text, formatting, glow, dye and wax when the sign is placed again.",
+  "description": "Keeps both sides of signs, dye, glow and wax when broken and placed again.",
   "authors": [
     "MineMods"
   ],
