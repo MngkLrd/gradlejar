@@ -6,7 +6,8 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.StandingAndWallBlockItem;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.util.Unit;
+import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -23,10 +24,11 @@ public abstract class SignDropsMixin {
     private static void keepsigntext$onDrops(BlockState state, ServerLevel level, BlockPos pos, BlockEntity entity,
                                               CallbackInfoReturnable<List<ItemStack>> cir) {
         if (!(entity instanceof SignBlockEntity sign)) return;
-        var data = CustomData.of(sign.saveWithFullMetadata(level.registryAccess()));
         for (ItemStack stack : cir.getReturnValue()) {
             if (stack.getItem() instanceof StandingAndWallBlockItem) {
-                stack.set(DataComponents.BLOCK_ENTITY_DATA, data);
+                stack.set(DataComponents.SIGN_TEXT_FRONT, sign.getText(SignTextSlot.FRONT));
+                stack.set(DataComponents.SIGN_TEXT_BACK, sign.getText(SignTextSlot.BACK));
+                if (sign.isWaxed()) stack.set(DataComponents.WAXED, Unit.INSTANCE);
             }
         }
     }

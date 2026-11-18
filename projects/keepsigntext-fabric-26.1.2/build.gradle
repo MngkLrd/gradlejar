@@ -9,8 +9,8 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 dependencies {
     minecraft 'com.mojang:minecraft:26.1.2'
-    modImplementation 'net.fabricmc:fabric-loader:0.19.5'
-    modImplementation 'net.fabricmc.fabric-api:fabric-api:0.155.3+26.1.2'
+    implementation 'net.fabricmc:fabric-loader:0.19.5'
+    implementation 'net.fabricmc.fabric-api:fabric-api:0.155.3+26.1.2'
 }
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
