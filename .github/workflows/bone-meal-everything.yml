@@ -1,0 +1,123 @@
+name: Bone Meal Everything - 11 JAR Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - tools/build_bonemeal_everything.py
+      - .github/workflows/bone-meal-everything.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: ${{ matrix.loader }} ${{ matrix.mc }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {loader: forge, mc: '1.20.1', java: '17', gradle: '8.14.5'}
+          - {loader: neoforge, mc: '1.20.1', java: '17', gradle: '8.14.5'}
+          - {loader: neoforge, mc: '1.21.1', java: '21', gradle: '9.2.1'}
+          - {loader: neoforge, mc: '26.1.2', java: '25', gradle: '9.2.1'}
+          - {loader: neoforge, mc: '26.2', java: '25', gradle: '9.2.1'}
+          - {loader: neoforge, mc: '26.3', java: '25', gradle: '9.2.1'}
+          - {loader: fabric, mc: '1.20.1', java: '21', gradle: '8.14.3'}
+          - {loader: fabric, mc: '1.21.1', java: '21', gradle: '9.2.1'}
+          - {loader: fabric, mc: '26.1.2', java: '25', gradle: '9.5.1'}
+          - {loader: fabric, mc: '26.2', java: '25', gradle: '9.5.1'}
+          - {loader: fabric, mc: '26.3', java: '25', gradle: '9.7.1'}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate project
+        run: python3 tools/build_bonemeal_everything.py "${{ matrix.mc }}" "${{ matrix.loader }}"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ matrix.gradle }}
+      - name: Compile the mod
+        working-directory: build/bonemealeverything-${{ matrix.loader }}-${{ matrix.mc }}
+        run: gradle --no-daemon clean build --stacktrace
+      - name: Verify and stage JAR
+        env:
+          MC: ${{ matrix.mc }}
+          LOADER: ${{ matrix.loader }}
+        run: |
+          python3 - <<'PY'
+          import json, os, shutil
+          from pathlib import Path
+          base=Path('build')/('bonemealeverything-'+os.environ['LOADER']+'-'+os.environ['MC'])
+          profile=json.loads((base/'build-profile.json').read_text())
+          files=list((base/'build'/'libs').glob(profile['jar_glob']))
+          if len(files)!=1:
+              raise SystemExit(f"Expected exactly one compiled release JAR, got: {files}")
+          dst=Path('staging'); dst.mkdir(exist_ok=True)
+          shutil.copy2(files[0], dst/files[0].name)
+          print(files[0].name, files[0].stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bone-meal-everything-${{ matrix.loader }}-${{ matrix.mc }}
+          path: staging/*.jar
+          if-no-files-found: error
+          retention-days: 30
+
+  package:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: bone-meal-everything-*
+          path: staging
+          merge-multiple: true
+      - name: Make a flat ZIP in Forge, NeoForge, Fabric order
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+          jars=list(Path('staging').glob('*.jar'))
+          if len(jars)!=11: raise SystemExit(f'Expected 11 JAR files, found {len(jars)}')
+          order={'forge':0, 'neoforge':1, 'fabric':2}
+          def key(j):
+              loader=next(x for x in order if j.name.startswith('bonemealeverything-'+x+'-'))
+              mc=j.name.split('-mc')[1].split('-1.0.0.jar')[0]
+              v={'26.3':0,'26.2':1,'26.1.2':2,'1.21.1':3,'1.20.1':4}
+              return (order[loader],v[mc])
+          jars.sort(key=key)
+          out=Path('dist/BoneMealEverything-ALL-11-JARs.zip')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for jar in jars:
+                  z.write(jar,jar.name)
+                  print('Packed: ',jar.name)
+          with zipfile.ZipFile(out) as z:
+              assert len(z.namelist())==11
+              assert all('/' not in name for name in z.namelist())
+              assert z.testzip() is None
+          print('Saved:',out,out.stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BoneMealEverything-ALL-11-JARs
+          path: dist/BoneMealEverything-ALL-11-JARs.zip
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish archive on GitHub Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="bone-meal-everything-build-${{ github.run_number }}-${{ github.run_attempt }}"
+          gh release create "$tag" dist/BoneMealEverything-ALL-11-JARs.zip \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Bone Meal Everything v1.0.0 - 11 JARs" \
+            --notes "Forge 1.20.1; NeoForge 1.20.1, 1.21.1, 26.1.2, 26.2, 26.3; Fabric 1.20.1, 1.21.1, 26.1.2, 26.2, 26.3. Eleven compiled JAR files, no folders. Release generated only after all eleven Gradle builds succeed." \
+            --prerelease
