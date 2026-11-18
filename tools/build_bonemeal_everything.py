@@ -391,7 +391,7 @@ def make(version: str, loader: str) -> Path:
                     'displayName="Bone Meal Everything"\nauthors="MineMods"\n'
                     'description="Bone meal can fertilize many more blocks."\n')
         else:
-            text = ('license="MIT"\n\n[[mods]]\nmodId="bonemealeverything"\n'
+            text = ('modLoader="javafml"\nloaderVersion="[1,)"\nlicense="MIT"\n\n[[mods]]\nmodId="bonemealeverything"\n'
                     'version="1.0.0"\ndisplayName="Bone Meal Everything"\nauthors="MineMods"\n'
                     'description="Bone meal can fertilize many more blocks."\n')
         text += '\n'
