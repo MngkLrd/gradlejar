@@ -1,0 +1,65 @@
+name: Keep Sign Text 1.0.1 - Fixed JAR-only Release
+on:
+  workflow_run:
+    workflows: ["Minecraft Mod Build Hub"]
+    types: [completed]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  bundle:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_commit.message, 'Fix Keep Sign Text 1.0.1:') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all verified 1.0.1 mod jars
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --pattern 'jar-keepsigntext-*' --dir downloaded
+      - name: Package eleven jars in Forge, NeoForge, Fabric order
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p flat
+          count=0
+          for loader in forge neoforge fabric; do
+            for mc in 1.20.1 1.21.1 26.1.2 26.2 26.3; do
+              [[ "$loader" = forge && "$mc" != 1.20.1 ]] && continue
+              source_name="keepsigntext-${loader}-mc${mc}-1.0.1.jar"
+              mapfile -t sources < <(find downloaded -type f -name "$source_name")
+              [[ "${#sources[@]}" -eq 1 ]] || { echo "Missing/nonunique $source_name" >&2; exit 1; }
+              count=$((count+1))
+              printf -v prefix '%02d' "$count"
+              cp "${sources[0]}" "flat/${prefix}-KeepSignText-${loader}-mc${mc}-1.0.1.jar"
+            done
+          done
+          [[ "$count" -eq 11 ]]
+          (cd flat && zip -q -9 ../KeepSignText-1.0.1-11-JARs-ONLY.zip ./*.jar)
+          python3 - <<'PY'
+          import zipfile
+          name='KeepSignText-1.0.1-11-JARs-ONLY.zip'
+          with zipfile.ZipFile(name) as z:
+              entries=sorted(z.namelist())
+              assert len(entries)==11
+              assert all('/' not in p and p.endswith('.jar') for p in entries)
+              assert [p[:2] for p in entries] == [f'{i:02}' for i in range(1,12)]
+              for entry in entries:
+                  with zipfile.ZipFile(z.open(entry)) as jar:
+                      files=jar.namelist()
+                      assert any(p.endswith('.class') for p in files)
+                      assert 'pack.mcmeta' in files
+                      assert 'com/kirill/keepsigntext/mixin/SignPlacementMixin.class' in files
+              print('VALIDATED: exactly eleven compiled JARs, placement mixin included, no folders/sources')
+              print('\n'.join(entries))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KeepSignText-1.0.1-FIXED-11-JARs
+          path: KeepSignText-1.0.1-11-JARs-ONLY.zip
+          retention-days: 30
+      - name: Publish ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create keepsigntext-v1.0.1-fixed KeepSignText-1.0.1-11-JARs-ONLY.zip --repo "$GITHUB_REPOSITORY" --target "${{ github.event.workflow_run.head_sha }}" --title "Keep Sign Text 1.0.1 - placement fix, all 11 JARs" --notes "11 compiled JARs only, flat ZIP, sorted Forge, NeoForge, Fabric. Server-side restoration hook and sign editor suppression. CI build verified; gameplay testing not certified." --prerelease
