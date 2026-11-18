@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+[[mods]]
+modId="towerveil"
+version="0.1.0-beta"
+displayName="Tower Veil"
+authors="Kirill & contributors"
+description="Look down at a field of farmland and find yourself in a world with a solitary tower. Beta."
+[[dependencies.towerveil]]
+modId="neoforge"
+type="required"
+versionRange="[21.1,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.towerveil]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
