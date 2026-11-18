@@ -1,0 +1,85 @@
+name: Package Simple Sorter JARs
+on:
+  push:
+    paths:
+      - '.github/workflows/package-simplesorter-jars.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download and verify JARs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p bundle
+          while IFS='|' read -r mc loader tag; do
+            [[ -z "$mc" ]] && continue
+            dest="bundle/Minecraft-$mc/$loader"
+            mkdir -p "$dest"
+            gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern '*.jar' --dir "$dest" --clobber
+            shopt -s nullglob
+            jars=( "$dest"/*.jar )
+            [[ "${#jars[@]}" -eq 1 ]] || { echo "Expected one JAR for $mc / $loader"; exit 1; }
+            jar tf "${jars[0]}" > /tmp/jar-entries.txt
+            if [[ "$loader" == "fabric" ]]; then
+              grep -q '^fabric.mod.json$' /tmp/jar-entries.txt
+            else
+              grep -Eq '^META-INF/(neoforge.)?mods.toml$' /tmp/jar-entries.txt
+            fi
+            echo "Validated $mc $loader"
+          done <<'MATRIX'
+          1.20.1|forge|ci-simplesorter-mc1.20.1-forge-0.8.0-forge-739-1
+          1.20.1|neoforge|ci-simplesorter-mc1.20.1-neoforge-0.8.0-neoforge-739-1
+          1.20.1|fabric|ci-simplesorter-mc1.20.1-fabric-0.8.0-fabric-736-1
+          1.21.1|neoforge|ci-simplesorter-mc1.21.1-neoforge-0.8.0-neoforge-629-1
+          1.21.1|fabric|ci-simplesorter-mc1.21.1-fabric-0.8.0-fabric-729-1
+          26.1.2|neoforge|ci-simplesorter-mc26.1.2-neoforge-0.8.5-neoforge-742-1
+          26.1.2|fabric|ci-simplesorter-mc26.1.2-fabric-0.8.5-fabric-742-1
+          26.2|neoforge|ci-simplesorter-mc26.2-neoforge-0.9.3-neoforge-742-1
+          26.2|fabric|ci-simplesorter-mc26.2-fabric-0.9.3-fabric-742-1
+          26.3|neoforge|ci-simplesorter-mc26.3-neoforge-0.9.3-neoforge-742-1
+          26.3|fabric|ci-simplesorter-mc26.3-fabric-0.9.3-fabric-742-1
+          MATRIX
+          [[ "$(find bundle -name '*.jar' -type f | wc -l)" -eq 11 ]]
+          cat > bundle/README.txt <<'README'
+          Simple Sorter - 11 compiled JARs
+
+          Minecraft 1.20.1: Java 17, Forge/NeoForge/Fabric
+          Minecraft 1.21.1: Java 21, NeoForge/Fabric
+          Minecraft 26.1.2, 26.2, 26.3: Java 25, NeoForge/Fabric
+
+          Use only one JAR for your Minecraft version and loader.
+          Fabric needs the matching Fabric API.
+          These builds passed GitHub Gradle compilation and JAR validation.
+          In-game runtime testing and other mod compatibility are not certified.
+          README
+          ( cd bundle && find . -type f -name '*.jar' -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt )
+          zip -qr SimpleSorter-ALL-11-JARs.zip bundle
+          unzip -t SimpleSorter-ALL-11-JARs.zip | tail -1
+          sha256sum SimpleSorter-ALL-11-JARs.zip > SimpleSorter-ALL-11-JARs.zip.sha256
+      - name: Publish bundled ZIP
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/notes.txt <<'NOTES'
+          Simple Sorter: 11 compiled JARs for Minecraft 1.20.1,
+          1.21.1, 26.1.2, 26.2 and 26.3, for Forge/NeoForge/Fabric
+          where supported. Each JAR passed CI compilation and archive
+          validation. In-game tests are still required before stable release.
+          NOTES
+          gh release create "simplesorter-all-11-jars-2026-11-18" \
+            SimpleSorter-ALL-11-JARs.zip \
+            SimpleSorter-ALL-11-JARs.zip.sha256 \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Simple Sorter - 11 compiled JARs for all supported loaders" \
+            --prerelease \
+            --notes-file /tmp/notes.txt
