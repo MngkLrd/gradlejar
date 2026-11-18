@@ -130,7 +130,8 @@ jobs:
         run: python3 tools/verify_keepsigntext.py "${{ matrix.project_dir }}"
       - name: Restore Last Witness sources
         if: matrix.project_dir == 'projects/last-witness'
-        run: tar -xJf projects/last-witness/source.tar.xz -C projects/last-witness
+        run: |
+          cat projects/last-witness/source-b64/*.part | base64 -d | tar -xJf - -C projects/last-witness
       - name: Validate profile
         id: profile
         env:
