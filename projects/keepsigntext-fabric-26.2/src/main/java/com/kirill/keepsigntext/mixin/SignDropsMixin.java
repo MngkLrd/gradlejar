@@ -5,6 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.block.Block;
@@ -19,6 +21,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Block.class)
 public abstract class SignDropsMixin {
+    @Inject(method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemInstance;)Ljava/util/List;", at = @At("RETURN"))
+    private static void keepsigntext$onDropsWithTool(BlockState state, ServerLevel level, BlockPos pos, BlockEntity entity,
+                                                    Entity breaker, ItemInstance tool, CallbackInfoReturnable<List<ItemStack>> cir) {
+        if (!(entity instanceof SignBlockEntity sign)) return;
+        for (ItemStack stack : cir.getReturnValue()) {
+            if (stack.getItem() instanceof StandingAndWallBlockItem) {
+                stack.set(DataComponents.BLOCK_ENTITY_DATA, TypedEntityData.of(sign.getType(), sign.saveCustomOnly(level.registryAccess())));
+            }
+        }
+    }
+
     @Inject(method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;)Ljava/util/List;", at = @At("RETURN"))
     private static void keepsigntext$onDrops(BlockState state, ServerLevel level, BlockPos pos, BlockEntity entity,
                                               CallbackInfoReturnable<List<ItemStack>> cir) {
