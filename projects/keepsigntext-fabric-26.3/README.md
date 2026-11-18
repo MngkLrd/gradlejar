@@ -7,3 +7,5 @@ Build with the Gradle version and Java toolchain in build-profile.json. Test cre
 This revision adapts to vanilla item component changes in 26.x; production releases contain only built JAR files.
 
 Release integration check r3: verify survival block drop and re-placement.
+
+Release validation r4: explicit generic type for 26.x BLOCK_ENTITY_DATA.

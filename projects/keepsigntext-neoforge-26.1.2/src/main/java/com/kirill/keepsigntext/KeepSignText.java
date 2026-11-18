@@ -5,6 +5,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -19,7 +20,7 @@ public final class KeepSignText {
 
     private static void onBlockDrops(BlockDropsEvent event) {
         if (!(event.getBlockEntity() instanceof SignBlockEntity sign)) return;
-        var data = TypedEntityData.of(sign.getType(), sign.saveCustomOnly(event.getLevel().registryAccess()));
+        var data = TypedEntityData.<BlockEntityType<?>>of(sign.getType(), sign.saveCustomOnly(event.getLevel().registryAccess()));
         for (ItemEntity entity : event.getDrops()) {
             var stack = entity.getItem();
             if (stack.getItem() instanceof StandingAndWallBlockItem) {

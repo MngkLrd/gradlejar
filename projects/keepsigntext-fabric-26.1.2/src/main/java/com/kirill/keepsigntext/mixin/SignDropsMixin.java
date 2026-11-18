@@ -12,6 +12,7 @@ import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +28,7 @@ public abstract class SignDropsMixin {
         if (!(entity instanceof SignBlockEntity sign)) return;
         for (ItemStack stack : cir.getReturnValue()) {
             if (stack.getItem() instanceof StandingAndWallBlockItem) {
-                stack.set(DataComponents.BLOCK_ENTITY_DATA, TypedEntityData.of(sign.getType(), sign.saveCustomOnly(level.registryAccess())));
+                stack.set(DataComponents.BLOCK_ENTITY_DATA, TypedEntityData.<BlockEntityType<?>>of(sign.getType(), sign.saveCustomOnly(level.registryAccess())));
             }
         }
     }
@@ -36,7 +37,7 @@ public abstract class SignDropsMixin {
     private static void keepsigntext$onDrops(BlockState state, ServerLevel level, BlockPos pos, BlockEntity entity,
                                               CallbackInfoReturnable<List<ItemStack>> cir) {
         if (!(entity instanceof SignBlockEntity sign)) return;
-        var data = TypedEntityData.of(sign.getType(), sign.saveCustomOnly(level.registryAccess()));
+        var data = TypedEntityData.<BlockEntityType<?>>of(sign.getType(), sign.saveCustomOnly(level.registryAccess()));
         for (ItemStack stack : cir.getReturnValue()) {
             if (stack.getItem() instanceof StandingAndWallBlockItem) {
                 stack.set(DataComponents.BLOCK_ENTITY_DATA, data);
