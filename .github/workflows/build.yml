@@ -132,6 +132,13 @@ jobs:
         if: matrix.project_dir == 'projects/last-witness'
         run: |
           cat projects/last-witness/source-b64/*.part | base64 -d | tar -xJf - -C projects/last-witness
+      - name: Apply Last Witness 0.3.0 skins
+        if: matrix.project_dir == 'projects/last-witness'
+        run: |
+          set -euo pipefail
+          cat projects/last-witness/update-b64/*.part | base64 -d | tar -xJf - -C projects/last-witness
+          python3 -m pip install --disable-pip-version-check Pillow==11.3.0
+          python3 projects/last-witness/tools/fetch_fixed_skins.py --minimum 15 --workers 6
       - name: Validate profile
         id: profile
         env:
