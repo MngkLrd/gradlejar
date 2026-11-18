@@ -1,5 +1,6 @@
 package com.kirill.towerveil.gameplay;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -35,6 +36,11 @@ public final class SeamlessTeleportBridge {
         // Commands are invoked by this mod internally, not exposed to players as op.
         var source = player.createCommandSourceStack()
                 .withPermission(4).withSuppressedOutput();
-        return player.getServer().getCommands().performPrefixedCommand(source, command) > 0;
+        try {
+            return player.getServer().getCommands().getDispatcher()
+                    .execute(command, source) > 0;
+        } catch (CommandSyntaxException ex) {
+            return false;
+        }
     }
 }
