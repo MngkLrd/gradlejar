@@ -3,10 +3,10 @@ loaderVersion="[4,)"
 license="MIT"
 [[mods]]
 modId="towerveil"
-version="0.1.0-beta"
+version="0.2.0-beta"
 displayName="Tower Veil"
 authors="Kirill & contributors"
-description="Look down at a field of farmland and find yourself in a world with a solitary tower. Beta."
+description="Look down at farmland and enter a tower world with no dimension loading screen. Requires Immersive Portals installed for seamless travel."
 [[dependencies.towerveil]]
 modId="neoforge"
 type="required"
