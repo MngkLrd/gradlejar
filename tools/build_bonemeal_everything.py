@@ -58,24 +58,28 @@ public final class GrowthLogic {
         if (st.is(Blocks.STONE_BRICKS)) return set(level, pos, Blocks.MOSSY_STONE_BRICKS.defaultBlockState());
 
         if (st.is(Blocks.SUGAR_CANE) || st.is(Blocks.CACTUS)) {
-            int height = 1;
             BlockPos bottom = pos;
-            while (height < 4 && level.getBlockState(bottom.below()).is(st.getBlock())) {
-                height++;
+            while (level.getBlockState(bottom.below()).is(st.getBlock()))
                 bottom = bottom.below();
+            BlockPos top = bottom;
+            int height = 0;
+            while (level.getBlockState(top).is(st.getBlock()) && height < 4) {
+                top = top.above(); height++;
             }
-            BlockPos top = pos;
-            while (level.getBlockState(top.above()).is(st.getBlock())) top = top.above();
-            if (height >= 3 || !level.getBlockState(top.above()).isAir()) return false;
+            if (height >= 3 || !level.getBlockState(top).isAir()) return false;
             BlockState placed = st.getBlock().defaultBlockState();
-            if (!placed.canSurvive(level, top.above())) return false;
-            return roll(level, 85) ? set(level, top.above(), placed) : true;
+            if (!placed.canSurvive(level, top)) return false;
+            return roll(level, 85) ? set(level, top, placed) : true;
         }
         if (st.is(Blocks.SAND) || st.is(Blocks.RED_SAND)) {
             BlockPos top = pos.above();
             BlockState cactus = Blocks.CACTUS.defaultBlockState();
             if (!level.getBlockState(top).isAir() || !cactus.canSurvive(level, top)) return false;
-            return roll(level, 85) ? set(level, top, cactus) : true;
+            if (roll(level, 85)) return set(level, top, cactus);
+            // A failed cactus roll can instead generate a dead bush (old mod behavior).
+            BlockState bush = Blocks.DEAD_BUSH.defaultBlockState();
+            if (bush.canSurvive(level, top) && roll(level, 70)) set(level, top, bush);
+            return true;
         }
         if (st.is(Blocks.NETHER_WART)) {
             int age = st.getValue(NetherWartBlock.AGE);
@@ -88,10 +92,13 @@ public final class GrowthLogic {
             if (age >= 5 || !level.getBlockState(next).isAir()) return false;
             BlockState flower = Blocks.CHORUS_FLOWER.defaultBlockState()
                 .setValue(ChorusFlowerBlock.AGE, Math.min(age + 1, 5));
-            // Grow upward without bypassing the block's support rules.
-            if (!flower.canSurvive(level, next)) return false;
             if (!roll(level, 80)) return true;
-            level.setBlock(pos, Blocks.CHORUS_PLANT.defaultBlockState(), 3);
+            // The support check must happen AFTER the old flower becomes a plant.
+            if (!level.setBlock(pos, Blocks.CHORUS_PLANT.defaultBlockState(), 3)) return false;
+            if (!flower.canSurvive(level, next)) {
+                level.setBlock(pos, st, 3);
+                return false;
+            }
             return set(level, next, flower);
         }
         if (st.is(Blocks.MELON_STEM) || st.is(Blocks.PUMPKIN_STEM)) {
@@ -129,13 +136,14 @@ public final class GrowthLogic {
             return false;
         }
         if (st.is(Blocks.MYCELIUM)) {
-            // Mushrooms on mycelium are preferred over conversion to more mycelium.
             BlockPos top = pos.above();
             BlockState mushroom = (level.getRandom().nextBoolean() ? Blocks.RED_MUSHROOM
                 : Blocks.BROWN_MUSHROOM).defaultBlockState();
-            if (level.getBlockState(top).isAir() && mushroom.canSurvive(level, top))
-                return roll(level, 85) ? set(level, top, mushroom) : true;
-            return spread(level, pos, Blocks.MYCELIUM.defaultBlockState(), 85);
+            boolean canMushroom = level.getBlockState(top).isAir() && mushroom.canSurvive(level, top);
+            if (!roll(level, 85)) return true;
+            boolean spreadDone = spread(level, pos, Blocks.MYCELIUM.defaultBlockState(), 100);
+            boolean mushroomDone = canMushroom && set(level, top, mushroom);
+            return spreadDone || mushroomDone;
         }
         if (st.is(Blocks.PODZOL)) {
             return spread(level, pos, Blocks.PODZOL.defaultBlockState(), 85);
@@ -166,7 +174,11 @@ public final class GrowthLogic {
         if (isCoral(st)) {
             BlockPos top = pos.above();
             if (!level.getBlockState(top).is(Blocks.WATER)) return false;
-            BlockState coral = Blocks.TUBE_CORAL.defaultBlockState();
+            BlockState coral = (st.is(Blocks.BRAIN_CORAL_BLOCK) ? Blocks.BRAIN_CORAL :
+                st.is(Blocks.BUBBLE_CORAL_BLOCK) ? Blocks.BUBBLE_CORAL :
+                st.is(Blocks.FIRE_CORAL_BLOCK) ? Blocks.FIRE_CORAL :
+                st.is(Blocks.HORN_CORAL_BLOCK) ? Blocks.HORN_CORAL :
+                Blocks.TUBE_CORAL).defaultBlockState();
             if (!coral.canSurvive(level, top)) return false;
             return roll(level, 80) ? set(level, top, coral) : true;
         }
