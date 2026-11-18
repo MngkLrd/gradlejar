@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.kirill.keepsigntext.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "keepsigntext.refmap.json",
+  "mixins": [
+    "SignDropsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

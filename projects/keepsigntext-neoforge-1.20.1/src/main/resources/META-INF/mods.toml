@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+
+[[mods]]
+modId="keepsigntext"
+version="1.0.0"
+displayName="Keep Sign Text"
+authors="MineMods"
+description='''Sign items preserve both sides of text and sign settings when broken.'''
+
+[[dependencies.keepsigntext]]
+modId="forge"
+mandatory=true
+versionRange="[47.1.106,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.keepsigntext]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.20.2)"
+ordering="NONE"
+side="BOTH"

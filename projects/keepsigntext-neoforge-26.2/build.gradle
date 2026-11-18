@@ -1,0 +1,19 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+group = 'com.kirill.keepsigntext'
+version = '1.0.0'
+base.archivesName = 'keepsigntext-neoforge-mc26.2'
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+neoForge {
+    version = '26.2.0.90'
+    runs { client { client() } }
+    mods { keepsigntext { sourceSet(sourceSets.main) } }
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 25
+}

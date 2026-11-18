@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "keepsigntext",
+  "version": "1.0.0",
+  "name": "Keep Sign Text",
+  "description": "Breaking a sign preserves front and back text, formatting, glow, dye and wax when the sign is placed again.",
+  "authors": [
+    "MineMods"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.kirill.keepsigntext.KeepSignText"
+    ]
+  },
+  "mixins": [
+    "keepsigntext.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.3",
+    "minecraft": "1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
