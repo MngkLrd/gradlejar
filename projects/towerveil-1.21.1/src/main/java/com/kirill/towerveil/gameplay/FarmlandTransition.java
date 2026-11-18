@@ -4,6 +4,7 @@ import com.kirill.towerveil.TowerVeil;
 import com.kirill.towerveil.world.TowerBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,11 +18,11 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 public final class FarmlandTransition {
     private static final Map<UUID, Integer> COVERED_TICKS = new HashMap<>();
+    private static final Map<UUID, Integer> COOLDOWN_TICKS = new HashMap<>();
     private static final String RETURN_TAG = "towerveil_return";
     private static final int REQUIRED_TICKS = 8;
     private static final double TAN_HALF_VERTICAL_FOV = Math.tan(Math.toRadians(35.0));
@@ -32,6 +33,13 @@ public final class FarmlandTransition {
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         UUID id = player.getUUID();
+        int cooldown = COOLDOWN_TICKS.getOrDefault(id, 0);
+        if (cooldown > 0) {
+            COOLDOWN_TICKS.put(id, cooldown - 1);
+            COVERED_TICKS.remove(id);
+            return;
+        }
+        COOLDOWN_TICKS.remove(id);
         if (player.level().dimension().equals(TowerVeil.FIELD_DIMENSION) ||
                 !player.onGround() || player.getXRot() < 83.0F) {
             COVERED_TICKS.remove(id);
@@ -48,6 +56,7 @@ public final class FarmlandTransition {
         int ticks = COVERED_TICKS.merge(id, 1, Integer::sum);
         if (ticks >= REQUIRED_TICKS) {
             COVERED_TICKS.remove(id);
+            COOLDOWN_TICKS.put(id, 100);
             transfer(player);
         }
     }
@@ -100,9 +109,28 @@ public final class FarmlandTransition {
     }
 
     private static void transfer(ServerPlayer player) {
+        if (!SeamlessTeleportBridge.isAvailable(player)) {
+            player.displayClientMessage(Component.literal(
+                    "Tower Veil: install Immersive Portals for seamless dimension travel."), true);
+            return;
+        }
+
         ServerLevel destination = player.getServer().getLevel(TowerVeil.FIELD_DIMENSION);
-        if (destination == null) return;
+        if (destination == null) {
+            player.displayClientMessage(Component.literal(
+                    "Tower Veil: towerveil:field dimension is missing."), true);
+            return;
+        }
+
+        // The world has bedrock Y=0, dirt Y=1..63, farmland Y=64.
+        // Generate the destination chunks before switching camera/world state.
+        for (int cx = -2; cx <= 2; cx++) {
+            for (int cz = -2; cz <= 2; cz++) {
+                destination.getChunk(cx, cz);
+            }
+        }
         TowerBuilder.ensureBuilt(destination);
+
         CompoundTag returnInfo = new CompoundTag();
         returnInfo.putString("dimension", player.level().dimension().location().toString());
         returnInfo.putDouble("x", player.getX());
@@ -111,7 +139,13 @@ public final class FarmlandTransition {
         returnInfo.putFloat("yaw", player.getYRot());
         returnInfo.putFloat("pitch", player.getXRot());
         player.getPersistentData().put(RETURN_TAG, returnInfo);
-        player.teleportTo(destination, 0.5, 1.01, 0.5, Set.of(), player.getYRot(), player.getXRot());
+
+        if (!SeamlessTeleportBridge.move(player, TowerVeil.FIELD_DIMENSION,
+                0.5, 64.9375, 0.5)) {
+            player.getPersistentData().remove(RETURN_TAG);
+            player.displayClientMessage(Component.literal(
+                    "Tower Veil: seamless teleport failed. Vanilla teleport was not used."), true);
+        }
     }
 
     public static boolean returnPlayer(ServerPlayer player) {
@@ -127,10 +161,13 @@ public final class FarmlandTransition {
         ServerLevel destination = player.getServer().getLevel(key);
         if (destination == null) return false;
 
-        boolean ok = player.teleportTo(destination,
-                tag.getDouble("x"), tag.getDouble("y"), tag.getDouble("z"),
-                Set.of(), tag.getFloat("yaw"), 0.0F);
-        if (ok) player.getPersistentData().remove(RETURN_TAG);
+        boolean ok = SeamlessTeleportBridge.move(player, key,
+                tag.getDouble("x"), tag.getDouble("y"), tag.getDouble("z"));
+        if (ok) {
+            player.getPersistentData().remove(RETURN_TAG);
+            COOLDOWN_TICKS.put(player.getUUID(), 80);
+            COVERED_TICKS.remove(player.getUUID());
+        }
         return ok;
     }
 }

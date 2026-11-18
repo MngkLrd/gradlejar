@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class TowerBuilder {
     private static final int CX = 24;
     private static final int CZ = 0;
-    private static final int BASE = 1;
+    private static final int BASE = 64;
     private static final int R = 5;
     private static final BlockPos MARKER = new BlockPos(CX, BASE, CZ);
 
