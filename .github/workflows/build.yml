@@ -146,6 +146,12 @@ jobs:
           set -euo pipefail
           cat projects/last-witness/guard-b64/*.part | base64 -d | tar -xJf - -C projects/last-witness
           python3 projects/last-witness/update_040.py
+      - name: Restore MIDNIGHT The Endless Eve sources
+        if: matrix.project_dir == 'projects/midnighteve'
+        run: |
+          set -euo pipefail
+          cat projects/midnighteve/source-b64/*.part | base64 -d | tar -xJf - -C projects/midnighteve
+          test -s projects/midnighteve/src/main/java/dev/mngklrd/midnighteve/MidnightEve.java
       - name: Validate profile
         id: profile
         env:
