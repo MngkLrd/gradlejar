@@ -231,8 +231,8 @@ jobs:
           cd "$PROJECT_DIR"
           for dir in run runs/server; do
             mkdir -p "$dir"
-            printf 'eula=true\\n' > "$dir/eula.txt"
-            printf 'level-name=ci-world\\nlevel-type=midnighteve:endless_eve\\nonline-mode=false\\nview-distance=4\\nsimulation-distance=4\\nspawn-protection=0\\nmax-tick-time=-1\\n' > "$dir/server.properties"
+            printf 'eula=true\n' > "$dir/eula.txt"
+            printf 'level-name=ci-world\nlevel-type=midnighteve:endless_eve\nonline-mode=false\nview-distance=4\nsimulation-distance=4\nspawn-protection=0\nmax-tick-time=-1\n' > "$dir/server.properties"
           done
           timeout --signal=TERM --kill-after=20s 180s gradle --no-daemon runServer --stacktrace > midnight-server.log 2>&1 &
           pid=$!
