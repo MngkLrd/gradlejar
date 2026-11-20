@@ -167,6 +167,9 @@ jobs:
           cat projects/midnighteve/source-b64/*.part | base64 -d | tar -xJf - -C projects/midnighteve
           python3 -c "import base64,zlib,pathlib; p=pathlib.Path('tools/midnighteve_v020_b64'); pathlib.Path('tools/midnighteve_v020.py').write_bytes(zlib.decompress(base64.b64decode(''.join(q.read_text() for q in sorted(p.glob('*.part'))))))"
           python3 tools/midnighteve_v020.py
+          cat tools/midnighteve_v030_b64/*.part | base64 -d | tar -xJf - -C projects/midnighteve
+          test -s projects/midnighteve/src/main/java/dev/mngklrd/midnighteve/worldgen/WinterLandmarkFeature.java
+          test -s projects/midnighteve/src/main/resources/data/midnighteve/worldgen/placed_feature/crystal_crown_landmark.json
           test -s projects/midnighteve/src/main/java/dev/mngklrd/midnighteve/world/WinterBiomes.java
       - name: Validate profile
         id: profile
