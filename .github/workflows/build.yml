@@ -140,6 +140,12 @@ jobs:
           python3 -m pip install --disable-pip-version-check Pillow==11.3.0
           python3 projects/last-witness/hotfix_031.py
           python3 projects/last-witness/tools/fetch_fixed_skins.py --minimum 15 --workers 6
+      - name: Apply Last Witness 0.4.0 guard update
+        if: matrix.project_dir == 'projects/last-witness'
+        run: |
+          set -euo pipefail
+          cat projects/last-witness/guard-b64/*.part | base64 -d | tar -xJf - -C projects/last-witness
+          python3 projects/last-witness/update_040.py
       - name: Validate profile
         id: profile
         env:
