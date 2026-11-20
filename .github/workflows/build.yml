@@ -147,6 +147,11 @@ jobs:
           cat projects/last-witness/guard-b64/*.part | base64 -d | tar -xJf - -C projects/last-witness
           python3 projects/last-witness/update_040.py
           python3 projects/last-witness/fix_040a.py
+      - name: Apply Last Witness 0.4.1 village guard spawn fix
+        if: matrix.project_dir == 'projects/last-witness'
+        run: |
+          set -euo pipefail
+          python3 projects/last-witness/fix_041.py
       - name: Restore MIDNIGHT The Endless Eve sources
         if: matrix.project_dir == 'projects/midnighteve'
         run: |
