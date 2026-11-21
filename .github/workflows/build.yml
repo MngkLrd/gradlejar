@@ -160,6 +160,15 @@ jobs:
           python3 projects/last-witness/fix_042.py
           grep -q 'RangedBowAttackGoal<GuardEntity>' projects/last-witness/src/main/java/dev/minemods/lastwitness/guard/GuardEntity.java
           ! grep -q 'new ItemStack(Items.ARROW, 64)' projects/last-witness/src/main/java/dev/minemods/lastwitness/guard/GuardEntity.java
+      - name: Apply Last Witness 0.4.3 witness eye
+        if: matrix.project_dir == 'projects/last-witness'
+        run: |
+          set -euo pipefail
+          python3 -c "import pathlib,base64,zlib; p=pathlib.Path('projects/last-witness'); (p/'patch_043.py').write_bytes(zlib.decompress(base64.b64decode((p/'patch_043.b64z').read_text())))"
+          python3 projects/last-witness/patch_043.py
+          sed -i 's/0\.4\.2/0.4.3/g' projects/last-witness/gradle.properties projects/last-witness/build-profile.json projects/last-witness/src/main/resources/META-INF/neoforge.mods.toml projects/last-witness/README.md
+          test -f projects/last-witness/src/main/resources/assets/lastwitness/textures/gui/eye_watching.png
+          test -f projects/last-witness/src/main/resources/assets/lastwitness/textures/gui/eye_alert.png
       - name: Restore MIDNIGHT The Endless Eve sources
         if: matrix.project_dir == 'projects/midnighteve'
         run: |
