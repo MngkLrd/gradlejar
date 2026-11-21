@@ -173,7 +173,7 @@ jobs:
           test -s projects/midnighteve/src/main/java/dev/mngklrd/midnighteve/world/WinterBiomes.java
           cat tools/midnighteve_v040_b64/*.part | base64 -d | tar -xJf - -C projects/midnighteve
           cat tools/midnighteve_v040_hotfix/*.part | base64 -d | tar -xJf - -C projects/midnighteve
-          python3 -c "import json,pathlib; root=pathlib.Path('projects/midnighteve'); p=root/'build-profile.json'; o=json.loads(p.read_text()); print('MIDNIGHT profile version before sync:',repr(o.get('version'))); o['version']='0.4.0'; o['jar_glob']='midnighteve-0.4.0.jar'; p.write_text(json.dumps(o,indent=2)+'\\n'); g=root/'gradle.properties'; t=g.read_text(); import re; g.write_text(re.sub(r'(?m)^mod_version=.*          test -s projects/midnighteve/src/main/java/dev/mngklrd/midnighteve/entity/WinterKeeper.java
+          python3 -c "import json,pathlib; p=pathlib.Path('projects/midnighteve/build-profile.json'); d=json.loads(p.read_text()); print('MIDNIGHT profile before correction',repr(d.get('version'))); d['version']='0.4.0'; d['jar_glob']='midnighteve-0.4.0.jar'; p.write_text(json.dumps(d,indent=2))"
       - name: Validate profile
         id: profile
         env:
