@@ -173,6 +173,176 @@ jobs:
           test -s projects/midnighteve/src/main/java/dev/mngklrd/midnighteve/world/WinterBiomes.java
           cat tools/midnighteve_v040_b64/*.part | base64 -d | tar -xJf - -C projects/midnighteve
           cat tools/midnighteve_v040_hotfix/*.part | base64 -d | tar -xJf - -C projects/midnighteve
+          python3 -c "import json,pathlib; root=pathlib.Path('projects/midnighteve'); p=root/'build-profile.json'; o=json.loads(p.read_text()); print('MIDNIGHT profile version before sync:',repr(o.get('version'))); o['version']='0.4.0'; o['jar_glob']='midnighteve-0.4.0.jar'; p.write_text(json.dumps(o,indent=2)+'\\n'); g=root/'gradle.properties'; t=g.read_text(); import re; g.write_text(re.sub(r'(?m)^mod_version=.*          test -s projects/midnighteve/src/main/java/dev/mngklrd/midnighteve/entity/WinterKeeper.java
+      - name: Validate profile
+        id: profile
+        env:
+          REQUESTED_DIR: ${{ matrix.project_dir }}
+        run: python3 tools/resolve_project.py "$REQUESTED_DIR" >> "$GITHUB_OUTPUT"
+      - name: Install project Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.profile.outputs.java }}
+      - name: Install project Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ steps.profile.outputs.gradle }}
+          cache-read-only: ${{ github.event_name == 'pull_request' }}
+      - name: Install Bone Hunter Python synthesis dependencies
+        if: matrix.project_dir == 'projects/spidercentaur'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Bone Hunter synthesis libraries
+        if: matrix.project_dir == 'projects/spidercentaur'
+        run: python3 -m pip install --disable-pip-version-check numpy==1.26.4 scipy==1.14.1 soundfile==0.12.1
+      - name: Install audio encoder for Spider Centaur
+        if: matrix.project_dir == 'projects/spidercentaur'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Install Sleep Debt audio encoder
+        if: matrix.project_dir == 'projects/sleepdebt'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Compile production mod
+        env:
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
+        run: |
+          set -euo pipefail
+          cd "$PROJECT_DIR"
+          gradle --no-daemon --stacktrace clean build 2>&1 | tee "$GITHUB_WORKSPACE/build-output-${{ strategy.job-index }}.log"
+      - name: Check model, texture and datapack assets
+        if: matrix.project_dir == 'projects/openmotion'
+        run: python3 projects/openmotion/tools/check_assets.py
+      - name: Verify Pocket Realms 0.7.0 stage and custom meshes
+        if: matrix.project_dir == 'projects/pocketrealms'
+        run: python3 tools/verify_pocketrealms_v070.py
+      - name: Verify JAR
+        id: verify
+        env:
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
+        run: python3 tools/verify_build_output.py "$PROJECT_DIR"
+      - name: Smoke-test MIDNIGHT dedicated server and custom biome generation
+        if: matrix.project_dir == 'projects/midnighteve'
+        env:
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
+        run: |
+          set -euo pipefail
+          cd "$PROJECT_DIR"
+          for dir in run runs/server; do
+            mkdir -p "$dir"
+            printf 'eula=true\n' > "$dir/eula.txt"
+            printf 'level-name=ci-world\nlevel-type=midnighteve:endless_eve\nonline-mode=false\nview-distance=4\nsimulation-distance=4\nspawn-protection=0\nmax-tick-time=-1\n' > "$dir/server.properties"
+          done
+          timeout --signal=TERM --kill-after=20s 180s gradle --no-daemon runServer --stacktrace > midnight-server.log 2>&1 &
+          pid=$!
+          for n in $(seq 1 175); do
+            if grep -q 'Done (' midnight-server.log; then
+              sleep 15
+              break
+            fi
+            if ! kill -0 "$pid" 2>/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          kill "$pid" 2>/dev/null || true
+          wait "$pid" 2>/dev/null || true
+          if ! grep -q 'Done (' midnight-server.log; then
+            tail -n 160 midnight-server.log
+            exit 1
+          fi
+          python3 "$GITHUB_WORKSPACE/tools/test_midnight_worldgen.py" run runs/server
+      - name: Upload compiled JAR as workflow artifact (release fallback)
+        if: steps.verify.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: jar-${{ steps.profile.outputs.slug }}-${{ steps.profile.outputs.minecraft }}-${{ steps.profile.outputs.loader }}-${{ steps.profile.outputs.version }}-${{ strategy.job-index }}
+          path: |
+            ${{ steps.verify.outputs.jar_path }}
+            ${{ steps.verify.outputs.checksum_path }}
+          if-no-files-found: error
+          retention-days: 30
+      - name: Validate WallSlam collision resources
+        if: startsWith(matrix.project_dir, 'projects/wallslam-')
+        env:
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
+        run: python3 tools/verify_wallslam_release.py "$PROJECT_DIR"
+      - name: Publish JAR to GitHub prerelease
+        if: github.event_name != 'pull_request'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JAR_PATH: ${{ steps.verify.outputs.jar_path }}
+          CHECKSUM_PATH: ${{ steps.verify.outputs.checksum_path }}
+          MOD_SLUG: ${{ steps.profile.outputs.slug }}
+          MOD_VERSION: ${{ steps.profile.outputs.version }}
+          MOD_LOADER: ${{ steps.profile.outputs.loader }}
+          MC_VERSION: ${{ steps.profile.outputs.minecraft }}
+        run: |
+          set -euo pipefail
+          tag="ci-${MOD_SLUG}-mc${MC_VERSION}-${MOD_LOADER}-${MOD_VERSION}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
+          gh release create "$tag" "$JAR_PATH" "$CHECKSUM_PATH" \
+            --target "$GITHUB_SHA" \
+            --title "${MOD_SLUG} ${MOD_VERSION} (Minecraft ${MC_VERSION}, ${MOD_LOADER}) — CI ${GITHUB_RUN_NUMBER}" \
+            --notes "Compiled with official Minecraft/NeoForge dependencies. Static validation passed. Client gameplay untested." \
+            --prerelease
+          echo "### Download compiled JAR" >> "$GITHUB_STEP_SUMMARY"
+          echo "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${tag}" >> "$GITHUB_STEP_SUMMARY"
+      - name: Build failure summary
+        if: failure()
+        run: |
+          echo "See the first failed Gradle task above; full logs are in the build step." >> "$GITHUB_STEP_SUMMARY"
+
+  package-keepsigntext:
+    needs: [plan, build]
+    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/keepsigntext-') && github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: jar-keepsigntext-*
+          path: downloaded-jars
+          merge-multiple: true
+      - name: Assemble exactly eleven loader-sorted JARs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -d '' jars < <(find downloaded-jars -type f -name 'keepsigntext-*.jar' -print0 | sort -z)
+          if [ "${#jars[@]}" -ne 11 ]; then
+            echo "Expected 11 JARs; found ${#jars[@]}" >&2
+            exit 1
+          fi
+          mkdir -p KeepSignText/{Forge,NeoForge,Fabric}
+          for jar in "${jars[@]}"; do
+            name="$(basename "$jar")"
+            case "$name" in
+              keepsigntext-forge-*) folder=Forge ;;
+              keepsigntext-neoforge-*) folder=NeoForge ;;
+              keepsigntext-fabric-*) folder=Fabric ;;
+              *) echo "Unexpected file: $name" >&2; exit 1 ;;
+            esac
+            cp "$jar" "KeepSignText/$folder/$name"
+          done
+          zip -q -r KeepSignText-ALL-11-JARs.zip KeepSignText
+          unzip -Z1 KeepSignText-ALL-11-JARs.zip | grep -E '\.jar$'
+      - name: Upload complete ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: KeepSignText-ALL-11-JARs
+          path: KeepSignText-ALL-11-JARs.zip
+          retention-days: 30
+      - name: Publish ZIP to GitHub Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "keepsigntext-v1.0.0-${GITHUB_RUN_NUMBER}" KeepSignText-ALL-11-JARs.zip --repo "${GITHUB_REPOSITORY}" --target "${GITHUB_SHA}" --title "Keep Sign Text 1.0.0 - all 11 loaders" --notes "Only 11 compiled JAR files, sorted into Forge, NeoForge and Fabric directories. GitHub Actions build validation passed; gameplay testing remains pending." --prerelease
+, 'mod_version=0.4.0', t))"
           python3 tools/verify_midnight_v040.py projects/midnighteve
           test -s projects/midnighteve/src/main/java/dev/mngklrd/midnighteve/entity/WinterKeeper.java
       - name: Validate profile
