@@ -172,6 +172,7 @@ jobs:
           test -s projects/midnighteve/src/main/resources/data/midnighteve/worldgen/placed_feature/crystal_crown_landmark.json
           test -s projects/midnighteve/src/main/java/dev/mngklrd/midnighteve/world/WinterBiomes.java
           cat tools/midnighteve_v040_b64/*.part | base64 -d | tar -xJf - -C projects/midnighteve
+          cat tools/midnighteve_v040_hotfix/*.part | base64 -d | tar -xJf - -C projects/midnighteve
           python3 tools/verify_midnight_v040.py projects/midnighteve
           test -s projects/midnighteve/src/main/java/dev/mngklrd/midnighteve/entity/WinterKeeper.java
       - name: Validate profile
