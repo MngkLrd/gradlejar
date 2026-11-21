@@ -169,6 +169,15 @@ jobs:
           sed -i 's/0\.4\.2/0.4.3/g' projects/last-witness/gradle.properties projects/last-witness/build-profile.json projects/last-witness/src/main/resources/META-INF/neoforge.mods.toml projects/last-witness/README.md
           test -f projects/last-witness/src/main/resources/assets/lastwitness/textures/gui/eye_watching.png
           test -f projects/last-witness/src/main/resources/assets/lastwitness/textures/gui/eye_alert.png
+      - name: Apply Last Witness 0.5.0 AI, vision and trading
+        if: matrix.project_dir == 'projects/last-witness'
+        run: |
+          set -euo pipefail
+          cat projects/last-witness/patch-050.b64 | base64 -d | tar -xJf - -C projects/last-witness
+          (cd projects/last-witness && patch --batch --forward -p0 -i diff.patch && rm diff.patch)
+          grep -q 'WITNESS_FOV' projects/last-witness/src/main/java/dev/minemods/lastwitness/config/WitnessConfig.java
+          grep -q 'GuardBowTacticsGoal' projects/last-witness/src/main/java/dev/minemods/lastwitness/guard/GuardEntity.java
+          grep -q 'refreshtrades' projects/last-witness/src/main/java/dev/minemods/lastwitness/guard/GuardCommands.java
       - name: Restore MIDNIGHT The Endless Eve sources
         if: matrix.project_dir == 'projects/midnighteve'
         run: |
