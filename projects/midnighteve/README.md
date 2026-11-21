@@ -1,13 +1,9 @@
-# MIDNIGHT: The Endless Eve 0.3.0
+# MIDNIGHT: The Endless Eve v0.4.0
 
-Minecraft 1.21.1, NeoForge 21.1.262, Java 21, Gradle 9.2.1.
+Minecraft 1.21.1, NeoForge 21.1.262, Java 21. Six native custom winter biomes, biome-specific flora, rare 9x9 winter workshops, Winter Keeper and Courier (one entity with two synchronized variants), exchanges, single-spawn resident persistence. All blocks, items and NPC skins use original vanilla-style assets developed under the [Blockbench Minecraft Style Guide](https://blockbench.net/wiki/guides/minecraft-style-guide/).
 
-Added **native worldgen features**: custom holiday landmarks and biome-dependent surface patches in all six winter biomes, placed during generation rather than on the first chunk tick. A real custom MIDNIGHT world type remains included, with six data-driven winter biomes, climate regions and vanilla terrain/caves/ores. Custom terrain noise-router is **not** part of 0.3.0.
+Java sources and textures are rebuilt from the original source-b64 and v020/v030/v040 CI overlays in **.github/workflows/build.yml**. Local complete source project and artwork source scripts are available in the ZIP deliverable.
 
-## Play
-Create a **new world**, select world type **MIDNIGHT: The Endless Eve**. Travel and inspect F3, or use `/locate biome midnighteve:crystal_crown`. Features are rare and require natural open terrain. Old Overworld automatic biome-conversion behavior remains and is **irreversible**; always back up saves before testing.
+Default Minecraft worlds are permanently winterized by the legacy conversion system; create a NEW world and select `MIDNIGHT: The Endless Eve`. Always back up saves.
 
-## Build
-Sources are unpacked by CI from `source-b64/` followed by v0.2 and v0.3 upgrades. Run Gradle 9.2.1 with Java 21: `gradle --no-daemon clean build`. Output `build/libs/midnighteve-0.3.0.jar`.
-
-The full source ZIP and details are supplied separately. No external runtime mod dependencies. Dedicated-server runtime and worldgen registry testing are required before calling this stable.
+Build: `gradle --no-daemon clean build`; output: `build/libs/midnighteve-0.4.0.jar`. The worldgen building placements are Feature-generated settlements, not registrable /locate structures. Client appearance and settlement spawn behavior remain subject to in-game testing.
