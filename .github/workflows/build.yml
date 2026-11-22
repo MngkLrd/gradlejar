@@ -183,6 +183,8 @@ jobs:
         run: |
           set -euo pipefail
           cat projects/last-witness/trade-b64/*.part | base64 -d | tar -xJf - -C projects/last-witness
+          # v060 version alignment: the earlier v0.5.0 patch restores its own build profile.
+          sed -i 's/0\.5\.0/0.6.0/g' projects/last-witness/gradle.properties projects/last-witness/build-profile.json
           test -f projects/last-witness/src/main/resources/assets/lastwitness/textures/gui/barter_counter.png
           test -f projects/last-witness/src/main/java/dev/minemods/lastwitness/barter/BarterMenu.java
           sed -i 's/this(id, inventory, null);/this(id, inventory, (Villager) null);/' projects/last-witness/src/main/java/dev/minemods/lastwitness/barter/BarterMenu.java

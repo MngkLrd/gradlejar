@@ -11,3 +11,5 @@ NeoForge 1.21.1 / Java 21; client + server must both have the mod.
 8. Wanted players cannot trade; guards, 133 skin PNGs and witness eyes unchanged.
 
 CI proves build and resource packaging; runtime UI testing remains mandatory.
+
+Build verification note: restore the matching 0.6.0 build profile *after* the 0.5.0 source patch has applied.
