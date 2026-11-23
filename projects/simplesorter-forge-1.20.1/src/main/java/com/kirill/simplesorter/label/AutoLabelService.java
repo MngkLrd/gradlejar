@@ -9,6 +9,7 @@ import com.kirill.simplesorter.sorting.IItemHandler;
 import com.kirill.simplesorter.sorting.ItemCategoryResolver;
 import com.kirill.simplesorter.sorting.SortCategory;
 import com.kirill.simplesorter.sorting.WarehouseLayout;
+import com.kirill.simplesorter.sorting.WarehouseColumns;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -40,33 +41,61 @@ public final class AutoLabelService {
         int created = 0;
         int missingSupplies = 0;
 
+        // First build column semantics once. A mostly-empty chest below
+        // an established ore/plant/metal column inherits that column's label.
+        List<WarehouseColumns.Node> columnNodes = new ArrayList<>(containers.size());
+        List<Map<String, Integer>> chestVotes = new ArrayList<>(containers.size());
+        Map<String, ItemStack> representative = new HashMap<>();
         for (ContainerRef ref : containers) {
-            if (created >= 160) break;
-            BlockPos pos = ref.pos();
-            // Do not use labels to bypass permissions in protected worlds.
-            if (!level.mayInteract(player, pos)
-                    || !player.mayUseItemAt(pos, Direction.UP, wand)) continue;
-            IItemHandler inventory = ref.handler();
             Map<String, Integer> votes = new HashMap<>();
-            Map<String, ItemStack> representatives = new HashMap<>();
+            IItemHandler inventory = ref.handler();
+            int occupied = 0;
             for (int slot = 0; slot < inventory.getSlots(); slot++) {
                 ItemStack stack = inventory.getStackInSlot(slot);
                 if (stack.isEmpty()) continue;
+                occupied++;
                 SortCategory category = ItemCategoryResolver.resolve(stack);
-                String family = category.moveAllowed() ? WarehouseLayout.family(category.id()) : "misc";
+                String family = category.moveAllowed()
+                        ? WarehouseLayout.family(category.id()) : "misc";
                 votes.merge(family, 1, Integer::sum);
-                // The visible model uses the real item ID but no arbitrary NBT:
-                // this prevents syncing private book contents or enormous
-                // modded tags just to display a category icon.
-                representatives.putIfAbsent(family, new ItemStack(stack.getItem()));
+                representative.putIfAbsent(family, new ItemStack(stack.getItem()));
             }
-            if (votes.isEmpty()) continue;
+            BlockPos p = ref.pos();
+            chestVotes.add(votes);
+            columnNodes.add(new WarehouseColumns.Node(p.getX(), p.getY(), p.getZ(),
+                    occupied, votes));
+        }
+        WarehouseColumns columns = WarehouseColumns.analyze(columnNodes);
 
-            String family = votes.entrySet().stream()
-                    .max(Comparator.comparingInt((Map.Entry<String, Integer> e) -> e.getValue())
-                            .thenComparing(Map.Entry::getKey))
-                    .map(Map.Entry::getKey).orElse("misc");
-            ItemStack icon = representatives.getOrDefault(family, ItemStack.EMPTY);
+        for (int index = 0; index < containers.size() && created < 160; index++) {
+            ContainerRef ref = containers.get(index);
+            BlockPos pos = ref.pos();
+            if (!level.mayInteract(player, pos)
+                    || !player.mayUseItemAt(pos, Direction.UP, wand)) continue;
+
+            Map<String, Integer> votes = chestVotes.get(index);
+            String family = columns.role(index);
+            if (family.isEmpty() && !votes.isEmpty()) {
+                family = votes.entrySet().stream()
+                        .max(Comparator.comparingInt((Map.Entry<String, Integer> e) -> e.getValue())
+                                .thenComparing(Map.Entry::getKey))
+                        .map(Map.Entry::getKey).orElse("misc");
+            }
+            if (family.isEmpty()) {
+                // Never leave a stale ore sign hanging above an empty chest
+                // whose column no longer has a stable role.
+                WarehouseLabelData.Label removed = data.remove(pos);
+                if (removed != null) {
+                    if (!WandLabelSupplies.refund(wand, removed.material())) {
+                        Containers.dropItemStack(level, pos.getX() + 0.5D,
+                                pos.getY() + 0.6D, pos.getZ() + 0.5D,
+                                removed.material().copy());
+                    }
+                    changed.add(new ChunkPos(pos));
+                }
+                continue;
+            }
+            ItemStack icon = representative.getOrDefault(family, ItemStack.EMPTY);
             if (icon.isEmpty()) continue;
 
             WarehouseLabelData.Label prior = data.get(pos);
