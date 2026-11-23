@@ -254,6 +254,8 @@ jobs:
           mkdir -p build/smart2-tests
           javac -d build/smart2-tests \
             src/main/java/com/kirill/simplesorter/sorting/PathTokenMatcher.java \
+            src/main/java/com/kirill/simplesorter/sorting/StrictStorageFamily.java \
+            src/main/java/com/kirill/simplesorter/sorting/StrictChestAdmission.java \
             src/main/java/com/kirill/simplesorter/sorting/RoutingPolicy.java \
             src/main/java/com/kirill/simplesorter/sorting/WarehouseLayout.java \
             src/main/java/com/kirill/simplesorter/sorting/WarehouseColumns.java \
@@ -264,12 +266,14 @@ jobs:
             tools/tests/WarehouseLayoutSelfTest.java \
             tools/tests/WarehouseColumnsSelfTest.java \
             tools/tests/WarehouseRoutingRulesSelfTest.java \
+            tools/tests/StrictStorageSelfTest.java \
             tools/tests/FaceLabelDimensionsSelfTest.java \
             tools/tests/FixedLabelFacesSelfTest.java
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.SmartRulesSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseLayoutSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseColumnsSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseRoutingRulesSelfTest
+          java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.StrictStorageSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.client.FaceLabelDimensionsSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.client.FixedLabelFacesSelfTest
       - name: Check model, texture and datapack assets
