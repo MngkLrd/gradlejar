@@ -2,6 +2,7 @@ package com.kirill.simplesorter.client;
 
 import com.kirill.simplesorter.network.WandActionPayload;
 import com.kirill.simplesorter.network.WandSettingsPayload;
+import com.kirill.simplesorter.network.WandSuppliesPayload;
 import com.kirill.simplesorter.settings.SortingMode;
 import com.kirill.simplesorter.settings.SortingWandSettings;
 import net.minecraft.ChatFormatting;
@@ -17,7 +18,7 @@ import com.kirill.simplesorter.network.ClientNetwork;
 
 public class WandSettingsScreen extends Screen {
     private static final int PANEL_WIDTH = 410;
-    private static final int PANEL_HEIGHT = 322;
+    private static final int PANEL_HEIGHT = 390;
     private static final int BUTTON_HEIGHT = 20;
 
     private static final int BACKGROUND = 0xFF070503;
@@ -96,7 +97,31 @@ public class WandSettingsScreen extends Screen {
             rebuildButtons();
         }));
 
-        int actionY = panelY + 244;
+        int labelY = panelY + 247;
+        int extraW = (right - left - 12) / 3;
+        addRenderableWidget(button(
+                Component.literal("Auto-Organize: " + (settings.autoOrganize() ? "ON" : "OFF")),
+                left, labelY, extraW, BUTTON_HEIGHT,
+                settings.autoOrganize() ? GREEN : RED, settings.autoOrganize(), ignored -> {
+                    settings = settings.withAutoOrganize(!settings.autoOrganize());
+                    rebuildButtons();
+                }));
+        addRenderableWidget(button(
+                Component.literal("Labels: " + switch (settings.labelMode()) {
+                    case 1 -> "Text"; case 2 -> "Icons"; default -> "OFF";
+                }),
+                left + extraW + 6, labelY, extraW, BUTTON_HEIGHT,
+                settings.labelMode() == 0 ? MUTED : GOLD, settings.labelMode() != 0, ignored -> {
+                    settings = settings.nextLabelMode();
+                    rebuildButtons();
+                }));
+        addRenderableWidget(button(Component.literal("Load Labels"),
+                left + (extraW + 6) * 2, labelY, extraW, BUTTON_HEIGHT, BLUE, false, ignored -> {
+                    save(false);
+                    ClientNetwork.send(new WandSuppliesPayload(hand == InteractionHand.OFF_HAND ? 1 : 0));
+                }));
+
+        int actionY = panelY + 307;
         addRenderableWidget(button(Component.translatable("screen.simplesorter.wand_settings.run_selected"), left, actionY, 118, BUTTON_HEIGHT, modeAccent(settings.mode()), true, ignored -> run(settings.mode(), true)));
         addRenderableWidget(button(Component.translatable("screen.simplesorter.wand_settings.deposit_now"), left + 126, actionY, 126, BUTTON_HEIGHT, PINK, false, ignored -> run(SortingMode.PLAYER_DEPOSIT, true)));
         addRenderableWidget(button(Component.translatable("screen.simplesorter.wand_settings.save"), right - 86, actionY, 86, BUTTON_HEIGHT, GREEN, false, ignored -> {
@@ -181,7 +206,7 @@ public class WandSettingsScreen extends Screen {
         drawRadiusScale(graphics, left, panelY + 184, right - left);
 
         drawSectionLabel(graphics, Component.translatable("screen.simplesorter.wand_settings.section.visuals"), left, panelY + 199, GREEN);
-        drawKeybindInfo(graphics, left, panelY + 236, right - left);
+        drawKeybindInfo(graphics, left, panelY + 283, right - left);
 
         super.render(graphics, mouseX, mouseY, partialTick);
     }
