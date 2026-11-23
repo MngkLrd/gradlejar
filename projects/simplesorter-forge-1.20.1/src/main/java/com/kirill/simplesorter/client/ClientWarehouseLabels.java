@@ -131,6 +131,7 @@ public final class ClientWarehouseLabels {
                     Vec3 center = Vec3.atCenterOf(pos);
                     boolean wide = false;
                     BlockState state = mc.level.getBlockState(pos);
+                    boolean insetChest = state.getBlock() instanceof ChestBlock;
                     if (state.getBlock() instanceof ChestBlock chest
                             && state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
                         BlockPos partner = pos.relative(ChestBlock.getConnectedDirection(state));
@@ -146,11 +147,12 @@ public final class ClientWarehouseLabels {
                         }
                     }
 
-                    // Fixed 0.53-block normal offset: sits just outside the
-                    // full-block face (or the inset vanilla chest model).
+                    // Depth matches the actual front face: inset vanilla
+                    // chest (7/16) versus full-front TFC crates/cabinets.
+                    double depth = FaceLabelDimensions.faceOffset(insetChest);
                     Vec3 surface = center.add(
-                            face.getStepX() * 0.535D, 0D,
-                            face.getStepZ() * 0.535D);
+                            face.getStepX() * depth, 0D,
+                            face.getStepZ() * depth);
                     double distSq = surface.distanceToSqr(camera);
                     if (distSq <= LABEL_RADIUS_SQ) {
                         visible.add(new Visible(render, surface, wide, distSq));
@@ -188,7 +190,7 @@ public final class ClientWarehouseLabels {
 
             if (drawIcon) {
                 poses.pushPose();
-                poses.translate(0D, FaceLabelDimensions.iconY(), 0.105D);
+                poses.translate(0D, FaceLabelDimensions.iconY(), FaceLabelDimensions.itemDepth());
                 float iconScale = FaceLabelDimensions.iconScale();
                 poses.scale(iconScale, iconScale, iconScale);
                 mc.getItemRenderer().renderStatic(data.icon(), ItemDisplayContext.FIXED,
@@ -201,7 +203,7 @@ public final class ClientWarehouseLabels {
             // All widths are clamped to the physical chest front. Even a long
             // Russian translation cannot extend outside an adjacent chest.
             poses.pushPose();
-            poses.translate(0D, FaceLabelDimensions.textY(drawIcon), 0.032D);
+            poses.translate(0D, FaceLabelDimensions.textY(drawIcon), FaceLabelDimensions.textDepth());
             float textScale = FaceLabelDimensions.textScale(v.label().textWidth(), v.wide());
             poses.scale(-textScale, -textScale, textScale);
             mc.font.drawInBatch(v.label().caption(),
