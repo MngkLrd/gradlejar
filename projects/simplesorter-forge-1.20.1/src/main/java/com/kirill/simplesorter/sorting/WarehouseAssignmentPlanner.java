@@ -28,8 +28,6 @@ import java.util.Set;
  * Pure Java: independent of any optional TFC, GTCEu, JEI or Forge classes.
  */
 public final class WarehouseAssignmentPlanner {
-    private WarehouseAssignmentPlanner() {}
-
     public record Node(int slots, Map<String, Integer> familySlots) {
         public Node {
             familySlots = Map.copyOf(familySlots);
