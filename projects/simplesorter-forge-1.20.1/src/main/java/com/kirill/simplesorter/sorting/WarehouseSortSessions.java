@@ -163,9 +163,7 @@ public final class WarehouseSortSessions {
 
             ItemStack wand = player.getItemInHand(hand);
             if (!wand.isEmpty() && wand.getItem() == ModItems.SORTING_WAND.get()) {
-                if (settings.labelMode() != 0) {
-                    AutoLabelService.refresh(level, player, wand, settings, containers);
-                }
+                AutoLabelService.refresh(level, player, wand, settings, containers);
                 if (count > 0) SortingWandItem.consumeUse(wand, player);
             }
 
