@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 /** Server-to-client animation request, sent only for successful transfers. */
 public record FlyingItemsPayload(List<Flight> flights) {
-    public static final int MAX_FLIGHTS = 24;
+    public static final int MAX_FLIGHTS = 64;
 
     public record Flight(BlockPos from, BlockPos to, ItemStack icon, int movedItems) {}
 

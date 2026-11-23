@@ -60,10 +60,12 @@ public class WandSettingsScreen extends Screen {
 
         int modeY = panelY + 70;
         int modeW = (right - left - 8) / 2;
-        addRenderableWidget(modeButton(SortingMode.MATCH_EXISTING, left, modeY, modeW));
-        addRenderableWidget(modeButton(SortingMode.SMART_CATEGORIES, left + modeW + 8, modeY, modeW));
-        addRenderableWidget(modeButton(SortingMode.COMPACT_STACKS, left, modeY + 25, modeW));
-        addRenderableWidget(modeButton(SortingMode.PLAYER_DEPOSIT, left + modeW + 8, modeY + 25, modeW));
+        // Smart Categories includes stack merging and inventory compaction.
+        // The old separate Compact Stacks option is kept only as a saved-mode
+        // compatibility alias, not a redundant GUI action.
+        addRenderableWidget(modeButton(SortingMode.SMART_CATEGORIES, left, modeY, modeW));
+        addRenderableWidget(modeButton(SortingMode.MATCH_EXISTING, left + modeW + 8, modeY, modeW));
+        addRenderableWidget(modeButton(SortingMode.PLAYER_DEPOSIT, left, modeY + 25, right - left));
 
         int radiusY = panelY + 156;
         addRenderableWidget(button(Component.literal("-"), left, radiusY, 34, BUTTON_HEIGHT, BLUE, false, ignored -> {

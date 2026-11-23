@@ -39,6 +39,7 @@ public final class SmartCategorySorter {
         Map<StackKey, ItemStack> samples = new LinkedHashMap<>();
         Map<StackKey, List<StorageSnapshot>> byExactStack = new LinkedHashMap<>();
         Map<String, List<StorageSnapshot>> byCategory = new HashMap<>();
+        Map<String, List<StorageSnapshot>> compatibilityCache = new HashMap<>();
 
         for (ContainerRef ref : containers) {
             snapshots.add(snapshot(ref, categories, samples));
@@ -72,8 +73,23 @@ public final class SmartCategorySorter {
             String label = resolved.id();
             ItemStack sample = samples.get(key);
             List<StorageSnapshot> originals = byExactStack.getOrDefault(key, List.of());
+            // One category-to-container intersection per distinct form.
+            // Thousands of NBT-different GregTech/TFC stacks reuse this index.
+            List<StorageSnapshot> related = categoryMode
+                    ? compatibilityCache.computeIfAbsent(label, requested -> {
+                        Set<StorageSnapshot> result = new LinkedHashSet<>();
+                        if (RoutingPolicy.allowsCategoryFallback(requested)) {
+                            for (Map.Entry<String, List<StorageSnapshot>> entry : byCategory.entrySet()) {
+                                if (RoutingPolicy.compatibility(requested, entry.getKey()) >= 0.50D) {
+                                    result.addAll(entry.getValue());
+                                }
+                            }
+                        }
+                        return List.copyOf(result);
+                    })
+                    : List.of();
             StorageSnapshot best = chooseHome(key, label, sample, categoryMode,
-                    originals, byCategory);
+                    originals, related);
 
             // Prefer an established chest over a brand-new empty one. An
             // empty chest is useful ONLY when no better existing home exists.
@@ -174,17 +190,20 @@ public final class SmartCategorySorter {
             }
         }
 
-        // Clean only inventories that actually took part in a transfer.
-        // The old implementation repacked ALL 160 chests at every click.
-        if (movedItems > 0) {
-            for (StorageSnapshot snapshot : snapshots) {
-                if (!modified.contains(snapshot.ref().pos())) continue;
-                int packed = InventoryMover.cleanUpContainer(snapshot.ref(), recordMove);
-                if (packed > 0) {
-                    movedItems += packed;
-                    movedStacks++;
-                }
+        // Smart Categories ALWAYS includes partial-stack merging and filling
+        // holes, even when there were no inter-chest transfers. A cheap
+        // linear preflight skips chests already in compact form.
+        // Match Existing retains its focused "changed chests only" behavior.
+        for (StorageSnapshot snapshot : snapshots) {
+            if (!categoryMode && !modified.contains(snapshot.ref().pos())) continue;
+            if (!InventoryMover.needsCompaction(snapshot.ref())) continue;
+            int packed = InventoryMover.cleanUpContainer(snapshot.ref(), recordMove);
+            if (packed > 0) {
+                movedItems += packed;
+                movedStacks++;
             }
+        }
+        if (movedItems > 0) {
             SortingVisuals.playSortingEffects(level, modified, visualTransfers, settings);
         }
         return new SortingResult(containers.size(), movedItems, movedStacks,
@@ -219,18 +238,12 @@ public final class SmartCategorySorter {
     private static StorageSnapshot chooseHome(StackKey key, String category, ItemStack sample,
                                              boolean allowCategoryFallback,
                                              List<StorageSnapshot> originalHomes,
-                                             Map<String, List<StorageSnapshot>> categoryIndex) {
+                                             List<StorageSnapshot> compatibleHomes) {
         if (originalHomes.isEmpty()) return null;
 
         Set<StorageSnapshot> candidates = new LinkedHashSet<>(originalHomes);
         if (allowCategoryFallback && RoutingPolicy.allowsCategoryFallback(category)) {
-            // Look up only containers with at least one COMPATIBLE label,
-            // rather than rescanning all the block entities for every item.
-            for (Map.Entry<String, List<StorageSnapshot>> indexed : categoryIndex.entrySet()) {
-                if (RoutingPolicy.compatibility(category, indexed.getKey()) >= 0.50D) {
-                    candidates.addAll(indexed.getValue());
-                }
-            }
+            candidates.addAll(compatibleHomes);
         }
 
         List<StorageSnapshot> ranked = new ArrayList<>();

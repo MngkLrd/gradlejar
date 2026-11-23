@@ -41,28 +41,31 @@ public enum SortingMode {
     }
 
     public SortingMode next() {
-        SortingMode[] values = values();
-        return values[(ordinal() + 1) % values.length];
+        return switch (this) {
+            case MATCH_EXISTING -> SMART_CATEGORIES;
+            case SMART_CATEGORIES, COMPACT_STACKS -> PLAYER_DEPOSIT;
+            case PLAYER_DEPOSIT -> MATCH_EXISTING;
+        };
     }
 
     public static SortingMode byIndex(int index) {
         for (SortingMode mode : values()) {
             if (mode.index == index) {
-                return mode;
+                return mode == COMPACT_STACKS ? SMART_CATEGORIES : mode;
             }
         }
-        return MATCH_EXISTING;
+        return SMART_CATEGORIES;
     }
 
     public static SortingMode byId(String id) {
         if (id == null || id.isBlank()) {
-            return MATCH_EXISTING;
+            return SMART_CATEGORIES;
         }
         for (SortingMode mode : values()) {
             if (mode.id.equals(id)) {
-                return mode;
+                return mode == COMPACT_STACKS ? SMART_CATEGORIES : mode;
             }
         }
-        return MATCH_EXISTING;
+        return SMART_CATEGORIES;
     }
 }

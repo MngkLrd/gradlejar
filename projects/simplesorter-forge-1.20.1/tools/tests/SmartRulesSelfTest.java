@@ -126,6 +126,95 @@ public final class SmartRulesSelfTest {
                 8, "salts", "salts", 1) == 0D,
                 "One misplaced NaCl must not make its ingot chest a salt home");
 
+        // 0.9.3 mathematical quality audit. These are deterministic *synthetic*
+        // category-routing cases, not measurements of in-game TerraFirmaGreg.
+        // Verify the full compatibility matrix never produces invalid scores.
+        String[] forms = {
+                "raw_ores", "ores", "tiny_dust", "small_dust", "dusts",
+                "salts", "ingots", "nuggets", "metal_sheets", "plates",
+                "rods", "wires", "gears", "gems", "adhesives",
+                "plants", "fruit_tree_parts", "tools", "wood",
+                "food", "books", "molds", "loose_stones"
+        };
+        int matrixPairs = 0;
+        for (String itemForm : forms) {
+            test(RoutingPolicy.allowsCategoryFallback(itemForm),
+                    "Tested form must be routable: " + itemForm);
+            for (String chestForm : forms) {
+                double strength = RoutingPolicy.compatibility(itemForm, chestForm);
+                test(Double.isFinite(strength) && strength >= 0D && strength <= 1D,
+                        "Similarity must stay in [0,1]: " + itemForm + "/" + chestForm);
+                if (itemForm.equals(chestForm)) {
+                    test(Math.abs(strength - 1D) < 1e-12, "Identical forms must match exactly");
+                }
+                matrixPairs++;
+            }
+        }
+        test(RoutingPolicy.compatibility("raw_ores", "ingots") == 0D,
+                "Processing stage must not be confused with source ores");
+        test(RoutingPolicy.compatibility("tiny_dust", "dusts") > 0.90D,
+                "Tiny and normal dust forms have high compatibility");
+        test(RoutingPolicy.compatibility("tiny_dust", "raw_ores") >= 0.70D,
+                "Dust and raw ores have a deliberate weaker intersection");
+        test(RoutingPolicy.compatibility("salts", "dusts")
+                > RoutingPolicy.compatibility("dusts", "salts"),
+                "Salt may join powders, but the salt chest should not attract all powders");
+        test(RoutingPolicy.compatibility("adhesives", "nuggets") == 0D,
+                "Glue and nuggets have no category intersection");
+        test(RoutingPolicy.compatibility("tools", "raw_ores") == 0D,
+                "Chisels and ores must not co-locate merely by being industrial");
+
+        Map<String, Integer> oresAndSomeDust = Map.of("raw_ores", 9, "tiny_dust", 4, "ingots", 1);
+        double rawOreFit = RoutingPolicy.contextualFit(
+                oresAndSomeDust, 14, "raw_ores", "raw_ores", 0);
+        double dustFit = RoutingPolicy.contextualFit(
+                oresAndSomeDust, 14, "dusts", "dusts", 0);
+        double ingotFit = RoutingPolicy.contextualFit(
+                oresAndSomeDust, 14, "ingots", "ingots", 0);
+        test(rawOreFit > 0.80D && dustFit > 0.68D && ingotFit < 0.10D,
+                "Multi-label chest: ores preferred, dust accepted, ingots rejected");
+        test(RoutingPolicy.shouldRelocate(0.70D, 0.74D,
+                RoutingPolicy.rank(0.70D, 0), RoutingPolicy.rank(0.74D, 0), false) == false,
+                "Small 0.04 improvement must NOT cause ping-pong");
+        test(RoutingPolicy.shouldRelocate(0.10D, 0.78D,
+                RoutingPolicy.rank(0.10D, 60), RoutingPolicy.rank(0.78D, 0), false),
+                "A wrong chest with 60 items cannot beat a correct chest with none");
+        test(RoutingPolicy.rank(0D, 64) <= 0.08D + 1e-9,
+                "Exact-stack bonus must saturate before overriding meaningful category quality");
+
+        // 2000 reproducible dominance cases with unrelated mixed junk.
+        // The expected best chest contains 8-20 category-compatible slots,
+        // while the distractor contains 8-14 unrelated slots and 0-2 misc.
+        int qualityTrials = 2000;
+        for (int trial = 0; trial < qualityTrials; trial++) {
+            String sought = forms[trial % forms.length];
+            String unrelated = null;
+            for (int shift = 1; shift < forms.length; shift++) {
+                String candidate = forms[(trial + shift) % forms.length];
+                if (RoutingPolicy.compatibility(sought, candidate) == 0D) {
+                    unrelated = candidate;
+                    break;
+                }
+            }
+            test(unrelated != null, "Every form must have at least one unrelated distractor");
+            int good = 8 + trial % 13;
+            int irrelevant = trial % 3;
+            double correct = RoutingPolicy.contextualFit(
+                    Map.of(sought, good, "misc", irrelevant), good + irrelevant,
+                    sought, sought, 0);
+            double wrong = RoutingPolicy.contextualFit(
+                    Map.of(unrelated, 8 + trial % 7, "misc", irrelevant),
+                    8 + trial % 7 + irrelevant, sought, sought, 0);
+            test(correct >= 0.80D && wrong == 0D,
+                    "Synthetic category discrimination failed on trial " + trial);
+            test(RoutingPolicy.shouldRelocate(wrong, correct,
+                    RoutingPolicy.rank(wrong, 64), RoutingPolicy.rank(correct, 0), false),
+                    "Better category must win even over a 64-item wrong stack");
+        }
+        System.out.println("0.9.3 synthetic category audit: " + matrixPairs
+                + " pairwise checks and " + qualityTrials
+                + " dominance cases passed (NOT an in-game modpack accuracy rate).");
+
         System.out.println("Smart 2.1 category affinity regressions passed.");
         System.out.println("Simple Sorter Smart Categories 2.0: all pure Java regression assertions passed.");
     }

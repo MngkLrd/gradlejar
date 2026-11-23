@@ -19,7 +19,7 @@ public final class SorterSettings {
      * Hard cap for item flight particle traces after one sorting action.
      * Prevents massive storage walls from dumping thousands of particles.
      */
-    public static final int MAX_MOVE_PARTICLE_TRACES = 24;
+    public static final int MAX_MOVE_PARTICLE_TRACES = 96;
 
     /**
      * Hard cap for highlighted changed containers after one sorting action.

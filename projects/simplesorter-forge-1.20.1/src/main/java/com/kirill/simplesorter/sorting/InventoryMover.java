@@ -4,6 +4,12 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.nbt.CompoundTag;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import com.kirill.simplesorter.sorting.IItemHandler;
 
 import java.util.List;
@@ -283,79 +289,84 @@ public final class InventoryMover {
         return Math.max(0, actuallyMoved);
     }
 
-    public static int cleanUpContainer(ContainerRef containerRef, MoveListener moveListener) {
-        if (containerRef == null || containerRef.handler() == null) {
-            return 0;
-        }
-
-        int moved = 0;
+    /**
+     * Cheap O(slots) preflight for Smart Categories. No actual insert/extract
+     * simulation occurs unless there are holes or compatible partial stacks.
+     */
+    public static boolean needsCompaction(ContainerRef containerRef) {
+        if (containerRef == null || containerRef.handler() == null) return false;
         IItemHandler handler = containerRef.handler();
-
-        for (int sourceSlot = handler.getSlots() - 1; sourceSlot >= 0; sourceSlot--) {
-            moved += mergeSlotWithinSameContainer(containerRef, sourceSlot, moveListener);
-        }
-
-        for (int targetSlot = 0; targetSlot < handler.getSlots(); targetSlot++) {
-            if (!handler.getStackInSlot(targetSlot).isEmpty()) {
-                continue;
-            }
-
-            int sourceSlot = findNextMovableStack(handler, targetSlot + 1);
-            if (sourceSlot < 0) {
-                break;
-            }
-
-            ItemStack stack = handler.getStackInSlot(sourceSlot);
-            if (!isCleanUpMovable(stack)) {
-                continue;
-            }
-
-            moved += moveIntoSlot(containerRef, sourceSlot, containerRef, targetSlot, stack.getCount(), moveListener);
-        }
-
-        return moved;
-    }
-
-    private static int mergeSlotWithinSameContainer(ContainerRef containerRef, int sourceSlot, MoveListener moveListener) {
-        IItemHandler handler = containerRef.handler();
-        ItemStack sourceStack = handler.getStackInSlot(sourceSlot);
-        if (!isCleanUpMovable(sourceStack)) {
-            return 0;
-        }
-
-        int moved = 0;
-        for (int targetSlot = 0; targetSlot < handler.getSlots(); targetSlot++) {
-            if (targetSlot == sourceSlot) {
-                continue;
-            }
-
-            ItemStack currentSource = handler.getStackInSlot(sourceSlot);
-            if (currentSource.isEmpty()) {
-                break;
-            }
-
-            ItemStack targetStack = handler.getStackInSlot(targetSlot);
-            if (!isCleanUpMovable(targetStack) || targetStack.getCount() >= targetStack.getMaxStackSize()) {
-                continue;
-            }
-
-            if (!ItemStack.isSameItemSameTags(targetStack, currentSource)) {
-                continue;
-            }
-
-            moved += moveIntoSlot(containerRef, sourceSlot, containerRef, targetSlot, currentSource.getCount(), moveListener);
-        }
-        return moved;
-    }
-
-    private static int findNextMovableStack(IItemHandler handler, int startSlot) {
-        for (int slot = startSlot; slot < handler.getSlots(); slot++) {
+        Set<StackFingerprint> partials = new HashSet<>();
+        boolean hasHoleBefore = false;
+        for (int slot = 0; slot < handler.getSlots(); slot++) {
             ItemStack stack = handler.getStackInSlot(slot);
-            if (isCleanUpMovable(stack)) {
-                return slot;
+            if (stack.isEmpty()) {
+                hasHoleBefore = true;
+                continue;
+            }
+            if (!isCleanUpMovable(stack)) continue;
+            if (hasHoleBefore) return true;
+            if (stack.getCount() < stack.getMaxStackSize()
+                    && !partials.add(StackFingerprint.of(stack))) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Linear expected time compaction, versus the old nested all-slot sweeps.
+     * First combine NBT-identical partial stacks, then close holes.
+     * Every edit uses the existing simulated transfer transaction so modded
+     * slot rules and TFC insertion limits are always respected.
+     */
+    public static int cleanUpContainer(ContainerRef containerRef, MoveListener moveListener) {
+        if (containerRef == null || containerRef.handler() == null) return 0;
+        IItemHandler handler = containerRef.handler();
+        int moved = 0;
+        Map<StackFingerprint, Integer> partialByKey = new HashMap<>();
+
+        for (int sourceSlot = 0; sourceSlot < handler.getSlots(); sourceSlot++) {
+            ItemStack source = handler.getStackInSlot(sourceSlot);
+            if (!isCleanUpMovable(source)) continue;
+            StackFingerprint key = StackFingerprint.of(source);
+            Integer partialTarget = partialByKey.get(key);
+            if (partialTarget != null && partialTarget != sourceSlot) {
+                ItemStack previous = handler.getStackInSlot(partialTarget);
+                if (!previous.isEmpty() && previous.getCount() < previous.getMaxStackSize()
+                        && ItemStack.isSameItemSameTags(previous, source)) {
+                    moved += moveIntoSlot(containerRef, sourceSlot, containerRef,
+                            partialTarget, source.getCount(), moveListener);
+                }
+                ItemStack afterTarget = handler.getStackInSlot(partialTarget);
+                if (afterTarget.isEmpty() || afterTarget.getCount() >= afterTarget.getMaxStackSize()) {
+                    partialByKey.remove(key);
+                }
+            }
+            ItemStack remaining = handler.getStackInSlot(sourceSlot);
+            if (!remaining.isEmpty() && remaining.getCount() < remaining.getMaxStackSize()) {
+                partialByKey.putIfAbsent(key, sourceSlot);
             }
         }
-        return -1;
+
+        int firstHole = 0;
+        for (int sourceSlot = 0; sourceSlot < handler.getSlots(); sourceSlot++) {
+            ItemStack current = handler.getStackInSlot(sourceSlot);
+            if (!isCleanUpMovable(current)) continue;
+            while (firstHole < sourceSlot && !handler.getStackInSlot(firstHole).isEmpty()) {
+                firstHole++;
+            }
+            if (firstHole < sourceSlot) {
+                moved += moveIntoSlot(containerRef, sourceSlot, containerRef,
+                        firstHole, current.getCount(), moveListener);
+            }
+        }
+        return moved;
+    }
+
+    private record StackFingerprint(Item item, CompoundTag tag) {
+        static StackFingerprint of(ItemStack stack) {
+            CompoundTag tag = stack.getTag();
+            return new StackFingerprint(stack.getItem(), tag == null ? null : tag.copy());
+        }
     }
 
     private static boolean isCleanUpMovable(ItemStack stack) {

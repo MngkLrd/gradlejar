@@ -71,7 +71,7 @@ public final class SortingVisuals {
 
         FlyingItemsPayload packet = new FlyingItemsPayload(new ArrayList<>(grouped.values()));
         // Nearby clients see the same motion; clients farther away don't receive
-        // an unnecessary packet containing up to 24 serialized item stacks.
+        // an unnecessary packet containing up to 64 serialized item stacks.
         for (ServerPlayer player : level.players()) {
             boolean close = false;
             for (FlyingItemsPayload.Flight flight : packet.flights()) {
