@@ -20,7 +20,7 @@ public final class RoutingPolicy {
             "tiny_dust", "small_dust", "dusts", "ores", "raw_ores",
             "ingots", "nuggets", "metal_sheets", "plates", "rods",
             "wires", "gears", "gems", "adhesives", "fruit_tree_parts",
-            "molds", "loose_stones", "salts", "tools", "weapons", "armor",
+            "molds", "loose_stones", "salts", "clays", "tools", "weapons", "armor",
             "potions", "books", "food", "plants", "wood", "redstone");
 
     private RoutingPolicy() {}
@@ -160,6 +160,7 @@ public final class RoutingPolicy {
             case "rods", "wires", "gears" -> "industrial_parts";
             case "plants", "fruit_tree_parts" -> "botanicals";
             case "salts" -> "salts";
+            case "clays" -> "clays";
             default -> category;
         };
     }
