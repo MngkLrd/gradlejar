@@ -1,6 +1,8 @@
 package com.kirill.simplesorter.client;
 
 import com.kirill.simplesorter.network.WarehouseLabelsPayload;
+import com.kirill.simplesorter.network.LabelSyncRequestPayload;
+import com.kirill.simplesorter.network.ModNetworking;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -60,6 +62,7 @@ public final class ClientWarehouseLabels {
     // scan occurs on every render frame in a TerraFirmaGreg warehouse.
     private static final Map<Long, Map<Long, RenderLabel>> CHUNKS = new HashMap<>();
     private static net.minecraft.client.multiplayer.ClientLevel previousLevel;
+    private static int initialSyncDelay = -1;
 
     private ClientWarehouseLabels() {}
 
@@ -91,6 +94,15 @@ public final class ClientWarehouseLabels {
         if (mc.level != previousLevel) {
             CHUNKS.clear();
             previousLevel = mc.level;
+            // ChunkWatch packets may arrive before Minecraft.level is ready
+            // and be discarded. Refresh once after entering the world.
+            initialSyncDelay = mc.level == null ? -1 : 40;
+        }
+        if (initialSyncDelay >= 0 && mc.level != null && mc.player != null) {
+            if (initialSyncDelay-- == 0) {
+                ModNetworking.CHANNEL.sendToServer(new LabelSyncRequestPayload());
+                initialSyncDelay = -1;
+            }
         }
     }
 
