@@ -147,13 +147,15 @@ public final class WarehouseReorganizer {
                 if (layout.axis(current) == WarehouseLayout.Axis.NONE) continue;
                 Profile sourceProfile = profiles.get(current);
                 if (family.equals(claimed.get(current))) continue;
-                // Purely populated storage is already a safe end state.
-                // Moving it for a small positional improvement only causes
-                // endless reshuffling after each RMB.
-                if (sourceProfile.belongsTo(family)) continue;
+                String sourceRole = columns.role(current);
+                // A pure chest is stable UNLESS it resides inside an
+                // established, incompatible category column (e.g. a lone
+                // stick chest in the finished-metal aisle).
+                boolean wrongColumn = !sourceRole.isEmpty()
+                        && !sourceRole.equals(broadFamily);
+                if (sourceProfile.belongsTo(family) && !wrongColumn) continue;
 
                 double sourceFit = layout.preference(current, category.id());
-                String sourceRole = columns.role(current);
                 String sourceClaim = claimed.getOrDefault(current, "");
                 int region = columns.region(current);
                 String grouping = region + ":" + family;
@@ -188,10 +190,10 @@ public final class WarehouseReorganizer {
                     // and water bottles without pretending they are ingots.
                     boolean belongs = targetProfile.belongsTo(family)
                             || family.equals(targetClaim);
-                    boolean allowed = sourceProfile.mixed()
+                    boolean needsEvacuation = sourceProfile.mixed() || wrongColumn;
+                    boolean allowed = needsEvacuation
                             && (targetProfile.occupied() == 0 || belongs)
-                            && !correctColumnExists
-                            || sourceProfile.mixed() && correctColumnExists && belongs;
+                            && (!correctColumnExists || belongs || columns.matches(targetIndex, category.id()));
                     if (!allowed && !"misc".equals(broadFamily)) {
                         allowed = WarehouseRoutingRules.mayMove(
                                 broadFamily, sourceRole, sourceClaim, targetRole,
