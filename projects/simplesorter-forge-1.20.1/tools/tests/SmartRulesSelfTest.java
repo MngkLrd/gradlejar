@@ -41,6 +41,62 @@ public final class SmartRulesSelfTest {
         test(!RoutingPolicy.isRawMineral("ingots"), "Ingots never join raw-mineral family");
         test(!RoutingPolicy.isRawMineral("loose_stones"), "Loose stones are separate");
 
+        // User regression: five different ore stacks were dropped into an
+        // ingot chest even though a dedicated ore chest had free slots.
+        Map<String, Integer> accidentalIngotChest = Map.of("ingots", 8, "raw_ores", 5);
+        Map<String, Integer> dedicatedOreChest = Map.of("raw_ores", 12, "dusts", 2);
+        double oreSource = RoutingPolicy.contextualFit(accidentalIngotChest, 13,
+                "raw_ores", "raw_ores", 1);
+        double oreDestination = RoutingPolicy.contextualFit(dedicatedOreChest, 14,
+                "raw_ores", "raw_ores", 0);
+        test(oreDestination > oreSource + 0.45D,
+                "A dedicated ore chest beats an ingot chest despite ore stacks in both");
+        test(RoutingPolicy.shouldRelocate(oreSource, oreDestination,
+                RoutingPolicy.rank(oreSource, 16), RoutingPolicy.rank(oreDestination, 0), false),
+                "Misplaced ore MUST leave an acceptable but worse ingot chest");
+
+        // Source-only vote is NOT sufficient to convert a chest into a home.
+        test(RoutingPolicy.contextualFit(Map.of("ingots", 8, "raw_ores", 1), 9,
+                "raw_ores", "raw_ores", 1) < 0.01D,
+                "Ignore the misplaced item when evaluating its own chest");
+
+        // Related forms can share raw storage, but NOT metal storage.
+        double rawMixForDust = RoutingPolicy.contextualFit(
+                Map.of("raw_ores", 8, "dusts", 2), 10, "tiny_dust", "tiny_dust", 0);
+        double ingotForDust = RoutingPolicy.contextualFit(
+                Map.of("ingots", 8, "nuggets", 2), 10, "tiny_dust", "tiny_dust", 0);
+        test(rawMixForDust >= RoutingPolicy.MIN_NEW_HOME_FIT,
+                "Tiny dust should fit a chest with mixed raw ores and dusts");
+        test(ingotForDust < 0.05D,
+                "Dust never treats the ingot chest as a strong destination");
+        test(RoutingPolicy.compatibility("raw_ores", "dusts") > 0.6D,
+                "Related forms stay interoperable");
+        test(RoutingPolicy.compatibility("raw_ores", "ingots") == 0D,
+                "Raw ores are not ingots");
+
+        // User regression: glue must not go to native gold, bones and candles.
+        double glueJunkFit = RoutingPolicy.contextualFit(
+                Map.of("nuggets", 3, "mob_drops", 1, "misc", 1),
+                5, "adhesives", "adhesives", 0);
+        test(glueJunkFit < 0.01D, "Glue cannot join gold, bones or candles");
+        test(!RoutingPolicy.shouldRelocate(0.30D, 0.31D,
+                RoutingPolicy.rank(0.30D, 12), RoutingPolicy.rank(0.31D, 0), false),
+                "Small differences should never reshuffle categories");
+
+        // Exact-item consolidation is still supported without guessing labels.
+        test(RoutingPolicy.shouldRelocate(0D, 0D,
+                RoutingPolicy.rank(0D, 2), RoutingPolicy.rank(0D, 64), true),
+                "Exact matching item should consolidate toward the larger seeded stack");
+        test(!RoutingPolicy.shouldRelocate(0.86D, 0.42D,
+                RoutingPolicy.rank(0.86D, 1), RoutingPolicy.rank(0.42D, 64), true),
+                "An unrelated seeded item cannot steal from a better fitting chest");
+
+        test(RoutingPolicy.contextualFit(
+                Map.of("plants", 5, "books", 1, "tools", 1), 7,
+                "raw_ores", "raw_ores", 0) == 0D,
+                "A plant and tool crate cannot be mistaken for a mineral warehouse");
+
+        System.out.println("Smart 2.1 category affinity regressions passed.");
         System.out.println("Simple Sorter Smart Categories 2.0: all pure Java regression assertions passed.");
     }
 }
