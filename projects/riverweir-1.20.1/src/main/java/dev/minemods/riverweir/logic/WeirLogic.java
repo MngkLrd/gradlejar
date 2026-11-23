@@ -115,7 +115,7 @@ public final class WeirLogic {
         Direction dir=direction(first,second);
         int width=span(first,second);
         if(dir==null||width<MIN_SPAN||width>kind.maxSpan){
-            say(player,"message.riverweir.distance");return false;
+            say(player,"message.riverweir.distance",kind.maxSpan);return false;
         }
         int[] depths=null;
         int waterY=0;
@@ -234,7 +234,7 @@ public final class WeirLogic {
         if(be==null||be.wear==0)return;
         ItemStack material=player.getItemInHand(hand);
         WeirTier kind=be.getTier();
-        boolean compatible=kind==WeirTier.JUTE?isJuteNet(material):kind.isRoll(material);
+        boolean compatible=isJuteNet(material);
         if(!compatible)return;
         if(!player.getAbilities().instabuild)material.shrink(1);
         be.wear=Math.max(0,be.wear-Math.max(40,kind.endurance/3));

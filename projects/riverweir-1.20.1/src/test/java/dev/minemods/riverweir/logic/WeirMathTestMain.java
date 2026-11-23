@@ -13,6 +13,10 @@ public final class WeirMathTestMain {
         check(WeirMath.requiredRolls(new int[]{1,2},4,3),1,"small stream");
         check(WeirMath.requiredRolls(new int[]{1,3,7,1,2},4,3),4,"irregular riverbed");
         check(WeirMath.requiredRolls(new int[]{12,12,12,12},4,3),4,"maximum depth");
+        check(WeirMath.requiredRolls(new int[]{5,5,5,5},4,5),1,"bronze 4x5");
+        check(WeirMath.requiredRolls(new int[]{10,5,5,5,7},4,5),3,"bronze irregular depth");
+        check(WeirMath.requiredRolls(new int[]{8,8,8,8},4,8),1,"iron 4x8");
+        check(WeirMath.requiredRolls(new int[]{16,15,8,8,8},4,8),3,"iron deep floor");
         check(WeirMath.salvageRolls(8,0),8,"unused net refund");
         check(WeirMath.salvageRolls(8,10),6,"mild wear recovery");
         check(WeirMath.salvageRolls(8,70),4,"used net recovery");

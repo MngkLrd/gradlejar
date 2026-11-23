@@ -64,6 +64,10 @@ public final class WeirNetBlock extends Block {
             if(post!=null){
                 if(player.isShiftKeyDown()&&WeirLogic.isJuteNet(player.getItemInHand(hand)))
                     WeirLogic.repair((ServerLevel)level,post,player,hand);
+                else if(player.isShiftKeyDown()&&player.getItemInHand(hand).isEmpty())
+                    WeirLogic.clean((ServerLevel)level,post,player);
+                else if(WeirLogic.isBait(player.getItemInHand(hand)))
+                    WeirLogic.addBait((ServerLevel)level,post,player,hand);
                 else WeirLogic.openMenu((ServerLevel)level,post,server);
             }
         }

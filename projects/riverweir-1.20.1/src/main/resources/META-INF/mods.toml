@@ -3,7 +3,7 @@ loaderVersion="[47,)"
 license="MIT"
 [[mods]]
 modId="riverweir"
-version="0.3.0"
+version="0.4.0"
 displayName="River Weir"
 description="Physical multi-block freshwater netting, jute and straw weaving, dynamic depth and real TFC fish catches."
 [[dependencies.riverweir]]
