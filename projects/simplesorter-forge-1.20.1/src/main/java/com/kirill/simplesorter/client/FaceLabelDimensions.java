@@ -28,6 +28,14 @@ public final class FaceLabelDimensions {
 
     public static float iconScale() { return 0.275F; }
 
+    /** The vanilla chest front is inset 1/16 block, unlike full-face crates. */
+    public static double faceOffset(boolean insetChest) {
+        return insetChest ? 0.451D : 0.508D;
+    }
+
+    public static double textDepth() { return 0.018D; }
+    public static double itemDepth() { return 0.14D; }
+
     public static boolean fitsVertically(boolean withIcon) {
         float textHeight = 9F * MAX_TEXT_SCALE;
         boolean textFits = Math.abs(textY(withIcon)) + textHeight <= 0.44F;
