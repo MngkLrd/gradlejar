@@ -101,6 +101,18 @@ public final class SortCategoryRegistry {
         // Explicit TFC salt recognition. The TFC salt is a powder visually,
         // but should not be filed with ingots simply because its old generic
         // dust category has no suitable destination.
+        // Clay lumps are ceramic raw materials, not metallic ingots.
+        // More specific than the broad BLOCK/MATERIALS fallbacks; includes
+        // TerraFirmaCraft kaolin and conventional vanilla clay balls.
+        categories.add(SortCategory.builder("clays")
+                .displayName("Clay & Ceramics")
+                .group("ceramics")
+                .priority(856)
+                .items("minecraft:clay_ball", "tfc:kaolin_clay")
+                .tags("forge:clay", "forge:clay_balls", "c:clay_balls")
+                .idContains("clay", "clay_ball", "clay_lump", "kaolin_clay")
+                .build());
+
         categories.add(SortCategory.builder("salts")
                 .displayName("Salts")
                 .group("minerals")
