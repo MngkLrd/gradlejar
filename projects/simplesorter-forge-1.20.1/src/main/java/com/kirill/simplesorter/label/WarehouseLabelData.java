@@ -51,7 +51,11 @@ public final class WarehouseLabelData extends SavedData {
             Label label = new Label(pos, style, family, icon.copyWithCount(1),
                     material.copyWithCount(1), facing);
             data.entries.put(pos.asLong(), label);
-            if (!tag.contains("facing")) data.legacyWithoutFacing.add(pos.asLong());
+            // 0.9.7 saved the wrong front direction for several modded
+            // crates. Flag every pre-0.9.8 label for one-time reorientation.
+            if (!tag.contains("facing") || compound.getInt("label_render_schema") < 2) {
+                data.legacyWithoutFacing.add(pos.asLong());
+            }
             data.labelsByChunk.computeIfAbsent(chunkKey(pos), k -> new HashSet<>()).add(pos.asLong());
         }
         return data;
@@ -71,6 +75,7 @@ public final class WarehouseLabelData extends SavedData {
             list.add(entry);
         }
         tag.put("labels", list);
+        tag.putInt("label_render_schema", 2);
         return tag;
     }
 
