@@ -82,14 +82,15 @@ public final class PrimitiveWaterworks {
     }
 
     public PrimitiveWaterworks() {
-        // Vanilla oak IDs remain unchanged to preserve blocks from 0.2.0 worlds.
+        // Vanilla oak names are preserved for backwards compatibility with older worlds.
+        // A species gets its own item/block: items don't lose their wood type when placed.
         for (String wood : TFC_WOODS) {
             if ("oak".equals(wood)) continue;
             register(COLLECTORS, "rain_collector_" + wood, () -> new RainCollectorBlock(wood()));
             register(GUTTERS, "wooden_gutter_" + wood, () -> new GutterBlock(wood()));
             register(DOWNSPOUTS, "wooden_downspout_" + wood, () -> new DownspoutBlock(wood()));
         }
-        // The optional texture namespace only exists when ArborFirmaCraft is installed.
+        // Do not register items whose texture namespace is absent.
         if (ModList.get().isLoaded("afc")) {
             for (String wood : AFC_WOODS) {
                 register(COLLECTORS, "rain_collector_afc_" + wood, () -> new RainCollectorBlock(wood()));
@@ -106,6 +107,6 @@ public final class PrimitiveWaterworks {
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
-            ALL_BLOCKS.forEach(block -> event.accept(block.get()));
+            ALL_BLOCKS.forEach(event::accept);
     }
 }

@@ -61,125 +61,35 @@
     "primitivewaterworks:rain_collector_willow",
     "primitivewaterworks:wooden_gutter_willow",
     "primitivewaterworks:wooden_downspout_willow",
-    {
-      "id": "primitivewaterworks:rain_collector_afc_baobab",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_gutter_afc_baobab",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_downspout_afc_baobab",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:rain_collector_afc_cypress",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_gutter_afc_cypress",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_downspout_afc_cypress",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:rain_collector_afc_eucalyptus",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_gutter_afc_eucalyptus",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_downspout_afc_eucalyptus",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:rain_collector_afc_fig",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_gutter_afc_fig",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_downspout_afc_fig",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:rain_collector_afc_hevea",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_gutter_afc_hevea",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_downspout_afc_hevea",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:rain_collector_afc_ipe",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_gutter_afc_ipe",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_downspout_afc_ipe",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:rain_collector_afc_ironwood",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_gutter_afc_ironwood",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_downspout_afc_ironwood",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:rain_collector_afc_mahogany",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_gutter_afc_mahogany",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_downspout_afc_mahogany",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:rain_collector_afc_teak",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_gutter_afc_teak",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_downspout_afc_teak",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:rain_collector_afc_tualang",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_gutter_afc_tualang",
-      "required": false
-    },
-    {
-      "id": "primitivewaterworks:wooden_downspout_afc_tualang",
-      "required": false
-    }
+    "primitivewaterworks:rain_collector_afc_baobab",
+    "primitivewaterworks:wooden_gutter_afc_baobab",
+    "primitivewaterworks:wooden_downspout_afc_baobab",
+    "primitivewaterworks:rain_collector_afc_cypress",
+    "primitivewaterworks:wooden_gutter_afc_cypress",
+    "primitivewaterworks:wooden_downspout_afc_cypress",
+    "primitivewaterworks:rain_collector_afc_eucalyptus",
+    "primitivewaterworks:wooden_gutter_afc_eucalyptus",
+    "primitivewaterworks:wooden_downspout_afc_eucalyptus",
+    "primitivewaterworks:rain_collector_afc_fig",
+    "primitivewaterworks:wooden_gutter_afc_fig",
+    "primitivewaterworks:wooden_downspout_afc_fig",
+    "primitivewaterworks:rain_collector_afc_hevea",
+    "primitivewaterworks:wooden_gutter_afc_hevea",
+    "primitivewaterworks:wooden_downspout_afc_hevea",
+    "primitivewaterworks:rain_collector_afc_ipe",
+    "primitivewaterworks:wooden_gutter_afc_ipe",
+    "primitivewaterworks:wooden_downspout_afc_ipe",
+    "primitivewaterworks:rain_collector_afc_ironwood",
+    "primitivewaterworks:wooden_gutter_afc_ironwood",
+    "primitivewaterworks:wooden_downspout_afc_ironwood",
+    "primitivewaterworks:rain_collector_afc_mahogany",
+    "primitivewaterworks:wooden_gutter_afc_mahogany",
+    "primitivewaterworks:wooden_downspout_afc_mahogany",
+    "primitivewaterworks:rain_collector_afc_teak",
+    "primitivewaterworks:wooden_gutter_afc_teak",
+    "primitivewaterworks:wooden_downspout_afc_teak",
+    "primitivewaterworks:rain_collector_afc_tualang",
+    "primitivewaterworks:wooden_gutter_afc_tualang",
+    "primitivewaterworks:wooden_downspout_afc_tualang"
   ]
 }
