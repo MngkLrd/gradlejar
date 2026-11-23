@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "L L",
+    "L L",
+    "L L"
+  ],
+  "key": {
+    "L": {
+      "tag": "tfc:lumber"
+    }
+  },
+  "result": {
+    "item": "primitivewaterworks:wooden_downspout",
+    "count": 4
+  }
+}

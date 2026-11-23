@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "primitivewaterworks:rain_collector",
+    "primitivewaterworks:wooden_gutter",
+    "primitivewaterworks:wooden_downspout"
+  ]
+}
