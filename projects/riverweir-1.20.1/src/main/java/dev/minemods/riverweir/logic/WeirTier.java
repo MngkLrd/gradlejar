@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 
 /** Three distinct physical net materials, deliberately capped for river use. */
 public enum WeirTier {
-    JUTE(0,"net_roll",16,6,3,100,9,0.26f,180,1,3),
+    JUTE(0,"net_roll",16,6,3,100,2,0.26f,180,1,3),
     BRONZE(1,"bronze_net_roll",24,10,5,220,18,0.40f,120,1,2),
     IRON(2,"iron_net_roll",32,16,8,360,27,0.55f,80,1,1);
 

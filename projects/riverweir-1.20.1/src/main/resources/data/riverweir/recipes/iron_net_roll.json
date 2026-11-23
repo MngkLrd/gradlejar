@@ -1,13 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "CRC",
+    "IRI",
     "LBL",
-    "CRC"
+    "IRI"
   ],
   "key": {
-    "C": {
-      "item": "tfc:metal/chain/wrought_iron"
+    "I": {
+      "item": "tfc:metal/ingot/wrought_iron"
     },
     "R": {
       "item": "tfc:metal/rod/wrought_iron"

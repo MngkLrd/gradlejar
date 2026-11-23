@@ -1,13 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " B ",
+    " I ",
     "WJW",
-    " B "
+    " I "
   ],
   "key": {
-    "B": {
-      "item": "tfc:metal/rod/bronze"
+    "I": {
+      "item": "tfc:metal/ingot/bronze"
     },
     "W": {
       "item": "tfc:wool_cloth"
