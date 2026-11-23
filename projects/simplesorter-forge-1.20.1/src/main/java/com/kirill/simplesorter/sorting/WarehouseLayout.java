@@ -243,5 +243,24 @@ public final class WarehouseLayout {
         return preference(destIndex, category);
     }
 
+    /**
+     * New, conservatively placed shelf organization: an isolated or homogeneous
+     * stack can move into an empty chest in its clearly better shelf. This is
+     * still one-click and does not require pre-labelling storage. If the layout
+     * is ambiguous, no automatic relocation is attempted.
+     */
+    public boolean shouldUsePreferredEmpty(int sourceIndex, String category,
+                                           List<Integer> empties) {
+        if (axis(sourceIndex) == Axis.NONE || preference(sourceIndex, category) > 0.35D) {
+            return false;
+        }
+        for (int empty : empties) {
+            if (sameRegion(sourceIndex, empty) && preference(empty, category) >= 0.90D) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int analyzedBlocks() { return regions.size(); }
 }
