@@ -158,53 +158,8 @@ public final class SortingManager {
     }
 
     private static SortingResult sortSmartCategories(ServerLevel level, List<ContainerRef> containers, int radius, SortingWandSettings settings) {
-        Map<ContainerRef, ChestProfile> profiles = analyzeContainers(containers);
-        Map<ContainerRef, String> roles = assignRoles(containers, profiles);
-        Map<String, List<ContainerRef>> targets = buildTargetMap(roles, profiles);
-
-        int movedItems = 0;
-        int movedStacks = 0;
-        int noTargetStacks = 0;
-        List<MoveRecord> moves = new ArrayList<>();
-        Set<BlockPos> changedContainers = new HashSet<>();
-        MoveListener moveListener = trackingListener(moves, changedContainers);
-
-        for (ContainerRef source : containers) {
-            IItemHandler sourceHandler = source.handler();
-
-            for (int slot = 0; slot < sourceHandler.getSlots(); slot++) {
-                ItemStack stack = sourceHandler.getStackInSlot(slot);
-                if (!canMove(stack)) {
-                    continue;
-                }
-
-                SortCategory itemCategory = ItemCategoryResolver.resolve(stack);
-                List<ContainerRef> categoryTargets = targets.get(itemCategory.id());
-                List<ContainerRef> destinations = selectDestinations(source, categoryTargets);
-
-                if (destinations.isEmpty()) {
-                    noTargetStacks++;
-                    continue;
-                }
-
-                int moved = InventoryMover.moveSlotToTargets(source, slot, destinations, moveListener);
-                if (moved > 0) {
-                    movedItems += moved;
-                    movedStacks++;
-                }
-            }
-        }
-
-        int cleanedItems = cleanUpContainers(containers, moveListener);
-        if (cleanedItems > 0) {
-            movedItems += cleanedItems;
-            movedStacks++;
-        }
-
-        playEffects(level, changedContainers, moves, settings, movedItems);
-        return new SortingResult(containers.size(), movedItems, movedStacks, Math.max(countUsefulRoles(targets), countNonEmptyContainers(changedContainers)), noTargetStacks, radius, settings.mode().id());
+        return SmartCategorySorter.sort(level, containers, radius, settings);
     }
-
 
     private static int cleanUpContainers(List<ContainerRef> containers, MoveListener moveListener) {
         int moved = 0;
