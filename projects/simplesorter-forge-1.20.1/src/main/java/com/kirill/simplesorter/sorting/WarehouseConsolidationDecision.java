@@ -16,7 +16,13 @@ public final class WarehouseConsolidationDecision {
                                          String family, boolean mixed,
                                          String keeperFamily) {
         if ("locked".equals(family) || family == null) return false;
-        if (mixed) return !family.equals(keeperFamily);
+        if (mixed) {
+            // A majority ore stack in an outlying sixth column should also
+            // return to the strongly established first ore column, even if
+            // that outlying source contains unrelated items that cannot
+            // currently be evacuated.
+            return !family.equals(keeperFamily) || !plan.atHome(index, family);
+        }
         return !plan.atHome(index, family);
     }
 
