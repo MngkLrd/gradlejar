@@ -54,14 +54,62 @@ public final class SmartCategorySorter {
             }
         }
 
-        // Freeze all decisions BEFORE moving anything, so a newly filled chest
-        // cannot change destination during the same sorting operation.
+        // Phase 1: find the best *existing* destinations, using one frozen
+        // snapshot. Phase 2: reserve empty chests for unsupported categories
+        // that are genuinely mixed into incompatible stores.
         Map<StackKey, StorageSnapshot> homes = new LinkedHashMap<>();
+        Set<StackKey> emptyAllocations = new HashSet<>();
+        Map<String, StorageSnapshot> reservedPartitions = new LinkedHashMap<>();
+        Set<StorageSnapshot> reservedContainers = new HashSet<>();
+        List<StorageSnapshot> emptyChests = snapshots.stream()
+                .filter(snapshot -> snapshot.occupied() == 0)
+                .toList();
+
         for (StackKey key : samples.keySet()) {
             SortCategory resolved = categories.get(key);
             if (resolved == null || !resolved.moveAllowed()) continue;
-            homes.put(key, chooseHome(key, resolved.id(), samples.get(key), categoryMode,
-                    byExactStack.getOrDefault(key, List.of()), byCategory));
+
+            String label = resolved.id();
+            ItemStack sample = samples.get(key);
+            List<StorageSnapshot> originals = byExactStack.getOrDefault(key, List.of());
+            StorageSnapshot best = chooseHome(key, label, sample, categoryMode,
+                    originals, byCategory);
+
+            // Prefer an established chest over a brand-new empty one. An
+            // empty chest is useful ONLY when no better existing home exists.
+            if (categoryMode && originals.size() == 1 && best != null
+                    && best == originals.get(0)) {
+                StorageSnapshot source = originals.get(0);
+                String partition = RoutingPolicy.emptyPartition(label);
+                int otherSlots = source.occupied() - source.slotCounts().getOrDefault(key, 0);
+                if (!partition.isEmpty() &&
+                        RoutingPolicy.shouldClaimEmpty(
+                                source.fit(key, label), otherSlots, false)) {
+                    StorageSnapshot reserved = reservedPartitions.get(partition);
+                    if (reserved == null) {
+                        // The nearest usable empty chest is reserved once per
+                        // family. Future item variants in that family share it.
+                        for (StorageSnapshot candidate : emptyChests.stream()
+                                .filter(candidate -> !reservedContainers.contains(candidate))
+                                .sorted(Comparator
+                                        .comparingDouble((StorageSnapshot candidate) ->
+                                                candidate.ref().pos().distSqr(source.ref().pos()))
+                                        .thenComparingLong(candidate -> candidate.ref().pos().asLong()))
+                                .toList()) {
+                            if (!canReceiveSample(candidate.ref().handler(), sample)) continue;
+                            reserved = candidate;
+                            reservedPartitions.put(partition, reserved);
+                            reservedContainers.add(reserved);
+                            break;
+                        }
+                    }
+                    if (reserved != null && canReceiveSample(reserved.ref().handler(), sample)) {
+                        best = reserved;
+                        emptyAllocations.add(key);
+                    }
+                }
+            }
+            homes.put(key, best);
         }
 
         int movedItems = 0;
@@ -107,6 +155,12 @@ public final class SmartCategorySorter {
                 if (!shouldMove && exactHome && Math.abs(targetRank - sourceRank) < 0.00001D
                         && targetFit + 0.07D >= sourceFit
                         && targetCount >= sourceCount) {
+                    shouldMove = true;
+                }
+                // Empty storage has zero contextual votes by definition.
+                // Its assignment was explicitly planned from an incompatible
+                // source, so don't reject the move by the usual score threshold.
+                if (emptyAllocations.contains(key) && home.occupied() == 0) {
                     shouldMove = true;
                 }
                 if (!shouldMove) continue;
