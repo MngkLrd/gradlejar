@@ -52,6 +52,12 @@ public final class StrictStorageFamily {
                 || matches(path, "pebble")
                 || matches(path, "pebbles")) return "stones";
 
+        // Mineral processing does not make salt/flux ordinary ore. These
+        // powders have their own crafting purpose and should stay together.
+        if (matches(path, "salt") || "salts".equals(cat)) return "salts";
+        if (matches(path, "flux") || matches(path, "lime_flux")
+                || matches(path, "limestone_flux")) return "crafting_powders";
+
         if (matches(path, "mortar") && !matches(path, "mortar_and_pestle")
                 && !matches(path, "mortar_pestle")) return "binding_mortar";
 
@@ -68,6 +74,16 @@ public final class StrictStorageFamily {
                 || matches(path, "charcoal_powder")
                 || matches(path, "redstone") || matches(path, "dye"))
             return "crafting_powders";
+
+        // TFC/TFG ore-grade variants can have bare poor_/normal_/rich_
+        // registry paths, not a literal "ore" token. Match the known ore
+        // grade convention only inside compatible mod namespaces; do not
+        // reinterpret similarly-named vanilla blocks as ore.
+        if ((value.startsWith("tfc:") || value.startsWith("tfg:")
+                || value.startsWith("terrafirmagreg:"))
+                && (path.startsWith("poor_") || path.startsWith("normal_")
+                    || path.startsWith("rich_") || path.startsWith("small_ore_")))
+            return "mineral_resources";
 
         // A single MATERIAL family for ore lumps, poor/normal/rich ores,
         // crushed and washed ores, full/small/tiny GregTech dusts and TFC
