@@ -61,7 +61,7 @@ public final class ItemCategoryResolver {
             }
 
             for (String token : category.idContains()) {
-                if (matchesPathToken(path, token)) {
+                if (!token.isBlank() && path.contains(token)) {
                     return new CategoryResolution(category, "id contains " + token);
                 }
             }
@@ -74,34 +74,6 @@ public final class ItemCategoryResolver {
         }
 
         return new CategoryResolution(SortCategoryRegistry.misc(), "fallback misc");
-    }
-
-
-    // Boundary matching prevents minecraft:string from matching the "ring" accessory rule.
-    // Prefix/suffix forms are retained for user-defined rules ending in _ or /.
-    private static boolean matchesPathToken(String path, String token) {
-        if (token == null || token.isBlank()) return false;
-        String t = SortCategory.normalizeToken(token).replace('-', '_');
-        String p = path.replace('-', '_');
-        if (t.endsWith("/") || t.endsWith("_")) {
-            return p.startsWith(t) || p.contains("/" + t);
-        }
-        if (t.startsWith("/") || t.startsWith("_")) {
-            return p.endsWith(t) || p.contains(t + "/");
-        }
-        int offset = 0;
-        while ((offset = p.indexOf(t, offset)) >= 0) {
-            int end = offset + t.length();
-            boolean left = offset == 0 || isSeparator(p.charAt(offset - 1));
-            boolean right = end == p.length() || isSeparator(p.charAt(end));
-            if (left && right) return true;
-            offset++;
-        }
-        return false;
-    }
-
-    private static boolean isSeparator(char c) {
-        return c == '_' || c == '/' || c == '.' || c == '-';
     }
 
     private static boolean matchesClassHint(ItemStack stack, Item item, ClassHint hint) {
