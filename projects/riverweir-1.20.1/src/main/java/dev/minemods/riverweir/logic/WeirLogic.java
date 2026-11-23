@@ -3,6 +3,7 @@ package dev.minemods.riverweir.logic;
 import dev.minemods.riverweir.RiverWeirMod;
 import dev.minemods.riverweir.block.WeirNetBlock;
 import dev.minemods.riverweir.block.WeirPostBlock;
+import dev.minemods.riverweir.logic.WeirWater;
 import dev.minemods.riverweir.blockentity.WeirPostBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -77,7 +78,7 @@ public final class WeirLogic {
     private static boolean isFreeWater(ServerLevel level,BlockPos pos){
         if(!level.hasChunkAt(pos))return false;
         BlockState state=level.getBlockState(pos);
-        return state.getBlock() instanceof LiquidBlock && level.getFluidState(pos).is(FluidTags.WATER)
+        return state.getBlock() instanceof LiquidBlock && WeirWater.kind(level.getFluidState(pos))>=0
             && level.getFluidState(pos).isSource();
     }
     private static int[] survey(ServerLevel level,BlockPos from,Direction dir,int width,int topY){
@@ -91,7 +92,7 @@ public final class WeirLogic {
                     depth++;
                 }else{
                     // Don't cut down aquatic plants or replace a custom block that contains water.
-                    if(level.getFluidState(p).is(FluidTags.WATER))return null;
+                    if(!level.getFluidState(p).isEmpty())return null;
                     break;
                 }
             }
@@ -147,7 +148,7 @@ public final class WeirLogic {
         setConnection(level,second,dir.getOpposite(),true);
         for(int i=0;i<width;i++)for(int d=0;d<depths[i];d++){
             BlockPos p=at(first,dir,i+1,waterY-d);
-            level.setBlock(p,netState(dir.getAxis(),0,d==0,d==depths[i]-1),3);
+            level.setBlock(p,netState(dir.getAxis(),0,d==0,(d%PANEL_HEIGHT==PANEL_HEIGHT-1||d==depths[i]-1),level.getFluidState(p)),3);
         }
         say(player,"message.riverweir.connected",width,maxDepth,required);
         return true;
@@ -159,11 +160,13 @@ public final class WeirLogic {
                 .setValue(WeirPostBlock.FACING,dir),3);
         }
     }
-    private static BlockState netState(Direction.Axis axis,int stage,boolean top,boolean bottom){
+    private static BlockState netState(Direction.Axis axis,int stage,boolean top,boolean bottom,net.minecraft.world.level.material.FluidState fluid){
         return RiverWeirMod.NET.get().defaultBlockState()
             .setValue(WeirNetBlock.AXIS,axis)
             .setValue(WeirNetBlock.STAGE,stage)
             .setValue(WeirNetBlock.WATERLOGGED,true)
+            .setValue(WeirNetBlock.WATER_KIND,Math.max(0,WeirWater.kind(fluid)))
+            .setValue(WeirNetBlock.FLOW,WeirWater.flow(fluid))
             .setValue(WeirNetBlock.TOP,top)
             .setValue(WeirNetBlock.BOTTOM,bottom);
     }
@@ -248,7 +251,7 @@ public final class WeirLogic {
         for(int col=0;col<count;col++)for(int d=0;d<savedDepths[col];d++){
             BlockPos panel=at(source,dir,col+1,waterY-d);
             if(level.hasChunkAt(panel)&&level.getBlockState(panel).is(RiverWeirMod.NET.get()))
-                level.setBlock(panel,Blocks.WATER.defaultBlockState(),3);
+                level.setBlock(panel,level.getBlockState(panel).getFluidState().createLegacyBlock(),3);
         }
     }
     private static void updateNet(ServerLevel level,WeirPostBlockEntity be,boolean rebuild){
@@ -260,7 +263,7 @@ public final class WeirLogic {
             BlockPos p=at(be.getBlockPos(),dir,col+1,be.netY-d);
             if(!level.hasChunkAt(p))continue;
             BlockState state=level.getBlockState(p);
-            BlockState wanted=netState(dir.getAxis(),stage(be.wear),d==0,d==be.depthAt(col)-1);
+            BlockState wanted=netState(dir.getAxis(),stage(be.wear),d==0,(d%PANEL_HEIGHT==PANEL_HEIGHT-1||d==be.depthAt(col)-1),state.getFluidState());
             if(state.is(RiverWeirMod.NET.get())){
                 if(!state.equals(wanted))level.setBlock(p,wanted,3);
             }else if(rebuild && isFreeWater(level,p))level.setBlock(p,wanted,3);

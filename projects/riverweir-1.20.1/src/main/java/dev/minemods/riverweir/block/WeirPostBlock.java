@@ -3,6 +3,7 @@ package dev.minemods.riverweir.block;
 import dev.minemods.riverweir.RiverWeirMod;
 import dev.minemods.riverweir.blockentity.WeirPostBlockEntity;
 import dev.minemods.riverweir.logic.WeirLogic;
+import dev.minemods.riverweir.logic.WeirWater;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -35,22 +36,26 @@ import org.jetbrains.annotations.Nullable;
 public final class WeirPostBlock extends BaseEntityBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
+    public static final net.minecraft.world.level.block.state.properties.IntegerProperty WATER_KIND=net.minecraft.world.level.block.state.properties.IntegerProperty.create("water_kind",0,1);
+    public static final net.minecraft.world.level.block.state.properties.IntegerProperty FLOW=net.minecraft.world.level.block.state.properties.IntegerProperty.create("flow",0,16);
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private static final VoxelShape SHAPE=Block.box(5,0,5,11,16,11);
 
     public WeirPostBlock(Properties properties) {
         super(properties);
-        registerDefaultState(stateDefinition.any().setValue(WATERLOGGED,false).setValue(CONNECTED,false).setValue(FACING,Direction.NORTH));
+        registerDefaultState(stateDefinition.any().setValue(WATERLOGGED,false).setValue(CONNECTED,false).setValue(FACING,Direction.NORTH).setValue(WATER_KIND,0).setValue(FLOW,16));
     }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> builder) {
-        builder.add(WATERLOGGED,CONNECTED,FACING);
+        builder.add(WATERLOGGED,CONNECTED,FACING,WATER_KIND,FLOW);
     }
     @Override public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         boolean wet=ctx.getLevel().getFluidState(ctx.getClickedPos()).getType()==Fluids.WATER;
-        return defaultBlockState().setValue(WATERLOGGED,wet).setValue(FACING,ctx.getHorizontalDirection());
+        return defaultBlockState().setValue(WATERLOGGED,wet).setValue(FACING,ctx.getHorizontalDirection())
+            .setValue(WATER_KIND,Math.max(0,WeirWater.kind(ctx.getLevel().getFluidState(ctx.getClickedPos()))))
+            .setValue(FLOW,WeirWater.flow(ctx.getLevel().getFluidState(ctx.getClickedPos())));
     }
     @Override public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED)?Fluids.WATER.getSource(false):super.getFluidState(state);
+        return state.getValue(WATERLOGGED)?WeirWater.fluid(state.getValue(WATER_KIND),state.getValue(FLOW)):super.getFluidState(state);
     }
     @Override public VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext context){return SHAPE;}
     @Override public RenderShape getRenderShape(BlockState state){return RenderShape.MODEL;}
@@ -72,7 +77,7 @@ public final class WeirPostBlock extends BaseEntityBlock {
         super.onRemove(state,level,pos,next,moving);
     }
     @Override public BlockState updateShape(BlockState state,Direction direction,BlockState adjacent,LevelAccessor level,BlockPos pos,BlockPos neighbour){
-        if(state.getValue(WATERLOGGED))level.scheduleTick(pos,Fluids.WATER,Fluids.WATER.getTickDelay(level));
+        if(state.getValue(WATERLOGGED))level.scheduleTick(pos,state.getFluidState().getType(),state.getFluidState().getType().getTickDelay(level));
         return super.updateShape(state,direction,adjacent,level,pos,neighbour);
     }
 }
