@@ -47,6 +47,26 @@ public final class SmartCategorySorter {
         }
         snapshots.sort(Comparator.comparingLong(s -> s.ref().pos().asLong()));
 
+        // One initial scan per chest. A mostly metallic chest containing
+        // sticks, bottles or bricks is NOT a safe destination for more metal.
+        // Empty = ""; mixed/unclassified family = null.
+        Map<StorageSnapshot, String> strictHomes = new IdentityHashMap<>();
+        for (StorageSnapshot snap : snapshots) {
+            String candidateFamily = "";
+            for (int i = 0; i < snap.ref().handler().getSlots(); i++) {
+                ItemStack entry = snap.ref().handler().getStackInSlot(i);
+                if (entry.isEmpty()) continue;
+                String family = StrictStackClassifier.family(entry);
+                if (candidateFamily.isEmpty()) candidateFamily = family;
+                else if (!candidateFamily.equals(family)) {
+                    candidateFamily = null;
+                    break;
+                }
+            }
+            strictHomes.put(snap, candidateFamily);
+        }
+
+
         // A one-shot spatial layout plan. Never saved to the world and never
         // requires pre-labelling chests. Strongly seeded rows are learned from
         // the snapshot; otherwise ordinary warehouse ordering is used.
@@ -132,13 +152,14 @@ public final class SmartCategorySorter {
             StorageSnapshot best = chooseHome(key, label, sample, categoryMode,
                     originals, related,
                     seededColumnHomes.getOrDefault(WarehouseLayout.family(label), List.of()),
-                    layout, columns, snapshotIndex);
+                    layout, columns, strictHomes, snapshotIndex);
 
             // A seeded vertical column is stronger evidence than default
             // top-to-bottom Y order. If a specific type is misplaced in another
             // column, use the empty chests UNDER its own existing category.
             if (categoryMode && !originals.isEmpty()) {
-                String partition = RoutingPolicy.emptyPartition(label);
+                String partition = RoutingPolicy.allowsCategoryFallback(label)
+                        ? StrictStackClassifier.family(sample) : "";
                 StorageSnapshot source = originals.stream()
                         .filter(candidate -> columns.conflicts(snapshotIndex.get(candidate), label))
                         .findFirst()
@@ -309,6 +330,13 @@ public final class SmartCategorySorter {
                     shouldMove = false;
                 }
                 if (!shouldMove) continue;
+                if (home.occupied() > 0
+                        && !StrictStackClassifier.family(stack).equals(strictHomes.get(home))) {
+                    // The output must never contaminate an existing stack of
+                    // unrelated items, even if a previous numerical ranking
+                    // selected that chest as a "good enough" destination.
+                    continue;
+                }
 
                 int transferred = InventoryMover.moveSlotToTargets(
                         source.ref(), slot, List.of(home.ref()), recordMove);
@@ -383,6 +411,7 @@ public final class SmartCategorySorter {
                                              List<StorageSnapshot> compatibleColumnHomes,
                                              WarehouseLayout layout,
                                              WarehouseColumns columns,
+                                             Map<StorageSnapshot, String> strictHomes,
                                              Map<StorageSnapshot, Integer> snapshotIndex) {
         if (originalHomes.isEmpty()) return null;
 
@@ -394,7 +423,12 @@ public final class SmartCategorySorter {
 
         List<StorageSnapshot> ranked = new ArrayList<>();
         int originatingIndex = snapshotIndex.get(originalHomes.get(0));
+        String requestedFamily = StrictStackClassifier.family(sample);
         for (StorageSnapshot snapshot : candidates) {
+            if (snapshot.occupied() > 0
+                    && !requestedFamily.equals(strictHomes.get(snapshot))) {
+                continue; // hard semantic incompatibility regardless of score
+            }
             if (allowCategoryFallback && !columns.allowsDestination(
                     originatingIndex, snapshotIndex.get(snapshot), category)
                     && !snapshot.counts().containsKey(key)) continue;
