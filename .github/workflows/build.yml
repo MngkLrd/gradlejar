@@ -268,6 +268,39 @@ jobs:
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: python3 tools/verify_build_output.py "$PROJECT_DIR"
+      - name: Smoke-test Simple Sorter dedicated server
+        if: matrix.project_dir == 'projects/simplesorter-forge-1.20.1'
+        timeout-minutes: 6
+        run: |
+          set -euo pipefail
+          cd projects/simplesorter-forge-1.20.1
+          for dir in run runs/server; do
+            mkdir -p "$dir"
+            printf 'eula=true\n' > "$dir/eula.txt"
+            printf 'online-mode=false\nlevel-name=ci-sorter-test\nview-distance=3\nsimulation-distance=3\nmax-tick-time=-1\n' > "$dir/server.properties"
+          done
+          logfile="$GITHUB_WORKSPACE/simplesorter-forge-server.log"
+          timeout --signal=TERM --kill-after=15s 195s gradle --no-daemon runServer > "$logfile" 2>&1 &
+          pid=$!
+          passed=0
+          for n in $(seq 1 190); do
+            if grep -q 'Done (' "$logfile"; then
+              passed=1
+              break
+            fi
+            if ! kill -0 "$pid" 2>/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          kill "$pid" 2>/dev/null || true
+          wait "$pid" 2>/dev/null || true
+          if [ "$passed" -ne 1 ]; then
+            echo 'Simple Sorter dedicated server did not reach startup completion.'
+            tail -n 180 "$logfile"
+            exit 1
+          fi
+          echo 'Simple Sorter dedicated server boot verified.'
       - name: Smoke-test MIDNIGHT dedicated server and custom biome generation
         if: matrix.project_dir == 'projects/midnighteve'
         env:
