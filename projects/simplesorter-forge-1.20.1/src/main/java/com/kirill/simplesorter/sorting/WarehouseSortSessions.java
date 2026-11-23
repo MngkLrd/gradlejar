@@ -205,6 +205,11 @@ public final class WarehouseSortSessions {
                             + (unresolved > 0 || noFamilyHome > 0
                                 ? " Add more chests or inspect unrecognized items." : "")),
                     unresolved == 0 && unknown == 0 && noFamilyHome == 0);
+            if (unknown > 0) {
+                player.displayClientMessage(Component.literal(
+                        "Simple Sorter unknown item IDs: "
+                        + session.unknownIdExamples(8)), false);
+            }
             return true;
         }
     }
