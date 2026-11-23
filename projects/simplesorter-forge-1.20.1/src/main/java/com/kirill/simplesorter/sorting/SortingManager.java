@@ -30,9 +30,10 @@ public final class SortingManager {
         }
 
         return switch (safe.mode()) {
-            case SMART_CATEGORIES, MATCH_EXISTING ->
-                    SmartCategorySorter.sort(level, containers, safe.radius(), safe);
-            case COMPACT_STACKS -> compactStacks(level, containers, safe);
+            case SMART_CATEGORIES, COMPACT_STACKS ->
+                    SmartCategorySorter.sort(level, containers, safe.radius(),
+                            safe.withMode(com.kirill.simplesorter.settings.SortingMode.SMART_CATEGORIES));
+            case MATCH_EXISTING -> SmartCategorySorter.sort(level, containers, safe.radius(), safe);
             case PLAYER_DEPOSIT -> depositPlayerInventory(level, player, containers, safe);
         };
     }
