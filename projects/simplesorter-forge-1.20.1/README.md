@@ -621,6 +621,12 @@ Categories too. Auto-Organize remains optional; it is no longer a prerequisite
 for cleaning up scattered ores and mixed chests. Player/warehouse counts and
 layout are inferred from actual loaded inventories.
 
+**Client/server:** protocol 8. Both sides require the 0.9.12 JAR so
+the client can resolve all newly localized per-chest category captions.
+Majority ore stacks from a mixed, outlying chest are also eligible for
+direct return to the established ore column; they are never redirected
+to a third, unrelated empty column.
+
 **Testing:** CI includes six-columns x four chests with 1-block gaps,
 a nearly free third ore chest and surplus sixth-column ore; multiple
 categories in one column; distinct TFC loose rocks; and per-chest labels.
