@@ -3,7 +3,7 @@ loaderVersion="[47,)"
 license="MIT"
 [[mods]]
 modId="simplesorter"
-version="0.8.0-forge"
+version="0.9.0-forge"
 displayName="Simple Sorter"
 description="Radius based sorting wand, inventory deposit, configurable controls and efficient container scanning."
 [[dependencies.simplesorter]]
