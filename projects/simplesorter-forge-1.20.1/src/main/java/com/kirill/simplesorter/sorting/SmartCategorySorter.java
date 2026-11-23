@@ -99,6 +99,7 @@ public final class SmartCategorySorter {
 
     private static StorageSnapshot snapshot(ContainerRef ref, Map<Item, SortCategory> cache) {
         Map<Item, Integer> items = new IdentityHashMap<>();
+        Map<Item, ItemStack> samples = new IdentityHashMap<>();
         Map<String, Integer> categories = new HashMap<>();
         int occupied = 0;
         IItemHandler handler = ref.handler();
@@ -107,6 +108,7 @@ public final class SmartCategorySorter {
             if (stack.isEmpty()) continue;
             occupied++;
             items.merge(stack.getItem(), stack.getCount(), Integer::sum);
+            samples.putIfAbsent(stack.getItem(), stack.copyWithCount(1));
             SortCategory cat = category(stack, cache);
             if (cat.moveAllowed() && !SortCategoryRegistry.MISC_ID.equals(cat.id())) {
                 // Slots, not stack size: a 64-stack must not drown out a whole
@@ -114,7 +116,7 @@ public final class SmartCategorySorter {
                 categories.merge(cat.id(), 1, Integer::sum);
             }
         }
-        return new StorageSnapshot(ref, items, categories, occupied);
+        return new StorageSnapshot(ref, items, samples, categories, occupied);
     }
 
     private static SortCategory category(ItemStack stack, Map<Item, SortCategory> cache) {
@@ -132,23 +134,22 @@ public final class SmartCategorySorter {
             if (s.items().containsKey(item)) originals.add(s);
         }
         if (originals.isEmpty()) return null;
+        ItemStack sample = originals.get(0).samples().get(item);
 
         // If the player has seeded the item in multiple chests, consolidate to
         // ONE consistent home. Pure category context wins before stack quantity.
         if (originals.size() >= 2) {
             return originals.stream()
-                    .filter(s -> canReceiveItemType(s.ref().handler(), item))
                     .max(Comparator
-                            .comparingDouble((StorageSnapshot s) -> s.purity(categoryId))
+                            .comparingDouble((StorageSnapshot s) -> s.affinity(categoryId))
                             .thenComparingInt(s -> s.items().getOrDefault(item, 0))
-                            .thenComparingInt(s -> s.categories().getOrDefault(categoryId, 0))
                             .thenComparingLong(s -> -s.ref().pos().asLong()))
                     .orElse(originals.get(0));
         }
 
         StorageSnapshot origin = originals.get(0);
         // Unknown categories must never be guessed into random misc chests.
-        if (SortCategoryRegistry.MISC_ID.equals(categoryId)) return origin;
+        if (!isSafeFallbackCategory(categoryId)) return origin;
         // The already dominant chest is the canonical home unless the player
         // deliberately seeded the item in a second chest (handled above).
         if (origin.purity(categoryId) >= SOURCE_ALREADY_SORTED_PURITY) return origin;
@@ -157,7 +158,7 @@ public final class SmartCategorySorter {
                 .filter(s -> s != origin && s.occupied() > 0)
                 .filter(s -> s.purity(categoryId) >= CATEGORY_TARGET_PURITY)
                 .filter(s -> s.categories().getOrDefault(categoryId, 0) > 0)
-                .filter(s -> canReceiveItemType(s.ref().handler(), item))
+                .filter(s -> canReceiveSample(s.ref().handler(), sample))
                 .max(Comparator
                         .comparingDouble((StorageSnapshot s) -> s.purity(categoryId))
                         .thenComparingInt(s -> s.categories().getOrDefault(categoryId, 0))
@@ -170,29 +171,58 @@ public final class SmartCategorySorter {
      * A modded inventory's slot rules (TFC size, sided slots etc.) are final.
      * Item type is sufficient for routing, but NBT is never stripped on moves.
      */
-    private static boolean canReceiveItemType(IItemHandler handler, Item item) {
-        ItemStack probe = new ItemStack(item);
-        if (probe.isEmpty()) return false;
+    private static boolean isSafeFallbackCategory(String id) {
+        return switch (id) {
+            case "tiny_dust", "small_dust", "dusts", "ores", "raw_ores",
+                    "ingots", "nuggets", "metal_sheets", "plates", "rods",
+                    "wires", "gears", "gems", "adhesives", "fruit_tree_parts",
+                    "molds", "loose_stones", "tools", "weapons", "armor",
+                    "potions", "books", "food", "plants", "wood", "redstone" -> true;
+            default -> false; // broad or unknown: exact-match only
+        };
+    }
+
+    private static boolean canReceiveSample(IItemHandler handler, ItemStack sample) {
+        if (sample == null || sample.isEmpty()) return false;
         try {
             for (int i = 0; i < handler.getSlots(); i++) {
                 ItemStack existing = handler.getStackInSlot(i);
-                if (existing.isEmpty()) {
-                    if (handler.insertItem(i, probe, true).getCount() < probe.getCount()) return true;
-                } else if (existing.getItem() == item && existing.getCount() < existing.getMaxStackSize()) {
-                    // Exact-tag check at transfer time; a different NBT state may
-                    // prevent merging, so this is only a hint of available space.
-                    if (handler.insertItem(i, existing.copyWithCount(1), true).isEmpty()) return true;
+                if (existing.isEmpty() ||
+                        (ItemStack.isSameItemSameTags(existing, sample)
+                                && existing.getCount() < existing.getMaxStackSize())) {
+                    ItemStack remainder = handler.insertItem(i, sample, true);
+                    if (remainder.getCount() < sample.getCount()) return true;
                 }
             }
         } catch (RuntimeException ignored) {
-            // Broken or invalid modded inventory: don't route items into it.
+            // Invalid capability: do not target it.
         }
-        // Home chests can be full; the mover simply performs no transfer.
         return false;
     }
 
     private record StorageSnapshot(ContainerRef ref, Map<Item, Integer> items,
-                                   Map<String, Integer> categories, int occupied) {
+                                   Map<Item, ItemStack> samples, Map<String, Integer> categories,
+                                   int occupied) {
+        double affinity(String categoryId) {
+            if (occupied == 0) return 0D;
+            double own = purity(categoryId);
+            String family = family(categoryId);
+            int related = 0;
+            for (var entry : categories.entrySet()) {
+                if (family.equals(family(entry.getKey()))) related += entry.getValue();
+            }
+            return own * 2.0D + (double) related / occupied;
+        }
+
+        private static String family(String id) {
+            return switch (id) {
+                case "ores", "raw_ores", "tiny_dust", "small_dust", "dusts", "gems", "loose_stones" -> "raw_minerals";
+                case "ingots", "nuggets", "metal_sheets", "plates" -> "metal_forms";
+                case "rods", "wires", "gears" -> "machine_components";
+                default -> id;
+            };
+        }
+
         double purity(String categoryId) {
             if (occupied <= 0 || SortCategoryRegistry.MISC_ID.equals(categoryId)) return 0D;
             return (double) categories.getOrDefault(categoryId, 0) / (double) occupied;
