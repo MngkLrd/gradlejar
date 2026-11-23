@@ -1,0 +1,6 @@
+{
+  "block.primitivewater.rain_collector": "Wooden Rain Collector",
+  "block.primitivewater.wooden_gutter": "Wooden Gutter",
+  "block.primitivewater.wooden_downspout": "Wooden Downspout",
+  "message.primitivewater.volume": "Rainwater: %s / %s mB"
+}

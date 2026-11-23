@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "primitivewater:block/rain_collector"
+    }
+  }
+}

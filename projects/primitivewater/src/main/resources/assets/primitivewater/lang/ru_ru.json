@@ -1,0 +1,6 @@
+{
+  "block.primitivewater.rain_collector": "Деревянный водосборник",
+  "block.primitivewater.wooden_gutter": "Деревянный желоб",
+  "block.primitivewater.wooden_downspout": "Деревянный водосток",
+  "message.primitivewater.volume": "Дождевая вода: %s / %s мБ"
+}

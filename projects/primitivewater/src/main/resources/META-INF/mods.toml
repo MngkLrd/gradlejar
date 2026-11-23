@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+[[mods]]
+modId="primitivewater"
+version="0.1.0"
+displayName="Primitive Water"
+authors="Minemods"
+description='''Early wooden rainwater collection, gutters and gravity downspouts for TerraFirmaCraft and TerraFirmaGreg.'''
+[[dependencies.primitivewater]]
+modId="forge"
+mandatory=true
+versionRange="[47.1,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.primitivewater]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.20.2)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.primitivewater]]
+modId="tfc"
+mandatory=true
+versionRange="[3.0,)"
+ordering="AFTER"
+side="BOTH"
