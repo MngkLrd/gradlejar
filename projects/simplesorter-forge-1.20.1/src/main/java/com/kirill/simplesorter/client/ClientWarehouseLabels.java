@@ -8,6 +8,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -211,6 +212,13 @@ public final class ClientWarehouseLabels {
             boolean drawIcon = data.style() == 2 && !data.icon().isEmpty()
                     && v.distanceSq() <= ICON_RADIUS_SQ && icons < MAX_ICON_MODELS;
             int light = LevelRenderer.getLightColor(mc.level, pos);
+            // The v0.9.7 renderer replaced FULL_BRIGHT with raw lighting.
+            // At night this can make captions practically black. Keep an
+            // ambient floor for the LETTERS only; 3D items still use natural
+            // block light and thus remain part of the scene.
+            int textLight = LightTexture.pack(
+                    Math.max(9, (light >> 4) & 15),
+                    Math.max(9, (light >> 20) & 15));
             poses.pushPose();
             poses.translate(v.surface().x - camera.x,
                     v.surface().y - camera.y, v.surface().z - camera.z);
@@ -242,7 +250,7 @@ public final class ClientWarehouseLabels {
             mc.font.drawInBatch(v.label().caption(),
                     -v.label().textWidth() * 0.5F, -4.5F,
                     TEXT_COLOR, false, poses.last().pose(),
-                    buffer, Font.DisplayMode.NORMAL, TEXT_BACKGROUND, light);
+                    buffer, Font.DisplayMode.NORMAL, TEXT_BACKGROUND, textLight);
             poses.popPose();
             poses.popPose();
             drawn++;
