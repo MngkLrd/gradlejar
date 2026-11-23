@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "waterlogged=false": {
+      "model": "riverweir:block/weir_post"
+    },
+    "waterlogged=true": {
+      "model": "riverweir:block/weir_post"
+    }
+  }
+}

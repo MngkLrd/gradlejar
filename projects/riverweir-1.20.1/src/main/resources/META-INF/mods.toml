@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+[[mods]]
+modId="riverweir"
+version="0.1.0"
+displayName="River Weir"
+description="A physical river-spanning fish net with woven jute, realistic catches, wear, and a shared inventory."
+[[dependencies.riverweir]]
+modId="forge"
+mandatory=true
+versionRange="[47.1,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.riverweir]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.20.2)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.riverweir]]
+modId="tfc"
+mandatory=true
+versionRange="[3.1,)"
+ordering="AFTER"
+side="BOTH"
