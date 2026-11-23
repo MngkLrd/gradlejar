@@ -174,17 +174,20 @@ public final class SmartCategorySorter {
             }
         }
 
-        // Clean only inventories that actually took part in a transfer.
-        // The old implementation repacked ALL 160 chests at every click.
-        if (movedItems > 0) {
-            for (StorageSnapshot snapshot : snapshots) {
-                if (!modified.contains(snapshot.ref().pos())) continue;
-                int packed = InventoryMover.cleanUpContainer(snapshot.ref(), recordMove);
-                if (packed > 0) {
-                    movedItems += packed;
-                    movedStacks++;
-                }
+        // Smart Categories ALWAYS includes partial-stack merging and filling
+        // holes, even when there were no inter-chest transfers. A cheap
+        // linear preflight skips chests already in compact form.
+        // Match Existing retains its focused "changed chests only" behavior.
+        for (StorageSnapshot snapshot : snapshots) {
+            if (!categoryMode && !modified.contains(snapshot.ref().pos())) continue;
+            if (!InventoryMover.needsCompaction(snapshot.ref())) continue;
+            int packed = InventoryMover.cleanUpContainer(snapshot.ref(), recordMove);
+            if (packed > 0) {
+                movedItems += packed;
+                movedStacks++;
             }
+        }
+        if (movedItems > 0) {
             SortingVisuals.playSortingEffects(level, modified, visualTransfers, settings);
         }
         return new SortingResult(containers.size(), movedItems, movedStacks,
