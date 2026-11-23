@@ -171,33 +171,22 @@ public final class WarehouseReorganizer {
                 ChestState sourceState = states.get(sourceIndex);
 
                 boolean mixedSource = sourceState.mixed();
-                if (mixedSource && family.equals(keepAtSource.get(sourceIndex))) {
-                    // Keep the dominant family. Evacuate the contamination,
-                    // rather than pointlessly moving everything elsewhere.
-                    continue;
-                }
-                if (!mixedSource && plan.atHome(sourceIndex, family)) {
-                    // Terminal home. This is why an already correct chest
-                    // won't shuffle between identical sibling chests.
-                    continue;
-                }
+                if (!WarehouseConsolidationDecision.shouldRelocate(
+                        plan, sourceIndex, family, mixedSource,
+                        keepAtSource.get(sourceIndex))) continue;
 
                 String pool = plan.region(sourceIndex) + ":" + family;
                 int checkedTargets = 0;
                 for (int targetIndex : candidateOrder.computeIfAbsent(
                         pool, ignored -> candidateIndices(sourceIndex, family))) {
                     if (++checkedTargets > MAX_TARGETS_PER_STACK) break;
-                    if (targetIndex == sourceIndex || !plan.sameRegion(sourceIndex, targetIndex)) continue;
-
-                    // A pure chest outside the family's canonical X/Z must
-                    // consolidate ONLY toward its established anchor. If that
-                    // anchor is full the correct choice is to leave it alone.
-                    if (!mixedSource && !plan.atHome(targetIndex, family)) continue;
-
                     ContainerRef target = containers.get(targetIndex);
                     if (!valid(level, target)) continue;
 
                     ChestState targetState = states.get(targetIndex);
+                    if (!WarehouseConsolidationDecision.eligibleTarget(
+                            plan, sourceIndex, targetIndex, family, mixedSource,
+                            targetState.pure(family), targetState.empty())) continue;
                     String claim = reservations.getOrDefault(targetIndex, "");
                     if (!targetState.canAccept(family, claim)) continue;
 
