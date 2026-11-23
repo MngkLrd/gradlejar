@@ -33,9 +33,9 @@ import java.util.UUID;
  * server tick, continuing over subsequent ticks. No async thread, always-on
  * scans, client-trusted item changes or repeated click requirements.
  *
- * Two bounded phases: stabilize all warehouse owners and relocate misplaced
- * stacks, then merge/compact each chest. Send visuals and refresh labels
- * once on completion.
+ * First, use a server-only transient wand buffer to exchange stacks in
+ * completely full/mixed chests. Each batch is extracted and restored in
+ * one server tick. Then compact, play visuals and refresh labels once.
  */
 @Mod.EventBusSubscriber(modid = "simplesorter",
         bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -64,6 +64,20 @@ public final class WarehouseSortSessions {
             return false;
         }
         if (containers.isEmpty()) return false;
+        // Two overlapping virtual-buffer jobs must not touch the same
+        // physical inventory while their layouts are being processed.
+        for (Job other : ACTIVE.values()) {
+            if (other.level != level) continue;
+            for (ContainerRef incoming : containers) {
+                for (ContainerRef claimed : other.containers) {
+                    if (incoming.pos().equals(claimed.pos())) {
+                        player.displayClientMessage(Component.literal(
+                                "Simple Sorter: these chests are already being sorted by another player."), true);
+                        return false;
+                    }
+                }
+            }
+        }
         InteractionHand hand = player.getItemInHand(InteractionHand.MAIN_HAND) == wand
                 ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
         Job job = new Job(level, player, hand, containers, settings);
@@ -114,7 +128,7 @@ public final class WarehouseSortSessions {
         private final InteractionHand hand;
         private final List<ContainerRef> containers;
         private final SortingWandSettings settings;
-        private final WarehouseReorganizer.Session session;
+        private final WarehouseVacuumSorter.Session session;
         private final Set<BlockPos> changed = new HashSet<>();
         private final List<MoveRecord> visualMoves = new ArrayList<>();
         private final MoveListener listener = move -> {
@@ -137,7 +151,7 @@ public final class WarehouseSortSessions {
             this.hand = hand;
             this.containers = List.copyOf(containers);
             this.settings = settings;
-            this.session = WarehouseReorganizer.begin(containers);
+            this.session = WarehouseVacuumSorter.begin(containers);
         }
 
         private boolean advance(ServerPlayer player) {
@@ -152,7 +166,7 @@ public final class WarehouseSortSessions {
                 player.displayClientMessage(Component.literal(
                         "Simple Sorter: " + (compaction
                         ? "packing containers " + compactIndex + "/" + containers.size()
-                        : "sorting chest " + Math.min(session.currentChestIndex() + 1, containers.size())
+                        : "buffer sorting chest " + Math.min(session.currentChestIndex() + 1, containers.size())
                                 + "/" + containers.size())
                         + "; transferred " + session.movedItems()
                         + " items between chests. Job still running."), true);
@@ -194,19 +208,17 @@ public final class WarehouseSortSessions {
 
             int unresolved = session.unresolvedMixedChests();
             int unknown = session.unknownFamilySlots();
-            int noFamilyHome = session.assignmentMissingFamilies();
             player.displayClientMessage(Component.literal(
-                    "Simple Sorter completed: " + session.movedItems()
+                    "Simple Sorter completed (virtual wand buffer): " + session.movedItems()
                             + " items transferred BETWEEN chests; "
-                            + compactedItems + " items only compacted WITHIN chests. "
-                            + unresolved + " mixed chests remain; "
-                            + unknown + " unclassified slots; "
-                            + noFamilyHome + " families without dedicated storage. "
-                            + "Transfer attempts: " + session.attemptedTransfers()
-                            + ", rejected by inventories: " + session.rejectedTransfers() + "."
-                            + (unresolved > 0 || noFamilyHome > 0
-                                ? " Add more chests or inspect unrecognized items." : "")),
-                    unresolved == 0 && unknown == 0 && noFamilyHome == 0);
+                            + compactedItems + " items compacted WITHIN chests. "
+                            + unresolved + " mixed chests remain (small families may share a chest); "
+                            + unknown + " unclassified slots. "
+                            + "Skipped restricted chests: " + session.skippedChests()
+                            + "; rejected buffer batches: " + session.rejectedTransfers() + "."
+                            + (session.skippedChests() > 0
+                                ? " Some inventories cannot be safely extracted/refilled." : "")),
+                    session.skippedChests() == 0 && session.rejectedTransfers() == 0);
             if (unknown > 0) {
                 player.displayClientMessage(Component.literal(
                         "Simple Sorter unknown item IDs: "
