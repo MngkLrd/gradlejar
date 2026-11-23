@@ -142,10 +142,10 @@ public final class WarehouseLayout {
         if (category == null || category.isBlank()) return "misc";
         return switch (category) {
             case "raw_minerals", "ores", "raw_ores", "tiny_dust", "small_dust", "dusts",
-                    "gems", "salts", "loose_stones" -> "raw_minerals";
+                    "gems", "salts" -> "raw_minerals";
             case "finished_materials", "ingots", "nuggets", "metal_sheets", "plates",
                     "rods", "wires", "gears" -> "finished_materials";
-            case "blocks", "building", "stone", "wood", "logs" -> "building";
+            case "blocks", "building", "stone", "loose_stones", "wood", "logs" -> "building";
             case "crafting", "adhesives", "molds", "clays", "sticks",
                     "tool_heads", "smithing_templates", "vessels", "redstone", "tools",
                     "weapons", "armor" -> "crafting";
