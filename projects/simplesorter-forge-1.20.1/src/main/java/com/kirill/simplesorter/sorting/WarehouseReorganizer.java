@@ -181,6 +181,9 @@ public final class WarehouseReorganizer {
                 ChestState sourceState = states.get(sourceIndex);
 
                 boolean mixedSource = sourceState.mixed();
+                boolean relocatingOutlyingMajority = mixedSource
+                        && family.equals(keepAtSource.get(sourceIndex))
+                        && !plan.atHome(sourceIndex, family);
                 if (!WarehouseConsolidationDecision.shouldRelocate(
                         plan, sourceIndex, family, mixedSource,
                         keepAtSource.get(sourceIndex))) continue;
@@ -206,6 +209,12 @@ public final class WarehouseReorganizer {
                     }
 
                     int targetIndex = choices.get(choiceIndex);
+                    // Keep a predominantly ore chest in an outlying column
+                    // until it can move DIRECTLY to the canonical ore cluster.
+                    // Do not relocate the majority to yet another outlying
+                    // empty chest just because the preferred area is full.
+                    if (relocatingOutlyingMajority
+                            && !plan.atHome(targetIndex, family)) continue;
                     if (targetIndex == sourceIndex) continue;
                     ContainerRef target = containers.get(targetIndex);
                     if (!valid(level, target)) continue;
