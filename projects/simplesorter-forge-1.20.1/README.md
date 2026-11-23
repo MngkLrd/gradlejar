@@ -1,4 +1,4 @@
-# Simple Sorter 0.9.13 (Forge 1.20.1)
+# Simple Sorter 0.9.14 (Forge 1.20.1)
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
@@ -114,7 +114,7 @@ gradle --no-daemon clean build
 ```
 
 Java: 17. Gradle: 8.14.3. Expected output:
-`build/libs/simplesorter-0.9.13-forge.jar`.
+`build/libs/simplesorter-0.9.14-forge.jar`.
 
 Our GitHub **Minecraft Mod Build Hub** CI performs the authoritative Forge
 compilation and JAR verification. A successful Gradle build is not equivalent
@@ -672,3 +672,60 @@ a running TerraFirmaGreg client with all its custom item capabilities. Use
 a backup of the world and check whether the user-visible "mixed" count
 falls to zero after one sort. If not, note the count and any remaining item
 IDs for further classifier refinements.
+
+## 0.9.14: one-click recovery of ALL-MIXED warehouses (0 transfers fix)
+
+Root-cause fix for the screenshot report: `0 items moved; 7619 packed;
+13 mixed chests; 59 unclassified slots`. 0.9.13 admitted a new stack ONLY
+to an already pure or entirely empty chest. If every chest was mixed, the
+algorithm could not move a single stack despite hundreds of free slots.
+"Packed" previously counted ITEMS rearranged WITHIN the same inventory,
+not items placed in more appropriate chests. This is why the user saw
+visibly random assortments after "successful" sorting.
+
+The sorter now:
+- Scans all selected loaded containers once on explicit wand use;
+- Builds a temporary stable **per-chest family ownership plan** from actual
+  content (not a preconfigured row/column template); preserves existing
+  pure chests and favors category concentrations;
+- Lets an assigned family home receive its OWN family while that chest is
+  still initially mixed, then evacuates incompatible items into THEIR
+  assigned homes, in bounded server-tick transactions. Thus it can sort
+  two mixed chests with no empty containers;
+- A family is never moved back after reaching its assigned home. A
+  temporary receiver may be mixed while its foreign items are leaving,
+  but the transfer policy is monotonic, not repeated unconstrained swaps;
+- Uses Forge item insertion/extraction SIMULATION and actual NBT-safe
+  stacks, never deletes or reconstructs an ItemStack;
+- Reports incomplete assignment when the warehouse has MORE distinct
+  families than available physical chests. One strict family per chest
+  cannot separate 20 unrelated families into only 13 chests, regardless
+  of available individual empty slots.
+
+Wand status/UI fixes:
+- The wand no longer enters cooldown if no warehouse action was accepted;
+  busy/cooldown/no-container actions now produce feedback.
+- While one-click sorting is running, a progress indication appears
+  every ~4 seconds. A safety watchdog stops a hung job instead of leaving
+  it active forever.
+- On completion, **inter-chest transfers** and **intra-chest compaction**
+  are shown as separate values, along with unresolved mixed chests,
+  unknown slots and unassigned item families.
+- The first eight actual registry IDs of unclassified items, with counts,
+  are printed to the user chat. This helps fix future TFC/GT item
+  classifiers using grounded data rather than screenshots guesses.
+- If another player's inventory changed during the multi-tick job,
+  destination handlers are re-read and transfer transaction simulation
+  remains authoritative. No TFC/GregTech hard dependency was introduced.
+
+Added pure Java executable **logical movement** regressions: two initially
+mixed chests become pure with no empty chest, 13 initially mixed 54-slot
+chests exchange foreign stacks, all item counts stay unchanged, sorting
+the already-organized chests again causes zero movement, and categories
+without enough whole-chest homes are reported honestly.
+
+For validation test on a COPY of your world, run Smart Categories once,
+wait until "completed" appears, and check the INTER-CHEST count and
+unknown registry IDs. Do NOT infer successful warehouse organization from
+the packing counter. Real modded chest insert restrictions and FPS are
+still only verifiable in a TerraFirmaGreg game client.

@@ -1,6 +1,7 @@
 package com.kirill.simplesorter.sorting;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -37,10 +38,12 @@ public final class WarehouseReorganizer {
 
     private static final class ChestState {
         private final Map<String, Integer> families = new HashMap<>();
+        private final Map<String, Integer> unknownItemIds = new HashMap<>();
         private int occupied;
 
         void refresh(ContainerRef ref, Map<Item, SortCategory> cache) {
             families.clear();
+            unknownItemIds.clear();
             occupied = 0;
             IItemHandler inventory = ref.handler();
             for (int slot = 0; slot < inventory.getSlots(); slot++) {
@@ -51,6 +54,10 @@ public final class WarehouseReorganizer {
                         stack.getItem(), item -> ItemCategoryResolver.resolve(stack));
                 String family = StrictStackClassifier.family(stack, category);
                 families.merge(family, 1, Integer::sum);
+                if ("misc".equals(family)) {
+                    String id = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+                    unknownItemIds.merge(id, 1, Integer::sum);
+                }
             }
         }
 
@@ -85,10 +92,10 @@ public final class WarehouseReorganizer {
         private final List<ContainerRef> containers;
         private final List<ChestState> states;
         private final WarehouseFamilyPlan plan;
+        private final WarehouseAssignmentPlanner assignments;
         private final Map<Item, SortCategory> itemCategoryCache = new IdentityHashMap<>();
         private final Map<String, List<Integer>> candidateOrder = new HashMap<>();
-        private final Map<Integer, String> reservations = new HashMap<>();
-        private final List<String> keepAtSource = new ArrayList<>();
+
 
         private int sourceIndex;
         private int slotIndex;
@@ -96,6 +103,8 @@ public final class WarehouseReorganizer {
         private int movedThisPass;
         private int movedItems;
         private int operations;
+        private int attemptedTransfers;
+        private int rejectedTransfers;
         // Carry the inner candidate-loop cursor over to the next server
         // tick, instead of searching up to 384 modded inventories in one tick.
         private int pendingSource = -1;
@@ -107,22 +116,36 @@ public final class WarehouseReorganizer {
             containers = List.copyOf(all);
             states = new ArrayList<>(containers.size());
             List<WarehouseFamilyPlan.Node> nodes = new ArrayList<>(containers.size());
+            List<WarehouseAssignmentPlanner.Node> targetNodes = new ArrayList<>(containers.size());
             for (ContainerRef ref : containers) {
                 ChestState state = new ChestState();
                 state.refresh(ref, itemCategoryCache);
                 states.add(state);
-                keepAtSource.add(state.majority());
                 BlockPos p = ref.pos();
                 nodes.add(new WarehouseFamilyPlan.Node(
                         p.getX(), p.getY(), p.getZ(), state.frozenVotes()));
+                targetNodes.add(new WarehouseAssignmentPlanner.Node(
+                        ref.handler().getSlots(), state.frozenVotes()));
             }
             plan = WarehouseFamilyPlan.analyze(nodes);
+            assignments = WarehouseAssignmentPlanner.analyze(targetNodes, plan);
         }
 
         public boolean isDone() { return done; }
         public int movedItems() { return movedItems; }
         public int movedOperations() { return operations; }
+        public int attemptedTransfers() { return attemptedTransfers; }
+        public int rejectedTransfers() { return rejectedTransfers; }
         public int examinedPasses() { return pass + 1; }
+        public int assignmentMissingFamilies() { return assignments.withoutHome().size(); }
+        public int scannedChests() { return containers.size(); }
+        public int currentChestIndex() { return sourceIndex; }
+
+        public void refreshContainer(int index) {
+            if (index >= 0 && index < containers.size()) {
+                states.get(index).refresh(containers.get(index), itemCategoryCache);
+            }
+        }
 
         /** Honest post-sort diagnostic. The storage may still be mixed if
          * every matching destination is full or the modded handler rejects
@@ -141,6 +164,22 @@ public final class WarehouseReorganizer {
                 count += state.families.getOrDefault("misc", 0);
             }
             return count;
+        }
+
+        public String unknownIdExamples(int maxEntries) {
+            Map<String, Integer> merged = new HashMap<>();
+            for (ChestState state : states) {
+                for (var e : state.unknownItemIds.entrySet()) {
+                    merged.merge(e.getKey(), e.getValue(), Integer::sum);
+                }
+            }
+            return merged.entrySet().stream()
+                    .sorted(Comparator.<Map.Entry<String, Integer>>comparingInt(
+                            Map.Entry::getValue).reversed()
+                            .thenComparing(Map.Entry::getKey))
+                    .limit(Math.max(0, maxEntries))
+                    .map(e -> e.getKey() + " (" + e.getValue() + ")")
+                    .collect(java.util.stream.Collectors.joining(", "));
         }
 
         /** Small, bounded main-thread slice; work automatically continues
@@ -199,13 +238,14 @@ public final class WarehouseReorganizer {
                 if ("locked".equals(family)) continue;
                 ChestState sourceState = states.get(sourceIndex);
 
-                boolean mixedSource = sourceState.mixed();
-                boolean relocatingOutlyingMajority = mixedSource
-                        && family.equals(keepAtSource.get(sourceIndex))
-                        && !plan.atHome(sourceIndex, family);
-                if (!WarehouseConsolidationDecision.shouldRelocate(
-                        plan, sourceIndex, family, mixedSource,
-                        keepAtSource.get(sourceIndex))) continue;
+                // A source may be mixed, but its assigned destination role
+                // is immutable for this session. Keep this family's items
+                // once they reach an assigned home; move all foreign items
+                // out. This is monotonic and eliminates A -> B -> A cycles.
+                if (assignments.isHome(sourceIndex, family)) continue;
+                if (assignments.homes(plan.region(sourceIndex), family).isEmpty()) {
+                    continue; // no dedicated chest available for this family
+                }
 
                 String pool = plan.region(sourceIndex) + ":" + family;
                 List<Integer> choices = candidateOrder.computeIfAbsent(
@@ -228,33 +268,34 @@ public final class WarehouseReorganizer {
                     }
 
                     int targetIndex = choices.get(choiceIndex);
-                    // Keep a predominantly ore chest in an outlying column
-                    // until it can move DIRECTLY to the canonical ore cluster.
-                    // Do not relocate the majority to yet another outlying
-                    // empty chest just because the preferred area is full.
-                    if (relocatingOutlyingMajority
-                            && !plan.atHome(targetIndex, family)) continue;
+                    // Receiver is a preassigned permanent family home.
+                    // It may START mixed: the incompatible stacks will be
+                    // evacuated on their own turn. This is the missing
+                    // ingredient in the 0.9.13 circular-purity deadlock.
+                    if (!assignments.isHome(targetIndex, family)) continue;
                     if (targetIndex == sourceIndex) continue;
                     ContainerRef target = containers.get(targetIndex);
                     if (!valid(level, target)) continue;
 
                     ChestState targetState = states.get(targetIndex);
-                    // Be safe if another player added a foreign item while a
-                    // multi-tick sort was working through the warehouse.
+                    // Recheck modded handler state and do not insert into
+                    // a protected chest. Transient mixing is permitted ONLY
+                    // inside a chest assigned to this exact family. Each
+                    // actual transfer is simulated by InventoryMover, so
+                    // TFC/GregTech slot restrictions are still respected.
                     targetState.refresh(target, itemCategoryCache);
-                    if (!WarehouseConsolidationDecision.eligibleTarget(
-                            plan, sourceIndex, targetIndex, family, mixedSource,
-                            targetState.pure(family), targetState.empty())) continue;
-                    String claim = reservations.getOrDefault(targetIndex, "");
-                    if (!targetState.canAccept(family, claim)) continue;
+                    if (targetState.families.containsKey("locked")) continue;
 
+                    attemptedTransfers++;
                     int moved = InventoryMover.moveSlotToTargets(
                             source, activeSlot, List.of(target), listener);
-                    if (moved <= 0) continue;
+                    if (moved <= 0) {
+                        rejectedTransfers++;
+                        continue;
+                    }
 
                     sourceState.refresh(source, itemCategoryCache);
                     targetState.refresh(target, itemCategoryCache);
-                    reservations.put(targetIndex, family);
                     movedItems += moved;
                     movedThisPass += moved;
                     operations++;
@@ -268,12 +309,14 @@ public final class WarehouseReorganizer {
         }
 
         private List<Integer> candidateIndices(int source, String family) {
-            List<Integer> result = plan.indicesInRegion(source);
+            List<Integer> result = new ArrayList<>(
+                    assignments.homes(plan.region(source), family));
             result.sort(Comparator
                     .comparingInt((Integer i) ->
                             plan.priority(i, family, states.get(i).pure(family))).reversed()
                     .thenComparing(Comparator
-                            .comparingInt((Integer i) -> states.get(i).pure(family) ? 1 : 0)
+                            .comparingInt((Integer i) ->
+                                    states.get(i).families.getOrDefault(family, 0))
                             .reversed())
                     .thenComparingLong(i -> containers.get(i).pos().asLong()));
             return List.copyOf(result);

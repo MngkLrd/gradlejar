@@ -3,6 +3,8 @@ package com.kirill.simplesorter.item;
 import com.kirill.simplesorter.settings.SortingWandSettings;
 import com.kirill.simplesorter.sorting.SortingManager;
 import com.kirill.simplesorter.sorting.SortingResult;
+import com.kirill.simplesorter.sorting.WarehouseSortSessions;
+import com.kirill.simplesorter.settings.SortingMode;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -46,13 +48,33 @@ public class SortingWandItem extends Item {
         }
 
         if (player.getCooldowns().isOnCooldown(this)) {
+            player.displayClientMessage(Component.literal(
+                    "Simple Sorter: wand cooldown is active."), true);
             return InteractionResultHolder.fail(stack);
         }
 
         SortingWandSettings settings = SortingWandSettings.readFrom(stack);
-        SortingResult result = SortingManager.sortAroundPlayer(serverLevel, player, settings, stack);
-        player.getCooldowns().addCooldown(this, COOLDOWN_TICKS);
+        if (settings.mode() == SortingMode.SMART_CATEGORIES
+                && WarehouseSortSessions.isRunning(player.getUUID())) {
+            player.displayClientMessage(Component.literal(
+                    "Simple Sorter: warehouse sorting is already running. "
+                    + "Check the progress message; no extra click needed."), true);
+            return InteractionResultHolder.success(stack);
+        }
 
+        SortingResult result = SortingManager.sortAroundPlayer(
+                serverLevel, player, settings, stack);
+        boolean startedSmart = settings.mode() == SortingMode.SMART_CATEGORIES
+                && result.scannedContainers() > 0;
+        // Only start cooldown after an actual action. Earlier versions
+        // charged cooldown even when no chests were found, the job was
+        // rejected, or the server could not do any work.
+        if (startedSmart || result.used()) {
+            player.getCooldowns().addCooldown(this, COOLDOWN_TICKS);
+        }
+        if (!startedSmart) {
+            player.displayClientMessage(result.toPlayerMessageComponent(), true);
+        }
         if (result.used()) {
             consumeUse(stack, player);
         }
