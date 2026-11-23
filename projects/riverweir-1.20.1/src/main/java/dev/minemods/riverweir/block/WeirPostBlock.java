@@ -4,6 +4,7 @@ import dev.minemods.riverweir.RiverWeirMod;
 import dev.minemods.riverweir.blockentity.WeirPostBlockEntity;
 import dev.minemods.riverweir.logic.WeirLogic;
 import dev.minemods.riverweir.logic.WeirWater;
+import dev.minemods.riverweir.item.NetRollItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -64,10 +65,14 @@ public final class WeirPostBlock extends BaseEntityBlock {
         return level.isClientSide?null:createTickerHelper(type,RiverWeirMod.POST_BE.get(),WeirPostBlockEntity::serverTick);
     }
     @Override public InteractionResult use(BlockState state,Level level,BlockPos pos,Player player,InteractionHand hand,BlockHitResult hit){
-        if(player.getItemInHand(hand).is(RiverWeirMod.NET_ROLL.get()))return InteractionResult.PASS;
+        if(player.getItemInHand(hand).getItem() instanceof NetRollItem)return InteractionResult.PASS;
         if(!level.isClientSide && player instanceof ServerPlayer server){
             if(player.isShiftKeyDown()&&WeirLogic.isJuteNet(player.getItemInHand(hand)))
                 WeirLogic.repair((ServerLevel)level,pos,player,hand);
+            else if(player.isShiftKeyDown()&&player.getItemInHand(hand).isEmpty())
+                WeirLogic.clean((ServerLevel)level,pos,player);
+            else if(WeirLogic.isBait(player.getItemInHand(hand)))
+                WeirLogic.addBait((ServerLevel)level,pos,player,hand);
             else WeirLogic.openMenu((ServerLevel)level,pos,server);
         }
         return InteractionResult.sidedSuccess(level.isClientSide);

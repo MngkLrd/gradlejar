@@ -2,6 +2,8 @@ package dev.minemods.riverweir.blockentity;
 
 import dev.minemods.riverweir.RiverWeirMod;
 import dev.minemods.riverweir.logic.WeirLogic;
+import dev.minemods.riverweir.logic.WeirTier;
+import net.minecraft.nbt.ListTag;
 import dev.minemods.riverweir.menu.WeirMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 public final class WeirPostBlockEntity extends BlockEntity implements MenuProvider {
-    public final ItemStackHandler items = new ItemStackHandler(9) {
+    public final ItemStackHandler items = new ItemStackHandler(27) {
         @Override protected void onContentsChanged(int slot) { setChanged(); refreshCatchMarker(); }
     };
     public BlockPos other;
@@ -31,10 +33,15 @@ public final class WeirPostBlockEntity extends BlockEntity implements MenuProvid
     private int[] columnDepths = new int[0];
     public BlockPos catchMarker;
     public int rollsUsed;
+    public int tierId;
+    public int clog;
+    public int baitCharges;
+    public long lastCatch; 
+    public WeirTier getTier() { return WeirTier.byId(tierId); }
 
     public WeirPostBlockEntity(BlockPos pos, BlockState state) { super(RiverWeirMod.POST_BE.get(),pos,state); }
 
-    public void link(BlockPos linked, boolean isMaster, int y, int[] depths, int rolls) {
+    public void link(BlockPos linked, boolean isMaster, int y, int[] depths, int rolls, WeirTier kind) {
         other=linked.immutable();
         master=isMaster;
         wear=0;
@@ -43,6 +50,10 @@ public final class WeirPostBlockEntity extends BlockEntity implements MenuProvid
         lastWear=0;
         columnDepths=depths.clone();
         rollsUsed=rolls;
+        tierId=kind.id;
+        clog=0;
+        baitCharges=0;
+        lastCatch=0;
         catchMarker=null;
         setChanged();
     }
@@ -50,6 +61,10 @@ public final class WeirPostBlockEntity extends BlockEntity implements MenuProvid
         other=null;master=false;wear=0;netY=0;lastScan=0;lastWear=0;
         columnDepths=new int[0];
         rollsUsed=0;
+        tierId=0;
+        clog=0;
+        baitCharges=0;
+        lastCatch=0;
         catchMarker=null;
         setChanged();
     }
@@ -89,6 +104,10 @@ public final class WeirPostBlockEntity extends BlockEntity implements MenuProvid
         tag.putLong("LastWear",lastWear);
         tag.putIntArray("ColumnDepths",columnDepths);
         tag.putInt("RollsUsed",rollsUsed);
+        tag.putInt("NetTier",tierId);
+        tag.putInt("Clog",clog);
+        tag.putInt("BaitCharges",baitCharges);
+        tag.putLong("LastCatch",lastCatch);
         if (catchMarker != null) tag.putLong("CatchMarker",catchMarker.asLong());
         tag.put("Inventory",items.serializeNBT());
     }
@@ -102,12 +121,26 @@ public final class WeirPostBlockEntity extends BlockEntity implements MenuProvid
         lastWear=tag.getLong("LastWear");
         columnDepths=tag.contains("ColumnDepths")?tag.getIntArray("ColumnDepths"):new int[0];
         rollsUsed=tag.getInt("RollsUsed");
+        tierId=tag.getInt("NetTier");
+        clog=tag.getInt("Clog");
+        baitCharges=tag.getInt("BaitCharges");
+        lastCatch=tag.getLong("LastCatch");
         catchMarker=tag.contains("CatchMarker")?BlockPos.of(tag.getLong("CatchMarker")):null;
-        if(tag.contains("Inventory")) items.deserializeNBT(tag.getCompound("Inventory"));
+        if(tag.contains("Inventory")){
+            // Forge's handler deserialization resizes to the saved Size (9 for older nets).
+            // Read individual slots instead, preserving all v0.1-v0.3 catches in 27 slots.
+            ListTag list=tag.getCompound("Inventory").getList("Items",10);
+            for(int i=0;i<items.getSlots();i++)items.setStackInSlot(i,net.minecraft.world.item.ItemStack.EMPTY);
+            for(int i=0;i<list.size();i++){
+                CompoundTag entry=list.getCompound(i);
+                int slot=entry.getInt("Slot");
+                if(slot>=0&&slot<items.getSlots())items.setStackInSlot(slot,net.minecraft.world.item.ItemStack.of(entry));
+            }
+        }
     }
     @Override public Component getDisplayName() { return Component.translatable("container.riverweir.weir"); }
     @Nullable @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-        return new WeirMenu(id,inventory,worldPosition);
+        return new WeirMenu(id,inventory,worldPosition,getTier().id);
     }
     public static void serverTick(net.minecraft.world.level.Level level,BlockPos pos,BlockState state,WeirPostBlockEntity be) {
         if (!(level instanceof ServerLevel server) || !be.master || be.other==null) return;
@@ -117,7 +150,7 @@ public final class WeirPostBlockEntity extends BlockEntity implements MenuProvid
             WeirLogic.dismantle(server,pos);
             return;
         }
-        if (be.wear>=100) return;
+        if (be.wear>=be.getTier().endurance) return;
         long time=server.getGameTime();
         // Only process the actual loaded world; never grant fish for time spent away.
         if (time-be.lastScan<20 && time>=be.lastScan) return;
@@ -126,7 +159,8 @@ public final class WeirPostBlockEntity extends BlockEntity implements MenuProvid
         if (time-be.lastWear>=2400 || time<be.lastWear) {
             be.lastWear=time;
             WeirLogic.damage(server,be,1);
+            if(server.random.nextFloat()<0.30f){be.clog=Math.min(100,be.clog+1);be.setChanged();}
         }
-        if(be.wear<100) WeirLogic.catchNearbyFish(server,be);
+        if(be.wear<be.getTier().endurance && be.clog<90) WeirLogic.catchNearbyFish(server,be);
     }
 }

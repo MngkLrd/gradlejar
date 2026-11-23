@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class WeirLogic {
-    public static final int MIN_SPAN=2,MAX_SPAN=32,MAX_DEPTH=12,PANEL_WIDTH=4,PANEL_HEIGHT=3,MAX_WEAR=100;
+    public static final int MIN_SPAN=2,MAX_SPAN=32,MAX_DEPTH=16,PANEL_WIDTH=4,PANEL_HEIGHT=3,MAX_WEAR=100;
     private static final ResourceLocation JUTE_NET=new ResourceLocation("tfc","jute_net");
     private WeirLogic(){}
 
@@ -56,18 +56,18 @@ public final class WeirLogic {
     private static void say(Player player,String key,Object... args){
         player.displayClientMessage(Component.translatable(key,args),true);
     }
-    public static int countRolls(Player player){
+    public static int countRolls(Player player, WeirTier kind){
         int total=0;
         for(int i=0;i<player.getInventory().getContainerSize();i++){
             ItemStack stack=player.getInventory().getItem(i);
-            if(stack.is(RiverWeirMod.NET_ROLL.get()))total+=stack.getCount();
+            if(kind.isRoll(stack))total+=stack.getCount();
         }
         return total;
     }
-    private static void consumeRolls(Player player,int amount){
+    private static void consumeRolls(Player player,int amount,WeirTier kind){
         for(int i=0;i<player.getInventory().getContainerSize()&&amount>0;i++){
             ItemStack stack=player.getInventory().getItem(i);
-            if(stack.is(RiverWeirMod.NET_ROLL.get())){
+            if(kind.isRoll(stack)){
                 int take=Math.min(stack.getCount(),amount);
                 stack.shrink(take);
                 amount-=take;
@@ -82,11 +82,11 @@ public final class WeirLogic {
         return state.getBlock() instanceof LiquidBlock && WeirWater.kind(level.getFluidState(pos))>=0
             && level.getFluidState(pos).isSource();
     }
-    private static int[] survey(ServerLevel level,BlockPos from,Direction dir,int width,int topY){
+    private static int[] survey(ServerLevel level,BlockPos from,Direction dir,int width,int topY,int limit){
         int[] depths=new int[width];
         for(int col=0;col<width;col++){
             int depth=0;
-            for(int d=0;d<MAX_DEPTH;d++){
+            for(int d=0;d<limit;d++){
                 BlockPos p=at(from,dir,col+1,topY-d);
                 if(!level.hasChunkAt(p))return null;
                 if(isFreeWater(level,p)){
@@ -98,15 +98,15 @@ public final class WeirLogic {
                 }
             }
             if(depth==0)return null;
-            if(depth==MAX_DEPTH && isFreeWater(level,at(from,dir,col+1,topY-MAX_DEPTH)))return null;
+            if(depth==limit && isFreeWater(level,at(from,dir,col+1,topY-limit)))return null;
             depths[col]=depth;
         }
         return depths;
     }
-    private static int requiredRolls(int[] depths){
-        return WeirMath.requiredRolls(depths,PANEL_WIDTH,PANEL_HEIGHT);
+    private static int requiredRolls(int[] depths,WeirTier kind){
+        return WeirMath.requiredRolls(depths,PANEL_WIDTH,kind.panelHeight);
     }
-    public static boolean connect(ServerLevel level,BlockPos first,BlockPos second,Player player){
+    public static boolean connect(ServerLevel level,BlockPos first,BlockPos second,Player player,WeirTier kind){
         WeirPostBlockEntity a=post(level,first),b=post(level,second);
         if(a==null||b==null||!level.getBlockState(first).is(RiverWeirMod.POST.get())
             ||!level.getBlockState(second).is(RiverWeirMod.POST.get())||a.other!=null||b.other!=null){
@@ -114,35 +114,35 @@ public final class WeirLogic {
         }
         Direction dir=direction(first,second);
         int width=span(first,second);
-        if(dir==null||width<MIN_SPAN||width>MAX_SPAN){
+        if(dir==null||width<MIN_SPAN||width>kind.maxSpan){
             say(player,"message.riverweir.distance");return false;
         }
         int[] depths=null;
         int waterY=0;
         for(int candidate:new int[]{first.getY(),first.getY()-1}){
-            depths=survey(level,first,dir,width,candidate);
+            depths=survey(level,first,dir,width,candidate,kind.maxDepth);
             if(depths!=null){waterY=candidate;break;}
         }
         if(depths==null){
-            say(player,"message.riverweir.water",MAX_DEPTH);return false;
+            say(player,"message.riverweir.water",kind.maxDepth);return false;
         }
-        int required=requiredRolls(depths);
-        int available=countRolls(player);
+        int required=requiredRolls(depths,kind);
+        int available=countRolls(player,kind);
         if(!player.getAbilities().instabuild && available<required){
             say(player,"message.riverweir.rolls",required,available);
             return false;
         }
         int maxDepth=0;
         for(int d:depths)maxDepth=Math.max(maxDepth,d);
-        if(!player.getAbilities().instabuild)consumeRolls(player,required);
-        a.link(second,true,waterY,depths,required);
-        b.link(first,false,waterY,depths,required);
+        if(!player.getAbilities().instabuild)consumeRolls(player,required,kind);
+        a.link(second,true,waterY,depths,required,kind);
+        b.link(first,false,waterY,depths,required,kind);
         // Attach the rope from both stakes right to the actual mesh edge.
         setConnection(level,first,dir,true);
         setConnection(level,second,dir.getOpposite(),true);
         for(int i=0;i<width;i++)for(int d=0;d<depths[i];d++){
             BlockPos p=at(first,dir,i+1,waterY-d);
-            level.setBlock(p,netState(dir.getAxis(),0,d==0,(d%PANEL_HEIGHT==PANEL_HEIGHT-1||d==depths[i]-1),level.getFluidState(p)),3);
+            level.setBlock(p,netState(dir.getAxis(),0,d==0,(d%kind.panelHeight==kind.panelHeight-1||d==depths[i]-1),level.getFluidState(p),kind),3);
         }
         say(player,"message.riverweir.connected",width,maxDepth,required);
         return true;
@@ -154,10 +154,11 @@ public final class WeirLogic {
                 .setValue(WeirPostBlock.FACING,dir),3);
         }
     }
-    private static BlockState netState(Direction.Axis axis,int stage,boolean top,boolean bottom,net.minecraft.world.level.material.FluidState fluid){
+    private static BlockState netState(Direction.Axis axis,int stage,boolean top,boolean bottom,net.minecraft.world.level.material.FluidState fluid,WeirTier kind){
         return RiverWeirMod.NET.get().defaultBlockState()
             .setValue(WeirNetBlock.AXIS,axis)
             .setValue(WeirNetBlock.STAGE,stage)
+            .setValue(WeirNetBlock.TIER,kind.id)
             .setValue(WeirNetBlock.WATERLOGGED,true)
             .setValue(WeirNetBlock.WATER_KIND,Math.max(0,WeirWater.kind(fluid)))
             .setValue(WeirNetBlock.FLOW,WeirWater.flow(fluid))
@@ -212,7 +213,10 @@ public final class WeirLogic {
         if(be==null||be.other==null){
             say(player,"message.riverweir.unlinked");return;
         }
-        NetworkHooks.openScreen(player,be,be.getBlockPos());
+        NetworkHooks.openScreen(player,be,buf->{
+            buf.writeBlockPos(be.getBlockPos());
+            buf.writeVarInt(be.getTier().id);
+        });
     }
     public static void tear(ServerLevel level,BlockPos post){
         WeirPostBlockEntity be=master(level,post);
@@ -220,21 +224,46 @@ public final class WeirLogic {
     }
     public static void damage(ServerLevel level,WeirPostBlockEntity be,int amount){
         int original=be.wear;
-        be.wear=Math.min(MAX_WEAR,be.wear+amount);
+        be.wear=Math.min(be.getTier().endurance,be.wear+amount);
         be.setChanged();
-        if(stage(original)!=stage(be.wear))updateNet(level,be,false);
+        if(stage(original,be.getTier())!=stage(be.wear,be.getTier()))updateNet(level,be,false);
     }
-    private static int stage(int wear){return wear>=100?2:wear>=55?1:0;}
+    private static int stage(int wear,WeirTier tier){return wear>=tier.endurance?2:wear*100>=tier.endurance*55?1:0;}
     public static void repair(ServerLevel level,BlockPos post,Player player,InteractionHand hand){
         WeirPostBlockEntity be=master(level,post);
         if(be==null||be.wear==0)return;
         ItemStack material=player.getItemInHand(hand);
-        if(!isJuteNet(material))return;
+        WeirTier kind=be.getTier();
+        boolean compatible=kind==WeirTier.JUTE?isJuteNet(material):kind.isRoll(material);
+        if(!compatible)return;
         if(!player.getAbilities().instabuild)material.shrink(1);
-        be.wear=Math.max(0,be.wear-40);
+        be.wear=Math.max(0,be.wear-Math.max(40,kind.endurance/3));
         be.setChanged();
         updateNet(level,be,true);
         say(player,"message.riverweir.repaired");
+    }
+    public static boolean isBait(ItemStack stack) {
+        return !stack.isEmpty() && stack.is(net.minecraft.tags.TagKey.create(
+            net.minecraft.core.registries.Registries.ITEM,
+            new ResourceLocation(RiverWeirMod.ID,"bait")));
+    }
+    public static void addBait(ServerLevel level,BlockPos post,Player player,InteractionHand hand){
+        WeirPostBlockEntity be=master(level,post);
+        if(be==null || be.baitCharges>=16)return;
+        ItemStack item=player.getItemInHand(hand);
+        if(!isBait(item))return;
+        if(!player.getAbilities().instabuild)item.shrink(1);
+        be.baitCharges=Math.min(16,be.baitCharges+4);
+        be.setChanged();
+        say(player,"message.riverweir.bait",be.baitCharges);
+    }
+    public static void clean(ServerLevel level,BlockPos post,Player player){
+        WeirPostBlockEntity be=master(level,post);
+        if(be==null)return;
+        if(be.clog==0){say(player,"message.riverweir.clean_already");return;}
+        be.clog=0;
+        be.setChanged();
+        say(player,"message.riverweir.cleaned");
     }
     public static void dismantle(ServerLevel level,BlockPos pos){
         WeirPostBlockEntity clicked=post(level,pos);
@@ -245,7 +274,7 @@ public final class WeirLogic {
         Direction dir=direction(source,opposite);
         if(dir==null)return;
         int count=span(source,opposite),waterY=origin.netY;
-        int salvage=WeirMath.salvageRolls(origin.rollsUsed,origin.wear);
+        int salvage=WeirMath.salvageRolls(origin.rollsUsed,(100*origin.wear)/origin.getTier().endurance);
         int[] savedDepths=new int[count];
         for(int i=0;i<count;i++)savedDepths[i]=origin.depthAt(i);
         for(int i=0;i<origin.items.getSlots();i++){
@@ -254,7 +283,7 @@ public final class WeirLogic {
                 source.getY()+.5,source.getZ()+.5,loot);
         }
         if(salvage>0)net.minecraft.world.Containers.dropItemStack(level,source.getX()+0.5,
-            source.getY()+0.5,source.getZ()+0.5,new ItemStack(RiverWeirMod.NET_ROLL.get(),salvage));
+            source.getY()+0.5,source.getZ()+0.5,new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(RiverWeirMod.ID,origin.getTier().rollId)),salvage));
         WeirPostBlockEntity endpoint=post(level,opposite);
         origin.clearLink();
         if(endpoint!=null)endpoint.clearLink();
@@ -276,7 +305,7 @@ public final class WeirLogic {
             BlockPos p=at(be.getBlockPos(),dir,col+1,be.netY-d);
             if(!level.hasChunkAt(p))continue;
             BlockState state=level.getBlockState(p);
-            BlockState wanted=netState(dir.getAxis(),stage(be.wear),d==0,(d%PANEL_HEIGHT==PANEL_HEIGHT-1||d==be.depthAt(col)-1),state.getFluidState())
+            BlockState wanted=netState(dir.getAxis(),stage(be.wear,be.getTier()),d==0,(d%be.getTier().panelHeight==be.getTier().panelHeight-1||d==be.depthAt(col)-1),state.getFluidState(),be.getTier())
                 .setValue(WeirNetBlock.TRAPPED,be.catchMarker!=null&&be.catchMarker.equals(p));
             if(state.is(RiverWeirMod.NET.get())){
                 if(!state.equals(wanted))level.setBlock(p,wanted,3);
@@ -327,7 +356,8 @@ public final class WeirLogic {
         return ItemStack.EMPTY;
     }
     public static void catchNearbyFish(ServerLevel level,WeirPostBlockEntity be){
-        if(be.other==null||be.wear>=MAX_WEAR)return;
+        if(be.other==null||be.wear>=be.getTier().endurance||be.clog>=90)return;
+        if(level.getGameTime()-be.lastCatch<be.getTier().cooldownTicks)return;
         BlockPos first=be.getBlockPos(),second=be.other;
         Direction dir=direction(first,second);
         if(dir==null)return;
@@ -352,20 +382,25 @@ public final class WeirLogic {
             BlockPos mesh=at(first,dir,atIndex+1,be.netY-localY);
             if(!level.hasChunkAt(mesh)||!level.getBlockState(mesh).is(RiverWeirMod.NET.get()))continue;
 
+            if(level.random.nextFloat()>=Math.min(0.95f,be.getTier().catchChance*(be.baitCharges>0?1.8f:1.0f)*(1.0f-be.clog/140.0f)))continue;
             ItemStack caught=catchItem(candidate);
             if(caught.isEmpty())continue;
-            ItemStackHandler trial=new ItemStackHandler(be.items.getSlots());
-            for(int i=0;i<be.items.getSlots();i++)
+            ItemStackHandler trial=new ItemStackHandler(be.getTier().storage);
+            for(int i=0;i<trial.getSlots();i++)
                 trial.setStackInSlot(i,be.items.getStackInSlot(i).copy());
             ItemStack remaining=caught.copy();
             for(int i=0;i<trial.getSlots()&&!remaining.isEmpty();i++)
                 remaining=trial.insertItem(i,remaining,false);
             if(!remaining.isEmpty())return; // Inventory full: fish stays alive.
-            for(int i=0;i<be.items.getSlots();i++)
+            for(int i=0;i<trial.getSlots();i++)
                 be.items.setStackInSlot(i,trial.getStackInSlot(i).copy());
             candidate.discard();
             be.markCatch(mesh);
-            damage(level,be,1+level.random.nextInt(3));
+            be.lastCatch=level.getGameTime();
+            be.clog=Math.min(100,be.clog+be.getTier().clogPerCatch);
+            if(be.baitCharges>0)be.baitCharges--;
+            be.setChanged();
+            damage(level,be,be.getTier().catchWear+(level.random.nextInt(3)==0?1:0));
             return; // At most one fish per scan interval.
         }
     }
