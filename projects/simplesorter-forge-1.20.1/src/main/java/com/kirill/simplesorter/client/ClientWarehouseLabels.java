@@ -2,16 +2,20 @@ package com.kirill.simplesorter.client;
 
 import com.kirill.simplesorter.network.WarehouseLabelsPayload;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
@@ -19,21 +23,43 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Client-only, zero-entity billboards. No copied ItemStacks enter the world:
- * representative models are visual only, so displayed ores cannot duplicate.
- * These signs do not occupy blocks or prevent opening stacked chests.
+ * Fixed chest-face decal, NOT a camera-facing nametag/billboard.
+ *
+ * A label faces the block's stored horizontal FACING direction and occupies
+ * no entity or block space. The text and representative ItemStack are
+ * render-only; an item can never be picked up or duplicated.
+ *
+ * Performance: label data is indexed by chunk; inspect only nearby 5x5
+ * chunks and render at most 48 labels / 18 item models per frame. Labels on
+ * the rear of a chest are skipped. Light follows the local block lighting.
  */
 @Mod.EventBusSubscriber(modid = "simplesorter", value = Dist.CLIENT,
         bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ClientWarehouseLabels {
-    private static final Map<Long, WarehouseLabelsPayload.Entry> LABELS = new HashMap<>();
+    private static final int MAX_VISIBLE_LABELS = 48;
+    private static final int MAX_ICON_MODELS = 18;
+    private static final int CHUNK_SEARCH_RADIUS = 2;
+    private static final double LABEL_RADIUS_SQ = 23D * 23D;
+    private static final double ICON_RADIUS_SQ = 14D * 14D;
+    private static final int TEXT_COLOR = 0xFFF4E8C9;
+    private static final int TEXT_BACKGROUND = 0x6A201910;
+
+    private record RenderLabel(WarehouseLabelsPayload.Entry data,
+                               Component caption, int textWidth) {}
+    private record Visible(RenderLabel label, Vec3 surface,
+                           boolean wide, double distanceSq) {}
+
+    // Receive one whole chunk at a time, so no O(all saved world labels)
+    // scan occurs on every render frame in a TerraFirmaGreg warehouse.
+    private static final Map<Long, Map<Long, RenderLabel>> CHUNKS = new HashMap<>();
     private static net.minecraft.client.multiplayer.ClientLevel previousLevel;
-    private static final int MAX_VISIBLE = 64;
-    private static final double MAX_RENDER_DISTANCE_SQ = 28D * 28D;
 
     private ClientWarehouseLabels() {}
 
@@ -41,16 +67,21 @@ public final class ClientWarehouseLabels {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null) return;
         if (previousLevel != mc.level) {
-            LABELS.clear();
+            CHUNKS.clear();
             previousLevel = mc.level;
         }
-        LABELS.entrySet().removeIf(entry -> {
-            BlockPos p = entry.getValue().pos();
-            return (p.getX() >> 4) == payload.chunkX() && (p.getZ() >> 4) == payload.chunkZ();
-        });
-        for (WarehouseLabelsPayload.Entry entry : payload.labels()) {
-            LABELS.put(entry.pos().asLong(), entry);
+        long chunkKey = ChunkPos.asLong(payload.chunkX(), payload.chunkZ());
+        if (payload.labels().isEmpty()) {
+            CHUNKS.remove(chunkKey);
+            return;
         }
+        Map<Long, RenderLabel> incoming = new HashMap<>();
+        for (WarehouseLabelsPayload.Entry entry : payload.labels()) {
+            Component caption = Component.translatable("label.simplesorter." + entry.family());
+            incoming.put(entry.pos().asLong(),
+                    new RenderLabel(entry, caption, mc.font.width(caption)));
+        }
+        CHUNKS.put(chunkKey, incoming);
     }
 
     @SubscribeEvent
@@ -58,65 +89,131 @@ public final class ClientWarehouseLabels {
         if (event.phase != TickEvent.Phase.END) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc.level != previousLevel) {
-            LABELS.clear();
+            CHUNKS.clear();
             previousLevel = mc.level;
         }
     }
 
     @SubscribeEvent
     public static void render(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES || LABELS.isEmpty()) return;
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES || CHUNKS.isEmpty()) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.level != previousLevel) return;
 
         Vec3 camera = event.getCamera().getPosition();
+        int baseX = ((int) Math.floor(camera.x)) >> 4;
+        int baseZ = ((int) Math.floor(camera.z)) >> 4;
+        List<Visible> visible = new ArrayList<>(MAX_VISIBLE_LABELS * 2);
+
+        // Only the 5x5 loaded chunk neighbourhood can be relevant. Even if
+        // the world has thousands of persistent labels, we never scan them.
+        for (int cx = baseX - CHUNK_SEARCH_RADIUS; cx <= baseX + CHUNK_SEARCH_RADIUS; cx++) {
+            for (int cz = baseZ - CHUNK_SEARCH_RADIUS; cz <= baseZ + CHUNK_SEARCH_RADIUS; cz++) {
+                Map<Long, RenderLabel> nearby = CHUNKS.get(ChunkPos.asLong(cx, cz));
+                if (nearby == null) continue;
+                for (RenderLabel render : nearby.values()) {
+                    BlockPos pos = render.data().pos();
+                    double roughX = pos.getX() + 0.5D - camera.x;
+                    double roughY = pos.getY() + 0.5D - camera.y;
+                    double roughZ = pos.getZ() + 0.5D - camera.z;
+                    if (roughX * roughX + roughY * roughY + roughZ * roughZ
+                            > LABEL_RADIUS_SQ + 2D) continue;
+
+                    Direction face = render.data().facing();
+                    if (!face.getAxis().isHorizontal()) continue;
+                    if (roughX * face.getStepX() + roughZ * face.getStepZ() <= 0.09D) {
+                        // Never display the front label through the rear of
+                        // the chest when the user circles the storage wall.
+                        continue;
+                    }
+                    if (!mc.level.hasChunkAt(pos) || mc.level.getBlockEntity(pos) == null) continue;
+
+                    Vec3 center = Vec3.atCenterOf(pos);
+                    boolean wide = false;
+                    BlockState state = mc.level.getBlockState(pos);
+                    boolean insetChest = state.getBlock() instanceof ChestBlock;
+                    if (state.getBlock() instanceof ChestBlock chest
+                            && state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
+                        BlockPos partner = pos.relative(ChestBlock.getConnectedDirection(state));
+                        if (mc.level.hasChunkAt(partner)
+                                && mc.level.getBlockState(partner).getBlock() == chest) {
+                            // A vanilla 54-slot chest has one label precisely
+                            // centered across its two physical block halves.
+                            center = center.add(
+                                    (partner.getX() - pos.getX()) * 0.5D,
+                                    0D,
+                                    (partner.getZ() - pos.getZ()) * 0.5D);
+                            wide = true;
+                        }
+                    }
+
+                    // Depth matches the actual front face: inset vanilla
+                    // chest (7/16) versus full-front TFC crates/cabinets.
+                    double depth = FaceLabelDimensions.faceOffset(insetChest);
+                    Vec3 surface = center.add(
+                            face.getStepX() * depth, 0D,
+                            face.getStepZ() * depth);
+                    double distSq = surface.distanceToSqr(camera);
+                    if (distSq <= LABEL_RADIUS_SQ) {
+                        visible.add(new Visible(render, surface, wide, distSq));
+                    }
+                }
+            }
+        }
+
+        if (visible.isEmpty()) return;
+        visible.sort(Comparator.comparingDouble(Visible::distanceSq));
         PoseStack poses = event.getPoseStack();
         MultiBufferSource.BufferSource buffer = mc.renderBuffers().bufferSource();
-        int count = 0;
+        int drawn = 0;
+        int icons = 0;
 
-        for (WarehouseLabelsPayload.Entry label : LABELS.values()) {
-            if (count >= MAX_VISIBLE) break;
-            BlockPos p = label.pos();
-            if (!mc.level.hasChunkAt(p)) continue;
-            if (mc.level.getBlockEntity(p) == null) continue;
-            // Draw just outside the chest's camera-facing surface. A label
-            // above the lid gets hidden inside the NEXT chest on a vertical rack.
-            // Rendering at chest level also avoids interference with stacks.
-            Vec3 center = Vec3.atCenterOf(p);
-            Vec3 towards = new Vec3(camera.x - center.x, 0D, camera.z - center.z);
-            if (towards.lengthSqr() < 0.001D) towards = new Vec3(0D, 0D, 1D);
-            Vec3 front = center.add(towards.normalize().scale(0.81D)).add(0D, 0.08D, 0D);
-            double dx = front.x - camera.x;
-            double dy = front.y - camera.y;
-            double dz = front.z - camera.z;
-            if (dx*dx + dy*dy + dz*dz > MAX_RENDER_DISTANCE_SQ) continue;
+        for (Visible v : visible) {
+            if (drawn >= MAX_VISIBLE_LABELS) break;
+            WarehouseLabelsPayload.Entry data = v.label().data();
+            BlockPos pos = data.pos();
+            Direction face = data.facing();
 
+            boolean drawIcon = data.style() == 2 && !data.icon().isEmpty()
+                    && v.distanceSq() <= ICON_RADIUS_SQ && icons < MAX_ICON_MODELS;
+            int light = LevelRenderer.getLightColor(mc.level, pos);
             poses.pushPose();
-            poses.translate(dx, dy, dz);
-            poses.mulPose(mc.getEntityRenderDispatcher().cameraOrientation());
+            poses.translate(v.surface().x - camera.x,
+                    v.surface().y - camera.y, v.surface().z - camera.z);
 
-            if (label.style() == 2 && !label.icon().isEmpty()) {
+            // A fixed block face, NEVER cameraOrientation().
+            // Minecraft's font plane initially looks toward -Z and uses a
+            // negative X/Y glyph scale. Rotate that plane outward:
+            // SOUTH=180, NORTH=0, EAST=-90, WEST=90.
+            // This preserves legibility and stops labels rotating with us.
+            poses.mulPose(Axis.YP.rotationDegrees(180F - face.toYRot()));
+
+            if (drawIcon) {
                 poses.pushPose();
-                poses.translate(0D, 0.14D, 0D);
-                poses.scale(0.56F, 0.56F, 0.56F);
-                mc.getItemRenderer().renderStatic(label.icon(), ItemDisplayContext.FIXED,
-                        LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
-                        poses, buffer, mc.level, (int)(p.asLong() & 0xFFFF));
+                poses.translate(0D, FaceLabelDimensions.iconY(), FaceLabelDimensions.itemDepth());
+                float iconScale = FaceLabelDimensions.iconScale();
+                poses.scale(iconScale, iconScale, iconScale);
+                mc.getItemRenderer().renderStatic(data.icon(), ItemDisplayContext.FIXED,
+                        light, OverlayTexture.NO_OVERLAY,
+                        poses, buffer, mc.level, (int) (pos.asLong() & 0xFFFF));
                 poses.popPose();
+                icons++;
             }
+
+            // All widths are clamped to the physical chest front. Even a long
+            // Russian translation cannot extend outside an adjacent chest.
             poses.pushPose();
-            poses.translate(0D, label.style() == 2 ? -0.27D : 0D, 0D);
-            float scale = 0.020F;
-            poses.scale(-scale, -scale, scale);
-            Component name = Component.translatable("label.simplesorter." + label.family());
-            int width = mc.font.width(name);
-            mc.font.drawInBatch(name, -width / 2.0F, 0F, 0xFFF8E7C6, false,
-                    poses.last().pose(), buffer, Font.DisplayMode.NORMAL,
-                    0x96311E10, LightTexture.FULL_BRIGHT);
+            poses.translate(0D, FaceLabelDimensions.textY(drawIcon), FaceLabelDimensions.textDepth());
+            float textScale = FaceLabelDimensions.textScale(v.label().textWidth(), v.wide());
+            poses.scale(-textScale, -textScale, textScale);
+            mc.font.drawInBatch(v.label().caption(),
+                    -v.label().textWidth() * 0.5F, -4.5F,
+                    TEXT_COLOR, false, poses.last().pose(),
+                    buffer, Font.DisplayMode.NORMAL, TEXT_BACKGROUND, light);
             poses.popPose();
             poses.popPose();
-            count++;
+            drawn++;
         }
-        if (count > 0) buffer.endBatch();
+        if (drawn > 0) buffer.endBatch();
     }
 }

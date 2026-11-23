@@ -12,6 +12,8 @@ import com.kirill.simplesorter.sorting.WarehouseLayout;
 import com.kirill.simplesorter.sorting.WarehouseColumns;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -117,8 +119,11 @@ public final class AutoLabelService {
                 }
                 material = newMaterial;
             }
+            Direction facing = resolveFacing(level, player, pos, prior,
+                    data.needsFacingMigration(pos));
             if (data.put(new WarehouseLabelData.Label(
-                    pos, style, family, icon.copyWithCount(1), material.copyWithCount(1)))) {
+                    pos, style, family, icon.copyWithCount(1),
+                    material.copyWithCount(1), facing))) {
                 changed.add(new ChunkPos(pos));
                 created++;
             }
@@ -132,6 +137,34 @@ public final class AutoLabelService {
                     + ". Add materials to inventory, then press Load Labels."), true);
         }
         return created;
+    }
+
+    /**
+     * The label's plane is chosen only when created, never on each render
+     * frame. Blockstate-facing is authoritative when available (vanilla chest,
+     * TFC crates with a horizontal facing property). Nondirectional modded
+     * storage receives a permanent front side facing the creator.
+     */
+    private static Direction resolveFacing(ServerLevel level, ServerPlayer player,
+                                           BlockPos pos, WarehouseLabelData.Label existing,
+                                           boolean legacyWithoutFacing) {
+        BlockState state = level.getBlockState(pos);
+        for (Property<?> property : state.getProperties()) {
+            if (!"facing".equals(property.getName())) continue;
+            Comparable<?> value = state.getValue(property);
+            if (value instanceof Direction direction && direction.getAxis().isHorizontal()) {
+                return direction;
+            }
+        }
+        if (existing != null && !legacyWithoutFacing
+                && existing.facing().getAxis().isHorizontal()) {
+            return existing.facing();
+        }
+        double x = player.getX() - (pos.getX() + 0.5D);
+        double z = player.getZ() - (pos.getZ() + 0.5D);
+        return Math.abs(x) >= Math.abs(z)
+                ? (x >= 0D ? Direction.EAST : Direction.WEST)
+                : (z >= 0D ? Direction.SOUTH : Direction.NORTH);
     }
 
     public static void sendChunk(ServerPlayer player, ServerLevel level, ChunkPos chunk) {

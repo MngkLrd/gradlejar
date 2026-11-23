@@ -1,6 +1,7 @@
 package com.kirill.simplesorter.label;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -21,10 +22,13 @@ public final class WarehouseLabelData extends SavedData {
     private static final String NAME = "simplesorter_warehouse_labels";
     private static final int MAX_TOTAL = 8192;
     private final Map<Long, Label> entries = new HashMap<>();
+    // Only set while reading 0.9.6 world data. The next wand sort assigns
+    // a durable, correct front face to each legacy label once.
+    private final Set<Long> legacyWithoutFacing = new HashSet<>();
     private final Map<Long, Set<Long>> labelsByChunk = new HashMap<>();
 
     public record Label(BlockPos pos, int style, String family,
-                        ItemStack icon, ItemStack material) {}
+                        ItemStack icon, ItemStack material, Direction facing) {}
 
     public static WarehouseLabelData get(ServerLevel level) {
         return level.getDataStorage().computeIfAbsent(WarehouseLabelData::load,
@@ -42,8 +46,12 @@ public final class WarehouseLabelData extends SavedData {
             if (style < 1 || style > 2 || family.length() > 48) continue;
             ItemStack icon = ItemStack.of(tag.getCompound("icon"));
             ItemStack material = ItemStack.of(tag.getCompound("material"));
-            Label label = new Label(pos, style, family, icon.copyWithCount(1), material.copyWithCount(1));
+            Direction facing = tag.contains("facing")
+                    ? Direction.from2DDataValue(tag.getInt("facing")) : Direction.NORTH;
+            Label label = new Label(pos, style, family, icon.copyWithCount(1),
+                    material.copyWithCount(1), facing);
             data.entries.put(pos.asLong(), label);
+            if (!tag.contains("facing")) data.legacyWithoutFacing.add(pos.asLong());
             data.labelsByChunk.computeIfAbsent(chunkKey(pos), k -> new HashSet<>()).add(pos.asLong());
         }
         return data;
@@ -57,6 +65,7 @@ public final class WarehouseLabelData extends SavedData {
             entry.putLong("pos", label.pos().asLong());
             entry.putInt("style", label.style());
             entry.putString("family", label.family());
+            entry.putInt("facing", label.facing().get2DDataValue());
             entry.put("icon", label.icon().save(new CompoundTag()));
             entry.put("material", label.material().save(new CompoundTag()));
             list.add(entry);
@@ -69,15 +78,22 @@ public final class WarehouseLabelData extends SavedData {
         return entries.get(pos.asLong());
     }
 
+    public boolean needsFacingMigration(BlockPos pos) {
+        return legacyWithoutFacing.contains(pos.asLong());
+    }
+
     public boolean put(Label label) {
         Label previous = entries.get(label.pos().asLong());
         if (previous == null && entries.size() >= MAX_TOTAL) return false;
         if (previous != null && previous.style() == label.style()
                 && previous.family().equals(label.family())
-                && ItemStack.isSameItemSameTags(previous.icon(), label.icon())) {
+                && ItemStack.isSameItemSameTags(previous.icon(), label.icon())
+                && previous.facing() == label.facing()
+                && !legacyWithoutFacing.contains(label.pos().asLong())) {
             return false;
         }
         entries.put(label.pos().asLong(), label);
+        legacyWithoutFacing.remove(label.pos().asLong());
         labelsByChunk.computeIfAbsent(chunkKey(label.pos()), ignored -> new HashSet<>())
                 .add(label.pos().asLong());
         setDirty();
@@ -86,6 +102,7 @@ public final class WarehouseLabelData extends SavedData {
 
     public Label remove(BlockPos pos) {
         Label removed = entries.remove(pos.asLong());
+        legacyWithoutFacing.remove(pos.asLong());
         if (removed != null) {
             Set<Long> chunk = labelsByChunk.get(chunkKey(pos));
             if (chunk != null) {

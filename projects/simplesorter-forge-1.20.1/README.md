@@ -1,4 +1,4 @@
-# Simple Sorter 0.9.6 (Forge 1.20.1)
+# Simple Sorter 0.9.7 (Forge 1.20.1)
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
@@ -114,7 +114,7 @@ gradle --no-daemon clean build
 ```
 
 Java: 17. Gradle: 8.14.3. Expected output:
-`build/libs/simplesorter-0.9.6-forge.jar`.
+`build/libs/simplesorter-0.9.7-forge.jar`.
 
 Our GitHub **Minecraft Mod Build Hub** CI performs the authoritative Forge
 compilation and JAR verification. A successful Gradle build is not equivalent
@@ -326,3 +326,51 @@ CI includes Forge compilation, source-independent Java routing assertions,
 verified recipe/advancement resources and dedicated server boot.
 TerraFirmaGreg modpack-specific recipe removal and inventory behavior must
 still be checked on a copy of the user's world.
+
+## 0.9.7: attached chest-face labels and render performance
+
+Client label display no longer rotates with the viewer. Each persistent
+warehouse label has a **fixed horizontal face direction** chosen once when
+created. The actual block's "facing" state takes priority; a non-directional
+modded crate gets the side facing the player during first label creation.
+Direction persists in dimension SavedData and is synchronized to clients.
+Older saved labels without a direction load safely with a NORTH fallback
+and get their correct face on the next sorting action.
+
+The text and representative Minecraft/TFC/GregTech ItemStack are rendered
+as a small depth-tested decal just outside the **front surface of the chest**,
+not a floating billboard. Single-chest text width is capped at 0.78 blocks;
+a vanilla double chest gets a single centered label capped at 1.53 blocks.
+Labels are vertically centered and long localized captions shrink to fit.
+Item models shrink from 0.56 to 0.275 scale, with a small icon above the
+text and both kept within the physical chest height. There is no camera
+rotation, animated text movement, added item entity or persistent
+per-tick update. Direction and chest labels are only updated by sorting
+or by normal chunk synchronization.
+
+FPS measures and limits:
+
+- Only labels from the 5 x 5 chunk neighborhood around the camera are
+  inspected; the renderer does not iterate through all world SavedData.
+- 23-block maximum caption draw distance. Beyond 14 blocks, icon models are
+  not rendered. This cuts the highest GPU item-render cost.
+- Maximum 48 captions and 18 3D item models in one frame, nearest first.
+- Back-facing labels are culled before resolving block entity state.
+- All localized Component strings and glyph widths are cached when the
+  server updates a chunk, not recomputed per frame.
+- All visible text/icon output uses a single endBatch(), with light sampled
+  from the chest rather than forced maximum glow.
+- FaceLabelDimensions pure Java CI checks 2,000 long/short labels, all scaled
+  to fit a single/double chest within the front-face boundary.
+
+These are designed to minimize draw overhead. **No real in-game FPS
+benchmark has been run in TerraFirmaGreg**, so test with F3 using labels
+OFF, Text, and Icons at the same camera position and graphics settings.
+Shader packs can affect decal depth/blending; test both shaderless and with
+your usual Iris/Oculus-compatible setup. Labels require the client mod,
+not just a server installation.
+
+Networking protocol upgraded to version 4. **Update the mod on both
+client and server**; 0.9.6 clients cannot parse the new fixed-facing
+label packets. Crafting, categorization, NBT and warehouse sorting
+behaviour otherwise follow 0.9.6.
