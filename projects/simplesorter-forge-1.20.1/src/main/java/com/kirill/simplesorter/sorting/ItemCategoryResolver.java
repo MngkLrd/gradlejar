@@ -61,7 +61,7 @@ public final class ItemCategoryResolver {
             }
 
             for (String token : category.idContains()) {
-                if (!token.isBlank() && path.contains(token)) {
+                if (PathTokenMatcher.matches(path, token)) {
                     return new CategoryResolution(category, "id contains " + token);
                 }
             }
