@@ -36,6 +36,19 @@ public final class FaceLabelDimensions {
     public static double textDepth() { return 0.018D; }
     public static double itemDepth() { return 0.14D; }
 
+    /**
+     * The renderer's rough position vector is CHEST minus CAMERA.
+     * Facing vector points OUT of the chest. Front-side views therefore
+     * produce a NEGATIVE dot product. 0.9.7 incorrectly rejected them.
+     */
+    public static boolean isFrontVisible(double chestMinusCameraX,
+                                         double chestMinusCameraZ,
+                                         int normalX, int normalZ) {
+        return chestMinusCameraX * normalX
+                + chestMinusCameraZ * normalZ < -0.09D;
+    }
+
+
     public static boolean fitsVertically(boolean withIcon) {
         float textHeight = 9F * MAX_TEXT_SCALE;
         boolean textFits = Math.abs(textY(withIcon)) + textHeight <= 0.44F;
