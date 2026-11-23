@@ -1,6 +1,7 @@
 package dev.minemods.riverweir.logic;
 
 import java.util.Arrays;
+import dev.minemods.riverweir.menu.WeirLayout;
 
 /** Called from Gradle check without external test dependencies. */
 public final class WeirMathTestMain {
@@ -22,6 +23,18 @@ public final class WeirMathTestMain {
         check(WeirMath.salvageRolls(8,70),4,"used net recovery");
         check(WeirMath.salvageRolls(8,100),0,"torn net no recovery");
         check(WeirMath.salvageRolls(0,0),0,"old installation compatibility");
-        System.out.println("River Weir geometry regression checks passed.");
+        check(WeirLayout.rows(2),1,"jute rows");
+        check(WeirLayout.rows(18),2,"bronze rows");
+        check(WeirLayout.rows(27),3,"iron rows");
+        check(WeirLayout.playerInventoryY(2),67,"jute player inventory offset");
+        check(WeirLayout.playerInventoryY(18),85,"bronze player inventory offset");
+        check(WeirLayout.playerInventoryY(27),103,"iron player inventory offset");
+        check(WeirLayout.playerHotbarY(2),125,"jute hotbar offset");
+        check(WeirLayout.playerHotbarY(18),143,"bronze hotbar offset");
+        check(WeirLayout.playerHotbarY(27),161,"iron hotbar offset");
+        check(WeirLayout.imageHeight(2),149,"jute GUI height");
+        check(WeirLayout.imageHeight(18),167,"bronze GUI height");
+        check(WeirLayout.imageHeight(27),185,"iron GUI height");
+        System.out.println("River Weir geometry and GUI regression checks passed.");
     }
 }

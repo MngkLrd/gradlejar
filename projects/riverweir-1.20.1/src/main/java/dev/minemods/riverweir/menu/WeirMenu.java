@@ -33,7 +33,7 @@ public final class WeirMenu extends AbstractContainerMenu {
         masterPos = position;
         this.tierId = tierId;
         netSlots = WeirTier.byId(tierId).storage;
-        rows = Math.max(1, (netSlots + 8) / 9);
+        rows = WeirLayout.rows(netSlots);
 
         WeirPostBlockEntity be = inventory.player.level().getBlockEntity(position) instanceof WeirPostBlockEntity found ? found : null;
         IItemHandler handler = be == null ? new ItemStackHandler(27) : be.items;
@@ -67,9 +67,8 @@ public final class WeirMenu extends AbstractContainerMenu {
 
         // The additional 18px information strip is between net rows and the
         // vanilla player-inventory panel. Both SLOT and TEXTURE use this offset.
-        int playerSectionTop = 17 + rows * 18 + 18;
-        int playerMainY = playerSectionTop + 14;
-        int hotbarY = playerSectionTop + 72;
+        int playerMainY = WeirLayout.playerInventoryY(netSlots);
+        int hotbarY = WeirLayout.playerHotbarY(netSlots);
         for(int row = 0; row < 3; row++)
             for(int col = 0; col < 9; col++)
                 addSlot(new Slot(inventory, col + row * 9 + 9, 8 + col * 18, playerMainY + row * 18));
