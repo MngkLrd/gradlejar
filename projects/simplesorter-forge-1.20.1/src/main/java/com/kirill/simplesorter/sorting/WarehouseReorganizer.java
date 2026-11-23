@@ -36,11 +36,12 @@ public final class WarehouseReorganizer {
         // even if it would pass the old 74% acceptance threshold.
         boolean belongsTo(String strictFamily) {
             return occupied >= MIN_OWNED_SLOTS
-                    && strictVotes.getOrDefault(strictFamily, 0) == occupied;
+                    && StrictChestAdmission.canReceive(strictFamily,
+                            strictVotes, occupied, "");
         }
 
         boolean mixed() {
-            return strictVotes.size() > 1;
+            return StrictChestAdmission.mixed(strictVotes, occupied);
         }
     }
 
