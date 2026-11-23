@@ -1,13 +1,16 @@
 package com.kirill.simplesorter.client;
 
 /**
- * Pixel-to-world sizing rules for one chest-face decal. Plain Java to test
- * on CI independently of Forge and graphical Minecraft.
+ * Sized static chest-front labels. Previous "near flush" text was inside
+ * TerraFirmaCraft's extended 3D chest models even when icons were visible.
+ * Text now sits safely IN FRONT of their geometry, not inside it.
  */
 public final class FaceLabelDimensions {
-    private static final float SINGLE_WIDTH = 0.78F;
-    private static final float DOUBLE_WIDTH = 1.53F;
-    private static final float MAX_TEXT_SCALE = 0.011F;
+    private static final float SINGLE_WIDTH = 0.90F;
+    private static final float DOUBLE_WIDTH = 1.75F;
+    private static final float MAX_TEXT_SCALE = 0.015F;
+    public static final double DISPLAY_RADIUS = 10D;
+    public static final double DISPLAY_RADIUS_SQ = DISPLAY_RADIUS * DISPLAY_RADIUS;
 
     private FaceLabelDimensions() {}
 
@@ -21,37 +24,39 @@ public final class FaceLabelDimensions {
     }
 
     public static float textY(boolean withIcon) {
-        return withIcon ? -0.235F : 0.0F;
+        return withIcon ? -0.22F : 0.0F;
     }
 
-    public static float iconY() { return 0.145F; }
-
-    public static float iconScale() { return 0.275F; }
-
-    /** The vanilla chest front is inset 1/16 block, unlike full-face crates. */
-    public static double faceOffset(boolean insetChest) {
-        return insetChest ? 0.451D : 0.508D;
-    }
-
-    public static double textDepth() { return 0.018D; }
-    public static double itemDepth() { return 0.14D; }
+    public static float iconY() { return 0.15F; }
+    public static float iconScale() { return 0.28F; }
 
     /**
-     * The renderer's rough position vector is CHEST minus CAMERA.
-     * Facing vector points OUT of the chest. Front-side views therefore
-     * produce a NEGATIVE dot product. 0.9.7 incorrectly rejected them.
+     * Use an outward static surface position, not the block voxel shape:
+     * TFC/Greg crates commonly have 3D detailing extending past 0.5.
+     * At the earlier 0.526-block text depth, text was occluded by their fronts,
+     * while the 3D model at about 0.65 blocks rendered correctly.
      */
+    public static double labelDistanceFromCenter(boolean vanillaChest) {
+        return vanillaChest ? 0.575D : 0.690D;
+    }
+
+    public static double textDepth() { return 0.012D; }
+    public static double itemDepth() { return 0.055D; }
+
+    public static boolean withinRange(double squaredDistance) {
+        return squaredDistance < DISPLAY_RADIUS_SQ;
+    }
+
     public static boolean isFrontVisible(double chestMinusCameraX,
                                          double chestMinusCameraZ,
                                          int normalX, int normalZ) {
         return chestMinusCameraX * normalX
-                + chestMinusCameraZ * normalZ < -0.09D;
+                + chestMinusCameraZ * normalZ < -0.16D;
     }
-
 
     public static boolean fitsVertically(boolean withIcon) {
         float textHeight = 9F * MAX_TEXT_SCALE;
-        boolean textFits = Math.abs(textY(withIcon)) + textHeight <= 0.44F;
+        boolean textFits = Math.abs(textY(withIcon)) + textHeight * 0.5F <= 0.44F;
         boolean iconFits = !withIcon || iconY() + iconScale() * 0.5F <= 0.44F;
         return textFits && iconFits;
     }

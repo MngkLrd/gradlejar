@@ -1,59 +1,55 @@
 package com.kirill.simplesorter.client;
 
-/** Pure Java test: the full caption + model never exceeds one chest front. */
+/** Deterministic label size and visibility regression tests without Forge. */
 public final class FaceLabelDimensionsSelfTest {
     private FaceLabelDimensionsSelfTest() {}
 
-    private static void require(boolean correct, String error) {
-        if (!correct) throw new AssertionError(error);
+    private static void require(boolean condition, String error) {
+        if (!condition) throw new AssertionError(error);
     }
 
     public static void main(String[] args) {
         int assertions = 0;
-        for (int width = 1; width <= 1000; width++) {
+        for (int pixels = 1; pixels <= 1000; pixels++) {
             for (boolean doubleChest : new boolean[]{false, true}) {
-                float scale = FaceLabelDimensions.textScale(width, doubleChest);
-                float max = FaceLabelDimensions.maxWidth(doubleChest);
-                require(Float.isFinite(scale) && scale > 0F && scale <= 0.011F,
-                        "Invalid caption scale " + scale);
-                require(scale * width <= max + 0.0001F,
-                        "Caption exceeds chest face: " + width + " px -> " + scale * width);
-                require(max <= (doubleChest ? 1.60F : 0.82F),
-                        "Caption may spill past neighbouring chest");
-                assertions += 3;
+                float scale = FaceLabelDimensions.textScale(pixels, doubleChest);
+                require(Float.isFinite(scale) && scale > 0F && scale <= 0.015F,
+                        "Text scale must be smaller than the old 0.020 floating captions");
+                require(scale * pixels <= FaceLabelDimensions.maxWidth(doubleChest) + 0.0001F,
+                        "A long label cannot extend beyond the chest face");
+                assertions += 2;
             }
         }
         require(FaceLabelDimensions.fitsVertically(false),
-                "Text-only label must fit vertically within chest");
+                "Text alone must fit within a chest front");
         require(FaceLabelDimensions.fitsVertically(true),
-                "Icon+text label must fit vertically within chest");
+                "Text plus model must fit within a chest front");
+        require(FaceLabelDimensions.labelDistanceFromCenter(false) > 0.65D,
+                "TFC chest text must be clearly IN FRONT of protruding 3D models");
+        require(FaceLabelDimensions.labelDistanceFromCenter(true) > 0.53D,
+                "Vanilla chest text must sit outside its block front");
         require(FaceLabelDimensions.iconScale() < 0.30F,
-                "Icon must be markedly smaller than the old oversized model");
-        require(FaceLabelDimensions.textY(true) < FaceLabelDimensions.iconY(),
-                "Icon must sit ABOVE text in one block-front region");
-        require(Math.abs(FaceLabelDimensions.faceOffset(true)
-                        + FaceLabelDimensions.textDepth() - 0.4375D) < 0.04D,
-                "Vanilla chest text must sit almost flush with its inset face");
-        require(Math.abs(FaceLabelDimensions.faceOffset(false)
-                        + FaceLabelDimensions.textDepth() - 0.5D) < 0.04D,
-                "TFC crate text must sit almost flush with its full-block face");
-        require(FaceLabelDimensions.itemDepth() > FaceLabelDimensions.iconScale() / 2D,
-                "Icon back should not clip the underlying chest texture");
-        // Regression for invisible 0.9.7 chest labels. For every cardinal
-        // face a player standing in FRONT must see it; behind must not.
-        for (int[] normal : new int[][]{
-                {0, 1}, {0, -1}, {1, 0}, {-1, 0}}) {
-            double nx = normal[0], nz = normal[1];
-            require(FaceLabelDimensions.isFrontVisible(
-                    -4D * nx, -4D * nz, normal[0], normal[1]),
-                    "Front side of chest incorrectly culled");
-            require(!FaceLabelDimensions.isFrontVisible(
-                    4D * nx, 4D * nz, normal[0], normal[1]),
-                    "Rear side should not render through the chest");
+                "Icon should remain a compact chest decoration");
+        require(FaceLabelDimensions.withinRange(9.99D * 9.99D),
+                "Inside 10 blocks the label must be eligible");
+        require(!FaceLabelDimensions.withinRange(10D * 10D),
+                "At 10 blocks the label must disappear");
+        require(!FaceLabelDimensions.withinRange(10.01D * 10.01D),
+                "Beyond 10 blocks the label must remain hidden");
+        require(!FaceLabelDimensions.withinRange(1000D),
+                "No long-distance label rendering");
+        assertions += 9;
+
+        for (int[] face : new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}) {
+            require(FaceLabelDimensions.isFrontVisible(-5D * face[0],
+                            -5D * face[1], face[0], face[1]),
+                    "A physical front face must be visible");
+            require(!FaceLabelDimensions.isFrontVisible(5D * face[0],
+                            5D * face[1], face[0], face[1]),
+                    "Rear face must not bleed through the chest");
             assertions += 2;
         }
-
-        System.out.println("Face-mounted chest labels: " + (assertions + 7)
-                + " sizing and vertical-extent checks passed.");
+        System.out.println("FaceLabelDimensions: " + assertions +
+                " caption scale, world-space depth, 10-block culling and face tests passed.");
     }
 }

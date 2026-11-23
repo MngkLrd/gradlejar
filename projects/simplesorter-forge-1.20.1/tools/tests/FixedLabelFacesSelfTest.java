@@ -34,8 +34,10 @@ public final class FixedLabelFacesSelfTest {
             check(rejected == -1,
                     "A closed chest face must not display through an adjacent solid wall");
             double radians = Math.toRadians(FixedLabelFaces.glyphRotationDegrees(side));
-            // After negative X/Y scaling, font text's front points +Z.
-            // Rotation about world Y sends +Z to (sin(rotation), cos(rotation)).
+            // Vanilla sign transform uses (+X,-Y,+Z); the single Y flip
+            // makes the font quad's front point +Z. World-space Y rotation
+            // sends it to (sin(rotation), cos(rotation)). Paired (-X,-Y,+Z)
+            // is NOT equivalent: it has opposite winding and was invisible.
             check(Math.abs(Math.sin(radians) - nx) < 0.00001D
                     && Math.abs(Math.cos(radians) - nz) < 0.00001D,
                     "Font glyph normal turned inward for cardinal face " + side);

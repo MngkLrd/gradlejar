@@ -49,9 +49,15 @@ public final class AutoLabelService {
         // an established ore/plant/metal column inherits that column's label.
         List<WarehouseColumns.Node> columnNodes = new ArrayList<>(containers.size());
         List<Map<String, Integer>> chestVotes = new ArrayList<>(containers.size());
-        Map<String, ItemStack> representative = new HashMap<>();
+        // Never borrow an item from another chest as an icon for this chest.
+        // Empty category-inherited crates show TEXT only until a real item
+        // enters them. E.g. bone meal cannot appear over a chest without it.
+        List<Map<String, ItemStack>> localIcons = new ArrayList<>(containers.size());
+        List<Map<String, Integer>> localIconCounts = new ArrayList<>(containers.size());
         for (ContainerRef ref : containers) {
             Map<String, Integer> votes = new HashMap<>();
+            Map<String, ItemStack> icons = new HashMap<>();
+            Map<String, Integer> iconCounts = new HashMap<>();
             IItemHandler inventory = ref.handler();
             int occupied = 0;
             for (int slot = 0; slot < inventory.getSlots(); slot++) {
@@ -62,10 +68,16 @@ public final class AutoLabelService {
                 String family = category.moveAllowed()
                         ? WarehouseLayout.family(category.id()) : "misc";
                 votes.merge(family, 1, Integer::sum);
-                representative.putIfAbsent(family, new ItemStack(stack.getItem()));
+                int count = stack.getCount();
+                if (count > iconCounts.getOrDefault(family, -1)) {
+                    icons.put(family, new ItemStack(stack.getItem()));
+                    iconCounts.put(family, count);
+                }
             }
             BlockPos p = ref.pos();
             chestVotes.add(votes);
+            localIcons.add(icons);
+            localIconCounts.add(iconCounts);
             columnNodes.add(new WarehouseColumns.Node(p.getX(), p.getY(), p.getZ(),
                     occupied, votes));
         }
@@ -99,8 +111,10 @@ public final class AutoLabelService {
                 }
                 continue;
             }
-            ItemStack icon = representative.getOrDefault(family, ItemStack.EMPTY);
-            if (icon.isEmpty()) continue;
+            // Strict local icon. For an empty chest under the plants column,
+            // keep its category caption but never fabricate a seed/bone-meal
+            // icon taken from a different container.
+            ItemStack icon = localIcons.get(index).getOrDefault(family, ItemStack.EMPTY);
 
             WarehouseLabelData.Label prior = data.get(pos);
             ItemStack material = prior == null ? ItemStack.EMPTY : prior.material();

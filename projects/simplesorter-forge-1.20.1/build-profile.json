@@ -1,9 +1,9 @@
 {
   "slug": "simplesorter",
-  "version": "0.9.9-forge",
+  "version": "0.9.10-forge",
   "minecraft": "1.20.1",
   "loader": "forge",
   "java": "17",
   "gradle": "8.14.3",
-  "jar_glob": "simplesorter-0.9.9-forge.jar"
+  "jar_glob": "simplesorter-0.9.10-forge.jar"
 }
