@@ -1,9 +1,6 @@
 package com.kirill.simplesorter.sorting;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -263,10 +260,7 @@ public final class WarehouseReorganizer {
     }
 
     private static String strictFamily(ItemStack stack, SortCategory category) {
-        String itemId = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
-        boolean waterPotion = "minecraft:potion".equals(itemId)
-                && PotionUtils.getPotion(stack) == Potions.WATER;
-        return StrictStorageFamily.of(itemId, category.id(), waterPotion);
+        return StrictStackClassifier.family(stack, category);
     }
 
     private static Profile profile(ContainerRef ref, Map<Item, SortCategory> cache) {
