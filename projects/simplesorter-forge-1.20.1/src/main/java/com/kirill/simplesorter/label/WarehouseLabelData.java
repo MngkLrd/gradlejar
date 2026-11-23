@@ -22,6 +22,9 @@ public final class WarehouseLabelData extends SavedData {
     private static final String NAME = "simplesorter_warehouse_labels";
     private static final int MAX_TOTAL = 8192;
     private final Map<Long, Label> entries = new HashMap<>();
+    // Only set while reading 0.9.6 world data. The next wand sort assigns
+    // a durable, correct front face to each legacy label once.
+    private final Set<Long> legacyWithoutFacing = new HashSet<>();
     private final Map<Long, Set<Long>> labelsByChunk = new HashMap<>();
 
     public record Label(BlockPos pos, int style, String family,
@@ -48,6 +51,7 @@ public final class WarehouseLabelData extends SavedData {
             Label label = new Label(pos, style, family, icon.copyWithCount(1),
                     material.copyWithCount(1), facing);
             data.entries.put(pos.asLong(), label);
+            if (!tag.contains("facing")) data.legacyWithoutFacing.add(pos.asLong());
             data.labelsByChunk.computeIfAbsent(chunkKey(pos), k -> new HashSet<>()).add(pos.asLong());
         }
         return data;
@@ -74,16 +78,22 @@ public final class WarehouseLabelData extends SavedData {
         return entries.get(pos.asLong());
     }
 
+    public boolean needsFacingMigration(BlockPos pos) {
+        return legacyWithoutFacing.contains(pos.asLong());
+    }
+
     public boolean put(Label label) {
         Label previous = entries.get(label.pos().asLong());
         if (previous == null && entries.size() >= MAX_TOTAL) return false;
         if (previous != null && previous.style() == label.style()
                 && previous.family().equals(label.family())
                 && ItemStack.isSameItemSameTags(previous.icon(), label.icon())
-                && previous.facing() == label.facing()) {
+                && previous.facing() == label.facing()
+                && !legacyWithoutFacing.contains(label.pos().asLong())) {
             return false;
         }
         entries.put(label.pos().asLong(), label);
+        legacyWithoutFacing.remove(label.pos().asLong());
         labelsByChunk.computeIfAbsent(chunkKey(label.pos()), ignored -> new HashSet<>())
                 .add(label.pos().asLong());
         setDirty();
@@ -92,6 +102,7 @@ public final class WarehouseLabelData extends SavedData {
 
     public Label remove(BlockPos pos) {
         Label removed = entries.remove(pos.asLong());
+        legacyWithoutFacing.remove(pos.asLong());
         if (removed != null) {
             Set<Long> chunk = labelsByChunk.get(chunkKey(pos));
             if (chunk != null) {
