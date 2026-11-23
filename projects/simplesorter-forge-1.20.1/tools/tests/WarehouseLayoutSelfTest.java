@@ -92,6 +92,14 @@ public final class WarehouseLayoutSelfTest {
                 "Strongly established player ores on bottom must be preserved");
         check(!learned.shouldUsePreferredEmpty(5, "raw_ores", List.of(0, 1, 2)),
                 "An established inverted layout is never overwritten by a template");
+        WarehouseLayout aggressive = WarehouseLayout.analyze(reversed, false);
+        check(aggressive.preference(0, "raw_ores") == 1D,
+                "Opt-in full reorganization ignores previously seeded reverse layout");
+        check(aggressive.preference(5, "plants") == 1D,
+                "Full reorganization assigns plants to the bottom without manual chest setup");
+        check(aggressive.preference(5, "raw_ores") < 0.36D,
+                "Old ore position no longer dominates when user enables full reorganization");
+
 
         // Two separate warehouse walls must not constrain one another.
         List<WarehouseLayout.Node> separate = new ArrayList<>();

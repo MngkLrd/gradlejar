@@ -50,7 +50,7 @@ public class SortingWandItem extends Item {
         }
 
         SortingWandSettings settings = SortingWandSettings.readFrom(stack);
-        SortingResult result = SortingManager.sortAroundPlayer(serverLevel, player, settings);
+        SortingResult result = SortingManager.sortAroundPlayer(serverLevel, player, settings, stack);
         player.getCooldowns().addCooldown(this, COOLDOWN_TICKS);
 
         if (result.used()) {
@@ -91,6 +91,9 @@ public class SortingWandItem extends Item {
 
         int newDamage = stack.getDamageValue() + 1;
         if (newDamage >= stack.getMaxDamage()) {
+            if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                WandLabelSupplies.dropOnBreak(stack, serverPlayer);
+            }
             stack.shrink(1);
             player.displayClientMessage(Component.translatable("message.simplesorter.wand_broke"), true);
         } else {
@@ -113,6 +116,14 @@ public class SortingWandItem extends Item {
                 onOff(settings.showContainerHighlights()),
                 onOff(settings.showTransferParticles())
         ).withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.literal("Auto-Organize: " + (settings.autoOrganize() ? "ON" : "OFF")
+                + " | Labels: " + (settings.labelMode() == 1 ? "Text" :
+                        settings.labelMode() == 2 ? "Item Icons" : "OFF"))
+                .withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.literal("Label supplies: "
+                + WandLabelSupplies.stored(stack, 1) + " signs / "
+                + WandLabelSupplies.stored(stack, 2) + " frames")
+                .withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("tooltip.simplesorter.sorting_wand.2").withStyle(ChatFormatting.DARK_GRAY));
         tooltip.add(Component.translatable("tooltip.simplesorter.sorting_wand.3").withStyle(ChatFormatting.DARK_GRAY));
     }

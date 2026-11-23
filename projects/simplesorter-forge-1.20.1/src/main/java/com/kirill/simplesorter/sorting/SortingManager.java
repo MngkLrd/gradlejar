@@ -4,6 +4,8 @@ import com.kirill.simplesorter.config.SorterSettings;
 import com.kirill.simplesorter.registry.ModItems;
 import com.kirill.simplesorter.settings.SortingWandSettings;
 import com.kirill.simplesorter.visual.SortingVisuals;
+import com.kirill.simplesorter.label.AutoLabelService;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,6 +24,11 @@ public final class SortingManager {
     private SortingManager() {}
 
     public static SortingResult sortAroundPlayer(ServerLevel level, Player player, SortingWandSettings settings) {
+        return sortAroundPlayer(level, player, settings, ItemStack.EMPTY);
+    }
+
+    public static SortingResult sortAroundPlayer(ServerLevel level, Player player,
+                                                 SortingWandSettings settings, ItemStack wand) {
         SortingWandSettings safe = settings.sanitized();
         List<ContainerRef> containers = ContainerScanner.scanRadius(level, player,
                 player.blockPosition(), safe.radius());
@@ -29,13 +36,18 @@ public final class SortingManager {
             return new SortingResult(0, 0, 0, 0, 0, safe.radius(), safe.mode().id());
         }
 
-        return switch (safe.mode()) {
+        SortingResult result = switch (safe.mode()) {
             case SMART_CATEGORIES, COMPACT_STACKS ->
                     SmartCategorySorter.sort(level, containers, safe.radius(),
                             safe.withMode(com.kirill.simplesorter.settings.SortingMode.SMART_CATEGORIES));
             case MATCH_EXISTING -> SmartCategorySorter.sort(level, containers, safe.radius(), safe);
             case PLAYER_DEPOSIT -> depositPlayerInventory(level, player, containers, safe);
         };
+        if (safe.labelMode() != 0 && player instanceof ServerPlayer serverPlayer
+                && !wand.isEmpty() && wand.getItem() == ModItems.SORTING_WAND.get()) {
+            AutoLabelService.refresh(level, serverPlayer, wand, safe, containers);
+        }
+        return result;
     }
 
     private static SortingResult compactStacks(ServerLevel level,

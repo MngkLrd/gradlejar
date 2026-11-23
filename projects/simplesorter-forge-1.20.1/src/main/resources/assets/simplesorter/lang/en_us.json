@@ -58,5 +58,11 @@
   "screen.simplesorter.wand_settings.controls_hint": "Controls...",
   "message.simplesorter.wand_broke": "Simple Sorter: wand broke.",
   "message.simplesorter.reload_denied": "Simple Sorter: operator permission is required to reload rules.",
-  "message.simplesorter.rules_reloaded": "Simple Sorter: category rules reloaded."
+  "message.simplesorter.rules_reloaded": "Simple Sorter: category rules reloaded.",
+  "label.simplesorter.raw_minerals": "Ores & Minerals",
+  "label.simplesorter.finished_materials": "Processed Materials",
+  "label.simplesorter.building": "Building Blocks",
+  "label.simplesorter.crafting": "Crafting & Tools",
+  "label.simplesorter.misc": "Miscellaneous",
+  "label.simplesorter.botanical": "Plants & Food"
 }
