@@ -1,4 +1,4 @@
-# Simple Sorter 0.9.5 (Forge 1.20.1)
+# Simple Sorter 0.9.6 (Forge 1.20.1)
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
@@ -114,7 +114,7 @@ gradle --no-daemon clean build
 ```
 
 Java: 17. Gradle: 8.14.3. Expected output:
-`build/libs/simplesorter-0.9.5-forge.jar`.
+`build/libs/simplesorter-0.9.6-forge.jar`.
 
 Our GitHub **Minecraft Mod Build Hub** CI performs the authoritative Forge
 compilation and JAR verification. A successful Gradle build is not equivalent
@@ -286,3 +286,43 @@ No background item sorting. The large reorganizer and label refresh are
 executed only when the wand is activated. This version is a testing release.
 Verify both client and dedicated-server behaviour on TerraFirmaGreg before
 calling it production-ready.
+
+## 0.9.6: seeded vertical-column preservation and TFC clay/plant fixes
+
+**Regression: ore and plant columns were mixed by 0.9.5.**
+The default Smart Layout inferred Y rows across the warehouse and optional
+Auto-Organize ignored independently established X/Z vertical columns.
+With 3 full ore chests plus a fourth junk chest in column A, and a
+top botanical chest with two empties below in column B, earlier sorting
+sometimes put ore in B and saplings into metal column C.
+
+The new *WarehouseColumns* engine recognizes vertical columns using their
+existing contents. Confident mineral, botanical and metal columns preserve
+their purpose even with Auto-Organize enabled: an empty chest *under seeds*
+stays a botanical destination, an ore column's lightly mixed fourth chest
+is a mineral destination, and filled metal columns cannot capture saplings,
+clay or unrelated resources. No manual setup or persistent chest category
+assignment is needed. Geometry and container content are analyzed once per
+sort action. Unclassified columns may still be used for new categories.
+
+TFC `seeds/<crop>`, fruit pits and saplings are recognized as botanicals.
+Clay and kaolin lumps are classified as `clays` (ceramic crafting materials),
+independent of ingots and ores. Exact inventory acceptance still uses Forge
+simulation, so a full ore column remains full: no item is forcibly swapped
+or destroyed to satisfy a spatial ordering rule.
+
+**Recipes:** The original eight-coal-plus-stick shaped recipe was already
+in 0.9.5's JAR, but a vanilla recipe can be hidden/removed by TerraFirmaGreg
+scripts. 0.9.6 adds a parallel eight-charcoal-plus-stick shaped recipe and a
+recipe-book advancement that unlocks both variants when the player carries
+a stick. Standard Minecraft recipes are automatically readable by both JEI
+and EMI when the modpack retains them. The CI job verifies all three JSON
+files exist in the final compiled JAR. No mandatory JEI/EMI dependencies.
+
+This release includes a standalone test with three ore chests, a junk
+fourth ore chest, seeds plus two free botanical chests, a misplaced ore,
+misplaced saplings, an ingot column and a clay example.
+CI includes Forge compilation, source-independent Java routing assertions,
+verified recipe/advancement resources and dedicated server boot.
+TerraFirmaGreg modpack-specific recipe removal and inventory behavior must
+still be checked on a copy of the user's world.
