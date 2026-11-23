@@ -85,10 +85,10 @@ public final class WarehouseReorganizer {
         private final List<ContainerRef> containers;
         private final List<ChestState> states;
         private final WarehouseFamilyPlan plan;
+        private final WarehouseAssignmentPlanner assignments;
         private final Map<Item, SortCategory> itemCategoryCache = new IdentityHashMap<>();
         private final Map<String, List<Integer>> candidateOrder = new HashMap<>();
-        private final Map<Integer, String> reservations = new HashMap<>();
-        private final List<String> keepAtSource = new ArrayList<>();
+
 
         private int sourceIndex;
         private int slotIndex;
@@ -107,22 +107,34 @@ public final class WarehouseReorganizer {
             containers = List.copyOf(all);
             states = new ArrayList<>(containers.size());
             List<WarehouseFamilyPlan.Node> nodes = new ArrayList<>(containers.size());
+            List<WarehouseAssignmentPlanner.Node> targetNodes = new ArrayList<>(containers.size());
             for (ContainerRef ref : containers) {
                 ChestState state = new ChestState();
                 state.refresh(ref, itemCategoryCache);
                 states.add(state);
-                keepAtSource.add(state.majority());
                 BlockPos p = ref.pos();
                 nodes.add(new WarehouseFamilyPlan.Node(
                         p.getX(), p.getY(), p.getZ(), state.frozenVotes()));
+                targetNodes.add(new WarehouseAssignmentPlanner.Node(
+                        ref.handler().getSlots(), state.frozenVotes()));
             }
             plan = WarehouseFamilyPlan.analyze(nodes);
+            assignments = WarehouseAssignmentPlanner.analyze(targetNodes, plan);
         }
 
         public boolean isDone() { return done; }
         public int movedItems() { return movedItems; }
         public int movedOperations() { return operations; }
         public int examinedPasses() { return pass + 1; }
+        public int assignmentMissingFamilies() { return assignments.withoutHome().size(); }
+        public int scannedChests() { return containers.size(); }
+        public int currentChestIndex() { return sourceIndex; }
+
+        public void refreshContainer(int index) {
+            if (index >= 0 && index < containers.size()) {
+                states.get(index).refresh(containers.get(index), itemCategoryCache);
+            }
+        }
 
         /** Honest post-sort diagnostic. The storage may still be mixed if
          * every matching destination is full or the modded handler rejects
@@ -199,13 +211,14 @@ public final class WarehouseReorganizer {
                 if ("locked".equals(family)) continue;
                 ChestState sourceState = states.get(sourceIndex);
 
-                boolean mixedSource = sourceState.mixed();
-                boolean relocatingOutlyingMajority = mixedSource
-                        && family.equals(keepAtSource.get(sourceIndex))
-                        && !plan.atHome(sourceIndex, family);
-                if (!WarehouseConsolidationDecision.shouldRelocate(
-                        plan, sourceIndex, family, mixedSource,
-                        keepAtSource.get(sourceIndex))) continue;
+                // A source may be mixed, but its assigned destination role
+                // is immutable for this session. Keep this family's items
+                // once they reach an assigned home; move all foreign items
+                // out. This is monotonic and eliminates A -> B -> A cycles.
+                if (assignments.isHome(sourceIndex, family)) continue;
+                if (assignments.homes(plan.region(sourceIndex), family).isEmpty()) {
+                    continue; // no dedicated chest available for this family
+                }
 
                 String pool = plan.region(sourceIndex) + ":" + family;
                 List<Integer> choices = candidateOrder.computeIfAbsent(
@@ -228,25 +241,23 @@ public final class WarehouseReorganizer {
                     }
 
                     int targetIndex = choices.get(choiceIndex);
-                    // Keep a predominantly ore chest in an outlying column
-                    // until it can move DIRECTLY to the canonical ore cluster.
-                    // Do not relocate the majority to yet another outlying
-                    // empty chest just because the preferred area is full.
-                    if (relocatingOutlyingMajority
-                            && !plan.atHome(targetIndex, family)) continue;
+                    // Receiver is a preassigned permanent family home.
+                    // It may START mixed: the incompatible stacks will be
+                    // evacuated on their own turn. This is the missing
+                    // ingredient in the 0.9.13 circular-purity deadlock.
+                    if (!assignments.isHome(targetIndex, family)) continue;
                     if (targetIndex == sourceIndex) continue;
                     ContainerRef target = containers.get(targetIndex);
                     if (!valid(level, target)) continue;
 
                     ChestState targetState = states.get(targetIndex);
-                    // Be safe if another player added a foreign item while a
-                    // multi-tick sort was working through the warehouse.
+                    // Recheck modded handler state and do not insert into
+                    // a protected chest. Transient mixing is permitted ONLY
+                    // inside a chest assigned to this exact family. Each
+                    // actual transfer is simulated by InventoryMover, so
+                    // TFC/GregTech slot restrictions are still respected.
                     targetState.refresh(target, itemCategoryCache);
-                    if (!WarehouseConsolidationDecision.eligibleTarget(
-                            plan, sourceIndex, targetIndex, family, mixedSource,
-                            targetState.pure(family), targetState.empty())) continue;
-                    String claim = reservations.getOrDefault(targetIndex, "");
-                    if (!targetState.canAccept(family, claim)) continue;
+                    if (targetState.families.containsKey("locked")) continue;
 
                     int moved = InventoryMover.moveSlotToTargets(
                             source, activeSlot, List.of(target), listener);
@@ -254,7 +265,6 @@ public final class WarehouseReorganizer {
 
                     sourceState.refresh(source, itemCategoryCache);
                     targetState.refresh(target, itemCategoryCache);
-                    reservations.put(targetIndex, family);
                     movedItems += moved;
                     movedThisPass += moved;
                     operations++;
@@ -268,12 +278,14 @@ public final class WarehouseReorganizer {
         }
 
         private List<Integer> candidateIndices(int source, String family) {
-            List<Integer> result = plan.indicesInRegion(source);
+            List<Integer> result = new ArrayList<>(
+                    assignments.homes(plan.region(source), family));
             result.sort(Comparator
                     .comparingInt((Integer i) ->
                             plan.priority(i, family, states.get(i).pure(family))).reversed()
                     .thenComparing(Comparator
-                            .comparingInt((Integer i) -> states.get(i).pure(family) ? 1 : 0)
+                            .comparingInt((Integer i) ->
+                                    states.get(i).families.getOrDefault(family, 0))
                             .reversed())
                     .thenComparingLong(i -> containers.get(i).pos().asLong()));
             return List.copyOf(result);
