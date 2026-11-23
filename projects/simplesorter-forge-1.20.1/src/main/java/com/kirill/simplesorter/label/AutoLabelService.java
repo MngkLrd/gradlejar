@@ -119,7 +119,8 @@ public final class AutoLabelService {
                 }
                 material = newMaterial;
             }
-            Direction facing = resolveFacing(level, player, pos, prior);
+            Direction facing = resolveFacing(level, player, pos, prior,
+                    data.needsFacingMigration(pos));
             if (data.put(new WarehouseLabelData.Label(
                     pos, style, family, icon.copyWithCount(1),
                     material.copyWithCount(1), facing))) {
@@ -145,7 +146,8 @@ public final class AutoLabelService {
      * storage receives a permanent front side facing the creator.
      */
     private static Direction resolveFacing(ServerLevel level, ServerPlayer player,
-                                           BlockPos pos, WarehouseLabelData.Label existing) {
+                                           BlockPos pos, WarehouseLabelData.Label existing,
+                                           boolean legacyWithoutFacing) {
         BlockState state = level.getBlockState(pos);
         for (Property<?> property : state.getProperties()) {
             if (!"facing".equals(property.getName())) continue;
@@ -154,7 +156,8 @@ public final class AutoLabelService {
                 return direction;
             }
         }
-        if (existing != null && existing.facing().getAxis().isHorizontal()) {
+        if (existing != null && !legacyWithoutFacing
+                && existing.facing().getAxis().isHorizontal()) {
             return existing.facing();
         }
         double x = player.getX() - (pos.getX() + 0.5D);
