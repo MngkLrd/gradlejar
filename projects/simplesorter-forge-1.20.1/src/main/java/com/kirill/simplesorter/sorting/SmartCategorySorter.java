@@ -185,6 +185,9 @@ public final class SmartCategorySorter {
             }
         };
 
+        boolean independentReorganization =
+                categoryMode && settings.autoOrganize() && layout.analyzedBlocks() >= 3;
+        if (!independentReorganization) {
         for (StorageSnapshot source : snapshots) {
             IItemHandler handler = source.ref().handler();
             for (int slot = 0; slot < handler.getSlots(); slot++) {
@@ -241,6 +244,18 @@ public final class SmartCategorySorter {
                     movedStacks++;
                 }
             }
+        }
+
+        }
+
+        if (independentReorganization) {
+            // Re-plan from the current inventories, ignoring inferred historical
+            // chest roles. All actual moves obey Forge inventory simulation,
+            // two-pass and operations caps; no forced swaps or item deletion.
+            WarehouseReorganizer.Result reorganized =
+                    WarehouseReorganizer.organize(containers, recordMove);
+            movedItems += reorganized.movedItems();
+            movedStacks += reorganized.movedOperations();
         }
 
         // Smart Categories ALWAYS includes partial-stack merging and filling
