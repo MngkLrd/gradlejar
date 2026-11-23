@@ -54,7 +54,7 @@ public final class ClientWarehouseLabels {
     private record RenderLabel(WarehouseLabelsPayload.Entry data,
                                Component caption, int textWidth) {}
     private record Visible(RenderLabel label, Vec3 surface,
-                           boolean wide, double distanceSq) {}
+                           boolean wide, double distanceSq, Direction face) {}
 
     // Receive one whole chunk at a time, so no O(all saved world labels)
     // scan occurs on every render frame in a TerraFirmaGreg warehouse.
@@ -119,22 +119,13 @@ public final class ClientWarehouseLabels {
                     if (roughX * roughX + roughY * roughY + roughZ * roughZ
                             > LABEL_RADIUS_SQ + 2D) continue;
 
-                    Direction face = render.data().facing();
-                    if (!face.getAxis().isHorizontal()) continue;
-                    if (!FaceLabelDimensions.isFrontVisible(
-                            roughX, roughZ, face.getStepX(), face.getStepZ())) {
-                        // The rough vector points FROM camera TO chest, which is
-                        // opposite the face normal on the visible front.
-                        // 0.9.7 inverted this test and culled every
-                        // correctly facing sign (regression).
-                        continue;
-                    }
                     if (!mc.level.hasChunkAt(pos) || mc.level.getBlockEntity(pos) == null) continue;
 
                     Vec3 center = Vec3.atCenterOf(pos);
                     boolean wide = false;
                     BlockState state = mc.level.getBlockState(pos);
                     boolean insetChest = state.getBlock() instanceof ChestBlock;
+                    BlockPos otherHalf = null;
                     if (state.getBlock() instanceof ChestBlock chest
                             && state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
                         BlockPos partner = pos.relative(ChestBlock.getConnectedDirection(state));
@@ -147,18 +138,46 @@ public final class ClientWarehouseLabels {
                                     0D,
                                     (partner.getZ() - pos.getZ()) * 0.5D);
                             wide = true;
+                            otherHalf = partner;
                         }
                     }
 
-                    // Depth matches the actual front face: inset vanilla
-                    // chest (7/16) versus full-front TFC crates/cabinets.
+                    // The old direction was assigned from the player's
+                    // position relative to EACH chest. On a 14-column wall,
+                    // that puts many edge crates' labels on their EAST/WEST
+                    // side rather than the actual NORTH/SOUTH front.
+                    // Pick only among exposed, STATIC block faces. Labels
+                    // never billboard, and turn only at 90-degree surfaces.
+                    boolean north = exposed(mc.level, pos, Direction.NORTH);
+                    boolean south = exposed(mc.level, pos, Direction.SOUTH);
+                    boolean east = exposed(mc.level, pos, Direction.EAST);
+                    boolean west = exposed(mc.level, pos, Direction.WEST);
+                    if (otherHalf != null) {
+                        north &= exposed(mc.level, otherHalf, Direction.NORTH);
+                        south &= exposed(mc.level, otherHalf, Direction.SOUTH);
+                        east &= exposed(mc.level, otherHalf, Direction.EAST);
+                        west &= exposed(mc.level, otherHalf, Direction.WEST);
+                        if (pos.getX() != otherHalf.getX()) {
+                            east = false;
+                            west = false;
+                        } else {
+                            north = false;
+                            south = false;
+                        }
+                    }
+                    int side = FixedLabelFaces.bestFace(
+                            camera.x - center.x, camera.z - center.z,
+                            north, south, east, west);
+                    if (!FixedLabelFaces.isCardinal(side)) continue;
+                    Direction face = faceOf(side);
+
                     double depth = FaceLabelDimensions.faceOffset(insetChest);
                     Vec3 surface = center.add(
                             face.getStepX() * depth, 0D,
                             face.getStepZ() * depth);
                     double distSq = surface.distanceToSqr(camera);
                     if (distSq <= LABEL_RADIUS_SQ) {
-                        visible.add(new Visible(render, surface, wide, distSq));
+                        visible.add(new Visible(render, surface, wide, distSq, face));
                     }
                 }
             }
@@ -175,7 +194,7 @@ public final class ClientWarehouseLabels {
             if (drawn >= MAX_VISIBLE_LABELS) break;
             WarehouseLabelsPayload.Entry data = v.label().data();
             BlockPos pos = data.pos();
-            Direction face = data.facing();
+            Direction face = v.face();
 
             boolean drawIcon = data.style() == 2 && !data.icon().isEmpty()
                     && v.distanceSq() <= ICON_RADIUS_SQ && icons < MAX_ICON_MODELS;
@@ -184,12 +203,11 @@ public final class ClientWarehouseLabels {
             poses.translate(v.surface().x - camera.x,
                     v.surface().y - camera.y, v.surface().z - camera.z);
 
-            // A fixed block face, NEVER cameraOrientation().
-            // Minecraft's font plane initially looks toward -Z and uses a
-            // negative X/Y glyph scale. Rotate that plane outward:
-            // SOUTH=180, NORTH=0, EAST=-90, WEST=90.
-            // This preserves legibility and stops labels rotating with us.
-            poses.mulPose(Axis.YP.rotationDegrees(180F - face.toYRot()));
+            // Font glyphs using (-X,-Y,+Z) scale have a +Z front.
+            // NORTH requires 180 degrees, SOUTH zero, EAST +90, WEST -90.
+            // 0.9.7/0.9.8 used the opposite transformation, turning glyph
+            // fronts INTO the chest and making the text disappear.
+            poses.mulPose(Axis.YP.rotationDegrees(-face.toYRot()));
 
             if (drawIcon) {
                 poses.pushPose();
@@ -218,5 +236,25 @@ public final class ClientWarehouseLabels {
             drawn++;
         }
         if (drawn > 0) buffer.endBatch();
+    }
+
+    private static Direction faceOf(int code) {
+        return switch (code) {
+            case FixedLabelFaces.NORTH -> Direction.NORTH;
+            case FixedLabelFaces.SOUTH -> Direction.SOUTH;
+            case FixedLabelFaces.EAST -> Direction.EAST;
+            case FixedLabelFaces.WEST -> Direction.WEST;
+            default -> Direction.NORTH;
+        };
+    }
+
+    /** Never force-load a chunk to draw a decorative decal. */
+    private static boolean exposed(net.minecraft.client.multiplayer.ClientLevel level,
+                                   BlockPos pos, Direction side) {
+        BlockPos neighbor = pos.relative(side);
+        if (!level.hasChunkAt(neighbor)) return false;
+        if (level.getBlockEntity(neighbor) != null) return false;
+        BlockState block = level.getBlockState(neighbor);
+        return !block.isSolidRender(level, neighbor);
     }
 }
