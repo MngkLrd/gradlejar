@@ -3,9 +3,9 @@ loaderVersion="[47,)"
 license="MIT"
 [[mods]]
 modId="riverweir"
-version="0.1.0"
+version="0.2.0"
 displayName="River Weir"
-description="A physical river-spanning fish net with woven jute, realistic catches, wear, and a shared inventory."
+description="Physical multi-block freshwater netting, jute and straw weaving, dynamic depth and real TFC fish catches."
 [[dependencies.riverweir]]
 modId="forge"
 mandatory=true

@@ -1,11 +1,11 @@
 package dev.minemods.riverweir.block;
 
+import dev.minemods.riverweir.RiverWeirMod;
 import dev.minemods.riverweir.logic.WeirLogic;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -26,42 +26,47 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public final class WeirNetBlock extends Block {
-    public static final EnumProperty<Direction.Axis> AXIS = EnumProperty.create("axis", Direction.Axis.class, Direction.Axis.X, Direction.Axis.Z);
-    public static final IntegerProperty STAGE = IntegerProperty.create("stage", 0, 2);
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    private static final VoxelShape X_SHAPE = Block.box(0, 0, 7, 16, 16, 9);
-    private static final VoxelShape Z_SHAPE = Block.box(7, 0, 0, 9, 16, 16);
+    public static final EnumProperty<Direction.Axis> AXIS=EnumProperty.create("axis",Direction.Axis.class,Direction.Axis.X,Direction.Axis.Z);
+    public static final IntegerProperty STAGE=IntegerProperty.create("stage",0,2);
+    public static final BooleanProperty WATERLOGGED=BlockStateProperties.WATERLOGGED;
+    public static final BooleanProperty TOP=BooleanProperty.create("top");
+    public static final BooleanProperty BOTTOM=BooleanProperty.create("bottom");
+    private static final VoxelShape X_SHAPE=Block.box(0,0,7,16,16,9);
+    private static final VoxelShape Z_SHAPE=Block.box(7,0,0,9,16,16);
 
-    public WeirNetBlock(Properties properties) {
+    public WeirNetBlock(Properties properties){
         super(properties);
-        registerDefaultState(stateDefinition.any().setValue(AXIS, Direction.Axis.X).setValue(STAGE,0).setValue(WATERLOGGED,true));
+        registerDefaultState(stateDefinition.any().setValue(AXIS,Direction.Axis.X).setValue(STAGE,0)
+            .setValue(WATERLOGGED,true).setValue(TOP,false).setValue(BOTTOM,false));
     }
-    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b) { b.add(AXIS,STAGE,WATERLOGGED); }
-    @Override public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(AXIS)==Direction.Axis.X ? X_SHAPE : Z_SHAPE;
+    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){
+        b.add(AXIS,STAGE,WATERLOGGED,TOP,BOTTOM);
     }
-    @Override public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    @Override public VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext context){
+        return state.getValue(AXIS)==Direction.Axis.X?X_SHAPE:Z_SHAPE;
     }
-    @Override public BlockState updateShape(BlockState state, Direction direction, BlockState adjacent, LevelAccessor level, BlockPos pos, BlockPos neighbour) {
-        if (state.getValue(WATERLOGGED)) level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-        return super.updateShape(state, direction, adjacent, level, pos, neighbour);
+    @Override public FluidState getFluidState(BlockState state){
+        return state.getValue(WATERLOGGED)?Fluids.WATER.getSource(false):super.getFluidState(state);
     }
-    @Override public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!level.isClientSide && player instanceof ServerPlayer server) {
+    @Override public BlockState updateShape(BlockState state,Direction direction,BlockState adjacent,LevelAccessor level,BlockPos pos,BlockPos neighbour){
+        if(state.getValue(WATERLOGGED))level.scheduleTick(pos,Fluids.WATER,Fluids.WATER.getTickDelay(level));
+        return super.updateShape(state,direction,adjacent,level,pos,neighbour);
+    }
+    @Override public InteractionResult use(BlockState state,Level level,BlockPos pos,Player player,InteractionHand hand,BlockHitResult hit){
+        if(!level.isClientSide && player instanceof ServerPlayer server){
             BlockPos post=WeirLogic.findLinkedPost((ServerLevel)level,pos,state.getValue(AXIS));
-            if (post != null) {
-                if (player.isShiftKeyDown() && WeirLogic.isJuteNet(player.getItemInHand(hand))) {
+            if(post!=null){
+                if(player.isShiftKeyDown()&&WeirLogic.isJuteNet(player.getItemInHand(hand)))
                     WeirLogic.repair((ServerLevel)level,post,player,hand);
-                } else WeirLogic.openMenu((ServerLevel)level,post,server);
+                else WeirLogic.openMenu((ServerLevel)level,post,server);
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
-    @Override public void onRemove(BlockState state, Level level, BlockPos pos, BlockState next, boolean moving) {
-        if (!state.is(next.getBlock()) && level instanceof ServerLevel server) {
+    @Override public void onRemove(BlockState state,Level level,BlockPos pos,BlockState next,boolean moving){
+        if(!state.is(next.getBlock()) && level instanceof ServerLevel server){
             BlockPos post=WeirLogic.findLinkedPost(server,pos,state.getValue(AXIS));
-            if (post != null) WeirLogic.tear(server,post);
+            if(post!=null)WeirLogic.tear(server,post);
         }
         super.onRemove(state,level,pos,next,moving);
     }
