@@ -36,13 +36,13 @@ public final class SortingManager {
             return new SortingResult(0, 0, 0, 0, 0, safe.radius(), safe.mode().id());
         }
 
-        // Auto-Organize is a single server-tick session, not the old 9ms
-        // partial sort repeated by every RMB click. The session sends its
-        // completion status and only then packs stacks / updates labels.
-        if (safe.autoOrganize()
-                && safe.mode() == com.kirill.simplesorter.settings.SortingMode.SMART_CATEGORIES
+        // Both Smart Categories and optional Auto-Organize use the SAME
+        // time-sliced, family-aware one-click algorithm. This removes the
+        // old hard column gating from normal Smart mode: six ore/plant/tool
+        // categories may coexist in any physical vertical column.
+        if (safe.mode() == com.kirill.simplesorter.settings.SortingMode.SMART_CATEGORIES
                 && player instanceof ServerPlayer serverPlayer
-                && !wand.isEmpty()) {
+                && !wand.isEmpty() && wand.getItem() == ModItems.SORTING_WAND.get()) {
             WarehouseSortSessions.start(level, serverPlayer, containers, wand, safe);
             return new SortingResult(containers.size(), 0, 0,
                     0, 0, safe.radius(), safe.mode().id());
