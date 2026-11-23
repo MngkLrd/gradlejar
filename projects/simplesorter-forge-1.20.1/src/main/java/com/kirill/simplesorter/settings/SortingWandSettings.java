@@ -13,7 +13,7 @@ public record SortingWandSettings(
         boolean autoOrganize,
         int labelMode
 ) {
-    public static final int[] RADIUS_STEPS = new int[] {8, 12, 16, 24, 32};
+    public static final int[] RADIUS_STEPS = new int[] {8, 12, 16, 24, 32, 48, 64};
 
     private static final String KEY_MODE = "sort_mode";
     private static final String KEY_MODE_INDEX = "sort_mode_index";

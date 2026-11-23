@@ -37,7 +37,9 @@ public final class AutoLabelService {
     public static int refresh(ServerLevel level, ServerPlayer player, ItemStack wand,
                               SortingWandSettings settings, List<ContainerRef> containers) {
         int style = settings.labelMode();
-        if (style < 1 || style > 2 || containers.isEmpty()) return 0;
+        if (containers.isEmpty()) return 0;
+        if (style == 0) return clearDisabledLabels(level, player, wand, containers);
+        if (style < 1 || style > 2) return 0;
         WarehouseLabelData data = WarehouseLabelData.get(level);
         Set<ChunkPos> changed = new HashSet<>();
         int created = 0;
@@ -149,11 +151,16 @@ public final class AutoLabelService {
                                            BlockPos pos, WarehouseLabelData.Label existing,
                                            boolean legacyWithoutFacing) {
         BlockState state = level.getBlockState(pos);
-        for (Property<?> property : state.getProperties()) {
-            if (!"facing".equals(property.getName())) continue;
-            Comparable<?> value = state.getValue(property);
-            if (value instanceof Direction direction && direction.getAxis().isHorizontal()) {
-                return direction;
+        // Vanilla chest FACING corresponds to its physical front. Other
+        // modded blockstates may expose a different model orientation, so
+        // use the player's side on *first creation/migration* for them.
+        if (state.getBlock() instanceof net.minecraft.world.level.block.ChestBlock) {
+            for (Property<?> property : state.getProperties()) {
+                if (!"facing".equals(property.getName())) continue;
+                Comparable<?> value = state.getValue(property);
+                if (value instanceof Direction direction && direction.getAxis().isHorizontal()) {
+                    return direction;
+                }
             }
         }
         if (existing != null && !legacyWithoutFacing
@@ -165,6 +172,33 @@ public final class AutoLabelService {
         return Math.abs(x) >= Math.abs(z)
                 ? (x >= 0D ? Direction.EAST : Direction.WEST)
                 : (z >= 0D ? Direction.SOUTH : Direction.NORTH);
+    }
+
+
+    /** Labels OFF really hides old decals. Consumed sign/frame materials are
+     * returned to the wand (or dropped safely if its supply store is full).
+     * This also makes OFF/Text/Icons FPS comparisons meaningful. */
+    private static int clearDisabledLabels(ServerLevel level, ServerPlayer player,
+                                           ItemStack wand, List<ContainerRef> containers) {
+        WarehouseLabelData data = WarehouseLabelData.get(level);
+        Set<ChunkPos> changed = new HashSet<>();
+        int cleared = 0;
+        for (ContainerRef ref : containers) {
+            BlockPos pos = ref.pos();
+            if (!level.mayInteract(player, pos)
+                    || !player.mayUseItemAt(pos, Direction.UP, wand)) continue;
+            WarehouseLabelData.Label old = data.remove(pos);
+            if (old == null) continue;
+            cleared++;
+            changed.add(new ChunkPos(pos));
+            if (!old.material().isEmpty()
+                    && !WandLabelSupplies.refund(wand, old.material())) {
+                Containers.dropItemStack(level, pos.getX() + 0.5D,
+                        pos.getY() + 0.7D, pos.getZ() + 0.5D, old.material().copy());
+            }
+        }
+        for (ChunkPos chunk : changed) broadcast(level, chunk);
+        return cleared;
     }
 
     public static void sendChunk(ServerPlayer player, ServerLevel level, ChunkPos chunk) {

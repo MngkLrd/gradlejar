@@ -136,6 +136,11 @@ public final class WarehouseColumns {
 
     public boolean active() { return active; }
 
+    /** Stable region ID for an immutable one-action warehouse snapshot. */
+    public int region(int index) {
+        return index < 0 || index >= components.length ? -1 : components[index];
+    }
+
     public String role(int index) {
         return index < 0 || index >= roles.length ? "" : roles[index];
     }

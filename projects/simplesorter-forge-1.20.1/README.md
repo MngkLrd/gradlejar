@@ -1,4 +1,4 @@
-# Simple Sorter 0.9.7 (Forge 1.20.1)
+# Simple Sorter 0.9.8 (Forge 1.20.1)
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
@@ -114,7 +114,7 @@ gradle --no-daemon clean build
 ```
 
 Java: 17. Gradle: 8.14.3. Expected output:
-`build/libs/simplesorter-0.9.7-forge.jar`.
+`build/libs/simplesorter-0.9.8-forge.jar`.
 
 Our GitHub **Minecraft Mod Build Hub** CI performs the authoritative Forge
 compilation and JAR verification. A successful Gradle build is not equivalent
@@ -374,3 +374,50 @@ Networking protocol upgraded to version 4. **Update the mod on both
 client and server**; 0.9.6 clients cannot parse the new fixed-facing
 label packets. Crafting, categorization, NBT and warehouse sorting
 behaviour otherwise follow 0.9.6.
+
+## 0.9.8: visible fixed labels, 64-block radius and one-click stable sorting
+
+Hotfix for tester-reported 0.9.7 regressions:
+
+- **Fixed labels invisible from the front.** Front-face culling compared the
+  camera-to-chest vector with the face normal with the wrong sign. Every
+  correct frontal view was wrongly discarded. 0.9.8 uses a cardinal-facing
+  tested front/back rule. The small fixed chest-face design from 0.9.7
+  remains: text and icon stay attached to the box, never billboard toward
+  the camera. Legacy labels and non-vanilla crate facing directions are
+  recalibrated once on the next sorting action.
+- **Sorting radius:** new steps 8, 12, 16, 24, 32, 48, 64 blocks; default
+  32. Scanner hard cap raised to 64, and maximum loaded container refs
+  per player click raised to 384. The scanner still inspects loaded chunks
+  only and measures a 3D sphere around the player, not a chunk-bound area.
+- **Auto-Organize uses ONE explicit click for a COMPLETE job.** Instead of
+  dropping work after 9 ms per click and re-inferring roles each time, the
+  server records a category/warehouse geometry snapshot and processes the
+  whole bounded job over subsequent server ticks. Each tick scans at most
+  120 slots with an approximately 4-ms budget; compaction runs in a
+  separately bounded phase. Additional clicks while sorting do not restart
+  work. End-of-job status reports moved items and packed stacks.
+- **No-ping-pong routing:** An item already in its confirmed family column
+  cannot be moved to another warehouse section for a minor preference.
+  Existing column roles stay fixed for the duration of one sort. Newly
+  claimed chests reserve a category family and reject incompatible incoming
+  stacks. Unclassified items never spill to nearby metal/stick chests.
+  Category routing is monotonic, with at most three bounded passes and a
+  hard 4096 successful transfer-operation cap.
+- Smart Categories without Auto-Organize also respects terminal category
+  homes and requires a meaningful improvement before relocating an item.
+  InventoryMover preserves NBT and uses Forge item-handler insert/extract
+  simulation. This version does not force swaps of full chests.
+- No background automatic scans. A task exists only after explicit wand
+  activation, runs on the game's server main thread, and cancels when its
+  player leaves/dies or the server stops.
+
+Regression CI includes front/back visibility for all four cardinal chest
+faces, 6,000 seeded-column no-reverse-move scenarios, geometry / category /
+recipe tests, JAR verification and dedicated-server startup.
+
+**Important:** this remains a beta until 14-column TerraFirmaGreg runtime
+testing confirms that actual sorting stabilizes after ONE activation.
+Try on a copy of the world; measure FPS with Icons/Text/OFF and compare
+server MSPT via F3 or a profiler. The per-tick workload is bounded but has
+not been benchmarked on the user's modpack.
