@@ -103,6 +103,8 @@ public final class WarehouseReorganizer {
         private int movedThisPass;
         private int movedItems;
         private int operations;
+        private int attemptedTransfers;
+        private int rejectedTransfers;
         // Carry the inner candidate-loop cursor over to the next server
         // tick, instead of searching up to 384 modded inventories in one tick.
         private int pendingSource = -1;
@@ -132,6 +134,8 @@ public final class WarehouseReorganizer {
         public boolean isDone() { return done; }
         public int movedItems() { return movedItems; }
         public int movedOperations() { return operations; }
+        public int attemptedTransfers() { return attemptedTransfers; }
+        public int rejectedTransfers() { return rejectedTransfers; }
         public int examinedPasses() { return pass + 1; }
         public int assignmentMissingFamilies() { return assignments.withoutHome().size(); }
         public int scannedChests() { return containers.size(); }
@@ -282,9 +286,13 @@ public final class WarehouseReorganizer {
                     targetState.refresh(target, itemCategoryCache);
                     if (targetState.families.containsKey("locked")) continue;
 
+                    attemptedTransfers++;
                     int moved = InventoryMover.moveSlotToTargets(
                             source, activeSlot, List.of(target), listener);
-                    if (moved <= 0) continue;
+                    if (moved <= 0) {
+                        rejectedTransfers++;
+                        continue;
+                    }
 
                     sourceState.refresh(source, itemCategoryCache);
                     targetState.refresh(target, itemCategoryCache);
