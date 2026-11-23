@@ -27,9 +27,11 @@ public final class ContainerScanner {
   }
   candidates.sort(Comparator.comparingDouble(p->p.distSqr(center)));
   List<ContainerRef> result=new ArrayList<>();
-  for(BlockPos pos:candidates.subList(0,Math.min(160,candidates.size()))){
+  for(BlockPos pos:candidates){
+   if(result.size()>=160)break;
    BlockEntity be=level.getBlockEntity(pos);
-   if(be==null)continue;
+   if(be==null || !StorageFilter.isEligible(level.getBlockState(pos)))continue;
+   if(be instanceof Container container && !container.stillValid(player))continue;
    var capability=be.getCapability(ForgeCapabilities.ITEM_HANDLER,null).orElse(null);
    if(capability!=null && capability.getSlots()>0)
     result.add(new ContainerRef(pos,new ForgeItemHandlerAdapter(capability),be,level));
