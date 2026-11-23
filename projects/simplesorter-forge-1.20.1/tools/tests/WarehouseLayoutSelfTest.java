@@ -39,6 +39,12 @@ public final class WarehouseLayoutSelfTest {
         check(wall.preference(10, "plants") == 1D,
                 "Bottom shelf becomes plants without player setup");
         check(wall.sameRegion(0, 10), "All six levels share one warehouse region");
+        check(!wall.shouldUsePreferredEmpty(0, "raw_ores", List.of(10)),
+                "Raw ore already correctly on top must not be displaced");
+        check(wall.shouldUsePreferredEmpty(10, "raw_ores", List.of(0, 2, 4)),
+                "Ore initially on wrong bottom shelf automatically finds top empty shelf");
+        check(!wall.shouldUsePreferredEmpty(10, "raw_ores", List.of(6, 8)),
+                "No preferred empty shelf: do not force another wrong location");
 
         // A horizontal warehouse is detected by spatial spread without
         // hardcoding which specific chest models or blocks the user chose.
@@ -84,6 +90,8 @@ public final class WarehouseLayoutSelfTest {
                 "Strongly established player plants on top must be preserved");
         check(learned.preference(5, "raw_ores") == 1D,
                 "Strongly established player ores on bottom must be preserved");
+        check(!learned.shouldUsePreferredEmpty(5, "raw_ores", List.of(0, 1, 2)),
+                "An established inverted layout is never overwritten by a template");
 
         // Two separate warehouse walls must not constrain one another.
         List<WarehouseLayout.Node> separate = new ArrayList<>();
