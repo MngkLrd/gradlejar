@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LSL",
+    "LLL",
+    "LSL"
+  ],
+  "key": {
+    "L": {
+      "item": "tfc:wood/lumber/douglas_fir"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "primitivewaterworks:rain_collector_douglas_fir",
+    "count": 1
+  }
+}

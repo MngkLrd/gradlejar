@@ -1,0 +1,33 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "afc"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "LSL",
+          "L L",
+          "LSL"
+        ],
+        "key": {
+          "L": {
+            "item": "afc:wood/lumber/baobab"
+          },
+          "S": {
+            "item": "minecraft:stick"
+          }
+        },
+        "result": {
+          "item": "primitivewaterworks:wooden_downspout_afc_baobab",
+          "count": 1
+        }
+      }
+    }
+  ]
+}

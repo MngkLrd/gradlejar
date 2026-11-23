@@ -1,0 +1,33 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "afc"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "LSL",
+          "LLL",
+          "LSL"
+        ],
+        "key": {
+          "L": {
+            "item": "afc:wood/lumber/tualang"
+          },
+          "S": {
+            "item": "minecraft:stick"
+          }
+        },
+        "result": {
+          "item": "primitivewaterworks:rain_collector_afc_tualang",
+          "count": 1
+        }
+      }
+    }
+  ]
+}

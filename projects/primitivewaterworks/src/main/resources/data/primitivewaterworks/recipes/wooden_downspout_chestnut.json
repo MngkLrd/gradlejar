@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LSL",
+    "L L",
+    "LSL"
+  ],
+  "key": {
+    "L": {
+      "item": "tfc:wood/lumber/chestnut"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "primitivewaterworks:wooden_downspout_chestnut",
+    "count": 1
+  }
+}

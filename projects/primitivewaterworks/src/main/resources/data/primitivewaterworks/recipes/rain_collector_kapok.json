@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LSL",
+    "LLL",
+    "LSL"
+  ],
+  "key": {
+    "L": {
+      "item": "tfc:wood/lumber/kapok"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "primitivewaterworks:rain_collector_kapok",
+    "count": 1
+  }
+}

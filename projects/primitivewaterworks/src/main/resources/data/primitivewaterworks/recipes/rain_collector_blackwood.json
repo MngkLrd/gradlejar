@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LSL",
+    "LLL",
+    "LSL"
+  ],
+  "key": {
+    "L": {
+      "item": "tfc:wood/lumber/blackwood"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "primitivewaterworks:rain_collector_blackwood",
+    "count": 1
+  }
+}

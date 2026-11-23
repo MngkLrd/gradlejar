@@ -1,0 +1,33 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "afc"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "S S",
+          "S S",
+          "LLL"
+        ],
+        "key": {
+          "L": {
+            "item": "afc:wood/lumber/teak"
+          },
+          "S": {
+            "item": "minecraft:stick"
+          }
+        },
+        "result": {
+          "item": "primitivewaterworks:wooden_gutter_afc_teak",
+          "count": 1
+        }
+      }
+    }
+  ]
+}
