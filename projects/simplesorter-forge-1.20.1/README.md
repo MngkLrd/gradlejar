@@ -1,6 +1,6 @@
-# Simple Sorter 0.9.0 (Forge 1.20.1)
+# Simple Sorter 0.9.1 (Forge 1.20.1)
 
-Smart Categories 2.0, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
+Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
 ## Runtime
 
@@ -30,15 +30,21 @@ Modes:
 2. For an item seen in multiple storage blocks, select the canonical home based on
    its category/context, compatible mineral family, matching quantity and stable
    block position tie-break.
-3. For an item seen in just one storage block, relocate it only if its current
-   container is not already category-dominant and another seeded container has
-   a >=68% match for a *specific, safe* category.
-4. Unknown/misc items, empty chests, ambiguous categories and unsupported inventories
+3. Every chest has a multi-category profile. Compare the current chest to all
+   indexed compatible chests, including when the current chest already qualifies
+   as an acceptable destination. Ore must move from an ingot-heavy chest to a
+   better raw-ore chest if capacity and score permit it.
+4. Exclude each queried stack type from its own chest's context votes; a pile
+   of accidentally placed ores must not teach an ingot chest to accept more ore.
+5. Evaluate 0..1 semantic compatibility between ore, different forms of dust,
+   metal forms, plants, and incompatible categories. Only significant improvements
+   trigger category-based moves; exact variants use ID + NBT as identity.
+6. Unknown/misc items, empty chests, ambiguous categories and unsupported inventories
    are never guessed into random storage. Item identity always outranks broad categories.
-5. Forms are differentiated: tiny/small/normal dust, raw ore, ingot, nugget,
+7. Forms are differentiated: tiny/small/normal dust, raw ore, ingot, nugget,
    metal sheet, plate, rod, wire, gear, gems, loose stones, molds, adhesives,
    fruit tree parts, tools and the existing vanilla groups.
-6. Category matching uses registry tags first and ID *token boundaries*, not
+8. Category matching uses registry tags first and ID *token boundaries*, not
    arbitrary substrings. Custom category JSONs still override built-in IDs.
 
 An exact-item home uses registry-item identity; the actual item transfer respects
@@ -108,8 +114,21 @@ gradle --no-daemon clean build
 ```
 
 Java: 17. Gradle: 8.14.3. Expected output:
-`build/libs/simplesorter-0.9.0-forge.jar`.
+`build/libs/simplesorter-0.9.1-forge.jar`.
 
 Our GitHub **Minecraft Mod Build Hub** CI performs the authoritative Forge
 compilation and JAR verification. A successful Gradle build is not equivalent
 to a passed in-game regression test.
+
+## 0.9.1 regression focus
+
+- Place five different raw-ore stacks in a chest of bronze and copper ingots.
+  With free slots in a neighboring chest of other raw ores, all five must move
+  to the raw-ore chest even if the source chest is superficially compatible.
+- Dust can share a raw-mineral chest but must prefer dedicated dust storage
+  over ingots. Unrelated adhesives/coal should not be routed into random junk.
+- Same registry IDs with different NBT must retain their complete tags and must
+  never be merged accidentally. The match-existing mode remains available.
+- Only actual source/destination blocks are highlighted (max 10).
+- 3D flying item scale has increased from 0.31 to 0.54, with the same 48-item
+  client render limit.

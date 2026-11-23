@@ -15,6 +15,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,9 +29,16 @@ public final class SortingVisuals {
         SortingWandSettings safe = settings.sanitized();
 
         if (safe.showContainerHighlights()) {
+            // Only show the source and destination of real cross-container
+            // transfers. Internal stack compaction must not light up a warehouse.
+            Set<BlockPos> actualTransfers = new LinkedHashSet<>();
+            for (MoveRecord move : moves) {
+                if (move.sourcePos().equals(move.targetPos())) continue;
+                actualTransfers.add(move.sourcePos());
+                actualTransfers.add(move.targetPos());
+            }
             int highlighted = 0;
-            for (BlockPos pos : changedContainers) {
-                // Eight vertices, not hundreds of instant line particles.
+            for (BlockPos pos : actualTransfers) {
                 highlightContainer(level, pos);
                 if (++highlighted >= SorterSettings.MAX_HIGHLIGHTED_CONTAINERS) break;
             }
@@ -47,7 +55,8 @@ public final class SortingVisuals {
 
             ItemStack icon = record.visualStack().copyWithCount(1);
             String id = BuiltInRegistries.ITEM.getKey(icon.getItem()).toString();
-            String key = record.sourcePos().asLong() + ":" + record.targetPos().asLong() + ":" + id;
+            String key = record.sourcePos().asLong() + ":" + record.targetPos().asLong() + ":" + id
+                    + ":" + (icon.getTag() == null ? 0 : icon.getTag().hashCode());
             FlyingItemsPayload.Flight previous = grouped.get(key);
             if (previous == null) {
                 if (grouped.size() >= MAX_FLIGHTS) continue;
