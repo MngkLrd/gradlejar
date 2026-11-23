@@ -91,7 +91,7 @@ public final class ClientFlyingItems {
             pos = pos.add(0D, Math.sin(Math.PI * t) * arc, 0D);
 
             float fade = (float) (Math.min(1.0D, Math.min(rawT * 6D, (1D - rawT) * 6D)));
-            float scale = 0.31F * (0.72F + 0.28F * fade);
+            float scale = 0.54F * (0.72F + 0.28F * fade);
             poses.pushPose();
             poses.translate(pos.x - camera.x, pos.y - camera.y, pos.z - camera.z);
             poses.mulPose(Axis.YP.rotationDegrees((float)((gameTick + partial) * 23D + flight.spinOffset())));
