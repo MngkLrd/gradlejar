@@ -1,4 +1,4 @@
-# Simple Sorter 0.9.11 (Forge 1.20.1)
+# Simple Sorter 0.9.12 (Forge 1.20.1)
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
@@ -114,7 +114,7 @@ gradle --no-daemon clean build
 ```
 
 Java: 17. Gradle: 8.14.3. Expected output:
-`build/libs/simplesorter-0.9.11-forge.jar`.
+`build/libs/simplesorter-0.9.12-forge.jar`.
 
 Our GitHub **Minecraft Mod Build Hub** CI performs the authoritative Forge
 compilation and JAR verification. A successful Gradle build is not equivalent
@@ -568,3 +568,61 @@ time-sliced on the server; no continuous background scan.
 This is a beta with focused deterministic regression tests for TFC/GregTech
 mixes. Forge compilation and dedicated server boot do NOT substitute for
 runtime testing against the actual TerraFirmaGreg pack and its chest APIs.
+
+## 0.9.12 Forge: per-chest categories, distributed ore consolidation, loose rocks
+
+**Fixes combined from player tests:**
+
+1. Six vertical stacks, four chests in each, separated by a one-block gap.
+   The first column contains three ore chests and has an almost empty third
+   ore chest. A sixth column nevertheless receives additional ore. The
+   previous planner marked every pure ore chest as a terminal home and would
+   not consolidate the sixth-column material into the established first.
+2. Some physical columns contain unrelated categories at different heights,
+   which must remain legal. The earlier "WarehouseColumns" assumed that an
+   entire X/Z column belonged exclusively to a single broad family.
+3. TFC loose chalk and other stone pebbles were incorrectly grouped under
+   "Ores & Minerals", and sticks beside bronze ingots could make the chest
+   show the unhelpful label "Crafting & Tools".
+
+**What changed:**
+- Normal Smart Categories (even with Auto-Organize OFF) now uses the
+  server-tick, one-click warehouse session. The same safe strict-family
+  sorting handles both Smart Categories and optional Auto-Organize.
+- A category is assigned to a **chest**, never to an entire vertical stack.
+  Tools, bronze ingots, clay and sticks can each occupy a separate chest in
+  one column; the mod does not reserve whole columns or require a 6x4 layout.
+- Each family is assigned a canonical X/Z cluster by the amount of already
+  existing **pure** inventory evidence. A strong first ore column outranks
+  an isolated sixth-column ore chest. Sources outside the anchor consolidate
+  into pure or empty compatible storage at the anchor, including its almost
+  empty third chest. If no compatible room is available, nothing is dropped
+  or force-swapped. Mixed chests evacuate non-dominant items.
+- Spatial preferences are *soft*, per family. A column can simultaneously
+  anchor tools, metal, clay, seed and building categories, each in a different
+  chest. Existing pure source chests at their anchor are stable and don't
+  ping-pong on later clicks.
+- Loose TFC stones (including `tfc:rock/loose/chalk`) are classified
+  strictly as `stones`, not `raw_ores`. Actual ore remains `raw_ores`.
+  The old visual fallback also no longer treats loose rocks as ore.
+- Chest labels are based on **this specific chest's** strict contents.
+  There is a dedicated label for Tools, Crafting Materials, Ores, Ingots,
+  Loose Stones, Clay, Pottery, Tool Heads, and more. A bronze-and-sticks
+  chest is visibly labeled **Mixed Contents** until it is cleaned up,
+  never a generic "Crafting & Tools". Empty chests have no misleading label.
+- One movement attempt never mixes unrelated families; Forge simulation
+  preserves NBT and respects TFC slot/capacity rules. The family's initial
+  anchor stays fixed for one action. Long searches resume from the last
+  target on a later server tick rather than scanning 384 chests in one tick.
+  Changed inventories are revalidated before transfer.
+
+Important: The stable category algorithm now runs for *ordinary* Smart
+Categories too. Auto-Organize remains optional; it is no longer a prerequisite
+for cleaning up scattered ores and mixed chests. Player/warehouse counts and
+layout are inferred from actual loaded inventories.
+
+**Testing:** CI includes six-columns x four chests with 1-block gaps,
+a nearly free third ore chest and surplus sixth-column ore; multiple
+categories in one column; distinct TFC loose rocks; and per-chest labels.
+Forge Java 17 compile, resource checks, and dedicated-server startup still
+run. These tests cannot replace a full graphical TerraFirmaGreg session.
