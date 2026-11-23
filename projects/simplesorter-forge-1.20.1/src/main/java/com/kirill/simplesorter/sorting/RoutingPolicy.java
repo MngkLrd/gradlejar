@@ -20,7 +20,7 @@ public final class RoutingPolicy {
             "tiny_dust", "small_dust", "dusts", "ores", "raw_ores",
             "ingots", "nuggets", "metal_sheets", "plates", "rods",
             "wires", "gears", "gems", "adhesives", "fruit_tree_parts",
-            "molds", "loose_stones", "tools", "weapons", "armor",
+            "molds", "loose_stones", "salts", "tools", "weapons", "armor",
             "potions", "books", "food", "plants", "wood", "redstone");
 
     private RoutingPolicy() {}
@@ -55,6 +55,15 @@ public final class RoutingPolicy {
         if (itemCategory == null || chestCategory == null) return 0D;
         if (itemCategory.equals(chestCategory)) return 1D;
         if (!allowsCategoryFallback(itemCategory) || !allowsCategoryFallback(chestCategory)) return 0D;
+
+        // TFC food-grade mineral salt is a powder, but not an ingot.
+        // This relationship is intentionally directional: salt is welcome in
+        // an established powder store; other dusts do not use a salt chest.
+        if ("salts".equals(itemCategory)) {
+            if (isDust(chestCategory)) return 0.76D;
+            if (isRawOre(chestCategory)) return 0.32D;
+        }
+        if ("salts".equals(chestCategory) && isDust(itemCategory)) return 0.25D;
 
         if (isRawMineral(itemCategory) && isRawMineral(chestCategory)) {
             if (isRawOre(itemCategory) && isRawOre(chestCategory)) return 0.93D;
@@ -136,6 +145,36 @@ public final class RoutingPolicy {
                 ? 0.045D + 0.035D * Math.min(1D, Math.log1p(sameStackCount) / Math.log(65D))
                 : 0D;
         return contextFit + exact;
+    }
+
+    /**
+     * Logical reservation key when a new storage block has to be assigned.
+     * Compatible material forms share the same *empty* chest, rather than
+     * burning through one empty chest per unique item or NBT variant.
+     */
+    public static String emptyPartition(String category) {
+        if (!allowsCategoryFallback(category)) return "";
+        if (isRawMineral(category)) return "raw_minerals";
+        return switch (category) {
+            case "ingots", "nuggets", "metal_sheets", "plates" -> "metal_forms";
+            case "rods", "wires", "gears" -> "industrial_parts";
+            case "plants", "fruit_tree_parts" -> "botanicals";
+            case "salts" -> "salts";
+            default -> category;
+        };
+    }
+
+    /**
+     * Only split genuinely incompatible mixtures. A chest containing just a
+     * single type has no independent context, so it must not hop between
+     * empty chests on every click.
+     */
+    public static boolean shouldClaimEmpty(double bestCurrentFit,
+                                           int otherOccupiedSlots,
+                                           boolean alreadyHasSeededHome) {
+        return !alreadyHasSeededHome
+                && otherOccupiedSlots > 0
+                && bestCurrentFit < 0.35D;
     }
 
     public static boolean shouldRelocate(double sourceFit, double targetFit,
