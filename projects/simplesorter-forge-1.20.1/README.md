@@ -1,4 +1,4 @@
-# Simple Sorter 0.9.15 (Forge 1.20.1)
+# Simple Sorter 0.9.16 (Forge 1.20.1)
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
@@ -10,7 +10,18 @@ Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCra
 - Installed on **client and dedicated server** for networking, gameplay and 3D visuals.
 - No hard dependency on TerraFirmaCraft, GregTech, JEI or EMI.
 
-## Virtual wand buffer (0.9.15)
+## Virtual wand buffer (0.9.16)
+
+**0.9.16 fix:** The 0.9.15 greedy family-first planner could reserve a
+restricted destination slot for the wrong item and then reject all 12
+chests as one batch, leaving 0 cross-chest transfers. The layout now
+starts from every exact original occupied slot, then uses safe, strictly
+improving one-to-one category swaps and moves into available slots.
+The original arrangement remains a valid fallback. A separate pure-Java
+regression exercises 12 fully packed mixed chests, 15 families and
+item-specific slot restrictions. Rejected batches now report a reason.
+
+
 
 In **Smart Categories**, the wand now plans a complete re-layout of each
 connected warehouse batch (up to 16 chests per synchronous transaction).

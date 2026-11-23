@@ -213,9 +213,11 @@ public final class WarehouseSortSessions {
                             + " items transferred BETWEEN chests; "
                             + compactedItems + " items compacted WITHIN chests. "
                             + unresolved + " mixed chests remain (small families may share a chest); "
-                            + unknown + " unclassified slots. "
+                            + unknown + " misc/fallback slots. "
                             + "Skipped restricted chests: " + session.skippedChests()
                             + "; rejected buffer batches: " + session.rejectedTransfers() + "."
+                            + (session.rejectedTransfers() > 0
+                                ? " Reason: " + session.lastFailure() + "." : "")
                             + (session.skippedChests() > 0
                                 ? " Some inventories cannot be safely extracted/refilled." : "")),
                     session.skippedChests() == 0 && session.rejectedTransfers() == 0);
