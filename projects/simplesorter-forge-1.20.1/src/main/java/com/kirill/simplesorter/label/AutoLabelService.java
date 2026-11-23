@@ -9,7 +9,7 @@ import com.kirill.simplesorter.sorting.IItemHandler;
 import com.kirill.simplesorter.sorting.ItemCategoryResolver;
 import com.kirill.simplesorter.sorting.SortCategory;
 import com.kirill.simplesorter.sorting.WarehouseLayout;
-import com.kirill.simplesorter.sorting.WarehouseColumns;
+import com.kirill.simplesorter.sorting.StrictStackClassifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,61 +45,33 @@ public final class AutoLabelService {
         int created = 0;
         int missingSupplies = 0;
 
-        // First build column semantics once. A mostly-empty chest below
-        // an established ore/plant/metal column inherits that column's label.
-        List<WarehouseColumns.Node> columnNodes = new ArrayList<>(containers.size());
-        List<Map<String, Integer>> chestVotes = new ArrayList<>(containers.size());
-        // Never borrow an item from another chest as an icon for this chest.
-        // Empty category-inherited crates show TEXT only until a real item
-        // enters them. E.g. bone meal cannot appear over a chest without it.
-        List<Map<String, ItemStack>> localIcons = new ArrayList<>(containers.size());
-        List<Map<String, Integer>> localIconCounts = new ArrayList<>(containers.size());
-        for (ContainerRef ref : containers) {
-            Map<String, Integer> votes = new HashMap<>();
-            Map<String, ItemStack> icons = new HashMap<>();
-            Map<String, Integer> iconCounts = new HashMap<>();
-            IItemHandler inventory = ref.handler();
-            int occupied = 0;
-            for (int slot = 0; slot < inventory.getSlots(); slot++) {
-                ItemStack stack = inventory.getStackInSlot(slot);
-                if (stack.isEmpty()) continue;
-                occupied++;
-                SortCategory category = ItemCategoryResolver.resolve(stack);
-                String family = category.moveAllowed()
-                        ? WarehouseLayout.family(category.id()) : "misc";
-                votes.merge(family, 1, Integer::sum);
-                int count = stack.getCount();
-                if (count > iconCounts.getOrDefault(family, -1)) {
-                    icons.put(family, new ItemStack(stack.getItem()));
-                    iconCounts.put(family, count);
-                }
-            }
-            BlockPos p = ref.pos();
-            chestVotes.add(votes);
-            localIcons.add(icons);
-            localIconCounts.add(iconCounts);
-            columnNodes.add(new WarehouseColumns.Node(p.getX(), p.getY(), p.getZ(),
-                    occupied, votes));
-        }
-        WarehouseColumns columns = WarehouseColumns.analyze(columnNodes);
-
+        // Labels represent this individual chest, not a six-role warehouse
+        // template and not a vertical column. One column can have ores above,
+        // tools in the middle and clay below. A mixed chest is explicitly
+        // marked mixed instead of being mislabeled "Crafting & Tools".
         for (int index = 0; index < containers.size() && created < 160; index++) {
             ContainerRef ref = containers.get(index);
             BlockPos pos = ref.pos();
             if (!level.mayInteract(player, pos)
                     || !player.mayUseItemAt(pos, Direction.UP, wand)) continue;
 
-            Map<String, Integer> votes = chestVotes.get(index);
-            String family = columns.role(index);
-            if (family.isEmpty() && !votes.isEmpty()) {
-                family = votes.entrySet().stream()
-                        .max(Comparator.comparingInt((Map.Entry<String, Integer> e) -> e.getValue())
-                                .thenComparing(Map.Entry::getKey))
-                        .map(Map.Entry::getKey).orElse("misc");
+            Map<String, Integer> votes = new HashMap<>();
+            Map<String, ItemStack> icons = new HashMap<>();
+            Map<String, Integer> iconCounts = new HashMap<>();
+            IItemHandler inventory = ref.handler();
+            for (int slot = 0; slot < inventory.getSlots(); slot++) {
+                ItemStack stack = inventory.getStackInSlot(slot);
+                if (stack.isEmpty()) continue;
+                String family = StrictStackClassifier.family(stack);
+                votes.merge(family, 1, Integer::sum);
+                if (stack.getCount() > iconCounts.getOrDefault(family, -1)) {
+                    icons.put(family, new ItemStack(stack.getItem()));
+                    iconCounts.put(family, stack.getCount());
+                }
             }
+
+            String family = ChestCategoryLabels.select(votes);
             if (family.isEmpty()) {
-                // Never leave a stale ore sign hanging above an empty chest
-                // whose column no longer has a stable role.
                 WarehouseLabelData.Label removed = data.remove(pos);
                 if (removed != null) {
                     if (!WandLabelSupplies.refund(wand, removed.material())) {
@@ -111,10 +83,10 @@ public final class AutoLabelService {
                 }
                 continue;
             }
-            // Strict local icon. For an empty chest under the plants column,
-            // keep its category caption but never fabricate a seed/bone-meal
-            // icon taken from a different container.
-            ItemStack icon = localIcons.get(index).getOrDefault(family, ItemStack.EMPTY);
+            // Never show an item icon from another chest, or use an
+            // arbitrary representative item to disguise a mixed chest.
+            ItemStack icon = "mixed".equals(family)
+                    ? ItemStack.EMPTY : icons.getOrDefault(family, ItemStack.EMPTY);
 
             WarehouseLabelData.Label prior = data.get(pos);
             ItemStack material = prior == null ? ItemStack.EMPTY : prior.material();

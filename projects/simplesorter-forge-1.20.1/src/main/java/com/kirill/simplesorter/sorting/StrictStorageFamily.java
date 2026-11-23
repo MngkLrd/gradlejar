@@ -42,6 +42,16 @@ public final class StrictStorageFamily {
                 || matches(path, "smithing_blueprint")
                 || matches(path, "blueprint")) return "smithing_templates";
 
+        // TerraFirmaCraft loose ROCKS are construction/stone resources, not
+        // ore. "tfc:rock/loose/chalk" was previously labeled Ores & Minerals
+        // simply because all loose_stones shared the raw_minerals shelf.
+        if (path.startsWith("rock/loose/")
+                || path.contains("/rock/loose/")
+                || matches(path, "loose_rock")
+                || matches(path, "loose_stone")
+                || matches(path, "pebble")
+                || matches(path, "pebbles")) return "stones";
+
         if (matches(path, "mortar") && !matches(path, "mortar_and_pestle")
                 && !matches(path, "mortar_pestle")) return "binding_mortar";
 

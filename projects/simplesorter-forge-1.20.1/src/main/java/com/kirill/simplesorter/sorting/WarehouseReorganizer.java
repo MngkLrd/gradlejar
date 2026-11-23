@@ -13,106 +13,140 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Stable one-click reorganization. Creates ONE immutable ownership/layout
- * snapshot and runs it to completion in bounded server-tick slices.
+ * Smart Categories 0.9.12: each CHEST has its own strict semantic family.
  *
- * The old version recalculated shelf roles after every 9ms partial pass and
- * used a rotating source start; this could send materials A->B->A across
- * repeated clicks. This session never moves a stack OUT of its established
- * category column or a newly claimed destination.
+ * A vertical column is no longer a mutually exclusive category. It is only
+ * a preference for the destination of a category which already has a strong
+ * home elsewhere in the same warehouse. E.g. ore in column six moves into
+ * spare capacity of column one, but tools/ingots/clay may occupy different
+ * chests of the SAME column.
+ *
+ * The routing plan and original family anchors are calculated once per
+ * activation; transfers run in time-limited server-tick slices. A destination
+ * must be empty or 100% compatible with the moved stack. No arbitrary
+ * "mostly matching" category percentages or cross-warehouse transfers.
  */
 public final class WarehouseReorganizer {
     private static final int MAX_PASSES = 3;
     private static final int MAX_OPERATIONS = 4096;
-    private static final int MIN_OWNED_SLOTS = 1;
+    private static final int MAX_TARGETS_PER_STACK = 384;
 
     private WarehouseReorganizer() {}
 
     public record Result(int movedItems, int movedOperations) {}
 
-    private record Profile(int occupied, Map<String, Integer> strictVotes,
-                           Map<String, Integer> coarseVotes) {
-        // A chest containing 9 ingots and 1 stick is NOT a pure ingot chest,
-        // even if it would pass the old 74% acceptance threshold.
-        boolean belongsTo(String strictFamily) {
-            return occupied >= MIN_OWNED_SLOTS
-                    && StrictChestAdmission.canReceive(strictFamily,
-                            strictVotes, occupied, "");
+    private static final class ChestState {
+        private final Map<String, Integer> families = new HashMap<>();
+        private int occupied;
+
+        void refresh(ContainerRef ref, Map<Item, SortCategory> cache) {
+            families.clear();
+            occupied = 0;
+            IItemHandler inventory = ref.handler();
+            for (int slot = 0; slot < inventory.getSlots(); slot++) {
+                ItemStack stack = inventory.getStackInSlot(slot);
+                if (stack.isEmpty()) continue;
+                occupied++;
+                SortCategory category = cache.computeIfAbsent(
+                        stack.getItem(), item -> ItemCategoryResolver.resolve(stack));
+                String family = StrictStackClassifier.family(stack, category);
+                families.merge(family, 1, Integer::sum);
+            }
         }
 
-        boolean mixed() {
-            return StrictChestAdmission.mixed(strictVotes, occupied);
+        boolean mixed() { return families.size() > 1; }
+        boolean pure(String family) {
+            return occupied > 0 && families.getOrDefault(family, 0) == occupied;
+        }
+        boolean empty() { return occupied == 0; }
+
+        String majority() {
+            return families.entrySet().stream()
+                    .sorted(Comparator
+                            .comparingInt((Map.Entry<String, Integer> e) -> e.getValue())
+                            .reversed()
+                            .thenComparing(e -> "misc".equals(e.getKey()) ? 1 : 0)
+                            .thenComparing(Map.Entry::getKey))
+                    .map(Map.Entry::getKey).findFirst().orElse("");
+        }
+
+        boolean canAccept(String family, String claim) {
+            if (family == null || "locked".equals(family)) return false;
+            return StrictChestAdmission.canReceive(
+                    family, families, occupied, claim);
+        }
+
+        Map<String, Integer> frozenVotes() {
+            return Map.copyOf(families);
         }
     }
 
     public static final class Session {
         private final List<ContainerRef> containers;
-        private final List<Profile> profiles;
-        private final WarehouseLayout layout;
-        private final WarehouseColumns columns;
+        private final List<ChestState> states;
+        private final WarehouseFamilyPlan plan;
         private final Map<Item, SortCategory> itemCategoryCache = new IdentityHashMap<>();
         private final Map<String, List<Integer>> candidateOrder = new HashMap<>();
-        private final Map<String, Boolean> anchoredFamilyCache = new HashMap<>();
-        private final Map<Integer, String> claimed = new HashMap<>();
+        private final Map<Integer, String> reservations = new HashMap<>();
+        private final List<String> keepAtSource = new ArrayList<>();
 
-        private int sourceIndex = 0;
-        private int slotIndex = 0;
-        private int pass = 0;
-        private int passMoved = 0;
-        private int totalItems = 0;
-        private int operations = 0;
-        private boolean done = false;
+        private int sourceIndex;
+        private int slotIndex;
+        private int pass;
+        private int movedThisPass;
+        private int movedItems;
+        private int operations;
+        // Carry the inner candidate-loop cursor over to the next server
+        // tick, instead of searching up to 384 modded inventories in one tick.
+        private int pendingSource = -1;
+        private int pendingSlot = -1;
+        private int pendingCandidate;
+        private boolean done;
 
         public Session(List<ContainerRef> all) {
             containers = List.copyOf(all);
-            profiles = new ArrayList<>(containers.size());
-            List<WarehouseLayout.Node> nodes = new ArrayList<>(containers.size());
-
-            // Build the semantic snapshot exactly once per user activation.
+            states = new ArrayList<>(containers.size());
+            List<WarehouseFamilyPlan.Node> nodes = new ArrayList<>(containers.size());
             for (ContainerRef ref : containers) {
-                Profile profile = profile(ref, itemCategoryCache);
-                profiles.add(profile);
+                ChestState state = new ChestState();
+                state.refresh(ref, itemCategoryCache);
+                states.add(state);
+                keepAtSource.add(state.majority());
                 BlockPos p = ref.pos();
-                nodes.add(new WarehouseLayout.Node(
-                        p.getX(), p.getY(), p.getZ(),
-                        profile.occupied(), profile.coarseVotes()));
+                nodes.add(new WarehouseFamilyPlan.Node(
+                        p.getX(), p.getY(), p.getZ(), state.frozenVotes()));
             }
-            layout = WarehouseLayout.analyze(nodes, false);
-            columns = WarehouseColumns.analyze(nodes.stream()
-                    .map(n -> new WarehouseColumns.Node(
-                            n.x(), n.y(), n.z(), n.occupied(), n.labels()))
-                    .toList());
+            plan = WarehouseFamilyPlan.analyze(nodes);
         }
 
         public boolean isDone() { return done; }
-        public int movedItems() { return totalItems; }
+        public int movedItems() { return movedItems; }
         public int movedOperations() { return operations; }
         public int examinedPasses() { return pass + 1; }
 
-        /**
-         * Run at most maxSlots visited and maxNanos per server tick. The task
-         * continues automatically on subsequent ticks; no more RMB clicks.
-         */
+        /** Small, bounded main-thread slice; work automatically continues
+         * on the next server tick, without any additional wand clicks. */
         public boolean step(ServerLevel level, MoveListener listener,
                             int maxSlots, long maxNanos) {
             if (done) return true;
             long deadline = System.nanoTime() + maxNanos;
-            int inspected = 0;
+            int checkedSlots = 0;
 
-            while (inspected < maxSlots && System.nanoTime() < deadline && !done) {
+            while (checkedSlots < maxSlots && System.nanoTime() < deadline && !done) {
                 if (operations >= MAX_OPERATIONS) {
                     done = true;
                     break;
                 }
+
                 if (sourceIndex >= containers.size()) {
                     pass++;
-                    if (pass >= MAX_PASSES || passMoved == 0) {
+                    if (pass >= MAX_PASSES || movedThisPass == 0) {
                         done = true;
                         break;
                     }
+                    movedThisPass = 0;
                     sourceIndex = 0;
                     slotIndex = 0;
-                    passMoved = 0;
                     continue;
                 }
 
@@ -128,113 +162,102 @@ public final class WarehouseReorganizer {
                     slotIndex = 0;
                     continue;
                 }
-
                 int activeSlot = slotIndex++;
-                inspected++;
+                checkedSlots++;
+                if (activeSlot == 0) {
+                    // A player or other automation may have modified this
+                    // chest between server ticks; never trust stale contents.
+                    states.get(sourceIndex).refresh(source, itemCategoryCache);
+                }
+
                 ItemStack stack = handler.getStackInSlot(activeSlot);
                 if (stack.isEmpty()) continue;
-
                 SortCategory category = itemCategoryCache.computeIfAbsent(
-                        stack.getItem(), ignored -> ItemCategoryResolver.resolve(stack));
+                        stack.getItem(), item -> ItemCategoryResolver.resolve(stack));
                 if (!category.moveAllowed()) continue;
-                String broadFamily = WarehouseLayout.family(category.id());
-                String family = strictFamily(stack, category);
+
+                String family = StrictStackClassifier.family(stack, category);
                 if ("locked".equals(family)) continue;
+                ChestState sourceState = states.get(sourceIndex);
 
-                int current = sourceIndex;
-                if (layout.axis(current) == WarehouseLayout.Axis.NONE) continue;
-                Profile sourceProfile = profiles.get(current);
-                if (family.equals(claimed.get(current))) continue;
-                String sourceRole = columns.role(current);
-                // A pure chest is stable UNLESS it resides inside an
-                // established, incompatible category column (e.g. a lone
-                // stick chest in the finished-metal aisle).
-                boolean wrongColumn = !sourceRole.isEmpty()
-                        && !sourceRole.equals(broadFamily);
-                if (sourceProfile.belongsTo(family) && !wrongColumn) continue;
+                boolean mixedSource = sourceState.mixed();
+                boolean relocatingOutlyingMajority = mixedSource
+                        && family.equals(keepAtSource.get(sourceIndex))
+                        && !plan.atHome(sourceIndex, family);
+                if (!WarehouseConsolidationDecision.shouldRelocate(
+                        plan, sourceIndex, family, mixedSource,
+                        keepAtSource.get(sourceIndex))) continue;
 
-                double sourceFit = layout.preference(current, category.id());
-                String sourceClaim = claimed.getOrDefault(current, "");
-                int region = columns.region(current);
-                String grouping = region + ":" + family;
-                boolean hasHome = anchoredFamilyCache.computeIfAbsent(grouping,
-                        ignored -> columns.hasEstablishedColumn(current, category.id()));
+                String pool = plan.region(sourceIndex) + ":" + family;
+                List<Integer> choices = candidateOrder.computeIfAbsent(
+                        pool, ignored -> candidateIndices(sourceIndex, family));
+                int startAt = pendingSource == sourceIndex && pendingSlot == activeSlot
+                        ? pendingCandidate : 0;
 
-                for (int targetIndex : sortedCandidates(grouping, current, category.id(), family)) {
-                    if (targetIndex == current || !columns.sameRegion(current, targetIndex)) continue;
+                for (int choiceIndex = startAt;
+                        choiceIndex < choices.size()
+                            && choiceIndex < MAX_TARGETS_PER_STACK; choiceIndex++) {
+                    if (System.nanoTime() >= deadline) {
+                        // Keep the source slot/candidate intact. The next
+                        // server tick continues from exactly this target,
+                        // with no repeated failed inventory scans.
+                        pendingSource = sourceIndex;
+                        pendingSlot = activeSlot;
+                        pendingCandidate = choiceIndex;
+                        slotIndex = activeSlot;
+                        return false;
+                    }
+
+                    int targetIndex = choices.get(choiceIndex);
+                    // Keep a predominantly ore chest in an outlying column
+                    // until it can move DIRECTLY to the canonical ore cluster.
+                    // Do not relocate the majority to yet another outlying
+                    // empty chest just because the preferred area is full.
+                    if (relocatingOutlyingMajority
+                            && !plan.atHome(targetIndex, family)) continue;
+                    if (targetIndex == sourceIndex) continue;
                     ContainerRef target = containers.get(targetIndex);
                     if (!valid(level, target)) continue;
 
-                    Profile targetProfile = profiles.get(targetIndex);
-                    String targetRole = columns.role(targetIndex);
-                    String targetClaim = claimed.getOrDefault(targetIndex, "");
-                    // Hard semantic gate. The 0.9.10 rule accepted a chest
-                    // with 74% metals + 26% unrelated items as a metal home.
-                    // Now any incompatible occupied slot rejects insertion.
-                    if (!targetProfile.belongsTo(family) && targetProfile.occupied() > 0) continue;
-                    if (!targetClaim.isEmpty() && !family.equals(targetClaim)) continue;
-                    if (!targetRole.isEmpty() && !targetRole.equals(broadFamily)) continue;
-
-                    boolean correctColumnExists = hasHome && !"misc".equals(broadFamily);
-                    if (correctColumnExists && !columns.matches(targetIndex, category.id())) {
-                        continue;
-                    }
-
-                    // When the source chest is mixed, moving the misplaced
-                    // item into a pure matching or empty unclaimed container
-                    // is an improvement regardless of a broad Y-level score.
-                    // The destination then gets a permanent strict claim for
-                    // this sorting session. This also handles unknown sticks
-                    // and water bottles without pretending they are ingots.
-                    boolean belongs = targetProfile.belongsTo(family)
-                            || family.equals(targetClaim);
-                    boolean needsEvacuation = sourceProfile.mixed() || wrongColumn;
-                    boolean allowed = needsEvacuation
-                            && (targetProfile.occupied() == 0 || belongs)
-                            && (!correctColumnExists || belongs || columns.matches(targetIndex, category.id()));
-                    if (!allowed && !"misc".equals(broadFamily)) {
-                        allowed = WarehouseRoutingRules.mayMove(
-                                broadFamily, sourceRole, sourceClaim, targetRole,
-                                targetClaim.isEmpty() ? "" : broadFamily,
-                                correctColumnExists, sourceFit,
-                                layout.preference(targetIndex, category.id()),
-                                targetProfile.occupied(), belongs);
-                    }
-                    if (!allowed) continue;
+                    ChestState targetState = states.get(targetIndex);
+                    // Be safe if another player added a foreign item while a
+                    // multi-tick sort was working through the warehouse.
+                    targetState.refresh(target, itemCategoryCache);
+                    if (!WarehouseConsolidationDecision.eligibleTarget(
+                            plan, sourceIndex, targetIndex, family, mixedSource,
+                            targetState.pure(family), targetState.empty())) continue;
+                    String claim = reservations.getOrDefault(targetIndex, "");
+                    if (!targetState.canAccept(family, claim)) continue;
 
                     int moved = InventoryMover.moveSlotToTargets(
                             source, activeSlot, List.of(target), listener);
                     if (moved <= 0) continue;
 
-                    claimed.put(targetIndex, family);
-                    totalItems += moved;
-                    passMoved += moved;
+                    sourceState.refresh(source, itemCategoryCache);
+                    targetState.refresh(target, itemCategoryCache);
+                    reservations.put(targetIndex, family);
+                    movedItems += moved;
+                    movedThisPass += moved;
                     operations++;
-                    // A source slot can be partially extracted by TFC capacity.
-                    // Never send a subsequent part to a different category home.
                     if (handler.getStackInSlot(activeSlot).isEmpty()) break;
                 }
+                pendingSource = -1;
+                pendingSlot = -1;
+                pendingCandidate = 0;
             }
             return done;
         }
 
-        private List<Integer> sortedCandidates(String grouping, int source,
-                                               String category, String family) {
-            return candidateOrder.computeIfAbsent(grouping, key -> {
-                List<Integer> result = new ArrayList<>();
-                for (int i = 0; i < containers.size(); i++) {
-                    if (columns.sameRegion(source, i)) result.add(i);
-                }
-                result.sort(Comparator
-                        .comparingDouble((Integer idx) ->
-                                (profiles.get(idx).belongsTo(family) ? 250D : 0D)
-                                + (columns.matches(idx, category) ? 100D : 0D)
-                                + 10D * layout.preference(idx, category)).reversed()
-                        .thenComparing(Comparator.comparingInt(
-                                (Integer idx) -> profiles.get(idx).occupied()).reversed())
-                        .thenComparingLong(idx -> containers.get(idx).pos().asLong()));
-                return List.copyOf(result);
-            });
+        private List<Integer> candidateIndices(int source, String family) {
+            List<Integer> result = plan.indicesInRegion(source);
+            result.sort(Comparator
+                    .comparingInt((Integer i) ->
+                            plan.priority(i, family, states.get(i).pure(family))).reversed()
+                    .thenComparing(Comparator
+                            .comparingInt((Integer i) -> states.get(i).pure(family) ? 1 : 0)
+                            .reversed())
+                    .thenComparingLong(i -> containers.get(i).pos().asLong()));
+            return List.copyOf(result);
         }
 
         private static boolean valid(ServerLevel level, ContainerRef ref) {
@@ -247,40 +270,12 @@ public final class WarehouseReorganizer {
         return new Session(containers);
     }
 
-    /**
-     * Compatibility entrypoint for older callsites. The primary server path
-     * uses Session.step over ticks via WarehouseSortSessions.
-     */
+    /** Legacy compatibility for older callsites. New normal Smart Categories
+     * runs Session over server ticks through WarehouseSortSessions. */
     public static Result organize(List<ContainerRef> containers, MoveListener listener) {
         if (containers.isEmpty()) return new Result(0, 0);
         Session session = begin(containers);
-        // Never busy-wait on the main thread: a legacy direct call gets a
-        // single bounded slice. No follow-up tick state is retained here.
-        session.step(containers.get(0).level(), listener, 192, 4_000_000L);
+        session.step(containers.get(0).level(), listener, 120, 4_000_000L);
         return new Result(session.movedItems(), session.movedOperations());
-    }
-
-    private static String strictFamily(ItemStack stack, SortCategory category) {
-        return StrictStackClassifier.family(stack, category);
-    }
-
-    private static Profile profile(ContainerRef ref, Map<Item, SortCategory> cache) {
-        Map<String, Integer> strict = new HashMap<>();
-        Map<String, Integer> coarse = new HashMap<>();
-        int occupied = 0;
-        IItemHandler handler = ref.handler();
-        for (int slot = 0; slot < handler.getSlots(); slot++) {
-            ItemStack stack = handler.getStackInSlot(slot);
-            if (stack.isEmpty()) continue;
-            occupied++;
-            SortCategory category = cache.computeIfAbsent(stack.getItem(),
-                    ignored -> ItemCategoryResolver.resolve(stack));
-            String family = strictFamily(stack, category);
-            strict.merge(family, 1, Integer::sum);
-            String broad = category.moveAllowed()
-                    ? WarehouseLayout.family(category.id()) : "misc";
-            coarse.merge(broad, 1, Integer::sum);
-        }
-        return new Profile(occupied, Map.copyOf(strict), Map.copyOf(coarse));
     }
 }
