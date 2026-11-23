@@ -22,7 +22,7 @@ public record SortingWandSettings(
 
     public static SortingWandSettings defaults() {
         return new SortingWandSettings(
-                SortingMode.MATCH_EXISTING,
+                SortingMode.SMART_CATEGORIES,
                 SorterSettings.SORT_RADIUS_BLOCKS,
                 true,
                 true,
