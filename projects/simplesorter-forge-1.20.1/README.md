@@ -1,4 +1,4 @@
-# Simple Sorter 0.9.9 (Forge 1.20.1)
+# Simple Sorter 0.9.10 (Forge 1.20.1)
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
@@ -114,7 +114,7 @@ gradle --no-daemon clean build
 ```
 
 Java: 17. Gradle: 8.14.3. Expected output:
-`build/libs/simplesorter-0.9.9-forge.jar`.
+`build/libs/simplesorter-0.9.10-forge.jar`.
 
 Our GitHub **Minecraft Mod Build Hub** CI performs the authoritative Forge
 compilation and JAR verification. A successful Gradle build is not equivalent
@@ -472,3 +472,50 @@ letter-front rotations, tests sorting invariants and recipes, verifies
 packaged resources and boots a dedicated Minecraft server. These are
 automated tests; graphical FPS and shader compatibility require
 in-game TerraFirmaGreg QA.
+
+## 0.9.10: original-style readable chest text, 10-block-only decals and real local item icons
+
+Reworks the old bulky 0.9.5 floating text into a smaller fixed-surface label,
+without camera-facing billboard rotation. Captions use the original-style
+Minecraft Font renderer (depth-tested NORMAL mode), with world-aligned
+NORTH/SOUTH/EAST/WEST planar orientations. A label may occupy any EXPOSED
+block face that the player can approach. These are static physical planes,
+never quaternions based on the camera direction. No text/entity spawning.
+
+**Text restored on protruding TerraFirmaCraft chests:** The v0.9.7–0.9.9
+caption was placed almost flush (typically only 0.526 blocks from the chest
+center) and occluded by crate model geometry, while a more distant 3D icon
+remained visible. This version moves the text to a safe 0.702 blocks from
+the TFC block center, with a smaller 0.015 scale versus the original 0.020
+floating label, and shrinks long names to fit the chest width.
+
+**Hard distance cutoff:** Text and icons appear only when within strictly
+LESS THAN 10 blocks of the camera. At 10 blocks and beyond, they disappear.
+Only the closest 3x3 chunk region is searched. Max 36 world-space text decals
+and 12 item models in one frame. No always-on server scanning.
+
+**No text through walls:** Every candidate must be on an exposed physical
+chest surface, facing the viewer. A per-label client collision ray from the
+camera to the caption location must not hit a different block first.
+Normal font depth rendering remains enabled. This also prevents erroneous
+rendering of captions through rows of crates and solid building walls.
+
+**Real content icons:** Icon selection is now PER CONTAINER, not shared
+across the whole warehouse family. A bone-meal icon can never be copied to
+another chest that lacks bone meal simply because both use a "botanical"
+category label. A chest with no matching representative item gets TEXT
+ONLY until a real item of that family is stored inside. The shared category
+caption is allowed for an empty crate inheriting a clearly seeded column.
+
+The fixed protocol and saved metadata retain normal 0.9.9 compatibility;
+the client and server should both be updated so server-side icon selection
+matches the new renderer. Existing labels refresh on the next sort and
+re-sync on normal login. No changes to 0.9.8+ smart-sort routing,
+one-click tick-sliced organization, recipes, item transfer rules or 64-block
+sorting radius.
+
+CI tests enforce 10-block cutoff, short/long name scaling, geometry and
+all previous category safety checks. Dedicated Forge server smoke-tests
+verify startup but cannot replace actual graphical tests with TerraFirmaGreg
+or Oculus/Iris-compatible shader packs. This is a test version, not a
+claim of measured client FPS.
