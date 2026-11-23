@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/collector_bottom_open",
+  "textures": {
+    "wood": "tfc:block/wood/planks/white_cedar",
+    "particle": "#wood"
+  }
+}

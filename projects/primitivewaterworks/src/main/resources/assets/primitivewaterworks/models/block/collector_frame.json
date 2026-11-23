@@ -8,38 +8,6 @@
     {
       "from": [
         2,
-        1,
-        2
-      ],
-      "to": [
-        14,
-        3,
-        14
-      ],
-      "faces": {
-        "north": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "down": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "from": [
-        2,
         3,
         2
       ],

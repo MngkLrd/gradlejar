@@ -108,6 +108,22 @@
       "apply": {
         "model": "primitivewaterworks:block/collector_water_4"
       }
+    },
+    {
+      "when": {
+        "bottom": "false"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_bottom_closed_kapok"
+      }
+    },
+    {
+      "when": {
+        "bottom": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_bottom_open_kapok"
+      }
     }
   ]
 }

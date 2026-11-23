@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/collector_bottom_open",
+  "textures": {
+    "wood": "afc:block/wood/planks/ipe",
+    "particle": "#wood"
+  }
+}

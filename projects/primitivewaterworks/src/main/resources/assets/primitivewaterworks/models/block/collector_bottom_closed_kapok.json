@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/collector_bottom_closed",
+  "textures": {
+    "wood": "tfc:block/wood/planks/kapok",
+    "particle": "#wood"
+  }
+}
