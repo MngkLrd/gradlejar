@@ -26,7 +26,7 @@ public final class ContainerScanner {
 
     public static List<ContainerRef> scanRadius(ServerLevel level, Player player,
                                                 BlockPos center, int radius) {
-        int safe = Math.max(1, Math.min(radius, 32));
+        int safe = Math.max(1, Math.min(radius, 64));
         return scanBoxInRadius(level, player, center.offset(-safe, -safe, -safe),
                 center.offset(safe, safe, safe), center, safe);
     }
@@ -54,7 +54,7 @@ public final class ContainerScanner {
         Set<BlockPos> visited = new HashSet<>();
 
         for (BlockPos pos : candidates) {
-            if (result.size() >= 160) break;
+            if (result.size() >= 384) break;
             if (visited.contains(pos)) continue;
             BlockEntity be = level.getBlockEntity(pos);
             if (be == null) continue;
