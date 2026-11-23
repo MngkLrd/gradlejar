@@ -135,7 +135,7 @@ public final class SortCategoryRegistry {
                 .group("equipment")
                 .priority(830)
                 .classHints(ClassHint.TOOL)
-                .idContains("pickaxe", "axe", "shovel", "hoe", "hammer", "wrench", "saw", "knife", "tool")
+                .idContains("pickaxe", "axe", "shovel", "hoe", "hammer", "wrench", "saw", "knife", "tool", "chisel", "mortar", "pestle", "prospector", "sickle", "scythe")
                 .build());
 
         categories.add(SortCategory.builder("potions")
