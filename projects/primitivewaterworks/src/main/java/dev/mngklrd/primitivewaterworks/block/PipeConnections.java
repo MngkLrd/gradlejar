@@ -33,7 +33,8 @@ public final class PipeConnections {
         return be.getCapability(ForgeCapabilities.FLUID_HANDLER,side).isPresent();
     }
     public static boolean sourceOutput(BlockState source,Direction direction) {
-        return direction==Direction.DOWN || RainCollectorBlock.hasOutlet(source,direction);
+        return direction==Direction.DOWN ? source.getValue(RainCollectorBlock.BOTTOM)
+            : RainCollectorBlock.hasOutlet(source,direction);
     }
     public static boolean conduitOutput(BlockGetter level,BlockPos pos,BlockState current,Direction direction) {
         if(direction==Direction.UP)return false;

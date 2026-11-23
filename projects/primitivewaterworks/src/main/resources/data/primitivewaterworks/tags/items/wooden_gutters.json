@@ -1,0 +1,65 @@
+{
+  "replace": false,
+  "values": [
+    "primitivewaterworks:wooden_gutter_acacia",
+    "primitivewaterworks:wooden_gutter_ash",
+    "primitivewaterworks:wooden_gutter_aspen",
+    "primitivewaterworks:wooden_gutter_birch",
+    "primitivewaterworks:wooden_gutter_blackwood",
+    "primitivewaterworks:wooden_gutter_chestnut",
+    "primitivewaterworks:wooden_gutter_douglas_fir",
+    "primitivewaterworks:wooden_gutter_hickory",
+    "primitivewaterworks:wooden_gutter_kapok",
+    "primitivewaterworks:wooden_gutter_mangrove",
+    "primitivewaterworks:wooden_gutter_maple",
+    "primitivewaterworks:wooden_gutter",
+    "primitivewaterworks:wooden_gutter_palm",
+    "primitivewaterworks:wooden_gutter_pine",
+    "primitivewaterworks:wooden_gutter_rosewood",
+    "primitivewaterworks:wooden_gutter_sequoia",
+    "primitivewaterworks:wooden_gutter_spruce",
+    "primitivewaterworks:wooden_gutter_sycamore",
+    "primitivewaterworks:wooden_gutter_white_cedar",
+    "primitivewaterworks:wooden_gutter_willow",
+    {
+      "id": "primitivewaterworks:wooden_gutter_afc_baobab",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_gutter_afc_cypress",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_gutter_afc_eucalyptus",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_gutter_afc_fig",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_gutter_afc_hevea",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_gutter_afc_ipe",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_gutter_afc_ironwood",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_gutter_afc_mahogany",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_gutter_afc_teak",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_gutter_afc_tualang",
+      "required": false
+    }
+  ]
+}

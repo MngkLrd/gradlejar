@@ -1,0 +1,65 @@
+{
+  "replace": false,
+  "values": [
+    "primitivewaterworks:rain_collector_acacia",
+    "primitivewaterworks:rain_collector_ash",
+    "primitivewaterworks:rain_collector_aspen",
+    "primitivewaterworks:rain_collector_birch",
+    "primitivewaterworks:rain_collector_blackwood",
+    "primitivewaterworks:rain_collector_chestnut",
+    "primitivewaterworks:rain_collector_douglas_fir",
+    "primitivewaterworks:rain_collector_hickory",
+    "primitivewaterworks:rain_collector_kapok",
+    "primitivewaterworks:rain_collector_mangrove",
+    "primitivewaterworks:rain_collector_maple",
+    "primitivewaterworks:rain_collector",
+    "primitivewaterworks:rain_collector_palm",
+    "primitivewaterworks:rain_collector_pine",
+    "primitivewaterworks:rain_collector_rosewood",
+    "primitivewaterworks:rain_collector_sequoia",
+    "primitivewaterworks:rain_collector_spruce",
+    "primitivewaterworks:rain_collector_sycamore",
+    "primitivewaterworks:rain_collector_white_cedar",
+    "primitivewaterworks:rain_collector_willow",
+    {
+      "id": "primitivewaterworks:rain_collector_afc_baobab",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:rain_collector_afc_cypress",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:rain_collector_afc_eucalyptus",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:rain_collector_afc_fig",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:rain_collector_afc_hevea",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:rain_collector_afc_ipe",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:rain_collector_afc_ironwood",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:rain_collector_afc_mahogany",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:rain_collector_afc_teak",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:rain_collector_afc_tualang",
+      "required": false
+    }
+  ]
+}

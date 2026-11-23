@@ -11,9 +11,9 @@
   "block.primitivewaterworks.rain_collector_birch": "Деревянный дождесборник (берёза)",
   "block.primitivewaterworks.wooden_gutter_birch": "Деревянный желоб (берёза)",
   "block.primitivewaterworks.wooden_downspout_birch": "Деревянный водосток (берёза)",
-  "block.primitivewaterworks.rain_collector_blackwood": "Деревянный дождесборник (чёрное дерево)",
-  "block.primitivewaterworks.wooden_gutter_blackwood": "Деревянный желоб (чёрное дерево)",
-  "block.primitivewaterworks.wooden_downspout_blackwood": "Деревянный водосток (чёрное дерево)",
+  "block.primitivewaterworks.rain_collector_blackwood": "Деревянный дождесборник (гренадил)",
+  "block.primitivewaterworks.wooden_gutter_blackwood": "Деревянный желоб (гренадил)",
+  "block.primitivewaterworks.wooden_downspout_blackwood": "Деревянный водосток (гренадил)",
   "block.primitivewaterworks.rain_collector_chestnut": "Деревянный дождесборник (каштан)",
   "block.primitivewaterworks.wooden_gutter_chestnut": "Деревянный желоб (каштан)",
   "block.primitivewaterworks.wooden_downspout_chestnut": "Деревянный водосток (каштан)",
@@ -91,5 +91,8 @@
   "block.primitivewaterworks.wooden_downspout_afc_tualang": "Деревянный водосток (туаланг)",
   "message.primitivewaterworks.stored": "В баке: %s мБ | Собрано: %s мБ | Передано: %s мБ",
   "message.primitivewaterworks.opened": "Вырезан выход: %s",
-  "message.primitivewaterworks.closed": "Выход закрыт: %s"
+  "message.primitivewaterworks.closed": "Выход закрыт: %s",
+  "group.primitivewaterworks.rain_collectors": "Дождесборники",
+  "group.primitivewaterworks.wooden_gutters": "Деревянные желоба",
+  "group.primitivewaterworks.wooden_downspouts": "Деревянные водостоки"
 }

@@ -22,3 +22,9 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     options.release = 17
 }
+
+repositories { maven { url = "https://maven.architectury.dev" } }
+dependencies {
+    compileOnly "me.shedaniel:RoughlyEnoughItems-api-forge:12.1.785"
+    compileOnly "me.shedaniel:RoughlyEnoughItems-forge:12.1.785"
+}

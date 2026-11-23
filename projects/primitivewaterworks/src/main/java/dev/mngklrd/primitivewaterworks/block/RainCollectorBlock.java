@@ -36,6 +36,7 @@ public final class RainCollectorBlock extends BaseEntityBlock {
     public static final BooleanProperty SOUTH = BooleanProperty.create("south");
     public static final BooleanProperty EAST = BooleanProperty.create("east");
     public static final BooleanProperty WEST = BooleanProperty.create("west");
+    public static final BooleanProperty BOTTOM = BooleanProperty.create("bottom");
     public static final IntegerProperty WATER_LEVEL = IntegerProperty.create("water_level", 0, 4);
     public static final TagKey<Item> KNIVES = TagKey.create(Registries.ITEM, new ResourceLocation("tfc", "knives"));
     private static final VoxelShape SHAPE = box(1, 1, 1, 15, 13, 15);
@@ -44,10 +45,10 @@ public final class RainCollectorBlock extends BaseEntityBlock {
         super(properties);
         registerDefaultState(stateDefinition.any()
             .setValue(NORTH, false).setValue(SOUTH, false).setValue(EAST, false)
-            .setValue(WEST, false).setValue(WATER_LEVEL, 0));
+            .setValue(WEST, false).setValue(BOTTOM, false).setValue(WATER_LEVEL, 0));
     }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
-        builder.add(NORTH, SOUTH, EAST, WEST, WATER_LEVEL);
+        builder.add(NORTH, SOUTH, EAST, WEST, BOTTOM, WATER_LEVEL);
     }
     public static BooleanProperty side(Direction direction) {
         return switch (direction) {
@@ -78,7 +79,8 @@ public final class RainCollectorBlock extends BaseEntityBlock {
     @Override public InteractionResult use(BlockState state, Level level, BlockPos pos,
             Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack held = player.getItemInHand(hand);
-        BooleanProperty chosenSide = side(hit.getDirection());
+        boolean carveBottom = hit.getDirection() == Direction.DOWN || player.isShiftKeyDown();
+        BooleanProperty chosenSide = carveBottom ? BOTTOM : side(hit.getDirection());
         if (chosenSide != null && held.is(KNIVES)) {
             if (!level.isClientSide) {
                 boolean opened = !state.getValue(chosenSide);
@@ -87,7 +89,7 @@ public final class RainCollectorBlock extends BaseEntityBlock {
                     held.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
                 player.displayClientMessage(Component.translatable(
                     opened ? "message.primitivewaterworks.opened" : "message.primitivewaterworks.closed",
-                    hit.getDirection().getName()), true);
+                    carveBottom ? "bottom" : hit.getDirection().getName()), true);
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
         }

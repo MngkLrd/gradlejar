@@ -3,7 +3,7 @@ loaderVersion="[47,)"
 license="MIT"
 [[mods]]
 modId="primitivewaterworks"
-version="0.3.1"
+version="0.3.2"
 displayName="Primitive Waterworks"
 authors="MngkLrd"
 description='''A wooden rainwater collection and gravity flow system for TFC with native wood species and knife-carved outlets.'''

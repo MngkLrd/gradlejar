@@ -91,5 +91,8 @@
   "block.primitivewaterworks.wooden_downspout_afc_tualang": "Wooden Downspout (Tualang)",
   "message.primitivewaterworks.stored": "Tank: %s mB | Collected: %s mB | Delivered: %s mB",
   "message.primitivewaterworks.opened": "Carved outlet: %s",
-  "message.primitivewaterworks.closed": "Closed outlet: %s"
+  "message.primitivewaterworks.closed": "Closed outlet: %s",
+  "group.primitivewaterworks.rain_collectors": "Rain Collectors",
+  "group.primitivewaterworks.wooden_gutters": "Wooden Gutters",
+  "group.primitivewaterworks.wooden_downspouts": "Wooden Downspouts"
 }

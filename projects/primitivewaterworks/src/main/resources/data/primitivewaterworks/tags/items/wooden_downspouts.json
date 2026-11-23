@@ -1,0 +1,65 @@
+{
+  "replace": false,
+  "values": [
+    "primitivewaterworks:wooden_downspout_acacia",
+    "primitivewaterworks:wooden_downspout_ash",
+    "primitivewaterworks:wooden_downspout_aspen",
+    "primitivewaterworks:wooden_downspout_birch",
+    "primitivewaterworks:wooden_downspout_blackwood",
+    "primitivewaterworks:wooden_downspout_chestnut",
+    "primitivewaterworks:wooden_downspout_douglas_fir",
+    "primitivewaterworks:wooden_downspout_hickory",
+    "primitivewaterworks:wooden_downspout_kapok",
+    "primitivewaterworks:wooden_downspout_mangrove",
+    "primitivewaterworks:wooden_downspout_maple",
+    "primitivewaterworks:wooden_downspout",
+    "primitivewaterworks:wooden_downspout_palm",
+    "primitivewaterworks:wooden_downspout_pine",
+    "primitivewaterworks:wooden_downspout_rosewood",
+    "primitivewaterworks:wooden_downspout_sequoia",
+    "primitivewaterworks:wooden_downspout_spruce",
+    "primitivewaterworks:wooden_downspout_sycamore",
+    "primitivewaterworks:wooden_downspout_white_cedar",
+    "primitivewaterworks:wooden_downspout_willow",
+    {
+      "id": "primitivewaterworks:wooden_downspout_afc_baobab",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_downspout_afc_cypress",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_downspout_afc_eucalyptus",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_downspout_afc_fig",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_downspout_afc_hevea",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_downspout_afc_ipe",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_downspout_afc_ironwood",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_downspout_afc_mahogany",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_downspout_afc_teak",
+      "required": false
+    },
+    {
+      "id": "primitivewaterworks:wooden_downspout_afc_tualang",
+      "required": false
+    }
+  ]
+}

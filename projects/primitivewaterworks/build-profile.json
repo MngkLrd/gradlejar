@@ -1,9 +1,9 @@
 {
   "slug": "primitivewaterworks",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "minecraft": "1.20.1",
   "loader": "forge",
   "java": "17",
   "gradle": "8.14.3",
-  "jar_glob": "primitivewaterworks-0.3.1.jar"
+  "jar_glob": "primitivewaterworks-0.3.2.jar"
 }
