@@ -36,6 +36,18 @@ public final class SortingManager {
             return new SortingResult(0, 0, 0, 0, 0, safe.radius(), safe.mode().id());
         }
 
+        // Auto-Organize is a single server-tick session, not the old 9ms
+        // partial sort repeated by every RMB click. The session sends its
+        // completion status and only then packs stacks / updates labels.
+        if (safe.autoOrganize()
+                && safe.mode() == com.kirill.simplesorter.settings.SortingMode.SMART_CATEGORIES
+                && player instanceof ServerPlayer serverPlayer
+                && !wand.isEmpty()) {
+            WarehouseSortSessions.start(level, serverPlayer, containers, wand, safe);
+            return new SortingResult(containers.size(), 0, 0,
+                    0, 0, safe.radius(), safe.mode().id());
+        }
+
         SortingResult result = switch (safe.mode()) {
             case SMART_CATEGORIES, COMPACT_STACKS ->
                     SmartCategorySorter.sort(level, containers, safe.radius(),
