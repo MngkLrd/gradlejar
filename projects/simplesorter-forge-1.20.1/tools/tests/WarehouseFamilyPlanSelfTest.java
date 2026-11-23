@@ -68,6 +68,9 @@ public final class WarehouseFamilyPlanSelfTest {
         check(!WarehouseConsolidationDecision.eligibleTarget(
                         plan, sixthOre, 8, "raw_ores", false, false, false),
                 "Unrelated tool chest cannot receive ores");
+        check(WarehouseConsolidationDecision.shouldRelocate(
+                        plan, sixthOre, "raw_ores", true, "raw_ores"),
+                "Majority ores in a mixed sixth-column chest should still consolidate");
         check(!WarehouseConsolidationDecision.shouldRelocate(
                         plan, freeThirdFirst, "raw_ores", false, "raw_ores"),
                 "First-column ore chest remains stable: no ping-pong");
