@@ -320,7 +320,12 @@ jobs:
             tail -n 180 "$logfile"
             exit 1
           fi
-          echo 'Simple Sorter dedicated server boot verified.'
+          if ! grep -q 'Sorting Wand crafting recipes registered: coal=true, charcoal=true' "$logfile"; then
+            echo 'Sorting Wand recipes did not register in the Forge RecipeManager.'
+            grep -E 'SimpleSorter/Recipes|Sorting Wand crafting' "$logfile" || true
+            exit 1
+          fi
+          echo 'Simple Sorter dedicated server boot and active recipe registry verified.'
       - name: Smoke-test MIDNIGHT dedicated server and custom biome generation
         if: matrix.project_dir == 'projects/midnighteve'
         env:
