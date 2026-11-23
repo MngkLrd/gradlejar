@@ -11,6 +11,8 @@ import net.minecraft.world.level.saveddata.SavedData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +21,7 @@ public final class WarehouseLabelData extends SavedData {
     private static final String NAME = "simplesorter_warehouse_labels";
     private static final int MAX_TOTAL = 8192;
     private final Map<Long, Label> entries = new HashMap<>();
+    private final Map<Long, Set<Long>> labelsByChunk = new HashMap<>();
 
     public record Label(BlockPos pos, int style, String family,
                         ItemStack icon, ItemStack material) {}
@@ -39,8 +42,9 @@ public final class WarehouseLabelData extends SavedData {
             if (style < 1 || style > 2 || family.length() > 48) continue;
             ItemStack icon = ItemStack.of(tag.getCompound("icon"));
             ItemStack material = ItemStack.of(tag.getCompound("material"));
-            data.entries.put(pos.asLong(), new Label(pos, style, family,
-                    icon.copyWithCount(1), material.copyWithCount(1)));
+            Label label = new Label(pos, style, family, icon.copyWithCount(1), material.copyWithCount(1));
+            data.entries.put(pos.asLong(), label);
+            data.labelsByChunk.computeIfAbsent(chunkKey(pos), k -> new HashSet<>()).add(pos.asLong());
         }
         return data;
     }
@@ -74,23 +78,35 @@ public final class WarehouseLabelData extends SavedData {
             return false;
         }
         entries.put(label.pos().asLong(), label);
+        labelsByChunk.computeIfAbsent(chunkKey(label.pos()), ignored -> new HashSet<>())
+                .add(label.pos().asLong());
         setDirty();
         return true;
     }
 
     public Label remove(BlockPos pos) {
         Label removed = entries.remove(pos.asLong());
-        if (removed != null) setDirty();
+        if (removed != null) {
+            Set<Long> chunk = labelsByChunk.get(chunkKey(pos));
+            if (chunk != null) {
+                chunk.remove(pos.asLong());
+                if (chunk.isEmpty()) labelsByChunk.remove(chunkKey(pos));
+            }
+            setDirty();
+        }
         return removed;
+    }
+
+    private static long chunkKey(BlockPos pos) {
+        return ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4);
     }
 
     public List<Label> inChunk(ChunkPos chunk) {
         List<Label> found = new ArrayList<>();
-        for (Label label : entries.values()) {
-            if (label.pos().getX() >> 4 == chunk.x && label.pos().getZ() >> 4 == chunk.z) {
-                found.add(label);
-                if (found.size() >= 128) break;
-            }
+        for (long key : labelsByChunk.getOrDefault(chunk.toLong(), Set.of())) {
+            Label label = entries.get(key);
+            if (label != null) found.add(label);
+            if (found.size() >= 128) break;
         }
         return found;
     }
