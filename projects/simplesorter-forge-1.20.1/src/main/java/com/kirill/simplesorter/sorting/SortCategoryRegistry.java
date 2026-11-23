@@ -98,6 +98,18 @@ public final class SortCategoryRegistry {
                 .idContains("quest_item", "creative_only")
                 .build());
 
+        // Explicit TFC salt recognition. The TFC salt is a powder visually,
+        // but should not be filed with ingots simply because its old generic
+        // dust category has no suitable destination.
+        categories.add(SortCategory.builder("salts")
+                .displayName("Salts")
+                .group("minerals")
+                .priority(855)
+                .items("tfc:powder/salt")
+                .tags("forge:dusts/salt", "c:salts", "forge:salts")
+                .idContains("powder/salt", "salt", "rock_salt")
+                .build());
+
         categories.add(SortCategory.builder("tiny_dust").group("resources").priority(825).tags("forge:tiny_dusts", "forge:dusts/tiny", "c:tiny_dusts").idContains("tiny_dust", "tiny_dusts", "dust_tiny").build());
         categories.add(SortCategory.builder("small_dust").group("resources").priority(824).tags("forge:small_dusts", "forge:dusts/small", "c:small_dusts").idContains("small_dust", "small_dusts", "dust_small").build());
         categories.add(SortCategory.builder("dusts").group("resources").priority(823).tags("forge:dusts", "c:dusts", "forge:powders").idContains("dust", "dusts", "powder", "powder/", "dust/").build());
