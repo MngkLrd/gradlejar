@@ -30,6 +30,7 @@ public final class SmartCategorySorter {
 
     public static SortingResult sort(ServerLevel level, List<ContainerRef> containers,
                                      int radius, SortingWandSettings settings) {
+        boolean allowCategoryFallback = settings.mode() == com.kirill.simplesorter.settings.SortingMode.SMART_CATEGORIES;
         List<StorageSnapshot> snapshots = new ArrayList<>();
         Map<Item, SortCategory> categoryCache = new IdentityHashMap<>();
 
@@ -42,7 +43,7 @@ public final class SmartCategorySorter {
         Map<Item, StorageSnapshot> homes = new IdentityHashMap<>();
         for (StorageSnapshot snapshot : snapshots) {
             for (Item item : snapshot.items().keySet()) {
-                homes.computeIfAbsent(item, key -> selectHome(key, snapshots, categoryCache));
+                homes.computeIfAbsent(item, key -> selectHome(key, snapshots, categoryCache, allowCategoryFallback));
             }
         }
 
@@ -124,7 +125,7 @@ public final class SmartCategorySorter {
     }
 
     private static StorageSnapshot selectHome(Item item, List<StorageSnapshot> snapshots,
-                                               Map<Item, SortCategory> categories) {
+                                               Map<Item, SortCategory> categories, boolean allowCategoryFallback) {
         SortCategory cat = categories.get(item);
         if (cat == null || !cat.moveAllowed()) return null;
         String categoryId = cat.id();
@@ -148,6 +149,7 @@ public final class SmartCategorySorter {
         }
 
         StorageSnapshot origin = originals.get(0);
+        if (!allowCategoryFallback) return origin;
         // Unknown categories must never be guessed into random misc chests.
         if (!isSafeFallbackCategory(categoryId)) return origin;
         // The already dominant chest is the canonical home unless the player
