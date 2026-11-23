@@ -246,6 +246,17 @@ jobs:
           set -euo pipefail
           cd "$PROJECT_DIR"
           gradle --no-daemon --stacktrace clean build 2>&1 | tee "$GITHUB_WORKSPACE/build-output-${{ strategy.job-index }}.log"
+      - name: Run Simple Sorter Smart 2.0 regression tests
+        if: matrix.project_dir == 'projects/simplesorter-forge-1.20.1'
+        run: |
+          set -euo pipefail
+          cd projects/simplesorter-forge-1.20.1
+          mkdir -p build/smart2-tests
+          javac -d build/smart2-tests \
+            src/main/java/com/kirill/simplesorter/sorting/PathTokenMatcher.java \
+            src/main/java/com/kirill/simplesorter/sorting/RoutingPolicy.java \
+            tools/tests/SmartRulesSelfTest.java
+          java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.SmartRulesSelfTest
       - name: Check model, texture and datapack assets
         if: matrix.project_dir == 'projects/openmotion'
         run: python3 projects/openmotion/tools/check_assets.py
