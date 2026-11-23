@@ -1,4 +1,4 @@
-# Simple Sorter 0.9.1 (Forge 1.20.1)
+# Simple Sorter 0.9.2 (Forge 1.20.1)
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
@@ -114,7 +114,7 @@ gradle --no-daemon clean build
 ```
 
 Java: 17. Gradle: 8.14.3. Expected output:
-`build/libs/simplesorter-0.9.1-forge.jar`.
+`build/libs/simplesorter-0.9.2-forge.jar`.
 
 Our GitHub **Minecraft Mod Build Hub** CI performs the authoritative Forge
 compilation and JAR verification. A successful Gradle build is not equivalent
@@ -132,3 +132,26 @@ to a passed in-game regression test.
 - Only actual source/destination blocks are highlighted (max 10).
 - 3D flying item scale has increased from 0.31 to 0.54, with the same 48-item
   client render limit.
+
+## 0.9.2: Auto-assign empty chests
+
+Smart Categories now reserves previously empty chests when an item is in an
+incompatible mixed chest and there is NO sufficiently appropriate occupied
+destination. Related forms share a newly allocated chest (for example
+raw ores and dusts), rather than allocating one chest per item type.
+
+An empty chest is *not* chosen if:
+- An already filled container has a strong matching profile.
+- The current chest contains only the item itself, or is already appropriate.
+- The category is unknown/misc or blocked.
+- The destination's simulated insert rejects the actual ItemStack.
+
+This prevents items from bouncing across empty chests on repeated sorts.
+TFC `tfc:powder/salt` is classified as `salts`, before generic dusts.
+A dedicated powder chest can receive salt; a metal ingot chest cannot.
+If the salt is misplaced among metal bars and an empty chest is available,
+the empty chest becomes its new salt storage.
+
+Pure Java regressions validate empty allocations and anti-oscillation.
+Dedicated Forge startup is tested by CI. Full TerraFirmaGreg in-game sorting
+and external protection plugins still require manual integration tests.
