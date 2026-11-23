@@ -1,6 +1,7 @@
 package com.kirill.simplesorter.sorting;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -37,10 +38,12 @@ public final class WarehouseReorganizer {
 
     private static final class ChestState {
         private final Map<String, Integer> families = new HashMap<>();
+        private final Map<String, Integer> unknownItemIds = new HashMap<>();
         private int occupied;
 
         void refresh(ContainerRef ref, Map<Item, SortCategory> cache) {
             families.clear();
+            unknownItemIds.clear();
             occupied = 0;
             IItemHandler inventory = ref.handler();
             for (int slot = 0; slot < inventory.getSlots(); slot++) {
@@ -51,6 +54,10 @@ public final class WarehouseReorganizer {
                         stack.getItem(), item -> ItemCategoryResolver.resolve(stack));
                 String family = StrictStackClassifier.family(stack, category);
                 families.merge(family, 1, Integer::sum);
+                if ("misc".equals(family)) {
+                    String id = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+                    unknownItemIds.merge(id, 1, Integer::sum);
+                }
             }
         }
 
@@ -153,6 +160,22 @@ public final class WarehouseReorganizer {
                 count += state.families.getOrDefault("misc", 0);
             }
             return count;
+        }
+
+        public String unknownIdExamples(int maxEntries) {
+            Map<String, Integer> merged = new HashMap<>();
+            for (ChestState state : states) {
+                for (var e : state.unknownItemIds.entrySet()) {
+                    merged.merge(e.getKey(), e.getValue(), Integer::sum);
+                }
+            }
+            return merged.entrySet().stream()
+                    .sorted(Comparator.<Map.Entry<String, Integer>>comparingInt(
+                            Map.Entry::getValue).reversed()
+                            .thenComparing(Map.Entry::getKey))
+                    .limit(Math.max(0, maxEntries))
+                    .map(e -> e.getKey() + " (" + e.getValue() + ")")
+                    .collect(java.util.stream.Collectors.joining(", "));
         }
 
         /** Small, bounded main-thread slice; work automatically continues
