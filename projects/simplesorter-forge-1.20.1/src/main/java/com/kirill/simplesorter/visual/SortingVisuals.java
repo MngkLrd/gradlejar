@@ -1,100 +1,94 @@
 package com.kirill.simplesorter.visual;
 
 import com.kirill.simplesorter.config.SorterSettings;
+import com.kirill.simplesorter.network.FlyingItemsPayload;
+import com.kirill.simplesorter.network.ModNetworking;
 import com.kirill.simplesorter.settings.SortingWandSettings;
 import com.kirill.simplesorter.sorting.MoveRecord;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.PacketDistributor;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public final class SortingVisuals {
+    private static final int MAX_FLIGHTS = FlyingItemsPayload.MAX_FLIGHTS;
     private SortingVisuals() {}
 
-    public static void playSortingEffects(ServerLevel level, Set<BlockPos> changedContainers, List<MoveRecord> moves, SortingWandSettings settings) {
+    public static void playSortingEffects(ServerLevel level, Set<BlockPos> changedContainers,
+                                          List<MoveRecord> moves, SortingWandSettings settings) {
         SortingWandSettings safe = settings.sanitized();
 
         if (safe.showContainerHighlights()) {
             int highlighted = 0;
             for (BlockPos pos : changedContainers) {
+                // Eight vertices, not hundreds of instant line particles.
                 highlightContainer(level, pos);
-                highlighted++;
-                if (highlighted >= SorterSettings.MAX_HIGHLIGHTED_CONTAINERS) {
+                if (++highlighted >= SorterSettings.MAX_HIGHLIGHTED_CONTAINERS) break;
+            }
+        }
+        if (safe.showTransferParticles()) {
+            sendFlights(level, moves);
+        }
+    }
+
+    private static void sendFlights(ServerLevel level, List<MoveRecord> moves) {
+        Map<String, FlyingItemsPayload.Flight> grouped = new LinkedHashMap<>();
+        for (MoveRecord record : moves) {
+            if (record.visualStack().isEmpty() || record.sourcePos().equals(record.targetPos())) continue;
+
+            ItemStack icon = record.visualStack().copyWithCount(1);
+            String id = BuiltInRegistries.ITEM.getKey(icon.getItem()).toString();
+            String key = record.sourcePos().asLong() + ":" + record.targetPos().asLong() + ":" + id;
+            FlyingItemsPayload.Flight previous = grouped.get(key);
+            if (previous == null) {
+                if (grouped.size() >= MAX_FLIGHTS) continue;
+                grouped.put(key, new FlyingItemsPayload.Flight(record.sourcePos(), record.targetPos(),
+                        icon, record.movedItems()));
+            } else {
+                grouped.put(key, new FlyingItemsPayload.Flight(previous.from(), previous.to(),
+                        previous.icon(), previous.movedItems() + record.movedItems()));
+            }
+        }
+        if (grouped.isEmpty()) return;
+
+        FlyingItemsPayload packet = new FlyingItemsPayload(new ArrayList<>(grouped.values()));
+        // Nearby clients see the same motion; clients farther away don't receive
+        // an unnecessary packet containing up to 24 serialized item stacks.
+        for (ServerPlayer player : level.players()) {
+            boolean close = false;
+            for (FlyingItemsPayload.Flight flight : packet.flights()) {
+                if (player.distanceToSqr(flight.from().getX() + 0.5D,
+                        flight.from().getY() + 0.5D, flight.from().getZ() + 0.5D) < 80D * 80D) {
+                    close = true;
                     break;
                 }
             }
-        }
-
-        if (safe.showTransferParticles()) {
-            int traced = 0;
-            for (MoveRecord move : moves) {
-                drawItemFlight(level, move);
-                traced++;
-                if (traced >= SorterSettings.MAX_MOVE_PARTICLE_TRACES) {
-                    break;
-                }
+            if (close) {
+                ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
             }
         }
     }
 
     private static void highlightContainer(ServerLevel level, BlockPos pos) {
-        double minX = pos.getX() + 0.14D;
-        double maxX = pos.getX() + 0.86D;
-        double minY = pos.getY() + 0.08D;
-        double maxY = pos.getY() + 0.92D;
-        double minZ = pos.getZ() + 0.14D;
-        double maxZ = pos.getZ() + 0.86D;
-
-        drawLine(level, minX, minY, minZ, maxX, minY, minZ, 4);
-        drawLine(level, minX, minY, maxZ, maxX, minY, maxZ, 4);
-        drawLine(level, minX, minY, minZ, minX, minY, maxZ, 4);
-        drawLine(level, maxX, minY, minZ, maxX, minY, maxZ, 4);
-
-        drawLine(level, minX, maxY, minZ, maxX, maxY, minZ, 4);
-        drawLine(level, minX, maxY, maxZ, maxX, maxY, maxZ, 4);
-        drawLine(level, minX, maxY, minZ, minX, maxY, maxZ, 4);
-        drawLine(level, maxX, maxY, minZ, maxX, maxY, maxZ, 4);
-
-        drawLine(level, minX, minY, minZ, minX, maxY, minZ, 3);
-        drawLine(level, maxX, minY, minZ, maxX, maxY, minZ, 3);
-        drawLine(level, minX, minY, maxZ, minX, maxY, maxZ, 3);
-        drawLine(level, maxX, minY, maxZ, maxX, maxY, maxZ, 3);
-    }
-
-    private static void drawItemFlight(ServerLevel level, MoveRecord move) {
-        if (move.visualStack().isEmpty() || move.sourcePos().equals(move.targetPos())) {
-            return;
-        }
-
-        Vec3 from = Vec3.atCenterOf(move.sourcePos()).add(0.0D, 0.55D, 0.0D);
-        Vec3 to = Vec3.atCenterOf(move.targetPos()).add(0.0D, 0.55D, 0.0D);
-        Vec3 delta = to.subtract(from);
-        double length = delta.length();
-        if (length <= 0.1D) {
-            return;
-        }
-
-        int steps = Math.max(3, Math.min(8, (int) Math.ceil(length / 2.25D)));
-        ItemParticleOption itemParticle = new ItemParticleOption(ParticleTypes.ITEM, move.visualStack());
-
-        for (int i = 0; i <= steps; i++) {
-            double t = (double) i / (double) steps;
-            Vec3 point = from.add(delta.scale(t)).add(0.0D, Math.sin(t * Math.PI) * 0.32D, 0.0D);
-            level.sendParticles(itemParticle, point.x, point.y, point.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
-        }
-    }
-
-    private static void drawLine(ServerLevel level, double x1, double y1, double z1, double x2, double y2, double z2, int steps) {
-        for (int i = 0; i <= steps; i++) {
-            double t = (double) i / (double) steps;
-            double x = x1 + (x2 - x1) * t;
-            double y = y1 + (y2 - y1) * t;
-            double z = z1 + (z2 - z1) * t;
-            level.sendParticles(ParticleTypes.END_ROD, x, y, z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+        for (int dx : new int[]{0, 1}) {
+            for (int dy : new int[]{0, 1}) {
+                for (int dz : new int[]{0, 1}) {
+                    level.sendParticles(ParticleTypes.END_ROD,
+                            pos.getX() + (dx == 0 ? 0.14D : 0.86D),
+                            pos.getY() + (dy == 0 ? 0.12D : 0.88D),
+                            pos.getZ() + (dz == 0 ? 0.14D : 0.86D),
+                            1, 0, 0, 0, 0);
+                }
+            }
         }
     }
 }
