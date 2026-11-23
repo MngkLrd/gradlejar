@@ -167,12 +167,16 @@ public final class WarehouseSortSessions {
                 if (count > 0) SortingWandItem.consumeUse(wand, player);
             }
 
+            int unresolved = session.unresolvedMixedChests();
+            int unknown = session.unknownFamilySlots();
             player.displayClientMessage(Component.literal(
-                    "Simple Sorter: completed. " + session.movedItems()
-                            + " items transferred between chests, "
-                            + compactedItems + " internally packed. "
-                            + (count == 0 ? "Storage is already stable." :
-                                "Repeat sorting is not required.")), true);
+                    "Simple Sorter: " + session.movedItems()
+                            + " items moved; " + compactedItems + " packed. "
+                            + (unresolved == 0 ? "No mixed chests remain."
+                                : unresolved + " mixed chests remain (no compatible capacity, "
+                                  + "restricted slots or unidentified items).")
+                            + (unknown > 0 ? " Unclassified slots: " + unknown + "." : "")),
+                    unresolved > 0 ? false : true);
             return true;
         }
     }
