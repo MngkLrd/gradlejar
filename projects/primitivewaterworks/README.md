@@ -1,13 +1,32 @@
-# Primitive Waterworks 0.3.2
-Minecraft 1.20.1 / Forge 47.3.0 / Java 17. Requires TerraFirmaCraft. ArborFirmaCraft and REI are optional.
+# Primitive Waterworks 0.3.3 — Grouping Fix
 
-* Adds REI native collapsible categories for rain collectors, wooden gutters and downspouts, each with all TFC and optional AFC variants.
-* Corrects blackwood Russian translation to гренадил (Grenadil), matching the original TerraFirmaCraft name.
-* Allows carving a bottom outlet on a collector using a TFC knife: Shift + knife right click (any side), or knife right click on its underside.
-* Bottom outlet is closed by default. Vertical transfer requires opening it.
-* Dedicated tags under primitivewaterworks:rain_collectors, wooden_gutters and wooden_downspouts for future third-party integration.
-* Gravity-only, fresh water only. Existing connections and flow visualizations remain.
-* Survival crafting disabled until collision-free recipe designs are provided.
+Minecraft 1.20.1 / Forge 47.3.0+ / Java 17 / TerraFirmaCraft 3.x
 
-Validation: /give @s primitivewaterworks:rain_collector_blackwood
-Test REI collapsible groups, TFC blackwood name, knife carving, flow stopping with closed bottom and existing world migration.
+This release ONLY changes the item-viewer integration. All water flow, 3D models,
+knife-carved outlets, species colors, barrel interfaces, and recipes are preserved.
+
+### Correct TFG integration
+TerraFirmaGreg Modern uses EMI and Reliable EMI (REMI) stack groups, not just REI.
+The groups are defined under `assets/primitivewaterworks/stack_groups/`,
+with the exact `remi:tag` structure used by the pack's own grouping system.
+
+Three groups:
+- Rain Collectors (primitivewaterworks:rain_collectors)
+- Wooden Gutters (primitivewaterworks:wooden_gutters)
+- Wooden Downspouts (primitivewaterworks:wooden_downspouts)
+
+Their members are item tags already present in 0.3.2. Each includes TFC
+species and optional ArborFirmaCraft species. All labels are localized.
+
+### Testing
+1. Install only this JAR, deleting 0.3.2.
+2. Ensure EMI + REMI are enabled. TerraFirmaGreg stock config has enableStackGroups=true.
+3. Enter a world, reload resources with F3+T (or restart Minecraft).
+4. In EMI item index, group entries should collapse to three rotating category icons.
+5. Hover or open a group to verify member count and species.
+6. Check that searching `@primitivewaterworks` may filter and unpack groups based on search settings.
+
+If your TFG instance uses a version of REMI which reads groups from
+`config/remi/stack_groups` only instead of resource packs, a separate
+compatibility setup may be needed. The stock TFG scripts use resource-pack
+assets paths, matching this release.

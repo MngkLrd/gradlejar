@@ -94,5 +94,8 @@
   "message.primitivewaterworks.closed": "Closed outlet: %s",
   "group.primitivewaterworks.rain_collectors": "Rain Collectors",
   "group.primitivewaterworks.wooden_gutters": "Wooden Gutters",
-  "group.primitivewaterworks.wooden_downspouts": "Wooden Downspouts"
+  "group.primitivewaterworks.wooden_downspouts": "Wooden Downspouts",
+  "stackgroup.remi.primitivewaterworks_rain_collectors": "Rain Collectors",
+  "stackgroup.remi.primitivewaterworks_wooden_gutters": "Wooden Gutters",
+  "stackgroup.remi.primitivewaterworks_wooden_downspouts": "Wooden Downspouts"
 }

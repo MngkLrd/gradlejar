@@ -94,5 +94,8 @@
   "message.primitivewaterworks.closed": "Выход закрыт: %s",
   "group.primitivewaterworks.rain_collectors": "Дождесборники",
   "group.primitivewaterworks.wooden_gutters": "Деревянные желоба",
-  "group.primitivewaterworks.wooden_downspouts": "Деревянные водостоки"
+  "group.primitivewaterworks.wooden_downspouts": "Деревянные водостоки",
+  "stackgroup.remi.primitivewaterworks_rain_collectors": "Дождесборники",
+  "stackgroup.remi.primitivewaterworks_wooden_gutters": "Деревянные желоба",
+  "stackgroup.remi.primitivewaterworks_wooden_downspouts": "Деревянные водостоки"
 }
