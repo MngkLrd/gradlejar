@@ -93,6 +93,7 @@ public final class WarehouseVacuumSorter {
         private int moves;
         private int skippedChests;
         private int rejectedBatches;
+        private String lastFailure = "none";
 
         private Session(List<ContainerRef> containers) {
             this.containers = List.copyOf(containers);
@@ -111,6 +112,7 @@ public final class WarehouseVacuumSorter {
         public int attemptedTransfers() { return moves + rejectedBatches; }
         public int rejectedTransfers() { return rejectedBatches; }
         public int skippedChests() { return skippedChests; }
+        public String lastFailure() { return lastFailure; }
         public int currentChestIndex() { return processed; }
         public int assignmentMissingFamilies() { return 0; }
 
@@ -194,6 +196,7 @@ public final class WarehouseVacuumSorter {
                 // Preflight exceptions do not mutate inventories. Commit
                 // exceptions are handled and rolled back inside commit().
                 rejectedBatches++;
+                lastFailure = "exception during planning: " + ex.getClass().getSimpleName();
                 LOG.error("Wand buffer skipped broken inventory batch", ex);
             }
             return batchIndex >= batches.size();
@@ -213,49 +216,33 @@ public final class WarehouseVacuumSorter {
             }
             if (chests.size() < 2 || entries.isEmpty()) return;
 
-            // Every existing occupied slot becomes one independent buffer
-            // stack. This preserves TFC food NBT, unique item components,
-            // durability and stack size without inventing extra capacity.
-            Map<String, List<Entry>> byFamily = new HashMap<>();
+            // The previous greedy plan consumed permitted slots in family
+            // order, then rejected the WHOLE warehouse if a later modded
+            // stack could not fit. We now begin with an exact identity
+            // placement (always feasible) and perform positive-value swaps.
+            // No missing family home can abort this operation.
+            List<WarehouseSlotOptimizer.Stack> snapshots = new ArrayList<>();
+            int[] capacities = new int[chests.size()];
+            for (int i = 0; i < chests.size(); i++) {
+                capacities[i] = chests.get(i).layout.length;
+            }
             for (Entry entry : entries) {
-                byFamily.computeIfAbsent(entry.family, ignored -> new ArrayList<>())
-                        .add(entry);
+                snapshots.add(new WarehouseSlotOptimizer.Stack(
+                        entry.source.sequence, entry.sourceSlot, entry.family));
             }
-            List<String> families = new ArrayList<>(byFamily.keySet());
-            families.sort(Comparator
-                    .comparingInt((String family) -> "misc".equals(family) ? 1 : 0)
-                    .thenComparing(Comparator.comparingInt(
-                            (String family) -> byFamily.get(family).size()).reversed())
-                    .thenComparing(String::compareTo));
-
-            for (String family : families) {
-                List<Chest> candidates = new ArrayList<>(chests);
-                // Preserve existing affinities, prefer untouched chests,
-                // and only mix families when there are no better vacancies.
-                candidates.sort(Comparator
-                        .comparingInt((Chest c) -> c.allocatedFamilies.containsKey(family)
-                                ? 0 : c.placed == 0 ? 1 : 2)
-                        .thenComparingInt(c -> -c.votes.getOrDefault(family, 0))
-                        .thenComparingInt(c -> -c.freeSlots())
-                        .thenComparingInt(c -> c.sequence));
-                for (Entry entry : byFamily.get(family)) {
-                    boolean allocated = false;
-                    for (Chest chest : candidates) {
-                        int slot = firstCompatibleSlot(chest, entry);
-                        if (slot < 0) continue;
-                        chest.reserve(slot, entry);
-                        allocated = true;
-                        break;
-                    }
-                    if (!allocated) {
-                        // This batch contains a modded slot restriction or
-                        // insufficient compatible capacity. Nothing was
-                        // extracted; leave every inventory unchanged.
-                        rejectedBatches++;
-                        return;
-                    }
-                }
+            WarehouseSlotOptimizer.Layout optimized = WarehouseSlotOptimizer.organize(
+                    snapshots, capacities, (item, chest, slot) ->
+                            canInsertAfterExtraction(chests.get(chest).ref.handler(),
+                                    slot, entries.get(item).original));
+            int[] owners = optimized.chestByStack();
+            int[] slots = optimized.slotByStack();
+            for (int i = 0; i < entries.size(); i++) {
+                chests.get(owners[i]).reserve(slots[i], entries.get(i));
             }
+            LOG.info("Wand buffer planned {} occupied slots in {} chests; "
+                            + "{} cross-chest stack assignments; improvement {}; probes {}",
+                    entries.size(), chests.size(), optimized.crossChestStacks(),
+                    optimized.improvement(), optimized.probes());
 
             int crossChestItems = 0;
             for (Entry entry : entries) {
@@ -265,6 +252,8 @@ public final class WarehouseVacuumSorter {
 
             if (!unchanged(level, chests)) {
                 rejectedBatches++;
+                lastFailure = "chest changed after snapshot";
+                LOG.warn("Wand buffer rejected batch because chest contents changed during planning");
                 return;
             }
             if (commit(level, chests, entries, listener)) {
@@ -272,6 +261,7 @@ public final class WarehouseVacuumSorter {
                 moves += entries.stream().filter(e -> e.source != e.destination).count();
             } else {
                 rejectedBatches++;
+                lastFailure = "inventory rejected actual extraction or insertion (see latest.log)";
             }
         }
 
