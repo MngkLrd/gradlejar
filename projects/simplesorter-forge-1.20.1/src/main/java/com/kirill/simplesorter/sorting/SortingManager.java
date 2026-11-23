@@ -43,8 +43,9 @@ public final class SortingManager {
         if (safe.mode() == com.kirill.simplesorter.settings.SortingMode.SMART_CATEGORIES
                 && player instanceof ServerPlayer serverPlayer
                 && !wand.isEmpty() && wand.getItem() == ModItems.SORTING_WAND.get()) {
-            WarehouseSortSessions.start(level, serverPlayer, containers, wand, safe);
-            return new SortingResult(containers.size(), 0, 0,
+            boolean started = WarehouseSortSessions.start(
+                    level, serverPlayer, containers, wand, safe);
+            return new SortingResult(started ? containers.size() : 0, 0, 0,
                     0, 0, safe.radius(), safe.mode().id());
         }
 
