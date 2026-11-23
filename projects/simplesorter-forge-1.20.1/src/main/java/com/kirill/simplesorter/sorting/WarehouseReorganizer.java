@@ -19,7 +19,8 @@ import java.util.Map;
 public final class WarehouseReorganizer {
     private static final int MAX_SUCCESSFUL_OPERATIONS = 160;
     private static final int MAX_PASSES = 2;
-    private static final int MAX_VISITED_SLOTS = 6000;
+    private static final int MAX_VISITED_SLOTS = 16384;
+    private static int nextStart = 0;
     private static final long TIME_BUDGET_NANOS = 9_000_000L;
     private static final double MIN_DESTINATION_FIT = 0.66D;
     private static final double MIN_LAYOUT_GAIN = 0.29D;
@@ -33,6 +34,10 @@ public final class WarehouseReorganizer {
         Map<Item, SortCategory> categories = new IdentityHashMap<>();
         int moved = 0, operations = 0;
         int visitedSlots = 0;
+        // Rotate the initial source index across clicks, so a very large
+        // warehouse cannot starve the last chest when the time budget expires.
+        int start = Math.floorMod(nextStart, containers.size());
+        nextStart = (start + 31) % containers.size();
         long deadline = System.nanoTime() + TIME_BUDGET_NANOS;
 
         for (int pass = 0; pass < MAX_PASSES && operations < MAX_SUCCESSFUL_OPERATIONS
@@ -51,9 +56,10 @@ public final class WarehouseReorganizer {
             Map<String, List<Integer>> orderedDestinations = new HashMap<>();
             int movedThisPass = 0;
 
-            for (int sourceIndex = 0; sourceIndex < containers.size()
+            for (int offset = 0; offset < containers.size()
                     && operations < MAX_SUCCESSFUL_OPERATIONS
-                    && visitedSlots < MAX_VISITED_SLOTS && System.nanoTime() < deadline; sourceIndex++) {
+                    && visitedSlots < MAX_VISITED_SLOTS && System.nanoTime() < deadline; offset++) {
+                int sourceIndex = (start + offset) % containers.size();
                 if (layout.axis(sourceIndex) == WarehouseLayout.Axis.NONE) continue;
                 ContainerRef source = containers.get(sourceIndex);
                 IItemHandler handler = source.handler();
