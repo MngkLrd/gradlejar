@@ -216,6 +216,23 @@ public final class SmartRulesSelfTest {
                 + " dominance cases passed (NOT an in-game modpack accuracy rate).");
 
         System.out.println("Smart 2.1 category affinity regressions passed.");
+        test(PathTokenMatcher.matches("seeds/wheat", "seeds"),
+                "TFC seeds/wheat must be recognized as botanical");
+        test(PathTokenMatcher.matches("plant/cherry_sapling", "sapling"),
+                "TFC plant saplings must be recognized");
+        test(PathTokenMatcher.matches("food/peach_pit", "pit"),
+                "Fruit pits belong with seeds and saplings");
+        test(PathTokenMatcher.matches("kaolin_clay", "clay"),
+                "Kaolin clay lumps must be detected by ceramic classifier");
+        test(RoutingPolicy.allowsCategoryFallback("clays"),
+                "Clay has its own routable material category");
+        test(RoutingPolicy.compatibility("clays", "ingots") == 0D,
+                "Clay lumps are not metal ingots");
+        test(RoutingPolicy.compatibility("clays", "raw_ores") == 0D,
+                "Clay is not treated as an ordinary metal ore");
+        test(WarehouseLayout.family("clays").equals("crafting"),
+                "Clay lumps belong to ceramics/crafting family");
+
         System.out.println("Simple Sorter Smart Categories 2.0: all pure Java regression assertions passed.");
     }
 }
