@@ -1,4 +1,5 @@
 {
+  "parent": "minecraft:block/block",
   "textures": {
     "wood": "tfc:block/wood/planks/oak",
     "particle": "tfc:block/wood/planks/oak"
@@ -19,10 +20,10 @@
         "north": {
           "texture": "#wood"
         },
-        "south": {
+        "east": {
           "texture": "#wood"
         },
-        "east": {
+        "south": {
           "texture": "#wood"
         },
         "west": {
@@ -51,10 +52,10 @@
         "north": {
           "texture": "#wood"
         },
-        "south": {
+        "east": {
           "texture": "#wood"
         },
-        "east": {
+        "south": {
           "texture": "#wood"
         },
         "west": {
@@ -83,10 +84,10 @@
         "north": {
           "texture": "#wood"
         },
-        "south": {
+        "east": {
           "texture": "#wood"
         },
-        "east": {
+        "south": {
           "texture": "#wood"
         },
         "west": {

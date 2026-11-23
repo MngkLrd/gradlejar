@@ -3,7 +3,7 @@ loaderVersion="[47,)"
 license="MIT"
 [[mods]]
 modId="primitivewaterworks"
-version="0.1.0"
+version="0.1.1"
 displayName="Primitive Waterworks"
 authors="MngkLrd"
 description='''Primitive wooden rainwater collectors, gutters, and gravity-fed downspouts for TerraFirmaCraft and TerraFirmaGreg.'''
