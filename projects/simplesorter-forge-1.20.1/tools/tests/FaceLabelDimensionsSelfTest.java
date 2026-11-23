@@ -39,6 +39,20 @@ public final class FaceLabelDimensionsSelfTest {
                 "TFC crate text must sit almost flush with its full-block face");
         require(FaceLabelDimensions.itemDepth() > FaceLabelDimensions.iconScale() / 2D,
                 "Icon back should not clip the underlying chest texture");
+        // Regression for invisible 0.9.7 chest labels. For every cardinal
+        // face a player standing in FRONT must see it; behind must not.
+        for (int[] normal : new int[][]{
+                {0, 1}, {0, -1}, {1, 0}, {-1, 0}}) {
+            double nx = normal[0], nz = normal[1];
+            require(FaceLabelDimensions.isFrontVisible(
+                    -4D * nx, -4D * nz, normal[0], normal[1]),
+                    "Front side of chest incorrectly culled");
+            require(!FaceLabelDimensions.isFrontVisible(
+                    4D * nx, 4D * nz, normal[0], normal[1]),
+                    "Rear side should not render through the chest");
+            assertions += 2;
+        }
+
         System.out.println("Face-mounted chest labels: " + (assertions + 7)
                 + " sizing and vertical-extent checks passed.");
     }
