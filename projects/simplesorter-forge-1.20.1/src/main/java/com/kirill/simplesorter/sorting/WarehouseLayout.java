@@ -146,7 +146,7 @@ public final class WarehouseLayout {
             case "ingots", "nuggets", "metal_sheets", "plates",
                     "rods", "wires", "gears" -> "finished_materials";
             case "blocks", "building", "stone", "wood", "logs" -> "building";
-            case "adhesives", "molds", "redstone", "tools",
+            case "adhesives", "molds", "clays", "redstone", "tools",
                     "weapons", "armor" -> "crafting";
             case "plants", "fruit_tree_parts", "food", "seeds" -> "botanical";
             default -> "misc";
