@@ -254,7 +254,7 @@ public final class SortCategoryRegistry {
                 .priority(540)
                 .tags("simplesorter:plants", "c:seeds", "c:crops", "c:saplings", "forge:seeds", "forge:crops", "minecraft:saplings", "minecraft:flowers")
                 .items("minecraft:sugar_cane", "minecraft:cactus", "minecraft:bamboo", "minecraft:kelp", "minecraft:vine", "minecraft:lily_pad", "minecraft:nether_wart")
-                .idContains("seed", "sapling", "flower", "crop", "leaves", "mushroom", "wart")
+                .idContains("seed", "seeds", "seeds/", "sapling", "fruit_pit", "pit", "fruit_seed", "flower", "crop", "leaves", "mushroom", "wart")
                 .build());
 
         categories.add(SortCategory.builder("wood")
