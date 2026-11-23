@@ -37,7 +37,7 @@ public final class WarehouseReorganizer {
         // Rotate the initial source index across clicks, so a very large
         // warehouse cannot starve the last chest when the time budget expires.
         int start = Math.floorMod(nextStart, containers.size());
-        nextStart = (start + 31) % containers.size();
+        nextStart = (start + 1) % containers.size();
         long deadline = System.nanoTime() + TIME_BUDGET_NANOS;
 
         for (int pass = 0; pass < MAX_PASSES && operations < MAX_SUCCESSFUL_OPERATIONS
