@@ -80,7 +80,8 @@ public final class StrictStorageFamily {
         // grade convention only inside compatible mod namespaces; do not
         // reinterpret similarly-named vanilla blocks as ore.
         if ((value.startsWith("tfc:") || value.startsWith("tfg:")
-                || value.startsWith("terrafirmagreg:"))
+                || value.startsWith("terrafirmagreg:")
+                || value.startsWith("gtceu:"))
                 && (path.startsWith("poor_") || path.startsWith("normal_")
                     || path.startsWith("rich_") || path.startsWith("small_ore_")))
             return "mineral_resources";
