@@ -52,7 +52,10 @@ public final class AutoLabelService {
                 SortCategory category = ItemCategoryResolver.resolve(stack);
                 String family = category.moveAllowed() ? WarehouseLayout.family(category.id()) : "misc";
                 votes.merge(family, 1, Integer::sum);
-                representatives.putIfAbsent(family, stack.copyWithCount(1));
+                // The visible model uses the real item ID but no arbitrary NBT:
+                // this prevents syncing private book contents or enormous
+                // modded tags just to display a category icon.
+                representatives.putIfAbsent(family, new ItemStack(stack.getItem()));
             }
             if (votes.isEmpty()) continue;
 
