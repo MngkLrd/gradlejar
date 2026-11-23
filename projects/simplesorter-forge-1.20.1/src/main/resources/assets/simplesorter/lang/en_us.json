@@ -93,5 +93,7 @@
   "label.simplesorter.accessories": "Accessories",
   "label.simplesorter.adhesives": "Adhesives",
   "label.simplesorter.locked": "Special Items",
-  "label.simplesorter.mixed": "Mixed Contents"
+  "label.simplesorter.mixed": "Mixed Contents",
+  "label.simplesorter.mineral_resources": "Ores & Mineral Powders",
+  "label.simplesorter.crafting_powders": "Crafting Powders"
 }
