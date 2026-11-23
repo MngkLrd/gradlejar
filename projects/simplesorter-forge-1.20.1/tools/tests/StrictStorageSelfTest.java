@@ -46,6 +46,45 @@ public final class StrictStorageSelfTest {
         family("tfc:powder/mortar", "dusts", false, "binding_mortar");
         family("tfc:ore/kaolinite", "raw_ores", false, "ceramic_clay");
 
+        // TFG report 0.9.12: ore pieces, poor-rich ore lumps and all sizes
+        // of GregTech mineral dust are ONE geological storage family.
+        family("tfc:ore/poor_goethite", "raw_ores", false, "mineral_resources");
+        family("tfg:ore/poor_goethite", "misc", false, "mineral_resources");
+        family("tfg:poor_goethite", "misc", false, "mineral_resources");
+        family("tfc:ore/rich_garnierite", "raw_ores", false, "mineral_resources");
+        family("tfc:ore/lignite", "raw_ores", false, "mineral_resources");
+        family("gtceu:goethite_dust", "dusts", false, "mineral_resources");
+        family("gtceu:small_goethite_dust", "small_dust", false, "mineral_resources");
+        family("gtceu:tiny_goethite_dust", "tiny_dust", false, "mineral_resources");
+        family("gtceu:crushed_goethite_ore", "raw_ores", false, "mineral_resources");
+        family("gtceu:impure_iron_dust", "dusts", false, "mineral_resources");
+        family("gtceu:pure_iron_dust", "dusts", false, "mineral_resources");
+        family("tfc:powder/sulfur", "dusts", false, "mineral_resources");
+        family("minecraft:raw_iron", "materials", false, "mineral_resources");
+
+        // All these ARE incompatible and must not inherit the mineral home.
+        family("tfc:rock/loose/chalk", "raw_ores", false, "stones");
+        family("tfc:rock/loose/marble", "loose_stones", false, "stones");
+        family("tfc:powder/salt", "salts", false, "salts");
+        family("tfc:powder/flux", "dusts", false, "crafting_powders");
+        family("minecraft:bone_meal", "dusts", false, "crafting_powders");
+        family("tfc:powder/mortar", "dusts", false, "binding_mortar");
+        family("tfc:ore/kaolinite", "raw_ores", false, "ceramic_clay");
+        family("gtceu:copper_ingot", "ingots", false, "finished_metals");
+        family("tfc:metal/pickaxe_head/copper", "misc", false, "tool_heads");
+
+        check(StrictChestAdmission.canReceive("mineral_resources",
+                        Map.of("mineral_resources", 23), 23, ""),
+                "The entire dust+ore chest is ONE valid geological family");
+        check(!StrictChestAdmission.mixed(Map.of("mineral_resources", 23), 23),
+                "Small/tiny/full dust and ore variants must not read MIXED");
+        check(!StrictChestAdmission.canReceive("stones",
+                        Map.of("mineral_resources", 23), 23, ""),
+                "Ordinary loose stones cannot enter ore storage");
+        check(!StrictChestAdmission.canReceive("mineral_resources",
+                        Map.of("mineral_resources", 18, "stones", 2), 20, ""),
+                "Stones mixed in ore chest must be evacuated");
+
         // A "99% right" chest still must not take a foreign category.
         check(!StrictChestAdmission.canReceive("finished_metals",
                         Map.of("finished_metals", 99, "sticks", 1), 100, ""),
