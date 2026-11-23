@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CRC",
+    "LBL",
+    "CRC"
+  ],
+  "key": {
+    "C": {
+      "item": "tfc:metal/chain/wrought_iron"
+    },
+    "R": {
+      "item": "tfc:metal/rod/wrought_iron"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "B": {
+      "item": "riverweir:bronze_net_roll"
+    }
+  },
+  "result": {
+    "item": "riverweir:iron_net_roll",
+    "count": 1
+  }
+}

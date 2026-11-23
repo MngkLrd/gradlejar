@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "tfc:food/bluegill",
+    "tfc:food/salmon",
+    "tfc:food/crappie",
+    "minecraft:cod",
+    "minecraft:salmon",
+    "minecraft:rotten_flesh"
+  ]
+}

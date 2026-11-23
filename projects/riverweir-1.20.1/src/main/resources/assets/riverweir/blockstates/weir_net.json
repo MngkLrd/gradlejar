@@ -3,6 +3,7 @@
     {
       "when": {
         "axis": "x",
+        "tier": "0",
         "stage": "0"
       },
       "apply": {
@@ -12,6 +13,7 @@
     {
       "when": {
         "axis": "x",
+        "tier": "0",
         "stage": "1"
       },
       "apply": {
@@ -21,10 +23,170 @@
     {
       "when": {
         "axis": "x",
+        "tier": "0",
         "stage": "2"
       },
       "apply": {
         "model": "riverweir:block/weir_net_torn"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "tier": "1",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_bronze_intact"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "tier": "1",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_bronze_frayed"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "tier": "1",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_bronze_torn"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "tier": "2",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_iron_intact"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "tier": "2",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_iron_frayed"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "tier": "2",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_iron_torn"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "tier": "0",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_intact",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "tier": "0",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_frayed",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "tier": "0",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_torn",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "tier": "1",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_bronze_intact",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "tier": "1",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_bronze_frayed",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "tier": "1",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_bronze_torn",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "tier": "2",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_iron_intact",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "tier": "2",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_iron_frayed",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "tier": "2",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_iron_torn",
+        "y": 90
       }
     },
     {
@@ -47,32 +209,11 @@
     },
     {
       "when": {
-        "axis": "z",
-        "stage": "0"
+        "axis": "x",
+        "trapped": "true"
       },
       "apply": {
-        "model": "riverweir:block/weir_net_intact",
-        "y": 90
-      }
-    },
-    {
-      "when": {
-        "axis": "z",
-        "stage": "1"
-      },
-      "apply": {
-        "model": "riverweir:block/weir_net_frayed",
-        "y": 90
-      }
-    },
-    {
-      "when": {
-        "axis": "z",
-        "stage": "2"
-      },
-      "apply": {
-        "model": "riverweir:block/weir_net_torn",
-        "y": 90
+        "model": "riverweir:block/weir_net_caught"
       }
     },
     {
@@ -93,15 +234,6 @@
       "apply": {
         "model": "riverweir:block/weir_net_bottom_rope",
         "y": 90
-      }
-    },
-    {
-      "when": {
-        "axis": "x",
-        "trapped": "true"
-      },
-      "apply": {
-        "model": "riverweir:block/weir_net_caught"
       }
     },
     {

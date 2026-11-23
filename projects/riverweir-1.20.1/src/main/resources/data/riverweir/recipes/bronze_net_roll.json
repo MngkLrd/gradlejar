@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "WJW",
+    " B "
+  ],
+  "key": {
+    "B": {
+      "item": "tfc:metal/rod/bronze"
+    },
+    "W": {
+      "item": "tfc:wool_cloth"
+    },
+    "J": {
+      "item": "riverweir:net_roll"
+    }
+  },
+  "result": {
+    "item": "riverweir:bronze_net_roll",
+    "count": 1
+  }
+}

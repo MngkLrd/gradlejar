@@ -29,6 +29,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public final class WeirNetBlock extends Block {
     public static final EnumProperty<Direction.Axis> AXIS=EnumProperty.create("axis",Direction.Axis.class,Direction.Axis.X,Direction.Axis.Z);
     public static final IntegerProperty STAGE=IntegerProperty.create("stage",0,2);
+    public static final IntegerProperty TIER=IntegerProperty.create("tier",0,2);
     public static final BooleanProperty WATERLOGGED=BlockStateProperties.WATERLOGGED;
     public static final net.minecraft.world.level.block.state.properties.IntegerProperty WATER_KIND=net.minecraft.world.level.block.state.properties.IntegerProperty.create("water_kind",0,1);
     public static final net.minecraft.world.level.block.state.properties.IntegerProperty FLOW=net.minecraft.world.level.block.state.properties.IntegerProperty.create("flow",0,16);
@@ -41,11 +42,11 @@ public final class WeirNetBlock extends Block {
     public WeirNetBlock(Properties properties){
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(AXIS,Direction.Axis.X).setValue(STAGE,0)
-            .setValue(WATERLOGGED,true).setValue(WATER_KIND,0).setValue(FLOW,16)
+            .setValue(WATERLOGGED,true).setValue(TIER,0).setValue(WATER_KIND,0).setValue(FLOW,16)
             .setValue(TOP,false).setValue(BOTTOM,false).setValue(TRAPPED,false));
     }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){
-        b.add(AXIS,STAGE,WATERLOGGED,WATER_KIND,FLOW,TOP,BOTTOM,TRAPPED);
+        b.add(AXIS,STAGE,TIER,WATERLOGGED,WATER_KIND,FLOW,TOP,BOTTOM,TRAPPED);
     }
     @Override public VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext context){
         return state.getValue(AXIS)==Direction.Axis.X?X_SHAPE:Z_SHAPE;
@@ -63,6 +64,10 @@ public final class WeirNetBlock extends Block {
             if(post!=null){
                 if(player.isShiftKeyDown()&&WeirLogic.isJuteNet(player.getItemInHand(hand)))
                     WeirLogic.repair((ServerLevel)level,post,player,hand);
+                else if(player.isShiftKeyDown()&&player.getItemInHand(hand).isEmpty())
+                    WeirLogic.clean((ServerLevel)level,post,player);
+                else if(WeirLogic.isBait(player.getItemInHand(hand)))
+                    WeirLogic.addBait((ServerLevel)level,post,player,hand);
                 else WeirLogic.openMenu((ServerLevel)level,post,server);
             }
         }

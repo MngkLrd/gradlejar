@@ -4,6 +4,7 @@ import dev.minemods.riverweir.block.WeirNetBlock;
 import dev.minemods.riverweir.block.WeirPostBlock;
 import dev.minemods.riverweir.blockentity.WeirPostBlockEntity;
 import dev.minemods.riverweir.item.NetRollItem;
+import dev.minemods.riverweir.logic.WeirTier;
 import dev.minemods.riverweir.menu.WeirMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -33,7 +34,11 @@ public final class RiverWeirMod {
     public static final RegistryObject<Block> NET = BLOCKS.register("weir_net", () -> new WeirNetBlock(
         BlockBehaviour.Properties.of().strength(0.6f).sound(SoundType.WOOL).noOcclusion()));
     public static final RegistryObject<Item> POST_ITEM = ITEMS.register("weir_post", () -> new BlockItem(POST.get(), new Item.Properties()));
-    public static final RegistryObject<Item> NET_ROLL = ITEMS.register("net_roll", () -> new NetRollItem(new Item.Properties().stacksTo(64)));
+    public static final RegistryObject<Item> NET_ROLL = ITEMS.register("net_roll", () -> new NetRollItem(WeirTier.JUTE,new Item.Properties().stacksTo(64)));
+    public static final RegistryObject<Item> BRONZE_NET_ROLL = ITEMS.register("bronze_net_roll",
+        () -> new NetRollItem(WeirTier.BRONZE,new Item.Properties().stacksTo(32)));
+    public static final RegistryObject<Item> IRON_NET_ROLL = ITEMS.register("iron_net_roll",
+        () -> new NetRollItem(WeirTier.IRON,new Item.Properties().stacksTo(16)));
     public static final RegistryObject<Item> NET_TWINE = ITEMS.register("net_twine", () -> new Item(new Item.Properties()));
 
     public static final RegistryObject<BlockEntityType<WeirPostBlockEntity>> POST_BE = BLOCK_ENTITIES.register("weir_post",

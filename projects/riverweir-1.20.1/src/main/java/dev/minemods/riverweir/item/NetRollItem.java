@@ -2,6 +2,7 @@ package dev.minemods.riverweir.item;
 
 import dev.minemods.riverweir.RiverWeirMod;
 import dev.minemods.riverweir.logic.WeirLogic;
+import dev.minemods.riverweir.logic.WeirTier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -17,11 +18,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public final class NetRollItem extends Item {
-    public NetRollItem(Properties properties){super(properties);}
+    private final WeirTier tier;
+    public NetRollItem(WeirTier tier,Properties properties){super(properties);this.tier=tier;}
     @Override public void appendHoverText(ItemStack stack,@Nullable Level level,List<Component> tooltip,TooltipFlag flag){
-        tooltip.add(Component.translatable("tooltip.riverweir.dimensions").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("tooltip.riverweir.capacity",stack.getCount(),Math.min(WeirLogic.MAX_SPAN,stack.getCount()*4)).withStyle(ChatFormatting.DARK_GRAY));
-        tooltip.add(Component.translatable("tooltip.riverweir.depth_rule").withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("tooltip.riverweir.dimensions_tier",4,tier.panelHeight).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("tooltip.riverweir.capacity",stack.getCount(),Math.min(tier.maxSpan,stack.getCount()*4)).withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("tooltip.riverweir.tier_limits",tier.maxSpan,tier.maxDepth).withStyle(ChatFormatting.DARK_GRAY));
     }
     @Override public InteractionResult useOn(UseOnContext context){
         Level level=context.getLevel();
@@ -46,7 +48,7 @@ public final class NetRollItem extends Item {
         if(!data.contains(key)||!dimension.equals(data.getString(worldKey))){
             data.putLong(key,pos.asLong());
             data.putString(worldKey,dimension);
-            player.displayClientMessage(Component.translatable("message.riverweir.first",WeirLogic.countRolls(player)),true);
+            player.displayClientMessage(Component.translatable("message.riverweir.first",WeirLogic.countRolls(player,tier)),true);
             return InteractionResult.CONSUME;
         }
         BlockPos first=BlockPos.of(data.getLong(key));
@@ -55,7 +57,7 @@ public final class NetRollItem extends Item {
             player.displayClientMessage(Component.translatable("message.riverweir.cancel"),true);
             return InteractionResult.CONSUME;
         }
-        if(WeirLogic.connect((ServerLevel)level,first,pos,player)){
+        if(WeirLogic.connect((ServerLevel)level,first,pos,player,tier)){
             data.remove(key);data.remove(worldKey);
         }
         return InteractionResult.CONSUME;
