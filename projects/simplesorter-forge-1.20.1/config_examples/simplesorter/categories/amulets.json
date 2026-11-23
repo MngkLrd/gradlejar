@@ -1,0 +1,24 @@
+{
+  "id": "amulets",
+  "display_name": "Amulets",
+  "group": "equipment",
+  "priority": 960,
+  "weight_multiplier": 1,
+  "move_allowed": true,
+  "items": [
+    "examplemod:fire_amulet",
+    "examplemod:moon_amulet"
+  ],
+  "tags": [
+    "curios:necklace",
+    "curios:charm",
+    "simplesorter:amulets"
+  ],
+  "id_contains": [
+    "amulet",
+    "talisman",
+    "pendant"
+  ],
+  "namespaces": [],
+  "class_hints": []
+}
