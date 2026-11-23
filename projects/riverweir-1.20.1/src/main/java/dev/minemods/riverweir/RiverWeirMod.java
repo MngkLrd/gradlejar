@@ -7,6 +7,10 @@ import dev.minemods.riverweir.item.NetRollItem;
 import dev.minemods.riverweir.logic.WeirTier;
 import dev.minemods.riverweir.menu.WeirMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -28,6 +32,7 @@ public final class RiverWeirMod {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ID);
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, ID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ID);
 
     public static final RegistryObject<Block> POST = BLOCKS.register("weir_post", () -> new WeirPostBlock(
         BlockBehaviour.Properties.of().strength(1.7f).sound(SoundType.WOOD).noOcclusion()));
@@ -41,6 +46,18 @@ public final class RiverWeirMod {
         () -> new NetRollItem(WeirTier.IRON,new Item.Properties().stacksTo(16)));
     public static final RegistryObject<Item> NET_TWINE = ITEMS.register("net_twine", () -> new Item(new Item.Properties()));
 
+    public static final RegistryObject<CreativeModeTab> CREATIVE_TAB = CREATIVE_TABS.register("main",
+        () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.riverweir"))
+            .icon(() -> new ItemStack(NET_ROLL.get()))
+            .displayItems((parameters, output) -> {
+                output.accept(POST_ITEM.get());
+                output.accept(NET_TWINE.get());
+                output.accept(NET_ROLL.get());
+                output.accept(BRONZE_NET_ROLL.get());
+                output.accept(IRON_NET_ROLL.get());
+            }).build());
+
     public static final RegistryObject<BlockEntityType<WeirPostBlockEntity>> POST_BE = BLOCK_ENTITIES.register("weir_post",
         () -> BlockEntityType.Builder.of(WeirPostBlockEntity::new, POST.get()).build(null));
     public static final RegistryObject<MenuType<WeirMenu>> WEIR_MENU = MENUS.register("weir",
@@ -52,5 +69,6 @@ public final class RiverWeirMod {
         ITEMS.register(bus);
         BLOCK_ENTITIES.register(bus);
         MENUS.register(bus);
+        CREATIVE_TABS.register(bus);
     }
 }

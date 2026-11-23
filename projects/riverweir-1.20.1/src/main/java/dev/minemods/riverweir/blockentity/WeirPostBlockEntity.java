@@ -7,6 +7,7 @@ import net.minecraft.nbt.ListTag;
 import dev.minemods.riverweir.menu.WeirMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.Containers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -94,6 +95,26 @@ public final class WeirPostBlockEntity extends BlockEntity implements MenuProvid
         setChanged();
     }
 
+    /**
+     * The v0.4 Jute net had nine visible slots. When it is upgraded to two,
+     * merge old catches first and drop any leftover stacks at the stake.
+     * Never discard a catch silently or leave inaccessible hidden slots.
+     */
+    private void migrateExcessCatches(ServerLevel server) {
+        int capacity = getTier().storage;
+        if (capacity >= items.getSlots()) return;
+        for (int index = capacity; index < items.getSlots(); index++) {
+            ItemStack stack = items.getStackInSlot(index);
+            if (stack.isEmpty()) continue;
+            ItemStack moving = items.extractItem(index, stack.getCount(), false);
+            for (int target = 0; target < capacity && !moving.isEmpty(); target++)
+                moving = items.insertItem(target, moving, false);
+            if (!moving.isEmpty())
+                Containers.dropItemStack(server, worldPosition.getX() + .5,
+                    worldPosition.getY() + .5, worldPosition.getZ() + .5, moving);
+        }
+    }
+
     @Override protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         if (other != null) tag.putLong("OtherPost",other.asLong());
@@ -146,6 +167,7 @@ public final class WeirPostBlockEntity extends BlockEntity implements MenuProvid
         if (!(level instanceof ServerLevel server) || !be.master || be.other==null) return;
         // A post may be broken while the far end is unloaded. Reconcile as soon
         // as both ends are available, without force-loading chunks.
+        be.migrateExcessCatches(server);
         if (server.hasChunkAt(be.other) && !WeirLogic.isValidPartner(server,be)) {
             WeirLogic.dismantle(server,pos);
             return;
