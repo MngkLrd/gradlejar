@@ -11,7 +11,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -30,9 +29,9 @@ public final class RiverWeirMod {
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, ID);
 
     public static final RegistryObject<Block> POST = BLOCKS.register("weir_post", () -> new WeirPostBlock(
-        BlockBehaviour.Properties.of(Material.WOOD).strength(1.7f).sound(SoundType.WOOD).noOcclusion()));
+        BlockBehaviour.Properties.of().strength(1.7f).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistryObject<Block> NET = BLOCKS.register("weir_net", () -> new WeirNetBlock(
-        BlockBehaviour.Properties.of(Material.DECORATION).strength(0.6f).sound(SoundType.WOOL).noOcclusion()));
+        BlockBehaviour.Properties.of().strength(0.6f).sound(SoundType.WOOL).noOcclusion()));
     public static final RegistryObject<Item> POST_ITEM = ITEMS.register("weir_post", () -> new BlockItem(POST.get(), new Item.Properties()));
     public static final RegistryObject<Item> NET_ROLL = ITEMS.register("net_roll", () -> new NetRollItem(new Item.Properties().stacksTo(64)));
 

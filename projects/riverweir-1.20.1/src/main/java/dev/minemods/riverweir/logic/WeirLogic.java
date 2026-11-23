@@ -131,7 +131,7 @@ public final class WeirLogic {
         for(Direction dir : axis==Direction.Axis.X ? new Direction[]{Direction.EAST,Direction.WEST} :
                 new Direction[]{Direction.NORTH,Direction.SOUTH}) {
             for(int distance=1;distance<=MAX_SPAN+1;distance++) {
-                for(int dy=0;dy<=1;dy++) {
+                for(int dy=0;dy<=3;dy++) {
                     BlockPos p=net.relative(dir,distance).above(dy);
                     WeirPostBlockEntity be=post(level,p);
                     if(be!=null && be.other!=null && be.netY>=net.getY()
