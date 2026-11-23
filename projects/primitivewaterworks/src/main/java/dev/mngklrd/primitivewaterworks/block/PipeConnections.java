@@ -76,11 +76,12 @@ public final class PipeConnections {
 
     public static boolean getSide(BlockState state, Direction direction) {
         if (!direction.getAxis().isHorizontal()) return false;
+        boolean isDownspout = state.getBlock() instanceof DownspoutBlock;
         return switch (direction) {
-            case NORTH -> state.getValue(GutterBlock.NORTH);
-            case EAST -> state.getValue(GutterBlock.EAST);
-            case SOUTH -> state.getValue(GutterBlock.SOUTH);
-            case WEST -> state.getValue(GutterBlock.WEST);
+            case NORTH -> state.getValue(isDownspout ? DownspoutBlock.NORTH : GutterBlock.NORTH);
+            case EAST -> state.getValue(isDownspout ? DownspoutBlock.EAST : GutterBlock.EAST);
+            case SOUTH -> state.getValue(isDownspout ? DownspoutBlock.SOUTH : GutterBlock.SOUTH);
+            case WEST -> state.getValue(isDownspout ? DownspoutBlock.WEST : GutterBlock.WEST);
             default -> false;
         };
     }
