@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,23 +96,13 @@ public final class WarehouseVacuumSorter {
 
         private Session(List<ContainerRef> containers) {
             this.containers = List.copyOf(containers);
-            List<WarehouseFamilyPlan.Node> nodes = new ArrayList<>();
-            for (ContainerRef ref : containers) {
-                BlockPos p = ref.pos();
-                nodes.add(new WarehouseFamilyPlan.Node(p.getX(), p.getY(), p.getZ(), Map.of()));
-            }
-            WarehouseFamilyPlan geometry = WarehouseFamilyPlan.analyze(nodes);
-            Map<Integer, List<ContainerRef>> regions = new LinkedHashMap<>();
-            for (int i = 0; i < containers.size(); i++) {
-                regions.computeIfAbsent(geometry.region(i), key -> new ArrayList<>())
-                        .add(containers.get(i));
-            }
+            // Sort all storage discovered in the wand's selected radius.
+            // Unlike the old strict-home algorithm, do not split the player's
+            // warehouse by an arbitrary 4-block spatial connectedness rule.
             batches = new ArrayList<>();
-            for (List<ContainerRef> region : regions.values()) {
-                for (int i = 0; i < region.size(); i += MAX_CHESTS_PER_BATCH) {
-                    batches.add(List.copyOf(region.subList(
-                            i, Math.min(i + MAX_CHESTS_PER_BATCH, region.size()))));
-                }
+            for (int i = 0; i < containers.size(); i += MAX_CHESTS_PER_BATCH) {
+                batches.add(List.copyOf(containers.subList(
+                        i, Math.min(i + MAX_CHESTS_PER_BATCH, containers.size()))));
             }
         }
 
