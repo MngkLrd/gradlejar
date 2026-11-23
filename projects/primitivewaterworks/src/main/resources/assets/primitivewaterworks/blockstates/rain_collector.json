@@ -1,7 +1,24 @@
 {
   "variants": {
-    "": {
-      "model": "primitivewaterworks:block/rain_collector"
+    "facing=north": {
+      "model": "primitivewaterworks:block/rain_collector",
+      "y": 0,
+      "uvlock": true
+    },
+    "facing=east": {
+      "model": "primitivewaterworks:block/rain_collector",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=south": {
+      "model": "primitivewaterworks:block/rain_collector",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=west": {
+      "model": "primitivewaterworks:block/rain_collector",
+      "y": 270,
+      "uvlock": true
     }
   }
 }

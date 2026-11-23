@@ -2,5 +2,6 @@
   "block.primitivewaterworks.rain_collector": "Wooden Rain Collector",
   "block.primitivewaterworks.wooden_gutter": "Wooden Gutter",
   "block.primitivewaterworks.wooden_downspout": "Wooden Downspout",
-  "message.primitivewaterworks.stored": "Rainwater: %s / 1000 mB"
+  "message.primitivewaterworks.stored": "Tank: %s mB | Collected: %s mB | Delivered: %s mB",
+  "message.primitivewaterworks.rotated": "Rain collector outlet: %s"
 }

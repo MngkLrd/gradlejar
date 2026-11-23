@@ -7,7 +7,14 @@
     },
     {
       "when": {
-        "north": "true"
+        "OR": [
+          {
+            "north": "true"
+          },
+          {
+            "axis": "z"
+          }
+        ]
       },
       "apply": {
         "model": "primitivewaterworks:block/gutter_north"
@@ -15,7 +22,14 @@
     },
     {
       "when": {
-        "south": "true"
+        "OR": [
+          {
+            "south": "true"
+          },
+          {
+            "axis": "z"
+          }
+        ]
       },
       "apply": {
         "model": "primitivewaterworks:block/gutter_south"
@@ -23,7 +37,14 @@
     },
     {
       "when": {
-        "east": "true"
+        "OR": [
+          {
+            "east": "true"
+          },
+          {
+            "axis": "x"
+          }
+        ]
       },
       "apply": {
         "model": "primitivewaterworks:block/gutter_east"
@@ -31,10 +52,25 @@
     },
     {
       "when": {
-        "west": "true"
+        "OR": [
+          {
+            "west": "true"
+          },
+          {
+            "axis": "x"
+          }
+        ]
       },
       "apply": {
         "model": "primitivewaterworks:block/gutter_west"
+      }
+    },
+    {
+      "when": {
+        "drop": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_drop"
       }
     }
   ]
