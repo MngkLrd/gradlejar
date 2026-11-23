@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/gutter_inlet",
+  "textures": {
+    "wood": "tfc:block/wood/planks/white_cedar",
+    "particle": "#wood"
+  }
+}

@@ -107,6 +107,6 @@ public final class PrimitiveWaterworks {
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
-            ALL_BLOCKS.forEach(event::accept);
+            ALL_BLOCKS.forEach(block -> event.accept(block.get()));
     }
 }

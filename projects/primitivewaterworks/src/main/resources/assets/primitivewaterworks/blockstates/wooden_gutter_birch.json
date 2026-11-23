@@ -1,23 +1,15 @@
 {
   "multipart": [
     {
-      "apply": {
-        "model": "primitivewaterworks:block/gutter_core_birch"
-      }
-    },
-    {
       "when": {
-        "OR": [
-          {
-            "north": "true"
-          },
-          {
-            "axis": "z"
-          }
-        ]
+        "north": "false",
+        "east": "false",
+        "south": "false",
+        "west": "false",
+        "axis": "x"
       },
       "apply": {
-        "model": "primitivewaterworks:block/gutter_north_birch"
+        "model": "primitivewaterworks:block/gutter_shape_0_x_birch"
       }
     },
     {
@@ -27,71 +19,28 @@
             "wet": "true"
           },
           {
-            "OR": [
-              {
-                "north": "true"
-              },
-              {
-                "axis": "z"
-              }
-            ]
-          }
-        ]
-      },
-      "apply": {
-        "model": "primitivewaterworks:block/gutter_water_north"
-      }
-    },
-    {
-      "when": {
-        "OR": [
-          {
-            "south": "true"
-          },
-          {
-            "axis": "z"
-          }
-        ]
-      },
-      "apply": {
-        "model": "primitivewaterworks:block/gutter_south_birch"
-      }
-    },
-    {
-      "when": {
-        "AND": [
-          {
-            "wet": "true"
-          },
-          {
-            "OR": [
-              {
-                "south": "true"
-              },
-              {
-                "axis": "z"
-              }
-            ]
-          }
-        ]
-      },
-      "apply": {
-        "model": "primitivewaterworks:block/gutter_water_south"
-      }
-    },
-    {
-      "when": {
-        "OR": [
-          {
-            "east": "true"
-          },
-          {
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "false",
             "axis": "x"
           }
         ]
       },
       "apply": {
-        "model": "primitivewaterworks:block/gutter_east_birch"
+        "model": "primitivewaterworks:block/gutter_water_shape_0_x"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "east": "false",
+        "south": "false",
+        "west": "false",
+        "axis": "z"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_0_z_birch"
       }
     },
     {
@@ -101,34 +50,259 @@
             "wet": "true"
           },
           {
-            "OR": [
-              {
-                "east": "true"
-              },
-              {
-                "axis": "x"
-              }
-            ]
+            "north": "false",
+            "east": "false",
+            "south": "false",
+            "west": "false",
+            "axis": "z"
           }
         ]
       },
       "apply": {
-        "model": "primitivewaterworks:block/gutter_water_east"
+        "model": "primitivewaterworks:block/gutter_water_shape_0_z"
       }
     },
     {
       "when": {
-        "OR": [
+        "north": "true",
+        "east": "false",
+        "south": "false",
+        "west": "false"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_1_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
           {
+            "wet": "true"
+          },
+          {
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_shape_1"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "east": "true",
+        "south": "false",
+        "west": "false"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_2_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_shape_2"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "east": "true",
+        "south": "false",
+        "west": "false"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_3_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_shape_3"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "east": "false",
+        "south": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_4_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_shape_4"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "east": "false",
+        "south": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_5_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "north": "true",
+            "east": "false",
+            "south": "true",
+            "west": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_shape_5"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "east": "true",
+        "south": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_6_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_shape_6"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_7_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "north": "true",
+            "east": "true",
+            "south": "true",
+            "west": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_shape_7"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "east": "false",
+        "south": "false",
+        "west": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_8_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "north": "false",
+            "east": "false",
+            "south": "false",
             "west": "true"
-          },
-          {
-            "axis": "x"
           }
         ]
       },
       "apply": {
-        "model": "primitivewaterworks:block/gutter_west_birch"
+        "model": "primitivewaterworks:block/gutter_water_shape_8"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "east": "false",
+        "south": "false",
+        "west": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_9_birch"
       }
     },
     {
@@ -138,19 +312,189 @@
             "wet": "true"
           },
           {
-            "OR": [
-              {
-                "west": "true"
-              },
-              {
-                "axis": "x"
-              }
-            ]
+            "north": "true",
+            "east": "false",
+            "south": "false",
+            "west": "true"
           }
         ]
       },
       "apply": {
-        "model": "primitivewaterworks:block/gutter_water_west"
+        "model": "primitivewaterworks:block/gutter_water_shape_9"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "east": "true",
+        "south": "false",
+        "west": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_10_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "north": "false",
+            "east": "true",
+            "south": "false",
+            "west": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_shape_10"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "east": "true",
+        "south": "false",
+        "west": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_11_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "north": "true",
+            "east": "true",
+            "south": "false",
+            "west": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_shape_11"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "east": "false",
+        "south": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_12_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "north": "false",
+            "east": "false",
+            "south": "true",
+            "west": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_shape_12"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "east": "false",
+        "south": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_13_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "north": "true",
+            "east": "false",
+            "south": "true",
+            "west": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_shape_13"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "east": "true",
+        "south": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_14_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "north": "false",
+            "east": "true",
+            "south": "true",
+            "west": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_shape_14"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "east": "true",
+        "south": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_shape_15_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "north": "true",
+            "east": "true",
+            "south": "true",
+            "west": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_shape_15"
       }
     },
     {
@@ -163,10 +507,25 @@
     },
     {
       "when": {
-        "wet": "true"
+        "inlet": "true"
       },
       "apply": {
-        "model": "primitivewaterworks:block/gutter_water_core"
+        "model": "primitivewaterworks:block/gutter_inlet_birch"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "inlet": "true"
+          },
+          {
+            "wet": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_inlet_water"
       }
     }
   ]

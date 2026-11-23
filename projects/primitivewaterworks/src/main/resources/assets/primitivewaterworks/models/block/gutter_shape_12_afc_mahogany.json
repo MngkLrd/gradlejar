@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/gutter_shape_12",
+  "textures": {
+    "wood": "afc:block/wood/planks/mahogany",
+    "particle": "#wood"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/gutter_shape_3",
+  "textures": {
+    "wood": "afc:block/wood/planks/tualang",
+    "particle": "#wood"
+  }
+}

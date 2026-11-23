@@ -5,54 +5,50 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
-/** Unified flow and port rules for physical geometry and routing. */
+/** Water-only gravity connection graph, never accepting upward routing. */
 public final class PipeConnections {
     private PipeConnections() {}
 
     public static boolean isConduit(BlockState state) {
         return state.getBlock() instanceof GutterBlock || state.getBlock() instanceof DownspoutBlock;
     }
-    public static boolean canJoinHorizontally(BlockGetter level, BlockPos origin, Direction direction) {
-        if (!direction.getAxis().isHorizontal()) return false;
-        BlockPos neighbor = origin.relative(direction);
-        BlockState adjacent = level.getBlockState(neighbor);
-        if (adjacent.getBlock() instanceof GutterBlock) return true;
-        if (adjacent.getBlock() instanceof DownspoutBlock) return true;
-        if (adjacent.getBlock() instanceof RainCollectorBlock)
-            return RainCollectorBlock.hasOutlet(adjacent, direction.getOpposite());
-        return isFluidInput(level, neighbor, direction.getOpposite());
+    public static boolean canJoinHorizontally(BlockGetter level,BlockPos origin,Direction direction) {
+        if(!direction.getAxis().isHorizontal())return false;
+        BlockPos at=origin.relative(direction);
+        BlockState neighbor=level.getBlockState(at);
+        if(neighbor.getBlock() instanceof GutterBlock)return true;
+        if(neighbor.getBlock() instanceof DownspoutBlock)return true;
+        if(neighbor.getBlock() instanceof RainCollectorBlock)
+            return RainCollectorBlock.hasOutlet(neighbor,direction.getOpposite());
+        return isFluidInput(level,at,direction.getOpposite());
     }
-    public static boolean isFluidInput(BlockGetter level, BlockPos pos, Direction side) {
-        BlockEntity target = level.getBlockEntity(pos);
-        if (target == null || target instanceof dev.mngklrd.primitivewaterworks.blockentity.RainCollectorBlockEntity)
+    public static boolean isFluidInput(BlockGetter level,BlockPos at,Direction side) {
+        BlockEntity be=level.getBlockEntity(at);
+        if(be==null || be instanceof dev.mngklrd.primitivewaterworks.blockentity.RainCollectorBlockEntity)
             return false;
-        return target.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
-            .map(PipeConnections::canInsertWater).orElse(false);
+        // Capability presence indicates a possible socket even if the tank is already full.
+        // Real fluid acceptance is still checked during each server transfer.
+        return be.getCapability(ForgeCapabilities.FLUID_HANDLER,side).isPresent();
     }
-    public static boolean canInsertWater(IFluidHandler handler) {
-        return handler.fill(new FluidStack(Fluids.WATER, 1), IFluidHandler.FluidAction.SIMULATE) > 0;
+    public static boolean sourceOutput(BlockState source,Direction direction) {
+        return direction==Direction.DOWN || RainCollectorBlock.hasOutlet(source,direction);
     }
-
-    public static boolean sourceOutput(BlockState source, Direction direction) {
-        return direction == Direction.DOWN || RainCollectorBlock.hasOutlet(source, direction);
+    public static boolean conduitOutput(BlockGetter level,BlockPos pos,BlockState current,Direction direction) {
+        if(direction==Direction.UP)return false;
+        if(direction==Direction.DOWN)
+            return current.getBlock() instanceof DownspoutBlock
+                || (current.getBlock() instanceof GutterBlock && GutterBlock.hasDrop(level,pos));
+        return canJoinHorizontally(level,pos,direction);
     }
-    public static boolean conduitOutput(BlockGetter level, BlockPos pos, BlockState current, Direction direction) {
-        if (direction == Direction.UP) return false;
-        if (direction == Direction.DOWN) return true;
-        return canJoinHorizontally(level, pos, direction);
-    }
-    public static boolean canEnterConduit(BlockGetter level, BlockPos next, BlockState state, Direction from) {
-        if (state.getBlock() instanceof DownspoutBlock)
-            return from == Direction.DOWN ||
-                (from.getAxis().isHorizontal() && canJoinHorizontally(level, next, from.getOpposite()));
-        if (state.getBlock() instanceof GutterBlock)
-            return from.getAxis().isHorizontal() &&
-                canJoinHorizontally(level, next, from.getOpposite());
+    public static boolean canEnterConduit(BlockGetter level,BlockPos at,BlockState neighbor,Direction incoming) {
+        if(neighbor.getBlock() instanceof DownspoutBlock)
+            return incoming==Direction.DOWN ||
+                (incoming.getAxis().isHorizontal() && canJoinHorizontally(level,at,incoming.getOpposite()));
+        if(neighbor.getBlock() instanceof GutterBlock)
+            return (incoming==Direction.DOWN && GutterBlock.hasInlet(level,at))
+                || (incoming.getAxis().isHorizontal() && canJoinHorizontally(level,at,incoming.getOpposite()));
         return false;
     }
 }

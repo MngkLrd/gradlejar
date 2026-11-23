@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/gutter_shape_2",
+  "textures": {
+    "wood": "afc:block/wood/planks/ipe",
+    "particle": "#wood"
+  }
+}

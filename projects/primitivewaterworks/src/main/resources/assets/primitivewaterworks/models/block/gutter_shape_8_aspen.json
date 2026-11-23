@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/gutter_shape_8",
+  "textures": {
+    "wood": "tfc:block/wood/planks/aspen",
+    "particle": "#wood"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/gutter_shape_9",
+  "textures": {
+    "wood": "tfc:block/wood/planks/sycamore",
+    "particle": "#wood"
+  }
+}
