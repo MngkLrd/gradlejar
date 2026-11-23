@@ -11,6 +11,7 @@ import com.kirill.simplesorter.sorting.SortCategory;
 import com.kirill.simplesorter.sorting.WarehouseLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -36,6 +37,7 @@ public final class AutoLabelService {
         WarehouseLabelData data = WarehouseLabelData.get(level);
         Set<ChunkPos> changed = new HashSet<>();
         int created = 0;
+        int missingSupplies = 0;
 
         for (ContainerRef ref : containers) {
             if (created >= 160) break;
@@ -70,7 +72,10 @@ public final class AutoLabelService {
             ItemStack material = prior == null ? ItemStack.EMPTY : prior.material();
             if (prior == null || prior.style() != style) {
                 ItemStack newMaterial = WandLabelSupplies.consume(wand, style);
-                if (newMaterial.isEmpty()) continue; // no free labels or fabricated resources
+                if (newMaterial.isEmpty()) {
+                    missingSupplies++;
+                    continue; // no fabricated labels
+                }
                 if (prior != null && !prior.material().isEmpty()) {
                     WandLabelSupplies.refund(wand, prior.material());
                 }
@@ -84,6 +89,12 @@ public final class AutoLabelService {
         }
 
         for (ChunkPos chunk : changed) broadcast(level, chunk);
+        if (missingSupplies > 0) {
+            player.displayClientMessage(Component.literal("Simple Sorter: "
+                    + missingSupplies + " chests need "
+                    + (style == 1 ? "signs" : "item frames")
+                    + ". Add materials to inventory, then press Load Labels."), true);
+        }
         return created;
     }
 
