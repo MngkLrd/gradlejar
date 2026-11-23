@@ -29,8 +29,8 @@ public final class WarehouseFamilyPlanSelfTest {
                 Map<String, Integer> votes = Map.of();
                 if (column == 0) {
                     votes = switch (row) {
-                        case 0, 1 -> Map.of("raw_ores", 27);
-                        case 2 -> Map.of("raw_ores", 1); // third almost free!
+                        case 0, 1 -> Map.of("mineral_resources", 27);
+                        case 2 -> Map.of("mineral_resources", 1); // third almost free!
                         default -> Map.of();
                     };
                 }
@@ -42,7 +42,7 @@ public final class WarehouseFamilyPlanSelfTest {
                         default -> Map.of("sticks", 3);
                     };
                 }
-                if (column == 5 && row == 0) votes = Map.of("raw_ores", 14);
+                if (column == 5 && row == 0) votes = Map.of("mineral_resources", 14);
                 nodes.add(new WarehouseFamilyPlan.Node(x, 78 - row, 0, votes));
             }
         }
@@ -51,28 +51,28 @@ public final class WarehouseFamilyPlanSelfTest {
         int sixthOre = 20, freeThirdFirst = 2;
         check(plan.size() == 24, "Must handle 6x4 warehouse with 1-block gaps");
         check(plan.sameRegion(0, sixthOre), "All 6 columns belong to one warehouse");
-        check(plan.anchor(sixthOre, "raw_ores").equals(
+        check(plan.anchor(sixthOre, "mineral_resources").equals(
                         new WarehouseFamilyPlan.Column(0, 0)),
                 "First column with three ore chests MUST anchor ores");
-        check(plan.atHome(freeThirdFirst, "raw_ores"),
+        check(plan.atHome(freeThirdFirst, "mineral_resources"),
                 "Third, almost-free ore chest is still the correct destination");
-        check(!plan.atHome(sixthOre, "raw_ores"),
+        check(!plan.atHome(sixthOre, "mineral_resources"),
                 "A single sixth-column ore chest is NOT a canonical home");
         check(WarehouseConsolidationDecision.shouldRelocate(
-                        plan, sixthOre, "raw_ores", false, "raw_ores"),
+                        plan, sixthOre, "mineral_resources", false, "mineral_resources"),
                 "Scattered sixth-column ores should consolidate toward first");
         check(WarehouseConsolidationDecision.eligibleTarget(
-                        plan, sixthOre, freeThirdFirst, "raw_ores",
+                        plan, sixthOre, freeThirdFirst, "mineral_resources",
                         false, true, false),
                 "Third partially filled ore chest can receive sixth-column ores");
         check(!WarehouseConsolidationDecision.eligibleTarget(
-                        plan, sixthOre, 8, "raw_ores", false, false, false),
+                        plan, sixthOre, 8, "mineral_resources", false, false, false),
                 "Unrelated tool chest cannot receive ores");
         check(WarehouseConsolidationDecision.shouldRelocate(
-                        plan, sixthOre, "raw_ores", true, "raw_ores"),
+                        plan, sixthOre, "mineral_resources", true, "mineral_resources"),
                 "Majority ores in a mixed sixth-column chest should still consolidate");
         check(!WarehouseConsolidationDecision.shouldRelocate(
-                        plan, freeThirdFirst, "raw_ores", false, "raw_ores"),
+                        plan, freeThirdFirst, "mineral_resources", false, "mineral_resources"),
                 "First-column ore chest remains stable: no ping-pong");
 
         int tools = 8, metals = 9, clay = 10, sticks = 11;
@@ -102,7 +102,7 @@ public final class WarehouseFamilyPlanSelfTest {
                         "raw_ores", false).equals("stones"),
                 "Loose TFC limestone must never inherit the ore group");
         check(StrictStorageFamily.of("tfc:ore/hematite",
-                        "raw_ores", false).equals("raw_ores"),
+                        "raw_ores", false).equals("mineral_resources"),
                 "Actual hematite remains raw ore");
         check(WarehouseLayout.family("loose_stones").equals("building"),
                 "Even the old visual-layout fallback cannot label stones as ore");
@@ -110,13 +110,13 @@ public final class WarehouseFamilyPlanSelfTest {
         // No assumption of exactly 6x4: a separate 2-chest satellite storage
         // must not steal the anchor or receive its items.
         nodes.add(new WarehouseFamilyPlan.Node(100, 78, 100,
-                Map.of("raw_ores", 64)));
+                Map.of("mineral_resources", 64)));
         nodes.add(new WarehouseFamilyPlan.Node(100, 77, 100, Map.of()));
         WarehouseFamilyPlan withSatellite = WarehouseFamilyPlan.analyze(nodes);
         check(!withSatellite.sameRegion(sixthOre, 24),
                 "Independent warehouse areas cannot exchange items");
         check(!WarehouseConsolidationDecision.eligibleTarget(withSatellite,
-                        sixthOre, 24, "raw_ores", false, true, false),
+                        sixthOre, 24, "mineral_resources", false, true, false),
                 "Even an ore-filled far-away chest is not a valid target");
 
         System.out.println("WarehouseFamilyPlan: 6x4 flexible shelves, first/last ore "
