@@ -31,6 +31,21 @@ public final class FixedLabelFaces {
         return selected;
     }
 
+    /**
+     * Minecraft's text front (+Z after the paired negative X/Y scale)
+     * must point along the OUTWARD normal of the chest face.
+     * Important: +180/-180 for NORTH, 0 for SOUTH; 0.9.7 inverted this.
+     */
+    public static float glyphRotationDegrees(int side) {
+        return switch (side) {
+            case NORTH -> 180F;
+            case SOUTH -> 0F;
+            case EAST -> 90F;
+            case WEST -> -90F;
+            default -> 0F;
+        };
+    }
+
     public static boolean isCardinal(int side) {
         return side >= NORTH && side <= WEST;
     }
