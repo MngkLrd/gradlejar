@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +47,24 @@ public final class SmartCategorySorter {
         }
         snapshots.sort(Comparator.comparingLong(s -> s.ref().pos().asLong()));
 
+        // A one-shot spatial layout plan. Never saved to the world and never
+        // requires pre-labelling chests. Strongly seeded rows are learned from
+        // the snapshot; otherwise ordinary warehouse ordering is used.
+        Map<StorageSnapshot, Integer> snapshotIndex = new IdentityHashMap<>();
+        List<WarehouseLayout.Node> positions = new ArrayList<>(snapshots.size());
+        for (int i = 0; i < snapshots.size(); i++) {
+            StorageSnapshot current = snapshots.get(i);
+            snapshotIndex.put(current, i);
+            BlockPos p = current.ref().pos();
+            positions.add(new WarehouseLayout.Node(
+                    p.getX(), p.getY(), p.getZ(),
+                    current.occupied(), current.labels()));
+        }
+        WarehouseLayout layout = categoryMode
+                ? WarehouseLayout.analyze(positions)
+                : WarehouseLayout.analyze(List.of());
+
+
         for (StorageSnapshot snapshot : snapshots) {
             for (StackKey key : snapshot.counts().keySet()) {
                 byExactStack.computeIfAbsent(key, ignored -> new ArrayList<>()).add(snapshot);
@@ -60,7 +79,8 @@ public final class SmartCategorySorter {
         // that are genuinely mixed into incompatible stores.
         Map<StackKey, StorageSnapshot> homes = new LinkedHashMap<>();
         Set<StackKey> emptyAllocations = new HashSet<>();
-        Map<String, StorageSnapshot> reservedPartitions = new LinkedHashMap<>();
+        Map<String, List<StorageSnapshot>> reservedPartitions = new LinkedHashMap<>();
+        Map<StorageSnapshot, Integer> virtualFreeSlots = new IdentityHashMap<>();
         Set<StorageSnapshot> reservedContainers = new HashSet<>();
         List<StorageSnapshot> emptyChests = snapshots.stream()
                 .filter(snapshot -> snapshot.occupied() == 0)
@@ -89,7 +109,7 @@ public final class SmartCategorySorter {
                     })
                     : List.of();
             StorageSnapshot best = chooseHome(key, label, sample, categoryMode,
-                    originals, related);
+                    originals, related, layout, snapshotIndex);
 
             // Prefer an established chest over a brand-new empty one. An
             // empty chest is useful ONLY when no better existing home exists.
@@ -101,25 +121,44 @@ public final class SmartCategorySorter {
                 if (!partition.isEmpty() &&
                         RoutingPolicy.shouldClaimEmpty(
                                 source.fit(key, label), otherSlots, false)) {
-                    StorageSnapshot reserved = reservedPartitions.get(partition);
+                    int requestedSlots = Math.max(1,
+                            (source.counts().getOrDefault(key, 1)
+                                    + sample.getMaxStackSize() - 1)
+                                    / Math.max(1, sample.getMaxStackSize()));
+                    StorageSnapshot reserved = null;
+                    for (StorageSnapshot candidate : reservedPartitions.getOrDefault(partition, List.of())) {
+                        if (virtualFreeSlots.getOrDefault(candidate, 0) >= requestedSlots
+                                && canReceiveSample(candidate.ref().handler(), sample)) {
+                            reserved = candidate;
+                            break;
+                        }
+                    }
                     if (reserved == null) {
-                        // The nearest usable empty chest is reserved once per
-                        // family. Future item variants in that family share it.
-                        for (StorageSnapshot candidate : emptyChests.stream()
+                        int sourceIndex = snapshotIndex.get(source);
+                        List<StorageSnapshot> orderedEmpties = emptyChests.stream()
                                 .filter(candidate -> !reservedContainers.contains(candidate))
                                 .sorted(Comparator
                                         .comparingDouble((StorageSnapshot candidate) ->
+                                                layout.emptyPlacementScore(sourceIndex,
+                                                        snapshotIndex.get(candidate), label)).reversed()
+                                        .thenComparingDouble(candidate ->
                                                 candidate.ref().pos().distSqr(source.ref().pos()))
                                         .thenComparingLong(candidate -> candidate.ref().pos().asLong()))
-                                .toList()) {
-                            if (!canReceiveSample(candidate.ref().handler(), sample)) continue;
+                                .toList();
+                        for (StorageSnapshot candidate : orderedEmpties) {
+                            if (candidate.ref().handler().getSlots() < requestedSlots
+                                    || !canReceiveSample(candidate.ref().handler(), sample)) continue;
                             reserved = candidate;
-                            reservedPartitions.put(partition, reserved);
-                            reservedContainers.add(reserved);
+                            reservedPartitions.computeIfAbsent(partition,
+                                    ignored -> new ArrayList<>()).add(candidate);
+                            virtualFreeSlots.put(candidate, candidate.ref().handler().getSlots());
+                            reservedContainers.add(candidate);
                             break;
                         }
                     }
                     if (reserved != null && canReceiveSample(reserved.ref().handler(), sample)) {
+                        virtualFreeSlots.put(reserved,
+                                virtualFreeSlots.getOrDefault(reserved, 0) - requestedSlots);
                         best = reserved;
                         emptyAllocations.add(key);
                     }
@@ -171,6 +210,16 @@ public final class SmartCategorySorter {
                 if (!shouldMove && exactHome && Math.abs(targetRank - sourceRank) < 0.00001D
                         && targetFit + 0.07D >= sourceFit
                         && targetCount >= sourceCount) {
+                    shouldMove = true;
+                }
+                // Position only resolves close semantic scores, never forces
+                // blocks / ores / plants into a conflicting class of storage.
+                if (!shouldMove && categoryMode && home.occupied() > 0
+                        && layout.sameRegion(snapshotIndex.get(source), snapshotIndex.get(home))
+                        && targetFit >= 0.78D && targetFit >= sourceFit - 0.015D
+                        && targetRank >= sourceRank - 0.035D
+                        && layout.preference(snapshotIndex.get(home), cat.id())
+                           - layout.preference(snapshotIndex.get(source), cat.id()) >= 0.58D) {
                     shouldMove = true;
                 }
                 // Empty storage has zero contextual votes by definition.
@@ -238,7 +287,9 @@ public final class SmartCategorySorter {
     private static StorageSnapshot chooseHome(StackKey key, String category, ItemStack sample,
                                              boolean allowCategoryFallback,
                                              List<StorageSnapshot> originalHomes,
-                                             List<StorageSnapshot> compatibleHomes) {
+                                             List<StorageSnapshot> compatibleHomes,
+                                             WarehouseLayout layout,
+                                             Map<StorageSnapshot, Integer> snapshotIndex) {
         if (originalHomes.isEmpty()) return null;
 
         Set<StorageSnapshot> candidates = new LinkedHashSet<>(originalHomes);
@@ -257,8 +308,13 @@ public final class SmartCategorySorter {
         }
         if (ranked.isEmpty()) return originalHomes.get(0);
 
+        StorageSnapshot sourceForLayout = originalHomes.get(0);
+        int sourceIndex = snapshotIndex.get(sourceForLayout);
         ranked.sort(Comparator
-                .comparingDouble((StorageSnapshot s) -> s.rank(key, category)).reversed()
+                .comparingDouble((StorageSnapshot s) -> s.rank(key, category)
+                        + (layout.sameRegion(sourceIndex, snapshotIndex.get(s))
+                                ? 0.045D * layout.preference(snapshotIndex.get(s), category)
+                                : 0D)).reversed()
                 .thenComparing(Comparator.comparingInt(
                         (StorageSnapshot s) -> s.counts().getOrDefault(key, 0)).reversed())
                 .thenComparingLong(s -> s.ref().pos().asLong()));
