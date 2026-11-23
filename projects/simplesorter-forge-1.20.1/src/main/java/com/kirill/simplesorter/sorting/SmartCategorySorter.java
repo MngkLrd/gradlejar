@@ -25,6 +25,7 @@ import java.util.Set;
 public final class SmartCategorySorter {
     private static final double CATEGORY_TARGET_PURITY = 0.68D;
     private static final double SOURCE_ALREADY_SORTED_PURITY = 0.68D;
+    private static final double RAW_FAMILY_PURITY = 0.86D;
 
     private SmartCategorySorter() {}
 
@@ -154,15 +155,16 @@ public final class SmartCategorySorter {
         if (!isSafeFallbackCategory(categoryId)) return origin;
         // The already dominant chest is the canonical home unless the player
         // deliberately seeded the item in a second chest (handled above).
-        if (origin.purity(categoryId) >= SOURCE_ALREADY_SORTED_PURITY) return origin;
+        if (origin.purity(categoryId) >= SOURCE_ALREADY_SORTED_PURITY
+                || (isRawMineral(categoryId) && origin.familyPurity(categoryId) >= RAW_FAMILY_PURITY)) return origin;
 
         return snapshots.stream()
                 .filter(s -> s != origin && s.occupied() > 0)
-                .filter(s -> s.purity(categoryId) >= CATEGORY_TARGET_PURITY)
-                .filter(s -> s.categories().getOrDefault(categoryId, 0) > 0)
+                .filter(s -> s.purity(categoryId) >= CATEGORY_TARGET_PURITY
+                        || (isRawMineral(categoryId) && s.familyPurity(categoryId) >= RAW_FAMILY_PURITY))
                 .filter(s -> canReceiveSample(s.ref().handler(), sample))
                 .max(Comparator
-                        .comparingDouble((StorageSnapshot s) -> s.purity(categoryId))
+                        .comparingDouble((StorageSnapshot s) -> s.affinity(categoryId))
                         .thenComparingInt(s -> s.categories().getOrDefault(categoryId, 0))
                         .thenComparingLong(s -> -s.ref().pos().asLong()))
                 .orElse(origin);
@@ -173,6 +175,11 @@ public final class SmartCategorySorter {
      * A modded inventory's slot rules (TFC size, sided slots etc.) are final.
      * Item type is sufficient for routing, but NBT is never stripped on moves.
      */
+    private static boolean isRawMineral(String id) {
+        return id.equals("ores") || id.equals("raw_ores") || id.equals("dusts")
+                || id.equals("small_dust") || id.equals("tiny_dust");
+    }
+
     private static boolean isSafeFallbackCategory(String id) {
         return switch (id) {
             case "tiny_dust", "small_dust", "dusts", "ores", "raw_ores",
@@ -207,18 +214,22 @@ public final class SmartCategorySorter {
                                    int occupied) {
         double affinity(String categoryId) {
             if (occupied == 0) return 0D;
-            double own = purity(categoryId);
+            return purity(categoryId) * 2.0D + familyPurity(categoryId);
+        }
+
+        double familyPurity(String categoryId) {
+            if (occupied == 0) return 0D;
             String family = family(categoryId);
             int related = 0;
             for (var entry : categories.entrySet()) {
                 if (family.equals(family(entry.getKey()))) related += entry.getValue();
             }
-            return own * 2.0D + (double) related / occupied;
+            return (double) related / occupied;
         }
 
         private static String family(String id) {
             return switch (id) {
-                case "ores", "raw_ores", "tiny_dust", "small_dust", "dusts", "gems", "loose_stones" -> "raw_minerals";
+                case "ores", "raw_ores", "tiny_dust", "small_dust", "dusts" -> "raw_minerals";
                 case "ingots", "nuggets", "metal_sheets", "plates" -> "metal_forms";
                 case "rods", "wires", "gears" -> "machine_components";
                 default -> id;
