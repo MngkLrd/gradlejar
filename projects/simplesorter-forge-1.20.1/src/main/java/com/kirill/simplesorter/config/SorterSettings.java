@@ -24,5 +24,5 @@ public final class SorterSettings {
     /**
      * Hard cap for highlighted changed containers after one sorting action.
      */
-    public static final int MAX_HIGHLIGHTED_CONTAINERS = 32;
+    public static final int MAX_HIGHLIGHTED_CONTAINERS = 10;
 }
