@@ -69,10 +69,12 @@ public final class SmartCategorySorter {
                                 node.x(), node.y(), node.z(),
                                 node.occupied(), node.labels())).toList())
                 : WarehouseColumns.analyze(List.of());
+        boolean independentReorganization = categoryMode && settings.autoOrganize()
+                && layout.analyzedBlocks() >= 3;
 
 
 
-        for (StorageSnapshot snapshot : snapshots) {
+        if (!independentReorganization) for (StorageSnapshot snapshot : snapshots) {
             for (StackKey key : snapshot.counts().keySet()) {
                 byExactStack.computeIfAbsent(key, ignored -> new ArrayList<>()).add(snapshot);
             }
@@ -93,7 +95,7 @@ public final class SmartCategorySorter {
                 .filter(snapshot -> snapshot.occupied() == 0)
                 .toList();
 
-        for (StackKey key : samples.keySet()) {
+        if (!independentReorganization) for (StackKey key : samples.keySet()) {
             SortCategory resolved = categories.get(key);
             if (resolved == null || !resolved.moveAllowed()) continue;
 
@@ -209,8 +211,6 @@ public final class SmartCategorySorter {
             }
         };
 
-        boolean independentReorganization =
-                categoryMode && settings.autoOrganize() && layout.analyzedBlocks() >= 3;
         if (!independentReorganization) {
         for (StorageSnapshot source : snapshots) {
             IItemHandler handler = source.ref().handler();
