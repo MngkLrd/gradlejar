@@ -95,20 +95,22 @@ public final class WandLabelSupplies {
         return ItemStack.EMPTY;
     }
 
-    public static void refund(ItemStack wand, ItemStack material) {
-        if (material.isEmpty() || type(material) == 0) return;
+    public static boolean refund(ItemStack wand, ItemStack material) {
+        if (material.isEmpty() || type(material) == 0) return false;
         List<ItemStack> items = load(wand);
         for (ItemStack existing : items) {
             if (ItemStack.isSameItemSameTags(existing, material)) {
                 existing.grow(1);
                 save(wand, items);
-                return;
+                return true;
             }
         }
         if (items.size() < MAX_SLOTS) {
             items.add(material.copyWithCount(1));
             save(wand, items);
+            return true;
         }
+        return false;
     }
 
     public static void dropOnBreak(ItemStack wand, ServerPlayer player) {
