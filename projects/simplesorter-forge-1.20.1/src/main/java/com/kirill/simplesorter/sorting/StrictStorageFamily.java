@@ -57,6 +57,13 @@ public final class StrictStorageFamily {
         if (matches(path, "glass_bottle") || matches(path, "bottle")
                 || matches(path, "flask")) return "bottles";
 
+        // Some TFC crops and fruit shrubs are registered as BLOCK items,
+        // so vanilla BlockItem fallback must not make a pineapple bush a brick.
+        if (matches(path, "seed") || matches(path, "seeds")
+                || matches(path, "sapling") || matches(path, "bush")
+                || matches(path, "flower") || matches(path, "crop")
+                || matches(path, "fruit_leaves")) return "botanical";
+
         if (matches(path, "stairs") || matches(path, "stair")
                 || matches(path, "bricks") || matches(path, "brick")
                 || matches(path, "slab") || matches(path, "wall"))
