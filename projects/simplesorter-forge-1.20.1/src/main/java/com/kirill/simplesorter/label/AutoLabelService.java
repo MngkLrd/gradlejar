@@ -149,11 +149,16 @@ public final class AutoLabelService {
                                            BlockPos pos, WarehouseLabelData.Label existing,
                                            boolean legacyWithoutFacing) {
         BlockState state = level.getBlockState(pos);
-        for (Property<?> property : state.getProperties()) {
-            if (!"facing".equals(property.getName())) continue;
-            Comparable<?> value = state.getValue(property);
-            if (value instanceof Direction direction && direction.getAxis().isHorizontal()) {
-                return direction;
+        // Vanilla chest FACING corresponds to its physical front. Other
+        // modded blockstates may expose a different model orientation, so
+        // use the player's side on *first creation/migration* for them.
+        if (state.getBlock() instanceof net.minecraft.world.level.block.ChestBlock) {
+            for (Property<?> property : state.getProperties()) {
+                if (!"facing".equals(property.getName())) continue;
+                Comparable<?> value = state.getValue(property);
+                if (value instanceof Direction direction && direction.getAxis().isHorizontal()) {
+                    return direction;
+                }
             }
         }
         if (existing != null && !legacyWithoutFacing
