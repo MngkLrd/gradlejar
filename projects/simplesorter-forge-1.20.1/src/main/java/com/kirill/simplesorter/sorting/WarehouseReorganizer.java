@@ -124,6 +124,25 @@ public final class WarehouseReorganizer {
         public int movedOperations() { return operations; }
         public int examinedPasses() { return pass + 1; }
 
+        /** Honest post-sort diagnostic. The storage may still be mixed if
+         * every matching destination is full or the modded handler rejects
+         * a particular item. Do not call such a warehouse "stable". */
+        public int unresolvedMixedChests() {
+            int count = 0;
+            for (ChestState state : states) {
+                if (state.mixed()) count++;
+            }
+            return count;
+        }
+
+        public int unknownFamilySlots() {
+            int count = 0;
+            for (ChestState state : states) {
+                count += state.families.getOrDefault("misc", 0);
+            }
+            return count;
+        }
+
         /** Small, bounded main-thread slice; work automatically continues
          * on the next server tick, without any additional wand clicks. */
         public boolean step(ServerLevel level, MoveListener listener,
