@@ -1,0 +1,61 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "axis": "x",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_intact"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_frayed"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_torn"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_intact",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_frayed",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_torn",
+        "y": 90
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "type": "tfc:damage_inputs_shaped_crafting",
+  "recipe": {
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "PS",
+      "P "
+    ],
+    "key": {
+      "P": {
+        "item": "minecraft:stick"
+      },
+      "S": {
+        "tag": "tfc:saws"
+      }
+    },
+    "result": {
+      "item": "riverweir:weir_post",
+      "count": 2
+    }
+  }
+}

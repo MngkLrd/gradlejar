@@ -1,0 +1,15 @@
+{
+  "block.riverweir.weir_post": "Wooden Net Stake",
+  "block.riverweir.weir_net": "River Fishing Net",
+  "item.riverweir.net_roll": "Jute Net Roll (4 m)",
+  "container.riverweir.weir": "River Fishing Net",
+  "message.riverweir.first": "First stake selected. Right-click the second stake.",
+  "message.riverweir.cancel": "Net placement cancelled.",
+  "message.riverweir.posts": "Both stakes must be present and not connected.",
+  "message.riverweir.distance": "Stakes must be in a straight line, 2-32 water blocks apart and level.",
+  "message.riverweir.water": "The space between stakes must be filled with water at the same height.",
+  "message.riverweir.rolls": "Not enough woven net rolls. Required: %s.",
+  "message.riverweir.connected": "Fishing net assembled over %s water blocks.",
+  "message.riverweir.unlinked": "Connect two stakes with a woven net roll first.",
+  "message.riverweir.repaired": "Netting patched."
+}

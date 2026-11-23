@@ -1,0 +1,15 @@
+{
+  "block.riverweir.weir_post": "Деревянный колышек для сети",
+  "block.riverweir.weir_net": "Речная рыболовная сеть",
+  "item.riverweir.net_roll": "Рулон джутовой сети (4 м)",
+  "container.riverweir.weir": "Речная рыболовная сеть",
+  "message.riverweir.first": "Выбран первый колышек. Нажми ПКМ по второму.",
+  "message.riverweir.cancel": "Установка сети отменена.",
+  "message.riverweir.posts": "Оба колышка должны существовать и быть свободны.",
+  "message.riverweir.distance": "Колышки должны стоять на одной высоте и прямой, через 2–32 водных блока.",
+  "message.riverweir.water": "Между колышками должна быть вода на одной высоте.",
+  "message.riverweir.rolls": "Недостаточно сетевого полотна. Нужно рулонов: %s.",
+  "message.riverweir.connected": "Рыболовная сеть натянута через %s водных блоков.",
+  "message.riverweir.unlinked": "Сначала соедини колышки рулоном сетевого полотна.",
+  "message.riverweir.repaired": "Сеть залатана."
+}
