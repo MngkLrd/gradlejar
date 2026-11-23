@@ -121,7 +121,8 @@ public final class ClientWarehouseLabels {
 
                     Direction face = render.data().facing();
                     if (!face.getAxis().isHorizontal()) continue;
-                    if (roughX * face.getStepX() + roughZ * face.getStepZ() >= -0.09D) {
+                    if (!FaceLabelDimensions.isFrontVisible(
+                            roughX, roughZ, face.getStepX(), face.getStepZ())) {
                         // The rough vector points FROM camera TO chest, which is
                         // opposite the face normal on the visible front.
                         // 0.9.7 inverted this test and culled every
