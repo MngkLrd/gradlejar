@@ -70,6 +70,12 @@ public final class StrictStorageFamily {
             return "building_blocks";
 
         return switch (cat) {
+            case "sticks" -> "sticks";
+            case "tool_heads" -> "tool_heads";
+            case "smithing_templates" -> "smithing_templates";
+            case "water_containers" -> "water_containers";
+            case "vessels" -> "ceramic_vessels";
+            case "binders" -> "binding_mortar";
             case "ingots", "nuggets", "metal_sheets", "plates" -> "finished_metals";
             case "rods", "wires", "gears", "components", "redstone" -> "machine_parts";
             case "raw_ores", "ores" -> "raw_ores";
