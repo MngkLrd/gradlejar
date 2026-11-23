@@ -105,7 +105,8 @@ public record SortingWandSettings(
     }
 
     public SortingWandSettings sanitized() {
-        SortingMode safeMode = mode == null ? SortingMode.MATCH_EXISTING : mode;
+        SortingMode safeMode = mode == null || mode == SortingMode.COMPACT_STACKS
+                ? SortingMode.SMART_CATEGORIES : mode;
         int safeRadius = nearestRadiusStep(radius);
         return new SortingWandSettings(safeMode, safeRadius, showRadius, showContainerHighlights, showTransferParticles);
     }
