@@ -286,6 +286,28 @@ public final class SmartCategorySorter {
                         && canReceiveSample(home.ref().handler(), stack)) {
                     shouldMove = true;
                 }
+
+                // Once an item is in the established family column it has
+                // reached a terminal home: do not chase minor scoring changes
+                // between two identical ore/ingot/seed chests on every click.
+                if (columns.active()) {
+                    int currentIndex = snapshotIndex.get(source);
+                    int homeIndex = snapshotIndex.get(home);
+                    if (columns.matches(currentIndex, cat.id())) {
+                        shouldMove = false;
+                    } else if (columns.hasEstablishedColumn(currentIndex, cat.id())
+                            && !columns.matches(homeIndex, cat.id())) {
+                        shouldMove = false;
+                    }
+                }
+                // Even without strong columns, an already good home is
+                // stable until another chest provides a genuinely superior
+                // semantic category fit, not a tiny exact-stack bonus.
+                if (!emptyAllocations.contains(key)
+                        && sourceFit >= RoutingPolicy.MIN_NEW_HOME_FIT
+                        && targetFit <= sourceFit + RoutingPolicy.MIN_CATEGORY_IMPROVEMENT) {
+                    shouldMove = false;
+                }
                 if (!shouldMove) continue;
 
                 int transferred = InventoryMover.moveSlotToTargets(
