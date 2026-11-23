@@ -256,10 +256,13 @@ jobs:
             src/main/java/com/kirill/simplesorter/sorting/PathTokenMatcher.java \
             src/main/java/com/kirill/simplesorter/sorting/RoutingPolicy.java \
             src/main/java/com/kirill/simplesorter/sorting/WarehouseLayout.java \
+            src/main/java/com/kirill/simplesorter/sorting/WarehouseColumns.java \
             tools/tests/SmartRulesSelfTest.java \
-            tools/tests/WarehouseLayoutSelfTest.java
+            tools/tests/WarehouseLayoutSelfTest.java \
+            tools/tests/WarehouseColumnsSelfTest.java
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.SmartRulesSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseLayoutSelfTest
+          java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseColumnsSelfTest
       - name: Check model, texture and datapack assets
         if: matrix.project_dir == 'projects/openmotion'
         run: python3 projects/openmotion/tools/check_assets.py
@@ -271,6 +274,20 @@ jobs:
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: python3 tools/verify_build_output.py "$PROJECT_DIR"
+      - name: Verify Simple Sorter wand recipes in final JAR
+        if: matrix.project_dir == 'projects/simplesorter-forge-1.20.1'
+        run: |
+          set -euo pipefail
+          cd projects/simplesorter-forge-1.20.1
+          jarfile=$(find build/libs -maxdepth 1 -name 'simplesorter-*.jar' ! -name '*sources*' ! -name '*dev*' | head -n 1)
+          test -n "$jarfile"
+          for resource in \
+            data/simplesorter/recipes/sorting_wand.json \
+            data/simplesorter/recipes/sorting_wand_charcoal.json \
+            data/simplesorter/advancements/recipes/misc/sorting_wand.json; do
+            unzip -p "$jarfile" "$resource" | python3 -m json.tool >/dev/null
+            echo "Verified: $resource"
+          done
       - name: Smoke-test Simple Sorter dedicated server
         if: matrix.project_dir == 'projects/simplesorter-forge-1.20.1'
         timeout-minutes: 6
@@ -303,7 +320,12 @@ jobs:
             tail -n 180 "$logfile"
             exit 1
           fi
-          echo 'Simple Sorter dedicated server boot verified.'
+          if ! grep -q 'Sorting Wand crafting recipes registered: coal=true, charcoal=true' "$logfile"; then
+            echo 'Sorting Wand recipes did not register in the Forge RecipeManager.'
+            grep -E 'SimpleSorter/Recipes|Sorting Wand crafting' "$logfile" || true
+            exit 1
+          fi
+          echo 'Simple Sorter dedicated server boot and active recipe registry verified.'
       - name: Smoke-test MIDNIGHT dedicated server and custom biome generation
         if: matrix.project_dir == 'projects/midnighteve'
         env:

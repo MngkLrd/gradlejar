@@ -141,14 +141,14 @@ public final class WarehouseLayout {
     public static String family(String category) {
         if (category == null || category.isBlank()) return "misc";
         return switch (category) {
-            case "ores", "raw_ores", "tiny_dust", "small_dust", "dusts",
+            case "raw_minerals", "ores", "raw_ores", "tiny_dust", "small_dust", "dusts",
                     "gems", "salts", "loose_stones" -> "raw_minerals";
-            case "ingots", "nuggets", "metal_sheets", "plates",
+            case "finished_materials", "ingots", "nuggets", "metal_sheets", "plates",
                     "rods", "wires", "gears" -> "finished_materials";
             case "blocks", "building", "stone", "wood", "logs" -> "building";
-            case "adhesives", "molds", "redstone", "tools",
+            case "crafting", "adhesives", "molds", "clays", "redstone", "tools",
                     "weapons", "armor" -> "crafting";
-            case "plants", "fruit_tree_parts", "food", "seeds" -> "botanical";
+            case "botanical", "plants", "fruit_tree_parts", "food", "seeds" -> "botanical";
             default -> "misc";
         };
     }

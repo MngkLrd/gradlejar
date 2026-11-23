@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_stick": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:stick"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_stick"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "simplesorter:sorting_wand",
+      "simplesorter:sorting_wand_charcoal"
+    ]
+  }
+}

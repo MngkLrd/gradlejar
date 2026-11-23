@@ -63,9 +63,30 @@ public final class SmartCategorySorter {
         WarehouseLayout layout = categoryMode
                 ? WarehouseLayout.analyze(positions)
                 : WarehouseLayout.analyze(List.of());
-
-
+        WarehouseColumns columns = categoryMode
+                ? WarehouseColumns.analyze(positions.stream()
+                        .map(node -> new WarehouseColumns.Node(
+                                node.x(), node.y(), node.z(),
+                                node.occupied(), node.labels())).toList())
+                : WarehouseColumns.analyze(List.of());
+        // An ore column's lightly mixed fourth chest is eligible even if
+        // its own local contents look like junk. Index strong column roles
+        // once, not once per unique modded item.
+        Map<String, List<StorageSnapshot>> seededColumnHomes = new HashMap<>();
         for (StorageSnapshot snapshot : snapshots) {
+            String role = columns.role(snapshotIndex.get(snapshot));
+            if (!role.isEmpty()) {
+                seededColumnHomes.computeIfAbsent(role,
+                        ignored -> new ArrayList<>()).add(snapshot);
+            }
+        }
+
+        boolean independentReorganization = categoryMode && settings.autoOrganize()
+                && layout.analyzedBlocks() >= 3;
+
+
+
+        if (!independentReorganization) for (StorageSnapshot snapshot : snapshots) {
             for (StackKey key : snapshot.counts().keySet()) {
                 byExactStack.computeIfAbsent(key, ignored -> new ArrayList<>()).add(snapshot);
             }
@@ -86,7 +107,7 @@ public final class SmartCategorySorter {
                 .filter(snapshot -> snapshot.occupied() == 0)
                 .toList();
 
-        for (StackKey key : samples.keySet()) {
+        if (!independentReorganization) for (StackKey key : samples.keySet()) {
             SortCategory resolved = categories.get(key);
             if (resolved == null || !resolved.moveAllowed()) continue;
 
@@ -109,28 +130,44 @@ public final class SmartCategorySorter {
                     })
                     : List.of();
             StorageSnapshot best = chooseHome(key, label, sample, categoryMode,
-                    originals, related, layout, snapshotIndex);
+                    originals, related,
+                    seededColumnHomes.getOrDefault(WarehouseLayout.family(label), List.of()),
+                    layout, columns, snapshotIndex);
 
-            // Prefer an established chest over a brand-new empty one. An
-            // empty chest is useful ONLY when no better existing home exists.
-            if (categoryMode && originals.size() == 1 && best != null
-                    && best == originals.get(0)) {
-                StorageSnapshot source = originals.get(0);
+            // A seeded vertical column is stronger evidence than default
+            // top-to-bottom Y order. If a specific type is misplaced in another
+            // column, use the empty chests UNDER its own existing category.
+            if (categoryMode && !originals.isEmpty()) {
                 String partition = RoutingPolicy.emptyPartition(label);
+                StorageSnapshot source = originals.stream()
+                        .filter(candidate -> columns.conflicts(snapshotIndex.get(candidate), label))
+                        .findFirst()
+                        .orElseGet(() -> originals.stream()
+                                .min(Comparator.comparingDouble(candidate -> candidate.fit(key, label)))
+                                .orElse(originals.get(0)));
+                int sourceIndex = snapshotIndex.get(source);
                 int otherSlots = source.occupied() - source.slotCounts().getOrDefault(key, 0);
-                boolean wrongShelfWithEmpty = layout.shouldUsePreferredEmpty(
-                        snapshotIndex.get(source), label, emptyChests.stream()
-                                .map(snapshotIndex::get).toList());
-                if (!partition.isEmpty() &&
-                        (RoutingPolicy.shouldClaimEmpty(
-                                source.fit(key, label), otherSlots, false)
-                                || wrongShelfWithEmpty)) {
+                boolean misplacedColumn = columns.conflicts(sourceIndex, label);
+                boolean noUsableGoodDestination = best == null
+                        || !canReceiveSample(best.ref().handler(), sample)
+                        || columns.conflicts(snapshotIndex.get(best), label);
+                boolean wrongShelfWithEmpty = !columns.active()
+                        && layout.shouldUsePreferredEmpty(sourceIndex, label,
+                                emptyChests.stream().map(snapshotIndex::get).toList());
+                boolean needsEmpty = misplacedColumn || (noUsableGoodDestination
+                        && (RoutingPolicy.shouldClaimEmpty(source.fit(key, label),
+                                otherSlots, false) || wrongShelfWithEmpty));
+
+                if (!partition.isEmpty() && needsEmpty
+                        && (noUsableGoodDestination || misplacedColumn)) {
                     int requestedSlots = Math.max(1,
                             (source.counts().getOrDefault(key, 1)
                                     + sample.getMaxStackSize() - 1)
                                     / Math.max(1, sample.getMaxStackSize()));
                     StorageSnapshot reserved = null;
                     for (StorageSnapshot candidate : reservedPartitions.getOrDefault(partition, List.of())) {
+                        int targetIndex = snapshotIndex.get(candidate);
+                        if (!columns.allowsDestination(sourceIndex, targetIndex, label)) continue;
                         if (virtualFreeSlots.getOrDefault(candidate, 0) >= requestedSlots
                                 && canReceiveSample(candidate.ref().handler(), sample)) {
                             reserved = candidate;
@@ -138,13 +175,16 @@ public final class SmartCategorySorter {
                         }
                     }
                     if (reserved == null) {
-                        int sourceIndex = snapshotIndex.get(source);
                         List<StorageSnapshot> orderedEmpties = emptyChests.stream()
                                 .filter(candidate -> !reservedContainers.contains(candidate))
+                                .filter(candidate -> columns.allowsDestination(
+                                        sourceIndex, snapshotIndex.get(candidate), label))
                                 .sorted(Comparator
                                         .comparingDouble((StorageSnapshot candidate) ->
-                                                layout.emptyPlacementScore(sourceIndex,
-                                                        snapshotIndex.get(candidate), label)).reversed()
+                                                columns.preference(sourceIndex,
+                                                        snapshotIndex.get(candidate), label) * 4D
+                                                + layout.emptyPlacementScore(sourceIndex,
+                                                        snapshotIndex.get(candidate), label) * 0.10D).reversed()
                                         .thenComparingDouble(candidate ->
                                                 candidate.ref().pos().distSqr(source.ref().pos()))
                                         .thenComparingLong(candidate -> candidate.ref().pos().asLong()))
@@ -160,7 +200,7 @@ public final class SmartCategorySorter {
                             break;
                         }
                     }
-                    if (reserved != null && canReceiveSample(reserved.ref().handler(), sample)) {
+                    if (reserved != null) {
                         virtualFreeSlots.put(reserved,
                                 virtualFreeSlots.getOrDefault(reserved, 0) - requestedSlots);
                         best = reserved;
@@ -185,8 +225,6 @@ public final class SmartCategorySorter {
             }
         };
 
-        boolean independentReorganization =
-                categoryMode && settings.autoOrganize() && layout.analyzedBlocks() >= 3;
         if (!independentReorganization) {
         for (StorageSnapshot source : snapshots) {
             IItemHandler handler = source.ref().handler();
@@ -233,6 +271,19 @@ public final class SmartCategorySorter {
                 // Its assignment was explicitly planned from an incompatible
                 // source, so don't reject the move by the usual score threshold.
                 if (emptyAllocations.contains(key) && home.occupied() == 0) {
+                    // Never empty out an already correctly seeded chest simply
+                    // because another chest in its column had free slots.
+                    shouldMove = columns.conflicts(snapshotIndex.get(source), cat.id())
+                            || (source.fit(key, cat.id()) < 0.35D
+                                && (source.occupied() >
+                                    source.slotCounts().getOrDefault(key, 0)));
+                }
+                if (columns.active() && columns.conflicts(snapshotIndex.get(home), cat.id())) {
+                    shouldMove = false;
+                } else if (columns.active()
+                        && columns.conflicts(snapshotIndex.get(source), cat.id())
+                        && columns.matches(snapshotIndex.get(home), cat.id())
+                        && canReceiveSample(home.ref().handler(), stack)) {
                     shouldMove = true;
                 }
                 if (!shouldMove) continue;
@@ -307,22 +358,31 @@ public final class SmartCategorySorter {
                                              boolean allowCategoryFallback,
                                              List<StorageSnapshot> originalHomes,
                                              List<StorageSnapshot> compatibleHomes,
+                                             List<StorageSnapshot> compatibleColumnHomes,
                                              WarehouseLayout layout,
+                                             WarehouseColumns columns,
                                              Map<StorageSnapshot, Integer> snapshotIndex) {
         if (originalHomes.isEmpty()) return null;
 
         Set<StorageSnapshot> candidates = new LinkedHashSet<>(originalHomes);
         if (allowCategoryFallback && RoutingPolicy.allowsCategoryFallback(category)) {
             candidates.addAll(compatibleHomes);
+            candidates.addAll(compatibleColumnHomes);
         }
 
         List<StorageSnapshot> ranked = new ArrayList<>();
+        int originatingIndex = snapshotIndex.get(originalHomes.get(0));
         for (StorageSnapshot snapshot : candidates) {
+            if (allowCategoryFallback && !columns.allowsDestination(
+                    originatingIndex, snapshotIndex.get(snapshot), category)
+                    && !snapshot.counts().containsKey(key)) continue;
             boolean existing = snapshot.counts().containsKey(key);
             double fit = snapshot.fit(key, category);
+            boolean anchoredOverflow = columns.matches(snapshotIndex.get(snapshot), category)
+                    && snapshot.occupied() <= 8;
             if (!existing && (!allowCategoryFallback
                     || !RoutingPolicy.allowsCategoryFallback(category)
-                    || fit < RoutingPolicy.MIN_NEW_HOME_FIT)) continue;
+                    || (fit < RoutingPolicy.MIN_NEW_HOME_FIT && !anchoredOverflow))) continue;
             ranked.add(snapshot);
         }
         if (ranked.isEmpty()) return originalHomes.get(0);
@@ -331,9 +391,11 @@ public final class SmartCategorySorter {
         int sourceIndex = snapshotIndex.get(sourceForLayout);
         ranked.sort(Comparator
                 .comparingDouble((StorageSnapshot s) -> s.rank(key, category)
-                        + (layout.sameRegion(sourceIndex, snapshotIndex.get(s))
+                        + (columns.active()
+                            ? 2.0D * columns.preference(sourceIndex, snapshotIndex.get(s), category)
+                            : (layout.sameRegion(sourceIndex, snapshotIndex.get(s))
                                 ? 0.045D * layout.preference(snapshotIndex.get(s), category)
-                                : 0D)).reversed()
+                                : 0D))).reversed()
                 .thenComparing(Comparator.comparingInt(
                         (StorageSnapshot s) -> s.counts().getOrDefault(key, 0)).reversed())
                 .thenComparingLong(s -> s.ref().pos().asLong()));
