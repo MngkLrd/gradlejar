@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.Containers;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -77,7 +78,13 @@ public final class AutoLabelService {
                     continue; // no fabricated labels
                 }
                 if (prior != null && !prior.material().isEmpty()) {
-                    WandLabelSupplies.refund(wand, prior.material());
+                    if (!WandLabelSupplies.refund(wand, prior.material())) {
+                        // Never lose an already-paid material if the wand supply
+                        // list happens to be full when the label style changes.
+                        Containers.dropItemStack(level, pos.getX() + 0.5D,
+                                pos.getY() + 0.6D, pos.getZ() + 0.5D,
+                                prior.material().copy());
+                    }
                 }
                 material = newMaterial;
             }
