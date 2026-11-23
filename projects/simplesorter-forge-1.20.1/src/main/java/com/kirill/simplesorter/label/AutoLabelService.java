@@ -70,9 +70,7 @@ public final class AutoLabelService {
                 }
             }
 
-            String family = votes.isEmpty() ? ""
-                    : votes.size() > 1 ? "mixed"
-                    : votes.keySet().iterator().next();
+            String family = ChestCategoryLabels.select(votes);
             if (family.isEmpty()) {
                 WarehouseLabelData.Label removed = data.remove(pos);
                 if (removed != null) {
