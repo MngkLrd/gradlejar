@@ -79,9 +79,16 @@ public final class ClientWarehouseLabels {
             BlockPos p = label.pos();
             if (!mc.level.hasChunkAt(p)) continue;
             if (mc.level.getBlockEntity(p) == null) continue;
-            double dx = p.getX() + 0.5D - camera.x;
-            double dy = p.getY() + 1.15D - camera.y;
-            double dz = p.getZ() + 0.5D - camera.z;
+            // Draw just outside the chest's camera-facing surface. A label
+            // above the lid gets hidden inside the NEXT chest on a vertical rack.
+            // Rendering at chest level also avoids interference with stacks.
+            Vec3 center = Vec3.atCenterOf(p);
+            Vec3 towards = new Vec3(camera.x - center.x, 0D, camera.z - center.z);
+            if (towards.lengthSqr() < 0.001D) towards = new Vec3(0D, 0D, 1D);
+            Vec3 front = center.add(towards.normalize().scale(0.81D)).add(0D, 0.08D, 0D);
+            double dx = front.x - camera.x;
+            double dy = front.y - camera.y;
+            double dz = front.z - camera.z;
             if (dx*dx + dy*dy + dz*dz > MAX_RENDER_DISTANCE_SQ) continue;
 
             poses.pushPose();
