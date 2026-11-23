@@ -278,7 +278,7 @@ public final class WarehouseVacuumSorter {
                 rejectedBatches++;
                 return;
             }
-            if (commit(level, entries, listener)) {
+            if (commit(level, chests, entries, listener)) {
                 movedItems += crossChestItems;
                 moves += entries.stream().filter(e -> e.source != e.destination).count();
             } else {
@@ -382,53 +382,75 @@ public final class WarehouseVacuumSorter {
          * Extract everything, refill, and commit atomically on the game
          * thread. No client packets can withdraw from this virtual buffer.
          */
-        private static boolean commit(ServerLevel level, List<Entry> entries,
-                                      MoveListener listener) {
+
+        private static boolean commit(ServerLevel level, List<Chest> chests,
+                                      List<Entry> entries, MoveListener listener) {
             List<Placement> placed = new ArrayList<>();
             boolean success = false;
             try {
                 for (Entry entry : entries) {
-                    ItemStack removed = entry.source.ref.handler().extractItem(
-                            entry.sourceSlot, entry.original.getCount(), false);
-                    if (!removed.isEmpty()) entry.carried = removed.copy();
-                    if (!sameStackAndCount(removed, entry.original)) {
-                        throw new IllegalStateException("Inventory extraction differs from simulation at "
-                                + entry.source.ref.pos());
+                    IItemHandler source = entry.source.ref.handler();
+                    ItemStack reported;
+                    try {
+                        reported = source.extractItem(
+                                entry.sourceSlot, entry.original.getCount(), false);
+                    } catch (RuntimeException ex) {
+                        // A broken mod may mutate and then throw; use observed
+                        // slot contents, not its untrusted return value.
+                        entry.carried = observedRemoval(entry);
+                        throw ex;
+                    }
+                    entry.carried = observedRemoval(entry);
+                    if (!sameStackAndCount(reported, entry.carried)
+                            || !sameStackAndCount(entry.carried, entry.original)) {
+                        throw new IllegalStateException("Extraction did not remove the expected stack at "
+                                + entry.source.ref.pos() + ":" + entry.sourceSlot);
                     }
                 }
 
                 for (Entry entry : entries) {
+                    IItemHandler destination = entry.destination.ref.handler();
                     ItemStack before = entry.carried.copy();
-                    ItemStack remainder = entry.destination.ref.handler().insertItem(
-                            entry.destinationSlot, before, false);
-                    int remaining = remainder.isEmpty() ? 0 : remainder.getCount();
-                    if (remaining < 0 || remaining > before.getCount()
-                            || (!remainder.isEmpty()
-                            && !ItemStack.isSameItemSameTags(before, remainder))) {
-                        throw new IllegalStateException("Invalid inventory insertion remainder at "
-                                + entry.destination.ref.pos());
+                    ItemStack reported;
+                    try {
+                        reported = destination.insertItem(
+                                entry.destinationSlot, before, false);
+                    } catch (RuntimeException ex) {
+                        observePlacement(entry, before, placed);
+                        throw ex;
                     }
-                    int accepted = before.getCount() - remaining;
-                    if (accepted > 0) {
-                        placed.add(new Placement(entry, entry.destination,
-                                entry.destinationSlot, accepted));
+                    observePlacement(entry, before, placed);
+                    if (!sameStackAndCount(reported, entry.carried)) {
+                        throw new IllegalStateException("Insertion remainder disagrees with actual chest at "
+                                + entry.destination.ref.pos() + ":" + entry.destinationSlot);
                     }
-                    entry.carried = remainder.isEmpty() ? ItemStack.EMPTY : remainder.copy();
                     if (!entry.carried.isEmpty()) {
                         throw new IllegalStateException("Inventory rejected buffer item at "
-                                + entry.destination.ref.pos());
+                                + entry.destination.ref.pos() + ":" + entry.destinationSlot);
+                    }
+                }
+
+                // Detect handlers which claim to accept an item but leave it
+                // missing, or unexpectedly mutate unrelated slots.
+                for (Chest chest : chests) {
+                    for (int slot = 0; slot < chest.layout.length; slot++) {
+                        Entry expected = chest.layout[slot];
+                        ItemStack actual = chest.ref.handler().getStackInSlot(slot);
+                        if (!sameStackAndCount(expected == null
+                                ? ItemStack.EMPTY : expected.original, actual)) {
+                            throw new IllegalStateException("Warehouse contents changed during commit at "
+                                    + chest.ref.pos() + ":" + slot);
+                        }
                     }
                 }
                 success = true;
             } catch (RuntimeException ex) {
-                LOG.error("Wand inventory transaction failed; rolling back all extracted stacks", ex);
+                LOG.error("Wand buffer transaction failed; restoring original chest contents", ex);
             } finally {
                 if (!success) rollback(level, entries, placed);
             }
             if (!success) return false;
 
-            // Visual effects are emitted only AFTER all items have been
-            // returned from the buffer successfully.
             for (Entry entry : entries) {
                 if (entry.source != entry.destination) {
                     listener.onMove(new MoveRecord(entry.source.ref.pos(),
@@ -439,53 +461,113 @@ public final class WarehouseVacuumSorter {
             return true;
         }
 
+        /**
+         * Compute a removal from what is actually missing in the source.
+         * Forge capability simulations and returned ItemStacks are not
+         * sufficient evidence for exotic modded handlers.
+         */
+        private static ItemStack observedRemoval(Entry entry) {
+            ItemStack now = entry.source.ref.handler().getStackInSlot(entry.sourceSlot);
+            int remaining = 0;
+            if (!now.isEmpty()) {
+                if (!ItemStack.isSameItemSameTags(now, entry.original)
+                        || now.getCount() > entry.original.getCount()) {
+                    throw new IllegalStateException("Source transformed the stack unexpectedly at "
+                            + entry.source.ref.pos());
+                }
+                remaining = now.getCount();
+            }
+            int removed = entry.original.getCount() - remaining;
+            return removed == 0 ? ItemStack.EMPTY : entry.original.copyWithCount(removed);
+        }
+
+        private static void observePlacement(Entry entry, ItemStack before,
+                                             List<Placement> placed) {
+            ItemStack now = entry.destination.ref.handler().getStackInSlot(entry.destinationSlot);
+            int inserted = 0;
+            if (!now.isEmpty()) {
+                if (!ItemStack.isSameItemSameTags(now, before)
+                        || now.getCount() > before.getCount()) {
+                    throw new IllegalStateException("Destination transformed the stack at "
+                            + entry.destination.ref.pos());
+                }
+                inserted = now.getCount();
+            }
+            if (inserted > 0) {
+                placed.add(new Placement(entry, entry.destination, entry.destinationSlot, inserted));
+            }
+            int remaining = before.getCount() - inserted;
+            entry.carried = remaining == 0
+                    ? ItemStack.EMPTY : before.copyWithCount(remaining);
+        }
+
         private static void rollback(ServerLevel level, List<Entry> entries,
                                      List<Placement> placed) {
-            // Reclaim every confirmed destination insertion first. The
-            // original slots are now available for exact restoration.
             for (int i = placed.size() - 1; i >= 0; i--) {
                 Placement move = placed.get(i);
                 try {
-                    ItemStack recovered = move.chest.ref.handler().extractItem(
-                            move.slot, move.count, false);
-                    if (!recovered.isEmpty()
-                            && ItemStack.isSameItemSameTags(recovered, move.entry.original)) {
+                    IItemHandler handler = move.chest.ref.handler();
+                    ItemStack before = handler.getStackInSlot(move.slot);
+                    if (before.isEmpty()
+                            || !ItemStack.isSameItemSameTags(before, move.entry.original)) {
+                        LOG.error("Rollback destination was modified externally: {} slot {}",
+                                move.chest.ref.pos(), move.slot);
+                        continue;
+                    }
+                    handler.extractItem(move.slot, Math.min(move.count, before.getCount()), false);
+                    ItemStack after = handler.getStackInSlot(move.slot);
+                    int actualLeft = after.isEmpty() ? 0 : after.getCount();
+                    if (!after.isEmpty()
+                            && !ItemStack.isSameItemSameTags(after, before)) {
+                        LOG.error("Rollback changed destination type: {}", move.chest.ref.pos());
+                        continue;
+                    }
+                    int recovered = before.getCount() - actualLeft;
+                    if (recovered > 0) {
                         if (move.entry.carried.isEmpty()) {
-                            move.entry.carried = recovered.copy();
+                            move.entry.carried = move.entry.original.copyWithCount(recovered);
                         } else {
-                            move.entry.carried.grow(recovered.getCount());
+                            move.entry.carried.grow(recovered);
                         }
-                    } else if (!recovered.isEmpty()) {
-                        emergencyDrop(level, move.chest.ref.pos(), recovered);
                     }
                 } catch (RuntimeException ex) {
-                    // An uncooperative modded inventory may retain an item
-                    // at its destination. Never manufacture a duplicate.
-                    LOG.error("Unable to reclaim placed stack at {} slot {}",
+                    LOG.error("Could not recover placed stack at {} slot {}",
                             move.chest.ref.pos(), move.slot, ex);
                 }
             }
+
             for (Entry entry : entries) {
                 if (entry.carried.isEmpty()) continue;
                 ItemStack remaining = entry.carried.copy();
-                try {
-                    remaining = entry.source.ref.handler().insertItem(
-                            entry.sourceSlot, remaining, false);
-                    for (int s = 0; !remaining.isEmpty()
-                            && s < entry.source.ref.slots(); s++) {
-                        if (s != entry.sourceSlot) {
-                            remaining = entry.source.ref.handler().insertItem(s, remaining, false);
-                        }
+                IItemHandler handler = entry.source.ref.handler();
+                remaining = restoreToSlot(handler, entry.sourceSlot, remaining);
+                for (int slot = 0; !remaining.isEmpty() && slot < entry.source.ref.slots(); slot++) {
+                    if (slot != entry.sourceSlot) {
+                        remaining = restoreToSlot(handler, slot, remaining);
                     }
-                } catch (RuntimeException ex) {
-                    LOG.error("Original slot rejected rollback at {} slot {}",
-                            entry.source.ref.pos(), entry.sourceSlot, ex);
                 }
-                if (!remaining.isEmpty()) {
-                    emergencyDrop(level, entry.source.ref.pos(), remaining);
-                }
+                if (!remaining.isEmpty()) emergencyDrop(level, entry.source.ref.pos(), remaining);
                 entry.carried = ItemStack.EMPTY;
             }
+        }
+
+        private static ItemStack restoreToSlot(IItemHandler handler, int slot, ItemStack stack) {
+            if (stack.isEmpty()) return ItemStack.EMPTY;
+            int originalCount = countMatching(handler.getStackInSlot(slot), stack);
+            try {
+                handler.insertItem(slot, stack.copy(), false);
+            } catch (RuntimeException ex) {
+                LOG.error("Inventory threw while restoring slot {}", slot, ex);
+            }
+            int afterCount = countMatching(handler.getStackInSlot(slot), stack);
+            int accepted = Math.max(0, Math.min(stack.getCount(), afterCount - originalCount));
+            int rest = stack.getCount() - accepted;
+            return rest == 0 ? ItemStack.EMPTY : stack.copyWithCount(rest);
+        }
+
+        private static int countMatching(ItemStack live, ItemStack sample) {
+            return !live.isEmpty() && ItemStack.isSameItemSameTags(live, sample)
+                    ? live.getCount() : 0;
         }
 
         private static void emergencyDrop(ServerLevel level, BlockPos origin, ItemStack stack) {
