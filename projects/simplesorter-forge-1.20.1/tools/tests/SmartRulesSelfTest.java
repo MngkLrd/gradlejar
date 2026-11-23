@@ -96,6 +96,36 @@ public final class SmartRulesSelfTest {
                 "raw_ores", "raw_ores", 0) == 0D,
                 "A plant and tool crate cannot be mistaken for a mineral warehouse");
 
+        // 0.9.2 regression: TFC NaCl salt has a distinct label; it must NEVER
+        // be considered an ingot, and an entirely empty storage is available
+        // for a contaminated source when no appropriate occupied chest exists.
+        test(RoutingPolicy.allowsCategoryFallback("salts"),
+                "TFC salt must be a known eligible family");
+        test(RoutingPolicy.compatibility("salts", "ingots") == 0D,
+                "Salt and metal ingots are unrelated");
+        test(RoutingPolicy.compatibility("salts", "dusts") >= 0.70D,
+                "Salt can use an existing established powder warehouse");
+        test(RoutingPolicy.compatibility("dusts", "salts") < 0.50D,
+                "General-purpose dust cannot flood a specialized salt chest");
+        test("salts".equals(RoutingPolicy.emptyPartition("salts")),
+                "Specialized salt must reserve one shared empty chest");
+        test("raw_minerals".equals(RoutingPolicy.emptyPartition("tiny_dust"))
+                        && "raw_minerals".equals(RoutingPolicy.emptyPartition("raw_ores")),
+                "Related ore/dust forms must share one newly assigned empty chest");
+        test(RoutingPolicy.emptyPartition("misc").isEmpty(),
+                "Unknown item categories may not claim an empty chest");
+        test(RoutingPolicy.shouldClaimEmpty(0D, 7, false),
+                "Salt mixed with seven metal slots must be eligible for new storage");
+        test(!RoutingPolicy.shouldClaimEmpty(0D, 0, false),
+                "A single isolated salt stack must not ping-pong between empty chests");
+        test(!RoutingPolicy.shouldClaimEmpty(0.8D, 6, false),
+                "Strong existing category storage should not use new empty chests");
+        test(!RoutingPolicy.shouldClaimEmpty(0D, 6, true),
+                "A seeded matching home outranks an unused chest");
+        test(RoutingPolicy.contextualFit(Map.of("ingots", 7, "salts", 1),
+                8, "salts", "salts", 1) == 0D,
+                "One misplaced NaCl must not make its ingot chest a salt home");
+
         System.out.println("Smart 2.1 category affinity regressions passed.");
         System.out.println("Simple Sorter Smart Categories 2.0: all pure Java regression assertions passed.");
     }
