@@ -45,8 +45,14 @@ public final class WarehouseSortSessions {
     private static final int SORT_SLOTS_PER_TICK = 120;
     private static final int COMPACT_CONTAINERS_PER_TICK = 5;
     private static final long COMPACT_TIME_PER_TICK_NS = 5_000_000L;
+    private static final int STATUS_INTERVAL_TICKS = 80;
+    private static final int MAX_JOB_TICKS = 2400;
 
     private WarehouseSortSessions() {}
+
+    public static boolean isRunning(UUID player) {
+        return ACTIVE.containsKey(player);
+    }
 
     public static boolean start(ServerLevel level, ServerPlayer player,
                                 List<ContainerRef> containers, ItemStack wand,
@@ -123,6 +129,7 @@ public final class WarehouseSortSessions {
         private int compactIndex = 0;
         private int compactedItems = 0;
         private boolean compaction = false;
+        private int ticks;
 
         private Job(ServerLevel level, ServerPlayer player, InteractionHand hand,
                     List<ContainerRef> containers, SortingWandSettings settings) {
@@ -134,6 +141,22 @@ public final class WarehouseSortSessions {
         }
 
         private boolean advance(ServerPlayer player) {
+            ticks++;
+            if (ticks > MAX_JOB_TICKS) {
+                player.displayClientMessage(Component.literal(
+                        "Simple Sorter: sorting stopped after the safety time limit. "
+                        + "Already transferred items remain safe. Start another sort if needed."), false);
+                return true;
+            }
+            if (ticks % STATUS_INTERVAL_TICKS == 0) {
+                player.displayClientMessage(Component.literal(
+                        "Simple Sorter: " + (compaction
+                        ? "packing containers " + compactIndex + "/" + containers.size()
+                        : "sorting chest " + Math.min(session.currentChestIndex() + 1, containers.size())
+                                + "/" + containers.size())
+                        + "; transferred " + session.movedItems()
+                        + " items between chests. Job still running."), true);
+            }
             if (!compaction) {
                 if (session.step(level, listener, SORT_SLOTS_PER_TICK, SORT_TIME_PER_TICK_NS)) {
                     compaction = true;
@@ -146,12 +169,14 @@ public final class WarehouseSortSessions {
             while (compactIndex < containers.size()
                     && done < COMPACT_CONTAINERS_PER_TICK
                     && (done == 0 || System.nanoTime() < deadline)) {
-                ContainerRef container = containers.get(compactIndex++);
+                int current = compactIndex++;
+                ContainerRef container = containers.get(current);
                 if (!level.hasChunkAt(container.pos())
                         || level.getBlockEntity(container.pos()) != container.identity()) continue;
                 if (InventoryMover.needsCompaction(container)) {
                     compactedItems += InventoryMover.cleanUpContainer(container, listener);
                 }
+                session.refreshContainer(current);
                 done++;
             }
             if (compactIndex < containers.size()) return false;
@@ -169,14 +194,17 @@ public final class WarehouseSortSessions {
 
             int unresolved = session.unresolvedMixedChests();
             int unknown = session.unknownFamilySlots();
+            int noFamilyHome = session.assignmentMissingFamilies();
             player.displayClientMessage(Component.literal(
-                    "Simple Sorter: " + session.movedItems()
-                            + " items moved; " + compactedItems + " packed. "
-                            + (unresolved == 0 ? "No mixed chests remain."
-                                : unresolved + " mixed chests remain (no compatible capacity, "
-                                  + "restricted slots or unidentified items).")
-                            + (unknown > 0 ? " Unclassified slots: " + unknown + "." : "")),
-                    unresolved > 0 ? false : true);
+                    "Simple Sorter completed: " + session.movedItems()
+                            + " items transferred BETWEEN chests; "
+                            + compactedItems + " items only compacted WITHIN chests. "
+                            + unresolved + " mixed chests remain; "
+                            + unknown + " unclassified slots; "
+                            + noFamilyHome + " families without dedicated storage."
+                            + (unresolved > 0 || noFamilyHome > 0
+                                ? " Add more chests or inspect unrecognized items." : "")),
+                    unresolved == 0 && unknown == 0 && noFamilyHome == 0);
             return true;
         }
     }
