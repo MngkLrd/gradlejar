@@ -119,7 +119,9 @@ public final class WandLabelSupplies {
         ListTag tags = wand.getTag().getList(KEY, Tag.TAG_COMPOUND);
         for (int i = 0; i < Math.min(MAX_SLOTS, tags.size()); i++) {
             CompoundTag stored = tags.getCompound(i);
-            ItemStack stack = ItemStack.of(stored);
+            CompoundTag itemData = stored.copy();
+            if (stored.contains("SSCount")) itemData.putByte("Count", (byte) 1);
+            ItemStack stack = ItemStack.of(itemData);
             // Minecraft 1.20.1 ItemStack normally saves its count as a byte.
             // Keep the wand's supply count in an explicit bounded int instead,
             // so storing more than 64 materials cannot corrupt or lose items.
