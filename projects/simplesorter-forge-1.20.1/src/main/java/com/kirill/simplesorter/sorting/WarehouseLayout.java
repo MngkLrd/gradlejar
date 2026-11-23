@@ -48,6 +48,14 @@ public final class WarehouseLayout {
     }
 
     public static WarehouseLayout analyze(List<Node> nodes) {
+        return analyze(nodes, true);
+    }
+
+    /**
+     * Non-invasive mode respects strongly seeded shelf roles; aggressive
+     * reorganization ignores those roles and enforces a canonical layout.
+     */
+    public static WarehouseLayout analyze(List<Node> nodes, boolean respectSeeded) {
         Map<Integer, Region> membership = new HashMap<>();
         if (nodes.size() < MIN_CLUSTER_SIZE) return new WarehouseLayout(membership);
 
@@ -113,7 +121,7 @@ public final class WarehouseLayout {
                 lanes[i] = axis == Axis.VERTICAL ? values.length - 1 - index : index;
             }
 
-            Map<String, Integer> preferred = inferredPreferredRows(nodes, component, lanes, values.length);
+            Map<String, Integer> preferred = inferredPreferredRows(nodes, component, lanes, values.length, respectSeeded);
             int[] indices = component.stream().mapToInt(Integer::intValue).toArray();
             Region region = new Region(indices, axis, lanes, values.length, preferred);
             for (int index : indices) membership.put(index, region);
@@ -154,7 +162,8 @@ public final class WarehouseLayout {
     }
 
     private static Map<String, Integer> inferredPreferredRows(
-            List<Node> nodes, List<Integer> component, int[] lane, int rowCount) {
+            List<Node> nodes, List<Integer> component, int[] lane, int rowCount,
+            boolean respectSeeded) {
         Map<String, Integer> preferred = new LinkedHashMap<>();
         // A clear, already seeded row is stronger evidence than our canonical
         // order, but a random mixed chest must never seed an entire lane.
@@ -182,6 +191,7 @@ public final class WarehouseLayout {
                 }
             }
         }
+        if (!respectSeeded) anchors.clear();
         anchors.sort(Comparator.comparingInt(Evidence::count).reversed()
                 .thenComparing(Comparator.comparingDouble(Evidence::purity).reversed()));
         for (Evidence e : anchors) {
