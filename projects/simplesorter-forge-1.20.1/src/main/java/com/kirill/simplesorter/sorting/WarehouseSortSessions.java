@@ -44,6 +44,7 @@ public final class WarehouseSortSessions {
     private static final long SORT_TIME_PER_TICK_NS = 4_000_000L;
     private static final int SORT_SLOTS_PER_TICK = 120;
     private static final int COMPACT_CONTAINERS_PER_TICK = 5;
+    private static final long COMPACT_TIME_PER_TICK_NS = 5_000_000L;
 
     private WarehouseSortSessions() {}
 
@@ -141,8 +142,10 @@ public final class WarehouseSortSessions {
             }
 
             int done = 0;
+            long deadline = System.nanoTime() + COMPACT_TIME_PER_TICK_NS;
             while (compactIndex < containers.size()
-                    && done < COMPACT_CONTAINERS_PER_TICK) {
+                    && done < COMPACT_CONTAINERS_PER_TICK
+                    && (done == 0 || System.nanoTime() < deadline)) {
                 ContainerRef container = containers.get(compactIndex++);
                 if (!level.hasChunkAt(container.pos())
                         || level.getBlockEntity(container.pos()) != container.identity()) continue;
