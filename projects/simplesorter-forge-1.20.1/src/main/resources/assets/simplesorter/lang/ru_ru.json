@@ -93,5 +93,7 @@
   "label.simplesorter.accessories": "Аксессуары",
   "label.simplesorter.adhesives": "Клей и связующие",
   "label.simplesorter.locked": "Особые предметы",
-  "label.simplesorter.mixed": "Смешанное содержимое"
+  "label.simplesorter.mixed": "Смешанное содержимое",
+  "label.simplesorter.mineral_resources": "Руды и рудные порошки",
+  "label.simplesorter.crafting_powders": "Порошки для крафта"
 }

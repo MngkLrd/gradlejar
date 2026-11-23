@@ -52,12 +52,64 @@ public final class StrictStorageFamily {
                 || matches(path, "pebble")
                 || matches(path, "pebbles")) return "stones";
 
+        // Mineral processing does not make salt/flux ordinary ore. These
+        // powders have their own crafting purpose and should stay together.
+        if (matches(path, "salt") || "salts".equals(cat)) return "salts";
+        if (matches(path, "flux") || matches(path, "lime_flux")
+                || matches(path, "limestone_flux")) return "crafting_powders";
+
         if (matches(path, "mortar") && !matches(path, "mortar_and_pestle")
                 && !matches(path, "mortar_pestle")) return "binding_mortar";
 
         if (matches(path, "clay") || matches(path, "kaolin")
                 || matches(path, "kaolinite") || "clays".equals(cat))
             return "ceramic_clay";
+
+        // Do NOT place organic/chemical crafting powders with metal ores.
+        // These common names are checked before the generic ore-dust branch.
+        if (matches(path, "bone_meal") || matches(path, "bonemeal")
+                || matches(path, "gunpowder") || matches(path, "blaze_powder")
+                || matches(path, "sugar") || matches(path, "cocoa")
+                || matches(path, "ash") || matches(path, "wood_ash")
+                || matches(path, "charcoal_powder")
+                || matches(path, "redstone") || matches(path, "dye"))
+            return "crafting_powders";
+
+        // TFC/TFG ore-grade variants can have bare poor_/normal_/rich_
+        // registry paths, not a literal "ore" token. Match the known ore
+        // grade convention only inside compatible mod namespaces; do not
+        // reinterpret similarly-named vanilla blocks as ore.
+        if ((value.startsWith("tfc:") || value.startsWith("tfg:")
+                || value.startsWith("terrafirmagreg:")
+                || value.startsWith("gtceu:"))
+                && (path.startsWith("poor_") || path.startsWith("normal_")
+                    || path.startsWith("rich_") || path.startsWith("small_ore_")))
+            return "mineral_resources";
+
+        // A single MATERIAL family for ore lumps, poor/normal/rich ores,
+        // crushed and washed ores, full/small/tiny GregTech dusts and TFC
+        // mineral powders. The old raw_ores vs raw_powders incompatibility
+        // falsely marked homogeneous mineral chests as MIXED.
+        //
+        // Registry IDs are used independent of the installed mod: there
+        // is no TFC or GregTech class import / mandatory dependency.
+        if (path.startsWith("ore/") || path.contains("/ore/")
+                || path.startsWith("raw_ore/") || path.contains("/raw_ore/")
+                || matches(path, "ore") || matches(path, "raw_ore")
+                || matches(path, "crushed_ore") || matches(path, "washed_ore")
+                || matches(path, "purified_ore")
+                || matches(path, "centrifuged_ore")
+                || matches(path, "impure_dust") || matches(path, "pure_dust")
+                || matches(path, "tiny_dust") || matches(path, "small_dust")
+                || matches(path, "dust")
+                || matches(path, "dusts")
+                || matches(path, "powder") || matches(path, "powders")
+                || cat.equals("raw_ores") || cat.equals("ores")
+                || cat.equals("tiny_dust") || cat.equals("small_dust")
+                || cat.equals("dusts") || cat.equals("materials")
+                   && (matches(path, "raw") || matches(path, "ore")
+                           || matches(path, "dust") || matches(path, "powder")))
+            return "mineral_resources";
 
         if (matches(path, "vessel") || matches(path, "jar")
                 || matches(path, "ceramic_pot") || matches(path, "pottery")
@@ -88,8 +140,7 @@ public final class StrictStorageFamily {
             case "binders" -> "binding_mortar";
             case "ingots", "nuggets", "metal_sheets", "plates" -> "finished_metals";
             case "rods", "wires", "gears", "components", "redstone" -> "machine_parts";
-            case "raw_ores", "ores" -> "raw_ores";
-            case "tiny_dust", "small_dust", "dusts" -> "raw_powders";
+            case "raw_ores", "ores", "tiny_dust", "small_dust", "dusts" -> "mineral_resources";
             case "gems" -> "gems";
             case "salts" -> "salts";
             case "loose_stones" -> "stones";
