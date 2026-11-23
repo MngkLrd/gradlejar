@@ -246,7 +246,12 @@ public final class ClientWarehouseLabels {
                     FaceLabelDimensions.textDepth());
             float scale = FaceLabelDimensions.textScale(
                     visible.label().textWidth(), visible.wide());
-            poses.scale(-scale, -scale, scale);
+            // Match vanilla sign text transforms: positive X, negative
+            // Y, positive Z. Earlier versions flipped BOTH X and Y;
+            // together with the world-fixed yaw this made the glyph plane
+            // face inward even when its nominal facing looked correct.
+            // The original billboard hid this through camera rotation.
+            poses.scale(scale, -scale, scale);
             mc.font.drawInBatch(
                     visible.label().caption(),
                     -visible.label().textWidth() * 0.5F, -4.5F,
