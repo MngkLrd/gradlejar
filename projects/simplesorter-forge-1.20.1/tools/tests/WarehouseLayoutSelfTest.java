@@ -54,6 +54,15 @@ public final class WarehouseLayoutSelfTest {
         check(line.preference(5, "plants") == 1D,
                 "Last row defaults to plants");
 
+        // Two tightly stacked rows, each with three chests, are still vertical
+        // even when horizontal extent exceeds the vertical Y-span.
+        List<WarehouseLayout.Node> twoRows = new ArrayList<>();
+        for (int y = 65; y <= 66; y++)
+            for (int x = 0; x < 3; x++)
+                twoRows.add(new WarehouseLayout.Node(x, y, 0, 0, Map.of()));
+        check(WarehouseLayout.analyze(twoRows).axis(0) == WarehouseLayout.Axis.VERTICAL,
+                "Two shelf levels must still be recognized as vertical");
+
         List<WarehouseLayout.Node> zLine = new ArrayList<>();
         for (int i = 0; i < 4; i++)
             zLine.add(new WarehouseLayout.Node(0, 64, 12 + i, 0, Map.of()));
