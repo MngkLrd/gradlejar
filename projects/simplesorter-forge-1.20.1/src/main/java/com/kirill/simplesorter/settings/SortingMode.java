@@ -63,9 +63,9 @@ public enum SortingMode {
         }
         for (SortingMode mode : values()) {
             if (mode.id.equals(id)) {
-                return mode;
+                return mode == COMPACT_STACKS ? SMART_CATEGORIES : mode;
             }
         }
-        return MATCH_EXISTING;
+        return SMART_CATEGORIES;
     }
 }
