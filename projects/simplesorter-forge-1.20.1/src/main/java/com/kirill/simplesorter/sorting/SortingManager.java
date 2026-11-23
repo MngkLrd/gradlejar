@@ -40,7 +40,7 @@ public final class SortingManager {
             case SMART_CATEGORIES -> sortSmartCategories(level, containers, radius, safe);
             case COMPACT_STACKS -> sortCompactStacks(level, containers, radius, safe);
             case PLAYER_DEPOSIT -> sortPlayerDeposit(level, player, containers, radius, safe);
-            case MATCH_EXISTING -> sortMatchExisting(level, containers, radius, safe);
+            case MATCH_EXISTING -> SmartCategorySorter.sort(level, containers, radius, safe);
         };
     }
 
