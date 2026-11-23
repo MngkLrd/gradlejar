@@ -25,5 +25,7 @@
   "gui.riverweir.bait": "Bait: %s",
   "message.riverweir.bait": "Bait added, remaining charges: %s.",
   "message.riverweir.cleaned": "Silt and debris removed from the net.",
-  "message.riverweir.clean_already": "The fishing net is already clean."
+  "message.riverweir.clean_already": "The fishing net is already clean.",
+  "gui.riverweir.header": "River Net",
+  "gui.riverweir.condition_short": "Strength: %s%%"
 }

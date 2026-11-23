@@ -54,9 +54,9 @@ public final class WeirMenu extends AbstractContainerMenu {
         for(int i=0;i<netSlots;i++)addSlot(new SlotItemHandler(handler,i,8+(i%9)*18,18+(i/9)*18){
             @Override public boolean mayPlace(ItemStack stack){return false;}
         });
-        int y=86+(rows-1)*18;
+        int y=104+(rows-1)*18;
         for(int r=0;r<3;r++)for(int c=0;c<9;c++)addSlot(new Slot(inv,c+r*9+9,8+c*18,y+r*18));
-        for(int c=0;c<9;c++)addSlot(new Slot(inv,c,8+c*18,144+(rows-1)*18));
+        for(int c=0;c<9;c++)addSlot(new Slot(inv,c,8+c*18,162+(rows-1)*18));
     }
     public int getRows(){return rows;}
     public int getCondition(){return Math.max(0,100-(100*data.get(0))/WeirTier.byId(tierId).endurance);}

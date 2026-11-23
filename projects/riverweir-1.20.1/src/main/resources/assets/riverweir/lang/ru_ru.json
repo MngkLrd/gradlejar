@@ -25,5 +25,7 @@
   "gui.riverweir.bait": "Приманка: %s",
   "message.riverweir.bait": "Приманка добавлена, запас: %s.",
   "message.riverweir.cleaned": "Сетка очищена от ила и мусора.",
-  "message.riverweir.clean_already": "Сеть уже чистая."
+  "message.riverweir.clean_already": "Сеть уже чистая.",
+  "gui.riverweir.header": "Речная сеть",
+  "gui.riverweir.condition_short": "Прочн.: %s%%"
 }
