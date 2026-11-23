@@ -98,6 +98,22 @@ public final class SortCategoryRegistry {
                 .idContains("quest_item", "creative_only")
                 .build());
 
+        categories.add(SortCategory.builder("tiny_dust").group("resources").priority(825).tags("forge:tiny_dusts", "forge:dusts/tiny", "c:tiny_dusts").idContains("tiny_dust", "tiny_dusts", "dust_tiny").build());
+        categories.add(SortCategory.builder("small_dust").group("resources").priority(824).tags("forge:small_dusts", "forge:dusts/small", "c:small_dusts").idContains("small_dust", "small_dusts", "dust_small").build());
+        categories.add(SortCategory.builder("dusts").group("resources").priority(823).tags("forge:dusts", "c:dusts", "forge:powders").idContains("dust", "dusts", "powder", "powder/", "dust/").build());
+        categories.add(SortCategory.builder("raw_ores").group("resources").priority(822).tags("forge:raw_materials", "c:raw_materials").idContains("ore/", "raw_ore", "crushed_ore", "ore_", "_ore").build());
+        categories.add(SortCategory.builder("ingots").group("resources").priority(821).tags("forge:ingots", "c:ingots").idContains("ingot", "ingots", "ingot/", "double_ingot").build());
+        categories.add(SortCategory.builder("nuggets").group("resources").priority(820).tags("forge:nuggets", "c:nuggets").idContains("nugget", "nuggets", "nugget/").build());
+        categories.add(SortCategory.builder("metal_sheets").group("resources").priority(819).idContains("sheet", "sheets", "double_sheet").build());
+        categories.add(SortCategory.builder("plates").group("resources").priority(818).tags("forge:plates", "c:plates").idContains("plate", "plates").build());
+        categories.add(SortCategory.builder("rods").group("resources").priority(817).tags("forge:rods", "c:rods").idContains("rod", "rods").build());
+        categories.add(SortCategory.builder("wires").group("resources").priority(816).tags("forge:wires", "c:wires").idContains("wire", "wires", "cable", "cables").build());
+        categories.add(SortCategory.builder("gears").group("resources").priority(815).tags("forge:gears", "c:gears").idContains("gear", "gears").build());
+        categories.add(SortCategory.builder("gems").group("resources").priority(814).tags("forge:gems", "c:gems").idContains("gem", "gems", "gem/", "crystal").build());
+        categories.add(SortCategory.builder("adhesives").group("resources").priority(813).tags("forge:glue", "c:glue", "forge:resins").idContains("glue", "resin", "adhesive").build());
+        categories.add(SortCategory.builder("fruit_tree_parts").group("resources").priority(812).idContains("fruit_leaves", "fruit_tree", "fruit_sapling").build());
+        categories.add(SortCategory.builder("molds").group("resources").priority(811).idContains("mold", "mould", "ceramic", "vessel", "pottery", "unfired_").build());
+        categories.add(SortCategory.builder("loose_stones").group("resources").priority(810).idContains("loose_rock", "rock/loose", "pebble", "loose_stone").build());
         categories.add(SortCategory.builder("accessories")
                 .displayName("Accessories")
                 .group("equipment")
@@ -205,7 +221,7 @@ public final class SortCategoryRegistry {
                 .priority(760)
                 .classHints(ClassHint.FOOD)
                 .tags("simplesorter:food", "c:foods", "forge:foods")
-                .idContains("cooked_", "raw_", "bread", "apple", "stew", "soup", "meat", "pie")
+                .idContains("cooked_", "bread", "apple", "stew", "soup", "meat", "pie")
                 .build());
 
         categories.add(SortCategory.builder("plants")
