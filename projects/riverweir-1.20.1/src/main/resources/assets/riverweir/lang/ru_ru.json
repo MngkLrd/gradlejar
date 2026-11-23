@@ -8,12 +8,13 @@
   "tooltip.riverweir.capacity": "В стопке: %s рул. | до %s блоков ширины при глубине 3",
   "tooltip.riverweir.depth_rule": "Дополнительные рулоны позволяют увеличить глубину.",
   "message.riverweir.first": "Первый колышек выбран. Рулонов в инвентаре: %s. Нажми ПКМ по второму.",
-  "message.riverweir.cancel": "Установка сети отменена.",
+  "message.riverweir.cancel": "Выбор колышков сброшен.",
   "message.riverweir.posts": "Оба колышка должны существовать и быть свободны.",
   "message.riverweir.distance": "Колышки должны стоять на одной высоте и прямой, через 2–32 блока воды.",
   "message.riverweir.water": "Нужна непрерывная пресная вода до дна без растений; максимальная глубина %s блоков.",
   "message.riverweir.rolls": "Не хватает рулонов: нужно %s, есть %s. 1 рулон = 4×3 блока.",
   "message.riverweir.connected": "Сеть установлена: ширина %s, глубина до %s, потрачено рулонов %s.",
   "message.riverweir.unlinked": "Сначала соедини колышки рулоном сетевого полотна.",
-  "message.riverweir.repaired": "Повреждённое полотно залатано."
+  "message.riverweir.repaired": "Повреждённое полотно залатано.",
+  "gui.riverweir.condition": "Состояние полотна: %s%%"
 }

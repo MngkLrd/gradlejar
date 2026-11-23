@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "fish": "riverweir:block/trapped_fish",
+    "particle": "riverweir:block/trapped_fish"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        3,
+        7
+      ],
+      "to": [
+        15,
+        13,
+        7.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fish",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#fish",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

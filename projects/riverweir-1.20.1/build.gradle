@@ -9,3 +9,12 @@ legacyForge {
   mods { "${mod_id}" { sourceSet(sourceSets.main) } }
 }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=17 }
+
+tasks.register('weirMathRegression', JavaExec) {
+    group = 'verification'
+    description = 'Check 4x3 net panel arithmetic and salvage without spawning Minecraft.'
+    dependsOn tasks.testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.minemods.riverweir.logic.WeirMathTestMain'
+}
+tasks.named('check') { dependsOn tasks.named('weirMathRegression') }

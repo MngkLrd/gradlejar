@@ -1,6 +1,7 @@
 package dev.minemods.riverweir.logic;
 
 import dev.minemods.riverweir.RiverWeirMod;
+import dev.minemods.riverweir.logic.WeirMath;
 import dev.minemods.riverweir.block.WeirNetBlock;
 import dev.minemods.riverweir.block.WeirPostBlock;
 import dev.minemods.riverweir.logic.WeirWater;
@@ -103,14 +104,7 @@ public final class WeirLogic {
         return depths;
     }
     private static int requiredRolls(int[] depths){
-        int rolls=0;
-        for(int start=0;start<depths.length;start+=PANEL_WIDTH){
-            int deepest=0;
-            for(int index=start;index<Math.min(depths.length,start+PANEL_WIDTH);index++)
-                deepest=Math.max(deepest,depths[index]);
-            rolls+=(deepest+PANEL_HEIGHT-1)/PANEL_HEIGHT;
-        }
-        return rolls;
+        return WeirMath.requiredRolls(depths,PANEL_WIDTH,PANEL_HEIGHT);
     }
     public static boolean connect(ServerLevel level,BlockPos first,BlockPos second,Player player){
         WeirPostBlockEntity a=post(level,first),b=post(level,second);
@@ -141,8 +135,8 @@ public final class WeirLogic {
         int maxDepth=0;
         for(int d:depths)maxDepth=Math.max(maxDepth,d);
         if(!player.getAbilities().instabuild)consumeRolls(player,required);
-        a.link(second,true,waterY,depths);
-        b.link(first,false,waterY,depths);
+        a.link(second,true,waterY,depths,required);
+        b.link(first,false,waterY,depths,required);
         // Attach the rope from both stakes right to the actual mesh edge.
         setConnection(level,first,dir,true);
         setConnection(level,second,dir.getOpposite(),true);
@@ -168,7 +162,8 @@ public final class WeirLogic {
             .setValue(WeirNetBlock.WATER_KIND,Math.max(0,WeirWater.kind(fluid)))
             .setValue(WeirNetBlock.FLOW,WeirWater.flow(fluid))
             .setValue(WeirNetBlock.TOP,top)
-            .setValue(WeirNetBlock.BOTTOM,bottom);
+            .setValue(WeirNetBlock.BOTTOM,bottom)
+            .setValue(WeirNetBlock.TRAPPED,false);
     }
     private static WeirPostBlockEntity master(ServerLevel level,BlockPos at){
         WeirPostBlockEntity be=post(level,at);
@@ -176,26 +171,41 @@ public final class WeirLogic {
         return be.master?be:post(level,be.other);
     }
     public static BlockPos findLinkedPost(ServerLevel level,BlockPos cell,Direction.Axis axis){
-        Direction[] directions=axis==Direction.Axis.X?
-            new Direction[]{Direction.EAST,Direction.WEST}:
-            new Direction[]{Direction.NORTH,Direction.SOUTH};
-        for(Direction toPost:directions)for(int distance=1;distance<=MAX_SPAN+1;distance++)
-            for(int dy=0;dy<=MAX_DEPTH+1;dy++){
-                BlockPos candidate=cell.relative(toPost,distance).above(dy);
-                WeirPostBlockEntity post=post(level,candidate);
-                if(post==null||post.other==null||post.netY<cell.getY())continue;
-                Direction along=direction(candidate,post.other);
-                if(along==null||along.getAxis()!=axis)continue;
-                int index=Math.abs(cell.getX()-candidate.getX())+Math.abs(cell.getZ()-candidate.getZ())-1;
-                if(index<0||index>=span(candidate,post.other))continue;
-                if(post.netY-cell.getY()>=post.depthAt(index))continue;
-                if(cell.getX()<Math.min(candidate.getX(),post.other.getX())||
-                    cell.getX()>Math.max(candidate.getX(),post.other.getX())||
-                    cell.getZ()<Math.min(candidate.getZ(),post.other.getZ())||
-                    cell.getZ()>Math.max(candidate.getZ(),post.other.getZ()))continue;
-                return candidate;
+        // The two stakes can have mirrored depth arrays. Only the master owns
+        // the authoritative column order; use its origin for every lookup.
+        Direction[] scan=axis==Direction.Axis.X
+            ? new Direction[]{Direction.EAST,Direction.WEST}
+            : new Direction[]{Direction.NORTH,Direction.SOUTH};
+        for(Direction towardStake:scan)for(int gap=1;gap<=MAX_SPAN+1;gap++){
+            for(int rise=0;rise<=MAX_DEPTH+1;rise++){
+                BlockPos candidate=cell.relative(towardStake,gap).above(rise);
+                WeirPostBlockEntity endpoint=post(level,candidate);
+                if(endpoint==null||endpoint.other==null)continue;
+                WeirPostBlockEntity be=master(level,candidate);
+                if(be==null||be.other==null)continue;
+                Direction spanDirection=direction(be.getBlockPos(),be.other);
+                if(spanDirection==null||spanDirection.getAxis()!=axis)continue;
+                int col=Math.abs(cell.getX()-be.getBlockPos().getX())
+                    +Math.abs(cell.getZ()-be.getBlockPos().getZ())-1;
+                if(col<0||col>=span(be.getBlockPos(),be.other))continue;
+                if(be.netY-cell.getY()<0||be.netY-cell.getY()>=be.depthAt(col))continue;
+                if(!cell.equals(at(be.getBlockPos(),spanDirection,col+1,cell.getY())))continue;
+                return be.getBlockPos();
             }
+        }
         return null;
+    }
+    public static boolean isValidPartner(ServerLevel level,WeirPostBlockEntity main){
+        if(main.other==null||!level.hasChunkAt(main.other))return true;
+        WeirPostBlockEntity other=post(level,main.other);
+        return other!=null&&!other.master&&main.getBlockPos().equals(other.other)
+            &&level.getBlockState(main.other).is(RiverWeirMod.POST.get());
+    }
+    public static void setCatchVisual(ServerLevel level,BlockPos at,boolean caught){
+        if(!level.hasChunkAt(at))return;
+        BlockState state=level.getBlockState(at);
+        if(state.is(RiverWeirMod.NET.get())&&state.getValue(WeirNetBlock.TRAPPED)!=caught)
+            level.setBlock(at,state.setValue(WeirNetBlock.TRAPPED,caught),3);
     }
     public static void openMenu(ServerLevel level,BlockPos post,ServerPlayer player){
         WeirPostBlockEntity be=master(level,post);
@@ -235,6 +245,7 @@ public final class WeirLogic {
         Direction dir=direction(source,opposite);
         if(dir==null)return;
         int count=span(source,opposite),waterY=origin.netY;
+        int salvage=WeirMath.salvageRolls(origin.rollsUsed,origin.wear);
         int[] savedDepths=new int[count];
         for(int i=0;i<count;i++)savedDepths[i]=origin.depthAt(i);
         for(int i=0;i<origin.items.getSlots();i++){
@@ -242,6 +253,8 @@ public final class WeirLogic {
             if(!loot.isEmpty())net.minecraft.world.Containers.dropItemStack(level,source.getX()+.5,
                 source.getY()+.5,source.getZ()+.5,loot);
         }
+        if(salvage>0)net.minecraft.world.Containers.dropItemStack(level,source.getX()+0.5,
+            source.getY()+0.5,source.getZ()+0.5,new ItemStack(RiverWeirMod.NET_ROLL.get(),salvage));
         WeirPostBlockEntity endpoint=post(level,opposite);
         origin.clearLink();
         if(endpoint!=null)endpoint.clearLink();
@@ -263,7 +276,8 @@ public final class WeirLogic {
             BlockPos p=at(be.getBlockPos(),dir,col+1,be.netY-d);
             if(!level.hasChunkAt(p))continue;
             BlockState state=level.getBlockState(p);
-            BlockState wanted=netState(dir.getAxis(),stage(be.wear),d==0,(d%PANEL_HEIGHT==PANEL_HEIGHT-1||d==be.depthAt(col)-1),state.getFluidState());
+            BlockState wanted=netState(dir.getAxis(),stage(be.wear),d==0,(d%PANEL_HEIGHT==PANEL_HEIGHT-1||d==be.depthAt(col)-1),state.getFluidState())
+                .setValue(WeirNetBlock.TRAPPED,be.catchMarker!=null&&be.catchMarker.equals(p));
             if(state.is(RiverWeirMod.NET.get())){
                 if(!state.equals(wanted))level.setBlock(p,wanted,3);
             }else if(rebuild && isFreeWater(level,p))level.setBlock(p,wanted,3);
@@ -350,6 +364,7 @@ public final class WeirLogic {
             for(int i=0;i<be.items.getSlots();i++)
                 be.items.setStackInSlot(i,trial.getStackInSlot(i).copy());
             candidate.discard();
+            be.markCatch(mesh);
             damage(level,be,1+level.random.nextInt(3));
             return; // At most one fish per scan interval.
         }

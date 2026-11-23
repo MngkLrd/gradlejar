@@ -34,6 +34,15 @@ public final class NetRollItem extends Item {
         String worldKey="RiverWeirDim";
         String dimension=level.dimension().location().toString();
         var data=player.getPersistentData();
+        // Players can clear an old selection without finding the original stake.
+        if(player.isShiftKeyDown()){
+            data.remove(key);data.remove(worldKey);
+            player.displayClientMessage(Component.translatable("message.riverweir.cancel"),true);
+            return InteractionResult.CONSUME;
+        }
+        if(data.contains(key) && !level.hasChunkAt(BlockPos.of(data.getLong(key)))){
+            data.remove(key);data.remove(worldKey);
+        }
         if(!data.contains(key)||!dimension.equals(data.getString(worldKey))){
             data.putLong(key,pos.asLong());
             data.putString(worldKey,dimension);
