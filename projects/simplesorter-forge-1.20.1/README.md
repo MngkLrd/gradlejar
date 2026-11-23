@@ -1,4 +1,4 @@
-# Simple Sorter 0.9.2 (Forge 1.20.1)
+# Simple Sorter 0.9.3 (Forge 1.20.1)
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
@@ -114,7 +114,7 @@ gradle --no-daemon clean build
 ```
 
 Java: 17. Gradle: 8.14.3. Expected output:
-`build/libs/simplesorter-0.9.2-forge.jar`.
+`build/libs/simplesorter-0.9.3-forge.jar`.
 
 Our GitHub **Minecraft Mod Build Hub** CI performs the authoritative Forge
 compilation and JAR verification. A successful Gradle build is not equivalent
@@ -155,3 +155,45 @@ the empty chest becomes its new salt storage.
 Pure Java regressions validate empty allocations and anti-oscillation.
 Dedicated Forge startup is tested by CI. Full TerraFirmaGreg in-game sorting
 and external protection plugins still require manual integration tests.
+
+## 0.9.3: category quality audit + automatic compacting + visible item bursts
+
+**Smart Categories** is now the main combined action: assigns storage from
+multi-category contextual scores, merges NBT-identical partial stacks,
+and shifts stacks into open slots in each eligible general-purpose chest,
+even when all the original categories were already correctly placed.
+No second click on Compact Stacks is needed. The old saved
+`compact_stacks` preference automatically maps to Smart Categories;
+the redundant mode button is removed from the wand UI. Match Existing and
+Player Deposit retain their separate purposes.
+
+Compact-pass optimization: a linear slot scan first checks for either
+compatible partially filled stacks or holes; already tidy chests are skipped.
+The actual merge and pack stages use indexed partial stack lookups rather
+than comparing every pair of slots, always transferring with
+simulate/extract/insert/rollback semantics through the modded inventory API.
+
+Category-math regression suite checks 529 pairwise compatibility scores
+and 2,000 deterministic synthetic chest-routing cases. This is a *routing
+rule test*, not a measured in-game classification accuracy rate.
+Additional regression cases cover pure and mixed raw minerals, TFC salt,
+ingots, glue, false substring matches and no-ping-pong thresholds.
+Compatibility candidates are cached per category across all stack/NBT
+variants during one sort action, avoiding repeated category-index scans.
+
+Flying Items visual budget: up to 64 distinct grouped inter-container
+routes in one bounded clientbound message, sampled from a maximum
+of 96 recorded successful transfers. Each transferred item type
+creates 1-4 animated models depending on quantity, with up to 160
+simultaneous models on the client (previously 48). Models are
+0.70-scale (previously 0.54), fly along a slightly higher arc and
+remain visible for 17-30 ticks, with staggered start times.
+No physical item entities, additional item drops or server render
+ticks are created by the visual effect. Internal chest compaction
+does not spawn flying visual effects or highlight particles.
+
+Minecraft 1.20.1 Forge 47.x, Java 17.
+CI: `gradle --no-daemon clean build`, standalone pure Java routing
+regressions, JAR verification and dedicated Forge server smoke test.
+Full TerraFirmaGreg runtime validation and graphics compatibility
+must still be tested in-game before marking as stable.
