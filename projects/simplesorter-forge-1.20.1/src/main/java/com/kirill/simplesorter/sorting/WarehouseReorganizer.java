@@ -96,6 +96,11 @@ public final class WarehouseReorganizer {
         private int movedThisPass;
         private int movedItems;
         private int operations;
+        // Carry the inner candidate-loop cursor over to the next server
+        // tick, instead of searching up to 384 modded inventories in one tick.
+        private int pendingSource = -1;
+        private int pendingSlot = -1;
+        private int pendingCandidate;
         private boolean done;
 
         public Session(List<ContainerRef> all) {
@@ -159,6 +164,11 @@ public final class WarehouseReorganizer {
                 }
                 int activeSlot = slotIndex++;
                 checkedSlots++;
+                if (activeSlot == 0) {
+                    // A player or other automation may have modified this
+                    // chest between server ticks; never trust stale contents.
+                    states.get(sourceIndex).refresh(source, itemCategoryCache);
+                }
 
                 ItemStack stack = handler.getStackInSlot(activeSlot);
                 if (stack.isEmpty()) continue;
@@ -176,28 +186,44 @@ public final class WarehouseReorganizer {
                         keepAtSource.get(sourceIndex))) continue;
 
                 String pool = plan.region(sourceIndex) + ":" + family;
-                int checkedTargets = 0;
-                for (int targetIndex : candidateOrder.computeIfAbsent(
-                        pool, ignored -> candidateIndices(sourceIndex, family))) {
-                    if (++checkedTargets > MAX_TARGETS_PER_STACK) break;
+                List<Integer> choices = candidateOrder.computeIfAbsent(
+                        pool, ignored -> candidateIndices(sourceIndex, family));
+                int startAt = pendingSource == sourceIndex && pendingSlot == activeSlot
+                        ? pendingCandidate : 0;
+
+                for (int choiceIndex = startAt;
+                        choiceIndex < choices.size()
+                            && choiceIndex < MAX_TARGETS_PER_STACK; choiceIndex++) {
+                    if (System.nanoTime() >= deadline) {
+                        // Keep the source slot/candidate intact. The next
+                        // server tick continues from exactly this target,
+                        // with no repeated failed inventory scans.
+                        pendingSource = sourceIndex;
+                        pendingSlot = activeSlot;
+                        pendingCandidate = choiceIndex;
+                        slotIndex = activeSlot;
+                        return false;
+                    }
+
+                    int targetIndex = choices.get(choiceIndex);
+                    if (targetIndex == sourceIndex) continue;
                     ContainerRef target = containers.get(targetIndex);
                     if (!valid(level, target)) continue;
 
                     ChestState targetState = states.get(targetIndex);
+                    // Be safe if another player added a foreign item while a
+                    // multi-tick sort was working through the warehouse.
+                    targetState.refresh(target, itemCategoryCache);
                     if (!WarehouseConsolidationDecision.eligibleTarget(
                             plan, sourceIndex, targetIndex, family, mixedSource,
                             targetState.pure(family), targetState.empty())) continue;
                     String claim = reservations.getOrDefault(targetIndex, "");
                     if (!targetState.canAccept(family, claim)) continue;
 
-                    // A foreign family may be physically in the same column,
-                    // which is perfectly valid. It cannot be used as target.
                     int moved = InventoryMover.moveSlotToTargets(
                             source, activeSlot, List.of(target), listener);
                     if (moved <= 0) continue;
 
-                    // Refresh only the two affected chests, not all 384
-                    // inventories after every transfer.
                     sourceState.refresh(source, itemCategoryCache);
                     targetState.refresh(target, itemCategoryCache);
                     reservations.put(targetIndex, family);
@@ -206,6 +232,9 @@ public final class WarehouseReorganizer {
                     operations++;
                     if (handler.getStackInSlot(activeSlot).isEmpty()) break;
                 }
+                pendingSource = -1;
+                pendingSlot = -1;
+                pendingCandidate = 0;
             }
             return done;
         }
