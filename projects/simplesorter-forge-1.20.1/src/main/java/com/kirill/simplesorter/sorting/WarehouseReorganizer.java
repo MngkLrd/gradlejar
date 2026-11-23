@@ -184,7 +184,7 @@ public final class WarehouseReorganizer {
             return candidateOrder.computeIfAbsent(grouping, key -> {
                 List<Integer> result = new ArrayList<>();
                 for (int i = 0; i < containers.size(); i++) {
-                    if (i != source && columns.sameRegion(source, i)) result.add(i);
+                    if (columns.sameRegion(source, i)) result.add(i);
                 }
                 result.sort(Comparator
                         .comparingDouble((Integer idx) ->
