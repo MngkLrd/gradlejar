@@ -259,16 +259,19 @@ jobs:
             src/main/java/com/kirill/simplesorter/sorting/WarehouseColumns.java \
             src/main/java/com/kirill/simplesorter/sorting/WarehouseRoutingRules.java \
             src/main/java/com/kirill/simplesorter/client/FaceLabelDimensions.java \
+            src/main/java/com/kirill/simplesorter/client/FixedLabelFaces.java \
             tools/tests/SmartRulesSelfTest.java \
             tools/tests/WarehouseLayoutSelfTest.java \
             tools/tests/WarehouseColumnsSelfTest.java \
             tools/tests/WarehouseRoutingRulesSelfTest.java \
-            tools/tests/FaceLabelDimensionsSelfTest.java
+            tools/tests/FaceLabelDimensionsSelfTest.java \
+            tools/tests/FixedLabelFacesSelfTest.java
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.SmartRulesSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseLayoutSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseColumnsSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseRoutingRulesSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.client.FaceLabelDimensionsSelfTest
+          java -ea -cp build/smart2-tests com.kirill.simplesorter.client.FixedLabelFacesSelfTest
       - name: Check model, texture and datapack assets
         if: matrix.project_dir == 'projects/openmotion'
         run: python3 projects/openmotion/tools/check_assets.py

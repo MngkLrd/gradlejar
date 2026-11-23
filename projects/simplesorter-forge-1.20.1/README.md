@@ -1,4 +1,4 @@
-# Simple Sorter 0.9.8 (Forge 1.20.1)
+# Simple Sorter 0.9.9 (Forge 1.20.1)
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
@@ -114,7 +114,7 @@ gradle --no-daemon clean build
 ```
 
 Java: 17. Gradle: 8.14.3. Expected output:
-`build/libs/simplesorter-0.9.8-forge.jar`.
+`build/libs/simplesorter-0.9.9-forge.jar`.
 
 Our GitHub **Minecraft Mod Build Hub** CI performs the authoritative Forge
 compilation and JAR verification. A successful Gradle build is not equivalent
@@ -421,3 +421,54 @@ testing confirms that actual sorting stabilizes after ONE activation.
 Try on a copy of the world; measure FPS with Icons/Text/OFF and compare
 server MSPT via F3 or a profiler. The per-tick workload is bounded but has
 not been benchmarked on the user's modpack.
+
+## 0.9.9: reliably visible TFC crate labels, not rotating billboards
+
+Fixes two independent client-rendering failures inherited from 0.9.7/0.9.8:
+
+1. **Wrong glyph plane**: text was rotated 180 degrees into the chest.
+   The text's front surface (+Z after negative X/Y scaling) now points
+   OUT of the block for NORTH/SOUTH/EAST/WEST. New pure Java regression
+   tests verify the normals of all four rotations.
+2. **Missed network snapshots**: ChunkWatch can send label data before
+   the client finishes loading the world. If unchanged, a later sort
+   would not send the label chunk again. The client now requests a
+   rate-limited 5x5 loaded-chunk refresh once after joining, and the
+   server always re-sends scanned label chunks after sorting even if
+   their saved contents are unchanged.
+
+TerraFirmaCraft's crates / modded chests may not expose the same front
+metadata as vanilla chests; an old world label could have been assigned
+to the E/W side of a crate just because the sorting player was far
+to one side of a 14-column warehouse. The client no longer trusts that
+guessed direction for rendering. It selects from the actual exposed
+N/S/E/W block faces, skipping solid walls and adjacent chests. All
+rendered surfaces are **world-aligned 90-degree planes**, not continuously
+rotating floating nametags. Single and double chest text width remains
+bounded; double chests prefer the two long exterior faces.
+
+At nighttime, captions now have a soft light-map floor so dark TFC
+storerooms cannot make them visually black. Representative 3D items
+still use normal world lighting and are limited to the existing client
+LOD (48 text decals, 18 models, 23/14 block distances).
+
+**Label resource requirement has not been removed**. Set Labels: Text
+or Icons in the sorting wand GUI, place signs or item frames in your
+player inventory, press Load Labels, then sort once. First-time label
+creation consumes one sign or frame per chest; subsequent updates are
+free. If none are available, the warning now appears in regular chat
+instead of a temporary actionbar message overwritten by the
+"sorting completed" status. Labels: OFF still removes existing marks
+and refunds their backing materials.
+
+Server/Client network protocol has advanced to version 6; both sides
+must update. 0.9.9 retains the 0.9.8 64-block radius, 384-chest
+scanning limit, tick-sliced one-click warehouse reorganization and
+no-ping-pong routing. No changes to inventory stack semantics, world
+loading, or category definitions in this release.
+
+Forge CI compiles the production JAR, tests cardinal surfaces and
+letter-front rotations, tests sorting invariants and recipes, verifies
+packaged resources and boots a dedicated Minecraft server. These are
+automated tests; graphical FPS and shader compatibility require
+in-game TerraFirmaGreg QA.

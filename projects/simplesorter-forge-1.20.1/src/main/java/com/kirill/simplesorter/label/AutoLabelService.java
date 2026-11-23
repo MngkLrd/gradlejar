@@ -131,12 +131,24 @@ public final class AutoLabelService {
             }
         }
 
+        // Important: unchanged labels were NOT re-sent in 0.9.7/0.9.8.
+        // If the initial ChunkWatch packet arrived before the client world
+        // existed, subsequent sorts performed zero NBT changes and the
+        // screen remained completely empty forever. Always re-send the
+        // current chunk snapshots to the sorting player.
         for (ChunkPos chunk : changed) broadcast(level, chunk);
+        Set<ChunkPos> scannedChunks = new HashSet<>();
+        for (ContainerRef ref : containers) {
+            scannedChunks.add(new ChunkPos(ref.pos()));
+        }
+        for (ChunkPos chunk : scannedChunks) {
+            if (!changed.contains(chunk)) sendChunk(player, level, chunk);
+        }
         if (missingSupplies > 0) {
             player.displayClientMessage(Component.literal("Simple Sorter: "
                     + missingSupplies + " chests need "
                     + (style == 1 ? "signs" : "item frames")
-                    + ". Add materials to inventory, then press Load Labels."), true);
+                    + ". Add materials to inventory, then press Load Labels."), false);
         }
         return created;
     }
