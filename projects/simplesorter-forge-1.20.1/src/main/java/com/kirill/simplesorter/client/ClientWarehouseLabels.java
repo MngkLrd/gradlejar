@@ -121,9 +121,11 @@ public final class ClientWarehouseLabels {
 
                     Direction face = render.data().facing();
                     if (!face.getAxis().isHorizontal()) continue;
-                    if (roughX * face.getStepX() + roughZ * face.getStepZ() <= 0.09D) {
-                        // Never display the front label through the rear of
-                        // the chest when the user circles the storage wall.
+                    if (roughX * face.getStepX() + roughZ * face.getStepZ() >= -0.09D) {
+                        // The rough vector points FROM camera TO chest, which is
+                        // opposite the face normal on the visible front.
+                        // 0.9.7 inverted this test and culled every
+                        // correctly facing sign (regression).
                         continue;
                     }
                     if (!mc.level.hasChunkAt(pos) || mc.level.getBlockEntity(pos) == null) continue;
