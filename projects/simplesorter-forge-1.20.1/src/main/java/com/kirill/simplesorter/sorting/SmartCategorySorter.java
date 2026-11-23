@@ -23,9 +23,6 @@ import java.util.Set;
  * oscillating between equally ranked chests and preserves player-seeded homes.
  */
 public final class SmartCategorySorter {
-    private static final double CATEGORY_TARGET_PURITY = 0.68D;
-    private static final double SOURCE_ALREADY_SORTED_PURITY = 0.68D;
-    private static final double RAW_FAMILY_PURITY = 0.86D;
 
     private SmartCategorySorter() {}
 
@@ -152,16 +149,14 @@ public final class SmartCategorySorter {
         StorageSnapshot origin = originals.get(0);
         if (!allowCategoryFallback) return origin;
         // Unknown categories must never be guessed into random misc chests.
-        if (!isSafeFallbackCategory(categoryId)) return origin;
+        if (!RoutingPolicy.allowsCategoryFallback(categoryId)) return origin;
         // The already dominant chest is the canonical home unless the player
         // deliberately seeded the item in a second chest (handled above).
-        if (origin.purity(categoryId) >= SOURCE_ALREADY_SORTED_PURITY
-                || (isRawMineral(categoryId) && origin.familyPurity(categoryId) >= RAW_FAMILY_PURITY)) return origin;
+        if (RoutingPolicy.isEstablishedHome(origin.categories(), origin.occupied(), categoryId)) return origin;
 
         return snapshots.stream()
                 .filter(s -> s != origin && s.occupied() > 0)
-                .filter(s -> s.purity(categoryId) >= CATEGORY_TARGET_PURITY
-                        || (isRawMineral(categoryId) && s.familyPurity(categoryId) >= RAW_FAMILY_PURITY))
+                .filter(s -> RoutingPolicy.isEstablishedHome(s.categories(), s.occupied(), categoryId))
                 .filter(s -> canReceiveSample(s.ref().handler(), sample))
                 .max(Comparator
                         .comparingDouble((StorageSnapshot s) -> s.affinity(categoryId))
@@ -175,22 +170,6 @@ public final class SmartCategorySorter {
      * A modded inventory's slot rules (TFC size, sided slots etc.) are final.
      * Item type is sufficient for routing, but NBT is never stripped on moves.
      */
-    private static boolean isRawMineral(String id) {
-        return id.equals("ores") || id.equals("raw_ores") || id.equals("dusts")
-                || id.equals("small_dust") || id.equals("tiny_dust");
-    }
-
-    private static boolean isSafeFallbackCategory(String id) {
-        return switch (id) {
-            case "tiny_dust", "small_dust", "dusts", "ores", "raw_ores",
-                    "ingots", "nuggets", "metal_sheets", "plates", "rods",
-                    "wires", "gears", "gems", "adhesives", "fruit_tree_parts",
-                    "molds", "loose_stones", "tools", "weapons", "armor",
-                    "potions", "books", "food", "plants", "wood", "redstone" -> true;
-            default -> false; // broad or unknown: exact-match only
-        };
-    }
-
     private static boolean canReceiveSample(IItemHandler handler, ItemStack sample) {
         if (sample == null || sample.isEmpty()) return false;
         try {
@@ -213,32 +192,8 @@ public final class SmartCategorySorter {
                                    Map<Item, ItemStack> samples, Map<String, Integer> categories,
                                    int occupied) {
         double affinity(String categoryId) {
-            if (occupied == 0) return 0D;
-            return purity(categoryId) * 2.0D + familyPurity(categoryId);
+            return RoutingPolicy.affinity(categories, occupied, categoryId);
         }
 
-        double familyPurity(String categoryId) {
-            if (occupied == 0) return 0D;
-            String family = family(categoryId);
-            int related = 0;
-            for (var entry : categories.entrySet()) {
-                if (family.equals(family(entry.getKey()))) related += entry.getValue();
-            }
-            return (double) related / occupied;
-        }
-
-        private static String family(String id) {
-            return switch (id) {
-                case "ores", "raw_ores", "tiny_dust", "small_dust", "dusts" -> "raw_minerals";
-                case "ingots", "nuggets", "metal_sheets", "plates" -> "metal_forms";
-                case "rods", "wires", "gears" -> "machine_components";
-                default -> id;
-            };
-        }
-
-        double purity(String categoryId) {
-            if (occupied <= 0 || SortCategoryRegistry.MISC_ID.equals(categoryId)) return 0D;
-            return (double) categories.getOrDefault(categoryId, 0) / (double) occupied;
-        }
     }
 }
