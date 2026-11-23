@@ -123,7 +123,7 @@ jobs:
         if: matrix.project_dir == 'projects/bigfrogs'
         run: tar -xJf projects/bigfrogs/source.tar.xz -C projects/bigfrogs
       - name: Restore Simple Sorter NeoForge 26.x projects
-        if: startsWith(matrix.project_dir, 'projects/simplesorter-neoforge-26.') || startsWith(matrix.project_dir, 'projects/simplesorter-fabric-') || startsWith(matrix.project_dir, 'projects/simplesorter-forge-') || matrix.project_dir == 'projects/simplesorter-neoforge-1.20.1'
+        if: startsWith(matrix.project_dir, 'projects/simplesorter-neoforge-26.') || startsWith(matrix.project_dir, 'projects/simplesorter-fabric-') || (startsWith(matrix.project_dir, 'projects/simplesorter-forge-') && matrix.project_dir != 'projects/simplesorter-forge-1.20.1') || matrix.project_dir == 'projects/simplesorter-neoforge-1.20.1'
         run: tar -xJf projects/simplesorter-neoforge-bundle.tar.xz -C projects
       - name: Validate Keep Sign Text packaging
         if: startsWith(matrix.project_dir, 'projects/keepsigntext-')
