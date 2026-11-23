@@ -1,0 +1,173 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_core_mangrove"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "north": "true"
+          },
+          {
+            "axis": "z"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_north_mangrove"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "OR": [
+              {
+                "north": "true"
+              },
+              {
+                "axis": "z"
+              }
+            ]
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_north"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "south": "true"
+          },
+          {
+            "axis": "z"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_south_mangrove"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "OR": [
+              {
+                "south": "true"
+              },
+              {
+                "axis": "z"
+              }
+            ]
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_south"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "east": "true"
+          },
+          {
+            "axis": "x"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_east_mangrove"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "OR": [
+              {
+                "east": "true"
+              },
+              {
+                "axis": "x"
+              }
+            ]
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_east"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "west": "true"
+          },
+          {
+            "axis": "x"
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_west_mangrove"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "wet": "true"
+          },
+          {
+            "OR": [
+              {
+                "west": "true"
+              },
+              {
+                "axis": "x"
+              }
+            ]
+          }
+        ]
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_west"
+      }
+    },
+    {
+      "when": {
+        "drop": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_drop_mangrove"
+      }
+    },
+    {
+      "when": {
+        "wet": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/gutter_water_core"
+      }
+    }
+  ]
+}

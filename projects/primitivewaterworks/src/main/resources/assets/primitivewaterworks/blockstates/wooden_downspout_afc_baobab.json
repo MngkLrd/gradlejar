@@ -1,0 +1,49 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "primitivewaterworks:block/wooden_downspout_afc_baobab"
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_north_afc_baobab"
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_south_afc_baobab"
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_east_afc_baobab"
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_west_afc_baobab"
+      }
+    },
+    {
+      "when": {
+        "wet": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_water"
+      }
+    }
+  ]
+}

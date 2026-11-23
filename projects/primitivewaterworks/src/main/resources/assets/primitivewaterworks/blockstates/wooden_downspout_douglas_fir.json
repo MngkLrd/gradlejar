@@ -1,0 +1,49 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "primitivewaterworks:block/wooden_downspout_douglas_fir"
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_north_douglas_fir"
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_south_douglas_fir"
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_east_douglas_fir"
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_west_douglas_fir"
+      }
+    },
+    {
+      "when": {
+        "wet": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_water"
+      }
+    }
+  ]
+}

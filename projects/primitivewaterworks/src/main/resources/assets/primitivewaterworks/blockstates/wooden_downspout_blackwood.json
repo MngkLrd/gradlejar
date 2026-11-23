@@ -1,0 +1,49 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "primitivewaterworks:block/wooden_downspout_blackwood"
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_north_blackwood"
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_south_blackwood"
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_east_blackwood"
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_west_blackwood"
+      }
+    },
+    {
+      "when": {
+        "wet": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_water"
+      }
+    }
+  ]
+}

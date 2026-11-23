@@ -1,0 +1,49 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "primitivewaterworks:block/wooden_downspout_birch"
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_north_birch"
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_south_birch"
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_east_birch"
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_west_birch"
+      }
+    },
+    {
+      "when": {
+        "wet": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_water"
+      }
+    }
+  ]
+}

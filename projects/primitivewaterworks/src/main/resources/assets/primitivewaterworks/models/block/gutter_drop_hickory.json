@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/gutter_drop",
+  "textures": {
+    "wood": "tfc:block/wood/planks/hickory",
+    "particle": "#wood"
+  }
+}

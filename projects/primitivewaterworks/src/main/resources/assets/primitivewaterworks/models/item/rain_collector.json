@@ -1,5 +1,5 @@
 {
-  "parent": "primitivewaterworks:block/rain_collector",
+  "parent": "primitivewaterworks:block/collector_inventory",
   "display": {
     "gui": {
       "rotation": [

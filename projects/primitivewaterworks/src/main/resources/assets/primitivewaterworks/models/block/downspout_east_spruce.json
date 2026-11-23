@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/downspout_east",
+  "textures": {
+    "wood": "tfc:block/wood/planks/spruce",
+    "particle": "#wood"
+  }
+}

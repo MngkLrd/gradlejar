@@ -3,10 +3,10 @@ loaderVersion="[47,)"
 license="MIT"
 [[mods]]
 modId="primitivewaterworks"
-version="0.2.0"
+version="0.3.0"
 displayName="Primitive Waterworks"
 authors="MngkLrd"
-description='''Primitive wooden rainwater collectors, gutters, and gravity-fed downspouts for TerraFirmaCraft and TerraFirmaGreg.'''
+description='''A wooden rainwater collection and gravity flow system for TFC with native wood species and knife-carved outlets.'''
 [[dependencies.primitivewaterworks]]
 modId="forge"
 mandatory=true

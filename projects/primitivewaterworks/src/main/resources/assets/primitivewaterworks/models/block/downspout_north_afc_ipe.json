@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/downspout_north",
+  "textures": {
+    "wood": "afc:block/wood/planks/ipe",
+    "particle": "#wood"
+  }
+}

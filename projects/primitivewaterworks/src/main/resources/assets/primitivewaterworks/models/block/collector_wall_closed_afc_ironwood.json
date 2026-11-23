@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/collector_wall_closed",
+  "textures": {
+    "wood": "afc:block/wood/planks/ironwood",
+    "particle": "#wood"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/gutter_core",
+  "textures": {
+    "wood": "tfc:block/wood/planks/ash",
+    "particle": "#wood"
+  }
+}

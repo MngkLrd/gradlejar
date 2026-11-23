@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/gutter_south",
+  "textures": {
+    "wood": "tfc:block/wood/planks/maple",
+    "particle": "#wood"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/gutter_west",
+  "textures": {
+    "wood": "afc:block/wood/planks/hevea",
+    "particle": "#wood"
+  }
+}

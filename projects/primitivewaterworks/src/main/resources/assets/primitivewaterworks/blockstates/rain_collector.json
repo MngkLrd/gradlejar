@@ -1,24 +1,113 @@
 {
-  "variants": {
-    "facing=north": {
-      "model": "primitivewaterworks:block/rain_collector",
-      "y": 0,
-      "uvlock": true
+  "multipart": [
+    {
+      "apply": {
+        "model": "primitivewaterworks:block/collector_frame"
+      }
     },
-    "facing=east": {
-      "model": "primitivewaterworks:block/rain_collector",
-      "y": 90,
-      "uvlock": true
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_wall_closed",
+        "y": 0
+      }
     },
-    "facing=south": {
-      "model": "primitivewaterworks:block/rain_collector",
-      "y": 180,
-      "uvlock": true
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_wall_open",
+        "y": 0
+      }
     },
-    "facing=west": {
-      "model": "primitivewaterworks:block/rain_collector",
-      "y": 270,
-      "uvlock": true
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_wall_closed",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_wall_open",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_wall_closed",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_wall_open",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_wall_closed",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_wall_open",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "water_level": "1"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_water_1"
+      }
+    },
+    {
+      "when": {
+        "water_level": "2"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_water_2"
+      }
+    },
+    {
+      "when": {
+        "water_level": "3"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_water_3"
+      }
+    },
+    {
+      "when": {
+        "water_level": "4"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/collector_water_4"
+      }
     }
-  }
+  ]
 }

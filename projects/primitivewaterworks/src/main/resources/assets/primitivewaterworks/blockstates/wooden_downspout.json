@@ -36,6 +36,14 @@
       "apply": {
         "model": "primitivewaterworks:block/downspout_west"
       }
+    },
+    {
+      "when": {
+        "wet": "true"
+      },
+      "apply": {
+        "model": "primitivewaterworks:block/downspout_water"
+      }
     }
   ]
 }

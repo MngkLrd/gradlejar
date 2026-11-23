@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/collector_frame",
+  "textures": {
+    "wood": "tfc:block/wood/planks/chestnut",
+    "particle": "#wood"
+  }
+}

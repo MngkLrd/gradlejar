@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/downspout_west",
+  "textures": {
+    "wood": "afc:block/wood/planks/hevea",
+    "particle": "#wood"
+  }
+}

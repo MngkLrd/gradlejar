@@ -1,0 +1,7 @@
+{
+  "parent": "primitivewaterworks:block/downspout_west",
+  "textures": {
+    "wood": "tfc:block/wood/planks/kapok",
+    "particle": "#wood"
+  }
+}
