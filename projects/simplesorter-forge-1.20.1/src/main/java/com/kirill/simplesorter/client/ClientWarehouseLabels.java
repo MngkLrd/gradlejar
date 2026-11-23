@@ -179,9 +179,12 @@ public final class ClientWarehouseLabels {
             poses.translate(v.surface().x - camera.x,
                     v.surface().y - camera.y, v.surface().z - camera.z);
 
-            // A fixed block face normal, NEVER cameraOrientation().
-            // South=0, north=180, east=+90, west=-90.
-            poses.mulPose(Axis.YP.rotationDegrees(-face.toYRot()));
+            // A fixed block face, NEVER cameraOrientation().
+            // Minecraft's font plane initially looks toward -Z and uses a
+            // negative X/Y glyph scale. Rotate that plane outward:
+            // SOUTH=180, NORTH=0, EAST=-90, WEST=90.
+            // This preserves legibility and stops labels rotating with us.
+            poses.mulPose(Axis.YP.rotationDegrees(180F - face.toYRot()));
 
             if (drawIcon) {
                 poses.pushPose();
