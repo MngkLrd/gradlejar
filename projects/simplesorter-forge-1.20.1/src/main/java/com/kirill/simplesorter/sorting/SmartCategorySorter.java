@@ -69,6 +69,18 @@ public final class SmartCategorySorter {
                                 node.x(), node.y(), node.z(),
                                 node.occupied(), node.labels())).toList())
                 : WarehouseColumns.analyze(List.of());
+        // An ore column's lightly mixed fourth chest is eligible even if
+        // its own local contents look like junk. Index strong column roles
+        // once, not once per unique modded item.
+        Map<String, List<StorageSnapshot>> seededColumnHomes = new HashMap<>();
+        for (StorageSnapshot snapshot : snapshots) {
+            String role = columns.role(snapshotIndex.get(snapshot));
+            if (!role.isEmpty()) {
+                seededColumnHomes.computeIfAbsent(role,
+                        ignored -> new ArrayList<>()).add(snapshot);
+            }
+        }
+
         boolean independentReorganization = categoryMode && settings.autoOrganize()
                 && layout.analyzedBlocks() >= 3;
 
@@ -118,7 +130,9 @@ public final class SmartCategorySorter {
                     })
                     : List.of();
             StorageSnapshot best = chooseHome(key, label, sample, categoryMode,
-                    originals, related, layout, columns, snapshotIndex);
+                    originals, related,
+                    seededColumnHomes.getOrDefault(WarehouseLayout.family(label), List.of()),
+                    layout, columns, snapshotIndex);
 
             // A seeded vertical column is stronger evidence than default
             // top-to-bottom Y order. If a specific type is misplaced in another
@@ -344,6 +358,7 @@ public final class SmartCategorySorter {
                                              boolean allowCategoryFallback,
                                              List<StorageSnapshot> originalHomes,
                                              List<StorageSnapshot> compatibleHomes,
+                                             List<StorageSnapshot> compatibleColumnHomes,
                                              WarehouseLayout layout,
                                              WarehouseColumns columns,
                                              Map<StorageSnapshot, Integer> snapshotIndex) {
@@ -352,6 +367,7 @@ public final class SmartCategorySorter {
         Set<StorageSnapshot> candidates = new LinkedHashSet<>(originalHomes);
         if (allowCategoryFallback && RoutingPolicy.allowsCategoryFallback(category)) {
             candidates.addAll(compatibleHomes);
+            candidates.addAll(compatibleColumnHomes);
         }
 
         List<StorageSnapshot> ranked = new ArrayList<>();
@@ -362,9 +378,11 @@ public final class SmartCategorySorter {
                     && !snapshot.counts().containsKey(key)) continue;
             boolean existing = snapshot.counts().containsKey(key);
             double fit = snapshot.fit(key, category);
+            boolean anchoredOverflow = columns.matches(snapshotIndex.get(snapshot), category)
+                    && snapshot.occupied() <= 8;
             if (!existing && (!allowCategoryFallback
                     || !RoutingPolicy.allowsCategoryFallback(category)
-                    || fit < RoutingPolicy.MIN_NEW_HOME_FIT)) continue;
+                    || (fit < RoutingPolicy.MIN_NEW_HOME_FIT && !anchoredOverflow))) continue;
             ranked.add(snapshot);
         }
         if (ranked.isEmpty()) return originalHomes.get(0);
