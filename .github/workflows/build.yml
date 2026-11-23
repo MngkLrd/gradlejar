@@ -123,7 +123,7 @@ jobs:
         if: matrix.project_dir == 'projects/bigfrogs'
         run: tar -xJf projects/bigfrogs/source.tar.xz -C projects/bigfrogs
       - name: Restore Simple Sorter NeoForge 26.x projects
-        if: startsWith(matrix.project_dir, 'projects/simplesorter-neoforge-26.') || startsWith(matrix.project_dir, 'projects/simplesorter-fabric-') || startsWith(matrix.project_dir, 'projects/simplesorter-forge-') || matrix.project_dir == 'projects/simplesorter-neoforge-1.20.1'
+        if: startsWith(matrix.project_dir, 'projects/simplesorter-neoforge-26.') || startsWith(matrix.project_dir, 'projects/simplesorter-fabric-') || (startsWith(matrix.project_dir, 'projects/simplesorter-forge-') && matrix.project_dir != 'projects/simplesorter-forge-1.20.1') || matrix.project_dir == 'projects/simplesorter-neoforge-1.20.1'
         run: tar -xJf projects/simplesorter-neoforge-bundle.tar.xz -C projects
       - name: Validate Keep Sign Text packaging
         if: startsWith(matrix.project_dir, 'projects/keepsigntext-')
@@ -246,6 +246,17 @@ jobs:
           set -euo pipefail
           cd "$PROJECT_DIR"
           gradle --no-daemon --stacktrace clean build 2>&1 | tee "$GITHUB_WORKSPACE/build-output-${{ strategy.job-index }}.log"
+      - name: Run Simple Sorter Smart 2.0 regression tests
+        if: matrix.project_dir == 'projects/simplesorter-forge-1.20.1'
+        run: |
+          set -euo pipefail
+          cd projects/simplesorter-forge-1.20.1
+          mkdir -p build/smart2-tests
+          javac -d build/smart2-tests \
+            src/main/java/com/kirill/simplesorter/sorting/PathTokenMatcher.java \
+            src/main/java/com/kirill/simplesorter/sorting/RoutingPolicy.java \
+            tools/tests/SmartRulesSelfTest.java
+          java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.SmartRulesSelfTest
       - name: Check model, texture and datapack assets
         if: matrix.project_dir == 'projects/openmotion'
         run: python3 projects/openmotion/tools/check_assets.py
@@ -257,6 +268,39 @@ jobs:
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: python3 tools/verify_build_output.py "$PROJECT_DIR"
+      - name: Smoke-test Simple Sorter dedicated server
+        if: matrix.project_dir == 'projects/simplesorter-forge-1.20.1'
+        timeout-minutes: 6
+        run: |
+          set -euo pipefail
+          cd projects/simplesorter-forge-1.20.1
+          for dir in run runs/server; do
+            mkdir -p "$dir"
+            printf 'eula=true\n' > "$dir/eula.txt"
+            printf 'online-mode=false\nlevel-name=ci-sorter-test\nview-distance=3\nsimulation-distance=3\nmax-tick-time=-1\n' > "$dir/server.properties"
+          done
+          logfile="$GITHUB_WORKSPACE/simplesorter-forge-server.log"
+          timeout --signal=TERM --kill-after=15s 195s gradle --no-daemon runServer > "$logfile" 2>&1 &
+          pid=$!
+          passed=0
+          for n in $(seq 1 190); do
+            if grep -q 'Done (' "$logfile"; then
+              passed=1
+              break
+            fi
+            if ! kill -0 "$pid" 2>/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          kill "$pid" 2>/dev/null || true
+          wait "$pid" 2>/dev/null || true
+          if [ "$passed" -ne 1 ]; then
+            echo 'Simple Sorter dedicated server did not reach startup completion.'
+            tail -n 180 "$logfile"
+            exit 1
+          fi
+          echo 'Simple Sorter dedicated server boot verified.'
       - name: Smoke-test MIDNIGHT dedicated server and custom biome generation
         if: matrix.project_dir == 'projects/midnighteve'
         env:
