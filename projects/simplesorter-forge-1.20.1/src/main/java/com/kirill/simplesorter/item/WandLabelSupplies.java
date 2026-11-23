@@ -8,6 +8,7 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SignItem;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,12 @@ public final class WandLabelSupplies {
         if (stack.isEmpty()) return 0;
         if (stack.getItem() == Items.ITEM_FRAME || stack.getItem() == Items.GLOW_ITEM_FRAME) return 2;
         if (stack.getItem() instanceof SignItem) return 1;
+        // TerraFirmaCraft and other content packs can provide their own wood
+        // signs through custom item classes. Labels are decorative, so only
+        // the semantic registry ID is needed to use those as supplied signs.
+        String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
+        if (path.endsWith("_hanging_sign") || path.endsWith("_sign")) return 1;
+        if (path.endsWith("_item_frame")) return 2;
         return 0;
     }
 
