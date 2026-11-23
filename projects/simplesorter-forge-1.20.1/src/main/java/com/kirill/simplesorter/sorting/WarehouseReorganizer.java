@@ -24,18 +24,24 @@ import java.util.Map;
 public final class WarehouseReorganizer {
     private static final int MAX_PASSES = 3;
     private static final int MAX_OPERATIONS = 4096;
-    private static final int MIN_OWNED_SLOTS = 2;
-    private static final double MIN_PURITY = 0.74D;
+    private static final int MIN_OWNED_SLOTS = 1;
 
     private WarehouseReorganizer() {}
 
     public record Result(int movedItems, int movedOperations) {}
 
-    private record Profile(int occupied, Map<String, Integer> votes,
-                           String dominantFamily, double purity) {
-        boolean belongsTo(String family) {
+    private record Profile(int occupied, Map<String, Integer> strictVotes,
+                           Map<String, Integer> coarseVotes) {
+        // A chest containing 9 ingots and 1 stick is NOT a pure ingot chest,
+        // even if it would pass the old 74% acceptance threshold.
+        boolean belongsTo(String strictFamily) {
             return occupied >= MIN_OWNED_SLOTS
-                    && purity >= MIN_PURITY && dominantFamily.equals(family);
+                    && StrictChestAdmission.canReceive(strictFamily,
+                            strictVotes, occupied, "");
+        }
+
+        boolean mixed() {
+            return StrictChestAdmission.mixed(strictVotes, occupied);
         }
     }
 
@@ -69,7 +75,7 @@ public final class WarehouseReorganizer {
                 BlockPos p = ref.pos();
                 nodes.add(new WarehouseLayout.Node(
                         p.getX(), p.getY(), p.getZ(),
-                        profile.occupied(), profile.votes()));
+                        profile.occupied(), profile.coarseVotes()));
             }
             layout = WarehouseLayout.analyze(nodes, false);
             columns = WarehouseColumns.analyze(nodes.stream()
@@ -131,16 +137,23 @@ public final class WarehouseReorganizer {
                 SortCategory category = itemCategoryCache.computeIfAbsent(
                         stack.getItem(), ignored -> ItemCategoryResolver.resolve(stack));
                 if (!category.moveAllowed()) continue;
-                String family = WarehouseLayout.family(category.id());
-                if ("misc".equals(family)) continue;
+                String broadFamily = WarehouseLayout.family(category.id());
+                String family = strictFamily(stack, category);
+                if ("locked".equals(family)) continue;
 
                 int current = sourceIndex;
                 if (layout.axis(current) == WarehouseLayout.Axis.NONE) continue;
-                if (columns.matches(current, category.id())) continue;
+                Profile sourceProfile = profiles.get(current);
                 if (family.equals(claimed.get(current))) continue;
+                String sourceRole = columns.role(current);
+                // A pure chest is stable UNLESS it resides inside an
+                // established, incompatible category column (e.g. a lone
+                // stick chest in the finished-metal aisle).
+                boolean wrongColumn = !sourceRole.isEmpty()
+                        && !sourceRole.equals(broadFamily);
+                if (sourceProfile.belongsTo(family) && !wrongColumn) continue;
 
                 double sourceFit = layout.preference(current, category.id());
-                String sourceRole = columns.role(current);
                 String sourceClaim = claimed.getOrDefault(current, "");
                 int region = columns.region(current);
                 String grouping = region + ":" + family;
@@ -155,13 +168,39 @@ public final class WarehouseReorganizer {
                     Profile targetProfile = profiles.get(targetIndex);
                     String targetRole = columns.role(targetIndex);
                     String targetClaim = claimed.getOrDefault(targetIndex, "");
-                    boolean belongs = targetProfile.belongsTo(family) ||
-                            family.equals(targetClaim);
+                    // Hard semantic gate. The 0.9.10 rule accepted a chest
+                    // with 74% metals + 26% unrelated items as a metal home.
+                    // Now any incompatible occupied slot rejects insertion.
+                    if (!targetProfile.belongsTo(family) && targetProfile.occupied() > 0) continue;
+                    if (!targetClaim.isEmpty() && !family.equals(targetClaim)) continue;
+                    if (!targetRole.isEmpty() && !targetRole.equals(broadFamily)) continue;
 
-                    if (!WarehouseRoutingRules.mayMove(
-                            family, sourceRole, sourceClaim, targetRole, targetClaim,
-                            hasHome, sourceFit, layout.preference(targetIndex, category.id()),
-                            targetProfile.occupied(), belongs)) continue;
+                    boolean correctColumnExists = hasHome && !"misc".equals(broadFamily);
+                    if (correctColumnExists && !columns.matches(targetIndex, category.id())) {
+                        continue;
+                    }
+
+                    // When the source chest is mixed, moving the misplaced
+                    // item into a pure matching or empty unclaimed container
+                    // is an improvement regardless of a broad Y-level score.
+                    // The destination then gets a permanent strict claim for
+                    // this sorting session. This also handles unknown sticks
+                    // and water bottles without pretending they are ingots.
+                    boolean belongs = targetProfile.belongsTo(family)
+                            || family.equals(targetClaim);
+                    boolean needsEvacuation = sourceProfile.mixed() || wrongColumn;
+                    boolean allowed = needsEvacuation
+                            && (targetProfile.occupied() == 0 || belongs)
+                            && (!correctColumnExists || belongs || columns.matches(targetIndex, category.id()));
+                    if (!allowed && !"misc".equals(broadFamily)) {
+                        allowed = WarehouseRoutingRules.mayMove(
+                                broadFamily, sourceRole, sourceClaim, targetRole,
+                                targetClaim.isEmpty() ? "" : broadFamily,
+                                correctColumnExists, sourceFit,
+                                layout.preference(targetIndex, category.id()),
+                                targetProfile.occupied(), belongs);
+                    }
+                    if (!allowed) continue;
 
                     int moved = InventoryMover.moveSlotToTargets(
                             source, activeSlot, List.of(target), listener);
@@ -188,8 +227,8 @@ public final class WarehouseReorganizer {
                 }
                 result.sort(Comparator
                         .comparingDouble((Integer idx) ->
-                                (columns.matches(idx, category) ? 100D : 0D)
-                                + (profiles.get(idx).belongsTo(family) ? 30D : 0D)
+                                (profiles.get(idx).belongsTo(family) ? 250D : 0D)
+                                + (columns.matches(idx, category) ? 100D : 0D)
                                 + 10D * layout.preference(idx, category)).reversed()
                         .thenComparing(Comparator.comparingInt(
                                 (Integer idx) -> profiles.get(idx).occupied()).reversed())
@@ -221,29 +260,27 @@ public final class WarehouseReorganizer {
         return new Result(session.movedItems(), session.movedOperations());
     }
 
+    private static String strictFamily(ItemStack stack, SortCategory category) {
+        return StrictStackClassifier.family(stack, category);
+    }
+
     private static Profile profile(ContainerRef ref, Map<Item, SortCategory> cache) {
-        Map<String, Integer> votes = new HashMap<>();
+        Map<String, Integer> strict = new HashMap<>();
+        Map<String, Integer> coarse = new HashMap<>();
         int occupied = 0;
         IItemHandler handler = ref.handler();
         for (int slot = 0; slot < handler.getSlots(); slot++) {
             ItemStack stack = handler.getStackInSlot(slot);
             if (stack.isEmpty()) continue;
             occupied++;
-            SortCategory category = cache.computeIfAbsent(
-                    stack.getItem(), ignored -> ItemCategoryResolver.resolve(stack));
-            String family = category.moveAllowed()
+            SortCategory category = cache.computeIfAbsent(stack.getItem(),
+                    ignored -> ItemCategoryResolver.resolve(stack));
+            String family = strictFamily(stack, category);
+            strict.merge(family, 1, Integer::sum);
+            String broad = category.moveAllowed()
                     ? WarehouseLayout.family(category.id()) : "misc";
-            votes.merge(family, 1, Integer::sum);
+            coarse.merge(broad, 1, Integer::sum);
         }
-        String dominant = "misc";
-        int maximum = 0;
-        for (var vote : votes.entrySet()) {
-            if (vote.getValue() > maximum) {
-                maximum = vote.getValue();
-                dominant = vote.getKey();
-            }
-        }
-        return new Profile(occupied, votes, dominant,
-                occupied == 0 ? 0D : (double) maximum / occupied);
+        return new Profile(occupied, Map.copyOf(strict), Map.copyOf(coarse));
     }
 }

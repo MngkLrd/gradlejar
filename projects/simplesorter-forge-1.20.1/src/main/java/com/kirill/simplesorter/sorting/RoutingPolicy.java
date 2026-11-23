@@ -20,7 +20,9 @@ public final class RoutingPolicy {
             "tiny_dust", "small_dust", "dusts", "ores", "raw_ores",
             "ingots", "nuggets", "metal_sheets", "plates", "rods",
             "wires", "gears", "gems", "adhesives", "fruit_tree_parts",
-            "molds", "loose_stones", "salts", "clays", "tools", "weapons", "armor",
+            "molds", "loose_stones", "salts", "clays", "sticks",
+            "tool_heads", "smithing_templates", "water_containers", "vessels",
+            "tools", "weapons", "armor",
             "potions", "books", "food", "plants", "wood", "redstone");
 
     private RoutingPolicy() {}

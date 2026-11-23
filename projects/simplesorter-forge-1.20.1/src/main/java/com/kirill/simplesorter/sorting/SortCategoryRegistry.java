@@ -113,6 +113,47 @@ public final class SortCategoryRegistry {
                 .idContains("clay", "clay_ball", "clay_lump", "kaolin_clay")
                 .build());
 
+        // These are ordinary TFC/GregTech item families that should NEVER
+        // fall into the catch-all "misc" bucket or be inferred as ingots,
+        // construction blocks or generic tools from a broad name overlap.
+        categories.add(SortCategory.builder("tool_heads")
+                .displayName("Tool Heads")
+                .group("components")
+                .priority(879)
+                .idContains("pickaxe_head", "axe_head", "shovel_head",
+                        "hoe_head", "tool_head")
+                .build());
+
+        categories.add(SortCategory.builder("smithing_templates")
+                .displayName("Smithing Templates")
+                .group("crafting")
+                .priority(874)
+                .idContains("smithing_template", "smithing_blueprint", "blueprint")
+                .build());
+
+        categories.add(SortCategory.builder("water_containers")
+                .displayName("Water Containers")
+                .group("liquids")
+                .priority(871)
+                .items("minecraft:water_bucket")
+                .idContains("water_bucket", "water_bottle", "water_flask")
+                .build());
+
+        categories.add(SortCategory.builder("vessels")
+                .displayName("Ceramic Vessels")
+                .group("ceramics")
+                .priority(858)
+                .idContains("vessel", "ceramic_pot", "pottery", "jug")
+                .build());
+
+        categories.add(SortCategory.builder("sticks")
+                .displayName("Sticks and Twigs")
+                .group("crafting")
+                .priority(857)
+                .items("minecraft:stick")
+                .idContains("stick", "twig", "twigs", "wooden_rod")
+                .build());
+
         categories.add(SortCategory.builder("salts")
                 .displayName("Salts")
                 .group("minerals")

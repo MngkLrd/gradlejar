@@ -1,4 +1,4 @@
-# Simple Sorter 0.9.10 (Forge 1.20.1)
+# Simple Sorter 0.9.11 (Forge 1.20.1)
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
@@ -114,7 +114,7 @@ gradle --no-daemon clean build
 ```
 
 Java: 17. Gradle: 8.14.3. Expected output:
-`build/libs/simplesorter-0.9.10-forge.jar`.
+`build/libs/simplesorter-0.9.11-forge.jar`.
 
 Our GitHub **Minecraft Mod Build Hub** CI performs the authoritative Forge
 compilation and JAR verification. A successful Gradle build is not equivalent
@@ -519,3 +519,52 @@ all previous category safety checks. Dedicated Forge server smoke-tests
 verify startup but cannot replace actual graphical tests with TerraFirmaGreg
 or Oculus/Iris-compatible shader packs. This is a test version, not a
 claim of measured client FPS.
+
+## 0.9.11: strict item semantics, no arbitrary category intermixing
+
+This update addresses the user-reported TerraFirmaGreg failure where sticks
+were packed together with ingots, a water potion appeared among conglomerate
+bricks, a pineapple bush and ladders, and a separate chest contained a knife,
+stones, pickaxe head, clay, ceramic vessel, smithing template, mortar and
+kaolinite clay.
+
+**Root causes found in 0.9.10:**
+- The Auto-Organize "home" profile used only the broad six shelf families:
+  ore / finished material / building / crafting / misc / plants. Clay, tools,
+  molds, armor and many other objects all counted as one vague "crafting"
+  destination even though they are not interchangeable.
+- A "mostly matching" chest counted as compatible when as few as 74% of
+  its occupied slots matched, so new ingots could still be deposited beside
+  sticks and other foreign items.
+- Items classified as `misc` were skipped during reorganization, leaving
+  sticks, water bottles, uncommon TFC objects in inappropriate storage forever.
+
+**New strict acceptance policy:** Shelf/column proximity guides which
+category gets an EMPTY chest; it never grants permission to mix unrelated
+families in an occupied chest. Every occupied slot must belong to the SAME
+fine category as the incoming item (100%, not 74% or 99%). A 99-ingot /
+1-stick chest is NOT an ingot destination. An unclaimed empty chest may be
+allocated to a new category; a claimed empty chest refuses other categories.
+The same hard gate applies in ordinary Smart Categories and Auto-Organize.
+
+**Detailed categories:** sticks/twigs; water containers (including water
+potions read from ItemStack NBT); other potions; construction bricks/stairs;
+botanical bushes/seeds; finished metal forms; mechanical components;
+tool heads vs complete tools; smithing templates; clay and kaolinite;
+mortar/binders; ceramic vessels; rocks; powders; and other recognized forms.
+Unrecognized items may use a miscellaneous space but can never qualify as
+a finished-metal/brick/tool home solely from vague name proximity. Names
+and data are read from registry IDs, item tags and actual stack NBT, not
+translated tooltip strings or manually maintained TFC compatibility lists.
+
+**Mixed container cleanup:** A mixed source can move misplaced items to
+already PURE matching containers or newly reserved EMPTY containers.
+A completely full warehouse with no compatible space cannot be repaired
+without an item buffer; the sorter leaves those items instead of dropping
+or replacing them. Category/claim decisions are frozen per explicit sorting
+action so completed pure storage is a terminal stable state. The work remains
+time-sliced on the server; no continuous background scan.
+
+This is a beta with focused deterministic regression tests for TFC/GregTech
+mixes. Forge compilation and dedicated server boot do NOT substitute for
+runtime testing against the actual TerraFirmaGreg pack and its chest APIs.
