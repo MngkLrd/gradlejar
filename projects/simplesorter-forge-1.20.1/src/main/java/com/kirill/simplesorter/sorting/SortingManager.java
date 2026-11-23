@@ -55,7 +55,7 @@ public final class SortingManager {
             case MATCH_EXISTING -> SmartCategorySorter.sort(level, containers, safe.radius(), safe);
             case PLAYER_DEPOSIT -> depositPlayerInventory(level, player, containers, safe);
         };
-        if (safe.labelMode() != 0 && player instanceof ServerPlayer serverPlayer
+        if (player instanceof ServerPlayer serverPlayer
                 && !wand.isEmpty() && wand.getItem() == ModItems.SORTING_WAND.get()) {
             AutoLabelService.refresh(level, serverPlayer, wand, safe, containers);
         }
