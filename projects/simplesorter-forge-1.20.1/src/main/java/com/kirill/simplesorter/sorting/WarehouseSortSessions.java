@@ -201,7 +201,9 @@ public final class WarehouseSortSessions {
                             + compactedItems + " items only compacted WITHIN chests. "
                             + unresolved + " mixed chests remain; "
                             + unknown + " unclassified slots; "
-                            + noFamilyHome + " families without dedicated storage."
+                            + noFamilyHome + " families without dedicated storage. "
+                            + "Transfer attempts: " + session.attemptedTransfers()
+                            + ", rejected by inventories: " + session.rejectedTransfers() + "."
                             + (unresolved > 0 || noFamilyHome > 0
                                 ? " Add more chests or inspect unrecognized items." : "")),
                     unresolved == 0 && unknown == 0 && noFamilyHome == 0);
