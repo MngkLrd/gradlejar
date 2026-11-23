@@ -49,7 +49,7 @@ public final class WeirPostBlock extends BaseEntityBlock {
         builder.add(WATERLOGGED,CONNECTED,FACING,WATER_KIND,FLOW);
     }
     @Override public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        boolean wet=ctx.getLevel().getFluidState(ctx.getClickedPos()).getType()==Fluids.WATER;
+        boolean wet=WeirWater.kind(ctx.getLevel().getFluidState(ctx.getClickedPos()))>=0;
         return defaultBlockState().setValue(WATERLOGGED,wet).setValue(FACING,ctx.getHorizontalDirection())
             .setValue(WATER_KIND,Math.max(0,WeirWater.kind(ctx.getLevel().getFluidState(ctx.getClickedPos()))))
             .setValue(FLOW,WeirWater.flow(ctx.getLevel().getFluidState(ctx.getClickedPos())));

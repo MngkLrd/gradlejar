@@ -20,7 +20,7 @@ public final class NetRollItem extends Item {
     public NetRollItem(Properties properties){super(properties);}
     @Override public void appendHoverText(ItemStack stack,@Nullable Level level,List<Component> tooltip,TooltipFlag flag){
         tooltip.add(Component.translatable("tooltip.riverweir.dimensions").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("tooltip.riverweir.capacity",stack.getCount(),stack.getCount()*4).withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("tooltip.riverweir.capacity",stack.getCount(),Math.min(WeirLogic.MAX_SPAN,stack.getCount()*4)).withStyle(ChatFormatting.DARK_GRAY));
         tooltip.add(Component.translatable("tooltip.riverweir.depth_rule").withStyle(ChatFormatting.DARK_GRAY));
     }
     @Override public InteractionResult useOn(UseOnContext context){
