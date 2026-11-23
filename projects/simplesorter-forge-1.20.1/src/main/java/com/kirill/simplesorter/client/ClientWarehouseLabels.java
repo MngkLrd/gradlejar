@@ -133,7 +133,9 @@ public final class ClientWarehouseLabels {
                 for (RenderLabel label : chunk.values()) {
                     BlockPos pos = label.data().pos();
                     Vec3 blockCenter = Vec3.atCenterOf(pos);
-                    if (!FaceLabelDimensions.withinRange(blockCenter.distanceToSqr(camera))) {
+                    // Cheap candidate rejection, allowing the front face to be
+                    // closer than the block center by up to ~0.7 blocks.
+                    if (blockCenter.distanceToSqr(camera) > 11D * 11D) {
                         continue;
                     }
                     if (!mc.level.hasChunkAt(pos) || mc.level.getBlockEntity(pos) == null) {
