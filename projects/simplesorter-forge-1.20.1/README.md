@@ -1,4 +1,4 @@
-# Simple Sorter 0.9.3 (Forge 1.20.1)
+# Simple Sorter 0.9.4 (Forge 1.20.1)
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
@@ -114,7 +114,7 @@ gradle --no-daemon clean build
 ```
 
 Java: 17. Gradle: 8.14.3. Expected output:
-`build/libs/simplesorter-0.9.3-forge.jar`.
+`build/libs/simplesorter-0.9.4-forge.jar`.
 
 Our GitHub **Minecraft Mod Build Hub** CI performs the authoritative Forge
 compilation and JAR verification. A successful Gradle build is not equivalent
@@ -197,3 +197,45 @@ CI: `gradle --no-daemon clean build`, standalone pure Java routing
 regressions, JAR verification and dedicated Forge server smoke test.
 Full TerraFirmaGreg runtime validation and graphics compatibility
 must still be tested in-game before marking as stable.
+
+## 0.9.4: automatic no-setup Smart Layout (experimental)
+
+The Smart Categories button now automatically considers storage geometry
+without assigning labels to the blocks, placing signs or manually organizing
+empty chests. A one-action analysis groups adjacent chests into warehouse walls,
+automatically chooses vertical (top -> bottom) or horizontal (low -> high
+block coordinate) shelves, and creates an ephemeral row layout. Clear, already
+stocked rows (at least 3 slots with >=72% confidence) are respected before a
+default order is used for all other rows:
+
+1. Raw ores, mineral dusts, salt and gems
+2. Finished metals (ingots, sheets, gears, wires)
+3. Building materials (stone, blocks, wood)
+4. Crafting equipment and components
+5. Miscellaneous
+6. Plants, trees, food and agriculture
+
+Any number of shelves can participate: fewer than six combine families, and
+more than six permit expansion. Separate disconnected storage walls retain
+independent auto-layouts. Small unrelated pairs of chests are ignored by the
+spatial layer and keep normal Smart Categories behavior.
+
+**Safety:** Category fit still dominates spatial preference. Layout only
+breaks semantically close ties, guides first allocation of empty chests and
+can consolidate matching categories onto a clearly better shelf. A strict
+insertion simulation checks all candidate inventories, including TFC storage.
+The layout is calculated once per click and does not run in background,
+save block positions or require player setup. No persistent category/chest
+mapping is written to the world.
+
+**Constraints for this initial implementation:** Layout uses coordinate
+orientation, not a customized front/back view; a horizontal row follows
+increasing X or Z. Large complicated rooms may split into regions with no
+clear warehouse geometry. A completely full set of incompatible chests
+cannot automatically split itself without free slots or an available buffer.
+The mod never force-drops items for purely cosmetic shelf ordering.
+
+The CI suite additionally tests six-level and two-level vertical racks,
+horizontal X/Z rows, already-seeded reversed layouts, distinct walls,
+and sparse-storage fallback. These are deterministic geometry tests, not
+a substitute for visual in-game tests with TerraFirmaGreg.

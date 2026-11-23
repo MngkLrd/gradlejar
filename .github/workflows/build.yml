@@ -255,8 +255,11 @@ jobs:
           javac -d build/smart2-tests \
             src/main/java/com/kirill/simplesorter/sorting/PathTokenMatcher.java \
             src/main/java/com/kirill/simplesorter/sorting/RoutingPolicy.java \
-            tools/tests/SmartRulesSelfTest.java
+            src/main/java/com/kirill/simplesorter/sorting/WarehouseLayout.java \
+            tools/tests/SmartRulesSelfTest.java \
+            tools/tests/WarehouseLayoutSelfTest.java
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.SmartRulesSelfTest
+          java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseLayoutSelfTest
       - name: Check model, texture and datapack assets
         if: matrix.project_dir == 'projects/openmotion'
         run: python3 projects/openmotion/tools/check_assets.py
