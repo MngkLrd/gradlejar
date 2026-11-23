@@ -89,7 +89,13 @@ public final class WarehouseLayout {
             }
 
             Axis axis;
-            if (maxY - minY >= 2) axis = Axis.VERTICAL;
+            Map<Integer, Integer> countsPerHeight = new HashMap<>();
+            for (int index : component) {
+                countsPerHeight.merge(nodes.get(index).y(), 1, Integer::sum);
+            }
+            boolean stackedRows = countsPerHeight.size() >= 2
+                    && countsPerHeight.values().stream().filter(count -> count >= 2).count() >= 2;
+            if (maxY > minY && (maxY - minY >= 2 || stackedRows)) axis = Axis.VERTICAL;
             else if (maxX - minX >= Math.max(1, maxZ - minZ)) axis = Axis.HORIZONTAL_X;
             else axis = Axis.HORIZONTAL_Z;
 
