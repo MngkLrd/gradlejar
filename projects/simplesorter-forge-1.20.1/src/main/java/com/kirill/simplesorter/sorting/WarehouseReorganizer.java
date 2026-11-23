@@ -52,6 +52,10 @@ public final class WarehouseReorganizer {
                         profile.occupied(), profile.votes()));
             }
             WarehouseLayout layout = WarehouseLayout.analyze(nodes, false);
+            WarehouseColumns columns = WarehouseColumns.analyze(nodes.stream()
+                    .map(node -> new WarehouseColumns.Node(
+                            node.x(), node.y(), node.z(),
+                            node.occupied(), node.labels())).toList());
             Map<Integer, String> newlyClaimed = new HashMap<>();
             Map<String, List<Integer>> orderedDestinations = new HashMap<>();
             int movedThisPass = 0;
@@ -74,7 +78,11 @@ public final class WarehouseReorganizer {
                     if (!cat.moveAllowed()) continue;
 
                     String family = WarehouseLayout.family(cat.id());
-                    double sourceFit = layout.preference(sourceIndex, cat.id());
+                    if ("misc".equals(family)) continue;
+                    boolean columnHomeExists = columns.hasEstablishedColumn(sourceIndex, cat.id());
+                    double sourceFit = columnHomeExists
+                            ? (columns.matches(sourceIndex, cat.id()) ? 1D : 0D)
+                            : layout.preference(sourceIndex, cat.id());
                     if (sourceFit > 1D - MIN_LAYOUT_GAIN) continue;
                     int from = sourceIndex;
 
@@ -85,7 +93,9 @@ public final class WarehouseReorganizer {
                                 for (int i = 0; i < containers.size(); i++) indexes.add(i);
                                 indexes.sort(Comparator
                                         .comparingDouble((Integer i) ->
-                                                layout.preference(i, requested)).reversed()
+                                                columns.hasEstablishedColumn(from, requested)
+                                                    ? (columns.matches(i, requested) ? 1D : 0D)
+                                                    : layout.preference(i, requested)).reversed()
                                         .thenComparingInt(i -> i));
                                 return indexes;
                             });
@@ -93,14 +103,26 @@ public final class WarehouseReorganizer {
                     List<Integer> destinations = new ArrayList<>();
                     for (int dest : sortedIndices) {
                         if (dest == from || !layout.sameRegion(from, dest)) continue;
-                        double destFit = layout.preference(dest, cat.id());
+                        // Once a warehouse has a clearly seeded category
+                        // column, NO other column may capture that family.
+                        if (!columns.allowsDestination(from, dest, cat.id())) continue;
+                        double destFit = columnHomeExists
+                                ? (columns.matches(dest, cat.id()) ? 1D : 0D)
+                                : layout.preference(dest, cat.id());
                         if (destFit < MIN_DESTINATION_FIT
                                 || destFit < sourceFit + MIN_LAYOUT_GAIN) continue;
                         Profile target = profiles.get(dest);
                         String claimed = newlyClaimed.get(dest);
                         if (claimed != null && !claimed.equals(family)) continue;
-                        if (target.occupied() > 0 &&
-                                !(target.dominantFamily().equals(family)
+
+                        boolean seededColumnOverflow = columnHomeExists
+                                && columns.matches(dest, cat.id())
+                                && target.occupied() <= 8;
+                        // Allow a lightly contaminated fourth chest of the
+                        // ore column to accept ore, instead of moving ore to
+                        // a full seed column with empty storage below it.
+                        if (target.occupied() > 0 && !seededColumnOverflow
+                                && !(target.dominantFamily().equals(family)
                                         && target.familyPurity() >= 0.72D)) continue;
                         destinations.add(dest);
                     }
