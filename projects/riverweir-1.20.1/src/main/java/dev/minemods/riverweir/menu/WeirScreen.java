@@ -15,6 +15,7 @@ public final class WeirScreen extends AbstractContainerScreen<WeirMenu> {
     @Override protected void renderBg(GuiGraphics graphics,float partial,int mouseX,int mouseY) {
         graphics.blit(GUI,leftPos,topPos,0,0,176,71);
         graphics.blit(GUI,leftPos,topPos+71,0,126,176,96);
+        graphics.drawString(font,Component.translatable("gui.riverweir.condition",Math.max(0,100-menu.getWear())),leftPos+8,topPos+54,0x4D4434,false);
     }
     @Override public void render(GuiGraphics graphics,int mouseX,int mouseY,float partial) {
         renderBackground(graphics);

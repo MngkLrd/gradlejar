@@ -9,6 +9,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -16,11 +18,20 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public final class WeirMenu extends AbstractContainerMenu {
     private final BlockPos masterPos;
+    private final ContainerData data;
+    public int getWear() { return data.get(0); }
     public WeirMenu(int id, Inventory inv, FriendlyByteBuf buffer) {this(id,inv,buffer.readBlockPos());}
     public WeirMenu(int id, Inventory inv, BlockPos pos) {
         super(RiverWeirMod.WEIR_MENU.get(),id);
         this.masterPos=pos;
-        IItemHandler handler=inv.player.level().getBlockEntity(pos) instanceof WeirPostBlockEntity be ? be.items : new ItemStackHandler(9);
+        WeirPostBlockEntity be = inv.player.level().getBlockEntity(pos) instanceof WeirPostBlockEntity found ? found : null;
+        IItemHandler handler = be != null ? be.items : new ItemStackHandler(9);
+        data = be != null && !inv.player.level().isClientSide ? new ContainerData() {
+            @Override public int get(int index) { return index == 0 ? be.wear : 0; }
+            @Override public void set(int index, int value) { if (index == 0) be.wear = value; }
+            @Override public int getCount() { return 1; }
+        } : new SimpleContainerData(1);
+        addDataSlots(data);
         for(int i=0;i<9;i++) addSlot(new SlotItemHandler(handler,i,8+i*18,18) {
             @Override public boolean mayPlace(ItemStack stack) {return false;}
         });
@@ -32,7 +43,7 @@ public final class WeirMenu extends AbstractContainerMenu {
         if (!(player.level().getBlockEntity(masterPos) instanceof WeirPostBlockEntity be) || !be.master || be.other==null) return false;
         double x=Mth.clamp(player.getX(),Math.min(masterPos.getX(),be.other.getX()),Math.max(masterPos.getX(),be.other.getX())+1);
         double z=Mth.clamp(player.getZ(),Math.min(masterPos.getZ(),be.other.getZ()),Math.max(masterPos.getZ(),be.other.getZ())+1);
-        double y=Mth.clamp(player.getY(),be.netY-2,masterPos.getY()+2);
+        double y=Mth.clamp(player.getY(),be.netY-be.maxDepth(),masterPos.getY()+2);
         double dx=player.getX()-x,dy=player.getY()-y,dz=player.getZ()-z;
         return dx*dx+dy*dy+dz*dz<=64;
     }

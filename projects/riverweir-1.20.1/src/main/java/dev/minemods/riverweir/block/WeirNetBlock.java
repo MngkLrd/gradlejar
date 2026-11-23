@@ -34,6 +34,7 @@ public final class WeirNetBlock extends Block {
     public static final net.minecraft.world.level.block.state.properties.IntegerProperty FLOW=net.minecraft.world.level.block.state.properties.IntegerProperty.create("flow",0,16);
     public static final BooleanProperty TOP=BooleanProperty.create("top");
     public static final BooleanProperty BOTTOM=BooleanProperty.create("bottom");
+    public static final BooleanProperty TRAPPED=BooleanProperty.create("trapped");
     private static final VoxelShape X_SHAPE=Block.box(0,0,7,16,16,9);
     private static final VoxelShape Z_SHAPE=Block.box(7,0,0,9,16,16);
 
@@ -41,10 +42,10 @@ public final class WeirNetBlock extends Block {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(AXIS,Direction.Axis.X).setValue(STAGE,0)
             .setValue(WATERLOGGED,true).setValue(WATER_KIND,0).setValue(FLOW,16)
-            .setValue(TOP,false).setValue(BOTTOM,false));
+            .setValue(TOP,false).setValue(BOTTOM,false).setValue(TRAPPED,false));
     }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){
-        b.add(AXIS,STAGE,WATERLOGGED,WATER_KIND,FLOW,TOP,BOTTOM);
+        b.add(AXIS,STAGE,WATERLOGGED,WATER_KIND,FLOW,TOP,BOTTOM,TRAPPED);
     }
     @Override public VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext context){
         return state.getValue(AXIS)==Direction.Axis.X?X_SHAPE:Z_SHAPE;

@@ -94,6 +94,25 @@
         "model": "riverweir:block/weir_net_bottom_rope",
         "y": 90
       }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "trapped": "true"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_caught"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "trapped": "true"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_caught",
+        "y": 90
+      }
     }
   ]
 }

@@ -1,12 +1,18 @@
-# River Weir 0.2.0
-Minecraft 1.20.1, Forge, Java 17, TerraFirmaCraft + TerraFirmaGreg Modern.
+# River Weir 0.3.0 (Minecraft 1.20.1 Forge / Java 17)
 
-Install two wooden stakes at the same Y on opposite river banks, with 2 to 32 water blocks between them. Select each post using a woven 4x3 net roll, twice with right-click. Each net roll covers four horizontal blocks by three vertical blocks. A stack of N rolls covers N*4 blocks if water is 3 deep, or fewer horizontal blocks at greater depth. Requirement is calculated per strip of four blocks using its deepest point. Max depth 12.
+River-spanning physical fishing net compatible with TerraFirmaCraft and TerraFirmaGreg Modern.
 
-TFC-specific crafting: two jute fibers and two straw in a 2x2 diagonal yield four twisted net cords. A TFC loom consumes 12 cords in 12 steps for one net roll. TFC saw with two vertical sticks makes two stakes in a 2x2 grid. For repairs, crouch + right click the weir with a tfc:jute_net.
+- Stakes placed at same height, 2–32 blocks apart. Hold a net roll and right-click both stakes to assemble. Sneak-right-click a stake with a roll to clear an old first-stake selection.
+- Material: 2 jute fibers + 2 straw -> 4 jute cords in 2x2 crafting; 12 cords -> one 4×3 net roll on the TerraFirmaCraft loom.
+- Variable-depth panels trace the freshwater column down to a solid riverbed, stopping at rock, gravel or plants, max 12 blocks deep. No replacement of solid or plant blocks. Consumes additional panels for deep 4-block horizontal strips. A deep, plant-filled or excessively wide river is rejected without consuming rolls.
+- TFC `tfc:river_water` flow direction is preserved inside panels and restored when dismantling them.
+- Captures ONLY physically present live fish entities near the actual occupied mesh, once per 20 ticks max, without generating new fish. Correct food item is resolved from the TFC species registry (TFC's standard fish loot tables require a player kill). Full inventory leaves fish alive.
+- Shared 9-slot inventory via right-click on stake or panel. Shows net condition percent. A trapped fish sprite appears in a net panel when a catch is stored; disappears when inventory is emptied.
+- Condition visibly degrades to frayed/torn without off-site alerts. Repair using sneak-right-click with tfc:jute_net.
+- Dismantling a recently installed net recovers 100% of the panels if untouched, 75% if lightly worn, 50% if moderately worn and none if badly torn. All inventory contents are dropped safely. Old 0.2 nets are preserved (they lack material-cost tracking, so no roll salvage).
+- Fixes selecting two posts using different stacks, stale stake selection while chunks are unavailable, detection from either side of the span, deep-water GUI distance, and delayed cleanup after the opposite stake is destroyed while its chunk was unloaded.
+- Vanilla-style 16x16 cluster pixel art; discrete 4-frame water sway without AA or gradients. No fabric simulation.
 
-Panels cover liquid source water only, tracing each column until the riverbed without destroying stone or vegetation. Connections render rope links all the way to each stake. Ropes appear at the surface and each third/lower row, not every meter. Pixel art is opaque/transparent 16x16 pixel clusters, with a 4-frame low amplitude animated texture for subtle ripple; no full cloth physics. Icon rebuilt as a rolled net bundle with knots. All animations use nearest-neighbor with no interpolation.
+`gradle clean build` runs pure-Java geometry regression checks via the `check` task. Build output: `build/libs/riverweir-0.3.0.jar`. GitHub CI validates compile and packaged JAR. In-game TFG integration still requires live testing.
 
-The weir scans existing AbstractFish mobs standing against the mesh every 10 ticks when the chunk is loaded, moves one TFC food item of the matching species (or vanilla fish) into its nine-slot inventory, then removes the fish. The previous standard loot-table approach was broken because TFC fish require killed_by_player. A full inventory does not delete the fish. The weir wears and can tear without notifications, only visible damage. Right-click any panel or stake to open the inventory.
-
-No synthetic fish, no catch accumulation while unloaded. Existing v0.1 nets retain their original depth until rebuilt. Fresh water only, max 12 blocks deep, no aquatic plants in the construction corridor. In-game integration not tested by CI.
+For new depth, catch indicators and material salvage, dismantle old nets and place new ones. Existing inventory saves remain compatible on upgrade.
