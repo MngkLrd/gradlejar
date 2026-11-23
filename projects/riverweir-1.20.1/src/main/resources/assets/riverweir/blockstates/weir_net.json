@@ -29,6 +29,24 @@
     },
     {
       "when": {
+        "axis": "x",
+        "top": "true"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_top_rope"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "bottom": "true"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_bottom_rope"
+      }
+    },
+    {
+      "when": {
         "axis": "z",
         "stage": "0"
       },
@@ -54,6 +72,26 @@
       },
       "apply": {
         "model": "riverweir:block/weir_net_torn",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "top": "true"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_top_rope",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "bottom": "true"
+      },
+      "apply": {
+        "model": "riverweir:block/weir_net_bottom_rope",
         "y": 90
       }
     }

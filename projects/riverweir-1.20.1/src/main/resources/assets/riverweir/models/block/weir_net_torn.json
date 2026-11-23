@@ -3,7 +3,6 @@
   "ambientocclusion": false,
   "textures": {
     "net": "riverweir:block/net_torn",
-    "rope": "riverweir:block/rope",
     "particle": "riverweir:block/rope"
   },
   "elements": [
@@ -11,12 +10,12 @@
       "from": [
         0,
         0,
-        7
+        7.5
       ],
       "to": [
         16,
         16,
-        8
+        8.5
       ],
       "faces": {
         "north": {
@@ -36,70 +35,6 @@
             16,
             16
           ]
-        }
-      }
-    },
-    {
-      "from": [
-        0,
-        14,
-        6
-      ],
-      "to": [
-        16,
-        16,
-        9
-      ],
-      "faces": {
-        "north": {
-          "texture": "#rope"
-        },
-        "south": {
-          "texture": "#rope"
-        },
-        "east": {
-          "texture": "#rope"
-        },
-        "west": {
-          "texture": "#rope"
-        },
-        "up": {
-          "texture": "#rope"
-        },
-        "down": {
-          "texture": "#rope"
-        }
-      }
-    },
-    {
-      "from": [
-        0,
-        0,
-        6
-      ],
-      "to": [
-        16,
-        1,
-        9
-      ],
-      "faces": {
-        "north": {
-          "texture": "#rope"
-        },
-        "south": {
-          "texture": "#rope"
-        },
-        "east": {
-          "texture": "#rope"
-        },
-        "west": {
-          "texture": "#rope"
-        },
-        "up": {
-          "texture": "#rope"
-        },
-        "down": {
-          "texture": "#rope"
         }
       }
     }

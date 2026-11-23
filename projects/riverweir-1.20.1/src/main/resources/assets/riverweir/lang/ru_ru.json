@@ -1,15 +1,19 @@
 {
-  "block.riverweir.weir_post": "Деревянный колышек для сети",
+  "block.riverweir.weir_post": "Речной колышек",
   "block.riverweir.weir_net": "Речная рыболовная сеть",
-  "item.riverweir.net_roll": "Рулон джутовой сети (4 м)",
+  "item.riverweir.net_roll": "Рулон рыболовной сети (4×3 м)",
+  "item.riverweir.net_twine": "Переплетённая джутовая нить",
   "container.riverweir.weir": "Речная рыболовная сеть",
-  "message.riverweir.first": "Выбран первый колышек. Нажми ПКМ по второму.",
+  "tooltip.riverweir.dimensions": "Полотно: 4 блока в ширину × 3 в глубину",
+  "tooltip.riverweir.capacity": "В стопке: %s рул. | до %s блоков ширины при глубине 3",
+  "tooltip.riverweir.depth_rule": "Дополнительные рулоны позволяют увеличить глубину.",
+  "message.riverweir.first": "Первый колышек выбран. Рулонов в инвентаре: %s. Нажми ПКМ по второму.",
   "message.riverweir.cancel": "Установка сети отменена.",
   "message.riverweir.posts": "Оба колышка должны существовать и быть свободны.",
-  "message.riverweir.distance": "Колышки должны стоять на одной высоте и прямой, через 2–32 водных блока.",
-  "message.riverweir.water": "Между колышками должна быть вода на одной высоте.",
-  "message.riverweir.rolls": "Недостаточно сетевого полотна. Нужно рулонов: %s.",
-  "message.riverweir.connected": "Рыболовная сеть натянута через %s водных блоков.",
+  "message.riverweir.distance": "Колышки должны стоять на одной высоте и прямой, через 2–32 блока воды.",
+  "message.riverweir.water": "Нужна непрерывная пресная вода до дна без растений; максимальная глубина %s блоков.",
+  "message.riverweir.rolls": "Не хватает рулонов: нужно %s, есть %s. 1 рулон = 4×3 блока.",
+  "message.riverweir.connected": "Сеть установлена: ширина %s, глубина до %s, потрачено рулонов %s.",
   "message.riverweir.unlinked": "Сначала соедини колышки рулоном сетевого полотна.",
-  "message.riverweir.repaired": "Сеть залатана."
+  "message.riverweir.repaired": "Повреждённое полотно залатано."
 }

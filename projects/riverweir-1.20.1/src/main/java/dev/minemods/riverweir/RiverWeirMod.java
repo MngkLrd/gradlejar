@@ -34,6 +34,7 @@ public final class RiverWeirMod {
         BlockBehaviour.Properties.of().strength(0.6f).sound(SoundType.WOOL).noOcclusion()));
     public static final RegistryObject<Item> POST_ITEM = ITEMS.register("weir_post", () -> new BlockItem(POST.get(), new Item.Properties()));
     public static final RegistryObject<Item> NET_ROLL = ITEMS.register("net_roll", () -> new NetRollItem(new Item.Properties().stacksTo(64)));
+    public static final RegistryObject<Item> NET_TWINE = ITEMS.register("net_twine", () -> new Item(new Item.Properties()));
 
     public static final RegistryObject<BlockEntityType<WeirPostBlockEntity>> POST_BE = BLOCK_ENTITIES.register("weir_post",
         () -> BlockEntityType.Builder.of(WeirPostBlockEntity::new, POST.get()).build(null));

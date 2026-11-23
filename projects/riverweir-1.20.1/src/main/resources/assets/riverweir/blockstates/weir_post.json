@@ -1,10 +1,60 @@
 {
   "variants": {
-    "waterlogged=false": {
+    "waterlogged=false,connected=false,facing=north": {
       "model": "riverweir:block/weir_post"
     },
-    "waterlogged=true": {
+    "waterlogged=false,connected=false,facing=east": {
       "model": "riverweir:block/weir_post"
+    },
+    "waterlogged=false,connected=false,facing=south": {
+      "model": "riverweir:block/weir_post"
+    },
+    "waterlogged=false,connected=false,facing=west": {
+      "model": "riverweir:block/weir_post"
+    },
+    "waterlogged=false,connected=true,facing=north": {
+      "model": "riverweir:block/weir_post_attached",
+      "y": 0
+    },
+    "waterlogged=false,connected=true,facing=east": {
+      "model": "riverweir:block/weir_post_attached",
+      "y": 90
+    },
+    "waterlogged=false,connected=true,facing=south": {
+      "model": "riverweir:block/weir_post_attached",
+      "y": 180
+    },
+    "waterlogged=false,connected=true,facing=west": {
+      "model": "riverweir:block/weir_post_attached",
+      "y": 270
+    },
+    "waterlogged=true,connected=false,facing=north": {
+      "model": "riverweir:block/weir_post"
+    },
+    "waterlogged=true,connected=false,facing=east": {
+      "model": "riverweir:block/weir_post"
+    },
+    "waterlogged=true,connected=false,facing=south": {
+      "model": "riverweir:block/weir_post"
+    },
+    "waterlogged=true,connected=false,facing=west": {
+      "model": "riverweir:block/weir_post"
+    },
+    "waterlogged=true,connected=true,facing=north": {
+      "model": "riverweir:block/weir_post_attached",
+      "y": 0
+    },
+    "waterlogged=true,connected=true,facing=east": {
+      "model": "riverweir:block/weir_post_attached",
+      "y": 90
+    },
+    "waterlogged=true,connected=true,facing=south": {
+      "model": "riverweir:block/weir_post_attached",
+      "y": 180
+    },
+    "waterlogged=true,connected=true,facing=west": {
+      "model": "riverweir:block/weir_post_attached",
+      "y": 270
     }
   }
 }

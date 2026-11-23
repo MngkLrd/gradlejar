@@ -2,7 +2,7 @@
   "type": "tfc:loom",
   "ingredient": {
     "ingredient": {
-      "item": "tfc:jute_fiber"
+      "item": "riverweir:net_twine"
     },
     "count": 12
   },

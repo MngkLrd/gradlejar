@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "JS",
+    "SJ"
+  ],
+  "key": {
+    "J": {
+      "item": "tfc:jute_fiber"
+    },
+    "S": {
+      "item": "tfc:straw"
+    }
+  },
+  "result": {
+    "item": "riverweir:net_twine",
+    "count": 4
+  }
+}

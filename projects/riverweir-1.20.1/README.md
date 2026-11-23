@@ -1,24 +1,12 @@
-# River Weir - TerraFirmaCraft 1.20.1 Forge
+# River Weir 0.2.0
+Minecraft 1.20.1, Forge, Java 17, TerraFirmaCraft + TerraFirmaGreg Modern.
 
-Build hub project for MngkLrd/gradlejar. Java 17, Gradle 8.14.3, Forge 47.3.0.
+Install two wooden stakes at the same Y on opposite river banks, with 2 to 32 water blocks between them. Select each post using a woven 4x3 net roll, twice with right-click. Each net roll covers four horizontal blocks by three vertical blocks. A stack of N rolls covers N*4 blocks if water is 3 deep, or fewer horizontal blocks at greater depth. Requirement is calculated per strip of four blocks using its deepest point. Max depth 12.
 
-## Gameplay
-* Two hand-crafted wooden stakes are placed across a river, horizontally aligned and at the same Y-level.
-* Work the TerraFirmaCraft loom with 12 jute fibers to weave one 4-block net roll.
-* Right-click the first stake with a roll, then the other. Spans: 2-32 water blocks; consumption: ceil(span/4) rolls.
-* Automatically forms actual waterlogged net segment blocks, up to 3 blocks deep, including across chunk borders.
-* Right-click a stake or connected net piece to open the shared 9-slot inventory.
-* Server scans for existing AbstractFish entities near the structure while chunks are active, inserts their normal entity loot into the inventory, and only then discards the fish.
-* Netting wears, progressively frays, and finally tears. No break notification. Crouch + right-click with tfc:jute_net to patch it.
-* Destroying a stake dismantles the panels, restores water and drops caught items. The other stake remains.
-* All fish drops use their actual entity loot tables, including TFC fish.
+TFC-specific crafting: two jute fibers and two straw in a 2x2 diagonal yield four twisted net cords. A TFC loom consumes 12 cords in 12 steps for one net roll. TFC saw with two vertical sticks makes two stakes in a 2x2 grid. For repairs, crouch + right click the weir with a tfc:jute_net.
 
-## Crafting
-* Sticks: 2 vertical sticks in the left column, a TFC saw in the top-right; yields 2 stakes, damages the saw, fits the 2x2 player grid.
-* Net rolls: TFC loom, 12 tfc:jute_fiber / 12 steps -> 1 net roll. The normal TFC jute net craft remains available for repairs.
+Panels cover liquid source water only, tracing each column until the riverbed without destroying stone or vegetation. Connections render rope links all the way to each stake. Ropes appear at the surface and each third/lower row, not every meter. Pixel art is opaque/transparent 16x16 pixel clusters, with a 4-frame low amplitude animated texture for subtle ripple; no full cloth physics. Icon rebuilt as a rolled net bundle with knots. All animations use nearest-neighbor with no interpolation.
 
-## Known limits
-* Does not generate synthetic fish and doesn't accumulate catches in unloaded chunks.
-* For MVP the top net row needs a straight uninterrupted water corridor, at either stake Y or Y-1.
-* Repairs regenerate missing net panels only where water is available. Do not place solid blocks inside the completed structure.
-* Standard client/server mod: must be installed on both ends alongside TerraFirmaCraft.
+The weir scans existing AbstractFish mobs standing against the mesh every 10 ticks when the chunk is loaded, moves one TFC food item of the matching species (or vanilla fish) into its nine-slot inventory, then removes the fish. The previous standard loot-table approach was broken because TFC fish require killed_by_player. A full inventory does not delete the fish. The weir wears and can tear without notifications, only visible damage. Right-click any panel or stake to open the inventory.
+
+No synthetic fish, no catch accumulation while unloaded. Existing v0.1 nets retain their original depth until rebuilt. Fresh water only, max 12 blocks deep, no aquatic plants in the construction corridor. In-game integration not tested by CI.
