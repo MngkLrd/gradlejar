@@ -31,7 +31,15 @@ public final class FaceLabelDimensionsSelfTest {
                 "Icon must be markedly smaller than the old oversized model");
         require(FaceLabelDimensions.textY(true) < FaceLabelDimensions.iconY(),
                 "Icon must sit ABOVE text in one block-front region");
-        System.out.println("Face-mounted chest labels: " + (assertions + 4)
+        require(Math.abs(FaceLabelDimensions.faceOffset(true)
+                        + FaceLabelDimensions.textDepth() - 0.4375D) < 0.04D,
+                "Vanilla chest text must sit almost flush with its inset face");
+        require(Math.abs(FaceLabelDimensions.faceOffset(false)
+                        + FaceLabelDimensions.textDepth() - 0.5D) < 0.04D,
+                "TFC crate text must sit almost flush with its full-block face");
+        require(FaceLabelDimensions.itemDepth() > FaceLabelDimensions.iconScale() / 2D,
+                "Icon back should not clip the underlying chest texture");
+        System.out.println("Face-mounted chest labels: " + (assertions + 7)
                 + " sizing and vertical-extent checks passed.");
     }
 }
