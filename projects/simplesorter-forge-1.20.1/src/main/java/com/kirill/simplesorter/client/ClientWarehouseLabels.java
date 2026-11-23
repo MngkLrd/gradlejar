@@ -219,7 +219,7 @@ public final class ClientWarehouseLabels {
             // NORTH requires 180 degrees, SOUTH zero, EAST +90, WEST -90.
             // 0.9.7/0.9.8 used the opposite transformation, turning glyph
             // fronts INTO the chest and making the text disappear.
-            poses.mulPose(Axis.YP.rotationDegrees(-face.toYRot()));
+            poses.mulPose(Axis.YP.rotationDegrees(FixedLabelFaces.glyphRotationDegrees(faceCode(face))));
 
             if (drawIcon) {
                 poses.pushPose();
@@ -248,6 +248,16 @@ public final class ClientWarehouseLabels {
             drawn++;
         }
         if (drawn > 0) buffer.endBatch();
+    }
+
+    private static int faceCode(Direction face) {
+        return switch (face) {
+            case NORTH -> FixedLabelFaces.NORTH;
+            case SOUTH -> FixedLabelFaces.SOUTH;
+            case EAST -> FixedLabelFaces.EAST;
+            case WEST -> FixedLabelFaces.WEST;
+            default -> FixedLabelFaces.SOUTH;
+        };
     }
 
     private static Direction faceOf(int code) {
