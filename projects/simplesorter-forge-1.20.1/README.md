@@ -1,4 +1,4 @@
-# Simple Sorter 0.9.12 (Forge 1.20.1)
+# Simple Sorter 0.9.13 (Forge 1.20.1)
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 
@@ -114,7 +114,7 @@ gradle --no-daemon clean build
 ```
 
 Java: 17. Gradle: 8.14.3. Expected output:
-`build/libs/simplesorter-0.9.12-forge.jar`.
+`build/libs/simplesorter-0.9.13-forge.jar`.
 
 Our GitHub **Minecraft Mod Build Hub** CI performs the authoritative Forge
 compilation and JAR verification. A successful Gradle build is not equivalent
@@ -632,3 +632,43 @@ a nearly free third ore chest and surplus sixth-column ore; multiple
 categories in one column; distinct TFC loose rocks; and per-chest labels.
 Forge Java 17 compile, resource checks, and dedicated-server startup still
 run. These tests cannot replace a full graphical TerraFirmaGreg session.
+
+## 0.9.13: TFC/TFG/GTCEu mineral forms, ore-grade ID fallback, honest mixed status
+
+Regression from in-game TFG screenshots: small/tiny/full dust piles, poor
+and rich raw ore lumps and other ore-processing materials were stored in the
+same chest but classified as `raw_ores` vs `raw_powders`, so its label read
+"Mixed Contents". Poor Goethite could be classified as miscellaneous if
+the item ID lacked the literal ore token; unrelated stone pebbles appeared
+among mineral ores.
+
+- `mineral_resources` is now one compatible chest family for actual ore
+  pieces and normal/small/tiny mineral dusts, TFC ore-grade forms and crushed
+  or washed ore. Multiple mineral forms from DIFFERENT mods may coexist
+  without a false mixed label; their exact item/NBT stack identities remain
+  distinct, and only real identical stacks are merged.
+- TFC/TFG/GTCEu poor/normal/rich grade registry paths are recognized,
+  including plain grade-prefixed names. Optional item-tag fallbacks recognize
+  TFC ore-pieces and conventional Forge/C ore/raw-material tags even when
+  the item path does not reveal its origin. These are ID/tag checks, not
+  a requirement that TFC or GT be installed.
+- Loose rock pebbles (chalk, marble, etc.) stay `stones`; metal ingots,
+  finished tools, sticks, clay/kaolinite, salt, flux, mortar, organic bone
+  meal and crafting powders are not admitted into the mineral resource
+  family. Broad six-row positions never override strict family gating.
+- If mixed chests remain after the one-click session, the player gets an
+  explicit count rather than the false "storage already stable" message.
+  Unclassified inventory slots are also counted for further modpack QA.
+  Without a pure compatible destination, an empty chest, and permission to
+  insert into its slots, the mod cannot safely separate all items; it will
+  never destroy items or force TFC inventory rules.
+- New regressions cover poor Goethite, rich Garnierite, Lignite, Greg
+  tiny/small/full dusts, impure and purified materials, rock pebbles,
+  clay, salt, flux and exact strict family admission. All 6-column
+  consolidation and chest label tests run on the unified mineral family.
+
+**Important:** tests assert classification and pure-Java storage policy, not
+a running TerraFirmaGreg client with all its custom item capabilities. Use
+a backup of the world and check whether the user-visible "mixed" count
+falls to zero after one sort. If not, note the count and any remaining item
+IDs for further classifier refinements.
