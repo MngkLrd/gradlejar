@@ -118,9 +118,13 @@ public final class SmartCategorySorter {
                 StorageSnapshot source = originals.get(0);
                 String partition = RoutingPolicy.emptyPartition(label);
                 int otherSlots = source.occupied() - source.slotCounts().getOrDefault(key, 0);
+                boolean wrongShelfWithEmpty = layout.shouldUsePreferredEmpty(
+                        snapshotIndex.get(source), label, emptyChests.stream()
+                                .map(snapshotIndex::get).toList());
                 if (!partition.isEmpty() &&
-                        RoutingPolicy.shouldClaimEmpty(
-                                source.fit(key, label), otherSlots, false)) {
+                        (RoutingPolicy.shouldClaimEmpty(
+                                source.fit(key, label), otherSlots, false)
+                                || wrongShelfWithEmpty)) {
                     int requestedSlots = Math.max(1,
                             (source.counts().getOrDefault(key, 1)
                                     + sample.getMaxStackSize() - 1)
