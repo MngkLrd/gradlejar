@@ -80,8 +80,8 @@ public final class WarehouseReorganizer {
                     String family = WarehouseLayout.family(cat.id());
                     if ("misc".equals(family)) continue;
                     boolean columnHomeExists = columns.hasEstablishedColumn(sourceIndex, cat.id());
-                    double sourceFit = columnHomeExists
-                            ? (columns.matches(sourceIndex, cat.id()) ? 1D : 0D)
+                    double sourceFit = columns.conflicts(sourceIndex, cat.id()) ? 0D
+                            : columnHomeExists ? (columns.matches(sourceIndex, cat.id()) ? 1D : 0D)
                             : layout.preference(sourceIndex, cat.id());
                     if (sourceFit > 1D - MIN_LAYOUT_GAIN) continue;
                     int from = sourceIndex;
@@ -108,7 +108,10 @@ public final class WarehouseReorganizer {
                         if (!columns.allowsDestination(from, dest, cat.id())) continue;
                         double destFit = columnHomeExists
                                 ? (columns.matches(dest, cat.id()) ? 1D : 0D)
-                                : layout.preference(dest, cat.id());
+                                : (columns.conflicts(from, cat.id())
+                                   && columns.role(dest).isEmpty()
+                                   ? Math.max(0.82D, layout.preference(dest, cat.id()))
+                                   : layout.preference(dest, cat.id()));
                         if (destFit < MIN_DESTINATION_FIT
                                 || destFit < sourceFit + MIN_LAYOUT_GAIN) continue;
                         Profile target = profiles.get(dest);
