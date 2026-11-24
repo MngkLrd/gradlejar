@@ -48,6 +48,8 @@ public final class ProjectStore {
                     else if(op instanceof WorkspacePhoto.Wheels a){out.writeByte(13);for(int v:a.values())out.writeInt(v);}
                     else if(op instanceof WorkspacePhoto.Perspective a){out.writeByte(14);out.writeInt(a.horizontal());out.writeInt(a.vertical());}
                     else if(op instanceof WorkspacePhoto.Text a){out.writeByte(15);out.writeUTF(a.text());out.writeUTF(a.family());for(int v:new int[]{a.x(),a.y(),a.size(),a.color(),a.style(),a.angle(),a.fontStyle()})out.writeInt(v);}
+                    else if(op instanceof FilmLooks.Look a){out.writeByte(16);out.writeUTF(a.profile().name());for(int v:a.values())out.writeInt(v);}
+                    else if(op instanceof LensTilt a){out.writeByte(17);for(int v:a.values())out.writeInt(v);}
                     else throw new IOException("Unsupported layer");
                 }
             }
@@ -90,6 +92,8 @@ public final class ProjectStore {
                     case 13 -> {int[] a=new int[9];for(int k=0;k<9;k++)a[k]=in.readInt();op=new WorkspacePhoto.Wheels(a);}
                     case 14 -> op=new WorkspacePhoto.Perspective(in.readInt(),in.readInt());
                     case 15 -> {String t=in.readUTF(),family=in.readUTF();op=new WorkspacePhoto.Text(t,family,in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readInt());}
+                    case 16 -> {var profile=FilmLooks.Profile.valueOf(in.readUTF());int[] a=new int[FilmLooks.COUNT];for(int k=0;k<a.length;k++)a[k]=in.readInt();op=new FilmLooks.Look(profile,a);}
+                    case 17 -> {int[] a=new int[LensTilt.COUNT];for(int k=0;k<a.length;k++)a[k]=in.readInt();op=new LensTilt(a);}
                     default -> throw new IOException("Unknown layer");
                 }
                 ops.add(new Layer(op,visible||geometry(op),opacity,blend));
