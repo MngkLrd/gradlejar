@@ -28,9 +28,7 @@ import java.util.Map;
  */
 public final class WarehouseVacuumSorter {
     private static final Logger LOG = LoggerFactory.getLogger("SimpleSorter/WandBuffer");
-    // One batch is a single synchronous transaction. Bound the worst-case
-    // tick cost while still allowing a fully occupied 12-chest warehouse.
-    private static final int MAX_CHESTS_PER_BATCH = 32;
+    // Planning is global; execution is partitioned into independent transactions.
     private static final int MAX_SLOTS_PER_CHEST = 108;
 
     private WarehouseVacuumSorter() {}
@@ -88,8 +86,11 @@ public final class WarehouseVacuumSorter {
 
     public static final class Session {
         private final List<ContainerRef> containers;
-        private final List<List<ContainerRef>> batches;
-        private int batchIndex;
+        private List<List<Entry>> components=List.of();
+        private boolean planned;
+        private int componentIndex,totalComponents,processedEntries,totalEntries;
+        private int activeInventories,semanticGroups;
+        private long beforeCost,afterCost;
         private int processed;
         private int movedItems;
         private int moves;
@@ -99,22 +100,7 @@ public final class WarehouseVacuumSorter {
 
         private Session(List<ContainerRef> containers) {
             this.containers = List.copyOf(containers);
-            // Sort all storage discovered in the wand's selected radius.
-            // Unlike the old strict-home algorithm, do not split the player's
-            // warehouse by an arbitrary 4-block spatial connectedness rule.
-            batches = new ArrayList<>();
-            // Ordinary warehouses of <=32 inventories are planned together.
-            // Larger warehouses have overlapping anchor windows, so later
-            // containers can still exchange with the first group.
-            for (int i=0;i<containers.size();) {
-                List<ContainerRef> batch=new ArrayList<>();
-                int anchors=i==0?0:Math.min(8,i);
-                if(anchors>0) batch.addAll(containers.subList(0,anchors));
-                int end=Math.min(i+MAX_CHESTS_PER_BATCH-anchors,containers.size());
-                batch.addAll(containers.subList(i,end));
-                batches.add(List.copyOf(batch));
-                i=end;
-            }
+
         }
 
         public int movedItems() { return movedItems; }
@@ -124,7 +110,13 @@ public final class WarehouseVacuumSorter {
         public int skippedChests() { return skippedChests; }
         public String lastFailure() { return lastFailure; }
         public int currentChestIndex() { return processed; }
-        public int batchCount() { return batches.size(); }
+        public int batchCount() { return containers.isEmpty()?0:1; }
+        public int totalComponents(){return totalComponents;}
+        public int completedComponents(){return componentIndex;}
+        public int activeInventories(){return activeInventories;}
+        public int semanticGroups(){return semanticGroups;}
+        public long beforeCost(){return beforeCost;}
+        public long afterCost(){return afterCost;}
         public int assignmentMissingFamilies() { return 0; }
 
         // Diagnostics are derived from actual post-sort inventories, not a
@@ -192,88 +184,82 @@ public final class WarehouseVacuumSorter {
         }
 
         /**
-         * At most one bounded warehouse batch per server tick. The entire
-         * extraction/refill/rollback is synchronous inside that one tick:
-         * there is never a persistent item buffer across saves or logouts.
+         * One global plan per activation. Execute independent components
+         * synchronously; never retain extracted items across ticks.
          */
-        public boolean step(ServerLevel level, MoveListener listener,
-                            int ignoredSlotLimit, long ignoredTimeLimit) {
-            if (batchIndex >= batches.size()) return true;
-            List<ContainerRef> batch = batches.get(batchIndex++);
-            processed = Math.min(containers.size(),processed+batch.size()-(batchIndex>1?8:0));
-            try {
-                reorganize(level, batch, listener);
-            } catch (RuntimeException ex) {
-                // Preflight exceptions do not mutate inventories. Commit
-                // exceptions are handled and rolled back inside commit().
-                rejectedBatches++;
-                lastFailure = "exception during planning: " + ex.getClass().getSimpleName();
-                LOG.error("Wand buffer skipped broken inventory batch", ex);
+        public boolean step(ServerLevel level, MoveListener listener,int slotLimit,long timeLimit) {
+            if(!planned){
+                planned=true;
+                try { prepare(level); }
+                catch(RuntimeException ex){
+                    rejectedBatches++;lastFailure="global planning failed: "+ex.getClass().getSimpleName();
+                    LOG.error("Global warehouse planning failed",ex);
+                    return true;
+                }
+                if(components.isEmpty())processed=containers.size();
+                return components.isEmpty();
             }
-            return batchIndex >= batches.size();
+            long start=System.nanoTime();
+            int budget=Math.max(1,slotLimit),used=0;
+            while(componentIndex<components.size()){
+                List<Entry> group=components.get(componentIndex);
+                if(used>0 && (used+group.size()>budget || System.nanoTime()-start>=timeLimit))break;
+                componentIndex++;used+=group.size();
+                boolean ok=false;
+                try{ok=commitComponent(level,group,listener);}
+                catch(RuntimeException ex){LOG.error("Warehouse component failed",ex);}
+                if(ok){
+                    for(Entry e:group)if(e.source!=e.destination){movedItems+=e.original.getCount();moves++;}
+                }else{
+                    rejectedBatches++;
+                    lastFailure="component changed or inventory refused transfer (see latest.log)";
+                }
+                processedEntries+=group.size();
+                processed=totalEntries==0?containers.size():(int)((long)processedEntries*containers.size()/totalEntries);
+            }
+            return componentIndex>=components.size();
         }
 
-        private void reorganize(ServerLevel level, List<ContainerRef> refs,
-                                MoveListener listener) {
-            List<Chest> chests = new ArrayList<>();
-            List<Entry> entries = new ArrayList<>();
-            for (ContainerRef ref : refs) {
-                Chest chest = snapshotEligible(level, ref, chests.size(), entries);
-                if (chest == null) {
-                    skippedChests++;
-                } else {
-                    chests.add(chest);
-                }
+        private void prepare(ServerLevel level){
+            List<Chest> chests=new ArrayList<>();
+            List<Entry> entries=new ArrayList<>();
+            for(ContainerRef ref:containers){
+                Chest chest=snapshotEligible(level,ref,chests.size(),entries);
+                if(chest==null)skippedChests++;else chests.add(chest);
             }
-            if (chests.size() < 2 || entries.isEmpty()) return;
-
-            // The previous greedy plan consumed permitted slots in family
-            // order, then rejected the WHOLE warehouse if a later modded
-            // stack could not fit. We now begin with an exact identity
-            // placement (always feasible) and perform positive-value swaps.
-            // No missing family home can abort this operation.
-            List<WarehouseSlotOptimizer.Stack> snapshots = new ArrayList<>();
-            int[] capacities = new int[chests.size()];
-            for (int i = 0; i < chests.size(); i++) {
-                capacities[i] = chests.get(i).layout.length;
+            if(chests.size()<2||entries.isEmpty())return;
+            List<AdaptiveWarehousePlanner.Storage> boxes=new ArrayList<>();
+            for(Chest chest:chests){
+                BlockPos p=chest.ref.pos(),q=chest.ref.partnerPos();
+                boxes.add(new AdaptiveWarehousePlanner.Storage(chest.layout.length,
+                        p.getX()+(q==null?p.getX():q.getX()),p.getY(),
+                        p.getZ()+(q==null?p.getZ():q.getZ())));
             }
-            for (Entry entry : entries) {
-                snapshots.add(new WarehouseSlotOptimizer.Stack(
-                        entry.source.sequence, entry.sourceSlot, entry.family));
+            List<AdaptiveWarehousePlanner.Stack> items=new ArrayList<>();
+            for(Entry e:entries)items.add(new AdaptiveWarehousePlanner.Stack(e.source.sequence,e.sourceSlot,e.semantic));
+            AdaptiveWarehousePlanner.Plan plan=AdaptiveWarehousePlanner.plan(items,boxes,
+                    (item,chest,slot)->canInsertAfterExtraction(chests.get(chest).ref.handler(),
+                            slot,entries.get(item).original),false);
+            int[] owners=plan.chestByStack(),slots=plan.slotByStack();
+            List<WarehouseTransferComponents.Slot> sources=new ArrayList<>(),targets=new ArrayList<>();
+            for(int i=0;i<entries.size();i++){
+                Entry e=entries.get(i);
+                chests.get(owners[i]).reserve(slots[i],e);
+                sources.add(new WarehouseTransferComponents.Slot(e.source.sequence,e.sourceSlot));
+                targets.add(new WarehouseTransferComponents.Slot(owners[i],slots[i]));
             }
-            WarehouseSlotOptimizer.Layout optimized = WarehouseSlotOptimizer.organize(
-                    snapshots, capacities, (item, chest, slot) ->
-                            canInsertAfterExtraction(chests.get(chest).ref.handler(),
-                                    slot, entries.get(item).original));
-            int[] owners = optimized.chestByStack();
-            int[] slots = optimized.slotByStack();
-            for (int i = 0; i < entries.size(); i++) {
-                chests.get(owners[i]).reserve(slots[i], entries.get(i));
+            beforeCost=plan.beforeCost();afterCost=plan.afterCost();
+            activeInventories=plan.activeInventories();semanticGroups=plan.groups();
+            if(!unchanged(level,chests)){rejectedBatches++;lastFailure="inventory changed during planning";return;}
+            List<List<Entry>> jobs=new ArrayList<>();
+            for(List<Integer> component:WarehouseTransferComponents.decompose(sources,targets)){
+                List<Entry> group=new ArrayList<>();
+                for(int i:component)group.add(entries.get(i));
+                jobs.add(List.copyOf(group));totalEntries+=group.size();
             }
-            LOG.info("Wand buffer planned {} occupied slots in {} chests; "
-                            + "{} cross-chest stack assignments; improvement {}; probes {}",
-                    entries.size(), chests.size(), optimized.crossChestStacks(),
-                    optimized.improvement(), optimized.probes());
-
-            int crossChestItems = 0;
-            for (Entry entry : entries) {
-                if (entry.source != entry.destination) crossChestItems += entry.original.getCount();
-            }
-            if (crossChestItems == 0) return;
-
-            if (!unchanged(level, chests)) {
-                rejectedBatches++;
-                lastFailure = "chest changed after snapshot";
-                LOG.warn("Wand buffer rejected batch because chest contents changed during planning");
-                return;
-            }
-            if (commit(level, chests, entries, listener)) {
-                movedItems += crossChestItems;
-                moves += entries.stream().filter(e -> e.source != e.destination).count();
-            } else {
-                rejectedBatches++;
-                lastFailure = "inventory rejected actual extraction or insertion (see latest.log)";
-            }
+            components=List.copyOf(jobs);totalComponents=components.size();
+            LOG.info("Global plan: {} eligible inventories, {} stacks, {} semantic groups, {} active inventories, cost {} -> {}, {} components",
+                    chests.size(),entries.size(),semanticGroups,activeInventories,beforeCost,afterCost,totalComponents);
         }
 
         private Chest snapshotEligible(ServerLevel level, ContainerRef ref, int sequence,
@@ -373,14 +359,29 @@ public final class WarehouseVacuumSorter {
          * thread. No client packets can withdraw from this virtual buffer.
          */
 
-        private static boolean commit(ServerLevel level, List<Chest> chests,
-                                      List<Entry> entries, MoveListener listener) {
-            List<Placement> placed = new ArrayList<>();
-            // Leave unchanged stacks untouched. Only displaced slots enter
-            // the transaction, reducing mod callbacks and rollback exposure.
-            List<Entry> displaced = entries.stream()
-                    .filter(e -> e.source != e.destination || e.sourceSlot != e.destinationSlot)
-                    .toList();
+        private static boolean commitComponent(ServerLevel level,List<Entry> displaced,MoveListener listener) {
+            // Re-snapshot touched inventories; independent components may run across ticks.
+            Map<Chest,ItemStack[]> expected=new java.util.LinkedHashMap<>();
+            for(Entry e:displaced){
+                for(Chest chest:List.of(e.source,e.destination)){
+                    if(!valid(level,chest.ref)||chest.ref.slots()!=chest.layout.length)return false;
+                    if(!expected.containsKey(chest)){
+                        ItemStack[] row=new ItemStack[chest.layout.length];
+                        for(int s=0;s<row.length;s++)row[s]=chest.ref.handler().getStackInSlot(s).copy();
+                        expected.put(chest,row);
+                    }
+                }
+                if(!sameStackAndCount(expected.get(e.source)[e.sourceSlot],e.original))return false;
+                if(!canInsertAfterExtraction(e.destination.ref.handler(),e.destinationSlot,e.original))return false;
+                if(!sameStackAndCount(e.original,e.source.ref.handler().extractItem(e.sourceSlot,e.original.getCount(),true)))return false;
+            }
+            for(Entry e:displaced)expected.get(e.source)[e.sourceSlot]=ItemStack.EMPTY;
+            for(Entry e:displaced){
+                ItemStack[] row=expected.get(e.destination);
+                if(!row[e.destinationSlot].isEmpty())return false;
+                row[e.destinationSlot]=e.original.copy();
+            }
+            List<Placement> placed=new ArrayList<>();
             boolean success = false;
             try {
                 for (Entry entry : displaced) {
@@ -437,17 +438,11 @@ public final class WarehouseVacuumSorter {
                     }
                 }
 
-                // Detect handlers which claim to accept an item but leave it
-                // missing, or unexpectedly mutate unrelated slots.
-                for (Chest chest : chests) {
-                    for (int slot = 0; slot < chest.layout.length; slot++) {
-                        Entry expected = chest.layout[slot];
-                        ItemStack actual = chest.ref.handler().getStackInSlot(slot);
-                        if (!sameStackAndCount(expected == null
-                                ? ItemStack.EMPTY : expected.original, actual)) {
-                            throw new IllegalStateException("Warehouse contents changed during commit at "
-                                    + chest.ref.pos() + ":" + slot);
-                        }
+                for(var check:expected.entrySet()){
+                    Chest chest=check.getKey();
+                    for(int slot=0;slot<check.getValue().length;slot++){
+                        if(!sameStackAndCount(check.getValue()[slot],chest.ref.handler().getStackInSlot(slot)))
+                            throw new IllegalStateException("Unexpected inventory mutation at "+chest.ref.pos()+":"+slot);
                     }
                 }
                 success = true;
@@ -458,11 +453,12 @@ public final class WarehouseVacuumSorter {
             }
             if (!success) return false;
 
-            for (Entry entry : entries) {
+            for (Entry entry : displaced) {
                 if (entry.source != entry.destination) {
-                    listener.onMove(new MoveRecord(entry.source.ref.pos(),
+                    try { listener.onMove(new MoveRecord(entry.source.ref.pos(),
                             entry.destination.ref.pos(), entry.original.getCount(),
-                            entry.original.copy()));
+                            entry.original.copy())); }
+                    catch(RuntimeException ex){LOG.warn("Transfer visual failed after committed move",ex);}
                 }
             }
             return true;
