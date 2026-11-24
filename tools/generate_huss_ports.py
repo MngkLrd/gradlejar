@@ -121,8 +121,8 @@ import java.util.function.Supplier;
 public final class HussMod implements ModInitializer {{
  public static final String ID="husshusshuss";
  private static {idtype} id(String path){{return {idexpr};}}
- public static final Supplier<Item> WHISTLE=()->whistle;
- public static final Supplier<SoundEvent> HUSS=()->huss;
+ public static final Supplier<Item> WHISTLE=()->HussMod.whistle;
+ public static final Supplier<SoundEvent> HUSS=()->HussMod.huss;
  private static Item whistle;
  private static SoundEvent huss;
  private static MobEffect TRAINING;
@@ -173,6 +173,9 @@ public final class ClientEvents implements ClientModInitializer {
 }
 ''')
 if modern:
+    if fabric:mod=mod.replace('ServerTickEvents.END_WORLD_TICK.register(Training::tickWorld);','ServerTickEvents.END_SERVER_TICK.register(server->{for(ServerLevel world:server.getAllLevels()) Training.tickWorld(world);});')
+    training=re.sub(r'player\.displayClientMessage\((Component\.translatable\([^\n]+?\)),true\)',r'notifyPlayer(player,\1)',training)
+    training=training.replace('    private Training() {}','    private Training() {}\n    private static void notifyPlayer(Player p, Component text) {\n        if (p instanceof net.minecraft.server.level.ServerPlayer sp) sp.connection.send(new net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket(text));\n    }')
     mod=mod.replace('ResourceLocation','Identifier').replace('net.minecraft.world.entity.npc.Villager','net.minecraft.world.entity.npc.villager.Villager')
     if not fabric:mod=mod.replace('new Item.Properties().stacksTo(1)','new Item.Properties().setId(net.minecraft.resources.ResourceKey.create(Registries.ITEM,Identifier.fromNamespaceAndPath(ID,"discipline_whistle"))).stacksTo(1)')
     training=training.replace('net.minecraft.world.entity.npc.Villager','net.minecraft.world.entity.npc.villager.Villager')
@@ -272,5 +275,29 @@ verify=read(BASE/'tools/verify_release.py')
 if modern:
     verify=verify.replace('dev/ataflore/huss/client/TrainingModel.class','dev/ataflore/huss/client/mixin/VillagerModelMixin.class').replace('dev/ataflore/huss/client/TrainingRenderer.class','dev/ataflore/huss/client/mixin/VillagerRendererMixin.class').replace('dev/ataflore/huss/client/ClientEvents.class','dev/ataflore/huss/client/HussRenderState.class')
 if legacy:verify=verify.replace('data/husshusshuss/recipe/','data/husshusshuss/recipes/')
+verify+=r"""
+with zipfile.ZipFile(sys.argv[1]) as z:
+    from pathlib import Path
+    profile=json.loads((Path(__file__).resolve().parents[1]/'build-profile.json').read_text())
+    mc=profile['minecraft']
+    modern=mc.startswith('26.')
+    legacy=mc=='1.20.1'
+    folder='recipes' if legacy else 'recipe'
+    recipe=json.loads(z.read(f'data/husshusshuss/{folder}/discipline_whistle.json'))
+    assert recipe['type']=='minecraft:crafting_shaped'
+    assert recipe['category']=='equipment'
+    assert recipe['pattern']==[' IG',' HI']
+    ingredients={'I':'minecraft:iron_ingot','G':'minecraft:gold_nugget','H':'minecraft:goat_horn'}
+    expected=ingredients if modern else {k:{'item':v} for k,v in ingredients.items()}
+    assert recipe['key']==expected,recipe
+    assert recipe['result']=={('item' if legacy else 'id'):'husshusshuss:discipline_whistle','count':1},recipe
+    if modern:
+        model=json.loads(z.read('assets/husshusshuss/items/discipline_whistle.json'))
+        assert model=={'model':{'type':'minecraft:model','model':'husshusshuss:item/discipline_whistle'}}
+        assert not any(n.startswith('data/husshusshuss/advancement/') for n in z.namelist())
+    header=z.read('dev/ataflore/huss/HussMod.class')
+    assert int.from_bytes(header[6:8],'big')==(69 if modern else 61 if legacy else 65)
+    print('PASS: version-specific recipe JSON, item model, class bytecode target',mc)
+"""
 write(dest/'tools/verify_release.py',verify)
 print(dest.relative_to(ROOT))
