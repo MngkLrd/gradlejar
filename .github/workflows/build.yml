@@ -263,6 +263,7 @@ jobs:
             src/main/java/com/kirill/simplesorter/sorting/WarehouseAssignmentPlanner.java \
             src/main/java/com/kirill/simplesorter/sorting/WarehouseSlotOptimizer.java \
             src/main/java/com/kirill/simplesorter/sorting/ChestInventoryShape.java \
+            src/main/java/com/kirill/simplesorter/sorting/ScanGeometry.java \
             src/main/java/com/kirill/simplesorter/sorting/WarehouseConsolidationDecision.java \
             src/main/java/com/kirill/simplesorter/label/ChestCategoryLabels.java \
             src/main/java/com/kirill/simplesorter/sorting/WarehouseRoutingRules.java \
@@ -277,6 +278,7 @@ jobs:
             tools/tests/WarehouseAssignmentPlannerSelfTest.java \
             tools/tests/WarehouseSlotOptimizerSelfTest.java \
             tools/tests/ChestInventoryShapeSelfTest.java \
+            tools/tests/ScanGeometrySelfTest.java \
             tools/tests/FaceLabelDimensionsSelfTest.java \
             tools/tests/FixedLabelFacesSelfTest.java
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.SmartRulesSelfTest
@@ -288,6 +290,7 @@ jobs:
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseAssignmentPlannerSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseSlotOptimizerSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.ChestInventoryShapeSelfTest
+          java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.ScanGeometrySelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.client.FaceLabelDimensionsSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.client.FixedLabelFacesSelfTest
       - name: Check model, texture and datapack assets

@@ -51,7 +51,11 @@ public record WandActionPayload(int handIndex, int storedModeIndex, int actionMo
         stored.writeTo(wand);
         SortingResult result = SortingManager.sortAroundPlayer(player.serverLevel(), player,
                 stored.withMode(SortingMode.byIndex(actionModeIndex)), wand);
-        player.getCooldowns().addCooldown(wand.getItem(), SortingWandItem.COOLDOWN_TICKS);
+        boolean startedSmart = stored.withMode(SortingMode.byIndex(actionModeIndex)).mode()
+                == SortingMode.SMART_CATEGORIES && result.scannedContainers() > 0;
+        if (startedSmart || result.used())
+            player.getCooldowns().addCooldown(wand.getItem(), SortingWandItem.COOLDOWN_TICKS);
+        if (!startedSmart) player.displayClientMessage(result.toPlayerMessageComponent(), true);
         if (result.used()) SortingWandItem.consumeUse(wand, player);
     }
 }

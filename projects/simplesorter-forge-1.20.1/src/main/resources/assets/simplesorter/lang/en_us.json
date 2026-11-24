@@ -95,5 +95,12 @@
   "label.simplesorter.locked": "Special Items",
   "label.simplesorter.mixed": "Mixed Contents",
   "label.simplesorter.mineral_resources": "Ores & Mineral Powders",
-  "label.simplesorter.crafting_powders": "Crafting Powders"
+  "label.simplesorter.crafting_powders": "Crafting Powders",
+  "label.simplesorter.fuel": "Fuel",
+  "label.simplesorter.ammunition": "Ammunition",
+  "label.simplesorter.spawn_eggs": "Spawn Eggs",
+  "label.simplesorter.currency": "Currency",
+  "label.simplesorter.explosives": "Explosives",
+  "label.simplesorter.ignition": "Fire Starters",
+  "label.simplesorter.materials": "Materials"
 }

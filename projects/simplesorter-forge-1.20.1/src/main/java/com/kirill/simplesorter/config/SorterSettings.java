@@ -5,7 +5,7 @@ public final class SorterSettings {
 
     /**
      * Main sorting radius around the player, measured in blocks.
-     * The scanner uses a real 3D radius, not the current chunk.
+     * The scanner uses the square wand preview and equal vertical reach, not the current chunk.
      */
     public static final int SORT_RADIUS_BLOCKS = 32;
 

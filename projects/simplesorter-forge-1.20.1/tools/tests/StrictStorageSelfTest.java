@@ -19,6 +19,21 @@ public final class StrictStorageSelfTest {
     }
 
     public static void main(String[] args) {
+        family("minecraft:charcoal","materials",false,"fuel");
+        family("minecraft:coal","materials",false,"fuel");
+        family("minecraft:arrow","misc",false,"ammunition");
+        family("minecraft:spectral_arrow","misc",false,"ammunition");
+        family("tfc:firestarter","misc",false,"ignition");
+        family("gtceu:invar_lighter","misc",false,"ignition");
+        family("gtceu:matches","misc",false,"ignition");
+        family("tfc:spawn_egg/lake_trout","misc",false,"spawn_eggs");
+        family("tfc:straw","misc",false,"botanical");
+        family("firmalife:fruit_leaf","misc",false,"botanical");
+        family("createdeco:iron_coin","misc",false,"currency");
+        family("gtceu:dynamite","misc",false,"explosives");
+        family("example:resource","materials",false,"materials");
+        family("example:charm","custom_amulets",false,"custom_amulets");
+        family("example:unknown","misc",false,"misc");
         // Sticks are not smelted metal; different metal forms can coexist.
         family("minecraft:stick", "misc", false, "sticks");
         family("tfc:wood/twig", "misc", false, "sticks");

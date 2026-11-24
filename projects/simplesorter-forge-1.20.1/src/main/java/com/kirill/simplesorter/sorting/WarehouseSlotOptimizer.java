@@ -69,8 +69,11 @@ public final class WarehouseSlotOptimizer {
             increment(familyCounts.get(item.chest), item.family, 1);
         }
 
+        // Seed new empty storage with an entire family. The old objective
+        // rejected the first move of a multi-stack family into a blank chest.
+        int seeded = seedEmptyChests(immutable,slots,familyCounts,location,position,accepts);
         long probes = 0;
-        int totalGain = 0;
+        int totalGain = seeded;
         boolean limitReached = false;
         for (int pass = 0; pass < MAX_PASSES && !limitReached; pass++) {
             int changed = 0;
@@ -143,6 +146,54 @@ public final class WarehouseSlotOptimizer {
             if (location[i] != immutable.get(i).chest) moved++;
         }
         return new Layout(location, position, moved, totalGain, probes);
+    }
+
+    private static int seedEmptyChests(List<Stack> stacks,int[][] slots,
+            List<Map<String,Integer>> counts,int[] location,int[] position,Accepts accepts) {
+        Map<String,List<Integer>> byFamily=new java.util.TreeMap<>();
+        for(int i=0;i<stacks.size();i++) byFamily.computeIfAbsent(stacks.get(i).family,k->new ArrayList<>()).add(i);
+        List<String> choices=new ArrayList<>(byFamily.keySet());
+        choices.sort(java.util.Comparator.comparingInt((String f)->byFamily.get(f).size()).reversed()
+                .thenComparing(String::compareTo));
+        int seeded=0;
+        for(int target=0;target<slots.length;target++) {
+            if(!counts.get(target).isEmpty()) continue;
+            int capacity=slots[target].length;
+            for(String family:choices) {
+                List<Integer> group=byFamily.get(family);
+                if(group.size()>capacity) continue;
+                boolean mixed=false,hasPureHome=false;
+                for(int index:group) {
+                    Map<String,Integer> source=counts.get(location[index]);
+                    if(source.size()>1) mixed=true; else hasPureHome=true;
+                }
+                if(!mixed||hasPureHome) continue;
+                int[] destinations=new int[group.size()];
+                boolean[] used=new boolean[capacity];
+                boolean fits=true;
+                for(int k=0;k<group.size();k++) {
+                    int index=group.get(k),chosen=-1;
+                    for(int slot=0;slot<capacity;slot++) {
+                        if(!used[slot]&&accepts.test(index,target,slot)){chosen=slot;break;}
+                    }
+                    if(chosen<0){fits=false;break;}
+                    used[chosen]=true;
+                    destinations[k]=chosen;
+                }
+                if(!fits) continue;
+                // Mutate the virtual layout only after the complete group fits.
+                for(int k=0;k<group.size();k++){
+                    int index=group.get(k);
+                    slots[location[index]][position[index]]=-1;
+                    increment(counts.get(location[index]),family,-1);
+                    slots[target][destinations[k]]=index;
+                    increment(counts.get(target),family,1);
+                    location[index]=target;position[index]=destinations[k];
+                }
+                seeded++;break;
+            }
+        }
+        return seeded;
     }
 
     private static void increment(Map<String, Integer> counts, String family, int change) {
