@@ -11,5 +11,5 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class FirmalifeOvenRecipeMixin {
     @Shadow public abstract float getTemperature();
     @Inject(method="assemble(Lnet/dries007/tfc/common/recipes/inventory/ItemStackInventory;Lnet/minecraft/core/RegistryAccess;)Lnet/minecraft/world/item/ItemStack;",at=@At("RETURN"))
-    private void hearthbound$bake(ItemStackInventory in,RegistryAccess access,CallbackInfoReturnable<ItemStack> cir){Quality.heating(in.getStack(),cir.getReturnValue(),getTemperature());}
+    private void hearthbound$bake(ItemStackInventory in,RegistryAccess access,CallbackInfoReturnable<ItemStack> cir){Quality.completedHeating(in.getStack(),cir.getReturnValue(),getTemperature());}
 }

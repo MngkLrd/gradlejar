@@ -52,7 +52,12 @@ public final class Quality {
         return !input.isEmpty()&&eligible(output)&&(input.getItem()!=output.getItem()||output.is(SAME_ITEM)||has(output));
     }
     public static void heating(ItemStack input,ItemStack output,float target){
-        if(!transformed(input,output)||!fresh(input))return;
+        if(!transformed(input,output))return;
+        completedHeating(input,output,target);
+    }
+    /** Use only for an appliance's explicit successful food preparation. */
+    public static void completedHeating(ItemStack input,ItemStack output,float target){
+        if(input.isEmpty()||!eligible(output)||!fresh(input))return;
         int process=QualityMath.heating(HeatCapability.getTemperature(input),target);
         if(process>=0)finish(output,process,java.util.List.of(input));
     }

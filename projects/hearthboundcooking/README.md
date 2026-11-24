@@ -19,3 +19,5 @@ Quality arithmetic test is part of Gradle check. In-game regression testing is s
 - Staggered once-per-second heating, reused isolated inventory, no elapsed cooking credit across unloads. Native pot counters saved; vessel NBT sanitized.
 - GUI diagnoses missing water, invalid recipe, spoiled ingredients; shows planned batches and servings. No timer. Open lid before serving. Creative inventory insertion consumes the moved items.
 - Runtime regression tests and industrial TFG adapters remain outstanding.
+
+- Explicit successful grill and Firmalife oven food recipes now grade same-ID preparations without grading raw warming in generic heating recipes.
