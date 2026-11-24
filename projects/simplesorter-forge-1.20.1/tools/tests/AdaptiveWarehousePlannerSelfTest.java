@@ -42,6 +42,15 @@ public final class AdaptiveWarehousePlannerSelfTest {
         }
         check(byColumn.size()==10&&byColumn.values().stream().allMatch(set->set.size()==1),"vertical columns split materials");
         check(Arrays.stream(plan.chestByStack()).anyMatch(i->i>=32),"later chests omitted");
+        List<AdaptiveWarehousePlanner.Stack> after=new ArrayList<>();
+        int[] dst=plan.chestByStack(),slots=plan.slotByStack();
+        for(int i=0;i<items.size();i++)after.add(new AdaptiveWarehousePlanner.Stack(dst[i],slots[i],items.get(i).profile()));
+        var repeat=AdaptiveWarehousePlanner.plan(after,boxes,accept,true);
+        check(repeat.movedStacks()==0,"unchanged full warehouse should be stable");
+        // A new type in one occupied slot makes a fresh plan legal and
+        // the cost must never increase even when a full reshuffle is needed.
+        after.set(0,new AdaptiveWarehousePlanner.Stack(dst[0],slots[0],FOOD));
+        verify(after,boxes,AdaptiveWarehousePlanner.plan(after,boxes,accept,true),accept);
     }
     private static void capacityAndNewStorage(){
         List<AdaptiveWarehousePlanner.Stack> items=List.of(

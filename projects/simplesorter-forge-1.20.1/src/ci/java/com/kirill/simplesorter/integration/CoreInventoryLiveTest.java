@@ -118,6 +118,11 @@ public final class CoreInventoryLiveTest {
             check(columns.size()==10&&columns.values().stream().allMatch(set->set.size()==1),
                     "real vertical columns not pure: "+columns);
             check(spatial.totalComponents()>0,"missing transfer components");
+            var repeated=WarehouseVacuumSorter.begin(full.containers());
+            while(!repeated.step(level,move->{},120,4_000_000L)){}
+            check(repeated.rejectedTransfers()==0&&repeated.movedItems()==0,
+                    "unchanged real warehouse must not reshuffle");
+            check(repeated.quality().mixed()==0&&repeated.quality().score()==100,"pure real warehouse quality");
             org.slf4j.LoggerFactory.getLogger("SimpleSorter/CoreLiveTest").info(
                     "SORTER_CORE_LIVE_TEST_PASSED: live 21->22 chest scan, remote access, new empty chest, classification and item count; moved {} items",session.movedItems());
         } finally {

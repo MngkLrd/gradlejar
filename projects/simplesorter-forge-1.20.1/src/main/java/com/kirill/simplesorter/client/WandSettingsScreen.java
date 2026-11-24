@@ -38,8 +38,9 @@ public final class WandSettingsScreen extends Screen {
         // Fit the scaled viewport, including small windows and high GUI scale.
         panelW=Math.min(248,Math.max(1,width-12));
         gap=height>=196?4:2;
-        rowH=Math.min(20,Math.max(12,(height-12-26-6*gap)/7));
-        panelH=26+7*rowH+6*gap;
+        int rows=advanced?7:6;
+        rowH=Math.min(20,Math.max(12,(height-12-26-(rows-1)*gap)/rows));
+        panelH=26+rows*rowH+(rows-1)*gap;
         panelX=(width-panelW)/2;panelY=(height-panelH)/2;
         bodyX=panelX+8;bodyW=Math.max(1,panelW-16);bodyY=panelY+21;
         if(advanced)advancedPage();else mainPage();
@@ -76,12 +77,8 @@ public final class WandSettingsScreen extends Screen {
         full(tr("compact.sort"),Component.translatable(settings.mode().descriptionKey()),2,b->run(settings.mode()));
         full(tr("compact.deposit"),tr("compact.deposit_tip"),3,b->run(SortingMode.PLAYER_DEPOSIT));
         full(tr("compact.advanced"),tr("compact.advanced_tip"),4,b->{advanced=true;rebuild();});
-        // One deliberately quiet row for key help. It is a tooltip, not a long
-        // unbounded line competing with the title and mode buttons.
-        full(tr("compact.controls"),tr("keys.line",ClientKeyMappings.OPEN_SETTINGS.getTranslatedKeyMessage(),
-                ClientKeyMappings.QUICK_SORT.getTranslatedKeyMessage()),5,b->{});
         pair(tr("save"),null,b->{save(false);onClose();},
-                Component.translatable("gui.cancel"),null,b->onClose(),6);
+                Component.translatable("gui.cancel"),null,b->onClose(),5);
     }
 
     private void advancedPage(){

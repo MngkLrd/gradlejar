@@ -88,6 +88,7 @@ public final class WarehouseVacuumSorter {
         private final List<ContainerRef> containers;
         private List<List<Entry>> components=List.of();
         private boolean planned;
+        private final java.util.Set<ContainerRef> eligible=new java.util.HashSet<>();
         private int componentIndex,totalComponents,processedEntries,totalEntries;
         private int activeInventories,semanticGroups;
         private long beforeCost,afterCost;
@@ -118,6 +119,7 @@ public final class WarehouseVacuumSorter {
         public long beforeCost(){return beforeCost;}
         public long afterCost(){return afterCost;}
         public int assignmentMissingFamilies() { return 0; }
+        public boolean eligibleForCompaction(ContainerRef ref){return eligible.contains(ref);}
 
         // Diagnostics are derived from actual post-sort inventories, not a
         // frozen pre-sort snapshot. Unknown "misc" is a valid fallback family.
@@ -150,7 +152,7 @@ public final class WarehouseVacuumSorter {
                 try {
                     for (int s = 0; s < ref.slots(); s++) {
                         ItemStack stack = ref.handler().getStackInSlot(s);
-                        if (!stack.isEmpty() && "misc".equals(StrictStackClassifier.family(stack))) {
+                        if (!stack.isEmpty() && "unknown".equals(StrictStackClassifier.profile(stack).group())) {
                             count++;
                         }
                     }
@@ -167,7 +169,7 @@ public final class WarehouseVacuumSorter {
                 try {
                     for (int s = 0; s < ref.slots(); s++) {
                         ItemStack stack = ref.handler().getStackInSlot(s);
-                        if (!stack.isEmpty() && "misc".equals(StrictStackClassifier.family(stack))) {
+                        if (!stack.isEmpty() && "unknown".equals(StrictStackClassifier.profile(stack).group())) {
                             counts.merge(BuiltInRegistries.ITEM.getKey(stack.getItem()).toString(),
                                     1, Integer::sum);
                         }
@@ -226,7 +228,7 @@ public final class WarehouseVacuumSorter {
             List<Entry> entries=new ArrayList<>();
             for(ContainerRef ref:containers){
                 Chest chest=snapshotEligible(level,ref,chests.size(),entries);
-                if(chest==null)skippedChests++;else chests.add(chest);
+                if(chest==null)skippedChests++;else {chests.add(chest);eligible.add(ref);}
             }
             if(chests.size()<2||entries.isEmpty())return;
             List<AdaptiveWarehousePlanner.Storage> boxes=new ArrayList<>();

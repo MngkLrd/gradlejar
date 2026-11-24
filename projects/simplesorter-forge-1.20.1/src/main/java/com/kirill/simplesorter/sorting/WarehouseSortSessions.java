@@ -128,7 +128,11 @@ public final class WarehouseSortSessions {
         private final InteractionHand hand;
         private final List<ContainerRef> containers;
         private final SortingWandSettings settings;
-        private final WarehouseVacuumSorter.Session session;
+        private WarehouseVacuumSorter.Session session;
+        private static final int MAX_ROUNDS=4;
+        private int rounds=1,totalMoved,totalRejected,totalTransactions,totalCompleted,compactedAtRoundStart;
+        private boolean convergenceLimited;
+        private String lastFailure="none";
         private final Set<BlockPos> changed = new HashSet<>();
         private final List<MoveRecord> visualMoves = new ArrayList<>();
         private final MoveListener listener = move -> {
@@ -168,7 +172,7 @@ public final class WarehouseSortSessions {
                         ? "packing containers " + compactIndex + "/" + containers.size()
                         : "buffer sorting chest " + Math.min(session.currentChestIndex() + 1, containers.size())
                                 + "/" + containers.size())
-                        + "; transferred " + session.movedItems()
+                        + "; transferred " + (totalMoved+session.movedItems())
                         + " items between chests. Job still running."), true);
             }
             if (!compaction) {
@@ -185,7 +189,7 @@ public final class WarehouseSortSessions {
                     && (done == 0 || System.nanoTime() < deadline)) {
                 int current = compactIndex++;
                 ContainerRef container = containers.get(current);
-                if (!container.isValid()) continue;
+                if (!container.isValid() || !session.eligibleForCompaction(container)) continue;
                 if (InventoryMover.needsCompaction(container)) {
                     compactedItems += InventoryMover.cleanUpContainer(container, listener);
                 }
@@ -194,7 +198,22 @@ public final class WarehouseSortSessions {
             }
             if (compactIndex < containers.size()) return false;
 
-            int count = session.movedItems() + compactedItems;
+            totalMoved+=session.movedItems();
+            totalRejected+=session.rejectedTransfers();
+            totalTransactions+=session.totalComponents();
+            totalCompleted+=session.completedComponents();
+            if(session.rejectedTransfers()>0)lastFailure=session.lastFailure();
+            // Compaction can change the stack-count objective. Re-snapshot
+            // automatically instead of requiring repeated wand clicks.
+            boolean changedThisRound=session.totalComponents()>0 || compactedItems>compactedAtRoundStart;
+            if(changedThisRound && totalRejected==0 && rounds<MAX_ROUNDS){
+                rounds++;compactedAtRoundStart=compactedItems;
+                session=WarehouseVacuumSorter.begin(containers);
+                compaction=false;compactIndex=0;
+                return false;
+            }
+            convergenceLimited=changedThisRound&&totalRejected==0&&rounds>=MAX_ROUNDS;
+            int count = totalMoved + compactedItems;
             if (count > 0) {
                 SortingVisuals.playSortingEffects(level, changed, visualMoves, settings);
             }
@@ -205,24 +224,22 @@ public final class WarehouseSortSessions {
                 if (count > 0) SortingWandItem.consumeUse(wand, player);
             }
 
-            int unresolved = session.unresolvedMixedChests();
-            int unknown = session.unknownFamilySlots();
+            var quality=session.quality();
+            int unresolved=quality.mixed();
+            int unknown=session.unknownFamilySlots();
             player.displayClientMessage(Component.literal(
-                    "Simple Sorter completed (virtual wand buffer): " + session.movedItems()
+                    "Simple Sorter completed: " + totalMoved
                             + " items transferred BETWEEN chests; "
                             + compactedItems + " items compacted WITHIN chests. "
-                            + unresolved + " mixed chests remain (small families may share a chest); "
-                            + unknown + " misc/fallback slots. "
-                            + "Global plans: " + session.batchCount() + "; transactions: " + session.completedComponents() + "/" + session.totalComponents() + ". "
-                            + "Planned semantic groups: " + session.semanticGroups()
-                            + "; occupied inventories: " + session.activeInventories() + ". "
-                            + "Skipped restricted chests: " + session.skippedChests()
-                            + "; rejected buffer batches: " + session.rejectedTransfers() + "."
-                            + (session.rejectedTransfers() > 0
-                                ? " Reason: " + session.lastFailure() + "." : "")
-                            + (session.skippedChests() > 0
-                                ? " Some inventories cannot be safely extracted/refilled." : "")),
-                    session.skippedChests() == 0 && session.rejectedTransfers() == 0);
+                            + "Coherence: " + quality.score() + "%; mixed: " + unresolved
+                            + "/" + quality.occupied() + "; unknown slots: " + unknown + ". "
+                            + (convergenceLimited ? "Refinement limit reached. " : "")
+                            + (totalRejected>0 ? "Rejected transactions: "+totalRejected+". "+lastFailure+". " : "")
+                            + (session.skippedChests()>0 ? "Restricted inventories: "+session.skippedChests()+". " : "")),
+                    session.skippedChests()==0 && totalRejected==0);
+            org.slf4j.LoggerFactory.getLogger("SimpleSorter/SortSessions").info(
+                    "Refinement rounds {}, transactions {}/{}, mixed {}/{}, coherence {}, limited {}",
+                    rounds,totalCompleted,totalTransactions,unresolved,quality.occupied(),quality.score(),convergenceLimited);
             if (unknown > 0) {
                 player.displayClientMessage(Component.literal(
                         "Simple Sorter unknown item IDs: "

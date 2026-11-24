@@ -1,4 +1,28 @@
-# Simple Sorter 0.10.2 (Forge 1.20.1)
+# Simple Sorter 0.10.3 (Forge 1.20.1)
+
+## 0.10.3: stable refinement, semantic labels and compact wand screen
+
+The global planner compares deterministic capacity/geometry candidates.
+An unchanged legal layout wins score ties. A job automatically re-plans
+after transfers/compaction, up to four rounds, and reports if refinement
+did not settle within that cap. New activations still scan fresh live
+storage; no persisted chest category ownership. Restricted inventories
+excluded by the global snapshot are not compacted by the Smart job.
+
+Labels and the final coherence report now share one semantic evaluator.
+Iron forms are labeled Iron; related different metals can be Metals &
+Minerals; unrelated groups remain Mixed. The score is mean pair affinity
+over occupied slots, not a claim of perfect mathematical sorting.
+Unknown exact item IDs get an item label when it fits the packet limit.
+Existing labels, materials and packet formats are retained.
+
+A compact two-page vanilla-style wand screen replaces the old fixed
+410x322 panel. Main: mode, radius, sort, deposit, advanced, save/cancel.
+Advanced: preview/highlights/particles, auto-organize, label style and
+supply loading, defaults, rules reload and save. Standard widgets,
+bounded panel layout, tooltips, English/Russian translations.
+No JAR delivery requested before 0.10.4.
+
 
 ## 0.10.1–0.10.2 internal milestones: global adaptive planning and spatial layout
 
