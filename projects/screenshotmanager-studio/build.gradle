@@ -20,6 +20,12 @@ sourceSets.main.resources {
 }
 
 repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Minecraft provides Gson at runtime; standalone core smoke tests also need it.
+    testRuntimeOnly 'com.google.code.gson:gson:2.10.1'
 }
 
 neoForge {
