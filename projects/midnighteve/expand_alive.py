@@ -23,18 +23,15 @@ import net.neoforged.neoforge.registries.*;
 public final class AliveContent {
     private static final DeferredRegister<StructureType<?>> STRUCTURES=DeferredRegister.create(Registries.STRUCTURE_TYPE,"midnighteve");
     private static final DeferredRegister<Feature<?>> FEATURES=DeferredRegister.create(Registries.FEATURE,"midnighteve");
-    private static final DeferredRegister<SoundEvent> SOUNDS=DeferredRegister.create(Registries.SOUND_EVENT,"midnighteve");
     public static final DeferredHolder<StructureType<?>,StructureType<FlatVillage>> FLAT=STRUCTURES.register("flat_village",()->()->FlatVillage.CODEC);
     public static final DeferredHolder<Feature<?>,Feature<NoneFeatureConfiguration>> UNDER_FIR=FEATURES.register("under_fir_snow",()->new UnderFirSnow(NoneFeatureConfiguration.CODEC));
-    public static final DeferredHolder<SoundEvent,SoundEvent> WINTER=SOUNDS.register("music.winter",()->SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("midnighteve","music.winter")));
-    public static final DeferredHolder<SoundEvent,SoundEvent> VILLAGE=SOUNDS.register("music.village",()->SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("midnighteve","music.village")));
     public static final DeferredBlock<Block> SOIL=MidnightEve.BLOCKS.registerSimpleBlock("frozen_soil",BlockBehaviour.Properties.ofFullCopy(Blocks.DIRT).sound(SoundType.GRAVEL));
     public static final DeferredItem<BlockItem> SOIL_ITEM=MidnightEve.ITEMS.registerSimpleBlockItem(SOIL);
     public static final DeferredBlock<LightString> STRING=MidnightEve.BLOCKS.register("festive_lights",()->new LightString(BlockBehaviour.Properties.of().strength(.2F).sound(SoundType.WOOL).noOcclusion().noCollission().lightLevel(s->9)));
     public static final DeferredItem<BlockItem> STRING_ITEM=MidnightEve.ITEMS.registerSimpleBlockItem(STRING);
     public static final DeferredBlock<PresentBlock> PRESENT=MidnightEve.BLOCKS.register("stacked_presents",()->new PresentBlock(BlockBehaviour.Properties.of().strength(.4F).sound(SoundType.WOOL).noOcclusion()));
     public static final DeferredItem<BlockItem> PRESENT_ITEM=MidnightEve.ITEMS.registerSimpleBlockItem(PRESENT);
-    public static void init(IEventBus bus){STRUCTURES.register(bus);FEATURES.register(bus);SOUNDS.register(bus);NeoForge.EVENT_BUS.addListener(SettlementLife::tick);}
+    public static void init(IEventBus bus){STRUCTURES.register(bus);FEATURES.register(bus);NeoForge.EVENT_BUS.addListener(SettlementLife::tick);}
 }
 ''')
 edit(J/"MidnightEve.java","        dev.mngklrd.midnighteve.market.MarketContent.init(bus);","        dev.mngklrd.midnighteve.market.MarketContent.init(bus);\n        dev.mngklrd.midnighteve.alive.AliveContent.init(bus);")
@@ -60,7 +57,7 @@ public final class FlatVillage extends Structure {
     private final JigsawStructure delegate;
     public FlatVillage(StructureSettings settings,Holder<StructureTemplatePool> pool,int radius,int relief){
         super(settings);this.pool=pool;this.radius=radius;this.relief=relief;
-        delegate=new JigsawStructure(settings,pool,1,ConstantHeight.of(VerticalAnchor.absolute(-1)),false,Heightmap.Types.WORLD_SURFACE_WG);
+        delegate=new JigsawStructure(settings,pool,0,ConstantHeight.of(VerticalAnchor.absolute(-1)),false,Heightmap.Types.WORLD_SURFACE_WG);
     }
     @Override protected Optional<GenerationStub> findGenerationPoint(GenerationContext c){
         int x=c.chunkPos().getMiddleBlockX(),z=c.chunkPos().getMiddleBlockZ();
@@ -132,7 +129,10 @@ write(A/"blockstates/frozen_soil.json",{"variants":{"":{"model":mod("block/froze
 write(A/"models/item/frozen_soil.json",{"parent":mod("block/frozen_soil")})
 for name in ("frozen_soil","festive_lights","stacked_presents"):
     write(D/"loot_table/blocks"/(name+".json"),{"type":"minecraft:block","pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":mod(name)}],"conditions":[{"condition":"minecraft:survives_explosion"}]}]})
-write(R/"data/minecraft/tags/block/mineable/shovel.json",{"replace":False,"values":[mod("frozen_soil")]})
+shovel=R/"data/minecraft/tags/block/mineable/shovel.json"
+shovel_tag=json.loads(shovel.read_text()) if shovel.exists() else {"replace":False,"values":[]}
+if mod("frozen_soil") not in shovel_tag["values"]:shovel_tag["values"].append(mod("frozen_soil"))
+write(shovel,shovel_tag)
 # Only dirt-compatible surface patches in two winter biomes; preserve other geology.
 path=D/"worldgen/noise_settings/frostlands.json";d=json.loads(path.read_text())
 d["surface_rule"]["sequence"][1]["then_run"]["sequence"].insert(0,f.condition(f.floor(),f.condition(f.biome("silent_snowfields","starlit_steppe"),f.condition(f.dry,f.condition(f.threshold(-.20,.05),f.block(mod("frozen_soil")))))))
@@ -141,7 +141,7 @@ write(path,d)
 # Add true 3D colored bulbs, cable, sockets and glass-like highlights.
 for name,base,hi,shade in [("wire","49583b","68774d","35442f"),("red_bulb","b94a3f","ec8771","883d38"),("gold_bulb","c8a14e","efd489","95783c"),("green_bulb","618758","a0c381","446b44"),("blue_bulb","6393ae","abd1d9","466b89"),("red_wrap","ad4744","ca6155","853c3b"),("green_wrap","638450","819a63","465f40"),("gold_ribbon","c39f50","e7c478","95783b"),("cream_wrap","c8bda1","e1d8c0","a99a83")]:
     rows=["bbbbbbbbbbbbbbbb","bbhhhbbbbbbbbbbb","bbhhhbbbbbbbbbbb","bbb hbbbbbbbbbbb".replace(" ","b"),"bbbbbbbbbbbbbbbb","bbbbbbbssbbbbbbb","bbbbbbsssbbbbbbb","bbbbbbbssbbbbbbb","bbbbbbbbbbbbbbbb","bbbbbbbbbbbbbbbb","bbbbb hhhbbbbbbb".replace(" ","b"),"bbbbbbhhbbbbbbbb","bbbbbbbbbbbbbbbb","sbbbbbbbbbbbbbbb","ssbbbbbbbbbbbbbb","ssssssssssssssss"]
-    g.png(A/"textures/block"/(name+".png"),rows,{k:g.rgba(c) for k,c in {"b":base,"h":hi,"s":shade}.items()})
+    g.png(A/"textures/block"/(name+".png"),[(r+"b"*16)[:16] for r in rows],{k:g.rgba(c) for k,c in {"b":base,"h":hi,"s":shade}.items()})
 els=[]
 # Sagging segmented cable (one model spans a full block).
 for lo,hi in [([0,12,7],[3,13,9]),([3,11,7],[6,12,9]),([6,10,7],[10,11,9]),([10,11,7],[13,12,9]),([13,12,7],[16,13,9])]:els.append(f.elem(lo,hi,"wire"))
@@ -236,3 +236,65 @@ write(D/"worldgen/placed_feature/under_fir_snow.json",{"feature":mod("under_fir_
 for n in ("firlight_woods","peppermint_grove","silent_snowfields"):
     path=D/"worldgen/biome"/(n+".json");d=json.loads(path.read_text());d["features"][9].append(mod("under_fir_snow"));write(path,d)
 print("PASS: bounded terrain sampling, frozen soil, volumetric bulbs and parcels, under-canopy snow, decorated tree additions",decor)
+
+# Villagers retain vanilla trading, work, panic and sleep. Social activity is
+# limited to active settlement residents near players during the evening.
+text(J/"alive/SettlementLife.java",'''package dev.mngklrd.midnighteve.alive;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.schedule.Activity;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import java.util.HashSet;
+import java.util.UUID;
+public final class SettlementLife {
+    private SettlementLife(){}
+    private static boolean resident(Villager v){
+        return v.isAlive()&&!v.isSleeping()&&!v.isTrading()&&!v.isBaby()
+            &&v.getTags().contains("midnighteve_resident")
+            &&!v.getBrain().isActive(Activity.PANIC);
+    }
+    public static void tick(ServerTickEvent.Post event){
+        var server=event.getServer();
+        if(server.getTickCount()%100!=0)return;
+        var visited=new HashSet<UUID>();
+        for(ServerPlayer player:server.getPlayerList().getPlayers()){
+            if(player.isSpectator())continue;
+            ServerLevel level=player.serverLevel();
+            long day=level.getDayTime()%24000L;
+            if(day<10500||day>=12000)continue;
+            var residents=level.getEntitiesOfClass(Villager.class,player.getBoundingBox().inflate(40,10,40),SettlementLife::resident);
+            int processed=0;
+            for(Villager villager:residents){
+                if(processed>=24)break;
+                if(!visited.add(villager.getUUID()))continue;
+                processed++;
+                if(villager.getRandom().nextInt(3)!=0)continue;
+                Villager partner=null;
+                double closest=81;
+                for(Villager other:residents){
+                    if(other==villager)continue;
+                    double distance=villager.distanceToSqr(other);
+                    if(distance>2.25&&distance<closest){partner=other;closest=distance;}
+                }
+                if(partner==null)continue;
+                villager.getLookControl().setLookAt(partner,30,30);
+                if(closest>9&&villager.getNavigation().isDone()){
+                    villager.getNavigation().moveTo(partner,0.48);
+                }else if(closest<=9){
+                    partner.getLookControl().setLookAt(villager,30,30);
+                    level.sendParticles(ParticleTypes.HAPPY_VILLAGER,villager.getX(),villager.getY()+1.9,villager.getZ(),1,.12,.12,.12,0);
+                }
+            }
+        }
+    }
+}
+''')
+# Localize new blocks and retain the existing soundtrack registrations.
+g.en.update({"block.midnighteve.frozen_soil":"Frozen Soil","block.midnighteve.festive_lights":"Festive Lights","block.midnighteve.stacked_presents":"Stacked Presents"})
+g.ru.update({"block.midnighteve.frozen_soil":"Промёрзшая земля","block.midnighteve.festive_lights":"Праздничная гирлянда","block.midnighteve.stacked_presents":"Гора подарков"})
+for n,lang in [("en_us",g.en),("ru_ru",g.ru)]:write(A/"lang"/(n+".json"),lang)
+edit(R/"META-INF/neoforge.mods.toml",'version="0.12.0"','version="0.13.0"')
+for file in R.rglob("*.json"):json.loads(file.read_text(encoding="utf8"))
+print("PASS: Alive Settlements generation and localization")
