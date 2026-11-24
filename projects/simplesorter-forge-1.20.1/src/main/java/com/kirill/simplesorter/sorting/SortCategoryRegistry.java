@@ -359,7 +359,8 @@ public final class SortCategoryRegistry {
                     CategoryJson json = GSON.fromJson(reader, CategoryJson.class);
                     SortCategory category = fromJson(json);
                     if (category != null) {
-                        categories.put(category.id(), category);
+                        // Never let an optional rule replace the built-in safety lock.
+                        if (!"locked".equals(category.id())) categories.put(category.id(), category);
                     }
                 } catch (IOException | JsonSyntaxException ignored) {
                     // Bad custom category file should not kill the whole mod.
@@ -398,6 +399,7 @@ public final class SortCategoryRegistry {
         }
 
         SortCategory.Builder builder = SortCategory.builder(json.id)
+                .userDefined(true)
                 .displayName(json.display_name)
                 .group(json.group)
                 .priority(json.priority)
