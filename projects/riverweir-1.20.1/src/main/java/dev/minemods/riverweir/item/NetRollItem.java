@@ -22,7 +22,8 @@ public final class NetRollItem extends Item {
     public NetRollItem(WeirTier tier,Properties properties){super(properties);this.tier=tier;}
     @Override public void appendHoverText(ItemStack stack,@Nullable Level level,List<Component> tooltip,TooltipFlag flag){
         tooltip.add(Component.translatable("tooltip.riverweir.dimensions_tier",4,tier.panelHeight).withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("tooltip.riverweir.capacity",stack.getCount(),Math.min(tier.maxSpan,stack.getCount()*4)).withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("tooltip.riverweir.capacity",stack.getCount(),Math.min(tier.maxSpan,stack.getCount()*4),tier.panelHeight).withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("tooltip.riverweir.area",stack.getCount()*4*tier.panelHeight).withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("tooltip.riverweir.tier_limits",tier.maxSpan,tier.maxDepth).withStyle(ChatFormatting.DARK_GRAY));
     }
     @Override public InteractionResult useOn(UseOnContext context){

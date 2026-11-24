@@ -5,7 +5,7 @@
   "item.riverweir.net_twine": "Twisted Jute Net Cord",
   "container.riverweir.weir": "River Fishing Net",
   "tooltip.riverweir.dimensions": "Panel: 4 blocks wide × 3 blocks deep",
-  "tooltip.riverweir.capacity": "Stack: %s rolls | up to %s blocks wide at depth 3",
+  "tooltip.riverweir.capacity": "Stack: %s rolls | width up to %s at depth %s",
   "tooltip.riverweir.depth_rule": "Additional rolls can extend the net vertically.",
   "message.riverweir.first": "First stake selected. Total net rolls: %s. Right-click the second stake.",
   "message.riverweir.cancel": "Stake selection cleared.",
@@ -28,5 +28,7 @@
   "message.riverweir.clean_already": "The fishing net is already clean.",
   "gui.riverweir.header": "River Net",
   "gui.riverweir.condition_short": "Strength: %s%%",
-  "itemGroup.riverweir": "River Weir Fishing"
+  "itemGroup.riverweir": "River Weir Fishing",
+  "tooltip.riverweir.area": "Total material area: %s blocks²",
+  "message.riverweir.repair_blocked": "Repair requires all net sections loaded and unobstructed."
 }

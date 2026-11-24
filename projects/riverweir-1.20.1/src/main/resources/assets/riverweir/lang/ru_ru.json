@@ -5,7 +5,7 @@
   "item.riverweir.net_twine": "Переплетённая джутовая нить",
   "container.riverweir.weir": "Речная рыболовная сеть",
   "tooltip.riverweir.dimensions": "Полотно: 4 блока в ширину × 3 в глубину",
-  "tooltip.riverweir.capacity": "В стопке: %s рул. | до %s блоков ширины при глубине 3",
+  "tooltip.riverweir.capacity": "В стопке: %s рул. | ширина до %s при глубине %s",
   "tooltip.riverweir.depth_rule": "Дополнительные рулоны позволяют увеличить глубину.",
   "message.riverweir.first": "Первый колышек выбран. Рулонов в инвентаре: %s. Нажми ПКМ по второму.",
   "message.riverweir.cancel": "Выбор колышков сброшен.",
@@ -28,5 +28,7 @@
   "message.riverweir.clean_already": "Сеть уже чистая.",
   "gui.riverweir.header": "Речная сеть",
   "gui.riverweir.condition_short": "Прочн.: %s%%",
-  "itemGroup.riverweir": "Речные рыболовные сети"
+  "itemGroup.riverweir": "Речные рыболовные сети",
+  "tooltip.riverweir.area": "Суммарная площадь материала: %s блоков²",
+  "message.riverweir.repair_blocked": "Для ремонта освободите повреждённые участки и загрузите всю сеть."
 }

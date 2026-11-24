@@ -220,13 +220,14 @@ public final class WeirLogic {
     }
     public static void tear(ServerLevel level,BlockPos post){
         WeirPostBlockEntity be=master(level,post);
-        if(be!=null)damage(level,be,MAX_WEAR);
+        if(be!=null)damage(level,be,be.getTier().endurance);
     }
     public static void damage(ServerLevel level,WeirPostBlockEntity be,int amount){
         int original=be.wear;
         be.wear=Math.min(be.getTier().endurance,be.wear+amount);
         be.setChanged();
         if(stage(original,be.getTier())!=stage(be.wear,be.getTier()))updateNet(level,be,false);
+        if(be.wear>=be.getTier().endurance)WeirCapture.release(level,be);
     }
     private static int stage(int wear,WeirTier tier){return wear>=tier.endurance?2:wear*100>=tier.endurance*55?1:0;}
     public static void repair(ServerLevel level,BlockPos post,Player player,InteractionHand hand){
@@ -236,6 +237,14 @@ public final class WeirLogic {
         WeirTier kind=be.getTier();
         boolean compatible=isJuteNet(material);
         if(!compatible)return;
+        Direction dir=direction(be.getBlockPos(),be.other);
+        if(dir==null)return;
+        for(int col=0;col<span(be.getBlockPos(),be.other);col++)for(int d=0;d<be.depthAt(col);d++){
+            BlockPos p=at(be.getBlockPos(),dir,col+1,be.netY-d);
+            if(!level.hasChunkAt(p)||(!level.getBlockState(p).is(RiverWeirMod.NET.get())&&!isFreeWater(level,p))){
+                say(player,"message.riverweir.repair_blocked");return;
+            }
+        }
         if(!player.getAbilities().instabuild)material.shrink(1);
         be.wear=Math.max(0,be.wear-Math.max(40,kind.endurance/3));
         be.setChanged();
@@ -274,6 +283,7 @@ public final class WeirLogic {
         Direction dir=direction(source,opposite);
         if(dir==null)return;
         int count=span(source,opposite),waterY=origin.netY;
+        WeirCapture.release(level,origin);
         int salvage=WeirMath.salvageRolls(origin.rollsUsed,(100*origin.wear)/origin.getTier().endurance);
         int[] savedDepths=new int[count];
         for(int i=0;i<count;i++)savedDepths[i]=origin.depthAt(i);
@@ -328,7 +338,7 @@ public final class WeirLogic {
     // TFC fish loot tables all require killed_by_player. A passive weir never counts as a
     // player kill, so querying those tables returns zero items. Resolve fresh TFC fish food
     // by its registered species ID instead; do not fake player kills or duplicate a drop.
-    private static ItemStack catchItem(AbstractFish fish){
+    static ItemStack catchItem(AbstractFish fish){
         ResourceLocation id=BuiltInRegistries.ENTITY_TYPE.getKey(fish.getType());
         if(id==null)return ItemStack.EMPTY;
         if(id.getNamespace().equals("minecraft")){
@@ -356,52 +366,6 @@ public final class WeirLogic {
         return ItemStack.EMPTY;
     }
     public static void catchNearbyFish(ServerLevel level,WeirPostBlockEntity be){
-        if(be.other==null||be.wear>=be.getTier().endurance||be.clog>=90)return;
-        if(level.getGameTime()-be.lastCatch<be.getTier().cooldownTicks)return;
-        BlockPos first=be.getBlockPos(),second=be.other;
-        Direction dir=direction(first,second);
-        if(dir==null)return;
-        int count=span(first,second);
-        int dmax=be.maxDepth();
-        AABB search=new AABB(
-            Math.min(first.getX(),second.getX())-1.5,be.netY-dmax-0.7,
-            Math.min(first.getZ(),second.getZ())-1.5,
-            Math.max(first.getX(),second.getX())+2.5,be.netY+1.7,
-            Math.max(first.getZ(),second.getZ())+2.5);
-        List<AbstractFish> fish=level.getEntitiesOfClass(AbstractFish.class,search,f->f.isAlive()&&f.isInWater());
-        for(AbstractFish candidate:fish){
-            double plane=dir.getAxis()==Direction.Axis.X?first.getZ()+.5:first.getX()+.5;
-            double delta=Math.abs((dir.getAxis()==Direction.Axis.X?candidate.getZ():candidate.getX())-plane);
-            if(delta>1.55)continue;
-            int atIndex=(dir.getAxis()==Direction.Axis.X?
-                Math.abs(candidate.blockPosition().getX()-first.getX()):
-                Math.abs(candidate.blockPosition().getZ()-first.getZ()))-1;
-            if(atIndex<0||atIndex>=count)continue;
-            int localY=be.netY-candidate.blockPosition().getY();
-            if(localY<0||localY>=be.depthAt(atIndex))continue;
-            BlockPos mesh=at(first,dir,atIndex+1,be.netY-localY);
-            if(!level.hasChunkAt(mesh)||!level.getBlockState(mesh).is(RiverWeirMod.NET.get()))continue;
-
-            if(level.random.nextFloat()>=Math.min(0.95f,be.getTier().catchChance*(be.baitCharges>0?1.8f:1.0f)*(1.0f-be.clog/140.0f)))continue;
-            ItemStack caught=catchItem(candidate);
-            if(caught.isEmpty())continue;
-            ItemStackHandler trial=new ItemStackHandler(be.getTier().storage);
-            for(int i=0;i<trial.getSlots();i++)
-                trial.setStackInSlot(i,be.items.getStackInSlot(i).copy());
-            ItemStack remaining=caught.copy();
-            for(int i=0;i<trial.getSlots()&&!remaining.isEmpty();i++)
-                remaining=trial.insertItem(i,remaining,false);
-            if(!remaining.isEmpty())return; // Inventory full: fish stays alive.
-            for(int i=0;i<trial.getSlots();i++)
-                be.items.setStackInSlot(i,trial.getStackInSlot(i).copy());
-            candidate.discard();
-            be.markCatch(mesh);
-            be.lastCatch=level.getGameTime();
-            be.clog=Math.min(100,be.clog+be.getTier().clogPerCatch);
-            if(be.baitCharges>0)be.baitCharges--;
-            be.setChanged();
-            damage(level,be,be.getTier().catchWear+(level.random.nextInt(3)==0?1:0));
-            return; // At most one fish per scan interval.
-        }
+        WeirCapture.tryContact(level,be);
     }
 }
