@@ -19,7 +19,7 @@ public final class ChargeHud {
     public static void draw(GuiGraphicsExtractor g) {
         Minecraft mc=Minecraft.getInstance();
         if(mc.player==null || mc.level==null || !mc.player.isAlive() ||
-                mc.player.isSpectator() || mc.screen!=null) return;
+                mc.player.isSpectator()) return;
         ItemStack main=mc.player.getMainHandItem(), off=mc.player.getOffhandItem();
         int a=heldCharge(main), b=heldCharge(off);
         ItemStack shield=a>=b?main:off;

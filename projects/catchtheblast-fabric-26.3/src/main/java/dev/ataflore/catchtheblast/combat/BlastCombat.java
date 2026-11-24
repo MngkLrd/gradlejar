@@ -85,7 +85,7 @@ public final class BlastCombat {
         player.hurtServer(level, player.damageSources().magic(), 5.0f);
         if (held) stack.hurtAndBreak(16, player, player.getMainHandItem() == stack ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         else stack.setDamageValue(Math.min(stack.getMaxDamage()-1, stack.getDamageValue()+16));
-        player.getCooldowns().addCooldown(stack.getItem(), 60);
+        player.getCooldowns().addCooldown(stack, 60);
         level.sendParticles(ParticleTypes.EXPLOSION, player.getX(), player.getY()+1, player.getZ(), 1, 0,0,0,0);
         level.playSound(null, player.blockPosition(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.1f, 0.65f);
     }
