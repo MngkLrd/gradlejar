@@ -28,7 +28,12 @@ public final class StudioScreen extends Screen {
     private final ArrayList<StudioUi.Hit> hits=new ArrayList<>();
     private ImageDocument doc;
     private BufferedImage rendered;
-    private StudioTexture texture;
+    private StudioTexture texture,comparisonTexture;
+    private boolean compareMode;
+    private int panel,selected=-1,layerScroll,toolScroll,adjustScroll;
+    private final int[] grade=new int[6];
+    private static final String[] GRADE_NAMES={"Brightness","Contrast","Saturation","Warmth","Gamma","Vignette"};
+    private boolean movingLayer;private int moveX,moveY;
     private EditBox text;
     private String draft="Look here",status="Opening original...";
     private Tool tool=Tool.ARROW;
@@ -51,8 +56,8 @@ public final class StudioScreen extends Screen {
         if(doc==null&&!busy)load();
     }
     private void layout(){
-        toolW=width>=440?72:60;
-        sideW=width>=560?142:width>=420?116:96;
+        toolW=width>=440?70:52;
+        sideW=width>=560?150:width>=420?128:104;
         sideX=width-sideW;
         cx=toolW+5;cy=47;cw=Math.max(1,sideX-cx-5);ch=Math.max(1,height-cy-23);
         imageBounds();
@@ -81,6 +86,7 @@ public final class StudioScreen extends Screen {
     private record Result(BufferedImage full,BufferedImage preview){}
     private void renderDoc(boolean resetView){
         if(doc==null)return;
+        compareMode=false;
         busy=true;status="Rendering...";long token=++epoch;
         ImageDocument current=doc;var ops=current.snapshot();
         CompletableFuture.supplyAsync(()->{
@@ -93,6 +99,8 @@ public final class StudioScreen extends Screen {
             try{
                 StudioTexture next=new StudioTexture(result.preview());
                 if(texture!=null)texture.close();
+                if(comparisonTexture!=null){comparisonTexture.close();comparisonTexture=null;}
+                selected=Math.min(selected,doc.count()-1);
                 texture=next;rendered=result.full();
                 if(resetView){zoom=1;panX=panY=0;}
                 imageBounds();
@@ -102,9 +110,10 @@ public final class StudioScreen extends Screen {
     }
     private static String message(Throwable e){Throwable t=e.getCause()==null?e:e.getCause();return t.getMessage()==null?t.getClass().getSimpleName():t.getMessage();}
     private void apply(ImageDocument.Operation operation,boolean resetView){
+        if(compareMode)return;
         if(doc==null||busy)return;
         if(!doc.add(operation)){status="100 edit limit reached. Export this image to continue.";return;}
-        renderDoc(resetView);
+        selected=doc.count()-1;renderDoc(resetView);
     }
     private void undo(){if(doc!=null&&!busy&&doc.canUndo()){doc.undo();renderDoc(false);}}
     private void redo(){if(doc!=null&&!busy&&doc.canRedo()){doc.redo();renderDoc(false);}}
@@ -126,9 +135,9 @@ public final class StudioScreen extends Screen {
         StudioUi.button(g,font,name,x,y,w,h,mx,my,selected);hits.add(new StudioUi.Hit(x,y,w,h,fn));
     }
     private void toolbar(GuiGraphics g,int mx,int my){
-        String[] names={"Library","Undo","Redo","Reset","Fit","Copy","PNG","JPG","1080"};
-        Runnable[] actions={()->Minecraft.getInstance().setScreen(new LibraryScreen()),this::undo,this::redo,this::reset,()->{zoom=1;panX=panY=0;imageBounds();},()->output(true,false,0),()->output(false,false,0),()->output(false,true,0),()->output(false,false,1920)};
-        int w=Math.max(22,(width-12)/names.length);
+        String[] names={"Library","Undo","Redo","Reset","Fit","Copy","PNG","JPG","Compare","1080"};
+        Runnable[] actions={()->Minecraft.getInstance().setScreen(new LibraryScreen()),this::undo,this::redo,this::reset,()->{zoom=1;panX=panY=0;imageBounds();},()->output(true,false,0),()->output(false,false,0),()->output(false,true,0),this::compare,()->output(false,false,1920)};
+        int w=Math.max(12,(width-12)/names.length);
         for(int i=0;i<names.length;i++)action(g,names[i],6+i*w,25,w-3,17,mx,my,false,actions[i]);
     }
     @Override public void render(GuiGraphics g,int mx,int my,float dt){
@@ -141,57 +150,141 @@ public final class StudioScreen extends Screen {
         StudioUi.box(g,0,46,toolW,height-68,StudioUi.PANEL);
         StudioUi.box(g,sideX,46,sideW,height-68,StudioUi.PANEL);
         StudioUi.box(g,cx,cy,cw,ch,0xff090c10);
-        int row=Math.max(9,Math.min(19,(height-72)/TOOLS.length));
-        for(int i=0;i<TOOLS.length;i++){
-            Tool chosen=TOOLS[i];action(g,TOOL_LABELS[i],4,49+i*row,toolW-8,Math.max(8,row-2),mx,my,tool==chosen,()->{tool=chosen;dragging=false;});
+        int row=16,visibleTools=Math.max(1,(height-75)/row);
+        toolScroll=Math.max(0,Math.min(toolScroll,TOOLS.length-visibleTools));
+        for(int i=toolScroll;i<Math.min(TOOLS.length,toolScroll+visibleTools);i++){
+            Tool chosen=TOOLS[i];action(g,TOOL_LABELS[i],4,49+(i-toolScroll)*row,toolW-8,14,mx,my,tool==chosen,()->{tool=chosen;dragging=false;});
         }
         if(texture!=null){
             g.enableScissor(cx,cy,cx+cw,cy+ch);
-            texture.draw(g,ix,iy,iw,ih);
-            if(dragging)selection(g);
+            if(compareMode&&comparisonTexture!=null){
+                double k=Math.min(cw/(double)comparisonTexture.width,ch/(double)comparisonTexture.height);
+                int ww=Math.max(1,(int)(comparisonTexture.width*k)),hh=Math.max(1,(int)(comparisonTexture.height*k));
+                comparisonTexture.draw(g,cx+(cw-ww)/2,cy+(ch-hh)/2,ww,hh);
+            }else{
+                texture.draw(g,ix,iy,iw,ih);
+                if(dragging)selection(g);
+                if(panel==1&&movingLayer) {
+                    StudioUi.label(g,font,"Moving layer "+(selected+1),cx+6,cy+6,cw-12,StudioUi.ACCENT);
+                }
+            }
             g.disableScissor();
         }else g.drawCenteredString(font,busy?"Loading...":"No image",cx+cw/2,cy+ch/2,StudioUi.MUTED);
         int sx=sideX+6,sw=sideW-12;
-        g.drawString(font,filterPanel?"ADJUSTMENTS":"PROPERTIES",sx,53,StudioUi.ACCENT,false);
-        action(g,filterPanel?"Tools":"Filters",sx,66,sw,15,mx,my,filterPanel,()->filterPanel=!filterPanel);
-        if(filterPanel){
-            Filter[] fs=Filter.values();
-            int rh=Math.max(11,Math.min(19,(height-110)/fs.length));
-            for(int i=0;i<fs.length;i++){
-                Filter f=fs[i];String n=f.name().substring(0,1)+f.name().substring(1).toLowerCase(java.util.Locale.ROOT);
-                action(g,n,sx,85+i*rh,sw,rh-2,mx,my,false,()->apply(ImageDocument.filter(f),f==Filter.ROTATE));
-            }
-        }else{
-            int cell=Math.max(8,(sw-2)/6);
-            for(int i=0;i<COLORS.length;i++){
-                int chosen=COLORS[i],x=sx+i*cell;
-                StudioUi.box(g,x,89,cell-2,15,color==chosen?StudioUi.ACCENT:StudioUi.EDGE);
-                StudioUi.box(g,x+1,90,cell-4,13,chosen);
-                hits.add(new StudioUi.Hit(x,89,cell-2,15,()->color=chosen));
-            }
-            g.drawString(font,"Size: "+thickness+" px",sx,110,StudioUi.TEXT,false);
-            action(g,"-",sx,122,23,16,mx,my,false,()->thickness=Math.max(1,thickness-2));
-            action(g,"+",sx+26,122,23,16,mx,my,false,()->thickness=Math.min(80,thickness+2));
-            if(height>=220){
-                g.drawString(font,"Text / marker",sx,140,StudioUi.MUTED,false);
-                g.drawString(font,"Censor: "+strength,sx,177,StudioUi.TEXT,false);
-                action(g,"-",sx,188,23,16,mx,my,false,()->strength=Math.max(3,strength-3));
-                action(g,"+",sx+26,188,23,16,mx,my,false,()->strength=Math.min(96,strength+3));
-            }
-            if(doc!=null&&height>=265){
-                g.drawString(font,"HISTORY",sx,213,StudioUi.ACCENT,false);
-                List<String> labels=doc.labels();
-                int slots=Math.max(0,(height-250)/13);
-                for(int i=Math.max(0,labels.size()-slots),r=0;i<labels.size();i++,r++)
-                    StudioUi.label(g,font,(i+1)+". "+labels.get(i),sx,226+r*13,sw,StudioUi.MUTED);
-            }
-        }
-        text.visible=!filterPanel&&height>=220;
+        String[] tabs={"Tools","Layers","Color"};
+        int tabWidth=sw/3;
+        for(int i=0;i<3;i++){int chosen=i;action(g,tabs[i],sx+i*tabWidth,50,tabWidth-2,15,mx,my,panel==i,()->{panel=chosen;dragging=false;text.setFocused(false);});}
+        if(panel==0)drawTools(g,mx,my,sx,sw);
+        else if(panel==1)drawLayers(g,mx,my,sx,sw);
+        else drawGrade(g,mx,my,sx,sw);
+        text.visible=panel==0&&height>=184&&!compareMode;
         StudioUi.box(g,0,height-21,width,21,StudioUi.PANEL);
         String info=rendered==null?"":rendered.getWidth()+" x "+rendered.getHeight()+"  |  "+Math.round(scale*100)+"%";
         StudioUi.label(g,font,status,7,height-15,Math.max(40,width-font.width(info)-22),StudioUi.MUTED);
         g.drawString(font,info,width-font.width(info)-7,height-15,StudioUi.ACCENT,false);
         super.render(g,mx,my,dt);
+    }
+    private void drawTools(GuiGraphics g,int mx,int my,int sx,int sw){
+        int cell=Math.max(8,(sw-2)/6);
+        g.drawString(font,"COLOR",sx,73,StudioUi.MUTED,false);
+        for(int i=0;i<COLORS.length;i++){
+            int chosen=COLORS[i],x=sx+i*cell;
+            StudioUi.box(g,x,85,cell-2,15,color==chosen?StudioUi.ACCENT:StudioUi.EDGE);
+            StudioUi.box(g,x+1,86,cell-4,13,chosen);
+            hits.add(new StudioUi.Hit(x,85,cell-2,15,()->color=chosen));
+        }
+        g.drawString(font,"Size: "+thickness+" px",sx,107,StudioUi.TEXT,false);
+        action(g,"-",sx,119,23,15,mx,my,false,()->thickness=Math.max(1,thickness-2));
+        action(g,"+",sx+26,119,23,15,mx,my,false,()->thickness=Math.min(80,thickness+2));
+        if(height>=184)g.drawString(font,"Text",sx,140,StudioUi.MUTED,false);
+        if(height>=224){
+            g.drawString(font,"Censor: "+strength,sx,176,StudioUi.TEXT,false);
+            action(g,"-",sx,188,23,15,mx,my,false,()->strength=Math.max(3,strength-3));
+            action(g,"+",sx+26,188,23,15,mx,my,false,()->strength=Math.min(96,strength+3));
+        }
+        if(height>=250){
+            action(g,"Rotate",sx,210,sw/2-2,16,mx,my,false,()->apply(ImageDocument.filter(Filter.ROTATE),true));
+            action(g,"Flip",sx+sw/2,210,sw/2-2,16,mx,my,false,()->apply(ImageDocument.filter(Filter.FLIP),true));
+        }
+    }
+    private void changed(boolean success){if(success){selected=Math.min(selected,doc.count()-1);renderDoc(false);}else status="Layer cannot be changed across crop / rotate";}
+    private void drawLayers(GuiGraphics g,int mx,int my,int sx,int sw){
+        if(doc==null)return;
+        var ops=doc.snapshot();
+        g.drawString(font,"LAYERS  "+ops.size(),sx,73,StudioUi.ACCENT,false);
+        int slots=Math.max(1,(height-155)/15);
+        layerScroll=Math.max(0,Math.min(layerScroll,Math.max(0,ops.size()-slots)));
+        for(int r=0;r<Math.min(slots,ops.size()-layerScroll);r++){
+            int i=ops.size()-1-r-layerScroll,y=86+r*15;var op=ops.get(i);
+            action(g,(ImageDocument.geometry(op)?"# ":ImageDocument.visible(op)?"+ ":"- ")+op.label(),sx,y,sw,13,mx,my,i==selected,()->{
+                selected=i;
+                if(ImageDocument.unwrap(op) instanceof ImageDocument.MarkOperation mark){
+                    var m=mark.value();color=m.color();thickness=m.thickness();strength=m.strength();draft=m.text();text.setValue(draft);
+                }else if(ImageDocument.unwrap(op) instanceof ImageDocument.Adjustment gr){
+                    grade[0]=gr.brightness();grade[1]=gr.contrast();grade[2]=gr.saturation();grade[3]=gr.warmth();grade[4]=gr.gamma();grade[5]=gr.vignette();
+                }
+            });
+        }
+        int y=height-66,w=sw/3;
+        action(g,"Show",sx,y,w-2,15,mx,my,false,()->{if(!busy&&!compareMode)changed(doc.toggle(selected));});
+        action(g,"Up",sx+w,y,w-2,15,mx,my,false,()->{if(!busy&&!compareMode){boolean ok=doc.move(selected,1);if(ok)selected++;changed(ok);}});
+        action(g,"Down",sx+2*w,y,w-2,15,mx,my,false,()->{if(!busy&&!compareMode){boolean ok=doc.move(selected,-1);if(ok)selected--;changed(ok);}});
+        action(g,"Delete",sx,y+17,sw/2-2,15,mx,my,false,()->{if(!busy&&!compareMode)changed(doc.delete(selected));});
+        action(g,"Apply style",sx+sw/2,y+17,sw/2-2,15,mx,my,false,this::applyStyle);
+    }
+    private void applyStyle(){
+        if(doc==null||busy||compareMode||selected<0||selected>=doc.count())return;
+        var op=ImageDocument.unwrap(doc.snapshot().get(selected));
+        if(op instanceof ImageDocument.MarkOperation mark){
+            var m=mark.value();
+            changed(doc.replace(selected,ImageDocument.mark(new ImageDocument.Mark(m.tool(),m.x1(),m.y1(),m.x2(),m.y2(),color,thickness,strength,draft,m.points()))));
+        }else if(op instanceof ImageDocument.Adjustment)changed(doc.replace(selected,currentGrade()));
+        else status="Select an annotation or color layer";
+    }
+    private ImageDocument.Adjustment currentGrade(){return new ImageDocument.Adjustment(grade[0],grade[1],grade[2],grade[3],grade[4],grade[5]);}
+    private void drawGrade(GuiGraphics g,int mx,int my,int sx,int sw){
+        int slots=Math.max(1,Math.min(6,(height-146)/28));
+        adjustScroll=Math.max(0,Math.min(adjustScroll,6-slots));
+        for(int r=0;r<slots;r++){
+            int i=r+adjustScroll,y=73+r*28;
+            StudioUi.label(g,font,GRADE_NAMES[i]+" "+grade[i],sx,y,sw,StudioUi.TEXT);
+            int min=i==5?0:-100,bar=sw-4;
+            StudioUi.box(g,sx,y+13,bar,7,StudioUi.EDGE);
+            int handle=(int)((grade[i]-min)/(double)(100-min)*Math.max(1,bar-5));
+            StudioUi.box(g,sx+handle,y+11,5,11,StudioUi.ACCENT);
+            final int val=Math.max(min,Math.min(100,min+(int)((mx-sx)/(double)Math.max(1,bar-1)*(100-min))));
+            hits.add(new StudioUi.Hit(sx,y+8,bar,16,()->grade[i]=val));
+        }
+        int y=height-66,w=sw/3;
+        action(g,"Film",sx,y,w-2,15,mx,my,false,()->preset(4,22,12,18,0,25));
+        action(g,"B&W",sx+w,y,w-2,15,mx,my,false,()->preset(0,18,-100,0,0,15));
+        action(g,"Night",sx+w*2,y,w-2,15,mx,my,false,()->preset(15,10,12,-16,25,10));
+        action(g,"Add grade",sx,y+17,sw/2-2,15,mx,my,false,()->apply(currentGrade(),false));
+        action(g,"Zero",sx+sw/2,y+17,sw/2-2,15,mx,my,false,()->java.util.Arrays.fill(grade,0));
+    }
+    private void preset(int... v){System.arraycopy(v,0,grade,0,6);}
+    private void compare(){
+        if(busy||rendered==null||doc==null)return;
+        if(compareMode){compareMode=false;return;}
+        if(comparisonTexture!=null){compareMode=true;return;}
+        busy=true;long token=++epoch;var current=doc;var image=rendered;
+        CompletableFuture.supplyAsync(()->ImageDocument.resize(current.compare(image),2048),ShotFiles.IO)
+                .whenComplete((result,error)->Minecraft.getInstance().execute(()->{
+                    if(!alive||token!=epoch)return;busy=false;
+                    if(error!=null){status="Comparison failed";return;}
+                    try{comparisonTexture=new StudioTexture(result);compareMode=true;status="Before / after. PNG exports edited image; Ctrl+Shift+S exports comparison.";}
+                    catch(Exception e){status="Comparison unavailable";}
+                }));
+    }
+    private void exportCompare(){
+        if(busy||doc==null||rendered==null)return;
+        busy=true;long token=++epoch;var current=doc;var image=rendered;
+        CompletableFuture.supplyAsync(()->{
+            try{return ShotFiles.export(StudioClient.directory(),shot,current.compare(image),false,0);}
+            catch(Exception e){throw new RuntimeException(e);}
+        },ShotFiles.IO).whenComplete((result,error)->Minecraft.getInstance().execute(()->{
+            if(!alive||token!=epoch)return;busy=false;status=error==null?"Comparison saved: "+result.getFileName():"Comparison export failed";
+        }));
     }
     private void selection(GuiGraphics g){
         int x1=ix+(int)Math.round(ax*scale),y1=iy+(int)Math.round(ay*scale);
@@ -216,7 +309,7 @@ public final class StudioScreen extends Screen {
     private int px(double x){return Math.max(0,Math.min(rendered.getWidth()-1,(int)((x-ix)/scale)));}
     private int py(double y){return Math.max(0,Math.min(rendered.getHeight()-1,(int)((y-iy)/scale)));}
     private void commitMark(){
-        if(doc==null||busy)return;
+        if(doc==null||busy||compareMode)return;
         if(tool==Tool.COPY_REGION){
             int x=Math.min(ax,bx),y=Math.min(ay,by),w=Math.abs(ax-bx)+1,h=Math.abs(ay-by)+1;
             BufferedImage source=rendered;busy=true;long token=++epoch;
@@ -233,6 +326,12 @@ public final class StudioScreen extends Screen {
         if(button==0){
             for(StudioUi.Hit hit:List.copyOf(hits))if(hit.contains(x,y)){hit.action().run();return true;}
         }
+        if(compareMode&&canvas(x,y))return true;
+        if(panel==1&&button==0&&image(x,y)&&!busy&&selected>=0&&selected<doc.count()){
+            if(ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ImageDocument.MarkOperation&&!ImageDocument.geometry(doc.snapshot().get(selected))){
+                movingLayer=true;moveX=px(x);moveY=py(y);return true;
+            }
+        }
         if(canvas(x,y)&&rendered!=null&&(button==2||(button==0&&tool==Tool.PAN))){panning=true;return true;}
         if(button==0&&image(x,y)&&!busy){
             text.setFocused(false);setFocused(null);
@@ -243,31 +342,37 @@ public final class StudioScreen extends Screen {
         return super.mouseClicked(x,y,button);
     }
     @Override public boolean mouseDragged(double x,double y,int button,double dx,double dy){
+        if(movingLayer)return true;
         if(panning){panX+=dx;panY+=dy;imageBounds();return true;}
         if(dragging&&button==0){bx=px(x);by=py(y);if(tool==Tool.PEN&&points.size()<4096)points.add(new Point(bx,by));return true;}
         return super.mouseDragged(x,y,button,dx,dy);
     }
     @Override public boolean mouseReleased(double x,double y,int button){
+        if(movingLayer){movingLayer=false;if(!busy&&doc!=null)changed(doc.translate(selected,px(x)-moveX,py(y)-moveY));return true;}
         if(panning){panning=false;return true;}
         if(dragging&&button==0){bx=px(x);by=py(y);dragging=false;commitMark();return true;}
         return super.mouseReleased(x,y,button);
     }
     @Override public boolean mouseScrolled(double x,double y,double horizontal,double vertical){
+        if(x<toolW&&y>=47){toolScroll=Math.max(0,toolScroll-(int)Math.signum(vertical));return true;}
+        if(x>=sideX&&y>=65){if(panel==1)layerScroll=Math.max(0,layerScroll-(int)Math.signum(vertical));else if(panel==2)adjustScroll=Math.max(0,adjustScroll-(int)Math.signum(vertical));return true;}
+        if(compareMode)return true;
         if(!canvas(x,y)||rendered==null)return super.mouseScrolled(x,y,horizontal,vertical);
         double fx=(x-ix)/scale,fy=(y-iy)/scale;
         zoom=Math.max(.2,Math.min(12,zoom*Math.pow(1.18,vertical)));
         imageBounds();panX+=x-(ix+fx*scale);panY+=y-(iy+fy*scale);imageBounds();return true;
     }
     @Override public boolean keyPressed(int key,int scancode,int mods){
+        if(text.isFocused()&&key!=GLFW.GLFW_KEY_ESCAPE)return super.keyPressed(key,scancode,mods);
         if(hasControlDown()){
             if(key==GLFW.GLFW_KEY_Z){if(hasShiftDown())redo();else undo();return true;}
             if(key==GLFW.GLFW_KEY_Y){redo();return true;}
-            if(key==GLFW.GLFW_KEY_S){output(false,false,0);return true;}
+            if(key==GLFW.GLFW_KEY_S){if(hasShiftDown())exportCompare();else output(false,false,0);return true;}
             if(key==GLFW.GLFW_KEY_C&&!text.isFocused()){output(true,false,0);return true;}
         }
         return super.keyPressed(key,scancode,mods);
     }
     @Override public boolean isPauseScreen(){return false;}
     @Override public void onClose(){Minecraft.getInstance().setScreen(parent);}
-    @Override public void removed(){alive=false;epoch++;busy=false;dragging=panning=false;if(texture!=null){texture.close();texture=null;}doc=null;rendered=null;}
+    @Override public void removed(){alive=false;epoch++;busy=false;dragging=panning=false;if(texture!=null){texture.close();texture=null;}if(comparisonTexture!=null){comparisonTexture.close();comparisonTexture=null;}doc=null;rendered=null;compareMode=false;movingLayer=false;}
 }
