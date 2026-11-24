@@ -19,7 +19,9 @@ public final class ImageDocument {
     private int cursor=0;
     public ImageDocument(BufferedImage image) { original=copy(image);revisions.add(List.of()); }
     public BufferedImage originalPreview(int max){return resize(copy(original),max);}
-    public record Layer(Operation operation,boolean visible) implements Operation {
+    public record Layer(Operation operation,boolean visible,int opacity,WorkspacePhoto.Blend blend) implements Operation {
+        public Layer(Operation op,boolean visible){this(op,visible,100,WorkspacePhoto.Blend.NORMAL);}
+        public Layer{opacity=Math.max(0,Math.min(100,opacity));java.util.Objects.requireNonNull(blend);}
         public String label(){return operation.label();}
         public BufferedImage apply(BufferedImage img){return visible?operation.apply(img):img;}
     }
@@ -36,11 +38,13 @@ public final class ImageDocument {
         public BufferedImage apply(BufferedImage img){return grade(img,this);}
     }
     public static Operation unwrap(Operation op){return op instanceof Layer layer?layer.operation():op;}
+    public static int opacity(Operation op){return op instanceof Layer l?l.opacity():100;}
+    public static WorkspacePhoto.Blend blend(Operation op){return op instanceof Layer l?l.blend():WorkspacePhoto.Blend.NORMAL;}
     public static boolean visible(Operation op){return !(op instanceof Layer layer)||layer.visible();}
     // Geometry operations are fixed in the pipeline: moving/removing them would invalidate later coordinates.
     public static boolean geometry(Operation op){
         op=unwrap(op);
-        return op instanceof AdvancedPhoto.Canvas || op instanceof MarkOperation m&&m.value().tool()==Tool.CROP
+        return op instanceof WorkspacePhoto.Perspective || op instanceof AdvancedPhoto.Canvas || op instanceof MarkOperation m&&m.value().tool()==Tool.CROP
             ||op instanceof FilterOperation f&&(f.value()==Filter.ROTATE||f.value()==Filter.FLIP);
     }
     private boolean valid(int index){return index>=0&&index<count();}
@@ -57,7 +61,7 @@ public final class ImageDocument {
     public boolean toggle(int i){
         if(!valid(i)||geometry(snapshot().get(i)))return false;
         var next=new ArrayList<>(snapshot());Operation old=next.get(i);
-        next.set(i,new Layer(unwrap(old),!visible(old)));return commit(next);
+        next.set(i,new Layer(unwrap(old),!visible(old),opacity(old),blend(old)));return commit(next);
     }
     public boolean delete(int i){
         if(!valid(i)||geometry(snapshot().get(i)))return false;
@@ -70,10 +74,17 @@ public final class ImageDocument {
     }
     public boolean replace(int i,Operation value){
         if(!valid(i)||geometry(snapshot().get(i))||geometry(value))return false;
-        var next=new ArrayList<>(snapshot());next.set(i,new Layer(unwrap(value),visible(next.get(i))));return commit(next);
+        var next=new ArrayList<>(snapshot());var old=next.get(i);next.set(i,new Layer(unwrap(value),visible(old),opacity(old),blend(old)));return commit(next);
+    }
+    public boolean composite(int i,int opacity,WorkspacePhoto.Blend mode){
+        if(!valid(i)||geometry(snapshot().get(i)))return false;
+        var old=snapshot().get(i);
+        if(unwrap(old) instanceof MarkOperation m&&m.value().tool()==Tool.REDACT)return false;
+        var next=new ArrayList<>(snapshot());next.set(i,new Layer(unwrap(old),visible(old),opacity,mode));return commit(next);
     }
     public boolean translate(int i,int dx,int dy){
         if(!valid(i))return false;
+        if(unwrap(snapshot().get(i)) instanceof WorkspacePhoto.Text c)return replace(i,c.move(dx,dy));
         if(unwrap(snapshot().get(i)) instanceof AdvancedPhoto.Caption c)return replace(i,new AdvancedPhoto.Caption(c.text(),c.x()+dx,c.y()+dy,c.size(),c.color(),c.style(),c.angle()));
         if(unwrap(snapshot().get(i)) instanceof ProPhoto.ImageLayer im)return replace(i,im.transform(im.x()+dx,im.y()+dy,im.size(),im.rotation(),im.opacity()));
         if(!(unwrap(snapshot().get(i)) instanceof MarkOperation mark)||geometry(mark))return false;
@@ -89,7 +100,12 @@ public final class ImageDocument {
         g.drawImage(after,panelW+8+(panelW-after.getWidth())/2,30+(panelH-after.getHeight())/2,null);
         g.setColor(Color.WHITE);g.setFont(new Font("SansSerif",Font.BOLD,18));g.drawString("BEFORE",8,22);g.drawString("AFTER",panelW+16,22);g.dispose();return out;
     }
-    public BufferedImage compare(BufferedImage after){return comparison(original,after);}
+    public BufferedImage beforeGeometry(List<Operation> ops){
+        BufferedImage img=copy(original);
+        for(var op:ops)if(visible(op)&&(geometry(op)||unwrap(op) instanceof MarkOperation m&&m.value().tool()==Tool.REDACT))img=unwrap(op).apply(img);
+        return img;
+    }
+    public BufferedImage compare(BufferedImage after){return comparison(beforeGeometry(snapshot()),after);}
     public void restore(List<Operation> ops){if(ops.size()>100)throw new IllegalArgumentException("Too many layers");commit(ops);}
     public boolean canUndo(){return cursor>0;}
     public boolean canRedo(){return cursor+1<revisions.size();}
@@ -109,23 +125,22 @@ public final class ImageDocument {
             Operation op=ops.get(i);if(!visible(op))continue;
             Operation base=unwrap(op);
             if(base instanceof MarkOperation m&&m.value().tool()==Tool.ERASER)continue;
-            if(base instanceof AdvancedPhoto.Caption||base instanceof MarkOperation m&&erasable(m.value().tool())){
-                List<Mark> masks=new ArrayList<>();
-                for(int k=i+1;k<ops.size()&&!geometry(ops.get(k));k++){
-                    Operation next=unwrap(ops.get(k));
-                    if(visible(ops.get(k))&&next instanceof MarkOperation er&&er.value().tool()==Tool.ERASER)masks.add(er.value());
-                }
-                if(!masks.isEmpty()){
-                    BufferedImage overlay=new BufferedImage(img.getWidth(),img.getHeight(),BufferedImage.TYPE_INT_ARGB);
-                    base.apply(overlay);
-                    Graphics2D erase=overlay.createGraphics();
-                    try{erase.setComposite(AlphaComposite.Clear);erase.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-                        for(Mark mask:masks)stroke(erase,mask);
-                    }finally{erase.dispose();}
-                    Graphics2D composite=img.createGraphics();composite.drawImage(overlay,0,0,null);composite.dispose();continue;
-                }
-            }
-            img=op.apply(img);
+            if(geometry(op)||base instanceof MarkOperation m&&m.value().tool()==Tool.REDACT){img=base.apply(img);continue;}
+            boolean overlay=base instanceof AdvancedPhoto.Caption||base instanceof WorkspacePhoto.Text||base instanceof ProPhoto.ImageLayer||base instanceof MarkOperation m&&erasable(m.value().tool());
+            int alpha=opacity(op);var mode=blend(op);
+            if(alpha==0)continue;
+            if(overlay){
+                var layer=new BufferedImage(img.getWidth(),img.getHeight(),BufferedImage.TYPE_INT_ARGB);base.apply(layer);
+                Graphics2D erase=layer.createGraphics();
+                try{erase.setComposite(AlphaComposite.Clear);erase.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+                    for(int k=i+1;k<ops.size()&&!geometry(ops.get(k));k++){
+                        Operation next=unwrap(ops.get(k));
+                        if(visible(ops.get(k))&&next instanceof MarkOperation er&&er.value().tool()==Tool.ERASER)stroke(erase,er.value());
+                    }
+                }finally{erase.dispose();}
+                img=WorkspacePhoto.composite(img,layer,alpha,mode);
+            }else if(alpha==100&&mode==WorkspacePhoto.Blend.NORMAL){img=base.apply(img);}
+            else{img=WorkspacePhoto.composite(img,base.apply(copy(img)),alpha,mode);}
         }
         return img;
     }
