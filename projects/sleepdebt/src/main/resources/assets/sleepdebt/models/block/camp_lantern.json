@@ -5,7 +5,8 @@
     "glass": "sleepdebt:block/rest_lamp",
     "flame": "sleepdebt:block/lantern_flame",
     "copper": "sleepdebt:block/copper_machine",
-    "particle": "sleepdebt:block/copper_machine"
+    "particle": "sleepdebt:block/copper_machine",
+    "cap": "sleepdebt:block/copper_top"
   },
   "elements": [
     {
@@ -216,7 +217,7 @@
           ]
         },
         "up": {
-          "texture": "#copper",
+          "texture": "#cap",
           "uv": [
             4,
             4,

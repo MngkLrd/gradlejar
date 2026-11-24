@@ -32,6 +32,7 @@ public final class SleepDebtMod {
   ModEntities.ENTITIES.register(bus);
   ModMenus.MENUS.register(bus);
   ModItems.ITEMS.register(bus);
+  dev.minemods.sleepdebt.registry.ModEffects.EFFECTS.register(bus);
   ModCreativeTabs.TABS.register(bus);
   bus.addListener(SleepDebtMod::attributes);
   bus.addListener(SleepNetworking::register);

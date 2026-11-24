@@ -8,7 +8,7 @@
   "item.sleepdebt.warm_milk": "Тёплое молоко",
   "item.sleepdebt.pillow": "Подушка",
   "item.sleepdebt.sleep_mask": "Маска для сна",
-  "item.sleepdebt.coffee.tooltip": "Временно скрывает симптомы. Долг сна остаётся.",
+  "item.sleepdebt.coffee.tooltip": "Временно снижает ощущаемую сонливость. Долг сна сохраняется.",
   "item.sleepdebt.strong_coffee.tooltip": "Сильное действие. Быстрее накапливает перегрузку.",
   "item.sleepdebt.long_coffee.tooltip": "Действует дольше, но всё равно вызывает привыкание.",
   "item.sleepdebt.energy_drink.tooltip": "Мощная стимуляция и повышенный риск отката.",
@@ -140,5 +140,8 @@
   "journal.sleepdebt.duration": "Действие: %sс | Откат: %sс",
   "journal.sleepdebt.potency": "Подавление штрафов: %s%%",
   "journal.sleepdebt.sleep_history": "История качества сна",
-  "journal.sleepdebt.nights": "%s сеансов сна"
+  "journal.sleepdebt.nights": "%s сеансов сна",
+  "effect.sleepdebt.alertness": "Бодрость",
+  "effect.sleepdebt.caffeine_crash": "Кофеиновый спад",
+  "effect.sleepdebt.calm": "Спокойствие"
 }

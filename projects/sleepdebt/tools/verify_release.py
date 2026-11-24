@@ -54,6 +54,8 @@ with zipfile.ZipFile(jar) as z:
         js(f"assets/sleepdebt/models/block/coffee_bush_stage_{n}.json")
     for img in ("sleep_journal.png","sleep_hud.png","sleep_hint.png","sleep_meters.png","journal_frame.png","coffee_maker.png"):
         data("assets/sleepdebt/textures/gui/"+img)
+    for effect in ("alertness","caffeine_crash","calm"):
+        data(f"assets/sleepdebt/textures/mob_effect/{effect}.png")
     for name in names:
         if (name.startswith("assets/sleepdebt/") or name.startswith("data/sleepdebt/")) and name.endswith(".json"):
             js(name)
@@ -68,7 +70,8 @@ with zipfile.ZipFile(jar) as z:
                 (228,188) if "textures/gui/sleep_journal.png" in n else
                 (158,68) if "textures/gui/sleep_hud.png" in n else
                 (158,15) if "textures/gui/sleep_hint.png" in n else
-                (72,21) if "textures/gui/sleep_meters.png" in n else (16,16))
+                (72,21) if "textures/gui/sleep_meters.png" in n else
+                (18,18) if "/mob_effect/" in n else (16,16))
         if (width,height)!=target:raise ValueError(f"{n}: size {(width,height)} not {target}")
 
         # Parse PNG chunks rather than trusting the ZIP CRC or just the PNG header.
@@ -108,8 +111,8 @@ with zipfile.ZipFile(jar) as z:
             for side,face in piece["faces"].items():
                 if native_model and "uv" in face:
                     uv=face["uv"]
-                    x,y,z=dims
-                    expected=(x,z) if side in ("up","down") else (x,y) if side in ("north","south") else (z,y)
+                    dx,dy,dz=dims
+                    expected=(dx,dz) if side in ("up","down") else (dx,dy) if side in ("north","south") else (dz,dy)
                     actual=(abs(uv[2]-uv[0]),abs(uv[3]-uv[1]))
                     if actual!=expected:
                         raise ValueError(f"UV ratio mismatch: {model_path}/{side} {actual} != {expected}")

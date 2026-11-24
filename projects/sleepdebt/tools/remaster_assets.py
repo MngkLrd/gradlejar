@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""3.1.3: original native 16px sprite sheets. No reuse of previous art.
+"""3.1.4: original native 16px sprite sheets. No reuse of previous art.
 Material-first palettes, deliberate cluster maps, no stochastic noise or AA.
 Blockbench Minecraft Style Guide: https://blockbench.net/wiki/guides/minecraft-style-guide/
 """
@@ -15,7 +15,7 @@ def save(name,a,p):
     raw=b"".join(b"\0"+b"".join(bytes(p[c]) for c in r) for r in a)
     target=ROOT/(name+".png");target.parent.mkdir(parents=True,exist_ok=True)
     target.write_bytes(b"\x89PNG\r\n\x1a\n"+chunk(b"IHDR",struct.pack(">IIBBBBB",w,h,8,6,0,0,0))+chunk(b"IDAT",zlib.compress(raw,9))+chunk(b"IEND",b""))
-for n,t in json.loads(Path("tools/art_313.json").read_text()).items():save(n,t["rows"],pal(t["palette"]))
+for n,t in json.loads(Path("tools/art_314.json").read_text()).items():save(n,t["rows"],pal(t["palette"]))
 def canvas(w,h,c="."):return [[c]*w for _ in range(h)]
 def put(a,x,y,c):
     if 0<=y<len(a) and 0<=x<len(a[y]):a[y][x]=c
@@ -120,4 +120,4 @@ rect(c,9,65,158,1,"3")
 # Tiny vent slits/fasteners, distinct from slots.
 for x in (12,17,22,148,153,158):stamp(c,x,27,"000/888")
 save("gui/coffee_maker",c,q)
-print("3.1.3: independent pixel maps, 47 item/material/crop textures and 6 GUI assets")
+print("3.1.4: independent pixel maps, 47 item/material/crop textures and 6 GUI assets")

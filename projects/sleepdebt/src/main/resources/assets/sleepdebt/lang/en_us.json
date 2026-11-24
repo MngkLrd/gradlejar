@@ -8,7 +8,7 @@
   "item.sleepdebt.warm_milk": "Warm Milk",
   "item.sleepdebt.pillow": "Pillow",
   "item.sleepdebt.sleep_mask": "Sleep Mask",
-  "item.sleepdebt.coffee.tooltip": "Temporarily hides symptoms. Sleep debt remains.",
+  "item.sleepdebt.coffee.tooltip": "Temporarily reduces perceived Sleep pressure. Actual sleep debt remains.",
   "item.sleepdebt.strong_coffee.tooltip": "Intense stimulation. Faster overload.",
   "item.sleepdebt.long_coffee.tooltip": "Lasts longer, but still builds tolerance.",
   "item.sleepdebt.energy_drink.tooltip": "Powerful boost with a significant crash risk.",
@@ -140,5 +140,8 @@
   "journal.sleepdebt.duration": "Active: %ss | Crash: %ss",
   "journal.sleepdebt.potency": "Masking strength: %s%%",
   "journal.sleepdebt.sleep_history": "Sleep quality history",
-  "journal.sleepdebt.nights": "%s sleep sessions"
+  "journal.sleepdebt.nights": "%s sleep sessions",
+  "effect.sleepdebt.alertness": "Caffeinated",
+  "effect.sleepdebt.caffeine_crash": "Caffeine Crash",
+  "effect.sleepdebt.calm": "Calm"
 }

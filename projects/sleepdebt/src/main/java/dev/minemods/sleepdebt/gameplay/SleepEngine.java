@@ -31,8 +31,15 @@ public final class SleepEngine {
  public static int[] penalties(ServerPlayer p){return SleepEffects.percentages(p,data(p));}
  private static void sync(ServerPlayer p,CompoundTag state){
   PacketDistributor.sendToPlayer(p,new SleepStatusPayload(
-   state.getInt("debt"),state.getInt("mask"),state.getInt("crash"),
+   effectiveDebt(state),state.getInt("mask"),state.getInt("crash"),
    state.getInt("caffeine"),state.getInt("fatigue"),state.getInt("stress"),SleepEffects.percentages(p,state)));
+ }
+ /** Perceived sleep pressure is temporary; persistent debt and journal history are untouched. */
+ static int effectiveDebt(CompoundTag t){
+  int debt=clamp(t.getInt("debt"));
+  if(t.getInt("mask")>0)debt=debt*(100-Math.max(0,Math.min(85,t.getInt("maskPower"))))/100;
+  if(t.getInt("crash")>0)debt+=190;
+  return clamp(debt);
  }
  public static int getDebt(ServerPlayer p){return data(p).getInt("debt");}
  public static int getFatigue(ServerPlayer p){return data(p).getInt("fatigue");}
@@ -170,6 +177,9 @@ public final class SleepEngine {
    int potency=caffeine>=80?85:caffeine>=55?70:caffeine>=35?55:42;
    int active=duration*effect/100;
    if(active>=t.getInt("mask")){t.putInt("mask",active);t.putInt("maskPower",potency*effect/100);}
+   // Stimulants briefly relieve physical fatigue, at the cost of rising stress.
+   t.putInt("fatigue",clamp(t.getInt("fatigue")-Math.min(120,caffeine)));
+   t.putInt("stress",clamp(t.getInt("stress")+Math.max(0,caffeine-25)-calm*25));
    t.putInt("caffeine",Math.min(100,load+caffeine));
    t.putInt("tolerance",Math.min(100,tolerance+Math.max(2,caffeine/5)));
    t.putInt("crashPending",Math.max(t.getInt("crashPending"),caffeine>=80?3600:duration>=16000?3200:caffeine>=55?2400:caffeine>=35?1400:700));
@@ -183,14 +193,34 @@ public final class SleepEngine {
    // Calming drinks cannot erase sleep debt.
    if(calm>0)t.putInt("calm",6000+calm*1800);
   }
-  save(p,t);sync(p,t);
+  save(p,t);SleepEffects.apply(p,t);sync(p,t);
+ }
+
+ /** Tick all timed drink states together, including in creative test sessions. */
+ private static void advanceStimulants(CompoundTag t){
+  int mask=t.getInt("mask");
+  if(mask>0){
+   mask=Math.max(0,mask-20);t.putInt("mask",mask);
+   if(mask==0){
+    t.putInt("crash",Math.max(t.getInt("crash"),t.getInt("crashPending")));
+    t.putInt("crashPending",0);t.putInt("maskPower",0);
+   }
+  } else if(t.getInt("crash")>0)t.putInt("crash",Math.max(0,t.getInt("crash")-20));
+  if(mask>0&&t.getInt("crash")>0)t.putInt("crash",Math.max(0,t.getInt("crash")-20));
+  if(t.getInt("calm")>0)t.putInt("calm",Math.max(0,t.getInt("calm")-20));
  }
 
  public static void tick(PlayerTickEvent.Post e){
   if(!(e.getEntity() instanceof ServerPlayer p))return;
   if(p.isSpectator()){SleepEffects.apply(p,data(p));return;}
   CampRestSessions.tick(p);
-  if(p.getAbilities().instabuild){SleepEffects.apply(p,data(p));return;}
+  if(p.getAbilities().instabuild){
+   if(p.tickCount%20==0){CompoundTag t=data(p);advanceStimulants(t);
+    if(p.tickCount%120==0&&t.getInt("caffeine")>0)t.putInt("caffeine",t.getInt("caffeine")-1);
+    if(p.tickCount%2400==0&&t.getInt("tolerance")>0)t.putInt("tolerance",t.getInt("tolerance")-1);
+    save(p,t);SleepEffects.apply(p,t);sync(p,t);}
+   return;
+  }
   CompoundTag t=data(p);
   if(!t.contains("lastSleepAt"))t.putLong("lastSleepAt",p.serverLevel().getGameTime());
   if(p.isSleeping()){
@@ -241,14 +271,7 @@ public final class SleepEngine {
    boolean dark=!p.level().isDay()&&p.level().getMaxLocalRawBrightness(p.blockPosition())<5;
    int calming=t.getInt("calm")>0?2:0;
    t.putInt("stress",clamp(t.getInt("stress")+(threatened?5:dark?1:-2-calming)));
-   int mask=t.getInt("mask");
-   if(mask>0){
-    mask=Math.max(0,mask-20);
-    t.putInt("mask",mask);
-    if(mask==0){t.putInt("crash",Math.max(t.getInt("crash"),t.getInt("crashPending")));t.putInt("crashPending",0);t.putInt("maskPower",0);}
-   }
-   if(t.getInt("crash")>0)t.putInt("crash",Math.max(0,t.getInt("crash")-20));
-   if(t.getInt("calm")>0)t.putInt("calm",Math.max(0,t.getInt("calm")-20));
+   advanceStimulants(t);
    if(p.tickCount%120==0&&t.getInt("caffeine")>0)t.putInt("caffeine",t.getInt("caffeine")-1);
    if(p.tickCount%2400==0&&t.getInt("tolerance")>0)t.putInt("tolerance",t.getInt("tolerance")-1);
    if(p.tickCount%1200==0||t.getIntArray("history").length==0)historySample(p,t);
