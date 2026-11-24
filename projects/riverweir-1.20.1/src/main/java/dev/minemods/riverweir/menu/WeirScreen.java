@@ -31,8 +31,10 @@ public final class WeirScreen extends AbstractContainerScreen<WeirMenu> {
     }
 
     @Override protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.drawString(font, Component.translatable("gui.riverweir.header"), 8, 6, 0x404040, false);
-        graphics.drawString(font, Component.translatable("gui.riverweir.condition_short", menu.getCondition()), 101, 6, 0x404040, false);
+        Component header=Component.translatable("gui.riverweir.tier."+menu.getTier().id);
+        Component condition=Component.translatable("gui.riverweir.condition_short",menu.getCondition());
+        graphics.drawString(font,header,8,6,0x404040,false);
+        graphics.drawString(font,condition,168-font.width(condition),6,0x404040,false);
         int infoY = WeirLayout.upperHeight(menu.getNetSlots()) + 5;
         graphics.drawString(font, Component.translatable("gui.riverweir.clog", menu.getClog()), 8, infoY, 0x494338, false);
         graphics.drawString(font, Component.translatable("gui.riverweir.bait", menu.getBaitCharges()), 101, infoY, 0x494338, false);

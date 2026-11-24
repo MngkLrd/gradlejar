@@ -29,3 +29,8 @@ Automated CI checks Java compilation and packaged resources but does not reprodu
 - One rare escape roll per entanglement: 5% jute, 2.5% bronze, 1% iron; a freed fish swims away and cannot be immediately recaptured for 200 ticks.
 - Local client-side tension-cord accent, triggered by vanilla block events on active bursts; no new block-state properties or cloth simulation. Effects expire after 16 ticks and are distance limited. Visual quality with shaders requires in-game testing.
 - Pure-Java struggle regression checks, geometry and GUI tests retained.
+
+## 0.4.4
+- Recolor the exact original 32x32 jute roll sprite for bronze and iron, retaining all pixel clusters and alpha. All six enhanced mesh damage textures are recolors of the working 16x64 four-frame originals. No gameplay changes.
+- Tier-specific menu title and header. Pick-block returns the matching roll; Jade 1.20.1's name fallback can resolve that tier item instead of the generic panel name. No Jade dependency.
+- CI decodes all roll and mesh PNGs and compares every alpha pixel and dimensions to the original, verifies distinct palettes and animation metadata.

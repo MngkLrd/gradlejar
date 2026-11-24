@@ -62,6 +62,18 @@ public final class WeirNetBlock extends Block {
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){
         b.add(AXIS,STAGE,TIER,WATERLOGGED,WATER_KIND,FLOW,TOP,BOTTOM,TRAPPED);
     }
+    // No BlockItem exists for individual installed panels. Return the actual tier roll
+    // for Creative pick and HUDs that resolve the name from a picked item.
+    @Override public net.minecraft.world.item.ItemStack getCloneItemStack(BlockGetter level,BlockPos pos,BlockState state){
+        return new net.minecraft.world.item.ItemStack(switch(state.getValue(TIER)){
+            case 1 -> RiverWeirMod.BRONZE_NET_ROLL.get();
+            case 2 -> RiverWeirMod.IRON_NET_ROLL.get();
+            default -> RiverWeirMod.NET_ROLL.get();
+        });
+    }
+    @Override public net.minecraft.network.chat.MutableComponent getName(){
+        return net.minecraft.network.chat.Component.translatable("container.riverweir.weir");
+    }
     @Override public VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext context){
         return state.getValue(AXIS)==Direction.Axis.X?X_SHAPE:Z_SHAPE;
     }

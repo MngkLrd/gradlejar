@@ -53,6 +53,7 @@ public final class WeirMathTestMain {
                     throw new AssertionError("escape outside late active burst");
             }
         }
-        System.out.println("River Weir geometry, GUI and struggle regression checks passed.");
+        WeirTextureTest.run();
+        System.out.println("River Weir geometry, GUI, struggle and texture regression checks passed.");
     }
 }

@@ -1,6 +1,5 @@
 {
   "block.riverweir.weir_post": "River Net Stake",
-  "block.riverweir.weir_net": "River Fishing Net",
   "item.riverweir.net_roll": "Fishing Net Roll (4×3 m)",
   "item.riverweir.net_twine": "Twisted Jute Net Cord",
   "container.riverweir.weir": "River Fishing Net",
@@ -30,5 +29,11 @@
   "gui.riverweir.condition_short": "Strength: %s%%",
   "itemGroup.riverweir": "River Weir Fishing",
   "tooltip.riverweir.area": "Total material area: %s blocks²",
-  "message.riverweir.repair_blocked": "Repair requires all net sections loaded and unobstructed."
+  "message.riverweir.repair_blocked": "Repair requires all net sections loaded and unobstructed.",
+  "container.riverweir.tier.0": "Jute Fishing Net",
+  "container.riverweir.tier.1": "Bronze-Reinforced Fishing Net",
+  "container.riverweir.tier.2": "Heavy Iron Fishing Net",
+  "gui.riverweir.tier.0": "Jute Net",
+  "gui.riverweir.tier.1": "Bronze Net",
+  "gui.riverweir.tier.2": "Iron Net"
 }
