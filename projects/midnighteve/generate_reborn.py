@@ -269,6 +269,7 @@ tree(town,21,20)
 # One persistent celebration controller; lamps are ordinary world blocks, not particles.
 def festival(t,x,z):
     t.put(x,4,z,"midnighteve:festival_hearth",stage=0)
+    t.put(x,5,z,"air")
     for dx,dz in [(-3,-2),(3,-2),(-3,2),(3,2)]:
         t.put(x+dx,3,z+dz,"stone_bricks")
         t.put(x+dx,4,z+dz,"stone_brick_wall",up=True,north="none",south="none",east="none",west="none",waterlogged=False)
@@ -291,7 +292,9 @@ watch.save("northwatch")
 
 # Postal station: enclosed timber office plus a real covered sorting/loading yard.
 post=Template(32,19,26)
-path(post,3,3,28,22)
+path(post,6,3,25,5);path(post,19,6,26,7)
+post.fill(17,0,7,29,2,20,"cobblestone")
+post.fill(17,3,7,29,3,20,"spruce_planks")
 cabin(post,4,8,11,12,"Postmaster","spruce_planks","dark_oak","librarian")
 for x in (18,28):
     for z in (8,19):
@@ -304,12 +307,14 @@ for x in range(17,30):
 for x in range(19,28,2):
     post.put(x,4,18,"barrel",facing="up",open=False)
     post.put(x,4,10,"midnighteve:gift_crate")
-for x in (20,26):post.put(x,9,13,"lantern",hanging=True,waterlogged=False)
+for x in (20,26):
+    post.put(x,10,13,"stripped_spruce_log",axis="z")
+    post.put(x,9,13,"lantern",hanging=True,waterlogged=False)
 post.save("winter_post")
 
 # Candle hall: taller stone nave, buttresses, coloured glass, pews and tower.
 hall=Template(31,25,31)
-path(hall,4,2,26,26)
+path(hall,12,2,18,7);path(hall,9,3,21,6);path(hall,3,5,11,6)
 x0,x1,z0,z1=8,22,8,24
 hall.fill(x0,0,z0,x1,3,z1,"stone_bricks")
 hall.fill(x0,4,z0,x1,12,z1,"air")
@@ -343,13 +348,26 @@ for x in (10,20):
         hall.put(x,4,z,"stone_brick_wall",up=True,north="none",south="none",east="none",west="none",waterlogged=False)
         hall.put(x,5,z,"lantern",hanging=False,waterlogged=False)
 hall.put(15,4,22,"lectern",facing="north",has_book=False,powered=False)
+# Freestanding belfry: stone plinth, open bell chamber supported by four columns.
+hall.fill(2,0,8,6,3,12,"stone_bricks")
+for x in (2,6):
+    for z in (8,12): hall.fill(x,4,z,x,13,z,"stone_bricks")
+hall.fill(2,8,8,6,8,12,"stone_bricks")
+hall.fill(2,13,8,6,13,12,"spruce_planks")
+hall.put(4,12,10,"bell",attachment="ceiling",facing="north",powered=False)
+for y,r in ((14,3),(15,2),(16,1),(17,0)):
+    for x in range(4-r,5+r):
+        for z in range(10-r,11+r):
+            hall.put(x,y,z,"dark_oak_planks")
+hall.put(4,18,10,"lantern",hanging=False,waterlogged=False)
 hall.resident(17,4,22,"Chandler","cleric")
 festival(hall,15,5)
 hall.save("candle_hall")
 
 # Fjord trading post: two separate roofs, storage racks, raised timber landing.
 fjord=Template(36,19,30)
-path(fjord,3,3,32,26)
+path(fjord,7,3,25,5);path(fjord,23,6,28,10)
+fjord.fill(16,0,5,20,2,25,"cobblestone")
 cabin(fjord,4,8,11,10,"Fisher","spruce_planks","spruce","fisherman")
 cabin(fjord,22,12,9,10,None,"stripped_spruce_wood","dark_oak")
 for x in range(16,21):
