@@ -93,11 +93,7 @@ stone=[
 "ssmmmmmmmmmmhhmm","smmmmmmmmmhhhhmm","mmmmmmmmmmhhmmmm","mmmmmssmmmmmmmmm",
 "mmmssssmmmmmmmmm","mmmsmmmmmmhhmmmm","mmmmmmmmmhhhmmmm","hhmmmmmmhhmmmmmm",
 "hhmmmmmmmmmmssmm","mmmmmmmmmsssssmm","mmmmmmmmmssmmmmm","mmmhhmmmmmmmmmmm"]
-brick=[
-"ssssssssssssssss","shhhhhhmshhhhhhm","shmmmmmmsmmmmmmm","smmmmmmmsmmmmmmm",
-"smmmssmmsmmmmmmm","smmsssmmshhmmmmm","smmmmmmmsmmmmmmm","ssssssssssssssss",
-"hhhhmssshhhhhhms","mmmmmsmsmmmmmmms","mmmmmsmsmmmmmmms","hmmmmssssmmmmmmms",
-"hhmmmsmsmmmssmms","mmmmmsmsmmssmmms","mmmmmsmsmmmmmmms","ssssssssssssssss"]
+brick=["ssssssssssssssss","shhhhhhmshhhhhhm","shmmmmmmsmmmmmmm","smmmmmmmsmmmmmmm","smmmssmmsmmmmmmm","smmsssmmshhmmmmm","smmmmmmmsmmmmmmm","ssssssssssssssss","hhhhmssshhhhhhms","mmmmmsmsmmmmmmms","mmmmmsmsmmmmmmms","hmmmmssssmmmmmmm","hhmmmsmsmmmssmms","mmmmmsmsmmssmmms","mmmmmsmsmmmmmmms","ssssssssssssssss"]
 palette={"m":g.rgba("9aa6a8"),"h":g.rgba("aeb9b8"),"s":g.rgba("859396")}
 for n,rows in [("froststone",stone),("froststone_bricks",brick)]:
     g.png(A/"textures/block"/(n+".png"),rows,palette)
@@ -188,8 +184,7 @@ fir=[
 "gggggggggggggggg","gggggggggggggggg","gggggggggggggggg","gggggggggggggggg"]
 g.png(A/"textures/block/garland.png",fir,{k:g.rgba(v) for k,v in {"g":"4f6848","h":"688254","d":"3b523a","r":"a64f43"}.items()})
 model("garland",[elem([0,3,6],[16,7,10],"fir",{"north":(0,0),"south":(0,6),"east":(0,8),"west":(4,8),"up":(0,2),"down":(0,10)}),elem([1,1,5],[5,5,11],"fir",{"north":(0,4),"south":(4,4)}),elem([11,1,5],[15,5,11],"fir",{"north":(8,4),"south":(10,4)}),elem([7,0,7],[9,3,9],"metal")],{"fir":mod("block/garland"),"metal":"minecraft:block/copper_block"})
-# Tree star is a two-sided pixel silhouette, avoiding stair-step model cubes.
-# A thin cross made with one central body and two rotated elements.
+# Star uses one central body and two justified rotated elements, without stair-step modeling.
 gold=[
 "mmmmmmmmmmmmmmmm","mmhhhhmmmmmmmmmm","mhhhhhmmmmmmmmmm","mhhllhmmmmmmmmmm",
 "mmhhmmmmmmmmmmmm","mmmmmmmmmmmmmmmm","mmmmmmmmmmmmmmmm","mmmmmmmmmmmmmmmm",
@@ -283,4 +278,4 @@ g.ru.update({"block.midnighteve.froststone":"Морозный камень","blo
 for n,lang in [("en_us",g.en),("ru_ru",g.ru)]:write(A/"lang"/(n+".json"),lang)
 edit(R/"META-INF/neoforge.mods.toml",'version="0.8.0"','version="0.9.0"')
 for p in R.rglob("*.json"):json.loads(p.read_text(encoding="utf8"))
-print("PASS: independent Frostlands router, 10 density functions, six material rules, two building materials, revised native art")
+print("PASS: independent Frostlands router, 11 density functions, six material rules, two building materials, revised native art")
