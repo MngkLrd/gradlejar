@@ -1,0 +1,72 @@
+name: Potion Timer Bar 0.3.1 - 11 JAR archive
+on:
+  workflow_run:
+    workflows: ["Minecraft Mod Build Hub"]
+    types: [completed]
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  package:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_commit.message, 'Potion Timer Bar 0.3.1 ports:') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download compiled JARs from Build Hub
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN: ${{ github.event.workflow_run.run_number }}
+          ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+        run: |
+          set -euo pipefail
+          mkdir -p downloaded
+          while read -r loader mc; do
+            name="potiontimerbar-${loader}-mc${mc}-0.3.1.jar"
+            tag="ci-potiontimerbar-mc${mc}-${loader}-0.3.1-${RUN}-${ATTEMPT}"
+            gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "$name" --dir downloaded
+          done <<'EOF'
+          forge 1.20.1
+          neoforge 1.20.1
+          fabric 1.20.1
+          neoforge 1.21.1
+          fabric 1.21.1
+          neoforge 26.1.2
+          fabric 26.1.2
+          neoforge 26.2
+          fabric 26.2
+          neoforge 26.3
+          fabric 26.3
+          EOF
+      - name: Verify and zip exactly 11 compiled JARs
+        run: |
+          python3 - <<'PY'
+          import zipfile,json,tomllib
+          from pathlib import Path
+          targets=[["forge","1.20.1"],["neoforge","1.20.1"],["fabric","1.20.1"],["neoforge","1.21.1"],["fabric","1.21.1"],["neoforge","26.1.2"],["fabric","26.1.2"],["neoforge","26.2"],["fabric","26.2"],["neoforge","26.3"],["fabric","26.3"]]
+          folders={'forge':'Forge','neoforge':'NeoForge','fabric':'Fabric'}
+          output=Path('Potion-Timer-Bar-0.3.1-11-JARs.zip')
+          assert len(list(Path('downloaded').glob('*.jar')))==11
+          with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED) as out:
+              for loader,mc in targets:
+                  path=Path('downloaded')/f'potiontimerbar-{loader}-mc{mc}-0.3.1.jar'
+                  with zipfile.ZipFile(path) as jar:
+                      assert jar.testzip() is None,path
+                      names=set(jar.namelist())
+                      assert not any(n.endswith('.java') for n in names)
+                      for cls in ('PotionHudOverlay','PotionPalette','EffectTracker','PotionTimerBar'):
+                          assert 'dev/minemods/potiontimerbar/'+cls+'.class' in names
+                      if loader=='fabric':
+                          m=json.loads(jar.read('fabric.mod.json'))
+                          assert m['version']=='0.3.1' and m['depends']['minecraft']==mc and m['environment']=='client'
+                      else:
+                          m=tomllib.loads(jar.read('META-INF/mods.toml' if mc=='1.20.1' else 'META-INF/neoforge.mods.toml').decode())
+                          assert m['mods'][0]['modId']=='potiontimerbar' and m['mods'][0]['version']=='0.3.1'
+                  out.write(path,folders[loader]+'/'+path.name)
+          with zipfile.ZipFile(output) as out:
+              assert len(out.namelist())==11 and out.testzip() is None
+              print('\n'.join(out.namelist()))
+          PY
+      - name: Publish JAR-only ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "potiontimerbar-v0.3.1-11-ports-${{ github.event.workflow_run.run_number }}" Potion-Timer-Bar-0.3.1-11-JARs.zip --repo "$GITHUB_REPOSITORY" --target "${{ github.event.workflow_run.head_sha }}" --title "Potion Timer Bar 0.3.1 - 11 Minecraft ports" --notes "11 compiled and verified JARs grouped by Forge, NeoForge, Fabric. Potion-colored gradients. Client-side. In-game testing pending." --prerelease

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "potiontimerbar",
+  "version": "0.3.1",
+  "name": "Potion Timer Bar",
+  "description": "A single potion-colored countdown bar above hunger for the longest remaining active effect.",
+  "authors": [
+    "Minemods"
+  ],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.minemods.potiontimerbar.PotionTimerBar"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
