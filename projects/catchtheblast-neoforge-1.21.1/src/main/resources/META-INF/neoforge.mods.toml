@@ -3,7 +3,7 @@ loaderVersion="[4,)"
 license="All Rights Reserved"
 [[mods]]
 modId="catchtheblast"
-version="0.1.0-beta"
+version="0.2.0-beta"
 displayName="Catch the Blast"
 authors="ataflore"
 description='''Catch explosions with a shield and unleash their energy in a directed shockwave.'''

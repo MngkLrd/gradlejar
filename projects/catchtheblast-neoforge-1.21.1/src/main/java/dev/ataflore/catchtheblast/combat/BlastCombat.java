@@ -11,6 +11,10 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.LargeFireball;
+import net.minecraft.world.entity.monster.Ghast;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -19,14 +23,36 @@ import net.neoforged.neoforge.event.entity.living.LivingShieldBlockEvent;
 public final class BlastCombat {
     private BlastCombat() {}
     public static void onBlock(LivingShieldBlockEvent event) {
-        if (event.isCanceled() || !event.getBlocked() || !event.getOriginalBlock() || !(event.getEntity() instanceof Player player) ||
-            !(player.level() instanceof ServerLevel level) ||
-            !event.getDamageSource().is(DamageTypeTags.IS_EXPLOSION)) return;
+        if (event.isCanceled() || !(event.getEntity() instanceof Player player) ||
+            !(player.level() instanceof ServerLevel level)) return;
+        var source = event.getDamageSource();
+        Entity direct = source.getDirectEntity();
+        boolean fireball = direct instanceof LargeFireball || (source.getEntity() instanceof Ghast &&
+                (source.is(DamageTypeTags.IS_FIRE) || source.is(DamageTypeTags.IS_EXPLOSION) || source.is(DamageTypeTags.IS_PROJECTILE)));
+        if (!fireball && !source.is(DamageTypeTags.IS_EXPLOSION)) return;
         ItemStack shield = player.getUseItem();
-        if (!(shield.getItem() instanceof BlastShieldItem) || event.getBlockedDamage() <= 0) return;
+        if (!(shield.getItem() instanceof BlastShieldItem) || !player.isBlocking()) return;
+        // A fireball can impact at the exact shield position, where vanilla's positional
+        // test degenerates. Use its incoming velocity as a fallback, never block from behind.
+        if (!event.getBlocked() || !event.getOriginalBlock()) {
+            if (!fireball || !(direct instanceof LargeFireball ball)) return;
+            Vec3 incoming = ball.getDeltaMovement().scale(-1);
+            Vec3 facing = player.getLookAngle();
+            if (incoming.lengthSqr() < 0.0001 || incoming.normalize().dot(facing) <= 0.10) return;
+            event.setBlocked(true);
+            event.setBlockedDamage(event.getOriginalBlockedDamage());
+        }
+        if (event.getBlockedDamage() <= 0) return;
+        // One charge per projectile; its contact hit and explosion can share a tick.
+        if (direct instanceof LargeFireball ball) {
+            var data = player.getPersistentData();
+            if (data.hasUUID("catchtheblastLastFireball") && data.getUUID("catchtheblastLastFireball").equals(ball.getUUID())) return;
+            data.putUUID("catchtheblastLastFireball", ball.getUUID());
+        }
         int before = Charge.get(shield);
         boolean perfect = player.getTicksUsingItem() <= 15;
         int gained = Math.max(5, Math.min(120, Math.round(event.getBlockedDamage() * (perfect ? 3.6f : 3.0f))));
+        if (fireball) gained = Math.max(20, gained);
         int after = Math.min(Charge.MAX, before + gained);
         long now = level.getServer().overworld().getGameTime();
         long deadline = after > 100 ? (before > 100 && Charge.deadline(shield) > 0 ? Charge.deadline(shield) : now + 70) : 0;
@@ -56,6 +82,7 @@ public final class BlastCombat {
             }
         }
         BlastFx.release(level, player, dir, range, strength);
+        if (player instanceof ServerPlayer serverPlayer) TravellingWave.launch(level, serverPlayer, origin, dir, range, strength);
         player.getCooldowns().addCooldown(stack.getItem(), 20 + Math.round(20 * strength));
         stack.hurtAndBreak(Math.max(1, Math.round(charge / 18f)), player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         player.displayClientMessage(Component.translatable("message.catchtheblast.released"), true);
