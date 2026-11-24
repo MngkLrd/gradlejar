@@ -83,6 +83,7 @@ public final class ImageDocument {
         g.setColor(Color.WHITE);g.setFont(new Font("SansSerif",Font.BOLD,18));g.drawString("BEFORE",8,22);g.drawString("AFTER",panelW+16,22);g.dispose();return out;
     }
     public BufferedImage compare(BufferedImage after){return comparison(original,after);}
+    public void restore(List<Operation> ops){if(ops.size()>100)throw new IllegalArgumentException("Too many layers");commit(ops);}
     public boolean canUndo(){return cursor>0;}
     public boolean canRedo(){return cursor+1<revisions.size();}
     public int count(){return snapshot().size();}

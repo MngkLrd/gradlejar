@@ -13,6 +13,13 @@ public final class ClipCodec {
     public record Result(Path path,int frames,int width,int height,long bytes){}
     public static Result save(Path root,List<Frame> source,int from,int to,int fps,int maxSide,long limit)throws IOException{
         if(from<0||to>source.size()||to<=from||fps<1||fps>30||maxSide<64||limit<10000)throw new IOException("Invalid clip settings");
+        // Preserve the recorded timing while capping the requested export frame rate.
+        List<Frame> sampled=new ArrayList<>();
+        for(int i=from;i<to;i++){
+            Frame f=source.get(i);
+            if(sampled.isEmpty()||f.millis()-sampled.getLast().millis()>=Math.round(1000.0/fps)-1)sampled.add(f);
+        }
+        source=sampled;from=0;to=source.size();
         Files.createDirectories(root);
         Path temp=Files.createTempFile(root,"clip-",".gif");
         try{

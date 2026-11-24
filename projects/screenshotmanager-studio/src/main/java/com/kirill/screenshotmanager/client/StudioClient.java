@@ -23,7 +23,10 @@ import java.nio.file.Files;
 import java.util.concurrent.CompletableFuture;
 
 public final class StudioClient {
-    private static KeyMapping edit,library,copy,capture,photo,clean,zoomIn,zoomOut;
+    private static KeyMapping edit,library,copy,capture,photo,clean,zoomIn,zoomOut,record,burst;
+    private static final ClipRecorder recorder=new ClipRecorder();
+    private static int burstRemaining;
+    private static long burstNext;
     private static StudioPreferences preferences;
     private static boolean photoMode,cleanPending,oldHide;
     private static int savedFov;
@@ -49,6 +52,7 @@ public final class StudioClient {
         photo=key("photo",GLFW.GLFW_KEY_F9);clean=key("clean",GLFW.GLFW_KEY_F10);
         zoomIn=key("zoom_in",GLFW.GLFW_KEY_LEFT_BRACKET);zoomOut=key("zoom_out",GLFW.GLFW_KEY_RIGHT_BRACKET);
         e.register(photo);e.register(clean);e.register(zoomIn);e.register(zoomOut);
+        record=key("record",GLFW.GLFW_KEY_F6);burst=key("burst",GLFW.GLFW_KEY_F7);e.register(record);e.register(burst);
     }
     static Path directory(){return Minecraft.getInstance().gameDirectory.toPath().resolve("screenshots");}
     static StudioPreferences preferences(){
@@ -65,8 +69,17 @@ public final class StudioClient {
     }
     private static void restoreClean(Minecraft mc){if(cleanPending){mc.options.hideGui=oldHide;cleanPending=false;}}
     private static void afterFrame(RenderFrameEvent.Post e){
-        if(!cleanPending)return;
         Minecraft mc=Minecraft.getInstance();
+        if(recorder.active()){
+            if(mc.screen!=null||mc.level==null){recorder.finish(false);return;}
+            recorder.frame(mc);
+            return;
+        }
+        if(burstRemaining>0&&mc.screen==null&&mc.level!=null&&System.nanoTime()>=burstNext){
+            burstRemaining--;burstNext=System.nanoTime()+350_000_000L;
+            Screenshot.grab(mc.gameDirectory,mc.getMainRenderTarget(),message->{});
+        }
+        if(!cleanPending)return;
         if(mc.screen!=null||mc.level==null){restoreClean(mc);return;}
         try{
             Screenshot.grab(mc.gameDirectory,mc.getMainRenderTarget(),message->mc.execute(()->{if(mc.player!=null)mc.player.displayClientMessage(message,false);}));
@@ -83,6 +96,13 @@ public final class StudioClient {
         }
         if(preview!=null&&System.currentTimeMillis()>expires){preview.close();preview=null;}
         if(edit==null)return;
+        while(record.consumeClick()){
+            if(recorder.active())recorder.finish(true);
+            else if(mc.screen==null&&mc.level!=null&&!cleanPending&&burstRemaining==0)recorder.start();
+        }
+        while(burst.consumeClick()){if(!recorder.active()&&mc.screen==null&&mc.level!=null&&!cleanPending){burstRemaining=5;burstNext=0;}}
+        if(recorder.active())return;
+        if(mc.level==null||mc.screen!=null)burstRemaining=0;
         if(mc.level==null||mc.screen!=null)stopPhoto(mc);
         if(cleanPending&&(mc.level==null||mc.screen!=null||System.currentTimeMillis()-cleanStarted>3000))restoreClean(mc);
         while(edit.consumeClick()){if(mc.screen==null){if(latest!=null)mc.setScreen(new StudioScreen(latest,null));else mc.setScreen(new LibraryScreen());}}
@@ -140,7 +160,7 @@ public final class StudioClient {
     }
     private static void hud(RenderGuiEvent.Post e){
         Minecraft mc=Minecraft.getInstance();
-        if(mc.screen!=null||mc.options.hideGui||cleanPending||edit==null)return;
+        if(mc.screen!=null||mc.options.hideGui||cleanPending||edit==null||recorder.active()||burstRemaining>0)return;
         GuiGraphics g=e.getGuiGraphics();
         int sw=mc.getWindow().getGuiScaledWidth(),sh=mc.getWindow().getGuiScaledHeight();
         if(photoMode){
