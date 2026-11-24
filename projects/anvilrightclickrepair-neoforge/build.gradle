@@ -1,0 +1,7 @@
+plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
+group='dev.anvilrightclickrepair'
+version='0.1.0'
+base.archivesName='anvilrightclickrepair-neoforge-1.21.1'
+java.toolchain.languageVersion=JavaLanguageVersion.of(21)
+neoForge { version='21.1.228'; runs { client { client() }; server { server() } }; mods { anvilrightclickrepair { sourceSet(sourceSets.main) } } }
+tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=21 }
