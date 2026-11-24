@@ -4,63 +4,49 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
-/**
- * A single, unsegmented 81px strip aligned exactly with the vanilla food icons.
- * All values are GUI-scaled pixels, not physical display pixels.
- */
+/** Catch the Blast countdown style, aligned with the vanilla food row. */
 public final class PotionHudOverlay {
-    // 10 vanilla food icons: 9px icon width + 9 gaps of 8px = 81px.
-    private static final int FOOD_WIDTH = 81;
-    private static final int FOOD_LEFT_OF_CENTER = 10;
-    // Food icons start at guiHeight - 39; put a 2px strip above them, leaving a 3px gap.
-    private static final int STRIP_TOP_FROM_BOTTOM = 44;
-    private static final int STRIP_HEIGHT = 2;
-
-    public static void render(GuiGraphics graphics, DeltaTracker partialTick) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (!HudConfig.ENABLED.get() || minecraft.options.hideGui ||
-            minecraft.player == null || minecraft.level == null || minecraft.player.isSpectator()) {
-            return;
-        }
-
-        // A bar is drawn only while at least one actual status effect is active.
-        EffectTracker.Selection selected = EffectTracker.select(minecraft.player, minecraft.level);
-        if (selected == null) {
-            return;
-        }
-
-        final int x = graphics.guiWidth() / 2 + FOOD_LEFT_OF_CENTER;
-        int y = graphics.guiHeight() - STRIP_TOP_FROM_BOTTOM + HudConfig.VERTICAL_OFFSET.get();
-
-        // Air icons occupy the area just above hunger. Clear them without moving X or changing width.
-        if (HudConfig.AUTO_AVOID_AIR.get() &&
-            (minecraft.player.isUnderWater() ||
-             minecraft.player.getAirSupply() < minecraft.player.getMaxAirSupply())) {
-            y -= 11;
-        }
-
-        final int color = 0xFF000000 | makeReadable(selected.effect().getEffect().value().getColor());
-        final int filled = Math.max(0, Math.min(FOOD_WIDTH, Math.round(FOOD_WIDTH * selected.fraction())));
-
-        // Both background and fill use the SAME two pixel rows: exactly one continuous strip.
-        graphics.fill(x, y, x + FOOD_WIDTH, y + STRIP_HEIGHT, 0x991B1B22);
-        if (filled > 0) {
-            graphics.fill(x, y, x + filled, y + STRIP_HEIGHT, color);
-        }
-    }
-
-    private static int makeReadable(int color) {
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = color & 0xFF;
-        // Preserve the potion's hue while lifting very dark effect colors off the HUD.
-        if (Math.max(r, Math.max(g, b)) < 130) {
-            r = Math.min(255, r + 75);
-            g = Math.min(255, g + 75);
-            b = Math.min(255, b + 75);
-        }
-        return r << 16 | g << 8 | b;
-    }
+    private static final int WIDTH=81;
+    private static final int GREEN=0x61C647, GOLD=0xF5C74A, RED=0xEC4938;
 
     private PotionHudOverlay() {}
+
+    public static void render(GuiGraphics g, DeltaTracker partialTick) {
+        Minecraft mc=Minecraft.getInstance();
+        if (!HudConfig.ENABLED.get() || mc.options.hideGui || mc.player==null ||
+                mc.level==null || !mc.player.isAlive() || mc.player.isSpectator()) return;
+        EffectTracker.Selection selected=EffectTracker.select(mc.player,mc.level);
+        if(selected==null) return;
+        int x=g.guiWidth()/2+10;
+        // Preserve the previous lower edge and the three-pixel gap above food.
+        int y=g.guiHeight()-47+HudConfig.VERTICAL_OFFSET.get();
+        if(HudConfig.AUTO_AVOID_AIR.get() &&
+                (mc.player.isUnderWater() || mc.player.getAirSupply()<mc.player.getMaxAirSupply())) y-=11;
+        bar(g,x,y,selected.fraction(),true);
+    }
+
+    // Pixel-sharp five-pixel XP-style track; both states use the same palette.
+    private static void bar(GuiGraphics g,int x,int y,float amount,boolean countdown) {
+        int n=Math.max(0,Math.min(WIDTH-2,Math.round(amount*(WIDTH-2))));
+        if(amount>0) n=Math.max(1,n);
+        g.fill(x+1,y,x+WIDTH-1,y+5,0xFF171512);
+        g.fill(x,y+1,x+WIDTH,y+4,0xFF171512);
+        g.fill(x+1,y+1,x+WIDTH-1,y+4,0xFF49423B);
+        for(int i=0;i<n;i++) {
+            float p=i/(float)(WIDTH-3);
+            // Countdown heats up as it empties: its visible end always reaches red.
+            if(countdown) p=1f-amount+i/(float)(Math.max(1,n-1))*amount;
+            int c=p<.5f?mix(GREEN,GOLD,p*2):mix(GOLD,RED,(p-.5f)*2);
+            g.fill(x+1+i,y+1,x+2+i,y+2,0xFF000000|mix(c,0xFFFFFF,.24f));
+            g.fill(x+1+i,y+2,x+2+i,y+3,0xFF000000|c);
+            g.fill(x+1+i,y+3,x+2+i,y+4,0xFF000000|mix(c,0x000000,.34f));
+        }
+    }
+    private static int mix(int a,int b,float t) {
+        t=Math.max(0,Math.min(1,t));
+        int r=Math.round(((a>>16)&255)*(1-t)+((b>>16)&255)*t);
+        int g=Math.round(((a>>8)&255)*(1-t)+((b>>8)&255)*t);
+        int bl=Math.round((a&255)*(1-t)+(b&255)*t);
+        return (r<<16)|(g<<8)|bl;
+    }
 }

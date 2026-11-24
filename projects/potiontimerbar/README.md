@@ -1,14 +1,14 @@
-# Potion Timer Bar 0.2.0
+# Potion Timer Bar 0.3.0
 
 A minimal, **client-only** Alchemy Strip for Minecraft 1.21.1 (NeoForge).
 
 ## What it does
 
-- Renders **one unsegmented, 2px-high line**, exactly **81 GUI pixels wide**, aligned with the complete vanilla hunger row.
+- One 81px-wide, 5px-high XP-style timer, with the pixel-sharp Catch the Blast frame, top highlight and bottom shadow.
 - Appears **only when at least one status effect is active**; disappears immediately when none remain.
 - If there are multiple active effects, it uses **the one that will expire last** (greatest remaining duration). No positive/negative priority, rarity filter, or duration limit.
 - Infinite-duration effects also count: if selected they keep the bar filled until removed.
-- Fill color follows the selected effect, including effects from other mods.
+- The countdown gradient runs green, gold, red; the remaining fill becomes warmer as time runs out.
 - No bottle icons, text, numeric countdown, section marks, or other HUD clutter.
 - The fraction decreases based on the selected effect's locally observed starting duration and refills if the effect is reapplied/extended.
 - Renders just above hunger by default, using GUI-scaled coordinates; shifts **vertically only** when air bubbles appear. X and width never shift.
@@ -16,7 +16,7 @@ A minimal, **client-only** Alchemy Strip for Minecraft 1.21.1 (NeoForge).
 
 ## Setup
 
-Copy `potiontimerbar-0.2.0.jar` into the **client** `mods/` folder. Requires Minecraft 1.21.1, NeoForge 21.1.1+ in the 21.1 line and Java 21. Use with any vanilla or modded multiplayer server.
+Copy `potiontimerbar-0.3.0.jar` into the **client** `mods/` folder. Requires Minecraft 1.21.1, NeoForge 21.1.1+ in the 21.1 line and Java 21. Use with any vanilla or modded multiplayer server.
 
 Config at `config/potiontimerbar-client.toml`:
 - `hud.enabled=true`
@@ -32,7 +32,7 @@ Java 21, Gradle 9.2.1:
 cd projects/potiontimerbar
 gradle --no-daemon clean build
 ```
-Output: `build/libs/potiontimerbar-0.2.0.jar`. Dedicated GitHub Actions workflow publishes a prerelease build only after compilation and JAR validation succeed.
+Output: `build/libs/potiontimerbar-0.3.0.jar`. Dedicated GitHub Actions workflow publishes a prerelease build only after compilation and JAR validation succeed.
 
 ## In-game QA
 
