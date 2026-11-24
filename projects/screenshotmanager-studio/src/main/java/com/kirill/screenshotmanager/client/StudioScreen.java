@@ -40,7 +40,7 @@ public final class StudioScreen extends Screen {
     private int color=COLORS[0],thickness=6,strength=18,number=1;
     private int cx,cy,cw,ch,ix,iy,iw,ih,sideX,sideW,toolW;
     private double fit=1,zoom=1,panX=0,panY=0,scale=1;
-    private boolean alive,busy,dragging,panning,filterPanel;
+    private boolean alive,busy,dragging,panning;
     private int ax,ay,bx,by;
     private final ArrayList<Point> points=new ArrayList<>();
     private long epoch;
@@ -177,7 +177,7 @@ public final class StudioScreen extends Screen {
         if(panel==0)drawTools(g,mx,my,sx,sw);
         else if(panel==1)drawLayers(g,mx,my,sx,sw);
         else drawGrade(g,mx,my,sx,sw);
-        text.visible=panel==0&&height>=184&&!compareMode;
+        text.visible=panel==0&&height>=195&&!compareMode;
         StudioUi.box(g,0,height-21,width,21,StudioUi.PANEL);
         String info=rendered==null?"":rendered.getWidth()+" x "+rendered.getHeight()+"  |  "+Math.round(scale*100)+"%";
         StudioUi.label(g,font,status,7,height-15,Math.max(40,width-font.width(info)-22),StudioUi.MUTED);
@@ -196,7 +196,7 @@ public final class StudioScreen extends Screen {
         g.drawString(font,"Size: "+thickness+" px",sx,107,StudioUi.TEXT,false);
         action(g,"-",sx,119,23,15,mx,my,false,()->thickness=Math.max(1,thickness-2));
         action(g,"+",sx+26,119,23,15,mx,my,false,()->thickness=Math.min(80,thickness+2));
-        if(height>=184)g.drawString(font,"Text",sx,140,StudioUi.MUTED,false);
+        if(height>=195)g.drawString(font,"Text",sx,140,StudioUi.MUTED,false);
         if(height>=224){
             g.drawString(font,"Censor: "+strength,sx,176,StudioUi.TEXT,false);
             action(g,"-",sx,188,23,15,mx,my,false,()->strength=Math.max(3,strength-3));
@@ -333,6 +333,7 @@ public final class StudioScreen extends Screen {
             }
         }
         if(canvas(x,y)&&rendered!=null&&(button==2||(button==0&&tool==Tool.PAN))){panning=true;return true;}
+        if(panel==1&&button==0&&canvas(x,y))return true;
         if(button==0&&image(x,y)&&!busy){
             text.setFocused(false);setFocused(null);
             ax=bx=px(x);ay=by=py(y);points.clear();

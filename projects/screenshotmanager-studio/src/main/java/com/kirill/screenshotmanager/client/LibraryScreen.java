@@ -23,7 +23,8 @@ public final class LibraryScreen extends Screen {
     private final Map<Path,StudioTexture> thumbs=new HashMap<>();
     private final Set<Path> requested=new HashSet<>();
     private List<Shot> all=List.of(),filtered=List.of();
-    private EditBox search;
+    private EditBox search,albumInput;
+    private String albumFilter="",albumDraft="";
     private String query="",status="Loading library...";
     private int page,cols=3,rows=2,tab;
     private boolean alive,ascending;
@@ -33,7 +34,11 @@ public final class LibraryScreen extends Screen {
         alive=true;
         search=new EditBox(font,8,26,Math.max(80,width-16),18,Component.literal("Search screenshots"));
         search.setMaxLength(100);search.setValue(query);search.setResponder(v->{query=v;page=0;filter();});
-        addRenderableWidget(search);refresh();
+        addRenderableWidget(search);
+        albumInput=new EditBox(font,8,72,Math.max(65,width/2-14),17,Component.literal("Album name"));
+        albumInput.setMaxLength(64);albumInput.setValue(albumDraft);albumInput.setHint(Component.literal("Type album name"));
+        albumInput.setResponder(v->albumDraft=v);addRenderableWidget(albumInput);
+        refresh();
     }
     private void refresh(){
         long token=++scanToken;status="Scanning screenshots...";
@@ -48,9 +53,25 @@ public final class LibraryScreen extends Screen {
     private void filter(){
         String q=query.toLowerCase(Locale.ROOT);
         filtered=all.stream().filter(s->s.name().toLowerCase(Locale.ROOT).contains(q))
-                .filter(s->tab==0||(tab==1&&!edited(s))||(tab==2&&edited(s))).toList();
+                .filter(s->tab==0||(tab==1&&!edited(s))||(tab==2&&edited(s))||(tab==3&&StudioClient.preferences().favorite(s.path())))
+                .filter(s->albumFilter.isEmpty()||StudioClient.preferences().album(s.path()).equals(albumFilter)).toList();
         if(ascending){ArrayList<Shot> reversed=new ArrayList<>(filtered);Collections.reverse(reversed);filtered=List.copyOf(reversed);}
         page=Math.max(0,Math.min(page,maxPage()));clearThumbs();
+    }
+    private void cycleAlbum(){
+        var names=StudioClient.preferences().albums();int i=names.indexOf(albumFilter)+1;
+        albumFilter=i>=names.size()?"":names.get(i);page=0;filter();
+    }
+    private void favorite(Shot shot){
+        try{StudioClient.preferences().toggleFavorite(shot.path());if(tab==3)filter();}
+        catch(Exception e){status="Could not save favorite";}
+    }
+    private void assignAlbum(Shot shot){
+        try{
+            StudioClient.preferences().album(shot.path(),albumDraft);
+            status=albumDraft.isBlank()?"Removed from album":"Added to "+albumDraft;
+            if(!albumFilter.isEmpty())filter();
+        }catch(Exception e){status="Could not save album";}
     }
     private boolean edited(Shot s){return s.path().getParent().getFileName().toString().equalsIgnoreCase("edited");}
     private int capacity(){return Math.max(1,cols*rows);}
@@ -62,7 +83,8 @@ public final class LibraryScreen extends Screen {
         CompletableFuture.supplyAsync(()->{
             try{return ShotFiles.read(shot.path(),256);}catch(Exception e){return null;}
         },ShotFiles.IO).whenComplete((image,error)->Minecraft.getInstance().execute(()->{
-            if(!alive||token!=epoch||image==null||error!=null)return;
+            if(!alive||token!=epoch)return;
+            if(image==null||error!=null){status="Some thumbnails unavailable";return;}
             try{thumbs.put(shot.path(),new StudioTexture(image));}catch(Exception ignored){}
         }));
     }
@@ -72,27 +94,30 @@ public final class LibraryScreen extends Screen {
     @Override public void render(GuiGraphics g,int mx,int my,float dt){
         hits.clear();
         StudioUi.box(g,0,0,width,height,StudioUi.BG);
-        StudioUi.box(g,0,0,width,73,StudioUi.PANEL);
+        StudioUi.box(g,0,0,width,95,StudioUi.PANEL);
         g.drawString(font,"SCREENSHOT LIBRARY",8,9,StudioUi.ACCENT,false);
         StudioUi.label(g,font,status,140,9,Math.max(1,width-148),StudioUi.MUTED);
-        int w=Math.max(34,(width-12)/6);
+        int w=Math.max(18,(width-12)/7);
         button(g,"All",6,50,w-3,18,mx,my,tab==0,()->{tab=0;page=0;filter();});
         button(g,"Originals",6+w,50,w-3,18,mx,my,tab==1,()->{tab=1;page=0;filter();});
         button(g,"Edited",6+2*w,50,w-3,18,mx,my,tab==2,()->{tab=2;page=0;filter();});
-        button(g,ascending?"Oldest":"Newest",6+3*w,50,w-3,18,mx,my,false,()->{ascending=!ascending;filter();});
-        button(g,"Refresh",6+4*w,50,w-3,18,mx,my,false,this::refresh);
-        button(g,"Folder",6+5*w,50,w-3,18,mx,my,false,()->{
+        button(g,"Favorites",6+3*w,50,w-3,18,mx,my,tab==3,()->{tab=3;page=0;filter();});
+        button(g,ascending?"Oldest":"Newest",6+4*w,50,w-3,18,mx,my,false,()->{ascending=!ascending;filter();});
+        button(g,"Refresh",6+5*w,50,w-3,18,mx,my,false,this::refresh);
+        button(g,"Folder",6+6*w,50,w-3,18,mx,my,false,()->{
             try{Files.createDirectories(StudioClient.directory());Util.getPlatform().openFile(StudioClient.directory().toFile());}catch(Exception e){status="Unable to open folder";}
         });
-        int newCols=Math.max(2,Math.min(5,(width-12)/108));
-        int newRows=Math.max(1,Math.min(4,(height-101)/82));
+        button(g,albumFilter.isEmpty()?"All albums":"Album: "+albumFilter,width/2,72,Math.max(30,width/2-63),17,mx,my,!albumFilter.isEmpty(),this::cycleAlbum);
+        button(g,"Settings",width-59,72,53,17,mx,my,false,()->Minecraft.getInstance().setScreen(new StudioSettingsScreen(this)));
+        int newCols=Math.max(2,Math.min(5,(width-12)/116));
+        int newRows=Math.max(1,Math.min(4,(height-123)/100));
         if(newCols!=cols||newRows!=rows){cols=newCols;rows=newRows;page=Math.min(page,maxPage());clearThumbs();}
-        int tileW=Math.max(1,(width-12)/cols),tileH=Math.max(1,(height-101)/rows);
+        int tileW=Math.max(1,(width-12)/cols),tileH=Math.max(1,(height-123)/rows);
         int end=Math.min(filtered.size(),(page+1)*capacity());
         for(int i=page*capacity();i<end;i++){
             Shot shot=filtered.get(i);int slot=i-page*capacity();
-            int x=6+(slot%cols)*tileW,y=77+(slot/cols)*tileH;
-            int tw=tileW-5,th=tileH-5,previewH=Math.max(8,th-26);
+            int x=6+(slot%cols)*tileW,y=99+(slot/cols)*tileH;
+            int tw=tileW-5,th=tileH-5,previewH=Math.max(8,th-44);
             boolean hover=mx>=x&&mx<x+tw&&my>=y&&my<y+th;
             StudioUi.box(g,x,y,tw,th,hover?0xff354252:StudioUi.PANEL);
             StudioTexture texture=thumbs.get(shot.path());
@@ -103,8 +128,12 @@ public final class LibraryScreen extends Screen {
                 texture.draw(g,x+(tw-dw)/2,y+(previewH-dh)/2,dw,dh);
             }
             StudioUi.label(g,font,shot.name(),x+3,y+previewH+3,tw-6,StudioUi.TEXT);
-            StudioUi.label(g,font,DATE.format(Instant.ofEpochMilli(shot.time())),x+3,y+previewH+14,tw-6,StudioUi.MUTED);
-            hits.add(new StudioUi.Hit(x,y,tw,th,()->Minecraft.getInstance().setScreen(new StudioScreen(shot,this))));
+            String album=StudioClient.preferences().album(shot.path());
+            StudioUi.label(g,font,album.isEmpty()?DATE.format(Instant.ofEpochMilli(shot.time())):album,x+3,y+previewH+14,tw-6,StudioUi.MUTED);
+            hits.add(new StudioUi.Hit(x,y,tw,previewH+25,()->Minecraft.getInstance().setScreen(new StudioScreen(shot,this))));
+            boolean fav=StudioClient.preferences().favorite(shot.path());
+            button(g,fav?"Starred":"Star",x+3,y+previewH+27,tw/2-5,14,mx,my,fav,()->favorite(shot));
+            button(g,albumDraft.isBlank()?"Unfile":"To album",x+tw/2,y+previewH+27,tw/2-3,14,mx,my,false,()->assignAlbum(shot));
         }
         if(filtered.isEmpty())g.drawCenteredString(font,"No screenshots. Take one with F2.",width/2,height/2,StudioUi.MUTED);
         StudioUi.box(g,0,height-23,width,23,StudioUi.PANEL);
