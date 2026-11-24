@@ -339,7 +339,7 @@ jobs:
           for dir in run runs/server; do
             mkdir -p "$dir"
             printf 'eula=true\n' > "$dir/eula.txt"
-            printf 'online-mode=false\nlevel-name=ci-sorter-test\nview-distance=3\nsimulation-distance=3\nmax-tick-time=-1\n' > "$dir/server.properties"
+            printf 'online-mode=false\nspawn-protection=0\nlevel-name=ci-sorter-test\nview-distance=3\nsimulation-distance=3\nmax-tick-time=-1\n' > "$dir/server.properties"
           done
           logfile="$GITHUB_WORKSPACE/simplesorter-forge-server.log"
           SIMPLE_SORTER_CI_STORAGE_TEST=1 timeout --signal=TERM --kill-after=15s 195s gradle --no-daemon runServer > "$logfile" 2>&1 &

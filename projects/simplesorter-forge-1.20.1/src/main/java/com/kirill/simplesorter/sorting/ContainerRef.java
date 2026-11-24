@@ -24,7 +24,7 @@ public record ContainerRef(BlockPos pos, IItemHandler handler, Object identity,
             return !(state.getBlock() instanceof ChestBlock)
                     || state.getValue(ChestBlock.TYPE) == ChestType.SINGLE;
         }
-        if (!level.hasChunkAt(partnerPos)
+        if (level.getChunkSource().getChunkNow(partnerPos.getX()>>4,partnerPos.getZ()>>4)==null
                 || level.getBlockEntity(partnerPos) != partnerIdentity
                 || !(state.getBlock() instanceof ChestBlock)
                 || state.getValue(ChestBlock.TYPE) == ChestType.SINGLE

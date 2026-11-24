@@ -1,4 +1,26 @@
-# Simple Sorter 0.10.3 (Forge 1.20.1)
+# Simple Sorter 0.10.4 (Forge 1.20.1) — release candidate
+
+## 0.10.4: hardening and validation
+
+- Fix compact settings compilation and constrain translated button captions.
+- Slice snapshots and revalidation across ticks; one global candidate per
+  search step. Cache sort keys and aggregate repeated profiles. A candidate
+  or indivisible transfer cycle can exceed the soft tick budget.
+- Recheck access on both chest halves, reject overlapping jobs across modes,
+  stop when the wand is no longer held.
+- Audit serialized item identity and counts before and after transactions
+  and rollback; abort on mismatches. Audit compaction and recover observed
+  remainders. No guarantee against arbitrary broken third-party handlers.
+- Test full 40-chest layouts, new capacity, repeated sorting, tagged stacks,
+  rejected insertion, external edits and a 384-storage planner stress case.
+
+## Release gate
+
+0.10.4 is RC1. Test the actual modpack warehouse, vanilla and modded
+double chests, capacity, repeat activation, GUI scale and server tick cost.
+If all pass, publish stable 0.11.0 without extra features. Use 0.10.5–0.10.x
+only for concrete verified blockers.
+
 
 ## 0.10.3: stable refinement, semantic labels and compact wand screen
 

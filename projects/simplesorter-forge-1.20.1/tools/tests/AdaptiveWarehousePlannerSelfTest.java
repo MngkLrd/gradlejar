@@ -80,8 +80,23 @@ public final class AdaptiveWarehousePlannerSelfTest {
         for(var group:parts)for(int index:group)check(all.add(index),"duplicate transfer");
         check(all.equals(Set.of(0,1,2,3,4)),"missing transfer or stationary stack");
     }
+    private static void stress(){
+        List<AdaptiveWarehousePlanner.Storage> boxes=new ArrayList<>();
+        List<AdaptiveWarehousePlanner.Stack> items=new ArrayList<>();
+        for(int c=0;c<384;c++){
+            boxes.add(new AdaptiveWarehousePlanner.Storage(36,(c%24)*4,c/24,0));
+            for(int s=0;s<36;s++)items.add(new AdaptiveWarehousePlanner.Stack(c,s,(s+c)%2==0?IRON:COPPER));
+        }
+        var accept=(AdaptiveWarehousePlanner.Accepts)(i,c,s)->true;
+        long start=System.nanoTime();
+        var search=new AdaptiveWarehousePlanner.Search(items,boxes,accept,true);
+        int slices=0;while(!search.advance()){check(++slices<20,"unbounded candidate search");}
+        var result=search.result();verify(items,boxes,result,accept);
+        check(result.movedStacks()>0&&result.afterCost()<result.beforeCost(),"large warehouse did not improve");
+        System.out.println("384 x 36 slots stress elapsed ms: "+(System.nanoTime()-start)/1_000_000);
+    }
     public static void main(String[] args){
-        largeFullWarehouse();capacityAndNewStorage();components();
+        largeFullWarehouse();capacityAndNewStorage();components();stress();
         System.out.println("Adaptive warehouse: 40 full chests, vertical material columns, scarce/new capacity, restrictions and transaction components passed.");
     }
 }

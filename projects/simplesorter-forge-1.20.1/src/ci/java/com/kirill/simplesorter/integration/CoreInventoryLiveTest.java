@@ -123,6 +123,49 @@ public final class CoreInventoryLiveTest {
             check(repeated.rejectedTransfers()==0&&repeated.movedItems()==0,
                     "unchanged real warehouse must not reshuffle");
             check(repeated.quality().mixed()==0&&repeated.quality().score()==100,"pure real warehouse quality");
+            var first=(ChestBlockEntity)level.getBlockEntity(full.containers().get(0).pos());
+            var second=(ChestBlockEntity)level.getBlockEntity(full.containers().get(1).pos());
+            ItemStack marked=new ItemStack(Items.IRON_INGOT,64);
+            marked.getOrCreateTag().putString("sorter_test","variant_a");
+            ItemStack markedB=new ItemStack(Items.COPPER_INGOT,64);
+            markedB.getOrCreateTag().putString("sorter_test","variant_b");
+            first.setItem(0,marked);second.setItem(0,markedB);
+            var taggedBefore=ledger(full.containers());
+            var tagged=WarehouseVacuumSorter.begin(full.containers());
+            while(!tagged.step(level,move->{},120,4_000_000L)){}
+            check(tagged.rejectedTransfers()==0&&taggedBefore.equals(ledger(full.containers())),
+                    "tagged item conservation");
+            // Independent synthetic Forge capability at real chest positions.
+            var a=full.containers().get(0);var b=full.containers().get(1);
+            var ha=new net.minecraftforge.items.ItemStackHandler(4);
+            var hb=new net.minecraftforge.items.ItemStackHandler(4){
+                boolean failed=false;
+                @Override public ItemStack insertItem(int slot,ItemStack stack,boolean simulate){
+                    if(!simulate&&!failed){failed=true;return stack.copy();}
+                    return super.insertItem(slot,stack,simulate);
+                }
+            };
+            for(int i=0;i<4;i++){
+                ha.setStackInSlot(i,new ItemStack(i%2==0?Items.IRON_INGOT:Items.COPPER_INGOT,64));
+                hb.setStackInSlot(i,new ItemStack(i%2==0?Items.COPPER_INGOT:Items.IRON_INGOT,64));
+            }
+            var ra=new ContainerRef(a.pos(),new com.kirill.simplesorter.sorting.ForgeItemHandlerAdapter(ha),a.identity(),level);
+            var rb=new ContainerRef(b.pos(),new com.kirill.simplesorter.sorting.ForgeItemHandlerAdapter(hb),b.identity(),level);
+            var fake=List.of(ra,rb);
+            var original=ledger(fake);
+            var rejected=WarehouseVacuumSorter.begin(fake);
+            int guard=0;
+            while(!rejected.step(level,move->{},120,4_000_000L)){check(++guard<200,"unbounded rollback test");}
+            check(rejected.rejectedTransfers()>0&&!rejected.unsafe(),"expected recoverable insertion rejection");
+            check(original.equals(ledger(fake)),"rollback lost or duplicated NBT items");
+            var stale=WarehouseVacuumSorter.begin(fake);
+            check(!stale.step(level,move->{},1,4_000_000L),"snapshot should yield");
+            ha.setStackInSlot(0,new ItemStack(Items.GOLD_INGOT,17));
+            var externallyEdited=ledger(fake);
+            guard=0;
+            while(!stale.step(level,move->{},1,4_000_000L)){check(++guard<200,"unbounded stale snapshot test");}
+            check(stale.rejectedTransfers()>0&&stale.movedItems()==0,"stale snapshot must not commit");
+            check(externallyEdited.equals(ledger(fake)),"external edit overwritten");
             org.slf4j.LoggerFactory.getLogger("SimpleSorter/CoreLiveTest").info(
                     "SORTER_CORE_LIVE_TEST_PASSED: live 21->22 chest scan, remote access, new empty chest, classification and item count; moved {} items",session.movedItems());
         } finally {
@@ -131,6 +174,11 @@ public final class CoreInventoryLiveTest {
                 level.setBlockAndUpdate(p,Blocks.AIR.defaultBlockState());
             }
         }
+    }
+    private static java.util.Map<net.minecraft.nbt.CompoundTag,Long> ledger(List<ContainerRef> refs){
+        List<ItemStack> all=new ArrayList<>();
+        for(ContainerRef ref:refs)all.addAll(com.kirill.simplesorter.sorting.InventoryConservation.snapshot(ref.handler()));
+        return com.kirill.simplesorter.sorting.InventoryConservation.count(all);
     }
     private static long countItem(List<ContainerRef> refs,net.minecraft.world.item.Item item){
         long total=0;for(ContainerRef ref:refs)for(int s=0;s<ref.slots();s++){
