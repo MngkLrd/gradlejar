@@ -1,8 +1,8 @@
-# MIDNIGHT Reborn 0.11.0 — Winter Tales
+# MIDNIGHT Reborn 0.13.0 — Alive Settlements
 
 Minecraft 1.21.1 NeoForge, Java 21, Gradle 9.2.1. Create a new world with the MIDNIGHT preset. 16 native locateable structure types, seven resident professions, 21 finite personal delivery requests, persistent reputation and a craftable journal. Discover all six regions and all sixteen native structures; sneak-use the journal for exploration progress. Four treasure sites use native loot-table chests. Normal right-click trades; sneak-right-click with an empty main hand asks for a request, and sneak-right-click holding enough of the requested item delivers it. Progress is per player, globally per profession, and copied on death. Festival Hearth remains a shared one-time physical celebration. New craftable gingerbread, cocoa, journal, parcel, ornament, candle cluster, garland and star. Wrapped gifts are now craftable and no longer reward diamonds. Two original synthesized background tracks, six biome-specific local terrain decorations, and client-only aurora ribbons. Disable the aurora for shader troubleshooting with JVM argument -Dmidnighteve.disableAurora=true. The custom Frostlands density router modifies terrain relief while retaining vanilla continental climate axes, caves and ores; music and visual quality require client QA.
 
-Build: Python 3 and ffmpeg for authoring only. Run `python3 revise_evergreen_qa.py`, `python3 compose_midnight.py`, `gradle --no-daemon clean build`. JAR: build/libs/midnighteve-0.11.0.jar. No external runtime dependencies.
+Build: Python 3 and ffmpeg for authoring only. Run `python3 expand_alive.py`, `python3 compose_midnight.py`, `gradle --no-daemon clean build`. JAR: build/libs/midnighteve-0.13.0.jar. No external runtime dependencies.
 
 All new structures are real NBT templates; original six structures remain. Additional landmarks are stargazer_observatory, winter_conservatory, snow_gallery, solstice_shrine. Find structures with /locate structure midnighteve:everlight_hamlet, lantern_fair, mountain_refuge, yuletide_longhouse, icefish_station. Back up saves. New-world visual inspection required. Existing baseline CI server smoke test does not simulate player quests or client rendering.
 
@@ -25,3 +25,11 @@ Frostberry and holly bushes have four growth states, native biome random patches
 ### Player QA corrections
 
 The 0.10 playtest reported long synchronous locate searches. Hamlet and farm now accept all six MIDNIGHT biomes and use 28/32 chunk spacing (12/14 separation), with a four-chunk farm exclusion radius around hamlet candidates. CI requires successful natural locate for both from the test world origin, before forced template placement. Climate and aurora are unchanged. Snowstag has segmented legs, tapered hindquarters, forward-visible eyes, a narrower neck/head and revised fur clusters. Grouse eyes wrap front corners and beak has material-specific shading. Hearthling now has a hood, face, scarf and ears rather than a lantern-shaped torso. Gingerbread and ledger sprites are replaced. Manual client visual verification remains necessary.
+
+## Holiday Villages 0.12
+
+Everlight has two distinct weighted templates, each 86×82, 12 furnished buildings, 16 persistent residents, market stalls, decorated public plaza, two roof axes, seven role-specific workshops, beds and job sites. All authored templates remove two redundant foundation courses and use adjusted start height and thin terrain blending; native terrain QA still required. Existing landmarks receive additional purpose-specific furnishings where safe. Market Ledger opens a nine-page vanilla-synchronized menu with order item, inventory count, reward, status, delivery button and Giftkeeper shop. Server validates resident distance, item possession, market time and currency before delivery or purchases. Three creative tabs separate decor, food/plants and essentials. Old climate, aurora, berry textures and validated locate depth retained. CI asserts native locate, shifted floor geometry, 16 hamlet residents and old farm placement; manual client QA remains required.
+
+## Alive Settlements 0.13
+
+Terrain-gated hamlet, farm and market placement; bounded nine-point height sampling. Volumetric festive lights and stacked presents, frozen soil, under-fir snow, evening resident interactions. Existing music, trade UI, festival and vanilla villager schedules retained. New-world and client QA required. CI generation, Java build and existing native structure smoke tests must pass before release.
