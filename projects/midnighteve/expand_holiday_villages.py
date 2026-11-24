@@ -163,6 +163,12 @@ def village(name,variant):
         # 7x4 counter footprints fit inside the template; not another house.
         t.stall(T,x,z,"cake" if x%2 else "midnighteve:gift_crate")
     # No overlap of interior beds/workstations with doors. Population 16.
+    # Outdoor lamps, plaza and adjacent eaves must never replace entrance blocks.
+    for x,y,z in T.doors:
+        for yy,half in ((y,"lower"),(y+1,"upper")):
+            T.put(x,yy,z,"spruce_door",facing="north",half=half,hinge="left",open=False,powered=False)
+        T.fill(x,y,z+1,x,y+1,z+1,"air")
+        T.fill(x,y,z-1,x,y+1,z-1,"air")
     assert len(T.entities)==16 and len(T.doors)==12
     T.save(name)
 village("everlight_hamlet",0);village("everlight_hamlet_b",1)
