@@ -185,8 +185,7 @@ public final class WarehouseSortSessions {
                     && (done == 0 || System.nanoTime() < deadline)) {
                 int current = compactIndex++;
                 ContainerRef container = containers.get(current);
-                if (!level.hasChunkAt(container.pos())
-                        || level.getBlockEntity(container.pos()) != container.identity()) continue;
+                if (!container.isValid()) continue;
                 if (InventoryMover.needsCompaction(container)) {
                     compactedItems += InventoryMover.cleanUpContainer(container, listener);
                 }

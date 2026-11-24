@@ -1,4 +1,24 @@
-# Simple Sorter 0.9.16 (Forge 1.20.1)
+# Simple Sorter 0.9.17 (Forge 1.20.1)
+
+## Inventory compatibility fix
+
+Double-chest capabilities are measured against the sum of the two physical
+Container sizes. A shared combined view is selected once; two genuinely
+separate half views are joined only when their sizes prove that shape.
+No fixed 27/54 assumption, mod namespace or dependency. This addresses
+18/36-slot chests and other sizes as well as vanilla. Ambiguous shapes
+are skipped rather than guessed. Both physical blocks must remain connected
+and unchanged for the scheduled transaction.
+
+The transient buffer now touches only changed slots, rechecks the live
+source immediately before extraction and rejects an unexpectedly occupied
+destination. This prevents a stale/aliased second read from creating
+a phantom copy during rollback. The normal inventory validity, capacity
+and item NBT checks remain enabled.
+
+Pure-Java tests cover shared 36/54/other-sized views, split halves,
+ambiguous wrappers and an alias-backed simulated warehouse. In-game tests
+with real modded storage are still required before marking this stable.
 
 Smart Categories 2.1, built for heavily modded inventories such as TerraFirmaCraft and GregTech Modern.
 

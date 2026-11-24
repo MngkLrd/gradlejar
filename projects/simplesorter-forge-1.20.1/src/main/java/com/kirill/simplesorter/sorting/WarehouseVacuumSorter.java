@@ -321,8 +321,7 @@ public final class WarehouseVacuumSorter {
         }
 
         private static boolean valid(ServerLevel level, ContainerRef ref) {
-            return level.hasChunkAt(ref.pos())
-                    && level.getBlockEntity(ref.pos()) == ref.identity();
+            return ref.level() == level && ref.isValid();
         }
 
         /**
@@ -365,10 +364,23 @@ public final class WarehouseVacuumSorter {
         private static boolean commit(ServerLevel level, List<Chest> chests,
                                       List<Entry> entries, MoveListener listener) {
             List<Placement> placed = new ArrayList<>();
+            // Leave unchanged stacks untouched. Only displaced slots enter
+            // the transaction, reducing mod callbacks and rollback exposure.
+            List<Entry> displaced = entries.stream()
+                    .filter(e -> e.source != e.destination || e.sourceSlot != e.destinationSlot)
+                    .toList();
             boolean success = false;
             try {
-                for (Entry entry : entries) {
+                for (Entry entry : displaced) {
                     IItemHandler source = entry.source.ref.handler();
+                    // Validate again IMMEDIATELY before touching a physical
+                    // slot. A duplicate/aliased view must never manufacture
+                    // a buffer item from the older snapshot.
+                    ItemStack before = source.getStackInSlot(entry.sourceSlot).copy();
+                    if (!sameStackAndCount(before, entry.original)) {
+                        throw new IllegalStateException("Source no longer matches snapshot at "
+                                + entry.source.ref.pos() + ":" + entry.sourceSlot);
+                    }
                     ItemStack reported;
                     try {
                         reported = source.extractItem(
@@ -376,10 +388,10 @@ public final class WarehouseVacuumSorter {
                     } catch (RuntimeException ex) {
                         // A broken mod may mutate and then throw; use observed
                         // slot contents, not its untrusted return value.
-                        entry.carried = observedRemoval(entry);
+                        entry.carried = observedRemoval(entry, before);
                         throw ex;
                     }
-                    entry.carried = observedRemoval(entry);
+                    entry.carried = observedRemoval(entry, before);
                     if (!sameStackAndCount(reported, entry.carried)
                             || !sameStackAndCount(entry.carried, entry.original)) {
                         throw new IllegalStateException("Extraction did not remove the expected stack at "
@@ -387,8 +399,12 @@ public final class WarehouseVacuumSorter {
                     }
                 }
 
-                for (Entry entry : entries) {
+                for (Entry entry : displaced) {
                     IItemHandler destination = entry.destination.ref.handler();
+                    if (!destination.getStackInSlot(entry.destinationSlot).isEmpty()) {
+                        throw new IllegalStateException("Destination unexpectedly occupied at "
+                                + entry.destination.ref.pos() + ":" + entry.destinationSlot);
+                    }
                     ItemStack before = entry.carried.copy();
                     ItemStack reported;
                     try {
@@ -426,7 +442,7 @@ public final class WarehouseVacuumSorter {
             } catch (RuntimeException ex) {
                 LOG.error("Wand buffer transaction failed; restoring original chest contents", ex);
             } finally {
-                if (!success) rollback(level, entries, placed);
+                if (!success) rollback(level, displaced, placed);
             }
             if (!success) return false;
 
@@ -445,19 +461,19 @@ public final class WarehouseVacuumSorter {
          * Forge capability simulations and returned ItemStacks are not
          * sufficient evidence for exotic modded handlers.
          */
-        private static ItemStack observedRemoval(Entry entry) {
+        private static ItemStack observedRemoval(Entry entry, ItemStack before) {
             ItemStack now = entry.source.ref.handler().getStackInSlot(entry.sourceSlot);
             int remaining = 0;
             if (!now.isEmpty()) {
-                if (!ItemStack.isSameItemSameTags(now, entry.original)
-                        || now.getCount() > entry.original.getCount()) {
+                if (!ItemStack.isSameItemSameTags(now, before)
+                        || now.getCount() > before.getCount()) {
                     throw new IllegalStateException("Source transformed the stack unexpectedly at "
                             + entry.source.ref.pos());
                 }
                 remaining = now.getCount();
             }
-            int removed = entry.original.getCount() - remaining;
-            return removed == 0 ? ItemStack.EMPTY : entry.original.copyWithCount(removed);
+            int removed = before.getCount() - remaining;
+            return removed == 0 ? ItemStack.EMPTY : before.copyWithCount(removed);
         }
 
         private static void observePlacement(Entry entry, ItemStack before,
@@ -486,7 +502,7 @@ public final class WarehouseVacuumSorter {
                 Placement move = placed.get(i);
                 try {
                     IItemHandler handler = move.chest.ref.handler();
-                    ItemStack before = handler.getStackInSlot(move.slot);
+                    ItemStack before = handler.getStackInSlot(move.slot).copy();
                     if (before.isEmpty()
                             || !ItemStack.isSameItemSameTags(before, move.entry.original)) {
                         LOG.error("Rollback destination was modified externally: {} slot {}",
