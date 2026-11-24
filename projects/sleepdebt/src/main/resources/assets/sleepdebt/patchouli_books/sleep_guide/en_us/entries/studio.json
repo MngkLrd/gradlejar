@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Sleep Debt 2.4 tracks three different pressures. Sleep Debt is your long-term sleeplessness. Fatigue measures recent effort, and Stress rises near danger. Rest treats each differently."
+      "text": "Sleep debt slows attacks, physical fatigue slows mining and movement, and stress worsens rest. Caffeine temporarily masks sleep debt only."
     },
     {
       "type": "patchouli:text",

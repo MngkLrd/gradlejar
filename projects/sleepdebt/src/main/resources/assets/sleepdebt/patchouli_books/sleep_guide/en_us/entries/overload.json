@@ -5,11 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Repeated caffeine use raises your caffeine load. High load causes reduced drink efficiency, and after the boost ends may trigger a weakness crash."
-    },
-    {
-      "type": "patchouli:crafting",
-      "recipe": "sleepdebt:energy_drink"
+      "text": "Use the coffee machine: put the base liquid or drink in the first slot, the ingredient in the second and coal or charcoal in the third. Water + grounds makes coffee. Coffee + redstone lasts longer; coffee + glowstone is stronger; strong coffee + sugar makes energy drink. Upgrade energy with redstone or glowstone. Tea uses dried herbs. JEI/EMI list all machine recipes."
     }
   ]
 }

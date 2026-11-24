@@ -5,19 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Roast cocoa beans, grind them, then prepare coffee. Ordinary coffee gives a moderate symptom-masking effect. Strong coffee boosts harder; long coffee lasts longer."
-    },
-    {
-      "type": "patchouli:crafting",
-      "recipe": "sleepdebt:coffee"
-    },
-    {
-      "type": "patchouli:crafting",
-      "recipe": "sleepdebt:strong_coffee"
-    },
-    {
-      "type": "patchouli:crafting",
-      "recipe": "sleepdebt:long_coffee"
+      "text": "Use the coffee machine: put the base liquid or drink in the first slot, the ingredient in the second and coal or charcoal in the third. Water + grounds makes coffee. Coffee + redstone lasts longer; coffee + glowstone is stronger; strong coffee + sugar makes energy drink. Upgrade energy with redstone or glowstone. Tea uses dried herbs. JEI/EMI list all machine recipes."
     }
   ]
 }
