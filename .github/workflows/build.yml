@@ -191,18 +191,39 @@ jobs:
           grep -q 'TradeMenus.REGISTER.register' projects/last-witness/src/main/java/dev/minemods/lastwitness/LastWitnessMod.java
       - name: Generate standalone MIDNIGHT Reborn source project
         if: matrix.project_dir == 'projects/midnighteve'
+        timeout-minutes: 2
         run: |
           set -euo pipefail
-          python3 projects/midnighteve/expand_winterfolk.py
-          if ! command -v ffmpeg >/dev/null; then
-            sudo apt-get update -qq
-            sudo apt-get install -y -qq ffmpeg
-          fi
-          python3 projects/midnighteve/compose_midnight.py
+          echo "::group::Generate Java, models, textures and structure NBT"
+          timeout --kill-after=5s 90s python3 -u projects/midnighteve/expand_winterfolk.py
+          echo "::endgroup::"
+          test -s projects/midnighteve/src/main/resources/data/midnighteve/structure/hollycroft_farm.nbt
           test -s projects/midnighteve/src/main/resources/data/midnighteve/structure/everlight_hamlet.nbt
-          test -s projects/midnighteve/src/main/resources/assets/midnighteve/sounds/music/lanterns_at_dusk.ogg
           test -s projects/midnighteve/src/main/resources/data/midnighteve/structure/frostmarket.nbt
           test -s projects/midnighteve/src/main/resources/data/midnighteve/worldgen/structure/frostmarket.json
+      - name: Restore unchanged MIDNIGHT music from verified 0.9.0
+        if: matrix.project_dir == 'projects/midnighteve'
+        timeout-minutes: 3
+        run: |
+          set -euo pipefail
+          echo "Downloading the previously compiled original soundtrack; no system package installation required."
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 35 --retry 1 --retry-max-time 50 -o /tmp/midnight-audio-source.jar 'https://github.com/MngkLrd/gradlejar/releases/download/ci-midnighteve-mc1.21.1-neoforge-0.9.0-989-1/midnighteve-0.9.0.jar'
+          echo 'c712a4f2422cdbbd7b2ec16824cc2656c8287166eaa9204e05c1d8e30084395c  /tmp/midnight-audio-source.jar' | sha256sum --check
+          python3 -u - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          root = Path("projects/midnighteve/src/main/resources")
+          with ZipFile("/tmp/midnight-audio-source.jar") as jar:
+              for name in ("lanterns_at_dusk", "snow_over_the_fjords"):
+                  asset = "assets/midnighteve/sounds/music/" + name + ".ogg"
+                  data = jar.read(asset)
+                  assert data.startswith(b"OggS") and len(data) > 1024, asset
+                  path = root / asset
+                  path.parent.mkdir(parents=True, exist_ok=True)
+                  path.write_bytes(data)
+                  print("Restored verified music:", asset, len(data), flush=True)
+          PY
+          test -s projects/midnighteve/src/main/resources/assets/midnighteve/sounds/music/lanterns_at_dusk.ogg
       - name: Validate profile
         id: profile
         env:
