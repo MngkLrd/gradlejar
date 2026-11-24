@@ -44,11 +44,11 @@ out=command("place template midnighteve:frostmarket 0 180 0")
 if not any(word in out.lower() for word in ("placed", "loaded template")):raise RuntimeError("Template placement failed: "+out)
 time.sleep(4)
 for cmd in [
- "execute if block 8 184 4 minecraft:spruce_door[half=lower]",
- "execute if block 8 185 4 minecraft:spruce_door[half=upper]",
- "execute if block 8 184 5 minecraft:air",
- "execute if block 8 195 8 minecraft:dark_oak_slab",
- "execute if block 8 183 5 minecraft:spruce_planks",
+ "execute if block 8 182 4 minecraft:spruce_door[half=lower]",
+ "execute if block 8 183 4 minecraft:spruce_door[half=upper]",
+ "execute if block 8 182 5 minecraft:air",
+ "execute if block 8 193 8 minecraft:dark_oak_slab",
+ "execute if block 8 181 5 minecraft:spruce_planks",
  "execute if entity @e[type=minecraft:villager,tag=midnighteve_resident]"
 ]:
     out=command(cmd)
@@ -60,13 +60,13 @@ out=command("place template midnighteve:hollycroft_farm 0 220 0")
 if not any(w in out.lower() for w in ("placed","loaded template")):raise RuntimeError("Farm placement failed: "+out)
 time.sleep(2)
 for cmd in [
- "execute if block 35 224 9 minecraft:spruce_door[half=lower]",
- "execute if block 36 225 9 minecraft:spruce_door[half=upper]",
- "execute if block 35 224 10 minecraft:air",
- "execute if block 36 239 18 minecraft:dark_oak_slab",
- "execute if block 33 224 19 minecraft:spruce_fence_gate",
- "execute if entity @e[type=midnighteve:snowstag,x=31,y=224,z=20,distance=..12]",
- "execute if entity @e[type=midnighteve:snowgrouse,x=41,y=224,z=20,distance=..12]"
+ "execute if block 35 222 9 minecraft:spruce_door[half=lower]",
+ "execute if block 36 223 9 minecraft:spruce_door[half=upper]",
+ "execute if block 35 222 10 minecraft:air",
+ "execute if block 36 237 18 minecraft:dark_oak_slab",
+ "execute if block 33 222 19 minecraft:spruce_fence_gate",
+ "execute if entity @e[type=midnighteve:snowstag,x=31,y=222,z=20,distance=..12]",
+ "execute if entity @e[type=midnighteve:snowgrouse,x=41,y=222,z=20,distance=..12]"
 ]:
     out=command(cmd)
     if "test passed" not in out.lower():raise RuntimeError("Farm assertion failed: "+cmd+" => "+out)
@@ -74,6 +74,26 @@ command('summon midnighteve:snowgrouse 25 225 25 {NoAI:1b,EggTime:3000,Tags:["mi
 out=command("data get entity @e[type=midnighteve:snowgrouse,tag=midnight_grouse_ci,limit=1] EggTime")
 if "299" not in out and "3000" not in out and "298" not in out:raise RuntimeError("Grouse egg timer not retained: "+out)
 print("PASS: farm roof, doors, gate, both resident species and saved egg timer")
+# Validate the actual new town template and resident population.
+command("forceload add 0 0 95 95")
+time.sleep(4)
+out=command("place template midnighteve:everlight_hamlet 0 270 0")
+if not any(word in out.lower() for word in ("placed","loaded template")):raise RuntimeError("New hamlet placement failed: "+out)
+time.sleep(2)
+for cmd in [
+ "execute if block 16 272 10 minecraft:spruce_door[half=lower]",
+ "execute if block 16 273 10 minecraft:spruce_door[half=upper]",
+ "execute if block 16 272 11 minecraft:air",
+ "execute if block 16 271 11 minecraft:spruce_planks",
+ "execute if block 35 272 41 midnighteve:celebration_bell"
+]:
+    out=command(cmd)
+    if "test passed" not in out.lower():raise RuntimeError("Hamlet assertion failed: "+cmd+" => "+out)
+out=command("execute if entity @e[type=minecraft:villager,tag=midnighteve_resident,x=0,y=270,z=0,dx=85,dy=15,dz=81]")
+import re
+m=re.search(r"count:\s*(\d+)",out,re.I)
+if m is None or int(m.group(1))!=16:raise RuntimeError("Expected 16 new hamlet residents: "+out)
+print("PASS: grounded 12-house hamlet geometry, 16 actual villagers and festive bell")
 command("save-all flush")
 print("PASS: structure placement, roof, doors, clear entrance, floor and resident merchant data")
 try: command("stop")

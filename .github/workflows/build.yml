@@ -195,7 +195,7 @@ jobs:
         run: |
           set -euo pipefail
           echo "::group::Generate Java, models, textures and structure NBT"
-          timeout --kill-after=5s 90s python3 -u projects/midnighteve/revise_evergreen_qa.py
+          timeout --kill-after=5s 90s python3 -u projects/midnighteve/expand_alive_settlements.py
           echo "::endgroup::"
           test -s projects/midnighteve/src/main/resources/data/midnighteve/structure/hollycroft_farm.nbt
           test -s projects/midnighteve/src/main/resources/data/midnighteve/structure/everlight_hamlet.nbt
