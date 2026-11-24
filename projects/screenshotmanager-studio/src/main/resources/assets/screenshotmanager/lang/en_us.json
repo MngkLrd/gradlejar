@@ -12,5 +12,7 @@
   "key.screenshotmanager.burst": "Burst capture (5 screenshots)",
   "key.screenshotmanager.keyframe": "Flyby: set start camera",
   "key.screenshotmanager.director_play": "Flyby: automatic camera approach (Shift: GIF)",
-  "key.screenshotmanager.director_clear": "Flyby: clear start"
+  "key.screenshotmanager.director_clear": "Flyby: clear start",
+  "key.screenshotmanager.depth_capture": "Capture screenshot with depth (experimental)",
+  "key.screenshotmanager.cutout": "Capture isolated living entity (experimental)"
 }
