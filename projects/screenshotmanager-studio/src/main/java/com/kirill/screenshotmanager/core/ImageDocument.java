@@ -8,7 +8,7 @@ import java.util.List;
 
 /** Immutable operations in document-pixel coordinates. Original pixels are never modified. */
 public final class ImageDocument {
-    public enum Tool { PAN, CROP, RECT, ELLIPSE, ARROW, LINE, PEN, TEXT, HIGHLIGHT, PIXELATE, BLUR, REDACT, NUMBER, COPY_REGION }
+    public enum Tool { PAN, CROP, RECT, ELLIPSE, ARROW, LINE, PEN, TEXT, HIGHLIGHT, PIXELATE, BLUR, REDACT, NUMBER, COPY_REGION, HIGHLIGHT_BRUSH, ERASER }
     public enum Filter { BRIGHTER, DARKER, CONTRAST, SATURATION, MONO, WARM, VIGNETTE, ROTATE, FLIP }
     public record Mark(Tool tool, int x1, int y1, int x2, int y2, int color, int thickness, int strength, String text, List<Point> points) {
         public Mark { points=points==null?List.of():points.stream().map(Point::new).toList(); text=text==null?"":text; }
@@ -24,7 +24,7 @@ public final class ImageDocument {
         public BufferedImage apply(BufferedImage img){return visible?operation.apply(img):img;}
     }
     public record MarkOperation(Mark value) implements Operation {
-        public String label(){return value.tool().name();}
+        public String label(){return value.tool()==Tool.TEXT?"Text: "+value.text():value.tool()==Tool.HIGHLIGHT_BRUSH?"Marker brush":value.tool()==Tool.ERASER?"Erase brush":value.tool().name();}
         public BufferedImage apply(BufferedImage img){return draw(img,value);}
     }
     public record FilterOperation(Filter value) implements Operation {
@@ -98,7 +98,28 @@ public final class ImageDocument {
     public List<Operation> snapshot(){return revisions.get(cursor);}
     public BufferedImage render(List<Operation> ops){
         BufferedImage img=copy(original);
-        for(Operation op:ops)img=op.apply(img);
+        for(int i=0;i<ops.size();i++){
+            Operation op=ops.get(i);if(!visible(op))continue;
+            Operation base=unwrap(op);
+            if(base instanceof MarkOperation m&&m.value().tool()==Tool.ERASER)continue;
+            if(base instanceof MarkOperation m&&erasable(m.value().tool())){
+                List<Mark> masks=new ArrayList<>();
+                for(int k=i+1;k<ops.size()&&!geometry(ops.get(k));k++){
+                    Operation next=unwrap(ops.get(k));
+                    if(visible(ops.get(k))&&next instanceof MarkOperation er&&er.value().tool()==Tool.ERASER)masks.add(er.value());
+                }
+                if(!masks.isEmpty()){
+                    BufferedImage overlay=new BufferedImage(img.getWidth(),img.getHeight(),BufferedImage.TYPE_INT_ARGB);
+                    draw(overlay,m.value());
+                    Graphics2D erase=overlay.createGraphics();
+                    try{erase.setComposite(AlphaComposite.Clear);erase.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+                        for(Mark mask:masks)stroke(erase,mask);
+                    }finally{erase.dispose();}
+                    Graphics2D composite=img.createGraphics();composite.drawImage(overlay,0,0,null);composite.dispose();continue;
+                }
+            }
+            img=op.apply(img);
+        }
         return img;
     }
     public static Operation mark(Mark m){return new MarkOperation(m);}
@@ -142,6 +163,18 @@ public final class ImageDocument {
         g.drawImage(img,0,0,out.getWidth(),out.getHeight(),null);g.dispose();return out;
     }
     private static int clamp(int v,int min,int max){return Math.max(min,Math.min(max,v));}
+    private static boolean erasable(Tool tool){return switch(tool){
+        case PEN,HIGHLIGHT_BRUSH,HIGHLIGHT,TEXT,NUMBER,RECT,ELLIPSE,LINE,ARROW -> true;
+        default -> false;
+    };}
+    private static void stroke(Graphics2D g,Mark m){
+        int size=Math.max(1,m.thickness());g.setStroke(new BasicStroke(size,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+        Path2D.Double p=new Path2D.Double();p.moveTo(m.x1(),m.y1());
+        for(Point pt:m.points())p.lineTo(pt.x,pt.y);
+        p.lineTo(m.x2(),m.y2());
+        if(m.points().isEmpty()&&m.x1()==m.x2()&&m.y1()==m.y2())g.fillOval(m.x1()-size/2,m.y1()-size/2,size,size);
+        else g.draw(p);
+    }
     private static BufferedImage draw(BufferedImage img,Mark m){
         int ax=clamp(m.x1(),0,img.getWidth()-1),ay=clamp(m.y1(),0,img.getHeight()-1);
         int bx=clamp(m.x2(),0,img.getWidth()-1),by=clamp(m.y2(),0,img.getHeight()-1);
@@ -173,12 +206,10 @@ public final class ImageDocument {
                     g.drawLine(bx,by,(int)(bx-len*Math.cos(a-0.52)),(int)(by-len*Math.sin(a-0.52)));
                     g.drawLine(bx,by,(int)(bx-len*Math.cos(a+0.52)),(int)(by-len*Math.sin(a+0.52)));
                 }
-                case PEN -> {
-                    Path2D.Double p=new Path2D.Double();p.moveTo(ax,ay);
-                    for(Point point:m.points()) p.lineTo(point.x,point.y);
-                    p.lineTo(bx,by);g.draw(p);
-                }
-                case HIGHLIGHT -> {g.setColor(new Color((m.color()&0xffffff)|0x55000000,true));g.fillRect(x,y,w,h);}
+                case PEN -> stroke(g,m);
+                case HIGHLIGHT_BRUSH -> stroke(g,m);
+                case ERASER -> {}
+                case HIGHLIGHT -> {int alpha=m.color()>>>24;g.setColor(new Color((m.color()&0xffffff)|((alpha==255?85:alpha)<<24),true));g.fillRect(x,y,w,h);}
                 case REDACT -> {g.setComposite(AlphaComposite.Src);g.setColor(new Color(m.color()|0xff000000,true));g.fillRect(x,y,w,h);}
                 case TEXT -> {
                     int size=Math.max(12,stroke*4);

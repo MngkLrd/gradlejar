@@ -32,6 +32,9 @@ public final class ProjectStore {
                         for(Point point:v.points()){out.writeInt(point.x);out.writeInt(point.y);}
                     }else if(op instanceof FilterOperation f){out.writeByte(2);out.writeUTF(f.value().name());}
                     else if(op instanceof Adjustment a){out.writeByte(3);for(int i:new int[]{a.brightness(),a.contrast(),a.saturation(),a.warmth(),a.gamma(),a.vignette()})out.writeInt(i);}
+                    else if(op instanceof ProPhoto.Tone a){out.writeByte(4);for(int v:a.values())out.writeInt(v);}
+                    else if(op instanceof ProPhoto.Effects a){out.writeByte(5);for(int v:a.values())out.writeInt(v);}
+                    else if(op instanceof ProPhoto.Focus a){out.writeByte(6);out.writeInt(a.x());out.writeInt(a.y());out.writeInt(a.radius());out.writeInt(a.amount());out.writeBoolean(a.dark());}
                     else throw new IOException("Unsupported layer");
                 }
             }
@@ -58,6 +61,9 @@ public final class ProjectStore {
                     }
                     case 2 -> op=filter(Filter.valueOf(in.readUTF()));
                     case 3 -> {int[] a=new int[6];for(int k=0;k<6;k++){a[k]=in.readInt();if(a[k]<-100||a[k]>100)throw new IOException("Invalid adjustment");}op=new Adjustment(a[0],a[1],a[2],a[3],a[4],a[5]);}
+                    case 4 -> {int[] a=new int[ProPhoto.TONE_COUNT];for(int k=0;k<a.length;k++)a[k]=in.readInt();op=new ProPhoto.Tone(a);}
+                    case 5 -> {int[] a=new int[ProPhoto.EFFECT_COUNT];for(int k=0;k<a.length;k++)a[k]=in.readInt();op=new ProPhoto.Effects(a);}
+                    case 6 -> op=new ProPhoto.Focus(in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readBoolean());
                     default -> throw new IOException("Unknown layer");
                 }
                 ops.add(new Layer(op,visible||geometry(op)));
