@@ -193,7 +193,7 @@ jobs:
         if: matrix.project_dir == 'projects/midnighteve'
         run: |
           set -euo pipefail
-          python3 projects/midnighteve/expand_tales.py
+          python3 projects/midnighteve/expand_exploration.py
           command -v ffmpeg
           python3 projects/midnighteve/compose_midnight.py
           test -s projects/midnighteve/src/main/resources/data/midnighteve/structure/everlight_hamlet.nbt
