@@ -85,8 +85,14 @@ public final class AdaptiveWarehousePlanner {
             // In addition to contiguous packing, try dedicated-group
             // allocations that can deliberately leave spare slots unused.
             int ordinary=orders.size()*2;
-            int limit=ordinary+4;
+            int limit=ordinary+6;
             if(items.isEmpty()||cursor>=limit)return true;
+            if(cursor>=ordinary+4){
+                Candidate candidate=evacuate(items,boxes,best,accepts,spatial,cursor-ordinary-4);
+                cursor++;
+                if(candidate.cost<best.cost || candidate.cost==best.cost&&candidate.moved<best.moved)best=candidate;
+                return cursor>=limit;
+            }
             List<Address> desired;
             if(cursor<ordinary){
                 List<Integer> order=orders.get(cursor/2);
@@ -260,6 +266,72 @@ public final class AdaptiveWarehousePlanner {
         // Bounds: 384 x 108 slots, so each term fits safely in a long.
         return foreignSlots*1_000_000_000_000L
                 +differentFamilySlots*10_000_000L+result;
+    }
+
+    /**
+     * Targeted cleanup from the best feasible plan. Move complete minority
+     * groups to empty or matching storage, never into an unrelated chest.
+     * This is especially useful when a pinned or restricted slot prevents
+     * a fully reconstructed layout from being realized by virtual swaps.
+     */
+    private static Candidate evacuate(List<Stack> items,List<Storage> boxes,Candidate base,
+            Accepts accepts,boolean spatial,int tier){
+        int[] chest=base.chest.clone(),slot=base.slot.clone();
+        int c=boxes.size();
+        int[][] layout=new int[c][];
+        for(int i=0;i<c;i++){layout[i]=new int[boxes.get(i).capacity];Arrays.fill(layout[i],-1);}
+        for(int i=0;i<items.size();i++)layout[chest[i]][slot[i]]=i;
+        long probes=0;
+        for(int source:SpatialWarehouseLayout.columnOrder(boxes,false)){
+            Map<String,List<Integer>> groups=new TreeMap<>();
+            for(int i:layout[source])if(i>=0)groups.computeIfAbsent(partition(items.get(i).profile,tier),k->new ArrayList<>()).add(i);
+            if(groups.size()<2)continue;
+            var minorities=new ArrayList<>(groups.entrySet());
+            minorities.sort(Comparator.<Map.Entry<String,List<Integer>>>comparingInt(e->e.getValue().size())
+                    .thenComparing(Map.Entry::getKey));
+            for(int g=0;g<minorities.size()-1;g++){
+                var group=minorities.get(g);var ids=group.getValue();
+                if(ids.stream().anyMatch(i->!items.get(i).movable||!items.get(i).profile.moveAllowed()))continue;
+                int chosen=-1;int[] targets=null;long bestRank=Long.MAX_VALUE;
+                for(int dst=0;dst<c;dst++){
+                    if(dst==source)continue;
+                    int empty=0,occupied=0;boolean related=true;
+                    for(int i:layout[dst]){
+                        if(i<0)empty++;
+                        else{occupied++;if(!partition(items.get(i).profile,tier).equals(group.getKey())){related=false;break;}}
+                    }
+                    if(!related||empty<ids.size())continue;
+                    long distance=Math.abs((long)boxes.get(source).x2-boxes.get(dst).x2)
+                            +Math.abs((long)boxes.get(source).z2-boxes.get(dst).z2);
+                    long rank=(occupied==0?1_000_000L:0)+1000L*(empty-ids.size())+Math.min(999,distance);
+                    if(rank>=bestRank)continue;
+                    int[] candidate=new int[ids.size()];
+                    boolean[] used=new boolean[layout[dst].length];
+                    boolean fits=true;
+                    for(int k=0;k<ids.size();k++){
+                        int found=-1;
+                        for(int j=0;j<used.length;j++)if(layout[dst][j]<0&&!used[j]){
+                            if(++probes>500_000)return makeCandidate(items,boxes,chest,slot,spatial);
+                            if(accepts.test(ids.get(k),dst,j)){found=j;break;}
+                        }
+                        if(found<0){fits=false;break;}
+                        used[found]=true;candidate[k]=found;
+                    }
+                    if(fits){chosen=dst;targets=candidate;bestRank=rank;}
+                }
+                if(chosen<0)continue;
+                for(int k=0;k<ids.size();k++){
+                    int i=ids.get(k);layout[source][slot[i]]=-1;layout[chosen][targets[k]]=i;
+                    chest[i]=chosen;slot[i]=targets[k];
+                }
+            }
+        }
+        return makeCandidate(items,boxes,chest,slot,spatial);
+    }
+    private static Candidate makeCandidate(List<Stack> items,List<Storage> boxes,int[] chest,int[] slot,boolean spatial){
+        int moved=0;
+        for(int i=0;i<items.size();i++)if(chest[i]!=items.get(i).chest||slot[i]!=items.get(i).slot)moved++;
+        return new Candidate(chest,slot,cost(items,boxes,chest,spatial),moved);
     }
 
     private static String partition(SemanticItemProfile p,int tier){

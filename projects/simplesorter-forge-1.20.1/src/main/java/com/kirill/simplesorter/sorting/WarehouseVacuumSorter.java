@@ -273,7 +273,7 @@ public final class WarehouseVacuumSorter {
                 processed=snapshotIndex;
                 return false;
             }
-            LOG.info("Planning input: {} eligible inventories, {} empty, {} slots, {} fixed slots, reasons {}",
+            if(search==null)LOG.info("Planning input: {} eligible inventories, {} empty, {} slots, {} fixed slots, reasons {}",
                     chests.size(),eligibleEmpty,eligibleSlots,pinnedSlots,pinReasons);
             if(chests.size()<2||entries.isEmpty())return true;
             if(search==null){
@@ -347,8 +347,13 @@ public final class WarehouseVacuumSorter {
                     if(!resolution.category().moveAllowed())reason="protected";
                     else if(!canInsertAfterExtraction(ref.handler(),slot,stack))reason="cannot reinsert";
                     else{
-                        ItemStack simulated=ref.handler().extractItem(slot,stack.getCount(),true);
-                        if(!sameStackAndCount(stack,simulated))reason="extraction simulation differs";
+                        try{
+                            ItemStack simulated=ref.handler().extractItem(slot,stack.getCount(),true);
+                            if(!sameStackAndCount(stack,simulated))reason="extraction simulation differs";
+                        }catch(RuntimeException ex){
+                            reason="extraction simulation threw";
+                            LOG.debug("Cannot simulate extraction {}:{}",ref.pos(),slot,ex);
+                        }
                     }
                     if(reason!=null){
                         chest.pinnedSlots.add(slot);pinnedSlots++;pinReasons.merge(reason,1,Integer::sum);
