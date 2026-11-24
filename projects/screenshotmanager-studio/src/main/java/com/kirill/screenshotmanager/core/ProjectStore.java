@@ -26,9 +26,9 @@ public final class ProjectStore {
         Path tmp=Files.createTempFile(target.getParent(),"project-",".tmp");
         try{
             try(var out=new DataOutputStream(new BufferedOutputStream(Files.newOutputStream(tmp)))){
-                out.writeUTF("SMPROJECT1");out.writeUTF(fingerprint(source));out.writeInt(ops.size());
+                out.writeUTF("SMPROJECT2");out.writeUTF(fingerprint(source));out.writeInt(ops.size());
                 for(var wrapped:ops){
-                    out.writeBoolean(visible(wrapped));var op=unwrap(wrapped);
+                    out.writeBoolean(visible(wrapped));out.writeByte(opacity(wrapped));out.writeUTF(blend(wrapped).name());var op=unwrap(wrapped);
                     if(op instanceof MarkOperation m){
                         var v=m.value();out.writeByte(1);out.writeUTF(v.tool().name());
                         for(int i:new int[]{v.x1(),v.y1(),v.x2(),v.y2(),v.color(),v.thickness(),v.strength()})out.writeInt(i);
@@ -44,6 +44,10 @@ public final class ProjectStore {
                     else if(op instanceof AdvancedPhoto.Adjust a){out.writeByte(9);out.writeUTF(a.kind().name());for(int v:a.values())out.writeInt(v);}
                     else if(op instanceof AdvancedPhoto.Canvas a){out.writeByte(10);out.writeInt(a.width());out.writeInt(a.height());out.writeBoolean(a.cover());}
                     else if(op instanceof AdvancedPhoto.Caption a){out.writeByte(11);out.writeUTF(a.text());for(int v:new int[]{a.x(),a.y(),a.size(),a.color(),a.style(),a.angle()})out.writeInt(v);}
+                    else if(op instanceof WorkspacePhoto.Curves a){out.writeByte(12);for(int[] c:a.nodes())for(int v:c)out.writeByte(v);}
+                    else if(op instanceof WorkspacePhoto.Wheels a){out.writeByte(13);for(int v:a.values())out.writeInt(v);}
+                    else if(op instanceof WorkspacePhoto.Perspective a){out.writeByte(14);out.writeInt(a.horizontal());out.writeInt(a.vertical());}
+                    else if(op instanceof WorkspacePhoto.Text a){out.writeByte(15);out.writeUTF(a.text());out.writeUTF(a.family());for(int v:new int[]{a.x(),a.y(),a.size(),a.color(),a.style(),a.angle(),a.fontStyle()})out.writeInt(v);}
                     else throw new IOException("Unsupported layer");
                 }
             }
@@ -59,11 +63,11 @@ public final class ProjectStore {
     private static List<Operation> loadFrom(Path source,Path file)throws IOException{
         if(Files.size(file)>8_000_000)throw new IOException("Project too large");
         try(var in=new DataInputStream(new BufferedInputStream(Files.newInputStream(file)))){
-            if(!in.readUTF().equals("SMPROJECT1")||!in.readUTF().equals(fingerprint(source)))throw new IOException("Original image changed");
+            String magic=in.readUTF();boolean v2=magic.equals("SMPROJECT2");if(!(v2||magic.equals("SMPROJECT1"))||!in.readUTF().equals(fingerprint(source)))throw new IOException("Original image changed");
             int count=in.readInt();if(count<0||count>100)throw new IOException("Invalid layer count");
             List<Operation> ops=new ArrayList<>();
             for(int i=0;i<count;i++){
-                boolean visible=in.readBoolean();Operation op;
+                boolean visible=in.readBoolean();int opacity=v2?in.readUnsignedByte():100;var blend=v2?WorkspacePhoto.Blend.valueOf(in.readUTF()):WorkspacePhoto.Blend.NORMAL;if(opacity>100)throw new IOException("Invalid layer opacity");Operation op;
                 switch(in.readByte()){
                     case 1 -> {
                         Tool tool=Tool.valueOf(in.readUTF());int x=in.readInt(),y=in.readInt(),x2=in.readInt(),y2=in.readInt(),c=in.readInt(),th=in.readInt(),st=in.readInt();
@@ -77,14 +81,18 @@ public final class ProjectStore {
                     case 4 -> {int[] a=new int[ProPhoto.TONE_COUNT];for(int k=0;k<a.length;k++)a[k]=in.readInt();op=new ProPhoto.Tone(a);}
                     case 5 -> {int[] a=new int[ProPhoto.EFFECT_COUNT];for(int k=0;k<a.length;k++)a[k]=in.readInt();op=new ProPhoto.Effects(a);}
                     case 6 -> op=new ProPhoto.Focus(in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readBoolean());
-                    case 7 -> {String name=in.readUTF();int x=in.readInt(),y=in.readInt(),size=in.readInt(),rotation=in.readInt(),opacity=in.readInt(),n=in.readInt();if(n<8||n>1_500_000)throw new IOException("Invalid image layer");byte[] data=in.readNBytes(n);if(data.length!=n)throw new IOException("Truncated layer");op=new ProPhoto.ImageLayer(name,data,x,y,size,rotation,opacity);}
+                    case 7 -> {String name=in.readUTF();int x=in.readInt(),y=in.readInt(),size=in.readInt(),rotation=in.readInt(),imageOpacity=in.readInt(),n=in.readInt();if(n<8||n>1_500_000)throw new IOException("Invalid image layer");byte[] data=in.readNBytes(n);if(data.length!=n)throw new IOException("Truncated layer");op=new ProPhoto.ImageLayer(name,data,x,y,size,rotation,imageOpacity);}
                     case 8 -> {int distance=in.readInt(),range=in.readInt(),amount=in.readInt();op=new DepthMap.Focus(DepthMap.read(in),distance,range,amount);}
                     case 9 -> {var kind=AdvancedPhoto.Kind.valueOf(in.readUTF());int[] a=new int[kind.count];for(int k=0;k<a.length;k++)a[k]=in.readInt();op=new AdvancedPhoto.Adjust(kind,a);}
                     case 10 -> op=new AdvancedPhoto.Canvas(in.readInt(),in.readInt(),in.readBoolean());
                     case 11 -> op=new AdvancedPhoto.Caption(in.readUTF(),in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readInt());
+                    case 12 -> {int[][] a=new int[4][WorkspacePhoto.CURVE_POINTS];for(int[] c:a)for(int k=0;k<c.length;k++)c[k]=in.readUnsignedByte();op=new WorkspacePhoto.Curves(a);}
+                    case 13 -> {int[] a=new int[9];for(int k=0;k<9;k++)a[k]=in.readInt();op=new WorkspacePhoto.Wheels(a);}
+                    case 14 -> op=new WorkspacePhoto.Perspective(in.readInt(),in.readInt());
+                    case 15 -> {String t=in.readUTF(),family=in.readUTF();op=new WorkspacePhoto.Text(t,family,in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readInt());}
                     default -> throw new IOException("Unknown layer");
                 }
-                ops.add(new Layer(op,visible||geometry(op)));
+                ops.add(new Layer(op,visible||geometry(op),opacity,blend));
             }
             return List.copyOf(ops);
         }catch(IllegalArgumentException e){throw new IOException("Invalid project",e);}
