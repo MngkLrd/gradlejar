@@ -8,7 +8,7 @@ import java.util.List;
 
 /** Immutable operations in document-pixel coordinates. Original pixels are never modified. */
 public final class ImageDocument {
-    public enum Tool { PAN, CROP, RECT, ELLIPSE, ARROW, LINE, PEN, TEXT, HIGHLIGHT, PIXELATE, BLUR, REDACT, NUMBER, COPY_REGION, HIGHLIGHT_BRUSH, ERASER, FOCUS, FOCUS_SHADE, DEPTH_FOCUS }
+    public enum Tool { PAN, CROP, RECT, ELLIPSE, ARROW, LINE, PEN, TEXT, HIGHLIGHT, PIXELATE, BLUR, REDACT, NUMBER, COPY_REGION, HIGHLIGHT_BRUSH, ERASER, FOCUS, FOCUS_SHADE, DEPTH_FOCUS, EYEDROPPER, FILLED_RECT }
     public enum Filter { BRIGHTER, DARKER, CONTRAST, SATURATION, MONO, WARM, VIGNETTE, ROTATE, FLIP }
     public record Mark(Tool tool, int x1, int y1, int x2, int y2, int color, int thickness, int strength, String text, List<Point> points) {
         public Mark { points=points==null?List.of():points.stream().map(Point::new).toList(); text=text==null?"":text; }
@@ -40,7 +40,7 @@ public final class ImageDocument {
     // Geometry operations are fixed in the pipeline: moving/removing them would invalidate later coordinates.
     public static boolean geometry(Operation op){
         op=unwrap(op);
-        return op instanceof MarkOperation m&&m.value().tool()==Tool.CROP
+        return op instanceof AdvancedPhoto.Canvas || op instanceof MarkOperation m&&m.value().tool()==Tool.CROP
             ||op instanceof FilterOperation f&&(f.value()==Filter.ROTATE||f.value()==Filter.FLIP);
     }
     private boolean valid(int index){return index>=0&&index<count();}
@@ -49,6 +49,10 @@ public final class ImageDocument {
         revisions.add(List.copyOf(next));cursor++;
         if(revisions.size()>101){revisions.removeFirst();cursor--;}
         return true;
+    }
+    public boolean duplicate(int i){
+        if(!valid(i)||geometry(snapshot().get(i))||count()>=100)return false;
+        var next=new ArrayList<>(snapshot());next.add(i+1,next.get(i));return commit(next);
     }
     public boolean toggle(int i){
         if(!valid(i)||geometry(snapshot().get(i)))return false;
@@ -70,6 +74,7 @@ public final class ImageDocument {
     }
     public boolean translate(int i,int dx,int dy){
         if(!valid(i))return false;
+        if(unwrap(snapshot().get(i)) instanceof AdvancedPhoto.Caption c)return replace(i,new AdvancedPhoto.Caption(c.text(),c.x()+dx,c.y()+dy,c.size(),c.color(),c.style(),c.angle()));
         if(unwrap(snapshot().get(i)) instanceof ProPhoto.ImageLayer im)return replace(i,im.transform(im.x()+dx,im.y()+dy,im.size(),im.rotation(),im.opacity()));
         if(!(unwrap(snapshot().get(i)) instanceof MarkOperation mark)||geometry(mark))return false;
         Mark m=mark.value();
@@ -104,7 +109,7 @@ public final class ImageDocument {
             Operation op=ops.get(i);if(!visible(op))continue;
             Operation base=unwrap(op);
             if(base instanceof MarkOperation m&&m.value().tool()==Tool.ERASER)continue;
-            if(base instanceof MarkOperation m&&erasable(m.value().tool())){
+            if(base instanceof AdvancedPhoto.Caption||base instanceof MarkOperation m&&erasable(m.value().tool())){
                 List<Mark> masks=new ArrayList<>();
                 for(int k=i+1;k<ops.size()&&!geometry(ops.get(k));k++){
                     Operation next=unwrap(ops.get(k));
@@ -112,7 +117,7 @@ public final class ImageDocument {
                 }
                 if(!masks.isEmpty()){
                     BufferedImage overlay=new BufferedImage(img.getWidth(),img.getHeight(),BufferedImage.TYPE_INT_ARGB);
-                    draw(overlay,m.value());
+                    base.apply(overlay);
                     Graphics2D erase=overlay.createGraphics();
                     try{erase.setComposite(AlphaComposite.Clear);erase.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
                         for(Mark mask:masks)stroke(erase,mask);
@@ -166,7 +171,7 @@ public final class ImageDocument {
     }
     private static int clamp(int v,int min,int max){return Math.max(min,Math.min(max,v));}
     private static boolean erasable(Tool tool){return switch(tool){
-        case PEN,HIGHLIGHT_BRUSH,HIGHLIGHT,TEXT,NUMBER,RECT,ELLIPSE,LINE,ARROW -> true;
+        case PEN,HIGHLIGHT_BRUSH,HIGHLIGHT,TEXT,NUMBER,RECT,FILLED_RECT,ELLIPSE,LINE,ARROW -> true;
         default -> false;
     };}
     private static void stroke(Graphics2D g,Mark m){
@@ -200,6 +205,7 @@ public final class ImageDocument {
             g.setColor(new Color(m.color(),true));g.setStroke(new BasicStroke(stroke,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
             switch(m.tool()){
                 case RECT -> g.drawRect(x,y,w-1,h-1);
+                case FILLED_RECT -> g.fillRect(x,y,w,h);
                 case ELLIPSE -> g.drawOval(x,y,w-1,h-1);
                 case LINE -> g.drawLine(ax,ay,bx,by);
                 case ARROW -> {

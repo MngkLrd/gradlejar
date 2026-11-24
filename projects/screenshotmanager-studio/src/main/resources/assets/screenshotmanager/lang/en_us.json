@@ -14,5 +14,9 @@
   "key.screenshotmanager.director_play": "Flyby: automatic camera approach (Shift: GIF)",
   "key.screenshotmanager.director_clear": "Flyby: clear start",
   "key.screenshotmanager.depth_capture": "Capture screenshot with depth (experimental)",
-  "key.screenshotmanager.cutout": "Capture isolated living entity (experimental)"
+  "key.screenshotmanager.cutout": "Capture isolated living entity (experimental)",
+  "key.screenshotmanager.ghost": "Ghost shot: toggle latest screenshot overlay",
+  "key.screenshotmanager.roll": "Photo mode: change roll (Shift: reverse)",
+  "key.screenshotmanager.panorama": "Capture 360 panorama (assign a key)",
+  "key.screenshotmanager.super_resolution": "Experimental 2x render capture"
 }
