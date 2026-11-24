@@ -51,28 +51,29 @@ public final class AdaptiveWarehousePlanner {
         sorted.sort(Comparator.comparing((Integer i)->semanticKey(items.get(i).profile))
                 .thenComparing(i->items.get(i).profile.itemId())
                 .thenComparingInt(i->items.get(i).chest).thenComparingInt(i->items.get(i).slot));
-        List<Integer> natural=new ArrayList<>();
-        for(int i=0;i<c;i++)natural.add(i);
+        List<Integer> natural=SpatialWarehouseLayout.columnOrder(boxes,false);
         List<List<Integer>> orders=new ArrayList<>();
         orders.add(natural);
-        // Prefer currently empty storage in a competing candidate. This lets
-        // a new chest actually resolve a mixed family without requiring one.
-        List<Integer> emptyFirst=new ArrayList<>(natural);
-        emptyFirst.sort(Comparator.comparingInt((Integer i)->occupied(original[i])==0?0:1)
-                .thenComparingInt(i->-boxes.get(i).capacity).thenComparingInt(i->i));
-        orders.add(emptyFirst);
+        // The candidate space must not depend on the previous allocation
+        // or the player's position. Capacity changes are real new evidence;
+        // empty/nonempty status alone must not cause a new target every click.
+        List<Integer> capacityFirst=new ArrayList<>(natural);
+        capacityFirst.sort(Comparator.comparingInt((Integer i)->-boxes.get(i).capacity));
+        orders.add(capacityFirst);
+        List<Integer> reverse=new ArrayList<>(natural);
+        Collections.reverse(reverse);orders.add(reverse);
         if(spatial){
-            orders.add(SpatialWarehouseLayout.columnOrder(boxes,false));
             orders.add(SpatialWarehouseLayout.columnOrder(boxes,true));
             orders.add(SpatialWarehouseLayout.neighborOrder(boxes));
         }
-        for(List<Integer> order:orders){
+        for(List<Integer> order:new LinkedHashSet<>(orders)){
             // Coarse and fine cuts compete on the same quality objective.
             // More spare slots allow form separation when it improves purity.
             for(int granularity:new int[]{3,2}){
                 List<Address> desired=pack(items,boxes,sorted,order,granularity);
                 if(desired.size()!=n)continue;
                 Candidate candidate=repair(items,boxes,original,sorted,desired,accepts,spatial);
+                // An unchanged feasible layout wins every quality tie.
                 if(candidate.cost<best.cost || candidate.cost==best.cost&&candidate.moved<best.moved)best=candidate;
             }
         }

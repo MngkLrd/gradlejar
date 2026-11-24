@@ -123,25 +123,26 @@ public final class WarehouseVacuumSorter {
         // frozen pre-sort snapshot. Unknown "misc" is a valid fallback family.
         public void refreshContainer(int ignored) {}
 
-        public int unresolvedMixedChests() {
-            int result = 0;
-            for (ContainerRef ref : containers) {
-                try {
-                    Map<String, Integer> families = new HashMap<>();
-                    for (int s = 0; s < ref.slots(); s++) {
-                        ItemStack stack = ref.handler().getStackInSlot(s);
-                        if (!stack.isEmpty()) {
-                            String family = StrictStackClassifier.family(stack);
-                            families.merge(family, 1, Integer::sum);
-                        }
+        public record Quality(int mixed,int occupied,int score){}
+        public Quality quality(){
+            int mixed=0,occupied=0;long sum=0,slots=0;
+            for(ContainerRef ref:containers){
+                try{
+                    if(!ref.isValid())continue;
+                    List<SemanticItemProfile> profiles=new ArrayList<>();
+                    for(int s=0;s<ref.slots();s++){
+                        ItemStack stack=ref.handler().getStackInSlot(s);
+                        if(!stack.isEmpty())profiles.add(StrictStackClassifier.profile(stack));
                     }
-                    if (families.size() > 1) result++;
-                } catch (RuntimeException ex) {
-                    LOG.warn("Cannot inspect chest {} after sorting", ref.pos(), ex);
-                }
+                    var q=SemanticChestQuality.evaluate(profiles);
+                    if(q.occupied()==0)continue;
+                    occupied++;if(q.mixed())mixed++;
+                    slots+=q.occupied();sum+=(long)q.score()*q.occupied();
+                }catch(RuntimeException ex){LOG.warn("Cannot inspect chest quality at {}",ref.pos(),ex);}
             }
-            return result;
+            return new Quality(mixed,occupied,slots==0?100:(int)Math.round((double)sum/slots));
         }
+        public int unresolvedMixedChests(){return quality().mixed();}
 
         public int unknownFamilySlots() {
             int count = 0;
