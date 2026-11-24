@@ -81,7 +81,7 @@ public final class ProjectStore {
                     case 4 -> {int[] a=new int[ProPhoto.TONE_COUNT];for(int k=0;k<a.length;k++)a[k]=in.readInt();op=new ProPhoto.Tone(a);}
                     case 5 -> {int[] a=new int[ProPhoto.EFFECT_COUNT];for(int k=0;k<a.length;k++)a[k]=in.readInt();op=new ProPhoto.Effects(a);}
                     case 6 -> op=new ProPhoto.Focus(in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readBoolean());
-                    case 7 -> {String name=in.readUTF();int x=in.readInt(),y=in.readInt(),size=in.readInt(),rotation=in.readInt(),opacity=in.readInt(),n=in.readInt();if(n<8||n>1_500_000)throw new IOException("Invalid image layer");byte[] data=in.readNBytes(n);if(data.length!=n)throw new IOException("Truncated layer");op=new ProPhoto.ImageLayer(name,data,x,y,size,rotation,opacity);}
+                    case 7 -> {String name=in.readUTF();int x=in.readInt(),y=in.readInt(),size=in.readInt(),rotation=in.readInt(),imageOpacity=in.readInt(),n=in.readInt();if(n<8||n>1_500_000)throw new IOException("Invalid image layer");byte[] data=in.readNBytes(n);if(data.length!=n)throw new IOException("Truncated layer");op=new ProPhoto.ImageLayer(name,data,x,y,size,rotation,imageOpacity);}
                     case 8 -> {int distance=in.readInt(),range=in.readInt(),amount=in.readInt();op=new DepthMap.Focus(DepthMap.read(in),distance,range,amount);}
                     case 9 -> {var kind=AdvancedPhoto.Kind.valueOf(in.readUTF());int[] a=new int[kind.count];for(int k=0;k<a.length;k++)a[k]=in.readInt();op=new AdvancedPhoto.Adjust(kind,a);}
                     case 10 -> op=new AdvancedPhoto.Canvas(in.readInt(),in.readInt(),in.readBoolean());
