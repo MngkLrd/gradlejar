@@ -116,7 +116,7 @@ def payload(tag):
     if t==10:return b"".join(bytes([x[0]])+utf(k)+payload(x) for k,x in v.items())+b"\0"
     raise ValueError(t)
 class Template:
-    def __init__(self,w,h,d):self.size=(w,h,d);self.blocks={};self.entities=[];self.doors=[];self.rooms=[]
+    def __init__(self,w,h,d):self.size=(w,h,d);self.blocks={};self.entities=[];self.doors=[];self.rooms=[];self.block_nbt={}
     def put(self,x,y,z,name,**props):
         assert all(0<=a<b for a,b in zip((x,y,z),self.size)), (x,y,z,self.size)
         self.blocks[x,y,z]=(mc(name),tuple(sorted((k,str(v).lower()) for k,v in props.items())))
@@ -149,7 +149,9 @@ class Template:
                 v={"Name":Str(name)}
                 if props:v["Properties"]=C({k:Str(v) for k,v in props})
                 palette.append(v)
-            blocks.append({"pos":L(3,list(pos)),"state":I(index[state])})
+            entry={"pos":L(3,list(pos)),"state":I(index[state])}
+            if pos in self.block_nbt:entry["nbt"]=C(self.block_nbt[pos])
+            blocks.append(entry)
         for x,y,z in self.doors:
             assert self.blocks[x,y,z][0].endswith("_door") and self.blocks[x,y+1,z][0].endswith("_door")
             assert self.blocks[x,y,z+1][0]=="minecraft:air"
