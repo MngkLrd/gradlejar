@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "lid=false,stage=0": {
+      "model": "hearthboundcooking:block/clay_stockpot_empty"
+    },
+    "lid=true,stage=0": {
+      "model": "hearthboundcooking:block/clay_stockpot_lid"
+    },
+    "lid=false,stage=1": {
+      "model": "hearthboundcooking:block/clay_stockpot_filled"
+    },
+    "lid=true,stage=1": {
+      "model": "hearthboundcooking:block/clay_stockpot_lid"
+    },
+    "lid=false,stage=2": {
+      "model": "hearthboundcooking:block/clay_stockpot_filled"
+    },
+    "lid=true,stage=2": {
+      "model": "hearthboundcooking:block/clay_stockpot_lid"
+    },
+    "lid=false,stage=3": {
+      "model": "hearthboundcooking:block/clay_stockpot_filled"
+    },
+    "lid=true,stage=3": {
+      "model": "hearthboundcooking:block/clay_stockpot_lid"
+    }
+  }
+}

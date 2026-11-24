@@ -1,0 +1,21 @@
+{
+  "block.hearthboundcooking.clay_stockpot": "Большой глиняный горшок",
+  "block.hearthboundcooking.bronze_cauldron": "Бронзовый котёл",
+  "item.hearthboundcooking.unfired_stockpot": "Необожжённый большой горшок",
+  "hearthbound.quality": "Качество готовки: %s%% (%s)",
+  "hearthbound.tier.excellent": "Отличное",
+  "hearthbound.tier.good": "Хорошее",
+  "hearthbound.tier.ordinary": "Обычное",
+  "hearthbound.tier.poor": "Неудачное",
+  "hearthbound.ready": "Готово: %s порций · Качество %s%% · Набери миской",
+  "hearthbound.status": "Продукты %s/%s · Вода %s/%s mB · %s · %s",
+  "hearthbound.unbalanced": "Выровняй 3–5 ингредиентов",
+  "hearthbound.batches": "Партий: %s",
+  "hearthbound.state.cold": "Холодный",
+  "hearthbound.state.warming": "Нагревается",
+  "hearthbound.state.boiling": "Кипит",
+  "hearthbound.state.simmering": "Томится",
+  "hearthbound.full": "Нет места или достигнут предел ингредиента",
+  "hearthbound.open_lid": "Присядь и нажми ПКМ пустой рукой, чтобы открыть крышку",
+  "hearthbound.container_ingredient": "Продукты с возвращаемой тарой не поддерживаются"
+}
