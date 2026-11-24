@@ -3,10 +3,10 @@ loaderVersion="[4,)"
 license="All Rights Reserved"
 [[mods]]
 modId="husshusshuss"
-version="0.2.0-beta"
+version="0.3.0-beta"
 displayName="Huss Huss Huss"
 authors="ataflore"
-description='''Everyone goes out partying. Except the villagers who grind.'''
+description='''Everyone goes out partying. Except the villagers who grind. Original meme audio: @larpniverse, excerpt supplied by the user.'''
 [[dependencies.husshusshuss]]
 modId="neoforge"
 type="required"

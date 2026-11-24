@@ -81,12 +81,13 @@ public final class Training {
         v.setXRot(0);
         Vec3 m=v.getDeltaMovement();
         v.setDeltaMovement(m.x*.08,m.y,m.z*.08);
-        if (phase==4 || phase==14 || phase==24) {
-            if (session.voice()) level.playSound(null,v.getX(),v.getY()+1,v.getZ(),HussMod.HUSS.get(),SoundSource.NEUTRAL,2.5f,phase==24?.82f:phase==14?1.12f:1.0f);
+        // One complete original excerpt per cycle; never stack the three individual shouts.
+        if (phase==0 && session.voice()) level.playSound(null,v.getX(),v.getY()+1,v.getZ(),HussMod.HUSS.get(),SoundSource.NEUTRAL,2.5f,1.0f);
+        if (phase==2 || phase==6 || phase==10 || phase==21 || phase==25 || phase==29) {
             level.sendParticles(ParticleTypes.CLOUD,v.getX(),v.getY()+.12,v.getZ(),7,.26,.04,.26,.04);
             double a=Math.toRadians(session.yaw());
             level.sendParticles(ParticleTypes.CRIT,v.getX()-Math.sin(a)*.65,v.getY()+1.25,v.getZ()+Math.cos(a)*.65,8,.18,.14,.18,.13);
-            if (phase==24 && v.onGround()) {
+            if (phase==29 && v.onGround()) {
                 v.setDeltaMovement(0,.31,0);v.hasImpulse=true;
                 level.sendParticles(ParticleTypes.POOF,v.getX(),v.getY()+.15,v.getZ(),10,.4,.05,.4,.04);
                 if (session.voice()) level.playSound(null,v.blockPosition(),SoundEvents.PLAYER_ATTACK_STRONG,SoundSource.NEUTRAL,.75f,.8f);

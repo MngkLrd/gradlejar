@@ -42,10 +42,10 @@ public final class TrainingModel extends VillagerModel<Villager> {
         float partial=age-v.tickCount;
         float elapsed=effect==null?0:Math.max(0,Training.DURATION+2-effect.getDuration()+partial);
         float t=elapsed%Training.CYCLE;
-        float a=hit(t,4,5),b=hit(t,14,5),c=hit(t,24,6);
+        float a=Math.max(hit(t,2,2.5f),hit(t,21,3)),b=Math.max(hit(t,6,2.5f),hit(t,25,3)),c=Math.max(hit(t,10,3),hit(t,29,3));
         float beat=Math.max(a,Math.max(b,c));
-        float crouch=hit(t,0,5)+hit(t,10,4)+hit(t,20,4);
-        float settle=hit(t,31,5);
+        float crouch=hit(t,0,2)+hit(t,16,5)+hit(t,34,2);
+        float settle=hit(t,33,3);
         float sway=.07f*Mth.sin(t*.35f);
         float mode=(int)(elapsed/Training.CYCLE)%3;
         // Boxing, double-arm flex, then high knee power punches.

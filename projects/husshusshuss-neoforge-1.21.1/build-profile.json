@@ -1,11 +1,11 @@
 {
   "slug": "husshusshuss",
-  "version": "0.2.0-beta",
+  "version": "0.3.0-beta",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "husshusshuss-neoforge-mc1.21.1-0.2.0-beta.jar",
+  "jar_glob": "husshusshuss-neoforge-mc1.21.1-0.3.0-beta.jar",
   "minimum_loader_version": "21.1.0",
   "compile_loader_version": "21.1.228"
 }

@@ -35,8 +35,8 @@ public final class ClientEvents {
             if(!(e.getEntity() instanceof Villager v) || v.getEffect(HussMod.trainingEffect())==null || v.hasCustomName()) return;
             int elapsed=dev.ataflore.huss.training.Training.DURATION+2-v.getEffect(HussMod.trainingEffect()).getDuration();
             int p=Math.floorMod(elapsed,36);
-            if(p<2 || p>30) return;
-            e.setContent(Component.literal(p<12?"HUSS!":p<22?"HUSS! HUSS!":"HUSS! HUSS! HUSS!").withStyle(ChatFormatting.GOLD,ChatFormatting.BOLD));
+            if(p<1 || (p>14 && p<19) || p>32) return;
+            e.setContent(Component.literal((p<5 || (p>=19 && p<24))?"HUSS!":(p<9 || (p>=24 && p<28))?"HUSS! HUSS!":"HUSS! HUSS! HUSS!").withStyle(ChatFormatting.GOLD,ChatFormatting.BOLD));
             e.setCanRender(TriState.TRUE);
         }
     }
