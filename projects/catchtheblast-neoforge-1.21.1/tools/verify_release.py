@@ -1,7 +1,7 @@
 import sys,zipfile,json,struct
 with zipfile.ZipFile(sys.argv[1]) as z:
     names=set(z.namelist())
-    for n in ['CatchTheBlast','item/BlastShieldItem','item/Charge','combat/BlastCombat','combat/BlastFx','combat/TravellingWave','client/ClientSetup','client/BlastShieldRenderer','client/BlastShieldGeometry','client/BlastShieldClientExtensions','client/ChargeHud','config/BlastConfig']:
+    for n in ['CatchTheBlast','item/BlastShieldItem','item/Charge','combat/BlastCombat','combat/BlastFx','combat/TravellingWave','client/ClientSetup','client/BlastShieldRenderer','client/BlastShieldGeometry','client/BlastShieldClientExtensions','client/ChargeHud','config/BlastConfig','config/BlastCommands']:
         assert 'dev/ataflore/catchtheblast/'+n+'.class' in names,n
     a='assets/catchtheblast/'
     for i in range(4):

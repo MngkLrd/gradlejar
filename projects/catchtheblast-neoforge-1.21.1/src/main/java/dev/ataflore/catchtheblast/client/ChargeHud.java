@@ -19,8 +19,8 @@ public final class ChargeHud {
         Minecraft mc=Minecraft.getInstance();
         if(mc.player==null || mc.level==null || mc.options.hideGui || mc.player.isSpectator() || mc.screen!=null) return;
         ItemStack stack=mc.player.getMainHandItem();
-        if(!(stack.getItem() instanceof BlastShieldItem)) stack=mc.player.getOffhandItem();
-        if(!(stack.getItem() instanceof BlastShieldItem)) return;
+        if(!(stack.getItem() instanceof BlastShieldItem) || Charge.get(stack)<=100) stack=mc.player.getOffhandItem();
+        if(!(stack.getItem() instanceof BlastShieldItem) || Charge.get(stack)<=100) return;
         GuiGraphics g=event.getGuiGraphics();
         int charge=Charge.get(stack), width=92, x=(g.guiWidth()-width)/2;
         int y=Math.min(g.guiHeight()/2+34,g.guiHeight()-82);

@@ -7,6 +7,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import dev.ataflore.catchtheblast.combat.TravellingWave;
 import dev.ataflore.catchtheblast.config.BlastConfig;
+import dev.ataflore.catchtheblast.config.BlastCommands;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -28,6 +29,7 @@ public final class CatchTheBlast {
         NeoForge.EVENT_BUS.addListener(BlastCombat::onBlock);
         NeoForge.EVENT_BUS.addListener(TravellingWave::tick);
         NeoForge.EVENT_BUS.addListener(TravellingWave::stop);
+        NeoForge.EVENT_BUS.addListener(BlastCommands::register);
     }
     private void creative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.COMBAT) event.accept(BLAST_SHIELD.get());

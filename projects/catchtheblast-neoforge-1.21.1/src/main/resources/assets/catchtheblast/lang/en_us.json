@@ -9,5 +9,7 @@
   "message.catchtheblast.overload": "OVERLOAD! %s%% — release now",
   "message.catchtheblast.released": "Blast released",
   "message.catchtheblast.burst": "The shield overloaded!",
-  "hud.catchtheblast.charge": "BLAST  %s%%"
+  "hud.catchtheblast.charge": "BLAST  %s%%",
+  "command.catchtheblast.terrain.enabled": "Catch the Blast: terrain destruction enabled.",
+  "command.catchtheblast.terrain.disabled": "Catch the Blast: terrain destruction disabled."
 }
