@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="All Rights Reserved"
+[[mods]]
+modId="campfirebatch"
+version="1.0.0"
+displayName="Campfire Batch"
+authors="MngkLrd"
+description="Sneak-right-click a lit campfire to fill its available cooking slots using the held stack."
+[[dependencies.campfirebatch]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.200,21.2)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.campfirebatch]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
