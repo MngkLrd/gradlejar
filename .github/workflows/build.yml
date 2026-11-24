@@ -195,7 +195,7 @@ jobs:
         run: |
           set -euo pipefail
           echo "::group::Generate Java, models, textures and structure NBT"
-          timeout --kill-after=5s 90s python3 -u projects/midnighteve/expand_winterfolk.py
+          timeout --kill-after=5s 90s python3 -u projects/midnighteve/expand_evergreen.py
           echo "::endgroup::"
           test -s projects/midnighteve/src/main/resources/data/midnighteve/structure/hollycroft_farm.nbt
           test -s projects/midnighteve/src/main/resources/data/midnighteve/structure/everlight_hamlet.nbt
@@ -224,6 +224,19 @@ jobs:
                   print("Restored verified music:", asset, len(data), flush=True)
           PY
           test -s projects/midnighteve/src/main/resources/assets/midnighteve/sounds/music/lanterns_at_dusk.ogg
+      - name: Restore licensed Evergreen sound effects
+        if: matrix.project_dir == 'projects/midnighteve'
+        timeout-minutes: 2
+        run: |
+          set -euo pipefail
+          dest=projects/midnighteve/src/main/resources/assets/midnighteve/sounds/celebration
+          mkdir -p "$dest"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 25 --retry 1 -o "$dest/bell.ogg" 'https://raw.githubusercontent.com/Mcamento8/open-game-sfx-index/main/audio/impact-sounds/impactBell_heavy_001.ogg'
+          echo "9df61e3ae9a83dc65e5a1fd3ed19d480876f3b22b963a1b9ef6fa293592dcec4  $dest/bell.ogg" | sha256sum --check
+          test -s "$dest/bell.ogg"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 25 --retry 1 -o "$dest/chime.ogg" 'https://raw.githubusercontent.com/Mcamento8/open-game-sfx-index/main/audio/music-jingles/jingles_PIZZI07.ogg'
+          echo "91870588924e0e498c6eb8d4f4ccf8595c9e7dc51fb553797b551062e642ce7c  $dest/chime.ogg" | sha256sum --check
+          test -s "$dest/chime.ogg"
       - name: Validate profile
         id: profile
         env:
