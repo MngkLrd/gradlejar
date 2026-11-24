@@ -1,0 +1,105 @@
+name: Huss Huss Huss 0.3.0 - eleven JARs
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/generate_huss_ports.py'
+      - '.github/workflows/huss-11.yml'
+permissions:
+  contents: write
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {loader: forge, mc: '1.20.1'}
+          - {loader: neoforge, mc: '1.20.1'}
+          - {loader: fabric, mc: '1.20.1'}
+          - {loader: neoforge, mc: '1.21.1'}
+          - {loader: fabric, mc: '1.21.1'}
+          - {loader: neoforge, mc: '26.1.2'}
+          - {loader: fabric, mc: '26.1.2'}
+          - {loader: neoforge, mc: '26.2'}
+          - {loader: fabric, mc: '26.2'}
+          - {loader: neoforge, mc: '26.3'}
+          - {loader: fabric, mc: '26.3'}
+    steps:
+      - uses: actions/checkout@v4
+      - id: config
+        env:
+          LOADER: ${{ matrix.loader }}
+          MC: ${{ matrix.mc }}
+        run: |
+          set -euo pipefail
+          project=$(python3 tools/generate_huss_ports.py "$LOADER" "$MC")
+          python3 tools/resolve_project.py "$project" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.config.outputs.java }}
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ steps.config.outputs.gradle }}
+      - name: Compile actual Minecraft mod
+        working-directory: ${{ steps.config.outputs.project_dir }}
+        run: gradle --no-daemon --stacktrace clean build
+      - name: Verify loader metadata, compiled classes, original audio and recipes
+        id: verify
+        run: python3 tools/verify_build_output.py "${{ steps.config.outputs.project_dir }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: huss-${{ matrix.loader }}-${{ matrix.mc }}
+          path: ${{ steps.verify.outputs.jar_path }}
+          if-no-files-found: error
+      - name: Publish verified individual JAR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOADER: ${{ matrix.loader }}
+          MC: ${{ matrix.mc }}
+          JAR: ${{ steps.verify.outputs.jar_path }}
+        run: |
+          gh release create "huss-port-$LOADER-$MC-$GITHUB_RUN_NUMBER-$GITHUB_RUN_ATTEMPT" "$JAR" --target "$GITHUB_SHA" --title "Huss 0.3.0 $LOADER $MC" --notes "Compilation and static validation passed. Gameplay not tested." --prerelease
+  package:
+    needs: compile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: huss-*
+          path: jars
+          merge-multiple: true
+      - name: Verify exact matrix and package only eleven JARs
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile, hashlib
+          matrix=[('1.20.1',['forge','neoforge','fabric']),('1.21.1',['neoforge','fabric']),('26.1.2',['neoforge','fabric']),('26.2',['neoforge','fabric']),('26.3',['neoforge','fabric'])]
+          expected={f'husshusshuss-{l}-mc{mc}-0.3.0-beta.jar':l for mc,ls in matrix for l in ls}
+          all_jars=list(Path('jars').rglob('*.jar'))
+          assert len(all_jars)==11 and {p.name for p in all_jars}==set(expected),all_jars
+          by_name={p.name:p for p in all_jars}
+          with zipfile.ZipFile('HussHussHuss-0.3.0-ALL-11-JARs.zip','w',zipfile.ZIP_DEFLATED) as out:
+              for loader,folder in [('forge','Forge'),('neoforge','NeoForge'),('fabric','Fabric')]:
+                  for name,l in expected.items():
+                      if l!=loader:continue
+                      p=by_name[name]
+                      with zipfile.ZipFile(p) as z:
+                          assert z.testzip() is None
+                          assert hashlib.sha256(z.read('assets/husshusshuss/sounds/huss.ogg')).hexdigest()=='a060227d7a37af7184af1cfaffb4cc6a6ddb9cdf3dd41bdd2f43b539b0051c02'
+                      out.write(p,folder+'/'+name)
+          with zipfile.ZipFile('HussHussHuss-0.3.0-ALL-11-JARs.zip') as z:
+              assert len(z.namelist())==11 and all(n.endswith('.jar') for n in z.namelist())
+              print('\n'.join(z.namelist()))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HussHussHuss-0.3.0-ALL-11-JARs
+          path: HussHussHuss-0.3.0-ALL-11-JARs.zip
+      - name: Publish ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "huss-all-11-$GITHUB_RUN_NUMBER-$GITHUB_RUN_ATTEMPT" HussHussHuss-0.3.0-ALL-11-JARs.zip --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "Huss Huss Huss 0.3.0 - 11 JARs" --notes "Exactly eleven verified compiled JARs, no sources. Original audio checksum verified. Gameplay not tested." --prerelease
