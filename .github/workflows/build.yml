@@ -193,7 +193,7 @@ jobs:
         if: matrix.project_dir == 'projects/midnighteve'
         run: |
           set -euo pipefail
-          python3 projects/midnighteve/expand_living.py
+          python3 projects/midnighteve/expand_frostlands.py
           if ! command -v ffmpeg >/dev/null; then
             sudo apt-get update -qq
             sudo apt-get install -y -qq ffmpeg
@@ -381,6 +381,7 @@ jobs:
           python3 test_reborn_server.py
           wait "$pid"
           python3 "$GITHUB_WORKSPACE/tools/test_midnight_worldgen.py" run runs/server
+          python3 test_frostlands.py run runs/server
           trap - EXIT
       - name: Upload compiled JAR as workflow artifact (release fallback)
         if: steps.verify.outcome == 'success'
