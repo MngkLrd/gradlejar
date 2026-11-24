@@ -46,7 +46,7 @@ public final class ProPhoto {
         return nodes[k]+(nodes[k+1]-nodes[k])*t;
     }
     public record Effects(int[] values) implements ImageDocument.Operation{
-        public Effects{values=validated(values,EFFECT_COUNT);}
+        public Effects{if(values.length!=EFFECT_COUNT)throw new IllegalArgumentException("Invalid effects");int bars=clamp(values[6],0,250);values=validated(values,EFFECT_COUNT);values[6]=bars;}
         public int[] values(){return values.clone();}
         public String label(){return "Cinematic effects";}
         public BufferedImage apply(BufferedImage img){

@@ -165,6 +165,24 @@ public final class CoreSmoke {
         check(workspaceOps.size()==5&&ImageDocument.opacity(workspaceOps.getFirst())==50&&ImageDocument.unwrap(workspaceOps.get(3)) instanceof WorkspacePhoto.Text,"Workspace persistence");
         check(blendDoc.render(workspaceOps).getRGB(12,12)==blendDoc.render(blendDoc.snapshot()).getRGB(12,12),"Workspace round trip render");
         Files.delete(workspaceSource.resolveSibling("original.png.smproject"));Files.delete(workspaceSource);Files.delete(workspaceRoot);
+        var lens=new LensTilt(new int[]{0,14,0,100,0,25,0,0,0});
+        var lensImg=lens.apply(ImageDocument.copy(stripes));
+        check(lensImg.getRGB(51,60)==stripes.getRGB(51,60),"Lens focal band stays sharp");
+        check(lensImg.getRGB(51,115)!=stripes.getRGB(51,115),"Lens foreground blur");
+        check(lensImg.getRGB(51,3)==stripes.getRGB(51,3),"Independent background blur");
+        check(lens.radius(.5,.8)>lens.radius(.5,.59),"Progressive blur radius");
+        var vhs=new FilmLooks.Look(FilmLooks.Profile.VHS,FilmLooks.Profile.VHS.defaults());
+        var tape=vhs.apply(ImageDocument.copy(stripes));check(tape.getRGB(51,3)!=stripes.getRGB(51,3),"VHS changes pixels");
+        check(tape.getRGB(51,3)==vhs.apply(ImageDocument.copy(stripes)).getRGB(51,3),"Deterministic VHS");
+        for(var profile:FilmLooks.Profile.values())check(new FilmLooks.Look(profile,new int[5]).apply(ImageDocument.copy(img)).getRGB(0,0)==img.getRGB(0,0),"Zero strength profile");
+        var wideBars=new ProPhoto.Effects(new int[]{0,0,0,0,0,0,250});
+        var barImage=wideBars.apply(ImageDocument.copy(stripes));
+        check(barImage.getRGB(51,29)==0xff000000&&barImage.getRGB(51,30)==0xffffffff,"25 percent letterbox");
+        check(new ProPhoto.Effects(new int[]{0,0,0,0,0,0,100}).apply(ImageDocument.copy(stripes)).getRGB(51,12)==0xffffffff,"Old letterbox compatible");
+        var filmRoot=Files.createTempDirectory("sm-film");var filmSource=filmRoot.resolve("original.png");javax.imageio.ImageIO.write(stripes,"png",filmSource.toFile());
+        ProjectStore.save(filmSource,List.of(new ImageDocument.Layer(vhs,true),new ImageDocument.Layer(lens,true),new ImageDocument.Layer(wideBars,true)));
+        var filmOps=ProjectStore.load(filmSource);check(filmOps.size()==3&&ImageDocument.unwrap(filmOps.get(0)) instanceof FilmLooks.Look&&ImageDocument.unwrap(filmOps.get(1)) instanceof LensTilt&&((ProPhoto.Effects)ImageDocument.unwrap(filmOps.get(2))).values()[6]==250,"Film project round trip");
+        Files.delete(filmSource.resolveSibling("original.png.smproject"));Files.delete(filmSource);Files.delete(filmRoot);
         System.out.println("Screenshot Manager core smoke tests passed");
     }
 }

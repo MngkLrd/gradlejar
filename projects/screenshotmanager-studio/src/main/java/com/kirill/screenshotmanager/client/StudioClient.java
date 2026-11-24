@@ -5,6 +5,7 @@ import com.kirill.screenshotmanager.core.StudioPreferences;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import com.kirill.screenshotmanager.core.DepthMap;
+import com.kirill.screenshotmanager.core.FilmLooks;
 import com.kirill.screenshotmanager.core.ShotFiles.Shot;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
@@ -25,7 +26,9 @@ import java.nio.file.Files;
 import java.util.concurrent.CompletableFuture;
 
 public final class StudioClient {
-    private static KeyMapping edit,library,copy,capture,photo,clean,zoomIn,zoomOut,record,burst,keyframe,directorPlay,directorClear,depthKey,cutoutKey,ghostKey,rollKey,panoKey,superKey;
+    private static KeyMapping edit,library,copy,capture,photo,clean,zoomIn,zoomOut,record,burst,keyframe,directorPlay,directorClear,depthKey,cutoutKey,ghostKey,rollKey,panoKey,superKey,presetKey;
+    private static final FilmLooks.Profile[] PHOTO_PRESETS=FilmLooks.profiles(true);
+    private static int photoPreset=-1;
     private static boolean depthRequested,depthAttempted;
     private static DepthMap pendingDepth,grabDepth;
     private static final ClipRecorder recorder=new ClipRecorder();
@@ -68,6 +71,7 @@ public final class StudioClient {
         ghostKey=key("ghost",GLFW.GLFW_KEY_G);rollKey=key("roll",GLFW.GLFW_KEY_R);
         panoKey=key("panorama",GLFW.GLFW_KEY_I);superKey=key("super_resolution",GLFW.GLFW_KEY_F12);
         e.register(ghostKey);e.register(rollKey);e.register(panoKey);e.register(superKey);
+        presetKey=key("photo_preset",GLFW.GLFW_KEY_N);e.register(presetKey);
     }
     static Path directory(){return Minecraft.getInstance().gameDirectory.toPath().resolve("screenshots");}
     static StudioPreferences preferences(){
@@ -78,7 +82,7 @@ public final class StudioClient {
     static void captureSaved(Path path){latest=new Shot(path,System.currentTimeMillis());notice("Capture saved in Edited");}
     static void notice(String s){toast=s;created=System.currentTimeMillis();expires=created+1000L*preferences().number("hud.seconds",5,2,20);}
     private static void stopPhoto(Minecraft mc){
-        if(photoMode){photoMode=false;mc.options.fov().set(savedFov);AdvancedCapture.resetRoll();}
+        if(photoMode){photoMode=false;photoPreset=-1;mc.options.fov().set(savedFov);AdvancedCapture.resetRoll();}
     }
     private static void beginClean(Minecraft mc){
         if(cleanPending||mc.level==null||mc.screen!=null)return;
@@ -123,8 +127,8 @@ public final class StudioClient {
         if(edit==null)return;
         AdvancedCapture.check(mc);
         if(AdvancedCapture.active()){
-            while(panoKey.consumeClick()){}while(superKey.consumeClick()){}while(ghostKey.consumeClick()){}while(rollKey.consumeClick()){}
-            while(record.consumeClick()){}while(burst.consumeClick()){}while(edit.consumeClick()){}while(library.consumeClick()){}while(copy.consumeClick()){}while(capture.consumeClick()){}while(photo.consumeClick()){}while(clean.consumeClick()){}while(zoomIn.consumeClick()){}while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}while(cutoutKey.consumeClick()){}while(panoKey.consumeClick()){}while(superKey.consumeClick()){}while(ghostKey.consumeClick()){}while(rollKey.consumeClick()){}while(keyframe.consumeClick()){}while(directorPlay.consumeClick()){}while(directorClear.consumeClick()){}
+            while(panoKey.consumeClick()){}while(superKey.consumeClick()){}while(ghostKey.consumeClick()){}while(rollKey.consumeClick()){}while(presetKey.consumeClick()){}
+            while(record.consumeClick()){}while(burst.consumeClick()){}while(edit.consumeClick()){}while(library.consumeClick()){}while(copy.consumeClick()){}while(capture.consumeClick()){}while(photo.consumeClick()){}while(clean.consumeClick()){}while(zoomIn.consumeClick()){}while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}while(cutoutKey.consumeClick()){}while(panoKey.consumeClick()){}while(superKey.consumeClick()){}while(ghostKey.consumeClick()){}while(rollKey.consumeClick()){}while(presetKey.consumeClick()){}while(keyframe.consumeClick()){}while(directorPlay.consumeClick()){}while(directorClear.consumeClick()){}
             return;
         }
         Director.checkWorld(mc,recorder);
@@ -139,7 +143,7 @@ public final class StudioClient {
         while(directorClear.consumeClick()){if(!Director.active()&&mc.screen==null){Director.clear();notice("Flyby start cleared");}}
         if(Director.active()){
             while(record.consumeClick()){}while(burst.consumeClick()){}while(edit.consumeClick()){}while(library.consumeClick()){}while(copy.consumeClick()){}while(capture.consumeClick()){}
-            while(photo.consumeClick()){}while(clean.consumeClick()){}while(zoomIn.consumeClick()){}while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}while(cutoutKey.consumeClick()){}while(panoKey.consumeClick()){}while(superKey.consumeClick()){}while(ghostKey.consumeClick()){}while(rollKey.consumeClick()){}
+            while(photo.consumeClick()){}while(clean.consumeClick()){}while(zoomIn.consumeClick()){}while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}while(cutoutKey.consumeClick()){}while(panoKey.consumeClick()){}while(superKey.consumeClick()){}while(ghostKey.consumeClick()){}while(rollKey.consumeClick()){}while(presetKey.consumeClick()){}
             return;
         }
         while(record.consumeClick()){
@@ -149,7 +153,7 @@ public final class StudioClient {
         while(burst.consumeClick()){if(!recorder.active()&&mc.screen==null&&mc.level!=null&&!cleanPending){burstRemaining=5;burstNext=0;}}
         if(recorder.active()){
             while(edit.consumeClick()){} while(library.consumeClick()){} while(copy.consumeClick()){} while(capture.consumeClick()){}
-            while(photo.consumeClick()){} while(clean.consumeClick()){} while(zoomIn.consumeClick()){} while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}while(cutoutKey.consumeClick()){}while(panoKey.consumeClick()){}while(superKey.consumeClick()){}while(ghostKey.consumeClick()){}while(rollKey.consumeClick()){}
+            while(photo.consumeClick()){} while(clean.consumeClick()){} while(zoomIn.consumeClick()){} while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}while(cutoutKey.consumeClick()){}while(panoKey.consumeClick()){}while(superKey.consumeClick()){}while(ghostKey.consumeClick()){}while(rollKey.consumeClick()){}while(presetKey.consumeClick()){}
             return;
         }
         if(mc.level==null||mc.screen!=null)burstRemaining=0;
@@ -161,6 +165,7 @@ public final class StudioClient {
         while(photo.consumeClick()){if(mc.screen==null&&mc.level!=null){
             if(photoMode)stopPhoto(mc);else{savedFov=mc.options.fov().get();photoMode=true;notice("Photo mode enabled");}
         }}
+        while(presetKey.consumeClick()){if(photoMode&&mc.screen==null&&mc.level!=null){int step=net.minecraft.client.gui.screens.Screen.hasShiftDown()?-1:1;photoPreset=Math.floorMod(photoPreset+step,PHOTO_PRESETS.length);var preset=PHOTO_PRESETS[photoPreset];mc.options.fov().set(preset.fov);notice(preset.title+" | FOV "+preset.fov+" | "+preset.hint);}}
         while(zoomIn.consumeClick()){if(photoMode&&mc.screen==null)mc.options.fov().set(Math.max(30,mc.options.fov().get()-5));}
         while(zoomOut.consumeClick()){if(photoMode&&mc.screen==null)mc.options.fov().set(Math.min(110,mc.options.fov().get()+5));}
         while(ghostKey.consumeClick()){if(mc.screen==null&&mc.level!=null)AdvancedCapture.toggleGhost(latest);}
@@ -242,13 +247,14 @@ public final class StudioClient {
                     StudioUi.box(g,0,sh*i/3,sw,1,0x55ffffff);
                 }
             }
-            String info="PHOTO  |  FOV "+mc.options.fov().get()+"  |  "+zoomIn.getTranslatedKeyMessage().getString()+"/"+zoomOut.getTranslatedKeyMessage().getString()+" Zoom  |  "+clean.getTranslatedKeyMessage().getString()+" Clean shot  |  "+photo.getTranslatedKeyMessage().getString()+" Exit | Roll "+AdvancedCapture.roll()+" deg";
+            String info="PHOTO  |  FOV "+mc.options.fov().get()+"  |  "+zoomIn.getTranslatedKeyMessage().getString()+"/"+zoomOut.getTranslatedKeyMessage().getString()+" Zoom  |  "+clean.getTranslatedKeyMessage().getString()+" Clean shot  |  "+photo.getTranslatedKeyMessage().getString()+" Exit | Roll "+AdvancedCapture.roll()+" deg | "+presetKey.getTranslatedKeyMessage().getString()+" Preset";
             StudioUi.box(g,0,0,sw,14,0xc8182028);
             StudioUi.label(g,mc.font,info,5,3,sw-10,StudioUi.TEXT);
         }
+        if(photoMode&&photoPreset>=0){var preset=PHOTO_PRESETS[photoPreset];StudioUi.box(g,0,15,sw,14,0xc8182028);StudioUi.label(g,mc.font,preset.title+" | "+preset.hint,5,18,sw-10,StudioUi.TEXT);}
         if(Director.count()>0){
             String path="FLYBY: start saved | "+keyframe.getTranslatedKeyMessage().getString()+" Set start | "+directorPlay.getTranslatedKeyMessage().getString()+" Play | Shift+Play GIF | "+directorClear.getTranslatedKeyMessage().getString()+" Clear";
-            int y=photoMode?15:1;StudioUi.box(g,0,y,sw,14,0xc8182028);StudioUi.label(g,mc.font,path,5,y+3,sw-10,StudioUi.TEXT);
+            int y=photoMode?29:1;StudioUi.box(g,0,y,sw,14,0xc8182028);StudioUi.label(g,mc.font,path,5,y+3,sw-10,StudioUi.TEXT);
         }
         if(preferences().number("hud.enabled",1,0,1)==0||System.currentTimeMillis()>=expires)return;
         int w=Math.max(1,Math.min(preferences().number("hud.width",168,100,260),sw-12)),imageH=preview==null?0:Math.min(82,Math.max(1,(int)(w*preview.height/(double)preview.width)));
