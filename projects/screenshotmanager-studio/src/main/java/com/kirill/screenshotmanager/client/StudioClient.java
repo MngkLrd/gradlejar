@@ -25,7 +25,7 @@ import java.nio.file.Files;
 import java.util.concurrent.CompletableFuture;
 
 public final class StudioClient {
-    private static KeyMapping edit,library,copy,capture,photo,clean,zoomIn,zoomOut,record,burst,keyframe,directorPlay,directorClear,depthKey,cutoutKey;
+    private static KeyMapping edit,library,copy,capture,photo,clean,zoomIn,zoomOut,record,burst,keyframe,directorPlay,directorClear,depthKey,cutoutKey,ghostKey,rollKey,panoKey,superKey;
     private static boolean depthRequested,depthAttempted;
     private static DepthMap pendingDepth,grabDepth;
     private static final ClipRecorder recorder=new ClipRecorder();
@@ -49,6 +49,9 @@ public final class StudioClient {
         NeoForge.EVENT_BUS.addListener(StudioClient::hud);
         NeoForge.EVENT_BUS.addListener(StudioClient::afterFrame);
         NeoForge.EVENT_BUS.addListener(StudioClient::worldRendered);
+        NeoForge.EVENT_BUS.addListener(AdvancedCapture::beforeFrame);
+        NeoForge.EVENT_BUS.addListener(AdvancedCapture::angles);
+        NeoForge.EVENT_BUS.addListener(AdvancedCapture::fov);
     }
     private static KeyMapping key(String name,int code){return new KeyMapping("key.screenshotmanager."+name,InputConstants.Type.KEYSYM,code,"key.categories.screenshotmanager");}
     private static void keys(RegisterKeyMappingsEvent e){
@@ -62,15 +65,20 @@ public final class StudioClient {
         e.register(keyframe);e.register(directorPlay);e.register(directorClear);
         depthKey=key("depth_capture",GLFW.GLFW_KEY_F4);e.register(depthKey);
         cutoutKey=key("cutout",GLFW.GLFW_KEY_U);e.register(cutoutKey);
+        ghostKey=key("ghost",GLFW.GLFW_KEY_G);rollKey=key("roll",GLFW.GLFW_KEY_R);
+        panoKey=key("panorama",GLFW.GLFW_KEY_F11);superKey=key("super_resolution",GLFW.GLFW_KEY_F12);
+        // F11 is used by vanilla fullscreen; leave panorama unbound until assigned.
+        panoKey=key("panorama",GLFW.GLFW_KEY_UNKNOWN);
+        e.register(ghostKey);e.register(rollKey);e.register(panoKey);e.register(superKey);
     }
     static Path directory(){return Minecraft.getInstance().gameDirectory.toPath().resolve("screenshots");}
     static StudioPreferences preferences(){
         if(preferences==null)preferences=new StudioPreferences(Minecraft.getInstance().gameDirectory.toPath().resolve("config/screenshotmanager.properties"),directory());
         return preferences;
     }
-    private static void notice(String s){toast=s;created=System.currentTimeMillis();expires=created+1000L*preferences().number("hud.seconds",5,2,20);}
+    static void notice(String s){toast=s;created=System.currentTimeMillis();expires=created+1000L*preferences().number("hud.seconds",5,2,20);}
     private static void stopPhoto(Minecraft mc){
-        if(photoMode){photoMode=false;mc.options.fov().set(savedFov);}
+        if(photoMode){photoMode=false;mc.options.fov().set(savedFov);AdvancedCapture.resetRoll();}
     }
     private static void beginClean(Minecraft mc){
         if(cleanPending||mc.level==null||mc.screen!=null)return;
@@ -83,6 +91,7 @@ public final class StudioClient {
     }
     private static void afterFrame(RenderFrameEvent.Post e){
         Minecraft mc=Minecraft.getInstance();
+        if(AdvancedCapture.afterFrame(mc))return;
         if(Director.afterFrame(mc,recorder))return;
         if(recorder.active()){
             if(mc.screen!=null||mc.level==null){recorder.finish(false);return;}
@@ -112,6 +121,12 @@ public final class StudioClient {
         }
         if(preview!=null&&System.currentTimeMillis()>expires){preview.close();preview=null;}
         if(edit==null)return;
+        AdvancedCapture.check(mc);
+        if(AdvancedCapture.active()){
+            while(panoKey.consumeClick()){}while(superKey.consumeClick()){}while(ghostKey.consumeClick()){}while(rollKey.consumeClick()){}
+            while(record.consumeClick()){}while(burst.consumeClick()){}while(edit.consumeClick()){}while(library.consumeClick()){}while(copy.consumeClick()){}while(capture.consumeClick()){}while(photo.consumeClick()){}while(clean.consumeClick()){}while(zoomIn.consumeClick()){}while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}while(cutoutKey.consumeClick()){}while(panoKey.consumeClick()){}while(superKey.consumeClick()){}while(ghostKey.consumeClick()){}while(rollKey.consumeClick()){}while(keyframe.consumeClick()){}while(directorPlay.consumeClick()){}while(directorClear.consumeClick()){}
+            return;
+        }
         Director.checkWorld(mc,recorder);
         while(directorPlay.consumeClick()){
             if(Director.active())Director.stop(mc,recorder,true);
@@ -124,7 +139,7 @@ public final class StudioClient {
         while(directorClear.consumeClick()){if(!Director.active()&&mc.screen==null){Director.clear();notice("Flyby start cleared");}}
         if(Director.active()){
             while(record.consumeClick()){}while(burst.consumeClick()){}while(edit.consumeClick()){}while(library.consumeClick()){}while(copy.consumeClick()){}while(capture.consumeClick()){}
-            while(photo.consumeClick()){}while(clean.consumeClick()){}while(zoomIn.consumeClick()){}while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}while(cutoutKey.consumeClick()){}
+            while(photo.consumeClick()){}while(clean.consumeClick()){}while(zoomIn.consumeClick()){}while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}while(cutoutKey.consumeClick()){}while(panoKey.consumeClick()){}while(superKey.consumeClick()){}while(ghostKey.consumeClick()){}while(rollKey.consumeClick()){}
             return;
         }
         while(record.consumeClick()){
@@ -134,7 +149,7 @@ public final class StudioClient {
         while(burst.consumeClick()){if(!recorder.active()&&mc.screen==null&&mc.level!=null&&!cleanPending){burstRemaining=5;burstNext=0;}}
         if(recorder.active()){
             while(edit.consumeClick()){} while(library.consumeClick()){} while(copy.consumeClick()){} while(capture.consumeClick()){}
-            while(photo.consumeClick()){} while(clean.consumeClick()){} while(zoomIn.consumeClick()){} while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}while(cutoutKey.consumeClick()){}
+            while(photo.consumeClick()){} while(clean.consumeClick()){} while(zoomIn.consumeClick()){} while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}while(cutoutKey.consumeClick()){}while(panoKey.consumeClick()){}while(superKey.consumeClick()){}while(ghostKey.consumeClick()){}while(rollKey.consumeClick()){}
             return;
         }
         if(mc.level==null||mc.screen!=null)burstRemaining=0;
@@ -148,6 +163,11 @@ public final class StudioClient {
         }}
         while(zoomIn.consumeClick()){if(photoMode&&mc.screen==null)mc.options.fov().set(Math.max(30,mc.options.fov().get()-5));}
         while(zoomOut.consumeClick()){if(photoMode&&mc.screen==null)mc.options.fov().set(Math.min(110,mc.options.fov().get()+5));}
+        while(ghostKey.consumeClick()){if(mc.screen==null&&mc.level!=null)AdvancedCapture.toggleGhost(latest);}
+        while(rollKey.consumeClick()){if(photoMode&&mc.screen==null)AdvancedCapture.cycleRoll(net.minecraft.client.gui.screens.Screen.hasShiftDown());}
+        while(panoKey.consumeClick()){if(mc.screen==null&&mc.level!=null&&!cleanPending&&burstRemaining==0)AdvancedCapture.begin(mc,true);}
+        while(superKey.consumeClick()){if(mc.screen==null&&mc.level!=null&&!cleanPending&&burstRemaining==0&&!AdvancedCapture.active())AdvancedCapture.begin(mc,false);}
+        if(AdvancedCapture.active())return;
         while(cutoutKey.consumeClick()){
             if(mc.screen==null&&mc.level!=null&&!cleanPending&&!recorder.active()&&burstRemaining==0){
                 if(mc.crosshairPickEntity instanceof net.minecraft.world.entity.LivingEntity target&&target.isAlive()&&!target.isInvisible()){
@@ -211,9 +231,10 @@ public final class StudioClient {
     }
     private static void hud(RenderGuiEvent.Post e){
         Minecraft mc=Minecraft.getInstance();
-        if(mc.screen!=null||mc.options.hideGui||cleanPending||edit==null||recorder.active()||burstRemaining>0)return;
+        if(mc.screen!=null||mc.options.hideGui||cleanPending||edit==null||recorder.active()||burstRemaining>0||AdvancedCapture.active())return;
         GuiGraphics g=e.getGuiGraphics();
         int sw=mc.getWindow().getGuiScaledWidth(),sh=mc.getWindow().getGuiScaledHeight();
+        AdvancedCapture.drawGhost(g,sw,sh);
         if(photoMode){
             if(preferences().number("photo.grid",1,0,1)==1){
                 for(int i=1;i<=2;i++){
@@ -221,7 +242,7 @@ public final class StudioClient {
                     StudioUi.box(g,0,sh*i/3,sw,1,0x55ffffff);
                 }
             }
-            String info="PHOTO  |  FOV "+mc.options.fov().get()+"  |  "+zoomIn.getTranslatedKeyMessage().getString()+"/"+zoomOut.getTranslatedKeyMessage().getString()+" Zoom  |  "+clean.getTranslatedKeyMessage().getString()+" Clean shot  |  "+photo.getTranslatedKeyMessage().getString()+" Exit";
+            String info="PHOTO  |  FOV "+mc.options.fov().get()+"  |  "+zoomIn.getTranslatedKeyMessage().getString()+"/"+zoomOut.getTranslatedKeyMessage().getString()+" Zoom  |  "+clean.getTranslatedKeyMessage().getString()+" Clean shot  |  "+photo.getTranslatedKeyMessage().getString()+" Exit | Roll "+AdvancedCapture.roll()+" deg";
             StudioUi.box(g,0,0,sw,14,0xc8182028);
             StudioUi.label(g,mc.font,info,5,3,sw-10,StudioUi.TEXT);
         }

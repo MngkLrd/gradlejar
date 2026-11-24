@@ -16,6 +16,8 @@ abstract class DirectorCameraMixin {
     @Shadow private boolean detached;
     @Inject(method="setup",at=@At("RETURN"))
     private void screenshotmanager$director(BlockGetter level,Entity entity,boolean thirdPerson,boolean inverse,float partialTick,CallbackInfo ci){
+        var capture=com.kirill.screenshotmanager.client.AdvancedCapture.panoramaPose();
+        if(capture!=null){setPosition(capture.x(),capture.y(),capture.z());setRotation(capture.yaw(),capture.pitch());detached=false;return;}
         var pose=Director.currentPose();
         if(pose==null)return;
         setPosition(pose.x(),pose.y(),pose.z());
