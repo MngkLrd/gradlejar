@@ -103,7 +103,8 @@ public final class SleepEngine {
  }
  public static void incense(ServerPlayer p){
   CompoundTag t=data(p);long now=p.serverLevel().getGameTime();
-  if(t.contains("incenseAt")&&now-t.getLong("incenseAt")<40)return;
+  if(!survival(p))return;
+  if(t.contains("incenseAt")&&now>=t.getLong("incenseAt")&&now-t.getLong("incenseAt")<40)return;
   t.putLong("incenseAt",now);save(p,t);soothe(p,6,4);
  }
  private static void historySample(ServerPlayer p,CompoundTag t){
@@ -204,10 +205,14 @@ public final class SleepEngine {
    sync(p,t);
   }
   // Measure horizontal movement every tick; teleport-sized steps are ignored.
-  double dx=p.getX()-p.xo,dz=p.getZ()-p.zo;
-  double distance=Math.sqrt(dx*dx+dz*dz);
-  if(distance<2&&!p.isPassenger()&&!p.isFallFlying())
-   t.putDouble("walkDistance",t.getDouble("walkDistance")+distance);
+  String dimension=p.level().dimension().location().toString();
+  if(t.contains("moveX")&&dimension.equals(t.getString("moveDimension"))){
+   double dx=p.getX()-t.getDouble("moveX"),dz=p.getZ()-t.getDouble("moveZ");
+   double distance=Math.sqrt(dx*dx+dz*dz);
+   if(distance<2&&!p.isPassenger()&&!p.isFallFlying())
+    t.putDouble("walkDistance",t.getDouble("walkDistance")+distance);
+  }
+  t.putDouble("moveX",p.getX());t.putDouble("moveZ",p.getZ());t.putString("moveDimension",dimension);
   int progress=t.getInt("progress")+1;
   int interval=SleepSettings.TICKS_PER_POINT.get();
   if(p.isSprinting()||p.isSwimming())interval=Math.max(20,(int)(interval*.78f));
@@ -246,7 +251,7 @@ public final class SleepEngine {
    if(t.getInt("calm")>0)t.putInt("calm",Math.max(0,t.getInt("calm")-20));
    if(p.tickCount%120==0&&t.getInt("caffeine")>0)t.putInt("caffeine",t.getInt("caffeine")-1);
    if(p.tickCount%2400==0&&t.getInt("tolerance")>0)t.putInt("tolerance",t.getInt("tolerance")-1);
-   if(p.tickCount%1200==0)historySample(p,t);
+   if(p.tickCount%1200==0||t.getIntArray("history").length==0)historySample(p,t);
   }
   if(t.getInt("micro")>0)t.putInt("micro",t.getInt("micro")-1);
   if(p.tickCount%20==0){SleepEffects.apply(p,t);sync(p,t);}
@@ -301,11 +306,11 @@ public final class SleepEngine {
    old.putInt("fatigue",0);old.putInt("stress",0);
    old.putInt("mask",0);old.putInt("crash",0);old.putInt("maskPower",0);old.putInt("crashPending",0);old.putInt("caffeine",0);old.putInt("tolerance",0);
   }
-  old.putInt("sleepTicks",0);old.putInt("micro",0);old.putDouble("walkDistance",0);
+  old.putInt("sleepTicks",0);old.putInt("micro",0);old.putDouble("walkDistance",0);old.remove("moveX");
   p.getPersistentData().put(KEY,old);
  }
  public static void onLogin(PlayerEvent.PlayerLoggedInEvent e){
-  if(e.getEntity() instanceof ServerPlayer p){CampRestSessions.discard(p);sync(p,data(p));}
+  if(e.getEntity() instanceof ServerPlayer p){CampRestSessions.discard(p);CompoundTag t=data(p);t.remove("moveX");t.putDouble("walkDistance",0);save(p,t);SleepEffects.apply(p,t);sync(p,t);}
  }
  private SleepEngine(){}
 }

@@ -45,6 +45,7 @@ public final class SleepHud {
   meter(g,x,y+28,ClientState.debt,0xFFA65C67);
   meter(g,x,y+41,ClientState.fatigue,0xFFC79360);
   meter(g,x,y+54,ClientState.stress,0xFF9683B2);
+  // Detailed server-calculated modifiers are available from the inventory journal.
   if(ClientState.maskTicks>0)g.drawString(mc.font,"+",x+141,y+8,0xFFCBA65D,false);
   else if(ClientState.crashTicks>0)g.drawString(mc.font,"!",x+122,y+6,0xFFD9796E,false);
  }

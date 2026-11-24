@@ -18,12 +18,7 @@ public final class SleepJournalItem extends Item {
  @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){
   ItemStack held=player.getItemInHand(hand);
   if(!level.isClientSide &&player instanceof ServerPlayer server){
-   var quality=RestEnvironment.evaluate(server,server.blockPosition());
-   PacketDistributor.sendToPlayer(server,new SleepReportPayload(
-    SleepEngine.getDebt(server),SleepEngine.getFatigue(server),
-    SleepEngine.getStress(server),SleepEngine.getLastQuality(server),
-    SleepEngine.getLastRecovery(server),SleepEngine.getLastReasons(server),
-    quality.quality(),quality.reasons()));
+   SleepReportPayload.send(server);
   }
   return InteractionResultHolder.sidedSuccess(held,level.isClientSide);
  }
