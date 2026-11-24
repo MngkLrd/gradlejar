@@ -1,0 +1,184 @@
+{
+  "variants": {
+    "enabled=false,facing=north,lit=false,range=0": {
+      "model": "umbral:block/projector"
+    },
+    "enabled=false,facing=north,lit=false,range=1": {
+      "model": "umbral:block/projector"
+    },
+    "enabled=false,facing=north,lit=false,range=2": {
+      "model": "umbral:block/projector"
+    },
+    "enabled=true,facing=north,lit=false,range=0": {
+      "model": "umbral:block/projector"
+    },
+    "enabled=true,facing=north,lit=false,range=1": {
+      "model": "umbral:block/projector"
+    },
+    "enabled=true,facing=north,lit=false,range=2": {
+      "model": "umbral:block/projector"
+    },
+    "enabled=false,facing=north,lit=true,range=0": {
+      "model": "umbral:block/projector_lit"
+    },
+    "enabled=false,facing=north,lit=true,range=1": {
+      "model": "umbral:block/projector_lit"
+    },
+    "enabled=false,facing=north,lit=true,range=2": {
+      "model": "umbral:block/projector_lit"
+    },
+    "enabled=true,facing=north,lit=true,range=0": {
+      "model": "umbral:block/projector_lit"
+    },
+    "enabled=true,facing=north,lit=true,range=1": {
+      "model": "umbral:block/projector_lit"
+    },
+    "enabled=true,facing=north,lit=true,range=2": {
+      "model": "umbral:block/projector_lit"
+    },
+    "enabled=false,facing=east,lit=false,range=0": {
+      "model": "umbral:block/projector",
+      "y": 90
+    },
+    "enabled=false,facing=east,lit=false,range=1": {
+      "model": "umbral:block/projector",
+      "y": 90
+    },
+    "enabled=false,facing=east,lit=false,range=2": {
+      "model": "umbral:block/projector",
+      "y": 90
+    },
+    "enabled=true,facing=east,lit=false,range=0": {
+      "model": "umbral:block/projector",
+      "y": 90
+    },
+    "enabled=true,facing=east,lit=false,range=1": {
+      "model": "umbral:block/projector",
+      "y": 90
+    },
+    "enabled=true,facing=east,lit=false,range=2": {
+      "model": "umbral:block/projector",
+      "y": 90
+    },
+    "enabled=false,facing=east,lit=true,range=0": {
+      "model": "umbral:block/projector_lit",
+      "y": 90
+    },
+    "enabled=false,facing=east,lit=true,range=1": {
+      "model": "umbral:block/projector_lit",
+      "y": 90
+    },
+    "enabled=false,facing=east,lit=true,range=2": {
+      "model": "umbral:block/projector_lit",
+      "y": 90
+    },
+    "enabled=true,facing=east,lit=true,range=0": {
+      "model": "umbral:block/projector_lit",
+      "y": 90
+    },
+    "enabled=true,facing=east,lit=true,range=1": {
+      "model": "umbral:block/projector_lit",
+      "y": 90
+    },
+    "enabled=true,facing=east,lit=true,range=2": {
+      "model": "umbral:block/projector_lit",
+      "y": 90
+    },
+    "enabled=false,facing=south,lit=false,range=0": {
+      "model": "umbral:block/projector",
+      "y": 180
+    },
+    "enabled=false,facing=south,lit=false,range=1": {
+      "model": "umbral:block/projector",
+      "y": 180
+    },
+    "enabled=false,facing=south,lit=false,range=2": {
+      "model": "umbral:block/projector",
+      "y": 180
+    },
+    "enabled=true,facing=south,lit=false,range=0": {
+      "model": "umbral:block/projector",
+      "y": 180
+    },
+    "enabled=true,facing=south,lit=false,range=1": {
+      "model": "umbral:block/projector",
+      "y": 180
+    },
+    "enabled=true,facing=south,lit=false,range=2": {
+      "model": "umbral:block/projector",
+      "y": 180
+    },
+    "enabled=false,facing=south,lit=true,range=0": {
+      "model": "umbral:block/projector_lit",
+      "y": 180
+    },
+    "enabled=false,facing=south,lit=true,range=1": {
+      "model": "umbral:block/projector_lit",
+      "y": 180
+    },
+    "enabled=false,facing=south,lit=true,range=2": {
+      "model": "umbral:block/projector_lit",
+      "y": 180
+    },
+    "enabled=true,facing=south,lit=true,range=0": {
+      "model": "umbral:block/projector_lit",
+      "y": 180
+    },
+    "enabled=true,facing=south,lit=true,range=1": {
+      "model": "umbral:block/projector_lit",
+      "y": 180
+    },
+    "enabled=true,facing=south,lit=true,range=2": {
+      "model": "umbral:block/projector_lit",
+      "y": 180
+    },
+    "enabled=false,facing=west,lit=false,range=0": {
+      "model": "umbral:block/projector",
+      "y": 270
+    },
+    "enabled=false,facing=west,lit=false,range=1": {
+      "model": "umbral:block/projector",
+      "y": 270
+    },
+    "enabled=false,facing=west,lit=false,range=2": {
+      "model": "umbral:block/projector",
+      "y": 270
+    },
+    "enabled=true,facing=west,lit=false,range=0": {
+      "model": "umbral:block/projector",
+      "y": 270
+    },
+    "enabled=true,facing=west,lit=false,range=1": {
+      "model": "umbral:block/projector",
+      "y": 270
+    },
+    "enabled=true,facing=west,lit=false,range=2": {
+      "model": "umbral:block/projector",
+      "y": 270
+    },
+    "enabled=false,facing=west,lit=true,range=0": {
+      "model": "umbral:block/projector_lit",
+      "y": 270
+    },
+    "enabled=false,facing=west,lit=true,range=1": {
+      "model": "umbral:block/projector_lit",
+      "y": 270
+    },
+    "enabled=false,facing=west,lit=true,range=2": {
+      "model": "umbral:block/projector_lit",
+      "y": 270
+    },
+    "enabled=true,facing=west,lit=true,range=0": {
+      "model": "umbral:block/projector_lit",
+      "y": 270
+    },
+    "enabled=true,facing=west,lit=true,range=1": {
+      "model": "umbral:block/projector_lit",
+      "y": 270
+    },
+    "enabled=true,facing=west,lit=true,range=2": {
+      "model": "umbral:block/projector_lit",
+      "y": 270
+    }
+  }
+}

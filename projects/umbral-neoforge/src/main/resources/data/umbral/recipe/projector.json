@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ODO",
+    "ILI",
+    "ORO"
+  ],
+  "key": {
+    "O": {
+      "item": "minecraft:polished_deepslate"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "L": {
+      "item": "umbral:umbral_lens"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "umbral:projector",
+    "count": 1
+  }
+}

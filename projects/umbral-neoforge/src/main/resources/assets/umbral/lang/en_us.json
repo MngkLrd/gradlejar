@@ -1,0 +1,11 @@
+{
+  "block.umbral.projector": "Umbral Projector",
+  "block.umbral.umbra_pillar": "Umbra Pillar",
+  "block.umbral.shadow_matter": "Solid Shadow",
+  "item.umbral.umbral_lens": "Umbral Lens",
+  "umbral.enabled": "Projector enabled",
+  "umbral.disabled": "Projector disabled",
+  "umbral.range": "Projection range: %s blocks",
+  "advancements.umbral.first_light.title": "Matter of Light",
+  "advancements.umbral.first_light.description": "Craft an Umbral Projector and give shadow a physical shape."
+}

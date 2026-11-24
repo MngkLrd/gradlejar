@@ -1,0 +1,11 @@
+{
+  "block.umbral.projector": "Теневой проектор",
+  "block.umbral.umbra_pillar": "Теневой столб",
+  "block.umbral.shadow_matter": "Материальная тень",
+  "item.umbral.umbral_lens": "Теневая линза",
+  "umbral.enabled": "Проектор включён",
+  "umbral.disabled": "Проектор выключен",
+  "umbral.range": "Дальность проекции: %s блоков",
+  "advancements.umbral.first_light.title": "Материя света",
+  "advancements.umbral.first_light.description": "Создай теневой проектор и придай тени физическую форму."
+}

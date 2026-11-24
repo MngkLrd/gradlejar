@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "id": "umbral:projector"
+    },
+    "title": {
+      "translate": "advancements.umbral.first_light.title"
+    },
+    "description": {
+      "translate": "advancements.umbral.first_light.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "minecraft:story/root",
+  "criteria": {
+    "projector": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "umbral:projector"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "projector"
+    ]
+  ]
+}

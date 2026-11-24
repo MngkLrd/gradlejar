@@ -1,0 +1,132 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "nw": "1"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_nw_1"
+      }
+    },
+    {
+      "when": {
+        "nw": "2"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_nw_2"
+      }
+    },
+    {
+      "when": {
+        "nw": "3"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_nw_3"
+      }
+    },
+    {
+      "when": {
+        "nw": "4"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_nw_4"
+      }
+    },
+    {
+      "when": {
+        "ne": "1"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_ne_1"
+      }
+    },
+    {
+      "when": {
+        "ne": "2"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_ne_2"
+      }
+    },
+    {
+      "when": {
+        "ne": "3"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_ne_3"
+      }
+    },
+    {
+      "when": {
+        "ne": "4"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_ne_4"
+      }
+    },
+    {
+      "when": {
+        "sw": "1"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_sw_1"
+      }
+    },
+    {
+      "when": {
+        "sw": "2"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_sw_2"
+      }
+    },
+    {
+      "when": {
+        "sw": "3"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_sw_3"
+      }
+    },
+    {
+      "when": {
+        "sw": "4"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_sw_4"
+      }
+    },
+    {
+      "when": {
+        "se": "1"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_se_1"
+      }
+    },
+    {
+      "when": {
+        "se": "2"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_se_2"
+      }
+    },
+    {
+      "when": {
+        "se": "3"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_se_3"
+      }
+    },
+    {
+      "when": {
+        "se": "4"
+      },
+      "apply": {
+        "model": "umbral:block/shadow_se_4"
+      }
+    }
+  ]
+}

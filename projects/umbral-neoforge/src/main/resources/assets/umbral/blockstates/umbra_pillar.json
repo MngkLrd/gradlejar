@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "umbral:block/umbra_pillar"
+    }
+  }
+}

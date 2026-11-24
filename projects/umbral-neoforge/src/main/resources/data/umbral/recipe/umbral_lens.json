@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "GSG",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "G": {
+      "item": "minecraft:glass_pane"
+    },
+    "S": {
+      "item": "minecraft:echo_shard"
+    }
+  },
+  "result": {
+    "id": "umbral:umbral_lens",
+    "count": 1
+  }
+}
