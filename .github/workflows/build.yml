@@ -189,23 +189,13 @@ jobs:
           test -f projects/last-witness/src/main/java/dev/minemods/lastwitness/barter/BarterMenu.java
           sed -i 's/this(id, inventory, null);/this(id, inventory, (Villager) null);/' projects/last-witness/src/main/java/dev/minemods/lastwitness/barter/BarterMenu.java
           grep -q 'TradeMenus.REGISTER.register' projects/last-witness/src/main/java/dev/minemods/lastwitness/LastWitnessMod.java
-      - name: Restore MIDNIGHT The Endless Eve sources
+      - name: Generate standalone MIDNIGHT Reborn source project
         if: matrix.project_dir == 'projects/midnighteve'
         run: |
           set -euo pipefail
-          cat projects/midnighteve/source-b64/*.part | base64 -d | tar -xJf - -C projects/midnighteve
-          python3 -c "import base64,zlib,pathlib; p=pathlib.Path('tools/midnighteve_v020_b64'); pathlib.Path('tools/midnighteve_v020.py').write_bytes(zlib.decompress(base64.b64decode(''.join(q.read_text() for q in sorted(p.glob('*.part'))))))"
-          python3 tools/midnighteve_v020.py
-          cat tools/midnighteve_v030_b64/*.part | base64 -d | tar -xJf - -C projects/midnighteve
-          test -s projects/midnighteve/src/main/java/dev/mngklrd/midnighteve/worldgen/WinterLandmarkFeature.java
-          test -s projects/midnighteve/src/main/resources/data/midnighteve/worldgen/placed_feature/crystal_crown_landmark.json
-          test -s projects/midnighteve/src/main/java/dev/mngklrd/midnighteve/world/WinterBiomes.java
-          cat tools/midnighteve_v040_b64/*.part | base64 -d | tar -xJf - -C projects/midnighteve
-          cat tools/midnighteve_v040_hotfix/*.part | base64 -d | tar -xJf - -C projects/midnighteve
-          python3 -c "import json,pathlib; p=pathlib.Path('projects/midnighteve/build-profile.json'); d=json.loads(p.read_text()); print('MIDNIGHT source profile version',d['version']); d['version']='0.4.0'; d['jar_glob']='midnighteve-0.4.0.jar'; p.write_text(json.dumps(d,indent=2))"
-          python3 -c "import pathlib; p=pathlib.Path('projects/midnighteve/gradle.properties'); s=p.read_text(); s=s.replace('mod_version=0.3.0', 'mod_version=0.4.0').replace('mod_version=0.2.0', 'mod_version=0.4.0'); p.write_text(s)"
-          python3 tools/verify_midnight_v040.py projects/midnighteve
-          test -s projects/midnighteve/src/main/java/dev/mngklrd/midnighteve/entity/WinterKeeper.java
+          python3 projects/midnighteve/generate_reborn.py
+          test -s projects/midnighteve/src/main/resources/data/midnighteve/structure/frostmarket.nbt
+          test -s projects/midnighteve/src/main/resources/data/midnighteve/worldgen/structure/frostmarket.json
       - name: Validate profile
         id: profile
         env:
@@ -360,7 +350,7 @@ jobs:
             exit 1
           fi
           echo 'Simple Sorter dedicated server boot and active recipe registry verified.'
-      - name: Smoke-test MIDNIGHT dedicated server and custom biome generation
+      - name: Smoke-test MIDNIGHT dedicated server, architecture, merchants and biomes
         if: matrix.project_dir == 'projects/midnighteve'
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
@@ -370,27 +360,21 @@ jobs:
           for dir in run runs/server; do
             mkdir -p "$dir"
             printf 'eula=true\n' > "$dir/eula.txt"
-            printf 'level-name=ci-world\nlevel-type=midnighteve:endless_eve\nonline-mode=false\nview-distance=4\nsimulation-distance=4\nspawn-protection=0\nmax-tick-time=-1\n' > "$dir/server.properties"
+            printf 'level-name=ci-world\nlevel-type=midnighteve:endless_eve\nlevel-seed=824681\nonline-mode=false\nserver-ip=127.0.0.1\nview-distance=4\nsimulation-distance=4\nspawn-protection=0\nmax-tick-time=-1\nenable-rcon=true\nrcon.port=25575\nrcon.password=midnight-ci-local-050\n' > "$dir/server.properties"
           done
-          timeout --signal=TERM --kill-after=20s 180s gradle --no-daemon runServer --stacktrace > midnight-server.log 2>&1 &
+          timeout --signal=TERM --kill-after=20s 270s gradle --no-daemon runServer --stacktrace > midnight-server.log 2>&1 &
           pid=$!
-          for n in $(seq 1 175); do
-            if grep -q 'Done (' midnight-server.log; then
-              sleep 15
-              break
-            fi
-            if ! kill -0 "$pid" 2>/dev/null; then
-              break
-            fi
+          trap 'kill "$pid" 2>/dev/null || true; tail -n 100 midnight-server.log' EXIT
+          for n in $(seq 1 180); do
+            if grep -q 'Done (' midnight-server.log; then break; fi
+            if ! kill -0 "$pid" 2>/dev/null; then break; fi
             sleep 1
           done
-          kill "$pid" 2>/dev/null || true
-          wait "$pid" 2>/dev/null || true
-          if ! grep -q 'Done (' midnight-server.log; then
-            tail -n 160 midnight-server.log
-            exit 1
-          fi
+          grep -q 'Done (' midnight-server.log
+          python3 test_reborn_server.py
+          wait "$pid"
           python3 "$GITHUB_WORKSPACE/tools/test_midnight_worldgen.py" run runs/server
+          trap - EXIT
       - name: Upload compiled JAR as workflow artifact (release fallback)
         if: steps.verify.outcome == 'success'
         uses: actions/upload-artifact@v4

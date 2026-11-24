@@ -1,9 +1,5 @@
-# MIDNIGHT: The Endless Eve v0.4.0
+# MIDNIGHT: Reborn 0.5.0
 
-Minecraft 1.21.1, NeoForge 21.1.262, Java 21. Six native custom winter biomes, biome-specific flora, rare 9x9 winter workshops, Winter Keeper and Courier (one entity with two synchronized variants), exchanges, single-spawn resident persistence. All blocks, items and NPC skins use original vanilla-style assets developed under the [Blockbench Minecraft Style Guide](https://blockbench.net/wiki/guides/minecraft-style-guide/).
+Complete clean-room replacement of the 0.4 implementation. Minecraft 1.21.1 NeoForge, Java 21. **Create a new world** with MIDNIGHT: Reborn; old saves are incompatible with removed legacy content. Normal worlds are not converted. Six winter climate regions, three custom tree shapes, native NBT settlements, gift trading, authentic vanilla block architecture. Merchants use the vanilla villager model and trade GUI, not custom NPC skins. The world still uses vanilla height/noise settings. No automatic rewards or biome rewrites.
 
-Java sources and textures are rebuilt from the original source-b64 and v020/v030/v040 CI overlays in **.github/workflows/build.yml**. Local complete source project and artwork source scripts are available in the ZIP deliverable.
-
-Default Minecraft worlds are permanently winterized by the legacy conversion system; create a NEW world and select `MIDNIGHT: The Endless Eve`. Always back up saves.
-
-Build: `gradle --no-daemon clean build`; output: `build/libs/midnighteve-0.4.0.jar`. The worldgen building placements are Feature-generated settlements, not registrable /locate structures. Client appearance and settlement spawn behavior remain subject to in-game testing.
+Build: `python3 generate_reborn.py` then `gradle --no-daemon clean build`. JAR: `build/libs/midnighteve-0.5.0.jar`. Python standard library only. Assets are authored 16x16 pixel clusters or vanilla blocks/models. The generated structures are located via `/locate structure midnighteve:frostmarket`, `evergreen_lodge`, `northwatch`. CI runs a dedicated server and tests template placement and trades. Client visual inspection remains necessary.
