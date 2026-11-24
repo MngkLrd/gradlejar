@@ -10,7 +10,15 @@ public final class QualityContractTest {
         expect(QualityMath.heating(200,200),100);
         expect(QualityMath.heating(Float.NaN,200),-1);
         expect(QualityMath.merged(80,4,100,4),90);
-        expect(QualityMath.merged(-1,4,100,1),100);
+        expect(QualityMath.merged(-1,4,100,1),75);
+        expect(QualityMath.batches(6,6000,new int[]{6,4,5,0,0}),4);
+        expect(QualityMath.batches(6,2000,new int[]{6,4,5}),2);
+        expect(QualityMath.batches(6,999,new int[]{6,4,5}),0);
+        expect(QualityMath.batches(3,3000,new int[]{0,0,0}),0);
+        expect(QualityMath.batches(3,3000,new int[]{8,8,8}),3);
+        float perTick=20;for(int i=0;i<20;i++)perTick=QualityMath.advanceHeat(perTick,500,.012f,1);
+        if(Math.abs(perTick-QualityMath.advanceHeat(20,500,.012f,20))>.01f)throw new AssertionError("analytic heat");
+        if(!Float.isFinite(QualityMath.advanceHeat(Float.NaN,400,.012f,20)))throw new AssertionError("finite heat");
         expect(QualityMath.quantize(-100),0);
         expect(QualityMath.quantize(110),100);
         if(Math.abs(QualityMath.saturationMultiplier(70)-1f)>1e-6)throw new AssertionError("neutral");

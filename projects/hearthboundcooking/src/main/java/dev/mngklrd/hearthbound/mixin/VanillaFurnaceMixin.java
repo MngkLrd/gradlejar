@@ -19,6 +19,10 @@ public abstract class VanillaFurnaceMixin {
     @Unique private boolean hearthbound$eligible(){
         Object be=this;return be instanceof FurnaceBlockEntity||be instanceof SmokerBlockEntity;
     }
+    @Redirect(method="canBurn",at=@At(value="INVOKE",target="Lnet/minecraft/world/item/ItemStack;isSameItemSameTags(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"))
+    private boolean hearthbound$compare(ItemStack existing,ItemStack result){
+        return hearthbound$eligible()?Quality.furnaceCompatible(existing,result):ItemStack.isSameItemSameTags(existing,result);
+    }
     @Inject(method="burn",at=@At("HEAD"))
     private void hearthbound$before(RegistryAccess access,Recipe<?> recipe,NonNullList<ItemStack> items,int max,CallbackInfoReturnable<Boolean> ci){
         if(!hearthbound$eligible())return;

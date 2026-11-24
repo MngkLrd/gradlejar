@@ -14,9 +14,21 @@ public final class QualityMath {
         return clamp(Math.round(100-Math.max(0,actual-target*1.15f)*.18f));
     }
     public static int merged(int oldQuality,int oldCount,int newQuality,int newCount){
-        if(oldCount<=0||oldQuality<0)return quantize(newQuality);
+        if(oldCount<=0)return quantize(newQuality);
+        if(oldQuality<0)oldQuality=70;
         if(newCount<=0)return quantize(oldQuality);
         return quantize((int)Math.round(((double)oldQuality*oldCount+(double)newQuality*newCount)/(oldCount+newCount)));
+    }
+    public static int batches(int max,int water,int[] counts){
+        if(max<=0||water<1000)return 0;
+        int groups=0,n=Math.min(max,water/1000);
+        for(int count:counts)if(count>0){groups++;n=Math.min(n,count);}
+        return groups>=1?n:0;
+    }
+    public static float advanceHeat(float current,float target,float coefficient,int ticks){
+        if(!Float.isFinite(current)||current<0)current=0;
+        if(!Float.isFinite(target)||target<0)target=0;
+        return (float)(target+(current-target)*Math.pow(1-coefficient,Math.max(0,ticks)));
     }
     public static float saturationMultiplier(int quality){
         int q=clamp(quality);

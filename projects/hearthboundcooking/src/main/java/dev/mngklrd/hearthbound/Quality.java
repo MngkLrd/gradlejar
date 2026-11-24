@@ -31,6 +31,23 @@ public final class Quality {
     }
     public static int score(int process,Iterable<ItemStack> inputs){return QualityMath.finish(process,inherited(inputs));}
     public static void finish(ItemStack output,int process,Iterable<ItemStack> inputs){if(eligible(output))set(output,score(process,inputs));}
+    public static ItemStack withoutGrade(ItemStack s){
+        ItemStack copy=s.copy();
+        if(copy.hasTag()&&copy.getTag().contains(KEY)){
+            copy.getTag().remove(KEY);
+            if(copy.getTag().isEmpty())copy.setTag(null);
+        }
+        return copy;
+    }
+    public static boolean furnaceCompatible(ItemStack existing,ItemStack result){
+        if(!has(existing)&&!has(result))return ItemStack.isSameItemSameTags(existing,result);
+        if(existing.getItem()!=result.getItem()||!food(existing)||!food(result))return ItemStack.isSameItemSameTags(existing,result);
+        return ItemStack.isSameItemSameTags(withoutGrade(existing),withoutGrade(result));
+    }
+    public static boolean ingredientCompatible(ItemStack a,ItemStack b){
+        if(has(a)!=has(b))return false;
+        return FoodCapability.areStacksStackableExceptCreationDate(withoutGrade(a),withoutGrade(b));
+    }
     public static boolean transformed(ItemStack input,ItemStack output){
         return !input.isEmpty()&&eligible(output)&&(input.getItem()!=output.getItem()||output.is(SAME_ITEM)||has(output));
     }

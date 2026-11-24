@@ -6,6 +6,7 @@ import net.dries007.tfc.common.recipes.PotRecipe;
 import net.dries007.tfc.common.recipes.SoupPotRecipe;
 import net.dries007.tfc.common.recipes.JamPotRecipe;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import java.util.ArrayList;
 import java.util.List;
 import org.spongepowered.asm.mixin.*;
@@ -20,6 +21,16 @@ public abstract class PotMixin {
         PotBlockEntity p=(PotBlockEntity)(Object)this;
         if(p.isBoiling()){hearthbound$hot++;if(p.getTemperature()>470)hearthbound$excess++;}
         else {hearthbound$hot=0;hearthbound$excess=0;}
+    }
+    @Inject(method="saveAdditional",at=@At("RETURN"))
+    private void hearthbound$save(CompoundTag tag,CallbackInfo ci){
+        tag.putInt("hearthbound_hot",hearthbound$hot);
+        tag.putInt("hearthbound_excess",hearthbound$excess);
+    }
+    @Inject(method="loadAdditional",at=@At("RETURN"))
+    private void hearthbound$load(CompoundTag tag,CallbackInfo ci){
+        hearthbound$hot=Math.max(0,tag.getInt("hearthbound_hot"));
+        hearthbound$excess=Math.max(0,Math.min(hearthbound$hot,tag.getInt("hearthbound_excess")));
     }
     // This call is executed only when native cooking completes. Never touch inputs.
     @Redirect(method="handleCooking",at=@At(value="INVOKE",target="Lnet/dries007/tfc/common/recipes/PotRecipe;getOutput(Lnet/dries007/tfc/common/blockentities/PotBlockEntity$PotInventory;)Lnet/dries007/tfc/common/recipes/PotRecipe$Output;"))
