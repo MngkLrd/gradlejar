@@ -130,7 +130,10 @@ class Template:
           "Baker":[("wheat",12,"midnighteve:wintermark",1),("midnighteve:wintermark",1,"cookie",8)],
           "Giftkeeper":[("emerald",3,"midnighteve:wintermark",1),("midnighteve:wintermark",3,"midnighteve:wrapped_gift",1)],
           "Woodworker":[("spruce_log",12,"midnighteve:wintermark",1),("midnighteve:wintermark",2,"lantern",3)],
-          "Ranger":[("coal",10,"midnighteve:wintermark",1),("midnighteve:wintermark",2,"bread",6)]
+          "Ranger":[("coal",10,"midnighteve:wintermark",1),("midnighteve:wintermark",2,"bread",6)],
+          "Postmaster":[("paper",12,"midnighteve:wintermark",1),("midnighteve:wintermark",3,"midnighteve:wrapped_gift",1)],
+          "Chandler":[("honeycomb",4,"midnighteve:wintermark",1),("midnighteve:wintermark",2,"lantern",3)],
+          "Fisher":[("cod",10,"midnighteve:wintermark",1),("midnighteve:wintermark",1,"cooked_cod",6)]
         }[role]
         offers=[{"buy":stack(a,b),"sell":stack(c,d),"uses":I(0),"maxUses":I(12),"xp":I(2),"rewardExp":B(1),"priceMultiplier":F(0.0)} for a,b,c,d in trade]
         nbt={"id":Str("minecraft:villager"),"CustomName":Str(json.dumps({"text":role})),"PersistenceRequired":B(1),
@@ -263,6 +266,14 @@ cabin(town,28,27,11,10,"Ranger","spruce_planks","spruce","butcher")
 path(town,7,1,17,2);path(town,14,1,17,18);path(town,25,2,33,3);path(town,25,2,27,16)
 path(town,7,24,9,25);path(town,32,24,34,25)
 tree(town,21,20)
+# One persistent celebration controller; lamps are ordinary world blocks, not particles.
+def festival(t,x,z):
+    t.put(x,4,z,"midnighteve:festival_hearth",stage=0)
+    for dx,dz in [(-3,-2),(3,-2),(-3,2),(3,2)]:
+        t.put(x+dx,3,z+dz,"stone_bricks")
+        t.put(x+dx,4,z+dz,"stone_brick_wall",up=True,north="none",south="none",east="none",west="none",waterlogged=False)
+        t.put(x+dx,5,z+dz,"midnighteve:festival_lamp",lit=False)
+festival(town,21,25)
 town.save("frostmarket")
 lodge=Template(32,19,25)
 path(lodge,4,3,28,7);path(lodge,3,8,28,21)
@@ -277,17 +288,94 @@ for y in range(4,14):watch.put(17,y,14,"stripped_spruce_log",axis="y")
 watch.fill(16,14,13,18,14,15,"spruce_planks")
 watch.put(17,15,14,"lantern",hanging=False,waterlogged=False)
 watch.save("northwatch")
+
+# Postal station: enclosed timber office plus a real covered sorting/loading yard.
+post=Template(32,19,26)
+path(post,3,3,28,22)
+cabin(post,4,8,11,12,"Postmaster","spruce_planks","dark_oak","librarian")
+for x in (18,28):
+    for z in (8,19):
+        post.fill(x,4,z,x,9,z,"stripped_spruce_log",axis="y")
+for x in range(17,30):
+    for z in range(7,21):
+        h=10+min(x-17,29-x)//2
+        post.put(x,h,z,"spruce_planks")
+        if x in (17,29):post.put(x,h,z,"dark_oak_stairs",facing="east" if x==17 else "west",half="bottom",shape="straight",waterlogged=False)
+for x in range(19,28,2):
+    post.put(x,4,18,"barrel",facing="up",open=False)
+    post.put(x,4,10,"midnighteve:gift_crate")
+for x in (20,26):post.put(x,9,13,"lantern",hanging=True,waterlogged=False)
+post.save("winter_post")
+
+# Candle hall: taller stone nave, buttresses, coloured glass, pews and tower.
+hall=Template(31,25,31)
+path(hall,4,2,26,26)
+x0,x1,z0,z1=8,22,8,24
+hall.fill(x0,0,z0,x1,3,z1,"stone_bricks")
+hall.fill(x0,4,z0,x1,12,z1,"air")
+for x in range(x0,x1+1):
+    for z in range(z0,z1+1):
+        if x in (x0,x1) or z in (z0,z1):
+            hall.fill(x,4,z,x,12,z,"stone_bricks")
+for x in (x0,x1):
+    for z in (11,16,21):
+        hall.fill(x,7,z,x,10,z,"yellow_stained_glass")
+        q=x-1 if x==x0 else x+1
+        hall.fill(q,4,z-2,q,9,z-2,"stone_bricks")
+        hall.put(q,10,z-2,"stone_brick_stairs",facing="east" if x==x0 else "west",half="bottom",shape="straight",waterlogged=False)
+for x in range(x0-1,x1+2):
+    y=13+min(x-x0+1,x1+1-x)
+    for z in range(z0-1,z1+2):
+        if x==15:hall.put(x,y,z,"dark_oak_slab",type="bottom",waterlogged=False)
+        else:hall.put(x,y,z,"dark_oak_stairs",facing="east" if x<15 else "west",half="bottom",shape="straight",waterlogged=False)
+    if x0<=x<=x1:
+        for z in (z0,z1):
+            if y>13:hall.fill(x,13,z,x,y-1,z,"stone_bricks")
+hall.fill(14,14,z1,16,17,z1,"red_stained_glass")
+for y,half in ((4,"lower"),(5,"upper")):
+    hall.put(15,y,z0,"spruce_door",facing="north",half=half,hinge="left",open=False,powered=False)
+hall.doors.append((15,4,z0));hall.rooms.append((15,4,z0+1))
+for z in (12,15,18):
+    for x in (10,11,12,18,19,20):
+        hall.put(x,4,z,"spruce_stairs",facing="north",half="bottom",shape="straight",waterlogged=False)
+for x in (10,20):
+    for z in (10,16,22):
+        hall.put(x,4,z,"stone_brick_wall",up=True,north="none",south="none",east="none",west="none",waterlogged=False)
+        hall.put(x,5,z,"lantern",hanging=False,waterlogged=False)
+hall.put(15,4,22,"lectern",facing="north",has_book=False,powered=False)
+hall.resident(17,4,22,"Chandler","cleric")
+festival(hall,15,5)
+hall.save("candle_hall")
+
+# Fjord trading post: two separate roofs, storage racks, raised timber landing.
+fjord=Template(36,19,30)
+path(fjord,3,3,32,26)
+cabin(fjord,4,8,11,10,"Fisher","spruce_planks","spruce","fisherman")
+cabin(fjord,22,12,9,10,None,"stripped_spruce_wood","dark_oak")
+for x in range(16,21):
+    for z in range(5,26):
+        fjord.put(x,3,z,"spruce_planks")
+for z in (6,12,18,24):
+    for x in (16,20):
+        fjord.fill(x,0,z,x,4,z,"spruce_log",axis="y")
+        fjord.put(x,5,z,"lantern",hanging=False,waterlogged=False)
+for x in (23,25,27,29):
+    fjord.put(x,4,23,"barrel",facing="up",open=False)
+fjord.save("fjord_trading_post")
 for i,(n,allowed,spacing,sep) in enumerate([
  ("frostmarket",["peppermint_grove","starlit_steppe"],38,12),
  ("evergreen_lodge",["firlight_woods","silent_snowfields"],29,9),
- ("northwatch",["crystal_crown","silent_snowfields"],34,11)
+ ("northwatch",["crystal_crown","silent_snowfields"],34,11),
+ ("winter_post",["peppermint_grove","firlight_woods"],36,12),
+ ("candle_hall",["starlit_steppe","peppermint_grove"],42,14),
+ ("fjord_trading_post",["mirror_fjords"],32,10)
 ]):
     write(D/"tags/worldgen/biome"/("has_structure/"+n+".json"),{"replace":False,"values":[mod(b) for b in allowed]})
     write(D/"worldgen/template_pool"/(n+".json"),{"fallback":"minecraft:empty","elements":[{"weight":1,"element":{"element_type":"minecraft:single_pool_element","location":mod(n),"processors":"minecraft:empty","projection":"rigid"}}]})
     write(D/"worldgen/structure"/(n+".json"),{"type":"minecraft:jigsaw","biomes":"#"+mod("has_structure/"+n),"step":"surface_structures","spawn_overrides":{},"terrain_adaptation":"beard_box","start_pool":mod(n),"size":0,"start_height":{"absolute":-3},"project_start_to_heightmap":"WORLD_SURFACE_WG","max_distance_from_center":80,"use_expansion_hack":False})
     write(D/"worldgen/structure_set"/(n+".json"),{"structures":[{"structure":mod(n),"weight":1}],"placement":{"type":"minecraft:random_spread","spacing":spacing,"separation":sep,"salt":271811+i*7817}})
     en["structure.midnighteve."+n]=n.replace("_"," ").title()
-    ru["structure.midnighteve."+n]={"frostmarket":"Морозная ярмарка","evergreen_lodge":"Хвойный приют","northwatch":"Северная сторожка"}[n]
+    ru["structure.midnighteve."+n]={"frostmarket":"Морозная ярмарка","evergreen_lodge":"Хвойный приют","northwatch":"Северная сторожка","winter_post":"Зимняя почта","candle_hall":"Зал свечей","fjord_trading_post":"Торговый двор фьордов"}[n]
 # Art: hand-authored clusters with limited ramps, transparent item silhouettes.
 def png(path,rows,pal):
     assert len(rows)==16 and all(len(r)==16 for r in rows)
@@ -313,6 +401,25 @@ write(A/"models/item/gift_crate.json",{"parent":mod("block/gift_crate")})
 for n in ["wintermark","wrapped_gift"]:write(A/"models/item"/(n+".json"),{"parent":"minecraft:item/generated","textures":{"layer0":mod("item/"+n)}})
 write(D/"loot_table/blocks/gift_crate.json",{"type":"minecraft:block","pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":mod("gift_crate")}],"conditions":[{"condition":"minecraft:survives_explosion"}]}]})
 write(D/"recipe/gift_crate.json",{"type":"minecraft:crafting_shaped","pattern":["PPP","PWP","PPP"],"key":{"P":{"item":"minecraft:paper"},"W":{"item":"minecraft:red_wool"}},"result":{"id":mod("gift_crate"),"count":2}})
+# The stone hearth uses the original vanilla masonry palette. Top progress pixels
+# are hand-defined, not procedural noise; one glowing inset per completed stage.
+for stage in range(6):
+    rows=[list("ssssssssssssssss") for _ in range(16)]
+    for y in range(1,15):
+        for x in range(1,15):rows[y][x]="m" if (y in (1,14) or x in (1,14)) else "d"
+    for k,(x,y) in enumerate([(3,3),(10,3),(3,10),(10,10)]):
+        for yy in range(y,y+3):
+            for xx in range(x,x+3):rows[yy][xx]="g" if stage>k else "s"
+    for y in range(6,10):
+        for x in range(6,10):rows[y][x]="h" if stage==5 else ("g" if stage==4 else "m")
+    png(A/"textures/block"/("hearth_"+str(stage)+".png"),["".join(r) for r in rows],{k:rgba(v) for k,v in {"s":"6f6b65","m":"8a8580","d":"4b4845","g":"cf9f4d","h":"f4d68b"}.items()})
+    write(A/"models/block"/("hearth_"+str(stage)+".json"),{"parent":"minecraft:block/cube_column","textures":{"side":"minecraft:block/stone_bricks","end":mod("block/hearth_"+str(stage))}})
+write(A/"blockstates/festival_hearth.json",{"variants":{"stage="+str(i):{"model":mod("block/hearth_"+str(i))} for i in range(6)}})
+write(A/"models/item/festival_hearth.json",{"parent":mod("block/hearth_0")})
+write(A/"blockstates/festival_lamp.json",{"variants":{"lit=false":{"model":"minecraft:block/redstone_lamp"},"lit=true":{"model":"minecraft:block/redstone_lamp_on"}}})
+write(A/"models/item/festival_lamp.json",{"parent":"minecraft:block/redstone_lamp"})
+en.update({"block.midnighteve.festival_hearth":"Festival Hearth","block.midnighteve.festival_lamp":"Festival Lamp","festival.midnighteve.0":"Bring 8 cookies for the feast.","festival.midnighteve.1":"Bring 3 lanterns to light the square.","festival.midnighteve.2":"Bring a wrapped gift for the celebration.","festival.midnighteve.3":"Bring 2 wintermarks to complete the preparations.","festival.midnighteve.4":"The square is ready. Return at midnight!","festival.midnighteve.5":"This celebration has already taken place.","festival.midnighteve.midnight":"Midnight! The winter festival has begun!"})
+ru.update({"block.midnighteve.festival_hearth":"Праздничный очаг","block.midnighteve.festival_lamp":"Праздничный светильник","festival.midnighteve.0":"Принеси 8 печений для угощения.","festival.midnighteve.1":"Принеси 3 фонаря для площади.","festival.midnighteve.2":"Принеси упакованный подарок к празднику.","festival.midnighteve.3":"Принеси 2 зимние марки для завершения подготовки.","festival.midnighteve.4":"Площадь готова. Возвращайся к полуночи!","festival.midnighteve.5":"Этот праздник уже состоялся.","festival.midnighteve.midnight":"Полночь! Начинается зимний праздник!"})
 write(A/"lang/en_us.json",en);write(A/"lang/ru_ru.json",ru)
 write(R/"pack.mcmeta",{"pack":{"pack_format":34,"description":"MIDNIGHT Reborn"}})
 text(R/"META-INF/neoforge.mods.toml",'''modLoader="javafml"
@@ -320,7 +427,7 @@ loaderVersion="[4,)"
 license="MIT"
 [[mods]]
 modId="midnighteve"
-version="0.5.0"
+version="0.6.0"
 displayName="MIDNIGHT: Reborn"
 authors="MngkLrd"
 description="A winter adventure with native seasonal settlements, merchants and gifts."
@@ -347,6 +454,8 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.*;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import dev.mngklrd.midnighteve.item.WrappedGift;
+import dev.mngklrd.midnighteve.block.FestivalHearth;
+import dev.mngklrd.midnighteve.block.FestivalLamp;
 
 @Mod("midnighteve")
 public final class MidnightEve {
@@ -358,6 +467,8 @@ public final class MidnightEve {
     public static final DeferredItem<Item> WINTERMARK = ITEMS.registerSimpleItem("wintermark", new Item.Properties());
     public static final DeferredItem<WrappedGift> WRAPPED_GIFT = ITEMS.register("wrapped_gift",
         () -> new WrappedGift(new Item.Properties().stacksTo(16)));
+    public static final DeferredBlock<FestivalHearth> HEARTH = BLOCKS.register("festival_hearth", () -> new FestivalHearth(BlockBehaviour.Properties.of().strength(-1.0F,3600000.0F).noLootTable().lightLevel(s -> s.getValue(FestivalHearth.STAGE)>=4?12:0)));
+    public static final DeferredBlock<FestivalLamp> LAMP = BLOCKS.register("festival_lamp", () -> new FestivalLamp(BlockBehaviour.Properties.of().strength(1.0F).lightLevel(s -> s.getValue(FestivalLamp.LIT)?15:0)));
     public MidnightEve(IEventBus bus) {
         BLOCKS.register(bus); ITEMS.register(bus); bus.addListener(this::creative);
     }
@@ -399,4 +510,87 @@ public final class WrappedGift extends Item {
     }
 }
 ''')
-print("PASS: complete standalone MIDNIGHT Reborn source and resource generation")
+text(S/"java/dev/mngklrd/midnighteve/block/FestivalLamp.java",'''package dev.mngklrd.midnighteve.block;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+public final class FestivalLamp extends Block {
+    public static final BooleanProperty LIT = BooleanProperty.create("lit");
+    public FestivalLamp(Properties p) { super(p); registerDefaultState(stateDefinition.any().setValue(LIT,false)); }
+    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b) { b.add(LIT); }
+}
+''')
+text(S/"java/dev/mngklrd/midnighteve/block/FestivalHearth.java",'''package dev.mngklrd.midnighteve.block;
+import dev.mngklrd.midnighteve.MidnightEve;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
+
+public final class FestivalHearth extends Block {
+    public static final IntegerProperty STAGE = IntegerProperty.create("stage",0,5);
+    public FestivalHearth(Properties p) { super(p); registerDefaultState(stateDefinition.any().setValue(STAGE,0)); }
+    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b) { b.add(STAGE); }
+    private void hint(Player p,int stage) { p.displayClientMessage(Component.translatable("festival.midnighteve."+stage),true); }
+    @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit) {
+        if (!level.isClientSide) hint(player,state.getValue(STAGE));
+        return InteractionResult.sidedSuccess(level.isClientSide);
+    }
+    @Override protected ItemInteractionResult useItemOn(ItemStack stack,BlockState state,Level level,BlockPos pos,Player p,InteractionHand hand,BlockHitResult hit) {
+        int stage=state.getValue(STAGE);
+        int count=switch(stage){case 0->8;case 1->3;case 2->1;case 3->2;default->0;};
+        boolean match=switch(stage){case 0->stack.is(Items.COOKIE);case 1->stack.is(Items.LANTERN);case 2->stack.is(MidnightEve.WRAPPED_GIFT.get());case 3->stack.is(MidnightEve.WINTERMARK.get());default->false;};
+        if (!(level instanceof ServerLevel server)) return ItemInteractionResult.SUCCESS;
+        if (!match || stack.getCount()<count) { hint(p,stage);return ItemInteractionResult.CONSUME; }
+        if (!p.getAbilities().instabuild) stack.shrink(count);
+        int next=stage+1;
+        server.setBlockAndUpdate(pos,state.setValue(STAGE,next));
+        server.playSound(null,pos,SoundEvents.BELL_BLOCK,SoundSource.BLOCKS,0.7F,0.9F+next*0.1F);
+        server.sendParticles(ParticleTypes.HAPPY_VILLAGER,pos.getX()+0.5,pos.getY()+1.2,pos.getZ()+0.5,12,0.4,0.3,0.4,0.01);
+        if(next>=2) light(server,pos,next==4?4:2);
+        if(next==4) server.scheduleTick(pos,this,20);
+        hint(p,next);
+        return ItemInteractionResult.CONSUME;
+    }
+    private void light(ServerLevel s,BlockPos p,int n) {
+        int found=0;
+        for(int[] off:new int[][]{{-3,-2},{3,-2},{-3,2},{3,2}}){
+            BlockPos q=p.offset(off[0],1,off[1]);BlockState b=s.getBlockState(q);
+            if(b.is(MidnightEve.LAMP.get()) && found++<n) s.setBlockAndUpdate(q,b.setValue(FestivalLamp.LIT,true));
+        }
+    }
+    @Override protected void onPlace(BlockState state,Level level,BlockPos pos,BlockState old,boolean moved) {
+        super.onPlace(state,level,pos,old,moved);
+        if(level instanceof ServerLevel s && state.getValue(STAGE)==4) s.scheduleTick(pos,this,20);
+    }
+    @Override protected void tick(BlockState state,ServerLevel s,BlockPos p,RandomSource r) {
+        if(state.getValue(STAGE)!=4)return;
+        long time=Math.floorMod(s.getDayTime(),24000L);
+        if(time<17500||time>18500){s.scheduleTick(p,this,20);return;}
+        s.setBlockAndUpdate(p,state.setValue(STAGE,5));
+        light(s,p,4);
+        s.playSound(null,p,SoundEvents.BELL_BLOCK,SoundSource.BLOCKS,2.0F,0.8F);
+        s.sendParticles(ParticleTypes.FIREWORK,p.getX()+0.5,p.getY()+6,p.getZ()+0.5,100,2.0,1.6,2.0,0.15);
+        s.sendParticles(ParticleTypes.END_ROD,p.getX()+0.5,p.getY()+3,p.getZ()+0.5,60,3,2,3,0.04);
+        Block.popResource(s,p.above(),new ItemStack(MidnightEve.WRAPPED_GIFT.get(),3));
+        for(var player:s.players()) if(player.distanceToSqr(p.getX()+0.5,p.getY()+0.5,p.getZ()+0.5)<4096) player.displayClientMessage(Component.translatable("festival.midnighteve.midnight"),false);
+    }
+}
+''')
+print("PASS: MIDNIGHT 0.6.0 architecture, resource generation and festival progression")
