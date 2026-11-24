@@ -26,4 +26,4 @@ tasks.named('processResources') {
     dependsOn 'generateAssets'
     from(layout.buildDirectory.dir('generated/hussassets'))
 }
-jar { finalizedBy 'reobfJar' }
+// Forge 1.21.1 uses official runtime mappings; no reobfJar task.
