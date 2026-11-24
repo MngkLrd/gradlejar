@@ -21,7 +21,7 @@ public final class WeirCapture {
     private static final String CLAIM="RiverWeirHoldUntil";
     private static final double CONTACT_MARGIN=.16;
     private WeirCapture(){}
-    public record Hold(UUID fish,BlockPos mesh,Vec3 anchor,long started,int duration,boolean alongX){}
+    public record Hold(UUID fish,BlockPos mesh,Vec3 anchor,long started,int duration,boolean alongX,int seed,int escapeAt,int side){}
 
     private static boolean intact(ServerLevel level,BlockPos p){
         if(!level.hasChunkAt(p))return false;
@@ -72,12 +72,31 @@ public final class WeirCapture {
             float chance=Math.min(.95f,be.getTier().catchChance*(be.baitCharges>0?1.8f:1f)*(1f-be.clog/140f));
             if(level.random.nextFloat()>=chance||plan(be,WeirLogic.catchItem(fish))==null)continue;
             int duration=100+level.random.nextInt(81);
-            be.hold=new Hold(fish.getUUID(),mesh.immutable(),fish.position(),now,duration,x);
+            int seed=level.random.nextInt();
+            int escapeAt=WeirStruggle.escapeTick(be.getTier().id,level.random.nextFloat(),duration,seed);
+            double normal=x?fish.getZ()-(mesh.getZ()+.5):fish.getX()-(mesh.getX()+.5);
+            int side=normal>=0?1:-1;
+            be.hold=new Hold(fish.getUUID(),mesh.immutable(),fish.position(),now,duration,x,seed,escapeAt,side);
+            pulse(level,be.hold);
             fish.getPersistentData().putLong(CLAIM,now+duration+20);
             fish.setDeltaMovement(Vec3.ZERO);
             fish.hurtMarked=true;
             return;
         }
+    }
+    private static void pulse(ServerLevel level,Hold hold){
+        if(intact(level,hold.mesh()))
+            level.blockEvent(hold.mesh(),RiverWeirMod.NET.get(),WeirNetBlock.TENSION_EVENT,hold.side()>0?1:0);
+    }
+    private static void escape(ServerLevel level,WeirPostBlockEntity be,AbstractFish fish,Hold hold,long now){
+        pulse(level,hold);
+        release(level,be);
+        // The freed fish is not captured again immediately by the same or a neighboring net.
+        fish.getPersistentData().putLong(CLAIM,now+200);
+        double away=hold.side()*.29;
+        fish.setDeltaMovement(hold.alongX()?new Vec3(0,.045,away):new Vec3(away,.045,0));
+        fish.hurtMarked=true;
+        level.sendParticles(ParticleTypes.BUBBLE,fish.getX(),fish.getY()+fish.getBbHeight()*.5,fish.getZ(),4,.12,.12,.12,.025);
     }
     public static void release(ServerLevel level,WeirPostBlockEntity be){
         Hold h=be.hold;
@@ -96,7 +115,12 @@ public final class WeirCapture {
             ||fish.distanceToSqr(h.anchor().x,h.anchor().y,h.anchor().z)>2.25){
             release(level,be);return;
         }
-        if(now-h.started()>=h.duration()){
+        long elapsed=now-h.started();
+        if(h.escapeAt()>=0&&elapsed>=h.escapeAt()&&elapsed<h.duration()){
+            escape(level,be,fish,h,now);
+            return;
+        }
+        if(elapsed>=h.duration()){
             ItemStackHandler trial=plan(be,WeirLogic.catchItem(fish));
             if(trial==null){release(level,be);be.lastCatch=now;be.setChanged();return;}
             for(int i=0;i<trial.getSlots();i++)be.items.setStackInSlot(i,trial.getStackInSlot(i).copy());
@@ -110,16 +134,23 @@ public final class WeirCapture {
             WeirLogic.damage(level,be,be.getTier().catchWear+(level.random.nextInt(3)==0?1:0));
             return;
         }
-        // Keep natural AI enabled. Only gently tether position/velocity while the controller ticks.
-        // If the chunk unloads, no permanent AI, gravity or persistence flags are left on the fish.
-        double phase=(now-h.started())*.65;
-        Vec3 target=h.anchor().add(h.alongX()?Math.sin(phase)*.055:0,Math.sin(phase*.7)*.035,h.alongX()?0:Math.sin(phase)*.055);
+        // Keep native fish AI and model. Active holds alone get this cheap motion update.
+        // Discovery of new fish is still limited to one scan per second by the controller.
+        int age=(int)Math.max(0,elapsed);
+        double strength=WeirStruggle.strength(age,h.seed());
+        if(age>0&&age%WeirStruggle.cycle(h.seed())==0) pulse(level,h);
+        double phase=age*.72+(h.seed()&31)*.23;
+        double lateral=(.004+.085*strength)*Math.sin(phase);
+        double vertical=(.003+.035*strength)*Math.sin(phase*.67);
+        Vec3 target=h.anchor().add(h.alongX()?lateral:0,vertical,h.alongX()?0:lateral);
         Vec3 delta=target.subtract(fish.position()).scale(.65);
         fish.setDeltaMovement(delta);
         if(now%4==0){
-            if(level.noCollision(fish,fish.getBoundingBox().move(target.subtract(fish.position()))))fish.setPos(target.x,target.y,target.z);
+            if(level.noCollision(fish,fish.getBoundingBox().move(target.subtract(fish.position()))))
+                fish.setPos(target.x,target.y,target.z);
             fish.hurtMarked=true;
         }
-        if(now%8==0)level.sendParticles(ParticleTypes.BUBBLE,fish.getX(),fish.getY()+fish.getBbHeight()*.5,fish.getZ(),2,.12,.12,.12,.015);
+        if(strength>.35&&age%6==0)
+            level.sendParticles(ParticleTypes.BUBBLE,fish.getX(),fish.getY()+fish.getBbHeight()*.5,fish.getZ(),2,.10,.10,.10,.015);
     }
 }

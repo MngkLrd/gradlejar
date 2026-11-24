@@ -35,6 +35,24 @@ public final class WeirMathTestMain {
         check(WeirLayout.imageHeight(2),149,"jute GUI height");
         check(WeirLayout.imageHeight(18),167,"bronze GUI height");
         check(WeirLayout.imageHeight(27),185,"iron GUI height");
-        System.out.println("River Weir geometry and GUI regression checks passed.");
+        check(WeirStruggle.escapeTick(0,.051f,140,71),-1,"jute does not escape above 5 percent");
+        check(WeirStruggle.escapeTick(1,.026f,140,71),-1,"bronze does not escape above 2.5 percent");
+        check(WeirStruggle.escapeTick(2,.011f,140,71),-1,"iron does not escape above 1 percent");
+        for(int seed:new int[]{0,71,-12,Integer.MIN_VALUE,Integer.MAX_VALUE}){
+            int cycle=WeirStruggle.cycle(seed);
+            boolean burst=false,rest=false;
+            for(int i=0;i<cycle*4;i++){
+                double strength=WeirStruggle.strength(i,seed);
+                if(strength<0||strength>1.001)throw new AssertionError("strength outside bounds");
+                burst|=strength>.5;rest|=strength==0;
+            }
+            if(!burst||!rest)throw new AssertionError("missing motion or rest");
+            for(int tier=0;tier<3;tier++){
+                int escape=WeirStruggle.escapeTick(tier,0,140,seed);
+                if(escape<77||escape>132||WeirStruggle.strength(escape,seed)<=0)
+                    throw new AssertionError("escape outside late active burst");
+            }
+        }
+        System.out.println("River Weir geometry, GUI and struggle regression checks passed.");
     }
 }

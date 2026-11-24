@@ -16,6 +16,7 @@ public final class RiverWeirClient {
         event.enqueueWork(() -> {
             ItemBlockRenderTypes.setRenderLayer(RiverWeirMod.NET.get(),RenderType.cutout());
             MenuScreens.register(RiverWeirMod.WEIR_MENU.get(),WeirScreen::new);
+            dev.minemods.riverweir.block.WeirNetBlock.setTensionListener(WeirTensionVisual::pulse);
         });
     }
 }

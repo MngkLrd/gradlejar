@@ -27,6 +27,20 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public final class WeirNetBlock extends Block {
+    // Vanilla block-event packet; no additional persistent block-state combinations.
+    public static final int TENSION_EVENT=41;
+    @FunctionalInterface public interface TensionListener {
+        void pulse(Level level,BlockPos pos,int side);
+    }
+    private static TensionListener tensionListener=(level,pos,side)->{};
+    public static void setTensionListener(TensionListener listener){tensionListener=listener;}
+    @Override public boolean triggerEvent(BlockState state,Level level,BlockPos pos,int id,int data){
+        if(id==TENSION_EVENT){
+            if(level.isClientSide&&state.getValue(STAGE)<2)tensionListener.pulse(level,pos,data==1?1:-1);
+            return true;
+        }
+        return super.triggerEvent(state,level,pos,id,data);
+    }
     public static final EnumProperty<Direction.Axis> AXIS=EnumProperty.create("axis",Direction.Axis.class,Direction.Axis.X,Direction.Axis.Z);
     public static final IntegerProperty STAGE=IntegerProperty.create("stage",0,2);
     public static final IntegerProperty TIER=IntegerProperty.create("tier",0,2);
