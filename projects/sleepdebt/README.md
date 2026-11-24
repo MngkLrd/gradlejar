@@ -13,3 +13,7 @@ Cumulative activity-based fatigue, separate acute caffeine and tolerance, calm r
 
 ## 3.1.0
 Restored detailed copper HUD with pixel-authored bevels, corner fittings and framed penalty strip. Journal uses a single unblurred background pass, followed by data and then widgets; native tiled border and fine chart strokes. Five pages and server history preserved. This is a focused visual/UI correction, not a physiology rebalance. Client and server protocol remains 5. Live graphical QA is required.
+
+
+## 3.1.2
+Independent material-first pixel artwork (24 items, 15 material maps, 8 growth stages), textured HUD meter atlas, no centered text shadow on journal chart labels, explicit particle texture, nonintersecting awning and bedroll geometry, espresso machine with open brewing bay and nozzle. No gameplay changes. Static asset and compilation tests are not graphical client tests.

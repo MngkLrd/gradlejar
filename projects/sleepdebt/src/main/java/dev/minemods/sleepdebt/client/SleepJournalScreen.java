@@ -115,7 +115,8 @@ public final class SleepJournalScreen extends Screen {
    int bw=Math.max(5,group-12);
    g.fill(xx+4,gy+gh-bh,xx+4+bw,gy+gh, i%2==0?GOLD:TEAL);
    raw(g,Integer.toString(v),xx+3,Math.max(gy,gy+gh-bh-10),TEXT);
-   g.drawCenteredString(font,tr(keys[i]),xx+group/2,gy+gh+4,TEXT);
+   var category=tr(keys[i]);
+   g.drawString(font,category,xx+(group-font.width(category))/2,gy+gh+4,TEXT,false);
   }
   line(g,gx,gy+gh,gx+cw-16,gy+gh,GRID);
   label(g,"lifetime",x+8,y+ch-12);
@@ -185,7 +186,7 @@ public final class SleepJournalScreen extends Screen {
   drawFrame(g);
   g.fill(left+8,top+19,left+w-8,top+20,0xFF8C8C8C);
   g.fill(left+8,top+20,left+w-8,top+21,0xFFECECEC);
-  g.drawCenteredString(font,title,left+w/2,top+9,TEXT);
+  g.drawString(font,title,left+(w-font.width(title))/2,top+9,TEXT,false);
   int x=left+9,y=top+50,cw=w-18,ch=h-81;
   switch(page){case 0->overview(g,x,y,cw,ch);case 1->history(g,x,y,cw,ch);
    case 2->activity(g,x,y,cw,ch);case 3->recovery(g,x,y,cw,ch);case 4->caffeine(g,x,y,cw,ch);}
