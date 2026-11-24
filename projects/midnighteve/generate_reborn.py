@@ -47,6 +47,32 @@ for i,n in enumerate(names):
           "mood_sound":{"sound":"minecraft:ambient.cave","tick_delay":6000,"block_search_extent":8,"offset":2.0}},
         "carvers":{"air":[mc(v) for v in ["cave","cave_extra_underground","canyon"]]},
         "features":[[mc(v) for v in a] for a in feat],"spawn_costs":{},"spawners":spawners})
+# Native trees give each land region an identifiable silhouette.
+def uniform(a,b):return {"type":"minecraft:uniform","min_inclusive":a,"max_inclusive":b}
+def state(n,**props):
+    d={"Name":mc(n)}
+    if props:d["Properties"]=props
+    return {"type":"minecraft:simple_state_provider","state":d}
+for name,base,extra,radius,crown,count,giant in [
+ ("old_fir",15,9,4,7,2,True),("hearth_fir",8,3,3,3,2,False),
+ ("tundra_pine",3,2,2,2,1,False)]:
+    foliage={"type":"minecraft:mega_pine_foliage_placer","radius":0,"offset":0,"crown_height":uniform(5,9)} if giant else {"type":"minecraft:spruce_foliage_placer","radius":uniform(max(1,radius-1),radius),"offset":uniform(0,1),"trunk_height":uniform(1,crown)}
+    config={"decorators":[],"dirt_provider":state("dirt"),"foliage_placer":foliage,
+       "foliage_provider":state("spruce_leaves",distance="7",persistent="false",waterlogged="false"),
+       "force_dirt":False,"ignore_vines":True,"minimum_size":{"type":"minecraft:two_layers_feature_size","limit":2,"lower_size":1 if giant else 0,"upper_size":2},
+       "trunk_placer":{"type":"minecraft:giant_trunk_placer" if giant else "minecraft:straight_trunk_placer","base_height":base,"height_rand_a":extra,"height_rand_b":2},
+       "trunk_provider":state("spruce_log",axis="y")}
+    if giant:config["decorators"]=[{"type":"minecraft:alter_ground","provider":state("podzol",snowy="false")}]
+    write(D/"worldgen/configured_feature"/(name+".json"),{"type":"minecraft:tree","config":config})
+    write(D/"worldgen/placed_feature"/(name+".json"),{"feature":mod(name),"placement":[
+        {"type":"minecraft:count","count":count},{"type":"minecraft:in_square"},
+        {"type":"minecraft:surface_water_depth_filter","max_water_depth":0},
+        {"type":"minecraft:heightmap","heightmap":"OCEAN_FLOOR"},
+        {"type":"minecraft:block_predicate_filter","predicate":{"type":"minecraft:would_survive","state":{"Name":"minecraft:spruce_sapling","Properties":{"stage":"0"}}}},
+        {"type":"minecraft:biome"}]})
+for region,feature in [("firlight_woods","old_fir"),("peppermint_grove","hearth_fir"),("silent_snowfields","tundra_pine")]:
+    p=D/"worldgen/biome"/(region+".json")
+    b=json.loads(p.read_text());b["features"][9].append(mod(feature));write(p,b)
 # Smooth vanilla climate axes, with peaks and coast selected separately.
 biomes=[]
 for c in [(-1.2,-.25),(-.25,.06),(.06,.38),(.38,1.2)]:
@@ -191,6 +217,22 @@ def cabin(t,x,z,w,d,role=None,wall="spruce_planks",roof="dark_oak",profession="f
         t.put(xx,4,z-1,"cobblestone_wall",up=True,north="none",south="none",east="none",west="none",waterlogged=False)
         t.put(xx,5,z-1,"lantern",hanging=False,waterlogged=False)
     if role:
+        # Role-specific furnishing; a striped awning protects the entry.
+        t.fill(cx-2,7,z-1,cx+2,7,z-1,"red_wool")
+        for xx in (cx-1,cx+1):
+            t.put(xx,7,z-1,"white_wool")
+        if role=="Baker":
+            t.put(x+2,4,Z-2,"smoker",facing="north",lit=False)
+            t.put(x+3,4,Z-1,"spruce_planks");t.put(x+3,5,Z-1,"cake",bites=0)
+            t.put(x+1,4,Z-3,"hay_block",axis="y")
+        elif role=="Giftkeeper":
+            t.put(x+2,4,Z-2,"chest",facing="north",type="single",waterlogged=False)
+            t.put(cx+2,4,Z-1,"midnighteve:gift_crate")
+        elif role=="Woodworker":
+            t.put(x+2,4,Z-2,"smithing_table")
+            t.put(x+3,4,Z-1,"stripped_spruce_log",axis="x")
+        else:
+            t.put(x+2,4,Z-2,"cartography_table")
         t.resident(cx,4,z+3,role,profession)
 def tree(t,x,z,y=4):
     for yy in range(y,y+12):t.put(x,yy,z,"spruce_log",axis="y")
@@ -218,7 +260,7 @@ cabin(town,28,5,11,11,"Woodworker","spruce_planks","dark_oak","toolsmith")
 cabin(town,3,27,11,10,"Giftkeeper","white_terracotta","dark_oak","librarian")
 cabin(town,28,27,11,10,"Ranger","spruce_planks","spruce","butcher")
 # connect all entrances, including northern houses, to square around the buildings
-path(town,7,1,9,2);path(town,14,1,17,18);path(town,31,2,33,3);path(town,25,2,27,16)
+path(town,7,1,17,2);path(town,14,1,17,18);path(town,25,2,33,3);path(town,25,2,27,16)
 path(town,7,24,9,25);path(town,32,24,34,25)
 tree(town,21,20)
 town.save("frostmarket")
