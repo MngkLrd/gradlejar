@@ -1,0 +1,76 @@
+name: Catch the Blast JAR-only package
+on:
+  workflow_run:
+    workflows: ["Minecraft Mod Build Hub"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  package:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.id == 45350249370 && github.event.workflow_run.conclusion == 'success') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download eleven exact compiled release JARs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p downloaded
+          while read -r mc loader run; do
+            tag="ci-catchtheblast-mc${mc}-${loader}-0.2.2-beta-${run}-1"
+            name="catchtheblast-${loader}-mc${mc}-0.2.2-beta.jar"
+            gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "$name" --dir downloaded
+          done <<'EOF'
+          1.20.1 forge 1025
+          1.20.1 neoforge 1025
+          1.21.1 neoforge 1024
+          26.1.2 neoforge 1031
+          26.2 neoforge 1031
+          26.3 neoforge 1031
+          1.20.1 fabric 1027
+          1.21.1 fabric 1027
+          26.1.2 fabric 1031
+          26.2 fabric 1031
+          26.3 fabric 1031
+          EOF
+      - name: Assemble and validate ZIP
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+          expected = [
+              (folder, f'catchtheblast-{loader}-mc{mc}-0.2.2-beta.jar')
+              for folder, loader, versions in [
+                  ('Forge','forge',['1.20.1']),
+                  ('NeoForge','neoforge',['1.20.1','1.21.1','26.1.2','26.2','26.3']),
+                  ('Fabric','fabric',['1.20.1','1.21.1','26.1.2','26.2','26.3'])
+              ] for mc in versions
+          ]
+          files = {p.name:p for p in Path('downloaded').glob('*.jar')}
+          assert set(files) == {name for _,name in expected} and len(files) == 11
+          path='Catch-the-Blast-0.2.2-beta-ALL-11-JARs.zip'
+          with zipfile.ZipFile(path,'w',zipfile.ZIP_DEFLATED) as out:
+              for folder,name in expected:
+                  with zipfile.ZipFile(files[name]) as jar:
+                      assert jar.testzip() is None, name
+                      assert 'dev/ataflore/catchtheblast/CatchTheBlast.class' in jar.namelist(), name
+                      assert any(n.endswith('/BlastCombat.class') for n in jar.namelist()), name
+                      assert not any(n.endswith('.java') for n in jar.namelist()), name
+                  out.write(files[name], f'{folder}/{name}')
+          with zipfile.ZipFile(path) as out:
+              assert out.testzip() is None
+              assert out.namelist() == [f'{folder}/{name}' for folder,name in expected]
+              print('\n'.join(out.namelist()))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Catch-the-Blast-0.2.2-beta-ALL-11-JARs
+          path: Catch-the-Blast-0.2.2-beta-ALL-11-JARs.zip
+      - name: Publish verified package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "catchtheblast-v0.2.2-beta-all-11" Catch-the-Blast-0.2.2-beta-ALL-11-JARs.zip --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "Catch the Blast 0.2.2 Beta - 11 JARs" --notes "Exactly eleven compiled JARs, grouped into Forge, NeoForge and Fabric. Build and archive validation passed; in-game testing remains pending." --prerelease
