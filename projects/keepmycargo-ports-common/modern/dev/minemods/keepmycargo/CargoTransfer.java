@@ -35,11 +35,11 @@ public final class CargoTransfer {
     }
     public static boolean isPacked(ItemStack stack) {
         var cargo = stack.get(DataComponents.CONTAINER);
-        return supported(stack) && cargo != null && cargo.nonEmptyStream().findAny().isPresent();
+        return supported(stack) && cargo != null && cargo.nonEmptyItemCopyStream().findAny().isPresent();
     }
     public static long packedCount(ItemStack stack) {
         var cargo = stack.get(DataComponents.CONTAINER);
-        return cargo == null ? 0 : cargo.nonEmptyStream().count();
+        return cargo == null ? 0 : cargo.nonEmptyItemCopyStream().count();
     }
     private static Item vehicleItem(Entity entity) {
         if (entity instanceof AbstractChestBoat boat) { ItemStack picked = boat.getPickResult(); return picked != null && supported(picked) ? picked.getItem() : null; }
@@ -53,7 +53,7 @@ public final class CargoTransfer {
         if (isPacked(stack)) return true;
         if (depth >= 16) return true;
         var contents = stack.get(DataComponents.CONTAINER);
-        return contents != null && contents.nonEmptyStream().anyMatch(child -> containsPackedCargo(child, depth + 1));
+        return contents != null && contents.nonEmptyItemCopyStream().anyMatch(child -> containsPackedCargo(child, depth + 1));
     }
     public static boolean packOnDestroy(Entity entity, DamageSource source) {
         if (!(entity.level() instanceof ServerLevel level) || entity.isRemoved() ||
