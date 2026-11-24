@@ -1,0 +1,22 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="All Rights Reserved"
+[[mods]]
+modId="keepmycargo"
+version="1.0.0"
+displayName="Keep My Cargo"
+description='''Pack and redeploy cargo boats, rafts and minecarts.'''
+[[mixins]]
+config="keepmycargo.mixins.json"
+[[dependencies.keepmycargo]]
+modId="neoforge"
+type="required"
+versionRange="[26.2.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.keepmycargo]]
+modId="minecraft"
+type="required"
+versionRange="[26.2]"
+ordering="NONE"
+side="BOTH"

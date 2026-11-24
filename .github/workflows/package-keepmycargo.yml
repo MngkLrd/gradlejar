@@ -1,0 +1,59 @@
+name: Keep My Cargo flat 11-JAR bundle
+on:
+  workflow_run:
+    workflows: ["Minecraft Mod Build Hub"]
+    types: [completed]
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  package:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_commit.message, 'Keep My Cargo ports:') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect and validate eleven real JARs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+        run: |
+          set -euo pipefail
+          mkdir -p jars
+          gh release download ci-keepmycargo-mc1.21.1-neoforge-1.0.0-1036-1 --repo "$GITHUB_REPOSITORY" --pattern keepmycargo-1.0.0.jar --dir jars
+          mv jars/keepmycargo-1.0.0.jar jars/keepmycargo-neoforge-mc1.21.1-1.0.0.jar
+          while read -r loader mc; do
+            gh release download "ci-keepmycargo-mc${mc}-${loader}-1.0.0-${RUN_NUMBER}-${RUN_ATTEMPT}" --repo "$GITHUB_REPOSITORY" --pattern "keepmycargo-${loader}-mc${mc}-1.0.0.jar" --dir jars
+          done <<'EOF'
+          forge 1.20.1
+          neoforge 1.20.1
+          fabric 1.20.1
+          fabric 1.21.1
+          neoforge 26.1.2
+          neoforge 26.2
+          neoforge 26.3
+          fabric 26.1.2
+          fabric 26.2
+          fabric 26.3
+          EOF
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+          expected=[(loader,mc) for loader in ('forge','neoforge','fabric') for mc in ('1.20.1','1.21.1','26.1.2','26.2','26.3') if loader!='forge' or mc=='1.20.1']
+          assert len(expected)==11
+          names=[f'keepmycargo-{loader}-mc{mc}-1.0.0.jar' for loader,mc in expected]
+          assert set(names)=={p.name for p in Path('jars').glob('*.jar')}
+          with ZipFile('KeepMyCargo-1.0.0-ALL-11-JARs.zip','w',ZIP_DEFLATED) as out:
+              for name in names:
+                  path=Path('jars')/name
+                  with ZipFile(path) as jar:
+                      assert jar.testzip() is None
+                      assert any(n.endswith('/CargoTransfer.class') for n in jar.namelist())
+                  out.write(path,name)
+          with ZipFile('KeepMyCargo-1.0.0-ALL-11-JARs.zip') as out:
+              assert out.namelist()==names and out.testzip() is None
+          PY
+      - name: Publish flat archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+        run: gh release create "keepmycargo-all-11-${RUN_NUMBER}" KeepMyCargo-1.0.0-ALL-11-JARs.zip --repo "$GITHUB_REPOSITORY" --target "${{ github.event.workflow_run.head_sha }}" --title "Keep My Cargo 1.0.0 - all 11 JARs" --notes "Flat JAR-only archive, Forge then NeoForge then Fabric. Compiled and static-validated; runtime gameplay tested only on original NeoForge 1.21.1." --prerelease

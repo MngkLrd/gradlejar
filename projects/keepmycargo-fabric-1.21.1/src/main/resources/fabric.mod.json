@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "keepmycargo",
+  "version": "1.0.0",
+  "name": "Keep My Cargo",
+  "description": "Pack and redeploy vanilla cargo vehicles.",
+  "environment": "*",
+  "mixins": [
+    "keepmycargo.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.3",
+    "minecraft": "1.21.1",
+    "java": ">=21"
+  },
+  "license": "All Rights Reserved"
+}

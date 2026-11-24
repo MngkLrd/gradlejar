@@ -1,0 +1,13 @@
+plugins { id 'fabric-loom' version '1.11.8' }
+group = 'dev.minemods.keepmycargo'
+version = '1.0.0'
+base.archivesName = 'keepmycargo-fabric-mc1.20.1'
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+dependencies {
+    minecraft 'com.mojang:minecraft:1.20.1'
+    mappings loom.officialMojangMappings()
+    modImplementation 'net.fabricmc:fabric-loader:0.17.3'
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 17 }
+
+sourceSets.main.java.srcDir '../keepmycargo-ports-common/legacy'

@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.minemods.keepmycargo.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "CargoDestroyMixin",
+    "BoatItemMixin",
+    "MinecartItemMixin",
+    "DispenserMixin",
+    "CargoSlotMixin",
+    "ServerLevelMixin",
+    "ItemTooltipMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "keepmycargo.refmap.json"
+}
