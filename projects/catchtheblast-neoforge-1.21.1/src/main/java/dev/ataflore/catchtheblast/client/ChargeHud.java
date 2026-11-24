@@ -15,37 +15,54 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 
 @EventBusSubscriber(modid=CatchTheBlast.ID,value=Dist.CLIENT,bus=EventBusSubscriber.Bus.GAME)
 public final class ChargeHud {
+    private static final int WIDTH=82;
+    private static final int GREEN=0x61C647, GOLD=0xF5C74A, RED=0xEC4938;
+    private ChargeHud() {}
+    private static int heldCharge(ItemStack stack) {
+        return !stack.isEmpty() && stack.getItem() instanceof BlastShieldItem ? Charge.get(stack) : 0;
+    }
     @SubscribeEvent public static void draw(RenderGuiEvent.Post event) {
         Minecraft mc=Minecraft.getInstance();
-        if(mc.player==null || mc.level==null || mc.options.hideGui || mc.player.isSpectator() || mc.screen!=null) return;
-        ItemStack stack=mc.player.getMainHandItem();
-        if(!(stack.getItem() instanceof BlastShieldItem) || Charge.get(stack)<=100) stack=mc.player.getOffhandItem();
-        if(!(stack.getItem() instanceof BlastShieldItem) || Charge.get(stack)<=100) return;
+        if(mc.player==null || mc.level==null || !mc.player.isAlive() || mc.options.hideGui ||
+                mc.player.isSpectator() || mc.screen!=null) return;
+        ItemStack main=mc.player.getMainHandItem(), off=mc.player.getOffhandItem();
+        int a=heldCharge(main), b=heldCharge(off);
+        ItemStack shield=a>=b?main:off;
+        int charge=Math.max(a,b);
+        if(charge<=0) return;
         GuiGraphics g=event.getGuiGraphics();
-        int charge=Charge.get(stack), width=92, x=(g.guiWidth()-width)/2;
-        int y=Math.min(g.guiHeight()/2+34,g.guiHeight()-82);
-        int fill=Math.round(Math.min(charge,100)*width/100f);
-        g.fill(x-2,y-2,x+width+2,y+8,0xD0231D19);
-        g.fill(x,y,x+width,y+6,0xC03C3330);
-        for(int i=0;i<fill;i++) {
-            float p=i/(float)(width-1);
-            int r=(int)(p<.5f?85+300*p:235), gr=(int)(p<.5f?185+80*p:225-340*(p-.5f));
-            int color=0xFF000000|(r<<16)|(gr<<8)|47;
-            g.fill(x+i,y,x+i+1,y+5,color);
+        int x=(g.guiWidth()-WIDTH)/2, y=g.guiHeight()/2+14;
+        boolean overload=charge>100;
+        bar(g,x,y,Math.min(charge,100)/100f,false);
+        if(overload) {
+            long ticks=Math.max(0,Math.min(70,Charge.deadline(shield)-mc.level.getGameTime()));
+            bar(g,x,y+7,ticks/70f,true);
+            g.drawCenteredString(mc.font,Component.translatable("hud.catchtheblast.overload",
+                String.format(Locale.ROOT,"%.2f",ticks/20.0),ticks),x+WIDTH/2,y+14,0xFFFF9565);
         }
-        for(int i=1;i<10;i++) { int mark=x+i*width/10; g.fill(mark,y,mark+1,y+6,0x603A241E); }
-        boolean over=charge>100;
-        Component label=Component.translatable("hud.catchtheblast.charge",charge);
-        g.drawCenteredString(mc.font,label,x+width/2,y-11,over?0xFFFF7652:0xFFF4E3B5);
-        if(over) {
-            long ticks=Math.max(0,Math.min(70,Charge.deadline(stack)-mc.level.getGameTime()));
-            int remaining=(int)Math.ceil(width*ticks/70f);
-            int yy=y+11;
-            g.fill(x-2,yy-2,x+width+2,yy+6,0xE03A1914);
-            g.fill(x,yy,x+width,yy+4,0xFF4D211B);
-            g.fill(x,yy,x+remaining,yy+4,ticks%10<5?0xFFFF6336:0xFFFFA44B);
-            for(int i=1;i<7;i++){int mark=x+i*width/7;g.fill(mark,yy,mark+1,yy+4,0x90271913);}
-            g.drawCenteredString(mc.font,Component.literal(String.format(Locale.ROOT,"%.2fs  |  %dt",ticks/20.0,ticks)),x+width/2,yy+7,0xFFFF8862);
+    }
+    // Pixel-sharp five-pixel XP-style track; both states use the same palette.
+    private static void bar(GuiGraphics g,int x,int y,float amount,boolean countdown) {
+        int n=Math.max(0,Math.min(WIDTH-2,Math.round(amount*(WIDTH-2))));
+        if(amount>0) n=Math.max(1,n);
+        g.fill(x+1,y,x+WIDTH-1,y+5,0xFF171512);
+        g.fill(x,y+1,x+WIDTH,y+4,0xFF171512);
+        g.fill(x+1,y+1,x+WIDTH-1,y+4,0xFF49423B);
+        for(int i=0;i<n;i++) {
+            float p=i/(float)(WIDTH-3);
+            // Countdown heats up as it empties: its visible end always reaches red.
+            if(countdown) p=1f-amount+i/(float)(Math.max(1,n-1))*amount;
+            int c=p<.5f?mix(GREEN,GOLD,p*2):mix(GOLD,RED,(p-.5f)*2);
+            g.fill(x+1+i,y+1,x+2+i,y+2,0xFF000000|mix(c,0xFFFFFF,.24f));
+            g.fill(x+1+i,y+2,x+2+i,y+3,0xFF000000|c);
+            g.fill(x+1+i,y+3,x+2+i,y+4,0xFF000000|mix(c,0x000000,.34f));
         }
+    }
+    private static int mix(int a,int b,float t) {
+        t=Math.max(0,Math.min(1,t));
+        int r=Math.round(((a>>16)&255)*(1-t)+((b>>16)&255)*t);
+        int g=Math.round(((a>>8)&255)*(1-t)+((b>>8)&255)*t);
+        int bl=Math.round((a&255)*(1-t)+(b&255)*t);
+        return (r<<16)|(g<<8)|bl;
     }
 }

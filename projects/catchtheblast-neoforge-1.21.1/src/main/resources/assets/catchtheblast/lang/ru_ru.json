@@ -11,5 +11,6 @@
   "message.catchtheblast.burst": "Щит перегрузился!",
   "hud.catchtheblast.charge": "ЗАРЯД  %s%%",
   "command.catchtheblast.terrain.enabled": "Catch the Blast: разрушение блоков включено.",
-  "command.catchtheblast.terrain.disabled": "Catch the Blast: разрушение блоков отключено."
+  "command.catchtheblast.terrain.disabled": "Catch the Blast: разрушение блоков отключено.",
+  "hud.catchtheblast.overload": "ПЕРЕГРУЗКА  %s с | %s т."
 }

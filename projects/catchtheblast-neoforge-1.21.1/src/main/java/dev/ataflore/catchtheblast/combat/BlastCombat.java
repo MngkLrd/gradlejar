@@ -58,7 +58,6 @@ public final class BlastCombat {
         long deadline = after > 100 ? (before > 100 && Charge.deadline(shield) > 0 ? Charge.deadline(shield) : now + 70) : 0;
         Charge.set(shield, after, deadline);
         BlastFx.capture(level, player, after);
-        if (after > 100 && before <= 100) player.displayClientMessage(Component.translatable("message.catchtheblast.overload", after), true);
     }
 
     public static void release(ServerLevel level, Player player, InteractionHand hand, ItemStack stack) {

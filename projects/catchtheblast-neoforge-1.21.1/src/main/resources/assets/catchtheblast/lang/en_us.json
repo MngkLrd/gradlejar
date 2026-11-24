@@ -11,5 +11,6 @@
   "message.catchtheblast.burst": "The shield overloaded!",
   "hud.catchtheblast.charge": "BLAST  %s%%",
   "command.catchtheblast.terrain.enabled": "Catch the Blast: terrain destruction enabled.",
-  "command.catchtheblast.terrain.disabled": "Catch the Blast: terrain destruction disabled."
+  "command.catchtheblast.terrain.disabled": "Catch the Blast: terrain destruction disabled.",
+  "hud.catchtheblast.overload": "OVERLOAD  %s s | %s t"
 }
