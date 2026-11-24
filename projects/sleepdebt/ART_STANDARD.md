@@ -9,3 +9,5 @@ Source: https://blockbench.net/wiki/guides/minecraft-style-guide/
 - Entity shading: top/front brighter than bottom/back, relative to the actual box UV. Not applicable to the retired Sleepless migration ID.
 
 Technical checks are not proof of artistic quality. No live client rendering is claimed by CI.
+
+Release review: inspect item contact sheet at 1:1 and enlarged scale, check 3x3 material swatches, check model UV ratios mechanically. In-game inspection is a separate required step.

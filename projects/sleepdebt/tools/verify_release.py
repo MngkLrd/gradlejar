@@ -101,7 +101,18 @@ with zipfile.ZipFile(jar) as z:
             frm=piece["from"];to=piece["to"]
             if any(not (0<=a<b<=16) for a,b in zip(frm,to)):
                 raise ValueError(f"Invalid cuboid dimensions: {model_path}")
+            native_model=model_path.endswith(("/coffee_machine.json","/camp_awning.json","/camp_bedroll.json","/camp_lantern.json","/incense_burner.json","/dreamcatcher.json"))
+            if native_model and any(float(n)!=int(n) for n in frm+to):
+                raise ValueError(f"Fractional model unit: {model_path}")
+            dims=[b-a for a,b in zip(frm,to)]
             for side,face in piece["faces"].items():
+                if native_model and "uv" in face:
+                    uv=face["uv"]
+                    x,y,z=dims
+                    expected=(x,z) if side in ("up","down") else (x,y) if side in ("north","south") else (z,y)
+                    actual=(abs(uv[2]-uv[0]),abs(uv[3]-uv[1]))
+                    if actual!=expected:
+                        raise ValueError(f"UV ratio mismatch: {model_path}/{side} {actual} != {expected}")
                 token=face.get("texture","")
                 if token.startswith("#") and token[1:] not in textures:
                     raise ValueError(f"Unknown texture alias {token} in {model_path}")

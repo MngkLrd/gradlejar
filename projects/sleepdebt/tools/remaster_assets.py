@@ -114,6 +114,9 @@ for x in (28,55,82,136):slot(x,44)
 for y in (84,102,120,142):
     for x in range(8,153,18):slot(x,y)
 rect(c,108,47,24,8,"0");rect(c,109,48,22,6,"1")
+# Structural upper-panel copper joints and graphite working surface.
+for x,pat in ((8,"5533/4433"),(70,"5565/4433"),(157,"5565/4433")):stamp(c,x,19,pat)
+rect(c,9,65,158,1,"3")
 # Tiny vent slits/fasteners, distinct from slots.
 for x in (12,17,22,148,153,158):stamp(c,x,27,"000/888")
 save("gui/coffee_maker",c,q)
