@@ -107,9 +107,10 @@ import java.util.function.Supplier;
 public final class FolkContent {
     private static final DeferredRegister<EntityType<?>> TYPES=DeferredRegister.create(Registries.ENTITY_TYPE,"midnighteve");
     public static final Supplier<EntityType<Snowstag>> STAG=TYPES.register("snowstag",()->EntityType.Builder.of(Snowstag::new,MobCategory.CREATURE).sized(.85F,1.65F).clientTrackingRange(8).build("midnighteve:snowstag"));
-    public static final Supplier<EntityType<Snowgrouse>> GROUSE=TYPES.register("snowgrouse",()->EntityType.Builder.of(Snowgrouse::new,MobCategory.CREATURE).sized(.45F,.65F).clientTrackingRange(8).build("midnighteve:snowgrouse"));
+    public static final Supplier<EntityType<Snowgrouse>> GROUSE=TYPES.register("snowgrouse",()->EntityType.Builder.of(Snowgrouse::new,MobCategory.CREATURE).sized(.55F,.75F).clientTrackingRange(8).build("midnighteve:snowgrouse"));
     public static final DeferredItem<Item> STAG_EGG=MidnightEve.ITEMS.register("snowstag_spawn_egg",()->new DeferredSpawnEggItem(STAG,0x987d65,0xd3c3aa,new Item.Properties()));
     public static final DeferredItem<Item> GROUSE_EGG=MidnightEve.ITEMS.register("snowgrouse_spawn_egg",()->new DeferredSpawnEggItem(GROUSE,0xc6c8be,0x6b7471,new Item.Properties()));
+    public static final DeferredItem<Item> GROUSE_EGG_FOOD=MidnightEve.ITEMS.registerSimpleItem("grouse_egg",new Item.Properties().stacksTo(16));
     public static final DeferredItem<Item> VENISON=MidnightEve.ITEMS.registerSimpleItem("venison",new Item.Properties().food(new FoodProperties.Builder().nutrition(3).saturationModifier(.3F).build()));
     public static final DeferredItem<Item> ROAST=MidnightEve.ITEMS.registerSimpleItem("roast_venison",new Item.Properties().food(new FoodProperties.Builder().nutrition(8).saturationModifier(.7F).build()));
     public static final DeferredItem<Item> STEW=MidnightEve.ITEMS.registerSimpleItem("winter_stew",new Item.Properties().stacksTo(1).food(new FoodProperties.Builder().nutrition(9).saturationModifier(.8F).usingConvertsTo(Items.BOWL).build()));
@@ -126,7 +127,7 @@ public final class FolkContent {
     private static void creative(BuildCreativeModeTabContentsEvent e){
         if(e.getTabKey().equals(CreativeModeTabs.SPAWN_EGGS)){e.accept(STAG_EGG.get());e.accept(GROUSE_EGG.get());}
         if(e.getTabKey().equals(CreativeModeTabs.FOOD_AND_DRINKS)){e.accept(VENISON.get());e.accept(ROAST.get());e.accept(STEW.get());}
-        if(e.getTabKey().equals(CreativeModeTabs.INGREDIENTS))e.accept(LEDGER.get());
+        if(e.getTabKey().equals(CreativeModeTabs.INGREDIENTS)){e.accept(LEDGER.get());e.accept(GROUSE_EGG_FOOD.get());}
     }
 }
 ''')
@@ -152,12 +153,13 @@ public final class Snowstag extends Animal {
     @Override protected void registerGoals(){
         goalSelector.addGoal(0,new FloatGoal(this));
         goalSelector.addGoal(1,new PanicGoal(this,1.55));
-        goalSelector.addGoal(2,new BreedGoal(this,1.0));
-        goalSelector.addGoal(3,new TemptGoal(this,1.05,Ingredient.of(Items.SWEET_BERRIES),false));
-        goalSelector.addGoal(4,new FollowParentGoal(this,1.1));
-        goalSelector.addGoal(5,new WaterAvoidingRandomStrollGoal(this,.9));
-        goalSelector.addGoal(6,new LookAtPlayerGoal(this,Player.class,7));
-        goalSelector.addGoal(7,new RandomLookAroundGoal(this));
+        goalSelector.addGoal(2,new AvoidEntityGoal<>(this,net.minecraft.world.entity.animal.Wolf.class,10F,1.1,1.5));
+        goalSelector.addGoal(3,new BreedGoal(this,1.0));
+        goalSelector.addGoal(4,new TemptGoal(this,1.05,Ingredient.of(Items.SWEET_BERRIES),false));
+        goalSelector.addGoal(5,new FollowParentGoal(this,1.1));
+        goalSelector.addGoal(6,new WaterAvoidingRandomStrollGoal(this,.9));
+        goalSelector.addGoal(7,new LookAtPlayerGoal(this,Player.class,7));
+        goalSelector.addGoal(8,new RandomLookAroundGoal(this));
     }
     @Override public boolean isFood(ItemStack stack){return stack.is(Items.SWEET_BERRIES);}
     @Override public AgeableMob getBreedOffspring(ServerLevel level,AgeableMob other){return FolkContent.STAG.get().create(level);}
@@ -195,7 +197,7 @@ public final class Snowgrouse extends Animal {
     @Override public void aiStep(){
         super.aiStep();
         if(!level().isClientSide&&isAlive()&&!isBaby()&&--eggTime<=0){
-            playSound(SoundEvents.CHICKEN_EGG,.6F,1.2F);spawnAtLocation(Items.EGG);
+            playSound(SoundEvents.CHICKEN_EGG,.6F,1.2F);spawnAtLocation(FolkContent.GROUSE_EGG_FOOD.get());
             eggTime=6000+random.nextInt(6000);
         }
     }
@@ -304,12 +306,15 @@ f.sprite("venison",[".....oooo...","...oohhho...","..ohhhhho...","oohhhhmmmo..",
 f.sprite("roast_venison",[".....oooo...","...oohhho...","..ohhhhho...","oohhhmmmo...","ohhmmmmmdo..","ohhmmdddmo..","ohmmdddmdo..","ohmddddddo..",".ohdddddo...","..oooooo...."],{"o":"67432f","h":"c18e58","m":"a16d40","d":"825137"})
 f.sprite("winter_stew",["...s...s....","...s..s.....","..oooooooo..",".ohhgghhhho.","ohhmhrrmhhoo","ohhmmrrmmhho","ohhhmmmmhhho",".ohhhhhhhho.",".owwwwwwmmo.","..owwwwmmo..","...oooooo..."],{"s":"c6cfc9","o":"6b5037","h":"bc9258","m":"966b3e","g":"79915c","r":"af6548","w":"d0ad7a"})
 f.sprite("market_ledger",["..oooooooo..","..ohhhmmmo..","..ohlllmmo..","..ohlgllmo..","..ohggglmo..","..ohlgglmo..","..ohllllmo..","..ohlhllmo..","..ohllllmo..","..ohmmmmmo..","..oooooooo.."],{"o":"564638","h":"ad8b63","m":"8b6c4b","l":"d6c39a","g":"82966b"})
-for n in ("venison","roast_venison","winter_stew","market_ledger"):
+f.sprite("grouse_egg",["....oooo....","...ohhhho...","..ohhhmmho..","..ohhhmmho..",".ohhhhhmhmo.",".ohhhssmmmo.",".ohhmssmmmo.",".ohmmmmmdmo.",".ohmmdddmoo.","..oddddo....","...oooo....."],{"o":"887d69","h":"e1d7bc","m":"c9bca0","d":"b0a286","s":"a49781"})
+for n in ("venison","roast_venison","winter_stew","market_ledger","grouse_egg"):
     write(A/"models/item"/(n+".json"),{"parent":"minecraft:item/generated","textures":{"layer0":mod("item/"+n)}})
 for typ,duration in [("smelting",200),("smoking",100),("campfire_cooking",600)]:
     write(D/"recipe"/("roast_venison_"+typ+".json"),{"type":"minecraft:"+typ,"ingredient":{"item":mod("venison")},"result":{"id":mod("roast_venison")},"experience":.35,"cookingtime":duration})
 write(D/"recipe/winter_stew.json",{"type":"minecraft:crafting_shapeless","ingredients":[{"item":mod("roast_venison")},{"item":"minecraft:carrot"},{"item":"minecraft:potato"},{"item":"minecraft:bowl"}],"result":{"id":mod("winter_stew")}})
 t.recipe("market_ledger",[" P "," B "," G "],{"P":"paper","B":"book","G":"gold_nugget"})
+write(R/"data/c/tags/item/eggs.json",{"replace":False,"values":[mod("grouse_egg")]})
+write(D/"recipe/gingerbread_grouse_egg.json",{"type":"minecraft:crafting_shaped","pattern":["WSW"," E "],"key":{"W":{"item":"minecraft:wheat"},"S":{"item":"minecraft:sugar"},"E":{"item":mod("grouse_egg")}},"result":{"id":mod("gingerbread"),"count":4}})
 
 # One optional daily order per profession and player. Independent of finite story requests.
 # Preview uses a normal right-click; sneaking confirms atomically from inventory.
@@ -329,7 +334,7 @@ public final class DailyMarket {
     private static final String KEY="midnighteve_daily_market_v1";
     private record Order(String id,int count,int marks){}
     private static final Map<String,List<Order>> ORDERS=Map.of(
-        "baker",List.of(new Order("minecraft:wheat",16,2),new Order("midnighteve:gingerbread",8,3),new Order("midnighteve:winter_stew",2,4)),
+        "baker",List.of(new Order("minecraft:wheat",16,2),new Order("midnighteve:gingerbread",8,3),new Order("midnighteve:winter_stew",2,4),new Order("midnighteve:grouse_egg",4,3)),
         "giftkeeper",List.of(new Order("minecraft:paper",16,2),new Order("midnighteve:wrapped_gift",2,3),new Order("midnighteve:ornament",4,3)),
         "woodworker",List.of(new Order("minecraft:spruce_log",20,2),new Order("midnighteve:froststone_bricks",16,3),new Order("midnighteve:garland",4,3)),
         "ranger",List.of(new Order("minecraft:coal",12,2),new Order("midnighteve:roast_venison",6,3),new Order("midnighteve:hot_cocoa",3,3)),
@@ -394,7 +399,8 @@ for x in range(x0,x1+1):
     if x in (x0,x1) or z in (z0,z1):
         for y in range(4,11):
             beam=(x in (x0,x1) and z in (z0,z1)) or y==10 or (x in (x0,x1) and (z-z0)%5==0)
-            farm.put(x,y,z,"stripped_spruce_log" if beam else ("froststone_bricks" if y==4 else "spruce_planks"),**({"axis":"y"} if beam else {})) if beam else farm.put(x,y,z,"midnighteve:froststone_bricks" if y==4 else "spruce_planks")
+            if beam:farm.put(x,y,z,"stripped_spruce_log",axis="y")
+            else:farm.put(x,y,z,"midnighteve:froststone_bricks" if y==4 else "spruce_planks")
 for z in (13,18,23):
  for x in (x0,x1):
     farm.put(x,7,z,"glass");farm.put(x,8,z,"glass")
@@ -434,7 +440,7 @@ for x in range(5,18):
     farm.put(x,3,z,"water" if x==11 else "farmland",**({"level":0} if x==11 else {"moisture":7}))
     if x!=11:farm.put(x,4,z,"carrots" if x<11 else "wheat",age=7)
 for x,z in ((20,9),(26,9),(20,24),(26,24),(34,7),(38,7)):t.lamp(farm,x,z)
-farm.put(15,4,19,"composter",level=0)
+farm.put(14,4,18,"composter",level=0)
 def animal(kind,x,y,z):
     farm.entities.append({"pos":g.L(6,[x+.5,float(y),z+.5]),"blockPos":g.L(3,[x,y,z]),"nbt":g.C({"id":g.Str(mod(kind)),"PersistenceRequired":g.B(1),"Age":g.I(0)})})
 for x,z in ((31,20),(31,22)):animal("snowstag",x,4,z)
@@ -487,8 +493,8 @@ for path in sorted((D/"structure").glob("*.nbt")):
     root["blocks"]=g.L(10,blocks);path.write_bytes(gzip.compress(b"\x0a\x00\x00"+g.payload(g.C(root)),mtime=0))
 print("PASS: new role-compatible workstation blocks:",count,"unresolved residents (left unchanged):",unresolved)
 # English/Russian localization.
-g.en.update({"entity.midnighteve.snowstag":"Snowstag","entity.midnighteve.snowgrouse":"Snow Grouse","item.midnighteve.snowstag_spawn_egg":"Snowstag Spawn Egg","item.midnighteve.snowgrouse_spawn_egg":"Snow Grouse Spawn Egg","item.midnighteve.venison":"Raw Venison","item.midnighteve.roast_venison":"Roast Venison","item.midnighteve.winter_stew":"Winter Stew","item.midnighteve.market_ledger":"Market Ledger","market.midnighteve.closed":"The winter market opens in the morning and closes at dusk.","market.midnighteve.done":"You have already completed today's order for this profession.","market.midnighteve.offer":"%s: today's order is %s × %s for %s wintermarks. Sneak + use the ledger to deliver from your inventory.","market.midnighteve.short":"Still needed: %s × %s.","market.midnighteve.paid":"Market order completed! +%s wintermarks."})
-g.ru.update({"entity.midnighteve.snowstag":"Снежный олень","entity.midnighteve.snowgrouse":"Снежная куропатка","item.midnighteve.snowstag_spawn_egg":"Яйцо призыва снежного оленя","item.midnighteve.snowgrouse_spawn_egg":"Яйцо призыва снежной куропатки","item.midnighteve.venison":"Сырая оленина","item.midnighteve.roast_venison":"Жареная оленина","item.midnighteve.winter_stew":"Зимнее рагу","item.midnighteve.market_ledger":"Рыночная книга","market.midnighteve.closed":"Зимний рынок работает с утра до сумерек.","market.midnighteve.done":"Сегодняшний заказ этой профессии уже выполнен.","market.midnighteve.offer":"%s: сегодня нужно %s × %s за %s зимних марок. Shift + ПКМ с книгой отдаёт нужные предметы из инвентаря.","market.midnighteve.short":"Не хватает: %s × %s.","market.midnighteve.paid":"Рыночный заказ выполнен! +%s зимних марок."})
+g.en.update({"entity.midnighteve.snowstag":"Snowstag","entity.midnighteve.snowgrouse":"Snow Grouse","item.midnighteve.snowstag_spawn_egg":"Snowstag Spawn Egg","item.midnighteve.snowgrouse_spawn_egg":"Snow Grouse Spawn Egg","item.midnighteve.grouse_egg":"Grouse Egg","item.midnighteve.venison":"Raw Venison","item.midnighteve.roast_venison":"Roast Venison","item.midnighteve.winter_stew":"Winter Stew","item.midnighteve.market_ledger":"Market Ledger","market.midnighteve.closed":"The winter market opens in the morning and closes at dusk.","market.midnighteve.done":"You have already completed today's order for this profession.","market.midnighteve.offer":"%s: today's order is %s × %s for %s wintermarks. Sneak + use the ledger to deliver from your inventory.","market.midnighteve.short":"Still needed: %s × %s.","market.midnighteve.paid":"Market order completed! +%s wintermarks."})
+g.ru.update({"entity.midnighteve.snowstag":"Снежный олень","entity.midnighteve.snowgrouse":"Снежная куропатка","item.midnighteve.snowstag_spawn_egg":"Яйцо призыва снежного оленя","item.midnighteve.snowgrouse_spawn_egg":"Яйцо призыва снежной куропатки","item.midnighteve.grouse_egg":"Яйцо куропатки","item.midnighteve.venison":"Сырая оленина","item.midnighteve.roast_venison":"Жареная оленина","item.midnighteve.winter_stew":"Зимнее рагу","item.midnighteve.market_ledger":"Рыночная книга","market.midnighteve.closed":"Зимний рынок работает с утра до сумерек.","market.midnighteve.done":"Сегодняшний заказ этой профессии уже выполнен.","market.midnighteve.offer":"%s: сегодня нужно %s × %s за %s зимних марок. Shift + ПКМ с книгой отдаёт нужные предметы из инвентаря.","market.midnighteve.short":"Не хватает: %s × %s.","market.midnighteve.paid":"Рыночный заказ выполнен! +%s зимних марок."})
 for n,lang in [("en_us",g.en),("ru_ru",g.ru)]:write(A/"lang"/(n+".json"),lang)
 edit(R/"META-INF/neoforge.mods.toml",'version="0.9.0"','version="0.10.0"')
 for pfile in R.rglob("*.json"):json.loads(pfile.read_text(encoding="utf8"))
