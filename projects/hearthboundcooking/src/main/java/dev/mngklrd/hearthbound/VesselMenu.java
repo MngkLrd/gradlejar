@@ -13,10 +13,10 @@ public final class VesselMenu extends AbstractContainerMenu {
     public VesselMenu(int id,Inventory inventory,@Nullable VesselEntity vessel){
         super(Hearthbound.VESSEL_MENU.get(),id);
         this.vessel=vessel;
-        this.data=vessel==null?new SimpleContainerData(7):new ContainerData(){
+        this.data=vessel==null?new SimpleContainerData(10):new ContainerData(){
             @Override public int get(int i){return vessel.displayData(i);}
             @Override public void set(int i,int v){}
-            @Override public int getCount(){return 7;}
+            @Override public int getCount(){return 10;}
         };
         for(int i=0;i<5;i++)addSlot(new PreviewSlot(preview,i,43+i*22,39));
         for(int row=0;row<3;row++)for(int col=0;col<9;col++)addSlot(new Slot(inventory,9+row*9+col,8+col*18,112+row*18));
@@ -37,7 +37,7 @@ public final class VesselMenu extends AbstractContainerMenu {
         if(index>=0&&index<5){
             if(vessel!=null&&click==ClickType.PICKUP&&vessel.canUse(p)){
                 ItemStack carried=getCarried();
-                if(!carried.isEmpty())vessel.addIngredient(p,carried,button==0);
+                if(!carried.isEmpty())vessel.addIngredient(p,carried,button==0,index,true);
                 else if(button==1)vessel.removeIngredient(p,index);
                 broadcastChanges();
             }
@@ -48,7 +48,7 @@ public final class VesselMenu extends AbstractContainerMenu {
     @Override public ItemStack quickMoveStack(Player player,int index){
         if(vessel==null||index<5||index>=slots.size()||!vessel.canUse(player))return ItemStack.EMPTY;
         Slot slot=slots.get(index);ItemStack s=slot.getItem();if(s.isEmpty())return ItemStack.EMPTY;
-        ItemStack original=s.copy();if(vessel.addIngredient(player,s,true)==0)return ItemStack.EMPTY;
+        ItemStack original=s.copy();if(vessel.addIngredient(player,s,true,-1,true)==0)return ItemStack.EMPTY;
         if(s.isEmpty())slot.set(ItemStack.EMPTY);else slot.setChanged();
         broadcastChanges();return original;
     }

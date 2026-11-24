@@ -9,7 +9,7 @@
   "hearthbound.tier.poor": "Неудачное",
   "hearthbound.ready": "Готово: %s порций · Качество %s%% · Набери миской",
   "hearthbound.status": "Продукты %s/%s · Вода %s/%s mB · %s · %s",
-  "hearthbound.unbalanced": "Выровняй 3–5 ингредиентов",
+  "hearthbound.unbalanced": "Добавь продукты и воду",
   "hearthbound.batches": "Партий: %s",
   "hearthbound.state.cold": "Холодный",
   "hearthbound.state.warming": "Нагревается",
@@ -28,5 +28,11 @@
   "hearthbound.gui.ingredients": "Ингредиенты",
   "hearthbound.gui.servings": "%s порц. · %s%%",
   "hearthbound.gui.add": "Нажми: добавить",
-  "hearthbound.gui.remove": "ПКМ: забрать"
+  "hearthbound.gui.remove": "ПКМ: забрать",
+  "hearthbound.slot_mismatch": "В ячейке другой ингредиент",
+  "hearthbound.gui.water": "Добавь воду",
+  "hearthbound.gui.no_recipe": "Нет рецепта супа",
+  "hearthbound.gui.planned": "%s парт. / %s порц.",
+  "hearthbound.gui.rotten": "Убери испорченное",
+  "hearthbound.gui.add_food": "Добавь продукты"
 }

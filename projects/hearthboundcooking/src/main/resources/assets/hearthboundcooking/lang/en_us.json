@@ -9,7 +9,7 @@
   "hearthbound.tier.poor": "Poor",
   "hearthbound.ready": "Ready: %s servings · Quality %s%% · Use a bowl",
   "hearthbound.status": "Ingredients %s/%s · Water %s/%s mB · %s · %s",
-  "hearthbound.unbalanced": "Balance 3–5 ingredients",
+  "hearthbound.unbalanced": "Add ingredients and water",
   "hearthbound.batches": "%s batches",
   "hearthbound.state.cold": "Cold",
   "hearthbound.state.warming": "Warming",
@@ -28,5 +28,11 @@
   "hearthbound.gui.ingredients": "Ingredients",
   "hearthbound.gui.servings": "%s servings · %s%%",
   "hearthbound.gui.add": "Click: add",
-  "hearthbound.gui.remove": "RMB: remove"
+  "hearthbound.gui.remove": "RMB: remove",
+  "hearthbound.slot_mismatch": "This slot holds a different ingredient",
+  "hearthbound.gui.water": "Add water",
+  "hearthbound.gui.no_recipe": "No soup recipe",
+  "hearthbound.gui.planned": "%s batches / %s bowls",
+  "hearthbound.gui.rotten": "Remove spoiled food",
+  "hearthbound.gui.add_food": "Add ingredients"
 }
