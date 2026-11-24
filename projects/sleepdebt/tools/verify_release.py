@@ -28,7 +28,7 @@ with zipfile.ZipFile(jar) as z:
         "roasted_cocoa_beans","coffee_grounds","dried_herbs","dream_shard",
         "coffee","strong_coffee","long_coffee","energy_drink","warm_milk",
         "herbal_tea","dream_tea","caramel_coffee","bitter_tonic","cocoa_biscuit",
-        "pillow","sleep_mask",
+        "pillow","sleep_mask","long_energy_drink","strong_energy_drink",
         "sleep_journal","herbal_poultice","incense_bundle",
         "coffee_seeds","coffee_berries","roasted_coffee_beans",
         "coffee_machine","camp_bedroll","camp_awning","camp_lantern","dreamcatcher","incense_burner",

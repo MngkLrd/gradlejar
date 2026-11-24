@@ -9,7 +9,7 @@ import struct, sys, zlib, zipfile
 
 BASE="assets/sleepdebt/textures/"
 MATERIALS="copper_machine copper_top coffee_screen iron_rim stitched_fabric bedroll_edge bedroll_pillow camp_canvas wooden_pole rest_lamp lantern_flame dream_ring dream_woven incense_clay incense_coals".split()
-ITEMS="coffee strong_coffee long_coffee caramel_coffee herbal_tea dream_tea warm_milk bitter_tonic coffee_seeds coffee_berries roasted_coffee_beans roasted_cocoa_beans energy_drink coffee_grounds dried_herbs dream_shard cocoa_biscuit sleep_mask pillow sleep_journal herbal_poultice incense_bundle".split()
+ITEMS="coffee strong_coffee long_coffee caramel_coffee herbal_tea dream_tea warm_milk bitter_tonic coffee_seeds coffee_berries roasted_coffee_beans roasted_cocoa_beans energy_drink long_energy_drink strong_energy_drink coffee_grounds dried_herbs dream_shard cocoa_biscuit sleep_mask pillow sleep_journal herbal_poultice incense_bundle".split()
 
 def decode(raw):
     if raw[:8]!=b"\x89PNG\r\n\x1a\n": raise ValueError("Invalid PNG")

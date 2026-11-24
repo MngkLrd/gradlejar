@@ -17,7 +17,6 @@
   "block.sleepdebt.coffee_machine": "Медная кофеварка",
   "block.sleepdebt.camp_bedroll": "Походный спальник",
   "block.sleepdebt.camp_awning": "Походный навес",
-  "entity.sleepdebt.sleepless": "Бессонный",
   "container.sleepdebt.coffee_machine": "Кофеварка: вода / помол / уголь / результат",
   "message.sleepdebt.camp_rest": "Отдых в лагере (+%s)",
   "message.sleepdebt.camp_cooldown": "Пока слишком рано отдыхать снова.",
@@ -29,7 +28,6 @@
   "item.sleepdebt.caramel_coffee": "Карамельный кофе",
   "item.sleepdebt.bitter_tonic": "Горькая настойка",
   "item.sleepdebt.cocoa_biscuit": "Какао-печенье",
-  "item.sleepdebt.sleepless_spawn_egg": "Яйцо призыва Бессонного",
   "block.sleepdebt.camp_lantern": "Походный светильник",
   "block.sleepdebt.dreamcatcher": "Ловец снов",
   "item.sleepdebt.herbal_tea.tooltip": "Успокаивает нервы и снижает стресс.",
@@ -46,8 +44,6 @@
   "advancements.sleepdebt.first_camp.description": "Изготовьте походный спальник",
   "advancements.sleepdebt.first_brew.title": "Свежая заварка",
   "advancements.sleepdebt.first_brew.description": "Получите чашку кофе",
-  "advancements.sleepdebt.shadow_hunter.title": "Проснись!",
-  "advancements.sleepdebt.shadow_hunter.description": "Победите Бессонного",
   "item.sleepdebt.sleep_journal": "Дневник сна",
   "item.sleepdebt.herbal_poultice": "Травяная повязка",
   "item.sleepdebt.incense_bundle": "Благовоние из трав",
@@ -94,5 +90,10 @@
   "itemGroup.sleepdebt.main": "Sleep Debt",
   "key.categories.sleepdebt": "Sleep Debt",
   "key.sleepdebt.test_void": "Включить тестовую тьму",
-  "key.sleepdebt.void_diagnostics": "Диагностика тьмы"
+  "item.sleepdebt.long_energy_drink": "Длительный энергетик",
+  "item.sleepdebt.strong_energy_drink": "Концентрированный энергетик",
+  "item.sleepdebt.long_energy_drink.tooltip": "Дольше бодрость, позже откат.",
+  "item.sleepdebt.strong_energy_drink.tooltip": "Высокая концентрация и тяжёлый откат.",
+  "message.sleepdebt.micro": "Ты на мгновение теряешь концентрацию.",
+  "item.sleepdebt.sleepless_spawn_egg": "Устаревший предмет"
 }

@@ -51,6 +51,8 @@ public final class ModCreativeTabs {
      output.accept(ModItems.LONG.get());
      output.accept(ModItems.CARAMEL_COFFEE.get());
      output.accept(ModItems.ENERGY.get());
+     output.accept(ModItems.ENERGY_LONG.get());
+     output.accept(ModItems.ENERGY_STRONG.get());
      output.accept(ModItems.WARM_MILK.get());
      output.accept(ModItems.HERBAL_TEA.get());
      output.accept(ModItems.DREAM_TEA.get());

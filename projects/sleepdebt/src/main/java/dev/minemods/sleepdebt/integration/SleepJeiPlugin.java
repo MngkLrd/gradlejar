@@ -45,7 +45,7 @@ public final class SleepJeiPlugin implements IModPlugin {
   @Override public IDrawable getBackground(){return bg;}
   @Override public IDrawable getIcon(){return icon;}
   @Override public void setRecipe(IRecipeLayoutBuilder b,BrewRecipes.Brew recipe,IFocusGroup focuses){
-   b.addSlot(RecipeIngredientRole.INPUT,8,19).addItemStack(new ItemStack(Items.WATER_BUCKET));
+   b.addSlot(RecipeIngredientRole.INPUT,8,19).addItemStack(new ItemStack(recipe.base()));
    b.addSlot(RecipeIngredientRole.INPUT,32,19).addItemStack(new ItemStack(recipe.ingredient()));
    b.addSlot(RecipeIngredientRole.INPUT,56,19).addItemStacks(
     java.util.List.of(new ItemStack(Items.COAL),new ItemStack(Items.CHARCOAL)));

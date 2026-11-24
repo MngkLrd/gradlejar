@@ -1,6 +1,7 @@
 package dev.minemods.sleepdebt.menu;
 
 import dev.minemods.sleepdebt.registry.ModMenus;
+import dev.minemods.sleepdebt.integration.BrewRecipes;
 import dev.minemods.sleepdebt.registry.ModItems;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -25,8 +26,8 @@ public final class CoffeeMenu extends AbstractContainerMenu {
   checkContainerDataCount(data,2);
   this.container=container;this.data=data;
   container.startOpen(inv.player);
-  addSlot(new RestrictedSlot(container,0,28,44,s->s.is(Items.WATER_BUCKET)));
-  addSlot(new RestrictedSlot(container,1,55,44,s->s.is(ModItems.GROUNDS.get())||s.is(ModItems.DRIED_HERBS.get())));
+  addSlot(new RestrictedSlot(container,0,28,44,BrewRecipes::acceptsBase));
+  addSlot(new RestrictedSlot(container,1,55,44,BrewRecipes::acceptsIngredient));
   addSlot(new RestrictedSlot(container,2,82,44,s->s.is(Items.COAL)||s.is(Items.CHARCOAL)));
   addSlot(new Slot(container,3,136,44){
    @Override public boolean mayPlace(ItemStack stack){return false;}
@@ -49,8 +50,8 @@ public final class CoffeeMenu extends AbstractContainerMenu {
   if(clicked<MACHINE_SLOTS){
    if(!moveItemStackTo(source,MACHINE_SLOTS,slots.size(),true))return empty;
   }else{
-   int target=source.is(Items.WATER_BUCKET)?0:
-     (source.is(ModItems.GROUNDS.get())||source.is(ModItems.DRIED_HERBS.get()))?1:
+   int target=BrewRecipes.acceptsBase(source)?0:
+     BrewRecipes.acceptsIngredient(source)?1:
      (source.is(Items.COAL)||source.is(Items.CHARCOAL))?2:-1;
    if(target>=0){
     if(!moveItemStackTo(source,target,target+1,false))return empty;
