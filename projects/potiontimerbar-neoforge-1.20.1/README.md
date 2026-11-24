@@ -1,3 +1,3 @@
-# Potion Timer Bar 0.3.1 - neoforge 1.20.1
+# Potion Timer Bar 0.4.0 - neoforge 1.20.1
 
-Client HUD: one 81x5 pixel potion-colored countdown bar. Selects longest remaining active effect. Potion registry palette with harmful red and beneficial light green fallbacks. No status effect means no bar. Config: config/potiontimerbar-client.toml. Java 17, Gradle 8.14.5. No additional dependencies. Build: gradle clean build. Release JAR: build/libs/potiontimerbar-neoforge-mc1.20.1-0.3.1.jar.
+Client-only. Native XP background, strong potion gradients, separate stacked timer per active effect. 81x5 GUI pixels; longest remaining at bottom; no effects means no HUD. Java 17; Gradle 8.14.5. Build: gradle clean build. Output build/libs/potiontimerbar-neoforge-mc1.20.1-0.4.0.jar. Runtime testing pending.

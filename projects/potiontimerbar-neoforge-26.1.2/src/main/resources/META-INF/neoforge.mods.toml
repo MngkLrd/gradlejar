@@ -1,11 +1,11 @@
 license="MIT"
 [[mods]]
 modId="potiontimerbar"
-version="0.3.1"
+version="0.4.0"
 displayName="Potion Timer Bar"
 displayTest="IGNORE_ALL_VERSION"
 authors="Minemods"
-description="A single potion-colored countdown bar above hunger for the longest remaining active effect."
+description="Stacked potion-colored XP-style countdown bars above hunger, one per active effect."
 [[dependencies.potiontimerbar]]
 modId="neoforge"
 type="required"

@@ -18,9 +18,9 @@ final class PotionPalette {
         Integer liquid = potionColors.get(effect);
         if (liquid == null) {
             return switch (effect.getCategory()) {
-                case HARMFUL -> new Gradient(0xE65A60, 0xA52D3C, 0x541522);
-                case BENEFICIAL -> new Gradient(0xB7F39A, 0x60C86B, 0x2E7947);
-                case NEUTRAL -> new Gradient(0xC3E6A8, 0x82BE77, 0x3D7355);
+                case HARMFUL -> new Gradient(0xFF9292, 0xCA373F, 0x54111C);
+                case BENEFICIAL -> new Gradient(0xE0FFAE, 0x75D54E, 0x235C27);
+                case NEUTRAL -> new Gradient(0xE1F2A2, 0xA7B959, 0x4B5123);
             };
         }
 
@@ -28,7 +28,7 @@ final class PotionPalette {
         int base = liquid & 0xFFFFFF;
         int peak = Math.max((base >> 16) & 255, Math.max((base >> 8) & 255, base & 255));
         if (peak < 96) base = mix(base, 0xFFFFFF, .20f);
-        return new Gradient(mix(base, 0xFFFFFF, .36f), base, mix(base, 0x000000, .32f));
+        return new Gradient(mix(base, 0xFFFFFF, .58f), base, mix(base, 0x000000, .50f));
     }
 
     private static Map<MobEffect, Integer> indexPotions() {

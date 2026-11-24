@@ -1,9 +1,9 @@
 {
   "slug": "potiontimerbar",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "minecraft": "26.2",
   "loader": "fabric",
   "java": "25",
   "gradle": "9.5.1",
-  "jar_glob": "potiontimerbar-fabric-mc26.2-0.3.1.jar"
+  "jar_glob": "potiontimerbar-fabric-mc26.2-0.4.0.jar"
 }
