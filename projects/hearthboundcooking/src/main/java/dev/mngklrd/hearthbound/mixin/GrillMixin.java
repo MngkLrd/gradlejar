@@ -12,8 +12,6 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value=GrillBlockEntity.class,remap=false)
 public abstract class GrillMixin {
-    @Unique private final int[] hearthbound$exposure=new int[5];
-    @Unique private final ItemStack[] hearthbound$previous=new ItemStack[5];
     // Native grill recipe completion applies WOOD_GRILLED to the result, even for a same-ID food.
     @Redirect(method="handleCooking",at=@At(value="INVOKE",target="Lnet/dries007/tfc/common/recipes/HeatingRecipe;assemble(Lnet/dries007/tfc/common/recipes/inventory/ItemStackInventory;Lnet/minecraft/core/RegistryAccess;)Lnet/minecraft/world/item/ItemStack;"))
     private ItemStack hearthbound$grilled(HeatingRecipe recipe,ItemStackInventory in,RegistryAccess access){
@@ -24,16 +22,6 @@ public abstract class GrillMixin {
     @Inject(method="handleCooking",at=@At("RETURN"))
     private void hearthbound$hold(CallbackInfo ci){
         GrillBlockEntity g=(GrillBlockEntity)(Object)this;
-        if(g.getLevel()==null||g.getLevel().isClientSide)return;
-        g.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(h->{
-            for(int i=0;i<5&&i+4<h.getSlots();i++){
-                ItemStack s=h.getStackInSlot(i+4);
-                if(s!=hearthbound$previous[i]){hearthbound$previous[i]=s;hearthbound$exposure[i]=0;}
-                if(!Quality.has(s)||!Quality.fresh(s)||g.getTemperature()<=300||HeatCapability.getTemperature(s)<=220){hearthbound$exposure[i]=0;continue;}
-                if(++hearthbound$exposure[i]>=100){
-                    Quality.set(s,Quality.get(s)-5);hearthbound$exposure[i]=0;g.markForSync();
-                }
-            }
-        });
+        if(dev.mngklrd.hearthbound.HoldTracker.tick(g,4,5))g.markForSync();
     }
 }

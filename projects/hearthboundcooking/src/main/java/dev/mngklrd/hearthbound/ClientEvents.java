@@ -24,8 +24,17 @@ public final class ClientEvents {
         if(!Quality.has(s))return;
         int q=Quality.get(s);
         ChatFormatting color=q>=90?ChatFormatting.GOLD:q>=75?ChatFormatting.GREEN:q>=50?ChatFormatting.YELLOW:ChatFormatting.RED;
-        String tier=q>=90?"excellent":q>=75?"good":q>=50?"ordinary":"poor";
-        event.getToolTip().add(Component.translatable("hearthbound.quality",q,Component.translatable("hearthbound.tier."+tier)).withStyle(color));
+        String tier=CookingReport.tier(q);
+        event.getToolTip().add(Component.literal(CookingReport.starsText(q)+"  ").withStyle(ChatFormatting.GOLD).append(Component.translatable("hearthbound.quality",q,Component.translatable("hearthbound.tier."+tier)).withStyle(color)));
+        if(!net.minecraft.client.gui.screens.Screen.hasShiftDown()){
+            event.getToolTip().add(Component.translatable("hearthbound.report.shift").withStyle(ChatFormatting.DARK_GRAY));return;
+        }
+        CookingReport report=CookingReport.read(s);
+        if(report==null){event.getToolTip().add(Component.translatable("hearthbound.report.legacy").withStyle(ChatFormatting.GRAY));return;}
+        String[] keys={"under","over","heat","late","prior"};
+        int[] values={report.under(),report.over(),report.heat(),report.late(),report.prior()};
+        for(int i=0;i<keys.length;i++)if(values[i]>0)event.getToolTip().add(Component.translatable("hearthbound.report."+keys[i],values[i]).withStyle(ChatFormatting.RED));
+        if(report.score()==100)event.getToolTip().add(Component.translatable("hearthbound.report.perfect").withStyle(ChatFormatting.GREEN));
     }
     @SubscribeEvent public static void noCookingClock(ScreenEvent.Render.Post event){
         if(!(event.getScreen() instanceof AbstractFurnaceScreen<?> screen))return;

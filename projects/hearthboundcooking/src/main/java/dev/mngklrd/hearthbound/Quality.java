@@ -19,7 +19,7 @@ public final class Quality {
     public static boolean food(ItemStack s){return !s.isEmpty()&&(s.isEdible()||FoodCapability.get(s)!=null);}
     public static boolean fresh(ItemStack s){IFood f=FoodCapability.get(s);return f==null||!f.isRotten();}
     public static boolean eligible(ItemStack s){return food(s)&&!s.is(UNGRADED)&&fresh(s);}
-    public static void set(ItemStack s,int q){if(eligible(s))s.getOrCreateTag().putInt(KEY,QualityMath.quantize(q));}
+    public static void set(ItemStack s,int q){if(eligible(s)){s.getOrCreateTag().putInt(KEY,QualityMath.quantize(q));s.getTag().remove(CookingReport.KEY);}}
     public static float saturationMultiplier(int q){return QualityMath.saturationMultiplier(q);}
     /** Raw, ungraded inputs contribute no inherited grade. Zero is a real grade. */
     public static int inherited(Iterable<ItemStack> inputs){
@@ -34,7 +34,7 @@ public final class Quality {
     public static ItemStack withoutGrade(ItemStack s){
         ItemStack copy=s.copy();
         if(copy.hasTag()&&copy.getTag().contains(KEY)){
-            copy.getTag().remove(KEY);
+            copy.getTag().remove(KEY);copy.getTag().remove(CookingReport.KEY);
             if(copy.getTag().isEmpty())copy.setTag(null);
         }
         return copy;
@@ -58,8 +58,7 @@ public final class Quality {
     /** Use only for an appliance's explicit successful food preparation. */
     public static void completedHeating(ItemStack input,ItemStack output,float target){
         if(input.isEmpty()||!eligible(output)||!fresh(input))return;
-        int process=QualityMath.heating(HeatCapability.getTemperature(input),target);
-        if(process>=0)finish(output,process,java.util.List.of(input));
+        if(QualityMath.heating(HeatCapability.getTemperature(input),target)>=0)CookingReport.fresh(inherited(java.util.List.of(input))).apply(output);
     }
     public static int role(ItemStack s){
         IFood f=FoodCapability.get(s);if(f==null)return 1;

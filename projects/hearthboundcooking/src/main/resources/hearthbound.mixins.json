@@ -12,7 +12,9 @@
     "FirmalifeOvenRecipeMixin",
     "VanillaFurnaceMixin",
     "SaladMixin",
-    "MealModifierMixin"
+    "MealModifierMixin",
+    "FirmalifeHoldMixin",
+    "FirmalifeTooltipMixin"
   ],
   "injectors": {
     "defaultRequire": 0
