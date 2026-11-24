@@ -183,7 +183,7 @@ def cabin(t,x,z,w,d,role=None,wall="spruce_planks",roof="dark_oak",profession="f
     t.put(X-2,4,z+2,"spruce_fence",north=False,south=False,east=False,west=False,waterlogged=False)
     t.put(X-2,5,z+2,"spruce_pressure_plate",powered=False)
     t.put(cx-2,4,Z-1,"bookshelf")
-    t.put(cx+1,4,Z-1,"gift_crate" if False else "midnighteve:gift_crate")
+    t.put(cx+1,4,Z-1,"midnighteve:gift_crate")
     # entrance steps and lamps outside; explicitly leave accessible path
     t.fill(cx-1,3,z-2,cx+1,3,z-1,"stone_bricks")
     t.fill(cx-1,4,z-2,cx+1,5,z-1,"air")
@@ -222,10 +222,10 @@ path(town,7,1,9,2);path(town,14,1,17,18);path(town,31,2,33,3);path(town,25,2,27,
 path(town,7,24,9,25);path(town,32,24,34,25)
 tree(town,21,20)
 town.save("frostmarket")
-lodge=Template(23,19,22)
-path(lodge,4,2,18,6);path(lodge,2,7,20,19)
-cabin(lodge,5,7,13,12,"Ranger","spruce_planks","dark_oak","butcher")
-tree(lodge,17,3)
+lodge=Template(32,19,25)
+path(lodge,4,3,28,7);path(lodge,3,8,28,21)
+cabin(lodge,4,9,13,12,"Ranger","spruce_planks","dark_oak","butcher")
+tree(lodge,24,13)
 lodge.save("evergreen_lodge")
 # Smaller, real buildings with a separate footprint appropriate for uplands.
 watch=Template(21,19,21)
