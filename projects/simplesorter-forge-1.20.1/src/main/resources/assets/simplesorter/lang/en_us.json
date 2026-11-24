@@ -152,5 +152,7 @@
   "label.simplesorter.group.textiles": "Textiles",
   "label.simplesorter.soil": "Soil",
   "label.simplesorter.group.soil": "Soil",
-  "label.simplesorter.fibers": "Fibers"
+  "label.simplesorter.fibers": "Fibers",
+  "screen.simplesorter.wand_settings.mode.by_mod": "Sort by Mod",
+  "screen.simplesorter.wand_settings.mode.by_mod.desc": "Group items by their registered mod, prioritizing vertical chest columns."
 }

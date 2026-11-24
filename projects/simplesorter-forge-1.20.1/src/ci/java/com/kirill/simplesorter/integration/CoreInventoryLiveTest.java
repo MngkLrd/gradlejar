@@ -196,6 +196,24 @@ public final class CoreInventoryLiveTest {
             check(separation.quality().mixed()==0,"avoidable mixed chests in sparse warehouse: "+separation.quality());
             check(separation.movedItems()>0,"sparse layout unchanged");
             org.slf4j.LoggerFactory.getLogger("SimpleSorter/CoreLiveTest").info("SORTER_SPARSE_PURITY_TEST_PASSED");
+            List<ContainerRef> originRefs=new ArrayList<>();
+            for(int i=0;i<4;i++){
+                var physical=full.containers().get(i);
+                var handler=new net.minecraftforge.items.ItemStackHandler(4);
+                handler.setStackInSlot(0,new ItemStack(Items.IRON_INGOT,4));
+                handler.setStackInSlot(1,new ItemStack(Items.APPLE,3));
+                handler.setStackInSlot(2,new ItemStack(com.kirill.simplesorter.registry.ModItems.SORTING_WAND.get()));
+                handler.setStackInSlot(3,new ItemStack(com.kirill.simplesorter.registry.ModItems.SORTING_WAND.get()));
+                originRefs.add(new ContainerRef(physical.pos(),new com.kirill.simplesorter.sorting.ForgeItemHandlerAdapter(handler),physical.identity(),level));
+            }
+            var originBefore=ledger(originRefs);
+            var originSort=WarehouseVacuumSorter.begin(originRefs,ref->true,true);
+            guard=0;while(!originSort.step(level,move->{},120,4_000_000L)){check(++guard<400,"mod plan stalled");}
+            check(originSort.rejectedTransfers()==0&&!originSort.unsafe(),"mod transfer rejection");
+            check(originSort.quality().mixed()==0&&originSort.quality().score()==100,"actual mod namespaces mixed");
+            check(originSort.movedItems()>0&&originBefore.equals(ledger(originRefs)),"mod mode conservation");
+            org.slf4j.LoggerFactory.getLogger("SimpleSorter/CoreLiveTest").info("SORTER_MOD_ORIGIN_TEST_PASSED");
+
             org.slf4j.LoggerFactory.getLogger("SimpleSorter/CoreLiveTest").info(
                     "SORTER_CORE_LIVE_TEST_PASSED: live 21->22 chest scan, remote access, new empty chest, classification and item count; moved {} items",session.movedItems());
         } finally {

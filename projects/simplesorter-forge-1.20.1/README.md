@@ -1,4 +1,15 @@
-# Simple Sorter 0.10.5 (Forge 1.20.1) — release candidate 2
+# Simple Sorter 0.10.6 (Forge 1.20.1) — release candidate 3
+
+## Sort by Mod
+
+Select Sort by Mod in the wand settings or use the saved mode with RMB.
+Groups by the item's registered namespace, not localized names.
+The global planner, dedicated allocation, vertical columns, fixed slots,
+permissions and item/NBT audits are reused. Mod labels use Forge display
+names, falling back to namespace. Smart Categories retains its classifier.
+Existing mode IDs are retained; BY_MOD uses index 4 (index 2 remains
+the legacy compact alias). Both client and server must use 0.10.6.
+
 
 ## Purity-first correction
 

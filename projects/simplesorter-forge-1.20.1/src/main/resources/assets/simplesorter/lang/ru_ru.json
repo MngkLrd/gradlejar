@@ -152,5 +152,7 @@
   "label.simplesorter.group.textiles": "Текстиль",
   "label.simplesorter.soil": "Почва",
   "label.simplesorter.group.soil": "Почва",
-  "label.simplesorter.fibers": "Волокна"
+  "label.simplesorter.fibers": "Волокна",
+  "screen.simplesorter.wand_settings.mode.by_mod": "По модам",
+  "screen.simplesorter.wand_settings.mode.by_mod.desc": "Группировать предметы по модам, сохраняя вертикальные колонны сундуков."
 }

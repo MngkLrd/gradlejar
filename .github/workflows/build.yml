@@ -256,6 +256,8 @@ jobs:
             src/main/java/com/kirill/simplesorter/sorting/PathTokenMatcher.java \
             src/main/java/com/kirill/simplesorter/sorting/StrictStorageFamily.java \
             src/main/java/com/kirill/simplesorter/sorting/SemanticItemProfile.java \
+            src/main/java/com/kirill/simplesorter/sorting/ModOriginProfile.java \
+            src/main/java/com/kirill/simplesorter/settings/SortingMode.java \
             src/main/java/com/kirill/simplesorter/sorting/SemanticItemClassifier.java \
             src/main/java/com/kirill/simplesorter/sorting/AdaptiveWarehousePlanner.java \
             src/main/java/com/kirill/simplesorter/sorting/SpatialWarehouseLayout.java \
@@ -283,6 +285,7 @@ jobs:
             tools/tests/SemanticItemClassifierSelfTest.java \
             tools/tests/AdaptiveWarehousePlannerSelfTest.java \
             tools/tests/SemanticChestQualitySelfTest.java \
+            tools/tests/ModOriginSelfTest.java \
             tools/tests/WarehouseFamilyPlanSelfTest.java \
             tools/tests/WarehouseAssignmentPlannerSelfTest.java \
             tools/tests/WarehouseSlotOptimizerSelfTest.java \
@@ -298,6 +301,7 @@ jobs:
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.SemanticItemClassifierSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.AdaptiveWarehousePlannerSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.SemanticChestQualitySelfTest
+          java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.ModOriginSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseFamilyPlanSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseAssignmentPlannerSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseSlotOptimizerSelfTest
