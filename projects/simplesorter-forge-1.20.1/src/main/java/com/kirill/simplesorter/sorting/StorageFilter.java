@@ -5,6 +5,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.BarrelBlock;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 /** Opt-in general-purpose storage; industrial IItemHandlers remain untouched. */
@@ -19,6 +22,8 @@ public final class StorageFilter {
     public static boolean isEligible(BlockState state) {
         if (state.is(DENY)) return false;
         if (state.is(ALLOW)) return true;
+        if (state.getBlock() instanceof ChestBlock || state.getBlock() instanceof BarrelBlock
+                || state.getBlock() instanceof ShulkerBoxBlock) return true;
 
         ResourceLocation id = BuiltInRegistries.BLOCK.getKey(state.getBlock());
         String ns = id.getNamespace();

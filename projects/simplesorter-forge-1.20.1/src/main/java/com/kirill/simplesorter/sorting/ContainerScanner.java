@@ -6,6 +6,9 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -17,6 +20,10 @@ import java.util.IdentityHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Discovers only loaded, player-usable storage block entities.
@@ -25,30 +32,55 @@ import java.util.Set;
  * neither half is the vanilla size. Never wrap two combined views together.
  */
 public final class ContainerScanner {
+    private static final Logger LOG = LoggerFactory.getLogger("SimpleSorter/Scanner");
     private ContainerScanner() {}
+    public record ScanReport(List<ContainerRef> containers, int physicalBlocks, int emptyInventories,
+                             int totalSlots, int unloadedChunks, Map<String,Integer> skipped) {
+        public ScanReport { containers = List.copyOf(containers); skipped = Map.copyOf(skipped); }
+        public String summary() {
+            return containers.size() + " logical inventories / " + physicalBlocks + " physical storage blocks; "
+                    + emptyInventories + " empty; " + totalSlots + " slots; unloaded chunks: " + unloadedChunks
+                    + "; skipped: " + (skipped.isEmpty() ? "none" : skipped);
+        }
+    }
+    private static void skip(Map<String,Integer> reasons,String reason,BlockPos pos,BlockState state) {
+        reasons.merge(reason,1,Integer::sum);
+        LOG.info("Scan skipped {} {}: {}",pos,BuiltInRegistries.BLOCK.getKey(state.getBlock()),reason);
+    }
 
     public static List<ContainerRef> scanRadius(ServerLevel level, Player player,
                                                 BlockPos center, int radius) {
+        return scanDetailed(level,player,center,radius).containers();
+    }
+
+    public static ScanReport scanDetailed(ServerLevel level,Player player,BlockPos center,int radius) {
         int safe = Math.max(1, Math.min(radius, 64));
-        return scanBoxInRadius(level, player, center.offset(-safe, -safe, -safe),
+        return scanBox(level, player, center.offset(-safe, -safe, -safe),
                 center.offset(safe, safe, safe), center, safe);
     }
 
     public static List<ContainerRef> scanBoxInRadius(ServerLevel level, Player player,
             BlockPos min, BlockPos max, BlockPos center, int radius) {
+        return scanBox(level,player,min,max,center,radius).containers();
+    }
+
+    private static ScanReport scanBox(ServerLevel level,Player player,BlockPos min,BlockPos max,BlockPos center,int radius) {
+        // Always enumerate live loaded chunk contents; never use a chest cache.
         List<BlockPos> candidates = new ArrayList<>();
-        int radiusSq = radius * radius;
+        Map<String,Integer> skipped = new LinkedHashMap<>();
+        int unloadedChunks = 0;
         for (int cx = Math.floorDiv(min.getX(), 16); cx <= Math.floorDiv(max.getX(), 16); cx++) {
             for (int cz = Math.floorDiv(min.getZ(), 16); cz <= Math.floorDiv(max.getZ(), 16); cz++) {
-                if (!level.hasChunk(cx, cz)) continue;
-                for (BlockPos pos : level.getChunk(cx, cz).getBlockEntitiesPos()) {
+                LevelChunk chunk = level.getChunkSource().getChunkNow(cx,cz);
+                if (chunk == null) { unloadedChunks++; continue; }
+                for (BlockPos pos : chunk.getBlockEntitiesPos()) {
                     if (pos.getX() < min.getX() || pos.getX() > max.getX()
                             || pos.getY() < min.getY() || pos.getY() > max.getY()
                             || pos.getZ() < min.getZ() || pos.getZ() > max.getZ()) continue;
                     int dx = pos.getX() - center.getX();
                     int dy = pos.getY() - center.getY();
                     int dz = pos.getZ() - center.getZ();
-                    if (dx * dx + dy * dy + dz * dz <= radiusSq) candidates.add(pos.immutable());
+                    if (ScanGeometry.contains(dx,dy,dz,radius)) candidates.add(pos.immutable());
                 }
             }
         }
@@ -58,25 +90,32 @@ public final class ContainerScanner {
         Set<Object> claimedHandlers = Collections.newSetFromMap(new IdentityHashMap<>());
 
         for (BlockPos pos : candidates) {
-            if (result.size() >= 384) break;
             if (visited.contains(pos)) continue;
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be == null) continue;
             BlockState state = level.getBlockState(pos);
-            if (!StorageFilter.isEligible(state) || !accessible(player, be)) continue;
+            if (!StorageFilter.isEligible(state)) continue;
+            if (result.size() >= 384) { skip(skipped,"scan limit",pos,state); continue; }
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be == null || be.isRemoved()) { skip(skipped,"missing block entity",pos,state); continue; }
+            if (!accessible(player,be)) { skip(skipped,"locked or custom access denied",pos,state); continue; }
 
             if (state.getBlock() instanceof ChestBlock
                     && state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
                 BlockPos other = pos.relative(ChestBlock.getConnectedDirection(state));
-                if (!level.hasChunk(other.getX() >> 4, other.getZ() >> 4)) continue;
+                if (level.getChunkSource().getChunkNow(other.getX() >> 4, other.getZ() >> 4) == null) {
+                    skip(skipped,"unloaded partner",pos,state); continue;
+                }
                 BlockState partnerState = level.getBlockState(other);
                 if (partnerState.getBlock() != state.getBlock()
                         || partnerState.getValue(ChestBlock.TYPE) == ChestType.SINGLE
-                        || !other.relative(ChestBlock.getConnectedDirection(partnerState)).equals(pos))
-                    continue;
+                        || !other.relative(ChestBlock.getConnectedDirection(partnerState)).equals(pos)) {
+                    skip(skipped,"invalid chest connection",pos,state); continue;
+                }
 
                 BlockEntity partner = level.getBlockEntity(other);
-                if (partner == null || !accessible(player, partner)) continue;
+                if (partner == null || partner.isRemoved() || !StorageFilter.isEligible(partnerState)
+                        || !accessible(player,partner)) {
+                    skip(skipped,"partner missing or access denied",pos,state); continue;
+                }
 
                 visited.add(pos);
                 visited.add(other);
@@ -84,18 +123,20 @@ public final class ContainerScanner {
                 // ChestBlock subclasses expose their physical half through
                 // Container, while Forge capabilities may expose either half
                 // or the entire combined inventory. Sizes must be measured.
-                if (!(be instanceof Container first) || !(partner instanceof Container second))
-                    continue;
+                if (!(be instanceof Container first) || !(partner instanceof Container second)) {
+                    skip(skipped,"unknown double chest shape",pos,state); continue;
+                }
                 IItemHandler a = itemHandler(be);
                 IItemHandler b = itemHandler(partner);
-                if (a == null || b == null) continue;
+                if (a == null || b == null) { skip(skipped,"no item handler",pos,state); continue; }
 
                 BlockPos canonical = pos.asLong() <= other.asLong() ? pos : other;
                 boolean firstIsCanonical = canonical.equals(pos);
                 Object aIdentity = handlerIdentity(a);
                 Object bIdentity = handlerIdentity(b);
-                if (claimedHandlers.contains(aIdentity) || claimedHandlers.contains(bIdentity))
-                    continue;
+                if (claimedHandlers.contains(aIdentity) || claimedHandlers.contains(bIdentity)) {
+                    skip(skipped,"duplicate handler",pos,state); continue;
+                }
                 // Select the canonical combined view when both are available.
                 IItemHandler canonicalHandler = firstIsCanonical ? a : b;
                 IItemHandler partnerHandler = firstIsCanonical ? b : a;
@@ -111,10 +152,8 @@ public final class ContainerScanner {
                     case UNSAFE -> null;
                 };
                 if (logical == null) {
-                    org.slf4j.LoggerFactory.getLogger("SimpleSorter/Scanner").debug(
-                            "Skipped ambiguous chest {}: physical {}+{}, capability {}+{}",
-                            canonical, canonicalSize, partnerSize,
-                            canonicalHandler.getSlots(), partnerHandler.getSlots());
+                    skip(skipped,"ambiguous chest shape "+canonicalSize+"+"+partnerSize+" / "
+                            +canonicalHandler.getSlots()+"+"+partnerHandler.getSlots(),pos,state);
                     continue;
                 }
                 claimedHandlers.add(aIdentity);
@@ -127,13 +166,24 @@ public final class ContainerScanner {
             }
 
             IItemHandler handler = itemHandler(be);
-            if (handler != null && handler.getSlots() > 0
-                    && claimedHandlers.add(handlerIdentity(handler))) {
-                visited.add(pos);
-                result.add(new ContainerRef(pos, handler, be, level));
-            }
+            if (handler == null || handler.getSlots() <= 0) { skip(skipped,"no item handler",pos,state); continue; }
+            if (!claimedHandlers.add(handlerIdentity(handler))) { skip(skipped,"duplicate handler",pos,state); continue; }
+            visited.add(pos);
+            result.add(new ContainerRef(pos,handler,be,level));
         }
-        return result;
+        int physical=0,empty=0,slots=0;
+        for (ContainerRef ref:result) {
+            physical += ref.partnerPos()==null ? 1:2;
+            slots += ref.slots();
+            boolean isEmpty=true;
+            try {
+                for (int slot=0;slot<ref.slots();slot++) {
+                    if (!ref.handler().getStackInSlot(slot).isEmpty()) { isEmpty=false; break; }
+                }
+            } catch (RuntimeException ex) { isEmpty=false; LOG.warn("Cannot inspect storage {}",ref.pos(),ex); }
+            if (isEmpty) empty++;
+        }
+        return new ScanReport(result,physical,empty,slots,unloadedChunks,skipped);
     }
 
     private static Object handlerIdentity(IItemHandler handler) {
@@ -143,6 +193,10 @@ public final class ContainerScanner {
     }
 
     private static boolean accessible(Player player, BlockEntity be) {
+        // stillValid is a menu reach check (normally eight blocks). Honor
+        // actual vanilla-style locks instead. Unknown custom containers may
+        // encode access policy in stillValid, so retain that check for them.
+        if (be instanceof BaseContainerBlockEntity storage) return storage.canOpen(player);
         return !(be instanceof Container container) || container.stillValid(player);
     }
 

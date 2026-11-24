@@ -3,6 +3,8 @@ package com.kirill.simplesorter.sorting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BookItem;
@@ -78,6 +80,8 @@ public final class ItemCategoryResolver {
 
     private static boolean matchesClassHint(ItemStack stack, Item item, ClassHint hint) {
         return switch (hint) {
+            case AMMUNITION -> item instanceof ArrowItem;
+            case SPAWN_EGG -> item instanceof SpawnEggItem;
             case ARMOR -> item instanceof ArmorItem;
             case WEAPON -> item instanceof SwordItem || item instanceof BowItem || item instanceof CrossbowItem || item instanceof TridentItem;
             case TOOL -> item instanceof PickaxeItem || item instanceof AxeItem || item instanceof ShovelItem || item instanceof HoeItem || item instanceof ShieldItem;
