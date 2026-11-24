@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "catchtheblast",
+  "version": "0.2.2-beta",
+  "name": "Catch the Blast",
+  "description": "Absorb explosive energy and release fiery shockwaves.",
+  "authors": [
+    "ataflore"
+  ],
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.ataflore.catchtheblast.CatchTheBlast"
+    ],
+    "client": [
+      "dev.ataflore.catchtheblast.client.ClientSetup"
+    ]
+  },
+  "mixins": [
+    "catchtheblast.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

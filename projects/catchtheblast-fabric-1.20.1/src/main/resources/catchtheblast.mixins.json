@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "dev.ataflore.catchtheblast.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "LivingEntityShieldMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

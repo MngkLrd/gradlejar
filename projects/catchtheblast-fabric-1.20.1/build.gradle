@@ -1,0 +1,24 @@
+plugins { id 'fabric-loom' version '1.11.8'; id 'maven-publish' }
+group='dev.ataflore.catchtheblast'
+version='0.2.2-beta'
+base.archivesName='catchtheblast-fabric-mc1.20.1'
+java.toolchain.languageVersion=JavaLanguageVersion.of(17)
+dependencies { minecraft 'com.mojang:minecraft:1.20.1'; mappings loom.officialMojangMappings(); modImplementation 'net.fabricmc:fabric-loader:0.17.3'; modImplementation 'net.fabricmc.fabric-api:fabric-api:0.92.12+1.20.1' }
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 17 }
+tasks.register('decodeTextures') {
+    inputs.files(fileTree('src/main/resources') { include '**/*.png.b64' })
+    outputs.dir(layout.buildDirectory.dir('generated/textures'))
+    doLast {
+        fileTree('src/main/resources').matching { include '**/*.png.b64' }.each { src ->
+            def rel = file('src/main/resources').toPath().relativize(src.toPath()).toString()
+            def dest = file("$buildDir/generated/textures/" + rel.replace('.png.b64', '.png'))
+            dest.parentFile.mkdirs()
+            dest.bytes = Base64.decoder.decode(src.text.trim())
+        }
+    }
+}
+tasks.named('processResources') {
+    dependsOn 'decodeTextures'
+    from("$buildDir/generated/textures")
+    exclude '**/*.png.b64'
+}

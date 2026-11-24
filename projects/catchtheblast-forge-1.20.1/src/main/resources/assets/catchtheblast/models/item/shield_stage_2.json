@@ -1,0 +1,6 @@
+{
+  "parent": "catchtheblast:item/shield_geometry",
+  "textures": {
+    "core": "catchtheblast:item/core_2"
+  }
+}
