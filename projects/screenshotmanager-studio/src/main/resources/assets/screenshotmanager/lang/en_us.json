@@ -3,5 +3,9 @@
   "key.screenshotmanager.edit": "Open latest screenshot",
   "key.screenshotmanager.gallery": "Open Screenshot Library",
   "key.screenshotmanager.copy": "Copy latest screenshot",
-  "key.screenshotmanager.capture": "Capture and copy"
+  "key.screenshotmanager.capture": "Capture and copy",
+  "key.screenshotmanager.photo": "Toggle Photo Mode",
+  "key.screenshotmanager.clean": "Capture without HUD",
+  "key.screenshotmanager.zoom_in": "Photo Mode zoom in",
+  "key.screenshotmanager.zoom_out": "Photo Mode zoom out"
 }

@@ -15,38 +15,114 @@ public final class ImageDocument {
     }
     public interface Operation { BufferedImage apply(BufferedImage img); String label(); }
     private final BufferedImage original;
-    private final ArrayList<Operation> history=new ArrayList<>();
+    private final ArrayList<List<Operation>> revisions=new ArrayList<>();
     private int cursor=0;
-    public ImageDocument(BufferedImage image) { original=image; }
+    public ImageDocument(BufferedImage image) { original=copy(image);revisions.add(List.of()); }
+    public BufferedImage originalPreview(int max){return resize(copy(original),max);}
+    public record Layer(Operation operation,boolean visible) implements Operation {
+        public String label(){return operation.label();}
+        public BufferedImage apply(BufferedImage img){return visible?operation.apply(img):img;}
+    }
+    public record MarkOperation(Mark value) implements Operation {
+        public String label(){return value.tool().name();}
+        public BufferedImage apply(BufferedImage img){return draw(img,value);}
+    }
+    public record FilterOperation(Filter value) implements Operation {
+        public String label(){return value.name();}
+        public BufferedImage apply(BufferedImage img){return adjust(img,value);}
+    }
+    public record Adjustment(int brightness,int contrast,int saturation,int warmth,int gamma,int vignette) implements Operation {
+        public String label(){return "Color grade";}
+        public BufferedImage apply(BufferedImage img){return grade(img,this);}
+    }
+    public static Operation unwrap(Operation op){return op instanceof Layer layer?layer.operation():op;}
+    public static boolean visible(Operation op){return !(op instanceof Layer layer)||layer.visible();}
+    // Geometry operations are fixed in the pipeline: moving/removing them would invalidate later coordinates.
+    public static boolean geometry(Operation op){
+        op=unwrap(op);
+        return op instanceof MarkOperation m&&m.value().tool()==Tool.CROP
+            ||op instanceof FilterOperation f&&(f.value()==Filter.ROTATE||f.value()==Filter.FLIP);
+    }
+    private boolean valid(int index){return index>=0&&index<count();}
+    private boolean commit(List<Operation> next){
+        revisions.subList(cursor+1,revisions.size()).clear();
+        revisions.add(List.copyOf(next));cursor++;
+        if(revisions.size()>101){revisions.removeFirst();cursor--;}
+        return true;
+    }
+    public boolean toggle(int i){
+        if(!valid(i)||geometry(snapshot().get(i)))return false;
+        var next=new ArrayList<>(snapshot());Operation old=next.get(i);
+        next.set(i,new Layer(unwrap(old),!visible(old)));return commit(next);
+    }
+    public boolean delete(int i){
+        if(!valid(i)||geometry(snapshot().get(i)))return false;
+        var next=new ArrayList<>(snapshot());next.remove(i);return commit(next);
+    }
+    public boolean move(int i,int direction){
+        int to=i+direction;
+        if(!valid(i)||!valid(to)||Math.abs(direction)!=1||geometry(snapshot().get(i))||geometry(snapshot().get(to)))return false;
+        var next=new ArrayList<>(snapshot());java.util.Collections.swap(next,i,to);return commit(next);
+    }
+    public boolean replace(int i,Operation value){
+        if(!valid(i)||geometry(snapshot().get(i))||geometry(value))return false;
+        var next=new ArrayList<>(snapshot());next.set(i,new Layer(unwrap(value),visible(next.get(i))));return commit(next);
+    }
+    public boolean translate(int i,int dx,int dy){
+        if(!valid(i)||!(unwrap(snapshot().get(i)) instanceof MarkOperation mark)||geometry(mark))return false;
+        Mark m=mark.value();
+        return replace(i,mark(new Mark(m.tool(),m.x1()+dx,m.y1()+dy,m.x2()+dx,m.y2()+dy,m.color(),m.thickness(),m.strength(),m.text(),m.points().stream().map(p->new Point(p.x+dx,p.y+dy)).toList())));
+    }
+    public static BufferedImage comparison(BufferedImage before,BufferedImage after){
+        before=resize(before,1920);after=resize(after,1920);
+        int panelW=Math.max(before.getWidth(),after.getWidth()),panelH=Math.max(before.getHeight(),after.getHeight());
+        BufferedImage out=new BufferedImage(panelW*2+8,panelH+34,BufferedImage.TYPE_INT_RGB);
+        Graphics2D g=out.createGraphics();g.setColor(new Color(20,25,32));g.fillRect(0,0,out.getWidth(),out.getHeight());
+        g.drawImage(before,(panelW-before.getWidth())/2,30+(panelH-before.getHeight())/2,null);
+        g.drawImage(after,panelW+8+(panelW-after.getWidth())/2,30+(panelH-after.getHeight())/2,null);
+        g.setColor(Color.WHITE);g.setFont(new Font("SansSerif",Font.BOLD,18));g.drawString("BEFORE",8,22);g.drawString("AFTER",panelW+16,22);g.dispose();return out;
+    }
+    public BufferedImage compare(BufferedImage after){return comparison(original,after);}
     public boolean canUndo(){return cursor>0;}
-    public boolean canRedo(){return cursor<history.size();}
-    public int count(){return cursor;}
-    public List<String> labels(){return history.subList(0,cursor).stream().map(Operation::label).toList();}
-    public boolean add(Operation op) {
-        if(cursor>=100) return false;
-        history.subList(cursor,history.size()).clear();
-        history.add(op);cursor++;return true;
+    public boolean canRedo(){return cursor+1<revisions.size();}
+    public int count(){return snapshot().size();}
+    public List<String> labels(){return snapshot().stream().map(Operation::label).toList();}
+    public boolean add(Operation op){
+        if(count()>=100)return false;
+        var next=new ArrayList<>(snapshot());next.add(new Layer(op,true));return commit(next);
     }
     public void undo(){if(canUndo())cursor--;}
     public void redo(){if(canRedo())cursor++;}
-    public void reset(){cursor=0;}
-    public List<Operation> snapshot(){return List.copyOf(history.subList(0,cursor));}
+    public void reset(){if(count()>0)commit(List.of());}
+    public List<Operation> snapshot(){return revisions.get(cursor);}
     public BufferedImage render(List<Operation> ops){
         BufferedImage img=copy(original);
-        for(Operation op:ops) img=op.apply(img);
+        for(Operation op:ops)img=op.apply(img);
         return img;
     }
-    public static Operation mark(Mark m){
-        return new Operation(){
-            public String label(){return m.tool().name();}
-            public BufferedImage apply(BufferedImage img){return draw(img,m);}
-        };
-    }
-    public static Operation filter(Filter f){
-        return new Operation(){
-            public String label(){return f.name();}
-            public BufferedImage apply(BufferedImage img){return adjust(img,f);}
-        };
+    public static Operation mark(Mark m){return new MarkOperation(m);}
+    public static Operation filter(Filter f){return new FilterOperation(f);}
+    private static BufferedImage grade(BufferedImage img,Adjustment a){
+        int w=img.getWidth(),h=img.getHeight();int[] row=new int[w];
+        double contrast=Math.pow(2,a.contrast()/100.0),sat=Math.max(0,1+a.saturation()/100.0),gamma=Math.pow(2,a.gamma()/100.0);
+        int[] lut=new int[256];
+        for(int i=0;i<256;i++)lut[i]=clamp((int)Math.round(255*Math.pow(i/255.0,1/gamma)),0,255);
+        for(int y=0;y<h;y++){
+            img.getRGB(0,y,w,1,row,0,w);
+            for(int x=0;x<w;x++){
+                int c=row[x];double r=lut[(c>>16)&255],g=lut[(c>>8)&255],b=lut[c&255];
+                double gray=.2126*r+.7152*g+.0722*b;
+                r=gray+(r-gray)*sat;g=gray+(g-gray)*sat;b=gray+(b-gray)*sat;
+                double dx=2.0*x/Math.max(1,w-1)-1,dy=2.0*y/Math.max(1,h-1)-1;
+                double v=1-Math.max(0,a.vignette())/100.0*.65*Math.min(1,(dx*dx+dy*dy)/2);
+                r=((r-128)*contrast+128+a.brightness()*.8+a.warmth()*.45)*v;
+                g=((g-128)*contrast+128+a.brightness()*.8)*v;
+                b=((b-128)*contrast+128+a.brightness()*.8-a.warmth()*.45)*v;
+                row[x]=(c&0xff000000)|(clamp((int)Math.round(r),0,255)<<16)|(clamp((int)Math.round(g),0,255)<<8)|clamp((int)Math.round(b),0,255);
+            }
+            img.setRGB(0,y,w,1,row,0,w);
+        }
+        return img;
     }
     public static BufferedImage copy(BufferedImage img){
         BufferedImage out=new BufferedImage(img.getWidth(),img.getHeight(),BufferedImage.TYPE_INT_ARGB);
