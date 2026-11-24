@@ -68,7 +68,7 @@ if modern:
     js(recipe,data)
     js(dest/RES/'assets/husshusshuss/items/discipline_whistle.json',{'model':{'type':'minecraft:model','model':'husshusshuss:item/discipline_whistle'}})
     # Recipe discovery remains automatic via the vanilla recipe manager; no stale predicate schema.
-    if adv.exists():adv.unlink()
+    shutil.rmtree(dest/RES/'data/husshusshuss/advancement',ignore_errors=True)
 # Original shared audio is not regenerated or fetched from the internet.
 # All loaders use precisely the same checked OGG asset.
 mod=src('HussMod')
@@ -294,7 +294,7 @@ with zipfile.ZipFile(sys.argv[1]) as z:
     if modern:
         model=json.loads(z.read('assets/husshusshuss/items/discipline_whistle.json'))
         assert model=={'model':{'type':'minecraft:model','model':'husshusshuss:item/discipline_whistle'}}
-        assert not any(n.startswith('data/husshusshuss/advancement/') for n in z.namelist())
+        assert not any(n.startswith('data/husshusshuss/advancement/') and not n.endswith('/') for n in z.namelist()), 'Unexpected advancement file in modern port'
     header=z.read('dev/ataflore/huss/HussMod.class')
     assert int.from_bytes(header[6:8],'big')==(69 if modern else 61 if legacy else 65)
     print('PASS: version-specific recipe JSON, item model, class bytecode target',mc)
