@@ -112,6 +112,34 @@ public final class CoreSmoke {
         check(outline.getRGB(outline.getWidth()/2,outline.getHeight()/2)==0xff884422,"Outline preserves subject");
         int outlines=0;for(int y=0;y<outline.getHeight();y++)for(int x=0;x<outline.getWidth();x++)if(outline.getRGB(x,y)==0xffffffff)outlines++;
         check(outlines>0,"Entity outline generated");
+        var stripes=new BufferedImage(120,120,BufferedImage.TYPE_INT_ARGB);
+        for(int y=0;y<120;y++)for(int x=0;x<120;x++)stripes.setRGB(x,y,x%2==0?0xff000000:0xffffffff);
+        var tilt=new AdvancedPhoto.Adjust(AdvancedPhoto.Kind.TILT,new int[]{0,15,0,100,20,0});
+        var tilted=tilt.apply(ImageDocument.copy(stripes));
+        check(tilted.getRGB(51,60)==stripes.getRGB(51,60),"Tilt Shift preserves focal band");
+        check(tilted.getRGB(51,3)!=stripes.getRGB(51,3),"Tilt Shift blurs outer band");
+        var composed=ThumbnailComposer.compose(stripes,new ThumbnailComposer.Settings(1,1,"Test","Subtitle",0xffffffff,6,70,11,true),0);
+        check(composed.getWidth()==840&&composed.getHeight()==473,"Thumbnail exact dimensions");
+        var canvas=new AdvancedPhoto.Canvas(512,512,false).apply(img);
+        check(canvas.getWidth()==512&&canvas.getHeight()==512,"Canvas format");
+        var cubes=new java.util.ArrayList<BufferedImage>();
+        for(int i=0;i<6;i++){var f=new BufferedImage(32,32,BufferedImage.TYPE_INT_RGB);for(int y=0;y<32;y++)for(int x=0;x<32;x++)f.setRGB(x,y,0xff000000|(i+1)*0x110000);cubes.add(f);}
+        var panorama=Panorama.stitch(cubes,128);
+        check(panorama.getWidth()==128&&panorama.getHeight()==64,"Panorama ratio");
+        check(panorama.getRGB(64,32)==0xff110000&&panorama.getRGB(64,0)==0xff550000,"Panorama orientation");
+        var advancedRoot=Files.createTempDirectory("sm-advanced");var source=advancedRoot.resolve("source.png");
+        javax.imageio.ImageIO.write(stripes,"png",source.toFile());
+        var advancedDoc=new ImageDocument(stripes);advancedDoc.add(tilt);advancedDoc.add(new AdvancedPhoto.Caption("Example",10,40,20,0xffffffff,1,0));
+        check(advancedDoc.duplicate(1)&&advancedDoc.count()==3,"Duplicate layer");
+        ProjectStore.save(source,advancedDoc.snapshot());RecoveryStore.save(source,advancedDoc.snapshot());
+        check(ProjectStore.load(source).size()==3&&RecoveryStore.load(source).size()==3,"Advanced project and recovery");
+        var trashed=MediaFiles.move(advancedRoot,new MediaFiles.Entry(source,false),true);
+        check(!Files.exists(source)&&ProjectStore.exists(trashed)&&RecoveryStore.exists(trashed),"Trash includes sidecars");
+        var returned=MediaFiles.move(advancedRoot,new MediaFiles.Entry(trashed,true),false);
+        check(returned.equals(source)&&ProjectStore.load(returned).size()==3,"Restore file bundle");
+        var renamed=MediaFiles.rename(advancedRoot,new MediaFiles.Entry(returned,false),"renamed");
+        check(ProjectStore.load(renamed).size()==3,"Rename keeps project");
+        try(var stream=Files.walk(advancedRoot)){for(var f:stream.sorted(java.util.Comparator.reverseOrder()).toList())Files.delete(f);}
         System.out.println("Screenshot Manager core smoke tests passed");
     }
 }

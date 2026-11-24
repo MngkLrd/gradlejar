@@ -66,9 +66,7 @@ public final class StudioClient {
         depthKey=key("depth_capture",GLFW.GLFW_KEY_F4);e.register(depthKey);
         cutoutKey=key("cutout",GLFW.GLFW_KEY_U);e.register(cutoutKey);
         ghostKey=key("ghost",GLFW.GLFW_KEY_G);rollKey=key("roll",GLFW.GLFW_KEY_R);
-        panoKey=key("panorama",GLFW.GLFW_KEY_F11);superKey=key("super_resolution",GLFW.GLFW_KEY_F12);
-        // F11 is used by vanilla fullscreen; leave panorama unbound until assigned.
-        panoKey=key("panorama",GLFW.GLFW_KEY_UNKNOWN);
+        panoKey=key("panorama",GLFW.GLFW_KEY_I);superKey=key("super_resolution",GLFW.GLFW_KEY_F12);
         e.register(ghostKey);e.register(rollKey);e.register(panoKey);e.register(superKey);
     }
     static Path directory(){return Minecraft.getInstance().gameDirectory.toPath().resolve("screenshots");}
@@ -76,6 +74,8 @@ public final class StudioClient {
         if(preferences==null)preferences=new StudioPreferences(Minecraft.getInstance().gameDirectory.toPath().resolve("config/screenshotmanager.properties"),directory());
         return preferences;
     }
+    static void mediaMoved(Path from,Path to,boolean trashed){if(latest!=null&&latest.path().toAbsolutePath().normalize().equals(from.toAbsolutePath().normalize()))latest=trashed?null:new Shot(to,System.currentTimeMillis());}
+    static void captureSaved(Path path){latest=new Shot(path,System.currentTimeMillis());notice("Capture saved in Edited");}
     static void notice(String s){toast=s;created=System.currentTimeMillis();expires=created+1000L*preferences().number("hud.seconds",5,2,20);}
     private static void stopPhoto(Minecraft mc){
         if(photoMode){photoMode=false;mc.options.fov().set(savedFov);AdvancedCapture.resetRoll();}

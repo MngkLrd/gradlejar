@@ -60,7 +60,9 @@ public final class StudioScreen extends StudioBaseScreen {
     private StudioTexture liveTexture;
     private boolean draftDirty,previewRunning,autoSave=true;
     private long previewRevision,previewDue;
-    private int captionStyle=1,captionAngle,canvasPreset,toolPage;
+    private int captionStyle=1,captionAngle,canvasPreset,toolPage=1,optionsPage;
+    private static final String[] GROUPS={"Navigate","Draw","Privacy","Focus"};
+    private static final int[][] GROUP_TOOLS={{0,1,13,19},{2,3,4,5,6,7,8,12,14,15,20},{9,10,11},{16,17,18}};
     private static final int[][] CANVAS={{1280,720},{840,473},{512,512},{1920,1080},{1080,1920},{2560,1080}};
     private int editColorChannel;
     private static final java.util.concurrent.ExecutorService AUTOSAVE=java.util.concurrent.Executors.newSingleThreadExecutor(r->{Thread t=new Thread(r,"sm-autosave");t.setDaemon(true);return t;});
@@ -190,10 +192,11 @@ public final class StudioScreen extends StudioBaseScreen {
         StudioUi.box(g,0,46,toolW,height-68,glass?0x971b2736:StudioUi.PANEL);
         StudioUi.box(g,sideX,46,sideW,height-68,glass?0x971b2736:StudioUi.PANEL);
         StudioUi.box(g,cx,cy,cw,ch,glass?0x18090c10:0xff090c10);
-        int row=16,visibleTools=Math.max(1,(height-75)/row);
-        toolScroll=Math.max(0,Math.min(toolScroll,TOOLS.length-visibleTools));
-        for(int i=toolScroll;i<Math.min(TOOLS.length,toolScroll+visibleTools);i++){
-            Tool chosen=TOOLS[i];action(g,TOOL_LABELS[i],4,49+(i-toolScroll)*row,toolW-8,14,mx,my,tool==chosen,()->{clearPreview();tool=chosen;selected=-1;dragging=false;textPending=false;panel=0;clearTextFocus();});
+        action(g,GROUPS[toolPage],4,49,toolW-8,15,mx,my,false,()->{toolPage=(toolPage+1)%GROUPS.length;toolScroll=0;});
+        int row=16,visibleTools=Math.max(1,(height-92)/row);int[] group=GROUP_TOOLS[toolPage];
+        toolScroll=Math.max(0,Math.min(toolScroll,group.length-visibleTools));
+        for(int i=toolScroll;i<Math.min(group.length,toolScroll+visibleTools);i++){
+            int index=group[i];Tool chosen=TOOLS[index];action(g,TOOL_LABELS[index],4,68+(i-toolScroll)*row,toolW-8,14,mx,my,tool==chosen,()->selectTool(chosen));
         }
         if(texture!=null&&!peek){
             g.enableScissor(cx,cy,cx+cw,cy+ch);
@@ -220,7 +223,7 @@ public final class StudioScreen extends StudioBaseScreen {
         else if(panel==1)drawLayers(g,mx,my,sx,sw);
         else if(panel==2)drawGrade(g,mx,my,sx,sw);
         else drawFile(g,mx,my,sx,sw);
-        text.visible=panel==0&&!compareMode&&needsText();
+        text.visible=panel==0&&optionsPage==0&&!compareMode&&needsText();
         if(!text.visible&&text.isFocused())clearTextFocus();
         StudioUi.box(g,0,height-21,width,21,glass?0x951b2736:StudioUi.PANEL);
         String info=rendered==null?"":rendered.getWidth()+" x "+rendered.getHeight()+"  |  "+Math.round(scale*100)+"%";
@@ -228,6 +231,7 @@ public final class StudioScreen extends StudioBaseScreen {
         g.drawString(font,info,width-font.width(info)-7,height-15,StudioUi.ACCENT,false);
         if(text.visible)text.render(g,mx,my,dt);
     }
+    private void selectTool(Tool chosen){clearPreview();tool=chosen;selected=-1;dragging=false;textPending=false;panel=0;optionsPage=0;clearTextFocus();for(int i=0;i<GROUP_TOOLS.length;i++)for(int id:GROUP_TOOLS[i])if(id==chosen.ordinal()){toolPage=i;toolScroll=0;}}
     private boolean needsText(){
         return tool==Tool.TEXT||(doc!=null&&selected>=0&&selected<doc.count()&&ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof AdvancedPhoto.Caption)||(doc!=null&&selected>=0&&selected<doc.count()&&ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ImageDocument.MarkOperation m&&m.value().tool()==Tool.TEXT);
     }
@@ -249,33 +253,34 @@ public final class StudioScreen extends StudioBaseScreen {
             slider(g,"Opacity "+imageOpacity+"%",sx,y,sw,0,100,imageOpacity,100,v->imageOpacity=v);y+=27;
             action(g,"Apply transform",sx,y,sw,16,mx,my,false,this::applyStyle);return;
         }
-        if(needsText()){
-            g.drawString(font,textPending?"Enter to place / Esc cancel":"Click image to place text",sx,y,StudioUi.MUTED,false);
-            text.setX(sx);text.setY(y+12);text.setWidth(sw);
-            y+=36;
+        action(g,optionsPage==0?"Tool settings":"Color / style",sx,y,sw,14,mx,my,false,()->{optionsPage=1-optionsPage;clearTextFocus();});y+=18;
+        if(needsText()&&optionsPage==0){
+            StudioUi.label(g,font,textPending?"Enter to place":"Click image to place",sx,y,sw,StudioUi.MUTED);
+            text.setX(sx);text.setY(y+12);text.setWidth(sw);y+=34;
         }
-        int cell=Math.max(8,(sw-2)/6);
-        for(int i=0;i<COLORS.length;i++){
-            int chosen=COLORS[i],x=sx+i*cell,yy=y;
-            StudioUi.box(g,x,y,cell-2,15,color==chosen?StudioUi.ACCENT:StudioUi.EDGE);
-            StudioUi.box(g,x+1,y+1,cell-4,13,chosen);
-            hits.add(new StudioUi.Hit(x,yy,cell-2,15,()->color=chosen));
-        }
-        y+=19;
-        action(g,String.format("#%06X",color&0xffffff),sx,y,sw-26,13,mx,my,false,()->{editColorChannel=(editColorChannel+1)%3;});
-        action(g,new String[]{"R","G","B"}[editColorChannel],sx+sw-24,y,22,13,mx,my,false,()->editColorChannel=(editColorChannel+1)%3);y+=16;
-        int shift=(2-editColorChannel)*8;
-        slider(g,"Channel "+((color>>>shift)&255),sx,y,sw,0,255,(color>>>shift)&255,255,v->color=(color&~(255<<shift))|(v<<shift));y+=25;
-        slider(g,"Size "+thickness+" px",sx,y,sw,1,80,thickness,6,v->thickness=v);y+=27;
-        if(tool==Tool.HIGHLIGHT||tool==Tool.HIGHLIGHT_BRUSH){slider(g,"Opacity "+opacity+"%",sx,y,sw,5,99,opacity,33,v->opacity=v);y+=27;}
-        if(tool==Tool.BLUR||tool==Tool.PIXELATE){slider(g,"Censor "+strength,sx,y,sw,3,96,strength,18,v->strength=v);y+=27;}
-        if(tool==Tool.FOCUS||tool==Tool.FOCUS_SHADE||tool==Tool.DEPTH_FOCUS){
-            slider(g,(tool==Tool.DEPTH_FOCUS?"Focus range ":"Radius ")+focusRadius+"%",sx,y,sw,5,100,focusRadius,25,v->focusRadius=v);y+=27;
-            slider(g,"Strength "+focusAmount+"%",sx,y,sw,0,100,focusAmount,65,v->focusAmount=v);y+=27;
-        }
-        if(needsText()&&y+30<height-22){
-            action(g,new String[]{"Plain","Outline","Shadow","Label","Italic","Mono"}[captionStyle],sx,y,sw,14,mx,my,false,()->captionStyle=(captionStyle+1)%6);y+=16;
-            slider(g,"Text angle "+captionAngle,sx,y,sw,-180,180,captionAngle,0,v->captionAngle=v);y+=27;
+        if(optionsPage==0){
+            slider(g,"Size "+thickness+" px",sx,y,sw,1,80,thickness,6,v->thickness=v);y+=27;
+            if(tool==Tool.HIGHLIGHT||tool==Tool.HIGHLIGHT_BRUSH){slider(g,"Opacity "+opacity+"%",sx,y,sw,5,99,opacity,33,v->opacity=v);y+=27;}
+            if(tool==Tool.BLUR||tool==Tool.PIXELATE){slider(g,"Censor "+strength,sx,y,sw,3,96,strength,18,v->strength=v);y+=27;}
+            if(tool==Tool.FOCUS||tool==Tool.FOCUS_SHADE||tool==Tool.DEPTH_FOCUS){
+                slider(g,(tool==Tool.DEPTH_FOCUS?"Focus range ":"Radius ")+focusRadius+"%",sx,y,sw,5,100,focusRadius,25,v->focusRadius=v);y+=27;
+                slider(g,"Strength "+focusAmount+"%",sx,y,sw,0,100,focusAmount,65,v->focusAmount=v);y+=27;
+            }
+            if(needsText()&&y+14<height-22){
+                action(g,new String[]{"Plain","Outline","Shadow","Label","Italic","Mono"}[captionStyle],sx,y,sw,14,mx,my,false,()->captionStyle=(captionStyle+1)%6);y+=18;
+            }
+        }else{
+            int cell=Math.max(8,(sw-2)/6);
+            for(int i=0;i<COLORS.length;i++){
+                int chosen=COLORS[i],xx=sx+i*cell,yy=y;StudioUi.box(g,xx,y,cell-2,15,color==chosen?StudioUi.ACCENT:StudioUi.EDGE);StudioUi.box(g,xx+1,y+1,cell-4,13,chosen);
+                hits.add(new StudioUi.Hit(xx,yy,cell-2,15,()->color=chosen));
+            }
+            y+=19;
+            action(g,String.format("#%06X",color&0xffffff),sx,y,sw-26,13,mx,my,false,()->editColorChannel=(editColorChannel+1)%3);
+            action(g,new String[]{"R","G","B"}[editColorChannel],sx+sw-24,y,22,13,mx,my,false,()->editColorChannel=(editColorChannel+1)%3);y+=16;
+            int shift=(2-editColorChannel)*8;
+            slider(g,"Channel "+((color>>>shift)&255),sx,y,sw,0,255,(color>>>shift)&255,255,v->color=(color&~(255<<shift))|(v<<shift));y+=27;
+            if(needsText()){slider(g,"Text angle "+captionAngle,sx,y,sw,-180,180,captionAngle,0,v->captionAngle=v);y+=27;}
         }
         if(y+16<height-22){
             action(g,"Rotate",sx,y,sw/2-2,16,mx,my,false,()->apply(ImageDocument.filter(Filter.ROTATE),true));
@@ -564,7 +569,7 @@ public final class StudioScreen extends StudioBaseScreen {
         if(button==0&&image(x,y)&&!busy){
             text.setFocused(false);setFocused(null);
             ax=bx=px(x);ay=by=py(y);points.clear();
-            if(tool==Tool.TEXT){textPending=true;textX=ax;textY=ay;panel=0;text.visible=true;setFocused(text);text.setFocused(true);status="Type annotation, Enter to place";return true;}
+            if(tool==Tool.TEXT){textPending=true;textX=ax;textY=ay;panel=0;optionsPage=0;text.visible=true;setFocused(text);text.setFocused(true);status="Type annotation, Enter to place";return true;}
             if(tool==Tool.NUMBER||tool==Tool.FOCUS||tool==Tool.FOCUS_SHADE||tool==Tool.DEPTH_FOCUS||tool==Tool.EYEDROPPER){commitMark();return true;}
             dragging=true;setDragging(true);return true;
         }
@@ -594,9 +599,13 @@ public final class StudioScreen extends StudioBaseScreen {
         imageBounds();panX+=x-(ix+fx*scale);panY+=y-(iy+fy*scale);imageBounds();return true;
     }
     @Override public boolean keyPressed(int key,int scancode,int mods){
-        if(key==GLFW.GLFW_KEY_ESCAPE){if(textPending||text.isFocused()){textPending=false;clearTextFocus();return true;}onClose();return true;}
+        if(key==GLFW.GLFW_KEY_ESCAPE){if(draftDirty){clearPreview();status="Preview cancelled";return true;}if(textPending||text.isFocused()){textPending=false;clearTextFocus();return true;}onClose();return true;}
         if(textPending&&(key==GLFW.GLFW_KEY_ENTER||key==GLFW.GLFW_KEY_KP_ENTER)){if(draft.isBlank()){status="Type text first";return true;}ax=bx=textX;ay=by=textY;points.clear();textPending=false;clearTextFocus();commitMark();return true;}
         if(text.visible&&text.isFocused())return super.keyPressed(key,scancode,mods);
+        if(!hasControlDown()&&(mods&GLFW.GLFW_MOD_ALT)==0){
+            Tool shortcut=switch(key){case GLFW.GLFW_KEY_B->Tool.PEN;case GLFW.GLFW_KEY_E->Tool.ERASER;case GLFW.GLFW_KEY_T->Tool.TEXT;case GLFW.GLFW_KEY_C->Tool.CROP;case GLFW.GLFW_KEY_I->Tool.EYEDROPPER;case GLFW.GLFW_KEY_V->Tool.PAN;default->null;};
+            if(shortcut!=null){selectTool(shortcut);return true;}
+        }
         if(hasControlDown()){
             if(key==GLFW.GLFW_KEY_V){pasteImage();return true;}
             if(key==GLFW.GLFW_KEY_Z){if(hasShiftDown())redo();else undo();return true;}

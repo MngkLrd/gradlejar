@@ -109,7 +109,7 @@ public final class ImageDocument {
             Operation op=ops.get(i);if(!visible(op))continue;
             Operation base=unwrap(op);
             if(base instanceof MarkOperation m&&m.value().tool()==Tool.ERASER)continue;
-            if(base instanceof MarkOperation m&&erasable(m.value().tool())){
+            if(base instanceof AdvancedPhoto.Caption||base instanceof MarkOperation m&&erasable(m.value().tool())){
                 List<Mark> masks=new ArrayList<>();
                 for(int k=i+1;k<ops.size()&&!geometry(ops.get(k));k++){
                     Operation next=unwrap(ops.get(k));
@@ -117,7 +117,7 @@ public final class ImageDocument {
                 }
                 if(!masks.isEmpty()){
                     BufferedImage overlay=new BufferedImage(img.getWidth(),img.getHeight(),BufferedImage.TYPE_INT_ARGB);
-                    draw(overlay,m.value());
+                    base.apply(overlay);
                     Graphics2D erase=overlay.createGraphics();
                     try{erase.setComposite(AlphaComposite.Clear);erase.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
                         for(Mark mask:masks)stroke(erase,mask);

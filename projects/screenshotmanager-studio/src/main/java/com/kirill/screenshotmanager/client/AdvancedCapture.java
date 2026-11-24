@@ -105,6 +105,6 @@ public final class AdvancedCapture{
                 var output=cube==null?image:Panorama.stitch(cube,Math.min(4096,cube.getFirst().getWidth()*4));
                 return CreatorExport.save(StudioClient.directory().resolve("edited"),output,false,100,0,0);
             }catch(Exception e){throw new RuntimeException(e);}
-        },ShotFiles.IO).whenComplete((p,e)->mc.execute(()->StudioClient.notice(e==null?"Capture saved in Edited":"Capture export failed")));
+        },ShotFiles.IO).whenComplete((p,e)->mc.execute(()->{if(e==null)StudioClient.captureSaved(p);else StudioClient.notice("Capture export failed");}));
     }
 }

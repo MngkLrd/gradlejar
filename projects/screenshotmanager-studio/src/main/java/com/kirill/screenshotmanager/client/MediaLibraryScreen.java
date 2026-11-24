@@ -35,6 +35,7 @@ final class MediaLibraryScreen extends StudioBaseScreen{
         CompletableFuture.supplyAsync(()->{try{return rename?MediaFiles.rename(StudioClient.directory(),entry,value):MediaFiles.move(StudioClient.directory(),entry,!entry.trash());}catch(Exception e){throw new RuntimeException(e);}},ShotFiles.IO).whenComplete((path,e)->Minecraft.getInstance().execute(()->{
             busy=false;if(!alive)return;if(e!=null){status="Operation failed: "+(e.getCause()==null?e.getMessage():e.getCause().getMessage());return;}
             try{StudioClient.preferences().relocate(entry.path(),path);}catch(Exception ignored){}
+            StudioClient.mediaMoved(entry.path(),path,!rename&&!entry.trash());
             selected=null;name="";input.setValue("");scan();
         }));
     }
