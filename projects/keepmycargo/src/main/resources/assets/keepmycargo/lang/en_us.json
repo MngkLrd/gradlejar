@@ -1,0 +1,4 @@
+{
+  "tooltip.keepmycargo.loaded": "Packed cargo: %s stacks",
+  "tooltip.keepmycargo.no_nesting": "Loaded cargo cannot be packed inside cargo."
+}

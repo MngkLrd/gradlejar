@@ -1,0 +1,9 @@
+{
+  "slug": "keepmycargo",
+  "version": "1.0.0",
+  "minecraft": "1.21.1",
+  "loader": "neoforge",
+  "java": "21",
+  "gradle": "8.14.3",
+  "jar_glob": "keepmycargo-1.0.0.jar"
+}

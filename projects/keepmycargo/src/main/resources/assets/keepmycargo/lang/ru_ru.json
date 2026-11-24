@@ -1,0 +1,4 @@
+{
+  "tooltip.keepmycargo.loaded": "Упакованный груз: %s стопок",
+  "tooltip.keepmycargo.no_nesting": "Заполненный транспорт нельзя упаковать в другой."
+}
