@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
+}
+group = 'dev.ataflore.huss'
+version = '0.1.0-beta'
+base { archivesName = 'husshusshuss-forge-mc1.21.1' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+minecraft {
+    mappings channel: 'official', version: '1.21.1'
+    copyIdeResources = true
+    runs {
+        client { workingDirectory project.file('run'); mods { husshusshuss { source sourceSets.main } } }
+        server { workingDirectory project.file('run-server'); args '--nogui'; mods { husshusshuss { source sourceSets.main } } }
+    }
+}
+dependencies { minecraft "net.minecraftforge:forge:1.21.1-${forge_version}" }
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 21 }
+tasks.register('generateAssets', Exec) {
+    inputs.file('tools/generate_assets.py')
+    outputs.dir(layout.buildDirectory.dir('generated/hussassets'))
+    commandLine 'python3', 'tools/generate_assets.py', layout.buildDirectory.dir('generated/hussassets').get().asFile.absolutePath
+}
+tasks.named('processResources') {
+    dependsOn 'generateAssets'
+    from(layout.buildDirectory.dir('generated/hussassets'))
+}
+jar { finalizedBy 'reobfJar' }

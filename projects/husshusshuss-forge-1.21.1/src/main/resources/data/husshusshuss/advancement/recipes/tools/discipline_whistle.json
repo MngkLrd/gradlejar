@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_horn": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:goat_horn"
+          }
+        ]
+      }
+    },
+    "has_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "husshusshuss:discipline_whistle"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_horn",
+      "has_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "husshusshuss:discipline_whistle"
+    ]
+  }
+}

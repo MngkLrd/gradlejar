@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[52,)"
+license="All Rights Reserved"
+[[mods]]
+modId="husshusshuss"
+version="0.1.0-beta"
+displayName="Huss Huss Huss"
+authors="ataflore"
+description='''Everyone goes out partying. Except the villagers who grind.'''
+[[dependencies.husshusshuss]]
+modId="forge"
+mandatory=true
+versionRange="[52.1.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.husshusshuss]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
