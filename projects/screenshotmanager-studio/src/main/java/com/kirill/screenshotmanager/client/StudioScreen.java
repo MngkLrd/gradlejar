@@ -336,7 +336,7 @@ public final class StudioScreen extends StudioBaseScreen {
     }
     private void requestPreview(){
         if(busy||rendered==null||compareMode||panel!=2)return;
-        draftDirty=true;previewRevision++;previewDue=System.nanoTime()+25_000_000L;
+        draftDirty=true;previewRevision++;previewDue=System.nanoTime();
         status="Live preview | Apply to keep / Cancel to discard";
     }
     @Override public void tick(){
@@ -418,7 +418,7 @@ public final class StudioScreen extends StudioBaseScreen {
     private void drawFile(GuiGraphics g,int mx,int my,int sx,int sw){
         int y=69,step=Math.max(10,Math.min(16,(height-96)/13)),h=step-2;
         action(g,"Save project",sx,y,sw,h,mx,my,false,()->project(false));
-        action(g,"Load project",sx,y+=step,sw,h,mx,my,false,()->project(true));
+        action(g,"Load / recover",sx,y+=step,sw,h,mx,my,false,()->project(true));
         action(g,exportJpeg?"Format: JPEG":"Format: PNG",sx,y+=step,sw,h,mx,my,false,()->exportJpeg=!exportJpeg);
         action(g,"Quality: "+exportQuality+"%",sx,y+=step,sw,h,mx,my,false,()->exportQuality=exportQuality<=40?100:exportQuality-10);
         action(g,exportSide==0?"Size: original":"Long side: "+exportSide,sx,y+=step,sw,h,mx,my,false,()->exportSide=exportSide==0?3840:exportSide==3840?1920:exportSide==1920?1280:exportSide==1280?840:exportSide==840?640:0);
@@ -427,7 +427,7 @@ public final class StudioScreen extends StudioBaseScreen {
         action(g,importPath==null?"Pick import":importPath.getFileName().toString(),sx,y+=step,sw,h,mx,my,false,this::pickImport);
         action(g,"Add image",sx,y+=step,sw,h,mx,my,false,this::importImage);
         action(g,"Scene info",sx,y+=step,sw,h,mx,my,false,this::sceneInfo);
-        action(g,"Thumbnail Studio",sx,y+=step,sw,h,mx,my,false,()->{if(!busy&&rendered!=null&&!draftDirty)Minecraft.getInstance().setScreen(new ThumbnailScreen(shot,rendered,this));});
+        action(g,"Thumbnail Studio",sx,y+=step,sw,h,mx,my,false,()->{if(!busy&&rendered!=null&&!draftDirty)Minecraft.getInstance().setScreen(new ThumbnailScreen(shot,rendered,new StudioScreen(shot,parent)));});
         int[] wh=CANVAS[canvasPreset];action(g,"Canvas "+wh[0]+"x"+wh[1],sx,y+=step,sw,h,mx,my,false,()->canvasPreset=(canvasPreset+1)%CANVAS.length);
         action(g,"Resize / fit",sx,y+=step,sw,h,mx,my,false,()->apply(new AdvancedPhoto.Canvas(wh[0],wh[1],false),true));
     }
@@ -440,7 +440,7 @@ public final class StudioScreen extends StudioBaseScreen {
         busy=true;status=load?"Loading project...":"Saving project...";long token=++epoch;
         var ops=doc.snapshot();
         CompletableFuture.supplyAsync(()->{
-            try{if(load)return ProjectStore.exists(shot.path())?ProjectStore.load(shot.path()):com.kirill.screenshotmanager.core.RecoveryStore.load(shot.path());ProjectStore.save(shot.path(),ops);return ops;}
+            try{if(load)return com.kirill.screenshotmanager.core.RecoveryStore.exists(shot.path())?com.kirill.screenshotmanager.core.RecoveryStore.load(shot.path()):ProjectStore.load(shot.path());ProjectStore.save(shot.path(),ops);return ops;}
             catch(Exception e){throw new RuntimeException(e);}
         },ShotFiles.IO).whenComplete((result,error)->Minecraft.getInstance().execute(()->{
             if(!alive||token!=epoch)return;busy=false;
@@ -560,7 +560,7 @@ public final class StudioScreen extends StudioBaseScreen {
             }
         }
         if(canvas(x,y)&&rendered!=null&&(button==2||(button==0&&tool==Tool.PAN))){panning=true;return true;}
-        if((panel==1||panel==3)&&button==0&&canvas(x,y))return true;
+        if((panel==1||panel==2||panel==3)&&button==0&&canvas(x,y))return true;
         if(button==0&&image(x,y)&&!busy){
             text.setFocused(false);setFocused(null);
             ax=bx=px(x);ay=by=py(y);points.clear();

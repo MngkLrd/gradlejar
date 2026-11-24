@@ -135,7 +135,7 @@ public final class LibraryScreen extends StudioBaseScreen {
         button(g,"Settings",width-59,72,53,17,mx,my,false,()->Minecraft.getInstance().setScreen(new StudioSettingsScreen(this)));
         button(g,"Collage ("+chosen.size()+")",8,94,Math.max(52,width/2-10),16,mx,my,false,this::collage);
         button(g,verticalCollage?"Vertical":"Grid",width/2,94,Math.max(40,width/4-4),16,mx,my,verticalCollage,()->verticalCollage=!verticalCollage);
-        button(g,"Clear",width*3/4,94,Math.max(35,width/4-8),16,mx,my,false,chosen::clear);
+        button(g,"Manage",width*3/4,94,Math.max(35,width/4-8),16,mx,my,false,()->Minecraft.getInstance().setScreen(new MediaLibraryScreen(this,List.copyOf(chosen))));
         int newCols=Math.max(2,Math.min(5,(width-12)/116));
         int newRows=Math.max(1,Math.min(4,(height-143)/100));
         if(newCols!=cols||newRows!=rows){cols=newCols;rows=newRows;page=Math.min(page,maxPage());clearThumbs();}
