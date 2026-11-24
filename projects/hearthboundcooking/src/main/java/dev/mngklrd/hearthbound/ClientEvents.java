@@ -13,6 +13,12 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid=Hearthbound.ID,value=Dist.CLIENT)
 public final class ClientEvents {
+    @Mod.EventBusSubscriber(modid=Hearthbound.ID,value=Dist.CLIENT,bus=Mod.EventBusSubscriber.Bus.MOD)
+    public static final class Registration {
+        @SubscribeEvent public static void setup(net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent event){
+            event.enqueueWork(()->net.minecraft.client.gui.screens.MenuScreens.register(Hearthbound.VESSEL_MENU.get(),VesselScreen::new));
+        }
+    }
     @SubscribeEvent public static void tooltip(ItemTooltipEvent event){
         ItemStack s=event.getItemStack();
         if(!Quality.has(s))return;

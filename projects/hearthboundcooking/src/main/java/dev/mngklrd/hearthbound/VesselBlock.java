@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 
 public final class VesselBlock extends BaseEntityBlock {
     public static final BooleanProperty LID=BooleanProperty.create("lid");
-    public static final IntegerProperty STAGE=IntegerProperty.create("stage",0,3);
+    public static final IntegerProperty STAGE=IntegerProperty.create("stage",0,4);
     public final int batches;
     public VesselBlock(int batches,Properties props){
         super(props);this.batches=batches;

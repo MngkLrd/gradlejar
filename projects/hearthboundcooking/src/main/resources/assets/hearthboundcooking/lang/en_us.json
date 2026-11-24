@@ -17,5 +17,16 @@
   "hearthbound.state.simmering": "Simmering",
   "hearthbound.full": "Ingredient slots full or this ingredient has reached capacity",
   "hearthbound.open_lid": "Sneak + empty hand to open the lid",
-  "hearthbound.container_ingredient": "Ingredients with crafting remainders are not supported"
+  "hearthbound.container_ingredient": "Ingredients with crafting remainders are not supported",
+  "hearthbound.gui.open": "Open lid",
+  "hearthbound.gui.close": "Close lid",
+  "hearthbound.gui.ready": "Ready to serve",
+  "hearthbound.gui.cold": "Cold",
+  "hearthbound.gui.warming": "Warming",
+  "hearthbound.gui.boiling": "Boiling",
+  "hearthbound.gui.simmering": "Simmering",
+  "hearthbound.gui.ingredients": "Ingredients",
+  "hearthbound.gui.servings": "%s servings · %s%%",
+  "hearthbound.gui.add": "Click: add",
+  "hearthbound.gui.remove": "RMB: remove"
 }

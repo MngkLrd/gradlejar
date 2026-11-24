@@ -23,6 +23,12 @@
     },
     "lid=true,stage=3": {
       "model": "hearthboundcooking:block/bronze_cauldron_lid"
+    },
+    "lid=true,stage=4": {
+      "model": "hearthboundcooking:block/bronze_cauldron_lid"
+    },
+    "lid=false,stage=4": {
+      "model": "hearthboundcooking:block/bronze_cauldron_filled"
     }
   }
 }

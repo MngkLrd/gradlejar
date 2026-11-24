@@ -17,5 +17,16 @@
   "hearthbound.state.simmering": "Томится",
   "hearthbound.full": "Нет места или достигнут предел ингредиента",
   "hearthbound.open_lid": "Присядь и нажми ПКМ пустой рукой, чтобы открыть крышку",
-  "hearthbound.container_ingredient": "Продукты с возвращаемой тарой не поддерживаются"
+  "hearthbound.container_ingredient": "Продукты с возвращаемой тарой не поддерживаются",
+  "hearthbound.gui.open": "Открыть",
+  "hearthbound.gui.close": "Закрыть",
+  "hearthbound.gui.ready": "Готово к раздаче",
+  "hearthbound.gui.cold": "Холодный",
+  "hearthbound.gui.warming": "Нагревается",
+  "hearthbound.gui.boiling": "Кипит",
+  "hearthbound.gui.simmering": "Томится",
+  "hearthbound.gui.ingredients": "Ингредиенты",
+  "hearthbound.gui.servings": "%s порц. · %s%%",
+  "hearthbound.gui.add": "Нажми: добавить",
+  "hearthbound.gui.remove": "ПКМ: забрать"
 }

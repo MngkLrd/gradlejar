@@ -23,6 +23,12 @@
     },
     "lid=true,stage=3": {
       "model": "hearthboundcooking:block/clay_stockpot_lid"
+    },
+    "lid=true,stage=4": {
+      "model": "hearthboundcooking:block/clay_stockpot_lid"
+    },
+    "lid=false,stage=4": {
+      "model": "hearthboundcooking:block/clay_stockpot_filled"
     }
   }
 }

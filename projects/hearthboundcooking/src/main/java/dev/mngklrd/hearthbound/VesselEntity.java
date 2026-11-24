@@ -70,6 +70,27 @@ public final class VesselEntity extends BlockEntity {
     }
     private int amount(){int n=0;for(ItemStack s:ingredients)n+=s.getCount();return n;}
     private void resetProgress(){progress=0;hotTicks=0;overheatTicks=0;activeRecipe=null;}
+    public ItemStack preview(int i){return ingredients.get(i).copy();}
+    public int displayData(int i){
+        return switch(i){
+            case 0 -> tank.getFluidAmount(); case 1 -> tank.getCapacity();
+            case 2 -> getBlockState().getValue(VesselBlock.STAGE);
+            case 3 -> lid()?1:0;
+            case 4 -> finished.getCount(); case 5 -> finished.isEmpty()?-1:Quality.get(finished);
+            case 6 -> heat<180?0:heat<300?1:2;
+            default -> 0;
+        };
+    }
+    public boolean canUse(Player p){return level!=null&&level.getBlockEntity(worldPosition)==this&&p.distanceToSqr(worldPosition.getX()+.5,worldPosition.getY()+.5,worldPosition.getZ()+.5)<=64;}
+    public void menuToggle(Player p){if(canUse(p)){toggleLid();}}
+    public void removeIngredient(Player p,int i){
+        if(!canUse(p)||lid()||!finished.isEmpty()||i<0||i>=5||ingredients.get(i).isEmpty())return;
+        ItemHandlerHelper.giveItemToPlayer(p,ingredients.get(i));ingredients.set(i,ItemStack.EMPTY);exposure[i]=0;resetProgress();setChanged();
+    }
+    private void openMenu(Player p){
+        if(p instanceof net.minecraft.server.level.ServerPlayer server)
+            net.minecraftforge.network.NetworkHooks.openScreen(server,new SimpleMenuProvider((id,inv,player)->new VesselMenu(id,inv,this),getBlockState().getBlock().getName()));
+    }
     private void status(Player p){
         if(!finished.isEmpty()){say(p,"ready",finished.getCount(),Quality.get(finished));return;}
         int n=batchCount();
@@ -90,11 +111,12 @@ public final class VesselEntity extends BlockEntity {
                 setChanged();return InteractionResult.CONSUME;
             }
             if(held.isEmpty()&&player.isShiftKeyDown()){toggleLid();status(player);return InteractionResult.CONSUME;}
-            status(player);return InteractionResult.CONSUME;
+            if(held.isEmpty())openMenu(player);else status(player);
+            return InteractionResult.CONSUME;
         }
         if(held.isEmpty()){
             if(player.isShiftKeyDown()){toggleLid();status(player);}
-            else status(player);
+            else openMenu(player);
             return InteractionResult.CONSUME;
         }
         if(lid()){say(player,"open_lid");return InteractionResult.CONSUME;}
@@ -107,33 +129,32 @@ public final class VesselEntity extends BlockEntity {
                 resetProgress();setChanged();status(player);return InteractionResult.CONSUME;
             }
         }
-        if(held.is(SOUP_INPUT)&&FoodCapability.get(held)!=null&&Quality.fresh(held)){
-            if(!held.getCraftingRemainingItem().isEmpty()){say(player,"container_ingredient");return InteractionResult.CONSUME;}
-            int index=-1,empty=-1;
-            for(int i=0;i<5;i++){
-                ItemStack s=ingredients.get(i);
-                if(s.isEmpty()){if(empty<0)empty=i;}
-                else if(FoodCapability.areStacksStackableExceptCreationDate(s,held)){index=i;break;}
-            }
-            if(index<0)index=empty;
-            if(index<0){say(player,"full");return InteractionResult.CONSUME;}
-            ItemStack old=ingredients.get(index);
-            int max=Math.min(capacity(),held.getMaxStackSize());
-            if(old.getCount()>=max){say(player,"full");return InteractionResult.CONSUME;}
-            int n=Math.min(player.isShiftKeyDown()?held.getCount():1,max-old.getCount());
-            ItemStack add=held.copyWithCount(n);
-            if(old.isEmpty()){ingredients.set(index,add);exposure[index]=0;}
-            else{
-                // Equal nutrition and traits were checked; preserve the oldest creation date.
-                IFood a=FoodCapability.get(old),b=FoodCapability.get(add);
-                if(a!=null&&b!=null)a.setCreationDate(Math.min(a.getCreationDate(),b.getCreationDate()));
-                exposure[index]=(int)((long)exposure[index]*old.getCount()/(old.getCount()+n));
-                old.grow(n);
-            }
-            if(!player.getAbilities().instabuild)held.shrink(n);
-            resetProgress();setChanged();sound(SoundEvents.GENERIC_SPLASH);stage(1);status(player);return InteractionResult.CONSUME;
+        addIngredient(player,held,player.isShiftKeyDown());status(player);return InteractionResult.CONSUME;
+    }
+    public int addIngredient(Player player,ItemStack held,boolean all){
+        if(!canUse(player)||lid()||!finished.isEmpty()||!held.is(SOUP_INPUT)||FoodCapability.get(held)==null||!Quality.fresh(held))return 0;
+        if(!held.getCraftingRemainingItem().isEmpty()){say(player,"container_ingredient");return 0;}
+        int index=-1,empty=-1;
+        for(int i=0;i<5;i++){
+            ItemStack s=ingredients.get(i);
+            if(s.isEmpty()){if(empty<0)empty=i;}
+            else if(FoodCapability.areStacksStackableExceptCreationDate(s,held)){index=i;break;}
         }
-        status(player);return InteractionResult.CONSUME;
+        if(index<0)index=empty;
+        if(index<0){say(player,"full");return 0;}
+        ItemStack old=ingredients.get(index);
+        int max=Math.min(capacity(),held.getMaxStackSize());
+        if(old.getCount()>=max){say(player,"full");return 0;}
+        int n=Math.min(all?held.getCount():1,max-old.getCount());ItemStack add=held.copyWithCount(n);
+        if(old.isEmpty()){ingredients.set(index,add);exposure[index]=0;}
+        else{
+            IFood a=FoodCapability.get(old),b=FoodCapability.get(add);
+            if(a!=null&&b!=null)a.setCreationDate(Math.min(a.getCreationDate(),b.getCreationDate()));
+            exposure[index]=(int)((long)exposure[index]*old.getCount()/(old.getCount()+n));
+            old.grow(n);
+        }
+        if(!player.getAbilities().instabuild)held.shrink(n);
+        resetProgress();setChanged();sound(SoundEvents.GENERIC_SPLASH);stage(1);return n;
     }
     private void toggleLid(){
         level.setBlock(worldPosition,getBlockState().setValue(VesselBlock.LID,!lid()),3);
@@ -192,6 +213,7 @@ public final class VesselEntity extends BlockEntity {
         v.heat+=(target-v.heat)*coefficient;
         if(v.heat<.1f)v.heat=0;
         if(!v.finished.isEmpty()){
+            if(level.getGameTime()%20==0)v.stage(v.heat>=180?3:4);
             if(v.heat>450&&++v.finishedHotTicks>=200){v.finishedHotTicks=0;Quality.set(v.finished,Quality.get(v.finished)-5);v.setChanged();}
             return;
         }
