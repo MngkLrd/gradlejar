@@ -108,7 +108,7 @@ public final class StudioClient {
             }
         }
         while(keyframe.consumeClick()){if(!Director.active()&&!recorder.active()&&mc.screen==null&&mc.level!=null)notice(Director.add(mc));}
-        while(directorClear.consumeClick()){if(!Director.active()&&mc.screen==null){Director.clear();notice("Director path cleared");}}
+        while(directorClear.consumeClick()){if(!Director.active()&&mc.screen==null){Director.clear();notice("Flyby start cleared");}}
         if(Director.active()){
             while(record.consumeClick()){}while(burst.consumeClick()){}while(edit.consumeClick()){}while(library.consumeClick()){}while(copy.consumeClick()){}while(capture.consumeClick()){}
             while(photo.consumeClick()){}while(clean.consumeClick()){}while(zoomIn.consumeClick()){}while(zoomOut.consumeClick()){}
@@ -197,7 +197,7 @@ public final class StudioClient {
             StudioUi.label(g,mc.font,info,5,3,sw-10,StudioUi.TEXT);
         }
         if(Director.count()>0){
-            String path="DIRECTOR: "+Director.count()+" points | "+keyframe.getTranslatedKeyMessage().getString()+" Add | "+directorPlay.getTranslatedKeyMessage().getString()+" Play | Shift+Play GIF | "+directorClear.getTranslatedKeyMessage().getString()+" Clear";
+            String path="FLYBY: start saved | "+keyframe.getTranslatedKeyMessage().getString()+" Set start | "+directorPlay.getTranslatedKeyMessage().getString()+" Play | Shift+Play GIF | "+directorClear.getTranslatedKeyMessage().getString()+" Clear";
             int y=photoMode?15:1;StudioUi.box(g,0,y,sw,14,0xc8182028);StudioUi.label(g,mc.font,path,5,y+3,sw-10,StudioUi.TEXT);
         }
         if(preferences().number("hud.enabled",1,0,1)==0||System.currentTimeMillis()>=expires)return;

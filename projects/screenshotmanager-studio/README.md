@@ -1,5 +1,5 @@
-# Screenshot Manager 0.6.0 - Director Update
-Minecraft 1.21.1, NeoForge, Java 21. Client-only, no additional mods.
-All 0.5.0 features retained. Studio, Library, Settings and GIF Studio disable vanilla background blur; text inputs focus on click and release focus outside, with Escape first defocusing the input.
-Director: J adds the current camera as a keyframe (2-12 points), L plays the six-second path, Shift+L plays and records a GIF, H clears the path. L stops playback. Stand still during playback; player position and server state are unchanged. Path is client-only, limited to nearby points (48 blocks from player), cleared on world change; the HUD is restored on completion/interruption. Terrain is not collision-checked; plan unobstructed keyframes. Capture requires loaded chunks and is subject to shader compatibility. GIF Studio opens for a recorded path. Controls are rebindable.
-Build: gradle --no-daemon clean build. Gradle 9.2.1. Core smoke tests include camera path endpoints and angle interpolation. In-game QA remains required.
+# Screenshot Manager 0.6.0 - Cinematic Flyby
+Minecraft 1.21.1, NeoForge, Java 21, client only. No additional mods.
+All 0.5.0 functions retained. Fixed vanilla background blur and text focus on custom screens.
+J sets or replaces one start camera. Move the player to the destination. L automatically plays a six-second camera approach towards a clear third-person angle near the stationary player. Shift+L records the same flyby in GIF Studio. H clears the start; L interrupts playback. The path is planned through loaded nearby space (48 blocks), using block collision shapes, bounded grid navigation and collision-checked corner rounding. If no route is found, choose a clearer start. Only the camera moves, not the player or server state. Moving more than 1.5 blocks, changing worlds, opening a screen or new obstacles aborts playback. No manual timeline/keyframes. HUD restored on exit. Shader compatibility and actual camera rendering require client QA.
+Build: gradle --no-daemon clean build (Gradle 9.2.1). Core smoke tests cover direct and obstructed routes, safe smoothing and rejection of unreachable endpoints.
