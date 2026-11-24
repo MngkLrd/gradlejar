@@ -25,7 +25,7 @@ import java.nio.file.Files;
 import java.util.concurrent.CompletableFuture;
 
 public final class StudioClient {
-    private static KeyMapping edit,library,copy,capture,photo,clean,zoomIn,zoomOut,record,burst,keyframe,directorPlay,directorClear,depthKey;
+    private static KeyMapping edit,library,copy,capture,photo,clean,zoomIn,zoomOut,record,burst,keyframe,directorPlay,directorClear,depthKey,cutoutKey;
     private static boolean depthRequested,depthAttempted;
     private static DepthMap pendingDepth,grabDepth;
     private static final ClipRecorder recorder=new ClipRecorder();
@@ -61,6 +61,7 @@ public final class StudioClient {
         keyframe=key("keyframe",GLFW.GLFW_KEY_J);directorPlay=key("director_play",GLFW.GLFW_KEY_L);directorClear=key("director_clear",GLFW.GLFW_KEY_H);
         e.register(keyframe);e.register(directorPlay);e.register(directorClear);
         depthKey=key("depth_capture",GLFW.GLFW_KEY_F4);e.register(depthKey);
+        cutoutKey=key("cutout",GLFW.GLFW_KEY_U);e.register(cutoutKey);
     }
     static Path directory(){return Minecraft.getInstance().gameDirectory.toPath().resolve("screenshots");}
     static StudioPreferences preferences(){
@@ -123,7 +124,7 @@ public final class StudioClient {
         while(directorClear.consumeClick()){if(!Director.active()&&mc.screen==null){Director.clear();notice("Flyby start cleared");}}
         if(Director.active()){
             while(record.consumeClick()){}while(burst.consumeClick()){}while(edit.consumeClick()){}while(library.consumeClick()){}while(copy.consumeClick()){}while(capture.consumeClick()){}
-            while(photo.consumeClick()){}while(clean.consumeClick()){}while(zoomIn.consumeClick()){}while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}
+            while(photo.consumeClick()){}while(clean.consumeClick()){}while(zoomIn.consumeClick()){}while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}while(cutoutKey.consumeClick()){}
             return;
         }
         while(record.consumeClick()){
@@ -133,7 +134,7 @@ public final class StudioClient {
         while(burst.consumeClick()){if(!recorder.active()&&mc.screen==null&&mc.level!=null&&!cleanPending){burstRemaining=5;burstNext=0;}}
         if(recorder.active()){
             while(edit.consumeClick()){} while(library.consumeClick()){} while(copy.consumeClick()){} while(capture.consumeClick()){}
-            while(photo.consumeClick()){} while(clean.consumeClick()){} while(zoomIn.consumeClick()){} while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}
+            while(photo.consumeClick()){} while(clean.consumeClick()){} while(zoomIn.consumeClick()){} while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}while(cutoutKey.consumeClick()){}
             return;
         }
         if(mc.level==null||mc.screen!=null)burstRemaining=0;
@@ -147,6 +148,13 @@ public final class StudioClient {
         }}
         while(zoomIn.consumeClick()){if(photoMode&&mc.screen==null)mc.options.fov().set(Math.max(30,mc.options.fov().get()-5));}
         while(zoomOut.consumeClick()){if(photoMode&&mc.screen==null)mc.options.fov().set(Math.min(110,mc.options.fov().get()+5));}
+        while(cutoutKey.consumeClick()){
+            if(mc.screen==null&&mc.level!=null&&!cleanPending&&!recorder.active()&&burstRemaining==0){
+                if(mc.crosshairPickEntity instanceof net.minecraft.world.entity.LivingEntity target&&target.isAlive()&&!target.isInvisible()){
+                    mc.setScreen(new EntityCutoutScreen(target));
+                }else notice("Aim at a visible living entity");
+            }
+        }
         while(depthKey.consumeClick()){if(mc.screen==null&&mc.level!=null&&!cleanPending&&burstRemaining==0){depthRequested=true;depthAttempted=false;pendingDepth=null;beginClean(mc);}}
         while(clean.consumeClick()){if(mc.screen==null&&mc.level!=null)beginClean(mc);}
         while(capture.consumeClick()){if(mc.screen==null&&mc.level!=null){

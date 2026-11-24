@@ -103,6 +103,15 @@ public final class CoreSmoke {
         var depthResult=new DepthMap.Focus(depths,1000,5,100).apply(ImageDocument.copy(depthOriginal));
         check(depthResult.getRGB(5,3)==depthOriginal.getRGB(5,3),"Depth focus preserves in-focus pixels");
         check(depthResult.getRGB(5,28)!=depthOriginal.getRGB(5,28),"Depth focus blurs distant pixels");
+        var black=new BufferedImage(20,20,BufferedImage.TYPE_INT_RGB);var white=new BufferedImage(20,20,BufferedImage.TYPE_INT_RGB);
+        for(int y=0;y<20;y++)for(int x=0;x<20;x++)white.setRGB(x,y,0xffffffff);
+        for(int y=8;y<12;y++)for(int x=8;x<12;x++){black.setRGB(x,y,0xff884422);white.setRGB(x,y,0xff884422);}
+        var cut=SubjectMask.extract(black,white);
+        check(cut.getRGB(0,0)==0&&cut.getRGB(cut.getWidth()/2,cut.getHeight()/2)==0xff884422,"Entity alpha extraction");
+        var outline=SubjectMask.outline(cut,3,0xffffffff);
+        check(outline.getRGB(outline.getWidth()/2,outline.getHeight()/2)==0xff884422,"Outline preserves subject");
+        int outlines=0;for(int y=0;y<outline.getHeight();y++)for(int x=0;x<outline.getWidth();x++)if(outline.getRGB(x,y)==0xffffffff)outlines++;
+        check(outlines>0,"Entity outline generated");
         System.out.println("Screenshot Manager core smoke tests passed");
     }
 }

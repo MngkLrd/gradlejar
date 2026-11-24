@@ -385,7 +385,11 @@ public final class StudioScreen extends StudioBaseScreen {
         if(busy)return;busy=true;long token=++epoch;int wanted=importIndex+1;
         CompletableFuture.supplyAsync(()->{
             try{var folder=StudioClient.directory().resolve("imports");java.nio.file.Files.createDirectories(folder);
-                try(var list=java.nio.file.Files.list(folder)){return list.filter(java.nio.file.Files::isRegularFile).filter(path->{String n=path.getFileName().toString().toLowerCase(java.util.Locale.ROOT);return n.endsWith(".png")||n.endsWith(".jpg")||n.endsWith(".jpeg");}).sorted().limit(250).toList();}
+                var found=new java.util.ArrayList<java.nio.file.Path>();
+                try(var list=java.nio.file.Files.list(folder)){list.filter(java.nio.file.Files::isRegularFile).filter(path->{String n=path.getFileName().toString().toLowerCase(java.util.Locale.ROOT);return n.endsWith(".png")||n.endsWith(".jpg")||n.endsWith(".jpeg");}).sorted().limit(250).forEach(found::add);}
+                var edits=StudioClient.directory().resolve("edited");
+                if(java.nio.file.Files.isDirectory(edits))try(var list=java.nio.file.Files.list(edits)){list.filter(java.nio.file.Files::isRegularFile).filter(path->path.getFileName().toString().startsWith("cutout_")&&path.getFileName().toString().endsWith(".png")).sorted(java.util.Comparator.reverseOrder()).limit(100).forEach(found::add);}
+                return java.util.List.copyOf(found);
             }catch(Exception e){throw new RuntimeException(e);}
         },ShotFiles.IO).whenComplete((list,error)->Minecraft.getInstance().execute(()->{
             if(!alive||epoch!=token)return;busy=false;
