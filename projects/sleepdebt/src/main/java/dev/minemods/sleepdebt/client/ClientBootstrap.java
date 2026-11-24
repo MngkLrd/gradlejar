@@ -2,52 +2,29 @@ package dev.minemods.sleepdebt.client;
 import dev.minemods.sleepdebt.SleepDebtMod;
 import dev.minemods.sleepdebt.registry.ModEntities;
 import dev.minemods.sleepdebt.registry.ModMenus;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 public final class ClientBootstrap {
  public static void register(IEventBus bus,ModContainer container){
   container.registerConfig(ModConfig.Type.CLIENT,ClientSettings.SPEC);
+  container.registerExtensionPoint(IConfigScreenFactory.class,ConfigurationScreen::new);
   bus.addListener(ClientBootstrap::onGui);
-  bus.addListener(ClientBootstrap::renderers);
-  bus.addListener(ClientBootstrap::layers);
-  bus.addListener(MiragePlayers::modelBake);
-  bus.addListener(SleeplessApparitions::bake);
   bus.addListener(ClientBootstrap::screens);
-  bus.addListener(SleeplessVoidOverlay::registerKeys);
-  NeoForge.EVENT_BUS.addListener(ClientHallucinations::tick);
-  NeoForge.EVENT_BUS.addListener(SleeplessDread::tick);
-  NeoForge.EVENT_BUS.addListener(SleeplessVoidOverlay::tickKeys);
-  NeoForge.EVENT_BUS.addListener(SleeplessVoidOverlay::renderPre);
-  NeoForge.EVENT_BUS.addListener(SleeplessVoidOverlay::renderPost);
-  NeoForge.EVENT_BUS.addListener(MiragePlayers::clientTick);
-  NeoForge.EVENT_BUS.addListener(SleeplessApparitions::tick);
-  NeoForge.EVENT_BUS.addListener(MiragePlayers::renderWorld);
-  NeoForge.EVENT_BUS.addListener(SleeplessApparitions::render);
+  bus.addListener(ClientBootstrap::renderers);
  }
  private static void onGui(RegisterGuiLayersEvent e){
-  // Blackness now executes directly in RenderGuiEvent.Pre, before HUD layers.
-  e.registerAbove(VanillaGuiLayers.FOOD_LEVEL,
-    ResourceLocation.fromNamespaceAndPath(SleepDebtMod.MOD_ID,"sleep_hud"),SleepHud::render);
+  e.registerAbove(VanillaGuiLayers.FOOD_LEVEL,ResourceLocation.fromNamespaceAndPath(SleepDebtMod.MOD_ID,"sleep_hud"),SleepHud::render);
  }
- private static void screens(RegisterMenuScreensEvent e){
-  e.register(ModMenus.COFFEE.get(),CoffeeScreen::new);
- }
- private static void layers(EntityRenderersEvent.RegisterLayerDefinitions e){
-  e.registerLayerDefinition(SleeplessModel.LAYER,SleeplessModel::createLayer);
- }
- private static void renderers(EntityRenderersEvent.RegisterRenderers e){
-  e.registerEntityRenderer(ModEntities.SLEEPLESS.get(),SleeplessRenderer::new);
- }
+ private static void screens(RegisterMenuScreensEvent e){e.register(ModMenus.COFFEE.get(),CoffeeScreen::new);}
+ private static void renderers(EntityRenderersEvent.RegisterRenderers e){e.registerEntityRenderer(ModEntities.SLEEPLESS.get(),NoopRenderer::new);}
  private ClientBootstrap(){}
 }
-
-
-

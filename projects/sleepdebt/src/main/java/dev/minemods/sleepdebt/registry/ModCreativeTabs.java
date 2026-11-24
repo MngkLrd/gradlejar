@@ -59,7 +59,7 @@ public final class ModCreativeTabs {
 
      // Dream-specific content and testing the hostile mob.
      output.accept(ModItems.DREAM_SHARD.get());
-     output.accept(ModItems.SLEEPLESS_EGG.get());
+
     }).build());
 
  private ModCreativeTabs(){}

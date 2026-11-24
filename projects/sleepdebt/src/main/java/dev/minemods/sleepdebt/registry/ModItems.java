@@ -54,8 +54,7 @@ public final class ModItems {
  public static final DeferredItem<BlockItem> AWNING=ITEMS.register("camp_awning",()->new BlockItem(ModBlocks.CAMP_AWNING.get(),new Item.Properties()));
  public static final DeferredItem<BlockItem> CAMP_LANTERN=ITEMS.register("camp_lantern",()->new BlockItem(ModBlocks.CAMP_LANTERN.get(),new Item.Properties()));
  public static final DeferredItem<BlockItem> DREAMCATCHER=ITEMS.register("dreamcatcher",()->new BlockItem(ModBlocks.DREAMCATCHER.get(),new Item.Properties()));
- public static final DeferredItem<SpawnEggItem> SLEEPLESS_EGG=ITEMS.register("sleepless_spawn_egg",
-  ()->new SpawnEggItem(ModEntities.SLEEPLESS.get(),0x26232F,0xBB8498,new Item.Properties()));
+ public static final DeferredItem<Item> SLEEPLESS_EGG=ITEMS.registerSimpleItem("sleepless_spawn_egg",new Item.Properties());
  private ModItems(){}
 }
 
