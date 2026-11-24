@@ -106,3 +106,12 @@ idea {
         downloadJavadoc = true
     }
 }
+
+// Run real headless image-engine assertions as part of every CI build.
+tasks.register('coreSmoke', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.kirill.screenshotmanager.core.CoreSmoke'
+    systemProperty 'java.awt.headless', 'true'
+}
+tasks.named('check') { dependsOn 'coreSmoke' }
