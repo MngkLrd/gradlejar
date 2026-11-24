@@ -7,5 +7,7 @@
   "key.screenshotmanager.photo": "Toggle Photo Mode",
   "key.screenshotmanager.clean": "Capture without HUD",
   "key.screenshotmanager.zoom_in": "Photo Mode zoom in",
-  "key.screenshotmanager.zoom_out": "Photo Mode zoom out"
+  "key.screenshotmanager.zoom_out": "Photo Mode zoom out",
+  "key.screenshotmanager.record": "Start / stop GIF recording",
+  "key.screenshotmanager.burst": "Burst capture (5 screenshots)"
 }

@@ -1,6 +1,8 @@
 package com.kirill.screenshotmanager.client;
 
 import com.kirill.screenshotmanager.core.ImageDocument;
+import com.kirill.screenshotmanager.core.ProjectStore;
+import com.kirill.screenshotmanager.core.CreatorExport;
 import com.kirill.screenshotmanager.core.ImageDocument.Tool;
 import com.kirill.screenshotmanager.core.ImageDocument.Filter;
 import com.kirill.screenshotmanager.core.ShotFiles;
@@ -30,7 +32,8 @@ public final class StudioScreen extends Screen {
     private BufferedImage rendered;
     private StudioTexture texture,comparisonTexture;
     private boolean compareMode;
-    private int panel,selected=-1,layerScroll,toolScroll,adjustScroll;
+    private int panel,selected=-1,layerScroll,toolScroll,adjustScroll,exportQuality=90,exportSide=0,exportBudget=0;
+    private boolean exportJpeg,renderedCurrent;
     private final int[] grade=new int[6];
     private static final String[] GRADE_NAMES={"Brightness","Contrast","Saturation","Warmth","Gamma","Vignette"};
     private boolean movingLayer;private int moveX,moveY;
@@ -87,7 +90,7 @@ public final class StudioScreen extends Screen {
     private void renderDoc(boolean resetView){
         if(doc==null)return;
         compareMode=false;
-        busy=true;status="Rendering...";long token=++epoch;
+        renderedCurrent=false;busy=true;status="Rendering...";long token=++epoch;
         ImageDocument current=doc;var ops=current.snapshot();
         CompletableFuture.supplyAsync(()->{
             BufferedImage full=current.render(ops);
@@ -101,7 +104,7 @@ public final class StudioScreen extends Screen {
                 if(texture!=null)texture.close();
                 if(comparisonTexture!=null){comparisonTexture.close();comparisonTexture=null;}
                 selected=Math.min(selected,doc.count()-1);
-                texture=next;rendered=result.full();
+                texture=next;rendered=result.full();renderedCurrent=true;
                 if(resetView){zoom=1;panX=panY=0;}
                 imageBounds();
                 status="Ready  |  "+doc.count()+" edit(s)  |  Original protected";
@@ -119,7 +122,7 @@ public final class StudioScreen extends Screen {
     private void redo(){if(doc!=null&&!busy&&doc.canRedo()){doc.redo();renderDoc(false);}}
     private void reset(){if(doc!=null&&!busy){doc.reset();number=1;renderDoc(true);}}
     private void output(boolean copy,boolean jpg,int max){
-        if(rendered==null||busy)return;
+        if(rendered==null||busy||!renderedCurrent)return;
         BufferedImage image=rendered;busy=true;status=copy?"Copying...":"Exporting...";
         long token=++epoch;
         CompletableFuture.supplyAsync(()->{
@@ -171,12 +174,13 @@ public final class StudioScreen extends Screen {
             g.disableScissor();
         }else g.drawCenteredString(font,busy?"Loading...":"No image",cx+cw/2,cy+ch/2,StudioUi.MUTED);
         int sx=sideX+6,sw=sideW-12;
-        String[] tabs={"Tools","Layers","Color"};
-        int tabWidth=sw/3;
-        for(int i=0;i<3;i++){int chosen=i;action(g,tabs[i],sx+i*tabWidth,50,tabWidth-2,15,mx,my,panel==i,()->{panel=chosen;dragging=false;text.setFocused(false);});}
+        String[] tabs={"Tools","Layers","Color","File"};
+        int tabWidth=sw/4;
+        for(int i=0;i<4;i++){int chosen=i;action(g,tabs[i],sx+i*tabWidth,50,tabWidth-2,15,mx,my,panel==i,()->{panel=chosen;dragging=false;text.setFocused(false);});}
         if(panel==0)drawTools(g,mx,my,sx,sw);
         else if(panel==1)drawLayers(g,mx,my,sx,sw);
-        else drawGrade(g,mx,my,sx,sw);
+        else if(panel==2)drawGrade(g,mx,my,sx,sw);
+        else drawFile(g,mx,my,sx,sw);
         text.visible=panel==0&&height>=195&&!compareMode;
         StudioUi.box(g,0,height-21,width,21,StudioUi.PANEL);
         String info=rendered==null?"":rendered.getWidth()+" x "+rendered.getHeight()+"  |  "+Math.round(scale*100)+"%";
@@ -264,7 +268,7 @@ public final class StudioScreen extends Screen {
     }
     private void preset(int... v){System.arraycopy(v,0,grade,0,6);}
     private void compare(){
-        if(busy||rendered==null||doc==null)return;
+        if(busy||rendered==null||doc==null||!renderedCurrent)return;
         if(compareMode){compareMode=false;return;}
         if(comparisonTexture!=null){compareMode=true;return;}
         busy=true;long token=++epoch;var current=doc;var image=rendered;
@@ -277,13 +281,47 @@ public final class StudioScreen extends Screen {
                 }));
     }
     private void exportCompare(){
-        if(busy||doc==null||rendered==null)return;
+        if(busy||doc==null||rendered==null||!renderedCurrent)return;
         busy=true;long token=++epoch;var current=doc;var image=rendered;
         CompletableFuture.supplyAsync(()->{
             try{return ShotFiles.export(StudioClient.directory(),shot,current.compare(image),false,0);}
             catch(Exception e){throw new RuntimeException(e);}
         },ShotFiles.IO).whenComplete((result,error)->Minecraft.getInstance().execute(()->{
             if(!alive||token!=epoch)return;busy=false;status=error==null?"Comparison saved: "+result.getFileName():"Comparison export failed";
+        }));
+    }
+    private void drawFile(GuiGraphics g,int mx,int my,int sx,int sw){
+        int y=69,step=Math.max(11,Math.min(20,(height-96)/7)),h=step-2;
+        action(g,"Save project",sx,y,sw,h,mx,my,false,()->project(false));
+        action(g,"Load project",sx,y+=step,sw,h,mx,my,false,()->project(true));
+        action(g,exportJpeg?"Format: JPEG":"Format: PNG",sx,y+=step,sw,h,mx,my,false,()->exportJpeg=!exportJpeg);
+        action(g,"Quality: "+exportQuality+"%",sx,y+=step,sw,h,mx,my,false,()->exportQuality=exportQuality<=40?100:exportQuality-10);
+        action(g,exportSide==0?"Size: original":"Long side: "+exportSide,sx,y+=step,sw,h,mx,my,false,()->exportSide=exportSide==0?3840:exportSide==3840?1920:exportSide==1920?1280:exportSide==1280?840:exportSide==840?640:0);
+        action(g,exportBudget==0?"Limit: none":"Limit: "+exportBudget+" KB",sx,y+=step,sw,h,mx,my,false,()->exportBudget=exportBudget==0?2000:exportBudget==2000?1000:exportBudget==1000?500:exportBudget==500?250:0);
+        action(g,"Export image",sx,y+=step,sw,h,mx,my,false,this::customExport);
+    }
+    private void project(boolean load){
+        if(busy||doc==null)return;
+        busy=true;status=load?"Loading project...":"Saving project...";long token=++epoch;
+        var ops=doc.snapshot();
+        CompletableFuture.supplyAsync(()->{
+            try{if(load)return ProjectStore.load(shot.path());ProjectStore.save(shot.path(),ops);return ops;}
+            catch(Exception e){throw new RuntimeException(e);}
+        },ShotFiles.IO).whenComplete((result,error)->Minecraft.getInstance().execute(()->{
+            if(!alive||token!=epoch)return;busy=false;
+            if(error!=null){status="Project: "+message(error);return;}
+            if(load){doc.restore(result);selected=-1;renderDoc(true);}else status="Project saved next to original";
+        }));
+    }
+    private void customExport(){
+        if(busy||rendered==null||!renderedCurrent)return;
+        busy=true;status="Exporting...";long token=++epoch;
+        var image=rendered;boolean jpeg=exportJpeg;int quality=exportQuality,side=exportSide,budget=exportBudget;
+        CompletableFuture.supplyAsync(()->{
+            try{return CreatorExport.save(StudioClient.directory().resolve("edited"),image,jpeg,quality,side,budget*1000L);}
+            catch(Exception e){throw new RuntimeException(e);}
+        },ShotFiles.IO).whenComplete((path,error)->Minecraft.getInstance().execute(()->{
+            if(!alive||token!=epoch)return;busy=false;status=error==null?"Saved "+path.getFileName():"Export: "+message(error);
         }));
     }
     private void selection(GuiGraphics g){
@@ -309,7 +347,7 @@ public final class StudioScreen extends Screen {
     private int px(double x){return Math.max(0,Math.min(rendered.getWidth()-1,(int)((x-ix)/scale)));}
     private int py(double y){return Math.max(0,Math.min(rendered.getHeight()-1,(int)((y-iy)/scale)));}
     private void commitMark(){
-        if(doc==null||busy||compareMode)return;
+        if(doc==null||busy||compareMode||!renderedCurrent)return;
         if(tool==Tool.COPY_REGION){
             int x=Math.min(ax,bx),y=Math.min(ay,by),w=Math.abs(ax-bx)+1,h=Math.abs(ay-by)+1;
             BufferedImage source=rendered;busy=true;long token=++epoch;
@@ -333,7 +371,7 @@ public final class StudioScreen extends Screen {
             }
         }
         if(canvas(x,y)&&rendered!=null&&(button==2||(button==0&&tool==Tool.PAN))){panning=true;return true;}
-        if(panel==1&&button==0&&canvas(x,y))return true;
+        if((panel==1||panel==3)&&button==0&&canvas(x,y))return true;
         if(button==0&&image(x,y)&&!busy){
             text.setFocused(false);setFocused(null);
             ax=bx=px(x);ay=by=py(y);points.clear();

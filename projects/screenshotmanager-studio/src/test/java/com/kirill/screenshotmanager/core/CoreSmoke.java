@@ -40,7 +40,25 @@ public final class CoreSmoke {
         var restored=new StudioPreferences(prefPath,root);
         check(restored.favorite(png)&&restored.album(png).equals("Builds"),"Persist album and favorite");
         check(restored.albums().equals(List.of("Builds"))&&restored.number("hud.seconds",5,2,20)==8,"Persist settings");
-        Files.delete(prefPath);Files.delete(png);Files.delete(jpg);Files.delete(root.resolve("edited"));Files.delete(root);
+        ProjectStore.save(png,layers.snapshot());
+        var loaded=ProjectStore.load(png);
+        var reopened=new ImageDocument(img);reopened.restore(loaded);
+        check(reopened.count()==layers.count(),"Project layer count");
+        check(reopened.render(reopened.snapshot()).getRGB(14,4)==layers.render(layers.snapshot()).getRGB(14,4),"Project layer rendering");
+        check(reopened.render(reopened.snapshot()).getRGB(0,0)==layers.render(layers.snapshot()).getRGB(0,0),"Project adjustment rendering");
+        var custom=CreatorExport.save(root.resolve("edited"),img,true,75,20,20000);
+        check(Files.size(custom)<=20000&&ShotFiles.read(custom,0).getWidth()==20,"Custom JPEG export");
+        var grid=CreatorExport.collage(List.of(img,rotated),false);
+        check(grid.getWidth()==1944&&grid.getHeight()==556,"Collage dimensions");
+        var anim=ClipCodec.save(root.resolve("clips"),List.of(new ClipCodec.Frame(img,0),new ClipCodec.Frame(edited,100),new ClipCodec.Frame(img,200)),0,3,10,64,20000);
+        check(anim.bytes()<=20000&&anim.frames()==3,"GIF encoding and limit");
+        var reader=javax.imageio.ImageIO.getImageReadersByFormatName("gif").next();
+        try(var in=javax.imageio.ImageIO.createImageInputStream(anim.path().toFile())){
+            reader.setInput(in);check(reader.getNumImages(true)==3,"GIF contains all frames");
+        }finally{reader.dispose();}
+        Files.delete(anim.path());Files.delete(root.resolve("clips"));
+        Files.delete(png.resolveSibling(png.getFileName()+".smproject"));
+        Files.delete(custom);Files.delete(prefPath);Files.delete(png);Files.delete(jpg);Files.delete(root.resolve("edited"));Files.delete(root);
         System.out.println("Screenshot Manager core smoke tests passed");
     }
 }
