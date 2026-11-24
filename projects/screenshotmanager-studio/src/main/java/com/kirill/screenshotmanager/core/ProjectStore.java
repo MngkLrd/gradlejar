@@ -18,8 +18,12 @@ public final class ProjectStore {
         }catch(java.security.NoSuchAlgorithmException e){throw new IOException(e);}
     }
     public static void save(Path source,List<Operation> ops)throws IOException{
+        saveTo(source,ops,sidecar(source));
+    }
+    public static void saveRecovery(Path source,List<Operation> ops)throws IOException{saveTo(source,ops,source.resolveSibling(source.getFileName()+".smrecovery"));}
+    private static void saveTo(Path source,List<Operation> ops,Path target)throws IOException{
         if(ops.size()>100)throw new IOException("Too many layers");
-        Path target=sidecar(source),tmp=Files.createTempFile(target.getParent(),"project-",".tmp");
+        Path tmp=Files.createTempFile(target.getParent(),"project-",".tmp");
         try{
             try(var out=new DataOutputStream(new BufferedOutputStream(Files.newOutputStream(tmp)))){
                 out.writeUTF("SMPROJECT1");out.writeUTF(fingerprint(source));out.writeInt(ops.size());
@@ -49,7 +53,10 @@ public final class ProjectStore {
         }finally{Files.deleteIfExists(tmp);}
     }
     public static List<Operation> load(Path source)throws IOException{
-        Path file=sidecar(source);
+        return loadFrom(source,sidecar(source));
+    }
+    public static List<Operation> loadRecovery(Path source)throws IOException{return loadFrom(source,source.resolveSibling(source.getFileName()+".smrecovery"));}
+    private static List<Operation> loadFrom(Path source,Path file)throws IOException{
         if(Files.size(file)>8_000_000)throw new IOException("Project too large");
         try(var in=new DataInputStream(new BufferedInputStream(Files.newInputStream(file)))){
             if(!in.readUTF().equals("SMPROJECT1")||!in.readUTF().equals(fingerprint(source)))throw new IOException("Original image changed");

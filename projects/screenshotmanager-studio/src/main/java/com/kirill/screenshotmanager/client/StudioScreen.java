@@ -2,6 +2,7 @@ package com.kirill.screenshotmanager.client;
 
 import com.kirill.screenshotmanager.core.ImageDocument;
 import com.kirill.screenshotmanager.core.ProPhoto;
+import com.kirill.screenshotmanager.core.AdvancedPhoto;
 import com.kirill.screenshotmanager.core.DepthMap;
 import com.kirill.screenshotmanager.core.ProjectStore;
 import com.kirill.screenshotmanager.core.CreatorExport;
@@ -25,7 +26,7 @@ import java.util.function.Supplier;
 
 public final class StudioScreen extends StudioBaseScreen {
     private static final Tool[] TOOLS=Tool.values();
-    private static final String[] TOOL_LABELS={"Pan","Crop","Rect","Ellipse","Arrow","Line","Pen","Text","Highlight","Mosaic","Blur","Redact","Number","Copy area","Marker","Eraser","Focus blur","Focus shade","Depth focus"};
+    private static final String[] TOOL_LABELS={"Pan","Crop","Rect","Ellipse","Arrow","Line","Pen","Text","Highlight","Mosaic","Blur","Redact","Number","Copy area","Marker","Eraser","Focus blur","Focus shade","Depth focus","Pick color","Fill rect"};
     private static final int[] COLORS={0xffff535e,0xffffd04e,0xff5de2ac,0xff62bafa,0xfff4f6fa,0xff111111};
     private final Shot shot;
     private final Screen parent;
@@ -47,6 +48,22 @@ public final class StudioScreen extends StudioBaseScreen {
     private static final String[] EFFECT_NAMES={"Bloom","Film grain","Color fringe","Vignette","Sharpen","Atmosphere","Letterbox"};
     private final ArrayList<StudioSlider> sliders=new ArrayList<>();
     private StudioSlider activeSlider;
+    private final int[][] advanced=java.util.Arrays.stream(AdvancedPhoto.Kind.values()).map(k->new int[k.count]).toArray(int[][]::new);
+    private static final String[] MODES={"Basic","Tone / Curves","Cinematic","HSL mixer","Color wheels","Tilt Shift","Clarity / Dehaze","Gradient"};
+    private static final String[][] ADV_NAMES={
+        {"Red hue","Red sat","Red light","Yellow hue","Yellow sat","Yellow light","Green hue","Green sat","Green light","Cyan hue","Cyan sat","Cyan light","Blue hue","Blue sat","Blue light","Magenta hue","Magenta sat","Magenta light"},
+        {"Shadow warmth","Shadow tint","Mid warmth","Mid tint","Light warmth","Light tint"},
+        {"Focus position","Band width","Angle","Blur","Feather","Saturation"},
+        {"Clarity","Dehaze","Saturation","Exposure"},
+        {"Position","Angle","Feather","Exposure","Warmth"}
+    };
+    private StudioTexture liveTexture;
+    private boolean draftDirty,previewRunning,autoSave=true;
+    private long previewRevision,previewDue;
+    private int captionStyle=1,captionAngle,canvasPreset,toolPage;
+    private static final int[][] CANVAS={{1280,720},{840,473},{512,512},{1920,1080},{1080,1920},{2560,1080}};
+    private int editColorChannel;
+    private static final java.util.concurrent.ExecutorService AUTOSAVE=java.util.concurrent.Executors.newSingleThreadExecutor(r->{Thread t=new Thread(r,"sm-autosave");t.setDaemon(true);return t;});
     private int imageSize=100,imageAngle=0,imageOpacity=100,importIndex=-1;
     private java.nio.file.Path importPath;
     private String draft="",status="Opening original...";
@@ -101,7 +118,7 @@ public final class StudioScreen extends StudioBaseScreen {
     private record Result(BufferedImage full,BufferedImage preview){}
     private void renderDoc(boolean resetView){
         if(doc==null)return;
-        compareMode=false;
+        clearPreview();compareMode=false;
         renderedCurrent=false;busy=true;status="Rendering...";long token=++epoch;
         ImageDocument current=doc;var ops=current.snapshot();
         CompletableFuture.supplyAsync(()->{
@@ -129,16 +146,17 @@ public final class StudioScreen extends StudioBaseScreen {
         if(doc==null||busy)return;
         confirmReset=false;
         if(!doc.add(operation)){status="100 edit limit reached. Export this image to continue.";return;}
-        selected=doc.count()-1;renderDoc(resetView);
+        selected=doc.count()-1;saveRecovery();renderDoc(resetView);
     }
-    private void undo(){if(doc!=null&&!busy&&doc.canUndo()){doc.undo();renderDoc(false);}}
-    private void redo(){if(doc!=null&&!busy&&doc.canRedo()){doc.redo();renderDoc(false);}}
+    private void undo(){if(doc!=null&&!busy&&doc.canUndo()){doc.undo();saveRecovery();renderDoc(false);}}
+    private void redo(){if(doc!=null&&!busy&&doc.canRedo()){doc.redo();saveRecovery();renderDoc(false);}}
     private void reset(){if(doc!=null&&!busy&&doc.count()>0){
         if(!confirmReset){confirmReset=true;status="Click Undo all again to clear edits (reversible)";return;}
-        confirmReset=false;doc.reset();number=1;selected=-1;renderDoc(true);
+        confirmReset=false;doc.reset();number=1;selected=-1;saveRecovery();renderDoc(true);
     }}
     private void output(boolean copy,boolean jpg,int max){
         if(rendered==null||busy||!renderedCurrent)return;
+        if(draftDirty){status="Apply or cancel preview before export";return;}
         BufferedImage image=rendered;busy=true;status=copy?"Copying...":"Exporting...";
         long token=++epoch;
         CompletableFuture.supplyAsync(()->{
@@ -175,7 +193,7 @@ public final class StudioScreen extends StudioBaseScreen {
         int row=16,visibleTools=Math.max(1,(height-75)/row);
         toolScroll=Math.max(0,Math.min(toolScroll,TOOLS.length-visibleTools));
         for(int i=toolScroll;i<Math.min(TOOLS.length,toolScroll+visibleTools);i++){
-            Tool chosen=TOOLS[i];action(g,TOOL_LABELS[i],4,49+(i-toolScroll)*row,toolW-8,14,mx,my,tool==chosen,()->{tool=chosen;selected=-1;dragging=false;textPending=false;panel=0;clearTextFocus();});
+            Tool chosen=TOOLS[i];action(g,TOOL_LABELS[i],4,49+(i-toolScroll)*row,toolW-8,14,mx,my,tool==chosen,()->{clearPreview();tool=chosen;selected=-1;dragging=false;textPending=false;panel=0;clearTextFocus();});
         }
         if(texture!=null&&!peek){
             g.enableScissor(cx,cy,cx+cw,cy+ch);
@@ -184,7 +202,7 @@ public final class StudioScreen extends StudioBaseScreen {
                 int ww=Math.max(1,(int)(comparisonTexture.width*k)),hh=Math.max(1,(int)(comparisonTexture.height*k));
                 comparisonTexture.draw(g,cx+(cw-ww)/2,cy+(ch-hh)/2,ww,hh);
             }else{
-                texture.draw(g,ix,iy,iw,ih);
+                (liveTexture!=null&&panel==2&&draftDirty?liveTexture:texture).draw(g,ix,iy,iw,ih);
                 if(dragging)selection(g);
                 if(textPending)StudioUi.label(g,font,draft.isBlank()?"Type text, Enter to place":draft,ix+(int)(textX*scale),iy+(int)(textY*scale),Math.max(20,cw),0xffffffff);
                 if(brush()&&image(mx,my))brushCursor(g,mx,my);
@@ -197,7 +215,7 @@ public final class StudioScreen extends StudioBaseScreen {
         int sx=sideX+6,sw=sideW-12;
         String[] tabs={"Tools","Layers","Color","File"};
         int tabWidth=sw/4;
-        for(int i=0;i<4;i++){int chosen=i;action(g,tabs[i],sx+i*tabWidth,50,tabWidth-2,15,mx,my,panel==i,()->{panel=chosen;dragging=false;textPending=false;clearTextFocus();});}
+        for(int i=0;i<4;i++){int chosen=i;action(g,tabs[i],sx+i*tabWidth,50,tabWidth-2,15,mx,my,panel==i,()->{if(panel!=chosen)clearPreview();panel=chosen;dragging=false;textPending=false;clearTextFocus();});}
         if(panel==0)drawTools(g,mx,my,sx,sw);
         else if(panel==1)drawLayers(g,mx,my,sx,sw);
         else if(panel==2)drawGrade(g,mx,my,sx,sw);
@@ -211,7 +229,7 @@ public final class StudioScreen extends StudioBaseScreen {
         if(text.visible)text.render(g,mx,my,dt);
     }
     private boolean needsText(){
-        return tool==Tool.TEXT||(doc!=null&&selected>=0&&selected<doc.count()&&ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ImageDocument.MarkOperation m&&m.value().tool()==Tool.TEXT);
+        return tool==Tool.TEXT||(doc!=null&&selected>=0&&selected<doc.count()&&ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof AdvancedPhoto.Caption)||(doc!=null&&selected>=0&&selected<doc.count()&&ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ImageDocument.MarkOperation m&&m.value().tool()==Tool.TEXT);
     }
     private void clearTextFocus(){text.setFocused(false);setFocused(null);}
     private void slider(GuiGraphics g,String label,int x,int y,int w,int min,int max,int value,int reset,java.util.function.IntConsumer setter){
@@ -243,7 +261,11 @@ public final class StudioScreen extends StudioBaseScreen {
             StudioUi.box(g,x+1,y+1,cell-4,13,chosen);
             hits.add(new StudioUi.Hit(x,yy,cell-2,15,()->color=chosen));
         }
-        y+=21;
+        y+=19;
+        action(g,String.format("#%06X",color&0xffffff),sx,y,sw-26,13,mx,my,false,()->{editColorChannel=(editColorChannel+1)%3;});
+        action(g,new String[]{"R","G","B"}[editColorChannel],sx+sw-24,y,22,13,mx,my,false,()->editColorChannel=(editColorChannel+1)%3);y+=16;
+        int shift=(2-editColorChannel)*8;
+        slider(g,"Channel "+((color>>>shift)&255),sx,y,sw,0,255,(color>>>shift)&255,255,v->color=(color&~(255<<shift))|(v<<shift));y+=25;
         slider(g,"Size "+thickness+" px",sx,y,sw,1,80,thickness,6,v->thickness=v);y+=27;
         if(tool==Tool.HIGHLIGHT||tool==Tool.HIGHLIGHT_BRUSH){slider(g,"Opacity "+opacity+"%",sx,y,sw,5,99,opacity,33,v->opacity=v);y+=27;}
         if(tool==Tool.BLUR||tool==Tool.PIXELATE){slider(g,"Censor "+strength,sx,y,sw,3,96,strength,18,v->strength=v);y+=27;}
@@ -251,37 +273,44 @@ public final class StudioScreen extends StudioBaseScreen {
             slider(g,(tool==Tool.DEPTH_FOCUS?"Focus range ":"Radius ")+focusRadius+"%",sx,y,sw,5,100,focusRadius,25,v->focusRadius=v);y+=27;
             slider(g,"Strength "+focusAmount+"%",sx,y,sw,0,100,focusAmount,65,v->focusAmount=v);y+=27;
         }
+        if(needsText()&&y+30<height-22){
+            action(g,new String[]{"Plain","Outline","Shadow","Label","Italic","Mono"}[captionStyle],sx,y,sw,14,mx,my,false,()->captionStyle=(captionStyle+1)%6);y+=16;
+            slider(g,"Text angle "+captionAngle,sx,y,sw,-180,180,captionAngle,0,v->captionAngle=v);y+=27;
+        }
         if(y+16<height-22){
             action(g,"Rotate",sx,y,sw/2-2,16,mx,my,false,()->apply(ImageDocument.filter(Filter.ROTATE),true));
             action(g,"Flip",sx+sw/2,y,sw/2-2,16,mx,my,false,()->apply(ImageDocument.filter(Filter.FLIP),true));
         }
     }
-    private void changed(boolean success){if(success){selected=Math.min(selected,doc.count()-1);renderDoc(false);}else status="Layer cannot be changed across crop / rotate";}
+    private void changed(boolean success){if(success){selected=Math.min(selected,doc.count()-1);saveRecovery();renderDoc(false);}else status="Layer cannot be changed across crop / rotate";}
     private void drawLayers(GuiGraphics g,int mx,int my,int sx,int sw){
         if(doc==null)return;
         var ops=doc.snapshot();
         g.drawString(font,"LAYERS  "+ops.size(),sx,73,StudioUi.ACCENT,false);
-        int slots=Math.max(1,(height-155)/15);
+        int slots=Math.max(1,(height-172)/15);
         layerScroll=Math.max(0,Math.min(layerScroll,Math.max(0,ops.size()-slots)));
         for(int r=0;r<Math.min(slots,ops.size()-layerScroll);r++){
             int i=ops.size()-1-r-layerScroll,y=86+r*15;var op=ops.get(i);
             action(g,(ImageDocument.geometry(op)?"LOCK ":ImageDocument.visible(op)?"ON ":"OFF ")+op.label(),sx,y,sw,13,mx,my,i==selected,()->{
-                selected=i;
+                clearPreview();selected=i;
                 if(ImageDocument.unwrap(op) instanceof ImageDocument.MarkOperation mark){
                     var m=mark.value();color=m.color()|0xff000000;thickness=m.thickness();strength=m.strength();draft=m.text();text.setValue(draft);if(m.tool()==Tool.HIGHLIGHT||m.tool()==Tool.HIGHLIGHT_BRUSH)opacity=(m.color()>>>24)==255?33:Math.max(5,(m.color()>>>24)*100/255);
                 }else if(ImageDocument.unwrap(op) instanceof ImageDocument.Adjustment gr){
-                    grade[0]=gr.brightness();grade[1]=gr.contrast();grade[2]=gr.saturation();grade[3]=gr.warmth();grade[4]=gr.gamma();grade[5]=gr.vignette();
+                    grade[0]=gr.brightness();grade[1]=gr.contrast();grade[2]=gr.saturation();grade[3]=gr.warmth();grade[4]=gr.gamma();grade[5]=gr.vignette();gradeMode=0;
                 }else if(ImageDocument.unwrap(op) instanceof ProPhoto.Tone t){System.arraycopy(t.values(),0,tone,0,tone.length);gradeMode=1;}
                 else if(ImageDocument.unwrap(op) instanceof ProPhoto.Effects e){System.arraycopy(e.values(),0,effects,0,effects.length);gradeMode=2;}
                 else if(ImageDocument.unwrap(op) instanceof ProPhoto.ImageLayer im){imageSize=im.size();imageAngle=im.rotation();imageOpacity=im.opacity();}
+                else if(ImageDocument.unwrap(op) instanceof AdvancedPhoto.Adjust ad){gradeMode=3+ad.kind().ordinal();System.arraycopy(ad.values(),0,advanced[ad.kind().ordinal()],0,ad.kind().count);}
+                else if(ImageDocument.unwrap(op) instanceof AdvancedPhoto.Caption c){draft=c.text();text.setValue(draft);color=c.color();thickness=Math.max(1,Math.min(80,c.size()/4));captionStyle=c.style();captionAngle=c.angle();}
             });
         }
-        int y=height-66,w=sw/3;
+        int y=height-83,w=sw/3;
         action(g,"On/Off",sx,y,w-2,15,mx,my,false,()->{if(!busy&&!compareMode)changed(doc.toggle(selected));});
         action(g,"Up",sx+w,y,w-2,15,mx,my,false,()->{if(!busy&&!compareMode){boolean ok=doc.move(selected,1);if(ok)selected++;changed(ok);}});
         action(g,"Down",sx+2*w,y,w-2,15,mx,my,false,()->{if(!busy&&!compareMode){boolean ok=doc.move(selected,-1);if(ok)selected--;changed(ok);}});
         action(g,"Delete",sx,y+17,sw/2-2,15,mx,my,false,()->{if(!busy&&!compareMode)changed(doc.delete(selected));});
         action(g,"Apply style",sx+sw/2,y+17,sw/2-2,15,mx,my,false,this::applyStyle);
+        action(g,"Duplicate",sx,y+34,sw,15,mx,my,false,()->{if(!busy&&!compareMode){boolean ok=doc.duplicate(selected);if(ok)selected++;changed(ok);}});
     }
     private void applyStyle(){
         if(doc==null||busy||compareMode||selected<0||selected>=doc.count())return;
@@ -293,36 +322,78 @@ public final class StudioScreen extends StudioBaseScreen {
         else if(op instanceof ProPhoto.Tone)changed(doc.replace(selected,new ProPhoto.Tone(tone)));
         else if(op instanceof ProPhoto.Effects)changed(doc.replace(selected,new ProPhoto.Effects(effects)));
         else if(op instanceof ProPhoto.ImageLayer im)changed(doc.replace(selected,im.transform(im.x(),im.y(),imageSize,imageAngle,imageOpacity)));
+        else if(op instanceof AdvancedPhoto.Adjust ad)changed(doc.replace(selected,new AdvancedPhoto.Adjust(ad.kind(),advanced[ad.kind().ordinal()])));
+        else if(op instanceof AdvancedPhoto.Caption c)changed(doc.replace(selected,new AdvancedPhoto.Caption(draft,c.x(),c.y(),thickness*4,color,captionStyle,captionAngle)));
         else status="Select an annotation or color layer";
     }
     private ImageDocument.Adjustment currentGrade(){return new ImageDocument.Adjustment(grade[0],grade[1],grade[2],grade[3],grade[4],grade[5]);}
+    private ImageDocument.Operation draftOperation(){
+        return gradeMode==0?currentGrade():gradeMode==1?new ProPhoto.Tone(tone):gradeMode==2?new ProPhoto.Effects(effects):new AdvancedPhoto.Adjust(AdvancedPhoto.Kind.values()[gradeMode-3],advanced[gradeMode-3]);
+    }
+    private void clearPreview(){
+        draftDirty=false;previewRevision++;
+        if(liveTexture!=null){liveTexture.close();liveTexture=null;}
+    }
+    private void requestPreview(){
+        if(busy||rendered==null||compareMode||panel!=2)return;
+        draftDirty=true;previewRevision++;previewDue=System.nanoTime()+25_000_000L;
+        status="Live preview | Apply to keep / Cancel to discard";
+    }
+    @Override public void tick(){
+        super.tick();
+        if(!draftDirty||previewRunning||busy||rendered==null||panel!=2||System.nanoTime()<previewDue)return;
+        long rev=previewRevision,token=epoch;BufferedImage base=rendered;var op=draftOperation();
+        previewRunning=true;
+        CompletableFuture.supplyAsync(()->op.apply(ImageDocument.copy(ImageDocument.resize(base,768))),ShotFiles.IO)
+            .whenComplete((img,error)->Minecraft.getInstance().execute(()->{
+                previewRunning=false;
+                if(!alive||epoch!=token||!draftDirty||panel!=2)return;
+                if(error!=null){status="Preview failed";clearPreview();return;}
+                try{var next=new StudioTexture(img);if(liveTexture!=null)liveTexture.close();liveTexture=next;}
+                catch(Exception e){clearPreview();return;}
+                if(rev==previewRevision)previewDue=Long.MAX_VALUE;
+            }));
+    }
+    private void applyDraft(){
+        if(busy||doc==null)return;
+        var op=draftOperation();clearPreview();apply(op,false);
+        java.util.Arrays.fill(grade,0);java.util.Arrays.fill(tone,0);java.util.Arrays.fill(effects,0);for(int[] v:advanced)java.util.Arrays.fill(v,0);
+    }
     private void drawGrade(GuiGraphics g,int mx,int my,int sx,int sw){
-        action(g,new String[]{"Basic","Tone / Curves","Cinematic"}[gradeMode],sx,68,sw,15,mx,my,false,()->{gradeMode=(gradeMode+1)%3;adjustScroll=0;});
-        int[] values=gradeMode==0?grade:gradeMode==1?tone:effects;
-        String[] names=gradeMode==0?GRADE_NAMES:gradeMode==1?TONE_NAMES:EFFECT_NAMES;
-        int slots=Math.max(1,Math.min(values.length,(height-146)/25));
+        int w=sw/3;
+        action(g,"<",sx,68,17,15,mx,my,false,()->{clearPreview();gradeMode=(gradeMode+MODES.length-1)%MODES.length;adjustScroll=0;});
+        action(g,MODES[gradeMode],sx+19,68,sw-38,15,mx,my,false,()->{clearPreview();gradeMode=(gradeMode+1)%MODES.length;adjustScroll=0;});
+        action(g,">",sx+sw-17,68,17,15,mx,my,false,()->{clearPreview();gradeMode=(gradeMode+1)%MODES.length;adjustScroll=0;});
+        int[] values=gradeMode==0?grade:gradeMode==1?tone:gradeMode==2?effects:advanced[gradeMode-3];
+        String[] names=gradeMode==0?GRADE_NAMES:gradeMode==1?TONE_NAMES:gradeMode==2?EFFECT_NAMES:ADV_NAMES[gradeMode-3];
+        int slots=Math.max(1,Math.min(values.length,(height-151)/25));
         adjustScroll=Math.max(0,Math.min(adjustScroll,values.length-slots));
         for(int r=0;r<slots;r++){
             int i=r+adjustScroll,y=87+r*25;
-            int min=gradeMode==2||gradeMode==0&&i==5||gradeMode==1&&(i==3||i==4)?0:-100;
-            slider(g,names[i]+" "+values[i],sx,y,sw,min,100,values[i],0,v->values[i]=v);
+            int min=gradeMode==2||gradeMode==0&&i==5||gradeMode==1&&(i==3||i==4)||gradeMode==5&&(i==1||i==3||i==4)||gradeMode==7&&i==2?0:-100;
+            slider(g,names[i]+" "+values[i],sx,y,sw,min,100,values[i],0,v->{values[i]=v;requestPreview();});
         }
-        int y=height-55,w=sw/3;
-        if(gradeMode==0){
-            action(g,"Film",sx,y,w-2,14,mx,my,false,()->preset(4,22,12,18,0,25));
-            action(g,"B&W",sx+w,y,w-2,14,mx,my,false,()->preset(0,18,-100,0,0,15));
-            action(g,"Night",sx+w*2,y,w-2,14,mx,my,false,()->preset(15,10,12,-16,25,10));
+        int y=height-66;
+        if(gradeMode==5){
+            action(g,"Miniature",sx,y,sw/2-2,14,mx,my,false,()->{int[] a={0,22,0,85,30,18};System.arraycopy(a,0,values,0,6);requestPreview();});
+            action(g,"Diagonal",sx+sw/2,y,sw/2-2,14,mx,my,false,()->{int[] a={0,22,25,85,30,18};System.arraycopy(a,0,values,0,6);requestPreview();});
+        }else if(gradeMode==0){
+            action(g,"Film",sx,y,w-2,14,mx,my,false,()->{preset(4,22,12,18,0,25);requestPreview();});
+            action(g,"B&W",sx+w,y,w-2,14,mx,my,false,()->{preset(0,18,-100,0,0,15);requestPreview();});
+            action(g,"Night",sx+w*2,y,w-2,14,mx,my,false,()->{preset(15,10,12,-16,25,10);requestPreview();});
         }else if(gradeMode==2){
-            action(g,"Film",sx,y,w-2,14,mx,my,false,()->{int[] preset={35,18,6,25,8,0,65};System.arraycopy(preset,0,effects,0,effects.length);});
-            action(g,"Dream",sx+w,y,w-2,14,mx,my,false,()->{int[] preset={70,4,0,8,0,30,0};System.arraycopy(preset,0,effects,0,effects.length);});
-            action(g,"Horror",sx+w*2,y,w-2,14,mx,my,false,()->{int[] preset={12,35,15,60,15,20,40};System.arraycopy(preset,0,effects,0,effects.length);});
-        }else StudioUi.label(g,font,"Scroll for RGB controls",sx,y+3,sw,StudioUi.MUTED);
-        action(g,"Add layer",sx,y+16,sw/2-2,15,mx,my,false,()->apply(gradeMode==0?currentGrade():gradeMode==1?new ProPhoto.Tone(tone):new ProPhoto.Effects(effects),false));
-        action(g,"Zero",sx+sw/2,y+16,sw/2-2,15,mx,my,false,()->java.util.Arrays.fill(values,0));
+            action(g,"Film",sx,y,w-2,14,mx,my,false,()->{int[] a={35,18,6,25,8,0,65};System.arraycopy(a,0,values,0,7);requestPreview();});
+            action(g,"Dream",sx+w,y,w-2,14,mx,my,false,()->{int[] a={70,4,0,8,0,30,0};System.arraycopy(a,0,values,0,7);requestPreview();});
+            action(g,"Horror",sx+w*2,y,w-2,14,mx,my,false,()->{int[] a={12,35,15,60,15,20,40};System.arraycopy(a,0,values,0,7);requestPreview();});
+        }else StudioUi.label(g,font,"Scroll for more controls",sx,y+3,sw,StudioUi.MUTED);
+        action(g,"Apply",sx,y+16,w-2,15,mx,my,false,this::applyDraft);
+        action(g,"Cancel",sx+w,y+16,w-2,15,mx,my,false,this::clearPreview);
+        action(g,"Zero",sx+2*w,y+16,w-2,15,mx,my,false,()->{java.util.Arrays.fill(values,0);requestPreview();});
     }
     private void preset(int... v){System.arraycopy(v,0,grade,0,6);}
     private void compare(){
         if(busy||rendered==null||doc==null||!renderedCurrent)return;
+        if(draftDirty){status="Apply or cancel preview first";return;}
         if(compareMode){compareMode=false;return;}
         if(comparisonTexture!=null){compareMode=true;return;}
         busy=true;long token=++epoch;var current=doc;var image=rendered;
@@ -345,7 +416,7 @@ public final class StudioScreen extends StudioBaseScreen {
         }));
     }
     private void drawFile(GuiGraphics g,int mx,int my,int sx,int sw){
-        int y=69,step=Math.max(10,Math.min(17,(height-96)/10)),h=step-2;
+        int y=69,step=Math.max(10,Math.min(16,(height-96)/13)),h=step-2;
         action(g,"Save project",sx,y,sw,h,mx,my,false,()->project(false));
         action(g,"Load project",sx,y+=step,sw,h,mx,my,false,()->project(true));
         action(g,exportJpeg?"Format: JPEG":"Format: PNG",sx,y+=step,sw,h,mx,my,false,()->exportJpeg=!exportJpeg);
@@ -356,13 +427,20 @@ public final class StudioScreen extends StudioBaseScreen {
         action(g,importPath==null?"Pick import":importPath.getFileName().toString(),sx,y+=step,sw,h,mx,my,false,this::pickImport);
         action(g,"Add image",sx,y+=step,sw,h,mx,my,false,this::importImage);
         action(g,"Scene info",sx,y+=step,sw,h,mx,my,false,this::sceneInfo);
+        action(g,"Thumbnail Studio",sx,y+=step,sw,h,mx,my,false,()->{if(!busy&&rendered!=null&&!draftDirty)Minecraft.getInstance().setScreen(new ThumbnailScreen(shot,rendered,this));});
+        int[] wh=CANVAS[canvasPreset];action(g,"Canvas "+wh[0]+"x"+wh[1],sx,y+=step,sw,h,mx,my,false,()->canvasPreset=(canvasPreset+1)%CANVAS.length);
+        action(g,"Resize / fit",sx,y+=step,sw,h,mx,my,false,()->apply(new AdvancedPhoto.Canvas(wh[0],wh[1],false),true));
+    }
+    private void saveRecovery(){
+        if(!autoSave||doc==null)return;var ops=doc.snapshot();var path=shot.path();
+        AUTOSAVE.execute(()->{try{com.kirill.screenshotmanager.core.RecoveryStore.save(path,ops);}catch(Exception ignored){}});
     }
     private void project(boolean load){
         if(busy||doc==null)return;
         busy=true;status=load?"Loading project...":"Saving project...";long token=++epoch;
         var ops=doc.snapshot();
         CompletableFuture.supplyAsync(()->{
-            try{if(load)return ProjectStore.load(shot.path());ProjectStore.save(shot.path(),ops);return ops;}
+            try{if(load)return ProjectStore.exists(shot.path())?ProjectStore.load(shot.path()):com.kirill.screenshotmanager.core.RecoveryStore.load(shot.path());ProjectStore.save(shot.path(),ops);return ops;}
             catch(Exception e){throw new RuntimeException(e);}
         },ShotFiles.IO).whenComplete((result,error)->Minecraft.getInstance().execute(()->{
             if(!alive||token!=epoch)return;busy=false;
@@ -372,6 +450,7 @@ public final class StudioScreen extends StudioBaseScreen {
     }
     private void customExport(){
         if(busy||rendered==null||!renderedCurrent)return;
+        if(draftDirty){status="Apply or cancel preview first";return;}
         busy=true;status="Exporting...";long token=++epoch;
         var image=rendered;boolean jpeg=exportJpeg;int quality=exportQuality,side=exportSide,budget=exportBudget;
         CompletableFuture.supplyAsync(()->{
@@ -457,6 +536,8 @@ public final class StudioScreen extends StudioBaseScreen {
             }));return;
         }
         if(tool==Tool.TEXT&&draft.isBlank()){status="Enter annotation text";return;}
+        if(tool==Tool.TEXT){apply(new AdvancedPhoto.Caption(draft,ax,ay+thickness*4,thickness*4,color,captionStyle,captionAngle),false);return;}
+        if(tool==Tool.EYEDROPPER){color=rendered.getRGB(ax,ay)|0xff000000;status=String.format("Picked #%06X",color&0xffffff);return;}
         if(tool==Tool.DEPTH_FOCUS){depthFocus();return;}
         if(tool==Tool.FOCUS||tool==Tool.FOCUS_SHADE){apply(new ProPhoto.Focus(ax,ay,focusRadius,focusAmount,tool==Tool.FOCUS_SHADE),false);return;}
         if(tool==Tool.CROP&&(Math.abs(ax-bx)<2||Math.abs(ay-by)<2)){status="Select a larger region";return;}
@@ -474,7 +555,7 @@ public final class StudioScreen extends StudioBaseScreen {
         }
         if((compareMode||peek)&&canvas(x,y))return true;
         if(panel==1&&button==0&&image(x,y)&&!busy&&selected>=0&&selected<doc.count()){
-            if((ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ImageDocument.MarkOperation||ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ProPhoto.ImageLayer)&&!ImageDocument.geometry(doc.snapshot().get(selected))){
+            if((ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ImageDocument.MarkOperation||ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ProPhoto.ImageLayer||ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof AdvancedPhoto.Caption)&&!ImageDocument.geometry(doc.snapshot().get(selected))){
                 movingLayer=true;moveX=px(x);moveY=py(y);return true;
             }
         }
@@ -484,7 +565,7 @@ public final class StudioScreen extends StudioBaseScreen {
             text.setFocused(false);setFocused(null);
             ax=bx=px(x);ay=by=py(y);points.clear();
             if(tool==Tool.TEXT){textPending=true;textX=ax;textY=ay;panel=0;text.visible=true;setFocused(text);text.setFocused(true);status="Type annotation, Enter to place";return true;}
-            if(tool==Tool.NUMBER||tool==Tool.FOCUS||tool==Tool.FOCUS_SHADE||tool==Tool.DEPTH_FOCUS){commitMark();return true;}
+            if(tool==Tool.NUMBER||tool==Tool.FOCUS||tool==Tool.FOCUS_SHADE||tool==Tool.DEPTH_FOCUS||tool==Tool.EYEDROPPER){commitMark();return true;}
             dragging=true;setDragging(true);return true;
         }
         return super.mouseClicked(x,y,button);
@@ -517,6 +598,7 @@ public final class StudioScreen extends StudioBaseScreen {
         if(textPending&&(key==GLFW.GLFW_KEY_ENTER||key==GLFW.GLFW_KEY_KP_ENTER)){if(draft.isBlank()){status="Type text first";return true;}ax=bx=textX;ay=by=textY;points.clear();textPending=false;clearTextFocus();commitMark();return true;}
         if(text.visible&&text.isFocused())return super.keyPressed(key,scancode,mods);
         if(hasControlDown()){
+            if(key==GLFW.GLFW_KEY_V){pasteImage();return true;}
             if(key==GLFW.GLFW_KEY_Z){if(hasShiftDown())redo();else undo();return true;}
             if(key==GLFW.GLFW_KEY_Y){redo();return true;}
             if(key==GLFW.GLFW_KEY_S){if(hasShiftDown())exportCompare();else output(false,false,0);return true;}
@@ -524,7 +606,13 @@ public final class StudioScreen extends StudioBaseScreen {
         }
         return super.keyPressed(key,scancode,mods);
     }
+    private void pasteImage(){
+        if(busy||doc==null||rendered==null)return;busy=true;long token=++epoch;int x=rendered.getWidth()/2,y=rendered.getHeight()/2;
+        CompletableFuture.supplyAsync(()->{try{return ClipboardLayers.read(x,y);}catch(Exception e){throw new RuntimeException(e);}},ShotFiles.IO).whenComplete((layer,error)->Minecraft.getInstance().execute(()->{
+            if(!alive||token!=epoch)return;busy=false;if(error!=null){status="Clipboard has no supported image";return;}apply(layer,false);panel=1;
+        }));
+    }
     @Override public boolean isPauseScreen(){return false;}
     @Override public void onClose(){Minecraft.getInstance().setScreen(parent);}
-    @Override public void removed(){alive=false;epoch++;busy=false;dragging=panning=false;if(texture!=null){texture.close();texture=null;}if(comparisonTexture!=null){comparisonTexture.close();comparisonTexture=null;}doc=null;rendered=null;compareMode=false;movingLayer=false;activeSlider=null;textPending=false;}
+    @Override public void removed(){clearPreview();alive=false;epoch++;busy=false;dragging=panning=false;if(texture!=null){texture.close();texture=null;}if(comparisonTexture!=null){comparisonTexture.close();comparisonTexture=null;}doc=null;rendered=null;compareMode=false;movingLayer=false;activeSlider=null;textPending=false;}
 }
