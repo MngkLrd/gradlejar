@@ -1,0 +1,2 @@
+# Huss Huss Huss 0.2.0-beta
+Minecraft 1.21.1 NeoForge 21.1.x, Java 21, Gradle 9.2.1. Standalone, no other mods required. /give @s husshusshuss:discipline_whistle. Right click adult villager or whistle nearby; sneak-right-click trains up to six. 18 seconds, dedicated animated villager model, boxing/flexing/high knees, synchronized three-beat voice and impact particles. Original synthesized voice pre-generated, not sampled. Client and server require the mod. Build: gradle clean build, Python 3 only for resource restoration. In-game validation pending.

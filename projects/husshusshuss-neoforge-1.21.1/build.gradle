@@ -1,0 +1,20 @@
+plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
+group='dev.ataflore.huss'
+version='0.2.0-beta'
+base.archivesName='husshusshuss-neoforge-mc1.21.1'
+java.toolchain.languageVersion=JavaLanguageVersion.of(21)
+neoForge {
+    version=project.neo_version
+    runs { client { client() }; server { server() } }
+    mods { husshusshuss { sourceSet(sourceSets.main) } }
+}
+tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=21 }
+tasks.register('generateAssets', Exec) {
+    inputs.files('tools/generate_assets.py','tools/huss.ogg.b64z')
+    outputs.dir(layout.buildDirectory.dir('generated/hussassets'))
+    commandLine 'python3', 'tools/generate_assets.py', layout.buildDirectory.dir('generated/hussassets').get().asFile.absolutePath
+}
+tasks.named('processResources') {
+    dependsOn 'generateAssets'
+    from(layout.buildDirectory.dir('generated/hussassets'))
+}
