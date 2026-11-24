@@ -183,7 +183,11 @@ public final class VesselEntity extends BlockEntity {
         return r instanceof SoupPotRecipe?r:null;
     }
     private void finish(PotRecipe recipe,PotBlockEntity.PotInventory inv,int n){
-        if(!recipe.matches(inv,level)||!(recipe.getOutput(inv) instanceof SoupPotRecipe.SoupOutput soup)||soup.stack().isEmpty())return;
+        if(!recipe.matches(inv,level))return;
+        PotRecipe.Output result;
+        RecipeHelpers.setCraftingInput(inv,4,9);
+        try { result=recipe.getOutput(inv); } finally { RecipeHelpers.clearCraftingInput(); }
+        if(!(result instanceof SoupPotRecipe.SoupOutput soup)||soup.stack().isEmpty())return;
         ItemStack out=soup.stack();
         int servings=out.getCount()*n;
         if(servings>out.getMaxStackSize()){
@@ -196,7 +200,7 @@ public final class VesselEntity extends BlockEntity {
         int stageScore=count==0?70:score/count;
         int tempScore=Mth.clamp(100-Math.round(100f*overheatTicks/Math.max(1,hotTicks)),0,100);
         int q=Math.round(stageScore*.55f+tempScore*.35f+10);
-        finished=out.copyWithCount(servings);Quality.set(finished,q);
+        finished=out.copyWithCount(servings);Quality.finish(finished,q,ingredients);
         for(int i=0;i<5;i++){ingredients.set(i,ItemStack.EMPTY);exposure[i]=0;}
         tank.drain(n*1000,net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE);
         resetProgress();finishedHotTicks=0;stage(3);sound(SoundEvents.GENERIC_EXTINGUISH_FIRE);setChanged();

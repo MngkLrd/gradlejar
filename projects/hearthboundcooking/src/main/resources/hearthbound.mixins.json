@@ -10,9 +10,9 @@
     "GrillMixin",
     "FoodDataMixin",
     "FirmalifeOvenRecipeMixin",
-    "FirmalifeOvenMixin",
     "VanillaFurnaceMixin",
-    "SaladMixin"
+    "SaladMixin",
+    "MealModifierMixin"
   ],
   "injectors": {
     "defaultRequire": 0

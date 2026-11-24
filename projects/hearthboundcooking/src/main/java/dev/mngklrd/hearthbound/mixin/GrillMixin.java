@@ -14,11 +14,13 @@ public abstract class GrillMixin {
     @Inject(method="handleCooking",at=@At("RETURN"))
     private void hearthbound$hold(CallbackInfo ci){
         GrillBlockEntity g=(GrillBlockEntity)(Object)this;
+        if(g.getLevel()==null||g.getLevel().isClientSide)return;
         g.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(h->{
-            for(int i=0;i<5;i++){
+            for(int i=0;i<5&&i+4<h.getSlots();i++){
                 ItemStack s=h.getStackInSlot(i+4);
                 if(s!=hearthbound$previous[i]){hearthbound$previous[i]=s;hearthbound$exposure[i]=0;}
-                if(Quality.has(s)&&g.getTemperature()>300&&HeatCapability.getTemperature(s)>220&&++hearthbound$exposure[i]>=100){
+                if(!Quality.has(s)||!Quality.fresh(s)||g.getTemperature()<=300||HeatCapability.getTemperature(s)<=220){hearthbound$exposure[i]=0;continue;}
+                if(++hearthbound$exposure[i]>=100){
                     Quality.set(s,Quality.get(s)-5);hearthbound$exposure[i]=0;g.markForSync();
                 }
             }

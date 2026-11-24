@@ -1,10 +1,13 @@
-# Hearthbound Cooking 0.1.0 — development alpha
+# Hearthbound Cooking 0.3.0 — development alpha
 Minecraft 1.20.1 Forge, Java 17, TerraFirmaCraft 3.2.x. Install on server and client.
-Uses the existing TFC soup recipe, nutrition and expiry; does not add food recipes.
-- Place a vessel directly above a TFC firepit or Firmalife oven bottom. No new heater.
-- Add fluid with compatible container, ingredients with right click. Sneak-click to add up to capacity of one ingredient. Use three to five equally sized ingredient groups, 1–3 groups per clay pot or 1–6 per bronze pot. Each group requires 1000 mB of water. Add protein first, then grain, then fruit/vegetables. Sneak with an empty hand toggles lid. Sneak with stick removes last ingredient group.
-- Open lid is faster; closed lid simmers more slowly and retains heat. State and sound, not countdown. Use native bowls to extract servings. Breaking spills finished liquid; raw ingredients drop.
-- Quality in 5% steps minimizes stack fragmentation. TFC heating recipes and normal soup receive quality; grill hot holding lowers it. Firmalife oven recipe/timer hooks are optional. Vanilla furnace and smoker receive quality and can lose quality when held hot; their recipe and output stacking rules remain. Food cooking progress arrow is hidden. Salads are graded on freshness and ingredient quality.
-- Freshness remains TFC-managed. Quality adjusts saturation, never nutrition categories or hunger. No fixed recipe copies.
-- Alpha limitations: custom vessel menu with synchronized ingredients, fluid level, lid and serving quality; fill water and serve bowls in-world. No native staged soup slot changes, no support for arbitrary non-soup pot recipes, no global grading of cold crafting or machine output. No actual game test yet.
-Build: gradle --no-daemon clean build. JAR: build/libs/hearthboundcooking-0.1.0.jar.
+No original food recipe is replaced. Raw ingredients are never assigned a grade by collection, inventory scanning, or eating. A supported cooking result receives a quality grade from the actual process. Previously graded ingredients contribute 20% of the final score; ungraded ingredients contribute no inherited grade, not zero.
+- TFC heating recipes: actual valid heat threshold, edible result, no marking merely heated same-item raw inputs.
+- Native TFC pot: soup, jam and immediate food results at native completion, remaining containers excluded. Custom stockpot uses native soup output and native crafting context.
+- Salads and TFC MealModifier (including supported sandwiches): grade only assembled result; ingredients remain intact. Recipe previews can calculate a result grade but must not mutate inputs.
+- Firmalife oven: optional heating-recipe hook. Removed unsafe getTicksLeft override; native timer remains for compatibility.
+- Vanilla furnace/smoker: grade only a successful burn result, weight accumulated output score; no temporary tag stripping or recipe matching override. Native processing and automation stay in control.
+- Quality affects saturation only, not original nutrient categories, hunger, freshness or recipe ingredients. Scores quantized in steps of five; different grades may form distinct inventory stacks.
+- Data packs can exclude intermediate output items via hearthboundcooking:ungraded_outputs or opt in same-ID thermal preparations via hearthboundcooking:prepared_same_item.
+- New vessels still support native soup recipes only; original pot and recipes are unaffected. Arbitrary TFG industrial machine outputs and unsupported Firmalife devices require separate verified adapters; not universally covered.
+Build: gradle --no-daemon clean build. JAR: build/libs/hearthboundcooking-0.3.0.jar.
+Quality arithmetic test is part of Gradle check. In-game regression testing is still required: raw food, roasted food, soups with mixed grades, jam, rice, salads, sandwiches, Firmalife ovens, hoppers, full stacks, expiry, save/reload, JEI/EMI.
