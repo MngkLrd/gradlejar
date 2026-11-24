@@ -50,6 +50,18 @@ public final class WarehouseSortSessions {
 
     private WarehouseSortSessions() {}
 
+    public static boolean conflicts(ServerLevel level,List<ContainerRef> refs){
+        for(Job other:ACTIVE.values()){
+            if(other.level!=level)continue;
+            for(ContainerRef a:refs)for(ContainerRef b:other.containers){
+                if(a.pos().equals(b.pos())||a.pos().equals(b.partnerPos())||
+                        b.pos().equals(a.partnerPos())||
+                        (a.partnerPos()!=null&&a.partnerPos().equals(b.partnerPos())))return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean isRunning(UUID player) {
         return ACTIVE.containsKey(player);
     }
@@ -66,17 +78,9 @@ public final class WarehouseSortSessions {
         if (containers.isEmpty()) return false;
         // Two overlapping virtual-buffer jobs must not touch the same
         // physical inventory while their layouts are being processed.
-        for (Job other : ACTIVE.values()) {
-            if (other.level != level) continue;
-            for (ContainerRef incoming : containers) {
-                for (ContainerRef claimed : other.containers) {
-                    if (incoming.pos().equals(claimed.pos())) {
-                        player.displayClientMessage(Component.literal(
-                                "Simple Sorter: these chests are already being sorted by another player."), true);
-                        return false;
-                    }
-                }
-            }
+        if(conflicts(level,containers)){
+            player.displayClientMessage(Component.literal("Simple Sorter: these chests are already being sorted."),true);
+            return false;
         }
         InteractionHand hand = player.getItemInHand(InteractionHand.MAIN_HAND) == wand
                 ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
@@ -128,7 +132,11 @@ public final class WarehouseSortSessions {
         private final InteractionHand hand;
         private final List<ContainerRef> containers;
         private final SortingWandSettings settings;
-        private final WarehouseVacuumSorter.Session session;
+        private WarehouseVacuumSorter.Session session;
+        private static final int MAX_ROUNDS=4;
+        private int rounds=1,totalMoved,totalRejected,totalTransactions,totalCompleted,compactedAtRoundStart;
+        private boolean convergenceLimited;
+        private String lastFailure="none";
         private final Set<BlockPos> changed = new HashSet<>();
         private final List<MoveRecord> visualMoves = new ArrayList<>();
         private final MoveListener listener = move -> {
@@ -151,11 +159,17 @@ public final class WarehouseSortSessions {
             this.hand = hand;
             this.containers = List.copyOf(containers);
             this.settings = settings;
-            this.session = WarehouseVacuumSorter.begin(containers);
+            this.session = WarehouseVacuumSorter.begin(containers,ref->ContainerScanner.canAccess(level,player,ref),
+                    settings.mode()==com.kirill.simplesorter.settings.SortingMode.BY_MOD);
         }
 
         private boolean advance(ServerPlayer player) {
             ticks++;
+            ItemStack held=player.getItemInHand(hand);
+            if(held.isEmpty()||held.getItem()!=ModItems.SORTING_WAND.get()){
+                player.displayClientMessage(Component.literal("Simple Sorter: stopped (wand no longer held)."),true);
+                return true;
+            }
             if (ticks > MAX_JOB_TICKS) {
                 player.displayClientMessage(Component.literal(
                         "Simple Sorter: sorting stopped after the safety time limit. "
@@ -166,13 +180,17 @@ public final class WarehouseSortSessions {
                 player.displayClientMessage(Component.literal(
                         "Simple Sorter: " + (compaction
                         ? "packing containers " + compactIndex + "/" + containers.size()
-                        : "buffer sorting chest " + Math.min(session.currentChestIndex() + 1, containers.size())
+                        : (session.isPlanning()?"planning warehouse ":"applying plan ") + Math.min(session.currentChestIndex() + 1, containers.size())
                                 + "/" + containers.size())
-                        + "; transferred " + session.movedItems()
+                        + "; transferred " + (totalMoved+session.movedItems())
                         + " items between chests. Job still running."), true);
             }
             if (!compaction) {
                 if (session.step(level, listener, SORT_SLOTS_PER_TICK, SORT_TIME_PER_TICK_NS)) {
+                    if(session.unsafe()){
+                        player.displayClientMessage(Component.literal("Simple Sorter: stopped by inventory safety audit. Check latest.log."),false);
+                        return true;
+                    }
                     compaction = true;
                 }
                 return false;
@@ -185,16 +203,36 @@ public final class WarehouseSortSessions {
                     && (done == 0 || System.nanoTime() < deadline)) {
                 int current = compactIndex++;
                 ContainerRef container = containers.get(current);
-                if (!container.isValid()) continue;
+                if (!container.isValid() || !session.eligibleForCompaction(container)) continue;
                 if (InventoryMover.needsCompaction(container)) {
-                    compactedItems += InventoryMover.cleanUpContainer(container, listener);
+                    var audit=InventoryConservation.count(InventoryConservation.snapshot(container.handler()));
+                    compactedItems+=InventoryMover.cleanUpContainer(container,listener);
+                    InventoryConservation.requireEqual(audit,
+                            InventoryConservation.count(InventoryConservation.snapshot(container.handler())),
+                            "compaction at "+container.pos());
                 }
                 session.refreshContainer(current);
                 done++;
             }
             if (compactIndex < containers.size()) return false;
 
-            int count = session.movedItems() + compactedItems;
+            totalMoved+=session.movedItems();
+            totalRejected+=session.rejectedTransfers();
+            totalTransactions+=session.totalComponents();
+            totalCompleted+=session.completedComponents();
+            if(session.rejectedTransfers()>0)lastFailure=session.lastFailure();
+            // Compaction can change the stack-count objective. Re-snapshot
+            // automatically instead of requiring repeated wand clicks.
+            boolean changedThisRound=session.totalComponents()>0 || compactedItems>compactedAtRoundStart;
+            if(changedThisRound && totalRejected==0 && rounds<MAX_ROUNDS){
+                rounds++;compactedAtRoundStart=compactedItems;
+                session=WarehouseVacuumSorter.begin(containers,ref->ContainerScanner.canAccess(level,player,ref),
+                    settings.mode()==com.kirill.simplesorter.settings.SortingMode.BY_MOD);
+                compaction=false;compactIndex=0;
+                return false;
+            }
+            convergenceLimited=changedThisRound&&totalRejected==0&&rounds>=MAX_ROUNDS;
+            int count = totalMoved + compactedItems;
             if (count > 0) {
                 SortingVisuals.playSortingEffects(level, changed, visualMoves, settings);
             }
@@ -205,22 +243,23 @@ public final class WarehouseSortSessions {
                 if (count > 0) SortingWandItem.consumeUse(wand, player);
             }
 
-            int unresolved = session.unresolvedMixedChests();
-            int unknown = session.unknownFamilySlots();
+            var quality=session.quality();
+            int unresolved=quality.mixed();
+            int unknown=session.unknownFamilySlots();
             player.displayClientMessage(Component.literal(
-                    "Simple Sorter completed (virtual wand buffer): " + session.movedItems()
+                    "Simple Sorter completed: " + totalMoved
                             + " items transferred BETWEEN chests; "
                             + compactedItems + " items compacted WITHIN chests. "
-                            + unresolved + " mixed chests remain (small families may share a chest); "
-                            + unknown + " misc/fallback slots. "
-                            + "Inventory groups: " + session.batchCount() + ". "
-                            + "Skipped restricted chests: " + session.skippedChests()
-                            + "; rejected buffer batches: " + session.rejectedTransfers() + "."
-                            + (session.rejectedTransfers() > 0
-                                ? " Reason: " + session.lastFailure() + "." : "")
-                            + (session.skippedChests() > 0
-                                ? " Some inventories cannot be safely extracted/refilled." : "")),
-                    session.skippedChests() == 0 && session.rejectedTransfers() == 0);
+                            + (settings.mode()==com.kirill.simplesorter.settings.SortingMode.BY_MOD?"Mod purity: ":"Coherence: ") + quality.score() + "%; mixed: " + unresolved
+                            + "/" + quality.occupied() + "; unknown slots: " + unknown + ". "
+                            + (convergenceLimited ? "Refinement limit reached. " : "")
+                            + (totalRejected>0 ? "Rejected transactions: "+totalRejected+". "+lastFailure+". " : "")
+                            + (session.skippedChests()>0 ? "Restricted inventories: "+session.skippedChests()+". " : "")),
+                    false);
+            player.displayClientMessage(Component.literal("Simple Sorter planning: "+session.eligibilitySummary()),false);
+            org.slf4j.LoggerFactory.getLogger("SimpleSorter/SortSessions").info(
+                    "Refinement rounds {}, transactions {}/{}, mixed {}/{}, coherence {}, limited {}",
+                    rounds,totalCompleted,totalTransactions,unresolved,quality.occupied(),quality.score(),convergenceLimited);
             if (unknown > 0) {
                 player.displayClientMessage(Component.literal(
                         "Simple Sorter unknown item IDs: "

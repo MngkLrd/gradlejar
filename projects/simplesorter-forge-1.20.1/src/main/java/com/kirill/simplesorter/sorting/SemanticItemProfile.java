@@ -43,6 +43,8 @@ public record SemanticItemProfile(
      * Exact item identity is not stackability: NBT checks belong to the mover.
      */
     public int affinity(SemanticItemProfile other) {
+        if(group.startsWith("mod/")&&other.group.startsWith("mod/"))
+            return group.equals(other.group)?100:0;
         if (!moveAllowed || !other.moveAllowed) return 0;
         if (itemId.equals(other.itemId) && group.equals(other.group)
                 && purpose.equals(other.purpose) && form.equals(other.form)) return 100;

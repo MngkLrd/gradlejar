@@ -1,4 +1,114 @@
-# Simple Sorter 0.10.0 (Forge 1.20.1)
+# Simple Sorter 0.10.6 (Forge 1.20.1) — release candidate 3
+
+## Sort by Mod
+
+Select Sort by Mod in the wand settings or use the saved mode with RMB.
+Groups by the item's registered namespace, not localized names.
+The global planner, dedicated allocation, vertical columns, fixed slots,
+permissions and item/NBT audits are reused. Mod labels use Forge display
+names, falling back to namespace. Smart Categories retains its classifier.
+Existing mode IDs are retained; BY_MOD uses index 4 (index 2 remains
+the legacy compact alias). Both client and server must use 0.10.6.
+
+
+## Purity-first correction
+
+A user warehouse scan found 25 logical inventories, 46 physical blocks,
+828 slots and 11 empty inventories. Discovery was not the observed
+bottleneck. The former contiguous packing candidates could mix semantic
+groups despite spare capacity; spatial/fragmentation costs could reward
+such layouts. A single restricted item also excluded a whole chest.
+
+- Make unrelated-group minority slots the first objective; family
+  separation second; affinity, concentration and geography third.
+- Add dedicated group/family/material candidates and a bounded minority
+  evacuation pass into compatible or empty storage. No requirement to
+  fill a chest before opening the next. Keep original placement if better.
+- Pin individual protected or non-extractable slots instead of excluding
+  their entire inventory. Do not compact inventories containing fixed
+  slots. Preserve transaction audits.
+- Recover common functional categories from registry path tokens and
+  category tags, not per-mod item tables. Unknown opaque IDs remain unknown.
+- Persist final sort summary in chat, including actual planning eligibility,
+  free eligible inventories, fixed slots, and rejection reasons.
+
+Tests reproduce the reported 25/828/11 geometry and verify that
+unrelated groups separate when capacity permits. Real modpack behavior
+still requires verification. No forced claims of perfect optimality.
+
+
+## 0.10.4: hardening and validation
+
+- Fix compact settings compilation and constrain translated button captions.
+- Slice snapshots and revalidation across ticks; one global candidate per
+  search step. Cache sort keys and aggregate repeated profiles. A candidate
+  or indivisible transfer cycle can exceed the soft tick budget.
+- Recheck access on both chest halves, reject overlapping jobs across modes,
+  stop when the wand is no longer held.
+- Audit serialized item identity and counts before and after transactions
+  and rollback; abort on mismatches. Audit compaction and recover observed
+  remainders. No guarantee against arbitrary broken third-party handlers.
+- Test full 40-chest layouts, new capacity, repeated sorting, tagged stacks,
+  rejected insertion, external edits and a 384-storage planner stress case.
+
+## Release gate
+
+0.10.4 is RC1. Test the actual modpack warehouse, vanilla and modded
+double chests, capacity, repeat activation, GUI scale and server tick cost.
+If all pass, publish stable 0.11.0 without extra features. Use 0.10.5–0.10.x
+only for concrete verified blockers.
+
+
+## 0.10.3: stable refinement, semantic labels and compact wand screen
+
+The global planner compares deterministic capacity/geometry candidates.
+An unchanged legal layout wins score ties. A job automatically re-plans
+after transfers/compaction, up to four rounds, and reports if refinement
+did not settle within that cap. New activations still scan fresh live
+storage; no persisted chest category ownership. Restricted inventories
+excluded by the global snapshot are not compacted by the Smart job.
+
+Labels and the final coherence report now share one semantic evaluator.
+Iron forms are labeled Iron; related different metals can be Metals &
+Minerals; unrelated groups remain Mixed. The score is mean pair affinity
+over occupied slots, not a claim of perfect mathematical sorting.
+Unknown exact item IDs get an item label when it fits the packet limit.
+Existing labels, materials and packet formats are retained.
+
+A compact two-page vanilla-style wand screen replaces the old fixed
+410x322 panel. Main: mode, radius, sort, deposit, advanced, save/cancel.
+Advanced: preview/highlights/particles, auto-organize, label style and
+supply loading, defaults, rules reload and save. Standard widgets,
+bounded panel layout, tooltips, English/Russian translations.
+No JAR delivery requested before 0.10.4.
+
+
+## 0.10.1–0.10.2 internal milestones: global adaptive planning and spatial layout
+
+Smart Categories takes one fresh snapshot of every eligible inventory in
+the selected radius. No independent 16/32-chest sorting windows. Candidate
+layouts consider real slot capacity, semantic groups, material and form
+boundaries, and legal placements. Small warehouses can co-locate related
+groups; with spare capacity the planner may separate materials/forms.
+Unknown items use exact identity, not invented similarity. Original
+placement is always a valid fallback and a worse score is not accepted.
+
+Spatial candidates group actual chest footprints into vertical columns,
+top to bottom, including double-chest midpoints. Same material spread over
+many columns and distant storage is penalized; related groups have a weaker
+proximity preference. Irregular horizontal warehouses work too. The
+semantic impurity and fragmentation score is evaluated together with
+spatial quality; no mandatory warehouse shape.
+
+Execution decomposes the single global plan into independent paths and
+cycles, checking live sources, target validity and touched inventories.
+The hidden buffer is emptied within each transaction and never persists
+between ticks. A failed component does not cancel unrelated components.
+The planning pass and an indivisible large cycle can exceed a tick budget;
+performance, full audit and cancellation behavior are scheduled for
+0.10.4. Label/purity presentation and re-sort stability remain 0.10.3.
+No new dependencies or changes to wand recipes/UI.
+
 
 ## 0.10.0 internal milestone: semantic item classification
 

@@ -88,12 +88,27 @@ public final class ClientWarehouseLabels {
         }
         Map<Long, RenderLabel> incoming = new HashMap<>();
         for (WarehouseLabelsPayload.Entry entry : payload.labels()) {
-            String key = "label.simplesorter." + entry.family();
-            Component text = Component.translatableWithFallback(key,entry.family().replace('_',' '));
+            String family=entry.family();
+            String shortName=family;
+            if(family.startsWith("material/"))shortName=family.substring("material/".length());
+            else if(family.startsWith("group/"))shortName=family.substring("group/".length());
+            String readable=shortName.replace('_',' ').replace('/',' ');
+            if(!readable.isEmpty())readable=Character.toUpperCase(readable.charAt(0))+readable.substring(1);
+            Component text=family.startsWith("mod/")
+                    ?Component.literal(modDisplayName(family.substring(4)))
+                    :family.startsWith("item/")&&!entry.icon().isEmpty()
+                    ?entry.icon().getHoverName()
+                    :Component.translatableWithFallback("label.simplesorter."+family.replace('/','.'),readable);
             incoming.put(entry.pos().asLong(),
                     new RenderLabel(entry, text, mc.font.width(text)));
         }
         CHUNKS.put(chunkKey, incoming);
+    }
+
+    private static String modDisplayName(String namespace){
+        if("minecraft".equals(namespace))return "Minecraft";
+        return net.minecraftforge.fml.ModList.get().getModContainerById(namespace)
+                .map(mod->mod.getModInfo().getDisplayName()).orElse(namespace);
     }
 
     @SubscribeEvent

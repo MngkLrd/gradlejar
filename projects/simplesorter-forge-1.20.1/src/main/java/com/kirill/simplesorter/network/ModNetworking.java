@@ -6,7 +6,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 public final class ModNetworking {
- private static final String VERSION="8";
+ private static final String VERSION="9";
  public static final SimpleChannel CHANNEL=NetworkRegistry.ChannelBuilder
   .named(new ResourceLocation(SimpleSorterMod.MOD_ID,"network"))
   .networkProtocolVersion(()->VERSION)

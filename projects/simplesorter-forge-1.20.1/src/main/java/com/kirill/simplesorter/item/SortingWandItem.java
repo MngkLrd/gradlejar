@@ -54,7 +54,7 @@ public class SortingWandItem extends Item {
         }
 
         SortingWandSettings settings = SortingWandSettings.readFrom(stack);
-        if (settings.mode() == SortingMode.SMART_CATEGORIES
+        if (settings.mode().usesGlobalWarehouse()
                 && WarehouseSortSessions.isRunning(player.getUUID())) {
             player.displayClientMessage(Component.literal(
                     "Simple Sorter: warehouse sorting is already running. "
@@ -64,7 +64,7 @@ public class SortingWandItem extends Item {
 
         SortingResult result = SortingManager.sortAroundPlayer(
                 serverLevel, player, settings, stack);
-        boolean startedSmart = settings.mode() == SortingMode.SMART_CATEGORIES
+        boolean startedSmart = settings.mode().usesGlobalWarehouse()
                 && result.scannedContainers() > 0;
         // Only start cooldown after an actual action. Earlier versions
         // charged cooldown even when no chests were found, the job was

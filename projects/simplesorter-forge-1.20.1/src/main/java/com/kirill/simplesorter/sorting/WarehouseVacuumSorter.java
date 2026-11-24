@@ -28,15 +28,21 @@ import java.util.Map;
  */
 public final class WarehouseVacuumSorter {
     private static final Logger LOG = LoggerFactory.getLogger("SimpleSorter/WandBuffer");
-    // One batch is a single synchronous transaction. Bound the worst-case
-    // tick cost while still allowing a fully occupied 12-chest warehouse.
-    private static final int MAX_CHESTS_PER_BATCH = 32;
+    // Planning is global; execution is partitioned into independent transactions.
     private static final int MAX_SLOTS_PER_CHEST = 108;
 
     private WarehouseVacuumSorter() {}
 
     public static Session begin(List<ContainerRef> containers) {
-        return new Session(containers);
+        return new Session(containers,ref->true,false);
+    }
+
+    public static Session begin(List<ContainerRef> containers,java.util.function.Predicate<ContainerRef> access){
+        return new Session(containers,access,false);
+    }
+
+    public static Session begin(List<ContainerRef> containers,java.util.function.Predicate<ContainerRef> access,boolean byMod){
+        return new Session(containers,access,byMod);
     }
 
     private static final class Chest {
@@ -46,6 +52,7 @@ public final class WarehouseVacuumSorter {
         final Entry[] layout;
         final Map<String, Integer> votes = new HashMap<>();
         final Map<String, Integer> allocatedFamilies = new HashMap<>();
+        final java.util.Set<Integer> pinnedSlots=new java.util.HashSet<>();
         int placed;
 
         Chest(ContainerRef ref, int sequence) {
@@ -71,15 +78,17 @@ public final class WarehouseVacuumSorter {
         final ItemStack original;
         final String family;
         final SemanticItemProfile semantic;
+        final boolean movable;
         Chest destination;
         int destinationSlot = -1;
         ItemStack carried = ItemStack.EMPTY;
 
-        Entry(Chest source, int sourceSlot, ItemStack original, SemanticItemProfile semantic) {
+        Entry(Chest source, int sourceSlot, ItemStack original, SemanticItemProfile semantic,boolean movable) {
             this.source = source;
             this.sourceSlot = sourceSlot;
             this.original = original;
             this.semantic = semantic;
+            this.movable=movable;
             this.family = semantic.legacyFamily();
         }
     }
@@ -88,33 +97,32 @@ public final class WarehouseVacuumSorter {
 
     public static final class Session {
         private final List<ContainerRef> containers;
-        private final List<List<ContainerRef>> batches;
-        private int batchIndex;
+        private List<List<Entry>> components=List.of();
+        private boolean planned;
+        private boolean unsafe;
+        private final java.util.function.Predicate<ContainerRef> access;
+        private final boolean byMod;
+        private final List<Chest> planningChests=new ArrayList<>();
+        private final List<Entry> planningEntries=new ArrayList<>();
+        private int snapshotIndex,validationIndex;
+        private AdaptiveWarehousePlanner.Search search;
+        private final java.util.Set<ContainerRef> eligible=new java.util.HashSet<>();
+        private int componentIndex,totalComponents,processedEntries,totalEntries;
+        private int activeInventories,semanticGroups;
+        private long beforeCost,afterCost;
         private int processed;
         private int movedItems;
         private int moves;
-        private int skippedChests;
+        private int skippedChests,pinnedSlots,eligibleEmpty,eligibleSlots;
+        private final java.util.Map<String,Integer> pinReasons=new java.util.TreeMap<>();
         private int rejectedBatches;
         private String lastFailure = "none";
 
-        private Session(List<ContainerRef> containers) {
+        private Session(List<ContainerRef> containers,java.util.function.Predicate<ContainerRef> access,boolean byMod) {
             this.containers = List.copyOf(containers);
-            // Sort all storage discovered in the wand's selected radius.
-            // Unlike the old strict-home algorithm, do not split the player's
-            // warehouse by an arbitrary 4-block spatial connectedness rule.
-            batches = new ArrayList<>();
-            // Ordinary warehouses of <=32 inventories are planned together.
-            // Larger warehouses have overlapping anchor windows, so later
-            // containers can still exchange with the first group.
-            for (int i=0;i<containers.size();) {
-                List<ContainerRef> batch=new ArrayList<>();
-                int anchors=i==0?0:Math.min(8,i);
-                if(anchors>0) batch.addAll(containers.subList(0,anchors));
-                int end=Math.min(i+MAX_CHESTS_PER_BATCH-anchors,containers.size());
-                batch.addAll(containers.subList(i,end));
-                batches.add(List.copyOf(batch));
-                i=end;
-            }
+            this.access=access;
+            this.byMod=byMod;
+
         }
 
         public int movedItems() { return movedItems; }
@@ -122,42 +130,59 @@ public final class WarehouseVacuumSorter {
         public int attemptedTransfers() { return moves + rejectedBatches; }
         public int rejectedTransfers() { return rejectedBatches; }
         public int skippedChests() { return skippedChests; }
+        public int pinnedSlots(){return pinnedSlots;}
+        public String eligibilitySummary(){return (containers.size()-skippedChests)+" eligible / "+containers.size()+" scanned; "+
+                eligibleEmpty+" empty eligible; "+eligibleSlots+" eligible slots; "+pinnedSlots+" fixed slots; reasons "+pinReasons;}
         public String lastFailure() { return lastFailure; }
         public int currentChestIndex() { return processed; }
-        public int batchCount() { return batches.size(); }
+        public int batchCount() { return containers.isEmpty()?0:1; }
+        public int totalComponents(){return totalComponents;}
+        public int completedComponents(){return componentIndex;}
+        public int activeInventories(){return activeInventories;}
+        public int semanticGroups(){return semanticGroups;}
+        public long beforeCost(){return beforeCost;}
+        public long afterCost(){return afterCost;}
         public int assignmentMissingFamilies() { return 0; }
+        public boolean eligibleForCompaction(ContainerRef ref){return !unsafe&&eligible.contains(ref)&&access.test(ref);}
+        public boolean unsafe(){return unsafe;}
+        public boolean isPlanning(){return !planned;}
 
         // Diagnostics are derived from actual post-sort inventories, not a
         // frozen pre-sort snapshot. Unknown "misc" is a valid fallback family.
         public void refreshContainer(int ignored) {}
 
-        public int unresolvedMixedChests() {
-            int result = 0;
-            for (ContainerRef ref : containers) {
-                try {
-                    Map<String, Integer> families = new HashMap<>();
-                    for (int s = 0; s < ref.slots(); s++) {
-                        ItemStack stack = ref.handler().getStackInSlot(s);
-                        if (!stack.isEmpty()) {
-                            String family = StrictStackClassifier.family(stack);
-                            families.merge(family, 1, Integer::sum);
+        public record Quality(int mixed,int occupied,int score){}
+        public Quality quality(){
+            int mixed=0,occupied=0;long sum=0,slots=0;
+            for(ContainerRef ref:containers){
+                try{
+                    if(!ref.isValid())continue;
+                    List<SemanticItemProfile> profiles=new ArrayList<>();
+                    for(int s=0;s<ref.slots();s++){
+                        ItemStack stack=ref.handler().getStackInSlot(s);
+                        if(!stack.isEmpty()){
+                            var profile=StrictStackClassifier.profile(stack);
+                            profiles.add(byMod?ModOriginProfile.of(profile):profile);
                         }
                     }
-                    if (families.size() > 1) result++;
-                } catch (RuntimeException ex) {
-                    LOG.warn("Cannot inspect chest {} after sorting", ref.pos(), ex);
-                }
+                    var q=SemanticChestQuality.evaluate(profiles);
+                    if(q.occupied()==0)continue;
+                    occupied++;if(q.mixed())mixed++;
+                    slots+=q.occupied();sum+=(long)q.score()*q.occupied();
+                }catch(RuntimeException ex){LOG.warn("Cannot inspect chest quality at {}",ref.pos(),ex);}
             }
-            return result;
+            return new Quality(mixed,occupied,slots==0?100:(int)Math.round((double)sum/slots));
         }
+        public int unresolvedMixedChests(){return quality().mixed();}
 
         public int unknownFamilySlots() {
+            if(byMod)return 0;
             int count = 0;
             for (ContainerRef ref : containers) {
                 try {
                     for (int s = 0; s < ref.slots(); s++) {
                         ItemStack stack = ref.handler().getStackInSlot(s);
-                        if (!stack.isEmpty() && "misc".equals(StrictStackClassifier.family(stack))) {
+                        if (!stack.isEmpty() && "unknown".equals(StrictStackClassifier.profile(stack).group())) {
                             count++;
                         }
                     }
@@ -169,12 +194,13 @@ public final class WarehouseVacuumSorter {
         }
 
         public String unknownIdExamples(int limit) {
+            if(byMod)return "";
             Map<String, Integer> counts = new HashMap<>();
             for (ContainerRef ref : containers) {
                 try {
                     for (int s = 0; s < ref.slots(); s++) {
                         ItemStack stack = ref.handler().getStackInSlot(s);
-                        if (!stack.isEmpty() && "misc".equals(StrictStackClassifier.family(stack))) {
+                        if (!stack.isEmpty() && "unknown".equals(StrictStackClassifier.profile(stack).group())) {
                             counts.merge(BuiltInRegistries.ITEM.getKey(stack.getItem()).toString(),
                                     1, Integer::sum);
                         }
@@ -192,88 +218,125 @@ public final class WarehouseVacuumSorter {
         }
 
         /**
-         * At most one bounded warehouse batch per server tick. The entire
-         * extraction/refill/rollback is synchronous inside that one tick:
-         * there is never a persistent item buffer across saves or logouts.
+         * One global plan per activation. Execute independent components
+         * synchronously; never retain extracted items across ticks.
          */
-        public boolean step(ServerLevel level, MoveListener listener,
-                            int ignoredSlotLimit, long ignoredTimeLimit) {
-            if (batchIndex >= batches.size()) return true;
-            List<ContainerRef> batch = batches.get(batchIndex++);
-            processed = Math.min(containers.size(),processed+batch.size()-(batchIndex>1?8:0));
-            try {
-                reorganize(level, batch, listener);
-            } catch (RuntimeException ex) {
-                // Preflight exceptions do not mutate inventories. Commit
-                // exceptions are handled and rolled back inside commit().
-                rejectedBatches++;
-                lastFailure = "exception during planning: " + ex.getClass().getSimpleName();
-                LOG.error("Wand buffer skipped broken inventory batch", ex);
+        public boolean step(ServerLevel level, MoveListener listener,int slotLimit,long timeLimit) {
+            if(!planned){
+                try { if(!prepareStep(level,slotLimit,timeLimit))return false; planned=true; }
+                catch(RuntimeException ex){
+                    planned=true;unsafe=true;eligible.clear();
+                    rejectedBatches++;lastFailure="global planning failed: "+ex.getClass().getSimpleName();
+                    LOG.error("Global warehouse planning failed",ex);
+                    return true;
+                }
+                if(components.isEmpty())processed=containers.size();
+                return components.isEmpty();
             }
-            return batchIndex >= batches.size();
+            long start=System.nanoTime();
+            int budget=Math.max(1,slotLimit),used=0;
+            while(componentIndex<components.size()){
+                List<Entry> group=components.get(componentIndex);
+                if(used>0 && (used+group.size()>budget || System.nanoTime()-start>=timeLimit))break;
+                componentIndex++;used+=group.size();
+                boolean ok=false;
+                try{
+                    boolean allowed=true;
+                    for(Entry e:group)if(!access.test(e.source.ref)||!access.test(e.destination.ref)){allowed=false;break;}
+                    if(allowed)ok=commitComponent(level,group,listener);
+                }catch(RuntimeException ex){
+                    unsafe=true;LOG.error("Warehouse component failed audit; stop remaining transfers",ex);
+                }
+                if(ok){
+                    for(Entry e:group)if(e.source!=e.destination){movedItems+=e.original.getCount();moves++;}
+                }else{
+                    rejectedBatches++;
+                    lastFailure="component changed or inventory refused transfer (see latest.log)";
+                }
+                if(unsafe){eligible.clear();return true;}
+                processedEntries+=group.size();
+                processed=totalEntries==0?containers.size():(int)((long)processedEntries*containers.size()/totalEntries);
+            }
+            return componentIndex>=components.size();
         }
 
-        private void reorganize(ServerLevel level, List<ContainerRef> refs,
-                                MoveListener listener) {
-            List<Chest> chests = new ArrayList<>();
-            List<Entry> entries = new ArrayList<>();
-            for (ContainerRef ref : refs) {
-                Chest chest = snapshotEligible(level, ref, chests.size(), entries);
-                if (chest == null) {
-                    skippedChests++;
-                } else {
-                    chests.add(chest);
+        private boolean prepareStep(ServerLevel level,int slotLimit,long timeLimit){
+            List<Chest> chests=planningChests;
+            List<Entry> entries=planningEntries;
+            long start=System.nanoTime();
+            int read=0;
+            if(snapshotIndex<containers.size()){
+                while(snapshotIndex<containers.size() && (read==0||
+                        (read<Math.max(1,slotLimit)&&System.nanoTime()-start<timeLimit))){
+                    ContainerRef ref=containers.get(snapshotIndex++);
+                    Chest chest=access.test(ref)?snapshotEligible(level,ref,chests.size(),entries):null;
+                    if(chest==null){
+                        skippedChests++;LOG.warn("Planning excluded inventory {} (invalid, inaccessible or unsupported)",ref.pos());
+                    }else {
+                        chests.add(chest);eligibleSlots+=chest.layout.length;
+                        if(chest.votes.isEmpty())eligibleEmpty++;
+                        // Compaction must never touch a fixed slot, even if
+                        // another stack in this inventory is movable.
+                        if(chest.pinnedSlots.isEmpty())eligible.add(ref);
+                    }
+                    read+=Math.max(1,ref.slots());
                 }
+                processed=snapshotIndex;
+                return false;
             }
-            if (chests.size() < 2 || entries.isEmpty()) return;
-
-            // The previous greedy plan consumed permitted slots in family
-            // order, then rejected the WHOLE warehouse if a later modded
-            // stack could not fit. We now begin with an exact identity
-            // placement (always feasible) and perform positive-value swaps.
-            // No missing family home can abort this operation.
-            List<WarehouseSlotOptimizer.Stack> snapshots = new ArrayList<>();
-            int[] capacities = new int[chests.size()];
-            for (int i = 0; i < chests.size(); i++) {
-                capacities[i] = chests.get(i).layout.length;
+            if(search==null)LOG.info("Planning input: {} eligible inventories, {} empty, {} slots, {} fixed slots, reasons {}",
+                    chests.size(),eligibleEmpty,eligibleSlots,pinnedSlots,pinReasons);
+            if(chests.size()<2||entries.isEmpty())return true;
+            if(search==null){
+                List<AdaptiveWarehousePlanner.Storage> boxes=new ArrayList<>();
+                for(Chest chest:chests){
+                    BlockPos p=chest.ref.pos(),q=chest.ref.partnerPos();
+                    boxes.add(new AdaptiveWarehousePlanner.Storage(chest.layout.length,
+                            p.getX()+(q==null?p.getX():q.getX()),p.getY(),
+                            p.getZ()+(q==null?p.getZ():q.getZ())));
+                }
+                List<AdaptiveWarehousePlanner.Stack> items=new ArrayList<>();
+                for(Entry e:entries)items.add(new AdaptiveWarehousePlanner.Stack(e.source.sequence,e.sourceSlot,e.semantic,e.movable));
+                search=new AdaptiveWarehousePlanner.Search(items,boxes,
+                        (item,chest,slot)->canInsertAfterExtraction(chests.get(chest).ref.handler(),
+                                slot,entries.get(item).original),true);
+                return false;
             }
-            for (Entry entry : entries) {
-                snapshots.add(new WarehouseSlotOptimizer.Stack(
-                        entry.source.sequence, entry.sourceSlot, entry.family));
+            if(!search.advance())return false;
+            // Revalidate incrementally after search. Each execution component
+            // also checks its live source and destination just before mutation.
+            while(validationIndex<chests.size() && (read==0||
+                    (read<Math.max(1,slotLimit)&&System.nanoTime()-start<timeLimit))){
+                Chest chest=chests.get(validationIndex++);
+                if(!access.test(chest.ref)||!unchanged(level,List.of(chest))){
+                    rejectedBatches++;lastFailure="inventory changed during planning at "+chest.ref.pos();eligible.clear();return true;
+                }
+                read+=chest.snapshot.length;
             }
-            WarehouseSlotOptimizer.Layout optimized = WarehouseSlotOptimizer.organize(
-                    snapshots, capacities, (item, chest, slot) ->
-                            canInsertAfterExtraction(chests.get(chest).ref.handler(),
-                                    slot, entries.get(item).original));
-            int[] owners = optimized.chestByStack();
-            int[] slots = optimized.slotByStack();
-            for (int i = 0; i < entries.size(); i++) {
-                chests.get(owners[i]).reserve(slots[i], entries.get(i));
+            if(validationIndex<chests.size())return false;
+            AdaptiveWarehousePlanner.Plan plan=search.result();
+            int[] owners=plan.chestByStack(),slots=plan.slotByStack();
+            List<WarehouseTransferComponents.Slot> sources=new ArrayList<>(),targets=new ArrayList<>();
+            for(int i=0;i<entries.size();i++){
+                Entry e=entries.get(i);
+                chests.get(owners[i]).reserve(slots[i],e);
+                sources.add(new WarehouseTransferComponents.Slot(e.source.sequence,e.sourceSlot));
+                targets.add(new WarehouseTransferComponents.Slot(owners[i],slots[i]));
             }
-            LOG.info("Wand buffer planned {} occupied slots in {} chests; "
-                            + "{} cross-chest stack assignments; improvement {}; probes {}",
-                    entries.size(), chests.size(), optimized.crossChestStacks(),
-                    optimized.improvement(), optimized.probes());
-
-            int crossChestItems = 0;
-            for (Entry entry : entries) {
-                if (entry.source != entry.destination) crossChestItems += entry.original.getCount();
+            beforeCost=plan.beforeCost();afterCost=plan.afterCost();
+            activeInventories=plan.activeInventories();semanticGroups=plan.groups();
+            // Validation was sliced above; per-component preflight is mandatory.
+            List<List<Entry>> jobs=new ArrayList<>();
+            for(List<Integer> component:WarehouseTransferComponents.decompose(sources,targets)){
+                List<Entry> group=new ArrayList<>();
+                for(int i:component)group.add(entries.get(i));
+                jobs.add(List.copyOf(group));totalEntries+=group.size();
             }
-            if (crossChestItems == 0) return;
-
-            if (!unchanged(level, chests)) {
-                rejectedBatches++;
-                lastFailure = "chest changed after snapshot";
-                LOG.warn("Wand buffer rejected batch because chest contents changed during planning");
-                return;
-            }
-            if (commit(level, chests, entries, listener)) {
-                movedItems += crossChestItems;
-                moves += entries.stream().filter(e -> e.source != e.destination).count();
-            } else {
-                rejectedBatches++;
-                lastFailure = "inventory rejected actual extraction or insertion (see latest.log)";
-            }
+            components=List.copyOf(jobs);totalComponents=components.size();
+            LOG.info("Global plan: {} eligible inventories, {} stacks, {} semantic groups, {} active inventories, cost {} -> {}, {} components",
+                    chests.size(),entries.size(),semanticGroups,activeInventories,beforeCost,afterCost,totalComponents);
+            planningChests.clear();planningEntries.clear();search=null;processed=0;
+            return true;
         }
 
         private Chest snapshotEligible(ServerLevel level, ContainerRef ref, int sequence,
@@ -290,13 +353,26 @@ public final class WarehouseVacuumSorter {
                     chest.snapshot[slot] = stack;
                     if (stack.isEmpty()) continue;
                     CategoryResolution resolution = ItemCategoryResolver.resolveDetailed(stack);
-                    if (!resolution.category().moveAllowed()
-                            || !canInsertAfterExtraction(ref.handler(), slot, stack)) return null;
-                    ItemStack simulated = ref.handler().extractItem(slot, stack.getCount(), true);
-                    if (!sameStackAndCount(stack, simulated)) return null;
-                    SemanticItemProfile semantic = StrictStackClassifier.profile(stack,resolution);
-                    chest.votes.merge(semantic.legacyFamily(), 1, Integer::sum);
-                    local.add(new Entry(chest, slot, stack, semantic));
+                    SemanticItemProfile semantic=StrictStackClassifier.profile(stack,resolution);
+                    if(byMod)semantic=ModOriginProfile.of(semantic);
+                    String reason=null;
+                    if(!resolution.category().moveAllowed())reason="protected";
+                    else if(!canInsertAfterExtraction(ref.handler(),slot,stack))reason="cannot reinsert";
+                    else{
+                        try{
+                            ItemStack simulated=ref.handler().extractItem(slot,stack.getCount(),true);
+                            if(!sameStackAndCount(stack,simulated))reason="extraction simulation differs";
+                        }catch(RuntimeException ex){
+                            reason="extraction simulation threw";
+                            LOG.debug("Cannot simulate extraction {}:{}",ref.pos(),slot,ex);
+                        }
+                    }
+                    if(reason!=null){
+                        chest.pinnedSlots.add(slot);pinnedSlots++;pinReasons.merge(reason,1,Integer::sum);
+                        LOG.debug("Fixed slot {}:{} {} ({})",ref.pos(),slot,semantic.itemId(),reason);
+                    }
+                    chest.votes.merge(semantic.legacyFamily(),1,Integer::sum);
+                    local.add(new Entry(chest,slot,stack,semantic,reason==null));
                 }
             } catch (RuntimeException ex) {
                 LOG.warn("Skipping incompatible inventory at {}", ref.pos(), ex);
@@ -325,8 +401,12 @@ public final class WarehouseVacuumSorter {
             for (Chest chest : chests) {
                 if (!valid(level, chest.ref)) return false;
                 for (int slot = 0; slot < chest.snapshot.length; slot++) {
-                    if (!sameStackAndCount(chest.snapshot[slot],
-                            chest.ref.handler().getStackInSlot(slot))) return false;
+                    ItemStack live=chest.ref.handler().getStackInSlot(slot);
+                    if(chest.pinnedSlots.contains(slot)){
+                        if(chest.snapshot[slot].getCount()!=live.getCount()||!chest.snapshot[slot].is(live.getItem()))return false;
+                    }else if(!sameStackAndCount(chest.snapshot[slot],live)){
+                        LOG.warn("Planning snapshot changed at {} slot {}",chest.ref.pos(),slot);return false;
+                    }
                 }
             }
             return true;
@@ -365,7 +445,8 @@ public final class WarehouseVacuumSorter {
         private static boolean sameStackAndCount(ItemStack a, ItemStack b) {
             return a.isEmpty() ? b.isEmpty()
                     : !b.isEmpty() && a.getCount() == b.getCount()
-                    && ItemStack.isSameItemSameTags(a, b);
+                    && ItemStack.isSameItemSameTags(a,b)
+                    && InventoryConservation.sameIdentity(a,b);
         }
 
         /**
@@ -373,14 +454,32 @@ public final class WarehouseVacuumSorter {
          * thread. No client packets can withdraw from this virtual buffer.
          */
 
-        private static boolean commit(ServerLevel level, List<Chest> chests,
-                                      List<Entry> entries, MoveListener listener) {
-            List<Placement> placed = new ArrayList<>();
-            // Leave unchanged stacks untouched. Only displaced slots enter
-            // the transaction, reducing mod callbacks and rollback exposure.
-            List<Entry> displaced = entries.stream()
-                    .filter(e -> e.source != e.destination || e.sourceSlot != e.destinationSlot)
-                    .toList();
+        private static boolean commitComponent(ServerLevel level,List<Entry> displaced,MoveListener listener) {
+            // Re-snapshot touched inventories; independent components may run across ticks.
+            Map<Chest,ItemStack[]> expected=new java.util.LinkedHashMap<>();
+            for(Entry e:displaced){
+                for(Chest chest:List.of(e.source,e.destination)){
+                    if(!valid(level,chest.ref)||chest.ref.slots()!=chest.layout.length)return false;
+                    if(!expected.containsKey(chest)){
+                        ItemStack[] row=new ItemStack[chest.layout.length];
+                        for(int s=0;s<row.length;s++)row[s]=chest.ref.handler().getStackInSlot(s).copy();
+                        expected.put(chest,row);
+                    }
+                }
+                if(!sameStackAndCount(expected.get(e.source)[e.sourceSlot],e.original))return false;
+                if(!canInsertAfterExtraction(e.destination.ref.handler(),e.destinationSlot,e.original))return false;
+                if(!sameStackAndCount(e.original,e.source.ref.handler().extractItem(e.sourceSlot,e.original.getCount(),true)))return false;
+            }
+            List<ItemStack> auditBefore=new ArrayList<>();
+            for(ItemStack[] row:expected.values())java.util.Collections.addAll(auditBefore,row);
+            var ledger=InventoryConservation.count(auditBefore);
+            for(Entry e:displaced)expected.get(e.source)[e.sourceSlot]=ItemStack.EMPTY;
+            for(Entry e:displaced){
+                ItemStack[] row=expected.get(e.destination);
+                if(!row[e.destinationSlot].isEmpty())return false;
+                row[e.destinationSlot]=e.original.copy();
+            }
+            List<Placement> placed=new ArrayList<>();
             boolean success = false;
             try {
                 for (Entry entry : displaced) {
@@ -421,7 +520,7 @@ public final class WarehouseVacuumSorter {
                     ItemStack reported;
                     try {
                         reported = destination.insertItem(
-                                entry.destinationSlot, before, false);
+                                entry.destinationSlot, before.copy(), false);
                     } catch (RuntimeException ex) {
                         observePlacement(entry, before, placed);
                         throw ex;
@@ -437,32 +536,32 @@ public final class WarehouseVacuumSorter {
                     }
                 }
 
-                // Detect handlers which claim to accept an item but leave it
-                // missing, or unexpectedly mutate unrelated slots.
-                for (Chest chest : chests) {
-                    for (int slot = 0; slot < chest.layout.length; slot++) {
-                        Entry expected = chest.layout[slot];
-                        ItemStack actual = chest.ref.handler().getStackInSlot(slot);
-                        if (!sameStackAndCount(expected == null
-                                ? ItemStack.EMPTY : expected.original, actual)) {
-                            throw new IllegalStateException("Warehouse contents changed during commit at "
-                                    + chest.ref.pos() + ":" + slot);
-                        }
+                for(var check:expected.entrySet()){
+                    Chest chest=check.getKey();
+                    for(int slot=0;slot<check.getValue().length;slot++){
+                        if(!sameStackAndCount(check.getValue()[slot],chest.ref.handler().getStackInSlot(slot)))
+                            throw new IllegalStateException("Unexpected inventory mutation at "+chest.ref.pos()+":"+slot);
                     }
                 }
+                InventoryConservation.requireEqual(ledger,auditLive(expected.keySet(),List.of()),"successful component");
                 success = true;
             } catch (RuntimeException ex) {
                 LOG.error("Wand buffer transaction failed; restoring original chest contents", ex);
             } finally {
-                if (!success) rollback(level, displaced, placed);
+                if (!success){
+                    List<ItemStack> recovered=rollback(level,displaced,placed);
+                    InventoryConservation.requireEqual(ledger,auditLive(expected.keySet(),recovered),"component rollback");
+                    if(!recovered.isEmpty())throw new IllegalStateException("Emergency recovery dropped items; stop and inspect warehouse");
+                }
             }
             if (!success) return false;
 
-            for (Entry entry : entries) {
+            for (Entry entry : displaced) {
                 if (entry.source != entry.destination) {
-                    listener.onMove(new MoveRecord(entry.source.ref.pos(),
+                    try { listener.onMove(new MoveRecord(entry.source.ref.pos(),
                             entry.destination.ref.pos(), entry.original.getCount(),
-                            entry.original.copy()));
+                            entry.original.copy())); }
+                    catch(RuntimeException ex){LOG.warn("Transfer visual failed after committed move",ex);}
                 }
             }
             return true;
@@ -508,8 +607,16 @@ public final class WarehouseVacuumSorter {
                     ? ItemStack.EMPTY : before.copyWithCount(remaining);
         }
 
-        private static void rollback(ServerLevel level, List<Entry> entries,
+        private static java.util.Map<net.minecraft.nbt.CompoundTag,Long> auditLive(
+                java.util.Set<Chest> chests,List<ItemStack> recovered){
+            List<ItemStack> stacks=new ArrayList<>(recovered);
+            for(Chest chest:chests)stacks.addAll(InventoryConservation.snapshot(chest.ref.handler()));
+            return InventoryConservation.count(stacks);
+        }
+
+        private static List<ItemStack> rollback(ServerLevel level,List<Entry> entries,
                                      List<Placement> placed) {
+            List<ItemStack> recoveredDrops=new ArrayList<>();
             for (int i = placed.size() - 1; i >= 0; i--) {
                 Placement move = placed.get(i);
                 try {
@@ -521,7 +628,8 @@ public final class WarehouseVacuumSorter {
                                 move.chest.ref.pos(), move.slot);
                         continue;
                     }
-                    handler.extractItem(move.slot, Math.min(move.count, before.getCount()), false);
+                    try{handler.extractItem(move.slot,Math.min(move.count,before.getCount()),false);}
+                    catch(RuntimeException ex){LOG.error("Rollback extraction threw; measuring actual slot delta",ex);}
                     ItemStack after = handler.getStackInSlot(move.slot);
                     int actualLeft = after.isEmpty() ? 0 : after.getCount();
                     if (!after.isEmpty()
@@ -529,7 +637,7 @@ public final class WarehouseVacuumSorter {
                         LOG.error("Rollback changed destination type: {}", move.chest.ref.pos());
                         continue;
                     }
-                    int recovered = before.getCount() - actualLeft;
+                    int recovered = Math.min(move.count,before.getCount() - actualLeft);
                     if (recovered > 0) {
                         if (move.entry.carried.isEmpty()) {
                             move.entry.carried = move.entry.original.copyWithCount(recovered);
@@ -553,9 +661,13 @@ public final class WarehouseVacuumSorter {
                         remaining = restoreToSlot(handler, slot, remaining);
                     }
                 }
-                if (!remaining.isEmpty()) emergencyDrop(level, entry.source.ref.pos(), remaining);
+                if(!remaining.isEmpty()){
+                    if(emergencyDrop(level,entry.source.ref.pos(),remaining))recoveredDrops.add(remaining.copy());
+                    else LOG.error("Emergency item entity rejected at {}",entry.source.ref.pos());
+                }
                 entry.carried = ItemStack.EMPTY;
             }
+            return recoveredDrops;
         }
 
         private static ItemStack restoreToSlot(IItemHandler handler, int slot, ItemStack stack) {
@@ -577,15 +689,15 @@ public final class WarehouseVacuumSorter {
                     ? live.getCount() : 0;
         }
 
-        private static void emergencyDrop(ServerLevel level, BlockPos origin, ItemStack stack) {
-            if (stack.isEmpty()) return;
+        private static boolean emergencyDrop(ServerLevel level, BlockPos origin, ItemStack stack) {
+            if (stack.isEmpty()) return true;
             LOG.error("EMERGENCY RECOVERY: dropping {} x {} at {} after inventory rollback failure",
                     stack.getCount(), BuiltInRegistries.ITEM.getKey(stack.getItem()), origin);
             ItemEntity entity = new ItemEntity(level,
                     origin.getX() + 0.5, origin.getY() + 1.0,
                     origin.getZ() + 0.5, stack.copy());
             entity.setDefaultPickUpDelay();
-            level.addFreshEntity(entity);
+            return level.addFreshEntity(entity);
         }
     }
 }

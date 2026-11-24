@@ -183,8 +183,9 @@ public final class InventoryMover {
         ItemStack visualStack = actuallyExtracted.copy();
         visualStack.setCount(1);
 
-        ItemStack actualRemainder = target.insertItem(targetSlot, actuallyExtracted, false);
-        int actuallyMoved = actuallyExtracted.getCount() - actualRemainder.getCount();
+        int extractedCount=actuallyExtracted.getCount();
+        ItemStack actualRemainder = target.insertItem(targetSlot, actuallyExtracted.copy(), false);
+        int actuallyMoved = extractedCount - actualRemainder.getCount();
 
         if (!actualRemainder.isEmpty()) {
             ItemStack leftover = returnRemainderToSource(source, sourceSlot, actualRemainder);
@@ -275,8 +276,9 @@ public final class InventoryMover {
         ItemStack visualStack = extracted.copy();
         visualStack.setCount(1);
 
-        ItemStack actualRemainder = target.insertItem(targetSlot, extracted, false);
-        int actuallyMoved = extracted.getCount() - actualRemainder.getCount();
+        int extractedCount=extracted.getCount();
+        ItemStack actualRemainder = target.insertItem(targetSlot, extracted.copy(), false);
+        int actuallyMoved = extractedCount - actualRemainder.getCount();
 
         if (!actualRemainder.isEmpty()) {
             returnPlayerRemainder(player, playerSlot, actualRemainder);
@@ -333,8 +335,7 @@ public final class InventoryMover {
                 ItemStack previous = handler.getStackInSlot(partialTarget);
                 if (!previous.isEmpty() && previous.getCount() < previous.getMaxStackSize()
                         && ItemStack.isSameItemSameTags(previous, source)) {
-                    moved += moveIntoSlot(containerRef, sourceSlot, containerRef,
-                            partialTarget, source.getCount(), moveListener);
+                    moved += moveWithinAudited(containerRef,sourceSlot,partialTarget,source.getCount(),moveListener);
                 }
                 ItemStack afterTarget = handler.getStackInSlot(partialTarget);
                 if (afterTarget.isEmpty() || afterTarget.getCount() >= afterTarget.getMaxStackSize()) {
@@ -355,11 +356,75 @@ public final class InventoryMover {
                 firstHole++;
             }
             if (firstHole < sourceSlot) {
-                moved += moveIntoSlot(containerRef, sourceSlot, containerRef,
-                        firstHole, current.getCount(), moveListener);
+                moved += moveWithinAudited(containerRef,sourceSlot,firstHole,current.getCount(),moveListener);
             }
         }
         return moved;
+    }
+
+    /**
+     * Compaction must not trust mutable arguments or a capability's claimed
+     * remainder. Measure both physical slots, restore the proven remainder,
+     * and fail closed on unexpected identity/count changes.
+     */
+    private static int moveWithinAudited(ContainerRef ref,int from,int to,int requested,MoveListener listener){
+        if(from==to)return 0;
+        IItemHandler h=ref.handler();
+        ItemStack original=h.getStackInSlot(from).copy();
+        ItemStack dest=h.getStackInSlot(to).copy();
+        if(original.isEmpty()||(!dest.isEmpty()&&!InventoryConservation.sameIdentity(original,dest)))return 0;
+        ItemStack simulated=h.extractItem(from,requested,true);
+        if(simulated.isEmpty()||!InventoryConservation.sameIdentity(original,simulated))return 0;
+        int offered=simulated.getCount();
+        ItemStack remainder=h.insertItem(to,simulated.copy(),true);
+        int accepted=offered-remainder.getCount();
+        if(accepted<=0||accepted>original.getCount())return 0;
+        RuntimeException problem=null;
+        try{h.extractItem(from,accepted,false);}catch(RuntimeException ex){problem=ex;}
+        int removed=original.getCount()-matching(h.getStackInSlot(from),original);
+        if(removed<0||removed>accepted)throw new IllegalStateException("Unexpected compaction extraction count");
+        if(removed==0){if(problem!=null)throw problem;return 0;}
+        ItemStack carried=original.copyWithCount(removed);
+        int inserted=0;
+        if(problem==null){
+            try{h.insertItem(to,carried.copy(),false);}catch(RuntimeException ex){problem=ex;}
+            inserted=matching(h.getStackInSlot(to),original)-dest.getCount();
+            if(inserted<0||inserted>removed)throw new IllegalStateException("Unexpected compaction insertion count");
+        }
+        int rest=removed-inserted;
+        if(rest>0){
+            int before=matching(h.getStackInSlot(from),original);
+            try{h.insertItem(from,original.copyWithCount(rest),false);}
+            catch(RuntimeException ex){problem=ex;}
+            int restored=matching(h.getStackInSlot(from),original)-before;
+            if(restored<0||restored>rest)throw new IllegalStateException("Unexpected compaction restoration count");
+            rest-=restored;
+            // Try other slots only for the observed remainder. Never overwrite.
+            for(int s=0;s<h.getSlots()&&rest>0;s++){
+                if(s==from||s==to)continue;
+                ItemStack old=h.getStackInSlot(s);
+                if(!old.isEmpty()&&!InventoryConservation.sameIdentity(old,original))continue;
+                before=old.getCount();
+                try{h.insertItem(s,original.copyWithCount(rest),false);}
+                catch(RuntimeException ex){problem=ex;}
+                restored=matching(h.getStackInSlot(s),original)-before;
+                if(restored<0||restored>rest)throw new IllegalStateException("Unexpected recovery count");
+                rest-=restored;
+            }
+            if(rest>0){
+                Containers.dropItemStack(ref.level(),ref.pos().getX()+0.5,ref.pos().getY()+0.7,ref.pos().getZ()+0.5,
+                        original.copyWithCount(rest));
+                throw new IllegalStateException("Compaction emergency recovery; inspect dropped items");
+            }
+        }
+        if(problem!=null)throw new IllegalStateException("Compaction capability threw; observed remainder restored",problem);
+        if(inserted>0&&listener!=null)listener.onMove(new MoveRecord(ref.pos(),ref.pos(),inserted,original.copyWithCount(1)));
+        return inserted;
+    }
+    private static int matching(ItemStack live,ItemStack sample){
+        if(live.isEmpty())return 0;
+        if(!InventoryConservation.sameIdentity(live,sample))throw new IllegalStateException("Inventory transformed item during compaction");
+        return live.getCount();
     }
 
     private record StackFingerprint(Item item, CompoundTag tag) {
