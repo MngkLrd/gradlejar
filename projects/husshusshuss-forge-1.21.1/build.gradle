@@ -4,7 +4,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
 }
 group = 'dev.ataflore.huss'
-version = '0.1.0-beta'
+version = '0.2.0-beta'
 base { archivesName = 'husshusshuss-forge-mc1.21.1' }
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 minecraft {

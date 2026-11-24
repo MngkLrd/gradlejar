@@ -1,11 +1,11 @@
 {
   "slug": "husshusshuss",
-  "version": "0.1.0-beta",
+  "version": "0.2.0-beta",
   "minecraft": "1.21.1",
   "loader": "forge",
   "java": "21",
   "gradle": "8.10.2",
-  "jar_glob": "husshusshuss-forge-mc1.21.1-0.1.0-beta.jar",
+  "jar_glob": "husshusshuss-forge-mc1.21.1-0.2.0-beta.jar",
   "minimum_loader_version": "52.1.0",
   "compile_loader_version": "52.1.0"
 }

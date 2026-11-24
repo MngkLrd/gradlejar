@@ -1,3 +1,3 @@
-# Huss Huss Huss 0.1.0-beta
-Minecraft 1.21.1, Forge 52.1.0+, Java 21, Gradle 8.10.2. Build with gradle clean build (requires Python 3 and ffmpeg for original procedural assets).
-Use /give @s husshusshuss:discipline_whistle. Right click an adult villager, or whistle nearby. Sneak-right-click trains up to six. Training lasts 12 seconds, with synchronized hops, head movement, breath sounds and dust. Finish grants 30 seconds of speed and resistance. Damage, water and sleep interrupt training. The original meme recording is not included. No external mod required. Both sides need the mod. In-game validation pending.
+# Huss Huss Huss 0.2.0-beta
+Minecraft 1.21.1 Forge 52.1.0+, Java 21, Gradle 8.10.2.
+Standalone, no other mods required. Use /give @s husshusshuss:discipline_whistle. Right click adult villager, or whistle nearby; sneak-right-click trains up to six. Training lasts 18 seconds. Dedicated animated villager model has separate arms and forearms, three exercise routines, head/body/leg poses, synchronized three-beat voice and impact particles. Original generated voice, not original meme recording. Group shares one voice to avoid audio clipping. Client and server need the mod. Build with gradle clean build; asset generation requires Python 3, espeak-ng and ffmpeg. In-game client testing pending.

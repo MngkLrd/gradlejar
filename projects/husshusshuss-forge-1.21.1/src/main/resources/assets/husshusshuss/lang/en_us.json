@@ -2,5 +2,6 @@
   "item.husshusshuss.discipline_whistle": "Discipline Whistle",
   "message.husshusshuss.grind": "No party. Only grind. (%s)",
   "message.husshusshuss.none": "No idle adult villagers nearby.",
-  "subtitles.husshusshuss.huss": "Huss! Huss! Huss!"
+  "subtitles.husshusshuss.huss": "Huss! Huss! Huss!",
+  "effect.husshusshuss.training": "Huss Mode"
 }
