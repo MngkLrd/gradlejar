@@ -34,4 +34,4 @@ tasks.named('processResources') {
     from("$buildDir/generated/textures")
     exclude '**/*.png.b64'
 }
-jar { finalizedBy 'reobfJar' }
+// ForgeGradle supplies the production jar task for this version.
