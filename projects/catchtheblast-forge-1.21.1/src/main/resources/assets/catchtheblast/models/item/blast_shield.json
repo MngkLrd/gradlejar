@@ -10,39 +10,39 @@
     },
     {
       "predicate": {
-        "catchtheblast:stage": 1
+        "catchtheblast:stage": 0.25
       },
       "model": "catchtheblast:item/shield_stage_1"
     },
     {
       "predicate": {
-        "catchtheblast:stage": 1,
+        "catchtheblast:stage": 0.25,
         "catchtheblast:blocking": 1
       },
       "model": "catchtheblast:item/shield_stage_1_blocking"
     },
     {
       "predicate": {
-        "catchtheblast:stage": 2
+        "catchtheblast:stage": 0.5
       },
       "model": "catchtheblast:item/shield_stage_2"
     },
     {
       "predicate": {
-        "catchtheblast:stage": 2,
+        "catchtheblast:stage": 0.5,
         "catchtheblast:blocking": 1
       },
       "model": "catchtheblast:item/shield_stage_2_blocking"
     },
     {
       "predicate": {
-        "catchtheblast:stage": 3
+        "catchtheblast:stage": 0.75
       },
       "model": "catchtheblast:item/shield_stage_3"
     },
     {
       "predicate": {
-        "catchtheblast:stage": 3,
+        "catchtheblast:stage": 0.75,
         "catchtheblast:blocking": 1
       },
       "model": "catchtheblast:item/shield_stage_3_blocking"

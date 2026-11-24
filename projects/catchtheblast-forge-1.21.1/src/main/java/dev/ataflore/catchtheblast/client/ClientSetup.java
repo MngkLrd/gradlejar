@@ -14,7 +14,7 @@ public final class ClientSetup {
     @SubscribeEvent public static void setup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             ItemProperties.register(CatchTheBlast.BLAST_SHIELD.get(), ResourceLocation.fromNamespaceAndPath(CatchTheBlast.ID,"stage"),
-                (stack, level, entity, seed) -> Charge.stage(stack));
+                (stack, level, entity, seed) -> Charge.stage(stack) * 0.25f);
             ItemProperties.register(CatchTheBlast.BLAST_SHIELD.get(), ResourceLocation.fromNamespaceAndPath(CatchTheBlast.ID,"blocking"),
                 (stack, level, entity, seed) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1f : 0f);
         });
