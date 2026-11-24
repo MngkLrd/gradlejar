@@ -3,7 +3,6 @@ package com.kirill.simplesorter.sorting;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -66,7 +65,7 @@ public final class SemanticItemClassifier {
     private static final Set<String> PLANT_FORMS = Set.of("sapling","seed","leaf");
     private static final Set<String> EQUIPMENT_FORMS = Set.of("pickaxe","axe","shovel","hoe","sword","helmet","chestplate","leggings","boots","pickaxe_head","axe_head","shovel_head","hoe_head");
     private static final Set<String> MATERIAL_FAMILIES = Set.of("mineral_resources","finished_metals","gems","machine_parts","materials");
-    private static final Set<String> NO_MATERIAL = Set.of("","tiny","small","pure","impure","normal","poor","rich","raw","stripped","double","wooden","metal","stone","all","any");
+    private static final Set<String> NO_MATERIAL = Set.of("","tiny","small","pure","impure","normal","poor","rich","raw","stripped","double","wooden","metal","all","any","in_ground","in_ground_stone","in_ground_deepslate");
     private static final Set<String> COMMON_TAG_NAMESPACES = Set.of("forge","c","minecraft");
 
     private static List<Form> forms(Map<String,String> map) {
@@ -99,6 +98,20 @@ public final class SemanticItemClassifier {
         }
 
         Shape byId = parseId(path);
+        // Known resource tags can distinguish a metal storage block from
+        // generic construction. No arbitrary block becomes a metal.
+        if (group.equals("construction") || group.equals("unknown")) {
+            for (String tag : new TreeSet<>(input.tags)) {
+                Shape strong = parseTag(tag);
+                if (strong == null || strong.material.isEmpty()) continue;
+                if (METAL_FORMS.contains(strong.form)
+                        && (!strong.form.equals("block") || path(tag).startsWith("storage_blocks/"))) {
+                    group="metals_minerals";
+                    family=inferredFamily(strong.form);
+                    break;
+                }
+            }
+        }
         Set<String> materials = new TreeSet<>();
         Set<String> tagForms = new TreeSet<>();
         // Deterministic, conservative: conflicting credible tags don't pick
@@ -135,7 +148,9 @@ public final class SemanticItemClassifier {
                 material = "";
                 evidence.add("ambiguous-material:" + String.join(",",materials));
             }
-            confidence = SemanticItemProfile.Confidence.TAG;
+            // Generic tags establish form, not the registry-derived material.
+            if (!materials.isEmpty() || byId==null || byId.material.isEmpty())
+                confidence = SemanticItemProfile.Confidence.TAG;
         }
         // The old family bridge is conservative; use strong known forms to
         // recover unrecognized material products without namespace tables.
@@ -193,6 +208,10 @@ public final class SemanticItemClassifier {
             case "gem" -> "gems";
             case "log","plank","wood","stairs","slab","fence" -> "wood";
             case "seed","sapling","leaf" -> "botanical";
+            case "pickaxe","axe","shovel","hoe" -> "tools";
+            case "pickaxe_head","axe_head","shovel_head","hoe_head" -> "tool_heads";
+            case "sword" -> "weapons";
+            case "helmet","chestplate","leggings","boots" -> "armor";
             default -> "materials";
         };
     }
@@ -231,8 +250,16 @@ public final class SemanticItemClassifier {
             String material=tail.contains("/")?"":material(tail);
             return new Shape(form.canonical,material);
         }
-        // c:iron_ingots / minecraft:oak_logs etc.
-        return parseId(p);
+        // c:iron_ingots / minecraft:oak_logs. Only suffix conventions
+        // here: forge:ores_in_ground is not a material called in_ground.
+        if (slash>=0) return null;
+        for (Form form:FORMS) {
+            if (p.endsWith("_"+form.alias)) {
+                String m=material(p.substring(0,p.length()-form.alias.length()-1));
+                if (!m.isEmpty()) return new Shape(form.canonical,m);
+            }
+        }
+        return null;
     }
 
     private static Shape parseId(String path) {

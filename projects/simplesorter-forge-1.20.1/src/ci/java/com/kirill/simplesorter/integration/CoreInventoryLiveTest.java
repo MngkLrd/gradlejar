@@ -43,6 +43,15 @@ public final class CoreInventoryLiveTest {
         try {
             check("fuel".equals(StrictStackClassifier.family(new ItemStack(Items.CHARCOAL))),"real charcoal classification");
             check("ammunition".equals(StrictStackClassifier.family(new ItemStack(Items.ARROW))),"real arrow classification");
+            var iron=StrictStackClassifier.profile(new ItemStack(Items.IRON_INGOT));
+            var raw=StrictStackClassifier.profile(new ItemStack(Items.RAW_IRON));
+            var tool=StrictStackClassifier.profile(new ItemStack(Items.IRON_PICKAXE));
+            check("iron".equals(iron.material()) && "ingot".equals(iron.form()),"real iron ingot semantic profile: "+iron);
+            check("iron".equals(raw.material()) && "ore".equals(raw.form()),"real raw iron semantic profile: "+raw);
+            check(iron.affinity(raw)>=85 && iron.affinity(tool)==0,"real item semantic affinity");
+            var log=StrictStackClassifier.profile(new ItemStack(Items.OAK_LOG));
+            var plank=StrictStackClassifier.profile(new ItemStack(Items.OAK_PLANKS));
+            check("oak".equals(log.material()) && log.affinity(plank)>=85,"real wood material affinity");
             for(int i=0;i<21;i++){
                 // 21 independent real chests, all mixed; many beyond vanilla menu reach.
                 BlockPos p=center.offset(3+(i%7)*4,0,3+(i/7)*4);

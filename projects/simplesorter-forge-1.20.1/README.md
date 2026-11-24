@@ -1,4 +1,23 @@
-# Simple Sorter 0.9.18 (Forge 1.20.1)
+# Simple Sorter 0.10.0 (Forge 1.20.1)
+
+## 0.10.0 internal milestone: semantic item classification
+
+`SemanticItemProfile` records group, material, form, purpose, confidence,
+source evidence, legacy family and movement permissions. It exposes a
+hierarchy and a bounded affinity score for the upcoming adaptive planner.
+Generic Forge/common/vanilla tags and registry path conventions support
+unlisted materials and mods. Conflicting material tags are marked
+ambiguous instead of choosing a random material. Unknown items retain
+their exact registry identity and namespace, without claiming semantic
+similarity. User categories are evaluated before built-ins, while lock
+rules always take precedence. No mandatory compatibility dependencies.
+
+The active Smart Categories snapshot now retains semantic profiles.
+0.10.0 still uses legacy-family placement as a transitional planner;
+global adaptive assignment, spatial columns and reorganization stability
+are subsequent milestones (0.10.1–0.10.4). No player-facing UI, recipe,
+scanner, or transactional storage changes are intended in this milestone.
+
 
 ## Core radius and classification fixes
 

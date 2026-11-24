@@ -48,8 +48,10 @@ public record SemanticItemProfile(
                 && purpose.equals(other.purpose) && form.equals(other.form)) return 100;
         if (!group.equals(other.group)) return 0;
         if ("unknown".equals(group)) return 0;
-        if (hasMaterial() && other.hasMaterial() && material.equals(other.material))
+        if (hasMaterial() && other.hasMaterial() && material.equals(other.material)) {
+            if ("equipment".equals(group) && !purpose.equals(other.purpose)) return 45;
             return form.equals(other.form) ? 95 : 85;
+        }
         if (legacyFamily.equals(other.legacyFamily)) return 65;
         return 40;
     }
