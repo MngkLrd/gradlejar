@@ -178,7 +178,7 @@ public final class MarketScreen extends AbstractContainerScreen<MarketMenu> {
         for(int i=0;i<6;i++){buy[i].visible=page==8;buy[i].active=page==8&&menu.merchantPage()==2&&menu.status(1)!=1&&menu.balance()>=stock.get(i).cost();}
     }
     @Override public void render(GuiGraphics g,int mouseX,int mouseY,float partial){
-        renderBackground(g,mouseX,mouseY,partial);super.render(g,mouseX,mouseY,partial);renderTooltip(g,mouseX,mouseY);
+        super.render(g,mouseX,mouseY,partial);renderTooltip(g,mouseX,mouseY);
     }
     @Override protected void renderBg(GuiGraphics g,float p,int mouseX,int mouseY){
         int x=leftPos,y=topPos;
