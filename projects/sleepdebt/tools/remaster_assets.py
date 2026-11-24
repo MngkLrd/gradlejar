@@ -641,13 +641,67 @@ def frame(a,w,h):
         stamp(a,x,y,"55.4/54.3")
     for x,y in ((2,2),(w-7,2),(2,h-7),(w-7,h-7)):
         stamp(a,x,y,".333./35643/35423/34213/.333.")
-hud=canvas(158,68,"0");frame(hud,158,68)
-rect(hud,7,7,144,12,"8")
+# HUD: dark oiled timber / aged copper. Native pixel density, strong
+# value separation for recessed channels, tiny authored corner fittings.
+hudpal=palette("19171b","29262a","363137","4c342a","694937","8b6044","ae8057","c6a070","dfbe88","5d453a","423b37","756254")
+hudpal={".":(0,0,0,0),**{format(i,"x"):v for i,v in enumerate(list(hudpal.values())[1:])}}
+def copper_frame(w,h):
+    a=canvas(w,h,".")
+    rect(a,1,0,w-2,h,"0");rect(a,0,1,w,h-2,"0")
+    rect(a,1,1,w-2,h-2,"3");rect(a,2,2,w-4,h-4,"5")
+    rect(a,3,3,w-6,h-6,"4");rect(a,4,4,w-8,h-8,"0")
+    rect(a,5,5,w-10,h-10,"1")
+    rect(a,3,2,w-6,1,"6");rect(a,2,3,1,h-6,"6")
+    rect(a,3,h-3,w-6,1,"3");rect(a,w-3,3,1,h-6,"3")
+    # Directional interrupted highlight clusters on the upper copper lip.
+    for x,p in ((11,"66776/56665"),(31,"677766/555655"),(58,"66677/55565"),(92,"6676/5655"),(124,"67766/55655")):
+        if x+7<w-8:stamp(a,x,2,p)
+    for x,p in ((18,"44554/33443"),(49,"4544/3433"),(88,"4455/3344"),(128,"5544/4433")):
+        if x+5<w-6:stamp(a,x,h-4,p)
+    # Four separately oriented inset metal corner brackets, never random noise.
+    corner=["056550","567640","575430","643430","533300","000000"]
+    for flipx,flipy in ((False,False),(True,False),(False,True),(True,True)):
+        for yy,row in enumerate(corner):
+            for xx,c in enumerate(row):
+                put(a,w-1-xx if flipx else xx,h-1-yy if flipy else yy,c)
+    return a
+hud=copper_frame(158,68)
+# Quiet text field and fine stepped inner edges, matching Java coordinates.
+rect(hud,8,7,142,13,"1")
+rect(hud,9,21,140,1,"5");rect(hud,10,22,138,1,"3")
 for y in (25,38,51):
-    rect(hud,8,y-1,142,11,"0");rect(hud,9,y,140,9,"8")
-    rect(hud,73,y+3,74,6,"1");rect(hud,74,y+4,72,4,"0")
-    rect(hud,74,y+8,72,1,"3")
-save("gui/sleep_hud",hud,gui)
+    rect(hud,9,y-1,140,12,"2")
+    rect(hud,9,y-1,140,1,"0");rect(hud,9,y+10,140,1,"a")
+    # Small copper inlay is a deliberate status ornament, not a noisy texture.
+    stamp(hud,11,y+2,".6./65./.4.")
+    rect(hud,73,y+3,74,6,"0")
+    rect(hud,74,y+4,72,4,"1")
+    rect(hud,74,y+8,72,1,"5")
+    rect(hud,146,y+4,1,4,"3")
+save("gui/sleep_hud",hud,hudpal)
+hint=copper_frame(158,15)
+save("gui/sleep_hint",hint,hudpal)
+# Vanilla-grey journal edge atlas: 4px corners + 8px tiling rails.
+# Neutral stone/metal palette with local bevel clusters, not a flat fill.
+jp=palette("242326","555257","777477","a3a09e","c6c4c1","e1ded8","f6f3e9")
+map16("gui/journal_frame",jp,"""
+.00000000000000.
+065555665555560
+054444544445450
+054333433343450
+0544........4210
+0644........4210
+0543........3210
+0544........4210
+0544........4210
+0543........3210
+0644........4210
+0544........4210
+0543334333434210
+0433332333333210
+0322223222222210
+.00000000000000.
+""")
 journal=canvas(228,188,"0");frame(journal,228,188)
 rect(journal,11,7,210,174,"5");rect(journal,13,9,206,170,"6")
 # worn paper edge clusters; reading area is deliberately quiet.

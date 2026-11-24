@@ -6,14 +6,17 @@ import dev.minemods.sleepdebt.network.SleepReportPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 
-/** Native inventory-style bevel, four pages, actual recorded data, sub-GUI-pixel plots. */
+/** Five pages, pixel-cluster frame, single background pass and sub-GUI-pixel plots. */
 public final class SleepJournalScreen extends Screen {
  private static final int TEXT=0xFF393939, MUTED=0xFF626262, RED=0xFFA65C67, GOLD=0xFFC18A50,
    VIOLET=0xFF927BB1, TEAL=0xFF54857F, GRID=0xFFB0B0B0;
+ private static final ResourceLocation FRAME=ResourceLocation.fromNamespaceAndPath("sleepdebt","textures/gui/journal_frame.png");
  private SleepReportPayload report;
  private int refreshTicks;
  private final Screen previous;
@@ -45,7 +48,7 @@ public final class SleepJournalScreen extends Screen {
  private void raw(GuiGraphics g,String s,int x,int y,int col){g.drawString(font,s,x,y,col,false);}
  private void panel(GuiGraphics g,int x,int y,int x2,int y2){
   g.fill(x,y,x2,y2,0xFFA4A4A4);
-  g.fill(x+1,y+1,x2-1,y2-1,0xFFE0E0E0);
+  g.fill(x+1,y+1,x2-1,y2-1,0xFFE3E0D9);
   g.fill(x,y,x2,y+1,0xFF777777);g.fill(x,y,x+1,y2,0xFF777777);
   g.fill(x,y2-1,x2,y2,0xFFFFFFFF);g.fill(x2-1,y,x2,y2,0xFFFFFFFF);
  }
@@ -77,11 +80,11 @@ public final class SleepJournalScreen extends Screen {
   label(g,"energy",x+split+7,y+70,String.format(java.util.Locale.ROOT,"%.3f",val(report.penalties(),4)/1000.0));
  }
  private void plot(GuiGraphics g,int x,int y,int cw,int ch,int[] channels,int[] colors,int maximum){
-  int gx=x+24,gy=y+8,gw=cw-33,gh=ch-28;
+  int gx=x+35,gy=y+8,gw=cw-44,gh=ch-28;
   panel(g,x,y,x+cw,y+ch);
   for(int i=0;i<=4;i++){
    int yy=gy+gh*i/4;
-   line(g,gx,yy,gx+gw,yy,GRID);raw(g,Integer.toString(maximum*(4-i)/4),x+3,yy-4,MUTED);
+   line(g,gx,yy,gx+gw,yy,GRID);raw(g,Integer.toString(100*(4-i)/4)+"%",x+3,yy-4,MUTED);
   }
   for(int i=0;i<=6;i++){float xx=gx+gw*i/6f;line(g,xx,gy,xx,gy+gh,GRID);}
   int[] data=report.history();int n=data.length/5;
@@ -153,20 +156,42 @@ public final class SleepJournalScreen extends Screen {
   label(g,"potency",x+3,y+39,report.maskPower());
   if(ch>75)plot(g,x,y+52,cw,ch-52,new int[]{3,4},new int[]{TEAL,VIOLET},100);
  }
+ // 16x16 atlas, 4px corners; edges tile at native size, never stretched.
+ private void drawFrame(GuiGraphics g){
+  for(int dx=4;dx<w-4;dx+=8){
+   int n=Math.min(8,w-4-dx);
+   g.blit(FRAME,left+dx,top,4,0,n,4,16,16);
+   g.blit(FRAME,left+dx,top+h-4,4,12,n,4,16,16);
+  }
+  for(int dy=4;dy<h-4;dy+=8){
+   int n=Math.min(8,h-4-dy);
+   g.blit(FRAME,left,top+dy,0,4,4,n,16,16);
+   g.blit(FRAME,left+w-4,top+dy,12,4,4,n,16,16);
+  }
+  g.blit(FRAME,left,top,0,0,4,4,16,16);
+  g.blit(FRAME,left+w-4,top,12,0,4,4,16,16);
+  g.blit(FRAME,left,top+h-4,0,12,4,4,16,16);
+  g.blit(FRAME,left+w-4,top+h-4,12,12,4,4,16,16);
+ }
  @Override public void render(GuiGraphics g,int mx,int my,float delta){
-  renderBackground(g,mx,my,delta);
-  // Same grey embossed material language as a vanilla container screen.
+  // Never call Screen.render after custom contents: in 1.21.1 it can
+  // run the background blur again, smearing everything except its widgets.
+  // Explicitly paint a vanilla-style dim backdrop once, WITHOUT blur.
+  g.fill(0,0,width,height,0xB0101010);
+  g.flush();
+  // Native grey inventory material, with a pixel-authored segmented frame.
   g.fill(left,top,left+w,top+h,0xFF171717);
   g.fill(left+1,top+1,left+w-1,top+h-1,0xFFC6C6C6);
-  g.fill(left+2,top+2,left+w-3,top+4,0xFFFFFFFF);
-  g.fill(left+2,top+2,left+4,top+h-3,0xFFFFFFFF);
-  g.fill(left+3,top+h-4,left+w-2,top+h-2,0xFF555555);
-  g.fill(left+w-4,top+3,left+w-2,top+h-2,0xFF555555);
+  drawFrame(g);
+  g.fill(left+8,top+19,left+w-8,top+20,0xFF8C8C8C);
+  g.fill(left+8,top+20,left+w-8,top+21,0xFFECECEC);
   g.drawCenteredString(font,title,left+w/2,top+9,TEXT);
   int x=left+9,y=top+50,cw=w-18,ch=h-81;
   switch(page){case 0->overview(g,x,y,cw,ch);case 1->history(g,x,y,cw,ch);
    case 2->activity(g,x,y,cw,ch);case 3->recovery(g,x,y,cw,ch);case 4->caffeine(g,x,y,cw,ch);}
   raw(g,(page+1)+" / "+pages.length,left+62,top+h-20,MUTED);
-  super.render(g,mx,my,delta);
+  g.flush();
+  // Render registered buttons only; input/narration still use Screen.children.
+  for(var child:children())if(child instanceof Renderable widget)widget.render(g,mx,my,delta);
  }
 }

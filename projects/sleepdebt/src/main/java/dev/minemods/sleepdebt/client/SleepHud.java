@@ -11,6 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 public final class SleepHud {
  private static final ResourceLocation PANEL=ResourceLocation.fromNamespaceAndPath(
   SleepDebtMod.MOD_ID,"textures/gui/sleep_hud.png");
+ private static final ResourceLocation HINT=ResourceLocation.fromNamespaceAndPath(
+  SleepDebtMod.MOD_ID,"textures/gui/sleep_hint.png");
  private static int width(int value){return Math.max(0,Math.min(72,value*72/1000));}
  private static void meter(GuiGraphics g,int x,int y,int value,int color){
   int len=width(value);
@@ -24,7 +26,7 @@ public final class SleepHud {
   g.fill(x+74,y+1,x+74+len,y+5,color);
   g.fill(x+74,y+1,x+74+len,y+2,highlight);
   g.fill(x+74,y+4,x+74+len,y+5,shadow);
-  if(len>6)g.fill(x+74+len-2,y+2,x+74+len-1,y+4,highlight);
+  if(len>6)g.fill(x+74+len-2,y+2,x+74+len-1,y+4,shadow);
  }
  public static void render(GuiGraphics g,DeltaTracker delta){
   Minecraft mc=Minecraft.getInstance();
@@ -52,7 +54,7 @@ public final class SleepHud {
     String[] keys={"attack","mining","movement","damage"};
     var hint=v[worst]>0?Component.translatable("journal.sleepdebt."+keys[worst],v[worst]):
       Component.translatable("journal.sleepdebt.energy",String.format(java.util.Locale.ROOT,"%.3f",v[4]/1000.0));
-    g.fill(x,y+69,x+158,y+81,0xBD222222);g.drawString(mc.font,hint,x+4,y+71,0xFFE6C9A0,false);
+    g.blit(HINT,x,y+69,0f,0f,158,15,158,15);g.drawString(mc.font,hint,x+9,y+73,0xFFE6C9A0,false);
    }
   }
   if(ClientState.maskTicks>0)g.drawString(mc.font,"+",x+141,y+8,0xFFCBA65D,false);

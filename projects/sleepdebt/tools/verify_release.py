@@ -52,7 +52,7 @@ with zipfile.ZipFile(jar) as z:
     js("data/sleepdebt/loot_table/blocks/coffee_bush.json")
     for n in range(8):
         js(f"assets/sleepdebt/models/block/coffee_bush_stage_{n}.json")
-    for img in ("sleep_journal.png","sleep_hud.png","coffee_maker.png"):
+    for img in ("sleep_journal.png","sleep_hud.png","sleep_hint.png","journal_frame.png","coffee_maker.png"):
         data("assets/sleepdebt/textures/gui/"+img)
     for name in names:
         if (name.startswith("assets/sleepdebt/") or name.startswith("data/sleepdebt/")) and name.endswith(".json"):
@@ -66,7 +66,8 @@ with zipfile.ZipFile(jar) as z:
         target=((2048,1024) if "entity/sleepless.png" in n else
                 (176,166) if "textures/gui/coffee_maker.png" in n else
                 (228,188) if "textures/gui/sleep_journal.png" in n else
-                (158,68) if "textures/gui/sleep_hud.png" in n else (16,16))
+                (158,68) if "textures/gui/sleep_hud.png" in n else
+                (158,15) if "textures/gui/sleep_hint.png" in n else (16,16))
         if (width,height)!=target:raise ValueError(f"{n}: size {(width,height)} not {target}")
 
         # Parse PNG chunks rather than trusting the ZIP CRC or just the PNG header.
