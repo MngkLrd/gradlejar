@@ -22,7 +22,11 @@ print("PASS: expanded native settlement candidates, distinct salts, farm exclusi
 
 # Author exact-sized box UVs: front is north. Patches are hand-selected row clusters.
 # All original mob gameplay is preserved. Symmetric limb pieces intentionally reuse UV.
-Atlas,plain,p,six=w.Atlas,w.plain,w.p,w.six
+Atlas=w.Atlas
+def plain(color):return (color,[])
+def p(color,*patches):return (color,list(patches))
+def six(front,left,right,back,top,bottom):
+    return dict(zip(("front","left","right","back","top","bottom"),(front,left,right,back,top,bottom)))
 deer=Atlas("snowstag",64,64,{"f":"a4886c","h":"b89d80","l":"c6ae90","s":"92745d","d":"79624f","c":"d4c2a3","C":"e1d0b4","v":"b6a083","n":"342e28","N":"635140","a":"aa9276","A":"c6b297","k":"645449","K":"877363"})
 deer.cube(0,0,8,8,12,six(
  p("f",("h",[(0,1,6),(1,0,6),(2,1,4)]),("c",[(3,2,4),(4,1,5),(5,1,6),(6,1,6),(7,2,5)])),
