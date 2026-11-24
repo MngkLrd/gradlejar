@@ -2,6 +2,9 @@ package dev.mngklrd.hearthbound;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import java.util.Collection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.player.Player;
@@ -35,9 +38,28 @@ public record CookingReport(int under,int over,int heat,int late,int prior) {
         if(!Quality.has(s)||!Quality.fresh(s))return;
         CookingReport old=read(s);
         if(old==null)old=new CookingReport(0,0,0,0,100-Quality.get(s));
+        CompoundTag before=s.getTag().getCompound(KEY).copy();
         new CookingReport(old.under,old.over,old.heat,old.late+loss,old.prior).apply(s);
+        CompoundTag after=s.getTag().getCompound(KEY);
+        if(before.contains("UnderFoods",9))after.put("UnderFoods",before.getList("UnderFoods",8));
+        if(before.contains("OverFoods",9))after.put("OverFoods",before.getList("OverFoods",8));
     }
-    public static int stars(int q){return q>=95?5:q>=80?4:q>=60?3:q>=40?2:q>=20?1:0;}
+    public static void ingredientNames(ItemStack s,Collection<String> under,Collection<String> over){
+        if(read(s)==null)return;
+        CompoundTag report=s.getTag().getCompound(KEY);
+        ListTag u=new ListTag(),o=new ListTag();
+        under.stream().distinct().limit(5).forEach(k->u.add(StringTag.valueOf(k)));
+        over.stream().distinct().limit(5).forEach(k->o.add(StringTag.valueOf(k)));
+        if(!u.isEmpty())report.put("UnderFoods",u);
+        if(!o.isEmpty())report.put("OverFoods",o);
+    }
+    public static Component names(ItemStack s,String key){
+        ListTag list=s.getTag().getCompound(KEY).getList(key,8);
+        var result=Component.empty();
+        for(int i=0;i<list.size();i++){if(i>0)result.append(", ");result.append(Component.translatable(list.getString(i)));}
+        return result;
+    }
+    public static int stars(int q){return QualityMath.stars(q);}
     public static String starsText(int q){int n=stars(q);return "★".repeat(n)+"☆".repeat(5-n);}
     public static String tier(int q){return switch(stars(q)){case 5->"excellent";case 4->"good";case 3->"ordinary";case 2->"mediocre";case 1->"poor";default->"ruined";};}
     public static void notify(Player p,ItemStack s){

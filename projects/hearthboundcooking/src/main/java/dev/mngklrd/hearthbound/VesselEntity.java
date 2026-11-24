@@ -105,7 +105,7 @@ public final class VesselEntity extends BlockEntity {
         if(finished.isEmpty()&&held.is(TFCTags.Items.SOUP_BOWLS)){
             if(lid()){say(player,"open_lid");return InteractionResult.CONSUME;}
             if(amount()>0){
-                if(tank.getFluidAmount()<1000||heat<180||!canServe()){say(player,"not_ready");return InteractionResult.CONSUME;}
+                if(tank.getFluidAmount()<1000||!canServe()){say(player,"not_ready");return InteractionResult.CONSUME;}
                 var inv=sample();finish(recipeFor(inv),inv,batchCount());
                 if(finished.isEmpty()){say(player,"not_ready");return InteractionResult.CONSUME;}
             }
@@ -210,9 +210,9 @@ public final class VesselEntity extends BlockEntity {
         for(int i=0;i<5;i++){
             ItemStack item=ingredients.get(i);if(item.isEmpty())continue;
             int ideal=idealTicks(item,n);float ratio=exposure[i]/(float)ideal;
-            under+=Math.max(0,1-ratio)*80;
-            over+=Math.max(0,ratio-1.25f)*55;
-            temp+=Math.min(15,15f*excess[i]/Math.max(1,exposure[i]));
+            under+=QualityMath.soupUnder(exposure[i],ideal);
+            over+=QualityMath.soupOver(exposure[i],ideal);
+            temp+=QualityMath.soupHeat(excess[i],exposure[i]);
             used.add(item.copyWithCount(n));groups++;
         }
         int prior=Quality.inherited(used);
@@ -262,6 +262,14 @@ public final class VesselEntity extends BlockEntity {
         int servings=out.getCount()*n;
         if(servings<=0||servings>capacity()*3)return;
         finished=out.copyWithCount(servings);report(n).apply(finished);
+        List<String> under=new ArrayList<>(),over=new ArrayList<>();
+        for(int i=0;i<5;i++){
+            ItemStack item=ingredients.get(i);if(item.isEmpty())continue;
+            int ideal=idealTicks(item,n);
+            if(exposure[i]<ideal)under.add(item.getDescriptionId());
+            if(exposure[i]>ideal*1.25f)over.add(item.getDescriptionId());
+        }
+        CookingReport.ingredientNames(finished,under,over);
         for(int i=0;i<5;i++){
             ItemStack ingredient=ingredients.get(i);
             if(ingredient.isEmpty())continue;
@@ -289,8 +297,9 @@ public final class VesselEntity extends BlockEntity {
         if(!v.finished.isEmpty()){
             v.stage(v.heat>=180&&v.finishedHotTicks>=160?4:3);
             if(v.heat>=180&&Quality.has(v.finished)&&Quality.fresh(v.finished)){
+                int previous=Math.max(0,v.finishedHotTicks-160)/80;
                 v.finishedHotTicks=Math.min(100000,v.finishedHotTicks+ticks);
-                if(v.finishedHotTicks>160&&(v.finishedHotTicks-160)%80==0)CookingReport.late(v.finished,5);
+                if(Math.max(0,v.finishedHotTicks-160)/80>previous)CookingReport.late(v.finished,5);
             }
             v.setChanged();return;
         }
@@ -303,13 +312,13 @@ public final class VesselEntity extends BlockEntity {
         int n=v.batchCount();
         v.recipeState=3;v.plannedBatches=n;
         v.plannedServings=n*(int)(v.ingredients.stream().filter(item->!item.isEmpty()).count()/2+1);
-        if(v.heat>=180){
+        if(v.heat>=300){
             int before=v.getBlockState().getValue(VesselBlock.STAGE);
             boolean ready=true,over=false;
             for(int i=0;i<5;i++){
                 ItemStack item=v.ingredients.get(i);if(item.isEmpty())continue;
                 v.exposure[i]=Math.min(100000,v.exposure[i]+ticks);
-                if(v.heat>650)v.excess[i]=Math.min(v.exposure[i],v.excess[i]+ticks);
+                if(v.heat>(v.lid()?900:800))v.excess[i]=Math.min(v.exposure[i],v.excess[i]+ticks);
                 int ideal=v.idealTicks(item,n);
                 if(v.exposure[i]<ideal)ready=false;
                 if(v.exposure[i]>ideal*1.25f)over=true;
@@ -333,7 +342,7 @@ public final class VesselEntity extends BlockEntity {
         Arrays.fill(exposure,0);int[] a=t.getIntArray("Exposure");if(t.getInt("CookingModel")==2)System.arraycopy(a,0,exposure,0,Math.min(a.length,5));
         Arrays.fill(excess,0);int[] b=t.getIntArray("Excess");System.arraycopy(b,0,excess,0,Math.min(b.length,5));
         for(int i=0;i<5;i++){exposure[i]=Mth.clamp(exposure[i],0,100000);excess[i]=Mth.clamp(excess[i],0,exposure[i]);}
-        tank.readFromNBT(t.getCompound("Tank"));heat=Float.isFinite(t.getFloat("Heat"))?Math.max(0,t.getFloat("Heat")):0;progress=Float.isFinite(t.getFloat("Progress"))?Math.max(0,t.getFloat("Progress")):0;hotTicks=Math.max(0,t.getInt("Hot"));overheatTicks=Mth.clamp(t.getInt("Overheat"),0,hotTicks);finishedHotTicks=Mth.clamp(t.getInt("FinishedHot"),0,100000);lastTick=t.contains("LastTick")?t.getLong("LastTick"):-1;
+        tank.readFromNBT(t.getCompound("Tank"));heat=Float.isFinite(t.getFloat("Heat"))?Math.max(0,t.getFloat("Heat")):0;progress=Float.isFinite(t.getFloat("Progress"))?Math.max(0,t.getFloat("Progress")):0;hotTicks=Math.max(0,t.getInt("Hot"));overheatTicks=Mth.clamp(t.getInt("Overheat"),0,hotTicks);finishedHotTicks=t.getInt("CookingModel")==2?Mth.clamp(t.getInt("FinishedHot"),0,100000):0;lastTick=t.contains("LastTick")?t.getLong("LastTick"):-1;
         activeRecipe=t.contains("Recipe")?ResourceLocation.tryParse(t.getString("Recipe")):null;
         finished=ItemStack.of(t.getCompound("Finished"));if(!finished.isEmpty())finished.setCount(Mth.clamp(t.getInt("Servings"),0,capacity()*3));
     }

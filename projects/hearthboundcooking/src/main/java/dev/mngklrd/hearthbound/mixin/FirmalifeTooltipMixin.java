@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Pseudo
 @Mixin(targets="com.eerussianguy.firmalife.compat.tooltip.FLTooltips$BlockEntities",remap=false)
 public abstract class FirmalifeTooltipMixin {
-    @Shadow @Final @Mutable private static BlockEntityTooltip OVEN;
+    @Shadow @Final @Mutable public static BlockEntityTooltip OVEN;
     @Inject(method="<clinit>",at=@At("RETURN"))
     private static void hearthbound$hideClock(CallbackInfo ci){
         BlockEntityTooltip original=OVEN;

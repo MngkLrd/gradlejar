@@ -48,5 +48,8 @@
   "hearthbound.cooking_status": "%s: готовится",
   "hearthbound.not_ready": "Ингредиентам нужно ещё время",
   "hearthbound.cannot_add": "Нельзя добавить этот продукт сюда",
-  "hearthbound.gui.overdone": "Переваривается"
+  "hearthbound.gui.overdone": "Переваривается",
+  "hearthbound.factor.ingredients": "Ингредиенты",
+  "hearthbound.factor.temperature": "Температура",
+  "hearthbound.factor.serving": "Подача"
 }

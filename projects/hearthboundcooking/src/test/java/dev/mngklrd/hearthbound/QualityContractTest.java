@@ -22,6 +22,15 @@ public final class QualityContractTest {
         expect(QualityMath.quantize(-100),0);
         expect(QualityMath.quantize(110),100);
         if(Math.abs(QualityMath.saturationMultiplier(70)-1f)>1e-6)throw new AssertionError("neutral");
+        expect(QualityMath.stars(95),5);
+        expect(QualityMath.stars(80),4);
+        expect(QualityMath.stars(59),2);
+        expect(QualityMath.stars(19),0);
+        expect(Math.round(QualityMath.soupUnder(600,1200)),40);
+        expect(Math.round(QualityMath.soupUnder(1200,1200)),0);
+        expect(Math.round(QualityMath.soupOver(1500,1200)),0);
+        expect(Math.round(QualityMath.soupOver(2100,1200)),28);
+        expect(Math.round(QualityMath.soupHeat(600,1200)),8);
         System.out.println("Hearthbound quality contract: passed");
     }
 }

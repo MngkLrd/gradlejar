@@ -48,5 +48,8 @@
   "hearthbound.cooking_status": "%s: cooking",
   "hearthbound.not_ready": "The ingredients need more time",
   "hearthbound.cannot_add": "Cannot add this ingredient here",
-  "hearthbound.gui.overdone": "Overcooking"
+  "hearthbound.gui.overdone": "Overcooking",
+  "hearthbound.factor.ingredients": "Ingredients",
+  "hearthbound.factor.temperature": "Temperature",
+  "hearthbound.factor.serving": "Serving"
 }

@@ -15,6 +15,13 @@ import net.minecraftforge.fml.common.Mod;
 public final class ClientEvents {
     @Mod.EventBusSubscriber(modid=Hearthbound.ID,value=Dist.CLIENT,bus=Mod.EventBusSubscriber.Bus.MOD)
     public static final class Registration {
+        @SubscribeEvent public static void colors(net.minecraftforge.client.event.RegisterColorHandlersEvent.Block event){
+            event.register((state,world,pos,index)->{
+                if(index!=0)return -1;
+                return switch(state.getValue(VesselBlock.STAGE)){case 1->0xb8bfc9;case 2->0xe1cfb2;case 3->0xffffff;case 4->0x725046;default->0xffffff;};
+            },net.minecraftforge.registries.ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Hearthbound.ID,"clay_stockpot")),
+              net.minecraftforge.registries.ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Hearthbound.ID,"bronze_cauldron")));
+        }
         @SubscribeEvent public static void setup(net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent event){
             event.enqueueWork(()->net.minecraft.client.gui.screens.MenuScreens.register(Hearthbound.VESSEL_MENU.get(),VesselScreen::new));
         }
@@ -33,7 +40,23 @@ public final class ClientEvents {
         if(report==null){event.getToolTip().add(Component.translatable("hearthbound.report.legacy").withStyle(ChatFormatting.GRAY));return;}
         String[] keys={"under","over","heat","late","prior"};
         int[] values={report.under(),report.over(),report.heat(),report.late(),report.prior()};
-        for(int i=0;i<keys.length;i++)if(values[i]>0)event.getToolTip().add(Component.translatable("hearthbound.report."+keys[i],values[i]).withStyle(ChatFormatting.RED));
+        for(int i=0;i<keys.length;i++){
+            if(values[i]<=0)continue;
+            event.getToolTip().add(Component.translatable("hearthbound.report."+keys[i],values[i]).withStyle(ChatFormatting.RED));
+            if(i<2){
+                Component names=CookingReport.names(s,i==0?"UnderFoods":"OverFoods");
+                if(!names.getString().isEmpty())event.getToolTip().add(Component.literal("  ").append(names).withStyle(ChatFormatting.GRAY));
+            }
+        }
+        int[] scores={100-report.under()-report.over(),100-report.heat(),100-report.late()};
+        String[] factors={"ingredients","temperature","serving"};
+        for(int i=0;i<factors.length;i++){
+            int n=Math.max(0,Math.min(10,(scores[i]+5)/10));
+            event.getToolTip().add(Component.translatable("hearthbound.factor."+factors[i]).withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(" "+"|".repeat(n)).withStyle(ChatFormatting.GOLD))
+                .append(Component.literal("|".repeat(10-n)).withStyle(ChatFormatting.DARK_GRAY))
+                .append(Component.literal(" "+scores[i]+"%").withStyle(ChatFormatting.WHITE)));
+        }
         if(report.score()==100)event.getToolTip().add(Component.translatable("hearthbound.report.perfect").withStyle(ChatFormatting.GREEN));
     }
     @SubscribeEvent public static void noCookingClock(ScreenEvent.Render.Post event){

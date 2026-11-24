@@ -437,22 +437,28 @@
       ],
       "faces": {
         "north": {
-          "texture": "#soup"
+          "texture": "#soup",
+          "tintindex": 0
         },
         "south": {
-          "texture": "#soup"
+          "texture": "#soup",
+          "tintindex": 0
         },
         "east": {
-          "texture": "#soup"
+          "texture": "#soup",
+          "tintindex": 0
         },
         "west": {
-          "texture": "#soup"
+          "texture": "#soup",
+          "tintindex": 0
         },
         "up": {
-          "texture": "#soup"
+          "texture": "#soup",
+          "tintindex": 0
         },
         "down": {
-          "texture": "#soup"
+          "texture": "#soup",
+          "tintindex": 0
         }
       }
     }

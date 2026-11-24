@@ -47,6 +47,7 @@ public final class VesselBlock extends BaseEntityBlock {
         int stage=s.getValue(STAGE);if(stage<2)return;
         if(r.nextInt(s.getValue(LID)?8:3)==0){
             l.addParticle(stage==4?ParticleTypes.SMOKE:ParticleTypes.CAMPFIRE_COSY_SMOKE,p.getX()+0.35+r.nextDouble()*.3,p.getY()+.73,p.getZ()+.35+r.nextDouble()*.3,0,.025,0);
+            if(!s.getValue(LID)&&stage!=4)l.addParticle(ParticleTypes.BUBBLE_POP,p.getX()+.3+r.nextDouble()*.4,p.getY()+.53,p.getZ()+.3+r.nextDouble()*.4,0,.025,0);
         }
     }
 }

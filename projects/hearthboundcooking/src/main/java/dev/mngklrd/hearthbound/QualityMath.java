@@ -30,6 +30,10 @@ public final class QualityMath {
         if(!Float.isFinite(target)||target<0)target=0;
         return (float)(target+(current-target)*Math.pow(1-coefficient,Math.max(0,ticks)));
     }
+    public static float soupUnder(int exposure,int ideal){return Math.max(0,1-exposure/(float)Math.max(1,ideal))*80;}
+    public static float soupOver(int exposure,int ideal){return Math.max(0,exposure/(float)Math.max(1,ideal)-1.25f)*55;}
+    public static float soupHeat(int excess,int exposure){return Math.min(15,15f*Math.max(0,excess)/Math.max(1,exposure));}
+    public static int stars(int q){return q>=95?5:q>=80?4:q>=60?3:q>=40?2:q>=20?1:0;}
     public static float saturationMultiplier(int quality){
         int q=clamp(quality);
         return q<=70?.8f+q*(.2f/70f):1f+(q-70)*(.1f/30f);
