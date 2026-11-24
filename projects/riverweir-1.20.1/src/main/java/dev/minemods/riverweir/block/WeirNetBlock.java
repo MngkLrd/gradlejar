@@ -51,6 +51,9 @@ public final class WeirNetBlock extends Block {
     @Override public VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext context){
         return state.getValue(AXIS)==Direction.Axis.X?X_SHAPE:Z_SHAPE;
     }
+    @Override public VoxelShape getCollisionShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext context){
+        return state.getValue(STAGE)==2?net.minecraft.world.phys.shapes.Shapes.empty():getShape(state,level,pos,context);
+    }
     @Override public FluidState getFluidState(BlockState state){
         return state.getValue(WATERLOGGED)?WeirWater.fluid(state.getValue(WATER_KIND),state.getValue(FLOW)):super.getFluidState(state);
     }

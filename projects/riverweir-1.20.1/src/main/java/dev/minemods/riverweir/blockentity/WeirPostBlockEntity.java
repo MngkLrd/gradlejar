@@ -3,6 +3,7 @@ package dev.minemods.riverweir.blockentity;
 import dev.minemods.riverweir.RiverWeirMod;
 import dev.minemods.riverweir.logic.WeirLogic;
 import dev.minemods.riverweir.logic.WeirTier;
+import dev.minemods.riverweir.logic.WeirCapture;
 import net.minecraft.nbt.ListTag;
 import dev.minemods.riverweir.menu.WeirMenu;
 import net.minecraft.core.BlockPos;
@@ -37,7 +38,9 @@ public final class WeirPostBlockEntity extends BlockEntity implements MenuProvid
     public int tierId;
     public int clog;
     public int baitCharges;
-    public long lastCatch; 
+    public long lastCatch;
+    // In-flight entanglements are intentionally transient. Unloaded fish swim freely.
+    public WeirCapture.Hold hold; 
     public WeirTier getTier() { return WeirTier.byId(tierId); }
 
     public WeirPostBlockEntity(BlockPos pos, BlockState state) { super(RiverWeirMod.POST_BE.get(),pos,state); }
@@ -172,6 +175,7 @@ public final class WeirPostBlockEntity extends BlockEntity implements MenuProvid
             WeirLogic.dismantle(server,pos);
             return;
         }
+        if (be.hold != null) WeirCapture.tick(server,be);
         if (be.wear>=be.getTier().endurance) return;
         long time=server.getGameTime();
         // Only process the actual loaded world; never grant fish for time spent away.

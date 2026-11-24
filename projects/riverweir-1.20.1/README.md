@@ -18,3 +18,8 @@ Minecraft 1.20.1, Forge, Java 17. Both client and server must install the mod.
 Build: `gradle clean build` on JDK 17 (recommended Gradle 8.14.3).
 Output `build/libs/riverweir-0.4.1.jar`.
 Automated CI checks Java compilation and packaged resources but does not reproduce the full TerraFirmaGreg Modern client UI or external recipe script overrides.
+
+## 0.4.2
+- Live fish contact uses the actual hitbox against a mesh cell (0.16 block tolerance). A fish visibly struggles for 5–9 seconds before becoming a catch. No permanent AI or gravity changes; interrupted holds release safely. A full inventory never deletes a fish.
+- Torn panels have no collision while retaining selection for repairs. Breaking a panel tears every tier correctly. Forge sneak-use repair interception and validation before material consumption.
+- Tier-correct stack dimension and nominal material area tooltips. Existing recipes, storage, and save format remain unchanged. In-game behavior still requires testing.
