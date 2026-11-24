@@ -146,6 +146,12 @@ public final class StudioClient {
             try{ShotFiles.copyImage(ShotFiles.read(shot.path(),0));}catch(Exception e){throw new RuntimeException(e);}
         },ShotFiles.IO).whenComplete((v,error)->Minecraft.getInstance().execute(()->notice(error==null?"Copied to clipboard":"Clipboard unavailable")));
     }
+    private static com.kirill.screenshotmanager.core.WorldCapture.Scene sceneSnapshot(Minecraft mc){
+        if(mc.level==null||mc.player==null)return null;
+        var cam=mc.gameRenderer.getMainCamera();if(!cam.isInitialized())return null;
+        var p=cam.getPosition();
+        return new com.kirill.screenshotmanager.core.WorldCapture.Scene(mc.level.dimension().location().toString(),p.x,p.y,p.z,cam.getYRot(),cam.getXRot(),mc.options.fov().get(),mc.level.getDayTime(),mc.level.isRaining(),mc.level.isThundering(),mc.options.hideGui,System.currentTimeMillis());
+    }
     private static void captured(ScreenshotEvent e){
         if(e.isCanceled())return;
         Path path=e.getScreenshotFile().toPath();
@@ -154,13 +160,14 @@ public final class StudioClient {
         Minecraft mc=Minecraft.getInstance();
         mc.execute(()->{
             long token=++requestId;
+            var scene=sceneSnapshot(mc);
             CompletableFuture.supplyAsync(()->{
                 // Vanilla writes asynchronously after this event; only read a complete, stable PNG.
                 long last=-1;
                 for(int i=0;i<80;i++){
                     try{
                         long size=Files.size(path);
-                        if(size>0&&size==last){BufferedImage image=ShotFiles.read(path,384);return image;}
+                        if(size>0&&size==last){BufferedImage image=ShotFiles.read(path,384);if(scene!=null)try{com.kirill.screenshotmanager.core.WorldCapture.save(path,scene);}catch(Exception ignored){}return image;}
                         last=size;
                     }catch(Exception ignored){}
                     try{Thread.sleep(100);}catch(InterruptedException ex){Thread.currentThread().interrupt();break;}

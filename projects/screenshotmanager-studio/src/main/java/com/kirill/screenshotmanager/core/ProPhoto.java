@@ -83,6 +83,38 @@ public final class ProPhoto {
             }return img;
         }
     }
+    public record ImageLayer(String name,byte[] png,int x,int y,int size,int rotation,int opacity) implements ImageDocument.Operation{
+        public ImageLayer{
+            if(png.length<8||png.length>1_500_000)throw new IllegalArgumentException("Image layer exceeds 1.5 MB");
+            png=png.clone();size=clamp(size,10,200);rotation=clamp(rotation,-180,180);opacity=clamp(opacity,0,100);
+            if(name.length()>128)name=name.substring(0,128);
+        }
+        public byte[] png(){return png.clone();}
+        public String label(){return "Image: "+name;}
+        public ImageLayer transform(int x,int y,int size,int rotation,int opacity){return new ImageLayer(name,png,x,y,size,rotation,opacity);}
+        public static ImageLayer load(java.nio.file.Path path,int x,int y)throws java.io.IOException{
+            BufferedImage image=ShotFiles.read(path,768);
+            for(int side:new int[]{768,640,512,384,256}){
+                var out=new java.io.ByteArrayOutputStream();
+                javax.imageio.ImageIO.write(ImageDocument.resize(image,side),"png",out);
+                if(out.size()<=1_500_000)return new ImageLayer(path.getFileName().toString(),out.toByteArray(),x,y,100,0,100);
+            }throw new java.io.IOException("Image is too large");
+        }
+        public BufferedImage apply(BufferedImage img){
+            try(var in=javax.imageio.ImageIO.createImageInputStream(new java.io.ByteArrayInputStream(png))){
+                var it=javax.imageio.ImageIO.getImageReaders(in);if(!it.hasNext())throw new java.io.IOException("Invalid image layer");
+                var reader=it.next();BufferedImage layer;
+                try{reader.setInput(in,true,true);if(reader.getWidth(0)>768||reader.getHeight(0)>768)throw new java.io.IOException("Layer dimensions exceed limit");layer=reader.read(0);}
+                finally{reader.dispose();}
+                double k=Math.min(img.getWidth()*.5/layer.getWidth(),img.getHeight()*.5/layer.getHeight())*size/100.0;
+                Graphics2D g=img.createGraphics();
+                try{g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,opacity/100f));
+                    g.translate(x,y);g.rotate(Math.toRadians(rotation));g.scale(k,k);g.drawImage(layer,-layer.getWidth()/2,-layer.getHeight()/2,null);
+                }finally{g.dispose();}
+                return img;
+            }catch(java.io.IOException e){throw new IllegalStateException("Could not decode imported image",e);}
+        }
+    }
     /** Explicit image-space focus, not a depth-buffer effect. */
     public record Focus(int x,int y,int radius,int amount,boolean dark) implements ImageDocument.Operation {
         public Focus{radius=clamp(radius,5,100);amount=clamp(amount,0,100);}

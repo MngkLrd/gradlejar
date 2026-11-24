@@ -69,7 +69,9 @@ public final class ImageDocument {
         var next=new ArrayList<>(snapshot());next.set(i,new Layer(unwrap(value),visible(next.get(i))));return commit(next);
     }
     public boolean translate(int i,int dx,int dy){
-        if(!valid(i)||!(unwrap(snapshot().get(i)) instanceof MarkOperation mark)||geometry(mark))return false;
+        if(!valid(i))return false;
+        if(unwrap(snapshot().get(i)) instanceof ProPhoto.ImageLayer im)return replace(i,im.transform(im.x()+dx,im.y()+dy,im.size(),im.rotation(),im.opacity()));
+        if(!(unwrap(snapshot().get(i)) instanceof MarkOperation mark)||geometry(mark))return false;
         Mark m=mark.value();
         return replace(i,mark(new Mark(m.tool(),m.x1()+dx,m.y1()+dy,m.x2()+dx,m.y2()+dy,m.color(),m.thickness(),m.strength(),m.text(),m.points().stream().map(p->new Point(p.x+dx,p.y+dy)).toList())));
     }

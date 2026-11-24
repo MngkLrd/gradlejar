@@ -72,6 +72,28 @@ public final class CoreSmoke {
         check(detour!=null&&detour.length()>6,"Flyby detours around obstacle");
         for(int i=0;i<=400;i++)check(free.test(detour.sample(i/400.0)),"Flyby collision-free smoothing");
         check(FlybyPath.plan(from,to,v->v.x()<1||v.x()>6)==null,"Flyby rejects enclosed path");
+        var brushDoc=new ImageDocument(img);
+        brushDoc.add(ImageDocument.mark(new ImageDocument.Mark(ImageDocument.Tool.PEN,4,4,20,4,0xffff0000,5,18,"",List.of())));
+        check(brushDoc.render(brushDoc.snapshot()).getRGB(12,4)==0xffff0000,"Pen stroke");
+        brushDoc.add(ImageDocument.mark(new ImageDocument.Mark(ImageDocument.Tool.ERASER,12,1,12,8,0xffffffff,5,18,"",List.of())));
+        check(brushDoc.render(brushDoc.snapshot()).getRGB(12,4)==img.getRGB(12,4),"Eraser protects original");
+        brushDoc.undo();check(brushDoc.render(brushDoc.snapshot()).getRGB(12,4)==0xffff0000,"Undo eraser");
+        brushDoc.reset();check(brushDoc.count()==0,"Undo all");
+        brushDoc.undo();check(brushDoc.count()==1,"Undo reset");
+        check(Math.abs(ProPhoto.curve(128,0,0,0)-128)<.001,"Neutral curve");
+        var neutral=new ProPhoto.Tone(new int[ProPhoto.TONE_COUNT]).apply(ImageDocument.copy(img));
+        check(neutral.getRGB(0,0)==img.getRGB(0,0),"Neutral tone");
+        int[] tone=new int[ProPhoto.TONE_COUNT];tone[0]=45;
+        check(new ProPhoto.Tone(tone).apply(ImageDocument.copy(img)).getRGB(0,0)!=img.getRGB(0,0),"Shadow adjustment");
+        var proRoot=Files.createTempDirectory("sm-pro-test");var proPng=proRoot.resolve("source.png");
+        javax.imageio.ImageIO.write(img,"png",proPng.toFile());
+        var imported=ProPhoto.ImageLayer.load(proPng,20,15);
+        brushDoc.add(imported);brushDoc.add(new ProPhoto.Tone(tone));
+        ProjectStore.save(proPng,brushDoc.snapshot());
+        check(ProjectStore.load(proPng).size()==3,"Pro project round trip");
+        WorldCapture.save(proPng,new WorldCapture.Scene("minecraft:overworld",1,64,2,0,0,70,1000,false,false,true,123));
+        check(WorldCapture.read(proPng).contains("minecraft:overworld"),"Scene metadata");
+        Files.delete(proPng.resolveSibling("source.png.world.json"));Files.delete(proPng.resolveSibling("source.png.smproject"));Files.delete(proPng);Files.delete(proRoot);
         System.out.println("Screenshot Manager core smoke tests passed");
     }
 }

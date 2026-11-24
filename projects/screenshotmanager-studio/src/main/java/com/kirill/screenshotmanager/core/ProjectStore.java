@@ -35,9 +35,11 @@ public final class ProjectStore {
                     else if(op instanceof ProPhoto.Tone a){out.writeByte(4);for(int v:a.values())out.writeInt(v);}
                     else if(op instanceof ProPhoto.Effects a){out.writeByte(5);for(int v:a.values())out.writeInt(v);}
                     else if(op instanceof ProPhoto.Focus a){out.writeByte(6);out.writeInt(a.x());out.writeInt(a.y());out.writeInt(a.radius());out.writeInt(a.amount());out.writeBoolean(a.dark());}
+                    else if(op instanceof ProPhoto.ImageLayer a){out.writeByte(7);out.writeUTF(a.name());for(int v:new int[]{a.x(),a.y(),a.size(),a.rotation(),a.opacity()})out.writeInt(v);byte[] png=a.png();out.writeInt(png.length);out.write(png);}
                     else throw new IOException("Unsupported layer");
                 }
             }
+            if(Files.size(tmp)>8_000_000)throw new IOException("Project exceeds 8 MB; remove some image layers");
             try{Files.move(tmp,target,StandardCopyOption.REPLACE_EXISTING,StandardCopyOption.ATOMIC_MOVE);}
             catch(AtomicMoveNotSupportedException e){Files.move(tmp,target,StandardCopyOption.REPLACE_EXISTING);}
         }finally{Files.deleteIfExists(tmp);}
@@ -64,6 +66,7 @@ public final class ProjectStore {
                     case 4 -> {int[] a=new int[ProPhoto.TONE_COUNT];for(int k=0;k<a.length;k++)a[k]=in.readInt();op=new ProPhoto.Tone(a);}
                     case 5 -> {int[] a=new int[ProPhoto.EFFECT_COUNT];for(int k=0;k<a.length;k++)a[k]=in.readInt();op=new ProPhoto.Effects(a);}
                     case 6 -> op=new ProPhoto.Focus(in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readBoolean());
+                    case 7 -> {String name=in.readUTF();int x=in.readInt(),y=in.readInt(),size=in.readInt(),rotation=in.readInt(),opacity=in.readInt(),n=in.readInt();if(n<8||n>1_500_000)throw new IOException("Invalid image layer");byte[] data=in.readNBytes(n);if(data.length!=n)throw new IOException("Truncated layer");op=new ProPhoto.ImageLayer(name,data,x,y,size,rotation,opacity);}
                     default -> throw new IOException("Unknown layer");
                 }
                 ops.add(new Layer(op,visible||geometry(op)));

@@ -46,6 +46,8 @@ public final class StudioScreen extends StudioBaseScreen {
     private static final String[] EFFECT_NAMES={"Bloom","Film grain","Color fringe","Vignette","Sharpen","Atmosphere","Letterbox"};
     private final ArrayList<StudioSlider> sliders=new ArrayList<>();
     private StudioSlider activeSlider;
+    private int imageSize=100,imageAngle=0,imageOpacity=100,importIndex=-1;
+    private java.nio.file.Path importPath;
     private String draft="",status="Opening original...";
     private Tool tool=Tool.ARROW;
     private int color=COLORS[0],thickness=6,strength=18,number=1;
@@ -222,6 +224,12 @@ public final class StudioScreen extends StudioBaseScreen {
     }
     private void drawTools(GuiGraphics g,int mx,int my,int sx,int sw){
         int y=73;
+        if(doc!=null&&selected>=0&&selected<doc.count()&&ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ProPhoto.ImageLayer){
+            slider(g,"Scale "+imageSize+"%",sx,y,sw,10,200,imageSize,100,v->imageSize=v);y+=27;
+            slider(g,"Rotate "+imageAngle,sx,y,sw,-180,180,imageAngle,0,v->imageAngle=v);y+=27;
+            slider(g,"Opacity "+imageOpacity+"%",sx,y,sw,0,100,imageOpacity,100,v->imageOpacity=v);y+=27;
+            action(g,"Apply transform",sx,y,sw,16,mx,my,false,this::applyStyle);return;
+        }
         if(needsText()){
             g.drawString(font,textPending?"Enter to place / Esc cancel":"Click image to place text",sx,y,StudioUi.MUTED,false);
             text.setX(sx);text.setY(y+12);text.setWidth(sw);
@@ -264,6 +272,7 @@ public final class StudioScreen extends StudioBaseScreen {
                     grade[0]=gr.brightness();grade[1]=gr.contrast();grade[2]=gr.saturation();grade[3]=gr.warmth();grade[4]=gr.gamma();grade[5]=gr.vignette();
                 }else if(ImageDocument.unwrap(op) instanceof ProPhoto.Tone t){System.arraycopy(t.values(),0,tone,0,tone.length);gradeMode=1;}
                 else if(ImageDocument.unwrap(op) instanceof ProPhoto.Effects e){System.arraycopy(e.values(),0,effects,0,effects.length);gradeMode=2;}
+                else if(ImageDocument.unwrap(op) instanceof ProPhoto.ImageLayer im){imageSize=im.size();imageAngle=im.rotation();imageOpacity=im.opacity();}
             });
         }
         int y=height-66,w=sw/3;
@@ -282,6 +291,7 @@ public final class StudioScreen extends StudioBaseScreen {
         }else if(op instanceof ImageDocument.Adjustment)changed(doc.replace(selected,currentGrade()));
         else if(op instanceof ProPhoto.Tone)changed(doc.replace(selected,new ProPhoto.Tone(tone)));
         else if(op instanceof ProPhoto.Effects)changed(doc.replace(selected,new ProPhoto.Effects(effects)));
+        else if(op instanceof ProPhoto.ImageLayer im)changed(doc.replace(selected,im.transform(im.x(),im.y(),imageSize,imageAngle,imageOpacity)));
         else status="Select an annotation or color layer";
     }
     private ImageDocument.Adjustment currentGrade(){return new ImageDocument.Adjustment(grade[0],grade[1],grade[2],grade[3],grade[4],grade[5]);}
@@ -334,7 +344,7 @@ public final class StudioScreen extends StudioBaseScreen {
         }));
     }
     private void drawFile(GuiGraphics g,int mx,int my,int sx,int sw){
-        int y=69,step=Math.max(11,Math.min(20,(height-96)/7)),h=step-2;
+        int y=69,step=Math.max(10,Math.min(17,(height-96)/10)),h=step-2;
         action(g,"Save project",sx,y,sw,h,mx,my,false,()->project(false));
         action(g,"Load project",sx,y+=step,sw,h,mx,my,false,()->project(true));
         action(g,exportJpeg?"Format: JPEG":"Format: PNG",sx,y+=step,sw,h,mx,my,false,()->exportJpeg=!exportJpeg);
@@ -342,6 +352,9 @@ public final class StudioScreen extends StudioBaseScreen {
         action(g,exportSide==0?"Size: original":"Long side: "+exportSide,sx,y+=step,sw,h,mx,my,false,()->exportSide=exportSide==0?3840:exportSide==3840?1920:exportSide==1920?1280:exportSide==1280?840:exportSide==840?640:0);
         action(g,exportBudget==0?"Limit: none":"Limit: "+exportBudget+" KB",sx,y+=step,sw,h,mx,my,false,()->exportBudget=exportBudget==0?2000:exportBudget==2000?1000:exportBudget==1000?500:exportBudget==500?250:0);
         action(g,"Export image",sx,y+=step,sw,h,mx,my,false,this::customExport);
+        action(g,importPath==null?"Pick import":importPath.getFileName().toString(),sx,y+=step,sw,h,mx,my,false,this::pickImport);
+        action(g,"Add image",sx,y+=step,sw,h,mx,my,false,this::importImage);
+        action(g,"Scene info",sx,y+=step,sw,h,mx,my,false,this::sceneInfo);
     }
     private void project(boolean load){
         if(busy||doc==null)return;
@@ -366,6 +379,32 @@ public final class StudioScreen extends StudioBaseScreen {
         },ShotFiles.IO).whenComplete((path,error)->Minecraft.getInstance().execute(()->{
             if(!alive||token!=epoch)return;busy=false;status=error==null?"Saved "+path.getFileName():"Export: "+message(error);
         }));
+    }
+    private void pickImport(){
+        if(busy)return;busy=true;long token=++epoch;int wanted=importIndex+1;
+        CompletableFuture.supplyAsync(()->{
+            try{var folder=StudioClient.directory().resolve("imports");java.nio.file.Files.createDirectories(folder);
+                try(var list=java.nio.file.Files.list(folder)){return list.filter(java.nio.file.Files::isRegularFile).filter(path->{String n=path.getFileName().toString().toLowerCase(java.util.Locale.ROOT);return n.endsWith(".png")||n.endsWith(".jpg")||n.endsWith(".jpeg");}).sorted().limit(250).toList();}
+            }catch(Exception e){throw new RuntimeException(e);}
+        },ShotFiles.IO).whenComplete((list,error)->Minecraft.getInstance().execute(()->{
+            if(!alive||epoch!=token)return;busy=false;
+            if(error!=null||list.isEmpty()){status="Put PNG/JPG in screenshots/imports, then Pick import";importPath=null;return;}
+            importIndex=wanted%list.size();importPath=list.get(importIndex);status="Selected "+importPath.getFileName();
+        }));
+    }
+    private void importImage(){
+        if(busy||doc==null||rendered==null||importPath==null)return;
+        busy=true;long token=++epoch;var path=importPath;int x=rendered.getWidth()/2,y=rendered.getHeight()/2;
+        CompletableFuture.supplyAsync(()->{try{return ProPhoto.ImageLayer.load(path,x,y);}catch(Exception e){throw new RuntimeException(e);}},ShotFiles.IO)
+            .whenComplete((layer,error)->Minecraft.getInstance().execute(()->{
+                if(!alive||epoch!=token)return;busy=false;if(error!=null){status="Import failed: "+message(error);return;}
+                imageSize=100;imageAngle=0;imageOpacity=100;apply(layer,false);panel=1;
+            }));
+    }
+    private void sceneInfo(){
+        if(busy)return;busy=true;long token=++epoch;
+        CompletableFuture.supplyAsync(()->{try{return com.kirill.screenshotmanager.core.WorldCapture.read(shot.path());}catch(Exception e){return "No scene metadata for this screenshot";}},ShotFiles.IO)
+            .whenComplete((value,error)->Minecraft.getInstance().execute(()->{if(!alive||epoch!=token)return;busy=false;status=value==null?"No scene metadata":value;}));
     }
     private void selection(GuiGraphics g){
         int x1=ix+(int)Math.round(ax*scale),y1=iy+(int)Math.round(ay*scale);
@@ -416,7 +455,7 @@ public final class StudioScreen extends StudioBaseScreen {
         }
         if((compareMode||peek)&&canvas(x,y))return true;
         if(panel==1&&button==0&&image(x,y)&&!busy&&selected>=0&&selected<doc.count()){
-            if(ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ImageDocument.MarkOperation&&!ImageDocument.geometry(doc.snapshot().get(selected))){
+            if((ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ImageDocument.MarkOperation||ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ProPhoto.ImageLayer)&&!ImageDocument.geometry(doc.snapshot().get(selected))){
                 movingLayer=true;moveX=px(x);moveY=py(y);return true;
             }
         }
