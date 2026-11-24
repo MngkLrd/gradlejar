@@ -323,8 +323,7 @@ public final class WarehouseReorganizer {
         }
 
         private static boolean valid(ServerLevel level, ContainerRef ref) {
-            return level.hasChunkAt(ref.pos())
-                    && level.getBlockEntity(ref.pos()) == ref.identity();
+            return ref.level() == level && ref.isValid();
         }
     }
 

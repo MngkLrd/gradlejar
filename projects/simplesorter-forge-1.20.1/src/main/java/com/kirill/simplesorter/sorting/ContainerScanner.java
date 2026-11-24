@@ -12,14 +12,17 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
  * Discovers only loaded, player-usable storage block entities.
- * Vanilla double chests are ONE logical 54-slot inventory, not two misleading
- * category profiles made from the separate 27-slot block entities.
+ * A double chest is one logical inventory of its actual physical size.
+ * Some capability implementations already expose both halves, even when
+ * neither half is the vanilla size. Never wrap two combined views together.
  */
 public final class ContainerScanner {
     private ContainerScanner() {}
@@ -52,6 +55,7 @@ public final class ContainerScanner {
         candidates.sort(Comparator.comparingDouble(p -> p.distSqr(center)));
         List<ContainerRef> result = new ArrayList<>();
         Set<BlockPos> visited = new HashSet<>();
+        Set<Object> claimedHandlers = Collections.newSetFromMap(new IdentityHashMap<>());
 
         for (BlockPos pos : candidates) {
             if (result.size() >= 384) break;
@@ -73,35 +77,69 @@ public final class ContainerScanner {
 
                 BlockEntity partner = level.getBlockEntity(other);
                 if (partner == null || !accessible(player, partner)) continue;
-                IItemHandler a = itemHandler(be);
-                IItemHandler b = itemHandler(partner);
-                if (a == null || b == null) continue;
+
                 visited.add(pos);
                 visited.add(other);
 
+                // ChestBlock subclasses expose their physical half through
+                // Container, while Forge capabilities may expose either half
+                // or the entire combined inventory. Sizes must be measured.
+                if (!(be instanceof Container first) || !(partner instanceof Container second))
+                    continue;
+                IItemHandler a = itemHandler(be);
+                IItemHandler b = itemHandler(partner);
+                if (a == null || b == null) continue;
+
                 BlockPos canonical = pos.asLong() <= other.asLong() ? pos : other;
-                IItemHandler logical;
-                if (a.getSlots() >= 54 || b.getSlots() >= 54) {
-                    // Support chest implementations that already expose a
-                    // combined inventory through a capability.
-                    logical = a.getSlots() >= 54 ? a : b;
-                } else {
-                    logical = canonical.equals(pos)
-                            ? new DoubleChestItemHandler(a, b)
-                            : new DoubleChestItemHandler(b, a);
+                boolean firstIsCanonical = canonical.equals(pos);
+                Object aIdentity = handlerIdentity(a);
+                Object bIdentity = handlerIdentity(b);
+                if (claimedHandlers.contains(aIdentity) || claimedHandlers.contains(bIdentity))
+                    continue;
+                // Select the canonical combined view when both are available.
+                IItemHandler canonicalHandler = firstIsCanonical ? a : b;
+                IItemHandler partnerHandler = firstIsCanonical ? b : a;
+                int canonicalSize = firstIsCanonical ? first.getContainerSize() : second.getContainerSize();
+                int partnerSize = firstIsCanonical ? second.getContainerSize() : first.getContainerSize();
+                ChestInventoryShape.Mode mode = ChestInventoryShape.resolve(
+                        canonicalSize, partnerSize, canonicalHandler.getSlots(),
+                        partnerHandler.getSlots(), aIdentity == bIdentity);
+                IItemHandler logical = switch (mode) {
+                    case FIRST_COMBINED -> canonicalHandler;
+                    case SECOND_COMBINED -> partnerHandler;
+                    case TWO_HALVES -> new DoubleChestItemHandler(canonicalHandler, partnerHandler);
+                    case UNSAFE -> null;
+                };
+                if (logical == null) {
+                    org.slf4j.LoggerFactory.getLogger("SimpleSorter/Scanner").debug(
+                            "Skipped ambiguous chest {}: physical {}+{}, capability {}+{}",
+                            canonical, canonicalSize, partnerSize,
+                            canonicalHandler.getSlots(), partnerHandler.getSlots());
+                    continue;
                 }
+                claimedHandlers.add(aIdentity);
+                claimedHandlers.add(bIdentity);
                 result.add(new ContainerRef(canonical, logical,
-                        canonical.equals(pos) ? be : partner, level));
+                        firstIsCanonical ? be : partner, level,
+                        firstIsCanonical ? other : pos,
+                        firstIsCanonical ? partner : be));
                 continue;
             }
 
             IItemHandler handler = itemHandler(be);
-            if (handler != null && handler.getSlots() > 0) {
+            if (handler != null && handler.getSlots() > 0
+                    && claimedHandlers.add(handlerIdentity(handler))) {
                 visited.add(pos);
                 result.add(new ContainerRef(pos, handler, be, level));
             }
         }
         return result;
+    }
+
+    private static Object handlerIdentity(IItemHandler handler) {
+        if (handler instanceof ForgeItemHandlerAdapter forge) return forge.delegate();
+        if (handler instanceof ContainerItemHandler container) return container.container();
+        return handler;
     }
 
     private static boolean accessible(Player player, BlockEntity be) {
