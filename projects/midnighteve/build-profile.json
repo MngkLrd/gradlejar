@@ -1,9 +1,9 @@
 {
   "slug": "midnighteve",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "midnighteve-0.6.0.jar"
+  "jar_glob": "midnighteve-0.7.0.jar"
 }
