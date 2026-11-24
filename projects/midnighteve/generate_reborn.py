@@ -272,6 +272,10 @@ tree(town,21,20)
 def festival(t,x,z):
     t.put(x,4,z,"midnighteve:festival_hearth",stage=0)
     t.put(x,5,z,"air")
+    for kind,(dx,dz) in enumerate([(-2,-1),(2,-1),(2,1)]):
+        t.put(x+dx,3,z+dz,"stone_bricks")
+        t.put(x+dx,4,z+dz,"midnighteve:festival_display",kind=kind,ready=False)
+        t.put(x+dx,5,z+dz,"air")
     for dx,dz in [(-3,-2),(3,-2),(-3,2),(3,2)]:
         t.put(x+dx,3,z+dz,"stone_bricks")
         t.put(x+dx,4,z+dz,"stone_brick_wall",up=True,north="none",south="none",east="none",west="none",waterlogged=False)
