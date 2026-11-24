@@ -577,6 +577,79 @@ edit(p,"import net.minecraft.core.particles.ParticleTypes;","import net.minecraf
 # Actual progression unlocks a whole set of craftable holiday goods without making old festivals incompatible.
 p=J/"block/FestivalHearth.java"
 edit(p,"Block.popResource(s,p.above(),new ItemStack(MidnightEve.WRAPPED_GIFT.get(),3));","Block.popResource(s,p.above(),new ItemStack(MidnightEve.WRAPPED_GIFT.get(),3));\n        Block.popResource(s,p.above(),new ItemStack(dev.mngklrd.midnighteve.content.TalesContent.GINGERBREAD.get(),8));\n        Block.popResource(s,p.above(),new ItemStack(dev.mngklrd.midnighteve.content.TalesContent.STAR_ITEM.get(),1));")
+
+# Native biome soundtrack registration. Original Ogg files are composed offline.
+p=J/"content/TalesContent.java"
+edit(p,"import net.minecraft.core.registries.Registries;","import net.minecraft.core.registries.Registries;\nimport net.minecraft.sounds.SoundEvent;\nimport net.minecraft.resources.ResourceLocation;")
+edit(p,"    public static final DeferredRegister<Feature<?>> FEATURES",'''    private static final DeferredRegister<SoundEvent> SOUNDS=DeferredRegister.create(Registries.SOUND_EVENT,"midnighteve");
+    public static final Supplier<SoundEvent> DUSK=SOUNDS.register("lanterns_at_dusk",()->SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("midnighteve","lanterns_at_dusk")));
+    public static final Supplier<SoundEvent> FJORDS=SOUNDS.register("snow_over_the_fjords",()->SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("midnighteve","snow_over_the_fjords")));
+    public static final DeferredRegister<Feature<?>> FEATURES''')
+edit(p,"        FEATURES.register(bus);","        FEATURES.register(bus); SOUNDS.register(bus);")
+write(A/"sounds.json",{n:{"sounds":[{"name":mod("music/"+n),"stream":True}]} for n in ("lanterns_at_dusk","snow_over_the_fjords")})
+for n in g.names:
+    song="snow_over_the_fjords" if n in ("mirror_fjords","crystal_crown","silent_snowfields") else "lanterns_at_dusk"
+    add_json(D/"worldgen/biome"/(n+".json"),lambda b:b["effects"].update({"music":{"sound":mod(song),"min_delay":2400,"max_delay":6000,"replace_current_music":False}}))
+# Only client code references Minecraft's render classes. The ribbons are sky-space
+# geometry, not entities or server particles, and need no custom shader.
+text(J/"client/AuroraRenderer.java",'''package dev.mngklrd.midnighteve.client;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import org.joml.Matrix4f;
+
+@EventBusSubscriber(modid="midnighteve",value=Dist.CLIENT)
+public final class AuroraRenderer {
+    @SubscribeEvent
+    public static void sky(RenderLevelStageEvent e){
+        if(e.getStage()!=RenderLevelStageEvent.Stage.AFTER_SKY||Boolean.getBoolean("midnighteve.disableAurora"))return;
+        Minecraft mc=Minecraft.getInstance();
+        if(mc.level==null||mc.player==null)return;
+        if(!mc.level.getBiome(mc.player.blockPosition()).unwrapKey().map(k->k.location().getNamespace().equals("midnighteve")).orElse(false))return;
+        long tick=Math.floorMod(mc.level.getDayTime(),24000L);
+        float night=(float)Math.max(0,Math.min(1,Math.min((tick-12600)/1700.0,(23500-tick)/1700.0)));
+        float fade=night*(1-mc.level.getRainLevel(1.0F));
+        if(fade<.02F)return;
+        double t=mc.level.getGameTime()*.007;
+        Matrix4f mat=e.getModelViewMatrix();
+        RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.depthMask(false);RenderSystem.disableCull();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        RenderSystem.setShaderColor(1,1,1,1);
+        try{
+            BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+            for(int band=0;band<3;band++){
+                for(int i=0;i<80;i++){
+                    double u=i/80.0,v=(i+1)/80.0;
+                    float alpha=fade*(float)(.15+.08*band);
+                    for(int layer=0;layer<3;layer++){
+                        vert(b,mat,u,band,layer,t,alpha);
+                        vert(b,mat,v,band,layer,t,alpha);
+                        vert(b,mat,v,band,layer+1,t,alpha);
+                        vert(b,mat,u,band,layer+1,t,alpha);
+                    }
+                }
+            }
+            BufferUploader.drawWithShader(b.buildOrThrow());
+        }finally{RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();RenderSystem.setShaderColor(1,1,1,1);}
+    }
+    private static void vert(BufferBuilder b,Matrix4f mat,double u,int band,int layer,double t,float alpha){
+        double theta=-2.45+u*2.65+band*.13;
+        double wave=Math.sin(u*12+t+band*.8)*5+Math.sin(u*29-t*.7)*2.1;
+        double radius=93-band*9+Math.sin(u*8+t*.35)*5;
+        float x=(float)(Math.cos(theta)*radius),z=(float)(Math.sin(theta)*radius);
+        float y=(float)(29+band*9+wave+layer*(7+Math.sin(u*8+t)*2));
+        float a=(float)(alpha*Math.sin(Math.PI*u)*(layer==0||layer==3?0:layer==1?1:.55));
+        float r=layer==2?.32F:.18F,g=layer==2?.50F:.84F,blue=layer==2?.88F:.58F;
+        b.addVertex(mat,x,y,z).setColor(r,g,blue,a);
+    }
+}
+''')
+
 # Version and translation resources written only after all extensions are assembled.
 edit(R/"META-INF/neoforge.mods.toml",'version="0.6.0"','version="0.7.0"')
 for n,lang in [("en_us",g.en),("ru_ru",g.ru)]:write(A/"lang"/(n+".json"),lang)
