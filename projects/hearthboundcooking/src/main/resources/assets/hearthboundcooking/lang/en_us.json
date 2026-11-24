@@ -33,5 +33,20 @@
   "hearthbound.gui.water": "Add water",
   "hearthbound.gui.planned": "%s batches / %s bowls",
   "hearthbound.gui.rotten": "Remove spoiled food",
-  "hearthbound.gui.add_food": "Add ingredients"
+  "hearthbound.gui.add_food": "Add ingredients",
+  "hearthbound.result": "%s  Cooking quality: %s%%",
+  "hearthbound.tier.mediocre": "Mediocre",
+  "hearthbound.tier.ruined": "Ruined",
+  "hearthbound.report.shift": "Hold Shift for cooking report",
+  "hearthbound.report.legacy": "No detailed report for this preparation",
+  "hearthbound.report.under": "-%s%% Undercooked ingredients",
+  "hearthbound.report.over": "-%s%% Overcooked ingredients",
+  "hearthbound.report.heat": "-%s%% Excessive heat",
+  "hearthbound.report.late": "-%s%% Left on the heat too long",
+  "hearthbound.report.prior": "-%s%% Previously prepared ingredients",
+  "hearthbound.report.perfect": "No cooking mistakes",
+  "hearthbound.cooking_status": "%s: cooking",
+  "hearthbound.not_ready": "The ingredients need more time",
+  "hearthbound.cannot_add": "Cannot add this ingredient here",
+  "hearthbound.gui.overdone": "Overcooking"
 }

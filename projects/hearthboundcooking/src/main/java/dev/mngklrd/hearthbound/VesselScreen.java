@@ -33,7 +33,7 @@ public final class VesselScreen extends AbstractContainerScreen<VesselMenu> {
     }
     @Override protected void renderLabels(GuiGraphics g,int x,int y){
         g.drawString(font,font.plainSubstrByWidth(title.getString(),160),8,8,0xfff5e6cc,false);
-        String state=menu.value(4)>0?"ready":menu.value(6)==0?"cold":menu.value(2)==2?(menu.value(3)==1?"simmering":"boiling"):"warming";
+        String state=menu.value(4)>0?"ready":menu.value(6)==0?"cold":menu.value(2)==4?"overdone":menu.value(2)==3?"ready":menu.value(2)==2?(menu.value(3)==1?"simmering":"boiling"):"warming";
         g.drawString(font,Component.translatable("hearthbound.gui."+state),8,20,0xfff5e6cc,false);
         g.drawString(font,Component.translatable("hearthbound.gui.ingredients"),43,30,0xff4b3828,false);
         g.drawString(font,Component.literal(menu.value(0)+"/"+menu.value(1)+" mB"),8,75,0xff4b3828,false);

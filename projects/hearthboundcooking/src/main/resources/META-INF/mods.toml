@@ -3,7 +3,7 @@ loaderVersion="[47,)"
 license="MIT"
 [[mods]]
 modId="hearthboundcooking"
-version="0.4.1"
+version="0.5.0"
 displayName="Hearthbound Cooking"
 description='''Batch cooking, slow simmering and food quality for TerraFirmaCraft.'''
 [[dependencies.hearthboundcooking]]

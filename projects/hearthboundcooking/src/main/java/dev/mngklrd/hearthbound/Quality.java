@@ -60,6 +60,17 @@ public final class Quality {
         if(input.isEmpty()||!eligible(output)||!fresh(input))return;
         if(QualityMath.heating(HeatCapability.getTemperature(input),target)>=0)CookingReport.fresh(inherited(java.util.List.of(input))).apply(output);
     }
+    public static int soupTicks(ItemStack s){
+        IFood food=FoodCapability.get(s);if(food==null)return 800;
+        FoodData d=food.getData();
+        String path=net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(s.getItem()).getPath();
+        if(path.contains("fish")||path.contains("cod")||path.contains("salmon")||path.contains("trout")||path.contains("bass")||path.contains("tuna"))return 600;
+        if(path.contains("herb")||path.contains("spice"))return 100;
+        if(d.protein()>Math.max(d.grain(),Math.max(d.vegetables(),d.fruit())))return 1200;
+        if(d.fruit()>Math.max(d.vegetables(),d.grain()))return 200;
+        if(path.contains("cabbage")||path.contains("lettuce")||path.contains("spinach")||path.contains("leaf"))return 400;
+        return 800;
+    }
     public static int role(ItemStack s){
         IFood f=FoodCapability.get(s);if(f==null)return 1;
         FoodData d=f.getData();

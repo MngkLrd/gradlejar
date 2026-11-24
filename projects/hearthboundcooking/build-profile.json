@@ -1,9 +1,9 @@
 {
   "slug": "hearthboundcooking",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "minecraft": "1.20.1",
   "loader": "forge",
   "java": "17",
   "gradle": "8.14.3",
-  "jar_glob": "hearthboundcooking-0.4.1.jar"
+  "jar_glob": "hearthboundcooking-0.5.0.jar"
 }

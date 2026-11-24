@@ -33,5 +33,20 @@
   "hearthbound.gui.water": "Добавь воду",
   "hearthbound.gui.planned": "%s парт. / %s порц.",
   "hearthbound.gui.rotten": "Убери испорченное",
-  "hearthbound.gui.add_food": "Добавь продукты"
+  "hearthbound.gui.add_food": "Добавь продукты",
+  "hearthbound.result": "%s  Качество готовки: %s%%",
+  "hearthbound.tier.mediocre": "Посредственно",
+  "hearthbound.tier.ruined": "Испорчено",
+  "hearthbound.report.shift": "Зажми Shift для разбора готовки",
+  "hearthbound.report.legacy": "Подробный отчёт не сохранён",
+  "hearthbound.report.under": "-%s%% Недоваренные ингредиенты",
+  "hearthbound.report.over": "-%s%% Переваренные ингредиенты",
+  "hearthbound.report.heat": "-%s%% Чрезмерный нагрев",
+  "hearthbound.report.late": "-%s%% Передержано на огне",
+  "hearthbound.report.prior": "-%s%% Качество ранее приготовленных продуктов",
+  "hearthbound.report.perfect": "Без ошибок приготовления",
+  "hearthbound.cooking_status": "%s: готовится",
+  "hearthbound.not_ready": "Ингредиентам нужно ещё время",
+  "hearthbound.cannot_add": "Нельзя добавить этот продукт сюда",
+  "hearthbound.gui.overdone": "Переваривается"
 }
