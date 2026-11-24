@@ -3,7 +3,7 @@ loaderVersion="[4,)"
 license="All Rights Reserved"
 [[mods]]
 modId="sleepdebt"
-version="3.1.2"
+version="3.1.3"
 displayName="Sleep Debt"
 description='''A survival system for sleep debt, physical fatigue, stress, camp rest and caffeine.'''
 [[dependencies.sleepdebt]]

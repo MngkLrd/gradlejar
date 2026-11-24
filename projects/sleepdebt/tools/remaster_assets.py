@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""3.1.2: original native 16px sprite sheets. No reuse of previous art.
+"""3.1.3: original native 16px sprite sheets. No reuse of previous art.
 Material-first palettes, deliberate cluster maps, no stochastic noise or AA.
 Blockbench Minecraft Style Guide: https://blockbench.net/wiki/guides/minecraft-style-guide/
 """
@@ -15,7 +15,7 @@ def save(name,a,p):
     raw=b"".join(b"\0"+b"".join(bytes(p[c]) for c in r) for r in a)
     target=ROOT/(name+".png");target.parent.mkdir(parents=True,exist_ok=True)
     target.write_bytes(b"\x89PNG\r\n\x1a\n"+chunk(b"IHDR",struct.pack(">IIBBBBB",w,h,8,6,0,0,0))+chunk(b"IDAT",zlib.compress(raw,9))+chunk(b"IEND",b""))
-for n,t in json.loads(Path("tools/art_312.json").read_text()).items():save(n,t["rows"],pal(t["palette"]))
+for n,t in json.loads(Path("tools/art_313.json").read_text()).items():save(n,t["rows"],pal(t["palette"]))
 def canvas(w,h,c="."):return [[c]*w for _ in range(h)]
 def put(a,x,y,c):
     if 0<=y<len(a) and 0<=x<len(a[y]):a[y][x]=c
@@ -26,54 +26,72 @@ def stamp(a,x,y,p):
     for j,r in enumerate(p.split("/")):
         for i,c in enumerate(r):
             if c!=".":put(a,x+i,y+j,c)
-# Dark timber and warm bronze. Wood grain is a set of interrupted, coherent
-# groups; recessed faces remain readable, not filled with random dither.
-p=pal("171419 292328 352c2b 48332a 633c29 885335 b07545 d8a265 ebc486 3b3434 51413a 6b4c37")
+# Native HUD. A forged bronze frame surrounds a dark oak inset.
+# Broad, connected plank sections describe wood, with few fine exposed joints.
+p=pal("151519 272127 382a2a 4b3026 683e2b 925736 b87848 dfa366 f0c78b 44342e 5b4538 83604a")
 def frame(w,h):
     a=canvas(w,h,".")
     rect(a,1,0,w-2,h,"0");rect(a,0,1,w,h-2,"0")
     rect(a,1,1,w-2,h-2,"4");rect(a,2,2,w-4,h-4,"5")
-    rect(a,4,4,w-8,h-8,"0");rect(a,5,5,w-10,h-10,"1")
-    rect(a,3,2,w-6,1,"6");rect(a,2,3,1,h-6,"6")
-    rect(a,3,h-3,w-6,1,"3");rect(a,w-3,3,1,h-6,"3")
-    for x,pattern in ((10,"667766/55565"),(25,"677666/55655"),(49,"666776/55565"),(81,"677766/56555"),(117,"667766/55565"),(137,"6776/5655")):
-        if x+6<w-5:stamp(a,x,2,pattern)
-    for x,pattern in ((12,"44554/33443"),(34,"4544/3433"),(74,"4455/3344"),(105,"5544/4433"),(135,"4544/3433")):
-        if x+5<w-5:stamp(a,x,h-4,pattern)
-    corner=["056550","567760","578650","675430","643430","000000"]
+    rect(a,5,5,w-10,h-10,"1")
+    # Two distinct frame planes. Bevel discontinuities at the joints.
+    rect(a,4,3,w-8,1,"7");rect(a,3,4,1,h-8,"6")
+    rect(a,4,h-4,w-8,1,"3");rect(a,w-4,4,1,h-8,"3")
+    for x,pat in ((12,"77666/6555"),(36,"6677666/555655"),(64,"77666/6555"),(95,"667766/55555"),(127,"77666/6555")):
+        if x+7<w-7:stamp(a,x,2,pat)
+    for x,pat in ((18,"44455/33344"),(46,"44554/33443"),(85,"44455/33344"),(122,"44554/33443")):
+        if x+5<w-7:stamp(a,x,h-4,pat)
+    # Four compact bronze clasps with a rivet recess and angled reflected light.
+    corner=[".000000.","06777760","07866650","07604540","06504430","06544330","05443300",".000000."]
     for fx,fy in ((0,0),(1,0),(0,1),(1,1)):
         for yy,row in enumerate(corner):
-            for xx,c in enumerate(row):put(a,w-1-xx if fx else xx,h-1-yy if fy else yy,c)
+            for xx,c in enumerate(row):
+                if c!=".":put(a,w-1-xx if fx else xx,h-1-yy if fy else yy,c)
     return a
 a=frame(158,68)
-# Large joined shallow relief clusters, not uniform bands.
-for x,y,s in [(9,8,"22222222/22233322/..2222"),(38,9,"222222222/..222222"),(95,8,"2222222/2223322"),(122,13,"222222222/2222"),(15,18,"333333333333/..333333"),(76,18,"333333333333333/..33333333"),(11,60,"222222222/222222"),(101,61,"222222222222/..222222")]:stamp(a,x,y,s)
-rect(a,9,21,140,1,"5");rect(a,10,22,138,1,"3")
+# Carved title plank. Long, interrupted grain follows the board's axis.
+rect(a,9,7,140,15,"2")
+for x,y,pat in [(9,7,"3333333333333333/333333333333"),(35,8,".333333333333/..333333333"),(95,7,"333333333333333333/3333333333333"),(123,10,"333333333333/..33333333"),(11,17,"11111111111111/11111111"),(70,18,"111111111111111111/..111111111111"),(128,18,"1111111111111/11111111")]:
+    stamp(a,x,y,pat)
+rect(a,9,21,140,1,"5");rect(a,10,22,138,1,"0")
 for y in (25,38,51):
-    rect(a,9,y-1,140,12,"3");rect(a,10,y,138,10,"2")
-    rect(a,9,y-1,140,1,"0");rect(a,10,y+10,138,1,"a")
-    stamp(a,11,y+2,".7./765/.54")
-    # coarse wooden grain along left and under meters, keeping text unobstructed.
-    for x,pattern in ((20,"2223332/..22222"),(39,"222222/222332"),(61,"33322/22222"),(93,"333333/..3333"),(121,"3333333/..33333")):
-        stamp(a,x,y+8,pattern)
-    rect(a,73,y+1,74,9,"0");rect(a,74,y+2,72,7,"1")
-    for x,pattern in ((75,"2222/222"),(88,".22/222"),(105,"22222/..222"),(123,".2222/222"),(138,"22222/222")):stamp(a,x,y+6,pattern)
-    rect(a,74,y+9,72,1,"5");rect(a,146,y+2,1,7,"3")
+    rect(a,9,y-1,140,12,"3")
+    rect(a,10,y,138,10,"2")
+    rect(a,10,y,138,1,"9");rect(a,10,y+10,138,1,"0")
+    stamp(a,11,y+2,".7./786/.54")
+    # Recessed horizontal track, separated from timber by a metal lip.
+    rect(a,72,y,76,11,"4");rect(a,73,y+1,74,9,"0")
+    rect(a,74,y+2,72,7,"1")
+    for x,pat in ((75,"222222/2222"),(86,"22222/2222"),(103,"2222222/..2222"),(121,"222222/2222"),(136,"22222/222")):
+        stamp(a,x,y+7,pat)
+    rect(a,74,y+9,72,1,"6")
+    # Carved wood grain is visible outside the labels, not behind every letter.
+    stamp(a,55,y+1,"3333333333/..333333")
+    stamp(a,20,y+8,"111111111111/..111111")
 save("gui/sleep_hud",a,p)
 save("gui/sleep_hint",frame(158,15),p)
-# 72x21 atlas. Three native 72x7 strips: shape light clusters from the
-# left/top, distinct short material patches and local shadow planes.
-# The visible width is cropped by Java; no stretching or flat fills.
-mp=pal("57262f 873443 b94b58 db6770 f18e86 714224 a36a2d d69843 f4c16a ffd88b 3f315e 63487f 8965ad b490d0 d5b5e7")
+# Meter atlas: sculpted connected relief, not identical three recolours.
+# Red - folded cloth ribbon, ochre - polished copper, violet - woven ribbon.
+mp=pal("562936 8b3b49 b85461 dc7680 f3a59c 684020 a96b2d d49a47 f6c66b ffe09e 45315e 674681 8e6ab0 b698ce e0c1ec")
 m=canvas(72,21,"0")
 for idx,chars in enumerate(("01234","56789","abcde")):
     d,s,b,l,h=chars;y=idx*7
-    rect(m,0,y,72,7,b);rect(m,0,y+5,72,2,s)
-    rect(m,0,y,72,1,l)
-    for x,shape in [(1,[h+h+l+l,l+l+l]),(11,[l+l+h+h+h,l+l+l]),(24,[h+h+l,l+l+l+l]),(39,[l+l+l+h+h,l+l+l]),(56,[h+h+l+l+l,l+l+l+l]),(66,[l+h+h,l+l])]:
-        stamp(m,x,y+1,"/".join(shape))
-    for x,shape in [(5,[s+s+b,s+s]),(17,[s+s+s,s+s]),(31,[s+s+s+b,s+s]),(47,[s+s+b,s+s+s]),(61,[s+s+s,s+s])]:
-        stamp(m,x,y+4,"/".join(shape))
+    rect(m,0,y,72,7,b);rect(m,0,y+6,72,1,d)
+    rect(m,0,y+5,72,1,s)
+    if idx==0:
+        for x,pat in [(0,"333333/44433/3333"),(8,"3333333333/33333333"),(20,"334444333333/3333333333"),(35,"333333333/333333"),(47,"3334443333/33333333"),(61,"33333333333/4433333333")]:
+            stamp(m,x,y,pat)
+        for x in (7,26,45,62):stamp(m,x,y+4,"1111/111")
+    elif idx==1:
+        for x,pat in [(0,"888888888888/99998888888/8888888"),(16,"888888888/888888"),(28,"88899998888/88888888"),(44,"888888888888/8888888"),(61,"88899988888/8888888")]:
+            stamp(m,x,y,pat)
+        stamp(m,11,y+3,"666/6666/666")
+        stamp(m,35,y+3,"66/6666/666")
+        stamp(m,56,y+3,"666/6666/666")
+    else:
+        for x,pat in [(0,"ddddddd/eedddd/dddd"),(11,"dddddddddd/dddddddd"),(24,"ddeeeddddd/dddddddd"),(38,"dddddddd/dddddd"),(50,"dddeeedddd/dddddddd"),(63,"ddddddddd/dddddd")]:
+            stamp(m,x,y,pat)
+        for x in (6,23,41,58):stamp(m,x,y+3,"bb/bbb/bb")
     rect(m,0,y,1,7,d)
 save("gui/sleep_meters",m,mp)
 # Grey vanilla-style journal framing retained; no custom fonts.
@@ -99,4 +117,4 @@ rect(c,108,47,24,8,"0");rect(c,109,48,22,6,"1")
 # Tiny vent slits/fasteners, distinct from slots.
 for x in (12,17,22,148,153,158):stamp(c,x,27,"000/888")
 save("gui/coffee_maker",c,q)
-print("3.1.2: independent pixel maps, 47 item/material/crop textures and 6 GUI assets")
+print("3.1.3: independent pixel maps, 47 item/material/crop textures and 6 GUI assets")

@@ -17,3 +17,7 @@ Restored detailed copper HUD with pixel-authored bevels, corner fittings and fra
 
 ## 3.1.2
 Independent material-first pixel artwork (24 items, 15 material maps, 8 growth stages), textured HUD meter atlas, no centered text shadow on journal chart labels, explicit particle texture, nonintersecting awning and bedroll geometry, espresso machine with open brewing bay and nozzle. No gameplay changes. Static asset and compilation tests are not graphical client tests.
+
+
+## 3.1.3
+Fresh native artwork set, separate material ramps, directional surface shading, shaped item outlines, HUD relief and distinct meter artwork. Integer geometry and 1:1 UVs for lantern, incense burner and dreamcatcher. Gameplay and journal logic unchanged. See ART_STANDARD.md. Visual QA in Minecraft remains required.
