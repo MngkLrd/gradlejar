@@ -1,4 +1,31 @@
-# Simple Sorter 0.10.0 (Forge 1.20.1)
+# Simple Sorter 0.10.2 (Forge 1.20.1)
+
+## 0.10.1–0.10.2 internal milestones: global adaptive planning and spatial layout
+
+Smart Categories takes one fresh snapshot of every eligible inventory in
+the selected radius. No independent 16/32-chest sorting windows. Candidate
+layouts consider real slot capacity, semantic groups, material and form
+boundaries, and legal placements. Small warehouses can co-locate related
+groups; with spare capacity the planner may separate materials/forms.
+Unknown items use exact identity, not invented similarity. Original
+placement is always a valid fallback and a worse score is not accepted.
+
+Spatial candidates group actual chest footprints into vertical columns,
+top to bottom, including double-chest midpoints. Same material spread over
+many columns and distant storage is penalized; related groups have a weaker
+proximity preference. Irregular horizontal warehouses work too. The
+semantic impurity and fragmentation score is evaluated together with
+spatial quality; no mandatory warehouse shape.
+
+Execution decomposes the single global plan into independent paths and
+cycles, checking live sources, target validity and touched inventories.
+The hidden buffer is emptied within each transaction and never persists
+between ticks. A failed component does not cancel unrelated components.
+The planning pass and an indivisible large cycle can exceed a tick budget;
+performance, full audit and cancellation behavior are scheduled for
+0.10.4. Label/purity presentation and re-sort stability remain 0.10.3.
+No new dependencies or changes to wand recipes/UI.
+
 
 ## 0.10.0 internal milestone: semantic item classification
 
