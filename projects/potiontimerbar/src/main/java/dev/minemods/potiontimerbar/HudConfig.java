@@ -10,7 +10,7 @@ public final class HudConfig {
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
-        builder.comment("Potion Timer Bar - one continuous 81px strip, longest remaining effect").push("hud");
+        builder.comment("Potion Timer Bar - stacked 81px XP-style effect timers").push("hud");
         ENABLED = builder.comment("Show a bar only when an active effect exists").define("enabled", true);
         AUTO_AVOID_AIR = builder.comment("Keep the line clear of the vanilla air bubbles while underwater")
             .define("autoAvoidAir", true);
