@@ -101,7 +101,11 @@ public final class StudioClient {
             else if(mc.screen==null&&mc.level!=null&&!cleanPending&&burstRemaining==0)recorder.start();
         }
         while(burst.consumeClick()){if(!recorder.active()&&mc.screen==null&&mc.level!=null&&!cleanPending){burstRemaining=5;burstNext=0;}}
-        if(recorder.active())return;
+        if(recorder.active()){
+            while(edit.consumeClick()){} while(library.consumeClick()){} while(copy.consumeClick()){} while(capture.consumeClick()){}
+            while(photo.consumeClick()){} while(clean.consumeClick()){} while(zoomIn.consumeClick()){} while(zoomOut.consumeClick()){}
+            return;
+        }
         if(mc.level==null||mc.screen!=null)burstRemaining=0;
         if(mc.level==null||mc.screen!=null)stopPhoto(mc);
         if(cleanPending&&(mc.level==null||mc.screen!=null||System.currentTimeMillis()-cleanStarted>3000))restoreClean(mc);
