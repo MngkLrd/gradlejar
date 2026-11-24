@@ -45,7 +45,16 @@ public final class SleepHud {
   meter(g,x,y+28,ClientState.debt,0xFFA65C67);
   meter(g,x,y+41,ClientState.fatigue,0xFFC79360);
   meter(g,x,y+54,ClientState.stress,0xFF9683B2);
-  // Detailed server-calculated modifiers are available from the inventory journal.
+  if(ClientSettings.PENALTY_HINT.get()){
+   int[] v=ClientState.penalties;int worst=0;
+   for(int i=1;i<4;i++)if(v[i]>v[worst])worst=i;
+   if(v[worst]>0||v[4]>0){
+    String[] keys={"attack","mining","movement","damage"};
+    var hint=v[worst]>0?Component.translatable("journal.sleepdebt."+keys[worst],v[worst]):
+      Component.translatable("journal.sleepdebt.energy",String.format(java.util.Locale.ROOT,"%.3f",v[4]/1000.0));
+    g.fill(x,y+69,x+158,y+81,0xBD222222);g.drawString(mc.font,hint,x+4,y+71,0xFFE6C9A0,false);
+   }
+  }
   if(ClientState.maskTicks>0)g.drawString(mc.font,"+",x+141,y+8,0xFFCBA65D,false);
   else if(ClientState.crashTicks>0)g.drawString(mc.font,"!",x+122,y+6,0xFFD9796E,false);
  }

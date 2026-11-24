@@ -14,7 +14,8 @@ import net.minecraft.network.chat.Component;
 public final class SleepJournalScreen extends Screen {
  private static final int TEXT=0xFF393939, MUTED=0xFF626262, RED=0xFFA65C67, GOLD=0xFFC18A50,
    VIOLET=0xFF927BB1, TEAL=0xFF54857F, GRID=0xFFB0B0B0;
- private final SleepReportPayload report;
+ private SleepReportPayload report;
+ private int refreshTicks;
  private final Screen previous;
  private int left,top,w,h,page;
  private final String[] pages={"overview","history","activity","recovery","caffeine"};
@@ -23,7 +24,7 @@ public final class SleepJournalScreen extends Screen {
  }
  public static void open(SleepReportPayload report){
   Minecraft mc=Minecraft.getInstance();
-  if(mc.screen instanceof SleepJournalScreen old){var next=new SleepJournalScreen(report,old.previous);next.page=old.page;mc.setScreen(next);}
+  if(mc.screen instanceof SleepJournalScreen old){old.report=report;}
   else if(mc.screen==null||mc.screen instanceof InventoryScreen)mc.setScreen(new SleepJournalScreen(report,mc.screen));
  }
  private Component tr(String key,Object... args){return Component.translatable("journal.sleepdebt."+key,args);}
@@ -39,6 +40,7 @@ public final class SleepJournalScreen extends Screen {
  }
  @Override public void onClose(){if(minecraft!=null)minecraft.setScreen(previous);}
  @Override public boolean isPauseScreen(){return false;}
+ @Override public void tick(){if(++refreshTicks>=100){refreshTicks=0;net.neoforged.neoforge.network.PacketDistributor.sendToServer(new dev.minemods.sleepdebt.network.JournalRequest());}}
  private void label(GuiGraphics g,String key,int x,int y,Object...args){g.drawString(font,tr(key,args),x,y,TEXT,false);}
  private void raw(GuiGraphics g,String s,int x,int y,int col){g.drawString(font,s,x,y,col,false);}
  private void panel(GuiGraphics g,int x,int y,int x2,int y2){
@@ -71,7 +73,8 @@ public final class SleepJournalScreen extends Screen {
   }
   label(g,"penalties",x+split+7,y+7);
   String[] keys={"attack","mining","movement","damage","energy"};
-  for(int i=0;i<5;i++)label(g,keys[i],x+split+7,y+22+i*12,val(report.penalties(),i));
+  for(int i=0;i<4;i++)label(g,keys[i],x+split+7,y+22+i*12,val(report.penalties(),i));
+  label(g,"energy",x+split+7,y+70,String.format(java.util.Locale.ROOT,"%.3f",val(report.penalties(),4)/1000.0));
  }
  private void plot(GuiGraphics g,int x,int y,int cw,int ch,int[] channels,int[] colors,int maximum){
   int gx=x+24,gy=y+8,gw=cw-33,gh=ch-28;
@@ -115,6 +118,7 @@ public final class SleepJournalScreen extends Screen {
   label(g,"lifetime",x+8,y+ch-12);
  }
  private void recovery(GuiGraphics g,int x,int y,int cw,int ch){
+  int full=cw;boolean chart=cw>=300&&ch>=105;if(chart)cw=cw/2;
   panel(g,x,y,x+cw,y+ch);
   label(g,"quality",x+9,y+8,report.quality());
   label(g,"forecast",x+9,y+22,report.forecast());
@@ -126,6 +130,19 @@ public final class SleepJournalScreen extends Screen {
   for(int i=0;i<k.length;i++)if((r&(1<<i))!=0){
    if(y+76+row*11<y+ch-4)label(g,k[i],x+9+col*(cw-18)/2,y+76+row*11);
    if(++col==2){col=0;row++;}
+  }
+  if(chart){
+   int xx=x+cw+4,ww=full-cw-4;
+   panel(g,xx,y,xx+ww,y+ch);label(g,"sleep_history",xx+5,y+7);
+   int[] nights=report.sleepHistory();int n=nights.length/2;
+   int gx=xx+6,gy=y+24,gh=ch-40,gw=ww-12;
+   for(int i=0;i<=3;i++)line(g,gx,gy+gh*i/3f,gx+gw,gy+gh*i/3f,GRID);
+   if(n==0)label(g,"no_history",gx,gy+8);
+   else for(int i=0;i<n;i++){
+    int colW=Math.max(1,gw/n),bh=gh*Math.min(150,Math.max(0,nights[2*i]))/150;
+    g.fill(gx+i*colW,gy+gh-bh,gx+i*colW+Math.max(1,colW-2),gy+gh,TEAL);
+   }
+   label(g,"nights",gx,y+ch-12,n);
   }
  }
  private void caffeine(GuiGraphics g,int x,int y,int cw,int ch){

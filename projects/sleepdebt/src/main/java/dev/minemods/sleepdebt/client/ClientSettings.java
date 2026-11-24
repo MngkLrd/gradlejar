@@ -5,6 +5,7 @@ public final class ClientSettings {
  public static final ModConfigSpec.BooleanValue VISIBLE=B.define("hudVisible",true);
  public static final ModConfigSpec.BooleanValue RESTED=B.define("showWhenRested",true);
  public static final ModConfigSpec.IntValue OFFSET=B.defineInRange("verticalOffset",0,-55,70);
+ public static final ModConfigSpec.BooleanValue PENALTY_HINT=B.define("hudPenaltyHint",true);
  public static final ModConfigSpec SPEC=B.build();
  private ClientSettings(){}
 }

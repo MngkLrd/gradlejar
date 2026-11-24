@@ -22,7 +22,7 @@ final class SleepEffects {
   if(t.getInt("mask")>0)sleep*=1-Math.min(.85,t.getInt("maskPower")/100.0);
   if(enabled&&t.getInt("crash")>0)sleep+=.25;
   if(enabled&&t.getInt("micro")>0)sleep+=.45;
-  return new int[]{(int)Math.round(100*Math.min(.65,sleep*.40)),(int)Math.round(100*Math.min(.75,body*.50)),(int)Math.round(100*Math.min(.48,body*.30)),(int)Math.round(100*Math.min(.48,body*.30)),(int)Math.round(50*Math.min(1,enabled?load(t.getInt("stress"))*SleepSettings.STRESS_PENALTY.get():0))};
+  return new int[]{(int)Math.round(100*Math.min(.65,sleep*.40)),(int)Math.round(100*Math.min(.75,body*.50)),(int)Math.round(100*Math.min(.48,body*.30)),(int)Math.round(100*Math.min(.48,body*.30)),(int)Math.round(100*Math.min(1,enabled?load(t.getInt("stress"))*SleepSettings.STRESS_PENALTY.get():0))};
  }
  static void apply(ServerPlayer p,CompoundTag t){
   int[] v=percentages(p,t);

@@ -112,7 +112,7 @@
   "journal.sleepdebt.mining": "Mining speed -%s%%",
   "journal.sleepdebt.movement": "Movement -%s%%",
   "journal.sleepdebt.damage": "Attack damage -%s%%",
-  "journal.sleepdebt.energy": "Exertion +%s%%",
+  "journal.sleepdebt.energy": "Extra exhaustion +%s/s",
   "journal.sleepdebt.no_history": "No recorded data yet",
   "journal.sleepdebt.samples": "%s samples | 1 min / sample",
   "journal.sleepdebt.walk": "Walk",
@@ -138,5 +138,7 @@
   "journal.sleepdebt.load": "Caffeine: %s%%",
   "journal.sleepdebt.tolerance": "Tolerance: %s%%",
   "journal.sleepdebt.duration": "Active: %ss | Crash: %ss",
-  "journal.sleepdebt.potency": "Masking strength: %s%%"
+  "journal.sleepdebt.potency": "Masking strength: %s%%",
+  "journal.sleepdebt.sleep_history": "Sleep quality history",
+  "journal.sleepdebt.nights": "%s sleep sessions"
 }

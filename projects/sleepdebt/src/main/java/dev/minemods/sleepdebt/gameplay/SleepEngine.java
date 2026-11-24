@@ -22,6 +22,7 @@ public final class SleepEngine {
  private static CompoundTag data(ServerPlayer p){return p.getPersistentData().getCompound(KEY);}
  private static void save(ServerPlayer p,CompoundTag state){p.getPersistentData().put(KEY,state);}
  public static int[] history(ServerPlayer p){return data(p).getIntArray("history");}
+ public static int[] sleepHistory(ServerPlayer p){return data(p).getIntArray("sleepHistory");}
  public static int getTolerance(ServerPlayer p){return data(p).getInt("tolerance");}
  public static int getMaskPower(ServerPlayer p){return data(p).getInt("maskPower");}
  public static int getMaskTicks(ServerPlayer p){return data(p).getInt("mask");}
@@ -31,7 +32,7 @@ public final class SleepEngine {
  private static void sync(ServerPlayer p,CompoundTag state){
   PacketDistributor.sendToPlayer(p,new SleepStatusPayload(
    state.getInt("debt"),state.getInt("mask"),state.getInt("crash"),
-   state.getInt("caffeine"),state.getInt("fatigue"),state.getInt("stress")));
+   state.getInt("caffeine"),state.getInt("fatigue"),state.getInt("stress"),SleepEffects.percentages(p,state)));
  }
  public static int getDebt(ServerPlayer p){return data(p).getInt("debt");}
  public static int getFatigue(ServerPlayer p){return data(p).getInt("fatigue");}
@@ -228,10 +229,9 @@ public final class SleepEngine {
    if(exerting){
     int weight=p.getArmorValue()/6;
     int hunger=p.getFoodData().getFoodLevel()<7?2:0;
-    int activity=p.isSwimming()?1:0;
-    int amount=(p.isSwimming()?5:p.isSprinting()?4:1)+weight+hunger;
+    int activity=p.isSwimming()?1:p.isSprinting()?5:0;
+    int amount=(p.isSwimming()?5:p.isSprinting()?6:1)+weight+hunger;
     exert(t,activity,amount);
-    if(p.isSprinting()&&!p.isSwimming())exert(t,5,2);
     if(SleepSettings.PENALTIES.get())p.causeFoodExhaustion((float)(.10*stressLoad));
    }else if(p.hurtTime==0){
     int recovery=p.getFoodData().getFoodLevel()<7?0:stressLoad>.55?1:2;
@@ -278,6 +278,9 @@ public final class SleepEngine {
   t.putLong("lastFullSleepAt",now);
   t.putInt("lastSleepQuality",quality);
   t.putInt("lastSleepRecovery",before-after);
+  int[] old=t.getIntArray("sleepHistory");int n=Math.min(old.length/2*2,26);
+  int[] nights=new int[n+2];System.arraycopy(old,old.length-n,nights,0,n);
+  nights[n]=quality;nights[n+1]=before-after;t.putIntArray("sleepHistory",nights);
   t.putInt("lastSleepReasons",site.reasons());
   t.putLong("lastSleepAt",p.serverLevel().getGameTime());
   t.putInt("debt",after);
