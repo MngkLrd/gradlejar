@@ -1,9 +1,9 @@
 {
   "slug": "riverweir",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "minecraft": "1.20.1",
   "loader": "forge",
   "java": "17",
   "gradle": "8.14.3",
-  "jar_glob": "riverweir-0.4.3.jar"
+  "jar_glob": "riverweir-0.4.4.jar"
 }

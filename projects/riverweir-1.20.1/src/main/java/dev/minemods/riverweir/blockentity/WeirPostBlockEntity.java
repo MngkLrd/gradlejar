@@ -162,7 +162,7 @@ public final class WeirPostBlockEntity extends BlockEntity implements MenuProvid
             }
         }
     }
-    @Override public Component getDisplayName() { return Component.translatable("container.riverweir.weir"); }
+    @Override public Component getDisplayName() { return Component.translatable("container.riverweir.tier."+getTier().id); }
     @Nullable @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new WeirMenu(id,inventory,worldPosition,getTier().id);
     }

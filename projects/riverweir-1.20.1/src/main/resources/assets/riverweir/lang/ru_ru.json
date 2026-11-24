@@ -1,6 +1,5 @@
 {
   "block.riverweir.weir_post": "Речной колышек",
-  "block.riverweir.weir_net": "Речная рыболовная сеть",
   "item.riverweir.net_roll": "Рулон рыболовной сети (4×3 м)",
   "item.riverweir.net_twine": "Переплетённая джутовая нить",
   "container.riverweir.weir": "Речная рыболовная сеть",
@@ -30,5 +29,11 @@
   "gui.riverweir.condition_short": "Прочн.: %s%%",
   "itemGroup.riverweir": "Речные рыболовные сети",
   "tooltip.riverweir.area": "Суммарная площадь материала: %s блоков²",
-  "message.riverweir.repair_blocked": "Для ремонта освободите повреждённые участки и загрузите всю сеть."
+  "message.riverweir.repair_blocked": "Для ремонта освободите повреждённые участки и загрузите всю сеть.",
+  "container.riverweir.tier.0": "Джутовая рыболовная сеть",
+  "container.riverweir.tier.1": "Усиленная бронзовая сеть",
+  "container.riverweir.tier.2": "Тяжёлая железная сеть",
+  "gui.riverweir.tier.0": "Джутовая сеть",
+  "gui.riverweir.tier.1": "Бронзовая сеть",
+  "gui.riverweir.tier.2": "Железная сеть"
 }
