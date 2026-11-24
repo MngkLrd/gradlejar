@@ -88,13 +88,9 @@ preset=D/"worldgen/world_preset/endless_eve.json"
 p=json.loads(preset.read_text());p["dimensions"]["minecraft:overworld"]["generator"]["settings"]=mod("frostlands");write(preset,p)
 # New stone can be mined and processed; useful as an architectural material.
 # Hand-defined mineral seams: broken, offset clusters, no outline grid or random speckles.
-stone=[
-"mmmhhhhmmmmssmmm","mmhhhhmmmmmssmmm","mmhhmmmmssssmmmm","mmmmmmmmssmmmmmm",
-"ssmmmmmmmmmmhhmm","smmmmmmmmmhhhhmm","mmmmmmmmmmhhmmmm","mmmmmssmmmmmmmmm",
-"mmmssssmmmmmmmmm","mmmsmmmmmmhhmmmm","mmmmmmmmmhhhmmmm","hhmmmmmmhhmmmmmm",
-"hhmmmmmmmmmmssmm","mmmmmmmmmsssssmm","mmmmmmmmmssmmmmm","mmmhhmmmmmmmmmmm"]
-brick=["ssssssssssssssss","shhhhhhmshhhhhhm","shmmmmmmsmmmmmmm","smmmmmmmsmmmmmmm","smmmssmmsmmmmmmm","smmsssmmshhmmmmm","smmmmmmmsmmmmmmm","ssssssssssssssss","hhhhmssshhhhhhms","mmmmmsmsmmmmmmms","mmmmmsmsmmmmmmms","hmmmmssssmmmmmmm","hhmmmsmsmmmssmms","mmmmmsmsmmssmmms","mmmmmsmsmmmmmmms","ssssssssssssssss"]
-palette={"m":g.rgba("9aa6a8"),"h":g.rgba("aeb9b8"),"s":g.rgba("859396")}
+stone=["mmhhmmssssmmmlmm","mhhmmmssmmmllmmm","mhhmmmmsmmllhmmm","smmmmmmmmllhhmms","ssmmmhhmmmhmmsss","mssmmhhmmmmmsssm","mmssmmmhmmmmmsmm","mmmssmmmmmmmmmmm","mmmmmmmssmmhmmmm","hmmmmmmssmhhmmmh","hhmmmmmmsmhhmmhh","mmhmmssmmmmmmmmm","mmmmmssmmmmmmsss","mmmmmmmmhhmmsssm","mmlmmmhhhmmmmmsm","mllmmmhhmmmmmmmm"]
+brick=["ssssssssssssssss","sllhhhmmslhhhmms","shhmmmmmslhhmmms","shmmmssmsmmmmmmm","smmmmssmsmmmhhms","smmmmsmmsmmhhhms","smmmmmmssmmmmsss","ssssssssssssssss","hhmsllhhhmslhhhm","hmmslhhmmmslhhmm","mmmsmmmmmmsmmmmm","mmmsmmssmmsmmmmm","mmmsmmssmmsmmmhh","msssmmmmmmssmmhm","mmssssmmmmmsmmms","ssssssssssssssss"]
+palette={"m":g.rgba("9ba8a9"),"h":g.rgba("aab7b6"),"l":g.rgba("b8c4bf"),"s":g.rgba("859598")}
 for n,rows in [("froststone",stone),("froststone_bricks",brick)]:
     g.png(A/"textures/block"/(n+".png"),rows,palette)
     write(A/"blockstates"/(n+".json"),{"variants":{"":{"model":mod("block/"+n)}}})
