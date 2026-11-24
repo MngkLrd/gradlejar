@@ -29,11 +29,25 @@ import org.jetbrains.annotations.Nullable;
 public final class CoffeeMachineBlock extends BaseEntityBlock {
  public static final MapCodec<CoffeeMachineBlock> CODEC=simpleCodec(CoffeeMachineBlock::new);
  public static final DirectionProperty FACING=HorizontalDirectionalBlock.FACING;
- private static final VoxelShape SHAPE=Shapes.or(
-  net.minecraft.world.level.block.Block.box(2,0,2,14,2,14),
-  net.minecraft.world.level.block.Block.box(3,2,3,13,12,13),
-  net.minecraft.world.level.block.Block.box(2,12,2,14,14,14),
-  net.minecraft.world.level.block.Block.box(6,14,6,10,15,10));
+ private static final int[][] PARTS={
+  {2,0,2,14,2,14},{3,2,8,13,11,13},{3,11,3,13,14,13},
+  {6,14,8,10,15,12},{4,2,3,12,3,8},{7,8,5,9,11,7},{11,4,6,12,9,8}
+ };
+ private static VoxelShape shape(Direction d){
+  VoxelShape result=Shapes.empty();
+  for(int[] p:PARTS){
+   VoxelShape q=switch(d){
+    case EAST -> box(16-p[5],p[1],p[0],16-p[2],p[4],p[3]);
+    case SOUTH -> box(16-p[3],p[1],16-p[5],16-p[0],p[4],16-p[2]);
+    case WEST -> box(p[2],p[1],16-p[3],p[5],p[4],16-p[0]);
+    default -> box(p[0],p[1],p[2],p[3],p[4],p[5]);
+   };
+   result=Shapes.or(result,q);
+  }
+  return result;
+ }
+ private static final VoxelShape NORTH=shape(Direction.NORTH),EAST=shape(Direction.EAST),
+  SOUTH=shape(Direction.SOUTH),WEST=shape(Direction.WEST);
  public CoffeeMachineBlock(Properties p){
   super(p);
   registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH));
@@ -44,7 +58,7 @@ public final class CoffeeMachineBlock extends BaseEntityBlock {
  @Nullable @Override public BlockState getStateForPlacement(BlockPlaceContext context){
   return defaultBlockState().setValue(FACING,context.getHorizontalDirection().getOpposite());
  }
- @Override protected VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext ctx){return SHAPE;}
+ @Override protected VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext ctx){return switch(state.getValue(FACING)){case EAST->EAST;case SOUTH->SOUTH;case WEST->WEST;default->NORTH;};}
  @Override protected MapCodec<? extends BaseEntityBlock> codec(){return CODEC;}
  @Override public RenderShape getRenderShape(BlockState state){return RenderShape.MODEL;}
  @Nullable @Override public BlockEntity newBlockEntity(BlockPos pos,BlockState state){

@@ -16,7 +16,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 public final class CampBedrollBlock extends Block {
  public static final MapCodec<CampBedrollBlock> CODEC=simpleCodec(CampBedrollBlock::new);
- private static final VoxelShape SHAPE=Block.box(1,0,1,15,3,15);
+ private static final VoxelShape SHAPE=net.minecraft.world.phys.shapes.Shapes.or(Block.box(1,0,1,15,2,15),Block.box(2,2,6,14,3,14),Block.box(2,2,2,14,4,6),Block.box(2,3,10,14,4,11));
  public CampBedrollBlock(Properties p){super(p);}
  @Override protected MapCodec<? extends Block> codec(){return CODEC;}
  @Override protected VoxelShape getShape(BlockState s,BlockGetter l,BlockPos p,CollisionContext c){return SHAPE;}

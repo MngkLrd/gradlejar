@@ -4,7 +4,8 @@
     "metal": "sleepdebt:block/iron_rim",
     "glass": "sleepdebt:block/rest_lamp",
     "flame": "sleepdebt:block/lantern_flame",
-    "copper": "sleepdebt:block/copper_machine"
+    "copper": "sleepdebt:block/copper_machine",
+    "particle": "sleepdebt:block/copper_machine"
   },
   "elements": [
     {

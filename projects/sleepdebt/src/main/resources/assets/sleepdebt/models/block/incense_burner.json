@@ -3,7 +3,8 @@
   "textures": {
     "clay": "sleepdebt:block/incense_clay",
     "coal": "sleepdebt:block/incense_coals",
-    "metal": "sleepdebt:block/iron_rim"
+    "metal": "sleepdebt:block/iron_rim",
+    "particle": "sleepdebt:block/incense_clay"
   },
   "elements": [
     {

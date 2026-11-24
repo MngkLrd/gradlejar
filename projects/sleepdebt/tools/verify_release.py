@@ -92,7 +92,7 @@ with zipfile.ZipFile(jar) as z:
                              and n.endswith(".json")):
         item=js(model_path)
         textures=item.get("textures",{})
-        if model_path.endswith(("/dreamcatcher.json","/camp_awning.json","/coffee_machine.json","/camp_bedroll.json")) and "particle" not in textures:
+        if model_path.endswith(("/dreamcatcher.json","/camp_awning.json","/coffee_machine.json","/camp_bedroll.json","/camp_lantern.json","/incense_burner.json")) and "particle" not in textures:
             raise ValueError(f"Missing particle texture: {model_path}")
         for alias,ref in textures.items():
             if ref.startswith("sleepdebt:"):
