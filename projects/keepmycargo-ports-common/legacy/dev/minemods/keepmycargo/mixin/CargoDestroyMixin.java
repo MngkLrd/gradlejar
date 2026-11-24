@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-@Mixin({ChestBoat.class, AbstractMinecartContainer.class})
+@Mixin(ChestBoat.class)
 public abstract class CargoDestroyMixin {
     @Inject(method = "destroy(Lnet/minecraft/world/damagesource/DamageSource;)V", at = @At("HEAD"), cancellable = true)
     private void keepmycargo$pack(DamageSource source, CallbackInfo ci) {

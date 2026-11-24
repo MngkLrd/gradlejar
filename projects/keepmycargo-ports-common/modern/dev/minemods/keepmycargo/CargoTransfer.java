@@ -43,8 +43,8 @@ public final class CargoTransfer {
     }
     private static Item vehicleItem(Entity entity) {
         if (entity instanceof AbstractChestBoat boat) { ItemStack picked = boat.getPickResult(); return picked != null && supported(picked) ? picked.getItem() : null; }
-        if (entity instanceof MinecartChest && entity.getType() == net.minecraft.world.entity.EntityType.CHEST_MINECART) return Items.CHEST_MINECART;
-        if (entity instanceof MinecartHopper && entity.getType() == net.minecraft.world.entity.EntityType.HOPPER_MINECART) return Items.HOPPER_MINECART;
+        if (entity.getClass() == MinecartChest.class) return Items.CHEST_MINECART;
+        if (entity.getClass() == MinecartHopper.class) return Items.HOPPER_MINECART;
         return null;
     }
     // Refuse recursive packing, including packed cargo hidden inside a shulker.
