@@ -1,0 +1,16 @@
+{
+  "item.catchtheblast.blast_shield": "Blast Shield",
+  "tooltip.catchtheblast.charge": "Stored blast: %s%%",
+  "tooltip.catchtheblast.block": "Hold right click to absorb explosions",
+  "tooltip.catchtheblast.release": "Sneak + right click to release",
+  "tooltip.catchtheblast.overload": "Overloaded! Release immediately.",
+  "message.catchtheblast.charge": "Blast stored: %s%%",
+  "message.catchtheblast.perfect": "Perfect catch! %s%%",
+  "message.catchtheblast.overload": "OVERLOAD! %s%% — release now",
+  "message.catchtheblast.released": "Blast released",
+  "message.catchtheblast.burst": "The shield overloaded!",
+  "hud.catchtheblast.charge": "BLAST  %s%%",
+  "command.catchtheblast.terrain.enabled": "Catch the Blast: terrain destruction enabled.",
+  "command.catchtheblast.terrain.disabled": "Catch the Blast: terrain destruction disabled.",
+  "hud.catchtheblast.overload": "OVERLOAD  %s s | %s t"
+}

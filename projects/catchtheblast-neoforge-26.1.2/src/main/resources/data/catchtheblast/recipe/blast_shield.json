@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","category":"equipment","pattern":["IAI","ISI"," O "],"key":{"I":"minecraft:iron_ingot","A":"minecraft:amethyst_shard","S":"minecraft:shield","O":"minecraft:obsidian"},"result":{"id":"catchtheblast:blast_shield","count":1}}

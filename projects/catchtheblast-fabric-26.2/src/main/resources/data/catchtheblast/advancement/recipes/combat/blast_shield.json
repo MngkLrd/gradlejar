@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_shield": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:shield"
+          }
+        ]
+      }
+    },
+    "has_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "catchtheblast:blast_shield"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_shield",
+      "has_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "catchtheblast:blast_shield"
+    ]
+  }
+}

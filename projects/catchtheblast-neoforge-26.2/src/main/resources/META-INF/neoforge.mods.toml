@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+[[mods]]
+modId="catchtheblast"
+version="0.2.2-beta"
+displayName="Catch the Blast"
+authors="ataflore"
+description='''Absorb explosive energy and release fiery shockwaves.'''
+[[dependencies.catchtheblast]]
+modId="neoforge"
+type="required"
+versionRange="[26.2.0.93,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.catchtheblast]]
+modId="minecraft"
+type="required"
+versionRange="[26.2]"
+ordering="NONE"
+side="BOTH"

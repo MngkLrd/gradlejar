@@ -1,0 +1,24 @@
+plugins { id 'java-library'; id 'idea'; id 'net.neoforged.moddev' version '2.0.148' }
+group='dev.ataflore.catchtheblast'
+version='0.2.2-beta'
+base.archivesName='catchtheblast-neoforge-mc26.3'
+java.toolchain.languageVersion=JavaLanguageVersion.of(25)
+neoForge { version=project.neo_version; runs { client { client() }; server { server() } }; mods { catchtheblast { sourceSet(sourceSets.main) } } }
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 25 }
+tasks.register('decodeTextures') {
+    inputs.files(fileTree('src/main/resources') { include '**/*.png.b64' })
+    outputs.dir(layout.buildDirectory.dir('generated/textures'))
+    doLast {
+        fileTree('src/main/resources').matching { include '**/*.png.b64' }.each { src ->
+            def rel = file('src/main/resources').toPath().relativize(src.toPath()).toString()
+            def dest = file("$buildDir/generated/textures/" + rel.replace('.png.b64', '.png'))
+            dest.parentFile.mkdirs()
+            dest.bytes = Base64.decoder.decode(src.text.trim())
+        }
+    }
+}
+tasks.named('processResources') {
+    dependsOn 'decodeTextures'
+    from("$buildDir/generated/textures")
+    exclude '**/*.png.b64'
+}
