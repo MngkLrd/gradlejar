@@ -17,7 +17,7 @@ public final class Probe extends Item {
  @Override public InteractionResult useOn(UseOnContext ctx){
   Level l=ctx.getLevel();if(ctx.getPlayer()==null)return InteractionResult.PASS;
   BlockPos pos=ctx.getClickedPos();BlockState state=l.getBlockState(pos);boolean host=state.getBlock() instanceof HostBlock;Material m=Material.from(state);
-  if(!host&&m==null&&!state.is(Fractal.SOCKET.get())&&!state.is(Fractal.EXIT.get())&&!state.is(Fractal.INPUT.get())&&!state.is(Fractal.OUTPUT.get()))return InteractionResult.PASS;
+  if(!host&&m==null&&!state.is(Fractal.SOCKET.get())&&!state.is(Fractal.EXIT.get())&&!state.is(Fractal.INPUT.get())&&!state.is(Fractal.OUTPUT.get())){if(ctx.getPlayer() instanceof ServerPlayer p)msg(p,"fractal.probe_help");return InteractionResult.sidedSuccess(l.isClientSide);}
   if(l.isClientSide)return InteractionResult.SUCCESS;
   if(!(ctx.getPlayer() instanceof ServerPlayer p)||!(l instanceof ServerLevel level))return InteractionResult.PASS;
   CellData d=CellData.get(p.getServer());CellData.Cell parent=level.dimension().equals(CellSpace.KEY)?d.at(pos):null;
@@ -43,7 +43,7 @@ public final class Probe extends Item {
   CellNetwork.syncLineage(p.getServer(),d,c);CellSpace.enter(p,c);return InteractionResult.CONSUME;
  }
  @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand hand){
-  ItemStack stack=p.getItemInHand(hand);if(!l.dimension().equals(CellSpace.KEY)||!p.isShiftKeyDown())return InteractionResultHolder.pass(stack);
+  ItemStack stack=p.getItemInHand(hand);if(!l.dimension().equals(CellSpace.KEY)||!p.isShiftKeyDown()){if(p instanceof ServerPlayer sp)msg(sp,"fractal.probe_help");return InteractionResultHolder.sidedSuccess(stack,l.isClientSide);}
   if(p instanceof ServerPlayer sp){CellData d=CellData.get(sp.getServer());CellData.Cell c=d.at(sp.blockPosition());if(d.live(c))CellNetwork.syncLineage(sp.getServer(),d,c);CellSpace.ascend(sp,d,c);}return InteractionResultHolder.sidedSuccess(stack,l.isClientSide);
  }
 }

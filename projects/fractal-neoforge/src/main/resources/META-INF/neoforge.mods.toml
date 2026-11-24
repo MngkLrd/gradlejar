@@ -3,7 +3,7 @@ loaderVersion="[4,)"
 license="All Rights Reserved"
 [[mods]]
 modId="fractal"
-version="0.2.0"
+version="0.3.0"
 displayName="Fractal"
 description="Enter matter, rebuild its lattice, and make mechanisms act across nested scales."
 [[dependencies.fractal]]

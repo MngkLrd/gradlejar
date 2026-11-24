@@ -37,9 +37,32 @@ public final class CellSpace {
   }
   // Different structural geometry in each material, not just palette swaps.
   if(c.material==Material.STONE){
-   for(int x:new int[]{-8,8})for(int z:new int[]{-5,5})for(int y=1;y<=4+(x*z>0?2:0);y++){
-    l.setBlock(center.offset(x,y,z),y%3==0?crystal:matrix,2);
-    if(y<=2)l.setBlock(center.offset(x/Math.abs(x)+x,y,z),matrix,2);
+   // An irregular mineral cavity inside a solid matrix. The immutable bounding shell is retained,
+   // but is concealed behind jagged natural rock layers, mineral veins and crystal formations.
+   java.util.Random random=new java.util.Random(server.overworld().getSeed()^((long)c.id*0x9E3779B97F4A7C15L));
+   for(int x=-10;x<=10;x++)for(int z=-10;z<=10;z++){
+    double radial=Math.sqrt(x*x+z*z);
+    int rough=random.nextInt(3)-1;
+    int floor=Math.max(0,(int)Math.floor((radial-8.5)*.7)+rough);
+    int roof=Math.max(0,(int)Math.floor((radial-5.5)*.6)+rough);
+    boolean edge=radial>11.8+rough*.65;
+    for(int y=1;y<12;y++){
+     if(edge||y<=Math.min(3,floor)||y>=12-Math.min(5,roof)){
+      // Keep entry, terminals, node approaches and above-node space usable.
+      if(y<=5&&((Math.abs(z)<=1&&Math.abs(x)<=9)||(Math.abs(x)<=1&&z<=-8)))continue;
+      boolean node=false;for(int i=0;i<6;i++){BlockPos s=socket(c.id,i);if(Math.abs(x-(s.getX()-center.getX()))<=1&&Math.abs(z-(s.getZ()-center.getZ()))<=1&&y<=5)node=true;}
+      if(node)continue;
+      boolean vein=Math.abs(Math.sin((x+z)*.62+y*.78+c.id))<.13;
+      l.setBlock(center.offset(x,y,z),vein?crystal:matrix,2);
+     }
+    }
+   }
+   for(int[] pos:new int[][]{{-8,-4},{8,4},{-7,8},{7,-8}}){
+    int h=3+random.nextInt(4);
+    for(int y=1;y<=h;y++){
+     l.setBlock(center.offset(pos[0],y,pos[1]),y>=h-1?crystal:matrix,2);
+     if(y<=2)l.setBlock(center.offset(pos[0]-Integer.signum(pos[0]),y,pos[1]),matrix,2);
+    }
    }
   }else if(c.material==Material.COPPER){
    for(int z:new int[]{-8,8})for(int x=-9;x<=9;x++)l.setBlock(center.offset(x,8,z),x%4==0?crystal:matrix,2);
@@ -55,7 +78,7 @@ public final class CellSpace {
    BlockPos p=socket(c.id,i);l.setBlock(p.below(),matrix,2);
    l.setBlock(p,Fractal.SOCKET.get().defaultBlockState().setValue(SocketBlock.TYPE,c.material.initial(i)),3);
   }
-  for(int k=-8;k<=8;k+=4){
+  if(c.material!=Material.STONE)for(int k=-8;k<=8;k+=4){
    if(k==0)continue;
    for(int y=1;y<=3;y++)l.setBlock(center.offset(k,y,-10),y==3?crystal:matrix,2);
   }
