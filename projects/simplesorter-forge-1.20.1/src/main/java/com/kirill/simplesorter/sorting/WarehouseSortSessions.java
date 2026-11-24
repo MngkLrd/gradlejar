@@ -204,7 +204,11 @@ public final class WarehouseSortSessions {
                 ContainerRef container = containers.get(current);
                 if (!container.isValid() || !session.eligibleForCompaction(container)) continue;
                 if (InventoryMover.needsCompaction(container)) {
-                    compactedItems += InventoryMover.cleanUpContainer(container, listener);
+                    var audit=InventoryConservation.count(InventoryConservation.snapshot(container.handler()));
+                    compactedItems+=InventoryMover.cleanUpContainer(container,listener);
+                    InventoryConservation.requireEqual(audit,
+                            InventoryConservation.count(InventoryConservation.snapshot(container.handler())),
+                            "compaction at "+container.pos());
                 }
                 session.refreshContainer(current);
                 done++;

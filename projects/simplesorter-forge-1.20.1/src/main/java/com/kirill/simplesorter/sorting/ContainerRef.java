@@ -16,7 +16,8 @@ public record ContainerRef(BlockPos pos, IItemHandler handler, Object identity,
     public int slots() { return handler.getSlots(); }
 
     public boolean isValid() {
-        if (!level.hasChunkAt(pos) || level.getBlockEntity(pos) != identity) return false;
+        if (level.getChunkSource().getChunkNow(pos.getX()>>4,pos.getZ()>>4)==null
+                || level.getBlockEntity(pos) != identity) return false;
         BlockState state = level.getBlockState(pos);
         if (partnerPos == null) {
             // A single chest may have been connected to a new half since scan.

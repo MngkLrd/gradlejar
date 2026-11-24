@@ -93,6 +93,7 @@ public final class ContainerScanner {
             if (visited.contains(pos)) continue;
             BlockState state = level.getBlockState(pos);
             if (!StorageFilter.isEligible(state)) continue;
+            // Explicit discovery safety ceiling; no fixed planning batches.
             if (result.size() >= 384) { skip(skipped,"scan limit",pos,state); continue; }
             BlockEntity be = level.getBlockEntity(pos);
             if (be == null || be.isRemoved()) { skip(skipped,"missing block entity",pos,state); continue; }

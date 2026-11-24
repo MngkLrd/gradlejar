@@ -400,7 +400,8 @@ public final class WarehouseVacuumSorter {
         private static boolean sameStackAndCount(ItemStack a, ItemStack b) {
             return a.isEmpty() ? b.isEmpty()
                     : !b.isEmpty() && a.getCount() == b.getCount()
-                    && ItemStack.isSameItemSameTags(a, b);
+                    && ItemStack.isSameItemSameTags(a,b)
+                    && InventoryConservation.sameIdentity(a,b);
         }
 
         /**
@@ -424,6 +425,9 @@ public final class WarehouseVacuumSorter {
                 if(!canInsertAfterExtraction(e.destination.ref.handler(),e.destinationSlot,e.original))return false;
                 if(!sameStackAndCount(e.original,e.source.ref.handler().extractItem(e.sourceSlot,e.original.getCount(),true)))return false;
             }
+            List<ItemStack> auditBefore=new ArrayList<>();
+            for(ItemStack[] row:expected.values())java.util.Collections.addAll(auditBefore,row);
+            var ledger=InventoryConservation.count(auditBefore);
             for(Entry e:displaced)expected.get(e.source)[e.sourceSlot]=ItemStack.EMPTY;
             for(Entry e:displaced){
                 ItemStack[] row=expected.get(e.destination);
@@ -471,7 +475,7 @@ public final class WarehouseVacuumSorter {
                     ItemStack reported;
                     try {
                         reported = destination.insertItem(
-                                entry.destinationSlot, before, false);
+                                entry.destinationSlot, before.copy(), false);
                     } catch (RuntimeException ex) {
                         observePlacement(entry, before, placed);
                         throw ex;
@@ -494,11 +498,16 @@ public final class WarehouseVacuumSorter {
                             throw new IllegalStateException("Unexpected inventory mutation at "+chest.ref.pos()+":"+slot);
                     }
                 }
+                InventoryConservation.requireEqual(ledger,auditLive(expected.keySet(),List.of()),"successful component");
                 success = true;
             } catch (RuntimeException ex) {
                 LOG.error("Wand buffer transaction failed; restoring original chest contents", ex);
             } finally {
-                if (!success) rollback(level, displaced, placed);
+                if (!success){
+                    List<ItemStack> recovered=rollback(level,displaced,placed);
+                    InventoryConservation.requireEqual(ledger,auditLive(expected.keySet(),recovered),"component rollback");
+                    if(!recovered.isEmpty())throw new IllegalStateException("Emergency recovery dropped items; stop and inspect warehouse");
+                }
             }
             if (!success) return false;
 
@@ -553,8 +562,16 @@ public final class WarehouseVacuumSorter {
                     ? ItemStack.EMPTY : before.copyWithCount(remaining);
         }
 
-        private static void rollback(ServerLevel level, List<Entry> entries,
+        private static java.util.Map<net.minecraft.nbt.CompoundTag,Long> auditLive(
+                java.util.Set<Chest> chests,List<ItemStack> recovered){
+            List<ItemStack> stacks=new ArrayList<>(recovered);
+            for(Chest chest:chests)stacks.addAll(InventoryConservation.snapshot(chest.ref.handler()));
+            return InventoryConservation.count(stacks);
+        }
+
+        private static List<ItemStack> rollback(ServerLevel level,List<Entry> entries,
                                      List<Placement> placed) {
+            List<ItemStack> recoveredDrops=new ArrayList<>();
             for (int i = placed.size() - 1; i >= 0; i--) {
                 Placement move = placed.get(i);
                 try {
@@ -566,7 +583,8 @@ public final class WarehouseVacuumSorter {
                                 move.chest.ref.pos(), move.slot);
                         continue;
                     }
-                    handler.extractItem(move.slot, Math.min(move.count, before.getCount()), false);
+                    try{handler.extractItem(move.slot,Math.min(move.count,before.getCount()),false);}
+                    catch(RuntimeException ex){LOG.error("Rollback extraction threw; measuring actual slot delta",ex);}
                     ItemStack after = handler.getStackInSlot(move.slot);
                     int actualLeft = after.isEmpty() ? 0 : after.getCount();
                     if (!after.isEmpty()
@@ -574,7 +592,7 @@ public final class WarehouseVacuumSorter {
                         LOG.error("Rollback changed destination type: {}", move.chest.ref.pos());
                         continue;
                     }
-                    int recovered = before.getCount() - actualLeft;
+                    int recovered = Math.min(move.count,before.getCount() - actualLeft);
                     if (recovered > 0) {
                         if (move.entry.carried.isEmpty()) {
                             move.entry.carried = move.entry.original.copyWithCount(recovered);
@@ -598,9 +616,13 @@ public final class WarehouseVacuumSorter {
                         remaining = restoreToSlot(handler, slot, remaining);
                     }
                 }
-                if (!remaining.isEmpty()) emergencyDrop(level, entry.source.ref.pos(), remaining);
+                if(!remaining.isEmpty()){
+                    if(emergencyDrop(level,entry.source.ref.pos(),remaining))recoveredDrops.add(remaining.copy());
+                    else LOG.error("Emergency item entity rejected at {}",entry.source.ref.pos());
+                }
                 entry.carried = ItemStack.EMPTY;
             }
+            return recoveredDrops;
         }
 
         private static ItemStack restoreToSlot(IItemHandler handler, int slot, ItemStack stack) {
@@ -622,15 +644,15 @@ public final class WarehouseVacuumSorter {
                     ? live.getCount() : 0;
         }
 
-        private static void emergencyDrop(ServerLevel level, BlockPos origin, ItemStack stack) {
-            if (stack.isEmpty()) return;
+        private static boolean emergencyDrop(ServerLevel level, BlockPos origin, ItemStack stack) {
+            if (stack.isEmpty()) return true;
             LOG.error("EMERGENCY RECOVERY: dropping {} x {} at {} after inventory rollback failure",
                     stack.getCount(), BuiltInRegistries.ITEM.getKey(stack.getItem()), origin);
             ItemEntity entity = new ItemEntity(level,
                     origin.getX() + 0.5, origin.getY() + 1.0,
                     origin.getZ() + 0.5, stack.copy());
             entity.setDefaultPickUpDelay();
-            level.addFreshEntity(entity);
+            return level.addFreshEntity(entity);
         }
     }
 }
