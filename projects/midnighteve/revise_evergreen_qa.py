@@ -20,6 +20,22 @@ for n,spacing,separation in [("everlight_hamlet",28,12),("hollycroft_farm",32,14
     assert spacing>separation and len(json.loads(tag.read_text())["values"])==6
 print("PASS: expanded native settlement candidates, distinct salts, farm exclusion radius")
 
+# Minecraft 1.21-era JigsawPlacement only adds the initial piece to the
+# StructurePiecesBuilder in its positive-depth branch. Zero-depth definitions
+# can therefore produce an empty StructureStart, despite valid template NBT.
+# Our templates have no connecting jigsaw blocks, so size=1 retains exactly one
+# piece and enables its actual insertion without expanding the template graph.
+fixed=0
+for path in sorted((D/"worldgen/structure").glob("*.json")):
+    data=json.loads(path.read_text())
+    if data.get("type")=="minecraft:jigsaw" and data.get("size")==0:
+        data["size"]=1
+        write(path,data)
+        fixed+=1
+assert fixed==16, fixed
+print("PASS: corrected positive jigsaw depth for all",fixed,"native structure starts",flush=True)
+
+
 # Author exact-sized box UVs: front is north. Patches are hand-selected row clusters.
 # All original mob gameplay is preserved. Symmetric limb pieces intentionally reuse UV.
 Atlas=w.Atlas
