@@ -94,6 +94,15 @@ public final class CoreSmoke {
         WorldCapture.save(proPng,new WorldCapture.Scene("minecraft:overworld",1,64,2,0,0,70,1000,false,false,true,123));
         check(WorldCapture.read(proPng).contains("minecraft:overworld"),"Scene metadata");
         Files.delete(proPng.resolveSibling("source.png.world.json"));Files.delete(proPng.resolveSibling("source.png.smproject"));Files.delete(proPng);Files.delete(proRoot);
+        var depths=new DepthMap(2,2,new short[]{1000,1000,(short)50000,(short)50000});
+        check(depths.valueAt(0,0)==1000&&depths.valueAt(0,1)==50000,"Depth map samples");
+        var buf=new java.io.ByteArrayOutputStream();try(var out=new java.io.DataOutputStream(buf)){depths.write(out);}
+        try(var in=new java.io.DataInputStream(new java.io.ByteArrayInputStream(buf.toByteArray()))){check(DepthMap.read(in).valueAt(0,1)==50000,"Depth map round trip");}
+        var depthOriginal=new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB);
+        for(int y=0;y<32;y++)for(int x=0;x<32;x++)depthOriginal.setRGB(x,y,(x%2==0)?0xff000000:0xffffffff);
+        var depthResult=new DepthMap.Focus(depths,1000,5,100).apply(ImageDocument.copy(depthOriginal));
+        check(depthResult.getRGB(5,3)==depthOriginal.getRGB(5,3),"Depth focus preserves in-focus pixels");
+        check(depthResult.getRGB(5,28)!=depthOriginal.getRGB(5,28),"Depth focus blurs distant pixels");
         System.out.println("Screenshot Manager core smoke tests passed");
     }
 }

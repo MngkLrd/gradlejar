@@ -8,7 +8,7 @@ import java.util.List;
 
 /** Immutable operations in document-pixel coordinates. Original pixels are never modified. */
 public final class ImageDocument {
-    public enum Tool { PAN, CROP, RECT, ELLIPSE, ARROW, LINE, PEN, TEXT, HIGHLIGHT, PIXELATE, BLUR, REDACT, NUMBER, COPY_REGION, HIGHLIGHT_BRUSH, ERASER, FOCUS, FOCUS_SHADE }
+    public enum Tool { PAN, CROP, RECT, ELLIPSE, ARROW, LINE, PEN, TEXT, HIGHLIGHT, PIXELATE, BLUR, REDACT, NUMBER, COPY_REGION, HIGHLIGHT_BRUSH, ERASER, FOCUS, FOCUS_SHADE, DEPTH_FOCUS }
     public enum Filter { BRIGHTER, DARKER, CONTRAST, SATURATION, MONO, WARM, VIGNETTE, ROTATE, FLIP }
     public record Mark(Tool tool, int x1, int y1, int x2, int y2, int color, int thickness, int strength, String text, List<Point> points) {
         public Mark { points=points==null?List.of():points.stream().map(Point::new).toList(); text=text==null?"":text; }

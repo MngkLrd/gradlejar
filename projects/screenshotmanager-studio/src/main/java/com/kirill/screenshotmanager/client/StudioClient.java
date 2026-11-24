@@ -3,6 +3,8 @@ package com.kirill.screenshotmanager.client;
 import com.kirill.screenshotmanager.core.ShotFiles;
 import com.kirill.screenshotmanager.core.StudioPreferences;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import com.kirill.screenshotmanager.core.DepthMap;
 import com.kirill.screenshotmanager.core.ShotFiles.Shot;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
@@ -23,7 +25,9 @@ import java.nio.file.Files;
 import java.util.concurrent.CompletableFuture;
 
 public final class StudioClient {
-    private static KeyMapping edit,library,copy,capture,photo,clean,zoomIn,zoomOut,record,burst,keyframe,directorPlay,directorClear;
+    private static KeyMapping edit,library,copy,capture,photo,clean,zoomIn,zoomOut,record,burst,keyframe,directorPlay,directorClear,depthKey;
+    private static boolean depthRequested,depthAttempted;
+    private static DepthMap pendingDepth,grabDepth;
     private static final ClipRecorder recorder=new ClipRecorder();
     private static int burstRemaining;
     private static long burstNext;
@@ -44,6 +48,7 @@ public final class StudioClient {
         NeoForge.EVENT_BUS.addListener(StudioClient::captured);
         NeoForge.EVENT_BUS.addListener(StudioClient::hud);
         NeoForge.EVENT_BUS.addListener(StudioClient::afterFrame);
+        NeoForge.EVENT_BUS.addListener(StudioClient::worldRendered);
     }
     private static KeyMapping key(String name,int code){return new KeyMapping("key.screenshotmanager."+name,InputConstants.Type.KEYSYM,code,"key.categories.screenshotmanager");}
     private static void keys(RegisterKeyMappingsEvent e){
@@ -55,6 +60,7 @@ public final class StudioClient {
         record=key("record",GLFW.GLFW_KEY_F6);burst=key("burst",GLFW.GLFW_KEY_F7);e.register(record);e.register(burst);
         keyframe=key("keyframe",GLFW.GLFW_KEY_J);directorPlay=key("director_play",GLFW.GLFW_KEY_L);directorClear=key("director_clear",GLFW.GLFW_KEY_H);
         e.register(keyframe);e.register(directorPlay);e.register(directorClear);
+        depthKey=key("depth_capture",GLFW.GLFW_KEY_F4);e.register(depthKey);
     }
     static Path directory(){return Minecraft.getInstance().gameDirectory.toPath().resolve("screenshots");}
     static StudioPreferences preferences(){
@@ -69,7 +75,11 @@ public final class StudioClient {
         if(cleanPending||mc.level==null||mc.screen!=null)return;
         oldHide=mc.options.hideGui;mc.options.hideGui=true;cleanPending=true;cleanStarted=System.currentTimeMillis();
     }
-    private static void restoreClean(Minecraft mc){if(cleanPending){mc.options.hideGui=oldHide;cleanPending=false;}}
+    private static void restoreClean(Minecraft mc){if(cleanPending){mc.options.hideGui=oldHide;cleanPending=false;}depthRequested=false;depthAttempted=false;pendingDepth=null;grabDepth=null;}
+    private static void worldRendered(RenderLevelStageEvent event){
+        if(!depthRequested||!cleanPending||depthAttempted||event.getStage()!=RenderLevelStageEvent.Stage.AFTER_LEVEL)return;
+        depthAttempted=true;pendingDepth=DepthCapture.read(Minecraft.getInstance());
+    }
     private static void afterFrame(RenderFrameEvent.Post e){
         Minecraft mc=Minecraft.getInstance();
         if(Director.afterFrame(mc,recorder))return;
@@ -85,7 +95,9 @@ public final class StudioClient {
         if(!cleanPending)return;
         if(mc.screen!=null||mc.level==null){restoreClean(mc);return;}
         try{
+            grabDepth=depthRequested?pendingDepth:null;
             Screenshot.grab(mc.gameDirectory,mc.getMainRenderTarget(),message->mc.execute(()->{if(mc.player!=null)mc.player.displayClientMessage(message,false);}));
+            if(depthRequested&&grabDepth==null)notice("Depth unavailable: normal screenshot saved");
         }catch(Exception ex){notice("Clean capture failed");}
         finally{restoreClean(mc);}
     }
@@ -111,7 +123,7 @@ public final class StudioClient {
         while(directorClear.consumeClick()){if(!Director.active()&&mc.screen==null){Director.clear();notice("Flyby start cleared");}}
         if(Director.active()){
             while(record.consumeClick()){}while(burst.consumeClick()){}while(edit.consumeClick()){}while(library.consumeClick()){}while(copy.consumeClick()){}while(capture.consumeClick()){}
-            while(photo.consumeClick()){}while(clean.consumeClick()){}while(zoomIn.consumeClick()){}while(zoomOut.consumeClick()){}
+            while(photo.consumeClick()){}while(clean.consumeClick()){}while(zoomIn.consumeClick()){}while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}
             return;
         }
         while(record.consumeClick()){
@@ -121,7 +133,7 @@ public final class StudioClient {
         while(burst.consumeClick()){if(!recorder.active()&&mc.screen==null&&mc.level!=null&&!cleanPending){burstRemaining=5;burstNext=0;}}
         if(recorder.active()){
             while(edit.consumeClick()){} while(library.consumeClick()){} while(copy.consumeClick()){} while(capture.consumeClick()){}
-            while(photo.consumeClick()){} while(clean.consumeClick()){} while(zoomIn.consumeClick()){} while(zoomOut.consumeClick()){}
+            while(photo.consumeClick()){} while(clean.consumeClick()){} while(zoomIn.consumeClick()){} while(zoomOut.consumeClick()){}while(depthKey.consumeClick()){}
             return;
         }
         if(mc.level==null||mc.screen!=null)burstRemaining=0;
@@ -135,6 +147,7 @@ public final class StudioClient {
         }}
         while(zoomIn.consumeClick()){if(photoMode&&mc.screen==null)mc.options.fov().set(Math.max(30,mc.options.fov().get()-5));}
         while(zoomOut.consumeClick()){if(photoMode&&mc.screen==null)mc.options.fov().set(Math.min(110,mc.options.fov().get()+5));}
+        while(depthKey.consumeClick()){if(mc.screen==null&&mc.level!=null&&!cleanPending&&burstRemaining==0){depthRequested=true;depthAttempted=false;pendingDepth=null;beginClean(mc);}}
         while(clean.consumeClick()){if(mc.screen==null&&mc.level!=null)beginClean(mc);}
         while(capture.consumeClick()){if(mc.screen==null&&mc.level!=null){
             copyUntil=System.currentTimeMillis()+5000;
@@ -155,6 +168,7 @@ public final class StudioClient {
     private static void captured(ScreenshotEvent e){
         if(e.isCanceled())return;
         Path path=e.getScreenshotFile().toPath();
+        DepthMap capturedDepth=grabDepth;
         boolean auto=System.currentTimeMillis()<copyUntil;
         if(auto)copyUntil=0;
         Minecraft mc=Minecraft.getInstance();
@@ -167,7 +181,7 @@ public final class StudioClient {
                 for(int i=0;i<80;i++){
                     try{
                         long size=Files.size(path);
-                        if(size>0&&size==last){BufferedImage image=ShotFiles.read(path,384);if(scene!=null)try{com.kirill.screenshotmanager.core.WorldCapture.save(path,scene);}catch(Exception ignored){}return image;}
+                        if(size>0&&size==last){BufferedImage image=ShotFiles.read(path,384);if(scene!=null)try{com.kirill.screenshotmanager.core.WorldCapture.save(path,scene);}catch(Exception ignored){}if(capturedDepth!=null)try{capturedDepth.save(path);}catch(Exception ignored){}return image;}
                         last=size;
                     }catch(Exception ignored){}
                     try{Thread.sleep(100);}catch(InterruptedException ex){Thread.currentThread().interrupt();break;}
@@ -182,7 +196,7 @@ public final class StudioClient {
                 try{
                     StudioTexture next=new StudioTexture(image);
                     if(preview!=null)preview.close();preview=next;
-                    notice(auto?"Captured / copying...":"Screenshot saved");
+                    notice(auto?"Captured / copying...":capturedDepth!=null?"Depth screenshot saved":"Screenshot saved");
                 }catch(Exception ex){notice("Screenshot saved");}
             }));
         });

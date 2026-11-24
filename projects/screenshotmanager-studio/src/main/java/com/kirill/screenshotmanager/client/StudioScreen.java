@@ -2,6 +2,7 @@ package com.kirill.screenshotmanager.client;
 
 import com.kirill.screenshotmanager.core.ImageDocument;
 import com.kirill.screenshotmanager.core.ProPhoto;
+import com.kirill.screenshotmanager.core.DepthMap;
 import com.kirill.screenshotmanager.core.ProjectStore;
 import com.kirill.screenshotmanager.core.CreatorExport;
 import com.kirill.screenshotmanager.core.ImageDocument.Tool;
@@ -24,7 +25,7 @@ import java.util.function.Supplier;
 
 public final class StudioScreen extends StudioBaseScreen {
     private static final Tool[] TOOLS=Tool.values();
-    private static final String[] TOOL_LABELS={"Pan","Crop","Rect","Ellipse","Arrow","Line","Pen","Text","Highlight","Mosaic","Blur","Redact","Number","Copy area","Marker","Eraser","Focus blur","Focus shade"};
+    private static final String[] TOOL_LABELS={"Pan","Crop","Rect","Ellipse","Arrow","Line","Pen","Text","Highlight","Mosaic","Blur","Redact","Number","Copy area","Marker","Eraser","Focus blur","Focus shade","Depth focus"};
     private static final int[] COLORS={0xffff535e,0xffffd04e,0xff5de2ac,0xff62bafa,0xfff4f6fa,0xff111111};
     private final Shot shot;
     private final Screen parent;
@@ -174,7 +175,7 @@ public final class StudioScreen extends StudioBaseScreen {
         int row=16,visibleTools=Math.max(1,(height-75)/row);
         toolScroll=Math.max(0,Math.min(toolScroll,TOOLS.length-visibleTools));
         for(int i=toolScroll;i<Math.min(TOOLS.length,toolScroll+visibleTools);i++){
-            Tool chosen=TOOLS[i];action(g,TOOL_LABELS[i],4,49+(i-toolScroll)*row,toolW-8,14,mx,my,tool==chosen,()->{tool=chosen;dragging=false;textPending=false;panel=0;clearTextFocus();});
+            Tool chosen=TOOLS[i];action(g,TOOL_LABELS[i],4,49+(i-toolScroll)*row,toolW-8,14,mx,my,tool==chosen,()->{tool=chosen;selected=-1;dragging=false;textPending=false;panel=0;clearTextFocus();});
         }
         if(texture!=null&&!peek){
             g.enableScissor(cx,cy,cx+cw,cy+ch);
@@ -246,8 +247,8 @@ public final class StudioScreen extends StudioBaseScreen {
         slider(g,"Size "+thickness+" px",sx,y,sw,1,80,thickness,6,v->thickness=v);y+=27;
         if(tool==Tool.HIGHLIGHT||tool==Tool.HIGHLIGHT_BRUSH){slider(g,"Opacity "+opacity+"%",sx,y,sw,5,99,opacity,33,v->opacity=v);y+=27;}
         if(tool==Tool.BLUR||tool==Tool.PIXELATE){slider(g,"Censor "+strength,sx,y,sw,3,96,strength,18,v->strength=v);y+=27;}
-        if(tool==Tool.FOCUS||tool==Tool.FOCUS_SHADE){
-            slider(g,"Radius "+focusRadius+"%",sx,y,sw,5,100,focusRadius,25,v->focusRadius=v);y+=27;
+        if(tool==Tool.FOCUS||tool==Tool.FOCUS_SHADE||tool==Tool.DEPTH_FOCUS){
+            slider(g,(tool==Tool.DEPTH_FOCUS?"Focus range ":"Radius ")+focusRadius+"%",sx,y,sw,5,100,focusRadius,25,v->focusRadius=v);y+=27;
             slider(g,"Strength "+focusAmount+"%",sx,y,sw,0,100,focusAmount,65,v->focusAmount=v);y+=27;
         }
         if(y+16<height-22){
@@ -401,6 +402,19 @@ public final class StudioScreen extends StudioBaseScreen {
                 imageSize=100;imageAngle=0;imageOpacity=100;apply(layer,false);panel=1;
             }));
     }
+    private void depthFocus(){
+        if(busy||doc==null||rendered==null)return;
+        if(doc.snapshot().stream().anyMatch(ImageDocument::geometry)){status="Depth focus must be added before crop / rotate";return;}
+        busy=true;long token=++epoch;int x=ax,y=ay,w=rendered.getWidth(),h=rendered.getHeight(),radius=focusRadius,amount=focusAmount;
+        CompletableFuture.supplyAsync(()->{
+            try{var map=DepthMap.load(shot.path());return new DepthMap.Focus(map,map.valueAt(x/(double)Math.max(1,w-1),y/(double)Math.max(1,h-1)),radius,amount);}
+            catch(Exception e){throw new RuntimeException(e);}
+        },ShotFiles.IO).whenComplete((op,error)->Minecraft.getInstance().execute(()->{
+            if(!alive||epoch!=token)return;busy=false;
+            if(error!=null){status="No usable depth map: capture a clean depth shot with F4";return;}
+            apply(op,false);
+        }));
+    }
     private void sceneInfo(){
         if(busy)return;busy=true;long token=++epoch;
         CompletableFuture.supplyAsync(()->{try{return com.kirill.screenshotmanager.core.WorldCapture.read(shot.path());}catch(Exception e){return "No scene metadata for this screenshot";}},ShotFiles.IO)
@@ -439,6 +453,7 @@ public final class StudioScreen extends StudioBaseScreen {
             }));return;
         }
         if(tool==Tool.TEXT&&draft.isBlank()){status="Enter annotation text";return;}
+        if(tool==Tool.DEPTH_FOCUS){depthFocus();return;}
         if(tool==Tool.FOCUS||tool==Tool.FOCUS_SHADE){apply(new ProPhoto.Focus(ax,ay,focusRadius,focusAmount,tool==Tool.FOCUS_SHADE),false);return;}
         if(tool==Tool.CROP&&(Math.abs(ax-bx)<2||Math.abs(ay-by)<2)){status="Select a larger region";return;}
         String value=tool==Tool.NUMBER?Integer.toString(number++):tool==Tool.TEXT?draft:"";
@@ -465,7 +480,7 @@ public final class StudioScreen extends StudioBaseScreen {
             text.setFocused(false);setFocused(null);
             ax=bx=px(x);ay=by=py(y);points.clear();
             if(tool==Tool.TEXT){textPending=true;textX=ax;textY=ay;panel=0;text.visible=true;setFocused(text);text.setFocused(true);status="Type annotation, Enter to place";return true;}
-            if(tool==Tool.NUMBER||tool==Tool.FOCUS||tool==Tool.FOCUS_SHADE){commitMark();return true;}
+            if(tool==Tool.NUMBER||tool==Tool.FOCUS||tool==Tool.FOCUS_SHADE||tool==Tool.DEPTH_FOCUS){commitMark();return true;}
             dragging=true;setDragging(true);return true;
         }
         return super.mouseClicked(x,y,button);
