@@ -27,6 +27,17 @@ def command(cmd):
     head,out=packet(s,2,cmd)
     print(cmd, "=>",out,flush=True)
     return out
+# Regression: actual locate from spawn in a native world, before placing templates.
+# Fail fast rather than waiting minutes for a broken synchronous search.
+s.settimeout(25)
+for structure in ("everlight_hamlet","hollycroft_farm"):
+    begin=time.monotonic()
+    out=command("execute positioned 0 100 0 run locate structure midnighteve:"+structure)
+    elapsed=time.monotonic()-begin
+    if not ("nearest" in out.lower() and "blocks away" in out.lower()):raise RuntimeError("Native locate failed: "+structure+" => "+out)
+    if elapsed>20:raise RuntimeError("Native locate exceeded 20 seconds: "+structure)
+    print("PASS: natural locate",structure,round(elapsed,2),"seconds",out,flush=True)
+s.settimeout(90)
 command("forceload add 0 0 47 47")
 time.sleep(12)
 out=command("place template midnighteve:frostmarket 0 180 0")
