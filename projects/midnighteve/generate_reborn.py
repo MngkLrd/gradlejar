@@ -416,8 +416,24 @@ for stage in range(6):
     write(A/"models/block"/("hearth_"+str(stage)+".json"),{"parent":"minecraft:block/cube_column","textures":{"side":"minecraft:block/stone_bricks","end":mod("block/hearth_"+str(stage))}})
 write(A/"blockstates/festival_hearth.json",{"variants":{"stage="+str(i):{"model":mod("block/hearth_"+str(i))} for i in range(6)}})
 write(A/"models/item/festival_hearth.json",{"parent":mod("block/hearth_0")})
-write(A/"blockstates/festival_lamp.json",{"variants":{"lit=false":{"model":"minecraft:block/redstone_lamp"},"lit=true":{"model":"minecraft:block/redstone_lamp_on"}}})
-write(A/"models/item/festival_lamp.json",{"parent":"minecraft:block/redstone_lamp"})
+# 16px lantern glass, aged brass frame with contiguous highlights; a real 3D fixture.
+lamp_rows=[
+ "dddddddddddddddd","dddddddddddddddd","dddddddddddddddd","dddddddddddddddd",
+ "ddddhhhmmmdddddd","ddddhggggmdddddd","ddddhglggmdddddd","ddddhglggmdddddd",
+ "ddddhggllmdddddd","ddddhggglmdddddd","ddddhggggmdddddd","ddddmmmmmmdddddd",
+ "dddddddddddddddd","dddddddddddddddd","dddddddddddddddd","dddddddddddddddd"]
+for name,colors in [("festival_lamp_dark",{"d":"514131","h":"9d8054","m":"755c3e","g":"5f5441","l":"83725a"}),
+                    ("festival_lamp_lit",{"d":"514131","h":"b39767","m":"8b6b42","g":"d49c45","l":"f0cf80"})]:
+    png(A/"textures/block"/(name+".png"),lamp_rows,{k:rgba(v) for k,v in colors.items()})
+    def faces(uv,texture):return {face:{"uv":uv,"texture":texture} for face in ("north","south","east","west","up","down")}
+    model={"parent":"minecraft:block/block","textures":{"particle":mod("block/"+name),"glass":mod("block/"+name),"metal":"minecraft:block/stripped_spruce_log_top"},"elements":[
+        {"from":[4,1,4],"to":[12,11,12],"faces":faces([3,3,11,12],"#glass")},
+        {"from":[3,0,3],"to":[13,2,13],"faces":faces([0,0,10,2],"#metal")},
+        {"from":[3,10,3],"to":[13,12,13],"faces":faces([0,0,10,2],"#metal")},
+        {"from":[6,12,6],"to":[10,14,10],"faces":faces([0,0,4,2],"#metal")}]}
+    write(A/"models/block"/(name+".json"),model)
+write(A/"blockstates/festival_lamp.json",{"variants":{"lit=false":{"model":mod("block/festival_lamp_dark")},"lit=true":{"model":mod("block/festival_lamp_lit")}}})
+write(A/"models/item/festival_lamp.json",{"parent":mod("block/festival_lamp_dark")})
 en.update({"block.midnighteve.festival_hearth":"Festival Hearth","block.midnighteve.festival_lamp":"Festival Lamp","festival.midnighteve.0":"Bring 8 cookies for the feast.","festival.midnighteve.1":"Bring 3 lanterns to light the square.","festival.midnighteve.2":"Bring a wrapped gift for the celebration.","festival.midnighteve.3":"Bring 2 wintermarks to complete the preparations.","festival.midnighteve.4":"The square is ready. Return at midnight!","festival.midnighteve.5":"This celebration has already taken place.","festival.midnighteve.midnight":"Midnight! The winter festival has begun!"})
 ru.update({"block.midnighteve.festival_hearth":"Праздничный очаг","block.midnighteve.festival_lamp":"Праздничный светильник","festival.midnighteve.0":"Принеси 8 печений для угощения.","festival.midnighteve.1":"Принеси 3 фонаря для площади.","festival.midnighteve.2":"Принеси упакованный подарок к празднику.","festival.midnighteve.3":"Принеси 2 зимние марки для завершения подготовки.","festival.midnighteve.4":"Площадь готова. Возвращайся к полуночи!","festival.midnighteve.5":"Этот праздник уже состоялся.","festival.midnighteve.midnight":"Полночь! Начинается зимний праздник!"})
 write(A/"lang/en_us.json",en);write(A/"lang/ru_ru.json",ru)
@@ -467,8 +483,8 @@ public final class MidnightEve {
     public static final DeferredItem<Item> WINTERMARK = ITEMS.registerSimpleItem("wintermark", new Item.Properties());
     public static final DeferredItem<WrappedGift> WRAPPED_GIFT = ITEMS.register("wrapped_gift",
         () -> new WrappedGift(new Item.Properties().stacksTo(16)));
-    public static final DeferredBlock<FestivalHearth> HEARTH = BLOCKS.register("festival_hearth", () -> new FestivalHearth(BlockBehaviour.Properties.of().strength(-1.0F,3600000.0F).noLootTable().lightLevel(s -> s.getValue(FestivalHearth.STAGE)>=4?12:0)));
-    public static final DeferredBlock<FestivalLamp> LAMP = BLOCKS.register("festival_lamp", () -> new FestivalLamp(BlockBehaviour.Properties.of().strength(1.0F).lightLevel(s -> s.getValue(FestivalLamp.LIT)?15:0)));
+    public static final DeferredBlock<FestivalHearth> HEARTH = BLOCKS.register("festival_hearth", () -> new FestivalHearth(BlockBehaviour.Properties.of().strength(3.5F,12.0F).noLootTable().lightLevel(s -> s.getValue(FestivalHearth.STAGE)>=4?12:0)));
+    public static final DeferredBlock<FestivalLamp> LAMP = BLOCKS.register("festival_lamp", () -> new FestivalLamp(BlockBehaviour.Properties.of().strength(1.0F).noOcclusion().noLootTable().lightLevel(s -> s.getValue(FestivalLamp.LIT)?15:0)));
     public MidnightEve(IEventBus bus) {
         BLOCKS.register(bus); ITEMS.register(bus); bus.addListener(this::creative);
     }
@@ -515,10 +531,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 public final class FestivalLamp extends Block {
     public static final BooleanProperty LIT = BooleanProperty.create("lit");
     public FestivalLamp(Properties p) { super(p); registerDefaultState(stateDefinition.any().setValue(LIT,false)); }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b) { b.add(LIT); }
+    @Override protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) { return box(3,0,3,13,14,13); }
 }
 ''')
 text(S/"java/dev/mngklrd/midnighteve/block/FestivalHearth.java",'''package dev.mngklrd.midnighteve.block;
@@ -570,7 +591,7 @@ public final class FestivalHearth extends Block {
     }
     private void light(ServerLevel s,BlockPos p,int n) {
         int found=0;
-        for(int[] off:new int[][]{{-3,-2},{3,-2},{-3,2},{3,2}}){
+        for(int[] off:new int[][]{{-3,-2},{3,-2},{-3,2},{3,2},{-2,-3},{2,-3},{-2,3},{2,3}}){
             BlockPos q=p.offset(off[0],1,off[1]);BlockState b=s.getBlockState(q);
             if(b.is(MidnightEve.LAMP.get()) && found++<n) s.setBlockAndUpdate(q,b.setValue(FestivalLamp.LIT,true));
         }
@@ -586,6 +607,7 @@ public final class FestivalHearth extends Block {
         s.setBlockAndUpdate(p,state.setValue(STAGE,5));
         light(s,p,4);
         s.playSound(null,p,SoundEvents.BELL_BLOCK,SoundSource.BLOCKS,2.0F,0.8F);
+        s.playSound(null,p,SoundEvents.FIREWORK_ROCKET_BLAST,SoundSource.AMBIENT,1.2F,1.0F);
         s.sendParticles(ParticleTypes.FIREWORK,p.getX()+0.5,p.getY()+6,p.getZ()+0.5,100,2.0,1.6,2.0,0.15);
         s.sendParticles(ParticleTypes.END_ROD,p.getX()+0.5,p.getY()+3,p.getZ()+0.5,60,3,2,3,0.04);
         Block.popResource(s,p.above(),new ItemStack(MidnightEve.WRAPPED_GIFT.get(),3));
