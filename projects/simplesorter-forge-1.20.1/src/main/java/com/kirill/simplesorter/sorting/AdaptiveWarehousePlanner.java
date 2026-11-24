@@ -22,7 +22,6 @@ public final class AdaptiveWarehousePlanner {
         @Override public int[] slotByStack(){return slotByStack.clone();}
     }
     private record Address(int chest,int slot) {}
-    private record Column(int x,int z) {}
     private record Candidate(int[] chest,int[] slot,long cost,int moved) {}
 
     public static Plan plan(List<Stack> input,List<Storage> storage,Accepts accepts) {
@@ -63,14 +62,19 @@ public final class AdaptiveWarehousePlanner {
                 .thenComparingInt(i->-boxes.get(i).capacity).thenComparingInt(i->i));
         orders.add(emptyFirst);
         if(spatial){
-            orders.add(columnOrder(boxes,false));
-            orders.add(columnOrder(boxes,true));
+            orders.add(SpatialWarehouseLayout.columnOrder(boxes,false));
+            orders.add(SpatialWarehouseLayout.columnOrder(boxes,true));
+            orders.add(SpatialWarehouseLayout.neighborOrder(boxes));
         }
         for(List<Integer> order:orders){
-            List<Address> desired=pack(items,boxes,sorted,order);
-            if(desired.size()!=n)continue;
-            Candidate candidate=repair(items,boxes,original,sorted,desired,accepts,spatial);
-            if(candidate.cost<best.cost || candidate.cost==best.cost&&candidate.moved<best.moved)best=candidate;
+            // Coarse and fine cuts compete on the same quality objective.
+            // More spare slots allow form separation when it improves purity.
+            for(int granularity:new int[]{3,2}){
+                List<Address> desired=pack(items,boxes,sorted,order,granularity);
+                if(desired.size()!=n)continue;
+                Candidate candidate=repair(items,boxes,original,sorted,desired,accepts,spatial);
+                if(candidate.cost<best.cost || candidate.cost==best.cost&&candidate.moved<best.moved)best=candidate;
+            }
         }
         // A restricted handler can make the ideal packing impossible. The
         // original legal layout is always a candidate: never discard items
@@ -109,7 +113,7 @@ public final class AdaptiveWarehousePlanner {
      * count or requirement for one dedicated chest per family.
      */
     private static List<Address> pack(List<Stack> items,List<Storage> boxes,
-            List<Integer> sorted,List<Integer> order){
+            List<Integer> sorted,List<Integer> order,int granularity){
         List<Address> target=new ArrayList<>(items.size());
         long remaining=boxes.stream().mapToLong(Storage::capacity).sum();
         int at=0;
@@ -125,7 +129,7 @@ public final class AdaptiveWarehousePlanner {
             for(int k=min;k<max;k++){
                 int strength=boundary(items.get(sorted.get(at+k-1)).profile,
                         items.get(sorted.get(at+k)).profile);
-                if(strength>=3 && strength>=bestStrength){bestStrength=strength;take=k;}
+                if(strength>=granularity && strength>=bestStrength){bestStrength=strength;take=k;}
             }
             if(max==left || (max<left && boundary(items.get(sorted.get(at+max-1)).profile,
                     items.get(sorted.get(at+max)).profile)>=bestStrength))take=max;
@@ -181,7 +185,8 @@ public final class AdaptiveWarehousePlanner {
         for(int i=0;i<boxes.size();i++)contents.add(new ArrayList<>());
         for(int i=0;i<items.size();i++)contents.get(assigned[i]).add(items.get(i).profile);
         Map<String,Set<Integer>> spread=new HashMap<>();
-        Map<String,Set<Column>> columns=new HashMap<>();
+        Map<String,Set<SpatialWarehouseLayout.Column>> columns=new HashMap<>();
+        Map<String,Set<SpatialWarehouseLayout.Column>> relatedColumns=new HashMap<>();
         long result=0;
         for(int c=0;c<contents.size();c++){
             List<SemanticItemProfile> row=contents.get(c);
@@ -191,23 +196,23 @@ public final class AdaptiveWarehousePlanner {
                 SemanticItemProfile p=row.get(i);
                 String key=cluster(p);
                 spread.computeIfAbsent(key,k->new HashSet<>()).add(c);
-                if(spatial)columns.computeIfAbsent(key,k->new HashSet<>())
-                        .add(new Column(boxes.get(c).x2,boxes.get(c).z2));
+                if(spatial && !"unknown".equals(p.group())){
+                    var column=SpatialWarehouseLayout.column(boxes.get(c));
+                    columns.computeIfAbsent(key,k->new HashSet<>()).add(column);
+                    relatedColumns.computeIfAbsent(p.group(),k->new HashSet<>()).add(column);
+                }
                 for(int j=0;j<i;j++)impurity+=100-p.affinity(row.get(j));
             }
             if(n>1)result+=2*impurity/(n-1);
         }
         for(Set<Integer> set:spread.values())result+=12L*Math.max(0,set.size()-1);
-        if(spatial)for(Set<Column> set:columns.values())result+=8L*Math.max(0,set.size()-1);
+        if(spatial){
+            // Same material in one vertical column first; adjacent columns
+            // next. A weaker family-wide term keeps related groups nearby.
+            for(var set:columns.values())result+=SpatialWarehouseLayout.dispersion(set,24,3);
+            for(var set:relatedColumns.values())result+=SpatialWarehouseLayout.dispersion(set,3,1);
+        }
         return result;
     }
 
-    private static List<Integer> columnOrder(List<Storage> storage,boolean swapAxes){
-        List<Integer> result=new ArrayList<>();
-        for(int i=0;i<storage.size();i++)result.add(i);
-        result.sort(Comparator.comparingInt((Integer i)->swapAxes?storage.get(i).z2:storage.get(i).x2)
-                .thenComparingInt(i->swapAxes?storage.get(i).x2:storage.get(i).z2)
-                .thenComparingInt(i->-storage.get(i).y).thenComparingInt(i->i));
-        return result;
-    }
 }

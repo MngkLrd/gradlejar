@@ -257,6 +257,9 @@ jobs:
             src/main/java/com/kirill/simplesorter/sorting/StrictStorageFamily.java \
             src/main/java/com/kirill/simplesorter/sorting/SemanticItemProfile.java \
             src/main/java/com/kirill/simplesorter/sorting/SemanticItemClassifier.java \
+            src/main/java/com/kirill/simplesorter/sorting/AdaptiveWarehousePlanner.java \
+            src/main/java/com/kirill/simplesorter/sorting/SpatialWarehouseLayout.java \
+            src/main/java/com/kirill/simplesorter/sorting/WarehouseTransferComponents.java \
             src/main/java/com/kirill/simplesorter/sorting/StrictChestAdmission.java \
             src/main/java/com/kirill/simplesorter/sorting/RoutingPolicy.java \
             src/main/java/com/kirill/simplesorter/sorting/WarehouseLayout.java \
@@ -277,6 +280,7 @@ jobs:
             tools/tests/WarehouseRoutingRulesSelfTest.java \
             tools/tests/StrictStorageSelfTest.java \
             tools/tests/SemanticItemClassifierSelfTest.java \
+            tools/tests/AdaptiveWarehousePlannerSelfTest.java \
             tools/tests/WarehouseFamilyPlanSelfTest.java \
             tools/tests/WarehouseAssignmentPlannerSelfTest.java \
             tools/tests/WarehouseSlotOptimizerSelfTest.java \
@@ -290,6 +294,7 @@ jobs:
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseRoutingRulesSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.StrictStorageSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.SemanticItemClassifierSelfTest
+          java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.AdaptiveWarehousePlannerSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseFamilyPlanSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseAssignmentPlannerSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseSlotOptimizerSelfTest

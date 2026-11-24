@@ -239,7 +239,7 @@ public final class WarehouseVacuumSorter {
             for(Entry e:entries)items.add(new AdaptiveWarehousePlanner.Stack(e.source.sequence,e.sourceSlot,e.semantic));
             AdaptiveWarehousePlanner.Plan plan=AdaptiveWarehousePlanner.plan(items,boxes,
                     (item,chest,slot)->canInsertAfterExtraction(chests.get(chest).ref.handler(),
-                            slot,entries.get(item).original),false);
+                            slot,entries.get(item).original),true);
             int[] owners=plan.chestByStack(),slots=plan.slotByStack();
             List<WarehouseTransferComponents.Slot> sources=new ArrayList<>(),targets=new ArrayList<>();
             for(int i=0;i<entries.size();i++){

@@ -214,6 +214,8 @@ public final class WarehouseSortSessions {
                             + unresolved + " mixed chests remain (small families may share a chest); "
                             + unknown + " misc/fallback slots. "
                             + "Global plans: " + session.batchCount() + "; transactions: " + session.completedComponents() + "/" + session.totalComponents() + ". "
+                            + "Planned semantic groups: " + session.semanticGroups()
+                            + "; occupied inventories: " + session.activeInventories() + ". "
                             + "Skipped restricted chests: " + session.skippedChests()
                             + "; rejected buffer batches: " + session.rejectedTransfers() + "."
                             + (session.rejectedTransfers() > 0
