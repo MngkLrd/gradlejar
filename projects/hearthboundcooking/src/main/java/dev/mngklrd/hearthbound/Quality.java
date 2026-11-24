@@ -15,13 +15,13 @@ public final class Quality {
     }
     public static boolean food(ItemStack s){return !s.isEmpty()&&(s.isEdible()||FoodCapability.get(s)!=null);}
     public static boolean fresh(ItemStack s){IFood f=FoodCapability.get(s);return f==null||!f.isRotten();}
-    public static float saturationMultiplier(int q){return 0.8f+Mth.clamp(q,0,100)*0.004f;}
+    public static float saturationMultiplier(int q){q=Mth.clamp(q,0,100);return q<=70?0.8f+q*(0.2f/70f):1f+(q-70)*(0.1f/30f);}
     public static void heating(ItemStack input,ItemStack output,float target){
-        if(output.isEmpty()||!food(output)||!food(input)||!fresh(input))return;
+        if(output.isEmpty()||!food(output)||!fresh(input))return;
         float actual=HeatCapability.getTemperature(input);
         if(target<=0||actual<target*0.85f)return; // do not grade recipe viewers / simulated cold results
         float excess=Math.max(0,actual-target);
-        set(output,Math.round(95-Math.max(0,excess-target*0.15f)*0.18f));
+        set(output,Math.round(100-Math.max(0,excess-target*0.15f)*0.18f));
     }
     public static int role(ItemStack s){
         IFood f=FoodCapability.get(s);if(f==null)return 1;

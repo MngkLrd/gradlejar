@@ -37,7 +37,7 @@ public final class VesselEntity extends BlockEntity {
     private float heat=0, incoming=0, progress=0;
     private int hotTicks,overheatTicks,finishedHotTicks;
     private ResourceLocation activeRecipe;
-    private long lastIncoming=Long.MIN_VALUE;
+    private long lastIncoming=Long.MIN_VALUE,lastTick=-1;
     private final LazyOptional<IHeatBlock> heatCap=LazyOptional.of(()->new IHeatBlock(){
         public float getTemperature(){return 0;}
         public void setTemperature(float t){if(level!=null&&!level.isClientSide){incoming=Math.max(0,t);lastIncoming=level.getGameTime();}}
@@ -170,7 +170,7 @@ public final class VesselEntity extends BlockEntity {
         }
         int score=0,count=0;
         for(int i=0;i<5;i++)if(!ingredients.get(i).isEmpty()){
-            score+=Quality.stageScore(Quality.role(ingredients.get(i)),exposure[i],recipe.getDuration());count++;
+            score+=Quality.stageScore(Quality.role(ingredients.get(i)),exposure[i],Math.max(1,hotTicks));count++;
         }
         int stageScore=count==0?70:score/count;
         int tempScore=Mth.clamp(100-Math.round(100f*overheatTicks/Math.max(1,hotTicks)),0,100);
@@ -183,6 +183,9 @@ public final class VesselEntity extends BlockEntity {
     public static void tick(Level level,BlockPos pos,BlockState state,VesselEntity v){
         // Heat is delivered by native TFC firepits and Firmalife oven bottoms. The direct
         // firepit read also removes order-of-ticking jitter without creating any extra fuel.
+        long now=level.getGameTime();
+        if(v.lastTick>=0&&now-v.lastTick>40){v.heat*=Math.pow(v.lid()?.997:.992,Math.min(10000,now-v.lastTick));}
+        v.lastTick=now;
         float target=(level.getGameTime()-v.lastIncoming<=2&&v.lastIncoming!=Long.MIN_VALUE)?v.incoming:0;
         if(level.getBlockEntity(pos.below()) instanceof AbstractFirepitBlockEntity<?> fire)target=Math.max(target,fire.getTemperature());
         float coefficient=target>v.heat?(v.capacity()==6?.018f:.012f):(v.lid()?.003f:.008f);
@@ -204,6 +207,7 @@ public final class VesselEntity extends BlockEntity {
         if(v.ingredients.stream().anyMatch(s->!s.isEmpty()&&!Quality.fresh(s))){
             v.resetProgress();v.stage(1);v.setChanged();return;
         }
+        if(v.heat<180){v.stage(1);v.setChanged();return;}
         PotBlockEntity.PotInventory inv=v.sample();
         PotRecipe recipe=v.recipeFor(inv);
         if(recipe==null){v.resetProgress();v.stage(1);v.setChanged();return;}
@@ -220,14 +224,14 @@ public final class VesselEntity extends BlockEntity {
     }
     @Override protected void saveAdditional(CompoundTag t){
         super.saveAdditional(t);ContainerHelper.saveAllItems(t,ingredients);t.putIntArray("Exposure",exposure);
-        t.put("Tank",tank.writeToNBT(new CompoundTag()));t.putFloat("Heat",heat);t.putFloat("Progress",progress);t.putInt("Hot",hotTicks);t.putInt("Overheat",overheatTicks);t.putInt("FinishedHot",finishedHotTicks);
+        t.put("Tank",tank.writeToNBT(new CompoundTag()));t.putFloat("Heat",heat);t.putFloat("Progress",progress);t.putInt("Hot",hotTicks);t.putInt("Overheat",overheatTicks);t.putInt("FinishedHot",finishedHotTicks);t.putLong("LastTick",lastTick);
         if(activeRecipe!=null)t.putString("Recipe",activeRecipe.toString());
         if(!finished.isEmpty()){t.put("Finished",finished.copyWithCount(1).save(new CompoundTag()));t.putInt("Servings",finished.getCount());}
     }
     @Override public void load(CompoundTag t){
         super.load(t);ingredients.clear();ContainerHelper.loadAllItems(t,ingredients);
         Arrays.fill(exposure,0);int[] a=t.getIntArray("Exposure");System.arraycopy(a,0,exposure,0,Math.min(a.length,5));
-        tank.readFromNBT(t.getCompound("Tank"));heat=t.getFloat("Heat");progress=t.getFloat("Progress");hotTicks=t.getInt("Hot");overheatTicks=t.getInt("Overheat");finishedHotTicks=t.getInt("FinishedHot");
+        tank.readFromNBT(t.getCompound("Tank"));heat=t.getFloat("Heat");progress=t.getFloat("Progress");hotTicks=t.getInt("Hot");overheatTicks=t.getInt("Overheat");finishedHotTicks=t.getInt("FinishedHot");lastTick=t.contains("LastTick")?t.getLong("LastTick"):-1;
         activeRecipe=t.contains("Recipe")?ResourceLocation.tryParse(t.getString("Recipe")):null;
         finished=ItemStack.of(t.getCompound("Finished"));if(!finished.isEmpty())finished.setCount(Mth.clamp(t.getInt("Servings"),0,capacity()*3));
     }

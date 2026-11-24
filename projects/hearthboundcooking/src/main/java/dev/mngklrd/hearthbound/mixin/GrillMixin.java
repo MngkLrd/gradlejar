@@ -19,7 +19,7 @@ public abstract class GrillMixin {
                 ItemStack s=h.getStackInSlot(i+4);
                 if(s!=hearthbound$previous[i]){hearthbound$previous[i]=s;hearthbound$exposure[i]=0;}
                 if(Quality.has(s)&&g.getTemperature()>300&&HeatCapability.getTemperature(s)>220&&++hearthbound$exposure[i]>=100){
-                    Quality.set(s,Quality.get(s)-5);hearthbound$exposure[i]=0;g.setChanged();
+                    Quality.set(s,Quality.get(s)-5);hearthbound$exposure[i]=0;g.markForSync();
                 }
             }
         });
