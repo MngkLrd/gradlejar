@@ -16,6 +16,7 @@ public final class SortCategory {
     private final int priority;
     private final int weightMultiplier;
     private final boolean moveAllowed;
+    private final boolean userDefined;
     private final List<ResourceLocation> itemIds;
     private final List<TagKey<Item>> tags;
     private final List<String> idContains;
@@ -29,6 +30,7 @@ public final class SortCategory {
         this.priority = builder.priority;
         this.weightMultiplier = Math.max(1, builder.weightMultiplier);
         this.moveAllowed = builder.moveAllowed;
+        this.userDefined = builder.userDefined;
         this.itemIds = List.copyOf(builder.itemIds);
         this.tags = List.copyOf(builder.tags);
         this.idContains = builder.idContains.stream().map(SortCategory::normalizeToken).filter(s -> !s.isBlank()).toList();
@@ -55,6 +57,8 @@ public final class SortCategory {
     public int weight(int stackCount) {
         return Math.max(1, stackCount) * weightMultiplier;
     }
+
+    public boolean userDefined() { return userDefined; }
 
     public boolean moveAllowed() {
         return moveAllowed;
@@ -99,6 +103,7 @@ public final class SortCategory {
         private int priority;
         private int weightMultiplier = 1;
         private boolean moveAllowed = true;
+        private boolean userDefined;
         private final List<ResourceLocation> itemIds = new ArrayList<>();
         private final List<TagKey<Item>> tags = new ArrayList<>();
         private final List<String> idContains = new ArrayList<>();
@@ -128,6 +133,8 @@ public final class SortCategory {
             this.weightMultiplier = weightMultiplier;
             return this;
         }
+
+        public Builder userDefined(boolean value) { this.userDefined=value; return this; }
 
         public Builder moveAllowed(boolean moveAllowed) {
             this.moveAllowed = moveAllowed;

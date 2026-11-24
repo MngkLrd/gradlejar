@@ -70,15 +70,17 @@ public final class WarehouseVacuumSorter {
         final int sourceSlot;
         final ItemStack original;
         final String family;
+        final SemanticItemProfile semantic;
         Chest destination;
         int destinationSlot = -1;
         ItemStack carried = ItemStack.EMPTY;
 
-        Entry(Chest source, int sourceSlot, ItemStack original, String family) {
+        Entry(Chest source, int sourceSlot, ItemStack original, SemanticItemProfile semantic) {
             this.source = source;
             this.sourceSlot = sourceSlot;
             this.original = original;
-            this.family = family;
+            this.semantic = semantic;
+            this.family = semantic.legacyFamily();
         }
     }
 
@@ -287,13 +289,14 @@ public final class WarehouseVacuumSorter {
                     ItemStack stack = live.isEmpty() ? ItemStack.EMPTY : live.copy();
                     chest.snapshot[slot] = stack;
                     if (stack.isEmpty()) continue;
-                    if (!ItemCategoryResolver.resolve(stack).moveAllowed()
+                    CategoryResolution resolution = ItemCategoryResolver.resolveDetailed(stack);
+                    if (!resolution.category().moveAllowed()
                             || !canInsertAfterExtraction(ref.handler(), slot, stack)) return null;
                     ItemStack simulated = ref.handler().extractItem(slot, stack.getCount(), true);
                     if (!sameStackAndCount(stack, simulated)) return null;
-                    String family = StrictStackClassifier.family(stack);
-                    chest.votes.merge(family, 1, Integer::sum);
-                    local.add(new Entry(chest, slot, stack, family));
+                    SemanticItemProfile semantic = StrictStackClassifier.profile(stack,resolution);
+                    chest.votes.merge(semantic.legacyFamily(), 1, Integer::sum);
+                    local.add(new Entry(chest, slot, stack, semantic));
                 }
             } catch (RuntimeException ex) {
                 LOG.warn("Skipping incompatible inventory at {}", ref.pos(), ex);

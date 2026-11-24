@@ -29,6 +29,25 @@ public final class StrictStackClassifier {
         return TagKey.create(Registries.ITEM, new ResourceLocation(namespace, path));
     }
 
+    public static SemanticItemProfile profile(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return SemanticItemClassifier.classify(new SemanticItemClassifier.Input(
+                    "minecraft:air","misc","misc","misc",false,false,"empty",java.util.List.of()));
+        }
+        return profile(stack,ItemCategoryResolver.resolveDetailed(stack));
+    }
+
+    public static SemanticItemProfile profile(ItemStack stack, CategoryResolution resolution) {
+        SortCategory category=resolution.category();
+        String id=BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+        String family=family(stack,category);
+        if (category.userDefined() && category.moveAllowed()) family=category.id();
+        return SemanticItemClassifier.classify(new SemanticItemClassifier.Input(
+                id,category.id(),category.group(),family,category.moveAllowed(),
+                category.userDefined(),resolution.reason(),
+                stack.getTags().map(t -> t.location().toString()).toList()));
+    }
+
     public static String family(ItemStack stack) {
         if (stack == null || stack.isEmpty()) return "misc";
         return family(stack, ItemCategoryResolver.resolve(stack));

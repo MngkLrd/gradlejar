@@ -43,39 +43,39 @@ public final class ItemCategoryResolver {
         String namespace = SortCategory.normalizeToken(itemId.getNamespace());
         String path = SortCategory.normalizeToken(itemId.getPath());
 
-        for (SortCategory category : SortCategoryRegistry.categories()) {
-            for (ResourceLocation exact : category.itemIds()) {
-                if (exact.equals(itemId)) {
-                    return new CategoryResolution(category, "exact item " + itemId);
-                }
-            }
-
-            for (var tag : category.tags()) {
-                if (stack.is(tag)) {
-                    return new CategoryResolution(category, "tag " + tag.location());
-                }
-            }
-
-            for (ClassHint hint : category.classHints()) {
-                if (matchesClassHint(stack, item, hint)) {
-                    return new CategoryResolution(category, "class hint " + hint.name().toLowerCase(Locale.ROOT));
-                }
-            }
-
-            for (String token : category.idContains()) {
-                if (PathTokenMatcher.matches(path, token)) {
-                    return new CategoryResolution(category, "id contains " + token);
-                }
-            }
-
-            for (String categoryNamespace : category.namespaces()) {
-                if (!categoryNamespace.isBlank() && namespace.equals(categoryNamespace)) {
-                    return new CategoryResolution(category, "namespace " + namespace);
-                }
-            }
+        var rules = SortCategoryRegistry.categories();
+        // Safety rules win, regardless of any user-supplied priority.
+        for (SortCategory category : rules) {
+            if (category.moveAllowed()) continue;
+            String reason=match(category,stack,item,itemId,namespace,path);
+            if (reason!=null) return new CategoryResolution(category,reason);
+        }
+        // Explicit user rules are evaluated before built-ins. Their own
+        // priority order remains intact.
+        for (SortCategory category : rules) {
+            if (!category.userDefined() || !category.moveAllowed()) continue;
+            String reason=match(category,stack,item,itemId,namespace,path);
+            if (reason!=null) return new CategoryResolution(category,"user rule: "+reason);
+        }
+        // Preserve established built-in ordering in this milestone.
+        for (SortCategory category : rules) {
+            if (category.userDefined() || !category.moveAllowed()) continue;
+            String reason=match(category,stack,item,itemId,namespace,path);
+            if (reason!=null) return new CategoryResolution(category,reason);
         }
 
         return new CategoryResolution(SortCategoryRegistry.misc(), "fallback misc");
+    }
+
+    private static String match(SortCategory category,ItemStack stack,Item item,
+                                ResourceLocation itemId,String namespace,String path) {
+        for (ResourceLocation exact:category.itemIds()) if (exact.equals(itemId)) return "exact item "+itemId;
+        for (var tag:category.tags()) if (stack.is(tag)) return "tag "+tag.location();
+        for (ClassHint hint:category.classHints()) if (matchesClassHint(stack,item,hint))
+            return "class hint "+hint.name().toLowerCase(Locale.ROOT);
+        for (String token:category.idContains()) if (PathTokenMatcher.matches(path,token)) return "id contains "+token;
+        for (String ns:category.namespaces()) if (!ns.isBlank() && namespace.equals(ns)) return "namespace "+namespace;
+        return null;
     }
 
     private static boolean matchesClassHint(ItemStack stack, Item item, ClassHint hint) {
