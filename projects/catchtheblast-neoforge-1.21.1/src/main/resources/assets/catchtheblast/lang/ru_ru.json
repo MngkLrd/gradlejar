@@ -1,0 +1,13 @@
+{
+  "item.catchtheblast.blast_shield": "Взрывной щит",
+  "tooltip.catchtheblast.charge": "Накопленный заряд: %s%%",
+  "tooltip.catchtheblast.block": "Удерживайте ПКМ для поглощения взрывов",
+  "tooltip.catchtheblast.release": "Shift + ПКМ для выброса энергии",
+  "tooltip.catchtheblast.overload": "Перегрузка! Немедленно сбросьте заряд.",
+  "message.catchtheblast.charge": "Заряд: %s%%",
+  "message.catchtheblast.perfect": "Идеальный блок! %s%%",
+  "message.catchtheblast.overload": "ПЕРЕГРУЗКА! %s%% — сбросьте заряд",
+  "message.catchtheblast.released": "Энергия высвобождена",
+  "message.catchtheblast.burst": "Щит перегрузился!",
+  "hud.catchtheblast.charge": "ЗАРЯД  %s%%"
+}

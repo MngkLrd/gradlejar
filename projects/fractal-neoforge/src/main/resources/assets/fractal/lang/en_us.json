@@ -23,5 +23,7 @@
   "fractal.limit": "Maximum depth or lifetime cell limit reached.",
   "item.fractal.lattice_lens": "Matter Lens",
   "fractal.cutaway_open": "Material cutaway opened",
-  "fractal.cutaway_closed": "Material cutaway closed"
+  "fractal.cutaway_closed": "Material cutaway closed",
+  "fractal.probe_help": "Use on stone, copper block or vertical oak log. Inside matter, sneak-use in air to ascend.",
+  "fractal.lens_help": "Use on an explored material cell to open or close its cutaway."
 }

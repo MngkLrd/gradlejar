@@ -28,13 +28,14 @@ jobs:
         working-directory: projects/fractal-neoforge
         run: |
           java -cp build/classes/java/main dev.fractal.cell.LatticeMath
+          java -cp build/classes/java/main dev.fractal.cell.PreviewCodec
           python3 - <<'PY'
           from zipfile import ZipFile
           import json,struct
-          with ZipFile('build/libs/fractal-neoforge-1.21.1-0.2.0.jar') as z:
+          with ZipFile('build/libs/fractal-neoforge-1.21.1-0.3.0.jar') as z:
               assert z.testzip() is None
               names=set(z.namelist())
-              for c in ['Fractal','cell/CellData','cell/CellSpace','cell/CellNetwork','cell/LatticeMath','cell/Material','block/HostBlock','block/SocketBlock','block/InputBlock','item/Probe','block/HostEntity','cell/Preview','client/HostRenderer','client/ClientEvents','item/LatticeLens']:
+              for c in ['Fractal','cell/CellData','cell/CellSpace','cell/CellNetwork','cell/LatticeMath','cell/Material','block/HostBlock','block/SocketBlock','block/InputBlock','item/Probe','block/HostEntity','cell/Preview','cell/PreviewCodec','client/HostRenderer','client/ClientEvents','item/LatticeLens']:
                   assert 'dev/fractal/'+c+'.class' in names,c
               for n in ['META-INF/neoforge.mods.toml','pack.mcmeta','data/fractal/dimension/matter.json','assets/fractal/textures/item/matter_probe.png','assets/fractal/blockstates/stone_cell.json','data/fractal/recipe/matter_probe.json']:
                   assert n in names,n
@@ -48,4 +49,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "ci-fractal-neoforge-${GITHUB_RUN_NUMBER}" projects/fractal-neoforge/build/libs/fractal-neoforge-1.21.1-0.2.0.jar --target "$GITHUB_SHA" --title "Fractal 0.2.0 (NeoForge 1.21.1)" --notes "Compiled, lattice coupling math and JAR verified. Cutaway snapshots and recursive coupling; in-game test pending." --prerelease
+          gh release create "ci-fractal-neoforge-${GITHUB_RUN_NUMBER}" projects/fractal-neoforge/build/libs/fractal-neoforge-1.21.1-0.3.0.jar --target "$GITHUB_SHA" --title "Fractal 0.3.0 (NeoForge 1.21.1)" --notes "Compiled, lattice coupling math and JAR verified. Full vertical cutaway, no-occlusion fix, stone cavity and recursive coupling; in-game test pending." --prerelease

@@ -36,7 +36,7 @@ public final class Fractal {
  public static final java.util.function.Supplier<BlockEntityType<HostEntity>> HOST_ENTITY=ENTITIES.register("host",()->BlockEntityType.Builder.of(HostEntity::new,STONE.get(),COPPER.get(),WOOD.get()).build(null));
  public static final DeferredItem<LatticeLens> LENS=ITEMS.register("lattice_lens",()->new LatticeLens(new Item.Properties().stacksTo(1)));
  private static BlockBehaviour.Properties shell(){return BlockBehaviour.Properties.of().strength(-1,3600000).noLootTable().pushReaction(PushReaction.BLOCK);}
- private static BlockBehaviour.Properties hostProps(float hardness,float resist){return BlockBehaviour.Properties.of().strength(hardness,resist).pushReaction(PushReaction.BLOCK).lightLevel(s->s.getValue(HostBlock.LIGHT)*5);}
+ private static BlockBehaviour.Properties hostProps(float hardness,float resist){return BlockBehaviour.Properties.of().strength(hardness,resist).noOcclusion().pushReaction(PushReaction.BLOCK).lightLevel(s->s.getValue(HostBlock.LIGHT)*5);}
  public Fractal(IEventBus bus){BLOCKS.register(bus);ITEMS.register(bus);ENTITIES.register(bus);bus.addListener(this::tab);NeoForge.EVENT_BUS.addListener(CellNetwork::tick);NeoForge.EVENT_BUS.addListener(CellNetwork::commands);NeoForge.EVENT_BUS.addListener(CellNetwork::onBreak);}
  private void tab(BuildCreativeModeTabContentsEvent e){if(e.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)){e.accept(PROBE.get());e.accept(LENS.get());}}
 }

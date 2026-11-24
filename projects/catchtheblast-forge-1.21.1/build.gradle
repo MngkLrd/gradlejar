@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
+}
+group = 'dev.ataflore.catchtheblast'
+version = '0.1.0-beta'
+base { archivesName = 'catchtheblast-forge-mc1.21.1' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+minecraft {
+    mappings channel: 'official', version: '1.21.1'
+    copyIdeResources = true
+    runs {
+        client { workingDirectory project.file('run'); mods { catchtheblast { source sourceSets.main } } }
+        server { workingDirectory project.file('run-server'); args '--nogui'; mods { catchtheblast { source sourceSets.main } } }
+    }
+}
+dependencies { minecraft "net.minecraftforge:forge:1.21.1-${forge_version}" }
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 21 }
+tasks.register('decodeTextures') {
+    inputs.files(fileTree('src/main/resources') { include '**/*.png.b64' })
+    outputs.dir(layout.buildDirectory.dir('generated/textures'))
+    doLast {
+        fileTree('src/main/resources').matching { include '**/*.png.b64' }.each { src ->
+            def rel = file('src/main/resources').toPath().relativize(src.toPath()).toString()
+            def dest = file("$buildDir/generated/textures/" + rel.replace('.png.b64', '.png'))
+            dest.parentFile.mkdirs()
+            dest.bytes = Base64.decoder.decode(src.text.trim())
+        }
+    }
+}
+tasks.named('processResources') {
+    dependsOn 'decodeTextures'
+    from("$buildDir/generated/textures")
+    exclude '**/*.png.b64'
+}
+// ForgeGradle supplies the production jar task for this version.

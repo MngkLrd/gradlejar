@@ -34,7 +34,7 @@ public final class CellNetwork {
    if(inner!=null)inner.getChunkSource().addRegionTicket(ACTIVE,new ChunkPos(CellSpace.center(id)),2,id);
   }
   for(CellData.Cell c:live)sync(s,d,c);
-  if(!live.isEmpty())for(int n=0;n<Math.min(2,live.size());n++){CellData.Cell c=live.get(Math.floorMod(previewCursor++,live.size()));preview(s,c);}
+  if(!live.isEmpty())for(int n=0;n<Math.min(1,live.size());n++){CellData.Cell c=live.get(Math.floorMod(previewCursor++,live.size()));preview(s,c);}
   for(ServerPlayer p:s.getPlayerList().getPlayers())if(p.serverLevel().dimension().equals(CellSpace.KEY)){
    CellData.Cell c=d.at(p.blockPosition());
    if(!d.live(c)||!CellSpace.inside(c,p.blockPosition())){p.sendSystemMessage(Component.translatable("fractal.collapsed"));CellSpace.ascend(p,d,c);}
@@ -72,6 +72,7 @@ public final class CellNetwork {
   CellData d=CellData.get(s);if(!d.live(c))return;
   ServerLevel outer=s.getLevel(c.address.dimension()),inner=s.getLevel(CellSpace.KEY);
   if(outer==null||inner==null)return;
+  if(!outer.hasChunkAt(c.address.position()))return;
   String fresh=Preview.capture(inner,c.id);
   if(fresh!=null&&!fresh.equals(c.preview)){c.preview=fresh;d.setDirty();}
   if(outer.hasChunkAt(c.address.position())&&outer.getBlockEntity(c.address.position()) instanceof HostEntity h)h.setPreview(c.preview);

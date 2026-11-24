@@ -270,6 +270,11 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Install Huss original voice synthesis and encoder
+        if: matrix.project_dir == 'projects/husshusshuss-forge-1.21.1'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends espeak-ng ffmpeg
       - name: Compile production mod
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}

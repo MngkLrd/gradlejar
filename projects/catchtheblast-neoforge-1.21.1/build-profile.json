@@ -1,0 +1,11 @@
+{
+  "slug": "catchtheblast",
+  "version": "0.2.0-beta",
+  "minecraft": "1.21.1",
+  "loader": "neoforge",
+  "java": "21",
+  "gradle": "8.14.3",
+  "jar_glob": "catchtheblast-neoforge-mc1.21.1-0.2.0-beta.jar",
+  "minimum_loader_version": "21.1.1",
+  "compile_loader_version": "21.1.1"
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " IG",
+    " HI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "G": {
+      "item": "minecraft:gold_nugget"
+    },
+    "H": {
+      "item": "minecraft:goat_horn"
+    }
+  },
+  "result": {
+    "id": "husshusshuss:discipline_whistle",
+    "count": 1
+  }
+}
