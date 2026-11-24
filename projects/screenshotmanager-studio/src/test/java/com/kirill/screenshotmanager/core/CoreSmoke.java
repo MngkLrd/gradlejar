@@ -59,6 +59,19 @@ public final class CoreSmoke {
         Files.delete(anim.path());Files.delete(root.resolve("clips"));
         Files.delete(png.resolveSibling(png.getFileName()+".smproject"));
         Files.delete(custom);Files.delete(prefPath);Files.delete(png);Files.delete(jpg);Files.delete(root.resolve("edited"));Files.delete(root);
+        var track=new CameraTrack(List.of(new CameraTrack.Pose(0,64,0,170,0),new CameraTrack.Pose(4,65,3,-170,10),new CameraTrack.Pose(8,66,6,-160,0)));
+        check(track.sample(0).x()==0&&track.sample(1).x()==8,"Camera path endpoints");
+        check(Math.abs(track.sample(.25).yaw())>160,"Shortest angle interpolation");
+        check(track.sample(.5).y()==65,"Camera keyframe interpolation");
+        check(track.sample(.2).x()>=0&&track.sample(.8).x()<=8,"Camera path bounds");
+        var from=new FlybyPath.Vec(.5,1.5,.5);var to=new FlybyPath.Vec(6.5,1.5,.5);
+        var direct=FlybyPath.plan(from,to,v->true);
+        check(direct!=null&&direct.sample(0).equals(from)&&direct.sample(1).equals(to),"Flyby direct endpoints");
+        java.util.function.Predicate<FlybyPath.Vec> free=v->!(v.x()>2.7&&v.x()<4.3&&Math.abs(v.z()-.5)<1.2&&v.y()<3.2)&&v.y()>0&&v.y()<6;
+        var detour=FlybyPath.plan(from,to,free);
+        check(detour!=null&&detour.length()>6,"Flyby detours around obstacle");
+        for(int i=0;i<=400;i++)check(free.test(detour.sample(i/400.0)),"Flyby collision-free smoothing");
+        check(FlybyPath.plan(from,to,v->v.x()<1||v.x()>6)==null,"Flyby rejects enclosed path");
         System.out.println("Screenshot Manager core smoke tests passed");
     }
 }

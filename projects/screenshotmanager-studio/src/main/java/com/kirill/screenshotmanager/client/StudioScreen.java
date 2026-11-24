@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
-public final class StudioScreen extends Screen {
+public final class StudioScreen extends StudioBaseScreen {
     private static final Tool[] TOOLS=Tool.values();
     private static final String[] TOOL_LABELS={"Pan","Crop","Rect","Ellipse","Arrow","Line","Pen","Text","Highlight","Mosaic","Blur","Redact","Number","Copy area"};
     private static final int[] COLORS={0xffff535e,0xffffd04e,0xff5de2ac,0xff62bafa,0xfff4f6fa,0xff111111};
@@ -55,7 +55,7 @@ public final class StudioScreen extends Screen {
         if(text!=null)draft=text.getValue();
         text=new EditBox(font,sideX+7,151,Math.max(20,sideW-14),18,Component.literal("Annotation text"));
         text.setMaxLength(160);text.setValue(draft);text.setResponder(v->draft=v);
-        addRenderableWidget(text);
+        addRenderableWidget(text);text.setFocused(false);setFocused(null);
         if(doc==null&&!busy)load();
     }
     private void layout(){
@@ -181,13 +181,18 @@ public final class StudioScreen extends Screen {
         else if(panel==1)drawLayers(g,mx,my,sx,sw);
         else if(panel==2)drawGrade(g,mx,my,sx,sw);
         else drawFile(g,mx,my,sx,sw);
-        text.visible=panel==0&&height>=195&&!compareMode;
+        text.visible=panel==0&&height>=195&&!compareMode&&needsText();
+        if(!text.visible&&text.isFocused())clearTextFocus();
         StudioUi.box(g,0,height-21,width,21,StudioUi.PANEL);
         String info=rendered==null?"":rendered.getWidth()+" x "+rendered.getHeight()+"  |  "+Math.round(scale*100)+"%";
         StudioUi.label(g,font,status,7,height-15,Math.max(40,width-font.width(info)-22),StudioUi.MUTED);
         g.drawString(font,info,width-font.width(info)-7,height-15,StudioUi.ACCENT,false);
-        super.render(g,mx,my,dt);
+        if(text.visible)text.render(g,mx,my,dt);
     }
+    private boolean needsText(){
+        return tool==Tool.TEXT||(doc!=null&&selected>=0&&selected<doc.count()&&ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ImageDocument.MarkOperation m&&m.value().tool()==Tool.TEXT);
+    }
+    private void clearTextFocus(){text.setFocused(false);setFocused(null);}
     private void drawTools(GuiGraphics g,int mx,int my,int sx,int sw){
         int cell=Math.max(8,(sw-2)/6);
         g.drawString(font,"COLOR",sx,73,StudioUi.MUTED,false);
@@ -200,7 +205,7 @@ public final class StudioScreen extends Screen {
         g.drawString(font,"Size: "+thickness+" px",sx,107,StudioUi.TEXT,false);
         action(g,"-",sx,119,23,15,mx,my,false,()->thickness=Math.max(1,thickness-2));
         action(g,"+",sx+26,119,23,15,mx,my,false,()->thickness=Math.min(80,thickness+2));
-        if(height>=195)g.drawString(font,"Text",sx,140,StudioUi.MUTED,false);
+        if(height>=195&&needsText())g.drawString(font,"Text",sx,140,StudioUi.MUTED,false);
         if(height>=224){
             g.drawString(font,"Censor: "+strength,sx,176,StudioUi.TEXT,false);
             action(g,"-",sx,188,23,15,mx,my,false,()->strength=Math.max(3,strength-3));
@@ -361,6 +366,8 @@ public final class StudioScreen extends Screen {
         apply(ImageDocument.mark(new ImageDocument.Mark(tool,ax,ay,bx,by,color,thickness,strength,value,List.copyOf(points))),tool==Tool.CROP);
     }
     @Override public boolean mouseClicked(double x,double y,int button){
+        if(button==0&&text.visible&&text.isMouseOver(x,y))return super.mouseClicked(x,y,button);
+        clearTextFocus();
         if(button==0){
             for(StudioUi.Hit hit:List.copyOf(hits))if(hit.contains(x,y)){hit.action().run();return true;}
         }
@@ -402,7 +409,8 @@ public final class StudioScreen extends Screen {
         imageBounds();panX+=x-(ix+fx*scale);panY+=y-(iy+fy*scale);imageBounds();return true;
     }
     @Override public boolean keyPressed(int key,int scancode,int mods){
-        if(text.isFocused()&&key!=GLFW.GLFW_KEY_ESCAPE)return super.keyPressed(key,scancode,mods);
+        if(key==GLFW.GLFW_KEY_ESCAPE){if(text.isFocused()){clearTextFocus();return true;}onClose();return true;}
+        if(text.visible&&text.isFocused())return super.keyPressed(key,scancode,mods);
         if(hasControlDown()){
             if(key==GLFW.GLFW_KEY_Z){if(hasShiftDown())redo();else undo();return true;}
             if(key==GLFW.GLFW_KEY_Y){redo();return true;}

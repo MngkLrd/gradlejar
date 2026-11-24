@@ -9,5 +9,8 @@
   "key.screenshotmanager.zoom_in": "Photo Mode zoom in",
   "key.screenshotmanager.zoom_out": "Photo Mode zoom out",
   "key.screenshotmanager.record": "Start / stop GIF recording",
-  "key.screenshotmanager.burst": "Burst capture (5 screenshots)"
+  "key.screenshotmanager.burst": "Burst capture (5 screenshots)",
+  "key.screenshotmanager.keyframe": "Flyby: set start camera",
+  "key.screenshotmanager.director_play": "Flyby: automatic camera approach (Shift: GIF)",
+  "key.screenshotmanager.director_clear": "Flyby: clear start"
 }
