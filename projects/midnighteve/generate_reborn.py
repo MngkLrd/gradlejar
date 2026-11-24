@@ -138,7 +138,7 @@ class Template:
         offers=[{"buy":stack(a,b),"sell":stack(c,d),"uses":I(0),"maxUses":I(12),"xp":I(2),"rewardExp":B(1),"priceMultiplier":F(0.0)} for a,b,c,d in trade]
         nbt={"id":Str("minecraft:villager"),"CustomName":Str(json.dumps({"text":role})),"PersistenceRequired":B(1),
             "VillagerData":C({"type":Str("minecraft:snow"),"profession":Str(mc(profession)),"level":I(2)}),
-            "Offers":C({"Recipes":L(10,offers)}),"Tags":L(8,["midnighteve_resident"])}
+            "Offers":C({"Recipes":L(10,offers)}),"Tags":L(8,["midnighteve_resident","midnighteve_role_"+role.lower()])}
         self.entities.append({"pos":L(6,[x+.5,float(y),z+.5]),"blockPos":L(3,[x,y,z]),"nbt":C(nbt)})
     def save(self,n):
         palette=[]; index={}; blocks=[]
