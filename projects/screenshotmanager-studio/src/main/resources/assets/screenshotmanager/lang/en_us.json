@@ -18,5 +18,6 @@
   "key.screenshotmanager.ghost": "Ghost shot: toggle latest screenshot overlay",
   "key.screenshotmanager.roll": "Photo mode: change roll (Shift: reverse)",
   "key.screenshotmanager.panorama": "Capture 360 panorama (assign a key)",
-  "key.screenshotmanager.super_resolution": "Experimental 2x render capture"
+  "key.screenshotmanager.super_resolution": "Experimental 2x render capture",
+  "key.screenshotmanager.photo_preset": "Photo mode: next camera preset (Shift: previous)"
 }

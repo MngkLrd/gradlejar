@@ -4,6 +4,8 @@ import com.kirill.screenshotmanager.core.ImageDocument;
 import com.kirill.screenshotmanager.core.ProPhoto;
 import com.kirill.screenshotmanager.core.AdvancedPhoto;
 import com.kirill.screenshotmanager.core.WorkspacePhoto;
+import com.kirill.screenshotmanager.core.FilmLooks;
+import com.kirill.screenshotmanager.core.LensTilt;
 import com.kirill.screenshotmanager.core.DepthMap;
 import com.kirill.screenshotmanager.core.ProjectStore;
 import com.kirill.screenshotmanager.core.CreatorExport;
@@ -50,7 +52,7 @@ public final class StudioScreen extends StudioBaseScreen {
     private final ArrayList<StudioSlider> sliders=new ArrayList<>();
     private StudioSlider activeSlider;
     private final int[][] advanced=java.util.Arrays.stream(AdvancedPhoto.Kind.values()).map(k->new int[k.count]).toArray(int[][]::new);
-    private static final String[] MODES={"Basic","Tone / Curves","Cinematic","HSL mixer","Color wheels","Tilt Shift","Clarity / Dehaze","Gradient","RGB curves","3-way wheels","Perspective"};
+    private static final String[] MODES={"Basic","Tone / Curves","Cinematic","HSL mixer","Color wheels","Legacy tilt","Clarity / Dehaze","Gradient","RGB curves","3-way wheels","Perspective","Film styles","Photo presets","Tilt Shift"};
     private static final String[][] ADV_NAMES={
         {"Red hue","Red sat","Red light","Yellow hue","Yellow sat","Yellow light","Green hue","Green sat","Green light","Cyan hue","Cyan sat","Cyan light","Blue hue","Blue sat","Blue light","Magenta hue","Magenta sat","Magenta light"},
         {"Shadow warmth","Shadow tint","Mid warmth","Mid tint","Light warmth","Light tint"},
@@ -58,6 +60,12 @@ public final class StudioScreen extends StudioBaseScreen {
         {"Clarity","Dehaze","Saturation","Exposure"},
         {"Position","Angle","Feather","Exposure","Warmth"}
     };
+    private final FilmLooks.Profile[] films=FilmLooks.profiles(false),photoLooks=FilmLooks.profiles(true);
+    private int filmIndex,photoLookIndex;
+    private int[] filmValues=films[0].defaults(),photoValues=photoLooks[0].defaults(),lensValues=LensTilt.miniature();
+    private boolean lensGuides=true;
+    private static final String[] LENS_NAMES={"Focus position","Band width","Angle","Foreground blur","Background blur","Feather","Saturation","Focus contrast","Highlight glow"};
+    private static final String[] LOOK_NAMES={"Strength","Grain","Distortion","Texture","Vignette"};
     private StudioTexture liveTexture;
     private int[][] curves=WorkspacePhoto.identity(),histogram=new int[4][256],liveHistogram;
     private final int[] wheels=new int[9],perspective=new int[2];
@@ -234,6 +242,7 @@ public final class StudioScreen extends StudioBaseScreen {
                 StudioUi.label(g,font,"AFTER",cx+cw/2,cy+5,Math.max(1,cw/2-8),0xffffffff);
             }else{
                 (liveTexture!=null&&draftDirty&&(panel==2||compositeDraft)?liveTexture:texture).draw(g,ix,iy,iw,ih);
+                if(panel==2&&gradeMode==13&&lensGuides&&!workspaceWide)drawLensGuides(g);
                 if(dragging)selection(g);
                 if(textPending)StudioUi.label(g,font,draft.isBlank()?"Type text, Enter to place":draft,ix+(int)(textX*scale),iy+(int)(textY*scale),Math.max(20,cw),0xffffffff);
                 if(brush()&&image(mx,my))brushCursor(g,mx,my);
@@ -263,7 +272,7 @@ public final class StudioScreen extends StudioBaseScreen {
         StudioUi.label(g,font,status,7,height-15,Math.max(40,width-font.width(info)-22),StudioUi.MUTED);
         g.drawString(font,info,width-font.width(info)-7,height-15,StudioUi.ACCENT,false);
         if(text.visible)text.render(g,mx,my,dt);
-        if(!workspaceWide&&panel==2&&gradeMode!=8&&gradeMode!=9&&height>=290){WorkspaceControls.histogram(g,sideX+7,height-89,sideW-14,18,liveHistogram==null?histogram:liveHistogram,0);}
+        if(!workspaceWide&&panel==2&&gradeMode<8&&height>=290){WorkspaceControls.histogram(g,sideX+7,height-89,sideW-14,18,liveHistogram==null?histogram:liveHistogram,0);}
     }
     private void selectTool(Tool chosen){clearPreview();layerEditing=-1;tool=chosen;selected=-1;dragging=false;textPending=false;panel=0;optionsPage=0;clearTextFocus();for(int i=0;i<GROUP_TOOLS.length;i++)for(int id:GROUP_TOOLS[i])if(id==chosen.ordinal()){toolPage=i;toolScroll=0;}}
     private boolean needsText(){
@@ -348,6 +357,8 @@ public final class StudioScreen extends StudioBaseScreen {
                 else if(ImageDocument.unwrap(op) instanceof ProPhoto.Effects e){System.arraycopy(e.values(),0,effects,0,effects.length);gradeMode=2;}
                 else if(ImageDocument.unwrap(op) instanceof ProPhoto.ImageLayer im){imageSize=im.size();imageAngle=im.rotation();imageOpacity=im.opacity();}
                 else if(ImageDocument.unwrap(op) instanceof AdvancedPhoto.Adjust ad){gradeMode=3+ad.kind().ordinal();System.arraycopy(ad.values(),0,advanced[ad.kind().ordinal()],0,ad.kind().count);}
+                else if(ImageDocument.unwrap(op) instanceof FilmLooks.Look look){if(look.profile().camera){photoLookIndex=java.util.Arrays.asList(photoLooks).indexOf(look.profile());photoValues=look.values();gradeMode=12;}else{filmIndex=java.util.Arrays.asList(films).indexOf(look.profile());filmValues=look.values();gradeMode=11;}}
+                else if(ImageDocument.unwrap(op) instanceof LensTilt t){lensValues=t.values();gradeMode=13;}
                 else if(ImageDocument.unwrap(op) instanceof WorkspacePhoto.Curves c){curves=c.nodes();gradeMode=8;}
                 else if(ImageDocument.unwrap(op) instanceof WorkspacePhoto.Wheels c){System.arraycopy(c.values(),0,wheels,0,9);gradeMode=9;}
                 else if(ImageDocument.unwrap(op) instanceof WorkspacePhoto.Text c){draft=c.text();text.setValue(draft);color=c.color();thickness=Math.max(1,Math.min(80,c.size()/4));captionStyle=c.style();captionAngle=c.angle();fontFamily=c.family();fontStyle=c.fontStyle();int idx=java.util.Arrays.asList(fonts).indexOf(fontFamily);if(idx>=0)fontIndex=idx;}
@@ -361,7 +372,7 @@ public final class StudioScreen extends StudioBaseScreen {
         action(g,"Delete",sx,y+17,sw/2-2,15,mx,my,false,()->{if(!busy&&!compareMode)changed(doc.delete(selected));});
         action(g,"Apply style",sx+sw/2,y+17,sw/2-2,15,mx,my,false,this::applyStyle);
         action(g,"Duplicate",sx,y+34,sw,15,mx,my,false,()->{if(!busy&&!compareMode){boolean ok=doc.duplicate(selected);if(ok)selected++;changed(ok);}});
-        action(g,"Edit selected",sx,y+51,sw,15,mx,my,false,()->{if(selected>=0&&selected<doc.count()){var op=ImageDocument.unwrap(doc.snapshot().get(selected));if(op instanceof WorkspacePhoto.Curves||op instanceof WorkspacePhoto.Wheels||op instanceof ImageDocument.Adjustment||op instanceof ProPhoto.Tone||op instanceof ProPhoto.Effects||op instanceof AdvancedPhoto.Adjust){panel=2;layerEditing=selected;}else{panel=0;optionsPage=0;}}});
+        action(g,"Edit selected",sx,y+51,sw,15,mx,my,false,()->{if(selected>=0&&selected<doc.count()){var op=ImageDocument.unwrap(doc.snapshot().get(selected));if(op instanceof FilmLooks.Look||op instanceof LensTilt||op instanceof WorkspacePhoto.Curves||op instanceof WorkspacePhoto.Wheels||op instanceof ImageDocument.Adjustment||op instanceof ProPhoto.Tone||op instanceof ProPhoto.Effects||op instanceof AdvancedPhoto.Adjust){panel=2;layerEditing=selected;}else{panel=0;optionsPage=0;}}});
     }
     private void drawComposite(GuiGraphics g,int mx,int my,int sx,int sw){
         if(selected<0||selected>=doc.count()){StudioUi.label(g,font,"Select a layer first",sx,93,sw,StudioUi.MUTED);return;}
@@ -390,6 +401,8 @@ public final class StudioScreen extends StudioBaseScreen {
         else if(op instanceof ProPhoto.ImageLayer im)changed(doc.replace(selected,im.transform(im.x(),im.y(),imageSize,imageAngle,imageOpacity)));
         else if(op instanceof AdvancedPhoto.Adjust ad)changed(doc.replace(selected,new AdvancedPhoto.Adjust(ad.kind(),advanced[ad.kind().ordinal()])));
         else if(op instanceof WorkspacePhoto.Text c)changed(doc.replace(selected,new WorkspacePhoto.Text(draft,fontFamily,c.x(),c.y(),thickness*4,color,captionStyle,captionAngle,fontStyle)));
+        else if(op instanceof FilmLooks.Look look)changed(doc.replace(selected,new FilmLooks.Look(look.profile().camera?photoLooks[photoLookIndex]:films[filmIndex],look.profile().camera?photoValues:filmValues)));
+        else if(op instanceof LensTilt)changed(doc.replace(selected,new LensTilt(lensValues)));
         else if(op instanceof WorkspacePhoto.Curves)changed(doc.replace(selected,new WorkspacePhoto.Curves(curves)));
         else if(op instanceof WorkspacePhoto.Wheels)changed(doc.replace(selected,new WorkspacePhoto.Wheels(wheels)));
         else if(op instanceof AdvancedPhoto.Caption c)changed(doc.replace(selected,new AdvancedPhoto.Caption(draft,c.x(),c.y(),thickness*4,color,captionStyle,captionAngle)));
@@ -400,6 +413,9 @@ public final class StudioScreen extends StudioBaseScreen {
         if(gradeMode==8)return new WorkspacePhoto.Curves(curves);
         if(gradeMode==9)return new WorkspacePhoto.Wheels(wheels);
         if(gradeMode==10)return new WorkspacePhoto.Perspective(perspective[0],perspective[1]);
+        if(gradeMode==11)return new FilmLooks.Look(films[filmIndex],filmValues);
+        if(gradeMode==12)return new FilmLooks.Look(photoLooks[photoLookIndex],photoValues);
+        if(gradeMode==13)return new LensTilt(lensValues);
         return gradeMode==0?currentGrade():gradeMode==1?new ProPhoto.Tone(tone):gradeMode==2?new ProPhoto.Effects(effects):new AdvancedPhoto.Adjust(AdvancedPhoto.Kind.values()[gradeMode-3],advanced[gradeMode-3]);
     }
     private void clearPreview(){
@@ -434,11 +450,13 @@ public final class StudioScreen extends StudioBaseScreen {
         var op=draftOperation();clearPreview();if(layerEditing>=0&&layerEditing<doc.count()&&!ImageDocument.geometry(op)){changed(doc.replace(layerEditing,op));}else apply(op,ImageDocument.geometry(op));layerEditing=-1;
         java.util.Arrays.fill(grade,0);java.util.Arrays.fill(tone,0);java.util.Arrays.fill(effects,0);for(int[] v:advanced)java.util.Arrays.fill(v,0);curves=WorkspacePhoto.identity();java.util.Arrays.fill(wheels,0);java.util.Arrays.fill(perspective,0);
     }
+    private void cycleGrade(int dir){clearPreview();layerEditing=-1;do{gradeMode=Math.floorMod(gradeMode+dir,MODES.length);}while(gradeMode==5);adjustScroll=0;if(gradeMode>=11)requestPreview();}
     private void drawGrade(GuiGraphics g,int mx,int my,int sx,int sw){
         int w=sw/3;
-        action(g,"<",sx,68,17,15,mx,my,false,()->{clearPreview();layerEditing=-1;gradeMode=(gradeMode+MODES.length-1)%MODES.length;adjustScroll=0;});
-        action(g,MODES[gradeMode],sx+19,68,sw-38,15,mx,my,false,()->{clearPreview();layerEditing=-1;gradeMode=(gradeMode+1)%MODES.length;adjustScroll=0;});
-        action(g,">",sx+sw-17,68,17,15,mx,my,false,()->{clearPreview();layerEditing=-1;gradeMode=(gradeMode+1)%MODES.length;adjustScroll=0;});
+        action(g,"<",sx,68,17,15,mx,my,false,()->cycleGrade(-1));
+        action(g,MODES[gradeMode],sx+19,68,sw-38,15,mx,my,false,()->cycleGrade(1));
+        action(g,">",sx+sw-17,68,17,15,mx,my,false,()->cycleGrade(1));
+        if(gradeMode>=11){drawFilmLens(g,mx,my,sx,sw);return;}
         if(gradeMode>=8){drawWorkspaceGrade(g,mx,my,sx,sw);return;}
         int[] values=gradeMode==0?grade:gradeMode==1?tone:gradeMode==2?effects:advanced[gradeMode-3];
         String[] names=gradeMode==0?GRADE_NAMES:gradeMode==1?TONE_NAMES:gradeMode==2?EFFECT_NAMES:ADV_NAMES[gradeMode-3];
@@ -447,7 +465,9 @@ public final class StudioScreen extends StudioBaseScreen {
         for(int r=0;r<slots;r++){
             int i=r+adjustScroll,y=87+r*25;
             int min=gradeMode==2||gradeMode==0&&i==5||gradeMode==1&&(i==3||i==4)||gradeMode==5&&(i==1||i==3||i==4)||gradeMode==7&&i==2?0:-100;
-            slider(g,names[i]+" "+values[i],sx,y,sw,min,100,values[i],0,v->{values[i]=v;requestPreview();});
+            int max=gradeMode==2&&i==6?250:100;
+            String label=gradeMode==2&&i==6?String.format(java.util.Locale.ROOT,"Bars %.1f%% each",values[i]/10.0):names[i]+" "+values[i];
+            slider(g,label,sx,y,sw,min,max,values[i],0,v->{values[i]=v;requestPreview();});
         }
         int y=height-66;
         if(gradeMode==5){
@@ -458,13 +478,54 @@ public final class StudioScreen extends StudioBaseScreen {
             action(g,"B&W",sx+w,y,w-2,14,mx,my,false,()->{preset(0,18,-100,0,0,15);requestPreview();});
             action(g,"Night",sx+w*2,y,w-2,14,mx,my,false,()->{preset(15,10,12,-16,25,10);requestPreview();});
         }else if(gradeMode==2){
-            action(g,"Film",sx,y,w-2,14,mx,my,false,()->{int[] a={35,18,6,25,8,0,65};System.arraycopy(a,0,values,0,7);requestPreview();});
+            action(g,"Film",sx,y,w-2,14,mx,my,false,()->{int[] a={35,18,6,25,8,0,120};System.arraycopy(a,0,values,0,7);requestPreview();});
             action(g,"Dream",sx+w,y,w-2,14,mx,my,false,()->{int[] a={70,4,0,8,0,30,0};System.arraycopy(a,0,values,0,7);requestPreview();});
-            action(g,"Horror",sx+w*2,y,w-2,14,mx,my,false,()->{int[] a={12,35,15,60,15,20,40};System.arraycopy(a,0,values,0,7);requestPreview();});
+            action(g,"Horror",sx+w*2,y,w-2,14,mx,my,false,()->{int[] a={12,35,15,60,15,20,100};System.arraycopy(a,0,values,0,7);requestPreview();});
         }else StudioUi.label(g,font,"Scroll for more controls",sx,y+3,sw,StudioUi.MUTED);
         action(g,"Apply",sx,y+16,w-2,15,mx,my,false,this::applyDraft);
         action(g,"Cancel",sx+w,y+16,w-2,15,mx,my,false,()->{clearPreview();layerEditing=-1;});
         action(g,"Zero",sx+2*w,y+16,w-2,15,mx,my,false,()->{java.util.Arrays.fill(values,0);requestPreview();});
+    }
+    private void cycleLook(int direction){
+        if(gradeMode==11){filmIndex=Math.floorMod(filmIndex+direction,films.length);filmValues=films[filmIndex].defaults();}
+        else{photoLookIndex=Math.floorMod(photoLookIndex+direction,photoLooks.length);photoValues=photoLooks[photoLookIndex].defaults();}
+        requestPreview();
+    }
+    private void drawFilmLens(GuiGraphics g,int mx,int my,int sx,int sw){
+        int y=87,bottom=height-49;
+        int[] values;String[] labels;
+        if(gradeMode==13){
+            values=lensValues;labels=LENS_NAMES;
+            action(g,"Miniature",sx,y,sw/2-2,15,mx,my,false,()->{lensValues=LensTilt.miniature();requestPreview();});
+            action(g,lensGuides?"Guides on":"Guides off",sx+sw/2,y,sw/2-2,15,mx,my,lensGuides,()->lensGuides=!lensGuides);
+            y+=19;
+        }else{
+            boolean photo=gradeMode==12;var profile=photo?photoLooks[photoLookIndex]:films[filmIndex];values=photo?photoValues:filmValues;labels=LOOK_NAMES;
+            action(g,"<",sx,y,17,15,mx,my,false,()->cycleLook(-1));
+            action(g,profile.title,sx+19,y,sw-38,15,mx,my,false,()->cycleLook(1));
+            action(g,">",sx+sw-17,y,17,15,mx,my,false,()->cycleLook(1));y+=18;
+            StudioUi.label(g,font,profile.hint,sx,y,sw,StudioUi.MUTED);y+=13;
+            if(photo){StudioUi.label(g,font,"Photo mode FOV "+profile.fov+" deg",sx,y,sw,StudioUi.MUTED);y+=13;}
+        }
+        int slots=Math.max(1,Math.min(values.length,(bottom-y-3)/25));
+        adjustScroll=Math.max(0,Math.min(adjustScroll,values.length-slots));
+        for(int r=0;r<slots;r++){
+            int i=r+adjustScroll;int min=gradeMode==13&&(i==0||i==2||i==6)?-100:0;
+            slider(g,labels[i]+" "+values[i],sx,y+r*25,sw,min,100,values[i],0,v->{values[i]=v;requestPreview();});
+        }
+        int w=sw/3;
+        action(g,"Apply",sx,bottom,w-2,16,mx,my,false,this::applyDraft);
+        action(g,"Cancel",sx+w,bottom,w-2,16,mx,my,false,()->{clearPreview();layerEditing=-1;});
+        action(g,"Reset",sx+2*w,bottom,w-2,16,mx,my,false,()->{if(gradeMode==13)lensValues=LensTilt.miniature();else if(gradeMode==11)filmValues=films[filmIndex].defaults();else photoValues=photoLooks[photoLookIndex].defaults();requestPreview();});
+    }
+    private void drawLensGuides(GuiGraphics g){
+        var tilt=new LensTilt(lensValues);double angle=Math.toRadians(lensValues[2]*1.8),sin=Math.sin(angle),cos=Math.cos(angle),center=lensValues[0]/200.0;
+        double[] offsets={-tilt.band()-tilt.feather(),-tilt.band(),0,tilt.band(),tilt.band()+tilt.feather()};
+        for(int i=0;i<offsets.length;i++){
+            int color=i==2?0xbbffffff:i==1||i==3?0xdd73e5ab:0x997dc9ff;
+            if(Math.abs(cos)>.6){for(int x=Math.max(0,cx-ix);x<Math.min(iw,cx+cw-ix);x+=4){double nx=x/(double)Math.max(1,iw-1)-.5;double ny=(center+offsets[i]-nx*sin)/cos+.5;if(ny>=0&&ny<=1)StudioUi.box(g,ix+x,iy+(int)(ny*ih),2,1,color);}}
+            else if(Math.abs(sin)>.001){for(int y=Math.max(0,cy-iy);y<Math.min(ih,cy+ch-iy);y+=4){double ny=y/(double)Math.max(1,ih-1)-.5;double nx=(center+offsets[i]-ny*cos)/sin+.5;if(nx>=0&&nx<=1)StudioUi.box(g,ix+(int)(nx*iw),iy+y,1,2,color);}}
+        }
     }
     private void drawWorkspaceGrade(GuiGraphics g,int mx,int my,int sx,int sw){
         int bottom=height-49;

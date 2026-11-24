@@ -41,10 +41,10 @@ public record LensTilt(int[] values) implements ImageDocument.Operation{
             }
         }
     }
-    private static double sample(BufferedImage img,double x,double y,int shift){
+    private static int sample(BufferedImage img,double x,double y){
         double sx=unit(x)*(img.getWidth()-1),sy=unit(y)*(img.getHeight()-1);int ix=(int)sx,iy=(int)sy,jx=Math.min(img.getWidth()-1,ix+1),jy=Math.min(img.getHeight()-1,iy+1);
-        double a=(img.getRGB(ix,iy)>>>shift)&255,b=(img.getRGB(jx,iy)>>>shift)&255,c=(img.getRGB(ix,jy)>>>shift)&255,d=(img.getRGB(jx,jy)>>>shift)&255;
-        return (a+(b-a)*(sx-ix))*(1-(sy-iy))+(c+(d-c)*(sx-ix))*(sy-iy);
+        int p=img.getRGB(ix,iy),q=img.getRGB(jx,iy),r=img.getRGB(ix,jy),s=img.getRGB(jx,jy),out=0;double dx=sx-ix,dy=sy-iy;
+        for(int shift=0;shift<=24;shift+=8){double a=(p>>>shift)&255,b=(q>>>shift)&255,c=(r>>>shift)&255,d=(s>>>shift)&255;out|=clip((a+(b-a)*dx)*(1-dy)+(c+(d-c)*dx)*dy)<<shift;}return out;
     }
     public BufferedImage apply(BufferedImage img){
         if(Arrays.stream(values).allMatch(v->v==0))return img;
@@ -58,7 +58,7 @@ public record LensTilt(int[] values) implements ImageDocument.Operation{
                 double nx=x/(double)Math.max(1,w-1),ny=y/(double)Math.max(1,h-1),t=radius(nx,ny);
                 double index=Math.pow(t,.7)*5;int lo=Math.min(4,(int)index),hi=lo+1;double frac=index-lo;
                 int c=src.getRGB(x,y);double r=(c>>>16)&255,g=(c>>>8)&255,b=c&255;
-                if(t>0){r=sample(levels[lo],nx,ny,16)*(1-frac)+sample(levels[hi],nx,ny,16)*frac;g=sample(levels[lo],nx,ny,8)*(1-frac)+sample(levels[hi],nx,ny,8)*frac;b=sample(levels[lo],nx,ny,0)*(1-frac)+sample(levels[hi],nx,ny,0)*frac;}
+                if(t>0){int p=lo==0?c:sample(levels[lo],nx,ny),q=sample(levels[hi],nx,ny);r=((p>>>16)&255)*(1-frac)+((q>>>16)&255)*frac;g=((p>>>8)&255)*(1-frac)+((q>>>8)&255)*frac;b=(p&255)*(1-frac)+(q&255)*frac;}
                 double gray=.2126*r+.7152*g+.0722*b,sat=1+values[6]/100.0;
                 double clarity=1+values[7]/100.0*.24*(1-t);
                 double glow=Math.max(0,gray-180)*values[8]/100.0*t*.28;
