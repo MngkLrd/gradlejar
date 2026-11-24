@@ -1,9 +1,9 @@
 {
   "slug": "catchtheblast",
-  "version": "0.2.3-beta",
+  "version": "0.2.4-beta",
   "minecraft": "26.3",
   "loader": "neoforge",
   "java": "25",
   "gradle": "9.2.1",
-  "jar_glob": "catchtheblast-neoforge-mc26.3-0.2.3-beta.jar"
+  "jar_glob": "catchtheblast-neoforge-mc26.3-0.2.4-beta.jar"
 }
