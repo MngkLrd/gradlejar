@@ -10,6 +10,8 @@ import com.kirill.simplesorter.sorting.ItemCategoryResolver;
 import com.kirill.simplesorter.sorting.SortCategory;
 import com.kirill.simplesorter.sorting.WarehouseLayout;
 import com.kirill.simplesorter.sorting.StrictStackClassifier;
+import com.kirill.simplesorter.sorting.SemanticItemProfile;
+import com.kirill.simplesorter.sorting.SemanticChestQuality;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -55,22 +57,18 @@ public final class AutoLabelService {
             if (!level.mayInteract(player, pos)
                     || !player.mayUseItemAt(pos, Direction.UP, wand)) continue;
 
-            Map<String, Integer> votes = new HashMap<>();
-            Map<String, ItemStack> icons = new HashMap<>();
-            Map<String, Integer> iconCounts = new HashMap<>();
-            IItemHandler inventory = ref.handler();
-            for (int slot = 0; slot < inventory.getSlots(); slot++) {
-                ItemStack stack = inventory.getStackInSlot(slot);
-                if (stack.isEmpty()) continue;
-                String family = StrictStackClassifier.family(stack);
-                votes.merge(family, 1, Integer::sum);
-                if (stack.getCount() > iconCounts.getOrDefault(family, -1)) {
-                    icons.put(family, new ItemStack(stack.getItem()));
-                    iconCounts.put(family, stack.getCount());
-                }
+            if(!ref.isValid())continue;
+            List<SemanticItemProfile> profiles=new ArrayList<>();
+            List<ItemStack> stacks=new ArrayList<>();
+            IItemHandler inventory=ref.handler();
+            for(int slot=0;slot<inventory.getSlots();slot++){
+                ItemStack stack=inventory.getStackInSlot(slot);
+                if(stack.isEmpty())continue;
+                profiles.add(StrictStackClassifier.profile(stack));
+                stacks.add(stack);
             }
-
-            String family = ChestCategoryLabels.select(votes);
+            var quality=SemanticChestQuality.evaluate(profiles);
+            String family=quality.label();
             if (family.isEmpty()) {
                 WarehouseLabelData.Label removed = data.remove(pos);
                 if (removed != null) {
@@ -85,8 +83,8 @@ public final class AutoLabelService {
             }
             // Never show an item icon from another chest, or use an
             // arbitrary representative item to disguise a mixed chest.
-            ItemStack icon = "mixed".equals(family)
-                    ? ItemStack.EMPTY : icons.getOrDefault(family, ItemStack.EMPTY);
+            ItemStack icon=quality.representative()<0?ItemStack.EMPTY:
+                    new ItemStack(stacks.get(quality.representative()).getItem());
 
             WarehouseLabelData.Label prior = data.get(pos);
             ItemStack material = prior == null ? ItemStack.EMPTY : prior.material();

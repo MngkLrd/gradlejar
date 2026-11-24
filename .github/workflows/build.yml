@@ -257,6 +257,10 @@ jobs:
             src/main/java/com/kirill/simplesorter/sorting/StrictStorageFamily.java \
             src/main/java/com/kirill/simplesorter/sorting/SemanticItemProfile.java \
             src/main/java/com/kirill/simplesorter/sorting/SemanticItemClassifier.java \
+            src/main/java/com/kirill/simplesorter/sorting/AdaptiveWarehousePlanner.java \
+            src/main/java/com/kirill/simplesorter/sorting/SpatialWarehouseLayout.java \
+            src/main/java/com/kirill/simplesorter/sorting/SemanticChestQuality.java \
+            src/main/java/com/kirill/simplesorter/sorting/WarehouseTransferComponents.java \
             src/main/java/com/kirill/simplesorter/sorting/StrictChestAdmission.java \
             src/main/java/com/kirill/simplesorter/sorting/RoutingPolicy.java \
             src/main/java/com/kirill/simplesorter/sorting/WarehouseLayout.java \
@@ -277,6 +281,8 @@ jobs:
             tools/tests/WarehouseRoutingRulesSelfTest.java \
             tools/tests/StrictStorageSelfTest.java \
             tools/tests/SemanticItemClassifierSelfTest.java \
+            tools/tests/AdaptiveWarehousePlannerSelfTest.java \
+            tools/tests/SemanticChestQualitySelfTest.java \
             tools/tests/WarehouseFamilyPlanSelfTest.java \
             tools/tests/WarehouseAssignmentPlannerSelfTest.java \
             tools/tests/WarehouseSlotOptimizerSelfTest.java \
@@ -290,6 +296,8 @@ jobs:
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseRoutingRulesSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.StrictStorageSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.SemanticItemClassifierSelfTest
+          java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.AdaptiveWarehousePlannerSelfTest
+          java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.SemanticChestQualitySelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseFamilyPlanSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseAssignmentPlannerSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseSlotOptimizerSelfTest
@@ -331,7 +339,7 @@ jobs:
           for dir in run runs/server; do
             mkdir -p "$dir"
             printf 'eula=true\n' > "$dir/eula.txt"
-            printf 'online-mode=false\nlevel-name=ci-sorter-test\nview-distance=3\nsimulation-distance=3\nmax-tick-time=-1\n' > "$dir/server.properties"
+            printf 'online-mode=false\nspawn-protection=0\nlevel-name=ci-sorter-test\nview-distance=3\nsimulation-distance=3\nmax-tick-time=-1\n' > "$dir/server.properties"
           done
           logfile="$GITHUB_WORKSPACE/simplesorter-forge-server.log"
           SIMPLE_SORTER_CI_STORAGE_TEST=1 timeout --signal=TERM --kill-after=15s 195s gradle --no-daemon runServer > "$logfile" 2>&1 &

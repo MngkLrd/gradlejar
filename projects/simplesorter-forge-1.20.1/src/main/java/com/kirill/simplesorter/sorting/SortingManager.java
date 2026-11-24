@@ -39,6 +39,12 @@ public final class SortingManager {
             return new SortingResult(0, 0, 0, 0, 0, safe.radius(), safe.mode().id());
         }
 
+        if(WarehouseSortSessions.conflicts(level,containers)){
+            player.displayClientMessage(net.minecraft.network.chat.Component.literal(
+                    "Simple Sorter: storage is already being sorted."),true);
+            return new SortingResult(0,0,0,0,0,safe.radius(),safe.mode().id());
+        }
+
         // Both Smart Categories and optional Auto-Organize use the SAME
         // time-sliced, family-aware one-click algorithm. This removes the
         // old hard column gating from normal Smart mode: six ore/plant/tool
