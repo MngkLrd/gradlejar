@@ -79,7 +79,7 @@ public final class ImageDocument {
     public boolean composite(int i,int opacity,WorkspacePhoto.Blend mode){
         if(!valid(i)||geometry(snapshot().get(i)))return false;
         var old=snapshot().get(i);
-        if(unwrap(old) instanceof MarkOperation m&&m.value().tool()==Tool.REDACT)return false;
+        if(unwrap(old) instanceof MarkOperation m&&(m.value().tool()==Tool.REDACT||m.value().tool()==Tool.ERASER))return false;
         var next=new ArrayList<>(snapshot());next.set(i,new Layer(unwrap(old),visible(old),opacity,mode));return commit(next);
     }
     public boolean translate(int i,int dx,int dy){
@@ -130,6 +130,8 @@ public final class ImageDocument {
             int alpha=opacity(op);var mode=blend(op);
             if(alpha==0)continue;
             if(overlay){
+                boolean masks=false;for(int k=i+1;k<ops.size()&&!geometry(ops.get(k));k++)if(visible(ops.get(k))&&unwrap(ops.get(k)) instanceof MarkOperation er&&er.value().tool()==Tool.ERASER){masks=true;break;}
+                if(!masks&&alpha==100&&mode==WorkspacePhoto.Blend.NORMAL){img=base.apply(img);continue;}
                 var layer=new BufferedImage(img.getWidth(),img.getHeight(),BufferedImage.TYPE_INT_ARGB);base.apply(layer);
                 Graphics2D erase=layer.createGraphics();
                 try{erase.setComposite(AlphaComposite.Clear);erase.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);

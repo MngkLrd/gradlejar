@@ -140,6 +140,31 @@ public final class CoreSmoke {
         var renamed=MediaFiles.rename(advancedRoot,new MediaFiles.Entry(returned,false),"renamed");
         check(ProjectStore.load(renamed).size()==3,"Rename keeps project");
         try(var stream=Files.walk(advancedRoot)){for(var f:stream.sorted(java.util.Comparator.reverseOrder()).toList())Files.delete(f);}
+        var neutralCurve=new WorkspacePhoto.Curves(WorkspacePhoto.identity());
+        check(neutralCurve.apply(ImageDocument.copy(img)).getRGB(0,0)==img.getRGB(0,0),"Neutral curves");
+        int[][] curveNodes=WorkspacePhoto.identity();curveNodes[1][4]=220;
+        var curveOp=new WorkspacePhoto.Curves(curveNodes);curveNodes[1][4]=0;
+        int originalPixel=img.getRGB(0,0),graded=curveOp.apply(ImageDocument.copy(img)).getRGB(0,0);
+        check(((graded>>>16)&255)>((originalPixel>>>16)&255)&&(graded&0xffff)==(originalPixel&0xffff),"Red curve independent");
+        var histogram=WorkspacePhoto.histogram(img);check(histogram[1][0x89]==1200&&histogram[2][0xab]==1200,"RGB histogram");
+        check(WorkspacePhoto.hex("#fFaA01")==0xffffaa01,"HEX parsing");
+        var a1=new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);var b1=new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);
+        a1.setRGB(0,0,0xff808080);b1.setRGB(0,0,0xff808080);
+        check(WorkspacePhoto.composite(a1,b1,100,WorkspacePhoto.Blend.MULTIPLY).getRGB(0,0)==0xff404040,"Multiply");
+        var blendDoc=new ImageDocument(img);blendDoc.add(ImageDocument.mark(new ImageDocument.Mark(ImageDocument.Tool.FILLED_RECT,0,0,10,10,0xff000000,1,3,"",List.of())));
+        check(blendDoc.composite(0,50,WorkspacePhoto.Blend.NORMAL),"Layer opacity");
+        int mixed=blendDoc.render(blendDoc.snapshot()).getRGB(4,4);check(mixed!=0xff000000&&mixed!=originalPixel,"Opacity compositing");
+        blendDoc.toggle(0);blendDoc.toggle(0);check(ImageDocument.opacity(blendDoc.snapshot().get(0))==50,"Visibility preserves opacity");
+        blendDoc.add(curveOp);blendDoc.add(new WorkspacePhoto.Wheels(new int[]{60,0,0,0,0,0,0,0,0}));
+        blendDoc.add(new WorkspacePhoto.Text("Text","SansSerif",1,18,12,0xffffffff,1,0,1));
+        blendDoc.add(new WorkspacePhoto.Perspective(20,-10));
+        check(blendDoc.beforeGeometry(blendDoc.snapshot()).getWidth()==img.getWidth(),"Aligned comparison");
+        var workspaceRoot=Files.createTempDirectory("sm-workspace");var workspaceSource=workspaceRoot.resolve("original.png");
+        javax.imageio.ImageIO.write(img,"png",workspaceSource.toFile());ProjectStore.save(workspaceSource,blendDoc.snapshot());
+        var workspaceOps=ProjectStore.load(workspaceSource);
+        check(workspaceOps.size()==5&&ImageDocument.opacity(workspaceOps.getFirst())==50&&ImageDocument.unwrap(workspaceOps.get(3)) instanceof WorkspacePhoto.Text,"Workspace persistence");
+        check(blendDoc.render(workspaceOps).getRGB(12,12)==blendDoc.render(blendDoc.snapshot()).getRGB(12,12),"Workspace round trip render");
+        Files.delete(workspaceSource.resolveSibling("original.png.smproject"));Files.delete(workspaceSource);Files.delete(workspaceRoot);
         System.out.println("Screenshot Manager core smoke tests passed");
     }
 }

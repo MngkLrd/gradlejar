@@ -72,6 +72,8 @@ public final class StudioScreen extends StudioBaseScreen {
     private int fontIndex;
     private boolean fontsLoaded;
     private int layerEditing=-1;
+    private boolean compositeDraft;
+    private long previewSession;
     private boolean draftDirty,previewRunning,autoSave=true;
     private long previewRevision,previewDue;
     private int captionStyle=1,captionAngle,canvasPreset,toolPage=1,optionsPage;
@@ -138,7 +140,7 @@ public final class StudioScreen extends StudioBaseScreen {
     private record Result(BufferedImage full,BufferedImage preview,int[][] histogram){}
     private void renderDoc(boolean resetView){
         if(doc==null)return;
-        clearPreview();compareMode=false;
+        clearPreview();layerEditing=-1;compareMode=false;
         renderedCurrent=false;busy=true;status="Rendering...";long token=++epoch;
         ImageDocument current=doc;var ops=current.snapshot();
         CompletableFuture.supplyAsync(()->{
@@ -223,7 +225,7 @@ public final class StudioScreen extends StudioBaseScreen {
                 texture.draw(g,ix,iy,iw,ih);
                 int divider=cx+(int)Math.round(cw*split);
                 if(divider>cx){
-                    g.enableScissor(cx,cy,divider,cy+ch);comparisonTexture.draw(g,ix,iy,iw,ih);g.disableScissor();
+                    g.enableScissor(cx,cy,divider,cy+ch);StudioUi.box(g,cx,cy,cw,ch,0xff090c10);comparisonTexture.draw(g,ix,iy,iw,ih);g.disableScissor();
                 }
                 StudioUi.box(g,divider-1,cy,2,ch,0xffffffff);
                 StudioUi.box(g,divider-9,cy+ch/2-8,18,16,0xff273746);
@@ -231,7 +233,7 @@ public final class StudioScreen extends StudioBaseScreen {
                 StudioUi.label(g,font,"BEFORE",cx+5,cy+5,Math.max(1,cw/2-10),0xffffffff);
                 StudioUi.label(g,font,"AFTER",cx+cw/2,cy+5,Math.max(1,cw/2-8),0xffffffff);
             }else{
-                (liveTexture!=null&&panel==2&&draftDirty?liveTexture:texture).draw(g,ix,iy,iw,ih);
+                (liveTexture!=null&&draftDirty&&(panel==2||compositeDraft)?liveTexture:texture).draw(g,ix,iy,iw,ih);
                 if(dragging)selection(g);
                 if(textPending)StudioUi.label(g,font,draft.isBlank()?"Type text, Enter to place":draft,ix+(int)(textX*scale),iy+(int)(textY*scale),Math.max(20,cw),0xffffffff);
                 if(brush()&&image(mx,my))brushCursor(g,mx,my);
@@ -246,7 +248,7 @@ public final class StudioScreen extends StudioBaseScreen {
         int sx=sideX+6,sw=sideW-12;
         String[] tabs={"Tools","Layers","Color","File"};
         int tabWidth=sw/4;
-        for(int i=0;i<4;i++){int chosen=i;action(g,tabs[i],sx+i*tabWidth,50,tabWidth-2,15,mx,my,panel==i,()->{if(panel!=chosen)clearPreview();panel=chosen;dragging=false;textPending=false;clearTextFocus();});}
+        for(int i=0;i<4;i++){int chosen=i;action(g,tabs[i],sx+i*tabWidth,50,tabWidth-2,15,mx,my,panel==i,()->{if(panel!=chosen){clearPreview();layerEditing=-1;}panel=chosen;dragging=false;textPending=false;clearTextFocus();});}
         if(panel==0)drawTools(g,mx,my,sx,sw);
         else if(panel==1)drawLayers(g,mx,my,sx,sw);
         else if(panel==2)drawGrade(g,mx,my,sx,sw);
@@ -263,7 +265,7 @@ public final class StudioScreen extends StudioBaseScreen {
         if(text.visible)text.render(g,mx,my,dt);
         if(!workspaceWide&&panel==2&&gradeMode!=8&&gradeMode!=9&&height>=290){WorkspaceControls.histogram(g,sideX+7,height-89,sideW-14,18,liveHistogram==null?histogram:liveHistogram,0);}
     }
-    private void selectTool(Tool chosen){clearPreview();tool=chosen;selected=-1;dragging=false;textPending=false;panel=0;optionsPage=0;clearTextFocus();for(int i=0;i<GROUP_TOOLS.length;i++)for(int id:GROUP_TOOLS[i])if(id==chosen.ordinal()){toolPage=i;toolScroll=0;}}
+    private void selectTool(Tool chosen){clearPreview();layerEditing=-1;tool=chosen;selected=-1;dragging=false;textPending=false;panel=0;optionsPage=0;clearTextFocus();for(int i=0;i<GROUP_TOOLS.length;i++)for(int id:GROUP_TOOLS[i])if(id==chosen.ordinal()){toolPage=i;toolScroll=0;}}
     private boolean needsText(){
         return tool==Tool.TEXT||(doc!=null&&selected>=0&&selected<doc.count()&&ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof WorkspacePhoto.Text)||(doc!=null&&selected>=0&&selected<doc.count()&&ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof AdvancedPhoto.Caption)||(doc!=null&&selected>=0&&selected<doc.count()&&ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ImageDocument.MarkOperation m&&m.value().tool()==Tool.TEXT);
     }
@@ -319,6 +321,7 @@ public final class StudioScreen extends StudioBaseScreen {
                 action(g,new String[]{"Regular","Bold","Italic","Bold italic"}[fontStyle],sx,y,sw,14,mx,my,false,()->fontStyle=(fontStyle+1)%4);y+=17;
                 if(y+25<height-22){slider(g,"Text angle "+captionAngle,sx,y,sw,-180,180,captionAngle,0,v->captionAngle=v);y+=27;}}
         }
+        if(needsText()&&selected>=0&&y+16<height-22){action(g,"Apply text style",sx,y,sw,14,mx,my,false,this::applyStyle);y+=17;}
         if(y+16<height-22){
             action(g,"Rotate",sx,y,sw/2-2,16,mx,my,false,()->apply(ImageDocument.filter(Filter.ROTATE),true));
             action(g,"Flip",sx+sw/2,y,sw/2-2,16,mx,my,false,()->apply(ImageDocument.filter(Filter.FLIP),true));
@@ -329,7 +332,7 @@ public final class StudioScreen extends StudioBaseScreen {
     private void drawLayers(GuiGraphics g,int mx,int my,int sx,int sw){
         if(doc==null)return;
         var ops=doc.snapshot();
-        action(g,layerPage==0?"Layers "+ops.size():"Blend / opacity",sx,70,sw,14,mx,my,false,()->layerPage=1-layerPage);
+        action(g,layerPage==0?"Layers "+ops.size():"Blend / opacity",sx,70,sw,14,mx,my,false,()->{clearPreview();layerPage=1-layerPage;if(selected>=0&&selected<doc.count()){var old=doc.snapshot().get(selected);layerOpacity=ImageDocument.opacity(old);layerBlend=ImageDocument.blend(old);}});
         if(layerPage==1){drawComposite(g,mx,my,sx,sw);return;}
         int slots=Math.max(1,(height-187)/15);
         layerScroll=Math.max(0,Math.min(layerScroll,Math.max(0,ops.size()-slots)));
@@ -367,12 +370,14 @@ public final class StudioScreen extends StudioBaseScreen {
         if(ImageDocument.geometry(op)||ImageDocument.unwrap(op) instanceof ImageDocument.MarkOperation m&&(m.value().tool()==Tool.REDACT||m.value().tool()==Tool.ERASER)){
             StudioUi.label(g,font,"Protected operation",sx,108,sw,StudioUi.MUTED);return;
         }
-        slider(g,"Opacity "+layerOpacity+"%",sx,108,sw,0,100,layerOpacity,100,v->layerOpacity=v);
-        action(g,"<",sx,138,16,16,mx,my,false,()->layerBlend=WorkspacePhoto.Blend.values()[Math.floorMod(layerBlend.ordinal()-1,WorkspacePhoto.Blend.values().length)]);
-        action(g,layerBlend.name(),sx+18,138,sw-36,16,mx,my,false,()->layerBlend=WorkspacePhoto.Blend.values()[(layerBlend.ordinal()+1)%WorkspacePhoto.Blend.values().length]);
-        action(g,">",sx+sw-16,138,16,16,mx,my,false,()->layerBlend=WorkspacePhoto.Blend.values()[(layerBlend.ordinal()+1)%WorkspacePhoto.Blend.values().length]);
-        action(g,"Apply blend",sx,158,sw,16,mx,my,false,()->{if(!busy&&!compareMode)changed(doc.composite(selected,layerOpacity,layerBlend));});
+        slider(g,"Opacity "+layerOpacity+"%",sx,108,sw,0,100,layerOpacity,100,v->{layerOpacity=v;requestComposite();});
+        action(g,"<",sx,138,16,16,mx,my,false,()->{layerBlend=WorkspacePhoto.Blend.values()[Math.floorMod(layerBlend.ordinal()-1,WorkspacePhoto.Blend.values().length)];requestComposite();});
+        action(g,layerBlend.name(),sx+18,138,sw-36,16,mx,my,false,()->{layerBlend=WorkspacePhoto.Blend.values()[(layerBlend.ordinal()+1)%WorkspacePhoto.Blend.values().length];requestComposite();});
+        action(g,">",sx+sw-16,138,16,16,mx,my,false,()->{layerBlend=WorkspacePhoto.Blend.values()[(layerBlend.ordinal()+1)%WorkspacePhoto.Blend.values().length];requestComposite();});
+        action(g,"Apply",sx,158,sw/2-2,16,mx,my,false,()->{if(!busy&&!compareMode)changed(doc.composite(selected,layerOpacity,layerBlend));});
+        action(g,"Cancel",sx+sw/2,158,sw/2-2,16,mx,my,false,()->{clearPreview();layerOpacity=ImageDocument.opacity(op);layerBlend=ImageDocument.blend(op);});
     }
+    private void requestComposite(){if(busy||compareMode||rendered==null)return;compositeDraft=true;draftDirty=true;previewRevision++;previewDue=System.nanoTime();status="Blend preview | Apply or Cancel";}
     private void applyStyle(){
         if(doc==null||busy||compareMode||selected<0||selected>=doc.count())return;
         var op=ImageDocument.unwrap(doc.snapshot().get(selected));
@@ -398,7 +403,7 @@ public final class StudioScreen extends StudioBaseScreen {
         return gradeMode==0?currentGrade():gradeMode==1?new ProPhoto.Tone(tone):gradeMode==2?new ProPhoto.Effects(effects):new AdvancedPhoto.Adjust(AdvancedPhoto.Kind.values()[gradeMode-3],advanced[gradeMode-3]);
     }
     private void clearPreview(){
-        draftDirty=false;previewRevision++;liveHistogram=null;
+        draftDirty=false;compositeDraft=false;previewRevision++;previewSession++;liveHistogram=null;
         if(liveTexture!=null){liveTexture.close();liveTexture=null;}
     }
     private void requestPreview(){
@@ -408,13 +413,16 @@ public final class StudioScreen extends StudioBaseScreen {
     }
     @Override public void tick(){
         super.tick();
-        if(!draftDirty||previewRunning||busy||rendered==null||panel!=2||System.nanoTime()<previewDue)return;
-        long rev=previewRevision,token=epoch;BufferedImage base=rendered;var op=draftOperation();
+        if(!draftDirty||previewRunning||busy||rendered==null||(panel!=2&&!compositeDraft)||System.nanoTime()<previewDue)return;
+        long rev=previewRevision,token=epoch,session=previewSession;BufferedImage base=rendered;var op=draftOperation();
+        var current=doc;var replacement=new ArrayList<>(doc.snapshot());int idx=compositeDraft?selected:layerEditing;
+        boolean replace=idx>=0&&idx<replacement.size();
+        if(replace){var old=replacement.get(idx);replacement.set(idx,new ImageDocument.Layer(compositeDraft?ImageDocument.unwrap(old):op,ImageDocument.visible(old),compositeDraft?layerOpacity:ImageDocument.opacity(old),compositeDraft?layerBlend:ImageDocument.blend(old)));}
         previewRunning=true;
-        CompletableFuture.supplyAsync(()->{var img=op.apply(ImageDocument.copy(ImageDocument.resize(base,768)));return new Result(img,img,WorkspacePhoto.histogram(img));},ShotFiles.IO)
+        CompletableFuture.supplyAsync(()->{var img=replace?ImageDocument.resize(current.render(replacement),768):op.apply(ImageDocument.copy(ImageDocument.resize(base,768)));return new Result(img,img,WorkspacePhoto.histogram(img));},ShotFiles.IO)
             .whenComplete((img,error)->Minecraft.getInstance().execute(()->{
                 previewRunning=false;
-                if(!alive||epoch!=token||!draftDirty||panel!=2)return;
+                if(!alive||epoch!=token||session!=previewSession||!draftDirty||(panel!=2&&!compositeDraft))return;
                 if(error!=null){status="Preview failed";clearPreview();return;}
                 try{var next=new StudioTexture(img.preview());if(liveTexture!=null)liveTexture.close();liveTexture=next;liveHistogram=img.histogram();}
                 catch(Exception e){clearPreview();return;}
@@ -422,7 +430,7 @@ public final class StudioScreen extends StudioBaseScreen {
             }));
     }
     private void applyDraft(){
-        if(busy||doc==null)return;
+        if(busy||doc==null||compareMode)return;
         var op=draftOperation();clearPreview();if(layerEditing>=0&&layerEditing<doc.count()&&!ImageDocument.geometry(op)){changed(doc.replace(layerEditing,op));}else apply(op,ImageDocument.geometry(op));layerEditing=-1;
         java.util.Arrays.fill(grade,0);java.util.Arrays.fill(tone,0);java.util.Arrays.fill(effects,0);for(int[] v:advanced)java.util.Arrays.fill(v,0);curves=WorkspacePhoto.identity();java.util.Arrays.fill(wheels,0);java.util.Arrays.fill(perspective,0);
     }
@@ -434,7 +442,7 @@ public final class StudioScreen extends StudioBaseScreen {
         if(gradeMode>=8){drawWorkspaceGrade(g,mx,my,sx,sw);return;}
         int[] values=gradeMode==0?grade:gradeMode==1?tone:gradeMode==2?effects:advanced[gradeMode-3];
         String[] names=gradeMode==0?GRADE_NAMES:gradeMode==1?TONE_NAMES:gradeMode==2?EFFECT_NAMES:ADV_NAMES[gradeMode-3];
-        int slots=Math.max(1,Math.min(values.length,(height-151)/25));
+        int slots=Math.max(1,Math.min(values.length,(height-(height>=290?176:151))/25));
         adjustScroll=Math.max(0,Math.min(adjustScroll,values.length-slots));
         for(int r=0;r<slots;r++){
             int i=r+adjustScroll,y=87+r*25;
@@ -455,7 +463,7 @@ public final class StudioScreen extends StudioBaseScreen {
             action(g,"Horror",sx+w*2,y,w-2,14,mx,my,false,()->{int[] a={12,35,15,60,15,20,40};System.arraycopy(a,0,values,0,7);requestPreview();});
         }else StudioUi.label(g,font,"Scroll for more controls",sx,y+3,sw,StudioUi.MUTED);
         action(g,"Apply",sx,y+16,w-2,15,mx,my,false,this::applyDraft);
-        action(g,"Cancel",sx+w,y+16,w-2,15,mx,my,false,this::clearPreview);
+        action(g,"Cancel",sx+w,y+16,w-2,15,mx,my,false,()->{clearPreview();layerEditing=-1;});
         action(g,"Zero",sx+2*w,y+16,w-2,15,mx,my,false,()->{java.util.Arrays.fill(values,0);requestPreview();});
     }
     private void drawWorkspaceGrade(GuiGraphics g,int mx,int my,int sx,int sw){
@@ -464,7 +472,7 @@ public final class StudioScreen extends StudioBaseScreen {
             int tab=sw/4;String[] channels={"RGB","R","G","B"};
             for(int i=0;i<4;i++){int c=i;action(g,channels[i],sx+i*tab,87,tab-2,14,mx,my,i==curveChannel,()->curveChannel=c);}
             graphX=sx+2;graphY=105;graphW=Math.max(20,sw-4);graphH=Math.max(20,Math.min(graphW,bottom-graphY-21));
-            WorkspaceControls.curve(g,graphX,graphY,graphW,graphH,curves[curveChannel],histogram[curveChannel],curveChannel);
+            WorkspaceControls.curve(g,graphX,graphY,graphW,graphH,curves[curveChannel],(liveHistogram==null?histogram:liveHistogram)[curveChannel],curveChannel);
             if(graphY+graphH+10<bottom)StudioUi.label(g,font,"Drag 9 curve points",sx,graphY+graphH+4,sw,StudioUi.MUTED);
         }else if(gradeMode==9){
             int tab=sw/3;String[] channels={"Shadows","Midtones","Lights"};
@@ -654,7 +662,7 @@ public final class StudioScreen extends StudioBaseScreen {
         }
         if(compareMode&&canvas(x,y)&&button==0){compareDrag=true;split=Math.max(0,Math.min(1,(x-cx)/cw));setDragging(true);return true;}
         if((compareMode||peek)&&canvas(x,y))return true;
-        if(panel==1&&button==0&&image(x,y)&&!busy&&selected>=0&&selected<doc.count()){
+        if(panel==1&&button==0&&image(x,y)&&!busy&&!draftDirty&&selected>=0&&selected<doc.count()){
             if((ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ImageDocument.MarkOperation||ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof ProPhoto.ImageLayer||ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof AdvancedPhoto.Caption||ImageDocument.unwrap(doc.snapshot().get(selected)) instanceof WorkspacePhoto.Text)&&!ImageDocument.geometry(doc.snapshot().get(selected))){
                 movingLayer=true;moveX=px(x);moveY=py(y);return true;
             }
@@ -682,8 +690,8 @@ public final class StudioScreen extends StudioBaseScreen {
         if(button==0&&(resizePanel||compareDrag||curveNode>=0||wheelDrag)){resizePanel=compareDrag=wheelDrag=false;curveNode=-1;setDragging(false);return true;}
         if(activeSlider!=null&&button==0){activeSlider.update(x);activeSlider=null;setDragging(false);return true;}
         if(movingLayer){movingLayer=false;if(!busy&&doc!=null)changed(doc.translate(selected,px(x)-moveX,py(y)-moveY));return true;}
-        if(panning){panning=false;return true;}
-        if(dragging&&button==0){bx=px(x);by=py(y);dragging=false;commitMark();return true;}
+        if(panning){panning=false;setDragging(false);return true;}
+        if(dragging&&button==0){bx=px(x);by=py(y);dragging=false;setDragging(false);commitMark();return true;}
         return super.mouseReleased(x,y,button);
     }
     @Override public boolean mouseScrolled(double x,double y,double horizontal,double vertical){
@@ -698,7 +706,7 @@ public final class StudioScreen extends StudioBaseScreen {
     @Override public boolean keyPressed(int key,int scancode,int mods){
         if(hexBox.visible&&hexBox.isFocused()){if(key==GLFW.GLFW_KEY_ENTER||key==GLFW.GLFW_KEY_KP_ENTER){applyHex();return true;}if(key==GLFW.GLFW_KEY_ESCAPE){clearTextFocus();syncHex();return true;}return super.keyPressed(key,scancode,mods);}
         if(key==GLFW.GLFW_KEY_TAB&&!text.isFocused()){workspaceWide=!workspaceWide;clearTextFocus();return true;}
-        if(key==GLFW.GLFW_KEY_ESCAPE){if(draftDirty){clearPreview();status="Preview cancelled";return true;}if(textPending||text.isFocused()){textPending=false;clearTextFocus();return true;}onClose();return true;}
+        if(key==GLFW.GLFW_KEY_ESCAPE){if(draftDirty){clearPreview();layerEditing=-1;status="Preview cancelled";return true;}if(textPending||text.isFocused()){textPending=false;clearTextFocus();return true;}onClose();return true;}
         if(textPending&&(key==GLFW.GLFW_KEY_ENTER||key==GLFW.GLFW_KEY_KP_ENTER)){if(draft.isBlank()){status="Type text first";return true;}ax=bx=textX;ay=by=textY;points.clear();textPending=false;clearTextFocus();commitMark();return true;}
         if(text.visible&&text.isFocused())return super.keyPressed(key,scancode,mods);
         if(!hasControlDown()&&(mods&GLFW.GLFW_MOD_ALT)==0){

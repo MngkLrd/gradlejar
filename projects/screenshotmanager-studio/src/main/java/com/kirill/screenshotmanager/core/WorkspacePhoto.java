@@ -59,7 +59,8 @@ public final class WorkspacePhoto {
         public String label(){return "RGB curves";}
         public BufferedImage apply(BufferedImage img){
             int[][] lut=new int[3][256];
-            for(int c=0;c<3;c++)for(int i=0;i<256;i++)lut[c][i]=clip(curve(nodes[c+1],curve(nodes[0],i)));
+            int[] neutral=identity()[0];boolean masterNeutral=Arrays.equals(neutral,nodes[0]);
+            for(int c=0;c<3;c++){boolean channelNeutral=Arrays.equals(neutral,nodes[c+1]);for(int i=0;i<256;i++){double v=masterNeutral?i:curve(nodes[0],i);lut[c][i]=clip(channelNeutral?v:curve(nodes[c+1],v));}}
             int w=img.getWidth(),h=img.getHeight();int[] row=new int[w];
             for(int y=0;y<h;y++){img.getRGB(0,y,w,1,row,0,w);for(int x=0;x<w;x++){int a=row[x];row[x]=(a&0xff000000)|(lut[0][(a>>>16)&255]<<16)|(lut[1][(a>>>8)&255]<<8)|lut[2][a&255];}img.setRGB(0,y,w,1,row,0,w);}
             return img;
