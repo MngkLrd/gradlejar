@@ -44,6 +44,25 @@ for cmd in [
     if "test passed" not in out.lower():raise RuntimeError("Structure assertion failed: "+cmd)
 out=command("data get entity @e[type=minecraft:villager,tag=midnighteve_resident,limit=1] Offers.Recipes")
 if "midnighteve:wintermark" not in out:raise RuntimeError("Resident trade data missing")
+# Native farm template, two distinct entity types and persisted egg timer.
+out=command("place template midnighteve:hollycroft_farm 0 220 0")
+if not any(w in out.lower() for w in ("placed","loaded template")):raise RuntimeError("Farm placement failed: "+out)
+time.sleep(2)
+for cmd in [
+ "execute if block 35 224 9 minecraft:spruce_door[half=lower]",
+ "execute if block 36 225 9 minecraft:spruce_door[half=upper]",
+ "execute if block 35 224 10 minecraft:air",
+ "execute if block 36 239 18 minecraft:dark_oak_slab",
+ "execute if block 33 224 19 minecraft:spruce_fence_gate",
+ "execute if entity @e[type=midnighteve:snowstag,x=31,y=224,z=20,distance=..12]",
+ "execute if entity @e[type=midnighteve:snowgrouse,x=41,y=224,z=20,distance=..12]"
+]:
+    out=command(cmd)
+    if "test passed" not in out.lower():raise RuntimeError("Farm assertion failed: "+cmd+" => "+out)
+command('summon midnighteve:snowgrouse 25 225 25 {NoAI:1b,EggTime:3000,Tags:["midnight_grouse_ci"]}')
+out=command("data get entity @e[type=midnighteve:snowgrouse,tag=midnight_grouse_ci,limit=1] EggTime")
+if "299" not in out and "3000" not in out and "298" not in out:raise RuntimeError("Grouse egg timer not retained: "+out)
+print("PASS: farm roof, doors, gate, both resident species and saved egg timer")
 command("save-all flush")
 print("PASS: structure placement, roof, doors, clear entrance, floor and resident merchant data")
 try: command("stop")
