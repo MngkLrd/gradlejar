@@ -20,5 +20,8 @@
   "fractal.socket_help": "Probe + offhand iron ingot, redstone or glowstone dust. Sneak with empty offhand to clear.",
   "fractal.unchanged": "Socket already has this material.",
   "fractal.material": "Compatible material: %s. Use normally to descend.",
-  "fractal.limit": "Maximum depth or lifetime cell limit reached."
+  "fractal.limit": "Maximum depth or lifetime cell limit reached.",
+  "item.fractal.lattice_lens": "Matter Lens",
+  "fractal.cutaway_open": "Material cutaway opened",
+  "fractal.cutaway_closed": "Material cutaway closed"
 }

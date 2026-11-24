@@ -3,6 +3,10 @@ import dev.fractal.block.*;
 import dev.fractal.cell.*;
 import dev.fractal.item.Probe;
 import net.minecraft.world.item.*;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import dev.fractal.block.HostEntity;
+import dev.fractal.item.LatticeLens;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
@@ -16,6 +20,7 @@ import net.neoforged.neoforge.registries.*;
 public final class Fractal {
  public static final DeferredRegister.Blocks BLOCKS=DeferredRegister.createBlocks("fractal");
  public static final DeferredRegister.Items ITEMS=DeferredRegister.createItems("fractal");
+ public static final DeferredRegister<BlockEntityType<?>> ENTITIES=DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE,"fractal");
  public static final DeferredBlock<HostBlock> STONE=BLOCKS.register("stone_cell",()->new HostBlock(Material.STONE,hostProps(1.5f,6).requiresCorrectToolForDrops()));
  public static final DeferredBlock<HostBlock> COPPER=BLOCKS.register("copper_cell",()->new HostBlock(Material.COPPER,hostProps(3,6).requiresCorrectToolForDrops()));
  public static final DeferredBlock<HostBlock> WOOD=BLOCKS.register("wood_cell",()->new HostBlock(Material.WOOD,hostProps(2,3)));
@@ -28,8 +33,10 @@ public final class Fractal {
  public static final DeferredBlock<Block> OUTPUT=BLOCKS.register("output_terminal",()->new Block(shell()));
  public static final DeferredBlock<Block> EXIT=BLOCKS.register("ascension_node",()->new Block(shell().lightLevel(s->10)));
  public static final DeferredItem<Probe> PROBE=ITEMS.register("matter_probe",()->new Probe(new Item.Properties().stacksTo(1)));
+ public static final java.util.function.Supplier<BlockEntityType<HostEntity>> HOST_ENTITY=ENTITIES.register("host",()->BlockEntityType.Builder.of(HostEntity::new,STONE.get(),COPPER.get(),WOOD.get()).build(null));
+ public static final DeferredItem<LatticeLens> LENS=ITEMS.register("lattice_lens",()->new LatticeLens(new Item.Properties().stacksTo(1)));
  private static BlockBehaviour.Properties shell(){return BlockBehaviour.Properties.of().strength(-1,3600000).noLootTable().pushReaction(PushReaction.BLOCK);}
  private static BlockBehaviour.Properties hostProps(float hardness,float resist){return BlockBehaviour.Properties.of().strength(hardness,resist).pushReaction(PushReaction.BLOCK).lightLevel(s->s.getValue(HostBlock.LIGHT)*5);}
- public Fractal(IEventBus bus){BLOCKS.register(bus);ITEMS.register(bus);bus.addListener(this::tab);NeoForge.EVENT_BUS.addListener(CellNetwork::tick);NeoForge.EVENT_BUS.addListener(CellNetwork::commands);NeoForge.EVENT_BUS.addListener(CellNetwork::onBreak);}
- private void tab(BuildCreativeModeTabContentsEvent e){if(e.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES))e.accept(PROBE.get());}
+ public Fractal(IEventBus bus){BLOCKS.register(bus);ITEMS.register(bus);ENTITIES.register(bus);bus.addListener(this::tab);NeoForge.EVENT_BUS.addListener(CellNetwork::tick);NeoForge.EVENT_BUS.addListener(CellNetwork::commands);NeoForge.EVENT_BUS.addListener(CellNetwork::onBreak);}
+ private void tab(BuildCreativeModeTabContentsEvent e){if(e.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)){e.accept(PROBE.get());e.accept(LENS.get());}}
 }

@@ -14,8 +14,9 @@ public final class CellData extends SavedData {
  public static final class Cell {
   public final int id,parent,depth; public final Address address; public final Material material;
   public boolean destroyed;
-  public int reinforcement,conductivity,light,input,output;
-  Cell(int id,int parent,int depth,Address address,Material material){this.id=id;this.parent=parent;this.depth=depth;this.address=address;this.material=material;int[] initial=new int[6];for(int i=0;i<6;i++)initial[i]=material.initial(i);var p=LatticeMath.evaluate(initial);reinforcement=p.reinforcement();conductivity=p.conductivity();light=p.light();}
+  public int reinforcement,conductivity,light,input,output,localR,localC,localL;
+  public String preview="";
+  Cell(int id,int parent,int depth,Address address,Material material){this.id=id;this.parent=parent;this.depth=depth;this.address=address;this.material=material;int[] initial=new int[6];for(int i=0;i<6;i++)initial[i]=material.initial(i);var p=LatticeMath.evaluate(initial);reinforcement=localR=p.reinforcement();conductivity=localC=p.conductivity();light=localL=p.light();}
  }
  public final Map<Integer,Cell> cells=new LinkedHashMap<>();
  private final Map<Address,Integer> hosts=new HashMap<>();
@@ -34,13 +35,13 @@ public final class CellData extends SavedData {
  public void destroy(Cell c){if(!c.destroyed){c.destroyed=true;hosts.remove(c.address,c.id);setDirty();}}
  @Override public CompoundTag save(CompoundTag t,HolderLookup.Provider regs){
   t.putInt("next",next);ListTag list=new ListTag();
-  for(Cell c:cells.values()){CompoundTag n=new CompoundTag();n.putInt("id",c.id);n.putInt("parent",c.parent);n.putInt("depth",c.depth);n.putString("dim",c.address.dimension().location().toString());n.putLong("pos",c.address.position().asLong());n.putString("material",c.material.name());n.putBoolean("destroyed",c.destroyed);n.putInt("reinforcement",c.reinforcement);n.putInt("conductivity",c.conductivity);n.putInt("light",c.light);n.putInt("input",c.input);n.putInt("output",c.output);list.add(n);}
+  for(Cell c:cells.values()){CompoundTag n=new CompoundTag();n.putInt("id",c.id);n.putInt("parent",c.parent);n.putInt("depth",c.depth);n.putString("dim",c.address.dimension().location().toString());n.putLong("pos",c.address.position().asLong());n.putString("material",c.material.name());n.putBoolean("destroyed",c.destroyed);n.putInt("reinforcement",c.reinforcement);n.putInt("conductivity",c.conductivity);n.putInt("light",c.light);n.putInt("input",c.input);n.putInt("output",c.output);n.putInt("localR",c.localR);n.putInt("localC",c.localC);n.putInt("localL",c.localL);n.putString("preview",c.preview);list.add(n);}
   t.put("cells",list);return t;
  }
  private static CellData read(CompoundTag t,HolderLookup.Provider regs){
   CellData d=new CellData();d.next=Math.max(0,t.getInt("next"));ListTag list=t.getList("cells",Tag.TAG_COMPOUND);
   for(int i=0;i<list.size();i++){CompoundTag n=list.getCompound(i);int id=n.getInt("id"),depth=n.getInt("depth");if(id<0||id>=LIMIT||depth<1||depth>MAX_DEPTH)continue;
-   try{Cell c=new Cell(id,n.getInt("parent"),depth,new Address(ResourceKey.create(Registries.DIMENSION,ResourceLocation.parse(n.getString("dim"))),BlockPos.of(n.getLong("pos"))),Material.valueOf(n.getString("material")));c.destroyed=n.getBoolean("destroyed");c.reinforcement=Math.clamp(n.getInt("reinforcement"),0,3);c.conductivity=Math.clamp(n.getInt("conductivity"),0,3);c.light=Math.clamp(n.getInt("light"),0,3);c.input=Math.clamp(n.getInt("input"),0,15);c.output=Math.clamp(n.getInt("output"),0,15);d.cells.put(id,c);if(!c.destroyed)d.hosts.put(c.address,id);d.next=Math.max(d.next,id+1);}catch(RuntimeException ignored){}
+   try{Cell c=new Cell(id,n.getInt("parent"),depth,new Address(ResourceKey.create(Registries.DIMENSION,ResourceLocation.parse(n.getString("dim"))),BlockPos.of(n.getLong("pos"))),Material.valueOf(n.getString("material")));c.destroyed=n.getBoolean("destroyed");c.reinforcement=Math.clamp(n.getInt("reinforcement"),0,3);c.conductivity=Math.clamp(n.getInt("conductivity"),0,3);c.light=Math.clamp(n.getInt("light"),0,3);c.input=Math.clamp(n.getInt("input"),0,15);c.output=Math.clamp(n.getInt("output"),0,15);c.localR=n.contains("localR")?Math.clamp(n.getInt("localR"),0,3):c.reinforcement;c.localC=n.contains("localC")?Math.clamp(n.getInt("localC"),0,3):c.conductivity;c.localL=n.contains("localL")?Math.clamp(n.getInt("localL"),0,3):c.light;c.preview=n.getString("preview");if(c.preview.length()>20000)c.preview="";d.cells.put(id,c);if(!c.destroyed)d.hosts.put(c.address,id);d.next=Math.max(d.next,id+1);}catch(RuntimeException ignored){}
   }return d;
  }
 }
