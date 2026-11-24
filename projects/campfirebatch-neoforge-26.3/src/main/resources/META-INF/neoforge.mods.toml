@@ -1,0 +1,19 @@
+license="All Rights Reserved"
+[[mods]]
+modId="campfirebatch"
+version="1.0.1"
+displayName="Campfire Batch"
+authors="MineMods"
+description="Sneak-right-click campfires to fill available cooking slots."
+[[dependencies.campfirebatch]]
+modId="neoforge"
+type="required"
+versionRange="[26.3.0.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.campfirebatch]]
+modId="minecraft"
+type="required"
+versionRange="[26.3]"
+ordering="NONE"
+side="BOTH"

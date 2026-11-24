@@ -477,3 +477,47 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "keepsigntext-v1.0.0-${GITHUB_RUN_NUMBER}" KeepSignText-ALL-11-JARs.zip --repo "${GITHUB_REPOSITORY}" --target "${GITHUB_SHA}" --title "Keep Sign Text 1.0.0 - all 11 loaders" --notes "Only 11 compiled JAR files, sorted into Forge, NeoForge and Fabric directories. GitHub Actions build validation passed; gameplay testing remains pending." --prerelease
+
+  package-campfirebatch:
+    needs: [plan, build]
+    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/campfirebatch-') && github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: jar-campfirebatch-*
+          path: downloaded-campfirebatch
+          merge-multiple: true
+      - name: Assemble and verify exact eleven JAR files
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+          root = Path('downloaded-campfirebatch')
+          files = list(root.rglob('campfirebatch-*.jar'))
+          expected = {f'campfirebatch-{loader}-mc{mc}-1.0.1.jar': loader.title() if loader != 'neoforge' else 'NeoForge' for mc, loaders in [('1.20.1', ['forge','neoforge','fabric']), ('1.21.1',['neoforge','fabric']), ('26.1.2',['neoforge','fabric']), ('26.2',['neoforge','fabric']), ('26.3',['neoforge','fabric'])] for loader in loaders}
+          assert len(files) == 11 and {p.name for p in files} == set(expected), [p.name for p in files]
+          by_name = {p.name:p for p in files}
+          with zipfile.ZipFile('CampfireBatch-1.0.1-ALL-11-JARs.zip','w',zipfile.ZIP_DEFLATED) as out:
+              for folder in ['Forge','NeoForge','Fabric']:
+                  for name, dest in expected.items():
+                      if dest != folder: continue
+                      with zipfile.ZipFile(by_name[name]) as jar:
+                          assert jar.testzip() is None
+                          assert any(n.endswith('/BatchLoader.class') for n in jar.namelist())
+                      out.write(by_name[name], f'{folder}/{name}')
+          with zipfile.ZipFile('CampfireBatch-1.0.1-ALL-11-JARs.zip') as out:
+              assert len(out.namelist()) == 11 and all(n.endswith('.jar') for n in out.namelist())
+              print('\n'.join(out.namelist()))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CampfireBatch-1.0.1-ALL-11-JARs
+          path: CampfireBatch-1.0.1-ALL-11-JARs.zip
+      - name: Publish verified JAR-only archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "campfirebatch-v1.0.1-${GITHUB_RUN_NUMBER}" CampfireBatch-1.0.1-ALL-11-JARs.zip --target "$GITHUB_SHA" --title "Campfire Batch 1.0.1 - 11 JARs" --notes "Exactly eleven compiled JARs grouped by loader. Runtime gameplay not tested." --prerelease

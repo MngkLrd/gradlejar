@@ -1,0 +1,12 @@
+plugins { id 'net.fabricmc.fabric-loom' version '1.17.13' }
+group = 'dev.minemods.campfirebatch'
+version = '1.0.1'
+base.archivesName = 'campfirebatch-fabric-mc26.1.2'
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+dependencies {
+    minecraft 'com.mojang:minecraft:26.1.2'
+    
+    implementation 'net.fabricmc:fabric-loader:0.19.5'
+    implementation 'net.fabricmc.fabric-api:fabric-api:0.155.3+26.1.2'
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 25 }

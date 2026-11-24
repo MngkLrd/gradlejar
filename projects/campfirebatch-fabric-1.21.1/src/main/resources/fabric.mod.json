@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "campfirebatch",
+  "version": "1.0.1",
+  "name": "Campfire Batch",
+  "description": "Sneak-right-click campfires to fill available cooking slots.",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.minemods.campfirebatch.CampfireBatch"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "minecraft": "1.21.1",
+    "java": ">=21"
+  }
+}
