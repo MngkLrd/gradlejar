@@ -10,18 +10,11 @@
           }
         ]
       }
-    },
-    "has_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
-      "conditions": {
-        "recipe": "catchtheblast:blast_shield"
-      }
     }
   },
   "requirements": [
     [
-      "has_shield",
-      "has_recipe"
+      "has_shield"
     ]
   ],
   "rewards": {

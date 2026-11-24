@@ -1,9 +1,9 @@
 {
   "slug": "catchtheblast",
-  "version": "0.2.2-beta",
+  "version": "0.2.3-beta",
   "minecraft": "26.3",
   "loader": "fabric",
   "java": "25",
   "gradle": "9.7.1",
-  "jar_glob": "catchtheblast-fabric-mc26.3-0.2.2-beta.jar"
+  "jar_glob": "catchtheblast-fabric-mc26.3-0.2.3-beta.jar"
 }

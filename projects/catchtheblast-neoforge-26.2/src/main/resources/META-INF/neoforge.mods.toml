@@ -3,7 +3,7 @@ loaderVersion="[1,)"
 license="MIT"
 [[mods]]
 modId="catchtheblast"
-version="0.2.2-beta"
+version="0.2.3-beta"
 displayName="Catch the Blast"
 authors="ataflore"
 description='''Absorb explosive energy and release fiery shockwaves.'''

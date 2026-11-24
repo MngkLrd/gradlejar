@@ -1,6 +1,6 @@
 plugins { id 'java-library'; id 'idea'; id 'net.neoforged.moddev' version '2.0.148' }
 group='dev.ataflore.catchtheblast'
-version='0.2.2-beta'
+version='0.2.3-beta'
 base.archivesName='catchtheblast-neoforge-mc26.1.2'
 java.toolchain.languageVersion=JavaLanguageVersion.of(25)
 neoForge { version=project.neo_version; runs { client { client() }; server { server() } }; mods { catchtheblast { sourceSet(sourceSets.main) } } }

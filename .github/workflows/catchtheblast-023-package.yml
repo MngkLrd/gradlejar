@@ -1,0 +1,66 @@
+name: Catch the Blast 0.2.3 beta corrected JARs
+on:
+  workflow_run:
+    workflows: ["Minecraft Mod Build Hub"]
+    types: [completed]
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  package:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_commit.message, 'Catch the Blast 0.2.3:') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download six corrected JARs and five unchanged ports
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+        run: |
+          set -euo pipefail
+          mkdir -p downloaded
+          for mc in 26.1.2 26.2 26.3; do
+            for loader in neoforge fabric; do
+              gh release download "ci-catchtheblast-mc${mc}-${loader}-0.2.3-beta-${RUN_NUMBER}-${RUN_ATTEMPT}" --repo "$GITHUB_REPOSITORY" --pattern "catchtheblast-${loader}-mc${mc}-0.2.3-beta.jar" --dir downloaded
+            done
+          done
+          while read -r mc loader run; do
+            gh release download "ci-catchtheblast-mc${mc}-${loader}-0.2.2-beta-${run}-1" --repo "$GITHUB_REPOSITORY" --pattern "catchtheblast-${loader}-mc${mc}-0.2.2-beta.jar" --dir downloaded
+          done <<'EOF'
+          1.20.1 forge 1025
+          1.20.1 neoforge 1025
+          1.21.1 neoforge 1024
+          1.20.1 fabric 1027
+          1.21.1 fabric 1027
+          EOF
+      - name: Validate and assemble ZIPs
+        run: |
+          python3 - <<'PY'
+          import json, zipfile
+          from pathlib import Path
+          files = []
+          for folder,loader,versions in [('Forge','forge',['1.20.1']),('NeoForge','neoforge',['1.20.1','1.21.1','26.1.2','26.2','26.3']),('Fabric','fabric',['1.20.1','1.21.1','26.1.2','26.2','26.3'])]:
+              for mc in versions:
+                  modern = mc.startswith('26.')
+                  name = f"catchtheblast-{loader}-mc{mc}-{'0.2.3-beta' if modern else '0.2.2-beta'}.jar"
+                  p = Path('downloaded')/name
+                  with zipfile.ZipFile(p) as jar:
+                      assert jar.testzip() is None
+                      assert not any(n.endswith('.java') for n in jar.namelist())
+                      if modern:
+                          a = json.loads(jar.read('data/catchtheblast/advancement/recipes/combat/blast_shield.json'))
+                          assert list(a['criteria']) == ['has_shield']
+                          assert a['requirements'] == [['has_shield']]
+                  files.append((folder,p,modern))
+          for name,selected in [('Catch-the-Blast-0.2.3-beta-FIXED-26x-6-JARs.zip',[f for f in files if f[2]]),('Catch-the-Blast-0.2.3-beta-ALL-11-JARs.zip',files)]:
+              with zipfile.ZipFile(name,'w',zipfile.ZIP_DEFLATED) as out:
+                  for folder,p,_ in selected: out.write(p,f'{folder}/{p.name}')
+              with zipfile.ZipFile(name) as out:
+                  assert out.testzip() is None and len(out.namelist()) == len(selected)
+                  print(name, out.namelist())
+          PY
+      - name: Publish archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "catchtheblast-v0.2.3-beta-fixed-26x" Catch-the-Blast-0.2.3-beta-*.zip --repo "$GITHUB_REPOSITORY" --target "${{ github.event.workflow_run.head_sha }}" --title "Catch the Blast 0.2.3 Beta: 26.x advancement fix" --notes "Six rebuilt 26.x JARs. Complete bundle additionally includes unchanged five 0.2.2-beta legacy JARs. Advancement and archive validation; runtime testing pending." --prerelease
