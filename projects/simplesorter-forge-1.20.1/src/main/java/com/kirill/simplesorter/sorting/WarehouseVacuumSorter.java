@@ -34,11 +34,15 @@ public final class WarehouseVacuumSorter {
     private WarehouseVacuumSorter() {}
 
     public static Session begin(List<ContainerRef> containers) {
-        return new Session(containers,ref->true);
+        return new Session(containers,ref->true,false);
     }
 
     public static Session begin(List<ContainerRef> containers,java.util.function.Predicate<ContainerRef> access){
-        return new Session(containers,access);
+        return new Session(containers,access,false);
+    }
+
+    public static Session begin(List<ContainerRef> containers,java.util.function.Predicate<ContainerRef> access,boolean byMod){
+        return new Session(containers,access,byMod);
     }
 
     private static final class Chest {
@@ -97,6 +101,7 @@ public final class WarehouseVacuumSorter {
         private boolean planned;
         private boolean unsafe;
         private final java.util.function.Predicate<ContainerRef> access;
+        private final boolean byMod;
         private final List<Chest> planningChests=new ArrayList<>();
         private final List<Entry> planningEntries=new ArrayList<>();
         private int snapshotIndex,validationIndex;
@@ -113,9 +118,10 @@ public final class WarehouseVacuumSorter {
         private int rejectedBatches;
         private String lastFailure = "none";
 
-        private Session(List<ContainerRef> containers,java.util.function.Predicate<ContainerRef> access) {
+        private Session(List<ContainerRef> containers,java.util.function.Predicate<ContainerRef> access,boolean byMod) {
             this.containers = List.copyOf(containers);
             this.access=access;
+            this.byMod=byMod;
 
         }
 
@@ -154,7 +160,10 @@ public final class WarehouseVacuumSorter {
                     List<SemanticItemProfile> profiles=new ArrayList<>();
                     for(int s=0;s<ref.slots();s++){
                         ItemStack stack=ref.handler().getStackInSlot(s);
-                        if(!stack.isEmpty())profiles.add(StrictStackClassifier.profile(stack));
+                        if(!stack.isEmpty()){
+                            var profile=StrictStackClassifier.profile(stack);
+                            profiles.add(byMod?ModOriginProfile.of(profile):profile);
+                        }
                     }
                     var q=SemanticChestQuality.evaluate(profiles);
                     if(q.occupied()==0)continue;
@@ -167,6 +176,7 @@ public final class WarehouseVacuumSorter {
         public int unresolvedMixedChests(){return quality().mixed();}
 
         public int unknownFamilySlots() {
+            if(byMod)return 0;
             int count = 0;
             for (ContainerRef ref : containers) {
                 try {
@@ -184,6 +194,7 @@ public final class WarehouseVacuumSorter {
         }
 
         public String unknownIdExamples(int limit) {
+            if(byMod)return "";
             Map<String, Integer> counts = new HashMap<>();
             for (ContainerRef ref : containers) {
                 try {
@@ -343,6 +354,7 @@ public final class WarehouseVacuumSorter {
                     if (stack.isEmpty()) continue;
                     CategoryResolution resolution = ItemCategoryResolver.resolveDetailed(stack);
                     SemanticItemProfile semantic=StrictStackClassifier.profile(stack,resolution);
+                    if(byMod)semantic=ModOriginProfile.of(semantic);
                     String reason=null;
                     if(!resolution.category().moveAllowed())reason="protected";
                     else if(!canInsertAfterExtraction(ref.handler(),slot,stack))reason="cannot reinsert";

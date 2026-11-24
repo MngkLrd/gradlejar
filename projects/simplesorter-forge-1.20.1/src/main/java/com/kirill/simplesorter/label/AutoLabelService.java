@@ -64,7 +64,9 @@ public final class AutoLabelService {
             for(int slot=0;slot<inventory.getSlots();slot++){
                 ItemStack stack=inventory.getStackInSlot(slot);
                 if(stack.isEmpty())continue;
-                profiles.add(StrictStackClassifier.profile(stack));
+                var profile=StrictStackClassifier.profile(stack);
+                profiles.add(settings.mode()==com.kirill.simplesorter.settings.SortingMode.BY_MOD
+                        ?com.kirill.simplesorter.sorting.ModOriginProfile.of(profile):profile);
                 stacks.add(stack);
             }
             var quality=SemanticChestQuality.evaluate(profiles);

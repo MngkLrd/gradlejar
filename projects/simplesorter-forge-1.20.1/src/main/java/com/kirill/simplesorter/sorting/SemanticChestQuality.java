@@ -28,6 +28,7 @@ public final class SemanticChestQuality {
         int score=n==1?100:(int)Math.round(2.0*sum/(n*(double)(n-1)));
         String label;
         if(!sameGroup)label="mixed";
+        else if(first.group().startsWith("mod/"))label=first.group();
         else if("unknown".equals(first.group()))label=sameId?"item/"+first.itemId():"mixed";
         else if("equipment".equals(first.group())&&!samePurpose)label="equipment";
         else if(sameMaterial)label="material/"+first.material();

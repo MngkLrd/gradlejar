@@ -49,7 +49,7 @@ public final class SortingManager {
         // time-sliced, family-aware one-click algorithm. This removes the
         // old hard column gating from normal Smart mode: six ore/plant/tool
         // categories may coexist in any physical vertical column.
-        if (safe.mode() == com.kirill.simplesorter.settings.SortingMode.SMART_CATEGORIES
+        if (safe.mode().usesGlobalWarehouse()
                 && player instanceof ServerPlayer serverPlayer
                 && !wand.isEmpty() && wand.getItem() == ModItems.SORTING_WAND.get()) {
             boolean started = WarehouseSortSessions.start(
@@ -62,6 +62,7 @@ public final class SortingManager {
             case SMART_CATEGORIES, COMPACT_STACKS ->
                     SmartCategorySorter.sort(level, containers, safe.radius(),
                             safe.withMode(com.kirill.simplesorter.settings.SortingMode.SMART_CATEGORIES));
+            case BY_MOD -> new SortingResult(0,0,0,0,0,safe.radius(),safe.mode().id());
             case MATCH_EXISTING -> SmartCategorySorter.sort(level, containers, safe.radius(), safe);
             case PLAYER_DEPOSIT -> depositPlayerInventory(level, player, containers, safe);
         };

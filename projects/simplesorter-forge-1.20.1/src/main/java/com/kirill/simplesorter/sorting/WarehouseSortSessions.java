@@ -159,7 +159,8 @@ public final class WarehouseSortSessions {
             this.hand = hand;
             this.containers = List.copyOf(containers);
             this.settings = settings;
-            this.session = WarehouseVacuumSorter.begin(containers,ref->ContainerScanner.canAccess(level,player,ref));
+            this.session = WarehouseVacuumSorter.begin(containers,ref->ContainerScanner.canAccess(level,player,ref),
+                    settings.mode()==com.kirill.simplesorter.settings.SortingMode.BY_MOD);
         }
 
         private boolean advance(ServerPlayer player) {
@@ -225,7 +226,8 @@ public final class WarehouseSortSessions {
             boolean changedThisRound=session.totalComponents()>0 || compactedItems>compactedAtRoundStart;
             if(changedThisRound && totalRejected==0 && rounds<MAX_ROUNDS){
                 rounds++;compactedAtRoundStart=compactedItems;
-                session=WarehouseVacuumSorter.begin(containers,ref->ContainerScanner.canAccess(level,player,ref));
+                session=WarehouseVacuumSorter.begin(containers,ref->ContainerScanner.canAccess(level,player,ref),
+                    settings.mode()==com.kirill.simplesorter.settings.SortingMode.BY_MOD);
                 compaction=false;compactIndex=0;
                 return false;
             }
@@ -248,7 +250,7 @@ public final class WarehouseSortSessions {
                     "Simple Sorter completed: " + totalMoved
                             + " items transferred BETWEEN chests; "
                             + compactedItems + " items compacted WITHIN chests. "
-                            + "Coherence: " + quality.score() + "%; mixed: " + unresolved
+                            + (settings.mode()==com.kirill.simplesorter.settings.SortingMode.BY_MOD?"Mod purity: ":"Coherence: ") + quality.score() + "%; mixed: " + unresolved
                             + "/" + quality.occupied() + "; unknown slots: " + unknown + ". "
                             + (convergenceLimited ? "Refinement limit reached. " : "")
                             + (totalRejected>0 ? "Rejected transactions: "+totalRejected+". "+lastFailure+". " : "")
