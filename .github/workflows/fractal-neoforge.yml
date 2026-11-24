@@ -1,0 +1,51 @@
+name: Fractal NeoForge JAR
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'projects/fractal-neoforge/**'
+      - '.github/workflows/fractal-neoforge.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+      - name: Compile
+        working-directory: projects/fractal-neoforge
+        run: gradle --no-daemon --stacktrace clean build
+      - name: Verify lattice and JAR
+        working-directory: projects/fractal-neoforge
+        run: |
+          java -cp build/classes/java/main dev.fractal.cell.LatticeMath
+          python3 - <<'PY'
+          from zipfile import ZipFile
+          import json,struct
+          with ZipFile('build/libs/fractal-neoforge-1.21.1-0.1.0.jar') as z:
+              assert z.testzip() is None
+              names=set(z.namelist())
+              for c in ['Fractal','cell/CellData','cell/CellSpace','cell/CellNetwork','cell/LatticeMath','cell/Material','block/HostBlock','block/SocketBlock','block/InputBlock','item/Probe']:
+                  assert 'dev/fractal/'+c+'.class' in names,c
+              for n in ['META-INF/neoforge.mods.toml','pack.mcmeta','data/fractal/dimension/matter.json','assets/fractal/textures/item/matter_probe.png','assets/fractal/blockstates/stone_cell.json','data/fractal/recipe/matter_probe.json']:
+                  assert n in names,n
+              for n in names:
+                  if n.endswith('.json') or n=='pack.mcmeta':json.loads(z.read(n))
+              p=z.read('assets/fractal/textures/item/matter_probe.png')
+              assert struct.unpack('>II',p[16:24])==(16,16)
+              assert not any(n.startswith('net/minecraft/') for n in names)
+          PY
+      - name: Publish JAR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "ci-fractal-neoforge-${GITHUB_RUN_NUMBER}" projects/fractal-neoforge/build/libs/fractal-neoforge-1.21.1-0.1.0.jar --target "$GITHUB_SHA" --title "Fractal 0.1.0 (NeoForge 1.21.1)" --notes "Compiled, lattice math and JAR verified. Logical nested material cells; in-game test pending." --prerelease

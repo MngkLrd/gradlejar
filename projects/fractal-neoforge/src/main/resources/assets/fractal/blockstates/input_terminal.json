@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "power=0": {
+      "model": "fractal:block/input_off"
+    },
+    "power=1": {
+      "model": "fractal:block/input_on"
+    },
+    "power=2": {
+      "model": "fractal:block/input_on"
+    },
+    "power=3": {
+      "model": "fractal:block/input_on"
+    },
+    "power=4": {
+      "model": "fractal:block/input_on"
+    },
+    "power=5": {
+      "model": "fractal:block/input_on"
+    },
+    "power=6": {
+      "model": "fractal:block/input_on"
+    },
+    "power=7": {
+      "model": "fractal:block/input_on"
+    },
+    "power=8": {
+      "model": "fractal:block/input_on"
+    },
+    "power=9": {
+      "model": "fractal:block/input_on"
+    },
+    "power=10": {
+      "model": "fractal:block/input_on"
+    },
+    "power=11": {
+      "model": "fractal:block/input_on"
+    },
+    "power=12": {
+      "model": "fractal:block/input_on"
+    },
+    "power=13": {
+      "model": "fractal:block/input_on"
+    },
+    "power=14": {
+      "model": "fractal:block/input_on"
+    },
+    "power=15": {
+      "model": "fractal:block/input_on"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "minecraft:block/amethyst_block",
+    "tex": "minecraft:block/amethyst_block"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        16,
+        9
+      ],
+      "to": [
+        7,
+        16.5,
+        12
+      ],
+      "faces": {
+        "up": {
+          "texture": "#tex"
+        },
+        "down": {
+          "texture": "#tex"
+        },
+        "north": {
+          "texture": "#tex"
+        },
+        "south": {
+          "texture": "#tex"
+        },
+        "east": {
+          "texture": "#tex"
+        },
+        "west": {
+          "texture": "#tex"
+        }
+      }
+    }
+  ]
+}

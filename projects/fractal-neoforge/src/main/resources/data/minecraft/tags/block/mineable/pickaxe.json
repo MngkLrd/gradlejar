@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "fractal:stone_cell",
+    "fractal:copper_cell"
+  ]
+}

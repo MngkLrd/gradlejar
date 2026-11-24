@@ -1,0 +1,20 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="All Rights Reserved"
+[[mods]]
+modId="fractal"
+version="0.1.0"
+displayName="Fractal"
+description="Enter matter, rebuild its lattice, and make mechanisms act across nested scales."
+[[dependencies.fractal]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.fractal]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.228,21.2)"
+ordering="NONE"
+side="BOTH"

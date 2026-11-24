@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "minecraft:block/glowstone",
+    "tex": "minecraft:block/glowstone"
+  },
+  "elements": [
+    {
+      "from": [
+        9,
+        16,
+        4
+      ],
+      "to": [
+        12,
+        16.5,
+        7
+      ],
+      "faces": {
+        "up": {
+          "texture": "#tex"
+        },
+        "down": {
+          "texture": "#tex"
+        },
+        "north": {
+          "texture": "#tex"
+        },
+        "south": {
+          "texture": "#tex"
+        },
+        "east": {
+          "texture": "#tex"
+        },
+        "west": {
+          "texture": "#tex"
+        }
+      }
+    }
+  ]
+}

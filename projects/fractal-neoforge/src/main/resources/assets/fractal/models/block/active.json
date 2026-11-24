@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "minecraft:block/redstone_block",
+    "tex": "minecraft:block/redstone_block"
+  },
+  "elements": [
+    {
+      "from": [
+        9,
+        16,
+        9
+      ],
+      "to": [
+        12,
+        16.5,
+        12
+      ],
+      "faces": {
+        "up": {
+          "texture": "#tex"
+        },
+        "down": {
+          "texture": "#tex"
+        },
+        "north": {
+          "texture": "#tex"
+        },
+        "south": {
+          "texture": "#tex"
+        },
+        "east": {
+          "texture": "#tex"
+        },
+        "west": {
+          "texture": "#tex"
+        }
+      }
+    }
+  ]
+}

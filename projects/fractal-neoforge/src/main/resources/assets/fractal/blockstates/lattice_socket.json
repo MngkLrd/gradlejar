@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "type=0": {
+      "model": "fractal:block/socket_0"
+    },
+    "type=1": {
+      "model": "fractal:block/socket_1"
+    },
+    "type=2": {
+      "model": "fractal:block/socket_2"
+    },
+    "type=3": {
+      "model": "fractal:block/socket_3"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "fractal:block/output_terminal"
+    }
+  }
+}
