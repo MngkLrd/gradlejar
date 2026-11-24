@@ -42,6 +42,7 @@ public final class SleepDebtMod {
   NeoForge.EVENT_BUS.addListener(SleepEngine::onLogin);
   NeoForge.EVENT_BUS.addListener(SleepEngine::onBlockBreak);
   NeoForge.EVENT_BUS.addListener(SleepEngine::onAttack);
+  NeoForge.EVENT_BUS.addListener(SleepEngine::onJump);
   NeoForge.EVENT_BUS.addListener(CampRestSessions::onLogout);
   NeoForge.EVENT_BUS.addListener(VanillaSleepIntegration::onPhantoms);
   NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent e)->SleepCommands.register(e.getDispatcher()));

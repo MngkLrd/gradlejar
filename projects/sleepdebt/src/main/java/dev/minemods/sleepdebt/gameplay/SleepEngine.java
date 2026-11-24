@@ -21,10 +21,18 @@ public final class SleepEngine {
  private static int clamp(int v){return Math.max(0,Math.min(MAX,v));}
  private static CompoundTag data(ServerPlayer p){return p.getPersistentData().getCompound(KEY);}
  private static void save(ServerPlayer p,CompoundTag state){p.getPersistentData().put(KEY,state);}
+ public static int[] history(ServerPlayer p){return data(p).getIntArray("history");}
+ public static int[] sleepHistory(ServerPlayer p){return data(p).getIntArray("sleepHistory");}
+ public static int getTolerance(ServerPlayer p){return data(p).getInt("tolerance");}
+ public static int getMaskPower(ServerPlayer p){return data(p).getInt("maskPower");}
+ public static int getMaskTicks(ServerPlayer p){return data(p).getInt("mask");}
+ public static int getCrashTicks(ServerPlayer p){return data(p).getInt("crash");}
+ public static int[] activity(ServerPlayer p){return data(p).getIntArray("activity");}
+ public static int[] penalties(ServerPlayer p){return SleepEffects.percentages(p,data(p));}
  private static void sync(ServerPlayer p,CompoundTag state){
   PacketDistributor.sendToPlayer(p,new SleepStatusPayload(
    state.getInt("debt"),state.getInt("mask"),state.getInt("crash"),
-   state.getInt("caffeine"),state.getInt("fatigue"),state.getInt("stress")));
+   state.getInt("caffeine"),state.getInt("fatigue"),state.getInt("stress"),SleepEffects.percentages(p,state)));
  }
  public static int getDebt(ServerPlayer p){return data(p).getInt("debt");}
  public static int getFatigue(ServerPlayer p){return data(p).getInt("fatigue");}
@@ -48,7 +56,7 @@ public final class SleepEngine {
   t.putInt("debt",clamp(debt));
   t.putInt("fatigue",clamp(fatigue));
   t.putInt("stress",clamp(stress));
-  save(p,t);sync(p,t);
+  save(p,t);SleepEffects.apply(p,t);sync(p,t);
  }
  public static void addStress(ServerPlayer p,int amount){
   CompoundTag t=data(p);
@@ -67,16 +75,46 @@ public final class SleepEngine {
   t.putInt("fatigue",clamp(t.getInt("fatigue")-fatigue));
   save(p,t);
  }
+ private static void exert(CompoundTag t,int category,int amount){
+  if(amount<=0)return;
+  int[] a=java.util.Arrays.copyOf(t.getIntArray("activity"),6);
+  a[category]=(int)Math.min(1000000L,(long)a[category]+amount);
+  t.putIntArray("activity",a);
+  t.putInt("fatigue",clamp(t.getInt("fatigue")+amount));
+ }
+ private static boolean survival(ServerPlayer p){return !p.isCreative()&&!p.isSpectator();}
  public static void onBlockBreak(BlockEvent.BreakEvent e){
-  if(e.getPlayer() instanceof ServerPlayer p&&!p.getAbilities().instabuild){
-   addFatigue(p,3);
+  if(e.getPlayer() instanceof ServerPlayer p&&survival(p)&&!e.isCanceled()){
+   float hardness=e.getState().getDestroySpeed(e.getLevel(),e.getPos());
+   CompoundTag t=data(p);
+   exert(t,3,Math.max(1,Math.min(12,2+(int)Math.max(0,hardness))));
+   save(p,t);
   }
  }
  public static void onAttack(AttackEntityEvent e){
-  if(e.getEntity() instanceof ServerPlayer p&&!p.getAbilities().instabuild){
-   addFatigue(p,11);
-   addStress(p,4);
+  if(e.getEntity() instanceof ServerPlayer p&&survival(p)&&!e.isCanceled()&&p.getAttackStrengthScale(0)>.8f){
+   CompoundTag t=data(p);exert(t,4,7);
+   t.putInt("stress",clamp(t.getInt("stress")+4));save(p,t);
   }
+ }
+ public static void onJump(net.neoforged.neoforge.event.entity.living.LivingEvent.LivingJumpEvent e){
+  if(e.getEntity() instanceof ServerPlayer p&&survival(p)){
+   CompoundTag t=data(p);exert(t,2,2+p.getArmorValue()/10);save(p,t);
+  }
+ }
+ public static void incense(ServerPlayer p){
+  CompoundTag t=data(p);long now=p.serverLevel().getGameTime();
+  if(!survival(p))return;
+  if(t.contains("incenseAt")&&now>=t.getLong("incenseAt")&&now-t.getLong("incenseAt")<40)return;
+  t.putLong("incenseAt",now);save(p,t);soothe(p,6,4);
+ }
+ private static void historySample(ServerPlayer p,CompoundTag t){
+  int[] old=t.getIntArray("history");int length=Math.min(old.length/5*5,235);
+  int[] next=new int[length+5];
+  System.arraycopy(old,old.length-length,next,0,length);
+  next[length]=t.getInt("debt");next[length+1]=t.getInt("fatigue");next[length+2]=t.getInt("stress");
+  next[length+3]=t.getInt("caffeine");next[length+4]=t.getInt("tolerance");
+  t.putIntArray("history",next);
  }
  public static boolean usePoultice(ServerPlayer p){
   CompoundTag t=data(p);
@@ -111,9 +149,10 @@ public final class SleepEngine {
   if(!SleepSettings.ENABLE_CAMP_REST.get())return 0;
   var site=RestEnvironment.evaluate(p,pos);
   CompoundTag t=data(p);
-  int fatigueRecovery=(int)(Math.min(520,165*site.quality()/100+(site.warm()?55:0))*(1-.30*SleepEffects.load(t.getInt("stress"))));
+  int fatigueRecovery=(int)(Math.min(520,165*site.quality()/100+(site.warm()?55:0))*(1-.30*Math.min(1,SleepEffects.load(t.getInt("stress"))*SleepSettings.STRESS_PENALTY.get())));
   int stressRecovery=Math.min(420,100*site.quality()/100+(site.incense()?80:0));
-  int debtRecovery=Math.min(85,50*site.quality()/100);
+  // A short camp break restores the body, not accumulated sleep debt.
+  int debtRecovery=0;
   t.putInt("fatigue",clamp(t.getInt("fatigue")-fatigueRecovery));
   t.putInt("stress",clamp(t.getInt("stress")-stressRecovery));
   t.putInt("debt",clamp(t.getInt("debt")-debtRecovery));
@@ -126,19 +165,22 @@ public final class SleepEngine {
   CompoundTag t=data(p);
   if(caffeine>0){
    int load=t.getInt("caffeine");
-   int effect=Math.max(25,100-load);
+   int tolerance=t.getInt("tolerance");
+   int effect=Math.max(25,100-tolerance/2-load/3);
    int potency=caffeine>=80?85:caffeine>=55?70:caffeine>=35?55:42;
    int active=duration*effect/100;
    if(active>=t.getInt("mask")){t.putInt("mask",active);t.putInt("maskPower",potency*effect/100);}
    t.putInt("caffeine",Math.min(100,load+caffeine));
+   t.putInt("tolerance",Math.min(100,tolerance+Math.max(2,caffeine/5)));
    t.putInt("crashPending",Math.max(t.getInt("crashPending"),caffeine>=80?3600:duration>=16000?3200:caffeine>=55?2400:caffeine>=35?1400:700));
+   if(calm>0)t.putInt("calm",Math.max(t.getInt("calm"),6000+calm*1800));
    if(load+caffeine>=100){t.putInt("stress",clamp(t.getInt("stress")+140));t.putInt("crash",Math.max(t.getInt("crash"),1200));}
 
   }else{
    // Tea and warm milk calm you; they do not magically undo hours awake.
    t.putInt("fatigue",clamp(t.getInt("fatigue")-relief*2));
    t.putInt("stress",clamp(t.getInt("stress")-relief-calm*55));
-   t.putInt("debt",clamp(t.getInt("debt")-Math.min(35,relief/5)));
+   // Calming drinks cannot erase sleep debt.
    if(calm>0)t.putInt("calm",6000+calm*1800);
   }
   save(p,t);sync(p,t);
@@ -163,6 +205,15 @@ public final class SleepEngine {
    t.putInt("sleepTicks",0);
    sync(p,t);
   }
+  // Measure horizontal movement every tick; teleport-sized steps are ignored.
+  String dimension=p.level().dimension().location().toString();
+  if(t.contains("moveX")&&dimension.equals(t.getString("moveDimension"))){
+   double dx=p.getX()-t.getDouble("moveX"),dz=p.getZ()-t.getDouble("moveZ");
+   double distance=Math.sqrt(dx*dx+dz*dz);
+   if(distance<2&&!p.isPassenger()&&!p.isFallFlying())
+    t.putDouble("walkDistance",t.getDouble("walkDistance")+distance);
+  }
+  t.putDouble("moveX",p.getX());t.putDouble("moveZ",p.getZ());t.putString("moveDimension",dimension);
   int progress=t.getInt("progress")+1;
   int interval=SleepSettings.TICKS_PER_POINT.get();
   if(p.isSprinting()||p.isSwimming())interval=Math.max(20,(int)(interval*.78f));
@@ -172,14 +223,24 @@ public final class SleepEngine {
   }
   t.putInt("progress",progress);
   if(p.tickCount%20==0){
-   boolean exerting=p.isSprinting()||p.isSwimming()||p.getAttackStrengthScale(0)<.6f;
-   double stressLoad=SleepEffects.load(t.getInt("stress"))*SleepSettings.STRESS_PENALTY.get();
-   t.putInt("fatigue",clamp(t.getInt("fatigue")+(exerting?4:stressLoad>.55?-1:-2)));
-   if(exerting&&SleepSettings.PENALTIES.get())p.causeFoodExhaustion((float)(.10*stressLoad));
-   boolean threatened=p.hurtTime>0||!p.level().getEntitiesOfClass(
-     net.minecraft.world.entity.monster.Monster.class,p.getBoundingBox().inflate(9)).isEmpty();
+   double distanceMoved=t.getDouble("walkDistance");t.putDouble("walkDistance",0);
+   boolean exerting=distanceMoved>.35||p.isSwimming()||p.isSprinting();
+   double stressLoad=Math.min(1,SleepEffects.load(t.getInt("stress"))*SleepSettings.STRESS_PENALTY.get());
+   if(exerting){
+    int weight=p.getArmorValue()/6;
+    int hunger=p.getFoodData().getFoodLevel()<7?2:0;
+    int activity=p.isSwimming()?1:p.isSprinting()?5:0;
+    int amount=(p.isSwimming()?5:p.isSprinting()?6:1)+weight+hunger;
+    exert(t,activity,amount);
+    if(SleepSettings.PENALTIES.get())p.causeFoodExhaustion((float)(.10*stressLoad));
+   }else if(p.hurtTime==0){
+    int recovery=p.getFoodData().getFoodLevel()<7?0:stressLoad>.55?1:2;
+    t.putInt("fatigue",clamp(t.getInt("fatigue")-recovery));
+   }
+   boolean threatened=p.hurtTime>0||RestEnvironment.threatened(p,9);
    boolean dark=!p.level().isDay()&&p.level().getMaxLocalRawBrightness(p.blockPosition())<5;
-   t.putInt("stress",clamp(t.getInt("stress")+(threatened?5:dark?1:-2)));
+   int calming=t.getInt("calm")>0?2:0;
+   t.putInt("stress",clamp(t.getInt("stress")+(threatened?5:dark?1:-2-calming)));
    int mask=t.getInt("mask");
    if(mask>0){
     mask=Math.max(0,mask-20);
@@ -188,8 +249,9 @@ public final class SleepEngine {
    }
    if(t.getInt("crash")>0)t.putInt("crash",Math.max(0,t.getInt("crash")-20));
    if(t.getInt("calm")>0)t.putInt("calm",Math.max(0,t.getInt("calm")-20));
-   if(p.tickCount%600==0&&t.getInt("caffeine")>0)
-    t.putInt("caffeine",t.getInt("caffeine")-1);
+   if(p.tickCount%120==0&&t.getInt("caffeine")>0)t.putInt("caffeine",t.getInt("caffeine")-1);
+   if(p.tickCount%2400==0&&t.getInt("tolerance")>0)t.putInt("tolerance",t.getInt("tolerance")-1);
+   if(p.tickCount%1200==0||t.getIntArray("history").length==0)historySample(p,t);
   }
   if(t.getInt("micro")>0)t.putInt("micro",t.getInt("micro")-1);
   if(p.tickCount%20==0){SleepEffects.apply(p,t);sync(p,t);}
@@ -216,6 +278,9 @@ public final class SleepEngine {
   t.putLong("lastFullSleepAt",now);
   t.putInt("lastSleepQuality",quality);
   t.putInt("lastSleepRecovery",before-after);
+  int[] old=t.getIntArray("sleepHistory");int n=Math.min(old.length/2*2,26);
+  int[] nights=new int[n+2];System.arraycopy(old,old.length-n,nights,0,n);
+  nights[n]=quality;nights[n+1]=before-after;t.putIntArray("sleepHistory",nights);
   t.putInt("lastSleepReasons",site.reasons());
   t.putLong("lastSleepAt",p.serverLevel().getGameTime());
   t.putInt("debt",after);
@@ -242,13 +307,13 @@ public final class SleepEngine {
   if(e.isWasDeath()&&!SleepSettings.KEEP_ON_DEATH.get()){
    old.putInt("debt",0);old.putInt("progress",0);
    old.putInt("fatigue",0);old.putInt("stress",0);
-   old.putInt("mask",0);old.putInt("crash",0);old.putInt("maskPower",0);old.putInt("crashPending",0);old.putInt("caffeine",0);
+   old.putInt("mask",0);old.putInt("crash",0);old.putInt("maskPower",0);old.putInt("crashPending",0);old.putInt("caffeine",0);old.putInt("tolerance",0);
   }
-  old.putInt("sleepTicks",0);old.putInt("micro",0);
+  old.putInt("sleepTicks",0);old.putInt("micro",0);old.putDouble("walkDistance",0);old.remove("moveX");
   p.getPersistentData().put(KEY,old);
  }
  public static void onLogin(PlayerEvent.PlayerLoggedInEvent e){
-  if(e.getEntity() instanceof ServerPlayer p){CampRestSessions.discard(p);sync(p,data(p));}
+  if(e.getEntity() instanceof ServerPlayer p){CampRestSessions.discard(p);CompoundTag t=data(p);t.remove("moveX");t.putDouble("walkDistance",0);save(p,t);SleepEffects.apply(p,t);sync(p,t);}
  }
  private SleepEngine(){}
 }

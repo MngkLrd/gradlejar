@@ -35,7 +35,7 @@ public final class IncenseBurnerBlockEntity extends BlockEntity {
   if(server.getGameTime()%40==0){
    for(ServerPlayer player:server.getEntitiesOfClass(ServerPlayer.class,
      new AABB(pos).inflate(7))){
-    SleepEngine.soothe(player,6,4);
+    SleepEngine.incense(player);
    }
    block.setChanged();
   }

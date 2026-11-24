@@ -15,18 +15,22 @@ final class SleepEffects {
   i.removeModifier(id);
   if(Math.abs(amount)>.0001)i.addTransientModifier(new AttributeModifier(id,amount,AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
  }
- static void apply(ServerPlayer p,CompoundTag t){
+ static int[] percentages(ServerPlayer p,CompoundTag t){
   boolean enabled=SleepSettings.PENALTIES.get()&&!p.isCreative()&&!p.isSpectator();
   double sleep=enabled?load(t.getInt("debt"))*SleepSettings.SLEEP_PENALTY.get():0;
   double body=enabled?load(t.getInt("fatigue"))*SleepSettings.BODY_PENALTY.get():0;
   if(t.getInt("mask")>0)sleep*=1-Math.min(.85,t.getInt("maskPower")/100.0);
   if(enabled&&t.getInt("crash")>0)sleep+=.25;
   if(enabled&&t.getInt("micro")>0)sleep+=.45;
-  set(p,Attributes.ATTACK_SPEED,"sleep_attack",-Math.min(.65,sleep*.40));
-  set(p,Attributes.BLOCK_BREAK_SPEED,"body_mining",-Math.min(.75,body*.50));
-  set(p,Attributes.MOVEMENT_SPEED,"body_move",-Math.min(.48,body*.30));
-  set(p,Attributes.ATTACK_DAMAGE,"body_damage",-Math.min(.48,body*.30));
-  set(p,Attributes.MOVEMENT_SPEED,"micro_move",enabled&&t.getInt("micro")>0?-.45:0);
+  return new int[]{(int)Math.round(100*Math.min(.65,sleep*.40)),(int)Math.round(100*Math.min(.75,body*.50)),(int)Math.round(100*Math.min(.48,body*.30)),(int)Math.round(100*Math.min(.48,body*.30)),(int)Math.round(100*Math.min(1,enabled?load(t.getInt("stress"))*SleepSettings.STRESS_PENALTY.get():0))};
+ }
+ static void apply(ServerPlayer p,CompoundTag t){
+  int[] v=percentages(p,t);
+  set(p,Attributes.ATTACK_SPEED,"sleep_attack",-v[0]/100.0);
+  set(p,Attributes.BLOCK_BREAK_SPEED,"body_mining",-v[1]/100.0);
+  set(p,Attributes.MOVEMENT_SPEED,"body_move",-v[2]/100.0);
+  set(p,Attributes.ATTACK_DAMAGE,"body_damage",-v[3]/100.0);
+  set(p,Attributes.MOVEMENT_SPEED,"micro_move",SleepSettings.PENALTIES.get()&&!p.isCreative()&&!p.isSpectator()&&t.getInt("micro")>0?-.45:0);
  }
  private SleepEffects(){}
 }

@@ -6,7 +6,8 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 public final class SleepNetworking {
  public static void register(RegisterPayloadHandlersEvent e){
-  var registrar=e.registrar("4");
+  var registrar=e.registrar("5");
+  registrar.playToServer(JournalRequest.TYPE,JournalRequest.STREAM_CODEC,(payload,ctx)->{if(ctx.player() instanceof net.minecraft.server.level.ServerPlayer p)JournalRequest.handle(p);});
   if(FMLEnvironment.dist==Dist.CLIENT){
    registrar.playToClient(SleepStatusPayload.TYPE,SleepStatusPayload.STREAM_CODEC,
     (payload,ctx)->ClientState.update(payload));

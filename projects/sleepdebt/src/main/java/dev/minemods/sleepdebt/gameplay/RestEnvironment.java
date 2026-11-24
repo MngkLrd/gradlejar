@@ -22,11 +22,13 @@ public final class RestEnvironment {
  public static final int RAIN=1,COLD=2,HEAT=4,HOSTILES=8,OPEN_AIR=16,
   COMFORT=32,PROTECTION=64,STRESS=128,CAFFEINE=256;
 
+ public static boolean threatened(ServerPlayer p,double radius){
+  return p.serverLevel().getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(radius),m->m.isAlive()&&(m.getTarget()==p||m.hasLineOfSight(p))).stream().anyMatch(m->m.hasLineOfSight(p));
+ }
  public static Conditions evaluate(ServerPlayer player,BlockPos pos){
   var level=player.serverLevel();
   boolean sheltered=!level.canSeeSky(pos.above());
-  boolean threatened=!level.getEntitiesOfClass(Monster.class,
-    player.getBoundingBox().inflate(11)).isEmpty();
+  boolean threatened=threatened(player,11);
   boolean rain=!sheltered&&level.isRainingAt(pos.above());
   float temperature=level.getBiome(pos).value().getBaseTemperature();
   boolean cold=!sheltered&&temperature<.15f;
@@ -34,7 +36,7 @@ public final class RestEnvironment {
   boolean campfire=false,lantern=false,incense=false,dreamcatcher=false;
   for(BlockPos scan:BlockPos.betweenClosed(pos.offset(-5,-2,-5),pos.offset(5,3,5))){
    var state=level.getBlockState(scan);
-   if(state.is(Blocks.CAMPFIRE)||state.is(Blocks.SOUL_CAMPFIRE))campfire=true;
+   if((state.is(Blocks.CAMPFIRE)||state.is(Blocks.SOUL_CAMPFIRE))&&state.getValue(net.minecraft.world.level.block.CampfireBlock.LIT))campfire=true;
    if(state.is(ModBlocks.CAMP_LANTERN.get()))lantern=true;
    if(state.is(ModBlocks.DREAMCATCHER.get()))dreamcatcher=true;
    if(!incense&&state.is(ModBlocks.INCENSE_BURNER.get())&&
@@ -48,7 +50,7 @@ public final class RestEnvironment {
   if(!mask&&ModList.get().isLoaded("accessories")){
    mask=SleepAccessoriesBridge.hasMask(player);
   }
-  boolean warm=campfire||lantern;
+  boolean warm=campfire;
   int quality=100,reasons=0;
   if(sheltered){if(SleepSettings.SHELTER_BONUS.get())quality+=14;reasons|=COMFORT;}else{quality-=8;reasons|=OPEN_AIR;}
   if(threatened){if(SleepSettings.MONSTER_PENALTY.get())quality-=24;reasons|=HOSTILES;}
@@ -56,6 +58,7 @@ public final class RestEnvironment {
   if(cold){quality-=17;reasons|=COLD;}
   if(hot){quality-=10;reasons|=HEAT;}
   if(warm){quality+=6;reasons|=COMFORT;}
+  if(lantern){quality+=3;reasons|=COMFORT;}
   if(dreamcatcher){quality+=10;reasons|=PROTECTION;}
   if(incense){quality+=10;reasons|=COMFORT;}
   if(pillow){quality+=6;reasons|=COMFORT;}
