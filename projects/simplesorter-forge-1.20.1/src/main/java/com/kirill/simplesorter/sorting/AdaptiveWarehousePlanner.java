@@ -10,7 +10,9 @@ import java.util.*;
 public final class AdaptiveWarehousePlanner {
     private AdaptiveWarehousePlanner() {}
 
-    public record Stack(int chest,int slot,SemanticItemProfile profile) {}
+    public record Stack(int chest,int slot,SemanticItemProfile profile,boolean movable) {
+        public Stack(int chest,int slot,SemanticItemProfile profile){this(chest,slot,profile,profile.moveAllowed());}
+    }
     public record Storage(int capacity,int x2,int y,int z2) {
         public Storage { if(capacity<=0) throw new IllegalArgumentException("capacity"); }
     }
@@ -80,15 +82,26 @@ public final class AdaptiveWarehousePlanner {
             orders=List.copyOf(new LinkedHashSet<>(candidates));
         }
         public boolean advance(){
-            if(items.isEmpty()||cursor>=orders.size()*2)return true;
-            List<Integer> order=orders.get(cursor/2);
-            int granularity=cursor%2==0?3:2;cursor++;
-            List<Address> desired=pack(items,boxes,sorted,order,granularity);
+            // In addition to contiguous packing, try dedicated-group
+            // allocations that can deliberately leave spare slots unused.
+            int ordinary=orders.size()*2;
+            int limit=ordinary+4;
+            if(items.isEmpty()||cursor>=limit)return true;
+            List<Address> desired;
+            if(cursor<ordinary){
+                List<Integer> order=orders.get(cursor/2);
+                int granularity=cursor%2==0?3:2;
+                desired=pack(items,boxes,sorted,order,granularity);
+            }else{
+                int mode=cursor-ordinary;
+                desired=dedicatedPack(items,boxes,sorted,orders.get(0),mode<2?mode:2,mode==3);
+            }
+            cursor++;
             if(desired.size()==items.size()){
                 Candidate candidate=repair(items,boxes,original,sorted,desired,accepts,spatial);
                 if(candidate.cost<best.cost || candidate.cost==best.cost&&candidate.moved<best.moved)best=candidate;
             }
-            return cursor>=orders.size()*2;
+            return cursor>=limit;
         }
         public Plan result(){
             Set<Integer> used=new HashSet<>();Set<String> groups=new HashSet<>();
@@ -176,8 +189,8 @@ public final class AdaptiveWarehousePlanner {
                 int a=chest[i],b=slot[i];
                 if(a==dst.chest&&b==dst.slot)continue;
                 int j=layout[dst.chest][dst.slot];
-                if(!items.get(i).profile.moveAllowed() || !accepts.test(i,dst.chest,dst.slot))continue;
-                if(j>=0&&(!items.get(j).profile.moveAllowed()||!accepts.test(j,a,b)))continue;
+                if(!items.get(i).movable || !items.get(i).profile.moveAllowed() || !accepts.test(i,dst.chest,dst.slot))continue;
+                if(j>=0&&(!items.get(j).movable||!items.get(j).profile.moveAllowed()||!accepts.test(j,a,b)))continue;
                 layout[dst.chest][dst.slot]=i;chest[i]=dst.chest;slot[i]=dst.slot;
                 layout[a][b]=j;
                 if(j>=0){chest[j]=a;slot[j]=b;}
@@ -203,10 +216,17 @@ public final class AdaptiveWarehousePlanner {
         Map<String,Set<Integer>> spread=new HashMap<>();
         Map<String,Set<SpatialWarehouseLayout.Column>> columns=new HashMap<>();
         Map<String,Set<SpatialWarehouseLayout.Column>> relatedColumns=new HashMap<>();
-        long result=0;
+        long result=0, foreignSlots=0, differentFamilySlots=0;
         for(int c=0;c<contents.size();c++){
             List<SemanticItemProfile> row=contents.get(c);
             int n=row.size();if(n==0)continue;
+            Map<String,Integer> groupCounts=new HashMap<>(),familyCounts=new HashMap<>();
+            for(var p:row){
+                groupCounts.merge(p.group(),1,Integer::sum);
+                familyCounts.merge(p.group()+"/"+p.legacyFamily(),1,Integer::sum);
+            }
+            foreignSlots+=n-groupCounts.values().stream().mapToInt(Integer::intValue).max().orElse(0);
+            differentFamilySlots+=n-familyCounts.values().stream().mapToInt(Integer::intValue).max().orElse(0);
             long impurity=0;
             // Repeated stacks of one semantic profile need one pair
             // evaluation with multiplicity, not O(n²) identical evaluations.
@@ -235,6 +255,75 @@ public final class AdaptiveWarehousePlanner {
             for(var set:columns.values())result+=SpatialWarehouseLayout.dispersion(set,24,3);
             for(var set:relatedColumns.values())result+=SpatialWarehouseLayout.dispersion(set,3,1);
         }
+        // Lexicographic quality: no spatial preference or concentration
+        // bonus may purchase an extra unrelated stack in a mixed chest.
+        // Bounds: 384 x 108 slots, so each term fits safely in a long.
+        return foreignSlots*1_000_000_000_000L
+                +differentFamilySlots*10_000_000L+result;
+    }
+
+    private static String partition(SemanticItemProfile p,int tier){
+        if(tier==0)return p.group();
+        if(tier==1)return p.group()+"/"+p.legacyFamily();
+        return p.group()+"/"+p.legacyFamily()+"/"+cluster(p);
+    }
+
+    /**
+     * Allocate whole semantic groups to real free capacity first. A chest
+     * may remain partially full; unrelated contents are admitted only when
+     * no dedicated capacity remains. Pinned slots stay at their exact
+     * address and influence the choice of matching storage.
+     */
+    private static List<Address> dedicatedPack(List<Stack> items,List<Storage> boxes,
+            List<Integer> sorted,List<Integer> order,int tier,boolean largestFirst){
+        int c=boxes.size(),n=items.size();
+        Address[] dest=new Address[n];
+        List<java.util.ArrayDeque<Integer>> free=new ArrayList<>();
+        List<Set<String>> owners=new ArrayList<>();
+        boolean[][] pinned=new boolean[c][];
+        for(int k=0;k<c;k++){
+            pinned[k]=new boolean[boxes.get(k).capacity];
+            owners.add(new HashSet<>());
+        }
+        Map<String,List<Integer>> groups=new LinkedHashMap<>();
+        for(int i:sorted){
+            Stack item=items.get(i);
+            String key=partition(item.profile,tier);
+            if(!item.movable||!item.profile.moveAllowed()){
+                dest[i]=new Address(item.chest,item.slot);
+                pinned[item.chest][item.slot]=true;owners.get(item.chest).add(key);
+            }else groups.computeIfAbsent(key,k->new ArrayList<>()).add(i);
+        }
+        for(int k=0;k<c;k++){
+            var q=new java.util.ArrayDeque<Integer>();
+            for(int s=0;s<pinned[k].length;s++)if(!pinned[k][s])q.add(s);
+            free.add(q);
+        }
+        List<Map.Entry<String,List<Integer>>> runs=new ArrayList<>(groups.entrySet());
+        if(largestFirst)runs.sort(Comparator.<Map.Entry<String,List<Integer>>>comparingInt(e->e.getValue().size()).reversed()
+                .thenComparing(Map.Entry::getKey));
+        for(var run:runs){
+            String key=run.getKey();List<Integer> ids=run.getValue();int at=0;
+            while(at<ids.size()){
+                int remaining=ids.size()-at,best=-1,bestClass=Integer.MAX_VALUE,bestFit=Integer.MAX_VALUE;
+                for(int k:order){
+                    int available=free.get(k).size();if(available==0)continue;
+                    Set<String> set=owners.get(k);
+                    int kind=set.size()==1&&set.contains(key)?0:set.isEmpty()?1:set.contains(key)?2:3;
+                    // Prefer smallest sufficient chest, otherwise largest
+                    // available capacity, then actual spatial ordering.
+                    int fit=available>=remaining?available-remaining:100000-available;
+                    if(kind<bestClass||(kind==bestClass&&fit<bestFit)){
+                        best=k;bestClass=kind;bestFit=fit;
+                    }
+                }
+                if(best<0)return List.of();
+                var q=free.get(best);owners.get(best).add(key);
+                while(at<ids.size()&&!q.isEmpty())dest[ids.get(at++)]=new Address(best,q.removeFirst());
+            }
+        }
+        List<Address> result=new ArrayList<>(n);
+        for(int i:sorted){if(dest[i]==null)return List.of();result.add(dest[i]);}
         return result;
     }
 

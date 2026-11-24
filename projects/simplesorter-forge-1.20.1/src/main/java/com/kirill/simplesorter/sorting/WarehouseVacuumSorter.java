@@ -48,6 +48,7 @@ public final class WarehouseVacuumSorter {
         final Entry[] layout;
         final Map<String, Integer> votes = new HashMap<>();
         final Map<String, Integer> allocatedFamilies = new HashMap<>();
+        final java.util.Set<Integer> pinnedSlots=new java.util.HashSet<>();
         int placed;
 
         Chest(ContainerRef ref, int sequence) {
@@ -73,15 +74,17 @@ public final class WarehouseVacuumSorter {
         final ItemStack original;
         final String family;
         final SemanticItemProfile semantic;
+        final boolean movable;
         Chest destination;
         int destinationSlot = -1;
         ItemStack carried = ItemStack.EMPTY;
 
-        Entry(Chest source, int sourceSlot, ItemStack original, SemanticItemProfile semantic) {
+        Entry(Chest source, int sourceSlot, ItemStack original, SemanticItemProfile semantic,boolean movable) {
             this.source = source;
             this.sourceSlot = sourceSlot;
             this.original = original;
             this.semantic = semantic;
+            this.movable=movable;
             this.family = semantic.legacyFamily();
         }
     }
@@ -105,7 +108,8 @@ public final class WarehouseVacuumSorter {
         private int processed;
         private int movedItems;
         private int moves;
-        private int skippedChests;
+        private int skippedChests,pinnedSlots,eligibleEmpty,eligibleSlots;
+        private final java.util.Map<String,Integer> pinReasons=new java.util.TreeMap<>();
         private int rejectedBatches;
         private String lastFailure = "none";
 
@@ -120,6 +124,9 @@ public final class WarehouseVacuumSorter {
         public int attemptedTransfers() { return moves + rejectedBatches; }
         public int rejectedTransfers() { return rejectedBatches; }
         public int skippedChests() { return skippedChests; }
+        public int pinnedSlots(){return pinnedSlots;}
+        public String eligibilitySummary(){return (containers.size()-skippedChests)+" eligible / "+containers.size()+" scanned; "+
+                eligibleEmpty+" empty eligible; "+eligibleSlots+" eligible slots; "+pinnedSlots+" fixed slots; reasons "+pinReasons;}
         public String lastFailure() { return lastFailure; }
         public int currentChestIndex() { return processed; }
         public int batchCount() { return containers.isEmpty()?0:1; }
@@ -252,12 +259,22 @@ public final class WarehouseVacuumSorter {
                         (read<Math.max(1,slotLimit)&&System.nanoTime()-start<timeLimit))){
                     ContainerRef ref=containers.get(snapshotIndex++);
                     Chest chest=access.test(ref)?snapshotEligible(level,ref,chests.size(),entries):null;
-                    if(chest==null)skippedChests++;else {chests.add(chest);eligible.add(ref);}
+                    if(chest==null){
+                        skippedChests++;LOG.warn("Planning excluded inventory {} (invalid, inaccessible or unsupported)",ref.pos());
+                    }else {
+                        chests.add(chest);eligibleSlots+=chest.layout.length;
+                        if(chest.votes.isEmpty())eligibleEmpty++;
+                        // Compaction must never touch a fixed slot, even if
+                        // another stack in this inventory is movable.
+                        if(chest.pinnedSlots.isEmpty())eligible.add(ref);
+                    }
                     read+=Math.max(1,ref.slots());
                 }
                 processed=snapshotIndex;
                 return false;
             }
+            LOG.info("Planning input: {} eligible inventories, {} empty, {} slots, {} fixed slots, reasons {}",
+                    chests.size(),eligibleEmpty,eligibleSlots,pinnedSlots,pinReasons);
             if(chests.size()<2||entries.isEmpty())return true;
             if(search==null){
                 List<AdaptiveWarehousePlanner.Storage> boxes=new ArrayList<>();
@@ -268,7 +285,7 @@ public final class WarehouseVacuumSorter {
                             p.getZ()+(q==null?p.getZ():q.getZ())));
                 }
                 List<AdaptiveWarehousePlanner.Stack> items=new ArrayList<>();
-                for(Entry e:entries)items.add(new AdaptiveWarehousePlanner.Stack(e.source.sequence,e.sourceSlot,e.semantic));
+                for(Entry e:entries)items.add(new AdaptiveWarehousePlanner.Stack(e.source.sequence,e.sourceSlot,e.semantic,e.movable));
                 search=new AdaptiveWarehousePlanner.Search(items,boxes,
                         (item,chest,slot)->canInsertAfterExtraction(chests.get(chest).ref.handler(),
                                 slot,entries.get(item).original),true);
@@ -281,7 +298,7 @@ public final class WarehouseVacuumSorter {
                     (read<Math.max(1,slotLimit)&&System.nanoTime()-start<timeLimit))){
                 Chest chest=chests.get(validationIndex++);
                 if(!access.test(chest.ref)||!unchanged(level,List.of(chest))){
-                    rejectedBatches++;lastFailure="inventory changed during planning";eligible.clear();return true;
+                    rejectedBatches++;lastFailure="inventory changed during planning at "+chest.ref.pos();eligible.clear();return true;
                 }
                 read+=chest.snapshot.length;
             }
@@ -325,13 +342,20 @@ public final class WarehouseVacuumSorter {
                     chest.snapshot[slot] = stack;
                     if (stack.isEmpty()) continue;
                     CategoryResolution resolution = ItemCategoryResolver.resolveDetailed(stack);
-                    if (!resolution.category().moveAllowed()
-                            || !canInsertAfterExtraction(ref.handler(), slot, stack)) return null;
-                    ItemStack simulated = ref.handler().extractItem(slot, stack.getCount(), true);
-                    if (!sameStackAndCount(stack, simulated)) return null;
-                    SemanticItemProfile semantic = StrictStackClassifier.profile(stack,resolution);
-                    chest.votes.merge(semantic.legacyFamily(), 1, Integer::sum);
-                    local.add(new Entry(chest, slot, stack, semantic));
+                    SemanticItemProfile semantic=StrictStackClassifier.profile(stack,resolution);
+                    String reason=null;
+                    if(!resolution.category().moveAllowed())reason="protected";
+                    else if(!canInsertAfterExtraction(ref.handler(),slot,stack))reason="cannot reinsert";
+                    else{
+                        ItemStack simulated=ref.handler().extractItem(slot,stack.getCount(),true);
+                        if(!sameStackAndCount(stack,simulated))reason="extraction simulation differs";
+                    }
+                    if(reason!=null){
+                        chest.pinnedSlots.add(slot);pinnedSlots++;pinReasons.merge(reason,1,Integer::sum);
+                        LOG.debug("Fixed slot {}:{} {} ({})",ref.pos(),slot,semantic.itemId(),reason);
+                    }
+                    chest.votes.merge(semantic.legacyFamily(),1,Integer::sum);
+                    local.add(new Entry(chest,slot,stack,semantic,reason==null));
                 }
             } catch (RuntimeException ex) {
                 LOG.warn("Skipping incompatible inventory at {}", ref.pos(), ex);
@@ -360,8 +384,12 @@ public final class WarehouseVacuumSorter {
             for (Chest chest : chests) {
                 if (!valid(level, chest.ref)) return false;
                 for (int slot = 0; slot < chest.snapshot.length; slot++) {
-                    if (!sameStackAndCount(chest.snapshot[slot],
-                            chest.ref.handler().getStackInSlot(slot))) return false;
+                    ItemStack live=chest.ref.handler().getStackInSlot(slot);
+                    if(chest.pinnedSlots.contains(slot)){
+                        if(chest.snapshot[slot].getCount()!=live.getCount()||!chest.snapshot[slot].is(live.getItem()))return false;
+                    }else if(!sameStackAndCount(chest.snapshot[slot],live)){
+                        LOG.warn("Planning snapshot changed at {} slot {}",chest.ref.pos(),slot);return false;
+                    }
                 }
             }
             return true;

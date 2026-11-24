@@ -253,7 +253,8 @@ public final class WarehouseSortSessions {
                             + (convergenceLimited ? "Refinement limit reached. " : "")
                             + (totalRejected>0 ? "Rejected transactions: "+totalRejected+". "+lastFailure+". " : "")
                             + (session.skippedChests()>0 ? "Restricted inventories: "+session.skippedChests()+". " : "")),
-                    session.skippedChests()==0 && totalRejected==0);
+                    false);
+            player.displayClientMessage(Component.literal("Simple Sorter planning: "+session.eligibilitySummary()),false);
             org.slf4j.LoggerFactory.getLogger("SimpleSorter/SortSessions").info(
                     "Refinement rounds {}, transactions {}/{}, mixed {}/{}, coherence {}, limited {}",
                     rounds,totalCompleted,totalTransactions,unresolved,quality.occupied(),quality.score(),convergenceLimited);
