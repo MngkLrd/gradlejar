@@ -17,7 +17,6 @@
   "block.sleepdebt.coffee_machine": "Copper Coffee Maker",
   "block.sleepdebt.camp_bedroll": "Camp Bedroll",
   "block.sleepdebt.camp_awning": "Camp Awning",
-  "entity.sleepdebt.sleepless": "The Sleepless",
   "container.sleepdebt.coffee_machine": "Coffee Maker: Water / Grounds / Coal / Output",
   "message.sleepdebt.camp_rest": "Rested at camp (+%s)",
   "message.sleepdebt.camp_cooldown": "You need more time before resting again.",
@@ -29,7 +28,6 @@
   "item.sleepdebt.caramel_coffee": "Caramel Coffee",
   "item.sleepdebt.bitter_tonic": "Bitter Tonic",
   "item.sleepdebt.cocoa_biscuit": "Cocoa Biscuit",
-  "item.sleepdebt.sleepless_spawn_egg": "The Sleepless Spawn Egg",
   "block.sleepdebt.camp_lantern": "Rest Lantern",
   "block.sleepdebt.dreamcatcher": "Dreamcatcher",
   "item.sleepdebt.herbal_tea.tooltip": "Calms nerves, helping you recover stress.",
@@ -46,8 +44,6 @@
   "advancements.sleepdebt.first_camp.description": "Craft a field bedroll",
   "advancements.sleepdebt.first_brew.title": "Freshly Brewed",
   "advancements.sleepdebt.first_brew.description": "Obtain a cup of coffee",
-  "advancements.sleepdebt.shadow_hunter.title": "Wake Up!",
-  "advancements.sleepdebt.shadow_hunter.description": "Defeat The Sleepless",
   "item.sleepdebt.sleep_journal": "Sleep Journal",
   "item.sleepdebt.herbal_poultice": "Herbal Poultice",
   "item.sleepdebt.incense_bundle": "Incense Bundle",
@@ -94,5 +90,10 @@
   "itemGroup.sleepdebt.main": "Sleep Debt",
   "key.categories.sleepdebt": "Sleep Debt",
   "key.sleepdebt.test_void": "Force blackout for QA",
-  "key.sleepdebt.void_diagnostics": "Show darkness diagnostics"
+  "item.sleepdebt.long_energy_drink": "Long Energy Drink",
+  "item.sleepdebt.strong_energy_drink": "Concentrated Energy Drink",
+  "item.sleepdebt.long_energy_drink.tooltip": "Longer wakefulness; a later crash.",
+  "item.sleepdebt.strong_energy_drink.tooltip": "High concentration; severe crash.",
+  "message.sleepdebt.micro": "You briefly lose concentration.",
+  "item.sleepdebt.sleepless_spawn_egg": "Retired item (inert)"
 }

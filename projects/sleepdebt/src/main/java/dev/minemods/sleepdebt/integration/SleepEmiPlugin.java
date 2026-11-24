@@ -31,14 +31,14 @@ public final class SleepEmiPlugin implements EmiPlugin {
    return ResourceLocation.fromNamespaceAndPath(SleepDebtMod.MOD_ID,"machine/"+data.name());
   }
   @Override public List<EmiIngredient> getInputs(){
-   return List.of(EmiStack.of(Items.WATER_BUCKET),EmiStack.of(data.ingredient()),
+   return List.of(EmiStack.of(data.base()),EmiStack.of(data.ingredient()),
       EmiIngredient.of(List.of(EmiStack.of(Items.COAL),EmiStack.of(Items.CHARCOAL))));
   }
   @Override public List<EmiStack> getOutputs(){return List.of(EmiStack.of(data.output()));}
   @Override public int getDisplayWidth(){return 142;}
   @Override public int getDisplayHeight(){return 55;}
   @Override public void addWidgets(WidgetHolder holder){
-   holder.addSlot(EmiStack.of(Items.WATER_BUCKET),4,17);
+   holder.addSlot(EmiStack.of(data.base()),4,17);
    holder.addSlot(EmiStack.of(data.ingredient()),29,17);
    holder.addSlot(EmiIngredient.of(List.of(EmiStack.of(Items.COAL),EmiStack.of(Items.CHARCOAL))),54,17);
    holder.addSlot(EmiStack.of(data.output()),117,17).recipeContext(this);

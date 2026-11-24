@@ -27,9 +27,7 @@ public final class VanillaSleepIntegration {
     return;
    }
   }
-  if(debt>=850){
-   event.setPhantomsToSpawn(Math.min(4,event.getPhantomsToSpawn()+1));
-  }
+  // Do not modify counts; other phantom mods retain their own spawn rules.
   // The regular vanilla world rules (skylight, insomnia gamerule, difficulty)
   // still apply; no phantom is forced into safe daytime worlds.
  }

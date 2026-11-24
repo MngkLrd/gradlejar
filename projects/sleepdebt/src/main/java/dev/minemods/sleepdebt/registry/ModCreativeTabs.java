@@ -51,6 +51,8 @@ public final class ModCreativeTabs {
      output.accept(ModItems.LONG.get());
      output.accept(ModItems.CARAMEL_COFFEE.get());
      output.accept(ModItems.ENERGY.get());
+     output.accept(ModItems.ENERGY_LONG.get());
+     output.accept(ModItems.ENERGY_STRONG.get());
      output.accept(ModItems.WARM_MILK.get());
      output.accept(ModItems.HERBAL_TEA.get());
      output.accept(ModItems.DREAM_TEA.get());
@@ -59,7 +61,7 @@ public final class ModCreativeTabs {
 
      // Dream-specific content and testing the hostile mob.
      output.accept(ModItems.DREAM_SHARD.get());
-     output.accept(ModItems.SLEEPLESS_EGG.get());
+
     }).build());
 
  private ModCreativeTabs(){}

@@ -36,64 +36,6 @@ public final class SleepCommands {
     return good?1:0;
    }))
    .then(Commands.literal("debug").requires(source->source.hasPermission(2))
-    .then(Commands.literal("spawn_sleepless").executes(ctx->{
-     ServerPlayer p=ctx.getSource().getPlayerOrException();
-     var world=p.serverLevel();
-     var look=p.getLookAngle();
-     int x=p.getBlockX()+(int)Math.round(look.x*9);
-     int z=p.getBlockZ()+(int)Math.round(look.z*9);
-     var spot=new BlockPos(x,p.getBlockY(),z);
-     if(!world.hasChunkAt(spot)){
-      ctx.getSource().sendFailure(Component.literal("The target chunk is not loaded."));
-      return 0;
-     }
-     int y=world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);
-     var mob=ModEntities.SLEEPLESS.get().create(world);
-     if(mob==null)return 0;
-     mob.moveTo(x+.5,y,z+.5,world.random.nextFloat()*360,0);
-     if(!world.addFreshEntity(mob))return 0;
-     // Deterministic QA: bypass vanilla target selection and respawn grace.
-     mob.beginDebugHunt(p);
-     ctx.getSource().sendSuccess(()->Component.literal(
-       "Sleepless hunter engaged. Creative: follows without damage; Survival: attacks. "
-       +"Debug ignores respawn grace, natural hunters do not."),false);
-     return 1;
-    }))
-    .then(Commands.literal("vanish_sleepless").executes(ctx->{
-     ServerPlayer p=ctx.getSource().getPlayerOrException();
-     var hunters=p.serverLevel().getEntitiesOfClass(
-       dev.minemods.sleepdebt.entity.SleeplessEntity.class,
-       p.getBoundingBox().inflate(48));
-     if(hunters.isEmpty()){
-      ctx.getSource().sendFailure(Component.literal(
-        "No real Sleepless nearby. Use /sleepdebt debug spawn_sleepless first."));
-      return 0;
-     }
-     hunters.sort(java.util.Comparator.comparingDouble(p::distanceToSqr));
-     hunters.getFirst().forceVanish(p);
-     ctx.getSource().sendSuccess(()->Component.literal(
-       "Sleepless retreat -> fade -> teleport sequence forced; watch ahead/behind."),
-       false);
-     return 1;
-    }))
-    .then(Commands.literal("why_no_sleepless").executes(ctx->{
-     ServerPlayer p=ctx.getSource().getPlayerOrException();
-     boolean shielded=BlockPos.betweenClosedStream(
-       p.blockPosition().offset(-7,-3,-7),p.blockPosition().offset(7,4,7))
-       .anyMatch(pos->p.level().getBlockState(pos).is(ModBlocks.DREAMCATCHER.get()));
-     ctx.getSource().sendSuccess(()->Component.literal(
-       "Sleepless debug: debt="+SleepEngine.getDebt(p)
-       +" threshold="+SleepSettings.SLEEPLESS_THRESHOLD.get()
-       +" night="+!p.level().isDay()
-       +" protected="+shielded
-       +" respawnGrace="+SleepEngine.hasSleeplessGrace(p)
-       +" creative="+p.isCreative()
-       +" enabled="+SleepSettings.ENABLE_SLEEPLESS.get()
-       +" spawnCheckEvery="+SleepSettings.SPAWN_INTERVAL_TICKS.get()+" ticks"
-       +" vanishEvery~="+SleepSettings.TELEPORT_INTERVAL_TICKS.get()+" ticks"
-       +" (real spawn also requires loaded dark ground)."),false);
-     return 1;
-    }))
     .then(Commands.literal("set")
      .then(Commands.argument("debt",IntegerArgumentType.integer(0,1000))
       .then(Commands.argument("fatigue",IntegerArgumentType.integer(0,1000))

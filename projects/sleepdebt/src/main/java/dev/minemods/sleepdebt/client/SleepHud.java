@@ -29,7 +29,6 @@ public final class SleepHud {
  public static void render(GuiGraphics g,DeltaTracker delta){
   Minecraft mc=Minecraft.getInstance();
   if(mc.options.hideGui||mc.player==null||mc.player.isSpectator())return;
-  ClientHallucinations.render(g);
   if(!ClientSettings.VISIBLE.get())return;
   if(ClientState.debt==0&&ClientState.fatigue==0&&ClientState.stress==0&&
     !ClientSettings.RESTED.get())return;

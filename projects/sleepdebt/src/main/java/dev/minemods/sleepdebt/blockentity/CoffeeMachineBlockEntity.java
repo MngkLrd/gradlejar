@@ -1,6 +1,7 @@
 package dev.minemods.sleepdebt.blockentity;
 
 import dev.minemods.sleepdebt.menu.CoffeeMenu;
+import dev.minemods.sleepdebt.integration.BrewRecipes;
 import dev.minemods.sleepdebt.registry.ModBlockEntities;
 import dev.minemods.sleepdebt.registry.ModItems;
 import net.minecraft.core.BlockPos;
@@ -41,8 +42,8 @@ public final class CoffeeMachineBlockEntity extends BlockEntity implements Conta
   ItemStack ingredient=machine.items.get(1);
   ItemStack fuel=machine.items.get(2);
   ItemStack output=machine.items.get(3);
-  ItemStack result=resultFor(ingredient);
-  boolean ready=water.is(Items.WATER_BUCKET) && !result.isEmpty() && (fuel.is(Items.COAL)||fuel.is(Items.CHARCOAL))
+  ItemStack result=BrewRecipes.result(water,ingredient);
+  boolean ready=!result.isEmpty() && (fuel.is(Items.COAL)||fuel.is(Items.CHARCOAL))
     &&(output.isEmpty()||(ItemStack.isSameItemSameComponents(output,result) && output.getCount()<output.getMaxStackSize()));
   if(!ready){if(machine.progress!=0){machine.progress=0;machine.setChanged();}return;}
   machine.progress++;
@@ -50,19 +51,14 @@ public final class CoffeeMachineBlockEntity extends BlockEntity implements Conta
    server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,pos.getX()+.5,pos.getY()+.92,pos.getZ()+.5,2,.1,.02,.1,.003);
   if(machine.progress>=MAX_PROGRESS){
    machine.progress=0;
-   ingredient.shrink(1);
+   if(ingredient.is(Items.HONEY_BOTTLE)&&ingredient.getCount()==1)machine.items.set(1,new ItemStack(Items.GLASS_BOTTLE));else ingredient.shrink(1);
    fuel.shrink(1);
-   machine.items.set(0,new ItemStack(Items.BUCKET));
+   if(water.is(Items.WATER_BUCKET)||water.is(Items.MILK_BUCKET))machine.items.set(0,new ItemStack(Items.BUCKET));else water.shrink(1);
    if(output.isEmpty())machine.items.set(3,result.copy());
    else output.grow(1);
    level.playSound(null,pos,SoundEvents.BREWING_STAND_BREW,SoundSource.BLOCKS,.7f,.9f);
   }
   if(machine.progress%10==0)machine.setChanged();
- }
- private static ItemStack resultFor(ItemStack input){
-  if(input.is(ModItems.GROUNDS.get()))return new ItemStack(ModItems.COFFEE.get());
-  if(input.is(ModItems.DRIED_HERBS.get()))return new ItemStack(ModItems.HERBAL_TEA.get());
-  return ItemStack.EMPTY;
  }
  @Override public int getContainerSize(){return 4;}
  @Override public boolean isEmpty(){return items.stream().allMatch(ItemStack::isEmpty);}
@@ -80,8 +76,8 @@ public final class CoffeeMachineBlockEntity extends BlockEntity implements Conta
  }
  @Override public boolean canPlaceItem(int slot,ItemStack stack){
   return switch(slot){
-   case 0 -> stack.is(Items.WATER_BUCKET);
-   case 1 -> stack.is(ModItems.GROUNDS.get())||stack.is(ModItems.DRIED_HERBS.get());
+   case 0 -> BrewRecipes.acceptsBase(stack);
+   case 1 -> BrewRecipes.acceptsIngredient(stack);
    case 2 -> stack.is(Items.COAL)||stack.is(Items.CHARCOAL);
    default -> false;
   };

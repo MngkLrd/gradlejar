@@ -25,6 +25,8 @@ public final class ModItems {
  public static final DeferredItem<RestDrinkItem> STRONG=ITEMS.register("strong_coffee",()->new RestDrinkItem(new Item.Properties().stacksTo(16),7400,55,0,0));
  public static final DeferredItem<RestDrinkItem> LONG=ITEMS.register("long_coffee",()->new RestDrinkItem(new Item.Properties().stacksTo(16),10500,38,0,0));
  public static final DeferredItem<RestDrinkItem> ENERGY=ITEMS.register("energy_drink",()->new RestDrinkItem(new Item.Properties().stacksTo(16),12000,70,0,0));
+ public static final DeferredItem<RestDrinkItem> ENERGY_LONG=ITEMS.register("long_energy_drink",()->new RestDrinkItem(new Item.Properties().stacksTo(16),17000,58,0,0));
+ public static final DeferredItem<RestDrinkItem> ENERGY_STRONG=ITEMS.register("strong_energy_drink",()->new RestDrinkItem(new Item.Properties().stacksTo(16),10000,90,0,0));
  public static final DeferredItem<RestDrinkItem> WARM_MILK=ITEMS.register("warm_milk",()->new RestDrinkItem(new Item.Properties().stacksTo(16),0,0,75,1));
  public static final DeferredItem<RestDrinkItem> HERBAL_TEA=ITEMS.register("herbal_tea",()->new RestDrinkItem(new Item.Properties().stacksTo(16),0,0,55,2));
  public static final DeferredItem<RestDrinkItem> DREAM_TEA=ITEMS.register("dream_tea",()->new RestDrinkItem(new Item.Properties().stacksTo(16),0,0,160,3));
@@ -54,8 +56,7 @@ public final class ModItems {
  public static final DeferredItem<BlockItem> AWNING=ITEMS.register("camp_awning",()->new BlockItem(ModBlocks.CAMP_AWNING.get(),new Item.Properties()));
  public static final DeferredItem<BlockItem> CAMP_LANTERN=ITEMS.register("camp_lantern",()->new BlockItem(ModBlocks.CAMP_LANTERN.get(),new Item.Properties()));
  public static final DeferredItem<BlockItem> DREAMCATCHER=ITEMS.register("dreamcatcher",()->new BlockItem(ModBlocks.DREAMCATCHER.get(),new Item.Properties()));
- public static final DeferredItem<SpawnEggItem> SLEEPLESS_EGG=ITEMS.register("sleepless_spawn_egg",
-  ()->new SpawnEggItem(ModEntities.SLEEPLESS.get(),0x26232F,0xBB8498,new Item.Properties()));
+ public static final DeferredItem<Item> SLEEPLESS_EGG=ITEMS.registerSimpleItem("sleepless_spawn_egg",new Item.Properties());
  private ModItems(){}
 }
 

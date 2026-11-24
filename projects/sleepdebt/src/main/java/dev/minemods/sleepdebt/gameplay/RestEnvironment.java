@@ -61,7 +61,7 @@ public final class RestEnvironment {
   if(pillow){quality+=6;reasons|=COMFORT;}
   if(mask){quality+=6;reasons|=COMFORT;}
   int stress=SleepEngine.getStress(player);
-  if(stress>350){quality-=Math.min(20,(stress-300)/35);reasons|=STRESS;}
+  if(stress>350){quality-=Math.min(32,(int)((stress-300)/23.0*SleepSettings.STRESS_PENALTY.get()));reasons|=STRESS;}
   int caffeine=SleepEngine.getCaffeine(player);
   if(caffeine>=65){quality-=Math.min(17,(caffeine-40)/4);reasons|=CAFFEINE;}
   return new Conditions(Math.max(35,Math.min(150,quality)),sheltered,threatened,
