@@ -23,8 +23,8 @@ public final class EvergreenContent {
     private static final DeferredRegister<SoundEvent> SOUNDS=DeferredRegister.create(Registries.SOUND_EVENT,"midnighteve");
     public static final Supplier<SoundEvent> BELL=SOUNDS.register("celebration.bell",()->SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("midnighteve","celebration.bell")));
     public static final Supplier<SoundEvent> CHIME=SOUNDS.register("celebration.chime",()->SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("midnighteve","celebration.chime")));
-    public static final DeferredBlock<WinterBush> FROSTBERRY=MidnightEve.BLOCKS.register("frostberry_bush",()->new WinterBush(BlockBehaviour.Properties.ofFullCopy(Blocks.SWEET_BERRY_BUSH).noCollission().randomTicks()));
-    public static final DeferredBlock<WinterBush> HOLLY=MidnightEve.BLOCKS.register("holly_bush",()->new WinterBush(BlockBehaviour.Properties.ofFullCopy(Blocks.SWEET_BERRY_BUSH).noCollission().randomTicks()));
+    public static final DeferredBlock<WinterBush> FROSTBERRY=MidnightEve.BLOCKS.register("frostberry_bush",()->new WinterBush(BlockBehaviour.Properties.of().noCollission().randomTicks().instabreak().sound(SoundType.SWEET_BERRY_BUSH)));
+    public static final DeferredBlock<WinterBush> HOLLY=MidnightEve.BLOCKS.register("holly_bush",()->new WinterBush(BlockBehaviour.Properties.of().noCollission().randomTicks().instabreak().sound(SoundType.SWEET_BERRY_BUSH)));
     public static final DeferredItem<Item> BERRIES=MidnightEve.ITEMS.register("frostberries",()->new ItemNameBlockItem(FROSTBERRY.get(),new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(.3F).build())));
     public static final DeferredItem<Item> SPRIG=MidnightEve.ITEMS.register("holly_sprig",()->new ItemNameBlockItem(HOLLY.get(),new Item.Properties()));
     public static final DeferredItem<Item> TEA=MidnightEve.ITEMS.register("frostberry_tea",()->new WinterTea(new Item.Properties().stacksTo(16).food(new FoodProperties.Builder().nutrition(3).saturationModifier(.4F).alwaysEdible().usingConvertsTo(Items.GLASS_BOTTLE).build())));
@@ -169,9 +169,9 @@ frame=[f.elem([2,0,4],[4,16,6],"wood"),f.elem([12,0,4],[14,16,6],"wood"),f.elem(
 def bell_geometry(tilt):
     rot={"origin":[8,13,8],"axis":"x","angle":tilt,"rescale":False} if tilt else None
     return [f.elem([7,12,7],[9,14,9],"metal",rotation=rot),
-            f.elem([5,7,5],[11,12,11],"metal",rotation=rot),
+            f.elem([5,7,5],[11,12,11],"metal",{"north":(0,0),"south":(8,7),"east":(3,2),"west":(6,5),"up":(1,0),"down":(8,6)},rotation=rot),
             f.elem([4,5,4],[12,7,12],"metal",rotation=rot),
-            f.elem([3,4,3],[13,5,13],"rim",rotation=rot),
+            f.elem([3,4,3],[13,5,13],"rim",{"north":(0,12),"south":(0,12),"east":(0,12),"west":(0,12),"up":(0,3),"down":(0,6)},rotation=rot),
             f.elem([7,2,7],[9,5,9],"dark",rotation=rot)]
 for ready in (False,True):
     n="celebration_bell_"+("ringing" if ready else "idle")
@@ -205,7 +205,7 @@ SHA-256 verified at build. No endorsement implied.
 # Celebration feedback has distinct sounds instead of reusing the same vanilla bell everywhere.
 edit(J/"winterfolk/DailyMarket.java","SoundEvents.BELL_BLOCK,SoundSource.PLAYERS,.5F,1.25F","dev.mngklrd.midnighteve.evergreen.EvergreenContent.CHIME.get(),SoundSource.PLAYERS,.65F,1F")
 edit(J/"block/FestivalHearth.java","SoundEvents.BELL_BLOCK,SoundSource.BLOCKS,2.0F,0.8F","dev.mngklrd.midnighteve.evergreen.EvergreenContent.BELL.get(),SoundSource.BLOCKS,1.2F,0.9F")
-# Native structure decorations: bells and holly in pre-authored clear exterior spaces.
+# Native structure decorations: bells in pre-authored clear exterior spaces.
 # Add them only to the four existing festival locations; retain all doors and floor blocks.
 import gzip
 added=0
