@@ -97,6 +97,15 @@ public final class SemanticItemClassifier {
                     "custom/"+category,true,SemanticItemProfile.Confidence.EXPLICIT,evidence);
         }
 
+        // Functional object families must not be inferred solely from
+        // their material. A wooden bucket is a container, not timber;
+        // unfinished metal lamps are lighting parts, not ingots.
+        String functional=functionalFamily(path,input.tags);
+        if(!functional.isEmpty() && (group.equals("unknown")||group.equals("construction")
+                ||group.equals("wood")||group.equals("metals_minerals")||group.equals("resources"))){
+            family=functional;group=group(family,"");
+            evidence.add("functional-form:"+functional);
+        }
         Shape byId = parseId(path);
         // Known resource tags can distinguish a metal storage block from
         // generic construction. No arbitrary block becomes a metal.
@@ -181,6 +190,10 @@ public final class SemanticItemClassifier {
             case "botanical" -> "plants";
             case "food" -> "food";
             case "mob_drops" -> "animal_resources";
+            case "fibers" -> "textiles";
+            case "containers" -> "containers";
+            case "lighting" -> "lighting";
+            case "soil" -> "soil";
             case "tools","weapons","armor","ammunition","tool_heads","accessories" -> "equipment";
             case "fuel","ignition" -> "fuel";
             case "bottles","water_containers","potions" -> "liquids";
@@ -193,6 +206,28 @@ public final class SemanticItemClassifier {
         };
     }
 
+    private static boolean token(String path,String... tokens){
+        for(String t:tokens)if(PathTokenMatcher.matches(path,t))return true;
+        return false;
+    }
+    private static String functionalFamily(String path,Collection<String> tags){
+        if(token(path,"bucket","buckets","canteen","waterskin"))return "containers";
+        if(token(path,"lamp","lamps","lantern","lanterns"))return "lighting";
+        if(token(path,"handstone","handstones","grindstone","quern"))return "tools";
+        if(token(path,"fiber","fibers","fibre","fibres","yarn","thread"))return "fibers";
+        if(token(path,"blubber","tallow","hide","leather","feather"))return "mob_drops";
+        if(token(path,"humus","compost","topsoil","farmland"))return "soil";
+        if(token(path,"plant","plants","sapling","saplings","seed","seeds","shrub","bush","flower","flowers"))
+            return "botanical";
+        for(String tag:new TreeSet<>(tags)){
+            String t=path(tag);
+            if(token(t,"fibers","fibres","yarns"))return "fibers";
+            if(token(t,"buckets","canteens"))return "containers";
+            if(token(t,"lamps","lanterns"))return "lighting";
+            if(token(t,"saplings","seeds","flowers","plants"))return "botanical";
+        }
+        return "";
+    }
     private static String inferredGroup(String form) {
         if (METAL_FORMS.contains(form)) return "metals_minerals";
         if (WOOD_FORMS.contains(form)) return "wood";
