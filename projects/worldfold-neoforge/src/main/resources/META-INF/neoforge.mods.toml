@@ -3,9 +3,9 @@ loaderVersion="[4,)"
 license="All Rights Reserved"
 [[mods]]
 modId="worldfold"
-version="0.1.0"
-displayName="World Fold"
-description="Persistent scaled see-through spatial connections. Requires Immersive Portals CE."
+version="0.2.0"
+displayName="World Fold: Spatial Engineering"
+description="Persistent spatial seams, routing, pocket architecture, redstone, item/fluid transit and structural strain. Uses the Immersive Portals CE rendering engine."
 [[dependencies.worldfold]]
 modId="minecraft"
 type="required"

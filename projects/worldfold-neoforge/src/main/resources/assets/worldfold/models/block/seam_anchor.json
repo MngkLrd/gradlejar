@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "worldfold:block/anchor_top",
+    "front": "worldfold:block/anchor_front",
+    "side": "minecraft:block/crying_obsidian"
+  }
+}

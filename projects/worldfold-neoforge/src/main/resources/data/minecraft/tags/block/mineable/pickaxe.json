@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "worldfold:seam_anchor",
+    "worldfold:stabilizer"
+  ]
+}

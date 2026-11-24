@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "OAO",
+    "EDE",
+    "OAO"
+  ],
+  "key": {
+    "O": {
+      "item": "minecraft:crying_obsidian"
+    },
+    "A": {
+      "item": "minecraft:amethyst_block"
+    },
+    "E": {
+      "item": "minecraft:ender_pearl"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "id": "worldfold:chamber_seed",
+    "count": 1
+  }
+}

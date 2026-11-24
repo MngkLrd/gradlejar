@@ -1,1 +1,9 @@
-{"slug":"worldfold","version":"0.1.0","minecraft":"1.21.1","loader":"neoforge","java":"21","gradle":"9.2.1","jar_glob":"worldfold-neoforge-1.21.1-0.1.0.jar"}
+{
+  "slug": "worldfold",
+  "version": "0.2.0",
+  "minecraft": "1.21.1",
+  "loader": "neoforge",
+  "java": "21",
+  "gradle": "9.2.1",
+  "jar_glob": "worldfold-neoforge-1.21.1-0.2.0.jar"
+}

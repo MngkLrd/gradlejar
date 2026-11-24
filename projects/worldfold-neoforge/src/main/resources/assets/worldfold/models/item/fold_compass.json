@@ -1,1 +1,6 @@
-{"parent":"minecraft:item/generated","textures":{"layer0":"minecraft:item/ender_eye","layer1":"minecraft:item/amethyst_shard"}}
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "worldfold:item/fold_compass"
+  }
+}

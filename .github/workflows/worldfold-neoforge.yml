@@ -24,18 +24,33 @@ jobs:
       - name: Compile
         working-directory: projects/worldfold-neoforge
         run: gradle --no-daemon --stacktrace clean build
-      - name: Verify JAR
+      - name: Verify geometry and archive
+        working-directory: projects/worldfold-neoforge
         run: |
+          java -cp build/classes/java/main dev.worldfold.fold.SpatialMath
           python3 - <<'PY'
           from zipfile import ZipFile
-          with ZipFile('projects/worldfold-neoforge/build/libs/worldfold-neoforge-1.21.1-0.1.0.jar') as z:
+          import json
+          with ZipFile('build/libs/worldfold-neoforge-1.21.1-0.2.0.jar') as z:
               assert z.testzip() is None
-              for entry in ['META-INF/neoforge.mods.toml','pack.mcmeta','dev/worldfold/WorldFold.class','dev/worldfold/item/FoldCompass.class','dev/worldfold/fold/PortalBridge.class','dev/worldfold/fold/Anchor.class','data/worldfold/recipe/fold_compass.json']:
-                  assert entry in z.namelist(), entry
-              assert not any(n.startswith('net/minecraft/') for n in z.namelist())
+              names=set(z.namelist())
+              for c in ['WorldFold','block/SeamAnchorBlock','item/FoldCompass','item/FoldTuner','item/ChamberSeed','fold/Anchor','fold/PortalBridge','fold/FoldNetwork','fold/FoldData','fold/FoldLink','fold/Transport','fold/PocketSpace','fold/SpatialMath']:
+                  assert 'dev/worldfold/'+c+'.class' in names,c
+              for n in ['META-INF/neoforge.mods.toml','pack.mcmeta','data/worldfold/dimension/foldspace.json','assets/worldfold/textures/item/fold_compass.png','assets/worldfold/textures/item/fold_tuner.png','assets/worldfold/textures/item/chamber_seed.png','assets/worldfold/textures/block/anchor_front.png','assets/worldfold/textures/block/anchor_front_active.png','assets/worldfold/textures/block/anchor_top.png','assets/worldfold/textures/block/stabilizer.png']:
+                  assert n in names,n
+              for n in names:
+                  if n.endswith('.json') or n=='pack.mcmeta':json.loads(z.read(n))
+              assert not any(n.startswith('net/minecraft/') for n in names)
           PY
+      - name: Check pinned spatial API
+        run: |
+          curl -fL --retry 3 -o /tmp/ce.jar https://github.com/UpperMoon0/ImmersivePortals/releases/download/v6.1.3.1/immersive_portals-6.1.3.1.jar
+          javap -classpath /tmp/ce.jar qouteall.imm_ptl.core.portal.Portal > /tmp/portal-api.txt
+          javap -classpath /tmp/ce.jar qouteall.imm_ptl.core.api.PortalAPI > /tmp/bridge-api.txt
+          for m in ENTITY_TYPE setOriginPos setOrientationAndSize setPortalShapeToDefault setDestinationDimension setDestination setScaleTransformation setOtherSideOrientation setTeleportChangesScale setCrossPortalCollisionEnabled setInteractable setTeleportable; do grep -q "$m" /tmp/portal-api.txt; done
+          for m in getPortalOrientationQuaternion createFlippedPortal; do grep -q "$m" /tmp/bridge-api.txt; done
       - name: Publish JAR
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "ci-worldfold-neoforge-${GITHUB_RUN_NUMBER}" projects/worldfold-neoforge/build/libs/worldfold-neoforge-1.21.1-0.1.0.jar --target "$GITHUB_SHA" --title "World Fold 0.1.0 (NeoForge 1.21.1)" --notes "Compiled and archive-verified; requires Immersive Portals CE 6.1.3.x and Cloth Config. Runtime testing pending." --prerelease
+          gh release create "ci-worldfold-spatial-${GITHUB_RUN_NUMBER}" projects/worldfold-neoforge/build/libs/worldfold-neoforge-1.21.1-0.2.0.jar --target "$GITHUB_SHA" --title "World Fold Spatial Engineering 0.2.0 (NeoForge 1.21.1)" --notes "Compiled, geometry invariants, archive resources and pinned Immersive Portals API verified. Requires CE 6.1.3.1 and Cloth Config. In-game testing pending." --prerelease

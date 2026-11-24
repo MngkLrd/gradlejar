@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "id": "worldfold:fold_compass"
+    },
+    "title": {
+      "translate": "advancements.worldfold.first_fold.title"
+    },
+    "description": {
+      "translate": "advancements.worldfold.first_fold.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "minecraft:story/root",
+  "criteria": {
+    "compass": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "worldfold:fold_compass"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "compass"
+    ]
+  ]
+}
