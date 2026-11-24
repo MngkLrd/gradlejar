@@ -115,3 +115,6 @@ tasks.register('coreSmoke', JavaExec) {
     systemProperty 'java.awt.headless', 'true'
 }
 tasks.named('check') { dependsOn 'coreSmoke' }
+
+// The standalone coreSmoke task executes the assertions; no JUnit tests are defined.
+tasks.named('test', Test) { failOnNoDiscoveredTests = false }
