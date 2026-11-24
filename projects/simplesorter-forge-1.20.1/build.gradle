@@ -9,3 +9,8 @@ legacyForge {
  mods { "${mod_id}" { sourceSet(sourceSets.main) } }
 }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8';options.release=17 }
+
+// The live inventory regression is compiled only for the disposable CI server.
+if (System.getenv('SIMPLE_SORTER_CI_STORAGE_TEST') == '1') {
+    sourceSets.main.java.srcDir 'src/ci/java'
+}
