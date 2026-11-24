@@ -64,8 +64,8 @@ public final class SnowstagModel extends HierarchicalModel<Snowstag>{
         MeshDefinition m=new MeshDefinition();PartDefinition r=m.getRoot();
         r.addOrReplaceChild("body",CubeListBuilder.create().texOffs(0,0).addBox(-4,-4,-6,8,8,12),PartPose.offset(0,10,0));
         r.addOrReplaceChild("rump",CubeListBuilder.create().texOffs(40,0).addBox(-3,-3,-2,6,7,5),PartPose.offsetAndRotation(0,10,5,-.12F,0,0));
-        PartDefinition n=r.addOrReplaceChild("neck",CubeListBuilder.create().texOffs(40,13).addBox(-2.5F,-8,-2.5F,5,9,5),PartPose.offsetAndRotation(0,9,-5,-.42F,0,0));
-        PartDefinition h=n.addOrReplaceChild("head",CubeListBuilder.create().texOffs(0,20).addBox(-2.5F,-4,-5,5,5,6),PartPose.offsetAndRotation(0,-7,-1,.42F,0,0));
+        PartDefinition n=r.addOrReplaceChild("neck",CubeListBuilder.create().texOffs(40,13).addBox(-2.5F,-8,-2.5F,5,9,5),PartPose.offsetAndRotation(0,9,-5,.42F,0,0));
+        PartDefinition h=n.addOrReplaceChild("head",CubeListBuilder.create().texOffs(0,20).addBox(-2.5F,-4,-5,5,5,6),PartPose.offsetAndRotation(0,-7,-1,-.42F,0,0));
         h.addOrReplaceChild("muzzle",CubeListBuilder.create().texOffs(24,20).addBox(-2,-1,-4,4,3,4),PartPose.offset(0,-.4F,-4));
         h.addOrReplaceChild("ear_l",CubeListBuilder.create().texOffs(40,28).addBox(-1,-4,-1,2,4,2),PartPose.offsetAndRotation(2.2F,-3,0,0,0,.9F));
         h.addOrReplaceChild("ear_r",CubeListBuilder.create().texOffs(48,28).addBox(-1,-4,-1,2,4,2),PartPose.offsetAndRotation(-2.2F,-3,0,0,0,-.9F));
@@ -82,7 +82,7 @@ public final class SnowstagModel extends HierarchicalModel<Snowstag>{
     }
     @Override public ModelPart root(){return root;}
     @Override public void setupAnim(Snowstag mob,float limb,float amount,float age,float yaw,float pitch){
-        head.yRot=Mth.clamp(yaw,-55,55)*Mth.DEG_TO_RAD;head.xRot=.42F+Mth.clamp(pitch,-30,30)*Mth.DEG_TO_RAD;
+        head.yRot=Mth.clamp(yaw,-55,55)*Mth.DEG_TO_RAD;head.xRot=-.42F+Mth.clamp(pitch,-30,30)*Mth.DEG_TO_RAD;
         float step=Mth.cos(limb*.6662F)*.85F*amount;
         for(int i=0;i<4;i++){float a=(i==0||i==3)?step:-step;legs[i].xRot=a;legs[i].getChild("shin").xRot=Math.max(0,-a)*.6F;}
         tail.yRot=Mth.sin(age*.13F)*.12F;head.getChild("antler_l").visible=!mob.isBaby();head.getChild("antler_r").visible=!mob.isBaby();
