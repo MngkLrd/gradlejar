@@ -95,8 +95,60 @@ public final class AdaptiveWarehousePlannerSelfTest {
         check(result.movedStacks()>0&&result.afterCost()<result.beforeCost(),"large warehouse did not improve");
         System.out.println("384 x 36 slots stress elapsed ms: "+(System.nanoTime()-start)/1_000_000);
     }
+    private static SemanticItemProfile semantic(String id,String family,String group,String material,String form){
+        return new SemanticItemProfile(id,family,family,group,material,form,family,true,
+                SemanticItemProfile.Confidence.TAG,List.of());
+    }
+    private static void reportedWarehouse(){
+        List<AdaptiveWarehousePlanner.Storage> boxes=new ArrayList<>();
+        List<AdaptiveWarehousePlanner.Stack> items=new ArrayList<>();
+        var ore=semantic("x:ore/pyrite","mineral_resources","metals_minerals","pyrite","ore");
+        var ingot=semantic("x:copper_ingot","finished_metals","metals_minerals","copper","ingot");
+        var sapling=semantic("x:oak_sapling","botanical","plants","oak","sapling");
+        var stone=semantic("x:loose_chalk","stones","construction","chalk","");
+        var salt=semantic("x:rock_salt","salts","crafting","","");
+        var glue=semantic("x:glue","adhesives","crafting","","");
+        var bone=semantic("x:bone","mob_drops","animal_resources","","");
+        var brick=semantic("x:brick","building_blocks","construction","","");
+        var lamp=semantic("x:lamp_glass","lighting","lighting","","");
+        var humus=semantic("x:humus","soil","soil","","");
+        var profiles=List.of(ore,ingot,sapling,stone,salt,glue,bone,brick,lamp,humus,FOOD);
+        for(int c=0;c<25;c++){
+            boxes.add(new AdaptiveWarehousePlanner.Storage(c<21?36:18,(c%5)*4,c/5,0));
+            if(c>=14)continue;
+            for(int slot=0;slot<18;slot++){
+                var p=profiles.get((slot+c*3)%profiles.size());
+                items.add(new AdaptiveWarehousePlanner.Stack(c,slot,p,!(c==0&&slot==0)));
+            }
+        }
+        check(boxes.stream().mapToInt(AdaptiveWarehousePlanner.Storage::capacity).sum()==828,"reported capacity");
+        var accepts=(AdaptiveWarehousePlanner.Accepts)(i,c,s)->true;
+        var plan=AdaptiveWarehousePlanner.plan(items,boxes,accepts,true);
+        verify(items,boxes,plan,accepts);
+        int[] cs=plan.chestByStack(),ss=plan.slotByStack();
+        check(cs[0]==0&&ss[0]==0,"fixed item moved");
+        Map<Integer,Set<String>> groups=new HashMap<>(),families=new HashMap<>();
+        for(int i=0;i<items.size();i++){
+            groups.computeIfAbsent(cs[i],k->new HashSet<>()).add(items.get(i).profile().group());
+            families.computeIfAbsent(cs[i],k->new HashSet<>()).add(items.get(i).profile().legacyFamily());
+        }
+        check(groups.values().stream().allMatch(x->x.size()==1),"unrelated contents despite 11 free inventories: "+groups);
+        check(families.values().stream().allMatch(x->x.size()==1),"family mixing despite ample capacity: "+families);
+        check(Arrays.stream(cs).anyMatch(c->c>=14),"available new storage not used");
+        // Restricted single slot must not freeze the other stacks.
+        var tinyBoxes=List.of(new AdaptiveWarehousePlanner.Storage(4,0,0,0),
+                new AdaptiveWarehousePlanner.Storage(4,0,1,0),new AdaptiveWarehousePlanner.Storage(4,0,2,0));
+        var tiny=List.of(new AdaptiveWarehousePlanner.Stack(0,0,ore,false),
+                new AdaptiveWarehousePlanner.Stack(0,1,sapling),new AdaptiveWarehousePlanner.Stack(0,2,salt),
+                new AdaptiveWarehousePlanner.Stack(0,3,ore));
+        var split=AdaptiveWarehousePlanner.plan(tiny,tinyBoxes,accepts,true);
+        verify(tiny,tinyBoxes,split,accepts);
+        check(split.chestByStack()[0]==0&&split.slotByStack()[0]==0,"fixed slot");
+        check(split.chestByStack()[1]!=0&&split.chestByStack()[2]!=0
+                &&split.chestByStack()[1]!=split.chestByStack()[2],"movable neighbors remained mixed");
+    }
     public static void main(String[] args){
-        largeFullWarehouse();capacityAndNewStorage();components();stress();
+        largeFullWarehouse();capacityAndNewStorage();components();stress();reportedWarehouse();
         System.out.println("Adaptive warehouse: 40 full chests, vertical material columns, scarce/new capacity, restrictions and transaction components passed.");
     }
 }

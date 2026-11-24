@@ -166,6 +166,36 @@ public final class CoreInventoryLiveTest {
             while(!stale.step(level,move->{},1,4_000_000L)){check(++guard<200,"unbounded stale snapshot test");}
             check(stale.rejectedTransfers()>0&&stale.movedItems()==0,"stale snapshot must not commit");
             check(externallyEdited.equals(ledger(fake)),"external edit overwritten");
+            // A sparse warehouse with 14 mixed inventories and 11 empty
+            // (21x36 + 4x18 = 828 slots) matches the user's reported scan.
+            List<ContainerRef> sparse=new ArrayList<>();
+            for(int i=0;i<25;i++){
+                var physical=full.containers().get(i);
+                var handler=new net.minecraftforge.items.ItemStackHandler(i<21?36:18){
+                    @Override public ItemStack extractItem(int slot,int amount,boolean simulate){
+                        if(slot==0&&!getStackInSlot(slot).isEmpty()&&getStackInSlot(slot).is(Items.BEDROCK))return ItemStack.EMPTY;
+                        return super.extractItem(slot,amount,simulate);
+                    }
+                };
+                if(i<14){
+                    net.minecraft.world.item.Item[] types={Items.IRON_INGOT,Items.RAW_IRON,Items.OAK_SAPLING,
+                            Items.COBBLESTONE,Items.SUGAR,Items.BONE,Items.BRICK,Items.APPLE};
+                    for(int s=0;s<16;s++)handler.setStackInSlot(s,new ItemStack(types[(s+i)%types.length],1));
+                    if(i==0)handler.setStackInSlot(0,new ItemStack(Items.BEDROCK,1));
+                }
+                sparse.add(new ContainerRef(physical.pos(),new com.kirill.simplesorter.sorting.ForgeItemHandlerAdapter(handler),
+                        physical.identity(),level));
+            }
+            var sparseBefore=ledger(sparse);
+            var separation=WarehouseVacuumSorter.begin(sparse);
+            guard=0;while(!separation.step(level,move->{},120,4_000_000L)){check(++guard<400,"sparse plan stalled");}
+            check(separation.rejectedTransfers()==0&&!separation.unsafe(),"sparse transfers rejected: "+separation.lastFailure());
+            check(separation.pinnedSlots()==1,"one fixed slot expected: "+separation.eligibilitySummary());
+            check(sparse.get(0).handler().getStackInSlot(0).is(Items.BEDROCK),"fixed stack moved");
+            check(sparseBefore.equals(ledger(sparse)),"sparse conservation");
+            check(separation.quality().mixed()==0,"avoidable mixed chests in sparse warehouse: "+separation.quality());
+            check(separation.movedItems()>0,"sparse layout unchanged");
+            org.slf4j.LoggerFactory.getLogger("SimpleSorter/CoreLiveTest").info("SORTER_SPARSE_PURITY_TEST_PASSED");
             org.slf4j.LoggerFactory.getLogger("SimpleSorter/CoreLiveTest").info(
                     "SORTER_CORE_LIVE_TEST_PASSED: live 21->22 chest scan, remote access, new empty chest, classification and item count; moved {} items",session.movedItems());
         } finally {

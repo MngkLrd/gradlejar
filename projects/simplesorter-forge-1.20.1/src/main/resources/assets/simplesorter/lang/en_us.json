@@ -143,5 +143,14 @@
   "label.simplesorter.material.spruce": "Spruce",
   "label.simplesorter.material.birch": "Birch",
   "label.simplesorter.material.stone": "Stone",
-  "label.simplesorter.equipment": "Equipment"
+  "label.simplesorter.equipment": "Equipment",
+  "label.simplesorter.containers": "Containers",
+  "label.simplesorter.group.containers": "Containers",
+  "label.simplesorter.lighting": "Lighting",
+  "label.simplesorter.group.lighting": "Lighting",
+  "label.simplesorter.textiles": "Textiles",
+  "label.simplesorter.group.textiles": "Textiles",
+  "label.simplesorter.soil": "Soil",
+  "label.simplesorter.group.soil": "Soil",
+  "label.simplesorter.fibers": "Fibers"
 }

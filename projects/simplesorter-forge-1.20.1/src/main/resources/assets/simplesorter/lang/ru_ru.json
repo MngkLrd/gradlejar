@@ -143,5 +143,14 @@
   "label.simplesorter.material.spruce": "Ель",
   "label.simplesorter.material.birch": "Берёза",
   "label.simplesorter.material.stone": "Камень",
-  "label.simplesorter.equipment": "Снаряжение"
+  "label.simplesorter.equipment": "Снаряжение",
+  "label.simplesorter.containers": "Ёмкости",
+  "label.simplesorter.group.containers": "Ёмкости",
+  "label.simplesorter.lighting": "Освещение",
+  "label.simplesorter.group.lighting": "Освещение",
+  "label.simplesorter.textiles": "Текстиль",
+  "label.simplesorter.group.textiles": "Текстиль",
+  "label.simplesorter.soil": "Почва",
+  "label.simplesorter.group.soil": "Почва",
+  "label.simplesorter.fibers": "Волокна"
 }

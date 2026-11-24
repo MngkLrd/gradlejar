@@ -1,4 +1,30 @@
-# Simple Sorter 0.10.4 (Forge 1.20.1) — release candidate
+# Simple Sorter 0.10.5 (Forge 1.20.1) — release candidate 2
+
+## Purity-first correction
+
+A user warehouse scan found 25 logical inventories, 46 physical blocks,
+828 slots and 11 empty inventories. Discovery was not the observed
+bottleneck. The former contiguous packing candidates could mix semantic
+groups despite spare capacity; spatial/fragmentation costs could reward
+such layouts. A single restricted item also excluded a whole chest.
+
+- Make unrelated-group minority slots the first objective; family
+  separation second; affinity, concentration and geography third.
+- Add dedicated group/family/material candidates and a bounded minority
+  evacuation pass into compatible or empty storage. No requirement to
+  fill a chest before opening the next. Keep original placement if better.
+- Pin individual protected or non-extractable slots instead of excluding
+  their entire inventory. Do not compact inventories containing fixed
+  slots. Preserve transaction audits.
+- Recover common functional categories from registry path tokens and
+  category tags, not per-mod item tables. Unknown opaque IDs remain unknown.
+- Persist final sort summary in chat, including actual planning eligibility,
+  free eligible inventories, fixed slots, and rejection reasons.
+
+Tests reproduce the reported 25/828/11 geometry and verify that
+unrelated groups separate when capacity permits. Real modpack behavior
+still requires verification. No forced claims of perfect optimality.
+
 
 ## 0.10.4: hardening and validation
 

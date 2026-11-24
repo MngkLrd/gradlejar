@@ -61,6 +61,14 @@ public final class SemanticItemClassifierSelfTest {
         check(custom.group().equals("custom/my_group") && custom.legacyFamily().equals("my_category"),"user rule preservation");
         check(ingot.hierarchy().equals(List.of("metals_minerals","metals_minerals/material/iron",
                 "metals_minerals/material/iron/ingot","item/minecraft:iron_ingot")),"hierarchical grouping keys");
+        check(item("any:wooden_bucket","wood","building","wood").group().equals("containers"),"bucket is not wood");
+        check(item("any:metal/unfinished_lamp/bronze","misc","misc","misc").group().equals("lighting"),"unfinished lamp");
+        check(item("any:jute_fiber","misc","misc","misc").group().equals("textiles"),"fiber");
+        check(item("any:handstone","misc","misc","misc").group().equals("equipment"),"handstone");
+        check(item("any:blubber","misc","misc","misc").group().equals("animal_resources"),"animal fat");
+        check(item("any:plant/syngonium","blocks","building","building_blocks").group().equals("plants"),"plant block");
+        check(item("any:humus","blocks","building","building_blocks").group().equals("soil"),"soil");
+        check(item("any:tt_5","misc","misc","misc").group().equals("unknown"),"opaque ID remains unknown");
         System.out.println("Semantic classification: unknown mod materials, tags, forms, purpose, hierarchy, conflicts and locks passed.");
     }
 }
