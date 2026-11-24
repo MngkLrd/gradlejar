@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-final class ClipScreen extends Screen {
+final class ClipScreen extends StudioBaseScreen {
     private final List<ClipCodec.Frame> frames;
     private final List<StudioUi.Hit> hits=new ArrayList<>();
     private int first,last,index,fps=10,side=640,budget=1990,displayed=-1;

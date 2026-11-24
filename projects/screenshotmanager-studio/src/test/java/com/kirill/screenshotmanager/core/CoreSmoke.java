@@ -59,6 +59,11 @@ public final class CoreSmoke {
         Files.delete(anim.path());Files.delete(root.resolve("clips"));
         Files.delete(png.resolveSibling(png.getFileName()+".smproject"));
         Files.delete(custom);Files.delete(prefPath);Files.delete(png);Files.delete(jpg);Files.delete(root.resolve("edited"));Files.delete(root);
+        var track=new CameraTrack(List.of(new CameraTrack.Pose(0,64,0,170,0),new CameraTrack.Pose(4,65,3,-170,10),new CameraTrack.Pose(8,66,6,-160,0)));
+        check(track.sample(0).x()==0&&track.sample(1).x()==8,"Camera path endpoints");
+        check(Math.abs(track.sample(.25).yaw())>160,"Shortest angle interpolation");
+        check(track.sample(.5).y()==65,"Camera keyframe interpolation");
+        check(track.sample(.2).x()>=0&&track.sample(.8).x()<=8,"Camera path bounds");
         System.out.println("Screenshot Manager core smoke tests passed");
     }
 }

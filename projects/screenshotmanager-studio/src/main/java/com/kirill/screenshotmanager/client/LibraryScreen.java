@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-public final class LibraryScreen extends Screen {
+public final class LibraryScreen extends StudioBaseScreen {
     private static final DateTimeFormatter DATE=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withZone(ZoneId.systemDefault());
     private final ArrayList<StudioUi.Hit> hits=new ArrayList<>();
     private final Map<Path,StudioTexture> thumbs=new HashMap<>();
@@ -40,6 +40,7 @@ public final class LibraryScreen extends Screen {
         albumInput=new EditBox(font,8,72,Math.max(65,width/2-14),17,Component.literal("Album name"));
         albumInput.setMaxLength(64);albumInput.setValue(albumDraft);albumInput.setHint(Component.literal("Type album name"));
         albumInput.setResponder(v->albumDraft=v);addRenderableWidget(albumInput);
+        search.setFocused(false);albumInput.setFocused(false);setFocused(null);
         refresh();
     }
     private void refresh(){
@@ -168,12 +169,21 @@ public final class LibraryScreen extends Screen {
         button(g,"< Prev",6,height-20,55,17,mx,my,false,()->{if(page>0){page--;clearThumbs();}});
         g.drawCenteredString(font,"Page "+(page+1)+" / "+(maxPage()+1)+"  |  "+filtered.size(),width/2,height-16,StudioUi.MUTED);
         button(g,"Next >",width-61,height-20,55,17,mx,my,false,()->{if(page<maxPage()){page++;clearThumbs();}});
-        super.render(g,mx,my,dt);
+        search.render(g,mx,my,dt);
+        albumInput.render(g,mx,my,dt);
     }
     @Override public boolean mouseClicked(double x,double y,int button){
+        if(button==0&&(search.isMouseOver(x,y)||albumInput.isMouseOver(x,y)))return super.mouseClicked(x,y,button);
+        search.setFocused(false);albumInput.setFocused(false);setFocused(null);
         if(button==1)for(var entry:tiles.entrySet())if(entry.getKey().contains(x,y)){toggleChoice(entry.getValue());return true;}
         if(button==0)for(StudioUi.Hit h:List.copyOf(hits))if(h.contains(x,y)){h.action().run();return true;}
         return super.mouseClicked(x,y,button);
+    }
+    @Override public boolean keyPressed(int key,int scan,int mods){
+        if(key==org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE){
+            if(search.isFocused()||albumInput.isFocused()){search.setFocused(false);albumInput.setFocused(false);setFocused(null);return true;}
+            onClose();return true;
+        }return super.keyPressed(key,scan,mods);
     }
     @Override public boolean isPauseScreen(){return false;}
     @Override public void removed(){alive=false;scanToken++;clearThumbs();}

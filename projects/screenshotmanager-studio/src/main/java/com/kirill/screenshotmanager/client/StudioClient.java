@@ -23,7 +23,7 @@ import java.nio.file.Files;
 import java.util.concurrent.CompletableFuture;
 
 public final class StudioClient {
-    private static KeyMapping edit,library,copy,capture,photo,clean,zoomIn,zoomOut,record,burst;
+    private static KeyMapping edit,library,copy,capture,photo,clean,zoomIn,zoomOut,record,burst,keyframe,directorPlay,directorClear;
     private static final ClipRecorder recorder=new ClipRecorder();
     private static int burstRemaining;
     private static long burstNext;
@@ -53,6 +53,8 @@ public final class StudioClient {
         zoomIn=key("zoom_in",GLFW.GLFW_KEY_LEFT_BRACKET);zoomOut=key("zoom_out",GLFW.GLFW_KEY_RIGHT_BRACKET);
         e.register(photo);e.register(clean);e.register(zoomIn);e.register(zoomOut);
         record=key("record",GLFW.GLFW_KEY_F6);burst=key("burst",GLFW.GLFW_KEY_F7);e.register(record);e.register(burst);
+        keyframe=key("keyframe",GLFW.GLFW_KEY_J);directorPlay=key("director_play",GLFW.GLFW_KEY_L);directorClear=key("director_clear",GLFW.GLFW_KEY_H);
+        e.register(keyframe);e.register(directorPlay);e.register(directorClear);
     }
     static Path directory(){return Minecraft.getInstance().gameDirectory.toPath().resolve("screenshots");}
     static StudioPreferences preferences(){
@@ -70,6 +72,7 @@ public final class StudioClient {
     private static void restoreClean(Minecraft mc){if(cleanPending){mc.options.hideGui=oldHide;cleanPending=false;}}
     private static void afterFrame(RenderFrameEvent.Post e){
         Minecraft mc=Minecraft.getInstance();
+        if(Director.afterFrame(mc,recorder))return;
         if(recorder.active()){
             if(mc.screen!=null||mc.level==null){recorder.finish(false);return;}
             recorder.frame(mc);
@@ -96,6 +99,21 @@ public final class StudioClient {
         }
         if(preview!=null&&System.currentTimeMillis()>expires){preview.close();preview=null;}
         if(edit==null)return;
+        Director.checkWorld(mc,recorder);
+        while(directorPlay.consumeClick()){
+            if(Director.active())Director.stop(mc,recorder,true);
+            else if(mc.screen==null&&mc.level!=null&&!recorder.active()&&!cleanPending&&burstRemaining==0){
+                boolean export=net.minecraft.client.gui.screens.Screen.hasShiftDown();
+                String result=Director.start(mc,recorder,export);if(result!=null)notice(result);
+            }
+        }
+        while(keyframe.consumeClick()){if(!Director.active()&&!recorder.active()&&mc.screen==null&&mc.level!=null)notice(Director.add(mc));}
+        while(directorClear.consumeClick()){if(!Director.active()&&mc.screen==null){Director.clear();notice("Director path cleared");}}
+        if(Director.active()){
+            while(record.consumeClick()){}while(burst.consumeClick()){}while(edit.consumeClick()){}while(library.consumeClick()){}while(copy.consumeClick()){}while(capture.consumeClick()){}
+            while(photo.consumeClick()){}while(clean.consumeClick()){}while(zoomIn.consumeClick()){}while(zoomOut.consumeClick()){}
+            return;
+        }
         while(record.consumeClick()){
             if(recorder.active())recorder.finish(true);
             else if(mc.screen==null&&mc.level!=null&&!cleanPending&&burstRemaining==0)recorder.start();
@@ -177,6 +195,10 @@ public final class StudioClient {
             String info="PHOTO  |  FOV "+mc.options.fov().get()+"  |  "+zoomIn.getTranslatedKeyMessage().getString()+"/"+zoomOut.getTranslatedKeyMessage().getString()+" Zoom  |  "+clean.getTranslatedKeyMessage().getString()+" Clean shot  |  "+photo.getTranslatedKeyMessage().getString()+" Exit";
             StudioUi.box(g,0,0,sw,14,0xc8182028);
             StudioUi.label(g,mc.font,info,5,3,sw-10,StudioUi.TEXT);
+        }
+        if(Director.count()>0){
+            String path="DIRECTOR: "+Director.count()+" points | "+keyframe.getTranslatedKeyMessage().getString()+" Add | "+directorPlay.getTranslatedKeyMessage().getString()+" Play | Shift+Play GIF | "+directorClear.getTranslatedKeyMessage().getString()+" Clear";
+            int y=photoMode?15:1;StudioUi.box(g,0,y,sw,14,0xc8182028);StudioUi.label(g,mc.font,path,5,y+3,sw-10,StudioUi.TEXT);
         }
         if(preferences().number("hud.enabled",1,0,1)==0||System.currentTimeMillis()>=expires)return;
         int w=Math.max(1,Math.min(preferences().number("hud.width",168,100,260),sw-12)),imageH=preview==null?0:Math.min(82,Math.max(1,(int)(w*preview.height/(double)preview.width)));

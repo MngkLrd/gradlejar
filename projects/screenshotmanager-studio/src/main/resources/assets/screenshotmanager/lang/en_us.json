@@ -9,5 +9,8 @@
   "key.screenshotmanager.zoom_in": "Photo Mode zoom in",
   "key.screenshotmanager.zoom_out": "Photo Mode zoom out",
   "key.screenshotmanager.record": "Start / stop GIF recording",
-  "key.screenshotmanager.burst": "Burst capture (5 screenshots)"
+  "key.screenshotmanager.burst": "Burst capture (5 screenshots)",
+  "key.screenshotmanager.keyframe": "Director: add camera keyframe",
+  "key.screenshotmanager.director_play": "Director: play path (Shift: record GIF)",
+  "key.screenshotmanager.director_clear": "Director: clear keyframes"
 }

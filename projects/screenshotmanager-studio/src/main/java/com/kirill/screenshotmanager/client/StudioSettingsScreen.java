@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class StudioSettingsScreen extends Screen {
+public final class StudioSettingsScreen extends StudioBaseScreen {
     private final Screen parent;
     private final List<StudioUi.Hit> hits=new ArrayList<>();
     private String status="Changes are saved automatically";
