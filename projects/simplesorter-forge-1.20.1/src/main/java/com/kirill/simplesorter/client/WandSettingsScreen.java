@@ -31,7 +31,7 @@ public final class WandSettingsScreen extends Screen {
 
     @Override protected void init(){rebuild();}
 
-    private static Component tr(String key,Object... args){return Component.translatable(KEY+key,args);}
+    private static net.minecraft.network.chat.MutableComponent tr(String key,Object... args){return Component.translatable(KEY+key,args);}
 
     private void rebuild(){
         clearWidgets();
@@ -49,7 +49,15 @@ public final class WandSettingsScreen extends Screen {
     private int y(int row){return bodyY+row*(rowH+gap);}
 
     private void add(Component text,Component hint,int x,int row,int w,Button.OnPress action){
-        Button.Builder b=Button.builder(text,action).bounds(x,y(row),Math.max(1,w),rowH);
+        // Standard buttons can clip long translations; retain the complete
+        // text in a tooltip and keep the visible caption within its bounds.
+        Component visible=text;
+        if(font.width(text)>Math.max(1,w-10)){
+            String shortText=font.plainSubstrByWidth(text.getString(),Math.max(1,w-16));
+            visible=Component.literal(shortText+"…");
+            hint=hint==null?text:Component.empty().append(text).append("\n").append(hint);
+        }
+        Button.Builder b=Button.builder(visible,action).bounds(x,y(row),Math.max(1,w),rowH);
         if(hint!=null)b.tooltip(Tooltip.create(hint));
         addRenderableWidget(b.build());
     }

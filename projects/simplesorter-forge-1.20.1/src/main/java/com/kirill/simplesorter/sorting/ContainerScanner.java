@@ -96,7 +96,7 @@ public final class ContainerScanner {
             if (result.size() >= 384) { skip(skipped,"scan limit",pos,state); continue; }
             BlockEntity be = level.getBlockEntity(pos);
             if (be == null || be.isRemoved()) { skip(skipped,"missing block entity",pos,state); continue; }
-            if (!accessible(player,be)) { skip(skipped,"locked or custom access denied",pos,state); continue; }
+            if (!level.mayInteract(player,pos) || !accessible(player,be)) { skip(skipped,"locked or custom access denied",pos,state); continue; }
 
             if (state.getBlock() instanceof ChestBlock
                     && state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
@@ -113,7 +113,7 @@ public final class ContainerScanner {
 
                 BlockEntity partner = level.getBlockEntity(other);
                 if (partner == null || partner.isRemoved() || !StorageFilter.isEligible(partnerState)
-                        || !accessible(player,partner)) {
+                        || !level.mayInteract(player,other) || !accessible(player,partner)) {
                     skip(skipped,"partner missing or access denied",pos,state); continue;
                 }
 
@@ -190,6 +190,18 @@ public final class ContainerScanner {
         if (handler instanceof ForgeItemHandlerAdapter forge) return forge.delegate();
         if (handler instanceof ContainerItemHandler container) return container.container();
         return handler;
+    }
+
+    public static boolean canAccess(ServerLevel level,Player player,ContainerRef ref){
+        if(!ref.isValid()||!level.mayInteract(player,ref.pos()))return false;
+        BlockEntity first=level.getBlockEntity(ref.pos());
+        if(first==null||!accessible(player,first))return false;
+        if(ref.partnerPos()!=null){
+            if(!level.mayInteract(player,ref.partnerPos()))return false;
+            BlockEntity second=level.getBlockEntity(ref.partnerPos());
+            if(second==null||!accessible(player,second))return false;
+        }
+        return true;
     }
 
     private static boolean accessible(Player player, BlockEntity be) {

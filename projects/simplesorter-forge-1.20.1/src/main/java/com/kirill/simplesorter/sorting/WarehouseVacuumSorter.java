@@ -34,7 +34,11 @@ public final class WarehouseVacuumSorter {
     private WarehouseVacuumSorter() {}
 
     public static Session begin(List<ContainerRef> containers) {
-        return new Session(containers);
+        return new Session(containers,ref->true);
+    }
+
+    public static Session begin(List<ContainerRef> containers,java.util.function.Predicate<ContainerRef> access){
+        return new Session(containers,access);
     }
 
     private static final class Chest {
@@ -88,6 +92,12 @@ public final class WarehouseVacuumSorter {
         private final List<ContainerRef> containers;
         private List<List<Entry>> components=List.of();
         private boolean planned;
+        private boolean unsafe;
+        private final java.util.function.Predicate<ContainerRef> access;
+        private final List<Chest> planningChests=new ArrayList<>();
+        private final List<Entry> planningEntries=new ArrayList<>();
+        private int snapshotIndex,validationIndex;
+        private AdaptiveWarehousePlanner.Search search;
         private final java.util.Set<ContainerRef> eligible=new java.util.HashSet<>();
         private int componentIndex,totalComponents,processedEntries,totalEntries;
         private int activeInventories,semanticGroups;
@@ -99,8 +109,9 @@ public final class WarehouseVacuumSorter {
         private int rejectedBatches;
         private String lastFailure = "none";
 
-        private Session(List<ContainerRef> containers) {
+        private Session(List<ContainerRef> containers,java.util.function.Predicate<ContainerRef> access) {
             this.containers = List.copyOf(containers);
+            this.access=access;
 
         }
 
@@ -119,7 +130,9 @@ public final class WarehouseVacuumSorter {
         public long beforeCost(){return beforeCost;}
         public long afterCost(){return afterCost;}
         public int assignmentMissingFamilies() { return 0; }
-        public boolean eligibleForCompaction(ContainerRef ref){return eligible.contains(ref);}
+        public boolean eligibleForCompaction(ContainerRef ref){return !unsafe&&eligible.contains(ref)&&access.test(ref);}
+        public boolean unsafe(){return unsafe;}
+        public boolean isPlanning(){return !planned;}
 
         // Diagnostics are derived from actual post-sort inventories, not a
         // frozen pre-sort snapshot. Unknown "misc" is a valid fallback family.
@@ -192,9 +205,9 @@ public final class WarehouseVacuumSorter {
          */
         public boolean step(ServerLevel level, MoveListener listener,int slotLimit,long timeLimit) {
             if(!planned){
-                planned=true;
-                try { prepare(level); }
+                try { if(!prepareStep(level,slotLimit,timeLimit))return false; planned=true; }
                 catch(RuntimeException ex){
+                    planned=true;unsafe=true;eligible.clear();
                     rejectedBatches++;lastFailure="global planning failed: "+ex.getClass().getSimpleName();
                     LOG.error("Global warehouse planning failed",ex);
                     return true;
@@ -209,40 +222,71 @@ public final class WarehouseVacuumSorter {
                 if(used>0 && (used+group.size()>budget || System.nanoTime()-start>=timeLimit))break;
                 componentIndex++;used+=group.size();
                 boolean ok=false;
-                try{ok=commitComponent(level,group,listener);}
-                catch(RuntimeException ex){LOG.error("Warehouse component failed",ex);}
+                try{
+                    boolean allowed=true;
+                    for(Entry e:group)if(!access.test(e.source.ref)||!access.test(e.destination.ref)){allowed=false;break;}
+                    if(allowed)ok=commitComponent(level,group,listener);
+                }catch(RuntimeException ex){
+                    unsafe=true;LOG.error("Warehouse component failed audit; stop remaining transfers",ex);
+                }
                 if(ok){
                     for(Entry e:group)if(e.source!=e.destination){movedItems+=e.original.getCount();moves++;}
                 }else{
                     rejectedBatches++;
                     lastFailure="component changed or inventory refused transfer (see latest.log)";
                 }
+                if(unsafe){eligible.clear();return true;}
                 processedEntries+=group.size();
                 processed=totalEntries==0?containers.size():(int)((long)processedEntries*containers.size()/totalEntries);
             }
             return componentIndex>=components.size();
         }
 
-        private void prepare(ServerLevel level){
-            List<Chest> chests=new ArrayList<>();
-            List<Entry> entries=new ArrayList<>();
-            for(ContainerRef ref:containers){
-                Chest chest=snapshotEligible(level,ref,chests.size(),entries);
-                if(chest==null)skippedChests++;else {chests.add(chest);eligible.add(ref);}
+        private boolean prepareStep(ServerLevel level,int slotLimit,long timeLimit){
+            List<Chest> chests=planningChests;
+            List<Entry> entries=planningEntries;
+            long start=System.nanoTime();
+            int read=0;
+            if(snapshotIndex<containers.size()){
+                while(snapshotIndex<containers.size() && (read==0||
+                        (read<Math.max(1,slotLimit)&&System.nanoTime()-start<timeLimit))){
+                    ContainerRef ref=containers.get(snapshotIndex++);
+                    Chest chest=access.test(ref)?snapshotEligible(level,ref,chests.size(),entries):null;
+                    if(chest==null)skippedChests++;else {chests.add(chest);eligible.add(ref);}
+                    read+=Math.max(1,ref.slots());
+                }
+                processed=snapshotIndex;
+                return false;
             }
-            if(chests.size()<2||entries.isEmpty())return;
-            List<AdaptiveWarehousePlanner.Storage> boxes=new ArrayList<>();
-            for(Chest chest:chests){
-                BlockPos p=chest.ref.pos(),q=chest.ref.partnerPos();
-                boxes.add(new AdaptiveWarehousePlanner.Storage(chest.layout.length,
-                        p.getX()+(q==null?p.getX():q.getX()),p.getY(),
-                        p.getZ()+(q==null?p.getZ():q.getZ())));
+            if(chests.size()<2||entries.isEmpty())return true;
+            if(search==null){
+                List<AdaptiveWarehousePlanner.Storage> boxes=new ArrayList<>();
+                for(Chest chest:chests){
+                    BlockPos p=chest.ref.pos(),q=chest.ref.partnerPos();
+                    boxes.add(new AdaptiveWarehousePlanner.Storage(chest.layout.length,
+                            p.getX()+(q==null?p.getX():q.getX()),p.getY(),
+                            p.getZ()+(q==null?p.getZ():q.getZ())));
+                }
+                List<AdaptiveWarehousePlanner.Stack> items=new ArrayList<>();
+                for(Entry e:entries)items.add(new AdaptiveWarehousePlanner.Stack(e.source.sequence,e.sourceSlot,e.semantic));
+                search=new AdaptiveWarehousePlanner.Search(items,boxes,
+                        (item,chest,slot)->canInsertAfterExtraction(chests.get(chest).ref.handler(),
+                                slot,entries.get(item).original),true);
+                return false;
             }
-            List<AdaptiveWarehousePlanner.Stack> items=new ArrayList<>();
-            for(Entry e:entries)items.add(new AdaptiveWarehousePlanner.Stack(e.source.sequence,e.sourceSlot,e.semantic));
-            AdaptiveWarehousePlanner.Plan plan=AdaptiveWarehousePlanner.plan(items,boxes,
-                    (item,chest,slot)->canInsertAfterExtraction(chests.get(chest).ref.handler(),
-                            slot,entries.get(item).original),true);
+            if(!search.advance())return false;
+            // Revalidate incrementally after search. Each execution component
+            // also checks its live source and destination just before mutation.
+            while(validationIndex<chests.size() && (read==0||
+                    (read<Math.max(1,slotLimit)&&System.nanoTime()-start<timeLimit))){
+                Chest chest=chests.get(validationIndex++);
+                if(!access.test(chest.ref)||!unchanged(level,List.of(chest))){
+                    rejectedBatches++;lastFailure="inventory changed during planning";eligible.clear();return true;
+                }
+                read+=chest.snapshot.length;
+            }
+            if(validationIndex<chests.size())return false;
+            AdaptiveWarehousePlanner.Plan plan=search.result();
             int[] owners=plan.chestByStack(),slots=plan.slotByStack();
             List<WarehouseTransferComponents.Slot> sources=new ArrayList<>(),targets=new ArrayList<>();
             for(int i=0;i<entries.size();i++){
@@ -253,7 +297,7 @@ public final class WarehouseVacuumSorter {
             }
             beforeCost=plan.beforeCost();afterCost=plan.afterCost();
             activeInventories=plan.activeInventories();semanticGroups=plan.groups();
-            if(!unchanged(level,chests)){rejectedBatches++;lastFailure="inventory changed during planning";return;}
+            // Validation was sliced above; per-component preflight is mandatory.
             List<List<Entry>> jobs=new ArrayList<>();
             for(List<Integer> component:WarehouseTransferComponents.decompose(sources,targets)){
                 List<Entry> group=new ArrayList<>();
@@ -263,6 +307,8 @@ public final class WarehouseVacuumSorter {
             components=List.copyOf(jobs);totalComponents=components.size();
             LOG.info("Global plan: {} eligible inventories, {} stacks, {} semantic groups, {} active inventories, cost {} -> {}, {} components",
                     chests.size(),entries.size(),semanticGroups,activeInventories,beforeCost,afterCost,totalComponents);
+            planningChests.clear();planningEntries.clear();search=null;processed=0;
+            return true;
         }
 
         private Chest snapshotEligible(ServerLevel level, ContainerRef ref, int sequence,

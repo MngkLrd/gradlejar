@@ -29,60 +29,72 @@ public final class AdaptiveWarehousePlanner {
     }
 
     public static Plan plan(List<Stack> input,List<Storage> storage,Accepts accepts,boolean spatial) {
-        List<Stack> items=List.copyOf(input);
-        List<Storage> boxes=List.copyOf(storage);
-        int n=items.size(), c=boxes.size();
-        int[] home=new int[n], origin=new int[n];
-        int[][] original=new int[c][];
-        for(int i=0;i<c;i++){original[i]=new int[boxes.get(i).capacity];Arrays.fill(original[i],-1);}
-        for(int i=0;i<n;i++){
-            Stack a=items.get(i);
-            if(a.chest<0||a.chest>=c||a.slot<0||a.slot>=original[a.chest].length
-                    ||original[a.chest][a.slot]>=0)throw new IllegalArgumentException("invalid original slot");
-            original[a.chest][a.slot]=i;home[i]=a.chest;origin[i]=a.slot;
+        Search search=new Search(input,storage,accepts,spatial);
+        while(!search.advance()){}
+        return search.result();
+    }
+
+    /** One candidate per advance; no game objects or inventories are mutated. */
+    public static final class Search {
+        private final List<Stack> items;
+        private final List<Storage> boxes;
+        private final Accepts accepts;
+        private final boolean spatial;
+        private final int[][] original;
+        private final List<Integer> sorted=new ArrayList<>();
+        private final List<List<Integer>> orders;
+        private final long before;
+        private Candidate best;
+        private int cursor;
+        public Search(List<Stack> input,List<Storage> storage,Accepts accepts,boolean spatial){
+            this.items=List.copyOf(input);this.boxes=List.copyOf(storage);
+            this.accepts=accepts;this.spatial=spatial;
+            int n=items.size(),c=boxes.size();
+            int[] home=new int[n],origin=new int[n];
+            original=new int[c][];
+            for(int i=0;i<c;i++){original[i]=new int[boxes.get(i).capacity];Arrays.fill(original[i],-1);}
+            String[] keys=new String[n];
+            for(int i=0;i<n;i++){
+                Stack a=items.get(i);
+                if(a.chest<0||a.chest>=c||a.slot<0||a.slot>=original[a.chest].length
+                        ||original[a.chest][a.slot]>=0)throw new IllegalArgumentException("invalid original slot");
+                original[a.chest][a.slot]=i;home[i]=a.chest;origin[i]=a.slot;
+                sorted.add(i);keys[i]=semanticKey(a.profile);
+            }
+            before=cost(items,boxes,home,spatial);
+            best=new Candidate(home.clone(),origin.clone(),before,0);
+            sorted.sort(Comparator.comparing((Integer i)->keys[i])
+                    .thenComparing(i->items.get(i).profile.itemId())
+                    .thenComparingInt(i->items.get(i).chest).thenComparingInt(i->items.get(i).slot));
+            List<Integer> natural=SpatialWarehouseLayout.columnOrder(boxes,false);
+            List<List<Integer>> candidates=new ArrayList<>();
+            candidates.add(natural);
+            List<Integer> capacityFirst=new ArrayList<>(natural);
+            capacityFirst.sort(Comparator.comparingInt((Integer i)->-boxes.get(i).capacity));
+            candidates.add(capacityFirst);
+            List<Integer> reverse=new ArrayList<>(natural);Collections.reverse(reverse);candidates.add(reverse);
+            if(spatial){
+                candidates.add(SpatialWarehouseLayout.columnOrder(boxes,true));
+                candidates.add(SpatialWarehouseLayout.neighborOrder(boxes));
+            }
+            orders=List.copyOf(new LinkedHashSet<>(candidates));
         }
-        long before=cost(items,boxes,home,spatial);
-        Candidate best=new Candidate(home.clone(),origin.clone(),before,0);
-        if(n==0)return new Plan(home,origin,0,before,before,0,0);
-        // Order by semantic hierarchy, never by namespace alone or past chest
-        // label. At different capacities different hierarchy boundaries fit.
-        List<Integer> sorted=new ArrayList<>();
-        for(int i=0;i<n;i++)sorted.add(i);
-        sorted.sort(Comparator.comparing((Integer i)->semanticKey(items.get(i).profile))
-                .thenComparing(i->items.get(i).profile.itemId())
-                .thenComparingInt(i->items.get(i).chest).thenComparingInt(i->items.get(i).slot));
-        List<Integer> natural=SpatialWarehouseLayout.columnOrder(boxes,false);
-        List<List<Integer>> orders=new ArrayList<>();
-        orders.add(natural);
-        // The candidate space must not depend on the previous allocation
-        // or the player's position. Capacity changes are real new evidence;
-        // empty/nonempty status alone must not cause a new target every click.
-        List<Integer> capacityFirst=new ArrayList<>(natural);
-        capacityFirst.sort(Comparator.comparingInt((Integer i)->-boxes.get(i).capacity));
-        orders.add(capacityFirst);
-        List<Integer> reverse=new ArrayList<>(natural);
-        Collections.reverse(reverse);orders.add(reverse);
-        if(spatial){
-            orders.add(SpatialWarehouseLayout.columnOrder(boxes,true));
-            orders.add(SpatialWarehouseLayout.neighborOrder(boxes));
-        }
-        for(List<Integer> order:new LinkedHashSet<>(orders)){
-            // Coarse and fine cuts compete on the same quality objective.
-            // More spare slots allow form separation when it improves purity.
-            for(int granularity:new int[]{3,2}){
-                List<Address> desired=pack(items,boxes,sorted,order,granularity);
-                if(desired.size()!=n)continue;
+        public boolean advance(){
+            if(items.isEmpty()||cursor>=orders.size()*2)return true;
+            List<Integer> order=orders.get(cursor/2);
+            int granularity=cursor%2==0?3:2;cursor++;
+            List<Address> desired=pack(items,boxes,sorted,order,granularity);
+            if(desired.size()==items.size()){
                 Candidate candidate=repair(items,boxes,original,sorted,desired,accepts,spatial);
-                // An unchanged feasible layout wins every quality tie.
                 if(candidate.cost<best.cost || candidate.cost==best.cost&&candidate.moved<best.moved)best=candidate;
             }
+            return cursor>=orders.size()*2;
         }
-        // A restricted handler can make the ideal packing impossible. The
-        // original legal layout is always a candidate: never discard items
-        // or abort all compatible storage just because a target slot refused.
-        Set<Integer> used=new HashSet<>();Set<String> groups=new HashSet<>();
-        for(int i=0;i<n;i++){used.add(best.chest[i]);groups.add(items.get(i).profile.group());}
-        return new Plan(best.chest,best.slot,best.moved,before,best.cost,used.size(),groups.size());
+        public Plan result(){
+            Set<Integer> used=new HashSet<>();Set<String> groups=new HashSet<>();
+            for(int i=0;i<items.size();i++){used.add(best.chest[i]);groups.add(items.get(i).profile.group());}
+            return new Plan(best.chest,best.slot,best.moved,before,best.cost,used.size(),groups.size());
+        }
     }
 
     private static int occupied(int[] row){int n=0;for(int i:row)if(i>=0)n++;return n;}
@@ -196,8 +208,14 @@ public final class AdaptiveWarehousePlanner {
             List<SemanticItemProfile> row=contents.get(c);
             int n=row.size();if(n==0)continue;
             long impurity=0;
-            for(int i=0;i<n;i++){
-                SemanticItemProfile p=row.get(i);
+            // Repeated stacks of one semantic profile need one pair
+            // evaluation with multiplicity, not O(n²) identical evaluations.
+            Map<SemanticItemProfile,Integer> frequency=new LinkedHashMap<>();
+            for(var p:row)frequency.merge(p,1,Integer::sum);
+            List<Map.Entry<SemanticItemProfile,Integer>> distinct=new ArrayList<>(frequency.entrySet());
+            for(int i=0;i<distinct.size();i++){
+                SemanticItemProfile p=distinct.get(i).getKey();
+                long count=distinct.get(i).getValue();
                 String key=cluster(p);
                 spread.computeIfAbsent(key,k->new HashSet<>()).add(c);
                 if(spatial && !"unknown".equals(p.group())){
@@ -205,7 +223,8 @@ public final class AdaptiveWarehousePlanner {
                     columns.computeIfAbsent(key,k->new HashSet<>()).add(column);
                     relatedColumns.computeIfAbsent(p.group(),k->new HashSet<>()).add(column);
                 }
-                for(int j=0;j<i;j++)impurity+=100-p.affinity(row.get(j));
+                impurity+=count*(count-1)/2*(100-p.affinity(p));
+                for(int j=0;j<i;j++)impurity+=count*distinct.get(j).getValue()*(100-p.affinity(distinct.get(j).getKey()));
             }
             if(n>1)result+=2*impurity/(n-1);
         }

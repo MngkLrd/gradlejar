@@ -50,6 +50,18 @@ public final class WarehouseSortSessions {
 
     private WarehouseSortSessions() {}
 
+    public static boolean conflicts(ServerLevel level,List<ContainerRef> refs){
+        for(Job other:ACTIVE.values()){
+            if(other.level!=level)continue;
+            for(ContainerRef a:refs)for(ContainerRef b:other.containers){
+                if(a.pos().equals(b.pos())||a.pos().equals(b.partnerPos())||
+                        b.pos().equals(a.partnerPos())||
+                        (a.partnerPos()!=null&&a.partnerPos().equals(b.partnerPos())))return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean isRunning(UUID player) {
         return ACTIVE.containsKey(player);
     }
@@ -66,17 +78,9 @@ public final class WarehouseSortSessions {
         if (containers.isEmpty()) return false;
         // Two overlapping virtual-buffer jobs must not touch the same
         // physical inventory while their layouts are being processed.
-        for (Job other : ACTIVE.values()) {
-            if (other.level != level) continue;
-            for (ContainerRef incoming : containers) {
-                for (ContainerRef claimed : other.containers) {
-                    if (incoming.pos().equals(claimed.pos())) {
-                        player.displayClientMessage(Component.literal(
-                                "Simple Sorter: these chests are already being sorted by another player."), true);
-                        return false;
-                    }
-                }
-            }
+        if(conflicts(level,containers)){
+            player.displayClientMessage(Component.literal("Simple Sorter: these chests are already being sorted."),true);
+            return false;
         }
         InteractionHand hand = player.getItemInHand(InteractionHand.MAIN_HAND) == wand
                 ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
@@ -155,11 +159,16 @@ public final class WarehouseSortSessions {
             this.hand = hand;
             this.containers = List.copyOf(containers);
             this.settings = settings;
-            this.session = WarehouseVacuumSorter.begin(containers);
+            this.session = WarehouseVacuumSorter.begin(containers,ref->ContainerScanner.canAccess(level,player,ref));
         }
 
         private boolean advance(ServerPlayer player) {
             ticks++;
+            ItemStack held=player.getItemInHand(hand);
+            if(held.isEmpty()||held.getItem()!=ModItems.SORTING_WAND.get()){
+                player.displayClientMessage(Component.literal("Simple Sorter: stopped (wand no longer held)."),true);
+                return true;
+            }
             if (ticks > MAX_JOB_TICKS) {
                 player.displayClientMessage(Component.literal(
                         "Simple Sorter: sorting stopped after the safety time limit. "
@@ -170,13 +179,17 @@ public final class WarehouseSortSessions {
                 player.displayClientMessage(Component.literal(
                         "Simple Sorter: " + (compaction
                         ? "packing containers " + compactIndex + "/" + containers.size()
-                        : "buffer sorting chest " + Math.min(session.currentChestIndex() + 1, containers.size())
+                        : (session.isPlanning()?"planning warehouse ":"applying plan ") + Math.min(session.currentChestIndex() + 1, containers.size())
                                 + "/" + containers.size())
                         + "; transferred " + (totalMoved+session.movedItems())
                         + " items between chests. Job still running."), true);
             }
             if (!compaction) {
                 if (session.step(level, listener, SORT_SLOTS_PER_TICK, SORT_TIME_PER_TICK_NS)) {
+                    if(session.unsafe()){
+                        player.displayClientMessage(Component.literal("Simple Sorter: stopped by inventory safety audit. Check latest.log."),false);
+                        return true;
+                    }
                     compaction = true;
                 }
                 return false;
@@ -208,7 +221,7 @@ public final class WarehouseSortSessions {
             boolean changedThisRound=session.totalComponents()>0 || compactedItems>compactedAtRoundStart;
             if(changedThisRound && totalRejected==0 && rounds<MAX_ROUNDS){
                 rounds++;compactedAtRoundStart=compactedItems;
-                session=WarehouseVacuumSorter.begin(containers);
+                session=WarehouseVacuumSorter.begin(containers,ref->ContainerScanner.canAccess(level,player,ref));
                 compaction=false;compactIndex=0;
                 return false;
             }
