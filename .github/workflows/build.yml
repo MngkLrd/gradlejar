@@ -194,7 +194,10 @@ jobs:
         run: |
           set -euo pipefail
           python3 projects/midnighteve/expand_exploration.py
-          command -v ffmpeg
+          if ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
           python3 projects/midnighteve/compose_midnight.py
           test -s projects/midnighteve/src/main/resources/data/midnighteve/structure/everlight_hamlet.nbt
           test -s projects/midnighteve/src/main/resources/assets/midnighteve/sounds/music/lanterns_at_dusk.ogg
