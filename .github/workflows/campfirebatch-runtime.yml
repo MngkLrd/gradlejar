@@ -1,0 +1,71 @@
+name: Campfire Batch 26.x runtime verification
+on:
+  push:
+    branches: [campfirebatch-runtime-check]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  runtime:
+    strategy:
+      fail-fast: false
+      matrix:
+        loader: [fabric, neoforge]
+        mc: ['26.1.2', '26.2', '26.3']
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PROJECT: projects/campfirebatch-${{ matrix.loader }}-${{ matrix.mc }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - id: profile
+        run: echo "gradle=$(python3 -c 'import json,os; print(json.load(open(os.environ["PROJECT"]+"/build-profile.json"))["gradle"])')" >> "$GITHUB_OUTPUT"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ steps.profile.outputs.gradle }}
+      - name: Build unmodified production JAR
+        run: cd "$PROJECT" && gradle --no-daemon clean build
+      - name: Verify Java 25 bytecode in production JAR
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib, struct, zipfile
+          root=pathlib.Path(os.environ['PROJECT'])
+          profile=json.loads((root/'build-profile.json').read_text())
+          with zipfile.ZipFile(root/'build/libs'/profile['jar_glob']) as z:
+              names=[n for n in z.namelist() if n.startswith('dev/minemods/campfirebatch/') and n.endswith('.class')]
+              assert len(names)>=2, names
+              assert not any('RuntimeProbe' in n for n in names), names
+              for name in names:
+                  data=z.read(name)
+                  magic,minor,major=struct.unpack('>IHH',data[:8])
+                  assert magic==0xcafebabe and major==69 and minor==0,(name,major,minor)
+                  print(name, 'class file',major,minor)
+          PY
+      - name: Inject isolated server runtime probe
+        run: python3 tools/campfirebatch-runtime/inject.py "$PROJECT" "${{ matrix.loader }}"
+      - name: Start real Minecraft dedicated server and exercise registered interaction handler
+        run: |
+          set -euo pipefail
+          cd "$PROJECT"
+          for dir in run runs/server; do
+            mkdir -p "$dir"
+            printf 'eula=true\n' > "$dir/eula.txt"
+            printf 'online-mode=false\nlevel-name=campfire-runtime-test\nlevel-type=minecraft:flat\nview-distance=3\nsimulation-distance=3\nmax-tick-time=-1\n' > "$dir/server.properties"
+          done
+          timeout --signal=TERM --kill-after=10s 300s gradle --no-daemon runServer > runtime.log 2>&1 &
+          pid=$!
+          ok=0
+          for i in $(seq 1 285); do
+            if grep -q 'CAMPFIRE_BATCH_RUNTIME_FAILED' runtime.log; then break; fi
+            if grep -q 'CAMPFIRE_BATCH_RUNTIME_PASSED' runtime.log && grep -q 'Done (' runtime.log; then ok=1; break; fi
+            if ! kill -0 "$pid" 2>/dev/null; then break; fi
+            sleep 1
+          done
+          kill "$pid" 2>/dev/null || true
+          wait "$pid" 2>/dev/null || true
+          tail -n 160 runtime.log
+          test "$ok" = 1
