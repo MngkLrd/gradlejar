@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public final class CoffeeMachineBlockEntity extends BlockEntity implements Container,MenuProvider {
  private NonNullList<ItemStack> items=NonNullList.withSize(4,ItemStack.EMPTY);
  private int progress;
+ private String activeRecipe="";
  private static final int MAX_PROGRESS=200;
  private final ContainerData progressData=new ContainerData(){
   @Override public int get(int index){return index==0?progress:MAX_PROGRESS;}
@@ -45,7 +46,9 @@ public final class CoffeeMachineBlockEntity extends BlockEntity implements Conta
   ItemStack result=BrewRecipes.result(water,ingredient);
   boolean ready=!result.isEmpty() && (fuel.is(Items.COAL)||fuel.is(Items.CHARCOAL))
     &&(output.isEmpty()||(ItemStack.isSameItemSameComponents(output,result) && output.getCount()<output.getMaxStackSize()));
-  if(!ready){if(machine.progress!=0){machine.progress=0;machine.setChanged();}return;}
+  if(!ready){if(machine.progress!=0){machine.progress=0;machine.activeRecipe="";machine.setChanged();}return;}
+  String key=net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(water.getItem())+"|"+net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(ingredient.getItem());
+  if(!key.equals(machine.activeRecipe)){machine.progress=0;machine.activeRecipe=key;machine.setChanged();}
   machine.progress++;
   if(machine.progress%20==0 && level instanceof ServerLevel server)
    server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,pos.getX()+.5,pos.getY()+.92,pos.getZ()+.5,2,.1,.02,.1,.003);
@@ -95,12 +98,12 @@ public final class CoffeeMachineBlockEntity extends BlockEntity implements Conta
   super.loadAdditional(tag,provider);
   items=NonNullList.withSize(4,ItemStack.EMPTY);
   ContainerHelper.loadAllItems(tag,items,provider);
-  progress=tag.getInt("progress");
+  progress=tag.getInt("progress");activeRecipe=tag.getString("activeRecipe");
  }
  @Override protected void saveAdditional(CompoundTag tag,HolderLookup.Provider provider){
   super.saveAdditional(tag,provider);
   ContainerHelper.saveAllItems(tag,items,provider);
-  tag.putInt("progress",progress);
+  tag.putInt("progress",progress);tag.putString("activeRecipe",activeRecipe);
  }
 }
 
