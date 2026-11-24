@@ -4,7 +4,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.EventPriority;
-import net.neoforged.neoforge.common.util.TriState;
+import net.minecraft.util.TriState;
 
 @Mod("campfirebatch")
 public final class CampfireBatch {
