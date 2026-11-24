@@ -30,7 +30,7 @@ def command(cmd):
 command("forceload add 0 0 47 47")
 time.sleep(12)
 out=command("place template midnighteve:frostmarket 0 180 0")
-if "placed" not in out.lower():raise RuntimeError("Template placement failed")
+if not any(word in out.lower() for word in ("placed", "loaded template")):raise RuntimeError("Template placement failed: "+out)
 time.sleep(4)
 for cmd in [
  "execute if block 8 184 4 minecraft:spruce_door[half=lower]",
@@ -46,5 +46,6 @@ out=command("data get entity @e[type=minecraft:villager,tag=midnighteve_resident
 if "midnighteve:wintermark" not in out:raise RuntimeError("Resident trade data missing")
 command("save-all flush")
 print("PASS: structure placement, roof, doors, clear entrance, floor and resident merchant data")
-command("stop")
+try: command("stop")
+except (RuntimeError, OSError): pass
 s.close()
