@@ -18,13 +18,15 @@ public final class VesselMenu extends AbstractContainerMenu {
             @Override public void set(int i,int v){}
             @Override public int getCount(){return 7;}
         };
-        for(int i=0;i<5;i++)addSlot(new Slot(preview,i,43+i*22,39){
-            @Override public boolean mayPickup(Player p){return false;}
-            @Override public boolean mayPlace(ItemStack s){return false;}
-        });
+        for(int i=0;i<5;i++)addSlot(new PreviewSlot(preview,i,43+i*22,39));
         for(int row=0;row<3;row++)for(int col=0;col<9;col++)addSlot(new Slot(inventory,9+row*9+col,8+col*18,112+row*18));
         for(int col=0;col<9;col++)addSlot(new Slot(inventory,col,8+col*18,170));
         addDataSlots(data);refresh();
+    }
+    private static final class PreviewSlot extends Slot {
+        private PreviewSlot(net.minecraft.world.Container container,int index,int x,int y){super(container,index,x,y);}
+        @Override public boolean mayPickup(Player player){return false;}
+        @Override public boolean mayPlace(ItemStack stack){return false;}
     }
     private void refresh(){if(vessel!=null)for(int i=0;i<5;i++)preview.setItem(i,vessel.preview(i));}
     @Override public void broadcastChanges(){refresh();super.broadcastChanges();}
