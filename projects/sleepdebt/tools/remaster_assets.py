@@ -228,22 +228,22 @@ block("incense_coals",clay,"""
 0000000000000000
 """)
 block("dream_ring",wood,"""
-2223333222222222
-2333333222222222
-2334433222222222
-2233333222222222
-2222222222222222
-2222222221112222
-2222222211112222
-2222222211122222
-2222222222222222
-2222222222222222
+3333222222333222
+3343222222333222
+3333222222333222
+2222223333222222
+2222333333222222
+2222334332222222
 2222333322222222
-2223333322222222
-2223343222222222
-2222333222222222
-2222222222222222
-2222222222222222
+2222222222222112
+2333222222221112
+2334322222221122
+2333322222222222
+2222222222333322
+2222222222334322
+2222222222333322
+3332222222222222
+3333222222333222
 """)
 block("dream_woven",dream,"""
 4..............3
@@ -350,6 +350,17 @@ def cup_variant(name,liquid,accent):
     a=[list(x) for x in cup.strip().splitlines()]
     for x in range(3,11):a[5][x]=liquid
     stamp(a,4,8,accent)
+    # Handle / rim variations distinguish drink types without artificial sparkles.
+    if name=="strong_coffee":
+        for y in range(10,13):
+            for x in range(2,12):a[y][x]="."
+        stamp(a,2,10,".0554430../..00000...")
+    elif name=="long_coffee":
+        for y in range(13,15):stamp(a,4,y,"011110")
+    elif name=="herbal_tea" or name=="dream_tea":
+        stamp(a,8,3,"9../9../99./.99")
+    elif name=="warm_milk":
+        stamp(a,4,6,"666666")
     save("item/"+name,a,item)
 cup_variant("coffee","1","22/23")
 cup_variant("strong_coffee","0","78/88")
@@ -452,7 +463,7 @@ beans="""
 ................
 """
 ico("roasted_coffee_beans",beans)
-ico("roasted_cocoa_beans",beans.replace("3","2").replace("2","1").replace("1","3"))
+ico("roasted_cocoa_beans",beans.translate(str.maketrans({"3":"2","2":"1","1":"8"})))
 ico("coffee_grounds","""
 ................
 ......0000......

@@ -4,7 +4,7 @@ import net.minecraft.world.item.*;
 import java.util.List;
 public final class BrewRecipes {
  public record Brew(Item base,Item ingredient,Item output,String name){}
- public static List<Brew> all(){return List.of(
+ private static final class Recipes {static final List<Brew> ALL=List.of(
   new Brew(Items.WATER_BUCKET,ModItems.GROUNDS.get(),ModItems.COFFEE.get(),"coffee"),
   new Brew(Items.WATER_BUCKET,ModItems.DRIED_HERBS.get(),ModItems.HERBAL_TEA.get(),"herbal_tea"),
   new Brew(ModItems.COFFEE.get(),Items.REDSTONE,ModItems.LONG.get(),"long_coffee"),
@@ -17,6 +17,7 @@ public final class BrewRecipes {
   new Brew(ModItems.HERBAL_TEA.get(),Items.HONEY_BOTTLE,ModItems.DREAM_TEA.get(),"dream_tea"),
   new Brew(ModItems.HERBAL_TEA.get(),ModItems.GROUNDS.get(),ModItems.BITTER_TONIC.get(),"bitter_tonic")
  );}
+ public static List<Brew> all(){return Recipes.ALL;}
  public static boolean acceptsBase(ItemStack s){return all().stream().anyMatch(r->s.is(r.base()));}
  public static boolean acceptsIngredient(ItemStack s){return all().stream().anyMatch(r->s.is(r.ingredient()));}
  public static ItemStack result(ItemStack a,ItemStack b){for(Brew r:all())if(a.is(r.base())&&b.is(r.ingredient()))return new ItemStack(r.output());return ItemStack.EMPTY;}

@@ -131,7 +131,7 @@ public final class SleepEngine {
    int active=duration*effect/100;
    if(active>=t.getInt("mask")){t.putInt("mask",active);t.putInt("maskPower",potency*effect/100);}
    t.putInt("caffeine",Math.min(100,load+caffeine));
-   t.putInt("crashPending",Math.max(t.getInt("crashPending"),caffeine>=80?3600:caffeine>=55?2400:caffeine>=35?1400:700));
+   t.putInt("crashPending",Math.max(t.getInt("crashPending"),caffeine>=80?3600:duration>=16000?3200:caffeine>=55?2400:caffeine>=35?1400:700));
    if(load+caffeine>=100){t.putInt("stress",clamp(t.getInt("stress")+140));t.putInt("crash",Math.max(t.getInt("crash"),1200));}
 
   }else{
@@ -145,7 +145,8 @@ public final class SleepEngine {
  }
 
  public static void tick(PlayerTickEvent.Post e){
-  if(!(e.getEntity() instanceof ServerPlayer p)||p.isSpectator())return;
+  if(!(e.getEntity() instanceof ServerPlayer p))return;
+  if(p.isSpectator()){SleepEffects.apply(p,data(p));return;}
   CampRestSessions.tick(p);
   if(p.getAbilities().instabuild){SleepEffects.apply(p,data(p));return;}
   CompoundTag t=data(p);
@@ -208,8 +209,8 @@ public final class SleepEngine {
   if(slept<85)recovery=Math.min(recovery,180);
   long now=p.serverLevel().getGameTime();
   // Anti-spam: multiple partial bed sleeps cannot replace a real night.
-  if(t.contains("lastFullSleepAt")&&now>=t.getLong("lastFullSleepAt")
-      &&now-t.getLong("lastFullSleepAt")<6000)recovery=Math.min(recovery,90);
+  boolean repeated=t.contains("lastFullSleepAt")&&now>=t.getLong("lastFullSleepAt")&&now-t.getLong("lastFullSleepAt")<6000;
+  if(repeated)recovery=Math.min(recovery,90);
   int before=t.getInt("debt");
   int after=clamp(before-recovery);
   t.putLong("lastFullSleepAt",now);
@@ -222,14 +223,12 @@ public final class SleepEngine {
   t.putInt("mask",0);
   t.putInt("crash",0);t.putInt("crashPending",0);t.putInt("maskPower",0);t.putInt("micro",0);
   t.putInt("calm",0);
-  t.putInt("fatigue",clamp(t.getInt("fatigue")-(slept<85?Math.min(180,650*quality/100):650*quality/100)));
-  t.putInt("stress",clamp(t.getInt("stress")-(slept<85?Math.min(140,500*quality/100):500*quality/100)));
+  t.putInt("fatigue",clamp(t.getInt("fatigue")-(repeated?Math.min(90,650*quality/100):slept<85?Math.min(180,650*quality/100):650*quality/100)));
+  t.putInt("stress",clamp(t.getInt("stress")-(repeated?Math.min(70,500*quality/100):slept<85?Math.min(140,500*quality/100):500*quality/100)));
   t.putInt("caffeine",Math.max(0,t.getInt("caffeine")-30));
   p.displayClientMessage(Component.translatable("message.sleepdebt.sleep_report",
    quality,before-after),true);
-  if(after==0&&before>0){
-   p.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED,1600,0,true,true));
-  }
+
  }
 
  public static void clonePlayer(PlayerEvent.Clone e){
@@ -243,7 +242,7 @@ public final class SleepEngine {
   if(e.isWasDeath()&&!SleepSettings.KEEP_ON_DEATH.get()){
    old.putInt("debt",0);old.putInt("progress",0);
    old.putInt("fatigue",0);old.putInt("stress",0);
-   old.putInt("mask",0);old.putInt("crash",0);
+   old.putInt("mask",0);old.putInt("crash",0);old.putInt("maskPower",0);old.putInt("crashPending",0);old.putInt("caffeine",0);
   }
   old.putInt("sleepTicks",0);old.putInt("micro",0);
   p.getPersistentData().put(KEY,old);
