@@ -37,6 +37,9 @@ public final class ProjectStore {
                     else if(op instanceof ProPhoto.Focus a){out.writeByte(6);out.writeInt(a.x());out.writeInt(a.y());out.writeInt(a.radius());out.writeInt(a.amount());out.writeBoolean(a.dark());}
                     else if(op instanceof ProPhoto.ImageLayer a){out.writeByte(7);out.writeUTF(a.name());for(int v:new int[]{a.x(),a.y(),a.size(),a.rotation(),a.opacity()})out.writeInt(v);byte[] png=a.png();out.writeInt(png.length);out.write(png);}
                     else if(op instanceof DepthMap.Focus a){out.writeByte(8);out.writeInt(a.distance());out.writeInt(a.range());out.writeInt(a.amount());a.map().write(out);}
+                    else if(op instanceof AdvancedPhoto.Adjust a){out.writeByte(9);out.writeUTF(a.kind().name());for(int v:a.values())out.writeInt(v);}
+                    else if(op instanceof AdvancedPhoto.Canvas a){out.writeByte(10);out.writeInt(a.width());out.writeInt(a.height());out.writeBoolean(a.cover());}
+                    else if(op instanceof AdvancedPhoto.Caption a){out.writeByte(11);out.writeUTF(a.text());for(int v:new int[]{a.x(),a.y(),a.size(),a.color(),a.style(),a.angle()})out.writeInt(v);}
                     else throw new IOException("Unsupported layer");
                 }
             }
@@ -69,6 +72,9 @@ public final class ProjectStore {
                     case 6 -> op=new ProPhoto.Focus(in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readBoolean());
                     case 7 -> {String name=in.readUTF();int x=in.readInt(),y=in.readInt(),size=in.readInt(),rotation=in.readInt(),opacity=in.readInt(),n=in.readInt();if(n<8||n>1_500_000)throw new IOException("Invalid image layer");byte[] data=in.readNBytes(n);if(data.length!=n)throw new IOException("Truncated layer");op=new ProPhoto.ImageLayer(name,data,x,y,size,rotation,opacity);}
                     case 8 -> {int distance=in.readInt(),range=in.readInt(),amount=in.readInt();op=new DepthMap.Focus(DepthMap.read(in),distance,range,amount);}
+                    case 9 -> {var kind=AdvancedPhoto.Kind.valueOf(in.readUTF());int[] a=new int[kind.count];for(int k=0;k<a.length;k++)a[k]=in.readInt();op=new AdvancedPhoto.Adjust(kind,a);}
+                    case 10 -> op=new AdvancedPhoto.Canvas(in.readInt(),in.readInt(),in.readBoolean());
+                    case 11 -> op=new AdvancedPhoto.Caption(in.readUTF(),in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readInt(),in.readInt());
                     default -> throw new IOException("Unknown layer");
                 }
                 ops.add(new Layer(op,visible||geometry(op)));
