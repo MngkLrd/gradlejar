@@ -1,0 +1,2 @@
+# World Fold 0.1.0
+NeoForge 1.21.1 / Java 21. Requires Immersive Portals CE 6.1.3.x and Cloth Config on client and server. Craft or /give @s worldfold:fold_compass. Right-click a clear sturdy floor at each endpoint; orientation follows player. Air-use cycles exit scale 1x/2x/0.5x; sneak air-use resets or dissolves. One pair per compass; keep the compass. Two-sided and cross-dimension links use CE public API for rendering/transit. Test in disposable worlds; no independent renderer or shader guarantee. Credits: https://github.com/UpperMoon0/ImmersivePortals.
