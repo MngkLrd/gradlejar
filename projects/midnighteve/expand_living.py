@@ -65,7 +65,7 @@ import net.neoforged.neoforge.registries.*;
 import java.util.function.Supplier;
 public final class LivingContent {
     private static final DeferredRegister<EntityType<?>> TYPES=DeferredRegister.create(Registries.ENTITY_TYPE,"midnighteve");
-    public static final Supplier<EntityType<Hearthling>> HEARTHLING=TYPES.register("hearthling",()->EntityType.Builder.of(Hearthling::new,MobCategory.CREATURE).sized(.625F,1.0625F).clientTrackingRange(8).build("midnighteve:hearthling"));
+    public static final Supplier<EntityType<Hearthling>> HEARTHLING=TYPES.register("hearthling",()->EntityType.Builder.of(Hearthling::new,MobCategory.CREATURE).sized(.625F,1.125F).clientTrackingRange(8).build("midnighteve:hearthling"));
     public static final DeferredItem<Item> EGG=MidnightEve.ITEMS.register("hearthling_spawn_egg",()->new DeferredSpawnEggItem(HEARTHLING,0x526c48,0xd5a553,new Item.Properties()));
     public static final DeferredBlock<FestivalDisplay> DISPLAY=MidnightEve.BLOCKS.register("festival_display",()->new FestivalDisplay(BlockBehaviour.Properties.of().strength(1.2F).sound(SoundType.WOOD).noOcclusion().noLootTable().lightLevel(s->s.getValue(FestivalDisplay.READY)&&s.getValue(FestivalDisplay.KIND)==2?8:0)));
     public static void init(IEventBus bus){
@@ -269,10 +269,12 @@ public final class WinterPostRoute {
         ItemStack held=p.getMainHandItem();
         if(!held.is(TalesContent.JOURNAL.get())&&!held.is(TalesContent.PARCEL.get()))return false;
         CompoundTag d=data(p);int n=Math.max(0,Math.min(5,d.getInt("step")));
-        if(n==5){p.displayClientMessage(Component.translatable("route.midnighteve.done"),false);return true;}
+        if(n==5){if(held.is(TalesContent.PARCEL.get()))return false;p.displayClientMessage(Component.translatable("route.midnighteve.done"),false);return true;}
+        if(held.is(TalesContent.PARCEL.get())&&(n!=0||!role.equals(ROLES[0])))return false;
         if(!role.equals(ROLES[n])){hint(p,n);return true;}
         var site=TagKey.create(Registries.STRUCTURE,ResourceLocation.fromNamespaceAndPath("midnighteve","post_route/"+SITES[n]));
         if(!p.serverLevel().structureManager().getStructureWithPieceAt(p.blockPosition(),site).isValid()){
+            if(held.is(TalesContent.PARCEL.get()))return false;
             hint(p,n);return true;
         }
         // A bound itinerary is held in personal NBT. No tradable quest item duplication.
@@ -317,7 +319,7 @@ public final class FestivalDisplay extends Block {
     public static final BooleanProperty READY=BooleanProperty.create("ready");
     public FestivalDisplay(Properties p){super(p);registerDefaultState(stateDefinition.any().setValue(KIND,0).setValue(READY,false));}
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){b.add(KIND,READY);}
-    @Override protected VoxelShape getShape(BlockState s,BlockGetter l,BlockPos p,CollisionContext c){return box(1,0,1,15,s.getValue(READY)?15:5,15);}
+    @Override protected VoxelShape getShape(BlockState s,BlockGetter l,BlockPos p,CollisionContext c){return box(1,0,1,15,s.getValue(READY)?16:7,15);}
 }
 ''')
 def faces(lo,hi,tex):
