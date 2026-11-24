@@ -176,7 +176,24 @@ public final class SortCategoryRegistry {
         categories.add(SortCategory.builder("gears").group("resources").priority(815).tags("forge:gears", "c:gears").idContains("gear", "gears").build());
         categories.add(SortCategory.builder("gems").group("resources").priority(814).tags("forge:gems", "c:gems").idContains("gem", "gems", "gem/", "crystal").build());
         categories.add(SortCategory.builder("adhesives").group("resources").priority(813).tags("forge:glue", "c:glue", "forge:resins").idContains("glue", "resin", "adhesive").build());
-        categories.add(SortCategory.builder("fruit_tree_parts").group("resources").priority(812).idContains("fruit_leaves", "fruit_tree", "fruit_sapling").build());
+        categories.add(SortCategory.builder("fruit_tree_parts").group("resources").priority(812).idContains("fruit_leaf", "fruit_leaves", "fruit_tree", "fruit_sapling").build());
+        categories.add(SortCategory.builder("fuel").displayName("Fuel").group("resources").priority(805)
+                .items("minecraft:coal","minecraft:charcoal","minecraft:coal_block","minecraft:blaze_rod")
+                .tags("minecraft:coals","forge:coal","c:coal","forge:fuels","c:fuels")
+                .idContains("charcoal","coke","briquette").build());
+        categories.add(SortCategory.builder("ammunition").displayName("Ammunition").group("equipment").priority(845)
+                .classHints(ClassHint.AMMUNITION)
+                .items("minecraft:arrow","minecraft:spectral_arrow","minecraft:tipped_arrow")
+                .tags("minecraft:arrows","forge:arrows","c:arrows").idContains("arrow","ammunition","bullet").build());
+        categories.add(SortCategory.builder("spawn_eggs").displayName("Spawn Eggs").group("utility").priority(795)
+                .classHints(ClassHint.SPAWN_EGG).idContains("spawn_egg","spawn_eggs").build());
+        categories.add(SortCategory.builder("currency").displayName("Currency").group("utility").priority(785)
+                .tags("forge:coins","c:coins").idContains("coin","coins","currency","banknote").build());
+        categories.add(SortCategory.builder("explosives").displayName("Explosives").group("equipment").priority(842)
+                .items("minecraft:tnt").idContains("dynamite","tnt","explosive","explosives").build());
+        categories.add(SortCategory.builder("ignition").displayName("Fire Starters").group("equipment").priority(835)
+                .items("minecraft:flint_and_steel","minecraft:fire_charge")
+                .idContains("firestarter","fire_starter","lighter","matches","matchstick","flint_and_steel").build());
         categories.add(SortCategory.builder("molds").group("resources").priority(811).idContains("mold", "mould", "ceramic", "vessel", "pottery", "unfired_").build());
         categories.add(SortCategory.builder("loose_stones").group("resources").priority(810).idContains("loose_rock", "rock/loose", "pebble", "loose_stone").build());
         categories.add(SortCategory.builder("accessories")
@@ -295,7 +312,7 @@ public final class SortCategoryRegistry {
                 .priority(540)
                 .tags("simplesorter:plants", "c:seeds", "c:crops", "c:saplings", "forge:seeds", "forge:crops", "minecraft:saplings", "minecraft:flowers")
                 .items("minecraft:sugar_cane", "minecraft:cactus", "minecraft:bamboo", "minecraft:kelp", "minecraft:vine", "minecraft:lily_pad", "minecraft:nether_wart")
-                .idContains("seed", "seeds", "seeds/", "sapling", "fruit_pit", "pit", "fruit_seed", "flower", "crop", "leaves", "mushroom", "wart")
+                .idContains("seed", "seeds", "seeds/", "sapling", "fruit_pit", "pit", "fruit_seed", "flower", "crop", "leaves", "leaf", "straw", "mushroom", "wart")
                 .build());
 
         categories.add(SortCategory.builder("wood")

@@ -99,7 +99,22 @@ public final class WarehouseSlotOptimizerSelfTest {
         }
     }
 
+    private static void newEmptyChestBeyondOldBatch() {
+        int[] sizes=new int[22];
+        java.util.Arrays.fill(sizes,4);
+        List<WarehouseSlotOptimizer.Stack> items=new ArrayList<>();
+        for(int c=0;c<21;c++) for(int slot=0;slot<4;slot++)
+            items.add(new WarehouseSlotOptimizer.Stack(c,slot,"family_"+c+"_"+(slot/2)));
+        var accepts=(WarehouseSlotOptimizer.Accepts)(i,c,s)->true;
+        var result=WarehouseSlotOptimizer.organize(items,sizes,accepts);
+        verify(items,sizes,result,accepts);
+        check(java.util.Arrays.stream(result.chestByStack()).anyMatch(c->c==21),
+                "New empty chest #22 must receive an entire family");
+        check(result.crossChestStacks()>=2,"Empty chest must receive a whole family");
+    }
+
     public static void main(String[] args) {
+        newEmptyChestBeyondOldBatch();
         fullWarehouseWithRestrictedSlots();
         reversibleAndIdempotent();
         System.out.println("Wand buffer: full 12 chest no-empty regression, locked slots, total preservation and repeat click passed.");

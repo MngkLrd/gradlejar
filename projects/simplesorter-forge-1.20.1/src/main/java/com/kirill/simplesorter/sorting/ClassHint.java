@@ -7,5 +7,7 @@ public enum ClassHint {
     FOOD,
     BLOCK,
     POTION,
-    BOOK
+    BOOK,
+    AMMUNITION,
+    SPAWN_EGG
 }

@@ -88,7 +88,8 @@ public final class ClientWarehouseLabels {
         }
         Map<Long, RenderLabel> incoming = new HashMap<>();
         for (WarehouseLabelsPayload.Entry entry : payload.labels()) {
-            Component text = Component.translatable("label.simplesorter." + entry.family());
+            String key = "label.simplesorter." + entry.family();
+            Component text = Component.translatableWithFallback(key,entry.family().replace('_',' '));
             incoming.put(entry.pos().asLong(),
                     new RenderLabel(entry, text, mc.font.width(text)));
         }

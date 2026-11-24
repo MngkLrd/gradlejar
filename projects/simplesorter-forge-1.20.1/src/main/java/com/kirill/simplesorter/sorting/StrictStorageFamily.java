@@ -19,7 +19,19 @@ public final class StrictStorageFamily {
     public static String of(String id, String category, boolean waterPotion) {
         String value = id == null ? "" : id.toLowerCase(Locale.ROOT);
         String path = value.substring(Math.max(-1, value.indexOf(':')) + 1);
-        String cat = category == null ? "misc" : category.toLowerCase(Locale.ROOT);
+        String cat = category == null || category.isBlank() ? "misc" : category.toLowerCase(Locale.ROOT);
+        if ("locked".equals(cat)) return "locked";
+        if (value.equals("minecraft:coal") || value.equals("minecraft:charcoal")
+                || value.equals("minecraft:coal_block") || "fuel".equals(cat)) return "fuel";
+        if (value.equals("minecraft:arrow") || value.equals("minecraft:spectral_arrow")
+                || value.equals("minecraft:tipped_arrow") || "ammunition".equals(cat)
+                || matches(path,"arrow")) return "ammunition";
+        if ("spawn_eggs".equals(cat) || matches(path,"spawn_egg") || matches(path,"spawn_eggs")) return "spawn_eggs";
+        if ("currency".equals(cat) || matches(path,"coin") || matches(path,"coins")) return "currency";
+        if ("explosives".equals(cat) || matches(path,"dynamite")) return "explosives";
+        if ("ignition".equals(cat) || matches(path,"firestarter") || matches(path,"fire_starter")
+                || matches(path,"lighter") || matches(path,"matches")) return "ignition";
+        if (matches(path,"fruit_leaf") || matches(path,"fruit_leaves") || matches(path,"straw")) return "botanical";
 
         // A Minecraft potion item has identical registry ID for water, buffs
         // and custom liquid NBT. The caller must inspect the actual ItemStack.
@@ -159,7 +171,8 @@ public final class StrictStorageFamily {
             case "magic" -> "magic";
             case "accessories" -> "accessories";
             case "locked" -> "locked";
-            default -> "misc";
+            // Preserve first-stage and custom categories instead of discarding them.
+            default -> cat;
         };
     }
 

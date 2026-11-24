@@ -30,7 +30,7 @@ public final class WarehouseVacuumSorter {
     private static final Logger LOG = LoggerFactory.getLogger("SimpleSorter/WandBuffer");
     // One batch is a single synchronous transaction. Bound the worst-case
     // tick cost while still allowing a fully occupied 12-chest warehouse.
-    private static final int MAX_CHESTS_PER_BATCH = 16;
+    private static final int MAX_CHESTS_PER_BATCH = 32;
     private static final int MAX_SLOTS_PER_CHEST = 108;
 
     private WarehouseVacuumSorter() {}
@@ -101,9 +101,17 @@ public final class WarehouseVacuumSorter {
             // Unlike the old strict-home algorithm, do not split the player's
             // warehouse by an arbitrary 4-block spatial connectedness rule.
             batches = new ArrayList<>();
-            for (int i = 0; i < containers.size(); i += MAX_CHESTS_PER_BATCH) {
-                batches.add(List.copyOf(containers.subList(
-                        i, Math.min(i + MAX_CHESTS_PER_BATCH, containers.size()))));
+            // Ordinary warehouses of <=32 inventories are planned together.
+            // Larger warehouses have overlapping anchor windows, so later
+            // containers can still exchange with the first group.
+            for (int i=0;i<containers.size();) {
+                List<ContainerRef> batch=new ArrayList<>();
+                int anchors=i==0?0:Math.min(8,i);
+                if(anchors>0) batch.addAll(containers.subList(0,anchors));
+                int end=Math.min(i+MAX_CHESTS_PER_BATCH-anchors,containers.size());
+                batch.addAll(containers.subList(i,end));
+                batches.add(List.copyOf(batch));
+                i=end;
             }
         }
 
@@ -114,6 +122,7 @@ public final class WarehouseVacuumSorter {
         public int skippedChests() { return skippedChests; }
         public String lastFailure() { return lastFailure; }
         public int currentChestIndex() { return processed; }
+        public int batchCount() { return batches.size(); }
         public int assignmentMissingFamilies() { return 0; }
 
         // Diagnostics are derived from actual post-sort inventories, not a
@@ -189,7 +198,7 @@ public final class WarehouseVacuumSorter {
                             int ignoredSlotLimit, long ignoredTimeLimit) {
             if (batchIndex >= batches.size()) return true;
             List<ContainerRef> batch = batches.get(batchIndex++);
-            processed += batch.size();
+            processed = Math.min(containers.size(),processed+batch.size()-(batchIndex>1?8:0));
             try {
                 reorganize(level, batch, listener);
             } catch (RuntimeException ex) {

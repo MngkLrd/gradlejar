@@ -95,5 +95,12 @@
   "label.simplesorter.locked": "Особые предметы",
   "label.simplesorter.mixed": "Смешанное содержимое",
   "label.simplesorter.mineral_resources": "Руды и рудные порошки",
-  "label.simplesorter.crafting_powders": "Порошки для крафта"
+  "label.simplesorter.crafting_powders": "Порошки для крафта",
+  "label.simplesorter.fuel": "Топливо",
+  "label.simplesorter.ammunition": "Боеприпасы",
+  "label.simplesorter.spawn_eggs": "Яйца призыва",
+  "label.simplesorter.currency": "Валюта",
+  "label.simplesorter.explosives": "Взрывчатка",
+  "label.simplesorter.ignition": "Огнива и зажигалки",
+  "label.simplesorter.materials": "Материалы"
 }

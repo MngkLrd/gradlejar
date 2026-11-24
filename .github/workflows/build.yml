@@ -263,6 +263,7 @@ jobs:
             src/main/java/com/kirill/simplesorter/sorting/WarehouseAssignmentPlanner.java \
             src/main/java/com/kirill/simplesorter/sorting/WarehouseSlotOptimizer.java \
             src/main/java/com/kirill/simplesorter/sorting/ChestInventoryShape.java \
+            src/main/java/com/kirill/simplesorter/sorting/ScanGeometry.java \
             src/main/java/com/kirill/simplesorter/sorting/WarehouseConsolidationDecision.java \
             src/main/java/com/kirill/simplesorter/label/ChestCategoryLabels.java \
             src/main/java/com/kirill/simplesorter/sorting/WarehouseRoutingRules.java \
@@ -277,6 +278,7 @@ jobs:
             tools/tests/WarehouseAssignmentPlannerSelfTest.java \
             tools/tests/WarehouseSlotOptimizerSelfTest.java \
             tools/tests/ChestInventoryShapeSelfTest.java \
+            tools/tests/ScanGeometrySelfTest.java \
             tools/tests/FaceLabelDimensionsSelfTest.java \
             tools/tests/FixedLabelFacesSelfTest.java
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.SmartRulesSelfTest
@@ -288,6 +290,7 @@ jobs:
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseAssignmentPlannerSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.WarehouseSlotOptimizerSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.ChestInventoryShapeSelfTest
+          java -ea -cp build/smart2-tests com.kirill.simplesorter.sorting.ScanGeometrySelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.client.FaceLabelDimensionsSelfTest
           java -ea -cp build/smart2-tests com.kirill.simplesorter.client.FixedLabelFacesSelfTest
       - name: Check model, texture and datapack assets
@@ -327,11 +330,11 @@ jobs:
             printf 'online-mode=false\nlevel-name=ci-sorter-test\nview-distance=3\nsimulation-distance=3\nmax-tick-time=-1\n' > "$dir/server.properties"
           done
           logfile="$GITHUB_WORKSPACE/simplesorter-forge-server.log"
-          timeout --signal=TERM --kill-after=15s 195s gradle --no-daemon runServer > "$logfile" 2>&1 &
+          SIMPLE_SORTER_CI_STORAGE_TEST=1 timeout --signal=TERM --kill-after=15s 195s gradle --no-daemon runServer > "$logfile" 2>&1 &
           pid=$!
           passed=0
           for n in $(seq 1 190); do
-            if grep -q 'Done (' "$logfile"; then
+            if grep -q 'Done (' "$logfile" && grep -q 'SORTER_CORE_LIVE_TEST_PASSED' "$logfile"; then
               passed=1
               break
             fi

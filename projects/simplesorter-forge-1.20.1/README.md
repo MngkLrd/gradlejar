@@ -1,4 +1,22 @@
-# Simple Sorter 0.9.17 (Forge 1.20.1)
+# Simple Sorter 0.9.18 (Forge 1.20.1)
+
+## Core radius and classification fixes
+
+Fresh loaded-chunk discovery on every activation; the actual square
+preview and equal vertical reach. Standard lockable storage uses the
+lock check rather than the eight-block menu reach check; custom
+containers retain their own access policy. Scan reports show logical
+inventories, physical blocks, empty storage, slot counts, unloaded chunks
+and explicit rejection reasons. No chunks are force-loaded.
+
+The 32-inventory planning window now covers a 22-chest warehouse in one
+operation; larger warehouses use overlapping windows. Empty storage
+can be seeded with a full semantic family rather than requiring a
+single-stack affinity improvement. Fuel, ammunition, spawn eggs,
+currency, ignition, explosives and botanical parts are recognized,
+and known/custom categories are no longer lost in the second classifier.
+No new mod dependencies. Actual modpack testing remains required.
+
 
 ## Inventory compatibility fix
 

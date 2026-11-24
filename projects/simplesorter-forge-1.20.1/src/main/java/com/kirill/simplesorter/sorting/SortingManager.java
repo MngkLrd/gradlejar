@@ -30,8 +30,11 @@ public final class SortingManager {
     public static SortingResult sortAroundPlayer(ServerLevel level, Player player,
                                                  SortingWandSettings settings, ItemStack wand) {
         SortingWandSettings safe = settings.sanitized();
-        List<ContainerRef> containers = ContainerScanner.scanRadius(level, player,
-                player.blockPosition(), safe.radius());
+        ContainerScanner.ScanReport report = ContainerScanner.scanDetailed(level,player,player.blockPosition(),safe.radius());
+        List<ContainerRef> containers = report.containers();
+        String scanMessage = "Simple Sorter scan +/-" + safe.radius() + " blocks: " + report.summary();
+        org.slf4j.LoggerFactory.getLogger("SimpleSorter/Scanner").info("{} at {}",scanMessage,player.blockPosition());
+        player.displayClientMessage(net.minecraft.network.chat.Component.literal(scanMessage),false);
         if (containers.isEmpty()) {
             return new SortingResult(0, 0, 0, 0, 0, safe.radius(), safe.mode().id());
         }
