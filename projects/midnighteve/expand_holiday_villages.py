@@ -61,7 +61,7 @@ def house(t,x,z,W,L,role,job,wall,roof,style,extra=False):
     for yy,half in ((4,"lower"),(5,"upper")):put(t,cx,yy,z,"spruce_door",facing="north",half=half,hinge="left",open=False,powered=False)
     t.doors.append((cx,4,z));t.rooms.append((cx,4,z+1))
     # Porch: flush with the street, awnings, two vertical wreaths of leaves.
-    g.path(t,cx-1,z-3,cx+1,z-1)
+    g.path(t,cx-1,z-4,cx+1,z-1)
     for xx in (cx-2,cx+2):
         put(t,xx,4,z-1,"spruce_fence",north=False,south=False,east=False,west=False,waterlogged=False)
         put(t,xx,5,z-1,"lantern",hanging=False,waterlogged=False)
@@ -137,7 +137,11 @@ def village(name,variant):
     plans=[(10,10,13,12),(25,10,11,12),(49,10,13,12),(64,10,12,12),
            (10,33,12,14),(24,33,12,14),(56,33,10,14),(68,33,9,14),
            (10,60,12,13),(25,60,11,13),(49,60,12,13),(65,60,11,13)]
-    # Plans vary in roles, materials, roof ridge axes and furniture.
+    if variant:
+        plans=[(10,10,11,13),(24,11,13,11),(50,10,10,12),(63,10,13,12),
+               (10,33,13,12),(25,34,11,13),(57,33,9,14),(68,34,9,12),
+               (10,59,14,14),(26,60,10,12),(49,60,14,12),(65,59,11,14)]
+    # Plans vary in footprints, roles, materials, roof ridge axes and furniture.
     for i,(x,z,W,L) in enumerate(plans):
         role,job,wall,roof,style=roles[(i+variant*3)%len(roles)]
         house(T,x,z,W,L,role,job,wall,roof,style,extra=(i%3==0))
