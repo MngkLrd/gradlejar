@@ -1,0 +1,1 @@
+Isolated CI validation only. Builds the production JAR before injecting a server-side probe into a disposable checkout. No probe is shipped. The six fresh Minecraft ports are tested using the registered loader event and real vanilla campfire blocks.
