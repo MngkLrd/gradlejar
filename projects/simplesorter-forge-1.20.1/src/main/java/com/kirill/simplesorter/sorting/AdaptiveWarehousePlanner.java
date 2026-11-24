@@ -132,8 +132,11 @@ public final class AdaptiveWarehousePlanner {
                         items.get(sorted.get(at+k)).profile);
                 if(strength>=granularity && strength>=bestStrength){bestStrength=strength;take=k;}
             }
-            if(max==left || (max<left && boundary(items.get(sorted.get(at+max-1)).profile,
-                    items.get(sorted.get(at+max)).profile)>=bestStrength))take=max;
+            // Even if all remaining stacks fit here, keep the selected
+            // semantic cut when later storage has capacity. Otherwise a
+            // newly added empty chest can never improve a small warehouse.
+            if(max<left && boundary(items.get(sorted.get(at+max-1)).profile,
+                    items.get(sorted.get(at+max)).profile)>=bestStrength)take=max;
             for(int slot=0;slot<take;slot++)target.add(new Address(chest,slot));
             at+=take;
         }
