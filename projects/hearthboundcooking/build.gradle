@@ -1,0 +1,75 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.147'
+}
+group = mod_group_id
+version = mod_version
+base.archivesName = mod_id
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+legacyForge {
+    enable { forgeVersion = project.minecraft_version + '-' + project.forge_version; disableRecompilation = true }
+    runs { client { client() }; server { server() } }
+    mods { "${mod_id}" { sourceSet(sourceSets.main) } }
+}
+repositories { maven { url='https://api.modrinth.com/maven' }; maven { url='https://repo.spongepowered.org/repository/maven-public/' } }
+dependencies {
+    modImplementation 'maven.modrinth:JaCEZUhg:F35Y7gTr'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+mixin { add sourceSets.main, 'hearthbound.refmap.json'; config 'hearthbound.mixins.json' }
+jar { manifest.attributes('MixinConfigs':'hearthbound.mixins.json') }
+tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=17 }
+def textureDir=layout.buildDirectory.dir('generated/hearthboundAssets')
+sourceSets.main.resources.srcDir(textureDir)
+tasks.register('generateVesselTextures') {
+    outputs.dir(textureDir)
+    doLast {
+        def out=new File(textureDir.get().asFile,'assets/hearthboundcooking/textures/block'); out.mkdirs()
+        def palettes=[
+            clay:[0x59372b,0x764936,0x8f5740,0xa66b4b,0xb67b54],
+            bronze:[0x594528,0x806139,0x9e7845,0xb08b52,0xc69d5c],
+            unfired:[0x665248,0x876c5d,0xa28774,0xb49a85,0xc4ac98]
+        ]
+        palettes.each { name,pal ->
+            ['side','rim','inside'].each { part ->
+                def image=new java.awt.image.BufferedImage(16,16,java.awt.image.BufferedImage.TYPE_INT_ARGB)
+                for(int y=0;y<16;y++) for(int x=0;x<16;x++) {
+                    int shade=2
+                    if(part=='side') {
+                        shade = (y<2 || y>13) ? 1 : 2
+                        if((x>=2 && x<=5 && y>=3 && y<=6)||(x>=9 && x<=12 && y>=8 && y<=10)) shade=3
+                        if((x>=6 && x<=8 && y>=7 && y<=9)||(x>=1 && x<=3 && y>=10 && y<=12)) shade=1
+                        if((x==3 || x==4) && y==3) shade=4
+                        if(name=='bronze' && (y==2||y==12)) shade=(x%5==1?4:3)
+                    } else if(part=='rim') {
+                        shade=(x<2||y<2)?4:((x>13||y>13)?1:3)
+                        if((x+y)%11==0 && x>2 && x<13 && y>2 && y<13) shade=2
+                    } else {
+                        shade=(x<2||x>13||y<2||y>13)?1:0
+                        if(x>=3&&x<=5&&y>=3&&y<=6) shade=1
+                    }
+                    image.setRGB(x,y, (int)(0xff000000L | (long)pal[shade]))
+                }
+                javax.imageio.ImageIO.write(image,'png',new File(out,"${name}_${part}.png"))
+            }
+        }
+        def image=new java.awt.image.BufferedImage(16,16,java.awt.image.BufferedImage.TYPE_INT_ARGB)
+        for(int y=0;y<16;y++) for(int x=0;x<16;x++) {
+            int color=0x8b512d
+            if((x>=2&&x<=5&&y>=4&&y<=6)||(x>=10&&x<=12&&y>=10&&y<=12)) color=0xb98243
+            if((x>=7&&x<=9&&y>=2&&y<=4)||(x>=4&&x<=6&&y>=11&&y<=13)) color=0x77502a
+            if((x==3&&y==5)||(x==11&&y==11)) color=0xd7a25a
+            image.setRGB(x,y,(int)(0xff000000L|color))
+        }
+        javax.imageio.ImageIO.write(image,'png',new File(out,'soup.png'))
+    }
+}
+tasks.named('processResources') { dependsOn tasks.named('generateVesselTextures') }
+
+tasks.register('qualityContractTest', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.mngklrd.hearthbound.QualityContractTest'
+}
+tasks.named('check') { dependsOn tasks.named('qualityContractTest') }

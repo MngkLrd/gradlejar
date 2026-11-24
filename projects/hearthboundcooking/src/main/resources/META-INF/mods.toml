@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+[[mods]]
+modId="hearthboundcooking"
+version="0.5.0"
+displayName="Hearthbound Cooking"
+description='''Batch cooking, slow simmering and food quality for TerraFirmaCraft.'''
+[[dependencies.hearthboundcooking]]
+modId="forge"
+mandatory=true
+versionRange="[47.1.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.hearthboundcooking]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.20.2)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.hearthboundcooking]]
+modId="tfc"
+mandatory=true
+versionRange="[3.2.0,3.3.0)"
+ordering="AFTER"
+side="BOTH"

@@ -1,0 +1,22 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "dev.mngklrd.hearthbound.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "hearthbound.refmap.json",
+  "mixins": [
+    "HeatingRecipeMixin",
+    "PotMixin",
+    "GrillMixin",
+    "FoodDataMixin",
+    "FirmalifeOvenRecipeMixin",
+    "VanillaFurnaceMixin",
+    "SaladMixin",
+    "MealModifierMixin",
+    "FirmalifeHoldMixin",
+    "FirmalifeTooltipMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

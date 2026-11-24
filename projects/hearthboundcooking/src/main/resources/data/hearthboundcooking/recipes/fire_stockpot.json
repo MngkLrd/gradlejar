@@ -1,0 +1,10 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "item": "hearthboundcooking:unfired_stockpot"
+  },
+  "result_item": {
+    "item": "hearthboundcooking:clay_stockpot"
+  },
+  "temperature": 1399
+}
