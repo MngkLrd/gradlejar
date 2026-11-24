@@ -31,7 +31,6 @@
   "hearthbound.gui.remove": "RMB: remove",
   "hearthbound.slot_mismatch": "This slot holds a different ingredient",
   "hearthbound.gui.water": "Add water",
-  "hearthbound.gui.no_recipe": "No soup recipe",
   "hearthbound.gui.planned": "%s batches / %s bowls",
   "hearthbound.gui.rotten": "Remove spoiled food",
   "hearthbound.gui.add_food": "Add ingredients"

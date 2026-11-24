@@ -6,8 +6,6 @@ import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.*;
-import net.minecraft.tags.TagKey;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -29,7 +27,6 @@ import net.dries007.tfc.common.recipes.*;
 import javax.annotation.Nullable;
 
 public final class VesselEntity extends BlockEntity {
-    private static final TagKey<Item> SOUP_INPUT=TagKey.create(Registries.ITEM,new ResourceLocation("tfc","foods/usable_in_soup"));
     private final NonNullList<ItemStack> ingredients=NonNullList.withSize(5,ItemStack.EMPTY);
     private final int[] exposure=new int[5];
     private final FluidTank tank;
@@ -191,16 +188,16 @@ public final class VesselEntity extends BlockEntity {
         for(int i=0;i<5;i++)inv.setStackInSlot(4+i,ingredients.get(i).copyWithCount(1));
         return inv;
     }
-    private PotRecipe recipeFor(PotBlockEntity.PotInventory inv){
-        if(level==null)return null;
-        PotRecipe r=level.getRecipeManager().getRecipeFor(TFCRecipeTypes.POT.get(),inv,level).orElse(null);
-        if(r instanceof SoupPotRecipe)return r;
-        for(PotRecipe candidate:level.getRecipeManager().getAllRecipesFor(TFCRecipeTypes.POT.get()))
-            if(candidate instanceof SoupPotRecipe&&candidate.matches(inv,level))return candidate;
-        return null;
+    private SoupPotRecipe recipeFor(PotBlockEntity.PotInventory inv){
+        // This vessel makes soup from food, not from a fixed set of registered recipes.
+        // Preserve an exact native recipe when present; otherwise use TFC's own dynamic soup output.
+        return FlexibleSoup.resolve(level,inv);
     }
-    private void finish(PotRecipe recipe,PotBlockEntity.PotInventory inv,int n){
-        if(!recipe.matches(inv,level))return;
+    private void finish(SoupPotRecipe recipe,PotBlockEntity.PotInventory inv,int n){
+        // The recipe/plan was resolved on this same server tick. A fallback deliberately
+        // does not require native ingredient-tag or exact-cardinality matching.
+        if(n<=0||n!=batchCount()||tank.getFluidAmount()<n*1000)return;
+        for(ItemStack item:ingredients)if(!item.isEmpty()&&(FoodCapability.get(item)==null||!Quality.fresh(item)))return;
         PotRecipe.Output result;
         RecipeHelpers.setCraftingInput(inv,4,9);
         try { result=recipe.getOutput(inv); } finally { RecipeHelpers.clearCraftingInput(); }
@@ -259,8 +256,8 @@ public final class VesselEntity extends BlockEntity {
             v.exposure[i]=Math.min(100000,v.exposure[i]+ticks);
         int n=v.batchCount();
         PotBlockEntity.PotInventory inv=v.sample();
-        PotRecipe recipe=v.recipeFor(inv);
-        if(n==0||recipe==null){v.recipeState=2;v.resetProgress();v.stage(1);v.setChanged();return;}
+        if(n==0){v.recipeState=0;v.resetProgress();v.stage(1);v.setChanged();return;}
+        SoupPotRecipe recipe=v.recipeFor(inv);
         v.recipeState=3;v.plannedBatches=n;
         v.plannedServings=n*(int)(v.ingredients.stream().filter(s->!s.isEmpty()).count()/2+1);
         if(!recipe.getId().equals(v.activeRecipe)){v.resetProgress();v.activeRecipe=recipe.getId();}

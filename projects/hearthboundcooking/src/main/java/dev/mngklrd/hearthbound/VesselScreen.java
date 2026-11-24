@@ -39,7 +39,7 @@ public final class VesselScreen extends AbstractContainerScreen<VesselMenu> {
         g.drawString(font,Component.literal(menu.value(0)+"/"+menu.value(1)+" mB"),8,75,0xff4b3828,false);
         if(menu.value(4)>0)g.drawString(font,Component.translatable("hearthbound.gui.servings",menu.value(4),menu.value(5)),43,59,0xff4b3828,false);
         else{
-            String key=switch(menu.value(7)){case 1->"water";case 2->"no_recipe";case 3->"planned";case 4->"rotten";default->"add_food";};
+            String key=switch(menu.value(7)){case 1->"water";case 3->"planned";case 4->"rotten";default->"add_food";};
             Component hint=Component.translatable("hearthbound.gui."+key,menu.value(8),menu.value(9));
             g.drawString(font,font.plainSubstrByWidth(hint.getString(),123),43,58,0xff4b3828,false);
             g.drawString(font,Component.translatable("hearthbound.gui.remove"),43,67,0xff4b3828,false);

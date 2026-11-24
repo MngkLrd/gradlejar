@@ -31,7 +31,6 @@
   "hearthbound.gui.remove": "ПКМ: забрать",
   "hearthbound.slot_mismatch": "В ячейке другой ингредиент",
   "hearthbound.gui.water": "Добавь воду",
-  "hearthbound.gui.no_recipe": "Нет рецепта супа",
   "hearthbound.gui.planned": "%s парт. / %s порц.",
   "hearthbound.gui.rotten": "Убери испорченное",
   "hearthbound.gui.add_food": "Добавь продукты"
