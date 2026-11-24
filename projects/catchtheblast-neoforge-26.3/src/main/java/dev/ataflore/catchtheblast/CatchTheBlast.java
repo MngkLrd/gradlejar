@@ -19,7 +19,8 @@ public final class CatchTheBlast {
  public static final DeferredRegister.Items ITEMS=DeferredRegister.createItems(ID);
  public static final DeferredItem<BlastShieldItem> BLAST_SHIELD=ITEMS.registerItem("blast_shield",BlastShieldItem::new,BlastShieldItem::configure);
  public CatchTheBlast(IEventBus bus,ModContainer container){
-  ITEMS.register(bus);container.registerConfig(ModConfig.Type.SERVER,BlastConfig.SPEC);bus.addListener(this::creative);
+  ITEMS.register(bus);bus.addListener(this::creative);
+  NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStartedEvent event)->BlastConfig.load(event.getServer()));
   NeoForge.EVENT_BUS.addListener(BlastCombat::onBlock);NeoForge.EVENT_BUS.addListener(TravellingWave::tick);NeoForge.EVENT_BUS.addListener(TravellingWave::stop);NeoForge.EVENT_BUS.addListener(BlastCommands::register);
   if(FMLEnvironment.getDist()==Dist.CLIENT)dev.ataflore.catchtheblast.client.ClientSetup.register(bus);
  }

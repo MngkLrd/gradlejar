@@ -15,13 +15,12 @@ public final class BlastCommands {
                 .executes(ctx -> report(ctx.getSource(), false))
                 .then(Commands.argument("enabled", BoolArgumentType.bool())
                     .executes(ctx -> {
-                        BlastConfig.TERRAIN_DAMAGE.set(BoolArgumentType.getBool(ctx, "enabled"));
-                        BlastConfig.SPEC.save();
+                        BlastConfig.setTerrain(BoolArgumentType.getBool(ctx, "enabled"));
                         return report(ctx.getSource(), true);
                     }))));
     }
     private static int report(CommandSourceStack source, boolean broadcast) {
-        boolean enabled = BlastConfig.TERRAIN_DAMAGE.get();
+        boolean enabled = BlastConfig.terrainDamage();
         source.sendSuccess(() -> Component.translatable(enabled ? "command.catchtheblast.terrain.enabled" : "command.catchtheblast.terrain.disabled"), broadcast);
         return enabled ? 1 : 0;
     }

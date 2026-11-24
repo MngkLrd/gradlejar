@@ -46,7 +46,7 @@ public final class TravellingWave {
             Vec3 center=w.origin.add(w.dir.scale(w.distance));
             double radius=.25+w.distance*.53;
             BlastFx.waveRing(w.level,center,w.dir,radius,w.strength);
-            if (BlastConfig.TERRAIN_DAMAGE.get() && w.strength>=.2f && w.distance>=1.4 && budget>0)
+            if (BlastConfig.terrainDamage() && w.strength>=.2f && w.distance>=1.4 && budget>0)
                 budget-=carve(w,player,center,Math.min(2.5, .65+radius*.48),Math.min(24,budget));
             if(w.distance>=w.range) it.remove();
         }
@@ -73,7 +73,7 @@ public final class TravellingWave {
             if(!w.visited.add(pos) || !w.level.isLoaded(pos) || !w.level.getWorldBorder().isWithinBounds(pos)) continue;
             BlockState state=w.level.getBlockState(pos);
             if(state.isAir() || state.hasBlockEntity() || !state.getFluidState().isEmpty() ||
-               state.getDestroySpeed(w.level,pos)<0 || state.getBlock().getExplosionResistance()>BlastConfig.MAX_RESISTANCE.get() ||
+               state.getDestroySpeed(w.level,pos)<0 || state.getBlock().getExplosionResistance()>BlastConfig.maxResistance() ||
                !w.level.mayInteract(player,pos)) continue;
             used++;
             // Standard player block break path fires NeoForge's protection event.
