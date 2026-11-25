@@ -27,8 +27,8 @@ def button(state):
     for x,y,w in [(12,7,19),(44,12,23),(72,6,14),(103,13,28),(143,8,17),(174,11,11)]:
         d.line((x,y,x+w,y),fill=shadow);d.line((x+2,y+1,x+w-4,y+1),fill=lit)
     # A snow cap along the top, with distinct short drifts.
-    d.line((3,1,196,1),fill=ice)
-    for x,w in [(3,12),(20,8),(39,14),(67,8),(83,12),(113,9),(139,17),(165,8),(184,13)]:
+    d.line((3,1,196,1),fill=shadow)
+    for x,w in {'normal':[(3,16),(27,9),(53,23),(100,12),(153,19),(184,13)],'hover':[(3,10),(35,17),(76,11),(122,26),(174,23)],'disabled':[(3,6),(66,10),(143,11),(191,6)]}[state]:
         d.rectangle((x,0,x+w-1,1),fill=snow)
         d.line((x+1,2,x+w-3,2),fill=ice)
     for x,sgn in [(2,1),(197,-1)]:
@@ -123,6 +123,9 @@ if z:
                         break
         save(rel,im)
         if entry+'.mcmeta' in z.namelist():(root/(rel+'.png.mcmeta')).write_bytes(z.read(entry+'.mcmeta'))
+    # Second pass uses exact vanilla atlas geometry and explicit seasonal artwork.
+    from winter import upgrade
+    upgrade(root, z, a.out, a.download)
     z.close()
 assert len(list(root.rglob('*.png')))>=8
 print('Christmas UI sprites:',len(list(root.rglob('*.png'))))

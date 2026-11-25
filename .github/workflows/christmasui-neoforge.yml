@@ -43,10 +43,12 @@ jobs:
                   assert len(images)>50, len(images)
                   for n in images: Image.open(BytesIO(z.read(n))).verify()
                   assert 'assets/minecraft/textures/gui/sprites/widget/button.png.mcmeta' in z.namelist()
+                  for name in ['container/inventory','container/creative_inventory/tab_items','sprites/hud/heart/full','sprites/server_list/join','title/background/panorama_0']:
+                      assert 'assets/minecraft/textures/gui/'+name+'.png' in z.namelist(), name
                   if f.suffix=='.jar': assert 'dev/christmasui/client/TitleSnow.class' in z.namelist()
           PY
       - name: Publish
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar projects/christmasui-neoforge/build/packs/*.zip --target "$GITHUB_SHA" --title "Christmas UI 0.1.0" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
+          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar projects/christmasui-neoforge/build/packs/*.zip --target "$GITHUB_SHA" --title "Christmas UI 0.2.0" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease

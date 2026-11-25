@@ -3,7 +3,7 @@ loaderVersion="[4,)"
 license="All Rights Reserved"
 [[mods]]
 modId="christmasui"
-version="0.1.0"
+version="0.2.0"
 displayName="Christmas UI"
 description="Festive vanilla menus and HUD with animated title-screen snowfall."
 displayTest="IGNORE_ALL_VERSION"
