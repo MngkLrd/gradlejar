@@ -1,6 +1,6 @@
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group='dev.christmasui'
-version='0.2.0'
+version='0.3.0'
 base.archivesName='christmasui-neoforge-1.21.1'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 neoForge { version='21.1.228'; runs { client { client() } }; mods { christmasui { sourceSet(sourceSets.main) } } }
@@ -17,6 +17,6 @@ tasks.register('resourcePack', Zip) {
     dependsOn('generateChristmasArt')
     from(artDir)
     from('src/main/resources') { include 'pack.mcmeta' }
-    archiveFileName='christmasui-resourcepack-1.21.1-0.2.0.zip'
+    archiveFileName='christmasui-resourcepack-1.21.1-0.3.0.zip'
     destinationDirectory=layout.buildDirectory.dir('packs')
 }

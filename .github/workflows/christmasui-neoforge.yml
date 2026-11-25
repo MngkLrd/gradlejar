@@ -27,7 +27,7 @@ jobs:
           gradle-version: '9.2.1'
       - name: Compile and package
         working-directory: projects/christmasui-neoforge
-        run: gradle --no-daemon --stacktrace clean build resourcePack
+        run: gradle --no-daemon --stacktrace clean build
       - name: Verify
         working-directory: projects/christmasui-neoforge
         run: |
@@ -36,7 +36,7 @@ jobs:
           from PIL import Image
           from io import BytesIO
           from pathlib import Path
-          for f in [next(Path('build/libs').glob('*.jar')),next(Path('build/packs').glob('*.zip'))]:
+          for f in [next(Path('build/libs').glob('*.jar')),]:
               with ZipFile(f) as z:
                   assert z.testzip() is None
                   images=[n for n in z.namelist() if n.endswith('.png')]
@@ -46,9 +46,16 @@ jobs:
                   for name in ['container/inventory','container/creative_inventory/tab_items','sprites/hud/heart/full','sprites/server_list/join','title/background/panorama_0']:
                       assert 'assets/minecraft/textures/gui/'+name+'.png' in z.namelist(), name
                   if f.suffix=='.jar': assert 'dev/christmasui/client/TitleSnow.class' in z.namelist()
+                  import json
+                  events=json.loads(z.read('assets/minecraft/sounds.json'))
+                  assert all(events[e]['replace'] for e in ['music.menu','music.game','music.overworld.frozen_peaks','music.creative'])
+                  assert z.read('assets/minecraft/sounds/music/christmas_calm.ogg')[:4]==b'OggS'
+                  for name in ['sprites/world_list/join','sprites/world_list/join_highlighted','sprites/widget/slider_handle','sprites/widget/locked_button','sprites/hud/hotbar_offhand_right']:
+                      assert 'assets/minecraft/textures/gui/'+name+'.png' in z.namelist(),name
+                  assert 'assets/minecraft/textures/item/empty_armor_slot_shield.png' in z.namelist()
           PY
       - name: Publish
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar projects/christmasui-neoforge/build/packs/*.zip --target "$GITHUB_SHA" --title "Christmas UI 0.2.0" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
+          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar --target "$GITHUB_SHA" --title "Christmas UI 0.3.0" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
