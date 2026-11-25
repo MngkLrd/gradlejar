@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="All Rights Reserved"
+[[mods]]
+modId="christmasui"
+version="0.1.0"
+displayName="Christmas UI"
+description="Festive vanilla menus and HUD with animated title-screen snowfall."
+displayTest="IGNORE_ALL_VERSION"
+[[dependencies.christmasui]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="CLIENT"
+[[dependencies.christmasui]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.0,21.2)"
+ordering="NONE"
+side="CLIENT"

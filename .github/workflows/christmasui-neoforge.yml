@@ -1,0 +1,52 @@
+name: Christmas UI NeoForge
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'projects/christmasui-neoforge/**'
+      - '.github/workflows/christmasui-neoforge.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install Pillow
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+      - name: Compile and package
+        working-directory: projects/christmasui-neoforge
+        run: gradle --no-daemon --stacktrace clean build resourcePack
+      - name: Verify
+        working-directory: projects/christmasui-neoforge
+        run: |
+          python3 - <<'PY'
+          from zipfile import ZipFile
+          from PIL import Image
+          from io import BytesIO
+          from pathlib import Path
+          for f in [next(Path('build/libs').glob('*.jar')),next(Path('build/packs').glob('*.zip'))]:
+              with ZipFile(f) as z:
+                  assert z.testzip() is None
+                  images=[n for n in z.namelist() if n.endswith('.png')]
+                  assert len(images)>50, len(images)
+                  for n in images: Image.open(BytesIO(z.read(n))).verify()
+                  assert 'assets/minecraft/textures/gui/sprites/widget/button.png.mcmeta' in z.namelist()
+                  if f.suffix=='.jar': assert 'dev/christmasui/client/TitleSnow.class' in z.namelist()
+          PY
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar projects/christmasui-neoforge/build/packs/*.zip --target "$GITHUB_SHA" --title "Christmas UI 0.1.0" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
