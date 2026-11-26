@@ -29,7 +29,7 @@ public final class Body {
   if(Rules.on("cold_shock")&&water&&!s.water&&l.getBiome(p.blockPosition()).value().getBaseTemperature()<.15){p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,60,0,false,false,false));p.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,60,0,false,false,false));}
   int air=p.getAirSupply(),max=p.getMaxAirSupply();
   if(Rules.on("exhausted_breath")&&water&&s.lastSprint>0&&now-s.lastSprint<80&&now%12==0&&air>0&&!p.hasEffect(MobEffects.WATER_BREATHING))p.setAirSupply(air-1);
-  if(!water&&s.lastAir<max*.75&&Rules.on("breath_debt")&&air>s.lastAir&&s.lastAir>=0)p.setAirSupply(Math.min(air,s.lastAir+2));
+  if(!water&&s.lastAir<max*.75&&Rules.on("breath_debt")&&air>s.lastAir)p.setAirSupply(Math.min(air,Math.max(0,s.lastAir)+2));
   if(Rules.on("finite_air"))AirAndFire.breathe(l,p,s,water,now);
   s.water=water;s.lastAir=p.getAirSupply();
   if(now%5==0){if(p.isInWater()||l.isRainingAt(p.blockPosition()))s.wet=Math.min(100,s.wet+5);else s.wet=Math.max(0,s.wet-(AirAndFire.nearHeat(l,p.blockPosition(),2)?4:1));}

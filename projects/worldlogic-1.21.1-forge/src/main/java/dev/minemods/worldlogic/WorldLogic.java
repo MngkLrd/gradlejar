@@ -3,7 +3,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.common.MinecraftForge;
 @Mod("worldlogic")
 public final class WorldLogic {
- public WorldLogic() {
+ public WorldLogic(net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext context) {
+  Content.ITEMS.register(context.getModEventBus());
   Rules.load();
   var bus=MinecraftForge.EVENT_BUS;
   bus.addListener(Structure::onBreak);

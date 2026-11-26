@@ -36,7 +36,23 @@ public final class Structure {
   if(e.getProjectile().getDeltaMovement().length()<.45)return;BlockPos p=hit.getBlockPos();if(!l.hasChunkAt(p))return;BlockState s=l.getBlockState(p);
   if(Rules.on("fragile_lanterns")&&s.getBlock() instanceof LanternBlock&&s.getValue(LanternBlock.HANGING)){l.destroyBlock(p,true,e.getProjectile());return;}
   if(Rules.on("fragile_containers")&&Material.block(s,"fragile_container")){l.destroyBlock(p,true,e.getProjectile());return;}
-  if(Rules.on("falling_dripstone")&&s.is(Blocks.POINTED_DRIPSTONE)&&s.getValue(PointedDripstoneBlock.TIP_DIRECTION)==Direction.DOWN){FallingBlockEntity.fall(l,p,s); }
+  if(Rules.on("falling_dripstone")&&s.is(Blocks.POINTED_DRIPSTONE)&&s.getValue(PointedDripstoneBlock.TIP_DIRECTION)==Direction.DOWN){FallingBlockEntity.fall(l,p,s);return;}
+  if(e.getProjectile() instanceof AbstractArrow a&&(a.getType()==net.minecraft.world.entity.EntityType.ARROW||a.getType()==net.minecraft.world.entity.EntityType.SPECTRAL_ARROW)&&a.getPierceLevel()==0){
+   Vec3 normal=Vec3.atLowerCornerOf(hit.getDirection().getNormal());Vec3 v=a.getDeltaMovement();
+   boolean metal=Material.block(s,"ricochet_metal"),hard=metal||Material.block(s,"ricochet_stone");
+   double angle=Math.abs(v.normalize().dot(normal));int bounces=a.getPersistentData().getInt("worldlogic_bounces");
+   if(Rules.on("ricochet")&&hard&&angle<(metal?.48:.28)&&bounces<2&&v.length()>1.0){
+    var clone=a.getType().create(l);
+    if(clone instanceof AbstractArrow b){
+     var tag=a.saveWithoutId(new net.minecraft.nbt.CompoundTag());tag.remove("UUID");b.load(tag);b.setUUID(java.util.UUID.randomUUID());
+     b.getPersistentData().putInt("worldlogic_bounces",bounces+1);
+     b.setPos(hit.getLocation().x+normal.x*.25,hit.getLocation().y+normal.y*.25,hit.getLocation().z+normal.z*.25);
+     b.setDeltaMovement(new Impulse(v,.2).reflect(normal,metal?.66:.48));
+     if(l.addFreshEntity(b)){e.setImpactResult(ProjectileImpactEvent.ImpactResult.STOP_AT_CURRENT_NO_DAMAGE);return;}
+    }
+   }
+   if(Rules.on("arrow_recovery")&&hard&&v.length()>2&&l.random.nextFloat()<.08)e.setImpactResult(ProjectileImpactEvent.ImpactResult.STOP_AT_CURRENT_NO_DAMAGE);
+  }
  }
  public static void onExplosion(ExplosionEvent.Detonate e){
   if(!(e.getLevel() instanceof ServerLevel l)||!Rules.on("glass_pressure")||e.getAffectedBlocks().isEmpty()||!l.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING))return;

@@ -22,6 +22,6 @@ public final class Combat {
   if(Rules.on("landing_recovery")&&x instanceof Player p&&d>5&&!p.isCreative()&&!p.isSpectator()){int t=Math.min(20,Math.round((d-5)*2));p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,Math.max(4,t),0,false,false,false));Body.state(p).recoverUntil=l.getGameTime()+t;}
  }
  public static void shield(ShieldBlockEvent e){if(!Rules.on("shield_momentum")||!(e.getEntity().level() instanceof ServerLevel)||!(e.getDamageSource().getDirectEntity() instanceof LivingEntity a)||!a.isSprinting())return;
-  var v=e.getEntity();Vec3 d=v.position().subtract(a.position());if(d.lengthSqr()<.01)return;double m=Math.min(.35,.13*Material.mass(a)/Material.mass(v));v.push(d.normalize().x*m,.02,d.normalize().z*m);v.hurtMarked=true;a.setSprinting(false);}
+  var v=e.getEntity();Vec3 d=v.position().subtract(a.position());if(d.lengthSqr()<.01)return;double m=Math.min(.35,new Impulse(a.getDeltaMovement(),Material.mass(a)).transfer(v)*.7);v.push(d.normalize().x*m,.02,d.normalize().z*m);v.hurtMarked=true;a.setSprinting(false);}
  public static void visibility(LivingEvent.LivingVisibilityEvent e){if(Rules.on("armor_noise")&&e.getEntity() instanceof Player p&&p.level() instanceof ServerLevel&&p.isSprinting())e.modifyVisibility(Material.armorNoise(p));}
 }
