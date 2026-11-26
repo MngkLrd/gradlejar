@@ -55,6 +55,7 @@ public final class Balance {
   p.setDeltaMovement(v.x,Math.min(0,p.getDeltaMovement().y),v.z);p.hurtMarked=true;
   Survival.work(p,5+severity*3);
   GroundHazards.dropOnImpact(p,severity,reason);
+  Trauma.impact(p,severity,reason);
   if(severity>=.75&&Rules.on("wall_collision")&&reason.equals("collision"))p.hurt(l.damageSources().generic(),(float)Math.min(3,1+severity));
   BlockPos ground=p.getOnPos();var floor=l.getBlockState(ground);
   if(!floor.isAir())l.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,floor),p.getX(),p.getY()+.08,p.getZ(),12,.25,.04,.25,.035);
@@ -79,7 +80,7 @@ public final class Balance {
   Vec3 delta=p.position().subtract(s.position),previous=s.velocity;double speed=previous.horizontalDistance(),current=delta.horizontalDistance();
   boolean injured=Rules.on("injured_balance")&&Survival.injured(p,now);
   double fatigue=Rules.on("exertion")?Survival.fatigue(p):0,burden=Condition.burden(p),weak=Condition.weakness(p);
-  double min=threshold(injured,fatigue,burden);if(dark(l,p))min=Math.max(.13,min*.85);
+  double min=Math.max(.13,threshold(injured,fatigue,burden)-Trauma.balancePenalty(p));if(dark(l,p))min=Math.max(.13,min*.85);
   if(s.ground&&!p.onGround()&&delta.y>.075){s.jumpAt=now;s.jumpY=s.position.y;s.jumpSpeed=Math.max(speed,current);s.failedUntil=0;}
   boolean airborneJump=!p.onGround()&&now-s.jumpAt<=20;
   if(airborneJump)s.jumpSpeed=Math.max(s.jumpSpeed,speed);

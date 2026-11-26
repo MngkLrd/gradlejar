@@ -27,5 +27,10 @@
   "message.worldlogic.fall_chain": "Столкновение сбило тебя с ног!",
   "message.worldlogic.fall_edge": "Ты потерял равновесие у края!",
   "message.worldlogic.ledge_grab": "Ты ухватился за край!",
-  "message.worldlogic.disarmed": "Оружие вылетело из руки!"
+  "message.worldlogic.disarmed": "Оружие вылетело из руки!",
+  "message.worldlogic.shoulder_injury": "Ты повредил плечо!",
+  "message.worldlogic.guard_broken": "Твоя защита сорвана!",
+  "message.worldlogic.concussion": "Взрыв оглушил тебя!",
+  "message.worldlogic.fall_animal": "Крупное животное сбило тебя с ног!",
+  "message.worldlogic.fall_dodge": "Ты потерял равновесие на резком повороте!"
 }

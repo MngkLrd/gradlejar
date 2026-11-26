@@ -65,6 +65,11 @@ public final class WorldLogic {
   bus.addListener(Condition::hurt);
   bus.addListener(Condition::logout);
   bus.addListener(Balance::tick);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,Trauma::shield);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,Trauma::damage);
+  bus.addListener(Trauma::melee);
+  bus.addListener(Trauma::tick);
+  bus.addListener(Trauma::logout);
   bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,ImpactDynamics::hit);
   bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,ImpactDynamics::landing);
   bus.addListener(ImpactDynamics::tick);

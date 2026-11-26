@@ -30,6 +30,6 @@ public final class Trees {
   for(BlockPos q:ordered){queue.add(new Job(q,origin.immutable(),e.getState().getBlock(),due));due+=5;}
  }
  public static void tick(TickEvent.LevelTickEvent.Post e){if(!(e.level instanceof ServerLevel l))return;var queue=QUEUE.get(l);if(queue==null)return;int n=6;
-  while(n-->0&&!queue.isEmpty()&&queue.peek().due<=l.getGameTime()){Job job=queue.remove();BlockPos q=job.pos;if(Rules.on("tree_weight")&&l.hasChunkAt(q)&&l.hasChunkAt(job.root)&&l.isEmptyBlock(job.root)&&l.getBlockState(q).is(job.block)&&!WorldState.placed(l,q))l.destroyBlock(q,true);}
+  while(n-->0&&!queue.isEmpty()&&queue.peek().due<=l.getGameTime()){Job job=queue.remove();BlockPos q=job.pos;if(Rules.on("tree_weight")&&l.hasChunkAt(q)&&l.hasChunkAt(job.root)&&l.isEmptyBlock(job.root)&&l.getBlockState(q).is(job.block)&&!WorldState.placed(l,q)){if(Rules.on("dangerous_trees")&&l.getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_MOBGRIEFING)){var falling=net.minecraft.world.entity.item.FallingBlockEntity.fall(l,q,l.getBlockState(q));falling.getPersistentData().putBoolean("worldlogic_falling_log",true);}else l.destroyBlock(q,true);}}
  }
 }

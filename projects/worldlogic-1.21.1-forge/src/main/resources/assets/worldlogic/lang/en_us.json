@@ -27,5 +27,10 @@
   "message.worldlogic.fall_chain": "A collision knocked you down!",
   "message.worldlogic.fall_edge": "You lost your footing at the edge!",
   "message.worldlogic.ledge_grab": "You grabbed the ledge!",
-  "message.worldlogic.disarmed": "You lost your weapon!"
+  "message.worldlogic.disarmed": "You lost your weapon!",
+  "message.worldlogic.shoulder_injury": "Your shoulder is injured!",
+  "message.worldlogic.guard_broken": "Your guard broke!",
+  "message.worldlogic.concussion": "The blast left you dazed!",
+  "message.worldlogic.fall_animal": "A heavy animal knocked you down!",
+  "message.worldlogic.fall_dodge": "You lost balance during a sharp turn!"
 }

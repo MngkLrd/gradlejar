@@ -9,7 +9,11 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 public final class ReleaseChecks {
  private static void check(boolean ok,String detail){if(!ok)throw new IllegalStateException("World Logic test failed: "+detail);}
  public static void run(){
-  check(Rules.keys().size()>=97,"rule count");
+  check(Rules.keys().size()>=105,"rule count");
+  check(Trauma.guardRisk(10,3,90)>Trauma.guardRisk(4,1,0),"guard overload curve");
+  check(Trauma.aggravation(100)>Trauma.aggravation(0),"injury aggravation curve");
+  check(Trauma.armFactor(true)<Trauma.armFactor(false),"arm injury mining penalty");
+  check(Rules.preset("realistic").get("dangerous_trees").equals("false"),"tree safety");
   check(ImpactDynamics.hitRisk(10,3,80,true)>ImpactDynamics.hitRisk(2,1,0,false),"knockdown risk");
   check(ImpactDynamics.collisionRisk(.4,3)>ImpactDynamics.collisionRisk(.1,1),"collision momentum");
   check(ImpactDynamics.shockRadius(10,40)<=5,"shockwave bound");

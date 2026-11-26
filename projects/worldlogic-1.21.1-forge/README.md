@@ -1,6 +1,6 @@
-# World Logic 1.0.0-rc13
+# World Logic 1.0.0-rc14
 Minecraft 1.21.1 / Forge 52.1.0+ / Java 21 / Gradle 8.10.2 / official mappings.
-Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc13.jar.
+Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc14.jar.
 Install on both server and clients. No external dependencies. Burning Arrows excluded.
 
 Config: config/worldlogic.properties. Mods > World Logic > Config (local world or main menu).
@@ -42,3 +42,5 @@ RC12 polish: night vision protects against the darkness balance modifier; disabl
 RC13: 97 switches. Strong melee impacts queue actual prone transitions while grounded; sprinting player collisions use closing velocity and mass, respect PvP rules, and push nonplayer mobs rather than forcing unsupported poses. Hold sneak with a free hand while falling beside a reachable ledge to briefly catch it once per airborne interval; no teleport or automatic mantle. Prone players can crawl after 8 ticks; shallow downhill movement uses collision geometry and never intentionally pushes over a deep drop. Edge stumbling requires narrow support and a sharp direction change. Hardcore-only disarming drops one unnamed tagged weapon, never deletes it. Heavy landings panic nearby animals, produce dust and feed existing gravel vibration rules; fragile block reaction is visual only, not destruction. No recipes. Network protocol 4, update both sides. Client visual and actual movement QA still needed.
 
 RC13 refinement: downhill movement preserves initial fall direction, stops when crawling becomes possible, and never repeats on a flat surface. Crawl unlock syncs immediately at tick 8 rather than relying only on periodic state sync.
+
+RC14: 105 switches. Strong blocked hits can disable shield use briefly; rapid sprint turns cost fatigue and can cause a slip only on slick terrain if injured/exhausted; sprinting delays leg recovery; severe collisions can cause persistent shoulder injury (-25% mining, -15% melee), synced to client; moving heavy animals can knock players down; opt-in tree decay can turn logs into falling entities, respecting mobGriefing and tracked placements; explosion damage temporarily causes darkness, weakness and impaired movement (no custom hearing filter); impacts accumulate bounded trauma, reducing balance threshold and decaying with rest. No new recipes or required items. Dangerous trees are Hardcore-only and require tree_weight; pre-install builds remain unidentifiable. Network protocol 5. Tests cover calculations, not manual gameplay. Both client and server must update.
