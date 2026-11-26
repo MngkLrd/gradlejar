@@ -39,7 +39,7 @@ public final class Survival {
   if(Rules.on("exertion")){
    boolean moving=!p.isPassenger()&&(p.isSprinting()||p.isSwimming()||p.onClimbable()&&p.getDeltaMovement().y>.05);
    double mass=Material.mass(p);
-   if(moving){work(p,(p.isSwimming()?2.4:1.45)*Math.max(.8,mass));p.causeFoodExhaustion((float)(.08*Math.max(1,mass)*Rules.strength("movement")));}
+   if(moving){double armor=Rules.on("armor_fatigue")?CombatConsequences.armorWork(Expedition.armorLoad(p)):1;work(p,(p.isSwimming()?2.4:1.45)*Math.max(.8,mass)*armor);p.causeFoodExhaustion((float)(.08*Math.max(1,mass)*armor*Rules.strength("movement")));}
    else if(p.onGround()&&!p.isInWater()&&!p.isUsingItem()&&now-LAST_WORK.getOrDefault(p,-100L)>=60){double recovery=p.getFoodData().getFoodLevel()>=12?2.0:.6;if(p.getDeltaMovement().horizontalDistance()<.04)recovery*=2;if(AirAndFire.nearHeat(l,p.blockPosition(),2)&&p.getDeltaMovement().horizontalDistance()<.04)recovery*=1.6;tag.putDouble(FATIGUE,Math.max(0,fatigue(p)-recovery));}
    if(fatigue(p)>=75){p.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,35,0,false,false,false));if(fatigue(p)>=92)p.setSprinting(false);}
   }

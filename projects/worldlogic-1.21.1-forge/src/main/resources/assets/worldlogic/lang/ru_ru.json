@@ -6,5 +6,8 @@
   "message.worldlogic.guard_exhausted": "Руки устали держать щит. Отступи!",
   "message.worldlogic.heavy_diving": "Тяжёлая броня ускоряет расход воздуха.",
   "message.worldlogic.rest_sheltered": "Сон под крышей восстановил силы.",
-  "message.worldlogic.rest_exposed": "Сон под открытым небом восстановил только часть сил."
+  "message.worldlogic.rest_exposed": "Сон под открытым небом восстановил только часть сил.",
+  "message.worldlogic.retreat_hit": "Удар в спину сорвал отступление.",
+  "message.worldlogic.climb_hit": "Ты потерял хват!",
+  "message.worldlogic.cargo_broken": "Хрупкий груз разбился: %s шт."
 }

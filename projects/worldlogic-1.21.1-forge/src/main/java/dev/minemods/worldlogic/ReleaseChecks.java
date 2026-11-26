@@ -9,8 +9,12 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 public final class ReleaseChecks {
  private static void check(boolean ok,String detail){if(!ok)throw new IllegalStateException("World Logic test failed: "+detail);}
  public static void run(){
-  check(Rules.keys().size()>=63,"rule count");
+  check(Rules.keys().size()>=70,"rule count");
   check(Expedition.armorLoad(new ItemStack(Items.IRON_CHESTPLATE))>Expedition.armorLoad(new ItemStack(Items.LEATHER_CHESTPLATE)),"armor diving tradeoff");
+  check(CombatConsequences.healDelay(10,1)>CombatConsequences.healDelay(2,1),"damage recovery curve");
+  check(CombatConsequences.cargoLoss(4,1)==0&&CombatConsequences.cargoLoss(20,2)==3,"bounded cargo breakage");
+  check(CombatConsequences.armorWork(4)>CombatConsequences.armorWork(0),"armor exertion curve");
+  check(Rules.preset("realistic").get("fragile_cargo").equals("false"),"cargo opt-in");
   check(Expedition.shieldFraction(100)<Expedition.shieldFraction(0),"shield fatigue");
   check(Expedition.restRecovery(true)>Expedition.restRecovery(false),"shelter rest");
   check(Rules.preset("light").get("tree_weight").equals("false"),"light safety");

@@ -1,6 +1,6 @@
-# World Logic 1.0.0-rc8
+# World Logic 1.0.0-rc9
 Minecraft 1.21.1 / Forge 52.1.0+ / Java 21 / Gradle 8.10.2 / official mappings.
-Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc8.jar.
+Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc9.jar.
 Install on both server and clients. No external dependencies. Burning Arrows excluded.
 
 Config: config/worldlogic.properties. Mods > World Logic > Config (local world or main menu).
@@ -22,3 +22,5 @@ Hard survival terrain pass: finite campfire fuel (coal/charcoal/logs/planks/stic
 RC8 expedition consequences: damage interrupts food use without consuming it; shield blocks consume existing fatigue and become less efficient at high fatigue; heavy armor increases oxygen use underwater; sheltered full sleep recovers more fatigue than exposed sleep; noisy mining attracts nearby idle hostile mobs through navigation (sneaking avoids the noise). No recipes, item weight HUD or new progression. Light disables the five rules. Shield and sleep require exertion. New core checks cover armor, shield and rest calculations; multiplayer and client gameplay remain untested.
 
 Fatigue recovery now starts after three seconds without strenuous work; active item use prevents ordinary rest recovery. Mining noise targets the miner's last reachable position rather than the still-solid block being broken. /worldlogic inspect reports fatigue.
+
+RC9 consequences: 70 switches. Combat recovery delays food-driven natural healing only, not potion/beacon healing; back hits while sprinting stagger; attack on ladders applies a downward/outward impulse; heavy armor increases exertion; actual fall damage can break 1–3 tagged fragile cargo items (Hardcore only by default); hard falls and environmental damage wear armor; selected mobs investigate their last visible target location after losing their vanilla target. Pursuit does not reveal hidden player positions or break doors. Recovery/stagger and pursuit memory are session-local; no new items or recipes. Runtime and balance must be verified.
