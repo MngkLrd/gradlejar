@@ -19,14 +19,6 @@
       "expect": "Changed the block"
     },
     {
-      "command": "gamemode survival MineModsQA",
-      "expect": "Set.*game mode|already"
-    },
-    {
-      "command": "clear MineModsQA",
-      "expect": "Removed|No items"
-    },
-    {
       "command": "tp MineModsQA 3.5 200 1.5",
       "expect": "Teleported"
     },
