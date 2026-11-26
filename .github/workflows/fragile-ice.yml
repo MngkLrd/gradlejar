@@ -63,7 +63,8 @@ jobs:
           with zipfile.ZipFile(path) as z:
               assert z.testzip() is None
               names=set(z.namelist())
-              assert 'dev/minemods/fragileice/mixin/ServerPlayerMixin.class' in names
+              assert 'dev/minemods/fragileice/mixin/ServerLevelMixin.class' in names
+              assert 'dev/minemods/fragileice/IceStress.class' in names
               assert 'fragileice.mixins.json' in names
               assert 'pack.mcmeta' in names
               meta='fabric.mod.json' if loader=='fabric' else 'META-INF/mods.toml' if mc=='1.20.1' else 'META-INF/neoforge.mods.toml'
@@ -97,12 +98,12 @@ jobs:
           for loader in ('forge','neoforge','fabric'):
               for mc in ('1.20.1','1.21.1','26.1.2','26.2','26.3'):
                   if loader=='forge' and mc!='1.20.1': continue
-                  p=root/f'fragileice-{loader}-mc{mc}-1.0.0.jar'
+                  p=root/f'fragileice-{loader}-mc{mc}-1.0.1.jar'
                   assert p.is_file(), p
                   jars.append(p)
           assert len(jars)==11 and len(list(root.glob('*.jar')))==11
-          with zipfile.ZipFile('FragileIce-1.0.0-ALL-11-JARs.zip','w',zipfile.ZIP_DEFLATED) as z:
+          with zipfile.ZipFile('FragileIce-1.0.1-ALL-11-JARs.zip','w',zipfile.ZIP_DEFLATED) as z:
               for p in jars: z.write(p,p.name)
-          with zipfile.ZipFile('FragileIce-1.0.0-ALL-11-JARs.zip') as z: assert z.testzip() is None
+          with zipfile.ZipFile('FragileIce-1.0.1-ALL-11-JARs.zip') as z: assert z.testzip() is None
           PY
-          gh release create "fragileice-1.0.0-all-11-$GITHUB_RUN_NUMBER-$GITHUB_RUN_ATTEMPT" FragileIce-1.0.0-ALL-11-JARs.zip --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "Fragile Ice 1.0.0 | All 11 JARs" --notes "All 11 Gradle-compiled JARs, Forge / NeoForge / Fabric order." --prerelease
+          gh release create "fragileice-1.0.1-all-11-$GITHUB_RUN_NUMBER-$GITHUB_RUN_ATTEMPT" FragileIce-1.0.1-ALL-11-JARs.zip --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "Fragile Ice 1.0.1 | All 11 JARs" --notes "All 11 Gradle-compiled JARs, Forge / NeoForge / Fabric order." --prerelease
