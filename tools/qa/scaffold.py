@@ -14,7 +14,8 @@ def matrix():
 
 def select(targets):
     available={l+"-mc"+mc:(mc,l) for mc,l in matrix()}
-    if targets==["all"]:return list(available.values())
+    if targets==["all"]:return [(mc,l) for mc,l in available.values() if REGISTRY["minecraft"][mc].get("standard",True)]
+    if targets==["extended"]:return list(available.values())
     require(targets and len(targets)==len(set(targets)) and set(targets)<=set(available),"Invalid or duplicate target")
     return [available[t] for t in targets]
 

@@ -7,7 +7,8 @@
     "https://minecraft.wiki/w/Java_Edition_26.1.2",
     "https://minecraft.wiki/w/Pack_format",
     "https://fabricmc.net/use/server/",
-    "https://docs.neoforged.net/user/docs/server/"
+    "https://docs.neoforged.net/user/docs/server/",
+    "https://feedback.minecraft.net/hc/en-us/articles/32385811139085-Minecraft-Java-Edition-1-21-4-The-Garden-Awakens"
   ],
   "minecraft": {
     "1.20.1": {
@@ -130,6 +131,27 @@
           "note": "Snapshot plugin must be revalidated before upgrading."
         }
       }
+    },
+    "1.21.4": {
+      "standard": false,
+      "java": 21,
+      "resource": [
+        46,
+        0
+      ],
+      "data": [
+        61,
+        0
+      ],
+      "data_layout": "singular",
+      "loaders": {
+        "fabric": {
+          "version": "0.17.3",
+          "gradle": "8.14.3",
+          "loom": "1.11.8"
+        }
+      },
+      "note": "Extended pilot only; runtime QA required"
     }
   }
 }

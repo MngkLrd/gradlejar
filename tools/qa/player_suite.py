@@ -5,7 +5,7 @@ import time
 from .common import ROOT, safe_path, require
 from .virtual_player import Bot
 
-SUPPORTED={("fabric","1.20.1"),("fabric","1.21.1")}
+SUPPORTED={("fabric","1.20.1"),("fabric","1.21.1"),("fabric","1.21.4")}
 ACTIONS={"position","startDig","abortDig","activate","inventory","drop"}
 
 def validate(suite):

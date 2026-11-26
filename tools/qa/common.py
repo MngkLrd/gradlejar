@@ -83,7 +83,7 @@ def qa_config(p):
         require(isinstance(q.get("scenario"),str), "Gameplay server mod needs a scenario")
         require(safe_path(ROOT,q["scenario"]).is_file(), "Missing scenario")
     if q.get("player_scenario"):
-        require(q["mode"]=="server" and (p["loader"],p["minecraft"]) in {("fabric","1.20.1"),("fabric","1.21.1")},"Unsupported player backend")
+        require(q["mode"]=="server" and (p["loader"],p["minecraft"]) in {("fabric","1.20.1"),("fabric","1.21.1"),("fabric","1.21.4")},"Unsupported player backend")
         require(safe_path(ROOT,q["player_scenario"]).is_file(),"Missing player scenario")
     for item in q.get("dependencies",[]):
         require(isinstance(item,dict) and re.fullmatch(r"[A-Za-z0-9_.-]+\.jar",item.get("name","")), "Bad dependency name")

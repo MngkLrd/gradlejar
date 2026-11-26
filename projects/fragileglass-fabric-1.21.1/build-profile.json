@@ -13,7 +13,8 @@
     "player_scenario": "tools/qa/scenarios/fragileglass-player.json",
     "release_targets": [
       "fabric-mc1.20.1",
-      "fabric-mc1.21.1"
+      "fabric-mc1.21.1",
+      "fabric-mc1.21.4"
     ]
   }
 }

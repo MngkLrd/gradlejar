@@ -59,7 +59,10 @@ def known_profiles():
 def select_projects(requested,changed=None):
     if requested:
         if requested.startswith("@batch:"):
-            from qa.control import batch_select
+            if __package__:
+                from .qa.control import batch_select
+            else:
+                from qa.control import batch_select
             return batch_select(list(known_profiles()),requested[7:].split(","))
         if requested.startswith("@"):
             slug=requested[1:]
