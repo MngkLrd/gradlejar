@@ -21,3 +21,7 @@ Independent material-first pixel artwork (24 items, 15 material maps, 8 growth s
 
 ## 3.1.3
 Fresh native artwork set, separate material ramps, directional surface shading, shaped item outlines, HUD relief and distinct meter artwork. Integer geometry and 1:1 UVs for lantern, incense burner and dreamcatcher. Gameplay and journal logic unchanged. See ART_STANDARD.md. Visual QA in Minecraft remains required.
+
+
+## 3.1.5
+New static PNG artwork for items, crops, materials, effects and GUI. Approved coffee, energy can, coffee berries and pillow retained at pixel level. Gradle copies fixed PNG bytes from the checked-in archive without drawing or recoloring. Gameplay and model geometry unchanged; in-game visual QA required.
