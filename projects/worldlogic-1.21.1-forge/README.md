@@ -1,6 +1,6 @@
-# World Logic 1.0.0-rc6
+# World Logic 1.0.0-rc7
 Minecraft 1.21.1 / Forge 52.1.0+ / Java 21 / Gradle 8.10.2 / official mappings.
-Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc6.jar.
+Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc7.jar.
 Install on both server and clients. No external dependencies. Burning Arrows excluded.
 
 Config: config/worldlogic.properties. Mods > World Logic > Config (local world or main menu).
@@ -14,3 +14,5 @@ CI core assertions cover profiles, impulse reflection, item mass, torch light, f
 Known limitations: existing logs placed before the mod was installed cannot be identified reliably; tree decay is off by default. Air and ventilation use bounded searches, no fluid simulation. Smoke follows sampled air paths; snow shedding is discrete. Furnace batches use last cooking time; not individual food units. Client visuals, mixed-mod interactions, network movement, claim protection and performance require in-game validation.
 
 RC6: client receives authoritative server friction and mining streak settings, with no writes to the local config. Expired hot-food components are removed from player inventory. Dedicated-server smoke gate is mandatory for CI prerelease; if installer downloads are denied, the dev server is tested with explicit mixins. Production testing must still be confirmed separately before stable release.
+
+Hard survival update: persistent work fatigue, recovery through rest and warmth, longer fall injuries, smoke inhalation in small enclosed areas. Light preset disables these additions. Further rules are implemented in the subsequent terrain and campfire pass.

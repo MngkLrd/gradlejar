@@ -27,6 +27,11 @@ public final class WorldLogic {
   bus.addListener(Combat::fall);
   bus.addListener(Combat::shield);
   bus.addListener(Combat::visibility);
+  bus.addListener(Survival::mine);
+  bus.addListener(Survival::jump);
+  bus.addListener(Survival::hit);
+  bus.addListener(Survival::fall);
+  bus.addListener(Survival::tick);
   bus.addListener(Body::tick);
   bus.addListener(Body::jump);
   bus.addListener(Body::breakSpeed);
