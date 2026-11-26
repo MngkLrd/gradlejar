@@ -682,3 +682,40 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "fooddigestion-v1.0.0-${GITHUB_RUN_NUMBER}" FoodDigestion-1.0.0-ALL-11-JARs.zip --target "$GITHUB_SHA" --title "Food Digestion 1.0.0 - 11 JARs" --notes "Exactly eleven compiled JARs grouped by loader. Static and core tests only; gameplay not tested." --prerelease
+
+
+  package-fragileglass:
+    needs: [plan, build]
+    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/fragileglass-') && github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: jar-fragileglass-*
+          path: downloaded-fragileglass
+      - name: Assemble exact eleven flat JARs
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+          expected = {'fragileglass-forge-mc1.20.1-1.0.0.jar', 'fragileglass-neoforge-mc1.20.1-1.0.0.jar', 'fragileglass-neoforge-mc1.21.1-1.0.0.jar', 'fragileglass-neoforge-mc26.1.2-1.0.0.jar', 'fragileglass-neoforge-mc26.2-1.0.0.jar', 'fragileglass-neoforge-mc26.3-1.0.0.jar', 'fragileglass-fabric-mc1.20.1-1.0.0.jar', 'fragileglass-fabric-mc1.21.1-1.0.0.jar', 'fragileglass-fabric-mc26.1.2-1.0.0.jar', 'fragileglass-fabric-mc26.2-1.0.0.jar', 'fragileglass-fabric-mc26.3-1.0.0.jar'}
+          files = list(Path('downloaded-fragileglass').rglob('*.jar'))
+          assert len(files) == 11 and {p.name for p in files} == expected, [p.name for p in files]
+          with zipfile.ZipFile('FragileGlass-1.0.0-ALL-11-JARs.zip','w',zipfile.ZIP_DEFLATED) as out:
+              for p in sorted(files,key=lambda p:p.name):
+                  with zipfile.ZipFile(p) as jar:
+                      assert jar.testzip() is None
+                      assert any(n.endswith('/GlassRules.class') for n in jar.namelist())
+                  out.write(p,p.name)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FragileGlass-1.0.0-ALL-11-JARs
+          path: FragileGlass-1.0.0-ALL-11-JARs.zip
+      - name: Publish flat JAR-only archive
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "fragileglass-all-1.0.0-${GITHUB_RUN_NUMBER}" FragileGlass-1.0.0-ALL-11-JARs.zip --repo "${GITHUB_REPOSITORY}" --target "${GITHUB_SHA}" --title "Fragile Glass 1.0.0 - all 11 JARs" --notes "Eleven separately compiled JARs. Runtime gameplay not yet tested." --prerelease

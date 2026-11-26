@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "dev.minemods.fragileglass.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MiningMixin",
+    "ProjectileMixin",
+    "FallMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

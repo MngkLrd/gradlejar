@@ -1,0 +1,20 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved"
+[[mods]]
+modId="fragileglass"
+version="1.0.0"
+displayName="Fragile Glass"
+description="Glass shatters from strikes, projectiles and hard landings."
+[[dependencies.fragileglass]]
+modId="forge"
+mandatory=true
+versionRange="[47.1.106,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.fragileglass]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1]"
+ordering="NONE"
+side="BOTH"

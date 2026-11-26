@@ -1,0 +1,9 @@
+{
+  "slug": "fragileglass",
+  "version": "1.0.0",
+  "minecraft": "1.20.1",
+  "loader": "forge",
+  "java": "17",
+  "gradle": "9.2.1",
+  "jar_glob": "fragileglass-forge-mc1.20.1-1.0.0.jar"
+}

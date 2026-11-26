@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "fragileglass",
+  "version": "1.0.0",
+  "name": "Fragile Glass",
+  "description": "Glass shatters from strikes, projectiles and hard landings.",
+  "environment": "*",
+  "mixins": [
+    "fragileglass.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.3",
+    "minecraft": "1.20.1",
+    "java": ">=17"
+  }
+}

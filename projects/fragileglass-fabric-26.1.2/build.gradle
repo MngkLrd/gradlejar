@@ -1,0 +1,10 @@
+plugins { id 'net.fabricmc.fabric-loom' version '1.17.13' }
+group='dev.minemods.fragileglass'
+version='1.0.0'
+base.archivesName='fragileglass-fabric-mc26.1.2'
+java.toolchain.languageVersion=JavaLanguageVersion.of(25)
+dependencies {
+ minecraft 'com.mojang:minecraft:26.1.2'
+ implementation 'net.fabricmc:fabric-loader:0.19.5'
+}
+tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=25 }
