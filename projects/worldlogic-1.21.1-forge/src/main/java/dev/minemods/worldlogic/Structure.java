@@ -59,6 +59,14 @@ public final class Structure {
    if(Rules.on("ricochet")&&Material.block(s,"soft_projectile"))a.setDeltaMovement(v.scale(.55));
   }
  }
+ static void landingVibration(ServerLevel l,BlockPos ground,net.minecraft.world.entity.LivingEntity source){
+  if(!l.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING))return;
+  int n=0;for(BlockPos q:BlockPos.betweenClosed(ground.offset(-2,0,-2),ground.offset(2,1,2))){
+   if(!l.hasChunkAt(q))continue;var s=l.getBlockState(q);
+   if(Rules.on("loose_gravel")&&Material.block(s,"unstable"))enqueue(l,q);
+   if(n<4&&(Material.block(s,"glass")||Material.block(s,"fragile_container"))){n++;l.sendParticles(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK,s),q.getX()+.5,q.getY()+.5,q.getZ()+.5,4,.2,.2,.2,.02);}
+  }
+ }
  public static void onExplosion(ExplosionEvent.Detonate e){
   if(!(e.getLevel() instanceof ServerLevel l)||e.getAffectedBlocks().isEmpty())return;
   if(!l.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING))return;

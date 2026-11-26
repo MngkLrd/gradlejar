@@ -1,6 +1,6 @@
-# World Logic 1.0.0-rc12
+# World Logic 1.0.0-rc13
 Minecraft 1.21.1 / Forge 52.1.0+ / Java 21 / Gradle 8.10.2 / official mappings.
-Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc12.jar.
+Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc13.jar.
 Install on both server and clients. No external dependencies. Burning Arrows excluded.
 
 Config: config/worldlogic.properties. Mods > World Logic > Config (local world or main menu).
@@ -38,3 +38,5 @@ RC11 follow-up: failed jump detection also covers slower ordinary jumps with act
 RC12: 89 switches. Darkness lowers the collision threshold, never causes random falls alone. Rough ground needs an actual uneven step and lost speed. Heavy landing uses the fall event and defers prone transition until grounded. Recovery adds up to 28 ticks for fatigue, armor and cargo; hostile impacts may extend it up to 75 ticks total. Exhausted climbers temporarily slide; crouch and rest to avoid it. Wet heavy-weapon grips may cause brief handling penalties, no item deletion. Severe impacts may drop one tagged unnamed cargo item into the world (Hardcore only); animals in loaded chunks accumulate hunger, grazing on grass restores it, hungry animals need feeding before breeding interactions and cows cannot be milked when hungry. Animal hunger is Hardcore-only by default, no starvation death or egg/wool production changes. No recipes changed. All new rules disabled in Light. Client animation and actual multiplayer scenarios still need manual QA.
 
 RC12 polish: night vision protects against the darkness balance modifier; disabling physical falls releases the action lock. Wet grip additionally reduces the affected heavy melee hit by 15%; inspection includes cargo burden and prone state.
+
+RC13: 97 switches. Strong melee impacts queue actual prone transitions while grounded; sprinting player collisions use closing velocity and mass, respect PvP rules, and push nonplayer mobs rather than forcing unsupported poses. Hold sneak with a free hand while falling beside a reachable ledge to briefly catch it once per airborne interval; no teleport or automatic mantle. Prone players can crawl after 8 ticks; shallow downhill movement uses collision geometry and never intentionally pushes over a deep drop. Edge stumbling requires narrow support and a sharp direction change. Hardcore-only disarming drops one unnamed tagged weapon, never deletes it. Heavy landings panic nearby animals, produce dust and feed existing gravel vibration rules; fragile block reaction is visual only, not destruction. No recipes. Network protocol 4, update both sides. Client visual and actual movement QA still needed.

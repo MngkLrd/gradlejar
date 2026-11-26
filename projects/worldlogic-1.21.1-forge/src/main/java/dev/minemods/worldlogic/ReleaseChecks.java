@@ -9,7 +9,11 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 public final class ReleaseChecks {
  private static void check(boolean ok,String detail){if(!ok)throw new IllegalStateException("World Logic test failed: "+detail);}
  public static void run(){
-  check(Rules.keys().size()>=89,"rule count");
+  check(Rules.keys().size()>=97,"rule count");
+  check(ImpactDynamics.hitRisk(10,3,80,true)>ImpactDynamics.hitRisk(2,1,0,false),"knockdown risk");
+  check(ImpactDynamics.collisionRisk(.4,3)>ImpactDynamics.collisionRisk(.1,1),"collision momentum");
+  check(ImpactDynamics.shockRadius(10,40)<=5,"shockwave bound");
+  check(Rules.preset("realistic").get("combat_disarm").equals("false"),"disarm opt-in");
   check(GroundHazards.recoveryExtra(100,4,8)>GroundHazards.recoveryExtra(0,0,0),"ground recovery curve");
   check(GroundHazards.landingRisk(6,4,true,80)>GroundHazards.landingRisk(3,0,false,0),"heavy landing curve");
   check(Rules.preset("realistic").get("unstable_carrying").equals("false"),"cargo loss opt-in");
@@ -45,6 +49,7 @@ public final class ReleaseChecks {
   check(TorchLifeData.get(l)!=null,"torch persistence");
   check(Material.item(new ItemStack(Items.IRON_AXE),"heavy_weapons"),"heavy weapon tag");
   check(Material.block(Blocks.ROOTED_DIRT.defaultBlockState(),"rough_terrain"),"rough terrain tag");
+  check(Material.item(new ItemStack(Items.IRON_SWORD),"disarmable"),"disarm tag");
   check(WorldState.get(l)!=null&&PocketData.get(l)!=null,"saved data");
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_CORE_TESTS_PASSED");
  }

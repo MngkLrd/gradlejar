@@ -31,6 +31,8 @@ public final class Balance {
  private static State state(Player p){return STATES.computeIfAbsent(p,k->new State());}
  static boolean eligible(Player p){return Survival.active(p)&&p.isAlive()&&!p.isSleeping()&&!p.isPassenger()&&!p.isFallFlying()&&!p.isInWater()&&!p.isInLava()&&!p.onClimbable()&&!p.getAbilities().flying;}
  public static boolean down(Player p){State s=STATES.get(p);return Rules.on("physical_falls")&&s!=null&&s.owned&&eligible(p)&&s.downUntil>p.level().getGameTime();}
+ public static boolean canCrawl(Player p){State s=STATES.get(p);return Rules.on("desperate_recovery")&&down(p)&&s!=null&&p.level().getGameTime()-s.started>=8;}
+ static Vec3 recentMotion(Player p){State s=STATES.get(p);return s==null?Vec3.ZERO:s.velocity;}
  public static float roll(Player p){State s=STATES.get(p);return s==null?0:s.roll;}
  static double threshold(boolean injured,double fatigue,double burden){return Math.max(.15,.265-(injured?.055:0)-Math.max(0,fatigue-55)*.0008-Math.min(.035,burden*.008));}
  static double slipRisk(boolean injured,double fatigue,double burden,double weakness){return Math.max(0,Math.min(1,(injured?.65:0)+Math.max(0,fatigue-55)*.007+Math.min(.22,burden*.05)+weakness*.4));}
@@ -67,7 +69,7 @@ public final class Balance {
   if(!eligible(p)||!Rules.on("physical_falls")){release(p,s);s.position=null;return;}
   if(s.owned){
    if(now>=s.downUntil||p.getForcedPose()!=Pose.SWIMMING){release(p,s);}
-   else{p.setSprinting(false);if(p.isUsingItem())p.stopUsingItem();Vec3 v=p.getDeltaMovement();p.setDeltaMovement(v.x*.65,v.y,v.z*.65);}
+   else{p.setSprinting(false);if(p.isUsingItem())p.stopUsingItem();Vec3 v=p.getDeltaMovement();double damping=canCrawl(p)?.9:.65;p.setDeltaMovement(v.x*damping,v.y,v.z*damping);ImpactDynamics.rollDown(l,p);}
    s.position=p.position();s.last=now;s.ground=p.onGround();s.sprint=false;return;
   }
   if(s.position==null||s.last!=now-1||p.position().distanceToSqr(s.position)>4){
@@ -101,6 +103,7 @@ public final class Balance {
     if(angle<.65&&risk>=.45&&speed>=min*.95)fall(l,p,s,forward,"slip",risk,injured);
    }
   }
+  if(!s.owned&&now>=s.cooldown&&p.onGround()&&s.ground&&s.sprint&&!p.isShiftKeyDown()&&Rules.on("unstable_footing")&&speed>=min*.95&&ImpactDynamics.edgeRisk(l,p,previous,delta,slipRisk(injured,fatigue,burden,weak)))fall(l,p,s,previous,"edge",.65,injured);
   if(!s.owned&&now>=s.cooldown&&p.onGround()&&s.ground&&s.sprint&&!p.isShiftKeyDown()&&Rules.on("rough_terrain")&&speed>=min*.9){
    var floor=l.getBlockState(p.getOnPos());
    double rise=Math.abs(delta.y);boolean rough=Material.block(floor,"rough_terrain");
@@ -114,11 +117,12 @@ public final class Balance {
   if(p.onGround()&&!s.ground)s.failedUntil=0;
   s.velocity=s.owned?Vec3.ZERO:delta;s.position=p.position();s.last=now;s.ground=p.onGround();s.sprint=p.isSprinting();
  }
- static boolean forceLanding(Player p,double severity){
+ static boolean forceLanding(Player p,double severity){return force(p,p.getDeltaMovement(),"landing",severity);}
+ static boolean force(Player p,Vec3 direction,String reason,double severity){
   if(!eligible(p)||!Rules.on("physical_falls")||p.getForcedPose()!=null)return false;
   State s=state(p);if(s.owned||s.cooldown>p.level().getGameTime())return false;
-  Vec3 direction=p.getDeltaMovement();if(direction.horizontalDistance()<.05)direction=p.getLookAngle();
-  fall((ServerLevel)p.level(),p,s,direction,"landing",severity,Survival.injured(p,p.level().getGameTime()));return s.owned;
+  if(direction.horizontalDistance()<.05)direction=p.getLookAngle();
+  fall((ServerLevel)p.level(),p,s,direction,reason,severity,Survival.injured(p,p.level().getGameTime()));return s.owned;
  }
  public static void damaged(net.minecraftforge.event.entity.living.LivingDamageEvent e){
   if(e.isCanceled()||e.getAmount()<2||!(e.getEntity() instanceof Player p)||!Rules.on("ground_recovery")||!down(p))return;

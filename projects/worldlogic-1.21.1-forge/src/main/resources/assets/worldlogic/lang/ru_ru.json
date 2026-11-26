@@ -22,5 +22,10 @@
   "message.worldlogic.dropped_grip": "Ты выронил часть груза!",
   "message.worldlogic.wet_grip": "Мокрые руки подвели.",
   "message.worldlogic.animal_fed": "Животное сначала нужно накормить.",
-  "message.worldlogic.animal_hungry": "Животное слишком голодно, чтобы давать молоко."
+  "message.worldlogic.animal_hungry": "Животное слишком голодно, чтобы давать молоко.",
+  "message.worldlogic.fall_hit": "Удар сбил тебя с ног!",
+  "message.worldlogic.fall_chain": "Столкновение сбило тебя с ног!",
+  "message.worldlogic.fall_edge": "Ты потерял равновесие у края!",
+  "message.worldlogic.ledge_grab": "Ты ухватился за край!",
+  "message.worldlogic.disarmed": "Оружие вылетело из руки!"
 }

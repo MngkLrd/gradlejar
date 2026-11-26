@@ -3,7 +3,7 @@ loaderVersion="[52,)"
 license="All Rights Reserved"
 [[mods]]
 modId="worldlogic"
-version="1.0.0-rc12"
+version="1.0.0-rc13"
 displayName="World Logic"
 description='''Material, movement, water, weather and ecological reactions for vanilla survival.'''
 [[dependencies.worldlogic]]

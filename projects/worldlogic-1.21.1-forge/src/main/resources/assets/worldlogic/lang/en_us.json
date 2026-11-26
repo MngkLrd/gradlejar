@@ -22,5 +22,10 @@
   "message.worldlogic.dropped_grip": "You dropped part of your cargo!",
   "message.worldlogic.wet_grip": "Your wet grip slipped.",
   "message.worldlogic.animal_fed": "The animal needed food first.",
-  "message.worldlogic.animal_hungry": "The animal is too hungry to produce milk."
+  "message.worldlogic.animal_hungry": "The animal is too hungry to produce milk.",
+  "message.worldlogic.fall_hit": "The blow knocked you down!",
+  "message.worldlogic.fall_chain": "A collision knocked you down!",
+  "message.worldlogic.fall_edge": "You lost your footing at the edge!",
+  "message.worldlogic.ledge_grab": "You grabbed the ledge!",
+  "message.worldlogic.disarmed": "You lost your weapon!"
 }
