@@ -1,0 +1,58 @@
+name: QA v2 experimental client
+on:
+  workflow_dispatch:
+    inputs:
+      project_dir:
+        description: 'Project directory with Gradle runClient task'
+        required: true
+        default: projects/fragileglass-fabric-26.3
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - tools/qa/client.py
+      - .github/workflows/qa-client-smoke.yml
+permissions:
+  contents: read
+jobs:
+  dev-client:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resolve profile
+        id: profile
+        env:
+          PROJECT_DIR: ${{ github.event_name == 'workflow_dispatch' && inputs.project_dir || 'projects/fragileglass-fabric-26.3' }}
+        run: python3 tools/resolve_project.py "$PROJECT_DIR" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.profile.outputs.java }}
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ steps.profile.outputs.gradle }}
+          cache-read-only: true
+      - name: Install virtual display and software renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends xvfb xauth xdotool imagemagick libgl1-mesa-dri libopenal1
+      - name: Compile development client
+        env:
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
+        run: |
+          cd "$PROJECT_DIR"
+          gradle --no-daemon clean build
+      - name: Observe actual client window and capture evidence
+        env:
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" python3 -m tools.qa.client "$PROJECT_DIR" --out client-evidence
+      - name: Upload client evidence (not QA-5)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experimental-client-evidence
+          path: client-evidence/
+          if-no-files-found: warn
+          retention-days: 14

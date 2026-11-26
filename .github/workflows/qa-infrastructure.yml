@@ -1,0 +1,51 @@
+name: QA v2 infrastructure and dashboard
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/qa/**'
+      - tools/plan_builds.py
+      - .github/workflows/build.yml
+      - .github/workflows/qa-infrastructure.yml
+      - docs/QA-V2.md
+      - AGENTS.md
+  pull_request:
+    paths:
+      - 'tools/qa/**'
+      - tools/plan_builds.py
+      - .github/workflows/build.yml
+      - .github/workflows/qa-infrastructure.yml
+      - docs/QA-V2.md
+      - AGENTS.md
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  self-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test QA infrastructure and planning
+        run: |
+          python3 -m compileall -q tools/qa tools/plan_builds.py
+          python3 -m unittest discover -s tools/qa/tests -v
+      - name: Generate actual recent-evidence dashboard
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -m tools.qa.dashboard --github --out qa-dashboard
+      - name: Generate local dashboard on PR
+        if: github.event_name == 'pull_request'
+        run: python3 -m tools.qa.dashboard --out qa-dashboard
+      - name: Upload dashboard (open index.html)
+        uses: actions/upload-artifact@v4
+        with:
+          name: MineMods-QA-dashboard
+          path: qa-dashboard/
+          retention-days: 30

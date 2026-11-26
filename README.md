@@ -1,44 +1,26 @@
-# Minecraft Mod Build Hub
+# Minecraft Mod Build Hub — MineMods QA v2
 
-Reusable CI workspace for Minecraft mods. The repository contains a first project (**FieldKit 1.2.2**) in its root directory as the bootstrap project. Future independent projects live in `projects/<mod-id>/`, each with its own real Gradle project and `build-profile.json`.
+Shared Gradle build infrastructure for real Minecraft mods. The bootstrap project (FieldKit) lives at root; independent ports live in `projects/<project>`.
 
-## Build a mod
+**Development contract:** [AGENTS.md](AGENTS.md) · **QA guide:** [docs/QA-V2.md](docs/QA-V2.md) · **Compatibility registry:** [tools/qa/compatibility.json](tools/qa/compatibility.json)
 
-Open [Actions](../../actions/workflows/build.yml) → **Minecraft Mod Build Hub** → **Run workflow**.
+## Build
+Open [Actions](../../actions/workflows/build.yml) → **Minecraft Mod Build Hub** → **Run workflow**. Enter a project directory, `.` for FieldKit, or `@slug` to run every enrolled QA port of a mod. Main pushes build affected projects across the complete commit range. Pull requests do not publish.
 
-Enter `.` for FieldKit, or `projects/<mod-id>` for another mod. The workflow reads the project's declared versions of Java and Gradle, downloads its actual mod loader/Minecraft dependencies, performs `gradle clean build`, checks the real JAR, and publishes a **pre-release** on [Releases](../../releases).
+Common CI compiles genuine Gradle projects using the profile's pinned Java/Gradle, verifies the JAR, evaluates the QA policy and uploads evidence. New gameplay projects require production-server runtime assertions; new client-only projects remain manual-validation candidates. Legacy projects in the explicit snapshot continue with the old static-only pipeline. Independent historical workflows remain outside the v2 gate until migrated.
 
-Builds triggered by a push to main use the default project (`.`). Pull requests compile and verify but **do not publish** a release.
+## Artifacts
+- `jar-*`: eligible individual JAR and SHA-256.
+- `qa-report-*`: per-project machine-readable evidence.
+- `qa-candidate-NOT-RELEASE-*`: debugging candidate, not a published release.
+- `qa-diagnostics-*`: failure logs.
+- `qa-v2-bundles-*`: complete verified JAR-only cohorts plus a separate package report.
+- **QA v2 infrastructure and dashboard**: downloadable HTML/JSON status dashboard.
+- **QA v2 experimental client**: development-client screenshot and logs, not production-client certification.
 
-No fake Minecraft APIs and no manual bytecode name remapping.
+The standard targets use Java 17/21/25. Loader-specific Gradle files and metadata remain mandatory. The compatibility registry is not a claim that any arbitrary combination works.
 
-## Project contract
+## Important
+Successful compilation is not gameplay validation. QA-4 is awarded only to the exact production JAR tested on the dedicated server, with positive assertions and clean shutdown. Manual client testing is still needed. Legacy static-only releases must never be described as runtime tested. No fake Minecraft APIs or manual bytecode name remapping.
 
-Each mod directory requires:
-- `settings.gradle` (or `.kts`) and `build.gradle` (or `.kts`).
-- `build-profile.json` declaring `slug`, `version`, `minecraft`, `loader` (`neoforge`, `forge`, `fabric`), `java` (17 or 21), `gradle` and `jar_glob`.
-- `src/main/resources/pack.mcmeta` plus the loader's metadata.
-- Optional `tools/verify_release.py` to perform project-specific bytecode checks.
-
-Example profile:
-```json
-{
-  "slug": "fieldkit",
-  "version": "1.2.2",
-  "minecraft": "1.21.1",
-  "loader": "neoforge",
-  "java": "21",
-  "gradle": "9.2.1",
-  "jar_glob": "fieldkit-1.2.2.jar"
-}
-```
-
-The profile's Java and Gradle versions are used by CI. Actual dependencies and mappings remain defined in the mod's Gradle files. Therefore individual Forge/NeoForge/Fabric projects are **not** treated as interchangeable.
-
-## Verification scope
-
-Success means: genuine Gradle compilation, valid ZIP/JAR, required metadata, no bundled fake Minecraft classes, a single selected binary and optional per-project static validation. Success does **not** imply that the mod passed an in-game Minecraft client test. Always test runtime UI, keybinds, startup, and server/client separation before marking a build production-ready.
-
-## Why Releases?
-
-The linked account reached its GitHub Actions artifact storage quota. This workflow publishes JARs as pre-releases instead of using `actions/upload-artifact`.
+Run tooling tests: `python3 -m unittest discover -s tools/qa/tests -v`.

@@ -434,6 +434,11 @@ jobs:
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: python3 "$PROJECT_DIR/tools/smoke_server.py" "$PROJECT_DIR"
+      - name: Validate WallSlam collision resources
+        if: startsWith(matrix.project_dir, 'projects/wallslam-')
+        env:
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
+        run: python3 tools/verify_wallslam_release.py "$PROJECT_DIR"
       - name: Resolve v2 quality policy
         id: qa-policy
         env:
@@ -487,7 +492,7 @@ jobs:
         if: always() && steps.verify.outcome == 'success' && steps.qa.outputs.eligible != 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: qa-candidate-NOT-RELEASE-${{ strategy.job-index }}
+          name: qa-candidate-NOT-RELEASE-${{ strategy.job-index }}-${{ github.run_attempt }}
           path: ${{ steps.verify.outputs.jar_path }}
           if-no-files-found: warn
           retention-days: 7
@@ -496,16 +501,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jar-${{ steps.profile.outputs.slug }}-${{ steps.profile.outputs.minecraft }}-${{ steps.profile.outputs.loader }}-${{ steps.profile.outputs.version }}-${{ strategy.job-index }}
+          overwrite: true
           path: |
             ${{ steps.verify.outputs.jar_path }}
             ${{ steps.verify.outputs.checksum_path }}
           if-no-files-found: error
           retention-days: 30
-      - name: Validate WallSlam collision resources
-        if: startsWith(matrix.project_dir, 'projects/wallslam-')
-        env:
-          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
-        run: python3 tools/verify_wallslam_release.py "$PROJECT_DIR"
       - name: Publish JAR to GitHub prerelease
         if: success() && github.event_name != 'pull_request' && steps.qa.outputs.eligible == 'true'
         continue-on-error: true
@@ -756,7 +757,7 @@ jobs:
 
   package-fragileglass:
     needs: [plan, build]
-    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/fragileglass-forge-1.20.1') && contains(needs.plan.outputs.project_dirs, 'projects/fragileglass-fabric-26.3') && github.event_name == 'push' }}
+    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/fragileglass-forge-1.20.1') && contains(needs.plan.outputs.project_dirs, 'projects/fragileglass-fabric-26.3') && needs.plan.outputs.qa_enabled != 'true' && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -790,33 +791,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "fragileglass-all-1.0.0-${GITHUB_RUN_NUMBER}" FragileGlass-1.0.0-ALL-11-JARs.zip --repo "${GITHUB_REPOSITORY}" --target "${GITHUB_SHA}" --title "Fragile Glass 1.0.0 - all 11 JARs" --notes "Eleven separately compiled JARs. Runtime gameplay not yet tested." --prerelease
 
-
-  package-fragileglass-26x-fix:
-    needs: [plan, build]
-    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/fragileglass-fabric-26.1.2') && contains(needs.plan.outputs.project_dirs, 'projects/fragileglass-neoforge-26.3') && !contains(needs.plan.outputs.project_dirs, 'projects/fragileglass-forge-1.20.1') }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: jar-fragileglass-26*-*-1.0.2-*
-          path: downloaded-fg26x
-      - name: Package six verified JARs
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          from zipfile import ZipFile, ZIP_DEFLATED
-          files=list(Path('downloaded-fg26x').rglob('*.jar'))
-          expected={f'fragileglass-{loader}-mc{mc}-1.0.2.jar' for loader in ('fabric','neoforge') for mc in ('26.1.2','26.2','26.3')}
-          assert len(files)==6 and {p.name for p in files}==expected, files
-          with ZipFile('FragileGlass-26x-1.0.2.zip','w',ZIP_DEFLATED) as z:
-              for p in sorted(files):
-                  with ZipFile(p) as j: assert j.testzip() is None
-                  z.write(p,p.name)
-          PY
-      - uses: actions/upload-artifact@v4
-        with:
-          name: FragileGlass-26x-1.0.2
-          path: FragileGlass-26x-1.0.2.zip
 
 
   package-qa-v2:
