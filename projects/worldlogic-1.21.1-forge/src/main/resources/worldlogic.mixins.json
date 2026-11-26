@@ -9,7 +9,9 @@
     "ArrowLifeMixin",
     "FrictionMixin",
     "FurnaceFoodMixin",
-    "CampfireFoodMixin"
+    "CampfireFoodMixin",
+    "FurnaceExtractionMixin",
+    "DoorPhysicsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

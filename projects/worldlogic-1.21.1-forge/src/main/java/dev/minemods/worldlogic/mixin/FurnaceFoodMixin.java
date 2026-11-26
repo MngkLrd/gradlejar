@@ -27,11 +27,4 @@ public abstract class FurnaceFoodMixin {
    furnace.getPersistentData().putLong(HotFood.KEY,HotFood.now(l)+1200);furnace.setChanged();
   }
  }
- @Inject(method="removeItem",at=@At("RETURN"),remap=false)
- private void worldlogic$extract(int slot,int count,CallbackInfoReturnable<ItemStack> cir){
-  if(slot!=2)return;AbstractFurnaceBlockEntity furnace=(AbstractFurnaceBlockEntity)(Object)this;
-  if(furnace.getLevel() instanceof ServerLevel l){long until=furnace.getPersistentData().getLong(HotFood.KEY);if(until>HotFood.now(l))HotFood.stamp(cir.getReturnValue(),until);}
- }
- @Inject(method="removeItemNoUpdate",at=@At("RETURN"),remap=false)
- private void worldlogic$extractAll(int slot,CallbackInfoReturnable<ItemStack> cir){worldlogic$extract(slot,64,cir);}
 }

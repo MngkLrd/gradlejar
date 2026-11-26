@@ -56,14 +56,10 @@ public final class ObjectsPhysics {
    }
   }
  }
- public static void onNeighbor(net.minecraftforge.event.level.BlockEvent.NeighborNotifyEvent e){
-  if(!Rules.on("doors_have_mass")||!(e.getLevel() instanceof ServerLevel l)||e.isCanceled())return;BlockPos q=e.getPos();var s=e.getState();if(!(s.getBlock() instanceof DoorBlock)||s.getValue(BlockStateProperties.OPEN)||!s.is(Blocks.IRON_DOOR))return;
+ public static void queueDoor(ServerLevel l,BlockPos q){
+  if(!Rules.on("doors_have_mass")||!l.hasChunkAt(q))return;
+  var s=l.getBlockState(q);if(!(s.getBlock() instanceof DoorBlock)||s.getValue(BlockStateProperties.OPEN))return;
   if(s.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF)==net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER)q=q.below();
-  var jobs=DOORS.computeIfAbsent(l,k->new ArrayDeque<>());if(jobs.size()<128)jobs.add(new DoorJob(q.immutable(),l.getGameTime()+1));
- }
- public static void onInteract(PlayerInteractEvent.RightClickBlock e){if(!Rules.on("doors_have_mass")||!(e.getLevel() instanceof ServerLevel l)||e.isCanceled()||e.getEntity().isShiftKeyDown())return;
-  var s=l.getBlockState(e.getPos());if(!(s.getBlock() instanceof DoorBlock)||!s.getValue(BlockStateProperties.OPEN))return;
-  BlockPos q=e.getPos();if(s.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF)==net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER)q=q.below();
-  var jobs=DOORS.computeIfAbsent(l,k->new ArrayDeque<>());if(jobs.size()<128)jobs.add(new DoorJob(q.immutable(),l.getGameTime()+1));
+  var jobs=DOORS.computeIfAbsent(l,k->new ArrayDeque<>());final BlockPos lower=q.immutable();if(jobs.size()<128&&jobs.stream().noneMatch(a->a.pos.equals(lower)))jobs.add(new DoorJob(lower,l.getGameTime()+1));
  }
 }

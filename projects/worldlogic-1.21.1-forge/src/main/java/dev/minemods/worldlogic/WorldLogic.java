@@ -33,11 +33,10 @@ public final class WorldLogic {
   bus.addListener(Ecology::smelt);
   bus.addListener(Ecology::eat);
   bus.addListener(ObjectsPhysics::tick);
-  bus.addListener(ObjectsPhysics::onInteract);
-  bus.addListener(ObjectsPhysics::onNeighbor);
   bus.addListener(Torches::tick);
   bus.addListener(Torches::relight);
   bus.addListener(AirAndFire::tick);
+  bus.addListener(AirAndFire::smokeTick);
   bus.addListener(AirAndFire::onExplosion);
  }
 }

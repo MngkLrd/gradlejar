@@ -14,6 +14,15 @@ public final class AirAndFire {
  static final class Pocket {final Set<BlockPos> cells;int oxygen;long last;Pocket(Set<BlockPos> cells,long now){this.cells=cells;oxygen=cells.size()*240;last=now;}}
 
  private static final Map<ServerLevel,Map<BlockPos,Long>> HEAT=new WeakHashMap<>();
+ private record Smoke(List<BlockPos> path,int index,long due){}
+ private static final Map<ServerLevel,ArrayDeque<Smoke>> SMOKE=new WeakHashMap<>();
+ public static void smokeTick(TickEvent.LevelTickEvent.Post e){
+  if(!Rules.on("draft_smoke")||!(e.level instanceof ServerLevel l)||l.getGameTime()%4!=0)return;var queue=SMOKE.get(l);if(queue==null)return;
+  int count=Math.min(24,queue.size());while(count-->0){Smoke a=queue.remove();if(a.due>l.getGameTime()){queue.add(a);continue;}
+   BlockPos p=a.path.get(a.index);if(!l.hasChunkAt(p)||!l.isEmptyBlock(p))continue;var center=net.minecraft.world.phys.Vec3.atCenterOf(p);l.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,center.x,center.y,center.z,1,.04,.03,.04,.004);
+   if(a.index+1<a.path.size())queue.add(new Smoke(a.path,a.index+1,l.getGameTime()+4));
+  }
+ }
  // Local ventilation path: bounded air-cell BFS, no forced chunk loads.
  static List<BlockPos> ventPath(ServerLevel l,BlockPos start){
   if(!l.hasChunkAt(start)||!l.isEmptyBlock(start))return null;
@@ -55,7 +64,7 @@ public final class AirAndFire {
    if(s.getBlock() instanceof CampfireBlock&&s.getValue(BlockStateProperties.LIT)){
     if(Rules.on("residual_heat")||Rules.on("thermal_shock"))for(Direction d:Direction.values())map.put(q.relative(d),now+200);
     List<BlockPos> path=(Rules.on("draft_smoke")||Rules.on("fire_needs_air"))?ventPath(l,q.above()):List.of(q.above());
-    if(Rules.on("draft_smoke")&&path!=null&&path.size()>1){int at=(int)((now/40)%path.size());BlockPos a=path.get(at);l.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,a.getX()+.5,a.getY()+.5,a.getZ()+.5,1,.08,.04,.08,.005);}
+    if(Rules.on("draft_smoke")&&path!=null&&path.size()>1){var queue=SMOKE.computeIfAbsent(l,k->new ArrayDeque<>());if(queue.size()<64)queue.add(new Smoke(List.copyOf(path),0,now));}
     if(Rules.on("fire_needs_air")&&path==null&&l.random.nextFloat()<.12)l.setBlock(q,s.setValue(BlockStateProperties.LIT,false),3);
     if(Rules.on("campfire_sparks")&&l.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)&&!l.isRainingAt(q)&&l.random.nextFloat()<.02){BlockPos t=q.relative(Direction.Plane.HORIZONTAL.getRandomDirection(l.random));if(l.isEmptyBlock(t)&&Material.block(l.getBlockState(t.below()),"spark_fuel"))l.setBlock(t,Blocks.FIRE.defaultBlockState(),3);}
    }
