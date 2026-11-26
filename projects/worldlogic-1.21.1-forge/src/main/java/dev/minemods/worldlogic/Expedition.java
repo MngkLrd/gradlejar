@@ -68,7 +68,7 @@ public final class Expedition {
   if(e.isCanceled()||!Rules.on("mining_noise")||!Survival.active(e.getPlayer())||!(e.getLevel() instanceof ServerLevel l))return;
   Player p=e.getPlayer();long now=l.getGameTime();if(p.isShiftKeyDown()||now-LAST_NOISE.getOrDefault(p,-100L)<30)return;
   var state=e.getState();if(!Material.block(state,"ricochet_stone")&&!MineInstability.rock(state)&&!Material.block(state,"ricochet_metal")&&!Material.block(state,"noisy_mining"))return;
-  LAST_NOISE.put(p,now);double range=Math.min(16,8*Material.armorNoise(p)*Rules.strength("ecology"));Vec3 point=Vec3.atCenterOf(e.getPos());int n=0;
+  LAST_NOISE.put(p,now);double range=Math.min(16,8*Material.armorNoise(p)*Rules.strength("ecology"));Vec3 point=p.position();int n=0;
   for(Monster mob:l.getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(range),m->m.isAlive()&&m.getTarget()==null)){
    if(n>=6)break;if(mob.distanceToSqr(point)>range*range||INVESTIGATING.getOrDefault(mob,0L)>now)continue;n++;
    INVESTIGATING.put(mob,now+100);mob.getNavigation().moveTo(point.x,point.y,point.z,1.05);

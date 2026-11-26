@@ -40,6 +40,7 @@ public final class WorldLogic {
   bus.addListener(Survival::hit);
   bus.addListener(Survival::fall);
   bus.addListener(Survival::tick);
+  bus.addListener(Survival::logout);
   bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,Expedition::damaged);
   bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,Expedition::shield);
   bus.addListener(Expedition::tick);

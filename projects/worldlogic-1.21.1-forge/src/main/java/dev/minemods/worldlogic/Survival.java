@@ -16,10 +16,11 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 public final class Survival {
  private static final String FATIGUE="worldlogic_exertion",INJURY="worldlogic_injury",SMOKE="worldlogic_smoke";
+ private static final Map<Player,Long> LAST_WORK=new WeakHashMap<>();
  static boolean active(Player p){return p.level() instanceof ServerLevel&&!p.isCreative()&&!p.isSpectator();}
  public static double fatigue(Player p){return Math.max(0,Math.min(100,p.getPersistentData().getDouble(FATIGUE)));}
  static void rest(Player p,double amount){if(active(p)&&Rules.on("exertion"))p.getPersistentData().putDouble(FATIGUE,Math.max(0,fatigue(p)-amount));}
- static void work(Player p,double amount){if(active(p)&&Rules.on("exertion"))p.getPersistentData().putDouble(FATIGUE,Math.min(100,fatigue(p)+amount*Rules.strength("movement")));}
+ static void work(Player p,double amount){if(active(p)&&Rules.on("exertion")){LAST_WORK.put(p,p.level().getGameTime());p.getPersistentData().putDouble(FATIGUE,Math.min(100,fatigue(p)+amount*Rules.strength("movement")));}}
  public static void mine(BlockEvent.BreakEvent e){if(!e.isCanceled()&&active(e.getPlayer())){float hardness=e.getState().getDestroySpeed(e.getLevel(),e.getPos());if(hardness>0)work(e.getPlayer(),Math.min(5,.6+hardness*.5));}}
  public static void jump(LivingEvent.LivingJumpEvent e){if(e.getEntity() instanceof Player p)work(p,1.2);}
  public static void hit(LivingHurtEvent e){if(!e.isCanceled()&&e.getSource().getEntity() instanceof Player p)work(p,1.8);}
@@ -30,6 +31,7 @@ public final class Survival {
   if(Rules.on("injuries")&&p.getPersistentData().getLong(INJURY)>now)result=Math.max(result,.25);
   return result;
  }
+ public static void logout(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent e){LAST_WORK.remove(e.getEntity());}
  public static void tick(TickEvent.PlayerTickEvent.Post e){
   Player p=e.player;if(!active(p)||!(p.level() instanceof ServerLevel l))return;long now=l.getGameTime();
   if(now%20!=0)return;
@@ -38,7 +40,7 @@ public final class Survival {
    boolean moving=!p.isPassenger()&&(p.isSprinting()||p.isSwimming()||p.onClimbable()&&p.getDeltaMovement().y>.05);
    double mass=Material.mass(p);
    if(moving){work(p,(p.isSwimming()?2.4:1.45)*Math.max(.8,mass));p.causeFoodExhaustion((float)(.08*Math.max(1,mass)*Rules.strength("movement")));}
-   else if(p.onGround()&&!p.isInWater()){double recovery=p.getFoodData().getFoodLevel()>=12?2.0:.6;if(p.getDeltaMovement().horizontalDistance()<.04)recovery*=2;if(AirAndFire.nearHeat(l,p.blockPosition(),2)&&p.getDeltaMovement().horizontalDistance()<.04)recovery*=1.6;tag.putDouble(FATIGUE,Math.max(0,fatigue(p)-recovery));}
+   else if(p.onGround()&&!p.isInWater()&&!p.isUsingItem()&&now-LAST_WORK.getOrDefault(p,-100L)>=60){double recovery=p.getFoodData().getFoodLevel()>=12?2.0:.6;if(p.getDeltaMovement().horizontalDistance()<.04)recovery*=2;if(AirAndFire.nearHeat(l,p.blockPosition(),2)&&p.getDeltaMovement().horizontalDistance()<.04)recovery*=1.6;tag.putDouble(FATIGUE,Math.max(0,fatigue(p)-recovery));}
    if(fatigue(p)>=75){p.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,35,0,false,false,false));if(fatigue(p)>=92)p.setSprinting(false);}
   }
   if(Rules.on("injuries")&&tag.getLong(INJURY)>now&&p.onGround()&&!p.isSprinting()&&p.getFoodData().getFoodLevel()>=14&&p.getDeltaMovement().horizontalDistance()<.04&&AirAndFire.nearHeat(l,p.blockPosition(),2))tag.putLong(INJURY,Math.max(now,tag.getLong(INJURY)-30));
