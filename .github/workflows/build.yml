@@ -639,3 +639,46 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "realisticdrops-v1.0.0-${GITHUB_RUN_NUMBER}" Realistic-Drops-1.0.0-ALL-11-JARs.zip --target "$GITHUB_SHA" --title "Realistic Drops 1.0.0 - all 11 JARs" --notes "Exactly eleven compiled JARs sorted by loader. Static validation passed; gameplay testing pending." --prerelease
+
+  package-fooddigestion:
+    needs: [plan, build]
+    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/fooddigestion-') && github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: jar-fooddigestion-*
+          path: downloaded-fooddigestion
+          merge-multiple: true
+      - name: Verify and assemble all eleven JARs
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+          root = Path('downloaded-fooddigestion')
+          files = list(root.rglob('fooddigestion-*.jar'))
+          expected = {f'fooddigestion-{loader}-mc{mc}-1.0.0.jar': folder for folder, loader, versions in [('Forge','forge',['1.20.1']),('NeoForge','neoforge',['1.20.1','1.21.1','26.1.2','26.2','26.3']),('Fabric','fabric',['1.20.1','1.21.1','26.1.2','26.2','26.3'])] for mc in versions}
+          assert len(files) == 11 and {p.name for p in files} == set(expected), [p.name for p in files]
+          by_name = {p.name:p for p in files}
+          with zipfile.ZipFile('FoodDigestion-1.0.0-ALL-11-JARs.zip','w',zipfile.ZIP_DEFLATED) as out:
+              for name, folder in expected.items():
+                  with zipfile.ZipFile(by_name[name]) as jar:
+                      assert jar.testzip() is None
+                      assert 'fooddigestion.mixins.json' in jar.namelist()
+                      assert 'dev/minemods/fooddigestion/mixin/FoodDataMixin.class' in jar.namelist()
+                  out.write(by_name[name], f'{folder}/{name}')
+          with zipfile.ZipFile('FoodDigestion-1.0.0-ALL-11-JARs.zip') as out:
+              assert len(out.namelist()) == 11 and all(n.endswith('.jar') for n in out.namelist())
+              print('\n'.join(out.namelist()))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FoodDigestion-1.0.0-ALL-11-JARs
+          path: FoodDigestion-1.0.0-ALL-11-JARs.zip
+      - name: Publish verified JAR-only archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "fooddigestion-v1.0.0-${GITHUB_RUN_NUMBER}" FoodDigestion-1.0.0-ALL-11-JARs.zip --target "$GITHUB_SHA" --title "Food Digestion 1.0.0 - 11 JARs" --notes "Exactly eleven compiled JARs grouped by loader. Static and core tests only; gameplay not tested." --prerelease

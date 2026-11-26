@@ -1,0 +1,16 @@
+plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
+group = 'dev.minemods.fooddigestion'
+version = '1.0.0'
+base.archivesName = 'fooddigestion-neoforge-mc26.1.2'
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+neoForge {
+    version = '26.1.2.126'
+    runs { client { client() } }
+    mods { fooddigestion { sourceSet(sourceSets.main) } }
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 25 }
+tasks.register('digestionSelfTest', JavaExec) { dependsOn testClasses; classpath = sourceSets.test.output + sourceSets.main.output; mainClass = 'dev.minemods.fooddigestion.DigestionTest' }
+tasks.named('check') { dependsOn 'digestionSelfTest' }
+
+// Standalone assertion tests are run by digestionSelfTest, not JUnit.
+tasks.named('test') { enabled = false }

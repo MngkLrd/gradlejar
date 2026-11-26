@@ -1,0 +1,21 @@
+license="All Rights Reserved"
+[[mods]]
+modId="fooddigestion"
+version="1.0.0"
+displayName="Food Digestion"
+authors="MineMods"
+description="Food restores part of hunger immediately and digests the rest over time."
+[[mixins]]
+config="fooddigestion.mixins.json"
+[[dependencies.fooddigestion]]
+modId="neoforge"
+type="required"
+versionRange="[26.2.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.fooddigestion]]
+modId="minecraft"
+type="required"
+versionRange="[26.2]"
+ordering="NONE"
+side="BOTH"
