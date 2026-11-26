@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Craft a pillow and sleep mask while preparing your shelter. These supplies are a foundation for future bed-quality upgrades. They are currently crafting items, not wearable equipment."
+      "text": "Craft a pillow and sleep mask while preparing your shelter. Keep a pillow in your inventory. Equip the sleep mask in your head slot by right-clicking; it blocks your first-person view and improves rest. Remove it through the inventory."
     },
     {
       "type": "patchouli:crafting",

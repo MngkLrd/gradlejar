@@ -25,3 +25,6 @@ Fresh native artwork set, separate material ramps, directional surface shading, 
 
 ## 3.1.5
 New static PNG artwork for items, crops, materials, effects and GUI. Approved coffee, energy can, coffee berries and pillow retained at pixel level. Gradle copies fixed PNG bytes from the checked-in archive without drawing or recoloring. Gameplay and model geometry unchanged; in-game visual QA required.
+
+## 3.1.6
+Release feedback: distinct roasted cocoa bean sprite, copper coffee maker interface with localized short labels; actual wearable sleep mask with first-person darkness; camp bedroll now testable in creative, feedback when disabled; awning contributes shelter when above the rest site. Dreamcatcher and dream shard removed from normal acquisition, old IDs preserved for saves. Vanilla phantom integration is unchanged except for removal of dreamcatcher warding. Client visual and multiplayer testing still required.

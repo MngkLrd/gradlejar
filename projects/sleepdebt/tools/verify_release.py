@@ -25,29 +25,31 @@ with zipfile.ZipFile(jar) as z:
     if not {"neoforge","minecraft"}.issubset(dep_names):
         raise ValueError(f"Required dependencies missing: {dep_names}")
     item_ids=[
-        "roasted_cocoa_beans","coffee_grounds","dried_herbs","dream_shard",
+        "roasted_cocoa_beans","coffee_grounds","dried_herbs",
         "coffee","strong_coffee","long_coffee","energy_drink","warm_milk",
         "herbal_tea","dream_tea","caramel_coffee","bitter_tonic","cocoa_biscuit",
         "pillow","sleep_mask","long_energy_drink","strong_energy_drink",
         "sleep_journal","herbal_poultice","incense_bundle",
         "coffee_seeds","coffee_berries","roasted_coffee_beans",
-        "coffee_machine","camp_bedroll","camp_awning","camp_lantern","dreamcatcher","incense_burner",
+        "coffee_machine","camp_bedroll","camp_awning","camp_lantern","incense_burner",
     ]
     for lang in ("en_us","ru_ru"):
         l=js(f"assets/sleepdebt/lang/{lang}.json")
         for item in item_ids:
-            key=("block" if item in {"coffee_machine","camp_bedroll","camp_awning","camp_lantern","dreamcatcher","incense_burner"} else "item")
+            key=("block" if item in {"coffee_machine","camp_bedroll","camp_awning","camp_lantern","incense_burner"} else "item")
             k=f"{key}.sleepdebt.{item}"
             if k not in l:raise ValueError(f"Missing translation {lang}:{k}")
     for item in item_ids:
         m=js(f"assets/sleepdebt/models/item/{item}.json")
         if not m.get("parent"):raise ValueError(f"Item {item} has no parent model")
-    block_names=("coffee_machine","camp_bedroll","camp_awning","camp_lantern","dreamcatcher","incense_burner")
+    block_names=("coffee_machine","camp_bedroll","camp_awning","camp_lantern","incense_burner")
     for b in block_names:
         js(f"assets/sleepdebt/blockstates/{b}.json")
         js(f"assets/sleepdebt/models/block/{b}.json")
         js(f"data/sleepdebt/loot_table/blocks/{b}.json")
         js(f"data/sleepdebt/recipe/{b}.json")
+    for removed in ("dreamcatcher","dream_shard"):
+        if f"data/sleepdebt/recipe/{removed}.json" in names:raise ValueError(f"Retired recipe still packaged: {removed}")
     js("assets/sleepdebt/blockstates/coffee_bush.json")
     js("data/sleepdebt/loot_table/blocks/coffee_bush.json")
     for n in range(8):

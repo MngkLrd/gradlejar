@@ -17,7 +17,7 @@
   "block.sleepdebt.coffee_machine": "Медная кофеварка",
   "block.sleepdebt.camp_bedroll": "Походный спальник",
   "block.sleepdebt.camp_awning": "Походный навес",
-  "container.sleepdebt.coffee_machine": "Кофеварка: вода / помол / уголь / результат",
+  "container.sleepdebt.coffee_machine": "Кофеварка",
   "message.sleepdebt.camp_rest": "Отдых в лагере (+%s)",
   "message.sleepdebt.camp_cooldown": "Пока слишком рано отдыхать снова.",
   "sleepdebt.jade.camp": "Отдых снижает физическую усталость",
@@ -143,5 +143,17 @@
   "journal.sleepdebt.nights": "%s сеансов сна",
   "effect.sleepdebt.alertness": "Бодрость",
   "effect.sleepdebt.caffeine_crash": "Кофеиновый спад",
-  "effect.sleepdebt.calm": "Спокойствие"
+  "effect.sleepdebt.calm": "Спокойствие",
+  "gui.sleepdebt.brew.base": "База",
+  "gui.sleepdebt.brew.ingredient": "Доб.",
+  "gui.sleepdebt.brew.fuel": "Топл.",
+  "gui.sleepdebt.brew.output": "Вых.",
+  "message.sleepdebt.camp_disabled": "Походный отдых отключён в настройках сервера.",
+  "message.sleepdebt.camp_begin": "Не двигайся 7 секунд. Повторный ПКМ отменяет отдых.",
+  "message.sleepdebt.camp_progress": "Отдых: %s%%",
+  "message.sleepdebt.camp_complete": "Отдых завершён: восстановлено %s сил.",
+  "message.sleepdebt.camp_interrupted": "Отдых прерван.",
+  "message.sleepdebt.camp_cancel": "Отдых отменён.",
+  "message.sleepdebt.camp_far": "Подойди ближе к спальнику.",
+  "item.sleepdebt.sleep_mask.tooltip": "ПКМ: надеть. Закрывает обзор от первого лица."
 }

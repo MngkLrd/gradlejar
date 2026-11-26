@@ -17,7 +17,7 @@
   "block.sleepdebt.coffee_machine": "Copper Coffee Maker",
   "block.sleepdebt.camp_bedroll": "Camp Bedroll",
   "block.sleepdebt.camp_awning": "Camp Awning",
-  "container.sleepdebt.coffee_machine": "Coffee Maker: Water / Grounds / Coal / Output",
+  "container.sleepdebt.coffee_machine": "Coffee Maker",
   "message.sleepdebt.camp_rest": "Rested at camp (+%s)",
   "message.sleepdebt.camp_cooldown": "You need more time before resting again.",
   "sleepdebt.jade.camp": "Camp resting reduces physical fatigue",
@@ -143,5 +143,17 @@
   "journal.sleepdebt.nights": "%s sleep sessions",
   "effect.sleepdebt.alertness": "Caffeinated",
   "effect.sleepdebt.caffeine_crash": "Caffeine Crash",
-  "effect.sleepdebt.calm": "Calm"
+  "effect.sleepdebt.calm": "Calm",
+  "gui.sleepdebt.brew.base": "Base",
+  "gui.sleepdebt.brew.ingredient": "Add",
+  "gui.sleepdebt.brew.fuel": "Fuel",
+  "gui.sleepdebt.brew.output": "Out",
+  "message.sleepdebt.camp_disabled": "Camp rest is disabled in the server settings.",
+  "message.sleepdebt.camp_begin": "Stay still: resting for 7 seconds. Right-click again to cancel.",
+  "message.sleepdebt.camp_progress": "Resting: %s%%",
+  "message.sleepdebt.camp_complete": "Rest complete: %s fatigue restored.",
+  "message.sleepdebt.camp_interrupted": "Rest interrupted.",
+  "message.sleepdebt.camp_cancel": "Rest cancelled.",
+  "message.sleepdebt.camp_far": "Move closer to the bedroll.",
+  "item.sleepdebt.sleep_mask.tooltip": "Right-click to wear. Blocks first-person vision while equipped."
 }
