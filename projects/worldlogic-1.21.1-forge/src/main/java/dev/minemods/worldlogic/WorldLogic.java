@@ -8,6 +8,9 @@ public final class WorldLogic {
   Rules.load();
   var bus=MinecraftForge.EVENT_BUS;
   bus.addListener(Structure::onBreak);
+  bus.addListener(Trees::breakBase);
+  bus.addListener(Trees::placed);
+  bus.addListener(Trees::tick);
   bus.addListener(Structure::onImpact);
   bus.addListener(Structure::onExplosion);
   bus.addListener(Structure::onTick);

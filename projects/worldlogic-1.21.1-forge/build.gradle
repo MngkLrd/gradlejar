@@ -4,7 +4,7 @@ plugins {
  id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
 }
 group = 'dev.minemods.worldlogic'
-version = '0.1.0-alpha'
+version = '0.1.1-alpha'
 base { archivesName = 'worldlogic-forge-mc1.21.1' }
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 minecraft {
@@ -17,3 +17,6 @@ minecraft {
 }
 dependencies { minecraft "net.minecraftforge:forge:1.21.1-${forge_version}" }
 tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 21 }
+
+// Forge 52 uses official names at runtime; these mixins explicitly opt out of remapping.
+jar { manifest.attributes('MixinConfigs': 'worldlogic.mixins.json') }

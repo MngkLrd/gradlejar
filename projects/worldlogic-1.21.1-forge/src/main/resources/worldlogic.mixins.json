@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.minemods.worldlogic.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "WeightedPlateMixin",
+    "StonePlateMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

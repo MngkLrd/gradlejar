@@ -14,6 +14,15 @@ public final class AirAndFire {
  static final class Pocket {final Set<BlockPos> cells;int oxygen;long last;Pocket(Set<BlockPos> cells,long now){this.cells=cells;oxygen=cells.size()*240;last=now;}}
  private static final Map<ServerLevel,List<Pocket>> POCKETS=new WeakHashMap<>();
  private static final Map<ServerLevel,Map<BlockPos,Long>> HEAT=new WeakHashMap<>();
+ // Local ventilation path: bounded air-cell BFS, no forced chunk loads.
+ static BlockPos vent(ServerLevel l,BlockPos start){
+  if(!l.hasChunkAt(start)||!l.isEmptyBlock(start))return null;
+  Set<BlockPos> seen=new HashSet<>();ArrayDeque<BlockPos> todo=new ArrayDeque<>();seen.add(start);todo.add(start);
+  while(!todo.isEmpty()&&seen.size()<=128){BlockPos q=todo.remove();if(l.canSeeSky(q))return q;
+   for(Direction d:Direction.values()){BlockPos t=q.relative(d);if(!l.hasChunkAt(t)||!l.isInWorldBounds(t))return start;if(l.isEmptyBlock(t)&&seen.add(t.immutable()))todo.add(t);}
+  }
+  return seen.size()>128?start:null;
+ }
  static boolean nearHeat(ServerLevel l,BlockPos p,int r){for(BlockPos q:BlockPos.betweenClosed(p.offset(-r,-1,-r),p.offset(r,1,r))){if(!l.hasChunkAt(q))continue;var s=l.getBlockState(q);if(s.is(Blocks.FIRE)||s.is(Blocks.LAVA)||s.getBlock() instanceof CampfireBlock&&s.getValue(BlockStateProperties.LIT))return true;}return false;}
  static void breathe(ServerLevel l,Player p,Body.State st,boolean water,long now){
   if(water||p.hasEffect(MobEffects.WATER_BREATHING)){st.pocket=null;st.pocketCheck=0;return;}
@@ -41,8 +50,9 @@ public final class AirAndFire {
   for(int i=0;i<32;i++){BlockPos q=p.blockPosition().offset(l.random.nextInt(13)-6,l.random.nextInt(7)-3,l.random.nextInt(13)-6);if(!l.hasChunkAt(q))continue;var s=l.getBlockState(q);
    if(s.getBlock() instanceof CampfireBlock&&s.getValue(BlockStateProperties.LIT)){
     if(Rules.on("residual_heat")||Rules.on("thermal_shock"))for(Direction d:Direction.values())map.put(q.relative(d),now+200);
-    if(Rules.on("draft_smoke")){for(Direction d:Direction.Plane.HORIZONTAL){BlockPos t=q.above().relative(d);if(l.isEmptyBlock(t)&&l.canSeeSky(t)){l.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,q.getX()+.5+d.getStepX()*.35,q.getY()+1.1,q.getZ()+.5+d.getStepZ()*.35,1,.1,.05,.1,.01);break;}}}
-    if(Rules.on("fire_needs_air")){boolean enclosed=true;for(Direction d:Direction.values())if(d!=Direction.DOWN&&l.isEmptyBlock(q.relative(d)))enclosed=false;if(enclosed&&l.random.nextFloat()<.15)l.setBlock(q,s.setValue(BlockStateProperties.LIT,false),3);}
+    BlockPos exit=(Rules.on("draft_smoke")||Rules.on("fire_needs_air"))?vent(l,q.above()):q.above();
+    if(Rules.on("draft_smoke")&&exit!=null&&!exit.equals(q.above())){var v=net.minecraft.world.phys.Vec3.atCenterOf(exit).subtract(net.minecraft.world.phys.Vec3.atCenterOf(q)).normalize();l.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,q.getX()+.5+v.x*.5,q.getY()+1.0,q.getZ()+.5+v.z*.5,1,.05,.05,.05,.01);}
+    if(Rules.on("fire_needs_air")&&exit==null&&l.random.nextFloat()<.12)l.setBlock(q,s.setValue(BlockStateProperties.LIT,false),3);
     if(Rules.on("campfire_sparks")&&l.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)&&!l.isRainingAt(q)&&l.random.nextFloat()<.02){BlockPos t=q.relative(Direction.Plane.HORIZONTAL.getRandomDirection(l.random));if(l.isEmptyBlock(t)&&Material.block(l.getBlockState(t.below()),"spark_fuel"))l.setBlock(t,Blocks.FIRE.defaultBlockState(),3);}
    }
    if(Rules.on("wet_torches")&&l.isRainingAt(q)&&(s.is(Blocks.TORCH)||s.is(Blocks.WALL_TORCH)))l.sendParticles(ParticleTypes.SMOKE,q.getX()+.5,q.getY()+.7,q.getZ()+.5,2,.05,.1,.05,.01);
