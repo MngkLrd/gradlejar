@@ -3,12 +3,12 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.107'
 }
 group = 'dev.minemods'
-version = '0.1.0'
+version = '0.2.0'
 base { archivesName = 'layeredarmor' }
 java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
 def generated = providers.exec {
     workingDir projectDir
-    commandLine 'python3', '-c', 'import base64,tarfile,io,pathlib,subprocess,sys; p=pathlib.Path("source.tar.gz.b64"); t=tarfile.open(fileobj=io.BytesIO(base64.b64decode(p.read_text())),mode="r:gz"); t.extractall("."); subprocess.check_call([sys.executable,"generate.py"])'
+    commandLine 'python3', '-c', 'import base64,tarfile,io,pathlib,subprocess,sys; p=pathlib.Path("source.tar.gz.b64"); t=tarfile.open(fileobj=io.BytesIO(base64.b64decode(p.read_text())),mode="r:gz"); t.extractall("."); import gzip; pathlib.Path("upgrade_020.py").write_bytes(gzip.decompress(base64.b64decode(pathlib.Path("upgrade_020.py.gz.b64").read_text()))); subprocess.check_call([sys.executable,"upgrade_020.py"])'
 }.result.get()
 if (generated.exitValue != 0) throw new GradleException('Source extraction failed')
 neoForge {
