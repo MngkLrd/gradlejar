@@ -1,6 +1,6 @@
-# World Logic 1.0.0-rc14
+# World Logic 1.0.0-rc15
 Minecraft 1.21.1 / Forge 52.1.0+ / Java 21 / Gradle 8.10.2 / official mappings.
-Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc14.jar.
+Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc15.jar.
 Install on both server and clients. No external dependencies. Burning Arrows excluded.
 
 Config: config/worldlogic.properties. Mods > World Logic > Config (local world or main menu).
@@ -46,3 +46,5 @@ RC13 refinement: downhill movement preserves initial fall direction, stops when 
 RC14: 105 switches. Strong blocked hits can disable shield use briefly; rapid sprint turns cost fatigue and can cause a slip only on slick terrain if injured/exhausted; sprinting delays leg recovery; severe collisions can cause persistent shoulder injury (-25% mining, -15% melee), synced to client; moving heavy animals can knock players down; opt-in tree decay can turn logs into falling entities, respecting mobGriefing and tracked placements; explosion damage temporarily causes darkness, weakness and impaired movement (no custom hearing filter); impacts accumulate bounded trauma, reducing balance threshold and decaying with rest. No new recipes or required items. Dangerous trees are Hardcore-only and require tree_weight; pre-install builds remain unidentifiable. Network protocol 5. Tests cover calculations, not manual gameplay. Both client and server must update.
 
 RC14 refinement: shield cooldown is deferred to the next player tick so Forge's vanilla shield durability processing completes first. Accumulated impact load additionally delays recovery by up to eight ticks, with a 75-tick cap. Arm penalties do not apply in Creative or Spectator.
+
+RC15: 115 switches. Current applies bounded mass-dependent impulse in actual flowing water, ice overhead increases exertion when trying to ascend; panic collisions use existing herd state and knockdown, heavy weapons need side clearance, cramped mining checks low ceiling and both side walls on client/server. Opt-in structural stress drops unsupported tagged natural soil/gravel/clay when a support is removed; delayed blast reaction uses the same bounded queue, no secondary explosions. Falling debris damages via existing falling entity handler; thermal expansion uses heat exposure followed by water quench, only selected blocks. Unsupported wooden blocks exposed to sustained fire may fall, subject to doFireTick and mobGriefing. Thermal/burn tracking is bounded and session-local, near players only; older builds lack placement provenance. Destructive rules default Hardcore only. No arbitrary stone collapse, no new recipes, no custom water physics engine. Network protocol 6; both sides must update. Gameplay and balance need testing.

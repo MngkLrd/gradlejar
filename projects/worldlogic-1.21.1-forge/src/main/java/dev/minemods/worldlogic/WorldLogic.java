@@ -69,6 +69,13 @@ public final class WorldLogic {
   bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,Trauma::damage);
   bus.addListener(Trauma::melee);
   bus.addListener(Trauma::tick);
+  bus.addListener(EnvironmentPhysics::tick);
+  bus.addListener(EnvironmentPhysics::logout);
+  bus.addListener(EnvironmentPhysics::melee);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,StructuralHazards::broken);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,StructuralHazards::place);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,StructuralHazards::blast);
+  bus.addListener(StructuralHazards::tick);
   bus.addListener(Trauma::logout);
   bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,ImpactDynamics::hit);
   bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,ImpactDynamics::landing);

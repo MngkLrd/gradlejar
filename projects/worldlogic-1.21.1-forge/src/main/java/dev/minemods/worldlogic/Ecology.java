@@ -19,6 +19,8 @@ import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 public final class Ecology {
  private static final Map<Mob,Long> PANIC=new WeakHashMap<>();
+ static boolean panicked(Mob m,long now){return PANIC.getOrDefault(m,0L)>now;}
+ static void panic(Mob m,long until){PANIC.merge(m,until,Math::max);}
 
  public static void crop(BlockEvent.CropGrowEvent.Pre e){if(!(e.getLevel() instanceof ServerLevel l)||!(e.getState().getBlock() instanceof CropBlock))return;BlockPos p=e.getPos();
   if(Rules.on("crop_crowding")){int count=0;for(BlockPos q:BlockPos.betweenClosed(p.offset(-2,0,-2),p.offset(2,0,2)))if(l.hasChunkAt(q)&&l.getBlockState(q).is(e.getState().getBlock()))count++;
@@ -27,7 +29,7 @@ public final class Ecology {
  }
  public static void hurt(LivingHurtEvent e){if(!Rules.on("herd_panic")||!(e.getEntity() instanceof Animal animal)||!(animal.level() instanceof ServerLevel l))return;
   var source=e.getSource().getEntity();Vec3 away=source==null?animal.position().add(1,0,0):source.position();
-  Set<Animal> seen=new HashSet<>();seen.add(animal);List<Animal> wave=List.of(animal);
+  panic(animal,l.getGameTime()+100);Set<Animal> seen=new HashSet<>();seen.add(animal);List<Animal> wave=List.of(animal);
   for(int depth=0;depth<3&&!wave.isEmpty()&&seen.size()<30;depth++){List<Animal> next=new ArrayList<>();for(Animal origin:wave){
    for(Animal a:l.getEntitiesOfClass(Animal.class,origin.getBoundingBox().inflate(6),a->a.getType()==animal.getType()&&a.isAlive())){
     if(seen.size()>=30)break;if(!seen.add(a)||PANIC.getOrDefault(a,0L)>l.getGameTime())continue;

@@ -9,7 +9,13 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 public final class ReleaseChecks {
  private static void check(boolean ok,String detail){if(!ok)throw new IllegalStateException("World Logic test failed: "+detail);}
  public static void run(){
-  check(Rules.keys().size()>=105,"rule count");
+  check(Rules.keys().size()>=115,"rule count");
+  check(EnvironmentPhysics.crampedFactor(2,true)<EnvironmentPhysics.crampedFactor(2,false),"cramped mining geometry");
+  check(EnvironmentPhysics.swingFactor(2)<EnvironmentPhysics.swingFactor(0),"weapon clearance");
+  check(EnvironmentPhysics.currentStrength(4,1)<EnvironmentPhysics.currentStrength(1,1),"current mass");
+  check(StructuralHazards.minBurn(2)<StructuralHazards.minBurn(1),"burn exposure");
+  check(StructuralHazards.quenched(Blocks.STONE_BRICKS.defaultBlockState()).is(Blocks.CRACKED_STONE_BRICKS),"quench reaction");
+  check(Rules.preset("realistic").get("burning_structures").equals("false"),"structural safety");
   check(Trauma.guardRisk(10,3,90)>Trauma.guardRisk(4,1,0),"guard overload curve");
   check(Trauma.aggravation(100)>Trauma.aggravation(0),"injury aggravation curve");
   check(Trauma.armFactor(true)<Trauma.armFactor(false),"arm injury mining penalty");
@@ -54,6 +60,8 @@ public final class ReleaseChecks {
   check(Material.item(new ItemStack(Items.IRON_AXE),"heavy_weapons"),"heavy weapon tag");
   check(Material.block(Blocks.ROOTED_DIRT.defaultBlockState(),"rough_terrain"),"rough terrain tag");
   check(Material.item(new ItemStack(Items.IRON_SWORD),"disarmable"),"disarm tag");
+  check(Material.block(Blocks.CLAY.defaultBlockState(),"structural_weak"),"weak structure tag");
+  check(Material.block(Blocks.PACKED_ICE.defaultBlockState(),"ice_ceiling"),"ice tag");
   check(WorldState.get(l)!=null&&PocketData.get(l)!=null,"saved data");
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_CORE_TESTS_PASSED");
  }

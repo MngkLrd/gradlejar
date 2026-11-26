@@ -36,11 +36,11 @@ public final class ObjectsPhysics {
      if(Rules.on("wind")&&l.isThundering()&&!a.onGround()&&v.lengthSqr()>.25&&l.canSeeSky(a.blockPosition())){double angle=(now/1200L+l.dimension().location().hashCode())*.73;a.setDeltaMovement(v.add(Math.sin(angle)*.0015*Rules.strength("weather"),0,Math.cos(angle)*.0015*Rules.strength("weather")));}
     }else if(x instanceof net.minecraft.world.entity.item.FallingBlockEntity fb){
      if(v.y<-.5&&Rules.on("fragile_containers")){BlockPos q=fb.blockPosition().below();if(l.hasChunkAt(q)&&Material.block(l.getBlockState(q),"fragile_container"))l.destroyBlock(q,true,fb);}
-     boolean log=Rules.on("dangerous_trees")&&fb.getPersistentData().getBoolean("worldlogic_falling_log");
-     if(v.y<-.5&&(log||Rules.on("falling_objects")&&Material.block(fb.getBlockState(),"falling_hazard"))){
+     boolean log=Rules.on("dangerous_trees")&&fb.getPersistentData().getBoolean("worldlogic_falling_log");boolean debris=Rules.on("debris_impact")&&fb.getPersistentData().getBoolean("worldlogic_debris");
+     if(v.y<-.5&&(log||debris||Rules.on("falling_objects")&&Material.block(fb.getBlockState(),"falling_hazard"))){
       for(LivingEntity target:l.getEntitiesOfClass(LivingEntity.class,fb.getBoundingBox().expandTowards(0,v.y,0),a->!a.isSpectator()&&(!(a instanceof Player p2)||!p2.isCreative()))){
        if(FALL_HITS.getOrDefault(target,0L)>now)continue;
-       FALL_HITS.put(target,now+20);target.hurt(l.damageSources().generic(),(float)Math.min(log?7:5,Math.abs(v.y)*(log?3:2)));
+       FALL_HITS.put(target,now+20);target.hurt(l.damageSources().generic(),(float)Math.min(log?7:5,Math.abs(v.y)*(log?3:debris?2.5:2)));
       }
      }
     }else if(x instanceof LivingEntity||x instanceof net.minecraft.world.entity.vehicle.Boat){

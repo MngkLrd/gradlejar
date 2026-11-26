@@ -32,5 +32,8 @@
   "message.worldlogic.guard_broken": "Твоя защита сорвана!",
   "message.worldlogic.concussion": "Взрыв оглушил тебя!",
   "message.worldlogic.fall_animal": "Крупное животное сбило тебя с ног!",
-  "message.worldlogic.fall_dodge": "Ты потерял равновесие на резком повороте!"
+  "message.worldlogic.fall_dodge": "Ты потерял равновесие на резком повороте!",
+  "message.worldlogic.cramped_swing": "Недостаточно места для размаха тяжёлым оружием.",
+  "message.worldlogic.ice_ceiling": "Лёд перекрывает путь наверх. Ищи выход!",
+  "message.worldlogic.fall_stampede": "Бегущее стадо сбило тебя с ног!"
 }
