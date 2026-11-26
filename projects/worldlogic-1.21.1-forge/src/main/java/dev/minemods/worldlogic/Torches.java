@@ -23,7 +23,7 @@ public final class Torches {
    if(now-first<120)continue;
    BlockState next=(s.is(Blocks.TORCH)?Content.TORCH.get():Content.WALL_TORCH.get()).defaultBlockState();
    if(s.hasProperty(BlockStateProperties.HORIZONTAL_FACING))next=next.setValue(BlockStateProperties.HORIZONTAL_FACING,s.getValue(BlockStateProperties.HORIZONTAL_FACING));
-   l.setBlock(q,next,3);wet.remove(q);
+   if(l.setBlock(q,next,3)){TorchLifetime.forget(l,q);wet.remove(q);}
   }
  }
  public static void relight(PlayerInteractEvent.RightClickBlock e){
@@ -31,7 +31,7 @@ public final class Torches {
   var s=l.getBlockState(e.getPos());boolean wall=s.is(Content.WALL_TORCH.get());if(!wall&&!s.is(Content.TORCH.get()))return;
   var next=(wall?Blocks.WALL_TORCH:Blocks.TORCH).defaultBlockState();
   if(wall)next=next.setValue(BlockStateProperties.HORIZONTAL_FACING,s.getValue(BlockStateProperties.HORIZONTAL_FACING));
-  if(l.setBlock(e.getPos(),next,3)&&!e.getEntity().isCreative())e.getItemStack().hurtAndBreak(1,e.getEntity(),e.getHand()==net.minecraft.world.InteractionHand.MAIN_HAND?EquipmentSlot.MAINHAND:EquipmentSlot.OFFHAND);
+  if(l.setBlock(e.getPos(),next,3)){TorchLifetime.register(l,e.getPos());if(!e.getEntity().isCreative())e.getItemStack().hurtAndBreak(1,e.getEntity(),e.getHand()==net.minecraft.world.InteractionHand.MAIN_HAND?EquipmentSlot.MAINHAND:EquipmentSlot.OFFHAND);}
   e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);
  }
 }

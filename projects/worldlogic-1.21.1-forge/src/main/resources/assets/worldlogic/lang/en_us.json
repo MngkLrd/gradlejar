@@ -9,5 +9,7 @@
   "message.worldlogic.rest_exposed": "Sleeping in the open restored only some of your strength.",
   "message.worldlogic.retreat_hit": "A hit from behind interrupted your retreat.",
   "message.worldlogic.climb_hit": "You lost your grip!",
-  "message.worldlogic.cargo_broken": "Fragile cargo broke: %s item(s)."
+  "message.worldlogic.cargo_broken": "Fragile cargo broke: %s item(s).",
+  "message.worldlogic.leash_tension": "The animal resists the leash. Walk slowly.",
+  "message.worldlogic.boat_loaded": "Heavy cargo: boat speed limited to %s%%."
 }

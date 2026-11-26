@@ -9,7 +9,11 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 public final class ReleaseChecks {
  private static void check(boolean ok,String detail){if(!ok)throw new IllegalStateException("World Logic test failed: "+detail);}
  public static void run(){
-  check(Rules.keys().size()>=70,"rule count");
+  check(Rules.keys().size()>=77,"rule count");
+  check(TravelPhysics.boatFactor(7)<TravelPhysics.boatFactor(1),"boat overload curve");
+  check(TravelPhysics.crashDamage(.2)==0&&TravelPhysics.crashDamage(.8)>0,"wall impact threshold");
+  check(TorchLifetime.lifetime(2)<TorchLifetime.lifetime(1),"torch lifetime scaling");
+  check(Rules.preset("realistic").get("torch_lifetime").equals("false"),"torch opt-in");
   check(Expedition.armorLoad(new ItemStack(Items.IRON_CHESTPLATE))>Expedition.armorLoad(new ItemStack(Items.LEATHER_CHESTPLATE)),"armor diving tradeoff");
   check(CombatConsequences.healDelay(10,1)>CombatConsequences.healDelay(2,1),"damage recovery curve");
   check(CombatConsequences.cargoLoss(4,1)==0&&CombatConsequences.cargoLoss(20,2)==3,"bounded cargo breakage");
@@ -31,6 +35,8 @@ public final class ReleaseChecks {
   check(Material.block(Blocks.GLASS.defaultBlockState(),"glass"),"glass tag");
   check(Material.block(Blocks.IRON_BLOCK.defaultBlockState(),"ricochet_metal"),"metal tag");
   check(Material.item(new ItemStack(Items.GLASS_BOTTLE),"fragile_cargo"),"fragile cargo tag");
+  check(TorchLifeData.get(l)!=null,"torch persistence");
+  check(Material.item(new ItemStack(Items.IRON_AXE),"heavy_weapons"),"heavy weapon tag");
   check(WorldState.get(l)!=null&&PocketData.get(l)!=null,"saved data");
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_CORE_TESTS_PASSED");
  }

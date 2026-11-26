@@ -9,5 +9,7 @@
   "message.worldlogic.rest_exposed": "Сон под открытым небом восстановил только часть сил.",
   "message.worldlogic.retreat_hit": "Удар в спину сорвал отступление.",
   "message.worldlogic.climb_hit": "Ты потерял хват!",
-  "message.worldlogic.cargo_broken": "Хрупкий груз разбился: %s шт."
+  "message.worldlogic.cargo_broken": "Хрупкий груз разбился: %s шт.",
+  "message.worldlogic.leash_tension": "Животное сопротивляется поводку. Иди медленнее.",
+  "message.worldlogic.boat_loaded": "Тяжёлый груз: скорость лодки ограничена до %s%%."
 }

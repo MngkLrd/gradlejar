@@ -51,6 +51,16 @@ public final class WorldLogic {
   bus.addListener(CombatConsequences::tick);
   bus.addListener(CombatConsequences::logout);
   bus.addListener(Pursuit::tick);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,TravelPhysics::attack);
+  bus.addListener(TravelPhysics::animal);
+  bus.addListener(TravelPhysics::tick);
+  bus.addListener(TravelPhysics::logout);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,PredatorEcology::wound);
+  bus.addListener(PredatorEcology::tick);
+  bus.addListener(PredatorEcology::hunt);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,TorchLifetime::placed);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,TorchLifetime::broken);
+  bus.addListener(TorchLifetime::tick);
   bus.addListener(Body::tick);
   bus.addListener(Body::jump);
   bus.addListener(Body::breakSpeed);

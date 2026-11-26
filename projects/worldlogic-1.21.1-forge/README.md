@@ -1,6 +1,6 @@
-# World Logic 1.0.0-rc9
+# World Logic 1.0.0-rc10
 Minecraft 1.21.1 / Forge 52.1.0+ / Java 21 / Gradle 8.10.2 / official mappings.
-Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc9.jar.
+Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc10.jar.
 Install on both server and clients. No external dependencies. Burning Arrows excluded.
 
 Config: config/worldlogic.properties. Mods > World Logic > Config (local world or main menu).
@@ -26,3 +26,5 @@ Fatigue recovery now starts after three seconds without strenuous work; active i
 RC9 consequences: 70 switches. Combat recovery delays food-driven natural healing only, not potion/beacon healing; back hits while sprinting stagger; attack on ladders applies a downward/outward impulse; heavy armor increases exertion; actual fall damage can break 1–3 tagged fragile cargo items (Hardcore only by default); hard falls and environmental damage wear armor; selected mobs investigate their last visible target location after losing their vanilla target. Pursuit does not reveal hidden player positions or break doors. Combat healing deadline persists in player NBT; stagger and pursuit memory are session-local; no new items or recipes. Runtime and balance must be verified.
 
 RC9 follow-up: gate only FoodData's natural-regeneration gamerule read, before food exhaustion is charged. This does not change the global gamerule or potion healing. The mixin is required so a mismatch fails the startup test instead of silently disabling the mechanic.
+
+RC10: 77 toggles. Injured players leave bounded server-side scent traces and red dust while moving; water/rain and healing stop new traces. Wild wolves/foxes and selected undead investigate traces, without forcing attacks or revealing hidden players. Nearby wild predators remember food locations in entity NBT for two minutes. Occupied boats and chest-boat cargo have a bounded server-side water speed cap. Heavy axe/mace attack attempts against living entities consume fatigue and briefly prevent sprinting (air swings are not included). Sprinting while leading an animal creates tension. High-speed sprint wall collisions can hurt if actual collision geometry blocks the path. New or relit torches expire after 30 minutes at strength 1 (Hardcore only by default); tracked deadlines persist, old untouched torches are not retroactively tracked, unloaded chunks never forced. Lanterns unaffected. Breaking and replacing a torch resets its timer. No new progression or resources. Actual client-side boat prediction, leash feel and wall impacts need gameplay verification.
