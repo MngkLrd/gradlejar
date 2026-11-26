@@ -135,6 +135,12 @@ class PackTests(unittest.TestCase):
         report={"checks":[{"assertion":True,"passed":True,"suite":"old"}]}
         with self.assertRaisesRegex(ValueError,"No scenario assertions"):
             play(Fake(),[{"command":"list","expect":"Test passed"}],report,"new")
+    def test_pack_dashboard_scope(self):
+        from tools.qa.dashboard import compatibility_inventory, render_compat
+        rows=compatibility_inventory([])
+        self.assertEqual({r["target"] for r in rows if r["pack"]=="physics"},{"fabric-mc26.3","neoforge-mc26.3"})
+        self.assertTrue(all(r["status"]=="no-recent-evidence" for r in rows))
+        self.assertIn("Exact modpack combinations",render_compat(rows,"owner/repo"))
     def test_graphics_diagnostic(self):
         self.assertEqual(analyze("Failed to create backend OpenGL: Couldn't find matching GLX visual")[0]["category"],"graphics")
 

@@ -106,6 +106,8 @@ def test(name,key,inputs,out):
         t=ts[0]
         jars,evidence=resolve_members(t,inputs,report["commit"],report["run_id"],report["run_attempt"])
         report["members"]=evidence
+        report["manifest_sha256"]=sha256(ROOT/"tools/qa/packs"/(name+".json"))
+        report["scenario_sha256"]={m["slug"]:sha256(safe_path(ROOT,m["scenario"])) for m in t["members"]}
         p=profile(t["members"][0]["project"])
         q={"loader_version":t["loader_version"],"dependencies":t["dependencies"]}
         report["loader_version"]=q["loader_version"]

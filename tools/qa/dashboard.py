@@ -7,7 +7,7 @@ import os
 import subprocess
 import zipfile
 from pathlib import Path
-from .common import ROOT, LEGACY, project_tree, write_json
+from .common import ROOT, LEGACY, project_tree, write_json, sha256, safe_path
 
 def gh(*args):
     return subprocess.run(["gh","api",*args],check=True,capture_output=True,timeout=40).stdout
@@ -21,7 +21,7 @@ def github_reports(repo,max_pages=5,max_reports=100):
             warnings.append("Artifact listing incomplete: "+str(e));break
         items=body.get("artifacts",[])
         for a in items:
-            if a.get("expired") or not a.get("name","").startswith("qa-report-"): continue
+            if a.get("expired") or not a.get("name","").startswith(("qa-report-","compat-report-")): continue
             if a.get("size_in_bytes",0)>2*1024*1024:
                 warnings.append("Oversized QA report artifact ignored");continue
             try:
@@ -30,7 +30,7 @@ def github_reports(repo,max_pages=5,max_reports=100):
                     for info in z.infolist():
                         if not info.filename.endswith(".json") or info.file_size>1024*1024: continue
                         r=json.loads(z.read(info))
-                        if isinstance(r,dict) and r.get("schema")==1 and r.get("project"):
+                        if isinstance(r,dict) and r.get("schema")==1 and (r.get("project") or r.get("kind")=="compatibility"):
                             r["_artifact_created"]=a.get("created_at","")
                             reports.append(r)
             except (ValueError,KeyError,OSError,subprocess.SubprocessError,zipfile.BadZipFile) as e:
@@ -48,7 +48,7 @@ def local_reports(path):
     for f in Path(path).rglob("*.json"):
         try:
             r=json.loads(f.read_text("utf-8"))
-            if isinstance(r,dict) and r.get("schema")==1 and r.get("project"): result.append(r)
+            if isinstance(r,dict) and r.get("schema")==1 and (r.get("project") or r.get("kind")=="compatibility"): result.append(r)
         except (OSError,ValueError): pass
     return result
 
@@ -60,6 +60,7 @@ def inventory(reports):
             except (ValueError,TypeError): return 0
         return (number("run_id"),number("run_attempt"),r.get("_artifact_created",""))
     for r in reports:
+        if not r.get("project"): continue
         project=r["project"]
         if project not in latest or order(r)>order(latest[project]): latest[project]=r
     rows=[]
@@ -80,7 +81,51 @@ def inventory(reports):
         rows.append(row)
     return rows
 
-def render(rows,warnings,repo):
+def compatibility_inventory(reports):
+    latest={}
+    def number(v):
+        try:return int(v)
+        except (TypeError,ValueError):return 0
+    for r in reports:
+        if r.get("kind")!="compatibility":continue
+        key=(r.get("pack"),r.get("target"))
+        rank=(number(r.get("run_id")),number(r.get("run_attempt")))
+        old=latest.get(key)
+        if old is None or rank>(number(old.get("run_id")),number(old.get("run_attempt"))):latest[key]=r
+    rows=[]
+    for manifest in sorted((ROOT/"tools/qa/packs").glob("*.json")):
+        try:
+            p=json.loads(manifest.read_text("utf-8"))
+            for t in p["targets"]:
+                key=(p["id"],t["id"])
+                row={"pack":key[0],"target":key[1],"members":[m["project"] for m in t["members"]],"status":"no-recent-evidence"}
+                r=latest.get(key)
+                if r:
+                    row.update(run_id=r.get("run_id"),latest_status=r.get("status"),error=r.get("error"),commit=r.get("commit"))
+                    members={m["project"]:m for m in r.get("members",[])}
+                    current=(r.get("manifest_sha256")==sha256(manifest)
+                        and set(members)==set(row["members"])
+                        and all(members[m["project"]].get("tree")==project_tree(m["project"]) and members[m["project"]].get("tree")
+                                and r.get("scenario_sha256",{}).get(members[m["project"]]["slug"])==sha256(safe_path(ROOT,m["scenario"])) for m in t["members"]))
+                    row["status"]=r.get("status","unknown") if current else "stale-evidence"
+                    row["checks_passed"]=sum(bool(c.get("assertion") and c.get("passed")) for c in r.get("checks",[]))
+                    row["installed_jars"]=r.get("installed_jars",{})
+                rows.append(row)
+        except (KeyError,ValueError,OSError,TypeError) as e:
+            rows.append({"pack":manifest.stem,"target":"?","members":[],"status":"invalid-manifest","error":str(e)})
+    return rows
+
+def render_compat(rows,repo):
+    e=lambda x:html.escape(str(x if x is not None else ""),quote=True)
+    cells=[]
+    for r in rows:
+        run=r.get("run_id","")
+        link=f'<a href="https://github.com/{e(repo)}/actions/runs/{e(run)}">#{e(run)}</a>' if str(run).isdigit() else "—"
+        cls="ok" if r["status"]=="passed" else "bad" if r["status"]=="failed" else "neutral"
+        cells.append(f'<tr><td><b>{e(r["pack"])}</b></td><td>{e(r["target"])}</td><td>{e(", ".join(r["members"]))}</td><td><span class="{cls}">{e(r["status"])}</span></td><td>{e(r.get("checks_passed","—"))}</td><td>{link}</td><td>{e(r.get("error",""))}</td></tr>')
+    return '<h2>Exact modpack combinations</h2><p>Separate compatibility evidence. Only these exact member JARs and scenarios; not universal modpack support.</p><div class="wrap"><table id="compatibility"><thead><tr><th>Pack</th><th>Target</th><th>Members</th><th>Status</th><th>Assertions passed</th><th>Run</th><th>Detail</th></tr></thead><tbody>'+"".join(cells)+'</tbody></table></div>'
+
+def render(rows,warnings,repo,compat_rows=()):
     e=lambda x:html.escape(str(x if x is not None else ""),quote=True)
     def status(row):
         s=row["status"]
@@ -99,9 +144,9 @@ def render(rows,warnings,repo):
     return """<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MineMods QA dashboard</title><style>
     :root{color-scheme:dark;--bg:#111820;--panel:#1c2835;--line:#354658;--text:#e2eaf1;--muted:#aebdca}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px system-ui,sans-serif}main{max-width:1500px;margin:auto;padding:30px}h1{font-size:27px;margin:0 0 8px}p,small{color:var(--muted)}.metrics{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}.metric{background:var(--panel);border:1px solid var(--line);padding:16px;min-width:150px;flex:1;border-radius:8px}.metric strong{font-size:28px;display:block}.metric span{color:var(--muted)}.filters{display:flex;gap:10px;margin:16px 0;flex-wrap:wrap}input,select{background:var(--panel);border:1px solid var(--line);color:var(--text);padding:10px;border-radius:6px}input{flex:1;min-width:160px}.wrap{overflow:auto;border:1px solid var(--line);border-radius:7px}table{width:100%;border-collapse:collapse;min-width:940px}th,td{padding:11px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}th{background:var(--panel);position:sticky;top:0}td small{display:block;font-size:11px;max-width:270px;overflow-wrap:anywhere}a{color:#85c4ff}.ok{color:#9ce1ae}.bad{color:#ffaeae}.neutral{color:#c7cbd1}ul{color:var(--muted)}
-    </style><main><h1>MineMods · Build and QA status</h1><p>Actual recent GitHub Actions evidence, not inferred gameplay results. A changed source tree invalidates earlier evidence. Unknown is not a failure.</p>"""+'<div class="metrics">'+cards+'</div><div class="filters"><input id="search" placeholder="Search mod, loader or version"><select id="status"><option value="">All statuses</option>'+options+'</select></div><div class="wrap"><table><thead><tr><th>Mod / project</th><th>Version</th><th>Minecraft</th><th>Loader</th><th>Policy</th><th>Current QA</th><th>Status</th><th>Run</th><th>Detail</th></tr></thead><tbody>'+"".join(trs)+"""</tbody></table></div><p>QA-4 means production server gameplay assertions; client visuals remain unverified. Legacy profiles are explicitly not runtime-certified.</p><ul>"""+"".join("<li>"+e(w)+"</li>" for w in warnings)+"""</ul></main><script>
+    </style><main><h1>MineMods · Build and QA status</h1><p>Actual recent GitHub Actions evidence, not inferred gameplay results. A changed source tree invalidates earlier evidence. Unknown is not a failure.</p>"""+'<div class="metrics">'+cards+'</div><div class="filters"><input id="search" placeholder="Search mod, loader or version"><select id="status"><option value="">All statuses</option>'+options+'</select></div><div class="wrap"><table><thead><tr><th>Mod / project</th><th>Version</th><th>Minecraft</th><th>Loader</th><th>Policy</th><th>Current QA</th><th>Status</th><th>Run</th><th>Detail</th></tr></thead><tbody>'+"".join(trs)+"""</tbody></table></div><p>QA-4 means production server gameplay assertions; client visuals remain unverified. Legacy profiles are explicitly not runtime-certified.</p><ul>"""+"".join("<li>"+e(w)+"</li>" for w in warnings)+"""</ul>"""+render_compat(compat_rows,repo)+"""</main><script>
     const search=document.querySelector('#search'), status=document.querySelector('#status');
-    function filter(){const q=search.value.toLowerCase();for(const row of document.querySelectorAll('tbody tr'))row.hidden=!(row.textContent.toLowerCase().includes(q)&&(!status.value||row.dataset.status===status.value));}
+    function filter(){const q=search.value.toLowerCase();for(const row of document.querySelectorAll('tbody tr[data-status]'))row.hidden=!(row.textContent.toLowerCase().includes(q)&&(!status.value||row.dataset.status===status.value));}
     search.addEventListener('input',filter);status.addEventListener('change',filter);
     </script></html>"""
 
@@ -115,6 +160,7 @@ if __name__=="__main__":
         recent,warnings=github_reports(a.repo);reports+=recent
     else: warnings.append("Local report mode; no GitHub artifact history queried")
     rows=inventory(reports);out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
-    write_json(out/"dashboard.json",{"profiles":rows,"warnings":warnings})
-    (out/"index.html").write_text(render(rows,warnings,a.repo),encoding="utf-8")
+    packs=compatibility_inventory(reports)
+    write_json(out/"dashboard.json",{"profiles":rows,"compatibility":packs,"warnings":warnings})
+    (out/"index.html").write_text(render(rows,warnings,a.repo,packs),encoding="utf-8")
     print("Dashboard:",len(rows),"profiles,",len(reports),"reports")

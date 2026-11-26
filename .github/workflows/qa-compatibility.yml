@@ -15,6 +15,10 @@ on:
       - tools/qa/server.py
       - tools/qa/scenarios/fragileglass.json
       - tools/qa/scenarios/naturalbuoyancy-water.json
+      - 'projects/fragileglass-fabric-26.3/**'
+      - 'projects/fragileglass-neoforge-26.3/**'
+      - 'projects/naturalbuoyancy-fabric-26.3/**'
+      - 'projects/naturalbuoyancy-neoforge-26.3/**'
       - .github/workflows/qa-compatibility.yml
 permissions:
   contents: read
@@ -112,13 +116,19 @@ jobs:
           PACK_ID: ${{ needs.plan.outputs.pack }}
           TARGET: ${{ matrix.target.id }}
         run: python3 -m tools.qa.pack test "$PACK_ID" "$TARGET" pack-members pack-evidence
-      - name: Upload compatibility report and runtime logs
+      - name: Upload compact compatibility evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: compat-report-${{ needs.plan.outputs.pack }}-${{ matrix.target.id }}-${{ github.run_attempt }}
-          path: |
-            pack-evidence/compatibility-report.json
-            pack-evidence/runtime/logs/
+          path: pack-evidence/compatibility-report.json
           if-no-files-found: warn
           retention-days: 30
+      - name: Upload runtime logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compat-logs-${{ needs.plan.outputs.pack }}-${{ matrix.target.id }}-${{ github.run_attempt }}
+          path: pack-evidence/runtime/logs/
+          if-no-files-found: ignore
+          retention-days: 7
