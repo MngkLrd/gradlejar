@@ -9,7 +9,10 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 public final class ReleaseChecks {
  private static void check(boolean ok,String detail){if(!ok)throw new IllegalStateException("World Logic test failed: "+detail);}
  public static void run(){
-  check(Rules.keys().size()>=81,"rule count");
+  check(Rules.keys().size()>=89,"rule count");
+  check(GroundHazards.recoveryExtra(100,4,8)>GroundHazards.recoveryExtra(0,0,0),"ground recovery curve");
+  check(GroundHazards.landingRisk(6,4,true,80)>GroundHazards.landingRisk(3,0,false,0),"heavy landing curve");
+  check(Rules.preset("realistic").get("unstable_carrying").equals("false"),"cargo loss opt-in");
   check(Balance.threshold(true,80,2)<Balance.threshold(false,0,0),"injury lowers balance threshold");
   check(Balance.slipRisk(true,80,2,.1)>Balance.slipRisk(false,0,0,0),"injured slip risk");
   check(Balance.duration(1,true)>Balance.duration(.5,false),"fall recovery time");
@@ -41,6 +44,7 @@ public final class ReleaseChecks {
   check(Material.item(new ItemStack(Items.GLASS_BOTTLE),"fragile_cargo"),"fragile cargo tag");
   check(TorchLifeData.get(l)!=null,"torch persistence");
   check(Material.item(new ItemStack(Items.IRON_AXE),"heavy_weapons"),"heavy weapon tag");
+  check(Material.block(Blocks.ROOTED_DIRT.defaultBlockState(),"rough_terrain"),"rough terrain tag");
   check(WorldState.get(l)!=null&&PocketData.get(l)!=null,"saved data");
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_CORE_TESTS_PASSED");
  }

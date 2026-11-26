@@ -22,7 +22,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 public final class Balance {
  private static final class State {
   Vec3 position,velocity=Vec3.ZERO;
-  long last,downUntil,cooldown,jumpAt=-100,failedUntil;
+  long last,downUntil,cooldown,jumpAt=-100,failedUntil,started;
   boolean sprint,ground,owned;
   float roll;
   double jumpY,jumpSpeed;
@@ -44,12 +44,13 @@ public final class Balance {
  }
  private static void fall(ServerLevel l,Player p,State s,Vec3 dir,String reason,double severity,boolean injured){
   if(s.owned||p.getForcedPose()!=null||!eligible(p))return;
-  long now=l.getGameTime();s.downUntil=now+duration(severity,injured);s.cooldown=s.downUntil+60;s.owned=true;
+  long now=l.getGameTime();s.started=now;s.downUntil=now+duration(severity,injured)+(Rules.on("ground_recovery")?GroundHazards.recoveryExtra(p):0);s.cooldown=s.downUntil+60;s.owned=true;
   s.roll=dir.cross(p.getLookAngle()).y>=0?18:-18;
   p.stopUsingItem();p.setSprinting(false);p.setForcedPose(Pose.SWIMMING);p.setPose(Pose.SWIMMING);
   Vec3 v=dir.multiply(1,0,1).normalize().scale(.12);
   p.setDeltaMovement(v.x,Math.min(0,p.getDeltaMovement().y),v.z);p.hurtMarked=true;
   Survival.work(p,5+severity*3);
+  GroundHazards.dropOnImpact(p,severity,reason);
   if(severity>=.75&&Rules.on("wall_collision")&&reason.equals("collision"))p.hurt(l.damageSources().generic(),(float)Math.min(3,1+severity));
   BlockPos ground=p.getOnPos();var floor=l.getBlockState(ground);
   if(!floor.isAir())l.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,floor),p.getX(),p.getY()+.08,p.getZ(),12,.25,.04,.25,.035);
@@ -74,7 +75,7 @@ public final class Balance {
   Vec3 delta=p.position().subtract(s.position),previous=s.velocity;double speed=previous.horizontalDistance(),current=delta.horizontalDistance();
   boolean injured=Rules.on("injured_balance")&&Survival.injured(p,now);
   double fatigue=Rules.on("exertion")?Survival.fatigue(p):0,burden=Condition.burden(p),weak=Condition.weakness(p);
-  double min=threshold(injured,fatigue,burden);
+  double min=threshold(injured,fatigue,burden);if(Rules.on("dangerous_darkness")&&l.getMaxLocalRawBrightness(p.blockPosition())<=3)min=Math.max(.13,min*.85);
   if(s.ground&&!p.onGround()&&delta.y>.075){s.jumpAt=now;s.jumpY=s.position.y;s.jumpSpeed=Math.max(speed,current);s.failedUntil=0;}
   boolean airborneJump=!p.onGround()&&now-s.jumpAt<=20;
   if(airborneJump)s.jumpSpeed=Math.max(s.jumpSpeed,speed);
@@ -99,11 +100,30 @@ public final class Balance {
     if(angle<.65&&risk>=.45&&speed>=min*.95)fall(l,p,s,forward,"slip",risk,injured);
    }
   }
+  if(!s.owned&&now>=s.cooldown&&p.onGround()&&s.ground&&s.sprint&&!p.isShiftKeyDown()&&Rules.on("rough_terrain")&&speed>=min*.9){
+   var floor=l.getBlockState(p.getOnPos());
+   double rise=Math.abs(delta.y);boolean rough=Material.block(floor,"rough_terrain");
+   double risk=slipRisk(injured,fatigue,burden,weak)+(Rules.on("dangerous_darkness")&&l.getMaxLocalRawBrightness(p.blockPosition())<=3?.20:0);
+   // No random falls on flat terrain: require a sudden vertical step or drop and measurable loss of speed.
+   if(rough&&rise>=.23&&rise<=.65&&current<speed*.72&&risk>=.35)fall(l,p,s,previous,"rough",Math.min(1.1,risk),injured);
+  }
   if(!s.owned&&p.onGround()&&!s.ground&&s.failedUntil>0&&s.failedUntil>=now&&now>=s.cooldown&&p.getY()<s.jumpY+.50&&!p.isShiftKeyDown()){
    Vec3 dir=previous.horizontalDistance()>.04?previous:p.getLookAngle();fall(l,p,s,dir,"jump",.6,injured);
   }
   if(p.onGround()&&!s.ground)s.failedUntil=0;
   s.velocity=s.owned?Vec3.ZERO:delta;s.position=p.position();s.last=now;s.ground=p.onGround();s.sprint=p.isSprinting();
+ }
+ static boolean forceLanding(Player p,double severity){
+  if(!eligible(p)||!Rules.on("physical_falls")||p.getForcedPose()!=null)return false;
+  State s=state(p);if(s.owned||s.cooldown>p.level().getGameTime())return false;
+  Vec3 direction=p.getDeltaMovement();if(direction.horizontalDistance()<.05)direction=p.getLookAngle();
+  fall((ServerLevel)p.level(),p,s,direction,"landing",severity,Survival.injured(p,p.level().getGameTime()));return s.owned;
+ }
+ public static void damaged(net.minecraftforge.event.entity.living.LivingDamageEvent e){
+  if(e.isCanceled()||e.getAmount()<2||!(e.getEntity() instanceof Player p)||!Rules.on("ground_recovery")||!down(p))return;
+  // Impacts from the fall itself cannot extend the initial prone period.
+  if(e.getSource().getEntity()==null)return;
+  State s=state(p);long now=p.level().getGameTime();s.downUntil=Math.min(s.started+75,Math.max(s.downUntil,now+12));s.cooldown=s.downUntil+60;
  }
  public static void jump(LivingEvent.LivingJumpEvent e){if(e.getEntity() instanceof Player p&&down(p)){Vec3 v=p.getDeltaMovement();p.setDeltaMovement(v.x,0,v.z);p.hurtMarked=true;}}
  public static void attack(AttackEntityEvent e){if(down(e.getEntity()))e.setCanceled(true);}

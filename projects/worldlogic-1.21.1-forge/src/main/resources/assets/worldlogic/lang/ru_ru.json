@@ -15,5 +15,12 @@
   "message.worldlogic.fall_collision": "Ты потерял равновесие при столкновении!",
   "message.worldlogic.fall_slip": "Ты поскользнулся!",
   "message.worldlogic.fall_jump": "Ты не удержался при прыжке!",
-  "message.worldlogic.fall_debug": "Проверка падения."
+  "message.worldlogic.fall_debug": "Проверка падения.",
+  "message.worldlogic.fall_landing": "Тяжёлое приземление сбило тебя с ног!",
+  "message.worldlogic.fall_rough": "Ты споткнулся на неровной земле!",
+  "message.worldlogic.climb_slip": "Руки соскальзывают!",
+  "message.worldlogic.dropped_grip": "Ты выронил часть груза!",
+  "message.worldlogic.wet_grip": "Мокрые руки подвели.",
+  "message.worldlogic.animal_fed": "Животное сначала нужно накормить.",
+  "message.worldlogic.animal_hungry": "Животное слишком голодно, чтобы давать молоко."
 }

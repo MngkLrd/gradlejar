@@ -15,5 +15,12 @@
   "message.worldlogic.fall_collision": "You lost your balance on impact!",
   "message.worldlogic.fall_slip": "You slipped!",
   "message.worldlogic.fall_jump": "You missed your footing!",
-  "message.worldlogic.fall_debug": "Test fall."
+  "message.worldlogic.fall_debug": "Test fall.",
+  "message.worldlogic.fall_landing": "The heavy landing knocked you down!",
+  "message.worldlogic.fall_rough": "You stumbled on uneven ground!",
+  "message.worldlogic.climb_slip": "Your grip is failing!",
+  "message.worldlogic.dropped_grip": "You dropped part of your cargo!",
+  "message.worldlogic.wet_grip": "Your wet grip slipped.",
+  "message.worldlogic.animal_fed": "The animal needed food first.",
+  "message.worldlogic.animal_hungry": "The animal is too hungry to produce milk."
 }
