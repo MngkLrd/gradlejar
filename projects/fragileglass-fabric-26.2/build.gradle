@@ -8,3 +8,7 @@ dependencies {
  implementation 'net.fabricmc:fabric-loader:0.19.5'
 }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=25 }
+
+// Shared byte-identical sources; every target still compiles independently.
+sourceSets.main.java.srcDir('../../shared/fragileglass/fabric/src/main/java')
+sourceSets.main.resources.srcDirs('../../shared/fragileglass/fabric/src/main/resources', '../../shared/fragileglass/common/src/main/resources')

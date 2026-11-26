@@ -5,3 +5,7 @@ base.archivesName='fragileglass-neoforge-mc26.3'
 java.toolchain.languageVersion=JavaLanguageVersion.of(25)
 neoForge { version='26.3.0.101'; runs { client { client() }; server { server() } }; mods { fragileglass { sourceSet(sourceSets.main) } } }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=25 }
+
+// Shared byte-identical sources; every target still compiles independently.
+sourceSets.main.java.srcDir('../../shared/fragileglass/neoforge/src/main/java')
+sourceSets.main.resources.srcDirs('../../shared/fragileglass/neoforge/src/main/resources', '../../shared/fragileglass/common/src/main/resources')

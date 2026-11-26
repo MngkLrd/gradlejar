@@ -41,7 +41,7 @@ class P5Tests(unittest.TestCase):
         self.assertEqual(len(p["targets"]),11)
         self.assertEqual(p["status"],"plan-only")
         r=duplicates(["projects/fragileglass-fabric-26.2","projects/fragileglass-fabric-26.3"])
-        self.assertGreater(r["duplicated_bytes"],0)
+        self.assertEqual(r["duplicated_bytes"],0) # shared 26.x source refactor
     def test_release_hash_and_no_drafts(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);reports=root/"reports";reports.mkdir()

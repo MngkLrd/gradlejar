@@ -18,5 +18,9 @@
       "neoforge-mc26.2",
       "neoforge-mc26.3"
     ]
-  }
+  },
+  "shared_sources": [
+    "shared/fragileglass/neoforge",
+    "shared/fragileglass/common"
+  ]
 }

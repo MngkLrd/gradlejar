@@ -78,6 +78,7 @@ def select_projects(requested,changed=None):
         if not isinstance(q,dict): continue
         scenario=q.get("scenario")
         watches=q.get("watch_paths",[])
+        if any(path==root or path.startswith(root+"/") for path in changed for root in p.get("shared_sources",[])): projects.add(d)
         if scenario in changed or "tools/qa/compatibility.json" in changed or any(fnmatch.fnmatch(path,pattern) for path in changed for pattern in watches):
             projects.add(d)
     if len(projects)>256: raise ValueError("GitHub matrix exceeds 256 targets; dispatch enrolled cohorts separately")
