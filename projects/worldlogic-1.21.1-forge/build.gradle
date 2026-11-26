@@ -11,8 +11,8 @@ minecraft {
  mappings channel: 'official', version: '1.21.1'
  copyIdeResources = true
  runs {
-  client { workingDirectory project.file('run'); mods { worldlogic { source sourceSets.main } } }
-  server { workingDirectory project.file('run-server'); args '--nogui'; mods { worldlogic { source sourceSets.main } } }
+  client { workingDirectory project.file('run'); args '--mixin.config', 'worldlogic.mixins.json'; mods { worldlogic { source sourceSets.main } } }
+  server { workingDirectory project.file('run-server'); args '--nogui', '--mixin.config', 'worldlogic.mixins.json'; if(project.hasProperty('worldlogicCi')) property 'worldlogic.ci', 'true'; mods { worldlogic { source sourceSets.main } } }
  }
 }
 dependencies { minecraft "net.minecraftforge:forge:1.21.1-${forge_version}" }
