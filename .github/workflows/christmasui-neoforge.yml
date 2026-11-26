@@ -54,6 +54,11 @@ jobs:
                   assert ImageChops.difference(normal,hover).getbbox() is not None
                   assert hover.getpixel((100,10))[0]-normal.getpixel((100,10))[0]>=30
                   assert hover.getpixel((100,18))==(255,215,125)
+                  inv=Image.open(BytesIO(z.read('assets/minecraft/textures/gui/container/inventory.png'))).convert('RGBA')
+                  assert inv.size==(256,256)
+                  colors=set(inv.getdata())
+                  assert (68,56,45,255) in colors and (181,150,114,255) in colors
+                  assert (40,68,56,255) in colors
                   import json, hashlib
                   logo=z.read('assets/christmasui/textures/gui/christmas_logo.png')
                   assert hashlib.sha256(logo).hexdigest()=='8634330a1096ceec2c3303c1016f04087e5c1c40c83af1a343fd46e9becd69c2'
@@ -91,11 +96,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar --target "$GITHUB_SHA" --title "Christmas UI 0.3.4" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
+          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar --target "$GITHUB_SHA" --title "Christmas UI 0.3.5" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
       - name: Upload JAR if release publishing is denied
         if: steps.publish.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
-          name: christmasui-neoforge-1.21.1-0.3.4
+          name: christmasui-neoforge-1.21.1-0.3.5
           path: projects/christmasui-neoforge/build/libs/*.jar
           if-no-files-found: error

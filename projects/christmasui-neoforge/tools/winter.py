@@ -115,8 +115,9 @@ def upgrade(root,z,out,download):
                 else:c=('#ed8d76' if blink and base=='#d24c48' else base)
                 im.putpixel((x,y),(*bytes.fromhex(c[1:]),255))
         save(rel,im)
-    # Inventory surfaces: warm parchment for vanilla dark labels; pine-green slot wells and red/brown framing.
-    palette={0:'#29271f',31:'#39382a',55:'#433e2e',85:'#52604a',139:'#69765a',198:'#c8b68d',255:'#f0e1bd'}
+    # Spruce cabinet: same material ramps as normal buttons and the hotbar.
+    # Retain vanilla slot geometry, light-facing rims, and readable dark screen labels.
+    palette={0:'#29251e',31:'#382b23',55:'#483a2c',85:'#68503b',139:'#44382d',198:'#b59672',255:'#e6c69c'}
     def panel(im):
         for y in range(im.height):
             for x in range(im.width):
@@ -125,21 +126,93 @@ def upgrade(root,z,out,download):
                 v=(r+g+b)//3;k=min(palette,key=lambda k:abs(k-v))
                 im.putpixel((x,y),(*bytes.fromhex(palette[k][1:]),a))
         return im
+    # These ornaments are manually specified pixel clusters, not randomized noise.
+    branch=[
+        '....g.......g....',
+        '...gg......gg....',
+        'g..gg.....glg....',
+        '.gglgg...glg.....',
+        '..gglgg.ggg..g...',
+        '...ggggrrgggg....',
+        '....ggrrrlgg.....',
+        '.....grryggggg...',
+        '......gggg..ggg..',
+        '.......ggg....gg.',
+        '.........gg......',
+    ]
+    festive={'g':'#284438','l':'#648957','r':'#a63432','y':'#ef8a6d'}
+    bell=[
+        '...o...',
+        '..oho..',
+        '..oyoo.',
+        '.ohyy o'.replace(' ',''),
+        '.oyyso.',
+        'oyyyyso',
+        'ooooooo',
+        '...s...',
+    ]
+    gold={'o':'#654126','h':'#fff1bc','y':'#dab16a','s':'#a27137'}
+    def safe_draw(im,source,paint):
+        # Restrict interior ornamentation to the original flat panel material.
+        overlay=Image.new('RGBA',im.size)
+        paint(overlay,ImageDraw.Draw(overlay))
+        pix=overlay.load();src=source.load()
+        for y in range(im.height):
+            for x in range(im.width):
+                if pix[x,y][3] and src[x,y][3] and src[x,y][0:3] in ((198,198,198),(197,197,197)):
+                    im.putpixel((x,y),pix[x,y])
+    def grain(d,x,y,w):
+        d.line((x,y,x+w,y),fill='#9a7653')
+        if w>5:d.line((x+2,y+1,x+w-2,y+1),fill='#c6a57c')
+    def inventory_art(im,d):
+        # Rails between storage rows and the top crafting area, clear of the item wells.
+        for x,y,w in [(4,5,16),(82,18,10),(82,37,8),(143,55,20),(94,72,8),(128,74,15),(8,79,29),(47,79,31),(106,79,27),(146,79,20),(12,138,30),(52,138,37),(110,138,40),(10,161,30),(47,161,25),(96,161,35),(143,161,22)]:
+            grain(d,x,y,w)
+        # Tall evergreen ornament in the divider between the character and crafting slots.
+        pixels(im,branch,festive,73,16)
+        pixels(im,[r[::-1] for r in branch],festive,74,33)
+        pixels(im,bell,gold,84,49)
+        # A small hanging ribbon and bell in the open space under the craft grid.
+        d.line((150,55,150,62),fill='#86392f')
+        d.line((149,55,151,55),fill='#c45542')
+        pixels(im,bell,gold,147,63)
+        pixels(im,branch,festive,128,62)
+        # Paired carved motifs on the lower rail, not on item squares.
+        for x in (44,86,128):
+            d.polygon([(x,137),(x+2,135),(x+4,137),(x+2,139)],fill='#765338')
+            d.point((x+2,137),fill='#e1bb7e')
     for n in names:
         if not n.startswith(prefix) or not n.endswith('.png'):continue
         rel=n[len(prefix):-4]
         if not (rel.startswith('container/') or rel.startswith('sprites/container/creative_inventory/')):continue
-        im=panel(original(rel));d=ImageDraw.Draw(im)
+        src=original(rel)
+        im=panel(src.copy());d=ImageDraw.Draw(im)
         if rel=='container/inventory':
-            # Header decoration stays above crafting/armor slots.
-            for x,w in [(5,21),(40,17),(74,12),(135,24),(166,7)]:
-                snow(d,x,0,w,3)
-            for x,y,flip in [(5,158,False),(161,158,True),(83,4,False)]:
-                pixels(im,[s[::-1] for s in sprig] if flip else sprig,sp,x,y)
-            d.line((5,161,170,161),fill='#76553a')
+            safe_draw(im,src,inventory_art)
+            d=ImageDraw.Draw(im)
+            # Keep snowy caps outside armor and crafting cells.
+            for x,w,deep in [(3,23,4),(36,18,3),(72,19,4),(132,22,4),(163,11,3)]:
+                snow(d,x,0,w,deep)
+            # Brass corner pins and carved wooden perimeter.
+            for x,y in [(3,9),(172,9),(3,156),(172,156)]:
+                d.point((x,y),fill='#edca8a')
+                d.point((x,y+1),fill='#896036')
+            d.line((3,11,3,153),fill='#826247')
+            d.line((172,11,172,153),fill='#68503b')
+            # Edge ornamentation stays within the lower frame; leave all slots alone.
+            for x,y,flip in [(3,157,False),(163,157,True)]:
+                pixels(im,[r[::-1] for r in sprig] if flip else sprig,sp,x,y)
+            d.line((13,164,162,164),fill='#68503b')
         elif rel.startswith('container/creative_inventory/'):
+            def creative_art(ov,od):
+                for x,y,w in [(9,5,22),(48,5,18),(112,5,25),(148,5,23),(8,130,25),(42,130,31),(102,130,32),(145,130,27)]:
+                    grain(od,x,y,w)
+                pixels(ov,branch,festive,4,136)
+                pixels(ov,[r[::-1] for r in branch],festive,173,136)
+            safe_draw(im,src,creative_art)
+            d=ImageDraw.Draw(im)
             for x,w in [(5,21),(35,12),(158,21)]:
-                if im.getpixel((x,1))[3]>0:snow(d,x,0,w,3)
+                if x<im.width and src.getpixel((x,1))[3]>0:snow(d,x,0,w,3)
         elif rel.startswith('sprites/container/creative_inventory/tab_'):
             if im.width>=12 and im.height>=10:
                 d.line((3,2,im.width-4,2),fill='#e9f2e5')
@@ -157,7 +230,14 @@ def upgrade(root,z,out,download):
                 im.putpixel((x,y),(*bytes.fromhex(c[1:]),a))
         f=out/n;f.parent.mkdir(parents=True,exist_ok=True);im.save(f)
     for rel in ['hotbar_offhand_left','hotbar_offhand_right']:
-        im=panel(original('sprites/hud/'+rel));d=ImageDraw.Draw(im)
+        im=original('sprites/hud/'+rel);pix=im.load()
+        for y in range(im.height):
+            for x in range(im.width):
+                r,g,b,a=pix[x,y]
+                if a and max(r,g,b)-min(r,g,b)<15:
+                    v=(r+g+b)//3;col=palette[min(palette,key=lambda k:abs(k-v))]
+                    pix[x,y]=(*bytes.fromhex(col[1:]),a)
+        d=ImageDraw.Draw(im)
         snow(d,2,0,min(14,im.width-3),3);save('sprites/hud/'+rel,im)
     # Import the actual captured winter cubemap from a redistributable CC BY project.
     if download:
