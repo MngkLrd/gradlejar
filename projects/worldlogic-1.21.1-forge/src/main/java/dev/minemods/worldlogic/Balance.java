@@ -48,7 +48,7 @@ public final class Balance {
  }
  private static void fall(ServerLevel l,Player p,State s,Vec3 dir,String reason,double severity,boolean injured){
   if(s.owned||p.getForcedPose()!=null||!eligible(p))return;
-  long now=l.getGameTime();s.started=now;s.downUntil=now+duration(severity,injured)+(Rules.on("ground_recovery")?GroundHazards.recoveryExtra(p):0);s.cooldown=s.downUntil+60;s.owned=true;
+  long now=l.getGameTime();s.started=now;s.downUntil=now+Math.min(75,duration(severity,injured)+(Rules.on("ground_recovery")?GroundHazards.recoveryExtra(p):0)+(int)(Trauma.load(p)*.08));s.cooldown=s.downUntil+60;s.owned=true;
   s.fallDirection=dir.multiply(1,0,1).normalize();s.roll=dir.cross(p.getLookAngle()).y>=0?18:-18;
   p.stopUsingItem();p.setSprinting(false);p.setForcedPose(Pose.SWIMMING);p.setPose(Pose.SWIMMING);
   Vec3 v=dir.multiply(1,0,1).normalize().scale(.12);
