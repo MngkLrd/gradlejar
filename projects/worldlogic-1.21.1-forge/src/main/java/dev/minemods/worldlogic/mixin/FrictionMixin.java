@@ -14,7 +14,7 @@ public abstract class FrictionMixin {
  @Redirect(method="travel",at=@At(value="INVOKE",target="Lnet/minecraft/world/level/block/state/BlockState;getFriction(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)F"),remap=false,require=0)
  private float worldlogic$friction(BlockState state,LevelReader reader,BlockPos pos,Entity entity){
   float vanilla=state.getFriction(reader,pos,entity);
-  if(Rules.on("slippery_rain")&&reader instanceof Level l&&l.isRainingAt(pos.above())&&Material.block(state,"slippery"))return Math.max(vanilla,.78f);
+  if(reader instanceof Level l&&RuleSync.friction(l.isClientSide)&&l.isRainingAt(pos.above())&&Material.block(state,"slippery"))return Math.max(vanilla,Math.min(.90f,vanilla+(float)(.18*RuleSync.weather(l.isClientSide))));
   return vanilla;
  }
 }

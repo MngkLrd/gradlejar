@@ -8,4 +8,5 @@ public final class HotFood {
  public static long now(ServerLevel l){return l.getServer().overworld().getGameTime();}
  public static void stamp(ItemStack stack,long until){if(Rules.on("hot_meal")&&!stack.isEmpty()&&stack.has(DataComponents.FOOD)&&until>0)CustomData.update(DataComponents.CUSTOM_DATA,stack,t->t.putLong(KEY,until));}
  public static long deadline(ItemStack stack){return stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getLong(KEY);}
+ public static void expire(net.minecraft.world.entity.player.Player p,ServerLevel l){long now=now(l);for(int i=0;i<p.getInventory().getContainerSize();i++){ItemStack s=p.getInventory().getItem(i);long until=deadline(s);if(until>0&&until<=now){var tag=s.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();tag.remove(KEY);if(tag.isEmpty())s.remove(DataComponents.CUSTOM_DATA);else s.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));}}}
 }

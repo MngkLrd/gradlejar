@@ -17,8 +17,8 @@ public final class Body {
  private static final Map<Player,State> STATES=new WeakHashMap<>();
  static State state(Player p){return STATES.computeIfAbsent(p,k->new State());}
  public static void logout(PlayerEvent.PlayerLoggedOutEvent e){STATES.remove(e.getEntity());}
- public static void onBreak(BlockEvent.BreakEvent e){if(e.isCanceled()||!(e.getLevel() instanceof ServerLevel l)||!Rules.on("tool_momentum"))return;var p=e.getPlayer();var s=state(p);var tool=p.getMainHandItem().getItem();var block=Material.family(e.getState());s.streak=(s.lastTool==tool&&block.equals(s.lastFamily)&&l.getGameTime()-s.lastBreak<=40)?Math.min(4,s.streak+1):1;s.lastBreak=l.getGameTime();s.lastTool=tool;s.lastFamily=block;}
- public static void breakSpeed(PlayerEvent.BreakSpeed e){var p=e.getEntity();if(!(p.level() instanceof ServerLevel l)||!Rules.on("tool_momentum"))return;var s=state(p);if(Material.family(e.getState()).equals(s.lastFamily)&&s.lastTool==p.getMainHandItem().getItem()&&l.getGameTime()-s.lastBreak<=40)e.setNewSpeed(e.getNewSpeed()*(1+.03f*s.streak));}
+ public static void onBreak(BlockEvent.BreakEvent e){if(e.isCanceled()||!(e.getLevel() instanceof ServerLevel l)||!Rules.on("tool_momentum"))return;var p=e.getPlayer();var s=state(p);var tool=p.getMainHandItem().getItem();var block=Material.family(e.getState());s.streak=(s.lastTool==tool&&block.equals(s.lastFamily)&&l.getGameTime()-s.lastBreak<=40)?Math.min(4,s.streak+1):1;s.lastBreak=l.getGameTime();s.lastTool=tool;s.lastFamily=block;if(p instanceof net.minecraft.server.level.ServerPlayer server)RuleSync.send(server);}
+ public static void breakSpeed(PlayerEvent.BreakSpeed e){var p=e.getEntity();if(p.level().isClientSide){e.setNewSpeed(e.getNewSpeed()*RuleSync.mining(p,e.getState()));return;}if(!(p.level() instanceof ServerLevel l)||!Rules.on("tool_momentum"))return;var s=state(p);if(Material.family(e.getState()).equals(s.lastFamily)&&s.lastTool==p.getMainHandItem().getItem()&&l.getGameTime()-s.lastBreak<=40)e.setNewSpeed(e.getNewSpeed()*(1+.03f*s.streak));}
  public static void jump(LivingEvent.LivingJumpEvent e){if(Rules.on("landing_recovery")&&e.getEntity() instanceof Player p&&p.level() instanceof ServerLevel l&&state(p).recoverUntil>l.getGameTime()){Vec3 v=p.getDeltaMovement();p.setDeltaMovement(v.x,v.y*.45,v.z);p.hurtMarked=true;}}
  public static void tick(TickEvent.PlayerTickEvent.Post e){
   Player p=e.player;if(!(p.level() instanceof ServerLevel l))return;if(p.isCreative()||p.isSpectator()){speedPenalty(p,0);return;}State s=state(p);long now=l.getGameTime();
@@ -33,10 +33,10 @@ public final class Body {
   if(Rules.on("cold_shock")&&water&&!s.water&&l.getBiome(p.blockPosition()).value().getBaseTemperature()<.15){p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,60,0,false,false,false));p.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,60,0,false,false,false));}
   int air=p.getAirSupply(),max=p.getMaxAirSupply();
   if(Rules.on("exhausted_breath")&&water&&s.lastSprint>0&&now-s.lastSprint<80&&now%12==0&&air>0&&!p.hasEffect(MobEffects.WATER_BREATHING))p.setAirSupply(air-1);
-  if(!water&&s.lastAir<max*.75&&Rules.on("breath_debt")&&air>s.lastAir)p.setAirSupply(Math.min(air,Math.max(0,s.lastAir)+2));
+  if(!water&&s.lastAir<max*.75&&Rules.on("breath_debt")&&air>s.lastAir)p.setAirSupply(Math.min(air,Math.max(0,s.lastAir)+Math.max(1,(int)Math.round(2/Rules.strength("air")))));
   if(Rules.on("finite_air"))AirAndFire.breathe(l,p,s,water,now);
   s.water=water;s.lastAir=p.getAirSupply();
-  if(now%10==0)WetGear.tick(l,p,s);
+  if(now%10==0)WetGear.tick(l,p,s);if(now%100==0)HotFood.expire(p,l);
   if(Rules.on("wet_gear")){double armor=0;for(ItemStack piece:p.getArmorSlots())if(WetGear.absorbent(piece))armor+=WetGear.wet(piece)*.00025;penalty=Math.max(penalty,armor);}
   speedPenalty(p,Math.min(.45,penalty*Rules.strength("movement")));
   if(Rules.on("water_extinguish")&&water&&p.isOnFire())p.clearFire();

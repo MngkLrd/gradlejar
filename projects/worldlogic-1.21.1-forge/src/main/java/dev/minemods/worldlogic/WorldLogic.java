@@ -8,8 +8,12 @@ public final class WorldLogic {
   Content.BLOCKS.register(context.getModEventBus());
   Content.ITEMS.register(context.getModEventBus());
   Rules.load();
+  RuleSync.init();
   var bus=MinecraftForge.EVENT_BUS;
   bus.addListener(AdminCommands::register);
+  bus.addListener(RuleSync::login);
+  bus.addListener(RuleSync::logout);
+  bus.addListener(RuleSync::tick);
   bus.addListener(ReleaseChecks::started);
   bus.addListener(Structure::onBreak);
   bus.addListener(Trees::breakBase);
