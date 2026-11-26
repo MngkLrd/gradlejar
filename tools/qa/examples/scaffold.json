@@ -1,0 +1,10 @@
+{
+  "id": "qascaffold",
+  "version": "0.1.0",
+  "name": "QA Scaffold",
+  "description": "Draft infrastructure smoke fixture.",
+  "mode": "server",
+  "targets": [
+    "all"
+  ]
+}

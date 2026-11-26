@@ -56,6 +56,7 @@ def compatibility(p):
     return mc, mc["loaders"][p["loader"]]
 
 def qa_config(p):
+    require(not p.get("draft"), "Draft scaffold cannot be enrolled or released")
     q = p.get("qa")
     if q is None:
         require(p["project_dir"] in LEGACY, "New project requires qa configuration; see AGENTS.md")

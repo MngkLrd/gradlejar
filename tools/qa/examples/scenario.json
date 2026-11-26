@@ -1,0 +1,42 @@
+{
+  "name": "Fragile Glass projectile fixture",
+  "operations": [
+    {
+      "type": "command",
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "type": "wait",
+      "seconds": 3
+    },
+    {
+      "type": "set_block",
+      "pos": [
+        5,
+        200,
+        5
+      ],
+      "block": "minecraft:glass"
+    },
+    {
+      "type": "command",
+      "command": "summon minecraft:arrow 5.5 200.7 2.5 {Motion:[0.0d,0.0d,1.8d]}",
+      "expect": "Summoned new"
+    },
+    {
+      "type": "wait",
+      "seconds": 3
+    },
+    {
+      "type": "assert_block",
+      "pos": [
+        5,
+        200,
+        5
+      ],
+      "block": "minecraft:air",
+      "name": "Arrow shatters glass"
+    }
+  ]
+}
