@@ -155,5 +155,6 @@
   "message.sleepdebt.camp_interrupted": "Отдых прерван.",
   "message.sleepdebt.camp_cancel": "Отдых отменён.",
   "message.sleepdebt.camp_far": "Подойди ближе к спальнику.",
-  "item.sleepdebt.sleep_mask.tooltip": "ПКМ: надеть. Закрывает обзор от первого лица."
+  "item.sleepdebt.sleep_mask.tooltip": "ПКМ: надеть. Закрывает обзор от первого лица.",
+  "message.sleepdebt.camp_incomplete": "Спальник не собран. Сломай и установи заново, оставив место для обеих частей."
 }

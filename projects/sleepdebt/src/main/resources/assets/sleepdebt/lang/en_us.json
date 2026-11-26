@@ -155,5 +155,6 @@
   "message.sleepdebt.camp_interrupted": "Rest interrupted.",
   "message.sleepdebt.camp_cancel": "Rest cancelled.",
   "message.sleepdebt.camp_far": "Move closer to the bedroll.",
-  "item.sleepdebt.sleep_mask.tooltip": "Right-click to wear. Blocks first-person vision while equipped."
+  "item.sleepdebt.sleep_mask.tooltip": "Right-click to wear. Blocks first-person vision while equipped.",
+  "message.sleepdebt.camp_incomplete": "Incomplete bedroll. Break and place it again with room for both halves."
 }

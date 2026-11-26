@@ -1,7 +1,22 @@
 {
   "variants": {
-    "": {
+    "fill=0": {
       "model": "sleepdebt:block/incense_burner"
+    },
+    "fill=1": {
+      "model": "sleepdebt:block/incense_burner_fill_1"
+    },
+    "fill=2": {
+      "model": "sleepdebt:block/incense_burner_fill_2"
+    },
+    "fill=3": {
+      "model": "sleepdebt:block/incense_burner_fill_3"
+    },
+    "fill=4": {
+      "model": "sleepdebt:block/incense_burner_fill_4"
+    },
+    "fill=5": {
+      "model": "sleepdebt:block/incense_burner_fill_5"
     }
   }
 }

@@ -48,6 +48,11 @@ with zipfile.ZipFile(jar) as z:
         js(f"assets/sleepdebt/models/block/{b}.json")
         js(f"data/sleepdebt/loot_table/blocks/{b}.json")
         js(f"data/sleepdebt/recipe/{b}.json")
+    for block,count in (("camp_awning",56),("camp_bedroll",8),("incense_burner",6)):
+        variants=js(f"assets/sleepdebt/blockstates/{block}.json")["variants"]
+        if len(variants)!=count:raise ValueError(f"{block}: wrong state count")
+        for variant in variants.values():
+            js("assets/sleepdebt/models/"+variant["model"].split(":",1)[1]+".json")
     for removed in ("dreamcatcher","dream_shard"):
         if f"data/sleepdebt/recipe/{removed}.json" in names:raise ValueError(f"Retired recipe still packaged: {removed}")
     js("assets/sleepdebt/blockstates/coffee_bush.json")
@@ -108,7 +113,7 @@ with zipfile.ZipFile(jar) as z:
             frm=piece["from"];to=piece["to"]
             if any(not (0<=a<b<=16) for a,b in zip(frm,to)):
                 raise ValueError(f"Invalid cuboid dimensions: {model_path}")
-            native_model=model_path.endswith(("/coffee_machine.json","/camp_awning.json","/camp_bedroll.json","/camp_lantern.json","/incense_burner.json","/dreamcatcher.json"))
+            native_model=any(token in model_path for token in ("/coffee_machine.json","/camp_awning","/camp_bedroll","/camp_lantern.json","/incense_burner","/dreamcatcher.json"))
             if native_model and any(float(n)!=int(n) for n in frm+to):
                 raise ValueError(f"Fractional model unit: {model_path}")
             dims=[b-a for a,b in zip(frm,to)]

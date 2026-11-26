@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "A field bedroll starts a seven-second rest, not an instant heal. Stay still and avoid damage. Shelter, a campfire, an incense burner, a pillow and sleep mask can improve recovery. A two-minute cooldown prevents repeated abuse. Use the journal to preview the quality of your resting spot."
+      "text": "Place a bedroll with two clear ground blocks; right-click either end and remain still for seven seconds. Place an awning with a 3 by 2 footprint and three blocks of clearance above ground. The center is open for your bedroll. A two-minute cooldown limits repeat rest."
     },
     {
       "type": "patchouli:crafting",

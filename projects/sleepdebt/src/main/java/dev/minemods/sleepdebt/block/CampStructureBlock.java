@@ -63,6 +63,7 @@ public abstract class CampStructureBlock extends Block {
   for(BlockPos pos:plan(origin,direction).keySet()){
    if(level.isOutsideBuildHeight(pos)||!level.getWorldBorder().isWithinBounds(pos))return null;
    if(!pos.equals(origin)&&!level.getBlockState(pos).isAir())return null;
+   if(pos.getY()==origin.getY()&&!level.getBlockState(pos.below()).isFaceSturdy(level,pos.below(),Direction.UP))return null;
   }
   return defaultBlockState().setValue(FACING,direction);
  }

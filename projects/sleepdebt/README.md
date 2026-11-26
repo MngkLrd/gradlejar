@@ -28,3 +28,6 @@ New static PNG artwork for items, crops, materials, effects and GUI. Approved co
 
 ## 3.1.6
 Release feedback: distinct roasted cocoa bean sprite, copper coffee maker interface with localized short labels; actual wearable sleep mask with first-person darkness; camp bedroll now testable in creative, feedback when disabled; awning contributes shelter when above the rest site. Dreamcatcher and dream shard removed from normal acquisition, old IDs preserved for saves. Vanilla phantom integration is unchanged except for removal of dreamcatcher warding. Client visual and multiplayer testing still required.
+
+## 3.1.7
+Full-size directional 1x2 camp bedroll and 3x2x3 awning (open center). Structures assemble and disassemble as a kit, with per-cell geometry and clearance validation. Existing single-cell campsite blocks need breaking and replacing. Incense burner displays five fuel levels via server-synchronized block states; empty bowl is visible and active herbs diminish as fuel burns. Short rest remains a stationary, interruptible seven-second action, not vanilla bed sleep. Client and multiplayer gameplay QA required.

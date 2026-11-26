@@ -1,7 +1,214 @@
 {
   "variants": {
-    "": {
-      "model": "sleepdebt:block/camp_awning"
+    "facing=north,part=0": {
+      "model": "sleepdebt:block/camp_awning_part_0"
+    },
+    "facing=north,part=1": {
+      "model": "sleepdebt:block/camp_awning_part_1"
+    },
+    "facing=north,part=2": {
+      "model": "sleepdebt:block/camp_awning_part_2"
+    },
+    "facing=north,part=3": {
+      "model": "sleepdebt:block/camp_awning_part_3"
+    },
+    "facing=north,part=4": {
+      "model": "sleepdebt:block/camp_awning_part_4"
+    },
+    "facing=north,part=5": {
+      "model": "sleepdebt:block/camp_awning_part_5"
+    },
+    "facing=north,part=6": {
+      "model": "sleepdebt:block/camp_awning_part_6"
+    },
+    "facing=north,part=7": {
+      "model": "sleepdebt:block/camp_awning_part_7"
+    },
+    "facing=north,part=8": {
+      "model": "sleepdebt:block/camp_awning_part_8"
+    },
+    "facing=north,part=9": {
+      "model": "sleepdebt:block/camp_awning_part_9"
+    },
+    "facing=north,part=10": {
+      "model": "sleepdebt:block/camp_awning_part_10"
+    },
+    "facing=north,part=11": {
+      "model": "sleepdebt:block/camp_awning_part_11"
+    },
+    "facing=north,part=12": {
+      "model": "sleepdebt:block/camp_awning_part_12"
+    },
+    "facing=north,part=13": {
+      "model": "sleepdebt:block/camp_awning_part_13"
+    },
+    "facing=east,part=0": {
+      "model": "sleepdebt:block/camp_awning_part_0",
+      "y": 90
+    },
+    "facing=east,part=1": {
+      "model": "sleepdebt:block/camp_awning_part_1",
+      "y": 90
+    },
+    "facing=east,part=2": {
+      "model": "sleepdebt:block/camp_awning_part_2",
+      "y": 90
+    },
+    "facing=east,part=3": {
+      "model": "sleepdebt:block/camp_awning_part_3",
+      "y": 90
+    },
+    "facing=east,part=4": {
+      "model": "sleepdebt:block/camp_awning_part_4",
+      "y": 90
+    },
+    "facing=east,part=5": {
+      "model": "sleepdebt:block/camp_awning_part_5",
+      "y": 90
+    },
+    "facing=east,part=6": {
+      "model": "sleepdebt:block/camp_awning_part_6",
+      "y": 90
+    },
+    "facing=east,part=7": {
+      "model": "sleepdebt:block/camp_awning_part_7",
+      "y": 90
+    },
+    "facing=east,part=8": {
+      "model": "sleepdebt:block/camp_awning_part_8",
+      "y": 90
+    },
+    "facing=east,part=9": {
+      "model": "sleepdebt:block/camp_awning_part_9",
+      "y": 90
+    },
+    "facing=east,part=10": {
+      "model": "sleepdebt:block/camp_awning_part_10",
+      "y": 90
+    },
+    "facing=east,part=11": {
+      "model": "sleepdebt:block/camp_awning_part_11",
+      "y": 90
+    },
+    "facing=east,part=12": {
+      "model": "sleepdebt:block/camp_awning_part_12",
+      "y": 90
+    },
+    "facing=east,part=13": {
+      "model": "sleepdebt:block/camp_awning_part_13",
+      "y": 90
+    },
+    "facing=south,part=0": {
+      "model": "sleepdebt:block/camp_awning_part_0",
+      "y": 180
+    },
+    "facing=south,part=1": {
+      "model": "sleepdebt:block/camp_awning_part_1",
+      "y": 180
+    },
+    "facing=south,part=2": {
+      "model": "sleepdebt:block/camp_awning_part_2",
+      "y": 180
+    },
+    "facing=south,part=3": {
+      "model": "sleepdebt:block/camp_awning_part_3",
+      "y": 180
+    },
+    "facing=south,part=4": {
+      "model": "sleepdebt:block/camp_awning_part_4",
+      "y": 180
+    },
+    "facing=south,part=5": {
+      "model": "sleepdebt:block/camp_awning_part_5",
+      "y": 180
+    },
+    "facing=south,part=6": {
+      "model": "sleepdebt:block/camp_awning_part_6",
+      "y": 180
+    },
+    "facing=south,part=7": {
+      "model": "sleepdebt:block/camp_awning_part_7",
+      "y": 180
+    },
+    "facing=south,part=8": {
+      "model": "sleepdebt:block/camp_awning_part_8",
+      "y": 180
+    },
+    "facing=south,part=9": {
+      "model": "sleepdebt:block/camp_awning_part_9",
+      "y": 180
+    },
+    "facing=south,part=10": {
+      "model": "sleepdebt:block/camp_awning_part_10",
+      "y": 180
+    },
+    "facing=south,part=11": {
+      "model": "sleepdebt:block/camp_awning_part_11",
+      "y": 180
+    },
+    "facing=south,part=12": {
+      "model": "sleepdebt:block/camp_awning_part_12",
+      "y": 180
+    },
+    "facing=south,part=13": {
+      "model": "sleepdebt:block/camp_awning_part_13",
+      "y": 180
+    },
+    "facing=west,part=0": {
+      "model": "sleepdebt:block/camp_awning_part_0",
+      "y": 270
+    },
+    "facing=west,part=1": {
+      "model": "sleepdebt:block/camp_awning_part_1",
+      "y": 270
+    },
+    "facing=west,part=2": {
+      "model": "sleepdebt:block/camp_awning_part_2",
+      "y": 270
+    },
+    "facing=west,part=3": {
+      "model": "sleepdebt:block/camp_awning_part_3",
+      "y": 270
+    },
+    "facing=west,part=4": {
+      "model": "sleepdebt:block/camp_awning_part_4",
+      "y": 270
+    },
+    "facing=west,part=5": {
+      "model": "sleepdebt:block/camp_awning_part_5",
+      "y": 270
+    },
+    "facing=west,part=6": {
+      "model": "sleepdebt:block/camp_awning_part_6",
+      "y": 270
+    },
+    "facing=west,part=7": {
+      "model": "sleepdebt:block/camp_awning_part_7",
+      "y": 270
+    },
+    "facing=west,part=8": {
+      "model": "sleepdebt:block/camp_awning_part_8",
+      "y": 270
+    },
+    "facing=west,part=9": {
+      "model": "sleepdebt:block/camp_awning_part_9",
+      "y": 270
+    },
+    "facing=west,part=10": {
+      "model": "sleepdebt:block/camp_awning_part_10",
+      "y": 270
+    },
+    "facing=west,part=11": {
+      "model": "sleepdebt:block/camp_awning_part_11",
+      "y": 270
+    },
+    "facing=west,part=12": {
+      "model": "sleepdebt:block/camp_awning_part_12",
+      "y": 270
+    },
+    "facing=west,part=13": {
+      "model": "sleepdebt:block/camp_awning_part_13",
+      "y": 270
     }
   }
 }

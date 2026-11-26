@@ -18,9 +18,9 @@ public final class ModBlocks {
  public static final DeferredBlock<Block> COFFEE_MACHINE=BLOCKS.register("coffee_machine",
   ()->new CoffeeMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.5f).sound(SoundType.COPPER)));
  public static final DeferredBlock<Block> CAMP_BEDROLL=BLOCKS.register("camp_bedroll",
-  ()->new CampBedrollBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).strength(.4f).sound(SoundType.WOOL).noOcclusion()));
+  ()->new CampBedrollBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).strength(.4f).sound(SoundType.WOOL).noOcclusion().pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK)));
  public static final DeferredBlock<Block> CAMP_AWNING=BLOCKS.register("camp_awning",
-  ()->new CampAwningBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).strength(1.2f).sound(SoundType.WOOL).noOcclusion()));
+  ()->new CampAwningBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).strength(1.2f).sound(SoundType.WOOL).noOcclusion().pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK)));
  public static final DeferredBlock<Block> COFFEE_BUSH=BLOCKS.register("coffee_bush",
    ()->new CoffeeBushBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT)
      .noCollission().randomTicks().instabreak().sound(SoundType.CROP)));
