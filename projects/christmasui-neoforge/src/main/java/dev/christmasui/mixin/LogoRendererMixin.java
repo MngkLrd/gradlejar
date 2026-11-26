@@ -27,6 +27,7 @@ public abstract class LogoRendererMixin {
         graphics.setColor(1f, 1f, 1f, alpha);
         graphics.blit(CHRISTMAS_LOGO, (screenWidth - w) / 2, top, w, h, 0f, 0f, 512, 147, 512, 147);
         graphics.setColor(1f, 1f, 1f, 1f);
+        dev.christmasui.client.FestiveArt.garland(graphics, (screenWidth-w)/2+5, top+Math.max(2,h/4), w-10, alpha);
         RenderSystem.disableBlend();
         ci.cancel();
     }

@@ -59,6 +59,10 @@ jobs:
                   colors=set(inv.getdata())
                   assert (68,56,45,255) in colors and (181,150,114,255) in colors
                   assert (40,68,56,255) in colors
+                  for path in ['client/FestiveArt','mixin/LoadingOverlayMixin','mixin/LevelLoadingScreenMixin']:
+                      assert 'dev/christmasui/'+path+'.class' in z.namelist()
+                  for path in ['armor_full','armor_half','armor_empty','air','air_bursting','food_full_hunger','food_half_hunger','food_empty_hunger','jump_bar_progress','heart/vehicle_full']:
+                      assert 'assets/minecraft/textures/gui/sprites/hud/'+path+'.png' in z.namelist(),path
                   import json, hashlib
                   logo=z.read('assets/christmasui/textures/gui/christmas_logo.png')
                   assert hashlib.sha256(logo).hexdigest()=='8634330a1096ceec2c3303c1016f04087e5c1c40c83af1a343fd46e9becd69c2'
@@ -97,11 +101,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar --target "$GITHUB_SHA" --title "Christmas UI 0.3.6" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
+          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar --target "$GITHUB_SHA" --title "Christmas UI 0.4.0" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
       - name: Upload JAR if release publishing is denied
         if: steps.publish.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
-          name: christmasui-neoforge-1.21.1-0.3.6
+          name: christmasui-neoforge-1.21.1-0.4.0
           path: projects/christmasui-neoforge/build/libs/*.jar
           if-no-files-found: error

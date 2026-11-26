@@ -9,6 +9,6 @@ import dev.christmasui.client.TitleSnow;
 public final class ChristmasUI {
     public ChristmasUI() {
         NeoForge.EVENT_BUS.addListener(TitleSnow::render);
-        NeoForge.EVENT_BUS.addListener(dev.christmasui.client.ButtonSnow::render);
+
     }
 }

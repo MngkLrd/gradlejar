@@ -98,7 +98,7 @@ def upgrade(root,z,out,download):
         if not n.startswith(prefix+'sprites/hud/heart/') or not n.endswith('.png'):continue
         rel=n[len(prefix):-4];key=rel.split('/')[-1]
         old=original(rel);im=Image.new('RGBA',old.size)
-        if 'vehicle' in key:continue
+
         container='container' in key;half='half' in key;blink='blinking' in key;hard='hardcore' in key
         if 'poisoned' in key:base='#769a43';lit='#d5e5a4'
         elif 'withered' in key:base='#655d73';lit='#b6aabb'
@@ -115,6 +115,31 @@ def upgrade(root,z,out,download):
                 else:c=('#ed8d76' if blink and base=='#d24c48' else base)
                 im.putpixel((x,y),(*bytes.fromhex(c[1:]),255))
         save(rel,im)
+    # All status icons preserve the 9x9 vanilla dimensions and half-fill direction.
+    hud='sprites/hud/'
+    shield=['.ooooooo.','.ollyyyo.','.olyssyo.','.olyysyo.','..oyyyo..','..oyyyo..','...oyo...','...ooo...','....o....']
+    flake=['....o....','.o..l..o.','..o.l.o..','...olo...','ollwkwllo','...olo...','..o.l.o..','.o..l..o.','....o....']
+    cookie=['...ooo...','..olhho..','..ohhho..','.ohwhwho.','oohhhhoo.','..ohhho..','..ohwho..','..ohoho..','..oo.oo..']
+    for key in ['armor_full','armor_half','armor_empty','air','air_bursting','food_full_hunger','food_half_hunger','food_empty_hunger']:
+        im=Image.new('RGBA',original(hud+key).size)
+        isarmor=key.startswith('armor');isair=key.startswith('air')
+        rows=shield if isarmor else flake if isair else cookie
+        pal={'o':'#543b27','l':'#fff1bb','y':'#d8a657','s':'#a4753f'} if isarmor else {'o':'#426479','l':'#a9d9e9','w':'#f0faf7','k':'#d7f1f5'} if isair else {'o':'#50402d','l':'#d1ac65','h':'#8e823e','w':'#e9e9af'}
+        for yy,row in enumerate(rows):
+            for xx,c in enumerate(row):
+                if c not in pal or xx>=im.width or yy>=im.height:continue
+                if key=='air_bursting' and (xx+yy)%3==0:continue
+                col=pal[c]
+                if 'empty' in key or ('half' in key and xx>=5):col='#514438' if c=='o' else '#302a25'
+                im.putpixel((xx,yy),(*bytes.fromhex(col[1:]),255))
+        save(hud+key,im)
+    for key in ['jump_bar_background','jump_bar_progress','jump_bar_cooldown']:
+        im=original(hud+key)
+        w,h=im.size;d=ImageDraw.Draw(im)
+        d.rectangle((0,0,w-1,h-1),fill='#382b23')
+        if w>2 and h>2:
+            d.rectangle((1,1,w-2,h-2),fill={'jump_bar_background':'#69513d','jump_bar_progress':'#ddb675','jump_bar_cooldown':'#9a5750'}[key])
+        save(hud+key,im)
     # Spruce cabinet: same material ramps as normal buttons and the hotbar.
     # Retain vanilla slot geometry, light-facing rims, and readable dark screen labels.
     palette={0:'#29251e',31:'#382b23',55:'#483a2c',85:'#68503b',139:'#44382d',198:'#b59672',255:'#e6c69c'}
@@ -217,6 +242,17 @@ def upgrade(root,z,out,download):
             if im.width>=12 and im.height>=10:
                 d.line((3,2,im.width-4,2),fill='#e9f2e5')
                 d.line((4,3,im.width-5,3),fill='#a6c5c4')
+        elif rel.startswith('container/') and im.width>=176 and im.height>=100:
+            def container_art(ov,od):
+                # Distinct material accents in the left/right frame, never in the slot grid.
+                accents={'furnace':'#a45d3d','blast_furnace':'#b0804d','smoker':'#87603e','anvil':'#8e9692','enchanting_table':'#8e5262','brewing_stand':'#b39b5d','generic_54':'#906740','crafting_table':'#ad885c','villager2':'#c29a61'}
+                accent=accents.get(rel.split('/')[-1],'#98724d')
+                for yy in range(20,80,13):
+                    od.point((3,yy),fill=accent);od.point((172,yy),fill=accent)
+                    od.point((4,yy+1),fill='#e0be88');od.point((171,yy+1),fill='#e0be88')
+                pixels(ov,sprig,sp,3,2)
+                pixels(ov,[r[::-1] for r in sprig],sp,163,2)
+            safe_draw(im,src,container_art)
         save(rel,im)
     # Equipment and offhand placeholders are item-atlas sprites, not container PNGs.
     for n in names:
