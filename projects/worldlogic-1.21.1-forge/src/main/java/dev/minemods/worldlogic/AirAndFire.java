@@ -12,7 +12,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
 public final class AirAndFire {
  static final class Pocket {final Set<BlockPos> cells;int oxygen;long last;Pocket(Set<BlockPos> cells,long now){this.cells=cells;oxygen=cells.size()*240;last=now;}}
- private static final Map<ServerLevel,List<Pocket>> POCKETS=new WeakHashMap<>();
+
  private static final Map<ServerLevel,Map<BlockPos,Long>> HEAT=new WeakHashMap<>();
  // Local ventilation path: bounded air-cell BFS, no forced chunk loads.
  static BlockPos vent(ServerLevel l,BlockPos start){
@@ -34,13 +34,15 @@ public final class AirAndFire {
     while(!todo.isEmpty()&&!open){BlockPos q=todo.remove();if(l.canSeeSky(q)||cells.size()>128){open=true;break;}
      for(Direction d:Direction.values()){BlockPos t=q.relative(d);if(!l.hasChunkAt(t)||!l.isInWorldBounds(t)){open=true;break;}if(l.getFluidState(t).is(net.minecraft.tags.FluidTags.WATER))wet=true;else if(l.isEmptyBlock(t)&&cells.add(t.immutable()))todo.add(t.immutable());}
     }
-    if(!open&&wet){var list=POCKETS.computeIfAbsent(l,k->new ArrayList<>());list.removeIf(a->now-a.last>24000);
-     for(Pocket a:list)if(a.cells.contains(head)){st.pocket=a;break;}
+    if(open||!wet){var data=PocketData.get(l);if(data.pockets.removeIf(a->a.cells.contains(head)))data.setDirty();}
+    if(!open&&wet){var data=PocketData.get(l);var list=data.pockets;
+     list.removeIf(a->a.cells.contains(head)&&!a.cells.equals(cells));data.setDirty();
+     for(Pocket a:list)if(a.cells.equals(cells)){st.pocket=a;break;}
      if(st.pocket==null&&list.size()<256){st.pocket=new Pocket(cells,now);list.add(st.pocket);}
     }
    }
   }
-  Pocket a=st.pocket;if(a==null||!a.cells.contains(head))return;a.last=now;a.oxygen=Math.max(0,a.oxygen-1);
+  Pocket a=st.pocket;if(a==null||!a.cells.contains(head))return;a.last=now;a.oxygen=Math.max(0,a.oxygen-1);PocketData.get(l).setDirty();
   if(a.oxygen==0){int air=Math.min(p.getAirSupply(),st.lastAir)-1;if(air<=-20){p.setAirSupply(0);p.hurt(p.damageSources().drown(),2);}else p.setAirSupply(air);}
   else if(a.oxygen<a.cells.size()*60&&p.getAirSupply()>st.lastAir)p.setAirSupply(Math.min(p.getAirSupply(),st.lastAir+1));
  }
@@ -55,7 +57,6 @@ public final class AirAndFire {
     if(Rules.on("fire_needs_air")&&exit==null&&l.random.nextFloat()<.12)l.setBlock(q,s.setValue(BlockStateProperties.LIT,false),3);
     if(Rules.on("campfire_sparks")&&l.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)&&!l.isRainingAt(q)&&l.random.nextFloat()<.02){BlockPos t=q.relative(Direction.Plane.HORIZONTAL.getRandomDirection(l.random));if(l.isEmptyBlock(t)&&Material.block(l.getBlockState(t.below()),"spark_fuel"))l.setBlock(t,Blocks.FIRE.defaultBlockState(),3);}
    }
-   if(Rules.on("wet_torches")&&l.isRainingAt(q)&&(s.is(Blocks.TORCH)||s.is(Blocks.WALL_TORCH)))l.sendParticles(ParticleTypes.SMOKE,q.getX()+.5,q.getY()+.7,q.getZ()+.5,2,.05,.1,.05,.01);
   }
   int budget=20;for(var entry:map.entrySet()){if(budget--<=0)break;BlockPos q=entry.getKey();if(!l.hasChunkAt(q))continue;var s=l.getBlockState(q);boolean wet=l.isRainingAt(q.above())||l.getFluidState(q.above()).is(net.minecraft.tags.FluidTags.WATER);
    if(wet){if(Rules.on("residual_heat"))l.sendParticles(ParticleTypes.CLOUD,q.getX()+.5,q.getY()+1,q.getZ()+.5,1,.15,.05,.15,.01);if(Rules.on("thermal_shock")&&Material.block(s,"glass")&&l.random.nextFloat()<.025)l.destroyBlock(q,false);}

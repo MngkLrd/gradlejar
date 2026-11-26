@@ -23,7 +23,7 @@ public final class Ecology {
  public static void crop(BlockEvent.CropGrowEvent.Pre e){if(!(e.getLevel() instanceof ServerLevel l)||!(e.getState().getBlock() instanceof CropBlock))return;BlockPos p=e.getPos();
   if(Rules.on("crop_crowding")){int count=0;for(BlockPos q:BlockPos.betweenClosed(p.offset(-2,0,-2),p.offset(2,0,2)))if(l.hasChunkAt(q)&&l.getBlockState(q).is(e.getState().getBlock()))count++;
    if(count>=13&&l.random.nextFloat()<.15){e.setResult(Event.Result.DENY);return;}}
-  if(Rules.on("flood_stress")&&l.getFluidState(p.above()).is(net.minecraft.tags.FluidTags.WATER)&&l.random.nextFloat()<.5)e.setResult(Event.Result.DENY);
+  if(Rules.on("flood_stress")){int wet=0;for(net.minecraft.core.Direction d:net.minecraft.core.Direction.Plane.HORIZONTAL)if(l.getFluidState(p.relative(d)).is(net.minecraft.tags.FluidTags.WATER))wet++;if((wet>=2||l.getFluidState(p.above()).is(net.minecraft.tags.FluidTags.WATER))&&l.random.nextFloat()<.5)e.setResult(Event.Result.DENY);}
  }
  public static void hurt(LivingHurtEvent e){if(!Rules.on("herd_panic")||!(e.getEntity() instanceof Animal animal)||!(animal.level() instanceof ServerLevel l))return;
   var source=e.getSource().getEntity();Vec3 away=source==null?animal.position().add(1,0,0):source.position();int count=0;

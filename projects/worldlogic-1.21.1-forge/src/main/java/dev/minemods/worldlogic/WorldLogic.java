@@ -4,6 +4,7 @@ import net.minecraftforge.common.MinecraftForge;
 @Mod("worldlogic")
 public final class WorldLogic {
  public WorldLogic(net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext context) {
+  Content.BLOCKS.register(context.getModEventBus());
   Content.ITEMS.register(context.getModEventBus());
   Rules.load();
   var bus=MinecraftForge.EVENT_BUS;
@@ -32,6 +33,8 @@ public final class WorldLogic {
   bus.addListener(Ecology::eat);
   bus.addListener(ObjectsPhysics::tick);
   bus.addListener(ObjectsPhysics::onInteract);
+  bus.addListener(Torches::tick);
+  bus.addListener(Torches::relight);
   bus.addListener(AirAndFire::tick);
   bus.addListener(AirAndFire::onExplosion);
  }

@@ -4,7 +4,7 @@ plugins {
  id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
 }
 group = 'dev.minemods.worldlogic'
-version = '0.1.1-alpha'
+version = '1.0.0-rc1'
 base { archivesName = 'worldlogic-forge-mc1.21.1' }
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 minecraft {

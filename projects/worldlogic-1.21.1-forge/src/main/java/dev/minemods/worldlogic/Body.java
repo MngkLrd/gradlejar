@@ -13,7 +13,7 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 public final class Body {
- static final class State {long recoverUntil,lastBreak,lastSprint;int streak,wet,web;Block lastBlock;net.minecraft.world.item.Item lastTool;boolean water;int lastAir=300;long pocketCheck;AirAndFire.Pocket pocket;}
+ static final class State {long recoverUntil,lastBreak,lastSprint;int streak,wet,web,ladderTicks;Block lastBlock;net.minecraft.world.item.Item lastTool;boolean water;int lastAir=300;long pocketCheck;AirAndFire.Pocket pocket;}
  private static final Map<Player,State> STATES=new WeakHashMap<>();
  static State state(Player p){return STATES.computeIfAbsent(p,k->new State());}
  public static void logout(PlayerEvent.PlayerLoggedOutEvent e){STATES.remove(e.getEntity());}
@@ -33,7 +33,12 @@ public final class Body {
   if(Rules.on("finite_air"))AirAndFire.breathe(l,p,s,water,now);
   s.water=water;s.lastAir=p.getAirSupply();
   if(now%5==0){if(p.isInWater()||l.isRainingAt(p.blockPosition()))s.wet=Math.min(100,s.wet+5);else s.wet=Math.max(0,s.wet-(AirAndFire.nearHeat(l,p.blockPosition(),2)?4:1));}
+  if(Rules.on("wet_gear")&&s.wet>=65&&now%10==0){
+   double armor=0;for(ItemStack piece:p.getArmorSlots())if(!piece.isEmpty()&&net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(piece.getItem()).getPath().contains("leather"))armor+=.025;
+   if(armor>0&&p.isSprinting()){Vec3 v=p.getDeltaMovement();p.setDeltaMovement(v.x*(1-armor),v.y,v.z*(1-armor));p.hurtMarked=true;}
+  }
   if(Rules.on("water_extinguish")&&water&&p.isOnFire())p.clearFire();
+  if(Rules.on("ladder_grip")&&p.onClimbable()&&p.isShiftKeyDown()&&Math.abs(p.getDeltaMovement().y)<.01){s.ladderTicks++;if(s.ladderTicks>100){Vec3 v=p.getDeltaMovement();p.setDeltaMovement(v.x,-.035,v.z);p.hurtMarked=true;}}else s.ladderTicks=0;
   if(Rules.on("grip")&&p.onClimbable()&&p.getDeltaMovement().y>0&&!p.getMainHandItem().isEmpty()&&!p.getOffhandItem().isEmpty()){Vec3 v=p.getDeltaMovement();p.setDeltaMovement(v.x,v.y*.84,v.z);p.hurtMarked=true;}
   if(Rules.on("cobweb")){if(l.getBlockState(p.blockPosition()).is(Blocks.COBWEB)){s.web=Math.min(30,s.web+1);if(s.web>20&&!Material.item(p.getMainHandItem(),"web_tools")){Vec3 v=p.getDeltaMovement();p.setDeltaMovement(v.multiply(.8,.8,.8));}}else s.web=0;}
  }

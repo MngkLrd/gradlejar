@@ -6,7 +6,7 @@ public final class Rules {
  private static final Properties P=new Properties();
  private static final String[] KEYS=("loose_gravel ricochet arrow_recovery falling_objects falling_dripstone fragile_containers fragile_lanterns glass_pressure "
  +"knockback_weight projectile_force shield_momentum creeper_shockwave sharp_blocks landing_recovery soft_landing "
- +"tool_momentum cobweb grip exhausted_sprint armor_noise breath_debt exhausted_breath cold_shock wet_bow "
+ +"tool_momentum cobweb grip ladder_grip exhausted_sprint armor_noise breath_debt exhausted_breath cold_shock wet_bow wet_gear "
  +"water_drag water_extinguish slippery_rain mud_tracks snow_compression rain_weight wind "
  +"campfire_sparks residual_heat thermal_shock fire_needs_air draft_smoke ashes wet_torches "
  +"crop_crowding flood_stress scent herd_panic hot_meal spoilage heavy_items doors_have_mass weighted_redstone finite_air tree_weight snow_weight").split(" ");
