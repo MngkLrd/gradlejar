@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "naturalbuoyancy",
+  "version": "1.0.0",
+  "name": "Natural Buoyancy",
+  "description": "Material-dependent water buoyancy for dropped items.",
+  "environment": "*",
+  "mixins": [
+    "naturalbuoyancy.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.3",
+    "java": ">=25"
+  }
+}

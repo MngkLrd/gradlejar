@@ -552,3 +552,47 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "campfirebatch-v1.0.1-${GITHUB_RUN_NUMBER}" CampfireBatch-1.0.1-ALL-11-JARs.zip --target "$GITHUB_SHA" --title "Campfire Batch 1.0.1 - 11 JARs" --notes "Exactly eleven compiled JARs grouped by loader. Runtime gameplay not tested." --prerelease
+
+  package-naturalbuoyancy:
+    needs: [plan, build]
+    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/naturalbuoyancy-') && github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: jar-naturalbuoyancy-*
+          path: downloaded-naturalbuoyancy
+          merge-multiple: true
+      - name: Assemble exactly eleven verified production JARs
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+          expected=[('Forge','forge','1.20.1')]+[(f,l,mc) for f,l in [('NeoForge','neoforge'),('Fabric','fabric')] for mc in ['1.20.1','1.21.1','26.1.2','26.2','26.3']]
+          jars=list(Path('downloaded-naturalbuoyancy').rglob('naturalbuoyancy-*.jar'))
+          assert len(jars)==11,jars
+          by_name={p.name:p for p in jars}
+          with zipfile.ZipFile('Natural-Buoyancy-1.0.0-ALL-11-JARs.zip','w',zipfile.ZIP_DEFLATED) as out:
+              for folder,loader,mc in expected:
+                  name=f'naturalbuoyancy-{loader}-mc{mc}-1.0.0.jar'
+                  p=by_name[name]
+                  with zipfile.ZipFile(p) as jar:
+                      assert jar.testzip() is None
+                      assert 'dev/minemods/naturalbuoyancy/BuoyancyPhysics.class' in jar.namelist()
+                      assert 'dev/minemods/naturalbuoyancy/DensityRules.class' in jar.namelist()
+                  out.write(p,f'{folder}/{name}')
+          with zipfile.ZipFile('Natural-Buoyancy-1.0.0-ALL-11-JARs.zip') as out:
+              assert len(out.namelist())==11 and all(n.endswith('.jar') for n in out.namelist())
+              print('\n'.join(out.namelist()))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Natural-Buoyancy-1.0.0-ALL-11-JARs
+          path: Natural-Buoyancy-1.0.0-ALL-11-JARs.zip
+      - name: Publish verified archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "naturalbuoyancy-v1.0.0-${GITHUB_RUN_NUMBER}" Natural-Buoyancy-1.0.0-ALL-11-JARs.zip --target "$GITHUB_SHA" --title "Natural Buoyancy 1.0.0 - all 11 JARs" --notes "Exactly eleven compiled JARs, loader-sorted. Static checks passed; in-game tests pending." --prerelease

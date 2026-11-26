@@ -1,0 +1,2 @@
+# Natural Buoyancy 1.0.0
+Minecraft 26.2, fabric. Server-side water-only physics for dropped items. Material controls ascent or descent; unknown items retain vanilla behavior. Data packs can override with naturalbuoyancy:floating, slow_sinking or sinking item tags. Stack size does not affect density. Build: gradle --no-daemon clean build; output build/libs/. Test wood, iron, dirt, unknown mod items, water currents, lava and item pickup/merging.

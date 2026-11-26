@@ -1,0 +1,10 @@
+plugins { id 'net.fabricmc.fabric-loom' version '1.18-SNAPSHOT' }
+group='dev.minemods.naturalbuoyancy'
+version='1.0.0'
+base.archivesName='naturalbuoyancy-fabric-mc26.3'
+java.toolchain.languageVersion=JavaLanguageVersion.of(25)
+dependencies {
+ minecraft 'com.mojang:minecraft:26.3'
+ implementation 'net.fabricmc:fabric-loader:0.19.5'
+}
+tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=25 }

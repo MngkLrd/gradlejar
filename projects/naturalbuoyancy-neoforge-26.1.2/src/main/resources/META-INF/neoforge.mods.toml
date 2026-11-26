@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="All Rights Reserved"
+[[mods]]
+modId="naturalbuoyancy"
+version="1.0.0"
+displayName="Natural Buoyancy"
+authors="MineMods"
+description="Material-dependent water buoyancy for dropped items."
+[[dependencies.naturalbuoyancy]]
+modId="neoforge"
+type="required"
+versionRange="[26.1.2.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.naturalbuoyancy]]
+modId="minecraft"
+type="required"
+versionRange="[26.1.2]"
+ordering="NONE"
+side="BOTH"
