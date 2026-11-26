@@ -422,6 +422,12 @@ jobs:
           python3 "$GITHUB_WORKSPACE/tools/test_midnight_worldgen.py" run runs/server
           python3 test_frostlands.py run runs/server
           trap - EXIT
+      - name: Smoke-test World Logic production JAR
+        if: matrix.project_dir == 'projects/worldlogic-1.21.1-forge'
+        timeout-minutes: 9
+        env:
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
+        run: python3 "$PROJECT_DIR/tools/smoke_server.py" "$PROJECT_DIR"
       - name: Upload compiled JAR as workflow artifact (release fallback)
         if: steps.verify.outcome == 'success'
         uses: actions/upload-artifact@v4
