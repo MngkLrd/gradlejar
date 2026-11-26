@@ -7,7 +7,9 @@
     "WeightedPlateMixin",
     "StonePlateMixin",
     "ArrowLifeMixin",
-    "FrictionMixin"
+    "FrictionMixin",
+    "FurnaceFoodMixin",
+    "CampfireFoodMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -15,13 +15,13 @@ public final class AirAndFire {
 
  private static final Map<ServerLevel,Map<BlockPos,Long>> HEAT=new WeakHashMap<>();
  // Local ventilation path: bounded air-cell BFS, no forced chunk loads.
- static BlockPos vent(ServerLevel l,BlockPos start){
+ static List<BlockPos> ventPath(ServerLevel l,BlockPos start){
   if(!l.hasChunkAt(start)||!l.isEmptyBlock(start))return null;
-  Set<BlockPos> seen=new HashSet<>();ArrayDeque<BlockPos> todo=new ArrayDeque<>();seen.add(start);todo.add(start);
-  while(!todo.isEmpty()&&seen.size()<=128){BlockPos q=todo.remove();if(l.canSeeSky(q))return q;
-   for(Direction d:Direction.values()){BlockPos t=q.relative(d);if(!l.hasChunkAt(t)||!l.isInWorldBounds(t))return start;if(l.isEmptyBlock(t)&&seen.add(t.immutable()))todo.add(t);}
+  Map<BlockPos,BlockPos> parent=new HashMap<>();ArrayDeque<BlockPos> todo=new ArrayDeque<>();parent.put(start,start);todo.add(start);
+  while(!todo.isEmpty()&&parent.size()<=192){BlockPos q=todo.remove();if(l.canSeeSky(q)){List<BlockPos> path=new ArrayList<>();while(!q.equals(start)){path.add(q);q=parent.get(q);}path.add(start);Collections.reverse(path);return path;}
+   for(Direction d:Direction.values()){BlockPos t=q.relative(d);if(!l.hasChunkAt(t)||!l.isInWorldBounds(t))return List.of(start);if(l.isEmptyBlock(t)&&!parent.containsKey(t)){parent.put(t.immutable(),q);todo.add(t); }}
   }
-  return seen.size()>128?start:null;
+  return parent.size()>192?List.of(start):null;
  }
  static boolean nearHeat(ServerLevel l,BlockPos p,int r){for(BlockPos q:BlockPos.betweenClosed(p.offset(-r,-1,-r),p.offset(r,1,r))){if(!l.hasChunkAt(q))continue;var s=l.getBlockState(q);if(s.is(Blocks.FIRE)||s.is(Blocks.SOUL_FIRE)||s.is(Blocks.LAVA)||s.is(Blocks.MAGMA_BLOCK)||s.hasProperty(BlockStateProperties.LIT)&&s.getValue(BlockStateProperties.LIT)&&(s.is(Blocks.FURNACE)||s.is(Blocks.SMOKER)||s.is(Blocks.BLAST_FURNACE))||s.getBlock() instanceof CampfireBlock&&s.getValue(BlockStateProperties.LIT))return true;}return false;}
  static void breathe(ServerLevel l,Player p,Body.State st,boolean water,long now){
@@ -54,9 +54,9 @@ public final class AirAndFire {
    if((Rules.on("residual_heat")||Rules.on("thermal_shock"))&&(s.is(Blocks.LAVA)||s.is(Blocks.FIRE)||s.is(Blocks.SOUL_FIRE)||s.is(Blocks.MAGMA_BLOCK)||s.hasProperty(BlockStateProperties.LIT)&&s.getValue(BlockStateProperties.LIT)&&(s.is(Blocks.FURNACE)||s.is(Blocks.SMOKER)||s.is(Blocks.BLAST_FURNACE))))for(Direction d:Direction.values())map.put(q.relative(d),now+200);
    if(s.getBlock() instanceof CampfireBlock&&s.getValue(BlockStateProperties.LIT)){
     if(Rules.on("residual_heat")||Rules.on("thermal_shock"))for(Direction d:Direction.values())map.put(q.relative(d),now+200);
-    BlockPos exit=(Rules.on("draft_smoke")||Rules.on("fire_needs_air"))?vent(l,q.above()):q.above();
-    if(Rules.on("draft_smoke")&&exit!=null&&!exit.equals(q.above())){var v=net.minecraft.world.phys.Vec3.atCenterOf(exit).subtract(net.minecraft.world.phys.Vec3.atCenterOf(q)).normalize();l.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,q.getX()+.5+v.x*.5,q.getY()+1.0,q.getZ()+.5+v.z*.5,1,.05,.05,.05,.01);}
-    if(Rules.on("fire_needs_air")&&exit==null&&l.random.nextFloat()<.12)l.setBlock(q,s.setValue(BlockStateProperties.LIT,false),3);
+    List<BlockPos> path=(Rules.on("draft_smoke")||Rules.on("fire_needs_air"))?ventPath(l,q.above()):List.of(q.above());
+    if(Rules.on("draft_smoke")&&path!=null&&path.size()>1){int at=(int)((now/40)%path.size());BlockPos a=path.get(at);l.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,a.getX()+.5,a.getY()+.5,a.getZ()+.5,1,.08,.04,.08,.005);}
+    if(Rules.on("fire_needs_air")&&path==null&&l.random.nextFloat()<.12)l.setBlock(q,s.setValue(BlockStateProperties.LIT,false),3);
     if(Rules.on("campfire_sparks")&&l.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)&&!l.isRainingAt(q)&&l.random.nextFloat()<.02){BlockPos t=q.relative(Direction.Plane.HORIZONTAL.getRandomDirection(l.random));if(l.isEmptyBlock(t)&&Material.block(l.getBlockState(t.below()),"spark_fuel"))l.setBlock(t,Blocks.FIRE.defaultBlockState(),3);}
    }
   }

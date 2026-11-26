@@ -35,7 +35,7 @@ public final class Ecology {
    }
   }wave=next;}
  }
- public static void smelt(PlayerEvent.ItemSmeltedEvent e){if(Rules.on("hot_meal")&&e.getEntity().level() instanceof ServerLevel l&&e.getSmelting().has(DataComponents.FOOD))net.minecraft.world.item.component.CustomData.update(DataComponents.CUSTOM_DATA,e.getSmelting(),tag->tag.putLong("worldlogic_hot_until",l.getServer().overworld().getGameTime()+1200));}
+ public static void smelt(PlayerEvent.ItemSmeltedEvent e){/* Freshness is assigned at the cooking source, never reset by extraction. */}
  public static void eat(LivingEntityUseItemEvent.Finish e){if(Rules.on("hot_meal")&&e.getEntity() instanceof Player p&&p.level() instanceof ServerLevel l&&e.getItem().has(DataComponents.FOOD)&&e.getItem().getOrDefault(DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.EMPTY).copyTag().getLong("worldlogic_hot_until")>l.getServer().overworld().getGameTime()){p.getFoodData().setSaturation(Math.min(p.getFoodData().getFoodLevel(),p.getFoodData().getSaturationLevel()+.5f));}}
  public static void tick(TickEvent.PlayerTickEvent.Post e){if(!(e.player.level() instanceof ServerLevel l)||l.getGameTime()%40!=0||!Rules.on("scent"))return;Player p=e.player;int budget=12;
   for(ItemEntity item:l.getEntitiesOfClass(ItemEntity.class,p.getBoundingBox().inflate(12))){if(--budget<0)break;String scent=Material.item(item.getItem(),"raw_meat")?"meat":Material.item(item.getItem(),"fish")?"fish":"";if(scent.isEmpty()&&item.getItem().is(net.minecraft.world.item.Items.ROTTEN_FLESH)){int n=0;for(var z:l.getEntitiesOfClass(net.minecraft.world.entity.monster.Zombie.class,item.getBoundingBox().inflate(8),z->z.getTarget()==null)){if(n++>=4)break;z.getNavigation().moveTo(item,1.0);}continue;}if(scent.isEmpty())continue;

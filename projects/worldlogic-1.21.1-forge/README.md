@@ -1,6 +1,6 @@
-# World Logic 1.0.0-rc2
+# World Logic 1.0.0-rc3
 Minecraft 1.21.1 • Forge 52.1.0 • Java 21 • Gradle 8.10.2 • official mappings.
-Run gradle --no-daemon clean build; output build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc2.jar.
+Run gradle --no-daemon clean build; output build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc3.jar.
 Config: config/worldlogic.properties; restart after editing. Install on both sides during tests. One spoiled food item and two zero-light extinguished torch blocks; no external dependencies. Burning Arrows excluded.
 
 ## Scope / limitations
@@ -10,3 +10,5 @@ Added in second pass: shallow-angle stone/metal ricochet for non-piercing vanill
 QA: runClient and runServer; check break/drop counts, mobGriefing=false, claim mods, ricochet angles and arrows not duplicating, water breathing, air pockets shared, player logout/rejoin, rain and projectiles, multiplayer movement corrections, large farms, config disabled rules. Profile crowded areas.
 
 RC2 improvements: persistent placed-log history, bounded gravel cascade and explosion reactions, material families and ricochet coefficients, extended recoverable arrow lifetime, direct shield collision, tagged sharp surfaces, attribute-based recovery/fatigue, per-stack wet gear, snow density and relocated snow, flood recovery, staged herd panic, hot-source expansion and thermal transformations, water current for mobs/boats, iron door impulses. Friction hook and all mixins require runtime verification. Existing builds from before installation cannot be identified reliably. Mud remains particles; exact furnace/campfire automation and full smoke paths are follow-up checks.
+
+RC3: floor-oriented mud footprint particles, cooking source timestamps and automated extraction hooks, bounded smoke path with samples along route. Requires in-game verification; optional redirect targets are not guaranteed to match until tested. Prior README limitations are historical except where changed here.
