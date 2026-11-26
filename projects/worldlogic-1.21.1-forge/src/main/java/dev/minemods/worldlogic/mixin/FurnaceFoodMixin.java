@@ -14,7 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /** Keep internal output unmodified so the vanilla recipe output comparison still works. */
 @Mixin(value=AbstractFurnaceBlockEntity.class,remap=false)
-public abstract class FurnaceFoodMixin {
+public abstract class FurnaceFoodMixin implements FurnaceHeatAccess {
+ @Unique private long worldlogic$hotUntil;
+ @Override public long worldlogic$getHotUntil(){return worldlogic$hotUntil;}
+ @Override public void worldlogic$setHotUntil(long until){worldlogic$hotUntil=until;}
  @Unique private int worldlogic$before;
  @Inject(method="serverTick",at=@At("HEAD"),remap=false)
  private static void worldlogic$before(Level level,BlockPos pos,BlockState state,AbstractFurnaceBlockEntity furnace,CallbackInfo ci){
@@ -24,7 +27,11 @@ public abstract class FurnaceFoodMixin {
  private static void worldlogic$after(Level level,BlockPos pos,BlockState state,AbstractFurnaceBlockEntity furnace,CallbackInfo ci){
   if(!Rules.on("hot_meal")||!(level instanceof ServerLevel l))return;
   if(furnace.getItem(2).has(net.minecraft.core.component.DataComponents.FOOD)&&furnace.getItem(2).getCount()>((FurnaceFoodMixin)(Object)furnace).worldlogic$before){
-   furnace.getPersistentData().putLong(HotFood.KEY,HotFood.now(l)+1200);furnace.setChanged();
+   ((FurnaceHeatAccess)(Object)furnace).worldlogic$setHotUntil(HotFood.now(l)+1200);furnace.setChanged();
   }
  }
+ @Inject(method="loadAdditional",at=@At("RETURN"),remap=false)
+ private void worldlogic$load(net.minecraft.nbt.CompoundTag tag,net.minecraft.core.HolderLookup.Provider lookup,CallbackInfo ci){worldlogic$hotUntil=tag.getLong(HotFood.KEY);}
+ @Inject(method="saveAdditional",at=@At("RETURN"),remap=false)
+ private void worldlogic$save(net.minecraft.nbt.CompoundTag tag,net.minecraft.core.HolderLookup.Provider lookup,CallbackInfo ci){tag.putLong(HotFood.KEY,worldlogic$hotUntil);}
 }

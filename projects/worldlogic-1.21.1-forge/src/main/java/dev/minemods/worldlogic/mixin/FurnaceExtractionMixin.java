@@ -17,6 +17,6 @@ public abstract class FurnaceExtractionMixin {
  @org.spongepowered.asm.mixin.Unique
  private void worldlogic$stamp(int slot,ItemStack stack){
   if(slot!=2||!((Object)this instanceof AbstractFurnaceBlockEntity furnace))return;
-  if(furnace.getLevel() instanceof ServerLevel l){long until=furnace.getPersistentData().getLong(HotFood.KEY);if(until>HotFood.now(l))HotFood.stamp(stack,until);}
+  if(furnace.getLevel() instanceof ServerLevel l){long until=((dev.minemods.worldlogic.FurnaceHeatAccess)(Object)furnace).worldlogic$getHotUntil();if(until>HotFood.now(l))HotFood.stamp(stack,until);}
  }
 }

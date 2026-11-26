@@ -14,3 +14,5 @@ RC2 improvements: persistent placed-log history, bounded gravel cascade and expl
 RC3: floor-oriented mud footprint particles, cooking source timestamps and automated extraction hooks, bounded smoke path with samples along route. Requires in-game verification; optional redirect targets are not guaranteed to match until tested. Prior README limitations are historical except where changed here.
 
 RC4: moved extraction hook to actual 1.21.1 declaring class BaseContainerBlockEntity; door closing uses transition hooks for players, mobs and redstone; smoke advances along path over time. Still requires dedicated-server and client testing; shift-click output and legacy builds are known edge cases.
+
+RC4 hotfix: furnace heat timestamp serialized in furnace NBT with direct slot removal and shift-click output handling. Forge block entities do not implement getPersistentData. The live container's output is kept free of freshness data outside extraction to preserve recipe stacking.

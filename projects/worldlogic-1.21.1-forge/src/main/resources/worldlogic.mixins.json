@@ -11,7 +11,8 @@
     "FurnaceFoodMixin",
     "CampfireFoodMixin",
     "FurnaceExtractionMixin",
-    "DoorPhysicsMixin"
+    "DoorPhysicsMixin",
+    "FurnaceMenuMixin"
   ],
   "injectors": {
     "defaultRequire": 1
