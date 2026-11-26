@@ -45,7 +45,9 @@ public final class EnvironmentPhysics {
  private static Vec3 flow(ServerLevel l,Player p){
   BlockPos at=p.blockPosition();if(!loaded(l,at))return Vec3.ZERO;
   var f=l.getFluidState(at);if(!f.is(FluidTags.WATER)){at=at.above();if(!loaded(l,at))return Vec3.ZERO;f=l.getFluidState(at);}
-  return f.is(FluidTags.WATER)?f.getFlow(l,at):Vec3.ZERO;
+  if(!f.is(FluidTags.WATER))return Vec3.ZERO;
+  for(Direction d:Direction.Plane.HORIZONTAL)if(!loaded(l,at.relative(d))||!loaded(l,at.relative(d).below()))return Vec3.ZERO;
+  return f.getFlow(l,at);
  }
  private static void water(ServerLevel l,Player p,long now){
   if(!p.isInWater()||p.isPassenger()||p.getAbilities().flying)return;

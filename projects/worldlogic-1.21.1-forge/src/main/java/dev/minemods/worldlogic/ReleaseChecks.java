@@ -61,6 +61,7 @@ public final class ReleaseChecks {
   check(Material.block(Blocks.ROOTED_DIRT.defaultBlockState(),"rough_terrain"),"rough terrain tag");
   check(Material.item(new ItemStack(Items.IRON_SWORD),"disarmable"),"disarm tag");
   check(Material.block(Blocks.CLAY.defaultBlockState(),"structural_weak"),"weak structure tag");
+  check(StructuralHazards.verifyWorld(l),"live world support and falling debris fixture");
   check(Material.block(Blocks.PACKED_ICE.defaultBlockState(),"ice_ceiling"),"ice tag");
   check(WorldState.get(l)!=null&&PocketData.get(l)!=null,"saved data");
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_CORE_TESTS_PASSED");

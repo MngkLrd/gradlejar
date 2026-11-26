@@ -62,10 +62,10 @@ public final class StructuralHazards {
   }
   if(Rules.on("animal_stampede")||Rules.on("herd_panic")){int n=0;for(var x:e.getAffectedEntities()){if(n++>=40)break;if(x instanceof net.minecraft.world.entity.animal.Animal a)Ecology.panic(a,l.getGameTime()+140);}}
  }
- static void fall(ServerLevel l,BlockPos p,BlockState s,boolean debris){
-  if(s.hasBlockEntity())return;
+ static FallingBlockEntity fall(ServerLevel l,BlockPos p,BlockState s,boolean debris){
+  if(s.hasBlockEntity())return null;
   FallingBlockEntity f=FallingBlockEntity.fall(l,p,s);
-  if(debris)f.getPersistentData().putBoolean("worldlogic_debris",true);
+  if(debris)f.getPersistentData().putBoolean("worldlogic_debris",true);return f;
  }
  private static boolean hot(BlockState s){return s.is(Blocks.FIRE)||s.is(Blocks.SOUL_FIRE)||s.is(Blocks.LAVA);}
  private static boolean adjacentFire(ServerLevel l,BlockPos p){for(Direction d:Direction.values()){BlockPos q=p.relative(d);if(loaded(l,q)&&hot(l.getBlockState(q)))return true;}return false;}
@@ -81,9 +81,9 @@ public final class StructuralHazards {
    var map=HEAT.computeIfAbsent(l,k->new HashMap<>());Heat old=map.get(p);
    if(old!=null&&old.block!=s.getBlock()){map.remove(p);old=null;}
    boolean wet=false;for(Direction d:Direction.values()){BlockPos q=p.relative(d);if(loaded(l,q)&&l.getFluidState(q).is(FluidTags.WATER)){wet=true;break;}}
-   if(old!=null&&wet&&now-old.first>=60&&now-old.last<=240){map.remove(p);BlockState next=quenched(s);
+   if(old!=null&&wet&&old.last-old.first>=60&&now-old.last<=240){map.remove(p);BlockState next=quenched(s);
     if(next!=s&&grief(l)){l.setBlock(p,next,3);l.sendParticles(ParticleTypes.CLOUD,p.getX()+.5,p.getY()+.8,p.getZ()+.5,8,.25,.2,.25,.02);}
-   }else if(adjacentFire(l,p)&&(map.size()<512||old!=null)){map.put(p.immutable(),new Heat(s.getBlock(),old==null||now-old.last>240?now:old.first,now));}
+   }else if(adjacentFire(l,p)&&(map.size()<512||old!=null)){map.put(p.immutable(),new Heat(s.getBlock(),old==null||now-old.last>30?now:old.first,now));}
   }
   if(!Rules.on("burning_structures")||!grief(l)||!l.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)||!Material.block(s,"burning_structure"))return;
   var map=BURN.computeIfAbsent(l,k->new HashMap<>());Heat old=map.get(p);
@@ -92,6 +92,29 @@ public final class StructuralHazards {
   if(now-old.first>=minBurn(Rules.strength("fire"))&&!supported(l,p)){
    map.remove(p);warn(l,p,s);fall(l,p,s,true);
   }else map.put(p.immutable(),new Heat(s.getBlock(),old.first,now));
+ }
+ /** Production-server fixture; called only with worldlogic.ci=true in a disposable test world. */
+ static boolean verifyWorld(ServerLevel l){
+  BlockPos p=l.getSharedSpawnPos().atY(l.getMaxBuildHeight()-12);
+  List<BlockPos> cells=new ArrayList<>();cells.add(p);cells.add(p.below());
+  for(Direction d:Direction.Plane.HORIZONTAL){cells.add(p.relative(d));cells.add(p.relative(d).below());}
+  for(BlockPos q:cells)if(!loaded(l,q)||l.getBlockState(q).hasBlockEntity())return false;
+  Map<BlockPos,BlockState> backup=new LinkedHashMap<>();for(BlockPos q:cells)backup.put(q,l.getBlockState(q));
+  FallingBlockEntity debris=null;
+  try{
+   for(BlockPos q:cells)l.setBlock(q,Blocks.AIR.defaultBlockState(),3);
+   l.setBlock(p,Blocks.CLAY.defaultBlockState(),3);
+   if(supported(l,p))return false;
+   BlockPos post=p.east();l.setBlock(post.below(),Blocks.STONE.defaultBlockState(),3);l.setBlock(post,Blocks.OAK_LOG.defaultBlockState(),3);
+   if(!supported(l,p))return false;
+   l.setBlock(post,Blocks.AIR.defaultBlockState(),3);
+   if(supported(l,p))return false;
+   debris=fall(l,p,l.getBlockState(p),true);
+   return debris!=null&&l.isEmptyBlock(p)&&debris.getBlockState().is(Blocks.CLAY)&&debris.getPersistentData().getBoolean("worldlogic_debris");
+  }finally{
+   if(debris!=null)debris.discard();
+   backup.forEach((q,s)->l.setBlock(q,s,3));
+  }
  }
  public static void tick(TickEvent.LevelTickEvent.Post e){
   if(!(e.level instanceof ServerLevel l))return;long now=l.getGameTime();var q=JOBS.get(l);
