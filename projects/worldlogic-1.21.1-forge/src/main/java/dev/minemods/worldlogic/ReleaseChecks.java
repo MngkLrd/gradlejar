@@ -9,7 +9,10 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 public final class ReleaseChecks {
  private static void check(boolean ok,String detail){if(!ok)throw new IllegalStateException("World Logic test failed: "+detail);}
  public static void run(){
-  check(Rules.keys().size()>=45,"rule count");
+  check(Rules.keys().size()>=63,"rule count");
+  check(Expedition.armorLoad(new ItemStack(Items.IRON_CHESTPLATE))>Expedition.armorLoad(new ItemStack(Items.LEATHER_CHESTPLATE)),"armor diving tradeoff");
+  check(Expedition.shieldFraction(100)<Expedition.shieldFraction(0),"shield fatigue");
+  check(Expedition.restRecovery(true)>Expedition.restRecovery(false),"shelter rest");
   check(Rules.preset("light").get("tree_weight").equals("false"),"light safety");
   check(Rules.preset("hardcore").get("tree_weight").equals("true"),"hardcore coverage");
   var i=new Impulse(new Vec3(1,0,2),2);check(Math.abs(i.energy()-5)<.0001,"impact energy");

@@ -1,1 +1,10 @@
-{"item.worldlogic.spoiled_food":"Испорченная еда","block.worldlogic.extinguished_torch":"Погасший факел","block.worldlogic.extinguished_wall_torch":"Погасший факел"}
+{
+  "item.worldlogic.spoiled_food": "Испорченная еда",
+  "block.worldlogic.extinguished_torch": "Погасший факел",
+  "block.worldlogic.extinguished_wall_torch": "Погасший факел",
+  "message.worldlogic.meal_interrupted": "Приём пищи прерван!",
+  "message.worldlogic.guard_exhausted": "Руки устали держать щит. Отступи!",
+  "message.worldlogic.heavy_diving": "Тяжёлая броня ускоряет расход воздуха.",
+  "message.worldlogic.rest_sheltered": "Сон под крышей восстановил силы.",
+  "message.worldlogic.rest_exposed": "Сон под открытым небом восстановил только часть сил."
+}

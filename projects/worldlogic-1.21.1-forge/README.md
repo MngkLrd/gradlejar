@@ -1,6 +1,6 @@
-# World Logic 1.0.0-rc7
+# World Logic 1.0.0-rc8
 Minecraft 1.21.1 / Forge 52.1.0+ / Java 21 / Gradle 8.10.2 / official mappings.
-Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc7.jar.
+Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc8.jar.
 Install on both server and clients. No external dependencies. Burning Arrows excluded.
 
 Config: config/worldlogic.properties. Mods > World Logic > Config (local world or main menu).
@@ -18,3 +18,5 @@ RC6: client receives authoritative server friction and mining streak settings, w
 Hard survival update: persistent work fatigue, recovery through rest and warmth, longer fall injuries, smoke inhalation in small enclosed areas. Light preset disables these additions. Further rules are implemented in the subsequent terrain and campfire pass.
 
 Hard survival terrain pass: finite campfire fuel (coal/charcoal/logs/planks/sticks, relight with flint and steel), persistent crop rotation and fertilization, opt-in roof instability below Y48 with supported logs/fences and two-second warnings. Old player builds cannot be identified retroactively; mine instability is off by default and on in Hardcore. Collapses are local and capped. Fuel ticks only in loaded active campfire chunks. This update is not yet gameplay-tested.
+
+RC8 expedition consequences: damage interrupts food use without consuming it; shield blocks consume existing fatigue and become less efficient at high fatigue; heavy armor increases oxygen use underwater; sheltered full sleep recovers more fatigue than exposed sleep; noisy mining attracts nearby idle hostile mobs through navigation (sneaking avoids the noise). No recipes, item weight HUD or new progression. Light disables the five rules. Shield and sleep require exertion. New core checks cover armor, shield and rest calculations; multiplayer and client gameplay remain untested.

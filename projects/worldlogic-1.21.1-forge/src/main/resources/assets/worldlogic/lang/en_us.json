@@ -1,1 +1,10 @@
-{"item.worldlogic.spoiled_food":"Spoiled Food","block.worldlogic.extinguished_torch":"Extinguished Torch","block.worldlogic.extinguished_wall_torch":"Extinguished Torch"}
+{
+  "item.worldlogic.spoiled_food": "Spoiled Food",
+  "block.worldlogic.extinguished_torch": "Extinguished Torch",
+  "block.worldlogic.extinguished_wall_torch": "Extinguished Torch",
+  "message.worldlogic.meal_interrupted": "Your meal was interrupted!",
+  "message.worldlogic.guard_exhausted": "Your guard is exhausted. Retreat!",
+  "message.worldlogic.heavy_diving": "Heavy armor is draining your breath.",
+  "message.worldlogic.rest_sheltered": "You slept under shelter and recovered.",
+  "message.worldlogic.rest_exposed": "Sleeping in the open restored only some of your strength."
+}

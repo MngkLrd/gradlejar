@@ -18,6 +18,7 @@ public final class Survival {
  private static final String FATIGUE="worldlogic_exertion",INJURY="worldlogic_injury",SMOKE="worldlogic_smoke";
  static boolean active(Player p){return p.level() instanceof ServerLevel&&!p.isCreative()&&!p.isSpectator();}
  public static double fatigue(Player p){return Math.max(0,Math.min(100,p.getPersistentData().getDouble(FATIGUE)));}
+ static void rest(Player p,double amount){if(active(p)&&Rules.on("exertion"))p.getPersistentData().putDouble(FATIGUE,Math.max(0,fatigue(p)-amount));}
  static void work(Player p,double amount){if(active(p)&&Rules.on("exertion"))p.getPersistentData().putDouble(FATIGUE,Math.min(100,fatigue(p)+amount*Rules.strength("movement")));}
  public static void mine(BlockEvent.BreakEvent e){if(!e.isCanceled()&&active(e.getPlayer())){float hardness=e.getState().getDestroySpeed(e.getLevel(),e.getPos());if(hardness>0)work(e.getPlayer(),Math.min(5,.6+hardness*.5));}}
  public static void jump(LivingEvent.LivingJumpEvent e){if(e.getEntity() instanceof Player p)work(p,1.2);}
@@ -34,7 +35,7 @@ public final class Survival {
   if(now%20!=0)return;
   var tag=p.getPersistentData();
   if(Rules.on("exertion")){
-   boolean moving=p.isSprinting()||p.isSwimming()||p.onClimbable()&&p.getDeltaMovement().y>.05;
+   boolean moving=!p.isPassenger()&&(p.isSprinting()||p.isSwimming()||p.onClimbable()&&p.getDeltaMovement().y>.05);
    double mass=Material.mass(p);
    if(moving){work(p,(p.isSwimming()?2.4:1.45)*Math.max(.8,mass));p.causeFoodExhaustion((float)(.08*Math.max(1,mass)*Rules.strength("movement")));}
    else if(p.onGround()&&!p.isInWater()){double recovery=p.getFoodData().getFoodLevel()>=12?2.0:.6;if(p.getDeltaMovement().horizontalDistance()<.04)recovery*=2;if(AirAndFire.nearHeat(l,p.blockPosition(),2)&&p.getDeltaMovement().horizontalDistance()<.04)recovery*=1.6;tag.putDouble(FATIGUE,Math.max(0,fatigue(p)-recovery));}
