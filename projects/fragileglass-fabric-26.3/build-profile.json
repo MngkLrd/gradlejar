@@ -1,9 +1,9 @@
 {
   "slug": "fragileglass",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "minecraft": "26.3",
   "loader": "fabric",
   "java": "25",
   "gradle": "9.7.1",
-  "jar_glob": "fragileglass-fabric-mc26.3-1.0.1.jar"
+  "jar_glob": "fragileglass-fabric-mc26.3-1.0.2.jar"
 }

@@ -17,14 +17,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Projectile.class)
 public abstract class ProjectileMixin {
- @Inject(method="onHit",at=@At("HEAD"),cancellable=true)
+ @Inject(method="onHit(Lnet/minecraft/world/phys/HitResult;)V",at=@At("HEAD"),cancellable=true)
  private void fragileglass$impact(HitResult result, CallbackInfo ci) {
   Projectile p=(Projectile)(Object)this;
   if(!(p.level() instanceof ServerLevel level) || !(result instanceof BlockHitResult hit)) return;
   if(p instanceof ThrownEnderpearl || p instanceof AbstractThrownPotion || p instanceof ThrownExperienceBottle) return;
   var state=level.getBlockState(hit.getBlockPos());
   if(!GlassRules.fragile(state)) return;
-  boolean pane=state.is(GlassRules.PANES), light=p instanceof Snowball || p instanceof ThrownEgg;
+  boolean pane=GlassRules.pane(state), light=p instanceof Snowball || p instanceof ThrownEgg;
   double speed=p.getDeltaMovement().length();
   if(light?(!pane||speed<0.35):speed<(pane?0.35:0.65)) return;
   Entity owner=p.getOwner();

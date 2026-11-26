@@ -37,7 +37,7 @@ public final class GlassEvents {
 
         double speed = projectile.getDeltaMovement().length();
         boolean light = projectile instanceof Snowball || projectile instanceof ThrownEgg;
-        boolean pane = state.is(GlassRules.PANES);
+        boolean pane = GlassRules.pane(state);
         if (light ? (!pane || speed < 0.35) : speed < (pane ? 0.35 : 0.65)) return;
 
         Entity owner = projectile.getOwner();

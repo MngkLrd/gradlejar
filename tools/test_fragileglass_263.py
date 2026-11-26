@@ -60,11 +60,23 @@ try:
     time.sleep(3)
     command("setblock 2 200 2 minecraft:glass")
     result=command("execute if block 2 200 2 #fragileglass:fragile_blocks")
-    if "passed" not in result.lower(): raise RuntimeError("Fragile Glass data tags missing: "+result)
-    print("FG_TAG_OK",flush=True)
+    if "passed" in result.lower():
+        print("FG_TAG_OK",flush=True)
+    elif "fabric" in root.name and "unknown block tag" in result.lower():
+        print("FG_TAG_OPTIONAL_UNAVAILABLE: Fabric Loader without resource loader; testing vanilla ID fallback",flush=True)
+    else:
+        raise RuntimeError("Fragile Glass data tags missing or invalid: "+result)
     command("setblock 5 200 5 minecraft:glass")
     command("setblock 8 200 5 minecraft:glass_pane")
     command("setblock 11 200 5 minecraft:glass")
+    command("setblock 2 200 9 minecraft:red_stained_glass")
+    command("setblock 5 200 9 minecraft:tinted_glass")
+    command("setblock 8 200 9 minecraft:glass")
+    command("setblock 11 200 9 minecraft:stone")
+    command("summon minecraft:arrow 2.5 200.7 6.5 {Motion:[0.0d,0.0d,1.8d]}")
+    command("summon minecraft:arrow 5.5 200.7 6.5 {Motion:[0.0d,0.0d,1.8d]}")
+    command("summon minecraft:snowball 8.5 200.7 6.5 {Motion:[0.0d,0.0d,1.8d]}")
+    command("summon minecraft:arrow 11.5 200.7 6.5 {Motion:[0.0d,0.0d,1.8d]}")
     command("summon minecraft:arrow 5.5 200.7 2.5 {Motion:[0.0d,0.0d,1.8d]}")
     command("summon minecraft:snowball 8.5 200.7 2.5 {Motion:[0.0d,0.0d,1.8d]}")
     command("summon minecraft:pig 11.5 208 5.5")
@@ -72,6 +84,10 @@ try:
     for x,label in [(5,"ARROW"),(8,"SNOWBALL"),(11,"FALL")]:
         result=command(f"execute if block {x} 200 5 minecraft:air")
         if "passed" not in result.lower(): raise RuntimeError(label+" did not break glass: "+result)
+        print("FG_"+label+"_OK",flush=True)
+    for x,block,label in [(2,"air","STAINED"),(5,"air","TINTED"),(8,"glass","LIGHT_IMPACT_CONTROL"),(11,"stone","STONE_CONTROL")]:
+        result=command(f"execute if block {x} 200 9 minecraft:{block}")
+        if "passed" not in result.lower(): raise RuntimeError(label+" failed: "+result)
         print("FG_"+label+"_OK",flush=True)
     print("FRAGILE_GLASS_RUNTIME_PASSED",flush=True)
 finally:

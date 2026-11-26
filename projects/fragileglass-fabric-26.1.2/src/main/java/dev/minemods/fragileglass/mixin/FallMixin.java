@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Block.class)
 public abstract class FallMixin {
- @Inject(method="fallOn",at=@At("HEAD"))
+ @Inject(method="fallOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;D)V",at=@At("HEAD"))
  private void fragileglass$fall(Level level,BlockState state,BlockPos pos,Entity entity,double distance,CallbackInfo ci){
    if(distance>=3 && entity instanceof LivingEntity && level instanceof ServerLevel server) GlassRules.shatter(server,pos,entity);
  }

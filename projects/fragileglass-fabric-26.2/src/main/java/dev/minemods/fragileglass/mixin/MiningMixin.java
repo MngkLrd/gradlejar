@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class MiningMixin {
- @Inject(method="getDestroyProgress",at=@At("RETURN"),cancellable=true)
+ @Inject(method="getDestroyProgress(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)F",at=@At("RETURN"),cancellable=true)
  private void fragileglass$mining(Player player, BlockGetter level, BlockPos pos, CallbackInfoReturnable<Float> cir) {
   if(!player.isSpectator() && cir.getReturnValueF()>0 && GlassRules.fragile((BlockState)(Object)this)) cir.setReturnValue(1.0F);
  }
