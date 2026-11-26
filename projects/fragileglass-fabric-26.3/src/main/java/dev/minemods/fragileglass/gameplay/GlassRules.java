@@ -2,6 +2,7 @@ package dev.minemods.fragileglass.gameplay;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
@@ -23,7 +24,20 @@ public final class GlassRules {
     private GlassRules() {}
 
     public static boolean fragile(BlockState state) {
-        return state.is(FRAGILE) && !state.is(REINFORCED);
+        if (state.is(REINFORCED)) return false;
+        if (state.is(FRAGILE)) return true;
+        // Vanilla glass remains functional even if optional data packs/tags are absent.
+        var id = BuiltInRegistries.BLOCK.getKey(state.getBlock());
+        if (!id.getNamespace().equals("minecraft")) return false;
+        String path = id.getPath();
+        return path.equals("glass") || path.equals("tinted_glass") || path.endsWith("_stained_glass") || pane(state);
+    }
+
+    public static boolean pane(BlockState state) {
+        if (state.is(PANES)) return true;
+        var id = BuiltInRegistries.BLOCK.getKey(state.getBlock());
+        return id.getNamespace().equals("minecraft") &&
+            (id.getPath().equals("glass_pane") || id.getPath().endsWith("_stained_glass_pane"));
     }
 
     public static boolean shatter(ServerLevel level, BlockPos pos, Entity source) {

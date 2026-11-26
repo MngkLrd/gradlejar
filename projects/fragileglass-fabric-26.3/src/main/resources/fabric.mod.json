@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "fragileglass",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "Fragile Glass",
   "description": "Glass shatters from strikes, projectiles and hard landings.",
   "environment": "*",
