@@ -7,6 +7,7 @@ from .common import ROOT, compatibility, profile, qa_config, report_for, write_j
 from .static import validate_jar
 from .server import run
 from .crash import analyze
+from .assets import inspect as inspect_assets
 
 def outputs(report):
     if out:=os.getenv("GITHUB_OUTPUT"):
@@ -43,6 +44,8 @@ def main():
             return 0
         report["release_targets"]=q["release_targets"]
         report["static"]=validate_jar(jar,p)
+        report["assets"]=inspect_assets(jar)
+        require(not report["assets"]["errors"],"Local asset validation failed")
         report["qa_level"]=2
         if q["mode"]=="client":
             report.update(status="client-candidate-awaiting-validation",eligible=False)

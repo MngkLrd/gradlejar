@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "incidents": [
+    {
+      "id": "FG-FABRIC-TAGS",
+      "category": "recipe",
+      "match": "Unknown block tag",
+      "symptom": "Fragile Glass on Fabric did not detect vanilla glass",
+      "root_cause": "Bundled tag not available in isolated Fabric Loader runtime",
+      "fix": "Use valid data-pack format and deliberate ID fallback or resource loader; verify actual world state",
+      "evidence": "45743239785; 45747002769",
+      "status": "verified for 26.x Fragile Glass"
+    },
+    {
+      "id": "QA-RELEASE-403",
+      "category": "infra",
+      "match": "HTTP 403.*Resource not accessible by integration",
+      "symptom": "Verified ZIP exists but release publication fails",
+      "root_cause": "GitHub integration permission denied",
+      "fix": "Preserve verified Actions artifact, report publication separately; do not weaken tests",
+      "evidence": "45747002769 / 139666594839",
+      "status": "artifact fallback implemented"
+    },
+    {
+      "id": "QA-GLX-VULKAN",
+      "category": "graphics",
+      "match": "matching GLX visual|VK_KHR_surface|Failed to create backend",
+      "symptom": "Development client cannot create rendering backend",
+      "root_cause": "Virtual display or software graphics capability unavailable; not proven mod crash",
+      "fix": "Collect GLX and Vulkan probes; test on real GPU client; do not award QA-5",
+      "evidence": "45747002772 / 139665373289",
+      "status": "diagnostic only"
+    },
+    {
+      "id": "HG-DUPLICATE-RELEASE",
+      "category": "infra",
+      "match": "release with the same tag name already exists",
+      "symptom": "Historical bundle reruns on unrelated builds",
+      "root_cause": "Fixed tag reused by workflow_run",
+      "fix": "Manual idempotent historical packaging",
+      "evidence": "45746842947 / 139664845283",
+      "status": "workflow corrected"
+    }
+  ]
+}

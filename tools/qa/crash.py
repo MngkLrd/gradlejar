@@ -1,5 +1,7 @@
 """Conservative failure triage: matched evidence, not automatic fixes."""
 import re
+import json
+from pathlib import Path
 PATTERNS=[
  ("graphics","Graphics backend or virtual display initialization",r"Couldn.t find matching GLX visual|Failed to create backend (?:OpenGL|Vulkan)|VK_KHR_surface|GLFW error"),
  ("mixin","Mixin injection/signature or target mapping",r"InvalidInjectionException|InjectionError|MixinApplyError|Critical injection failure|InvalidMixinException"),
@@ -22,4 +24,10 @@ def analyze(text):
     if not matches:
         hit=next((line.strip() for line in lines if re.search(r"Caused by:|Traceback|RuntimeError|ValueError|FAILURE:",line)),None)
         if hit: matches.append({"category":"unclassified","summary":"Inspect full log; no specific classifier matched","evidence":hit[:700]})
+    db=Path(__file__).with_name("crash-db.json")
+    if db.is_file():
+        for incident in json.loads(db.read_text("utf-8"))["incidents"]:
+            hit=next((line.strip() for line in lines if re.search(incident["match"],line,re.I)),None)
+            if hit:
+                matches.append({"category":"known-incident","incident":incident["id"],"summary":incident["symptom"],"evidence":hit[:700],"suggested_fix":incident["fix"],"verified_scope":incident["status"]})
     return matches

@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "rules": [
+    {
+      "id": "MC-26-PACK-RANGE",
+      "versions": [
+        "26.1.2",
+        "26.2",
+        "26.3"
+      ],
+      "category": "resources",
+      "pattern": "pack.mcmeta excludes required|Unknown block tag",
+      "advice": "Check separate data/resource formats in compatibility.json; modern min_format/max_format must cover actual content. For Fabric Loader alone, test tag discovery independently.",
+      "evidence": "Fragile Glass 1.0.2 production QA-4, run 45747002769",
+      "automatic": false
+    },
+    {
+      "id": "MC-26-IDENTIFIER",
+      "versions": [
+        "26.1.2",
+        "26.2",
+        "26.3"
+      ],
+      "category": "api",
+      "pattern": "ResourceLocation",
+      "advice": "Compare actual class/signature against target named server API; 26.x ports use Identifier. Do not blindly replace serialized IDs or strings.",
+      "evidence": "Fragile Glass 26.x source and production QA",
+      "automatic": false
+    },
+    {
+      "id": "MC-26-PROJECTILE",
+      "versions": [
+        "26.1.2",
+        "26.2",
+        "26.3"
+      ],
+      "category": "api",
+      "pattern": "net.minecraft.world.entity.projectile.AbstractArrow|net.minecraft.world.entity.projectile.ThrownPotion",
+      "advice": "Check relocated projectile classes and exact descriptors. AbstractArrow is under projectile.arrow; thrown classes may move to throwableitemprojectile.",
+      "evidence": "Fragile Glass 26.x production QA",
+      "automatic": false
+    },
+    {
+      "id": "MC-26-FALL-DESCRIPTOR",
+      "versions": [
+        "26.1.2",
+        "26.2",
+        "26.3"
+      ],
+      "category": "mixin",
+      "pattern": "fallOn.*;F\\)V|InvalidInjectionException",
+      "advice": "Compare target method descriptor, including fall distance double versus float. Compile and run real server; compiling Mixin does not prove injection.",
+      "evidence": "Fragile Glass 26.x server checks",
+      "automatic": false
+    },
+    {
+      "id": "MC-121-DATA-LAYOUT",
+      "versions": [
+        "1.21.1",
+        "26.1.2",
+        "26.2",
+        "26.3"
+      ],
+      "category": "resources",
+      "pattern": "data/[^/]+/(recipes|loot_tables|advancements|tags/blocks)/",
+      "advice": "Inspect version-specific singular registry paths. Update all references and test loaded data rather than just archive presence.",
+      "evidence": "Existing QA static validator and compatibility registry",
+      "automatic": false
+    },
+    {
+      "id": "FABRIC-TAG-LOADER",
+      "versions": [
+        "1.20.1",
+        "1.21.1",
+        "26.1.2",
+        "26.2",
+        "26.3"
+      ],
+      "category": "runtime",
+      "pattern": "Unknown block tag|state\\.is\\(FRAGILE\\)",
+      "advice": "Do not assume Fabric Loader alone exposes bundled data packs. Test actual registration; use appropriate resource loader or intentional vanilla-ID fallback, retaining tag overrides when present.",
+      "evidence": "Fragile Glass Fabric 26.3 observed unknown tag; fixed production QA",
+      "automatic": false
+    }
+  ]
+}
