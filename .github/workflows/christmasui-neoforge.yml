@@ -55,6 +55,19 @@ jobs:
                   events=json.loads(z.read('assets/minecraft/sounds.json'))
                   assert all(events[e]['replace'] for e in ['music.menu','music.game','music.overworld.frozen_peaks','music.creative'])
                   assert z.read('assets/minecraft/sounds/music/christmas_calm.ogg')[:4]==b'OggS'
+                  menu=events['music.menu']['sounds']
+                  assert len(menu)==1 and menu[0]['name']=='minecraft:music/christmas_calm'
+                  ingame=events['music.game']['sounds']
+                  assert len(ingame)==5 and len({s['name'] for s in ingame})==5
+                  hashes=set()
+                  for entry in ingame+menu:
+                      assert entry['stream'] is True
+                      data=z.read('assets/minecraft/sounds/'+entry['name'].split(':',1)[1]+'.ogg')
+                      assert data[:4]==b'OggS' and b'\x01vorbis' in data[:512]
+                      hashes.add(hashlib.sha256(data).hexdigest())
+                  assert len(hashes)==6
+                  assert all(v['sounds']==ingame for k,v in events.items() if k!='music.menu')
+                  assert 'MUSIC-CREDITS.txt' in z.namelist()
                   for name in ['sprites/world_list/join','sprites/world_list/join_highlighted','sprites/widget/slider_handle','sprites/widget/locked_button','sprites/hud/hotbar_offhand_right']:
                       assert 'assets/minecraft/textures/gui/'+name+'.png' in z.namelist(),name
                   assert 'assets/minecraft/textures/item/empty_armor_slot_shield.png' in z.namelist()
@@ -63,4 +76,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar --target "$GITHUB_SHA" --title "Christmas UI 0.3.1" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
+          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar --target "$GITHUB_SHA" --title "Christmas UI 0.3.2" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease

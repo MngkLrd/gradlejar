@@ -196,5 +196,34 @@ def upgrade(root,z,out,download):
         assert raw.startswith(b'OggS')
         mc=out/'assets/minecraft';snd=mc/'sounds/music/christmas_calm.ogg';snd.parent.mkdir(parents=True,exist_ok=True);snd.write_bytes(raw)
         events=['music.menu','music.game','music.creative','music.under_water','music.overworld.badlands','music.overworld.bamboo_jungle','music.overworld.cherry_grove','music.overworld.deep_dark','music.overworld.desert','music.overworld.dripstone_caves','music.overworld.flower_forest','music.overworld.forest','music.overworld.frozen_peaks','music.overworld.grove','music.overworld.jagged_peaks','music.overworld.jungle','music.overworld.lush_caves','music.overworld.meadow','music.overworld.old_growth_taiga','music.overworld.snowy_slopes','music.overworld.sparse_jungle','music.overworld.stony_peaks','music.overworld.swamp']
-        (mc/'sounds.json').write_text(json.dumps({e:{'replace':True,'sounds':[{'name':'minecraft:music/christmas_calm','stream':True}]} for e in events}))
-        (out/'MUSIC-CREDITS.txt').write_text('Jingle Bells (Calm) - Kevin MacLeod (incompetech.com)\nCC BY 3.0 https://creativecommons.org/licenses/by/3.0/\nSource: https://commons.wikimedia.org/wiki/File:Jingle_Bells_(Calm)_(Kevin_MacLeod)_(ISRC_USUAN1100188).oga\nUnmodified recording; filename changed.\n')
+        # Each game event uses the same five-track pool; menu remains a single dedicated track.
+        from urllib.parse import quote
+        tracks=[
+            ('silent_night','Silent Night','Silent Night (Kevin MacLeod) (ISRC USUAN1100075).oga','3.0'),
+            ('deck_the_halls','Deck the Halls A','Deck the Halls A (Kevin MacLeod) (ISRC USUAN1100263).oga','2.0'),
+            ('oh_christmas_tree','Oh Christmas Tree','Oh Christmas Tree.ogg','2.0'),
+            ('we_wish_you','We Wish You a Merry Christmas','We Wish you a Merry Christmas (Kevin MacLeod ) (ISRC USUAN1100369).oga','3.0'),
+            ('what_child_is_this','What Child Is This','What Child is This (Kevin MacLeod) (ISRC USUAN1100012).oga','3.0'),
+        ]
+        credits=['Jingle Bells (Calm) - Kevin MacLeod (incompetech.com)\nCC BY 3.0 https://creativecommons.org/licenses/by/3.0/\nSource: https://commons.wikimedia.org/wiki/File:Jingle_Bells_(Calm)_(Kevin_MacLeod)_(ISRC_USUAN1100188).oga\nUnmodified recording; filename changed.\n']
+        pool=[]
+        hashes={hashlib.sha256(raw).hexdigest()}
+        for key,title,filename,license_version in tracks:
+            filename=filename.replace(' ','_')
+            digest=hashlib.md5(filename.encode('utf-8')).hexdigest()
+            url='https://upload.wikimedia.org/wikipedia/commons/'+digest[0]+'/'+digest[:2]+'/'+quote(filename,safe='')
+            data=get(url)
+            assert data.startswith(b'OggS') and b'\x01vorbis' in data[:512] and len(data)>100000, title
+            digest=hashlib.sha256(data).hexdigest()
+            assert digest not in hashes, 'Duplicate recording: '+title
+            hashes.add(digest)
+            path=mc/'sounds/music/christmas'/ (key+'.ogg')
+            path.parent.mkdir(parents=True,exist_ok=True)
+            path.write_bytes(data)
+            pool.append({'name':'minecraft:music/christmas/'+key,'stream':True,'weight':1})
+            credits.append(title+' - Kevin MacLeod (incompetech.com)\nCC BY '+license_version+' https://creativecommons.org/licenses/by/'+license_version+'/\nSource: https://commons.wikimedia.org/wiki/File:'+quote(filename,safe='')+'\nUnmodified recording; filename changed.\n')
+            print('Verified music',title,len(data),'bytes',digest)
+        sound_events={e:{'replace':True,'sounds':pool} for e in events if e!='music.menu'}
+        sound_events['music.menu']={'replace':True,'sounds':[{'name':'minecraft:music/christmas_calm','stream':True}]}
+        (mc/'sounds.json').write_text(json.dumps(sound_events,indent=2))
+        (out/'MUSIC-CREDITS.txt').write_text('\n'.join(credits),encoding='utf-8')
