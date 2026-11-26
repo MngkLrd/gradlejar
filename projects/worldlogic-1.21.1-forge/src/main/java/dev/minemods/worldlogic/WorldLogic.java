@@ -48,7 +48,6 @@ public final class WorldLogic {
   bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,Expedition::mined);
   bus.addListener(Expedition::logout);
   bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,CombatConsequences::damage);
-  bus.addListener(CombatConsequences::heal);
   bus.addListener(CombatConsequences::tick);
   bus.addListener(CombatConsequences::logout);
   bus.addListener(Pursuit::tick);

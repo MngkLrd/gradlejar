@@ -30,6 +30,7 @@ public final class ReleaseChecks {
   run();var l=e.getServer().overworld();
   check(Material.block(Blocks.GLASS.defaultBlockState(),"glass"),"glass tag");
   check(Material.block(Blocks.IRON_BLOCK.defaultBlockState(),"ricochet_metal"),"metal tag");
+  check(Material.item(new ItemStack(Items.GLASS_BOTTLE),"fragile_cargo"),"fragile cargo tag");
   check(WorldState.get(l)!=null&&PocketData.get(l)!=null,"saved data");
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_CORE_TESTS_PASSED");
  }
