@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       project_dir:
-        description: 'Project: . or projects/fieldkit-26.3'
+        description: 'Project path, . for FieldKit, or @slug for all enrolled QA ports'
         required: true
         default: '.'
         type: string
@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       project_dirs: ${{ steps.select.outputs.project_dirs }}
+      qa_enabled: ${{ steps.select.outputs.qa_enabled }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,6 +32,7 @@ jobs:
 
   build:
     needs: plan
+    if: needs.plan.outputs.project_dirs != '[]'
     strategy:
       fail-fast: false
       matrix:
@@ -432,8 +434,65 @@ jobs:
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: python3 "$PROJECT_DIR/tools/smoke_server.py" "$PROJECT_DIR"
+      - name: Resolve v2 quality policy
+        id: qa-policy
+        env:
+          PROJECT_DIR: ${{ matrix.project_dir }}
+        run: python3 -m tools.qa.prepare "$PROJECT_DIR" >> "$GITHUB_OUTPUT"
+      - name: Install exact runtime Java for production test
+        if: steps.qa-policy.outputs.mode == 'server' && steps.qa-policy.outputs.runtime_java != steps.profile.outputs.java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.qa-policy.outputs.runtime_java }}
+      - name: QA v2 production JAR release gate
+        id: qa
+        timeout-minutes: 18
+        env:
+          PROJECT_DIR: ${{ matrix.project_dir }}
+          JAR_PATH: ${{ steps.verify.outputs.jar_path }}
+          REPORT: qa-report-${{ strategy.job-index }}.json
+          QA_WORK: qa-work-${{ strategy.job-index }}
+        run: python3 -m tools.qa.gate "$PROJECT_DIR" --jar "$JAR_PATH" --report "$REPORT" --work "$QA_WORK"
+      - name: Record failure or skipped quality gate
+        if: always()
+        env:
+          PROJECT_DIR: ${{ matrix.project_dir }}
+          REPORT: qa-report-${{ strategy.job-index }}.json
+          QA_WORK: qa-work-${{ strategy.job-index }}
+          BUILD_LOG: build-output-${{ strategy.job-index }}.log
+        run: |
+          if [ ! -s "$REPORT" ]; then
+            python3 -m tools.qa.gate "$PROJECT_DIR" --report "$REPORT" --work "$QA_WORK" --failure-log "$BUILD_LOG" || true
+          fi
+      - name: Upload machine-readable QA result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-report-${{ strategy.job-index }}-${{ github.run_attempt }}
+          path: qa-report-${{ strategy.job-index }}.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Upload diagnostic logs for failed QA
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-diagnostics-${{ strategy.job-index }}-${{ github.run_attempt }}
+          path: |
+            qa-work-${{ strategy.job-index }}/logs/
+            build-output-${{ strategy.job-index }}.log
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Upload unapproved candidate for manual debugging only
+        if: always() && steps.verify.outcome == 'success' && steps.qa.outputs.eligible != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-candidate-NOT-RELEASE-${{ strategy.job-index }}
+          path: ${{ steps.verify.outputs.jar_path }}
+          if-no-files-found: warn
+          retention-days: 7
       - name: Upload compiled JAR as workflow artifact (release fallback)
-        if: steps.verify.outcome == 'success'
+        if: success() && steps.verify.outcome == 'success' && steps.qa.outputs.eligible == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: jar-${{ steps.profile.outputs.slug }}-${{ steps.profile.outputs.minecraft }}-${{ steps.profile.outputs.loader }}-${{ steps.profile.outputs.version }}-${{ strategy.job-index }}
@@ -448,7 +507,7 @@ jobs:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
         run: python3 tools/verify_wallslam_release.py "$PROJECT_DIR"
       - name: Publish JAR to GitHub prerelease
-        if: github.event_name != 'pull_request'
+        if: success() && github.event_name != 'pull_request' && steps.qa.outputs.eligible == 'true'
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
@@ -458,13 +517,14 @@ jobs:
           MOD_VERSION: ${{ steps.profile.outputs.version }}
           MOD_LOADER: ${{ steps.profile.outputs.loader }}
           MC_VERSION: ${{ steps.profile.outputs.minecraft }}
+          QA_LEVEL: ${{ steps.qa.outputs.level }}
         run: |
           set -euo pipefail
           tag="ci-${MOD_SLUG}-mc${MC_VERSION}-${MOD_LOADER}-${MOD_VERSION}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
           gh release create "$tag" "$JAR_PATH" "$CHECKSUM_PATH" \
             --target "$GITHUB_SHA" \
             --title "${MOD_SLUG} ${MOD_VERSION} (Minecraft ${MC_VERSION}, ${MOD_LOADER}) — CI ${GITHUB_RUN_NUMBER}" \
-            --notes "Compiled with official Minecraft/NeoForge dependencies. Static validation passed. Client gameplay untested." \
+            --notes "Quality level QA-${QA_LEVEL}. QA-2 is legacy/static only; QA-4 is production-server gameplay verified. Manual client gameplay untested." \
             --prerelease
           echo "### Download compiled JAR" >> "$GITHUB_STEP_SUMMARY"
           echo "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${tag}" >> "$GITHUB_STEP_SUMMARY"
@@ -757,3 +817,45 @@ jobs:
         with:
           name: FragileGlass-26x-1.0.2
           path: FragileGlass-26x-1.0.2.zip
+
+
+  package-qa-v2:
+    needs: [plan, build]
+    if: always() && needs.plan.result == 'success' && needs.plan.outputs.qa_enabled == 'true' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retrieve QA evidence
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: qa-report-*-${{ github.run_attempt }}
+          path: qa-input/reports
+      - name: Retrieve eligible release JARs
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: jar-*
+          path: qa-input/jars
+      - name: Build complete, checksum-matched release cohorts
+        run: python3 -m tools.qa.bundle qa-input/reports qa-input/jars qa-bundles
+      - name: Upload bundles and separate evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-v2-bundles-${{ github.run_attempt }}
+          path: qa-bundles/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish only complete verified cohorts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for zip in qa-bundles/*.zip; do
+            tag="qa-v2-$(basename "$zip" .zip)-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
+            gh release create "$tag" "$zip" --target "$GITHUB_SHA" --title "$(basename "$zip" .zip)" --notes "Every declared target passed production-JAR server gameplay QA-4. Manual client verification not included. See workflow evidence." --prerelease
+          done

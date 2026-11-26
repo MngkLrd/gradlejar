@@ -37,12 +37,13 @@ def main():
         jar=Path(args.jar).resolve()
         report["jar"]=jar.name
         report["sha256"]=sha256(jar)
-        report["qa_level"]=2 # existing verify_build_output.py is the prerequisite
+        report["qa_level"]=1 # successful Gradle compilation; strict static checks still pending
         if q["mode"]=="legacy":
-            report.update(status="legacy-static-only",eligible=True)
+            report.update(status="legacy-static-only",eligible=True,qa_level=2)
             return 0
         report["release_targets"]=q["release_targets"]
         report["static"]=validate_jar(jar,p)
+        report["qa_level"]=2
         if q["mode"]=="client":
             report.update(status="client-candidate-awaiting-validation",eligible=False)
             return 2
