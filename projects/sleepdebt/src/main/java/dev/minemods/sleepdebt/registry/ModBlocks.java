@@ -26,7 +26,7 @@ public final class ModBlocks {
      .noCollission().randomTicks().instabreak().sound(SoundType.CROP)));
  public static final DeferredBlock<Block> INCENSE_BURNER=BLOCKS.register(
   "incense_burner",()->new IncenseBurnerBlock(BlockBehaviour.Properties.of()
-    .mapColor(MapColor.TERRACOTTA_RED).strength(1.3f).sound(SoundType.DECORATED_POT).noOcclusion()));
+    .mapColor(MapColor.TERRACOTTA_RED).strength(1.3f).sound(SoundType.DECORATED_POT).noOcclusion().lightLevel(s->s.getValue(IncenseBurnerBlock.FILL)>0?3:0)));
  public static final DeferredBlock<Block> CAMP_LANTERN=BLOCKS.register("camp_lantern",
   ()->new CampLanternBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(1f).sound(SoundType.LANTERN).noOcclusion().lightLevel(s->13)));
  public static final DeferredBlock<Block> DREAMCATCHER=BLOCKS.register("dreamcatcher",

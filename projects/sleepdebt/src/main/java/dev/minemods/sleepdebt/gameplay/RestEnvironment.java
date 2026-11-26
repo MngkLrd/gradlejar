@@ -29,7 +29,7 @@ public final class RestEnvironment {
   var level=player.serverLevel();
   boolean sheltered=!level.canSeeSky(pos.above());
   // Non-occluding awning geometry can be missed by the sky-light test.
-  for(int y=1;y<=3&&!sheltered;y++)sheltered=level.getBlockState(pos.above(y)).is(ModBlocks.CAMP_AWNING.get());
+  for(int y=1;y<=3&&!sheltered;y++)sheltered=dev.minemods.sleepdebt.block.CampAwningBlock.isRoof(level.getBlockState(pos.above(y)));
   boolean threatened=threatened(player,11);
   boolean rain=!sheltered&&level.isRainingAt(pos.above());
   float temperature=level.getBiome(pos).value().getBaseTemperature();

@@ -17,14 +17,16 @@ public final class ShowcaseBuilder {
   ServerLevel level=player.serverLevel();
   BlockPos origin=player.blockPosition().offset(4,0,3);
   Map<BlockPos,BlockState> placements=new LinkedHashMap<>();
-  placements.put(origin,ModBlocks.CAMP_BEDROLL.get().defaultBlockState());
-  placements.put(origin.above(),ModBlocks.CAMP_AWNING.get().defaultBlockState());
+  var bedroll=(dev.minemods.sleepdebt.block.CampBedrollBlock)ModBlocks.CAMP_BEDROLL.get();
+  var awning=(dev.minemods.sleepdebt.block.CampAwningBlock)ModBlocks.CAMP_AWNING.get();
+  placements.putAll(bedroll.plan(origin,net.minecraft.core.Direction.NORTH));
+  placements.putAll(awning.plan(origin.west(),net.minecraft.core.Direction.NORTH));
   placements.put(origin.east(2),ModBlocks.CAMP_LANTERN.get().defaultBlockState());
   BlockPos machine=origin.west(2);
   placements.put(machine,ModBlocks.COFFEE_MACHINE.get().defaultBlockState());
   for(BlockPos pos:placements.keySet()){
    if(!level.getBlockState(pos).isAir())return false;
-   if(!pos.equals(origin.above())&&level.getBlockState(pos.below()).isAir())return false;
+   if(pos.getY()==origin.getY()&&level.getBlockState(pos.below()).isAir())return false;
   }
   for(var placement:placements.entrySet())
    level.setBlock(placement.getKey(),placement.getValue(),3);

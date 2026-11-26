@@ -20,6 +20,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -27,8 +30,11 @@ import org.jetbrains.annotations.Nullable;
 
 public final class IncenseBurnerBlock extends BaseEntityBlock {
  public static final MapCodec<IncenseBurnerBlock> CODEC=simpleCodec(IncenseBurnerBlock::new);
- private static final VoxelShape SHAPE=box(3,0,3,13,9,13);
- public IncenseBurnerBlock(Properties properties){super(properties);}
+ public static final IntegerProperty FILL=IntegerProperty.create("fill",0,5);
+ private static final VoxelShape SHAPE=box(3,0,3,13,8,13);
+ public IncenseBurnerBlock(Properties properties){super(properties);registerDefaultState(stateDefinition.any().setValue(FILL,0));}
+ @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){b.add(FILL);}
+ public static int visualFill(int ticks){return Math.max(0,Math.min(5,(ticks+2399)/2400));}
  @Override protected MapCodec<? extends BaseEntityBlock> codec(){return CODEC;}
  @Override public RenderShape getRenderShape(BlockState state){return RenderShape.MODEL;}
  @Override protected VoxelShape getShape(BlockState state,BlockGetter world,BlockPos pos,CollisionContext ctx){return SHAPE;}

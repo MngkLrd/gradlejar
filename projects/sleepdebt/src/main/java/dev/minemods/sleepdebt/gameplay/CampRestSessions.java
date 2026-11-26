@@ -47,8 +47,7 @@ public final class CampRestSessions {
   if(session==null)return;
   boolean invalid=player.isRemoved()||player.isSpectator()||player.isSleeping()
       ||!session.dimension.equals(player.level().dimension().location().toString())
-      ||!player.level().getBlockState(session.bedroll).is(
-        dev.minemods.sleepdebt.registry.ModBlocks.CAMP_BEDROLL.get())
+      ||!completeBedroll(player,session.bedroll)
       ||player.position().distanceToSqr(session.origin)>3.24
       ||player.getHealth()<session.health||player.hurtTime>0;
   if(invalid){
@@ -67,6 +66,10 @@ public final class CampRestSessions {
    player.displayClientMessage(Component.translatable("message.sleepdebt.camp_progress",
      Math.min(99,(int)(100*elapsed/DURATION))),true);
   }
+ }
+ private static boolean completeBedroll(ServerPlayer player,BlockPos pos){
+  var state=player.level().getBlockState(pos);
+  return state.getBlock() instanceof dev.minemods.sleepdebt.block.CampBedrollBlock bedroll&&bedroll.complete(player.level(),pos,state);
  }
  public static void discard(ServerPlayer player){SESSIONS.remove(player.getUUID());}
  public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event){

@@ -23,11 +23,13 @@ public final class IncenseBurnerBlockEntity extends BlockEntity {
  public int remainingTicks(){return remainingTicks;}
  public boolean addFuel(int ticks){
   if(remainingTicks>MAX_TICKS-ticks)return false;
-  remainingTicks+=ticks;setChanged();return true;
+  remainingTicks+=ticks;setChanged();syncFill();return true;
  }
  public static void serverTick(Level level,BlockPos pos,BlockState state,IncenseBurnerBlockEntity block){
-  if(block.remainingTicks<=0||!(level instanceof ServerLevel server))return;
+  if(!(level instanceof ServerLevel server))return;
+  if(block.remainingTicks<=0){block.syncFill();return;}
   block.remainingTicks--;
+  block.syncFill();
   if(server.getGameTime()%20==0){
    server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
      pos.getX()+.5,pos.getY()+.72,pos.getZ()+.5,2,.12,.06,.12,.005);
@@ -40,6 +42,15 @@ public final class IncenseBurnerBlockEntity extends BlockEntity {
    block.setChanged();
   }
   if(block.remainingTicks==0)block.setChanged();
+ }
+ private void syncFill(){
+  if(level==null||level.isClientSide)return;
+  var state=level.getBlockState(worldPosition);
+  if(state.getBlock() instanceof dev.minemods.sleepdebt.block.IncenseBurnerBlock){
+   var property=dev.minemods.sleepdebt.block.IncenseBurnerBlock.FILL;
+   int fill=dev.minemods.sleepdebt.block.IncenseBurnerBlock.visualFill(remainingTicks);
+   if(state.getValue(property)!=fill)level.setBlock(worldPosition,state.setValue(property,fill),3);
+  }
  }
  @Override protected void loadAdditional(CompoundTag tag,HolderLookup.Provider provider){
   super.loadAdditional(tag,provider);
