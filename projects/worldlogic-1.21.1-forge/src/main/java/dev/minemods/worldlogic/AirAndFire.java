@@ -23,22 +23,23 @@ public final class AirAndFire {
   }
   return seen.size()>128?start:null;
  }
- static boolean nearHeat(ServerLevel l,BlockPos p,int r){for(BlockPos q:BlockPos.betweenClosed(p.offset(-r,-1,-r),p.offset(r,1,r))){if(!l.hasChunkAt(q))continue;var s=l.getBlockState(q);if(s.is(Blocks.FIRE)||s.is(Blocks.LAVA)||s.getBlock() instanceof CampfireBlock&&s.getValue(BlockStateProperties.LIT))return true;}return false;}
+ static boolean nearHeat(ServerLevel l,BlockPos p,int r){for(BlockPos q:BlockPos.betweenClosed(p.offset(-r,-1,-r),p.offset(r,1,r))){if(!l.hasChunkAt(q))continue;var s=l.getBlockState(q);if(s.is(Blocks.FIRE)||s.is(Blocks.SOUL_FIRE)||s.is(Blocks.LAVA)||s.is(Blocks.MAGMA_BLOCK)||s.hasProperty(BlockStateProperties.LIT)&&s.getValue(BlockStateProperties.LIT)&&(s.is(Blocks.FURNACE)||s.is(Blocks.SMOKER)||s.is(Blocks.BLAST_FURNACE))||s.getBlock() instanceof CampfireBlock&&s.getValue(BlockStateProperties.LIT))return true;}return false;}
  static void breathe(ServerLevel l,Player p,Body.State st,boolean water,long now){
   if(water||p.hasEffect(MobEffects.WATER_BREATHING)){st.pocket=null;st.pocketCheck=0;return;}
   BlockPos head=BlockPos.containing(p.getX(),p.getEyeY(),p.getZ());
   if(now>=st.pocketCheck){st.pocketCheck=now+40;st.pocket=null;
-   if(head.getY()<l.getSeaLevel()&&!l.canSeeSky(head)&&l.isEmptyBlock(head)){
+   if(l.isEmptyBlock(head)&&(!l.canSeeSky(head)||st.water)){
     Set<BlockPos> cells=new HashSet<>();ArrayDeque<BlockPos> todo=new ArrayDeque<>();todo.add(head);cells.add(head);
     boolean open=false,wet=false;
-    while(!todo.isEmpty()&&!open){BlockPos q=todo.remove();if(l.canSeeSky(q)||cells.size()>128){open=true;break;}
+    while(!todo.isEmpty()&&!open){BlockPos q=todo.remove();if(cells.size()>128||l.canSeeSky(q)&&q.getY()>=l.getSeaLevel()){open=true;break;}
      for(Direction d:Direction.values()){BlockPos t=q.relative(d);if(!l.hasChunkAt(t)||!l.isInWorldBounds(t)){open=true;break;}if(l.getFluidState(t).is(net.minecraft.tags.FluidTags.WATER))wet=true;else if(l.isEmptyBlock(t)&&cells.add(t.immutable()))todo.add(t.immutable());}
     }
     if(open||!wet){var data=PocketData.get(l);if(data.pockets.removeIf(a->a.cells.contains(head)))data.setDirty();}
     if(!open&&wet){var data=PocketData.get(l);var list=data.pockets;
-     list.removeIf(a->a.cells.contains(head)&&!a.cells.equals(cells));data.setDirty();
+     int overlapOxygen=0,overlap=0;for(Pocket old:list){if(old.cells.stream().anyMatch(cells::contains)){overlapOxygen+=old.oxygen;overlap+=old.cells.size();}}
+     if(overlap>0)list.removeIf(a->a.cells.stream().anyMatch(cells::contains)&&!a.cells.equals(cells));data.setDirty();
      for(Pocket a:list)if(a.cells.equals(cells)){st.pocket=a;break;}
-     if(st.pocket==null&&list.size()<256){st.pocket=new Pocket(cells,now);list.add(st.pocket);}
+     if(st.pocket==null&&list.size()<256){st.pocket=new Pocket(cells,now);if(overlap>0)st.pocket.oxygen=Math.min(st.pocket.oxygen,overlapOxygen*cells.size()/overlap);list.add(st.pocket);}
     }
    }
   }
@@ -50,6 +51,7 @@ public final class AirAndFire {
   var map=HEAT.computeIfAbsent(l,k->new HashMap<>());if(map.size()>512)map.clear();map.entrySet().removeIf(a->a.getValue()<now);
   // Sample bounded local positions instead of scanning every loaded block.
   for(int i=0;i<32;i++){BlockPos q=p.blockPosition().offset(l.random.nextInt(13)-6,l.random.nextInt(7)-3,l.random.nextInt(13)-6);if(!l.hasChunkAt(q))continue;var s=l.getBlockState(q);
+   if((Rules.on("residual_heat")||Rules.on("thermal_shock"))&&(s.is(Blocks.LAVA)||s.is(Blocks.FIRE)||s.is(Blocks.SOUL_FIRE)||s.is(Blocks.MAGMA_BLOCK)||s.hasProperty(BlockStateProperties.LIT)&&s.getValue(BlockStateProperties.LIT)&&(s.is(Blocks.FURNACE)||s.is(Blocks.SMOKER)||s.is(Blocks.BLAST_FURNACE))))for(Direction d:Direction.values())map.put(q.relative(d),now+200);
    if(s.getBlock() instanceof CampfireBlock&&s.getValue(BlockStateProperties.LIT)){
     if(Rules.on("residual_heat")||Rules.on("thermal_shock"))for(Direction d:Direction.values())map.put(q.relative(d),now+200);
     BlockPos exit=(Rules.on("draft_smoke")||Rules.on("fire_needs_air"))?vent(l,q.above()):q.above();
@@ -59,7 +61,7 @@ public final class AirAndFire {
    }
   }
   int budget=20;for(var entry:map.entrySet()){if(budget--<=0)break;BlockPos q=entry.getKey();if(!l.hasChunkAt(q))continue;var s=l.getBlockState(q);boolean wet=l.isRainingAt(q.above())||l.getFluidState(q.above()).is(net.minecraft.tags.FluidTags.WATER);
-   if(wet){if(Rules.on("residual_heat"))l.sendParticles(ParticleTypes.CLOUD,q.getX()+.5,q.getY()+1,q.getZ()+.5,1,.15,.05,.15,.01);if(Rules.on("thermal_shock")&&Material.block(s,"glass")&&l.random.nextFloat()<.025)l.destroyBlock(q,false);}
+   if(wet){if(Rules.on("residual_heat"))l.sendParticles(ParticleTypes.CLOUD,q.getX()+.5,q.getY()+1,q.getZ()+.5,1,.15,.05,.15,.01);if(Rules.on("thermal_shock")&&l.random.nextFloat()<.025){if(Material.block(s,"glass"))l.destroyBlock(q,false);else if(s.is(Blocks.STONE))l.setBlock(q,Blocks.COBBLESTONE.defaultBlockState(),3);else if(s.is(Blocks.STONE_BRICKS))l.setBlock(q,Blocks.CRACKED_STONE_BRICKS.defaultBlockState(),3);else if(s.is(Blocks.DEEPSLATE_BRICKS))l.setBlock(q,Blocks.CRACKED_DEEPSLATE_BRICKS.defaultBlockState(),3);}}
   }
  }
  public static void onExplosion(ExplosionEvent.Detonate e){if(!Rules.on("ashes")||!(e.getLevel() instanceof ServerLevel l))return;int n=0;for(BlockPos p:e.getAffectedBlocks()){if(n++>=24)break;l.sendParticles(ParticleTypes.ASH,p.getX()+.5,p.getY()+.5,p.getZ()+.5,2,.3,.3,.3,.01);}}

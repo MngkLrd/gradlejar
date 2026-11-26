@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "WeightedPlateMixin",
-    "StonePlateMixin"
+    "StonePlateMixin",
+    "ArrowLifeMixin",
+    "FrictionMixin"
   ],
   "injectors": {
     "defaultRequire": 1

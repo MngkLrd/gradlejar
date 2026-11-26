@@ -28,6 +28,11 @@ public final class Material {
   if(e instanceof LivingEntity l)for(ItemStack s:l.getArmorSlots())m+=Math.min(.14,weight(s)*.07);
   return m;
  }
+ public static String family(BlockState s){
+  for(String k:new String[]{"ricochet_metal","ricochet_stone","wood","soft_landing","glass","unstable"})if(block(s,k))return k;
+  return BuiltInRegistries.BLOCK.getKey(s.getBlock()).toString();
+ }
+ public static double surfaceBounce(BlockState s){return block(s,"ricochet_metal")?.70:block(s,"ricochet_stone")?.50:block(s,"wood")?.18:0;}
  public static double armorNoise(LivingEntity e){
   double n=1;
   for(ItemStack s:e.getArmorSlots()){if(s.isEmpty())continue;String p=BuiltInRegistries.ITEM.getKey(s.getItem()).getPath();
