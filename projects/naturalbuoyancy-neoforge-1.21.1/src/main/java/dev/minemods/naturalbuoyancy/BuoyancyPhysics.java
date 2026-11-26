@@ -52,3 +52,5 @@ public final class BuoyancyPhysics {
         return DensityRules.byPath(BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath());
     }
 }
+
+// Rebuild all targets together for the verified JAR-only archive.
