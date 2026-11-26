@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "fooddigestion",
+  "version": "1.0.0",
+  "name": "Food Digestion",
+  "description": "Food restores part of hunger immediately and digests the rest over time.",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.minemods.fooddigestion.FoodDigestion"
+    ]
+  },
+  "mixins": [
+    "fooddigestion.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.1.2",
+    "java": ">=25"
+  }
+}
