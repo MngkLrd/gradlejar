@@ -61,6 +61,16 @@ public final class WorldLogic {
   bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,TorchLifetime::placed);
   bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,TorchLifetime::broken);
   bus.addListener(TorchLifetime::tick);
+  bus.addListener(Condition::tick);
+  bus.addListener(Condition::hurt);
+  bus.addListener(Condition::logout);
+  bus.addListener(Balance::tick);
+  bus.addListener(Balance::jump);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.HIGHEST,Balance::attack);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.HIGHEST,Balance::interact);
+  bus.addListener(Balance::use);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,Balance::breakSpeed);
+  bus.addListener(Balance::logout);
   bus.addListener(Body::tick);
   bus.addListener(Body::jump);
   bus.addListener(Body::breakSpeed);

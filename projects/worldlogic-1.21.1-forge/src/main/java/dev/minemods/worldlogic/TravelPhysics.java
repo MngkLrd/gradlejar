@@ -54,7 +54,7 @@ public final class TravelPhysics {
   Step old=STEPS.get(p);Vec3 delta=old==null?Vec3.ZERO:p.position().subtract(old.position);
   if(Rules.on("heavy_swing")&&SWING.getOrDefault(p,0L)>now)p.setSprinting(false);
   boolean valid=old!=null&&old.time==now-1&&delta.lengthSqr()<4&&!p.isPassenger()&&!p.isFallFlying()&&!p.onClimbable()&&!p.isInWater()&&!p.getAbilities().flying;
-  if(Rules.on("wall_collision")&&valid&&old.sprint&&old.velocity.horizontalDistance()>.38&&delta.horizontalDistance()<old.velocity.horizontalDistance()*.35&&IMPACT.getOrDefault(p,0L)<=now){
+  if(!Rules.on("physical_falls")&&Rules.on("wall_collision")&&valid&&old.sprint&&old.velocity.horizontalDistance()>.38&&delta.horizontalDistance()<old.velocity.horizontalDistance()*.35&&IMPACT.getOrDefault(p,0L)<=now){
    Vec3 ahead=old.velocity.multiply(1,0,1).normalize().scale(.22);
    // Detect an actual blocking collision, not releasing the sprint key or climbing a step.
    if(!l.noCollision(p,p.getBoundingBox().move(ahead.x,0,ahead.z))&& !l.noCollision(p,p.getBoundingBox().move(ahead.x,.6,ahead.z))){

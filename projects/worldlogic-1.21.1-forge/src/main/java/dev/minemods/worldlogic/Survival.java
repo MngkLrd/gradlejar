@@ -25,6 +25,7 @@ public final class Survival {
  public static void jump(LivingEvent.LivingJumpEvent e){if(e.getEntity() instanceof Player p)work(p,1.2);}
  public static void hit(LivingHurtEvent e){if(!e.isCanceled()&&e.getSource().getEntity() instanceof Player p)work(p,1.8);}
  public static void fall(LivingFallEvent e){if(!(e.getEntity() instanceof Player p)||!active(p)||!Rules.on("injuries")||e.getDistance()<6||e.getDamageMultiplier()<=0)return;var l=(ServerLevel)p.level();long duration=(long)Math.min(1800,(e.getDistance()-5)*75*Rules.strength("impact"));p.getPersistentData().putLong(INJURY,Math.max(p.getPersistentData().getLong(INJURY),l.getGameTime()+duration));p.displayClientMessage(Component.literal("Your legs are injured. Rest and avoid heavy work."),true);}
+ static boolean injured(Player p,long now){return Rules.on("injuries")&&p.getPersistentData().getLong(INJURY)>now;}
  public static double penalty(Player p,long now){
   double result=0;
   if(Rules.on("exertion"))result=Math.max(result,Math.max(0,fatigue(p)-40)*.005);
@@ -39,7 +40,7 @@ public final class Survival {
   if(Rules.on("exertion")){
    boolean moving=!p.isPassenger()&&(p.isSprinting()||p.isSwimming()||p.onClimbable()&&p.getDeltaMovement().y>.05);
    double mass=Material.mass(p);
-   if(moving){double armor=Rules.on("armor_fatigue")?CombatConsequences.armorWork(Expedition.armorLoad(p)):1;work(p,(p.isSwimming()?2.4:1.45)*Math.max(.8,mass)*armor);p.causeFoodExhaustion((float)(.08*Math.max(1,mass)*armor*Rules.strength("movement")));}
+   if(moving){double armor=Rules.on("armor_fatigue")?CombatConsequences.armorWork(Expedition.armorLoad(p)):1;work(p,(p.isSwimming()?2.4:1.45)*Math.max(.8,mass)*armor*Condition.workFactor(p));p.causeFoodExhaustion((float)(.08*Math.max(1,mass)*armor*Condition.workFactor(p)*Rules.strength("movement")));}
    else if(p.onGround()&&!p.isInWater()&&!p.isUsingItem()&&now-LAST_WORK.getOrDefault(p,-100L)>=60){double recovery=p.getFoodData().getFoodLevel()>=12?2.0:.6;if(p.getDeltaMovement().horizontalDistance()<.04)recovery*=2;if(AirAndFire.nearHeat(l,p.blockPosition(),2)&&p.getDeltaMovement().horizontalDistance()<.04)recovery*=1.6;tag.putDouble(FATIGUE,Math.max(0,fatigue(p)-recovery));}
    if(fatigue(p)>=75){p.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,35,0,false,false,false));if(fatigue(p)>=92)p.setSprinting(false);}
   }

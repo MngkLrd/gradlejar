@@ -9,7 +9,11 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 public final class ReleaseChecks {
  private static void check(boolean ok,String detail){if(!ok)throw new IllegalStateException("World Logic test failed: "+detail);}
  public static void run(){
-  check(Rules.keys().size()>=77,"rule count");
+  check(Rules.keys().size()>=81,"rule count");
+  check(Balance.threshold(true,80,2)<Balance.threshold(false,0,0),"injury lowers balance threshold");
+  check(Balance.slipRisk(true,80,2,.1)>Balance.slipRisk(false,0,0,0),"injured slip risk");
+  check(Balance.duration(1,true)>Balance.duration(.5,false),"fall recovery time");
+  check(Condition.weakness(.2,5)>Condition.weakness(1,20),"condition curve");
   check(TravelPhysics.boatFactor(7)<TravelPhysics.boatFactor(1),"boat overload curve");
   check(TravelPhysics.crashDamage(.2)==0&&TravelPhysics.crashDamage(.8)>0,"wall impact threshold");
   check(TorchLifetime.lifetime(2)<TorchLifetime.lifetime(1),"torch lifetime scaling");

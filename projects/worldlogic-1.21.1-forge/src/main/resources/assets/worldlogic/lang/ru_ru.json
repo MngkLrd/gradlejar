@@ -11,5 +11,9 @@
   "message.worldlogic.climb_hit": "Ты потерял хват!",
   "message.worldlogic.cargo_broken": "Хрупкий груз разбился: %s шт.",
   "message.worldlogic.leash_tension": "Животное сопротивляется поводку. Иди медленнее.",
-  "message.worldlogic.boat_loaded": "Тяжёлый груз: скорость лодки ограничена до %s%%."
+  "message.worldlogic.boat_loaded": "Тяжёлый груз: скорость лодки ограничена до %s%%.",
+  "message.worldlogic.fall_collision": "Ты потерял равновесие при столкновении!",
+  "message.worldlogic.fall_slip": "Ты поскользнулся!",
+  "message.worldlogic.fall_jump": "Ты не удержался при прыжке!",
+  "message.worldlogic.fall_debug": "Проверка падения."
 }

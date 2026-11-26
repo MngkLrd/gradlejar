@@ -11,5 +11,9 @@
   "message.worldlogic.climb_hit": "You lost your grip!",
   "message.worldlogic.cargo_broken": "Fragile cargo broke: %s item(s).",
   "message.worldlogic.leash_tension": "The animal resists the leash. Walk slowly.",
-  "message.worldlogic.boat_loaded": "Heavy cargo: boat speed limited to %s%%."
+  "message.worldlogic.boat_loaded": "Heavy cargo: boat speed limited to %s%%.",
+  "message.worldlogic.fall_collision": "You lost your balance on impact!",
+  "message.worldlogic.fall_slip": "You slipped!",
+  "message.worldlogic.fall_jump": "You missed your footing!",
+  "message.worldlogic.fall_debug": "Test fall."
 }
