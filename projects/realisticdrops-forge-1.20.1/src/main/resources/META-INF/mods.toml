@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved"
+[[mods]]
+modId="realisticdrops"
+version="1.0.0"
+displayName="Realistic Drops"
+authors="MineMods"
+description="Thrown items inherit player momentum."
+[[dependencies.realisticdrops]]
+modId="forge"
+mandatory=true
+versionRange="[47.0.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.realisticdrops]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1]"
+ordering="NONE"
+side="BOTH"

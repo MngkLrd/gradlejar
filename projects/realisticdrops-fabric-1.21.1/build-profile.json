@@ -1,0 +1,9 @@
+{
+  "slug": "realisticdrops",
+  "version": "1.0.0",
+  "minecraft": "1.21.1",
+  "loader": "fabric",
+  "java": "21",
+  "gradle": "8.14.3",
+  "jar_glob": "realisticdrops-fabric-mc1.21.1-1.0.0.jar"
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "realisticdrops",
+  "version": "1.0.0",
+  "name": "Realistic Drops",
+  "description": "Thrown items inherit player momentum.",
+  "environment": "*",
+  "mixins": [
+    "realisticdrops.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.2",
+    "java": ">=25"
+  }
+}
