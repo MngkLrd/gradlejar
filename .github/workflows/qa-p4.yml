@@ -1,0 +1,99 @@
+name: QA v2 P4 engineering diagnostics
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - tools/qa/api_diff.py
+      - tools/qa/port_audit.py
+      - tools/qa/migration-rules.json
+      - tools/qa/assets.py
+      - tools/qa/performance.py
+      - tools/qa/virtual_player.py
+      - 'tools/qa/bot/**'
+      - tools/qa/p4.py
+      - tools/qa/scenarios/virtual-player-setup.json
+      - .github/workflows/qa-p4.yml
+permissions:
+  contents: read
+jobs:
+  api-diff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare named Mojang server APIs
+        run: |
+          python3 -m tools.qa.api_diff 26.1.2 26.3 --out p4-api/26.1.2-to-26.3.json
+          python3 -m tools.qa.api_diff 26.2 26.3 --out p4-api/26.2-to-26.3.json
+      - name: Audit real older port against 26.3 rules
+        if: always()
+        run: python3 -m tools.qa.port_audit projects/fragileglass-fabric-1.21.1 26.3 --out p4-api/fragileglass-port-audit.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p4-api-and-migration
+          path: p4-api/
+          retention-days: 30
+          if-no-files-found: warn
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 38
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - mode: performance
+            project: projects/fragileglass-fabric-26.3
+          - mode: virtual-player
+            project: projects/fragileglass-fabric-1.21.1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resolve actual project profile
+        id: profile
+        env:
+          PROJECT: ${{ matrix.project }}
+        run: python3 tools/resolve_project.py "$PROJECT" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.profile.outputs.java }}
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ steps.profile.outputs.gradle }}
+          cache-read-only: true
+      - uses: actions/setup-node@v4
+        if: matrix.mode == 'virtual-player'
+        with:
+          node-version: '22'
+      - name: Install local protocol client
+        if: matrix.mode == 'virtual-player'
+        working-directory: tools/qa/bot
+        run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Compile exact production JAR
+        env:
+          PROJECT: ${{ matrix.project }}
+        run: |
+          cd "$PROJECT"
+          gradle --no-daemon clean build
+      - name: Verify compiled artifact
+        id: jar
+        env:
+          PROJECT: ${{ matrix.project }}
+        run: python3 tools/verify_build_output.py "$PROJECT"
+      - name: Run production server engineering diagnostic
+        env:
+          MODE: ${{ matrix.mode }}
+          PROJECT: ${{ matrix.project }}
+          JAR: ${{ steps.jar.outputs.jar_path }}
+        run: python3 -m tools.qa.p4 "$MODE" "$PROJECT" "$JAR" --out p4-result
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p4-${{ matrix.mode }}-evidence
+          path: |
+            p4-result/p4-report.json
+            p4-result/runtime/logs/
+            tools/qa/bot/package-lock.json
+          if-no-files-found: warn
+          retention-days: 30

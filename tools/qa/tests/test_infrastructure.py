@@ -144,6 +144,36 @@ class PackTests(unittest.TestCase):
     def test_graphics_diagnostic(self):
         self.assertEqual(analyze("Failed to create backend OpenGL: Couldn't find matching GLX visual")[0]["category"],"graphics")
 
+class P4Tests(unittest.TestCase):
+    def test_api_signature_diff(self):
+        from tools.qa.api_diff import compare
+        a={"super":"Base","interfaces":[],"access":1,"fields":[],"methods":[{"name":"fallOn","descriptor":"(F)V","access":1}]}
+        b=dict(a,methods=[{"name":"fallOn","descriptor":"(D)V","access":1}])
+        changes=compare({"X":a,"Old":a},{"X":b,"New":b})
+        self.assertEqual({x["class"]:x["status"] for x in changes},{"New":"added","Old":"removed","X":"changed"})
+        self.assertEqual(changes[2]["changes"]["methods"]["removed"],[("fallOn","(F)V",1)])
+    def test_asset_missing_local_reference(self):
+        from tools.qa.assets import inspect
+        with tempfile.TemporaryDirectory() as tmp:
+            jar=Path(tmp)/"test.jar"
+            with zipfile.ZipFile(jar,"w") as z:
+                z.writestr("assets/test/models/item/a.json",'{"parent":"minecraft:item/generated","textures":{"layer0":"test:item/missing","layer1":"external:item/example"}}')
+            r=inspect(jar)
+            self.assertEqual(len(r["errors"]),1)
+            self.assertEqual(len(r["warnings"]),1)
+    def test_performance_parser(self):
+        from tools.qa.performance import parse_tick_query,summarize
+        self.assertEqual(parse_tick_query("Target tick rate: 20.0\nAverage time per tick: 3.45 ms"),{"mspt":3.45,"target_tps":20.0})
+        self.assertIsNone(parse_tick_query("unrecognized")["mspt"])
+        self.assertEqual(summarize([{"effective_tps":19},{"effective_tps":21}])["effective_tps"],20)
+    def test_known_incident(self):
+        self.assertTrue(any(x.get("incident")=="FG-FABRIC-TAGS" for x in analyze("Unknown block tag 'fragileglass:fragile_blocks'")))
+    def test_port_audit_read_only(self):
+        from tools.qa.port_audit import audit
+        r=audit("projects/fragileglass-fabric-1.21.1","26.3")
+        self.assertFalse(r["automatic_changes"])
+        self.assertTrue(any(x["rule"]=="MC-26-IDENTIFIER" for x in r["findings"]))
+
 class OtherTests(unittest.TestCase):
     def test_diagnostics(self):
         self.assertEqual(analyze("Caused by: org.spongepowered.asm.mixin.injection.throwables.InvalidInjectionException: target")[0]["category"],"mixin")

@@ -1,0 +1,9 @@
+{
+  "name": "minemods-qa-local-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local isolated Minecraft QA protocol client",
+  "dependencies": {
+    "mineflayer": "4.26.0"
+  }
+}

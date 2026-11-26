@@ -129,7 +129,7 @@ def play(rcon,steps,report,suite=None):
     require(any(c.get("assertion") and c["passed"] for c in report["checks"][start:]),"No scenario assertions executed")
 
 FATAL=re.compile(r"Failed to load registries|Errors in currently selected data packs|Exception in server tick loop|A critical error occurred|MixinApplyError|InvalidInjectionException|Failed to start the minecraft server",re.I)
-def run(p,q,jar,work,report,*,extra_jars=(),scenarios=None):
+def run(p,q,jar,work,report,*,extra_jars=(),scenarios=None,after_suites=None):
     work=Path(work).resolve()
     work.mkdir(parents=True,exist_ok=True)
     root=work/"server"
@@ -184,6 +184,8 @@ def run(p,q,jar,work,report,*,extra_jars=(),scenarios=None):
             report["installed_sha256"]=sha256(mods/Path(jar).name)
             for label,steps in suites:
                 play(conn,steps,report,label)
+            if after_suites is not None:
+                after_suites(conn,port,proc,report,work)
             require(not FATAL.search(log.read_text(errors="replace")),"Fatal Minecraft error during scenario")
             try: conn.cmd("stop")
             except (OSError,EOFError): pass
