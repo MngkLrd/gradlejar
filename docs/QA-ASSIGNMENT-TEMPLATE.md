@@ -1,42 +1,23 @@
-# Mod QA assignment template
+# Machine-readable mod QA assignment
 
-Copy to `tools/qa/assignments/<slug>.md` and populate from the user's requested behavior and the actual mod. This is an internal developer artifact, not a task for the user. Use one assignment for all ports and specify exceptions explicitly. Do not put test-only resources in the release JAR unless an established, reviewed harness requires it.
+The assignment is the executable test suite consumed by GitHub Actions, not a prose document for a human or another chat agent. No separate Markdown or natural-language technical specification is required.
 
-## Product and scope
-- Mod slug, release version, target Minecraft/loader pairs, Java/mappings:
-- Requested behavior and explicit non-goals:
-- Source/registration/resource inventory (list all additions or changes, including variants):
-- Dependencies and compatibility scope:
+## Required executable files
 
-## Coverage matrix
-For every feature and content entry, assign stable test IDs. A row can cover equivalent variants only if it lists them and the executable tests exercise each.
+- `tools/qa/scenarios/<slug>.json`: schema-1 server fixture and gameplay assertions, referenced by `qa.scenario` in each enrolled port's `build-profile.json`.
+- `tools/qa/scenarios/<slug>-player.json`: schema-1 network-player actions and independent server assertions, referenced by `qa.player_scenario` wherever the protocol backend is supported.
+- Additional GameTests or automated client tests when necessary, provided they are actually integrated into the GitHub Actions test path. Do not assume a new test file runs by itself.
 
-| ID | Feature/content (exact IDs where applicable) | Target(s) | Expected behavior | Backend and executable test reference | Critical? |
-|---|---|---|---|---|---|
-| EX-01 | Example feature — replace with actual mod content | All declared | Observable intended outcome | scenario path + named assertion | Yes |
+Use the actual supported schemas and actions in [server runner](../tools/qa/server.py), [player suite](../tools/qa/player_suite.py) and [Minecraft bot](../tools/qa/bot/player.cjs). Existing executable examples: [Fragile Glass server scenario](../tools/qa/scenarios/fragileglass.json) and [Fragile Glass player scenario](../tools/qa/scenarios/fragileglass-player.json). For a new mod, create tests for its own behavior, not copies of unrelated assertions.
 
-## Agent task for the test player
-For each test ID, specify:
-- Preconditions: clean world, game mode, inventory, blocks/entities, exact configuration and dependencies.
-- Player actions: concrete interaction sequence; use real network actions when supported (not a command that directly performs the behavior being tested).
-- Independent assertions: expected state before/after; use authoritative server state or appropriate client evidence.
-- Negative and edge cases: invalid target, incorrect tool, boundary condition, repeat action, multiplayer/restart/save behavior where relevant.
-- Content lifecycle as applicable: acquire/craft/place/use/equip/consume/break/drop/persist; verify all added variants, recipes, tooltips, effects, containers, mobs, worldgen, or other relevant features.
-- Backend: network player, server assertions, GameTest, or client test; identify unsupported actions, versions and required visual/manual evidence explicitly.
-- Executable test path and exact named assertion(s). Never use this document alone as a test.
+## Coverage requirements
 
-## Per-target evidence
-| Target | Test IDs executed | PASS | FAIL | NOT_RUN / UNSUPPORTED (reason) | CI run / exact JAR SHA-256 |
-|---|---|---|---|---|---|
-| | | | | | |
+Reconcile the requested feature list against the actual registered items, blocks, entities, recipes, effects, menus and other relevant content. Assign stable IDs using assertion names, exercise every added or changed variant, and test applicable acquisition, use, crafting, placement, durability, consumption, drops, persistence, interactions, boundaries and negative controls. Use actual network actions for player interactions where supported; commands may prepare fixtures and observe independent outcomes, but must not perform the player action under test.
 
-Record failures and reruns, link to regressions, distinguish server-only from actual network-player and client evidence. Missing critical behavior blocks a verified release. A complete tested release requires the applicable tests and existing release gates to pass; explicitly disclose any remaining coverage gap. Do not invent results, weaken checks or certify unsupported backends.
+If coverage mappings or exceptions need extra structure, keep them in an optional JSON manifest (for example `tools/qa/assignments/<slug>.json`) containing feature/content IDs, target applicability, criticality, executable test paths and assertion names. This is a machine-readable inventory, not an automatically executed or validated schema today. Never substitute it for the runnable scenarios. No Markdown checklist or duplicated prose assignment is mandatory.
 
-## Final developer review
-- [ ] All user-requested mechanics mapped to test IDs.
-- [ ] Every registered added/modified content entry reconciled against coverage.
-- [ ] All applicable positive, negative and lifecycle assertions implemented.
-- [ ] Required network-player tests executed on supported targets; alternatives and limitations recorded.
-- [ ] Exact final JAR evidence retained for each advertised target.
-- [ ] Failed checks investigated, fixed and rerun; unresolved blockers disclosed.
-- [ ] ZIP contains only eligible JARs; user receives concise results rather than technical chores.
+## Execution and evidence
+
+Commit scenarios and their profile references, and use the existing Minecraft Mod Build Hub on GitHub Actions. Inspect actual QA reports and logs for every declared target and exact production JAR SHA-256. Fix failures within scope and rerun. Record unsupported or unexecuted required checks explicitly; do not claim they passed. Existing release gates and client approval requirements remain unchanged. A server assertion is not evidence of GUI/rendering correctness. No human operation of the test bot is required.
+
+Keep shared infrastructure stable. A missing backend or action is a limitation to report, not permission to bypass the gate or silently invent a supported action. Only make shared tooling changes under the repository's existing scope rules.
