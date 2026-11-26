@@ -19,3 +19,5 @@ See `docs/QA-V2.md`. The experimental client launcher is development-mode only; 
 Use `tools/qa/port_audit.py` and the official named-server API diff before porting across 26.x. Treat findings as advisory, never blindly rewrite Java. Preserve crash incidents and regression evidence. Asset checking is part of enrolled JAR validation; protocol-client and performance diagnostics are separate from release approval.
 
 For new ports, prefer `python3 -m tools.qa.scaffold` and `tools.qa.port_plan`. Draft outputs are not working mods or release candidates; do not enroll until real mechanics and positive/negative regression tests are present. Prepare release notes from actual changes and QA evidence using `tools.qa.release_prep`.
+
+Declare shared source roots in build-profile.json and Gradle. Shared inputs invalidate QA evidence. Use the migration catalog and explicit proposal tool for legacy enrollment; never claim unknown evidence is a confirmed bug or remove legacy exemptions without reviewed tests.

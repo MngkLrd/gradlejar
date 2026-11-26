@@ -43,6 +43,15 @@ jobs:
       - name: Generate local dashboard on PR
         if: github.event_name == 'pull_request'
         run: python3 -m tools.qa.dashboard --out qa-dashboard
+      - name: Generate release history, debt and migration catalog
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+            python3 -m tools.qa.catalog --out qa-dashboard/catalog
+          else
+            python3 -m tools.qa.catalog --github --out qa-dashboard/catalog
+          fi
       - name: Upload dashboard (open index.html)
         uses: actions/upload-artifact@v4
         with:

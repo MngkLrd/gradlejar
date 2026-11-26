@@ -5,5 +5,14 @@
   "loader": "fabric",
   "java": "25",
   "gradle": "9.7.1",
-  "jar_glob": "naturalbuoyancy-fabric-mc26.3-1.0.0.jar"
+  "jar_glob": "naturalbuoyancy-fabric-mc26.3-1.0.0.jar",
+  "qa": {
+    "mode": "server",
+    "loader_version": "0.19.5",
+    "scenario": "tools/qa/scenarios/naturalbuoyancy-standalone.json",
+    "release_targets": [
+      "fabric-mc26.3",
+      "neoforge-mc26.3"
+    ]
+  }
 }

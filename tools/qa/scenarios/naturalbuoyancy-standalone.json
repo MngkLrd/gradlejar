@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "name": "Natural Buoyancy isolated water regression",
+  "steps": [
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "fill 1 180 1 8 190 8 minecraft:stone hollow",
+      "expect": "Successfully filled|Filled"
+    },
+    {
+      "command": "fill 2 181 2 7 189 7 minecraft:water",
+      "expect": "Successfully filled|Filled"
+    },
+    {
+      "command": "summon minecraft:item 3.5 185 3.5 {Item:{id:\"minecraft:iron_ingot\",count:1},Tags:[\"qa_heavy\"],PickupDelay:32767s}",
+      "expect": "Summoned new"
+    },
+    {
+      "command": "summon minecraft:item 6.5 185 6.5 {Item:{id:\"minecraft:oak_planks\",count:1},Tags:[\"qa_light\"],PickupDelay:32767s}",
+      "expect": "Summoned new"
+    },
+    {
+      "wait": 12
+    },
+    {
+      "command": "execute if entity @e[type=minecraft:item,tag=qa_heavy,x=2,y=181,z=2,dx=5,dy=3,dz=5]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "Iron ingot sinks below initial depth"
+    },
+    {
+      "command": "execute if entity @e[type=minecraft:item,tag=qa_light,x=2,y=187,z=2,dx=5,dy=3,dz=5]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "Oak planks float upward"
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:item,tag=qa_heavy,x=2,y=187,z=2,dx=5,dy=3,dz=5]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "Heavy item does not float at surface"
+    }
+  ]
+}

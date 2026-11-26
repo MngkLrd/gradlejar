@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "incidents": [
+    {
+      "id": "FG-1211-INSTAMINE",
+      "projects": [
+        "projects/fragileglass-fabric-1.21.1"
+      ],
+      "status": "open",
+      "severity": "gameplay",
+      "evidence": "45750325141 / 139676277262",
+      "description": "Survival START_DESTROY_BLOCK did not instantly break glass; cause not proven."
+    },
+    {
+      "id": "QA-CLIENT-GRAPHICS",
+      "projects": [],
+      "status": "open",
+      "severity": "infrastructure",
+      "evidence": "45748688125",
+      "description": "Software display client cannot initialize required graphics backend; not evidence of a gameplay bug."
+    }
+  ]
+}
