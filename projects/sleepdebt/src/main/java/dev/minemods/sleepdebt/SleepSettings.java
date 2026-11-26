@@ -25,7 +25,7 @@ public final class SleepSettings {
   ENABLE_CAMP_REST=B.define("allowCampRest",true);
   B.pop();
   B.push("vanilla");
-  PHANTOM_SYNC=B.comment("Use Sleep Debt to suppress vanilla phantoms for rested players; dreamcatchers ward them off.").define("integratePhantoms",true);
+  PHANTOM_SYNC=B.comment("Use Sleep Debt to suppress vanilla phantoms for rested players.").define("integratePhantoms",true);
   B.pop();
 
   SPEC=B.build();

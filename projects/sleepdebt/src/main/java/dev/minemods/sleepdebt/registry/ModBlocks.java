@@ -30,7 +30,7 @@ public final class ModBlocks {
  public static final DeferredBlock<Block> CAMP_LANTERN=BLOCKS.register("camp_lantern",
   ()->new CampLanternBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(1f).sound(SoundType.LANTERN).noOcclusion().lightLevel(s->13)));
  public static final DeferredBlock<Block> DREAMCATCHER=BLOCKS.register("dreamcatcher",
-  ()->new DreamcatcherBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(.4f).sound(SoundType.WOOD).noOcclusion()));
+  ()->new Block(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(.4f).sound(SoundType.WOOD).noOcclusion()));
  private ModBlocks(){}
 }
 

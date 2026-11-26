@@ -48,7 +48,7 @@ public final class ModItems {
  public static final DeferredItem<HerbalPoulticeItem> HERBAL_POULTICE=
    ITEMS.register("herbal_poultice",()->new HerbalPoulticeItem(new Item.Properties().stacksTo(16)));
  public static final DeferredItem<Item> PILLOW=ITEMS.registerSimpleItem("pillow",new Item.Properties().stacksTo(16));
- public static final DeferredItem<Item> MASK=ITEMS.registerSimpleItem("sleep_mask",new Item.Properties().stacksTo(1));
+ public static final DeferredItem<Item> MASK=ITEMS.register("sleep_mask",()->new dev.minemods.sleepdebt.item.SleepMaskItem(new Item.Properties().stacksTo(1)));
  public static final DeferredItem<BlockItem> INCENSE_BURNER=ITEMS.register(
   "incense_burner",()->new BlockItem(ModBlocks.INCENSE_BURNER.get(),new Item.Properties()));
  public static final DeferredItem<BlockItem> COFFEE_MACHINE=ITEMS.register("coffee_machine",()->new BlockItem(ModBlocks.COFFEE_MACHINE.get(),new Item.Properties()));

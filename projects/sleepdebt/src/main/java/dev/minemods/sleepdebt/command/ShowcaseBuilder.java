@@ -20,7 +20,6 @@ public final class ShowcaseBuilder {
   placements.put(origin,ModBlocks.CAMP_BEDROLL.get().defaultBlockState());
   placements.put(origin.above(),ModBlocks.CAMP_AWNING.get().defaultBlockState());
   placements.put(origin.east(2),ModBlocks.CAMP_LANTERN.get().defaultBlockState());
-  placements.put(origin.east(2).south(2),ModBlocks.DREAMCATCHER.get().defaultBlockState());
   BlockPos machine=origin.west(2);
   placements.put(machine,ModBlocks.COFFEE_MACHINE.get().defaultBlockState());
   for(BlockPos pos:placements.keySet()){

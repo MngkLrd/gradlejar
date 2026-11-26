@@ -18,14 +18,17 @@ public final class CampRestSessions {
  private static final Map<UUID,Session> SESSIONS=new HashMap<>();
  private record Session(BlockPos bedroll,Vec3 origin,String dimension,long started,double health){}
  public static void begin(ServerPlayer player,BlockPos pos){
-  if(player.isSpectator()||player.isCreative()||!SleepSettings.ENABLE_CAMP_REST.get()){return;}
+  if(player.isSpectator())return;
+  if(!SleepSettings.ENABLE_CAMP_REST.get()){
+   player.displayClientMessage(Component.translatable("message.sleepdebt.camp_disabled"),true);return;
+  }
   if(player.distanceToSqr(Vec3.atCenterOf(pos))>16){
    player.displayClientMessage(Component.translatable("message.sleepdebt.camp_far"),true);
    return;
   }
   long now=player.serverLevel().getGameTime();
   var tag=player.getPersistentData().getCompound("sleepdebt_v2");
-  if(tag.contains("lastCampRest")&&now>=tag.getLong("lastCampRest")
+  if(!player.isCreative()&&tag.contains("lastCampRest")&&now>=tag.getLong("lastCampRest")
       &&now-tag.getLong("lastCampRest")<2400){
    player.displayClientMessage(Component.translatable("message.sleepdebt.camp_cooldown"),true);
    return;
@@ -37,6 +40,7 @@ public final class CampRestSessions {
   SESSIONS.put(player.getUUID(),new Session(pos.immutable(),player.position(),
     player.level().dimension().location().toString(),now,player.getHealth()));
   player.displayClientMessage(Component.translatable("message.sleepdebt.camp_begin"),true);
+  player.level().playSound(null,pos,SoundEvents.WOOL_PLACE,SoundSource.PLAYERS,.6f,.95f);
  }
  public static void tick(ServerPlayer player){
   Session session=SESSIONS.get(player.getUUID());

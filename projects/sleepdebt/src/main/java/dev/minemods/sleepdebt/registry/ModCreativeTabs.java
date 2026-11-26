@@ -38,7 +38,6 @@ public final class ModCreativeTabs {
      output.accept(ModItems.AWNING.get());
      output.accept(ModItems.CAMP_LANTERN.get());
      output.accept(ModItems.INCENSE_BURNER.get());
-     output.accept(ModItems.DREAMCATCHER.get());
 
      // Equipment, consumables and the personal report.
      output.accept(ModItems.SLEEP_JOURNAL.get());
@@ -60,7 +59,6 @@ public final class ModCreativeTabs {
      output.accept(ModItems.COCOA_BISCUIT.get());
 
      // Dream-specific content and testing the hostile mob.
-     output.accept(ModItems.DREAM_SHARD.get());
 
     }).build());
 

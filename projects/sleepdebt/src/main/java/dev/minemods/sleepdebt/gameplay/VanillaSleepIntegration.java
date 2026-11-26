@@ -19,14 +19,6 @@ public final class VanillaSleepIntegration {
    event.setResult(PlayerSpawnPhantomsEvent.Result.DENY);
    return;
   }
-  // A properly defended sleeping area also helps with vanilla phantoms.
-  BlockPos at=player.blockPosition();
-  for(BlockPos pos:BlockPos.betweenClosed(at.offset(-7,-3,-7),at.offset(7,4,7))){
-   if(player.level().getBlockState(pos).is(ModBlocks.DREAMCATCHER.get())){
-    event.setResult(PlayerSpawnPhantomsEvent.Result.DENY);
-    return;
-   }
-  }
   // Do not modify counts; other phantom mods retain their own spawn rules.
   // The regular vanilla world rules (skylight, insomnia gamerule, difficulty)
   // still apply; no phantom is forced into safe daytime worlds.

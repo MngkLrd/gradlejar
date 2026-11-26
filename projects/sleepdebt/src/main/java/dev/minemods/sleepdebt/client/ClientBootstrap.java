@@ -23,6 +23,7 @@ public final class ClientBootstrap {
   net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(JournalInventoryTab::init);
  }
  private static void onGui(RegisterGuiLayersEvent e){
+  e.registerBelowAll(ResourceLocation.fromNamespaceAndPath(SleepDebtMod.MOD_ID,"sleep_mask"),SleepMaskOverlay::render);
   e.registerAbove(VanillaGuiLayers.FOOD_LEVEL,ResourceLocation.fromNamespaceAndPath(SleepDebtMod.MOD_ID,"sleep_hud"),SleepHud::render);
  }
  private static void screens(RegisterMenuScreensEvent e){e.register(ModMenus.COFFEE.get(),CoffeeScreen::new);}

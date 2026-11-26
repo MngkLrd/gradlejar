@@ -28,6 +28,8 @@ public final class RestEnvironment {
  public static Conditions evaluate(ServerPlayer player,BlockPos pos){
   var level=player.serverLevel();
   boolean sheltered=!level.canSeeSky(pos.above());
+  // Non-occluding awning geometry can be missed by the sky-light test.
+  for(int y=1;y<=3&&!sheltered;y++)sheltered=level.getBlockState(pos.above(y)).is(ModBlocks.CAMP_AWNING.get());
   boolean threatened=threatened(player,11);
   boolean rain=!sheltered&&level.isRainingAt(pos.above());
   float temperature=level.getBiome(pos).value().getBaseTemperature();
@@ -38,15 +40,13 @@ public final class RestEnvironment {
    var state=level.getBlockState(scan);
    if((state.is(Blocks.CAMPFIRE)||state.is(Blocks.SOUL_CAMPFIRE))&&state.getValue(net.minecraft.world.level.block.CampfireBlock.LIT))campfire=true;
    if(state.is(ModBlocks.CAMP_LANTERN.get()))lantern=true;
-   if(state.is(ModBlocks.DREAMCATCHER.get()))dreamcatcher=true;
    if(!incense&&state.is(ModBlocks.INCENSE_BURNER.get())&&
       level.getBlockEntity(scan) instanceof IncenseBurnerBlockEntity burner
       &&burner.remainingTicks()>0)incense=true;
   }
   boolean pillow=player.getInventory().items.stream()
     .anyMatch(stack->stack.is(ModItems.PILLOW.get()));
-  boolean mask=player.getInventory().items.stream()
-    .anyMatch(stack->stack.is(ModItems.MASK.get()));
+  boolean mask=player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD).is(ModItems.MASK.get());
   if(!mask&&ModList.get().isLoaded("accessories")){
    mask=SleepAccessoriesBridge.hasMask(player);
   }
@@ -59,7 +59,6 @@ public final class RestEnvironment {
   if(hot){quality-=10;reasons|=HEAT;}
   if(warm){quality+=6;reasons|=COMFORT;}
   if(lantern){quality+=3;reasons|=COMFORT;}
-  if(dreamcatcher){quality+=10;reasons|=PROTECTION;}
   if(incense){quality+=10;reasons|=COMFORT;}
   if(pillow){quality+=6;reasons|=COMFORT;}
   if(mask){quality+=6;reasons|=COMFORT;}
