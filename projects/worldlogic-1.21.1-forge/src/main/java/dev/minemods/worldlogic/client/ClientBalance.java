@@ -22,7 +22,7 @@ public final class ClientBalance {
   }else clearPose();
   float target=RuleSync.clientDown()?RuleSync.clientRoll()*(RuleSync.clientCrawl()?.45f:1):0;roll+=(target-roll)*.27f;
  }
- private static boolean local(Player p){return p==Minecraft.getInstance().player&&RuleSync.clientDown();}
+ private static boolean local(Player p){return p==Minecraft.getInstance().player&&RuleSync.clientDown()&&p.isAlive()&&!p.isCreative()&&!p.isSpectator();}
  @SubscribeEvent public static void attack(net.minecraftforge.event.entity.player.AttackEntityEvent e){if(local(e.getEntity()))e.setCanceled(true);}
  @SubscribeEvent public static void interact(net.minecraftforge.event.entity.player.PlayerInteractEvent e){if(e.isCancelable()&&local(e.getEntity()))e.setCanceled(true);}
  @SubscribeEvent public static void use(net.minecraftforge.event.entity.living.LivingEntityUseItemEvent.Start e){if(e.getEntity() instanceof Player p&&local(p))e.setCanceled(true);}

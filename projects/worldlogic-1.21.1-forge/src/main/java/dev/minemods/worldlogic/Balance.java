@@ -21,7 +21,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 public final class Balance {
  private static final class State {
-  Vec3 position,velocity=Vec3.ZERO;
+  Vec3 position,velocity=Vec3.ZERO,fallDirection=Vec3.ZERO;
   long last,downUntil,cooldown,jumpAt=-100,failedUntil,started;
   boolean sprint,ground,owned;
   float roll;
@@ -32,6 +32,7 @@ public final class Balance {
  static boolean eligible(Player p){return Survival.active(p)&&p.isAlive()&&!p.isSleeping()&&!p.isPassenger()&&!p.isFallFlying()&&!p.isInWater()&&!p.isInLava()&&!p.onClimbable()&&!p.getAbilities().flying;}
  public static boolean down(Player p){State s=STATES.get(p);return Rules.on("physical_falls")&&s!=null&&s.owned&&eligible(p)&&s.downUntil>p.level().getGameTime();}
  public static boolean canCrawl(Player p){State s=STATES.get(p);return Rules.on("desperate_recovery")&&down(p)&&s!=null&&p.level().getGameTime()-s.started>=8;}
+ static Vec3 fallDirection(Player p){State s=STATES.get(p);return s==null?Vec3.ZERO:s.fallDirection;}
  static Vec3 recentMotion(Player p){State s=STATES.get(p);return s==null?Vec3.ZERO:s.velocity;}
  public static float roll(Player p){State s=STATES.get(p);return s==null?0:s.roll;}
  static double threshold(boolean injured,double fatigue,double burden){return Math.max(.15,.265-(injured?.055:0)-Math.max(0,fatigue-55)*.0008-Math.min(.035,burden*.008));}
@@ -48,7 +49,7 @@ public final class Balance {
  private static void fall(ServerLevel l,Player p,State s,Vec3 dir,String reason,double severity,boolean injured){
   if(s.owned||p.getForcedPose()!=null||!eligible(p))return;
   long now=l.getGameTime();s.started=now;s.downUntil=now+duration(severity,injured)+(Rules.on("ground_recovery")?GroundHazards.recoveryExtra(p):0);s.cooldown=s.downUntil+60;s.owned=true;
-  s.roll=dir.cross(p.getLookAngle()).y>=0?18:-18;
+  s.fallDirection=dir.multiply(1,0,1).normalize();s.roll=dir.cross(p.getLookAngle()).y>=0?18:-18;
   p.stopUsingItem();p.setSprinting(false);p.setForcedPose(Pose.SWIMMING);p.setPose(Pose.SWIMMING);
   Vec3 v=dir.multiply(1,0,1).normalize().scale(.12);
   p.setDeltaMovement(v.x,Math.min(0,p.getDeltaMovement().y),v.z);p.hurtMarked=true;
@@ -62,14 +63,14 @@ public final class Balance {
   if(p instanceof ServerPlayer sp)RuleSync.send(sp);
  }
  private static void release(Player p,State s){
-  if(s.owned){if(p.getForcedPose()==Pose.SWIMMING)p.setForcedPose(null);s.owned=false;s.downUntil=0;s.failedUntil=0;s.velocity=Vec3.ZERO;if(p instanceof ServerPlayer sp)RuleSync.send(sp);}
+  if(s.owned){if(p.getForcedPose()==Pose.SWIMMING)p.setForcedPose(null);s.owned=false;s.fallDirection=Vec3.ZERO;s.downUntil=0;s.failedUntil=0;s.velocity=Vec3.ZERO;if(p instanceof ServerPlayer sp)RuleSync.send(sp);}
  }
  public static void tick(TickEvent.PlayerTickEvent.Post e){
   Player p=e.player;if(!(p.level() instanceof ServerLevel l))return;State s=state(p);long now=l.getGameTime();
   if(!eligible(p)||!Rules.on("physical_falls")){release(p,s);s.position=null;return;}
   if(s.owned){
    if(now>=s.downUntil||p.getForcedPose()!=Pose.SWIMMING){release(p,s);}
-   else{p.setSprinting(false);if(p.isUsingItem())p.stopUsingItem();Vec3 v=p.getDeltaMovement();double damping=canCrawl(p)?.9:.65;p.setDeltaMovement(v.x*damping,v.y,v.z*damping);ImpactDynamics.rollDown(l,p);}
+   else{p.setSprinting(false);if(p.isUsingItem())p.stopUsingItem();Vec3 v=p.getDeltaMovement();double damping=canCrawl(p)?.9:.65;p.setDeltaMovement(v.x*damping,v.y,v.z*damping);ImpactDynamics.rollDown(l,p);if(now-s.started==8&&p instanceof ServerPlayer sp)RuleSync.send(sp);}
    s.position=p.position();s.last=now;s.ground=p.onGround();s.sprint=false;return;
   }
   if(s.position==null||s.last!=now-1||p.position().distanceToSqr(s.position)>4){

@@ -54,9 +54,9 @@ public final class ImpactDynamics {
   return footing(l,p,Vec3.ZERO,.18)&&(!footing(l,p,side,.7)||!footing(l,p,side.scale(-1),.7));
  }
  static void rollDown(ServerLevel l,Player p){
-  if(!Rules.on("rolling_descent")||!p.onGround()||p.isShiftKeyDown())return;
+  if(!Rules.on("rolling_descent")||!p.onGround()||p.isShiftKeyDown()||Balance.canCrawl(p))return;
   long now=l.getGameTime();if(ROLLS.getOrDefault(p,0L)>now)return;
-  Vec3 dir=Balance.recentMotion(p);if(dir.horizontalDistance()<.05)dir=p.getLookAngle();dir=dir.multiply(1,0,1).normalize().scale(.48);
+  Vec3 dir=Balance.fallDirection(p);if(dir.horizontalDistance()<.05)dir=p.getLookAngle();dir=dir.multiply(1,0,1).normalize().scale(.48);
   // Only descend a nearby shallow step. Never add impulse over an open ravine.
   if(!footing(l,p,dir,.20)&&footing(l,p,dir,1.20)&&!solid(l,p,p.getBoundingBox().move(dir.x,0,dir.z))){
    Vec3 v=p.getDeltaMovement();p.setDeltaMovement(v.x+dir.x*.23,v.y,v.z+dir.z*.23);p.hurtMarked=true;ROLLS.put(p,now+8);
@@ -82,7 +82,7 @@ public final class ImpactDynamics {
  }
  public static void tick(TickEvent.PlayerTickEvent.Post e){
   Player p=e.player;if(!(p.level() instanceof ServerLevel l))return;long now=l.getGameTime();
-  if(!active(p)){stopGrab(p);GRABBED.remove(p);HITS.remove(p);return;}
+  if(!active(p)){stopGrab(p);GRABBED.remove(p);HITS.remove(p);ROLLS.remove(p);return;}
   grab(l,p);
   Hit hit=HITS.get(p);
   if(hit!=null){if(now>hit.expires)HITS.remove(p);else if(p.onGround()){HITS.remove(p);if(Balance.force(p,hit.direction,"hit",hit.severity)&&hit.disarm)disarm(p);}}
