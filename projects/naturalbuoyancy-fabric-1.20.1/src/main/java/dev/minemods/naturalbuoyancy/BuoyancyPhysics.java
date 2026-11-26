@@ -53,4 +53,4 @@ public final class BuoyancyPhysics {
     }
 }
 
-// Rebuild all targets together for the verified JAR-only archive.
+// Rebuild verified matrix with registry-based 26.x tag resolution.

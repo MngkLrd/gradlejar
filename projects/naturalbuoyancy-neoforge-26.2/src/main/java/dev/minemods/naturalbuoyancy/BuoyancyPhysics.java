@@ -29,7 +29,7 @@ public final class BuoyancyPhysics {
     }
     private static DensityRules.Kind classify(ItemStack stack) {
         boolean sink=false,slow=false,light=false,taggedSink=false,taggedLight=false;
-        var tags=stack.getItemHolder().tags().iterator();
+        var tags=BuiltInRegistries.ITEM.wrapAsHolder(stack.getItem()).tags().iterator();
         while(tags.hasNext()) {
             String name=tags.next().location().toString();
             switch(DensityRules.override(name)) {
