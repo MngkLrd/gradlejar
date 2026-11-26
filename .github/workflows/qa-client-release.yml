@@ -1,0 +1,74 @@
+name: QA v2 manual client release
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: 'Mod slug'
+        required: true
+        type: string
+      source_run:
+        description: 'Completed main Build Hub run ID'
+        required: true
+        type: string
+      source_attempt:
+        description: 'Exact candidate run attempt'
+        required: true
+        default: '1'
+        type: string
+      approval_json:
+        description: 'JSON object mapping EVERY manually tested candidate JAR filename to its SHA-256'
+        required: true
+        type: string
+      review_note:
+        description: 'Describe the human client verification on every declared target'
+        required: true
+        type: string
+      confirm_client_tested:
+        description: 'I personally tested all exact client candidate JARs and approve publication'
+        required: true
+        default: false
+        type: boolean
+permissions:
+  actions: read
+  contents: write
+jobs:
+  approve:
+    if: github.ref == 'refs/heads/main' && inputs.confirm_client_tested == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify explicit human approval, provenance and hashes
+        id: approval
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN: ${{ inputs.source_run }}
+          SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
+          MOD_SLUG: ${{ inputs.slug }}
+          APPROVAL_JSON: ${{ inputs.approval_json }}
+          REVIEW_NOTE: ${{ inputs.review_note }}
+          CONFIRM_CLIENT_TESTED: ${{ inputs.confirm_client_tested }}
+        run: python3 -m tools.qa.client_approval --out manual-client-approval
+      - name: Store human approval evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-report-client-${{ github.run_id }}-${{ github.run_attempt }}
+          path: manual-client-approval/reports/
+          retention-days: 30
+      - name: Upload complete manually approved JAR-only archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-client-approved-bundle
+          path: |
+            manual-client-approval/*.zip
+            manual-client-approval/approval.json
+          retention-days: 30
+      - name: Publish explicitly approved client cohort
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARCHIVE: ${{ steps.approval.outputs.archive }}
+          SOURCE_SHA: ${{ steps.approval.outputs.commit }}
+          MOD_SLUG: ${{ steps.approval.outputs.slug }}
+          MOD_VERSION: ${{ steps.approval.outputs.version }}
+        run: |
+          gh release create "qa-client-${MOD_SLUG}-${MOD_VERSION}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}" "$ARCHIVE" manual-client-approval/approval.json --target "$SOURCE_SHA" --title "${MOD_SLUG} ${MOD_VERSION} manually client-verified" --notes-file manual-client-approval/notes.md --prerelease

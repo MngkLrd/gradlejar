@@ -14,4 +14,4 @@ Applies to every agent and contributor using MngkLrd/gradlejar. The repository i
 9. Prefer shared tools over more hardcoded per-mod workflow jobs. Separate client and server code. Do not modify unrelated projects during a port.
 10. Report actual CI run, first failure, test scope and limitations. A successful compile is not a successful gameplay test.
 
-See `docs/QA-V2.md`. The experimental client launcher is development-mode only; QA-5 requires manual client validation. Independent legacy workflows remain outside the v2 gate until migrated; do not use them to bypass the standard.
+See `docs/QA-V2.md`. The experimental client launcher is development-mode only; QA-5 requires manual client validation and the explicit checksum-bound manual client release workflow. Independent legacy workflows remain outside the v2 gate until migrated; do not use them to bypass the standard.

@@ -815,8 +815,12 @@ jobs:
           pattern: jar-*
           path: qa-input/jars
       - name: Build complete, checksum-matched release cohorts
+        env:
+          PLANNED_PROJECTS: ${{ needs.plan.outputs.project_dirs }}
+          BUILD_RESULT: ${{ needs.build.result }}
         run: python3 -m tools.qa.bundle qa-input/reports qa-input/jars qa-bundles
       - name: Upload bundles and separate evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: qa-v2-bundles-${{ github.run_attempt }}

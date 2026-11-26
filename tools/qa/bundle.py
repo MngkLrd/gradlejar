@@ -6,7 +6,7 @@ import re
 import zipfile
 from collections import defaultdict
 from pathlib import Path
-from .common import require, sha256, write_json, SLUG, SAFE_VERSION
+from .common import require, sha256, write_json, SLUG, SAFE_VERSION, profile, target
 
 ORDER={"forge":0,"neoforge":1,"fabric":2}
 
@@ -53,9 +53,22 @@ def build(reports_dir,jars_dir,out,run_id):
     write_json(out/"bundle-report.json",summary)
     return summary
 
+def complete_planned_cohorts(planned):
+    cohorts=defaultdict(list)
+    for project in planned:
+        p=profile(project)
+        q=p.get("qa")
+        if isinstance(q,dict) and q.get("mode")=="server":
+            cohorts[(p["slug"],p["version"])].append(p)
+    return {key for key,ps in cohorts.items() if ps and len(ps)==len(ps[0]["qa"]["release_targets"]) and {target(p) for p in ps}==set(ps[0]["qa"]["release_targets"])}
+
 if __name__=="__main__":
     ap=argparse.ArgumentParser()
     ap.add_argument("reports");ap.add_argument("jars");ap.add_argument("out")
     ap.add_argument("--run-id",default=os.getenv("GITHUB_RUN_ID",""))
     a=ap.parse_args()
-    build(a.reports,a.jars,a.out,a.run_id)
+    results=build(a.reports,a.jars,a.out,a.run_id)
+    if os.getenv("BUILD_RESULT")=="success":
+        expected=complete_planned_cohorts(json.loads(os.getenv("PLANNED_PROJECTS","[]")))
+        passed={(r["slug"],r["version"]) for r in results if r["status"]=="passed"}
+        require(expected<=passed,"Complete successful build matrix failed to produce its verified ZIP: "+str(sorted(expected-passed)))

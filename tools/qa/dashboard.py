@@ -84,7 +84,7 @@ def render(rows,warnings,repo):
     e=lambda x:html.escape(str(x if x is not None else ""),quote=True)
     def status(row):
         s=row["status"]
-        return s, "ok" if s=="passed" else "bad" if s in ("failed","invalid-profile","build-failed-or-skipped") else "neutral"
+        return s, "ok" if s in ("passed","manual-client-approved") else "bad" if s in ("failed","invalid-profile","build-failed-or-skipped") else "neutral"
     trs=[]
     for r in rows:
         s,cls=status(r)
@@ -93,7 +93,7 @@ def render(rows,warnings,repo):
         detail=r.get("error") or "; ".join(d.get("summary","") for d in r.get("diagnostics",[])) or ""
         if s=="stale-evidence": detail="Last report: "+str(r.get("latest_status"))+" for "+str(r.get("latest_version"))
         trs.append(f'<tr data-status="{e(s)}"><td><b>{e(r["slug"])}</b><small>{e(r["project"])}</small></td><td>{e(r["version"])}</td><td>{e(r["minecraft"])}</td><td>{e(r["loader"])}</td><td>{e(r["mode"])}</td><td>{e("QA-"+str(r["qa_level"]) if r["qa_level"] is not None else "—")}</td><td><span class="{cls}">{e(s)}</span></td><td>{link}</td><td>{e(detail)}</td></tr>')
-    counts={"Profiles":len(rows),"Current QA-4":sum(r["status"]=="passed" and r["qa_level"]==4 for r in rows),"Failed current":sum(r["status"] in ("failed","invalid-profile","build-failed-or-skipped") for r in rows),"Legacy policies":sum(r["mode"]=="legacy" for r in rows),"Unknown or stale":sum(r["status"] in ("no-recent-evidence","stale-evidence") for r in rows)}
+    counts={"Profiles":len(rows),"Current QA-4":sum(r["status"]=="passed" and r["qa_level"]==4 for r in rows),"Human QA-5":sum(r["status"]=="manual-client-approved" and r["qa_level"]==5 for r in rows),"Failed current":sum(r["status"] in ("failed","invalid-profile","build-failed-or-skipped") for r in rows),"Legacy policies":sum(r["mode"]=="legacy" for r in rows),"Unknown or stale":sum(r["status"] in ("no-recent-evidence","stale-evidence") for r in rows)}
     cards="".join(f'<div class="metric"><strong>{n}</strong><span>{e(k)}</span></div>' for k,n in counts.items())
     options="".join(f'<option value="{e(s)}">{e(s)}</option>' for s in sorted({r["status"] for r in rows}))
     return """<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MineMods QA dashboard</title><style>

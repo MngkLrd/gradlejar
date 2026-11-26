@@ -13,6 +13,7 @@ from tools.qa.common import compatibility, qa_config, sha256, REGISTRY
 from tools.qa.static import pack_check, validate_jar
 from tools.qa.server import Rcon, scenario_steps, play
 from tools.qa.bundle import build
+from tools.qa.client_approval import approved_candidates
 from tools.qa.crash import analyze
 from tools.qa.dashboard import render
 from tools import plan_builds
@@ -88,6 +89,25 @@ class BundleTests(unittest.TestCase):
             self.assertEqual(build(reports,jars,root/"bad","42")[0]["status"],"incomplete")
             (reports/"1.json").unlink()
             self.assertEqual(build(reports,jars,root/"partial","42")[0]["status"],"incomplete")
+
+class ClientApprovalTests(unittest.TestCase):
+    def test_manual_candidate_hash_and_matrix(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);reports=root/"reports";jars=root/"jars";reports.mkdir();jars.mkdir()
+            name="testmod-fabric-mc26.3-1.0.0.jar"
+            with zipfile.ZipFile(jars/name,"w") as z:z.writestr("fixture","data")
+            sha=sha256(jars/name)
+            r={"schema":1,"mode":"client","slug":"testmod","version":"1.0.0","target":"fabric-mc26.3","loader":"fabric","minecraft":"26.3","release_targets":["fabric-mc26.3"],"run_id":"42","run_attempt":"1","commit":"abc","qa_level":2,"eligible":False,"status":"client-candidate-awaiting-validation","jar":name,"sha256":sha}
+            (reports/"report.json").write_text(json.dumps(r))
+            self.assertEqual(len(approved_candidates(reports,jars,"testmod",{name:sha},"42","1","abc")),1)
+            with self.assertRaisesRegex(ValueError,"hash mismatch"):
+                approved_candidates(reports,jars,"testmod",{name:"0"*64},"42","1","abc")
+            with self.assertRaisesRegex(ValueError,"provenance"):
+                approved_candidates(reports,jars,"testmod",{name:sha},"42","2","abc")
+            r["release_targets"].append("neoforge-mc26.3")
+            (reports/"report.json").write_text(json.dumps(r))
+            with self.assertRaisesRegex(ValueError,"Incomplete"):
+                approved_candidates(reports,jars,"testmod",{name:sha},"42","1","abc")
 
 class OtherTests(unittest.TestCase):
     def test_diagnostics(self):

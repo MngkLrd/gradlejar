@@ -17,6 +17,7 @@ Common CI compiles genuine Gradle projects using the profile's pinned Java/Gradl
 - `qa-v2-bundles-*`: complete verified JAR-only cohorts plus a separate package report.
 - **QA v2 infrastructure and dashboard**: downloadable HTML/JSON status dashboard.
 - **QA v2 experimental client**: development-client screenshot and logs, not production-client certification.
+- **QA v2 manual client release**: explicit human approval for a complete client-only cohort, matching every exact candidate SHA-256. See the QA guide.
 
 The standard targets use Java 17/21/25. Loader-specific Gradle files and metadata remain mandatory. The compatibility registry is not a claim that any arbitrary combination works.
 
