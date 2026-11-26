@@ -40,6 +40,16 @@
       "fix": "Manual idempotent historical packaging",
       "evidence": "45746842947 / 139664845283",
       "status": "workflow corrected"
+    },
+    {
+      "id": "FG-1211-INSTAMINE",
+      "category": "scenario",
+      "match": "One start-digging packet breaks glass.*Test failed",
+      "symptom": "Fragile Glass Fabric 1.21.1 did not break glass from a single survival START_DESTROY_BLOCK packet",
+      "root_cause": "Not established; inspect tag discovery, server-side mining progress and Mixin mapping",
+      "fix": "Reproduce using tools/qa/virtual_player.py; isolate the failed lookup and retain the one-packet regression before publishing a fix",
+      "evidence": "45750325141 / 139676277262",
+      "status": "confirmed failing regression; fix not yet applied"
     }
   ]
 }

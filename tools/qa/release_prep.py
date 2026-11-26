@@ -9,6 +9,7 @@ from .common import require,sha256,write_json,SLUG,SAFE_VERSION
 def prepare(spec,archive,reports,out):
     slug=spec["slug"];version=spec["version"]
     require(SLUG.fullmatch(slug) and SAFE_VERSION.fullmatch(version),"Invalid slug/version")
+    require(spec.get("release_type","beta") in ("release","beta","alpha"),"Invalid release type")
     require(isinstance(spec.get("summary"),str) and spec["summary"].strip(),"Summary required")
     require(isinstance(spec.get("changes"),list) and spec["changes"] and all(isinstance(x,str) and x.strip() for x in spec["changes"]),"Human-written changes required")
     evidence={}

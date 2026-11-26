@@ -42,7 +42,7 @@ def generate(spec,out):
         java=m["java"];build_java=cfg.get("build_java",java);lv=cfg["version"]
         modern=mc.startswith("26.");legacy=mc=="1.20.1" and l!="fabric"
         root=out/f"{slug}-{l}-{mc}";root.mkdir()
-        archive=f"{slug}-{l}-mc{mc}";pkg="dev.minemods."+slug
+        archive=f"{slug}-{l}-mc{mc}";pkg="dev.minemods.mod_"+slug
         if l=="fabric":
             plugin=f"id '{'net.fabricmc.fabric-loom' if modern else 'fabric-loom'}' version '{cfg['loom']}'"
             deps=f"minecraft 'com.mojang:minecraft:{mc}'\n"+(f"implementation 'net.fabricmc:fabric-loader:{lv}'" if modern else f"mappings loom.officialMojangMappings()\nmodImplementation 'net.fabricmc:fabric-loader:{lv}'")

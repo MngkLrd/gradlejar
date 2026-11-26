@@ -1,0 +1,20 @@
+{
+  "slug": "fragileglass",
+  "name": "Fragile Glass",
+  "version": "1.0.2",
+  "summary": "Glass shatters from projectile impacts and hard landings. Updated Minecraft 26.x ports.",
+  "changes": [
+    "Added vanilla glass identification fallback independent of optional Fabric tags.",
+    "Updated resource and data pack format ranges for Minecraft 26.x.",
+    "Verified projectile and landing mechanics in the final production JARs."
+  ],
+  "release_type": "beta",
+  "targets": [
+    "neoforge-mc26.1.2",
+    "neoforge-mc26.2",
+    "neoforge-mc26.3",
+    "fabric-mc26.1.2",
+    "fabric-mc26.2",
+    "fabric-mc26.3"
+  ]
+}

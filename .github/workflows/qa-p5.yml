@@ -1,0 +1,137 @@
+name: QA v2 P5 project factory
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - tools/qa/scaffold.py
+      - tools/qa/port_plan.py
+      - tools/qa/scenario_gen.py
+      - tools/qa/release_prep.py
+      - tools/qa/compare_perf.py
+      - 'tools/qa/examples/**'
+      - .github/workflows/qa-p5.yml
+permissions:
+  contents: read
+  actions: read
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    outputs:
+      ports: ${{ steps.matrix.outputs.ports }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate all draft ports and reports
+        run: |
+          python3 -m tools.qa.scaffold tools/qa/examples/scaffold.json --out p5-drafts
+          python3 -m tools.qa.port_plan plan projects/fragileglass-fabric-1.21.1 --out p5-reports/port-plan.json
+          python3 -m tools.qa.port_plan duplicates projects/fragileglass-{fabric,neoforge}-26.{1.2,2,3} --out p5-reports/duplicates.json
+          python3 -m tools.qa.scenario_gen tools/qa/examples/scenario.json --out p5-reports/scenario.json
+      - name: Derive actual registry matrix
+        id: matrix
+        run: |
+          python3 - <<'PY'
+          import json,os
+          rows=json.load(open('p5-drafts/scaffold-manifest.json'))['ports']
+          assert len(rows)==11
+          print('Generated draft matrix:',len(rows))
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('ports='+json.dumps([{'directory':r['directory'],'java':r['profile']['java'],'gradle':r['profile']['gradle'],'jar':r['profile']['jar_glob']} for r in rows],separators=(',',':'))+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: p5-draft-projects-NOT-RELEASE
+          path: p5-drafts/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: p5-porting-reports
+          path: p5-reports/
+  verify-scaffolds:
+    needs: generate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        port: ${{ fromJSON(needs.generate.outputs.ports) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.port.java }}
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ matrix.port.gradle }}
+          cache-read-only: true
+      - name: Regenerate registry-backed draft
+        run: python3 -m tools.qa.scaffold tools/qa/examples/scaffold.json --out p5-drafts
+      - name: Compile actual scaffold (not a mod release)
+        env:
+          PORT: ${{ matrix.port.directory }}
+        run: |
+          cd "p5-drafts/$PORT"
+          gradle --no-daemon clean build
+      - name: Verify compiled draft structure
+        env:
+          PORT: ${{ matrix.port.directory }}
+          JAR: ${{ matrix.port.jar }}
+        run: |
+          python3 - <<'PY'
+          import os,json
+          from pathlib import Path
+          from tools.qa.static import validate_jar
+          p=Path('p5-drafts')/os.environ['PORT']
+          profile=json.loads((p/'build-profile.json').read_text())
+          assert profile['draft'] is True
+          print(validate_jar(p/'build/libs'/os.environ['JAR'],profile))
+          PY
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.7.1'
+          cache-read-only: true
+      - name: Build exact pilot production JAR
+        run: |
+          cd projects/fragileglass-fabric-26.3
+          gradle --no-daemon clean build
+      - name: Compare vanilla, loader-only and modded
+        run: |
+          python3 -m tools.qa.compare_perf projects/fragileglass-fabric-26.3 projects/fragileglass-fabric-26.3/build/libs/fragileglass-fabric-mc26.3-1.0.2.jar --out p5-performance
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p5-performance-comparison
+          path: |
+            p5-performance/comparison.json
+            p5-performance/*/logs/
+          if-no-files-found: warn
+  release-prep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retrieve known production QA evidence (Fragile Glass pilot)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 45747002769 --repo "$GITHUB_REPOSITORY" --pattern 'qa-report-*-1' --dir p5-input/reports
+          gh run download 45747002769 --repo "$GITHUB_REPOSITORY" --name qa-v2-bundles-1 --dir p5-input/bundle
+      - name: Generate evidence-bound upload plan (no publication)
+        run: |
+          set -euo pipefail
+          mapfile -t archives < <(find p5-input/bundle -name '*.zip' -type f)
+          test "${#archives[@]}" -eq 1
+          python3 -m tools.qa.release_prep tools/qa/examples/release-fragileglass.json "${archives[0]}" p5-input/reports --out p5-release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: p5-curseforge-modrinth-upload-draft
+          path: p5-release/

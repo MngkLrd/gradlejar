@@ -129,7 +129,7 @@ def play(rcon,steps,report,suite=None):
     require(any(c.get("assertion") and c["passed"] for c in report["checks"][start:]),"No scenario assertions executed")
 
 FATAL=re.compile(r"Failed to load registries|Errors in currently selected data packs|Exception in server tick loop|A critical error occurred|MixinApplyError|InvalidInjectionException|Failed to start the minecraft server",re.I)
-def run(p,q,jar,work,report,*,extra_jars=(),scenarios=None,after_suites=None):
+def run(p,q,jar,work,report,*,extra_jars=(),scenarios=None,after_suites=None,diagnostic_baseline=None):
     work=Path(work).resolve()
     work.mkdir(parents=True,exist_ok=True)
     root=work/"server"
@@ -140,11 +140,26 @@ def run(p,q,jar,work,report,*,extra_jars=(),scenarios=None,after_suites=None):
         scenarios=[(p["slug"],q["scenario"])]
     suites=[(label,scenario_steps(json.loads(safe_path(ROOT,path).read_text("utf-8")),p["loader"])) for label,path in scenarios]
     require(suites and len({label for label,_ in suites})==len(suites),"Missing or duplicate scenario suites")
-    cmd=install(p,q,root,logs)
+    require(diagnostic_baseline in (None,"vanilla","loader-only"),"Invalid diagnostic baseline")
+    if diagnostic_baseline:
+        require(jar is None and not extra_jars and not q.get("dependencies"),"Baseline must not install any mods or dependencies")
+        require(report.get("kind")=="p5-benchmark-phase" and report.get("eligible") is False,"Baseline cannot be used for release certification")
+    else:
+        require(jar is not None,"Production JAR required")
+    if diagnostic_baseline=="vanilla":
+        from .api_diff import official
+        official_jar,official_sha1=official(p["minecraft"],work/"official-cache")
+        shutil.copy2(official_jar,root/"vanilla-server.jar")
+        report["official_server_sha1"]=official_sha1
+        cmd=["java","-Xmx2G","-jar","vanilla-server.jar","nogui"]
+    else:
+        cmd=install(p,q,root,logs)
     mods=root/"mods"; mods.mkdir(exist_ok=True)
-    shutil.copy2(jar,mods/Path(jar).name)
-    require(sha256(mods/Path(jar).name)==sha256(jar),"Installed JAR checksum mismatch")
-    installed={Path(jar).name:sha256(jar)}
+    installed={}
+    if jar is not None:
+        shutil.copy2(jar,mods/Path(jar).name)
+        require(sha256(mods/Path(jar).name)==sha256(jar),"Installed JAR checksum mismatch")
+        installed[Path(jar).name]=sha256(jar)
     for extra in extra_jars:
         extra=Path(extra)
         require(extra.is_file() and extra.name.endswith(".jar") and extra.name not in installed,"Missing or duplicate pack JAR")
@@ -180,8 +195,8 @@ def run(p,q,jar,work,report,*,extra_jars=(),scenarios=None,after_suites=None):
                 time.sleep(1)
             require(conn is not None,"Production server or RCON did not start")
             report["qa_level"]=3
-            report["runtime"]="production-jar"
-            report["installed_sha256"]=sha256(mods/Path(jar).name)
+            report["runtime"]=diagnostic_baseline or "production-jar"
+            if jar is not None: report["installed_sha256"]=sha256(mods/Path(jar).name)
             for label,steps in suites:
                 play(conn,steps,report,label)
             if after_suites is not None:
@@ -193,7 +208,7 @@ def run(p,q,jar,work,report,*,extra_jars=(),scenarios=None,after_suites=None):
             proc.wait(timeout=40)
             require(proc.returncode==0,"Server failed clean shutdown")
             require(not FATAL.search(log.read_text(errors="replace")),"Fatal Minecraft error during shutdown")
-            report["qa_level"]=4
+            report["qa_level"]=0 if diagnostic_baseline else 4
         finally:
             if conn is not None:
                 try: conn.cmd("stop")
