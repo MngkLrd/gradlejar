@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import io
 import json
+import os
 import re
 import struct
 import urllib.request
@@ -32,7 +33,7 @@ def checked(url,sha):
     return b
 
 def official(version,cache):
-    cache=Path(cache);cache.mkdir(parents=True,exist_ok=True)
+    cache=Path(os.getenv("MINEMODS_OFFICIAL_CACHE",str(cache)));cache.mkdir(parents=True,exist_ok=True)
     require(re.fullmatch(r"\d+\.\d+(?:\.\d+)?",version),"Invalid version")
     require(version.startswith("26."),"Named-server comparison currently supports 26.x only; older obfuscated versions need mapping normalization")
     manifest=json.loads(fetch(MANIFEST))

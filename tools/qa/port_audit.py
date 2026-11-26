@@ -3,16 +3,16 @@ import argparse
 import json
 import re
 from pathlib import Path
-from .common import ROOT, profile, relative_project, REGISTRY, require, write_json
+from .common import ROOT, profile, relative_project, REGISTRY, require, write_json, shared_paths, safe_path
 
 def audit(project,target_mc):
     p=profile(project);base=relative_project(project)
     require(target_mc in REGISTRY["minecraft"],"Unknown target")
     rules=json.loads((ROOT/"tools/qa/migration-rules.json").read_text())["rules"]
     hits=[]
-    for f in (base/"src/main").rglob("*"):
+    for f in [f for root in [base,*[safe_path(ROOT,x) for x in shared_paths(p)]] for f in (root/"src/main").rglob("*")]:
         if not f.is_file() or f.suffix not in (".java",".json",".mcmeta"):continue
-        rel=f.relative_to(base).as_posix()
+        rel=f.relative_to(ROOT).as_posix()
         try:text=f.read_text("utf-8")
         except UnicodeError:continue
         for rule in rules:

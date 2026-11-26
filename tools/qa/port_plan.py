@@ -4,15 +4,16 @@ import hashlib
 import json
 from collections import defaultdict
 from pathlib import Path
-from .common import ROOT,profile,relative_project,REGISTRY,write_json,require
+from .common import ROOT,profile,relative_project,REGISTRY,write_json,require,shared_paths,safe_path
 from .scaffold import select
 from .port_audit import audit
 
 def plan(project,targets):
     p=profile(project);src=relative_project(project)
     files=[]
-    for f in sorted((src/"src/main").rglob("*")):
-        if f.is_file():files.append({"path":f.relative_to(src).as_posix(),"sha256":hashlib.sha256(f.read_bytes()).hexdigest()})
+    for root in [src,*[safe_path(ROOT,x) for x in shared_paths(p)]]:
+        for f in sorted((root/"src/main").rglob("*")):
+            if f.is_file():files.append({"path":f.relative_to(ROOT).as_posix(),"sha256":hashlib.sha256(f.read_bytes()).hexdigest()})
     rows=[]
     for mc,l in select(targets):
         dest="projects/"+p["slug"]+"-"+l+"-"+mc

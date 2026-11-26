@@ -18,10 +18,17 @@ permissions:
   contents: read
 jobs:
   api-diff:
+    env:
+      MINEMODS_OFFICIAL_CACHE: /home/runner/.cache/minemods/official
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - name: Restore checksum-verified official Minecraft downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/minemods/official
+          key: minemods-official-v1-${{ runner.os }}-${{ hashFiles('tools/qa/compatibility.json') }}
       - name: Compare named Mojang server APIs
         run: |
           python3 -m tools.qa.api_diff 26.1.2 26.3 --out p4-api/26.1.2-to-26.3.json

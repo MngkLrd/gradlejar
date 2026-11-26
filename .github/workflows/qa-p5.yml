@@ -88,6 +88,8 @@ jobs:
           print(validate_jar(p/'build/libs'/os.environ['JAR'],profile))
           PY
   benchmark:
+    env:
+      MINEMODS_OFFICIAL_CACHE: /home/runner/.cache/minemods/official
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -100,6 +102,11 @@ jobs:
         with:
           gradle-version: '9.7.1'
           cache-read-only: true
+      - name: Restore checksum-verified official Minecraft downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/minemods/official
+          key: minemods-official-v1-${{ runner.os }}-${{ hashFiles('tools/qa/compatibility.json') }}
       - name: Build exact pilot production JAR
         run: |
           cd projects/fragileglass-fabric-26.3

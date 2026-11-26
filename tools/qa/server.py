@@ -18,11 +18,19 @@ from .common import REGISTRY, ROOT, require, sha256, safe_path
 def download(url, path, expected=None):
     require(url.startswith("https://"),"HTTPS required")
     path=Path(path)
+    cache=None
+    if expected and os.getenv("MINEMODS_DEP_CACHE"):
+        cache=Path(os.environ["MINEMODS_DEP_CACHE"])/expected
+        cache.parent.mkdir(parents=True,exist_ok=True)
+        if cache.is_file() and sha256(cache)==expected and zipfile.is_zipfile(cache):
+            shutil.copy2(cache,path)
+            return path
     request=urllib.request.Request(url,headers={"User-Agent":"MineMods-QA/2.0"})
     with urllib.request.urlopen(request,timeout=90) as r, path.open("wb") as f:
         shutil.copyfileobj(r,f)
     require(zipfile.is_zipfile(path),"Downloaded file is not a JAR: "+url)
     if expected: require(sha256(path)==expected,"Dependency checksum mismatch: "+path.name)
+    if cache is not None: shutil.copy2(path,cache)
     return path
 
 def install(p,q,root,log):

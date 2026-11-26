@@ -55,7 +55,15 @@ def compatibility(p):
     require(p["loader"] in mc["loaders"], "Unsupported loader/Minecraft pair")
     return mc, mc["loaders"][p["loader"]]
 
+def shared_paths(p):
+    paths=p.get("shared_sources",[])
+    require(isinstance(paths,list) and all(isinstance(x,str) for x in paths) and len(paths)==len(set(paths)),"Invalid shared_sources")
+    for path in paths:
+        require(re.fullmatch(r"shared/[a-z0-9_./-]+",path) and safe_path(ROOT,path).is_dir(),"Invalid shared source directory: "+path)
+    return sorted(paths)
+
 def qa_config(p):
+    shared_paths(p)
     require(not p.get("draft"), "Draft scaffold cannot be enrolled or released")
     q = p.get("qa")
     if q is None:
@@ -86,9 +94,23 @@ def target(p):
 def filename(p):
     return p["slug"]+"-"+target(p)+"-"+p["version"]+".jar"
 
+EVIDENCE_INPUTS=("tools/qa/compatibility.json","tools/qa/common.py","tools/qa/static.py","tools/qa/assets.py","tools/qa/server.py","tools/qa/gate.py")
 def project_tree(project):
+    """Legacy tree ID or QA fingerprint of all declared tracked inputs."""
     spec="HEAD^{tree}" if project=="." else "HEAD:"+project
-    return subprocess.run(["git","rev-parse",spec],cwd=ROOT,check=False,capture_output=True,text=True).stdout.strip()
+    raw=subprocess.run(["git","rev-parse",spec],cwd=ROOT,check=False,capture_output=True,text=True).stdout.strip()
+    try:p=json.loads((relative_project(project)/"build-profile.json").read_text())
+    except (OSError,ValueError):return raw
+    q=p.get("qa")
+    if not isinstance(q,dict):return raw
+    inputs=[*shared_paths(p),*EVIDENCE_INPUTS,*q.get("watch_paths",[])]
+    if q.get("scenario"):inputs.append(q["scenario"])
+    records={"project":raw}
+    for path in sorted(set(inputs)):
+        require(isinstance(path,str) and not Path(path).is_absolute() and ".." not in Path(path).parts,"Invalid evidence input")
+        result=subprocess.run(["git","ls-files","-s","-z","--",path],cwd=ROOT,check=True,capture_output=True)
+        records[path]=hashlib.sha256(result.stdout).hexdigest()
+    return hashlib.sha256(json.dumps(records,sort_keys=True).encode()).hexdigest()
 
 def report_for(p):
     return {"schema":1,"project":p["project_dir"],"slug":p["slug"],"version":p["version"],"minecraft":p["minecraft"],"loader":p["loader"],"target":target(p),"commit":os.getenv("GITHUB_SHA",""),"tree":project_tree(p["project_dir"]),"run_id":os.getenv("GITHUB_RUN_ID",""),"run_attempt":os.getenv("GITHUB_RUN_ATTEMPT",""),"qa_level":0,"status":"pending","eligible":False,"checks":[]}
