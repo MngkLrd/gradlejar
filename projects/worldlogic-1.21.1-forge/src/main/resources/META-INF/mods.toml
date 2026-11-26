@@ -1,0 +1,20 @@
+modLoader="javafml"
+loaderVersion="[52,)"
+license="All Rights Reserved"
+[[mods]]
+modId="worldlogic"
+version="0.1.0-alpha"
+displayName="World Logic"
+description='''Material, movement, water, weather and ecological reactions for vanilla survival.'''
+[[dependencies.worldlogic]]
+modId="forge"
+mandatory=true
+versionRange="[52.1.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.worldlogic]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"

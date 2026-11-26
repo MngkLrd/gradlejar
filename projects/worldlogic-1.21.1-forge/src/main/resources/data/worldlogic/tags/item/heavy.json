@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:anvil",
+    "minecraft:iron_block",
+    "minecraft:gold_block",
+    "minecraft:netherite_block",
+    "minecraft:copper_block"
+  ]
+}
