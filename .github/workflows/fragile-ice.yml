@@ -1,0 +1,108 @@
+name: Fragile Ice - 11 JARs
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/build_fragileice.py'
+      - '.github/workflows/fragile-ice.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    name: ${{ matrix.loader }} ${{ matrix.mc }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {loader: forge, mc: '1.20.1'}
+          - {loader: neoforge, mc: '1.20.1'}
+          - {loader: neoforge, mc: '1.21.1'}
+          - {loader: neoforge, mc: '26.1.2'}
+          - {loader: neoforge, mc: '26.2'}
+          - {loader: neoforge, mc: '26.3'}
+          - {loader: fabric, mc: '1.20.1'}
+          - {loader: fabric, mc: '1.21.1'}
+          - {loader: fabric, mc: '26.1.2'}
+          - {loader: fabric, mc: '26.2'}
+          - {loader: fabric, mc: '26.3'}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate port and read profile
+        id: profile
+        run: |
+          python3 tools/build_fragileice.py "${{ matrix.mc }}" "${{ matrix.loader }}"
+          p="build/fragileice-${{ matrix.loader }}-${{ matrix.mc }}/build-profile.json"
+          echo "java=$(jq -r .java "$p")" >> "$GITHUB_OUTPUT"
+          echo "gradle=$(jq -r .gradle "$p")" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.profile.outputs.java }}
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ steps.profile.outputs.gradle }}
+      - name: Compile actual mod
+        working-directory: build/fragileice-${{ matrix.loader }}-${{ matrix.mc }}
+        run: gradle --no-daemon clean build --stacktrace
+      - name: Verify and publish JAR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MC: ${{ matrix.mc }}
+          LOADER: ${{ matrix.loader }}
+        run: |
+          set -euo pipefail
+          base="build/fragileice-$LOADER-$MC"
+          jar="$base/build/libs/$(jq -r .jar_glob "$base/build-profile.json")"
+          test -f "$jar"
+          python3 - "$jar" "$LOADER" "$MC" <<'PY'
+          import sys,zipfile
+          path,loader,mc=sys.argv[1:]
+          with zipfile.ZipFile(path) as z:
+              assert z.testzip() is None
+              names=set(z.namelist())
+              assert 'dev/minemods/fragileice/mixin/ServerPlayerMixin.class' in names
+              assert 'fragileice.mixins.json' in names
+              assert 'pack.mcmeta' in names
+              meta='fabric.mod.json' if loader=='fabric' else 'META-INF/mods.toml' if mc=='1.20.1' else 'META-INF/neoforge.mods.toml'
+              assert meta in names
+              assert not any(x.startswith('net/minecraft/') for x in names)
+          PY
+          tag="ci-fragileice-$LOADER-mc$MC-$GITHUB_RUN_NUMBER-$GITHUB_RUN_ATTEMPT"
+          gh release create "$tag" "$jar" --target "$GITHUB_SHA" --title "$tag" --prerelease --notes "Compiled Fragile Ice port."
+  package:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download verified ports and pack ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p jars
+          for loader in forge neoforge fabric; do
+            for mc in 1.20.1 1.21.1 26.1.2 26.2 26.3; do
+              if [[ "$loader" == forge && "$mc" != 1.20.1 ]]; then continue; fi
+              tag="ci-fragileice-$loader-mc$mc-$GITHUB_RUN_NUMBER-$GITHUB_RUN_ATTEMPT"
+              gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*.jar" --dir jars
+            done
+          done
+          python3 - <<'PY'
+          import zipfile
+          from pathlib import Path
+          root=Path('jars')
+          jars=[]
+          for loader in ('forge','neoforge','fabric'):
+              for mc in ('1.20.1','1.21.1','26.1.2','26.2','26.3'):
+                  if loader=='forge' and mc!='1.20.1': continue
+                  p=root/f'fragileice-{loader}-mc{mc}-1.0.0.jar'
+                  assert p.is_file(), p
+                  jars.append(p)
+          assert len(jars)==11 and len(list(root.glob('*.jar')))==11
+          with zipfile.ZipFile('FragileIce-1.0.0-ALL-11-JARs.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for p in jars: z.write(p,p.name)
+          with zipfile.ZipFile('FragileIce-1.0.0-ALL-11-JARs.zip') as z: assert z.testzip() is None
+          PY
+          gh release create "fragileice-1.0.0-all-11-$GITHUB_RUN_NUMBER-$GITHUB_RUN_ATTEMPT" FragileIce-1.0.0-ALL-11-JARs.zip --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "Fragile Ice 1.0.0 | All 11 JARs" --notes "All 11 Gradle-compiled JARs, Forge / NeoForge / Fabric order." --prerelease
