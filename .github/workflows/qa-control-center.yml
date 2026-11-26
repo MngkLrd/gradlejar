@@ -1,0 +1,29 @@
+name: MineMods Control Center
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 4 * * *'
+  push:
+    branches: [main]
+    paths:
+      - tools/qa/control.py
+      - tools/qa/bulk_upload.py
+      - .github/workflows/qa-control-center.yml
+permissions:
+  contents: read
+  actions: read
+jobs:
+  discover-and-plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Discover official versions and plan bounded batches
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -m tools.qa.control --out control-center
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MineMods-Control-Center
+          path: control-center/
+          retention-days: 30
