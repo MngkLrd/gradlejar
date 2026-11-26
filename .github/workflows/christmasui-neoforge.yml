@@ -46,6 +46,14 @@ jobs:
                   for name in ['container/inventory','container/creative_inventory/tab_items','sprites/hud/heart/full','sprites/server_list/join','title/background/panorama_0']:
                       assert 'assets/minecraft/textures/gui/'+name+'.png' in z.namelist(), name
                   if f.suffix=='.jar': assert 'dev/christmasui/client/TitleSnow.class' in z.namelist()
+                  from PIL import ImageChops
+                  base='assets/minecraft/textures/gui/sprites/widget/'
+                  normal=Image.open(BytesIO(z.read(base+'button.png'))).convert('RGB')
+                  hover=Image.open(BytesIO(z.read(base+'button_highlighted.png'))).convert('RGB')
+                  assert normal.size==hover.size==(200,20)
+                  assert ImageChops.difference(normal,hover).getbbox() is not None
+                  assert hover.getpixel((100,10))[0]-normal.getpixel((100,10))[0]>=30
+                  assert hover.getpixel((100,18))==(255,215,125)
                   import json, hashlib
                   logo=z.read('assets/christmasui/textures/gui/christmas_logo.png')
                   assert hashlib.sha256(logo).hexdigest()=='8634330a1096ceec2c3303c1016f04087e5c1c40c83af1a343fd46e9becd69c2'
@@ -83,11 +91,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar --target "$GITHUB_SHA" --title "Christmas UI 0.3.3" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
+          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar --target "$GITHUB_SHA" --title "Christmas UI 0.3.4" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
       - name: Upload JAR if release publishing is denied
         if: steps.publish.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
-          name: christmasui-neoforge-1.21.1-0.3.3
+          name: christmasui-neoforge-1.21.1-0.3.4
           path: projects/christmasui-neoforge/build/libs/*.jar
           if-no-files-found: error

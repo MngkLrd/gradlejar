@@ -33,10 +33,14 @@ def upgrade(root,z,out,download):
     for rel in ['button','button_highlighted','button_disabled']:
         im=Image.new('RGBA',(200,20));d=ImageDraw.Draw(im)
         hover='highlighted' in rel;off='disabled' in rel
-        edge='#29251e';wood='#68503b' if not off else '#56534a';light='#9e7952' if hover else '#826247';dark='#483a2c'
+        edge='#ffda86' if hover else '#29251e';wood='#8c5d32' if hover else ('#56534a' if off else '#68503b');light='#c28c54' if hover else '#826247';dark='#694227' if hover else '#483a2c'
         d.rectangle((0,1,199,18),fill=edge);d.rectangle((1,0,198,19),fill=edge)
         d.rectangle((1,2,198,17),fill=dark);d.rectangle((2,3,197,15),fill=wood)
-        d.line((3,16,196,16),fill='#ad885e' if hover else '#8e6f50')
+        d.line((3,16,196,16),fill='#e6b36b' if hover else '#8e6f50')
+        if hover:
+            d.line((1,3,1,16),fill='#fff0ba')
+            d.line((198,3,198,16),fill='#e6b36b')
+            d.line((2,18,197,18),fill='#ffd77d')
         for x,y,w in [(10,9,19),(42,12,15),(71,7,15),(105,13,22),(146,10,19),(174,7,12)]:
             d.line((x,y,x+w,y),fill=dark);d.line((x+2,y+1,x+w-3,y+1),fill=light)
         for i,(x,w) in enumerate([(2,21),(33,13),(59,30),(103,19),(146,25),(184,14)]):
