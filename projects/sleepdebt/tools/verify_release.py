@@ -60,7 +60,9 @@ with zipfile.ZipFile(jar) as z:
         data(f"assets/sleepdebt/textures/mob_effect/{effect}.png")
     for name in names:
         if (name.startswith("assets/sleepdebt/") or name.startswith("data/sleepdebt/")) and name.endswith(".json"):
-            js(name)
+            obj=js(name)
+            if "/recipe/" in name and obj.get("type") in ("minecraft:shaped","minecraft:shapeless"):
+                raise ValueError(f"Invalid vanilla recipe serializer: {name}")
     pngs=[n for n in names if n.startswith("assets/sleepdebt/textures/") and n.endswith(".png")]
     if len(pngs)<17:raise ValueError(f"Expected >17 textures, found {len(pngs)}")
     for n in pngs:
