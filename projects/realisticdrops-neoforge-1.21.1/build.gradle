@@ -1,0 +1,7 @@
+plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
+neoForge { version='21.1.262'; runs { client { client() } }; mods { realisticdrops { sourceSet(sourceSets.main) } } }
+group='dev.minemods.realisticdrops'
+version='1.0.0'
+base.archivesName='realisticdrops-neoforge-mc1.21.1'
+java.toolchain.languageVersion=JavaLanguageVersion.of(21)
+tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=21 }
