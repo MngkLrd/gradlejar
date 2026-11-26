@@ -33,6 +33,10 @@ public final class GroundHazards {
   Player p=e.getEntity();if(e.isCanceled()||!Survival.active(p)||p.getAttackStrengthScale(.5f)<.8||wetGrip(p)<.65)return;
   if(p.getRandom().nextFloat()<Rules.chance("movement",.18)){GRIP.put(p,p.level().getGameTime()+12);Survival.work(p,2);p.displayClientMessage(Component.translatable("message.worldlogic.wet_grip"),true);}
  }
+ public static void hurt(net.minecraftforge.event.entity.living.LivingHurtEvent e){
+  if(e.isCanceled()||!Rules.on("tool_grip")||!(e.getSource().getDirectEntity() instanceof Player p)||!Survival.active(p)||!Material.item(p.getMainHandItem(),"heavy_weapons")||GRIP.getOrDefault(p,0L)<=p.level().getGameTime())return;
+  e.setAmount(e.getAmount()*.85f);
+ }
  static double penalty(Player p,long now){return Rules.on("tool_grip")&&GRIP.getOrDefault(p,0L)>now?.12:0;}
  public static void tick(TickEvent.PlayerTickEvent.Post e){
   Player p=e.player;if(!Survival.active(p)||!(p.level() instanceof ServerLevel l)||!p.isAlive()){LANDING.remove(p);SLIP.remove(p);return;}

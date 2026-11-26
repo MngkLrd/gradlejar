@@ -30,7 +30,7 @@ public final class Balance {
  private static final Map<Player,State> STATES=new WeakHashMap<>();
  private static State state(Player p){return STATES.computeIfAbsent(p,k->new State());}
  static boolean eligible(Player p){return Survival.active(p)&&p.isAlive()&&!p.isSleeping()&&!p.isPassenger()&&!p.isFallFlying()&&!p.isInWater()&&!p.isInLava()&&!p.onClimbable()&&!p.getAbilities().flying;}
- public static boolean down(Player p){State s=STATES.get(p);return s!=null&&s.owned&&eligible(p)&&s.downUntil>p.level().getGameTime();}
+ public static boolean down(Player p){State s=STATES.get(p);return Rules.on("physical_falls")&&s!=null&&s.owned&&eligible(p)&&s.downUntil>p.level().getGameTime();}
  public static float roll(Player p){State s=STATES.get(p);return s==null?0:s.roll;}
  static double threshold(boolean injured,double fatigue,double burden){return Math.max(.15,.265-(injured?.055:0)-Math.max(0,fatigue-55)*.0008-Math.min(.035,burden*.008));}
  static double slipRisk(boolean injured,double fatigue,double burden,double weakness){return Math.max(0,Math.min(1,(injured?.65:0)+Math.max(0,fatigue-55)*.007+Math.min(.22,burden*.05)+weakness*.4));}
@@ -38,6 +38,7 @@ public final class Balance {
  static boolean blocked(ServerLevel l,Player p,AABB box,Vec3 direction,double lift){
   return l.getBlockCollisions(p,box.deflate(.001).move(direction.x,lift,direction.z)).iterator().hasNext();
  }
+ static boolean dark(ServerLevel l,Player p){return Rules.on("dangerous_darkness")&&!p.hasEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION)&&l.getMaxLocalRawBrightness(p.blockPosition())<=3;}
  static boolean slick(ServerLevel l,Player p){
   BlockPos pos=p.getOnPos();var b=l.getBlockState(pos);
   return b.is(Blocks.ICE)||b.is(Blocks.PACKED_ICE)||b.is(Blocks.BLUE_ICE)||b.is(Blocks.FROSTED_ICE)||Rules.on("slippery_rain")&&Material.block(b,"slippery")&&l.isRainingAt(pos.above());
@@ -75,7 +76,7 @@ public final class Balance {
   Vec3 delta=p.position().subtract(s.position),previous=s.velocity;double speed=previous.horizontalDistance(),current=delta.horizontalDistance();
   boolean injured=Rules.on("injured_balance")&&Survival.injured(p,now);
   double fatigue=Rules.on("exertion")?Survival.fatigue(p):0,burden=Condition.burden(p),weak=Condition.weakness(p);
-  double min=threshold(injured,fatigue,burden);if(Rules.on("dangerous_darkness")&&l.getMaxLocalRawBrightness(p.blockPosition())<=3)min=Math.max(.13,min*.85);
+  double min=threshold(injured,fatigue,burden);if(dark(l,p))min=Math.max(.13,min*.85);
   if(s.ground&&!p.onGround()&&delta.y>.075){s.jumpAt=now;s.jumpY=s.position.y;s.jumpSpeed=Math.max(speed,current);s.failedUntil=0;}
   boolean airborneJump=!p.onGround()&&now-s.jumpAt<=20;
   if(airborneJump)s.jumpSpeed=Math.max(s.jumpSpeed,speed);
