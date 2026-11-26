@@ -1,0 +1,163 @@
+{
+  "schema": 1,
+  "name": "Fragile Glass survival network regression",
+  "steps": [
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded|already marked"
+    },
+    {
+      "command": "fill 0 199 0 10 199 10 minecraft:stone",
+      "expect": "Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 3 200 3 minecraft:glass",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 4 200 3 minecraft:stone",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 5 200 3 minecraft:lever[face=floor,facing=north,powered=false]",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "gamemode survival MineModsQA",
+      "expect": "Set.*game mode|already"
+    },
+    {
+      "command": "clear MineModsQA",
+      "expect": "Removed|No items"
+    },
+    {
+      "command": "tp MineModsQA 3.5 200 1.5",
+      "expect": "Teleported"
+    },
+    {
+      "action": "position",
+      "args": {
+        "x": 3.5,
+        "y": 200,
+        "z": 1.5
+      }
+    },
+    {
+      "command": "execute if entity @a[name=MineModsQA,gamemode=survival]",
+      "expect": "Test passed",
+      "name": "Survival player connected",
+      "assertion": true
+    },
+    {
+      "command": "execute if block 3 200 3 minecraft:glass",
+      "expect": "Test passed",
+      "name": "Glass exists before action",
+      "assertion": true
+    },
+    {
+      "action": "startDig",
+      "args": {
+        "x": 4,
+        "y": 200,
+        "z": 3,
+        "block": "stone"
+      }
+    },
+    {
+      "wait": 0.65
+    },
+    {
+      "command": "execute if block 4 200 3 minecraft:stone",
+      "expect": "Test passed",
+      "name": "Stone does not instamine",
+      "assertion": true
+    },
+    {
+      "action": "abortDig",
+      "args": {
+        "x": 4,
+        "y": 200,
+        "z": 3,
+        "block": "stone"
+      }
+    },
+    {
+      "action": "activate",
+      "args": {
+        "x": 5,
+        "y": 200,
+        "z": 3,
+        "block": "lever"
+      }
+    },
+    {
+      "wait": 0.65
+    },
+    {
+      "command": "execute if block 5 200 3 minecraft:lever[powered=true]",
+      "expect": "Test passed",
+      "name": "Right click toggles lever",
+      "assertion": true
+    },
+    {
+      "command": "give MineModsQA minecraft:stick 2",
+      "expect": "Gave"
+    },
+    {
+      "action": "inventory",
+      "args": {
+        "item": "stick",
+        "count": 2
+      }
+    },
+    {
+      "command": "clear MineModsQA minecraft:stick 0",
+      "expect": "\\b2\\b",
+      "name": "Inventory sync",
+      "assertion": true
+    },
+    {
+      "action": "drop",
+      "args": {
+        "item": "stick"
+      }
+    },
+    {
+      "wait": 0.65
+    },
+    {
+      "command": "clear MineModsQA minecraft:stick 0",
+      "expect": "\\b1\\b",
+      "name": "Q drops one item",
+      "assertion": true
+    },
+    {
+      "command": "execute if entity @e[type=minecraft:item,nbt={Item:{id:\"minecraft:stick\"}}]",
+      "expect": "Test passed",
+      "name": "Dropped item entity",
+      "assertion": true
+    },
+    {
+      "command": "clear MineModsQA",
+      "expect": "Removed|No items"
+    },
+    {
+      "action": "startDig",
+      "args": {
+        "x": 3,
+        "y": 200,
+        "z": 3,
+        "block": "glass"
+      }
+    },
+    {
+      "wait": 0.65
+    },
+    {
+      "command": "execute if block 3 200 3 minecraft:air",
+      "expect": "Test passed",
+      "name": "Glass breaks from single START_DESTROY_BLOCK",
+      "assertion": true
+    }
+  ]
+}

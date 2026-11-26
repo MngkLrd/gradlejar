@@ -50,7 +50,12 @@ def main():
         if q["mode"]=="client":
             report.update(status="client-candidate-awaiting-validation",eligible=False)
             return 2
-        run(p,q,jar,args.work,report)
+        after=None
+        if q.get("player_scenario"):
+            from .player_suite import callback
+            after=callback(p,q)
+        run(p,q,jar,args.work,report,after_suites=after)
+        if after is not None:require(report.get("virtual_player",{}).get("status")=="passed","Required protocol player scenario did not pass")
         require(report["qa_level"]==4,"Gameplay runtime not verified")
         report.update(status="passed",eligible=True)
         return 0

@@ -6,3 +6,5 @@ p=profile(sys.argv[1])
 q=qa_config(p)
 print("mode="+q["mode"])
 print("runtime_java="+str(compatibility(p)[0]["java"] if q["mode"]!="legacy" else p["java"]))
+
+print("player="+str(bool(q.get("player_scenario"))).lower())

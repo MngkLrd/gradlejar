@@ -3,7 +3,7 @@ const mineflayer = require('mineflayer');
 const readline = require('node:readline');
 const port = Number(process.argv[2]);
 const version = process.argv[3];
-if (!Number.isInteger(port) || port < 1 || port > 65535 || version !== '1.21.1') process.exit(2);
+if (!Number.isInteger(port) || port < 1 || port > 65535 || !['1.20.1','1.21.1'].includes(version)) process.exit(2);
 const bot = mineflayer.createBot({host:'127.0.0.1', port, username:'MineModsQA', auth:'offline', version, hideErrors:false});
 const emit = (obj) => process.stdout.write(JSON.stringify(obj)+'\n');
 const sleep = (ms) => new Promise(r=>setTimeout(r,ms));

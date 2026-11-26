@@ -82,6 +82,9 @@ def qa_config(p):
     if q["mode"]=="server":
         require(isinstance(q.get("scenario"),str), "Gameplay server mod needs a scenario")
         require(safe_path(ROOT,q["scenario"]).is_file(), "Missing scenario")
+    if q.get("player_scenario"):
+        require(q["mode"]=="server" and (p["loader"],p["minecraft"]) in {("fabric","1.20.1"),("fabric","1.21.1")},"Unsupported player backend")
+        require(safe_path(ROOT,q["player_scenario"]).is_file(),"Missing player scenario")
     for item in q.get("dependencies",[]):
         require(isinstance(item,dict) and re.fullmatch(r"[A-Za-z0-9_.-]+\.jar",item.get("name","")), "Bad dependency name")
         require(re.fullmatch(r"[a-f0-9]{64}",item.get("sha256","")), "Dependencies must be SHA-256 pinned")
@@ -105,6 +108,7 @@ def project_tree(project):
     if not isinstance(q,dict):return raw
     inputs=[*shared_paths(p),*EVIDENCE_INPUTS,*q.get("watch_paths",[])]
     if q.get("scenario"):inputs.append(q["scenario"])
+    if q.get("player_scenario"):inputs.extend([q["player_scenario"],"tools/qa/player_suite.py","tools/qa/virtual_player.py","tools/qa/bot"])
     records={"project":raw}
     for path in sorted(set(inputs)):
         require(isinstance(path,str) and not Path(path).is_absolute() and ".." not in Path(path).parts,"Invalid evidence input")

@@ -450,6 +450,14 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ steps.qa-policy.outputs.runtime_java }}
+      - uses: actions/setup-node@v4
+        if: steps.qa-policy.outputs.player == 'true'
+        with:
+          node-version: '22'
+      - name: Install protocol QA player
+        if: steps.qa-policy.outputs.player == 'true'
+        working-directory: tools/qa/bot
+        run: npm install --ignore-scripts --no-audit --no-fund
       - name: QA v2 production JAR release gate
         id: qa
         timeout-minutes: 18
@@ -626,7 +634,7 @@ jobs:
 
   package-naturalbuoyancy:
     needs: [plan, build]
-    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/naturalbuoyancy-') && github.event_name == 'push' }}
+    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/naturalbuoyancy-') && needs.plan.outputs.qa_enabled != 'true' && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
