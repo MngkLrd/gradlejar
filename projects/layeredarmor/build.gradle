@@ -1,0 +1,22 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.107'
+}
+group = 'dev.minemods'
+version = '0.1.0'
+base { archivesName = 'layeredarmor' }
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
+def generated = providers.exec {
+    workingDir projectDir
+    commandLine 'python3', '-c', 'import base64,tarfile,io,pathlib,subprocess,sys; p=pathlib.Path("source.tar.gz.b64"); t=tarfile.open(fileobj=io.BytesIO(base64.b64decode(p.read_text())),mode="r:gz"); t.extractall("."); subprocess.check_call([sys.executable,"generate.py"])'
+}.result.get()
+if (generated.exitValue != 0) throw new GradleException('Source extraction failed')
+neoForge {
+    version = '21.1.80'
+    runs {
+        client { client() }
+        server { server(); programArgument '--nogui' }
+    }
+    mods { layeredarmor { sourceSet(sourceSets.main) } }
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
