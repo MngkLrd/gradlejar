@@ -8,3 +8,5 @@ dependencies {
  implementation 'net.fabricmc:fabric-loader:0.19.5'
 }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=25 }
+
+// CI starts the dedicated server to check Mixin application and gameplay.

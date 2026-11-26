@@ -3,5 +3,5 @@ group='dev.minemods.fragileglass'
 version='1.0.1'
 base.archivesName='fragileglass-neoforge-mc26.3'
 java.toolchain.languageVersion=JavaLanguageVersion.of(25)
-neoForge { version='26.3.0.101'; runs { client { client() } }; mods { fragileglass { sourceSet(sourceSets.main) } } }
+neoForge { version='26.3.0.101'; runs { client { client() }; server { server() } }; mods { fragileglass { sourceSet(sourceSets.main) } } }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=25 }
