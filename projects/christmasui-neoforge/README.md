@@ -5,3 +5,5 @@ Minecraft 1.21.1 NeoForge, Java 21, Gradle 9.2.1. Includes 0.3.1 snowy panorama 
 0.3.4: Stronger vanilla-like hover/focus state, warm golden outline and lighter wood face. Snow silhouette, normal/disabled states, music, logo and panorama unchanged. Panorama selection pending user feedback.
 
 0.3.5: spruce cabinet inventory palette, wooden slot wells matching the hotbar, hand-authored evergreen and bell ornaments in safe panel areas, brass and snow edge trim, matching creative tabs. Retains existing panorama until user chooses replacement. In-game visual QA pending.
+
+0.3.6: replaces only the six panorama faces with Winter GUI Pack (CC BY 4.0), retaining all 0.3.5 UI, music and logo. Source hash, cubemap geometry and distinct faces verified in build. Source attribution included. In-game testing pending.

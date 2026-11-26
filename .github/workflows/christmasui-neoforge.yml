@@ -70,6 +70,7 @@ jobs:
                   assert all(im.width==im.height and im.width>=256 and max(ImageStat.Stat(im).stddev)>=3 for im in faces)
                   assert len({hashlib.sha256(im.tobytes()).hexdigest() for im in faces})==6
                   assert 'PANORAMA-CREDITS.txt' in z.namelist()
+                  assert b'https://modrinth.com/resourcepack/winter-gui-pack' in z.read('PANORAMA-CREDITS.txt')
                   events=json.loads(z.read('assets/minecraft/sounds.json'))
                   assert all(events[e]['replace'] for e in ['music.menu','music.game','music.overworld.frozen_peaks','music.creative'])
                   assert z.read('assets/minecraft/sounds/music/christmas_calm.ogg')[:4]==b'OggS'
@@ -96,11 +97,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar --target "$GITHUB_SHA" --title "Christmas UI 0.3.5" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
+          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar --target "$GITHUB_SHA" --title "Christmas UI 0.3.6" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
       - name: Upload JAR if release publishing is denied
         if: steps.publish.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
-          name: christmasui-neoforge-1.21.1-0.3.5
+          name: christmasui-neoforge-1.21.1-0.3.6
           path: projects/christmasui-neoforge/build/libs/*.jar
           if-no-files-found: error

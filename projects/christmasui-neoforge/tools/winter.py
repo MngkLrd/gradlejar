@@ -239,12 +239,14 @@ def upgrade(root,z,out,download):
                     pix[x,y]=(*bytes.fromhex(col[1:]),a)
         d=ImageDraw.Draw(im)
         snow(d,2,0,min(14,im.width-3),3);save('sprites/hud/'+rel,im)
-    # Import the actual captured winter cubemap from a redistributable CC BY project.
+    # Requested first choice: Winter GUI Pack's original snowy sunset cubemap.
+    # Only extract panorama faces, never replace our UI, music, or logo.
     if download:
         from PIL import ImageStat
         api='https://api.modrinth.com/v2/'
-        project=json.loads(get(api+'project/snowy-mountain-pws'))
-        assert project['license']['id']=='CC-BY-4.0', project['license']
+        project=json.loads(get(api+'project/ScxwaXQI'))
+        assert project['slug']=='winter-gui-pack',project['slug']
+        assert project['license']['id']=='CC-BY-4.0',project['license']
         versions=json.loads(get(api+'project/'+project['id']+'/version'))
         versions.sort(key=lambda v:('1.21.1' in v['game_versions'],v['date_published']),reverse=True)
         selected=None
@@ -265,15 +267,15 @@ def upgrade(root,z,out,download):
                     if len(faces)==6 and len({im.size for im in faces})==1 and len({hashlib.sha256(im.tobytes()).hexdigest() for im in faces})==6:
                         selected=(version,f,faces);break
             if selected:break
-        assert selected,'No valid six-face snowy panorama; refusing to package placeholder art'
+        assert selected,'Winter GUI Pack has no usable six-face cubemap; do not silently publish another panorama'
         version,f,faces=selected
         for i,im in enumerate(faces):
             save('title/background/panorama_'+str(i),im.convert('RGBA'))
         members=json.loads(get(api+'team/'+project['team']+'/members'))
         authors=', '.join(m['user']['username'] for m in members)
-        assert authors,'Missing panorama author attribution'
-        (out/'PANORAMA-CREDITS.txt').write_text('Snowy mountain [PWS] by '+authors+'\nSource: https://modrinth.com/resourcepack/snowy-mountain-pws\nVersion: '+version['version_number']+'\nOriginal archive: '+f['url']+'\nCC BY 4.0 https://creativecommons.org/licenses/by/4.0/\nChanges: only six panorama images extracted; converted to RGBA PNG for Minecraft 1.21.1; scene unmodified.\n',encoding='utf-8')
-        print('Verified snowy cubemap:',faces[0].size,'source',version['version_number'],'author',authors)
+        assert authors,'Missing panorama attribution'
+        (out/'PANORAMA-CREDITS.txt').write_text('Winter GUI Pack by '+authors+'\nSource: https://modrinth.com/resourcepack/winter-gui-pack\nVersion: '+version['version_number']+'\nOriginal archive: '+f['url']+'\nCC BY 4.0 https://creativecommons.org/licenses/by/4.0/\nChanges: only six panorama images extracted; converted to RGBA PNG for Minecraft 1.21.1; scene unmodified.\n',encoding='utf-8')
+        print('Verified Winter GUI Pack cubemap:',faces[0].size,'source',version['version_number'],'author',authors)
         # Required music: abort the build rather than publish a silent archive.
         url='https://upload.wikimedia.org/wikipedia/commons/4/4f/Jingle_Bells_%28Calm%29_%28Kevin_MacLeod%29_%28ISRC_USUAN1100188%29.oga'
         raw=get(url);assert hashlib.sha1(raw).hexdigest()=='df5c3c90f70da45bfd8bf7b39a0c300ac99cfb06'

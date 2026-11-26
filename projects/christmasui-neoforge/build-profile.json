@@ -1,9 +1,9 @@
 {
   "slug": "christmasui",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "christmasui-neoforge-1.21.1-0.3.5.jar"
+  "jar_glob": "christmasui-neoforge-1.21.1-0.3.6.jar"
 }
