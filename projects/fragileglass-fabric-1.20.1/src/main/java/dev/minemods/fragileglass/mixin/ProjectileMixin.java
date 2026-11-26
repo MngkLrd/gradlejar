@@ -24,7 +24,7 @@ public abstract class ProjectileMixin {
   if(p instanceof ThrownEnderpearl || p instanceof ThrownPotion || p instanceof ThrownExperienceBottle) return;
   var state=level.getBlockState(hit.getBlockPos());
   if(!GlassRules.fragile(state)) return;
-  boolean pane=state.is(GlassRules.PANES), light=p instanceof Snowball || p instanceof ThrownEgg;
+  boolean pane=GlassRules.pane(state), light=p instanceof Snowball || p instanceof ThrownEgg;
   double speed=p.getDeltaMovement().length();
   if(light?(!pane||speed<0.35):speed<(pane?0.35:0.65)) return;
   Entity owner=p.getOwner();

@@ -1,9 +1,19 @@
 {
   "slug": "fragileglass",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "minecraft": "1.20.1",
   "loader": "fabric",
   "java": "21",
   "gradle": "8.14.3",
-  "jar_glob": "fragileglass-fabric-mc1.20.1-1.0.0.jar"
+  "jar_glob": "fragileglass-fabric-mc1.20.1-1.0.1.jar",
+  "qa": {
+    "mode": "server",
+    "loader_version": "0.17.3",
+    "scenario": "tools/qa/scenarios/fragileglass.json",
+    "player_scenario": "tools/qa/scenarios/fragileglass-player.json",
+    "release_targets": [
+      "fabric-mc1.20.1",
+      "fabric-mc1.21.1"
+    ]
+  }
 }
