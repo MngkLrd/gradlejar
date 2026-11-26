@@ -21,7 +21,7 @@ public final class ObjectsPhysics {
   if(jobs!=null){int left=16;while(left-->0&&!jobs.isEmpty()&&jobs.peek().due<=now){
    BlockPos q=jobs.remove().pos;if(!l.hasChunkAt(q))continue;var s=l.getBlockState(q);if(!(s.getBlock() instanceof DoorBlock)||s.getValue(BlockStateProperties.OPEN))continue;
    Vec3 away=Vec3.atLowerCornerOf(s.getValue(BlockStateProperties.HORIZONTAL_FACING).getNormal());
-   for(Entity x:l.getEntities(null,new AABB(q).inflate(.06).expandTowards(0,1,0),a->!a.isSpectator()&&(a instanceof LivingEntity||a instanceof ItemEntity))){
+   for(Entity x:l.getEntities((Entity)null,new AABB(q).inflate(.06).expandTowards(0,1,0),a->!a.isSpectator()&&(a instanceof LivingEntity||a instanceof ItemEntity))){
     double side=x.position().subtract(Vec3.atCenterOf(q)).dot(away)>=0?1:-1;
     x.push(away.x*side*.16/Math.max(.5,Material.mass(x)),.015,away.z*side*.16/Math.max(.5,Material.mass(x)));x.hurtMarked=true;
    }
