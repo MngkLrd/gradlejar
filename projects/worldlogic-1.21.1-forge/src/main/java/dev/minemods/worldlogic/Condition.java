@@ -8,7 +8,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 public final class Condition {
  private static final Map<Player,Double> BURDEN=new WeakHashMap<>();
- static double stackLoad(ItemStack s){return Material.item(s,"dense_cargo")?Material.weight(s)*s.getCount()/64.0:0;}
+ static double stackLoad(ItemStack s){if(!Material.item(s,"dense_cargo"))return 0;double weight=Math.max(1.5,Material.weight(s));return weight*s.getCount()/Math.max(1,s.getMaxStackSize());}
  static double burden(Player p){return Rules.on("cargo_burden")?BURDEN.getOrDefault(p,0.0):0;}
  static double weakness(Player p){return Rules.on("weak_condition")?weakness(p.getHealth()/Math.max(1,p.getMaxHealth()),p.getFoodData().getFoodLevel()):0;}
  static double weakness(double health,int food){return Math.min(.5,Math.max(0,.5-health)*.6+Math.max(0,10-food)*.025);}

@@ -25,7 +25,7 @@ public final class Balance {
   long last,downUntil,cooldown,jumpAt=-100,failedUntil;
   boolean sprint,ground,owned;
   float roll;
-  double jumpY;
+  double jumpY,jumpSpeed;
  }
  private static final Map<Player,State> STATES=new WeakHashMap<>();
  private static State state(Player p){return STATES.computeIfAbsent(p,k->new State());}
@@ -36,7 +36,7 @@ public final class Balance {
  static double slipRisk(boolean injured,double fatigue,double burden,double weakness){return Math.max(0,Math.min(1,(injured?.65:0)+Math.max(0,fatigue-55)*.007+Math.min(.22,burden*.05)+weakness*.4));}
  static int duration(double severity,boolean injured){return (int)Math.max(16,Math.min(46,18+severity*15+(injured?8:0)));}
  static boolean blocked(ServerLevel l,Player p,AABB box,Vec3 direction,double lift){
-  return l.getBlockCollisions(p,box.move(direction.x,lift,direction.z)).iterator().hasNext();
+  return l.getBlockCollisions(p,box.deflate(.001).move(direction.x,lift,direction.z)).iterator().hasNext();
  }
  static boolean slick(ServerLevel l,Player p){
   BlockPos pos=p.getOnPos();var b=l.getBlockState(pos);
@@ -75,9 +75,10 @@ public final class Balance {
   boolean injured=Rules.on("injured_balance")&&Survival.injured(p,now);
   double fatigue=Rules.on("exertion")?Survival.fatigue(p):0,burden=Condition.burden(p),weak=Condition.weakness(p);
   double min=threshold(injured,fatigue,burden);
-  if(s.ground&&!p.onGround()&&delta.y>.075){s.jumpAt=now;s.jumpY=s.position.y;s.failedUntil=0;}
-  boolean airborneJump=!p.onGround()&&now-s.jumpAt<=16;
-  if(now>=s.cooldown&&!p.isShiftKeyDown()&&p.getForcedPose()==null&&speed>=min&&(s.sprint||p.isSprinting()||airborneJump)){
+  if(s.ground&&!p.onGround()&&delta.y>.075){s.jumpAt=now;s.jumpY=s.position.y;s.jumpSpeed=Math.max(speed,current);s.failedUntil=0;}
+  boolean airborneJump=!p.onGround()&&now-s.jumpAt<=20;
+  if(airborneJump)s.jumpSpeed=Math.max(s.jumpSpeed,speed);
+  if(now>=s.cooldown&&!p.isShiftKeyDown()&&p.getForcedPose()==null&&(speed>=min&&(s.sprint||p.isSprinting())||airborneJump&&speed>=.095&&s.jumpSpeed>=.14)){
    Vec3 forward=previous.multiply(1,0,1).normalize();
    AABB box=p.getBoundingBox();
    // Test each axis independently so a glancing shoulder collision is detected too.
@@ -86,9 +87,9 @@ public final class Balance {
    boolean front=current<speed*.5&&blocked(l,p,box,forward.scale(.18),0);
    boolean obstacle=x||z||front;
    boolean step=obstacle&&!blocked(l,p,box,forward.scale(.18),.62);
-   if(obstacle&&!step){
-    if(airborneJump){s.failedUntil=now+14;}
-    else if(p.onGround()&&s.ground&&s.sprint&&delta.y<.10){
+   if(obstacle&&airborneJump){s.failedUntil=now+16;}
+   else if(obstacle&&!step){
+    if(p.onGround()&&s.ground&&s.sprint&&delta.y<.10){
      fall(l,p,s,forward,"collision",Math.min(1.4,speed/min*.55),injured);
     }
    }
@@ -98,7 +99,7 @@ public final class Balance {
     if(angle<.65&&risk>=.45&&speed>=min*.95)fall(l,p,s,forward,"slip",risk,injured);
    }
   }
-  if(!s.owned&&p.onGround()&&!s.ground&&s.failedUntil>=now&&now>=s.cooldown&&p.getY()<s.jumpY+.50&&!p.isShiftKeyDown()){
+  if(!s.owned&&p.onGround()&&!s.ground&&s.failedUntil>0&&s.failedUntil>=now&&now>=s.cooldown&&p.getY()<s.jumpY+.50&&!p.isShiftKeyDown()){
    Vec3 dir=previous.horizontalDistance()>.04?previous:p.getLookAngle();fall(l,p,s,dir,"jump",.6,injured);
   }
   if(p.onGround()&&!s.ground)s.failedUntil=0;

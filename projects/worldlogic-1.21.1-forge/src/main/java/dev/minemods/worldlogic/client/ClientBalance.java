@@ -22,6 +22,11 @@ public final class ClientBalance {
   }else clearPose();
   float target=RuleSync.clientDown()?RuleSync.clientRoll():0;roll+=(target-roll)*.27f;
  }
+ private static boolean local(Player p){return p==Minecraft.getInstance().player&&RuleSync.clientDown();}
+ @SubscribeEvent public static void attack(net.minecraftforge.event.entity.player.AttackEntityEvent e){if(local(e.getEntity()))e.setCanceled(true);}
+ @SubscribeEvent public static void interact(net.minecraftforge.event.entity.player.PlayerInteractEvent e){if(e.isCancelable()&&local(e.getEntity()))e.setCanceled(true);}
+ @SubscribeEvent public static void use(net.minecraftforge.event.entity.living.LivingEntityUseItemEvent.Start e){if(e.getEntity() instanceof Player p&&local(p))e.setCanceled(true);}
+ @SubscribeEvent public static void breakSpeed(net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed e){if(local(e.getEntity()))e.setNewSpeed(0);}
  private static void clearPose(){if(owner!=null&&owner.getForcedPose()==Pose.SWIMMING)owner.setForcedPose(null);owner=null;}
  @SubscribeEvent public static void input(MovementInputUpdateEvent e){if(e.getEntity()==Minecraft.getInstance().player&&RuleSync.clientDown()){var i=e.getInput();i.forwardImpulse=0;i.leftImpulse=0;i.jumping=false;}}
  @SubscribeEvent public static void camera(ViewportEvent.ComputeCameraAngles e){if(Minecraft.getInstance().options.getCameraType().isFirstPerson())e.setRoll(e.getRoll()+roll);}
