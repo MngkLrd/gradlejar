@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "id": "physics",
+  "description": "Fragile Glass and Natural Buoyancy in one fresh server world; no external modpack certification.",
+  "targets": [
+    {
+      "id": "fabric-mc26.3",
+      "minecraft": "26.3",
+      "loader": "fabric",
+      "loader_version": "0.19.5",
+      "members": [
+        {
+          "project": "projects/fragileglass-fabric-26.3",
+          "scenario": "tools/qa/scenarios/fragileglass.json"
+        },
+        {
+          "project": "projects/naturalbuoyancy-fabric-26.3",
+          "scenario": "tools/qa/scenarios/naturalbuoyancy-water.json"
+        }
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "neoforge-mc26.3",
+      "minecraft": "26.3",
+      "loader": "neoforge",
+      "loader_version": "26.3.0.101",
+      "members": [
+        {
+          "project": "projects/fragileglass-neoforge-26.3",
+          "scenario": "tools/qa/scenarios/fragileglass.json"
+        },
+        {
+          "project": "projects/naturalbuoyancy-neoforge-26.3",
+          "scenario": "tools/qa/scenarios/naturalbuoyancy-water.json"
+        }
+      ],
+      "dependencies": []
+    }
+  ]
+}

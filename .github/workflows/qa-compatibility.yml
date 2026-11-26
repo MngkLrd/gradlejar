@@ -1,0 +1,124 @@
+name: QA v2 modpack compatibility
+on:
+  workflow_dispatch:
+    inputs:
+      pack:
+        description: 'Pack manifest ID from tools/qa/packs'
+        required: true
+        default: physics
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - 'tools/qa/packs/**'
+      - tools/qa/pack.py
+      - tools/qa/server.py
+      - tools/qa/scenarios/fragileglass.json
+      - tools/qa/scenarios/naturalbuoyancy-water.json
+      - .github/workflows/qa-compatibility.yml
+permissions:
+  contents: read
+  actions: read
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      members: ${{ steps.plan.outputs.members }}
+      targets: ${{ steps.plan.outputs.targets }}
+      pack: ${{ steps.pack.outputs.id }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resolve pack
+        id: pack
+        env:
+          PACK_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.pack || 'physics' }}
+        run: |
+          [[ "$PACK_ID" =~ ^[a-z][a-z0-9_-]{0,60}$ ]]
+          echo "id=$PACK_ID" >> "$GITHUB_OUTPUT"
+      - name: Validate manifest and plan build matrix
+        id: plan
+        env:
+          PACK_ID: ${{ steps.pack.outputs.id }}
+        run: python3 -m tools.qa.pack plan "$PACK_ID"
+  build-members:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        member: ${{ fromJSON(needs.plan.outputs.members) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resolve project
+        id: profile
+        env:
+          PROJECT: ${{ matrix.member.project }}
+        run: python3 tools/resolve_project.py "$PROJECT" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.profile.outputs.java }}
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ steps.profile.outputs.gradle }}
+          cache-read-only: true
+      - name: Compile production mod (no dev fallback)
+        env:
+          PROJECT: ${{ matrix.member.project }}
+        run: |
+          cd "$PROJECT"
+          gradle --no-daemon --stacktrace clean build
+      - name: Verify exact final JAR
+        id: jar
+        env:
+          PROJECT: ${{ matrix.member.project }}
+        run: python3 tools/verify_build_output.py "$PROJECT"
+      - name: Stage member with source and hash evidence
+        env:
+          PACK_ID: ${{ needs.plan.outputs.pack }}
+          MEMBER: ${{ matrix.member.key }}
+          JAR: ${{ steps.jar.outputs.jar_path }}
+        run: python3 -m tools.qa.pack stage "$PACK_ID" "$MEMBER" "$JAR" member-output
+      - uses: actions/upload-artifact@v4
+        with:
+          name: compat-member-${{ matrix.member.key }}-${{ github.run_attempt }}
+          path: member-output/
+          retention-days: 7
+          if-no-files-found: error
+  compatibility:
+    needs: [plan, build-members]
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJSON(needs.plan.outputs.targets) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.target.java }}
+      - name: Retrieve exact target members
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: compat-member-${{ matrix.target.id }}--*-${{ github.run_attempt }}
+          path: pack-members
+      - name: Run all gameplay scenarios together
+        env:
+          PACK_ID: ${{ needs.plan.outputs.pack }}
+          TARGET: ${{ matrix.target.id }}
+        run: python3 -m tools.qa.pack test "$PACK_ID" "$TARGET" pack-members pack-evidence
+      - name: Upload compatibility report and runtime logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compat-report-${{ needs.plan.outputs.pack }}-${{ matrix.target.id }}-${{ github.run_attempt }}
+          path: |
+            pack-evidence/compatibility-report.json
+            pack-evidence/runtime/logs/
+          if-no-files-found: warn
+          retention-days: 30

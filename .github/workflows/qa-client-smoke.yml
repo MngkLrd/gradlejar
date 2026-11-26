@@ -36,7 +36,7 @@ jobs:
       - name: Install virtual display and software renderer
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends xvfb xauth xdotool imagemagick libgl1-mesa-dri libopenal1
+          sudo apt-get install -y --no-install-recommends xvfb xauth xdotool imagemagick libgl1-mesa-dri libglx-mesa0 libegl-mesa0 libopenal1 mesa-utils mesa-vulkan-drivers vulkan-tools
       - name: Compile development client
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
@@ -47,7 +47,7 @@ jobs:
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
           LIBGL_ALWAYS_SOFTWARE: '1'
-        run: xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" python3 -m tools.qa.client "$PROJECT_DIR" --out client-evidence
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24 +extension GLX +render -noreset" python3 -m tools.qa.client "$PROJECT_DIR" --out client-evidence
       - name: Upload client evidence (not QA-5)
         if: always()
         uses: actions/upload-artifact@v4

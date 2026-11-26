@@ -1,6 +1,7 @@
 """Conservative failure triage: matched evidence, not automatic fixes."""
 import re
 PATTERNS=[
+ ("graphics","Graphics backend or virtual display initialization",r"Couldn.t find matching GLX visual|Failed to create backend (?:OpenGL|Vulkan)|VK_KHR_surface|GLFW error"),
  ("mixin","Mixin injection/signature or target mapping",r"InvalidInjectionException|InjectionError|MixinApplyError|Critical injection failure|InvalidMixinException"),
  ("linkage","Runtime API/dependency mismatch",r"NoSuchMethodError|NoSuchFieldError|NoClassDefFoundError|ClassNotFoundException|AbstractMethodError"),
  ("java","Incorrect Java or class-file target",r"UnsupportedClassVersionError|Unsupported class file major version|requires Java"),

@@ -109,6 +109,35 @@ class ClientApprovalTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"Incomplete"):
                 approved_candidates(reports,jars,"testmod",{name:sha},"42","1","abc")
 
+class PackTests(unittest.TestCase):
+    def test_physics_pack_manifest(self):
+        from tools.qa.pack import load_pack
+        targets=load_pack("physics")
+        self.assertEqual({t["id"] for t in targets},{"fabric-mc26.3","neoforge-mc26.3"})
+        for t in targets:self.assertEqual({m["slug"] for m in t["members"]},{"fragileglass","naturalbuoyancy"})
+    def test_pack_member_hash_and_provenance(self):
+        from tools.qa.pack import resolve_members
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);m={"project":"projects/test","slug":"test","version":"1.0.0","key":"fabric-mc26.3--test","target":"fabric-mc26.3","scenario":"tools/test.json"}
+            jar=root/"test.jar";jar.write_bytes(b"fixture")
+            r=dict(m,jar=jar.name,sha256=sha256(jar),tree="tree",commit="abc",run_id="42",run_attempt="1")
+            (root/"member.json").write_text(json.dumps(r))
+            with patch("tools.qa.pack.project_tree",return_value="tree"):
+                self.assertEqual(len(resolve_members({"members":[m]},root,"abc","42","1")[0]),1)
+                with self.assertRaisesRegex(ValueError,"provenance"):
+                    resolve_members({"members":[m]},root,"abc","42","2")
+                jar.write_bytes(b"changed")
+                with self.assertRaisesRegex(ValueError,"SHA-256"):
+                    resolve_members({"members":[m]},root,"abc","42","1")
+    def test_scenario_suite_cannot_inherit_previous_pass(self):
+        class Fake:
+            def cmd(self,c):return "Test passed"
+        report={"checks":[{"assertion":True,"passed":True,"suite":"old"}]}
+        with self.assertRaisesRegex(ValueError,"No scenario assertions"):
+            play(Fake(),[{"command":"list","expect":"Test passed"}],report,"new")
+    def test_graphics_diagnostic(self):
+        self.assertEqual(analyze("Failed to create backend OpenGL: Couldn't find matching GLX visual")[0]["category"],"graphics")
+
 class OtherTests(unittest.TestCase):
     def test_diagnostics(self):
         self.assertEqual(analyze("Caused by: org.spongepowered.asm.mixin.injection.throwables.InvalidInjectionException: target")[0]["category"],"mixin")

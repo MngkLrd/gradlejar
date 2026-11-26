@@ -828,6 +828,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Publish only complete verified cohorts
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -835,5 +836,10 @@ jobs:
           shopt -s nullglob
           for zip in qa-bundles/*.zip; do
             tag="qa-v2-$(basename "$zip" .zip)-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
-            gh release create "$tag" "$zip" --target "$GITHUB_SHA" --title "$(basename "$zip" .zip)" --notes "Every declared target passed production-JAR server gameplay QA-4. Manual client verification not included. See workflow evidence." --prerelease
+            if gh release create "$tag" "$zip" --target "$GITHUB_SHA" --title "$(basename "$zip" .zip)" --notes "Every declared target passed production-JAR server gameplay QA-4. Manual client verification not included. See workflow evidence." --prerelease; then
+              echo "Published $tag" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "::warning::GitHub release publication failed; verified ZIP remains available in qa-v2-bundles artifact."
+              echo "Verified ZIP retained as workflow artifact; GitHub Releases publication failed." >> "$GITHUB_STEP_SUMMARY"
+            fi
           done

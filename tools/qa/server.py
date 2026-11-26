@@ -113,7 +113,8 @@ def scenario_steps(scenario,loader):
     require(sum(s.get("wait",0) for s in active)<=150,"Scenario wait budget exceeded")
     return active
 
-def play(rcon,steps,report):
+def play(rcon,steps,report,suite=None):
+    start=len(report['checks'])
     for step in steps:
         if "wait" in step:
             time.sleep(step["wait"])
@@ -121,26 +122,40 @@ def play(rcon,steps,report):
         result=rcon.cmd(step["command"])
         ok=("expect" not in step or re.search(step["expect"],result,re.I)) and ("reject" not in step or not re.search(step["reject"],result,re.I))
         row={"name":step.get("name",step["command"]),"command":step["command"],"result":result[:1500],"passed":bool(ok),"assertion":bool(step.get("assertion",False))}
+        if suite is not None: row["suite"]=suite
         report["checks"].append(row)
         print("QA",row["name"],"=>",result,flush=True)
         require(ok,"Scenario assertion failed: "+row["name"]+" => "+result)
-    require(any(c.get("assertion") and c["passed"] for c in report["checks"]),"No scenario assertions executed")
+    require(any(c.get("assertion") and c["passed"] for c in report["checks"][start:]),"No scenario assertions executed")
 
 FATAL=re.compile(r"Failed to load registries|Errors in currently selected data packs|Exception in server tick loop|A critical error occurred|MixinApplyError|InvalidInjectionException|Failed to start the minecraft server",re.I)
-def run(p,q,jar,work,report):
+def run(p,q,jar,work,report,*,extra_jars=(),scenarios=None):
     work=Path(work).resolve()
     work.mkdir(parents=True,exist_ok=True)
     root=work/"server"
     require(not root.exists(),"QA server directory already exists; use a fresh directory")
     root.mkdir()
     logs=work/"logs"; logs.mkdir()
-    scenario=json.loads(safe_path(ROOT,q["scenario"]).read_text("utf-8"))
-    steps=scenario_steps(scenario,p["loader"])
+    if scenarios is None:
+        scenarios=[(p["slug"],q["scenario"])]
+    suites=[(label,scenario_steps(json.loads(safe_path(ROOT,path).read_text("utf-8")),p["loader"])) for label,path in scenarios]
+    require(suites and len({label for label,_ in suites})==len(suites),"Missing or duplicate scenario suites")
     cmd=install(p,q,root,logs)
     mods=root/"mods"; mods.mkdir(exist_ok=True)
     shutil.copy2(jar,mods/Path(jar).name)
     require(sha256(mods/Path(jar).name)==sha256(jar),"Installed JAR checksum mismatch")
-    for dep in q.get("dependencies",[]): download(dep["url"],mods/dep["name"],dep["sha256"])
+    installed={Path(jar).name:sha256(jar)}
+    for extra in extra_jars:
+        extra=Path(extra)
+        require(extra.is_file() and extra.name.endswith(".jar") and extra.name not in installed,"Missing or duplicate pack JAR")
+        shutil.copy2(extra,mods/extra.name)
+        require(sha256(mods/extra.name)==sha256(extra),"Installed pack JAR checksum mismatch")
+        installed[extra.name]=sha256(extra)
+    for dep in q.get("dependencies",[]):
+        require(dep["name"] not in installed,"Duplicate dependency JAR: "+dep["name"])
+        download(dep["url"],mods/dep["name"],dep["sha256"])
+        installed[dep["name"]]=dep["sha256"]
+    report["installed_jars"]=installed
     password=secrets.token_hex(18); port=free_port(); rport=free_port()
     while port==rport: rport=free_port()
     (root/"eula.txt").write_text("eula=true\n")
@@ -167,7 +182,8 @@ def run(p,q,jar,work,report):
             report["qa_level"]=3
             report["runtime"]="production-jar"
             report["installed_sha256"]=sha256(mods/Path(jar).name)
-            play(conn,steps,report)
+            for label,steps in suites:
+                play(conn,steps,report,label)
             require(not FATAL.search(log.read_text(errors="replace")),"Fatal Minecraft error during scenario")
             try: conn.cmd("stop")
             except (OSError,EOFError): pass

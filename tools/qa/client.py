@@ -4,6 +4,7 @@ import json
 import os
 import re
 import signal
+import shutil
 import struct
 import subprocess
 import time
@@ -24,6 +25,16 @@ def main():
     try:
         require(os.getenv("DISPLAY"),"Run through xvfb-run")
         env=dict(os.environ,LIBGL_ALWAYS_SOFTWARE="1",ALSOFT_DRIVERS="null")
+        probe=command("glxinfo","-B",timeout=25)
+        (out/"glxinfo.txt").write_text(probe.stdout+"\n"+probe.stderr)
+        report["glx_probe_exit"]=probe.returncode
+        # Record the Vulkan software ICD if present; do not claim GPU rendering.
+        icds=list(Path("/usr/share/vulkan/icd.d").glob("lvp_icd*.json"))
+        if icds: env["VK_DRIVER_FILES"]=str(icds[0])
+        if icds and shutil.which("vulkaninfo"):
+            probe=command("vulkaninfo","--summary",timeout=25)
+            (out/"vulkaninfo.txt").write_text(probe.stdout+"\n"+probe.stderr)
+            report["vulkan_probe_exit"]=probe.returncode
         with log.open("w") as f:
             proc=subprocess.Popen(["gradle","--no-daemon","runClient"],cwd=base,env=env,stdout=f,stderr=subprocess.STDOUT,start_new_session=True)
             deadline=time.monotonic()+360
@@ -32,6 +43,9 @@ def main():
                 contents=log.read_text(errors="replace")
                 require(proc.poll() is None,"Development client exited before visible window")
                 require(not FATAL.search(contents),"Fatal client startup error")
+                if "Failed to create backend OpenGL" in contents and "Failed to create backend Vulkan" in contents:
+                    report["status"]="graphics-backend-unavailable"
+                    raise RuntimeError("Both OpenGL and Vulkan backend creation failed; inspect graphics probes")
                 found=command("xdotool","search","--onlyvisible","--name","Minecraft")
                 candidates=[]
                 for wid in found.stdout.splitlines():
