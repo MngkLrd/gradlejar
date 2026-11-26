@@ -29,6 +29,14 @@ public final class TravelPhysics {
   if(b instanceof ChestBoat c){for(int i=0;i<c.getContainerSize();i++)result+=cargoWeight(c.getItem(i))*.32;}
   return result;
  }
+ public static double boatLimit(Player p){
+  if(!Rules.on("boat_overload")||!Survival.active(p)||!(p.getVehicle() instanceof Boat b)||b.getControllingPassenger()!=p)return 0;
+  double factor=boatFactor(load(b));return factor>=.999?0:.42*factor;
+ }
+ public static void capBoat(Boat b,double limit){
+  if(limit<=0||!b.isInWater())return;Vec3 v=b.getDeltaMovement();
+  if(v.horizontalDistance()>limit){double scale=limit/v.horizontalDistance();b.setDeltaMovement(v.x*scale,v.y,v.z*scale);}
+ }
  public static void attack(AttackEntityEvent e){
   Player p=e.getEntity();if(e.isCanceled()||!Rules.on("heavy_swing")||!Survival.active(p)||p.getAttackStrengthScale(.5f)<.85f||!Material.item(p.getMainHandItem(),"heavy_weapons")||!(e.getTarget() instanceof LivingEntity))return;
   long now=p.level().getGameTime();SWING.put(p,now+(long)(12*Rules.strength("impact")));Survival.work(p,3.5);p.setSprinting(false);
@@ -56,8 +64,7 @@ public final class TravelPhysics {
   }
   STEPS.put(p,new Step(p.position(),valid?delta:Vec3.ZERO,p.isSprinting(),now));
   if(Rules.on("boat_overload")&&p.getVehicle() instanceof Boat b&&b.getControllingPassenger()==p&&b.isInWater()&&now%4==0){
-   double load=load(b),factor=boatFactor(load);Vec3 v=b.getDeltaMovement();double max=.42*factor;
-   if(v.horizontalDistance()>max){double scale=max/v.horizontalDistance();b.setDeltaMovement(v.x*scale,v.y,v.z*scale);b.hurtMarked=true;}
+   double limit=boatLimit(p),factor=limit>0?limit/.42:1;capBoat(b,limit);
    if(factor<.85&&now%100==0)p.displayClientMessage(Component.translatable("message.worldlogic.boat_loaded",Math.round(factor*100)),true);
   }
  }
