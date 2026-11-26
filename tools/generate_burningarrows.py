@@ -144,6 +144,9 @@ def generate(loader,mc):
         write(code/'mixin/FireBlockAccessor.java',invoker)
     dump(resources/'burningarrows.mixins.json',mixins)
     arrow=java_code.replace('ARROW_PACKAGE','net.minecraft.world.entity.projectile.arrow' if modern else 'net.minecraft.world.entity.projectile')
+    if mc in ('26.2','26.3'):
+        arrow=arrow.replace('import net.minecraft.world.entity.EntityType;', 'import net.minecraft.core.registries.BuiltInRegistries;')
+        arrow=arrow.replace('arrow.getType() == EntityType.TRIDENT', '"trident".equals(BuiltInRegistries.ENTITY_TYPE.getKey(arrow.getType()).getPath())')
     arrow=arrow.replace('GROUND_SHADOW','@Shadow protected abstract boolean isInGround();' if modern else '@Shadow protected boolean inGround;').replace('GROUND_CHECK','isInGround()' if modern else 'inGround')
     arrow=arrow.replace('FLAMMABLE','((FireBlockAccessor)(Object)Blocks.FIRE).burningarrows$canBurn(state)' if fabric else 'state.isFlammable(level, struck, hit.getDirection())')
     write(code/'mixin/ArrowMixin.java',arrow)
