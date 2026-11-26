@@ -18,6 +18,16 @@
       "severity": "infrastructure",
       "evidence": "45748688125",
       "description": "Software display client cannot initialize required graphics backend; not evidence of a gameplay bug."
+    },
+    {
+      "id": "QA-1214-LEVER",
+      "projects": [
+        "projects/fragileglass-fabric-1.21.4"
+      ],
+      "status": "open",
+      "severity": "infrastructure",
+      "evidence": "45758127888 / 139701531365",
+      "description": "Network player failed independent vanilla lever positive control; failure is not proof of a Fragile Glass mechanic defect. Isolate reach/visibility fixture and rerun without relaxing the assertion."
     }
   ]
 }

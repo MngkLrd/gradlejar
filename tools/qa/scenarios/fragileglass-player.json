@@ -70,6 +70,24 @@
       }
     },
     {
+      "command": "tp MineModsQA 5.5 200 1.5",
+      "expect": "Teleported"
+    },
+    {
+      "action": "position",
+      "args": {
+        "x": 5.5,
+        "y": 200,
+        "z": 1.5
+      }
+    },
+    {
+      "command": "execute if block 5 200 3 minecraft:lever[powered=false]",
+      "expect": "Test passed",
+      "name": "Lever is unpowered before interaction",
+      "assertion": true
+    },
+    {
       "action": "activate",
       "args": {
         "x": 5,
@@ -79,7 +97,7 @@
       }
     },
     {
-      "wait": 0.65
+      "wait": 1.5
     },
     {
       "command": "execute if block 5 200 3 minecraft:lever[powered=true]",
@@ -128,6 +146,18 @@
     {
       "command": "clear MineModsQA",
       "expect": "Removed|No items"
+    },
+    {
+      "command": "tp MineModsQA 3.5 200 1.5",
+      "expect": "Teleported"
+    },
+    {
+      "action": "position",
+      "args": {
+        "x": 3.5,
+        "y": 200,
+        "z": 1.5
+      }
     },
     {
       "action": "startDig",
