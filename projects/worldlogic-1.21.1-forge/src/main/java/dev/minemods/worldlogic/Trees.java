@@ -27,7 +27,7 @@ public final class Trees {
     if(!t.equals(origin)&&st.is(e.getState().getBlock())&&!logs.contains(t))todo.add(t);}
   }
   if(!leaves||logs.isEmpty())return;var queue=QUEUE.computeIfAbsent(l,k->new ArrayDeque<>());if(queue.size()+logs.size()>128)return;
-  List<BlockPos> ordered=new ArrayList<>(logs);ordered.sort(Comparator.comparingInt(BlockPos::getY).reversed());long due=l.getGameTime()+10;
+  List<BlockPos> ordered=new ArrayList<>(logs);ordered.sort(Comparator.comparingInt((BlockPos pos)->pos.getY()).reversed());long due=l.getGameTime()+10;
   for(BlockPos q:ordered){queue.add(new Job(q,due));due+=5;}
  }
  public static void tick(TickEvent.LevelTickEvent.Post e){if(!(e.level instanceof ServerLevel l))return;var queue=QUEUE.get(l);if(queue==null)return;int n=6;
