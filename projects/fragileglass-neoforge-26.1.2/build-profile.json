@@ -5,5 +5,18 @@
   "loader": "neoforge",
   "java": "25",
   "gradle": "9.2.1",
-  "jar_glob": "fragileglass-neoforge-mc26.1.2-1.0.2.jar"
+  "jar_glob": "fragileglass-neoforge-mc26.1.2-1.0.2.jar",
+  "qa": {
+    "mode": "server",
+    "loader_version": "26.1.2.126",
+    "scenario": "tools/qa/scenarios/fragileglass.json",
+    "release_targets": [
+      "fabric-mc26.1.2",
+      "fabric-mc26.2",
+      "fabric-mc26.3",
+      "neoforge-mc26.1.2",
+      "neoforge-mc26.2",
+      "neoforge-mc26.3"
+    ]
+  }
 }

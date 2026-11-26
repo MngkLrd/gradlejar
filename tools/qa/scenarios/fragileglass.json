@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "name": "Fragile Glass projectile and landing regression",
+  "steps": [
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "setblock 2 200 2 minecraft:glass",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "execute if block 2 200 2 #fragileglass:fragile_blocks",
+      "expect": "Test passed",
+      "loaders": [
+        "neoforge",
+        "forge"
+      ],
+      "assertion": true,
+      "name": "Tag registered"
+    },
+    {
+      "command": "setblock 5 200 5 minecraft:glass",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 8 200 5 minecraft:glass_pane",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 11 200 5 minecraft:glass",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 2 200 9 minecraft:red_stained_glass",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 5 200 9 minecraft:tinted_glass",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 8 200 9 minecraft:glass",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 11 200 9 minecraft:stone",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "summon minecraft:arrow 2.5 200.7 6.5 {Motion:[0.0d,0.0d,1.8d]}",
+      "expect": "Summoned new"
+    },
+    {
+      "command": "summon minecraft:arrow 5.5 200.7 6.5 {Motion:[0.0d,0.0d,1.8d]}",
+      "expect": "Summoned new"
+    },
+    {
+      "command": "summon minecraft:snowball 8.5 200.7 6.5 {Motion:[0.0d,0.0d,1.8d]}",
+      "expect": "Summoned new"
+    },
+    {
+      "command": "summon minecraft:arrow 11.5 200.7 6.5 {Motion:[0.0d,0.0d,1.8d]}",
+      "expect": "Summoned new"
+    },
+    {
+      "command": "summon minecraft:arrow 5.5 200.7 2.5 {Motion:[0.0d,0.0d,1.8d]}",
+      "expect": "Summoned new"
+    },
+    {
+      "command": "summon minecraft:snowball 8.5 200.7 2.5 {Motion:[0.0d,0.0d,1.8d]}",
+      "expect": "Summoned new"
+    },
+    {
+      "command": "summon minecraft:pig 11.5 208 5.5",
+      "expect": "Summoned new"
+    },
+    {
+      "wait": 7
+    },
+    {
+      "command": "execute if block 5 200 5 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "Arrow breaks full glass"
+    },
+    {
+      "command": "execute if block 8 200 5 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "Snowball breaks pane"
+    },
+    {
+      "command": "execute if block 11 200 5 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "Hard landing breaks floor"
+    },
+    {
+      "command": "execute if block 2 200 9 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "Colored glass breaks"
+    },
+    {
+      "command": "execute if block 5 200 9 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "Tinted glass breaks"
+    },
+    {
+      "command": "execute if block 8 200 9 minecraft:glass",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "Snowball does not break full glass"
+    },
+    {
+      "command": "execute if block 11 200 9 minecraft:stone",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "Arrow does not break stone"
+    }
+  ]
+}

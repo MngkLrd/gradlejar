@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "fabric_installer": "1.1.2",
+  "sources": [
+    "https://www.minecraft.net/en-us/article/minecraft-java-edition-26-2",
+    "https://www.minecraft.net/en-us/article/minecraft-java-edition-26-3",
+    "https://minecraft.wiki/w/Java_Edition_26.1.2",
+    "https://minecraft.wiki/w/Pack_format",
+    "https://fabricmc.net/use/server/",
+    "https://docs.neoforged.net/user/docs/server/"
+  ],
+  "minecraft": {
+    "1.20.1": {
+      "java": 17,
+      "resource": [
+        15,
+        0
+      ],
+      "data": [
+        15,
+        0
+      ],
+      "data_layout": "plural",
+      "loaders": {
+        "forge": {
+          "version": "47.3.0",
+          "gradle": "9.2.1"
+        },
+        "neoforge": {
+          "version": "47.1.106",
+          "gradle": "9.2.1"
+        },
+        "fabric": {
+          "version": "0.17.3",
+          "gradle": "8.14.3",
+          "build_java": 21,
+          "loom": "1.11.8"
+        }
+      }
+    },
+    "1.21.1": {
+      "java": 21,
+      "resource": [
+        34,
+        0
+      ],
+      "data": [
+        48,
+        0
+      ],
+      "data_layout": "singular",
+      "loaders": {
+        "neoforge": {
+          "version": "21.1.262",
+          "gradle": "9.2.1"
+        },
+        "fabric": {
+          "version": "0.17.3",
+          "gradle": "8.14.3",
+          "loom": "1.11.8"
+        }
+      }
+    },
+    "26.1.2": {
+      "java": 25,
+      "resource": [
+        84,
+        0
+      ],
+      "data": [
+        101,
+        1
+      ],
+      "data_layout": "singular",
+      "loaders": {
+        "neoforge": {
+          "version": "26.1.2.126",
+          "gradle": "9.2.1"
+        },
+        "fabric": {
+          "version": "0.19.5",
+          "gradle": "9.5.1",
+          "loom": "1.17.13"
+        }
+      }
+    },
+    "26.2": {
+      "java": 25,
+      "resource": [
+        88,
+        0
+      ],
+      "data": [
+        107,
+        1
+      ],
+      "data_layout": "singular",
+      "loaders": {
+        "neoforge": {
+          "version": "26.2.0.90",
+          "gradle": "9.2.1"
+        },
+        "fabric": {
+          "version": "0.19.5",
+          "gradle": "9.5.1",
+          "loom": "1.17.21"
+        }
+      }
+    },
+    "26.3": {
+      "java": 25,
+      "resource": [
+        97,
+        1
+      ],
+      "data": [
+        121,
+        0
+      ],
+      "data_layout": "singular",
+      "loaders": {
+        "neoforge": {
+          "version": "26.3.0.101",
+          "gradle": "9.2.1"
+        },
+        "fabric": {
+          "version": "0.19.5",
+          "gradle": "9.7.1",
+          "loom": "1.18-SNAPSHOT",
+          "note": "Snapshot plugin must be revalidated before upgrading."
+        }
+      }
+    }
+  }
+}
