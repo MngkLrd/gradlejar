@@ -21,3 +21,5 @@ Use `tools/qa/port_audit.py` and the official named-server API diff before porti
 For new ports, prefer `python3 -m tools.qa.scaffold` and `tools.qa.port_plan`. Draft outputs are not working mods or release candidates; do not enroll until real mechanics and positive/negative regression tests are present. Prepare release notes from actual changes and QA evidence using `tools.qa.release_prep`.
 
 Declare shared source roots in build-profile.json and Gradle. Shared inputs invalidate QA evidence. Use the migration catalog and explicit proposal tool for legacy enrollment; never claim unknown evidence is a confirmed bug or remove legacy exemptions without reviewed tests.
+
+For bulk builds use @batch:slug1,slug2. Treat discovered Minecraft releases as candidates, not compatibility claims. Use required player_scenario for protocol-compatible gameplay ports; never label RCON-only tests as actual client actions. The standard eleven targets remain unchanged; extended targets require explicit review.

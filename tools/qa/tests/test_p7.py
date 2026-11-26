@@ -16,3 +16,9 @@ class P7Tests(unittest.TestCase):
         with self.assertRaises(ValueError):validate({"schema":1,"steps":[{"command":"list","expect":"players","assertion":True,"name":"test"}]})
         steps=validate({"schema":1,"steps":[{"action":"startDig","args":{}},{"command":"execute if block 1 2 3 minecraft:air","expect":"Test passed","assertion":True,"name":"glass broken"}]})
         self.assertEqual(len(steps),2)
+
+    def test_standard_and_extended_matrix(self):
+        from tools.qa.scaffold import select
+        self.assertEqual(len(select(["all"])),11)
+        self.assertIn(("1.21.4","fabric"),select(["extended"]))
+        self.assertEqual(select(["fabric-mc1.21.4"]),[("1.21.4","fabric")])
