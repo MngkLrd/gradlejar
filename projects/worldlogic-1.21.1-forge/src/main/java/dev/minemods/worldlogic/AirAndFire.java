@@ -52,7 +52,7 @@ public final class AirAndFire {
     }
    }
   }
-  Pocket a=st.pocket;if(a==null||!a.cells.contains(head))return;a.last=now;a.oxygen=Math.max(0,a.oxygen-1);PocketData.get(l).setDirty();
+  Pocket a=st.pocket;if(a==null||!a.cells.contains(head))return;a.last=now;a.oxygen=Math.max(0,a.oxygen-Math.max(1,(int)Math.round(Rules.strength("air"))));PocketData.get(l).setDirty();
   if(a.oxygen==0){int air=Math.min(p.getAirSupply(),st.lastAir)-1;if(air<=-20){p.setAirSupply(0);p.hurt(p.damageSources().drown(),2);}else p.setAirSupply(air);}
   else if(a.oxygen<a.cells.size()*60&&p.getAirSupply()>st.lastAir)p.setAirSupply(Math.min(p.getAirSupply(),st.lastAir+1));
  }
@@ -65,12 +65,12 @@ public final class AirAndFire {
     if(Rules.on("residual_heat")||Rules.on("thermal_shock"))for(Direction d:Direction.values())map.put(q.relative(d),now+200);
     List<BlockPos> path=(Rules.on("draft_smoke")||Rules.on("fire_needs_air"))?ventPath(l,q.above()):List.of(q.above());
     if(Rules.on("draft_smoke")&&path!=null&&path.size()>1){var queue=SMOKE.computeIfAbsent(l,k->new ArrayDeque<>());if(queue.size()<64)queue.add(new Smoke(List.copyOf(path),0,now));}
-    if(Rules.on("fire_needs_air")&&path==null&&l.random.nextFloat()<.12)l.setBlock(q,s.setValue(BlockStateProperties.LIT,false),3);
-    if(Rules.on("campfire_sparks")&&l.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)&&!l.isRainingAt(q)&&l.random.nextFloat()<.02){BlockPos t=q.relative(Direction.Plane.HORIZONTAL.getRandomDirection(l.random));if(l.isEmptyBlock(t)&&Material.block(l.getBlockState(t.below()),"spark_fuel"))l.setBlock(t,Blocks.FIRE.defaultBlockState(),3);}
+    if(Rules.on("fire_needs_air")&&path==null&&l.random.nextFloat()<Rules.chance("fire",.12))l.setBlock(q,s.setValue(BlockStateProperties.LIT,false),3);
+    if(Rules.on("campfire_sparks")&&l.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)&&!l.isRainingAt(q)&&l.random.nextFloat()<Rules.chance("fire",.02)){BlockPos t=q.relative(Direction.Plane.HORIZONTAL.getRandomDirection(l.random));if(l.isEmptyBlock(t)&&Material.block(l.getBlockState(t.below()),"spark_fuel"))l.setBlock(t,Blocks.FIRE.defaultBlockState(),3);}
    }
   }
   int budget=20;for(var entry:map.entrySet()){if(budget--<=0)break;BlockPos q=entry.getKey();if(!l.hasChunkAt(q))continue;var s=l.getBlockState(q);boolean wet=l.isRainingAt(q.above())||l.getFluidState(q.above()).is(net.minecraft.tags.FluidTags.WATER);
-   if(wet){if(Rules.on("residual_heat"))l.sendParticles(ParticleTypes.CLOUD,q.getX()+.5,q.getY()+1,q.getZ()+.5,1,.15,.05,.15,.01);if(Rules.on("thermal_shock")&&l.random.nextFloat()<.025){if(Material.block(s,"glass"))l.destroyBlock(q,false);else if(s.is(Blocks.STONE))l.setBlock(q,Blocks.COBBLESTONE.defaultBlockState(),3);else if(s.is(Blocks.STONE_BRICKS))l.setBlock(q,Blocks.CRACKED_STONE_BRICKS.defaultBlockState(),3);else if(s.is(Blocks.DEEPSLATE_BRICKS))l.setBlock(q,Blocks.CRACKED_DEEPSLATE_BRICKS.defaultBlockState(),3);}}
+   if(wet){if(Rules.on("residual_heat"))l.sendParticles(ParticleTypes.CLOUD,q.getX()+.5,q.getY()+1,q.getZ()+.5,1,.15,.05,.15,.01);if(Rules.on("thermal_shock")&&l.random.nextFloat()<Rules.chance("fire",.025)){if(Material.block(s,"glass"))l.destroyBlock(q,false);else if(s.is(Blocks.STONE))l.setBlock(q,Blocks.COBBLESTONE.defaultBlockState(),3);else if(s.is(Blocks.STONE_BRICKS))l.setBlock(q,Blocks.CRACKED_STONE_BRICKS.defaultBlockState(),3);else if(s.is(Blocks.DEEPSLATE_BRICKS))l.setBlock(q,Blocks.CRACKED_DEEPSLATE_BRICKS.defaultBlockState(),3);}}
   }
  }
  public static void onExplosion(ExplosionEvent.Detonate e){if(!Rules.on("ashes")||!(e.getLevel() instanceof ServerLevel l))return;int n=0;for(BlockPos p:e.getAffectedBlocks()){if(n++>=24)break;l.sendParticles(ParticleTypes.ASH,p.getX()+.5,p.getY()+.5,p.getZ()+.5,2,.3,.3,.3,.01);}}

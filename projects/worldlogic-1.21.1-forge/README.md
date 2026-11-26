@@ -1,18 +1,14 @@
-# World Logic 1.0.0-rc4
-Minecraft 1.21.1 • Forge 52.1.0 • Java 21 • Gradle 8.10.2 • official mappings.
-Run gradle --no-daemon clean build; output build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc4.jar.
-Config: config/worldlogic.properties; restart after editing. Install on both sides during tests. One spoiled food item and two zero-light extinguished torch blocks; no external dependencies. Burning Arrows excluded.
+# World Logic 1.0.0-rc5
+Minecraft 1.21.1 / Forge 52.1.0+ / Java 21 / Gradle 8.10.2 / official mappings.
+Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc5.jar.
+Install on both server and clients. No external dependencies. Burning Arrows excluded.
 
-## Scope / limitations
-Release candidate; feature implementations vary in fidelity; gameplay verification required. Events and bounded local samples; no world-wide scans. Destructive rules default off. Tag-driven defaults; tags can be extended by datapacks. Test on backups. No claim of client or server gameplay verification.
-Implemented first-pass: gravel slumping, dripstone projectile detachment, fragile pots/lanterns, blast glass, knockback mass, projectile damage adjustment, shield momentum, creeper impulse, cactus impact, landing recovery/soft landing, tool streak, cobweb resistance, grip, sprint fatigue, armor visibility, breath debt, exertion, cold shock, wet bow, current weighting, extinguish, wet friction approximation, mud particles, snow layer compression approximation, rain droplets, storm projectile drift, campfire sparks/heat/thermal shock, simple smoke and enclosed-fire heuristic, explosion ash, crop crowding/flood stress, food scent, herd panic, one-shot hot meal bonus after smelting, heavy items, bounded shared air pocket heuristic.
-Added in second pass: shallow-angle stone/metal ricochet for non-piercing vanilla arrows (replacement entity preserves serialized data); optional hard-impact arrow loss; door closing push, optional falling sand/gravel damage and dropped wet food spoilage; hot meal timestamp on smelting event output; campfire/smoker scent. Third pass: optional weighted and stone plate mass via vanilla calculation mixins, conservative opt-in tree crown decay, snow shedding, bounded ventilation search. RC1: extinguished torch blocks with zero light and normal torch drops, flint-and-steel relighting, oxygen persistence via level SavedData, wet leather gear penalty, ladder grip fatigue. No true smoke fluid simulation or snow layer falling entities; these remain approximations. Tree detection is heuristic and placed-log tracking is session-only; off by default. Redstone changes off by default to protect existing contraptions. Mud is particles rather than decals. Finite air only tests air cells adjacent to water below sea level; oxygen state is saved per dimension. Hot meal timestamp is applied to the Forge smelting output event; campfire outputs and automated extraction still need coverage.
-QA: runClient and runServer; check break/drop counts, mobGriefing=false, claim mods, ricochet angles and arrows not duplicating, water breathing, air pockets shared, player logout/rejoin, rain and projectiles, multiplayer movement corrections, large farms, config disabled rules. Profile crowded areas.
-
-RC2 improvements: persistent placed-log history, bounded gravel cascade and explosion reactions, material families and ricochet coefficients, extended recoverable arrow lifetime, direct shield collision, tagged sharp surfaces, attribute-based recovery/fatigue, per-stack wet gear, snow density and relocated snow, flood recovery, staged herd panic, hot-source expansion and thermal transformations, water current for mobs/boats, iron door impulses. Friction hook and all mixins require runtime verification. Existing builds from before installation cannot be identified reliably. Mud remains particles; exact furnace/campfire automation and full smoke paths are follow-up checks.
-
-RC3: floor-oriented mud footprint particles, cooking source timestamps and automated extraction hooks, bounded smoke path with samples along route. Requires in-game verification; optional redirect targets are not guaranteed to match until tested. Prior README limitations are historical except where changed here.
-
-RC4: moved extraction hook to actual 1.21.1 declaring class BaseContainerBlockEntity; door closing uses transition hooks for players, mobs and redstone; smoke advances along path over time. Still requires dedicated-server and client testing; shift-click output and legacy builds are known edge cases.
-
-RC4 hotfix: furnace heat timestamp serialized in furnace NBT with direct slot removal and shift-click output handling. Forge block entities do not implement getPersistentData. The live container's output is kept free of freshness data outside extraction to preserve recipe stacking.
+Config: config/worldlogic.properties. Mods > World Logic > Config (local world or main menu).
+Remote multiplayer server settings are administered with permission level 2:
+- /worldlogic preset light|realistic|hardcore
+- /worldlogic rule <key> <true|false>
+- /worldlogic strength <impact|movement|air|weather|fire|ecology> <0.25..2>
+- /worldlogic reload, inspect, selftest
+Realistic defaults preserve existing redstone and opt out of destructive mechanics. Hardcore enables all rules; use fresh worlds only. Strength changes selected shared calculations, not every individual threshold.
+CI core assertions cover profiles, impulse reflection, item mass, torch light, furnace mixin, material tags and SavedData creation. Dedicated server smoke test is separate from full gameplay QA.
+Known limitations: existing logs placed before the mod was installed cannot be identified reliably; tree decay is off by default. Air and ventilation use bounded searches, no fluid simulation. Smoke follows sampled air paths; snow shedding is discrete. Furnace batches use last cooking time; not individual food units. Client visuals, mixed-mod interactions, network movement, claim protection and performance require in-game validation.

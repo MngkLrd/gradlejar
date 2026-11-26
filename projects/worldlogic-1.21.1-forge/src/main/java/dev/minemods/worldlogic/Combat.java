@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.effect.*;
 import net.minecraftforge.event.entity.living.*;
 public final class Combat {
- public static void knockback(LivingKnockBackEvent e){if(Rules.on("knockback_weight")&&e.getEntity().level() instanceof ServerLevel)e.setStrength((float)(e.getStrength()*Math.max(.55,Math.min(1.2,1/Math.sqrt(Material.mass(e.getEntity()))))));}
+ public static void knockback(LivingKnockBackEvent e){if(Rules.on("knockback_weight")&&e.getEntity().level() instanceof ServerLevel)e.setStrength((float)(e.getStrength()*Math.max(.45,Math.min(1.35,1+(1/Math.sqrt(Material.mass(e.getEntity()))-1)*Rules.strength("impact")))));}
  public static void hurt(LivingHurtEvent e){var ent=e.getEntity();if(!(ent.level() instanceof ServerLevel l))return;
   if(Rules.on("projectile_force")&&e.getSource().getDirectEntity() instanceof AbstractArrow a){double speed=a.getDeltaMovement().length(); if(speed>0){Impulse impact=new Impulse(a.getDeltaMovement(),a instanceof net.minecraft.world.entity.projectile.ThrownTrident?.8:.2);e.setAmount(e.getAmount()*(float)Math.max(.9,Math.min(1.12,.90+impact.energy()*.15)));Vec3 v=impact.velocity().normalize().scale(impact.transfer(ent)*.20);ent.push(v.x,Math.max(0,v.y)*.15,v.z);ent.hurtMarked=true;}}
   if(Rules.on("creeper_shockwave")&&e.getSource().is(DamageTypeTags.IS_EXPLOSION)&&e.getSource().getEntity() instanceof Creeper c){Vec3 away=ent.position().subtract(c.position());if(away.lengthSqr()>.01){Vec3 impulse=away.normalize().scale(.14/Math.sqrt(Material.mass(ent)));ent.push(impulse.x,.04,impulse.z);ent.hurtMarked=true;}}

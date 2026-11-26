@@ -1,0 +1,21 @@
+package dev.minemods.worldlogic;
+import com.mojang.brigadier.arguments.*;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import java.util.*;
+public final class AdminCommands {
+ private static int reply(CommandSourceStack s,String message){s.sendSuccess(()->Component.literal(message),false);return 1;}
+ private static int change(CommandSourceStack s,Map<String,String> m){if(!Rules.apply(m)){s.sendFailure(Component.literal("World Logic: config write failed"));return 0;}return reply(s,"World Logic settings saved.");}
+ public static void register(RegisterCommandsEvent event){
+  var root=Commands.literal("worldlogic").requires(s->s.hasPermission(2)).executes(c->reply(c.getSource(),"World Logic: preset, rule, strength, reload, inspect, selftest"));
+  var preset=Commands.literal("preset");for(String name:List.of("light","realistic","hardcore"))preset.then(Commands.literal(name).executes(c->change(c.getSource(),Rules.preset(name))));root.then(preset);
+  root.then(Commands.literal("rule").then(Commands.argument("key",StringArgumentType.word()).suggests((c,b)->net.minecraft.commands.SharedSuggestionProvider.suggest(Rules.keys(),b)).then(Commands.argument("enabled",BoolArgumentType.bool()).executes(c->{String k=StringArgumentType.getString(c,"key");if(!Rules.keys().contains(k)){c.getSource().sendFailure(Component.literal("Unknown rule"));return 0;}var m=Rules.snapshot();m.put(k,Boolean.toString(BoolArgumentType.getBool(c,"enabled")));m.put("preset","custom");return change(c.getSource(),m);}))));
+  root.then(Commands.literal("strength").then(Commands.argument("family",StringArgumentType.word()).suggests((c,b)->net.minecraft.commands.SharedSuggestionProvider.suggest(Rules.tuningKeys(),b)).then(Commands.argument("factor",DoubleArgumentType.doubleArg(.25,2)).executes(c->{String k=StringArgumentType.getString(c,"family");if(!Rules.tuningKeys().contains(k)){c.getSource().sendFailure(Component.literal("Unknown family"));return 0;}var m=Rules.snapshot();m.put("strength."+k,Double.toString(DoubleArgumentType.getDouble(c,"factor")));m.put("preset","custom");return change(c.getSource(),m);}))));
+  root.then(Commands.literal("reload").executes(c->{Rules.load();return reply(c.getSource(),"World Logic configuration reloaded.");}));
+  root.then(Commands.literal("inspect").executes(c->{var s=c.getSource();var p=s.getPlayer();if(p==null)return reply(s,"Use in game to inspect player state.");var b=Body.state(p);return reply(s,"mass="+String.format(Locale.ROOT,"%.2f",Material.mass(p))+" wetness="+b.wet+" air="+p.getAirSupply()+" streak="+b.streak+" pocket="+(b.pocket==null?"none":b.pocket.oxygen));}));
+  root.then(Commands.literal("selftest").executes(c->{try{ReleaseChecks.run();return reply(c.getSource(),"WORLDLOGIC_CORE_TESTS_PASSED");}catch(Exception e){c.getSource().sendFailure(Component.literal(e.toString()));return 0;}}));
+  event.getDispatcher().register(root);
+ }
+}

@@ -33,7 +33,7 @@ public final class ObjectsPhysics {
     if(!processed.add(x.getId()))continue;if(--budget<0)return;Vec3 v=x.getDeltaMovement();
     if(x instanceof AbstractArrow a){
      if(SEEN.put(a,true)==null&&a.tickCount<5&&a.getPersistentData().getInt("worldlogic_bounces")==0)Body.bow(a);
-     if(Rules.on("wind")&&l.isThundering()&&!a.onGround()&&v.lengthSqr()>.25&&l.canSeeSky(a.blockPosition())){double angle=(now/1200L+l.dimension().location().hashCode())*.73;a.setDeltaMovement(v.add(Math.sin(angle)*.0015,0,Math.cos(angle)*.0015));}
+     if(Rules.on("wind")&&l.isThundering()&&!a.onGround()&&v.lengthSqr()>.25&&l.canSeeSky(a.blockPosition())){double angle=(now/1200L+l.dimension().location().hashCode())*.73;a.setDeltaMovement(v.add(Math.sin(angle)*.0015*Rules.strength("weather"),0,Math.cos(angle)*.0015*Rules.strength("weather")));}
     }else if(x instanceof net.minecraft.world.entity.item.FallingBlockEntity fb){
      if(v.y<-.5&&Rules.on("fragile_containers")){BlockPos q=fb.blockPosition().below();if(l.hasChunkAt(q)&&Material.block(l.getBlockState(q),"fragile_container"))l.destroyBlock(q,true,fb);}
      if(Rules.on("falling_objects")&&v.y<-.5&&Material.block(fb.getBlockState(),"falling_hazard")){

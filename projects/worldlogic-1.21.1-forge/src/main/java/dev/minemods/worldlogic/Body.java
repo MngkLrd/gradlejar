@@ -38,7 +38,7 @@ public final class Body {
   s.water=water;s.lastAir=p.getAirSupply();
   if(now%10==0)WetGear.tick(l,p,s);
   if(Rules.on("wet_gear")){double armor=0;for(ItemStack piece:p.getArmorSlots())if(WetGear.absorbent(piece))armor+=WetGear.wet(piece)*.00025;penalty=Math.max(penalty,armor);}
-  speedPenalty(p,penalty);
+  speedPenalty(p,Math.min(.45,penalty*Rules.strength("movement")));
   if(Rules.on("water_extinguish")&&water&&p.isOnFire())p.clearFire();
   if(Rules.on("ladder_grip")&&p.onClimbable()&&p.isShiftKeyDown()&&Math.abs(p.getDeltaMovement().y)<.01){s.ladderTicks++;if(s.ladderTicks>100){Vec3 v=p.getDeltaMovement();p.setDeltaMovement(v.x,-.035,v.z);p.hurtMarked=true;}}else s.ladderTicks=0;
   if(Rules.on("grip")&&p.onClimbable()&&p.getDeltaMovement().y>0&&!p.getMainHandItem().isEmpty()&&!p.getOffhandItem().isEmpty()){Vec3 v=p.getDeltaMovement();p.setDeltaMovement(v.x,v.y*.84,v.z);p.hurtMarked=true;}

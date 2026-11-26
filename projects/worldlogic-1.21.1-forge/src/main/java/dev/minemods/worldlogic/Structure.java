@@ -28,7 +28,7 @@ public final class Structure {
   while(budget-->0&&!q.isEmpty()&&q.peek().due<=l.getGameTime()){
    Work work=q.remove();BlockPos p=work.pos;if(!l.hasChunkAt(p)||!Rules.on("loose_gravel"))continue;BlockState s=l.getBlockState(p);if(!Material.block(s,"unstable")||!(s.getBlock() instanceof FallingBlock))continue;
    for(Direction d:Direction.Plane.HORIZONTAL){BlockPos t=p.relative(d);if(!l.hasChunkAt(t)||!l.hasChunkAt(t.below()))continue;
-    if(l.isEmptyBlock(t)&&l.isEmptyBlock(t.below())&&l.random.nextFloat()<.28f){l.removeBlock(p,false);l.setBlock(t,s,3);l.scheduleTick(t,s.getBlock(),2);for(Direction next:Direction.Plane.HORIZONTAL)enqueue(l,p.relative(next),work.depth+1);enqueue(l,p.above(),work.depth+1);break;}
+    if(l.isEmptyBlock(t)&&l.isEmptyBlock(t.below())&&l.random.nextFloat()<Rules.chance("impact",.28)){l.removeBlock(p,false);l.setBlock(t,s,3);l.scheduleTick(t,s.getBlock(),2);for(Direction next:Direction.Plane.HORIZONTAL)enqueue(l,p.relative(next),work.depth+1);enqueue(l,p.above(),work.depth+1);break;}
    }
   }
  }
@@ -53,7 +53,7 @@ public final class Structure {
     }
    }
    if(Rules.on("arrow_recovery")){
-    if(hard&&v.length()>2&&l.random.nextFloat()<.08)e.setImpactResult(ProjectileImpactEvent.ImpactResult.STOP_AT_CURRENT_NO_DAMAGE);
+    if(hard&&v.length()>2&&l.random.nextFloat()<Rules.chance("impact",.08))e.setImpactResult(ProjectileImpactEvent.ImpactResult.STOP_AT_CURRENT_NO_DAMAGE);
     else if(Material.block(s,"wood")||Material.block(s,"soft_projectile")||s.is(Blocks.DIRT))a.getPersistentData().putBoolean("worldlogic_recoverable",true);
    }
    if(Rules.on("ricochet")&&Material.block(s,"soft_projectile"))a.setDeltaMovement(v.scale(.55));
@@ -64,7 +64,7 @@ public final class Structure {
   if(!l.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING))return;
   Set<BlockPos> extra=new HashSet<>();int budget=96;
   for(BlockPos p:List.copyOf(e.getAffectedBlocks())){if(budget--<=0)break;for(Direction d:Direction.values()){BlockPos t=p.relative(d);if(!l.hasChunkAt(t))continue;var b=l.getBlockState(t);if(Rules.on("loose_gravel")&&Material.block(b,"unstable"))enqueue(l,t);
-   if(Rules.on("falling_dripstone")&&b.is(Blocks.POINTED_DRIPSTONE)&&b.getValue(PointedDripstoneBlock.TIP_DIRECTION)==Direction.DOWN){if(l.random.nextFloat()<.3)FallingBlockEntity.fall(l,t,b);}
+   if(Rules.on("falling_dripstone")&&b.is(Blocks.POINTED_DRIPSTONE)&&b.getValue(PointedDripstoneBlock.TIP_DIRECTION)==Direction.DOWN){if(l.random.nextFloat()<Rules.chance("impact",.3))FallingBlockEntity.fall(l,t,b);}
    else if(Rules.on("glass_pressure")&&Material.block(b,"glass")||Rules.on("fragile_containers")&&Material.block(b,"fragile_container")||Rules.on("fragile_lanterns")&&b.getBlock() instanceof LanternBlock&&b.getValue(LanternBlock.HANGING))extra.add(t.immutable());if(extra.size()>=24)break;}if(extra.size()>=24)break;}
   for(BlockPos p:extra)if(!e.getAffectedBlocks().contains(p))e.getAffectedBlocks().add(p);
  }
