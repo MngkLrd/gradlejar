@@ -15,7 +15,7 @@ public final class Trees {
  public static void placed(BlockEvent.EntityPlaceEvent e){if(e.getLevel() instanceof ServerLevel l&&e.getPlacedBlock().is(BlockTags.LOGS)){WorldState.markPlaced(l,e.getPos());}}
  public static void breakBase(BlockEvent.BreakEvent e){
   if(e.isCanceled()||!(e.getLevel() instanceof ServerLevel l))return;BlockPos origin=e.getPos();
-  var data=WorldState.get(l);boolean artificial=WorldState.placed(l,origin);WorldState.clear(l,origin);
+  var data=WorldState.get(l);boolean artificial=WorldState.placed(l,origin);if(e.getState().is(BlockTags.LOGS))WorldState.clear(l,origin);
   if(!Rules.on("tree_weight")||artificial||data.treeLimit||e.getPlayer().isCreative()||!e.getState().is(BlockTags.LOGS)||!l.getBlockState(origin.below()).is(BlockTags.DIRT))return;
   Set<BlockPos> logs=new HashSet<>();ArrayDeque<BlockPos> todo=new ArrayDeque<>();todo.add(origin.above());boolean leaves=false;
   while(!todo.isEmpty()){BlockPos q=todo.remove();if(q.equals(origin)||logs.contains(q))continue;if(!l.hasChunkAt(q)||q.getY()<origin.getY()||q.getY()>origin.getY()+12||Math.abs(q.getX()-origin.getX())>4||Math.abs(q.getZ()-origin.getZ())>4)return;

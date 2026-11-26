@@ -27,6 +27,14 @@ public final class WorldLogic {
   bus.addListener(Combat::fall);
   bus.addListener(Combat::shield);
   bus.addListener(Combat::visibility);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,MineInstability::mined);
+  bus.addListener(MineInstability::placed);
+  bus.addListener(MineInstability::tick);
+  bus.addListener(net.minecraftforge.eventbus.api.EventPriority.LOWEST,Cleanup::broken);
+  bus.addListener(Soil::harvest);
+  bus.addListener(Soil::grow);
+  bus.addListener(Soil::fertilize);
+  bus.addListener(CampfireFuel::feed);
   bus.addListener(Survival::mine);
   bus.addListener(Survival::jump);
   bus.addListener(Survival::hit);
