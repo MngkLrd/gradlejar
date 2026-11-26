@@ -155,15 +155,41 @@ def upgrade(root,z,out,download):
     for rel in ['hotbar_offhand_left','hotbar_offhand_right']:
         im=panel(original('sprites/hud/'+rel));d=ImageDraw.Draw(im)
         snow(d,2,0,min(14,im.width-3),3);save('sprites/hud/'+rel,im)
-    # Use the official, actual Minecraft 1.18 mountain-world cubemap, not a painted approximation.
+    # Import the actual captured winter cubemap from a redistributable CC BY project.
     if download:
-        man=json.loads(get('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json'))
-        info=json.loads(get(next(v['url'] for v in man['versions'] if v['id']=='1.18.2')))
-        client=info['downloads']['client'];raw=get(client['url']);assert hashlib.sha1(raw).hexdigest()==client['sha1']
-        with zipfile.ZipFile(io.BytesIO(raw)) as old:
-            for i in range(6):
-                rel='title/background/panorama_'+str(i)
-                save(rel,Image.open(io.BytesIO(old.read(prefix+rel+'.png'))).convert('RGBA'))
+        from PIL import ImageStat
+        api='https://api.modrinth.com/v2/'
+        project=json.loads(get(api+'project/snowy-mountain-pws'))
+        assert project['license']['id']=='CC-BY-4.0', project['license']
+        versions=json.loads(get(api+'project/'+project['id']+'/version'))
+        versions.sort(key=lambda v:('1.21.1' in v['game_versions'],v['date_published']),reverse=True)
+        selected=None
+        for version in versions:
+            for f in sorted(version['files'],key=lambda x:not x.get('primary',False)):
+                if not f['filename'].lower().endswith('.zip'):continue
+                data=get(f['url'])
+                assert hashlib.sha512(data).hexdigest()==f['hashes']['sha512']
+                with zipfile.ZipFile(io.BytesIO(data)) as pack:
+                    faces=[]
+                    for i in range(6):
+                        target='panorama_'+str(i)+'.png'
+                        candidates=[n for n in pack.namelist() if n.endswith('/title/background/'+target)]
+                        if len(candidates)!=1:break
+                        im=Image.open(io.BytesIO(pack.read(candidates[0]))).convert('RGB')
+                        if im.width!=im.height or im.width<256 or max(ImageStat.Stat(im).stddev)<3:break
+                        faces.append(im.copy())
+                    if len(faces)==6 and len({im.size for im in faces})==1 and len({hashlib.sha256(im.tobytes()).hexdigest() for im in faces})==6:
+                        selected=(version,f,faces);break
+            if selected:break
+        assert selected,'No valid six-face snowy panorama; refusing to package placeholder art'
+        version,f,faces=selected
+        for i,im in enumerate(faces):
+            save('title/background/panorama_'+str(i),im.convert('RGBA'))
+        members=json.loads(get(api+'team/'+project['team']+'/members'))
+        authors=', '.join(m['user']['username'] for m in members)
+        assert authors,'Missing panorama author attribution'
+        (out/'PANORAMA-CREDITS.txt').write_text('Snowy mountain [PWS] by '+authors+'\nSource: https://modrinth.com/resourcepack/snowy-mountain-pws\nVersion: '+version['version_number']+'\nOriginal archive: '+f['url']+'\nCC BY 4.0 https://creativecommons.org/licenses/by/4.0/\nChanges: only six panorama images extracted; converted to RGBA PNG for Minecraft 1.21.1; scene unmodified.\n',encoding='utf-8')
+        print('Verified snowy cubemap:',faces[0].size,'source',version['version_number'],'author',authors)
         # Required music: abort the build rather than publish a silent archive.
         url='https://upload.wikimedia.org/wikipedia/commons/4/4f/Jingle_Bells_%28Calm%29_%28Kevin_MacLeod%29_%28ISRC_USUAN1100188%29.oga'
         raw=get(url);assert hashlib.sha1(raw).hexdigest()=='df5c3c90f70da45bfd8bf7b39a0c300ac99cfb06'

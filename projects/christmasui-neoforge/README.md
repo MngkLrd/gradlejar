@@ -1,2 +1,3 @@
-# Christmas UI 0.3.0
-1.21.1 NeoForge, Java 21, Gradle 9.2.1. Build: pip install Pillow; gradle clean build. Official Minecraft 1.18.2 mountain panorama (not a custom winter world), redesigned peppermint star HP, inventory slot placeholders and offhand frame, world/server join sprites, sliders and difficulty lock, snowcaps, music menu and Overworld events. Music uses Kevin MacLeod CC BY 3.0; credits included. No separate resource pack release. In-game QA pending.
+# Christmas UI 0.3.1
+Minecraft 1.21.1 NeoForge, Java 21, Gradle 9.2.1.
+Panorama-only fix from 0.3.0: imports six real snowy panorama faces from Snowy mountain [PWS] (CC BY 4.0), verifies license and download hash, rejects solid-color images and mismatched or duplicate cube faces. Attribution is bundled in PANORAMA-CREDITS.txt. The original Minecraft renderer and overlay are retained. Other UI and music unchanged. Build: pip install Pillow; gradle clean build. In-game QA pending.

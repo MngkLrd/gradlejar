@@ -33,7 +33,7 @@ jobs:
         run: |
           python3 - <<'PY'
           from zipfile import ZipFile
-          from PIL import Image
+          from PIL import Image, ImageStat
           from io import BytesIO
           from pathlib import Path
           for f in [next(Path('build/libs').glob('*.jar')),]:
@@ -46,7 +46,12 @@ jobs:
                   for name in ['container/inventory','container/creative_inventory/tab_items','sprites/hud/heart/full','sprites/server_list/join','title/background/panorama_0']:
                       assert 'assets/minecraft/textures/gui/'+name+'.png' in z.namelist(), name
                   if f.suffix=='.jar': assert 'dev/christmasui/client/TitleSnow.class' in z.namelist()
-                  import json
+                  import json, hashlib
+                  faces=[Image.open(BytesIO(z.read('assets/minecraft/textures/gui/title/background/panorama_'+str(i)+'.png'))).convert('RGB') for i in range(6)]
+                  assert len({im.size for im in faces})==1
+                  assert all(im.width==im.height and im.width>=256 and max(ImageStat.Stat(im).stddev)>=3 for im in faces)
+                  assert len({hashlib.sha256(im.tobytes()).hexdigest() for im in faces})==6
+                  assert 'PANORAMA-CREDITS.txt' in z.namelist()
                   events=json.loads(z.read('assets/minecraft/sounds.json'))
                   assert all(events[e]['replace'] for e in ['music.menu','music.game','music.overworld.frozen_peaks','music.creative'])
                   assert z.read('assets/minecraft/sounds/music/christmas_calm.ogg')[:4]==b'OggS'
@@ -58,4 +63,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar --target "$GITHUB_SHA" --title "Christmas UI 0.3.0" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
+          gh release create "ci-christmasui-${GITHUB_RUN_NUMBER}" projects/christmasui-neoforge/build/libs/*.jar --target "$GITHUB_SHA" --title "Christmas UI 0.3.1" --notes "Gradle build and archive checks passed; in-game testing pending." --prerelease
