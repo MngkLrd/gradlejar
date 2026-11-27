@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC20 production core/API regression",
+  "name": "World Logic NeoForge RC21 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -36,6 +36,36 @@
       "command": "worldlogic qa terrain",
       "expect": "WORLDLOGIC_TERRAIN_PRESET_PASSED",
       "assertion": true
+    },
+    {
+      "command": "weather clear 120",
+      "expect": "clear"
+    },
+    {
+      "wait": 4
+    },
+    {
+      "name": "Atmosphere dry snapshot and model controls",
+      "command": "worldlogic qa atmosphere_dry",
+      "expect": "WORLDLOGIC_ATMOSPHERE_DRY_PASSED",
+      "assertion": true
+    },
+    {
+      "command": "weather rain 120",
+      "expect": "rain"
+    },
+    {
+      "wait": 5
+    },
+    {
+      "name": "Atmosphere rain snapshot and local intensity",
+      "command": "worldlogic qa atmosphere_rain",
+      "expect": "WORLDLOGIC_ATMOSPHERE_RAIN_PASSED",
+      "assertion": true
+    },
+    {
+      "command": "weather clear 120",
+      "expect": "clear"
     }
   ],
   "coverage": [
@@ -80,6 +110,28 @@
         {
           "backend": "server",
           "name": "Registered custom generator, climate fixtures, seed surveys and heights"
+        }
+      ]
+    },
+    {
+      "id": "atmosphere-dry",
+      "kind": "mechanic",
+      "subject": "Atmosphere dry snapshot and model controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Atmosphere dry snapshot and model controls"
+        }
+      ]
+    },
+    {
+      "id": "atmosphere-rain",
+      "kind": "mechanic",
+      "subject": "Atmosphere rain snapshot and local intensity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Atmosphere rain snapshot and local intensity"
         }
       ]
     }

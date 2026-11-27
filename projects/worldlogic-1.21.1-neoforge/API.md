@@ -1,4 +1,4 @@
-# World Logic API v1 (RC20)
+# World Logic API v1 (RC20 baseline, RC21 additive revision)
 
 Minecraft 1.21.1 / NeoForge 21.1.80+ (CI baseline 21.1.262) / Java 21 / official mappings.
 
@@ -75,3 +75,9 @@ Core owns fatigue, physics, environment and geography. Temperature addon owns bo
 Climate estimate is deliberately approximate; seasons and instantaneous regional wind/precipitation simulation are not implemented. Existing RC18 worlds keep their generator. The API can sample local conditions there using biome fallback, without RC19 regional fields.
 
 QA: the production server regression exercises environment sampling vs seeded router, unloaded location rejection, material weights, fatigue add/recovery/bounds/invalid input using NeoForge FakePlayer. No graphical HUD certification or external addon integration test yet.
+
+## RC21 atmosphere API (additive, API_REVISION=2)
+
+`WorldLogicApi.atmosphere(level, pos)` returns an optional immutable snapshot, on the server thread, for loaded positions in skylight dimensions. Use it instead of a separate environment() call to obtain both. Fields: `environment()` (unchanged RC20 record), `relativeHumidityPercent()` (0..100 modeled from approximate dew point, ambient temperature and weather; not the generator moisture index), `outdoorWindXMps()`, `outdoorWindZMps()`, `outdoorWindSpeedMps()` (deterministic modeled outdoor wind, not measured fluid dynamics), `precipitation()` (NONE/RAIN/SNOW from vanilla weather and biome exposure), `precipitationIntensity()` (0..1 vanilla rain strength proxy; not mm/h). Covered locations have no direct precipitation; outdoor wind is NOT an indoor wind estimate. Non-skylight dimensions/unloaded positions return empty. Vanilla world fallback uses a simple precipitation-capable vs dry biome moisture prior. No regional storm system, seasons, heat sources or fluid/terrain changes. No change to existing v1 records or method signatures. Addons using the new method must depend on RC21 or later, after CI release; RC20 remains sufficient for existing API consumers.
+
+[Approved subsystem ownership](ARCHITECTURE.md).

@@ -19,6 +19,8 @@ public final class AdminCommands {
   root.then(Commands.literal("selftest").executes(c->{try{ReleaseChecks.run();return reply(c.getSource(),"WORLDLOGIC_CORE_TESTS_PASSED");}catch(Exception e){c.getSource().sendFailure(Component.literal(e.toString()));return 0;}}));
   root.then(Commands.literal("qa").requires(s->s.hasPermission(4))
    .then(Commands.literal("api").executes(c->{ApiChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_API_CHECKS_PASSED");}))
+   .then(Commands.literal("atmosphere_dry").executes(c->{ApiChecks.verifyAtmosphere(c.getSource().getLevel(),false);return reply(c.getSource(),"WORLDLOGIC_ATMOSPHERE_DRY_PASSED");}))
+   .then(Commands.literal("atmosphere_rain").executes(c->{ApiChecks.verifyAtmosphere(c.getSource().getLevel(),true);return reply(c.getSource(),"WORLDLOGIC_ATMOSPHERE_RAIN_PASSED");}))
    .then(Commands.literal("terrain").executes(c->{TerrainChecks.verifyPreset(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_TERRAIN_PRESET_PASSED");}))
    .then(Commands.literal("world").executes(c->{ReleaseChecks.verifyWorld(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WORLD_FIXTURE_PASSED");})));
   event.getDispatcher().register(root);
