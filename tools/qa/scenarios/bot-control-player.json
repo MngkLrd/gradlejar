@@ -3,12 +3,16 @@
   "name": "Unmodded Fabric network control suite",
   "steps": [
     {
-      "command": "gamemode survival MineModsQA",
-      "expect": "Set|game mode|already"
+      "command": "execute if entity @a[name=MineModsQA,gamemode=survival]",
+      "expect": "Test passed",
+      "name": "Fresh player is in survival",
+      "assertion": true
     },
     {
-      "command": "clear MineModsQA",
-      "expect": "Removed|No items"
+      "command": "execute unless data entity MineModsQA Inventory[0]",
+      "expect": "Test passed",
+      "name": "Fresh player inventory is empty",
+      "assertion": true
     },
     {
       "command": "tp MineModsQA 5.5 200 3.5",
