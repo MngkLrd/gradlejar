@@ -36,6 +36,6 @@ public final class ClientEvents {
         }
     }
     private static void logout(ClientPlayerNetworkEvent.LoggingOut e){
-        ThermalScreenEffects.reset();ClientBodyState.clear();ClientTreatmentState.accept(new TreatmentProgressPacket(0,0));
+        ThermalScreenEffects.reset();TraumaticScreenEffects.reset();ClientGaitState.clear();ClientBodyState.clear();ClientTreatmentState.accept(new TreatmentProgressPacket(0,0));
     }
 }

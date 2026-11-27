@@ -200,6 +200,8 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         tooltip.add(BodyVisual.name(hovered));
         tooltip.add(Component.literal((int)Math.ceil(ClientBodyState.hp(hovered))+" / "+hovered.maximum+" HP"));
         tooltip.add(BodyVisual.condition(hovered));
+        for(var kind:dev.minemods.traumacraft.health.WoundKind.values())
+            if((ClientBodyState.wounds(hovered)&kind.bit)!=0)tooltip.add(Component.translatable("wound.traumacraft."+kind.name().toLowerCase(java.util.Locale.ROOT)));
         if(hovered==BodyPart.LEFT_ARM||hovered==BodyPart.RIGHT_ARM||hovered.isLeg()){
             float function=dev.minemods.traumacraft.health.PhysicalFunction.limb(ClientBodyState.fraction(hovered),ClientBodyState.fractured(hovered),ClientBodyState.stabilized(hovered));
             tooltip.add(Component.translatable("screen.traumacraft.function",Math.round(100*function)));

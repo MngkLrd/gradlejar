@@ -6,6 +6,7 @@ import dev.minemods.traumacraft.network.SyncBodyStatePacket;
 
 public final class ClientBodyState {
     private static final float[] HP = new float[BodyPart.values().length];
+    private static final byte[] WOUNDS=new byte[BodyPart.values().length];
     private static final byte[] BLEEDING = new byte[BodyPart.values().length];
     private static final boolean[] FRACTURE = new boolean[BodyPart.values().length];
     private static final boolean[] STABILIZED = new boolean[BodyPart.values().length];
@@ -22,6 +23,7 @@ public final class ClientBodyState {
             int i = part.ordinal();
             HP[i] = Math.max(0f, Math.min(part.maximum, packet.hp()[i]));
             BLEEDING[i] = (byte)Math.max(0, Math.min(2, packet.bleeding()[i]));
+            WOUNDS[i]=(byte)(packet.wounds()[i]&63);
             FRACTURE[i] = packet.fracture()[i];
             STABILIZED[i] = packet.stabilized()[i];
         }
@@ -43,6 +45,7 @@ public final class ClientBodyState {
     public static void clear() { received = false; concussionTicks = 0; painkillerTicks = 0; thermal=ThermalCondition.NONE; }
     public static float hp(BodyPart part) { return received ? HP[part.ordinal()] : part.maximum; }
     public static float fraction(BodyPart part) { return hp(part) / part.maximum; }
+    public static int wounds(BodyPart part){return received?WOUNDS[part.ordinal()]&63:0;}
     public static int bleeding(BodyPart part) { return received ? BLEEDING[part.ordinal()] : 0; }
     public static boolean fractured(BodyPart part) { return received && FRACTURE[part.ordinal()]; }
     public static boolean stabilized(BodyPart part) { return received && STABILIZED[part.ordinal()]; }
