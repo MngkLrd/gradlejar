@@ -2580,9 +2580,437 @@
         "vanilla_comparison": "Pink petals supplies native ground-plane scatter scale; litter uses smaller irregular shapes.",
         "functional_material_cues": "Thin twigs and broken organic fragments communicate decomposing forest debris."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_bell_pepper.png": {
+      "sha256": "a36be139f487a2ce31881c3bec6ae1b678564a176744101705ff472f3f707c5b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "d7d9bf83464ef649e52c8658e15b080f1abb36928ecdbaf2306a292b5bda5cb1"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sweet_berry_bush_stage3: Vanilla sweet berry bush gives native fruit-to-leaf scale; peppers use elongated lobed shapes. Different leaf lengths and fruit shapes preserve an uneven outline.",
+      "findings": {
+        "silhouette": "Two elongated orange fruits hang from a tall forked green plant.",
+        "cluster_structure": "Connected orange fruit faces have narrow lighter vertical ribs.",
+        "micro_contrast": "Close burnt orange and amber shades separate fruit sides.",
+        "light_and_volume": "Light left ribs contrast with darker right and bottom fruit faces.",
+        "material_continuity": "Green leaves and warm orange fruit follow distinct restrained material ramps.",
+        "edge_variation": "Different leaf lengths and fruit shapes preserve an uneven outline.",
+        "variant_identity": "Long hanging lobed peppers differ from round tomato fruit.",
+        "vanilla_comparison": "Vanilla sweet berry bush gives native fruit-to-leaf scale; peppers use elongated lobed shapes.",
+        "functional_material_cues": "Two pendant lobed fruit bodies with attached green stems identify bell pepper."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_tomato.png": {
+      "sha256": "6be2b2db888cf0f0b4f2408fbb43c9f6cf3b895246dc3e809cd6300d4f4990da",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "d7d9bf83464ef649e52c8658e15b080f1abb36928ecdbaf2306a292b5bda5cb1"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sweet_berry_bush_stage3: Sweet berry bush provides a native red fruit and foliage comparator; tomatoes are larger single fruit bodies. Staggered fruit heights and unequal leafy forks avoid symmetry.",
+      "findings": {
+        "silhouette": "Three rounded red tomatoes attach to an upright branched plant.",
+        "cluster_structure": "Compact red clusters have small lighter face strips and darker borders.",
+        "micro_contrast": "Adjacent red-orange and brick shades define round fruit faces.",
+        "light_and_volume": "Upper and left highlights contrast with darker lower turning edges.",
+        "material_continuity": "Warm fruit color stays distinct from the green stems and serrated foliage.",
+        "edge_variation": "Staggered fruit heights and unequal leafy forks avoid symmetry.",
+        "variant_identity": "Rounded red tomatoes with green calyxes differ from elongated orange pepper.",
+        "vanilla_comparison": "Sweet berry bush provides a native red fruit and foliage comparator; tomatoes are larger single fruit bodies.",
+        "functional_material_cues": "Round fruit bodies and green calyx pixels communicate ripe tomato."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_cabbage.png": {
+      "sha256": "68bd5d2feebf6dd8e89b128d824ec0acb87e7683b55c4e55ad59c64670b206e0",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/azalea_plant",
+          "minecraft": "1.21.1",
+          "sha256": "9b9f6aa9210c7b47275698fee8ba2bd5d7e8b309ab685f97ecfde4a832836dea"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against azalea_plant: Azalea offers a native foliage cluster comparator; cabbage is a low concentric rosette. Offset broad leaf lobes break the circular outer profile.",
+      "findings": {
+        "silhouette": "Low broad rosette encloses a pale compact cabbage head.",
+        "cluster_structure": "Connected overlapping green outer leaf faces surround the central pale group.",
+        "micro_contrast": "Gradual neighboring olive and pale-green planes differentiate curled leaf surfaces.",
+        "light_and_volume": "Central lit head is framed by darker overlapping lower wrapper leaves.",
+        "material_continuity": "Pale young inner leaves and darker mature outer foliage form a coherent ramp.",
+        "edge_variation": "Offset broad leaf lobes break the circular outer profile.",
+        "variant_identity": "Dense layered central head distinguishes cabbage from sparse leafy roots.",
+        "vanilla_comparison": "Azalea offers a native foliage cluster comparator; cabbage is a low concentric rosette.",
+        "functional_material_cues": "Pale folded central head and surrounding broad wrapper leaves identify cabbage."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_cucumber.png": {
+      "sha256": "ff2d0946ae9050e2acab7ae9b0726d6a67a4fa347e639c9fc03c7d4dba0e154c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/carrots_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "6a5b6a44b3978e507f35f4ad9f92d897f60434492b8f75dbc68f4e614834ff15"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against carrots_stage3: Carrot crop gives native cultivated leaf scale; cucumber uses a trailing vine and visible above-ground fruit. Asymmetric trailing stems and lobed leaves leave open diagonal gaps.",
+      "findings": {
+        "silhouette": "Trailing vine with broad angular leaves carries an oblique elongated fruit.",
+        "cluster_structure": "Connected broad leaves surround a separate short elongated lighter green fruit group.",
+        "micro_contrast": "Close olive and yellow-green fruit values contrast with darker leaf surfaces.",
+        "light_and_volume": "Light fruit ridge and shaded perimeter show a cylindrical turning surface.",
+        "material_continuity": "Fruit skin and vine foliage use related but distinguishable green ramps.",
+        "edge_variation": "Asymmetric trailing stems and lobed leaves leave open diagonal gaps.",
+        "variant_identity": "Low trailing silhouette and oblique fruit distinguish cucumber from upright tomato.",
+        "vanilla_comparison": "Carrot crop gives native cultivated leaf scale; cucumber uses a trailing vine and visible above-ground fruit.",
+        "functional_material_cues": "Elongated green fruit ridge and attached sprawling vine identify cucumber."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_onion.png": {
+      "sha256": "d092a6db36d3e7a01ece4dada65014c3ddddbbb78801df2226b39c06c7a60de8",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/carrots_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "6a5b6a44b3978e507f35f4ad9f92d897f60434492b8f75dbc68f4e614834ff15"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against carrots_stage3: Carrot crop provides native root-at-ground and leaf scale; onion uses narrow blades. Five blades bend at differing angles around the rounded root.",
+      "findings": {
+        "silhouette": "Long narrow leaves fan upward from a tan rounded bulb.",
+        "cluster_structure": "Connected narrow green blades meet a compact tan bulb with curved face clusters.",
+        "micro_contrast": "Muted amber and cream transitions separate the bulb skin from foliage.",
+        "light_and_volume": "Bright upper bulb shoulder and darker lower edge suggest rounded volume.",
+        "material_continuity": "Dry tan bulb skin and green leaves remain distinct materials.",
+        "edge_variation": "Five blades bend at differing angles around the rounded root.",
+        "variant_identity": "Tan bulb and linear foliage contrast with radish's red root and broad leaves.",
+        "vanilla_comparison": "Carrot crop provides native root-at-ground and leaf scale; onion uses narrow blades.",
+        "functional_material_cues": "Rounded papery bulb beneath upright strap-like leaves identifies onion."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_radish.png": {
+      "sha256": "3e0d24b1298eb047345c81cabc33a1e2b43de8d04c2cdcda066140aeb4594af6",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/beetroots_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "3cfc3b91dd1c5e00c916898443fdf421444535e1082df22aaa175f4b1e1ea9fd"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against beetroots_stage3: Beetroot crop provides native exposed red root reference; radish has paler pink skin. Lobed uneven leaf edges and tapering root tip break symmetry.",
+      "findings": {
+        "silhouette": "Broad lobed foliage fans from a pink round root with pale taproot tip.",
+        "cluster_structure": "Connected rose root faces and green leafy lobes use separated clusters.",
+        "micro_contrast": "Neighboring pink shades around a small pale highlight define root skin.",
+        "light_and_volume": "Lighter upper left root and dark lower rim give the bulb rounded volume.",
+        "material_continuity": "Rose root, pale taproot and green leaves have distinct coherent ramps.",
+        "edge_variation": "Lobed uneven leaf edges and tapering root tip break symmetry.",
+        "variant_identity": "Red round root with white tip contrasts with onion's tan bulb and strap leaves.",
+        "vanilla_comparison": "Beetroot crop provides native exposed red root reference; radish has paler pink skin.",
+        "functional_material_cues": "Pink rounded root, pale taproot and broad lobed leaves identify radish."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_pineapple.png": {
+      "sha256": "ff72b06436748f3c765f75743305338ac6a636b2599d4675bae7a334959509a9",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/carrots_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "6a5b6a44b3978e507f35f4ad9f92d897f60434492b8f75dbc68f4e614834ff15"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against carrots_stage3: Carrot crop provides native leaf and visible harvest color scale; pineapple is an above-ground fruit. Uneven spear-like leaves and staggered surface cells vary outer edge.",
+      "findings": {
+        "silhouette": "Golden oval pineapple sits between stiff basal leaves and spiky crown.",
+        "cluster_structure": "Connected gold fruit surface contains offset small scale-like cells.",
+        "micro_contrast": "Adjacent ochre and yellow planes break up the surface without uniform noise.",
+        "light_and_volume": "Upper and left fruit cells are lighter than shaded lower rim.",
+        "material_continuity": "Gold patterned fruit and green tough blade surfaces retain separate material ramps.",
+        "edge_variation": "Uneven spear-like leaves and staggered surface cells vary outer edge.",
+        "variant_identity": "Large golden textured fruit and pointed crown distinguish pineapple.",
+        "vanilla_comparison": "Carrot crop provides native leaf and visible harvest color scale; pineapple is an above-ground fruit.",
+        "functional_material_cues": "Overlapping fruit scales and stiff pointed green crown identify pineapple."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_blackberry.png": {
+      "sha256": "989e3c0bef00ebf2d4e651a2b9ae107003da9a1e57e90ba284218000973e421d",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "d7d9bf83464ef649e52c8658e15b080f1abb36928ecdbaf2306a292b5bda5cb1"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sweet_berry_bush_stage3: Sweet berry bush gives native foliage-fruit scale; blackberry uses compound dark drupelet masses. Asymmetric cane tips and notched leaf edges preserve irregular gaps. Mature and immature pair inspected together.",
+      "findings": {
+        "silhouette": "Arching canes support serrated foliage and three dark compound berries.",
+        "cluster_structure": "Connected purple drupelet clusters have smaller bright upper facets.",
+        "micro_contrast": "Adjacent plum and muted violet pixels distinguish individual drupelets.",
+        "light_and_volume": "Lighter upper drupelet faces and dark lower clusters convey berry depth.",
+        "material_continuity": "Deep purple fruit remains distinct from olive-green leaves and woody support.",
+        "edge_variation": "Asymmetric cane tips and notched leaf edges preserve irregular gaps.",
+        "variant_identity": "Dark lobed blackberry fruit contrasts with blueberry's round blue fruits.",
+        "vanilla_comparison": "Sweet berry bush gives native foliage-fruit scale; blackberry uses compound dark drupelet masses.",
+        "leaf_groups": "Serrated leaf groups attach along two arching cane branches.",
+        "canopy_depth": "Fruit clusters hang in front of darker inner green leaf surfaces.",
+        "structural_transparency": "Open spaces between foliage and fruit masses separate the canes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_blackberry_unripe.png": {
+      "sha256": "fd3fd99e649be76ca1f9dd7d3d6fa132d310d7801604a358a7deaab4de7d3d07",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage1",
+          "minecraft": "1.21.1",
+          "sha256": "892a7923e22fa2ddb80d8371c1fb5d9b3ee7de0dbf1dd20135d2d705fcbd0a5f"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sweet_berry_bush_stage1: Sweet berry bush stage one provides native leafy immature plant scale. The irregular forked arch and leaf notches match the mature species. Mature and immature pair inspected together.",
+      "findings": {
+        "silhouette": "Arching serrated-leaf cane silhouette remains recognizable before ripening.",
+        "cluster_structure": "Small connected green young-fruit groups occupy the future dark berry positions.",
+        "micro_contrast": "Pale yellow-green young-fruit tips distinguish them from surrounding olive leaves.",
+        "light_and_volume": "Dark internal cane and lighter upper leaf faces preserve canopy depth.",
+        "material_continuity": "Unripe green berries and olive foliage share compatible natural colors.",
+        "edge_variation": "The irregular forked arch and leaf notches match the mature species.",
+        "variant_identity": "Green young berries replace dark blackberry clusters without changing branch architecture.",
+        "vanilla_comparison": "Sweet berry bush stage one provides native leafy immature plant scale.",
+        "leaf_groups": "Serrated leaf groups are identical to mature blackberry away from fruit.",
+        "canopy_depth": "Young fruit groups sit before shaded interior branch areas.",
+        "structural_transparency": "Open spaces along arched cane and leaf groups remain visible."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_blueberry.png": {
+      "sha256": "1189974432aa216fe91904338f573cd17f30098426e380bd204fdf00eccbfe11",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "d7d9bf83464ef649e52c8658e15b080f1abb36928ecdbaf2306a292b5bda5cb1"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sweet_berry_bush_stage3: Sweet berry bush provides native foliage-fruit scale; blueberry uses rounded blue fruits. Staggered oval leaves and round fruit positions leave asymmetric gaps. Mature and immature pair inspected together.",
+      "findings": {
+        "silhouette": "Upright woody fork carries small oval leaves and separated blue berries.",
+        "cluster_structure": "Connected round berry faces have small light blue edge groups.",
+        "micro_contrast": "Adjacent powder-blue and slate values define bloom and darker berry centers.",
+        "light_and_volume": "Paler upper edges contrast with shaded lower blueberry faces.",
+        "material_continuity": "Muted cool green leaves and blue fruit preserve restrained natural colors.",
+        "edge_variation": "Staggered oval leaves and round fruit positions leave asymmetric gaps.",
+        "variant_identity": "Round blue fruit and narrow oval leaf groups differ from compound blackberry.",
+        "vanilla_comparison": "Sweet berry bush provides native foliage-fruit scale; blueberry uses rounded blue fruits.",
+        "leaf_groups": "Small oval leafy groups attach to the central woody fork.",
+        "canopy_depth": "Dark branch and lower leaf faces sit behind brighter exposed fruit and leaves.",
+        "structural_transparency": "Open gaps between oval leaves and the woody fork remain readable."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_blueberry_unripe.png": {
+      "sha256": "8fd3a51a53f5e32534f8cd55cba737eae37e9c3541a815b9f2fb8f2bb4916e20",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage1",
+          "minecraft": "1.21.1",
+          "sha256": "892a7923e22fa2ddb80d8371c1fb5d9b3ee7de0dbf1dd20135d2d705fcbd0a5f"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sweet_berry_bush_stage1: Vanilla immature berry bush gives native leafy stage comparison; blueberry keeps its woody fork. Unequal oval leaves preserve the mature plant's irregular profile. Mature and immature pair inspected together.",
+      "findings": {
+        "silhouette": "Small oval leaf groups spread along an upright woody fork.",
+        "cluster_structure": "Compact green young fruit clusters occur along the same fork as mature fruit.",
+        "micro_contrast": "Pale sage highlights distinguish small immature berries from darker leaves.",
+        "light_and_volume": "Dark woody fork and raised leaf faces create visible front and rear layers.",
+        "material_continuity": "Muted gray-green immature fruit and cool oval foliage retain related ramps.",
+        "edge_variation": "Unequal oval leaves preserve the mature plant's irregular profile.",
+        "variant_identity": "Smaller green berry groups distinguish the unripe stage from blue fruit.",
+        "vanilla_comparison": "Vanilla immature berry bush gives native leafy stage comparison; blueberry keeps its woody fork.",
+        "leaf_groups": "Oval leaf groups remain in the mature plant's positions.",
+        "canopy_depth": "Young fruits sit before dark branch and leaf bases.",
+        "structural_transparency": "Transparent side gaps separate small oval leaf groups."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_raspberry.png": {
+      "sha256": "1d43b987314636eea49c3e9b60fcb302339be70ef61f503cf96b99c491fb4702",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "d7d9bf83464ef649e52c8658e15b080f1abb36928ecdbaf2306a292b5bda5cb1"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sweet_berry_bush_stage3: Sweet berry bush gives native berry scale; raspberry has compound pink drupelets. Staggered cane heights and unequal serrated leaf fans vary the edge. Mature and immature pair inspected together.",
+      "findings": {
+        "silhouette": "Slender erect canes carry serrated leaf fans and pink compound berries.",
+        "cluster_structure": "Connected raspberry clusters contain small alternating pink drupelet faces.",
+        "micro_contrast": "Adjacent rose and deeper red-purple pixels separate raised drupelets.",
+        "light_and_volume": "Bright upper pink drupelets contrast with darker lower berry edges.",
+        "material_continuity": "Red-pink fruit remains distinct from muted green leaves and tan canes.",
+        "edge_variation": "Staggered cane heights and unequal serrated leaf fans vary the edge.",
+        "variant_identity": "Erect cane habit and crimson compound fruit contrast with arching dark blackberry.",
+        "vanilla_comparison": "Sweet berry bush gives native berry scale; raspberry has compound pink drupelets.",
+        "leaf_groups": "Serrated compound leaf fans attach to the upright cane structure.",
+        "canopy_depth": "Pink foreground fruits overlap darker inner foliage and stems.",
+        "structural_transparency": "Unequal spaces between upright canes and fans expose transparent background."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_raspberry_unripe.png": {
+      "sha256": "b05b9f727bb5af283cbff134e26330e35db9acab6028c9e708d1a8e180097c88",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage1",
+          "minecraft": "1.21.1",
+          "sha256": "892a7923e22fa2ddb80d8371c1fb5d9b3ee7de0dbf1dd20135d2d705fcbd0a5f"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sweet_berry_bush_stage1: Vanilla stage-one berry bush provides native immature shrub comparison. Unequal upright canes and jagged leaf fan tips break the outline. Mature and immature pair inspected together.",
+      "findings": {
+        "silhouette": "Erect thin canes and serrated leaf fans preserve raspberry structure.",
+        "cluster_structure": "Connected green young fruit groups replace pink drupelet clusters.",
+        "micro_contrast": "Small light green fruit-tip pixels contrast with shaded green leaves.",
+        "light_and_volume": "Upper raised leaves are lighter than inner shaded cane junctions.",
+        "material_continuity": "Young olive-green fruit fits the surrounding natural foliage ramp.",
+        "edge_variation": "Unequal upright canes and jagged leaf fan tips break the outline.",
+        "variant_identity": "Immature green fruit groups distinguish this stage from crimson mature raspberry.",
+        "vanilla_comparison": "Vanilla stage-one berry bush provides native immature shrub comparison.",
+        "leaf_groups": "Serrated leaf fans keep the mature raspberry layout unchanged.",
+        "canopy_depth": "Smaller fruit clusters leave more exposed darker cane area.",
+        "structural_transparency": "Open gaps between two upright canes and their leaf fans remain."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_strawberry.png": {
+      "sha256": "9c0133671a0373a2c51de297128a464410c62400c47fe4812203b6524c1d4858",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "d7d9bf83464ef649e52c8658e15b080f1abb36928ecdbaf2306a292b5bda5cb1"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sweet_berry_bush_stage3: Sweet berry bush gives native fruit scale; strawberry uses pointed seeded berries. Unequal leafy edges and two tapered hanging fruits preserve open gaps. Mature and immature pair inspected together.",
+      "findings": {
+        "silhouette": "Low crown carries two pendant tapered red strawberries under leaf groups.",
+        "cluster_structure": "Connected red fruit faces contain a few purposeful pale seed markings.",
+        "micro_contrast": "Small warm tan seeds contrast with adjacent ripe red skin.",
+        "light_and_volume": "Bright upper red skin and shaded pointed tips create hanging fruit volume.",
+        "material_continuity": "Red skin, pale seeds and green crowns remain distinct material cues.",
+        "edge_variation": "Unequal leafy edges and two tapered hanging fruits preserve open gaps.",
+        "variant_identity": "Tapered seeded strawberries and low crown differ from rounded clustered raspberry.",
+        "vanilla_comparison": "Sweet berry bush gives native fruit scale; strawberry uses pointed seeded berries.",
+        "leaf_groups": "Broad leaf groups radiate around a low central strawberry crown.",
+        "canopy_depth": "Pendant foreground berries hang below the raised leaf faces.",
+        "structural_transparency": "Gaps between crown leaves and the two pendant fruits separate forms."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_strawberry_unripe.png": {
+      "sha256": "001798a879e8758c3482b433dcf4aecb2fe59907db51fe70ef396ca57f80eff8",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage1",
+          "minecraft": "1.21.1",
+          "sha256": "892a7923e22fa2ddb80d8371c1fb5d9b3ee7de0dbf1dd20135d2d705fcbd0a5f"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sweet_berry_bush_stage1: Vanilla stage-one berry bush provides native immature foliage comparator. Unequal crown leaf tips and open space below preserve the low silhouette. Mature and immature pair inspected together.",
+      "findings": {
+        "silhouette": "Low spreading leafy crown retains the mature strawberry outline.",
+        "cluster_structure": "Small young green fruit clusters appear below broad leaf groups.",
+        "micro_contrast": "Light sage young-fruit tips contrast with shaded basal leaves.",
+        "light_and_volume": "Darker crown center and raised leaf surfaces create modest foliage depth.",
+        "material_continuity": "Green young fruit and mature green foliage form restrained natural ramps.",
+        "edge_variation": "Unequal crown leaf tips and open space below preserve the low silhouette.",
+        "variant_identity": "Small green young fruit replaces the two red pointed strawberries.",
+        "vanilla_comparison": "Vanilla stage-one berry bush provides native immature foliage comparator.",
+        "leaf_groups": "Broad leaf groups remain in the mature strawberry positions.",
+        "canopy_depth": "Young fruits hang below the lighter leaf surfaces and darker crown center.",
+        "structural_transparency": "Open space between basal stem and small fruits stays transparent."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_grape.png": {
+      "sha256": "048b99d815a73ba77f3ef9492a1fde80540294a69f56cb348102b8a8a8707ded",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "d7d9bf83464ef649e52c8658e15b080f1abb36928ecdbaf2306a292b5bda5cb1"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sweet_berry_bush_stage3: Sweet berry bush gives native fruit-and-leaf scale; grape has hanging bunches and trailing vine. Lobed leaf tips and unequal hanging bunches break repeated outlines. Mature and immature pair inspected together.",
+      "findings": {
+        "silhouette": "Asymmetric trailing vine carries lobed leaves and pendant purple grape bunches.",
+        "cluster_structure": "Connected grape bunches contain separated rounded fruit-face clusters.",
+        "micro_contrast": "Muted lilac upper facets and deeper purple gaps distinguish individual grapes.",
+        "light_and_volume": "Light exposed grapes contrast with shaded lower portions of hanging bunches.",
+        "material_continuity": "Purple grape skin and green vine leaves retain separate coherent ramps.",
+        "edge_variation": "Lobed leaf tips and unequal hanging bunches break repeated outlines.",
+        "variant_identity": "Long pendant purple bunches distinguish grape from separated compound berries.",
+        "vanilla_comparison": "Sweet berry bush gives native fruit-and-leaf scale; grape has hanging bunches and trailing vine.",
+        "leaf_groups": "Broad lobed leaves attach to an asymmetric woody vine.",
+        "canopy_depth": "Hanging grape faces overlap the darker inner vine and leaf edges.",
+        "structural_transparency": "Transparent gaps separate broad lobed leaves and pendant bunches."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_grape_unripe.png": {
+      "sha256": "46bb5933aa590792880a79643bad1aa727ca8620f797609b687b38a0747a00a6",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage1",
+          "minecraft": "1.21.1",
+          "sha256": "892a7923e22fa2ddb80d8371c1fb5d9b3ee7de0dbf1dd20135d2d705fcbd0a5f"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sweet_berry_bush_stage1: Vanilla stage-one berry bush provides native leafy immature scale; grape retains vine architecture. Unequal lobed leaf tips and exposed vine retain asymmetric profile. Mature and immature pair inspected together.",
+      "findings": {
+        "silhouette": "Trailing woody vine and broad lobed leaves preserve grape habit.",
+        "cluster_structure": "Small connected green young-grape groups descend along the future bunch positions.",
+        "micro_contrast": "Pale green fruit tips meet darker leaf and vine shades.",
+        "light_and_volume": "Raised light leaf faces contrast with shaded trailing woody stem.",
+        "material_continuity": "Green immature fruits and warm woody vine use compatible natural ramps.",
+        "edge_variation": "Unequal lobed leaf tips and exposed vine retain asymmetric profile.",
+        "variant_identity": "Small green fruit clusters distinguish immature grape from long ripe purple bunches.",
+        "vanilla_comparison": "Vanilla stage-one berry bush provides native leafy immature scale; grape retains vine architecture.",
+        "leaf_groups": "Broad lobed leaves remain in their mature grape positions.",
+        "canopy_depth": "Smaller young fruit groups expose the shaded inner vine behind.",
+        "structural_transparency": "Open gaps beneath lobed leaves and beside trailing stem remain visible."
+      }
     }
   },
-  "review_status": "DRAFT/BLOCKED: 101 accepted of 118. Remaining wild crops and berry growth stages pending; graphical client not run.",
+  "review_status": "ARTWORK REVIEW: 118 accepted of 118, static sprite inspection complete. Official lock execution, build and graphical client verification pending.",
   "reference_provenance": "Actual PNGs from InventivetalentDev/minecraft-assets, 1.21.1 branch; inspected at original and nearest-neighbor 4x. Official client SHA-1 could not be verified in this environment. No vanilla assets included.",
   "client_status": "NOT_RUN"
 }
