@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=7;
+ public static final int API_REVISION=8;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -87,12 +87,17 @@ public final class WorldLogicApi {
  public enum WaterKind { NONE, SEA, RIVER, LAKE, SPRING, GROUNDWATER, WETLAND, POND, BRACKISH, UNKNOWN }
  /** Gameplay treatment recommendation; never a real-world potability assessment. */
  public enum WaterQuality { DRINKABLE, TREAT_RECOMMENDED, DESALINATE, UNKNOWN, NOT_WATER }
- public enum WaterEvidence { FLUID_ABSENT, BIOME, TERRAIN_PROXY, LOCAL_GEOMETRY, UNCLASSIFIED }
+ public enum WaterEvidence { FLUID_ABSENT, BIOME, TERRAIN_PROXY, LOCAL_GEOMETRY, UNCLASSIFIED, REGISTERED_FLUID }
  /** Estimated salinity in g/kg (-1 unknown); contamination risk 0..1 (-1 unknown).
   * Game balance estimates, not measured water chemistry. Flowing describes vanilla fluid state, not river current. */
  public record WaterProfile(WaterKind kind,WaterQuality quality,double salinityGkg,double contaminationRisk,
   boolean sourceBlock,boolean flowing,WaterEvidence evidence){}
  /** Loaded block only, no forced chunk loads. Detailed natural-source inference for Hydration. */
+ /** Registry identity and intrinsic quality, for tanks, buckets and modded fluid handlers.
+  * Does not include surrounding soil; the positional overload adds that local effect. */
+ public static WaterProfile waterProfile(net.minecraft.world.level.material.Fluid fluid){
+  return dev.minemods.worldlogic.WaterClassification.registeredProfile(fluid);
+ }
  public static WaterProfile waterProfile(ServerLevel level,BlockPos pos){
   serverThread(level);return dev.minemods.worldlogic.WaterClassification.sample(level,pos);
  }

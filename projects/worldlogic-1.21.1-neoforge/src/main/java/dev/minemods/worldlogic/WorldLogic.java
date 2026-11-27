@@ -6,6 +6,7 @@ public final class WorldLogic {
  public WorldLogic(net.neoforged.bus.api.IEventBus modBus) {
   GeoDensity.TYPES.register(modBus);
   Content.PARTICLES.register(modBus);
+  NaturalFluids.register(modBus);
   Content.BLOCKS.register(modBus);
   Content.ITEMS.register(modBus);
   Rules.load();

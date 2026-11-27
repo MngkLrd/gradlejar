@@ -21,7 +21,7 @@ public final class GeologyGeneration {
  }
  public static boolean replaces(OreConfiguration c){return !c.targetStates.isEmpty()&&c.targetStates.stream().allMatch(t->REPLACED.contains(t.state.getBlock()));}
  static boolean rock(BlockState s){return s.is(Blocks.STONE)||s.is(Blocks.DEEPSLATE)||s.is(Blocks.ANDESITE)||s.is(Blocks.DIORITE)||s.is(Blocks.GRANITE)||s.is(Blocks.TUFF)||s.is(Blocks.CALCITE)||s.is(Blocks.SANDSTONE);}
- private static boolean shaftRock(BlockState s){return rock(s)||s.is(Blocks.GRASS_BLOCK)||s.is(Blocks.DIRT)||s.is(Blocks.COARSE_DIRT)||s.is(Blocks.GRAVEL)||s.is(Blocks.SAND)||s.is(Blocks.SANDSTONE);}
+ private static boolean shaftRock(BlockState s){return rock(s)||s.is(net.minecraft.tags.BlockTags.DIRT)||s.is(Blocks.GRASS_BLOCK)||s.is(Blocks.DIRT)||s.is(Blocks.COARSE_DIRT)||s.is(Blocks.GRAVEL)||s.is(Blocks.SAND)||s.is(Blocks.SANDSTONE);}
  static BlockState ore(GeologyModel.Ore type,boolean deep){return switch(type){
   case COAL -> (deep?Blocks.DEEPSLATE_COAL_ORE:Blocks.COAL_ORE).defaultBlockState();
   case IRON -> (deep?Blocks.DEEPSLATE_IRON_ORE:Blocks.IRON_ORE).defaultBlockState();
