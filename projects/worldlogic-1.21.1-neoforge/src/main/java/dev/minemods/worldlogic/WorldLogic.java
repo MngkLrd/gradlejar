@@ -11,6 +11,7 @@ public final class WorldLogic {
   Content.ITEMS.register(modBus);
   Rules.load();
   modBus.addListener(RuleSync::init);
+  modBus.addListener(MarineEcology::registerSpawns);
   var bus=NeoForge.EVENT_BUS;
   bus.addListener(AdminCommands::register);
   bus.addListener(RuleSync::login);
