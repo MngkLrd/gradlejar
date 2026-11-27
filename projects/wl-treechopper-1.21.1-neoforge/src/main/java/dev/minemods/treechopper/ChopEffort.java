@@ -8,11 +8,14 @@ final class ChopEffort {
         return (.4+.6*clamp(stamina))*main*(.7+.3*other);
     }
     static int cooldown(double power){return (int)Math.ceil(7+10*(1-clamp(power)));}
+    static int fellingWear(int upperLogs,boolean finalStrike){return Math.max(0,upperLogs)+(finalStrike?1:0);}
     static int depthIncrement(int before,double speed,double resistance,double power,double roll){
         if(power<=0)return 0;
         if(before==0)return 1;
         double quality=clamp(power);
         // Each effective strike visibly deepens the notch; strength changes the chance of a double increment.
-        return roll>Math.max(.57,.93-speed*.035*quality/resistance)?2:1;
+        double work=Math.max(1,Math.min(3,.45+.25*Math.max(0,speed)*quality/Math.max(.1,resistance)));
+        int whole=(int)Math.floor(work);
+        return whole+(roll>1-(work-whole)?1:0);
     }
 }

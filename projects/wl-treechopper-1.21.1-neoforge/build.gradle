@@ -1,6 +1,6 @@
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group='dev.minemods.treechopper'
-version='0.5.4'
+version='0.5.5'
 base.archivesName='wl_treechopper-neoforge-mc1.21.1'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 neoForge { version=project.neo_version; runs { client { client() }; server { server(); programArgument '--nogui' } }; mods { wl_treechopper { sourceSet(sourceSets.main) } } }

@@ -2,6 +2,7 @@ package dev.minemods.treechopper;
 
 import java.util.*;
 import net.minecraft.core.*;
+import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.nbt.*;
@@ -103,6 +104,12 @@ public final class TreeChopper {
         String s=species(state);
         if(s!=null && (state.getBlock() instanceof CutBlock || !scan(level,event.getPos(),s).isEmpty()))event.setCanceled(true);
     }
+    private static int upperLogs(List<Piece> tree){return (int)tree.stream().filter(Piece::log).count();}
+    private static boolean canPay(ServerPlayer player,ItemStack axe,int cost){
+        if(!axe.isDamageableItem()||axe.getMaxDamage()-axe.getDamageValue()>=cost)return true;
+        player.displayClientMessage(Component.translatable("message.wl_treechopper.axe_worn",cost),true);
+        return false;
+    }
     private static void hit(PlayerInteractEvent.LeftClickBlock event){
         if(!(event.getEntity() instanceof ServerPlayer player) || !(event.getLevel() instanceof ServerLevel level) || player.isCreative() || player.isSpectator())return;
         BlockPos pos=event.getPos();
@@ -131,21 +138,30 @@ public final class TreeChopper {
         BlockState damaged=cut?old:CUTS.get(s).get().defaultBlockState();
         // A previously fully severed hinge may have been held by a protection hook.
         // Retry felling without claiming a new cut or playing a phantom strike.
-        if(cut&&CutBlock.falls(old)){fall(level,player,pos,s,old,tree,side);return;}
+        if(cut&&CutBlock.falls(old)){
+            int wear=ChopEffort.fellingWear(upperLogs(tree),false);
+            if(canPay(player,axe,wear)&&fall(level,player,pos,s,old,tree,side))axe.hurtAndBreak(wear,player,EquipmentSlot.MAINHAND);
+            return;
+        }
         int before=CutBlock.depth(damaged,side);
-        float speed=axe.getDestroySpeed(original(s));
+        float speed=Math.max(axe.getDestroySpeed(original(s)),((AxeItem)axe.getItem()).getTier().getSpeed());
         float resistance=s.equals("dark_oak")||s.equals("mangrove")?1.18f:s.equals("birch")?0.86f:1f;
         double roll=level.random.nextDouble();
         int step=ChopEffort.depthIncrement(before,speed,resistance,power,roll);
         int next=Math.min(4,before+step);
         if(next<=before)return;
         damaged=damaged.setValue(CutBlock.side(side),next);
+        boolean severed=CutBlock.falls(damaged);
+        int wear=severed?ChopEffort.fellingWear(upperLogs(tree),true):1;
+        if(!canPay(player,axe,wear))return;
         if(!level.setBlock(pos,damaged,Block.UPDATE_ALL))return;
         player.swing(InteractionHand.MAIN_HAND,true);
-        axe.hurtAndBreak(1,player,EquipmentSlot.MAINHAND);
         level.playSound(null,pos,SoundEvents.WOOD_HIT,SoundSource.BLOCKS,1f,.8f+level.random.nextFloat()*.25f);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,original(s)),pos.getX()+.5+side.getStepX()*.47,pos.getY()+.5,pos.getZ()+.5+side.getStepZ()*.47,8,.12,.12,.12,.08);
-        if(CutBlock.falls(damaged))fall(level,player,pos,s,damaged,tree,side);
+        boolean felled=severed&&fall(level,player,pos,s,damaged,tree,side);
+        // Every real strike costs one point; every additional harvested log costs one
+        // more, only after successful felling. Vanilla damage processing handles enchantments.
+        axe.hurtAndBreak(felled?wear:1,player,EquipmentSlot.MAINHAND);
     }
     private record Piece(BlockPos pos,BlockState state,boolean log){}
     private static boolean naturalLeaf(BlockState b){
@@ -216,8 +232,8 @@ public final class TreeChopper {
         for(Direction d:SIDES){int n=CutBlock.depth(s,d);if(n>max){best=d;max=n;}}
         return best;
     }
-    private static void fall(ServerLevel l,ServerPlayer player,BlockPos base,String species,BlockState cut,List<Piece> tree,Direction latest){
-        if(tree.stream().anyMatch(p->!l.getBlockState(p.pos).equals(p.state)||!allowed(l,player,p.pos,p.state)))return;
+    private static boolean fall(ServerLevel l,ServerPlayer player,BlockPos base,String species,BlockState cut,List<Piece> tree,Direction latest){
+        if(tree.stream().anyMatch(p->!l.getBlockState(p.pos).equals(p.state)||!allowed(l,player,p.pos,p.state)))return false;
         Direction direction=fallDirection(cut,latest);
         List<Piece> pieces=new ArrayList<>(tree);
         // Preserve the complete upper 12px of the cut block. The lower 4px stays in the world.
@@ -244,14 +260,15 @@ public final class TreeChopper {
             fall.putBoolean("hinge",true);fall.putBoolean("cap",cap);fall.putBoolean("wholeUpper",true);
             fall.putString("direction",direction.getName());fall.putBoolean("log",piece.log);fall.putString("species",species);fall.putInt("age",0);
             d.getPersistentData().put(FALL,fall);
-            if(!l.addFreshEntity(d)){displays.forEach(Entity::discard);return;}
+            if(!l.addFreshEntity(d)){displays.forEach(Entity::discard);return false;}
             displays.add(d);
         }
-        l.setBlock(base,STUMPS.get(species).get().defaultBlockState(),Block.UPDATE_ALL);
+        if(!l.setBlock(base,STUMPS.get(species).get().defaultBlockState(),Block.UPDATE_ALL)){displays.forEach(Entity::discard);return false;}
         // Remove all tree blocks before notifying neighbors to avoid leaf decay/drop duplication.
         for(Piece p:tree)l.setBlock(p.pos,Blocks.AIR.defaultBlockState(),Block.UPDATE_CLIENTS);
         for(Piece p:tree)l.updateNeighborsAt(p.pos,Blocks.AIR);
         l.playSound(null,base,SoundEvents.WOOD_BREAK,SoundSource.BLOCKS,1.3f,.62f);
+        return true;
     }
     private static ListTag floats(float... v){
         ListTag list=new ListTag();for(float x:v)list.add(FloatTag.valueOf(x));return list;

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.5.4 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.5.5 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -670,6 +670,62 @@
       "expect": "TreeChopper network validation PASS",
       "assertion": true,
       "name": "network-strike-validation"
+    },
+    {
+      "command": "wltreechopper qa_axe_tiers",
+      "expect": "TreeChopper axe tier progression PASS",
+      "assertion": true,
+      "name": "axe-material-tiers"
+    },
+    {
+      "command": "setblock 1048 199 1018 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1048 201 1018 1048 203 1018 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1048 204 1018 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1048 200 1018 wl_treechopper:cut_oak[north=3,south=0,east=0,west=0]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_wear 1048 200 1018 4",
+      "expect": "TreeChopper per-log durability PASS",
+      "assertion": true,
+      "name": "axe-wear-4"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "setblock 1038 199 1018 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1038 201 1018 1038 211 1018 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1038 212 1018 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1038 200 1018 wl_treechopper:cut_oak[north=3,south=0,east=0,west=0]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_wear 1038 200 1018 12",
+      "expect": "TreeChopper per-log durability PASS",
+      "assertion": true,
+      "name": "axe-wear-12"
+    },
+    {
+      "wait": 3
     }
   ],
   "coverage": [
@@ -1330,6 +1386,39 @@
         {
           "backend": "server",
           "name": "network-strike-validation"
+        }
+      ]
+    },
+    {
+      "id": "axe-material-tiers",
+      "kind": "mechanic",
+      "subject": "Real vanilla axe tier speeds yield strictly decreasing mean hit counts in fixed 100-sample progression for wood, stone, iron, diamond, netherite, gold",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "axe-material-tiers"
+        }
+      ]
+    },
+    {
+      "id": "axe-wear-4",
+      "kind": "mechanic",
+      "subject": "A nearly broken axe refuses final strike without wear or block loss; healthy axe costs exactly 4 durability for final strike plus upper logs, not leaves",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "axe-wear-4"
+        }
+      ]
+    },
+    {
+      "id": "axe-wear-12",
+      "kind": "mechanic",
+      "subject": "A nearly broken axe refuses final strike without wear or block loss; healthy axe costs exactly 12 durability for final strike plus upper logs, not leaves",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "axe-wear-12"
         }
       ]
     }

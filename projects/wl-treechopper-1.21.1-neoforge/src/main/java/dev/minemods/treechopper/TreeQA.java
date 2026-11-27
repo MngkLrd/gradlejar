@@ -25,6 +25,51 @@ final class TreeQA {
             }
             c.getSource().sendSuccess(()->Component.literal("TreeChopper effort regression PASS"),false);return 1;
           }))
+          .then(Commands.literal("qa_axe_tiers").executes(c->{
+            Item[] axes={Items.WOODEN_AXE,Items.STONE_AXE,Items.IRON_AXE,Items.DIAMOND_AXE,Items.NETHERITE_AXE,Items.GOLDEN_AXE};
+            int previous=Integer.MAX_VALUE;
+            for(Item item:axes){
+                double speed=((AxeItem)item).getTier().getSpeed();
+                int total=0;
+                for(int sample=0;sample<100;sample++){
+                    int depth=0,hits=0;
+                    while(depth<4&&hits<4){
+                        depth+=ChopEffort.depthIncrement(depth,speed,1,1,((sample+hits*31)%100+.5)/100);
+                        hits++;
+                    }
+                    if(depth<4){c.getSource().sendFailure(Component.literal("TreeChopper axe tier progression FAILED"));return 0;}
+                    total+=hits;
+                }
+                if(total>=previous){c.getSource().sendFailure(Component.literal("TreeChopper axe tier order FAILED"));return 0;}
+                previous=total;
+            }
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper axe tier progression PASS"),false);return 1;
+          }))
+          .then(Commands.literal("qa_wear").then(Commands.argument("pos",BlockPosArgument.blockPos()).then(Commands.argument("logs",IntegerArgumentType.integer(2,32)).executes(c->{
+            ServerLevel l=c.getSource().getLevel();
+            BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            int logs=IntegerArgumentType.getInteger(c,"logs");
+            var fake=FakePlayerFactory.getMinecraft(l);
+            fake.setPos(p.getX()+.5,p.getY(),p.getZ()-1.5);
+            // Start one step before severing. A worn axe must not gain the tree for free.
+            var source=l.getBlockState(p);
+            ItemStack weak=new ItemStack(Items.WOODEN_AXE);
+            weak.setDamageValue(weak.getMaxDamage()-1);
+            fake.setItemSlot(EquipmentSlot.MAINHAND,weak);
+            TreeChopper.qaResetCooldown(fake);
+            NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
+            if(!source.equals(l.getBlockState(p))||weak.getDamageValue()!=weak.getMaxDamage()-1||!l.getBlockState(p.above()).is(net.minecraft.world.level.block.Blocks.OAK_LOG)){
+                c.getSource().sendFailure(Component.literal("TreeChopper insufficient durability FAILED"));return 0;
+            }
+            ItemStack strong=new ItemStack(Items.IRON_AXE);
+            fake.setItemSlot(EquipmentSlot.MAINHAND,strong);
+            TreeChopper.qaResetCooldown(fake);
+            NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
+            if(!(l.getBlockState(p).getBlock() instanceof StumpBlock)||strong.getDamageValue()!=logs||!l.getBlockState(p.above()).isAir()){
+                c.getSource().sendFailure(Component.literal("TreeChopper per-log durability FAILED"));return 0;
+            }
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper per-log durability PASS"),false);return 1;
+          }))))
           .then(Commands.literal("qa_landing").executes(c->{
             if(!TreeChopper.qaLandingPose()){c.getSource().sendFailure(Component.literal("TreeChopper landing geometry FAILED"));return 0;}
             c.getSource().sendSuccess(()->Component.literal("TreeChopper landing geometry PASS"),false);return 1;
