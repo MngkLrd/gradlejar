@@ -55,4 +55,32 @@ final class MarineEcology {
    require(!submerged(l,p),"lava negative control");
   }finally{l.setBlock(p.above(),above,2);l.setBlock(p,center,2);l.setBlock(p.below(),below,2);}
  }
+ /** Read actual loaded terrain, never generate a chunk for diagnostics. */
+ static String audit(ServerLevel l,BlockPos origin){
+  var chunk=l.getChunkSource().getChunkNow(origin.getX()>>4,origin.getZ()>>4);
+  if(chunk==null)return "MARINE_AUDIT unavailable";
+  int ocean=0,wet=0,wrongLand=0,sea=0,stone=0,sediment=0,dirt=0,habitat=0;
+  int level=l.getSeaLevel(),x0=chunk.getPos().getMinBlockX(),z0=chunk.getPos().getMinBlockZ();
+  var p=new BlockPos.MutableBlockPos();
+  for(int x=0;x<16;x++)for(int z=0;z<16;z++){
+   int wx=x0+x,wz=z0+z;
+   int h=chunk.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.OCEAN_FLOOR,x,z);
+   p.set(wx,Math.max(level-1,h),wz);
+   var key=l.getBiome(p).unwrapKey().orElseThrow().location();
+   if(!key.getNamespace().equals("worldlogic")||!key.getPath().endsWith("ocean"))continue;
+   ocean++;
+   if(h>=level+4){wrongLand++;continue;}
+   p.set(wx,level-1,wz);
+   if(!chunk.getFluidState(p).is(FluidTags.WATER))continue;
+   wet++;
+   if(nativeSea(l,p))sea++;
+   if(submerged(l,p.set(wx,level-5,wz)))habitat++;
+   var bed=chunk.getBlockState(p.set(wx,h,wz));
+   if(GeologyGeneration.rock(bed))stone++;
+   else if(bed.is(Blocks.SAND)||bed.is(Blocks.GRAVEL)||bed.is(Blocks.CLAY)||bed.is(Blocks.RED_SAND))sediment++;
+   else if(bed.is(Blocks.DIRT)||bed.is(Blocks.GRASS_BLOCK)||bed.is(Blocks.COARSE_DIRT))dirt++;
+  }
+  return "MARINE_AUDIT ocean="+ocean+" wet="+wet+" wrongLand="+wrongLand+" sea="+sea+" stone="+stone+" sediment="+sediment+" dirt="+dirt+" habitat="+habitat;
+ }
+
 }

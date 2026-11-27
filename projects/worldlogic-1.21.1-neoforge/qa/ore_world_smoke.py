@@ -71,6 +71,35 @@ def main():
             report.update(expected=expected,matched=matched,deep=deep,missedRock=missed)
             require(len(report["chunks"])==18 and expected>=30 and deep>=30,"Too little actual deep ore for a meaningful test")
             require(matched>=expected*.85 and missed<=expected*.10,"Seeded geological ore missing from actual generated rock")
+            # Real ocean columns in the same actual default world, not a synthetic water tank.
+            found=conn.cmd("execute positioned 0 63 0 run locate biome worldlogic:cold_ocean")
+            coords=re.search(r"\[\s*(-?\d+)\s*,\s*(?:~|-?\d+)\s*,\s*(-?\d+)\s*\]",found)
+            require(coords is not None,"Cannot locate cold ocean: "+found)
+            ax,az=(int(v)//16*16 for v in coords.groups())
+            force=f"{ax-16} {az-16} {ax+31} {az+31}"
+            conn.cmd("forceload add "+force)
+            pending={(ax+dx*16,az+dz*16) for dx in (-1,0,1) for dz in (-1,0,1)}
+            marine=[]
+            deadline=time.monotonic()+180
+            keys=("ocean","wet","wrongLand","sea","stone","sediment","dirt","habitat")
+            pattern="MARINE_AUDIT "+" ".join(k+r"=(\d+)" for k in keys)
+            while pending and time.monotonic()<deadline:
+                for x,z in sorted(pending):
+                    raw=conn.cmd(f"execute positioned {x} 63 {z} run worldlogic marine_audit")
+                    if "unavailable" in raw:continue
+                    match=re.search(pattern,raw)
+                    require(match is not None,"Marine audit failed: "+raw)
+                    row=dict(zip(keys,map(int,match.groups())));row.update(x=x,z=z);marine.append(row);pending.remove((x,z))
+                    print(json.dumps(row),flush=True)
+                if pending:time.sleep(3)
+            require(not pending,"Ocean chunks not fully generated")
+            totals={k:sum(c[k] for c in marine) for k in keys}
+            report["marine"]={"chunks":marine,**totals}
+            require(totals["wet"]>=64 and totals["sea"]>=totals["wet"]*.8,"Actual ocean lacks native seawater")
+            require(totals["wrongLand"]==0,"Dry land labelled ocean")
+            require(totals["stone"]>0 and totals["sediment"]>0 and totals["dirt"]<=totals["wet"]*.1,"Seabed is barren or incorrectly soil-covered")
+            require(totals["habitat"]>0,"No viable submerged fish habitat")
+            conn.cmd("forceload remove "+force)
             conn.cmd("save-all flush")
             require(not FATAL.search(log.read_text(errors="replace")),"Fatal generation error")
             try:conn.cmd("stop")

@@ -64,6 +64,7 @@ public final class AdminCommands {
    return reply(s,String.format(java.util.Locale.ROOT,"Water: %s; quality=%s; salinity=%.1f g/kg; risk=%.2f; evidence=%s",w.kind(),w.quality(),w.salinityGkg(),w.contaminationRisk(),w.evidence()));
   }));
   root.then(Commands.literal("addons").executes(c->{return reply(c.getSource(),Rules.addonSummary());}));
+  root.then(Commands.literal("marine_audit").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),MarineEcology.audit(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
   root.then(Commands.literal("ore_audit").requires(s->s.hasPermission(4)).executes(c->{
    try{return reply(c.getSource(),GeneratedOreAudit.scan(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())));}
    catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}

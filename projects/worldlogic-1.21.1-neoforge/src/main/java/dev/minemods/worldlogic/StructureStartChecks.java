@@ -14,12 +14,18 @@ import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStr
  * without forcing chunks into the running QA flat world. Not a block-placement test. */
 final class StructureStartChecks {
  private static void require(boolean v,String s){if(!v)throw new IllegalStateException("structure starts: "+s);}
+ private record Context(NoiseBasedChunkGenerator gen,RandomState state,net.minecraft.world.level.chunk.ChunkGeneratorStructureState placement){}
+ private static final Map<ServerLevel,Context> CONTEXTS=new WeakHashMap<>();
+ private static Context context(ServerLevel l){
+  return CONTEXTS.computeIfAbsent(l,v->{
+   var key=ResourceKey.create(Registries.WORLD_PRESET,ResourceLocation.fromNamespaceAndPath("worldlogic","realistic_unified"));
+   var gen=(NoiseBasedChunkGenerator)l.registryAccess().lookupOrThrow(Registries.WORLD_PRESET).getOrThrow(key).value().createWorldDimensions().overworld();
+   var state=RandomState.create(gen.generatorSettings().value(),l.registryAccess().lookupOrThrow(Registries.NOISE),42L);
+   return new Context(gen,state,gen.createState(l.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET),state,42L));
+  });
+ }
  static void verify(ServerLevel l,String id){
-  var key=ResourceKey.create(Registries.WORLD_PRESET,ResourceLocation.fromNamespaceAndPath("worldlogic","realistic_unified"));
-  var gen=(NoiseBasedChunkGenerator)l.registryAccess().lookupOrThrow(Registries.WORLD_PRESET).getOrThrow(key).value().createWorldDimensions().overworld();
-  long seed=42L;
-  var state=RandomState.create(gen.generatorSettings().value(),l.registryAccess().lookupOrThrow(Registries.NOISE),seed);
-  var placementState=gen.createState(l.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET),state,seed);
+  var c=context(l);var gen=c.gen();var state=c.state();var placementState=c.placement();long seed=42L;
   var holder=l.registryAccess().lookupOrThrow(Registries.STRUCTURE).getOrThrow(ResourceKey.create(Registries.STRUCTURE,ResourceLocation.withDefaultNamespace(id)));
   var structure=holder.value();
   var placements=placementState.getPlacementsForStructure(holder);

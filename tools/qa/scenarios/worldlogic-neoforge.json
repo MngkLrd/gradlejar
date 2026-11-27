@@ -239,12 +239,6 @@
       "assertion": true
     },
     {
-      "name": "Actual seeded structure start and invalid-biome control: stronghold",
-      "command": "worldlogic qa structure_stronghold",
-      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
-      "assertion": true
-    },
-    {
       "name": "Seeded biome reachability survey 1 part 1",
       "command": "worldlogic qa biome_survey_0_0",
       "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
@@ -296,6 +290,12 @@
       "name": "All 61 biomes reached in seeded generation survey",
       "command": "worldlogic qa biome_coverage",
       "expect": "WORLDLOGIC_BIOME_COVERAGE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded structure start and invalid-biome control: stronghold",
+      "command": "worldlogic qa structure_stronghold",
+      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
       "assertion": true
     }
   ],

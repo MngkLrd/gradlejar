@@ -32,6 +32,9 @@ public final class BiomeChecks {
    maxDelta=Math.max(maxDelta,Math.abs(h-n));
    require(h==n,"RC22 height changed at "+px+","+pz+": "+h+" -> "+n);
    require((h>=63)==(n>=63),"coastline changed");
+   var actualBiome=BiomeSurvey.at(gen,b,px,Math.max(63,n),pz);
+   if(n>=68)require(!actualBiome.getPath().endsWith("ocean"),"dry land classified ocean at "+px+","+pz+" y="+n+" "+actualBiome);
+   if(n<=53)require(actualBiome.getPath().endsWith("ocean"),"deep water classified as land at "+px+","+pz+" y="+n+" "+actualBiome);
   }
   for(int z=-20480;z<=20480;z+=4096)for(int x=-20480;x<=20480;x+=4096){
    var p=new net.minecraft.world.level.levelgen.DensityFunction.SinglePointContext(x,128,z);
