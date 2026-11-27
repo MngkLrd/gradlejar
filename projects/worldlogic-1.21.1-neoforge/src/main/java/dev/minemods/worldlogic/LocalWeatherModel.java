@@ -4,6 +4,22 @@ import dev.minemods.worldlogic.api.WorldLogicApi.*;
 final class LocalWeatherModel {
  private LocalWeatherModel(){}
  record Climate(double temperatureC,double moisture,double latitude,double prevailingX,double prevailingZ,boolean dryGround){}
+ /** Explicit operator-only visual test; blends back into actual weather at the edge and expiry. */
+ static LocalWeather demo(LocalWeather natural,WeatherKind kind,double weight){
+  double i=kind==WeatherKind.CLEAR?0:.85*weight;
+  Precipitation pr=switch(kind){case RAIN,DOWNPOUR,THUNDERSTORM,MONSOON->Precipitation.RAIN;case SNOW,BLIZZARD->Precipitation.SNOW;default->Precipitation.NONE;};
+  double delta=switch(kind){case DUST_STORM->3;case BLIZZARD->-8;case SNOW->-5;case MONSOON,DOWNPOUR,THUNDERSTORM->-4;case RAIN->-2;case FOG->-1;default->0;};
+  double fog=switch(kind){case DUST_STORM,BLIZZARD,FOG->.85;case MONSOON,DOWNPOUR,THUNDERSTORM->.30;default->.05;};
+  double cloud=kind==WeatherKind.CLEAR?.05:kind==WeatherKind.DUST_STORM?.25:.85;
+  double rh=kind==WeatherKind.DUST_STORM?22:kind==WeatherKind.CLEAR?45:92;
+  double wx=kind==WeatherKind.DUST_STORM||kind==WeatherKind.BLIZZARD?14:4;
+  if(weight<.15)return natural;
+  return new LocalWeather(kind,i,blend(natural.temperatureDeltaC(),delta,weight),blend(natural.relativeHumidityPercent(),rh,weight),
+   blend(natural.windXMps(),wx,weight),blend(natural.windZMps(),2,weight),blend(natural.gustMps(),wx+4,weight),
+   blend(natural.cloudFraction(),cloud,weight),blend(natural.fogDensity(),fog,weight),blend(natural.solarTransmission(),1-.75*cloud,weight),
+   natural.exposed()?pr:Precipitation.NONE,natural.exposed()&&pr!=Precipitation.NONE?i:0,natural.pressureHpa(),natural.exposed());
+ }
+ private static double blend(double a,double b,double t){return a+(b-a)*t;}
  static double unit(double x){return Math.max(0,Math.min(1,x));}
  static double smooth(double a,double b,double x){double t=unit((x-a)/(b-a));return t*t*(3-2*t);}
  static LocalWeather sample(long seed,int x,int z,long tick,int elevation,Climate c,boolean exposed){

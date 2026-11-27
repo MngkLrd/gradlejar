@@ -38,6 +38,16 @@ final class LocalWeatherChecks {
   require(seen.size()==WeatherKind.values().length,"all nine weather kinds reached: "+seen);
   require(spatial&&temporal,"weather varies with position and time");
   require(!LocalWeatherSync.snapshot("minecraft:the_nether",Optional.empty()).active(),"inactive client snapshot");
+  require(LocalWeatherRuntime.demoWeight(BlockPos.ZERO,new BlockPos(129,0,0),2400,0)==0,"demo outside radius");
+  require(LocalWeatherRuntime.demoWeight(BlockPos.ZERO,BlockPos.ZERO,2400,2400)==0,"demo expiry");
+  require(LocalWeatherRuntime.demoWeight(BlockPos.ZERO,BlockPos.ZERO,2400,0)==1,"demo center");
+  require(!LocalWeatherRuntime.demo(l,BlockPos.ZERO,WeatherKind.DUST_STORM),"demo rejects flat world");
+  var natural=LocalWeatherModel.sample(42,0,0,0,0,climates.get(1),true);
+  for(var kind:WeatherKind.values()){
+   var forced=LocalWeatherModel.demo(natural,kind,1);
+   require(forced.kind()==kind&&LocalWeatherSync.snapshot("minecraft:overworld",Optional.of(forced)).weatherKind()==kind,"demo state for "+kind);
+   if(kind==WeatherKind.BLIZZARD)require(forced.temperatureDeltaC()==-8&&forced.precipitation()==Precipitation.SNOW,"blizzard thermal response");
+  }
   var c=climates.get(1);
   require(LocalWeatherModel.sample(42,0,0,0,200,c,true).pressureHpa()<LocalWeatherModel.sample(42,0,0,0,0,c,true).pressureHpa(),"pressure decreases with elevation");
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_LOCAL_WEATHER samples={} kinds={} spatial={} temporal={}",samples,counts,spatial,temporal);

@@ -41,6 +41,12 @@ public final class LocalWeatherRenderer {
   thunder=lerp(thunder,kind==WeatherKind.THUNDERSTORM?s.intensity():0,.10f);
   fog=lerp(fog,s.exposed()?s.fog():s.fog()*.08f,.10f);
   l.setRainLevel(rain);l.setThunderLevel(thunder);
+  // Distant thunder and a short sky flash, no destructive lightning entity.
+  if(kind==WeatherKind.THUNDERSTORM&&s.intensity()>.4&&p.tickCount%60==0&&l.random.nextFloat()<.40f){
+   if(s.exposed())l.setSkyFlashTime(2);
+   l.playLocalSound(p.getX()+18,p.getY()+12,p.getZ()+18,net.minecraft.sounds.SoundEvents.LIGHTNING_BOLT_THUNDER,
+    net.minecraft.sounds.SoundSource.WEATHER,s.exposed()?.55f:.20f,.82f+l.random.nextFloat()*.16f,true);
+  }
   if(!s.exposed()||p.tickCount%2!=0||s.intensity()<.08)return;
   boolean dust=kind==WeatherKind.DUST_STORM,blizzard=kind==WeatherKind.BLIZZARD;
   boolean snow=kind==WeatherKind.SNOW||blizzard;

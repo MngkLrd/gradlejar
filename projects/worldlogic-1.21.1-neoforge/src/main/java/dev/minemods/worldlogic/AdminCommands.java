@@ -41,6 +41,15 @@ public final class AdminCommands {
    if(a.isEmpty())return reply(s,"Weather grid not active at this position.");
    var v=a.orElseThrow();return reply(s,String.format(Locale.ROOT,"Grid preview: %.1f hPa, %.1f C, %.2f g/kg vapor, %.0f%% RH, tick %d",v.pressureHpa(),v.airC(),v.vaporGkg(),v.relativeHumidityPercent(),v.modeledTick()));
   }));
+  var demo=Commands.literal("weather_demo").requires(s->s.hasPermission(4));
+  for(var kind:dev.minemods.worldlogic.api.WorldLogicApi.WeatherKind.values())
+   demo.then(Commands.literal(kind.name().toLowerCase(java.util.Locale.ROOT)).executes(c->{
+    var s=c.getSource();
+    return reply(s,LocalWeatherRuntime.demo(s.getLevel(),net.minecraft.core.BlockPos.containing(s.getPosition()),kind)?
+      "Local weather demo: "+kind+" (128 block radius, 120 seconds)":"Local weather demo requires active geographic preset and a loaded position.");
+   }));
+  demo.then(Commands.literal("stop").executes(c->{LocalWeatherRuntime.clearDemo(c.getSource().getLevel());return reply(c.getSource(),"Local weather demo stopped.");}));
+  root.then(demo);
   root.then(Commands.literal("weather_local").executes(c->{
    var s=c.getSource();var w=dev.minemods.worldlogic.api.WorldLogicApi.localWeather(s.getLevel(),net.minecraft.core.BlockPos.containing(s.getPosition()));
    return reply(s,w.map(v->String.format(java.util.Locale.ROOT,"Local weather: %s, intensity %.0f%%, air delta %+.1f C, RH %.0f%%, gust %.1f m/s, fog %.0f%%, exposed=%s",v.kind(),100*v.intensity(),v.temperatureDeltaC(),v.relativeHumidityPercent(),v.gustMps(),100*v.fogDensity(),v.exposed())).orElse("Local weather inactive (unsupported world, unloaded point or regional_weather disabled)."));

@@ -13,6 +13,18 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 public final class LocalWeatherRuntime {
  private LocalWeatherRuntime(){}
+ private record Demo(BlockPos center,long expires,WeatherKind kind){}
+ private static final java.util.Map<ServerLevel,Demo> DEMOS=new java.util.WeakHashMap<>();
+ public static boolean demo(ServerLevel l,BlockPos p,WeatherKind kind){
+  if(!active(l)||!l.hasChunkAt(p))return false;
+  DEMOS.put(l,new Demo(p.immutable(),l.getGameTime()+2400,kind));return true;
+ }
+ public static void clearDemo(ServerLevel l){DEMOS.remove(l);}
+ static double demoWeight(BlockPos center,BlockPos p,long expires,long now){
+  if(now>=expires)return 0;
+  double distance=Math.hypot((double)p.getX()-center.getX(),(double)p.getZ()-center.getZ());
+  return (1-LocalWeatherModel.smooth(96,128,distance))*LocalWeatherModel.smooth(0,100,expires-now);
+ }
  public static boolean active(ServerLevel l){
   if(l!=l.getServer().overworld()||!Rules.on("regional_weather")||!l.getGameRules().getBoolean(GameRules.RULE_WEATHER_CYCLE))return false;
   return l.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator gen&&gen.generatorSettings().unwrapKey().map(k->k.location().getNamespace().equals("worldlogic")&&java.util.Set.of("earthlike_climate","earthlike_extended","realistic_unified").contains(k.location().getPath())).orElse(false);
@@ -28,8 +40,17 @@ public final class LocalWeatherRuntime {
   boolean dry=biome.is(TagKey.create(Registries.BIOME,ResourceLocation.fromNamespaceAndPath("worldlogic","vegetation/desert")))||
     biome.is(TagKey.create(Registries.BIOME,ResourceLocation.fromNamespaceAndPath("worldlogic","vegetation/scrub")))||!biome.value().hasPrecipitation();
   double temperature=14+28*c.thermalIndex()-.065*Math.max(-80,Math.min(160,p.getY()-c.modeledSurfaceY()));
-  return Optional.of(LocalWeatherModel.sample(l.getSeed(),p.getX(),p.getZ(),l.getGameTime(),p.getY()-l.getSeaLevel(),
-   new LocalWeatherModel.Climate(temperature,c.moistureIndex(),c.absoluteLatitude(),c.prevailingWindX(),c.prevailingWindZ(),dry),l.canSeeSky(p)));
+  var w=LocalWeatherModel.sample(l.getSeed(),p.getX(),p.getZ(),l.getGameTime(),p.getY()-l.getSeaLevel(),
+   new LocalWeatherModel.Climate(temperature,c.moistureIndex(),c.absoluteLatitude(),c.prevailingWindX(),c.prevailingWindZ(),dry),l.canSeeSky(p));
+  var d=DEMOS.get(l);
+  if(d!=null){
+   if(d.expires<=l.getGameTime())DEMOS.remove(l);
+   else{
+    double strength=demoWeight(d.center,p,d.expires,l.getGameTime());
+    if(strength>.01)w=LocalWeatherModel.demo(w,d.kind,strength);
+   }
+  }
+  return Optional.of(w);
  }
  static boolean rainingAt(ServerLevel l,BlockPos p){return at(l,p).map(w->w.precipitation()==Precipitation.RAIN).orElseGet(()->l.isRainingAt(p));}
  static boolean snowingAt(ServerLevel l,BlockPos p){return at(l,p).map(w->w.precipitation()==Precipitation.SNOW).orElseGet(l::isRaining);}
