@@ -25,6 +25,7 @@ public final class TerrainContent {
     private static final List<Supplier<Item>> FOODS = new ArrayList<>();
     static {
         plant("meadow_grass", false);
+        plant("frosted_grass", false);
         plant("dense_meadow_grass", false);
         plant("dry_grass", false);
         plant("tall_dry_grass", false);

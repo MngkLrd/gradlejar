@@ -748,7 +748,7 @@
     {
       "name": "WorldLogic preset vegetation attachment",
       "command": "worldlogicterrain worldgen_check",
-      "expect": "3 core presets, 33 plant features, biome attachment verified",
+      "expect": "3 core presets, 35 plant features, biome attachment verified",
       "assertion": true
     },
     {
@@ -781,7 +781,7 @@
     },
     {
       "command": "fill 1 220 1 14 220 14 minecraft:sand",
-      "expect": "Successfully filled"
+      "expect": "Successfully filled|No blocks were filled"
     },
     {
       "command": "place feature worldlogicterrain:patch_dry_grass 8 221 8",
@@ -794,12 +794,8 @@
       "assertion": true
     },
     {
-      "command": "fill 1 220 1 14 220 14 minecraft:dirt",
-      "expect": "Successfully filled"
-    },
-    {
       "command": "fill 1 220 1 14 220 14 minecraft:sand",
-      "expect": "Successfully filled"
+      "expect": "Successfully filled|No blocks were filled"
     },
     {
       "command": "place feature worldlogicterrain:patch_tall_dry_grass 8 221 8",
@@ -817,7 +813,7 @@
     },
     {
       "command": "fill 1 220 1 14 220 14 minecraft:sand",
-      "expect": "Successfully filled"
+      "expect": "Successfully filled|No blocks were filled"
     },
     {
       "command": "place feature worldlogicterrain:patch_desert_shrub 8 221 8",
@@ -1207,6 +1203,12 @@
       "name": "Short grass generated on turf",
       "command": "fill 1 221 1 14 222 14 minecraft:air replace minecraft:short_grass",
       "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "name": "Mixed meadow and frost patch mechanics",
+      "command": "worldlogicterrain patch_check",
+      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support",
       "assertion": true
     }
   ],
@@ -1847,7 +1849,7 @@
     {
       "id": "core-preset-vegetation",
       "kind": "mechanic",
-      "subject": "All 33 placed features attached to appropriate biomes of all 3 core presets",
+      "subject": "All 35 placed features attached to appropriate biomes of all 3 core presets",
       "checks": [
         {
           "backend": "server",
@@ -2593,6 +2595,51 @@
         {
           "backend": "server",
           "name": "Short grass generated on turf"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "mixed-meadow-patch",
+      "kind": "mechanic",
+      "subject": "Compact mixed-species patch, vanilla short grass replacement and unchanged gap grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "frosted-grass-block",
+      "kind": "block",
+      "subject": "Frozen grass compact generation on soil, not ice or stone, support removal and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "frosted-grass-item",
+      "kind": "item",
+      "subject": "Registered item from actual frost grass loot table",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
         },
         {
           "backend": "server",

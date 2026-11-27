@@ -95,7 +95,7 @@ public final class TerrainMobility {
         var id=BuiltInRegistries.BLOCK.getKey(b.getBlock());
         if(!id.getNamespace().equals("worldlogicterrain"))return 1;
         return switch(id.getPath()) {
-            case "meadow_grass","dry_grass","forest_litter" -> .97;
+            case "meadow_grass","dry_grass","forest_litter","frosted_grass" -> .97;
             case "fallen_leaves","wild_chamomile","wild_cornflower","wild_clover" -> .98;
             case "low_fern","wild_strawberry","wild_radish","wild_onion","wild_cabbage","marsh_marigold" -> .95;
             case "wild_blueberry","wild_raspberry","wild_blackberry","wild_grape","wild_pineapple","wild_tomato","wild_cucumber","wild_bell_pepper","bracken" -> .88;

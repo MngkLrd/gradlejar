@@ -23,9 +23,7 @@
     "minecraft:swamp",
     "minecraft:mangrove_swamp",
     "minecraft:river",
-    "minecraft:snowy_plains",
-    "minecraft:snowy_taiga",
-    "minecraft:grove",
-    "minecraft:wooded_badlands"
+    "minecraft:wooded_badlands",
+    "minecraft:windswept_gravelly_hills"
   ]
 }

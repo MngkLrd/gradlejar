@@ -43,5 +43,6 @@
   "block.worldlogicterrain.wild_bell_pepper": "Дикое растение: Сладкий перец",
   "block.worldlogicterrain.bracken": "Орляк",
   "block.worldlogicterrain.marsh_marigold": "Калужница болотная",
-  "tooltip.worldlogicterrain.exertion": "Восстановление выносливости: +%s"
+  "tooltip.worldlogicterrain.exertion": "Восстановление выносливости: +%s",
+  "block.worldlogicterrain.frosted_grass": "Мёрзлая трава"
 }
