@@ -13,7 +13,11 @@ def coreName = 'worldlogic-neoforge-mc1.21.1-1.0.0-rc20.jar'
 def coreUrl = 'https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc20-1211-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc20.jar'
 def expectedSha = 'c03b7156d8cdcb04fcc0ef11e454b5ca6d018c98c3fbd2b67a8bef84cb10b9be'
 def coreJar = file(providers.gradleProperty('worldlogicJar').orElse('libs/'+coreName).get())
-dependencies { implementation files(coreJar) }
+dependencies {
+    implementation files(coreJar)
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.4'
+}
 tasks.register('verifyWorldLogic') {
     doLast {
         if (!coreJar.isFile()) {
@@ -39,9 +43,4 @@ tasks.register('verifyWorldLogic') {
 }
 tasks.named('compileJava') { dependsOn 'verifyWorldLogic' }
 tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 21 }
-tasks.register('thermalUnitTest', JavaExec) {
-    dependsOn testClasses
-    classpath = sourceSets.test.runtimeClasspath
-    mainClass = 'dev.minemods.thermal.ThermalModelTest'
-}
-tasks.named('check') { dependsOn thermalUnitTest }
+tasks.named('test', Test) { useJUnitPlatform() }
