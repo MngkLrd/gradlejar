@@ -287,7 +287,7 @@
       "assertion": true
     },
     {
-      "name": "All 61 biomes reached in seeded generation survey",
+      "name": "All 58 biomes reached in seeded generation survey",
       "command": "worldlogic qa biome_coverage",
       "expect": "WORLDLOGIC_BIOME_COVERAGE_PASSED",
       "assertion": true
@@ -857,7 +857,7 @@
     {
       "id": "all-biomes-seeded-reachability",
       "kind": "mechanic",
-      "subject": "Every registered biome reached on actual seeded climate grid, surface height checked for new surface classes",
+      "subject": "Every active biome reached; retired registry IDs retained; real base-height and land/water classification regression",
       "checks": [
         {
           "backend": "server",
@@ -893,7 +893,7 @@
         },
         {
           "backend": "server",
-          "name": "All 61 biomes reached in seeded generation survey"
+          "name": "All 58 biomes reached in seeded generation survey"
         }
       ]
     },

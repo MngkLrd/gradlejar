@@ -16,7 +16,7 @@ public final class GeoDensity implements DensityFunction {
   NoiseHolder.CODEC.fieldOf("detail").forGetter(g->g.detail),
   NoiseHolder.CODEC.fieldOf("moisture").forGetter(g->g.moisture)
  ).apply(i,GeoDensity::new));
- static{TYPES.register("geography",()->CODEC);}
+ static{TYPES.register("geography",()->CODEC);TYPES.register("shore_classification",()->ShoreDensity.CODEC);}
  private final String field;
  private final NoiseHolder continental,tectonic,detail,moisture;
  private final GeoModel model;

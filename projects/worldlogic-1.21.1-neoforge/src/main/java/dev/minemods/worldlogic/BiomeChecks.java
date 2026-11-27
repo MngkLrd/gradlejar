@@ -19,7 +19,12 @@ public final class BiomeChecks {
   var normal=l.registryAccess().lookupOrThrow(Registries.WORLD_PRESET).getOrThrow(ResourceKey.create(Registries.WORLD_PRESET,ResourceLocation.withDefaultNamespace("normal"))).value().createWorldDimensions().overworld();
   require(BiomeSurvey.supported(normal)&&normal.getMinY()==gen.getMinY()&&normal.getGenDepth()==gen.getGenDepth(),"new default world uses unified realism");
   require(gen.getMinY()==-256&&gen.getGenDepth()==768&&gen.getSeaLevel()==63&&GeologyGeneration.enabled(gen),"unified bounds and geology");
-  require(gen.getBiomeSource().possibleBiomes().size()==61,"all custom classes registered");
+  require(gen.getBiomeSource().possibleBiomes().size()==58,"58 active custom classes");
+  for(String retired:List.of("tallgrass_prairie","lichen_tundra","humid_taiga")){
+   var key=ResourceKey.create(Registries.BIOME,ResourceLocation.fromNamespaceAndPath("worldlogic",retired));
+   require(l.registryAccess().lookupOrThrow(Registries.BIOME).get(key).isPresent(),"legacy save ID retained "+retired);
+   require(gen.getBiomeSource().possibleBiomes().stream().noneMatch(v->v.is(key)),"retired biome still generated "+retired);
+  }
   for(var b:gen.getBiomeSource().possibleBiomes())require(b.unwrapKey().orElseThrow().location().getNamespace().equals("worldlogic"),"vanilla biome leaked");
   var noise=l.registryAccess().lookupOrThrow(Registries.NOISE);
   var a=RandomState.create(old.generatorSettings().value(),noise,seed);var b=RandomState.create(gen.generatorSettings().value(),noise,seed);
@@ -94,7 +99,7 @@ public final class BiomeChecks {
   var missing=new TreeSet<String>();
   for(var h:gen.getBiomeSource().possibleBiomes())missing.add(h.unwrapKey().orElseThrow().location().toString());
   missing.removeAll(seen);
-  require(missing.isEmpty(),"actual seeded biome coverage "+seen.size()+"/61; unsampled="+missing);
+  require(missing.isEmpty(),"actual seeded biome coverage "+seen.size()+"/58; unsampled="+missing);
  }
 
 }
