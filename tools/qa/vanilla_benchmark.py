@@ -82,6 +82,34 @@ def build(z,seed):
     for i,case in enumerate(cases,1):case["id"]=f"case-{i:03d}"
     return cases,assets
 
+# Fixed, unfitted diagnostic baselines. Directional choices are hypotheses,
+# not art rules; publish misses and abstentions as well as successes.
+BASELINES={
+    "more_palette_colors":("palette_colors",1),
+    "less_isolated_pixels":("singleton_pixel_fraction",-1),
+    "more_same_color_edges":("same_color_edge_fraction",1),
+    "less_adjacent_value_delta":("adjacent_mean_value_delta",-1),
+    "larger_component":("largest_cluster_area",1),
+}
+def baseline_results(cases):
+    results={}
+    for rule,(key,direction) in BASELINES.items():
+        total=Counter(correct=0,wrong=0,unsure=0,total=0)
+        by_mode={}
+        for case in cases:
+            source=case["source_metrics"].get(key)
+            altered=case["perturbed_metrics"].get(key)
+            delta=None if source is None or altered is None else direction*(source-altered)
+            decision="unsure" if delta is None or abs(delta)<1e-10 else ("correct" if delta>0 else "wrong")
+            mode=by_mode.setdefault(case["mode"],Counter(correct=0,wrong=0,unsure=0,total=0))
+            for counts in (total,mode):
+                counts[decision]+=1;counts["total"]+=1
+        results[rule]={"metric":key,"direction":direction,"total":dict(total),
+                       "by_mode":{m:dict(c) for m,c in sorted(by_mode.items())},
+                       "coverage":(total["correct"]+total["wrong"])/total["total"] if total["total"] else None,
+                       "source_choice_accuracy":total["correct"]/total["total"] if total["total"] else None}
+    return results
+
 def report(cases,assets,version,client_sha,seed):
     by=Counter(c["mode"] for c in cases)
     unchanged_palette=sum(c["source_metrics"]["palette_colors"]==c["perturbed_metrics"]["palette_colors"] for c in cases)
@@ -89,7 +117,7 @@ def report(cases,assets,version,client_sha,seed):
     return {"schema":1,"minecraft":version,"official_client_sha1":client_sha,"seed":seed,
             "source_count":len(assets),"pair_count":len(cases),"controls":dict(by),
             "equal_palette_count_pairs":unchanged_palette,"equal_visible_area_pairs":unchanged_visible,
-            "source_assets":assets,
+            "source_assets":assets,"unfitted_metric_baselines":baseline_results(cases),
             "reviewer_status":"NOT_RUN","scope":"Perturbed vs source pairs, not human-validated bad art; no reviewer accuracy yet."}
 
 def private_deck(out,cases):
@@ -139,5 +167,7 @@ def main():
     a.out.mkdir(parents=True,exist_ok=True)
     (a.out/"benchmark-summary.json").write_text(json.dumps(result,indent=2)+"\n")
     if a.private_deck:private_deck(a.out/"private-deck",cases)
-    print("BLIND_BENCHMARK",json.dumps({k:v for k,v in result.items() if k!="source_assets"},sort_keys=True))
+    print("BLIND_BENCHMARK",json.dumps({k:v for k,v in result.items() if k not in ("source_assets","unfitted_metric_baselines")},sort_keys=True))
+    for rule,row in result["unfitted_metric_baselines"].items():
+        print("METRIC_BASELINE",rule,json.dumps(row,sort_keys=True))
 if __name__=="__main__":main()
