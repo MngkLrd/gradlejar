@@ -28,7 +28,7 @@ public final class GeoDensity implements DensityFunction {
   GeoModel value=new GeoModel(c,t,d,m);MODELS.put(k,value);return value;
  }
  public GeoDensity(String field,NoiseHolder continental,NoiseHolder tectonic,NoiseHolder detail,NoiseHolder moisture){
-  if(!Set.of("offset","continents","erosion","ridges","temperature","humidity").contains(field))throw new IllegalArgumentException("Unknown geography field: "+field);
+  if(!Set.of("offset","continents","erosion","ridges","temperature","humidity","climate_temperature","climate_humidity").contains(field))throw new IllegalArgumentException("Unknown geography field: "+field);
   this.field=field;this.continental=continental;this.tectonic=tectonic;this.detail=detail;this.moisture=moisture;this.model=model(continental,tectonic,detail,moisture);
  }
  @Override public double compute(FunctionContext c){return model.value(field,c.blockX(),c.blockZ());}

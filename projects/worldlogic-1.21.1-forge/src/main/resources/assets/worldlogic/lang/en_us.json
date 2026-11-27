@@ -37,5 +37,6 @@
   "message.worldlogic.ice_ceiling": "Ice blocks the way up. Look for an opening!",
   "message.worldlogic.fall_stampede": "The stampede knocked you down!",
   "generator.worldlogic.realistic": "World Logic: Realistic Terrain (Legacy)",
-  "generator.worldlogic.earthlike": "World Logic: Earthlike Geography"
+  "generator.worldlogic.earthlike": "World Logic: Earthlike Geography (Legacy RC18)",
+  "generator.worldlogic.earthlike_climate": "World Logic: Earthlike Geography"
 }

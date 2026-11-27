@@ -1,4 +1,4 @@
-"""Production-only RC18 regression: fresh geography worlds on baseline and reported Forge."""
+"""Production-only RC19 regression: fresh geography worlds on baseline and reported Forge."""
 import hashlib, json, os, pathlib, re, shutil, signal, subprocess, sys, time, urllib.request, zipfile
 
 project = pathlib.Path(sys.argv[1]).resolve()
@@ -11,11 +11,18 @@ digest=hashlib.sha256(jar.read_bytes()).hexdigest()
 print("WORLDLOGIC_EXACT_JAR", jar.name, digest, flush=True)
 with zipfile.ZipFile(jar) as z:
     tag=json.loads(z.read("data/minecraft/tags/worldgen/world_preset/normal.json"))
-    assert tag == {"replace":False,"values":["worldlogic:earthlike"]}, tag
-    for name in ("realistic","earthlike"):
+    assert tag == {"replace":False,"values":["worldlogic:earthlike_climate"]}, tag
+    for name in ("realistic","earthlike","earthlike_climate"):
         z.read(f"data/worldlogic/worldgen/world_preset/{name}.json")
         z.read(f"data/worldlogic/worldgen/noise_settings/{name}.json")
-    target=json.loads(z.read("data/worldlogic/worldgen/noise_settings/earthlike.json"))["spawn_target"]
+    old=json.loads(z.read("data/worldlogic/worldgen/noise_settings/earthlike.json"))
+    new=json.loads(z.read("data/worldlogic/worldgen/noise_settings/earthlike_climate.json"))
+    assert new["noise_router"]["temperature"]=="worldlogic:earthlike_climate/temperature"
+    assert new["noise_router"]["vegetation"]=="worldlogic:earthlike_climate/humidity"
+    target=new["spawn_target"]
+    new["noise_router"]["temperature"]=old["noise_router"]["temperature"]
+    new["noise_router"]["vegetation"]=old["noise_router"]["vegetation"]
+    assert new==old, "unexpected change to terrain settings"
     assert len(target)==1 and target[0]["weirdness"]==[-1,1] and target[0]["continentalness"][0]>0, target
 
 def install(loader):
@@ -41,7 +48,7 @@ def install(loader):
 def run(root,args,seed):
     world=f"worldlogic-{seed}"
     shutil.rmtree(root/world,ignore_errors=True)
-    (root/"server.properties").write_text(f"online-mode=false\nserver-ip=127.0.0.1\nlevel-name={world}\nlevel-seed={seed}\nlevel-type=worldlogic:earthlike\nview-distance=6\nsimulation-distance=6\nmax-tick-time=-1\n")
+    (root/"server.properties").write_text(f"online-mode=false\nserver-ip=127.0.0.1\nlevel-name={world}\nlevel-seed={seed}\nlevel-type=worldlogic:earthlike_climate\nview-distance=6\nsimulation-distance=6\nmax-tick-time=-1\n")
     log=root/f"seed-{seed}.log"
     start=time.monotonic()
     with log.open("w") as out:
@@ -49,7 +56,7 @@ def run(root,args,seed):
         try:
             while time.monotonic()-start<100:
                 content=log.read_text(errors="replace")
-                if all(marker in content for marker in ("Done (","WORLDLOGIC_CORE_TESTS_PASSED","WORLDLOGIC_GEOGRAPHY_AGGREGATE","WORLDLOGIC_GENERATED_SPAWN","WORLDLOGIC_SPAWN_DRY","WORLDLOGIC_CACHE_EXACT_PASSED")):
+                if all(marker in content for marker in ("Done (","WORLDLOGIC_CORE_TESTS_PASSED","WORLDLOGIC_GEOGRAPHY_AGGREGATE","WORLDLOGIC_GENERATED_SPAWN","WORLDLOGIC_SPAWN_DRY","WORLDLOGIC_CACHE_EXACT_PASSED","WORLDLOGIC_CLIMATE_FIXTURES_PASSED","WORLDLOGIC_CLIMATE_SURVEY_PASSED","WORLDLOGIC_CLIMATE_PHASE")):
                     duration=re.search(r"Done \(([0-9.]+)s\)",content)
                     assert duration, "missing startup duration"
                     print("WORLDLOGIC_FRESH_WORLD",root.name,seed,"startup_seconds",duration.group(1),"elapsed",round(time.monotonic()-start,2),flush=True)
@@ -71,7 +78,7 @@ def run(root,args,seed):
                 except subprocess.TimeoutExpired: os.killpg(process.pid,signal.SIGKILL)
             print(log.read_text(errors="replace")[-25000:],flush=True)
 
-for loader,seeds in (("52.1.0",(1234,)),("52.1.20",(-987654321,42))):
+for loader,seeds in (("52.1.0",(1234,)),("52.1.20",(-987654321,-6487130996193510395))):
     root,args=install(loader)
     for seed in seeds:
         run(root,args,seed)

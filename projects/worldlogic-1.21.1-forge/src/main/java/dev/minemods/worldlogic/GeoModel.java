@@ -26,9 +26,17 @@ public final class GeoModel {
  private final LongAdder builds=new LongAdder(),buildNanos=new LongAdder();
  private record Sample(int x,int z,Surface surface){}
  private final ThreadLocal<Sample> lastSample=new ThreadLocal<>();
+ private final double climatePhase;
+ private record ClimateSample(int x,int z,double thermal,double humidity,double biomeTemperature){}
+ private final ThreadLocal<ClimateSample> lastClimate=new ThreadLocal<>();
  private record Tile(double[] height,double[] flow){}
  private record Surface(double height,double flow){}
- GeoModel(NoiseHolder c,NoiseHolder t,NoiseHolder d,NoiseHolder m){continental=c;tectonic=t;detail=d;moisture=m;}
+ GeoModel(NoiseHolder c,NoiseHolder t,NoiseHolder d,NoiseHolder m){
+  continental=c;tectonic=t;detail=d;moisture=m;
+  // A deterministic phase from the actual seeded noise, not world creation order.
+  long k=key((int)(c.getValue(912.5,0,-177.25)*1000000000),(int)(m.getValue(-651.25,0,391.5)*1000000000));
+  climatePhase=((k>>>11)*0x1.0p-53-.5)*44000;
+ }
  static double clamp(double x,double a,double b){return Math.max(a,Math.min(b,x));}
  static double smooth(double a,double b,double x){double t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t);}
  static double lerp(double a,double b,double t){return a+(b-a)*t;}
@@ -147,6 +155,32 @@ public final class GeoModel {
   Surface b=local(lx,rz,gx,gz);if(lx!=rx)b=mix(b,local(rx,rz,gx,gz),wx);
   return mix(a,b,wz);
  }
+ // RC19 only. Climate calculations must not change the legacy drainage or terrain.
+ static double biomeTemperature(double thermal,double humidity,double height){
+  // The vanilla hottest land row is desert at ALL humidity levels.
+  // Route humid tropical land to its warm jungle/savanna row; keep ocean thermal classes.
+  return height>=63?lerp(thermal,Math.min(thermal,.48),smooth(-.28,.25,humidity)):thermal;
+ }
+ private ClimateSample climate(int x,int z,double h){
+  ClimateSample cached=lastClimate.get();if(cached!=null&&cached.x==x&&cached.z==z)return cached;
+  double theta=(z+climatePhase)*Math.PI/22000.0;
+  double latitude=Math.acos(clamp(Math.cos(theta),-1,1))/Math.PI;
+  double thermal=clamp(.72*Math.cos(theta)+d(x,z,.11)*.24-Math.max(0,h-65)*.004,-1,1);
+  // Alternating tropical easterlies, temperate westerlies, polar easterlies.
+  double wind=-Math.cos(latitude*3*Math.PI);
+  double dx=wind,dz=.45*Math.sin(theta);
+  double length=Math.max(.35,Math.hypot(dx,dz));dx/=length;dz/=length;
+  double near=raw(x-dx*192,z-dz*192),mid=raw(x-dx*576,z-dz*576),far=raw(x-dx*1536,z-dz*1536);
+  double ocean=.24*(1-smooth(59,67,near))+.15*(1-smooth(59,67,mid))+.09*(1-smooth(59,67,far));
+  double equatorial=.34*Math.exp(-Math.pow(latitude/.19,2));
+  double subtropical=-.27*Math.exp(-Math.pow((latitude-.35)/.15,2));
+  double temperate=.12*Math.exp(-Math.pow((latitude-.62)/.20,2));
+  double lift=clamp((h-near)*.006,-.12,.24);
+  double shadow=clamp((Math.max(near,Math.max(mid,far))-h-16)*.006,0,.60);
+  double humidity=clamp(m(x,z)*.78+equatorial+subtropical+temperate+ocean-.10+lift-shadow,-1,1);
+  ClimateSample made=new ClimateSample(x,z,thermal,humidity,biomeTemperature(thermal,humidity,h));
+  lastClimate.set(made);return made;
+ }
  double value(String field,int x,int z){
   Sample previous=lastSample.get();
   Surface s;if(previous!=null&&previous.x==x&&previous.z==z)s=previous.surface;
@@ -157,6 +191,8 @@ public final class GeoModel {
    case "continents" -> h<63?clamp(-.18-(63-h)*.014,-1.15,-.18):clamp(-.10+(h-63)*.013,-.10,.85);
    case "erosion" -> clamp(.58-Math.max(0,h-75)*.011+d(x,z,.12)*.18,-.9,.85);
    case "ridges" -> h<78&&s.flow>30?0:clamp(t(x,z)*1.25,-1,1);
+   case "climate_temperature" -> climate(x,z,h).biomeTemperature;
+   case "climate_humidity" -> climate(x,z,h).humidity;
    case "temperature" -> clamp(.66*Math.cos(z*Math.PI/22000.0)+d(x,z,.11)*.30-Math.max(0,h-65)*.004,-1,1);
    case "humidity" -> {
     // Prevailing west wind approximation: upwind relief and coastal moisture.
