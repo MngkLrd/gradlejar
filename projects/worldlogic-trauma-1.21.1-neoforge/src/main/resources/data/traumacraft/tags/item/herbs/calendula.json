@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "worldlogicterrain:wild_calendula",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:calendula",
+      "required": false
+    }
+  ]
+}

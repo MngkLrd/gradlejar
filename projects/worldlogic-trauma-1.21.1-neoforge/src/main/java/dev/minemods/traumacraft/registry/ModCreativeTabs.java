@@ -17,7 +17,10 @@ public final class ModCreativeTabs {
                     .title(Component.translatable("itemGroup.traumacraft.medical"))
                     .icon(() -> ModItems.MEDKIT.get().getDefaultInstance())
                     .displayItems((params, output) -> {
-                        for (var supply : ModItems.COMPONENTS) output.accept(supply.get());
+                        for (var supply : ModItems.COMPONENTS) {
+                            if(supply==ModItems.BOTANICAL_POWDER){for(var species:dev.minemods.traumacraft.content.HerbSpecies.values())if(species.botanical())output.accept(dev.minemods.traumacraft.content.HerbSpecies.powder(species,1,0));}
+                            else output.accept(supply.get());
+                        }
                         for (var treatment : ModItems.MEDICINE) output.accept(treatment.get());
                     })
                     .build());

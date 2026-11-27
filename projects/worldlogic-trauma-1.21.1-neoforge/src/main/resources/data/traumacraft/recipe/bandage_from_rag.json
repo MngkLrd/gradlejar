@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "traumacraft:rag_dressing"
+    },
+    {
+      "tag": "traumacraft:primitive_fibers"
+    }
+  ],
+  "result": {
+    "id": "traumacraft:bandage",
+    "count": 1
+  }
+}

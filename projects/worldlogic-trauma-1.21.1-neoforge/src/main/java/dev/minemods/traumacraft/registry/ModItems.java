@@ -74,9 +74,10 @@ public final class ModItems {
     public static final DeferredHolder<Item, Item> HERBAL_POULTICE = medical("herbal_poultice",MedicalItem.Type.HERBAL_POULTICE,16);
     public static final DeferredHolder<Item, Item> RAW_HERBS=ITEMS.register("raw_herbs",()->new dev.minemods.traumacraft.item.HerbBundleItem(new Item.Properties().stacksTo(16)));
     public static final DeferredHolder<Item, Item> CRUSHED_HERBS=supply("crushed_herbs",32);
+    public static final DeferredHolder<Item, Item> BOTANICAL_POWDER=ITEMS.register("botanical_powder",()->new dev.minemods.traumacraft.item.BotanicalPowderItem(new Item.Properties().stacksTo(32)));
     public static final List<DeferredHolder<Item, Item>> RETIRED = List.of(OVERSIZED_MEDKIT,COMPACT_MEDKIT,COMPRESSION_WRAP,BONE_MENDER,STERILE_PATCH,FRACTURE_BRACE,FIELD_MEDKIT,RECOVERY_SERUM,ADRENALINE_INJECTOR,GUARDIAN_INJECTOR,FOCUS_INJECTOR,ENDURANCE_INJECTOR);
     public static final List<DeferredHolder<Item, Item>> COMPONENTS = List.of(
-            RAW_HERBS, CRUSHED_HERBS, STERILE_FABRIC, HERBAL_EXTRACT, ANTISEPTIC, SYRINGE_BODY, MEDICAL_POLYMER);
+            RAW_HERBS, CRUSHED_HERBS, BOTANICAL_POWDER, STERILE_FABRIC, HERBAL_EXTRACT, ANTISEPTIC, SYRINGE_BODY, MEDICAL_POLYMER);
     public static final List<DeferredHolder<Item, Item>> MEDICINE = List.of(
             ANALGESIC_TABLETS, RAG_DRESSING, HERBAL_POULTICE, BANDAGE, SPLINT, MEDKIT, HEMOSTATIC_GEL,
             TOURNIQUET, MEDICAL_POUCH, TRAUMA_KIT, SURGICAL_KIT);

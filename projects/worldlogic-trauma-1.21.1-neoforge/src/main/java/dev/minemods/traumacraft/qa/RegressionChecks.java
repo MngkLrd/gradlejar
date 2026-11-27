@@ -211,6 +211,7 @@ public final class RegressionChecks {
                 }
                 case "primitive" -> {
                     dev.minemods.traumacraft.content.HerbWorkChecks.verify(source.getLevel(),p);
+                    PrimitiveRecipeChecks.verify(source.getLevel());
                     var arm=BodyPart.LEFT_ARM;
                     b.reset();b.damage(arm,60);b.setBleeding(arm,2);
                     require(!MedicalAction.canApply(b,MedicalItem.Type.MEDKIT,arm),"medkit cannot resurrect black limb");

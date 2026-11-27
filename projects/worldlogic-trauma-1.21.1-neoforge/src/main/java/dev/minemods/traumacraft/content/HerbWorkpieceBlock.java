@@ -21,6 +21,9 @@ public final class HerbWorkpieceBlock extends Block implements EntityBlock {
     @Override protected BlockState updateShape(BlockState s,Direction d,BlockState neighbor,LevelAccessor l,BlockPos p,BlockPos other){
         return d==Direction.DOWN&&!canSurvive(s,l,p)?Blocks.AIR.defaultBlockState():super.updateShape(s,d,neighbor,l,p,other);
     }
+    @Override public <T extends BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(Level level,BlockState state,net.minecraft.world.level.block.entity.BlockEntityType<T> type){
+        return level.isClientSide||type!=HerbContent.ENTITY.get()?null:(l,p,s,be)->{if(be instanceof HerbWorkpieceEntity work)work.dryTick();};
+    }
     @Override public BlockEntity newBlockEntity(BlockPos pos,BlockState state){return new HerbWorkpieceEntity(pos,state);}
     @Override protected void onRemove(BlockState old,Level level,BlockPos pos,BlockState next,boolean moving){
         if(!old.is(next.getBlock())&&!level.isClientSide&&level.getBlockEntity(pos) instanceof HerbWorkpieceEntity work)

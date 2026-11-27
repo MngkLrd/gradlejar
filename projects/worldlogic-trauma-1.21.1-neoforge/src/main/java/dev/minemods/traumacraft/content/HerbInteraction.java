@@ -14,15 +14,19 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 public final class HerbInteraction {
     private HerbInteraction(){}
     public static boolean place(ServerLevel l,BlockPos support,Player p,ItemStack raw){
-        BlockPos at=support.above();
-        if(p.isSpectator()||!p.getAbilities().mayBuild||!raw.is(ModItems.RAW_HERBS.get())||!HerbWorkpieceBlock.surface(l,support)||!l.isEmptyBlock(at)||!l.mayInteract(p,support)||!l.mayInteract(p,at)||!p.mayUseItemAt(at,Direction.UP,raw))return false;
+        BlockPos at=support.above();HerbSpecies species=HerbSpecies.input(raw);
+        if(p.isSpectator()||!p.getAbilities().mayBuild||species==HerbSpecies.UNKNOWN||!HerbWorkpieceBlock.surface(l,support)||!l.isEmptyBlock(at)||!l.mayInteract(p,support)||!l.mayInteract(p,at)||!p.mayUseItemAt(at,Direction.UP,raw))return false;
         if(p instanceof ServerPlayer sp&&dev.minemods.traumacraft.integration.WorldLogicBridge.functionsEnabled(sp)&&dev.minemods.traumacraft.integration.WorldLogicBridge.miningFactor(sp)<=0)return false;
         if(!l.setBlockAndUpdate(at,HerbContent.WORKPIECE.get().defaultBlockState()))return false;
         if(!(l.getBlockEntity(at) instanceof HerbWorkpieceEntity work)){l.removeBlock(at,false);return false;}
-        work.update(HerbWorkpieceEntity.fromItem(raw));if(!p.getAbilities().instabuild)raw.shrink(1);return true;
+        work.initialize(raw,species);if(!p.getAbilities().instabuild)raw.shrink(1);return true;
     }
     public static void right(PlayerInteractEvent.RightClickBlock e){
-        if(e.isCanceled()||e.getHand()!=InteractionHand.MAIN_HAND||e.getEntity().isSpectator()||!e.getItemStack().is(ModItems.RAW_HERBS.get())||e.getFace()!=Direction.UP||!HerbWorkpieceBlock.surface(e.getLevel(),e.getPos())||!e.getLevel().isEmptyBlock(e.getPos().above()))return;
+        if(!e.isCanceled()&&e.getHand()==InteractionHand.MAIN_HAND&&e.getItemStack().isEmpty()&&e.getEntity().isShiftKeyDown()&&e.getLevel().getBlockEntity(e.getPos()) instanceof HerbWorkpieceEntity work&&work.species().botanical()){
+            if(e.getLevel() instanceof ServerLevel)e.getEntity().displayClientMessage(Component.translatable("message.traumacraft.herb_drying",work.drySeconds()*100/HerbSpecies.DRY_SECONDS),true);
+            e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);return;
+        }
+        if(e.isCanceled()||e.getHand()!=InteractionHand.MAIN_HAND||e.getEntity().isSpectator()||HerbSpecies.input(e.getItemStack())==HerbSpecies.UNKNOWN||e.getFace()!=Direction.UP||!HerbWorkpieceBlock.surface(e.getLevel(),e.getPos())||!e.getLevel().isEmptyBlock(e.getPos().above()))return;
         if(e.getLevel() instanceof ServerLevel l&&!place(l,e.getPos(),e.getEntity(),e.getItemStack()))return;
         e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);
     }

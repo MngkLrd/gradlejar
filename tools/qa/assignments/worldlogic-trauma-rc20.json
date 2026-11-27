@@ -957,5 +957,14 @@
     "combined": "traumaqa hydrationpack; actual provider classes on detached ServerPlayer; intake callback and reverse loss, read-only physiology, one Hydration model deduction",
     "client": "NOT_RUN: actual graphical client and modded network drinking/treatment unsupported by protocol bot",
     "protocol": 10
+  },
+  "primitive_rc2": {
+    "version": "0.7.0-rc2",
+    "scope": "typed botanical grinding and dry state, chamomile closed-bruise preparation, alternate primitive recipes",
+    "server": "traumaqa primitive",
+    "client": "NOT_RUN: typed workpiece and tooltip visual check",
+    "actual_player": "NOT_RUN: existing bot does not support modded inventory IDs",
+    "terrarian": "NOT_RUN: actual addon not in pinned standalone runtime; optional source tags for proposed species require confirmation",
+    "remaining": "wound washing and decoctions need public exact-volume water withdrawal; drying rack and climate-aware drying not implemented; other species therapeutic effects pending"
   }
 }

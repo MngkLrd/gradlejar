@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:string",
+    {
+      "id": "worldlogicterrain:cattail",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:flax_fiber",
+      "required": false
+    }
+  ]
+}

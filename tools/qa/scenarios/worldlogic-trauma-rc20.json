@@ -655,6 +655,48 @@
           "name": "TR-WATER-ILLNESS: dose, incubation, symptoms, treatment, recovery, persistence, illness-only loss"
         }
       ]
+    },
+    {
+      "id": "tr-botanical-identity",
+      "kind": "mechanic",
+      "subject": "All seven botanical identities survive grinding, pickup, save/load, resume; reject unknown and wrong preparation",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-botanical-drying",
+      "kind": "mechanic",
+      "subject": "Bounded drying, pause and retained state through grinding",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-primitive-recipes",
+      "kind": "mechanic",
+      "subject": "Actual server crafting recipes for rag, pressure bandage and splint; reject incorrect ingredient and legacy conversion",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
     }
   ]
 }

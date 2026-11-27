@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "worldlogicterrain:wild_plantain",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:plantain",
+      "required": false
+    }
+  ]
+}

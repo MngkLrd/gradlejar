@@ -54,9 +54,40 @@ public final class HerbWorkChecks {
             check(HerbInteraction.place(l,support,p,raw),"place again");
             l.setBlockAndUpdate(support,Blocks.AIR.defaultBlockState());check(l.isEmptyBlock(at),"support loss removes workpiece");
             check(l.getEntitiesOfClass(ItemEntity.class,box,e->e.getItem().is(ModItems.RAW_HERBS.get())).stream().mapToInt(e->e.getItem().getCount()).sum()==1,"support loss single drop");
+            l.getEntitiesOfClass(ItemEntity.class,box,e->e.getItem().is(ModItems.RAW_HERBS.get())).forEach(ItemEntity::discard);
+            l.setBlockAndUpdate(support,Blocks.STONE.defaultBlockState());
+            check(HerbSpecies.plant(new ItemStack(Items.POPPY))==HerbSpecies.UNKNOWN,"unrelated flower rejected");
+            for(var species:HerbSpecies.values())if(species.botanical()){
+                ItemStack typed=new ItemStack(ModItems.RAW_HERBS.get());HerbSpecies.write(typed,species,0);
+                check(HerbInteraction.place(l,support,p,typed)&&typed.isEmpty(),"typed placement consumes one "+species);
+                var work=piece(l,at);check(work.species()==species&&work.drySeconds()==0,"identity at placement");
+                check(!work.dryStep(false)&&work.drySeconds()==0,"wet or covered drying pauses");
+                for(int sec=0;sec<HerbSpecies.DRY_SECONDS;sec++)check(work.dryStep(true),"dry progress");
+                check(!work.dryStep(true)&&work.drySeconds()==HerbSpecies.DRY_SECONDS,"drying bounded");
+                var savedTyped=work.saveWithoutMetadata(l.registryAccess());var reloaded=new HerbWorkpieceEntity(at,l.getBlockState(at));reloaded.loadWithComponents(savedTyped,l.registryAccess());
+                check(reloaded.species()==species&&reloaded.drySeconds()==HerbSpecies.DRY_SECONDS,"species and drying NBT");
+                p.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
+                check(HerbInteraction.strike(l,at,p,2,false).equals("changed"),"typed crush");
+                check(HerbInteraction.strike(l,at,p,2,true).equals("removed"),"typed partial pickup");
+                var partial=l.getEntitiesOfClass(ItemEntity.class,box,e->e.getItem().is(ModItems.RAW_HERBS.get()));
+                check(partial.size()==1,"one typed partial");var recoveredTyped=partial.getFirst().getItem().copy();partial.getFirst().discard();
+                check(HerbSpecies.read(recoveredTyped)==species&&HerbSpecies.dry(recoveredTyped)==HerbSpecies.DRY_SECONDS&&HerbWorkpieceEntity.fromItem(recoveredTyped)==4,"partial retains all fields");
+                check(HerbInteraction.place(l,support,p,recoveredTyped),"typed resume");
+                for(int i=0;i<16;i++)if(!HerbMask.done(piece(l,at).mask(),i))check(HerbInteraction.strike(l,at,p,i,false).equals("changed"),"typed cell");
+                check(HerbInteraction.strike(l,at,p,0,false).equals("removed"),"typed final pickup");
+                var powders=l.getEntitiesOfClass(ItemEntity.class,box,e->e.getItem().is(ModItems.BOTANICAL_POWDER.get()));
+                check(powders.size()==1&&powders.getFirst().getItem().getCount()==2,"exact typed output");
+                var powder=powders.getFirst().getItem();check(HerbSpecies.read(powder)==species&&HerbSpecies.dry(powder)==HerbSpecies.DRY_SECONDS,"powder identity and dry state");
+                var poultice=dev.minemods.traumacraft.item.BotanicalPowderItem.prepare(powder,new ItemStack(ModItems.RAG_DRESSING.get()));
+                check(species==HerbSpecies.CHAMOMILE?poultice.is(ModItems.HERBAL_POULTICE.get())&&HerbSpecies.read(poultice)==species:poultice.isEmpty(),"only indicated species makes bruise compress");
+                check(dev.minemods.traumacraft.item.BotanicalPowderItem.prepare(powder,new ItemStack(Items.STICK)).isEmpty(),"wrong substrate rejected");
+                powders.forEach(ItemEntity::discard);
+            }
+            var invalid=new ItemStack(ModItems.RAW_HERBS.get());HerbSpecies.write(invalid,HerbSpecies.UNKNOWN,0);
+            check(!HerbInteraction.place(l,support,p,invalid)&&invalid.getCount()==1,"invalid identity cannot become legacy");
         }finally{
             l.setBlockAndUpdate(at,oldAbove);l.setBlockAndUpdate(support,old);p.setItemSlot(EquipmentSlot.MAINHAND,hand);
-            l.getEntitiesOfClass(ItemEntity.class,box,e->e.getItem().is(ModItems.RAW_HERBS.get())||e.getItem().is(ModItems.CRUSHED_HERBS.get())).forEach(ItemEntity::discard);
+            l.getEntitiesOfClass(ItemEntity.class,box,e->e.getItem().is(ModItems.RAW_HERBS.get())||e.getItem().is(ModItems.CRUSHED_HERBS.get())||e.getItem().is(ModItems.BOTANICAL_POWDER.get())).forEach(ItemEntity::discard);
         }
     }
 }

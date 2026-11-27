@@ -66,6 +66,7 @@ public final class MedicalItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
+        if(type==Type.HERBAL_POULTICE)dev.minemods.traumacraft.content.HerbSpecies.tooltip(stack,tooltip);
         String id = type.name().toLowerCase(Locale.ROOT);
         tooltip.add(Component.translatable("jei.traumacraft." + id).withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("tooltip.traumacraft.use_time",
