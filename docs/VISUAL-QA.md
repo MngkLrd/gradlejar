@@ -67,6 +67,42 @@ Optional `--client path/to/1.21.1.jar` reuses a local client after checking the 
 - Check normal and extreme states (empty/full, injured/healed, heat/cold, disabled, stacked effects, long tooltips). Check supported GUI scales, small/large window and relevant inventory/chat overlays; labels must not clip, overlap or cover vanilla HUD controls. Verify independent left/right limb markers and status/tooltip correspondence for anatomy UI, and synchronized values for climate/fatigue HUD when those features are affected.
 - A vanilla texture reference is a visual comparator, not permission to override an unrelated interface. Keep state and display logic separate. Do not claim client UX verification from Java layout math or a successful server test alone.
 
+## Non-negotiable material acceptance matrix (owner-confirmed examples)
+
+The following are acceptance criteria, not suggestions. The owner confirmed the actual vanilla examples in comparative screenshots: central log bark, left spruce leaves, right log top, upper ground block, left leather armor icon, third and fourth saplings. Use the actual target vanilla PNGs to calibrate, not screenshot pixel counts or subjective complexity. The observations below describe visible differences; no universal quantitative palette quota follows from them.
+
+| Material/profile | Required visual properties | Reject and redraw when |
+| --- | --- | --- |
+| Bark | Vertical but interrupted and varied grain; furrows, ridges and changing widths; neighboring close shades form depth | Uniform parallel stripes, detached rectangles, identical pattern pasted on every species |
+| Log end | Growth rings with local micro-contrast, secondary clusters within broad rings, varied edges and textured bark boundary | Perfect nested geometric rings, flat single-color bands, identical recolored cuts, solid frame without bark structure |
+| Conifer foliage | Thin directed needle groups, branch-like structure, transparent openings that follow needles; restrained coherent palette | Large shapeless blobs, random holes, added complexity that erases needle structure; do not mistake intentional spruce needle diagonals for a flaw |
+| Broadleaf foliage | Recognizable leaf groups with depth/overlap; transparency follows leaf silhouettes and natural gaps | Checkerboard or regular mesh unrelated to leaf geometry, big flat color blobs, generic green mass; do not merely recolor conifer foliage |
+| Soil/ground | Varied connected aggregates, small neighboring hue/value changes, uneven boundaries and coherent tiled rhythm | Generic random pixels, repeating stamps, unbroken flat fields or excessive noise |
+| Ore/inclusions | Host rock remains recognizable; inclusions have varied natural shapes, embedded edges, coherent light/material cues | Identical round stamps floating on the host rock, unrelated shadow rings or a recolor of the entire host texture |
+| Clothing/armor | Clear silhouette and controlled contour; folds, collar, hem/cuff or seam where visible; material-specific shading | Flat outlined silhouette, arbitrary bright patches, large uniform fill with no fabric/leather/metal character |
+| Sapling | Recognizable species silhouette, differentiated stem/branch hierarchy, attached foliage groups and purposeful small-scale shading | A stick with blobs, primitive disconnected branches, mechanically duplicated/recolored crowns |
+| Vessel/flask | Readable neck, rim, shoulder and body; neighboring shades describe curved surface; distinct material treatment and physically motivated patina | Unreadable shape, one flat base fill with outline and arbitrary spots, identical metal/wood/clay shading |
+
+All profiles must pass these common checks: recognizable silhouette or surface structure, cluster hierarchy (primary forms plus small purposeful secondary clusters), local micro-contrast where material requires it, coherent light and volume, material continuity, non-mechanical edge variation, identity relative to other variants, direct same-scale vanilla comparison. A simpler but faithful spruce texture is better than a more complex generic leaf texture. Broad color regions are allowed where the actual material/reference calls for them, not as a shortcut. No random added colors, dithering, or forced complexity to pass a heuristic. Intentional vanilla-like palette variants (e.g. dyes) may share geometry if the product explicitly calls for that; distinct species/materials must not be palette swaps unless justified by real comparators.
+
+## Executable art review lock
+
+Build Hub checks selected projects' tracked PNG textures under assets/*/textures/ against the fixed adoption tree (commit cb29b55). Only new/changed bytes relative to adoption require records; unchanged historical art is not migrated. The check runs before Gradle, including manual rebuilds and later code-only iterations of the same changed art. Unrelated projects are not blocked by another project's missing evidence. Deleted files need no review. Add the project-local `art-review.json` outside resources, with schema 1 and an assets object keyed by repository-relative PNG paths. Each entry must contain the actual PNG SHA-256, verdict PASS only after inspection, material_profile, reference IDs/versions/SHA-256 from inspected vanilla PNGs, a concrete comparison observation, and specific observations for every common and profile-specific criterion. See `tools/qa/art_review_lock.py` for the canonical executable criterion names. Use `art_compare` output for exact hashes; references may use a documented fallback game version when needed. Do not copy vanilla PNGs into the repo.
+
+Valid profile names: `bark`, `log_end`, `conifer`, `broadleaf`, `soil`, `ore`, `clothing`, `sapling`, `vessel`, `other`. Choose the most specific applicable profile; other is for genuinely different materials, not an exemption. Common criterion keys: `silhouette`, `cluster_structure`, `micro_contrast`, `light_and_volume`, `material_continuity`, `edge_variation`, `variant_identity`, `vanilla_comparison`. Additional keys by profile:
+- bark: `grain_direction`, `furrows_and_ridges`
+- log_end: `growth_rings`, `ring_microstructure`, `bark_boundary`
+- conifer: `needle_direction`, `structural_transparency`
+- broadleaf: `leaf_groups`, `canopy_depth`, `structural_transparency`
+- soil: `aggregate_structure`, `tile_rhythm`
+- ore: `host_rock`, `mineral_inclusion`, `inclusion_light`
+- clothing: `folds_and_seams`, `material_specific_shading`
+- sapling: `branch_hierarchy`, `species_silhouette`, `foliage_attachment`
+- vessel: `construction`, `surface_turn`, `material_specific_shading`
+- other: `functional_material_cues`
+
+A rejected or stale review, missing reference or missing criterion prevents compilation of the selected project. After changing pixels, inspect the revised image and update its hash and findings. Review records must describe concrete regions/relationships in the image; generic praise or fabricated records are prohibited. The executable validator can check completeness and candidate hash, not the truth of aesthetic observations or reference provenance without separate source inspection. This lock does not certify rendering, check generated/untracked textures or non-PNGs, enforce external historical workflows, or configure GitHub branch protection. Those assets still require the existing visual review and final-JAR checks. No global numeric aesthetic pass rule. Do not weaken existing runtime/client release gates.
+
 ## Evidence and acceptance
 
 | Evidence | What it establishes | What it cannot establish |
@@ -76,7 +112,7 @@ Optional `--client path/to/1.21.1.jar` reuses a local client after checking the 
 | Aesthetic review | Actual asset/preview compared to a relevant vanilla reference using the above checklist | Successful runtime rendering or gameplay |
 | Client review | Actual target client view of affected contexts, states and animations | Untested contexts or other versions/loaders |
 
-Record PASS only for a review actually performed; use FAIL, NOT_RUN, UNSUPPORTED or N/A as appropriate. These are review outcomes, not new automated QA-level definitions. A structural defect under the existing applicable asset gate blocks a verified release; heuristic warnings require judgment and are not automatic aesthetic failures. A material visual defect should be corrected rather than ignored. If no suitable client is available, deliver honestly labeled development evidence and report exactly which views remain untested; existing release and manual client approval rules still apply. Group screenshots or animation checks by feature rather than launching a client for every PNG. No new blocking subjective-score gate, no required manual user QA during ordinary development.
+Record PASS only for a review actually performed; use FAIL, NOT_RUN, UNSUPPORTED or N/A as appropriate. These are review outcomes, not new automated QA-level definitions. A structural defect under the existing applicable asset gate blocks a verified release; heuristic warnings require judgment and are not automatic aesthetic failures. A material visual defect should be corrected rather than ignored. If no suitable client is available, deliver honestly labeled development evidence and report exactly which views remain untested; existing release and manual client approval rules still apply. Group screenshots or animation checks by feature rather than launching a client for every PNG. No blocking subjective-score gate: the separate evidence lock checks required reviewed records, not an automatic taste score. No required manual user QA during ordinary development.
 
 ## Mandatory evidence for each changed asset
 
