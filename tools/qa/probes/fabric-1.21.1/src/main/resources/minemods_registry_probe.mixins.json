@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.minemods.qa.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "server": [
+    "RegistryDumpMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

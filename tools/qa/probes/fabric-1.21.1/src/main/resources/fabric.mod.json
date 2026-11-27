@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "minemods_registry_probe",
+  "version": "0.1.0",
+  "name": "MineMods Registry QA Probe",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "dev.minemods.qa.RegistryProbe"
+    ]
+  },
+  "mixins": [
+    "minemods_registry_probe.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.3",
+    "minecraft": "1.21.1",
+    "java": ">=21"
+  }
+}

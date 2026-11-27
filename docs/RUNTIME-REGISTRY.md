@@ -1,0 +1,7 @@
+# P9.2b — live registry diagnostic pilot
+
+Minecraft 1.21.1 / Fabric 0.17.3 / Java 21 / Gradle 8.14.3 / official Mojang mappings. A separate server-only test probe exports eleven runtime registry categories including active recipe IDs on the first server tick. The workflow builds the unchanged Fragile Glass production JAR, installs both JARs in an isolated official-loader server, runs existing server regression assertions and compares packaged resource hints with live IDs. Known vanilla controls and a code-only diagnostic item exercise the difference between resource hints and live registration. No probe in distributed product JARs; no release eligibility from this diagnostic.
+
+The probe fixture is enabled only in the isolated diagnostic process. The output retains target/probe hashes, registry counts, explicit runtime-only IDs, and resource hints not active under the observed namespace. IDs in other namespaces do not establish ownership. Active recipe IDs describe the loaded recipe manager at startup, not successful crafting or reload behavior. The diagnostic does not establish semantic completeness, dynamic registry support, client-only content, graphical rendering or other loaders.
+
+Workflow: MineMods Runtime Registry QA. Initially limited to the single pilot; do not make a release gate or expand to every loader until actual server evidence is reviewed. No old mod sources or profiles are changed.
