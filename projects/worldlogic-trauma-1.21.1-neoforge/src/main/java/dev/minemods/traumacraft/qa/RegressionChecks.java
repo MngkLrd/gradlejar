@@ -179,7 +179,9 @@ public final class RegressionChecks {
                     b.reset();TraumaEvents.applyDamage(p,b,p.damageSources().inFire(),2);
                     require((b.wounds(BodyPart.CHEST)&WoundKind.BURN.bit)!=0&&!b.hasBleeding(),"burn is not a bleeding cut");
                     b.reset();TraumaEvents.applyDamage(p,b,p.damageSources().freeze(),2);
-                    require((b.wounds(BodyPart.CHEST)&WoundKind.FROSTBITE.bit)!=0,"freeze injury");
+                    for(var limb:dev.minemods.traumacraft.integration.LegacyFrostExposure.LIMBS)
+                        require((b.wounds(limb)&WoundKind.FROSTBITE.bit)!=0&&b.health(limb)==limb.maximum-1.5f,"freeze injury "+limb);
+                    require(b.health(BodyPart.CHEST)==85&&b.wounds(BodyPart.CHEST)==0&&!b.hasBleeding(),"freeze does not duplicate torso or bleeding injury");
                     b.reset();b.wound(arm,12,WoundKind.CONTUSION);
                     require(!MedicalAction.canApply(b,MedicalItem.Type.RAG_DRESSING,arm),"dry bruise rejects rag");
                     b.setBleeding(arm,1);
