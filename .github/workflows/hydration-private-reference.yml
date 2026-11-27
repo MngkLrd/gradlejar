@@ -1,0 +1,42 @@
+name: Hydration private reference acquisition
+on:
+  push:
+    branches: [hydration-private-vanilla-reference]
+permissions:
+  contents: read
+jobs:
+  compare-reference:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install Pillow==12.0.0 cryptography
+      - name: Fetch verified official reference PNGs and encrypt for private local inspection
+        run: |
+          python - <<'PY'
+          import hashlib, io, json, os, zipfile
+          from pathlib import Path
+          from tools.qa.art_compare import official_client, reference_path
+          from cryptography.hazmat.primitives import serialization, hashes
+          from cryptography.hazmat.primitives.asymmetric import padding
+          from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+          client, sha = official_client("1.21.1")
+          ids = ["item/glass_bottle","item/flower_pot","item/bucket","item/copper_ingot","item/leather","item/leather_chestplate","item/charcoal","item/bowl","item/honey_bottle","item/spyglass","item/brick","item/bundle","block/oak_planks","block/oxidized_copper","block/terracotta","block/water_still","block/barrel_side","block/white_wool","block/gravel"]
+          packed=io.BytesIO()
+          with zipfile.ZipFile(io.BytesIO(client)) as source,zipfile.ZipFile(packed,"w",zipfile.ZIP_DEFLATED) as out:
+              for i in ids:
+                  path=reference_path(i)
+                  out.writestr(path,source.read(path))
+              out.writestr("source.json",json.dumps({"version":"1.21.1","client_sha1":sha}))
+          key=os.urandom(32);nonce=os.urandom(12)
+          public=serialization.load_pem_public_key(Path(".github/hydration-art-review-public.pem").read_bytes())
+          wrapped=public.encrypt(key,padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),algorithm=hashes.SHA256(),label=None))
+          Path("private-reference").mkdir()
+          Path("private-reference/key.enc").write_bytes(wrapped)
+          Path("private-reference/references.enc").write_bytes(nonce+AESGCM(key).encrypt(nonce,packed.getvalue(),None))
+          print("Official source verified; only encrypted evidence will be retained.")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: encrypted-private-reference
+          path: private-reference/
+          retention-days: 1
