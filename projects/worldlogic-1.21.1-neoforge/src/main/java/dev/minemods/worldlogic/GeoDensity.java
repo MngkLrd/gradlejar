@@ -50,6 +50,19 @@ public final class GeoDensity implements DensityFunction {
   }
   return java.util.Optional.of(region);
  }
+ public static java.util.Optional<dev.minemods.worldlogic.api.WorldLogicApi.WorldgenSampler> worldgenSampler(
+  net.minecraft.world.level.levelgen.RandomState state,net.minecraft.core.RegistryAccess access,net.minecraft.world.level.chunk.ChunkGenerator generator){
+  if(!(generator instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator gen))return java.util.Optional.empty();
+  var id=gen.generatorSettings().unwrapKey().map(k->k.location()).orElse(null);
+  if(id==null||!id.getNamespace().equals("worldlogic")||!Set.of("earthlike_climate","earthlike_extended","realistic_unified").contains(id.getPath()))return java.util.Optional.empty();
+  var registry=access.lookupOrThrow(Registries.NOISE);
+  java.util.function.Function<net.minecraft.resources.ResourceKey<net.minecraft.world.level.levelgen.synth.NormalNoise.NoiseParameters>,NoiseHolder> noise=
+    k->new NoiseHolder(registry.getOrThrow(k),state.getOrCreateNoise(k));
+  var m=model(noise.apply(net.minecraft.world.level.levelgen.Noises.CONTINENTALNESS),noise.apply(net.minecraft.world.level.levelgen.Noises.RIDGE),
+    noise.apply(net.minecraft.world.level.levelgen.Noises.EROSION),noise.apply(net.minecraft.world.level.levelgen.Noises.VEGETATION));
+  boolean extended=id.getPath().equals("earthlike_extended");
+  return java.util.Optional.of((pos,biome,ground)->WorldgenEcology.sample(m.site(pos.getX(),pos.getZ(),extended),pos,biome,ground));
+ }
  private static dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate extended(dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate r){
   double old=r.modeledSurfaceY(),surface=old<=110?old:110+(old-110)*1.6;
   return new dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate(Math.max(-1,r.thermalIndex()-(surface-old)*.065/28),r.moistureIndex(),r.absoluteLatitude(),r.prevailingWindX(),r.prevailingWindZ(),surface);
