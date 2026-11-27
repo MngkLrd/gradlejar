@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:tall_grass_plains",
+  "features": "worldlogicterrain:patch_tall_grass_plains",
+  "step": "vegetal_decoration"
+}

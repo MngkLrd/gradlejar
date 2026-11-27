@@ -17,6 +17,7 @@ public final class WorldLogicTerrain {
         TerrainContent.ITEMS.register(bus);
         TerrainContent.TABS.register(bus);
         EcologicalTreeFeature.FEATURES.register(bus);
+        dev.minemods.worldlogicterrain.worldgen.TallGrassPlainsFeature.FEATURES.register(bus);
         dev.minemods.worldlogicterrain.tree.TropicalTreeFeature.FEATURES.register(bus);
         dev.minemods.worldlogicterrain.water.AquaticFeature.FEATURES.register(bus);
         NeoForge.EVENT_BUS.addListener(dev.minemods.worldlogicterrain.water.AquaticChecks::register);
@@ -25,6 +26,7 @@ public final class WorldLogicTerrain {
         NeoForge.EVENT_BUS.addListener(TerrainMobility::register);
         NeoForge.EVENT_BUS.addListener(TerrainWorldgenChecks::register);
         NeoForge.EVENT_BUS.addListener(TerrainPatchChecks::register);
+        NeoForge.EVENT_BUS.addListener(dev.minemods.worldlogicterrain.worldgen.TallGrassPlainsFeature::registerChecks);
         NeoForge.EVENT_BUS.addListener(TreeChecks::register);
         NeoForge.EVENT_BUS.addListener(ForageChecks::register);
         NeoForge.EVENT_BUS.addListener(TerrainMobility::logout);

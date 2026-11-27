@@ -19,7 +19,7 @@ public final class TerrainWorldgenChecks {
           .then(Commands.literal("worldgen_check").executes(c->{
             try {
                 verify(c.getSource().getLevel());
-                c.getSource().sendSuccess(()->Component.literal("Terrain worldgen: legacy and available unified core presets, 35 plant features and ecological trees, biome attachment verified"),false);
+                c.getSource().sendSuccess(()->Component.literal("Terrain worldgen: legacy and available unified core presets, 36 plant features and ecological trees, biome attachment verified"),false);
                 return 1;
             } catch (IllegalStateException ex) {
                 c.getSource().sendFailure(Component.literal(ex.getMessage())); return 0;
@@ -38,6 +38,7 @@ public final class TerrainWorldgenChecks {
             var generator=preset.createWorldDimensions().overworld();
             if (!(generator instanceof NoiseBasedChunkGenerator gen) || !gen.generatorSettings().unwrapKey().map(k->k.location().equals(id)).orElse(false))
                 throw new IllegalStateException("Wrong WorldLogic generator: "+presetId);
+        checkPreset(gen, "tall_grass_plains", "tall_grass_plains", Set.of("plains","sunflower_plains","meadow"));
         checkPreset(gen, "meadow_grass", "meadow", Set.of("plains","sunflower_plains","meadow"));
         checkPreset(gen, "dense_meadow_grass", "meadow", Set.of("plains","sunflower_plains","meadow"));
         checkPreset(gen, "dry_grass", "dry", Set.of("desert","savanna","savanna_plateau","windswept_savanna","badlands","wooded_badlands","eroded_badlands","beach"));

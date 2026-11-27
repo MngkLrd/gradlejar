@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "minecraft:meadow",
+    {
+      "id": "worldlogic:prairie",
+      "required": false
+    },
+    {
+      "id": "worldlogic:tallgrass_prairie",
+      "required": false
+    },
+    {
+      "id": "worldlogic:temperate_steppe",
+      "required": false
+    },
+    {
+      "id": "worldlogic:subtropical_grassland",
+      "required": false
+    }
+  ]
+}
