@@ -30,6 +30,15 @@ final class PlantSoilModel{
   var next=new HydrologyState.Eco(e.salt()+accepted*salinity,e.cover(),e.roots(),e.fertilityDelta(),e.transpiration(),e.totalTranspiration(),e.saltExport(),e.recoveredCover(),e.vegetationTick(),now);
   return new Change(new HydrologyModel.Store(s.soil()+accepted,s.groundwater(),s.snow(),s.pond()),next,accepted,true);
  }
+ static double vaporInfluence(HydrologyState.Eco e,long now){
+  if(e.vegetationTick()<0||now<e.vegetationTick()||now-e.vegetationTick()>=400)return 0;
+  return HydrologyModel.unit(e.transpiration()/4)*(1-(now-e.vegetationTick())/400.0);
+ }
+ static LocalWeather microclimate(LocalWeather w,double influence){
+  double i=HydrologyModel.unit(influence);
+  return new LocalWeather(w.kind(),w.intensity(),w.temperatureDeltaC()-1.2*i,Math.min(100,w.relativeHumidityPercent()+8*i),
+   w.windXMps(),w.windZMps(),w.gustMps(),w.cloudFraction(),w.fogDensity(),w.solarTransmission(),w.precipitation(),w.precipitationIntensity(),w.pressureHpa(),w.exposed());
+ }
  static HydrologyState.Eco leach(HydrologyState.Eco e,HydrologyModel.Store before,HydrologyModel.Step step){
   // Recharge exports dissolved salt from the root-zone budget; runoff is not counted twice.
   double exported=Math.min(e.salt(),e.salt()*Math.min(1,step.recharge()/Math.max(1,before.soil()+step.recharge()))*.85);

@@ -21,6 +21,14 @@ public final class HydrologyRuntime{
  }
  private record Site(BlockPos surface,SoilType soil,double moisture){}
  private static Optional<Site> site(ServerLevel l,int x,int z){
+  // Deterministic alternatives stay within the same 16x16 cell. A tree or pond
+  // at its center must not make all plants in that cell unable to access water.
+  for(int[] offset:new int[][]{{0,0},{-5,-5},{5,-5},{-5,5},{5,5}}){
+   var result=columnSite(l,x+offset[0],z+offset[1]);if(result.isPresent())return result;
+  }
+  return Optional.empty();
+ }
+ private static Optional<Site> columnSite(ServerLevel l,int x,int z){
   if(!l.hasChunkAt(new BlockPos(x,l.getSeaLevel(),z)))return Optional.empty();
   int y=l.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);
   if(y<=l.getMinBuildHeight()||y>=l.getMaxBuildHeight())return Optional.empty();
@@ -62,6 +70,13 @@ public final class HydrologyRuntime{
    if(create){state.cells.put(key,c);state.setDirty();}
   }
   return Optional.of(new Access(state,key,s,c));
+ }
+ /** Bounded local proxy, no terrain reads and no recursive atmosphere query. */
+ static double transpirationInfluence(ServerLevel l,BlockPos p,double modeledSurfaceY){
+  if(!active(l)||!l.hasChunkAt(p)||p.getY()<modeledSurfaceY-4||p.getY()>modeledSurfaceY+24)return 0;
+  var e=HydrologyState.get(l).ecology.get(EnvironmentAnalytics.key(p));
+  if(e==null)return 0;
+  return PlantSoilModel.vaporInfluence(e,l.getGameTime());
  }
  public static Optional<SoilEcology> ecology(ServerLevel l,BlockPos p){
   return access(l,p,false).map(a->PlantSoilModel.snapshot(a.cell.store(),a.site.soil,a.state.ecology.getOrDefault(a.key,HydrologyState.emptyEco())));

@@ -51,6 +51,10 @@ final class PlantEcologyChecks{
   close(255,roots.store().mass()+roots.runoff()+roots.evaporation(),"root water budget");
   var leach=PlantSoilModel.leach(next.eco(),next.store(),roots);
   require(leach.saltExport()>0,"leaching");close(next.eco().salt(),leach.salt()+leach.saltExport(),"salt budget");
+  require(PlantSoilModel.vaporInfluence(next.eco(),400)>0&&PlantSoilModel.vaporInfluence(next.eco(),800)==0,"transpiration microclimate expires");
+  var natural=LocalWeatherModel.sample(42,0,0,0,0,new LocalWeatherModel.Climate(25,.5,20,1,0,false),true);
+  var plantAir=PlantSoilModel.microclimate(natural,1);
+  require(plantAir.temperatureDeltaC()<natural.temperatureDeltaC()&&plantAir.relativeHumidityPercent()>=natural.relativeHumidityPercent()&&plantAir.kind()==natural.kind(),"evaporative cooling and humidity");
   var data=new HydrologyState();data.cells.put(7L,new HydrologyState.Cell(next.store(),0,0,0,0,400));data.ecology.put(7L,next.eco());
   var restored=HydrologyState.load(data.save(new CompoundTag(),l.registryAccess()),l.registryAccess());
   require(data.cells.equals(restored.cells)&&data.ecology.equals(restored.ecology),"persistent plant and salt state");
@@ -59,6 +63,14 @@ final class PlantEcologyChecks{
   close(cell.recoveredCanopy,.125,"observed recovery");
   var a=AnalyticsState.load(analytics.save(new CompoundTag(),l.registryAccess()),l.registryAccess()).cells.get(7L);
   close(a.canopy,.375,"canopy persisted");close(a.baselineCanopy,.5,"baseline persisted");close(a.recoveredCanopy,.125,"recovery persisted");
+  // Actual top-leaf measurement in a loaded flat-world chunk, restored afterward.
+  var q=new BlockPos(4,110,4);require(l.hasChunkAt(q),"loaded canopy fixture");
+  var old=l.getBlockState(q);var chunk=new net.minecraft.world.level.ChunkPos(q);
+  try{
+   l.setBlock(q,Blocks.AIR.defaultBlockState(),2);double before=EnvironmentAnalytics.canopy(l,chunk);
+   l.setBlock(q,Blocks.OAK_LEAVES.defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.PERSISTENT,true),2);
+   close(EnvironmentAnalytics.canopy(l,chunk),before+1.0/256,"actual canopy observation");
+  }finally{l.setBlock(q,old,2);}
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_PLANT_ECOLOGY workers=8 waterBudget=PASS saltBudget=PASS persistence=PASS canopyRecovery=PASS");
  }
 }
