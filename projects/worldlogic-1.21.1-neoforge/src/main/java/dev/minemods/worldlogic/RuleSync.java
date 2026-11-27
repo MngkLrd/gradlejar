@@ -24,7 +24,7 @@ public final class RuleSync {
  static final StreamCodec<RegistryFriendlyByteBuf,State> CODEC=StreamCodec.of((b,m)->{b.writeBoolean(m.friction);b.writeBoolean(m.momentum);b.writeDouble(m.weather);b.writeVarInt(m.streak);b.writeUtf(m.family,256);b.writeUtf(m.tool,256);b.writeDouble(m.boatLimit);b.writeBoolean(m.down);b.writeFloat(m.roll);b.writeBoolean(m.crawl);b.writeBoolean(m.hanging);b.writeFloat(m.armFactor);b.writeBoolean(m.cramped);b.writeVarInt(m.fatiguePercent);},
   b->new State(b.readBoolean(),b.readBoolean(),b.readDouble(),b.readVarInt(),b.readUtf(256),b.readUtf(256),b.readDouble(),b.readBoolean(),b.readFloat(),b.readBoolean(),b.readBoolean(),b.readFloat(),b.readBoolean(),b.readVarInt()));
  public static void init(RegisterPayloadHandlersEvent e){
-  var registrar=e.registrar("9");
+  var registrar=e.registrar("10");
   registrar.playToClient(State.TYPE,CODEC,(m,c)->{client=m;received=System.nanoTime();});
   registrar.playToClient(LocalWeatherSync.State.TYPE,LocalWeatherSync.CODEC,(m,c)->LocalWeatherSync.receive(m));
   registrar.playToClient(AnalyticsSync.State.TYPE,AnalyticsSync.CODEC,(m,c)->AnalyticsSync.receive(m));

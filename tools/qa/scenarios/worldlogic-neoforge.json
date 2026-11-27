@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC30 production core/API regression",
+  "name": "World Logic NeoForge RC31 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -200,6 +200,12 @@
       "name": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history",
       "command": "worldlogic qa analytics",
       "expect": "WORLDLOGIC_ANALYTICS_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence",
+      "command": "worldlogic qa plant_ecology",
+      "expect": "WORLDLOGIC_PLANT_ECOLOGY_PASSED",
       "assertion": true
     }
   ],
@@ -623,6 +629,61 @@
         {
           "backend": "server",
           "name": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-water-prediction",
+      "kind": "mechanic",
+      "subject": "worldgen-water-prediction",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "plant-water-withdrawal",
+      "kind": "mechanic",
+      "subject": "plant-water-withdrawal",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "plant-root-retention",
+      "kind": "mechanic",
+      "subject": "plant-root-retention",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "soil-salinity",
+      "kind": "mechanic",
+      "subject": "soil-salinity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "forest-recovery",
+      "kind": "mechanic",
+      "subject": "forest-recovery",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
         }
       ]
     }

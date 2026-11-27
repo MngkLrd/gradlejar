@@ -152,6 +152,11 @@ public final class WorldLogicApi {
  public static Optional<SoilEcology> soilEcology(ServerLevel level,BlockPos pos){
   serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.ecology(level,pos);
  }
+ /** Observed top-leaf fraction of 256 columns, not tree count or global forest inventory. */
+ public record ForestObservation(double canopyCover,double baselineCover,double cumulativeRecovery,long observedTick){}
+ public static Optional<ForestObservation> forestObservation(ServerLevel level,BlockPos pos){
+  serverThread(level);return dev.minemods.worldlogic.EnvironmentAnalytics.forest(level,pos);
+ }
  public record Fatigue(boolean enabled,double fatiguePercent,double remainingStaminaPercent){}
  private static void serverThread(ServerLevel level){
   if(!level.getServer().isSameThread())throw new IllegalStateException("World Logic API requires server thread");

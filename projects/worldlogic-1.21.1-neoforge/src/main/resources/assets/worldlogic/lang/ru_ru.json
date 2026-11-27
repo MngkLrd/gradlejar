@@ -183,5 +183,21 @@
   "worldlogic.analytics.map_air": "Воздух вокруг",
   "worldlogic.analytics.map_soil": "Почва вокруг",
   "worldlogic.analytics.history_chart": "Последние замеры",
-  "worldlogic.analytics.legend": "Оранж.: воздух / зел.: почва / сер.: нет данных"
+  "worldlogic.analytics.legend": "Оранж.: воздух / зел.: почва / сер.: нет данных",
+  "worldlogic.analytics.ecology": "Экология",
+  "worldlogic.analytics.canopy": "Лесной полог",
+  "worldlogic.analytics.canopy_change": "Изменение от первого замера",
+  "worldlogic.analytics.canopy_recovery": "Восстановление полога (сумма приростов)",
+  "worldlogic.analytics.observed_tick": "Тик наблюдения",
+  "worldlogic.analytics.salt_mass": "Соль в корневом слое",
+  "worldlogic.analytics.soil_salinity": "Солёность почвенной влаги",
+  "worldlogic.analytics.salt_export": "Вымыто соли",
+  "worldlogic.analytics.plant_cover": "Покров растений по данным аддона",
+  "worldlogic.analytics.root_retention": "Удержание корнями",
+  "worldlogic.analytics.transpiration": "Последняя транспирация",
+  "worldlogic.analytics.total_transpiration": "Суммарная транспирация",
+  "worldlogic.analytics.plant_recovery": "Восстановление покрова (сумма приростов)",
+  "worldlogic.analytics.reported_tick": "Тик последнего отчёта растений",
+  "worldlogic.analytics.no_plant_report": "Нет данных от аддона растительности",
+  "worldlogic.analytics.habitat_fertility": "Эффективное плодородие"
 }

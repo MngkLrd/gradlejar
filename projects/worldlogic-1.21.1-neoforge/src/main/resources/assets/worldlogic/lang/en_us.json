@@ -183,5 +183,21 @@
   "worldlogic.analytics.map_air": "Nearby air",
   "worldlogic.analytics.map_soil": "Nearby soil",
   "worldlogic.analytics.history_chart": "Recent samples",
-  "worldlogic.analytics.legend": "Orange: air / green: soil / gray: unobserved"
+  "worldlogic.analytics.legend": "Orange: air / green: soil / gray: unobserved",
+  "worldlogic.analytics.ecology": "Ecology",
+  "worldlogic.analytics.canopy": "Observed canopy",
+  "worldlogic.analytics.canopy_change": "Change from baseline",
+  "worldlogic.analytics.canopy_recovery": "Cumulative canopy recovery",
+  "worldlogic.analytics.observed_tick": "Observed at tick",
+  "worldlogic.analytics.salt_mass": "Root-zone salt mass",
+  "worldlogic.analytics.soil_salinity": "Pore-water salinity",
+  "worldlogic.analytics.salt_export": "Leached salt",
+  "worldlogic.analytics.plant_cover": "Reported plant cover",
+  "worldlogic.analytics.root_retention": "Root retention",
+  "worldlogic.analytics.transpiration": "Last transpiration",
+  "worldlogic.analytics.total_transpiration": "Total transpiration",
+  "worldlogic.analytics.plant_recovery": "Cumulative plant cover recovery",
+  "worldlogic.analytics.reported_tick": "Last plant report tick",
+  "worldlogic.analytics.no_plant_report": "No vegetation report yet",
+  "worldlogic.analytics.habitat_fertility": "Effective soil fertility"
 }

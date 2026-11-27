@@ -64,6 +64,7 @@ public final class AdminCommands {
    return reply(s,String.format(java.util.Locale.ROOT,"Water: %s; quality=%s; salinity=%.1f g/kg; risk=%.2f; evidence=%s",w.kind(),w.quality(),w.salinityGkg(),w.contaminationRisk(),w.evidence()));
   }));
   root.then(Commands.literal("qa").requires(s->s.hasPermission(4))
+   .then(Commands.literal("plant_ecology").executes(c->{try{PlantEcologyChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_PLANT_ECOLOGY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("analytics").executes(c->{try{AnalyticsChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_ANALYTICS_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("native_water").executes(c->{try{NaturalWaterChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_NATIVE_WATER_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("water_profile").executes(c->{try{WaterClassificationChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WATER_PROFILE_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))

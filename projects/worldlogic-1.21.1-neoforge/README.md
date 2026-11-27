@@ -36,3 +36,5 @@ RC28 API revision 7: detailed water origin, gameplay quality, salinity/contamina
 RC29: eight natural water registry families, own buckets, intrinsic water profile for fluid handlers, soil-modulated quality for local water, generated standalone water conversion in Realistic, vanilla water tags preserved. Uses original vanilla animated water textures with family tint and NeoForge bucket model. Legacy chunks and waterlogged blocks retained. No dedicated JEI/Jade integration verified, actual client and real-world generation tests pending.
 
 RC30: environmental analytics in pause menu, local atmosphere/water/soil/activity/history, persisted observations, nearby pollution grid, modeled combustion deposition and natural dust separated. API revision 9. Client verification pending; no full world or ecological survey.
+
+RC31: thread-safe predicted water identity, bounded aggregate vegetation water withdrawals, root retention, litter fertility, irrigation salt budget and ecology analytics with observed canopy cover and recovery. Server API revision 10. Terrarian must call live aggregation; no automatic plant-specific growth or salt intrusion yet.

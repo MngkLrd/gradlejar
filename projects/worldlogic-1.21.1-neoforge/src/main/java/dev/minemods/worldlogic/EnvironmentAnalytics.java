@@ -21,6 +21,27 @@ public final class EnvironmentAnalytics{
   if(l.isOutsideBuildHeight(p)||!l.hasChunkAt(p))return Optional.empty();
   var c=AnalyticsState.get(l).cells.get(key(p));return c==null||c.tick<0?Optional.empty():Optional.of(snapshot(c));
  }
+ public static Optional<ForestObservation> forest(ServerLevel l,BlockPos p){
+  if(l.isOutsideBuildHeight(p)||!l.hasChunkAt(p))return Optional.empty();
+  var c=AnalyticsState.get(l).cells.get(key(p));
+  return c==null||c.canopy<0?Optional.empty():Optional.of(new ForestObservation(c.canopy,c.baselineCanopy,c.recoveredCanopy,c.canopyTick));
+ }
+ static void observeCanopy(AnalyticsState.Cell c,double cover,long now){
+  if(c.canopyTick>=now)return;
+  cover=AnalyticsState.unit(cover);
+  if(c.canopy<0)c.baselineCanopy=cover;
+  else c.recoveredCanopy+=Math.max(0,cover-c.canopy);
+  c.canopy=cover;c.canopyTick=now;
+ }
+ static double canopy(ServerLevel l,ChunkPos ch){
+  int leaves=0;
+  for(int x=ch.getMinBlockX();x<ch.getMinBlockX()+16;x++)for(int z=ch.getMinBlockZ();z<ch.getMinBlockZ()+16;z++){
+   int y=l.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,x,z)-1;
+   var pos=new BlockPos(x,y,z);
+   if(!l.isOutsideBuildHeight(pos)&&l.getBlockState(pos).is(BlockTags.LEAVES))leaves++;
+  }
+  return leaves/256.0;
+ }
  static void update(AnalyticsState.Cell c,long now,int sources,double dust,double rain,double wind){
   if(c.tick>=now)return;
   // Only observed intervals are simulated: no invented history while unloaded.
@@ -59,7 +80,7 @@ public final class EnvironmentAnalytics{
    }
    var w=WorldLogicApi.localWeather(l,pos);double dust=w.filter(v->v.kind()==WeatherKind.DUST_STORM).map(v->v.intensity()*.65).orElse(0.0);
    var a=WorldLogicApi.atmosphere(l,pos);double rain=a.map(Atmosphere::precipitationIntensity).orElse(0.0),wind=a.map(Atmosphere::outdoorWindSpeedMps).orElse(0.0);
-   update(c,now,sources,dust,rain,wind);state.setDirty();
+   update(c,now,sources,dust,rain,wind);if(c.canopyTick<0||now-c.canopyTick>=200)observeCanopy(c,canopy(l,ch),now);state.setDirty();
   }
   AnalyticsSync.send(p,state);
  }

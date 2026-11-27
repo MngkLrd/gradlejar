@@ -8,12 +8,12 @@ import net.minecraft.network.chat.Component;
 import java.util.*;
 public final class AnalyticsScreen extends Screen{
  private final Screen parent;private int tab,page;
- private static final String[] TABS={"air","water","soil","impact","history"};
+ private static final String[] TABS={"air","water","soil","impact","ecology","history"};
  public AnalyticsScreen(Screen parent){super(Component.translatable("worldlogic.analytics.title"));this.parent=parent;}
  private Component tr(String s){return Component.translatable("worldlogic.analytics."+s);}
  @Override protected void init(){
-  int left=12,w=(width-24)/5;
-  for(int i=0;i<5;i++){final int k=i;addRenderableWidget(Button.builder(tr(TABS[i]),b->{tab=k;page=0;}).bounds(left+i*w,32,w-2,20).build());}
+  int left=12,w=(width-24)/TABS.length;
+  for(int i=0;i<TABS.length;i++){final int k=i;addRenderableWidget(Button.builder(tr(TABS[i]),b->{tab=k;page=0;}).bounds(left+i*w,32,w-2,20).build());}
   addRenderableWidget(Button.builder(Component.literal("<"),b->page=Math.max(0,page-1)).bounds(12,height-28,26,20).build());
   addRenderableWidget(Button.builder(Component.literal(">"),b->page=Math.min(50,page+1)).bounds(42,height-28,26,20).build());
   addRenderableWidget(Button.builder(Component.translatable("gui.back"),b->onClose()).bounds(width-94,height-28,82,20).build());
@@ -29,7 +29,7 @@ public final class AnalyticsScreen extends Screen{
    g.drawCenteredString(font,tr("waiting"),width/2,76,0xffcccccc);
   }else{
    g.drawString(font,Component.literal("X "+state.x()+"  Y "+state.y()+"  Z "+state.z()+"  |  t "+state.tick()),18,64,0xffacb9bf,false);
-   if(tab<4&&state.tabs().size()>tab){
+   if(tab<5&&state.tabs().size()>tab){
     var lines=new ArrayList<net.minecraft.util.FormattedCharSequence>();
     for(String row:state.tabs().get(tab)){
      var kv=row.split("\\|",2);
@@ -42,7 +42,7 @@ public final class AnalyticsScreen extends Screen{
     int end=Math.min(lines.size(),(page+1)*visible),y=82;
     for(int i=page*visible;i<end;i++,y+=12)g.drawString(font,lines.get(i),18,y,0xffe6ebed,false);
     g.drawString(font,(page+1)+"/"+(maxPage+1),76,height-22,0xffbac4c9,false);
-   }else if(tab==4){history(g,state);}
+   }else if(tab==5){history(g,state);}
   }
   super.render(g,mx,my,delta);
  }
