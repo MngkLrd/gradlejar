@@ -38,7 +38,7 @@ public final class TreatmentManager {
 
     public static boolean begin(ServerPlayer player, MedicalItem medicine, BodyPart part,
                                 boolean cursor, InteractionHand hand) {
-        if (!player.isAlive() || player.isCreative() || player.isSpectator() || !dev.minemods.traumacraft.integration.WorldLogicBridge.canTreat(player)) return false;
+        if (dev.minemods.traumacraft.climb.ClimbManager.active(player) || !player.isAlive() || player.isCreative() || player.isSpectator() || !dev.minemods.traumacraft.integration.WorldLogicBridge.canTreat(player)) return false;
         if (part == null || (!cursor && hand == null) || ACTIVE.containsKey(player.getUUID())) return false;
         if (cursor && player.containerMenu != player.inventoryMenu) return false;
         ItemStack stack = stack(player, cursor, hand);

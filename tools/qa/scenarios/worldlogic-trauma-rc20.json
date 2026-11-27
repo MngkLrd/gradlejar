@@ -97,6 +97,12 @@
       "expect": "TRAUMAQA publicapi PASS",
       "assertion": true,
       "name": "TR-PUBLICAPI: immutable seven-region snapshot, external injury, invalid input and creative guards"
+    },
+    {
+      "command": "traumaqa climb",
+      "expect": "TRAUMAQA climb PASS",
+      "assertion": true,
+      "name": "TR-CLIMB: full block ascent, arm selection, duration, headroom and interrupted path"
     }
   ],
   "coverage": [
@@ -433,6 +439,48 @@
         {
           "backend": "server",
           "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-climb-geometry",
+      "kind": "mechanic",
+      "subject": "One-block ascent, healthy player rejection, obstacle/headroom and support checks",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-CLIMB: full block ascent, arm selection, duration, headroom and interrupted path"
+        }
+      ]
+    },
+    {
+      "id": "tr-climb-arms",
+      "kind": "mechanic",
+      "subject": "Two-arm and exact left/right selection, fracture and shock rejection, duration",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-CLIMB: full block ascent, arm selection, duration, headroom and interrupted path"
+        }
+      ]
+    },
+    {
+      "id": "tr-climb-cancel",
+      "kind": "mechanic",
+      "subject": "Mid-ascent obstruction/support loss interrupts without teleporting through collision",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-CLIMB: full block ascent, arm selection, duration, headroom and interrupted path"
         }
       ]
     }

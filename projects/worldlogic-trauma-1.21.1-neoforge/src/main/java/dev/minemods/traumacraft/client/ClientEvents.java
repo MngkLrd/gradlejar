@@ -19,6 +19,7 @@ public final class ClientEvents {
         modBus.addListener(ClientEvents::registerLayers);
         NeoForge.EVENT_BUS.addListener(ClientEvents::opening);
         NeoForge.EVENT_BUS.addListener(ClientEvents::logout);
+        NeoForge.EVENT_BUS.addListener(ClientClimbState::input);
     }
     private static void registerScreens(RegisterMenuScreensEvent e){
         e.register(ModMenus.MEDICAL_POUCH.get(),MedicalPouchScreen::new);
@@ -36,6 +37,6 @@ public final class ClientEvents {
         }
     }
     private static void logout(ClientPlayerNetworkEvent.LoggingOut e){
-        ThermalScreenEffects.reset();TraumaticScreenEffects.reset();ClientGaitState.clear();ClientBodyState.clear();ClientTreatmentState.accept(new TreatmentProgressPacket(0,0));
+        ThermalScreenEffects.reset();TraumaticScreenEffects.reset();ClientGaitState.clear();ClientClimbState.clear();ClientBodyState.clear();ClientTreatmentState.accept(new TreatmentProgressPacket(0,0));
     }
 }

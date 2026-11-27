@@ -98,7 +98,15 @@ public final class HudStatusLayoutCheck {
         require(InjuryVisualProfile.dark(1,0,true)>0,"concussion visual");
         float fade=1;for(int i=0;i<100;i++)fade=InjuryVisualProfile.ease(fade,0,.05f);
         require(fade==0,"effects fully fade");
-        System.out.println("PASS: gait asymmetry and injury overlay profiles");
+        for(int mask=1;mask<=3;mask++)for(float f:new float[]{0,.1f,.3f,.6f,.9f,1}){
+            require(Float.isFinite(ClimbVisual.arm(mask,true,f))&&Float.isFinite(ClimbVisual.arm(mask,false,f)),"finite climb pose");
+            if(f>.2f&&f<.8f){
+                require((ClimbVisual.arm(mask,true,f)<0)==ClimbVisual.uses(mask,true),"left support pose matches mask");
+                require((ClimbVisual.arm(mask,false,f)<0)==ClimbVisual.uses(mask,false),"right support pose matches mask");
+            }
+        }
+        require(ClimbVisual.grip(0)==0&&ClimbVisual.grip(1)==0,"climb pose transitions");
+        System.out.println("PASS: gait asymmetry and injury overlay profiles; independent climb arms");
         System.out.println("PASS: seven independent zones, centered lower inventory, 96 HUD layouts, injury palette and status bounds");
         System.out.println("PASS: 16 combinations, "+transitions+" removal transitions, timer boundaries and visibility");
     }

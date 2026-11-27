@@ -1,5 +1,6 @@
 package dev.minemods.traumacraft.event;
 import dev.minemods.traumacraft.combat.HitLocation;
+import dev.minemods.traumacraft.climb.ClimbManager;
 import dev.minemods.traumacraft.health.*;
 import dev.minemods.traumacraft.integration.WorldLogicBridge;
 import dev.minemods.traumacraft.integration.ThermalBridge;
@@ -25,6 +26,7 @@ public final class TraumaEvents {
         ModNetwork.progress(p,0,0);
     }
     public static void resetAfterDeath(ServerPlayer p) {
+        ClimbManager.cancel(p);
         TreatmentManager.forget(p);
         WorldLogicBridge.clearLegacyInjuries(p);
         BodyStates.resetForNewLife(p);
@@ -32,7 +34,7 @@ public final class TraumaEvents {
         ModNetwork.progress(p,0,0);
     }
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent e) {
-        if(e.getEntity() instanceof ServerPlayer p){BodyStates.flush(p);BodyStates.forget(p);TreatmentManager.forget(p);}
+        if(e.getEntity() instanceof ServerPlayer p){ClimbManager.cancel(p);ClimbManager.forget(p);BodyStates.flush(p);BodyStates.forget(p);TreatmentManager.forget(p);}
     }
     public static void onClone(PlayerEvent.Clone e) {
         BodyStates.copy(e.getOriginal(),e.getEntity(),e.isWasDeath());
@@ -40,6 +42,7 @@ public final class TraumaEvents {
             WorldLogicBridge.clearLegacyInjuries(p);
             TreatmentManager.forget(p);
         }
+        if(e.getOriginal() instanceof ServerPlayer old)ClimbManager.forget(old);
         BodyStates.forget(e.getOriginal());
     }
     public static void onRespawn(PlayerEvent.PlayerRespawnEvent e) {
@@ -50,12 +53,13 @@ public final class TraumaEvents {
         }
     }
     public static void onDimension(PlayerEvent.PlayerChangedDimensionEvent e) {
-        if(e.getEntity() instanceof ServerPlayer p){TreatmentManager.cancel(p);ModNetwork.sync(p);}
+        if(e.getEntity() instanceof ServerPlayer p){ClimbManager.cancel(p);TreatmentManager.cancel(p);ModNetwork.sync(p);}
     }
     public static void onDamage(LivingDamageEvent.Pre e) {
         if(INTERNAL.get() || !(e.getEntity() instanceof ServerPlayer p) || !WorldLogicBridge.active(p)) return;
         float amount=e.getNewDamage();
         if(amount<=0) return;
+        ClimbManager.cancel(p);
         TreatmentManager.cancel(p);
         if(!WorldLogicBridge.injuryEnabled(p)) return;
         BodyState b=BodyStates.get(p);
@@ -106,13 +110,14 @@ public final class TraumaEvents {
     public static void onPlayerTick(EntityTickEvent.Post e) {
         if(!(e.getEntity() instanceof ServerPlayer p)) return;
         FunctionEvents.update(p);
+        ClimbManager.tick(p);
         if(!WorldLogicBridge.active(p)){TreatmentManager.tick(p);if(p.tickCount%40==0)ModNetwork.syncGait(p);return;}
         BodyState b=BodyStates.get(p);
         if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
         TreatmentManager.tick(p);
         if(p.tickCount%20!=0) return;
         b.tickMedicalEffects();
-        if(WorldLogicBridge.resting(p)) {
+        if(!ClimbManager.active(p)&&WorldLogicBridge.resting(p)) {
             var thermal=ThermalBridge.condition(p);
             ThermalBridge.recover(b,thermal,p.tickCount%100==0);
             if(!b.hasBleeding())b.recoverBlood(6f*thermal.recoveryFactor);
@@ -126,6 +131,7 @@ public final class TraumaEvents {
     }
     /** No grace period for a destroyed brain or chest. Direct kill bypasses armor and totems. */
     private static void fatalCollapse(ServerPlayer p){
+        ClimbManager.cancel(p);
         TreatmentManager.cancel(p);
         BodyStates.flush(p);
         try{

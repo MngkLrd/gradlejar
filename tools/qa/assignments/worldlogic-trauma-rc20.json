@@ -898,5 +898,18 @@
     "client": "NOT_RUN",
     "network": "NOT_RUN",
     "combined_rc28_thermal": "NOT_RUN"
+  },
+  "rc14": {
+    "version": "0.5.2-rc14",
+    "input": "forward+jump near one-block full ledge",
+    "server": "swept AABB checks and server-owned arm mask/tickwise movement",
+    "animation": "HumanoidModel and first-person ItemInHandRenderer; actual graphical contact and network interpolation NOT_RUN",
+    "protocol": 8,
+    "checks": "traumaqa climb",
+    "limitations": [
+      "no half-blocks, two-block climbing or general parkour",
+      "tickwise server correction needs network-player QA",
+      "core RC22 pinned"
+    ]
   }
 }

@@ -11,7 +11,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 public final class ModNetwork {
     private ModNetwork(){}
     public static void register(RegisterPayloadHandlersEvent event){
-        var registrar=event.registrar("7");
+        var registrar=event.registrar("8");
         registrar.playToClient(SyncBodyStatePacket.TYPE,SyncBodyStatePacket.STREAM_CODEC,(m,c)->{
             if(FMLEnvironment.dist==Dist.CLIENT)ClientBodyState.accept(m);
         });
@@ -21,11 +21,18 @@ public final class ModNetwork {
         registrar.playToClient(GaitPacket.TYPE,GaitPacket.CODEC,(m,c)->{
             if(FMLEnvironment.dist==Dist.CLIENT)dev.minemods.traumacraft.client.ClientGaitState.accept(m);
         });
+        registrar.playToServer(ClimbRequestPacket.TYPE,ClimbRequestPacket.CODEC,ClimbRequestPacket::handle);
+        registrar.playToClient(ClimbPosePacket.TYPE,ClimbPosePacket.CODEC,(m,c)->{
+            if(FMLEnvironment.dist==Dist.CLIENT)dev.minemods.traumacraft.client.ClientClimbState.accept(m);
+        });
         registrar.playToServer(ApplyMedicalPacket.TYPE,ApplyMedicalPacket.STREAM_CODEC,ApplyMedicalPacket::handle);
     }
     public static void request(ApplyMedicalPacket p){PacketDistributor.sendToServer(p);}
     public static void progress(ServerPlayer p,int duration,int elapsed){
         if(!(p instanceof FakePlayer)&&p.connection!=null)PacketDistributor.sendToPlayer(p,new TreatmentProgressPacket(duration,elapsed));
+    }
+    public static void climb(ServerPlayer p,int arms,int elapsed,int duration){
+        if(!(p instanceof FakePlayer)&&p.connection!=null)PacketDistributor.sendToPlayersTrackingEntityAndSelf(p,new ClimbPosePacket(p.getUUID(),arms,elapsed,duration));
     }
     public static void syncGait(ServerPlayer p){
         if(p instanceof FakePlayer||p.connection==null)return;

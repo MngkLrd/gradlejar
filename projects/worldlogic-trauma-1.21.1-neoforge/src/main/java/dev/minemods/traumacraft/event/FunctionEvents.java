@@ -1,6 +1,7 @@
 package dev.minemods.traumacraft.event;
 
 import dev.minemods.traumacraft.health.*;
+import dev.minemods.traumacraft.climb.ClimbManager;
 import dev.minemods.traumacraft.integration.WorldLogicBridge;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,10 +32,10 @@ public final class FunctionEvents {
         if(active&&!PhysicalFunction.canSprint(BodyStates.get(p)))p.setSprinting(false);
     }
     public static void attack(AttackEntityEvent e){
-        if(e.getEntity() instanceof ServerPlayer p&&WorldLogicBridge.functionsEnabled(p)&&WorldLogicBridge.strikeFactor(p)<=0)e.setCanceled(true);
+        if(e.getEntity() instanceof ServerPlayer p&&(ClimbManager.active(p)||WorldLogicBridge.functionsEnabled(p)&&WorldLogicBridge.strikeFactor(p)<=0))e.setCanceled(true);
     }
     public static void breakBlock(BlockEvent.BreakEvent e){
-        if(e.getPlayer() instanceof ServerPlayer p&&WorldLogicBridge.functionsEnabled(p)&&WorldLogicBridge.miningFactor(p)<=0)e.setCanceled(true);
+        if(e.getPlayer() instanceof ServerPlayer p&&(ClimbManager.active(p)||WorldLogicBridge.functionsEnabled(p)&&WorldLogicBridge.miningFactor(p)<=0))e.setCanceled(true);
     }
     public static void jump(LivingEvent.LivingJumpEvent e){
         if(e.getEntity() instanceof ServerPlayer p&&WorldLogicBridge.functionsEnabled(p)){
@@ -44,9 +45,9 @@ public final class FunctionEvents {
     }
     public static boolean twoHanded(ItemStack stack){return stack.is(Items.BOW)||stack.is(Items.CROSSBOW);}
     public static void rightClickItem(PlayerInteractEvent.RightClickItem e){
-        if(e.getEntity() instanceof ServerPlayer p&&WorldLogicBridge.functionsEnabled(p)&&!PhysicalFunction.canUse(BodyStates.get(p),WorldLogicBridge.armForHand(p,e.getHand()),twoHanded(e.getItemStack())))e.setCanceled(true);
+        if(e.getEntity() instanceof ServerPlayer p&&(ClimbManager.active(p)||WorldLogicBridge.functionsEnabled(p)&&!PhysicalFunction.canUse(BodyStates.get(p),WorldLogicBridge.armForHand(p,e.getHand()),twoHanded(e.getItemStack()))))e.setCanceled(true);
     }
     public static void rightClickBlock(PlayerInteractEvent.RightClickBlock e){
-        if(e.getEntity() instanceof ServerPlayer p&&WorldLogicBridge.functionsEnabled(p)&&!PhysicalFunction.canUse(BodyStates.get(p),WorldLogicBridge.armForHand(p,e.getHand()),twoHanded(e.getItemStack())))e.setCanceled(true);
+        if(e.getEntity() instanceof ServerPlayer p&&(ClimbManager.active(p)||WorldLogicBridge.functionsEnabled(p)&&!PhysicalFunction.canUse(BodyStates.get(p),WorldLogicBridge.armForHand(p,e.getHand()),twoHanded(e.getItemStack()))))e.setCanceled(true);
     }
 }
