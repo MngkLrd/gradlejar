@@ -46,6 +46,7 @@ public final class ClimbChecks {
             require(WorldLogicBridge.functionsEnabled(p),"injury rule fixture");
             require(ClimbManager.start(p),"start two-arm ascent");
             require(!ClimbManager.start(p),"duplicate start rejected");
+            require(ClimbManager.blocksMove(p,start.add(30,0,0)),"server rejects arbitrary client coordinates during ascent");
             double previousY=p.getY();
             for(int i=0;i<both;i++){
                 ClimbManager.tick(p);
@@ -54,12 +55,14 @@ public final class ClimbChecks {
                 previousY=p.getY();
             }
             require(!ClimbManager.active(p)&&p.position().distanceToSqr(new Vec3(12.5,102.015,12.5))<.001,"reached top");
+            require(!ClimbManager.blocksMove(p,p.position()),"ordinary movement resumes after ascent");
             p.setPos(start.x,start.y,start.z);p.setOnGround(true);
             b.setFractured(BodyPart.RIGHT_ARM,true);
             require(ClimbManager.start(p),"one-arm ascent");
             ClimbManager.tick(p);
             l.setBlockAndUpdate(ledge,Blocks.AIR.defaultBlockState());ClimbManager.tick(p);
             require(!ClimbManager.active(p)&&p.getX()<12,"lost ledge stops ascent");
+            require(!ClimbManager.blocksMove(p,p.position()),"interrupted climb releases movement guard");
             l.setBlockAndUpdate(ledge,Blocks.STONE.defaultBlockState());
             p.setPos(start.x,start.y,start.z);p.setOnGround(true);
             require(ClimbManager.start(p),"restart after interruption");

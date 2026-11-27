@@ -12,9 +12,7 @@ public final class ClimbGeometry {
     private ClimbGeometry(){}
     public record Route(BlockPos ledge,Direction facing,Vec3 start,Vec3 end,AABB base){
         public Vec3 position(double progress){
-            double rise=ClimbRules.ease((progress-.10)/.52);
-            double forward=ClimbRules.ease((progress-.62)/.38);
-            return new Vec3(start.x+(end.x-start.x)*forward,start.y+(end.y-start.y)*rise,start.z+(end.z-start.z)*forward);
+            return ClimbGeometry.position(start,end,progress);
         }
         public AABB box(Vec3 point){return base.move(point.subtract(start));}
         public boolean clear(Player p,Vec3 previous,Vec3 next){
@@ -25,6 +23,10 @@ public final class ClimbGeometry {
             return level.hasChunkAt(ledge)&&level.getWorldBorder().isWithinBounds(ledge)
                 &&Block.isShapeFullBlock(level.getBlockState(ledge).getCollisionShape(level,ledge));
         }
+    }
+    public static Vec3 position(Vec3 start,Vec3 end,double progress){
+        double rise=ClimbRules.rise(progress),forward=ClimbRules.forward(progress);
+        return new Vec3(start.x+(end.x-start.x)*forward,start.y+(end.y-start.y)*rise,start.z+(end.z-start.z)*forward);
     }
     public static Route find(Player p){
         if(!p.onGround()||p.isPassenger()||p.isSwimming()||p.isInWater()||p.isFallFlying()||p.isCrouching())return null;

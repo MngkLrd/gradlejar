@@ -106,7 +106,18 @@ public final class HudStatusLayoutCheck {
             }
         }
         require(ClimbVisual.grip(0)==0&&ClimbVisual.grip(1)==0,"climb pose transitions");
-        System.out.println("PASS: gait asymmetry and injury overlay profiles; independent climb arms");
+        for(int duration:new int[]{26,46,80}){
+            float current=0;double y=0,x=0;
+            for(int tick=1;tick<=duration+20;tick++){
+                float next=dev.minemods.traumacraft.climb.ClimbRules.advance(current,Math.min(duration,tick+(tick%5==0?-4:tick%3==0?3:0)),duration);
+                require(next>=current&&next-current<=1.251f,"phase monotonic and correction bounded under jitter");
+                double f=next/duration,ny=dev.minemods.traumacraft.climb.ClimbRules.rise(f),nx=dev.minemods.traumacraft.climb.ClimbRules.forward(f);
+                require(ny+1e-7>=y&&nx+1e-7>=x&&ny-y<.17&&nx-x<.21,"bounded smooth path steps");
+                current=next;y=ny;x=nx;
+            }
+            require(current==duration&&y==1&&x==1,"smooth timeline reaches endpoint");
+        }
+        System.out.println("PASS: gait asymmetry, independent climb arms, monotonic phase under packet jitter");
         System.out.println("PASS: seven independent zones, centered lower inventory, 96 HUD layouts, injury palette and status bounds");
         System.out.println("PASS: 16 combinations, "+transitions+" removal transitions, timer boundaries and visibility");
     }

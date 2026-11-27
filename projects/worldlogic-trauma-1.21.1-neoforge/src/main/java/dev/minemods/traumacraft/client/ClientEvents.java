@@ -20,6 +20,7 @@ public final class ClientEvents {
         NeoForge.EVENT_BUS.addListener(ClientEvents::opening);
         NeoForge.EVENT_BUS.addListener(ClientEvents::logout);
         NeoForge.EVENT_BUS.addListener(ClientClimbState::input);
+        NeoForge.EVENT_BUS.addListener(ClientClimbState::tick);
     }
     private static void registerScreens(RegisterMenuScreensEvent e){
         e.register(ModMenus.MEDICAL_POUCH.get(),MedicalPouchScreen::new);

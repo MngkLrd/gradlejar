@@ -11,7 +11,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 public final class ModNetwork {
     private ModNetwork(){}
     public static void register(RegisterPayloadHandlersEvent event){
-        var registrar=event.registrar("8");
+        var registrar=event.registrar("9");
         registrar.playToClient(SyncBodyStatePacket.TYPE,SyncBodyStatePacket.STREAM_CODEC,(m,c)->{
             if(FMLEnvironment.dist==Dist.CLIENT)ClientBodyState.accept(m);
         });
@@ -31,8 +31,8 @@ public final class ModNetwork {
     public static void progress(ServerPlayer p,int duration,int elapsed){
         if(!(p instanceof FakePlayer)&&p.connection!=null)PacketDistributor.sendToPlayer(p,new TreatmentProgressPacket(duration,elapsed));
     }
-    public static void climb(ServerPlayer p,int arms,int elapsed,int duration){
-        if(!(p instanceof FakePlayer)&&p.connection!=null)PacketDistributor.sendToPlayersTrackingEntityAndSelf(p,new ClimbPosePacket(p.getUUID(),arms,elapsed,duration));
+    public static void climb(ServerPlayer p,int arms,int elapsed,int duration,net.minecraft.world.phys.Vec3 start,net.minecraft.world.phys.Vec3 end){
+        if(!(p instanceof FakePlayer)&&p.connection!=null)PacketDistributor.sendToPlayersTrackingEntityAndSelf(p,new ClimbPosePacket(p.getUUID(),arms,elapsed,duration,start,end));
     }
     public static void syncGait(ServerPlayer p){
         if(p instanceof FakePlayer||p.connection==null)return;

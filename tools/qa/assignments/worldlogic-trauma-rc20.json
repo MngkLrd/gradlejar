@@ -911,5 +911,23 @@
       "tickwise server correction needs network-player QA",
       "core RC22 pinned"
     ]
+  },
+  "rc15": {
+    "version": "0.5.3-rc15",
+    "reported": "camera jerks during mantle",
+    "cause": "RC14 connection.teleport per tick resets client position and teleport acknowledgement; walking bob and phase resets compound jitter",
+    "changes": [
+      "shared route and monotonic bounded timeline",
+      "server movement packet guard; no per-tick teleport",
+      "client normal position interpolation; climb-only walking bob suppression",
+      "final arrival guard with bounded expiry"
+    ],
+    "evidence": [
+      "traumaqa climb movement ownership fixture",
+      "checkHudStatusLayout monotonic synthetic packet jitter"
+    ],
+    "graphical_client": "NOT_RUN",
+    "network_player": "NOT_RUN",
+    "protocol": 9
   }
 }

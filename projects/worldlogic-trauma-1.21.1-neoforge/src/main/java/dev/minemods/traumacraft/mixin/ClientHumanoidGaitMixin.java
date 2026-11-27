@@ -29,7 +29,7 @@ public abstract class ClientHumanoidGaitMixin {
             if(pose!=null){
                 float f=pose.progress();int mask=pose.arms();
                 leftArm.xRot=ClimbVisual.arm(mask,true,f);rightArm.xRot=ClimbVisual.arm(mask,false,f);
-                leftArm.yRot=0;rightArm.yRot=0;leftArm.zRot=ClimbVisual.uses(mask,true)?-.07f:.12f;rightArm.zRot=ClimbVisual.uses(mask,false)?.07f:-.12f;
+                leftArm.yRot=0;rightArm.yRot=0;leftArm.zRot=(ClimbVisual.uses(mask,true)?-.07f:.12f)*ClimbVisual.grip(f);rightArm.zRot=(ClimbVisual.uses(mask,false)?.07f:-.12f)*ClimbVisual.grip(f);
                 body.xRot=ClimbVisual.lean(f);body.zRot=(mask==1?-.10f:mask==2?.10f:0)*ClimbVisual.grip(f);
                 leftLeg.xRot=ClimbVisual.leg(f,true);rightLeg.xRot=ClimbVisual.leg(f,false);
                 return;

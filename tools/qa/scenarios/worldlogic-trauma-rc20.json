@@ -483,6 +483,20 @@
           "name": "TR-CLIMB: full block ascent, arm selection, duration, headroom and interrupted path"
         }
       ]
+    },
+    {
+      "id": "tr-climb-movement-guard",
+      "kind": "mechanic",
+      "subject": "Reject client positions only during active climb and release on normal completion or abort",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-CLIMB: full block ascent, arm selection, duration, headroom and interrupted path"
+        }
+      ]
     }
   ]
 }
