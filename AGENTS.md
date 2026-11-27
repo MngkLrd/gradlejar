@@ -2,6 +2,18 @@
 
 Applies to every agent and contributor using MngkLrd/gradlejar. The repository is shared: inspect the current main head and never force-push, overwrite unrelated changes, or publish untested binaries as verified.
 
+## Documentation map — current main is canonical
+
+Read this contract for every task. Follow the relevant existing document below; do not invent filenames, assume a pending PR is already in main, or use stale instructions as authority. Resolve contradictions in favor of the current contract and actual verified tooling; report missing capabilities rather than claiming them.
+
+| Task | Required reference |
+| --- | --- |
+| Build, release, compatibility | [QA guide](docs/QA-V2.md) and [compatibility registry](tools/qa/compatibility.json) |
+| Gameplay and regression assignment | [QA assignment](docs/QA-ASSIGNMENT-TEMPLATE.md) |
+| Network player actions | [Bot actions](docs/BOT-ACTIONS.md) |
+| Recipes | [Recipe QA](docs/RECIPE-QA.md) |
+| Textures, models, animations, HUD and GUI | [Visual QA and art standard](docs/VISUAL-QA.md), including the original Blockbench guide linked there |
+
 ## Non-negotiable contract and delivery verification
 
 This is a binding development contract, not optional advice, a backlog, or a checklist to read only after the user notices a defect. It applies to every new task, continuation, hotfix, update, port, asset change, and release performed with this repository, including existing chats and agents working on older branches. The user does not need to repeat these rules.
@@ -27,15 +39,13 @@ Mandatory for agents working with this repository: read the current AGENTS.md fr
 
 ## Minecraft visual style — mandatory when creating or changing assets
 
-The sole art-style authority for vanilla-style mods is the [Blockbench Minecraft Style Guide](https://blockbench.net/wiki/guides/minecraft-style-guide/). Read it before creating assets. Apply its principles, not an arbitrary procedural texture template. User-requested intentional non-vanilla styles are explicit exceptions only.
+Read the original [Blockbench Minecraft Style Guide](https://blockbench.net/wiki/guides/minecraft-style-guide/) and the repository's [Visual QA and art standard](docs/VISUAL-QA.md) before creating or modifying visual assets. Blockbench is our primary aesthetic reference for vanilla-style art; verified Mojang artist guidance supplements it, and version-specific Java Edition/loader documentation governs technical implementation. The user may explicitly authorize a different style.
 
-- Model: recognizable simplified silhouette; minimal purposeful elements; use planes and transparency for small details where appropriate; avoid unnecessary stair-step geometry, model/texture mixels and stretched UVs; preserve consistent texel scale, proportions and gameplay readability.
-- Texture: deliberate connected clusters that describe shape and material, balanced hue/saturation/value steps, a restrained palette, no artificial smoothing, avoid banding, pillow/pancake shading, unnecessary dithering, noise and accidental jaggies. Do not copy one generic pattern across unrelated materials. A valid PNG or a fixed number of colors is not proof of art quality.
-- Items: design at the vanilla 16x16 grid for ordinary drawn icons; establish silhouette, darker outline, midtone, highlight and shadow (top-left light), then refine the palette and material. Shade the outline; examine at native size. Use larger textures only when appropriate to the model/asset type and keep consistent texel density.
-- Blocks: review a 3x3 tiled surface before detailed shading and again at the end; remove unintended repetition artifacts. Entities: plan UVs and shading with top/front generally lighter than bottom/back; design texture and geometry together. Distinguish genuine transparent materials, animation atlases and overlays from accidental AA.
-- Use actual vanilla textures of comparable material/asset type as references, not a universal color or cluster quota. When the shared Visual QA tool is available, run it on new or changed assets and inspect its report and native-size/tiling previews; review warnings and correct real style defects. Use at most one automatic redraw pass by default, then review the result and continue with a targeted correction only if a material issue remains. Do not regenerate good art merely to optimize a numeric score.
-- Review items in hand/inventory, blocks in-world, entities and animation in an actual client where supported and relevant. A PNG preview, protocol player or server test is not a rendered gameplay check. If client visual evidence is unavailable, state that briefly; do not claim visual certification. Keep normal asset checks fast: no full client startup for each texture, no mutation/stress tests for cosmetic changes, no mandatory manual user QA. Structural errors block a verified release; style heuristics are advisory and require artistic judgment.
-- Report material visual fixes and outstanding issues concisely. Use existing tools; do not redesign the pipeline as part of routine mod work.
+- Start with a comparable vanilla reference and coherent material palette; recognizable silhouette, restrained detail, intentional pixel clusters and consistent texel scale take priority over numeric scores. Use the actual target game and asset category as the reference when possible; do not force a 16x16 canvas onto UV atlases, GUI, or all entity textures.
+- Apply the detailed item, block, entity, vegetation, animation and HUD/GUI review procedure in Visual QA. For substantial item families, follow its production sequence: open comparable vanilla shape/material references, sketch silhouette, develop material-specific neighboring clusters and light/shadow, inspect an actual same-scale comparison before generating variants. Do not accept placeholder art or use color counts as a substitute for review. Review native size, block tiling, model geometry and UVs, then actual client contexts where relevant and supported.
+- Run the fast existing checks on changed assets, inspect outputs and resolve genuine structural failures and material style problems. One targeted redraw by default; do not regenerate good art to optimize advisory metrics. Inspect every new/changed asset even when no lint warning exists; use the all-asset art-review inventory and actual comparable vanilla reference. Distinguish structural validation, aesthetic review and real client rendering in the evidence. A green lint job or low warning count is never an aesthetic PASS. Apply the first-party Mojang developer guidance linked in Visual QA. A generated concept image, PNG preview, fake player, protocol bot or server assertion is not client rendering evidence.
+- **Mandatory texture review lock:** follow the category-specific acceptance rules in Visual QA and record the actual reviewed PNG SHA-256, named vanilla references and criterion observations in the project's `art-review.json`. A new or changed tracked PNG without matching positive evidence is blocked before Gradle in Build Hub. Never fabricate review evidence, bypass the lock or deliver a rejected texture as finished. A known art defect requires targeted correction even after the usual redraw budget. The lock validates evidence, not aesthetic truth.
+- Keep checks proportionate. Group client checks by changed feature; no full client startup per texture, no stress or mutation testing for cosmetic changes, no mandatory manual user QA during ordinary development. If a necessary graphical check cannot run, report NOT_RUN or UNSUPPORTED with the reason. Existing release and manual client approval policy remains unchanged.
 
 ## Development scope — product first, ports at the end
 
