@@ -3,7 +3,7 @@ loaderVersion="[1,)"
 license="All Rights Reserved"
 [[mods]]
 modId="hydration"
-version="0.1.0"
+version="0.2.0"
 displayName="WorldLogic: Hydration"
 description="Water balance and source-aware drinking for World Logic."
 [[dependencies.hydration]]
@@ -22,5 +22,18 @@ side="BOTH"
 modId="worldlogic"
 type="required"
 versionRange="[1.0.0-rc28,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.hydration]]
+modId="worldlogic_thermal"
+type="optional"
+versionRange="[0.3.0-rc1,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.hydration]]
+modId="worldlogic_trauma"
+type="optional"
+versionRange="[0,)"
 ordering="AFTER"
 side="BOTH"

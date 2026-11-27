@@ -38,7 +38,7 @@ import java.util.WeakHashMap;
 
 @Mod("hydration")
 public final class Hydration {
- private static final String WATER="hydration_water", EXPOSURE="hydration_exposure", PROFILE="hydration_profile";
+ private static final String WATER="hydration_water", EXPOSURE="hydration_exposure", PROFILE="hydration_profile", RESERVE="hydration_reserve", PENDING="hydration_pending";
  private static final WeakHashMap<ServerPlayer,Vec3> LAST_POS=new WeakHashMap<>();
  private static final WeakHashMap<ServerPlayer,Long> LAST_SIP=new WeakHashMap<>();
  public Hydration(IEventBus modBus){
@@ -59,11 +59,12 @@ public final class Hydration {
  public static boolean active(ServerPlayer p){return p.isAlive()&&!p.isCreative()&&!p.isSpectator()&&!(p instanceof FakePlayer);}
  public static WaterBalance.State state(ServerPlayer p){
   var n=p.getPersistentData();
-  return new WaterBalance.State(n.contains(WATER)?n.getDouble(WATER):100,n.getDouble(EXPOSURE));
+  return new WaterBalance.State(n.contains(WATER)?n.getDouble(WATER):100,n.getDouble(EXPOSURE),n.getDouble(RESERVE),n.getDouble(PENDING));
  }
  private static void store(ServerPlayer p,WaterBalance.State s){
   p.getPersistentData().putDouble(WATER,s.water());
   p.getPersistentData().putDouble(EXPOSURE,s.exposure());
+  p.getPersistentData().putDouble(RESERVE,s.reserve());p.getPersistentData().putDouble(PENDING,s.pending());
  }
  public static void applyDrink(ServerPlayer p,WaterBalance.Quality q,double ml,double risk){
   if(active(p)) {store(p,WaterBalance.drink(state(p),q,ml,risk));HydrationSync.send(p);}
@@ -80,7 +81,8 @@ public final class Hydration {
   double rh=at.map(WorldLogicApi.Atmosphere::relativeHumidityPercent).orElse(50.0);
   double solar=env.map(WorldLogicApi.Environment::solarExposure).orElse(0.0);
   boolean covered=env.map(WorldLogicApi.Environment::covered).orElse(true);
-  var s=WaterBalance.tick(state(p),WaterBalance.loss(c,rh,moving,p.isSprinting()&&moving,p.isSwimming()&&moving,covered,solar));
+  var body=PhysiologyBridge.sample(p);
+  var s=WaterBalance.tick(state(p),WaterBalance.loss(c,rh,moving,p.isSprinting()&&moving,p.isSwimming()&&moving,covered,solar,body.bodyC(),body.bleeding()));
   store(p,s);
   if(p.tickCount%100==0&&s.water()<25)WorldLogicApi.addExertion(p,s.water()<10?2.0:.7);
   if(p.tickCount%200==0&&s.water()<=0)p.hurt(p.damageSources().dryOut(),1f);
@@ -93,7 +95,7 @@ public final class Hydration {
    ClipContext.Block.OUTLINE,ClipContext.Fluid.ANY,p));
   if(hit.getType()!=HitResult.Type.BLOCK)return null;
   BlockPos pos=hit.getBlockPos();
-  if(!p.serverLevel().hasChunkAt(pos)||p.serverLevel().getFluidState(pos).isEmpty())return null;
+  if(!p.serverLevel().hasChunkAt(pos)||!p.serverLevel().getFluidState(pos).is(net.minecraft.tags.FluidTags.WATER))return null;
   var profile=WorldLogicApi.waterProfile(p.serverLevel(),pos);
   return profile.quality()==WorldLogicApi.WaterQuality.NOT_WATER?null:profile;
  }
@@ -103,7 +105,7 @@ public final class Hydration {
  private static void fill(PlayerInteractEvent.RightClickItem e){
   if(!(e.getEntity() instanceof ServerPlayer p)||!e.getItemStack().is(Items.GLASS_BOTTLE)||p.isSpectator())return;
   var profile=targeted(p);
-  if(profile==null)return;
+  if(profile==null||!profile.sourceBlock())return;
   ItemStack bottle=PotionContents.createItemStack(Items.POTION,Potions.WATER);
   CustomData.update(DataComponents.CUSTOM_DATA,bottle,tag->{
    CompoundTag data=new CompoundTag();
@@ -144,7 +146,7 @@ public final class Hydration {
   long previous=LAST_SIP.getOrDefault(p,now-30);
   if(now>=previous&&now-previous<30)return;
   LAST_SIP.put(p,now);
-  if(state(p).water()>=100)return;
+  if(!WaterBalance.canDrink(state(p)))return;
   var profile=targeted(p);
   if(profile==null)return;
   applyDrink(p,quality(profile),125,profile.contaminationRisk());
@@ -167,7 +169,7 @@ public final class Hydration {
   if(e.getEntity() instanceof ServerPlayer p){LAST_POS.remove(p);LAST_SIP.remove(p);HydrationSync.forget(p);}
  }
  private static String status(ServerPlayer p){
-  var s=state(p);return String.format(Locale.ROOT,"Hydration water=%d exposure=%d",(int)Math.round(s.water()),(int)Math.round(s.exposure()));
+  var s=state(p);return String.format(Locale.ROOT,"Hydration water=%d exposure=%d reserve=%d pending=%d",(int)Math.round(s.water()),(int)Math.round(s.exposure()),(int)Math.round(s.reserve()),(int)Math.round(s.pending()));
  }
  private static void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("hydration")

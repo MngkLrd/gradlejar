@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Hydration initial model and core integration",
+  "name": "Hydration 0.2.0 server model and source regression",
   "coverage": [
     {
       "id": "water-balance",
@@ -29,43 +29,35 @@
       ]
     },
     {
-      "id": "drinking",
+      "id": "absorption",
       "kind": "mechanic",
-      "subject": "Actual bottle consumption with fresh, salt and unknown profiles",
+      "subject": "Gradual absorption and bounded reserve",
       "checks": [
         {
-          "backend": "player",
-          "name": "Fresh bottle restores thirst"
-        },
-        {
-          "backend": "player",
-          "name": "Salt bottle reduces hydration"
-        },
-        {
-          "backend": "player",
-          "name": "Unknown bottle adds exposure"
+          "backend": "server",
+          "name": "Model rules"
         }
       ]
     },
     {
-      "id": "food-moisture",
+      "id": "physiology",
       "kind": "mechanic",
-      "subject": "Vanilla melon consumption",
+      "subject": "Body temperature replaces environmental heat, active bleeding adds bounded loss",
       "checks": [
         {
-          "backend": "player",
-          "name": "Melon restores hydration"
+          "backend": "server",
+          "name": "Model rules"
         }
       ]
     },
     {
-      "id": "creative-immunity",
+      "id": "water-transfer-model",
       "kind": "mechanic",
-      "subject": "Creative mode water balance unchanged",
+      "subject": "Capacity and volume/salt/risk conservation; conservative quality",
       "checks": [
         {
-          "backend": "player",
-          "name": "Creative does not lose water"
+          "backend": "server",
+          "name": "Model rules"
         }
       ]
     }

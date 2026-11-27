@@ -1,0 +1,88 @@
+{
+  "target": "neoforge-mc1.21.1",
+  "release_blocked": true,
+  "unexecuted": [
+    {
+      "id": "drinking",
+      "kind": "mechanic",
+      "subject": "Actual bottle consumption with fresh, salt and unknown profiles",
+      "checks": [
+        {
+          "backend": "player",
+          "name": "Fresh bottle restores thirst"
+        },
+        {
+          "backend": "player",
+          "name": "Salt bottle reduces hydration"
+        },
+        {
+          "backend": "player",
+          "name": "Unknown bottle adds exposure"
+        }
+      ],
+      "status": "UNSUPPORTED",
+      "reason": "Current Mineflayer network backend only supports Fabric. Retained player scenario requires adaptation to delayed absorption."
+    },
+    {
+      "id": "food-moisture",
+      "kind": "mechanic",
+      "subject": "Vanilla melon consumption",
+      "checks": [
+        {
+          "backend": "player",
+          "name": "Melon restores hydration"
+        }
+      ],
+      "status": "UNSUPPORTED",
+      "reason": "Current Mineflayer network backend only supports Fabric. Retained player scenario requires adaptation to delayed absorption."
+    },
+    {
+      "id": "creative-immunity",
+      "kind": "mechanic",
+      "subject": "Creative mode water balance unchanged",
+      "checks": [
+        {
+          "backend": "player",
+          "name": "Creative does not lose water"
+        }
+      ],
+      "status": "UNSUPPORTED",
+      "reason": "Current Mineflayer network backend only supports Fabric. Retained player scenario requires adaptation to delayed absorption."
+    },
+    {
+      "id": "bottle-fill",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "direct-sip",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "save-reload",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "optional-thermal-runtime",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "optional-trauma-runtime",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "hud-graphics",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "water-batch-container-integration",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    }
+  ]
+}

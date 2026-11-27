@@ -25,9 +25,9 @@
       "wait": 0.3
     },
     {
-      "name": "Fresh bottle restores thirst",
+      "name": "Fresh bottle queues absorption",
       "command": "hydration status MineModsQA",
-      "expect": "water=(59|60) exposure=0",
+      "expect": "water=(39|40|41|42) exposure=0 reserve=0 pending=(18|19|20)",
       "assertion": true
     },
     {
@@ -83,7 +83,7 @@
     {
       "name": "Unknown bottle adds exposure",
       "command": "hydration status MineModsQA",
-      "expect": "water=(51|52) exposure=8",
+      "expect": "water=(39|40|41|42) exposure=8 reserve=0 pending=(10|11|12)",
       "assertion": true
     },
     {
@@ -118,7 +118,7 @@
     {
       "name": "Melon restores hydration",
       "command": "hydration status MineModsQA",
-      "expect": "water=(44|45|46) exposure=0",
+      "expect": "water=(39|40|41|42) exposure=0 reserve=0 pending=(3|4|5)",
       "assertion": true
     },
     {
