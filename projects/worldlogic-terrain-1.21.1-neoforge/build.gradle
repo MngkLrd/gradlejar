@@ -6,7 +6,7 @@ version='0.2.0'
 base.archivesName='worldlogicterrain-neoforge-mc1.21.1'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 neoForge {
- version='21.1.262'
+ version=project.neo_version
  runs { client { client() }; server { server(); programArgument '--nogui' } }
  mods { worldlogicterrain { sourceSet(sourceSets.main) } }
 }
