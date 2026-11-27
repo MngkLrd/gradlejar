@@ -1,15 +1,28 @@
 package dev.minemods.worldlogic;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.LongAdder;
 import net.minecraft.world.level.levelgen.DensityFunction.NoiseHolder;
 /** Seeded macro terrain and bounded D8 drainage. No world access or chunk loads. */
 public final class GeoModel {
  static final int STEP=16,CORE=48,HALO=24,N=CORE+HALO*2+1,BLEND=8;
  private final NoiseHolder continental,tectonic,detail,moisture;
- private static final int CACHE_LIMIT=96;
- private final ConcurrentHashMap<Long,Tile> tiles=new ConcurrentHashMap<>();
- private final Object evictionLock=new Object();
+ // Retain hot entries instead of evicting an arbitrary hash bucket. Raw pages
+ // are shared between overlapping drainage tiles, preserving all sample values.
+ private static final int PAGE=24;
+ private final Cache<Long,Tile> tiles=CacheBuilder.newBuilder().maximumSize(192).build();
+ private final Cache<Long,RawPage> rawPages=CacheBuilder.newBuilder().maximumSize(768).build();
+ private final AtomicBoolean checked=new AtomicBoolean();
+ private record RawPage(double[] height,double[] rain){}
+ private static long key(int x,int z){
+  long k=((long)x<<32)^(z&0xffffffffL);
+  k=(k^(k>>>30))*0xbf58476d1ce4e5b9L;
+  k=(k^(k>>>27))*0x94d049bb133111ebL;
+  return k^(k>>>31);
+ }
  private final LongAdder builds=new LongAdder(),buildNanos=new LongAdder();
  private record Sample(int x,int z,Surface surface){}
  private final ThreadLocal<Sample> lastSample=new ThreadLocal<>();
@@ -53,24 +66,66 @@ public final class GeoModel {
   return flow;
  }
  static double incision(double height,double flow){return Math.min(12,Math.max(0,Math.log1p(flow/8)*2.8))*smooth(63,80,height);}
+ private RawPage buildPage(int px,int pz){
+  double[] h=new double[PAGE*PAGE],rain=new double[h.length];
+  for(int z=0;z<PAGE;z++)for(int x=0;x<PAGE;x++){
+   int i=z*PAGE+x;double wx=((long)px*PAGE+x)*STEP,wz=((long)pz*PAGE+z)*STEP;
+   h[i]=raw(wx,wz);rain[i]=h[i]>63?clamp(.65+m(wx,wz)*.5,.15,1.3):0;
+  }
+  return new RawPage(h,rain);
+ }
+ private RawPage page(int px,int pz){
+  try{return rawPages.get(key(px,pz),()->buildPage(px,pz));}
+  catch(ExecutionException e){throw new IllegalStateException("geography raw page",e.getCause());}
+ }
  private Tile build(int tx,int tz){
   double[] h=new double[N*N],rain=new double[h.length];
-  for(int z=0;z<N;z++)for(int x=0;x<N;x++){int i=z*N+x;double wx=((long)tx*CORE+x-HALO)*STEP,wz=((long)tz*CORE+z-HALO)*STEP;h[i]=raw(wx,wz);rain[i]=h[i]>63?clamp(.65+m(wx,wz)*.5,.15,1.3):0;}
+  int x0=tx*CORE-HALO,z0=tz*CORE-HALO;
+  // Copy rectangular intersections of the immutable globally aligned pages.
+  for(int pz=Math.floorDiv(z0,PAGE);pz<=Math.floorDiv(z0+N-1,PAGE);pz++){
+   int fromZ=Math.max(z0,pz*PAGE),toZ=Math.min(z0+N,(pz+1)*PAGE);
+   for(int px=Math.floorDiv(x0,PAGE);px<=Math.floorDiv(x0+N-1,PAGE);px++){
+    int fromX=Math.max(x0,px*PAGE),toX=Math.min(x0+N,(px+1)*PAGE);
+    RawPage p=page(px,pz);
+    for(int z=fromZ;z<toZ;z++){
+     int src=(z-pz*PAGE)*PAGE+fromX-px*PAGE,dst=(z-z0)*N+fromX-x0;
+     System.arraycopy(p.height,src,h,dst,toX-fromX);
+     System.arraycopy(p.rain,src,rain,dst,toX-fromX);
+    }
+   }
+  }
+  if(Boolean.getBoolean("worldlogic.ci")&&checked.compareAndSet(false,true)){
+   verifyRaw(h,rain,x0,z0);
+   // Also exercise a negative-coordinate grid, including page boundaries.
+   verifyPage(-1,-1);
+   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_CACHE_EXACT_PASSED");
+  }
   double[] flow=accumulate(h,rain,N);
   for(int i=0;i<h.length;i++)h[i]-=incision(h[i],flow[i]);
   return new Tile(h,flow);
  }
- private Tile tile(int tx,int tz){
-  long key=((long)tx<<32)^(tz&0xffffffffL);Tile hit=tiles.get(key);if(hit!=null)return hit;
-  // Build different geographic regions concurrently, without holding a global model lock.
-  Tile result=tiles.computeIfAbsent(key,k->{long start=System.nanoTime();Tile made=build(tx,tz);
-   builds.increment();buildNanos.add(System.nanoTime()-start);return made;});
-  // Immutable tiles can safely remain in use after eviction. Eviction never changes terrain.
-  if(tiles.size()>CACHE_LIMIT)synchronized(evictionLock){
-   var it=tiles.entrySet().iterator();
-   while(tiles.size()>CACHE_LIMIT&&it.hasNext()){var entry=it.next();if(entry.getKey()!=key)tiles.remove(entry.getKey(),entry.getValue());}
+ private void verifyRaw(double[] h,double[] rain,int x0,int z0){
+  for(int z=0;z<N;z++)for(int x=0;x<N;x++){
+   int i=z*N+x;double wx=((long)x0+x)*STEP,wz=((long)z0+z)*STEP;
+   double expected=raw(wx,wz),r=expected>63?clamp(.65+m(wx,wz)*.5,.15,1.3):0;
+   if(Double.doubleToLongBits(expected)!=Double.doubleToLongBits(h[i])||Double.doubleToLongBits(r)!=Double.doubleToLongBits(rain[i]))
+    throw new IllegalStateException("Cached terrain diverges from original raw samples");
   }
-  return result;
+ }
+ private void verifyPage(int px,int pz){
+  RawPage p=page(px,pz);
+  for(int z=0;z<PAGE;z++)for(int x=0;x<PAGE;x++){
+   double wx=((long)px*PAGE+x)*STEP,wz=((long)pz*PAGE+z)*STEP;
+   double h=raw(wx,wz),r=h>63?clamp(.65+m(wx,wz)*.5,.15,1.3):0;
+   int i=z*PAGE+x;
+   if(Double.doubleToLongBits(h)!=Double.doubleToLongBits(p.height[i])||Double.doubleToLongBits(r)!=Double.doubleToLongBits(p.rain[i]))
+    throw new IllegalStateException("Negative-coordinate cached samples diverge");
+  }
+ }
+ private Tile tile(int tx,int tz){
+  try{return tiles.get(key(tx,tz),()->{long start=System.nanoTime();Tile made=build(tx,tz);
+   builds.increment();buildNanos.add(System.nanoTime()-start);return made;});}
+  catch(ExecutionException e){throw new IllegalStateException("geography drainage tile",e.getCause());}
  }
  private static double interpolate(double[] a,double x,double z){
   int ix=(int)Math.floor(x),iz=(int)Math.floor(z);double u=x-ix,v=z-iz;

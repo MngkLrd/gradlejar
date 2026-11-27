@@ -49,7 +49,7 @@ def run(root,args,seed):
         try:
             while time.monotonic()-start<100:
                 content=log.read_text(errors="replace")
-                if all(marker in content for marker in ("Done (","WORLDLOGIC_CORE_TESTS_PASSED","WORLDLOGIC_GEOGRAPHY_AGGREGATE","WORLDLOGIC_GENERATED_SPAWN","WORLDLOGIC_SPAWN_DRY")):
+                if all(marker in content for marker in ("Done (","WORLDLOGIC_CORE_TESTS_PASSED","WORLDLOGIC_GEOGRAPHY_AGGREGATE","WORLDLOGIC_GENERATED_SPAWN","WORLDLOGIC_SPAWN_DRY","WORLDLOGIC_CACHE_EXACT_PASSED")):
                     duration=re.search(r"Done \(([0-9.]+)s\)",content)
                     assert duration, "missing startup duration"
                     print("WORLDLOGIC_FRESH_WORLD",root.name,seed,"startup_seconds",duration.group(1),"elapsed",round(time.monotonic()-start,2),flush=True)

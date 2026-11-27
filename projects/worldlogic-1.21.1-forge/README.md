@@ -1,6 +1,6 @@
-# World Logic 1.0.0-rc18
+# World Logic 1.0.0-rc18.1
 Minecraft 1.21.1 / Forge 52.1.0+ / Java 21 / Gradle 8.10.2 / official mappings.
-Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc18.jar.
+Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc18.1.jar.
 Install on both server and clients. No external dependencies. Burning Arrows excluded.
 
 Config: config/worldlogic.properties. Mods > World Logic > Config (local world or main menu).
@@ -58,3 +58,5 @@ RC17: separate Earthlike Geography preset (worldlogic:earthlike), preserving RC1
 RC17 follow-up: CI verifies drainage conservation in two distinct watersheds, finite and continuous regional height samples at tile seams, aggregate land/ocean coverage over four independent seed states, and actual generated spawn chunk heights for the running seed. Reports per-seed lowland count and maximum sampled boundary delta. These checks do not prove global river connectivity or visual quality.
 
 RC18 performance candidate: preserve RC17 geography math and old registry keys; hide RC16 from normal preset tag. Concurrent bounded tile cache and exact last-coordinate reuse; vanilla spawn climate target prefers inland land and accepts valleys. Existing saves retain their spawn. Production-only startup regression on Forge 52.1.0 and 52.1.20, actual dry spawn-column assertion, timeout thread dumps. No claim of graphical client verification or a measured speedup until evidence is available. The project remains on its existing legacy QA profile.
+
+RC18.1: timeout stack shows stronghold biome search and initial spawn waiting on drainage tile builds. Replace arbitrary eviction with bounded locality-aware caches and reuse exact raw terrain/precipitation samples across overlapping tile halos. Preserve original D8 order, coordinates, blend, height and climate equations. CI verifies bitwise raw-sample parity, including negative page coordinates, before accepting a production startup. Existing 100-second timeout retained. Client and speedup not yet verified.
