@@ -102,9 +102,16 @@ final class RoomChecks {
      require(away.airC()<warm.airC()&&away.airC()>=10,"unobserved room passively loses heat");
     }
     case "room_cache" -> {
+     var positionReading=dev.minemods.thermal.api.ThermalApi.roomClimate(l,CENTER).orElseThrow();
+     require(positionReading.volume()==27,"position API works without player in room");
+     require(dev.minemods.thermal.api.ThermalApi.roomClimate(l,CENTER.west()).orElseThrow().equals(positionReading),"position API shares canonical room");
+     require(dev.minemods.thermal.api.ThermalApi.roomClimate(l,new BlockPos(1000000,100,1000000)).isEmpty(),"position API refuses unloaded coordinates");
+     require(dev.minemods.thermal.api.ThermalApi.roomClimate(l,CENTER.above(3)).isEmpty(),"position API refuses outdoors");
      p.moveTo(CENTER.getX()+.5,CENTER.getY(),CENTER.getZ()+.5,0,0);
      require(EnvironmentSampler.sample(p,0).orElseThrow().room().indoor(),"production sampling detects physical room");
-     ThermalEvents.update(p);require(dev.minemods.thermal.api.ThermalApi.roomClimate(p).orElseThrow().volume()==27,"public room API publishes real sampled room");
+     ThermalEvents.update(p);require(dev.minemods.thermal.api.ThermalApi.roomClimate(p).orElseThrow().equals(positionReading),"player API agrees with coordinate API");
+     p.moveTo(CENTER.getX()+.5,CENTER.getY()+3,CENTER.getZ()+.5,0,0);
+     require(dev.minemods.thermal.api.ThermalApi.roomClimate(p).isEmpty(),"player API immediately clears on leaving room");
      RoomHeat.forget(l,CENTER,now);
      int before=RoomHeat.builds(l);var a=RoomHeat.sampleAt(l,CENTER,10,50,.3,now);
      int first=RoomHeat.builds(l);var b=RoomHeat.sampleAt(l,CENTER.west(),30,95,1,now);

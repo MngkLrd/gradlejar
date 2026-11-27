@@ -5,15 +5,24 @@ import java.util.Optional;
 /** Optional addon contract. Read on server thread; no mutation or private core/Trauma access. */
 public final class ThermalApi {
     public static final int API_VERSION=1;
+    /** Additive room contract; legacy API_VERSION remains compatible. */
+    public static final int ROOM_API_VERSION=1;
     public record Status(double bodyC,ThermalCondition.Kind condition,int coldSeconds,int hotSeconds,int sunSeconds){}
     private ThermalApi(){}
-    /** Latest server-sampled indoor climate; empty outdoors, in creative, or when stale. */
+    /** Current modeled room at a loaded coordinate, independent of player presence.
+     * Server thread only; no forced chunk loads. Empty for outdoors, unknown Core weather,
+     * or unsupported/unbounded geometry. Reading advances the shared room simulation at most
+     * once per second (not per API call). Temperature in Celsius, RH percent, ventilation 0..1,
+     * volume in interior blocks. The result is a snapshot, not mutable state.
+     */
+    public static Optional<dev.minemods.thermal.RoomReading> roomClimate(net.minecraft.server.level.ServerLevel level,net.minecraft.core.BlockPos pos){
+        return dev.minemods.thermal.server.RoomHeat.query(level,pos);
+    }
+    /** Current modeled indoor climate at a living survival player's position. Empty outdoors. */
     public static Optional<dev.minemods.thermal.RoomReading> roomClimate(ServerPlayer p){
         if(!p.serverLevel().getServer().isSameThread())throw new IllegalStateException("Thermal API requires server thread");
         if(!p.isAlive()||p.isCreative()||p.isSpectator())return Optional.empty();
-        var root=p.getPersistentData().getCompound("worldlogic_thermal");if(!root.contains("room"))return Optional.empty();
-        var n=root.getCompound("room");long age=p.serverLevel().getGameTime()-n.getLong("tick");if(age<0||age>40||!n.getString("dimension").equals(p.serverLevel().dimension().location().toString()))return Optional.empty();
-        return Optional.of(new dev.minemods.thermal.RoomReading(true,n.getDouble("air"),n.getDouble("humidity"),n.getDouble("ventilation"),n.getDouble("mass"),n.getInt("volume")));
+        return roomClimate(p.serverLevel(),p.blockPosition());
     }
     public static Optional<Status> status(ServerPlayer p){
         if(!p.serverLevel().getServer().isSameThread()) throw new IllegalStateException("Thermal API requires server thread");

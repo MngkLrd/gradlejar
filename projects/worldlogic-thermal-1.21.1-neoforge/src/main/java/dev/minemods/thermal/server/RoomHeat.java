@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import java.util.*;
 /** Server-thread, shared bounded room topology and air/mass/vapor simulation. No chunk loads. */
-final class RoomHeat {
+public final class RoomHeat {
  static final int MAX_VOLUME=384, MAX_ROOMS=128, TOPOLOGY_TICKS=40;
  private record Geometry(BlockPos anchor,long signature,long built,Set<BlockPos> cells,Set<BlockPos> boundaries,Set<BlockPos> portals,List<BlockPos> sourceCells,int openings,double mass,double conductance){}
  private record Sources(double heat,double cooling,double moisture){}
@@ -42,6 +42,10 @@ final class RoomHeat {
   invalidate(l);
  }
  private static boolean loaded(ServerLevel l,BlockPos p){return p.getY()>=l.getMinBuildHeight()&&p.getY()<l.getMaxBuildHeight()&&l.hasChunkAt(p);}
+ private static boolean isGlass(BlockState s){
+  var key=net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(s.getBlock());String name=key.getPath();
+  return s.is(Blocks.GLASS)||s.is(Blocks.TINTED_GLASS)||s.is(Blocks.GLASS_PANE)||name.endsWith("_stained_glass")||name.endsWith("_stained_glass_pane");
+ }
  private static boolean portal(BlockState s){return s.getBlock() instanceof DoorBlock||s.getBlock() instanceof TrapDoorBlock||s.getBlock() instanceof FenceGateBlock;}
  private static boolean roof(ServerLevel l,BlockPos p){
   for(int y=1;y<=12;y++){
@@ -98,12 +102,12 @@ final class RoomHeat {
     if(s.is(ThermalContent.CHIMNEY.get())||s.is(ThermalContent.DAMPER.get())){
       ports.add(q);walls.add(q);mass+=.7;conduct+=1;faces++;continue;
     }
-    if(Block.isShapeFullBlock(s.getCollisionShape(l,q))||s.is(Blocks.GLASS_PANE)||s.getBlock() instanceof StainedGlassPaneBlock||!s.getFluidState().isEmpty()){
+    if(Block.isShapeFullBlock(s.getCollisionShape(l,q))||isGlass(s)||!s.getFluidState().isEmpty()){
       walls.add(q);String material=WorldLogicApi.materialFamily(s).toLowerCase(Locale.ROOT);
       boolean stone=material.contains("stone")||s.is(Blocks.STONE)||s.is(Blocks.COBBLESTONE)||s.is(Blocks.BRICKS);
       boolean wood=material.contains("wood")||s.is(Blocks.OAK_PLANKS);
       boolean metal=material.contains("metal")||s.is(Blocks.IRON_BLOCK);
-      boolean glass=s.getBlock() instanceof AbstractGlassBlock||s.is(Blocks.GLASS_PANE)||s.getBlock() instanceof StainedGlassPaneBlock;
+      boolean glass=isGlass(s);
       mass+=stone?2.3:metal?2.6:wood?1.15:glass?.65:.85;
       conduct+=metal?2.6:glass?1.7:stone?.85:wood?.48:.75;faces++;continue;
     }
@@ -150,17 +154,25 @@ final class RoomHeat {
   }
   return new Sources(Math.min(240,heat),Math.min(100,cooling),Math.min(60,moisture));
  }
- static RoomReading sample(ServerLevel l,BlockPos start,double air,double humidity,double wind){
-  long now=l.getGameTime();Geometry g=geometry(l,start,now);if(g==null)return RoomReading.outside(air,humidity);
+ /** Internal server bridge for the public position-based API. Never force-loads chunks.
+  * Outside or unmodeled positions return empty; no fabricated weather values.
+  */
+ public static Optional<RoomReading> query(ServerLevel l,BlockPos pos){
+  if(!l.getServer().isSameThread())throw new IllegalStateException("Thermal API requires server thread");
+  if(!loaded(l,pos))return Optional.empty();
+  long now=l.getGameTime();Geometry g=geometry(l,pos,now);
+  if(g==null)return Optional.empty();
   Cache c=cache(l);long key=g.anchor().asLong();
-  if(c.updated.getOrDefault(key,Long.MIN_VALUE)==now/20&&c.readings.containsKey(key))return c.readings.get(key);
-  // One canonical Core sample per occupied room, not a particular player's outdoor measurement.
-  var atmosphere=WorldLogicApi.atmosphere(l,g.anchor());
-  var env=atmosphere.map(WorldLogicApi.Atmosphere::environment).or(()->WorldLogicApi.environment(l,g.anchor()));
-  double outside=env.map(e->e.ambientCelsiusEstimate()).orElse(air);
-  double rh=atmosphere.map(WorldLogicApi.Atmosphere::relativeHumidityPercent).orElse(humidity);
-  double w=atmosphere.map(a->Math.max(0,Math.min(1,a.outdoorWindSpeedMps()/12))).orElse(wind);
-  return evolve(l,g,now,outside,rh,w);
+  if(c.updated.getOrDefault(key,Long.MIN_VALUE)==now/20&&c.readings.containsKey(key))return Optional.of(c.readings.get(key));
+  var a=WorldLogicApi.atmosphere(l,g.anchor());
+  var e=a.map(WorldLogicApi.Atmosphere::environment).or(()->WorldLogicApi.environment(l,g.anchor()));
+  if(e.isEmpty()||!Double.isFinite(e.get().ambientCelsiusEstimate()))return Optional.empty();
+  double humidity=a.map(WorldLogicApi.Atmosphere::relativeHumidityPercent).orElse(100.0);
+  double wind=a.map(v->Math.max(0,Math.min(1,v.outdoorWindSpeedMps()/12))).orElse(0.0);
+  return Optional.of(evolve(l,g,now,e.get().ambientCelsiusEstimate(),humidity,wind));
+ }
+ static RoomReading sample(ServerLevel l,BlockPos start,double air,double humidity,double wind){
+  return query(l,start).orElseGet(()->RoomReading.outside(air,humidity));
  }
  static RoomReading sampleAt(ServerLevel l,BlockPos start,double air,double humidity,double wind,long now){
   Geometry g=geometry(l,start,now);return g==null?RoomReading.outside(air,humidity):evolve(l,g,now,air,humidity,wind);
