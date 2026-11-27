@@ -3010,7 +3010,7 @@
       }
     }
   },
-  "review_status": "ARTWORK REVIEW: 118 accepted of 118, static sprite inspection complete. Official lock execution, build and graphical client verification pending.",
+  "review_status": "ARTWORK REVIEW: 118 accepted of 118, static sprite inspection complete. Current-main Art Review Lock, build, worldgen and graphical client verification pending; do not release before required gates.",
   "reference_provenance": "Actual PNGs from InventivetalentDev/minecraft-assets, 1.21.1 branch; inspected at original and nearest-neighbor 4x. Official client SHA-1 could not be verified in this environment. No vanilla assets included.",
   "client_status": "NOT_RUN"
 }
