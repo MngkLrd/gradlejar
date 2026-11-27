@@ -142,7 +142,12 @@ final class ThermalChecks {
                     l.setBlockAndUpdate(pos,net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
                 }
                 case "clothing" -> {
-                    var content=dev.minemods.thermal.content.ThermalContent.class;
+                    var pos=new BlockPos(10,100,8);
+                    l.setBlockAndUpdate(pos,net.minecraft.world.level.block.Blocks.SHORT_GRASS.defaultBlockState());
+                    require(dev.minemods.thermal.content.FiberHarvest.harvest(l,pos,p),"bare-hand fiber harvest removes tagged plant");
+                    require(l.getBlockState(pos).isAir(),"harvest consumes plant");
+                    require(!dev.minemods.thermal.content.FiberHarvest.harvest(l,pos,p),"no duplicate harvest");
+                    require(!dev.minemods.thermal.content.FiberHarvest.canHarvest(net.minecraft.world.level.block.Blocks.STONE.defaultBlockState()),"stone is not fiber");
                     p.setItemSlot(EquipmentSlot.CHEST,new ItemStack(dev.minemods.thermal.content.ThermalContent.GRASS_COAT.get()));
                     require(EnvironmentSampler.sample(p,0).orElseThrow().exposure().insulation()>=.24,"grass coat protects");
                     p.setItemSlot(EquipmentSlot.CHEST,new ItemStack(dev.minemods.thermal.content.ThermalContent.LIGHT_TUNIC.get()));
