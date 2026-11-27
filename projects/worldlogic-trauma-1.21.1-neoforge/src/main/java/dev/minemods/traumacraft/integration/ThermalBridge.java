@@ -52,8 +52,9 @@ public final class ThermalBridge {
     }
     /** Only Trauma's natural repair is affected; no second movement, damage or fatigue penalty. */
     public static void recover(BodyState b,ThermalCondition s,boolean healTissue){
+        if(b.hasBleeding())return;
         int ticks=s.recoveryTicks(20);
         if(ticks>0)b.recoverBones(ticks);
-        if(healTissue&&s.recoveryFactor>0&&!b.hasBleeding())b.healMostDamaged(.75f*s.recoveryFactor);
+        if(healTissue&&s.recoveryFactor>0)b.healMostDamaged(.75f*s.recoveryFactor);
     }
 }

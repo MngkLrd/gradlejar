@@ -53,7 +53,7 @@
   "item.traumacraft.endurance_injector": "Endurance Injector (legacy)",
   "jei.traumacraft.endurance_injector": "Grants Speed I and Jump Boost II for 60 seconds.",
   "item.traumacraft.rag_dressing": "Improvised Dressing",
-  "jei.traumacraft.rag_dressing": "Stops light bleeding and restores up to 4 HP. Does not stop heavy bleeding.",
+  "jei.traumacraft.rag_dressing": "Stops light bleeding only. Does not restore tissue or stop heavy bleeding.",
   "item.traumacraft.analgesic_tablets": "Analgesic Tablets",
   "jei.traumacraft.analgesic_tablets": "Temporarily reduces pain. No tissue healing or damage resistance.",
   "tooltip.traumacraft.use_time": "Application: %s s",

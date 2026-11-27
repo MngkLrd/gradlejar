@@ -26,7 +26,7 @@ public final class MedicalAction {
             case SPLINT -> limb(part)&&b.fractured(part)&&!b.stabilized(part);
             case MEDKIT -> livingDamage(b,part);
             case HERBAL_POULTICE -> b.bleeding(part)==0&&!b.fractured(part)&&livingDamage(b,part)&&(b.wounds(part)&WoundKind.CONTUSION.bit)!=0;
-            case RAG_DRESSING -> b.bleeding(part)==1||(b.bleeding(part)==0&&livingDamage(b,part));
+            case RAG_DRESSING -> b.bleeding(part)==1;
             case TRAUMA_KIT -> livingDamage(b,part)||b.bleeding(part)>0||(limb(part)&&b.fractured(part)&&!b.stabilized(part));
             case SURGICAL_KIT -> limb(part)&&b.health(part)==0;
             case ANALGESIC_TABLETS -> b.pain()>0&&b.painkillerTicks()==0;
@@ -57,7 +57,7 @@ public final class MedicalAction {
             case SPLINT -> b.stabilize(part,4800);
             case MEDKIT -> b.heal(part,25);
             case HERBAL_POULTICE -> {b.heal(part,6);b.setPainkillerTicks(Math.max(b.painkillerTicks(),200));}
-            case RAG_DRESSING -> {if(b.bleeding(part)==1)b.stopBleeding(part);if(b.health(part)>0)b.heal(part,4);}
+            case RAG_DRESSING -> b.stopBleeding(part);
             case TRAUMA_KIT -> {
                 if(b.health(part)>0)b.heal(part,45);
                 b.stopBleeding(part);

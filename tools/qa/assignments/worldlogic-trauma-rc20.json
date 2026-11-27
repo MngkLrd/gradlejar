@@ -886,5 +886,17 @@
     "medicine": "11 canonical creative entries including pouch; no fantasy buffs; legacy items alias",
     "assets": "two hand-drawn native 16x16 items; vanilla moss and green terracotta surfaces; client NOT_RUN",
     "dependency": "core exact build RC22, runtime open-ended; Thermal optional"
+  },
+  "rc13": {
+    "version": "0.5.1-rc13",
+    "mechanics": [
+      "rag controls weak bleeding without healing",
+      "active bleeding pauses passive bone and tissue recovery",
+      "destroyed main arm blocks herb placement"
+    ],
+    "evidence": "component assertions in existing wounds, thermal and primitive scenarios",
+    "client": "NOT_RUN",
+    "network": "NOT_RUN",
+    "combined_rc28_thermal": "NOT_RUN"
   }
 }

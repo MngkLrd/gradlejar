@@ -393,6 +393,48 @@
           "name": "TR-PUBLICAPI: immutable seven-region snapshot, external injury, invalid input and creative guards"
         }
       ]
+    },
+    {
+      "id": "tr-rag-no-heal",
+      "kind": "mechanic",
+      "subject": "Improvised rag rejects dry bruise and stops weak bleeding without healing tissue",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry"
+        }
+      ]
+    },
+    {
+      "id": "tr-rehabilitation-bleed",
+      "kind": "mechanic",
+      "subject": "Active bleeding pauses bone and tissue rehabilitation",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation"
+        }
+      ]
+    },
+    {
+      "id": "tr-herb-arm",
+      "kind": "mechanic",
+      "subject": "Destroyed main arm rejects herb placement without consuming herbs",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
     }
   ]
 }

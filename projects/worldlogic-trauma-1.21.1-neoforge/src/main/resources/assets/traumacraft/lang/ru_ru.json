@@ -53,7 +53,7 @@
   "item.traumacraft.endurance_injector": "Инъектор выносливости (устар.)",
   "jei.traumacraft.endurance_injector": "Скорость I и Прыгучесть II на 60 секунд.",
   "item.traumacraft.rag_dressing": "Самодельная повязка",
-  "jei.traumacraft.rag_dressing": "Останавливает слабое кровотечение и восстанавливает до 4 HP. Не останавливает сильное кровотечение.",
+  "jei.traumacraft.rag_dressing": "Останавливает только слабое кровотечение. Не восстанавливает ткани и не останавливает сильное кровотечение.",
   "item.traumacraft.analgesic_tablets": "Обезболивающие таблетки",
   "jei.traumacraft.analgesic_tablets": "Временно уменьшает боль. Не лечит ткани и не даёт сопротивление урону.",
   "tooltip.traumacraft.use_time": "Применение: %s сек.",

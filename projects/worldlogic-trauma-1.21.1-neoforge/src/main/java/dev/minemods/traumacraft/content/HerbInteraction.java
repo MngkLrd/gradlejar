@@ -16,6 +16,7 @@ public final class HerbInteraction {
     public static boolean place(ServerLevel l,BlockPos support,Player p,ItemStack raw){
         BlockPos at=support.above();
         if(p.isSpectator()||!p.getAbilities().mayBuild||!raw.is(ModItems.RAW_HERBS.get())||!HerbWorkpieceBlock.surface(l,support)||!l.isEmptyBlock(at)||!l.mayInteract(p,support)||!l.mayInteract(p,at)||!p.mayUseItemAt(at,Direction.UP,raw))return false;
+        if(p instanceof ServerPlayer sp&&dev.minemods.traumacraft.integration.WorldLogicBridge.functionsEnabled(sp)&&dev.minemods.traumacraft.integration.WorldLogicBridge.miningFactor(sp)<=0)return false;
         if(!l.setBlockAndUpdate(at,HerbContent.WORKPIECE.get().defaultBlockState()))return false;
         if(!(l.getBlockEntity(at) instanceof HerbWorkpieceEntity work)){l.removeBlock(at,false);return false;}
         work.update(HerbWorkpieceEntity.fromItem(raw));if(!p.getAbilities().instabuild)raw.shrink(1);return true;

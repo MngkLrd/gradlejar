@@ -19,6 +19,13 @@ public final class HerbWorkChecks {
             ItemStack raw=new ItemStack(ModItems.RAW_HERBS.get(),2);
             check(!HerbInteraction.place(l,support,p,raw)&&raw.getCount()==2,"invalid surface no consumption");
             l.setBlockAndUpdate(support,Blocks.STONE.defaultBlockState());
+            var body=dev.minemods.traumacraft.health.BodyStates.get(p);
+            if(dev.minemods.traumacraft.integration.WorldLogicBridge.functionsEnabled(p)){
+                var arm=dev.minemods.traumacraft.integration.WorldLogicBridge.mainArm(p);
+                body.damage(arm,arm.maximum);
+                check(!HerbInteraction.place(l,support,p,raw)&&raw.getCount()==2&&l.isEmptyBlock(at),"destroyed main arm rejects placement without consumption");
+                body.reset();
+            }
             check(HerbInteraction.place(l,support,p,raw)&&raw.getCount()==1,"placement consumes one");
             check(!HerbInteraction.place(l,support,p,raw)&&raw.getCount()==1,"occupied surface rejected");
             p.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(Items.STICK));

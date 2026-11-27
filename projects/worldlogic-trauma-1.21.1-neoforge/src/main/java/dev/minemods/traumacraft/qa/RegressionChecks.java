@@ -180,9 +180,12 @@ public final class RegressionChecks {
                     require((b.wounds(BodyPart.CHEST)&WoundKind.BURN.bit)!=0&&!b.hasBleeding(),"burn is not a bleeding cut");
                     b.reset();TraumaEvents.applyDamage(p,b,p.damageSources().freeze(),2);
                     require((b.wounds(BodyPart.CHEST)&WoundKind.FROSTBITE.bit)!=0,"freeze injury");
-                    b.reset();b.setBleeding(arm,1);
+                    b.reset();b.wound(arm,12,WoundKind.CONTUSION);
+                    require(!MedicalAction.canApply(b,MedicalItem.Type.RAG_DRESSING,arm),"dry bruise rejects rag");
+                    b.setBleeding(arm,1);
                     require(MedicalAction.autoTarget(b,MedicalItem.Type.RAG_DRESSING)==arm,"primitive dressing targets light bleeding");
                     require(MedicalAction.apply(p,b,MedicalItem.Type.RAG_DRESSING,arm)&&!b.hasBleeding(),"primitive dressing stops weak bleeding");
+                    require(b.health(arm)==48,"rag does not repair tissue");
                     b.setBleeding(arm,2);require(!MedicalAction.canApply(b,MedicalItem.Type.RAG_DRESSING,arm),"rag rejects full HP severe wound");
                     b.reset();b.wound(arm,12,WoundKind.CONTUSION);
                     var item=(MedicalItem)ModItems.HERBAL_POULTICE.get();
@@ -330,6 +333,10 @@ public final class RegressionChecks {
                     require(dev.minemods.traumacraft.integration.ThermalCondition.actual("COMFORTABLE","SUNSTROKE",37)==dev.minemods.traumacraft.integration.ThermalCondition.COMFORTABLE,"stale diagnosis ignored");
                     b.damage(BodyPart.LEFT_ARM,10);b.setFractured(BodyPart.LEFT_LEG,true);b.stabilize(BodyPart.LEFT_LEG,20);
                     float hp=b.health(BodyPart.LEFT_ARM);
+                    b.setBleeding(BodyPart.RIGHT_ARM,1);
+                    dev.minemods.traumacraft.integration.ThermalBridge.recover(b,none,true);
+                    require(b.health(BodyPart.LEFT_ARM)==hp&&b.stabilized(BodyPart.LEFT_LEG),"active bleeding pauses rehabilitation");
+                    b.stopBleeding(BodyPart.RIGHT_ARM);
                     dev.minemods.traumacraft.integration.ThermalBridge.recover(b,extreme,true);
                     require(b.health(BodyPart.LEFT_ARM)==hp&&b.stabilized(BodyPart.LEFT_LEG),"extreme pauses recovery");
                     dev.minemods.traumacraft.integration.ThermalBridge.recover(b,cold,true);
