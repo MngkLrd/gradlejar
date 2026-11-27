@@ -22,20 +22,22 @@ final class ThermalPanel {
         if(s==null||!s.active()){g.drawCenteredString(f,tr("inactive"),x+w/2,y+55,0xff444444);return;}
         var old=ThermalSync.previous(s.entityId());
         var stage=ThermalModel.stage(s.body());int color=ThermalHud.COLORS[stage.ordinal()];
-        g.fill(x+8,y+23,x+w-8,y+45,0xff252729);
-        g.fill(x+9,y+24,x+w-9,y+25,0xff54585b);
+        g.fill(x+8,y+20,x+w-8,y+37,0xff252729);
+        g.fill(x+9,y+21,x+w-9,y+22,0xff54585b);
         String body=String.format(Locale.ROOT,"%.1f °C",s.body());
-        g.drawString(f,body,x+w-14-f.width(body),y+30,color,true);
+        g.drawString(f,body,x+w-14-f.width(body),y+25,color,true);
         String status=Component.translatable("stage.worldlogic_thermal."+stage.name().toLowerCase(Locale.ROOT)).getString();
-        g.drawString(f,f.plainSubstrByWidth(status,w-32-f.width(body)),x+14,y+30,color,false);
-        ThermalHud.scale(g,x+10,y+50,w-20,stage.ordinal());
-        changingRow(g,x,y+62,w,"air",String.format(Locale.ROOT,"%+.1f °C",s.air()),ThermalColors.air(s.air()),old==null?0:s.air()-old.air(),.04);
-        changingRow(g,x,y+74,w,"felt",String.format(Locale.ROOT,"%+.1f °C",s.felt()),ThermalColors.air(s.felt()),old==null?0:s.felt()-old.felt(),.04);
-        changingRow(g,x,y+86,w,"wet",String.format(Locale.ROOT,"%.0f%%",s.wet()*100),s.wet()>.3?0xff255f99:0xff555555,old==null?0:s.wet()-old.wet(),.004);
-        changingRow(g,x,y+98,w,"insulation",String.format(Locale.ROOT,"%.0f%%",s.insulation()*100),s.insulation()>.3?0xff80501e:0xff555555,old==null?0:s.insulation()-old.insulation(),.004);
-        changingRow(g,x,y+110,w,"heat",String.format(Locale.ROOT,"%+.1f °C",s.radiant()),s.radiant()>.5?0xffa54a18:0xff555555,old==null?0:s.radiant()-old.radiant(),.04);
-        row(g,x,y+122,w,"trend",String.format(Locale.ROOT,"%s %+.2f °C/min",ThermalColors.arrow(s.trend()),s.trend()),ThermalColors.darkTrend(s.trend()));
-        g.drawString(f,tr(s.sheltered()?"covered":"exposed"),x+10,y+136,0xff535353,false);
+        g.drawString(f,f.plainSubstrByWidth(status,w-32-f.width(body)),x+14,y+25,color,false);
+        ThermalHud.scale(g,x+10,y+41,w-20,stage.ordinal());
+        changingRow(g,x,y+50,w,"air",String.format(Locale.ROOT,"%+.1f °C",s.air()),ThermalColors.air(s.air()),old==null?0:s.air()-old.air(),.04);
+        changingRow(g,x,y+61,w,"felt",String.format(Locale.ROOT,"%+.1f °C",s.felt()),ThermalColors.air(s.felt()),old==null?0:s.felt()-old.felt(),.04);
+        changingRow(g,x,y+72,w,"wet",String.format(Locale.ROOT,"%.0f%%",s.wet()*100),s.wet()>.3?0xff255f99:0xff555555,old==null?0:s.wet()-old.wet(),.004);
+        changingRow(g,x,y+83,w,"insulation",String.format(Locale.ROOT,"%.0f%%",s.insulation()*100),s.insulation()>.3?0xff80501e:0xff555555,old==null?0:s.insulation()-old.insulation(),.004);
+        changingRow(g,x,y+94,w,"heat",String.format(Locale.ROOT,"%+.1f °C",s.radiant()),s.radiant()>.5?0xffa54a18:0xff555555,old==null?0:s.radiant()-old.radiant(),.04);
+        row(g,x,y+105,w,"trend",String.format(Locale.ROOT,"%s %+.2f °C/min",ThermalColors.arrow(s.trend()),s.trend()),ThermalColors.darkTrend(s.trend()));
+        row(g,x,y+116,w,"adaptation",String.format(Locale.ROOT,"%.0f%% / %.0f%%",s.coldAdaptation()*100,s.heatAdaptation()*100),0xff385e39);
+        row(g,x,y+127,w,"nutrition",String.format(Locale.ROOT,"%.0f%%",s.nutrition()*100),0xff80501e);
+        row(g,x,y+138,w,"room_heat",String.format(Locale.ROOT,"%+.1f °C",s.roomDelta()),ThermalColors.darkTrend(s.roomDelta()));
         if(s.condition()!=ThermalCondition.Kind.NONE)g.drawString(f,Component.translatable("condition.worldlogic_thermal."+s.condition().name().toLowerCase(Locale.ROOT)),x+10,y+149,0xff9c3030,false);
         else g.drawString(f,tr("stable"),x+10,y+149,0xff38663a,false);
     }

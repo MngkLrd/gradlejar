@@ -1,5 +1,6 @@
 package dev.minemods.thermal.server;
 import dev.minemods.thermal.ThermalModel;
+import dev.minemods.thermal.Adaptation;
 import dev.minemods.thermal.ThermalCondition;
 import dev.minemods.thermal.WeatherReading;
 import dev.minemods.thermal.network.ThermalSync;
@@ -30,7 +31,7 @@ public final class ThermalEvents {
         if(!active) {
             penalty(p,0);
             n.remove("coldSeconds");n.remove("hotSeconds");n.remove("sunSeconds");n.remove("condition");root.put(KEY,n);
-            ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),false,37,22,22,0,0,0,0,false,ThermalCondition.Kind.NONE,WeatherReading.unavailable()));
+            ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),false,37,22,22,0,0,0,0,false,ThermalCondition.Kind.NONE,WeatherReading.unavailable(),0,0,1,0));
             return;
         }
         double previous=n.contains("body",Tag.TAG_ANY_NUMERIC)?n.getDouble("body"):37;
@@ -40,6 +41,9 @@ public final class ThermalEvents {
         if(sampled.isEmpty()) return;
         var sample=sampled.get(); var e=sample.exposure();
         var state=ThermalModel.tick(new ThermalModel.State(previous,22,37,ThermalModel.stage(previous),0),e,1);
+        var adapted=Adaptation.step(new Adaptation.State(e.coldAdaptation(),e.heatAdaptation()),state.feelsLikeC(),state.bodyC());
+        n.putDouble("adaptCold",adapted.cold());n.putDouble("adaptHeat",adapted.heat());
+        n.putDouble("mealWarmth",Math.max(0,e.mealWarmth()-1.0/180));
         n.putDouble("body",state.bodyC()); n.putDouble("air",e.airC()); n.putDouble("felt",state.feelsLikeC());
         n.putDouble("skinWet",sample.skinWetness()); n.putDouble("wet",e.wetness()); n.putDouble("insulation",e.insulation());
         n.putDouble("trend",state.trendCPerMinute()); n.putDouble("radiant",e.radiantC()); n.putString("stage",state.stage().name());
@@ -53,7 +57,9 @@ public final class ThermalEvents {
         n.putInt("coldSeconds",progress.coldSeconds());n.putInt("hotSeconds",progress.hotSeconds());
         n.putInt("sunSeconds",progress.sunSeconds());n.putString("condition",progress.kind().name());n.remove("criticalSeconds");
         ThermalInjury.apply(p,progress);
-        ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),true,state.bodyC(),e.airC(),state.feelsLikeC(),state.trendCPerMinute(),e.wetness(),e.insulation(),e.radiantC(),sample.sheltered(),progress.kind(),sample.weather()));
+        LimbExposure.update(p,n,e,state);
+        root.put(KEY,n);
+        ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),true,state.bodyC(),e.airC(),state.feelsLikeC(),state.trendCPerMinute(),e.wetness(),e.insulation(),e.radiantC(),sample.sheltered(),progress.kind(),sample.weather(),adapted.cold(),adapted.heat(),e.nutrition(),e.roomDelta()));
         HistoryStore.tick(p,sample.weather(),state,e.airC());
     }
     static void penalty(ServerPlayer p,double amount) {
@@ -69,9 +75,18 @@ public final class ThermalEvents {
             event.getEntity().getPersistentData().put(KEY,event.getOriginal().getPersistentData().getCompound(KEY).copy());
         else if(event.isWasDeath()) event.getEntity().getPersistentData().remove(KEY);
     }
+    public static void meal(net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent.Finish event){
+        if(!(event.getEntity() instanceof ServerPlayer p)||p.isCreative()||p.isSpectator())return;
+        var food=event.getItem().get(net.minecraft.core.component.DataComponents.FOOD);
+        if(food==null||food.nutrition()<=0)return;
+        var root=p.getPersistentData();var n=root.getCompound(KEY);
+        // Metabolic contribution only: no invented literal food temperature or duplicated core food state.
+        n.putDouble("mealWarmth",Math.min(1,Math.max(n.getDouble("mealWarmth"),food.nutrition()/8.0)));
+        root.put(KEY,n);
+    }
     public static void registerCommands(RegisterCommandsEvent event) {
         var qa=Commands.literal("qa").requires(s->s.hasPermission(2));
-        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile"}) {
+        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile","adaptation","frostbite","nutrition","room_inertia","village_climate"}) {
             qa.then(Commands.literal(name).executes(c->{
                 ThermalChecks.verify(c.getSource().getLevel(),name);
                 c.getSource().sendSuccess(()->Component.literal("THERMAL_QA_"+name+"_PASS"),false);

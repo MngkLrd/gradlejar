@@ -40,6 +40,8 @@ public final class EnvironmentSampler {
         boolean rain = env.rainingAt();
         var local=localComfort(level,p,air,atmosphere.map(WorldLogicApi.Atmosphere::relativeHumidityPercent).orElse(100.0),sheltered,atmosphere.map(a->clamp(a.outdoorWindSpeedMps()/12,0,1)).orElse(0.0));
         double radiant=local.heat();
+        double room=RoomHeat.sample(level,pos,radiant,local.cooling(),sheltered);
+        var regionalWeather=AddonBridge.weather(level,pos);
         double ins=0,ventilation=0,rainShield=0,windShield=0,sunShield=0;
         for (ItemStack stack : p.getArmorSlots()) {
             if (stack.isEmpty()) continue;
@@ -54,6 +56,7 @@ public final class EnvironmentSampler {
         if(rain&&!p.isInWater())skin=clamp(previous+(skin-previous)*(1-clamp(rainShield,0,.92)),0,1);
         if(!rain&&!p.isInWater()&&a!=null)skin=previous+(skin-previous)*WeatherReading.dryingFactor(a.relativeHumidityPercent());
         double wind=a!=null?WeatherReading.normalizedWind(a.outdoorWindSpeedMps(),sheltered):sheltered?.06:env.globalThunder()?.85:rain?.55:.22;
+        if(!sheltered&&regionalWeather.isPresent())wind=Math.max(wind,WeatherReading.normalizedWind(regionalWeather.get().gust()*.65,false));
         wind*=1-clamp(windShield,0,.8);
         double solar=env.solarExposure()*(1-clamp(sunShield,0,.95));
         double shadeCooling=Math.max(0,air-24)*clamp(sunShield,0,.95)*env.solarExposure()*.25;
@@ -66,14 +69,26 @@ public final class EnvironmentSampler {
         radiant=ClimateComfort.capRadiant(air,radiant+portable.heat());
         double cooling=Math.min(18,local.cooling()+shadeCooling+portable.cool());
         // Core ambient includes this day's solar/rain offsets; invert only when not clamped.
-        double reference=Math.abs(air)>=99.99?Double.NaN:air-(sheltered?0:4*env.solarExposure()-2)+(rain?2:0);
+        double reference=regionalWeather.isPresent()?Double.NaN:Math.abs(air)>=99.99?Double.NaN:air-(sheltered?0:4*env.solarExposure()-2)+(rain?2:0);
         String biome=level.getBiome(pos).unwrapKey().map(k->k.location().toString()).orElse("");
         var regional=env.regionalClimate().orElse(null);
         var weather=new WeatherReading(biome,level.dimension().location().toString(),env.elevationAboveSea(),a!=null,
             a==null?0:a.relativeHumidityPercent(),a==null?0:a.outdoorWindSpeedMps(),a==null?0:a.outdoorWindXMps(),a==null?0:a.outdoorWindZMps(),
             a==null?0:a.precipitation().ordinal(),a==null?0:a.precipitationIntensity(),env.globalThunder(),env.solarExposure(),
             a==null?Double.NaN:reference,regional==null?Double.NaN:regional.absoluteLatitude(),regional==null?Double.NaN:regional.moistureIndex());
-        return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,p.isInWater(),water(air,air),0,cooling,clamp(ventilation,0,1)),skin,sheltered,solar,weather));
+        var n=p.getPersistentData().getCompound(ThermalEvents.KEY);
+        var adaptation=new dev.minemods.thermal.Adaptation.State(n.getDouble("adaptCold"),n.getDouble("adaptHeat"));
+        double nutrition=dev.minemods.thermal.Adaptation.nutrition(p.getFoodData().getFoodLevel(),p.getFoodData().getSaturationLevel());
+        double hydration=AddonBridge.hydration(p);
+        double meal=clamp(n.getDouble("mealWarmth"),0,1);
+        // Share heat between immediate radiant exchange and bounded retained room heat.
+        if(room!=0)radiant*=.8;
+        double contact=0;
+        var floor=level.getBlockState(pos.below());
+        if(!p.isInWater()&&p.onGround()&&(floor.is(Blocks.ICE)||floor.is(Blocks.PACKED_ICE)||floor.is(Blocks.BLUE_ICE)||floor.is(Blocks.SNOW_BLOCK)))
+            contact=2*(1-LimbExposure.protection(p.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET)));
+        cooling=Math.min(18,cooling+contact);
+        return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,p.isInWater(),water(air,air),meal,cooling,clamp(ventilation,0,1),adaptation.cold(),adaptation.heat(),nutrition,hydration,room),skin,sheltered,solar,weather));
     }
     record LocalComfort(double heat,double cooling){}
     static LocalComfort localComfort(ServerLevel level,ServerPlayer p,double air,double humidity,boolean sheltered) {

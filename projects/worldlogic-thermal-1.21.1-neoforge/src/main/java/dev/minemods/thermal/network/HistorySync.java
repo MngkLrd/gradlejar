@@ -33,7 +33,7 @@ final public class HistorySync {
     }
     private static volatile Journal latest;
     private HistorySync(){}
-    static void register(RegisterPayloadHandlersEvent event){event.registrar("3").playToClient(Journal.TYPE,Journal.CODEC,(m,c)->latest=m);}
+    static void register(RegisterPayloadHandlersEvent event){event.registrar("4").playToClient(Journal.TYPE,Journal.CODEC,(m,c)->latest=m);}
     public static void send(ServerPlayer p,List<Point> points){
         if(!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))PacketDistributor.sendToPlayer(p,new Journal(p.getId(),points));
     }

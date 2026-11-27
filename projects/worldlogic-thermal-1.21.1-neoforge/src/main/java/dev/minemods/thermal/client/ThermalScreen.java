@@ -37,5 +37,26 @@ public final class ThermalScreen extends Screen {
         super.render(g,mx,my,delta);
         int w=panelW();var r=new ThermalLayout.Rect((width-w)/2,panelY(),w,166);
         if(page==0)ThermalPanel.draw(g,r,data);else if(page==1)WeatherPanel.draw(g,r,data);else JournalPanel.draw(g,r,history,dayIndex,mx,my);
+        String tip=tooltip(page,r,mx,my);
+        if(tip!=null)g.renderTooltip(font,font.split(Component.translatable("tooltip.worldlogic_thermal.info."+tip),Math.min(220,width-16)),mx,my);
+    }
+    static String tooltip(int page,ThermalLayout.Rect r,int mx,int my){
+        if(!r.contains(mx,my))return null;
+        int y=my-r.y();
+        if(page==0){
+            if(y>=20&&y<48)return "body";
+            if(y>=50&&y<160){String[] rows={"air","felt","wet","insulation","heat","trend","adaptation","nutrition","room_heat","condition"};return rows[Math.min(9,(y-50)/11)];}
+            if(y<18)return "body_tab";
+        }else if(page==1){
+            if(y<18)return "weather_tab";
+            if(y>=20&&y<152){String[] rows={"biome","elevation","air","humidity","wind","precip","thunder","solar","reference","daily","annual"};return rows[Math.min(10,(y-20)/12)];}
+            if(y>=152)return "shelter";
+        }else{
+            if(y<20)return "history_tab";
+            if(y>=110&&y<125)return "history_values";
+            if(y>=125&&y<150)return "history_location";
+            if(y>=150)return "history_samples";
+        }
+        return null;
     }
 }
