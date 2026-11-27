@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "name": "Hydration initial model and core integration",
+  "coverage": [
+    {
+      "id": "water-balance",
+      "kind": "mechanic",
+      "subject": "Water loss, heat, humidity, activity, boundaries",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
+    },
+    {
+      "id": "source-classification",
+      "kind": "mechanic",
+      "subject": "Actual source versus nonwater",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Fresh pond classification"
+        },
+        {
+          "backend": "server",
+          "name": "Solid is not water"
+        }
+      ]
+    },
+    {
+      "id": "drinking",
+      "kind": "mechanic",
+      "subject": "Actual bottle consumption with fresh, salt and unknown profiles",
+      "checks": [
+        {
+          "backend": "player",
+          "name": "Fresh bottle restores thirst"
+        },
+        {
+          "backend": "player",
+          "name": "Salt bottle reduces hydration"
+        },
+        {
+          "backend": "player",
+          "name": "Unknown bottle adds exposure"
+        }
+      ]
+    },
+    {
+      "id": "food-moisture",
+      "kind": "mechanic",
+      "subject": "Vanilla melon consumption",
+      "checks": [
+        {
+          "backend": "player",
+          "name": "Melon restores hydration"
+        }
+      ]
+    },
+    {
+      "id": "creative-immunity",
+      "kind": "mechanic",
+      "subject": "Creative mode water balance unchanged",
+      "checks": [
+        {
+          "backend": "player",
+          "name": "Creative does not lose water"
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "name": "Model rules",
+      "command": "hydration selftest",
+      "expect": "HYDRATION_MODEL_CHECKS_PASSED",
+      "assertion": true
+    },
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "command": "setblock 3 200 3 minecraft:stone",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 3 201 3 minecraft:water",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "Fresh pond classification",
+      "command": "hydration inspect 3 201 3",
+      "expect": "source=(POND|RIVER|LAKE|SPRING) quality=DRINKABLE",
+      "assertion": true
+    },
+    {
+      "name": "Solid is not water",
+      "command": "hydration inspect 3 200 3",
+      "expect": "source=NONE quality=NOT_WATER",
+      "assertion": true
+    }
+  ]
+}

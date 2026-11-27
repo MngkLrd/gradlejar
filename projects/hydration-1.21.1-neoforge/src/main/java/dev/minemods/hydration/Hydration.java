@@ -1,0 +1,178 @@
+package dev.minemods.hydration;
+
+import com.mojang.brigadier.arguments.DoubleArgumentType;
+import dev.minemods.worldlogic.api.WorldLogicApi;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.ClipContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import java.util.Locale;
+import java.util.WeakHashMap;
+
+@Mod("hydration")
+public final class Hydration {
+ private static final String WATER="hydration_water", EXPOSURE="hydration_exposure", PROFILE="hydration_profile";
+ private static final WeakHashMap<ServerPlayer,Vec3> LAST_POS=new WeakHashMap<>();
+ private static final WeakHashMap<ServerPlayer,Long> LAST_SIP=new WeakHashMap<>();
+ public Hydration(IEventBus modBus){
+  if(WorldLogicApi.API_VERSION!=1)throw new IllegalStateException("Unsupported World Logic API");
+  // Read the revision reflectively to avoid Java compile-time inlining of the core constant.
+  try {if(WorldLogicApi.class.getField("API_REVISION").getInt(null)<7)throw new IllegalStateException("Hydration requires World Logic API revision 7");}
+  catch(ReflectiveOperationException e){throw new IllegalStateException("World Logic API revision unavailable",e);}
+  modBus.addListener(HydrationSync::register);
+  var bus=NeoForge.EVENT_BUS;
+  bus.addListener(Hydration::tick);
+  bus.addListener(Hydration::fill);
+  bus.addListener(Hydration::finished);
+  bus.addListener(Hydration::clonePlayer);
+  bus.addListener(Hydration::login);
+  bus.addListener(Hydration::logout);
+  bus.addListener(Hydration::tooltip);
+  bus.addListener(Hydration::commands);
+ }
+ public static boolean active(ServerPlayer p){return p.isAlive()&&!p.isCreative()&&!p.isSpectator()&&!(p instanceof FakePlayer);}
+ public static WaterBalance.State state(ServerPlayer p){
+  var n=p.getPersistentData();
+  return new WaterBalance.State(n.contains(WATER)?n.getDouble(WATER):100,n.getDouble(EXPOSURE));
+ }
+ private static void store(ServerPlayer p,WaterBalance.State s){
+  p.getPersistentData().putDouble(WATER,s.water());
+  p.getPersistentData().putDouble(EXPOSURE,s.exposure());
+ }
+ public static void applyDrink(ServerPlayer p,WaterBalance.Quality q,double ml,double risk){
+  if(active(p)) {store(p,WaterBalance.drink(state(p),q,ml,risk));HydrationSync.send(p);}
+ }
+ private static void tick(PlayerTickEvent.Post e){
+  if(!(e.getEntity() instanceof ServerPlayer p)||p.tickCount%20!=0)return;
+  if(!active(p)){LAST_POS.remove(p);HydrationSync.send(p);return;}
+  Vec3 previous=LAST_POS.put(p,p.position());
+  double distance=previous==null?0:p.position().distanceToSqr(previous);
+  boolean moving=distance>.025&&distance<225;
+  var at=WorldLogicApi.atmosphere(p.serverLevel(),p.blockPosition());
+  var env=at.map(WorldLogicApi.Atmosphere::environment).or(()->WorldLogicApi.environment(p.serverLevel(),p.blockPosition()));
+  double c=env.map(WorldLogicApi.Environment::ambientCelsiusEstimate).orElse(20.0);
+  double rh=at.map(WorldLogicApi.Atmosphere::relativeHumidityPercent).orElse(50.0);
+  double solar=env.map(WorldLogicApi.Environment::solarExposure).orElse(0.0);
+  boolean covered=env.map(WorldLogicApi.Environment::covered).orElse(true);
+  var s=WaterBalance.tick(state(p),WaterBalance.loss(c,rh,moving,p.isSprinting()&&moving,p.isSwimming()&&moving,covered,solar));
+  store(p,s);
+  if(p.tickCount%100==0&&s.water()<25)WorldLogicApi.addExertion(p,s.water()<10?2.0:.7);
+  if(p.tickCount%200==0&&s.water()<=0)p.hurt(p.damageSources().dryOut(),1f);
+  if(p.tickCount%100==0&&s.exposure()>=25)p.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,120,0,false,true));
+  HydrationSync.send(p);
+ }
+ private static WorldLogicApi.WaterProfile targeted(ServerPlayer p){
+  Vec3 eye=p.getEyePosition();
+  var hit=p.serverLevel().clip(new ClipContext(eye,eye.add(p.getLookAngle().scale(Math.min(4.5,p.blockInteractionRange()))),
+   ClipContext.Block.OUTLINE,ClipContext.Fluid.ANY,p));
+  if(hit.getType()!=HitResult.Type.BLOCK)return null;
+  BlockPos pos=hit.getBlockPos();
+  if(!p.serverLevel().hasChunkAt(pos)||p.serverLevel().getFluidState(pos).isEmpty())return null;
+  var profile=WorldLogicApi.waterProfile(p.serverLevel(),pos);
+  return profile.quality()==WorldLogicApi.WaterQuality.NOT_WATER?null:profile;
+ }
+ private static WaterBalance.Quality quality(WorldLogicApi.WaterProfile profile){
+  return WaterBalance.Quality.valueOf(profile.quality().name());
+ }
+ private static void fill(PlayerInteractEvent.RightClickItem e){
+  if(!(e.getEntity() instanceof ServerPlayer p)||!e.getItemStack().is(Items.GLASS_BOTTLE)||p.isSpectator())return;
+  var profile=targeted(p);
+  if(profile==null)return;
+  ItemStack bottle=PotionContents.createItemStack(Items.POTION,Potions.WATER);
+  CustomData.update(DataComponents.CUSTOM_DATA,bottle,tag->{
+   CompoundTag data=new CompoundTag();
+   data.putString("kind",profile.kind().name());data.putString("quality",profile.quality().name());
+   data.putDouble("salinity",profile.salinityGkg());data.putDouble("risk",profile.contaminationRisk());
+   data.putString("evidence",profile.evidence().name());tag.put(PROFILE,data);
+  });
+  p.setItemInHand(e.getHand(),ItemUtils.createFilledResult(e.getItemStack(),p,bottle));
+  p.level().playSound(null,p.getX(),p.getY(),p.getZ(),SoundEvents.BOTTLE_FILL,SoundSource.PLAYERS,1f,1f);
+  e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);
+ }
+ private static CompoundTag profile(ItemStack stack){
+  var d=stack.get(DataComponents.CUSTOM_DATA);
+  return d==null?new CompoundTag():d.copyTag().getCompound(PROFILE);
+ }
+ private static WaterBalance.Quality readQuality(CompoundTag d){
+  try{return WaterBalance.Quality.valueOf(d.getString("quality"));}catch(IllegalArgumentException ex){return WaterBalance.Quality.UNKNOWN;}
+ }
+ private static boolean isWater(ItemStack stack){
+  var potion=stack.get(DataComponents.POTION_CONTENTS);
+  return stack.is(Items.POTION)&&potion!=null&&potion.is(Potions.WATER);
+ }
+ private static void finished(LivingEntityUseItemEvent.Finish e){
+  if(!(e.getEntity() instanceof ServerPlayer p)||!active(p))return;
+  var item=e.getItem();
+  if(isWater(item)){
+   var d=profile(item);applyDrink(p,readQuality(d),250,d.getDouble("risk"));return;
+  }
+  // Vanilla moisture-bearing foods; only after the actual consumption event.
+  double ml=item.is(Items.MELON_SLICE)?65:item.is(Items.APPLE)||item.is(Items.BEETROOT)?35:
+   item.is(Items.MUSHROOM_STEW)||item.is(Items.BEETROOT_SOUP)||item.is(Items.RABBIT_STEW)?100:
+   item.is(Items.MILK_BUCKET)?150:0;
+  if(ml>0)applyDrink(p,WaterBalance.Quality.DRINKABLE,ml,0);
+ }
+ static void sip(ServerPlayer p){
+  if(!active(p)||!p.isShiftKeyDown()||!p.getMainHandItem().isEmpty()||!p.getOffhandItem().isEmpty())return;
+  long now=p.serverLevel().getGameTime();
+  if(now-LAST_SIP.getOrDefault(p,now-30)<30)return;
+  var profile=targeted(p);
+  if(profile==null||state(p).water()>=100)return;
+  LAST_SIP.put(p,now);applyDrink(p,quality(profile),125,profile.contaminationRisk());
+  p.level().playSound(null,p.getX(),p.getY(),p.getZ(),SoundEvents.GENERIC_DRINK,SoundSource.PLAYERS,.6f,1f);
+ }
+ private static void tooltip(net.neoforged.neoforge.event.entity.player.ItemTooltipEvent e){
+  if(!isWater(e.getItemStack()))return;
+  var d=profile(e.getItemStack());
+  String kind=d.getString("kind");if(kind.isEmpty())kind="UNKNOWN";
+  e.getToolTip().add(Component.translatable("hydration.water.kind."+kind.toLowerCase(Locale.ROOT)));
+  e.getToolTip().add(Component.translatable("hydration.water.quality."+readQuality(d).name().toLowerCase(Locale.ROOT)));
+ }
+ private static void clonePlayer(PlayerEvent.Clone e){
+  if(!(e.getEntity() instanceof ServerPlayer p))return;
+  if(!e.isWasDeath()&&e.getOriginal() instanceof ServerPlayer old)store(p,state(old));
+  else store(p,new WaterBalance.State(100,0));
+ }
+ private static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p)HydrationSync.send(p);}
+ private static void logout(PlayerEvent.PlayerLoggedOutEvent e){
+  if(e.getEntity() instanceof ServerPlayer p){LAST_POS.remove(p);LAST_SIP.remove(p);HydrationSync.forget(p);}
+ }
+ private static String status(ServerPlayer p){
+  var s=state(p);return String.format(Locale.ROOT,"Hydration water=%d exposure=%d",(int)Math.round(s.water()),(int)Math.round(s.exposure()));
+ }
+ private static void commands(RegisterCommandsEvent e){
+  e.getDispatcher().register(Commands.literal("hydration")
+   .then(Commands.literal("status").executes(c->{var p=c.getSource().getPlayerOrException();c.getSource().sendSuccess(()->Component.literal(status(p)),false);return 1;})
+    .then(Commands.argument("player",EntityArgument.player()).requires(s->s.hasPermission(2)).executes(c->{var p=EntityArgument.getPlayer(c,"player");c.getSource().sendSuccess(()->Component.literal(status(p)),false);return 1;})))
+   .then(Commands.literal("set").requires(s->s.hasPermission(2)).then(Commands.argument("player",EntityArgument.player()).then(Commands.argument("water",DoubleArgumentType.doubleArg(0,100)).executes(c->{var p=EntityArgument.getPlayer(c,"player");store(p,new WaterBalance.State(DoubleArgumentType.getDouble(c,"water"),0));HydrationSync.send(p);c.getSource().sendSuccess(()->Component.literal(status(p)),false);return 1;}))))
+   .then(Commands.literal("inspect").requires(s->s.hasPermission(2)).then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{var p=WorldLogicApi.waterProfile(c.getSource().getLevel(),BlockPosArgument.getLoadedBlockPos(c,"pos"));c.getSource().sendSuccess(()->Component.literal("Hydration source="+p.kind()+" quality="+p.quality()),false);return 1;})))
+   .then(Commands.literal("selftest").requires(s->s.hasPermission(2)).executes(c->{ModelChecks.run();c.getSource().sendSuccess(()->Component.literal("HYDRATION_MODEL_CHECKS_PASSED"),false);return 1;})));
+ }
+}

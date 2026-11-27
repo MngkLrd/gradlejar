@@ -1,0 +1,17 @@
+{
+  "hydration.water.kind.sea": "Морская вода",
+  "hydration.water.kind.river": "Речная вода",
+  "hydration.water.kind.lake": "Озёрная вода",
+  "hydration.water.kind.spring": "Родниковая вода",
+  "hydration.water.kind.groundwater": "Подземная вода",
+  "hydration.water.kind.wetland": "Болотная вода",
+  "hydration.water.kind.pond": "Прудовая вода",
+  "hydration.water.kind.brackish": "Солоноватая вода",
+  "hydration.water.kind.unknown": "Неизвестный источник",
+  "hydration.water.kind.none": "Нет воды",
+  "hydration.water.quality.drinkable": "Пригодна для питья",
+  "hydration.water.quality.treat_recommended": "Рекомендуется очистка",
+  "hydration.water.quality.desalinate": "Требуется опреснение",
+  "hydration.water.quality.unknown": "Качество не определено",
+  "hydration.water.quality.not_water": "Не вода"
+}
