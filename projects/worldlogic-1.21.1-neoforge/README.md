@@ -16,3 +16,5 @@ RC22 research extension: physically informed parcel-column diagnostics (water va
 RC22 active recovery: 2.4 fatigue points/s walking, 3 sneaking, 4 standing; one-second post-effort cooldown, hunger reduces recovery. Actual position delta distinguishes standing and walking; no recovery while airborne, swimming, riding or climbing. Weather checks use force-loaded open coordinates and return explicit failure diagnostics.
 
 RC23 research: new world preset `worldlogic:earthlike_extended` (-256..511, sea 63) with deterministic geological provinces, local cave systems, surface shafts, static water levels and eight ore families. Old presets untouched. New preset disables vanilla noise caves, carvers and standard ore clusters; custom chunk generation only. Full new-world and client validation pending.
+
+Extended-world cloud height is configured at Y440 through a client-only NeoForge dimension effects registration. The old preset's cloud height is unchanged. The client renderer remains unverified.

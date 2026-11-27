@@ -20,7 +20,7 @@ public final class GeologyGeneration {
   return g instanceof NoiseBasedChunkGenerator n&&n.generatorSettings().unwrapKey().map(k->k.location().getNamespace().equals("worldlogic")&&k.location().getPath().equals("earthlike_extended")).orElse(false);
  }
  public static boolean replaces(OreConfiguration c){return !c.targetStates.isEmpty()&&c.targetStates.stream().allMatch(t->REPLACED.contains(t.state.getBlock()));}
- static boolean rock(BlockState s){return s.is(Blocks.STONE)||s.is(Blocks.DEEPSLATE)||s.is(Blocks.ANDESITE)||s.is(Blocks.DIORITE)||s.is(Blocks.GRANITE)||s.is(Blocks.TUFF)||s.is(Blocks.CALCITE);}
+ static boolean rock(BlockState s){return s.is(Blocks.STONE)||s.is(Blocks.DEEPSLATE)||s.is(Blocks.ANDESITE)||s.is(Blocks.DIORITE)||s.is(Blocks.GRANITE)||s.is(Blocks.TUFF)||s.is(Blocks.CALCITE)||s.is(Blocks.SANDSTONE);}
  private static boolean shaftRock(BlockState s){return rock(s)||s.is(Blocks.GRASS_BLOCK)||s.is(Blocks.DIRT)||s.is(Blocks.COARSE_DIRT)||s.is(Blocks.GRAVEL)||s.is(Blocks.SAND)||s.is(Blocks.SANDSTONE);}
  static BlockState ore(GeologyModel.Ore type,boolean deep){return switch(type){
   case COAL -> (deep?Blocks.DEEPSLATE_COAL_ORE:Blocks.COAL_ORE).defaultBlockState();
@@ -44,7 +44,7 @@ public final class GeologyGeneration {
    for(int y=bottom;y<=top;y++){
     int band=Math.floorMod(y+fold,38);Block host=null;
     if(province==GeologyModel.Province.CARBONATE&&band<20)host=Blocks.CALCITE;
-    if(province==GeologyModel.Province.SEDIMENTARY&&band<7)host=Blocks.TUFF;
+    if(province==GeologyModel.Province.SEDIMENTARY&&band<7)host=Blocks.SANDSTONE;
     if(province==GeologyModel.Province.INTRUSIVE&&band<13)host=Blocks.GRANITE;
     if(province==GeologyModel.Province.METAMORPHIC&&band<12)host=Blocks.DIORITE;
     if(host==null)continue;
