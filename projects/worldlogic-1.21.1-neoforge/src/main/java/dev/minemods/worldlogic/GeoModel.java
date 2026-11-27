@@ -158,15 +158,24 @@ public final class GeoModel {
  /** Directed river centerlines on the original globally aligned D8 grid.
   * The original raw relief and drainage tile remain unchanged. */
  record RiverSegment(int x,int z,int endX,int endZ,double discharge,double radius){
+  double bend(){return 2.8*Math.sin(x*.021+z*.017+endX*.007);}
+  double cx(double u){return lerp(x,endX,u)-(endZ-z)/Math.hypot(endX-x,endZ-z)*bend()*Math.sin(Math.PI*u);}
+  double cz(double u){return lerp(z,endZ,u)+(endX-x)/Math.hypot(endX-x,endZ-z)*bend()*Math.sin(Math.PI*u);}
   double fraction(double px,double pz){
-   double dx=endX-x,dz=endZ-z;return clamp(((px-x)*dx+(pz-z)*dz)/(dx*dx+dz*dz),0,1);
+   double best=Double.POSITIVE_INFINITY,u=0;
+   // Project onto eight connected subsegments of a smooth arc.
+   for(int i=0;i<8;i++){double a=i/8.0,b=(i+1)/8.0,ax=cx(a),az=cz(a),dx=cx(b)-ax,dz=cz(b)-az;
+    double f=clamp(((px-ax)*dx+(pz-az)*dz)/(dx*dx+dz*dz),0,1),d=Math.hypot(px-ax-f*dx,pz-az-f*dz);
+    if(d<best){best=d;u=lerp(a,b,f);}
+   }return u;
   }
-  double distance(double px,double pz){double u=fraction(px,pz);return Math.hypot(px-lerp(x,endX,u),pz-lerp(z,endZ,u));}
+  double distance(double px,double pz){double u=fraction(px,pz);return Math.hypot(px-cx(u),pz-cz(u));}
+  net.minecraft.world.phys.Vec3 direction(double px,double pz){double u=fraction(px,pz),a=Math.max(0,u-.03),b=Math.min(1,u+.03);return new net.minecraft.world.phys.Vec3(cx(b)-cx(a),0,cz(b)-cz(a)).normalize();}
  }
  static boolean channelEligible(double height,double discharge){return height>=63.5&&discharge>=6;}
  static double channelRadius(double discharge){
-  if(discharge<12)return lerp(1.5,2.4,clamp((discharge-6)/6,0,1));
-  return clamp(1.7+Math.log1p(discharge/12)*1.15,2.4,5.5);
+  if(discharge<12)return lerp(2.4,3.8,clamp((discharge-6)/6,0,1));
+  return clamp(3.2+Math.log1p(discharge/12)*2.1,3.8,9.5);
  }
  List<RiverSegment> rivers(int minX,int minZ,int maxX,int maxZ){
   var out=new ArrayList<RiverSegment>();

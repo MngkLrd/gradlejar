@@ -21,17 +21,17 @@ public final class RiverTerrain {
  public static void prepare(NoiseBasedChunkGenerator gen,RandomState state,RegistryAccess access,ChunkAccess c){
   if(!NaturalWaterGeneration.enabled(gen))return;
   var model=GeoDensity.riverModel(state,access);int x0=c.getPos().getMinBlockX(),z0=c.getPos().getMinBlockZ(),sea=gen.getSeaLevel();
-  var segments=model.rivers(x0-6,z0-6,x0+21,z0+21);
+  var segments=model.rivers(x0-15,z0-15,x0+30,z0+30);
   if(segments.isEmpty())return;
   Map<Long,Integer> heights=new HashMap<>();
   java.util.function.BiFunction<Integer,Integer,Integer> height=(x,z)->heights.computeIfAbsent(((long)x<<32)^(z&0xffffffffL),k->gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,c,state)-1);
   var stages=new ArrayList<Stage>();
   for(var s:segments){
    // Skip distant segments before querying expensive actual base heights.
-   if(s.distance(x0+7.5,z0+7.5)>19)continue;
+   if(s.distance(x0+7.5,z0+7.5)>27)continue;
    int a=height.apply(s.x(),s.z()),b=height.apply(s.endX(),s.endZ());
-   if(a<sea||b>a+2||a-b>20)continue;
-   stages.add(new Stage(s,a-1,Math.min(a,b)-1));
+   if(a<sea||b>a+3||a-b>28)continue;
+   stages.add(new Stage(s,Math.max(sea,a-1),Math.max(sea,b-1)));
   }
   var p=new BlockPos.MutableBlockPos();var water=NaturalFluids.get(WaterKind.RIVER).block.get().defaultBlockState();
   int[] floor=new int[256];
@@ -39,18 +39,39 @@ public final class RiverTerrain {
   for(int x=0;x<16;x++)for(int z=0;z<16;z++){
    int wx=x0+x,wz=z0+z,h=floor[x*16+z];if(h<sea+1||!natural(c.getBlockState(p.set(wx,h,wz))))continue;
    Stage selected=null;double best=1;
+   best=1.65;
    for(var s:stages){double d=s.segment.distance(wx,wz)/s.segment.radius();if(d<best){best=d;selected=s;}}
    if(selected==null)continue;
    var s=selected.segment;int stage=Math.min(h-1,(int)Math.floor(GeoModel.lerp(selected.start,selected.end,s.fraction(wx,wz))));
-   if(stage<sea||h-stage>5)continue;
-   int depth=s.discharge()<12?1:best<.55&&s.discharge()>35?3:2,bed=stage-depth;
-   if(h-bed>8||bed<=c.getMinBuildHeight()+5||!natural(c.getBlockState(p.set(wx,bed,wz))))continue;
+   if(stage<sea||h-stage>12)continue;
+   int depth=channelDepth(s.discharge(),best);
+   int bed=best<=1?stage-depth:Math.min(h,stage+1+(int)Math.floor((best-1)*Math.max(3,h-stage)/.65));
+   if(h-bed>20||bed<=c.getMinBuildHeight()+5||!natural(c.getBlockState(p.set(wx,bed,wz))))continue;
    boolean valid=true;for(int y=bed+1;y<=h;y++)if(!natural(c.getBlockState(p.set(wx,y,wz)))){valid=false;break;}
    if(!valid)continue;
-   c.setBlockState(p.set(wx,bed,wz),Blocks.STONE.defaultBlockState(),false);
-   for(int y=bed+1;y<=stage;y++)c.setBlockState(p.set(wx,y,wz),water,false);
-   for(int y=stage+1;y<=h;y++)c.setBlockState(p.set(wx,y,wz),Blocks.AIR.defaultBlockState(),false);
+   if(best<=1){
+    c.setBlockState(p.set(wx,bed,wz),Blocks.GRAVEL.defaultBlockState(),false);
+    for(int y=bed+1;y<=stage;y++)c.setBlockState(p.set(wx,y,wz),water,false);
+   }
+   for(int y=Math.max(bed,stage)+1;y<=h;y++)c.setBlockState(p.set(wx,y,wz),Blocks.AIR.defaultBlockState(),false);
   }
+ }
+ static int channelDepth(double discharge,double relativeDistance){
+  int center=discharge<12?3:Math.min(7,4+(int)Math.floor(Math.log1p(discharge/25)));
+  return Math.max(1,(int)Math.ceil(center*(1-Math.pow(Math.min(1,Math.max(0,relativeDistance)),1.7))));
+ }
+ /** Runtime current derives from the same directed channel arc, even for full source blocks. */
+ public static net.minecraft.world.phys.Vec3 current(ServerLevel l,BlockPos p){
+  if(!NaturalWaterGeneration.enabled(l.getChunkSource().getGenerator())||!l.hasChunkAt(p))return net.minecraft.world.phys.Vec3.ZERO;
+  var model=GeoDensity.riverModel(l.getChunkSource().randomState(),l.registryAccess());
+  GeoModel.RiverSegment best=null;double distance=1.25;
+  for(var s:model.rivers(p.getX()-12,p.getZ()-12,p.getX()+12,p.getZ()+12)){
+   double d=s.distance(p.getX(),p.getZ())/s.radius();if(d<distance){distance=d;best=s;}
+  }
+  if(best==null)return net.minecraft.world.phys.Vec3.ZERO;
+  int surface=l.getHeight(Heightmap.Types.OCEAN_FLOOR,p.getX(),p.getZ());
+  if(p.getY()<surface-1||p.getY()>surface+8)return net.minecraft.world.phys.Vec3.ZERO;
+  return best.direction(p.getX(),p.getZ()).scale(.65);
  }
  /** Bounded candidate search. Actual generated river is verified independently by CoastSurvey. */
  static String probe(ServerLevel l,BlockPos origin){return probe(l,origin,false);}

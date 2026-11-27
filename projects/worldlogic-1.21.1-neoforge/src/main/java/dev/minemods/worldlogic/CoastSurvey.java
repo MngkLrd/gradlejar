@@ -34,7 +34,7 @@ final class CoastSurvey {
   if(c==null)return "COAST_AUDIT unavailable";
   int sea=l.getSeaLevel(),x0=c.getPos().getMinBlockX(),z0=c.getPos().getMinBlockZ();
   int ocean=0,wetOcean=0,dry=0,inland=0,unknown=0,dryQuart=0,river=0,links=0;
-  int[] riverY=new int[256];Arrays.fill(riverY,Integer.MIN_VALUE);
+  int deep=0;int[] riverY=new int[256];Arrays.fill(riverY,Integer.MIN_VALUE);
   List<String> examples=new ArrayList<>();
   for(int x=0;x<16;x++)for(int z=0;z<16;z++){
    int wx=x0+x,wz=z0+z,h=c.getHeight(Heightmap.Types.OCEAN_FLOOR,x,z);
@@ -51,7 +51,7 @@ final class CoastSurvey {
     }
    }
    for(int y=Math.min(l.getMaxBuildHeight()-1,Math.max(top,h+1));y>=Math.max(sea,h-2);y--){
-    if(NaturalFluids.kind(c.getFluidState(new BlockPos(wx,y,wz)).getType())==WaterKind.RIVER){river++;riverY[x*16+z]=y;break;}
+    if(NaturalFluids.kind(c.getFluidState(new BlockPos(wx,y,wz)).getType())==WaterKind.RIVER){river++;riverY[x*16+z]=y;if(NaturalFluids.kind(c.getFluidState(new BlockPos(wx,y-1,wz)).getType())==WaterKind.RIVER&&NaturalFluids.kind(c.getFluidState(new BlockPos(wx,y-2,wz)).getType())==WaterKind.RIVER)deep++;break;}
    }
   }
   for(int x=0;x<4;x++)for(int z=0;z<4;z++){
@@ -65,6 +65,6 @@ final class CoastSurvey {
    if(z<15&&riverY[x*16+z+1]!=Integer.MIN_VALUE&&Math.abs(y-riverY[x*16+z+1])<=1)links++;
   }
   if(inland>0||dryQuart>0)org.slf4j.LoggerFactory.getLogger("WorldLogic").warn("WORLDLOGIC_DRY_OCEAN chunk={} dryQuart={} inland={} examples={}",c.getPos(),dryQuart,inland,examples);
-  return "COAST_AUDIT columns=256 ocean="+ocean+" wet="+wetOcean+" dry="+dry+" inland="+inland+" unknown="+unknown+" dryQuart="+dryQuart+" river="+river+" links="+links+" examples="+examples;
+  return "COAST_AUDIT columns=256 ocean="+ocean+" wet="+wetOcean+" dry="+dry+" inland="+inland+" unknown="+unknown+" dryQuart="+dryQuart+" river="+river+" links="+links+" deep="+deep+" examples="+examples;
  }
 }

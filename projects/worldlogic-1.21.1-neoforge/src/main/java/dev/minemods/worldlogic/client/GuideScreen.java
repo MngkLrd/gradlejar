@@ -31,7 +31,7 @@ public final class GuideScreen extends ClearScreen{
   button.setTooltip(Tooltip.create(lit(text)));addRenderableWidget(button);
  }
  private void link(String text,int x,int y,int w,Runnable action){
-  var widget=new Button(x,y,w,15,lit(text),v->action.run(),Button.DEFAULT_NARRATION){
+  var widget=new Button(x,y,w,15,lit(text),v->action.run(),v->v.get()){
    @Override protected void renderWidget(GuiGraphics g,int mx,int my,float delta){
     if(isHoveredOrFocused())g.fill(getX(),getY(),getX()+getWidth(),getY()+getHeight(),0xffd5b786);
     g.drawString(font,font.plainSubstrByWidth(getMessage().getString(),Math.max(1,getWidth()-6)),getX()+3,getY()+3,0xff48311e,false);
