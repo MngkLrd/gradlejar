@@ -1,0 +1,401 @@
+{
+  "schema": 1,
+  "revision": "r9",
+  "minecraft": "1.21.1",
+  "official_client_sha1": "30c73b1c5da787909b2f73340419fdf13b9def88",
+  "scope": "57 directly viewed source PNGs; hashes confirmed by official client corpus. Art rules are observations not automatic aesthetic grades.",
+  "references": {
+    "block/spruce_log": "f28e8ce2783a0d14cc6f23904faf6858fba1295290a732735db82b54392574fd",
+    "block/spruce_log_top": "b153bde175085ba46e5badacf9d7dd4dc909a75f02118b73b9338685f06c5b42",
+    "block/spruce_leaves": "1f6c193f73cdd1399e94809c0bd7dce0b1b76dcdae1da2088e481dbba714edb2",
+    "block/oak_leaves": "69c9c7048695e014aee6b8a2c4cb080607bd7a2a5291c06218b8134cbfcdc04f",
+    "block/oak_log": "060c93128fb65aa350a84e4b6576e616c47d40211bbe537cfe923a81d072e30c",
+    "block/oak_log_top": "62f38b25ae28b6c4842ee5a83f790394b1ec4d6c6f20dd52044394855346a2a7",
+    "block/dirt": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0",
+    "block/stone": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b",
+    "block/iron_ore": "d3a50d2c689f8ade6445488f2edc68ca107c343ef09df8eaa27e51aa83d5a5ed",
+    "item/leather_chestplate": "bf5990a680964167f9e9eb3d1a362750cef1f0bcd115caec88434e23e90cf0b8",
+    "block/spruce_sapling": "8559ad02a8a73dc5f9b8bcb51f2eb26ddbb870e99736907a380f2487fe00ff74",
+    "block/birch_log": "cebcca1885e46164bf028cb7d1c2df6cb391da0e792b3d9c99641577d0c8baaf",
+    "block/jungle_log": "5fbebd043751f997f36cafec1645deb96e7fb46fc65b6942a67759e55b2d40b3",
+    "block/acacia_log": "3761f4cfc02c88215da85259a2069f7ac43ab647f100fd68a94a22af7c209f9d",
+    "block/dark_oak_log": "10fff32071a6f562064322321e481a4091e9aa21836ad272fe9e19b63527fc2c",
+    "block/birch_leaves": "42ba8c5b9aaecef27ce17b730abd45ebebd8240811b78bb836088ed58e89c332",
+    "block/acacia_leaves": "e9578d4e462ca2865a6f8db3492a783705844d2748fb030a53e1964d664e9b57",
+    "block/jungle_sapling": "28f2686cca35c16e0d59496902bc7f178404f88be2cfc6920e2c48f7b0432c8d",
+    "block/birch_sapling": "2d96c7b2f694569c5bf32045ea9ae42447aebe3e0d62619243c90cee619bd813",
+    "item/glass_bottle": "6a09a39bb6c41bc92bd5eca1f51caf5b582a85f68206b164476c8e14a4669416",
+    "item/bucket": "3f14980d6d2dea8d547e44104a55a51d62bee71bd45f16068113b279b3d2d042",
+    "item/copper_ingot": "ebccaba00d1623ef8acce3768e104bf54c8ee157d92ba7c969d7100830414875",
+    "item/iron_ingot": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391",
+    "item/brick": "0c052c23230ff95ec48959b3ee23e88d9b95b04fd4f9b3429da6a585e6e95c81",
+    "item/leather": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054",
+    "item/bread": "7e0e4a9fcb8bd4b85820ee3aa7ea83b66f08687cd907a8d38cc98281b41fac1d",
+    "item/apple": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2",
+    "block/oxidized_copper": "565994e5f9e3c03cf8ba0f3821bd4f65ab9151ea732a4942d7da6341e7148920",
+    "block/coarse_dirt": "00f317cb04d7484982d4288c4f4ff5ab5c9f881e6940bbac05a84a02b09cb640",
+    "block/rooted_dirt": "26cf902a828def31843782e171d638894dc8e408aeae2133d8a1ceb0073e407d",
+    "item/charcoal": "8694dbb742b7aeea35fda24643f078a3624e083109a3968431f944ff3c178473",
+    "item/bowl": "4510b6adbf2e162d5af6330e7faa3f162b82b89cacfd36ec5b90f3d29e0513e5",
+    "block/oak_planks": "3a33db67a3ba30537d0890a5cb37c8087ca336be89cbb1393a71c23224e361a8",
+    "block/birch_planks": "cdbfdcd32d0241c5c6c0179e323cc1a3198b5a86a2936f0553850ffbb9666797",
+    "block/spruce_planks": "43ddc665352825876985faaed7e5f7b958f9b8fc3cad56d7bca1c2db7a54949a",
+    "block/bricks": "33f9411f1cb233a2020df0cf3fda32c0f67a4b0fac3751bde2ba6f2fee81b169",
+    "block/terracotta": "0070431576a05bab0e0383afafdc4d2c6f46e04dac2c54a90afecc97f759b4fb",
+    "block/white_wool": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100",
+    "block/red_wool": "b0ffb8c5e070c8e9c96dfa4a02cd07382ba3bc245c9c6543042ec78156ed7a39",
+    "block/glass": "cb89c706dce86eac3123cef087d359b5f23098b658a468fb91662b4a9922bcd0",
+    "block/ice": "4d158c24f2ec563d52806642ac7f4e20a5bda168af8c2ae528ed8e9ef1a58771",
+    "block/snow": "05201107fc2c60db4dc59f778a9ca7cb6101b2a332da696b33ce4b0cd2a02019",
+    "block/sand": "8875040fbee9e8c40ef1d6472e1548230d9ef1bad32d58e4e2fa857f1ae08027",
+    "block/gravel": "cc9feb24f18337c9a4f01ca0c28a61bc2f0c629962d4f002c23623528c5ca0ea",
+    "block/cobblestone": "bcda95fdf5afa91747657aa198fc0b69ebf44141de30a718075f74045e9a5def",
+    "block/copper_block": "e5587b25d698a33eaa84b4f9faca00115cf91ff01e0340004c604913a1b2b22c",
+    "block/exposed_copper": "c1296b631dae31858d75fddc9cb381375c46b7c42e8254d7cd259738232749e5",
+    "block/weathered_copper": "208b464ef219281c1074f14f7c660d0b975cb81f1b0885add90742b04109bab1",
+    "block/iron_block": "910646c90f391ec42cfebdd356ed1e1be36ad513a684a930e38c36ab610a7a24",
+    "block/gold_block": "a66720b7a7a3a253ae02ac9ebafeb74fbe1e933dac1c752c8cd18bcd75422509",
+    "block/deepslate": "b4c5e7f5538608a371fd4c1f6b398e4b76f723702d10144432636a85a1a61832",
+    "block/moss_block": "ff2be8de2198aa42ce405734b69e69a2c220cd6996e2e170f29e4f5a8f649eb1",
+    "item/iron_sword": "ed1fa2f83955583e70a19791455d13989e8bd93b1d7240e775a57141022bed6b",
+    "item/wooden_pickaxe": "a6c2a1de2d8bf88516e5c1cd438d392e9f1dc4fc3e283ecabc838848cc4440a5",
+    "item/diamond_pickaxe": "7672c209d0c66c43d297b3d04513c9e789d03f5ea6ff1e564a4dbc1fd78a5c88",
+    "item/shears": "63be8d8865a04be4109aaae4fbb5d5b94c573e0f9f52ba79b444660eefce33d8",
+    "item/paper": "8ffee002bbc339552eb4d6be5948eb4eb66d016c19e7bbc55bc1cd4a575cc44a"
+  },
+  "rules": {
+    "vertical_bark": {
+      "profiles": [
+        "bark"
+      ],
+      "reference_ids": [
+        "block/oak_log",
+        "block/spruce_log",
+        "block/dark_oak_log",
+        "block/acacia_log"
+      ],
+      "principle": "Unequal vertical ridges, interrupted secondary clusters, coherent turning planes.",
+      "limit": "Exact high-quality palette variants may share geometry."
+    },
+    "horizontal_bark": {
+      "profiles": [
+        "bark"
+      ],
+      "reference_ids": [
+        "block/birch_log",
+        "block/jungle_log"
+      ],
+      "principle": "Broad planes or horizontal lenticels/streaks; distinguish species.",
+      "limit": "Do not force vertical grain onto birch or jungle."
+    },
+    "growth_rings": {
+      "profiles": [
+        "log_end"
+      ],
+      "reference_ids": [
+        "block/oak_log_top",
+        "block/spruce_log_top"
+      ],
+      "principle": "Ring offsets and local close shades; bark boundary has texture.",
+      "limit": "Shared ring geometry is legitimate when material supports it."
+    },
+    "needles": {
+      "profiles": [
+        "conifer"
+      ],
+      "reference_ids": [
+        "block/spruce_leaves"
+      ],
+      "principle": "Thin directed needle groups and structure-driven cutouts.",
+      "limit": "Tiny components and intentional diagonals are valid."
+    },
+    "broadleaf": {
+      "profiles": [
+        "broadleaf"
+      ],
+      "reference_ids": [
+        "block/oak_leaves",
+        "block/birch_leaves",
+        "block/acacia_leaves"
+      ],
+      "principle": "Leaf groups with local depth and structured transparent openings.",
+      "limit": "Raw grayscale may be tinted; four colors can suffice."
+    },
+    "ground_aggregates": {
+      "profiles": [
+        "soil"
+      ],
+      "reference_ids": [
+        "block/dirt",
+        "block/coarse_dirt",
+        "block/rooted_dirt",
+        "block/sand",
+        "block/gravel",
+        "block/moss_block"
+      ],
+      "principle": "Material-specific aggregate size, irregular local relationships; inspect tiling.",
+      "limit": "Sand is finer, gravel more angular, moss denser; no forced noise or palette quota."
+    },
+    "stone_surface": {
+      "profiles": [
+        "soil",
+        "other"
+      ],
+      "reference_ids": [
+        "block/stone",
+        "block/cobblestone",
+        "block/deepslate"
+      ],
+      "principle": "Coherent rock structure, differentiated rock edges, subdued base variations.",
+      "limit": "Stone can use four colors; deepslate may be directional and cobble deliberately clustered."
+    },
+    "mineral_inclusions": {
+      "profiles": [
+        "ore"
+      ],
+      "reference_ids": [
+        "block/iron_ore",
+        "block/stone"
+      ],
+      "principle": "Keep recognizable host rock; inclusions embedded with meaningful local light.",
+      "limit": "No forced round spots or universal palette size."
+    },
+    "clothing": {
+      "profiles": [
+        "clothing"
+      ],
+      "reference_ids": [
+        "item/leather_chestplate",
+        "item/leather",
+        "block/white_wool",
+        "block/red_wool"
+      ],
+      "principle": "Read silhouette, folds, material-specific edge shading.",
+      "limit": "Inventory icon is not worn UV; wool block does not specify a clothing silhouette."
+    },
+    "saplings": {
+      "profiles": [
+        "sapling"
+      ],
+      "reference_ids": [
+        "block/spruce_sapling",
+        "block/jungle_sapling",
+        "block/birch_sapling"
+      ],
+      "principle": "Species silhouette and attached foliage follow branch hierarchy.",
+      "limit": "Do not just recolor a crown."
+    },
+    "glass_vessel": {
+      "profiles": [
+        "vessel",
+        "other"
+      ],
+      "reference_ids": [
+        "item/glass_bottle",
+        "block/glass"
+      ],
+      "principle": "Neck/shoulder/body, purposefully empty interior, cool edge highlights.",
+      "limit": "Cutout glass may have no partial alpha; inspect intended rendering separately."
+    },
+    "metal_vessel": {
+      "profiles": [
+        "vessel"
+      ],
+      "reference_ids": [
+        "item/bucket",
+        "item/copper_ingot",
+        "item/iron_ingot"
+      ],
+      "principle": "Distinct opening, rim, turning surface and local metal highlights.",
+      "limit": "Do not copy a bucket silhouette blindly; metal and clay should not share generic shine."
+    },
+    "clay_vessel": {
+      "profiles": [
+        "vessel"
+      ],
+      "reference_ids": [
+        "item/brick",
+        "item/glass_bottle",
+        "block/terracotta"
+      ],
+      "principle": "Matte light planes, mouth and base, warm restrained transition.",
+      "limit": "Brick and terracotta are material references, not vessel construction references."
+    },
+    "leather_vessel": {
+      "profiles": [
+        "vessel"
+      ],
+      "reference_ids": [
+        "item/leather",
+        "item/glass_bottle"
+      ],
+      "principle": "Soft contour with folds or seam where function calls for it.",
+      "limit": "Leather hide is material reference; do not copy it as pouch geometry."
+    },
+    "wood_vessel": {
+      "profiles": [
+        "vessel"
+      ],
+      "reference_ids": [
+        "item/bowl",
+        "block/oak_planks"
+      ],
+      "principle": "Dark cavity and rim with grain aligned to construction.",
+      "limit": "Plank repeat is not a cup silhouette."
+    },
+    "metal_ingot": {
+      "profiles": [
+        "other",
+        "clothing"
+      ],
+      "reference_ids": [
+        "item/copper_ingot",
+        "item/iron_ingot"
+      ],
+      "principle": "Top and side planes, coherent sharp local highlights.",
+      "limit": "Similar silhouettes may differ by surface light response."
+    },
+    "fired_clay": {
+      "profiles": [
+        "other"
+      ],
+      "reference_ids": [
+        "item/brick",
+        "block/bricks",
+        "block/terracotta"
+      ],
+      "principle": "Warm matte planes, edges and mortar when relevant.",
+      "limit": "Terracotta is intentionally subdued; no mandatory bright microcontrast."
+    },
+    "leather_material": {
+      "profiles": [
+        "other",
+        "clothing"
+      ],
+      "reference_ids": [
+        "item/leather",
+        "item/leather_chestplate"
+      ],
+      "principle": "Broad warm inner planes and restrained folds/edges.",
+      "limit": "Grayscale armor tint is a separate rendering concern."
+    },
+    "food": {
+      "profiles": [
+        "other"
+      ],
+      "reference_ids": [
+        "item/bread",
+        "item/apple"
+      ],
+      "principle": "Material-specific crust, flesh or skin shapes and highlights.",
+      "limit": "Don't apply shiny fruit shading to bread."
+    },
+    "wood_planks": {
+      "profiles": [
+        "other"
+      ],
+      "reference_ids": [
+        "block/oak_planks",
+        "block/birch_planks",
+        "block/spruce_planks"
+      ],
+      "principle": "Plank joints, small horizontal grain clusters, repeated construction rhythm.",
+      "limit": "Palette variants share exact structure; repetition is intended."
+    },
+    "textile": {
+      "profiles": [
+        "other",
+        "clothing"
+      ],
+      "reference_ids": [
+        "block/white_wool",
+        "block/red_wool"
+      ],
+      "principle": "Low local contrast, dense small soft clusters give woven/fibrous impression.",
+      "limit": "White wool has 40 RGB colors; red wool 36. No numeric palette ceiling."
+    },
+    "cold_surface": {
+      "profiles": [
+        "other",
+        "soil"
+      ],
+      "reference_ids": [
+        "block/snow",
+        "block/ice"
+      ],
+      "principle": "Snow soft near-white clusters; ice translucent streaks.",
+      "limit": "Snow three colors; ice all pixels partially transparent, renderer context matters."
+    },
+    "glass_surface": {
+      "profiles": [
+        "other"
+      ],
+      "reference_ids": [
+        "block/glass",
+        "block/ice"
+      ],
+      "principle": "Edge reflections or translucent volume as appropriate.",
+      "limit": "Empty cutout vs partial alpha are distinct material treatments."
+    },
+    "metal_surface": {
+      "profiles": [
+        "other"
+      ],
+      "reference_ids": [
+        "block/iron_block",
+        "block/gold_block",
+        "block/copper_block"
+      ],
+      "principle": "Coherent rims and oriented highlights, relatively broad smooth planes.",
+      "limit": "Iron has horizontal streaks; gold and copper diagonal reflections."
+    },
+    "copper_oxidation": {
+      "profiles": [
+        "other",
+        "vessel"
+      ],
+      "reference_ids": [
+        "block/copper_block",
+        "block/exposed_copper",
+        "block/weathered_copper",
+        "block/oxidized_copper",
+        "item/copper_ingot"
+      ],
+      "principle": "Preserve metal construction while changing copper/patina regions through stages.",
+      "limit": "Full oxide block does not prescribe patina placement on a vessel."
+    },
+    "tools": {
+      "profiles": [
+        "other"
+      ],
+      "reference_ids": [
+        "item/iron_sword",
+        "item/wooden_pickaxe",
+        "item/diamond_pickaxe",
+        "item/shears"
+      ],
+      "principle": "Separate handle and working part with distinct ramps; use functional silhouette.",
+      "limit": "Shared tool geometry can support progression; don't obscure the working edge."
+    },
+    "paper": {
+      "profiles": [
+        "other"
+      ],
+      "reference_ids": [
+        "item/paper"
+      ],
+      "principle": "Light broad plane, shaded stepped edges, restrained interior.",
+      "limit": "A quiet interior is valid; no arbitrary marks to increase detail."
+    },
+    "charcoal": {
+      "profiles": [
+        "other"
+      ],
+      "reference_ids": [
+        "item/charcoal"
+      ],
+      "principle": "Dark, irregular fragment silhouette with warm-dark edge changes.",
+      "limit": "A lump is not a filter mechanism; use function-specific shape."
+    }
+  }
+}

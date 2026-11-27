@@ -25,7 +25,117 @@ HOLDOUT = {
     "armor":["item/iron_chestplate","item/chainmail_chestplate"],
     "vessel":["item/bowl","item/glass_bottle"],
 }
+# Expanded exploratory R9 suite: 60 fixed sources, 12 material/role groups.
+# Exact RGB partition layout fingerprints exclude R3 sources and R9's
+# directly viewed atlas; same-family knowledge and near-duplicates remain.
+EXPANDED={
+  "wood": [
+    "block/stripped_oak_log",
+    "block/stripped_birch_log",
+    "block/acacia_door_bottom",
+    "block/oak_trapdoor",
+    "block/bamboo_block"
+  ],
+  "stone": [
+    "block/granite",
+    "block/diorite",
+    "block/andesite",
+    "block/tuff",
+    "block/blackstone"
+  ],
+  "ground": [
+    "block/mud",
+    "block/podzol_top",
+    "block/mycelium_top",
+    "block/clay",
+    "block/soul_sand"
+  ],
+  "ore": [
+    "block/coal_ore",
+    "block/copper_ore",
+    "block/diamond_ore",
+    "block/lapis_ore",
+    "block/emerald_ore"
+  ],
+  "foliage": [
+    "block/flowering_azalea_leaves",
+    "block/cherry_leaves",
+    "block/jungle_leaves",
+    "block/dark_oak_leaves",
+    "block/azalea_plant"
+  ],
+  "plants": [
+    "block/dandelion",
+    "block/poppy",
+    "block/blue_orchid",
+    "block/cactus_side",
+    "block/wheat_stage7"
+  ],
+  "armor": [
+    "item/leather_helmet",
+    "item/leather_boots",
+    "item/leather_leggings",
+    "item/iron_helmet",
+    "item/iron_boots"
+  ],
+  "tool": [
+    "item/iron_axe",
+    "item/iron_shovel",
+    "item/iron_hoe",
+    "item/flint_and_steel",
+    "item/fishing_rod"
+  ],
+  "food": [
+    "item/carrot",
+    "item/potato",
+    "item/cooked_beef",
+    "item/chicken",
+    "item/melon_slice"
+  ],
+  "material": [
+    "item/gold_ingot",
+    "item/coal",
+    "item/clay_ball",
+    "item/string",
+    "item/feather"
+  ],
+  "gem": [
+    "item/diamond",
+    "item/emerald",
+    "item/amethyst_shard",
+    "item/quartz",
+    "item/lapis_lazuli"
+  ],
+  "utility": [
+    "item/book",
+    "item/compass_16",
+    "item/clock_00",
+    "item/flower_pot",
+    "item/hopper"
+  ]
+}
 METHODS=("shuffle_visible","flatten_ramp","shuffle_alpha")
+EXPANDED_METHODS=METHODS+("local_flatten","repeat_quadrant")
+
+def expanded_layout_audit(z,catalog):
+    def read_layout(ref):
+        path=PREFIX+ref+".png"
+        if path+".mcmeta" in z.namelist():raise ValueError("Animation not supported: "+path)
+        im=decode(z.read(path))
+        return extra_metrics(im)["layout_sha256"],im
+    old={read_layout(ref)[0] for ref in list(catalog["references"])+[n for refs in HOLDOUT.values() for n in refs]}
+    seen=set()
+    for refs in EXPANDED.values():
+        for ref in refs:
+            layout,im=read_layout(ref)
+            if im.size!=(16,16) or any(0<p[3]<255 for p in im.getdata()):
+                raise ValueError("Expanded source must be static 16x16 opaque/cutout: "+ref)
+            if layout in seen or layout in old:
+                raise ValueError("Expanded exact layout overlap: "+ref)
+            seen.add(layout)
+    return {"unique_source_layouts":len(seen),"prior_exact_layout_overlap":0,
+            "scope":"Exact visible RGB partition only; not a held-out-family or perceptual deduplication claim."}
+
 def pixels(im):
     return list(im.getdata())
 def visible_hist(im):
@@ -44,6 +154,27 @@ def mutate(im,mode,rng):
     elif mode=="shuffle_alpha":
         if not any(p[3]==0 for p in px) or not any(p[3]>0 for p in px):return None
         rng.shuffle(px)
+    elif mode=="local_flatten":
+        # Purposefully localized lost micro-contrast, not whole-sprite noise.
+        w,h=im.size
+        patches=[]
+        for y in range(h-3):
+            for x in range(w-3):
+                ids=[yy*w+xx for yy in range(y,y+4) for xx in range(x,x+4) if px[yy*w+xx][3]]
+                colors=Counter(px[i][:3] for i in ids)
+                if len(ids)>=10 and len(colors)>=3:patches.append((ids,colors))
+        if not patches:return None
+        ids,colors=rng.choice(patches)
+        color=colors.most_common(1)[0][0]
+        for i in ids:px[i]=(*color,px[i][3])
+    elif mode=="repeat_quadrant":
+        # Only opaque even-sided tiles: mechanical recurrence, not a cutout mutation.
+        w,h=im.size
+        if w%2 or h%2 or any(p[3]!=255 for p in px):return None
+        qw,qh=w//2,h//2
+        sx=rng.randrange(2)*qw;sy=rng.randrange(2)*qh
+        original=px[:]
+        px=[original[(sy+y%qh)*w+(sx+x%qw)] for y in range(h) for x in range(w)]
     else:raise ValueError("Unknown perturbation")
     result.putdata(px)
     return result if pixels(result)!=pixels(im) else None
@@ -55,16 +186,16 @@ def measure(im):
 def sha(im):
     return hashlib.sha256(im.tobytes()).hexdigest()
 
-def build(z,seed):
+def build(z,seed,sources=HOLDOUT,methods=METHODS):
     rng=random.Random(seed);cases=[];assets=[]
-    for family,refs in HOLDOUT.items():
+    for family,refs in sources.items():
         for ref in refs:
             path=PREFIX+ref+".png"
             if path+".mcmeta" in z.namelist():raise ValueError("Animated holdout "+path)
             data=z.read(path);source=decode(data)
             assets.append({"family":family,"reference":ref,"source_png_sha256":hashlib.sha256(data).hexdigest(),
                            "layout_sha256":extra_metrics(source)["layout_sha256"]})
-            for mode in METHODS:
+            for mode in methods:
                 altered=mutate(source,mode,rng)
                 if altered is None:continue
                 if mode=="shuffle_visible":
@@ -72,6 +203,8 @@ def build(z,seed):
                         raise ValueError("Control must preserve palette frequencies and alpha mask")
                 if mode=="shuffle_alpha" and Counter(pixels(source))!=Counter(pixels(altered)):
                     raise ValueError("Control must preserve RGBA histogram")
+                if mode=="local_flatten" and [p[3] for p in pixels(source)]!=[p[3] for p in pixels(altered)]:
+                    raise ValueError("Local flatten must preserve alpha mask")
                 order=[source,altered]
                 answer=rng.choice(("A","B"))
                 if answer=="B":order.reverse()
@@ -82,6 +215,34 @@ def build(z,seed):
     for i,case in enumerate(cases,1):case["id"]=f"case-{i:03d}"
     return cases,assets
 
+# Fixed, unfitted diagnostic baselines. Directional choices are hypotheses,
+# not art rules; publish misses and abstentions as well as successes.
+BASELINES={
+    "more_palette_colors":("palette_colors",1),
+    "less_isolated_pixels":("singleton_pixel_fraction",-1),
+    "more_same_color_edges":("same_color_edge_fraction",1),
+    "less_adjacent_value_delta":("adjacent_mean_value_delta",-1),
+    "larger_component":("largest_cluster_area",1),
+}
+def baseline_results(cases):
+    results={}
+    for rule,(key,direction) in BASELINES.items():
+        total=Counter(correct=0,wrong=0,unsure=0,total=0)
+        by_mode={}
+        for case in cases:
+            source=case["source_metrics"].get(key)
+            altered=case["perturbed_metrics"].get(key)
+            delta=None if source is None or altered is None else direction*(source-altered)
+            decision="unsure" if delta is None or abs(delta)<1e-10 else ("correct" if delta>0 else "wrong")
+            mode=by_mode.setdefault(case["mode"],Counter(correct=0,wrong=0,unsure=0,total=0))
+            for counts in (total,mode):
+                counts[decision]+=1;counts["total"]+=1
+        results[rule]={"metric":key,"direction":direction,"total":dict(total),
+                       "by_mode":{m:dict(c) for m,c in sorted(by_mode.items())},
+                       "coverage":(total["correct"]+total["wrong"])/total["total"] if total["total"] else None,
+                       "source_choice_accuracy":total["correct"]/total["total"] if total["total"] else None}
+    return results
+
 def report(cases,assets,version,client_sha,seed):
     by=Counter(c["mode"] for c in cases)
     unchanged_palette=sum(c["source_metrics"]["palette_colors"]==c["perturbed_metrics"]["palette_colors"] for c in cases)
@@ -89,7 +250,7 @@ def report(cases,assets,version,client_sha,seed):
     return {"schema":1,"minecraft":version,"official_client_sha1":client_sha,"seed":seed,
             "source_count":len(assets),"pair_count":len(cases),"controls":dict(by),
             "equal_palette_count_pairs":unchanged_palette,"equal_visible_area_pairs":unchanged_visible,
-            "source_assets":assets,
+            "source_assets":assets,"family_pair_counts":dict(Counter(c["family"] for c in cases)),"unfitted_metric_baselines":baseline_results(cases),
             "reviewer_status":"NOT_RUN","scope":"Perturbed vs source pairs, not human-validated bad art; no reviewer accuracy yet."}
 
 def private_deck(out,cases):
@@ -131,13 +292,25 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--minecraft",default="1.21.1");p.add_argument("--client",type=Path)
     p.add_argument("--seed",type=int,default=206);p.add_argument("--out",required=True,type=Path)
+    p.add_argument("--suite",choices=("pilot","expanded"),default="pilot")
     p.add_argument("--private-deck",action="store_true",help="Local only. Never upload vanilla images or answer key publicly.")
     a=p.parse_args()
     client,client_sha=official_client(a.minecraft,a.client)
-    with zipfile.ZipFile(io.BytesIO(client)) as z:cases,assets=build(z,a.seed)
+    audit=None
+    with zipfile.ZipFile(io.BytesIO(client)) as z:
+        if a.suite=="expanded":
+            if a.minecraft!="1.21.1":raise ValueError("R9 expanded suite is fixed to 1.21.1")
+            from .art_review_lock import load_atlas
+            audit=expanded_layout_audit(z,load_atlas())
+            cases,assets=build(z,a.seed,EXPANDED,EXPANDED_METHODS)
+        else:
+            cases,assets=build(z,a.seed)
     result=report(cases,assets,a.minecraft,client_sha,a.seed)
+    result.update(suite=a.suite,layout_audit=audit)
     a.out.mkdir(parents=True,exist_ok=True)
     (a.out/"benchmark-summary.json").write_text(json.dumps(result,indent=2)+"\n")
     if a.private_deck:private_deck(a.out/"private-deck",cases)
-    print("BLIND_BENCHMARK",json.dumps({k:v for k,v in result.items() if k!="source_assets"},sort_keys=True))
+    print("BLIND_BENCHMARK",json.dumps({k:v for k,v in result.items() if k not in ("source_assets","unfitted_metric_baselines")},sort_keys=True))
+    for rule,row in result["unfitted_metric_baselines"].items():
+        print("METRIC_BASELINE",rule,json.dumps(row,sort_keys=True))
 if __name__=="__main__":main()

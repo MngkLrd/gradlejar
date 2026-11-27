@@ -31,6 +31,15 @@ PILOT={
 "block/acacia_leaves":"81c370267c6bcff3f458d612ea4ef72c0838e5e3",
 "block/jungle_sapling":"8632359457d3a245220bee351716a7b1c9267bfc",
 "block/birch_sapling":"9b8193943a7dfd61a2752c82189e9b0d02f95497",
+"item/glass_bottle":"b86b4b7f27ee23ac212890441e7c67631489446f",
+"item/bucket":"735a4afb22247b199992b8fb989a66b72bb06293",
+"item/copper_ingot":"3774bab4d43fb4fa8570843620c2ff3c193740aa",
+"item/iron_ingot":"c332bd2ca95f685c0ff89b29c836303efa885e5d",
+"item/brick":"1fb55776cd0244e61e0cc7f9e124f1d66f482215",
+"item/leather":"d808180790a73d27ee67c855472dfaf594805198",
+"item/bread":"4f3fc127000610a8367e047c5bb0b53c39d8f8ef",
+"item/apple":"6b0d745c8814f5d201b2bbb2a05ce507ec67af1c",
+"block/oxidized_copper":"b049d6c446e00b016c8985618294a82d5ec9f98d",
 }
 
 def git_blob(data):
@@ -115,6 +124,12 @@ def summarize(rows):
     return {"statuses":dict(Counter(r["status"] for r in rows)),"families":summaries,
             "shared_color_layouts":[sorted(paths) for paths in layouts.values() if len(paths)>1]}
 
+def verify_atlas(rows,version,client_sha,catalog):
+    if version!=catalog["minecraft"]:return None
+    if client_sha!=catalog["official_client_sha1"]:raise ValueError("Atlas official-client identity mismatch")
+    by_path={r["path"]:r["sha256"] for r in rows}
+    return {n:by_path.get(n+".png")==expected for n,expected in catalog["references"].items()}
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--minecraft",default="1.21.1")
@@ -122,15 +137,30 @@ def main():
     p.add_argument("--out",type=Path,required=True)
     a=p.parse_args()
     client,sha=official_client(a.minecraft,a.client)
-    with zipfile.ZipFile(io.BytesIO(client)) as z:rows=inventory(z)
+    from .vanilla_extended import extended_inventory
+    with zipfile.ZipFile(io.BytesIO(client)) as z:
+        rows=inventory(z)
+        extended=extended_inventory(z,rows)
+    extended.update(minecraft=a.minecraft,official_client_sha1=sha)
     by_path={r["path"]:r for r in rows}
     pilot={n:by_path.get(n+".png",{}).get("git_blob_sha1")==expected for n,expected in PILOT.items()} if a.minecraft=="1.21.1" else {}
+    from .art_review_lock import load_atlas
+    atlas_matches=verify_atlas(rows,a.minecraft,sha,load_atlas())
+    if atlas_matches is not None:
+        print("ATLAS_REFERENCES",sum(atlas_matches.values()),"/",len(atlas_matches))
     summary=summarize(rows)
     report={"schema":1,"minecraft":a.minecraft,"official_client_sha1":sha,
             "scope":"Official PNG inventory; static measurements only. Family hints are not verified material labels. No automatic artistic verdict.",
-            "pilot_archive_hash_matches":pilot,"total":len(rows),"summary":summary,"assets":rows}
+            "pilot_archive_hash_matches":pilot,"atlas_reference_hash_matches":atlas_matches,"total":len(rows),"summary":summary,"assets":rows}
     a.out.mkdir(parents=True,exist_ok=True)
     (a.out/"corpus.json").write_text(json.dumps(report,indent=2)+"\n")
+    (a.out/"extended-corpus.json").write_text(json.dumps(extended,indent=2)+"\n")
+    print("EXTENDED_CORPUS",json.dumps({k:v for k,v in extended.items() if k not in ("assets","role_coverage")},sort_keys=True))
+    for role,counts in extended["role_coverage"].items():
+        print("ROLE_COVERAGE",role,json.dumps(counts,sort_keys=True))
+    for row in extended["assets"]:
+        if row["status"] in ("ANALYSIS_ERROR","ANIMATION_LAYOUT_UNSUPPORTED"):
+            print("DEFERRED_GAP",row["path"],row["reason"])
     print("Official client:",sha,"PNG total:",len(rows),"statuses:",summary["statuses"])
     print("Archive samples confirmed against official client:",sum(pilot.values()),"/",len(pilot))
     for k in ("bark_hint","log_end_hint","foliage_hint","sapling_hint","soil_hint","ore_hint","armor_icon_hint"):
@@ -138,6 +168,6 @@ def main():
     for group in summary["shared_color_layouts"]:
         if any(n.endswith(("_log.png","_leaves.png","_sapling.png","_log_top.png")) for n in group):
             print("SHARED_LAYOUT",json.dumps(group))
-    if not rows or any(r["status"]=="DECODE_FAILED" for r in rows) or (pilot and not all(pilot.values())):
+    if not rows or any(r["status"]=="DECODE_FAILED" for r in rows) or extended["statuses"].get("ANALYSIS_ERROR") or (pilot and not all(pilot.values())) or (atlas_matches is not None and not all(atlas_matches.values())):
         raise SystemExit("Corpus verification requires investigation")
 if __name__=="__main__":main()
