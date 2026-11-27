@@ -1992,9 +1992,205 @@
         "canopy_depth": "Dark crossing branch segments and bright foreground blades separate overlapping frond layers.",
         "structural_transparency": "Open spaces between the long rigid leaflet tips expose their structure rather than a square grid."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bracken.png": {
+      "sha256": "7e40b3d601f6eb210c92556f8f52e327d4bced5c3ae7da0e03f5798f7e1d4ae5",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against fern: Vanilla fern provides recognizable branched frond structure and scale. Unequal lateral leaflet lengths break the outer edge.",
+      "findings": {
+        "silhouette": "Three spreading fronds with a tall center rachis.",
+        "cluster_structure": "Connected leaflets alternate along upper and side branches.",
+        "micro_contrast": "Small moss-green tip patches adjoin shaded leaflet bases.",
+        "light_and_volume": "Central dark stem and lighter outer pinnae show overlapping fronds.",
+        "material_continuity": "Leaf and stem greens maintain one restrained warm ramp.",
+        "edge_variation": "Unequal lateral leaflet lengths break the outer edge.",
+        "variant_identity": "Bracken spreads taller and wider than compact low fern.",
+        "vanilla_comparison": "Vanilla fern provides recognizable branched frond structure and scale.",
+        "leaf_groups": "Paired upper leaflets and lateral fronds converge on stem.",
+        "canopy_depth": "Dark rachis pixels appear behind raised leaflets.",
+        "structural_transparency": "Cutouts between side fronds leave meaningful transparent gaps."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/low_fern.png": {
+      "sha256": "91638d15b52354ee1528df151ab64be2fa81c66fd17b47958ef1503ef4a82e2d",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against fern: Vanilla fern demonstrates frond-shaped clusters adapted to a lower plant. Offset side fronds leave gaps at different heights.",
+      "findings": {
+        "silhouette": "Low compact fern opens into short spreading fronds.",
+        "cluster_structure": "Small connected leaflet clusters meet along low central branches.",
+        "micro_contrast": "Lighter olive leaf tips meet darker center pixels.",
+        "light_and_volume": "Raised leaflets and shaded central base define compact layers.",
+        "material_continuity": "Warm subdued greens remain continuous across low plant.",
+        "edge_variation": "Offset side fronds leave gaps at different heights.",
+        "variant_identity": "Short broad rosette distinguishes low fern from taller bracken.",
+        "vanilla_comparison": "Vanilla fern demonstrates frond-shaped clusters adapted to a lower plant.",
+        "leaf_groups": "Left leaf group meets the shorter central fan.",
+        "canopy_depth": "Darker lower leaflets sit behind light upper fronds.",
+        "structural_transparency": "Transparent cutouts between groups follow separated leaflet margins."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/meadow_grass.png": {
+      "sha256": "4322fab5266913b65714e75f10af446810ecb1d322c6512f7fe06f185507e61d",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/short_grass",
+          "minecraft": "1.21.1",
+          "sha256": "ca8502acca569a1e1ac5e69ac296d4ad2e4faa4d179beeb4ece67125cc998ace"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against short_grass: Vanilla short grass provides native-scale narrow upright blades. Unequal heights and curved outer tips break clump outline.",
+      "findings": {
+        "silhouette": "Several short curved blades meet at ground-level base.",
+        "cluster_structure": "Central blade has long midtone strip and shorter pale tip.",
+        "micro_contrast": "Adjacent muted green steps follow bent grass surfaces.",
+        "light_and_volume": "Darker basal foliage sits behind lighter upward blades.",
+        "material_continuity": "Green palette remains coherent from root to tip.",
+        "edge_variation": "Unequal heights and curved outer tips break clump outline.",
+        "variant_identity": "Low meadow grass is shorter and more open than dense meadow.",
+        "vanilla_comparison": "Vanilla short grass provides native-scale narrow upright blades.",
+        "functional_material_cues": "Long tapering green blades and visible ground contact identify grass."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/dense_meadow_grass.png": {
+      "sha256": "78c0d030dea80b86d409f8335656f962cd4e512598c37f2a64d2b45cbd8acedb",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/short_grass",
+          "minecraft": "1.21.1",
+          "sha256": "ca8502acca569a1e1ac5e69ac296d4ad2e4faa4d179beeb4ece67125cc998ace"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against short_grass: Short grass provides native blade scale; denser vegetation occupies more canvas. Height differences between central and shorter outer leaves preserve gaps.",
+      "findings": {
+        "silhouette": "Tall dense grass blades fill upper area with lower short shoots.",
+        "cluster_structure": "Long center blade groups have small interrupted lighter strips.",
+        "micro_contrast": "Brighter central greens step into darker side blade bases.",
+        "light_and_volume": "Dark base and overlapping taller leaves suggest crowded clump.",
+        "material_continuity": "Green and yellow-green foliage maintains consistent blade colors.",
+        "edge_variation": "Height differences between central and shorter outer leaves preserve gaps.",
+        "variant_identity": "Tall dense upright structure differs from low open meadow grass.",
+        "vanilla_comparison": "Short grass provides native blade scale; denser vegetation occupies more canvas.",
+        "functional_material_cues": "Several staggered narrow shoots emerge from one connected basal clump."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/dry_grass.png": {
+      "sha256": "b57f4fa7dd4e0e30cbebd8323b962d50ca3c0cc50b779078d4fb03b925eba168",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dead_bush",
+          "minecraft": "1.21.1",
+          "sha256": "ed63c66ef4f4694d5e5ba4603576b0ca8bb45ea1ade4412d9b889d79ab4c38c2"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against dead_bush: Dead bush provides dry brown material tones; grass uses thinner blade forms. Different blade bends and pointed tips leave open side gaps.",
+      "findings": {
+        "silhouette": "Short curved straw blades form low open dry clump.",
+        "cluster_structure": "Central straw blade includes narrow gold strip and dark base.",
+        "micro_contrast": "Close beige and amber neighbors describe dry blade material.",
+        "light_and_volume": "Light exposed tips and darker curled lower blades imply folding.",
+        "material_continuity": "Dry warm straw tones persist through plant without green patches.",
+        "edge_variation": "Different blade bends and pointed tips leave open side gaps.",
+        "variant_identity": "Short dry grass is shorter and more splayed than tall straw.",
+        "vanilla_comparison": "Dead bush provides dry brown material tones; grass uses thinner blade forms.",
+        "functional_material_cues": "Beige brittle folded blades identify dried grass instead of woody branches."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/tall_dry_grass.png": {
+      "sha256": "360d4717a96b8f121de745371865bdbd748fe3c20bc3763039454d832d5d9284",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/tall_grass_bottom",
+          "minecraft": "1.21.1",
+          "sha256": "a35a3aba7a104fa1320c01be91e0c239ee6ea96c99959287ce71c75cd14d20ef"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against tall_grass_bottom: Tall grass provides upright blade structure; dry material has warm straw ramp. Central and right blades rise to unequal heights with open gaps.",
+      "findings": {
+        "silhouette": "Long upright dry stalks rise above lower broken blades.",
+        "cluster_structure": "Tall middle stalk carries extended pale group interrupted by side shade.",
+        "micro_contrast": "Subdued tan and golden pixels meet darker straw faces.",
+        "light_and_volume": "Bright upper strips contrast with shadowed overlapping lower leaves.",
+        "material_continuity": "Warm dry straw palette is coherent from tall tips to base.",
+        "edge_variation": "Central and right blades rise to unequal heights with open gaps.",
+        "variant_identity": "Tall dry grass is erect and taller than squat dry clump.",
+        "vanilla_comparison": "Tall grass provides upright blade structure; dry material has warm straw ramp.",
+        "functional_material_cues": "Slender upright bent blades communicate tall desiccated grass."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/frosted_grass.png": {
+      "sha256": "c8189af1d493248d3909e57e26c9e5349f5a2a643dcd62d5e61dbd34cf01b387",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/short_grass",
+          "minecraft": "1.21.1",
+          "sha256": "ca8502acca569a1e1ac5e69ac296d4ad2e4faa4d179beeb4ece67125cc998ace"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against short_grass: Short grass gives grass silhouette; icy upper faces are intentional climate cue. Bent left and right tips have unequal lengths and openings.",
+      "findings": {
+        "silhouette": "Curved frosted blades retain distinct green lower surfaces.",
+        "cluster_structure": "Pale upward strips connect with blue-green middle groups.",
+        "micro_contrast": "Cool adjacent sage and ice shades transition toward exposed tips.",
+        "light_and_volume": "White-blue frost is concentrated on upper surfaces while bases remain darker.",
+        "material_continuity": "Cold muted greens connect foliage with pale frost rather than all-white fill.",
+        "edge_variation": "Bent left and right tips have unequal lengths and openings.",
+        "variant_identity": "Frosted grass has localized ice-coated upper blades unlike ordinary meadow.",
+        "vanilla_comparison": "Short grass gives grass silhouette; icy upper faces are intentional climate cue.",
+        "functional_material_cues": "Pale frost streaks on living green blades show cold state."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sedge.png": {
+      "sha256": "90aeb59991a844068dc4299d9dfded815716d9212c0519ff32bc04d053bbf72a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/short_grass",
+          "minecraft": "1.21.1",
+          "sha256": "ca8502acca569a1e1ac5e69ac296d4ad2e4faa4d179beeb4ece67125cc998ace"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against short_grass: Vanilla short grass provides native vegetation scale; sedge is taller and stiffer. Several pointed tips rise at different heights; side blades bend outward.",
+      "findings": {
+        "silhouette": "Stiff long tapered wetland blades emerge from compact base.",
+        "cluster_structure": "Central narrow blade has connected green planes and pale edge.",
+        "micro_contrast": "Local green value changes follow triangular blade cross sections.",
+        "light_and_volume": "Dark blue-green bases separate raised narrow blade faces.",
+        "material_continuity": "Cool wetland greens remain consistent over connected foliage.",
+        "edge_variation": "Several pointed tips rise at different heights; side blades bend outward.",
+        "variant_identity": "Sedge uses stiff narrow tapered blades, not broad meadow form.",
+        "vanilla_comparison": "Vanilla short grass provides native vegetation scale; sedge is taller and stiffer.",
+        "functional_material_cues": "Long pointed wetland leaves and clustered root base identify sedge."
+      }
     }
   },
-  "review_status": "DRAFT/BLOCKED: 77 accepted of 118. Remaining plants pending; graphical client not run.",
+  "review_status": "DRAFT/BLOCKED: 85 accepted of 118. Remaining plants pending; graphical client not run.",
   "reference_provenance": "Actual PNGs from InventivetalentDev/minecraft-assets, 1.21.1 branch; inspected at original and nearest-neighbor 4x. Official client SHA-1 could not be verified in this environment. No vanilla assets included.",
   "client_status": "NOT_RUN"
 }
