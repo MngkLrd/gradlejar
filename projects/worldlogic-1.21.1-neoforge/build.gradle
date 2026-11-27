@@ -3,5 +3,5 @@ group='dev.minemods.worldlogic'
 version='1.0.0-rc20'
 base.archivesName='worldlogic-neoforge-mc1.21.1'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
-neoForge { version='21.1.262'; runs { client { client() }; server { server(); programArgument '--nogui' } }; mods { worldlogic { sourceSet(sourceSets.main) } } }
+neoForge { version=project.neo_version; runs { client { client() }; server { server(); programArgument '--nogui' } }; mods { worldlogic { sourceSet(sourceSets.main) } } }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=21 }

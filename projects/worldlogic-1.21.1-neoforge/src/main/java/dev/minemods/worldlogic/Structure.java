@@ -34,7 +34,7 @@ public final class Structure {
  }
  public static void onImpact(ProjectileImpactEvent e){if(!(e.getProjectile().level() instanceof ServerLevel l)||!(e.getRayTraceResult() instanceof BlockHitResult hit)||!(e.getProjectile() instanceof AbstractArrow))return;
   if(!(e.getProjectile().getOwner() instanceof net.minecraft.world.entity.player.Player)&&!l.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING))return;
-  if(e.getImpactResult()!=ProjectileImpactEvent.ImpactResult.DEFAULT||e.getProjectile().getDeltaMovement().length()<.45)return;BlockPos p=hit.getBlockPos();if(!l.hasChunkAt(p))return;BlockState s=l.getBlockState(p);
+  if(e.isCanceled()||e.getProjectile().getDeltaMovement().length()<.45)return;BlockPos p=hit.getBlockPos();if(!l.hasChunkAt(p))return;BlockState s=l.getBlockState(p);
   if(Rules.on("fragile_lanterns")&&s.getBlock() instanceof LanternBlock&&s.getValue(LanternBlock.HANGING)){l.destroyBlock(p,true,e.getProjectile());return;}
   if(Rules.on("fragile_containers")&&Material.block(s,"fragile_container")){l.destroyBlock(p,true,e.getProjectile());return;}
   if(Rules.on("falling_dripstone")&&s.is(Blocks.POINTED_DRIPSTONE)&&s.getValue(PointedDripstoneBlock.TIP_DIRECTION)==Direction.DOWN){FallingBlockEntity.fall(l,p,s);return;}
@@ -49,11 +49,11 @@ public final class Structure {
      b.getPersistentData().putInt("worldlogic_bounces",bounces+1);
      b.setPos(hit.getLocation().x+normal.x*.25,hit.getLocation().y+normal.y*.25,hit.getLocation().z+normal.z*.25);
      b.setDeltaMovement(new Impulse(v,.2).reflect(normal,Material.surfaceBounce(s)));
-     if(l.addFreshEntity(b)){e.setImpactResult(ProjectileImpactEvent.ImpactResult.STOP_AT_CURRENT_NO_DAMAGE);return;}
+     if(l.addFreshEntity(b)){e.setCanceled(true);a.discard();return;}
     }
    }
    if(Rules.on("arrow_recovery")){
-    if(hard&&v.length()>2&&l.random.nextFloat()<Rules.chance("impact",.08))e.setImpactResult(ProjectileImpactEvent.ImpactResult.STOP_AT_CURRENT_NO_DAMAGE);
+    if(hard&&v.length()>2&&l.random.nextFloat()<Rules.chance("impact",.08)){e.setCanceled(true);a.discard();return;}
     else if(Material.block(s,"wood")||Material.block(s,"soft_projectile")||s.is(Blocks.DIRT))a.getPersistentData().putBoolean("worldlogic_recoverable",true);
    }
    if(Rules.on("ricochet")&&Material.block(s,"soft_projectile"))a.setDeltaMovement(v.scale(.55));

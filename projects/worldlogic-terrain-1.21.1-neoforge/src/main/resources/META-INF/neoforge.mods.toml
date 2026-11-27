@@ -3,13 +3,13 @@ loaderVersion="[1,)"
 license="All Rights Reserved"
 [[mods]]
 modId="worldlogicterrain"
-version="0.1.1"
+version="0.2.0"
 displayName="WorldLogic: Terrain"
-description="Natural vegetation and ground cover for WorldLogic."
+description="Natural vegetation and surface mobility for WorldLogic."
 [[dependencies.worldlogicterrain]]
 modId="neoforge"
 type="required"
-versionRange="[21.1.80,21.2)"
+versionRange="[21.1.80,)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.worldlogicterrain]]

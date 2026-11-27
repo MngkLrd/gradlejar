@@ -634,6 +634,116 @@
       "command": "execute if block 11 200 7 minecraft:air",
       "expect": "Test passed",
       "assertion": true
+    },
+    {
+      "command": "worldlogic strength movement 1",
+      "expect": "settings saved"
+    },
+    {
+      "command": "weather clear",
+      "expect": "weather"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:stone",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 13 198 13 minecraft:stone",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=1\\.000 API=1",
+      "assertion": true,
+      "name": "mobility stone"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:grass_block",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=1\\.000 API=1",
+      "assertion": true,
+      "name": "mobility grass_block"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:gravel",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=0\\.900 API=1",
+      "assertion": true,
+      "name": "mobility gravel"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:sand",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=0\\.800 API=1",
+      "assertion": true,
+      "name": "mobility sand"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:mud",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=0\\.750 API=1",
+      "assertion": true,
+      "name": "mobility mud"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:dirt_path",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=1\\.050 API=1",
+      "assertion": true,
+      "name": "mobility dirt_path"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:grass_block",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 13 200 13 worldlogicterrain:dense_underbrush",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=0\\.750 API=1",
+      "assertion": true,
+      "name": "vegetation mobility"
+    },
+    {
+      "command": "worldlogic strength movement 0.5",
+      "expect": "settings saved"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=0\\.875 API=1",
+      "assertion": true,
+      "name": "core movement strength integration"
+    },
+    {
+      "command": "worldlogic strength movement 1",
+      "expect": "settings saved"
+    },
+    {
+      "command": "setblock 13 200 13 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=1\\.000 API=1",
+      "assertion": true,
+      "name": "neutral after clearing vegetation"
     }
   ],
   "coverage": [
@@ -1182,6 +1292,91 @@
         {
           "backend": "server",
           "name": "wild_clover has loot"
+        }
+      ]
+    },
+    {
+      "id": "mobility-stone",
+      "kind": "mechanic",
+      "subject": "Surface factor stone",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "mobility stone"
+        }
+      ]
+    },
+    {
+      "id": "mobility-grass_block",
+      "kind": "mechanic",
+      "subject": "Surface factor grass_block",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "mobility grass_block"
+        }
+      ]
+    },
+    {
+      "id": "mobility-gravel",
+      "kind": "mechanic",
+      "subject": "Surface factor gravel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "mobility gravel"
+        }
+      ]
+    },
+    {
+      "id": "mobility-sand",
+      "kind": "mechanic",
+      "subject": "Surface factor sand",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "mobility sand"
+        }
+      ]
+    },
+    {
+      "id": "mobility-mud",
+      "kind": "mechanic",
+      "subject": "Surface factor mud",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "mobility mud"
+        }
+      ]
+    },
+    {
+      "id": "mobility-dirt_path",
+      "kind": "mechanic",
+      "subject": "Surface factor dirt_path",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "mobility dirt_path"
+        }
+      ]
+    },
+    {
+      "id": "vegetation-mobility",
+      "kind": "mechanic",
+      "subject": "Vegetation and core movement strength",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "vegetation mobility"
+        },
+        {
+          "backend": "server",
+          "name": "core movement strength integration"
+        },
+        {
+          "backend": "server",
+          "name": "neutral after clearing vegetation"
         }
       ]
     }

@@ -11,7 +11,7 @@ config="worldlogic.mixins.json"
 [[dependencies.worldlogic]]
 modId="neoforge"
 type="required"
-versionRange="[21.1.80,21.2)"
+versionRange="[21.1.80,)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.worldlogic]]

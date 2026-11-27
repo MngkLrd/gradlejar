@@ -1,6 +1,8 @@
+import java.security.MessageDigest
+import java.net.URI
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group='dev.minemods.worldlogicterrain'
-version='0.1.1'
+version='0.2.0'
 base.archivesName='worldlogicterrain-neoforge-mc1.21.1'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 neoForge {
@@ -8,4 +10,29 @@ neoForge {
  runs { client { client() }; server { server(); programArgument '--nogui' } }
  mods { worldlogicterrain { sourceSet(sourceSets.main) } }
 }
+def coreUrl='https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc20-1211-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc20.jar'
+def coreHash='c03b7156d8cdcb04fcc0ef11e454b5ca6d018c98c3fbd2b67a8bef84cb10b9be'
+def coreJar=layout.buildDirectory.file('worldlogic-dependency/worldlogic-neoforge-mc1.21.1-1.0.0-rc20.jar')
+def digest={ File f -> MessageDigest.getInstance('SHA-256').digest(f.bytes).encodeHex().toString() }
+def fetchCore=tasks.register('fetchWorldLogic') {
+ inputs.property('url',coreUrl)
+ inputs.property('sha256',coreHash)
+ outputs.file(coreJar)
+ outputs.upToDateWhen { coreJar.get().asFile.isFile() && digest(coreJar.get().asFile)==coreHash }
+ doLast {
+  File out=coreJar.get().asFile
+  out.parentFile.mkdirs()
+  File tmp=new File(out.parentFile,out.name+'.tmp')
+  def connection=URI.create(coreUrl).toURL().openConnection()
+  connection.connectTimeout=30000
+  connection.readTimeout=90000
+  connection.setRequestProperty('User-Agent','MineMods-Gradle')
+  try {
+   connection.inputStream.withCloseable { input -> tmp.withOutputStream { output -> output << input } }
+   if(digest(tmp)!=coreHash) throw new GradleException('WorldLogic core checksum mismatch')
+   java.nio.file.Files.move(tmp.toPath(),out.toPath(),java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+  } finally { tmp.delete() }
+ }
+}
+dependencies { implementation(files(coreJar).builtBy(fetchCore)) }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=21 }
