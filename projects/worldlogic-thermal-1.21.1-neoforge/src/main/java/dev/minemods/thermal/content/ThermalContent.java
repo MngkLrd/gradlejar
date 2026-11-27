@@ -8,11 +8,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.*;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraft.network.chat.Component;
+import java.util.List;
 import java.util.function.Supplier;
 public final class ThermalContent {
  private static final DeferredRegister.Items ITEMS=DeferredRegister.createItems(ThermalMod.ID);
  private static final DeferredRegister.Blocks BLOCKS=DeferredRegister.createBlocks(ThermalMod.ID);
+ private static final DeferredRegister<CreativeModeTab> TABS=DeferredRegister.create(Registries.CREATIVE_MODE_TAB,ThermalMod.ID);
  private static final DeferredRegister<BlockEntityType<?>> ENTITIES=DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE,ThermalMod.ID);
  public static final DeferredItem<Item> RAW_FIBER=ITEMS.register("raw_fiber_bundle",()->new Item(new Item.Properties().stacksTo(16)));
  public static final DeferredItem<Item> THREAD=ITEMS.register("plant_thread",()->new Item(new Item.Properties()));
@@ -34,8 +36,12 @@ public final class ThermalContent {
  public static final DeferredBlock<FixtureBlock> COOLER=BLOCKS.register("evaporative_cooler",()->new FixtureBlock(true,BlockBehaviour.Properties.ofFullCopy(Blocks.TERRACOTTA)));
  public static final DeferredItem<BlockItem> HEARTH_ITEM=ITEMS.register("clay_hearth",()->new BlockItem(HEARTH.get(),new Item.Properties()));
  public static final DeferredItem<BlockItem> COOLER_ITEM=ITEMS.register("evaporative_cooler",()->new BlockItem(COOLER.get(),new Item.Properties()));
- public static void register(IEventBus bus){BLOCKS.register(bus);ITEMS.register(bus);ENTITIES.register(bus);bus.addListener(ThermalContent::creative);}
- private static void creative(BuildCreativeModeTabContentsEvent e){
-  if(e.getTabKey()==CreativeModeTabs.TOOLS_AND_UTILITIES)for(Supplier<? extends Item> i:java.util.List.of(RAW_FIBER,FIBER,THREAD,MAT,SCRAPER,GRASS_HOOD,GRASS_COAT,GRASS_LEGS,GRASS_BOOTS,SUN_HAT,LIGHT_TUNIC,HEARTH_ITEM,COOLER_ITEM))e.accept(i.get());
+ public static List<Item> creativeItems(){
+  return List.<Supplier<? extends Item>>of(RAW_FIBER,FIBER,THREAD,MAT,SCRAPER,GRASS_HOOD,GRASS_COAT,GRASS_LEGS,GRASS_BOOTS,SUN_HAT,LIGHT_TUNIC,HEARTH_ITEM,COOLER_ITEM).stream().map(s->(Item)s.get()).toList();
  }
+ public static final Supplier<CreativeModeTab> TAB=TABS.register("temperature",()->CreativeModeTab.builder()
+  .title(Component.translatable("itemGroup.worldlogic_thermal.temperature"))
+  .icon(()->new ItemStack(HEARTH_ITEM.get()))
+  .displayItems((parameters,output)->creativeItems().forEach(output::accept)).build());
+ public static void register(IEventBus bus){BLOCKS.register(bus);ITEMS.register(bus);ENTITIES.register(bus);TABS.register(bus);}
 }

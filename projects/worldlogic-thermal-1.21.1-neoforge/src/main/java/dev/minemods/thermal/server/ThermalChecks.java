@@ -156,6 +156,16 @@ final class ThermalChecks {
                 case "fiber_work" -> {
                     dev.minemods.thermal.content.FiberWorkChecks.verify(l,p);
                 }
+                case "creative_tab" -> {
+                    var tab=dev.minemods.thermal.content.ThermalContent.TAB.get();
+                    var key=net.minecraft.core.registries.BuiltInRegistries.CREATIVE_MODE_TAB.getKey(tab);
+                    require(key!=null&&key.toString().equals("worldlogic_thermal:temperature"),"dedicated creative tab registered");
+                    var items=dev.minemods.thermal.content.ThermalContent.creativeItems();
+                    var registry=net.minecraft.core.registries.BuiltInRegistries.ITEM;
+                    var expected=registry.keySet().stream().filter(k->k.getNamespace().equals("worldlogic_thermal")).collect(java.util.stream.Collectors.toSet());
+                    var listed=items.stream().map(registry::getKey).collect(java.util.stream.Collectors.toSet());
+                    require(items.size()==listed.size()&&listed.equals(expected)&&items.size()==13,"all thirteen registered items listed exactly once");
+                }
                 default -> throw new IllegalArgumentException(name);
             }
         } finally {

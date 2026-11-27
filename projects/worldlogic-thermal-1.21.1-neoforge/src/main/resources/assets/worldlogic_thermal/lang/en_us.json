@@ -65,5 +65,6 @@
   "item.worldlogic_thermal.stone_scraper": "Stone scraper",
   "block.worldlogic_thermal.fiber_workpiece": "Plant fiber workpiece",
   "message.worldlogic_thermal.fiber_progress": "Cleaned: %s/64",
-  "message.worldlogic_thermal.fiber_ready": "Ready. Strike again to collect fiber."
+  "message.worldlogic_thermal.fiber_ready": "Ready. Strike again to collect fiber.",
+  "itemGroup.worldlogic_thermal.temperature": "WL: Temperature"
 }

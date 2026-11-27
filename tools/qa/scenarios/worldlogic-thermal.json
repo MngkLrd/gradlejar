@@ -110,6 +110,12 @@
       "command": "thermal qa fiber_work",
       "expect": "THERMAL_QA_fiber_work_PASS",
       "assertion": true
+    },
+    {
+      "name": "Dedicated Temperature creative tab registered and complete item inventory",
+      "command": "thermal qa creative_tab",
+      "expect": "THERMAL_QA_creative_tab_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -253,6 +259,17 @@
         {
           "backend": "server",
           "name": "Stone fiber processing, exact cells, save and resume, scraper wear, completion and support loss"
+        }
+      ]
+    },
+    {
+      "id": "creative-tab",
+      "kind": "menu",
+      "subject": "Dedicated Temperature creative tab registered and complete item inventory",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Dedicated Temperature creative tab registered and complete item inventory"
         }
       ]
     }
