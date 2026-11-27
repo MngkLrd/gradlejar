@@ -703,6 +703,72 @@
           "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
         }
       ]
+    },
+    {
+      "id": "restored-mineshaft-eligibility",
+      "kind": "mechanic",
+      "subject": "restored-mineshaft-eligibility",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-trial-chamber-eligibility",
+      "kind": "mechanic",
+      "subject": "restored-trial-chamber-eligibility",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-ancient-city-eligibility",
+      "kind": "mechanic",
+      "subject": "restored-ancient-city-eligibility",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-geode-feature",
+      "kind": "mechanic",
+      "subject": "restored-geode-feature",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-monster-room-feature",
+      "kind": "mechanic",
+      "subject": "restored-monster-room-feature",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-deep-monster-room-feature",
+      "kind": "mechanic",
+      "subject": "restored-deep-monster-room-feature",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
     }
   ]
 }

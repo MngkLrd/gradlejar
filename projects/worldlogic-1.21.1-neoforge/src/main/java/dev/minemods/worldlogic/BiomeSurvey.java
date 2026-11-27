@@ -33,7 +33,7 @@ public final class BiomeSurvey{
   return gen.getBiomeSource().getNoiseBiome(x>>2,y>>2,z>>2,state.sampler()).unwrapKey().orElseThrow().location();
  }
  static boolean supported(ChunkGenerator gen){
-  return gen instanceof NoiseBasedChunkGenerator n&&n.generatorSettings().unwrapKey().map(k->k.location().equals(ResourceLocation.fromNamespaceAndPath("worldlogic","realistic_unified"))).orElse(false);
+  return gen instanceof NoiseBasedChunkGenerator n&&n.generatorSettings().unwrapKey().map(k->k.location().equals(ResourceLocation.fromNamespaceAndPath("worldlogic","realistic_unified"))).orElse(false)&&!gen.getBiomeSource().possibleBiomes().isEmpty()&&gen.getBiomeSource().possibleBiomes().stream().allMatch(v->v.unwrapKey().map(k->k.location().getNamespace().equals("worldlogic")).orElse(false));
  }
  static int sampleY(RandomState s,int x,int z,ResourceLocation id){
   return switch(id.getPath()){case "deep_rock_cavern"->-180;case "limestone_cavern","humid_cavern"->modelY(s,x,z)-80;default->Math.max(63,modelY(s,x,z));};

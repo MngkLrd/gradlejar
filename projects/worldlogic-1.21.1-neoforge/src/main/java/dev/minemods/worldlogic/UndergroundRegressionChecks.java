@@ -30,6 +30,10 @@ final class UndergroundRegressionChecks{
   for(var h:gen.getBiomeSource().possibleBiomes()){
    boolean deep=h.unwrapKey().orElseThrow().location().getPath().equals("deep_rock_cavern");
    require(h.is(mine)==!deep&&h.is(trial)==!deep&&h.is(city)==deep&&h.is(stronghold),"structure tags "+h.unwrapKey());
+   var steps=h.value().getGenerationSettings().features();
+   require(steps.size()>3,"underground feature stages "+h.unwrapKey());
+   require(steps.get(2).stream().anyMatch(v->v.unwrapKey().map(k->k.location().toString().equals("minecraft:amethyst_geode")).orElse(false)),"geode feature "+h.unwrapKey());
+   require(steps.get(3).stream().anyMatch(v->v.unwrapKey().map(k->k.location().toString().equals("minecraft:monster_room")).orElse(false))&&steps.get(3).stream().anyMatch(v->v.unwrapKey().map(k->k.location().toString().equals("minecraft:monster_room_deep")).orElse(false)),"dungeon features "+h.unwrapKey());
    if(!deep)eligible++;
   }
   require(eligible==60,"structure eligibility inventory");
