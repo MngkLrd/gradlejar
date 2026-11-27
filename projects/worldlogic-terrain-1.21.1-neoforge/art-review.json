@@ -2380,9 +2380,209 @@
         "vanilla_comparison": "Allium provides small rounded flower-head reference; clover uses separate trefoil leaves.",
         "functional_material_cues": "Three-part foliage groups and compact rounded pink inflorescences identify clover."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_heather.png": {
+      "sha256": "094fc910942407a95a0e5df266a159d917dbc5503ccbacfaab19c2d708054cb5",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/allium",
+          "minecraft": "1.21.1",
+          "sha256": "e821156d752c1cde84a71db59cdd25c308747c607c0759b72ba36a68e959ab7d"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against allium: Allium provides native purple blossom scale; heather uses upright clusters instead of a sphere. Different spike heights and uneven side florets break uniform outlines.",
+      "findings": {
+        "silhouette": "Three upright pink flower spikes stand above slender woody stems.",
+        "cluster_structure": "Small connected pink floret groups alternate along the spikes.",
+        "micro_contrast": "Muted rose and plum steps separate adjacent tiny flower groups.",
+        "light_and_volume": "Lighter upper and outer blossoms contrast with shaded stem-facing sides.",
+        "material_continuity": "Pink florets and subdued green foliage follow separate material ramps.",
+        "edge_variation": "Different spike heights and uneven side florets break uniform outlines.",
+        "variant_identity": "Tall narrow flower spikes contrast with rounded clover heads.",
+        "vanilla_comparison": "Allium provides native purple blossom scale; heather uses upright clusters instead of a sphere.",
+        "functional_material_cues": "Attached pink flower spikes and narrow woody stems identify flowering heather."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/desert_shrub.png": {
+      "sha256": "697e5ccfbc6a88d5ccb067403333897d5739c9ce37fcc4918be286034b572070",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/dead_bush",
+          "minecraft": "1.21.1",
+          "sha256": "ed63c66ef4f4694d5e5ba4603576b0ca8bb45ea1ade4412d9b889d79ab4c38c2"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against dead_bush: Dead bush provides native dry branching structure; small foliage groups add a live shrub cue. Unequal forks and sparse rounded tips preserve open silhouette.",
+      "findings": {
+        "silhouette": "Sparse forked woody branches carry small separated leaf groups.",
+        "cluster_structure": "Short yellow-green clusters connect to brown branch tips.",
+        "micro_contrast": "Olive leaf surfaces step into darker muted bases.",
+        "light_and_volume": "Lighter outer tips and shaded inner fork create branch depth.",
+        "material_continuity": "Dry wood and restrained olive foliage remain distinct.",
+        "edge_variation": "Unequal forks and sparse rounded tips preserve open silhouette.",
+        "variant_identity": "Desert shrub has exposed wood and sparse foliage unlike forest shrub.",
+        "vanilla_comparison": "Dead bush provides native dry branching structure; small foliage groups add a live shrub cue.",
+        "leaf_groups": "Five separated muted leaf groups attach to woody branch tips.",
+        "canopy_depth": "Overlapping inner branches sit behind outer foliage groups.",
+        "structural_transparency": "Large transparent spaces separate forks and leaf clusters."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/dwarf_shrub.png": {
+      "sha256": "e3174c0bd8c9477c969913abae7b61f5909c49aa5ed6c8d02dff5bde27efcc20",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/azalea_plant",
+          "minecraft": "1.21.1",
+          "sha256": "9b9f6aa9210c7b47275698fee8ba2bd5d7e8b309ab685f97ecfde4a832836dea"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against azalea_plant: Azalea offers a native low shrub comparator; dwarf variant uses a flatter profile. Unequal short lobes and exposed gaps break upper boundary.",
+      "findings": {
+        "silhouette": "Low cold gray-green cushion spreads close to ground.",
+        "cluster_structure": "Compact connected leaf faces form several low overlapping groups.",
+        "micro_contrast": "Small pale sage clusters contrast with muted dark teal bases.",
+        "light_and_volume": "Shaded underside and raised upper faces suggest a low rounded crown.",
+        "material_continuity": "Cool green leaves and dark stems retain restrained natural colors.",
+        "edge_variation": "Unequal short lobes and exposed gaps break upper boundary.",
+        "variant_identity": "Dwarf shrub remains shorter and cooler than taller forest shrub.",
+        "vanilla_comparison": "Azalea offers a native low shrub comparator; dwarf variant uses a flatter profile.",
+        "leaf_groups": "Low rounded leaf groups join around short stems.",
+        "canopy_depth": "Dark central underside separates front leaf groups from rear ones.",
+        "structural_transparency": "Transparent upper margins and small intergroup gaps retain natural edge."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/forest_shrub.png": {
+      "sha256": "bb7456ac9b23322c684035eb3aae27461e98df2baf0385ccd2a001ee938362a3",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/azalea_plant",
+          "minecraft": "1.21.1",
+          "sha256": "9b9f6aa9210c7b47275698fee8ba2bd5d7e8b309ab685f97ecfde4a832836dea"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against azalea_plant: Azalea provides native shrub scale and branching reference; forest shrub has a larger crown. Staggered outer lobes and small open gaps break symmetry.",
+      "findings": {
+        "silhouette": "Tall rounded foliage groups rise from a visible woody fork.",
+        "cluster_structure": "Connected leafy lobes include smaller light green surface clusters.",
+        "micro_contrast": "Neighboring warm olive greens separate outer leaf surfaces from dark bases.",
+        "light_and_volume": "Upper lit leaf groups overlap darker inner and lower foliage.",
+        "material_continuity": "Warm forest greens remain distinct from brown supporting branches.",
+        "edge_variation": "Staggered outer lobes and small open gaps break symmetry.",
+        "variant_identity": "Forest shrub uses a taller rounded crown than low cold dwarf shrub.",
+        "vanilla_comparison": "Azalea provides native shrub scale and branching reference; forest shrub has a larger crown.",
+        "leaf_groups": "Multiple rounded leafy groups attach to the central woody fork.",
+        "canopy_depth": "Dark internal groups sit beneath brighter outer leaf faces.",
+        "structural_transparency": "Gaps around lower branch and between outer lobes preserve negative space."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/dense_underbrush.png": {
+      "sha256": "1d64b9e0e3b61c1a2e57e4ef5a4dfd609e6a1296b8384e9ac2623ac93db985fe",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/azalea_plant",
+          "minecraft": "1.21.1",
+          "sha256": "9b9f6aa9210c7b47275698fee8ba2bd5d7e8b309ab685f97ecfde4a832836dea"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against azalea_plant: Azalea supplies a native shrub reference; underbrush increases foliage layers and width. Different heights and staggered leafy lobes interrupt outer boundary.",
+      "findings": {
+        "silhouette": "Broad dense multi-stem shrub fills most of the sprite.",
+        "cluster_structure": "Connected staggered leaf groups have several smaller lit interior faces.",
+        "micro_contrast": "Dark green shadow clusters meet lighter olive edges in short transitions.",
+        "light_and_volume": "Layered forward leafy faces overlap darker rear crown groups.",
+        "material_continuity": "Deep forest-green foliage and brown basal stems form coherent ramps.",
+        "edge_variation": "Different heights and staggered leafy lobes interrupt outer boundary.",
+        "variant_identity": "Underbrush is broader and deeper than isolated forest shrub.",
+        "vanilla_comparison": "Azalea supplies a native shrub reference; underbrush increases foliage layers and width.",
+        "leaf_groups": "Several overlapping broadleaf groups emerge from multiple lower stems.",
+        "canopy_depth": "Darker rear layers and bright raised front clusters establish canopy depth.",
+        "structural_transparency": "Uneven outside gaps and exposed stem spaces avoid a solid rectangular shape."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/duckweed.png": {
+      "sha256": "352230391c69ee34891a084206f049efe0d6db94d890f03330dbeb64abb7df94",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/lily_pad",
+          "minecraft": "1.21.1",
+          "sha256": "5e672ae307932bc4ee46bc29113369bb6f189fdb4f44ca88a1f7408c8ce2d4df"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against lily_pad: Lily pad provides native horizontal water surface vegetation reference. Paired groups differ in orientation and placement across the tile. Repeated plane checked in 3x3 layout.",
+      "findings": {
+        "silhouette": "Small paired oval leaflets scatter over transparent water plane.",
+        "cluster_structure": "Each tiny oval contains a connected green face with lighter edge.",
+        "micro_contrast": "Closely spaced olive-green values keep tiny floating leaves legible.",
+        "light_and_volume": "Light upper leaf faces contrast with darker thin perimeter pixels.",
+        "material_continuity": "Living aquatic leaflets retain a cohesive restrained green ramp.",
+        "edge_variation": "Paired groups differ in orientation and placement across the tile.",
+        "variant_identity": "Duckweed uses small separate floating leaflets rather than one large pad.",
+        "vanilla_comparison": "Lily pad provides native horizontal water surface vegetation reference.",
+        "functional_material_cues": "Paired small oval leaves and open water gaps identify duckweed at tile scale."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/fallen_leaves.png": {
+      "sha256": "f7915ba6b7ae38c8453761cbe80ab0c0adb4639c8ea02c0da53f2c7933ae54d7",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/pink_petals",
+          "minecraft": "1.21.1",
+          "sha256": "2ea08d4b868a8d59a7e1b7393fc5ffed49905235da6d176867a59e2070c55400"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against pink_petals: Pink petals provides a native scattered ground-cover plane reference. Unequal orientations and sizes break repeating outlines across tile. Repeated plane checked in 3x3 layout.",
+      "findings": {
+        "silhouette": "Intact angular fallen leaves scatter across transparent ground plane.",
+        "cluster_structure": "Individual connected rust and ochre faces contain short vein markings.",
+        "micro_contrast": "Adjacent brown and amber shades separate folds and leaf edges.",
+        "light_and_volume": "Pale folded faces and dark undersides imply curled dry leaves.",
+        "material_continuity": "Warm autumn leaf colors remain consistent across scattered pieces.",
+        "edge_variation": "Unequal orientations and sizes break repeating outlines across tile.",
+        "variant_identity": "Intact broad angular leaves contrast with finer fragmented forest litter.",
+        "vanilla_comparison": "Pink petals provides a native scattered ground-cover plane reference.",
+        "functional_material_cues": "Visible veins and curled broad leaf forms identify intact fallen leaves."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/forest_litter.png": {
+      "sha256": "4f991a6c14a60511a26428d2c3b2d1635c93d8ba2a594458a17bea943bc94e42",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/pink_petals",
+          "minecraft": "1.21.1",
+          "sha256": "2ea08d4b868a8d59a7e1b7393fc5ffed49905235da6d176867a59e2070c55400"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against pink_petals: Pink petals supplies native ground-plane scatter scale; litter uses smaller irregular shapes. Varied fragment orientations and open gaps prevent a uniform repeated patch. Repeated plane checked in 3x3 layout.",
+      "findings": {
+        "silhouette": "Small broken leaf fragments and thin twig pieces scatter on ground.",
+        "cluster_structure": "Connected short ochre fragments alternate with narrow brown twig strips.",
+        "micro_contrast": "Muted tan and umber steps distinguish fragments from woody slivers.",
+        "light_and_volume": "Lighter fragment planes sit against darker turned edges.",
+        "material_continuity": "Weathered brown and restrained ochre tones support dry organic material.",
+        "edge_variation": "Varied fragment orientations and open gaps prevent a uniform repeated patch.",
+        "variant_identity": "Fine twig and needle-like pieces distinguish litter from intact fallen leaves.",
+        "vanilla_comparison": "Pink petals supplies native ground-plane scatter scale; litter uses smaller irregular shapes.",
+        "functional_material_cues": "Thin twigs and broken organic fragments communicate decomposing forest debris."
+      }
     }
   },
-  "review_status": "DRAFT/BLOCKED: 93 accepted of 118. Remaining plants pending; graphical client not run.",
+  "review_status": "DRAFT/BLOCKED: 101 accepted of 118. Remaining wild crops and berry growth stages pending; graphical client not run.",
   "reference_provenance": "Actual PNGs from InventivetalentDev/minecraft-assets, 1.21.1 branch; inspected at original and nearest-neighbor 4x. Official client SHA-1 could not be verified in this environment. No vanilla assets included.",
   "client_status": "NOT_RUN"
 }
