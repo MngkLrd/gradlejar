@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:leaves",
+  "features": "worldlogicterrain:patch_fallen_leaves",
+  "step": "vegetal_decoration"
+}

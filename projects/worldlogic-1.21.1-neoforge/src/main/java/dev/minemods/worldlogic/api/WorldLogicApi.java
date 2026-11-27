@@ -1,6 +1,7 @@
 package dev.minemods.worldlogic.api;
 
 import dev.minemods.worldlogic.GeoDensity;
+import dev.minemods.worldlogic.AtmosphereModel;
 import dev.minemods.worldlogic.Material;
 import dev.minemods.worldlogic.RuleSync;
 import dev.minemods.worldlogic.Rules;
@@ -13,11 +14,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 
 /** Public addon contract, version 1. Server methods must be called on the server thread. */
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
+ /** Additive revision: RC21 introduces atmosphere(). Existing v1 signatures are unchanged. */
+ public static final int API_REVISION=2;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -29,6 +33,13 @@ public final class WorldLogicApi {
  public record Environment(double ambientCelsiusEstimate,int elevationAboveSea,boolean covered,
                            boolean rainingAt,boolean globalThunder,double solarExposure,
                            Optional<RegionalClimate> regionalClimate){}
+ public enum Precipitation { NONE, RAIN, SNOW }
+ /** Modeled relative humidity and open-air wind; local precipitation reflects vanilla weather.
+  * Wind vector components and speed are estimated m/s, not a physical fluid simulation.
+  * Local precipitation is normalized 0..1, not mm/hour. */
+ public record Atmosphere(Environment environment,double relativeHumidityPercent,
+                          double outdoorWindXMps,double outdoorWindZMps,double outdoorWindSpeedMps,
+                          Precipitation precipitation,double precipitationIntensity){}
  public record Fatigue(boolean enabled,double fatiguePercent,double remainingStaminaPercent){}
  private static void serverThread(ServerLevel level){
   if(!level.getServer().isSameThread())throw new IllegalStateException("World Logic API requires server thread");
@@ -48,6 +59,33 @@ public final class WorldLogicApi {
   boolean rain=level.isRainingAt(pos);
   double ambient=clamp(base+(sky?sun*4-2:0)-(rain?2:0),-100,100);
   return Optional.of(new Environment(ambient,pos.getY()-level.getSeaLevel(),!sky,rain,level.isThundering(),sun,regional));
+ }
+ /** RC21: weather snapshot for loaded locations in skylight dimensions; no chunk loads. */
+ public static Optional<Atmosphere> atmosphere(ServerLevel level,BlockPos pos){
+  serverThread(level);
+  if(!level.dimensionType().hasSkyLight())return Optional.empty();
+  var existing=environment(level,pos);
+  if(existing.isEmpty())return Optional.empty();
+  var env=existing.orElseThrow();
+  var biome=level.getBiome(pos).value();
+  var regional=env.regionalClimate();
+  double moisture=regional.map(RegionalClimate::moistureIndex).orElse(biome.hasPrecipitation()?.55:.15);
+  double reference=regional.map(c->14+28*c.thermalIndex()-Math.max(-80,Math.min(160,pos.getY()-c.modeledSurfaceY()))*.065)
+   .orElseGet(()->-12+32*biome.getBaseTemperature()-Math.max(0,pos.getY()-level.getSeaLevel())*.065);
+  double rain=level.isRaining()?clamp(level.getRainLevel(1.0F),0,1):0;
+  double thunder=level.isThundering()?clamp(level.getThunderLevel(1.0F),0,1):0;
+  var kind=biome.getPrecipitationAt(pos);
+  Precipitation local=rain<=0||env.covered()?Precipitation.NONE:
+    kind==Biome.Precipitation.RAIN&&env.rainingAt()?Precipitation.RAIN:
+    kind==Biome.Precipitation.SNOW?Precipitation.SNOW:Precipitation.NONE;
+  double intensity=local==Precipitation.NONE?0:rain;
+  // Regional humidity responds to weather even under a roof; a roof is not sealed insulation.
+  double wetWeather=biome.hasPrecipitation()?rain:0;
+  double humidity=AtmosphereModel.humidity(env.ambientCelsiusEstimate(),reference,moisture,wetWeather);
+  var wind=AtmosphereModel.wind(level.getSeed(),pos.getX(),pos.getZ(),level.getGameTime(),
+    regional.map(RegionalClimate::prevailingWindX).orElse(0.0),
+    regional.map(RegionalClimate::prevailingWindZ).orElse(0.0),rain,thunder);
+  return Optional.of(new Atmosphere(env,humidity,wind.x(),wind.z(),wind.speed(),local,intensity));
  }
  public static Fatigue fatigue(ServerPlayer player){
   serverThread(player.serverLevel());

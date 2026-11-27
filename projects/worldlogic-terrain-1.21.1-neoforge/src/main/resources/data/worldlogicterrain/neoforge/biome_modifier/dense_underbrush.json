@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:lush",
+  "features": "worldlogicterrain:patch_dense_underbrush",
+  "step": "vegetal_decoration"
+}

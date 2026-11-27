@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:litter",
+  "features": "worldlogicterrain:patch_forest_litter",
+  "step": "vegetal_decoration"
+}

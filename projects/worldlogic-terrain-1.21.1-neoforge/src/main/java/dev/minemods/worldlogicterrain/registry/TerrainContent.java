@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import dev.minemods.worldlogicterrain.WorldLogicTerrain;
 import dev.minemods.worldlogicterrain.block.TerrainPlantBlock;
+import dev.minemods.worldlogicterrain.block.TerrainTallPlantBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -43,7 +43,7 @@ public final class TerrainContent {
     private static void plant(String id, boolean tall) {
         Supplier<Block> block = BLOCKS.register(id, () -> {
             var properties = BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS);
-            return tall ? new DoublePlantBlock(properties) : new TerrainPlantBlock(properties);
+            return tall ? new TerrainTallPlantBlock(properties) : new TerrainPlantBlock(properties);
         });
         PLANTS.add(ITEMS.register(id, () -> new BlockItem(block.get(), new Item.Properties())));
     }

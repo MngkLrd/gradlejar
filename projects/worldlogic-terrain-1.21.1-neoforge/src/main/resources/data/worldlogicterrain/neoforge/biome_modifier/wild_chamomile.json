@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:flower",
+  "features": "worldlogicterrain:patch_wild_chamomile",
+  "step": "vegetal_decoration"
+}

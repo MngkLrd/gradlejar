@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:desert",
+  "features": "worldlogicterrain:patch_desert_shrub",
+  "step": "vegetal_decoration"
+}

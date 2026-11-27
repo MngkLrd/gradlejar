@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:wet",
+  "features": "worldlogicterrain:patch_sedge",
+  "step": "vegetal_decoration"
+}

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:forest",
+  "features": "worldlogicterrain:patch_low_fern",
+  "step": "vegetal_decoration"
+}

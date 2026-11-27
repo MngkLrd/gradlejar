@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:cold",
+  "features": "worldlogicterrain:patch_dwarf_shrub",
+  "step": "vegetal_decoration"
+}

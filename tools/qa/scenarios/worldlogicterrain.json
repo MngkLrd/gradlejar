@@ -744,6 +744,242 @@
       "expect": "Terrain factor=1\\.000 API=1",
       "assertion": true,
       "name": "neutral after clearing vegetation"
+    },
+    {
+      "name": "WorldLogic preset vegetation attachment",
+      "command": "worldlogicterrain worldgen_check",
+      "expect": "3 core presets, 18 plant features, biome attachment verified",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:dirt",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_meadow_grass 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_meadow_grass\""
+    },
+    {
+      "name": "generated patch meadow_grass",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:meadow_grass",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_dense_meadow_grass 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_dense_meadow_grass\""
+    },
+    {
+      "name": "generated patch dense_meadow_grass",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:dense_meadow_grass",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 219 1 14 219 14 minecraft:stone",
+      "expect": "Successfully filled|No blocks were filled"
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:sand",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_dry_grass 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_dry_grass\""
+    },
+    {
+      "name": "generated patch dry_grass",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:dry_grass",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:dirt",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "fill 1 219 1 14 219 14 minecraft:stone",
+      "expect": "Successfully filled|No blocks were filled"
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:sand",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_tall_dry_grass 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_tall_dry_grass\""
+    },
+    {
+      "name": "generated patch tall_dry_grass",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:tall_dry_grass",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:dirt",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "fill 1 219 1 14 219 14 minecraft:stone",
+      "expect": "Successfully filled|No blocks were filled"
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:sand",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_desert_shrub 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_desert_shrub\""
+    },
+    {
+      "name": "generated patch desert_shrub",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:desert_shrub",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:dirt",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_forest_shrub 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_forest_shrub\""
+    },
+    {
+      "name": "generated patch forest_shrub",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:forest_shrub",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_dense_underbrush 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_dense_underbrush\""
+    },
+    {
+      "name": "generated patch dense_underbrush",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:dense_underbrush",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_low_fern 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_low_fern\""
+    },
+    {
+      "name": "generated patch low_fern",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:low_fern",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_heather 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_heather\""
+    },
+    {
+      "name": "generated patch wild_heather",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_heather",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_sedge 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_sedge\""
+    },
+    {
+      "name": "generated patch sedge",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:sedge",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_reed 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_reed\""
+    },
+    {
+      "name": "generated patch reed",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:reed",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_cattail 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_cattail\""
+    },
+    {
+      "name": "generated patch cattail",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:cattail",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_dwarf_shrub 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_dwarf_shrub\""
+    },
+    {
+      "name": "generated patch dwarf_shrub",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:dwarf_shrub",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_forest_litter 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_forest_litter\""
+    },
+    {
+      "name": "generated patch forest_litter",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:forest_litter",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_fallen_leaves 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_fallen_leaves\""
+    },
+    {
+      "name": "generated patch fallen_leaves",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:fallen_leaves",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_chamomile 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_chamomile\""
+    },
+    {
+      "name": "generated patch wild_chamomile",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_chamomile",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_cornflower 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_cornflower\""
+    },
+    {
+      "name": "generated patch wild_cornflower",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_cornflower",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_clover 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_clover\""
+    },
+    {
+      "name": "generated patch wild_clover",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_clover",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:stone",
+      "expect": "Successfully filled"
+    },
+    {
+      "name": "No meadow growth on stone",
+      "command": "place feature worldlogicterrain:patch_meadow_grass 8 221 8",
+      "expect": "Failed to place feature",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -1377,6 +1613,298 @@
         {
           "backend": "server",
           "name": "neutral after clearing vegetation"
+        }
+      ]
+    },
+    {
+      "id": "core-preset-vegetation",
+      "kind": "mechanic",
+      "subject": "All 18 placed features attached to correct biomes of all 3 registered WorldLogic presets",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-meadow_grass",
+      "kind": "block",
+      "subject": "Actual configured feature generates meadow_grass in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch meadow_grass"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-dense_meadow_grass",
+      "kind": "block",
+      "subject": "Actual configured feature generates dense_meadow_grass in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch dense_meadow_grass"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-dry_grass",
+      "kind": "block",
+      "subject": "Actual configured feature generates dry_grass in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch dry_grass"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-tall_dry_grass",
+      "kind": "block",
+      "subject": "Actual configured feature generates tall_dry_grass in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch tall_dry_grass"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-desert_shrub",
+      "kind": "block",
+      "subject": "Actual configured feature generates desert_shrub in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch desert_shrub"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-forest_shrub",
+      "kind": "block",
+      "subject": "Actual configured feature generates forest_shrub in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch forest_shrub"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-dense_underbrush",
+      "kind": "block",
+      "subject": "Actual configured feature generates dense_underbrush in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch dense_underbrush"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-low_fern",
+      "kind": "block",
+      "subject": "Actual configured feature generates low_fern in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch low_fern"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_heather",
+      "kind": "block",
+      "subject": "Actual configured feature generates wild_heather in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_heather"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-sedge",
+      "kind": "block",
+      "subject": "Actual configured feature generates sedge in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch sedge"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-reed",
+      "kind": "block",
+      "subject": "Actual configured feature generates reed in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch reed"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-cattail",
+      "kind": "block",
+      "subject": "Actual configured feature generates cattail in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch cattail"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-dwarf_shrub",
+      "kind": "block",
+      "subject": "Actual configured feature generates dwarf_shrub in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch dwarf_shrub"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-forest_litter",
+      "kind": "block",
+      "subject": "Actual configured feature generates forest_litter in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch forest_litter"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-fallen_leaves",
+      "kind": "block",
+      "subject": "Actual configured feature generates fallen_leaves in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch fallen_leaves"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_chamomile",
+      "kind": "block",
+      "subject": "Actual configured feature generates wild_chamomile in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_chamomile"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_cornflower",
+      "kind": "block",
+      "subject": "Actual configured feature generates wild_cornflower in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_cornflower"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_clover",
+      "kind": "block",
+      "subject": "Actual configured feature generates wild_clover in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_clover"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-invalid-substrate",
+      "kind": "mechanic",
+      "subject": "No meadow generation on stone",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "No meadow growth on stone"
         }
       ]
     }

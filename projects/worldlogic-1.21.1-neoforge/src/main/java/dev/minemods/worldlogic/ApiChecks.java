@@ -8,6 +8,32 @@ import net.minecraft.world.level.levelgen.DensityFunction;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 public final class ApiChecks {
  private static void require(boolean value,String detail){if(!value)throw new IllegalStateException("World Logic API: "+detail);}
+ public static void verifyAtmosphere(ServerLevel l,boolean rain){
+  BlockPos pos=l.getSharedSpawnPos().above(5);
+  require(l.hasChunkAt(pos)&&l.canSeeSky(pos),"weather fixture must be loaded and exposed");
+  require(l.isRaining()==rain,"weather fixture must match requested weather");
+  var a=WorldLogicApi.atmosphere(l,pos).orElseThrow();
+  require(a.environment().equals(WorldLogicApi.environment(l,pos).orElseThrow()),"RC20 environment preserved");
+  require(Double.isFinite(a.relativeHumidityPercent())&&a.relativeHumidityPercent()>=0&&a.relativeHumidityPercent()<=100,"relative humidity bounds");
+  require(a.outdoorWindSpeedMps()>0&&a.outdoorWindSpeedMps()<=15,"wind bounds");
+  require(Math.abs(Math.hypot(a.outdoorWindXMps(),a.outdoorWindZMps())-a.outdoorWindSpeedMps())<1e-8,"wind vector");
+  require(a.equals(WorldLogicApi.atmosphere(l,pos).orElseThrow()),"same-tick deterministic snapshot");
+  require(WorldLogicApi.atmosphere(l,new BlockPos(1000000,64,1000000)).isEmpty(),"unloaded weather query");
+  require(WorldLogicApi.atmosphere(l,new BlockPos(pos.getX(),l.getMaxBuildHeight(),pos.getZ())).isEmpty(),"out-of-height weather query");
+  require(a.precipitation()==(rain?WorldLogicApi.Precipitation.RAIN:WorldLogicApi.Precipitation.NONE),"flat plains local precipitation");
+  require(rain?a.precipitationIntensity()>0&&a.precipitationIntensity()<=1:a.precipitationIntensity()==0,"precipitation intensity");
+  double dry=AtmosphereModel.humidity(25,25,.1,0),humid=AtmosphereModel.humidity(25,25,.9,0);
+  require(dry<humid&&AtmosphereModel.humidity(35,25,.1,0)<dry,"moisture and temperature dependence");
+  require(AtmosphereModel.humidity(25,25,.1,1)>dry,"rain moistens air");
+  for(double t:new double[]{-100,-40,0,40,100}){
+   double rh=AtmosphereModel.humidity(t,t,.5,0);
+   require(Double.isFinite(rh)&&rh>=0&&rh<=100,"extreme temperature humidity");
+  }
+  var calm=AtmosphereModel.wind(42,0,0,0,1,0,0,0);
+  var storm=AtmosphereModel.wind(42,0,0,0,1,0,1,1);
+  require(storm.speed()>calm.speed()&&calm.equals(AtmosphereModel.wind(42,0,0,0,1,0,0,0)),"storm wind and deterministic model");
+  require(AtmosphereModel.wind(42,0,0,1,1,0,0,0).speed()!=calm.speed(),"wind evolves with time");
+ }
  public static void verify(ServerLevel l){
   BlockPos pos=l.getSharedSpawnPos();
   var env=WorldLogicApi.environment(l,pos).orElseThrow();

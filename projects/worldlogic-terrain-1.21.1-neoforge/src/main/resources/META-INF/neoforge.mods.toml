@@ -3,7 +3,7 @@ loaderVersion="[1,)"
 license="All Rights Reserved"
 [[mods]]
 modId="worldlogicterrain"
-version="0.2.0"
+version="0.3.0"
 displayName="WorldLogic: Terrain"
 description="Natural vegetation and surface mobility for WorldLogic."
 [[dependencies.worldlogicterrain]]
