@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "name": "Metabolism model and persisted digestion regression",
+  "coverage": [
+    {
+      "id": "nutrition-model",
+      "kind": "mechanic",
+      "subject": "Actual model: energy, nutrient uptake, toxin, limiting nutrient and NBT",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "name": "Metabolic model and NBT",
+      "command": "metabolism selftest",
+      "expect": "METABOLISM_MODEL_CHECKS_PASSED",
+      "assertion": true
+    }
+  ]
+}

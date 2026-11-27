@@ -1,0 +1,32 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="All Rights Reserved"
+[[mods]]
+modId="metabolism"
+version="0.1.0"
+displayName="WorldLogic: Metabolism"
+description="Nutrition, digestion and energy metabolism for WorldLogic."
+[[dependencies.metabolism]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
+[[dependencies.metabolism]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.80,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.metabolism]]
+modId="worldlogic"
+type="required"
+versionRange="[1.0.0-rc33,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.metabolism]]
+modId="worldlogic_trauma"
+type="optional"
+versionRange="[0,)"
+ordering="AFTER"
+side="BOTH"
