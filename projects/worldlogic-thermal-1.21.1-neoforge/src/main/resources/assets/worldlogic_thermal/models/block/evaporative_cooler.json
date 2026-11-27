@@ -1,10 +1,10 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
-    "particle": "minecraft:block/terracotta",
-    "wall": "minecraft:block/terracotta",
-    "top": "minecraft:block/brown_terracotta",
-    "front": "minecraft:block/terracotta",
+    "particle": "worldlogic_thermal:block/clay_body",
+    "wall": "worldlogic_thermal:block/clay_body",
+    "top": "worldlogic_thermal:block/porous_ceramic_dry",
+    "front": "worldlogic_thermal:block/porous_ceramic_dry",
     "down": "#wall",
     "up": "#top",
     "north": "#front",

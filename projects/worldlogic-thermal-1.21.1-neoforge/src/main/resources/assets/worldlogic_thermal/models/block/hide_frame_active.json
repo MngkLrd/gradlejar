@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "base": "minecraft:block/stripped_oak_log",
-    "dark": "minecraft:block/brown_wool",
-    "warm": "minecraft:block/terracotta",
-    "particle": "minecraft:block/stripped_oak_log",
-    "face": "minecraft:block/terracotta",
-    "flame": "minecraft:block/terracotta"
+    "base": "worldlogic_thermal:block/wood_beam",
+    "dark": "worldlogic_thermal:block/hide_raw",
+    "warm": "worldlogic_thermal:block/hide_prepared",
+    "particle": "worldlogic_thermal:block/wood_beam",
+    "face": "worldlogic_thermal:block/hide_prepared",
+    "flame": "worldlogic_thermal:block/hide_prepared"
   },
   "elements": [
     {

@@ -1,13 +1,13 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "base": "minecraft:block/terracotta",
-    "rim": "minecraft:block/bricks",
-    "dark": "minecraft:block/coal_block",
-    "warm": "minecraft:block/magma",
-    "particle": "minecraft:block/terracotta",
-    "face": "minecraft:block/magma",
-    "flame": "minecraft:block/magma"
+    "base": "worldlogic_thermal:block/clay_body",
+    "rim": "worldlogic_thermal:block/clay_rim",
+    "dark": "worldlogic_thermal:block/charcoal_bed",
+    "warm": "worldlogic_thermal:block/ember_bed",
+    "particle": "worldlogic_thermal:block/clay_body",
+    "face": "worldlogic_thermal:block/ember_bed",
+    "flame": "worldlogic_thermal:block/ember_bed"
   },
   "elements": [
     {

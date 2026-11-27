@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "base": "minecraft:block/bricks",
-    "dark": "minecraft:block/coal_block",
-    "warm": "minecraft:block/magma",
-    "particle": "minecraft:block/bricks",
-    "face": "minecraft:block/coal_block",
-    "flame": "minecraft:block/coal_block"
+    "base": "worldlogic_thermal:block/fired_brick",
+    "dark": "worldlogic_thermal:block/charcoal_bed",
+    "warm": "worldlogic_thermal:block/ember_bed",
+    "particle": "worldlogic_thermal:block/fired_brick",
+    "face": "worldlogic_thermal:block/charcoal_bed",
+    "flame": "worldlogic_thermal:block/charcoal_bed"
   },
   "elements": [
     {

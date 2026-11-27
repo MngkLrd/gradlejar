@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "base": "minecraft:block/oak_planks",
-    "dark": "minecraft:block/gray_wool",
-    "warm": "minecraft:block/white_wool",
-    "particle": "minecraft:block/oak_planks",
-    "face": "minecraft:block/white_wool",
-    "flame": "minecraft:block/white_wool"
+    "base": "worldlogic_thermal:block/wood_board",
+    "dark": "worldlogic_thermal:block/wool_raw",
+    "warm": "worldlogic_thermal:block/felt_finished",
+    "particle": "worldlogic_thermal:block/wood_board",
+    "face": "worldlogic_thermal:block/felt_finished",
+    "flame": "worldlogic_thermal:block/felt_finished"
   },
   "elements": [
     {

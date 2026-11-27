@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "base": "minecraft:block/hay_block_top",
-    "rim": "minecraft:block/oak_planks",
-    "side": "minecraft:block/hay_block_side",
-    "particle": "minecraft:block/hay_block_top",
-    "face": "minecraft:block/hay_block_top",
-    "flame": "minecraft:block/hay_block_top"
+    "base": "worldlogic_thermal:block/straw_weave",
+    "rim": "worldlogic_thermal:block/wood_board",
+    "side": "worldlogic_thermal:block/straw_edge",
+    "particle": "worldlogic_thermal:block/straw_weave",
+    "face": "worldlogic_thermal:block/straw_weave",
+    "flame": "worldlogic_thermal:block/straw_weave"
   },
   "elements": [
     {

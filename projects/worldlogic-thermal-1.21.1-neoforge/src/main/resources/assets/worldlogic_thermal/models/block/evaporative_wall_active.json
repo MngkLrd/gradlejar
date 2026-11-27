@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "base": "minecraft:block/terracotta",
-    "dark": "minecraft:block/brown_terracotta",
-    "warm": "minecraft:block/cyan_terracotta",
-    "particle": "minecraft:block/terracotta",
-    "face": "minecraft:block/cyan_terracotta",
-    "flame": "minecraft:block/cyan_terracotta"
+    "base": "worldlogic_thermal:block/clay_body",
+    "dark": "worldlogic_thermal:block/porous_ceramic_dry",
+    "warm": "worldlogic_thermal:block/porous_ceramic_wet",
+    "particle": "worldlogic_thermal:block/clay_body",
+    "face": "worldlogic_thermal:block/porous_ceramic_wet",
+    "flame": "worldlogic_thermal:block/porous_ceramic_wet"
   },
   "elements": [
     {

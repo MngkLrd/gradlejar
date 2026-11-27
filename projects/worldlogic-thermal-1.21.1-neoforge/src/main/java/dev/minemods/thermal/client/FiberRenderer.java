@@ -14,8 +14,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 @EventBusSubscriber(modid=ThermalMod.ID,bus=EventBusSubscriber.Bus.MOD,value=Dist.CLIENT)
 public final class FiberRenderer implements BlockEntityRenderer<FiberWorkpieceEntity> {
-    private static final ResourceLocation RAW=ResourceLocation.withDefaultNamespace("textures/block/moss_block.png");
-    private static final ResourceLocation CLEAN=ResourceLocation.withDefaultNamespace("textures/block/hay_block_top.png");
+    private static final ResourceLocation RAW=ResourceLocation.fromNamespaceAndPath(ThermalMod.ID,"textures/block/fiber_raw.png");
+    private static final ResourceLocation CLEAN=ResourceLocation.fromNamespaceAndPath(ThermalMod.ID,"textures/block/straw_weave.png");
     public FiberRenderer(BlockEntityRendererProvider.Context c){}
     @SubscribeEvent public static void register(EntityRenderersEvent.RegisterRenderers e){e.registerBlockEntityRenderer(ThermalContent.WORKPIECE_ENTITY.get(),FiberRenderer::new);}
     @Override public void render(FiberWorkpieceEntity e,float delta,PoseStack pose,MultiBufferSource buffers,int light,int overlay){

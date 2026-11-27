@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "base": "minecraft:block/sandstone",
-    "top": "minecraft:block/smooth_sandstone",
-    "dark": "minecraft:block/cut_sandstone",
-    "particle": "minecraft:block/sandstone",
-    "face": "minecraft:block/cut_sandstone",
-    "flame": "minecraft:block/sandstone"
+    "base": "worldlogic_thermal:block/sandstone_body",
+    "top": "worldlogic_thermal:block/sandstone_cap",
+    "dark": "worldlogic_thermal:block/sandstone_vent",
+    "particle": "worldlogic_thermal:block/sandstone_body",
+    "face": "worldlogic_thermal:block/sandstone_vent",
+    "flame": "worldlogic_thermal:block/sandstone_body"
   },
   "elements": [
     {

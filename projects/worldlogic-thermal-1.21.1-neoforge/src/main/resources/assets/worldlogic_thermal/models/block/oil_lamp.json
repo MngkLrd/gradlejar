@@ -1,13 +1,13 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "base": "minecraft:block/terracotta",
-    "metal": "minecraft:block/iron_block",
-    "wick": "minecraft:block/brown_wool",
-    "warm": "minecraft:block/glowstone",
-    "particle": "minecraft:block/terracotta",
-    "face": "minecraft:block/terracotta",
-    "flame": "minecraft:block/brown_wool"
+    "base": "worldlogic_thermal:block/clay_body",
+    "metal": "worldlogic_thermal:block/forged_iron",
+    "wick": "worldlogic_thermal:block/lamp_wick",
+    "warm": "worldlogic_thermal:block/lamp_glow",
+    "particle": "worldlogic_thermal:block/clay_body",
+    "face": "worldlogic_thermal:block/clay_body",
+    "flame": "worldlogic_thermal:block/lamp_wick"
   },
   "elements": [
     {

@@ -1,13 +1,13 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "base": "minecraft:block/stone_bricks",
-    "dark": "minecraft:block/furnace_front",
-    "warm": "minecraft:block/furnace_front_on",
-    "top": "minecraft:block/furnace_top",
-    "particle": "minecraft:block/stone_bricks",
-    "face": "minecraft:block/furnace_front_on",
-    "flame": "minecraft:block/furnace_front_on"
+    "base": "worldlogic_thermal:block/stone_masonry",
+    "dark": "worldlogic_thermal:block/stove_face",
+    "warm": "worldlogic_thermal:block/stove_face_lit",
+    "top": "worldlogic_thermal:block/stove_top",
+    "particle": "worldlogic_thermal:block/stone_masonry",
+    "face": "worldlogic_thermal:block/stove_face_lit",
+    "flame": "worldlogic_thermal:block/stove_face_lit"
   },
   "elements": [
     {
