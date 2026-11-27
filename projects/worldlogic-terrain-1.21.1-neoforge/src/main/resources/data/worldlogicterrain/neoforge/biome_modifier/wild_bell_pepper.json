@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:warm_field",
+  "features": "worldlogicterrain:patch_wild_bell_pepper",
+  "step": "vegetal_decoration"
+}

@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/wild_bell_pepper"
+      },
+      {
+        "model": "worldlogicterrain:block/wild_bell_pepper",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_bell_pepper",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_bell_pepper",
+        "y": 270
+      }
+    ]
+  }
+}

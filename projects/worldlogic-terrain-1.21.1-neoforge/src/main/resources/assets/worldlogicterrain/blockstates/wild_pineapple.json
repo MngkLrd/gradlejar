@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/wild_pineapple"
+      },
+      {
+        "model": "worldlogicterrain:block/wild_pineapple",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_pineapple",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_pineapple",
+        "y": 270
+      }
+    ]
+  }
+}

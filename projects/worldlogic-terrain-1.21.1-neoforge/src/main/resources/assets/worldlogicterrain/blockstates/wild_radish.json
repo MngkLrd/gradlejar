@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/wild_radish"
+      },
+      {
+        "model": "worldlogicterrain:block/wild_radish",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_radish",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_radish",
+        "y": 270
+      }
+    ]
+  }
+}

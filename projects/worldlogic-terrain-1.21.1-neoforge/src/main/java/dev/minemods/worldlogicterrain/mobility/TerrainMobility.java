@@ -97,7 +97,8 @@ public final class TerrainMobility {
         return switch(id.getPath()) {
             case "meadow_grass","dry_grass","forest_litter" -> .97;
             case "fallen_leaves","wild_chamomile","wild_cornflower","wild_clover" -> .98;
-            case "low_fern" -> .95;
+            case "low_fern","wild_strawberry","wild_radish","wild_onion","wild_cabbage","marsh_marigold" -> .95;
+            case "wild_blueberry","wild_raspberry","wild_blackberry","wild_grape","wild_pineapple","wild_tomato","wild_cucumber","wild_bell_pepper","bracken" -> .88;
             case "dense_meadow_grass","tall_dry_grass","wild_heather","dwarf_shrub","desert_shrub" -> .90;
             case "sedge" -> .85;
             case "forest_shrub","cattail" -> .80;

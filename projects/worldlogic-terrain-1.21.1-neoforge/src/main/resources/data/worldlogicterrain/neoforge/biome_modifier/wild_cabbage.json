@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:cool_field",
+  "features": "worldlogicterrain:patch_wild_cabbage",
+  "step": "vegetal_decoration"
+}

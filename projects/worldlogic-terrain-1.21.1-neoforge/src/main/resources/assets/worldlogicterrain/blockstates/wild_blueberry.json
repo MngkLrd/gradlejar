@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/wild_blueberry"
+      },
+      {
+        "model": "worldlogicterrain:block/wild_blueberry",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_blueberry",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_blueberry",
+        "y": 270
+      }
+    ]
+  }
+}

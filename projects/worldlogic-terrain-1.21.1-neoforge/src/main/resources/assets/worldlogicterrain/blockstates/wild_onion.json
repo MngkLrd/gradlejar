@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/wild_onion"
+      },
+      {
+        "model": "worldlogicterrain:block/wild_onion",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_onion",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_onion",
+        "y": 270
+      }
+    ]
+  }
+}

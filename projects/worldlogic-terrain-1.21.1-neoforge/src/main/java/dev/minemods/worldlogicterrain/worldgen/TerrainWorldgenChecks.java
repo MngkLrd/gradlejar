@@ -18,7 +18,7 @@ public final class TerrainWorldgenChecks {
           .then(Commands.literal("worldgen_check").executes(c->{
             try {
                 verify(c.getSource().getLevel());
-                c.getSource().sendSuccess(()->Component.literal("Terrain worldgen: 3 core presets, 18 plant features, biome attachment verified"),false);
+                c.getSource().sendSuccess(()->Component.literal("Terrain worldgen: 3 core presets, 32 plant features, biome attachment verified"),false);
                 return 1;
             } catch (IllegalStateException ex) {
                 c.getSource().sendFailure(Component.literal(ex.getMessage())); return 0;
@@ -50,6 +50,20 @@ public final class TerrainWorldgenChecks {
         checkPreset(gen, "wild_chamomile", Set.of("plains","sunflower_plains","meadow","flower_forest","birch_forest","old_growth_birch_forest"));
         checkPreset(gen, "wild_cornflower", Set.of("plains","sunflower_plains","meadow","flower_forest","birch_forest","old_growth_birch_forest"));
         checkPreset(gen, "wild_clover", Set.of("plains","sunflower_plains","meadow"));
+        checkPreset(gen, "wild_strawberry", Set.of("plains","sunflower_plains","meadow","flower_forest","birch_forest"));
+        checkPreset(gen, "wild_blueberry", Set.of("taiga","snowy_taiga","old_growth_pine_taiga","old_growth_spruce_taiga","forest","birch_forest","old_growth_birch_forest"));
+        checkPreset(gen, "wild_raspberry", Set.of("forest","birch_forest","old_growth_birch_forest","flower_forest","dark_forest","taiga"));
+        checkPreset(gen, "wild_blackberry", Set.of("forest","birch_forest","old_growth_birch_forest","flower_forest","dark_forest","taiga"));
+        checkPreset(gen, "wild_grape", Set.of("jungle","sparse_jungle","bamboo_jungle","forest","savanna","wooded_badlands"));
+        checkPreset(gen, "wild_pineapple", Set.of("jungle","sparse_jungle","bamboo_jungle","mangrove_swamp"));
+        checkPreset(gen, "wild_tomato", Set.of("plains","savanna","savanna_plateau","windswept_savanna","jungle","sparse_jungle"));
+        checkPreset(gen, "wild_cucumber", Set.of("plains","savanna","savanna_plateau","windswept_savanna","jungle","sparse_jungle"));
+        checkPreset(gen, "wild_radish", Set.of("plains","sunflower_plains","meadow","flower_forest","birch_forest"));
+        checkPreset(gen, "wild_onion", Set.of("plains","sunflower_plains","meadow","savanna","savanna_plateau","windswept_savanna"));
+        checkPreset(gen, "wild_cabbage", Set.of("plains","meadow","sunflower_plains","birch_forest","flower_forest"));
+        checkPreset(gen, "wild_bell_pepper", Set.of("plains","savanna","savanna_plateau","windswept_savanna","jungle","sparse_jungle"));
+        checkPreset(gen, "bracken", Set.of("forest","dark_forest","birch_forest","old_growth_birch_forest","taiga","old_growth_pine_taiga","old_growth_spruce_taiga","jungle","sparse_jungle"));
+        checkPreset(gen, "marsh_marigold", Set.of("swamp","mangrove_swamp","river"));
         }
     }
     private static void checkPreset(NoiseBasedChunkGenerator gen,String plant,Set<String> expected) {

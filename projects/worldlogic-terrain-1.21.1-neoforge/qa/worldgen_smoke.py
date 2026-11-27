@@ -32,6 +32,13 @@ SPECIES = {
     "mangrove_swamp": {"forest_shrub", "dense_underbrush", "low_fern", "sedge", "reed", "cattail", "forest_litter", "fallen_leaves"},
 }
 
+NEW_FORAGE = {
+    "plains": {"wild_strawberry", "wild_radish", "wild_onion", "wild_cabbage", "wild_tomato", "wild_cucumber", "wild_bell_pepper"},
+    "forest": {"wild_blueberry", "wild_raspberry", "wild_blackberry", "wild_grape"},
+    "jungle": {"wild_grape", "wild_pineapple", "wild_tomato", "wild_cucumber", "wild_bell_pepper"},
+    "mangrove_swamp": {"wild_pineapple"},
+}
+
 def read_chunk(region, cx, cz):
     file = region / f"r.{cx // 32}.{cz // 32}.mca"
     if not file.exists():
@@ -169,10 +176,11 @@ def main():
                     if full == len(positions):
                         break
                 matching = sum(counts.get(n, 0) for n in expected)
-                passed = full == len(positions) and "minecraft:" + biome in biomes and matching > 0
+                forage_count = sum(counts.get(n, 0) for n in NEW_FORAGE.get(biome, set()))
+                passed = full == len(positions) and "minecraft:" + biome in biomes and matching > 0 and (biome not in NEW_FORAGE or forage_count > 0)
                 row = {"biome": biome, "status": "PASS" if passed else "FAIL",
                        "x": x, "z": z, "full_chunks": full,
-                       "expected_species_blocks": matching, "all_terrain_blocks": dict(counts)}
+                       "expected_species_blocks": matching, "new_forage_blocks": forage_count, "all_terrain_blocks": dict(counts)}
                 report["results"].append(row)
                 print(json.dumps(row), flush=True)
                 conn.cmd("forceload remove " + force)

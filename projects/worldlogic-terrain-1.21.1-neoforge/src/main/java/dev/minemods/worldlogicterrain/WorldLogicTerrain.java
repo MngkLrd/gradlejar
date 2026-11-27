@@ -5,6 +5,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import dev.minemods.worldlogicterrain.registry.TerrainContent;
 import dev.minemods.worldlogicterrain.mobility.TerrainMobility;
 import dev.minemods.worldlogicterrain.worldgen.TerrainWorldgenChecks;
+import dev.minemods.worldlogicterrain.food.ForageChecks;
 @Mod(WorldLogicTerrain.MOD_ID)
 public final class WorldLogicTerrain {
     public static final String MOD_ID = "worldlogicterrain";
@@ -15,6 +16,7 @@ public final class WorldLogicTerrain {
         NeoForge.EVENT_BUS.addListener(TerrainMobility::tick);
         NeoForge.EVENT_BUS.addListener(TerrainMobility::register);
         NeoForge.EVENT_BUS.addListener(TerrainWorldgenChecks::register);
+        NeoForge.EVENT_BUS.addListener(ForageChecks::register);
         NeoForge.EVENT_BUS.addListener(TerrainMobility::logout);
     }
 }

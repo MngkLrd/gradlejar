@@ -748,7 +748,7 @@
     {
       "name": "WorldLogic preset vegetation attachment",
       "command": "worldlogicterrain worldgen_check",
-      "expect": "3 core presets, 18 plant features, biome attachment verified",
+      "expect": "3 core presets, 32 plant features, biome attachment verified",
       "assertion": true
     },
     {
@@ -979,6 +979,222 @@
       "name": "No meadow growth on stone",
       "command": "place feature worldlogicterrain:patch_meadow_grass 8 221 8",
       "expect": "Failed to place feature",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:dirt",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_strawberry 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_strawberry\""
+    },
+    {
+      "name": "generated patch wild_strawberry",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_strawberry",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_blueberry 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_blueberry\""
+    },
+    {
+      "name": "generated patch wild_blueberry",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_blueberry",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_raspberry 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_raspberry\""
+    },
+    {
+      "name": "generated patch wild_raspberry",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_raspberry",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_blackberry 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_blackberry\""
+    },
+    {
+      "name": "generated patch wild_blackberry",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_blackberry",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_grape 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_grape\""
+    },
+    {
+      "name": "generated patch wild_grape",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_grape",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_pineapple 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_pineapple\""
+    },
+    {
+      "name": "generated patch wild_pineapple",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_pineapple",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_tomato 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_tomato\""
+    },
+    {
+      "name": "generated patch wild_tomato",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_tomato",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_cucumber 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_cucumber\""
+    },
+    {
+      "name": "generated patch wild_cucumber",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_cucumber",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_radish 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_radish\""
+    },
+    {
+      "name": "generated patch wild_radish",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_radish",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_onion 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_onion\""
+    },
+    {
+      "name": "generated patch wild_onion",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_onion",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_cabbage 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_cabbage\""
+    },
+    {
+      "name": "generated patch wild_cabbage",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_cabbage",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_bell_pepper 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_bell_pepper\""
+    },
+    {
+      "name": "generated patch wild_bell_pepper",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_bell_pepper",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_bracken 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_bracken\""
+    },
+    {
+      "name": "generated patch bracken",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:bracken",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_marsh_marigold 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_marsh_marigold\""
+    },
+    {
+      "name": "generated patch marsh_marigold",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:marsh_marigold",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "name": "food consumption strawberry",
+      "command": "worldlogicterrain food_check strawberry",
+      "expect": "Forage verified strawberry: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption blueberry",
+      "command": "worldlogicterrain food_check blueberry",
+      "expect": "Forage verified blueberry: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption raspberry",
+      "command": "worldlogicterrain food_check raspberry",
+      "expect": "Forage verified raspberry: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption blackberry",
+      "command": "worldlogicterrain food_check blackberry",
+      "expect": "Forage verified blackberry: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption grape",
+      "command": "worldlogicterrain food_check grape",
+      "expect": "Forage verified grape: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption pineapple",
+      "command": "worldlogicterrain food_check pineapple",
+      "expect": "Forage verified pineapple: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption tomato",
+      "command": "worldlogicterrain food_check tomato",
+      "expect": "Forage verified tomato: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption cucumber",
+      "command": "worldlogicterrain food_check cucumber",
+      "expect": "Forage verified cucumber: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption radish",
+      "command": "worldlogicterrain food_check radish",
+      "expect": "Forage verified radish: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption onion",
+      "command": "worldlogicterrain food_check onion",
+      "expect": "Forage verified onion: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption cabbage",
+      "command": "worldlogicterrain food_check cabbage",
+      "expect": "Forage verified cabbage: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption bell_pepper",
+      "command": "worldlogicterrain food_check bell_pepper",
+      "expect": "Forage verified bell_pepper: loot, food, saturation, consumption, core stamina",
       "assertion": true
     }
   ],
@@ -1619,7 +1835,7 @@
     {
       "id": "core-preset-vegetation",
       "kind": "mechanic",
-      "subject": "All 18 placed features attached to correct biomes of all 3 registered WorldLogic presets",
+      "subject": "All 32 placed features attached to correct biomes of all 3 registered WorldLogic presets",
       "checks": [
         {
           "backend": "server",
@@ -1905,6 +2121,396 @@
         {
           "backend": "server",
           "name": "No meadow growth on stone"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_strawberry",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_strawberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_strawberry"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_blueberry",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_blueberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_blueberry"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_raspberry",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_raspberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_raspberry"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_blackberry",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_blackberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_blackberry"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_grape",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_grape",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_grape"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_pineapple",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_pineapple",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_pineapple"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_tomato",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_tomato",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_tomato"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_cucumber",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_cucumber",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_cucumber"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_radish",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_radish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_radish"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_onion",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_onion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_onion"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_cabbage",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_cabbage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_cabbage"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_bell_pepper",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_bell_pepper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_bell_pepper"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-bracken",
+      "kind": "block",
+      "subject": "Natural feature and biome placement bracken",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch bracken"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-marsh_marigold",
+      "kind": "block",
+      "subject": "Natural feature and biome placement marsh_marigold",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch marsh_marigold"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "food-strawberry",
+      "kind": "item",
+      "subject": "Harvest and consume strawberry with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption strawberry"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_strawberry"
+        }
+      ]
+    },
+    {
+      "id": "food-blueberry",
+      "kind": "item",
+      "subject": "Harvest and consume blueberry with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption blueberry"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_blueberry"
+        }
+      ]
+    },
+    {
+      "id": "food-raspberry",
+      "kind": "item",
+      "subject": "Harvest and consume raspberry with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption raspberry"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_raspberry"
+        }
+      ]
+    },
+    {
+      "id": "food-blackberry",
+      "kind": "item",
+      "subject": "Harvest and consume blackberry with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption blackberry"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_blackberry"
+        }
+      ]
+    },
+    {
+      "id": "food-grape",
+      "kind": "item",
+      "subject": "Harvest and consume grape with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption grape"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_grape"
+        }
+      ]
+    },
+    {
+      "id": "food-pineapple",
+      "kind": "item",
+      "subject": "Harvest and consume pineapple with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption pineapple"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_pineapple"
+        }
+      ]
+    },
+    {
+      "id": "food-tomato",
+      "kind": "item",
+      "subject": "Harvest and consume tomato with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption tomato"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_tomato"
+        }
+      ]
+    },
+    {
+      "id": "food-cucumber",
+      "kind": "item",
+      "subject": "Harvest and consume cucumber with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption cucumber"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_cucumber"
+        }
+      ]
+    },
+    {
+      "id": "food-radish",
+      "kind": "item",
+      "subject": "Harvest and consume radish with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption radish"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_radish"
+        }
+      ]
+    },
+    {
+      "id": "food-onion",
+      "kind": "item",
+      "subject": "Harvest and consume onion with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption onion"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_onion"
+        }
+      ]
+    },
+    {
+      "id": "food-cabbage",
+      "kind": "item",
+      "subject": "Harvest and consume cabbage with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption cabbage"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_cabbage"
+        }
+      ]
+    },
+    {
+      "id": "food-bell_pepper",
+      "kind": "item",
+      "subject": "Harvest and consume bell_pepper with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption bell_pepper"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_bell_pepper"
         }
       ]
     }

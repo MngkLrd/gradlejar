@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/bracken"
+      },
+      {
+        "model": "worldlogicterrain:block/bracken",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/bracken",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/bracken",
+        "y": 270
+      }
+    ]
+  }
+}
