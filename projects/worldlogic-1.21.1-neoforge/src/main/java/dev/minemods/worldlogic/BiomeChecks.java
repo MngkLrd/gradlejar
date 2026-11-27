@@ -40,6 +40,7 @@ public final class BiomeChecks {
    var actualBiome=BiomeSurvey.at(gen,b,px,Math.max(63,n),pz);
    if(n>=68)require(!actualBiome.getPath().endsWith("ocean"),"dry land classified ocean at "+px+","+pz+" y="+n+" "+actualBiome);
    if(n<=53)require(actualBiome.getPath().endsWith("ocean"),"deep water classified as land at "+px+","+pz+" y="+n+" "+actualBiome);
+   if(actualBiome.getPath().endsWith("sandy_coast"))require(n>=60&&n<=67,"sandy shore escaped narrow sea-level band at "+px+","+pz+" y="+n);
   }
   for(int z=-20480;z<=20480;z+=4096)for(int x=-20480;x<=20480;x+=4096){
    var p=new net.minecraft.world.level.levelgen.DensityFunction.SinglePointContext(x,128,z);

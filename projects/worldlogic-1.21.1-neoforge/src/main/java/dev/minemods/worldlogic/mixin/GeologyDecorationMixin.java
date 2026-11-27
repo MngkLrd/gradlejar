@@ -10,6 +10,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ChunkGenerator.class)
 public abstract class GeologyDecorationMixin {
+ @Inject(method="applyBiomeDecoration",at=@At("HEAD"))
+ private void worldlogic$marineBed(WorldGenLevel level,ChunkAccess chunk,StructureManager structures,CallbackInfo ci){
+  var generator=(ChunkGenerator)(Object)this;
+  if(GeologyGeneration.enabled(generator))dev.minemods.worldlogic.MarineTerrain.prepare(level.getSeed(),chunk,generator.getSeaLevel());
+ }
  @Inject(method="applyBiomeDecoration",at=@At("RETURN"))
  private void worldlogic$deposits(WorldGenLevel level,ChunkAccess chunk,StructureManager structures,CallbackInfo ci){
   var generator=(ChunkGenerator)(Object)this;

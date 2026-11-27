@@ -41,6 +41,11 @@ final class MarineEcology {
    require(!b.getMobSettings().getMobs(MobCategory.WATER_AMBIENT).isEmpty(),"fish inventory "+id);
    if(!id.startsWith("polar"))require(features.get(9).stream().anyMatch(h->h.unwrapKey().map(k->k.location().getPath().startsWith("seagrass_")).orElse(false)),"vanilla seagrass "+id);
   }
+  for(double value:new double[]{0,.25,.6,.95}){
+   require(MarineTerrain.material("temperate_sandy_coast",value,0).is(Blocks.SAND),"temperate sandy shore is sand");
+   require(MarineTerrain.material("tropical_sandy_coast",value,0).is(Blocks.SAND),"tropical sandy shore is sand");
+  }
+  require(MarineTerrain.material("cold_ocean",.1,0).is(Blocks.STONE)&&MarineTerrain.material("cold_ocean",.3,0).is(Blocks.GRAVEL)&&MarineTerrain.material("cold_ocean",.65,0).is(Blocks.SAND)&&MarineTerrain.material("cold_ocean",.9,0).is(Blocks.CLAY),"cold seabed material mosaic");
   BlockPos p=new BlockPos(4,l.getSeaLevel()-5,4);
   require(l.hasChunkAt(p),"loaded aquatic fixture");
   var above=l.getBlockState(p.above());var center=l.getBlockState(p);var below=l.getBlockState(p.below());
