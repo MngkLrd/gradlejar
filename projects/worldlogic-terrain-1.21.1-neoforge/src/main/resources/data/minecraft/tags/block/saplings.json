@@ -2,6 +2,12 @@
   "replace": false,
   "values": [
     "worldlogicterrain:willow_sapling",
-    "worldlogicterrain:larch_sapling"
+    "worldlogicterrain:larch_sapling",
+    "worldlogicterrain:pine_sapling",
+    "worldlogicterrain:fir_sapling",
+    "worldlogicterrain:cedar_sapling",
+    "worldlogicterrain:maple_sapling",
+    "worldlogicterrain:beech_sapling",
+    "worldlogicterrain:alder_sapling"
   ]
 }

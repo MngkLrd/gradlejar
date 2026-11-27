@@ -2,6 +2,12 @@
   "replace": false,
   "values": [
     "worldlogicterrain:willow_planks",
-    "worldlogicterrain:larch_planks"
+    "worldlogicterrain:larch_planks",
+    "worldlogicterrain:pine_planks",
+    "worldlogicterrain:fir_planks",
+    "worldlogicterrain:cedar_planks",
+    "worldlogicterrain:maple_planks",
+    "worldlogicterrain:beech_planks",
+    "worldlogicterrain:alder_planks"
   ]
 }

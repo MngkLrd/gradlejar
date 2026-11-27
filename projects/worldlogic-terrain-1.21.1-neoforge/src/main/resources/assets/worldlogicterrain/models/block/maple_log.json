@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "worldlogicterrain:block/maple_log",
+    "end": "worldlogicterrain:block/maple_log_top"
+  }
+}

@@ -4,6 +4,18 @@
     "worldlogicterrain:willow_log",
     "worldlogicterrain:willow_planks",
     "worldlogicterrain:larch_log",
-    "worldlogicterrain:larch_planks"
+    "worldlogicterrain:larch_planks",
+    "worldlogicterrain:pine_log",
+    "worldlogicterrain:pine_planks",
+    "worldlogicterrain:fir_log",
+    "worldlogicterrain:fir_planks",
+    "worldlogicterrain:cedar_log",
+    "worldlogicterrain:cedar_planks",
+    "worldlogicterrain:maple_log",
+    "worldlogicterrain:maple_planks",
+    "worldlogicterrain:beech_log",
+    "worldlogicterrain:beech_planks",
+    "worldlogicterrain:alder_log",
+    "worldlogicterrain:alder_planks"
   ]
 }

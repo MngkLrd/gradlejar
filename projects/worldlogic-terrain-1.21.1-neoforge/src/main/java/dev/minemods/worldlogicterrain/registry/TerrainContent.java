@@ -44,6 +44,12 @@ public final class TerrainContent {
         PLANTS.add(ITEMS.register("duckweed",()->new net.minecraft.world.item.PlaceOnWaterBlockItem(duckweed.get(),new Item.Properties())));
         tree("willow");
         tree("larch");
+        tree("pine");
+        tree("fir");
+        tree("cedar");
+        tree("maple");
+        tree("beech");
+        tree("alder");
         plant("meadow_grass", false);
         plant("frosted_grass", false);
         plant("dense_meadow_grass", false);

@@ -2,6 +2,12 @@
   "replace": false,
   "values": [
     "worldlogicterrain:willow_log",
-    "worldlogicterrain:larch_log"
+    "worldlogicterrain:larch_log",
+    "worldlogicterrain:pine_log",
+    "worldlogicterrain:fir_log",
+    "worldlogicterrain:cedar_log",
+    "worldlogicterrain:maple_log",
+    "worldlogicterrain:beech_log",
+    "worldlogicterrain:alder_log"
   ]
 }

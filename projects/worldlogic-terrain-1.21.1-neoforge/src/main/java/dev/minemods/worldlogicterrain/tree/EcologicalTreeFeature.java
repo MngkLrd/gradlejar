@@ -45,6 +45,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         return Zone.NONE;
     }
     private static String id(Holder<Biome> b){return b.unwrapKey().map(k->k.location().getPath()).orElse("");}
+    private static String namespace(String wood){return java.util.Set.of("willow","larch","pine","fir","cedar","maple","beech","alder").contains(wood)?"worldlogicterrain":"minecraft";}
     static boolean soil(BlockState state){return state.is(BlockTags.DIRT)||state.is(Blocks.MUD)||state.is(Blocks.CLAY);}
     @Override public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context){
         WorldGenLevel level=context.level();
@@ -61,11 +62,15 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             int x=startX+random.nextInt(16),z=startZ+random.nextInt(16);
             BlockPos pos=new BlockPos(x,level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z),z);
             if(level.isOutsideBuildHeight(pos)||!level.ensureCanWrite(pos)||!level.ensureCanWrite(pos.below()))continue;
-            var biome=level.getBiome(pos);Zone zone=zone(biome);
+            var biome=level.getBiome(pos.below());Zone zone=zone(biome);
+            if(zone==Zone.NONE){biome=level.getBiome(pos);zone=zone(biome);}
             if(zone==Zone.NONE||(i>=8&&zone!=Zone.BOREAL))continue;
             String name=id(biome);
             boolean mangrove=name.contains("mangrove");
             BlockState ground=level.getBlockState(pos.below());
+            if(ground.is(Blocks.SNOW)&&level.ensureCanWrite(pos.below(2))&&soil(level.getBlockState(pos.below(2)))){
+                pos=pos.below();ground=level.getBlockState(pos.below());
+            }
             if(!soil(ground)){
                 // Mangrove roots alone may start in shallow water; no water or terrain is replaced by this selection step.
                 if(!mangrove||!ground.is(Blocks.WATER))continue;
@@ -139,6 +144,8 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         return switch(zone){
             case OPEN -> wind>.62?form("oak_windswept","oak"):young?form("oak_young","oak"):random.nextInt(14)==0?form("oak_ancient","oak"):form("oak_spreading","oak");
             case TEMPERATE -> {
+                if(!name.contains("birch")&&random.nextInt(5)==0)yield form(young?"maple_young":"maple_spreading","maple");
+                if(!name.contains("birch")&&moisture>.45&&random.nextInt(5)==0)yield form(young?"beech_young":"beech_tall","beech");
                 if(name.contains("birch")||random.nextInt(5)==0)yield form(young?(random.nextBoolean()?"birch_pioneer":"birch_young"):"birch_tall","birch");
                 if(name.equals("dark_forest")&&!young&&random.nextInt(3)==0)yield form("dark_oak_old","dark_oak");
                 if(moisture>.68&&river>.45&&random.nextInt(3)==0)yield form(young?"willow_young":"willow_spreading","willow");
@@ -146,11 +153,14 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             }
             case BOREAL -> {
                 if(name.equals("forest_tundra")||name.equals("light_conifer_taiga")||random.nextInt(4)==0)yield form(wind>.62||name.equals("forest_tundra")?"larch_exposed":young?"larch_young":"larch_tall","larch");
+                if(wind>.62||moisture<.43||name.equals("continental_taiga")&&random.nextBoolean())yield form(wind>.62?"pine_windswept":young?"pine_young":"pine_tall","pine");
+                if(moisture>.60&&random.nextInt(3)==0)yield form(young?"fir_young":"fir_tall","fir");
+                if(!name.equals("forest_tundra")&&random.nextInt(5)==0)yield form(young?"cedar_young":"cedar_spreading","cedar");
                 if(young)yield form("spruce_young","spruce");
                 if(!young&&fertility>.5&&(name.contains("old_growth")||name.contains("dark_conifer"))&&random.nextInt(7)==0)yield form("spruce_old","spruce");
-                yield form(moisture>.55||random.nextBoolean()?"spruce_dense":"pine_tall","spruce");
+                yield moisture>.55||random.nextBoolean()?form("spruce_dense","spruce"):form("pine_tall","pine");
             }
-            case WET -> name.contains("mangrove")?form("mangrove_coast","mangrove"):form(young?"willow_young":"willow_spreading","willow");
+            case WET -> name.contains("mangrove")?form("mangrove_coast","mangrove"):random.nextBoolean()?form(young?"alder_young":"alder_spreading","alder"):form(young?"willow_young":"willow_spreading","willow");
             case DRY -> form(young?"acacia_stunted":"acacia_spreading","acacia");
             case TROPICAL -> form(!young&&fertility>.46&&random.nextInt(6)==0?"jungle_giant":"jungle_canopy","jungle");
             case CHERRY -> form("cherry_spreading","cherry");
@@ -179,7 +189,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
     }
     static boolean recruit(WorldGenLevel level,BlockPos pos,String wood){
         if(!safeFloor(level,pos)||wood.equals("mangrove")||wood.equals("dark_oak"))return false;
-        String namespace=wood.equals("larch")||wood.equals("willow")?"worldlogicterrain":"minecraft";
+        String namespace=namespace(wood);
         Block sapling=BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(namespace,wood+"_sapling"));
         BlockState state=sapling.defaultBlockState();
         if(!(sapling instanceof net.minecraft.world.level.block.SaplingBlock)||!state.canSurvive(level,pos))return false;
@@ -192,7 +202,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         return !state.isAir()&&state.canSurvive(level,pos)&&level.setBlock(pos,state,2);
     }
     static boolean fallen(WorldGenLevel level,BlockPos start,String wood,Direction dir,int length){
-        String namespace=wood.equals("larch")||wood.equals("willow")?"worldlogicterrain":"minecraft";
+        String namespace=namespace(wood);
         Block log=BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(namespace,wood+"_log"));
         if(!log.defaultBlockState().hasProperty(RotatedPillarBlock.AXIS)||length<3||length>5)return false;
         for(int i=0;i<=length;i++){

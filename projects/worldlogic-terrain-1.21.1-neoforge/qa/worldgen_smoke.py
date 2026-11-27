@@ -57,12 +57,12 @@ CORE_FORAGE = {
     "equatorial_rainforest": {"wild_pineapple"},
 }
 TREE_EXPECTED = {
-    "forest": {"oak","birch","dark_oak"},
+    "forest": {"oak","birch","dark_oak","maple","beech"},
     "jungle": {"jungle"},
     "mangrove_swamp": {"mangrove"},
-    "mixed_forest": {"oak","birch","dark_oak","willow"},
-    "continental_taiga": {"larch","spruce"},
-    "temperate_marsh": {"willow"},
+    "mixed_forest": {"oak","birch","dark_oak","willow","maple","beech"},
+    "continental_taiga": {"larch","spruce","pine","fir","cedar"},
+    "temperate_marsh": {"willow","alder"},
     "equatorial_rainforest": {"jungle"},
 }
 MEADOW = SPECIES["plains"]

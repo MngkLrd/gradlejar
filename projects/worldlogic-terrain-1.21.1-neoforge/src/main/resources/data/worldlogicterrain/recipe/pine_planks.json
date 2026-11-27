@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "worldlogicterrain:pine_log"
+    }
+  ],
+  "result": {
+    "id": "worldlogicterrain:pine_planks",
+    "count": 4
+  }
+}
