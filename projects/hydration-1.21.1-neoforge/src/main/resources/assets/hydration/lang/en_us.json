@@ -21,7 +21,7 @@
   "item.hydration.charcoal_filter": "Charcoal Filter",
   "item.hydration.copper_condenser": "Copper Condenser",
   "itemGroup.hydration": "WL: Hydration",
-  "hydration.vessel.volume": "Water: %s / %s mL",
+  "hydration.vessel.volume": "Water: %s / %s mB",
   "hydration.vessel.properties": "Salt: %s g/kg | risk: %s%%",
   "hydration.treatment.not_heatproof": "This vessel cannot be heated",
   "hydration.treatment.boiling": "Boiling: %s s. Stay by the fire with the vessel in hand.",
@@ -34,7 +34,7 @@
   "block.hydration.stationary_filter": "Stationary Filter",
   "block.hydration.water_intake": "Water Intake",
   "block.hydration.clay_pipe": "Clay Pipe",
-  "hydration.tank.status": "Water: %s/%s mL | %s | filter remaining: %s mL",
+  "hydration.tank.status": "Water: %s/%s mB | %s | filter remaining: %s mB",
   "hydration.pipe.direction": "Inlet: %s | outlet: %s | %s",
   "hydration.water.kind.rain": "Rainwater"
 }

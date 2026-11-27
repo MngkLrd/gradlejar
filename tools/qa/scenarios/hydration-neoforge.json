@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Hydration 0.4.0 model, vessel and infrastructure regression",
+  "name": "Hydration 0.4.1 Minecraft fluid units and infrastructure regression",
   "coverage": [
     {
       "id": "water-balance",
@@ -179,6 +179,17 @@
         {
           "backend": "server",
           "name": "Infrastructure world fixture"
+        }
+      ]
+    },
+    {
+      "id": "millibuckets",
+      "kind": "mechanic",
+      "subject": "1000 mB per bucket, 250 mB sip and legacy amount compatibility",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
         }
       ]
     }

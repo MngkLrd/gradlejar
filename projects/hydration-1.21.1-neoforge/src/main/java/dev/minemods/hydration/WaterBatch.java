@@ -2,7 +2,7 @@ package dev.minemods.hydration;
 import java.util.Set;
 import java.util.HashSet;
 
-/** Conserves volume and modeled salt/contamination load in a closed transfer. */
+/** Amounts are millibuckets (mB). Conserves modeled salt/contamination load in a closed transfer. */
 public record WaterBatch(int ml, WaterBalance.Quality quality, double salinity, double risk, Set<String> origins) {
  public WaterBatch {
   if(origins==null||origins.size()>16||origins.stream().anyMatch(x->x==null||!x.matches("[A-Z_]{1,32}")))throw new IllegalArgumentException("Invalid origins");
@@ -13,6 +13,8 @@ public record WaterBatch(int ml, WaterBalance.Quality quality, double salinity, 
   else if(origins.isEmpty())origins=Set.of("UNKNOWN");
  }
  public WaterBatch(int ml,WaterBalance.Quality quality,double salinity,double risk){this(ml,quality,salinity,risk,ml==0?Set.of():Set.of("UNKNOWN"));}
+ /** Canonical amount accessor; ml() retained for binary/source compatibility. */
+ public int mB(){return ml;}
  public static WaterBatch empty(){return new WaterBatch(0,WaterBalance.Quality.NOT_WATER,0,0);}
  public record Transfer(WaterBatch source,WaterBatch target,int moved){}
  private WaterBatch withVolume(int amount){return amount==0?empty():new WaterBatch(amount,quality,salinity,risk,origins);}

@@ -21,7 +21,7 @@
   "item.hydration.charcoal_filter": "Угольный фильтр",
   "item.hydration.copper_condenser": "Медный конденсатор",
   "itemGroup.hydration": "WL: Hydration",
-  "hydration.vessel.volume": "Вода: %s / %s мл",
+  "hydration.vessel.volume": "Вода: %s / %s mB",
   "hydration.vessel.properties": "Соль: %s г/кг | риск: %s%%",
   "hydration.treatment.not_heatproof": "Этот сосуд нельзя нагревать",
   "hydration.treatment.boiling": "Кипячение: %s с. Оставайтесь у огня с сосудом в руке.",
@@ -34,7 +34,7 @@
   "block.hydration.stationary_filter": "Стационарный фильтр",
   "block.hydration.water_intake": "Водозаборник",
   "block.hydration.clay_pipe": "Глиняная труба",
-  "hydration.tank.status": "Вода: %s/%s мл | %s | ресурс фильтра: %s мл",
+  "hydration.tank.status": "Вода: %s/%s mB | %s | ресурс фильтра: %s mB",
   "hydration.pipe.direction": "Вход: %s | выход: %s | %s",
   "hydration.water.kind.rain": "Дождевая вода"
 }

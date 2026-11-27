@@ -26,7 +26,7 @@ public final class TankEntity extends BlockEntity {
  public WaterBatch water(){return water;}
  public int charge(){return filterCharge;}
  public boolean filter(){return kind()==TankBlock.Kind.FILTER;}
- public String diagnostic(){return "Hydration tank="+kind()+" volume="+water.ml()+" capacity="+capacity()+" quality="+water.quality()+" charge="+filterCharge;}
+ public String diagnostic(){return "Hydration tank="+kind()+" volume="+water.mB()+" mB capacity="+capacity()+" mB quality="+water.quality()+" charge="+filterCharge+" mB";}
  public boolean installFilter(){
   if(!filter()||filterCharge>GravityFlow.FILTER_CAPACITY)return false;
   filterCharge+=GravityFlow.FILTER_CAPACITY;changed();return true;

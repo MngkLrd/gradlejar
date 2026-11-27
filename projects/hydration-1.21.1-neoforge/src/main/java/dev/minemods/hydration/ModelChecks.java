@@ -27,7 +27,9 @@ public final class ModelChecks {
   check(loss(20,50,false,false,false,true,0,39,0)>loss(20,50,false,false,false,true,0,37,0),"body temperature");
   check(loss(20,50,false,false,false,true,0,37,4)>loss(20,50,false,false,false,true,0,37,0),"bleeding");
   check(halfUnits(0)==0&&halfUnits(1)==1&&halfUnits(50)==10&&halfUnits(100)==20,"HUD boundaries");
-  var sea=new WaterBatch(1000,Quality.DESALINATE,35,.3,java.util.Set.of("SEA"));
+  check(FluidUnits.BUCKET_MB==1000&&FluidUnits.SIP_MB*4==FluidUnits.BUCKET_MB,"Minecraft fluid units");
+  var sea=new WaterBatch(FluidUnits.BUCKET_MB,Quality.DESALINATE,35,.3,java.util.Set.of("SEA"));
+  check(sea.mB()==FluidUnits.BUCKET_MB&&sea.mB()==sea.ml(),"legacy amount compatibility");
   var fresh=new WaterBatch(500,Quality.DRINKABLE,.2,.1,java.util.Set.of("RIVER"));
   var t=WaterBatch.transfer(sea,fresh,750,1000);
   check(t.moved()==500&&t.source().ml()==500&&t.target().ml()==1000,"volume conservation/capacity");

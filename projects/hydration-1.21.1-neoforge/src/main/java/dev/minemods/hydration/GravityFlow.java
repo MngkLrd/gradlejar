@@ -2,7 +2,7 @@ package dev.minemods.hydration;
 
 /** Deterministic gameplay flow. Each source sends at most one bounded batch per second. */
 public final class GravityFlow {
- public static final int RATE=250, FILTER_CAPACITY=12000, MAX_PIPE_LENGTH=24;
+ public static final int RATE=FluidUnits.SIP_MB, FILTER_CAPACITY=12*FluidUnits.BUCKET_MB, MAX_PIPE_LENGTH=24;
  public record Result(WaterBatch source,WaterBatch target,int moved,int remainingFilter){}
  private GravityFlow(){}
  public static Result move(WaterBatch source,WaterBatch target,int targetCapacity,int sourceY,int targetY,int charge,boolean filter){
