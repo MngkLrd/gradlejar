@@ -1,0 +1,28 @@
+name: MineMods shared documentation links
+on:
+  pull_request:
+    paths:
+      - 'AGENTS.md'
+      - 'README.md'
+      - 'docs/**'
+      - 'tools/qa/tests/test_shared_docs_links.py'
+      - '.github/workflows/qa-docs.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'AGENTS.md'
+      - 'README.md'
+      - 'docs/**'
+      - 'tools/qa/tests/test_shared_docs_links.py'
+      - '.github/workflows/qa-docs.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  docs-links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate shared Markdown inline links and headings
+        run: python3 -m unittest tools.qa.tests.test_shared_docs_links -v

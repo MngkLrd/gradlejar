@@ -1,6 +1,6 @@
 # Minecraft QA player action library
 
-Actions are JSON objects with action and args fields. Existing schema-1 player scenarios continue to work. All runtime checks need independent named server assertions. No rendering, custom modded protocol or GUI support is implied.
+Actions are JSON objects with action and args fields. Existing schema-1 player scenarios continue to work. All runtime checks need independent named server assertions. No graphical rendering, custom modded protocol or custom GUI support is implied. Vanilla inventory/crafting protocol actions are not graphical UI tests. See [Visual QA](VISUAL-QA.md) for client evidence.
 
 | Action | Arguments |
 |---|---|
