@@ -2,6 +2,18 @@
 
 Applies to every agent and contributor using MngkLrd/gradlejar. The repository is shared: inspect the current main head and never force-push, overwrite unrelated changes, or publish untested binaries as verified.
 
+## Chat response and reporting standard
+
+Mandatory for agents working with this repository: read the current AGENTS.md from main at the start of each new task or continuation before reporting work. Apply the following user-facing response format unless the user explicitly requests a different or more detailed format. Repository access alone does not guarantee that an agent has read the instructions.
+
+- Default to concise, structured Russian-language replies when the user speaks Russian. Answer the question directly. Do not repeat the task, roadmap, architecture, process, file tree or previous updates unless specifically requested or necessary to resolve a problem.
+- Progress updates: one short sentence or a compact list of actual changes. State feature names and outcomes, not implementation narration. Avoid multiple headings, decorative cards, diagrams, large tables, unnecessary graphs, filler, generic advice and repeated conclusions.
+- Delivery: put the actual ZIP/JAR download link first when requested. Then provide one compact list with every new or materially changed feature and every material fix, one line per entry. Group equivalent ports/variants where this does not hide differences. Omit empty categories.
+- Gameplay QA: use one compact report/table only when useful, with actual targets passed/total, failed, and not run; actual executed assertion or declared-coverage counts only when the evidence supports them. Distinguish build, server gameplay, network player and graphical client evidence. Show the real CI/evidence link. A tiny status bar or similarly minimal visualization is optional; never duplicate the same data in another chart or paragraph.
+- Always state unresolved bugs, failed/untested targets, missing features, limitations, and significant decisions or deviations. Include the first meaningful failure in one line and identify affected targets. Never sacrifice accuracy or completeness for brevity; report what is unknown rather than inventing counts. Distinguish committed code, CI in progress, verified results and published artifacts.
+- Keep detailed diagnostics, full logs, code diffs and engineering evidence in GitHub; link them instead of pasting them into the chat. Expand only when requested, when debugging requires an exact fix, or when essential user instructions would otherwise be omitted. For a full project, include necessary build/run instructions compactly. Do not ask the user to carry out technical work the agent can perform.
+- Suggested delivery shape (omit unused lines): download link; **Changes** (short bullets); **QA** (one compact status line/table and CI link); **Remaining issues** (short bullets or "none identified within tested scope"). No mandatory prose report or duplicate Markdown artifact. This communication rule does not replace executable QA requirements or reduce the actual scope of engineering or testing.
+
 ## Mandatory for new projects
 1. Define Minecraft, loader, Java, Gradle, mappings and real dependencies. Use `tools/qa/compatibility.json` as the reference matrix; it contains tested/pinned baseline choices, not a universal promise of compatibility.
 2. Add `build-profile.json` with `qa.mode`, exact `qa.loader_version`, complete `qa.release_targets`, standard JAR name, and (for gameplay mods) a positive regression scenario under `tools/qa/scenarios/`. Client-only mods use mode client, not a dummy server.
