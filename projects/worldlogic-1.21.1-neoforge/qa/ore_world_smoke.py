@@ -19,7 +19,7 @@ def main():
     reports=[json.loads(f.read_text()) for f in inputs.rglob("qa-report-*.json")]
     valid=[r for r in reports if r.get("jar")==jar.name and r.get("eligible") is True and r.get("sha256")==digest]
     require(len(valid)==1,"Exact eligible Build Hub report required")
-    report={"jar":jar.name,"sha256":digest,"seed":824681,"status":"failed","chunks":[]}
+    report={"jar":jar.name,"sha256":digest,"seed":1234,"status":"failed","chunks":[]}
     proc=conn=None
     try:
         cmd=install(profile,profile["qa"],root,logs)
@@ -28,7 +28,7 @@ def main():
         password=secrets.token_hex(18); port,rport=free_port(),free_port()
         while port==rport:rport=free_port()
         (root/"eula.txt").write_text("eula=true\n")
-        (root/"server.properties").write_text("\n".join(["online-mode=false","server-ip=127.0.0.1",f"server-port={port}","enable-rcon=true",f"rcon.port={rport}",f"rcon.password={password}","level-name=ore-world","level-seed=824681","level-type=minecraft:normal","view-distance=3","simulation-distance=3","spawn-protection=0","max-tick-time=-1",""]))
+        (root/"server.properties").write_text("\n".join(["online-mode=false","server-ip=127.0.0.1",f"server-port={port}","enable-rcon=true",f"rcon.port={rport}",f"rcon.password={password}","level-name=ore-world","level-seed=1234","level-type=minecraft:normal","view-distance=3","simulation-distance=3","spawn-protection=0","max-tick-time=-1",""]))
         log=logs/"server.log"
         with log.open("w") as stream:
             proc=subprocess.Popen(cmd,cwd=root,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True)
@@ -71,16 +71,65 @@ def main():
             report.update(expected=expected,matched=matched,deep=deep,missedRock=missed)
             require(len(report["chunks"])==18 and expected>=30 and deep>=30,"Too little actual deep ore for a meaningful test")
             require(matched>=expected*.85 and missed<=expected*.10,"Seeded geological ore missing from actual generated rock")
-            # Real ocean columns in the same actual default world, not a synthetic water tank.
-            found=conn.cmd("execute positioned 0 63 0 run locate biome worldlogic:cold_ocean")
-            coords=re.search(r"\[\s*(-?\d+)\s*,\s*(?:~|-?\d+)\s*,\s*(-?\d+)\s*\]",found)
-            require(coords is not None,"Cannot locate cold ocean: "+found)
-            ax,az=(int(v)//16*16 for v in coords.groups())
+            # Known climate survey coordinates on seed 1234, all nine ocean classes,
+            # coast transitions and ordinary inland controls. Generate real full chunks.
+            sites=[("tropical",-28672,-40960),("warm_deep",-4096,-38912),
+                   ("subtropical",-26624,-34816),("temperate",-26624,-32768),
+                   ("temperate_deep",0,-32768),("cold",-18432,-30720),
+                   ("cold_deep",-28672,-28672),("polar",-8192,-26624),
+                   ("polar_deep",-10240,-22528),("tropical_coast",-4096,-40960),
+                   ("temperate_coast",-18432,-28672),("prairie",-24576,-32768),
+                   ("marsh",-12288,-32768),("inland_control",-954,497)]
+            # Probe five separated catchments, then require real generated water
+            # and neighbor links instead of merely a predicted river line.
+            river_sites=[]
+            for x,z in [(-24576,-32768),(-12288,-32768),(10240,-40960),(20480,-38912),(6144,14336)]:
+                raw=conn.cmd(f"execute positioned {x} 80 {z} run worldlogic river_probe")
+                match=re.search(r"RIVER_PROBE x=(-?\d+) z=(-?\d+)",raw)
+                if match:
+                    rx,rz=(int(v) for v in match.groups())
+                    river_sites.append(("river_"+str(len(river_sites)),rx,rz))
+            report["river_candidates"]=river_sites
+            require(len(river_sites)>=3,"Insufficient independent modeled river catchments")
+            sites.extend(river_sites)
+            keys=("columns","ocean","wet","dry","inland","unknown","dryQuart","river","links")
+            pattern="COAST_AUDIT "+" ".join(k+r"=(\d+)" for k in keys)
+            report["coast_windows"]=[]
+            for label,x,z in sites:
+                ax,az=x//16*16,z//16*16
+                # A 5x5 loaded halo surrounds the 3x3 inspected chunks, so dry
+                # interior detection can independently check nearby water.
+                force=f"{ax-32} {az-32} {ax+47} {az+47}"
+                conn.cmd("forceload add "+force)
+                pending={(ax+dx*16,az+dz*16) for dx in (-1,0,1) for dz in (-1,0,1)}
+                rows=[];deadline=time.monotonic()+240
+                while pending and time.monotonic()<deadline:
+                    for xx,zz in sorted(pending):
+                        raw=conn.cmd(f"execute positioned {xx} 96 {zz} run worldlogic coast_audit")
+                        if "unavailable" in raw:continue
+                        match=re.search(pattern,raw)
+                        require(match is not None,"Coast audit failed: "+raw)
+                        row=dict(zip(keys,map(int,match.groups())))
+                        if row["unknown"]:continue
+                        row.update(x=xx,z=zz,raw=raw);rows.append(row);pending.remove((xx,zz))
+                        print(json.dumps(row),flush=True)
+                    if pending:time.sleep(3)
+                require(not pending,"Survey chunks or halo not fully available: "+label)
+                sums={k:sum(c[k] for c in rows) for k in keys}
+                report["coast_windows"].append({"site":label,"chunks":rows,**sums})
+                conn.cmd("forceload remove "+force)
+            windows=report["coast_windows"]
+            totals={k:sum(w[k] for w in windows) for k in keys}
+            report["coast_totals"]=totals
+            require(totals["ocean"]>=1024 and totals["wet"]>=1024,"Insufficient real ocean coverage")
+            require(totals["inland"]==0 and totals["dryQuart"]==0,"Dry land labeled ocean; inspect logged coordinates")
+            require(sum(w["river"]>=16 and w["links"]>=12 for w in windows if w["site"].startswith("river_"))>=3,"Fewer than three generated connected river catchments")
+            # Retain independent marine substrate, native-water and flora assertions.
+            ax,az=-18432,-30720
             force=f"{ax-16} {az-16} {ax+31} {az+31}"
             conn.cmd("forceload add "+force)
             pending={(ax+dx*16,az+dz*16) for dx in (-1,0,1) for dz in (-1,0,1)}
-            marine=[]
-            deadline=time.monotonic()+180
+            marine=[];deadline=time.monotonic()+180
             keys=("ocean","wet","wrongLand","sea","stone","sediment","dirt","habitat","plants")
             pattern="MARINE_AUDIT "+" ".join(k+r"=(\d+)" for k in keys)
             while pending and time.monotonic()<deadline:

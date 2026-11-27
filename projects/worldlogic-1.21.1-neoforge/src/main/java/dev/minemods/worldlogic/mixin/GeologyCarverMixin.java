@@ -20,6 +20,7 @@ public abstract class GeologyCarverMixin {
   if(step==GenerationStep.Carving.AIR){
    dev.minemods.worldlogic.PhysicalBiomeReconciliation.apply((NoiseBasedChunkGenerator)(Object)this,random,chunk);
    GeologyGeneration.carve(seed,chunk);
+   dev.minemods.worldlogic.RiverTerrain.prepare((NoiseBasedChunkGenerator)(Object)this,random,region.registryAccess(),chunk);
   }
   ci.cancel();
  }

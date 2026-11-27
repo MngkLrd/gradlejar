@@ -63,6 +63,11 @@ public final class GeoDensity implements DensityFunction {
   boolean extended=id.getPath().equals("earthlike_extended");
   return java.util.Optional.of((pos,biome,ground)->WorldgenEcology.sample(m.site(pos.getX(),pos.getZ(),extended),pos,biome,ground));
  }
+ static GeoModel riverModel(net.minecraft.world.level.levelgen.RandomState state,net.minecraft.core.RegistryAccess access){
+  var registry=access.lookupOrThrow(Registries.NOISE);
+  java.util.function.Function<net.minecraft.resources.ResourceKey<net.minecraft.world.level.levelgen.synth.NormalNoise.NoiseParameters>,NoiseHolder> noise=k->new NoiseHolder(registry.getOrThrow(k),state.getOrCreateNoise(k));
+  return model(noise.apply(net.minecraft.world.level.levelgen.Noises.CONTINENTALNESS),noise.apply(net.minecraft.world.level.levelgen.Noises.RIDGE),noise.apply(net.minecraft.world.level.levelgen.Noises.EROSION),noise.apply(net.minecraft.world.level.levelgen.Noises.VEGETATION));
+ }
  private static dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate extended(dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate r){
   double old=r.modeledSurfaceY(),surface=old<=110?old:110+(old-110)*1.6;
   return new dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate(Math.max(-1,r.thermalIndex()-(surface-old)*.065/28),r.moistureIndex(),r.absoluteLatitude(),r.prevailingWindX(),r.prevailingWindZ(),surface);

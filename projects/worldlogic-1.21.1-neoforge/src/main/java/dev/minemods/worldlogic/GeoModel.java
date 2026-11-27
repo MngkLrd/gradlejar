@@ -155,6 +155,36 @@ public final class GeoModel {
   Surface b=local(lx,rz,gx,gz);if(lx!=rx)b=mix(b,local(rx,rz,gx,gz),wx);
   return mix(a,b,wz);
  }
+ /** Directed river centerlines on the original globally aligned D8 grid.
+  * The original raw relief and drainage tile remain unchanged. */
+ record RiverSegment(int x,int z,int endX,int endZ,double discharge,double radius){
+  double fraction(double px,double pz){
+   double dx=endX-x,dz=endZ-z;return clamp(((px-x)*dx+(pz-z)*dz)/(dx*dx+dz*dz),0,1);
+  }
+  double distance(double px,double pz){double u=fraction(px,pz);return Math.hypot(px-lerp(x,endX,u),pz-lerp(z,endZ,u));}
+ }
+ List<RiverSegment> rivers(int minX,int minZ,int maxX,int maxZ){
+  var out=new ArrayList<RiverSegment>();
+  for(int gz=Math.floorDiv(minZ,STEP)-1;gz<=Math.floorDiv(maxZ,STEP)+1;gz++)
+   for(int gx=Math.floorDiv(minX,STEP)-1;gx<=Math.floorDiv(maxX,STEP)+1;gx++){
+    int x=gx*STEP,z=gz*STEP;double high=raw(x,z);
+    if(high<63.5)continue;
+    double discharge=surface(x,z).flow;
+    // The small-stream threshold is deliberately lower than the old riverbank indicator.
+    if(discharge<12)continue;
+    int ex=x,ez=z;double best=0;
+    for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++){
+     if(dx==0&&dz==0)continue;
+     int nx=x+dx*STEP,nz=z+dz*STEP;
+     double slope=(high-raw(nx,nz))/Math.hypot(dx,dz);
+     if(slope>best+1e-8){best=slope;ex=nx;ez=nz;}
+    }
+    if(ex==x&&ez==z)continue;
+    double radius=clamp(1.7+Math.log1p(discharge/12)*1.15,2.4,5.5);
+    out.add(new RiverSegment(x,z,ex,ez,discharge,radius));
+   }
+  return List.copyOf(out);
+ }
  // RC19 only. Climate calculations must not change the legacy drainage or terrain.
  static double biomeTemperature(double thermal,double humidity,double height){
   // The vanilla hottest land row is desert at ALL humidity levels.

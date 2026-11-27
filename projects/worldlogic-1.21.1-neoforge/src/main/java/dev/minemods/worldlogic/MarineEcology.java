@@ -81,7 +81,11 @@ final class MarineEcology {
    ocean++;
    if(h>=level+4){wrongLand++;continue;}
    p.set(wx,level-1,wz);
-   if(!chunk.getFluidState(p).is(FluidTags.WATER))continue;
+   if(!chunk.getFluidState(p).is(FluidTags.WATER)){
+    var b=chunk.getBlockState(p);
+    if(!(b.is(Blocks.ICE)||b.is(Blocks.PACKED_ICE)||b.is(Blocks.BLUE_ICE)))wrongLand++;
+    continue;
+   }
    wet++;
    if(nativeSea(l,p))sea++;
    if(submerged(l,p.set(wx,level-5,wz)))habitat++;

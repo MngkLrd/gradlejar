@@ -29,6 +29,17 @@
         "vanilla_comparison": "Vanilla clay comparison at native size shows restrained tonal differences, with warm silt rather than blue clay.",
         "aggregate_structure": "Elongated small mineral aggregates vary in length and neighboring value.",
         "tile_rhythm": "3x3 tiled review shows short recurring beds but no uninterrupted hard seam or full-width stripe."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Small interrupted sediment beds use contiguous tan midtones rather than isolated random dots.",
+        "reference_limit": "Dirt's darker angular clods are unsuitable for fine silt; the clay-like flatter plane remains the material-specific distinction.",
+        "native_view": "Vanilla clay comparison at native size shows restrained tonal differences, with warm silt rather than blue clay.",
+        "context_view": "3x3 tiled review shows short recurring beds but no uninterrupted hard seam or full-width stripe.",
+        "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/frozen_soil.png": {
@@ -64,6 +75,17 @@
         "vanilla_comparison": "Rooted dirt and snow viewed at equal native scale show useful embedded contrast and cool ramp behavior respectively.",
         "aggregate_structure": "Clods retain earthy irregular dark recesses while ice follows interstitial gaps.",
         "tile_rhythm": "Repeated tile keeps the soil base continuous; frost shapes recur at block cadence but do not form broad white spots."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "cold_surface",
+        "reference": "minecraft:block/snow",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Restrained pale blue frost cores use closely related cool boundary tones against compact brown soil.",
+        "reference_limit": "The snow reference is a cool-value ramp, not an instruction to cover the brown host with white.",
+        "native_view": "Rooted dirt and snow viewed at equal native scale show useful embedded contrast and cool ramp behavior respectively.",
+        "context_view": "Repeated tile keeps the soil base continuous; frost shapes recur at block cadence but do not form broad white spots.",
+        "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/humus.png": {
@@ -94,6 +116,17 @@
         "vanilla_comparison": "At 1x and enlarged scale the new warm brown ramp sits closer to dirt than the old flat four-color pattern.",
         "aggregate_structure": "Small connected soil crumbs with visible interstitial shadows, especially center and bottom.",
         "tile_rhythm": "3x3 tiling shows no rectangular frame; adjoining vanilla dirt retains a compatible brown hue although a horizon contrast remains."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Unequal interlocked earth crumbs with narrow dark recesses use the dirt aggregate construction principle.",
+        "reference_limit": "Humus needs darker organic cavities than dirt, not exact reproduction of vanilla mineral speckles.",
+        "native_view": "At 1x and enlarged scale the new warm brown ramp sits closer to dirt than the old flat four-color pattern.",
+        "context_view": "3x3 tiling shows no rectangular frame; adjoining vanilla dirt retains a compatible brown hue although a horizon contrast remains.",
+        "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/loam.png": {
@@ -119,6 +152,17 @@
         "vanilla_comparison": "Native-scale comparison with dirt retains earthy orange hue while reducing its strong dark mottling.",
         "aggregate_structure": "Mineral crumbs and shallow recesses suggest a mixed sand/clay soil rather than packed stones.",
         "tile_rhythm": "3x3 tiled preview retains a quiet repeated ground rhythm; edge clods cross tile boundaries and no black border occurs."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Unequal angular crumb planes and localized ochre turning edges retain a coherent warm dirt-family aggregate structure.",
+        "reference_limit": "Loam has shallower crevices and lighter mineral planes than dirt; do not copy the darker dirt distribution.",
+        "native_view": "Native-scale comparison with dirt retains earthy orange hue while reducing its strong dark mottling.",
+        "context_view": "3x3 tiled preview retains a quiet repeated ground rhythm; edge clods cross tile boundaries and no black border occurs.",
+        "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/peat.png": {
@@ -149,6 +193,17 @@
         "vanilla_comparison": "Same-scale mud comparison shows similar low overall brightness but a warmer and more organic structure.",
         "aggregate_structure": "Interlocked dark clumps have compressed fiber-like edges and shadowed gaps.",
         "tile_rhythm": "3x3 repeat has a dark coherent rhythm; there are no straight full-width stripe seams."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/rooted_dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Compressed irregular clods use sparse embedded crooked fiber traces, like the root inclusions in rooted dirt.",
+        "reference_limit": "Rooted dirt is a construction reference for embedded organics, not a palette target; peat stays dark and wet.",
+        "native_view": "Same-scale mud comparison shows similar low overall brightness but a warmer and more organic structure.",
+        "context_view": "3x3 repeat has a dark coherent rhythm; there are no straight full-width stripe seams.",
+        "context_type": "tile_3x3"
       }
     }
   }

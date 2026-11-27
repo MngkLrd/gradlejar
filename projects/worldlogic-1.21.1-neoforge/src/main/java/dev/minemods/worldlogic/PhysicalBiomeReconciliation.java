@@ -16,14 +16,21 @@ public final class PhysicalBiomeReconciliation{
  public static void apply(NoiseBasedChunkGenerator gen,RandomState random,ChunkAccess chunk){
   if(!NaturalWaterGeneration.enabled(gen)||!(gen.getBiomeSource() instanceof MultiNoiseBiomeSource source))return;
   int sea=gen.getSeaLevel(),x0=chunk.getPos().getMinBlockX(),z0=chunk.getPos().getMinBlockZ();
-  int[] heights=new int[16];boolean[] wet=new boolean[16],shore=new boolean[16];
+  int[] heights=new int[16];boolean[] wet=new boolean[16],shore=new boolean[16],mixed=new boolean[16];
   for(int x=0;x<4;x++)for(int z=0;z<4;z++){
    int i=x*4+z,xx=x*4+2,zz=z*4+2;
    heights[i]=chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,xx,zz);
-   wet[i]=chunk.getFluidState(new BlockPos(x0+xx,sea-1,z0+zz)).is(FluidTags.WATER);
+   int waterColumns=0;
+   for(int dx=0;dx<4;dx++)for(int dz=0;dz<4;dz++){
+    int lx=x*4+dx,lz=z*4+dz;
+    if(chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,lx,lz)<sea-1&&chunk.getFluidState(new BlockPos(x0+lx,sea-1,z0+lz)).is(FluidTags.WATER))waterColumns++;
+   }
+   wet[i]=waterColumns==16;
+   mixed[i]=waterColumns>0&&waterColumns<16;
   }
   for(int x=0;x<4;x++)for(int z=0;z<4;z++){
-   int i=x*4+z;if(Math.abs(heights[i]-sea)>2)continue;
+   int i=x*4+z;if(mixed[i]&&Math.abs(heights[i]-sea)<=4)shore[i]=true;
+   if(Math.abs(heights[i]-sea)>2)continue;
    for(int dx=-1;dx<=1;dx++)for(int dz=-1;dz<=1;dz++){
     int nx=x+dx,nz=z+dz;
     if(nx>=0&&nx<4&&nz>=0&&nz<4){if(wet[nx*4+nz])shore[i]=true;}
