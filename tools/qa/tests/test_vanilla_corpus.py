@@ -34,3 +34,11 @@ class VanillaCorpusTests(unittest.TestCase):
         self.assertEqual(len(s["shared_color_layouts"][0]),3)
         self.assertTrue(all(r["visual_review"]=="NOT_RUN" for r in rows))
         self.assertTrue(all(r["git_blob_sha1"]==git_blob(data) for r in rows))
+
+    def test_catalog_reference_verification_is_exact(self):
+        from tools.qa.vanilla_corpus import verify_atlas
+        catalog={"minecraft":"1.21.1","official_client_sha1":"a"*40,"references":{"block/stone":"b"*64,"block/dirt":"c"*64}}
+        rows=[{"path":"block/stone.png","sha256":"b"*64}]
+        self.assertEqual(verify_atlas(rows,"1.21.1","a"*40,catalog),{"block/stone":True,"block/dirt":False})
+        self.assertIsNone(verify_atlas(rows,"1.20.1","a"*40,catalog))
+        with self.assertRaises(ValueError):verify_atlas(rows,"1.21.1","c"*40,catalog)

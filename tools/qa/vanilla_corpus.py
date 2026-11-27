@@ -124,6 +124,12 @@ def summarize(rows):
     return {"statuses":dict(Counter(r["status"] for r in rows)),"families":summaries,
             "shared_color_layouts":[sorted(paths) for paths in layouts.values() if len(paths)>1]}
 
+def verify_atlas(rows,version,client_sha,catalog):
+    if version!=catalog["minecraft"]:return None
+    if client_sha!=catalog["official_client_sha1"]:raise ValueError("Atlas official-client identity mismatch")
+    by_path={r["path"]:r["sha256"] for r in rows}
+    return {n:by_path.get(n+".png")==expected for n,expected in catalog["references"].items()}
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--minecraft",default="1.21.1")
@@ -138,10 +144,14 @@ def main():
     extended.update(minecraft=a.minecraft,official_client_sha1=sha)
     by_path={r["path"]:r for r in rows}
     pilot={n:by_path.get(n+".png",{}).get("git_blob_sha1")==expected for n,expected in PILOT.items()} if a.minecraft=="1.21.1" else {}
+    from .art_review_lock import load_atlas
+    atlas_matches=verify_atlas(rows,a.minecraft,sha,load_atlas())
+    if atlas_matches is not None:
+        print("ATLAS_REFERENCES",sum(atlas_matches.values()),"/",len(atlas_matches))
     summary=summarize(rows)
     report={"schema":1,"minecraft":a.minecraft,"official_client_sha1":sha,
             "scope":"Official PNG inventory; static measurements only. Family hints are not verified material labels. No automatic artistic verdict.",
-            "pilot_archive_hash_matches":pilot,"total":len(rows),"summary":summary,"assets":rows}
+            "pilot_archive_hash_matches":pilot,"atlas_reference_hash_matches":atlas_matches,"total":len(rows),"summary":summary,"assets":rows}
     a.out.mkdir(parents=True,exist_ok=True)
     (a.out/"corpus.json").write_text(json.dumps(report,indent=2)+"\n")
     (a.out/"extended-corpus.json").write_text(json.dumps(extended,indent=2)+"\n")
@@ -158,6 +168,6 @@ def main():
     for group in summary["shared_color_layouts"]:
         if any(n.endswith(("_log.png","_leaves.png","_sapling.png","_log_top.png")) for n in group):
             print("SHARED_LAYOUT",json.dumps(group))
-    if not rows or any(r["status"]=="DECODE_FAILED" for r in rows) or extended["statuses"].get("ANALYSIS_ERROR") or (pilot and not all(pilot.values())):
+    if not rows or any(r["status"]=="DECODE_FAILED" for r in rows) or extended["statuses"].get("ANALYSIS_ERROR") or (pilot and not all(pilot.values())) or (atlas_matches is not None and not all(atlas_matches.values())):
         raise SystemExit("Corpus verification requires investigation")
 if __name__=="__main__":main()

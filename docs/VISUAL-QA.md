@@ -111,6 +111,22 @@ Valid profile names: `bark`, `log_end`, `conifer`, `broadleaf`, `soil`, `ore`, `
 
 A rejected or stale review, missing reference or missing criterion prevents compilation of the selected project. After changing pixels, inspect the revised image and update its hash and findings. Review records must describe concrete regions/relationships in the image; generic praise, copy-pasted observations across criteria or fabricated records are prohibited. The validator rejects duplicate observation strings but cannot determine artistic sincerity. The executable validator can check completeness and candidate hash, not the truth of aesthetic observations or reference provenance without separate source inspection. This lock does not certify rendering, check generated/untracked textures or non-PNGs, enforce external historical workflows, or configure GitHub branch protection. Those assets still require the existing visual review and final-JAR checks. No global numeric aesthetic pass rule. Do not weaken existing runtime/client release gates.
 
+### Mandatory atlas application (R9)
+
+Read the [vanilla art atlas](VANILLA-ART-ATLAS.md) before drawing and again during the actual review. Its machine-readable catalog is `tools/qa/research/vanilla-art-rules.json`: 57 inspected and official-client SHA-256-verified reference PNGs, 28 material/role rules with examples and limitations. The applicable rule is not optional, and numerical metrics do not replace the review.
+
+Build Hub retains the original fixed-baseline review lock and adds a second fixed adoption tree `8e7d5b44a17360965ec0965874268d4112129d2d`. New or modified tracked PNGs relative to this second tree require an additional `atlas` object in the existing schema-1 per-asset review record. The original obligations remain for all assets enrolled by the earlier baseline; unchanged assets relative to R9 do not require retroactive new fields. Existing development branches must use current main tooling. No edits to old product branches or automatic fabrication of attestations.
+
+Required `atlas` fields:
+- `revision`: catalog revision (`r9`); `rule`: one compatible stable rule ID from the catalog.
+- `reference`: namespaced ID (e.g. `minecraft:block/spruce_log_top`), `reference_minecraft`: exact matching version from one existing `references` row. For catalog rules the named comparator must belong to the rule and match its official 1.21.1 SHA-256. For other target versions also inspect the appropriate actual target reference when available, and state limits of the 1.21.1 artistic comparison; do not replace version-specific technical validation.
+- `applied_pattern`: concrete description of what is visible in the candidate and how the actual reference informed its construction, palette or clusters.
+- `reference_limit`: what should not be copied, a material-specific exception, or a justified difference from the comparator.
+- `native_view`: actual observation at native size. `context_type`: `tile_3x3`, `icon_family`, `model_uv`, `placed_cutout`, `gui_state`, `animation_frames` or `other`; `context_view`: concrete observation in that preview. Soil/ore/bark/log-end profiles require a 3x3 tiled preview; use the relevant asset context otherwise. Static previews do not certify rendered gameplay.
+- Only a genuinely uncovered `other` profile may use `rule: custom`; include `custom_reason` explaining why the catalog does not apply and `reference_source` identifying the actual vanilla source and verification method. The chosen reference must still match an actual `references` row. An applicable known comparator may not be routed through custom.
+
+The validator checks rule/profile compatibility, reference membership/version and known official SHA-256 values, required distinct observations and context. It does not retrieve unlisted comparators in normal builds; their provenance and review observations remain attested. It cannot prove the agent actually saw the image or that its aesthetic judgment is correct. The catalog is verified against the official client in standalone research CI, not downloaded on every production build. A missing/stale/mismatched record blocks compilation for the affected project. The existing final-JAR, runtime and client gates remain unchanged.
+
 ## Evidence and acceptance
 
 | Evidence | What it establishes | What it cannot establish |

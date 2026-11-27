@@ -43,3 +43,21 @@ class VanillaBenchmarkTests(unittest.TestCase):
         self.assertEqual(rows["more_palette_colors"]["source_choice_accuracy"],.25)
         self.assertEqual(rows["more_palette_colors"]["by_mode"]["shuffle"]["unsure"],1)
         self.assertEqual(rows["larger_component"]["total"]["unsure"],4)
+
+    def test_expanded_pool_and_local_defect_controls(self):
+        from tools.qa.vanilla_benchmark import EXPANDED, EXPANDED_METHODS
+        sources=[n for refs in EXPANDED.values() for n in refs]
+        self.assertEqual(len(EXPANDED),12)
+        self.assertEqual(len(set(sources)),60)
+        im=Image.new("RGBA",(8,8))
+        im.putdata([(20+(i%5)*30,40,60,255) for i in range(64)])
+        out=mutate(im,"local_flatten",random.Random(209))
+        self.assertIsNotNone(out)
+        self.assertEqual([p[3] for p in pixels(im)],[p[3] for p in pixels(out)])
+        self.assertLessEqual(sum(a!=b for a,b in zip(pixels(im),pixels(out))),16)
+        out=mutate(im,"repeat_quadrant",random.Random(209))
+        self.assertIsNotNone(out)
+        self.assertEqual(out.crop((0,0,4,4)).tobytes(),out.crop((4,4,8,8)).tobytes())
+        self.assertIn("local_flatten",EXPANDED_METHODS)
+        im.putpixel((0,0),(0,0,0,0))
+        self.assertIsNone(mutate(im,"repeat_quadrant",random.Random(209)))

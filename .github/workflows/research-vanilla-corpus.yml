@@ -6,6 +6,8 @@ on:
       - 'tools/qa/real_art_review.py'
       - 'tools/qa/research/real-art-r7.json'
       - 'tools/qa/tests/test_real_art_review.py'
+      - 'tools/qa/research/vanilla-art-rules.json'
+      - 'tools/qa/art_review_lock.py'
       - 'tools/qa/vanilla_corpus.py'
       - 'tools/qa/vanilla_extended.py'
       - 'tools/qa/tests/test_vanilla_extended.py'
@@ -28,6 +30,7 @@ jobs:
       - run: python -m unittest tools.qa.tests.test_vanilla_corpus tools.qa.tests.test_vanilla_benchmark tools.qa.tests.test_vanilla_extended tools.qa.tests.test_real_art_review -v
       - run: python -m tools.qa.vanilla_corpus --minecraft 1.21.1 --out vanilla-corpus
       - run: python -m tools.qa.vanilla_benchmark --minecraft 1.21.1 --out vanilla-benchmark
+      - run: python -m tools.qa.vanilla_benchmark --minecraft 1.21.1 --suite expanded --seed 209 --out vanilla-benchmark-expanded
       - name: Verify real mod sources and generate exploratory reviewer packet
         env:
           GH_TOKEN: ${{ github.token }}
@@ -40,6 +43,7 @@ jobs:
             vanilla-corpus/corpus.json
             vanilla-corpus/extended-corpus.json
             vanilla-benchmark/benchmark-summary.json
+            vanilla-benchmark-expanded/benchmark-summary.json
             real-art-r7/summary.json
           if-no-files-found: warn
           retention-days: 14
