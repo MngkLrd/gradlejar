@@ -23,7 +23,7 @@ public final class EnvironmentSampler {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("worldlogic_thermal",path));
     }
     private static final TagKey<Item> INSULATED = gear("insulated_gear"), LIGHT = gear("light_gear"), METAL = gear("metal_gear");
-    public record Sample(ThermalModel.Exposure exposure, double skinWetness, boolean sheltered) {}
+    public record Sample(ThermalModel.Exposure exposure, double skinWetness, boolean sheltered, double solarExposure) {}
     private EnvironmentSampler() {}
     public static Optional<Sample> sample(ServerPlayer p, double skin) {
         ServerLevel level = p.serverLevel(); BlockPos pos = p.blockPosition();
@@ -44,7 +44,7 @@ public final class EnvironmentSampler {
         skin=skinWetness(Double.isFinite(skin)?clamp(skin,0,1):0,p.isInWater(),rain,radiant);
         double wind = sheltered ? .06 : env.globalThunder() ? .85 : rain ? .55 : .22;
         double activity = p.isSprinting() ? 1 : p.isSwimming() ? .75 : p.getDeltaMovement().horizontalDistanceSqr()>.008 ? .35 : 0;
-        return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,p.isInWater(),water(air,air),0),skin,sheltered));
+        return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,p.isInWater(),water(air,air),0),skin,sheltered,env.solarExposure()));
     }
     private static double localHeat(ServerLevel level,ServerPlayer p) {
         BlockPos at=p.blockPosition(); double heat=0;

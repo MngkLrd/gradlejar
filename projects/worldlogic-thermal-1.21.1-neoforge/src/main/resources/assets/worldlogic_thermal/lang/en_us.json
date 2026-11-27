@@ -15,5 +15,12 @@
   "stage.worldlogic_thermal.comfortable": "Comfortable",
   "stage.worldlogic_thermal.warm": "Warm",
   "stage.worldlogic_thermal.very_hot": "Very hot",
-  "stage.worldlogic_thermal.hyperthermia": "Hyperthermia"
+  "stage.worldlogic_thermal.hyperthermia": "Hyperthermia",
+  "screen.worldlogic_thermal.stable": "No acute condition",
+  "condition.worldlogic_thermal.hypothermia": "Hypothermia",
+  "death.attack.worldlogic_thermal.hypothermia": "%1$s died of hypothermia",
+  "condition.worldlogic_thermal.heatstroke": "Heatstroke",
+  "death.attack.worldlogic_thermal.heatstroke": "%1$s died of heatstroke",
+  "condition.worldlogic_thermal.sunstroke": "Sunstroke",
+  "death.attack.worldlogic_thermal.sunstroke": "%1$s died of sunstroke"
 }

@@ -15,5 +15,12 @@
   "stage.worldlogic_thermal.comfortable": "Комфорт",
   "stage.worldlogic_thermal.warm": "Тепло",
   "stage.worldlogic_thermal.very_hot": "Сильная жара",
-  "stage.worldlogic_thermal.hyperthermia": "Перегрев"
+  "stage.worldlogic_thermal.hyperthermia": "Перегрев",
+  "screen.worldlogic_thermal.stable": "Нет острых нарушений",
+  "condition.worldlogic_thermal.hypothermia": "Переохлаждение",
+  "death.attack.worldlogic_thermal.hypothermia": "%1$s погиб: переохлаждение",
+  "condition.worldlogic_thermal.heatstroke": "Тепловой удар",
+  "death.attack.worldlogic_thermal.heatstroke": "%1$s погиб: тепловой удар",
+  "condition.worldlogic_thermal.sunstroke": "Солнечный удар",
+  "death.attack.worldlogic_thermal.sunstroke": "%1$s погиб: солнечный удар"
 }

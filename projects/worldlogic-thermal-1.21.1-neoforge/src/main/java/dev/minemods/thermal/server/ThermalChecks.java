@@ -62,6 +62,28 @@ final class ThermalChecks {
                     require(n.getCompound(ThermalEvents.KEY).getString("stage").equals("COMFORTABLE"),"neutral stage");
                     require(p.getAttribute(Attributes.MOVEMENT_SPEED).getModifier(ThermalEvents.SPEED)==null,"neutral clears speed penalty");
                 }
+                case "conditions" -> {
+                    var q=dev.minemods.thermal.ThermalCondition.Progress.initial();
+                    for(int i=0;i<29;i++)q=dev.minemods.thermal.ThermalCondition.advance(q,dev.minemods.thermal.ThermalModel.Stage.HYPERTHERMIA,1,false);
+                    require(q.kind()==dev.minemods.thermal.ThermalCondition.Kind.NONE,"no immediate illness");
+                    q=dev.minemods.thermal.ThermalCondition.advance(q,dev.minemods.thermal.ThermalModel.Stage.HYPERTHERMIA,1,false);
+                    require(q.kind()==dev.minemods.thermal.ThermalCondition.Kind.SUNSTROKE&&dev.minemods.thermal.ThermalCondition.pulse(q),"sustained solar exposure causes sunstroke");
+                    for(var kind:dev.minemods.thermal.ThermalCondition.Kind.values()){
+                        if(kind==dev.minemods.thermal.ThermalCondition.Kind.NONE)continue;
+                        var source=ThermalInjury.source(p,kind);
+                        require(source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_ARMOR),"physiological damage bypasses already-accounted armor");
+                        require(!source.is(net.minecraft.tags.DamageTypeTags.IS_FIRE)&&source.getEntity()==null,"nonphysical damage routed through existing Trauma handler");
+                    }
+                    var tag=new CompoundTag();tag.putDouble("body",34);tag.putInt("coldSeconds",29);n.put(ThermalEvents.KEY,tag);
+                    ThermalEvents.update(p);
+                    var status=dev.minemods.thermal.api.ThermalApi.status(p).orElseThrow();
+                    require(status.condition()==dev.minemods.thermal.ThermalCondition.Kind.HYPOTHERMIA,"condition persisted by live update and API");
+                    require(p.hasEffect(net.minecraft.world.effect.MobEffects.WEAKNESS),"physiological debuff applied");
+                    tag=new CompoundTag();tag.putDouble("body",37);n.put(ThermalEvents.KEY,tag);
+                    ThermalEvents.update(p);
+                    require(dev.minemods.thermal.api.ThermalApi.status(p).orElseThrow().condition()==dev.minemods.thermal.ThermalCondition.Kind.NONE,"comfort clears illness");
+                    p.removeEffect(net.minecraft.world.effect.MobEffects.WEAKNESS);
+                }
                 default -> throw new IllegalArgumentException(name);
             }
         } finally {

@@ -1,5 +1,6 @@
 package dev.minemods.thermal.server;
 import dev.minemods.thermal.ThermalModel;
+import dev.minemods.thermal.ThermalCondition;
 import dev.minemods.thermal.network.ThermalSync;
 import dev.minemods.worldlogic.api.WorldLogicApi;
 import net.minecraft.commands.Commands;
@@ -27,7 +28,8 @@ public final class ThermalEvents {
         boolean active=!p.isCreative()&&!p.isSpectator();
         if(!active) {
             penalty(p,0);
-            ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),false,37,22,22,0,0,0,0,false));
+            n.remove("coldSeconds");n.remove("hotSeconds");n.remove("sunSeconds");n.remove("condition");root.put(KEY,n);
+            ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),false,37,22,22,0,0,0,0,false,ThermalCondition.Kind.NONE));
             return;
         }
         double previous=n.contains("body",Tag.TAG_ANY_NUMERIC)?n.getDouble("body"):37;
@@ -45,11 +47,12 @@ public final class ThermalEvents {
         penalty(p,slow);
         double fatigue=switch(state.stage()) {case HYPOTHERMIA,HYPERTHERMIA -> .24; case VERY_HOT,VERY_COLD -> .09; case WARM,COLD -> .02; default -> 0;};
         if(fatigue>0 && WorldLogicApi.fatigue(p).enabled()) WorldLogicApi.addExertion(p,fatigue);
-        if(state.stage()==ThermalModel.Stage.HYPOTHERMIA||state.stage()==ThermalModel.Stage.HYPERTHERMIA) {
-            int critical=n.getInt("criticalSeconds")+1; n.putInt("criticalSeconds",critical);
-            if(critical%10==0) p.hurt(state.stage()==ThermalModel.Stage.HYPOTHERMIA?p.damageSources().freeze():p.damageSources().onFire(),1);
-        } else n.putInt("criticalSeconds",0);
-        ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),true,state.bodyC(),e.airC(),state.feelsLikeC(),state.trendCPerMinute(),e.wetness(),e.insulation(),e.radiantC(),sample.sheltered()));
+        var prior=new ThermalCondition.Progress(n.getInt("coldSeconds"),n.getInt("hotSeconds"),n.getInt("sunSeconds"),ThermalCondition.parse(n.getString("condition")));
+        var progress=ThermalCondition.advance(prior,state.stage(),sample.solarExposure(),e.submerged());
+        n.putInt("coldSeconds",progress.coldSeconds());n.putInt("hotSeconds",progress.hotSeconds());
+        n.putInt("sunSeconds",progress.sunSeconds());n.putString("condition",progress.kind().name());n.remove("criticalSeconds");
+        ThermalInjury.apply(p,progress);
+        ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),true,state.bodyC(),e.airC(),state.feelsLikeC(),state.trendCPerMinute(),e.wetness(),e.insulation(),e.radiantC(),sample.sheltered(),progress.kind()));
     }
     static void penalty(ServerPlayer p,double amount) {
         var attribute=p.getAttribute(Attributes.MOVEMENT_SPEED); if(attribute==null) return;
@@ -65,7 +68,7 @@ public final class ThermalEvents {
     }
     public static void registerCommands(RegisterCommandsEvent event) {
         var qa=Commands.literal("qa").requires(s->s.hasPermission(2));
-        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects"}) {
+        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions"}) {
             qa.then(Commands.literal(name).executes(c->{
                 ThermalChecks.verify(c.getSource().getLevel(),name);
                 c.getSource().sendSuccess(()->Component.literal("THERMAL_QA_"+name+"_PASS"),false);
@@ -74,7 +77,7 @@ public final class ThermalEvents {
         }
         event.getDispatcher().register(Commands.literal("thermal").then(qa).then(Commands.literal("status").executes(c->{
             ServerPlayer p=c.getSource().getPlayerOrException(); CompoundTag n=p.getPersistentData().getCompound(KEY);
-            c.getSource().sendSuccess(()->Component.literal(n.contains("body")?String.format(Locale.ROOT,"body=%.2f air=%.2f felt=%.2f stage=%s wet=%.2f insulation=%.2f heat=%.2f",n.getDouble("body"),n.getDouble("air"),n.getDouble("felt"),n.getString("stage"),n.getDouble("wet"),n.getDouble("insulation"),n.getDouble("radiant")):"Thermal state not initialized"),false);return 1;
+            c.getSource().sendSuccess(()->Component.literal(n.contains("body")?String.format(Locale.ROOT,"body=%.2f air=%.2f felt=%.2f stage=%s wet=%.2f insulation=%.2f heat=%.2f condition=%s",n.getDouble("body"),n.getDouble("air"),n.getDouble("felt"),n.getString("stage"),n.getDouble("wet"),n.getDouble("insulation"),n.getDouble("radiant"),n.getString("condition")):"Thermal state not initialized"),false);return 1;
         })));
     }
 }

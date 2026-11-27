@@ -68,6 +68,12 @@
       "command": "thermal qa effects",
       "expect": "THERMAL_QA_effects_PASS",
       "assertion": true
+    },
+    {
+      "name": "Delayed thermal illness, damage registry, weakness and recovery",
+      "command": "thermal qa conditions",
+      "expect": "THERMAL_QA_conditions_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -134,6 +140,17 @@
         {
           "backend": "server",
           "name": "Thermal state, shared core fatigue and speed modifier"
+        }
+      ]
+    },
+    {
+      "id": "conditions",
+      "kind": "mechanic",
+      "subject": "Delayed thermal illness, damage registry, weakness and recovery",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Delayed thermal illness, damage registry, weakness and recovery"
         }
       ]
     }
