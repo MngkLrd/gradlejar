@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=5;
+ public static final int API_REVISION=6;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -80,6 +80,20 @@ public final class WorldLogicApi {
  /** Convenience for a feature in the existing WorldGenLevel. Reads only generator state and registry references. */
  public static Optional<WorldgenSampler> worldgenSampler(net.minecraft.world.level.WorldGenLevel level,net.minecraft.world.level.chunk.ChunkGenerator generator){
   return worldgenSampler(level.getLevel().getChunkSource().randomState(),level.registryAccess(),generator);
+ }
+ /** Natural-water classification, not a medical assessment of drinking safety. */
+ public enum WaterSource { NONE, FRESH_SURFACE, SALINE, GROUNDWATER, UNKNOWN }
+ public enum SoilType { LOAM,HUMUS,PEAT,SILT,FROZEN,SAND,CLAY,ROCK,UNKNOWN }
+ /** Model stores expressed in mm water equivalent per horizontal area; rates per 200-tick update. */
+ public record Hydrology(SoilType soil,double soilWaterMm,double capacityMm,double groundwaterMm,double snowWaterMm,
+  double pondedWaterMm,double lastRunoffMm,double lastEvaporationMm,double lastRechargeMm,double lastDischargeMm,
+  double saturation,double fertility,double permeability,double estimatedWaterTableDepthBlocks,boolean simulated,long updatedTick){}
+ public static Optional<Hydrology> hydrology(ServerLevel level,BlockPos pos){
+  serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.sample(level,pos);
+ }
+ /** Classifies actual local water; no chunk loads; no thirst or consumption mechanics. */
+ public static WaterSource waterSource(ServerLevel level,BlockPos pos){
+  serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.waterSource(level,pos);
  }
  public record Fatigue(boolean enabled,double fatiguePercent,double remainingStaminaPercent){}
  private static void serverThread(ServerLevel level){

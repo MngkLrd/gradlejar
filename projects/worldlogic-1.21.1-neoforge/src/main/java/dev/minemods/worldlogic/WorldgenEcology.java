@@ -33,6 +33,11 @@ final class WorldgenEcology {
   return Zone.UNKNOWN;
  }
  private static SurfaceFamily surface(BlockState b,double moisture,double wet,double cold){
+  var soil=HydrologyModel.soilType(b);
+  if(soil==SoilType.FROZEN)return SurfaceFamily.FROZEN;
+  if(soil==SoilType.PEAT)return SurfaceFamily.BOGGY;
+  if(soil==SoilType.SILT)return wet>.72?SurfaceFamily.BOGGY:SurfaceFamily.MOIST;
+  if(soil==SoilType.HUMUS)return moisture>.65?SurfaceFamily.MOIST:SurfaceFamily.NORMAL;
   if(b.is(Blocks.SNOW)||b.is(Blocks.SNOW_BLOCK)||b.is(Blocks.ICE)||b.is(Blocks.PACKED_ICE)||b.is(Blocks.POWDER_SNOW)||b.is(Blocks.FROSTED_ICE))return SurfaceFamily.FROZEN;
   if(b.is(BlockTags.SAND))return SurfaceFamily.SANDY;
   if(b.is(BlockTags.BASE_STONE_OVERWORLD)||b.is(Blocks.CALCITE)||b.is(Blocks.GRAVEL)||b.is(Blocks.SANDSTONE)||b.is(Blocks.RED_SANDSTONE)||b.is(Blocks.TERRACOTTA))return SurfaceFamily.ROCKY;
