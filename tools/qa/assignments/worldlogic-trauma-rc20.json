@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "target": "neoforge-mc1.21.1",
-  "status": "RC6 development",
+  "status": "RC7 development",
   "scenario": "tools/qa/scenarios/worldlogic-trauma-rc20.json",
   "coverage": [
     {
@@ -13,7 +13,7 @@
       "targets": [
         "neoforge-mc1.21.1"
       ],
-      "reason": "RC6 requires exact build evidence"
+      "reason": "RC7 needs fresh evidence"
     },
     {
       "id": "tr-treat",
@@ -24,7 +24,7 @@
       "targets": [
         "neoforge-mc1.21.1"
       ],
-      "reason": "RC6 requires exact build evidence"
+      "reason": "RC7 needs fresh evidence"
     },
     {
       "id": "tr-bridge",
@@ -35,7 +35,7 @@
       "targets": [
         "neoforge-mc1.21.1"
       ],
-      "reason": "RC6 requires exact build evidence"
+      "reason": "RC7 needs fresh evidence"
     },
     {
       "id": "tr-damage",
@@ -46,12 +46,12 @@
       "targets": [
         "neoforge-mc1.21.1"
       ],
-      "reason": "RC6 requires exact build evidence"
+      "reason": "RC7 needs fresh evidence"
     },
     {
       "id": "tr-network",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "targets": [
         "neoforge-mc1.21.1"
       ]
@@ -59,7 +59,7 @@
     {
       "id": "tr-ui",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "targets": [
         "neoforge-mc1.21.1"
       ]
@@ -67,7 +67,7 @@
     {
       "id": "tr-lifecycle",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "targets": [
         "neoforge-mc1.21.1"
       ]
@@ -75,7 +75,7 @@
     {
       "id": "tr-items",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "items": [
         "adrenaline_injector",
         "analgesic_tablets",
@@ -112,7 +112,7 @@
     {
       "id": "tr-recipes",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "recipes": [
         "adrenaline_injector",
         "analgesic_tablets",
@@ -153,7 +153,7 @@
       ],
       "asset": "assets/traumacraft/textures/item/medical_pouch.png",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
@@ -163,7 +163,7 @@
       ],
       "asset": "assets/traumacraft/textures/item/medkit.png",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
@@ -173,7 +173,7 @@
       ],
       "asset": "assets/traumacraft/textures/item/rag_dressing.png",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
@@ -183,7 +183,7 @@
       ],
       "asset": "assets/traumacraft/textures/item/compression_wrap.png",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
@@ -193,7 +193,7 @@
       ],
       "asset": "assets/traumacraft/textures/item/sterile_fabric.png",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
@@ -203,7 +203,7 @@
       ],
       "asset": "assets/traumacraft/textures/item/splint.png",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
@@ -213,7 +213,7 @@
       ],
       "asset": "assets/traumacraft/textures/item/antiseptic.png",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
@@ -223,13 +223,13 @@
       ],
       "asset": "assets/traumacraft/textures/item/bandage.png",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
       "id": "tr-hud-pixel",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "HUD renders at integer 1x when injured; no healthy/creative HUD; no hotbar overlap at narrow scales",
       "targets": [
         "neoforge-mc1.21.1"
@@ -238,7 +238,7 @@
     {
       "id": "tr-anatomy-ui",
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "2x anatomy, correct mirrored sides and treatment hit targets, qualitative localized statuses, small-screen vanilla fallback, no misleading raw HP total",
       "targets": [
         "neoforge-mc1.21.1"
@@ -250,7 +250,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "All seven zones use the correct palette; mirrored leg alignment; 2 px abdomen-to-leg gap; 20x20 icon frames and independent dynamic injury overlays; click targets match body sprite coordinates."
     },
     {
@@ -259,7 +259,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "76x94 HUD fits beside hotbar; at narrow GUI width relocates to top-left; healthy and creative HUD remains hidden."
     },
     {
@@ -268,7 +268,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
       "expected": "Show if any bleeding severity is positive; remove when all bleeding is stopped"
     },
@@ -278,7 +278,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
       "expected": "Show if any fracture exists, including stabilized; remove after all recover"
     },
@@ -288,7 +288,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
       "expected": "Show while server concussion ticks > 0; disappear on expiry"
     },
@@ -298,7 +298,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
       "expected": "Show while server painkiller ticks > 0; disappear on expiry"
     },
@@ -308,7 +308,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
       "expected": "No placeholders; reflow rows for all active combinations; hide healthy/dead player HUD"
     },
@@ -318,7 +318,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "New inventory opens at vanilla width, medical panel hidden; healthy body all green on opening tab"
     },
     {
@@ -327,7 +327,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "Click tab toggles panel; no loss of inventory cursor stack; closing and reopening inventory resets tab"
     },
     {
@@ -336,7 +336,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "Click each independent limb to apply medicine; splint only on treated limb; both legs and both arms independently show overlays; overlay disappears after recovery"
     },
     {
@@ -345,7 +345,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "Display only active effects in two-column grid; zero placeholders"
     },
     {
@@ -354,7 +354,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "Vanilla recipe book and medical tab do not overlap; narrow screen stays vanilla"
     },
     {
@@ -363,7 +363,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "Click empty medical panel must not drop cursor item"
     },
     {
@@ -373,7 +373,7 @@
       ],
       "state": "NOT_RUN",
       "expected": "All seven zones and independent stabilization flags synchronize, server validates cursor medicine, disconnect clears UI",
-      "reason": "RC6 requires exact build evidence"
+      "reason": "RC7 needs fresh evidence"
     },
     {
       "id": "tr-neoforge-core-lock",
@@ -382,7 +382,7 @@
       ],
       "state": "NOT_RUN",
       "expected": "Exact published NeoForge core hash, metadata, mapped methods and runtime dependency verified; Forge core rejected",
-      "reason": "RC6 requires exact build evidence"
+      "reason": "RC7 needs fresh evidence"
     },
     {
       "id": "tr-api",
@@ -392,7 +392,7 @@
       "state": "NOT_RUN",
       "expected": "Fatigue, recovery, rules and creative behavior use core public API",
       "assertion": "TR-API: public rule and fatigue API, recovery, creative mode, invalid input",
-      "reason": "RC6 requires exact build evidence"
+      "reason": "RC7 needs fresh evidence"
     },
     {
       "id": "tr-procedure",
@@ -402,7 +402,7 @@
       "state": "NOT_RUN",
       "expected": "Timed cursor treatment: one consumption, duplicate rejection, same-item replacement and cancellation",
       "assertion": "Timed cursor treatment: one consumption, duplicate rejection, same-item replacement and cancellation",
-      "reason": "RC6 requires exact build evidence"
+      "reason": "RC7 needs fresh evidence"
     },
     {
       "id": "tr-targeting",
@@ -412,7 +412,7 @@
       "state": "NOT_RUN",
       "expected": "Field medkit bleeding target and no-effect treatment rejection",
       "assertion": "Field medkit bleeding target and no-effect treatment rejection",
-      "reason": "RC6 requires exact build evidence"
+      "reason": "RC7 needs fresh evidence"
     },
     {
       "id": "tr-persistence",
@@ -422,7 +422,7 @@
       "state": "NOT_RUN",
       "expected": "Precise emergency grace persistence and invalid local HP safeguards",
       "assertion": "Precise emergency grace persistence and invalid local HP safeguards",
-      "reason": "RC6 requires exact build evidence"
+      "reason": "RC7 needs fresh evidence"
     },
     {
       "id": "tr-identity",
@@ -432,7 +432,7 @@
       ],
       "assertion": "TR-IDENTITY: branded loader identity, mandatory core, preserved medical item IDs and save key",
       "expected": "TR-IDENTITY: branded loader identity, mandatory core, preserved medical item IDs and save key",
-      "reason": "RC6 requires exact build evidence"
+      "reason": "RC7 needs fresh evidence"
     },
     {
       "id": "tr-ui-frameless",
@@ -440,7 +440,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "No portrait well in inventory or frame around HUD; silhouette centered and lower"
     },
     {
@@ -449,7 +449,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "Tab uses vanilla widget style; temperature addon coexistence checked in actual client"
     },
     {
@@ -458,7 +458,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "One or two wound glyphs only with active bleeding; splint independent per limb; healthy fully green"
     },
     {
@@ -467,7 +467,7 @@
         "neoforge-mc1.21.1"
       ],
       "state": "NOT_RUN",
-      "reason": "RC6 requires exact build evidence",
+      "reason": "RC7 needs fresh evidence",
       "expected": "Seven nonoverlapping zones and hit targets; HUD remains within bounds and avoids hotbar"
     },
     {
@@ -477,7 +477,8 @@
       ],
       "state": "NOT_RUN",
       "expected": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation",
-      "assertion": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation"
+      "assertion": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation",
+      "reason": "RC7 needs fresh evidence"
     },
     {
       "id": "tr-thermal-combined",
@@ -486,7 +487,7 @@
       ],
       "state": "NOT_RUN",
       "expected": "Actual Thermal + Trauma loaded together, all stages propagated, UI and no duplicate debuffs",
-      "reason": "Thermal not yet published as pinned release dependency; combined runtime not tested"
+      "reason": "RC7 needs fresh evidence"
     },
     {
       "id": "tr-thermal-ui",
@@ -495,7 +496,25 @@
       ],
       "state": "NOT_RUN",
       "expected": "Cold/heat glyph and stage text appear only for actual stress; clear on comfortable/absence",
-      "reason": "Graphical client required"
+      "reason": "RC7 needs fresh evidence"
+    },
+    {
+      "id": "tr-thermal-api",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "ThermalApi v1 preferred when available; legacy optional state fallback; confirmed diagnoses",
+      "reason": "Both actual addon JARs needed; API signatures inspected in Thermal artifact 15188071690"
+    },
+    {
+      "id": "tr-thermal-overlay",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Progressive frost and warm peripheral shimmer fade; no effect at comfort, spectator, creative or logout",
+      "reason": "Pure profile test in checkHudStatusLayout; actual client rendering not tested"
     }
   ],
   "prior_forge_assignment": "Archived on branch traumatic-worldlogic-rc16, commit 35619e0767f324e284015ef25a82b6ff40fcc446",
@@ -612,5 +631,13 @@
       16
     ],
     "review": "manual silhouette/palette review, actual vanilla reference textures, PNG alpha validation; client NOT_RUN"
+  },
+  "thermal_rc7": {
+    "provider": "Thermal 0.3.1-rc1 compiled artifact 15188071690; javap verified API_VERSION, status, bodyC, condition and ThermalModel.stage",
+    "fallback": "0.3.0-rc1 read-only state",
+    "protocol": 5,
+    "visual": "vanilla frost and slow heat gradients, not refraction; no duplicate game penalties",
+    "combined": "NOT_RUN",
+    "client": "NOT_RUN"
   }
 }

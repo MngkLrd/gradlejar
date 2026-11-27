@@ -65,7 +65,17 @@ public final class HudStatusLayoutCheck {
             }
         }
         require(dev.minemods.traumacraft.integration.ThermalCondition.fromWire(99)==dev.minemods.traumacraft.integration.ThermalCondition.NONE,"invalid wire ID");
-        System.out.println("PASS: 128 medical/thermal combinations, wire IDs and optional status layout");
+        for(var state:dev.minemods.traumacraft.integration.ThermalCondition.values()){
+            float c=ThermalVisualProfile.target(state,true),h=ThermalVisualProfile.target(state,false);
+            require(c>=0&&c<=1&&h>=0&&h<=1&&c*h==0,"exclusive bounded overlay");
+            require((c+h>0)==state.stressed(),"only active stress");
+            float value=0;for(int i=0;i<100;i++)value=ThermalVisualProfile.approach(value,c+h,.05f);
+            require(Math.abs(value-c-h)<.01f,"fade in");
+            for(int i=0;i<100;i++)value=ThermalVisualProfile.approach(value,0,.05f);
+            require(value==0,"fade out");
+            require(ThermalVisualProfile.alpha(c+h,66)<=66,"bounded opacity");
+        }
+        System.out.println("PASS: 176 medical/thermal combinations and all 11 visual states, fading and alpha");
         System.out.println("PASS: seven independent zones, centered lower inventory, 96 HUD layouts, injury palette and status bounds");
         System.out.println("PASS: 16 combinations, "+transitions+" removal transitions, timer boundaries and visibility");
     }

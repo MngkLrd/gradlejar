@@ -88,5 +88,8 @@
   "thermal.traumacraft.warm": "Warm",
   "thermal.traumacraft.very_hot": "Very hot",
   "thermal.traumacraft.hyperthermia": "Hyperthermia",
-  "thermal.traumacraft.recovery": "Recovery rate: %s%%"
+  "thermal.traumacraft.recovery": "Recovery rate: %s%%",
+  "thermal.traumacraft.heatstroke": "Heatstroke",
+  "thermal.traumacraft.sunstroke": "Sunstroke",
+  "thermal.traumacraft.confirmed_hypothermia": "Clinical hypothermia"
 }

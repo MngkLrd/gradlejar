@@ -88,5 +88,8 @@
   "thermal.traumacraft.warm": "Жарко",
   "thermal.traumacraft.very_hot": "Сильная жара",
   "thermal.traumacraft.hyperthermia": "Перегрев",
-  "thermal.traumacraft.recovery": "Скорость восстановления: %s%%"
+  "thermal.traumacraft.recovery": "Скорость восстановления: %s%%",
+  "thermal.traumacraft.heatstroke": "Тепловой удар",
+  "thermal.traumacraft.sunstroke": "Солнечный удар",
+  "thermal.traumacraft.confirmed_hypothermia": "Гипотермия"
 }

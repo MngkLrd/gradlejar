@@ -203,6 +203,20 @@
           "name": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation"
         }
       ]
+    },
+    {
+      "id": "tr-thermal-diagnosis",
+      "kind": "mechanic",
+      "subject": "Confirmed heatstroke, sunstroke and stale-diagnosis guard",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation"
+        }
+      ]
     }
   ]
 }
