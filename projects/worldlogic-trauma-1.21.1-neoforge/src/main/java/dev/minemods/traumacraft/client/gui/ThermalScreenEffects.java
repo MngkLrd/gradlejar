@@ -35,7 +35,7 @@ public final class ThermalScreenEffects {
             // Existing Minecraft frost texture, stretched like the vanilla freezing overlay.
             RenderSystem.enableBlend();
             g.setColor(1f,1f,1f,.72f*cold);
-            try{g.blit(ICE,0,0,w,h,0f,0f,128,128,128,128);}
+            try{g.blit(ICE,0,0,w,h,0f,0f,256,256,256,256);}
             finally{g.setColor(1f,1f,1f,1f);RenderSystem.disableBlend();}
         }
         if(hot>.005f){
