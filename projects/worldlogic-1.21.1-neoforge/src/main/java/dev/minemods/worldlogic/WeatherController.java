@@ -26,6 +26,7 @@ public final class WeatherController {
   return l==l.getServer().overworld()&&Rules.on("modeled_weather")&&l.getGameRules().getBoolean(GameRules.RULE_WEATHER_CYCLE);
  }
  static void update(ServerLevel l){
+  if(LocalWeatherRuntime.active(l)){LAST.remove(l);return;}
   if(!allowed(l)){LAST.remove(l);return;}
   BlockPos spawn=l.getSharedSpawnPos();
   if(!l.hasChunkAt(spawn))return;
