@@ -1,9 +1,14 @@
 import io
 import unittest
 import zipfile
-from PIL import Image
-from tools.qa.vanilla_corpus import extra_metrics, inventory, summarize, git_blob
+try:
+    from PIL import Image
+except ImportError:
+    Image=None
+if Image is not None:
+    from tools.qa.vanilla_corpus import extra_metrics, inventory, summarize, git_blob
 
+@unittest.skipIf(Image is None,"Pillow installed by standalone research workflow")
 class VanillaCorpusTests(unittest.TestCase):
     def png(self,colors):
         im=Image.new("RGBA",(2,2));im.putdata(colors)

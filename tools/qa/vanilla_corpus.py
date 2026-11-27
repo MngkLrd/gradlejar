@@ -23,6 +23,14 @@ PILOT={
 "block/iron_ore":"3d75fcd6c136aa75b4b9e381afeb0776feca0a0a",
 "item/leather_chestplate":"104c1feb3e77641096783d2a52538a0a86c45f6f",
 "block/spruce_sapling":"fdaa1493a8fef508e4ed70968c0e0bef4a9c0231",
+"block/birch_log":"9b9c2df4639489d58b7b4fcf7c469ee998cb4359",
+"block/jungle_log":"e1e5e12ae50cac33a2597a882d5e634d4c705a22",
+"block/acacia_log":"012ee84830b305003b9318e98570a3b1f6f83d11",
+"block/dark_oak_log":"8562ff7226479812ef22ddf43f3eb7e1d59e6c31",
+"block/birch_leaves":"b29f8c01e47ce5db20fcb7f226b920ea9b057ed1",
+"block/acacia_leaves":"81c370267c6bcff3f458d612ea4ef72c0838e5e3",
+"block/jungle_sapling":"8632359457d3a245220bee351716a7b1c9267bfc",
+"block/birch_sapling":"9b8193943a7dfd61a2752c82189e9b0d02f95497",
 }
 
 def git_blob(data):
@@ -124,7 +132,12 @@ def main():
     a.out.mkdir(parents=True,exist_ok=True)
     (a.out/"corpus.json").write_text(json.dumps(report,indent=2)+"\n")
     print("Official client:",sha,"PNG total:",len(rows),"statuses:",summary["statuses"])
-    print("Cross-archive pilot confirmed against official client:",sum(pilot.values()),"/",len(pilot))
+    print("Archive samples confirmed against official client:",sum(pilot.values()),"/",len(pilot))
+    for k in ("bark_hint","log_end_hint","foliage_hint","sapling_hint","soil_hint","ore_hint","armor_icon_hint"):
+        print("FAMILY",k,json.dumps(summary["families"].get(k,{}),sort_keys=True))
+    for group in summary["shared_color_layouts"]:
+        if any(n.endswith(("_log.png","_leaves.png","_sapling.png","_log_top.png")) for n in group):
+            print("SHARED_LAYOUT",json.dumps(group))
     if not rows or any(r["status"]=="DECODE_FAILED" for r in rows) or (pilot and not all(pilot.values())):
         raise SystemExit("Corpus verification requires investigation")
 if __name__=="__main__":main()

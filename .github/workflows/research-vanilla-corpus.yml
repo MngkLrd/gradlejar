@@ -5,6 +5,8 @@ on:
     paths:
       - 'tools/qa/vanilla_corpus.py'
       - 'tools/qa/tests/test_vanilla_corpus.py'
+      - 'tools/qa/vanilla_benchmark.py'
+      - 'tools/qa/tests/test_vanilla_benchmark.py'
       - '.github/workflows/research-vanilla-corpus.yml'
 permissions:
   contents: read
@@ -18,12 +20,15 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install Pillow==12.0.0
-      - run: python -m unittest tools.qa.tests.test_vanilla_corpus -v
+      - run: python -m unittest tools.qa.tests.test_vanilla_corpus tools.qa.tests.test_vanilla_benchmark -v
       - run: python -m tools.qa.vanilla_corpus --minecraft 1.21.1 --out vanilla-corpus
+      - run: python -m tools.qa.vanilla_benchmark --minecraft 1.21.1 --out vanilla-benchmark
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: vanilla-corpus-metrics
-          path: vanilla-corpus/corpus.json
+          path: |
+            vanilla-corpus/corpus.json
+            vanilla-benchmark/benchmark-summary.json
           if-no-files-found: warn
           retention-days: 14
