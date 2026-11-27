@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC36 production core/API regression",
+  "name": "World Logic NeoForge RC37 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1677,6 +1677,28 @@
       "id": "rc35-book-spread-layout",
       "kind": "other",
       "subject": "Book geometry, continuation-page offsets and small-window fallback; graphical blur and interaction require client evidence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
+    },
+    {
+      "id": "rc37-native-water-motion",
+      "kind": "mechanic",
+      "subject": "Actual downward spread and server entity contact, depth and eyes for all eight native fluid types; dry negative control. Real player swimming client not verified.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "rc37-patchouli-resources",
+      "kind": "other",
+      "subject": "Packaged bilingual Patchouli entries and lossless text migration; optional Patchouli runtime/client not tested by Core-only server",
       "checks": [
         {
           "backend": "server",

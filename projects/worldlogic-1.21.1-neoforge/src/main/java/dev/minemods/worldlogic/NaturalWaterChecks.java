@@ -48,6 +48,7 @@ final class NaturalWaterChecks{
    l.setBlock(p,NaturalFluids.get(WaterKind.SEA).block.get().defaultBlockState(),2);
    require(WorldLogicApi.waterProfile(l,p).quality()==WaterQuality.DESALINATE,"salt cannot become drinkable by soil");
   }finally{l.setBlock(p,original,2);old.forEach((q,s)->l.setBlock(q,s,2));}
+  verifyMotion(l);
   var chunk=new ProtoChunk(new ChunkPos(0,0),UpgradeData.EMPTY,LevelHeightAccessor.create(-256,768),l.registryAccess().registryOrThrow(Registries.BIOME),null);
   // Construct an actual vertical underground pool and surface pool. This is a chunk fixture, not a fully generated world.
   var pos=new BlockPos.MutableBlockPos();
@@ -64,4 +65,29 @@ final class NaturalWaterChecks{
   require(NaturalWaterGeneration.convertChunk(chunk,Optional.empty(),l.getBiome(p))==0,"idempotence");
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_NATIVE_WATER families=8 bucketPickup=8 capabilities=8 convertedBlocks={} soilQuality=PASS",count);
  }
+ private static void verifyMotion(ServerLevel l){
+  var origin=new BlockPos(10,110,10);var saved=new LinkedHashMap<BlockPos,BlockState>();
+  var pig=net.minecraft.world.entity.EntityType.PIG.create(l);
+  require(pig!=null,"motion fixture entity");
+  try{
+   for(int x=-2;x<=2;x++)for(int z=-2;z<=2;z++)for(int y=-2;y<=3;y++){
+    var p=origin.offset(x,y,z);saved.put(p,l.getBlockState(p));l.setBlock(p,(y==-2||Math.abs(x)==2||Math.abs(z)==2?Blocks.STONE:Blocks.AIR).defaultBlockState(),2|16);
+   }
+   for(var f:NaturalFluids.families()){
+    for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)for(int y=-1;y<=2;y++)l.setBlock(origin.offset(x,y,z),Blocks.AIR.defaultBlockState(),2|16);
+    l.setBlock(origin,f.block.get().defaultBlockState(),2|16);
+    require(NativeWaterTicks.needsTick(l,origin),"exposed source rearm "+f.id);
+    // Execute the actual Fluid tick, not an emulated movement equation.
+    var fs=l.getFluidState(origin);fs.getType().tick(l,origin,fs);
+    require(NaturalFluids.kind(l.getFluidState(origin.below()).getType())==f.kind&&!l.getFluidState(origin.below()).isSource(),"downward fluid spread "+f.id);
+    for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)for(int y=-1;y<=2;y++)l.setBlock(origin.offset(x,y,z),f.block.get().defaultBlockState(),2|16);
+    pig.setPos(origin.getX()+.5,origin.getY()+.1,origin.getZ()+.5);pig.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);pig.baseTick();
+    require(pig.isInWater()&&pig.getFluidHeight(FluidTags.WATER)>1&&pig.isEyeInFluid(FluidTags.WATER),"entity native immersion "+f.id);
+   }
+   for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)for(int y=-1;y<=2;y++)l.setBlock(origin.offset(x,y,z),Blocks.AIR.defaultBlockState(),2|16);
+   pig.baseTick();require(!pig.isInWater()&&!pig.isEyeInFluid(FluidTags.WATER),"dry entity negative control");
+  }finally{pig.discard();saved.forEach((p,s)->l.setBlock(p,s,2|16));}
+  org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_NATIVE_WATER_MOTION families=8 verticalSpread=8 immersion=8 dryControl=PASS");
+ }
+
 }

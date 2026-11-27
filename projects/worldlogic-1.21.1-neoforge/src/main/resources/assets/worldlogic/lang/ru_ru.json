@@ -220,5 +220,6 @@
   "worldlogic.analytics.season_progress": "Прогресс сезона",
   "worldlogic.analytics.season_temp": "Сезонная поправка воздуха",
   "worldlogic.analytics.season_solar": "Множитель солнца",
-  "worldlogic.analytics.season_wet": "Влажная фаза"
+  "worldlogic.analytics.season_wet": "Влажная фаза",
+  "worldlogic.patchouli.landing": "Полевое руководство World Logic. Выберите раздел: климат, вода, здоровье, растения, геология и выживание."
 }

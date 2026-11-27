@@ -67,6 +67,7 @@ public final class NaturalWaterGeneration{
     var next=NaturalFluids.get(kind).block.get().defaultBlockState().setValue(LiquidBlock.LEVEL,s.getValue(LiquidBlock.LEVEL));
     chunk.setBlockState(p,next,false);converted++;
     if(!s.getFluidState().isSource())chunk.markPosForPostprocessing(p);
+    else if(y>chunk.getMinBuildHeight()&&chunk.getBlockState(p.below()).isAir())chunk.markPosForPostprocessing(p);
    }
   }
   MarinePlants.convertGenerated(chunk,fixtureBiome);

@@ -39,6 +39,7 @@ public final class TabRail {
   Screen parent=from instanceof InventoryScreen?from:PARENTS.get(from);
   if(parent==null)parent=new InventoryScreen(mc.player);
   if(tab.id().equals(INVENTORY)){mc.setScreen(parent);return;}
+  if(tab.id().equals(GUIDE)){GuideOpener.open(parent);return;}
   Screen next=tab.factory().apply(parent);
   if(next==null||next==from||next==parent)return;
   OWNED.put(next,tab.id());PARENTS.put(next,parent);mc.setScreen(next);

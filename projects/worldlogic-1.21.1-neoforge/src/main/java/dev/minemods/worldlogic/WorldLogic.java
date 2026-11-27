@@ -16,6 +16,8 @@ public final class WorldLogic {
   var bus=NeoForge.EVENT_BUS;
   bus.addListener(AdminCommands::register);
   bus.addListener(MarinePlants::chunkLoaded);
+  bus.addListener(NativeWaterTicks::load);
+  bus.addListener(NativeWaterTicks::tick);
   bus.addListener(MarinePlants::serverTick);
   bus.addListener(RuleSync::login);
   bus.addListener(GuideItem::login);

@@ -220,5 +220,6 @@
   "worldlogic.analytics.season_progress": "Season progress",
   "worldlogic.analytics.season_temp": "Seasonal air offset",
   "worldlogic.analytics.season_solar": "Solar factor",
-  "worldlogic.analytics.season_wet": "Wet-season strength"
+  "worldlogic.analytics.season_wet": "Wet-season strength",
+  "worldlogic.patchouli.landing": "World Logic field guide. Select a chapter: climate, water, health, plants, geology and survival."
 }

@@ -46,6 +46,7 @@ public final class GuideBook{
  }
  static void verify()throws IOException{
   TabLayout.verify();
+  verifyPatchouli();
   BookLayout.verify();
   var all=new ArrayList<Chapter>();var ids=new HashSet<String>();
   for(String name:BUILTIN){try(var in=GuideBook.class.getResourceAsStream("/assets/worldlogic/worldlogic_guide/"+name+".json")){
@@ -65,4 +66,32 @@ public final class GuideBook{
   boolean rejected=false;try{read(new StringReader("{\"schema\":0}"));}catch(RuntimeException e){rejected=true;}if(!rejected)throw new IllegalStateException("bad schema accepted");
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_GUIDE chapters={} pages={} models={}",all.size(),all.stream().mapToInt(c->c.pages().size()).sum(),all.stream().flatMap(c->c.pages().stream()).mapToInt(v->v.models().size()).sum());
  }
+ private static JsonObject packaged(String path)throws IOException{
+  try(var in=GuideBook.class.getResourceAsStream(path)){
+   if(in==null)throw new IllegalStateException("missing Patchouli resource "+path);
+   return JsonParser.parseReader(new InputStreamReader(in,StandardCharsets.UTF_8)).getAsJsonObject();
+  }
+ }
+ private static void verifyPatchouli()throws IOException{
+  var book=packaged("/data/worldlogic/patchouli_books/field_guide/book.json");
+  if(!book.get("use_resource_pack").getAsBoolean()||!book.get("custom_book_item").getAsString().equals("worldlogic:guidebook"))throw new IllegalStateException("Patchouli book registration");
+  int count=0;
+  for(String name:BUILTIN){
+   Chapter chapter;try(var in=GuideBook.class.getResourceAsStream("/assets/worldlogic/worldlogic_guide/"+name+".json")){chapter=read(new InputStreamReader(in,StandardCharsets.UTF_8));}
+   for(String lang:List.of("ru_ru","en_us")){
+    String root="/assets/worldlogic/patchouli_books/field_guide/"+lang;
+    packaged(root+"/categories/"+name+".json");
+    for(var page:chapter.pages()){
+     var entry=packaged(root+"/entries/"+name+"/"+page.id()+".json");
+     var pages=entry.getAsJsonArray("pages");var text=new ArrayList<String>();
+     for(var e:pages){var obj=e.getAsJsonObject();if(obj.get("type").getAsString().equals("patchouli:text"))text.add(obj.get("text").getAsString());}
+     String original=String.join(" ",page.body().get(lang.equals("ru_ru"))).replaceAll("\\s+"," ").strip();
+     if(!String.join(" ",text).equals(original))throw new IllegalStateException("Patchouli text loss "+name+"/"+page.id()+"/"+lang);
+     count++;
+    }
+   }
+  }
+  org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_PATCHOULI generated bilingual entries={}",count);
+ }
+
 }
