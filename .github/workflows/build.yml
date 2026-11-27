@@ -30,7 +30,6 @@ jobs:
         env:
           PROJECT_DIR: ${{ github.event_name == 'workflow_dispatch' && inputs.project_dir || '' }}
         run: python3 tools/plan_builds.py "$PROJECT_DIR"
-
       - name: Validate changed texture review evidence
         id: art-review
         env:
