@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:dry",
+  "features": "worldlogicterrain:patch_wild_thyme",
+  "step": "vegetal_decoration"
+}

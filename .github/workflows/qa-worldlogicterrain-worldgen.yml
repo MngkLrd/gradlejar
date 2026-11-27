@@ -78,6 +78,16 @@ jobs:
           gh run download 46000227561 --repo "$GITHUB_REPOSITORY" --pattern 'jar-worldlogic-1.21.1-neoforge-1.0.0-rc31-*' --dir core-rc31-inputs
           gh run download 46000227561 --repo "$GITHUB_REPOSITORY" --pattern 'qa-report-*' --dir core-rc31-inputs
           PYTHONPATH=. python projects/worldlogic-terrain-1.21.1-neoforge/qa/worldgen_smoke.py natural-inputs predicted-water-qa core-rc31-inputs rc31
+      - name: Fetch verified RC34 core and exercise live seasonal integration
+        if: always() && steps.terrain-artifact.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/46041229359" --jq '.head_sha + " " + .conclusion' | grep -Fx '2e48cbf08dc4b3d6c4795f89eea8ee02edbd6b32 success'
+          gh run download 46041229359 --repo "$GITHUB_REPOSITORY" --pattern 'jar-worldlogic-1.21.1-neoforge-1.0.0-rc34-*' --dir core-rc34-inputs
+          gh run download 46041229359 --repo "$GITHUB_REPOSITORY" --pattern 'qa-report-*' --dir core-rc34-inputs
+          PYTHONPATH=. python projects/worldlogic-terrain-1.21.1-neoforge/qa/worldgen_smoke.py natural-inputs seasonal-world-qa core-rc34-inputs rc34
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -91,4 +101,6 @@ jobs:
             native-water-qa/logs/
             predicted-water-qa/worldgen-report.json
             predicted-water-qa/logs/
+            seasonal-world-qa/worldgen-report.json
+            seasonal-world-qa/logs/
           if-no-files-found: warn

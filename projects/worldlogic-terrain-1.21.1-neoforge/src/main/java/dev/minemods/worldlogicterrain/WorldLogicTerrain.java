@@ -14,6 +14,9 @@ public final class WorldLogicTerrain {
     public static final String MOD_ID = "worldlogicterrain";
     public WorldLogicTerrain(IEventBus bus) {
         TerrainContent.BLOCKS.register(bus);
+        bus.addListener(dev.minemods.worldlogicterrain.growth.GrowthSync::register);
+        NeoForge.EVENT_BUS.addListener(dev.minemods.worldlogicterrain.growth.GrowthSync::tick);
+        NeoForge.EVENT_BUS.addListener(dev.minemods.worldlogicterrain.growth.SeasonalChecks::register);
         dev.minemods.worldlogicterrain.soil.SoilExhaustion.register();
         TerrainContent.ITEMS.register(bus);
         TerrainContent.TABS.register(bus);

@@ -90,6 +90,12 @@ public final class TerrainContent {
         forage("onion", 2, 0.4f, 0);
         forage("cabbage", 4, 0.5f, 0);
         forage("bell_pepper", 3, 0.45f, 0);
+        for(var profile:dev.minemods.worldlogicterrain.growth.PlantSpecies.newSpecies()){
+            String id="wild_"+profile.id();
+            var block=BLOCKS.register(id,()->new dev.minemods.worldlogicterrain.growth.SeasonalPlantBlock(
+                BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS).randomTicks()));
+            PLANTS.add(ITEMS.register(id,()->new dev.minemods.worldlogicterrain.growth.SeasonalSeedItem(block.get())));
+        }
         for(var fruit:dev.minemods.worldlogicterrain.tree.TreeFruit.values()){
             BLOCKS.register(fruit.blockId(),()->new dev.minemods.worldlogicterrain.block.HangingFruitBlock(fruit,
                 BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS).randomTicks()));
@@ -119,12 +125,12 @@ public final class TerrainContent {
             var properties=BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS);
             return switch(id){
                 case "strawberry","blueberry","raspberry","blackberry","grape" -> new BerryBushBlock(properties.randomTicks());
-                default -> new TerrainPlantBlock(properties);
+                default -> new dev.minemods.worldlogicterrain.growth.SeasonalPlantBlock(properties.randomTicks());
             };
         });
         FOODS.add(ITEMS.register(id,()->new ForageFoodItem(hunger,saturation,recovery)));
         boolean berry=java.util.Set.of("strawberry","blueberry","raspberry","blackberry","grape").contains(id);
-        SEEDS.add(ITEMS.register(id+"_seeds",()->berry?new dev.minemods.worldlogicterrain.food.BerrySeedItem(wild.get()):new Item(new Item.Properties())));
+        SEEDS.add(ITEMS.register(id+"_seeds",()->berry?new dev.minemods.worldlogicterrain.food.BerrySeedItem(wild.get()):new dev.minemods.worldlogicterrain.growth.SeasonalSeedItem(wild.get())));
     }
     public static void creative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey().equals(CreativeModeTabs.NATURAL_BLOCKS))

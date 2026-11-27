@@ -12,6 +12,13 @@
       "conditions": [
         {
           "condition": "minecraft:survives_explosion"
+        },
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "worldlogicterrain:wild_cabbage",
+          "properties": {
+            "age": "3"
+          }
         }
       ]
     },
@@ -26,6 +33,35 @@
       "conditions": [
         {
           "condition": "minecraft:survives_explosion"
+        },
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "worldlogicterrain:wild_cabbage",
+          "properties": {
+            "age": "3"
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldlogicterrain:cabbage"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        },
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "worldlogicterrain:wild_cabbage",
+          "properties": {
+            "age": "3",
+            "quality": "3"
+          }
         }
       ]
     }

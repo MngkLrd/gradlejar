@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:cool_woodland",
+  "features": "worldlogicterrain:patch_wild_fireweed",
+  "step": "vegetal_decoration"
+}

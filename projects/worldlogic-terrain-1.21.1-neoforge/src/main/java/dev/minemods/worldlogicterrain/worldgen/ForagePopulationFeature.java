@@ -32,7 +32,7 @@ public final class ForagePopulationFeature extends Feature<ForagePopulationFeatu
     }
     private record Rule(String habitat,int rarity,int cap,double temperature,double moisture){}
     private record Candidate(BlockPos pos,double fitness,boolean mappedTaiga){}
-    private static final Map<String,Rule> RULES=Map.ofEntries(
+    private static final Map<String,Rule> RULES=new java.util.LinkedHashMap<>(Map.ofEntries(
         Map.entry("strawberry",new Rule("temperate_meadow",4,6,16,0.55)),
         Map.entry("blueberry",new Rule("cool_woodland",4,7,9,0.62)),
         Map.entry("raspberry",new Rule("temperate_woodland",5,6,15,0.6)),
@@ -45,7 +45,8 @@ public final class ForagePopulationFeature extends Feature<ForagePopulationFeatu
         Map.entry("onion",new Rule("open_field",5,6,17,0.42)),
         Map.entry("cabbage",new Rule("cool_field",6,5,12,0.6)),
         Map.entry("bell_pepper",new Rule("warm_field",6,5,24,0.57))
-    );
+    ));
+    static {for(var p:dev.minemods.worldlogicterrain.growth.PlantSpecies.newSpecies())RULES.put(p.id(),new Rule(p.habitat(),p.rarity(),p.cap(),p.optimalTemp(),p.optimalMoisture()));}
     public static final DeferredRegister<Feature<?>> FEATURES=DeferredRegister.create(BuiltInRegistries.FEATURE,"worldlogicterrain");
     public static final Supplier<Feature<?>> POPULATION=FEATURES.register("forage_population",ForagePopulationFeature::new);
     public ForagePopulationFeature(){super(Config.CODEC);}
@@ -72,7 +73,8 @@ public final class ForagePopulationFeature extends Feature<ForagePopulationFeatu
         var r=RULES.get(species);
         if(env.isEmpty())return .85; // RC20 legacy biome-based fallback
         var h=env.get();
-        if(h.zone().equals("MARINE")||h.zone().equals("SUBTERRANEAN")||h.slope()>55||h.waterlogging()>.94)return 0;
+        if(h.zone().equals("MARINE")||h.zone().equals("SUBTERRANEAN")||h.slope()>55||h.waterlogging()>.94&&!dev.minemods.worldlogicterrain.growth.PlantSpecies.isNew(species))return 0;
+        if(dev.minemods.worldlogicterrain.growth.PlantSpecies.isNew(species))return dev.minemods.worldlogicterrain.growth.PlantSpecies.byId(species).habitatFitness(h.temperature(),h.moisture(),h.fertility());
         double thermal=1-Math.min(.72,Math.abs(h.temperature()-r.temperature())/42);
         double moisture=1-Math.min(.65,Math.abs(h.moisture()-r.moisture())*1.1);
         double fertile=.45+.75*LandscapeMosaic.clamp(h.fertility(),0,1);
@@ -112,7 +114,10 @@ public final class ForagePopulationFeature extends Feature<ForagePopulationFeatu
         int cap=Math.max(3,(int)Math.round(rule.cap()*(.65+.35*field)));
         return populate(level,random,center,sx,sz,cap,plant,(x,z)->{
             BlockPos pos=surface(level,x,z);
-            return LandscapeMosaic.habitat(level,pos,habitat)!=null?pos:null;
+            var biome=LandscapeMosaic.habitat(level,pos,habitat);
+            if(biome==null)return null;
+            if(dev.minemods.worldlogicterrain.growth.PlantSpecies.isNew(species)&&fitness(species,sampler.sample(pos,biome,level.getBlockState(pos.below())))<=0)return null;
+            return pos;
         })>0;
     }
     static int populate(WorldGenLevel level,RandomSource random,BlockPos center,int sx,int sz,int cap,BlockState plant,

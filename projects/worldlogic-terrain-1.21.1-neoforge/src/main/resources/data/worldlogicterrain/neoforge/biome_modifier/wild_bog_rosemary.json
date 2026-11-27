@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:season_bog",
+  "features": "worldlogicterrain:patch_wild_bog_rosemary",
+  "step": "vegetal_decoration"
+}

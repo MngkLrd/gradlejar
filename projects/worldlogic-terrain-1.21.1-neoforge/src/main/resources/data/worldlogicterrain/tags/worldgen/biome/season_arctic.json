@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:snowy_plains",
+    "minecraft:snowy_taiga",
+    "minecraft:grove",
+    "minecraft:snowy_slopes",
+    {
+      "id": "worldlogic:shrub_tundra",
+      "required": false
+    },
+    {
+      "id": "worldlogic:moist_tundra",
+      "required": false
+    },
+    {
+      "id": "worldlogic:alpine_tundra",
+      "required": false
+    },
+    {
+      "id": "worldlogic:forest_tundra",
+      "required": false
+    },
+    {
+      "id": "worldlogic:polar_desert",
+      "required": false
+    }
+  ]
+}

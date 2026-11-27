@@ -748,7 +748,7 @@
     {
       "name": "WorldLogic preset vegetation attachment",
       "command": "worldlogicterrain worldgen_check",
-      "expect": "legacy and available unified core presets, 36 plant features and ecological trees, biome attachment verified",
+      "expect": "legacy and available unified core presets, 56 plant features and ecological trees, biome attachment verified",
       "assertion": true
     },
     {
@@ -1208,7 +1208,7 @@
     {
       "name": "Mixed meadow and frost patch mechanics",
       "command": "worldlogicterrain patch_check",
-      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 12 climate-aware forage populations verified; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells",
+      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 32 climate-aware forage populations verified; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells; 20 regional plants and seven existing crops verified: growth, quality, harvest, season boundaries and HUD data",
       "assertion": true
     }
   ],
@@ -4776,6 +4776,611 @@
       "id": "soil-exhausted-farmland",
       "kind": "block",
       "subject": "Exhausted farmland: moisture retained, normal crop support, growth penalty, recovery",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-plantain",
+      "kind": "block",
+      "subject": "wild_plantain: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-plantain",
+      "kind": "item",
+      "subject": "wild_plantain: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-nettle",
+      "kind": "block",
+      "subject": "wild_nettle: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-nettle",
+      "kind": "item",
+      "subject": "wild_nettle: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-yarrow",
+      "kind": "block",
+      "subject": "wild_yarrow: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-yarrow",
+      "kind": "item",
+      "subject": "wild_yarrow: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-sage",
+      "kind": "block",
+      "subject": "wild_sage: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-sage",
+      "kind": "item",
+      "subject": "wild_sage: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-thyme",
+      "kind": "block",
+      "subject": "wild_thyme: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-thyme",
+      "kind": "item",
+      "subject": "wild_thyme: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-lavender",
+      "kind": "block",
+      "subject": "wild_lavender: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-lavender",
+      "kind": "item",
+      "subject": "wild_lavender: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-wormwood",
+      "kind": "block",
+      "subject": "wild_wormwood: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-wormwood",
+      "kind": "item",
+      "subject": "wild_wormwood: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-wild_mint",
+      "kind": "block",
+      "subject": "wild_wild_mint: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-wild_mint",
+      "kind": "item",
+      "subject": "wild_wild_mint: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-horsetail",
+      "kind": "block",
+      "subject": "wild_horsetail: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-horsetail",
+      "kind": "item",
+      "subject": "wild_horsetail: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-marsh_cinquefoil",
+      "kind": "block",
+      "subject": "wild_marsh_cinquefoil: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-marsh_cinquefoil",
+      "kind": "item",
+      "subject": "wild_marsh_cinquefoil: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-bog_rosemary",
+      "kind": "block",
+      "subject": "wild_bog_rosemary: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-bog_rosemary",
+      "kind": "item",
+      "subject": "wild_bog_rosemary: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-cloudberry",
+      "kind": "block",
+      "subject": "wild_cloudberry: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-cloudberry",
+      "kind": "item",
+      "subject": "wild_cloudberry: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-lingonberry",
+      "kind": "block",
+      "subject": "wild_lingonberry: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-lingonberry",
+      "kind": "item",
+      "subject": "wild_lingonberry: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-arctic_poppy",
+      "kind": "block",
+      "subject": "wild_arctic_poppy: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-arctic_poppy",
+      "kind": "item",
+      "subject": "wild_arctic_poppy: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-edelweiss",
+      "kind": "block",
+      "subject": "wild_edelweiss: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-edelweiss",
+      "kind": "item",
+      "subject": "wild_edelweiss: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-fireweed",
+      "kind": "block",
+      "subject": "wild_fireweed: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-fireweed",
+      "kind": "item",
+      "subject": "wild_fireweed: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-aloe",
+      "kind": "block",
+      "subject": "wild_aloe: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-aloe",
+      "kind": "item",
+      "subject": "wild_aloe: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-agave",
+      "kind": "block",
+      "subject": "wild_agave: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-agave",
+      "kind": "item",
+      "subject": "wild_agave: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-ginger",
+      "kind": "block",
+      "subject": "wild_ginger: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-ginger",
+      "kind": "item",
+      "subject": "wild_ginger: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-lemongrass",
+      "kind": "block",
+      "subject": "wild_lemongrass: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-lemongrass",
+      "kind": "item",
+      "subject": "wild_lemongrass: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-pineapple",
+      "kind": "block",
+      "subject": "wild_pineapple: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-pineapple",
+      "kind": "item",
+      "subject": "wild_pineapple: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-tomato",
+      "kind": "block",
+      "subject": "wild_tomato: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-tomato",
+      "kind": "item",
+      "subject": "wild_tomato: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-cucumber",
+      "kind": "block",
+      "subject": "wild_cucumber: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-cucumber",
+      "kind": "item",
+      "subject": "wild_cucumber: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-radish",
+      "kind": "block",
+      "subject": "wild_radish: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-radish",
+      "kind": "item",
+      "subject": "wild_radish: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-onion",
+      "kind": "block",
+      "subject": "wild_onion: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-onion",
+      "kind": "item",
+      "subject": "wild_onion: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-cabbage",
+      "kind": "block",
+      "subject": "wild_cabbage: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-cabbage",
+      "kind": "item",
+      "subject": "wild_cabbage: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-bell_pepper",
+      "kind": "block",
+      "subject": "wild_bell_pepper: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-bell_pepper",
+      "kind": "item",
+      "subject": "wild_bell_pepper: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-growth",
+      "kind": "mechanic",
+      "subject": "Seasonal dormancy, temperature/moisture/light limits, quality, exhaustion, mature crops, legacy behavior and tree fruit exclusion",
       "checks": [
         {
           "backend": "server",

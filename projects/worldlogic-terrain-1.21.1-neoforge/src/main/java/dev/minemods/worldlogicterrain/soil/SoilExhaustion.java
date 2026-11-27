@@ -65,11 +65,11 @@ public final class SoilExhaustion extends SavedData {
     private void put(BlockPos pos,Entry e){var old=cells.put(pos.asLong(),e);if(!e.equals(old))setDirty();}
     void remove(BlockPos pos){if(cells.remove(pos.asLong())!=null)setDirty();}
     int cycles(BlockPos pos){var e=cells.get(pos.asLong());return e==null?0:e.cycles();}
-    static boolean exhausted(BlockState s){return s.is(TerrainContent.EXHAUSTED_DIRT.get())||s.is(TerrainContent.EXHAUSTED_FARMLAND.get());}
+    public static boolean exhausted(BlockState s){return s.is(TerrainContent.EXHAUSTED_DIRT.get())||s.is(TerrainContent.EXHAUSTED_FARMLAND.get());}
     static boolean eligible(BlockState s){return exhausted(s)||s.is(Blocks.DIRT)||s.is(Blocks.GRASS_BLOCK)||s.is(Blocks.FARMLAND);}
     private static String key(BlockState s){return BuiltInRegistries.BLOCK.getKey(s.getBlock()).toString();}
     private static boolean melon(BlockState s){return s.is(Blocks.MELON)||s.is(Blocks.PUMPKIN);}
-    private static boolean cultivated(BlockState s){return s.getBlock() instanceof CropBlock||s.getBlock() instanceof StemBlock||s.getBlock() instanceof AttachedStemBlock||s.getBlock() instanceof BerryBushBlock||s.is(Blocks.SWEET_BERRY_BUSH)||melon(s);}
+    private static boolean cultivated(BlockState s){return s.getBlock() instanceof CropBlock||s.getBlock() instanceof StemBlock||s.getBlock() instanceof AttachedStemBlock||s.getBlock() instanceof BerryBushBlock||s.getBlock() instanceof dev.minemods.worldlogicterrain.growth.SeasonalPlantBlock||s.is(Blocks.SWEET_BERRY_BUSH)||melon(s);}
     private static long now(ServerLevel l){return l.getDayTime();}
     static boolean uninterrupted(long last,long next){return last>=0&&next>=last&&next-last<=DAY;}
     void plant(ServerLevel l,BlockPos soil,BlockState plant,long time){
@@ -109,13 +109,14 @@ public final class SoilExhaustion extends SavedData {
     public static boolean allowGrowth(ServerLevel l,BlockPos soil,RandomSource random){
         return !exhausted(l.getBlockState(soil))||random.nextFloat()>=.35f;
     }
+    public static void plantGrowth(ServerLevel l,BlockPos pos,BlockState state){get(l).plant(l,pos.below(),state,now(l));}
     public static void berryHarvest(ServerLevel l,BlockPos pos){
         get(l).harvest(l,pos.below(),l.getBlockState(pos),now(l),true);
     }
     private static void placed(BlockEvent.EntityPlaceEvent e){
         if(!(e.getLevel() instanceof ServerLevel l)||!(e.getEntity() instanceof Player p)||p.isCreative()||p.isSpectator())return;
         var state=e.getPlacedBlock();var pos=e.getPos();
-        if(state.getBlock() instanceof CropBlock c&&!c.isMaxAge(state)||state.getBlock() instanceof StemBlock||state.getBlock() instanceof BerryBushBlock)
+        if(state.getBlock() instanceof CropBlock c&&!c.isMaxAge(state)||state.getBlock() instanceof StemBlock||state.getBlock() instanceof BerryBushBlock||state.getBlock() instanceof dev.minemods.worldlogicterrain.growth.SeasonalPlantBlock&&state.getValue(dev.minemods.worldlogicterrain.growth.SeasonalPlantBlock.AGE)<3)
             get(l).plant(l,pos.below(),state,now(l));
         else if(eligible(state)&&!exhausted(state))get(l).remove(pos);
     }
@@ -123,7 +124,7 @@ public final class SoilExhaustion extends SavedData {
         if(!(e.getLevel() instanceof ServerLevel l))return;
         var state=e.getState();var pos=e.getPos();
         if(state.getBlock() instanceof CropBlock||state.getBlock() instanceof StemBlock||state.is(Blocks.SWEET_BERRY_BUSH)){
-            if(!allowGrowth(l,pos.below(),l.random))e.setResult(CropGrowEvent.Pre.Result.DO_NOT_GROW);
+            if(!allowGrowth(l,pos.below(),l.random)||!dev.minemods.worldlogicterrain.growth.SeasonalGrowth.allowSeason(l,pos,state,l.random))e.setResult(CropGrowEvent.Pre.Result.DO_NOT_GROW);
         }
     }
     private static void afterGrowth(CropGrowEvent.Post e){
@@ -146,9 +147,9 @@ public final class SoilExhaustion extends SavedData {
         if(eligible(state)){get(l).remove(pos);return;}
         if(!(e.getBreaker() instanceof Player p)||p.isCreative()||p.isSpectator()||e.getDrops().isEmpty())return;
         var soil=pos.below();boolean worn=exhausted(l.getBlockState(soil));
-        boolean ripe=state.getBlock() instanceof CropBlock c&&c.isMaxAge(state)||melon(state);
+        boolean ripe=state.getBlock() instanceof CropBlock c&&c.isMaxAge(state)||melon(state)||state.getBlock() instanceof dev.minemods.worldlogicterrain.growth.SeasonalPlantBlock&&state.getValue(dev.minemods.worldlogicterrain.growth.SeasonalPlantBlock.AGE)==3;
         if(!ripe){
-            if(state.getBlock() instanceof CropBlock||state.getBlock() instanceof BerryBushBlock)get(l).abandoned(soil,now(l));
+            if(state.getBlock() instanceof CropBlock||state.getBlock() instanceof BerryBushBlock||state.getBlock() instanceof dev.minemods.worldlogicterrain.growth.SeasonalPlantBlock)get(l).abandoned(soil,now(l));
             return;
         }
         if(!get(l).harvest(l,soil,state,now(l),false)||!worn)return;

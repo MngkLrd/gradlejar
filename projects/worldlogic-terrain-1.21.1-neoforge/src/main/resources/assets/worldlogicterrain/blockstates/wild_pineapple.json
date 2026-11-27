@@ -1,21 +1,16 @@
 {
   "variants": {
-    "": [
-      {
-        "model": "worldlogicterrain:block/wild_pineapple"
-      },
-      {
-        "model": "worldlogicterrain:block/wild_pineapple",
-        "y": 90
-      },
-      {
-        "model": "worldlogicterrain:block/wild_pineapple",
-        "y": 180
-      },
-      {
-        "model": "worldlogicterrain:block/wild_pineapple",
-        "y": 270
-      }
-    ]
+    "age=0": {
+      "model": "worldlogicterrain:block/wild_pineapple_stage0"
+    },
+    "age=1": {
+      "model": "worldlogicterrain:block/wild_pineapple_stage1"
+    },
+    "age=2": {
+      "model": "worldlogicterrain:block/wild_pineapple_stage2"
+    },
+    "age=3": {
+      "model": "worldlogicterrain:block/wild_pineapple"
+    }
   }
 }

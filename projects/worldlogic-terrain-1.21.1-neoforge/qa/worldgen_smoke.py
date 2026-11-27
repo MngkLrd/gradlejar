@@ -266,8 +266,8 @@ def scan(region, positions):
 def main():
     global PRESET
     rc26 = len(sys.argv)>3
-    native_water = len(sys.argv)>4 and sys.argv[4] in {"rc30","rc31"}
-    predictor_required = native_water and sys.argv[4]=="rc31"
+    native_water = len(sys.argv)>4 and sys.argv[4] in {"rc30","rc31","rc34"}
+    predictor_required = native_water and sys.argv[4] in {"rc31","rc34"}
     core_name = f"worldlogic-neoforge-mc1.21.1-1.0.0-{sys.argv[4]}.jar" if native_water else CORE_RC26_JAR
     species = CORE_SPECIES if rc26 else SPECIES
     forage = CORE_FORAGE if rc26 else NEW_FORAGE
@@ -358,6 +358,16 @@ def main():
                     require("prediction=true" in aquatic,"RC31 predictor not actually exercised: "+aquatic)
                 report["native_aquatic_checks"]=aquatic
                 print(aquatic,flush=True)
+            if native_water and sys.argv[4]=="rc34":
+                seasonal=[]
+                for season in ("spring","summer","autumn","winter"):
+                    core_season=conn.cmd("worldlogic season set "+season)
+                    require("Season "+season.upper() in core_season,core_season)
+                    sample=conn.cmd("worldlogicterrain season_check")
+                    require("Terrarian Core season="+season.upper() in sample,sample)
+                    seasonal.append(sample)
+                    print(sample,flush=True)
+                report["live_season_checks"]=seasonal
             region = root / "natural-world" / "region"
             for biome, expected in species.items():
                 target=namespace+":"+biome

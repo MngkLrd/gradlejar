@@ -53,7 +53,7 @@ public final class BerryBushBlock extends BushBlock {
         return InteractionResult.CONSUME;
     }
     @Override public void randomTick(BlockState state,ServerLevel level,BlockPos pos,RandomSource random){
-        if(!state.getValue(RIPE)&&level.getRawBrightness(pos.above(),0)>=9&&random.nextInt(5)==0&&dev.minemods.worldlogicterrain.soil.SoilExhaustion.allowGrowth(level,pos.below(),random))
+        if(!state.getValue(RIPE)&&level.getRawBrightness(pos.above(),0)>=9&&random.nextInt(5)==0&&dev.minemods.worldlogicterrain.soil.SoilExhaustion.allowGrowth(level,pos.below(),random)&&dev.minemods.worldlogicterrain.growth.SeasonalGrowth.allowSeason(level,pos,state,random))
             level.setBlock(pos,state.setValue(RIPE,true),Block.UPDATE_ALL);
     }
 }

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:season_arctic",
+  "features": "worldlogicterrain:patch_wild_arctic_poppy",
+  "step": "vegetal_decoration"
+}

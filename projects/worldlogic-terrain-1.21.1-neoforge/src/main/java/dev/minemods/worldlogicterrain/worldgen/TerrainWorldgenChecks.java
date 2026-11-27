@@ -19,7 +19,7 @@ public final class TerrainWorldgenChecks {
           .then(Commands.literal("worldgen_check").executes(c->{
             try {
                 verify(c.getSource().getLevel());
-                c.getSource().sendSuccess(()->Component.literal("Terrain worldgen: legacy and available unified core presets, 36 plant features and ecological trees, biome attachment verified"),false);
+                c.getSource().sendSuccess(()->Component.literal("Terrain worldgen: legacy and available unified core presets, 56 plant features and ecological trees, biome attachment verified"),false);
                 return 1;
             } catch (IllegalStateException ex) {
                 c.getSource().sendFailure(Component.literal(ex.getMessage())); return 0;
@@ -76,6 +76,7 @@ public final class TerrainWorldgenChecks {
         checkPreset(gen, "frosted_grass", "frosted_ground", Set.of("snowy_plains","snowy_taiga","grove","snowy_slopes","frozen_river","snowy_beach"));
             checkTrees(gen);
             checkAquatic(gen);
+            for(var p:dev.minemods.worldlogicterrain.growth.PlantSpecies.newSpecies())checkSeasonal(gen,p.id(),p.habitat());
         }
     }
     private static void checkPreset(NoiseBasedChunkGenerator gen,String plant,String group,Set<String> expected) {
@@ -94,6 +95,16 @@ public final class TerrainWorldgenChecks {
             if(vanilla&&wanted)positives++;
         }
         if(vanillaCount>0&&positives!=expected.size())throw new IllegalStateException("Missing expected core biome for "+plant+": "+positives);
+    }
+    private static void checkSeasonal(NoiseBasedChunkGenerator gen,String plant,String group){
+        var key=ResourceKey.create(Registries.PLACED_FEATURE,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","patch_wild_"+plant));
+        var habitat=TagKey.create(Registries.BIOME,ResourceLocation.fromNamespaceAndPath("worldlogicterrain",group));
+        int step=GenerationStep.Decoration.VEGETAL_DECORATION.ordinal();
+        for(var biome:gen.getBiomeSource().possibleBiomes()){
+            var settings=biome.value().getGenerationSettings().features();
+            boolean present=settings.size()>step&&settings.get(step).stream().anyMatch(h->h.is(key));
+            if(present!=biome.is(habitat))throw new IllegalStateException("Wrong seasonal plant habitat "+plant+" / "+biome.unwrapKey());
+        }
     }
     private static void checkAquatic(NoiseBasedChunkGenerator gen){
         var key=ResourceKey.create(Registries.PLACED_FEATURE,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","aquatic_ecology"));
