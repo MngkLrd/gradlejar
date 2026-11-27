@@ -292,6 +292,19 @@ def inspect(names, read, out, ref=None):
     result["status"]="failed" if result["errors"] else ("review" if result["warnings"] else ("measured" if result["textures"] or result["models"] else "not-applicable"))
     return result
 
+def review_queue(report):
+    """Machine-readable, hash-bound tasks for the mod agent; never recolor automatically."""
+    groups={}
+    for t in report["textures"]:
+        if not t["warnings"]:continue
+        key=(t["sha256"],t["kind"])
+        task=groups.setdefault(key,{"status":"REVIEW","sha256":t["sha256"],"kind":t["kind"],
+            "files":[],"warnings":t["warnings"],"metrics":t["metrics"],"preview":t["preview"],
+            "vanilla_context":t["vanilla_context"],"max_automatic_redraws":1})
+        task["files"].append(t["file"])
+    return {"schema":1,"scope":"Agent review and targeted redraw only for confirmed defects; no unattended image generation or aesthetic pass claim.",
+            "tasks":list(groups.values())}
+
 def changed(base):
     if not re.fullmatch(r"[0-9a-f]{40}",base):
         raise ValueError("Expected base commit SHA")
@@ -330,6 +343,7 @@ def main():
         names=a.paths+(changed(a.base) if a.base else [])
         r=inspect(names,read,a.out,ref)
     (a.out/"visual-report.json").write_text(json.dumps(r,indent=2,ensure_ascii=False)+"\n")
+    (a.out/"redraw-queue.json").write_text(json.dumps(review_queue(r),indent=2,ensure_ascii=False)+"\n")
     c=r["counts"]
     summary=f"Visual QA: {r['status']} | {c['textures']} textures, {c['models']} models, {c['errors']} errors, {c['warnings']} advisory warnings. Native PNG metrics, no in-game rendering."
     print(summary)

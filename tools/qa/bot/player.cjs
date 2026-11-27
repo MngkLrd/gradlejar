@@ -53,6 +53,38 @@ async function control(c) {
   if(c.action==='move'&&Math.hypot(delta.x,delta.z)<.2)throw Error('No observed movement');
   return {delta:{x:delta.x,y:delta.y,z:delta.z},peakY:peak,startY:start.y};
 }
+async function craftGrid(c) {
+  const size=c.table?3:2;
+  if(!Array.isArray(c.grid)||c.grid.length!==size||!c.grid.every(r=>Array.isArray(r)&&r.length===size))throw Error('Invalid crafting grid');
+  let window=bot.inventory;
+  if(c.table){
+    const block=await blockAt(c.table);
+    await useBlock(block,{face:1});
+    for(let i=0;i<50&&!bot.currentWindow;i++)await sleep(100);
+    window=bot.currentWindow;
+    if(!window||!window.type.startsWith('minecraft:crafting'))throw Error('No crafting table window');
+  }
+  try{
+    if(window.selectedItem||window.slots.slice(0,1+size*size).some(Boolean))throw Error('Crafting grid or cursor not empty');
+    for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+      const name=c.grid[y][x];if(name===null)continue;
+      if(!bot.registry.itemsByName[name])throw Error('Unknown protocol item '+name);
+      let source;
+      for(let i=window.inventoryStart;i<window.inventoryEnd;i++){if(window.slots[i]?.name===name){source=i;break;}}
+      if(source===undefined)throw Error('Missing grid ingredient '+name);
+      await bot.clickWindow(source,0,0);
+      await bot.clickWindow(1+x+y*size,1,0);
+      if(window.selectedItem)await bot.clickWindow(source,0,0);
+      if(window.selectedItem)throw Error('Cursor not empty after placing ingredient');
+    }
+    // Never synthesize a predicted output; require the actual server slot update.
+    for(let i=0;i<50&&!window.slots[0];i++)await sleep(100);
+    const result=window.slots[0];
+    if(!result||result.name!==c.item||result.count!==c.count)throw Error('Unexpected crafting result '+JSON.stringify(result));
+    await bot.putAway(0);
+    return {output:c.item,count:c.count,grid:size+'x'+size};
+  }finally{if(c.table&&bot.currentWindow===window)bot.closeWindow(window);}
+}
 let sequence=10, ready=false, busy=false;
 const rl=readline.createInterface({input:process.stdin,terminal:false});
 // Mineflayer 4.26.0 predates upstream #3986: 1.21.4 waits for client load acknowledgment.
@@ -114,6 +146,8 @@ rl.on('line',async line=>{
       if(!recipes.length)throw Error('No craftable recipe for '+c.item);
       await bot.craft(recipes[0],c.count??1,table);
       result.output=c.item;
+    }else if(c.action==='craftGrid'){
+      result=await craftGrid(c);
     }else if(c.action==='place'){
       await bot.equip(await itemNamed(c.item),'hand');
       const b=await blockAt(c);

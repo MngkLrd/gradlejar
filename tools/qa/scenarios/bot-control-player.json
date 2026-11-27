@@ -281,6 +281,146 @@
       "expect": "\\b1\\b",
       "name": "Drop one stick",
       "assertion": true
+    },
+    {
+      "command": "clear MineModsQA",
+      "expect": "Removed|No items|^$"
+    },
+    {
+      "command": "give MineModsQA minecraft:oak_planks 2",
+      "expect": "Gave"
+    },
+    {
+      "action": "inventory",
+      "args": {
+        "item": "oak_planks",
+        "count": 2
+      }
+    },
+    {
+      "action": "craftGrid",
+      "args": {
+        "item": "stick",
+        "count": 4,
+        "grid": [
+          [
+            "oak_planks",
+            null
+          ],
+          [
+            "oak_planks",
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "wait": 0.5
+    },
+    {
+      "command": "clear MineModsQA minecraft:stick 0",
+      "expect": "Found 4 matching item",
+      "name": "Explicit grid 2x2 makes sticks",
+      "assertion": true
+    },
+    {
+      "command": "execute unless data entity MineModsQA Inventory[{id:\"minecraft:oak_planks\"}]",
+      "expect": "Test passed",
+      "name": "Explicit grid consumes planks",
+      "assertion": true
+    },
+    {
+      "command": "clear MineModsQA",
+      "expect": "Removed|No items|^$"
+    },
+    {
+      "command": "setblock 6 200 6 minecraft:crafting_table",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "tp MineModsQA 6.5 200 4.5",
+      "expect": "Teleported"
+    },
+    {
+      "action": "position",
+      "args": {
+        "x": 6.5,
+        "y": 200,
+        "z": 4.5
+      }
+    },
+    {
+      "command": "give MineModsQA minecraft:oak_planks 3",
+      "expect": "Gave"
+    },
+    {
+      "command": "give MineModsQA minecraft:stick 2",
+      "expect": "Gave"
+    },
+    {
+      "action": "inventory",
+      "args": {
+        "item": "oak_planks",
+        "count": 3
+      }
+    },
+    {
+      "action": "inventory",
+      "args": {
+        "item": "stick",
+        "count": 2
+      }
+    },
+    {
+      "action": "craftGrid",
+      "args": {
+        "item": "wooden_pickaxe",
+        "count": 1,
+        "grid": [
+          [
+            "oak_planks",
+            "oak_planks",
+            "oak_planks"
+          ],
+          [
+            null,
+            "stick",
+            null
+          ],
+          [
+            null,
+            "stick",
+            null
+          ]
+        ],
+        "table": {
+          "x": 6,
+          "y": 200,
+          "z": 6,
+          "block": "crafting_table"
+        }
+      }
+    },
+    {
+      "wait": 0.5
+    },
+    {
+      "command": "clear MineModsQA minecraft:wooden_pickaxe 0",
+      "expect": "Found 1 matching item",
+      "name": "Explicit grid 3x3 makes pickaxe",
+      "assertion": true
+    },
+    {
+      "command": "execute unless data entity MineModsQA Inventory[{id:\"minecraft:oak_planks\"}]",
+      "expect": "Test passed",
+      "name": "3x3 consumes planks",
+      "assertion": true
+    },
+    {
+      "command": "execute unless data entity MineModsQA Inventory[{id:\"minecraft:stick\"}]",
+      "expect": "Test passed",
+      "name": "3x3 consumes sticks",
+      "assertion": true
     }
   ]
 }

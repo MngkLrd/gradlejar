@@ -6,7 +6,7 @@ from .common import ROOT, safe_path, require
 from .virtual_player import Bot
 
 SUPPORTED={("fabric","1.20.1"),("fabric","1.21.1"),("fabric","1.21.4")}
-ACTIONS={"position","startDig","abortDig","activate","inventory","drop","equip","move","jump","craft","place","dig","attack","interact","use"}
+ACTIONS={"position","startDig","abortDig","activate","inventory","drop","equip","move","jump","craft","craftGrid","place","dig","attack","interact","use"}
 
 def validate_args(action, a):
     # Existing packet fixtures retain their schema. New actions have bounded inputs.
@@ -14,7 +14,7 @@ def validate_args(action, a):
         return isinstance(a.get(k),str) and bool(re.fullmatch(r"[a-z0-9_]+",a[k]))
     def coords(x):
         return isinstance(x,dict) and all(type(x.get(k)) in (int,float) and abs(x[k])<=30_000_000 for k in ("x","y","z")) and isinstance(x.get("block"),str)
-    if action in ("equip","craft","place","use"):
+    if action in ("equip","craft","craftGrid","place","use"):
         require(name("item"),"Action requires item name")
     if action in ("attack","interact"):
         require(name("entity"),"Action requires entity name")
@@ -26,6 +26,13 @@ def validate_args(action, a):
         require(a.get("destination","hand") in ("hand","off-hand","head","torso","legs","feet"),"Invalid equip slot")
     if action=="craft":
         require(type(a.get("count",1)) is int and 1<=a.get("count",1)<=16,"Invalid craft count")
+        require("table" not in a or coords(a["table"]),"Invalid crafting table")
+    if action=="craftGrid":
+        size=3 if "table" in a else 2
+        grid=a.get("grid")
+        require(isinstance(grid,list) and len(grid)==size and all(isinstance(row,list) and len(row)==size and all(v is None or isinstance(v,str) and re.fullmatch(r"[a-z0-9_]+",v) for v in row) for row in grid),"Invalid explicit crafting grid")
+        require(any(v is not None for row in grid for v in row),"Empty crafting grid")
+        require(type(a.get("count")) is int and 1<=a["count"]<=64,"Invalid grid output count")
         require("table" not in a or coords(a["table"]),"Invalid crafting table")
     if action in ("move","jump","use"):
         require(type(a.get("ms",800)) is int and 100<=a.get("ms",800)<=4000,"Invalid action duration")
