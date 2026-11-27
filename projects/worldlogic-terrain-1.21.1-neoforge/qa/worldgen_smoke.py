@@ -27,6 +27,7 @@ PRESET = "worldlogic:earthlike_climate"
 SPECIES = {
     "plains": {"meadow_grass", "dense_meadow_grass", "wild_chamomile", "wild_cornflower", "wild_clover"},
     "desert": {"dry_grass", "tall_dry_grass", "desert_shrub"},
+    "snowy_plains": {"frosted_grass"},
     "forest": {"forest_shrub", "low_fern", "forest_litter", "fallen_leaves"},
     "jungle": {"forest_shrub", "dense_underbrush", "low_fern", "sedge", "forest_litter", "fallen_leaves"},
     "mangrove_swamp": {"forest_shrub", "dense_underbrush", "low_fern", "sedge", "reed", "cattail", "forest_litter", "fallen_leaves"},
@@ -64,7 +65,7 @@ def read_chunk(region, cx, cz):
 
 def scan(region, positions):
     counts, biomes, full = Counter(), set(), 0
-    addon_columns, grass_columns = set(), set()
+    addon_columns, grass_columns, meadow_columns = set(), set(), set()
     for cx, cz in positions:
         chunk = read_chunk(region, cx, cz)
         if chunk is None or str(chunk.get("Status", "")) not in {"minecraft:full", "full"}:
@@ -82,6 +83,8 @@ def scan(region, positions):
                 counts[targets[0]] += 4096
                 for i in range(256):
                     (grass_columns if palette[0] == "minecraft:short_grass" else addon_columns).add((cx, cz, i))
+                    if targets[0] in SPECIES["plains"]:
+                        meadow_columns.add((cx*16 + i%16, cz*16 + i//16))
                 continue
             bits = max(4, (len(palette) - 1).bit_length())
             per = 64 // bits
@@ -92,7 +95,31 @@ def scan(region, positions):
                 if index in targets:
                     counts[targets[index]] += 1
                     (grass_columns if palette[index] == "minecraft:short_grass" else addon_columns).add((cx, cz, i % 256))
-    return full, biomes, counts, len(addon_columns), len(grass_columns)
+                    if targets[index] in SPECIES["plains"]:
+                        meadow_columns.add((cx*16 + i%16, cz*16 + (i%256)//16))
+    # Connected 4-neighbour components from actual stored block positions.
+    remaining = set(meadow_columns)
+    clusters = []
+    while remaining:
+        stack = [remaining.pop()]
+        size = 0
+        while stack:
+            x, z = stack.pop()
+            size += 1
+            for point in ((x+1,z),(x-1,z),(x,z+1),(x,z-1)):
+                if point in remaining:
+                    remaining.remove(point)
+                    stack.append(point)
+        clusters.append(size)
+    # 8x8 areas containing ordinary grass but no Terrain vegetation.
+    def tile(point):
+        cx, cz, i = point
+        return (cx*2+(i%16)//8, cz*2+(i//16)//8)
+    gap_tiles = len({tile(p) for p in grass_columns} - {tile(p) for p in addon_columns})
+    distribution = {"meadow_clusters_ge4": sum(n >= 4 for n in clusters),
+                    "largest_meadow_cluster": max(clusters, default=0),
+                    "grass_only_gap_tiles_8x8": gap_tiles}
+    return full, biomes, counts, len(addon_columns), len(grass_columns), distribution
 
 def main():
     inputs = Path(sys.argv[1]).resolve()
@@ -172,21 +199,25 @@ def main():
                 result = conn.cmd("forceload add " + force)
                 print("Generating", biome, x, z, result, flush=True)
                 deadline = time.monotonic() + 150
-                full, biomes, counts, addon_columns, grass_columns = 0, set(), Counter(), 0, 0
+                full, biomes, counts, addon_columns, grass_columns, distribution = 0, set(), Counter(), 0, 0, {}
                 while time.monotonic() < deadline:
                     time.sleep(5)
                     conn.cmd("save-all flush")
-                    full, biomes, counts, addon_columns, grass_columns = scan(region, positions)
+                    full, biomes, counts, addon_columns, grass_columns, distribution = scan(region, positions)
                     if full == len(positions):
                         break
                 matching = sum(counts.get(n, 0) for n in expected)
                 forage_count = sum(counts.get(n, 0) for n in NEW_FORAGE.get(biome, set()))
                 coverage = addon_columns / max(1, full * 256)
                 grass_ok = biome != "plains" or (grass_columns > addon_columns and grass_columns > 0)
-                passed = coverage <= 0.18 and grass_ok and full == len(positions) and "minecraft:" + biome in biomes and matching > 0 and (biome not in NEW_FORAGE or forage_count > 0)
+                # Plains must be visibly more populated than the 0.5.0 baseline
+                # (51 relevant blocks in this exact fixed-seed window), while
+                # still retaining distinct groups and ordinary-grass gaps.
+                mosaic_ok = biome != "plains" or (matching >= 70 and distribution.get("meadow_clusters_ge4", 0) >= 2 and distribution.get("grass_only_gap_tiles_8x8", 0) >= 4)
+                passed = coverage <= 0.18 and grass_ok and mosaic_ok and full == len(positions) and "minecraft:" + biome in biomes and matching > 0 and (biome not in NEW_FORAGE or forage_count > 0)
                 row = {"biome": biome, "status": "PASS" if passed else "FAIL",
                        "x": x, "z": z, "full_chunks": full,
-                       "expected_species_blocks": matching, "new_forage_blocks": forage_count, "addon_column_fraction": coverage, "vanilla_short_grass_columns": grass_columns, "all_terrain_blocks": dict(counts)}
+                       "expected_species_blocks": matching, "new_forage_blocks": forage_count, "addon_column_fraction": coverage, "vanilla_short_grass_columns": grass_columns, **distribution, "all_terrain_blocks": dict(counts)}
                 report["results"].append(row)
                 print(json.dumps(row), flush=True)
                 conn.cmd("forceload remove " + force)
