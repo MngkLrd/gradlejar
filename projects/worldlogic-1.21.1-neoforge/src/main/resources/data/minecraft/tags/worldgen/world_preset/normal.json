@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "worldlogic:earthlike_climate"
+    "worldlogic:earthlike_climate",
+    "worldlogic:earthlike_extended"
   ]
 }
