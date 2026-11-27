@@ -68,9 +68,16 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding='UTF-8'
     options.release=21
 }
+sourceSets {
+    hudTest {
+        java.srcDir 'src/hudTest/java'
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
 tasks.register('checkHudStatusLayout', JavaExec) {
-    dependsOn tasks.named('testClasses')
-    classpath=sourceSets.test.runtimeClasspath
+    dependsOn tasks.named('hudTestClasses')
+    classpath=sourceSets.hudTest.runtimeClasspath
     mainClass='dev.minemods.traumacraft.client.gui.HudStatusLayoutCheck'
 }
 tasks.named('check') { dependsOn tasks.named('checkHudStatusLayout') }

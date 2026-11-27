@@ -414,5 +414,12 @@
   "asset_source": "35619e0767f324e284015ef25a82b6ff40fcc446",
   "release_blockers": [
     "Actual network interaction, client visuals and full item/recipe gameplay coverage still outstanding; no merge or release on this draft PR."
-  ]
+  ],
+  "build_incident": {
+    "run": 45971933892,
+    "stage": "test",
+    "cause": "Gradle 9.2.1 discovered a standalone Java main under src/test, but no framework tests",
+    "resolution": "Move the standalone executable to hudTest source set; check still depends on checkHudStatusLayout",
+    "state": "FIXED_IN_SOURCE_NOT_RUN"
+  }
 }
