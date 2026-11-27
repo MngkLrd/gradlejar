@@ -35,13 +35,22 @@ public final class ThermalSync {
     private static WeatherReading readWeather(RegistryFriendlyByteBuf b){
         return new WeatherReading(b.readUtf(256),b.readUtf(256),b.readInt(),b.readBoolean(),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble(),b.readVarInt(),b.readDouble(),b.readBoolean(),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble());
     }
-    private record Received(Snapshot snapshot, long time) {}
+    private record Received(Snapshot snapshot, Snapshot previous, long time) {}
     private static volatile Received latest;
     private ThermalSync() {}
     public static void register(RegisterPayloadHandlersEvent event) {
         event.registrar("3").playToClient(Snapshot.TYPE, Snapshot.CODEC,
-            (s, context) -> latest = new Received(s, System.nanoTime()));
+            (s, context) -> accept(s));
         HistorySync.register(event);
+    }
+    private static void accept(Snapshot s){
+        long now=System.nanoTime();Received old=latest;
+        Snapshot previous=old!=null&&old.snapshot().entityId()==s.entityId()&&old.snapshot().active()&&s.active()&&now-old.time()<3_000_000_000L?old.snapshot():null;
+        latest=new Received(s,previous,now);
+    }
+    public static Snapshot previous(int id){
+        Received r=latest;
+        return r!=null&&r.snapshot().entityId()==id&&System.nanoTime()-r.time()<3_000_000_000L?r.previous():null;
     }
     public static void send(ServerPlayer p, Snapshot s) {
         if(!(p instanceof net.neoforged.neoforge.common.util.FakePlayer)) PacketDistributor.sendToPlayer(p,s);

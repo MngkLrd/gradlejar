@@ -20,7 +20,7 @@ final class JournalRegressionTest {
     }
     @Test void visualSemanticsAndWeather(){
         assertNotEquals(ThermalColors.trend(1),ThermalColors.trend(-1));
-        assertEquals("↑",ThermalColors.arrow(1));assertEquals("↓",ThermalColors.arrow(-1));assertEquals("=",ThermalColors.arrow(0));
+        assertEquals("↑",ThermalColors.arrow(1));assertEquals("↓",ThermalColors.arrow(-1));assertEquals("=",ThermalColors.arrow(0));assertEquals("↓",ThermalColors.arrow(-.04));assertEquals("↑",ThermalColors.arrow(.04));
         assertNotEquals(ThermalColors.gradient(.2),ThermalColors.gradient(.21));
         assertTrue(WeatherReading.dryingFactor(90)<WeatherReading.dryingFactor(20));
         assertTrue(WeatherReading.normalizedWind(10,false)>WeatherReading.normalizedWind(10,true));
