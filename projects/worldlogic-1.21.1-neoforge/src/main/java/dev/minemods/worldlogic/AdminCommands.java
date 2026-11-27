@@ -67,8 +67,8 @@ public final class AdminCommands {
    var l=s.getLevel();if(!l.hasChunkAt(p))return reply(s,"Biome unavailable: unloaded position.");
    var gen=l.getChunkSource().getGenerator();
    var actual=l.getBiome(p).unwrapKey().orElseThrow().location();
-   var preset=gen instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator n?n.generatorSettings().unwrapKey().map(k->k.location().toString()).orElse("unknown"):"non-noise";
-   return reply(s,"Biome: "+actual+" | generator: "+preset+" | Realistic custom biomes: "+BiomeSurvey.supported(gen));
+   var generatorPreset=gen instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator n?n.generatorSettings().unwrapKey().map(k->k.location().toString()).orElse("unknown"):"non-noise";
+   return reply(s,"Biome: "+actual+" | generator: "+generatorPreset+" | Realistic custom biomes: "+BiomeSurvey.supported(gen));
   }));
   root.then(Commands.literal("biome_find").then(Commands.argument("id",StringArgumentType.greedyString()).suggests((c,v)->net.minecraft.commands.SharedSuggestionProvider.suggest(c.getSource().getLevel().getChunkSource().getGenerator().getBiomeSource().possibleBiomes().stream().flatMap(h->h.unwrapKey().stream()).map(k->k.location().toString()),v)).executes(c->{
    var s=c.getSource();var l=s.getLevel();var cache=l.getChunkSource();var generator=cache.getGenerator();
