@@ -15,6 +15,16 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 final class TreeQA {
     static void register(RegisterCommandsEvent e){
         e.getDispatcher().register(Commands.literal("wltreechopper").requires(s->s.hasPermission(2))
+          .then(Commands.literal("qa_effort").executes(c->{
+            double full=ChopEffort.power(1,1,1), tired=ChopEffort.power(.1,1,1);
+            double oneArm=ChopEffort.power(1,1,0), disabled=ChopEffort.power(1,0,1);
+            if(!(full>oneArm&&oneArm>tired&&disabled==0&&ChopEffort.cooldown(tired)>ChopEffort.cooldown(full)
+                &&ChopEffort.depthIncrement(1,6,1,full,.5)>ChopEffort.depthIncrement(1,6,1,tired,.5)
+                &&ChopEffort.depthIncrement(0,6,1,disabled,.99)==0)){
+                c.getSource().sendFailure(Component.literal("TreeChopper effort regression FAILED"));return 0;
+            }
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper effort regression PASS"),false);return 1;
+          }))
           .then(Commands.literal("qa_hit").then(Commands.argument("pos",BlockPosArgument.blockPos())
           .then(Commands.argument("side",StringArgumentType.word()).then(Commands.argument("count",IntegerArgumentType.integer(1,16))
           .executes(c->{

@@ -72,18 +72,21 @@ public final class TreeChopper {
         List<Piece> tree=scan(level,pos,s);
         if(tree.isEmpty()&&!cut)return;
         event.setCanceled(true);
-        if(event.getAction()!=PlayerInteractEvent.LeftClickBlock.Action.START || tree.isEmpty() || !player.mayBuild() || !allowed(level,player,pos,old))return;
+        if(event.getAction()!=PlayerInteractEvent.LeftClickBlock.Action.START || tree.isEmpty() || !player.mayBuild())return;
         Direction side=event.getFace();
         if(side==null||side.getAxis().isVertical()) side=player.getDirection().getOpposite();
+        double power=WorldLogicIntegration.effort(player).power();
+        if(power<=0)return;
         long now=level.getGameTime(); CompoundTag data=player.getPersistentData();
-        if(data.contains(COOLDOWN)&&now-data.getLong(COOLDOWN)<7&&now>=data.getLong(COOLDOWN))return;
+        if(data.contains(COOLDOWN)&&now-data.getLong(COOLDOWN)<ChopEffort.cooldown(power)&&now>=data.getLong(COOLDOWN))return;
+        if(!allowed(level,player,pos,old))return;
         data.putLong(COOLDOWN,now);
         BlockState damaged=cut?old:CUTS.get(s).get().defaultBlockState();
         int before=CutBlock.depth(damaged,side);
         float speed=axe.getDestroySpeed(original(s));
         float resistance=s.equals("dark_oak")||s.equals("mangrove")?1.18f:s.equals("birch")?0.86f:1f;
         double roll=level.random.nextDouble();
-        int step=before==0?1:roll<0.24*resistance?0:roll>Math.max(.57,.93-speed*.035/resistance)?2:1;
+        int step=ChopEffort.depthIncrement(before,speed,resistance,power,roll);
         int next=Math.min(4,before+step);
         damaged=damaged.setValue(CutBlock.side(side),next);
         if(!level.setBlock(pos,damaged,Block.UPDATE_ALL) && !old.equals(damaged))return;
@@ -95,7 +98,7 @@ public final class TreeChopper {
     private record Piece(BlockPos pos,BlockState state,boolean log){}
     /** Conservative initial tree recognizer: straight, single-column trunks with a natural crown. Never loads chunks. */
     private static List<Piece> scan(ServerLevel l,BlockPos base,String species){
-        if(!l.hasChunkAt(base.below()) || !(l.getBlockState(base.below()).is(BlockTags.DIRT)||l.getBlockState(base.below()).is(BlockTags.LOGS))) return List.of();
+        if(!l.hasChunkAt(base.below()) || !(l.getBlockState(base.below()).is(BlockTags.DIRT)||l.getBlockState(base.below()).is(BlockTags.LOGS)||l.getBlockState(base.below()).is(Blocks.MUD)||l.getBlockState(base.below()).is(Blocks.CLAY))) return List.of();
         List<Piece> out=new ArrayList<>();
         BlockState original=original(species);
         int h=1;
