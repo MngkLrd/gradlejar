@@ -118,8 +118,8 @@
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/mahogany_log.png": {
-      "sha256": "d775448cb2481eefb0f379388ac06ddaae50efa561f8ba2f3c5b1d9cb06bd310",
-      "verdict": "FAIL",
+      "sha256": "3edd5d10e7f9deee202265e4d70b85bfd1aeeed84e9ba93a139b93856c50a035",
+      "verdict": "PASS",
       "material_profile": "bark",
       "references": [
         {
@@ -128,9 +128,19 @@
           "sha256": "5fbebd043751f997f36cafec1645deb96e7fb46fc65b6942a67759e55b2d40b3"
         }
       ],
-      "comparison": "The smaller red-brown clusters reduced the diagonal stamp, but the result still reads as generalized fine mottling rather than convincingly varied flaking bark.",
-      "findings": {},
-      "required_rework": "The smaller red-brown clusters reduced the diagonal stamp, but the result still reads as generalized fine mottling rather than convincingly varied flaking bark."
+      "comparison": "Inspected native size, 4x and tiled 3x3 with jungle_log: Jungle bark provides a native tropical bark scale; mahogany deliberately has larger vertically interrupted flakes. Central-left crack bends around an irregular plate at y6–12; the right fissure is longer.",
+      "findings": {
+        "silhouette": "Unequal reddish-brown flaking plates are outlined by winding dark cracks.",
+        "cluster_structure": "Broad connected upper-left and central plates contain smaller light edge groups.",
+        "micro_contrast": "The warm rose-brown edge at x6 y1–2 adjoins a darker recessed face.",
+        "light_and_volume": "Short pale facets occupy raised plate edges; the dark x4 y4–5 split recedes.",
+        "material_continuity": "The entire opaque face uses a coherent warm brown bark ramp, distinct from red cut timber.",
+        "edge_variation": "Central-left crack bends around an irregular plate at y6–12; the right fissure is longer.",
+        "variant_identity": "Mahogany uses a warm fissured flaking structure rather than ebony's dark narrow fibers.",
+        "vanilla_comparison": "Jungle bark provides a native tropical bark scale; mahogany deliberately has larger vertically interrupted flakes.",
+        "grain_direction": "The main cracks run vertically in pieces and branch around localized flakes.",
+        "furrows_and_ridges": "Dark narrow crevices at x4–5 and x11–12 contrast with broad raised irregular plates."
+      }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/mahogany_log_top.png": {
       "sha256": "8afdf494942defce5a7de73981f049d146462b628b81c658427d61e514758be3",
@@ -773,8 +783,8 @@
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/pine_log.png": {
-      "sha256": "6f7ea75291187326d0feaff08500102be53b4bc67dce672bc6506bef51a856b1",
-      "verdict": "FAIL",
+      "sha256": "d20af92af870e48a96bfbe56a142e09030c0bb2cad78124e93e8fa81f402ccdc",
+      "verdict": "PASS",
       "material_profile": "bark",
       "references": [
         {
@@ -783,9 +793,19 @@
           "sha256": "f28e8ce2783a0d14cc6f23904faf6858fba1295290a732735db82b54392574fd"
         }
       ],
-      "comparison": "Orange clusters are too evenly mottled and need larger irregular split plates interleaved with smaller fissures.",
-      "findings": {},
-      "required_rework": "Orange clusters are too evenly mottled and need larger irregular split plates interleaved with smaller fissures."
+      "comparison": "Inspected native size, 4x and tiled 3x3 with spruce_log: Spruce establishes the vertical bark scale; pine uses wider orange raised facets. Left ridge narrows and bends at y6–10 while the right split turns inward lower down.",
+      "findings": {
+        "silhouette": "Long copper-brown bark plates are broken by stepped dark longitudinal splits.",
+        "cluster_structure": "The wide central ridge contains narrow bright groups along the x6–7 upper face.",
+        "micro_contrast": "Short tan highlights inside the plate meet adjacent muted amber and brown pixels.",
+        "light_and_volume": "Dark recessed cracks at x4–5 and x9–10 contrast with raised lighter faces.",
+        "material_continuity": "The surface uses orange-brown wood pigments without bright arbitrary marks.",
+        "edge_variation": "Left ridge narrows and bends at y6–10 while the right split turns inward lower down.",
+        "variant_identity": "Pine has distinctly honey-colored long coarse plates instead of larch's more rust-red grain.",
+        "vanilla_comparison": "Spruce establishes the vertical bark scale; pine uses wider orange raised facets.",
+        "grain_direction": "The winding longitudinal crevices contain short horizontal branch turns at y6 and y13.",
+        "furrows_and_ridges": "Deep furrows and unequal raised plate widths remain readable in the tiled view."
+      }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/cedar_log.png": {
       "sha256": "6003d0c3000ee9aab9d04a7e0d36b7da65e05a0d4e025c8944805f955b978d2e",
@@ -838,8 +858,8 @@
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/fir_log.png": {
-      "sha256": "92d8af63e6dc41ac49227b7eac53c27b6f6c83a4c29e51c9878be84be2e684a6",
-      "verdict": "FAIL",
+      "sha256": "22bac622f1fea4ebf3bd4ef65b9971de4f73652c14de1dfd16dc757e4239d9e5",
+      "verdict": "PASS",
       "material_profile": "bark",
       "references": [
         {
@@ -848,9 +868,19 @@
           "sha256": "3761f4cfc02c88215da85259a2069f7ac43ab647f100fd68a94a22af7c209f9d"
         }
       ],
-      "comparison": "The narrow olive palette is appropriate for younger fir bark, but the final fine mottling lacks a convincing shallow fissure hierarchy.",
-      "findings": {},
-      "required_rework": "The narrow olive palette is appropriate for younger fir bark, but the final fine mottling lacks a convincing shallow fissure hierarchy."
+      "comparison": "Inspected native size, 4x and tiled 3x3 with acacia_log: Acacia gives a grey bark comparison; fir keeps smoother low-contrast plates. The upper left shallow split stops near y9, unlike the lower right crease.",
+      "findings": {
+        "silhouette": "Muted olive-grey bark is composed of shallow vertically elongated plates.",
+        "cluster_structure": "The broad central upper plate has a short pale accent and the lower section breaks into smaller planes.",
+        "micro_contrast": "A short dark resin-blister-like scar at x5–6 y5 joins lighter gray-green neighbors.",
+        "light_and_volume": "Low relief is communicated by restrained dark splits and short pale plate edges.",
+        "material_continuity": "The cool gray-green ramp is consistent with smooth young fir bark.",
+        "edge_variation": "The upper left shallow split stops near y9, unlike the lower right crease.",
+        "variant_identity": "Fir uses quiet olive plates and small horizontal scars rather than coarse amber pine.",
+        "vanilla_comparison": "Acacia gives a grey bark comparison; fir keeps smoother low-contrast plates.",
+        "grain_direction": "The main plates stretch vertically, with limited lateral resin scars.",
+        "furrows_and_ridges": "The narrow recessed x4 and x10 lines interrupt broader grey-green surfaces."
+      }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/willow_log.png": {
       "sha256": "5adf8a658010e3910ae9a738bf57bef449b8af28f421afc0fdf957d58d920857",
@@ -903,8 +933,8 @@
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/alder_log.png": {
-      "sha256": "3b0e4458d7b0f8fc6448f3fe74db41823a9dcd14a6d1803e0085bce07fb355fd",
-      "verdict": "FAIL",
+      "sha256": "d2c0c2c51ecebc5cbdcac8b5e6a3cc4e3423dae18f8e112737860f2730a24b52",
+      "verdict": "PASS",
       "material_profile": "bark",
       "references": [
         {
@@ -913,13 +943,23 @@
           "sha256": "060c93128fb65aa350a84e4b6576e616c47d40211bbe537cfe923a81d072e30c"
         }
       ],
-      "comparison": "The revised fine texture still looks mechanically mottled and needs identifiable irregular lenticels and shallow wood grain.",
-      "findings": {},
-      "required_rework": "The revised fine texture still looks mechanically mottled and needs identifiable irregular lenticels and shallow wood grain."
+      "comparison": "Inspected native size, 4x and tiled 3x3 with oak_log: Oak shows native clustered bark relief; alder deliberately keeps shallower grain and lateral marks. The top scar is three pixels wide while the lower left mark has a different shape and height.",
+      "findings": {
+        "silhouette": "Warm grey-brown younger bark has short elongated dark lenticels within pale patches.",
+        "cluster_structure": "The upper-left and lower-left raised color groups have distinct pale facets and darker boundaries.",
+        "micro_contrast": "Small shallow marks at x4–6 y2 and x10–12 y6 contrast locally with warm midtones.",
+        "light_and_volume": "Dark lenticels and neighboring lighter areas create subtle surface relief, not deep carved holes.",
+        "material_continuity": "The brown-gray palette stays muted across the continuous bark surface.",
+        "edge_variation": "The top scar is three pixels wide while the lower left mark has a different shape and height.",
+        "variant_identity": "Alder is the warm, relatively smooth lenticelled surface compared with dark vertical oak and silver beech.",
+        "vanilla_comparison": "Oak shows native clustered bark relief; alder deliberately keeps shallower grain and lateral marks.",
+        "grain_direction": "The longer patches give vertical grain cues, crossed by short species-appropriate lenticels.",
+        "furrows_and_ridges": "The subtle ridges at x5 y5–8 and lower central scars preserve a shallow rather than deeply fissured texture."
+      }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/maple_log.png": {
-      "sha256": "061544cc28437f0d1f40474989a8c4175bdd5b6d0e3171a9d47cea58481e4878",
-      "verdict": "FAIL",
+      "sha256": "134a5f7fec41915de556d61afd4d6f6982d10cc6d9d7f6b0979493f07e048e5b",
+      "verdict": "PASS",
       "material_profile": "bark",
       "references": [
         {
@@ -928,13 +968,23 @@
           "sha256": "3761f4cfc02c88215da85259a2069f7ac43ab647f100fd68a94a22af7c209f9d"
         }
       ],
-      "comparison": "The repeating short grey-green groups form a regular mesh; break the rhythm with irregular longer scars.",
-      "findings": {},
-      "required_rework": "The repeating short grey-green groups form a regular mesh; break the rhythm with irregular longer scars."
+      "comparison": "Inspected native size, 4x and tiled 3x3 with acacia_log: Acacia provides comparable native grey grain; maple's ridges have less contrast and altered branching. The left crack bends at y4 and y10 while the center-right crack shifts differently.",
+      "findings": {
+        "silhouette": "Grey-green longitudinal plates are separated by thin bending shallow cracks.",
+        "cluster_structure": "Long central pale groups have smaller breaks at y5–8 and lower branch junctions.",
+        "micro_contrast": "Restrained mid-grey and olive values near x3–4 y4 soften the narrow furrow edge.",
+        "light_and_volume": "The bright ridge near x6–7 contrasts with the shaded winding x9–10 fissure.",
+        "material_continuity": "The opaque surface retains a restrained cool grey-brown bark ramp.",
+        "edge_variation": "The left crack bends at y4 and y10 while the center-right crack shifts differently.",
+        "variant_identity": "Maple has continuous narrow grey creases, distinct from fir's blisters and alder's lenticels.",
+        "vanilla_comparison": "Acacia provides comparable native grey grain; maple's ridges have less contrast and altered branching.",
+        "grain_direction": "The broken vertical lines continue over tile edges with small changes in width.",
+        "furrows_and_ridges": "The x3–4 and x9–10 crevices run alongside irregular pale ridge faces."
+      }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/baobab_log.png": {
-      "sha256": "1a17d2ad4a7125be04ea79e2724b70210a9334127a638f71bb0afe009d3e946f",
-      "verdict": "FAIL",
+      "sha256": "290e495d3bbf8ddf980e0b58fdfcd1d9b8b789cc188b1a3118d6af24e4032afa",
+      "verdict": "PASS",
       "material_profile": "bark",
       "references": [
         {
@@ -943,9 +993,19 @@
           "sha256": "cebcca1885e46164bf028cb7d1c2df6cb391da0e792b3d9c99641577d0c8baaf"
         }
       ],
-      "comparison": "The broad pale folds are too weak; the tiled surface repeats narrow pale marks without convincing smooth corky relief.",
-      "findings": {},
-      "required_rework": "The broad pale folds are too weak; the tiled surface repeats narrow pale marks without convincing smooth corky relief."
+      "comparison": "Inspected native size, 4x and tiled 3x3 with birch_log: Birch is a smooth bark native-scale comparison; baobab deliberately uses pale subdued broad relief. The left crease turns inward at y5–7 while the middle line turns lower at y11.",
+      "findings": {
+        "silhouette": "Broad muted taupe folds and thin shallow curved creases identify smoother baobab bark.",
+        "cluster_structure": "The three wide pale faces contain narrower highlights and interruptions near their middle and lower ends.",
+        "micro_contrast": "Adjacent sand-grey values produce gentle local contrast at x4 y9–10 rather than hard black grooves.",
+        "light_and_volume": "Long broad raised planes and restrained shaded creases model a fleshy trunk surface.",
+        "material_continuity": "The pale corky grey-brown palette continues uniformly through the opaque tile.",
+        "edge_variation": "The left crease turns inward at y5–7 while the middle line turns lower at y11.",
+        "variant_identity": "Baobab uses pale broad folds rather than conifer fissures or the high-contrast markings of birch.",
+        "vanilla_comparison": "Birch is a smooth bark native-scale comparison; baobab deliberately uses pale subdued broad relief.",
+        "grain_direction": "Vertical folds bend slightly and carry short local scars rather than uniform dark stripes.",
+        "furrows_and_ridges": "Shallow dark crease segments at x4 and x9 interrupt wide pale ridge surfaces."
+      }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/palm_log.png": {
       "sha256": "57936fd0f010c1369b2436fbe7a4a23f690604dadf26f7e7033207b4c39105e8",
@@ -973,8 +1033,8 @@
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/date_palm_log.png": {
-      "sha256": "8da50657dac4f2925b28209dd0fc4f62d8f690b512163afa0c90532970c85af6",
-      "verdict": "FAIL",
+      "sha256": "b40a9aa123ecc895615992ddae1c6731845b2312ff037cd344fde71f73f79cd9",
+      "verdict": "PASS",
       "material_profile": "bark",
       "references": [
         {
@@ -983,9 +1043,19 @@
           "sha256": "5fbebd043751f997f36cafec1645deb96e7fb46fc65b6942a67759e55b2d40b3"
         }
       ],
-      "comparison": "The scar courses have become a repetitive grid, not individually recognizable broken leaf bases. Further redraw required.",
-      "findings": {},
-      "required_rework": "The scar courses have become a repetitive grid, not individually recognizable broken leaf bases. Further redraw required."
+      "comparison": "Inspected native size, 4x and tiled 3x3 with jungle_log: Jungle bark supplies tropical log scale; palm leaf-base scars are intentionally anatomical rather than dicot fissures. Upper-left scar ends at y4; the central larger scar reaches y9 with different width and edges.",
+      "findings": {
+        "silhouette": "Staggered irregular diamond-shaped leaf-base scars identify a date palm stem.",
+        "cluster_structure": "Broad ochre scar faces have small pale upper-edge groups and dark lower notches.",
+        "micro_contrast": "Neighboring golden and umber pixels distinguish individual torn leaf-base surfaces.",
+        "light_and_volume": "Pale upper facets and darker angled lower edges give each scar a shallow protruding face.",
+        "material_continuity": "The connected sandy-brown material remains opaque between fibrous scars.",
+        "edge_variation": "Upper-left scar ends at y4; the central larger scar reaches y9 with different width and edges.",
+        "variant_identity": "Date palm retains a staggered diamond scar pattern rather than coconut's thin horizontal scar bands.",
+        "vanilla_comparison": "Jungle bark supplies tropical log scale; palm leaf-base scars are intentionally anatomical rather than dicot fissures.",
+        "grain_direction": "Short vertical fibre segments between staggered lateral scars provide the trunk's underlying direction.",
+        "furrows_and_ridges": "Irregular shadowed lower scar boundaries surround raised ochre faces; diamond repetition is species-specific."
+      }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/pine_log_top.png": {
       "sha256": "ff2089ef621c9484ba4b076e62c57ea552b3e27797fdd698bd95a28f593295fe",
@@ -1560,9 +1630,67 @@
         "species_silhouette": "Young date palm with vertical spear crown",
         "foliage_attachment": "Frond bases converge at top of stem"
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/larch_planks.png": {
+      "sha256": "0486f5af32d59649ec1826e3755f492780fb46790a45db7e49836a6d1f3d067a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "2bccdc1ef269b7ae6050d46b70071ead5c3ad4c3a16e3f6baf24fc629752b8bc"
+        },
+        {
+          "id": "minecraft:block/mangrove_planks",
+          "minecraft": "1.21.1",
+          "sha256": "b9b9969300ee9aa3e69c2dd908616ee3dfe5211fbf5706ea787803fd12196d3a"
+        }
+      ],
+      "comparison": "Inspected the native tile and nine adjacent tiles with dark oak and mangrove: four horizontal board courses and staggered end joints remain clear, with orange larch heartwood rather than the darker vanilla palette.",
+      "findings": {
+        "silhouette": "Four horizontal sawn board courses are defined by narrow shadow seams.",
+        "cluster_structure": "The top course contains long midtone areas and a short lighter area next to the left joint.",
+        "micro_contrast": "Subdued orange-tan tones alternate along the horizontal grain without random high-contrast flecks.",
+        "light_and_volume": "Thin pale upper edges and dark lower joints separate adjacent wooden courses.",
+        "material_continuity": "All sixteen rows remain opaque and use a coherent warm timber ramp.",
+        "edge_variation": "End joints shift from the left to the right of successive courses, breaking vertical grid alignment.",
+        "variant_identity": "Orange honey-brown wood differs from the cool muted beige of willow.",
+        "vanilla_comparison": "The shared four-course construction follows the owner-approved vanilla plank convention, as in dark oak and mangrove.",
+        "functional_material_cues": "Long horizontal grain and shallow dark seams describe finished boards rather than raw bark."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/willow_planks.png": {
+      "sha256": "ec0e812b2022b1a0f201f9f388a539a08ab80b1f0ea1a18799780e8cc1bafe9b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "2bccdc1ef269b7ae6050d46b70071ead5c3ad4c3a16e3f6baf24fc629752b8bc"
+        },
+        {
+          "id": "minecraft:block/mangrove_planks",
+          "minecraft": "1.21.1",
+          "sha256": "b9b9969300ee9aa3e69c2dd908616ee3dfe5211fbf5706ea787803fd12196d3a"
+        }
+      ],
+      "comparison": "Inspected native and tiled 3x3 willow against dark oak and mangrove: the board pattern remains recognizable at 16 pixels; the lighter olive-beige face is an intentional sawn species variant.",
+      "findings": {
+        "silhouette": "Four flat horizontal plank courses have a visible one-pixel joint rhythm.",
+        "cluster_structure": "Large connected beige areas carry short muted ochre grain changes near the middle and right ends.",
+        "micro_contrast": "Soft adjacent straw and olive-beige shades are quieter than the orange larch wood.",
+        "light_and_volume": "Paler upper edges suggest a shallow board lip above the narrow dark joints.",
+        "material_continuity": "The continuous opaque wood faces preserve one cool muted yellow-brown palette.",
+        "edge_variation": "The short vertical joins fall in different places across the four horizontal courses.",
+        "variant_identity": "Willow's muted pale olive tone differs from honey-orange larch and darker processed timber.",
+        "vanilla_comparison": "Like vanilla dark oak and mangrove planks, willow deliberately retains a shared processed-board motif.",
+        "functional_material_cues": "Horizontal sawn grain and staggered end joints make a clear timber construction surface."
+      }
     }
   },
-  "review_status": "DRAFT/BLOCKED: 55 accepted of 118. Rejected and missing records remain.",
+  "review_status": "DRAFT/BLOCKED: 64 accepted of 118. Rejected and missing records remain.",
   "reference_provenance": "Actual PNGs from InventivetalentDev/minecraft-assets, 1.21.1 branch; inspected at original and nearest-neighbor 4x. Official client SHA-1 could not be verified in this environment. No vanilla assets included.",
   "client_status": "NOT_RUN"
 }
