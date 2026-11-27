@@ -98,6 +98,6 @@ public final class GeoModel {
  }
  static boolean drainageFixture(){
   double[] h={9,8,7,8,6,4,7,4,0};double[] rain=new double[9];Arrays.fill(rain,1);
-  double[] f=accumulate(h,rain,3);return Math.abs(f[8]-9)<1e-9&&incision(100,50)>incision(100,1)&&incision(50,50)==0;
+  double[] f=accumulate(h,rain,3);double[] two={2,4,9,4,2,1,3,8,3,1,0,2,7,2,0,1,3,8,3,1,2,4,9,4,2};double[] r=new double[25];Arrays.fill(r,1);double[] split=accumulate(two,r,5);return Math.abs(f[8]-9)<1e-9&&Math.abs(split[10]+split[14]-25)<1e-9&&split[10]>1&&split[14]>1&&incision(100,50)>incision(100,1)&&incision(50,50)==0;
  }
 }
