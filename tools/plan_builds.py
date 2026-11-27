@@ -86,7 +86,7 @@ def select_projects(requested,changed=None):
         if q.get("player_scenario") and any(path==q["player_scenario"] or path.startswith("tools/qa/bot/") or path in ("tools/qa/player_suite.py","tools/qa/virtual_player.py") for path in changed): projects.add(d)
         watches=q.get("watch_paths",[])
         if any(path==root or path.startswith(root+"/") for path in changed for root in p.get("shared_sources",[])): projects.add(d)
-        if scenario in changed or any(path in changed for path in ("tools/qa/compatibility.json","tools/qa/common.py","tools/qa/static.py","tools/qa/assets.py","tools/qa/server.py","tools/qa/gate.py")) or any(fnmatch.fnmatch(path,pattern) or path.startswith(pattern.rstrip("/")+"/") for path in changed for pattern in watches):
+        if scenario in changed or any(path in changed for path in ("tools/qa/compatibility.json","tools/qa/common.py","tools/qa/static.py","tools/qa/assets.py","tools/qa/server.py","tools/qa/gate.py","tools/qa/coverage.py","tools/qa/coverage-baseline.json")) or any(fnmatch.fnmatch(path,pattern) or path.startswith(pattern.rstrip("/")+"/") for path in changed for pattern in watches):
             projects.add(d)
     if len(projects)>256: raise ValueError("GitHub matrix exceeds 256 targets; dispatch enrolled cohorts separately")
     return sorted(projects)

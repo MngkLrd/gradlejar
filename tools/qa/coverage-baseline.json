@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "source_commit": "fbd8f70356c21157ee2d3893facc8373ce620762",
+  "projects": {
+    "projects/fragileglass-fabric-1.20.1": "ae0b53180a37a4c060b5081928fa6424a6699600",
+    "projects/fragileglass-fabric-1.21.1": "8dfa2d0d1b0b18c67306b10c0ed6676d9102494a",
+    "projects/fragileglass-fabric-1.21.4": "90c612ba2457166255bed1bb5f962354d7d31dba",
+    "projects/fragileglass-fabric-26.1.2": "d54fc581c36ade2b9ee39ee74d0fa32948897270",
+    "projects/fragileglass-fabric-26.2": "64b9bce1c3de798cf6bcea03cd7f28c9763265c7",
+    "projects/fragileglass-fabric-26.3": "52d610179af6eb8dd3b20fb9f8ea266419cb7637",
+    "projects/fragileglass-neoforge-26.1.2": "16eac4362db890eae15f9232fbecf1f26531e1fb",
+    "projects/fragileglass-neoforge-26.2": "0f6577778ebf89f910f63f953077f2beb2ce6037",
+    "projects/fragileglass-neoforge-26.3": "742e2149f051a173249281b58ce10b259be4ac61",
+    "projects/naturalbuoyancy-fabric-26.3": "a06f3dfe47d52215e3f0739cdfd8447184749868",
+    "projects/naturalbuoyancy-neoforge-26.3": "5a9e2d0be5a888d0124b3636a1488c2f047848c6"
+  }
+}
