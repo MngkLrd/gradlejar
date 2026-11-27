@@ -76,6 +76,10 @@
       "assertion": true
     },
     {
+      "command": "setblock 5 198 1 minecraft:stone",
+      "expect": "Changed the block"
+    },
+    {
       "command": "setblock 5 199 1 minecraft:sand",
       "expect": "Changed the block"
     },
@@ -107,6 +111,10 @@
       "command": "execute if block 5 200 1 minecraft:air",
       "expect": "Test passed",
       "assertion": true
+    },
+    {
+      "command": "setblock 7 198 1 minecraft:stone",
+      "expect": "Changed the block"
     },
     {
       "command": "setblock 7 199 1 minecraft:sand",
@@ -424,6 +432,10 @@
       "command": "execute if block 11 200 4 minecraft:air",
       "expect": "Test passed",
       "assertion": true
+    },
+    {
+      "command": "setblock 1 198 7 minecraft:stone",
+      "expect": "Changed the block"
     },
     {
       "command": "setblock 1 199 7 minecraft:sand",

@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:add",
+  "argument1": {
+    "type": "minecraft:mul",
+    "argument1": 4,
+    "argument2": {
+      "type": "minecraft:quarter_negative",
+      "argument": {
+        "type": "minecraft:mul",
+        "argument1": {
+          "type": "minecraft:add",
+          "argument1": "worldlogic:realistic/depth",
+          "argument2": {
+            "type": "minecraft:mul",
+            "argument1": "worldlogic:realistic/jaggedness",
+            "argument2": {
+              "type": "minecraft:half_negative",
+              "argument": {
+                "type": "minecraft:noise",
+                "noise": "minecraft:jagged",
+                "xz_scale": 1500,
+                "y_scale": 0
+              }
+            }
+          }
+        },
+        "argument2": "worldlogic:realistic/factor"
+      }
+    }
+  },
+  "argument2": {
+    "type": "minecraft:mul",
+    "argument1": "minecraft:overworld/base_3d_noise",
+    "argument2": "worldlogic:realistic/roughness"
+  }
+}

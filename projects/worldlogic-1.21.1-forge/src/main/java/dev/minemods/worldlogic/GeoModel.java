@@ -27,7 +27,7 @@ public final class GeoModel {
  private record Sample(int x,int z,Surface surface){}
  private final ThreadLocal<Sample> lastSample=new ThreadLocal<>();
  private final double climatePhase;
- private record ClimateSample(int x,int z,double thermal,double humidity,double biomeTemperature){}
+ private record ClimateSample(int x,int z,double thermal,double humidity,double biomeTemperature,double latitude,double windX,double windZ){}
  private final ThreadLocal<ClimateSample> lastClimate=new ThreadLocal<>();
  private record Tile(double[] height,double[] flow){}
  private record Surface(double height,double flow){}
@@ -178,8 +178,12 @@ public final class GeoModel {
   double lift=clamp((h-near)*.006,-.12,.24);
   double shadow=clamp((Math.max(near,Math.max(mid,far))-h-16)*.006,0,.60);
   double humidity=clamp(m(x,z)*.78+equatorial+subtropical+temperate+ocean-.10+lift-shadow,-1,1);
-  ClimateSample made=new ClimateSample(x,z,thermal,humidity,biomeTemperature(thermal,humidity,h));
+  ClimateSample made=new ClimateSample(x,z,thermal,humidity,biomeTemperature(thermal,humidity,h),latitude,dx,dz);
   lastClimate.set(made);return made;
+ }
+ dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate regional(int x,int z){
+  Surface s=surface(x,z);ClimateSample c=climate(x,z,s.height);
+  return new dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate(c.thermal,(c.humidity+1)*.5,c.latitude*90,c.windX,c.windZ,s.height);
  }
  double value(String field,int x,int z){
   Sample previous=lastSample.get();

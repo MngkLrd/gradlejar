@@ -54,6 +54,7 @@ public final class ReleaseChecks {
   if(!Boolean.getBoolean("worldlogic.ci"))return;
   run();var l=e.getServer().overworld();
   TerrainChecks.verify(l);
+  ApiChecks.verify(l);
   check(Material.block(Blocks.GLASS.defaultBlockState(),"glass"),"glass tag");
   check(Material.block(Blocks.IRON_BLOCK.defaultBlockState(),"ricochet_metal"),"metal tag");
   check(Material.item(new ItemStack(Items.GLASS_BOTTLE),"fragile_cargo"),"fragile cargo tag");

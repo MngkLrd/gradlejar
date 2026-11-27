@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:iron_block",
+    "minecraft:gold_block",
+    "minecraft:copper_block",
+    "minecraft:raw_iron_block",
+    "minecraft:raw_gold_block",
+    "minecraft:raw_copper_block",
+    "minecraft:obsidian",
+    "minecraft:glass",
+    "minecraft:glass_bottle",
+    "minecraft:egg"
+  ]
+}

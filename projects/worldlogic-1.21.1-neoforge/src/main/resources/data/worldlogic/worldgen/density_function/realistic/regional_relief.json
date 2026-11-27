@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:flat_cache",
+  "argument": {
+    "type": "minecraft:mul",
+    "argument1": "worldlogic:realistic/land_mask",
+    "argument2": {
+      "type": "minecraft:add",
+      "argument1": {
+        "type": "minecraft:mul",
+        "argument1": 0.12,
+        "argument2": {
+          "type": "minecraft:mul",
+          "argument1": "worldlogic:realistic/upland_mask",
+          "argument2": "worldlogic:realistic/ridge_relief"
+        }
+      },
+      "argument2": {
+        "type": "minecraft:mul",
+        "argument1": -0.035,
+        "argument2": "worldlogic:realistic/valley_cut"
+      }
+    }
+  }
+}

@@ -19,8 +19,8 @@ public final class Survival {
  private static final Map<Player,Long> LAST_WORK=new WeakHashMap<>();
  static boolean active(Player p){return p.level() instanceof ServerLevel&&!p.isCreative()&&!p.isSpectator();}
  public static double fatigue(Player p){return Math.max(0,Math.min(100,p.getPersistentData().getDouble(FATIGUE)));}
- static void rest(Player p,double amount){if(active(p)&&Rules.on("exertion"))p.getPersistentData().putDouble(FATIGUE,Math.max(0,fatigue(p)-amount));}
- static void work(Player p,double amount){if(active(p)&&Rules.on("exertion")){LAST_WORK.put(p,p.level().getGameTime());p.getPersistentData().putDouble(FATIGUE,Math.min(100,fatigue(p)+amount*Rules.strength("movement")));}}
+ public static void rest(Player p,double amount){if(active(p)&&Rules.on("exertion"))p.getPersistentData().putDouble(FATIGUE,Math.max(0,fatigue(p)-amount));}
+ public static void work(Player p,double amount){if(active(p)&&Rules.on("exertion")){LAST_WORK.put(p,p.level().getGameTime());p.getPersistentData().putDouble(FATIGUE,Math.min(100,fatigue(p)+amount*Rules.strength("movement")));}}
  public static void mine(BlockEvent.BreakEvent e){if(!e.isCanceled()&&active(e.getPlayer())){float hardness=e.getState().getDestroySpeed(e.getLevel(),e.getPos());if(hardness>0)work(e.getPlayer(),Math.min(5,.6+hardness*.5));}}
  public static void jump(LivingEvent.LivingJumpEvent e){if(e.getEntity() instanceof Player p)work(p,1.2);}
  public static void hit(LivingHurtEvent e){if(!e.isCanceled()&&e.getSource().getEntity() instanceof Player p)work(p,1.8);}
@@ -59,8 +59,8 @@ public final class Survival {
    }
    if(smoke>=40){p.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,35,0,false,false,false));if(smoke>=76){p.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,35,0,false,false,false));if(now%80==0)p.hurt(l.damageSources().generic(),1);}}
   }
-  if(now%80==0&&(Rules.on("exertion")&&fatigue(p)>=50||Rules.on("injuries")&&tag.getLong(INJURY)>now||Rules.on("smoke_inhalation")&&tag.getInt(SMOKE)>=40)){
-   String message=(Rules.on("exertion")?"Fatigue "+(int)fatigue(p)+"%  ":"")+(Rules.on("injuries")&&tag.getLong(INJURY)>now?"Injured  ":"")+(Rules.on("smoke_inhalation")&&tag.getInt(SMOKE)>=40?"Smoke! Get fresh air":"");p.displayClientMessage(Component.literal(message.strip()),true);
+  if(now%80==0&&(Rules.on("injuries")&&tag.getLong(INJURY)>now||Rules.on("smoke_inhalation")&&tag.getInt(SMOKE)>=40)){
+   String message=(Rules.on("injuries")&&tag.getLong(INJURY)>now?"Injured  ":"")+(Rules.on("smoke_inhalation")&&tag.getInt(SMOKE)>=40?"Smoke! Get fresh air":"");p.displayClientMessage(Component.literal(message.strip()),true);
   }
  }
 }

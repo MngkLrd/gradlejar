@@ -31,6 +31,21 @@ public final class GeoDensity implements DensityFunction {
   if(!Set.of("offset","continents","erosion","ridges","temperature","humidity","climate_temperature","climate_humidity").contains(field))throw new IllegalArgumentException("Unknown geography field: "+field);
   this.field=field;this.continental=continental;this.tectonic=tectonic;this.detail=detail;this.moisture=moisture;this.model=model(continental,tectonic,detail,moisture);
  }
+ /** Internal server adapter for the public API; uses the exact existing seeded noise instances. */
+ public static java.util.Optional<dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate> regional(net.minecraft.server.level.ServerLevel level,int x,int z){
+  var cache=level.getChunkSource();
+  if(!(cache.getGenerator() instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator gen)
+    ||!gen.generatorSettings().unwrapKey().map(k->k.location().equals(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("worldlogic","earthlike_climate"))).orElse(false))
+   return java.util.Optional.empty();
+  var state=cache.randomState();var registry=level.registryAccess().lookupOrThrow(Registries.NOISE);
+  java.util.function.Function<net.minecraft.resources.ResourceKey<net.minecraft.world.level.levelgen.synth.NormalNoise.NoiseParameters>,NoiseHolder> noise=
+   k->new NoiseHolder(registry.getOrThrow(k),state.getOrCreateNoise(k));
+  var c=noise.apply(net.minecraft.world.level.levelgen.Noises.CONTINENTALNESS);
+  var t=noise.apply(net.minecraft.world.level.levelgen.Noises.RIDGE);
+  var de=noise.apply(net.minecraft.world.level.levelgen.Noises.EROSION);
+  var m=noise.apply(net.minecraft.world.level.levelgen.Noises.VEGETATION);
+  return java.util.Optional.of(model(c,t,de,m).regional(x,z));
+ }
  @Override public double compute(FunctionContext c){return model.value(field,c.blockX(),c.blockZ());}
  @Override public void fillArray(double[] a,ContextProvider p){p.fillAllDirectly(a,this);}
  @Override public DensityFunction mapAll(Visitor v){return v.apply(new GeoDensity(field,v.visitNoise(continental),v.visitNoise(tectonic),v.visitNoise(detail),v.visitNoise(moisture)));}

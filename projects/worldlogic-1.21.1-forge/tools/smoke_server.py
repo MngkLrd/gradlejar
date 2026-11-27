@@ -1,4 +1,4 @@
-"""Production-only RC19 regression: fresh geography worlds on baseline and reported Forge."""
+"""Production-only RC20 regression: fresh geography worlds on baseline and reported Forge."""
 import hashlib, json, os, pathlib, re, shutil, signal, subprocess, sys, time, urllib.request, zipfile
 
 project = pathlib.Path(sys.argv[1]).resolve()
@@ -56,7 +56,7 @@ def run(root,args,seed):
         try:
             while time.monotonic()-start<100:
                 content=log.read_text(errors="replace")
-                if all(marker in content for marker in ("Done (","WORLDLOGIC_CORE_TESTS_PASSED","WORLDLOGIC_GEOGRAPHY_AGGREGATE","WORLDLOGIC_GENERATED_SPAWN","WORLDLOGIC_SPAWN_DRY","WORLDLOGIC_CACHE_EXACT_PASSED","WORLDLOGIC_CLIMATE_FIXTURES_PASSED","WORLDLOGIC_CLIMATE_SURVEY_PASSED","WORLDLOGIC_CLIMATE_PHASE")):
+                if all(marker in content for marker in ("Done (","WORLDLOGIC_CORE_TESTS_PASSED","WORLDLOGIC_GEOGRAPHY_AGGREGATE","WORLDLOGIC_GENERATED_SPAWN","WORLDLOGIC_SPAWN_DRY","WORLDLOGIC_CACHE_EXACT_PASSED","WORLDLOGIC_CLIMATE_FIXTURES_PASSED","WORLDLOGIC_CLIMATE_SURVEY_PASSED","WORLDLOGIC_CLIMATE_PHASE","WORLDLOGIC_API_CHECKS_PASSED")):
                     duration=re.search(r"Done \(([0-9.]+)s\)",content)
                     assert duration, "missing startup duration"
                     print("WORLDLOGIC_FRESH_WORLD",root.name,seed,"startup_seconds",duration.group(1),"elapsed",round(time.monotonic()-start,2),flush=True)
