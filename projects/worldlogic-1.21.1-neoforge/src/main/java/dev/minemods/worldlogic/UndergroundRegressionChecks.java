@@ -78,7 +78,15 @@ final class UndergroundRegressionChecks{
   for(var pos:existing)require(chunk.getBlockState(pos).isAir(),"original noise cavity refilled");
   var h=gen.getBiomeSource().getNoiseBiome(center.getX()>>2,surface>>2,center.getZ()>>2,state.sampler());
   int converted=NaturalWaterGeneration.convertChunk(chunk,Optional.empty(),h);
-  for(var section:chunk.getSections())require(!section.maybeHas(s->s.is(Blocks.WATER)),"vanilla standalone water remains");
+  // Palettes may retain unused entries; inspect actual blocks, not maybeHas's conservative palette query.
+  int actualNative=0;
+  for(int x=ch.getMinBlockX();x<ch.getMinBlockX()+16;x++)for(int z=ch.getMinBlockZ();z<ch.getMinBlockZ()+16;z++)for(int y=-256;y<512;y++){
+   var pos=p.set(x,y,z);var block=chunk.getBlockState(pos);
+   require(!block.is(Blocks.WATER),"vanilla standalone water remains at "+pos);
+   if(block.getFluidState().is(FluidTags.WATER)&&!block.getFluidState().isEmpty())actualNative++;
+  }
+  require(converted>0&&actualNative>=converted,"native water actually placed");
+  require(NaturalWaterGeneration.convertChunk(chunk,Optional.empty(),h)==0,"water conversion idempotent");
   for(var pos:existing)require(chunk.getBlockState(pos).isAir(),"water conversion refilled noise cavity");
   require(chunk.getBlockState(p.set(center.getX(),-256,center.getZ())).is(Blocks.BEDROCK),"bedrock after production passes");
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_UNDERGROUND_REGRESSION generatedColumns=256 originalAir={} shaftOpen={} nativeWater={} eligibleStructureBiomes={}",existing.size(),open,converted,eligible);

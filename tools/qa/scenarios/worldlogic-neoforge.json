@@ -213,6 +213,60 @@
       "command": "worldlogic qa underground_regression",
       "expect": "WORLDLOGIC_UNDERGROUND_REGRESSION_PASSED",
       "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1",
+      "command": "worldlogic qa biome_survey_0_0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2",
+      "command": "worldlogic qa biome_survey_0_1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3",
+      "command": "worldlogic qa biome_survey_0_2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4",
+      "command": "worldlogic qa biome_survey_0_3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1",
+      "command": "worldlogic qa biome_survey_1_0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2",
+      "command": "worldlogic qa biome_survey_1_1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3",
+      "command": "worldlogic qa biome_survey_1_2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4",
+      "command": "worldlogic qa biome_survey_1_3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "All 61 biomes reached in seeded generation survey",
+      "command": "worldlogic qa biome_coverage",
+      "expect": "WORLDLOGIC_BIOME_COVERAGE_PASSED",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -767,6 +821,49 @@
         {
           "backend": "server",
           "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "all-biomes-seeded-reachability",
+      "kind": "mechanic",
+      "subject": "Every registered biome reached on actual seeded climate grid, surface height checked for new surface classes",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 1 part 1"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 1 part 2"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 1 part 3"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 1 part 4"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 2 part 1"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 2 part 2"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 2 part 3"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 2 part 4"
+        },
+        {
+          "backend": "server",
+          "name": "All 61 biomes reached in seeded generation survey"
         }
       ]
     }

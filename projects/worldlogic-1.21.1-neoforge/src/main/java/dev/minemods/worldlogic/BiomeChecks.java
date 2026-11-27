@@ -56,4 +56,40 @@ public final class BiomeChecks {
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_SURVEY seed={} surface={} subterranean={} depthSamples={} unsampled={}",seed,seen.size(),subsurface,depthSamples,missing);
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_UNIFIED seed={} heightSamples=25 maxDelta={} biomeClasses={}",seed,maxDelta,seen);
  }
+ // Broad real-seed reachability audit in independent bounded server commands.
+ private static final Map<ServerLevel,Set<String>> COVERAGE=new WeakHashMap<>();
+ public static void verifyCoveragePart(ServerLevel l,long seed,int band,boolean reset){
+  var gen=generator(l,"realistic_unified");
+  var state=RandomState.create(gen.generatorSettings().value(),l.registryAccess().lookupOrThrow(Registries.NOISE),seed);
+  if(reset)COVERAGE.remove(l);
+  var seen=COVERAGE.computeIfAbsent(l,v->new TreeSet<>());
+  var bounds=LevelHeightAccessor.create(gen.getMinY(),gen.getGenDepth());
+  int before=seen.size(),samples=0;
+  for(int iz=band*10-20;iz<band*10-10;iz++)for(int ix=-14;ix<=14;ix++){
+   int x=ix*2048,z=iz*2048,model=BiomeSurvey.modelY(state,x,z);
+   int guess=Math.max(gen.getSeaLevel(),model);
+   var predicted=BiomeSurvey.at(gen,state,x,guess,z);
+   if(!seen.contains(predicted.toString())){
+    int actual=Math.max(gen.getSeaLevel(),gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state));
+    var found=BiomeSurvey.at(gen,state,x,actual,z);
+    if(seen.add(found.toString()))org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_REACHED {} seed={} x={} y={} z={}",found,seed,x,actual,z);
+   }
+   if(model>=75)for(int y:new int[]{-180,model-80}){
+    var id=BiomeSurvey.at(gen,state,x,y,z);
+    if(id.getPath().endsWith("cavern")&&seen.add(id.toString()))org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_REACHED {} seed={} x={} y={} z={}",id,seed,x,y,z);
+   }
+   samples++;
+  }
+  require(samples==290,"complete biome audit part");
+  org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_COVERAGE_PART seed={} band={} points={} new={} cumulative={}",seed,band,samples,seen.size()-before,seen.size());
+ }
+ public static void verifyCoverage(ServerLevel l){
+  var gen=generator(l,"realistic_unified");
+  var seen=COVERAGE.getOrDefault(l,Set.of());
+  var missing=new TreeSet<String>();
+  for(var h:gen.getBiomeSource().possibleBiomes())missing.add(h.unwrapKey().orElseThrow().location().toString());
+  missing.removeAll(seen);
+  require(missing.isEmpty(),"actual seeded biome coverage "+seen.size()+"/61; unsampled="+missing);
+ }
+
 }
