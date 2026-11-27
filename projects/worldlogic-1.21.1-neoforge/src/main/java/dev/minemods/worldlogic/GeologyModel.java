@@ -12,7 +12,7 @@ public final class GeologyModel {
  public record Body(Ore ore,double x,double y,double z,double along,double across,double vertical,double angle,double dip,double grade,long salt){
   public double score(int px,int py,int pz){
    double dx=px-x,dz=pz-z,a=dx*Math.cos(angle)+dz*Math.sin(angle),b=-dx*Math.sin(angle)+dz*Math.cos(angle);
-   double h=py-y-a*dip-1.8*Math.sin(a*.075+salt%13);
+   double h=py-y-a*dip-Math.min(1.8,vertical*.38)*Math.sin(a*.075+salt%13);
    return a*a/(along*along)+b*b/(across*across)+h*h/(vertical*vertical);
   }
   public boolean contains(int px,int py,int pz){double s=score(px,py,pz);return s<=1&&unit(hash(salt,px,py,pz))<grade*(1-.65*s);}
@@ -22,6 +22,7 @@ public final class GeologyModel {
  public record Cave(double x,double y,double z,double along,double across,double vertical,double angle,double dip,int waterY,boolean shaft){
   public double score(int px,int py,int pz){
    double dx=px-x,dz=pz-z,a=dx*Math.cos(angle)+dz*Math.sin(angle),b=-dx*Math.sin(angle)+dz*Math.cos(angle);
+   b-=Math.min(4,across*.65)*Math.sin(a*.07);
    double h=py-y-a*dip-3*Math.sin(a*.06);
    return a*a/(along*along)+b*b/(across*across)+h*h/(vertical*vertical);
   }
@@ -35,6 +36,35 @@ public final class GeologyModel {
   }
  }
  public record District(Province province,List<Body> ores,List<Cave> caves){}
+ public record Pocket(Body body,boolean relative){}
+ public static final int POCKET_CELL=16;
+ private static Pocket pocket(SplittableRandom r,Ore ore,int gx,int gz,double y,boolean relative){
+  double a=r.nextDouble(2.4,4.4),b=r.nextDouble(1.6,2.7),v=r.nextDouble(1.35,2.4);
+  if(ore==Ore.DIAMOND||ore==Ore.EMERALD){a*=.64;b*=.72;v*=.85;}
+  return new Pocket(new Body(ore,gx*(double)POCKET_CELL+r.nextDouble(2,14),y,gz*(double)POCKET_CELL+r.nextDouble(2,14),a,b,v,r.nextDouble(2*Math.PI),r.nextDouble(-.22,.22),r.nextDouble(.72,.93),r.nextLong()),relative);
+ }
+ /** Independent small-body background: common ores near the surface in every district,
+  * rarer ores deeper. Coordinates are deterministic and never depend on chunk order. */
+ public static List<Pocket> pockets(long seed,int gx,int gz){
+  var r=new SplittableRandom(hash(seed^0x65b3a5cc8d143ab1L,gx,2,gz));
+  var p=province(seed,gx*POCKET_CELL+8,gz*POCKET_CELL+8);
+  var list=new ArrayList<Pocket>(7);
+  list.add(pocket(r,Ore.COAL,gx,gz,-r.nextDouble(6,23),true));
+  list.add(pocket(r,Ore.IRON,gx,gz,-r.nextDouble(12,39),true));
+  list.add(pocket(r,p==Province.INTRUSIVE||r.nextBoolean()?Ore.COPPER:Ore.COAL,gx,gz,-r.nextDouble(27,56),true));
+  list.add(pocket(r,r.nextDouble()<.68?Ore.IRON:Ore.COPPER,gx,gz,-r.nextDouble(45,92),true));
+  list.add(pocket(r,r.nextDouble()<.63?Ore.IRON:Ore.LAPIS,gx,gz,r.nextDouble(-115,-35),false));
+  list.add(pocket(r,r.nextDouble()<.65?Ore.REDSTONE:Ore.GOLD,gx,gz,r.nextDouble(-215,-80),false));
+  double chance=p==Province.CRATON?.24:.12;
+  if(r.nextDouble()<chance)list.add(pocket(r,Ore.DIAMOND,gx,gz,r.nextDouble(-225,-105),false));
+  if(p==Province.METAMORPHIC&&r.nextDouble()<.18)list.add(pocket(r,Ore.EMERALD,gx,gz,-r.nextDouble(8,50),true));
+  return List.copyOf(list);
+ }
+ public static List<Pocket> nearbyPockets(long seed,int x,int z){
+  int gx=Math.floorDiv(x,POCKET_CELL),gz=Math.floorDiv(z,POCKET_CELL);var out=new ArrayList<Pocket>(72);
+  for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++)out.addAll(pockets(seed,gx+dx,gz+dz));
+  return out;
+ }
  public static long hash(long seed,int x,int y,int z){
   long h=seed^(x*0x9e3779b97f4a7c15L)^(y*0x632be59bd9b4e019L)^(z*0xc2b2ae3d27d4eb4fL);
   h=(h^(h>>>30))*0xbf58476d1ce4e5b9L;h=(h^(h>>>27))*0x94d049bb133111ebL;return h^(h>>>31);
@@ -49,7 +79,13 @@ public final class GeologyModel {
   // truncation below are game calibration values; not direct conversions of economic grades.
   double size=Math.max(.72,Math.min(1.20,Math.exp(.23*normal(r))));
   double richness=Math.max(.70,Math.min(1.25,Math.exp(.28*normal(r))));
-  return new Body(ore,x,y,z,a*size,b*size,v,angle,dip,Math.max(.06,Math.min(.90,grade*richness)),r.nextLong());
+  double g=Math.max(.06,Math.min(.90,grade*richness));
+  // Cap the expected ore yield of regional bodies, not just their width.
+  double target=switch(ore){case DIAMOND->18;case EMERALD->24;case GOLD,LAPIS->85;default->140;};
+  double aa=a*size,bb=b*size,vv=v;
+  double estimate=4*Math.PI/3*aa*bb*vv*g*.61;
+  double scale=Math.min(1,Math.cbrt(target/estimate));
+  return new Body(ore,x,y,z,aa*scale,bb*scale,vv*scale,angle,dip,g,r.nextLong());
  }
  public static District district(long seed,int gx,int gz){
   var r=new SplittableRandom(hash(seed,gx,1,gz));
@@ -82,10 +118,14 @@ public final class GeologyModel {
   if(r.nextDouble()<.5)ores.add(body(r,Ore.LAPIS,x+8,r.nextDouble(-85,-20),z+16,16,8,6,a,.1,.32));
   if(r.nextDouble()<.65)ores.add(body(r,Ore.REDSTONE,x,r.nextDouble(-205,-125),z,30,10,8,a,.1,.35));
   if(p==Province.CARBONATE){
-   double y=r.nextDouble(-42,25);int water=r.nextInt(-35,3);
+   double y=r.nextDouble(-42,15);int water=(int)Math.floor(y-4);
    caves.add(new Cave(x,y,z,82,5,4,a,.12,water,r.nextDouble()<.45));
    caves.add(new Cave(x,y,z,60,4,6,a+Math.PI*.48,-.10,water,false));
+   // Chamber straddles the shared static water horizon. A lateral connected lake
+   // extends away from the intersection; not every cave is a giant cavern.
    caves.add(new Cave(x,y-4,z,16,13,10,a,0,water,false));
+   double lx=x+28*Math.cos(a),lz=z+28*Math.sin(a);
+   caves.add(new Cave(lx,y-5,lz,25,15,9,a,.02,water,false));
   }else if(p==Province.METAMORPHIC||p==Province.INTRUSIVE){
    caves.add(new Cave(x,r.nextDouble(-82,-15),z,64,3,13,a,.24,-100,r.nextDouble()<.13));
   }else caves.add(new Cave(x,r.nextDouble(-120,-40),z,42,3,3,a,.12,-160,false));
