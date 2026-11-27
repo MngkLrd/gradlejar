@@ -135,6 +135,12 @@
       "command": "worldlogic qa geology",
       "expect": "WORLDLOGIC_GEOLOGY_PASSED",
       "assertion": true
+    },
+    {
+      "name": "All eight mineral types replace actual rock while preserving cave air and bedrock",
+      "command": "worldlogic qa ore_bodies",
+      "expect": "WORLDLOGIC_ORE_BODIES_PASSED",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -293,6 +299,17 @@
         {
           "backend": "server",
           "name": "Extended preset registry, geological provinces, ore bodies and synthetic chunk carving"
+        }
+      ]
+    },
+    {
+      "id": "ore-bodies-eight-types",
+      "kind": "mechanic",
+      "subject": "All eight mineral types replace actual rock while preserving cave air and bedrock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All eight mineral types replace actual rock while preserving cave air and bedrock"
         }
       ]
     }

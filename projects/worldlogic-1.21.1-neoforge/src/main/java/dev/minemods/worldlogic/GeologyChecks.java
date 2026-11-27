@@ -60,6 +60,31 @@ public final class GeologyChecks {
   require(oreChunk.getBlockState(new BlockPos(oreChunk.getPos().getMinBlockX(),-256,oreChunk.getPos().getMinBlockZ())).is(Blocks.BEDROCK),"ore does not replace bedrock");
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_GEOLOGY_FIXTURE min={} max={} provinces={} ores={} ironBlocks={}",min,max,provinces.size(),types.size(),found);
  }
+ public static void verifyOres(ServerLevel l){
+  var bounds=LevelHeightAccessor.create(-256,768);
+  var deposits=new java.util.EnumMap<GeologyModel.Ore,GeologyModel.Body>(GeologyModel.Ore.class);
+  for(int gx=-12;gx<=12;gx++)for(int gz=-12;gz<=12;gz++)
+   for(var o:GeologyModel.district(42,gx,gz).ores())deposits.putIfAbsent(o.ore(),o);
+  require(deposits.size()==8,"all eight ore families present");
+  var counts=new java.util.EnumMap<GeologyModel.Ore,Integer>(GeologyModel.Ore.class);
+  for(var entry:deposits.entrySet()){
+   var ore=entry.getKey();var body=entry.getValue();
+   var chunk=fixture(l,bounds,(int)Math.floor(body.x()),(int)Math.floor(body.z()));
+   var center=BlockPos.containing(body.x(),body.y(),body.z());
+   chunk.setBlockState(center,Blocks.CAVE_AIR.defaultBlockState(),false);
+   GeologyGeneration.mineralize(42,chunk);
+   require(chunk.getBlockState(center).isAir(),"mineralization preserves cave air "+ore);
+   var p=new BlockPos.MutableBlockPos();int count=0;
+   for(int x=chunk.getPos().getMinBlockX();x<chunk.getPos().getMinBlockX()+16;x++)
+    for(int z=chunk.getPos().getMinBlockZ();z<chunk.getPos().getMinBlockZ()+16;z++){
+     require(chunk.getBlockState(p.set(x,-256,z)).is(Blocks.BEDROCK),"bedrock preserved "+ore);
+     for(int y=Math.max(-248,body.minY());y<=Math.min(96,body.maxY());y++)
+      if(chunk.getBlockState(p.set(x,y,z)).equals(GeologyGeneration.ore(ore,y<0)))count++;
+    }
+   require(count>0,"actual chunk generated ore "+ore);counts.put(ore,count);
+  }
+  org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_ORE_FIXTURES {}",counts);
+ }
  private static ProtoChunk fixture(ServerLevel l,LevelHeightAccessor bounds,int x,int z){
   var chunk=new ProtoChunk(new ChunkPos(Math.floorDiv(x,16),Math.floorDiv(z,16)),UpgradeData.EMPTY,bounds,l.registryAccess().registryOrThrow(Registries.BIOME),null);
   var p=new BlockPos.MutableBlockPos();

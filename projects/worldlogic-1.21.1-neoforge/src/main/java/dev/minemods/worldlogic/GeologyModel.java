@@ -43,8 +43,13 @@ public final class GeologyModel {
  public static Province province(long seed,int x,int z){
   return Province.values()[(int)Math.floorMod(hash(seed,Math.floorDiv(x,DISTRICT*3),0,Math.floorDiv(z,DISTRICT*3)),5)];
  }
+ private static double normal(SplittableRandom r){return Math.sqrt(-2*Math.log(Math.max(1e-12,r.nextDouble())))*Math.cos(2*Math.PI*r.nextDouble());}
  private static Body body(SplittableRandom r,Ore ore,double x,double y,double z,double a,double b,double v,double angle,double dip,double grade){
-  return new Body(ore,x,y,z,a,b,v,angle,dip,grade,r.nextLong());
+  // USGS grade/tonnage models frequently use lognormal distributions. The medians and
+  // truncation below are game calibration values; not direct conversions of economic grades.
+  double size=Math.max(.72,Math.min(1.20,Math.exp(.23*normal(r))));
+  double richness=Math.max(.70,Math.min(1.25,Math.exp(.28*normal(r))));
+  return new Body(ore,x,y,z,a*size,b*size,v,angle,dip,Math.max(.06,Math.min(.90,grade*richness)),r.nextLong());
  }
  public static District district(long seed,int gx,int gz){
   var r=new SplittableRandom(hash(seed,gx,1,gz));
