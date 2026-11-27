@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       project_dir:
-        description: 'Project path, @slug, or @batch:slug1,slug2 (up to 48 enrolled ports)'
+        description: 'Project path, @slug, @batch:slug1,slug2 (48 targets), or @changed:<base SHA>'
         required: true
         default: '.'
         type: string
@@ -459,6 +459,23 @@ jobs:
         if: steps.qa-policy.outputs.player == 'true'
         working-directory: tools/qa/bot
         run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Discover packaged recipes and generate candidate tests
+        if: steps.verify.outcome == 'success' && (steps.qa-policy.outputs.mode == 'server' || steps.qa-policy.outputs.mode == 'client')
+        continue-on-error: true
+        env:
+          JAR_PATH: ${{ steps.verify.outputs.jar_path }}
+          MC_VERSION: ${{ steps.profile.outputs.minecraft }}
+          MOD_LOADER: ${{ steps.profile.outputs.loader }}
+          RECIPE_OUT: recipe-qa-${{ strategy.job-index }}
+        run: python3 -m tools.qa.recipe_qa "$JAR_PATH" --minecraft "$MC_VERSION" --loader "$MOD_LOADER" --out "$RECIPE_OUT"
+      - name: Upload recipe inventory and generated candidate scenarios
+        if: always() && steps.verify.outcome == 'success' && (steps.qa-policy.outputs.mode == 'server' || steps.qa-policy.outputs.mode == 'client')
+        uses: actions/upload-artifact@v4
+        with:
+          name: recipe-qa-${{ strategy.job-index }}-${{ github.run_attempt }}
+          path: recipe-qa-${{ strategy.job-index }}/
+          if-no-files-found: warn
+          retention-days: 14
       - name: QA v2 production JAR release gate
         id: qa
         timeout-minutes: 18

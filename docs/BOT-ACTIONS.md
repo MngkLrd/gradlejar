@@ -17,3 +17,7 @@ Actions are JSON objects with action and args fields. Existing schema-1 player s
 Fixtures can arrange blocks, inventory and player position, but cannot perform the action under test. Use the bot and then independent server evidence. A successful packet/API callback is not a gameplay assertion. Controls run against the official Fabric loader without any mods on 1.20.1, 1.21.1 and 1.21.4; they are diagnostic, not release evidence. Inspect actual CI results before treating a new action as verified. Existing mod-specific release tests remain mandatory. The standalone control workflow runs only on bot changes or explicit dispatch. New action APIs not exercised by the control suite (interact/use and non-default options) remain experimental. No new supported protocol targets.
 
 The pinned Mineflayer 4.26.0 client sends `player_loaded` on 1.21.4 spawn (upstream fix #3986); inventory actions wait for slot synchronization, rather than assuming an RCON reply arrived after the client update.
+
+### Explicit crafting grid and discovery
+
+`craftGrid` accepts item, count, a 2x2 or 3x3 matrix of vanilla item names/null, and a table fixture for 3x3. It clicks actual inventory/grid slots and reads the server output slot rather than synthesizing a local recipe result. Independent server assertions remain required. See [recipe QA](RECIPE-QA.md). No modded registry IDs or custom menus are supported by this protocol backend.

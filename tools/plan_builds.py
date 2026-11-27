@@ -58,6 +58,15 @@ def known_profiles():
 
 def select_projects(requested,changed=None):
     if requested:
+        if requested.startswith("@changed:"):
+            base=requested[9:]
+            if not re.fullmatch(r"[a-f0-9]{40}",base):raise ValueError("@changed requires an exact base commit SHA")
+            paths=diff(base)
+            if paths is None:
+                git("fetch","--no-tags","--depth=1","origin",base)
+                paths=diff(base)
+            if paths is None:raise ValueError("Cannot resolve requested change range")
+            return select_projects("",paths)
         if requested.startswith("@batch:"):
             if __package__:
                 from .qa.control import batch_select
