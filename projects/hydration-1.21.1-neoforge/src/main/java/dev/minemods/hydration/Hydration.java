@@ -6,8 +6,6 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
@@ -17,9 +15,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -38,7 +33,7 @@ import java.util.WeakHashMap;
 
 @Mod("hydration")
 public final class Hydration {
- private static final String WATER="hydration_water", EXPOSURE="hydration_exposure", PROFILE="hydration_profile", RESERVE="hydration_reserve", PENDING="hydration_pending";
+ private static final String WATER="hydration_water", EXPOSURE="hydration_exposure", RESERVE="hydration_reserve", PENDING="hydration_pending";
  private static final WeakHashMap<ServerPlayer,Vec3> LAST_POS=new WeakHashMap<>();
  private static final WeakHashMap<ServerPlayer,Long> LAST_SIP=new WeakHashMap<>();
  public Hydration(IEventBus modBus){
@@ -106,33 +101,17 @@ public final class Hydration {
   if(!(e.getEntity() instanceof ServerPlayer p)||!e.getItemStack().is(Items.GLASS_BOTTLE)||p.isSpectator())return;
   var profile=targeted(p);
   if(profile==null||!profile.sourceBlock())return;
-  ItemStack bottle=PotionContents.createItemStack(Items.POTION,Potions.WATER);
-  CustomData.update(DataComponents.CUSTOM_DATA,bottle,tag->{
-   CompoundTag data=new CompoundTag();
-   data.putString("kind",profile.kind().name());data.putString("quality",profile.quality().name());
-   data.putDouble("salinity",profile.salinityGkg());data.putDouble("risk",profile.contaminationRisk());
-   data.putString("evidence",profile.evidence().name());tag.put(PROFILE,data);
-  });
+  ItemStack bottle=WaterBottle.create(profile);
   p.setItemInHand(e.getHand(),ItemUtils.createFilledResult(e.getItemStack(),p,bottle));
   p.level().playSound(null,p.getX(),p.getY(),p.getZ(),SoundEvents.BOTTLE_FILL,SoundSource.PLAYERS,1f,1f);
   e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);
  }
- private static CompoundTag profile(ItemStack stack){
-  var d=stack.get(DataComponents.CUSTOM_DATA);
-  return d==null?new CompoundTag():d.copyTag().getCompound(PROFILE);
- }
- private static WaterBalance.Quality readQuality(CompoundTag d){
-  try{return WaterBalance.Quality.valueOf(d.getString("quality"));}catch(IllegalArgumentException ex){return WaterBalance.Quality.UNKNOWN;}
- }
- private static boolean isWater(ItemStack stack){
-  var potion=stack.get(DataComponents.POTION_CONTENTS);
-  return stack.is(Items.POTION)&&potion!=null&&potion.is(Potions.WATER);
- }
  private static void finished(LivingEntityUseItemEvent.Finish e){
   if(!(e.getEntity() instanceof ServerPlayer p)||!active(p))return;
   var item=e.getItem();
-  if(isWater(item)){
-   var d=profile(item);applyDrink(p,readQuality(d),250,d.getDouble("risk"));return;
+  var batch=WaterBottle.read(item);
+  if(batch.isPresent()){
+   var d=batch.get();applyDrink(p,d.quality(),d.ml(),d.risk());return;
   }
   // Vanilla moisture-bearing foods; only after the actual consumption event.
   double ml=item.is(Items.MELON_SLICE)?65:item.is(Items.APPLE)||item.is(Items.BEETROOT)?35:
@@ -153,11 +132,9 @@ public final class Hydration {
   p.level().playSound(null,p.getX(),p.getY(),p.getZ(),SoundEvents.GENERIC_DRINK,SoundSource.PLAYERS,.6f,1f);
  }
  private static void tooltip(net.neoforged.neoforge.event.entity.player.ItemTooltipEvent e){
-  if(!isWater(e.getItemStack()))return;
-  var d=profile(e.getItemStack());
-  String kind=d.getString("kind");if(kind.isEmpty())kind="UNKNOWN";
-  e.getToolTip().add(Component.translatable("hydration.water.kind."+kind.toLowerCase(Locale.ROOT)));
-  e.getToolTip().add(Component.translatable("hydration.water.quality."+readQuality(d).name().toLowerCase(Locale.ROOT)));
+  var batch=WaterBottle.read(e.getItemStack());if(batch.isEmpty())return;
+  var d=batch.get();for(String kind:d.origins().stream().sorted().toList())e.getToolTip().add(Component.translatable("hydration.water.kind."+kind.toLowerCase(Locale.ROOT)));
+  e.getToolTip().add(Component.translatable("hydration.water.quality."+d.quality().name().toLowerCase(Locale.ROOT)));
  }
  private static void clonePlayer(PlayerEvent.Clone e){
   if(!(e.getEntity() instanceof ServerPlayer p))return;

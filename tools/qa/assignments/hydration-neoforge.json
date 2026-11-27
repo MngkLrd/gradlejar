@@ -9,7 +9,7 @@
       "checks": [
         {
           "backend": "player",
-          "name": "Fresh bottle restores thirst"
+          "name": "Fresh bottle queues absorption"
         },
         {
           "backend": "player",
@@ -83,6 +83,11 @@
       "id": "water-batch-container-integration",
       "status": "NOT_RUN",
       "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "bottle-profile-roundtrip",
+      "status": "NOT_RUN",
+      "reason": "Requires production NeoForge runtime item component fixture."
     }
   ]
 }

@@ -27,13 +27,14 @@ public final class ModelChecks {
   check(loss(20,50,false,false,false,true,0,39,0)>loss(20,50,false,false,false,true,0,37,0),"body temperature");
   check(loss(20,50,false,false,false,true,0,37,4)>loss(20,50,false,false,false,true,0,37,0),"bleeding");
   check(halfUnits(0)==0&&halfUnits(1)==1&&halfUnits(50)==10&&halfUnits(100)==20,"HUD boundaries");
-  var sea=new WaterBatch(1000,Quality.DESALINATE,35,.3);
-  var fresh=new WaterBatch(500,Quality.DRINKABLE,.2,.1);
+  var sea=new WaterBatch(1000,Quality.DESALINATE,35,.3,java.util.Set.of("SEA"));
+  var fresh=new WaterBatch(500,Quality.DRINKABLE,.2,.1,java.util.Set.of("RIVER"));
   var t=WaterBatch.transfer(sea,fresh,750,1000);
   check(t.moved()==500&&t.source().ml()==500&&t.target().ml()==1000,"volume conservation/capacity");
   check(Math.abs(t.target().salinity()*1000+t.source().salinity()*500-(35*1000+.2*500))<.001,"salt mass conservation");
   check(Math.abs(t.target().risk()*1000+t.source().risk()*500-(.3*1000+.1*500))<.001,"contamination conservation");
   check(t.target().quality()==Quality.DESALINATE,"salt cannot be laundered");
+  check(t.target().origins().equals(java.util.Set.of("SEA","RIVER"))&&t.source().origins().equals(java.util.Set.of("SEA")),"provenance survives mixing and split");
   check(WaterBatch.transfer(sea,t.target(),100,1000).moved()==0,"full target");
   var unknown=new WaterBatch(100,Quality.UNKNOWN,0,1);
   check(WaterBatch.transfer(unknown,fresh,100,1000).target().quality()==Quality.UNKNOWN,"unknown cannot be laundered");
