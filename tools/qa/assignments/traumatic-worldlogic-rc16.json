@@ -207,6 +207,24 @@
       "state": "NOT_RUN",
       "reason": "graphical client required",
       "expected": "2x anatomy, correct mirrored sides and treatment hit targets, qualitative localized statuses, small-screen vanilla fallback, no misleading raw HP total"
+    },
+    {
+      "id": "TR-HUD-ATLAS",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Graphical client is not available; local geometry and PNG checks separately passed",
+      "expected": "All seven zones use the correct palette; mirrored leg alignment; 2 px abdomen-to-leg gap; 20x20 icon frames and independent dynamic injury overlays; click targets match body sprite coordinates."
+    },
+    {
+      "id": "TR-HUD-FRAME",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Graphical client required",
+      "expected": "76x94 HUD fits beside hotbar; at narrow GUI width relocates to top-left; healthy and creative HUD remains hidden."
     }
   ],
   "draft_project": "drafts/traumatic-worldlogic-1.21.1-forge",
@@ -235,5 +253,36 @@
     "local_art_review": "native-size and nearest-neighbor comparison inspected; splint targeted correction",
     "shared_visual_qa": "NOT_RUN on new revision at authoring time; existing PR workflow expected",
     "client": "NOT_RUN"
+  },
+  "hud_approved_art": {
+    "basis": "User-approved detailed reference, resampled and adapted to native GUI sprites (not an exact high-resolution copy)",
+    "scope": "Minecraft 1.21.1 Forge 52.1.0 / World Logic RC16 only",
+    "assets": [
+      "status/concussion.png",
+      "trauma/body.png",
+      "status/bleeding.png",
+      "status/fracture.png",
+      "trauma/panel.png",
+      "status/painkiller.png",
+      "trauma/overlays.png"
+    ],
+    "native_panel": [
+      76,
+      94
+    ],
+    "status_sprite": [
+      20,
+      20
+    ],
+    "atlas": [
+      240,
+      84
+    ],
+    "state_columns": 5,
+    "body_axis": 22,
+    "hip_gap": 2,
+    "checks": "Local native sprite decode/alpha/geometry and enlarged pixel preview; game screenshot NOT_RUN",
+    "blocker": "User requested visual iteration without JAR; graphical client cannot be started here (no Gradle/client dependencies; Maven DNS unavailable). Existing experimental client workflow resolves only enrolled projects and builds a JAR; draft must not be enrolled as workaround.",
+    "shared_visual_qa": "GUI sprites are excluded from item/block/entity regex; general workflow success must not be claimed as coverage of these sprites."
   }
 }

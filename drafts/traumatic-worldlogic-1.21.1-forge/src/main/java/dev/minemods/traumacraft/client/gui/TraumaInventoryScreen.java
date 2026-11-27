@@ -40,8 +40,8 @@ public final class TraumaInventoryScreen extends InventoryScreen {
     private int px() { return leftPos + VANILLA_WIDTH; }
     private int rowX() { return px() + 64; }
     private int rowRight() { return px() + panelWidth - 7; }
-    private int bx() { return px() + 9; }
-    private int by() { return topPos + 30; }
+    private int bx() { return px() + 10; }
+    private int by() { return topPos + 29; }
 
     private void small(GuiGraphics gui, String value, int x, int y, int color) {
         gui.pose().pushPose();
