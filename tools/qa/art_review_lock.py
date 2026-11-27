@@ -56,6 +56,10 @@ def validate(record,digest):
     for criterion in COMMON+PROFILES[profile]:
         if not observation(findings.get(criterion)):
             errors.append("Missing specific visual observation: "+criterion)
+    required=COMMON+PROFILES[profile]
+    supplied=[findings[k].strip().casefold() for k in required if observation(findings.get(k))]
+    if len(set(supplied))!=len(supplied):
+        errors.append("Copy-pasted criterion observations; describe each distinct visual property")
     if not observation(record.get("comparison")):
         errors.append("Missing concrete comparison of candidate against actual reference")
     return errors
