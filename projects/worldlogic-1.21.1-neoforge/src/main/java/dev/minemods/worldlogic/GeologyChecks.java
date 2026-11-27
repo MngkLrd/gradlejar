@@ -146,7 +146,7 @@ public final class GeologyChecks {
   };
   int x=(int)Math.floor(shaft.x()),z=(int)Math.floor(shaft.z());
   for(int y=(int)Math.ceil(shaft.y());y<=100;y++)require(block.apply(new BlockPos(x,y,z)).isAir(),"open shaft at "+y);
-  require(block.apply(new BlockPos(x+12,100,z)).is(Blocks.STONE),"shaft does not erase nearby surface");
+  require(block.apply(new BlockPos(x+5,100,z)).is(Blocks.STONE),"narrow shaft does not erase nearby surface");
   int lx=(int)Math.floor(lake.x()),lz=(int)Math.floor(lake.z()),water=lake.waterY();
   require(block.apply(new BlockPos(lx,water-2,lz)).is(Blocks.WATER),"subterranean lake water");
   require(block.apply(new BlockPos(lx,water+3,lz)).isAir(),"lake headspace");

@@ -17,5 +17,6 @@ public final class Content {
    ITEMS.register(name,()->new net.minecraft.world.item.BlockItem(block.get(),new Item.Properties()));
   }
  }
+ public static final java.util.function.Supplier<Item> GUIDE=ITEMS.register("guidebook",()->new GuideItem(new Item.Properties().stacksTo(1)));
  public static final java.util.function.Supplier<Item> SPOILED=ITEMS.register("spoiled_food",()->new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(1).saturationModifier(.1f).build())));
 }

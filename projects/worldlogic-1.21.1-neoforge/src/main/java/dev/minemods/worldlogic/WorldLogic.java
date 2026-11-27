@@ -15,6 +15,7 @@ public final class WorldLogic {
   var bus=NeoForge.EVENT_BUS;
   bus.addListener(AdminCommands::register);
   bus.addListener(RuleSync::login);
+  bus.addListener(GuideItem::login);
   bus.addListener(RuleSync::logout);
   bus.addListener(RuleSync::tick);
   bus.addListener(ReleaseChecks::started);

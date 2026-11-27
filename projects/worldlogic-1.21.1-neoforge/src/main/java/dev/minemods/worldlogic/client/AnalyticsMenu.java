@@ -9,6 +9,11 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 @EventBusSubscriber(modid="worldlogic",value=Dist.CLIENT)
 public final class AnalyticsMenu{
+ @SubscribeEvent public static void use(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickItem e){
+  if(e.getLevel().isClientSide()&&e.getItemStack().is(dev.minemods.worldlogic.Content.GUIDE.get())){
+   Minecraft.getInstance().setScreen(new GuideScreen(null));
+  }
+ }
  @SubscribeEvent public static void init(ScreenEvent.Init.Post e){
   if(e.getScreen() instanceof PauseScreen s&&Minecraft.getInstance().level!=null){
    e.addListener(Button.builder(Component.translatable("worldlogic.analytics.title"),b->Minecraft.getInstance().setScreen(new AnalyticsScreen(s))).bounds(s.width/2-100,Math.max(4,s.height-28),98,20).build());
