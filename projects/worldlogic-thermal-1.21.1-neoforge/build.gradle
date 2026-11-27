@@ -1,6 +1,6 @@
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group = 'dev.minemods'
-version = '0.4.0-rc1'
+version = '0.5.0-rc1'
 base.archivesName = 'worldlogic_thermal-neoforge-mc1.21.1'
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 neoForge {
@@ -9,9 +9,9 @@ neoForge {
     mods { worldlogic_thermal { sourceSet(sourceSets.main) } }
 }
 repositories { mavenCentral() }
-def coreName = 'worldlogic-neoforge-mc1.21.1-1.0.0-rc21.jar'
-def coreUrl = 'https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc21-1227-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc21.jar'
-def expectedSha = '475405d0de1921405fe19dd0a802fd770e60303af1b281213d6da370850b235e'
+def coreName = 'worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar'
+def coreUrl = 'https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc22-1246-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar'
+def expectedSha = '1c0d23ca034cd17f783e4d1abbf01f1eda8783ac0ba3b48cf6afdc1291d21dc8'
 def coreJar = file(providers.gradleProperty('worldlogicJar').orElse('libs/'+coreName).get())
 dependencies {
     implementation files(coreJar)
@@ -34,7 +34,7 @@ tasks.register('verifyWorldLogic') {
             } finally { temp.delete() }
         }
         def actual = java.security.MessageDigest.getInstance('SHA-256').digest(coreJar.bytes).encodeHex().toString()
-        if (actual != expectedSha) throw new GradleException('WorldLogic RC21 SHA-256 mismatch: '+actual)
+        if (actual != expectedSha) throw new GradleException('WorldLogic RC22 SHA-256 mismatch: '+actual)
         new java.util.zip.ZipFile(coreJar).withCloseable { zip ->
             if (zip.getEntry('META-INF/neoforge.mods.toml') == null || zip.getEntry('dev/minemods/worldlogic/api/WorldLogicApi.class') == null)
                 throw new GradleException('WorldLogic dependency has no NeoForge metadata or public API')

@@ -9,6 +9,7 @@ import net.neoforged.bus.api.IEventBus;
 public final class ThermalMod {
     public static final String ID = "worldlogic_thermal";
     public ThermalMod(IEventBus modBus) {
+        dev.minemods.thermal.content.ThermalContent.register(modBus);
         modBus.addListener(ThermalSync::register);
         var bus = NeoForge.EVENT_BUS;
         bus.addListener(EventPriority.LOWEST, ThermalEvents::tick);

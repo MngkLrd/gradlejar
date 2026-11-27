@@ -1,11 +1,11 @@
 {
   "slug": "worldlogic_thermal",
-  "version": "0.4.0-rc1",
+  "version": "0.5.0-rc1",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "worldlogic_thermal-neoforge-mc1.21.1-0.4.0-rc1.jar",
+  "jar_glob": "worldlogic_thermal-neoforge-mc1.21.1-0.5.0-rc1.jar",
   "minimum_loader_version": "21.1.80",
   "compile_loader_version": "21.1.262",
   "qa": {
@@ -20,9 +20,9 @@
     ],
     "dependencies": [
       {
-        "name": "worldlogic-neoforge-mc1.21.1-1.0.0-rc21.jar",
-        "url": "https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc21-1227-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc21.jar",
-        "sha256": "475405d0de1921405fe19dd0a802fd770e60303af1b281213d6da370850b235e"
+        "name": "worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar",
+        "url": "https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc22-1246-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar",
+        "sha256": "1c0d23ca034cd17f783e4d1abbf01f1eda8783ac0ba3b48cf6afdc1291d21dc8"
       }
     ]
   }

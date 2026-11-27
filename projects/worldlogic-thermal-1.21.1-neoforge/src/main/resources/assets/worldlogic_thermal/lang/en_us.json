@@ -49,5 +49,14 @@
   "screen.worldlogic_thermal.air_short": "Air",
   "screen.worldlogic_thermal.felt_short": "Feels",
   "screen.worldlogic_thermal.body_short": "Body",
-  "screen.worldlogic_thermal.history_samples": "Samples"
+  "screen.worldlogic_thermal.history_samples": "Samples",
+  "item.worldlogic_thermal.dry_fiber": "Dry plant fiber",
+  "item.worldlogic_thermal.grass_hood": "Woven grass hood",
+  "item.worldlogic_thermal.grass_coat": "Woven grass coat",
+  "item.worldlogic_thermal.grass_leggings": "Woven grass leggings",
+  "item.worldlogic_thermal.grass_boots": "Grass-lined boots",
+  "item.worldlogic_thermal.sun_hat": "Woven sun hat",
+  "item.worldlogic_thermal.light_tunic": "Light tunic",
+  "block.worldlogic_thermal.clay_hearth": "Clay hearth",
+  "block.worldlogic_thermal.evaporative_cooler": "Evaporative cooler"
 }

@@ -49,5 +49,14 @@
   "screen.worldlogic_thermal.air_short": "Воздух",
   "screen.worldlogic_thermal.felt_short": "Ощущ.",
   "screen.worldlogic_thermal.body_short": "Тело",
-  "screen.worldlogic_thermal.history_samples": "Замеры"
+  "screen.worldlogic_thermal.history_samples": "Замеры",
+  "item.worldlogic_thermal.dry_fiber": "Сухое растительное волокно",
+  "item.worldlogic_thermal.grass_hood": "Травяной капюшон",
+  "item.worldlogic_thermal.grass_coat": "Плетёная травяная накидка",
+  "item.worldlogic_thermal.grass_leggings": "Травяные поножи",
+  "item.worldlogic_thermal.grass_boots": "Травяные обмотки",
+  "item.worldlogic_thermal.sun_hat": "Плетёная шляпа",
+  "item.worldlogic_thermal.light_tunic": "Лёгкая туника",
+  "block.worldlogic_thermal.clay_hearth": "Глиняный очаг",
+  "block.worldlogic_thermal.evaporative_cooler": "Испарительный охладитель"
 }

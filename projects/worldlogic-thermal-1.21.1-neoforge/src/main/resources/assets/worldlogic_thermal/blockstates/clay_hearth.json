@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "worldlogic_thermal:block/clay_hearth"
+    },
+    "active=true": {
+      "model": "worldlogic_thermal:block/clay_hearth_active"
+    }
+  }
+}

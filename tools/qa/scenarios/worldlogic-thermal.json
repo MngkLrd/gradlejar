@@ -86,6 +86,24 @@
       "command": "thermal qa history",
       "expect": "THERMAL_QA_history_PASS",
       "assertion": true
+    },
+    {
+      "name": "Campfire at zero, lantern and lit furnace, no heat through wall",
+      "command": "thermal qa comfort",
+      "expect": "THERMAL_QA_comfort_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Finite-resource fixture activation and humidity-limited cooling",
+      "command": "thermal qa fixtures",
+      "expect": "THERMAL_QA_fixtures_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Plant insulation and summer clothing exposure",
+      "command": "thermal qa clothing",
+      "expect": "THERMAL_QA_clothing_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -185,6 +203,39 @@
         {
           "backend": "server",
           "name": "Live route sample, interval guard, coordinates and NBT persistence"
+        }
+      ]
+    },
+    {
+      "id": "comfort",
+      "kind": "mechanic",
+      "subject": "Campfire at zero, lantern and lit furnace, no heat through wall",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Campfire at zero, lantern and lit furnace, no heat through wall"
+        }
+      ]
+    },
+    {
+      "id": "fixtures",
+      "kind": "mechanic",
+      "subject": "Finite-resource fixture activation and humidity-limited cooling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Finite-resource fixture activation and humidity-limited cooling"
+        }
+      ]
+    },
+    {
+      "id": "clothing",
+      "kind": "mechanic",
+      "subject": "Plant insulation and summer clothing exposure",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Plant insulation and summer clothing exposure"
         }
       ]
     }

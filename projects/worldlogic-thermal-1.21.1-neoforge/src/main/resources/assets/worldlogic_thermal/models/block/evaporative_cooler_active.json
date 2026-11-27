@@ -1,0 +1,15 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "minecraft:block/terracotta",
+    "wall": "minecraft:block/terracotta",
+    "top": "minecraft:block/blue_terracotta",
+    "front": "minecraft:block/cyan_terracotta",
+    "down": "#wall",
+    "up": "#top",
+    "north": "#front",
+    "south": "#wall",
+    "east": "#wall",
+    "west": "#wall"
+  }
+}

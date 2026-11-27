@@ -5,11 +5,12 @@ public final class ThermalModel {
     public enum Stage { HYPOTHERMIA, VERY_COLD, COLD, COMFORTABLE, WARM, VERY_HOT, HYPERTHERMIA }
     public record Exposure(double airC, double radiantC, double wind, double wetness,
                            double insulation, double activity, boolean submerged, double waterC,
-                           double mealWarmth) {
+                           double mealWarmth, double coolingC, double ventilation) {
+        public Exposure(double airC,double radiantC,double wind,double wetness,double insulation,double activity,boolean submerged,double waterC,double mealWarmth){this(airC,radiantC,wind,wetness,insulation,activity,submerged,waterC,mealWarmth,0,0);}
         public Exposure {
             if (!Double.isFinite(airC) || !Double.isFinite(radiantC) || !Double.isFinite(wind)
                 || !Double.isFinite(wetness) || !Double.isFinite(insulation) || !Double.isFinite(activity)
-                || !Double.isFinite(waterC) || !Double.isFinite(mealWarmth)) throw new IllegalArgumentException("non-finite exposure");
+                || !Double.isFinite(waterC) || !Double.isFinite(mealWarmth) || !Double.isFinite(coolingC) || !Double.isFinite(ventilation)) throw new IllegalArgumentException("non-finite exposure");
         }
     }
     public record State(double bodyC, double feelsLikeC, double targetC, Stage stage, double trendCPerMinute) {}
@@ -19,12 +20,12 @@ public final class ThermalModel {
         double wet = clamp(e.wetness(),0,1), wind = clamp(e.wind(),0,1), insulation = clamp(e.insulation(),0,1);
         double activity = clamp(e.activity(),0,1), meal = clamp(e.mealWarmth(),0,1);
         double retained = insulation * (1 - 0.75 * wet);
-        double felt = e.submerged() ? e.waterC() : e.airC() + clamp(e.radiantC(),0,30)
+        double felt = e.submerged() ? e.waterC() : e.airC() + clamp(e.radiantC(),0,55)-clamp(e.coolingC(),0,18)
             - wind * (2 + 5 * wet) - 6 * wet;
-        double cold = Math.max(0, 18 - felt - activity * 6 - meal * 2) * (1 - retained * .75);
-        double hot = Math.max(0, felt - 28 + activity * 7 + meal + retained * 5);
-        double target = clamp(37 - cold * .18 + hot * .18, 30, 43);
-        double tau = e.submerged() ? 80 : 200;
+        double cold = Math.max(0, 12 - felt - activity * 6 - meal * 2 - retained * 6) * (1 - retained * .90);
+        double hot = Math.max(0, felt - 28 + activity * 7 + meal + retained * 5 - clamp(e.ventilation(),0,1)*7);
+        double target = clamp(37 - cold * .14 + hot * .18, 30, 43);
+        double tau = e.submerged() ? 80 : (felt>=18&&felt<=28&&previous.bodyC()<36.6 ? 105 : 200);
         double dt = Math.min(seconds, 5);
         double next = previous.bodyC() + (target - previous.bodyC()) * -Math.expm1(-dt / tau);
         next = clamp(next,30,43);

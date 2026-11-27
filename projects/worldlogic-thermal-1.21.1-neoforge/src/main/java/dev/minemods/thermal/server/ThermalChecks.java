@@ -108,6 +108,46 @@ final class ThermalChecks {
                         require(HistoryStore.read(saved).equals(points),"NBT round trip");
                     }finally{n.put(HistoryStore.KEY,before);}
                 }
+                case "comfort" -> {
+                    var c=dev.minemods.thermal.ClimateComfort.class;
+                    var h=EnvironmentSampler.localComfort(l,p,0,40,false);
+                    require(h.heat()==0,"blocked fixture must not heat");
+                    var pos=new BlockPos(10,100,8);l.setBlockAndUpdate(pos,net.minecraft.world.level.block.Blocks.CAMPFIRE.defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT,true));
+                    for(int y=100;y<=102;y++)for(int z=7;z<=9;z++)l.setBlockAndUpdate(new BlockPos(9,y,z),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+                    h=EnvironmentSampler.localComfort(l,p,0,40,false);
+                    require(h.heat()>=18,"campfire at two blocks supplies usable heat at zero degrees");
+                    var model=new dev.minemods.thermal.ThermalModel.Exposure(0,h.heat(),.3,0,0,0,false,0,0);
+                    var state=dev.minemods.thermal.ThermalModel.tick(dev.minemods.thermal.ThermalModel.initial(),model,1);
+                    require(state.targetC()>=36.6,"campfire prevents dangerous cold");
+                    l.setBlockAndUpdate(pos,net.minecraft.world.level.block.Blocks.LANTERN.defaultBlockState());
+                    require(EnvironmentSampler.localComfort(l,p,0,40,false).heat()>0,"lantern gives some heat");
+                    l.setBlockAndUpdate(pos,net.minecraft.world.level.block.Blocks.FURNACE.defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT,true));
+                    require(EnvironmentSampler.localComfort(l,p,0,40,false).heat()>10,"lit furnace produces heat");
+                    l.setBlockAndUpdate(pos,net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+                }
+                case "fixtures" -> {
+                    var pos=new BlockPos(10,100,8);
+                    var hearth=dev.minemods.thermal.content.ThermalContent.HEARTH.get();
+                    var cooler=dev.minemods.thermal.content.ThermalContent.COOLER.get();
+                    l.setBlockAndUpdate(pos,hearth.defaultBlockState());
+                    require(EnvironmentSampler.localComfort(l,p,0,40,true).heat()==0,"unfueled hearth cold");
+                    require(hearth.activate(l,pos,l.getBlockState(pos)),"hearth activation");
+                    require(!hearth.activate(l,pos,l.getBlockState(pos)),"no duplicate activation");
+                    require(EnvironmentSampler.localComfort(l,p,0,40,true).heat()>=18,"fueled hearth warms");
+                    l.setBlockAndUpdate(pos,cooler.defaultBlockState());
+                    require(EnvironmentSampler.localComfort(l,p,40,20,true).cooling()==0,"dry cooler does not cool");
+                    require(cooler.activate(l,pos,l.getBlockState(pos)),"cooler activation");
+                    require(EnvironmentSampler.localComfort(l,p,40,20,true).cooling()>EnvironmentSampler.localComfort(l,p,40,90,true).cooling(),"humidity limits cooling");
+                    require(EnvironmentSampler.localComfort(l,p,0,20,true).cooling()==0,"no cooling in cold");
+                    l.setBlockAndUpdate(pos,net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+                }
+                case "clothing" -> {
+                    var content=dev.minemods.thermal.content.ThermalContent.class;
+                    p.setItemSlot(EquipmentSlot.CHEST,new ItemStack(dev.minemods.thermal.content.ThermalContent.GRASS_COAT.get()));
+                    require(EnvironmentSampler.sample(p,0).orElseThrow().exposure().insulation()>=.24,"grass coat protects");
+                    p.setItemSlot(EquipmentSlot.CHEST,new ItemStack(dev.minemods.thermal.content.ThermalContent.LIGHT_TUNIC.get()));
+                    require(EnvironmentSampler.sample(p,0).orElseThrow().exposure().ventilation()>.4,"light tunic ventilates");
+                }
                 default -> throw new IllegalArgumentException(name);
             }
         } finally {
