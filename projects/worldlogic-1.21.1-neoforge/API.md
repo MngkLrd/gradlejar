@@ -153,3 +153,5 @@ RC35 custom-screen rendering contract: Minecraft 1.21.1 Screen.render invokes re
 RC35 river water remains the same registered fluid IDs; server flow vector incorporates modeled downstream direction near generated channels. This is a local gameplay current, not a fully conservative hydraulic simulation. Core retains existing worldgen API signatures.
 
 RC38 regional drainage changes internal river geometry only. Existing hydrology API and RC22 climate/terrain field semantics are unchanged. Current vectors use the cached regional plan; old worlds or evicted plans fall back to vanilla local flow until a plan is available. Regional plan does not yet expose a public watershed API.
+
+RC39 `RiverTerrain.current` reads persisted source-block direction (neutral for older/placed/ordinary flowing states), never reconstructs a watershed during player ticks. Existing WaterKind and fluid IDs unchanged. Direction encoded in block state `current=0..16`; external callers should continue using fluid APIs rather than treating this internal property as stable public API.

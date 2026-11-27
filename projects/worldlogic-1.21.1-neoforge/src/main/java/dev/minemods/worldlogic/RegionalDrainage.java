@@ -12,7 +12,7 @@ final class RegionalDrainage{
  private static final int SEA=63,MAX_SOURCES=6,MAX_TRIALS=28,MAX_HEIGHT_SAMPLES=320;
  private static final double INF=Double.POSITIVE_INFINITY;
  record Node(int x,int z,double height){}
- record Hit(double distance,double fraction,double stage,double radius,double depth,double bank,double dx,double dz){}
+ record Hit(double distance,double fraction,double stage,double radius,double depth,double bank,double dx,double dz,double slope,int tributaries){}
  record Edge(Node from,Node to,double start,double end,int tributaries,double radius,double depth,double bank,double bend){
   double x(double u){double dx=to.x-from.x,dz=to.z-from.z;return from.x+dx*u-dz/Math.hypot(dx,dz)*bend*Math.sin(Math.PI*u);}
   double z(double u){double dx=to.x-from.x,dz=to.z-from.z;return from.z+dz*u+dx/Math.hypot(dx,dz)*bend*Math.sin(Math.PI*u);}
@@ -25,16 +25,32 @@ final class RegionalDrainage{
     if(d<best){best=d;fraction=(k-1+f)/12.0;}ax=bx;az=bz;
    }
    double a=Math.max(0,fraction-.02),b=Math.min(1,fraction+.02),dx=x(b)-x(a),dz=z(b)-z(a),len=Math.hypot(dx,dz);
-   return new Hit(best,fraction,start+(end-start)*fraction,radius,depth,bank,dx/len,dz/len);
+   return new Hit(best,fraction,start+(end-start)*fraction,radius,depth,bank,dx/len,dz/len,(start-end)/Math.hypot(to.x-from.x,to.z-from.z),tributaries);
   }
   boolean near(double x,double z,double distance){
    double margin=distance+bank+Math.abs(bend);
    return x>=Math.min(from.x,to.x)-margin&&x<=Math.max(from.x,to.x)+margin&&z>=Math.min(from.z,to.z)-margin&&z<=Math.max(from.z,to.z)+margin;
   }
  }
- record Network(List<Edge> edges,int sources,int mouths,int samples){
-  Network{edges=List.copyOf(edges);}
-  Hit nearest(double x,double z){
+ // Separate regional network from local query partitions. Immutable index:
+ // query complexity depends on nearby river reaches, not total graph size.
+ private static final int PART=64;
+ private static long partKey(int x,int z){return ((long)x<<32)^(z&0xffffffffL);}
+ record Network(List<Edge> edges,int sources,int mouths,int samples,Map<Long,List<Edge>> partitions){
+  Network(List<Edge> edges,int sources,int mouths,int samples){this(List.copyOf(edges),sources,mouths,samples,index(edges));}
+  private static Map<Long,List<Edge>> index(List<Edge> edges){
+   var result=new HashMap<Long,List<Edge>>();
+   for(var e:edges){
+    double margin=e.bank+Math.abs(e.bend)+2;
+    int x0=(int)Math.floor((Math.min(e.from.x,e.to.x)-margin)/PART),x1=(int)Math.floor((Math.max(e.from.x,e.to.x)+margin)/PART);
+    int z0=(int)Math.floor((Math.min(e.from.z,e.to.z)-margin)/PART),z1=(int)Math.floor((Math.max(e.from.z,e.to.z)+margin)/PART);
+    for(int z=z0;z<=z1;z++)for(int x=x0;x<=x1;x++)result.computeIfAbsent(partKey(x,z),k->new ArrayList<>()).add(e);
+   }
+   result.replaceAll((k,v)->List.copyOf(v));return Map.copyOf(result);
+  }
+  List<Edge> candidates(double x,double z){return partitions.getOrDefault(partKey((int)Math.floor(x/PART),(int)Math.floor(z/PART)),List.of());}
+  Hit nearest(double x,double z){return nearestFrom(candidates(x,z),x,z);}
+  private static Hit nearestFrom(List<Edge> edges,double x,double z){
    Hit best=null;double score=INF;
    for(var e:edges){if(!e.near(x,z,0))continue;var h=e.hit(x,z);double s=h.distance/h.radius;if(h.distance<=h.bank&&s<score){score=s;best=h;}}
    return best;
@@ -157,6 +173,7 @@ final class RegionalDrainage{
   require(build(0,0,(x,z)->100,(x,z)->100).edges.isEmpty(),"no unverified inland outlet");
   require(build(0,0,coast,(x,z)->200).edges.isEmpty(),"actual terrain veto");
   require(a.samples<=MAX_HEIGHT_SAMPLES,"bounded physical samples");
+  for(int x=-32;x<=SIZE+32;x+=13)for(int z=-32;z<=SIZE+32;z+=17)require(Objects.equals(a.nearest(x,z),Network.nearestFrom(a.edges,x,z)),"partition exactness");
   var edge=a.edges.getFirst();var hit=edge.hit(edge.x(.5),edge.z(.5));
   require(hit.distance<.05&&hit.fraction>.4&&hit.fraction<.6,"centerline projection");
  }

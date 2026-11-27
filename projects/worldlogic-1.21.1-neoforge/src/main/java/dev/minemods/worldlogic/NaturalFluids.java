@@ -34,15 +34,13 @@ public final class NaturalFluids{
      .sound(SoundActions.BUCKET_FILL,SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY,SoundEvents.BUCKET_EMPTY)));
    source=FLUIDS.register(id,()->kind==WaterKind.RIVER?new RiverSource(properties()):new BaseFlowingFluid.Source(properties()));
    flowing=FLUIDS.register("flowing_"+id,()->kind==WaterKind.RIVER?new RiverFlowing(properties()):new BaseFlowingFluid.Flowing(properties()));
-   block=Content.BLOCKS.register(id,()->new LiquidBlock(source.get(),BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
+   block=Content.BLOCKS.register(id,()->kind==WaterKind.RIVER?new DirectedRiverBlock(source.get(),BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)):new LiquidBlock(source.get(),BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
    bucket=Content.ITEMS.register(id+"_bucket",()->new BucketItem(source.get(),new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET)));
   }
   private BaseFlowingFluid.Properties properties(){return new BaseFlowingFluid.Properties(type,source,flowing).block(block).bucket(bucket).slopeFindDistance(4).levelDecreasePerBlock(1).tickRate(5).explosionResistance(100);}
  }
  private static net.minecraft.world.phys.Vec3 riverFlow(net.minecraft.world.level.BlockGetter level,net.minecraft.core.BlockPos pos,net.minecraft.world.phys.Vec3 vanilla){
-  if(level instanceof net.minecraft.server.level.ServerLevel server){
-   var current=RiverTerrain.current(server,pos);if(current.lengthSqr()>0)return current;
-  }return vanilla;
+  return DirectedRiverBlock.flow(level,pos,vanilla);
  }
  private static final class RiverSource extends BaseFlowingFluid.Source{
   RiverSource(BaseFlowingFluid.Properties p){super(p);}

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC38 production core/API regression",
+  "name": "World Logic NeoForge RC39 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1710,6 +1710,28 @@
       "id": "rc38-regional-drainage",
       "kind": "mechanic",
       "subject": "Deterministic ocean-rooted graph, converging paths, monotonic grade, negative inland and actual terrain veto, centerline geometry and bounded sampling; natural full chunk evidence separate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc39-river-current-palette",
+      "kind": "mechanic",
+      "subject": "Sixteen directional source states and actual fluid flow vectors, neutral default, palette roundtrip; graphical and save/reload evidence pending",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "rc39-valley-partitions",
+      "kind": "mechanic",
+      "subject": "Exact indexed candidate lookup against exhaustive scan and monotonic blended profile endpoints",
       "checks": [
         {
           "backend": "server",

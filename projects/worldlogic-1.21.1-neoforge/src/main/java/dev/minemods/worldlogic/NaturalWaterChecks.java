@@ -49,6 +49,7 @@ final class NaturalWaterChecks{
    require(WorldLogicApi.waterProfile(l,p).quality()==WaterQuality.DESALINATE,"salt cannot become drinkable by soil");
   }finally{l.setBlock(p,original,2);old.forEach((q,s)->l.setBlock(q,s,2));}
   verifyMotion(l);
+  verifyDirectedRiver(l);
   var chunk=new ProtoChunk(new ChunkPos(0,0),UpgradeData.EMPTY,LevelHeightAccessor.create(-256,768),l.registryAccess().registryOrThrow(Registries.BIOME),null);
   // Construct an actual vertical underground pool and surface pool. This is a chunk fixture, not a fully generated world.
   var pos=new BlockPos.MutableBlockPos();
@@ -88,6 +89,22 @@ final class NaturalWaterChecks{
    pig.baseTick();require(!pig.isInWater()&&!pig.isEyeInFluid(FluidTags.WATER),"dry entity negative control");
   }finally{pig.discard();saved.forEach((p,s)->l.setBlock(p,s,2|16));}
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_NATIVE_WATER_MOTION families=8 verticalSpread=8 immersion=8 dryControl=PASS");
+ }
+
+ private static void verifyDirectedRiver(ServerLevel l){
+  var p=new BlockPos(4,110,4);var old=l.getBlockState(p);
+  try{
+   var family=NaturalFluids.get(WaterKind.RIVER);var base=family.block.get().defaultBlockState();
+   require(base.getValue(DirectedRiverBlock.CURRENT)==0,"bucket and old-state current default");
+   for(int sector=1;sector<=16;sector++){
+    var state=base.setValue(DirectedRiverBlock.CURRENT,sector);
+    require(net.minecraft.world.level.block.Block.stateById(net.minecraft.world.level.block.Block.getId(state))==state,"current block palette identity");
+    l.setBlock(p,state,2|16);
+    var f=l.getFluidState(p);var vector=f.getFlow(l,p);var expected=DirectedRiverBlock.vector(sector);
+    require(f.isSource()&&NaturalFluids.kind(f.getType())==WaterKind.RIVER&&vector.distanceTo(expected)<1e-8,"stored current vector "+sector);
+    require(DirectedRiverBlock.encode(expected.x,expected.z)==sector,"direction quantization");
+   }
+  }finally{l.setBlock(p,old,2|16);}
  }
 
 }

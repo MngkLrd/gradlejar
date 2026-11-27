@@ -15,6 +15,7 @@ final class HydrologyChecks{
  static void verify(ServerLevel l){
   require(Rules.on("hydrology"),"enabled by default");
   RegionalDrainage.verify();
+  RiverProfiles.verify();
   require(!GeoModel.channelEligible(90,5.99)&&GeoModel.channelEligible(90,6)&&GeoModel.channelEligible(90,12)&&!GeoModel.channelEligible(62,20),"runoff threshold and submerged negative control");
   close(GeoModel.channelRadius(6),2.4,"headwater radius");
   require(RiverTerrain.channelDepth(6,0)==3&&RiverTerrain.channelDepth(100,0)>=5&&RiverTerrain.channelDepth(100,1)==1,"deep center and shallow bank");

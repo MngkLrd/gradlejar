@@ -46,12 +46,8 @@ public final class RiverTerrain {
    var hit=net.nearest(wx,wz);if(hit==null)continue;
    int stage=(int)Math.floor(hit.stage()),bed;
    if(stage<sea-1||h-stage>19||stage-h>2)continue;
-   double d=hit.distance(),r=hit.radius();boolean wet=d<=r;
-   if(wet)bed=stage-Math.max(1,(int)Math.ceil(hit.depth()*(1-Math.pow(d/r,1.5))));
-   else{
-    double blend=GeoModel.smooth(r,hit.bank(),d);
-    bed=(int)Math.round(GeoModel.lerp(stage+1,h,blend));
-   }
+   var section=RiverProfiles.sample(hit,h);boolean wet=section.wet();
+   bed=wet?(int)Math.floor(section.bed()):(int)Math.round(section.bed());
    if(bed<=c.getMinBuildHeight()+5||h-bed>26)continue;
    // Do not fill open caves or replace structures. Small low bank corrections
    // use natural sediment, never walls of floating source blocks.
@@ -60,7 +56,9 @@ public final class RiverTerrain {
    var top=c.getBlockState(p.set(wx,h,wz));
    if(wet){
     if(bed<h)c.setBlockState(p.set(wx,bed,wz),Blocks.GRAVEL.defaultBlockState(),false);
-    for(int y=bed+1;y<=stage;y++){c.setBlockState(p.set(wx,y,wz),water,false);c.markPosForPostprocessing(p);}
+    else if(bed>h)for(int y=h+1;y<=bed;y++)c.setBlockState(p.set(wx,y,wz),Blocks.GRAVEL.defaultBlockState(),false);
+    var directed=water.setValue(DirectedRiverBlock.CURRENT,DirectedRiverBlock.encode(hit.dx(),hit.dz()));
+    for(int y=bed+1;y<=stage;y++){c.setBlockState(p.set(wx,y,wz),directed,false);if(y==stage)c.markPosForPostprocessing(p);}
     for(int y=stage+1;y<=h;y++)c.setBlockState(p.set(wx,y,wz),Blocks.AIR.defaultBlockState(),false);
    }else if(bed<h){
     c.setBlockState(p.set(wx,bed,wz),top,false);
@@ -76,12 +74,8 @@ public final class RiverTerrain {
   return Math.max(1,(int)Math.ceil(center*(1-Math.pow(Math.min(1,Math.max(0,relativeDistance)),1.7))));
  }
  public static Vec3 current(ServerLevel l,BlockPos p){
-  if(!(l.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator gen)||!NaturalWaterGeneration.enabled(gen)||!l.hasChunkAt(p))return Vec3.ZERO;
-  // Do not synchronously compute a new regional plan on a player's fluid tick.
-  var state=l.getChunkSource().randomState();int rx=Math.floorDiv(p.getX(),RegionalDrainage.SIZE),rz=Math.floorDiv(p.getZ(),RegionalDrainage.SIZE);
-  var net=cache(state).getIfPresent(((long)rx<<32)^(rz&0xffffffffL));if(net==null)return Vec3.ZERO;
-  var h=net.nearest(p.getX(),p.getZ());if(h==null||h.distance()>h.radius()||Math.abs(p.getY()-h.stage())>h.depth()+1)return Vec3.ZERO;
-  return new Vec3(h.dx(),0,h.dz()).scale(.65);
+  if(!l.hasChunkAt(p))return Vec3.ZERO;
+  return DirectedRiverBlock.flow(l,p,Vec3.ZERO);
  }
  static String probe(ServerLevel l,BlockPos origin){return probe(l,origin,false);}
  static String probe(ServerLevel l,BlockPos origin,boolean headwater){
