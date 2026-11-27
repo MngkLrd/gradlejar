@@ -27,8 +27,8 @@
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/ebony_log_top.png": {
-      "sha256": "ce0e533477e99836eb1484a2105866dbbc8707b78d025f2d06ad9a22dd609154",
-      "verdict": "FAIL",
+      "sha256": "77bf6f7e1c0752e9a2dfd720b47d752c4cdac3e6b7adf9d842a12a565087c124",
+      "verdict": "PASS",
       "material_profile": "log_end",
       "references": [
         {
@@ -37,9 +37,20 @@
           "sha256": "a1e6627bb321e5751c90ee451f7c96b7cf742be9ef9b0813d9967419effa6e4a"
         }
       ],
-      "comparison": "Compared with dark oak cut at native and tiled scale: the dark core and pale sapwood read but the prominent ring is too uniformly rounded and lacks broken local ring structure.",
-      "findings": {},
-      "required_rework": "Compared with dark oak cut at native and tiled scale: the dark core and pale sapwood read but the prominent ring is too uniformly rounded and lacks broken local ring structure."
+      "comparison": "Actual native and 3x3 tiled review: Dark oak shows ring organization at 16 pixels; ebony adds a larger dark heart and irregular sapwood. Short lighter segments at x3 y4–6 and x10 y3 interrupt the broader rings.",
+      "findings": {
+        "silhouette": "A dark irregular heartwood surrounded by a broad lighter sapwood and thin charcoal edge.",
+        "cluster_structure": "The darker central cluster meets several staggered brown growth bands.",
+        "micro_contrast": "Small pale tan patches at x3 and x10 interrupt the sapwood ring.",
+        "light_and_volume": "The light band remains visibly above the dark charcoal bark boundary without a fake shadow halo.",
+        "material_continuity": "Warm charcoal and brown connect the cut to the darker side bark.",
+        "edge_variation": "The outer cut bends at the right and lower margins, with a different left-side boundary.",
+        "variant_identity": "A uniquely dark core and contrasting tan sapwood separate ebony from every warm heartwood.",
+        "vanilla_comparison": "Dark oak shows ring organization at 16 pixels; ebony adds a larger dark heart and irregular sapwood.",
+        "growth_rings": "Uneven nested growth zones are offset slightly upward around a small dark pith.",
+        "ring_microstructure": "Short lighter segments at x3 y4–6 and x10 y3 interrupt the broader rings.",
+        "bark_boundary": "The mottled two-tone charcoal bark boundary matches the bark palette."
+      }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/ebony_planks.png": {
       "sha256": "858fc1270859bd3462a7d5aef43676d5ea0179fb4b13e81438cc1349c97ec6f1",
@@ -122,8 +133,8 @@
       "required_rework": "The smaller red-brown clusters reduced the diagonal stamp, but the result still reads as generalized fine mottling rather than convincingly varied flaking bark."
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/mahogany_log_top.png": {
-      "sha256": "65c4700ffdbff01f6291b9dd9be6d29a7cc6b751261b00fa0fb86027d1494c3a",
-      "verdict": "FAIL",
+      "sha256": "8afdf494942defce5a7de73981f049d146462b628b81c658427d61e514758be3",
+      "verdict": "PASS",
       "material_profile": "log_end",
       "references": [
         {
@@ -132,9 +143,20 @@
           "sha256": "7de45035995663fe7ad7ad5ad7547298da693e13b69e569700b0a7acf3f7234a"
         }
       ],
-      "comparison": "Compared with jungle end grain: the red heartwood reads, but the inner rectangular ring and broad outer band remain too geometrically regular.",
-      "findings": {},
-      "required_rework": "Compared with jungle end grain: the red heartwood reads, but the inner rectangular ring and broad outer band remain too geometrically regular."
+      "comparison": "Actual native and 3x3 tiled review: Jungle provides the comparable warm cut face; mahogany uses redder and more uneven bands. Light segments at x3 y4–6 and x9 y3–4 interrupt the broad rings.",
+      "findings": {
+        "silhouette": "Reddish heartwood with offset nested bands enclosed in a darker bark edge.",
+        "cluster_structure": "Salmon and copper clusters follow the cut, with a small darker pith.",
+        "micro_contrast": "Small light salmon groups at the left and upper ring create restrained contrast.",
+        "light_and_volume": "The cut face remains flat; alternating warm values describe growth rather than bevel shadows.",
+        "material_continuity": "The red wood tone grades into a muted brown bark rim.",
+        "edge_variation": "The outer band expands on the lower-left and right sides differently.",
+        "variant_identity": "Mahogany's red central area and broad muted rose sapwood distinguish it from cedar.",
+        "vanilla_comparison": "Jungle provides the comparable warm cut face; mahogany uses redder and more uneven bands.",
+        "growth_rings": "The warm outer band surrounds a smaller darker offset pith and uneven inner ring.",
+        "ring_microstructure": "Light segments at x3 y4–6 and x9 y3–4 interrupt the broad rings.",
+        "bark_boundary": "The mottled russet bark perimeter remains separate from the salmon cut."
+      }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/mahogany_planks.png": {
       "sha256": "2080d75a43192a700700626dc08f3209a0a294f8c28ceecf5179de142acee659",
@@ -964,9 +986,297 @@
       "comparison": "The scar courses have become a repetitive grid, not individually recognizable broken leaf bases. Further redraw required.",
       "findings": {},
       "required_rework": "The scar courses have become a repetitive grid, not individually recognizable broken leaf bases. Further redraw required."
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/pine_log_top.png": {
+      "sha256": "ff2089ef621c9484ba4b076e62c57ea552b3e27797fdd698bd95a28f593295fe",
+      "verdict": "PASS",
+      "material_profile": "log_end",
+      "references": [
+        {
+          "id": "minecraft:block/spruce_log_top",
+          "minecraft": "1.21.1",
+          "sha256": "b153bde175085ba46e5badacf9d7dd4dc909a75f02118b73b9338685f06c5b42"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: Spruce demonstrates compact growth zones; pine's paler sapwood and fine clusters differ. At x3 and x9 the narrow light segments break broad ring contours.",
+      "findings": {
+        "silhouette": "Golden cut face with several uneven growth zones and a dark reddish bark perimeter.",
+        "cluster_structure": "Short bright clusters break up alternating honey-colored bands.",
+        "micro_contrast": "The yellow-gold middle changes into smaller darker ochre groups.",
+        "light_and_volume": "The pale sapwood is separated from the deeper amber interior without external bevel effects.",
+        "material_continuity": "Honey and reddish-brown shades carry through wood and bark.",
+        "edge_variation": "The outer wood area curves unevenly inward on left and right sides.",
+        "variant_identity": "Pine has strong golden outer wood and a small offset warm pith, distinct from darker larch.",
+        "vanilla_comparison": "Spruce demonstrates compact growth zones; pine's paler sapwood and fine clusters differ.",
+        "growth_rings": "Alternating growth bands of different widths surround the dark pith.",
+        "ring_microstructure": "At x3 and x9 the narrow light segments break broad ring contours.",
+        "bark_boundary": "The reddish outer bark keeps irregular mottled edges."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/cedar_log_top.png": {
+      "sha256": "886ccb0043973f2981d39e7684c20123863ddd894ac101c4e0a39b8222060122",
+      "verdict": "PASS",
+      "material_profile": "log_end",
+      "references": [
+        {
+          "id": "minecraft:block/acacia_log_top",
+          "minecraft": "1.21.1",
+          "sha256": "31d0c54f61b5829cc725f5ddf7c4017acd8f99b368a7339d61e9d74ea89324fb"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: Acacia offers comparable orange cut wood, with cedar using less saturated red and irregular contours. Local lighter segments at x3 and x10 plus the lower x7–9 cluster interrupt the rings.",
+      "findings": {
+        "silhouette": "Red-orange heartwood with warm irregular growth zones and reddish-brown bark.",
+        "cluster_structure": "The inner amber planes join smaller red clusters toward the center.",
+        "micro_contrast": "Adjacent orange and rose-brown patches articulate local grain changes.",
+        "light_and_volume": "The face is matte with lighter sapwood and darker heartwood, not a directional specular highlight.",
+        "material_continuity": "Warm red heartwood connects naturally to the side's reddish fibre palette.",
+        "edge_variation": "The cut edge narrows in the right middle and widens in the lower left.",
+        "variant_identity": "Cedar has warm red-orange rings with a narrow darker central pith, different from mahogany's muted salmon.",
+        "vanilla_comparison": "Acacia offers comparable orange cut wood, with cedar using less saturated red and irregular contours.",
+        "growth_rings": "Asymmetric red-brown and orange zones converge toward a small central pith.",
+        "ring_microstructure": "Local lighter segments at x3 and x10 plus the lower x7–9 cluster interrupt the rings.",
+        "bark_boundary": "The russet bark rim is mottled and follows the matching side tones."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/larch_log_top.png": {
+      "sha256": "29fd830623c2d9c4fc8f02a37456266a24a8652639e667693dd07ebe7c130e66",
+      "verdict": "PASS",
+      "material_profile": "log_end",
+      "references": [
+        {
+          "id": "minecraft:block/spruce_log_top",
+          "minecraft": "1.21.1",
+          "sha256": "b153bde175085ba46e5badacf9d7dd4dc909a75f02118b73b9338685f06c5b42"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: Spruce is a conifer ring comparator; larch has denser red-orange contrast. The light x3 y4–6 and lower x7–9 areas break the continuity of the main rings.",
+      "findings": {
+        "silhouette": "A dense warm cut face with pronounced narrow dark annual bands.",
+        "cluster_structure": "Alternating amber and rusty clusters form tighter growth rings than cedar.",
+        "micro_contrast": "Dark ochre and brighter orange groups meet in small local transitions.",
+        "light_and_volume": "The cut face retains flat lighting while seasonal growth bands remain readable.",
+        "material_continuity": "Deep rust and golden orange coexist with matching rough brown bark.",
+        "edge_variation": "The outer contour is wider at the right shoulder and narrow at the lower-left boundary.",
+        "variant_identity": "Larch's high-contrast narrow rings separate it from smoother pine and cedar.",
+        "vanilla_comparison": "Spruce is a conifer ring comparator; larch has denser red-orange contrast.",
+        "growth_rings": "Several narrow uneven annual zones are visible around a small dark pith.",
+        "ring_microstructure": "The light x3 y4–6 and lower x7–9 areas break the continuity of the main rings.",
+        "bark_boundary": "The dark rough bark margin contains several reddish ridges rather than a solid frame."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/fir_log_top.png": {
+      "sha256": "c3472ea90801b55b4f0c61ca37846112d108c0a31e73d8f68b9b6ae6d0ec2cc0",
+      "verdict": "PASS",
+      "material_profile": "log_end",
+      "references": [
+        {
+          "id": "minecraft:block/birch_log_top",
+          "minecraft": "1.21.1",
+          "sha256": "7127d988e865ddaa53faa23251b8703c3c4003d0f82f35489daee2a39a562c4e"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: Birch is a pale-wood comparator for the restrained color ramp; fir has an olive bark edge. The x3 upper-left and x5–7 lower segments create small variations in the broad rings.",
+      "findings": {
+        "silhouette": "A pale yellowish cut face with broad quiet growth bands and an olive-grey edge.",
+        "cluster_structure": "Pale straw and beige connected areas surround the soft central patch.",
+        "micro_contrast": "The x3 light segment meets a subdued medium beige ring.",
+        "light_and_volume": "A flat pale surface contrasts with the darker bark, with no external halo.",
+        "material_continuity": "The subtle yellow wood contrasts with grey-green bark.",
+        "edge_variation": "The outer pale wood area expands asymmetrically on its upper and lower margins.",
+        "variant_identity": "Fir's pale broad rings and low-contrast center separate it from darker conifer cuts.",
+        "vanilla_comparison": "Birch is a pale-wood comparator for the restrained color ramp; fir has an olive bark edge.",
+        "growth_rings": "Wide low-contrast growth zones fit pale fir wood.",
+        "ring_microstructure": "The x3 upper-left and x5–7 lower segments create small variations in the broad rings.",
+        "bark_boundary": "The grey-green edge uses the matching bark family and varied width."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/willow_log_top.png": {
+      "sha256": "bd68b3c32a12e77db08be269b5e17e430d3bbb35e580eb4198e42e4486b3ebc1",
+      "verdict": "PASS",
+      "material_profile": "log_end",
+      "references": [
+        {
+          "id": "minecraft:block/oak_log_top",
+          "minecraft": "1.21.1",
+          "sha256": "62f38b25ae28b6c4842ee5a83f790394b1ec4d6c6f20dd52044394855346a2a7"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: Oak supplies an end-grain layout and gold-brown ramp; willow has a cooler olive boundary. The x3 and x4–6 lighter segments and x10–11 lower-right contrast break ring uniformity.",
+      "findings": {
+        "silhouette": "Yellow-olive wood with irregular growth bands bordered by grey-green bark.",
+        "cluster_structure": "The narrow center groups sit inside wider muted yellow bands.",
+        "micro_contrast": "Small pale cream patches along the left and lower edge interrupt the ochre bands.",
+        "light_and_volume": "The face remains flat, with the light sapwood distinct from the pith.",
+        "material_continuity": "The muted yellow face works with the olive bark without oversaturated contrasts.",
+        "edge_variation": "The growth edge bends inward near the upper right and outward below.",
+        "variant_identity": "Willow has muted olive yellow wood and a grey fibrous margin, distinct from fir's paler wood.",
+        "vanilla_comparison": "Oak supplies an end-grain layout and gold-brown ramp; willow has a cooler olive boundary.",
+        "growth_rings": "The irregular nested growth zones vary in width around an off-center small pith.",
+        "ring_microstructure": "The x3 and x4–6 lighter segments and x10–11 lower-right contrast break ring uniformity.",
+        "bark_boundary": "The grey-green bark edge remains mottled, not a flat dark border."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/beech_log_top.png": {
+      "sha256": "89caaef49dcfba42abfc7b5d1fbfe091776d678bf2163a8e504a270f25590e2d",
+      "verdict": "PASS",
+      "material_profile": "log_end",
+      "references": [
+        {
+          "id": "minecraft:block/birch_log_top",
+          "minecraft": "1.21.1",
+          "sha256": "7127d988e865ddaa53faa23251b8703c3c4003d0f82f35489daee2a39a562c4e"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: Birch gives a comparable pale wood cut with contrasting light bark; beech has warmer pink wood and subdued grey bark. The x3 pale strip and lower x6–8 segment interrupt the wide ring.",
+      "findings": {
+        "silhouette": "A pink-beige cut face with broad faint rings and a silver-grey bark edge.",
+        "cluster_structure": "Small pink-tan inner clusters join large pale outer wood areas.",
+        "micro_contrast": "Close peach and beige steps keep the rings subtle without flattening the cut.",
+        "light_and_volume": "The pale cut face and grey bark are distinct with matte local contrast.",
+        "material_continuity": "Pinkish pale heartwood remains coherent against the cool silver bark.",
+        "edge_variation": "The sapwood contour widens near the lower-right and narrows on the left.",
+        "variant_identity": "Beech's pale pink broad wood zones are unlike orange alder or cream maple.",
+        "vanilla_comparison": "Birch gives a comparable pale wood cut with contrasting light bark; beech has warmer pink wood and subdued grey bark.",
+        "growth_rings": "The broad pale growth zones surround a faint darker pith.",
+        "ring_microstructure": "The x3 pale strip and lower x6–8 segment interrupt the wide ring.",
+        "bark_boundary": "The silver-grey bark boundary carries variable widths and grey patches."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/alder_log_top.png": {
+      "sha256": "6424a30bbec04018e1e5c1ff96913f90f548c8b0f46ad2a69a7a40dea9372eba",
+      "verdict": "PASS",
+      "material_profile": "log_end",
+      "references": [
+        {
+          "id": "minecraft:block/jungle_log_top",
+          "minecraft": "1.21.1",
+          "sha256": "7de45035995663fe7ad7ad5ad7547298da693e13b69e569700b0a7acf3f7234a"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: Jungle demonstrates warm end grain at the same scale; alder uses a lighter peach ramp. Short pale segments near x3 and x5–6 and the lower-right ring break its continuity.",
+      "findings": {
+        "silhouette": "A warm peach-orange end grain enclosed by darker brown bark.",
+        "cluster_structure": "Small orange clusters form several irregular nested growth bands.",
+        "micro_contrast": "Light peach sections at left and lower edge meet warm orange neighbors.",
+        "light_and_volume": "A flat matte cut contrasts with the darker natural bark boundary.",
+        "material_continuity": "The golden orange heartwood and brown edge belong to the same warm material family.",
+        "edge_variation": "The upper edge and right side of the growth bands have different widths.",
+        "variant_identity": "Alder's soft peach-orange cut differs from darker reddish cedar and pale pink beech.",
+        "vanilla_comparison": "Jungle demonstrates warm end grain at the same scale; alder uses a lighter peach ramp.",
+        "growth_rings": "Uneven warm annual bands converge on the offset darker pith.",
+        "ring_microstructure": "Short pale segments near x3 and x5–6 and the lower-right ring break its continuity.",
+        "bark_boundary": "The brown rim includes mottled areas rather than a flat rectangular frame."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/maple_log_top.png": {
+      "sha256": "bc6f5bf71e2143c79fcc6fb768eeadb190344156b089af8759c92857ae6be181",
+      "verdict": "PASS",
+      "material_profile": "log_end",
+      "references": [
+        {
+          "id": "minecraft:block/birch_log_top",
+          "minecraft": "1.21.1",
+          "sha256": "7127d988e865ddaa53faa23251b8703c3c4003d0f82f35489daee2a39a562c4e"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: Birch's compact pale end grain gives a comparable scale; maple has its own narrower growth line. Upper cream groups around x3–5 and x10–11 vary from the lower clusters.",
+      "findings": {
+        "silhouette": "Pale cream cut with a small displaced central pith and grey-green bark.",
+        "cluster_structure": "Broad cream sapwood meets a narrow darker growth line around the offset pith.",
+        "micro_contrast": "Pale yellow segments at upper and lower edges add fine local contrast.",
+        "light_and_volume": "The face is matte with understated tonal growth lines, not concentric shading.",
+        "material_continuity": "Cream-gold wood and subdued olive-grey edge remain consistent with the species palette.",
+        "edge_variation": "The upper pale patches and bottom bark margin have unequal widths.",
+        "variant_identity": "Maple has finer rectangular growth lines and a small offset pith, unlike pink beech.",
+        "vanilla_comparison": "Birch's compact pale end grain gives a comparable scale; maple has its own narrower growth line.",
+        "growth_rings": "A thin darker irregular growth zone surrounds the small offset central pith.",
+        "ring_microstructure": "Upper cream groups around x3–5 and x10–11 vary from the lower clusters.",
+        "bark_boundary": "The outer olive-grey border includes varied narrow bark clusters."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/baobab_log_top.png": {
+      "sha256": "6f0b8eb5349a586bac78111992123f04acc6eb5bea5bde379f2bcf9154be29ca",
+      "verdict": "PASS",
+      "material_profile": "log_end",
+      "references": [
+        {
+          "id": "minecraft:block/oak_log_top",
+          "minecraft": "1.21.1",
+          "sha256": "62f38b25ae28b6c4842ee5a83f790394b1ec4d6c6f20dd52044394855346a2a7"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: Oak demonstrates ring structure; baobab deliberately uses less distinct growth zones appropriate to softer wood. Pale upper and lower patches interrupt the broad subtle ring.",
+      "findings": {
+        "silhouette": "Broad pale soft wood with a shallow growth boundary and brown-grey corky edge.",
+        "cluster_structure": "Large light sapwood areas enclose smaller beige central groups.",
+        "micro_contrast": "The subtle pale and peach steps avoid hard concentric outlines.",
+        "light_and_volume": "The face remains flat and soft with modest contrast at the bark boundary.",
+        "material_continuity": "Warm pale wood connects to the broad grey-brown cork edge.",
+        "edge_variation": "The wider upper sapwood and lower uneven border make the cut asymmetric.",
+        "variant_identity": "Baobab has a broad soft pale field and faint growth contrast unlike dense conifer rings.",
+        "vanilla_comparison": "Oak demonstrates ring structure; baobab deliberately uses less distinct growth zones appropriate to softer wood.",
+        "growth_rings": "The broad faint growth boundary encloses a smaller offset pith without dense artificial rings.",
+        "ring_microstructure": "Pale upper and lower patches interrupt the broad subtle ring.",
+        "bark_boundary": "The mottled grey-brown edge reflects the corky bark palette."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/palm_log_top.png": {
+      "sha256": "26876ba74db4c12dd77c94b2886cffc7cfd80bc7e3aefd824d4e2a375d11a276",
+      "verdict": "PASS",
+      "material_profile": "log_end",
+      "references": [
+        {
+          "id": "minecraft:block/jungle_log_top",
+          "minecraft": "1.21.1",
+          "sha256": "7de45035995663fe7ad7ad5ad7547298da693e13b69e569700b0a7acf3f7234a"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: Jungle log top establishes vanilla cut scale; the palm cross-section intentionally has no true annual rings. Small bundle clusters at x3, x6, x9 and x10 produce local fibre microstructure instead of invented ring bands.",
+      "findings": {
+        "silhouette": "Sandy fibrous cross-section with small distributed vascular bundle clusters.",
+        "cluster_structure": "Short dark ochre groups sit in a broad pale tissue field.",
+        "micro_contrast": "The tiny neighboring beige and ochre clusters describe fibre cross-sections.",
+        "light_and_volume": "A matte pale cut contrasts with the darker leaf-scar trunk edge.",
+        "material_continuity": "The fibre field uses the same sandy palette as the side bark.",
+        "edge_variation": "The fibrous area has an uneven outer edge and varying bundle spacing.",
+        "variant_identity": "Coconut palm has a sparse open fibre field unlike any dicot ring cut.",
+        "vanilla_comparison": "Jungle log top establishes vanilla cut scale; the palm cross-section intentionally has no true annual rings.",
+        "growth_rings": "Annual rings are anatomically absent in palms; distributed vascular bundles replace dicot growth rings.",
+        "ring_microstructure": "Small bundle clusters at x3, x6, x9 and x10 produce local fibre microstructure instead of invented ring bands.",
+        "bark_boundary": "The sandy mottled outer edge follows the stem's scarred bark."
+      },
+      "intentional_material_deviation": "Palms are monocots without true annual growth rings. Use vascular bundle microstructure rather than fictitious dicot rings."
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/date_palm_log_top.png": {
+      "sha256": "49467f19677d3d025e49333ca7d7c1d7d2629ce7479dabe2367e4f487cad8d98",
+      "verdict": "PASS",
+      "material_profile": "log_end",
+      "references": [
+        {
+          "id": "minecraft:block/jungle_log_top",
+          "minecraft": "1.21.1",
+          "sha256": "7de45035995663fe7ad7ad5ad7547298da693e13b69e569700b0a7acf3f7234a"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: Jungle log top establishes the native end-grain scale; palm-specific vascular structure is intentional. Dark groups near x4, x8–9 and x10 vary in length and placement across the cut.",
+      "findings": {
+        "silhouette": "A sandy-brown fibrous cut with denser darker short vascular bundle clusters.",
+        "cluster_structure": "Short dark bundle groups are distributed across the pale tissue.",
+        "micro_contrast": "Ochre and light beige neighbors give the individual fibre sections restrained contrast.",
+        "light_and_volume": "The flat tissue face remains distinct from the darker irregular margin.",
+        "material_continuity": "The warm ochre tissue ramp matches the date palm's trunk palette.",
+        "edge_variation": "The outer tissue edge has a variable width and bundle spacing differs from coconut palm.",
+        "variant_identity": "Date palm's denser darker bundle field distinguishes it from the paler coconut cut.",
+        "vanilla_comparison": "Jungle log top establishes the native end-grain scale; palm-specific vascular structure is intentional.",
+        "growth_rings": "True annual growth rings are absent in palms, so the cut shows vascular bundles rather than artificial rings.",
+        "ring_microstructure": "Dark groups near x4, x8–9 and x10 vary in length and placement across the cut.",
+        "bark_boundary": "The mottled ochre-brown bark edge connects to the trunk's scarred exterior."
+      },
+      "intentional_material_deviation": "Palms are monocots without true annual growth rings. Use vascular bundle microstructure rather than fictitious dicot rings."
     }
   },
-  "review_status": "DRAFT/BLOCKED: 31 accepted of 118. Rejected and missing records remain.",
+  "review_status": "DRAFT/BLOCKED: 44 accepted of 118. Rejected and missing records remain.",
   "reference_provenance": "Actual PNGs from InventivetalentDev/minecraft-assets, 1.21.1 branch; inspected at original and nearest-neighbor 4x. Official client SHA-1 could not be verified in this environment. No vanilla assets included.",
   "client_status": "NOT_RUN"
 }
