@@ -1,0 +1,43 @@
+name: MineMods Runtime Registry QA
+on:
+  pull_request:
+    paths:
+      - 'tools/qa/probes/**'
+      - 'tools/qa/runtime_registry.py'
+      - 'tools/qa/content_discovery.py'
+      - 'tools/qa/tests/test_runtime_registry.py'
+      - '.github/workflows/qa-runtime-registry.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  registry-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.14.3'
+      - name: Test inventory and reconciliation
+        run: python3 -m unittest tools.qa.tests.test_content_discovery tools.qa.tests.test_runtime_registry -v
+      - name: Compile independent probe and unchanged production mod
+        run: |
+          gradle -p tools/qa/probes/fabric-1.21.1 build --no-daemon
+          gradle -p projects/fragileglass-fabric-1.21.1 build --no-daemon
+      - name: Start official Fabric server and verify live controls
+        run: |
+          python3 -u -m tools.qa.runtime_registry --jar projects/fragileglass-fabric-1.21.1/build/libs/fragileglass-fabric-mc1.21.1-1.0.1.jar --probe tools/qa/probes/fabric-1.21.1/build/libs/minemods-registry-probe-fabric-mc1.21.1-0.1.0.jar --out registry-pilot
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: registry-pilot
+          path: |
+            registry-pilot/*.json
+            registry-pilot/runtime/logs/
+          if-no-files-found: warn
+          retention-days: 14
