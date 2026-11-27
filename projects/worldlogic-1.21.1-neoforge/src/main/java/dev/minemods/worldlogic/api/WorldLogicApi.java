@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=4;
+ public static final int API_REVISION=5;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -36,6 +36,16 @@ public final class WorldLogicApi {
                            boolean rainingAt,boolean globalThunder,double solarExposure,
                            Optional<RegionalClimate> regionalClimate){}
  public enum Precipitation { NONE, RAIN, SNOW }
+ public enum WeatherKind { CLEAR, RAIN, DOWNPOUR, THUNDERSTORM, SNOW, BLIZZARD, DUST_STORM, MONSOON, FOG }
+ /** Authoritative local gameplay conditions in geographic presets. Intensity, cloud, fog and solar transmission: 0..1. */
+ public record LocalWeather(WeatherKind kind,double intensity,double temperatureDeltaC,double relativeHumidityPercent,
+  double windXMps,double windZMps,double gustMps,double cloudFraction,double fogDensity,double solarTransmission,
+  Precipitation precipitation,double precipitationIntensity,double pressureHpa,boolean exposed){}
+ /** Empty for disabled rules, unsupported dimensions/generators and unloaded positions. Server thread only. */
+ public static Optional<LocalWeather> localWeather(ServerLevel level,BlockPos pos){
+  serverThread(level);
+  return dev.minemods.worldlogic.LocalWeatherRuntime.at(level,pos);
+ }
  /** Modeled relative humidity and open-air wind; local precipitation reflects vanilla weather.
   * Wind vector components and speed are estimated m/s, not a physical fluid simulation.
   * Local precipitation is normalized 0..1, not mm/hour. */
@@ -86,6 +96,13 @@ public final class WorldLogicApi {
   boolean sky=level.dimensionType().hasSkyLight()&&level.canSeeSky(pos);
   double sun=sky?Math.max(0,Math.cos((Math.floorMod(level.getDayTime(),24000L)-6000)*Math.PI/12000.0)):0;
   sun*=level.getBrightness(LightLayer.SKY,pos)/15.0;
+  var weather=dev.minemods.worldlogic.LocalWeatherRuntime.at(level,pos,regional);
+  if(weather.isPresent()){
+   var w=weather.orElseThrow();sun*=w.solarTransmission();
+   // This is the actual air temperature reference; do not apply the anomaly again in Temperature.
+   double ambient=clamp(base+(sky?sun*4-2:0)+w.temperatureDeltaC(),-100,100);
+   return Optional.of(new Environment(ambient,pos.getY()-level.getSeaLevel(),!sky,w.precipitation()==Precipitation.RAIN,w.kind()==WeatherKind.THUNDERSTORM,sun,regional));
+  }
   if(level.isRaining())sun*=.35;
   boolean rain=level.isRainingAt(pos);
   double ambient=clamp(base+(sky?sun*4-2:0)-(rain?2:0),-100,100);
@@ -98,6 +115,11 @@ public final class WorldLogicApi {
   var existing=environment(level,pos);
   if(existing.isEmpty())return Optional.empty();
   var env=existing.orElseThrow();
+  var local=dev.minemods.worldlogic.LocalWeatherRuntime.at(level,pos,env.regionalClimate());
+  if(local.isPresent()){
+   var w=local.orElseThrow();
+   return Optional.of(new Atmosphere(env,w.relativeHumidityPercent(),w.windXMps(),w.windZMps(),Math.hypot(w.windXMps(),w.windZMps()),w.precipitation(),w.precipitationIntensity()));
+  }
   var biome=level.getBiome(pos).value();
   var regional=env.regionalClimate();
   double moisture=regional.map(RegionalClimate::moistureIndex).orElse(biome.hasPrecipitation()?.55:.15);
@@ -159,7 +181,7 @@ public final class WorldLogicApi {
  /** Experimental persisted transport domain; not the authoritative player environment. */
  public static Optional<dev.minemods.worldlogic.WeatherGridState.Conditions> transportGridPreview(ServerLevel level,BlockPos pos){
   serverThread(level);
-  if(!Rules.on("modeled_weather")||level!=level.getServer().overworld()||level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
+  if(dev.minemods.worldlogic.LocalWeatherRuntime.active(level)||!Rules.on("modeled_weather")||level!=level.getServer().overworld()||level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
   return dev.minemods.worldlogic.WeatherGridState.sample(level,pos);
  }
  public static Fatigue fatigue(ServerPlayer player){
