@@ -31,6 +31,15 @@ PILOT={
 "block/acacia_leaves":"81c370267c6bcff3f458d612ea4ef72c0838e5e3",
 "block/jungle_sapling":"8632359457d3a245220bee351716a7b1c9267bfc",
 "block/birch_sapling":"9b8193943a7dfd61a2752c82189e9b0d02f95497",
+"item/glass_bottle":"b86b4b7f27ee23ac212890441e7c67631489446f",
+"item/bucket":"735a4afb22247b199992b8fb989a66b72bb06293",
+"item/copper_ingot":"3774bab4d43fb4fa8570843620c2ff3c193740aa",
+"item/iron_ingot":"c332bd2ca95f685c0ff89b29c836303efa885e5d",
+"item/brick":"1fb55776cd0244e61e0cc7f9e124f1d66f482215",
+"item/leather":"d808180790a73d27ee67c855472dfaf594805198",
+"item/bread":"4f3fc127000610a8367e047c5bb0b53c39d8f8ef",
+"item/apple":"6b0d745c8814f5d201b2bbb2a05ce507ec67af1c",
+"block/oxidized_copper":"b049d6c446e00b016c8985618294a82d5ec9f98d",
 }
 
 def git_blob(data):

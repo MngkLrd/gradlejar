@@ -78,3 +78,64 @@ R3: 16 additional official source images, 40 paired perturbations (16 visible sh
 ## R4 — unfitted metric diagnostics
 
 The benchmark now reports five prespecified single-metric directional baselines (more colors, fewer isolated pixels, more same-color neighbor edges, lower adjacent brightness delta, larger connected component). Compare original and perturbed images, count correct source-side choice, wrong choice and abstention for equal/missing values, and break down by perturbation. No fitting, no image-derived learned model, no aesthetics claim. Results are source-identification diagnostics on correlated synthetic pairs, not independent samples or proof of style quality. Never convert these numbers into release gates. Preserve actual measurements and error cases to inform a future independent image-based review. Reviewer must still inspect actual images and judge their meaning, not try to reverse these mutation algorithms.
+
+
+## R4 results (fixed exploratory controls)
+
+Verified [run 46017233045](https://github.com/MngkLrd/gradlejar/actions/runs/46017233045); PR #208 merged. All metrics are single-direction, unfitted source-choice diagnostics, not aesthetic accuracy. Ties/missing values are abstentions.
+
+| Hypothesis | Correct | Wrong | Abstain |
+| --- | ---: | ---: | ---: |
+| More palette colors | 16 | 0 | 24 |
+| Fewer isolated pixels | 21 | 18 | 1 |
+| More same-color neighbor edges | 19 | 20 | 1 |
+| Lower adjacent mean value delta | 29 | 11 | 0 |
+| Larger connected component | 18 | 17 | 5 |
+
+The more-same-color-edges heuristic incorrectly prefers all 16 flattened ramps. Larger-component and fewer-singleton hypotheses also fail frequently on this mode. This is concrete evidence against turning these numbers into artistic pass gates. It does not show that no combination or trained image model can help.
+
+## R5 — source audit, additional item/material examples, sufficiency review
+
+Nine PNGs decoded from the version-pinned misode/mcmeta archive (1.21.1-assets), local Git blob SHA-1 recomputed and matched, viewed at 1x and nearest-neighbor enlargement. Official-client hash cross-check added for all nine. See [atlas](VANILLA-ART-ATLAS.md) for material-specific observations.
+
+| Texture | RGB colors | Visible pixels | Components | Largest component |
+| --- | ---: | ---: | ---: | ---: |
+| item/glass_bottle | 8 | 42 | 25 | 5 |
+| item/bucket | 8 | 146 | 38 | 18 |
+| item/copper_ingot | 8 | 135 | 63 | 9 |
+| item/iron_ingot | 8 | 135 | 51 | 30 |
+| item/brick | 7 | 135 | 42 | 33 |
+| item/leather | 6 | 128 | 52 | 18 |
+| item/bread | 7 | 138 | 57 | 18 |
+| item/apple | 10 | 114 | 53 | 24 |
+| block/oxidized_copper | 8 | 256 | 110 | 37 |
+
+All are 16x16, with no partially transparent pixels. The bottle represents transparent glass via cutout space and edge cues, not partial alpha in this image. Copper, iron and brick share closely comparable shapes but differ substantially in surface treatment. Do not generalize a fully oxidized block to all patina states. Glass_bottle was already in the fixed R3/R4 exploratory benchmark, so it must not be used as an unseen holdout in subsequent reviewer evaluation.
+
+### Source status (2026-11-27)
+
+- [Texture update interview with Jasper Boerstra](https://www.minecraft.net/en-us/article/try-new-minecraft-textures): read; coherence across pack, restrained AA and geometry, iterative feedback.
+- [Caves & Cliffs developer Q&A](https://www.minecraft.net/en-us/article/caves---cliffs--part-i--dev-q-a): read; pixel relationships and color theory.
+- [Blockbench style guide](https://blockbench.net/wiki/guides/minecraft-style-guide/): read; community guide, not Mojang-authored. Covers proportional geometry, texel scale, HSV/ramps, deliberate shading, banding, tiling and entity UVs.
+- [Meet the Phantom](https://www.minecraft.net/en-us/article/meet-phantom): read; first-party art redesign case, intentional alpha for added body detail, willingness to iterate beyond a rigid style assumption.
+- [Maker Series: Goblin Chef](https://www.minecraft.net/en-us/creator/article/minecraft-maker-series-episode-1--making-goblin-chef): official introduction read; Peter Sheff's modeling/texturing/animation walkthrough identified, full videos NOT_REVIEWED.
+- [Lookin' Good: How We Make Minecraft](https://www.youtube.com/watch?v=UlVZgIdoR_A) and [Minecraft Live: The Art of Caves & Cliffs](https://www.youtube.com/watch?v=4WJ7LmY3mZA): official video references located; full contents NOT_REVIEWED. Do not attribute detailed rules before inspecting.
+- [Microsoft entity modeling and animation](https://learn.microsoft.com/en-us/minecraft/creator/documents/entitymodelingandanimation): inspected texturing, UV/bones and animation process; Bedrock schemas not Java.
+- [Java snapshot 25w08a](https://www.minecraft.net/en-us/article/minecraft-snapshot-25w08a): first-party change note for spawn egg readability/accessibility, later-version design example, not a 1.21.1 texture source.
+- [Bedrock Copper Age changelog](https://www.minecraft.net/en-us/article/the-copper-age---minecraft--bedrock-edition-1-21-111-changelog): previously inspected dye design/accessibility example; version and edition differ. No claim of Mojang's unpublished internal art manual.
+
+### Research sufficiency contract
+
+Do not declare the art system proven merely because corpus metrics or CI are complete.
+
+| Evidence layer | Current evidence | Remaining work |
+| --- | --- | --- |
+| Provenance/inventory | 3,070 official-client PNG paths; 2,886 statically measured, 96 metadata-bearing and 88 large explicitly inventoried | Analyze metadata frames and large/UV/GUI assets according to their function; audit decode/exclusion reasons |
+| Material/role knowledge | 28 directly viewed source examples; family statistics for 7 filename groups | Stratify by category, material, role, scale, tint, overlays and atlas/animation usage; expand representative samples and counterexamples, track direct visual vs numeric coverage separately |
+| Practical application | Atlas drawing methods, observed references and exceptions | Draw and review actual rejected mod families, compare before/after in native inventory and placed/rendered contexts |
+| Independent evaluation | Fixed exploratory 40 synthetic pairs; simple baseline results | Fresh held-out layout groups and real owner-approved/rejected mod assets; separate artist/reviewer contexts; label per-image accept/reject/unsure with concrete region evidence; freeze decisions, report false acceptance/rejection and uncertainty; repeat with fresh reviewer |
+| Release assurance | Existing hash-bound review evidence lock and structural tests | Actual reference provenance and independent review evidence must be verified, not just filled text; no automated artistic verdict yet; in-game evidence separate |
+
+Sufficiency is scoped to the intended art categories, not a demand to have a human look at every utility mask or redundant variant. Before marking a category ready, inventory its exact source assets, inspect a diverse set of examples and exceptions covering each meaningful material/role, evaluate a fresh independent reviewer against actual labeled accept/reject cases, show a corrected real mod example and record the renderer contexts tested. Pre-register sample selection, success criteria, treatment of uncertain outcomes, and confidence limits before the definitive evaluation. Owner-reviewed borderline examples are stronger than obvious shuffled textures; do not tune on the final holdout. A pilot cannot justify a global accuracy or production guarantee. Full video source review and model/UV/animation/GUI coverage are explicitly open. Do not add a heavier production gate before calibration and owner approval.
+
+R5 updates the contradictory vertical-only / blanket palette-variant language in Visual QA using the official verified bark example; no structural/release check is relaxed. All variant evidence remains required.
