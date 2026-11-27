@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.5.3 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.5.4 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -633,7 +633,7 @@
       "name": "single-side-progress"
     },
     {
-      "command": "execute if entity @e[type=minecraft:block_display,tag=wl_treechopper_cut_cap,x=1048,y=200,z=1038,distance=..2]",
+      "command": "execute if entity @e[type=minecraft:block_display,tag=wl_treechopper_cut_cap,x=1048,y=200,z=1038,distance=..2,nbt={block_state:{Name:\"wl_treechopper:fallen_upper_oak\"}}]",
       "expect": "Test passed",
       "assertion": true,
       "name": "cut-cap-present"
@@ -652,6 +652,24 @@
       "expect": "Test passed",
       "assertion": true,
       "name": "cut-cap-cleanup"
+    },
+    {
+      "command": "setblock 1048 199 1048 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1048 200 1048 1048 203 1048 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1048 204 1048 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_network 1048 200 1048",
+      "expect": "TreeChopper network validation PASS",
+      "assertion": true,
+      "name": "network-strike-validation"
     }
   ],
   "coverage": [
@@ -1274,7 +1292,7 @@
     {
       "id": "cut-cap-present",
       "kind": "mechanic",
-      "subject": "Actual falling display includes the severed top of the original cut block",
+      "subject": "Actual falling display uses the new full 12px upper log, not a 4px stump mesh",
       "checks": [
         {
           "backend": "server",
@@ -1301,6 +1319,17 @@
         {
           "backend": "server",
           "name": "cut-cap-cleanup"
+        }
+      ]
+    },
+    {
+      "id": "network-strike-validation",
+      "kind": "mechanic",
+      "subject": "Production packet handler path with actual player aim, cooldown and range rejection (FakePlayer not actual client packets)",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "network-strike-validation"
         }
       ]
     }

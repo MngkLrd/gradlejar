@@ -31,6 +31,9 @@ tasks.register('generateTreeGeometry') {
             def cut="cut_${s}"; def stump="stump_${s}"
             def bottom=model(stump,0,0,0,16,4,16)
             def top=model(cut+'_top',0,12,0,16,16,16)
+            def upper="fallen_upper_${s}"
+            def upperModel=model(upper,0,0,0,16,12,16)
+            emit(asset+"blockstates/${upper}.json",[variants:['':upperModel]])
             def multi=[[apply:bottom],[apply:top]]
             [[4,6,1],[6,10,0],[10,12,1]].eachWithIndex { band,i ->
                 (0..3).each { x -> (0..3).each { z ->

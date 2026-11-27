@@ -14,7 +14,10 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.*;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.*;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -35,16 +38,19 @@ public final class TreeChopper {
     private static final DeferredRegister.Blocks BLOCKS=DeferredRegister.createBlocks(ID);
     private static final Map<String,DeferredBlock<CutBlock>> CUTS=new LinkedHashMap<>();
     private static final Map<String,DeferredBlock<StumpBlock>> STUMPS=new LinkedHashMap<>();
+    private static final Map<String,DeferredBlock<Block>> UPPERS=new LinkedHashMap<>();
     private static final String COOLDOWN="wl_treechopper:last_hit", FALL="wl_treechopper_fall";
     private static final int FALL_TICKS=36;
     static {
         for(String name:SPECIES){
             CUTS.put(name,BLOCKS.register("cut_"+name,()->new CutBlock(BlockBehaviour.Properties.of().strength(2).sound(SoundType.WOOD).noOcclusion())));
             STUMPS.put(name,BLOCKS.register("stump_"+name,()->new StumpBlock(BlockBehaviour.Properties.of().strength(1.5f).sound(SoundType.WOOD).noOcclusion())));
+            UPPERS.put(name,BLOCKS.register("fallen_upper_"+name,()->new Block(BlockBehaviour.Properties.of().strength(2).sound(SoundType.WOOD).noOcclusion().noCollission())));
         }
     }
     public TreeChopper(IEventBus modBus){
         BLOCKS.register(modBus);
+        modBus.addListener(ChopNetwork::register);
         NeoForge.EVENT_BUS.addListener(TreeChopper::hit);
         NeoForge.EVENT_BUS.addListener(TreeChopper::guardBreak);
         NeoForge.EVENT_BUS.addListener(TreeChopper::tickDisplay);
@@ -60,6 +66,30 @@ public final class TreeChopper {
             if(!source.isAir() && state.is(source.getBlock()) && state.hasProperty(BlockStateProperties.AXIS)) return s;
         }
         return null;
+    }
+    static boolean choppingTarget(Player player,BlockPos pos){
+        if(player.isCreative()||player.isSpectator()||!(player.getMainHandItem().getItem() instanceof AxeItem)||!player.level().hasChunkAt(pos))return false;
+        BlockState state=player.level().getBlockState(pos);
+        String s=species(state);
+        return s!=null&&(state.getBlock() instanceof CutBlock||!scan(player.level(),pos,s).isEmpty());
+    }
+    static boolean aimsAt(Player player,BlockPos pos,HitResult actual){
+        if(actual==null)return false;
+        Vec3 eye=player.getEyePosition();
+        Vec3 end=eye.add(player.getViewVector(1f).scale(player.blockInteractionRange()));
+        var entry=new AABB(pos).clip(eye,end);
+        if(entry.isEmpty())return false;
+        if(actual instanceof BlockHitResult block&&actual.getType()==HitResult.Type.BLOCK&&block.getBlockPos().equals(pos))return true;
+        return actual.getLocation().distanceToSqr(eye)+.0001>=entry.get().distanceToSqr(eye);
+    }
+    static void networkStrike(ServerPlayer player,BlockPos pos){
+        if(!player.isAlive()||player.isUsingItem()||!player.mayBuild()||!player.level().hasChunkAt(pos))return;
+        HitResult actual=player.pick(player.blockInteractionRange(),1f,false);
+        if(!aimsAt(player,pos,actual)||!choppingTarget(player,pos))return;
+        double dx=player.getX()-pos.getX()-.5,dz=player.getZ()-pos.getZ()-.5;
+        Direction side=Math.abs(dx)>Math.abs(dz)?(dx>0?Direction.EAST:Direction.WEST):(dz>0?Direction.SOUTH:Direction.NORTH);
+        if(actual instanceof BlockHitResult block&&actual.getType()==HitResult.Type.BLOCK&&block.getBlockPos().equals(pos))side=block.getDirection();
+        NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(player,pos,side,PlayerInteractEvent.LeftClickBlock.Action.START));
     }
     private static boolean allowed(ServerLevel level,ServerPlayer player,BlockPos pos,BlockState state){
         if(!level.mayInteract(player,pos))return false;
@@ -111,6 +141,7 @@ public final class TreeChopper {
         if(next<=before)return;
         damaged=damaged.setValue(CutBlock.side(side),next);
         if(!level.setBlock(pos,damaged,Block.UPDATE_ALL))return;
+        player.swing(InteractionHand.MAIN_HAND,true);
         axe.hurtAndBreak(1,player,EquipmentSlot.MAINHAND);
         level.playSound(null,pos,SoundEvents.WOOD_HIT,SoundSource.BLOCKS,1f,.8f+level.random.nextFloat()*.25f);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,original(s)),pos.getX()+.5+side.getStepX()*.47,pos.getY()+.5,pos.getZ()+.5+side.getStepZ()*.47,8,.12,.12,.12,.08);
@@ -122,7 +153,7 @@ public final class TreeChopper {
     }
     private static boolean sameLog(BlockState b,BlockState source){return !source.isAir()&&b.is(source.getBlock());}
     /** Bounded connected crown search; no forced chunk loads. Only logs above the chosen cut are removed. */
-    private static List<Piece> scan(ServerLevel l,BlockPos base,String species){
+    private static List<Piece> scan(Level l,BlockPos base,String species){
         BlockState source=original(species);
         if(source.isAir()||!l.hasChunkAt(base.below()))return List.of();
         BlockState below=l.getBlockState(base.below());
@@ -189,9 +220,9 @@ public final class TreeChopper {
         if(tree.stream().anyMatch(p->!l.getBlockState(p.pos).equals(p.state)||!allowed(l,player,p.pos,p.state)))return;
         Direction direction=fallDirection(cut,latest);
         List<Piece> pieces=new ArrayList<>(tree);
-        // Reuse the existing 4px stump mesh as the severed upper cap (y=12..16).
-        // It is visual only: the original cut log is represented by the real stump drop.
-        pieces.add(0,new Piece(base,STUMPS.get(species).get().defaultBlockState(),false));
+        // Preserve the complete upper 12px of the cut block. The lower 4px stays in the world.
+        // This display has no item yield; the actual stump accounts for the original log.
+        pieces.add(0,new Piece(base,UPPERS.get(species).get().defaultBlockState(),false));
         List<Display.BlockDisplay> displays=new ArrayList<>();
         // All pieces share a common pivot, so rotation preserves the tree silhouette.
         for(Piece piece:pieces){
@@ -202,7 +233,7 @@ public final class TreeChopper {
             tag.putFloat("view_range",2f);
             tag.putInt("interpolation_duration",2);
             tag.putInt("start_interpolation",0);
-            tag.put("transformation",fallTransform(piece.pos.getX()-base.getX(),piece.pos.getY()-base.getY(),piece.pos.getZ()-base.getZ(),direction,0,cap,true));
+            tag.put("transformation",fallTransform(piece.pos.getX()-base.getX(),piece.pos.getY()-base.getY(),piece.pos.getZ()-base.getZ(),direction,0,cap,true,true));
             d.load(tag);
             d.setPos(base.getX()+.5+.5*direction.getStepX(),base.getY()+.25,base.getZ()+.5+.5*direction.getStepZ());
             d.setNoGravity(true);
@@ -210,7 +241,7 @@ public final class TreeChopper {
             if(cap)d.addTag("wl_treechopper_cut_cap");
             CompoundTag fall=new CompoundTag();
             fall.putInt("x",piece.pos.getX()-base.getX());fall.putInt("y",piece.pos.getY()-base.getY());fall.putInt("z",piece.pos.getZ()-base.getZ());
-            fall.putBoolean("hinge",true);fall.putBoolean("cap",cap);
+            fall.putBoolean("hinge",true);fall.putBoolean("cap",cap);fall.putBoolean("wholeUpper",true);
             fall.putString("direction",direction.getName());fall.putBoolean("log",piece.log);fall.putString("species",species);fall.putInt("age",0);
             d.getPersistentData().put(FALL,fall);
             if(!l.addFreshEntity(d)){displays.forEach(Entity::discard);return;}
@@ -233,21 +264,22 @@ public final class TreeChopper {
         return t*t*(3-2*t);
     }
     /** Transform relative to the hinge. Old in-flight displays retain their original pivot. */
-    private static Vector3f fallOffset(float x,float y,float z,Direction dir,float progress,boolean cap,boolean hinge){
+    private static Vector3f fallOffset(float x,float y,float z,Direction dir,float progress,boolean cap,boolean hinge,boolean wholeUpper){
         float angle=(float)(Math.PI*.5*progress*progress);
         float edge=hinge?.5f:0;
-        Vector3f off=rotation(dir,angle).transform(new Vector3f(x-.5f-edge*dir.getStepX(),y-.25f+(cap?.75f:0),z-.5f-edge*dir.getStepZ()));
+        Vector3f off=rotation(dir,angle).transform(new Vector3f(x-.5f-edge*dir.getStepX(),y-.25f+(cap?(wholeUpper?.25f:.75f):0),z-.5f-edge*dir.getStepZ()));
         if(hinge){
             // During the last quarter, lower the trunk onto its local ground plane
             // and close the gap left by the missing central notch.
             float t=settle(progress);
-            off.add(-.5f*t*dir.getStepX(),-.25f*t,-.5f*t*dir.getStepZ());
+            float close=wholeUpper?0:-.5f*t;
+            off.add(close*dir.getStepX(),-.25f*t,close*dir.getStepZ());
         }
         return off;
     }
-    private static CompoundTag fallTransform(float x,float y,float z,Direction dir,float progress,boolean cap,boolean hinge){
+    private static CompoundTag fallTransform(float x,float y,float z,Direction dir,float progress,boolean cap,boolean hinge,boolean wholeUpper){
         float angle=(float)(Math.PI*.5*progress*progress);
-        Quaternionf q=rotation(dir,angle);Vector3f off=fallOffset(x,y,z,dir,progress,cap,hinge);
+        Quaternionf q=rotation(dir,angle);Vector3f off=fallOffset(x,y,z,dir,progress,cap,hinge,wholeUpper);
         CompoundTag t=new CompoundTag();
         t.put("translation",floats(off.x,off.y,off.z));t.put("left_rotation",floats(q.x,q.y,q.z,q.w));
         t.put("right_rotation",floats(0,0,0,1));t.put("scale",floats(1,1,1));return t;
@@ -256,11 +288,11 @@ public final class TreeChopper {
         // Check initial cap height, shared contact plane and cap-to-log continuity
         // for the exact transform used by the real displays, in all four directions.
         for(Direction dir:SIDES){
-            Vector3f start=fallOffset(0,0,0,dir,0,true,true);
-            if(Math.abs(start.y+.25f-.75f)>.0001f)return false;
-            Vector3f cap=fallOffset(0,0,0,dir,1,true,true);
-            Vector3f log=fallOffset(0,1,0,dir,1,false,true);
-            Vector3f span=rotation(dir,(float)(Math.PI*.5)).transform(new Vector3f(0,.25f,0));
+            Vector3f start=fallOffset(0,0,0,dir,0,true,true,true);
+            if(Math.abs(start.y+.25f-.25f)>.0001f)return false;
+            Vector3f cap=fallOffset(0,0,0,dir,1,true,true,true);
+            Vector3f log=fallOffset(0,1,0,dir,1,false,true,true);
+            Vector3f span=rotation(dir,(float)(Math.PI*.5)).transform(new Vector3f(0,.75f,0));
             if(cap.add(span).distance(log)>.0001f)return false;
             // Each full log's eight transformed corners: bottom exactly at base Y.
             float low=Float.POSITIVE_INFINITY;
@@ -279,11 +311,11 @@ public final class TreeChopper {
         Direction dir=Direction.byName(f.getString("direction"));
         if(dir==null){d.discard();return;}
         float x=f.getInt("x"),y=f.getInt("y"),z=f.getInt("z");
-        boolean hinge=f.getBoolean("hinge"),cap=f.getBoolean("cap");
+        boolean hinge=f.getBoolean("hinge"),cap=f.getBoolean("cap"),wholeUpper=f.getBoolean("wholeUpper");
         float progress=Math.min(1,age/(float)FALL_TICKS);
         if(age>=FALL_TICKS+3){
             if(f.getBoolean("log")&&CUTS.containsKey(f.getString("species"))){
-                Vector3f off=fallOffset(x,y,z,dir,1,false,hinge).add(rotation(dir,(float)(Math.PI*.5)).transform(new Vector3f(.5f,.5f,.5f)));
+                Vector3f off=fallOffset(x,y,z,dir,1,false,hinge,wholeUpper).add(rotation(dir,(float)(Math.PI*.5)).transform(new Vector3f(.5f,.5f,.5f)));
                 BlockPos end=BlockPos.containing(d.getX()+off.x,d.getY()+off.y+.4,d.getZ()+off.z);
                 if(!l.hasChunkAt(end)||!l.getBlockState(end).getCollisionShape(l,end).isEmpty())end=d.blockPosition().above();
                 Block.popResource(l,end,new ItemStack(original(f.getString("species")).getBlock()));
@@ -293,7 +325,7 @@ public final class TreeChopper {
         if(age%2!=0)return;
         CompoundTag tag=d.saveWithoutId(new CompoundTag());
         tag.putInt("interpolation_duration",2);tag.putInt("start_interpolation",0);
-        tag.put("transformation",fallTransform(x,y,z,dir,progress,cap,hinge));
+        tag.put("transformation",fallTransform(x,y,z,dir,progress,cap,hinge,wholeUpper));
         d.load(tag);
     }
     static void qaResetCooldown(ServerPlayer player){player.getPersistentData().remove(COOLDOWN);}

@@ -29,6 +29,25 @@ final class TreeQA {
             if(!TreeChopper.qaLandingPose()){c.getSource().sendFailure(Component.literal("TreeChopper landing geometry FAILED"));return 0;}
             c.getSource().sendSuccess(()->Component.literal("TreeChopper landing geometry PASS"),false);return 1;
           }))
+          .then(Commands.literal("qa_network").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
+            ServerLevel l=c.getSource().getLevel();
+            BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            var fake=FakePlayerFactory.getMinecraft(l);
+            fake.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(Items.IRON_AXE));
+            fake.setPos(p.getX()+.5,p.getY()-1,p.getZ()-2);
+            fake.setYRot(0);fake.setXRot(4);
+            var original=l.getBlockState(p);
+            TreeChopper.qaResetCooldown(fake);
+            TreeChopper.networkStrike(fake,p);
+            var first=l.getBlockState(p);
+            if(!(first.getBlock() instanceof CutBlock)||first.equals(original)){c.getSource().sendFailure(Component.literal("TreeChopper network initial strike FAILED"));return 0;}
+            TreeChopper.networkStrike(fake,p);
+            if(!first.equals(l.getBlockState(p))){c.getSource().sendFailure(Component.literal("TreeChopper network cooldown FAILED"));return 0;}
+            fake.setPos(p.getX()+.5,p.getY()-1,p.getZ()-20);
+            TreeChopper.qaResetCooldown(fake);TreeChopper.networkStrike(fake,p);
+            if(!first.equals(l.getBlockState(p))){c.getSource().sendFailure(Component.literal("TreeChopper network range FAILED"));return 0;}
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper network validation PASS"),false);return 1;
+          })))
           .then(Commands.literal("qa_progress").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
             ServerLevel l=c.getSource().getLevel();
             BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
