@@ -12,10 +12,14 @@ function direction(c) {
   if(!Number.isInteger(d)||d<0||d>5) throw Error('Invalid face');
   return d;
 }
-function itemNamed(name) {
-  const i=bot.inventory.items().find(x=>x.name===name);
-  if(!i) throw Error('Missing inventory item '+name);
-  return i;
+async function itemNamed(name, count=1) {
+  // A fixture RCON reply may precede the inventory slot packet.
+  for(let n=0;n<50;n++){
+    const items=bot.inventory.items().filter(x=>x.name===name);
+    if(items.reduce((sum,x)=>sum+x.count,0)>=count)return items[0];
+    await sleep(100);
+  }
+  throw Error('Missing inventory item '+name+' count '+count);
 }
 async function useBlock(b,c) {
   await bot.lookAt(b.position.offset(.5,.5,.5),true);
@@ -51,7 +55,13 @@ async function control(c) {
 }
 let sequence=10, ready=false, busy=false;
 const rl=readline.createInterface({input:process.stdin,terminal:false});
-bot.once('spawn',()=>{ready=true; emit({event:'ready',version:bot.version});});
+// Mineflayer 4.26.0 predates upstream #3986: 1.21.4 waits for client load acknowledgment.
+bot.on('spawn',()=>{
+  if(version==='1.21.4') {
+    bot._client.write('player_loaded',{});
+  }
+  if(!ready){ready=true;emit({event:'ready',version:bot.version});}
+});
 bot.on('error',e=>emit({event:'error',message:String(e)}));
 bot.on('kicked',e=>emit({event:'error',message:'kicked: '+JSON.stringify(e)}));
 bot.on('end',()=>{emit({event:'end'});process.exit(0)});
@@ -84,18 +94,15 @@ rl.on('line',async line=>{
       await useBlock(b,c);
       result.packet='block_place / use_item_on';
     }else if(c.action==='inventory'){
-      let item;
-      for(let i=0;i<50;i++){item=bot.inventory.items().find(x=>x.name===c.item);if(item)break;await sleep(100);}
-      if(!item||item.count<c.count)throw Error('Inventory item missing: '+c.item);
-      result.count=item.count;
+      await itemNamed(c.item,c.count??1);
+      result.count=bot.inventory.items().filter(x=>x.name===c.item).reduce((sum,x)=>sum+x.count,0);
     }else if(c.action==='drop'){
-      const item=bot.inventory.items().find(x=>x.name===c.item);
-      if(!item)throw Error('Cannot drop missing item');
+      const item=await itemNamed(c.item);
       await bot.equip(item,'hand');
       bot._client.write('block_dig',{status:4,location:{x:0,y:0,z:0},face:0,sequence:sequence++});
       result.packet='DROP_ITEM';
     }else if(c.action==='equip'){
-      await bot.equip(itemNamed(c.item),c.destination??'hand');
+      await bot.equip(await itemNamed(c.item),c.destination??'hand');
       result.item=c.item;
     }else if(c.action==='move'||c.action==='jump'){
       result=await control(c);
@@ -108,7 +115,7 @@ rl.on('line',async line=>{
       await bot.craft(recipes[0],c.count??1,table);
       result.output=c.item;
     }else if(c.action==='place'){
-      await bot.equip(itemNamed(c.item),'hand');
+      await bot.equip(await itemNamed(c.item),'hand');
       const b=await blockAt(c);
       await useBlock(b,c);
       result.packet='block_place';
@@ -123,7 +130,7 @@ rl.on('line',async line=>{
       else await bot.activateEntity(e);
       result.entity=e.name;
     }else if(c.action==='use'){
-      await bot.equip(itemNamed(c.item),'hand');
+      await bot.equip(await itemNamed(c.item),'hand');
       try{bot.activateItem();await sleep(c.ms??500);}finally{bot.deactivateItem();}
       result.item=c.item;
     }else if(c.action==='quit'){

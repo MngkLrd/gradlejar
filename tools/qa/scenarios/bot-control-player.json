@@ -261,6 +261,13 @@
       "expect": "Gave"
     },
     {
+      "action": "inventory",
+      "args": {
+        "item": "stick",
+        "count": 2
+      }
+    },
+    {
       "action": "drop",
       "args": {
         "item": "stick"
