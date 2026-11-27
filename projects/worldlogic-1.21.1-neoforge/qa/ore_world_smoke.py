@@ -92,6 +92,17 @@ def main():
             report["river_candidates"]=river_sites
             require(len(river_sites)>=3,"Insufficient independent modeled river catchments")
             sites.extend(river_sites)
+            headwaters=[]
+            for x,z in [(-24576,-32768),(-12288,-32768),(10240,-40960),(20480,-38912),(6144,14336)]:
+                raw=conn.cmd(f"execute positioned {x} 80 {z} run worldlogic river_probe headwater")
+                match=re.search(r"RIVER_PROBE x=(-?\d+) z=(-?\d+) discharge=([0-9.]+)",raw)
+                if match and 6<=float(match.group(3))<12:
+                    rx,rz=map(int,match.groups()[:2])
+                    headwaters.append(("headwater_"+str(len(headwaters)),rx,rz))
+                    if len(headwaters)==2:break
+            require(len(headwaters)>=1,"No independent small-stream candidate")
+            report["headwater_candidates"]=headwaters
+            sites.extend(headwaters)
             keys=("columns","ocean","wet","dry","inland","unknown","dryQuart","river","links")
             pattern="COAST_AUDIT "+" ".join(k+r"=(\d+)" for k in keys)
             report["coast_windows"]=[]
@@ -124,6 +135,7 @@ def main():
             require(totals["ocean"]>=1024 and totals["wet"]>=1024,"Insufficient real ocean coverage")
             require(totals["inland"]==0 and totals["dryQuart"]==0,"Dry land labeled ocean; inspect logged coordinates")
             require(sum(w["river"]>=16 and w["links"]>=12 for w in windows if w["site"].startswith("river_"))>=3,"Fewer than three generated connected river catchments")
+            require(any(w["river"]>=8 and w["links"]>=4 for w in windows if w["site"].startswith("headwater_")),"No generated connected headwater stream")
             # Retain independent marine substrate, native-water and flora assertions.
             ax,az=-18432,-30720
             force=f"{ax-16} {az-16} {ax+31} {az+31}"

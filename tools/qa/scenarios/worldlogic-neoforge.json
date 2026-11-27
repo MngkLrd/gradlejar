@@ -968,6 +968,17 @@
           "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
         }
       ]
+    },
+    {
+      "id": "rc33-headwater-runoff-width",
+      "kind": "mechanic",
+      "subject": "Small-stream threshold, dry and submerged negative controls, runoff-scaled width, unchanged established major-channel widths; real generated channels additionally checked by product natural-world QA",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
     }
   ]
 }

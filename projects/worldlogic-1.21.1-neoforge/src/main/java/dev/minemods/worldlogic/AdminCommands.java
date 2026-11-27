@@ -65,7 +65,7 @@ public final class AdminCommands {
   }));
   root.then(Commands.literal("addons").executes(c->{return reply(c.getSource(),Rules.addonSummary());}));
   root.then(Commands.literal("coast_audit").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),CoastSurvey.audit(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
-  root.then(Commands.literal("river_probe").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),RiverTerrain.probe(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
+  root.then(Commands.literal("river_probe").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),RiverTerrain.probe(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))).then(Commands.literal("headwater").executes(c->reply(c.getSource(),RiverTerrain.probe(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition()),true)))));
   root.then(Commands.literal("marine_audit").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),MarineEcology.audit(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
   root.then(Commands.literal("ore_audit").requires(s->s.hasPermission(4)).executes(c->{
    try{return reply(c.getSource(),GeneratedOreAudit.scan(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())));}

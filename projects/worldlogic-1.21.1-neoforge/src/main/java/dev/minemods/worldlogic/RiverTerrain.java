@@ -43,7 +43,7 @@ public final class RiverTerrain {
    if(selected==null)continue;
    var s=selected.segment;int stage=Math.min(h-1,(int)Math.floor(GeoModel.lerp(selected.start,selected.end,s.fraction(wx,wz))));
    if(stage<sea||h-stage>5)continue;
-   int depth=best<.55&&s.discharge()>35?3:2,bed=stage-depth;
+   int depth=s.discharge()<12?1:best<.55&&s.discharge()>35?3:2,bed=stage-depth;
    if(h-bed>8||bed<=c.getMinBuildHeight()+5||!natural(c.getBlockState(p.set(wx,bed,wz))))continue;
    boolean valid=true;for(int y=bed+1;y<=h;y++)if(!natural(c.getBlockState(p.set(wx,y,wz)))){valid=false;break;}
    if(!valid)continue;
@@ -53,12 +53,14 @@ public final class RiverTerrain {
   }
  }
  /** Bounded candidate search. Actual generated river is verified independently by CoastSurvey. */
- static String probe(ServerLevel l,BlockPos origin){
+ static String probe(ServerLevel l,BlockPos origin){return probe(l,origin,false);}
+ static String probe(ServerLevel l,BlockPos origin,boolean headwater){
   if(!(l.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator gen)||!NaturalWaterGeneration.enabled(gen))return "RIVER_PROBE unavailable";
   var state=l.getChunkSource().randomState();var model=GeoDensity.riverModel(state,l.registryAccess());
   var list=new ArrayList<>(model.rivers(origin.getX()-192,origin.getZ()-192,origin.getX()+192,origin.getZ()+192));
   list.sort(Comparator.comparingDouble(s->Math.hypot(s.x()-origin.getX(),s.z()-origin.getZ())));
   for(var s:list){
+   if(headwater?s.discharge()>=12:s.discharge()<12)continue;
    int a=gen.getBaseHeight(s.x(),s.z(),Heightmap.Types.OCEAN_FLOOR_WG,l,state)-1;
    int b=gen.getBaseHeight(s.endX(),s.endZ(),Heightmap.Types.OCEAN_FLOOR_WG,l,state)-1;
    if(a>=gen.getSeaLevel()+5&&b>=gen.getSeaLevel()+3&&b<=a+2&&a-b<=12)

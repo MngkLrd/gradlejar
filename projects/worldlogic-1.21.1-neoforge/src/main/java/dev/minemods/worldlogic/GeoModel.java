@@ -163,6 +163,11 @@ public final class GeoModel {
   }
   double distance(double px,double pz){double u=fraction(px,pz);return Math.hypot(px-lerp(x,endX,u),pz-lerp(z,endZ,u));}
  }
+ static boolean channelEligible(double height,double discharge){return height>=63.5&&discharge>=6;}
+ static double channelRadius(double discharge){
+  if(discharge<12)return lerp(1.5,2.4,clamp((discharge-6)/6,0,1));
+  return clamp(1.7+Math.log1p(discharge/12)*1.15,2.4,5.5);
+ }
  List<RiverSegment> rivers(int minX,int minZ,int maxX,int maxZ){
   var out=new ArrayList<RiverSegment>();
   for(int gz=Math.floorDiv(minZ,STEP)-1;gz<=Math.floorDiv(maxZ,STEP)+1;gz++)
@@ -170,8 +175,8 @@ public final class GeoModel {
     int x=gx*STEP,z=gz*STEP;double high=raw(x,z);
     if(high<63.5)continue;
     double discharge=surface(x,z).flow;
-    // The small-stream threshold is deliberately lower than the old riverbank indicator.
-    if(discharge<12)continue;
+    // Headwater streams use the same D8 runoff and retain existing major channels.
+    if(!channelEligible(high,discharge))continue;
     int ex=x,ez=z;double best=0;
     for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++){
      if(dx==0&&dz==0)continue;
@@ -180,7 +185,7 @@ public final class GeoModel {
      if(slope>best+1e-8){best=slope;ex=nx;ez=nz;}
     }
     if(ex==x&&ez==z)continue;
-    double radius=clamp(1.7+Math.log1p(discharge/12)*1.15,2.4,5.5);
+    double radius=channelRadius(discharge);
     out.add(new RiverSegment(x,z,ex,ez,discharge,radius));
    }
   return List.copyOf(out);

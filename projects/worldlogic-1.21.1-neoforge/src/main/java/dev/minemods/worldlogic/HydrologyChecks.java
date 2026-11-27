@@ -14,6 +14,10 @@ final class HydrologyChecks{
  private static void close(double a,double b,String s){require(Math.abs(a-b)<1e-8,s+" "+a+" != "+b);}
  static void verify(ServerLevel l){
   require(Rules.on("hydrology"),"enabled by default");
+  require(!GeoModel.channelEligible(90,5.99)&&GeoModel.channelEligible(90,6)&&GeoModel.channelEligible(90,12)&&!GeoModel.channelEligible(62,20),"runoff threshold and submerged negative control");
+  close(GeoModel.channelRadius(6),1.5,"headwater radius");
+  require(GeoModel.channelRadius(9)>GeoModel.channelRadius(6)&&GeoModel.channelRadius(9)<GeoModel.channelRadius(12),"headwater width scales with runoff");
+  for(double flow:new double[]{12,35,100,1000})close(GeoModel.channelRadius(flow),GeoModel.clamp(1.7+Math.log1p(flow/12)*1.15,2.4,5.5),"major channel width unchanged");
   require(WorldLogicApi.hydrology(l,BlockPos.ZERO).isEmpty(),"flat world isolation");
   var state=new HydrologyState();int steps=0;
   for(var t:SoilType.values()){
