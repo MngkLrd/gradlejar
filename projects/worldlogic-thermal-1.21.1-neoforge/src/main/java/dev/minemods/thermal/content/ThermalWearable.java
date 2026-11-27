@@ -10,7 +10,7 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
 
-/** Climate garments use armor slots and leather geometry, but provide no combat armor. */
+/** Climate garments use armor slots but provide no combat armor. Client extensions supply garment-specific geometry. */
 public class ThermalWearable extends ArmorItem {
     public ThermalWearable(Type type, Properties properties) {
         super(ArmorMaterials.LEATHER, type, properties);

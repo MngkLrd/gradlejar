@@ -198,5 +198,12 @@
   "item.worldlogic_thermal.felt.info": "Insulating material for garments.",
   "item.worldlogic_thermal.spindle.info": "Right-click: 2 dry fibers in offhand → 4 thread.",
   "item.worldlogic_thermal.bone_needle.info": "Right-click with damaged garment in offhand and 1 thread; repairs 25% durability.",
-  "item.worldlogic_thermal.wool_comb.info": "Right-click: 1 wool block in offhand → 2 combed wool."
+  "item.worldlogic_thermal.wool_comb.info": "Right-click: 1 wool block in offhand → 2 combed wool.",
+  "emi.category.worldlogic_thermal.heating": "Heating",
+  "emi.category.worldlogic_thermal.cooling": "Cooling and shelter",
+  "emi.category.worldlogic_thermal.textile": "Material processing",
+  "emi.category.worldlogic_thermal.portable": "Portable thermal items",
+  "emi.category.worldlogic_thermal.clothing": "Climate clothing",
+  "emi.category.worldlogic_thermal.materials": "Materials and tools",
+  "tooltip.worldlogic_thermal.emi_hint": "In-world usage, not a crafting-grid recipe."
 }

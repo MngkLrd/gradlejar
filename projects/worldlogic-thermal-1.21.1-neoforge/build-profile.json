@@ -1,11 +1,11 @@
 {
   "slug": "worldlogic_thermal",
-  "version": "0.8.3-rc1",
+  "version": "0.8.4-rc1",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "worldlogic_thermal-neoforge-mc1.21.1-0.8.3-rc1.jar",
+  "jar_glob": "worldlogic_thermal-neoforge-mc1.21.1-0.8.4-rc1.jar",
   "minimum_loader_version": "21.1.80",
   "compile_loader_version": "21.1.262",
   "qa": {

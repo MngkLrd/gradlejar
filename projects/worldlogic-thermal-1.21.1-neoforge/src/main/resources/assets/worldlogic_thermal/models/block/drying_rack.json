@@ -29,7 +29,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "south": {
           "uv": [
@@ -38,7 +38,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "east": {
           "uv": [
@@ -47,7 +47,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "west": {
           "uv": [
@@ -56,7 +56,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "up": {
           "uv": [
@@ -97,7 +97,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "south": {
           "uv": [
@@ -106,7 +106,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "east": {
           "uv": [
@@ -115,7 +115,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "west": {
           "uv": [
@@ -124,7 +124,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "up": {
           "uv": [
@@ -165,7 +165,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "south": {
           "uv": [
@@ -174,7 +174,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "east": {
           "uv": [
@@ -183,7 +183,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "west": {
           "uv": [
@@ -192,7 +192,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "up": {
           "uv": [
@@ -233,7 +233,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "south": {
           "uv": [
@@ -242,7 +242,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "east": {
           "uv": [
@@ -251,7 +251,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "west": {
           "uv": [
@@ -260,7 +260,7 @@
             2,
             15
           ],
-          "texture": "#base"
+          "texture": "#beam"
         },
         "up": {
           "uv": [

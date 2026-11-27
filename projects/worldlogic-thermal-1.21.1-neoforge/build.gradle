@@ -1,6 +1,6 @@
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group = 'dev.minemods'
-version = '0.8.3-rc1'
+version = '0.8.4-rc1'
 base.archivesName = 'worldlogic_thermal-neoforge-mc1.21.1'
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 neoForge {
@@ -8,13 +8,17 @@ neoForge {
     runs { client { client() }; server { server(); programArgument '--nogui' } }
     mods { worldlogic_thermal { sourceSet(sourceSets.main) } }
 }
-repositories { mavenCentral() }
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.terraformersmc.com/releases/'; content { includeGroup 'dev.emi' } }
+}
 def coreName = 'worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar'
 def coreUrl = 'https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc22-1246-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar'
 def expectedSha = '1c0d23ca034cd17f783e4d1abbf01f1eda8783ac0ba3b48cf6afdc1291d21dc8'
 def coreJar = file(providers.gradleProperty('worldlogicJar').orElse('libs/'+coreName).get())
 dependencies {
     implementation files(coreJar)
+    compileOnly 'dev.emi:emi-neoforge:1.1.22+1.21.1'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.4'
 }

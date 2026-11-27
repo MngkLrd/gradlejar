@@ -198,5 +198,12 @@
   "item.worldlogic_thermal.felt.info": "Утепляющий материал для одежды.",
   "item.worldlogic_thermal.spindle.info": "ПКМ: 2 сухих волокна во второй руке → 4 нити.",
   "item.worldlogic_thermal.bone_needle.info": "ПКМ: повреждённая одежда во второй руке и 1 нить; ремонт 25% прочности.",
-  "item.worldlogic_thermal.wool_comb.info": "ПКМ: 1 блок шерсти во второй руке → 2 чёсаной шерсти."
+  "item.worldlogic_thermal.wool_comb.info": "ПКМ: 1 блок шерсти во второй руке → 2 чёсаной шерсти.",
+  "emi.category.worldlogic_thermal.heating": "Отопление",
+  "emi.category.worldlogic_thermal.cooling": "Охлаждение и укрытия",
+  "emi.category.worldlogic_thermal.textile": "Обработка материалов",
+  "emi.category.worldlogic_thermal.portable": "Переносные устройства",
+  "emi.category.worldlogic_thermal.clothing": "Климатическая одежда",
+  "emi.category.worldlogic_thermal.materials": "Материалы и инструменты",
+  "tooltip.worldlogic_thermal.emi_hint": "Применение в мире, не рецепт верстака."
 }
