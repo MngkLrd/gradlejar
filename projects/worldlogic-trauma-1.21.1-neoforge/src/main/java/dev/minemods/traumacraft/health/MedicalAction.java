@@ -51,7 +51,8 @@ public final class MedicalAction {
     public static boolean apply(Player player,BodyState b,MedicalItem.Type type,BodyPart part){
         if(!canApply(b,type,part))return false;
         switch(canonical(type)){
-            case BANDAGE,TOURNIQUET -> b.stopBleeding(part);
+            case BANDAGE -> b.reduceBleeding(part);
+            case TOURNIQUET -> b.stopBleeding(part);
             case HEMOSTATIC_GEL -> {b.stopBleeding(part);if(b.health(part)>0)b.heal(part,10);}
             case SPLINT -> b.stabilize(part,4800);
             case MEDKIT -> b.heal(part,25);

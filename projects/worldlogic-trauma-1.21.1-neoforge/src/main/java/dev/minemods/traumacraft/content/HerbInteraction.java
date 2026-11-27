@@ -43,6 +43,7 @@ public final class HerbInteraction {
     }
     public static String strike(ServerLevel l,BlockPos at,Player p,int cell,boolean lift){
         if(cell<0||cell>=16||p.isSpectator()||!p.getAbilities().mayBuild||!l.mayInteract(p,at)||!(l.getBlockEntity(at) instanceof HerbWorkpieceEntity work))return "ignored";
+        if(p instanceof ServerPlayer sp&&dev.minemods.traumacraft.integration.WorldLogicBridge.functionsEnabled(sp)&&dev.minemods.traumacraft.integration.WorldLogicBridge.miningFactor(sp)<=0)return "ignored";
         ItemStack hand=p.getMainHandItem();boolean tool=hand.is(Items.FLINT)||hand.is(Items.COBBLESTONE);
         if(!hand.isEmpty()&&!tool)return "ignored";
         if(lift||HerbMask.finished(work.mask())){l.removeBlock(at,false);return "removed";}

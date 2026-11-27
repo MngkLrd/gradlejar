@@ -165,6 +165,10 @@ public final class BodyState {
         byte updated = (byte) Math.min(2, Math.max(bleeding[i], severity));
         if (bleeding[i] != updated) { bleeding[i] = updated; dirty = true; }
     }
+    public void reduceBleeding(BodyPart part){
+        if(bleeding(part)==2){bleeding[part.ordinal()]=1;dirty=true;}
+        else if(bleeding(part)==1)stopBleeding(part);
+    }
     public void stopBleeding(BodyPart part) {
         bleeding[part.ordinal()] = 0;
         if(health(part)>=part.maximum&&!fractured(part))wounds[part.ordinal()]=0;

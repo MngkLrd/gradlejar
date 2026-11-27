@@ -23,7 +23,7 @@ public final class RegressionChecks {
     private static void require(boolean ok,String message){if(!ok)throw new IllegalStateException(message);}
     public static void register(RegisterCommandsEvent e){
         var root=Commands.literal("traumaqa").requires(s->s.hasPermission(4)&&s.getEntity()==null);
-        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss","physiology","wounds"})
+        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss","physiology","wounds","primitive","publicapi"})
             root.then(Commands.literal(name).executes(c->run(c.getSource(),name)));
         e.getDispatcher().register(root);
     }
@@ -52,7 +52,8 @@ public final class RegressionChecks {
                 case "treatment" -> {
                     require(!MedicalAction.apply(p,b,MedicalItem.Type.BANDAGE,BodyPart.HEAD),"healthy target accepted");
                     b.setBleeding(BodyPart.LEFT_ARM,2);
-                    require(MedicalAction.apply(p,b,MedicalItem.Type.BANDAGE,BodyPart.LEFT_ARM)&&!b.hasBleeding(),"bandage");
+                    require(MedicalAction.apply(p,b,MedicalItem.Type.BANDAGE,BodyPart.LEFT_ARM)&&b.bleeding(BodyPart.LEFT_ARM)==1,"bandage reduces severe bleeding");
+                    require(MedicalAction.apply(p,b,MedicalItem.Type.BANDAGE,BodyPart.LEFT_ARM)&&!b.hasBleeding(),"second bandage stops light bleeding");
                     b.setFractured(BodyPart.LEFT_LEG,true);
                     require(MedicalAction.apply(p,b,MedicalItem.Type.SPLINT,BodyPart.LEFT_LEG)&&b.fractured(BodyPart.LEFT_LEG)&&b.stabilized(BodyPart.LEFT_LEG),"splint must stabilize");
                     require(!MedicalAction.apply(p,b,MedicalItem.Type.SPLINT,BodyPart.LEFT_LEG),"double splint");
@@ -105,12 +106,12 @@ public final class RegressionChecks {
                     var item=(MedicalItem)ModItems.BANDAGE.get();
                     ItemStack original=new ItemStack(item,3);
                     p.inventoryMenu.setCarried(original);
-                    b.setBleeding(arm,2);
+                    b.setBleeding(arm,1);
                     require(TreatmentManager.begin(p,item,arm,true,null),"begin cursor treatment");
                     require(original.getCount()==2,"immediate one item consumption");
                     require(!TreatmentManager.begin(p,item,arm,true,null)&&original.getCount()==2,"duplicate rejected without consumption");
                     p.tickCount+=39;TreatmentManager.tick(p);
-                    require(b.bleeding(arm)==2,"effect not yet applied");
+                    require(b.bleeding(arm)==1,"effect not yet applied");
                     ItemStack replacement=new ItemStack(item,2);
                     p.inventoryMenu.setCarried(replacement);
                     p.tickCount++;TreatmentManager.tick(p);
@@ -118,16 +119,16 @@ public final class RegressionChecks {
                     TreatmentManager.tick(p);
                     require(replacement.getCount()==2,"repeat consumption absent");
                     require(!TreatmentManager.begin(p,item,arm,true,null)&&replacement.getCount()==2,"invalid target no consumption");
-                    b.setBleeding(arm,2);
+                    b.setBleeding(arm,1);
                     require(TreatmentManager.begin(p,item,arm,true,null)&&replacement.getCount()==1,"second procedure consumes one");
                     p.inventoryMenu.setCarried(ItemStack.EMPTY);
                     p.tickCount+=40;TreatmentManager.tick(p);
                     require(b.bleeding(arm)==0,"empty cursor cannot interrupt accepted procedure");
-                    b.setBleeding(arm,2);p.inventoryMenu.setCarried(replacement);
+                    b.setBleeding(arm,1);p.inventoryMenu.setCarried(replacement);
                     require(TreatmentManager.begin(p,item,arm,true,null),"final procedure");
                     TreatmentManager.cancel(p);
                     p.tickCount+=40;TreatmentManager.tick(p);
-                    require(b.bleeding(arm)==2&&replacement.isEmpty(),"explicit cancellation does not refund consumed treatment");
+                    require(b.bleeding(arm)==1&&replacement.isEmpty(),"explicit cancellation does not refund consumed treatment");
                 }
                 case "physiology" -> {
                     require(b.bloodMl()==5000&&b.pain()==0&&b.shockStage()==0,"healthy physiology");
@@ -202,6 +203,50 @@ public final class RegressionChecks {
                     }
                     require(recipes.byKey(ModItems.HERBAL_POULTICE.getId()).isPresent(),"poultice recipe loaded");
                     require(recipes.byKey(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("traumacraft","rag_dressing_from_string")).isPresent(),"early dressing recipe loaded");
+                }
+                case "primitive" -> {
+                    dev.minemods.traumacraft.content.HerbWorkChecks.verify(source.getLevel(),p);
+                    var arm=BodyPart.LEFT_ARM;
+                    b.reset();b.damage(arm,60);b.setBleeding(arm,2);
+                    require(!MedicalAction.canApply(b,MedicalItem.Type.MEDKIT,arm),"medkit cannot resurrect black limb");
+                    require(MedicalAction.apply(p,b,MedicalItem.Type.TOURNIQUET,arm)&&!b.hasBleeding()&&b.health(arm)==0,"tourniquet controls bleeding without repairing limb");
+                    require(MedicalAction.apply(p,b,MedicalItem.Type.SURGICAL_KIT,arm)&&b.health(arm)==15,"surgery only restores destroyed limb");
+                    b.reset();b.setBleeding(BodyPart.CHEST,2);
+                    require(!MedicalAction.canApply(b,MedicalItem.Type.TOURNIQUET,BodyPart.CHEST),"torso tourniquet rejected");
+                    require(MedicalAction.apply(p,b,MedicalItem.Type.HEMOSTATIC_GEL,BodyPart.CHEST)&&!b.hasBleeding(),"hemostatic gel treats torso");
+                    b.reset();require(!MedicalAction.canApply(b,MedicalItem.Type.ANALGESIC_TABLETS,arm),"healthy analgesic rejected");
+                    b.damage(arm,20);
+                    for(var retired:ModItems.RETIRED)require(((MedicalItem)retired.get()).medicalType()==MedicalAction.canonical(((MedicalItem)retired.get()).medicalType()),"retired type canonical");
+                    require(((MedicalItem)ModItems.GUARDIAN_INJECTOR.get()).medicalType()==MedicalItem.Type.ANALGESIC_TABLETS,"legacy injector becomes analgesic");
+                    float pain=b.pain();
+                    require(MedicalAction.apply(p,b,MedicalItem.Type.GUARDIAN_INJECTOR,arm)&&b.pain()<pain&&b.health(arm)==40,"legacy medicine no magical restoration");
+                    require(!MedicalAction.canApply(b,MedicalItem.Type.ANALGESIC_TABLETS,arm),"analgesic stacking rejected");
+                    var recipes=source.getServer().getRecipeManager();
+                    require(recipes.byKey(ModItems.RAW_HERBS.getId()).isPresent(),"herb bundle recipe registered");
+                    require(recipes.byKey(ModItems.HERBAL_POULTICE.getId()).isPresent(),"new poultice recipe registered");
+                }
+                case "publicapi" -> {
+                    require(dev.minemods.traumacraft.api.TraumaApi.API_VERSION==1,"public API version");
+                    var initial=dev.minemods.traumacraft.api.TraumaApi.status(p).orElseThrow();
+                    require(initial.regions().size()==7&&initial.bloodMl()==5000,"healthy public snapshot");
+                    var zone=dev.minemods.traumacraft.api.TraumaApi.Zone.LEFT_ARM;
+                    var cut=dev.minemods.traumacraft.api.TraumaApi.Injury.CUT;
+                    require(!dev.minemods.traumacraft.api.TraumaApi.reportInjury(p,zone,cut,Float.NaN,1),"invalid injury rejected");
+                    require(!dev.minemods.traumacraft.api.TraumaApi.reportInjury(p,zone,cut,61,1),"oversized injury rejected");
+                    require(!dev.minemods.traumacraft.api.TraumaApi.reportInjury(p,zone,cut,1,3),"invalid bleed rejected");
+                    float hearts=p.getHealth();
+                    require(dev.minemods.traumacraft.api.TraumaApi.reportInjury(p,zone,cut,12,1),"external injury accepted");
+                    var next=dev.minemods.traumacraft.api.TraumaApi.status(p).orElseThrow();
+                    var region=next.regions().stream().filter(x->x.zone()==zone).findFirst().orElseThrow();
+                    require(region.health()==48&&region.bleeding()==1&&region.injuries().contains(cut),"public wound visible");
+                    require(p.getHealth()==hearts&&initial.regions().stream().filter(x->x.zone()==zone).findFirst().orElseThrow().health()==60,"no duplicated vanilla damage; immutable prior snapshot");
+                    boolean immutable=false;try{next.regions().clear();}catch(UnsupportedOperationException ex){immutable=true;}
+                    require(immutable,"immutable regions");
+                    immutable=false;try{region.injuries().clear();}catch(UnsupportedOperationException ex){immutable=true;}
+                    require(immutable,"immutable injuries");
+                    setFixtureMode(p,GameType.CREATIVE);
+                    require(dev.minemods.traumacraft.api.TraumaApi.status(p).isEmpty()&&!dev.minemods.traumacraft.api.TraumaApi.reportInjury(p,zone,cut,1,0),"creative excluded");
+                    setFixtureMode(p,GameType.SURVIVAL);
                 }
                 case "bloodloss" -> {
                     b.damage(BodyPart.LEFT_ARM,60);

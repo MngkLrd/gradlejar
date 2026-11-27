@@ -9,7 +9,7 @@
   "message.traumacraft.no_injury": "No treatable injury",
   "message.traumacraft.not_applicable": "This item cannot treat that injury",
   "message.traumacraft.treated": "Treated: %s",
-  "jei.traumacraft.bandage": "Stops light or heavy bleeding on one selected body part. Pick up a bandage in inventory and click a body part in the TraumaCraft anatomy panel, or right-click to automatically treat the worst bleeding.",
+  "jei.traumacraft.bandage": "Stops light bleeding or reduces heavy bleeding to light.",
   "jei.traumacraft.splint": "Stabilizes a fracture. The bone recovers gradually while resting. Use in hand to select an unstabilized fracture.",
   "jei.traumacraft.medkit": "Restores up to 25 HP to living tissue. Does not stop bleeding or restore destroyed limbs.",
   "item.traumacraft.sterile_fabric": "Sterile Fabric",
@@ -111,5 +111,6 @@
   "jei.traumacraft.raw_herbs": "Right-click stone or planks to spread. Left-click cells with an empty hand, flint or cobblestone to crush. Sneak + left-click to retrieve partial work.",
   "jei.traumacraft.crushed_herbs": "Crush all 16 cells, then left-click to collect. Used in poultices and extract.",
   "message.traumacraft.herbs_ready": "Ready. Left-click to collect.",
-  "message.traumacraft.herbs_progress": "Processed: %s/16"
+  "message.traumacraft.herbs_progress": "Processed: %s/16",
+  "tooltip.traumacraft.herbs_help": "Right-click a surface; left-click with flint to process."
 }

@@ -72,7 +72,7 @@ public final class ModItems {
             medical("endurance_injector", MedicalItem.Type.ENDURANCE_INJECTOR, 8);
 
     public static final DeferredHolder<Item, Item> HERBAL_POULTICE = medical("herbal_poultice",MedicalItem.Type.HERBAL_POULTICE,16);
-    public static final DeferredHolder<Item, Item> RAW_HERBS=supply("raw_herbs",16);
+    public static final DeferredHolder<Item, Item> RAW_HERBS=ITEMS.register("raw_herbs",()->new dev.minemods.traumacraft.item.HerbBundleItem(new Item.Properties().stacksTo(16)));
     public static final DeferredHolder<Item, Item> CRUSHED_HERBS=supply("crushed_herbs",32);
     public static final List<DeferredHolder<Item, Item>> RETIRED = List.of(OVERSIZED_MEDKIT,COMPACT_MEDKIT,COMPRESSION_WRAP,BONE_MENDER,STERILE_PATCH,FRACTURE_BRACE,FIELD_MEDKIT,RECOVERY_SERUM,ADRENALINE_INJECTOR,GUARDIAN_INJECTOR,FOCUS_INJECTOR,ENDURANCE_INJECTOR);
     public static final List<DeferredHolder<Item, Item>> COMPONENTS = List.of(
