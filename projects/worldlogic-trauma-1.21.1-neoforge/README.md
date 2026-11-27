@@ -1,4 +1,6 @@
-# World Logic: Trauma 0.5.0-rc3 — development PR
-Minecraft 1.21.1, NeoForge 21.1.262, Java 21, Gradle 9.2.1. Core RC20 is mandatory and pinned by SHA-256. Build: gradle --no-daemon clean build. Expected JAR: build/libs/traumacraft-neoforge-mc1.21.1-0.5.0-rc3.jar.
+# World Logic: Trauma 0.5.0-rc4 — development PR
+Minecraft 1.21.1, NeoForge 21.1.262, Java 21, Gradle 9.2.1. Core RC20 is mandatory and pinned by SHA-256. Build: gradle --no-daemon clean build. Expected JAR: build/libs/traumacraft-neoforge-mc1.21.1-0.5.0-rc4.jar.
 Uses WorldLogicApi v1 for fatigue and rule lookup; no direct access to core fatigue NBT. RC20 still has no injury replacement or balance query API, so the existing narrow Survival/Trauma mixins and Balance.down remain, pinned to exact core version. Core class signatures were inspected in main 6b95fd4c199fd7a185794be6509e901402edbde4. No core changes. Existing 63 visual resources reused unchanged; same HUD, independent limbs and separate inventory tab.
 This draft pull request uses the standard Build Hub and does not authorize publication. Full medical content interactions, recipes, player lifecycle, network and client QA remain outstanding; do not merge until required coverage is completed. Executable component scenario: tools/qa/scenarios/worldlogic-trauma-rc20.json. Coverage inventory: tools/qa/assignments/worldlogic-trauma-rc20.json.
+
+RC4: prevent same-item replacement during treatment, cancel pending actions on game-mode change, stop hand-use animation on cancellation, fix field-medkit targeting and reject no-op trauma kits/serum, preserve exact emergency countdown on relog, sanitize invalid HP. Adds three component regressions; real network and graphical client remain separate.

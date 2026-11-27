@@ -31,6 +31,24 @@
       "expect": "TRAUMAQA api PASS",
       "assertion": true,
       "name": "TR-API: public rule and fatigue API, recovery, creative mode, invalid input"
+    },
+    {
+      "command": "traumaqa procedure",
+      "expect": "TRAUMAQA procedure PASS",
+      "assertion": true,
+      "name": "Timed cursor treatment: one consumption, duplicate rejection, same-item replacement and cancellation"
+    },
+    {
+      "command": "traumaqa targeting",
+      "expect": "TRAUMAQA targeting PASS",
+      "assertion": true,
+      "name": "Field medkit bleeding target and no-effect treatment rejection"
+    },
+    {
+      "command": "traumaqa persistence",
+      "expect": "TRAUMAQA persistence PASS",
+      "assertion": true,
+      "name": "Precise emergency grace persistence and invalid local HP safeguards"
     }
   ],
   "coverage": [
@@ -101,6 +119,48 @@
         {
           "backend": "server",
           "name": "TR-API: public rule and fatigue API, recovery, creative mode, invalid input"
+        }
+      ]
+    },
+    {
+      "id": "tr-procedure",
+      "kind": "mechanic",
+      "subject": "Timed cursor treatment: one consumption, duplicate rejection, same-item replacement and cancellation",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Timed cursor treatment: one consumption, duplicate rejection, same-item replacement and cancellation"
+        }
+      ]
+    },
+    {
+      "id": "tr-targeting",
+      "kind": "mechanic",
+      "subject": "Field medkit bleeding target and no-effect treatment rejection",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Field medkit bleeding target and no-effect treatment rejection"
+        }
+      ]
+    },
+    {
+      "id": "tr-persistence",
+      "kind": "mechanic",
+      "subject": "Precise emergency grace persistence and invalid local HP safeguards",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Precise emergency grace persistence and invalid local HP safeguards"
         }
       ]
     }

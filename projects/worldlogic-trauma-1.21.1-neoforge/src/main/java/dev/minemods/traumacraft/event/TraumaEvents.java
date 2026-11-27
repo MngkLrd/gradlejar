@@ -68,9 +68,10 @@ public final class TraumaEvents {
         }
     }
     public static void onPlayerTick(EntityTickEvent.Post e) {
-        if(!(e.getEntity() instanceof ServerPlayer p) || !WorldLogicBridge.active(p)) return;
-        BodyState b=BodyStates.get(p);
+        if(!(e.getEntity() instanceof ServerPlayer p)) return;
         TreatmentManager.tick(p);
+        if(!WorldLogicBridge.active(p)) return;
+        BodyState b=BodyStates.get(p);
         if(b.tickCriticalGrace() && b.vitalDestroyed()) {
             try { INTERNAL.set(true); p.hurt(p.damageSources().magic(),Math.max(40,p.getHealth()+p.getAbsorptionAmount()+1)); }
             finally { INTERNAL.set(false); }

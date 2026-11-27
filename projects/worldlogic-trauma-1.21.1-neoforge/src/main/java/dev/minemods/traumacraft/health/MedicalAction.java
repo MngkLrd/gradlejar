@@ -14,7 +14,7 @@ public final class MedicalAction {
 
     private static boolean anyRecoverable(BodyState state) {
         for (BodyPart zone : BodyPart.values()) {
-            if (state.health(zone) < zone.maximum || state.bleeding(zone) > 0) return true;
+            if (state.health(zone) < zone.maximum) return true;
         }
         return false;
     }
@@ -24,11 +24,12 @@ public final class MedicalAction {
             case BANDAGE, COMPRESSION_WRAP -> state.bleeding(part) > 0;
             case HEMOSTATIC_GEL, TOURNIQUET -> state.bleeding(part) == 2;
             case SPLINT, FRACTURE_BRACE, BONE_MENDER -> state.fractured(part) && !state.stabilized(part);
-            case MEDKIT, FIELD_MEDKIT -> state.health(part) < part.maximum;
+            case MEDKIT -> state.health(part) < part.maximum;
+            case FIELD_MEDKIT -> state.health(part) < part.maximum || state.bleeding(part) > 0;
             case RAG_DRESSING, STERILE_PATCH, COMPACT_MEDKIT ->
                     state.health(part) > 0 && state.health(part) < part.maximum;
             case TRAUMA_KIT ->
-                    state.health(part) < part.maximum || state.bleeding(part) > 0 || state.fractured(part);
+                    state.health(part) < part.maximum || state.bleeding(part) > 0 || (state.fractured(part) && !state.stabilized(part));
             case SURGICAL_KIT -> state.health(part) == 0;
             case RECOVERY_SERUM -> anyRecoverable(state);
             case ADRENALINE_INJECTOR, GUARDIAN_INJECTOR, FOCUS_INJECTOR, ENDURANCE_INJECTOR, ANALGESIC_TABLETS -> true;
@@ -69,7 +70,11 @@ public final class MedicalAction {
                 if (result == null) result = state.firstFracture();
                 yield result;
             }
-            case MEDKIT, FIELD_MEDKIT -> state.mostDamaged();
+            case MEDKIT -> state.mostDamaged();
+            case FIELD_MEDKIT -> {
+                BodyPart target = state.mostBleeding();
+                yield target != null ? target : state.mostDamaged();
+            }
             case RECOVERY_SERUM, ADRENALINE_INJECTOR, GUARDIAN_INJECTOR,
                  FOCUS_INJECTOR, ENDURANCE_INJECTOR, ANALGESIC_TABLETS -> BodyPart.CHEST;
         };

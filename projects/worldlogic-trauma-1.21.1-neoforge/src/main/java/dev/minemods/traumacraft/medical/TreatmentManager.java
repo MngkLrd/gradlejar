@@ -17,7 +17,7 @@ import java.util.UUID;
 /** One server-authoritative delayed medical action per player. */
 public final class TreatmentManager {
     public record Pending(BodyPart part, Item item, MedicalItem.Type treatment, int startTick,
-                          int duration, boolean cursor, InteractionHand hand, float startingHealth,
+                          int duration, boolean cursor, InteractionHand hand, ItemStack originalStack,
                           double x, double y, double z) {}
     private static final Map<UUID, Pending> ACTIVE = new HashMap<>();
     private TreatmentManager() {}
@@ -39,14 +39,14 @@ public final class TreatmentManager {
     public static boolean begin(ServerPlayer player, MedicalItem medicine, BodyPart part,
                                 boolean cursor, InteractionHand hand) {
         if (!player.isAlive() || player.isCreative() || player.isSpectator() || !dev.minemods.traumacraft.integration.WorldLogicBridge.canTreat(player)) return false;
-        if (ACTIVE.containsKey(player.getUUID())) return false;
+        if (part == null || (!cursor && hand == null) || ACTIVE.containsKey(player.getUUID())) return false;
         if (cursor && player.containerMenu != player.inventoryMenu) return false;
         ItemStack stack = stack(player, cursor, hand);
         if (stack.isEmpty() || stack.getItem() != medicine) return false;
         BodyState body = BodyStates.get(player);
         if (!MedicalAction.canApply(body, medicine.medicalType(), part)) return false;
         Pending pending = new Pending(part, medicine, medicine.medicalType(), player.tickCount,
-                duration(medicine.medicalType()), cursor, hand, player.getHealth(),
+                duration(medicine.medicalType()), cursor, hand, stack,
                 player.getX(), player.getY(), player.getZ());
         ACTIVE.put(player.getUUID(), pending);
         ModNetwork.progress(player, pending.duration(), 0);
@@ -63,7 +63,15 @@ public final class TreatmentManager {
     }
 
     public static void cancel(ServerPlayer player) {
-        if (ACTIVE.remove(player.getUUID()) != null) ModNetwork.progress(player, 0, 0);
+        Pending pending = ACTIVE.remove(player.getUUID());
+        if (pending == null) return;
+        stopHandUse(player, pending);
+        ModNetwork.progress(player, 0, 0);
+    }
+
+    private static void stopHandUse(ServerPlayer player, Pending p) {
+        if (!p.cursor() && player.isUsingItem() && player.getUsedItemHand() == p.hand()
+                && player.getUseItem().getItem() == p.item()) player.stopUsingItem();
     }
 
     public static void tick(ServerPlayer player) {
@@ -73,7 +81,7 @@ public final class TreatmentManager {
                 || (p.cursor() && player.containerMenu != player.inventoryMenu)
                 || (p.treatment() == MedicalItem.Type.SURGICAL_KIT &&
                     (Math.abs(player.getX() - p.x()) > 1.5 || Math.abs(player.getZ() - p.z()) > 1.5))
-                || (!p.cursor() && !player.isUsingItem())) {
+                || (!p.cursor() && (!player.isUsingItem() || player.getUsedItemHand() != p.hand()))) {
             // Real outside damage cancels treatment from TraumaEvents.onDamage.
             // Never cancel merely because VitalityBridge adjusted the displayed
             // hearts while the patient was bleeding.
@@ -81,7 +89,7 @@ public final class TreatmentManager {
             return;
         }
         ItemStack held = stack(player, p.cursor(), p.hand());
-        if (held.isEmpty() || held.getItem() != p.item()) {
+        if (held.isEmpty() || held != p.originalStack() || held.getItem() != p.item()) {
             cancel(player);
             return;
         }
@@ -90,7 +98,10 @@ public final class TreatmentManager {
         ACTIVE.remove(player.getUUID());
         ModNetwork.progress(player, 0, 0);
         BodyState body = BodyStates.get(player);
-        if (!MedicalAction.apply(player, body, p.treatment(), p.part())) return;
+        if (!MedicalAction.apply(player, body, p.treatment(), p.part())) {
+            stopHandUse(player, p);
+            return;
+        }
         if (!player.getAbilities().instabuild) {
             held.shrink(1);
             if (p.cursor()) {
@@ -98,7 +109,7 @@ public final class TreatmentManager {
                 player.containerMenu.broadcastChanges();
             }
         }
-        if (!p.cursor()) player.stopUsingItem();
+        stopHandUse(player, p);
         ModNetwork.sync(player);
     }
 }

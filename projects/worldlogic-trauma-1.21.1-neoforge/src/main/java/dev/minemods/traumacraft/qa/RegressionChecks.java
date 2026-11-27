@@ -3,6 +3,9 @@ import com.mojang.authlib.GameProfile;
 import dev.minemods.traumacraft.health.*;
 import dev.minemods.traumacraft.integration.WorldLogicBridge;
 import dev.minemods.traumacraft.item.MedicalItem;
+import dev.minemods.traumacraft.medical.TreatmentManager;
+import dev.minemods.traumacraft.registry.ModItems;
+import net.minecraft.world.item.ItemStack;
 import dev.minemods.traumacraft.event.TraumaEvents;
 import dev.minemods.worldlogic.api.WorldLogicApi;
 import net.minecraft.commands.Commands;
@@ -20,7 +23,7 @@ public final class RegressionChecks {
     private static void require(boolean ok,String message){if(!ok)throw new IllegalStateException(message);}
     public static void register(RegisterCommandsEvent e){
         var root=Commands.literal("traumaqa").requires(s->s.hasPermission(4)&&s.getEntity()==null);
-        for(String name:new String[]{"state","treatment","bridge","damage","api"})
+        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting"})
             root.then(Commands.literal(name).executes(c->run(c.getSource(),name)));
         e.getDispatcher().register(root);
     }
@@ -97,6 +100,72 @@ public final class RegressionChecks {
                     try{WorldLogicApi.addExertion(p,Double.NaN);}catch(IllegalArgumentException ex){rejected=true;}
                     require(rejected,"invalid exertion input");
                 }
+                case "procedure" -> {
+                    var arm=BodyPart.LEFT_ARM;
+                    var item=(MedicalItem)ModItems.BANDAGE.get();
+                    ItemStack original=new ItemStack(item,3);
+                    p.inventoryMenu.setCarried(original);
+                    b.setBleeding(arm,2);
+                    require(TreatmentManager.begin(p,item,arm,true,null),"begin cursor treatment");
+                    require(!TreatmentManager.begin(p,item,arm,true,null),"duplicate active procedure");
+                    p.tickCount+=39;
+                    TreatmentManager.tick(p);
+                    require(b.bleeding(arm)==2&&original.getCount()==3,"premature effect or consumption");
+                    p.tickCount++;
+                    TreatmentManager.tick(p);
+                    require(b.bleeding(arm)==0&&original.getCount()==2,"completion: effect and exactly one item");
+                    TreatmentManager.tick(p);
+                    require(original.getCount()==2,"repeat consumption");
+                    b.setBleeding(arm,2);
+                    require(TreatmentManager.begin(p,item,arm,true,null),"begin replacement control");
+                    ItemStack replacement=new ItemStack(item,2);
+                    p.inventoryMenu.setCarried(replacement);
+                    p.tickCount+=40;
+                    TreatmentManager.tick(p);
+                    require(b.bleeding(arm)==2&&replacement.getCount()==2&&original.getCount()==2,"same-item swap canceled");
+                    require(TreatmentManager.begin(p,item,arm,true,null),"restart after cancellation");
+                    TreatmentManager.cancel(p);
+                    p.tickCount+=40;TreatmentManager.tick(p);
+                    require(b.bleeding(arm)==2&&replacement.getCount()==2,"explicit cancellation");
+                    require(TreatmentManager.begin(p,item,arm,true,null),"begin mode change control");
+                    setFixtureMode(p,GameType.CREATIVE);
+                    TreatmentManager.tick(p);
+                    setFixtureMode(p,GameType.SURVIVAL);
+                    p.tickCount+=40;TreatmentManager.tick(p);
+                    require(b.bleeding(arm)==2&&replacement.getCount()==2,"creative cancellation");
+                }
+                case "targeting" -> {
+                    var arm=BodyPart.RIGHT_ARM;
+                    b.setBleeding(arm,2);
+                    require(MedicalAction.autoTarget(b,MedicalItem.Type.FIELD_MEDKIT)==arm,"field kit targets bleeding even at full local HP");
+                    require(MedicalAction.apply(p,b,MedicalItem.Type.FIELD_MEDKIT,arm)&&!b.hasBleeding(),"field kit stops bleeding");
+                    b.setFractured(arm,true);b.stabilize(arm,4800);
+                    require(!MedicalAction.canApply(b,MedicalItem.Type.TRAUMA_KIT,arm),"no wasted kit on stabilized full-health limb");
+                    b.setBleeding(arm,1);
+                    require(!MedicalAction.canApply(b,MedicalItem.Type.RECOVERY_SERUM,arm),"serum does not treat isolated bleeding");
+                    b.damage(arm,9);
+                    require(MedicalAction.canApply(b,MedicalItem.Type.RECOVERY_SERUM,arm),"serum works on tissue damage");
+                }
+                case "persistence" -> {
+                    b.damage(BodyPart.HEAD,BodyPart.HEAD.maximum);
+                    b.startCriticalGrace(600);
+                    require(BodyStates.flush(p),"initial save");
+                    b.tickCriticalGrace();
+                    require(BodyStates.flush(p),"sub-second grace save");
+                    BodyStates.forget(p);
+                    b=BodyStates.get(p);
+                    require(b.criticalGraceTicks()==599&&b.vitalDestroyed(),"grace survives reload exactly");
+                    b.heal(BodyPart.HEAD,1);
+                    require(b.criticalGraceTicks()==0,"healing cancels grace");
+                    float before=b.health(BodyPart.RIGHT_ARM);
+                    b.damage(BodyPart.RIGHT_ARM,Float.NaN);
+                    b.heal(BodyPart.RIGHT_ARM,Float.POSITIVE_INFINITY);
+                    require(b.health(BodyPart.RIGHT_ARM)==before,"nonfinite input rejected");
+                    var malformed=b.serializeNBT(p.registryAccess());
+                    malformed.getCompound("RIGHT_ARM").putFloat("hp",Float.NaN);
+                    BodyState restored=new BodyState();restored.deserializeNBT(p.registryAccess(),malformed);
+                    require(restored.health(BodyPart.RIGHT_ARM)==BodyPart.RIGHT_ARM.maximum,"invalid NBT safe fallback");
+                }
                 case "damage" -> {
                     TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);
                     require(b.health(BodyPart.LEFT_LEG)==45&&b.health(BodyPart.RIGHT_LEG)==45&&b.fractured(BodyPart.LEFT_LEG),"single fall damage");
@@ -109,6 +178,6 @@ public final class RegressionChecks {
             }
             source.sendSuccess(()->Component.literal("TRAUMAQA "+name+" PASS"),false);return 1;
         }catch(Exception ex){source.sendFailure(Component.literal("TRAUMAQA "+name+" FAIL: "+ex));return 0;}
-        finally{BodyStates.forget(p);p.getPersistentData().remove(BodyStates.KEY);p.getPersistentData().remove("worldlogic_injury");p.getPersistentData().remove("worldlogic_arm_until");}
+        finally{TreatmentManager.forget(p);p.inventoryMenu.setCarried(ItemStack.EMPTY);BodyStates.forget(p);p.getPersistentData().remove(BodyStates.KEY);p.getPersistentData().remove("worldlogic_injury");p.getPersistentData().remove("worldlogic_arm_until");}
     }
 }

@@ -36,7 +36,7 @@ public final class BodyState {
     public boolean tickCriticalGrace() {
         if (criticalGraceTicks <= 0) return false;
         criticalGraceTicks--;
-        if (criticalGraceTicks % 20 == 0) dirty = true;
+        dirty = true; // Persist the precise remaining grace on logout, including sub-second ticks.
         return criticalGraceTicks == 0;
     }
     public void addConcussion(int ticks) {
@@ -85,7 +85,7 @@ public final class BodyState {
         return Math.max(fracturePenalty, leg < 0.20f ? 0.32f : leg < 0.50f ? 0.16f : 0f);
     }
     public void damage(BodyPart part, float value) {
-        if (value <= 0) return;
+        if (!Float.isFinite(value) || value <= 0) return;
         int i = part.ordinal();
         health[i] = Math.max(0, health[i] - value);
         dirty = true;
@@ -127,7 +127,7 @@ public final class BodyState {
         }
     }
     public boolean heal(BodyPart part, float amount) {
-        if (amount <= 0 || health(part) >= part.maximum) return false;
+        if (!Float.isFinite(amount) || amount <= 0 || health(part) >= part.maximum) return false;
         int i = part.ordinal();
         health[i] = Math.min(part.maximum, health[i] + amount);
         if (!vitalDestroyed() && criticalGraceTicks > 0) criticalGraceTicks = 0;
@@ -209,7 +209,8 @@ public final class BodyState {
             if (!nbt.contains(part.name(), 10)) continue;
             CompoundTag zone = nbt.getCompound(part.name());
             int i = part.ordinal();
-            health[i] = Math.max(0, Math.min(part.maximum, zone.getFloat("hp")));
+            float stored = zone.contains("hp", 99) ? zone.getFloat("hp") : part.maximum;
+            health[i] = Float.isFinite(stored) ? Math.max(0, Math.min(part.maximum, stored)) : part.maximum;
             bleeding[i] = (byte) Math.max(0, Math.min(2, zone.getByte("bleed")));
             fractured[i] = zone.getBoolean("fracture");
             boneRecovery[i] = fractured[i] ? Math.max(0, Math.min(12000, zone.getInt("boneRecovery"))) : 0;
