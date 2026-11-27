@@ -187,8 +187,9 @@ def scan(region, positions):
 def main():
     global PRESET
     rc26 = len(sys.argv)>3
-    native_water = len(sys.argv)>4 and sys.argv[4]=="rc30"
-    core_name = "worldlogic-neoforge-mc1.21.1-1.0.0-rc30.jar" if native_water else CORE_RC26_JAR
+    native_water = len(sys.argv)>4 and sys.argv[4] in {"rc30","rc31"}
+    predictor_required = native_water and sys.argv[4]=="rc31"
+    core_name = f"worldlogic-neoforge-mc1.21.1-1.0.0-{sys.argv[4]}.jar" if native_water else CORE_RC26_JAR
     species = CORE_SPECIES if rc26 else SPECIES
     forage = CORE_FORAGE if rc26 else NEW_FORAGE
     namespace = 'worldlogic' if rc26 else 'minecraft'
@@ -274,6 +275,8 @@ def main():
             if native_water:
                 aquatic=conn.cmd("worldlogicterrain aquatic_check")
                 require("Aquatic checks passed; native fluids=8" in aquatic,aquatic)
+                if predictor_required:
+                    require("prediction=true" in aquatic,"RC31 predictor not actually exercised: "+aquatic)
                 report["native_aquatic_checks"]=aquatic
                 print(aquatic,flush=True)
             region = root / "natural-world" / "region"

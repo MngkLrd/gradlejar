@@ -1208,13 +1208,7 @@
     {
       "name": "Mixed meadow and frost patch mechanics",
       "command": "worldlogicterrain patch_check",
-      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 20 tree forms, saplings, wood recipes, fallen logs and habitat checks",
-      "assertion": true
-    },
-    {
-      "name": "Aquatic ecology placement and fluid preservation",
-      "command": "worldlogicterrain aquatic_check",
-      "expect": "Aquatic checks passed; native fluids=0",
+      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 23 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed",
       "assertion": true
     }
   ],
@@ -3262,7 +3256,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Aquatic ecology placement and fluid preservation"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -3273,7 +3267,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Aquatic ecology placement and fluid preservation"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -3284,7 +3278,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Aquatic ecology placement and fluid preservation"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -3295,7 +3289,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Aquatic ecology placement and fluid preservation"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -3306,7 +3300,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Aquatic ecology placement and fluid preservation"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     }

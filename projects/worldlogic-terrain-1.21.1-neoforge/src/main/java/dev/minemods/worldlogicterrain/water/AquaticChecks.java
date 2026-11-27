@@ -19,11 +19,11 @@ public final class AquaticChecks {
     public static void register(RegisterCommandsEvent e){
         e.getDispatcher().register(Commands.literal("worldlogicterrain").requires(s->s.hasPermission(2))
           .then(Commands.literal("aquatic_check").executes(c->{
-            try{int nativeCount=verify(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("Aquatic checks passed; native fluids="+nativeCount),false);return 1;}
+            try{int nativeCount=verify(c.getSource().getLevel());var l=c.getSource().getLevel();boolean prediction=AquaticHabitat.prediction(l,l.getChunkSource().getGenerator()).available();c.getSource().sendSuccess(()->Component.literal("Aquatic checks passed; native fluids="+nativeCount+"; prediction="+prediction),false);return 1;}
             catch(IllegalStateException ex){c.getSource().sendFailure(Component.literal(ex.getMessage()));return 0;}
           })));
     }
-    static int verify(ServerLevel l){
+    public static int verify(ServerLevel l){
         BlockPos p=new BlockPos(8,245,8);int tested=0;
         var lily=BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("worldlogicterrain","water_lily"));
         var saved=l.getBlockState(p);var floor=l.getBlockState(p.below());
@@ -67,6 +67,15 @@ public final class AquaticChecks {
                 if(expected){l.setBlock(p.below(),Blocks.AIR.defaultBlockState(),Block.UPDATE_ALL);require(l.getBlockState(p).isAir(),"Native water support removal "+ids[i]);}
             }
             require(tested==0||tested==8,"Incomplete native fluid registry");
+            var predictor=AquaticHabitat.prediction(l,l.getChunkSource().getGenerator());
+            if(predictor.available()){
+                var registry=l.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.BIOME);
+                var ocean=registry.getOrThrow(net.minecraft.world.level.biome.Biomes.OCEAN);
+                var river=registry.getOrThrow(net.minecraft.world.level.biome.Biomes.RIVER);
+                require(predictor.predict(p,p,p.getY()-1,ocean,Blocks.SAND.defaultBlockState())==AquaticHabitat.Kind.SEA,"RC31 marine prediction");
+                require(predictor.predict(p,p,p.getY()-1,river,Blocks.GRAVEL.defaultBlockState())==AquaticHabitat.Kind.RIVER,"RC31 river prediction");
+                require(predictor.predict(p,p.above(10),p.getY()+8,river,Blocks.STONE.defaultBlockState())==AquaticHabitat.Kind.GROUNDWATER,"RC31 groundwater prediction");
+            }
             return tested;
         }finally{
             l.setBlock(p.above(),upper,2);l.setBlock(p,saved,2);l.setBlock(p.below(),floor,2);

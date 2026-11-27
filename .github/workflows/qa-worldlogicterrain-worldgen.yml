@@ -68,6 +68,16 @@ jobs:
           gh run download 45998551314 --repo "$GITHUB_REPOSITORY" --pattern 'qa-report-*' --dir core-rc30-inputs
           python -m pip install nbtlib==2.0.4
           PYTHONPATH=. python projects/worldlogic-terrain-1.21.1-neoforge/qa/worldgen_smoke.py natural-inputs native-water-qa core-rc30-inputs rc30
+      - name: Fetch verified RC31 core and exercise water prediction
+        if: always() && steps.terrain-artifact.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/46000227561" --jq '.head_sha + " " + .conclusion' | grep -Fx '33115368f2980b41a77b8964cd2dce87adf40a24 success'
+          gh run download 46000227561 --repo "$GITHUB_REPOSITORY" --pattern 'jar-worldlogic-1.21.1-neoforge-1.0.0-rc31-*' --dir core-rc31-inputs
+          gh run download 46000227561 --repo "$GITHUB_REPOSITORY" --pattern 'qa-report-*' --dir core-rc31-inputs
+          PYTHONPATH=. python projects/worldlogic-terrain-1.21.1-neoforge/qa/worldgen_smoke.py natural-inputs predicted-water-qa core-rc31-inputs rc31
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -79,4 +89,6 @@ jobs:
             unified-world-qa/logs/
             native-water-qa/worldgen-report.json
             native-water-qa/logs/
+            predicted-water-qa/worldgen-report.json
+            predicted-water-qa/logs/
           if-no-files-found: warn

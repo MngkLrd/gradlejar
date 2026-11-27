@@ -26,6 +26,7 @@ public final class AquaticFeature extends Feature<NoneFeatureConfiguration> {
     }
     @Override public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> c){
         var l=c.level();var r=c.random();int x0=c.origin().getX()&~15,z0=c.origin().getZ()&~15;
+        var prediction=AquaticHabitat.prediction(l,c.chunkGenerator());
         boolean any=false;
         for(int i=0;i<16;i++){
             int x=x0+r.nextInt(16),z=z0+r.nextInt(16);
@@ -35,7 +36,7 @@ public final class AquaticFeature extends Feature<NoneFeatureConfiguration> {
             if(AquaticHabitat.water(below)){
                 // Source-only floating vegetation, shallow open water and no fluid replacement.
                 if(r.nextInt(4)!=0||!inside(l,p.below(3),x0,z0))continue;
-                var kind=AquaticHabitat.hint(below,l.getBiome(p.below()));
+                var kind=prediction.classify(l,p.below(),below);
                 if(AquaticHabitat.floating(kind)&&!AquaticHabitat.water(l.getBlockState(p.below(3)))
                     &&l.getBiome(p).value().getBaseTemperature()>.15f)
                     any|=placePlant(l,p,"water_lily",x0,z0);
@@ -47,7 +48,7 @@ public final class AquaticFeature extends Feature<NoneFeatureConfiguration> {
                 if(!inside(l,bank,x0,z0))continue;
                 var water=l.getBlockState(bank);
                 if(!AquaticHabitat.water(water))continue;
-                var kind=AquaticHabitat.hint(water,l.getBiome(bank));
+                var kind=prediction.classify(l,bank,water);
                 String species=shoreSpecies(kind,r);
                 if(species!=null&&l.getBiome(p).value().getBaseTemperature()>.15f)
                     any|=placePlant(l,p,species,x0,z0);
