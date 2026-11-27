@@ -3,7 +3,7 @@ package dev.minemods.traumacraft.client.gui;
 /** Pure layout logic: one slot per active server-reported condition, in stable order. */
 public final class HudStatusLayout {
     public static final int BLEEDING=1, FRACTURE=2, CONCUSSION=4, PAINKILLER=8;
-    public static final int COUNT=4, STEP=22;
+    public static final int COUNT=4, ICON_SIZE=16, STEP=18;
     private HudStatusLayout() {}
     public static int mask(boolean bleeding, boolean fracture, int concussionTicks, int painkillerTicks) {
         return (bleeding?BLEEDING:0)|(fracture?FRACTURE:0)

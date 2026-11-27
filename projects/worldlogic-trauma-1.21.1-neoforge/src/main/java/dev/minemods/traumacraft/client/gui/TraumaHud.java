@@ -8,9 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
-/** Approved framed anatomical display; original pixel dimensions, no fractional scaling. */
+/** Frameless native-pixel anatomy HUD. Only active effect glyphs occupy space. */
 public final class TraumaHud {
-    private static final ResourceLocation PANEL=ResourceLocation.fromNamespaceAndPath(TraumaCraft.MOD_ID,"textures/gui/trauma/panel.png");
     // Ordered exactly as HudStatusLayout bits. No vanilla-effect duplicates.
     private static final ResourceLocation[] ICONS={
         icon("bleeding"),icon("fracture"),icon("concussion"),icon("painkiller")
@@ -28,14 +27,13 @@ public final class TraumaHud {
         if(mc.player.isCreative() || mc.player.isSpectator())return;
         int mask=activeMask();
         if(!HudStatusLayout.visible(ClientBodyState.hasAnyInjuries(),mask))return;
-        int px=gui.guiWidth()/2-91-80, py=gui.guiHeight()-98;
-        if(px<4){px=4;py=4;}
-        gui.blit(PANEL,px,py,0,0,76,94,76,94);
-        int x=px+4,y=py+4;
+        int x=AnatomyLayout.hudX(gui.guiWidth(),mask), y=AnatomyLayout.hudY(gui.guiWidth(),gui.guiHeight(),mask);
         BodyVisual.draw(gui,x,y,true);
-        drawActive(gui,x+48,y,1);
+        int count=Integer.bitCount(mask);
+        if(count>0)drawActive(gui,x+BodyVisual.WIDTH+4,
+            y+BodyVisual.HEIGHT-HudStatusLayout.ICON_SIZE-(count-1)*HudStatusLayout.STEP,1);
     }
-    private static int activeMask(){
+    public static int activeMask(){
         boolean bleeding=false, fracture=false;
         for(BodyPart part:BodyPart.values()){
             bleeding|=ClientBodyState.bleeding(part)>0;
@@ -52,6 +50,6 @@ public final class TraumaHud {
         }
     }
     private static void draw(GuiGraphics gui,ResourceLocation icon,int x,int y) {
-        gui.blit(icon,x,y,0,0,20,20,20,20);
+        gui.blit(icon,x,y,0,0,HudStatusLayout.ICON_SIZE,HudStatusLayout.ICON_SIZE,HudStatusLayout.ICON_SIZE,HudStatusLayout.ICON_SIZE);
     }
 }

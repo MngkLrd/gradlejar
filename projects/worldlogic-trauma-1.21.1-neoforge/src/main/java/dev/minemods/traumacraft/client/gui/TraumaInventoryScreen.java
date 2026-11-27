@@ -7,6 +7,7 @@ import dev.minemods.traumacraft.network.ApplyMedicalPacket;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import dev.minemods.traumacraft.network.ModNetwork;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public final class TraumaInventoryScreen extends InventoryScreen {
     private int panelWidth = PANEL_DESIRED_WIDTH;
     private BodyPart hovered;
     private boolean anatomyOpen;
-    private static final int TAB_WIDTH=64, TAB_HEIGHT=18;
+    private static final int TAB_WIDTH=64, TAB_HEIGHT=20;
 
     public TraumaInventoryScreen(Player player) {
         super(player);
@@ -54,19 +55,17 @@ public final class TraumaInventoryScreen extends InventoryScreen {
     private void renderTab(GuiGraphics gui,int mx,int my) {
         if(!tabAvailable())return;
         int x=tabX(),y=tabY(),r=x+TAB_WIDTH,b=y+TAB_HEIGHT;
-        gui.fill(x+2,y,r-2,b,0xFF373737);
-        gui.fill(x,y+2,r,b,0xFF373737);
-        gui.fill(x+1,y+2,r-1,b,anatomyOpen?0xFFE9E9E9:0xFF8A8A8A);
-        gui.fill(x+3,y+3,r-3,b,anatomyOpen?0xFFC6C6C6:onTab(mx,my)?0xFFBBBBBB:0xFFA0A0A0);
-        gui.fill(x+6,y+5,x+9,y+13,0xFF8E3939);
-        gui.fill(x+4,y+7,x+11,y+10,0xFF8E3939);
-        small(gui,font.plainSubstrByWidth(Component.translatable("screen.traumacraft.tab").getString(),TAB_WIDTH-17),x+14,y+5,0xFF333333);
+        // Same vanilla widget skin as the temperature tab; no custom block-shaped background.
+        gui.blitSprite(ResourceLocation.withDefaultNamespace(anatomyOpen||onTab(mx,my)?"widget/button_highlighted":"widget/button"),x,y,TAB_WIDTH,TAB_HEIGHT);
+        gui.fill(x+6,y+6,x+9,y+14,0xFFB04443);
+        gui.fill(x+4,y+8,x+11,y+11,0xFFB04443);
+        gui.drawString(font,font.plainSubstrByWidth(Component.translatable("screen.traumacraft.tab").getString(),TAB_WIDTH-17),x+14,y+6,0xFFFFFFFF,true);
     }
     private int px() { return leftPos + VANILLA_WIDTH; }
-    private int rowX() { return px() + 64; }
+    private int rowX() { return px() + 70; }
     private int rowRight() { return px() + panelWidth - 7; }
-    private int bx() { return px() + 10; }
-    private int by() { return topPos + 24; }
+    private int bx() { return AnatomyLayout.inventoryBodyX(px()); }
+    private int by() { return topPos + AnatomyLayout.INVENTORY_BODY_Y; }
 
     private void small(GuiGraphics gui, String value, int x, int y, int color) {
         gui.pose().pushPose();
@@ -100,10 +99,15 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         gui.drawString(font, Component.translatable("screen.traumacraft.body"),
                 x+7,y+5,0xFF3F3F3F,false);
 
-        gui.fill(x+5,y+21,x+59,y+155,0xFF5D6567);
-        gui.fill(x+7,y+23,x+57,y+153,0xFF262B2E);
+        // Draw the body directly on the vanilla panel, without a dark portrait well.
         BodyVisual.draw(gui,bx(),by(),false);
-        TraumaHud.drawActive(gui,x+10,y+109,2);
+        int count=Integer.bitCount(TraumaHud.activeMask());
+        int cols=Math.min(2,count);
+        if(cols>0) {
+            int iconsWidth=HudStatusLayout.ICON_SIZE+(cols-1)*HudStatusLayout.STEP;
+            TraumaHud.drawActive(gui,x+(AnatomyLayout.COLUMN_WIDTH-iconsWidth)/2,
+                y+AnatomyLayout.INVENTORY_ICONS_Y,cols);
+        }
 
         hovered=BodyVisual.hit(mouseX,mouseY,bx(),by());
         for(int i=0;i<7;i++) {
@@ -120,7 +124,8 @@ public final class TraumaInventoryScreen extends InventoryScreen {
     }
 
     private void drawRow(GuiGraphics gui,BodyPart part,int x,int y,int right,boolean focus) {
-        if(focus)gui.fill(x-3,y-1,right+2,y+ROW_HEIGHT-1,0x4A789C7C);
+        if(focus)gui.fill(x-4,y-1,right+2,y+ROW_HEIGHT-1,0x34789C7C);
+        gui.fill(x-4,y+2,x-2,y+15,BodyVisual.hpColor(part,false));
         String name=BodyVisual.name(part).getString();
         small(gui,font.plainSubstrByWidth(name,Math.max(10,right-x)),x,y,0xFF333333);
 
@@ -131,7 +136,7 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         if(fracture)key=ClientBodyState.stabilized(part)?"splinted":"fracture";
         if(bleeding>0)key=bleeding==2?"heavy_bleed":"bleeding";
         int color=bleeding>0?0xFF9A353A:fracture?0xFF956F2F:
-            key.equals("stable")?0xFF56664B:0xFF84652C;
+            key.equals("stable")?0xFF3D663D:key.equals("disabled")||key.equals("severe")?0xFF8C3233:0xFF84652C;
         String status=Component.translatable("condition.traumacraft."+key).getString();
         small(gui,font.plainSubstrByWidth(status,Math.max(10,right-x)),x,y+9,color);
     }

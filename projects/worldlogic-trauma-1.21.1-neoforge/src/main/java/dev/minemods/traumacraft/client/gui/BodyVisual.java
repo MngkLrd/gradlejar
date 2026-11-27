@@ -8,35 +8,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import java.util.Locale;
 
-/** Exact native-pixel sprites from the approved HUD artwork.
- * Atlas: five 48x84 condition columns, seven non-overlapping anatomical zones.
- * Body axis x=22; both legs start two pixels below the abdomen.
- */
+/** Transparent anatomy sprites, drawn by independently selected body zones. */
 public final class BodyVisual {
-    public static final int WIDTH=44, HEIGHT=82;
+    public static final int WIDTH=AnatomyLayout.WIDTH, HEIGHT=AnatomyLayout.HEIGHT;
     private static final ResourceLocation BODY=ResourceLocation.fromNamespaceAndPath(
         TraumaCraft.MOD_ID,"textures/gui/trauma/body.png");
     private static final ResourceLocation OVERLAYS=ResourceLocation.fromNamespaceAndPath(
         TraumaCraft.MOD_ID,"textures/gui/trauma/overlays.png");
-    public record Zone(BodyPart part,int x,int y,int width,int height) {
-        boolean contains(int mx,int my,int ox,int oy) {
-            return mx>=ox+x && mx<ox+x+width && my>=oy+y && my<oy+y+height;
-        }
-    }
-    private static final Zone[] ZONES={
-        new Zone(BodyPart.HEAD,11,0,22,20),
-        new Zone(BodyPart.CHEST,12,21,20,13),
-        new Zone(BodyPart.STOMACH,12,35,20,15),
-        new Zone(BodyPart.RIGHT_ARM,1,21,10,29),
-        new Zone(BodyPart.LEFT_ARM,33,21,10,29),
-        new Zone(BodyPart.RIGHT_LEG,12,52,9,30),
-        new Zone(BodyPart.LEFT_LEG,23,52,9,30)
-    };
-    private static final int[] MIDTONES={0x737a5c,0xb49a60,0xbc7b4e,0xb65748,0x665a63};
+    private static final int[] MIDTONES={0x729954,0xc5a35b,0xce965b,0xc66553,0x847381};
     private BodyVisual(){}
     public static BodyPart hit(int mx,int my,int ox,int oy){
-        for(Zone z:ZONES)if(z.contains(mx,my,ox,oy))return z.part();
-        return null;
+        return AnatomyLayout.hit(mx,my,ox,oy);
     }
     public static Component name(BodyPart part){
         return Component.translatable("body.traumacraft."+part.name().toLowerCase(Locale.ROOT));
@@ -46,20 +28,14 @@ public final class BodyVisual {
         if(f<=0)return "disabled";
         if(f<.20f)return "severe";
         if(f<.50f)return "injured";
-        if(f<.90f)return "sore";
+        if(f<1f)return "sore";
         return "stable";
     }
     public static Component condition(BodyPart part){
         return Component.translatable("condition.traumacraft."+conditionKey(part));
     }
     private static int palette(BodyPart part){
-        return switch(conditionKey(part)){
-            case "disabled" -> 4;
-            case "severe" -> 3;
-            case "injured" -> 2;
-            case "sore" -> 1;
-            default -> 0;
-        };
+        return AnatomyLayout.palette(ClientBodyState.fraction(part),ClientBodyState.bleeding(part)>0,ClientBodyState.fractured(part));
     }
     public static int hpColor(BodyPart part,boolean translucent){
         return (translucent?0xD0000000:0xFF000000)|MIDTONES[palette(part)];
@@ -69,18 +45,20 @@ public final class BodyVisual {
     }
     public static void draw(GuiGraphics g,int ox,int oy,boolean compact){
         // HUD and anatomy panel use the exact same sprite pixels and hit rectangles.
-        for(Zone z:ZONES){
+        for(AnatomyLayout.Zone z:AnatomyLayout.ZONES){
             int x=ox+z.x(),y=oy+z.y(),w=z.width(),h=z.height(),p=palette(z.part());
-            g.blit(BODY,x,y,p*48+z.x(),z.y(),w,h,240,84);
+            g.blit(BODY,x,y,p*AnatomyLayout.WIDTH+z.x(),z.y(),w,h,AnatomyLayout.ATLAS_WIDTH,AnatomyLayout.ATLAS_HEIGHT);
             boolean limb=z.part()==BodyPart.LEFT_ARM||z.part()==BodyPart.RIGHT_ARM
                 ||z.part()==BodyPart.LEFT_LEG||z.part()==BodyPart.RIGHT_LEG;
-            if(p==1&&limb)overlay(g,x+(w-7)/2,y+h/2,8,0,7,7);
+            if(p==1&&limb&&ClientBodyState.bleeding(z.part())==0&&!ClientBodyState.fractured(z.part()))overlay(g,x+(w-7)/2,y+h/2,8,0,7,7);
             if(ClientBodyState.fractured(z.part())){
                 if(ClientBodyState.stabilized(z.part())&&limb)
                     overlay(g,x+(w-9)/2,y+(h-16)/2,0,10,9,16);
                 else overlay(g,x+(w-7)/2,y+(h-7)/2,16,0,7,7);
             }
-            if(ClientBodyState.bleeding(z.part())>0)overlay(g,x+w-7,y+h-9,0,0,7,9);
+            int bleeding=ClientBodyState.bleeding(z.part());
+            if(bleeding>0)overlay(g,x+w-7,y+h-9,0,0,7,9);
+            if(bleeding>1)overlay(g,x+(w-7)/2,y+2,0,0,7,9);
         }
     }
 }
