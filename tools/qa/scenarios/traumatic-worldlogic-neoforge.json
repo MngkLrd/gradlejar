@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "name": "World Logic Trauma NeoForge 1.21.1: dedicated server component regressions",
+  "steps": [
+    {
+      "command": "traumaqa state",
+      "expect": "TRAUMAQA state PASS",
+      "assertion": true,
+      "name": "TR-STATE: seven healthy zones, localized damage, NBT roundtrip"
+    },
+    {
+      "command": "traumaqa treatment",
+      "expect": "TRAUMAQA treatment PASS",
+      "assertion": true,
+      "name": "TR-TREAT: reject healthy target, bilateral arm and leg splints, gradual recovery"
+    },
+    {
+      "command": "traumaqa bridge",
+      "expect": "TRAUMAQA bridge PASS",
+      "assertion": true,
+      "name": "TR-BRIDGE: core injury predicate, penalty, arm signal, legacy migration"
+    },
+    {
+      "command": "traumaqa damage",
+      "expect": "TRAUMAQA damage PASS",
+      "assertion": true,
+      "name": "TR-DAMAGE: fall damage, unaffected head, creative exclusion"
+    }
+  ],
+  "coverage": [
+    {
+      "id": "TR-STATE",
+      "kind": "mechanic",
+      "subject": "TR-STATE: seven healthy zones, localized damage, NBT roundtrip",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-STATE: seven healthy zones, localized damage, NBT roundtrip"
+        }
+      ]
+    },
+    {
+      "id": "TR-TREAT",
+      "kind": "mechanic",
+      "subject": "TR-TREAT: reject healthy target, bilateral arm and leg splints, gradual recovery",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-TREAT: reject healthy target, bilateral arm and leg splints, gradual recovery"
+        }
+      ]
+    },
+    {
+      "id": "TR-BRIDGE",
+      "kind": "mechanic",
+      "subject": "TR-BRIDGE: core injury predicate, penalty, arm signal, legacy migration",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-BRIDGE: core injury predicate, penalty, arm signal, legacy migration"
+        }
+      ]
+    },
+    {
+      "id": "TR-DAMAGE",
+      "kind": "mechanic",
+      "subject": "TR-DAMAGE: fall damage, unaffected head, creative exclusion",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DAMAGE: fall damage, unaffected head, creative exclusion"
+        }
+      ]
+    }
+  ]
+}

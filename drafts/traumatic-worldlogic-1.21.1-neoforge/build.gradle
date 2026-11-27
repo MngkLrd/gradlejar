@@ -1,0 +1,75 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+group = mod_group_id
+version = mod_version
+base.archivesName = 'traumacraft-neoforge-mc1.21.1'
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+// Explicit dependency lock until the exact NeoForge core release is available.
+// Never download or substitute the older Forge binary.
+def corePath = providers.gradleProperty('worldlogicJar')
+def coreVersion = providers.gradleProperty('worldlogicVersion')
+def coreHash = providers.gradleProperty('worldlogicSha256')
+def coreJar = file(corePath.orElse('libs/worldlogic-neoforge.jar').get())
+tasks.register('verifyWorldLogic') {
+    inputs.file(coreJar).optional()
+    inputs.property('coreVersion',coreVersion.orElse('MISSING'))
+    inputs.property('coreHash',coreHash.orElse('MISSING'))
+    doLast {
+        if(!coreJar.isFile() || !coreVersion.isPresent() || !coreHash.isPresent())
+            throw new GradleException('NeoForge World Logic dependency is not locked: provide -PworldlogicJar, -PworldlogicVersion and -PworldlogicSha256')
+        if(!(coreVersion.get() ==~ /[0-9A-Za-z.\\-]+/) || !(coreHash.get() ==~ /[0-9a-fA-F]{64}/))
+            throw new GradleException('Invalid World Logic version or SHA-256 lock')
+        def actual = java.security.MessageDigest.getInstance('SHA-256').digest(coreJar.bytes).encodeHex().toString()
+        if(!actual.equalsIgnoreCase(coreHash.get())) throw new GradleException('World Logic SHA-256 mismatch')
+        new java.util.zip.ZipFile(coreJar).withCloseable { zip ->
+            def meta = zip.getEntry('META-INF/neoforge.mods.toml')
+            if(meta == null) throw new GradleException('World Logic must be the NeoForge build, not Forge')
+            def text = zip.getInputStream(meta).withCloseable { it.getText('UTF-8') }
+            if(!(text =~ /(?m)^\\s*modId\\s*=\\s*["']worldlogic["']/))
+                throw new GradleException('Dependency is not World Logic')
+            for (String name : ['Rules','Balance','Survival','Trauma']) {
+                if(zip.getEntry("dev/minemods/worldlogic/${name}.class")==null)
+                    throw new GradleException("World Logic bridge target missing: ${name}; adapt bridge to core before building")
+            }
+        }
+    }
+}
+repositories {
+    maven { url = 'https://maven.blamejared.com/' }
+    mavenCentral()
+}
+dependencies {
+    compileOnly files(coreJar)
+    runtimeOnly files(coreJar)
+    compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${jei_version}"
+}
+neoForge {
+    version = project.neo_version
+    runs {
+        client { client() }
+        server { server(); programArgument '--nogui' }
+    }
+    mods { "${mod_id}" { sourceSet(sourceSets.main) } }
+}
+tasks.named('processResources', ProcessResources).configure {
+    dependsOn tasks.named('verifyWorldLogic')
+    inputs.property('worldlogic_version',coreVersion.orElse('MISSING'))
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand(mod_id:mod_id,mod_version:mod_version,worldlogic_version:coreVersion.orElse('MISSING').get())
+    }
+}
+tasks.withType(JavaCompile).configureEach {
+    dependsOn tasks.named('verifyWorldLogic')
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+tasks.register('checkHudStatusLayout', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.minemods.traumacraft.client.gui.HudStatusLayoutCheck'
+}
+tasks.named('check') { dependsOn tasks.named('checkHudStatusLayout') }
