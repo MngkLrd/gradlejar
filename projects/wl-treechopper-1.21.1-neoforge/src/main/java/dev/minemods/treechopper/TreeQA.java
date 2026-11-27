@@ -19,12 +19,35 @@ final class TreeQA {
             double full=ChopEffort.power(1,1,1), tired=ChopEffort.power(.1,1,1);
             double oneArm=ChopEffort.power(1,1,0), disabled=ChopEffort.power(1,0,1);
             if(!(full>oneArm&&oneArm>tired&&disabled==0&&ChopEffort.cooldown(tired)>ChopEffort.cooldown(full)
-                &&ChopEffort.depthIncrement(1,6,1,full,.45)>ChopEffort.depthIncrement(1,6,1,tired,.45)
+                &&ChopEffort.depthIncrement(1,6,1,full,.8)>ChopEffort.depthIncrement(1,6,1,tired,.8)
                 &&ChopEffort.depthIncrement(0,6,1,disabled,.99)==0)){
                 c.getSource().sendFailure(Component.literal("TreeChopper effort regression FAILED"));return 0;
             }
             c.getSource().sendSuccess(()->Component.literal("TreeChopper effort regression PASS"),false);return 1;
           }))
+          .then(Commands.literal("qa_landing").executes(c->{
+            if(!TreeChopper.qaLandingPose()){c.getSource().sendFailure(Component.literal("TreeChopper landing geometry FAILED"));return 0;}
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper landing geometry PASS"),false);return 1;
+          }))
+          .then(Commands.literal("qa_progress").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
+            ServerLevel l=c.getSource().getLevel();
+            BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            var fake=FakePlayerFactory.getMinecraft(l);
+            fake.setPos(p.getX()+.5,p.getY(),p.getZ()-1.5);
+            fake.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(Items.IRON_AXE));
+            int depth=0;
+            for(int i=0;i<4;i++){
+                TreeChopper.qaResetCooldown(fake);
+                NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
+                var state=l.getBlockState(p);
+                if(state.getBlock() instanceof StumpBlock){
+                    c.getSource().sendSuccess(()->Component.literal("TreeChopper single-side progression PASS"),false);return 1;
+                }
+                if(!(state.getBlock() instanceof CutBlock)||CutBlock.depth(state,Direction.NORTH)<=depth)break;
+                depth=CutBlock.depth(state,Direction.NORTH);
+            }
+            c.getSource().sendFailure(Component.literal("TreeChopper single-side progression FAILED"));return 0;
+          })))
           .then(Commands.literal("qa_break").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
             ServerLevel l=c.getSource().getLevel();
             BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");

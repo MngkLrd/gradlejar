@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.5.2 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.5.3 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -607,6 +607,51 @@
       "expect": "TreeChopper hand break allowed",
       "assertion": true,
       "name": "hand-cut-break"
+    },
+    {
+      "command": "wltreechopper qa_landing",
+      "expect": "TreeChopper landing geometry PASS",
+      "assertion": true,
+      "name": "landing-pose"
+    },
+    {
+      "command": "setblock 1048 199 1038 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1048 200 1038 1048 203 1038 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1048 204 1038 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_progress 1048 200 1038",
+      "expect": "TreeChopper single-side progression PASS",
+      "assertion": true,
+      "name": "single-side-progress"
+    },
+    {
+      "command": "execute if entity @e[type=minecraft:block_display,tag=wl_treechopper_cut_cap,x=1048,y=200,z=1038,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cut-cap-present"
+    },
+    {
+      "command": "execute if block 1048 200 1038 wl_treechopper:stump_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "stump-kept"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_cut_cap,x=1048,y=200,z=1038,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cut-cap-cleanup"
     }
   ],
   "coverage": [
@@ -1201,6 +1246,61 @@
         {
           "backend": "server",
           "name": "hand-cut-break"
+        }
+      ]
+    },
+    {
+      "id": "landing-pose",
+      "kind": "mechanic",
+      "subject": "Exact display transform keeps the cut cap attached and full trunk on local ground in four directions",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "landing-pose"
+        }
+      ]
+    },
+    {
+      "id": "single-side-progress",
+      "kind": "mechanic",
+      "subject": "Each effective same-side strike advances depth or fells, within four strikes",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "single-side-progress"
+        }
+      ]
+    },
+    {
+      "id": "cut-cap-present",
+      "kind": "mechanic",
+      "subject": "Actual falling display includes the severed top of the original cut block",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-cap-present"
+        }
+      ]
+    },
+    {
+      "id": "stump-kept",
+      "kind": "mechanic",
+      "subject": "Cut base is a persistent real stump while the cap falls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "stump-kept"
+        }
+      ]
+    },
+    {
+      "id": "cut-cap-cleanup",
+      "kind": "mechanic",
+      "subject": "Visual severed cap is removed with the completed animation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-cap-cleanup"
         }
       ]
     }

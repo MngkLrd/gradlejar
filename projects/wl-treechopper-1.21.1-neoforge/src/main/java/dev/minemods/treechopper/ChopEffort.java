@@ -12,7 +12,7 @@ final class ChopEffort {
         if(power<=0)return 0;
         if(before==0)return 1;
         double quality=clamp(power);
-        if(roll<Math.min(.88,.24*resistance+.48*(1-quality)))return 0;
+        // Each effective strike visibly deepens the notch; strength changes the chance of a double increment.
         return roll>Math.max(.57,.93-speed*.035*quality/resistance)?2:1;
     }
 }
