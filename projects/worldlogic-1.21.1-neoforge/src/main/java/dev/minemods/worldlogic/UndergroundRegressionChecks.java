@@ -38,14 +38,24 @@ final class UndergroundRegressionChecks{
   }
   require(eligible==57&&gen.getBiomeSource().possibleBiomes().size()==58,"structure eligibility inventory after three approved biome merges");
   GeologyModel.Cave chosen=null;
-  outer:for(int gx=-10;gx<=10;gx++)for(int gz=-10;gz<=10;gz++){
-   var d=GeologyModel.district(42,gx,gz);
-   if(d.province()!=GeologyModel.Province.CARBONATE||!d.caves().get(0).shaft())continue;
-   var c=d.caves().get(0);int x=(int)Math.floor(c.x()),z=(int)Math.floor(c.z());
-   if(BiomeSurvey.modelY(state,x,z)<75)continue;
-   if(gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state)>=72){chosen=c;break outer;}
+  // RC32 intentionally made entrances rarer. A small origin-only survey is
+  // not representative of the continent-scale terrain. Sample separated belts,
+  // using authoritative base height (not a climate-router height proxy).
+  int candidates=0,landCandidates=0;
+  outer:for(int ring=0;ring<=3;ring++)for(int az=-ring;az<=ring;az++)for(int ax=-ring;ax<=ring;ax++){
+   if(Math.max(Math.abs(ax),Math.abs(az))!=ring)continue;
+   int cx=ax*64,cz=az*64;
+   for(int gx=cx-12;gx<=cx+12;gx++)for(int gz=cz-12;gz<=cz+12;gz++){
+    var d=GeologyModel.district(42,gx,gz);
+    if(d.province()!=GeologyModel.Province.CARBONATE||!d.caves().get(0).shaft())continue;
+    var c=d.caves().get(0);int x=(int)Math.floor(c.x()),z=(int)Math.floor(c.z());
+    candidates++;
+    if(gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state)<72)continue;
+    landCandidates++;chosen=c;break outer;
+   }
   }
-  require(chosen!=null,"real land karst candidate");
+  require(chosen!=null,"real land karst candidate; modeled shafts="+candidates+" land="+landCandidates);
+  org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_KARST_FIXTURE candidates={} x={} z={}",candidates,chosen.x(),chosen.z());
   var center=BlockPos.containing(chosen.x(),chosen.y(),chosen.z());var ch=new ChunkPos(center);
   var chunk=new ProtoChunk(ch,UpgradeData.EMPTY,bounds,l.registryAccess().registryOrThrow(Registries.BIOME),null);
   var p=new BlockPos.MutableBlockPos();
