@@ -92,7 +92,7 @@ public final class MetabolismScreen extends Screen{
   }
   for(int yy=cy-r;yy<=cy+r;yy++){
    var intersections=new ArrayList<Integer>();
-   for(int i=0;i<6;i++){int j=(i+1)%6;if((py[i]<=yy&&py[j]>yy)||(py[j]<=yy&&py[i]>yy))intersections.add(px[i]+(int)Math.round((double)(yy-py[i])*(px[j]-px[i])/(py[j]-py[i]));}
+   for(int i=0;i<6;i++){int j=(i+1)%6;if((py[i]<=yy&&py[j]>yy)||(py[j]<=yy&&py[i]>yy))intersections.add(px[i]+(int)Math.round((double)(yy-py[i])*(px[j]-px[i])/(py[j]-py[i])));}
    Collections.sort(intersections);for(int i=0;i+1<intersections.size();i+=2)g.fill(intersections.get(i),yy,intersections.get(i+1)+1,yy+1,0x709fca72);
   }
   for(int i=0;i<6;i++){int j=(i+1)%6;line(g,px[i],py[i],px[j],py[j],0xffa4cc72);g.fill(px[i]-1,py[i]-1,px[i]+2,py[i]+2,0xffe7eacb);}
