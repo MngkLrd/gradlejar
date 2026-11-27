@@ -50,3 +50,11 @@ tasks.withType(JavaCompile).configureEach {
 }
 tasks.matching { it.name == 'runClient' || it.name == 'runServer' }.configureEach { dependsOn tasks.named('prepareWorldLogic') }
 jar { manifest.attributes('MixinConfigs': 'traumacraft.mixins.json') }
+
+// Small deterministic regression; also runnable directly with javac/java in draft development.
+tasks.register('checkHudStatusLayout', JavaExec) {
+ dependsOn tasks.named('testClasses')
+ classpath = sourceSets.test.runtimeClasspath
+ mainClass = 'dev.minemods.traumacraft.client.gui.HudStatusLayoutCheck'
+}
+tasks.named('check') { dependsOn tasks.named('checkHudStatusLayout') }
