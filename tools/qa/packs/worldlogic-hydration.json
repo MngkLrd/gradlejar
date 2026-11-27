@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "worldlogic-hydration",
-  "description": "Core RC28 and Hydration in one exact production server (development baseline, not all addons)",
+  "description": "Pinned Core RC32 development snapshot with Hydration 0.5.0; joint runtime evidence required",
   "targets": [
     {
       "id": "neoforge-mc1.21.1",

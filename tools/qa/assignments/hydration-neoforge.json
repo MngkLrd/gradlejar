@@ -223,6 +223,21 @@
       "id": "pipe-redstone-player",
       "status": "NOT_RUN",
       "reason": "Fixture covers actual powered and unpowered block state, not player placement or wiring."
+    },
+    {
+      "id": "trauma-waterborne-bridge",
+      "status": "NOT_RUN",
+      "reason": "Requires Trauma reportWaterIntake and fluidLossPointsPerSecond API plus actual ingestion and medical integration test."
+    },
+    {
+      "id": "storage-player-inventory",
+      "status": "NOT_RUN",
+      "reason": "Requires actual inventory, transfer, player consumption and offline/chunk reload evidence; model and item snapshot checks are not sufficient."
+    },
+    {
+      "id": "dehydration-player-stage",
+      "status": "NOT_RUN",
+      "reason": "Requires real player effects and HUD status evidence; model stages are separately tested."
     }
   ]
 }

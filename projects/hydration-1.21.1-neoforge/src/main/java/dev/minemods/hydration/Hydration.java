@@ -79,7 +79,7 @@ public final class Hydration {
  private static void refreshInventory(ServerPlayer p){
   long now=clock(p);boolean changed=false;
   for(int i=0;i<p.getInventory().getContainerSize();i++){
-   var stack=p.getInventory().getItem(i);if(stack.isEmpty()||VesselTreatment.activeJob(p,stack))continue;
+   var stack=p.getInventory().getItem(i);if(stack.isEmpty()||VesselTreatment.activeJob(p,stack)||(p.isUsingItem()&&p.getUseItem()==stack))continue;
    if(stack.getItem() instanceof VesselItem v)changed|=v.refresh(stack,now);else changed|=WaterBottle.refresh(stack,now);
   }
   if(changed)p.getInventory().setChanged();

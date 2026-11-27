@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Hydration 0.4.1 Minecraft fluid units and infrastructure regression",
+  "name": "Hydration 0.5.0 native waters, storage and physiology regression",
   "coverage": [
     {
       "id": "water-balance",
@@ -190,6 +190,61 @@
         {
           "backend": "server",
           "name": "Model rules"
+        }
+      ]
+    },
+    {
+      "id": "native-water-eight",
+      "kind": "mechanic",
+      "subject": "Eight Core native water registry kinds and exact intake profile",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Infrastructure world fixture"
+        }
+      ]
+    },
+    {
+      "id": "storage-spoilage",
+      "kind": "mechanic",
+      "subject": "Exposed vs protected age, treatment, legacy timestamp, time rollback and mix conservation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
+    },
+    {
+      "id": "quality-numeric-salinity",
+      "kind": "mechanic",
+      "subject": "Risk-sensitive gain and numerical salt effect",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
+    },
+    {
+      "id": "electrolyte-stage",
+      "kind": "mechanic",
+      "subject": "Loss and food correction; five dehydration stages; fallback illness loss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
+    },
+    {
+      "id": "timestamp-item-roundtrip",
+      "kind": "mechanic",
+      "subject": "Aging timestamp survives component and stack copy",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vessel capacities and component persistence"
         }
       ]
     }

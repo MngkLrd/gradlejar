@@ -47,6 +47,18 @@ public final class InfrastructureChecks {
    in.step(l);require(in.water().ml()==0,"intake without source");
    l.setBlock(intake.above(),Blocks.WATER.defaultBlockState(),Block.UPDATE_ALL);in.step(l);
    require(in.water().ml()==250,"natural intake draws actual source");
+   String[][] kinds={{"sea_water","SEA"},{"river_water","RIVER"},{"lake_water","LAKE"},{"spring_water","SPRING"},{"groundwater","GROUNDWATER"},{"wetland_water","WETLAND"},{"pond_water","POND"},{"brackish_water","BRACKISH"}};
+   for(var k:kinds){
+    in.setWater(WaterBatch.empty());
+    var id=net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("worldlogic",k[0]);
+    var block=net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(id);
+    require(block!=Blocks.AIR,"missing native water "+id);
+    l.setBlock(intake.above(),block.defaultBlockState(),Block.UPDATE_ALL);
+    var profile=dev.minemods.worldlogic.api.WorldLogicApi.waterProfile(l,intake.above());
+    require(profile.kind().name().equals(k[1]),"native kind "+k[0]);
+    var expected=WaterBottle.fromSource(profile);in.step(l);
+    var actual=in.water();require(actual.ml()==250&&actual.origins().contains(k[1])&&actual.quality()==expected.quality()&&Math.abs(actual.salinity()-expected.salinity())<.00001&&Math.abs(actual.risk()-expected.risk())<.00001,"native intake profile "+k[0]);
+   }
    l.setBlock(collector.above(),Blocks.GLASS.defaultBlockState(),Block.UPDATE_ALL);rain.step(l);
    require(rain.water().ml()==0,"covered collector stays empty");
    var saved=source.saveWithoutMetadata(l.registryAccess());

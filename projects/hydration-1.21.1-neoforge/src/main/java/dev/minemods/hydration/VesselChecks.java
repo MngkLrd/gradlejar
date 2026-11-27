@@ -6,7 +6,7 @@ public final class VesselChecks {
  public static void run(){
   VesselItem[] items={HydrationItems.CUP.get(),HydrationItems.SKIN.get(),HydrationItems.JUG.get(),HydrationItems.CANTEEN.get()};
   int[] caps={500,1500,3000,2000};
-  var b=new WaterBatch(250,WaterBalance.Quality.DESALINATE,35,.3,Set.of("SEA"));
+  var b=new WaterBatch(250,WaterBalance.Quality.DESALINATE,35,.3,Set.of("SEA"),12345);
   for(int i=0;i<items.length;i++){
    var v=items[i];var s=new ItemStack(v);require(v.capacity==caps[i]&&v.read(s).ml()==0,"capacity/empty "+i);
    v.write(s,b);require(v.read(s).equals(b)&&v.read(s.copy()).equals(b),"NBT/copy "+i);
