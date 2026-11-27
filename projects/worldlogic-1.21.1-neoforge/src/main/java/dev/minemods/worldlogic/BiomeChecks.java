@@ -69,14 +69,25 @@ public final class BiomeChecks {
  }
  // Broad real-seed reachability audit in independent bounded server commands.
  private static final Map<ServerLevel,Set<String>> COVERAGE=new WeakHashMap<>();
- public static void verifyCoveragePart(ServerLevel l,long seed,int band,boolean reset){
-  var gen=generator(l,"realistic_unified");
-  var state=RandomState.create(gen.generatorSettings().value(),l.registryAccess().lookupOrThrow(Registries.NOISE),seed);
-  if(reset)COVERAGE.remove(l);
-  var seen=COVERAGE.computeIfAbsent(l,v->new TreeSet<>());
+ private static final Map<ServerLevel,Integer> NEXT_ROW=new WeakHashMap<>();
+ private record Survey(NoiseBasedChunkGenerator gen,RandomState state,long seed){}
+ private static final Map<ServerLevel,Survey> SURVEYS=new WeakHashMap<>();
+ public static int verifyCoverageRow(ServerLevel l,int seedIndex,int band,int row){
+  require(seedIndex>=0&&seedIndex<2&&band>=0&&band<4&&row>=0&&row<10,"survey row bounds");
+  int ordinal=seedIndex*40+band*10+row;
+  if(ordinal==0){COVERAGE.remove(l);NEXT_ROW.put(l,0);SURVEYS.remove(l);}
+  require(NEXT_ROW.getOrDefault(l,-1)==ordinal,"missing or out-of-order survey row "+ordinal);
+  long seed=seedIndex==0?1234L:-6487130996193510395L;
+  var survey=SURVEYS.get(l);
+  if(survey==null||survey.seed()!=seed){
+   var gen=generator(l,"realistic_unified");
+   survey=new Survey(gen,RandomState.create(gen.generatorSettings().value(),l.registryAccess().lookupOrThrow(Registries.NOISE),seed),seed);
+   SURVEYS.put(l,survey);
+  }
+  var gen=survey.gen();var state=survey.state();var seen=COVERAGE.computeIfAbsent(l,v->new TreeSet<>());
   var bounds=LevelHeightAccessor.create(gen.getMinY(),gen.getGenDepth());
-  int before=seen.size(),samples=0;
-  for(int iz=band*10-20;iz<band*10-10;iz++)for(int ix=-14;ix<=14;ix++){
+  int before=seen.size(),samples=0,iz=band*10-20+row;
+  for(int ix=-14;ix<=14;ix++){
    int x=ix*2048,z=iz*2048,model=BiomeSurvey.modelY(state,x,z);
    int guess=Math.max(gen.getSeaLevel(),model);
    var predicted=BiomeSurvey.at(gen,state,x,guess,z);
@@ -91,10 +102,14 @@ public final class BiomeChecks {
    }
    samples++;
   }
-  require(samples==290,"complete biome audit part");
-  org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_COVERAGE_PART seed={} band={} points={} new={} cumulative={}",seed,band,samples,seen.size()-before,seen.size());
+  require(samples==29,"complete biome audit row");
+  NEXT_ROW.put(l,ordinal+1);
+  org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_COVERAGE_ROW seed={} band={} row={} points={} new={} cumulative={}",seed,band,row,samples,seen.size()-before,seen.size());
+  return (ordinal+1)*29;
  }
  public static void verifyCoverage(ServerLevel l){
+  require(NEXT_ROW.getOrDefault(l,-1)==80,"all 2320 survey points required");
+  SURVEYS.remove(l);
   var gen=generator(l,"realistic_unified");
   var seen=COVERAGE.getOrDefault(l,Set.of());
   var missing=new TreeSet<String>();

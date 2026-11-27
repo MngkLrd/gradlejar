@@ -371,51 +371,563 @@
       "assertion": true
     },
     {
+      "name": "Seeded biome reachability survey 1 part 1 row 1/10",
+      "command": "worldlogic qa biome_survey_row 0 0 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=29$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 2/10",
+      "command": "worldlogic qa biome_survey_row 0 0 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=58$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 3/10",
+      "command": "worldlogic qa biome_survey_row 0 0 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=87$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 4/10",
+      "command": "worldlogic qa biome_survey_row 0 0 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=116$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 5/10",
+      "command": "worldlogic qa biome_survey_row 0 0 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=145$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 6/10",
+      "command": "worldlogic qa biome_survey_row 0 0 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=174$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 7/10",
+      "command": "worldlogic qa biome_survey_row 0 0 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=203$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 8/10",
+      "command": "worldlogic qa biome_survey_row 0 0 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=232$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 9/10",
+      "command": "worldlogic qa biome_survey_row 0 0 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=261$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
       "name": "Seeded biome reachability survey 1 part 1",
-      "command": "worldlogic qa biome_survey_0_0",
-      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "command": "worldlogic qa biome_survey_row 0 0 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=290$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 1/10",
+      "command": "worldlogic qa biome_survey_row 0 1 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=319$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 2/10",
+      "command": "worldlogic qa biome_survey_row 0 1 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=348$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 3/10",
+      "command": "worldlogic qa biome_survey_row 0 1 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=377$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 4/10",
+      "command": "worldlogic qa biome_survey_row 0 1 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=406$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 5/10",
+      "command": "worldlogic qa biome_survey_row 0 1 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=435$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 6/10",
+      "command": "worldlogic qa biome_survey_row 0 1 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=464$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 7/10",
+      "command": "worldlogic qa biome_survey_row 0 1 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=493$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 8/10",
+      "command": "worldlogic qa biome_survey_row 0 1 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=522$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 9/10",
+      "command": "worldlogic qa biome_survey_row 0 1 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=551$",
+      "reject": "FAIL:",
       "assertion": true
     },
     {
       "name": "Seeded biome reachability survey 1 part 2",
-      "command": "worldlogic qa biome_survey_0_1",
-      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "command": "worldlogic qa biome_survey_row 0 1 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=580$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 1/10",
+      "command": "worldlogic qa biome_survey_row 0 2 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=609$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 2/10",
+      "command": "worldlogic qa biome_survey_row 0 2 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=638$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 3/10",
+      "command": "worldlogic qa biome_survey_row 0 2 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=667$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 4/10",
+      "command": "worldlogic qa biome_survey_row 0 2 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=696$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 5/10",
+      "command": "worldlogic qa biome_survey_row 0 2 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=725$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 6/10",
+      "command": "worldlogic qa biome_survey_row 0 2 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=754$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 7/10",
+      "command": "worldlogic qa biome_survey_row 0 2 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=783$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 8/10",
+      "command": "worldlogic qa biome_survey_row 0 2 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=812$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 9/10",
+      "command": "worldlogic qa biome_survey_row 0 2 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=841$",
+      "reject": "FAIL:",
       "assertion": true
     },
     {
       "name": "Seeded biome reachability survey 1 part 3",
-      "command": "worldlogic qa biome_survey_0_2",
-      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "command": "worldlogic qa biome_survey_row 0 2 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=870$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 1/10",
+      "command": "worldlogic qa biome_survey_row 0 3 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=899$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 2/10",
+      "command": "worldlogic qa biome_survey_row 0 3 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=928$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 3/10",
+      "command": "worldlogic qa biome_survey_row 0 3 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=957$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 4/10",
+      "command": "worldlogic qa biome_survey_row 0 3 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=986$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 5/10",
+      "command": "worldlogic qa biome_survey_row 0 3 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1015$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 6/10",
+      "command": "worldlogic qa biome_survey_row 0 3 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1044$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 7/10",
+      "command": "worldlogic qa biome_survey_row 0 3 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1073$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 8/10",
+      "command": "worldlogic qa biome_survey_row 0 3 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1102$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 9/10",
+      "command": "worldlogic qa biome_survey_row 0 3 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1131$",
+      "reject": "FAIL:",
       "assertion": true
     },
     {
       "name": "Seeded biome reachability survey 1 part 4",
-      "command": "worldlogic qa biome_survey_0_3",
-      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "command": "worldlogic qa biome_survey_row 0 3 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1160$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 1/10",
+      "command": "worldlogic qa biome_survey_row 1 0 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1189$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 2/10",
+      "command": "worldlogic qa biome_survey_row 1 0 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1218$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 3/10",
+      "command": "worldlogic qa biome_survey_row 1 0 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1247$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 4/10",
+      "command": "worldlogic qa biome_survey_row 1 0 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1276$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 5/10",
+      "command": "worldlogic qa biome_survey_row 1 0 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1305$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 6/10",
+      "command": "worldlogic qa biome_survey_row 1 0 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1334$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 7/10",
+      "command": "worldlogic qa biome_survey_row 1 0 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1363$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 8/10",
+      "command": "worldlogic qa biome_survey_row 1 0 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1392$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 9/10",
+      "command": "worldlogic qa biome_survey_row 1 0 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1421$",
+      "reject": "FAIL:",
       "assertion": true
     },
     {
       "name": "Seeded biome reachability survey 2 part 1",
-      "command": "worldlogic qa biome_survey_1_0",
-      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "command": "worldlogic qa biome_survey_row 1 0 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1450$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 1/10",
+      "command": "worldlogic qa biome_survey_row 1 1 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1479$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 2/10",
+      "command": "worldlogic qa biome_survey_row 1 1 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1508$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 3/10",
+      "command": "worldlogic qa biome_survey_row 1 1 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1537$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 4/10",
+      "command": "worldlogic qa biome_survey_row 1 1 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1566$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 5/10",
+      "command": "worldlogic qa biome_survey_row 1 1 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1595$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 6/10",
+      "command": "worldlogic qa biome_survey_row 1 1 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1624$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 7/10",
+      "command": "worldlogic qa biome_survey_row 1 1 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1653$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 8/10",
+      "command": "worldlogic qa biome_survey_row 1 1 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1682$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 9/10",
+      "command": "worldlogic qa biome_survey_row 1 1 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1711$",
+      "reject": "FAIL:",
       "assertion": true
     },
     {
       "name": "Seeded biome reachability survey 2 part 2",
-      "command": "worldlogic qa biome_survey_1_1",
-      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "command": "worldlogic qa biome_survey_row 1 1 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1740$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 1/10",
+      "command": "worldlogic qa biome_survey_row 1 2 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1769$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 2/10",
+      "command": "worldlogic qa biome_survey_row 1 2 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1798$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 3/10",
+      "command": "worldlogic qa biome_survey_row 1 2 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1827$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 4/10",
+      "command": "worldlogic qa biome_survey_row 1 2 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1856$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 5/10",
+      "command": "worldlogic qa biome_survey_row 1 2 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1885$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 6/10",
+      "command": "worldlogic qa biome_survey_row 1 2 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1914$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 7/10",
+      "command": "worldlogic qa biome_survey_row 1 2 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1943$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 8/10",
+      "command": "worldlogic qa biome_survey_row 1 2 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1972$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 9/10",
+      "command": "worldlogic qa biome_survey_row 1 2 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2001$",
+      "reject": "FAIL:",
       "assertion": true
     },
     {
       "name": "Seeded biome reachability survey 2 part 3",
-      "command": "worldlogic qa biome_survey_1_2",
-      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "command": "worldlogic qa biome_survey_row 1 2 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2030$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 1/10",
+      "command": "worldlogic qa biome_survey_row 1 3 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2059$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 2/10",
+      "command": "worldlogic qa biome_survey_row 1 3 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2088$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 3/10",
+      "command": "worldlogic qa biome_survey_row 1 3 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2117$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 4/10",
+      "command": "worldlogic qa biome_survey_row 1 3 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2146$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 5/10",
+      "command": "worldlogic qa biome_survey_row 1 3 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2175$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 6/10",
+      "command": "worldlogic qa biome_survey_row 1 3 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2204$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 7/10",
+      "command": "worldlogic qa biome_survey_row 1 3 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2233$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 8/10",
+      "command": "worldlogic qa biome_survey_row 1 3 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2262$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 9/10",
+      "command": "worldlogic qa biome_survey_row 1 3 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2291$",
+      "reject": "FAIL:",
       "assertion": true
     },
     {
       "name": "Seeded biome reachability survey 2 part 4",
-      "command": "worldlogic qa biome_survey_1_3",
-      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "command": "worldlogic qa biome_survey_row 1 3 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2320$",
+      "reject": "FAIL:",
       "assertion": true
     },
     {
