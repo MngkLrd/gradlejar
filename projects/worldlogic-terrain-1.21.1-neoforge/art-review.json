@@ -4994,6 +4994,746 @@
         "context_type": "tile_3x3",
         "context_view": "Inspected 3x3 nearest-neighbor tiled preview after relocating diagonal deposits; rows stay recognizable and clumps break the vertical rhythm. Client rendering not run."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_agave.png": {
+      "sha256": "dbc0cb1155f4e67bb6c131f989b0ca7425046fa8fc9d1c471367a98fb81a5d01",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Compared with olive aloe, the taller blue-gray spear cluster looks more rigid.",
+      "findings": {
+        "silhouette": "Tall spiky bluish basal rosette with unequal pointed outer blades.",
+        "cluster_structure": "Wide center blades use dark green-gray edges and staggered pale inner strips.",
+        "micro_contrast": "Thin light cool ridges alternate with darker leaf faces.",
+        "light_and_volume": "Overlapping leaves darken toward the shared base.",
+        "material_continuity": "Muted blue-sage foliage uses a single coherent succulent ramp.",
+        "edge_variation": "Tips taper at different heights and leave clear sky gaps.",
+        "variant_identity": "Compared with olive aloe, the taller blue-gray spear cluster looks more rigid.",
+        "functional_material_cues": "Thick angular blades rise from a ground-level rosette.",
+        "vanilla_comparison": "Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Wide center blades use dark green-gray edges and staggered pale inner strips. Overlapping leaves darken toward the shared base.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Tall spiky bluish basal rosette with unequal pointed outer blades. Thin light cool ridges alternate with darker leaf faces.",
+        "context_type": "placed_cutout",
+        "context_view": "Tips taper at different heights and leave clear sky gaps. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_aloe.png": {
+      "sha256": "065ce5f52b1c04638bc9e89a235eb4395ce7a7b54d77fb5ef03216f1d9777548",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Shorter and warmer than agave, with a broader grounded base.",
+      "findings": {
+        "silhouette": "Low broad olive succulent rosette with a high central blade.",
+        "cluster_structure": "Warm green and olive clusters build layered broad leaf bases.",
+        "micro_contrast": "Small ochre highlights define thicker waxy edges.",
+        "light_and_volume": "Dark leaf overlaps sit behind lighter upward faces.",
+        "material_continuity": "Warm dusty green and olive remain continuous across each blade.",
+        "edge_variation": "Uneven spear tips curve outward from a compact center.",
+        "variant_identity": "Shorter and warmer than agave, with a broader grounded base.",
+        "functional_material_cues": "Broad fleshy pointed leaves share the root point.",
+        "vanilla_comparison": "Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Warm green and olive clusters build layered broad leaf bases. Dark leaf overlaps sit behind lighter upward faces.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Low broad olive succulent rosette with a high central blade. Small ochre highlights define thicker waxy edges.",
+        "context_type": "placed_cutout",
+        "context_view": "Uneven spear tips curve outward from a compact center. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_arctic_poppy.png": {
+      "sha256": "3f85ee7e660a8e156095c23f1440f821a098c5d3c3e09880efa0d07574c20da1",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/poppy",
+          "minecraft": "1.21.1",
+          "sha256": "419b360fb68a795a61100da382884aed41973ee9ba3c236d5a95e47d36462a62"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native poppy comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Golden cup and low leaf habit distinguish it from the red cinquefoil.",
+      "findings": {
+        "silhouette": "Single narrow stem with a large golden cup above sparse foliage.",
+        "cluster_structure": "Golden petal clusters surround a dark round central group.",
+        "micro_contrast": "Amber rim and pale gold face separate the flower from its stalk.",
+        "light_and_volume": "Darker gold at the underside sets the cup above the green stalk.",
+        "material_continuity": "Green stalk and yellow petals have separate coherent ramps.",
+        "edge_variation": "Cup has stepped rounded edges and uneven lower leaf tips.",
+        "variant_identity": "Golden cup and low leaf habit distinguish it from the red cinquefoil.",
+        "functional_material_cues": "Single exposed cup and central disk read as poppy.",
+        "vanilla_comparison": "Actual native poppy comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/poppy",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Golden petal clusters surround a dark round central group. Darker gold at the underside sets the cup above the green stalk.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Single narrow stem with a large golden cup above sparse foliage. Amber rim and pale gold face separate the flower from its stalk.",
+        "context_type": "placed_cutout",
+        "context_view": "Cup has stepped rounded edges and uneven lower leaf tips. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_bog_rosemary.png": {
+      "sha256": "75cf93eb996d198117b5d35f0bf6cf267918e79505d8beb802afae2529688df8",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/allium",
+          "minecraft": "1.21.1",
+          "sha256": "e821156d752c1cde84a71db59cdd25c308747c607c0759b72ba36a68e959ab7d"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Two delicate pink bells and silver foliage differ from the dense mint spike.",
+      "findings": {
+        "silhouette": "Two upright pink flower clusters with thin branching gray-green leaves.",
+        "cluster_structure": "Pink clusters form individual rounded blossoms above narrow stems.",
+        "micro_contrast": "Pale petal pixels contrast with deeper pink edges.",
+        "light_and_volume": "Darker leaf junctions lie behind lighter branches.",
+        "material_continuity": "Cool gray-green leaves and pink flowers retain separate color families.",
+        "edge_variation": "Stalks diverge with staggered leaf ends and open middle.",
+        "variant_identity": "Two delicate pink bells and silver foliage differ from the dense mint spike.",
+        "functional_material_cues": "Slender upright wetland stems hold small terminal blooms.",
+        "vanilla_comparison": "Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/allium",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Pink clusters form individual rounded blossoms above narrow stems. Darker leaf junctions lie behind lighter branches.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Two upright pink flower clusters with thin branching gray-green leaves. Pale petal pixels contrast with deeper pink edges.",
+        "context_type": "placed_cutout",
+        "context_view": "Stalks diverge with staggered leaf ends and open middle. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_cloudberry.png": {
+      "sha256": "c282cba25e29ee6aa64dedc9c6ffadfd7db93a2e63f4c3abab2ad9bb2dcfdf43",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "d7d9bf83464ef649e52c8658e15b080f1abb36928ecdbaf2306a292b5bda5cb1"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native sweet_berry_bush_stage3 comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Larger solitary orange fruit differs from many small red lingonberries.",
+      "findings": {
+        "silhouette": "Single large orange fruit above a short broad green leaf canopy.",
+        "cluster_structure": "Orange clusters wrap around a deeper russet fruit center.",
+        "micro_contrast": "Golden dots and warm amber patches distinguish clustered drupelets.",
+        "light_and_volume": "Shaded orange underside and darker lower leaves suggest volume.",
+        "material_continuity": "Deep green foliage supports one warm orange fruit ramp.",
+        "edge_variation": "Round stepped fruit outline sits above uneven leaf ends.",
+        "variant_identity": "Larger solitary orange fruit differs from many small red lingonberries.",
+        "functional_material_cues": "Rounded segmented golden berry sits over a low leaf group.",
+        "vanilla_comparison": "Actual native sweet_berry_bush_stage3 comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/sweet_berry_bush_stage3",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Orange clusters wrap around a deeper russet fruit center. Shaded orange underside and darker lower leaves suggest volume.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Single large orange fruit above a short broad green leaf canopy. Golden dots and warm amber patches distinguish clustered drupelets.",
+        "context_type": "placed_cutout",
+        "context_view": "Round stepped fruit outline sits above uneven leaf ends. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_edelweiss.png": {
+      "sha256": "8981bb6b52d51024d2d97a5b289369d7f93432c8e0c75b5479037de391bc068e",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/allium",
+          "minecraft": "1.21.1",
+          "sha256": "e821156d752c1cde84a71db59cdd25c308747c607c0759b72ba36a68e959ab7d"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. White star and central gold separate it from flat-topped yarrow.",
+      "findings": {
+        "silhouette": "White star-shaped cluster with a yellow center above muted gray foliage.",
+        "cluster_structure": "Cream pointed petals and a gold center form a distinct head.",
+        "micro_contrast": "Off-white and gray-green steps preserve petal separation.",
+        "light_and_volume": "Darker gray-green lower leaves contrast with pale upper flower.",
+        "material_continuity": "Cream and subdued cool foliage fit a mountain-flower palette.",
+        "edge_variation": "Star-like petal tips have stepped rather than smooth outlines.",
+        "variant_identity": "White star and central gold separate it from flat-topped yarrow.",
+        "functional_material_cues": "Light star of bracts surrounds a small warm central disk.",
+        "vanilla_comparison": "Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/allium",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Cream pointed petals and a gold center form a distinct head. Darker gray-green lower leaves contrast with pale upper flower.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "White star-shaped cluster with a yellow center above muted gray foliage. Off-white and gray-green steps preserve petal separation.",
+        "context_type": "placed_cutout",
+        "context_view": "Star-like petal tips have stepped rather than smooth outlines. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_fireweed.png": {
+      "sha256": "fce406ec4585286c031fbf4cee1ae1f0377def270311f708cb092ccb95df114a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/allium",
+          "minecraft": "1.21.1",
+          "sha256": "e821156d752c1cde84a71db59cdd25c308747c607c0759b72ba36a68e959ab7d"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Tapered tall pink inflorescence differs from mint's compact head.",
+      "findings": {
+        "silhouette": "Tall pink tapering spike over angled dark green leaves.",
+        "cluster_structure": "Pale and darker pink flower clusters stack up the main stem.",
+        "micro_contrast": "Bright magenta edges read clearly against the dark stalk.",
+        "light_and_volume": "Lower leaf clusters overlap and darken near the base.",
+        "material_continuity": "Saturated pink and deep woodland green form two consistent ramps.",
+        "edge_variation": "Staggered flowers narrow toward the upper tip.",
+        "variant_identity": "Tapered tall pink inflorescence differs from mint's compact head.",
+        "functional_material_cues": "Tall flower spike and alternating lanceolate leaves suggest fireweed.",
+        "vanilla_comparison": "Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/allium",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Pale and darker pink flower clusters stack up the main stem. Lower leaf clusters overlap and darken near the base.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Tall pink tapering spike over angled dark green leaves. Bright magenta edges read clearly against the dark stalk.",
+        "context_type": "placed_cutout",
+        "context_view": "Staggered flowers narrow toward the upper tip. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_ginger.png": {
+      "sha256": "cf5de00cb505d57f9991498b6678f1ce5a9cf4f926a24229e91fbc11be80e18c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Broad lush fans and orange side bloom separate it from lemongrass.",
+      "findings": {
+        "silhouette": "Broad green lance leaves fan around a separate orange flower cluster.",
+        "cluster_structure": "Layered long leaves have contiguous lighter faces and dark edges.",
+        "micro_contrast": "Small golden-orange flower contrasts with the broad dark foliage.",
+        "light_and_volume": "Dark central leaf intersections sit below lighter raised blades.",
+        "material_continuity": "Green leaf ramp and warm blossom ramp do not bleed into each other.",
+        "edge_variation": "Unequal broad leaf tips extend on both sides.",
+        "variant_identity": "Broad lush fans and orange side bloom separate it from lemongrass.",
+        "functional_material_cues": "Broad tropical leaf blades frame an upright flowering stalk.",
+        "vanilla_comparison": "Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Layered long leaves have contiguous lighter faces and dark edges. Dark central leaf intersections sit below lighter raised blades.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Broad green lance leaves fan around a separate orange flower cluster. Small golden-orange flower contrasts with the broad dark foliage.",
+        "context_type": "placed_cutout",
+        "context_view": "Unequal broad leaf tips extend on both sides. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_horsetail.png": {
+      "sha256": "e4ebf9f64d2c10aa524dc1980ef7f72f8fad72d1f86f3e88f29e35a8a1480a70",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Jointed thin stems differ from other broad-leaf marsh plants.",
+      "findings": {
+        "silhouette": "Two tall slender stems with regular horizontal green whorls.",
+        "cluster_structure": "Short angular lateral segments alternate around a thin main stalk.",
+        "micro_contrast": "Pale sage segments distinguish nodes from darker stem pixels.",
+        "light_and_volume": "Dark inner stem and light outward whorls suggest a branching cylinder.",
+        "material_continuity": "Desaturated green stems and tan tips preserve a restrained wetland palette.",
+        "edge_variation": "Separated whorls leave transparent gaps down both stalks.",
+        "variant_identity": "Jointed thin stems differ from other broad-leaf marsh plants.",
+        "functional_material_cues": "Nodal tiers and tan fertile tips identify the horsetail habit.",
+        "vanilla_comparison": "Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Short angular lateral segments alternate around a thin main stalk. Dark inner stem and light outward whorls suggest a branching cylinder.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Two tall slender stems with regular horizontal green whorls. Pale sage segments distinguish nodes from darker stem pixels.",
+        "context_type": "placed_cutout",
+        "context_view": "Separated whorls leave transparent gaps down both stalks. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_lavender.png": {
+      "sha256": "01a96cb7b459381b082391062b0854ffd7afa1811377f45dffbe7390156d5230",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/allium",
+          "minecraft": "1.21.1",
+          "sha256": "e821156d752c1cde84a71db59cdd25c308747c607c0759b72ba36a68e959ab7d"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Several lavender spikes distinguish it from mint's single compact one.",
+      "findings": {
+        "silhouette": "Three tall narrow purple spikes over cool gray-green stems.",
+        "cluster_structure": "Purple florets form short separate stepped clusters along the tips.",
+        "micro_contrast": "Muted lilac pixels lighten deeper violet bunches.",
+        "light_and_volume": "Dark gray-green stalks anchor the lighter flowering tips.",
+        "material_continuity": "Cool foliage and lavender-violet form consistent material groups.",
+        "edge_variation": "Spikes have different heights and exposed gaps between them.",
+        "variant_identity": "Several lavender spikes distinguish it from mint's single compact one.",
+        "functional_material_cues": "Upright narrow purple flower spikes sit above thin woody foliage.",
+        "vanilla_comparison": "Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/allium",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Purple florets form short separate stepped clusters along the tips. Dark gray-green stalks anchor the lighter flowering tips.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Three tall narrow purple spikes over cool gray-green stems. Muted lilac pixels lighten deeper violet bunches.",
+        "context_type": "placed_cutout",
+        "context_view": "Spikes have different heights and exposed gaps between them. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_lemongrass.png": {
+      "sha256": "4f84822776cc4fdcaa83a60b53472640b8cc45c0f5e90b497318d938a8a84ed4",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Lush flexible grass fan differs from blue rigid agave.",
+      "findings": {
+        "silhouette": "Tall bright green blade tuft with outward sloping leaf ends.",
+        "cluster_structure": "Long contiguous stripes follow narrow leaf blades to their tapered tips.",
+        "micro_contrast": "Fresh light-green accents alternate with dark internal blades.",
+        "light_and_volume": "Shaded central root area sits behind illuminated blades.",
+        "material_continuity": "Yellow-green highlights remain part of the warm grassy foliage ramp.",
+        "edge_variation": "Outer blades splay at varied angles with transparent breaks.",
+        "variant_identity": "Lush flexible grass fan differs from blue rigid agave.",
+        "functional_material_cues": "Tall grass blades converge at one visible rooted base.",
+        "vanilla_comparison": "Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Long contiguous stripes follow narrow leaf blades to their tapered tips. Shaded central root area sits behind illuminated blades.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Tall bright green blade tuft with outward sloping leaf ends. Fresh light-green accents alternate with dark internal blades.",
+        "context_type": "placed_cutout",
+        "context_view": "Outer blades splay at varied angles with transparent breaks. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_lingonberry.png": {
+      "sha256": "0f65436622ee4e0a419c7f810b26c7b259f83d50fe9c7a5c8bff44a735d69834",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "d7d9bf83464ef649e52c8658e15b080f1abb36928ecdbaf2306a292b5bda5cb1"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native sweet_berry_bush_stage3 comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Several small red berries distinguish it from solitary orange cloudberry.",
+      "findings": {
+        "silhouette": "Low leafy branching shrub carrying multiple small red berries.",
+        "cluster_structure": "Red rounded berry groups sit on staggered dense green leaves.",
+        "micro_contrast": "Lighter red berry pixels break up the darker rounded accents.",
+        "light_and_volume": "Dark stems and shaded leaf interiors separate overlapping foliage.",
+        "material_continuity": "Coherent evergreen leaf palette contrasts with berry red.",
+        "edge_variation": "Short irregular branch tips leave open spaces around the canopy.",
+        "variant_identity": "Several small red berries distinguish it from solitary orange cloudberry.",
+        "functional_material_cues": "Compact evergreen shrub with red fruit clusters.",
+        "vanilla_comparison": "Actual native sweet_berry_bush_stage3 comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/sweet_berry_bush_stage3",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Red rounded berry groups sit on staggered dense green leaves. Dark stems and shaded leaf interiors separate overlapping foliage.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Low leafy branching shrub carrying multiple small red berries. Lighter red berry pixels break up the darker rounded accents.",
+        "context_type": "placed_cutout",
+        "context_view": "Short irregular branch tips leave open spaces around the canopy. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_marsh_cinquefoil.png": {
+      "sha256": "65d6332321f5ff755ea21272e05b0c909f85551d7c3f3ed3af6427f35186c6a2",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/poppy",
+          "minecraft": "1.21.1",
+          "sha256": "419b360fb68a795a61100da382884aed41973ee9ba3c236d5a95e47d36462a62"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native poppy comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Dark red head and wetland foliage differ from golden arctic poppy.",
+      "findings": {
+        "silhouette": "Single dark red flower with branching blue-green lower leaves.",
+        "cluster_structure": "Burgundy petal clusters enclose a lighter red central area.",
+        "micro_contrast": "Subdued coral accents keep the dark bloom readable.",
+        "light_and_volume": "Deep flower edges and shadowed stem balance paler leaf faces.",
+        "material_continuity": "Wine-red petals and cool green foliage remain distinct.",
+        "edge_variation": "Rounded blossom edge and branching lower leaves break symmetry.",
+        "variant_identity": "Dark red head and wetland foliage differ from golden arctic poppy.",
+        "functional_material_cues": "Solitary dark crimson flower over divided marsh foliage.",
+        "vanilla_comparison": "Actual native poppy comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/poppy",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Burgundy petal clusters enclose a lighter red central area. Deep flower edges and shadowed stem balance paler leaf faces.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Single dark red flower with branching blue-green lower leaves. Subdued coral accents keep the dark bloom readable.",
+        "context_type": "placed_cutout",
+        "context_view": "Rounded blossom edge and branching lower leaves break symmetry. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_nettle.png": {
+      "sha256": "b127c6373c6e03b041bddd161f0f26ce482173fd489770323641ca45f924210a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Dark serrated leaves differ from the brighter tropical ginger fan.",
+      "findings": {
+        "silhouette": "Upright stem with paired broad serrated dark green leaves.",
+        "cluster_structure": "Angular leaf clusters use larger mid-green faces and dark veins.",
+        "micro_contrast": "Small lighter-green steps highlight toothed outlines.",
+        "light_and_volume": "Darker center veins and base imply overlapping leaf tiers.",
+        "material_continuity": "Coherent green tones move from dark stem to lighter leaf face.",
+        "edge_variation": "Stepped leaf teeth and unequal paired leaves keep the silhouette open.",
+        "variant_identity": "Dark serrated leaves differ from the brighter tropical ginger fan.",
+        "functional_material_cues": "Opposing pointed toothed leaves along a single stalk.",
+        "vanilla_comparison": "Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Angular leaf clusters use larger mid-green faces and dark veins. Darker center veins and base imply overlapping leaf tiers.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Upright stem with paired broad serrated dark green leaves. Small lighter-green steps highlight toothed outlines.",
+        "context_type": "placed_cutout",
+        "context_view": "Stepped leaf teeth and unequal paired leaves keep the silhouette open. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_plantain.png": {
+      "sha256": "740e1a6f75a5c65a7847428c0c173cbe7feaed15c82679725bcb6bf365f59f20",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Single seed spike above flat leaves differs from aloe's dense spears.",
+      "findings": {
+        "silhouette": "Broad basal foliage with a narrow upright gold-brown seed spike.",
+        "cluster_structure": "Oval leaf clusters radiate around the root and a thin spike.",
+        "micro_contrast": "Pale leaf veins contrast with dark olive green areas.",
+        "light_and_volume": "Dark overlapping leaf bases support the lighter seed spike.",
+        "material_continuity": "Olive green rosette and subdued yellow seed-head colors remain compatible.",
+        "edge_variation": "Broad leaves have differing outward angles and rounded stepped tips.",
+        "variant_identity": "Single seed spike above flat leaves differs from aloe's dense spears.",
+        "functional_material_cues": "Broad low rosette and tall narrow seed head.",
+        "vanilla_comparison": "Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Oval leaf clusters radiate around the root and a thin spike. Dark overlapping leaf bases support the lighter seed spike.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Broad basal foliage with a narrow upright gold-brown seed spike. Pale leaf veins contrast with dark olive green areas.",
+        "context_type": "placed_cutout",
+        "context_view": "Broad leaves have differing outward angles and rounded stepped tips. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_sage.png": {
+      "sha256": "fc1a87e8c4ef28ba34fb50bff70bd8b12b3de9603b0c562033e3b7bb9a3d5a2c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/allium",
+          "minecraft": "1.21.1",
+          "sha256": "e821156d752c1cde84a71db59cdd25c308747c607c0759b72ba36a68e959ab7d"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Large gray leaves and single violet bloom differ from lavender's three spikes.",
+      "findings": {
+        "silhouette": "Gray-green layered broad foliage with one violet terminal bloom.",
+        "cluster_structure": "Leaf groups form broad cool gray-green patches around the stalk.",
+        "micro_contrast": "Silver-green highlights sit over darker desaturated faces.",
+        "light_and_volume": "Lower overlapping leaves are darker than the upper leaf faces.",
+        "material_continuity": "Muted silvery green and a restrained violet head keep the dryland look.",
+        "edge_variation": "Staggered pointed leaves interrupt the central silhouette.",
+        "variant_identity": "Large gray leaves and single violet bloom differ from lavender's three spikes.",
+        "functional_material_cues": "Pale gray-green aromatic leaves and short violet flower head.",
+        "vanilla_comparison": "Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/allium",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Leaf groups form broad cool gray-green patches around the stalk. Lower overlapping leaves are darker than the upper leaf faces.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Gray-green layered broad foliage with one violet terminal bloom. Silver-green highlights sit over darker desaturated faces.",
+        "context_type": "placed_cutout",
+        "context_view": "Staggered pointed leaves interrupt the central silhouette. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_thyme.png": {
+      "sha256": "454789d8764c3068c81e365f8d9bde413d83e14b614460237d9aa37921a9e837",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/allium",
+          "minecraft": "1.21.1",
+          "sha256": "e821156d752c1cde84a71db59cdd25c308747c607c0759b72ba36a68e959ab7d"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Low branching pink blooms distinguish it from tall fireweed.",
+      "findings": {
+        "silhouette": "Low branched plant with several pink flowers on narrow stems.",
+        "cluster_structure": "Pink heads form small clustered accents over low branching olive foliage.",
+        "micro_contrast": "Light pink tips contrast with muted purple-pink shadows.",
+        "light_and_volume": "Deeper brown-green stem junctions sit behind outward leaves.",
+        "material_continuity": "Warm dry green leaf tones support soft pink flower clusters.",
+        "edge_variation": "Branches rise at different heights, leaving open gaps.",
+        "variant_identity": "Low branching pink blooms distinguish it from tall fireweed.",
+        "functional_material_cues": "Small flowers above branching low woody herbs.",
+        "vanilla_comparison": "Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/allium",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Pink heads form small clustered accents over low branching olive foliage. Deeper brown-green stem junctions sit behind outward leaves.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Low branched plant with several pink flowers on narrow stems. Light pink tips contrast with muted purple-pink shadows.",
+        "context_type": "placed_cutout",
+        "context_view": "Branches rise at different heights, leaving open gaps. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_wild_mint.png": {
+      "sha256": "535c38ef7e1d7f5b30506a74f633826a241ab9c6a70b7e09f485665acc6c2fd7",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/allium",
+          "minecraft": "1.21.1",
+          "sha256": "e821156d752c1cde84a71db59cdd25c308747c607c0759b72ba36a68e959ab7d"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Compact pink spike and green foliage differ from silver sage.",
+      "findings": {
+        "silhouette": "Single pink-purple compact head above dense green paired leaves.",
+        "cluster_structure": "Layered pointed leaf clusters surround a short straight stem.",
+        "micro_contrast": "Lighter cool green accents mark leaf planes and head edges.",
+        "light_and_volume": "Dark central stem and basal leaves support brighter upper leaves.",
+        "material_continuity": "Cool marsh green and restrained pink-violet form distinct color ramps.",
+        "edge_variation": "Staggered toothed leaves extend beyond the central stalk.",
+        "variant_identity": "Compact pink spike and green foliage differ from silver sage.",
+        "functional_material_cues": "Dense aromatic leaf pairs and a terminal flower head.",
+        "vanilla_comparison": "Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/allium",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Layered pointed leaf clusters surround a short straight stem. Dark central stem and basal leaves support brighter upper leaves.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Single pink-purple compact head above dense green paired leaves. Lighter cool green accents mark leaf planes and head edges.",
+        "context_type": "placed_cutout",
+        "context_view": "Staggered toothed leaves extend beyond the central stalk. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_wormwood.png": {
+      "sha256": "0a74e3af376df515b4939f77e9a64f445608fe98a41eabf8ea01ca0216877cb1",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Yellow buds and silver finely divided foliage distinguish it from lavender.",
+      "findings": {
+        "silhouette": "Tall branching silver-green herb with small yellow terminal accents.",
+        "cluster_structure": "Gray-green foliage clusters branch around several gold flecks.",
+        "micro_contrast": "Paler cool leaf edges and muted yellow highlights create contrast.",
+        "light_and_volume": "Darker central stalk gives the lighter dispersed foliage depth.",
+        "material_continuity": "Desaturated silver foliage and subdued yellow tips share a dusty palette.",
+        "edge_variation": "Irregular branching tips keep open spaces between leaves.",
+        "variant_identity": "Yellow buds and silver finely divided foliage distinguish it from lavender.",
+        "functional_material_cues": "Small yellow heads over gray-green dissected leaves.",
+        "vanilla_comparison": "Actual native fern comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Gray-green foliage clusters branch around several gold flecks. Darker central stalk gives the lighter dispersed foliage depth.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Tall branching silver-green herb with small yellow terminal accents. Paler cool leaf edges and muted yellow highlights create contrast.",
+        "context_type": "placed_cutout",
+        "context_view": "Irregular branching tips keep open spaces between leaves. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_yarrow.png": {
+      "sha256": "8fea72c97e8580f89fc1981067db71f086498bf855689c5a76d304d4a454ab93",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/allium",
+          "minecraft": "1.21.1",
+          "sha256": "e821156d752c1cde84a71db59cdd25c308747c607c0759b72ba36a68e959ab7d"
+        }
+      ],
+      "comparison": "Inspected native-size and enlarged sprite and static crossed-plane projection. Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline. Flat broad pale crown differs from edelweiss's single star.",
+      "findings": {
+        "silhouette": "Wide flat cream flower crown above upright divided green foliage.",
+        "cluster_structure": "Multiple ivory flower groups create one spread-out upper canopy.",
+        "micro_contrast": "Pale cream tips and warmer centers separate the tiny blooms.",
+        "light_and_volume": "Dark leafy stem and shaded lower leaf clusters support light canopy.",
+        "material_continuity": "Warm ivory flowers and woodland green foliage remain distinct.",
+        "edge_variation": "Flat crown has stepped uneven lobes and sparse side branches.",
+        "variant_identity": "Flat broad pale crown differs from edelweiss's single star.",
+        "functional_material_cues": "Umbrella-like cluster of small pale heads above divided leaves.",
+        "vanilla_comparison": "Actual native allium comparator uses transparent gaps, a grounded stem/leaf cluster and intentional shape changes at pixel scale; this species uses its own botanical outline."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/allium",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Multiple ivory flower groups create one spread-out upper canopy. Dark leafy stem and shaded lower leaf clusters support light canopy.",
+        "reference_limit": "The role comparator is used only for plant cutout scale, ground contact and pixel grouping, not a literal species template.",
+        "native_view": "Wide flat cream flower crown above upright divided green foliage. Pale cream tips and warmer centers separate the tiny blooms.",
+        "context_type": "placed_cutout",
+        "context_view": "Flat crown has stepped uneven lobes and sparse side branches. Crossed-plane static preview preserves the visible botanical outline and grounded base; actual client rendering remains untested.",
+        "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
+      }
     }
   },
   "review_status": "1.2.5 RC1: 118 previously reviewed textures unchanged; seven new original fruit item PNGs individually reviewed in native/enlarged icon family and static hanging-model context. Art Review Lock, Build Hub, natural generation and graphical client verification pending.",

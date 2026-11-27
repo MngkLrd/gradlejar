@@ -58,7 +58,6 @@ public final class SeasonalGrowth {
         int progress=-1;
         if(state.getBlock() instanceof SeasonalPlantBlock)progress=state.getValue(SeasonalPlantBlock.AGE)*100/3;
         else if(state.getBlock() instanceof BerryBushBlock)progress=state.getValue(BerryBushBlock.RIPE)?100:0;
-        else if(state.getBlock() instanceof CropBlock c)progress=c.getAge(state)*100/c.getMaxAge();
         else if(state.hasProperty(BlockStateProperties.AGE_7))progress=state.getValue(BlockStateProperties.AGE_7)*100/7;
         else if(state.hasProperty(BlockStateProperties.AGE_3))progress=state.getValue(BlockStateProperties.AGE_3)*100/3;
         if(progress<0)return null;
