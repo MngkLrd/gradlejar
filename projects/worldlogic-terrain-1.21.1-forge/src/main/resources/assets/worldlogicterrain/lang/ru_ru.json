@@ -1,0 +1,20 @@
+{
+  "block.worldlogicterrain.meadow_grass": "Луговая трава",
+  "block.worldlogicterrain.dense_meadow_grass": "Густая луговая трава",
+  "block.worldlogicterrain.dry_grass": "Сухая трава",
+  "block.worldlogicterrain.tall_dry_grass": "Высокая сухая трава",
+  "block.worldlogicterrain.forest_shrub": "Лесной кустарник",
+  "block.worldlogicterrain.dense_underbrush": "Густой подлесок",
+  "block.worldlogicterrain.low_fern": "Низкий папоротник",
+  "block.worldlogicterrain.wild_heather": "Дикий вереск",
+  "block.worldlogicterrain.sedge": "Осока",
+  "block.worldlogicterrain.reed": "Камыш",
+  "block.worldlogicterrain.cattail": "Рогоз",
+  "block.worldlogicterrain.dwarf_shrub": "Карликовый кустарник",
+  "block.worldlogicterrain.desert_shrub": "Пустынный кустарник",
+  "block.worldlogicterrain.forest_litter": "Лесная подстилка",
+  "block.worldlogicterrain.fallen_leaves": "Опавшие листья",
+  "block.worldlogicterrain.wild_chamomile": "Дикая ромашка",
+  "block.worldlogicterrain.wild_cornflower": "Дикий василёк",
+  "block.worldlogicterrain.wild_clover": "Дикий клевер"
+}

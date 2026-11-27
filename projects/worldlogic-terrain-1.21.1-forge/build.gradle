@@ -1,0 +1,15 @@
+plugins {
+ id 'java'
+ id 'idea'
+ id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
+}
+group = 'dev.minemods.worldlogicterrain'
+version = '0.1.0'
+base { archivesName = 'worldlogicterrain-forge-mc1.21.1' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+minecraft {
+ mappings channel: 'official', version: '1.21.1'
+ copyIdeResources = true
+}
+dependencies { minecraft "net.minecraftforge:forge:1.21.1-${forge_version}" }
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 21 }

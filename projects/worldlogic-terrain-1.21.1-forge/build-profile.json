@@ -1,0 +1,29 @@
+{
+  "slug": "worldlogicterrain",
+  "version": "0.1.0",
+  "minecraft": "1.21.1",
+  "loader": "forge",
+  "java": "21",
+  "gradle": "8.10.2",
+  "jar_glob": "worldlogicterrain-forge-mc1.21.1-0.1.0.jar",
+  "minimum_loader_version": "52.1.0",
+  "compile_loader_version": "52.1.0",
+  "qa": {
+    "mode": "server",
+    "loader_version": "52.1.0",
+    "scenario": "tools/qa/scenarios/worldlogicterrain.json",
+    "release_targets": [
+      "forge-mc1.21.1"
+    ],
+    "watch_paths": [
+      "tools/qa/scenarios/worldlogicterrain.json"
+    ],
+    "dependencies": [
+      {
+        "name": "worldlogic-forge-mc1.21.1-1.0.0-rc17.jar",
+        "url": "https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-forge-1.0.0-rc17-1176-1/worldlogic-forge-mc1.21.1-1.0.0-rc17.jar",
+        "sha256": "5e7b13be0a99709ea538f8275c895659c918f508374bdb0eb961b5ede5bb8ec3"
+      }
+    ]
+  }
+}

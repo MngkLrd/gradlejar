@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/wild_heather",
+        "y": 0
+      },
+      {
+        "model": "worldlogicterrain:block/wild_heather",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_heather",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_heather",
+        "y": 270
+      }
+    ]
+  }
+}

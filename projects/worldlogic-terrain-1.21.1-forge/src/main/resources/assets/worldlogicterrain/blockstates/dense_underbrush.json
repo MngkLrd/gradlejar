@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/dense_underbrush",
+        "y": 0
+      },
+      {
+        "model": "worldlogicterrain:block/dense_underbrush",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/dense_underbrush",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/dense_underbrush",
+        "y": 270
+      }
+    ]
+  }
+}

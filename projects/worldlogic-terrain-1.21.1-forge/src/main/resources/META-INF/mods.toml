@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[52,)"
+license="All Rights Reserved"
+[[mods]]
+modId="worldlogicterrain"
+version="0.1.0"
+displayName="WorldLogic: Terrain"
+description='''Natural vegetation and ground cover for WorldLogic. First content prototype.'''
+[[dependencies.worldlogicterrain]]
+modId="forge"
+mandatory=true
+versionRange="[52.1.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.worldlogicterrain]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.worldlogicterrain]]
+modId="worldlogic"
+mandatory=true
+versionRange="[1.0.0-rc17,)"
+ordering="AFTER"
+side="BOTH"

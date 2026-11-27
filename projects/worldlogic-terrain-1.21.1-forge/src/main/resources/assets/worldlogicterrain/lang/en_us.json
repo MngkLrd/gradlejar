@@ -1,0 +1,20 @@
+{
+  "block.worldlogicterrain.meadow_grass": "Meadow Grass",
+  "block.worldlogicterrain.dense_meadow_grass": "Dense Meadow Grass",
+  "block.worldlogicterrain.dry_grass": "Dry Grass",
+  "block.worldlogicterrain.tall_dry_grass": "Tall Dry Grass",
+  "block.worldlogicterrain.forest_shrub": "Forest Shrub",
+  "block.worldlogicterrain.dense_underbrush": "Dense Underbrush",
+  "block.worldlogicterrain.low_fern": "Low Fern",
+  "block.worldlogicterrain.wild_heather": "Wild Heather",
+  "block.worldlogicterrain.sedge": "Sedge",
+  "block.worldlogicterrain.reed": "Reed",
+  "block.worldlogicterrain.cattail": "Cattail",
+  "block.worldlogicterrain.dwarf_shrub": "Dwarf Shrub",
+  "block.worldlogicterrain.desert_shrub": "Desert Shrub",
+  "block.worldlogicterrain.forest_litter": "Forest Litter",
+  "block.worldlogicterrain.fallen_leaves": "Fallen Leaves",
+  "block.worldlogicterrain.wild_chamomile": "Wild Chamomile",
+  "block.worldlogicterrain.wild_cornflower": "Wild Cornflower",
+  "block.worldlogicterrain.wild_clover": "Wild Clover"
+}

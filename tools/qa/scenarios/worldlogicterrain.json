@@ -1,0 +1,1177 @@
+{
+  "schema": 1,
+  "name": "Terrain plants soil survival and loot",
+  "steps": [
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "setblock 1 199 1 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 1 200 1 worldlogicterrain:meadow_grass",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "meadow_grass survives on soil",
+      "command": "execute if block 1 200 1 worldlogicterrain:meadow_grass",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "meadow_grass has loot",
+      "command": "loot spawn 1.5 202 1.5 mine 1 200 1 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 1 199 1 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "meadow_grass loses support",
+      "command": "execute if block 1 200 1 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 3 199 1 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 3 200 1 worldlogicterrain:dense_meadow_grass",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "dense_meadow_grass survives on soil",
+      "command": "execute if block 3 200 1 worldlogicterrain:dense_meadow_grass",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "dense_meadow_grass has loot",
+      "command": "loot spawn 3.5 202 1.5 mine 3 200 1 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 3 199 1 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "dense_meadow_grass loses support",
+      "command": "execute if block 3 200 1 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 5 199 1 minecraft:sand",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 5 200 1 worldlogicterrain:dry_grass",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "dry_grass survives on soil",
+      "command": "execute if block 5 200 1 worldlogicterrain:dry_grass",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "dry_grass has loot",
+      "command": "loot spawn 5.5 202 1.5 mine 5 200 1 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 5 199 1 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "dry_grass loses support",
+      "command": "execute if block 5 200 1 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 7 199 1 minecraft:sand",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 7 200 1 worldlogicterrain:tall_dry_grass",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "tall_dry_grass survives on soil",
+      "command": "execute if block 7 200 1 worldlogicterrain:tall_dry_grass",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "tall_dry_grass has loot",
+      "command": "loot spawn 7.5 202 1.5 mine 7 200 1 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 7 199 1 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "tall_dry_grass loses support",
+      "command": "execute if block 7 200 1 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 9 199 1 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 9 200 1 worldlogicterrain:forest_shrub",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "forest_shrub survives on soil",
+      "command": "execute if block 9 200 1 worldlogicterrain:forest_shrub",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "forest_shrub has loot",
+      "command": "loot spawn 9.5 202 1.5 mine 9 200 1 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 9 199 1 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "forest_shrub loses support",
+      "command": "execute if block 9 200 1 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 11 199 1 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 11 200 1 worldlogicterrain:dense_underbrush",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "dense_underbrush survives on soil",
+      "command": "execute if block 11 200 1 worldlogicterrain:dense_underbrush",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "dense_underbrush has loot",
+      "command": "loot spawn 11.5 202 1.5 mine 11 200 1 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 11 199 1 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "dense_underbrush loses support",
+      "command": "execute if block 11 200 1 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 1 199 4 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 1 200 4 worldlogicterrain:low_fern",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "low_fern survives on soil",
+      "command": "execute if block 1 200 4 worldlogicterrain:low_fern",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "low_fern has loot",
+      "command": "loot spawn 1.5 202 4.5 mine 1 200 4 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 1 199 4 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "low_fern loses support",
+      "command": "execute if block 1 200 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 3 199 4 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 3 200 4 worldlogicterrain:wild_heather",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "wild_heather survives on soil",
+      "command": "execute if block 3 200 4 worldlogicterrain:wild_heather",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "wild_heather has loot",
+      "command": "loot spawn 3.5 202 4.5 mine 3 200 4 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 3 199 4 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "wild_heather loses support",
+      "command": "execute if block 3 200 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 5 199 4 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 5 200 4 worldlogicterrain:sedge",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "sedge survives on soil",
+      "command": "execute if block 5 200 4 worldlogicterrain:sedge",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "sedge has loot",
+      "command": "loot spawn 5.5 202 4.5 mine 5 200 4 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 5 199 4 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "sedge loses support",
+      "command": "execute if block 5 200 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 7 199 4 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 7 200 4 worldlogicterrain:reed[half=lower]",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 7 201 4 worldlogicterrain:reed[half=upper]",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "reed survives on soil",
+      "command": "execute if block 7 200 4 worldlogicterrain:reed",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "reed has loot",
+      "command": "loot spawn 7.5 202 4.5 mine 7 200 4 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 7 199 4 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "reed loses support",
+      "command": "execute if block 7 200 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "reed upper removed",
+      "command": "execute if block 7 201 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 9 199 4 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 9 200 4 worldlogicterrain:cattail[half=lower]",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 9 201 4 worldlogicterrain:cattail[half=upper]",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "cattail survives on soil",
+      "command": "execute if block 9 200 4 worldlogicterrain:cattail",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "cattail has loot",
+      "command": "loot spawn 9.5 202 4.5 mine 9 200 4 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 9 199 4 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "cattail loses support",
+      "command": "execute if block 9 200 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "cattail upper removed",
+      "command": "execute if block 9 201 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 11 199 4 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 11 200 4 worldlogicterrain:dwarf_shrub",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "dwarf_shrub survives on soil",
+      "command": "execute if block 11 200 4 worldlogicterrain:dwarf_shrub",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "dwarf_shrub has loot",
+      "command": "loot spawn 11.5 202 4.5 mine 11 200 4 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 11 199 4 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "dwarf_shrub loses support",
+      "command": "execute if block 11 200 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 1 199 7 minecraft:sand",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 1 200 7 worldlogicterrain:desert_shrub",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "desert_shrub survives on soil",
+      "command": "execute if block 1 200 7 worldlogicterrain:desert_shrub",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "desert_shrub has loot",
+      "command": "loot spawn 1.5 202 7.5 mine 1 200 7 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 1 199 7 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "desert_shrub loses support",
+      "command": "execute if block 1 200 7 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 3 199 7 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 3 200 7 worldlogicterrain:forest_litter",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "forest_litter survives on soil",
+      "command": "execute if block 3 200 7 worldlogicterrain:forest_litter",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "forest_litter has loot",
+      "command": "loot spawn 3.5 202 7.5 mine 3 200 7 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 3 199 7 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "forest_litter loses support",
+      "command": "execute if block 3 200 7 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 5 199 7 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 5 200 7 worldlogicterrain:fallen_leaves",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "fallen_leaves survives on soil",
+      "command": "execute if block 5 200 7 worldlogicterrain:fallen_leaves",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "fallen_leaves has loot",
+      "command": "loot spawn 5.5 202 7.5 mine 5 200 7 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 5 199 7 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "fallen_leaves loses support",
+      "command": "execute if block 5 200 7 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 7 199 7 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 7 200 7 worldlogicterrain:wild_chamomile",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "wild_chamomile survives on soil",
+      "command": "execute if block 7 200 7 worldlogicterrain:wild_chamomile",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "wild_chamomile has loot",
+      "command": "loot spawn 7.5 202 7.5 mine 7 200 7 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 7 199 7 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "wild_chamomile loses support",
+      "command": "execute if block 7 200 7 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 9 199 7 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 9 200 7 worldlogicterrain:wild_cornflower",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "wild_cornflower survives on soil",
+      "command": "execute if block 9 200 7 worldlogicterrain:wild_cornflower",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "wild_cornflower has loot",
+      "command": "loot spawn 9.5 202 7.5 mine 9 200 7 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 9 199 7 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "wild_cornflower loses support",
+      "command": "execute if block 9 200 7 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 11 199 7 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 11 200 7 worldlogicterrain:wild_clover",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "wild_clover survives on soil",
+      "command": "execute if block 11 200 7 worldlogicterrain:wild_clover",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "wild_clover has loot",
+      "command": "loot spawn 11.5 202 7.5 mine 11 200 7 minecraft:shears",
+      "expect": "Dropped 1 items?",
+      "assertion": true
+    },
+    {
+      "command": "setblock 11 199 7 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "wild_clover loses support",
+      "command": "execute if block 11 200 7 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    }
+  ],
+  "coverage": [
+    {
+      "id": "block-meadow_grass",
+      "kind": "block",
+      "subject": "worldlogicterrain:meadow_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "meadow_grass survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "meadow_grass has loot"
+        },
+        {
+          "backend": "server",
+          "name": "meadow_grass loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-meadow_grass",
+      "kind": "item",
+      "subject": "worldlogicterrain:meadow_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "meadow_grass has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-dense_meadow_grass",
+      "kind": "block",
+      "subject": "worldlogicterrain:dense_meadow_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dense_meadow_grass survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "dense_meadow_grass has loot"
+        },
+        {
+          "backend": "server",
+          "name": "dense_meadow_grass loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-dense_meadow_grass",
+      "kind": "item",
+      "subject": "worldlogicterrain:dense_meadow_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dense_meadow_grass has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-dry_grass",
+      "kind": "block",
+      "subject": "worldlogicterrain:dry_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dry_grass survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "dry_grass has loot"
+        },
+        {
+          "backend": "server",
+          "name": "dry_grass loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-dry_grass",
+      "kind": "item",
+      "subject": "worldlogicterrain:dry_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dry_grass has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-tall_dry_grass",
+      "kind": "block",
+      "subject": "worldlogicterrain:tall_dry_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "tall_dry_grass survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "tall_dry_grass has loot"
+        },
+        {
+          "backend": "server",
+          "name": "tall_dry_grass loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-tall_dry_grass",
+      "kind": "item",
+      "subject": "worldlogicterrain:tall_dry_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "tall_dry_grass has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-forest_shrub",
+      "kind": "block",
+      "subject": "worldlogicterrain:forest_shrub",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "forest_shrub survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "forest_shrub has loot"
+        },
+        {
+          "backend": "server",
+          "name": "forest_shrub loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-forest_shrub",
+      "kind": "item",
+      "subject": "worldlogicterrain:forest_shrub",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "forest_shrub has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-dense_underbrush",
+      "kind": "block",
+      "subject": "worldlogicterrain:dense_underbrush",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dense_underbrush survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "dense_underbrush has loot"
+        },
+        {
+          "backend": "server",
+          "name": "dense_underbrush loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-dense_underbrush",
+      "kind": "item",
+      "subject": "worldlogicterrain:dense_underbrush",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dense_underbrush has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-low_fern",
+      "kind": "block",
+      "subject": "worldlogicterrain:low_fern",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "low_fern survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "low_fern has loot"
+        },
+        {
+          "backend": "server",
+          "name": "low_fern loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-low_fern",
+      "kind": "item",
+      "subject": "worldlogicterrain:low_fern",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "low_fern has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-wild_heather",
+      "kind": "block",
+      "subject": "worldlogicterrain:wild_heather",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_heather survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "wild_heather has loot"
+        },
+        {
+          "backend": "server",
+          "name": "wild_heather loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-wild_heather",
+      "kind": "item",
+      "subject": "worldlogicterrain:wild_heather",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_heather has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-sedge",
+      "kind": "block",
+      "subject": "worldlogicterrain:sedge",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "sedge survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "sedge has loot"
+        },
+        {
+          "backend": "server",
+          "name": "sedge loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-sedge",
+      "kind": "item",
+      "subject": "worldlogicterrain:sedge",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "sedge has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-reed",
+      "kind": "block",
+      "subject": "worldlogicterrain:reed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "reed survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "reed has loot"
+        },
+        {
+          "backend": "server",
+          "name": "reed loses support"
+        },
+        {
+          "backend": "server",
+          "name": "reed upper removed"
+        }
+      ]
+    },
+    {
+      "id": "item-reed",
+      "kind": "item",
+      "subject": "worldlogicterrain:reed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "reed has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-cattail",
+      "kind": "block",
+      "subject": "worldlogicterrain:cattail",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cattail survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "cattail has loot"
+        },
+        {
+          "backend": "server",
+          "name": "cattail loses support"
+        },
+        {
+          "backend": "server",
+          "name": "cattail upper removed"
+        }
+      ]
+    },
+    {
+      "id": "item-cattail",
+      "kind": "item",
+      "subject": "worldlogicterrain:cattail",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cattail has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-dwarf_shrub",
+      "kind": "block",
+      "subject": "worldlogicterrain:dwarf_shrub",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dwarf_shrub survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "dwarf_shrub has loot"
+        },
+        {
+          "backend": "server",
+          "name": "dwarf_shrub loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-dwarf_shrub",
+      "kind": "item",
+      "subject": "worldlogicterrain:dwarf_shrub",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dwarf_shrub has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-desert_shrub",
+      "kind": "block",
+      "subject": "worldlogicterrain:desert_shrub",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "desert_shrub survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "desert_shrub has loot"
+        },
+        {
+          "backend": "server",
+          "name": "desert_shrub loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-desert_shrub",
+      "kind": "item",
+      "subject": "worldlogicterrain:desert_shrub",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "desert_shrub has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-forest_litter",
+      "kind": "block",
+      "subject": "worldlogicterrain:forest_litter",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "forest_litter survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "forest_litter has loot"
+        },
+        {
+          "backend": "server",
+          "name": "forest_litter loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-forest_litter",
+      "kind": "item",
+      "subject": "worldlogicterrain:forest_litter",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "forest_litter has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-fallen_leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:fallen_leaves",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "fallen_leaves survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "fallen_leaves has loot"
+        },
+        {
+          "backend": "server",
+          "name": "fallen_leaves loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-fallen_leaves",
+      "kind": "item",
+      "subject": "worldlogicterrain:fallen_leaves",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "fallen_leaves has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-wild_chamomile",
+      "kind": "block",
+      "subject": "worldlogicterrain:wild_chamomile",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_chamomile survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "wild_chamomile has loot"
+        },
+        {
+          "backend": "server",
+          "name": "wild_chamomile loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-wild_chamomile",
+      "kind": "item",
+      "subject": "worldlogicterrain:wild_chamomile",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_chamomile has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-wild_cornflower",
+      "kind": "block",
+      "subject": "worldlogicterrain:wild_cornflower",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_cornflower survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "wild_cornflower has loot"
+        },
+        {
+          "backend": "server",
+          "name": "wild_cornflower loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-wild_cornflower",
+      "kind": "item",
+      "subject": "worldlogicterrain:wild_cornflower",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_cornflower has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-wild_clover",
+      "kind": "block",
+      "subject": "worldlogicterrain:wild_clover",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_clover survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "wild_clover has loot"
+        },
+        {
+          "backend": "server",
+          "name": "wild_clover loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-wild_clover",
+      "kind": "item",
+      "subject": "worldlogicterrain:wild_clover",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_clover has loot"
+        }
+      ]
+    }
+  ]
+}

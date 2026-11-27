@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogicterrain:dry_grass",
+    "worldlogicterrain:tall_dry_grass",
+    "worldlogicterrain:desert_shrub"
+  ]
+}
