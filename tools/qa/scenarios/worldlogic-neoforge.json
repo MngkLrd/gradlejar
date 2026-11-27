@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC34 production core/API regression",
+  "name": "World Logic NeoForge RC35 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1670,6 +1670,17 @@
         {
           "backend": "server",
           "name": "Season clock persistence, climate amplitudes, opposite phase, rainfall phase and actual snow-layer changes"
+        }
+      ]
+    },
+    {
+      "id": "rc35-book-spread-layout",
+      "kind": "other",
+      "subject": "Book geometry, continuation-page offsets and small-window fallback; graphical blur and interaction require client evidence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
         }
       ]
     }

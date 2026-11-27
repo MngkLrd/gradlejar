@@ -46,6 +46,7 @@ public final class GuideBook{
  }
  static void verify()throws IOException{
   TabLayout.verify();
+  BookLayout.verify();
   var all=new ArrayList<Chapter>();var ids=new HashSet<String>();
   for(String name:BUILTIN){try(var in=GuideBook.class.getResourceAsStream("/assets/worldlogic/worldlogic_guide/"+name+".json")){
    if(in==null)throw new IllegalStateException("missing guide chapter "+name);

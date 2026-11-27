@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import java.util.*;
-public final class AnalyticsScreen extends Screen{
+public final class AnalyticsScreen extends ClearScreen{
  private final Screen parent;private int tab,page;
  private static final String[] TABS={"air","water","soil","impact","ecology","seasons","history"};
  public AnalyticsScreen(Screen parent){super(Component.translatable("worldlogic.analytics.title"));this.parent=parent;}

@@ -30,7 +30,7 @@ public final class TabRail {
  }
  private static ResourceLocation current(Screen screen){
   if(screen instanceof InventoryScreen)return INVENTORY;
-  if(screen instanceof GuideScreen)return GUIDE;
+  if(screen instanceof GuideScreen||screen instanceof GuideIndexScreen||screen instanceof GuideRecipesScreen)return GUIDE;
   if(screen instanceof AnalyticsScreen)return ANALYTICS;
   return OWNED.get(screen);
  }
@@ -102,7 +102,7 @@ public final class TabRail {
  @SubscribeEvent public static void init(ScreenEvent.Init.Post e){
   Screen s=e.getScreen();
   // Built-in screens install during init too, including rebuildWidgets.
-  if(!(s instanceof GuideScreen)&&!(s instanceof AnalyticsScreen)&&current(s)!=null)install(s,e::addListener);
+  if(!(s instanceof GuideScreen)&&!(s instanceof AnalyticsScreen)&&!(s instanceof GuideIndexScreen)&&!(s instanceof GuideRecipesScreen)&&current(s)!=null)install(s,e::addListener);
  }
  @SubscribeEvent public static void render(ScreenEvent.Render.Pre e){
   var rail=RAILS.get(e.getScreen());if(rail!=null)layout(e.getScreen(),rail);
