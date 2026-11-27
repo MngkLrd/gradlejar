@@ -31,7 +31,7 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install Pillow==12.0.0
       - name: Test visual measurements
-        run: python -m unittest tools.qa.tests.test_visual_lint -v
+        run: python -m unittest tools.qa.tests.test_visual_lint tools.qa.tests.test_visual_review_queue -v
       - uses: actions/cache@v4
         with:
           path: visual-reference.json

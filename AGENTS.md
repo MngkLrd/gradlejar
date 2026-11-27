@@ -26,6 +26,10 @@ The sole art-style authority for vanilla-style mods is the [Blockbench Minecraft
 - Review items in hand/inventory, blocks in-world, entities and animation in an actual client where supported and relevant. A PNG preview, protocol player or server test is not a rendered gameplay check. If client visual evidence is unavailable, state that briefly; do not claim visual certification. Keep normal asset checks fast: no full client startup for each texture, no mutation/stress tests for cosmetic changes, no mandatory manual user QA. Structural errors block a verified release; style heuristics are advisory and require artistic judgment.
 - Report material visual fixes and outstanding issues concisely. Use existing tools; do not redesign the pipeline as part of routine mod work.
 
+## Generated recipe and visual QA tasks
+
+Use the recipe inventory and candidate player scenarios emitted automatically by Build Hub for enrolled final JARs. Wire and execute applicable generated tests; never label a generated NOT_RUN scenario as passed. For unsupported serializers, tags or modded IDs, implement the appropriate actual test backend, or report the precise gap. Use Visual QA redraw-queue.json to review flagged assets against Blockbench and correct real defects, with at most one automatic redraw by default. These tasks are concise machine-readable inputs, not additional prose or manual user work.
+
 ## Mandatory for new projects
 1. Define Minecraft, loader, Java, Gradle, mappings and real dependencies. Use `tools/qa/compatibility.json` as the reference matrix; it contains tested/pinned baseline choices, not a universal promise of compatibility.
 2. Add `build-profile.json` with `qa.mode`, exact `qa.loader_version`, complete `qa.release_targets`, standard JAR name, and (for gameplay mods) a positive regression scenario under `tools/qa/scenarios/`. Client-only mods use mode client, not a dummy server.
