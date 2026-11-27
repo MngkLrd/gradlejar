@@ -50,3 +50,16 @@ class RealArtReviewTests(unittest.TestCase):
                 "candidates":[{"blob_sha":"0"*40,"revision":"snapshot"}]}]}
             with self.assertRaises(ValueError):
                 build(m,lambda *a:self.png((1,2,3,255)),lambda x:b"",Path(t)/"out",1)
+
+    def test_real_manifest_has_valid_pinned_locators(self):
+        import re
+        from tools.qa.real_art_review import MANIFEST
+        manifest=json.loads(MANIFEST.read_text(encoding="utf-8"))
+        self.assertEqual(len(manifest["cases"]),11)
+        candidates=[s for c in manifest["cases"] for s in c["candidates"]]
+        self.assertEqual(len(candidates),16)
+        for source in candidates:
+            self.assertRegex(source["commit"],r"^[a-f0-9]{40}$")
+            self.assertRegex(source["blob_sha"],r"^[a-f0-9]{40}$")
+            self.assertRegex(source["path"],r"^projects/[a-zA-Z0-9_./-]+\.png$")
+            self.assertNotIn("..",source["path"].split("/"))
