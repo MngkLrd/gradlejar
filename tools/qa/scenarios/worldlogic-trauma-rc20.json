@@ -79,6 +79,12 @@
       "expect": "TRAUMAQA physiology PASS",
       "assertion": true,
       "name": "TR-PHYSIOLOGY: independent limb function, splint benefit, pain relief, blood volume, shock, persistence and reset"
+    },
+    {
+      "command": "traumaqa wounds",
+      "expect": "TRAUMAQA wounds PASS",
+      "assertion": true,
+      "name": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry"
     }
   ],
   "coverage": [
@@ -275,6 +281,48 @@
         {
           "backend": "server",
           "name": "TR-PHYSIOLOGY: independent limb function, splint benefit, pain relief, blood volume, shock, persistence and reset"
+        }
+      ]
+    },
+    {
+      "id": "tr-wounds",
+      "kind": "mechanic",
+      "subject": "Classified wounds, persistence, healing and reset",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry"
+        }
+      ]
+    },
+    {
+      "id": "tr-primitive",
+      "kind": "item",
+      "subject": "Rag dressing and herbal poultice use, negative controls, consumption and recipe registration",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry"
+        }
+      ]
+    },
+    {
+      "id": "tr-retired",
+      "kind": "other",
+      "subject": "Four retired duplicates absent from recipe and creative lists; registry compatibility",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry"
         }
       ]
     }

@@ -87,6 +87,18 @@ public final class HudStatusLayoutCheck {
                 layouts++;
             }
         System.out.println("PASS: "+layouts+" responsive medical panel layouts");
+        for(float phase:new float[]{0,1,2,3,4,5,6}){
+            require(GaitVisual.leg(.7f,1,phase,1)==.7f,"healthy gait unchanged");
+            require(Math.abs(GaitVisual.leg(.7f,0,phase,1))<.7f,"injured stride shortened");
+            require(GaitVisual.stride(.32f)<GaitVisual.stride(.68f),"splint improves stride");
+        }
+        require(InjuryVisualProfile.red(0,0)==0&&InjuryVisualProfile.dark(1,0,false)==0,"healthy screen clear");
+        require(InjuryVisualProfile.dark(.4f,3,false)>InjuryVisualProfile.dark(.8f,1,false),"shock vignette increases");
+        require(InjuryVisualProfile.red(90,4)>InjuryVisualProfile.red(20,1),"pain redness increases");
+        require(InjuryVisualProfile.dark(1,0,true)>0,"concussion visual");
+        float fade=1;for(int i=0;i<100;i++)fade=InjuryVisualProfile.ease(fade,0,.05f);
+        require(fade==0,"effects fully fade");
+        System.out.println("PASS: gait asymmetry and injury overlay profiles");
         System.out.println("PASS: seven independent zones, centered lower inventory, 96 HUD layouts, injury palette and status bounds");
         System.out.println("PASS: 16 combinations, "+transitions+" removal transitions, timer boundaries and visibility");
     }

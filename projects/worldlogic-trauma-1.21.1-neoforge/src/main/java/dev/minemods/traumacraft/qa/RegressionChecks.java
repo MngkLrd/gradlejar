@@ -23,7 +23,7 @@ public final class RegressionChecks {
     private static void require(boolean ok,String message){if(!ok)throw new IllegalStateException(message);}
     public static void register(RegisterCommandsEvent e){
         var root=Commands.literal("traumaqa").requires(s->s.hasPermission(4)&&s.getEntity()==null);
-        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss","physiology"})
+        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss","physiology","wounds"})
             root.then(Commands.literal(name).executes(c->run(c.getSource(),name)));
         e.getDispatcher().register(root);
     }
@@ -164,6 +164,44 @@ public final class RegressionChecks {
                         b.reset();dev.minemods.traumacraft.event.FunctionEvents.update(p);
                         require(a.getModifier(id)==null,"healthy removes modifier");
                     }
+                }
+                case "wounds" -> {
+                    var arm=BodyPart.LEFT_ARM;
+                    b.wound(arm,15,WoundKind.CONTUSION);
+                    b.wound(arm,5,WoundKind.CUT);
+                    require(b.wounds(arm)==(WoundKind.CONTUSION.bit|WoundKind.CUT.bit)&&b.wounds(BodyPart.RIGHT_ARM)==0,"independent multiple wound classifications");
+                    var restored=new BodyState();restored.deserializeNBT(p.registryAccess(),b.serializeNBT(p.registryAccess()));
+                    require(restored.wounds(arm)==b.wounds(arm)&&restored.health(arm)==40,"wound persistence");
+                    b.heal(arm,60);require(b.wounds(arm)==0,"fully healed clears wounds");
+                    TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);
+                    require((b.wounds(BodyPart.LEFT_LEG)&WoundKind.CONTUSION.bit)!=0&&b.fractured(BodyPart.LEFT_LEG),"fall wound and fracture");
+                    b.reset();TraumaEvents.applyDamage(p,b,p.damageSources().inFire(),2);
+                    require((b.wounds(BodyPart.CHEST)&WoundKind.BURN.bit)!=0&&!b.hasBleeding(),"burn is not a bleeding cut");
+                    b.reset();TraumaEvents.applyDamage(p,b,p.damageSources().freeze(),2);
+                    require((b.wounds(BodyPart.CHEST)&WoundKind.FROSTBITE.bit)!=0,"freeze injury");
+                    b.reset();b.setBleeding(arm,1);
+                    require(MedicalAction.autoTarget(b,MedicalItem.Type.RAG_DRESSING)==arm,"primitive dressing targets light bleeding");
+                    require(MedicalAction.apply(p,b,MedicalItem.Type.RAG_DRESSING,arm)&&!b.hasBleeding(),"primitive dressing stops weak bleeding");
+                    b.setBleeding(arm,2);require(!MedicalAction.canApply(b,MedicalItem.Type.RAG_DRESSING,arm),"rag rejects full HP severe wound");
+                    b.reset();b.wound(arm,12,WoundKind.CONTUSION);
+                    var item=(MedicalItem)ModItems.HERBAL_POULTICE.get();
+                    require(MedicalAction.autoTarget(b,item.medicalType())==arm,"poultice targets bruise");
+                    ItemStack stack=new ItemStack(item,2);p.inventoryMenu.setCarried(stack);
+                    require(TreatmentManager.begin(p,item,arm,true,null)&&stack.getCount()==1,"poultice immediate consumption");
+                    p.tickCount+=30;TreatmentManager.tick(p);
+                    require(b.health(arm)==54&&b.painkillerTicks()==200,"poultice limited tissue and pain relief");
+                    require(!MedicalAction.canApply(b,item.medicalType(),BodyPart.RIGHT_ARM),"healthy rejects poultice");
+                    b.setBleeding(arm,1);require(!MedicalAction.canApply(b,item.medicalType(),arm),"bleeding rejects poultice");
+                    b.stopBleeding(arm);b.setFractured(arm,true);require(!MedicalAction.canApply(b,item.medicalType(),arm),"fracture rejects poultice");
+                    b.reset();require(b.wounds(arm)==0,"new life clears wound classification");
+                    var recipes=source.getServer().getRecipeManager();
+                    for(var retired:ModItems.RETIRED){
+                        require(!ModItems.MEDICINE.contains(retired),"duplicate absent from creative and JEI "+retired.getId());
+                        require(recipes.byKey(retired.getId()).isEmpty(),"duplicate recipe removed "+retired.getId());
+                        require(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(retired.get()).equals(retired.getId()),"legacy registry preserved");
+                    }
+                    require(recipes.byKey(ModItems.HERBAL_POULTICE.getId()).isPresent(),"poultice recipe loaded");
+                    require(recipes.byKey(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("traumacraft","rag_dressing_from_string")).isPresent(),"early dressing recipe loaded");
                 }
                 case "bloodloss" -> {
                     b.damage(BodyPart.LEFT_ARM,60);
