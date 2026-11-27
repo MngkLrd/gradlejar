@@ -3,7 +3,9 @@
   "values": [
     "worldlogic:forest_tundra",
     "worldlogic:continental_taiga",
+    "worldlogic:light_conifer_taiga",
     "worldlogic:humid_taiga",
+    "worldlogic:dark_conifer_taiga",
     "worldlogic:montane_conifer_forest"
   ]
 }
