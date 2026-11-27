@@ -21,7 +21,7 @@ public final class Metabolism {
  public Metabolism(IEventBus modBus){
   modBus.addListener(MetabolismSync::register);
   var bus=NeoForge.EVENT_BUS;
-  bus.addListener(Metabolism::tick);bus.addListener(Metabolism::finish);bus.addListener(Metabolism::clone);
+  bus.addListener(Metabolism::tick);bus.addListener(Metabolism::finish);bus.addListener(Metabolism::clonePlayer);
   bus.addListener(Metabolism::login);bus.addListener(Metabolism::logout);bus.addListener(Metabolism::commands);
  }
  static boolean active(ServerPlayer p){return p.isAlive()&&!p.isCreative()&&!p.isSpectator()&&!(p instanceof FakePlayer);}
@@ -57,7 +57,7 @@ public final class Metabolism {
   if(!(e.getEntity() instanceof ServerPlayer p)||!active(p))return;
   FoodProfiles.profile(e.getItem()).ifPresent(f->{var s=state(p);MetabolicModel.ingest(s,f.meal(),f.known());store(p,s);MetabolismSync.send(p);});
  }
- private static void clone(PlayerEvent.Clone e){if(e.getEntity() instanceof ServerPlayer p&&e.getOriginal() instanceof ServerPlayer old)store(p,e.isWasDeath()?new MetabolicModel.State():state(old));}
+ private static void clonePlayer(PlayerEvent.Clone e){if(e.getEntity() instanceof ServerPlayer p&&e.getOriginal() instanceof ServerPlayer old)store(p,e.isWasDeath()?new MetabolicModel.State():state(old));}
  private static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p)MetabolismSync.send(p);}
  private static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p)POS.remove(p);}
  private static void commands(RegisterCommandsEvent e){
