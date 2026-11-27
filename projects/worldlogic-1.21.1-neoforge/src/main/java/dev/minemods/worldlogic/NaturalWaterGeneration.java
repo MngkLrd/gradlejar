@@ -1,4 +1,5 @@
 package dev.minemods.worldlogic;
+import dev.minemods.worldlogic.api.WorldLogicApi;
 import dev.minemods.worldlogic.api.WorldLogicApi.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
