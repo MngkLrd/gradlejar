@@ -88,6 +88,76 @@
       "id": "bottle-profile-roundtrip",
       "status": "NOT_RUN",
       "reason": "Requires production NeoForge runtime item component fixture."
+    },
+    {
+      "id": "direct-rmb-sip",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "vessel-fill",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "vessel-drink-animation",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "vessel-transfer-main-offhand",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "filter-consumption",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "campfire-boil-timer-cancel",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "distillation-timer-cancel",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "creative-tab-render",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "recipe-wooden_cup",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "recipe-waterskin",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "recipe-clay_jug",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "recipe-copper_canteen",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "recipe-charcoal_filter",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "recipe-copper_condenser",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
     }
   ]
 }

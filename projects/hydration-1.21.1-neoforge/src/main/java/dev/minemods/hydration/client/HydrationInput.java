@@ -15,7 +15,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 public final class HydrationInput {
  @SubscribeEvent public static void use(InputEvent.InteractionKeyMappingTriggered e){
   var p=Minecraft.getInstance().player;
-  if(p==null||p.isCreative()||p.isSpectator()||!e.isUseItem()||!p.isShiftKeyDown()||!p.getMainHandItem().isEmpty()||!p.getOffhandItem().isEmpty())return;
+  if(p==null||p.isCreative()||p.isSpectator()||!e.isUseItem()||!p.getMainHandItem().isEmpty()||!p.getOffhandItem().isEmpty())return;
   var hit=p.pick(Math.min(4.5,p.blockInteractionRange()),1f,true);
   if(hit instanceof BlockHitResult b&&hit.getType()==HitResult.Type.BLOCK&&p.level().getFluidState(b.getBlockPos()).is(FluidTags.WATER)){
    PacketDistributor.sendToServer(new HydrationSync.Sip());e.setCanceled(true);e.setSwingHand(false);

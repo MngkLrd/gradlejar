@@ -13,5 +13,19 @@
   "hydration.water.quality.treat_recommended": "Рекомендуется очистка",
   "hydration.water.quality.desalinate": "Требуется опреснение",
   "hydration.water.quality.unknown": "Качество не определено",
-  "hydration.water.quality.not_water": "Не вода"
+  "hydration.water.quality.not_water": "Не вода",
+  "item.hydration.wooden_cup": "Деревянная кружка",
+  "item.hydration.waterskin": "Бурдюк",
+  "item.hydration.clay_jug": "Глиняный кувшин",
+  "item.hydration.copper_canteen": "Медная фляга",
+  "item.hydration.charcoal_filter": "Угольный фильтр",
+  "item.hydration.copper_condenser": "Медный конденсатор",
+  "itemGroup.hydration": "WL: Hydration",
+  "hydration.vessel.volume": "Вода: %s / %s мл",
+  "hydration.vessel.properties": "Соль: %s г/кг | риск: %s%%",
+  "hydration.treatment.not_heatproof": "Этот сосуд нельзя нагревать",
+  "hydration.treatment.boiling": "Кипячение: %s с. Оставайтесь у огня с сосудом в руке.",
+  "hydration.treatment.distilling": "Опреснение: %s с. Держите конденсатор во второй руке.",
+  "hydration.treatment.cancelled": "Обработка прервана",
+  "hydration.treatment.done": "Обработка воды завершена"
 }

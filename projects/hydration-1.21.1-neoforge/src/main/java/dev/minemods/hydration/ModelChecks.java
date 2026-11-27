@@ -36,6 +36,12 @@ public final class ModelChecks {
   check(t.target().quality()==Quality.DESALINATE,"salt cannot be laundered");
   check(t.target().origins().equals(java.util.Set.of("SEA","RIVER"))&&t.source().origins().equals(java.util.Set.of("SEA")),"provenance survives mixing and split");
   check(WaterBatch.transfer(sea,t.target(),100,1000).moved()==0,"full target");
+  check(WaterTreatment.filter(sea).salinity()==35&&WaterTreatment.filter(sea).quality()==Quality.DESALINATE,"filter retains salt");
+  var boiled=WaterTreatment.boil(sea);check(boiled.ml()==950&&boiled.quality()==Quality.DESALINATE&&Math.abs(boiled.salinity()*boiled.ml()-35000)<.001,"boil retains salt");
+  var distilled=WaterTreatment.distill(sea);check(distilled.ml()==700&&distilled.salinity()==0&&distilled.quality()==Quality.DRINKABLE&&distilled.origins().equals(sea.origins()),"distill");
+  var swamp=new WaterBatch(1000,Quality.TREAT_RECOMMENDED,.2,.9,java.util.Set.of("WETLAND"));
+  check(WaterTreatment.filter(swamp).quality()==Quality.TREAT_RECOMMENDED&&WaterTreatment.boil(swamp).quality()==Quality.TREAT_RECOMMENDED,"individual steps");
+  check(WaterTreatment.boil(WaterTreatment.filter(swamp)).quality()==Quality.DRINKABLE,"combined treatment");
   var unknown=new WaterBatch(100,Quality.UNKNOWN,0,1);
   check(WaterBatch.transfer(unknown,fresh,100,1000).target().quality()==Quality.UNKNOWN,"unknown cannot be laundered");
  }

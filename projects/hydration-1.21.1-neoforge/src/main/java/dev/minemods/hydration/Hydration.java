@@ -40,6 +40,7 @@ public final class Hydration {
   // Read both constants at runtime rather than inlining compile-time values.
   try {if(WorldLogicApi.class.getField("API_VERSION").getInt(null)!=1||WorldLogicApi.class.getField("API_REVISION").getInt(null)<7)throw new IllegalStateException("Hydration requires World Logic API v1 revision 7 or later");}
   catch(ReflectiveOperationException e){throw new IllegalStateException("World Logic API revision unavailable",e);}
+  HydrationItems.register(modBus);
   modBus.addListener(HydrationSync::register);
   var bus=NeoForge.EVENT_BUS;
   bus.addListener(Hydration::tick);
@@ -50,6 +51,9 @@ public final class Hydration {
   bus.addListener(Hydration::logout);
   bus.addListener(Hydration::tooltip);
   bus.addListener(Hydration::commands);
+  bus.addListener(VesselTreatment::interact);
+  bus.addListener(VesselTreatment::tick);
+  bus.addListener(VesselTreatment::logout);
  }
  public static boolean active(ServerPlayer p){return p.isAlive()&&!p.isCreative()&&!p.isSpectator()&&!(p instanceof FakePlayer);}
  public static WaterBalance.State state(ServerPlayer p){
@@ -84,7 +88,7 @@ public final class Hydration {
   if(p.tickCount%100==0&&s.exposure()>=25)p.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,120,0,false,true));
   HydrationSync.send(p);
  }
- private static WorldLogicApi.WaterProfile targeted(ServerPlayer p){
+ static WorldLogicApi.WaterProfile targeted(ServerPlayer p){
   Vec3 eye=p.getEyePosition();
   var hit=p.serverLevel().clip(new ClipContext(eye,eye.add(p.getLookAngle().scale(Math.min(4.5,p.blockInteractionRange()))),
    ClipContext.Block.OUTLINE,ClipContext.Fluid.ANY,p));
@@ -120,7 +124,7 @@ public final class Hydration {
   if(ml>0)applyDrink(p,WaterBalance.Quality.DRINKABLE,ml,0);
  }
  static void sip(ServerPlayer p){
-  if(!active(p)||!p.isShiftKeyDown()||!p.getMainHandItem().isEmpty()||!p.getOffhandItem().isEmpty())return;
+  if(!active(p)||!p.getMainHandItem().isEmpty()||!p.getOffhandItem().isEmpty())return;
   long now=p.serverLevel().getGameTime();
   long previous=LAST_SIP.getOrDefault(p,now-30);
   if(now>=previous&&now-previous<30)return;
@@ -128,7 +132,7 @@ public final class Hydration {
   if(!WaterBalance.canDrink(state(p)))return;
   var profile=targeted(p);
   if(profile==null)return;
-  applyDrink(p,quality(profile),125,profile.contaminationRisk());
+  applyDrink(p,quality(profile),250,profile.contaminationRisk());
   p.level().playSound(null,p.getX(),p.getY(),p.getZ(),SoundEvents.GENERIC_DRINK,SoundSource.PLAYERS,.6f,1f);
  }
  private static void tooltip(net.neoforged.neoforge.event.entity.player.ItemTooltipEvent e){
@@ -154,6 +158,7 @@ public final class Hydration {
     .then(Commands.argument("player",EntityArgument.player()).requires(s->s.hasPermission(2)).executes(c->{var p=EntityArgument.getPlayer(c,"player");c.getSource().sendSuccess(()->Component.literal(status(p)),false);return 1;})))
    .then(Commands.literal("set").requires(s->s.hasPermission(2)).then(Commands.argument("player",EntityArgument.player()).then(Commands.argument("water",DoubleArgumentType.doubleArg(0,100)).executes(c->{var p=EntityArgument.getPlayer(c,"player");store(p,new WaterBalance.State(DoubleArgumentType.getDouble(c,"water"),0));HydrationSync.send(p);c.getSource().sendSuccess(()->Component.literal(status(p)),false);return 1;}))))
    .then(Commands.literal("inspect").requires(s->s.hasPermission(2)).then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{var p=WorldLogicApi.waterProfile(c.getSource().getLevel(),BlockPosArgument.getLoadedBlockPos(c,"pos"));c.getSource().sendSuccess(()->Component.literal("Hydration source="+p.kind()+" quality="+p.quality()),false);return 1;})))
+   .then(Commands.literal("vesseltest").requires(s->s.hasPermission(2)).executes(c->{VesselChecks.run();c.getSource().sendSuccess(()->Component.literal("HYDRATION_VESSEL_CHECKS_PASSED"),false);return 1;}))
    .then(Commands.literal("selftest").requires(s->s.hasPermission(2)).executes(c->{ModelChecks.run();c.getSource().sendSuccess(()->Component.literal("HYDRATION_MODEL_CHECKS_PASSED"),false);return 1;})));
  }
 }

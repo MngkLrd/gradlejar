@@ -13,5 +13,19 @@
   "hydration.water.quality.treat_recommended": "Treatment recommended",
   "hydration.water.quality.desalinate": "Requires desalination",
   "hydration.water.quality.unknown": "Unverified quality",
-  "hydration.water.quality.not_water": "Not water"
+  "hydration.water.quality.not_water": "Not water",
+  "item.hydration.wooden_cup": "Wooden Cup",
+  "item.hydration.waterskin": "Waterskin",
+  "item.hydration.clay_jug": "Clay Jug",
+  "item.hydration.copper_canteen": "Copper Canteen",
+  "item.hydration.charcoal_filter": "Charcoal Filter",
+  "item.hydration.copper_condenser": "Copper Condenser",
+  "itemGroup.hydration": "WL: Hydration",
+  "hydration.vessel.volume": "Water: %s / %s mL",
+  "hydration.vessel.properties": "Salt: %s g/kg | risk: %s%%",
+  "hydration.treatment.not_heatproof": "This vessel cannot be heated",
+  "hydration.treatment.boiling": "Boiling: %s s. Stay by the fire with the vessel in hand.",
+  "hydration.treatment.distilling": "Distilling: %s s. Keep the condenser in your offhand.",
+  "hydration.treatment.cancelled": "Treatment interrupted",
+  "hydration.treatment.done": "Water treatment completed"
 }

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Hydration 0.2.0 server model and source regression",
+  "name": "Hydration 0.3.0 model and vessel component regression",
   "coverage": [
     {
       "id": "water-balance",
@@ -60,6 +60,61 @@
           "name": "Model rules"
         }
       ]
+    },
+    {
+      "id": "wooden_cup",
+      "kind": "item",
+      "subject": "Wooden cup 500 mL",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vessel capacities and component persistence"
+        }
+      ]
+    },
+    {
+      "id": "waterskin",
+      "kind": "item",
+      "subject": "Waterskin 1500 mL",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vessel capacities and component persistence"
+        }
+      ]
+    },
+    {
+      "id": "clay_jug",
+      "kind": "item",
+      "subject": "Clay jug 3000 mL",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vessel capacities and component persistence"
+        }
+      ]
+    },
+    {
+      "id": "copper_canteen",
+      "kind": "item",
+      "subject": "Copper canteen 2000 mL",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vessel capacities and component persistence"
+        }
+      ]
+    },
+    {
+      "id": "treatment-model",
+      "kind": "mechanic",
+      "subject": "Filter, boil, distill quality, volume and salt mass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
     }
   ],
   "steps": [
@@ -91,6 +146,12 @@
       "name": "Solid is not water",
       "command": "hydration inspect 3 200 3",
       "expect": "source=NONE quality=NOT_WATER",
+      "assertion": true
+    },
+    {
+      "name": "Vessel capacities and component persistence",
+      "command": "hydration vesseltest",
+      "expect": "HYDRATION_VESSEL_CHECKS_PASSED",
       "assertion": true
     }
   ]
