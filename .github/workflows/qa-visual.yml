@@ -6,6 +6,7 @@ on:
       - '**/assets/**/models/**'
       - 'tools/qa/visual_lint.py'
       - 'tools/qa/tests/test_visual_lint.py'
+      - 'tools/qa/tests/test_visual_review_queue.py'
       - '.github/workflows/qa-visual.yml'
   push:
     branches: [main]
@@ -14,6 +15,7 @@ on:
       - '**/assets/**/models/**'
       - 'tools/qa/visual_lint.py'
       - 'tools/qa/tests/test_visual_lint.py'
+      - 'tools/qa/tests/test_visual_review_queue.py'
       - '.github/workflows/qa-visual.yml'
   workflow_dispatch:
 permissions:
