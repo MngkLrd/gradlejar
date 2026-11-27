@@ -123,6 +123,33 @@ public final class TreeChecks {
                 if(form.feature().equals("oak_ancient"))ancient=shape.height();
             }
             require(ancient>young,"Old oak does not exceed young oak height");
+            FruitChecks.verifySelection(l);
+            for(var fruit:TreeFruit.values()){
+                String form=switch(fruit){
+                    case APPLE,PEAR -> "oak_spreading";
+                    case PLUM,FIG -> "oak_young";
+                    case MANGO -> "jungle_canopy";
+                    case COCONUT -> "palm_young";
+                    case DATE -> "date_palm_young";
+                    case BAOBAB -> "baobab_young";
+                };
+                clear(l);
+                require(FruitEcology.attach(l,CENTER,fruit,RandomSource.create(81))==0,"Fruit generated without foliage "+fruit.id);
+                boolean grown=false;
+                for(int seed=83;seed<87&&!grown;seed++){clear(l);grown=place(l,form,seed);}
+                require(grown,"Fruit host tree failed "+form);
+                int placed=FruitEcology.attach(l,CENTER,fruit,RandomSource.create(124));
+                BlockPos ripe=null;int actual=0;
+                for(var pos:BlockPos.betweenClosed(-6,260,-6,22,307,22)){
+                    var state=l.getBlockState(pos);
+                    if(!state.is(fruit.block()))continue;
+                    require(fruit.supports(l.getBlockState(pos.above()))&&state.canSurvive(l,pos),"Fruit not attached "+fruit.id);
+                    actual++;
+                    if(state.getValue(dev.minemods.worldlogicterrain.block.HangingFruitBlock.AGE)==2)ripe=pos.immutable();
+                }
+                require(placed>=2&&placed<=4&&actual==placed&&ripe!=null,"Missing fruit group "+fruit.id+" count="+placed);
+                FruitChecks.verifyHarvest(l,fruit,ripe);
+            }
             for(String species:new String[]{"willow","larch","pine","fir","cedar","maple","beech","alder","palm","date_palm","baobab","ebony","mahogany"}){
                 clear(l);
                 Block log=block("worldlogicterrain",species+"_log");

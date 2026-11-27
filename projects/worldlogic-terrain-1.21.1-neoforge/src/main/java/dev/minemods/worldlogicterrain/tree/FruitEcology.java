@@ -37,12 +37,12 @@ public final class FruitEcology {
     }
     static Optional<Plan> selectSite(String zone,String name,String wood,double temperature,double coldness,double wet,double moisture,RandomSource random){
         if(!suitable(name,temperature,coldness,wet))return Optional.empty();
-        if(wood.equals("palm")&&temperature>=19&&random.nextDouble()<.68)return Optional.of(new Plan(TreeFruit.COCONUT,null));
-        if(wood.equals("date_palm")&&temperature>=19&&random.nextDouble()<.68)return Optional.of(new Plan(TreeFruit.DATE,null));
+        if(wood.equals("palm")&&temperature>=19&&random.nextDouble()<(.45+.32*moisture))return Optional.of(new Plan(TreeFruit.COCONUT,null));
+        if(wood.equals("date_palm")&&temperature>=19&&random.nextDouble()<(.78-.24*moisture))return Optional.of(new Plan(TreeFruit.DATE,null));
         if(wood.equals("baobab")&&temperature>=20&&random.nextDouble()<.60)return Optional.of(new Plan(TreeFruit.BAOBAB,null));
-        if(zone.equals("TROPICAL")&&temperature>=19&&random.nextDouble()<.22)
+        if(zone.equals("TROPICAL")&&temperature>=19&&moisture>.32&&random.nextDouble()<.22)
             return Optional.of(new Plan(TreeFruit.MANGO,"jungle_canopy"));
-        if((zone.equals("DRY")||zone.equals("TEMPERATE")&&temperature>=22)&&temperature>=18&&random.nextDouble()<.22)
+        if((zone.equals("DRY")||zone.equals("TEMPERATE")&&temperature>=22)&&temperature>=18&&random.nextDouble()<(moisture<.65?.24:.12))
             return Optional.of(new Plan(TreeFruit.FIG,"oak_young"));
         if((zone.equals("OPEN")||zone.equals("TEMPERATE")||zone.equals("WET")||zone.equals("BOREAL")||zone.equals("CHERRY"))
             &&temperature>=8&&temperature<=27&&wet<.72&&random.nextDouble()<(zone.equals("BOREAL")?.10:.20)){
@@ -60,6 +60,7 @@ public final class FruitEcology {
     }
     /** Attach a small group to exposed undersides of the matching crown, never replace leaves or terrain. */
     public static int attach(WorldGenLevel level,BlockPos root,TreeFruit fruit,RandomSource random){
+        if(isWinter(level.getBiome(root)))return 0;
         var state=fruit.block().defaultBlockState();
         int limit=2+random.nextInt(3),count=0,offset=random.nextInt(121);
         for(int i=0;i<121&&count<limit;i++){
@@ -70,7 +71,9 @@ public final class FruitEcology {
                 if(level.isOutsideBuildHeight(pos.above())||!level.ensureCanWrite(pos)||!level.ensureCanWrite(pos.above()))continue;
                 if(!level.getBlockState(pos).isAir()||!level.getFluidState(pos).isEmpty()||!fruit.supports(level.getBlockState(pos.above())))continue;
                 var fruitState=state.setValue(HangingFruitBlock.AGE,count==0||random.nextBoolean()?2:1);
-                if(!fruitState.canSurvive(level,pos))continue;
+                if(isWinter(level.getBiome(pos))||isWinter(level.getBiome(pos.above()))
+                    ||isWinter(level.getNoiseBiome(pos.getX()>>2,pos.getY()>>2,pos.getZ()>>2))
+                    ||!fruitState.canSurvive(level,pos))continue;
                 if(level.setBlock(pos,fruitState,Block.UPDATE_CLIENTS)){count++;break;}
             }
         }

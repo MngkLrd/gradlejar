@@ -32,7 +32,7 @@ public final class TerrainPatchChecks {
                 ForagePopulationFeature.verify(c.getSource().getLevel());
                 dev.minemods.worldlogicterrain.tree.TreeChecks.verify(c.getSource().getLevel());
                 int nativeCount=dev.minemods.worldlogicterrain.water.AquaticChecks.verify(c.getSource().getLevel());
-                c.getSource().sendSuccess(()->Component.literal("Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 12 climate-aware forage populations verified"),false);
+                c.getSource().sendSuccess(()->Component.literal("Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 12 climate-aware forage populations verified; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion"),false);
                 return 1;
             }catch(IllegalStateException ex){c.getSource().sendFailure(Component.literal(ex.getMessage()));return 0;}
           })));
