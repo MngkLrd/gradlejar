@@ -7,7 +7,7 @@ plugins {
 }
 group = mod_group_id
 version = mod_version
-base.archivesName = 'worldlogic-trauma-neoforge-mc1.21.1'
+base.archivesName = 'traumacraft-neoforge-mc1.21.1'
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 def coreJar = file('libs/worldlogic-neoforge-mc1.21.1-1.0.0-rc20.jar')

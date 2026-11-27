@@ -420,6 +420,14 @@
     "stage": "test",
     "cause": "Gradle 9.2.1 discovered a standalone Java main under src/test, but no framework tests",
     "resolution": "Move the standalone executable to hudTest source set; check still depends on checkHudStatusLayout",
+    "state": "PASS_ON_RETRY",
+    "retry_run": 45972234091
+  },
+  "static_incident": {
+    "run": 45972234091,
+    "stage": "Verify JAR",
+    "cause": "modId traumacraft must match profile slug",
+    "resolution": "preserve existing registry namespace and align profile slug/filename",
     "state": "FIXED_IN_SOURCE_NOT_RUN"
   }
 }
