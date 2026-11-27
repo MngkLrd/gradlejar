@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "B B",
+    "IBI",
+    "BBB"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:brick"
+    },
+    "I": {
+      "item": "minecraft:iron_bars"
+    }
+  },
+  "result": {
+    "id": "hydration:water_intake",
+    "count": 1
+  }
+}

@@ -42,6 +42,15 @@ public final class ModelChecks {
   var swamp=new WaterBatch(1000,Quality.TREAT_RECOMMENDED,.2,.9,java.util.Set.of("WETLAND"));
   check(WaterTreatment.filter(swamp).quality()==Quality.TREAT_RECOMMENDED&&WaterTreatment.boil(swamp).quality()==Quality.TREAT_RECOMMENDED,"individual steps");
   check(WaterTreatment.boil(WaterTreatment.filter(swamp)).quality()==Quality.DRINKABLE,"combined treatment");
+  var down=GravityFlow.move(sea,fresh,1000,12,10,0,false);
+  check(down.moved()==250&&down.source().ml()==750&&down.target().ml()==750,"gravity rate and conservation");
+  check(GravityFlow.move(sea,fresh,1000,10,10,0,false).moved()==0,"no level flow");
+  check(GravityFlow.move(sea,fresh,1000,10,11,0,false).moved()==0,"no uphill flow");
+  check(GravityFlow.move(sea,fresh,500,12,10,0,false).moved()==0,"full target");
+  check(GravityFlow.move(sea,fresh,1000,12,10,0,true).moved()==0,"filter depleted");
+  var filtered=GravityFlow.move(sea,WaterBatch.empty(),1000,12,10,100,true);
+  check(filtered.moved()==100&&filtered.remainingFilter()==0&&filtered.target().salinity()==35&&filtered.target().risk()<sea.risk(),"filter consumption limited by actual throughput");
+  check(GravityFlow.rainMl(false,true,1)==0&&GravityFlow.rainMl(true,false,1)==0&&GravityFlow.rainMl(true,true,0)==0&&GravityFlow.rainMl(true,true,.5)==30,"rain boundaries");
   var unknown=new WaterBatch(100,Quality.UNKNOWN,0,1);
   check(WaterBatch.transfer(unknown,fresh,100,1000).target().quality()==Quality.UNKNOWN,"unknown cannot be laundered");
  }

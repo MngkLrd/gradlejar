@@ -15,6 +15,6 @@ public final class HydrationItems {
  public static final net.neoforged.neoforge.registries.DeferredItem<VesselItem> CANTEEN=ITEMS.register("copper_canteen",()->new VesselItem(2000,true));
  public static final net.neoforged.neoforge.registries.DeferredItem<Item> FILTER=ITEMS.registerSimpleItem("charcoal_filter",new Item.Properties());
  public static final net.neoforged.neoforge.registries.DeferredItem<Item> CONDENSER=ITEMS.registerSimpleItem("copper_condenser",new Item.Properties().stacksTo(1));
- private static final net.neoforged.neoforge.registries.DeferredHolder<CreativeModeTab,CreativeModeTab> TAB=TABS.register("hydration",()->CreativeModeTab.builder().title(Component.translatable("itemGroup.hydration")).icon(()->SKIN.get().getDefaultInstance()).displayItems((p,o)->{o.accept(CUP.get());o.accept(SKIN.get());o.accept(JUG.get());o.accept(CANTEEN.get());o.accept(FILTER.get());o.accept(CONDENSER.get());}).build());
- public static void register(IEventBus bus){ITEMS.register(bus);TABS.register(bus);}
+ private static final net.neoforged.neoforge.registries.DeferredHolder<CreativeModeTab,CreativeModeTab> TAB=TABS.register("hydration",()->CreativeModeTab.builder().title(Component.translatable("itemGroup.hydration")).icon(()->SKIN.get().getDefaultInstance()).displayItems((p,o)->{o.accept(CUP.get());o.accept(SKIN.get());o.accept(JUG.get());o.accept(CANTEEN.get());o.accept(FILTER.get());o.accept(CONDENSER.get());WaterInfrastructure.items().forEach(x->o.accept(x.get()));}).build());
+ public static void register(IEventBus bus){WaterInfrastructure.register(bus);ITEMS.register(bus);TABS.register(bus);}
 }

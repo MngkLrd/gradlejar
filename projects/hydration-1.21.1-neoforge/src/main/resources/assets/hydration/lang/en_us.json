@@ -13,7 +13,7 @@
   "hydration.water.quality.treat_recommended": "Treatment recommended",
   "hydration.water.quality.desalinate": "Requires desalination",
   "hydration.water.quality.unknown": "Unverified quality",
-  "hydration.water.quality.not_water": "Not water",
+  "hydration.water.quality.not_water": "Empty",
   "item.hydration.wooden_cup": "Wooden Cup",
   "item.hydration.waterskin": "Waterskin",
   "item.hydration.clay_jug": "Clay Jug",
@@ -27,5 +27,14 @@
   "hydration.treatment.boiling": "Boiling: %s s. Stay by the fire with the vessel in hand.",
   "hydration.treatment.distilling": "Distilling: %s s. Keep the condenser in your offhand.",
   "hydration.treatment.cancelled": "Treatment interrupted",
-  "hydration.treatment.done": "Water treatment completed"
+  "hydration.treatment.done": "Water treatment completed",
+  "block.hydration.clay_basin": "Clay Basin",
+  "block.hydration.water_barrel": "Water Barrel",
+  "block.hydration.rain_collector": "Rain Collector",
+  "block.hydration.stationary_filter": "Stationary Filter",
+  "block.hydration.water_intake": "Water Intake",
+  "block.hydration.clay_pipe": "Clay Pipe",
+  "hydration.tank.status": "Water: %s/%s mL | %s | filter remaining: %s mL",
+  "hydration.pipe.direction": "Outlet: %s | %s",
+  "hydration.water.kind.rain": "Rainwater"
 }

@@ -54,6 +54,7 @@ public final class Hydration {
   bus.addListener(VesselTreatment::interact);
   bus.addListener(VesselTreatment::tick);
   bus.addListener(VesselTreatment::logout);
+  bus.addListener(WaterInfrastructure::interact);
  }
  public static boolean active(ServerPlayer p){return p.isAlive()&&!p.isCreative()&&!p.isSpectator()&&!(p instanceof FakePlayer);}
  public static WaterBalance.State state(ServerPlayer p){
@@ -158,6 +159,8 @@ public final class Hydration {
     .then(Commands.argument("player",EntityArgument.player()).requires(s->s.hasPermission(2)).executes(c->{var p=EntityArgument.getPlayer(c,"player");c.getSource().sendSuccess(()->Component.literal(status(p)),false);return 1;})))
    .then(Commands.literal("set").requires(s->s.hasPermission(2)).then(Commands.argument("player",EntityArgument.player()).then(Commands.argument("water",DoubleArgumentType.doubleArg(0,100)).executes(c->{var p=EntityArgument.getPlayer(c,"player");store(p,new WaterBalance.State(DoubleArgumentType.getDouble(c,"water"),0));HydrationSync.send(p);c.getSource().sendSuccess(()->Component.literal(status(p)),false);return 1;}))))
    .then(Commands.literal("inspect").requires(s->s.hasPermission(2)).then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{var p=WorldLogicApi.waterProfile(c.getSource().getLevel(),BlockPosArgument.getLoadedBlockPos(c,"pos"));c.getSource().sendSuccess(()->Component.literal("Hydration source="+p.kind()+" quality="+p.quality()),false);return 1;})))
+   .then(Commands.literal("tankinspect").requires(s->s.hasPermission(2)).then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{var be=c.getSource().getLevel().getBlockEntity(BlockPosArgument.getLoadedBlockPos(c,"pos"));if(!(be instanceof TankEntity tank))throw new com.mojang.brigadier.exceptions.SimpleCommandExceptionType(Component.literal("Not a hydration tank")).create();c.getSource().sendSuccess(()->Component.literal(tank.diagnostic()),false);return 1;})))
+   .then(Commands.literal("infrastructuretest").requires(s->s.hasPermission(2)).executes(c->{InfrastructureChecks.run(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("HYDRATION_INFRASTRUCTURE_CHECKS_PASSED"),false);return 1;}))
    .then(Commands.literal("vesseltest").requires(s->s.hasPermission(2)).executes(c->{VesselChecks.run();c.getSource().sendSuccess(()->Component.literal("HYDRATION_VESSEL_CHECKS_PASSED"),false);return 1;}))
    .then(Commands.literal("selftest").requires(s->s.hasPermission(2)).executes(c->{ModelChecks.run();c.getSource().sendSuccess(()->Component.literal("HYDRATION_MODEL_CHECKS_PASSED"),false);return 1;})));
  }

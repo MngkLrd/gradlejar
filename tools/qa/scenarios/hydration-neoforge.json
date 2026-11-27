@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Hydration 0.3.0 model and vessel component regression",
+  "name": "Hydration 0.4.0 model, vessel and infrastructure regression",
   "coverage": [
     {
       "id": "water-balance",
@@ -115,6 +115,50 @@
           "name": "Model rules"
         }
       ]
+    },
+    {
+      "id": "gravity-flow",
+      "kind": "mechanic",
+      "subject": "Real block entities, gravity, capacity, no equal elevation, loop rejection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Infrastructure world fixture"
+        }
+      ]
+    },
+    {
+      "id": "filter-station",
+      "kind": "mechanic",
+      "subject": "Stationary filter charge and salt retention",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Infrastructure world fixture"
+        }
+      ]
+    },
+    {
+      "id": "tank-persistence",
+      "kind": "mechanic",
+      "subject": "Tank NBT roundtrip",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Infrastructure world fixture"
+        }
+      ]
+    },
+    {
+      "id": "rain-rate",
+      "kind": "mechanic",
+      "subject": "Rain amount and exposure bounds",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
     }
   ],
   "steps": [
@@ -152,6 +196,12 @@
       "name": "Vessel capacities and component persistence",
       "command": "hydration vesseltest",
       "expect": "HYDRATION_VESSEL_CHECKS_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Infrastructure world fixture",
+      "command": "hydration infrastructuretest",
+      "expect": "HYDRATION_INFRASTRUCTURE_CHECKS_PASSED",
       "assertion": true
     }
   ]

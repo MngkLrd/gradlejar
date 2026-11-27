@@ -158,6 +158,71 @@
       "id": "recipe-copper_condenser",
       "status": "NOT_RUN",
       "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "placed-tank-interaction",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "rain-collection-weather",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "natural-intake",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "pipe-redstone",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "block-drops",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "chunk-reload",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "render-filled-state",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "recipe-clay_basin",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "recipe-water_barrel",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "recipe-rain_collector",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "recipe-stationary_filter",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "recipe-water_intake",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "recipe-clay_pipe",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
     }
   ]
 }

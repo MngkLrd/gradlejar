@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "fill=0": {
+      "model": "hydration:block/clay_basin_0"
+    },
+    "fill=1": {
+      "model": "hydration:block/clay_basin_1"
+    },
+    "fill=2": {
+      "model": "hydration:block/clay_basin_2"
+    },
+    "fill=3": {
+      "model": "hydration:block/clay_basin_3"
+    }
+  }
+}

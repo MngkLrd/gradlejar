@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hydration:block/clay_pipe"
+    },
+    "facing=east": {
+      "model": "hydration:block/clay_pipe",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hydration:block/clay_pipe",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hydration:block/clay_pipe",
+      "y": 270
+    },
+    "facing=up": {
+      "model": "hydration:block/clay_pipe",
+      "x": 270
+    },
+    "facing=down": {
+      "model": "hydration:block/clay_pipe",
+      "x": 90
+    }
+  }
+}
