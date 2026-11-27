@@ -148,5 +148,20 @@
   "tooltip.worldlogic_thermal.info.history_tab": "Saved measurements along your route; use arrows to change day.",
   "tooltip.worldlogic_thermal.info.history_values": "Air, perceived and body temperature of the selected observation.",
   "tooltip.worldlogic_thermal.info.history_location": "Time, coordinates, biome and dimension of the selected measurement.",
-  "tooltip.worldlogic_thermal.info.history_samples": "Number of measurements recorded on this game day."
+  "tooltip.worldlogic_thermal.info.history_samples": "Number of measurements recorded on this game day.",
+  "screen.worldlogic_thermal.weather_kind": "Local weather",
+  "screen.worldlogic_thermal.pressure": "Air pressure",
+  "screen.worldlogic_thermal.gust": "Wind gusts",
+  "screen.worldlogic_thermal.weather_clear": "Clear",
+  "screen.worldlogic_thermal.weather_rain": "Rain",
+  "screen.worldlogic_thermal.weather_downpour": "Downpour",
+  "screen.worldlogic_thermal.weather_thunderstorm": "Thunderstorm",
+  "screen.worldlogic_thermal.weather_snow": "Snow",
+  "screen.worldlogic_thermal.weather_blizzard": "Blizzard",
+  "screen.worldlogic_thermal.weather_dust_storm": "Dust storm",
+  "screen.worldlogic_thermal.weather_monsoon": "Monsoon",
+  "screen.worldlogic_thermal.weather_fog": "Fog",
+  "tooltip.worldlogic_thermal.info.weather_kind": "Current local weather supplied by the core. Rain and wind change heat exposure.",
+  "tooltip.worldlogic_thermal.info.pressure": "Modeled atmospheric pressure. Display only; it is not a second temperature modifier.",
+  "tooltip.worldlogic_thermal.info.gust": "Short bursts of stronger wind. In exposed locations they increase cooling."
 }

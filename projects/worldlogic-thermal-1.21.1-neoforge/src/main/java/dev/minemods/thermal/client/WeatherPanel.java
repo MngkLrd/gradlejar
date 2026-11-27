@@ -27,10 +27,10 @@ final class WeatherPanel {
         ThermalPanel.row(g,x,y+68,w,"wind",a.atmosphere()?fmt("%.1f m/s %s",a.windSpeed(),a.windSpeed()<.2?"":dir(a.windX(),a.windZ())):na,0xff255f99);
         String precip=a.atmosphere()?ThermalPanel.tr(a.precipitation()==1?"rain":a.precipitation()==2?"snow":"none").getString():na;
         ThermalPanel.row(g,x,y+80,w,"precip",precip+(a.intensity()>0?fmt(" %.0f%%",100*a.intensity()):""),0xff255f99);
-        ThermalPanel.row(g,x,y+92,w,"thunder",ThermalPanel.tr(a.thunder()?"yes":"no").getString(),a.thunder()?0xff895022:0xff555555);
+        ThermalPanel.row(g,x,y+92,w,a.weatherKind().isEmpty()?"thunder":"weather_kind",a.weatherKind().isEmpty()?ThermalPanel.tr(a.thunder()?"yes":"no").getString():ThermalPanel.tr("weather_"+a.weatherKind().toLowerCase(Locale.ROOT)).getString(),a.thunder()?0xff895022:0xff555555);
         ThermalPanel.row(g,x,y+104,w,"solar",fmt("%.0f%%",100*a.solar()),0xff99601c);
-        ThermalPanel.row(g,x,y+116,w,"reference",Double.isFinite(a.reference())?fmt("%+.1f °C",a.reference()):na,0xff555555);
-        ThermalPanel.row(g,x,y+128,w,"daily",Double.isFinite(a.reference())?fmt("%+.0f .. %+.0f °C",a.reference()-2,a.reference()+2):na,0xff555555);
+        ThermalPanel.row(g,x,y+116,w,Double.isFinite(a.pressure())?"pressure":"reference",Double.isFinite(a.pressure())?fmt("%.0f hPa",a.pressure()):Double.isFinite(a.reference())?fmt("%+.1f °C",a.reference()):na,0xff555555);
+        ThermalPanel.row(g,x,y+128,w,Double.isFinite(a.gust())?"gust":"daily",Double.isFinite(a.gust())?fmt("%.1f m/s",a.gust()):Double.isFinite(a.reference())?fmt("%+.0f .. %+.0f °C",a.reference()-2,a.reference()+2):na,0xff555555);
         ThermalPanel.row(g,x,y+140,w,"annual",ThermalPanel.tr("unmodeled").getString(),0xff555555);
         g.drawString(f,ThermalPanel.tr(s.sheltered()?"covered":"exposed"),x+10,y+152,0xff555555,false);
     }

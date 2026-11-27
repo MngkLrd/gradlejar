@@ -12,6 +12,9 @@ final class RoomHeat {
  private static final Map<ServerLevel,LinkedHashMap<BlockPos,State>> ROOMS=new WeakHashMap<>();
  private RoomHeat(){}
  static double sample(ServerLevel l,BlockPos start,double source,double cooling,boolean covered){
+  return sampleAt(l,start,source,cooling,covered,l.getGameTime());
+ }
+ static double sampleAt(ServerLevel l,BlockPos start,double source,double cooling,boolean covered,long now){
   if(!covered||!l.hasChunkAt(start))return 0;
   Set<BlockPos> seen=new HashSet<>();ArrayDeque<BlockPos> queue=new ArrayDeque<>();seen.add(start.immutable());queue.add(start.immutable());
   BlockPos key=start;double mass=0;int boundaries=0;
@@ -32,7 +35,7 @@ final class RoomHeat {
    }
   }
   if(seen.size()<4||boundaries==0)return 0;
-  long now=l.getGameTime();var cache=ROOMS.computeIfAbsent(l,k->new LinkedHashMap<>(64,.75f,true));
+  var cache=ROOMS.computeIfAbsent(l,k->new LinkedHashMap<>(64,.75f,true));
   State old=cache.get(key);double target=Math.max(-8,Math.min(14,(source-cooling)*.35));
   double tau=30+40*mass/boundaries;
   double delta=old==null?0:Adaptation.approach(old.delta(),target,Math.min(300,Math.max(0,(now-old.tick())/20.0)),tau);

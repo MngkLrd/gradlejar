@@ -64,7 +64,7 @@ public final class EnvironmentSampler {
         double retained=clamp(ins,0,1)*(1-.75*skin);
         double warmLimit=28-activity*7-retained*5+clamp(ventilation,0,1)*7;
         double currentBody=p.getPersistentData().getCompound(ThermalEvents.KEY).contains("body")?p.getPersistentData().getCompound(ThermalEvents.KEY).getDouble("body"):37;
-        double effective=air+radiant-local.cooling()-shadeCooling-wind*(2+5*skin)-6*skin;
+        double effective=air+room+radiant-local.cooling()-shadeCooling-wind*(2+5*skin)-6*skin;
         var portable=ThermalPackItem.comfort(ThermalPackItem.hotbar(p,a==null?100:a.relativeHumidityPercent()),effective,warmLimit,currentBody);
         radiant=ClimateComfort.capRadiant(air,radiant+portable.heat());
         double cooling=Math.min(18,local.cooling()+shadeCooling+portable.cool());
@@ -75,7 +75,7 @@ public final class EnvironmentSampler {
         var weather=new WeatherReading(biome,level.dimension().location().toString(),env.elevationAboveSea(),a!=null,
             a==null?0:a.relativeHumidityPercent(),a==null?0:a.outdoorWindSpeedMps(),a==null?0:a.outdoorWindXMps(),a==null?0:a.outdoorWindZMps(),
             a==null?0:a.precipitation().ordinal(),a==null?0:a.precipitationIntensity(),env.globalThunder(),env.solarExposure(),
-            a==null?Double.NaN:reference,regional==null?Double.NaN:regional.absoluteLatitude(),regional==null?Double.NaN:regional.moistureIndex());
+            a==null?Double.NaN:reference,regional==null?Double.NaN:regional.absoluteLatitude(),regional==null?Double.NaN:regional.moistureIndex(),regionalWeather.map(AddonBridge.Local::kind).orElse(""),regionalWeather.map(AddonBridge.Local::gust).orElse(Double.NaN),regionalWeather.map(AddonBridge.Local::pressure).orElse(Double.NaN),regionalWeather.map(AddonBridge.Local::cloud).orElse(Double.NaN),regionalWeather.map(AddonBridge.Local::fog).orElse(Double.NaN));
         var n=p.getPersistentData().getCompound(ThermalEvents.KEY);
         var adaptation=new dev.minemods.thermal.Adaptation.State(n.getDouble("adaptCold"),n.getDouble("adaptHeat"));
         double nutrition=dev.minemods.thermal.Adaptation.nutrition(p.getFoodData().getFoodLevel(),p.getFoodData().getSaturationLevel());

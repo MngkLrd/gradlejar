@@ -148,5 +148,20 @@
   "tooltip.worldlogic_thermal.info.history_tab": "Сохранённые замеры вдоль вашего маршрута. Стрелками можно менять день.",
   "tooltip.worldlogic_thermal.info.history_values": "Температура воздуха, ощущаемая и температура тела в выбранный момент.",
   "tooltip.worldlogic_thermal.info.history_location": "Время, координаты, биом и измерение выбранного замера.",
-  "tooltip.worldlogic_thermal.info.history_samples": "Количество замеров за эти игровые сутки."
+  "tooltip.worldlogic_thermal.info.history_samples": "Количество замеров за эти игровые сутки.",
+  "screen.worldlogic_thermal.weather_kind": "Местная погода",
+  "screen.worldlogic_thermal.pressure": "Давление воздуха",
+  "screen.worldlogic_thermal.gust": "Порывы ветра",
+  "screen.worldlogic_thermal.weather_clear": "Ясно",
+  "screen.worldlogic_thermal.weather_rain": "Дождь",
+  "screen.worldlogic_thermal.weather_downpour": "Ливень",
+  "screen.worldlogic_thermal.weather_thunderstorm": "Гроза",
+  "screen.worldlogic_thermal.weather_snow": "Снег",
+  "screen.worldlogic_thermal.weather_blizzard": "Метель",
+  "screen.worldlogic_thermal.weather_dust_storm": "Пыльная буря",
+  "screen.worldlogic_thermal.weather_monsoon": "Муссон",
+  "screen.worldlogic_thermal.weather_fog": "Туман",
+  "tooltip.worldlogic_thermal.info.weather_kind": "Местная погода из ядра. Осадки и ветер меняют тепловую нагрузку.",
+  "tooltip.worldlogic_thermal.info.pressure": "Расчётное давление воздуха. Показывается для информации, не изменяет температуру повторно.",
+  "tooltip.worldlogic_thermal.info.gust": "Краткие усиления ветра. На открытом месте они ускоряют охлаждение."
 }

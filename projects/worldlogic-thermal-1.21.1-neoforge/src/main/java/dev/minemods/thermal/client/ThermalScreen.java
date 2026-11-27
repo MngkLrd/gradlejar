@@ -38,6 +38,7 @@ public final class ThermalScreen extends Screen {
         int w=panelW();var r=new ThermalLayout.Rect((width-w)/2,panelY(),w,166);
         if(page==0)ThermalPanel.draw(g,r,data);else if(page==1)WeatherPanel.draw(g,r,data);else JournalPanel.draw(g,r,history,dayIndex,mx,my);
         String tip=tooltip(page,r,mx,my);
+        if(page==1&&tip!=null&&data!=null){var wdata=data.weather();if(tip.equals("thunder")&&!wdata.weatherKind().isEmpty())tip="weather_kind";if(tip.equals("reference")&&Double.isFinite(wdata.pressure()))tip="pressure";if(tip.equals("daily")&&Double.isFinite(wdata.gust()))tip="gust";}
         if(tip!=null)g.renderTooltip(font,font.split(Component.translatable("tooltip.worldlogic_thermal.info."+tip),Math.min(220,width-16)),mx,my);
     }
     static String tooltip(int page,ThermalLayout.Rect r,int mx,int my){

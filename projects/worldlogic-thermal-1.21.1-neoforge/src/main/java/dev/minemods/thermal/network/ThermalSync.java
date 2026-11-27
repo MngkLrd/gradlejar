@@ -30,10 +30,10 @@ public final class ThermalSync {
         b.writeUtf(w.biome(),256);b.writeUtf(w.dimension(),256);b.writeInt(w.elevation());b.writeBoolean(w.atmosphere());
         b.writeDouble(w.humidity());b.writeDouble(w.windSpeed());b.writeDouble(w.windX());b.writeDouble(w.windZ());
         b.writeVarInt(w.precipitation());b.writeDouble(w.intensity());b.writeBoolean(w.thunder());b.writeDouble(w.solar());
-        b.writeDouble(w.reference());b.writeDouble(w.latitude());b.writeDouble(w.moisture());
+        b.writeDouble(w.reference());b.writeDouble(w.latitude());b.writeDouble(w.moisture());b.writeUtf(w.weatherKind(),48);b.writeDouble(w.gust());b.writeDouble(w.pressure());b.writeDouble(w.cloud());b.writeDouble(w.fog());
     }
     private static WeatherReading readWeather(RegistryFriendlyByteBuf b){
-        return new WeatherReading(b.readUtf(256),b.readUtf(256),b.readInt(),b.readBoolean(),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble(),b.readVarInt(),b.readDouble(),b.readBoolean(),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble());
+        return new WeatherReading(b.readUtf(256),b.readUtf(256),b.readInt(),b.readBoolean(),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble(),b.readVarInt(),b.readDouble(),b.readBoolean(),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble(),b.readUtf(48),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble());
     }
     private record Received(Snapshot snapshot, Snapshot previous, long time) {}
     private static volatile Received latest;

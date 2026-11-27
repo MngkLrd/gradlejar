@@ -140,6 +140,36 @@
       "command": "thermal qa textile",
       "expect": "THERMAL_QA_textile_PASS",
       "assertion": true
+    },
+    {
+      "name": "Acclimation persistence, moderate exposure, opposite climate and heat response",
+      "command": "thermal qa adaptation",
+      "expect": "THERMAL_QA_adaptation_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Four separate limb exposures, local insulation and wetness",
+      "command": "thermal qa frostbite",
+      "expect": "THERMAL_QA_frostbite_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Hunger and hydration effects on body model, live food reserve",
+      "command": "thermal qa nutrition",
+      "expect": "THERMAL_QA_nutrition_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Bounded enclosed-room heat storage and roof opening",
+      "command": "thermal qa room_inertia",
+      "expect": "THERMAL_QA_room_inertia_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Climate equipment selection and safe placement without overwriting",
+      "command": "thermal qa village_climate",
+      "expect": "THERMAL_QA_village_climate_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -338,6 +368,61 @@
         {
           "backend": "server",
           "name": "Three hand tools and four textile stations, material consumption and batch collection"
+        }
+      ]
+    },
+    {
+      "id": "adaptation",
+      "kind": "mechanic",
+      "subject": "Acclimation persistence, moderate exposure, opposite climate and heat response",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Acclimation persistence, moderate exposure, opposite climate and heat response"
+        }
+      ]
+    },
+    {
+      "id": "frostbite",
+      "kind": "mechanic",
+      "subject": "Four separate limb exposures, local insulation and wetness",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Four separate limb exposures, local insulation and wetness"
+        }
+      ]
+    },
+    {
+      "id": "nutrition",
+      "kind": "mechanic",
+      "subject": "Hunger and hydration effects on body model, live food reserve",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hunger and hydration effects on body model, live food reserve"
+        }
+      ]
+    },
+    {
+      "id": "room_inertia",
+      "kind": "mechanic",
+      "subject": "Bounded enclosed-room heat storage and roof opening",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Bounded enclosed-room heat storage and roof opening"
+        }
+      ]
+    },
+    {
+      "id": "village_climate",
+      "kind": "mechanic",
+      "subject": "Climate equipment selection and safe placement without overwriting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Climate equipment selection and safe placement without overwriting"
         }
       ]
     }

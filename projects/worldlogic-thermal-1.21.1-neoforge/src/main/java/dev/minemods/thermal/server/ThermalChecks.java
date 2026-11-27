@@ -170,6 +170,11 @@ final class ThermalChecks {
                 case "advanced_clothes" -> ExpansionChecks.clothes(l,p);
                 case "devices" -> ExpansionChecks.devices(l,p);
                 case "textile" -> ExpansionChecks.textile(l,p);
+                case "adaptation" -> ClimateEvolutionChecks.adaptation(l,p);
+                case "frostbite" -> ClimateEvolutionChecks.frostbite(l,p);
+                case "nutrition" -> ClimateEvolutionChecks.nutrition(l,p);
+                case "room_inertia" -> ClimateEvolutionChecks.room(l,p);
+                case "village_climate" -> ClimateEvolutionChecks.settlement(l,p);
                 default -> throw new IllegalArgumentException(name);
             }
         } finally {
