@@ -31,7 +31,7 @@ public final class ClimateDeviceBlock extends Block {
             case BRAZIER -> Shapes.or(Block.box(3,0,3,13,2,13),Block.box(6,2,6,10,5,10),Block.box(2,5,2,14,9,14));
             case FIREPLACE -> Shapes.or(Block.box(0,0,0,16,3,16),Block.box(0,3,0,3,13,16),Block.box(13,3,0,16,13,16),Block.box(3,3,13,13,13,16),Block.box(3,13,0,13,16,16),Block.box(3,3,3,13,5,13));
             case EVAP_WALL -> Shapes.or(Block.box(0,0,4,16,16,12),Block.box(0,0,2,16,2,14),Block.box(0,14,2,16,16,14));
-            case ICE_BOX -> Shapes.or(Block.box(1,0,1,15,3,15),Block.box(1,3,1,3,14,15),Block.box(13,3,1,15,14,15),Block.box(3,3,1,13,14,3),Block.box(3,3,13,13,14,15),Block.box(3,3,3,13,s.getValue(PHASE)==1?10:5,13),Block.box(0,12,0,16,14,3),Block.box(0,12,13,16,14,16),Block.box(0,12,3,3,14,13),Block.box(13,12,3,16,14,13));
+            case ICE_BOX -> Shapes.or(Block.box(1,0,1,15,3,15),Block.box(1,3,1,3,12,15),Block.box(13,3,1,15,12,15),Block.box(3,3,1,13,12,3),Block.box(3,3,13,13,12,15),Block.box(3,3,3,13,s.getValue(PHASE)==1?10:5,13),Block.box(0,12,0,16,14,3),Block.box(0,12,13,16,14,16),Block.box(0,12,3,3,14,13),Block.box(13,12,3,16,14,13));
             case WIND_TOWER -> Shapes.or(Block.box(0,0,0,16,3,16),Block.box(0,3,0,3,13,16),Block.box(13,3,0,16,13,16),Block.box(3,3,6,13,13,10),Block.box(3,3,1,5,13,3),Block.box(11,3,1,13,13,3),Block.box(0,13,0,16,16,16));
             case STOVE -> Shapes.or(Block.box(0,0,0,16,4,16),Block.box(0,4,0,4,12,16),Block.box(12,4,0,16,12,16),Block.box(4,4,4,12,12,16),Block.box(4,4,0,12,5,4),Block.box(0,12,0,16,16,16));
         };

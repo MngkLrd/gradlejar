@@ -37,15 +37,15 @@ public final class GarmentModels {
         for(Item item:ThermalContent.creativeItems())if(item instanceof ThermalWearable)event.registerItem(extensions,item);
     }
     private static void box(PartDefinition part,String name,int u,int v,float x,float y,float z,float w,float h,float d){
-        part.addOrReplaceChild(name,CubeListBuilder.create().texOffs(u,v).addBox(x,y,z,w,h,d),PartPose.ZERO);
+        part.addOrReplaceChild(name,CubeListBuilder.create().texOffs(u,v).addBox(x,y,z,w,h,d,new CubeDeformation(name.startsWith("cuff_")?.6f:0f)),PartPose.ZERO);
     }
     private static HumanoidModel<LivingEntity> bake(String id){
         float inflate=switch(id){
             case "fur_coat"->.85f;case "fur_boots"->.8f;case "fur_hat"->.65f;
             case "grass_hood","grass_coat"->.45f;
             case "grass_leggings"->.4f;case "grass_boots"->.35f;
-            case "wool_underwear"->.22f;case "linen_clothes"->.25f;case "light_tunic"->.32f;
-            case "desert_headwear"->.35f;case "leather_face_mask"->.20f;
+            case "wool_underwear"->.35f;case "linen_clothes"->.35f;case "light_tunic"->.35f;
+            case "desert_headwear"->.35f;case "leather_face_mask"->.55f;
             case "waxed_cloak"->.36f;case "straw_cape"->.5f;default->.4f;
         };
         MeshDefinition mesh=HumanoidModel.createMesh(new CubeDeformation(inflate),0);
@@ -56,7 +56,7 @@ public final class GarmentModels {
                 // Replace helmet shell with a brim above the eyes and a separate crown.
                 root.addOrReplaceChild("head",CubeListBuilder.create()
                     .texOffs(0,32).addBox(-7,-6,-7,14,1,14)
-                    .texOffs(0,48).addBox(-4.5f,-10,-4.5f,9,4,9),PartPose.ZERO);
+                    .texOffs(0,48).addBox(-4.5f,-10,-4.5f,9,4,9,new CubeDeformation(.15f)),PartPose.ZERO);
             }
             case "grass_hood" -> {
                 box(head,"woven_right",0,32,-5,-3,-3.5f,2,5,7);
