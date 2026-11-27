@@ -68,7 +68,7 @@ public final class TreeChopper {
         finally{PROTECTION_CHECK.remove();}
     }
     private static void guardBreak(BlockEvent.BreakEvent event){
-        if(PROTECTION_CHECK.get() || event.getPlayer().isCreative() || event.getPlayer().isSpectator() || !(event.getLevel() instanceof ServerLevel level))return;
+        if(PROTECTION_CHECK.get() || !(event.getPlayer().getMainHandItem().getItem() instanceof AxeItem) || event.getPlayer().isCreative() || event.getPlayer().isSpectator() || !(event.getLevel() instanceof ServerLevel level))return;
         BlockState state=event.getState();
         String s=species(state);
         if(s!=null && (state.getBlock() instanceof CutBlock || !scan(level,event.getPos(),s).isEmpty()))event.setCanceled(true);
@@ -81,10 +81,10 @@ public final class TreeChopper {
         if(s==null)return;
         boolean cut=old.getBlock() instanceof CutBlock;
         ItemStack axe=player.getMainHandItem();
+        if(!(axe.getItem() instanceof AxeItem))return;
         List<Piece> tree=scan(level,pos,s);
         if(tree.isEmpty()&&!cut)return;
         event.setCanceled(true);
-        if(!(axe.getItem() instanceof AxeItem))return;
         if(event.getAction()!=PlayerInteractEvent.LeftClickBlock.Action.START || tree.isEmpty() || !player.mayBuild())return;
         Direction side=event.getFace();
         // The hit face can be a horizontal ledge of an existing notch; use the player's approach side.

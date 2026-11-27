@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.5.1 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.5.2 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -537,15 +537,31 @@
     },
     {
       "command": "wltreechopper qa_break 1040 200 1028",
-      "expect": "TreeChopper vanilla bypass blocked",
+      "expect": "TreeChopper hand break allowed",
       "assertion": true,
       "name": "hand-bypass"
     },
     {
-      "command": "execute if block 1040 200 1028 minecraft:oak_log",
+      "command": "execute if block 1040 201 1028 minecraft:oak_log",
       "expect": "Test passed",
       "assertion": true,
       "name": "hand-intact"
+    },
+    {
+      "command": "execute if block 1040 200 1028 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "hand-no-felling"
+    },
+    {
+      "command": "setblock 1040 200 1028 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_axe_break 1040 200 1028",
+      "expect": "TreeChopper axe bypass blocked",
+      "assertion": true,
+      "name": "axe-normal-bypass"
     },
     {
       "command": "wltreechopper qa_hit 1040 200 1028 north 1",
@@ -558,8 +574,8 @@
       "name": "branch-notch"
     },
     {
-      "command": "wltreechopper qa_break 1040 200 1028",
-      "expect": "TreeChopper vanilla bypass blocked",
+      "command": "wltreechopper qa_axe_break 1040 200 1028",
+      "expect": "TreeChopper axe bypass blocked",
       "assertion": true,
       "name": "cut-bypass"
     },
@@ -581,6 +597,16 @@
     },
     {
       "wait": 3
+    },
+    {
+      "command": "setblock 1040 200 1028 wl_treechopper:cut_oak[north=1,south=0,east=0,west=0]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_break 1040 200 1028",
+      "expect": "TreeChopper hand break allowed",
+      "assertion": true,
+      "name": "hand-cut-break"
     }
   ],
   "coverage": [
@@ -1082,7 +1108,7 @@
     {
       "id": "hand-bypass",
       "kind": "mechanic",
-      "subject": "Natural tree rejects bare hand and actual ServerPlayerGameMode.destroyBlock",
+      "subject": "Bare-hand ordinary mining is not canceled and removes a natural log through server game mode",
       "checks": [
         {
           "backend": "server",
@@ -1093,7 +1119,7 @@
     {
       "id": "hand-intact",
       "kind": "mechanic",
-      "subject": "Trunk remains after ordinary break attempt",
+      "subject": "Bare-hand destruction leaves the upper log intact (no tree felling)",
       "checks": [
         {
           "backend": "server",
@@ -1115,7 +1141,7 @@
     {
       "id": "cut-bypass",
       "kind": "mechanic",
-      "subject": "Partially cut log rejects bare hand and actual normal destruction",
+      "subject": "Axe cannot bypass the geometric notch via normal server destruction",
       "checks": [
         {
           "backend": "server",
@@ -1142,6 +1168,39 @@
         {
           "backend": "server",
           "name": "branch-stump"
+        }
+      ]
+    },
+    {
+      "id": "hand-no-felling",
+      "kind": "mechanic",
+      "subject": "Bare hand leaves air instead of a stump",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "hand-no-felling"
+        }
+      ]
+    },
+    {
+      "id": "axe-normal-bypass",
+      "kind": "mechanic",
+      "subject": "Axe cannot bypass chopping on an intact recognized trunk",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "axe-normal-bypass"
+        }
+      ]
+    },
+    {
+      "id": "hand-cut-break",
+      "kind": "mechanic",
+      "subject": "Bare hand can also remove an existing notched log normally",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "hand-cut-break"
         }
       ]
     }
