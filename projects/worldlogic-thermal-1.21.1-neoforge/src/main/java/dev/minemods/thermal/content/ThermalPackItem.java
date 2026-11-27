@@ -27,8 +27,9 @@ public final class ThermalPackItem extends Item {
         public final int seconds; public final double power; public final boolean hot,cold;
         Kind(int s,double p,boolean h,boolean c){seconds=s;power=p;hot=h;cold=c;}
     }
+    private static final int CAPACITY=1000;
     private final Kind kind;
-    public ThermalPackItem(Kind k){super(new Properties().durability(k.seconds+1));kind=k;}
+    public ThermalPackItem(Kind k){super(new Properties().durability(CAPACITY+1));kind=k;}
     public Kind kind(){return kind;}
     public static long clock(ServerLevel l){return l.getServer().overworld().getGameTime();}
     private static CompoundTag data(ItemStack s){return s.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();}
@@ -39,7 +40,7 @@ public final class ThermalPackItem extends Item {
         if(expiry<=now)return 0;
         return Math.min(1,(expiry-(double)now)/(kind.seconds*20.0));
     }
-    public double displayCharge(ItemStack s){return mode(s)==0?0:Math.max(0,Math.min(1,1-s.getDamageValue()/(double)kind.seconds));}
+    public double displayCharge(ItemStack s){return mode(s)==0?0:Math.max(0,Math.min(1,1-s.getDamageValue()/(double)CAPACITY));}
     public boolean charge(ItemStack s,int mode,long now){
         if(mode!=1&&mode!=-1||mode==1&&!kind.hot||mode==-1&&!kind.cold)return false;
         if(mode(s)==mode&&remaining(s,now)>.95)return false;
@@ -47,12 +48,12 @@ public final class ThermalPackItem extends Item {
         s.set(DataComponents.CUSTOM_DATA,CustomData.of(n));s.setDamageValue(0);return true;
     }
     public void refresh(ItemStack s,long now){
-        int damage=kind.seconds-(int)Math.ceil(remaining(s,now)*kind.seconds);
+        int damage=CAPACITY-(int)Math.ceil(remaining(s,now)*CAPACITY);
         if(s.getDamageValue()!=damage)s.setDamageValue(damage);
     }
     public void neutralize(ItemStack s){
         CompoundTag n=data(s);n.remove("thermal_mode");n.remove("thermal_expiry");
-        s.set(DataComponents.CUSTOM_DATA,CustomData.of(n));s.setDamageValue(kind.seconds);
+        s.set(DataComponents.CUSTOM_DATA,CustomData.of(n));s.setDamageValue(CAPACITY);
     }
     @Override public void inventoryTick(ItemStack s,Level level,Entity entity,int slot,boolean selected){
         if(level instanceof ServerLevel l&&entity.tickCount%20==0)refresh(s,clock(l));

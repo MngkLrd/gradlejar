@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import java.util.*;
 final class ExpansionChecks {
-    private static void require(boolean ok,String label){if(!ok)throw new IllegalStateException("Expansion QA: "+label);}
+    private static void require(boolean ok,String label){if(!ok){org.slf4j.LoggerFactory.getLogger("WorldLogic Thermal QA").error("Expansion QA: {}",label);throw new IllegalStateException("Expansion QA: "+label);}}
     static void portable(ServerLevel l,ServerPlayer p){
         long now=ThermalPackItem.clock(l);
         var items=List.of(ThermalContent.HOT_STONE.get(),ThermalContent.LEATHER_POUCH.get(),ThermalContent.CHARCOAL_WARMER.get(),ThermalContent.HAND_FAN.get(),ThermalContent.WET_CLOTH.get(),ThermalContent.INSULATED_FLASK.get());
@@ -21,7 +21,7 @@ final class ExpansionChecks {
             require(!item.charge(s,mode,now),"no redundant recharge");
             long half=now+item.kind().seconds*10L,end=now+item.kind().seconds*20L;
             item.refresh(s,half);
-            require(item.getBarWidth(s)>=6&&item.getBarWidth(s)<=7,"half bar "+item.kind());
+            require(Math.abs(item.displayCharge(s)-.5)<.002&&item.getBarWidth(s)>=6&&item.getBarWidth(s)<=7,"half bar "+item.kind());
             require(item.remaining(s.copy(),half)>.49&&item.remaining(s.copy(),half)<.51,"copied stack retains expiry");
             item.refresh(s,end);
             require(item.remaining(s,end)==0&&item.getBarWidth(s)==0&&s.getCount()==1,"empty charge does not destroy "+item.kind());
