@@ -114,6 +114,7 @@ public final class WorldLogic {
   bus.addListener(Weather::tick);
   bus.addListener(WeatherController::tick);
   bus.addListener(LocalWeatherRuntime::tick);
+  bus.addListener(SeasonRuntime::tick);
   bus.addListener(HydrologyRuntime::tick);
   bus.addListener(EnvironmentAnalytics::tick);
   bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,EnvironmentAnalytics::broken);

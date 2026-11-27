@@ -15,6 +15,10 @@ public final class AdminCommands {
   root.then(Commands.literal("strength").then(Commands.argument("family",StringArgumentType.word()).suggests((c,b)->net.minecraft.commands.SharedSuggestionProvider.suggest(Rules.tuningKeys(),b)).then(Commands.argument("factor",DoubleArgumentType.doubleArg(.25,2)).executes(c->{String k=StringArgumentType.getString(c,"family");if(!Rules.tuningKeys().contains(k)){c.getSource().sendFailure(Component.literal("Unknown family"));return 0;}var m=Rules.snapshot();m.put("strength."+k,Double.toString(DoubleArgumentType.getDouble(c,"factor")));return change(c.getSource(),m);}))));
   root.then(Commands.literal("reload").executes(c->{Rules.load();return reply(c.getSource(),"World Logic configuration reloaded.");}));
   root.then(Commands.literal("inspect").executes(c->{var s=c.getSource();var p=s.getPlayer();if(p==null)return reply(s,"Use in game to inspect player state.");var b=Body.state(p);return reply(s,"mass="+String.format(Locale.ROOT,"%.2f",Material.mass(p))+" fatigue="+String.format(Locale.ROOT,"%.1f",Survival.fatigue(p))+" cargo="+String.format(Locale.ROOT,"%.2f",Condition.burden(p))+" impact_load="+String.format(Locale.ROOT,"%.1f",Trauma.load(p))+" arm_injury="+Trauma.arm(p)+" prone="+Balance.down(p)+" wetness="+b.wet+" air="+p.getAirSupply()+" streak="+b.streak+" pocket="+(b.pocket==null?"none":b.pocket.oxygen));}));
+  var season=Commands.literal("season").executes(c->reply(c.getSource(),SeasonRuntime.describe(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition()))));
+  season.then(Commands.literal("length").then(Commands.argument("days",IntegerArgumentType.integer(1,365)).executes(c->reply(c.getSource(),SeasonRuntime.setLength(c.getSource().getLevel(),IntegerArgumentType.getInteger(c,"days"))))));
+  var seasonSet=Commands.literal("set");for(var kind:dev.minemods.worldlogic.api.WorldLogicApi.SeasonKind.values())seasonSet.then(Commands.literal(kind.name().toLowerCase(Locale.ROOT)).executes(c->reply(c.getSource(),SeasonRuntime.setSeason(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition()),kind))));
+  season.then(seasonSet);root.then(season);
   root.then(Commands.literal("weather").executes(c->{
    var s=c.getSource();
    var pos=net.minecraft.core.BlockPos.containing(s.getPosition());
@@ -87,6 +91,7 @@ public final class AdminCommands {
    return BiomeSurvey.request(s,g,state,origin,id);
   })));
   root.then(Commands.literal("qa").requires(s->s.hasPermission(4))
+   .then(Commands.literal("seasons").executes(c->{try{SeasonChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_SEASONS_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("biome_survey_0_0").executes(c->{try{BiomeChecks.verifyCoveragePart(c.getSource().getLevel(),1234L,0,true);return reply(c.getSource(),"WORLDLOGIC_BIOME_SURVEY_PART_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("biome_survey_0_1").executes(c->{try{BiomeChecks.verifyCoveragePart(c.getSource().getLevel(),1234L,1,false);return reply(c.getSource(),"WORLDLOGIC_BIOME_SURVEY_PART_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("biome_survey_0_2").executes(c->{try{BiomeChecks.verifyCoveragePart(c.getSource().getLevel(),1234L,2,false);return reply(c.getSource(),"WORLDLOGIC_BIOME_SURVEY_PART_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))

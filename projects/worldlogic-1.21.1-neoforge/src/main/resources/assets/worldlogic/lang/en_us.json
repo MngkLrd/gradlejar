@@ -209,5 +209,16 @@
   "block.worldlogic.sea_kelp": "Kelp",
   "block.worldlogic.sea_kelp_plant": "Kelp",
   "block.worldlogic.sea_seagrass": "Seagrass",
-  "block.worldlogic.sea_tall_seagrass": "Tall Seagrass"
+  "block.worldlogic.sea_tall_seagrass": "Tall Seagrass",
+  "worldlogic.analytics.seasons": "Seasons",
+  "worldlogic.analytics.season_spring": "Spring",
+  "worldlogic.analytics.season_summer": "Summer",
+  "worldlogic.analytics.season_autumn": "Autumn",
+  "worldlogic.analytics.season_winter": "Winter",
+  "worldlogic.analytics.season_day": "Season day",
+  "worldlogic.analytics.season_year": "Local year progress",
+  "worldlogic.analytics.season_progress": "Season progress",
+  "worldlogic.analytics.season_temp": "Seasonal air offset",
+  "worldlogic.analytics.season_solar": "Solar factor",
+  "worldlogic.analytics.season_wet": "Wet-season strength"
 }

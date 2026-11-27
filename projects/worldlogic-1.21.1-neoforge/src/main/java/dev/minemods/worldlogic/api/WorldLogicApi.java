@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=10;
+ public static final int API_REVISION=11;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -35,6 +35,15 @@ public final class WorldLogicApi {
  public record Environment(double ambientCelsiusEstimate,int elevationAboveSea,boolean covered,
                            boolean rainingAt,boolean globalThunder,double solarExposure,
                            Optional<RegionalClimate> regionalClimate){}
+ public enum SeasonKind { SPRING, SUMMER, AUTUMN, WINTER }
+ /** Local climatological season. Progress values are fractions, offsets are applied by Core.
+  * Days are 24000 elapsed simulation ticks, independent of /time and sleeping. */
+ public record Season(SeasonKind kind,int dayOfSeason,int daysPerSeason,double yearProgress,double seasonProgress,
+  double temperatureOffsetC,double solarFactor,double wetSeasonStrength,double moistureOffset){}
+ public static Optional<Season> season(ServerLevel level,BlockPos pos){
+  serverThread(level);
+  return dev.minemods.worldlogic.SeasonRuntime.at(level,pos,GeoDensity.regional(level,pos.getX(),pos.getZ()));
+ }
  public enum Precipitation { NONE, RAIN, SNOW }
  public enum WeatherKind { CLEAR, RAIN, DOWNPOUR, THUNDERSTORM, SNOW, BLIZZARD, DUST_STORM, MONSOON, FOG }
  /** Authoritative local gameplay conditions in geographic presets. Intensity, cloud, fog and solar transmission: 0..1. */
@@ -172,6 +181,9 @@ public final class WorldLogicApi {
   boolean sky=level.dimensionType().hasSkyLight()&&level.canSeeSky(pos);
   double sun=sky?Math.max(0,Math.cos((Math.floorMod(level.getDayTime(),24000L)-6000)*Math.PI/12000.0)):0;
   sun*=level.getBrightness(LightLayer.SKY,pos)/15.0;
+  var season=dev.minemods.worldlogic.SeasonRuntime.at(level,pos,regional);
+  base+=season.map(Season::temperatureOffsetC).orElse(0.0);
+  sun=clamp(sun*season.map(Season::solarFactor).orElse(1.0),0,1);
   var weather=dev.minemods.worldlogic.LocalWeatherRuntime.at(level,pos,regional);
   if(weather.isPresent()){
    var w=weather.orElseThrow();sun*=w.solarTransmission();

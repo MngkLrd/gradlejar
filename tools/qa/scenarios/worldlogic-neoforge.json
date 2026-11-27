@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC32 production core/API regression",
+  "name": "World Logic NeoForge RC34 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -182,6 +182,13 @@
       "name": "Local weather nine types, spatial and temporal variation, exposure, temperature and client packet contract",
       "command": "worldlogic qa local_weather",
       "expect": "WORLDLOGIC_LOCAL_WEATHER_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Season clock persistence, climate amplitudes, opposite phase, rainfall phase and actual snow-layer changes",
+      "command": "worldlogic qa seasons",
+      "expect": "WORLDLOGIC_SEASONS_PASSED",
+      "reject": "FAIL:",
       "assertion": true
     },
     {
@@ -1140,6 +1147,17 @@
         {
           "backend": "server",
           "name": "Marine sediment, polar icebergs and actual native seawater spawn predicates"
+        }
+      ]
+    },
+    {
+      "id": "rc34-season-calendar",
+      "kind": "mechanic",
+      "subject": "Persistent configurable season clock, seamless length changes, periodic local climate, rain/snow and actual snow layer fixture; geographic runtime/client separately unverified",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Season clock persistence, climate amplitudes, opposite phase, rainfall phase and actual snow-layer changes"
         }
       ]
     }

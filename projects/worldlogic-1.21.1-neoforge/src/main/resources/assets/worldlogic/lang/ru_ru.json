@@ -209,5 +209,16 @@
   "block.worldlogic.sea_kelp": "Ламинария",
   "block.worldlogic.sea_kelp_plant": "Ламинария",
   "block.worldlogic.sea_seagrass": "Морская трава",
-  "block.worldlogic.sea_tall_seagrass": "Высокая морская трава"
+  "block.worldlogic.sea_tall_seagrass": "Высокая морская трава",
+  "worldlogic.analytics.seasons": "Сезоны",
+  "worldlogic.analytics.season_spring": "Весна",
+  "worldlogic.analytics.season_summer": "Лето",
+  "worldlogic.analytics.season_autumn": "Осень",
+  "worldlogic.analytics.season_winter": "Зима",
+  "worldlogic.analytics.season_day": "День сезона",
+  "worldlogic.analytics.season_year": "Прогресс местного года",
+  "worldlogic.analytics.season_progress": "Прогресс сезона",
+  "worldlogic.analytics.season_temp": "Сезонная поправка воздуха",
+  "worldlogic.analytics.season_solar": "Множитель солнца",
+  "worldlogic.analytics.season_wet": "Влажная фаза"
 }
