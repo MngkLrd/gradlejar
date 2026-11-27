@@ -2094,31 +2094,44 @@
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/dry_grass.png": {
-      "sha256": "b57f4fa7dd4e0e30cbebd8323b962d50ca3c0cc50b779078d4fb03b925eba168",
+      "sha256": "39f678c7ab58a620b7d5517e62025a12bde5a3fa88f7f8d79347412813c6cee7",
       "verdict": "PASS",
       "material_profile": "other",
       "references": [
         {
-          "id": "minecraft:block/dead_bush",
+          "id": "minecraft:block/short_grass",
           "minecraft": "1.21.1",
-          "sha256": "ed63c66ef4f4694d5e5ba4603576b0ca8bb45ea1ade4412d9b889d79ab4c38c2"
+          "sha256": "ca8502acca569a1e1ac5e69ac296d4ad2e4faa4d179beeb4ece67125cc998ace"
         }
       ],
-      "comparison": "Inspected native and enlarged sprite against dead_bush: Dead bush provides dry brown material tones; grass uses thinner blade forms. Different blade bends and pointed tips leave open side gaps.",
+      "comparison": "The exact native short-grass silhouette is deliberately recolored per owner request, preserving all alpha and value partitions while replacing grayscale with a six-step muted straw ramp.",
       "findings": {
-        "silhouette": "Short curved straw blades form low open dry clump.",
-        "cluster_structure": "Central straw blade includes narrow gold strip and dark base.",
-        "micro_contrast": "Close beige and amber neighbors describe dry blade material.",
-        "light_and_volume": "Light exposed tips and darker curled lower blades imply folding.",
-        "material_continuity": "Dry warm straw tones persist through plant without green patches.",
-        "edge_variation": "Different blade bends and pointed tips leave open side gaps.",
-        "variant_identity": "Short dry grass is shorter and more splayed than tall straw.",
-        "vanilla_comparison": "Dead bush provides dry brown material tones; grass uses thinner blade forms.",
-        "functional_material_cues": "Beige brittle folded blades identify dried grass instead of woody branches."
+        "silhouette": "Thin uneven upright blades and low rounded base preserve vanilla short grass shape.",
+        "cluster_structure": "Each connected blade group keeps the original adjacent color partition.",
+        "micro_contrast": "Six adjacent straw values retain small contrasts between tips and bases.",
+        "light_and_volume": "Lighter upper blades remain distinct from darker overlapping roots.",
+        "material_continuity": "Muted yellow and ochre form a consistent dry straw ramp.",
+        "edge_variation": "Original irregular blade lengths and cutout gaps are preserved exactly.",
+        "variant_identity": "Yellow palette identifies dried grass without changing the familiar short-grass structure.",
+        "vanilla_comparison": "Compared with the native grayscale short grass, only the pigment ramp changes; no invented thick stems.",
+        "functional_material_cues": "Fine straw blades and warm ochre basal clusters communicate dried grass."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/short_grass",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Each connected blade group keeps the original adjacent color partition. Six adjacent straw values retain small contrasts between tips and bases.",
+        "reference_limit": "The owner requested a color variant: keep the original silhouette and shading partition, but change the neutral source values to straw; do not copy the vanilla PNG bytes.",
+        "native_view": "Thin uneven upright blades and low rounded base preserve vanilla short grass shape.",
+        "context_type": "placed_cutout",
+        "context_view": "Original irregular blade lengths and cutout gaps are preserved exactly. Inspected actual cutout at native and nearest-neighbor enlarged scale; client rendering not run.",
+        "custom_reason": "Short-grass cutout is not covered by the catalog's wood, food or broadleaf surface rules. The direct role comparator is more faithful.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG opened and SHA-256 computed locally; official archive identity not independently checked for this uncatalogued comparator."
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/tall_dry_grass.png": {
-      "sha256": "360d4717a96b8f121de745371865bdbd748fe3c20bc3763039454d832d5d9284",
+      "sha256": "868e151216dace1c16e905ba337c78528b104c6cd73103b8ad011941699e44fb",
       "verdict": "PASS",
       "material_profile": "other",
       "references": [
@@ -2126,19 +2139,37 @@
           "id": "minecraft:block/tall_grass_bottom",
           "minecraft": "1.21.1",
           "sha256": "a35a3aba7a104fa1320c01be91e0c239ee6ea96c99959287ce71c75cd14d20ef"
+        },
+        {
+          "id": "minecraft:block/tall_grass_top",
+          "minecraft": "1.21.1",
+          "sha256": "1f7468bc83e9f1b952e8647bbfbab4f5c40c71cec4459a463a2c22ce03af2212"
         }
       ],
-      "comparison": "Inspected native and enlarged sprite against tall_grass_bottom: Tall grass provides upright blade structure; dry material has warm straw ramp. Central and right blades rise to unequal heights with open gaps.",
+      "comparison": "Compared the joined vanilla tall grass halves with the single-block tall dry grass; vertically recomposed to 16x16 for the existing block and shifted to a five-step yellow straw palette.",
       "findings": {
-        "silhouette": "Long upright dry stalks rise above lower broken blades.",
-        "cluster_structure": "Tall middle stalk carries extended pale group interrupted by side shade.",
-        "micro_contrast": "Subdued tan and golden pixels meet darker straw faces.",
-        "light_and_volume": "Bright upper strips contrast with shadowed overlapping lower leaves.",
-        "material_continuity": "Warm dry straw palette is coherent from tall tips to base.",
-        "edge_variation": "Central and right blades rise to unequal heights with open gaps.",
-        "variant_identity": "Tall dry grass is erect and taller than squat dry clump.",
-        "vanilla_comparison": "Tall grass provides upright blade structure; dry material has warm straw ramp.",
-        "functional_material_cues": "Slender upright bent blades communicate tall desiccated grass."
+        "silhouette": "Unequal tall narrow blades rise to the top of the one-block canvas.",
+        "cluster_structure": "Connected blade strips and gaps follow the combined vanilla tall-grass structure.",
+        "micro_contrast": "Five warm neighboring shades preserve the native relative value hierarchy.",
+        "light_and_volume": "Pale exposed blade tips contrast with darker basal overlaps.",
+        "material_continuity": "The straw ramp remains continuous across thin foliage.",
+        "edge_variation": "Different tip heights and open spaces separate the narrow tall blades.",
+        "variant_identity": "Taller open silhouette distinguishes tall dry grass from shorter denser dry grass.",
+        "vanilla_comparison": "Vanilla tall grass consists of two sixteen-pixel halves; the existing addon block remains one block and uses the recomposed outline.",
+        "functional_material_cues": "Long narrow straw blades with irregular tips distinguish tall dried grass."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/tall_grass_bottom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Connected blade strips and gaps follow the combined vanilla tall-grass structure. Five warm neighboring shades preserve the native relative value hierarchy.",
+        "reference_limit": "The vanilla comparator occupies two blocks; preserve existing single-block tall dry grass and recompose the shape rather than changing block states or copying original texture bytes.",
+        "native_view": "Unequal tall narrow blades rise to the top of the one-block canvas.",
+        "context_type": "placed_cutout",
+        "context_view": "Different tip heights and open spaces separate the narrow tall blades. Inspected actual cutout at native and nearest-neighbor enlarged scale; client rendering not run.",
+        "custom_reason": "Standing grass cutouts are not yet represented by a specific catalog rule; the actual two tall-grass reference halves match the role.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG opened and SHA-256 computed locally; official archive identity not independently checked for this uncatalogued comparator."
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/frosted_grass.png": {
@@ -2654,7 +2685,7 @@
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_cucumber.png": {
-      "sha256": "ff2d0946ae9050e2acab7ae9b0726d6a67a4fa347e639c9fc03c7d4dba0e154c",
+      "sha256": "3c9454074d4948c181b79104d06bf8114538f4c07456fae8ca09cda6bc9ecc7f",
       "verdict": "PASS",
       "material_profile": "other",
       "references": [
@@ -2664,17 +2695,30 @@
           "sha256": "6a5b6a44b3978e507f35f4ad9f92d897f60434492b8f75dbc68f4e614834ff15"
         }
       ],
-      "comparison": "Inspected native and enlarged sprite against carrots_stage3: Carrot crop gives native cultivated leaf scale; cucumber uses a trailing vine and visible above-ground fruit. Asymmetric trailing stems and lobed leaves leave open diagonal gaps.",
+      "comparison": "Compared with mature vanilla carrots at 16 pixels: distinct green foliage planes plus a visibly elongated dark-green fruit on a connected trailing vine; a crop, not a generic green leaf silhouette.",
       "findings": {
-        "silhouette": "Trailing vine with broad angular leaves carries an oblique elongated fruit.",
-        "cluster_structure": "Connected broad leaves surround a separate short elongated lighter green fruit group.",
-        "micro_contrast": "Close olive and yellow-green fruit values contrast with darker leaf surfaces.",
-        "light_and_volume": "Light fruit ridge and shaded perimeter show a cylindrical turning surface.",
-        "material_continuity": "Fruit skin and vine foliage use related but distinguishable green ramps.",
-        "edge_variation": "Asymmetric trailing stems and lobed leaves leave open diagonal gaps.",
-        "variant_identity": "Low trailing silhouette and oblique fruit distinguish cucumber from upright tomato.",
-        "vanilla_comparison": "Carrot crop gives native cultivated leaf scale; cucumber uses a trailing vine and visible above-ground fruit.",
-        "functional_material_cues": "Elongated green fruit ridge and attached sprawling vine identify cucumber."
+        "silhouette": "One diagonal elongated cucumber fruit is visible on the right of a trailing leafy stem.",
+        "cluster_structure": "The long green fruit has a connected midtone stripe with a narrower light upper edge.",
+        "micro_contrast": "Adjacent dark and muted light green values separate fruit skin from olive leaf faces.",
+        "light_and_volume": "Narrow pale upper fruit ridge and dark lower edge suggest a curved cylinder.",
+        "material_continuity": "Fruit and leaves use related but distinct muted green ramps, connected by the stem.",
+        "edge_variation": "Unequal foliage tips, rounded fruit ends and open cutouts separate the silhouettes.",
+        "variant_identity": "The clear long cucumber body differs from leafy cabbage and round tomatoes.",
+        "vanilla_comparison": "Vanilla mature carrots distinguish harvestable produce from foliage at the same native scale; the cucumber hangs on a vine instead.",
+        "functional_material_cues": "The diagonally elongated fruit and connected spreading green stem identify a cucumber plant."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/carrots_stage3",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "The long green fruit has a connected midtone stripe with a narrower light upper edge. Adjacent dark and muted light green values separate fruit skin from olive leaf faces.",
+        "reference_limit": "Mature carrots inform foliage-to-produce readability; do not imitate an orange underground root or its radial leafy crown.",
+        "native_view": "One diagonal elongated cucumber fruit is visible on the right of a trailing leafy stem.",
+        "context_type": "placed_cutout",
+        "context_view": "Unequal foliage tips, rounded fruit ends and open cutouts separate the silhouettes. Inspected actual cutout at native and nearest-neighbor enlarged scale; client rendering not run.",
+        "custom_reason": "A standing crop cutout with a visible fruit is not covered by the inventory food icon or broadleaf cube atlas rules.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG opened and SHA-256 computed locally; official archive identity not independently checked for this uncatalogued comparator."
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_onion.png": {
@@ -3010,7 +3054,7 @@
       }
     }
   },
-  "review_status": "ARTWORK REVIEW: 118 accepted of 118, static sprite inspection complete. Current-main Art Review Lock, build, worldgen and graphical client verification pending; do not release before required gates.",
+  "review_status": "RC2: three revised textures reviewed under R9; remaining unchanged RC1 artwork requires R9 evidence because the project is not present at the R9 adoption tree. Do not bypass current-main gate.",
   "reference_provenance": "Actual PNGs from InventivetalentDev/minecraft-assets, 1.21.1 branch; inspected at original and nearest-neighbor 4x. Official client SHA-1 could not be verified in this environment. No vanilla assets included.",
   "client_status": "NOT_RUN"
 }

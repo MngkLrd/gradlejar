@@ -748,7 +748,13 @@
     {
       "name": "WorldLogic preset vegetation attachment",
       "command": "worldlogicterrain worldgen_check",
-      "expect": "legacy and available unified core presets, 35 plant features and ecological trees, biome attachment verified",
+      "expect": "legacy and available unified core presets, 36 plant features and ecological trees, biome attachment verified",
+      "assertion": true
+    },
+    {
+      "name": "Flat plains tall grass generation",
+      "command": "worldlogicterrain tall_grass_check",
+      "expect": "Tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation",
       "assertion": true
     },
     {
@@ -4335,6 +4341,21 @@
         {
           "backend": "server",
           "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-tall-grass-plains",
+      "kind": "mechanic",
+      "subject": "Additional vanilla two-block tall grass in broad flat open grasslands; steep, insufficiently open and stone controls; no flower overwrite",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        },
+        {
+          "backend": "server",
+          "name": "Flat plains tall grass generation"
         }
       ]
     }
