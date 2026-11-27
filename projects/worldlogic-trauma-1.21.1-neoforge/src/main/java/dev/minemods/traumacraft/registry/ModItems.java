@@ -72,9 +72,11 @@ public final class ModItems {
             medical("endurance_injector", MedicalItem.Type.ENDURANCE_INJECTOR, 8);
 
     public static final DeferredHolder<Item, Item> HERBAL_POULTICE = medical("herbal_poultice",MedicalItem.Type.HERBAL_POULTICE,16);
+    public static final DeferredHolder<Item, Item> RAW_HERBS=supply("raw_herbs",16);
+    public static final DeferredHolder<Item, Item> CRUSHED_HERBS=supply("crushed_herbs",32);
     public static final List<DeferredHolder<Item, Item>> RETIRED = List.of(OVERSIZED_MEDKIT,COMPACT_MEDKIT,COMPRESSION_WRAP,BONE_MENDER);
     public static final List<DeferredHolder<Item, Item>> COMPONENTS = List.of(
-            STERILE_FABRIC, HERBAL_EXTRACT, ANTISEPTIC, SYRINGE_BODY, MEDICAL_POLYMER);
+            RAW_HERBS, CRUSHED_HERBS, STERILE_FABRIC, HERBAL_EXTRACT, ANTISEPTIC, SYRINGE_BODY, MEDICAL_POLYMER);
     public static final List<DeferredHolder<Item, Item>> MEDICINE = List.of(
             ANALGESIC_TABLETS, RAG_DRESSING, HERBAL_POULTICE, BANDAGE, SPLINT, MEDKIT, STERILE_PATCH, HEMOSTATIC_GEL,
             TOURNIQUET, FRACTURE_BRACE, FIELD_MEDKIT, MEDICAL_POUCH,

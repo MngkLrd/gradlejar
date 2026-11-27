@@ -20,6 +20,7 @@ public final class TraumaCraft {
     public static final String MOD_ID="traumacraft";
     public TraumaCraft(IEventBus modBus) {
         if(FMLEnvironment.dist==Dist.CLIENT) ClientEvents.register(modBus);
+        dev.minemods.traumacraft.content.HerbContent.register(modBus);
         ModItems.register(modBus); ModMenus.register(modBus); ModCreativeTabs.register(modBus);
         modBus.addListener(ModNetwork::register);
         var bus=NeoForge.EVENT_BUS;
@@ -31,6 +32,8 @@ public final class TraumaCraft {
         bus.addListener(EventPriority.LOWEST,FunctionEvents::jump);
         bus.addListener(EventPriority.HIGHEST,FunctionEvents::rightClickItem);
         bus.addListener(EventPriority.HIGHEST,FunctionEvents::rightClickBlock);
+        bus.addListener(EventPriority.LOWEST,dev.minemods.traumacraft.content.HerbInteraction::right);
+        bus.addListener(EventPriority.LOWEST,dev.minemods.traumacraft.content.HerbInteraction::left);
         bus.addListener(TraumaEvents::onLogin);
         bus.addListener(TraumaEvents::onLogout);
         bus.addListener(EventPriority.LOWEST,TraumaEvents::onClone);
