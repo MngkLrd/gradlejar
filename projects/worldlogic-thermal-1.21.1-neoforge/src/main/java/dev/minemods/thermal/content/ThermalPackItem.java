@@ -61,7 +61,7 @@ public final class ThermalPackItem extends Item {
     @Override public int getBarWidth(ItemStack s){return (int)Math.round(13*displayCharge(s));}
     public static int barColor(int mode,double charge){
         double t=Math.max(0,Math.min(1,charge));
-        int low=mode<0?0x193b82:0x9b271c,mid=mode<0?0x398cd0:0xe98b36,high=mode<0?0xa9e7ff:0xffd47a;
+        int low=mode<0?0x193b82:0x9b271c,mid=mode<0?0x398cd0:0xe9b33a,high=mode<0?0xa9e7ff:0xffd47a;
         int a=t<.5?low:mid,b=t<.5?mid:high;double f=t<.5?t*2:(t-.5)*2;
         return mix(a,b,16,f)<<16|mix(a,b,8,f)<<8|mix(a,b,0,f);
     }
@@ -126,6 +126,11 @@ public final class ThermalPackItem extends Item {
     }
     public static Power comfort(Power p,double effective){
         // No portable-item contribution when already comfortably warm/cool.
-        return new Power(Math.min(p.heat(),Math.max(0,22-effective)),Math.min(p.cool(),Math.max(0,effective-26)));
+        return comfort(p,effective,22,37);
+    }
+    public static Power comfort(Power p,double effective,double upperWarm,double bodyC){
+        double heat=bodyC>=37.5?0:Math.min(p.heat(),Math.max(0,Math.min(22,upperWarm)-effective));
+        double cool=bodyC<=36.6?0:Math.min(p.cool(),Math.max(0,effective-26));
+        return new Power(heat,cool);
     }
 }

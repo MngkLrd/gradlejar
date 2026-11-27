@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.*;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.*;
 /** 0 empty, 1 active, 2 retained heat. Vanilla persisted scheduled ticks. */
 public final class ClimateDeviceBlock extends Block {
     public static final IntegerProperty PHASE=IntegerProperty.create("phase",0,2);
@@ -22,6 +23,17 @@ public final class ClimateDeviceBlock extends Block {
     private final Kind kind;
     public ClimateDeviceBlock(Kind k,Properties p){super(p);kind=k;registerDefaultState(stateDefinition.any().setValue(PHASE,0));}
     public Kind kind(){return kind;}
+    @Override protected VoxelShape getShape(BlockState s,BlockGetter l,BlockPos p,CollisionContext c){
+        return switch(kind){
+            case LAMP -> Shapes.or(Block.box(3,0,3,13,3,13),Block.box(5,3,5,11,8,11),Block.box(7,8,7,9,10,9));
+            case BRAZIER -> Shapes.or(Block.box(3,0,3,13,2,13),Block.box(6,2,6,10,5,10),Block.box(2,5,2,14,9,14));
+            case FIREPLACE -> Shapes.or(Block.box(0,0,0,16,3,16),Block.box(0,3,0,3,13,16),Block.box(13,3,0,16,13,16),Block.box(3,3,13,13,13,16),Block.box(3,13,0,13,16,16),Block.box(3,3,3,13,5,13));
+            case EVAP_WALL -> Shapes.or(Block.box(0,0,4,16,16,12),Block.box(0,0,2,16,2,14),Block.box(0,14,2,16,16,14));
+            case ICE_BOX -> Shapes.or(Block.box(1,0,1,15,14,15),Block.box(0,14,0,16,16,16));
+            case WIND_TOWER -> Shapes.or(Block.box(0,0,0,16,4,16),Block.box(0,4,0,3,14,16),Block.box(13,4,0,16,14,16),Block.box(3,4,6,13,14,10),Block.box(0,14,0,16,16,16));
+            case STOVE -> Shapes.block();
+        };
+    }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){b.add(PHASE);}
     public double heat(BlockState s){int stage=s.getValue(PHASE);return stage==1?kind.output:stage==2?kind.output*.4:0;}
     public double cooling(BlockState s,double air,double humidity,double distance,boolean sheltered,double wind,boolean openTop){
@@ -43,7 +55,7 @@ public final class ClimateDeviceBlock extends Block {
     }
     public boolean activate(ServerLevel l,BlockPos p,BlockState s){
         if(!s.is(this)||kind.burn==0||s.getValue(PHASE)!=0)return false;
-        l.setBlockAndUpdate(p,s.setValue(PHASE,1));l.scheduleTick(p,this,kind.burn);return true;
+        if(!l.setBlockAndUpdate(p,s.setValue(PHASE,1)))return false;l.scheduleTick(p,this,kind.burn);return true;
     }
     @Override protected ItemInteractionResult useItemOn(ItemStack s,BlockState state,Level l,BlockPos pos,Player p,InteractionHand hand,BlockHitResult hit){
         if(!accepts(s)||state.getValue(PHASE)!=0)return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

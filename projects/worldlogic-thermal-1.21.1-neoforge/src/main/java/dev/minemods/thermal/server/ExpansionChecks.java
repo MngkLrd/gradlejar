@@ -42,6 +42,7 @@ final class ExpansionChecks {
             p.getInventory().setItem(0,stack.copy());require(ThermalPackItem.hotbar(p,30).heat()==stone.kind().power,"duplicates do not stack");
             var pack=ThermalPackItem.hotbar(p,30);
             require(ThermalPackItem.comfort(pack,28).heat()==0&&ThermalPackItem.comfort(pack,0).heat()>0,"no overheating from portable");
+            require(ThermalPackItem.comfort(pack,15,16,37).heat()==1&&ThermalPackItem.comfort(pack,0,16,38).heat()==0,"activity/insulation heat cap and body overheat guard");
             var pouch=ThermalContent.LEATHER_POUCH.get();var cold=new ItemStack(pouch);pouch.charge(cold,-1,now);p.getInventory().setItem(1,cold);
             require(ThermalPackItem.comfort(ThermalPackItem.hotbar(p,30),20).cool()==0&&ThermalPackItem.comfort(ThermalPackItem.hotbar(p,30),40).cool()>0,"cool only in heat");
         }finally{for(int i=0;i<36;i++)p.getInventory().setItem(i,old.get(i));}

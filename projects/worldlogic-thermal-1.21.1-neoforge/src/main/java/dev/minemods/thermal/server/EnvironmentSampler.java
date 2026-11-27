@@ -57,7 +57,12 @@ public final class EnvironmentSampler {
         wind*=1-clamp(windShield,0,.8);
         double solar=env.solarExposure()*(1-clamp(sunShield,0,.95));
         double shadeCooling=Math.max(0,air-24)*clamp(sunShield,0,.95)*env.solarExposure()*.25;
-        var portable=ThermalPackItem.comfort(ThermalPackItem.hotbar(p,a==null?100:a.relativeHumidityPercent()),air+radiant-local.cooling()-shadeCooling);
+        double activity = p.isSprinting() ? 1 : p.isSwimming() ? .75 : p.getDeltaMovement().horizontalDistanceSqr()>.008 ? .35 : 0;
+        double retained=clamp(ins,0,1)*(1-.75*skin);
+        double warmLimit=28-activity*7-retained*5+clamp(ventilation,0,1)*7;
+        double currentBody=p.getPersistentData().getCompound(ThermalEvents.KEY).contains("body")?p.getPersistentData().getCompound(ThermalEvents.KEY).getDouble("body"):37;
+        double effective=air+radiant-local.cooling()-shadeCooling-wind*(2+5*skin)-6*skin;
+        var portable=ThermalPackItem.comfort(ThermalPackItem.hotbar(p,a==null?100:a.relativeHumidityPercent()),effective,warmLimit,currentBody);
         radiant=ClimateComfort.capRadiant(air,radiant+portable.heat());
         double cooling=Math.min(18,local.cooling()+shadeCooling+portable.cool());
         // Core ambient includes this day's solar/rain offsets; invert only when not clamped.
@@ -68,7 +73,6 @@ public final class EnvironmentSampler {
             a==null?0:a.relativeHumidityPercent(),a==null?0:a.outdoorWindSpeedMps(),a==null?0:a.outdoorWindXMps(),a==null?0:a.outdoorWindZMps(),
             a==null?0:a.precipitation().ordinal(),a==null?0:a.precipitationIntensity(),env.globalThunder(),env.solarExposure(),
             a==null?Double.NaN:reference,regional==null?Double.NaN:regional.absoluteLatitude(),regional==null?Double.NaN:regional.moistureIndex());
-        double activity = p.isSprinting() ? 1 : p.isSwimming() ? .75 : p.getDeltaMovement().horizontalDistanceSqr()>.008 ? .35 : 0;
         return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,p.isInWater(),water(air,air),0,cooling,clamp(ventilation,0,1)),skin,sheltered,solar,weather));
     }
     record LocalComfort(double heat,double cooling){}
