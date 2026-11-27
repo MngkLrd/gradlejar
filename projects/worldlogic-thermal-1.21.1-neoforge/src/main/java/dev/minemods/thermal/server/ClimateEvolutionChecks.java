@@ -46,29 +46,7 @@ final class ClimateEvolutionChecks {
    require(EnvironmentSampler.sample(p,0).orElseThrow().exposure().nutrition()<.1,"live hunger affects exposure");
   }finally{p.getFoodData().setFoodLevel(old);p.getFoodData().setSaturation(sat);}
  }
- static void room(ServerLevel l,ServerPlayer p){
-  var center=new BlockPos(8,108,8);Map<BlockPos,BlockState> old=new HashMap<>();
-  try{
-   for(BlockPos b:BlockPos.betweenClosed(center.offset(-2,-2,-2),center.offset(2,2,2))){
-    BlockPos q=b.immutable();old.put(q,l.getBlockState(q));
-    boolean edge=Math.abs(q.getX()-center.getX())==2||Math.abs(q.getY()-center.getY())==2||Math.abs(q.getZ()-center.getZ())==2;
-    l.setBlockAndUpdate(q,edge?Blocks.STONE.defaultBlockState():Blocks.AIR.defaultBlockState());
-   }
-   long now=l.getGameTime();
-   double initial=RoomHeat.sampleAt(l,center,30,0,true,now);
-   double warmed=RoomHeat.sampleAt(l,center,30,0,true,now+1200);
-   require(warmed>=10.5*(1-Math.exp(-60.0/(110.0/3)))-.01,"enclosed room warms at least three times faster than former stone time constant");
-   var chilled=new ThermalModel.State(35,0,35,ThermalModel.Stage.VERY_COLD,0);
-   var roomExposure=new ThermalModel.Exposure(14,0,0,0,0,0,false,14,0,0,0,0,0,1,1,8);
-   var neutralExposure=new ThermalModel.Exposure(22,0,0,0,0,0,false,22,0,0,0,0,0,1,1,0);
-   double fast=ThermalModel.tick(chilled,roomExposure,1).bodyC()-35,normal=ThermalModel.tick(chilled,neutralExposure,1).bodyC()-35;
-   require(fast>2.9*normal&&fast<3.01*normal,"heated-room recovery about threefold at equal felt temperature");
-   double retained=RoomHeat.sampleAt(l,center,0,0,true,now+1400);
-   require(warmed>initial&&retained>0&&retained<warmed,"enclosed room warms and retains residual heat");
-   l.setBlockAndUpdate(center.above(2),Blocks.AIR.defaultBlockState());
-   require(RoomHeat.sampleAt(l,center,30,0,true,now+1600)==0,"open roof prevents room heat bonus");
-  }finally{old.forEach(l::setBlockAndUpdate);}
- }
+ static void room(ServerLevel l,ServerPlayer p){RoomChecks.verify(l,p,"room_inertia");}
  static void settlement(ServerLevel l,ServerPlayer p){
   require(SettlementClimate.choose(-5)==1&&SettlementClimate.choose(35)==-1&&SettlementClimate.choose(18)==0,"climate selects heater/cooler/no fixture");
   var bed=new BlockPos(8,116,8);var bounds=new BoundingBox(5,115,5,11,119,11);Map<BlockPos,BlockState> old=new HashMap<>();

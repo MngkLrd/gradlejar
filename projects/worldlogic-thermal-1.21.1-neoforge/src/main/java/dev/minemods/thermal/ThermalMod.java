@@ -18,6 +18,8 @@ public final class ThermalMod {
         bus.addListener(EventPriority.LOWEST,dev.minemods.thermal.content.FiberInteraction::left);
         bus.addListener(EventPriority.LOWEST,dev.minemods.thermal.content.ThermalPackItem::interact);
         bus.addListener(ThermalEvents::meal);
+        bus.addListener((net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e)->ThermalEvents.blockChanged(e));
+        bus.addListener((net.neoforged.neoforge.event.level.BlockEvent.EntityPlaceEvent e)->ThermalEvents.blockChanged(e));
         bus.addListener(dev.minemods.thermal.server.SettlementClimate::chunk);
         bus.addListener(dev.minemods.thermal.server.SettlementClimate::tick);
         bus.addListener(ThermalEvents::clonePlayer);

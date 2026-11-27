@@ -30,6 +30,7 @@ public final class ThermalEvents {
         boolean active=!p.isCreative()&&!p.isSpectator();
         if(!active) {
             penalty(p,0);
+            n.remove("room");
             n.remove("coldSeconds");n.remove("hotSeconds");n.remove("sunSeconds");n.remove("condition");root.put(KEY,n);
             ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),false,37,22,22,0,0,0,0,false,ThermalCondition.Kind.NONE,WeatherReading.unavailable(),0,0,1,0));
             return;
@@ -44,6 +45,10 @@ public final class ThermalEvents {
         var adapted=Adaptation.step(new Adaptation.State(e.coldAdaptation(),e.heatAdaptation()),state.feelsLikeC(),state.bodyC());
         n.putDouble("adaptCold",adapted.cold());n.putDouble("adaptHeat",adapted.heat());
         n.putDouble("mealWarmth",Math.max(0,e.mealWarmth()-1.0/180));
+        var room=sample.room();
+        if(room.indoor()){
+            var data=new CompoundTag();data.putDouble("air",room.airC());data.putDouble("humidity",room.humidity());data.putDouble("ventilation",room.ventilation());data.putDouble("mass",room.massC());data.putInt("volume",room.volume());data.putLong("tick",p.serverLevel().getGameTime());data.putString("dimension",p.serverLevel().dimension().location().toString());n.put("room",data);
+        }else n.remove("room");
         n.putDouble("body",state.bodyC()); n.putDouble("air",e.airC()); n.putDouble("felt",state.feelsLikeC());
         n.putDouble("skinWet",sample.skinWetness()); n.putDouble("wet",e.wetness()); n.putDouble("insulation",e.insulation());
         n.putDouble("trend",state.trendCPerMinute()); n.putDouble("radiant",e.radiantC()); n.putString("stage",state.stage().name());
@@ -59,7 +64,7 @@ public final class ThermalEvents {
         ThermalInjury.apply(p,progress);
         LimbExposure.update(p,n,e,state);
         root.put(KEY,n);
-        ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),true,state.bodyC(),e.airC(),state.feelsLikeC(),state.trendCPerMinute(),e.wetness(),e.insulation(),e.radiantC(),sample.sheltered(),progress.kind(),sample.weather(),adapted.cold(),adapted.heat(),e.nutrition(),e.roomDelta()));
+        ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),true,state.bodyC(),e.airC(),state.feelsLikeC(),state.trendCPerMinute(),e.wetness(),e.insulation(),e.radiantC(),sample.sheltered(),progress.kind(),sample.weather(),adapted.cold(),adapted.heat(),e.nutrition(),e.roomDelta(),sample.room()));
         HistoryStore.tick(p,sample.weather(),state,e.airC());
     }
     static void penalty(ServerPlayer p,double amount) {
@@ -84,9 +89,14 @@ public final class ThermalEvents {
         n.putDouble("mealWarmth",Math.min(1,Math.max(n.getDouble("mealWarmth"),food.nutrition()/8.0)));
         root.put(KEY,n);
     }
+    public static void blockChanged(net.neoforged.neoforge.event.level.BlockEvent event){
+        if(event.getLevel() instanceof net.minecraft.server.level.ServerLevel level){
+            RoomHeat.markDirty(level,event.getPos());EnvironmentSampler.invalidateLocal(level,event.getPos());
+        }
+    }
     public static void registerCommands(RegisterCommandsEvent event) {
         var qa=Commands.literal("qa").requires(s->s.hasPermission(2));
-        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile","adaptation","frostbite","nutrition","room_inertia","village_climate"}) {
+        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile","adaptation","frostbite","nutrition","room_inertia","room_ventilation","room_humidity","room_persistence","room_cache","village_climate"}) {
             qa.then(Commands.literal(name).executes(c->{
                 ThermalChecks.verify(c.getSource().getLevel(),name);
                 c.getSource().sendSuccess(()->Component.literal("THERMAL_QA_"+name+"_PASS"),false);

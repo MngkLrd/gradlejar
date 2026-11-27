@@ -12,6 +12,7 @@ final class ThermalChecks {
     private ThermalChecks() {}
     private static void require(boolean value,String detail){if(!value)throw new IllegalStateException("Thermal QA: "+detail);}
     static void verify(ServerLevel l,String name) {
+        EnvironmentSampler.invalidateLocal(l);RoomHeat.invalidate(l);
         var p=FakePlayerFactory.getMinecraft(l);
         p.moveTo(8.5,100,8.5,0,0);
         var n=p.getPersistentData(); n.remove(ThermalEvents.KEY);
@@ -174,6 +175,7 @@ final class ThermalChecks {
                 case "frostbite" -> ClimateEvolutionChecks.frostbite(l,p);
                 case "nutrition" -> ClimateEvolutionChecks.nutrition(l,p);
                 case "room_inertia" -> ClimateEvolutionChecks.room(l,p);
+                case "room_ventilation","room_humidity","room_persistence","room_cache" -> RoomChecks.verify(l,p,name);
                 case "village_climate" -> ClimateEvolutionChecks.settlement(l,p);
                 default -> throw new IllegalArgumentException(name);
             }

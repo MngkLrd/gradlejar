@@ -1,51 +1,184 @@
 package dev.minemods.thermal.server;
-import dev.minemods.thermal.Adaptation;
+import dev.minemods.thermal.RoomPhysics;
+import dev.minemods.thermal.RoomReading;
+import dev.minemods.thermal.content.*;
 import dev.minemods.worldlogic.api.WorldLogicApi;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import java.util.*;
-/** Bounded, shared thermal mass approximation. Never writes core air or loads chunks. */
+/** Server-thread, shared bounded room topology and air/mass/vapor simulation. No chunk loads. */
 final class RoomHeat {
- private record State(long tick,double delta){}
- private static final Map<ServerLevel,LinkedHashMap<BlockPos,State>> ROOMS=new WeakHashMap<>();
- private RoomHeat(){}
- static double sample(ServerLevel l,BlockPos start,double source,double cooling,boolean covered){
-  return sampleAt(l,start,source,cooling,covered,l.getGameTime());
+ static final int MAX_VOLUME=384, MAX_ROOMS=128, TOPOLOGY_TICKS=40;
+ private record Geometry(BlockPos anchor,long signature,long built,Set<BlockPos> cells,Set<BlockPos> boundaries,Set<BlockPos> portals,List<BlockPos> sourceCells,int openings,double mass,double conductance){}
+ private record Sources(double heat,double cooling,double moisture){}
+ private static final class Cache {
+  final Map<Long,Geometry> byCell=new HashMap<>();
+  final LinkedHashMap<Long,Geometry> rooms=new LinkedHashMap<>(32,.75f,true);
+  final LinkedHashMap<Long,Long> outside=new LinkedHashMap<>(32,.75f,true);
+  final Map<Long,RoomReading> readings=new HashMap<>();
+  final Map<Long,Long> updated=new HashMap<>();
+  final Set<Long> dirty=new HashSet<>();
+  int builds;
+  void drop(Geometry g){dirty.remove(g.anchor().asLong());rooms.remove(g.anchor().asLong(),g);for(BlockPos p:g.cells())byCell.remove(p.asLong(),g);readings.remove(g.anchor().asLong());updated.remove(g.anchor().asLong());}
  }
- static double sampleAt(ServerLevel l,BlockPos start,double source,double cooling,boolean covered,long now){
-  if(!covered||!l.hasChunkAt(start))return 0;
-  Set<BlockPos> seen=new HashSet<>();ArrayDeque<BlockPos> queue=new ArrayDeque<>();seen.add(start.immutable());queue.add(start.immutable());
-  BlockPos key=start;double mass=0;int boundaries=0;
-  while(!queue.isEmpty()){
-   BlockPos p=queue.removeFirst();
-   if(p.asLong()<key.asLong())key=p;
-   for(Direction d:Direction.values()){
-    BlockPos next=p.relative(d);
-    if(!l.hasChunkAt(next)||next.distManhattan(start)>8||next.getY()<l.getMinBuildHeight()||next.getY()>=l.getMaxBuildHeight())return 0;
-    BlockState b=l.getBlockState(next);
-    if(b.getCollisionShape(l,next).isEmpty()){
-     // The enclosure flood fill itself detects openings (radius/volume bounds).
-     // Sky light can be stale immediately after placing or removing a roof;
-     // do not reject a fully enclosed room while lighting propagates.
-     if(!b.getFluidState().isEmpty())return 0;
-     if(seen.add(next.immutable())){if(seen.size()>256)return 0;queue.add(next.immutable());}
-    }else{
-     String material=WorldLogicApi.materialFamily(b).toLowerCase(java.util.Locale.ROOT);
-     mass+=material.contains("stone")||material.contains("metal")?2:material.contains("wood")?1.2:.7;boundaries++;
+ private static final Map<ServerLevel,Cache> CACHES=new WeakHashMap<>();
+ private RoomHeat(){}
+ private static Cache cache(ServerLevel l){return CACHES.computeIfAbsent(l,k->new Cache());}
+ static int builds(ServerLevel l){return cache(l).builds;}
+ static void invalidate(ServerLevel l){CACHES.remove(l);}
+ static void markDirty(ServerLevel l,BlockPos pos){
+  Cache c=CACHES.get(l);if(c==null)return;
+  c.outside.clear();
+  Geometry g=c.byCell.get(pos.asLong());if(g!=null)c.dirty.add(g.anchor().asLong());
+  for(Direction d:Direction.values()){g=c.byCell.get(pos.relative(d).asLong());if(g!=null)c.dirty.add(g.anchor().asLong());}
+ }
+ static void forget(ServerLevel l,BlockPos start,long now){
+  Geometry g=geometry(l,start,now);
+  if(g!=null)RoomClimateData.get(l).remove(g.anchor().asLong());
+  invalidate(l);
+ }
+ private static boolean loaded(ServerLevel l,BlockPos p){return p.getY()>=l.getMinBuildHeight()&&p.getY()<l.getMaxBuildHeight()&&l.hasChunkAt(p);}
+ private static boolean portal(BlockState s){return s.getBlock() instanceof DoorBlock||s.getBlock() instanceof TrapDoorBlock||s.getBlock() instanceof FenceGateBlock;}
+ private static boolean roof(ServerLevel l,BlockPos p){
+  for(int y=1;y<=12;y++){
+   BlockPos q=p.above(y);if(!loaded(l,q))return false;
+   BlockState s=l.getBlockState(q);
+   if(s.getBlock() instanceof TrapDoorBlock&&!s.getValue(BlockStateProperties.OPEN))return true;
+   if(s.is(ThermalContent.CANOPY.get())||portal(s))continue;
+   if(s.isFaceSturdy(l,q,Direction.DOWN)||s.isFaceSturdy(l,q,Direction.UP))return true;
+  }
+  return false;
+ }
+ private static Geometry geometry(ServerLevel l,BlockPos start,long now){
+  Cache c=cache(l);long pos=start.asLong();Geometry old=c.byCell.get(pos);
+  if(old!=null&&!c.dirty.contains(old.anchor().asLong())&&now>=old.built()&&now-old.built()<TOPOLOGY_TICKS){c.rooms.get(old.anchor().asLong());return old;}
+  if(old!=null)c.drop(old);
+  Long negative=c.outside.get(pos);
+  if(negative!=null&&now>=negative&&now-negative<TOPOLOGY_TICKS)return null;
+  c.builds++;
+  Geometry g=discover(l,start,now);
+  if(g==null){c.outside.put(pos,now);while(c.outside.size()>512)c.outside.remove(c.outside.keySet().iterator().next());return null;}
+  // Small topology changes (e.g. a broken window) keep the thermal mass of the same room.
+  if(old!=null&&old.signature()!=g.signature()){
+   long overlap=g.cells().stream().filter(old.cells()::contains).count();
+   if(overlap>=.8*Math.max(g.cells().size(),old.cells().size())){
+    var data=RoomClimateData.get(l);long oldKey=old.anchor().asLong(),newKey=g.anchor().asLong();var prior=data.get(oldKey);
+    if(prior!=null&&prior.signature()==old.signature()&&(oldKey==newKey||data.get(newKey)==null)){
+     data.put(newKey,new RoomClimateData.Entry(g.signature(),prior.tick(),prior.state()));if(oldKey!=newKey)data.remove(oldKey);
     }
    }
   }
-  if(seen.size()<4||boundaries==0)return 0;
-  var cache=ROOMS.computeIfAbsent(l,k->new LinkedHashMap<>(64,.75f,true));
-  State old=cache.get(key);double target=Math.max(-8,Math.min(14,(source-cooling)*.35));
-  double tau=30+40*mass/boundaries;
-  if(old!=null&&target>0&&target>old.delta())tau/=3.0; // heat accumulation only; preserve passive heat loss
-  double delta=old==null?0:Adaptation.approach(old.delta(),target,Math.min(300,Math.max(0,(now-old.tick())/20.0)),tau);
-  if(old==null||now>old.tick())cache.put(key.immutable(),new State(now,delta));
-  else delta=old.delta();
-  while(cache.size()>256)cache.remove(cache.keySet().iterator().next());
-  return delta;
+  for(BlockPos b:g.cells()){Geometry conflict=c.byCell.get(b.asLong());if(conflict!=null&&conflict!=g)c.drop(conflict);}
+  c.rooms.put(g.anchor().asLong(),g);
+  for(BlockPos b:g.cells()){c.byCell.put(b.asLong(),g);c.outside.remove(b.asLong());}
+  while(c.rooms.size()>MAX_ROOMS)c.drop(c.rooms.values().iterator().next());
+  return g;
+ }
+ private static Geometry discover(ServerLevel l,BlockPos start,long now){
+  if(!loaded(l,start)||!roof(l,start))return null;
+  BlockState first=l.getBlockState(start);if(portal(first)||Block.isShapeFullBlock(first.getCollisionShape(l,start))||!first.getFluidState().isEmpty())return null;
+  Set<BlockPos> cells=new HashSet<>(),walls=new HashSet<>(),ports=new HashSet<>();
+  Map<BlockPos,Boolean> roofs=new HashMap<>();ArrayDeque<BlockPos> todo=new ArrayDeque<>();
+  cells.add(start.immutable());todo.add(start.immutable());roofs.put(start.immutable(),true);
+  BlockPos key=start.immutable();double mass=0,conduct=0;int faces=0,holes=0;
+  while(!todo.isEmpty()){
+   BlockPos p=todo.removeFirst();if(p.asLong()<key.asLong())key=p;
+   for(Direction d:Direction.values()){
+    BlockPos q=p.relative(d);
+    if(cells.contains(q))continue;
+    if(!loaded(l,q))return null;
+    BlockState s=l.getBlockState(q);
+    if(portal(s)){
+      ports.add(q);walls.add(q);mass+=.45;conduct+=.85;faces++;continue;
+    }
+    if(s.is(ThermalContent.CHIMNEY.get())||s.is(ThermalContent.DAMPER.get())){
+      ports.add(q);walls.add(q);mass+=.7;conduct+=1;faces++;continue;
+    }
+    if(Block.isShapeFullBlock(s.getCollisionShape(l,q))||s.is(Blocks.GLASS_PANE)||s.getBlock() instanceof StainedGlassPaneBlock||!s.getFluidState().isEmpty()){
+      walls.add(q);String material=WorldLogicApi.materialFamily(s).toLowerCase(Locale.ROOT);
+      boolean stone=material.contains("stone")||s.is(Blocks.STONE)||s.is(Blocks.COBBLESTONE)||s.is(Blocks.BRICKS);
+      boolean wood=material.contains("wood")||s.is(Blocks.OAK_PLANKS);
+      boolean metal=material.contains("metal")||s.is(Blocks.IRON_BLOCK);
+      boolean glass=s.getBlock() instanceof AbstractGlassBlock||s.is(Blocks.GLASS_PANE)||s.getBlock() instanceof StainedGlassPaneBlock;
+      mass+=stone?2.3:metal?2.6:wood?1.15:glass?.65:.85;
+      conduct+=metal?2.6:glass?1.7:stone?.85:wood?.48:.75;faces++;continue;
+    }
+    if(!roofs.computeIfAbsent(q,b->roof(l,b))){holes++;continue;}
+    if(q.distManhattan(start)>16||cells.size()>=MAX_VOLUME)return null;
+    if(cells.add(q.immutable()))todo.add(q.immutable());
+   }
+  }
+  if(cells.size()<4||faces<6||holes>Math.max(3,faces/2))return null;
+  long sig=0;for(BlockPos p:cells){long v=p.asLong();v^=v>>>33;v*=0xff51afd7ed558ccdL;v^=v>>>33;sig+=v;}
+  sig^=(long)cells.size()<<32;
+  Set<BlockPos> possible=new HashSet<>(cells);possible.addAll(walls);
+  var sources=possible.stream().filter(q->{var s=l.getBlockState(q);return EnvironmentSampler.potential(s)||s.getFluidState().is(net.minecraft.tags.FluidTags.WATER);}).toList();
+  return new Geometry(key,sig,now,Set.copyOf(cells),Set.copyOf(walls),Set.copyOf(ports),sources,holes,mass/faces,conduct/faces);
+ }
+ private static double ventilation(ServerLevel l,Geometry g,double wind){
+  double openings=g.openings();
+  for(BlockPos q:g.portals()){
+   if(!loaded(l,q)){openings+=2;continue;}
+   BlockState s=l.getBlockState(q);
+   if(portal(s))openings+=s.getValue(BlockStateProperties.OPEN)?1.0:.025;
+   else if(s.is(ThermalContent.CHIMNEY.get()))openings+=l.canSeeSky(q.above())?.65:.08;
+   else if(s.is(ThermalContent.DAMPER.get()))openings+=s.getValue(VentBlock.OPEN)?.5:.02;
+   else if(!Block.isShapeFullBlock(s.getCollisionShape(l,q)))openings+=1;
+  }
+  return Math.max(.02,Math.min(1,.035+openings*(.24+.36*Math.max(0,Math.min(1,wind)))/Math.sqrt(Math.max(.5,g.cells().size()/27.0))));
+ }
+ private static Sources sources(ServerLevel l,Geometry g,double air,double humidity,double wind){
+  double heat=0,cooling=0,moisture=0;
+  for(BlockPos q:g.sourceCells()){
+   if(!loaded(l,q))continue;
+   BlockState s=l.getBlockState(q);var block=s.getBlock();
+   heat+=EnvironmentSampler.output(s)*(block instanceof ClimateDeviceBlock?VentBlock.adjustment(l,q):1);
+   if(block instanceof FixtureBlock f&&f.cooling()&&s.getValue(FixtureBlock.ACTIVE)){
+    double effect=dev.minemods.thermal.ClimateComfort.cooling(air,humidity,0,true,true);
+    cooling+=effect*2;moisture+=effect*.65;
+   }
+   if(block instanceof ClimateDeviceBlock device){
+    double effect=device.cooling(s,air,humidity,0,true,wind,l.canSeeSky(q.above()));
+    cooling+=effect*2;
+    if(device.kind()==ClimateDeviceBlock.Kind.EVAP_WALL)moisture+=effect*.65;
+   }
+   if(s.getFluidState().is(net.minecraft.tags.FluidTags.WATER))moisture+=.35;
+  }
+  return new Sources(Math.min(240,heat),Math.min(100,cooling),Math.min(60,moisture));
+ }
+ static RoomReading sample(ServerLevel l,BlockPos start,double air,double humidity,double wind){
+  long now=l.getGameTime();Geometry g=geometry(l,start,now);if(g==null)return RoomReading.outside(air,humidity);
+  Cache c=cache(l);long key=g.anchor().asLong();
+  if(c.updated.getOrDefault(key,Long.MIN_VALUE)==now/20&&c.readings.containsKey(key))return c.readings.get(key);
+  // One canonical Core sample per occupied room, not a particular player's outdoor measurement.
+  var atmosphere=WorldLogicApi.atmosphere(l,g.anchor());
+  var env=atmosphere.map(WorldLogicApi.Atmosphere::environment).or(()->WorldLogicApi.environment(l,g.anchor()));
+  double outside=env.map(e->e.ambientCelsiusEstimate()).orElse(air);
+  double rh=atmosphere.map(WorldLogicApi.Atmosphere::relativeHumidityPercent).orElse(humidity);
+  double w=atmosphere.map(a->Math.max(0,Math.min(1,a.outdoorWindSpeedMps()/12))).orElse(wind);
+  return evolve(l,g,now,outside,rh,w);
+ }
+ static RoomReading sampleAt(ServerLevel l,BlockPos start,double air,double humidity,double wind,long now){
+  Geometry g=geometry(l,start,now);return g==null?RoomReading.outside(air,humidity):evolve(l,g,now,air,humidity,wind);
+ }
+ private static RoomReading evolve(ServerLevel l,Geometry g,long now,double outside,double humidity,double wind){
+  Cache c=cache(l);long key=g.anchor().asLong();long interval=now/20;
+  if(c.updated.getOrDefault(key,Long.MIN_VALUE)==interval&&c.readings.containsKey(key))return c.readings.get(key);
+  outside=Double.isFinite(outside)?outside:20;humidity=Double.isFinite(humidity)?Math.max(0,Math.min(100,humidity)):50;
+  wind=Double.isFinite(wind)?Math.max(0,Math.min(1,wind)):0;
+  double vent=ventilation(l,g,wind);var data=RoomClimateData.get(l);var old=data.get(key);
+  var state=old==null||old.signature()!=g.signature()?RoomPhysics.initial(outside,humidity):old.state();
+  double elapsed=old==null||old.signature()!=g.signature()?0:Math.max(0,(now-old.tick())/20.0);
+  // An unloaded/unused room cools passively; no pretending fuel remained active throughout absence.
+  if(elapsed>3){state=RoomPhysics.step(state,new RoomPhysics.Inputs(outside,humidity,vent,g.conductance(),g.mass(),g.cells().size(),0,0,0),Math.min(3600,elapsed-1));elapsed=1;}
+  Sources src=sources(l,g,state.air(),RoomPhysics.humidity(state),wind);
+  state=RoomPhysics.step(state,new RoomPhysics.Inputs(outside,humidity,vent,g.conductance(),g.mass(),g.cells().size(),src.heat(),src.cooling(),src.moisture()),elapsed);
+  data.put(key,new RoomClimateData.Entry(g.signature(),now,state));
+  var result=new RoomReading(true,state.air(),RoomPhysics.humidity(state),vent,state.mass(),g.cells().size());
+  c.updated.put(key,interval);c.readings.put(key,result);return result;
  }
 }

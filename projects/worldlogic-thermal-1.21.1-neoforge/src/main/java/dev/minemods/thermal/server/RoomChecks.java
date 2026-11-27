@@ -1,0 +1,127 @@
+package dev.minemods.thermal.server;
+import dev.minemods.thermal.*;
+import dev.minemods.thermal.content.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import java.util.*;
+
+final class RoomChecks {
+ private RoomChecks(){}
+ static void require(boolean value,String detail){if(!value)throw new IllegalStateException("Room QA: "+detail);}
+ private static final BlockPos CENTER=new BlockPos(8,108,8);
+ private static final BlockPos HEATER=CENTER.east(),DOOR=CENTER.east(2).below(),WINDOW=CENTER.north(2);
+ private static void build(ServerLevel l,Map<BlockPos,BlockState> old){
+  for(BlockPos b:BlockPos.betweenClosed(CENTER.offset(-2,-2,-2),CENTER.offset(2,2,2))){
+   BlockPos q=b.immutable();old.put(q,l.getBlockState(q));
+   boolean edge=Math.abs(q.getX()-CENTER.getX())==2||Math.abs(q.getY()-CENTER.getY())==2||Math.abs(q.getZ()-CENTER.getZ())==2;
+   l.setBlock(q,edge?Blocks.STONE.defaultBlockState():Blocks.AIR.defaultBlockState(),2);
+  }
+  RoomHeat.invalidate(l);RoomHeat.forget(l,CENTER,l.getGameTime());
+ }
+ private static void door(ServerLevel l,boolean open){
+  var state=Blocks.OAK_DOOR.defaultBlockState().setValue(DoorBlock.FACING,Direction.EAST).setValue(DoorBlock.OPEN,open);
+  l.setBlock(DOOR,state.setValue(DoorBlock.HALF,DoubleBlockHalf.LOWER),2);
+  l.setBlock(DOOR.above(),state.setValue(DoorBlock.HALF,DoubleBlockHalf.UPPER),2);
+ }
+ private static void heater(ServerLevel l,boolean active){
+  var h=ThermalContent.HEARTH.get();
+  l.setBlock(HEATER,h.defaultBlockState(),2);
+  if(active)require(h.activate(l,HEATER,l.getBlockState(HEATER)),"real heater activation");
+ }
+ private static RoomReading run(ServerLevel l,double air,double humidity,double wind,long now,int seconds){
+  RoomReading r=RoomReading.unavailable();
+  for(int i=0;i<=seconds;i++)r=RoomHeat.sampleAt(l,CENTER,air,humidity,wind,now+20L*i);
+  require(r.indoor()&&r.volume()==27,"bounded room detected");
+  return r;
+ }
+ static void verify(ServerLevel l,ServerPlayer p,String name){
+  Map<BlockPos,BlockState> old=new HashMap<>();
+  try{
+   build(l,old);long now=l.getGameTime();
+   switch(name){
+    case "room_inertia" -> {
+     heater(l,true);var initial=run(l,10,50,0,now,0);var warm=run(l,10,50,0,now,60);
+     require(warm.airC()>initial.airC()+8,"room warms promptly from real heater");
+     require(warm.massC()>initial.massC(),"walls accumulate heat");
+     heater(l,false);var retained=run(l,10,50,0,now+1200,15);
+     require(retained.airC()>10&&retained.airC()<warm.airC(),"retained heat decays after fuel removal");
+     require(retained.massC()>10,"thermal mass remains warm");
+     l.setBlock(CENTER.above(2),Blocks.AIR.defaultBlockState(),2);RoomHeat.invalidate(l);
+     require(!RoomHeat.sampleAt(l,CENTER,10,50,0,now+1600).indoor(),"open roof at sample position is not a room");
+     var chilled=new ThermalModel.State(35,0,35,ThermalModel.Stage.VERY_COLD,0);
+     var roomExposure=new ThermalModel.Exposure(14,0,0,0,0,0,false,14,0,0,0,0,0,1,1,8);
+     var neutralExposure=new ThermalModel.Exposure(22,0,0,0,0,0,false,22,0,0,0,0,0,1,1,0);
+     double fast=ThermalModel.tick(chilled,roomExposure,1).bodyC()-35,normal=ThermalModel.tick(chilled,neutralExposure,1).bodyC()-35;
+     require(fast>2.9*normal&&fast<3.01*normal,"existing accelerated recovery preserved");
+    }
+    case "room_ventilation" -> {
+     door(l,false);l.setBlock(WINDOW,Blocks.GLASS_PANE.defaultBlockState(),2);heater(l,true);
+     var closed=run(l,10,50,.7,now,60);
+     door(l,true);var opened=run(l,10,50,.7,now+1200,35);
+     require(opened.ventilation()>closed.ventilation()+.4,"open door increases ventilation");
+     require(opened.airC()<closed.airC()-1,"open door reduces heating despite same fuel");
+     door(l,false);var reclosed=run(l,10,50,.7,now+1900,35);
+     require(reclosed.ventilation()<opened.ventilation()&&reclosed.airC()>opened.airC(),"closing door restores retention");
+     l.setBlock(WINDOW,Blocks.AIR.defaultBlockState(),2);RoomHeat.markDirty(l,WINDOW);
+     var breach=RoomHeat.sampleAt(l,CENTER,10,50,.7,now+2600);
+     require(breach.indoor()&&Math.abs(breach.airC()-reclosed.airC())<.01,"window breach preserves existing thermal mass");
+     var hole=RoomHeat.sampleAt(l,CENTER,10,50,.7,now+2700);
+     require(hole.indoor()&&hole.ventilation()>reclosed.ventilation()+.2,"broken window leaks air");
+    }
+    case "room_humidity" -> {
+     heater(l,true);var before=run(l,15,60,0,now,0);var warm=run(l,15,60,0,now,60);
+     require(warm.humidity()<before.humidity()-10,"heating lowers relative humidity");
+     var s=RoomPhysics.initial(15,60);
+     var a=RoomPhysics.step(s,new RoomPhysics.Inputs(15,60,.035,.85,2.3,27,65,0,0),60);
+     require(Math.abs(s.vapor()-a.vapor())<.01,"heating does not remove absolute vapor");
+     RoomHeat.forget(l,CENTER,now+1200);heater(l,false);
+     var cooler=ThermalContent.COOLER.get();l.setBlock(HEATER,cooler.defaultBlockState(),2);
+     require(cooler.activate(l,HEATER,l.getBlockState(HEATER)),"evaporative cooler activated");
+     var dry=run(l,35,25,0,now+1220,0);var wet=run(l,35,25,0,now+1220,60);
+     require(wet.humidity()>dry.humidity()+5&&wet.airC()<dry.airC(),"evaporative cooler adds vapor and cools");
+     door(l,true);RoomHeat.invalidate(l);
+     var flushed=run(l,35,25,.9,now+2420,60);
+     require(flushed.humidity()<wet.humidity(),"ventilation removes excess humidity in dry outdoor air");
+    }
+    case "room_persistence" -> {
+     heater(l,true);var warm=run(l,10,60,0,now,60);
+     long key=CENTER.offset(-1,-1,-1).asLong();var data=RoomClimateData.get(l);
+     var entry=data.get(key);require(entry!=null,"canonical room stored");
+     var restored=RoomClimateData.load(data.save(new CompoundTag(),l.registryAccess()),l.registryAccess()).get(key);
+     require(entry.equals(restored),"SavedData round trip preserves temperature, vapor, mass and timestamp");
+     RoomHeat.invalidate(l);var resumed=run(l,10,60,0,now+1200,0);
+     require(Math.abs(resumed.airC()-warm.airC())<.00001,"cache rebuild reuses saved state");
+     heater(l,false);var away=run(l,10,60,0,now+1200+12000,0);
+     require(away.airC()<warm.airC()&&away.airC()>=10,"unobserved room passively loses heat");
+    }
+    case "room_cache" -> {
+     p.moveTo(CENTER.getX()+.5,CENTER.getY(),CENTER.getZ()+.5,0,0);
+     require(EnvironmentSampler.sample(p,0).orElseThrow().room().indoor(),"production sampling detects physical room");
+     ThermalEvents.update(p);require(dev.minemods.thermal.api.ThermalApi.roomClimate(p).orElseThrow().volume()==27,"public room API publishes real sampled room");
+     RoomHeat.forget(l,CENTER,now);
+     int before=RoomHeat.builds(l);var a=RoomHeat.sampleAt(l,CENTER,10,50,.3,now);
+     int first=RoomHeat.builds(l);var b=RoomHeat.sampleAt(l,CENTER.west(),30,95,1,now);
+     require(first==before+1&&RoomHeat.builds(l)==first&&a.equals(b),"different positions share one cached room reading");
+     var next=RoomHeat.sampleAt(l,CENTER.west(),10,50,.3,now+20);
+     require(next.indoor()&&RoomHeat.builds(l)==first,"topology cached across simulation ticks");
+     RoomHeat.sampleAt(l,CENTER,10,50,.3,now+40);require(RoomHeat.builds(l)==first+1,"topology refreshes on bounded interval");
+     require(!RoomHeat.sampleAt(l,new BlockPos(1000000,100,1000000),10,50,0,now).indoor(),"unloaded location rejected without loading");
+     EnvironmentSampler.invalidateLocal(l);
+     var sources=EnvironmentSampler.candidates(l,CENTER);
+     require(sources==EnvironmentSampler.candidates(l,CENTER.west()),"nearby positions share one source scan");
+    }
+    default -> throw new IllegalArgumentException(name);
+   }
+  }finally{
+   RoomClimateData.get(l).remove(CENTER.offset(-1,-1,-1).asLong());
+   old.forEach((q,s)->l.setBlock(q,s,2));RoomHeat.invalidate(l);EnvironmentSampler.invalidateLocal(l);
+  }
+ }
+}

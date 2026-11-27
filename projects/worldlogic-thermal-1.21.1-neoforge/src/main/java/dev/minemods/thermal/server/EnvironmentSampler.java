@@ -4,7 +4,8 @@ import dev.minemods.thermal.WeatherReading;
 import dev.minemods.thermal.ClimateComfort;
 import dev.minemods.thermal.content.*;
 import dev.minemods.worldlogic.api.WorldLogicApi;
-import java.util.Optional;
+import java.util.*;
+import dev.minemods.thermal.RoomReading;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +27,7 @@ public final class EnvironmentSampler {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("worldlogic_thermal",path));
     }
     private static final TagKey<Item> INSULATED = gear("insulated_gear"), LIGHT = gear("light_gear"), METAL = gear("metal_gear"), PLANT = gear("plant_insulation"), SUMMER = gear("summer_gear");
-    public record Sample(ThermalModel.Exposure exposure, double skinWetness, boolean sheltered, double solarExposure, WeatherReading weather) {}
+    public record Sample(ThermalModel.Exposure exposure, double skinWetness, boolean sheltered, double solarExposure, WeatherReading weather,RoomReading room) {}
     private EnvironmentSampler() {}
     public static Optional<Sample> sample(ServerPlayer p, double skin) {
         ServerLevel level = p.serverLevel(); BlockPos pos = p.blockPosition();
@@ -38,9 +39,14 @@ public final class EnvironmentSampler {
         if(!Double.isFinite(air)) return Optional.empty();
         boolean sheltered = env.covered();
         boolean rain = env.rainingAt();
-        var local=localComfort(level,p,air,atmosphere.map(WorldLogicApi.Atmosphere::relativeHumidityPercent).orElse(100.0),sheltered,atmosphere.map(a->clamp(a.outdoorWindSpeedMps()/12,0,1)).orElse(0.0));
+
+        double outdoorHumidity=atmosphere.map(WorldLogicApi.Atmosphere::relativeHumidityPercent).orElse(100.0);
+        double outdoorWind=atmosphere.map(a->clamp(a.outdoorWindSpeedMps()/12,0,1)).orElse(0.0);
+        var roomReading=RoomHeat.sample(level,pos,air,outdoorHumidity,outdoorWind);
+        double room=roomReading.indoor()?clamp(roomReading.airC()-air,-8,14):0;
+        double localAir=air+room,localHumidity=roomReading.indoor()?roomReading.humidity():outdoorHumidity;
+        var local=localComfort(level,p,localAir,localHumidity,sheltered||roomReading.indoor(),outdoorWind,candidates(level,pos));
         double radiant=local.heat();
-        double room=RoomHeat.sample(level,pos,radiant,local.cooling(),sheltered);
         var regionalWeather=AddonBridge.weather(level,pos);
         double ins=0,ventilation=0,rainShield=0,windShield=0,sunShield=0;
         for (ItemStack stack : p.getArmorSlots()) {
@@ -52,11 +58,12 @@ public final class EnvironmentSampler {
         // API v1 has no core gear moisture or hot-food accessor.
         var a=atmosphere.orElse(null);
         double previous=Double.isFinite(skin)?clamp(skin,0,1):0;
-        skin=skinWetness(previous,p.isInWater(),rain,radiant);
-        if(rain&&!p.isInWater())skin=clamp(previous+(skin-previous)*(1-clamp(rainShield,0,.92)),0,1);
-        if(!rain&&!p.isInWater()&&a!=null)skin=previous+(skin-previous)*WeatherReading.dryingFactor(a.relativeHumidityPercent());
+        skin=skinWetness(previous,p.isInWater(),rain&&!roomReading.indoor(),radiant);
+        if(rain&&!roomReading.indoor()&&!p.isInWater())skin=clamp(previous+(skin-previous)*(1-clamp(rainShield,0,.92)),0,1);
+        if((!rain||roomReading.indoor())&&!p.isInWater()&&a!=null)skin=previous+(skin-previous)*WeatherReading.dryingFactor(localHumidity);
         double wind=a!=null?WeatherReading.normalizedWind(a.outdoorWindSpeedMps(),sheltered):sheltered?.06:env.globalThunder()?.85:rain?.55:.22;
         if(!sheltered&&regionalWeather.isPresent())wind=Math.max(wind,WeatherReading.normalizedWind(regionalWeather.get().gust()*.65,false));
+        if(roomReading.indoor())wind=Math.max(.06,roomReading.ventilation()*outdoorWind+.02);
         wind*=1-clamp(windShield,0,.8);
         double shade=VentBlock.shades(level,pos)?1:clamp(sunShield,0,.95);
         double solar=env.solarExposure()*(1-shade);
@@ -66,8 +73,8 @@ public final class EnvironmentSampler {
         double warmLimit=28-activity*7-retained*5+clamp(ventilation,0,1)*7;
         double currentBody=p.getPersistentData().getCompound(ThermalEvents.KEY).contains("body")?p.getPersistentData().getCompound(ThermalEvents.KEY).getDouble("body"):37;
         double effective=air+room+radiant-local.cooling()-shadeCooling-wind*(2+5*skin)-6*skin;
-        var portable=ThermalPackItem.comfort(ThermalPackItem.hotbar(p,a==null?100:a.relativeHumidityPercent()),effective,warmLimit,currentBody);
-        radiant=ClimateComfort.capRadiant(air,radiant+portable.heat());
+        var portable=ThermalPackItem.comfort(ThermalPackItem.hotbar(p,localHumidity),effective,warmLimit,currentBody);
+        radiant=ClimateComfort.capRadiant(localAir,radiant+portable.heat());
         double cooling=Math.min(18,local.cooling()+shadeCooling+portable.cool());
         // Core ambient includes this day's solar/rain offsets; invert only when not clamped.
         double reference=regionalWeather.isPresent()?Double.NaN:Math.abs(air)>=99.99?Double.NaN:air-(sheltered?0:4*env.solarExposure()-2)+(rain?2:0);
@@ -89,15 +96,43 @@ public final class EnvironmentSampler {
         if(!p.isInWater()&&p.onGround()&&(floor.is(Blocks.ICE)||floor.is(Blocks.PACKED_ICE)||floor.is(Blocks.BLUE_ICE)||floor.is(Blocks.SNOW_BLOCK)))
             contact=2*(1-LimbExposure.protection(p.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET)));
         cooling=Math.min(18,cooling+contact);
-        return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,p.isInWater(),water(air,air),meal,cooling,clamp(ventilation,0,1),adaptation.cold(),adaptation.heat(),nutrition,hydration,room),skin,sheltered,solar,weather));
+        return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,p.isInWater(),water(air,air),meal,cooling,clamp(ventilation,0,1),adaptation.cold(),adaptation.heat(),nutrition,hydration,room),skin,sheltered,solar,weather,roomReading));
     }
     record LocalComfort(double heat,double cooling){}
     static LocalComfort localComfort(ServerLevel level,ServerPlayer p,double air,double humidity,boolean sheltered) {
         return localComfort(level,p,air,humidity,sheltered,.5);
     }
+
+    private record CandidateCell(long tick,List<BlockPos> positions){}
+    private static final Map<ServerLevel,LinkedHashMap<BlockPos,CandidateCell>> SOURCES=new WeakHashMap<>();
+    static void invalidateLocal(ServerLevel l){SOURCES.remove(l);}
+    static void invalidateLocal(ServerLevel l,BlockPos pos){
+        var map=SOURCES.get(l);if(map!=null)map.keySet().removeIf(k->pos.getX()>=k.getX()-4&&pos.getX()<=k.getX()+6&&pos.getY()>=k.getY()-2&&pos.getY()<=k.getY()+5&&pos.getZ()>=k.getZ()-4&&pos.getZ()<=k.getZ()+6);
+    }
+    static boolean potential(BlockState s){
+        return s.getBlock() instanceof ClimateDeviceBlock||s.getBlock() instanceof FixtureBlock||
+            s.is(Blocks.CAMPFIRE)||s.is(Blocks.SOUL_CAMPFIRE)||s.is(Blocks.FURNACE)||s.is(Blocks.BLAST_FURNACE)||s.is(Blocks.SMOKER)||output(s)>0;
+    }
+    static List<BlockPos> candidates(ServerLevel l,BlockPos at){
+        var key=new BlockPos(Math.floorDiv(at.getX(),3)*3,Math.floorDiv(at.getY(),3)*3,Math.floorDiv(at.getZ(),3)*3);
+        var map=SOURCES.computeIfAbsent(l,k->new LinkedHashMap<>(32,.75f,true));
+        long tick=l.getGameTime();var old=map.get(key);
+        if(old!=null&&tick>=old.tick()&&tick-old.tick()<40)return old.positions();
+        var found=new ArrayList<BlockPos>();
+        for(BlockPos q:BlockPos.betweenClosed(key.offset(-4,-2,-4),key.offset(6,5,6)))
+            if(q.getY()>=l.getMinBuildHeight()&&q.getY()<l.getMaxBuildHeight()&&l.hasChunkAt(q)&&potential(l.getBlockState(q)))found.add(q.immutable());
+        var result=List.copyOf(found);map.put(key,new CandidateCell(tick,result));
+        while(map.size()>128)map.remove(map.keySet().iterator().next());
+        return result;
+    }
     static LocalComfort localComfort(ServerLevel level,ServerPlayer p,double air,double humidity,boolean sheltered,double outdoorWind) {
+        BlockPos at=p.blockPosition();
+        return localComfort(level,p,air,humidity,sheltered,outdoorWind,BlockPos.betweenClosed(at.offset(-4,-2,-4),at.offset(4,3,4)));
+    }
+    private static LocalComfort localComfort(ServerLevel level,ServerPlayer p,double air,double humidity,boolean sheltered,double outdoorWind,Iterable<BlockPos> positions) {
         BlockPos at=p.blockPosition(); double heat=0,cooling=0;
-        for(BlockPos b:BlockPos.betweenClosed(at.offset(-4,-2,-4),at.offset(4,3,4))) {
+        for(BlockPos b:positions) {
+            if(Math.abs(b.getX()-at.getX())>4||Math.abs(b.getZ()-at.getZ())>4||b.getY()<at.getY()-2||b.getY()>at.getY()+3)continue;
             if(!level.hasChunkAt(b)) continue;
             BlockState s=level.getBlockState(b);
             double output=output(s); boolean cooler=s.getBlock() instanceof FixtureBlock fixture&&fixture.cooling()&&s.getValue(FixtureBlock.ACTIVE); ClimateDeviceBlock device=s.getBlock() instanceof ClimateDeviceBlock d?d:null; if(output<=0&&!cooler&&device==null) continue;
@@ -111,7 +146,7 @@ public final class EnvironmentSampler {
         }
         return new LocalComfort(ClimateComfort.capRadiant(air,heat),Math.min(18,cooling));
     }
-    private static double output(BlockState s) {
+    static double output(BlockState s) {
         if(s.getBlock() instanceof ClimateDeviceBlock device)return device.heat(s);
         if(s.getBlock() instanceof FixtureBlock fixture)return !fixture.cooling()&&s.getValue(FixtureBlock.ACTIVE)?65:0;
         if(s.is(Blocks.LANTERN))return 7;
