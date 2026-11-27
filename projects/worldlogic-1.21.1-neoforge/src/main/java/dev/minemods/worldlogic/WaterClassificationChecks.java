@@ -20,8 +20,8 @@ final class WaterClassificationChecks{
   check(new WaterClassification.Context(true,true,true,false,false,false,false,false,true,0,false),WaterKind.SPRING,WaterQuality.DRINKABLE);
   check(new WaterClassification.Context(true,true,true,false,false,false,false,true,false,0,true),WaterKind.GROUNDWATER,WaterQuality.TREAT_RECOMMENDED);
   check(new WaterClassification.Context(true,true,true,false,false,true,false,false,false,0,true),WaterKind.WETLAND,WaterQuality.TREAT_RECOMMENDED);
-  check(new WaterClassification.Context(true,true,true,false,false,false,false,false,false,0,true),WaterKind.LAKE,WaterQuality.TREAT_RECOMMENDED);
-  check(new WaterClassification.Context(true,true,true,false,false,false,false,false,false,0,false),WaterKind.POND,WaterQuality.TREAT_RECOMMENDED);
+  check(new WaterClassification.Context(true,true,true,false,false,false,false,false,false,0,true),WaterKind.LAKE,WaterQuality.DRINKABLE);
+  check(new WaterClassification.Context(true,true,true,false,false,false,false,false,false,0,false),WaterKind.POND,WaterQuality.DRINKABLE);
   check(new WaterClassification.Context(true,false,true,false,false,false,false,false,false,0,false),WaterKind.UNKNOWN,WaterQuality.UNKNOWN);
   check(new WaterClassification.Context(false,true,false,false,false,false,false,false,false,0,false),WaterKind.NONE,WaterQuality.NOT_WATER);
   // Actual loaded server water and a solid roof. Restore every changed block.
@@ -33,7 +33,7 @@ final class WaterClassificationChecks{
    }
    l.setBlock(p,Blocks.WATER.defaultBlockState(),2);
    var pond=WorldLogicApi.waterProfile(l,p);
-   require(pond.kind()==WaterKind.POND&&pond.sourceBlock()&&pond.quality()==WaterQuality.TREAT_RECOMMENDED,"actual exposed source "+pond);
+   require(pond.kind()==WaterKind.POND&&pond.sourceBlock()&&pond.quality()==WaterQuality.DRINKABLE,"actual exposed source "+pond);
    require(WorldLogicApi.waterSource(l,p)==WaterSource.FRESH_SURFACE,"legacy fresh");
    l.setBlock(p.above(8),Blocks.STONE.defaultBlockState(),2);
    var ground=WorldLogicApi.waterProfile(l,p);

@@ -37,8 +37,8 @@ public final class WaterClassification{
  private static WaterProfile profile(WaterKind kind,boolean source,WaterEvidence evidence){
   WaterQuality quality=switch(kind){
    case SEA,BRACKISH->WaterQuality.DESALINATE;
-   case RIVER,SPRING->WaterQuality.DRINKABLE;
-   case LAKE,GROUNDWATER,WETLAND,POND->WaterQuality.TREAT_RECOMMENDED;
+   case RIVER,SPRING,LAKE,POND->WaterQuality.DRINKABLE;
+   case GROUNDWATER,WETLAND->WaterQuality.TREAT_RECOMMENDED;
    case NONE->WaterQuality.NOT_WATER;
    case UNKNOWN->WaterQuality.UNKNOWN;
   };
@@ -67,7 +67,7 @@ public final class WaterClassification{
   // Surface water itself contributes to this heightmap. Require an actual solid roof
   // above the water (not merely deep open water) before labeling it groundwater.
   boolean solidRoof=false;
-  if(!l.canSeeSky(p)&&roof-p.getY()>=6){
+  if(roof-p.getY()>=6){
    for(int y=Math.max(p.getY()+1,roof-4);y<roof;y++){
     var q=new BlockPos(p.getX(),y,p.getZ());if(loaded(l,q)&&l.getBlockState(q).isCollisionShapeFullBlock(l,q)){solidRoof=true;break;}
    }
