@@ -1,6 +1,7 @@
 package dev.minemods.worldlogicterrain.tree;
 
 import java.util.ArrayList;
+import dev.minemods.worldlogicterrain.worldgen.LandscapeMosaic;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -45,6 +46,19 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         if(tagged(b,"open"))return Zone.OPEN;
         return Zone.NONE;
     }
+    private static Holder<Biome> localBiome(WorldGenLevel level,BlockPos pos){
+        var boreal=LandscapeMosaic.habitat(level,pos,tag("boreal"));
+        if(boreal!=null)return boreal;
+        var ground=level.getBiome(pos.below());
+        if(zone(ground)!=Zone.NONE)return ground;
+        var surface=level.getBiome(pos);
+        if(zone(surface)!=Zone.NONE)return surface;
+        for(var name:new String[]{"temperate","tropical","wet","dry","coast","cherry","open"}){
+            var candidate=LandscapeMosaic.habitat(level,pos,tag(name));
+            if(candidate!=null)return candidate;
+        }
+        return surface;
+    }
     private static String id(Holder<Biome> b){return b.unwrapKey().map(k->k.location().getPath()).orElse("");}
     private static String namespace(String wood){return java.util.Set.of("willow","larch","pine","fir","cedar","maple","beech","alder","palm","date_palm","baobab","ebony","mahogany").contains(wood)?"worldlogicterrain":"minecraft";}
     static boolean soil(BlockState state){return state.is(BlockTags.DIRT)||state.is(Blocks.MUD)||state.is(Blocks.CLAY);}
@@ -59,13 +73,17 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         long seed=level.getSeed();
         List<BlockPos> trunks=new ArrayList<>();
         boolean placed=false,deadwood=false;
-        for(int i=0;i<24;i++){
-            int x=startX+random.nextInt(16),z=startZ+random.nextInt(16);
+        // Sample every 4x4 cell before extra boreal attempts. Small biome fragments
+        // must not depend on a single random origin or a handful of lucky columns.
+        int offset=random.nextInt(16);
+        for(int i=0;i<48&&trunks.size()<7;i++){
+            int cell=(i+offset)&15;
+            int x=startX+(cell&3)*4+random.nextInt(4),z=startZ+(cell>>2)*4+random.nextInt(4);
             BlockPos pos=new BlockPos(x,level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z),z);
             if(level.isOutsideBuildHeight(pos)||!level.ensureCanWrite(pos)||!level.ensureCanWrite(pos.below()))continue;
-            var biome=level.getBiome(pos.below());Zone zone=zone(biome);
-            if(zone==Zone.NONE){biome=level.getBiome(pos);zone=zone(biome);}
-            if(zone==Zone.NONE||(i>=8&&zone!=Zone.BOREAL))continue;
+            var biome=localBiome(level,pos);Zone zone=zone(biome);
+            if(zone==Zone.NONE||(i>=16&&zone!=Zone.BOREAL))continue;
+            // High latitudes can have steep regional relief but still contain real soil benches.
             String name=id(biome);
             boolean mangrove=name.contains("mangrove");
             BlockState ground=level.getBlockState(pos.below());
@@ -82,7 +100,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             var local=sampler.sample(pos,biome,ground);
             double temperature=local.map(CoreHabitat.Sample::temperature).orElse((double)biome.value().getBaseTemperature()*25.0);
             if(zone==Zone.COAST&&temperature<18)continue;
-            double field=grove(seed,x,z);
+            double field=LandscapeMosaic.forest(seed,x,z);
             double base=switch(zone){
                 case OPEN -> name.equals("snowy_plains")?.035:.105;
                 case TEMPERATE -> .68;
@@ -95,20 +113,25 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
                 default -> 0;
             };
             // Smooth, seeded groves instead of independent uniform rolls.
-            double probability=base*Math.max(0,Math.min(1.35,(field-.16)*1.8));
-            if(zone==Zone.BOREAL&&!name.equals("forest_tundra")) probability=Math.max(.24,probability);
+            double probability=base*LandscapeMosaic.forestDensity(field);
+            boolean borealStand=zone==Zone.BOREAL&&!name.equals("forest_tundra");
             if(local.isPresent()){
                 var h=local.get();
-                if(h.zone().equals("MARINE")||h.zone().equals("SUBTERRANEAN")||h.slope()>42||h.surface().equals("ROCKY")&&zone!=Zone.BOREAL||h.surface().equals("SANDY")&&!mangrove&&zone!=Zone.COAST)continue;
+                if(h.zone().equals("MARINE")||h.zone().equals("SUBTERRANEAN")||h.slope()>(zone==Zone.BOREAL?55:42)||h.surface().equals("ROCKY")&&zone!=Zone.BOREAL||h.surface().equals("SANDY")&&!mangrove&&zone!=Zone.COAST)continue;
                 if((h.temperature() < -10 && zone!=Zone.BOREAL)||name.equals("arctic_wetland"))continue;
-                if(zone==Zone.BOREAL&&h.temperature()>23)probability*=.25;
+                // Biome identity is authoritative for forest presence; temperature
+                // and moisture select species rather than erasing a mapped taiga.
                 if(h.coldness()>.88&&zone!=Zone.BOREAL||h.dryness()>.92&&zone!=Zone.DRY&&zone!=Zone.BOREAL&&zone!=Zone.COAST)continue;
-                if(zone==Zone.BOREAL&&h.dryness()>.92)probability*=.35;
+                if(zone==Zone.BOREAL&&h.dryness()>.92)probability*=.70;
                 probability*=Math.max(.15,Math.min(1.2,.35+.8*h.fertility()+.25*h.strength()));
                 if(h.slope()>25)probability*=.55;
                 if(h.waterlogging()>.8&&zone!=Zone.WET)probability*=.3;
                 if(h.wind()>.75)probability*=.6;
             }
+            // Protect a viable mapped boreal stand after climate multipliers, while
+            // retaining genuine clearings and excluding marine, stone and ice above.
+            if(borealStand&&field>.20&&local.map(h->h.waterlogging()<.88).orElse(true))
+                probability=Math.max(probability,trunks.isEmpty()?.30:.14);
             if(random.nextDouble()>=probability)continue;
             boolean close=false;
             for(var previous:trunks)if(Math.abs(previous.getX()-x)<=3&&Math.abs(previous.getZ()-z)<=3){close=true;break;}
@@ -117,18 +140,22 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             var key=ResourceKey.create(Registries.CONFIGURED_FEATURE,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","tree_"+form.feature()));
             if(level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(key).value().place(level,generator,random,pos)){
                 placed=true;trunks.add(pos);
-                if(zone==Zone.BOREAL||zone==Zone.TEMPERATE||zone==Zone.WET){
+                if(zone==Zone.BOREAL||zone==Zone.TEMPERATE||zone==Zone.WET||zone==Zone.TROPICAL){
                     for(int n=0;n<3;n++){
                         int sx=x+random.nextInt(9)-4,sz=z+random.nextInt(9)-4;
                         if((sx&~15)!=startX||(sz&~15)!=startZ)continue;
                         BlockPos floor=new BlockPos(sx,level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,sx,sz),sz);
-                        if(random.nextInt(4)==0)recruit(level,floor,form.wood());
-                        else understory(level,floor,random.nextBoolean()?"forest_litter":"fallen_leaves");
+                        if(random.nextInt(5)==0)recruit(level,floor,form.wood());
+                        else {
+                            double moisture=local.map(CoreHabitat.Sample::moisture).orElse(.5);
+                            String cover=moisture>.57&&random.nextBoolean()?"low_fern":field<.45&&random.nextBoolean()?"forest_shrub":random.nextBoolean()?"forest_litter":"fallen_leaves";
+                            understory(level,floor,cover);
+                        }
                     }
                 }
             }
             // Deadwood is a separate rare feature on nearby free, level ground.
-            if(!deadwood&&!mangrove&&(zone==Zone.TEMPERATE||zone==Zone.BOREAL||zone==Zone.WET)&&random.nextInt(32)==0){
+            if(!deadwood&&!mangrove&&(zone==Zone.TEMPERATE||zone==Zone.BOREAL||zone==Zone.WET)&&random.nextInt(field>.65?24:48)==0){
                 BlockPos start=new BlockPos(startX+3+random.nextInt(10),pos.getY(),startZ+3+random.nextInt(10));
                 start=new BlockPos(start.getX(),level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,start.getX(),start.getZ()),start.getZ());
                 Direction fall=local.map(EcologicalTreeFeature::fallDirection).orElseGet(()->random.nextBoolean()?Direction.EAST:Direction.SOUTH);
@@ -210,7 +237,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         return level.setBlock(pos,state,2);
     }
     static boolean understory(WorldGenLevel level,BlockPos pos,String name){
-        if(!safeFloor(level,pos)||!(name.equals("forest_litter")||name.equals("fallen_leaves")))return false;
+        if(!safeFloor(level,pos)||!java.util.Set.of("forest_litter","fallen_leaves","low_fern","forest_shrub").contains(name))return false;
         BlockState state=BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("worldlogicterrain",name)).defaultBlockState();
         return !state.isAir()&&state.canSurvive(level,pos)&&level.setBlock(pos,state,2);
     }

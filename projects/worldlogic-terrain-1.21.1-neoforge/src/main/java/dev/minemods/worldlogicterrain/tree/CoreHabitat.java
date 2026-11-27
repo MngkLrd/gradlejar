@@ -12,11 +12,11 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.block.state.BlockState;
 
 /** Optional additive RC26 contract. No duplicate core classes and no live-server API on worldgen threads. */
-final class CoreHabitat {
-    record Sample(double temperature,double moisture,double fertility,double dryness,double waterlogging,
+public final class CoreHabitat {
+    public record Sample(double temperature,double moisture,double fertility,double dryness,double waterlogging,
         double coldness,double strength,String zone,String surface,double slope,double wind,
         double windX,double windZ,double riverbank) {}
-    interface Batch { Optional<Sample> sample(BlockPos pos,Holder<Biome> biome,BlockState ground); }
+    public interface Batch { Optional<Sample> sample(BlockPos pos,Holder<Biome> biome,BlockState ground); }
     private record Methods(Method factory,Method sample,Method[] fields) {}
     private static final Methods API=discover();
     private static Methods discover() {
@@ -33,7 +33,7 @@ final class CoreHabitat {
         }catch(ReflectiveOperationException e){throw new IllegalStateException("Unsupported World Logic worldgen API revision",e);}
     }
     static boolean available(){return API!=null;}
-    static Batch batch(WorldGenLevel level,ChunkGenerator generator) {
+    public static Batch batch(WorldGenLevel level,ChunkGenerator generator) {
         if(API==null)return (p,b,g)->Optional.empty();
         Optional<?> value=(Optional<?>)invoke(API.factory(),null,level,generator);
         if(value.isEmpty())return (p,b,g)->Optional.empty();

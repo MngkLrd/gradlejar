@@ -44,7 +44,7 @@ public final class TallGrassPlainsFeature extends Feature<NoneFeatureConfigurati
     }
     private static boolean openGround(WorldGenLevel level,BlockPos pos){
         return !level.isOutsideBuildHeight(pos)&&level.ensureCanWrite(pos.below())
-            && (level.getBiome(pos).is(OPEN)||level.getBiome(pos.below()).is(OPEN))
+            && LandscapeMosaic.habitat(level,pos,OPEN)!=null
             && level.getFluidState(pos.below()).isEmpty()
             && Blocks.TALL_GRASS.defaultBlockState().canSurvive(level,pos);
     }
@@ -62,7 +62,19 @@ public final class TallGrassPlainsFeature extends Feature<NoneFeatureConfigurati
             }
         }
         if(!sufficientlyFlat(heights,samples))return false;
-        return populate(level,context.random(),startX,startZ,prairie>=5?44:28,(x,z)->{
+        var sampler=dev.minemods.worldlogicterrain.tree.CoreHabitat.batch(level,context.chunkGenerator());
+        BlockPos middle=surface(level,startX+8,startZ+8);
+        var biome=LandscapeMosaic.habitat(level,middle,OPEN);
+        double cover=LandscapeMosaic.meadow(level.getSeed(),middle.getX(),middle.getZ());
+        if(biome!=null){
+            var env=sampler.sample(middle,biome,level.getBlockState(middle.below()));
+            if(env.isPresent()){
+                var h=env.get();
+                cover=LandscapeMosaic.clamp(cover+.18*(h.moisture()-.5)+.22*(h.fertility()-.5)-.16*h.dryness(),0,1);
+            }
+        }
+        int limit=LandscapeMosaic.grassLimit(cover,prairie>=5);
+        return populate(level,context.random(),startX,startZ,limit,(x,z)->{
             BlockPos pos=surface(level,x,z);
             return openGround(level,pos)?pos:null;
         })>0;
