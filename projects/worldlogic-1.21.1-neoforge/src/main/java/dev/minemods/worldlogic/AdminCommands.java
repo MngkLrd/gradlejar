@@ -36,9 +36,10 @@ public final class AdminCommands {
   root.then(Commands.literal("testfall").executes(c->{var p=c.getSource().getPlayer();if(p!=null&&Balance.debug(p))return reply(c.getSource(),"World Logic: test fall triggered.");c.getSource().sendFailure(Component.literal("Enable physical_falls and use in survival."));return 0;}));
   root.then(Commands.literal("selftest").executes(c->{try{ReleaseChecks.run();return reply(c.getSource(),"WORLDLOGIC_CORE_TESTS_PASSED");}catch(Exception e){c.getSource().sendFailure(Component.literal(e.toString()));return 0;}}));
   root.then(Commands.literal("qa").requires(s->s.hasPermission(4))
+   .then(Commands.literal("recovery").executes(c->{try{ApiChecks.verifyRecovery(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_RECOVERY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("api").executes(c->{ApiChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_API_CHECKS_PASSED");}))
-   .then(Commands.literal("atmosphere_dry").executes(c->{ApiChecks.verifyAtmosphere(c.getSource().getLevel(),false);return reply(c.getSource(),"WORLDLOGIC_ATMOSPHERE_DRY_PASSED");}))
-   .then(Commands.literal("atmosphere_rain").executes(c->{ApiChecks.verifyAtmosphere(c.getSource().getLevel(),true);return reply(c.getSource(),"WORLDLOGIC_ATMOSPHERE_RAIN_PASSED");}))
+   .then(Commands.literal("atmosphere_dry").executes(c->{try{ApiChecks.verifyAtmosphere(c.getSource().getLevel(),false);return reply(c.getSource(),"WORLDLOGIC_ATMOSPHERE_DRY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("atmosphere_rain").executes(c->{try{ApiChecks.verifyAtmosphere(c.getSource().getLevel(),true);return reply(c.getSource(),"WORLDLOGIC_ATMOSPHERE_RAIN_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("regional_weather").executes(c->{ApiChecks.verifyRegionalWeather(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_REGIONAL_WEATHER_PASSED");}))
    .then(Commands.literal("weather_column").executes(c->{ApiChecks.verifyWeatherColumn(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WEATHER_COLUMN_PASSED");}))
    .then(Commands.literal("terrain_seed_a").executes(c->{TerrainChecks.verifyPresetSeed(c.getSource().getLevel(),1234L);return reply(c.getSource(),"WORLDLOGIC_TERRAIN_SEED_PASSED");}))

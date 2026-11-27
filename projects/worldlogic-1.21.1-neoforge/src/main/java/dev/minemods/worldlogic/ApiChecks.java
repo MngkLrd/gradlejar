@@ -8,8 +8,43 @@ import net.minecraft.world.level.levelgen.DensityFunction;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 public final class ApiChecks {
  private static void require(boolean value,String detail){if(!value)throw new IllegalStateException("World Logic API: "+detail);}
+ private static BlockPos weatherFixture(ServerLevel l){
+  return new BlockPos(0,Math.min(l.getMaxBuildHeight()-1,Math.max(70,l.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,0,0)+5)),0);
+ }
+ public static void verifyRecovery(ServerLevel l){
+  var p=FakePlayerFactory.getMinecraft(l);double old=Survival.fatigue(p);int food=p.getFoodData().getFoodLevel();
+  var pos=p.position();boolean grounded=p.onGround(),sprint=p.isSprinting(),sneak=p.isShiftKeyDown();
+  try{
+   require(WorldLogicApi.fatigue(p).enabled(),"exertion enabled");
+   Survival.clearExertionTracking(p);
+   p.getFoodData().setFoodLevel(20);p.setSprinting(false);p.setShiftKeyDown(false);p.setOnGround(true);p.setPos(.5,70,.5);
+   Survival.rest(p,100);Survival.work(p,60);long now=l.getGameTime();double initial=Survival.fatigue(p);
+   Survival.updateExertion(p,l,now);
+   require(Survival.fatigue(p)==initial,"no immediate post-work recovery");
+   p.setPos(4.5,70,.5);p.setOnGround(true);Survival.updateExertion(p,l,now+20);
+   double walking=initial-Survival.fatigue(p);
+   require(Math.abs(walking-2.4)<1e-8,"ordinary walking restores stamina");
+   p.setPos(5.5,70,.5);p.setOnGround(true);p.setShiftKeyDown(true);
+   double before=Survival.fatigue(p);Survival.updateExertion(p,l,now+40);
+   require(before-Survival.fatigue(p)>walking,"slow sneak recovery");
+   p.setShiftKeyDown(false);before=Survival.fatigue(p);Survival.updateExertion(p,l,now+60);
+   require(before-Survival.fatigue(p)>walking,"standing recovery faster");
+   p.getFoodData().setFoodLevel(5);p.setPos(9.5,70,.5);p.setOnGround(true);before=Survival.fatigue(p);
+   Survival.updateExertion(p,l,now+80);
+   require(before-Survival.fatigue(p)>0&&before-Survival.fatigue(p)<walking,"hunger reduces recovery");
+   p.setSprinting(true);before=Survival.fatigue(p);Survival.updateExertion(p,l,now+100);
+   require(Survival.fatigue(p)>before,"sprint consumes stamina");
+   p.setSprinting(false);p.setOnGround(false);before=Survival.fatigue(p);Survival.updateExertion(p,l,now+120);
+   require(Survival.fatigue(p)==before,"no airborne recovery");
+   Survival.rest(p,100);p.setOnGround(true);Survival.updateExertion(p,l,now+140);
+   require(Survival.fatigue(p)==0,"fatigue never negative");
+  }finally{
+   Survival.clearExertionTracking(p);p.getPersistentData().putDouble("worldlogic_exertion",old);
+   p.getFoodData().setFoodLevel(food);p.setPos(pos.x,pos.y,pos.z);p.setOnGround(grounded);p.setSprinting(sprint);p.setShiftKeyDown(sneak);
+  }
+ }
  public static void verifyAtmosphere(ServerLevel l,boolean rain){
-  BlockPos pos=l.getSharedSpawnPos().above(5);
+  BlockPos pos=weatherFixture(l);
   require(l.hasChunkAt(pos)&&l.canSeeSky(pos),"weather fixture must be loaded and exposed");
   require(l.isRaining()==rain,"weather fixture must match requested weather");
   var a=WorldLogicApi.atmosphere(l,pos).orElseThrow();
@@ -35,7 +70,7 @@ public final class ApiChecks {
   require(AtmosphereModel.wind(42,0,0,1,1,0,0,0).speed()!=calm.speed(),"wind evolves with time");
  }
  public static void verifyRegionalWeather(ServerLevel l){
-  BlockPos pos=l.getSharedSpawnPos().above(5);
+  BlockPos pos=weatherFixture(l);
   var live=WorldLogicApi.atmosphere(l,pos).orElseThrow();
   var a=WorldLogicApi.regionalWeatherPreview(l,pos).orElseThrow();
   require(a.equals(WorldLogicApi.regionalWeatherPreview(l,pos).orElseThrow()),"same-tick regional sample");
@@ -64,7 +99,7 @@ public final class ApiChecks {
   require(wet&&dry,"regional survey includes wet and dry potential");
  }
  public static void verifyWeatherColumn(ServerLevel l){
-  BlockPos pos=l.getSharedSpawnPos().above(5);
+  BlockPos pos=weatherFixture(l);
   var live=WorldLogicApi.atmosphere(l,pos).orElseThrow();
   var a=WorldLogicApi.weatherColumnPreview(l,pos).orElseThrow();
   require(a.equals(WorldLogicApi.weatherColumnPreview(l,pos).orElseThrow()),"same-tick column");

@@ -20,6 +20,12 @@
       "assertion": true
     },
     {
+      "name": "Stamina active recovery, sprint, hunger and airborne controls",
+      "command": "worldlogic qa recovery",
+      "expect": "WORLDLOGIC_RECOVERY_PASSED",
+      "assertion": true
+    },
+    {
       "name": "Live support and falling debris, material tags and saved data",
       "command": "worldlogic qa world",
       "expect": "WORLDLOGIC_WORLD_FIXTURE_PASSED",
@@ -210,6 +216,17 @@
         {
           "backend": "server",
           "name": "Weather column diagnostics"
+        }
+      ]
+    },
+    {
+      "id": "active-recovery",
+      "kind": "mechanic",
+      "subject": "Stamina active recovery, sprint, hunger and airborne controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Stamina active recovery, sprint, hunger and airborne controls"
         }
       ]
     }
