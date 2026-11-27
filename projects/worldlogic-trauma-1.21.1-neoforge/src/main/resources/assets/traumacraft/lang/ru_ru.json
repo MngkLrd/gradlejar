@@ -53,7 +53,7 @@
   "item.traumacraft.endurance_injector": "Инъектор выносливости",
   "jei.traumacraft.endurance_injector": "Скорость I и Прыгучесть II на 60 секунд.",
   "item.traumacraft.rag_dressing": "Самодельная повязка",
-  "jei.traumacraft.rag_dressing": "Самодельная шерстяная повязка. Из 1 блока шерсти получается 2 штуки. Применяется за 1 секунду, возвращает 4 HP части тела, меньше стерильного пластыря (10 HP). Не восстанавливает уничтоженные части тела.",
+  "jei.traumacraft.rag_dressing": "Останавливает слабое кровотечение и восстанавливает до 4 HP. Не останавливает сильное кровотечение.",
   "item.traumacraft.analgesic_tablets": "Обезболивающие таблетки",
   "jei.traumacraft.analgesic_tablets": "Временное обезболивание: Сопротивление I на 10 секунд и лёгкая тёплая сепия на 2 минуты. Не лечит кровотечение и переломы.",
   "tooltip.traumacraft.use_time": "Применение: %s сек.",
@@ -96,5 +96,13 @@
   "screen.traumacraft.blood": "Кровотечение: %s слаб. / %s сильн.",
   "screen.traumacraft.treatment": "Лечение: %s с",
   "screen.traumacraft.physiology": "Кровь %s%% | Боль %s | Шок %s",
-  "screen.traumacraft.function": "Работоспособность: %s%%"
+  "screen.traumacraft.function": "Работоспособность: %s%%",
+  "wound.traumacraft.contusion": "Ушиб",
+  "wound.traumacraft.cut": "Резаная рана",
+  "wound.traumacraft.puncture": "Колотая рана",
+  "wound.traumacraft.laceration": "Рваная рана",
+  "wound.traumacraft.burn": "Ожог",
+  "wound.traumacraft.frostbite": "Обморожение",
+  "item.traumacraft.herbal_poultice": "Травяной компресс",
+  "jei.traumacraft.herbal_poultice": "Облегчает боль при ушибе и немного восстанавливает ткани. Не лечит переломы, кровотечения и разрушенные зоны."
 }

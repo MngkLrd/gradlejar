@@ -26,6 +26,7 @@ public final class MedicalAction {
             case SPLINT, FRACTURE_BRACE, BONE_MENDER -> state.fractured(part) && !state.stabilized(part);
             case MEDKIT -> state.health(part) < part.maximum;
             case FIELD_MEDKIT -> state.health(part) < part.maximum || state.bleeding(part) > 0;
+            case HERBAL_POULTICE -> state.bleeding(part)==0&&!state.fractured(part)&&state.health(part)>0&&state.health(part)<part.maximum&&(state.wounds(part)&WoundKind.CONTUSION.bit)!=0;
             case RAG_DRESSING -> state.bleeding(part)==1 || (state.health(part)>0&&state.health(part)<part.maximum);
             case STERILE_PATCH, COMPACT_MEDKIT ->
                     state.health(part) > 0 && state.health(part) < part.maximum;
@@ -58,6 +59,11 @@ public final class MedicalAction {
                 for (BodyPart zone : BodyPart.values()) if (state.health(zone) == 0) {
                     target = zone; break;
                 }
+                yield target;
+            }
+            case HERBAL_POULTICE -> {
+                BodyPart target=null;
+                for(var zone:BodyPart.values())if(canApply(state,type,zone)&&(target==null||state.percent(zone)<state.percent(target)))target=zone;
                 yield target;
             }
             case RAG_DRESSING -> {
@@ -99,6 +105,7 @@ public final class MedicalAction {
             case SPLINT -> state.stabilize(part, 4800);
             case MEDKIT -> state.heal(part, 25);
 
+            case HERBAL_POULTICE -> {state.heal(part,6);state.setPainkillerTicks(Math.max(state.painkillerTicks(),200));}
             case RAG_DRESSING -> {if(state.bleeding(part)==1)state.stopBleeding(part);state.heal(part,4);}
             case STERILE_PATCH -> state.heal(part, 10);
             case COMPRESSION_WRAP -> {

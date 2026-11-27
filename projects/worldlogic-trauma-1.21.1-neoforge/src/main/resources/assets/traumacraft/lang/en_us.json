@@ -53,7 +53,7 @@
   "item.traumacraft.endurance_injector": "Endurance Injector",
   "jei.traumacraft.endurance_injector": "Grants Speed I and Jump Boost II for 60 seconds.",
   "item.traumacraft.rag_dressing": "Improvised Dressing",
-  "jei.traumacraft.rag_dressing": "Improvised wool dressing. Craft 2 from 1 wool block. Applies in 1 second and restores 4 local HP, less than a Sterile Patch (10 HP). Cannot restore a destroyed body part by itself.",
+  "jei.traumacraft.rag_dressing": "Stops light bleeding and restores up to 4 HP. Does not stop heavy bleeding.",
   "item.traumacraft.analgesic_tablets": "Analgesic Tablets",
   "jei.traumacraft.analgesic_tablets": "Temporary pain relief. Grants Resistance I for 10 seconds and a subtle warm visual effect for 2 minutes. Does not cure fractures or bleeding.",
   "tooltip.traumacraft.use_time": "Application: %s s",
@@ -96,5 +96,13 @@
   "screen.traumacraft.blood": "Bleeding: %s light / %s heavy",
   "screen.traumacraft.treatment": "Treatment: %s s",
   "screen.traumacraft.physiology": "Blood %s%% | Pain %s | Shock %s",
-  "screen.traumacraft.function": "Function: %s%%"
+  "screen.traumacraft.function": "Function: %s%%",
+  "wound.traumacraft.contusion": "Contusion",
+  "wound.traumacraft.cut": "Cut",
+  "wound.traumacraft.puncture": "Puncture wound",
+  "wound.traumacraft.laceration": "Laceration",
+  "wound.traumacraft.burn": "Burn",
+  "wound.traumacraft.frostbite": "Frostbite",
+  "item.traumacraft.herbal_poultice": "Herbal poultice",
+  "jei.traumacraft.herbal_poultice": "Briefly relieves contusion pain and restores a little tissue. Cannot treat fractures, bleeding or destroyed zones."
 }

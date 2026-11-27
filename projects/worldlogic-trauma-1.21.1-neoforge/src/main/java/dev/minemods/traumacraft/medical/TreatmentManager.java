@@ -25,7 +25,7 @@ public final class TreatmentManager {
     public static int duration(MedicalItem.Type type) {
         return switch (type) {
             case RAG_DRESSING -> 20;
-            case STERILE_PATCH -> 30;
+            case STERILE_PATCH, HERBAL_POULTICE -> 30;
             case BANDAGE, COMPRESSION_WRAP, HEMOSTATIC_GEL, TOURNIQUET -> 40;
             case SPLINT, FRACTURE_BRACE, BONE_MENDER -> 60;
             case MEDKIT, COMPACT_MEDKIT, FIELD_MEDKIT -> 80;
