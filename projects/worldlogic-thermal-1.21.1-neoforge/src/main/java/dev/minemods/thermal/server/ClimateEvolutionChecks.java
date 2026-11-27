@@ -72,13 +72,34 @@ final class ClimateEvolutionChecks {
     boolean edge=q.getY()==115||q.getY()==119||q.getX()==5||q.getX()==11||q.getZ()==5||q.getZ()==11;
     l.setBlockAndUpdate(q,edge?Blocks.STONE.defaultBlockState():Blocks.AIR.defaultBlockState());
    }
-   l.setBlockAndUpdate(bed,Blocks.WHITE_WOOL.defaultBlockState());
+   var head=Blocks.WHITE_BED.defaultBlockState()
+       .setValue(net.minecraft.world.level.block.BedBlock.FACING,net.minecraft.core.Direction.EAST)
+       .setValue(net.minecraft.world.level.block.BedBlock.PART,net.minecraft.world.level.block.state.properties.BedPart.HEAD);
+   var foot=head.setValue(net.minecraft.world.level.block.BedBlock.PART,net.minecraft.world.level.block.state.properties.BedPart.FOOT);
+   var footPos=bed.west();
+   l.setBlock(footPos,foot,2);l.setBlock(bed,head,2);
    var chunk=l.getChunkSource().getChunkNow(0,0);
-   require(chunk!=null&&SettlementClimate.install(l,chunk,bed,bounds,1),"cold bedroom gets existing hearth");
+   require(chunk!=null,"bedroom fixture chunk loaded");
+   require(!SettlementClimate.install(l,chunk,bed,bounds,0),"temperate room receives no fixture");
+   // Opening the physical ceiling must fail immediately, even before light updates.
+   for(int x=6;x<=10;x++)for(int z=6;z<=10;z++)l.setBlockAndUpdate(new BlockPos(x,119,z),Blocks.AIR.defaultBlockState());
+   require(!SettlementClimate.install(l,chunk,bed,bounds,1),"roofless bedroom receives no heater");
+   for(int x=6;x<=10;x++)for(int z=6;z<=10;z++)l.setBlockAndUpdate(new BlockPos(x,119,z),Blocks.STONE.defaultBlockState());
+   // All four otherwise valid sites are occupied; placement must not overwrite them.
+   var sites=List.of(bed.north(2),bed.south(2),bed.east(2),bed.west(2));
+   for(BlockPos q:sites)l.setBlockAndUpdate(q,Blocks.OAK_PLANKS.defaultBlockState());
+   require(!SettlementClimate.install(l,chunk,bed,bounds,1),"occupied sites receive no heater");
+   for(BlockPos q:sites){require(l.getBlockState(q).is(Blocks.OAK_PLANKS),"occupied site unchanged");l.setBlockAndUpdate(q,Blocks.AIR.defaultBlockState());}
+   require(SettlementClimate.install(l,chunk,bed,bounds,1),"cold bedroom gets existing hearth");
    require(!SettlementClimate.install(l,chunk,bed,bounds,1),"duplicate heater rejected");
-   require(l.getBlockState(bed).is(Blocks.WHITE_WOOL),"bed/occupied position unchanged");
-   for(BlockPos q:old.keySet())if(l.getBlockState(q).is(ThermalContent.HEARTH.get()))l.setBlockAndUpdate(q,Blocks.AIR.defaultBlockState());
+   require(l.getBlockState(bed).equals(head)&&l.getBlockState(footPos).equals(foot),"both real bed halves unchanged");
+   var hearths=old.keySet().stream().filter(q->l.getBlockState(q).is(ThermalContent.HEARTH.get())).toList();
+   require(hearths.size()==1&&l.getBlockState(hearths.getFirst()).getValue(dev.minemods.thermal.content.FixtureBlock.ACTIVE),"exactly one initially fueled hearth");
+   l.setBlockAndUpdate(hearths.getFirst(),Blocks.AIR.defaultBlockState());
    require(SettlementClimate.install(l,chunk,bed,bounds,-1),"hot bedroom gets existing cooler");
+   var coolers=old.keySet().stream().filter(q->l.getBlockState(q).is(ThermalContent.COOLER.get())).toList();
+   require(coolers.size()==1&&l.getBlockState(coolers.getFirst()).getValue(dev.minemods.thermal.content.FixtureBlock.ACTIVE),"exactly one initially watered cooler");
+   require(!SettlementClimate.install(l,chunk,bed,bounds,-1),"duplicate cooler rejected");
   }finally{old.forEach(l::setBlockAndUpdate);}
  }
 }

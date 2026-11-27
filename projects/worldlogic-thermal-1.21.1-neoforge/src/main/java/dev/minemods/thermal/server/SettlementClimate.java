@@ -59,6 +59,7 @@ public final class SettlementClimate {
   return true;
  }
  static boolean install(ServerLevel l,LevelChunk c,BlockPos bed,net.minecraft.world.level.levelgen.structure.BoundingBox bounds,int kind){
+  if(kind!=1&&kind!=-1)return false;
   // One per nearby bedroom, never overwrite a door, bed, loot or a furniture block.
   for(BlockPos p:BlockPos.betweenClosed(bed.offset(-3,-1,-3),bed.offset(3,2,3))){
    if(!l.hasChunkAt(p)||!bounds.isInside(p))continue;
@@ -66,7 +67,7 @@ public final class SettlementClimate {
   }
   for(int radius=2;radius<=3;radius++)for(Direction dir:Direction.Plane.HORIZONTAL){
    BlockPos p=bed.relative(dir,radius);
-   if(!new ChunkPos(p).equals(c.getPos())||!bounds.isInside(p)||!l.isEmptyBlock(p)||!l.isEmptyBlock(p.above())||l.canSeeSky(p))continue;
+   if(!new ChunkPos(p).equals(c.getPos())||!bounds.isInside(p)||!bounds.isInside(p.above())||!l.isEmptyBlock(p)||!l.isEmptyBlock(p.above())||!hasRoof(l,p,bounds))continue;
    if(!l.getBlockState(p.below()).isFaceSturdy(l,p.below(),Direction.UP))continue;
    boolean wall=false;
    for(Direction face:Direction.Plane.HORIZONTAL){
@@ -76,6 +77,17 @@ public final class SettlementClimate {
    if(!wall)continue;
    var fixture=kind>0?ThermalContent.HEARTH.get():ThermalContent.COOLER.get();
    if(l.setBlockAndUpdate(p,fixture.defaultBlockState())){fixture.activate(l,p,l.getBlockState(p));return true;}
+  }
+  return false;
+ }
+ /** Inspect the actual structure, not the asynchronously updated sky-light cache. */
+ private static boolean hasRoof(ServerLevel l,BlockPos p,net.minecraft.world.level.levelgen.structure.BoundingBox bounds){
+  for(int y=p.getY()+2;y<=bounds.maxY()&&y<l.getMaxBuildHeight();y++){
+   BlockPos q=new BlockPos(p.getX(),y,p.getZ());
+   if(!l.hasChunkAt(q))return false;
+   BlockState s=l.getBlockState(q);
+   if(!s.getFluidState().isEmpty())return false;
+   if(!s.getCollisionShape(l,q).isEmpty())return true;
   }
   return false;
  }
