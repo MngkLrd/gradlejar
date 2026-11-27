@@ -22,7 +22,7 @@ public final class BiomeSurvey{
    .whenComplete((result,error)->server.execute(()->{
     BUSY.remove(server);
     if(error!=null){source.sendFailure(net.minecraft.network.chat.Component.literal("Biome survey failed: "+error.getMessage()));return;}
-    source.sendSuccess(()->net.minecraft.network.chat.Component.literal(result.map(p->"Predicted biome "+id+" at "+p.getX()+" "+p.getY()+" "+p.getZ()+" (sampled, not exact nearest)").orElse("No sampled match for "+id+" within 12288 blocks on the search grid. This does not prove absence.")),false);
+    source.sendSuccess(()->net.minecraft.network.chat.Component.literal(result.map(p->"Predicted biome "+id+" at "+p.getX()+" "+p.getY()+" "+p.getZ()+" (sampled, not exact nearest)").orElse("No sampled match for "+id+" within 32768 blocks on the search grid. This does not prove absence.")),false);
    }));
   source.sendSuccess(()->net.minecraft.network.chat.Component.literal("Searching seeded climate grid without loading chunks."),false);return 1;
  }
@@ -40,9 +40,9 @@ public final class BiomeSurvey{
  }
  static Optional<BlockPos> find(NoiseBasedChunkGenerator gen,RandomState state,BlockPos origin,ResourceLocation target){
   if(!supported(gen)||!gen.getBiomeSource().possibleBiomes().stream().anyMatch(b->b.unwrapKey().map(k->k.location().equals(target)).orElse(false)))return Optional.empty();
-  // First try a local 9x9 grid; then broad search across latitude bands (25x25 km).
+  // Local grid, then climate belts up to 32768 blocks away.
   // Return a sampled candidate rather than claiming exact nearest.
-  for(int step:new int[]{256,3072})for(int ring=0;ring<=4;ring++)for(int dz=-ring;dz<=ring;dz++)for(int dx=-ring;dx<=ring;dx++){
+  for(int step:new int[]{256,4096})for(int ring=0;ring<=(step==256?4:8);ring++)for(int dz=-ring;dz<=ring;dz++)for(int dx=-ring;dx<=ring;dx++){
    if(Math.max(Math.abs(dx),Math.abs(dz))!=ring)continue;
    int x=origin.getX()+dx*step,z=origin.getZ()+dz*step;
    if(Math.abs(x)>29900000||Math.abs(z)>29900000)continue;

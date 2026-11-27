@@ -40,6 +40,11 @@ public final class BiomeChecks {
    if(h>=70){
     var deep=BiomeSurvey.at(gen,b,x,-180,z);
     require(deep.getPath().equals("deep_rock_cavern"),"deep climate depth at land "+x+","+z+" -> "+deep);
+    if(depthSamples==0){
+     var result=BiomeSurvey.find(gen,b,new net.minecraft.core.BlockPos(x,63,z),deep);
+     require(result.isPresent()&&result.get().getX()==x&&result.get().getZ()==z&&BiomeSurvey.at(gen,b,x,result.get().getY(),z).equals(deep),"sampled biome search actual seed");
+     require(BiomeSurvey.find(gen,b,new net.minecraft.core.BlockPos(x,63,z),ResourceLocation.withDefaultNamespace("plains")).isEmpty(),"search rejects unavailable vanilla ID");
+    }
     depthSamples++;
     subsurface.add(deep.toString());
     subsurface.add(BiomeSurvey.at(gen,b,x,h-80,z).toString());
