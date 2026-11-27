@@ -28,6 +28,10 @@ public final class NaturalWaterGeneration{
   if(tagged(b,"minecraft","is_river")||river>.72)return WaterKind.RIVER;
   return WaterKind.LAKE;
  }
+ public static WaterProfile predict(BlockPos waterPos,int oceanFloorY,Holder<Biome> surfaceBiome,double river){
+  WaterKind kind=waterPos.getY()<oceanFloorY-6?WaterKind.GROUNDWATER:surfaceKind(surfaceBiome,river);
+  return WaterClassification.profile(kind,true,WaterEvidence.TERRAIN_PROXY);
+ }
  public static void convert(WorldGenLevel level,ChunkAccess chunk,ChunkGenerator generator){
   if(!enabled(generator))return;
   var sampler=WorldLogicApi.worldgenSampler(level,generator);
@@ -56,7 +60,7 @@ public final class NaturalWaterGeneration{
       var bed=chunk.getBlockState(p.set(x0+x,Math.max(chunk.getMinBuildHeight(),Math.min(y-1,floor)),z0+z));
       var samplePos=new BlockPos(x0+x,sy,z0+z);
       double river=sampler.map(v->v.sample(samplePos,biome,bed).riverbankPotential()).orElse(0.0);
-      kind=surfaceKind(biome,river);kinds[index]=kind;
+      kind=predict(new BlockPos(x0+x,y,z0+z),floor,biome,river).kind();kinds[index]=kind;
      }
     }
     p.set(x0+x,y,z0+z);

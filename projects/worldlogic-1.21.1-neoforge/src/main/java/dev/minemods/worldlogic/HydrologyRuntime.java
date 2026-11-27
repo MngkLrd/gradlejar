@@ -46,8 +46,46 @@ public final class HydrologyRuntime{
   var store=c==null?HydrologyModel.initial(s.soil,s.moisture):c.store();
   double sat=HydrologyModel.unit(store.soil()/profile.capacity());
   return Optional.of(new Hydrology(s.soil,store.soil(),profile.capacity(),store.groundwater(),store.snow(),store.pond(),
-   c==null?0:c.runoff(),c==null?0:c.evaporation(),c==null?0:c.recharge(),c==null?0:c.discharge(),sat,profile.fertility(),profile.permeability(),
+   c==null?0:c.runoff(),c==null?0:c.evaporation(),c==null?0:c.recharge(),c==null?0:c.discharge(),sat,PlantSoilModel.snapshot(store,s.soil,stateEco(l,ChunkPos.asLong(cx,cz))).effectiveFertility(),profile.permeability(),
    Math.max(1,32-store.groundwater()*.10),c!=null,c==null?-1:c.tick()));
+ }
+ private static HydrologyState.Eco stateEco(ServerLevel l,long key){return HydrologyState.get(l).ecology.getOrDefault(key,HydrologyState.emptyEco());}
+ private record Access(HydrologyState state,long key,Site site,HydrologyState.Cell cell){}
+ private static Optional<Access> access(ServerLevel l,BlockPos p,boolean create){
+  if(!active(l)||l.isOutsideBuildHeight(p)||!l.hasChunkAt(p))return Optional.empty();
+  int cx=Math.floorDiv(p.getX(),16),cz=Math.floorDiv(p.getZ(),16);long key=ChunkPos.asLong(cx,cz);
+  var found=site(l,cx*16+8,cz*16+8);if(found.isEmpty())return Optional.empty();
+  var s=found.orElseThrow();var state=HydrologyState.get(l);var c=state.cells.get(key);
+  if(c==null){
+   if(create&&state.cells.size()>=HydrologyState.LIMIT)return Optional.empty();
+   c=new HydrologyState.Cell(HydrologyModel.initial(s.soil,s.moisture),0,0,0,0,-1);
+   if(create){state.cells.put(key,c);state.setDirty();}
+  }
+  return Optional.of(new Access(state,key,s,c));
+ }
+ public static Optional<SoilEcology> ecology(ServerLevel l,BlockPos p){
+  return access(l,p,false).map(a->PlantSoilModel.snapshot(a.cell.store(),a.site.soil,a.state.ecology.getOrDefault(a.key,HydrologyState.emptyEco())));
+ }
+ public static Optional<VegetationResult> vegetation(ServerLevel l,BlockPos p,VegetationInput input){
+  PlantSoilModel.validate(input);
+  return access(l,p,true).map(a->{
+   var e=a.state.ecology.getOrDefault(a.key,HydrologyState.emptyEco());
+   var change=PlantSoilModel.vegetation(a.cell.store(),a.site.soil,e,input,l.getGameTime());
+   if(change.applied()){replaceStore(a,change.store());a.state.ecology.put(a.key,change.eco());a.state.setDirty();}
+   return new VegetationResult(change.applied(),change.accepted(),input.waterDemandMm(),PlantSoilModel.snapshot(change.store(),a.site.soil,change.eco()));
+  });
+ }
+ private static void replaceStore(Access a,HydrologyModel.Store store){
+  var c=a.cell;a.state.cells.put(a.key,new HydrologyState.Cell(store,c.runoff(),c.evaporation(),c.recharge(),c.discharge(),c.tick()));
+ }
+ public static double irrigate(ServerLevel l,BlockPos p,double offered,double salinity){
+  PlantSoilModel.validateIrrigation(offered,salinity);
+  return access(l,p,true).map(a->{
+   var e=a.state.ecology.getOrDefault(a.key,HydrologyState.emptyEco());
+   var change=PlantSoilModel.irrigate(a.cell.store(),a.site.soil,e,offered,salinity,l.getGameTime());
+   if(change.applied()){replaceStore(a,change.store());a.state.ecology.put(a.key,change.eco());a.state.setDirty();}
+   return change.accepted();
+  }).orElse(0.0);
  }
  public static WaterSource waterSource(ServerLevel l,BlockPos p){
   return WaterClassification.legacy(WaterClassification.sample(l,p));
@@ -76,7 +114,10 @@ public final class HydrologyRuntime{
   }
  }
  static HydrologyState.Cell advanceCell(HydrologyState state,long key,HydrologyModel.Store store,SoilType soil,double rain,double snow,double temperature,double humidity,double sun,double wind,long now){
-  var step=HydrologyModel.advance(store,soil,rain,snow,temperature,humidity,sun,wind);
+  var e=state.ecology.getOrDefault(key,HydrologyState.emptyEco());
+  double roots=e.vegetationTick()>=0&&now-e.vegetationTick()<=1200?e.roots():0;
+  var step=HydrologyModel.advance(store,soil,rain,snow,temperature,humidity,sun,wind,roots);
+  if(state.ecology.containsKey(key))state.ecology.put(key,PlantSoilModel.leach(e,store,step));
   var cell=new HydrologyState.Cell(step.store(),step.runoff(),step.evaporation(),step.recharge(),step.discharge(),now);
   state.cells.put(key,cell);state.setDirty();return cell;
  }

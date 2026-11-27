@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=9;
+ public static final int API_REVISION=10;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -71,6 +71,15 @@ public final class WorldLogicApi {
  @FunctionalInterface public interface WorldgenSampler {
   /** No world/block/chunk queries. Pass the already available biome and ground block; do not retain across worlds/reloads. */
   WorldgenEnvironment sample(BlockPos pos,net.minecraft.core.Holder<Biome> biome,BlockState ground);
+  /** Predict the identity of an actual or hypothetical water block before decoration conversion.
+   * Caller supplies column ocean-floor height (same heightmap convention as generator),
+   * biome at surface and bed state, and surface sample position. No reads or writes.
+   * Does not predict the existence of water. */
+  default WaterProfile predictWater(BlockPos waterPos,BlockPos surfacePos,int oceanFloorY,
+    net.minecraft.core.Holder<Biome> surfaceBiome,BlockState bed){
+   return dev.minemods.worldlogic.NaturalWaterGeneration.predict(waterPos,oceanFloorY,surfaceBiome,
+    sample(surfacePos,surfaceBiome,bed).riverbankPotential());
+  }
  }
  /** Build from the caller's existing generator state. No live server-thread assertion, world access or chunk loading. */
  public static Optional<WorldgenSampler> worldgenSampler(net.minecraft.world.level.levelgen.RandomState state,
@@ -120,6 +129,28 @@ public final class WorldLogicApi {
   long observedTick,int observedCombustionSources,int removedLogs,int minedBlocks,int disturbedSoil,int placedBlocks){}
  public static Optional<EnvironmentalMetrics> environmentalMetrics(ServerLevel level,BlockPos pos){
   serverThread(level);return dev.minemods.worldlogic.EnvironmentAnalytics.metrics(level,pos);
+ }
+ /** Aggregate input for one 16x16 horizontal soil cell per 200 game ticks.
+  * Water mm is equivalent to liters per square meter (256 L/mm per cell).
+  * Cover, root retention, and litter are normalized 0..1. Demand is total transpiration,
+  * not per-tree; maximum accepted demand is 4 mm per interval. */
+ public record VegetationInput(double waterDemandMm,double cover,double rootRetention,double litter){}
+ /** Actual water withdrawal and updated state. Repeated reports in one interval are rejected. */
+ public record VegetationResult(boolean applied,double consumedMm,double requestedMm,SoilEcology ecology){}
+ public record SoilEcology(double saltGm2,double salinityGPerLiter,double effectiveFertility,
+  double vegetationCover,double rootRetention,double lastTranspirationMm,double totalTranspirationMm,
+  double lastSaltExportGm2,double recoveredCover,long lastVegetationTick){}
+ public static Optional<VegetationResult> applyVegetation(ServerLevel level,BlockPos pos,VegetationInput input){
+  serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.vegetation(level,pos,input);
+ }
+ /** Report externally supplied irrigation already removed from a container/source.
+  * Returns accepted mm; caller must account for unaccepted volume. Salt input is g/L.
+  * One report per cell per 200 ticks. No fluid blocks are created. */
+ public static double irrigateSoil(ServerLevel level,BlockPos pos,double offeredMm,double salinityGPerLiter){
+  serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.irrigate(level,pos,offeredMm,salinityGPerLiter);
+ }
+ public static Optional<SoilEcology> soilEcology(ServerLevel level,BlockPos pos){
+  serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.ecology(level,pos);
  }
  public record Fatigue(boolean enabled,double fatiguePercent,double remainingStaminaPercent){}
  private static void serverThread(ServerLevel level){
