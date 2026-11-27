@@ -12,7 +12,7 @@ import dev.minemods.traumacraft.network.ModNetwork;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Vanilla-width inventory artwork plus one beveled, 166px tall medical extension. */
+/** Vanilla inventory with an opt-in medical tab; ordinary inventory retains its original width. */
 public final class TraumaInventoryScreen extends InventoryScreen {
     private static final int VANILLA_WIDTH = 176;
     private static final int PANEL_HEIGHT = 166;
@@ -23,25 +23,50 @@ public final class TraumaInventoryScreen extends InventoryScreen {
 
     private int panelWidth = PANEL_DESIRED_WIDTH;
     private BodyPart hovered;
+    private boolean anatomyOpen;
+    private static final int TAB_WIDTH=64, TAB_HEIGHT=18;
 
     public TraumaInventoryScreen(Player player) {
         super(player);
-        imageWidth = VANILLA_WIDTH + PANEL_DESIRED_WIDTH;
+        imageWidth = VANILLA_WIDTH;
         imageHeight = PANEL_HEIGHT;
     }
 
     @Override protected void init() {
         panelWidth = Math.max(148, Math.min(PANEL_DESIRED_WIDTH, width - VANILLA_WIDTH - 6));
-        imageWidth = VANILLA_WIDTH + panelWidth;
+        if(width < 330 || height < 202) anatomyOpen=false;
+        imageWidth = anatomyOpen ? VANILLA_WIDTH + panelWidth : VANILLA_WIDTH;
         imageHeight = PANEL_HEIGHT;
         super.init();
     }
 
+    private boolean tabAvailable() { return width>=330 && height>=202 && !getRecipeBookComponent().isVisible(); }
+    private int tabX() { return leftPos + VANILLA_WIDTH - TAB_WIDTH; }
+    private int tabY() { return topPos - TAB_HEIGHT; }
+    private boolean onTab(double mx,double my) {
+        return tabAvailable() && mx>=tabX() && mx<tabX()+TAB_WIDTH && my>=tabY() && my<tabY()+TAB_HEIGHT;
+    }
+    private void toggleAnatomy() {
+        anatomyOpen=!anatomyOpen;
+        hovered=null;
+        rebuildWidgets();
+    }
+    private void renderTab(GuiGraphics gui,int mx,int my) {
+        if(!tabAvailable())return;
+        int x=tabX(),y=tabY(),r=x+TAB_WIDTH,b=y+TAB_HEIGHT;
+        gui.fill(x+2,y,r-2,b,0xFF373737);
+        gui.fill(x,y+2,r,b,0xFF373737);
+        gui.fill(x+1,y+2,r-1,b,anatomyOpen?0xFFE9E9E9:0xFF8A8A8A);
+        gui.fill(x+3,y+3,r-3,b,anatomyOpen?0xFFC6C6C6:onTab(mx,my)?0xFFBBBBBB:0xFFA0A0A0);
+        gui.fill(x+6,y+5,x+9,y+13,0xFF8E3939);
+        gui.fill(x+4,y+7,x+11,y+10,0xFF8E3939);
+        small(gui,font.plainSubstrByWidth(Component.translatable("screen.traumacraft.tab").getString(),TAB_WIDTH-17),x+14,y+5,0xFF333333);
+    }
     private int px() { return leftPos + VANILLA_WIDTH; }
     private int rowX() { return px() + 64; }
     private int rowRight() { return px() + panelWidth - 7; }
     private int bx() { return px() + 10; }
-    private int by() { return topPos + 29; }
+    private int by() { return topPos + 24; }
 
     private void small(GuiGraphics gui, String value, int x, int y, int color) {
         gui.pose().pushPose();
@@ -54,6 +79,8 @@ public final class TraumaInventoryScreen extends InventoryScreen {
 
     @Override
     protected void renderBg(GuiGraphics gui, float partialTick, int mouseX, int mouseY) {
+        hovered=null;
+        if(!anatomyOpen || !tabAvailable()){super.renderBg(gui,partialTick,mouseX,mouseY);return;}
         // The vanilla PNG is 176px wide; do not attempt to blit the entire expanded screen.
         int saved = imageWidth;
         imageWidth = VANILLA_WIDTH;
@@ -73,10 +100,10 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         gui.drawString(font, Component.translatable("screen.traumacraft.body"),
                 x+7,y+5,0xFF3F3F3F,false);
 
-        gui.fill(x+5,y+21,x+59,y+151,0xFF5D6567);
-        gui.fill(x+7,y+23,x+57,y+149,0xFF262B2E);
+        gui.fill(x+5,y+21,x+59,y+155,0xFF5D6567);
+        gui.fill(x+7,y+23,x+57,y+153,0xFF262B2E);
         BodyVisual.draw(gui,bx(),by(),false);
-        drawTotals(gui,x+10,y+127);
+        TraumaHud.drawActive(gui,x+10,y+109,2);
 
         hovered=BodyVisual.hit(mouseX,mouseY,bx(),by());
         for(int i=0;i<7;i++) {
@@ -90,16 +117,6 @@ public final class TraumaInventoryScreen extends InventoryScreen {
 
         String footer=Component.translatable("screen.traumacraft.drag_to_treat").getString();
         small(gui,font.plainSubstrByWidth(footer,panelWidth-16),x+8,b-11,0xFF555555);
-    }
-
-    private void drawTotals(GuiGraphics gui,int x,int y) {
-        int blood=0,broken=0;
-        for(BodyPart p:BodyPart.values()) {
-            blood+=ClientBodyState.bleeding(p);
-            if(ClientBodyState.fractured(p))broken++;
-        }
-        small(gui,Component.translatable("screen.traumacraft.bleed_count",blood).getString(),x,y,blood>0?0xFFD77979:0xFFA6B0B0);
-        small(gui,Component.translatable("screen.traumacraft.fracture_count",broken).getString(),x,y+9,broken>0?0xFFF0CE91:0xFFA6B0B0);
     }
 
     private void drawRow(GuiGraphics gui,BodyPart part,int x,int y,int right,boolean focus) {
@@ -121,8 +138,9 @@ public final class TraumaInventoryScreen extends InventoryScreen {
 
     @Override public void render(GuiGraphics gui,int mx,int my,float delta) {
         super.render(gui,mx,my,delta);
+        renderTab(gui,mx,my);
         TreatmentRing.render(gui);
-        if(hovered==null)return;
+        if(!anatomyOpen || hovered==null)return;
         List<Component> tooltip=new ArrayList<>();
         tooltip.add(BodyVisual.name(hovered));
         tooltip.add(BodyVisual.condition(hovered));
@@ -142,15 +160,22 @@ public final class TraumaInventoryScreen extends InventoryScreen {
     }
 
     @Override public boolean mouseClicked(double mx,double my,int button) {
-        if(button==0||button==1){
+        if(button==0 && onTab(mx,my)) { toggleAnatomy(); return true; }
+        if(anatomyOpen && tabAvailable() && (button==0||button==1)){
             BodyPart part=findPart((int)mx,(int)my);
             if(part!=null){
                 if(menu.getCarried().getItem() instanceof MedicalItem)
                     ModNetwork.request(new ApplyMedicalPacket(part.ordinal()));
                 return true;
             }
+            // Empty areas of the medical panel must never drop the carried stack.
+            if(mx>=px() && mx<px()+panelWidth && my>=topPos && my<topPos+PANEL_HEIGHT)return true;
         }
-        return super.mouseClicked(mx,my,button);
+        boolean handled=super.mouseClicked(mx,my,button);
+        if(anatomyOpen && getRecipeBookComponent().isVisible()){
+            anatomyOpen=false; hovered=null; rebuildWidgets();
+        }
+        return handled;
     }
     private BodyPart findPart(int mx,int my) {
         BodyPart part=BodyVisual.hit(mx,my,bx(),by());

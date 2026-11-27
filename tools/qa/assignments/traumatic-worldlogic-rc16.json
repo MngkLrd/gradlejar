@@ -275,6 +275,60 @@
       "reason": "Graphical client and real server synchronization not available; pure selector regression passed",
       "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
       "expected": "No placeholders; reflow rows for all active combinations; hide healthy/dead player HUD"
+    },
+    {
+      "id": "TR-TAB-DEFAULT",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Requires graphical client and actual server interaction",
+      "expected": "New inventory opens at vanilla width, medical panel hidden; healthy body all green on opening tab"
+    },
+    {
+      "id": "TR-TAB-TOGGLE",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Requires graphical client and actual server interaction",
+      "expected": "Click tab toggles panel; no loss of inventory cursor stack; closing and reopening inventory resets tab"
+    },
+    {
+      "id": "TR-TAB-LIMBS",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Requires graphical client and actual server interaction",
+      "expected": "Click each independent limb to apply medicine; splint only on treated limb; both legs and both arms independently show overlays; overlay disappears after recovery"
+    },
+    {
+      "id": "TR-TAB-ACTIVE",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Requires graphical client and actual server interaction",
+      "expected": "Display only active effects in two-column grid; zero placeholders"
+    },
+    {
+      "id": "TR-TAB-RECIPE",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Requires graphical client and actual server interaction",
+      "expected": "Vanilla recipe book and medical tab do not overlap; narrow screen stays vanilla"
+    },
+    {
+      "id": "TR-TAB-CURSOR",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Requires graphical client and actual server interaction",
+      "expected": "Click empty medical panel must not drop cursor item"
     }
   ],
   "draft_project": "drafts/traumatic-worldlogic-1.21.1-forge",
@@ -362,5 +416,11 @@
     },
     "full_client": "NOT_RUN",
     "production_jar": "NOT_RUN (visual-only iteration; user requested no JAR in preceding turn)"
+  },
+  "inventory_tab": {
+    "scope": "Forge 1.21.1 / World Logic RC16",
+    "status": "NOT_RUN",
+    "reason": "Graphical client and mod compile unavailable; current draft excluded from standard release build; no workflow-dispatch action available in connector.",
+    "behavior": "Default closed, vanilla width 176; click Trauma tab expands real inventory panel; same BodyVisual renderer and same active condition icons as HUD; each limb has independent state; recipe book is mutually exclusive; no fabricated status icons; narrow GUI retains vanilla inventory."
   }
 }

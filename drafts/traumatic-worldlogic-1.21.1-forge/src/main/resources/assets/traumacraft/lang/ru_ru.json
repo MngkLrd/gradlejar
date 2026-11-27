@@ -80,5 +80,6 @@
   "condition.traumacraft.heavy_bleed": "Сильная кровь",
   "condition.traumacraft.bleeding": "Кровотечение",
   "screen.traumacraft.bleed_count": "Р: %s",
-  "screen.traumacraft.fracture_count": "П: %s"
+  "screen.traumacraft.fracture_count": "П: %s",
+  "screen.traumacraft.tab": "Травмы"
 }

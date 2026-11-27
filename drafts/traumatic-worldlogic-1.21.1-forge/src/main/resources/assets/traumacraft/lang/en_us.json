@@ -80,5 +80,6 @@
   "condition.traumacraft.heavy_bleed": "Heavy bleeding",
   "condition.traumacraft.bleeding": "Bleeding",
   "screen.traumacraft.bleed_count": "W: %s",
-  "screen.traumacraft.fracture_count": "F: %s"
+  "screen.traumacraft.fracture_count": "F: %s",
+  "screen.traumacraft.tab": "Trauma"
 }
