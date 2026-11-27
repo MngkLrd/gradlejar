@@ -12,7 +12,7 @@ permissions:
 jobs:
   natural-world:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,6 +25,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Fetch exact successful Build Hub artifact for this commit
+        id: terrain-artifact
         env:
           GH_TOKEN: ${{ github.token }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -45,6 +46,17 @@ jobs:
         run: |
           python -m pip install nbtlib==2.0.4
           PYTHONPATH=. python projects/worldlogic-terrain-1.21.1-neoforge/qa/worldgen_smoke.py natural-inputs natural-world-qa
+      - name: Fetch verified RC26 core artifact and run unified ecology regression
+        if: always() && steps.terrain-artifact.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/45989182596" --jq '.head_sha + " " + .conclusion' | grep -Fx 'c244e710efd67c6b17066f5de812776fb752bd5e success'
+          gh run download 45989182596 --repo "$GITHUB_REPOSITORY" --pattern 'jar-worldlogic-1.21.1-neoforge-1.0.0-rc26-*' --dir core-rc26-inputs
+          gh run download 45989182596 --repo "$GITHUB_REPOSITORY" --pattern 'qa-report-*' --dir core-rc26-inputs
+          python -m pip install nbtlib==2.0.4
+          PYTHONPATH=. python projects/worldlogic-terrain-1.21.1-neoforge/qa/worldgen_smoke.py natural-inputs unified-world-qa core-rc26-inputs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -52,4 +64,6 @@ jobs:
           path: |
             natural-world-qa/worldgen-report.json
             natural-world-qa/logs/
+            unified-world-qa/worldgen-report.json
+            unified-world-qa/logs/
           if-no-files-found: warn

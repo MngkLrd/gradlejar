@@ -28,7 +28,8 @@ public final class TerrainPatchChecks {
           .then(Commands.literal("patch_check").executes(c->{
             try{
                 check(c.getSource().getLevel());
-                c.getSource().sendSuccess(()->Component.literal("Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support"),false);
+                dev.minemods.worldlogicterrain.tree.TreeChecks.verify(c.getSource().getLevel());
+                c.getSource().sendSuccess(()->Component.literal("Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 20 tree forms, saplings, wood recipes, fallen logs and habitat checks"),false);
                 return 1;
             }catch(IllegalStateException ex){c.getSource().sendFailure(Component.literal(ex.getMessage()));return 0;}
           })));
@@ -80,6 +81,10 @@ public final class TerrainPatchChecks {
             require(drops.size()==1&&drops.getFirst().is(grass.asItem())&&drops.getFirst().getCount()==1,"frost loot");
             l.setBlock(sample.below(),Blocks.AIR.defaultBlockState(),Block.UPDATE_ALL);
             require(l.getBlockState(sample).isAir(),"frost support removal");
+            reset(l,Blocks.GRASS_BLOCK.defaultBlockState(),false);
+            for(int x=1;x<=14;x++)for(int z=1;z<=14;z++)
+                l.setBlock(new BlockPos(x,231,z),Blocks.SNOW.defaultBlockState(),Block.UPDATE_ALL);
+            require(place(l,"frosted_grass",center,82),"frost patch failed through snow layer");
             reset(l,Blocks.STONE.defaultBlockState(),false);
             require(!place(l,"open_meadow",center,81)&&!place(l,"frosted_grass",center,82),"plants generated on stone");
             reset(l,Blocks.ICE.defaultBlockState(),false);

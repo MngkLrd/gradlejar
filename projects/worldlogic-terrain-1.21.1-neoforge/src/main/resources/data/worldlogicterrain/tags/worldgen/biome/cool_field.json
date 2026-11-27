@@ -5,6 +5,22 @@
     "minecraft:meadow",
     "minecraft:sunflower_plains",
     "minecraft:birch_forest",
-    "minecraft:flower_forest"
+    "minecraft:flower_forest",
+    {
+      "id": "worldlogic:prairie",
+      "required": false
+    },
+    {
+      "id": "worldlogic:tallgrass_prairie",
+      "required": false
+    },
+    {
+      "id": "worldlogic:temperate_steppe",
+      "required": false
+    },
+    {
+      "id": "worldlogic:mixed_forest",
+      "required": false
+    }
   ]
 }

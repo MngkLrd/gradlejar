@@ -5,6 +5,22 @@
     "minecraft:windswept_hills",
     "minecraft:windswept_forest",
     "minecraft:taiga",
-    "minecraft:snowy_taiga"
+    "minecraft:snowy_taiga",
+    {
+      "id": "#worldlogic:vegetation/tundra",
+      "required": false
+    },
+    {
+      "id": "worldlogic:forest_tundra",
+      "required": false
+    },
+    {
+      "id": "worldlogic:alpine_meadow",
+      "required": false
+    },
+    {
+      "id": "worldlogic:montane_dry_scrub",
+      "required": false
+    }
   ]
 }

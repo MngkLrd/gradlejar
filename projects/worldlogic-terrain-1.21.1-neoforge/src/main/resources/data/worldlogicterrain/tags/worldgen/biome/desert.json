@@ -5,6 +5,14 @@
     "minecraft:badlands",
     "minecraft:wooded_badlands",
     "minecraft:eroded_badlands",
-    "minecraft:savanna"
+    "minecraft:savanna",
+    {
+      "id": "#worldlogic:vegetation/desert",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/scrub",
+      "required": false
+    }
   ]
 }

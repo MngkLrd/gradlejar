@@ -3,9 +3,9 @@ loaderVersion="[1,)"
 license="All Rights Reserved"
 [[mods]]
 modId="worldlogicterrain"
-version="0.6.0"
-displayName="WorldLogic: Terrain"
-description="Natural vegetation and surface mobility for WorldLogic."
+version="0.7.0"
+displayName="WorldLogic: Terrarian"
+description="Natural vegetation, ecological forests and surface mobility for WorldLogic."
 [[dependencies.worldlogicterrain]]
 modId="neoforge"
 type="required"

@@ -13,6 +13,30 @@
     "minecraft:sparse_jungle",
     "minecraft:bamboo_jungle",
     "minecraft:mangrove_swamp",
-    "minecraft:swamp"
+    "minecraft:swamp",
+    {
+      "id": "#worldlogic:vegetation/temperate_forest",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/boreal",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/tropical_forest",
+      "required": false
+    },
+    {
+      "id": "worldlogic:temperate_marsh",
+      "required": false
+    },
+    {
+      "id": "worldlogic:tropical_floodplain",
+      "required": false
+    },
+    {
+      "id": "worldlogic:mangrove_coast",
+      "required": false
+    }
   ]
 }

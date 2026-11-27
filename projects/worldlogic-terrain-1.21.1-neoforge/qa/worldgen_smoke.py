@@ -24,6 +24,7 @@ from tools.qa.common import require, sha256
 
 PROJECT = Path("projects/worldlogic-terrain-1.21.1-neoforge")
 PRESET = "worldlogic:earthlike_climate"
+CORE_RC26_JAR = "worldlogic-neoforge-mc1.21.1-1.0.0-rc26.jar"
 SPECIES = {
     "plains": {"meadow_grass", "dense_meadow_grass", "wild_chamomile", "wild_cornflower", "wild_clover"},
     "desert": {"dry_grass", "tall_dry_grass", "desert_shrub"},
@@ -39,6 +40,64 @@ NEW_FORAGE = {
     "jungle": {"wild_grape", "wild_pineapple", "wild_tomato", "wild_cucumber", "wild_bell_pepper"},
     "mangrove_swamp": {"wild_pineapple"},
 }
+
+CORE_SPECIES = {
+    "prairie": {"meadow_grass", "dense_meadow_grass", "wild_chamomile", "wild_cornflower", "wild_clover"},
+    "hot_desert": {"dry_grass", "tall_dry_grass", "desert_shrub"},
+    "shrub_tundra": {"frosted_grass", "dwarf_shrub", "wild_heather"},
+    "mixed_forest": {"forest_shrub", "low_fern", "forest_litter", "fallen_leaves"},
+    "continental_taiga": {"low_fern", "forest_shrub", "forest_litter", "bracken"},
+    "temperate_marsh": {"reed", "cattail", "sedge", "marsh_marigold"},
+    "equatorial_rainforest": {"forest_shrub", "dense_underbrush", "low_fern", "forest_litter"},
+}
+CORE_FORAGE = {
+    "prairie": {"wild_strawberry", "wild_radish", "wild_onion", "wild_cabbage"},
+    "mixed_forest": {"wild_blueberry", "wild_raspberry", "wild_blackberry"},
+    "continental_taiga": {"wild_blueberry"},
+    "equatorial_rainforest": {"wild_pineapple"},
+}
+TREE_EXPECTED = {
+    "forest": {"oak","birch","dark_oak"},
+    "jungle": {"jungle"},
+    "mangrove_swamp": {"mangrove"},
+    "mixed_forest": {"oak","birch","dark_oak","willow"},
+    "continental_taiga": {"larch","spruce"},
+    "temperate_marsh": {"willow"},
+    "equatorial_rainforest": {"jungle"},
+}
+MEADOW = SPECIES["plains"]
+
+def unpack(data, index, bits):
+    per = 64 // bits
+    return (int(data[index // per]) >> ((index % per) * bits)) & ((1 << bits) - 1)
+
+def surface_biomes(chunk):
+    sections = {int(sec["Y"]): sec for sec in chunk.get("sections", [])}
+    if not sections:
+        return Counter()
+    base_section = int(chunk.get("yPos", min(sections)))
+    heightmaps = chunk.get("Heightmaps", {})
+    data = heightmaps.get("MOTION_BLOCKING_NO_LEAVES", heightmaps.get("WORLD_SURFACE"))
+    if data is None:
+        return Counter()
+    candidates = [b for b in range(1, 17) if (256 + 64//b - 1)//(64//b) == len(data)]
+    if not candidates:
+        return Counter()
+    expected = ((max(sections) - base_section + 1) * 16).bit_length()
+    bits = min(candidates, key=lambda b: abs(b-expected))
+    counts = Counter()
+    for i in range(256):
+        y = base_section * 16 + unpack(data, i, bits)
+        sec = sections.get(y//16)
+        if sec is None:
+            continue
+        biomes = sec.get("biomes", {})
+        palette = biomes.get("palette", [])
+        if not palette:
+            continue
+        index = 0 if len(palette)==1 else unpack(biomes["data"], ((y%16)//4)*16+((i//16)//4)*4+(i%16)//4, max(1,(len(palette)-1).bit_length()))
+        counts[str(palette[index])] += 1
+    return counts
 
 def read_chunk(region, cx, cz):
     file = region / f"r.{cx // 32}.{cz // 32}.mca"
@@ -66,24 +125,27 @@ def read_chunk(region, cx, cz):
 def scan(region, positions):
     counts, biomes, full = Counter(), set(), 0
     addon_columns, grass_columns, meadow_columns = set(), set(), set()
+    surface = Counter()
     for cx, cz in positions:
         chunk = read_chunk(region, cx, cz)
         if chunk is None or str(chunk.get("Status", "")) not in {"minecraft:full", "full"}:
             continue
         full += 1
+        surface.update(surface_biomes(chunk))
         for section in chunk.get("sections", []):
             biomes.update(map(str, section.get("biomes", {}).get("palette", [])))
             states = section.get("block_states", {})
             palette = [str(x["Name"]) for x in states.get("palette", [])]
             targets = {i: name.split(":", 1)[1] for i, name in enumerate(palette)
-                       if name.startswith("worldlogicterrain:") or name == "minecraft:short_grass"}
+                       if name.startswith("worldlogicterrain:") or name == "minecraft:short_grass" or (name.startswith("minecraft:") and name.endswith(("_log","_leaves")))}
             if not targets:
                 continue
             if len(palette) == 1:
                 counts[targets[0]] += 4096
                 for i in range(256):
-                    (grass_columns if palette[0] == "minecraft:short_grass" else addon_columns).add((cx, cz, i))
-                    if targets[0] in SPECIES["plains"]:
+                    if palette[0]=="minecraft:short_grass": grass_columns.add((cx,cz,i))
+                    elif palette[0].startswith("worldlogicterrain:") and not targets[0].endswith(("_log","_leaves","_planks","_sapling")): addon_columns.add((cx,cz,i))
+                    if targets[0] in MEADOW:
                         meadow_columns.add((cx*16 + i%16, cz*16 + i//16))
                 continue
             bits = max(4, (len(palette) - 1).bit_length())
@@ -94,8 +156,9 @@ def scan(region, positions):
                 index = (int(packed[i // per]) >> ((i % per) * bits)) & mask
                 if index in targets:
                     counts[targets[index]] += 1
-                    (grass_columns if palette[index] == "minecraft:short_grass" else addon_columns).add((cx, cz, i % 256))
-                    if targets[index] in SPECIES["plains"]:
+                    if palette[index]=="minecraft:short_grass": grass_columns.add((cx,cz,i%256))
+                    elif palette[index].startswith("worldlogicterrain:") and not targets[index].endswith(("_log","_leaves","_planks","_sapling")): addon_columns.add((cx,cz,i%256))
+                    if targets[index] in MEADOW:
                         meadow_columns.add((cx*16 + i%16, cz*16 + (i%256)//16))
     # Connected 4-neighbour components from actual stored block positions.
     remaining = set(meadow_columns)
@@ -119,9 +182,16 @@ def scan(region, positions):
     distribution = {"meadow_clusters_ge4": sum(n >= 4 for n in clusters),
                     "largest_meadow_cluster": max(clusters, default=0),
                     "grass_only_gap_tiles_8x8": gap_tiles}
-    return full, biomes, counts, len(addon_columns), len(grass_columns), distribution
+    return full, biomes, counts, len(addon_columns), len(grass_columns), distribution, surface
 
 def main():
+    global PRESET
+    rc26 = len(sys.argv)>3
+    species = CORE_SPECIES if rc26 else SPECIES
+    forage = CORE_FORAGE if rc26 else NEW_FORAGE
+    namespace = 'worldlogic' if rc26 else 'minecraft'
+    if rc26:
+        PRESET = 'worldlogic:realistic_unified'
     inputs = Path(sys.argv[1]).resolve()
     work = Path(sys.argv[2]).resolve()
     work.mkdir(parents=True, exist_ok=False)
@@ -148,8 +218,18 @@ def main():
         mods.mkdir()
         shutil.copy2(jar, mods / jar.name)
         require(sha256(mods / jar.name) == digest, "Installed terrain hash mismatch")
-        for dep in qa["dependencies"]:
-            download(dep["url"], mods / dep["name"], dep["sha256"])
+        if rc26:
+            core_inputs=Path(sys.argv[3]).resolve()
+            cores=list(core_inputs.rglob(CORE_RC26_JAR))
+            require(len(cores)==1,"Expected one exact RC26 production JAR")
+            core_reports=[json.loads(f.read_text()) for f in core_inputs.rglob("qa-report-*.json")]
+            valid=[r for r in core_reports if r.get("jar")==CORE_RC26_JAR and r.get("eligible") is True]
+            require(len(valid)==1 and valid[0].get("sha256")==sha256(cores[0]),"RC26 artifact report/hash mismatch")
+            shutil.copy2(cores[0],mods/CORE_RC26_JAR)
+            report["core_sha256"]=sha256(cores[0])
+        else:
+            for dep in qa["dependencies"]:
+                download(dep["url"], mods / dep["name"], dep["sha256"])
         password = secrets.token_hex(18)
         port, rport = free_port(), free_port()
         while port == rport:
@@ -184,45 +264,72 @@ def main():
             require(str(generator["settings"]) == PRESET, "Actual saved generator is not the WorldLogic preset")
             check = conn.cmd("worldlogicterrain worldgen_check")
             require("biome attachment verified" in check, check)
+            if rc26:
+                sample=conn.cmd("worldlogicterrain habitat_check")
+                require("Core habitat sampled:" in sample,sample)
+                report["core_habitat_sample"]=sample
+                print(sample,flush=True)
             region = root / "natural-world" / "region"
-            for biome, expected in SPECIES.items():
-                found = conn.cmd("locate biome minecraft:" + biome)
-                coords = re.search(r"\[\s*(-?\d+)\s*,\s*(?:~|-?\d+)\s*,\s*(-?\d+)\s*\]", found)
-                if coords is None:
-                    report["results"].append({"biome": biome, "status": "NOT_FOUND_WITHIN_LOCATE_RANGE", "response": found})
-                    print("Not found", biome, found, flush=True)
-                    continue
-                x, z = (int(v) for v in coords.groups())
-                cx, cz = x // 16, z // 16
-                positions = [(a, b) for a in range(cx-2, cx+3) for b in range(cz-2, cz+3)]
-                force = f"{(cx-2)*16} {(cz-2)*16} {(cx+2)*16+15} {(cz+2)*16+15}"
-                result = conn.cmd("forceload add " + force)
-                print("Generating", biome, x, z, result, flush=True)
-                deadline = time.monotonic() + 150
-                full, biomes, counts, addon_columns, grass_columns, distribution = 0, set(), Counter(), 0, 0, {}
-                while time.monotonic() < deadline:
-                    time.sleep(5)
-                    conn.cmd("save-all flush")
-                    full, biomes, counts, addon_columns, grass_columns, distribution = scan(region, positions)
-                    if full == len(positions):
-                        break
-                matching = sum(counts.get(n, 0) for n in expected)
-                forage_count = sum(counts.get(n, 0) for n in NEW_FORAGE.get(biome, set()))
-                coverage = addon_columns / max(1, full * 256)
-                grass_ok = biome != "plains" or (grass_columns > addon_columns and grass_columns > 0)
-                # Plains must be visibly more populated than the 0.5.0 baseline
-                # (51 relevant blocks in this exact fixed-seed window), while
-                # still retaining distinct groups and ordinary-grass gaps.
-                mosaic_ok = biome != "plains" or (matching >= 70 and distribution.get("meadow_clusters_ge4", 0) >= 2 and distribution.get("grass_only_gap_tiles_8x8", 0) >= 4)
-                passed = coverage <= 0.18 and grass_ok and mosaic_ok and full == len(positions) and "minecraft:" + biome in biomes and matching > 0 and (biome not in NEW_FORAGE or forage_count > 0)
-                row = {"biome": biome, "status": "PASS" if passed else "FAIL",
-                       "x": x, "z": z, "full_chunks": full,
-                       "expected_species_blocks": matching, "new_forage_blocks": forage_count, "addon_column_fraction": coverage, "vanilla_short_grass_columns": grass_columns, **distribution, "all_terrain_blocks": dict(counts)}
+            for biome, expected in species.items():
+                target=namespace+":"+biome
+                # A locate result may refer only to an underground/vertical biome.
+                # Select a window on measured surface biome membership, not on plant counts.
+                row=None
+                seen=set()
+                for anchor in (None,(2048,160,2048),(-2048,160,-2048),(4096,180,-4096)):
+                    cmd="locate biome "+target if anchor is None else "execute positioned %d %d %d run locate biome "%anchor+target
+                    found=conn.cmd(cmd)
+                    coords=re.search(r"\[\s*(-?\d+)\s*,\s*(?:~|-?\d+)\s*,\s*(-?\d+)\s*\]",found)
+                    if coords is None:
+                        print("Not found",target,anchor,found,flush=True)
+                        continue
+                    x,z=(int(v) for v in coords.groups())
+                    cx,cz=x//16,z//16
+                    if (cx,cz) in seen: continue
+                    seen.add((cx,cz))
+                    positions=[(a,b) for a in range(cx-2,cx+3) for b in range(cz-2,cz+3)]
+                    force=f"{(cx-2)*16} {(cz-2)*16} {(cx+2)*16+15} {(cz+2)*16+15}"
+                    print("Generating",target,x,z,conn.cmd("forceload add "+force),flush=True)
+                    deadline=time.monotonic()+150
+                    full,biomes,counts,addon_columns,grass_columns,distribution,surface=0,set(),Counter(),0,0,{},Counter()
+                    while time.monotonic()<deadline:
+                        time.sleep(5)
+                        conn.cmd("save-all flush")
+                        full,biomes,counts,addon_columns,grass_columns,distribution,surface=scan(region,positions)
+                        if full==len(positions): break
+                    conn.cmd("forceload remove "+force)
+                    require(full==len(positions),"Full chunk generation timed out "+target)
+                    surface_count=surface.get(target,0)
+                    print("Surface columns",target,surface_count,flush=True)
+                    if surface_count<32: continue
+                    matching=sum(counts.get(n,0) for n in expected)
+                    forage_count=sum(counts.get(n,0) for n in forage.get(biome,set()))
+                    coverage=addon_columns/max(1,full*256)
+                    grass_ok=biome not in {"plains","prairie"} or (grass_columns>addon_columns and grass_columns>0)
+                    mosaic_ok=biome!="plains" or (matching>=70 and distribution.get("meadow_clusters_ge4",0)>=2 and distribution.get("grass_only_gap_tiles_8x8",0)>=4)
+                    trees=TREE_EXPECTED.get(biome,set())
+                    logs=sum(counts.get(n+"_log",0) for n in trees)
+                    leaves=sum(counts.get(n+"_leaves",0) for n in trees)
+                    trees_ok=not trees or (logs>3 and leaves>5)
+                    passed=coverage<=.18 and grass_ok and mosaic_ok and target in biomes and matching>0 and (biome not in forage or forage_count>0) and trees_ok
+                    # Cold habitats must contain actual frosted grass, not just another cold plant.
+                    if biome in {"snowy_plains","shrub_tundra"}: passed=passed and counts.get("frosted_grass",0)>0
+                    row={"biome":target,"status":"PASS" if passed else "FAIL","x":x,"z":z,"full_chunks":full,
+                         "surface_biome_columns":surface_count,"expected_species_blocks":matching,"new_forage_blocks":forage_count,
+                         "tree_logs":logs,"tree_leaves":leaves,"addon_column_fraction":coverage,
+                         "vanilla_short_grass_columns":grass_columns,**distribution,"all_terrain_blocks":dict(counts)}
+                    break
+                if row is None:
+                    row={"biome":target,"status":"NOT_FOUND_AT_SURFACE","searched_windows":len(seen)}
                 report["results"].append(row)
-                print(json.dumps(row), flush=True)
-                conn.cmd("forceload remove " + force)
+                print(json.dumps(row),flush=True)
             require(not FATAL.search(log.read_text(errors="replace")), "Fatal custom world error")
-            require(any(r["status"] == "PASS" for r in report["results"]), "No naturally generated target biome vegetation verified")
+            passed=[r for r in report["results"] if r["status"]=="PASS"]
+            require(len(passed)>=(3 if rc26 else 4),"Too few verified surface biomes")
+            require(any(r["biome"].endswith(":shrub_tundra" if rc26 else ":snowy_plains") for r in passed),"Frost grass regression not verified at a real cold surface")
+            if rc26:
+                require(any(r.get("tree_logs",0)>0 for r in passed),"No ecological trees verified in RC26")
+                require(any(r.get("all_terrain_blocks",{}).get("willow_log",0)+r.get("all_terrain_blocks",{}).get("larch_log",0)>0 for r in passed),"No new tree species verified in RC26")
             require(not any(r["status"] == "FAIL" for r in report["results"]), "A located target biome has no expected generated vegetation")
             try:
                 conn.cmd("stop")

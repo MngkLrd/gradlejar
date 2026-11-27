@@ -4,6 +4,18 @@
     "minecraft:jungle",
     "minecraft:sparse_jungle",
     "minecraft:bamboo_jungle",
-    "minecraft:mangrove_swamp"
+    "minecraft:mangrove_swamp",
+    {
+      "id": "#worldlogic:vegetation/tropical_forest",
+      "required": false
+    },
+    {
+      "id": "worldlogic:tropical_floodplain",
+      "required": false
+    },
+    {
+      "id": "worldlogic:mangrove_coast",
+      "required": false
+    }
   ]
 }

@@ -9,6 +9,18 @@
     "minecraft:old_growth_pine_taiga",
     "minecraft:old_growth_spruce_taiga",
     "minecraft:jungle",
-    "minecraft:sparse_jungle"
+    "minecraft:sparse_jungle",
+    {
+      "id": "#worldlogic:vegetation/temperate_forest",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/boreal",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/tropical_forest",
+      "required": false
+    }
   ]
 }

@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#worldlogicterrain:tree_open",
+    "#worldlogicterrain:tree_temperate",
+    "#worldlogicterrain:tree_boreal",
+    "#worldlogicterrain:tree_wet",
+    "#worldlogicterrain:tree_dry",
+    "#worldlogicterrain:tree_tropical",
+    "#worldlogicterrain:tree_cherry"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogicterrain:willow_log",
+    "worldlogicterrain:willow_planks",
+    "worldlogicterrain:larch_log",
+    "worldlogicterrain:larch_planks"
+  ]
+}

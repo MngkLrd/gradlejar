@@ -7,6 +7,18 @@
     "minecraft:old_growth_spruce_taiga",
     "minecraft:forest",
     "minecraft:birch_forest",
-    "minecraft:old_growth_birch_forest"
+    "minecraft:old_growth_birch_forest",
+    {
+      "id": "#worldlogic:vegetation/boreal",
+      "required": false
+    },
+    {
+      "id": "worldlogic:mixed_forest",
+      "required": false
+    },
+    {
+      "id": "worldlogic:temperate_deciduous_forest",
+      "required": false
+    }
   ]
 }

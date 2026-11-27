@@ -44,5 +44,13 @@
   "block.worldlogicterrain.bracken": "Орляк",
   "block.worldlogicterrain.marsh_marigold": "Калужница болотная",
   "tooltip.worldlogicterrain.exertion": "Восстановление выносливости: +%s",
-  "block.worldlogicterrain.frosted_grass": "Мёрзлая трава"
+  "block.worldlogicterrain.frosted_grass": "Мёрзлая трава",
+  "block.worldlogicterrain.willow_log": "Бревно ивы",
+  "block.worldlogicterrain.willow_planks": "Доски ивы",
+  "block.worldlogicterrain.willow_leaves": "Листва ивы",
+  "block.worldlogicterrain.willow_sapling": "Саженец ивы",
+  "block.worldlogicterrain.larch_log": "Бревно лиственницы",
+  "block.worldlogicterrain.larch_planks": "Доски лиственницы",
+  "block.worldlogicterrain.larch_leaves": "Листва лиственницы",
+  "block.worldlogicterrain.larch_sapling": "Саженец лиственницы"
 }

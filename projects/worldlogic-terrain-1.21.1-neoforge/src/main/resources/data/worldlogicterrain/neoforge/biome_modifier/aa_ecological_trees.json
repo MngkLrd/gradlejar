@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:tree_habitat",
+  "features": "worldlogicterrain:ecological_trees",
+  "step": "vegetal_decoration"
+}

@@ -11,6 +11,10 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import dev.minemods.worldlogicterrain.tree.TerrarianSaplingBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -23,7 +27,10 @@ public final class TerrainContent {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, WorldLogicTerrain.MOD_ID);
     private static final List<Supplier<Item>> PLANTS = new ArrayList<>();
     private static final List<Supplier<Item>> FOODS = new ArrayList<>();
+    private static final List<Supplier<Item>> WOOD = new ArrayList<>();
     static {
+        tree("willow");
+        tree("larch");
         plant("meadow_grass", false);
         plant("frosted_grass", false);
         plant("dense_meadow_grass", false);
@@ -58,6 +65,16 @@ public final class TerrainContent {
         forage("cabbage", 4, 0.5f, 0);
         forage("bell_pepper", 3, 0.45f, 0);
     }
+    private static void tree(String name) {
+        wood(name+"_log",()->new RotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG)));
+        wood(name+"_planks",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)));
+        wood(name+"_leaves",()->new LeavesBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LEAVES)));
+        wood(name+"_sapling",()->new TerrarianSaplingBlock(name,BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING)));
+    }
+    private static void wood(String id,Supplier<Block> factory) {
+        var block=BLOCKS.register(id,factory);
+        WOOD.add(ITEMS.register(id,()->new BlockItem(block.get(),new Item.Properties())));
+    }
     private static void plant(String id, boolean tall) {
         Supplier<Block> block = BLOCKS.register(id, () -> {
             var properties = BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS);
@@ -77,7 +94,13 @@ public final class TerrainContent {
     }
     public static void creative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey().equals(CreativeModeTabs.NATURAL_BLOCKS))
-            PLANTS.forEach(item -> event.accept(item.get()));
+            { PLANTS.forEach(item -> event.accept(item.get()));
+              WOOD.forEach(item -> event.accept(item.get())); }
+        if(event.getTabKey().equals(CreativeModeTabs.BUILDING_BLOCKS))
+            WOOD.stream().map(Supplier::get).filter(item -> {
+                String path=BuiltInRegistries.ITEM.getKey(item).getPath();
+                return path.endsWith("_log")||path.endsWith("_planks");
+            }).forEach(event::accept);
         if(event.getTabKey().equals(CreativeModeTabs.FOOD_AND_DRINKS))
             FOODS.forEach(item -> event.accept(item.get()));
     }

@@ -5,6 +5,18 @@
     "minecraft:mangrove_swamp",
     "minecraft:river",
     "minecraft:jungle",
-    "minecraft:sparse_jungle"
+    "minecraft:sparse_jungle",
+    {
+      "id": "#worldlogic:vegetation/wetland",
+      "required": false
+    },
+    {
+      "id": "worldlogic:temperate_rainforest",
+      "required": false
+    },
+    {
+      "id": "worldlogic:equatorial_rainforest",
+      "required": false
+    }
   ]
 }

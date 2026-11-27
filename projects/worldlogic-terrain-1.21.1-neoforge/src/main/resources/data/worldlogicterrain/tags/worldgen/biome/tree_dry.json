@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:savanna",
+    "minecraft:savanna_plateau",
+    "minecraft:windswept_savanna",
+    "minecraft:wooded_badlands",
+    {
+      "id": "#worldlogic:vegetation/scrub",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/savanna",
+      "required": false
+    }
+  ]
+}

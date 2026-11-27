@@ -748,7 +748,7 @@
     {
       "name": "WorldLogic preset vegetation attachment",
       "command": "worldlogicterrain worldgen_check",
-      "expect": "3 core presets, 35 plant features, biome attachment verified",
+      "expect": "legacy and available unified core presets, 35 plant features and ecological trees, biome attachment verified",
       "assertion": true
     },
     {
@@ -1208,7 +1208,7 @@
     {
       "name": "Mixed meadow and frost patch mechanics",
       "command": "worldlogicterrain patch_check",
-      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support",
+      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 20 tree forms, saplings, wood recipes, fallen logs and habitat checks",
       "assertion": true
     }
   ],
@@ -2641,6 +2641,541 @@
           "backend": "server",
           "name": "Mixed meadow and frost patch mechanics"
         },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-oak_young",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape oak_young, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-oak_spreading",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape oak_spreading, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-oak_ancient",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape oak_ancient, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-oak_windswept",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape oak_windswept, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-birch_young",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape birch_young, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-birch_tall",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape birch_tall, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-pine_tall",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape pine_tall, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-spruce_dense",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape spruce_dense, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-spruce_old",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape spruce_old, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-larch_young",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape larch_young, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-larch_tall",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape larch_tall, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-willow_young",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape willow_young, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-willow_spreading",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape willow_spreading, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-acacia_stunted",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape acacia_stunted, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-acacia_spreading",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape acacia_spreading, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-jungle_canopy",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape jungle_canopy, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-jungle_giant",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape jungle_giant, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-dark_oak_old",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape dark_oak_old, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-cherry_spreading",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape cherry_spreading, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-mangrove_coast",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape mangrove_coast, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "wood-willow-log",
+      "kind": "block",
+      "subject": "willow log actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-willow-log",
+      "kind": "item",
+      "subject": "willow log item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-willow-leaves",
+      "kind": "block",
+      "subject": "willow leaves actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-willow-leaves",
+      "kind": "item",
+      "subject": "willow leaves item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-willow-sapling",
+      "kind": "block",
+      "subject": "willow sapling actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-willow-sapling",
+      "kind": "item",
+      "subject": "willow sapling item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-willow-planks",
+      "kind": "block",
+      "subject": "willow planks actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-willow-planks",
+      "kind": "item",
+      "subject": "willow planks item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-larch-log",
+      "kind": "block",
+      "subject": "larch log actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-larch-log",
+      "kind": "item",
+      "subject": "larch log item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-larch-leaves",
+      "kind": "block",
+      "subject": "larch leaves actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-larch-leaves",
+      "kind": "item",
+      "subject": "larch leaves item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-larch-sapling",
+      "kind": "block",
+      "subject": "larch sapling actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-larch-sapling",
+      "kind": "item",
+      "subject": "larch sapling item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-larch-planks",
+      "kind": "block",
+      "subject": "larch planks actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-larch-planks",
+      "kind": "item",
+      "subject": "larch planks item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-recipe-willow",
+      "kind": "recipe",
+      "subject": "willow log crafts four own planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-recipe-larch",
+      "kind": "recipe",
+      "subject": "larch log crafts four own planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "ecological-grove-field",
+      "kind": "mechanic",
+      "subject": "Deterministic bounded seeded grove distribution with both gaps and stands",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "fallen-tree-stump",
+      "kind": "mechanic",
+      "subject": "Actual fallen wood and stump with correct log axes, obstacle rejection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "rc26-flora-habitats",
+      "kind": "mechanic",
+      "subject": "Flora and tree biome attachment to old and available unified core presets",
+      "checks": [
         {
           "backend": "server",
           "name": "WorldLogic preset vegetation attachment"
