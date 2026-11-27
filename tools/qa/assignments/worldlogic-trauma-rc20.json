@@ -5,7 +5,7 @@
   "scenario": "tools/qa/scenarios/worldlogic-trauma-rc20.json",
   "coverage": [
     {
-      "id": "TR-STATE",
+      "id": "tr-state",
       "assertions": [
         "TR-STATE"
       ],
@@ -16,7 +16,7 @@
       "reason": "RC20 revision requires actual CI or client verification."
     },
     {
-      "id": "TR-TREAT",
+      "id": "tr-treat",
       "assertions": [
         "TR-TREAT"
       ],
@@ -27,7 +27,7 @@
       "reason": "RC20 revision requires actual CI or client verification."
     },
     {
-      "id": "TR-BRIDGE",
+      "id": "tr-bridge",
       "assertions": [
         "TR-BRIDGE"
       ],
@@ -38,7 +38,7 @@
       "reason": "RC20 revision requires actual CI or client verification."
     },
     {
-      "id": "TR-DAMAGE",
+      "id": "tr-damage",
       "assertions": [
         "TR-DAMAGE"
       ],
@@ -49,7 +49,7 @@
       "reason": "RC20 revision requires actual CI or client verification."
     },
     {
-      "id": "TR-NETWORK",
+      "id": "tr-network",
       "state": "NOT_RUN",
       "reason": "RC20 revision requires actual CI or client verification.",
       "targets": [
@@ -57,7 +57,7 @@
       ]
     },
     {
-      "id": "TR-UI",
+      "id": "tr-ui",
       "state": "NOT_RUN",
       "reason": "RC20 revision requires actual CI or client verification.",
       "targets": [
@@ -65,7 +65,7 @@
       ]
     },
     {
-      "id": "TR-LIFECYCLE",
+      "id": "tr-lifecycle",
       "state": "NOT_RUN",
       "reason": "RC20 revision requires actual CI or client verification.",
       "targets": [
@@ -73,7 +73,7 @@
       ]
     },
     {
-      "id": "TR-ITEMS",
+      "id": "tr-items",
       "state": "NOT_RUN",
       "reason": "RC20 revision requires actual CI or client verification.",
       "items": [
@@ -110,7 +110,7 @@
       ]
     },
     {
-      "id": "TR-RECIPES",
+      "id": "tr-recipes",
       "state": "NOT_RUN",
       "reason": "RC20 revision requires actual CI or client verification.",
       "recipes": [
@@ -147,7 +147,7 @@
       ]
     },
     {
-      "id": "TR-ART-medical_pouch",
+      "id": "tr-art-medical_pouch",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -157,7 +157,7 @@
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
-      "id": "TR-ART-medkit",
+      "id": "tr-art-medkit",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -167,7 +167,7 @@
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
-      "id": "TR-ART-rag_dressing",
+      "id": "tr-art-rag_dressing",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -177,7 +177,7 @@
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
-      "id": "TR-ART-compression_wrap",
+      "id": "tr-art-compression_wrap",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -187,7 +187,7 @@
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
-      "id": "TR-ART-sterile_fabric",
+      "id": "tr-art-sterile_fabric",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -197,7 +197,7 @@
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
-      "id": "TR-ART-splint",
+      "id": "tr-art-splint",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -207,7 +207,7 @@
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
-      "id": "TR-ART-antiseptic",
+      "id": "tr-art-antiseptic",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -217,7 +217,7 @@
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
-      "id": "TR-ART-bandage",
+      "id": "tr-art-bandage",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -227,7 +227,7 @@
       "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
     },
     {
-      "id": "TR-HUD-PIXEL",
+      "id": "tr-hud-pixel",
       "state": "NOT_RUN",
       "reason": "RC20 revision requires actual CI or client verification.",
       "expected": "HUD renders at integer 1x when injured; no healthy/creative HUD; no hotbar overlap at narrow scales",
@@ -236,7 +236,7 @@
       ]
     },
     {
-      "id": "TR-ANATOMY-UI",
+      "id": "tr-anatomy-ui",
       "state": "NOT_RUN",
       "reason": "RC20 revision requires actual CI or client verification.",
       "expected": "2x anatomy, correct mirrored sides and treatment hit targets, qualitative localized statuses, small-screen vanilla fallback, no misleading raw HP total",
@@ -245,7 +245,7 @@
       ]
     },
     {
-      "id": "TR-HUD-ATLAS",
+      "id": "tr-hud-atlas",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -254,7 +254,7 @@
       "expected": "All seven zones use the correct palette; mirrored leg alignment; 2 px abdomen-to-leg gap; 20x20 icon frames and independent dynamic injury overlays; click targets match body sprite coordinates."
     },
     {
-      "id": "TR-HUD-FRAME",
+      "id": "tr-hud-frame",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -263,7 +263,7 @@
       "expected": "76x94 HUD fits beside hotbar; at narrow GUI width relocates to top-left; healthy and creative HUD remains hidden."
     },
     {
-      "id": "TR-HUD-BLEED",
+      "id": "tr-hud-bleed",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -273,7 +273,7 @@
       "expected": "Show if any bleeding severity is positive; remove when all bleeding is stopped"
     },
     {
-      "id": "TR-HUD-FRACTURE",
+      "id": "tr-hud-fracture",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -283,7 +283,7 @@
       "expected": "Show if any fracture exists, including stabilized; remove after all recover"
     },
     {
-      "id": "TR-HUD-CONCUSSION",
+      "id": "tr-hud-concussion",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -293,7 +293,7 @@
       "expected": "Show while server concussion ticks > 0; disappear on expiry"
     },
     {
-      "id": "TR-HUD-PAINKILLER",
+      "id": "tr-hud-painkiller",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -303,7 +303,7 @@
       "expected": "Show while server painkiller ticks > 0; disappear on expiry"
     },
     {
-      "id": "TR-HUD-COMPACT",
+      "id": "tr-hud-compact",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -313,7 +313,7 @@
       "expected": "No placeholders; reflow rows for all active combinations; hide healthy/dead player HUD"
     },
     {
-      "id": "TR-TAB-DEFAULT",
+      "id": "tr-tab-default",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -322,7 +322,7 @@
       "expected": "New inventory opens at vanilla width, medical panel hidden; healthy body all green on opening tab"
     },
     {
-      "id": "TR-TAB-TOGGLE",
+      "id": "tr-tab-toggle",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -331,7 +331,7 @@
       "expected": "Click tab toggles panel; no loss of inventory cursor stack; closing and reopening inventory resets tab"
     },
     {
-      "id": "TR-TAB-LIMBS",
+      "id": "tr-tab-limbs",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -340,7 +340,7 @@
       "expected": "Click each independent limb to apply medicine; splint only on treated limb; both legs and both arms independently show overlays; overlay disappears after recovery"
     },
     {
-      "id": "TR-TAB-ACTIVE",
+      "id": "tr-tab-active",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -349,7 +349,7 @@
       "expected": "Display only active effects in two-column grid; zero placeholders"
     },
     {
-      "id": "TR-TAB-RECIPE",
+      "id": "tr-tab-recipe",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -358,7 +358,7 @@
       "expected": "Vanilla recipe book and medical tab do not overlap; narrow screen stays vanilla"
     },
     {
-      "id": "TR-TAB-CURSOR",
+      "id": "tr-tab-cursor",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -367,7 +367,7 @@
       "expected": "Click empty medical panel must not drop cursor item"
     },
     {
-      "id": "TR-NEOFORGE-PAYLOADS",
+      "id": "tr-neoforge-payloads",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -376,7 +376,7 @@
       "reason": "RC20 revision requires actual CI or client verification."
     },
     {
-      "id": "TR-NEOFORGE-CORE-LOCK",
+      "id": "tr-neoforge-core-lock",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -385,7 +385,7 @@
       "reason": "RC20 revision requires actual CI or client verification."
     },
     {
-      "id": "TR-API",
+      "id": "tr-api",
       "targets": [
         "neoforge-mc1.21.1"
       ],
@@ -428,6 +428,14 @@
     "stage": "Verify JAR",
     "cause": "modId traumacraft must match profile slug",
     "resolution": "preserve existing registry namespace and align profile slug/filename",
+    "state": "PASS_ON_RETRY",
+    "retry_run": 45972506159
+  },
+  "qa_schema_incident": {
+    "run": 45972506159,
+    "stage": "QA v2 production JAR release gate",
+    "cause": "Coverage IDs must match [a-z][a-z0-9_.-]{0,95}; uppercase TR IDs rejected before server boot",
+    "resolution": "Normalize coverage IDs to lowercase; preserve all assertions",
     "state": "FIXED_IN_SOURCE_NOT_RUN"
   }
 }
