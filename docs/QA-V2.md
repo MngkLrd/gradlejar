@@ -1,5 +1,7 @@
 # MineMods QA v2: contributor guide
 
+**Development scope:** Follow [AGENTS.md — Development scope](../AGENTS.md#development-scope--product-first-ports-at-the-end). Routine product iterations use the established Minecraft/loader pair only. The eleven-target matrix is for explicitly requested porting or release work, not an automatic requirement for every update. Preserve existing cohort and evidence-invalidation rules.
+
 ## P0 — compatibility and release policy
 - `tools/qa/compatibility.json` centralizes the eleven standard targets, runtime Java, pinned baseline loaders, Gradle and separate resource/data pack formats. For newer releases verify Mojang/loader metadata and update the registry intentionally. It is a reference, not an automatic dependency updater. Each project's real Gradle build still controls compile dependencies.
 - `AGENTS.md` is the standard for all contributors. A new profile in the common Build Hub must define QA; missing QA is a failure. The explicit legacy snapshot prevents suddenly blocking existing work. Existing independent workflows are not yet migrated; their releases are not QA-v2 certified.
