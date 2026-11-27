@@ -1,3 +1,7 @@
+# NON-NEGOTIABLE OWNER REQUIREMENT: RC22 GEOGRAPHY MUST NOT REGRESS
+
+Preserve RC22 Earthlike Climate surface relief, coastlines, continents, mountains, plains and drainage. Do not amplify, flatten, reroll or replace its terrain noise to add biomes. New biome classes partition the same climate fields. Compare exact base height at identical coordinates and seeds against the immutable RC22 preset; intentional local cave mouths/soil features are separately reviewed. Do not remove old registry IDs needed by existing saves. This rule overrides older plans to amplify mountain height. Core owns geography, climate, biome classification, geology, hydrology and animals; Terrarian owns plant generation (trees, grass, shrubs and other flora). One selectable Realistic preset for new World Logic worlds, with legacy IDs retained for old saves. Full generated-world and client checks remain required before release-quality claims.
+
 # World Logic API v1 (RC20 baseline, RC21 additive revision)
 
 Minecraft 1.21.1 / NeoForge 21.1.80+ (CI baseline 21.1.262) / Java 21 / official mappings.
