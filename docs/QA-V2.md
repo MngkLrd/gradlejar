@@ -87,3 +87,7 @@ Extended pilot: Fabric 1.21.4 has a separate registry baseline (Java 21, resourc
 ## P8.1 — player action library pilot
 
 See [Bot actions](BOT-ACTIONS.md). A separate no-mod Fabric control workflow runs on bot changes, with actual server assertions for movement, crafting, placement, mining, combat and interaction. It does not publish JARs. Existing network scenarios retain their assertions; the lever test now uses an unobstructed fixture and an explicit sequenced use-item-on packet. Actual per-version CI results determine support.
+
+## P8/P9 — validated bot and declared coverage
+
+Bot control and production Fragile Glass network checks passed on Fabric 1.20.1, 1.21.1 and 1.21.4 in runs 45956448923 and 45956448945. Three older Fragile Glass Forge/NeoForge profiles are enrolled as a separate server-only cohort. All enrolled server profiles require machine-readable declared coverage. Initial Fragile Glass and Natural Buoyancy mappings cover existing assertions, not all mechanics. The gate checks named assertions before runtime and execution evidence before eligibility. No frozen exemption is needed for the currently enrolled cohort; existing legacy exemptions remain. Registry reconciliation and modded client actions are not implied. No blanket migration of published mods.
