@@ -64,6 +64,7 @@ def read_chunk(region, cx, cz):
 
 def scan(region, positions):
     counts, biomes, full = Counter(), set(), 0
+    addon_columns, grass_columns = set(), set()
     for cx, cz in positions:
         chunk = read_chunk(region, cx, cz)
         if chunk is None or str(chunk.get("Status", "")) not in {"minecraft:full", "full"}:
@@ -74,11 +75,13 @@ def scan(region, positions):
             states = section.get("block_states", {})
             palette = [str(x["Name"]) for x in states.get("palette", [])]
             targets = {i: name.split(":", 1)[1] for i, name in enumerate(palette)
-                       if name.startswith("worldlogicterrain:")}
+                       if name.startswith("worldlogicterrain:") or name == "minecraft:short_grass"}
             if not targets:
                 continue
             if len(palette) == 1:
                 counts[targets[0]] += 4096
+                for i in range(256):
+                    (grass_columns if palette[0] == "minecraft:short_grass" else addon_columns).add((cx, cz, i))
                 continue
             bits = max(4, (len(palette) - 1).bit_length())
             per = 64 // bits
@@ -88,7 +91,8 @@ def scan(region, positions):
                 index = (int(packed[i // per]) >> ((i % per) * bits)) & mask
                 if index in targets:
                     counts[targets[index]] += 1
-    return full, biomes, counts
+                    (grass_columns if palette[index] == "minecraft:short_grass" else addon_columns).add((cx, cz, i % 256))
+    return full, biomes, counts, len(addon_columns), len(grass_columns)
 
 def main():
     inputs = Path(sys.argv[1]).resolve()
@@ -163,24 +167,26 @@ def main():
                     continue
                 x, z = (int(v) for v in coords.groups())
                 cx, cz = x // 16, z // 16
-                positions = [(a, b) for a in range(cx-1, cx+2) for b in range(cz-1, cz+2)]
-                force = f"{(cx-1)*16} {(cz-1)*16} {(cx+1)*16+15} {(cz+1)*16+15}"
+                positions = [(a, b) for a in range(cx-2, cx+3) for b in range(cz-2, cz+3)]
+                force = f"{(cx-2)*16} {(cz-2)*16} {(cx+2)*16+15} {(cz+2)*16+15}"
                 result = conn.cmd("forceload add " + force)
                 print("Generating", biome, x, z, result, flush=True)
                 deadline = time.monotonic() + 150
-                full, biomes, counts = 0, set(), Counter()
+                full, biomes, counts, addon_columns, grass_columns = 0, set(), Counter(), 0, 0
                 while time.monotonic() < deadline:
                     time.sleep(5)
                     conn.cmd("save-all flush")
-                    full, biomes, counts = scan(region, positions)
+                    full, biomes, counts, addon_columns, grass_columns = scan(region, positions)
                     if full == len(positions):
                         break
                 matching = sum(counts.get(n, 0) for n in expected)
                 forage_count = sum(counts.get(n, 0) for n in NEW_FORAGE.get(biome, set()))
-                passed = full == len(positions) and "minecraft:" + biome in biomes and matching > 0 and (biome not in NEW_FORAGE or forage_count > 0)
+                coverage = addon_columns / max(1, full * 256)
+                grass_ok = biome != "plains" or (grass_columns > addon_columns and grass_columns > 0)
+                passed = coverage <= 0.18 and grass_ok and full == len(positions) and "minecraft:" + biome in biomes and matching > 0 and (biome not in NEW_FORAGE or forage_count > 0)
                 row = {"biome": biome, "status": "PASS" if passed else "FAIL",
                        "x": x, "z": z, "full_chunks": full,
-                       "expected_species_blocks": matching, "new_forage_blocks": forage_count, "all_terrain_blocks": dict(counts)}
+                       "expected_species_blocks": matching, "new_forage_blocks": forage_count, "addon_column_fraction": coverage, "vanilla_short_grass_columns": grass_columns, "all_terrain_blocks": dict(counts)}
                 report["results"].append(row)
                 print(json.dumps(row), flush=True)
                 conn.cmd("forceload remove " + force)

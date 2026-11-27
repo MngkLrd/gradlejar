@@ -2,8 +2,8 @@
   "feature": "worldlogicterrain:patch_fallen_leaves",
   "placement": [
     {
-      "type": "minecraft:count",
-      "count": 2
+      "type": "minecraft:rarity_filter",
+      "chance": 6
     },
     {
       "type": "minecraft:in_square"

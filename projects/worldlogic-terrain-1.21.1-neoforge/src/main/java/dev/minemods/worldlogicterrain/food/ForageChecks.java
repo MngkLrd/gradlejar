@@ -14,6 +14,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import dev.minemods.worldlogicterrain.block.BerryBushBlock;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
@@ -56,6 +64,7 @@ public final class ForageChecks {
         var pos=level.getSharedSpawnPos();
         var drops=Block.getDrops(plant.defaultBlockState(),level,pos,null,p,ItemStack.EMPTY);
         require(drops.size()==1&&drops.getFirst().is(item)&&drops.getFirst().getCount()==1,"wrong harvest "+id);
+        if(plant instanceof BerryBushBlock berry)checkBerry(level,p,berry,item,id);
         var stack=new ItemStack(item,2);
         var food=stack.get(DataComponents.FOOD);
         require(food!=null&&food.nutrition()==expect.hunger()&&Math.abs(food.saturation()-expect.saturation())<.001&&!food.canAlwaysEat(),"food properties "+id);
@@ -75,6 +84,36 @@ public final class ForageChecks {
         }finally{
             data.setFoodLevel(oldFood);data.setSaturation(oldSat);
             WorldLogicApi.recoverExertion(p,100);
+        }
+    }
+    private static void checkBerry(ServerLevel level,net.minecraft.server.level.ServerPlayer p,BerryBushBlock berry,net.minecraft.world.item.Item food,String id){
+        BlockPos pos=new BlockPos(12,240,12);
+        var old=level.getBlockState(pos);var floor=level.getBlockState(pos.below());
+        var box=new AABB(pos).inflate(2);
+        try{
+            level.setBlock(pos.below(),Blocks.DIRT.defaultBlockState(),Block.UPDATE_ALL);
+            level.setBlock(pos,berry.defaultBlockState(),Block.UPDATE_ALL);
+            var hit=new BlockHitResult(Vec3.atCenterOf(pos),Direction.UP,pos,false);
+            var existing=level.getEntitiesOfClass(ItemEntity.class,box);
+            var initialIds=existing.stream().map(ItemEntity::getUUID).collect(java.util.stream.Collectors.toSet());
+            var ripe=level.getBlockState(pos);
+            require(ripe.getValue(BerryBushBlock.RIPE),"initial berry not ripe "+id);
+            require(berry.useWithoutItem(ripe,level,pos,p,hit).consumesAction(),"right-click failed "+id);
+            var empty=level.getBlockState(pos);
+            require(empty.is(berry)&&!empty.getValue(BerryBushBlock.RIPE),"bush not preserved "+id);
+            var drops=level.getEntitiesOfClass(ItemEntity.class,box,e->!initialIds.contains(e.getUUID()));
+            require(drops.size()==1&&drops.getFirst().getItem().is(food)&&drops.getFirst().getItem().getCount()==1,"right-click yield "+id);
+            require(!berry.useWithoutItem(empty,level,pos,p,hit).consumesAction(),"repeat harvest accepted "+id);
+            require(level.getEntitiesOfClass(ItemEntity.class,box,e->!initialIds.contains(e.getUUID())).size()==1,"duplicate berry drop "+id);
+            require(Block.getDrops(empty,level,pos,null,p,ItemStack.EMPTY).isEmpty(),"empty bush drops berries "+id);
+            drops.forEach(ItemEntity::discard);
+            // deterministic random-tick path; no forced state reset.
+            var random=RandomSource.create(84);
+            for(int i=0;i<100&&!level.getBlockState(pos).getValue(BerryBushBlock.RIPE);i++)
+                berry.randomTick(level.getBlockState(pos),level,pos,random);
+            require(level.getBlockState(pos).getValue(BerryBushBlock.RIPE),"berry regrowth failed "+id);
+        }finally{
+            level.setBlock(pos,old,Block.UPDATE_ALL);level.setBlock(pos.below(),floor,Block.UPDATE_ALL);
         }
     }
 }

@@ -1,6 +1,6 @@
 {
   "variants": {
-    "": [
+    "ripe=true": [
       {
         "model": "worldlogicterrain:block/wild_blackberry"
       },
@@ -14,6 +14,23 @@
       },
       {
         "model": "worldlogicterrain:block/wild_blackberry",
+        "y": 270
+      }
+    ],
+    "ripe=false": [
+      {
+        "model": "worldlogicterrain:block/wild_blackberry_unripe"
+      },
+      {
+        "model": "worldlogicterrain:block/wild_blackberry_unripe",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_blackberry_unripe",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_blackberry_unripe",
         "y": 270
       }
     ]

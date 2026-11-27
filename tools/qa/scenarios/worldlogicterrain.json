@@ -748,7 +748,7 @@
     {
       "name": "WorldLogic preset vegetation attachment",
       "command": "worldlogicterrain worldgen_check",
-      "expect": "3 core presets, 32 plant features, biome attachment verified",
+      "expect": "3 core presets, 33 plant features, biome attachment verified",
       "assertion": true
     },
     {
@@ -798,10 +798,6 @@
       "expect": "Successfully filled"
     },
     {
-      "command": "fill 1 219 1 14 219 14 minecraft:stone",
-      "expect": "Successfully filled|No blocks were filled"
-    },
-    {
       "command": "fill 1 220 1 14 220 14 minecraft:sand",
       "expect": "Successfully filled"
     },
@@ -818,10 +814,6 @@
     {
       "command": "fill 1 220 1 14 220 14 minecraft:dirt",
       "expect": "Successfully filled"
-    },
-    {
-      "command": "fill 1 219 1 14 219 14 minecraft:stone",
-      "expect": "Successfully filled|No blocks were filled"
     },
     {
       "command": "fill 1 220 1 14 220 14 minecraft:sand",
@@ -1195,6 +1187,26 @@
       "name": "food consumption bell_pepper",
       "command": "worldlogicterrain food_check bell_pepper",
       "expect": "Forage verified bell_pepper: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "Short grass rejects plain dirt",
+      "command": "place feature worldlogicterrain:patch_short_grass 8 221 8",
+      "expect": "Failed to place feature",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:grass_block",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_short_grass 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_short_grass\""
+    },
+    {
+      "name": "Short grass generated on turf",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace minecraft:short_grass",
+      "expect": "Successfully filled [1-9][0-9]* block",
       "assertion": true
     }
   ],
@@ -1835,7 +1847,7 @@
     {
       "id": "core-preset-vegetation",
       "kind": "mechanic",
-      "subject": "All 32 placed features attached to correct biomes of all 3 registered WorldLogic presets",
+      "subject": "All 33 placed features attached to appropriate biomes of all 3 core presets",
       "checks": [
         {
           "backend": "server",
@@ -2511,6 +2523,80 @@
         {
           "backend": "server",
           "name": "generated patch wild_bell_pepper"
+        }
+      ]
+    },
+    {
+      "id": "right-click-strawberry",
+      "kind": "mechanic",
+      "subject": "Right-click harvest, preserved unripe bush, no repeat or unripe drop, random tick regrowth strawberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption strawberry"
+        }
+      ]
+    },
+    {
+      "id": "right-click-blueberry",
+      "kind": "mechanic",
+      "subject": "Right-click harvest, preserved unripe bush, no repeat or unripe drop, random tick regrowth blueberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption blueberry"
+        }
+      ]
+    },
+    {
+      "id": "right-click-raspberry",
+      "kind": "mechanic",
+      "subject": "Right-click harvest, preserved unripe bush, no repeat or unripe drop, random tick regrowth raspberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption raspberry"
+        }
+      ]
+    },
+    {
+      "id": "right-click-blackberry",
+      "kind": "mechanic",
+      "subject": "Right-click harvest, preserved unripe bush, no repeat or unripe drop, random tick regrowth blackberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption blackberry"
+        }
+      ]
+    },
+    {
+      "id": "right-click-grape",
+      "kind": "mechanic",
+      "subject": "Right-click harvest, preserved unripe bush, no repeat or unripe drop, random tick regrowth grape",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption grape"
+        }
+      ]
+    },
+    {
+      "id": "vanilla-short-grass",
+      "kind": "mechanic",
+      "subject": "Vanilla short grass only on turf, actual placement and negative substrate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Short grass rejects plain dirt"
+        },
+        {
+          "backend": "server",
+          "name": "Short grass generated on turf"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
         }
       ]
     }

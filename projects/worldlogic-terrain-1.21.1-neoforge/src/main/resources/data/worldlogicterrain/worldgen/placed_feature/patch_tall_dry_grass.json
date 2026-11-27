@@ -2,8 +2,8 @@
   "feature": "worldlogicterrain:patch_tall_dry_grass",
   "placement": [
     {
-      "type": "minecraft:count",
-      "count": 1
+      "type": "minecraft:rarity_filter",
+      "chance": 5
     },
     {
       "type": "minecraft:in_square"

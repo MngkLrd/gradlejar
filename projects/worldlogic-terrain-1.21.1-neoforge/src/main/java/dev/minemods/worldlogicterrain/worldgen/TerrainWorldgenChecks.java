@@ -18,7 +18,7 @@ public final class TerrainWorldgenChecks {
           .then(Commands.literal("worldgen_check").executes(c->{
             try {
                 verify(c.getSource().getLevel());
-                c.getSource().sendSuccess(()->Component.literal("Terrain worldgen: 3 core presets, 32 plant features, biome attachment verified"),false);
+                c.getSource().sendSuccess(()->Component.literal("Terrain worldgen: 3 core presets, 33 plant features, biome attachment verified"),false);
                 return 1;
             } catch (IllegalStateException ex) {
                 c.getSource().sendFailure(Component.literal(ex.getMessage())); return 0;
@@ -64,6 +64,7 @@ public final class TerrainWorldgenChecks {
         checkPreset(gen, "wild_bell_pepper", Set.of("plains","savanna","savanna_plateau","windswept_savanna","jungle","sparse_jungle"));
         checkPreset(gen, "bracken", Set.of("forest","dark_forest","birch_forest","old_growth_birch_forest","taiga","old_growth_pine_taiga","old_growth_spruce_taiga","jungle","sparse_jungle"));
         checkPreset(gen, "marsh_marigold", Set.of("swamp","mangrove_swamp","river"));
+        checkPreset(gen, "short_grass", Set.of("plains","sunflower_plains","meadow","forest","flower_forest","birch_forest","old_growth_birch_forest","dark_forest","taiga","old_growth_pine_taiga","old_growth_spruce_taiga","jungle","sparse_jungle","bamboo_jungle","savanna","savanna_plateau","windswept_savanna","windswept_hills","windswept_forest","swamp","mangrove_swamp","river","snowy_plains","snowy_taiga","grove","wooded_badlands"));
         }
     }
     private static void checkPreset(NoiseBasedChunkGenerator gen,String plant,Set<String> expected) {

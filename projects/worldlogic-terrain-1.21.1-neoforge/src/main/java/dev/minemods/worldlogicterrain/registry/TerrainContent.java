@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import dev.minemods.worldlogicterrain.WorldLogicTerrain;
 import dev.minemods.worldlogicterrain.block.TerrainPlantBlock;
+import dev.minemods.worldlogicterrain.block.BerryBushBlock;
 import dev.minemods.worldlogicterrain.block.TerrainTallPlantBlock;
 import dev.minemods.worldlogicterrain.food.ForageFoodItem;
 import net.minecraft.world.item.BlockItem;
@@ -64,7 +65,13 @@ public final class TerrainContent {
         PLANTS.add(ITEMS.register(id, () -> new BlockItem(block.get(), new Item.Properties())));
     }
     private static void forage(String id,int hunger,float saturation,double recovery) {
-        BLOCKS.register("wild_"+id,()->new TerrainPlantBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS)));
+        BLOCKS.register("wild_"+id,()->{
+            var properties=BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS);
+            return switch(id){
+                case "strawberry","blueberry","raspberry","blackberry","grape" -> new BerryBushBlock(properties.randomTicks());
+                default -> new TerrainPlantBlock(properties);
+            };
+        });
         FOODS.add(ITEMS.register(id,()->new ForageFoodItem(hunger,saturation,recovery)));
     }
     public static void creative(BuildCreativeModeTabContentsEvent event) {
