@@ -42,7 +42,7 @@
       "command": "traumaqa targeting",
       "expect": "TRAUMAQA targeting PASS",
       "assertion": true,
-      "name": "Field medkit bleeding target and no-effect treatment rejection"
+      "name": "TR-TARGETING: trauma kit bleed priority, medkit living tissue and no-effect rejection"
     },
     {
       "command": "traumaqa persistence",
@@ -85,6 +85,18 @@
       "expect": "TRAUMAQA wounds PASS",
       "assertion": true,
       "name": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry"
+    },
+    {
+      "command": "traumaqa primitive",
+      "expect": "TRAUMAQA primitive PASS",
+      "assertion": true,
+      "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+    },
+    {
+      "command": "traumaqa publicapi",
+      "expect": "TRAUMAQA publicapi PASS",
+      "assertion": true,
+      "name": "TR-PUBLICAPI: immutable seven-region snapshot, external injury, invalid input and creative guards"
     }
   ],
   "coverage": [
@@ -182,7 +194,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Field medkit bleeding target and no-effect treatment rejection"
+          "name": "TR-TARGETING: trauma kit bleed priority, medkit living tissue and no-effect rejection"
         }
       ]
     },
@@ -323,6 +335,62 @@
         {
           "backend": "server",
           "name": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry"
+        }
+      ]
+    },
+    {
+      "id": "tr-herb-workpiece",
+      "kind": "block",
+      "subject": "Workpiece placement, cell processing, saved partial work, pickup and support loss",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-herb-materials",
+      "kind": "item",
+      "subject": "Raw herbs and two crushed herbs; intermediate recipes",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-canonical-medicine",
+      "kind": "mechanic",
+      "subject": "Retired aliases and differentiated treatment roles",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-publicapi",
+      "kind": "other",
+      "subject": "Public TraumaApi v1 immutable snapshots and external injury validation",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PUBLICAPI: immutable seven-region snapshot, external injury, invalid input and creative guards"
         }
       ]
     }
