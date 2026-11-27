@@ -12,7 +12,6 @@ def patchouliOutput = layout.buildDirectory.dir('generated/worldlogicPatchouli')
 tasks.register('generatePatchouliGuide') {
  def source = file('src/main/resources/assets/worldlogic/worldlogic_guide')
  inputs.dir(source)
- inputs.dir(file('src/main/resources/data/worldlogic/recipe'))
  outputs.dir(patchouliOutput)
  doLast {
   def output = patchouliOutput.get().asFile

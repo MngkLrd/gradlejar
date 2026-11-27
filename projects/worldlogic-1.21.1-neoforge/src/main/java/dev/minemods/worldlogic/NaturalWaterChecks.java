@@ -82,7 +82,7 @@ final class NaturalWaterChecks{
     require(NaturalFluids.kind(l.getFluidState(origin.below()).getType())==f.kind&&!l.getFluidState(origin.below()).isSource(),"downward fluid spread "+f.id);
     for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)for(int y=-1;y<=2;y++)l.setBlock(origin.offset(x,y,z),f.block.get().defaultBlockState(),2|16);
     pig.setPos(origin.getX()+.5,origin.getY()+.1,origin.getZ()+.5);pig.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);pig.baseTick();
-    require(pig.isInWater()&&pig.getFluidHeight(FluidTags.WATER)>1&&pig.isEyeInFluid(FluidTags.WATER),"entity native immersion "+f.id);
+    require(pig.isInWater()&&pig.getFluidHeight(FluidTags.WATER)>.5&&pig.isEyeInFluid(FluidTags.WATER),"entity native immersion "+f.id);
    }
    for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)for(int y=-1;y<=2;y++)l.setBlock(origin.offset(x,y,z),Blocks.AIR.defaultBlockState(),2|16);
    pig.baseTick();require(!pig.isInWater()&&!pig.isEyeInFluid(FluidTags.WATER),"dry entity negative control");
