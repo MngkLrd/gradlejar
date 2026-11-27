@@ -52,5 +52,10 @@
   "metabolism.stat.burn": "Energy expenditure",
   "metabolism.help.burn": "Calories per in-game hour at current movement, including basal metabolism.",
   "metabolism.stat.fatigue": "Core fatigue",
-  "metabolism.help.fatigue": "WorldLogic Core fatigue readout. Metabolism does not store a second stamina bar."
+  "metabolism.help.fatigue": "WorldLogic Core fatigue readout. Metabolism does not store a second stamina bar.",
+  "metabolism.profile": "Nutrient profile",
+  "metabolism.stat.vitamins": "Vitamins",
+  "metabolism.stat.minerals": "Minerals",
+  "metabolism.help.vitamins": "Average adequacy of vitamins A, C and B12; each is listed separately.",
+  "metabolism.help.minerals": "Average adequacy of iron, calcium and magnesium; each is listed separately."
 }

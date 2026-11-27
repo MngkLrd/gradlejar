@@ -52,5 +52,10 @@
   "metabolism.stat.burn": "Расход энергии",
   "metabolism.help.burn": "Калории за игровой час при текущем движении, включая базовый обмен.",
   "metabolism.stat.fatigue": "Усталость Core",
-  "metabolism.help.fatigue": "Данные основной шкалы усталости WorldLogic Core. Metabolism не хранит вторую шкалу."
+  "metabolism.help.fatigue": "Данные основной шкалы усталости WorldLogic Core. Metabolism не хранит вторую шкалу.",
+  "metabolism.profile": "Профиль питания",
+  "metabolism.stat.vitamins": "Витамины",
+  "metabolism.stat.minerals": "Минералы",
+  "metabolism.help.vitamins": "Средний уровень витаминов A, C и B12. Каждый из них отображается отдельно в списке.",
+  "metabolism.help.minerals": "Средний уровень железа, кальция и магния. Каждый минерал отображается отдельно в списке."
 }

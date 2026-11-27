@@ -5,6 +5,7 @@ import dev.minemods.worldlogic.api.client.WorldLogicTabs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
@@ -24,7 +25,7 @@ public final class MetabolismScreen extends Screen{
  private int usable(){return WorldLogicTabs.contentWidth(width);}
  @Override protected void init(){
   int w=Math.max(15,(usable()-16)/TABS.length);
-  for(int i=0;i<TABS.length;i++){final int k=i;addRenderableWidget(Button.builder(tr("tab."+TABS[i]),b->{tab=k;page=0;}).bounds(8+i*w,27,w-2,20).build());}
+  for(int i=0;i<TABS.length;i++){final int k=i;var button=Button.builder(Component.literal(font.plainSubstrByWidth(tr("tab."+TABS[i]).getString(),Math.max(1,w-10))),b->{tab=k;page=0;}).bounds(8+i*w,27,w-2,20).build();button.setTooltip(Tooltip.create(tr("tab."+TABS[i])));addRenderableWidget(button);}
   addRenderableWidget(Button.builder(Component.literal("<"),b->page=Math.max(0,page-1)).bounds(8,height-25,24,20).build());
   addRenderableWidget(Button.builder(Component.literal(">"),b->page++).bounds(34,height-25,24,20).build());
   addRenderableWidget(Button.builder(Component.translatable("gui.back"),b->onClose()).bounds(Math.max(60,usable()-86),height-25,78,20).build());
@@ -65,6 +66,37 @@ public final class MetabolismScreen extends Screen{
   if(r.fraction>=0){int bar=w-30;g.fill(x+24,y+25,x+24+bar,y+29,0xff171b1d);int filled=Math.round(Math.max(0,Math.min(1,r.fraction))*bar);if(filled>0)g.fill(x+24,y+25,x+24+filled,y+28,c);}
   hits.add(new Hit(x,y,w,32,tr("stat."+r.key),tr("help."+r.key),Component.literal(r.value)));
  }
+ private void line(GuiGraphics g,int x,int y,int x2,int y2,int c){
+  int dx=Math.abs(x2-x),dy=-Math.abs(y2-y),sx=x<x2?1:-1,sy=y<y2?1:-1,err=dx+dy;
+  while(true){g.fill(x,y,x+1,y+1,c);if(x==x2&&y==y2)break;int e=err*2;if(e>=dy){err+=dy;x+=sx;}if(e<=dx){err+=dx;y+=sy;}}
+ }
+ private void radar(GuiGraphics g,float[] v,int x,int y,int w,int h){
+  int cx=x+w/2,cy=y+h/2+5,r=Math.min(w/2-24,h/2-25);
+  g.fill(x,y,x+w,y+h,0xff2e3437);g.renderOutline(x,y,w,h,0xff626b70);
+  g.drawCenteredString(font,tr("profile"),cx,y+7,0xffe6dfc9);
+  float[] values={v[0],v[1],v[2],v[3],(v[4]+v[5]+v[6])/3,(v[7]+v[8]+v[9])/3};
+  String[] keys={"protein","fat","carb","fiber","vitamins","minerals"};
+  Item[] icons={Items.COOKED_BEEF,Items.SALMON,Items.BREAD,Items.CARROT,Items.APPLE,Items.IRON_NUGGET};
+  int[] px=new int[6],py=new int[6];
+  for(int ring=1;ring<=4;ring++)for(int i=0;i<6;i++){
+   double a=i*Math.PI/3-Math.PI/2,b=(i+1)*Math.PI/3-Math.PI/2;
+   double d=r*ring/4.0;line(g,cx+(int)Math.round(Math.cos(a)*d),cy+(int)Math.round(Math.sin(a)*d),cx+(int)Math.round(Math.cos(b)*d),cy+(int)Math.round(Math.sin(b)*d),0xff626b70);
+  }
+  for(int i=0;i<6;i++){
+   double a=i*Math.PI/3-Math.PI/2;double xx=Math.cos(a),yy=Math.sin(a);
+   line(g,cx,cy,cx+(int)Math.round(xx*r),cy+(int)Math.round(yy*r),0xff626b70);
+   px[i]=cx+(int)Math.round(xx*r*Math.min(1,values[i]));py[i]=cy+(int)Math.round(yy*r*Math.min(1,values[i]));
+   int ix=cx+(int)Math.round(xx*(r+11))-8,iy=cy+(int)Math.round(yy*(r+11))-8;
+   g.renderItem(new ItemStack(icons[i]),ix,iy);
+   hits.add(new Hit(ix,iy,16,16,tr("stat."+keys[i]),tr("help."+keys[i]),Component.literal(pct(values[i]))));
+  }
+  for(int yy=cy-r;yy<=cy+r;yy++){
+   var intersections=new ArrayList<Integer>();
+   for(int i=0;i<6;i++){int j=(i+1)%6;if((py[i]<=yy&&py[j]>yy)||(py[j]<=yy&&py[i]>yy))intersections.add(px[i]+(int)Math.round((double)(yy-py[i])*(px[j]-px[i])/(py[j]-py[i]));}
+   Collections.sort(intersections);for(int i=0;i+1<intersections.size();i+=2)g.fill(intersections.get(i),yy,intersections.get(i+1)+1,yy+1,0x709fca72);
+  }
+  for(int i=0;i<6;i++){int j=(i+1)%6;line(g,px[i],py[i],px[j],py[j],0xffa4cc72);g.fill(px[i]-1,py[i]-1,px[i]+2,py[i]+2,0xffe7eacb);}
+ }
  private int color(float v){return v<.4?0xffe3796b:v<.8?0xffe2bd62:0xff9fca72;}
  @Override public void render(GuiGraphics g,int mx,int my,float delta){
   hits.clear();g.fill(0,0,width,height,0xff1a1e21);g.drawCenteredString(font,title,usable()/2,10,0xfff0eee7);
@@ -74,11 +106,13 @@ public final class MetabolismScreen extends Screen{
   if(state==null||player==null||!state.player().equals(player.getUUID()))g.drawCenteredString(font,tr("waiting"),usable()/2,top+8,0xffdddddd);
   else if(!state.active())g.drawCenteredString(font,tr("inactive"),usable()/2,top+8,0xffdddddd);
   else {
-   var data=rows(state.values(),state.anatomical());int cols=usable()>=430?3:usable()>=280?2:1;
+   var values=state.values();var data=rows(values,state.anatomical());int cols=usable()>=430?3:usable()>=280?2:1;
+   int start=left+4;
+   if(tab==1&&usable()>=430&&bottom-top>=144){int chart=Math.min(190,(right-left)/3);radar(g,values,start,top+4,chart-4,bottom-top-8);start+=chart;cols=2;}
    int lines=Math.max(1,(bottom-top-8)/35),capacity=cols*lines,maxPage=Math.max(0,(data.size()-1)/capacity);
-   page=Math.min(page,maxPage);int cell=(right-left-8)/cols;
+   page=Math.min(page,maxPage);int cell=(right-start-4)/cols;
    for(int i=page*capacity;i<Math.min(data.size(),(page+1)*capacity);i++){
-    int local=i-page*capacity;row(g,data.get(i),left+4+(local%cols)*cell,top+4+(local/cols)*35,cell-3,mx,my);
+    int local=i-page*capacity;row(g,data.get(i),start+(local%cols)*cell,top+4+(local/cols)*35,cell-3,mx,my);
    }
    g.drawString(font,(page+1)+"/"+(maxPage+1),63,height-18,0xffd0d0d0,false);
   }
