@@ -36,5 +36,10 @@
   "block.hydration.clay_pipe": "Clay Pipe",
   "hydration.tank.status": "Water: %s/%s mB | %s | filter remaining: %s mB",
   "hydration.pipe.direction": "Inlet: %s | outlet: %s | %s",
-  "hydration.water.kind.rain": "Rainwater"
+  "hydration.water.kind.rain": "Rainwater",
+  "hydration.stage.normal": "Hydration normal",
+  "hydration.stage.mild": "Mild dehydration",
+  "hydration.stage.moderate": "Moderate dehydration",
+  "hydration.stage.severe": "Severe dehydration",
+  "hydration.stage.critical": "Critical dehydration"
 }

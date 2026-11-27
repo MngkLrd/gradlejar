@@ -7,6 +7,13 @@ on:
         required: true
         default: physics
         type: string
+  pull_request:
+    branches: [worldlogic-hydration-0.1.0]
+    paths:
+      - 'projects/worldlogic-trauma-1.21.1-neoforge/**'
+      - 'projects/hydration-1.21.1-neoforge/**'
+      - tools/qa/packs/worldlogic-hydration.json
+      - tools/qa/scenarios/worldlogic-trauma-hydration-pack.json
   push:
     branches: [main]
     paths:
@@ -36,7 +43,7 @@ jobs:
       - name: Resolve pack
         id: pack
         env:
-          PACK_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.pack || 'physics' }}
+          PACK_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.pack || (github.event_name == 'pull_request' && github.head_ref == 'worldlogic-hydration-0.5.0' && 'worldlogic-hydration') || 'physics' }}
         run: |
           [[ "$PACK_ID" =~ ^[a-z][a-z0-9_-]{0,60}$ ]]
           echo "id=$PACK_ID" >> "$GITHUB_OUTPUT"

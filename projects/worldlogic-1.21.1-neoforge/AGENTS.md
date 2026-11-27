@@ -4,3 +4,6 @@ Preserve RC22 Earthlike Climate surface relief, coastlines, continents, mountain
 
 ## OWNER RESPONSIBILITY BOUNDARY (RC28)
 Thirst, drinking, hydration physiology and dehydration are separate Hydration addon scope. Core owns hydrology, water sources and soils and exposes additive API. Never implement duplicate player thirst in core. Preserve RC22 geography.
+
+## OWNER DIRECTION (2026-11-27): SINGLE REALISTIC MODE
+No Light/Hardcore gameplay profiles. All implemented Core rules active at balanced baseline, except mutually exclusive legacy alternatives and explicitly delegated addon mechanics. New default worlds use the unified Realistic preset, preserving RC22 base geography; keep old registered world IDs and do not rewrite existing chunks. Operator diagnostics may temporarily override rules, never silently persist a reduced baseline.

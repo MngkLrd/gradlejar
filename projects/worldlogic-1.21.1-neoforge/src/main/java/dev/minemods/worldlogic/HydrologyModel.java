@@ -36,23 +36,27 @@ public final class HydrologyModel {
   var s=profile(type);return new Store(s.capacity*unit(moisture)*.80,30+180*unit(moisture),0,0);
  }
  static Step advance(Store old,SoilType type,double rain,double snowfall,double temp,double humidity,double sun,double wind){
+  return advance(old,type,rain,snowfall,temp,humidity,sun,wind,0);
+ }
+ static Step advance(Store old,SoilType type,double rain,double snowfall,double temp,double humidity,double sun,double wind,double roots){
+  roots=unit(roots);
   var s=profile(type);
   double snow=old.snow+Math.max(0,snowfall);
   double melt=Math.min(snow,Math.max(0,temp)*.20);snow-=melt;
   double soil=Math.min(old.soil,s.capacity);
   double liquid=old.pond+Math.max(0,rain)+melt+Math.max(0,old.soil-s.capacity);
   double freeze=temp<=-1?.06:temp<2?.35:1;
-  double infiltrate=Math.min(liquid,Math.min(s.capacity-soil,8*s.permeability*freeze));
+  double infiltrate=Math.min(liquid,Math.min(s.capacity-soil,8*s.permeability*freeze*(1+.35*roots)));
   soil+=infiltrate;liquid-=infiltrate;
-  double recharge=Math.min(soil,Math.max(0,soil-s.capacity*s.fieldCapacity)*.13*s.permeability*freeze);
+  double recharge=Math.min(soil,Math.max(0,soil-s.capacity*s.fieldCapacity)*.13*s.permeability*freeze*(1-.30*roots));
   soil-=recharge;
   double gw=old.groundwater+recharge;
   double discharge=Math.min(gw,Math.max(0,gw-50)*.012);
   gw-=discharge;liquid+=discharge;
   double evaporationDemand=Math.max(0,temp+4)*.018*(1-unit(humidity))*(.25+.75*unit(sun))*(1+Math.min(25,Math.max(0,wind))*.045);
   double fromPond=Math.min(liquid,evaporationDemand);liquid-=fromPond;
-  double fromSoil=Math.min(soil,(evaporationDemand-fromPond)*unit(soil/s.capacity));soil-=fromSoil;
-  double pond=Math.min(type==SoilType.PEAT?18:6,liquid),runoff=liquid-pond;
+  double fromSoil=Math.min(soil,(evaporationDemand-fromPond)*unit(soil/s.capacity)*(1-.35*roots));soil-=fromSoil;
+  double pond=Math.min((type==SoilType.PEAT?18:6)+4*roots,liquid),runoff=liquid-pond;
   return new Step(new Store(soil,gw,snow,pond),runoff,fromPond+fromSoil,recharge,discharge);
  }
 }

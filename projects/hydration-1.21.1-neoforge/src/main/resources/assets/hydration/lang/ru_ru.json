@@ -36,5 +36,10 @@
   "block.hydration.clay_pipe": "Глиняная труба",
   "hydration.tank.status": "Вода: %s/%s mB | %s | ресурс фильтра: %s mB",
   "hydration.pipe.direction": "Вход: %s | выход: %s | %s",
-  "hydration.water.kind.rain": "Дождевая вода"
+  "hydration.water.kind.rain": "Дождевая вода",
+  "hydration.stage.normal": "Водный баланс в норме",
+  "hydration.stage.mild": "Лёгкое обезвоживание",
+  "hydration.stage.moderate": "Умеренное обезвоживание",
+  "hydration.stage.severe": "Тяжёлое обезвоживание",
+  "hydration.stage.critical": "Критическое обезвоживание"
 }

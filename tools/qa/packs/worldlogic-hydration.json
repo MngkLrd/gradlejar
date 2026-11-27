@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "worldlogic-hydration",
-  "description": "Core RC28 and Hydration in one exact production server (development baseline, not all addons)",
+  "description": "Exact pinned Core RC32 + Hydration 0.5.0 + Trauma 0.6.0-rc18 integration; joint runtime evidence required",
   "targets": [
     {
       "id": "neoforge-mc1.21.1",
@@ -16,6 +16,10 @@
         {
           "project": "projects/hydration-1.21.1-neoforge",
           "scenario": "tools/qa/scenarios/hydration-neoforge.json"
+        },
+        {
+          "project": "projects/worldlogic-trauma-1.21.1-neoforge",
+          "scenario": "tools/qa/scenarios/worldlogic-trauma-hydration-pack.json"
         }
       ],
       "dependencies": []

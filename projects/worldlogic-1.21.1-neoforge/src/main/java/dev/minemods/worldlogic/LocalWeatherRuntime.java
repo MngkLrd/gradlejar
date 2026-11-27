@@ -50,6 +50,8 @@ public final class LocalWeatherRuntime {
     if(strength>.01)w=LocalWeatherModel.demo(w,d.kind,strength);
    }
   }
+  double plants=HydrologyRuntime.transpirationInfluence(l,p,c.modeledSurfaceY());
+  if(plants>0&&w.exposed())w=PlantSoilModel.microclimate(w,plants);
   return Optional.of(w);
  }
  static boolean rainingAt(ServerLevel l,BlockPos p){return at(l,p).map(w->w.precipitation()==Precipitation.RAIN).orElseGet(()->l.isRainingAt(p));}

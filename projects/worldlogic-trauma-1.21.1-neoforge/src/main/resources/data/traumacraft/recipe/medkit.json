@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "traumacraft:bandage"
+    },
+    {
+      "item": "traumacraft:sterile_fabric"
+    },
+    {
+      "item": "traumacraft:herbal_extract"
+    }
+  ],
+  "result": {
+    "id": "traumacraft:medkit",
+    "count": 1
+  }
+}

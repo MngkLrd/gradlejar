@@ -208,6 +208,9 @@ public final class GeoModel {
   return switch(field){
    case "offset" -> (h-128)/128;
    case "continents" -> h<63?clamp(-.18-(63-h)*.014,-1.15,-.18):clamp(-.10+(h-63)*.013,-.10,.85);
+   // Only the biome router uses this field. Classify the shallow transitional shelf as coast,
+   // so quantized 4-block climate sampling and the physical surface offset cannot label inland flats ocean.
+   case "biome_continents" -> h<59?clamp(-.25-(59-h)*.014,-1.15,-.25):clamp(-.17+(h-59)*.018,-.17,.85);
    case "erosion" -> clamp(.58-Math.max(0,h-75)*.011+d(x,z,.12)*.18,-.9,.85);
    case "ridges" -> h<78&&s.flow>30?0:clamp(t(x,z)*1.25,-1,1);
    case "climate_temperature" -> climate(x,z,h).biomeTemperature;

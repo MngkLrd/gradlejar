@@ -6,10 +6,12 @@ public final class WorldLogic {
  public WorldLogic(net.neoforged.bus.api.IEventBus modBus) {
   GeoDensity.TYPES.register(modBus);
   Content.PARTICLES.register(modBus);
+  NaturalFluids.register(modBus);
   Content.BLOCKS.register(modBus);
   Content.ITEMS.register(modBus);
   Rules.load();
   modBus.addListener(RuleSync::init);
+  modBus.addListener(MarineEcology::registerSpawns);
   var bus=NeoForge.EVENT_BUS;
   bus.addListener(AdminCommands::register);
   bus.addListener(RuleSync::login);
@@ -109,6 +111,9 @@ public final class WorldLogic {
   bus.addListener(WeatherController::tick);
   bus.addListener(LocalWeatherRuntime::tick);
   bus.addListener(HydrologyRuntime::tick);
+  bus.addListener(EnvironmentAnalytics::tick);
+  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,EnvironmentAnalytics::broken);
+  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,EnvironmentAnalytics::placed);
   bus.addListener(LocalWeatherRuntime::playerTick);
   bus.addListener(Ecology::crop);
   bus.addListener(Ecology::hurt);

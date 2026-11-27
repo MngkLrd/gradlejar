@@ -50,14 +50,14 @@ public final class WaterInfrastructure {
   e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);
   if(!(e.getEntity() instanceof ServerPlayer p)||!(e.getLevel().getBlockEntity(e.getPos()) instanceof TankEntity tank))return;
   if(vessel&&stack.getItem() instanceof VesselItem v){
-   var before=v.read(stack);
+   var before=v.current(stack,Hydration.clock(p));
    var after=p.isShiftKeyDown()?tank.insert(before):tank.extract(before,v.capacity,v.capacity-before.ml());
    v.write(stack,after);p.getInventory().setChanged();
   }else if(cartridge&&tank.installFilter()){
    if(!p.isCreative())stack.shrink(1);p.getInventory().setChanged();
   }else if(empty&&p.isShiftKeyDown()&&Hydration.active(p)&&WaterBalance.canDrink(Hydration.state(p))){
    var b=tank.extract(WaterBatch.empty(),250,250);
-   if(b.ml()>0)Hydration.applyDrink(p,b.quality(),b.ml(),b.risk());
+   if(b.ml()>0)Hydration.applyDrink(p,b);
   }
   var b=tank.water();
   p.displayClientMessage(Component.translatable("hydration.tank.status",b.ml(),tank.capacity(),Component.translatable("hydration.water.quality."+b.quality().name().toLowerCase(Locale.ROOT)),tank.charge()),true);

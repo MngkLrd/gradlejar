@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "name": "Actual Hydration/Trauma bidirectional contract, NeoForge 1.21.1",
+  "steps": [
+    {
+      "command": "traumaqa waterillness",
+      "expect": "TRAUMAQA waterillness PASS",
+      "assertion": true,
+      "name": "TR-WATER-ILLNESS: dose, incubation, symptoms, treatment, recovery, persistence, illness-only loss"
+    },
+    {
+      "command": "traumaqa hydrationpack",
+      "expect": "TRAUMAQA hydrationpack PASS",
+      "assertion": true,
+      "name": "TR-HYDRATION-PACK: actual intake/loss bridge and physiology, no duplicate water mutation"
+    }
+  ]
+}

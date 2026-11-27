@@ -1,0 +1,36 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="All Rights Reserved"
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="World Logic: Trauma"
+authors="MineMods"
+description='''Anatomical trauma and medicine for World Logic.'''
+[[mixins]]
+config="traumacraft.mixins.json"
+[[dependencies.worldlogic_trauma]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.80,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.worldlogic_trauma]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.worldlogic_trauma]]
+modId="worldlogic"
+type="required"
+versionRange="[1.0.0-rc20,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.worldlogic_trauma]]
+modId="worldlogic_thermal"
+type="optional"
+versionRange="[0.3.0-rc1,)"
+ordering="AFTER"
+side="BOTH"

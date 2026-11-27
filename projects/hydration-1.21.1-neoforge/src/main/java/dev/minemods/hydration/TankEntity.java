@@ -24,6 +24,9 @@ public final class TankEntity extends BlockEntity {
  public TankBlock.Kind kind(){return ((TankBlock)getBlockState().getBlock()).kind;}
  public int capacity(){return kind().capacity;}
  public WaterBatch water(){return water;}
+ private boolean exposed(){return kind()!=TankBlock.Kind.BARREL;}
+ private long now(){return level instanceof ServerLevel l?l.getServer().overworld().getGameTime():-1;}
+ private void refresh(long now,boolean force){if(water.ml()==0)return;if(force||water.needsRefresh(now)){var aged=water.aged(now,exposed());if(!aged.equals(water)){water=aged;setChanged();}}}
  public int charge(){return filterCharge;}
  public boolean filter(){return kind()==TankBlock.Kind.FILTER;}
  public String diagnostic(){return "Hydration tank="+kind()+" volume="+water.mB()+" mB capacity="+capacity()+" mB quality="+water.quality()+" charge="+filterCharge+" mB";}
@@ -41,18 +44,21 @@ public final class TankEntity extends BlockEntity {
   }
  }
  public WaterBatch insert(WaterBatch input){
+  long now=now();refresh(now,true);
+  if(input.updatedTick()<0)input=input.aged(now,false);
   var t=WaterBatch.transfer(input,water,input.ml(),capacity());
   if(t.moved()>0)setWater(t.target());
   return t.source();
  }
  public WaterBatch extract(WaterBatch target,int capacity,int max){
+  refresh(now(),true);
   var t=GravityFlow.transfer(water,target,capacity,max,filterCharge,filter());
   if(t.moved()>0){filterCharge=t.remainingFilter();setWater(t.source());}
   return t.target();
  }
  @Override protected void saveAdditional(CompoundTag n,HolderLookup.Provider registries){
   super.saveAdditional(n,registries);
-  n.putInt("volume",water.ml());n.putString("quality",water.quality().name());n.putDouble("salt",water.salinity());n.putDouble("risk",water.risk());n.putInt("filter_charge",filterCharge);
+  n.putInt("volume",water.ml());n.putString("quality",water.quality().name());n.putDouble("salt",water.salinity());n.putDouble("risk",water.risk());n.putLong("updated_tick",water.updatedTick());n.putInt("filter_charge",filterCharge);
   var origins=new ListTag();water.origins().stream().sorted().forEach(x->origins.add(StringTag.valueOf(x)));n.put("origins",origins);
  }
  @Override protected void loadAdditional(CompoundTag n,HolderLookup.Provider registries){
@@ -64,7 +70,7 @@ public final class TankEntity extends BlockEntity {
    if(!n.contains("salt")||!n.contains("risk"))throw new IllegalArgumentException("Missing profile");
    var origins=new HashSet<String>();for(Tag t:n.getList("origins",Tag.TAG_STRING))origins.add(t.getAsString());
    double salt=n.getDouble("salt");var q=salt>=1?WaterBalance.Quality.DESALINATE:WaterBalance.Quality.valueOf(n.getString("quality"));
-   water=new WaterBatch(ml,q,salt,n.getDouble("risk"),origins);
+   water=new WaterBatch(ml,q,salt,n.getDouble("risk"),origins,n.contains("updated_tick")?Math.max(-1,n.getLong("updated_tick")):-1);
   }catch(IllegalArgumentException ex){water=new WaterBatch(ml,WaterBalance.Quality.UNKNOWN,0,1);}
  }
  public static void tick(Level level,BlockPos p,BlockState s,TankEntity tank){
@@ -72,6 +78,7 @@ public final class TankEntity extends BlockEntity {
   tank.step(l);
  }
  void step(ServerLevel l){
+  refresh(now(),false);
   if(water.ml()<capacity()){
    if(kind()==TankBlock.Kind.COLLECTOR){
     BlockPos top=worldPosition.above();
@@ -85,7 +92,7 @@ public final class TankEntity extends BlockEntity {
     if(l.hasChunkAt(above)&&l.getFluidState(above).is(FluidTags.WATER)&&l.getFluidState(above).isSource()&&l.getBlockState(above).getBlock() instanceof net.minecraft.world.level.block.LiquidBlock){
      var profile=WorldLogicApi.waterProfile(l,above);
      if(profile.quality()!=WorldLogicApi.WaterQuality.NOT_WATER){
-      var b=WaterBottle.fromSource(profile);insert(new WaterBatch(GravityFlow.RATE,b.quality(),b.salinity(),b.risk(),b.origins()));
+      var b=WaterBottle.fromSource(profile);insert(b.withVolume(GravityFlow.RATE));
      }
     }
    }
@@ -95,6 +102,7 @@ public final class TankEntity extends BlockEntity {
    if(d==Direction.UP)continue;
    var target=findOutlet(l,worldPosition.relative(d),worldPosition.getY(),d.getOpposite());
    if(target==null)continue;
+   long now=now();refresh(now,true);target.refresh(now,true);
    var result=GravityFlow.move(water,target.water,target.capacity(),worldPosition.getY(),target.worldPosition.getY(),filterCharge,filter());
    if(result.moved()>0){filterCharge=result.remainingFilter();setWater(result.source());target.setWater(result.target());return;}
   }

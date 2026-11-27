@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "id": "trauma",
+  "order": 30,
+  "requires": "worldlogic_trauma",
+  "title": {
+    "ru": "Traumatic · Медицина",
+    "en": "Traumatic · Medicine"
+  },
+  "source": "Trauma 0.5.5 RC17",
+  "pages": [
+    {
+      "id": "anatomy",
+      "title": {
+        "ru": "Анатомия и состояние",
+        "en": "Anatomy and condition"
+      },
+      "models": [
+        "traumacraft:bandage",
+        "traumacraft:splint",
+        "minecraft:shield"
+      ],
+      "body": {
+        "ru": [
+          "У частей тела независимое здоровье: повреждённые руки и ноги ухудшают действия, кровотечение снижает запас крови, боль и шок ограничивают функции. Следи за анатомическим интерфейсом.",
+          "Уничтожение жизненно важной зоны смертельно. Повреждение не следует оценивать только по ванильным сердцам. Восстановление тканей замедляется при плохой температуре и при кровотечении.",
+          "Классы ран: ушиб, порез, прокол, рваная рана, ожог, обморожение. Переломы и сотрясение учитываются отдельно."
+        ],
+        "en": [
+          "Body zones have independent health. Impaired limbs reduce function, bleeding drains blood, and pain/shock limit activity. Watch the anatomy interface.",
+          "Destroyed vital zones are lethal. Vanilla hearts alone do not describe injury. Tissue recovery slows with bad temperature and bleeding.",
+          "Wound classes include contusion, cut, puncture, laceration, burn and frostbite. Fracture and concussion are separate."
+        ]
+      }
+    },
+    {
+      "id": "bleeding",
+      "title": {
+        "ru": "Кровотечение",
+        "en": "Bleeding"
+      },
+      "models": [
+        "traumacraft:rag_dressing",
+        "traumacraft:bandage",
+        "traumacraft:tourniquet",
+        "traumacraft:hemostatic_gel"
+      ],
+      "body": {
+        "ru": [
+          "Простая тряпичная повязка останавливает слабое кровотечение, не восстанавливая HP. Бинт уменьшает тяжёлое кровотечение. Турникет предназначен только для конечностей.",
+          "Гемостатический гель применяется при тяжёлых ранах. Выбирай пострадавшую часть тела в анатомическом интерфейсе; не расходуй предмет на здоровую зону.",
+          "После остановки крови отдыхай и следи за общим состоянием. При принятом лечении предмет может быть израсходован даже при прерывании."
+        ],
+        "en": [
+          "A rag dressing stops weak bleeding without restoring HP. A bandage downgrades severe bleeding. Tourniquets are for limbs only.",
+          "Hemostatic gel treats severe wounds. Select the affected zone in the anatomy interface rather than a healthy zone.",
+          "Rest after stopping bleeding and monitor systemic condition. An accepted treatment can consume the item even if interrupted."
+        ]
+      }
+    },
+    {
+      "id": "herbs",
+      "title": {
+        "ru": "Примитивная медицина",
+        "en": "Primitive medicine"
+      },
+      "models": [
+        "traumacraft:raw_herbs",
+        "traumacraft:crushed_herbs",
+        "traumacraft:herbal_poultice",
+        "traumacraft:herbal_extract"
+      ],
+      "body": {
+        "ru": [
+          "Собери пучок из одуванчика и мака, разложи его на камне или досках. Обработка выполняется на сетке 4×4.",
+          "Пустая рука обрабатывает одну ячейку, кремень или булыжник — соседние клетки крестом. После всех 16 ячеек получишь две порции измельчённых трав; с приседанием можно забрать частичный прогресс.",
+          "Измельчённые травы нужны для припарки и экстракта. Припарка лечит ушиб без активного кровотечения и перелома, а не любую рану."
+        ],
+        "en": [
+          "Combine dandelion and poppy into an herb bundle and spread it on stone or planks. Work the 4x4 grid.",
+          "An empty hand processes one cell; flint or cobblestone processes a cross. All 16 cells yield two crushed herbs; sneak-click retrieves partial progress.",
+          "Crushed herbs are needed for poultice and extract. Poultice treats nonbleeding, unfractured contusions, not every wound."
+        ]
+      }
+    },
+    {
+      "id": "fracture",
+      "title": {
+        "ru": "Переломы, боль и лечение",
+        "en": "Fractures, pain and treatment"
+      },
+      "models": [
+        "traumacraft:splint",
+        "traumacraft:analgesic_tablets",
+        "traumacraft:medkit",
+        "traumacraft:surgical_kit"
+      ],
+      "body": {
+        "ru": [
+          "Шина помогает при переломе. Обезболивающее снимает боль, но не заменяет лечение повреждения. Обычная аптечка не восстанавливает уничтоженную конечность.",
+          "Хирургический набор способен вернуть 15 анатомических HP уничтоженной конечности. Следи за кровотечением и температурой: они влияют на восстановление.",
+          "При повреждении ног вперед+прыжок у сплошного выступа высотой один блок позволяет подтянуться руками, если состояние и опора позволяют. С одной рукой медленнее; удар или потеря опоры прерывают действие."
+        ],
+        "en": [
+          "A splint helps with fractures. Analgesics relieve pain but do not replace injury treatment. Ordinary medkits cannot revive a destroyed limb.",
+          "A surgical kit can restore 15 anatomical HP to a destroyed limb. Bleeding and temperature affect recovery.",
+          "With impaired legs, forward+jump at a solid one-block ledge allows an assisted mantle if support and limb condition permit. One arm is slower; damage or lost support interrupts it."
+        ]
+      }
+    }
+  ]
+}

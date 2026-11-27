@@ -34,25 +34,27 @@ public final class VesselItem extends Item {
    var q=WaterBalance.Quality.valueOf(n.getString("quality"));
    var origins=new HashSet<String>();for(Tag t:n.getList("origins",Tag.TAG_STRING))origins.add(t.getAsString());
    double salt=n.getDouble("salt");if(salt>=1)q=WaterBalance.Quality.DESALINATE;
-   return new WaterBatch(ml,q,salt,n.getDouble("risk"),origins);
+   return new WaterBatch(ml,q,salt,n.getDouble("risk"),origins,n.contains("updated_tick")?Math.max(-1,n.getLong("updated_tick")):-1);
   }catch(IllegalArgumentException ex){return new WaterBatch(ml,WaterBalance.Quality.UNKNOWN,0,1);}
  }
  public void write(ItemStack stack,WaterBatch b){
   if(b.ml()>capacity)throw new IllegalArgumentException("Vessel overflow");
   CustomData.update(DataComponents.CUSTOM_DATA,stack,tag->{
    if(b.ml()==0){tag.remove(KEY);return;}
-   CompoundTag n=new CompoundTag();n.putInt("ml",b.ml());n.putString("quality",b.quality().name());n.putDouble("salt",b.salinity());n.putDouble("risk",b.risk());
+   CompoundTag n=new CompoundTag();n.putInt("ml",b.ml());n.putString("quality",b.quality().name());n.putDouble("salt",b.salinity());n.putDouble("risk",b.risk());n.putLong("updated_tick",b.updatedTick());
    var origins=new ListTag();b.origins().stream().sorted().forEach(x->origins.add(StringTag.valueOf(x)));n.put("origins",origins);tag.put(KEY,n);
   });
  }
+ public WaterBatch current(ItemStack stack,long now){return read(stack).aged(now,capacity==500);}
+ public boolean refresh(ItemStack stack,long now){var b=read(stack);if(!b.needsRefresh(now))return false;write(stack,b.aged(now,capacity==500));return true;}
  @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){
   ItemStack stack=player.getItemInHand(hand);
   if(hand!=InteractionHand.MAIN_HAND)return InteractionResultHolder.pass(stack);
-  var b=read(stack);
+  var b=player instanceof ServerPlayer p?current(stack,Hydration.clock(p)):read(stack);
   ItemStack off=player.getOffhandItem();
   if(player.isShiftKeyDown()&&off.getItem() instanceof VesselItem target){
    if(!level.isClientSide){
-    var t=WaterBatch.transfer(b,target.read(off),b.ml(),target.capacity);
+    var t=WaterBatch.transfer(b,target.current(off,Hydration.clock((ServerPlayer)player)),b.ml(),target.capacity);
     if(t.moved()>0){write(stack,t.source());target.write(off,t.target());player.getInventory().setChanged();}
    }
    return InteractionResultHolder.sidedSuccess(stack,level.isClientSide);
@@ -75,10 +77,10 @@ public final class VesselItem extends Item {
  }
  public void fillFromSource(ServerPlayer p,ItemStack stack){
   if(p.isSpectator()||p.getMainHandItem()!=stack)return;
-  var b=read(stack);if(b.ml()>=capacity)return;
+  long now=Hydration.clock(p);var b=current(stack,now);if(b.ml()>=capacity)return;
   if(p.isShiftKeyDown()&&(p.getOffhandItem().getItem() instanceof VesselItem||p.getOffhandItem().is(HydrationItems.FILTER.get())))return;
   var profile=Hydration.targeted(p);if(profile==null||!profile.sourceBlock())return;
-  var source=WaterBottle.fromSource(profile);var pool=new WaterBatch(capacity,source.quality(),source.salinity(),source.risk(),source.origins());
+  var source=WaterBottle.fromSource(profile).aged(now,false);var pool=source.withVolume(capacity);
   var t=WaterBatch.transfer(pool,b,capacity,capacity);write(stack,t.target());p.getInventory().setChanged();
   p.level().playSound(null,p.getX(),p.getY(),p.getZ(),SoundEvents.BOTTLE_FILL,SoundSource.PLAYERS,1f,1f);
  }
@@ -86,9 +88,9 @@ public final class VesselItem extends Item {
  @Override public UseAnim getUseAnimation(ItemStack stack){return UseAnim.DRINK;}
  @Override public ItemStack finishUsingItem(ItemStack stack,Level level,LivingEntity entity){
   if(entity instanceof ServerPlayer p&&Hydration.active(p)&&WaterBalance.canDrink(Hydration.state(p))){
-   var b=read(stack);int ml=Math.min(250,b.ml());if(ml>0){
+   var b=current(stack,Hydration.clock(p));int ml=Math.min(250,b.ml());if(ml>0){
     var t=WaterBatch.transfer(b,WaterBatch.empty(),ml,ml);
-    Hydration.applyDrink(p,b.quality(),ml,b.risk());if(!p.isCreative())write(stack,t.source());p.getInventory().setChanged();
+    Hydration.applyDrink(p,t.target());if(!p.isCreative())write(stack,t.source());p.getInventory().setChanged();
    }
   }
   return stack;

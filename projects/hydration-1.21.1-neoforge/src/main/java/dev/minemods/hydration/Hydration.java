@@ -33,12 +33,13 @@ import java.util.WeakHashMap;
 
 @Mod("hydration")
 public final class Hydration {
- private static final String WATER="hydration_water", EXPOSURE="hydration_exposure", RESERVE="hydration_reserve", PENDING="hydration_pending";
+ private static final String WATER="hydration_water", EXPOSURE="hydration_exposure", RESERVE="hydration_reserve", PENDING="hydration_pending", ELECTROLYTES="hydration_electrolytes";
+ private static final WeakHashMap<ServerPlayer,WaterBalance.Dehydration> LAST_STAGE=new WeakHashMap<>();
  private static final WeakHashMap<ServerPlayer,Vec3> LAST_POS=new WeakHashMap<>();
  private static final WeakHashMap<ServerPlayer,Long> LAST_SIP=new WeakHashMap<>();
  public Hydration(IEventBus modBus){
   // Read both constants at runtime rather than inlining compile-time values.
-  try {if(WorldLogicApi.class.getField("API_VERSION").getInt(null)!=1||WorldLogicApi.class.getField("API_REVISION").getInt(null)<7)throw new IllegalStateException("Hydration requires World Logic API v1 revision 7 or later");}
+  try {if(WorldLogicApi.class.getField("API_VERSION").getInt(null)!=1||WorldLogicApi.class.getField("API_REVISION").getInt(null)<8)throw new IllegalStateException("Hydration requires World Logic API v1 revision 8 or later");}
   catch(ReflectiveOperationException e){throw new IllegalStateException("World Logic API revision unavailable",e);}
   HydrationItems.register(modBus);
   modBus.addListener(HydrationSync::register);
@@ -59,19 +60,34 @@ public final class Hydration {
  public static boolean active(ServerPlayer p){return p.isAlive()&&!p.isCreative()&&!p.isSpectator()&&!(p instanceof FakePlayer);}
  public static WaterBalance.State state(ServerPlayer p){
   var n=p.getPersistentData();
-  return new WaterBalance.State(n.contains(WATER)?n.getDouble(WATER):100,n.getDouble(EXPOSURE),n.getDouble(RESERVE),n.getDouble(PENDING));
+  return new WaterBalance.State(n.contains(WATER)?n.getDouble(WATER):100,n.getDouble(EXPOSURE),n.getDouble(RESERVE),n.getDouble(PENDING),n.contains(ELECTROLYTES)?n.getDouble(ELECTROLYTES):50);
  }
  private static void store(ServerPlayer p,WaterBalance.State s){
   p.getPersistentData().putDouble(WATER,s.water());
   p.getPersistentData().putDouble(EXPOSURE,s.exposure());
-  p.getPersistentData().putDouble(RESERVE,s.reserve());p.getPersistentData().putDouble(PENDING,s.pending());
+  p.getPersistentData().putDouble(RESERVE,s.reserve());p.getPersistentData().putDouble(PENDING,s.pending());p.getPersistentData().putDouble(ELECTROLYTES,s.electrolytes());
  }
  public static void applyDrink(ServerPlayer p,WaterBalance.Quality q,double ml,double risk){
   if(active(p)) {store(p,WaterBalance.drink(state(p),q,ml,risk));HydrationSync.send(p);}
  }
+ public static long clock(ServerPlayer p){return p.serverLevel().getServer().overworld().getGameTime();}
+ public static void applyDrink(ServerPlayer p,WaterBatch batch){
+  if(!active(p)||batch.ml()<=0)return;
+  store(p,WaterBalance.drink(state(p),batch.quality(),batch.ml(),batch.risk(),batch.salinity()));
+  PhysiologyBridge.reportIntake(p,batch);HydrationSync.send(p);
+ }
+ private static void refreshInventory(ServerPlayer p){
+  long now=clock(p);boolean changed=false;
+  for(int i=0;i<p.getInventory().getContainerSize();i++){
+   var stack=p.getInventory().getItem(i);if(stack.isEmpty()||VesselTreatment.activeJob(p,stack)||(p.isUsingItem()&&p.getUseItem()==stack))continue;
+   if(stack.getItem() instanceof VesselItem v)changed|=v.refresh(stack,now);else changed|=WaterBottle.refresh(stack,now);
+  }
+  if(changed)p.getInventory().setChanged();
+ }
  private static void tick(PlayerTickEvent.Post e){
   if(!(e.getEntity() instanceof ServerPlayer p)||p.tickCount%20!=0)return;
-  if(!active(p)){LAST_POS.remove(p);HydrationSync.send(p);return;}
+  if(p.tickCount%100==0)refreshInventory(p);
+  if(!active(p)){LAST_POS.remove(p);LAST_STAGE.remove(p);HydrationSync.send(p);return;}
   Vec3 previous=LAST_POS.put(p,p.position());
   double distance=previous==null?0:p.position().distanceToSqr(previous);
   boolean moving=distance>.025&&distance<225;
@@ -82,11 +98,20 @@ public final class Hydration {
   double solar=env.map(WorldLogicApi.Environment::solarExposure).orElse(0.0);
   boolean covered=env.map(WorldLogicApi.Environment::covered).orElse(true);
   var body=PhysiologyBridge.sample(p);
-  var s=WaterBalance.tick(state(p),WaterBalance.loss(c,rh,moving,p.isSprinting()&&moving,p.isSwimming()&&moving,covered,solar,body.bodyC(),body.bleeding()));
-  store(p,s);
-  if(p.tickCount%100==0&&s.water()<25)WorldLogicApi.addExertion(p,s.water()<10?2.0:.7);
+  var old=state(p);double medical=PhysiologyBridge.illnessLoss(p);
+  double extra=Double.isFinite(medical)?medical:WaterBalance.illnessLoss(old.exposure());
+  double loss=WaterBalance.loss(c,rh,moving,p.isSprinting()&&moving,p.isSwimming()&&moving,covered,solar,body.bodyC(),body.bleeding());
+  var s=WaterBalance.tick(old,loss+extra+.08*WaterBalance.electrolyteStress(old.electrolytes()));
+  store(p,s);var stage=WaterBalance.stage(s.water());var previousStage=LAST_STAGE.put(p,stage);
+  if(previousStage!=stage&&(previousStage!=null||stage!=WaterBalance.Dehydration.NORMAL))p.displayClientMessage(Component.translatable("hydration.stage."+stage.name().toLowerCase(Locale.ROOT)),true);
+  if(p.tickCount%100==0){
+   double exertion=switch(stage){case NORMAL->0;case MILD->.20;case MODERATE->.50;case SEVERE->1.0;case CRITICAL->2.0;};
+   if(exertion>0)WorldLogicApi.addExertion(p,exertion);
+   if(stage==WaterBalance.Dehydration.SEVERE||stage==WaterBalance.Dehydration.CRITICAL)p.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,120,stage==WaterBalance.Dehydration.CRITICAL?1:0,false,true));
+   if(stage==WaterBalance.Dehydration.CRITICAL)p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,120,0,false,true));
+   if(!Double.isFinite(medical)&&s.exposure()>=25)p.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,120,0,false,true));
+  }
   if(p.tickCount%200==0&&s.water()<=0)p.hurt(p.damageSources().dryOut(),1f);
-  if(p.tickCount%100==0&&s.exposure()>=25)p.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,120,0,false,true));
   HydrationSync.send(p);
  }
  static WorldLogicApi.WaterProfile targeted(ServerPlayer p){
@@ -106,7 +131,7 @@ public final class Hydration {
   if(!(e.getEntity() instanceof ServerPlayer p)||!e.getItemStack().is(Items.GLASS_BOTTLE)||p.isSpectator())return;
   var profile=targeted(p);
   if(profile==null||!profile.sourceBlock())return;
-  ItemStack bottle=WaterBottle.create(profile);
+  ItemStack bottle=WaterBottle.create(profile,clock(p));
   p.setItemInHand(e.getHand(),ItemUtils.createFilledResult(e.getItemStack(),p,bottle));
   p.level().playSound(null,p.getX(),p.getY(),p.getZ(),SoundEvents.BOTTLE_FILL,SoundSource.PLAYERS,1f,1f);
   e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);
@@ -116,13 +141,14 @@ public final class Hydration {
   var item=e.getItem();
   var batch=WaterBottle.read(item);
   if(batch.isPresent()){
-   var d=batch.get();applyDrink(p,d.quality(),d.ml(),d.risk());return;
+   var d=batch.get().aged(clock(p),false);applyDrink(p,d);return;
   }
   // Vanilla moisture-bearing foods; only after the actual consumption event.
   double ml=item.is(Items.MELON_SLICE)?65:item.is(Items.APPLE)||item.is(Items.BEETROOT)?35:
    item.is(Items.MUSHROOM_STEW)||item.is(Items.BEETROOT_SOUP)||item.is(Items.RABBIT_STEW)?100:
    item.is(Items.MILK_BUCKET)?150:0;
   if(ml>0)applyDrink(p,WaterBalance.Quality.DRINKABLE,ml,0);
+  var food=item.get(net.minecraft.core.component.DataComponents.FOOD);if(food!=null)store(p,WaterBalance.eat(state(p),food.nutrition()));
  }
  static void sip(ServerPlayer p){
   if(!active(p)||!p.getMainHandItem().isEmpty()||!p.getOffhandItem().isEmpty())return;
@@ -133,13 +159,14 @@ public final class Hydration {
   if(!WaterBalance.canDrink(state(p)))return;
   var profile=targeted(p);
   if(profile==null)return;
-  applyDrink(p,quality(profile),250,profile.contaminationRisk());
+  applyDrink(p,WaterBottle.fromSource(profile).aged(clock(p),false));
   p.level().playSound(null,p.getX(),p.getY(),p.getZ(),SoundEvents.GENERIC_DRINK,SoundSource.PLAYERS,.6f,1f);
  }
  private static void tooltip(net.neoforged.neoforge.event.entity.player.ItemTooltipEvent e){
   var batch=WaterBottle.read(e.getItemStack());if(batch.isEmpty())return;
   var d=batch.get();for(String kind:d.origins().stream().sorted().toList())e.getToolTip().add(Component.translatable("hydration.water.kind."+kind.toLowerCase(Locale.ROOT)));
   e.getToolTip().add(Component.translatable("hydration.water.quality."+d.quality().name().toLowerCase(Locale.ROOT)));
+  e.getToolTip().add(Component.translatable("hydration.vessel.properties",String.format(Locale.ROOT,"%.1f",d.salinity()),Math.round(d.risk()*100)));
  }
  private static void clonePlayer(PlayerEvent.Clone e){
   if(!(e.getEntity() instanceof ServerPlayer p))return;
@@ -148,10 +175,10 @@ public final class Hydration {
  }
  private static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p)HydrationSync.send(p);}
  private static void logout(PlayerEvent.PlayerLoggedOutEvent e){
-  if(e.getEntity() instanceof ServerPlayer p){LAST_POS.remove(p);LAST_SIP.remove(p);HydrationSync.forget(p);}
+  if(e.getEntity() instanceof ServerPlayer p){LAST_POS.remove(p);LAST_SIP.remove(p);LAST_STAGE.remove(p);HydrationSync.forget(p);}
  }
  private static String status(ServerPlayer p){
-  var s=state(p);return String.format(Locale.ROOT,"Hydration water=%d exposure=%d reserve=%d pending=%d",(int)Math.round(s.water()),(int)Math.round(s.exposure()),(int)Math.round(s.reserve()),(int)Math.round(s.pending()));
+  var s=state(p);return String.format(Locale.ROOT,"Hydration water=%d exposure=%d reserve=%d pending=%d electrolytes=%d stage=%s",(int)Math.round(s.water()),(int)Math.round(s.exposure()),(int)Math.round(s.reserve()),(int)Math.round(s.pending()),(int)Math.round(s.electrolytes()),WaterBalance.stage(s.water()));
  }
  private static void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("hydration")

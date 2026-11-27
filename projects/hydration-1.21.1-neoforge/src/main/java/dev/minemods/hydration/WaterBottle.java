@@ -41,28 +41,36 @@ public final class WaterBottle {
   Set<String> origins=new HashSet<>();
   for(Tag n:data.getList("origins",Tag.TAG_STRING))origins.add(n.getAsString());
   if(origins.isEmpty()&&!data.getString("kind").isEmpty())origins.add(data.getString("kind"));
-  try{return Optional.of(new WaterBatch(250,q,salt,risk,origins));}
+  try{return Optional.of(new WaterBatch(250,q,salt,risk,origins,data.contains("updated_tick")?Math.max(-1,data.getLong("updated_tick")):-1));}
   catch(IllegalArgumentException ex){return Optional.of(unknown());}
  }
  static WaterBatch fromSource(WorldLogicApi.WaterProfile p){
   if(p.quality()==WorldLogicApi.WaterQuality.NOT_WATER)throw new IllegalArgumentException("Not water");
   var q=quality(p.quality().name());
   double salt=p.salinityGkg(),risk=p.contaminationRisk();
-  if(!Double.isFinite(salt)||!Double.isFinite(risk)||salt<0||risk<0)return unknown();
+  if(!Double.isFinite(salt)||!Double.isFinite(risk)||salt<0||risk<0)return new WaterBatch(250,WaterBalance.Quality.UNKNOWN,0,1,Set.of(p.kind().name()));
   if(salt>=1)q=WaterBalance.Quality.DESALINATE;
   return new WaterBatch(250,q,salt,risk,Set.of(p.kind().name()));
  }
- static ItemStack create(WorldLogicApi.WaterProfile p){
-  var batch=fromSource(p);
+ static ItemStack create(WorldLogicApi.WaterProfile p,long now){
+  var batch=fromSource(p).aged(now,false);
   ItemStack bottle=PotionContents.createItemStack(Items.POTION,Potions.WATER);
   CustomData.update(DataComponents.CUSTOM_DATA,bottle,tag->{
    CompoundTag data=new CompoundTag();data.putInt("volume_ml",batch.ml());
    data.putString("kind",p.kind().name());data.putString("quality",batch.quality().name());
    data.putDouble("salinity",batch.salinity());data.putDouble("risk",batch.risk());
-   data.putString("evidence",p.evidence().name());
+   data.putString("evidence",p.evidence().name());data.putLong("updated_tick",batch.updatedTick());
    ListTag origins=new ListTag();batch.origins().stream().sorted().forEach(x->origins.add(StringTag.valueOf(x)));data.put("origins",origins);
    tag.put(PROFILE,data);
   });
   return bottle;
+ }
+ static boolean refresh(ItemStack stack,long now){
+  var before=read(stack);if(before.isEmpty()||!before.get().needsRefresh(now))return false;
+  var batch=before.get().aged(now,false);
+  CustomData.update(DataComponents.CUSTOM_DATA,stack,tag->{
+   CompoundTag data=tag.getCompound(PROFILE);data.putString("quality",batch.quality().name());data.putDouble("salinity",batch.salinity());data.putDouble("risk",batch.risk());data.putLong("updated_tick",batch.updatedTick());
+   ListTag origins=new ListTag();batch.origins().stream().sorted().forEach(x->origins.add(StringTag.valueOf(x)));data.put("origins",origins);tag.put(PROFILE,data);
+  });return true;
  }
 }

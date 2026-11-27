@@ -53,6 +53,21 @@ public final class ModelChecks {
   var filtered=GravityFlow.move(sea,WaterBatch.empty(),1000,12,10,100,true);
   check(filtered.moved()==100&&filtered.remainingFilter()==0&&filtered.target().salinity()==35&&filtered.target().risk()<sea.risk(),"filter consumption limited by actual throughput");
   check(GravityFlow.rainMl(false,true,1)==0&&GravityFlow.rainMl(true,false,1)==0&&GravityFlow.rainMl(true,true,0)==0&&GravityFlow.rainMl(true,true,.5)==30,"rain boundaries");
+  var clean=new WaterBatch(1000,Quality.DRINKABLE,.2,.08,java.util.Set.of("SPRING"),100);
+  var open=clean.aged(100+24000L*10,true);var closed=clean.aged(100+24000L*10,false);
+  check(open.risk()>closed.risk()&&closed.risk()>clean.risk(),"exposed storage spoils faster");
+  check(open.ml()==clean.ml()&&open.salinity()==clean.salinity()&&open.origins().equals(clean.origins()),"spoilage retains mass and provenance");
+  check(open.quality()==Quality.TREAT_RECOMMENDED&&WaterTreatment.boil(open).risk()<open.risk(),"stale water downgrade and treatment");
+  check(clean.aged(100,true).equals(clean)&&clean.aged(0,true).risk()==clean.risk(),"same tick and time rollback");
+  check(new WaterBatch(250,Quality.DRINKABLE,0,.1).aged(999999,true).risk()==.1,"legacy timestamp starts now");
+  check(Math.abs(clean.aged(24100,true).aged(48100,true).risk()-clean.aged(48100,true).risk())<.0000001,"storage rate independent of update interval");
+  var agedMix=WaterBatch.transfer(open,closed,500,1500);check(agedMix.moved()==500&&Math.abs(agedMix.target().risk()*1500+agedMix.source().risk()*500-(open.risk()*1000+closed.risk()*1000))<.001,"aged mix conserves risk");
+  check(drink(s,Quality.DRINKABLE,250,.01,.1).pending()>drink(s,Quality.TREAT_RECOMMENDED,250,.6,.1).pending(),"quality alters hydration gain");
+  check(drink(s,Quality.DRINKABLE,250,.1,.1).pending()>drink(s,Quality.DESALINATE,250,.1,5).pending(),"numeric salt reduces restoration");
+  check(drink(s,Quality.DESALINATE,250,.1,35).electrolytes()>50,"saline increases electrolyte index");
+  check(tick(s,.5).electrolytes()<s.electrolytes()&&eat(new State(40,0,0,0,30),4).electrolytes()>30,"electrolyte loss and food recovery");
+  check(stage(70)==Dehydration.NORMAL&&stage(50)==Dehydration.MILD&&stage(25)==Dehydration.MODERATE&&stage(10)==Dehydration.SEVERE&&stage(9)==Dehydration.CRITICAL,"dehydration stages");
+  check(illnessLoss(50)>illnessLoss(12)&&illnessLoss(0)==0,"fallback illness fluid loss");
   var unknown=new WaterBatch(100,Quality.UNKNOWN,0,1);
   check(WaterBatch.transfer(unknown,fresh,100,1000).target().quality()==Quality.UNKNOWN,"unknown cannot be laundered");
  }
