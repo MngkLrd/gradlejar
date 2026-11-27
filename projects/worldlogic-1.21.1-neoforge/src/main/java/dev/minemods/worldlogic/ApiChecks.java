@@ -63,7 +63,8 @@ public final class ApiChecks {
  public static void verifyAtmosphere(ServerLevel l,boolean rain){
   BlockPos pos=weatherFixture(l);
   require(l.hasChunkAt(pos)&&l.canSeeSky(pos),"weather fixture must be loaded and exposed");
-  require(l.isRaining()==rain,"weather fixture must match requested weather");
+  require(l.getLevelData().isRaining()==rain,"command weather flag expected="+rain+" actual="+l.getLevelData().isRaining());
+  require(l.isRaining()==rain,"weather fade expected="+rain+" actual="+l.isRaining()+" rainLevel="+l.getRainLevel(1.0F)+" tick="+l.getGameTime());
   var a=WorldLogicApi.atmosphere(l,pos).orElseThrow();
   require(a.environment().equals(WorldLogicApi.environment(l,pos).orElseThrow()),"RC20 environment preserved");
   require(Double.isFinite(a.relativeHumidityPercent())&&a.relativeHumidityPercent()>=0&&a.relativeHumidityPercent()<=100,"relative humidity bounds");

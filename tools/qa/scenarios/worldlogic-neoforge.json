@@ -50,7 +50,7 @@
       "assertion": true
     },
     {
-      "command": "weather clear 120",
+      "command": "weather clear 2400",
       "expect": "clear"
     },
     {
@@ -63,7 +63,7 @@
       "assertion": true
     },
     {
-      "command": "weather rain 120",
+      "command": "weather rain 2400",
       "expect": "rain"
     },
     {
@@ -76,7 +76,7 @@
       "assertion": true
     },
     {
-      "command": "weather clear 120",
+      "command": "weather clear 2400",
       "expect": "clear"
     },
     {
@@ -121,7 +121,7 @@
       "expect": "World Logic settings saved"
     },
     {
-      "command": "weather clear 120",
+      "command": "weather clear 2400",
       "expect": "clear"
     }
   ],
