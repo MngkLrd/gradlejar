@@ -30,3 +30,5 @@ RC27: regional_weather defaults on for World Logic geography presets. Nine local
 Operator test: `/worldlogic weather_demo dust_storm` (or `monsoon`, `blizzard`, `thunderstorm`, `fog`, `downpour`, `rain`, `snow`, `clear`); `stop` ends test. Limited to local radius 128 and 120 seconds; actual API follows demo. No real lightning entities yet.
 
 RC28: five climate-related soil blocks with original 16px textures, groundwater/snow/soil/pond storage, precipitation, infiltration, melt, evaporation, recharge, discharge and runoff; `/worldlogic hydrology` displays current modeled values. API revision 6 supports future Hydration. New ground blocks only in newly generated chunks, no terrain density changes. Existing worlds can use live model. Full actual world/client QA pending.
+
+RC28 API revision 7: detailed water origin, gameplay quality, salinity/contamination estimates, evidence and source/flow flags. Rivers/springs drinkable by game balance, sea/estuary desalination, other freshwater treatment recommended. Legacy method retained. Natural origin inference is provisional; no dedicated spring generation or fluid provenance tracking yet.

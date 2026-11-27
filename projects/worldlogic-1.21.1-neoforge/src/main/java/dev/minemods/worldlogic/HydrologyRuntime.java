@@ -50,12 +50,7 @@ public final class HydrologyRuntime{
    Math.max(1,32-store.groundwater()*.10),c!=null,c==null?-1:c.tick()));
  }
  public static WaterSource waterSource(ServerLevel l,BlockPos p){
-  if(l.isOutsideBuildHeight(p)||!l.hasChunkAt(p))return WaterSource.UNKNOWN;
-  if(!l.getFluidState(p).is(FluidTags.WATER))return WaterSource.NONE;
-  if(l.getBiome(p).is(TagKey.create(Registries.BIOME,ResourceLocation.fromNamespaceAndPath("minecraft","is_ocean"))))return WaterSource.SALINE;
-  if(!l.dimensionType().hasSkyLight())return WaterSource.UNKNOWN;
-  int surface=l.getHeight(Heightmap.Types.OCEAN_FLOOR,p.getX(),p.getZ());
-  return p.getY()<surface-8?WaterSource.GROUNDWATER:WaterSource.FRESH_SURFACE;
+  return WaterClassification.legacy(WaterClassification.sample(l,p));
  }
  public static void tick(LevelTickEvent.Post e){
   if(!(e.getLevel() instanceof ServerLevel l)||!active(l)||l.getGameTime()%200!=0||l.players().isEmpty())return;

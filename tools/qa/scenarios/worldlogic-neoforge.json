@@ -183,6 +183,12 @@
       "command": "worldlogic qa hydrology",
       "expect": "WORLDLOGIC_HYDROLOGY_PASSED",
       "assertion": true
+    },
+    {
+      "name": "Detailed water origins, game drinkability, legacy mapping and actual covered/exposed water fixtures",
+      "command": "worldlogic qa water_profile",
+      "expect": "WORLDLOGIC_WATER_PROFILE_PASSED",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -484,6 +490,17 @@
         {
           "backend": "server",
           "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "water-profile-classification",
+      "kind": "mechanic",
+      "subject": "Detailed water origins, game drinkability, legacy mapping and actual covered/exposed water fixtures",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Detailed water origins, game drinkability, legacy mapping and actual covered/exposed water fixtures"
         }
       ]
     }

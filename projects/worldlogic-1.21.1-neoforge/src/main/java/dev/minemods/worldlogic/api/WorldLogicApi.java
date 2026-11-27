@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=6;
+ public static final int API_REVISION=7;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -83,6 +83,19 @@ public final class WorldLogicApi {
  }
  /** Natural-water classification, not a medical assessment of drinking safety. */
  public enum WaterSource { NONE, FRESH_SURFACE, SALINE, GROUNDWATER, UNKNOWN }
+ /** Detailed in-game source class. Existing WaterSource is retained as a compatibility projection. */
+ public enum WaterKind { NONE, SEA, RIVER, LAKE, SPRING, GROUNDWATER, WETLAND, POND, BRACKISH, UNKNOWN }
+ /** Gameplay treatment recommendation; never a real-world potability assessment. */
+ public enum WaterQuality { DRINKABLE, TREAT_RECOMMENDED, DESALINATE, UNKNOWN, NOT_WATER }
+ public enum WaterEvidence { FLUID_ABSENT, BIOME, TERRAIN_PROXY, LOCAL_GEOMETRY, UNCLASSIFIED }
+ /** Estimated salinity in g/kg (-1 unknown); contamination risk 0..1 (-1 unknown).
+  * Game balance estimates, not measured water chemistry. Flowing describes vanilla fluid state, not river current. */
+ public record WaterProfile(WaterKind kind,WaterQuality quality,double salinityGkg,double contaminationRisk,
+  boolean sourceBlock,boolean flowing,WaterEvidence evidence){}
+ /** Loaded block only, no forced chunk loads. Detailed natural-source inference for Hydration. */
+ public static WaterProfile waterProfile(ServerLevel level,BlockPos pos){
+  serverThread(level);return dev.minemods.worldlogic.WaterClassification.sample(level,pos);
+ }
  public enum SoilType { LOAM,HUMUS,PEAT,SILT,FROZEN,SAND,CLAY,ROCK,UNKNOWN }
  /** Model stores expressed in mm water equivalent per horizontal area; rates per 200-tick update. */
  public record Hydrology(SoilType soil,double soilWaterMm,double capacityMm,double groundwaterMm,double snowWaterMm,

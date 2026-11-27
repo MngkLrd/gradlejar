@@ -58,7 +58,13 @@ public final class AdminCommands {
    var h=dev.minemods.worldlogic.api.WorldLogicApi.hydrology(s.getLevel(),pos);
    return reply(s,h.map(v->String.format(java.util.Locale.ROOT,"Soil %s; saturation %.0f%%; water %.1f/%.1f mm; groundwater %.1f mm; snow %.1f mm; runoff %.2f mm; simulated=%s",v.soil(),v.saturation()*100,v.soilWaterMm(),v.capacityMm(),v.groundwaterMm(),v.snowWaterMm(),v.lastRunoffMm(),v.simulated())).orElse("Hydrology inactive or no soil at loaded cell."));
   }));
+  root.then(Commands.literal("water").executes(c->{var s=c.getSource();
+   var p=net.minecraft.core.BlockPos.containing(s.getPosition());
+   var w=dev.minemods.worldlogic.api.WorldLogicApi.waterProfile(s.getLevel(),p);
+   return reply(s,String.format(java.util.Locale.ROOT,"Water: %s; quality=%s; salinity=%.1f g/kg; risk=%.2f; evidence=%s",w.kind(),w.quality(),w.salinityGkg(),w.contaminationRisk(),w.evidence()));
+  }));
   root.then(Commands.literal("qa").requires(s->s.hasPermission(4))
+   .then(Commands.literal("water_profile").executes(c->{try{WaterClassificationChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WATER_PROFILE_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("hydrology").executes(c->{try{HydrologyChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_HYDROLOGY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("local_weather").executes(c->{try{LocalWeatherChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_LOCAL_WEATHER_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("worldgen_ecology").executes(c->{try{WorldgenApiChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WORLDGEN_ECOLOGY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
