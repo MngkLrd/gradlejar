@@ -154,7 +154,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
                 if(fruit.isPresent()&&fruit.get().replacementForm()!=null)fruit=Optional.empty();
             }
             if(fruit.isPresent()&&fruit.get().replacementForm()!=null)
-                form=form(fruit.get().replacementForm(),fruit.get().fruit().wood());
+                form=form(fruit.get().replacementForm(),fruit.get().fruit().wood);
             var key=ResourceKey.create(Registries.CONFIGURED_FEATURE,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","tree_"+form.feature()));
             if(level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(key).value().place(level,generator,random,pos)){
                 placed=true;trunks.add(pos);
