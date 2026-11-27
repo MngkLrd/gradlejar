@@ -2,6 +2,7 @@ package dev.minemods.worldlogic.api;
 
 import dev.minemods.worldlogic.GeoDensity;
 import dev.minemods.worldlogic.AtmosphereModel;
+import dev.minemods.worldlogic.RegionalWeatherModel;
 import dev.minemods.worldlogic.Material;
 import dev.minemods.worldlogic.RuleSync;
 import dev.minemods.worldlogic.Rules;
@@ -20,8 +21,8 @@ import net.minecraft.world.level.block.state.BlockState;
 /** Public addon contract, version 1. Server methods must be called on the server thread. */
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
- /** Additive revision: RC21 introduces atmosphere(). Existing v1 signatures are unchanged. */
- public static final int API_REVISION=2;
+ /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
+ public static final int API_REVISION=3;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -40,6 +41,10 @@ public final class WorldLogicApi {
  public record Atmosphere(Environment environment,double relativeHumidityPercent,
                           double outdoorWindXMps,double outdoorWindZMps,double outdoorWindSpeedMps,
                           Precipitation precipitation,double precipitationIntensity){}
+ /** Experimental regional weather model, not live local conditions. Never drive player penalties from this preview. */
+ public record RegionalWeatherPreview(double seaLevelPressureHpa,double localPressureHpa,
+  double temperatureAnomalyC,double moistureFraction,double cloudFraction,double precipitationPotential,
+  double windXMps,double windZMps,double gustMps){}
  public record Fatigue(boolean enabled,double fatiguePercent,double remainingStaminaPercent){}
  private static void serverThread(ServerLevel level){
   if(!level.getServer().isSameThread())throw new IllegalStateException("World Logic API requires server thread");
@@ -86,6 +91,20 @@ public final class WorldLogicApi {
     regional.map(RegionalClimate::prevailingWindX).orElse(0.0),
     regional.map(RegionalClimate::prevailingWindZ).orElse(0.0),rain,thunder);
   return Optional.of(new Atmosphere(env,humidity,wind.x(),wind.z(),wind.speed(),local,intensity));
+ }
+ /** RC22 preview: immutable regional fields for a loaded location, never loads terrain or changes vanilla weather. */
+ public static Optional<RegionalWeatherPreview> regionalWeatherPreview(ServerLevel level,BlockPos pos){
+  serverThread(level);
+  if(!level.dimensionType().hasSkyLight())return Optional.empty();
+  var env=environment(level,pos);
+  if(env.isEmpty())return Optional.empty();
+  var c=env.orElseThrow().regionalClimate();
+  var s=RegionalWeatherModel.sample(level.getSeed(),pos.getX(),pos.getZ(),level.getGameTime(),
+    env.orElseThrow().elevationAboveSea(),
+    c.map(RegionalClimate::moistureIndex).orElse(level.getBiome(pos).value().hasPrecipitation()?.55:.15),
+    c.map(RegionalClimate::prevailingWindX).orElse(0.0),c.map(RegionalClimate::prevailingWindZ).orElse(0.0));
+  return Optional.of(new RegionalWeatherPreview(s.seaLevelPressureHpa(),s.localPressureHpa(),s.temperatureAnomalyC(),
+    s.moistureFraction(),s.cloudFraction(),s.precipitationPotential(),s.windX(),s.windZ(),s.gustMps()));
  }
  public static Fatigue fatigue(ServerPlayer player){
   serverThread(player.serverLevel());

@@ -13,3 +13,7 @@ Active target: Minecraft 1.21.1 / NeoForge / Java 21 / official mappings. Core w
 Physical item/entity mass stays in Core: it is used for impacts, doors, boats, tools and structures; do not extend a separate carried-weight progression system until approved. Plant growth, medical, food and sleep legacy rules still exist in RC20/RC21; the above is the target ownership, not a claim that code has already moved. Do not silently duplicate, delete or disable saved rules. Migrate overlapping rules and state deliberately with addon integration tests and a documented standalone fallback/config strategy. Do not start deferred addons now.
 
 Priority: environmental API, weather, hydrology and geology. Preserve existing world presets and generator behavior until a separately versioned generation update is tested. RC21 adds model estimates for relative humidity, outdoor wind and local vanilla precipitation; it is not a dynamic regional weather simulator.
+
+## Meteorology sequence
+
+RC22: deterministic regional pressure and moving warm/cold/moist/dry fields, cloud and precipitation potential, diagnostics. Next: reconcile regional controller with server/client weather, local precipitation and vanilla mechanics (water, fire, snow, crops); only then update the live environmental API atomically. Later: terrain/near-water and shelter microclimate, fog/dew, storms, seasons and extreme events. No separate weather addon; Temperature consumes the live core API only.

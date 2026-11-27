@@ -15,12 +15,23 @@ public final class AdminCommands {
   root.then(Commands.literal("strength").then(Commands.argument("family",StringArgumentType.word()).suggests((c,b)->net.minecraft.commands.SharedSuggestionProvider.suggest(Rules.tuningKeys(),b)).then(Commands.argument("factor",DoubleArgumentType.doubleArg(.25,2)).executes(c->{String k=StringArgumentType.getString(c,"family");if(!Rules.tuningKeys().contains(k)){c.getSource().sendFailure(Component.literal("Unknown family"));return 0;}var m=Rules.snapshot();m.put("strength."+k,Double.toString(DoubleArgumentType.getDouble(c,"factor")));m.put("preset","custom");return change(c.getSource(),m);}))));
   root.then(Commands.literal("reload").executes(c->{Rules.load();return reply(c.getSource(),"World Logic configuration reloaded.");}));
   root.then(Commands.literal("inspect").executes(c->{var s=c.getSource();var p=s.getPlayer();if(p==null)return reply(s,"Use in game to inspect player state.");var b=Body.state(p);return reply(s,"mass="+String.format(Locale.ROOT,"%.2f",Material.mass(p))+" fatigue="+String.format(Locale.ROOT,"%.1f",Survival.fatigue(p))+" cargo="+String.format(Locale.ROOT,"%.2f",Condition.burden(p))+" impact_load="+String.format(Locale.ROOT,"%.1f",Trauma.load(p))+" arm_injury="+Trauma.arm(p)+" prone="+Balance.down(p)+" wetness="+b.wet+" air="+p.getAirSupply()+" streak="+b.streak+" pocket="+(b.pocket==null?"none":b.pocket.oxygen));}));
+  root.then(Commands.literal("weather").executes(c->{
+   var s=c.getSource();
+   var pos=net.minecraft.core.BlockPos.containing(s.getPosition());
+   var live=dev.minemods.worldlogic.api.WorldLogicApi.atmosphere(s.getLevel(),pos);
+   var model=dev.minemods.worldlogic.api.WorldLogicApi.regionalWeatherPreview(s.getLevel(),pos);
+   if(live.isEmpty()||model.isEmpty())return reply(s,"Weather unavailable at this position.");
+   var a=live.orElseThrow();var w=model.orElseThrow();
+   return reply(s,String.format(Locale.ROOT,"Live: %.1f C, RH %.0f%%, wind %.1f m/s, %s. Regional preview: %.1f hPa, anomaly %+.1f C, cloud %.0f%%, precipitation potential %.0f%%, gust %.1f m/s.",
+    a.environment().ambientCelsiusEstimate(),a.relativeHumidityPercent(),a.outdoorWindSpeedMps(),a.precipitation(),w.localPressureHpa(),w.temperatureAnomalyC(),w.cloudFraction()*100,w.precipitationPotential()*100,w.gustMps()));
+  }));
   root.then(Commands.literal("testfall").executes(c->{var p=c.getSource().getPlayer();if(p!=null&&Balance.debug(p))return reply(c.getSource(),"World Logic: test fall triggered.");c.getSource().sendFailure(Component.literal("Enable physical_falls and use in survival."));return 0;}));
   root.then(Commands.literal("selftest").executes(c->{try{ReleaseChecks.run();return reply(c.getSource(),"WORLDLOGIC_CORE_TESTS_PASSED");}catch(Exception e){c.getSource().sendFailure(Component.literal(e.toString()));return 0;}}));
   root.then(Commands.literal("qa").requires(s->s.hasPermission(4))
    .then(Commands.literal("api").executes(c->{ApiChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_API_CHECKS_PASSED");}))
    .then(Commands.literal("atmosphere_dry").executes(c->{ApiChecks.verifyAtmosphere(c.getSource().getLevel(),false);return reply(c.getSource(),"WORLDLOGIC_ATMOSPHERE_DRY_PASSED");}))
    .then(Commands.literal("atmosphere_rain").executes(c->{ApiChecks.verifyAtmosphere(c.getSource().getLevel(),true);return reply(c.getSource(),"WORLDLOGIC_ATMOSPHERE_RAIN_PASSED");}))
+   .then(Commands.literal("regional_weather").executes(c->{ApiChecks.verifyRegionalWeather(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_REGIONAL_WEATHER_PASSED");}))
    .then(Commands.literal("terrain").executes(c->{TerrainChecks.verifyPreset(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_TERRAIN_PRESET_PASSED");}))
    .then(Commands.literal("world").executes(c->{ReleaseChecks.verifyWorld(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WORLD_FIXTURE_PASSED");})));
   event.getDispatcher().register(root);

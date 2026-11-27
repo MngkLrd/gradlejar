@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC21 production core/API regression",
+  "name": "World Logic NeoForge RC22 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -66,6 +66,18 @@
     {
       "command": "weather clear 120",
       "expect": "clear"
+    },
+    {
+      "name": "Regional weather pressure, moving fields, spatial continuity and live isolation",
+      "command": "worldlogic qa regional_weather",
+      "expect": "WORLDLOGIC_REGIONAL_WEATHER_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Weather diagnostics reports live and preview separately",
+      "command": "execute positioned 0 70 0 run worldlogic weather",
+      "expect": "Live:.*Regional preview:",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -132,6 +144,28 @@
         {
           "backend": "server",
           "name": "Atmosphere rain snapshot and local intensity"
+        }
+      ]
+    },
+    {
+      "id": "regional-weather",
+      "kind": "mechanic",
+      "subject": "Regional weather pressure, moving fields, spatial continuity and live isolation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Regional weather pressure, moving fields, spatial continuity and live isolation"
+        }
+      ]
+    },
+    {
+      "id": "weather-inspection",
+      "kind": "mechanic",
+      "subject": "Weather diagnostics reports live and preview separately",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Weather diagnostics reports live and preview separately"
         }
       ]
     }
