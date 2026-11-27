@@ -930,5 +930,15 @@
     "graphical_client": "NOT_RUN",
     "network_player": "NOT_RUN",
     "protocol": 9
+  },
+  "rc16": {
+    "version": "0.5.4-rc16",
+    "reported": "All body regions stop receiving damage with recent Core",
+    "confirmed_source": "Core RC32 Rules.on disables injuries, injury_aggravation, shoulder_impact with worldlogic_trauma loaded; old HP used ruleEnabled as own gate",
+    "fix": "HP owns anatomy and limb functions independently of Core legacy switches",
+    "regression": "registered LivingDamageEvent.Pre under disabled legacy switches; persistence/sync packet, external API, mode exclusions",
+    "combined_core_rc32": "NOT_RUN: latest Core RC32 CI failed",
+    "client": "NOT_RUN",
+    "protocol": 9
   }
 }

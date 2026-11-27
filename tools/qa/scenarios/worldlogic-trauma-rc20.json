@@ -103,6 +103,12 @@
       "expect": "TRAUMAQA climb PASS",
       "assertion": true,
       "name": "TR-CLIMB: full block ascent, arm selection, duration, headroom and interrupted path"
+    },
+    {
+      "command": "traumaqa ownership",
+      "expect": "TRAUMAQA ownership PASS",
+      "assertion": true,
+      "name": "TR-OWNERSHIP: registered damage event and Trauma API remain active with Core legacy injuries disabled"
     }
   ],
   "coverage": [
@@ -495,6 +501,48 @@
         {
           "backend": "server",
           "name": "TR-CLIMB: full block ascent, arm selection, duration, headroom and interrupted path"
+        }
+      ]
+    },
+    {
+      "id": "tr-ownership-damage",
+      "kind": "mechanic",
+      "subject": "Registered fall/fire damage updates anatomy exactly once with legacy Core rules disabled",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-OWNERSHIP: registered damage event and Trauma API remain active with Core legacy injuries disabled"
+        }
+      ]
+    },
+    {
+      "id": "tr-ownership-sync",
+      "kind": "mechanic",
+      "subject": "Damage persists and is reflected in actual body packet",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-OWNERSHIP: registered damage event and Trauma API remain active with Core legacy injuries disabled"
+        }
+      ]
+    },
+    {
+      "id": "tr-ownership-api",
+      "kind": "mechanic",
+      "subject": "External injury API and limb restrictions active; creative/spectator excluded",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-OWNERSHIP: registered damage event and Trauma API remain active with Core legacy injuries disabled"
         }
       ]
     }

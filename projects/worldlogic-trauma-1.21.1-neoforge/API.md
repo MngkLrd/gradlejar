@@ -18,3 +18,6 @@ boolean accepted = TraumaApi.reportInjury(serverPlayer,
 Reports NEW localized tissue damage; anatomical HP points must be finite, positive and at most the target zone maximum, bleeding 0..2. Does not subtract vanilla hearts itself. Rejects invalid/inactive calls; accepted calls cancel treatment and synchronize the body. Vital destruction is resolved by normal Trauma tick. Never call for damage already handled by Minecraft's damage event; that would count an injury twice. Thermal can use this for additional tissue-specific complications only if the corresponding wound is not already produced by vanilla damage. No core modification required. The API does not expose a public healing or direct NBT mutation method.
 
 This documents the RC12 source contract; combined third-party runtime verification is separate.
+
+### Ownership arbitration (0.5.4)
+Trauma is the owner of medical injuries while installed. Core's `ruleEnabled("injuries")` / `ruleEnabled("shoulder_impact")` may be false specifically because Core delegates these legacy mechanics to Trauma. Do not use these switches to gate Trauma API calls. Living server-side survival/adventure players remain eligible independently of Core's legacy injury switches; creative/spectator players remain excluded.

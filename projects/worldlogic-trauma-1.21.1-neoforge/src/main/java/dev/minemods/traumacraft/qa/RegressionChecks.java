@@ -23,7 +23,7 @@ public final class RegressionChecks {
     private static void require(boolean ok,String message){if(!ok)throw new IllegalStateException(message);}
     public static void register(RegisterCommandsEvent e){
         var root=Commands.literal("traumaqa").requires(s->s.hasPermission(4)&&s.getEntity()==null);
-        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss","physiology","wounds","primitive","publicapi","climb"})
+        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss","physiology","wounds","primitive","publicapi","climb","ownership"})
             root.then(Commands.literal(name).executes(c->run(c.getSource(),name)));
         e.getDispatcher().register(root);
     }
@@ -74,16 +74,16 @@ public final class RegressionChecks {
                     var penalty=survival.getDeclaredMethod("penalty",net.minecraft.world.entity.player.Player.class,long.class);penalty.setAccessible(true);
                     var arm=Class.forName("dev.minemods.worldlogic.Trauma").getDeclaredMethod("arm",net.minecraft.world.entity.player.Player.class);arm.setAccessible(true);
                     long now=p.level().getGameTime();
-                    require((boolean)injured.invoke(null,p,now)==WorldLogicApi.ruleEnabled("injuries"),"World Logic injury predicate");
-                    require((boolean)arm.invoke(null,p)==WorldLogicApi.ruleEnabled("shoulder_impact"),"World Logic arm predicate");
-                    if(WorldLogicApi.ruleEnabled("injuries")) require((double)penalty.invoke(null,p,now)>=.42f,"World Logic leg penalty");
+                    require((boolean)injured.invoke(null,p,now),"Trauma owns injury predicate regardless of Core legacy switch");
+                    require((boolean)arm.invoke(null,p),"Trauma owns arm predicate regardless of Core legacy switch");
+                    require((double)penalty.invoke(null,p,now)>=.42f,"World Logic leg penalty");
                     require(WorldLogicBridge.mergePenalty(p,.6)==.6,"penalty stacking");
                     p.getPersistentData().putLong("worldlogic_injury",now+1000);WorldLogicBridge.migrateLegacy(p);
                     require(!p.getPersistentData().contains("worldlogic_injury"),"legacy timer not removed");
                 }
                 case "api" -> {
                     require(WorldLogicApi.API_VERSION==1,"unsupported API contract");
-                    require(WorldLogicBridge.injuryEnabled(p)==WorldLogicApi.ruleEnabled("injuries"),"injury rule source");
+                    require(WorldLogicBridge.injuryEnabled(p),"installed Trauma owns anatomy");
                     WorldLogicApi.recoverExertion(p,100);
                     var initial=WorldLogicApi.fatigue(p);
                     require(initial.enabled()==WorldLogicApi.ruleEnabled("exertion"),"fatigue rule source");
@@ -152,7 +152,7 @@ public final class RegressionChecks {
                     require(restored.bloodMl()==b.bloodMl()&&restored.shockStage()==3,"persistent blood");
                     b.loseBlood(1000);require(b.fatalBloodLoss(),"fatal threshold");
                     b.reset();require(!b.fatalBloodLoss()&&b.bloodMl()==5000&&b.pain()==0,"new life resets physiology");
-                    if(WorldLogicApi.ruleEnabled("injuries")){
+                    if(WorldLogicBridge.injuryEnabled(p)){
                         var main=WorldLogicBridge.mainArm(p);
                         var mining=Class.forName("dev.minemods.worldlogic.Trauma").getDeclaredMethod("mining",net.minecraft.world.entity.player.Player.class);
                         mining.setAccessible(true);
@@ -388,6 +388,7 @@ public final class RegressionChecks {
                     }finally{BodyStates.forget(next);next.getPersistentData().remove(BodyStates.KEY);}
                 }
                 case "climb" -> dev.minemods.traumacraft.climb.ClimbChecks.verify(source.getLevel(),p);
+                case "ownership" -> dev.minemods.traumacraft.qa.OwnershipChecks.verify(p);
                 case "damage" -> {
                     TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);
                     require(b.health(BodyPart.LEFT_LEG)==45&&b.health(BodyPart.RIGHT_LEG)==45&&b.fractured(BodyPart.LEFT_LEG),"single fall damage");
