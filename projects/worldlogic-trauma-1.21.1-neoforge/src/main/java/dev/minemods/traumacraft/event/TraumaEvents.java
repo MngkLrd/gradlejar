@@ -94,41 +94,31 @@ public final class TraumaEvents {
     }
     public static void onPlayerTick(EntityTickEvent.Post e) {
         if(!(e.getEntity() instanceof ServerPlayer p)) return;
-        TreatmentManager.tick(p);
-        if(!WorldLogicBridge.active(p)) return;
+        if(!WorldLogicBridge.active(p)){TreatmentManager.tick(p);return;}
         BodyState b=BodyStates.get(p);
-        if(b.tickCriticalGrace() && b.vitalDestroyed()) {
-            try { INTERNAL.set(true); p.hurt(p.damageSources().magic(),Math.max(40,p.getHealth()+p.getAbsorptionAmount()+1)); }
-            finally { INTERNAL.set(false); }
-            ModNetwork.sync(p); return;
-        }
+        if(b.vitalDestroyed()){fatalCollapse(p);return;}
+        TreatmentManager.tick(p);
         if(p.tickCount%20!=0) return;
         b.tickMedicalEffects();
         if(WorldLogicBridge.resting(p)) {
             ThermalBridge.recover(b,ThermalBridge.condition(p),p.tickCount%100==0);
         }
         if(p.tickCount%40==0 && b.hasBleeding()) {
-            boolean was=b.vitalDestroyed(); float blood=0,overflow=0;
-            for(BodyPart zone:BodyPart.values()) {
-                int severity=b.bleeding(zone);
-                if(severity==0) continue;
-                float loss=severity==2?1.2f:.35f;
-                float available=b.health(zone);
-                b.damage(zone,loss); blood+=loss;
-                overflow+=Math.max(0,loss-available)*.35f;
-            }
-            // Bleeding from an exhausted zone still affects circulation.
-            if(overflow>0) {
-                BodyPart reserve=b.health(BodyPart.STOMACH)>0?BodyPart.STOMACH:
-                    b.health(BodyPart.CHEST)>0?BodyPart.CHEST:BodyPart.HEAD;
-                b.damage(reserve,overflow);
-            }
-            // Internal blood loss must never heal a low-health player. The
-            // fatal vital collapse remains governed by the emergency window.
+            float blood=b.bleedStep();
+            if(b.vitalDestroyed()){fatalCollapse(p);return;}
             if(blood>0 && p.getHealth()>1f) p.setHealth(Math.max(1f,p.getHealth()-blood*.20f));
-            if(!was && b.vitalDestroyed()) b.startCriticalGrace(600);
         }
         if(BodyStates.flush(p) || p.tickCount%40==0) ModNetwork.sync(p);
+    }
+    /** No grace period for a destroyed brain or chest. Direct kill bypasses armor and totems. */
+    private static void fatalCollapse(ServerPlayer p){
+        TreatmentManager.cancel(p);
+        BodyStates.flush(p);
+        try{
+            INTERNAL.set(true);
+            p.kill();
+        }finally{INTERNAL.set(false);}
+        if(p.isAlive())ModNetwork.sync(p);
     }
     // Existing admin command calls this after reset. World Logic alone owns movement modifiers.
     public static void updateMovement(ServerPlayer p,float unused) {}

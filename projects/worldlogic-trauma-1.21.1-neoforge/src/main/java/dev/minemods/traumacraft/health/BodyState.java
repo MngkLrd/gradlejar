@@ -62,6 +62,27 @@ public final class BodyState {
     public boolean fractured(BodyPart part) { return fractured[part.ordinal()]; }
     public float percent(BodyPart part) { return health(part) / part.maximum; }
 
+    /** Every two seconds: wound drains its own tissue; overflow from destroyed
+     * tissue represents systemic blood loss, affecting every surviving zone.
+     * Weak .35 / severe 1.2 local HP per step; systemic multiplier .5.
+     */
+    public float bleedStep() {
+        float total=0,overflow=0;
+        for(BodyPart part:BodyPart.values()){
+            int severity=bleeding(part);
+            if(severity==0)continue;
+            float loss=severity==2?1.2f:.35f;
+            float before=health(part);
+            damage(part,loss);
+            total+=loss;
+            overflow+=Math.max(0,loss-before);
+        }
+        if(overflow>0)
+            for(BodyPart part:BodyPart.values())
+                if(health(part)>0)damage(part,overflow*.5f);
+        return total;
+    }
+
     public boolean hasBleeding() {
         for (byte value : bleeding) if (value > 0) return true;
         return false;

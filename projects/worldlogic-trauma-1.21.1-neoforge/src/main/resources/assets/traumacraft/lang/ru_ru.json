@@ -73,7 +73,7 @@
   "condition.traumacraft.sore": "Ушиб",
   "condition.traumacraft.injured": "Травма",
   "condition.traumacraft.severe": "Тяжёлая травма",
-  "condition.traumacraft.disabled": "Критическая травма",
+  "condition.traumacraft.disabled": "Разрушена",
   "condition.traumacraft.concussion": "Сотрясение",
   "condition.traumacraft.splinted": "Наложена шина",
   "condition.traumacraft.fracture": "Перелом",
@@ -91,5 +91,8 @@
   "thermal.traumacraft.recovery": "Скорость восстановления: %s%%",
   "thermal.traumacraft.heatstroke": "Тепловой удар",
   "thermal.traumacraft.sunstroke": "Солнечный удар",
-  "thermal.traumacraft.confirmed_hypothermia": "Гипотермия"
+  "thermal.traumacraft.confirmed_hypothermia": "Гипотермия",
+  "screen.traumacraft.summary": "Общее HP: %s/%s | Утрачено: %s",
+  "screen.traumacraft.blood": "Кровотечение: %s слаб. / %s сильн.",
+  "screen.traumacraft.treatment": "Лечение: %s с"
 }

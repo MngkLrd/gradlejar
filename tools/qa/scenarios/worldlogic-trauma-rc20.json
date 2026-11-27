@@ -36,7 +36,7 @@
       "command": "traumaqa procedure",
       "expect": "TRAUMAQA procedure PASS",
       "assertion": true,
-      "name": "Timed cursor treatment: one consumption, duplicate rejection, same-item replacement and cancellation"
+      "name": "TR-PROCEDURE: immediate cursor consumption, duplicate and invalid rejection, cursor independence, explicit cancellation"
     },
     {
       "command": "traumaqa targeting",
@@ -67,6 +67,12 @@
       "expect": "TRAUMAQA respawn PASS",
       "assertion": true,
       "name": "TR-RESPAWN: healthy first join, death reset persisted, relog and nondeath clone preserve injury"
+    },
+    {
+      "command": "traumaqa bloodloss",
+      "expect": "TRAUMAQA bloodloss PASS",
+      "assertion": true,
+      "name": "TR-BLOODLOSS: weak and severe systemic loss, nonbleeding black limb, local bleeding and vital destruction"
     }
   ],
   "coverage": [
@@ -150,7 +156,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Timed cursor treatment: one consumption, duplicate rejection, same-item replacement and cancellation"
+          "name": "TR-PROCEDURE: immediate cursor consumption, duplicate and invalid rejection, cursor independence, explicit cancellation"
         }
       ]
     },
@@ -235,6 +241,20 @@
         {
           "backend": "server",
           "name": "TR-RESPAWN: healthy first join, death reset persisted, relog and nondeath clone preserve injury"
+        }
+      ]
+    },
+    {
+      "id": "tr-bloodloss",
+      "kind": "mechanic",
+      "subject": "TR-BLOODLOSS: weak and severe systemic loss, nonbleeding black limb, local bleeding and vital destruction",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-BLOODLOSS: weak and severe systemic loss, nonbleeding black limb, local bleeding and vital destruction"
         }
       ]
     }

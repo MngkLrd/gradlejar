@@ -23,7 +23,7 @@ public final class RegressionChecks {
     private static void require(boolean ok,String message){if(!ok)throw new IllegalStateException(message);}
     public static void register(RegisterCommandsEvent e){
         var root=Commands.literal("traumaqa").requires(s->s.hasPermission(4)&&s.getEntity()==null);
-        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn"})
+        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss"})
             root.then(Commands.literal(name).executes(c->run(c.getSource(),name)));
         e.getDispatcher().register(root);
     }
@@ -107,32 +107,48 @@ public final class RegressionChecks {
                     p.inventoryMenu.setCarried(original);
                     b.setBleeding(arm,2);
                     require(TreatmentManager.begin(p,item,arm,true,null),"begin cursor treatment");
-                    require(!TreatmentManager.begin(p,item,arm,true,null),"duplicate active procedure");
-                    p.tickCount+=39;
-                    TreatmentManager.tick(p);
-                    require(b.bleeding(arm)==2&&original.getCount()==3,"premature effect or consumption");
-                    p.tickCount++;
-                    TreatmentManager.tick(p);
-                    require(b.bleeding(arm)==0&&original.getCount()==2,"completion: effect and exactly one item");
-                    TreatmentManager.tick(p);
-                    require(original.getCount()==2,"repeat consumption");
-                    b.setBleeding(arm,2);
-                    require(TreatmentManager.begin(p,item,arm,true,null),"begin replacement control");
+                    require(original.getCount()==2,"immediate one item consumption");
+                    require(!TreatmentManager.begin(p,item,arm,true,null)&&original.getCount()==2,"duplicate rejected without consumption");
+                    p.tickCount+=39;TreatmentManager.tick(p);
+                    require(b.bleeding(arm)==2,"effect not yet applied");
                     ItemStack replacement=new ItemStack(item,2);
                     p.inventoryMenu.setCarried(replacement);
-                    p.tickCount+=40;
+                    p.tickCount++;TreatmentManager.tick(p);
+                    require(b.bleeding(arm)==0&&replacement.getCount()==2&&original.getCount()==2,"cursor replacement does not interrupt or consume twice");
                     TreatmentManager.tick(p);
-                    require(b.bleeding(arm)==2&&replacement.getCount()==2&&original.getCount()==2,"same-item swap canceled");
-                    require(TreatmentManager.begin(p,item,arm,true,null),"restart after cancellation");
+                    require(replacement.getCount()==2,"repeat consumption absent");
+                    require(!TreatmentManager.begin(p,item,arm,true,null)&&replacement.getCount()==2,"invalid target no consumption");
+                    b.setBleeding(arm,2);
+                    require(TreatmentManager.begin(p,item,arm,true,null)&&replacement.getCount()==1,"second procedure consumes one");
+                    p.inventoryMenu.setCarried(ItemStack.EMPTY);
+                    p.tickCount+=40;TreatmentManager.tick(p);
+                    require(b.bleeding(arm)==0,"empty cursor cannot interrupt accepted procedure");
+                    b.setBleeding(arm,2);p.inventoryMenu.setCarried(replacement);
+                    require(TreatmentManager.begin(p,item,arm,true,null),"final procedure");
                     TreatmentManager.cancel(p);
                     p.tickCount+=40;TreatmentManager.tick(p);
-                    require(b.bleeding(arm)==2&&replacement.getCount()==2,"explicit cancellation");
-                    require(TreatmentManager.begin(p,item,arm,true,null),"begin mode change control");
-                    setFixtureMode(p,GameType.CREATIVE);
-                    TreatmentManager.tick(p);
-                    setFixtureMode(p,GameType.SURVIVAL);
-                    p.tickCount+=40;TreatmentManager.tick(p);
-                    require(b.bleeding(arm)==2&&replacement.getCount()==2,"creative cancellation");
+                    require(b.bleeding(arm)==2&&replacement.isEmpty(),"explicit cancellation does not refund consumed treatment");
+                }
+                case "bloodloss" -> {
+                    b.damage(BodyPart.LEFT_ARM,60);
+                    require(!b.vitalDestroyed(),"black arm not lethal");
+                    b.bleedStep();
+                    for(var part:BodyPart.values())if(part!=BodyPart.LEFT_ARM)
+                        require(b.health(part)==part.maximum,"black nonbleeding arm cannot drain "+part);
+                    b.setBleeding(BodyPart.LEFT_ARM,1);
+                    b.bleedStep();
+                    for(var part:BodyPart.values())if(part!=BodyPart.LEFT_ARM)
+                        require(b.health(part)<part.maximum,"weak systemic loss "+part);
+                    float weak=BodyPart.HEAD.maximum-b.health(BodyPart.HEAD);
+                    b.reset();b.damage(BodyPart.LEFT_ARM,60);b.setBleeding(BodyPart.LEFT_ARM,2);
+                    b.bleedStep();
+                    require(BodyPart.HEAD.maximum-b.health(BodyPart.HEAD)>weak,"strong bleed faster");
+                    b.stopBleeding(BodyPart.LEFT_ARM);float head=b.health(BodyPart.HEAD);b.bleedStep();
+                    require(b.health(BodyPart.HEAD)==head,"bandage stops systemic loss");
+                    b.reset();b.setBleeding(BodyPart.LEFT_ARM,2);b.bleedStep();
+                    require(b.health(BodyPart.HEAD)==BodyPart.HEAD.maximum&&b.health(BodyPart.LEFT_ARM)<60,"local wound before destruction");
+                    b.damage(BodyPart.HEAD,35);require(b.vitalDestroyed(),"black head lethal predicate");
+                    b.reset();b.damage(BodyPart.CHEST,85);require(b.vitalDestroyed(),"black chest lethal predicate");
                 }
                 case "targeting" -> {
                     var arm=BodyPart.RIGHT_ARM;

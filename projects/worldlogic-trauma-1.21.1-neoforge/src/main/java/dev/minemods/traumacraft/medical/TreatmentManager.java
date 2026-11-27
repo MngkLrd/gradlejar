@@ -46,8 +46,15 @@ public final class TreatmentManager {
         BodyState body = BodyStates.get(player);
         if (!MedicalAction.canApply(body, medicine.medicalType(), part)) return false;
         Pending pending = new Pending(part, medicine, medicine.medicalType(), player.tickCount,
-                duration(medicine.medicalType()), cursor, hand, stack,
+                duration(medicine.medicalType()), cursor, hand, cursor?ItemStack.EMPTY:stack,
                 player.getX(), player.getY(), player.getZ());
+        // Cursor medicine is consumed at acceptance, not at completion.
+        // Remaining cursor items are ordinary inventory items, never a treatment token.
+        if(cursor&&!player.getAbilities().instabuild){
+            stack.shrink(1);
+            player.containerMenu.setCarried(stack.isEmpty()?ItemStack.EMPTY:stack);
+            player.containerMenu.broadcastChanges();
+        }
         ACTIVE.put(player.getUUID(), pending);
         ModNetwork.progress(player, pending.duration(), 0);
         return true;
@@ -78,7 +85,6 @@ public final class TreatmentManager {
         Pending p = ACTIVE.get(player.getUUID());
         if (p == null) return;
         if (!player.isAlive() || player.isCreative() || player.isSpectator() || player.isSprinting() || !dev.minemods.traumacraft.integration.WorldLogicBridge.canTreat(player)
-                || (p.cursor() && player.containerMenu != player.inventoryMenu)
                 || (p.treatment() == MedicalItem.Type.SURGICAL_KIT &&
                     (Math.abs(player.getX() - p.x()) > 1.5 || Math.abs(player.getZ() - p.z()) > 1.5))
                 || (!p.cursor() && (!player.isUsingItem() || player.getUsedItemHand() != p.hand()))) {
@@ -88,8 +94,8 @@ public final class TreatmentManager {
             cancel(player);
             return;
         }
-        ItemStack held = stack(player, p.cursor(), p.hand());
-        if (held.isEmpty() || held != p.originalStack() || held.getItem() != p.item()) {
+        ItemStack held = p.cursor()?ItemStack.EMPTY:stack(player,false,p.hand());
+        if (!p.cursor()&&(held.isEmpty() || held != p.originalStack() || held.getItem() != p.item())) {
             cancel(player);
             return;
         }
@@ -102,13 +108,7 @@ public final class TreatmentManager {
             stopHandUse(player, p);
             return;
         }
-        if (!player.getAbilities().instabuild) {
-            held.shrink(1);
-            if (p.cursor()) {
-                player.containerMenu.setCarried(held);
-                player.containerMenu.broadcastChanges();
-            }
-        }
+        if (!p.cursor() && !player.getAbilities().instabuild) held.shrink(1);
         stopHandUse(player, p);
         ModNetwork.sync(player);
     }

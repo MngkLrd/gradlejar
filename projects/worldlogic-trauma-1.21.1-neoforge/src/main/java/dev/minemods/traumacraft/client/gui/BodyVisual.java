@@ -15,7 +15,7 @@ public final class BodyVisual {
         TraumaCraft.MOD_ID,"textures/gui/trauma/body.png");
     private static final ResourceLocation OVERLAYS=ResourceLocation.fromNamespaceAndPath(
         TraumaCraft.MOD_ID,"textures/gui/trauma/overlays.png");
-    private static final int[] MIDTONES={0x729954,0xc5a35b,0xce965b,0xc66553,0x847381};
+    private static final int[] MIDTONES={0x729954,0xc5a35b,0xce965b,0xc66553,0x29272C};
     private BodyVisual(){}
     public static BodyPart hit(int mx,int my,int ox,int oy){
         return AnatomyLayout.hit(mx,my,ox,oy);
@@ -47,7 +47,9 @@ public final class BodyVisual {
         // HUD and anatomy panel use the exact same sprite pixels and hit rectangles.
         for(AnatomyLayout.Zone z:AnatomyLayout.ZONES){
             int x=ox+z.x(),y=oy+z.y(),w=z.width(),h=z.height(),p=palette(z.part());
-            g.blit(BODY,x,y,p*AnatomyLayout.WIDTH+z.x(),z.y(),w,h,AnatomyLayout.ATLAS_WIDTH,AnatomyLayout.ATLAS_HEIGHT);
+            if(p==4)g.setColor(.32f,.32f,.35f,1f);
+            try{g.blit(BODY,x,y,p*AnatomyLayout.WIDTH+z.x(),z.y(),w,h,AnatomyLayout.ATLAS_WIDTH,AnatomyLayout.ATLAS_HEIGHT);}
+            finally{if(p==4)g.setColor(1f,1f,1f,1f);}
             boolean limb=z.part()==BodyPart.LEFT_ARM||z.part()==BodyPart.RIGHT_ARM
                 ||z.part()==BodyPart.LEFT_LEG||z.part()==BodyPart.RIGHT_LEG;
             if(p==1&&limb&&ClientBodyState.bleeding(z.part())==0&&!ClientBodyState.fractured(z.part()))overlay(g,x+(w-7)/2,y+h/2,8,0,7,7);

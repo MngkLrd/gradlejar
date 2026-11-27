@@ -73,7 +73,7 @@
   "condition.traumacraft.sore": "Bruised",
   "condition.traumacraft.injured": "Injured",
   "condition.traumacraft.severe": "Severe injury",
-  "condition.traumacraft.disabled": "Critical injury",
+  "condition.traumacraft.disabled": "Destroyed",
   "condition.traumacraft.concussion": "Concussion",
   "condition.traumacraft.splinted": "Stabilized",
   "condition.traumacraft.fracture": "Fracture",
@@ -91,5 +91,8 @@
   "thermal.traumacraft.recovery": "Recovery rate: %s%%",
   "thermal.traumacraft.heatstroke": "Heatstroke",
   "thermal.traumacraft.sunstroke": "Sunstroke",
-  "thermal.traumacraft.confirmed_hypothermia": "Clinical hypothermia"
+  "thermal.traumacraft.confirmed_hypothermia": "Clinical hypothermia",
+  "screen.traumacraft.summary": "Total HP: %s/%s | Destroyed: %s",
+  "screen.traumacraft.blood": "Bleeding: %s light / %s heavy",
+  "screen.traumacraft.treatment": "Treatment: %s s"
 }
