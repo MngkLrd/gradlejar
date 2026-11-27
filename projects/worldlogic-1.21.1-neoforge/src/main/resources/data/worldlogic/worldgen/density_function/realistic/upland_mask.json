@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:flat_cache",
+  "argument": {
+    "type": "minecraft:spline",
+    "spline": {
+      "coordinate": "worldlogic:realistic/erosion",
+      "points": [
+        {
+          "location": -1.2,
+          "value": 1,
+          "derivative": 0
+        },
+        {
+          "location": -0.4,
+          "value": 0.85,
+          "derivative": 0
+        },
+        {
+          "location": 0.2,
+          "value": 0.25,
+          "derivative": 0
+        },
+        {
+          "location": 0.65,
+          "value": 0,
+          "derivative": 0
+        },
+        {
+          "location": 1.2,
+          "value": 0,
+          "derivative": 0
+        }
+      ]
+    }
+  }
+}

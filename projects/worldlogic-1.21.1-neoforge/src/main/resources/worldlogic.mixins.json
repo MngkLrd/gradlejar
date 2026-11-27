@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.minemods.worldlogic.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "WeightedPlateMixin",
+    "StonePlateMixin",
+    "ArrowLifeMixin",
+    "FrictionMixin",
+    "FurnaceFoodMixin",
+    "CampfireFoodMixin",
+    "FurnaceExtractionMixin",
+    "DoorPhysicsMixin",
+    "FurnaceMenuMixin",
+    "CampfireFuelMixin",
+    "FoodRecoveryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

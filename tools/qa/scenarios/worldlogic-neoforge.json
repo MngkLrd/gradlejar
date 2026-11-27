@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "name": "World Logic NeoForge RC20 production core/API regression",
+  "steps": [
+    {
+      "command": "worldlogic preset realistic",
+      "expect": "World Logic settings saved"
+    },
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "name": "Core calculations and furnace mixin",
+      "command": "worldlogic selftest",
+      "expect": "WORLDLOGIC_CORE_TESTS_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Live support and falling debris, material tags and saved data",
+      "command": "worldlogic qa world",
+      "expect": "WORLDLOGIC_WORLD_FIXTURE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Exertion API, shared jump fatigue, bounds and stamina icons scale",
+      "command": "worldlogic qa api",
+      "expect": "WORLDLOGIC_API_CHECKS_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Registered custom generator, climate fixtures, seed surveys and heights",
+      "command": "worldlogic qa terrain",
+      "expect": "WORLDLOGIC_TERRAIN_PRESET_PASSED",
+      "assertion": true
+    }
+  ],
+  "coverage": [
+    {
+      "id": "core-mechanics",
+      "kind": "mechanic",
+      "subject": "Core calculations and furnace mixin",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "live-support",
+      "kind": "mechanic",
+      "subject": "Live support and falling debris, material tags and saved data",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "exertion-api",
+      "kind": "mechanic",
+      "subject": "Exertion API, shared jump fatigue, bounds and stamina icons scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Exertion API, shared jump fatigue, bounds and stamina icons scale"
+        }
+      ]
+    },
+    {
+      "id": "terrain-climate",
+      "kind": "mechanic",
+      "subject": "Registered custom generator, climate fixtures, seed surveys and heights",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Registered custom generator, climate fixtures, seed surveys and heights"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:egg",
+    "minecraft:glass_bottle",
+    "minecraft:potion",
+    "minecraft:splash_potion",
+    "minecraft:lingering_potion"
+  ]
+}
