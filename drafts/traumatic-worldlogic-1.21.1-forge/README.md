@@ -9,3 +9,6 @@ QA: component checks under `tools/qa/scenarios/traumatic-worldlogic-rc16.json` a
 
 ## Audit correction
 The first Build Hub run (45955276725) failed compilation because Forge 52.1.0 does not supply FakePlayer/FakePlayerFactory. The draft replaces these imports with an unconnected vanilla ServerPlayer fixture, not a network player. That correction has not yet been compiled or run. Moved outside projects in accordance with QA-V2 P5. Do not enroll until the redesigned medical mechanics and complete positive/negative coverage are ready; do not bypass the missing Forge 1.21.1 compatibility baseline.
+
+## Visual iteration
+Eight existing medical icons redrawn by hand on 16x16 grids (bandage, rag dressing, splint, medical pouch, medkit, antiseptic, sterile fabric, compression wrap). Materials and palettes reviewed against vanilla paper, stick, leather, bundle, rabbit hide, string, glass bottle from Minecraft 1.21.1. No generic texture pattern or smoothing. Anatomy now uses 1x HUD and 2x inventory pixels, anatomically mirrored left/right, qualitative localized condition labels and distinct stabilized fracture markers. Legacy local HP remains internal pending physiology refactor. The legacy inventory extension remains in this draft; narrow screens keep vanilla inventory. No graphical client QA yet. Visual QA policy and actual gameplay evidence remain separate.

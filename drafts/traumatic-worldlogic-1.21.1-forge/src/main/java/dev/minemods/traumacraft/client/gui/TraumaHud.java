@@ -24,20 +24,19 @@ public final class TraumaHud {
         Minecraft mc=Minecraft.getInstance();
         if(mc.player==null || mc.options.hideGui || mc.screen!=null || !ClientBodyState.hasReceived())return;
         TreatmentRing.render(gui);
-        // Bottom aligned with the vanilla hotbar; no 68x76 background or empty box.
-        int x=Math.max(4,gui.guiWidth()/2-91-40);
-        int y=gui.guiHeight()-57;
-        gui.pose().pushPose();
-        gui.pose().translate(x,y,0);
-        gui.pose().scale(0.47f,0.47f,1f);
-        BodyVisual.draw(gui,0,0,true);
-        gui.pose().popPose();
+        if(mc.player.isCreative() || mc.player.isSpectator())return;
+        if(!ClientBodyState.hasAnyInjuries() && ClientBodyState.concussionTicks()==0
+                && ClientBodyState.painkillerTicks()==0)return;
+        // Exact 1:1 native GUI pixels. Move away from the hotbar at narrow scales.
+        int x=gui.guiWidth()/2-91-38, y=gui.guiHeight()-43;
+        if(x<4){x=4;y=4;}
+        BodyVisual.draw(gui,x,y,true);
         int bleeding=0, fractures=0;
         for(BodyPart part:BodyPart.values()){
             bleeding+=ClientBodyState.bleeding(part);
             if(ClientBodyState.fractured(part))fractures++;
         }
-        int col=x+25;
+        int col=x+24;
         int iy=y+4;
         if(bleeding>0){draw(gui,BLEED,col,iy);iy+=11;}
         if(fractures>0){draw(gui,FRACTURE,col,iy);iy+=11;}

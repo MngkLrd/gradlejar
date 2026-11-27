@@ -11,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import dev.minemods.traumacraft.network.ModNetwork;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /** Vanilla-width inventory artwork plus one beveled, 166px tall medical extension. */
 public final class TraumaInventoryScreen extends InventoryScreen {
@@ -20,7 +19,7 @@ public final class TraumaInventoryScreen extends InventoryScreen {
     private static final int PANEL_DESIRED_WIDTH = 188;
     private static final int FIRST_ROW_Y = 21;
     private static final int ROW_HEIGHT = 19;
-    private static final float SMALL_FONT = 0.78f;
+    private static final float SMALL_FONT = 1f;
 
     private int panelWidth = PANEL_DESIRED_WIDTH;
     private BodyPart hovered;
@@ -42,7 +41,7 @@ public final class TraumaInventoryScreen extends InventoryScreen {
     private int rowX() { return px() + 64; }
     private int rowRight() { return px() + panelWidth - 7; }
     private int bx() { return px() + 9; }
-    private int by() { return topPos + 26; }
+    private int by() { return topPos + 30; }
 
     private void small(GuiGraphics gui, String value, int x, int y, int color) {
         gui.pose().pushPose();
@@ -90,7 +89,7 @@ public final class TraumaInventoryScreen extends InventoryScreen {
                     rowRight(),hovered==BodyPart.values()[i]);
 
         String footer=Component.translatable("screen.traumacraft.drag_to_treat").getString();
-        small(gui,footer,x+8,b-11,0xFF555555);
+        small(gui,font.plainSubstrByWidth(footer,panelWidth-16),x+8,b-11,0xFF555555);
     }
 
     private void drawTotals(GuiGraphics gui,int x,int y) {
@@ -99,46 +98,25 @@ public final class TraumaInventoryScreen extends InventoryScreen {
             blood+=ClientBodyState.bleeding(p);
             if(ClientBodyState.fractured(p))broken++;
         }
-        small(gui,"BLD "+blood,x,y,blood>0?0xFFD77979:0xFFA6B0B0);
-        small(gui,"FX "+broken,x,y+9,broken>0?0xFFF0CE91:0xFFA6B0B0);
+        small(gui,Component.translatable("screen.traumacraft.bleed_count",blood).getString(),x,y,blood>0?0xFFD77979:0xFFA6B0B0);
+        small(gui,Component.translatable("screen.traumacraft.fracture_count",broken).getString(),x,y+9,broken>0?0xFFF0CE91:0xFFA6B0B0);
     }
 
     private void drawRow(GuiGraphics gui,BodyPart part,int x,int y,int right,boolean focus) {
         if(focus)gui.fill(x-3,y-1,right+2,y+ROW_HEIGHT-1,0x4A789C7C);
-        String name=switch(part) {
-            case HEAD->"HEAD"; case CHEST->"CHEST"; case STOMACH->"ABDOMEN";
-            case LEFT_ARM->"L.ARM"; case RIGHT_ARM->"R.ARM";
-            case LEFT_LEG->"L.LEG"; case RIGHT_LEG->"R.LEG";
-        };
-        String hp=Math.round(ClientBodyState.hp(part))+"/"+part.maximum;
-        small(gui,name,x,y+1,0xFF333333);
-        small(gui,hp,right-smallWidth(hp),y+1,0xFF333333);
+        String name=BodyVisual.name(part).getString();
+        small(gui,font.plainSubstrByWidth(name,Math.max(10,right-x)),x,y,0xFF333333);
 
         int bleeding=ClientBodyState.bleeding(part);
         boolean fracture=ClientBodyState.fractured(part);
-        String status;
-        int color;
-        if(part==BodyPart.HEAD&&ClientBodyState.concussionTicks()>0) {
-            status="CONCUSSION"; color=0xFF985A4F;
-        } else if(bleeding>0&&fracture) {
-            status="BLEED "+bleeding+" / FX";color=0xFF9A353A;
-        } else if(fracture) {
-            status=ClientBodyState.stabilized(part)?"SPLINTED":"FRACTURE";color=0xFF956F2F;
-        } else if(bleeding==2) {
-            status="HEAVY BLEED";color=0xFF9A353A;
-        } else if(bleeding==1) {
-            status="BLEEDING";color=0xFFA2513C;
-        } else if(ClientBodyState.hp(part)<=0) {
-            status="BLACKED";color=0xFF933A42;
-        } else if(ClientBodyState.hp(part)<part.maximum) {
-            status="INJURED";color=0xFF84652C;
-        } else {
-            status="STABLE";color=0xFF747E7E;
-        }
-        small(gui,status,x,y+9,color);
-        gui.fill(x,y+17,right,y+19,0xFF454A4B);
-        int filled=Math.round((right-x)*ClientBodyState.fraction(part));
-        if(filled>0)gui.fill(x,y+17,x+filled,y+19,BodyVisual.hpColor(part,false));
+        String key=BodyVisual.conditionKey(part);
+        if(part==BodyPart.HEAD&&ClientBodyState.concussionTicks()>0)key="concussion";
+        if(fracture)key=ClientBodyState.stabilized(part)?"splinted":"fracture";
+        if(bleeding>0)key=bleeding==2?"heavy_bleed":"bleeding";
+        int color=bleeding>0?0xFF9A353A:fracture?0xFF956F2F:
+            key.equals("stable")?0xFF56664B:0xFF84652C;
+        String status=Component.translatable("condition.traumacraft."+key).getString();
+        small(gui,font.plainSubstrByWidth(status,Math.max(10,right-x)),x,y+9,color);
     }
 
     @Override public void render(GuiGraphics gui,int mx,int my,float delta) {
@@ -146,15 +124,16 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         TreatmentRing.render(gui);
         if(hovered==null)return;
         List<Component> tooltip=new ArrayList<>();
-        tooltip.add(Component.literal(hovered.label));
-        tooltip.add(Component.literal(String.format(Locale.ROOT,"HP: %.0f / %d",
-                ClientBodyState.hp(hovered),hovered.maximum)));
-        if(ClientBodyState.hp(hovered)<=0)tooltip.add(Component.literal("Blacked out"));
+        tooltip.add(BodyVisual.name(hovered));
+        tooltip.add(BodyVisual.condition(hovered));
         if(ClientBodyState.bleeding(hovered)>0)
-            tooltip.add(Component.literal(ClientBodyState.bleeding(hovered)==2?"Heavy bleeding":"Light bleeding"));
-        if(ClientBodyState.fractured(hovered))tooltip.add(Component.literal(ClientBodyState.stabilized(hovered)?"Stabilized fracture - rest to recover":"Fracture"));
+            tooltip.add(Component.translatable("condition.traumacraft."+
+                (ClientBodyState.bleeding(hovered)==2?"heavy_bleed":"bleeding")));
+        if(ClientBodyState.fractured(hovered))
+            tooltip.add(Component.translatable("condition.traumacraft."+
+                (ClientBodyState.stabilized(hovered)?"splinted":"fracture")));
         if(hovered==BodyPart.HEAD&&ClientBodyState.concussionTicks()>0)
-            tooltip.add(Component.literal("Concussion"));
+            tooltip.add(Component.translatable("condition.traumacraft.concussion"));
         if(menu.getCarried().getItem() instanceof MedicalItem)
             tooltip.add(Component.translatable("screen.traumacraft.click_to_treat"));
         int widest=0;for(Component c:tooltip)widest=Math.max(widest,font.width(c));

@@ -22,7 +22,7 @@ public final class ClientEvents {
         // Do not replace inventory subclasses supplied by other mods.
         if(e.getNewScreen()!=null && e.getNewScreen().getClass()==InventoryScreen.class){
             var p=Minecraft.getInstance().player;
-            if(p!=null && !p.isCreative() && !p.isSpectator())
+            if(p!=null && !p.isCreative() && !p.isSpectator() && Minecraft.getInstance().getWindow().getGuiScaledWidth()>=340)
                 e.setNewScreen(new TraumaInventoryScreen(p));
         }
     }

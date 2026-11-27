@@ -115,6 +115,98 @@
         "tourniquet",
         "trauma_kit"
       ]
+    },
+    {
+      "id": "TR-ART-medical_pouch",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/medical_pouch.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-medkit",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/medkit.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-rag_dressing",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/rag_dressing.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-compression_wrap",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/compression_wrap.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-sterile_fabric",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/sterile_fabric.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-splint",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/splint.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-antiseptic",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/antiseptic.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-bandage",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/bandage.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-HUD-PIXEL",
+      "state": "NOT_RUN",
+      "reason": "graphical client required",
+      "expected": "HUD renders at integer 1x when injured; no healthy/creative HUD; no hotbar overlap at narrow scales"
+    },
+    {
+      "id": "TR-ANATOMY-UI",
+      "state": "NOT_RUN",
+      "reason": "graphical client required",
+      "expected": "2x anatomy, correct mirrored sides and treatment hit targets, qualitative localized statuses, small-screen vanilla fallback, no misleading raw HP total"
     }
   ],
   "draft_project": "drafts/traumatic-worldlogic-1.21.1-forge",
@@ -125,5 +217,23 @@
     "first_error": "Forge 52.1.0 has no net.minecraftforge.common.util.FakePlayer",
     "corrected_in_source": true,
     "correction_verified": false
+  },
+  "visual_iteration": {
+    "basis": "AGENTS.md and docs/VISUAL-QA.md at da52c261ded3cfe3a5e3598e522798cfc881c28d; Blockbench Minecraft Style Guide",
+    "reference": "Minecraft 1.21.1 paper, stick, leather, bundle, rabbit_hide, string, glass_bottle; sampled from minecraft-assets 1.21.1 mirror; no redistribution",
+    "changed_items": [
+      "medical_pouch",
+      "medkit",
+      "rag_dressing",
+      "compression_wrap",
+      "sterile_fabric",
+      "splint",
+      "antiseptic",
+      "bandage"
+    ],
+    "native_size": "16x16",
+    "local_art_review": "native-size and nearest-neighbor comparison inspected; splint targeted correction",
+    "shared_visual_qa": "NOT_RUN on new revision at authoring time; existing PR workflow expected",
+    "client": "NOT_RUN"
   }
 }
