@@ -697,6 +697,8 @@
   "rc9": {
     "balance": "Local 0.35/1.2 HP per 40 ticks; each surviving zone takes 0.5 times overflow; no new limb penalties; chest remains fatal; cursor consumption irreversible at acceptance",
     "client": "NOT_RUN",
-    "network": "NOT_RUN"
+    "network": "NOT_RUN",
+    "passive_recovery": "Destroyed zones excluded from natural tissue regeneration; existing explicit medical actions remain unchanged.",
+    "panel_layout": "30 layout combinations via pure Java test; compact rows keep HP, condition and bar; active icons move to header when necessary."
   }
 }

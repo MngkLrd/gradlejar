@@ -76,6 +76,17 @@ public final class HudStatusLayoutCheck {
             require(ThermalVisualProfile.alpha(c+h,66)<=66,"bounded opacity");
         }
         System.out.println("PASS: 176 medical/thermal combinations and all 11 visual states, fading and alpha");
+        int layouts=0;
+        for(int w:new int[]{330,360,408,480,640,960})
+            for(int h:new int[]{202,220,240,270,480}){
+                var l=MedicalPanelLayout.of(w,h);
+                require(l.available(w,h)&&176+l.width()+6<=w,"panel fits width");
+                require(l.height()+12<=h&&l.rowHeight()>=17,"panel fits height");
+                require(l.rowBottom()<=l.footerTop()-3&&l.bodyBottom()<=l.footerTop(),"no footer overlap");
+                require(l.bodyX()>=0&&l.bodyX()*2+AnatomyLayout.WIDTH*l.bodyScale()==l.columnWidth(),"centered anatomy");
+                layouts++;
+            }
+        System.out.println("PASS: "+layouts+" responsive medical panel layouts");
         System.out.println("PASS: seven independent zones, centered lower inventory, 96 HUD layouts, injury palette and status bounds");
         System.out.println("PASS: 16 combinations, "+transitions+" removal transitions, timer boundaries and visibility");
     }

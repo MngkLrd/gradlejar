@@ -168,7 +168,7 @@ public final class BodyState {
         float worst = 1.0f;
         for (BodyPart part : BodyPart.values()) {
             float fraction = percent(part);
-            if (fraction < worst) { target = part; worst = fraction; }
+            if (fraction > 0 && fraction < worst) { target = part; worst = fraction; }
         }
         if (target == null) return false;
         return heal(target, amount);

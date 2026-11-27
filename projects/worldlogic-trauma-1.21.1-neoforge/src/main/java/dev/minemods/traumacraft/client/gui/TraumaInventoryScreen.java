@@ -35,11 +35,9 @@ public final class TraumaInventoryScreen extends InventoryScreen {
     }
 
     @Override protected void init() {
-        panelWidth = Math.max(148, Math.min(PANEL_DESIRED_WIDTH, width - VANILLA_WIDTH - 6));
-        panelHeight=Math.min(232,height-12);
-        rowHeight=Math.min(23,(panelHeight-FIRST_ROW_Y-39)/7);
-        bodyScale=panelWidth>=238&&panelHeight>=226?2:1;
-        columnWidth=bodyScale==2?108:64;
+        var layout=MedicalPanelLayout.of(width,height);
+        panelWidth=layout.width();panelHeight=layout.height();rowHeight=layout.rowHeight();
+        bodyScale=layout.bodyScale();columnWidth=layout.columnWidth();
         if(width < 330 || height < 202) anatomyOpen=false;
         imageWidth = anatomyOpen ? VANILLA_WIDTH + panelWidth : VANILLA_WIDTH;
         imageHeight = PANEL_HEIGHT;
@@ -48,7 +46,7 @@ public final class TraumaInventoryScreen extends InventoryScreen {
 
     private boolean tabAvailable() { return width>=330 && height>=202 && !getRecipeBookComponent().isVisible(); }
     private int tabX() { return leftPos + VANILLA_WIDTH - TAB_WIDTH; }
-    private int tabY() { return topPos - TAB_HEIGHT; }
+    private int tabY() { return Math.max(1,topPos - TAB_HEIGHT); }
     private boolean onTab(double mx,double my) {
         return tabAvailable() && mx>=tabX() && mx<tabX()+TAB_WIDTH && my>=tabY() && my<tabY()+TAB_HEIGHT;
     }
@@ -106,20 +104,22 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         gui.fill(r-3,y+3,r-2,b-3,0xFF555555);
         gui.fill(x+3,b-3,r-2,b-2,0xFF555555);
         gui.fill(x+5,y+17,r-5,y+18,0xFF777777);
-        gui.drawString(font, Component.translatable("screen.traumacraft.body"),
-                x+7,y+5,0xFF3F3F3F,false);
+        int count=Integer.bitCount(TraumaHud.activeMask());
+        int cols=Math.min(3,count);
+        boolean iconsBelow=cols>0&&by()+BodyVisual.HEIGHT*bodyScale+3+HudStatusLayout.ICON_SIZE+((count+cols-1)/cols-1)*HudStatusLayout.STEP<=b-39;
+        int headerIcons=count==0||iconsBelow?0:HudStatusLayout.ICON_SIZE+(count-1)*HudStatusLayout.STEP+4;
+        String heading=Component.translatable("screen.traumacraft.body").getString();
+        small(gui,font.plainSubstrByWidth(heading,panelWidth-14-headerIcons),x+7,y+5,0xFF3F3F3F);
+        if(headerIcons>0)TraumaHud.drawActive(gui,r-5-headerIcons+4,y+1,count);
 
         gui.pose().pushPose();
         gui.pose().translate(bx(),by(),0);
         gui.pose().scale(bodyScale,bodyScale,1f);
         BodyVisual.draw(gui,0,0,false);
         gui.pose().popPose();
-        int count=Integer.bitCount(TraumaHud.activeMask());
-        int cols=Math.min(bodyScale==2?5:3,count);
-        if(cols>0){
+        if(iconsBelow){
             int iconWidth=HudStatusLayout.ICON_SIZE+(cols-1)*HudStatusLayout.STEP;
-            if(by()+BodyVisual.HEIGHT*bodyScale+3+HudStatusLayout.ICON_SIZE+((count+cols-1)/cols-1)*HudStatusLayout.STEP<=b-33)
-                TraumaHud.drawActive(gui,x+(columnWidth-iconWidth)/2,by()+BodyVisual.HEIGHT*bodyScale+3,cols);
+            TraumaHud.drawActive(gui,x+(columnWidth-iconWidth)/2,by()+BodyVisual.HEIGHT*bodyScale+3,cols);
         }
         hovered=bodyHit(mouseX,mouseY);
         for(int i=0;i<7;i++) {
@@ -149,9 +149,9 @@ public final class TraumaInventoryScreen extends InventoryScreen {
             Component.translatable("screen.traumacraft.drag_to_treat").getString();
         if(ClientTreatmentState.active()){
             last=Component.translatable("screen.traumacraft.treatment",String.format(java.util.Locale.ROOT,"%.1f",ClientTreatmentState.remaining()/20f)).getString();
-            gui.fill(x+7,b-9,r-7,b-5,0xFF777777);
-            gui.fill(x+7,b-9,x+7+Math.round((panelWidth-14)*ClientTreatmentState.fraction()),b-5,0xFF69964E);
-            small(gui,font.plainSubstrByWidth(last,panelWidth-16),x+8,b-15,0xFF333333);
+            gui.fill(x+7,b-6,r-7,b-3,0xFF777777);
+            gui.fill(x+7,b-6,x+7+Math.round((panelWidth-14)*ClientTreatmentState.fraction()),b-3,0xFF69964E);
+            small(gui,font.plainSubstrByWidth(last,panelWidth-16),x+8,b-16,0xFF333333);
         }else small(gui,font.plainSubstrByWidth(last,panelWidth-16),x+8,b-10,0xFF555555);
     }
 
@@ -164,8 +164,7 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         int numWidth=font.width(hp);
         small(gui,font.plainSubstrByWidth(name,Math.max(10,right-x-numWidth-4)),x,y,0xFF333333);
         small(gui,hp,right-numWidth,y,0xFF333333);
-        gui.fill(x,y+10,right,y+14,0xFF777777);
-        gui.fill(x+1,y+11,x+1+Math.round(Math.max(0,right-x-2)*ClientBodyState.fraction(part)),y+13,color);
+
         int bleeding=ClientBodyState.bleeding(part);
         String key=BodyVisual.conditionKey(part);
         if(ClientBodyState.hp(part)>0){
@@ -173,10 +172,21 @@ public final class TraumaInventoryScreen extends InventoryScreen {
             if(ClientBodyState.fractured(part))key=ClientBodyState.stabilized(part)?"splinted":"fracture";
             if(bleeding>0)key=bleeding==2?"heavy_bleed":"bleeding";
         }
-        if(rowHeight>=23){
-            String status=Component.translatable("condition.traumacraft."+key).getString();
-            small(gui,font.plainSubstrByWidth(status,Math.max(10,right-x)),x,y+15,bleeding>0?0xFF9A353A:key.equals("stable")?0xFF3D663D:0xFF555555);
-        }
+        String status=Component.translatable("condition.traumacraft."+key).getString();
+        if(ClientBodyState.hp(part)<=0&&bleeding>0)status+=" / "+Component.translatable("condition.traumacraft."+(bleeding==2?"heavy_bleed":"bleeding")).getString();
+        if(ClientBodyState.fractured(part)&&bleeding>0)status+=" / "+Component.translatable("condition.traumacraft."+(ClientBodyState.stabilized(part)?"splinted":"fracture")).getString();
+        int barWidth=rowHeight>=23?right-x:Math.min(36,Math.max(16,(right-x)/3));
+        int barX=right-barWidth,barY=y+(rowHeight>=23?19:12);
+        gui.fill(barX,barY,right,barY+3,0xFF777777);
+        gui.fill(barX+1,barY+1,barX+1+Math.round(Math.max(0,barWidth-2)*ClientBodyState.fraction(part)),barY+2,color);
+        int statusWidth=rowHeight>=23?right-x:barX-x-3;
+        // A two-line compact row keeps both condition and HP visible.
+        gui.pose().pushPose();
+        gui.pose().translate(x,y+9,0);
+        float scale=rowHeight<20?.8f:1f;
+        gui.pose().scale(scale,scale,1f);
+        gui.drawString(font,font.plainSubstrByWidth(status,Math.max(5,(int)(statusWidth/scale))),0,0,bleeding>0?0xFF9A353A:key.equals("stable")?0xFF3D663D:0xFF555555,false);
+        gui.pose().popPose();
     }
 
     @Override public void render(GuiGraphics gui,int mx,int my,float delta) {

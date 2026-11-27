@@ -132,6 +132,7 @@ public final class RegressionChecks {
                 case "bloodloss" -> {
                     b.damage(BodyPart.LEFT_ARM,60);
                     require(!b.vitalDestroyed(),"black arm not lethal");
+                    require(!b.healMostDamaged(10)&&b.health(BodyPart.LEFT_ARM)==0,"destroyed limb cannot regenerate passively");
                     b.bleedStep();
                     for(var part:BodyPart.values())if(part!=BodyPart.LEFT_ARM)
                         require(b.health(part)==part.maximum,"black nonbleeding arm cannot drain "+part);
