@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC20 production core/API regression",
+  "name": "World Logic NeoForge RC22 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -20,6 +20,12 @@
       "assertion": true
     },
     {
+      "name": "Stamina active recovery, sprint, hunger and airborne controls",
+      "command": "worldlogic qa recovery",
+      "expect": "WORLDLOGIC_RECOVERY_PASSED",
+      "assertion": true
+    },
+    {
       "name": "Live support and falling debris, material tags and saved data",
       "command": "worldlogic qa world",
       "expect": "WORLDLOGIC_WORLD_FIXTURE_PASSED",
@@ -32,10 +38,97 @@
       "assertion": true
     },
     {
-      "name": "Registered custom generator, climate fixtures, seed surveys and heights",
-      "command": "worldlogic qa terrain",
-      "expect": "WORLDLOGIC_TERRAIN_PRESET_PASSED",
+      "name": "Registered custom generator, climate fixtures, first seed survey and heights",
+      "command": "worldlogic qa terrain_seed_a",
+      "expect": "WORLDLOGIC_TERRAIN_SEED_PASSED",
       "assertion": true
+    },
+    {
+      "name": "Registered custom generator, climate fixtures, second seed survey and heights",
+      "command": "worldlogic qa terrain_seed_b",
+      "expect": "WORLDLOGIC_TERRAIN_SEED_PASSED",
+      "assertion": true
+    },
+    {
+      "command": "weather clear 2400",
+      "expect": "clear"
+    },
+    {
+      "wait": 12
+    },
+    {
+      "name": "Atmosphere dry snapshot and model controls",
+      "command": "worldlogic qa atmosphere_dry",
+      "expect": "WORLDLOGIC_ATMOSPHERE_DRY_PASSED",
+      "assertion": true
+    },
+    {
+      "command": "weather rain 2400",
+      "expect": "rain"
+    },
+    {
+      "wait": 12
+    },
+    {
+      "name": "Atmosphere rain snapshot and local intensity",
+      "command": "worldlogic qa atmosphere_rain",
+      "expect": "WORLDLOGIC_ATMOSPHERE_RAIN_PASSED",
+      "assertion": true
+    },
+    {
+      "command": "weather clear 2400",
+      "expect": "clear"
+    },
+    {
+      "name": "Regional weather pressure, moving fields, spatial continuity and live isolation",
+      "command": "worldlogic qa regional_weather",
+      "expect": "WORLDLOGIC_REGIONAL_WEATHER_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Weather diagnostics reports live and preview separately",
+      "command": "execute positioned 0 70 0 run worldlogic weather",
+      "expect": "Live:.*Regional preview:",
+      "assertion": true
+    },
+    {
+      "name": "Vertical parcel thermodynamics, moisture budget, stability, fog and live isolation",
+      "command": "worldlogic qa weather_column",
+      "expect": "WORLDLOGIC_WEATHER_COLUMN_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Weather column diagnostics",
+      "command": "execute positioned 0 70 0 run worldlogic weather_column",
+      "expect": "Column preview:.*condensate.*buoyancy",
+      "assertion": true
+    },
+    {
+      "name": "Conservative air heat and vapor transport, interpolation and persistence",
+      "command": "worldlogic qa transport_grid",
+      "expect": "WORLDLOGIC_TRANSPORT_GRID_PASSED",
+      "assertion": true
+    },
+    {
+      "command": "worldlogic rule modeled_weather true",
+      "expect": "World Logic settings saved"
+    },
+    {
+      "wait": 15
+    },
+    {
+      "name": "Opt-in automatic weather tick and vanilla rain/thunder transitions",
+      "command": "worldlogic qa weather_controller",
+      "expect": "WORLDLOGIC_WEATHER_CONTROLLER_PASSED",
+      "assertion": true
+    },
+    {
+      "command": "worldlogic rule modeled_weather false",
+      "expect": "World Logic settings saved"
+    },
+    {
+      "command": "weather clear 2400",
+      "expect": "clear"
     }
   ],
   "coverage": [
@@ -79,7 +172,110 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Registered custom generator, climate fixtures, seed surveys and heights"
+          "name": "Registered custom generator, climate fixtures, first seed survey and heights"
+        },
+        {
+          "backend": "server",
+          "name": "Registered custom generator, climate fixtures, second seed survey and heights"
+        }
+      ]
+    },
+    {
+      "id": "atmosphere-dry",
+      "kind": "mechanic",
+      "subject": "Atmosphere dry snapshot and model controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Atmosphere dry snapshot and model controls"
+        }
+      ]
+    },
+    {
+      "id": "atmosphere-rain",
+      "kind": "mechanic",
+      "subject": "Atmosphere rain snapshot and local intensity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Atmosphere rain snapshot and local intensity"
+        }
+      ]
+    },
+    {
+      "id": "regional-weather",
+      "kind": "mechanic",
+      "subject": "Regional weather pressure, moving fields, spatial continuity and live isolation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Regional weather pressure, moving fields, spatial continuity and live isolation"
+        }
+      ]
+    },
+    {
+      "id": "weather-inspection",
+      "kind": "mechanic",
+      "subject": "Weather diagnostics reports live and preview separately",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Weather diagnostics reports live and preview separately"
+        }
+      ]
+    },
+    {
+      "id": "atmospheric-column",
+      "kind": "mechanic",
+      "subject": "Vertical parcel thermodynamics, moisture budget, stability, fog and live isolation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vertical parcel thermodynamics, moisture budget, stability, fog and live isolation"
+        }
+      ]
+    },
+    {
+      "id": "weather-column-inspection",
+      "kind": "mechanic",
+      "subject": "Weather column diagnostics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Weather column diagnostics"
+        }
+      ]
+    },
+    {
+      "id": "active-recovery",
+      "kind": "mechanic",
+      "subject": "Stamina active recovery, sprint, hunger and airborne controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Stamina active recovery, sprint, hunger and airborne controls"
+        }
+      ]
+    },
+    {
+      "id": "live-weather-controller",
+      "kind": "mechanic",
+      "subject": "Opt-in automatic weather tick and vanilla rain/thunder transitions",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Opt-in automatic weather tick and vanilla rain/thunder transitions"
+        }
+      ]
+    },
+    {
+      "id": "conservative-atmosphere-grid",
+      "kind": "mechanic",
+      "subject": "Conservative air heat and vapor transport, interpolation and persistence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Conservative air heat and vapor transport, interpolation and persistence"
         }
       ]
     }

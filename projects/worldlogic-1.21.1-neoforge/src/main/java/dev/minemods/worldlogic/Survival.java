@@ -17,6 +17,32 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 public final class Survival {
  private static final String FATIGUE="worldlogic_exertion",INJURY="worldlogic_injury",SMOKE="worldlogic_smoke";
  private static final Map<Player,Long> LAST_WORK=new WeakHashMap<>();
+ private record RestSample(ServerLevel level,double x,double z,long time){}
+ private static final Map<Player,RestSample> REST_SAMPLE=new WeakHashMap<>();
+ static void clearExertionTracking(Player p){LAST_WORK.remove(p);REST_SAMPLE.remove(p);}
+ static double recoveryRate(int food,double speed,boolean sneak,boolean warm){
+  double rate=speed<.25?4.0:sneak?3.0:2.4;
+  if(food<12)rate*=.30;
+  if(warm&&speed<.25)rate*=1.6;
+  return rate;
+ }
+ static void updateExertion(Player p,ServerLevel l,long now){
+  if(!active(p)||!Rules.on("exertion"))return;
+  RestSample previous=REST_SAMPLE.put(p,new RestSample(l,p.getX(),p.getZ(),now));
+  double speed=previous!=null&&previous.level()==l&&now>previous.time()&&now-previous.time()<=40
+   ?Math.hypot(p.getX()-previous.x(),p.getZ()-previous.z())*20.0/(now-previous.time()):4.3;
+  boolean effort=!p.isPassenger()&&(p.isSprinting()||p.isSwimming()||p.onClimbable()&&p.getDeltaMovement().y>.05);
+  if(effort){
+   double mass=Material.mass(p),armor=Rules.on("armor_fatigue")?CombatConsequences.armorWork(Expedition.armorLoad(p)):1;
+   work(p,(p.isSwimming()?2.4:1.45)*Math.max(.8,mass)*armor*Condition.workFactor(p));
+   p.causeFoodExhaustion((float)(.08*Math.max(1,mass)*armor*Condition.workFactor(p)*Rules.strength("movement")));
+  }else if(!p.isPassenger()&&p.onGround()&&!p.isInWater()&&!p.isInLava()&&!p.isUsingItem()&&!p.onClimbable()
+       &&now-LAST_WORK.getOrDefault(p,now-20)>=20&&fatigue(p)>0){
+   boolean warm=speed<.25&&AirAndFire.nearHeat(l,p.blockPosition(),2);
+   rest(p,recoveryRate(p.getFoodData().getFoodLevel(),speed,p.isShiftKeyDown(),warm));
+  }
+  if(fatigue(p)>=75){p.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,35,0,false,false,false));if(fatigue(p)>=92)p.setSprinting(false);}
+ }
  static boolean active(Player p){return p.level() instanceof ServerLevel&&!p.isCreative()&&!p.isSpectator();}
  public static double fatigue(Player p){return Math.max(0,Math.min(100,p.getPersistentData().getDouble(FATIGUE)));}
  public static void rest(Player p,double amount){if(active(p)&&Rules.on("exertion"))p.getPersistentData().putDouble(FATIGUE,Math.max(0,fatigue(p)-amount));}
@@ -33,18 +59,12 @@ public final class Survival {
   if(Rules.on("injuries")&&p.getPersistentData().getLong(INJURY)>now)result=Math.max(result,.25);
   return result;
  }
- public static void logout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent e){LAST_WORK.remove(e.getEntity());}
+ public static void logout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent e){clearExertionTracking(e.getEntity());}
  public static void tick(PlayerTickEvent.Post e){
   Player p=e.getEntity();if(!active(p)||!(p.level() instanceof ServerLevel l))return;long now=l.getGameTime();
   if(now%20!=0)return;
   var tag=p.getPersistentData();
-  if(Rules.on("exertion")){
-   boolean moving=!p.isPassenger()&&(p.isSprinting()||p.isSwimming()||p.onClimbable()&&p.getDeltaMovement().y>.05);
-   double mass=Material.mass(p);
-   if(moving){double armor=Rules.on("armor_fatigue")?CombatConsequences.armorWork(Expedition.armorLoad(p)):1;work(p,(p.isSwimming()?2.4:1.45)*Math.max(.8,mass)*armor*Condition.workFactor(p));p.causeFoodExhaustion((float)(.08*Math.max(1,mass)*armor*Condition.workFactor(p)*Rules.strength("movement")));}
-   else if(p.onGround()&&!p.isInWater()&&!p.isUsingItem()&&now-LAST_WORK.getOrDefault(p,-100L)>=60){double recovery=p.getFoodData().getFoodLevel()>=12?2.0:.6;if(p.getDeltaMovement().horizontalDistance()<.04)recovery*=2;if(AirAndFire.nearHeat(l,p.blockPosition(),2)&&p.getDeltaMovement().horizontalDistance()<.04)recovery*=1.6;tag.putDouble(FATIGUE,Math.max(0,fatigue(p)-recovery));}
-   if(fatigue(p)>=75){p.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,35,0,false,false,false));if(fatigue(p)>=92)p.setSprinting(false);}
-  }
+  updateExertion(p,l,now);
   if(Rules.on("injuries")&&tag.getLong(INJURY)>now&&p.onGround()&&!p.isSprinting()&&p.getFoodData().getFoodLevel()>=14&&p.getDeltaMovement().horizontalDistance()<.04&&AirAndFire.nearHeat(l,p.blockPosition(),2))tag.putLong(INJURY,Math.max(now,tag.getLong(INJURY)-30));
   if(Rules.on("smoke_inhalation")){
    int smoke=tag.getInt(SMOKE);boolean exposed=false;

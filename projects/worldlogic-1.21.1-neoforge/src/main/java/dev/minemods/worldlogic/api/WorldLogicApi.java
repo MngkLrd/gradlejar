@@ -1,6 +1,9 @@
 package dev.minemods.worldlogic.api;
 
 import dev.minemods.worldlogic.GeoDensity;
+import dev.minemods.worldlogic.AtmosphereModel;
+import dev.minemods.worldlogic.RegionalWeatherModel;
+import dev.minemods.worldlogic.AtmosphericColumn;
 import dev.minemods.worldlogic.Material;
 import dev.minemods.worldlogic.RuleSync;
 import dev.minemods.worldlogic.Rules;
@@ -13,11 +16,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 
 /** Public addon contract, version 1. Server methods must be called on the server thread. */
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
+ /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
+ public static final int API_REVISION=3;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -29,6 +35,23 @@ public final class WorldLogicApi {
  public record Environment(double ambientCelsiusEstimate,int elevationAboveSea,boolean covered,
                            boolean rainingAt,boolean globalThunder,double solarExposure,
                            Optional<RegionalClimate> regionalClimate){}
+ public enum Precipitation { NONE, RAIN, SNOW }
+ /** Modeled relative humidity and open-air wind; local precipitation reflects vanilla weather.
+  * Wind vector components and speed are estimated m/s, not a physical fluid simulation.
+  * Local precipitation is normalized 0..1, not mm/hour. */
+ public record Atmosphere(Environment environment,double relativeHumidityPercent,
+                          double outdoorWindXMps,double outdoorWindZMps,double outdoorWindSpeedMps,
+                          Precipitation precipitation,double precipitationIntensity){}
+ /** Experimental regional weather model, not live local conditions. Never drive player penalties from this preview. */
+ public record RegionalWeatherPreview(double seaLevelPressureHpa,double localPressureHpa,
+  double temperatureAnomalyC,double moistureFraction,double cloudFraction,double precipitationPotential,
+  double windXMps,double windZMps,double gustMps){}
+ /** RC22 experimental vertical diagnostics. Heights are modeled atmospheric metres above ground.
+  * -1 means no condensation/cloud within the modeled column. Indices are not live precipitation or visibility. */
+ public record WeatherColumnPreview(double airC,double pressureHpa,double vaporMixingRatioGkg,
+  double relativeHumidityPercent,double dewPointC,double wetBulbC,double environmentalLapseCPerKm,
+  double condensationLevelM,double cloudBaseM,double cloudTopM,double condensedWaterGkg,
+  double buoyancyEnergyJkg,double cloudFraction,double precipitationPotential,double fogPotential,boolean convective){}
  public record Fatigue(boolean enabled,double fatiguePercent,double remainingStaminaPercent){}
  private static void serverThread(ServerLevel level){
   if(!level.getServer().isSameThread())throw new IllegalStateException("World Logic API requires server thread");
@@ -48,6 +71,77 @@ public final class WorldLogicApi {
   boolean rain=level.isRainingAt(pos);
   double ambient=clamp(base+(sky?sun*4-2:0)-(rain?2:0),-100,100);
   return Optional.of(new Environment(ambient,pos.getY()-level.getSeaLevel(),!sky,rain,level.isThundering(),sun,regional));
+ }
+ /** RC21: weather snapshot for loaded locations in skylight dimensions; no chunk loads. */
+ public static Optional<Atmosphere> atmosphere(ServerLevel level,BlockPos pos){
+  serverThread(level);
+  if(!level.dimensionType().hasSkyLight())return Optional.empty();
+  var existing=environment(level,pos);
+  if(existing.isEmpty())return Optional.empty();
+  var env=existing.orElseThrow();
+  var biome=level.getBiome(pos).value();
+  var regional=env.regionalClimate();
+  double moisture=regional.map(RegionalClimate::moistureIndex).orElse(biome.hasPrecipitation()?.55:.15);
+  double reference=regional.map(c->14+28*c.thermalIndex()-Math.max(-80,Math.min(160,pos.getY()-c.modeledSurfaceY()))*.065)
+   .orElseGet(()->-12+32*biome.getBaseTemperature()-Math.max(0,pos.getY()-level.getSeaLevel())*.065);
+  double rain=level.isRaining()?clamp(level.getRainLevel(1.0F),0,1):0;
+  double thunder=level.isThundering()?clamp(level.getThunderLevel(1.0F),0,1):0;
+  var kind=biome.getPrecipitationAt(pos);
+  Precipitation local=rain<=0||env.covered()?Precipitation.NONE:
+    kind==Biome.Precipitation.RAIN&&env.rainingAt()?Precipitation.RAIN:
+    kind==Biome.Precipitation.SNOW?Precipitation.SNOW:Precipitation.NONE;
+  double intensity=local==Precipitation.NONE?0:rain;
+  // Regional humidity responds to weather even under a roof; a roof is not sealed insulation.
+  double wetWeather=biome.hasPrecipitation()?rain:0;
+  double humidity=AtmosphereModel.humidity(env.ambientCelsiusEstimate(),reference,moisture,wetWeather);
+  var wind=AtmosphereModel.wind(level.getSeed(),pos.getX(),pos.getZ(),level.getGameTime(),
+    regional.map(RegionalClimate::prevailingWindX).orElse(0.0),
+    regional.map(RegionalClimate::prevailingWindZ).orElse(0.0),rain,thunder);
+  return Optional.of(new Atmosphere(env,humidity,wind.x(),wind.z(),wind.speed(),local,intensity));
+ }
+ /** RC22 preview: immutable regional fields for a loaded location, never loads terrain or changes vanilla weather. */
+ public static Optional<RegionalWeatherPreview> regionalWeatherPreview(ServerLevel level,BlockPos pos){
+  serverThread(level);
+  if(!level.dimensionType().hasSkyLight())return Optional.empty();
+  var env=environment(level,pos);
+  if(env.isEmpty())return Optional.empty();
+  var c=env.orElseThrow().regionalClimate();
+  var s=RegionalWeatherModel.sample(level.getSeed(),pos.getX(),pos.getZ(),level.getGameTime(),
+    env.orElseThrow().elevationAboveSea(),
+    c.map(RegionalClimate::moistureIndex).orElse(level.getBiome(pos).value().hasPrecipitation()?.55:.15),
+    c.map(RegionalClimate::prevailingWindX).orElse(0.0),c.map(RegionalClimate::prevailingWindZ).orElse(0.0));
+  return Optional.of(new RegionalWeatherPreview(s.seaLevelPressureHpa(),s.localPressureHpa(),s.temperatureAnomalyC(),
+    s.moistureFraction(),s.cloudFraction(),s.precipitationPotential(),s.windX(),s.windZ(),s.gustMps()));
+ }
+ /** RC22 research model: uses the same climate reference and moving regional fields; not authoritative for addons. */
+ public static Optional<WeatherColumnPreview> weatherColumnPreview(ServerLevel level,BlockPos pos){
+  serverThread(level);
+  var a=atmosphere(level,pos);
+  if(a.isEmpty())return Optional.empty();
+  var env=a.orElseThrow().environment();
+  var climate=env.regionalClimate();
+  double moisture=climate.map(RegionalClimate::moistureIndex).orElse(level.getBiome(pos).value().hasPrecipitation()?.55:.15);
+  var w=RegionalWeatherModel.sample(level.getSeed(),pos.getX(),pos.getZ(),level.getGameTime(),env.elevationAboveSea(),
+    moisture,climate.map(RegionalClimate::prevailingWindX).orElse(0.0),climate.map(RegionalClimate::prevailingWindZ).orElse(0.0));
+  double air=env.ambientCelsiusEstimate()+w.temperatureAnomalyC();
+  // Keep the dew-point prior tied to climate and the moving moisture field, not to the temperature anomaly.
+  double rh=AtmosphereModel.humidity(air,env.ambientCelsiusEstimate(),w.moistureFraction(),0);
+  double low=clamp((1017-w.seaLevelPressureHpa())/28,0,1);
+  double sun=env.solarExposure();
+  double lapse=clamp(4.5+3*low+2*sun,-2,10);
+  double lift=200+1800*low+600*sun;
+  double speed=Math.hypot(w.windX(),w.windZ());
+  double cooling=(1-sun)*(1-w.cloudFraction())*4;
+  var d=AtmosphericColumn.diagnose(air,w.localPressureHpa(),rh,lapse,lift,cooling,speed);
+  return Optional.of(new WeatherColumnPreview(d.airC(),d.pressureHpa(),d.vaporMixingRatioGkg(),d.relativeHumidityPercent(),
+   d.dewPointC(),d.wetBulbC(),d.environmentalLapseCPerKm(),d.condensationLevelM(),d.cloudBaseM(),d.cloudTopM(),
+   d.condensedWaterGkg(),d.buoyancyEnergyJkg(),d.cloudFraction(),d.precipitationPotential(),d.fogPotential(),d.convective()));
+ }
+ /** Experimental persisted transport domain; not the authoritative player environment. */
+ public static Optional<dev.minemods.worldlogic.WeatherGridState.Conditions> transportGridPreview(ServerLevel level,BlockPos pos){
+  serverThread(level);
+  if(!Rules.on("modeled_weather")||level!=level.getServer().overworld()||level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
+  return dev.minemods.worldlogic.WeatherGridState.sample(level,pos);
  }
  public static Fatigue fatigue(ServerPlayer player){
   serverThread(player.serverLevel());

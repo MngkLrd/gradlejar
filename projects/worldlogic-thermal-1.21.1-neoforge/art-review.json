@@ -1,0 +1,2309 @@
+{
+  "schema": 1,
+  "review_source": "Actual 1.21.1 extracted vanilla PNGs from InventivetalentDev/minecraft-assets branch 1.21.1; direct local inspection at native size, nearest-neighbor enlargement and 3x3 block tiling. Official client SHA-1 could not be verified in this environment; the PNG hashes are the actual inspected mirror bytes. UV atlas comparison is not graphical client QA.",
+  "assets": {
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/fur_coat.png": {
+      "sha256": "cfe476af644177506ee08885ab1a2b6f6120b37b9997c58907b57269cf1687e2",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_chestplate",
+          "minecraft": "1.21.1",
+          "sha256": "bf5990a680964167f9e9eb3d1a362750cef1f0bcd115caec88434e23e90cf0b8"
+        },
+        {
+          "id": "minecraft:item/rabbit_hide",
+          "minecraft": "1.21.1",
+          "sha256": "286b30c43aff496611e206c15a45d127828f909c1f346571162f9656b231acbf"
+        }
+      ],
+      "comparison": "Rabbit hide warmth and chestplate proportions inform the long fur-lined silhouette",
+      "findings": {
+        "silhouette": "Broad shoulders taper into a long coat hem",
+        "cluster_structure": "Pale collar clusters run into two fur edging groups",
+        "micro_contrast": "Small midtone steps separate lining from hide",
+        "light_and_volume": "Left shoulder and front placket catch the light",
+        "material_continuity": "Brown body continues beneath creamy edging",
+        "edge_variation": "Hem and shoulders step at different heights",
+        "variant_identity": "Fur lining distinguishes this from woven coat",
+        "vanilla_comparison": "Leather chestplate shoulder width is retained",
+        "folds_and_seams": "Collar opens into vertical front seam",
+        "material_specific_shading": "Hide planes are warmer than soft pale lining"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/grass_coat.png": {
+      "sha256": "49f40dce428355fb2d2cf2d2f7dc5eb4eb38f8e96c57aeeacf3394847fea45d5",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_chestplate",
+          "minecraft": "1.21.1",
+          "sha256": "bf5990a680964167f9e9eb3d1a362750cef1f0bcd115caec88434e23e90cf0b8"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Wheat colors and vanilla shoulder silhouette guide a visibly rough plant-fiber coat",
+      "findings": {
+        "silhouette": "Short sleeves and irregular hanging straw hem",
+        "cluster_structure": "Long straw clusters follow vertical torso folds",
+        "micro_contrast": "Adjacent ochres divide lighter and darker strands",
+        "light_and_volume": "Left shoulder is lighter than right sleeve",
+        "material_continuity": "Golden straw continues through sleeve and torso",
+        "edge_variation": "Trailing strands break the lower contour",
+        "variant_identity": "Frayed plant fibers distinguish from fur trim",
+        "vanilla_comparison": "Chestplate width matches comparable torso icon",
+        "folds_and_seams": "Neck notch and dangling hem indicate woven construction",
+        "material_specific_shading": "Fiber highlights run with strand direction"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/linen_clothes.png": {
+      "sha256": "144fe227a206c4348a382d99a34380f7593c8ec6c759cd27571bd2c471deaff1",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_chestplate",
+          "minecraft": "1.21.1",
+          "sha256": "bf5990a680964167f9e9eb3d1a362750cef1f0bcd115caec88434e23e90cf0b8"
+        },
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        }
+      ],
+      "comparison": "Chestplate proportions with wool-like close values produce an undyed soft textile rather than armor plate",
+      "findings": {
+        "silhouette": "Soft short sleeves surround open collar notch",
+        "cluster_structure": "Cream front planes meet narrower shadow folds",
+        "micro_contrast": "Subtle ivory steps model soft woven cloth",
+        "light_and_volume": "Left upper sleeve and shoulder receive broad light",
+        "material_continuity": "Pale cloth ramp continues through the torso",
+        "edge_variation": "Sleeve ends and lower hem have different steps",
+        "variant_identity": "Undyed linen reads lighter than blue belted tunic",
+        "vanilla_comparison": "Vanilla chestplate shoulder and waist remain recognizable",
+        "folds_and_seams": "Collar and hem bound broad vertical fabric folds",
+        "material_specific_shading": "Off-white highlights are soft instead of metallic"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/light_tunic.png": {
+      "sha256": "542e869d5f3931ae662aca707f90e66ad55002a142c64175608c18914803e51d",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_chestplate",
+          "minecraft": "1.21.1",
+          "sha256": "bf5990a680964167f9e9eb3d1a362750cef1f0bcd115caec88434e23e90cf0b8"
+        },
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        }
+      ],
+      "comparison": "Compared with wool and chestplate the soft blue body is separated by a narrow warm belt",
+      "findings": {
+        "silhouette": "Open neck and short sleeves read as tunic",
+        "cluster_structure": "Blue-gray fold clusters separate chest and waist",
+        "micro_contrast": "Close teal values surround the narrow belt",
+        "light_and_volume": "Top-left shoulder brighter than lower right torso",
+        "material_continuity": "Muted cloth ramp spans sleeves and body",
+        "edge_variation": "Small sleeve taper and straight hem mark garment edges",
+        "variant_identity": "Warm belt distinguishes blue tunic from undyed linen",
+        "vanilla_comparison": "Chestplate form provides readable shoulder proportions",
+        "folds_and_seams": "Thin waist belt interrupts descending soft folds",
+        "material_specific_shading": "Cloth highlights broad and belt highlights warmer"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/grass_hood.png": {
+      "sha256": "d65685dee3233be89b872e51e6bbe0b920c6869a86dd8148dcc4edf1ceab6e94",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_helmet",
+          "minecraft": "1.21.1",
+          "sha256": "fb5c1283c5ad8e2d32ad4154e12f759a94d0431f36ecca49b3da84ffc050cd7c"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Vanilla helmet opening and wheat fibers calibrate the rounded hood while keeping a woven rim",
+      "findings": {
+        "silhouette": "Rounded hood surrounds an open face aperture",
+        "cluster_structure": "Small staggered straw patches curve around opening",
+        "micro_contrast": "Ochre midtones transition along the face border",
+        "light_and_volume": "Top-left arch lights up before shaded right edge",
+        "material_continuity": "Golden fiber ramp wraps around entire opening",
+        "edge_variation": "Lower neck edge tapers instead of closing squarely",
+        "variant_identity": "Full straw arch differs from open fur hat",
+        "vanilla_comparison": "Helmet reference supports head-sized open center",
+        "folds_and_seams": "Lower closure and front rim create cloth seam",
+        "material_specific_shading": "Straw has narrow directional highlights not metal shine"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/fur_hat.png": {
+      "sha256": "3dc74f0f96a6798355dee9d654c78ec1a474b03c4116a5a45a59a2598ba9717e",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_helmet",
+          "minecraft": "1.21.1",
+          "sha256": "fb5c1283c5ad8e2d32ad4154e12f759a94d0431f36ecca49b3da84ffc050cd7c"
+        },
+        {
+          "id": "minecraft:item/rabbit_hide",
+          "minecraft": "1.21.1",
+          "sha256": "286b30c43aff496611e206c15a45d127828f909c1f346571162f9656b231acbf"
+        }
+      ],
+      "comparison": "The leather helmet and rabbit hide support a warmer fur cap with a generous face opening",
+      "findings": {
+        "silhouette": "Open U-shaped cap with thick ear edging",
+        "cluster_structure": "Cream fur groups under darker hide crown",
+        "micro_contrast": "Close brown steps follow the upper cap curve",
+        "light_and_volume": "Crown left side lighter than right ear flap",
+        "material_continuity": "Fur border meets brown crown without unrelated hues",
+        "edge_variation": "Ear tips descend unevenly around open face",
+        "variant_identity": "Open bottom and pale fur distinguish grass hood",
+        "vanilla_comparison": "Leather helmet opening informs the headgear scale",
+        "folds_and_seams": "Thick fur edging follows the forehead seam",
+        "material_specific_shading": "Soft fur ramp contrasts with brown hide crown"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/grass_leggings.png": {
+      "sha256": "938871504e71afe8d94fbc9c2bbdd2ad38577e617775cffbcb07c0c1127690fc",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_leggings",
+          "minecraft": "1.21.1",
+          "sha256": "5fe9d39042279e71ed6279e430401f46a571c519768717631c5683d3b6f65536"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Vanilla leg separation and wheat straw ramp guide the high-waisted woven trousers",
+      "findings": {
+        "silhouette": "Waistband joins two clearly separated tapered legs",
+        "cluster_structure": "Straw strips descend from connected waist groups",
+        "micro_contrast": "Alternating adjacent ochres break leg fill",
+        "light_and_volume": "Left leg front is lighter than inner gap",
+        "material_continuity": "Plant fibers continue from belt into leg faces",
+        "edge_variation": "Bottom cuffs have staggered straw endpoints",
+        "variant_identity": "Golden rough legs differ from pale wool leggings",
+        "vanilla_comparison": "Vanilla leggings show the separation below waist",
+        "folds_and_seams": "Waist seam and frayed cuffs delimit woven legs",
+        "material_specific_shading": "Narrow fiber highlights differ from wool folds"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/wool_underwear.png": {
+      "sha256": "5ece6fe51af3aabb894325672a8b77c33c8cf15f5c84685d3572927dbfb1f54b",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_leggings",
+          "minecraft": "1.21.1",
+          "sha256": "5fe9d39042279e71ed6279e430401f46a571c519768717631c5683d3b6f65536"
+        },
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        }
+      ],
+      "comparison": "Leggings structure and white wool surface suggest soft underwear rather than hard armor",
+      "findings": {
+        "silhouette": "High waist and two long cloth legs",
+        "cluster_structure": "Broad cream leg fold clusters divide the front",
+        "micro_contrast": "Near ivory and beige values soften knee transitions",
+        "light_and_volume": "Left knee and waist have restrained bright areas",
+        "material_continuity": "Off-white weave remains consistent across both legs",
+        "edge_variation": "Inner gap narrows at the crotch and opens below",
+        "variant_identity": "Soft plain cuffs distinguish from straw leggings",
+        "vanilla_comparison": "Leather leggings reference supplies two-leg silhouette",
+        "folds_and_seams": "Waist hem and narrow inner fold indicate seams",
+        "material_specific_shading": "Wool highlights use close muted value steps"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/insulated_flask.png": {
+      "sha256": "9dbb9606524a80283530d59636c3e8a69c07064b5bd79c0b952e3997a20da901",
+      "verdict": "PASS",
+      "material_profile": "vessel",
+      "references": [
+        {
+          "id": "minecraft:item/glass_bottle",
+          "minecraft": "1.21.1",
+          "sha256": "6a09a39bb6c41bc92bd5eca1f51caf5b582a85f68206b164476c8e14a4669416"
+        },
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
+        }
+      ],
+      "comparison": "Glass bottle neck shape and leather colors inform an insulated skin flask with a curved binding strap",
+      "findings": {
+        "silhouette": "Narrow capped neck rises from broad curved shoulder",
+        "cluster_structure": "Several neighboring leather clusters model rounded body",
+        "micro_contrast": "Warm cream stitches bridge two leather midtones",
+        "light_and_volume": "Broad upper-left highlight bends into shaded right side",
+        "material_continuity": "Leather body follows same warm ramp below neck",
+        "edge_variation": "Shoulder and rounded base taper by uneven steps",
+        "variant_identity": "Wrapped leather body differs from glass oil bottle",
+        "vanilla_comparison": "Glass bottle neck and shoulder remain easy to recognize",
+        "construction": "Cap neck shoulder and diagonal insulating strap visible",
+        "surface_turn": "Midtone clusters curve down toward shaded base",
+        "material_specific_shading": "Muted leather shine differs from glass rim reflections"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/plant_oil.png": {
+      "sha256": "ca783e3c97dd65e898bc701095465308ee6c160f87a45675cbcb4997087bd4ce",
+      "verdict": "PASS",
+      "material_profile": "vessel",
+      "references": [
+        {
+          "id": "minecraft:item/glass_bottle",
+          "minecraft": "1.21.1",
+          "sha256": "6a09a39bb6c41bc92bd5eca1f51caf5b582a85f68206b164476c8e14a4669416"
+        },
+        {
+          "id": "minecraft:item/honey_bottle",
+          "minecraft": "1.21.1",
+          "sha256": "c41e02d9398446543c77a4a50678715d6182004e8f170c6b5c12d84578fe5d98"
+        }
+      ],
+      "comparison": "Honey and glass bottle comparators guide the cool outline and bright oil-filled bulb",
+      "findings": {
+        "silhouette": "Cork and slender neck lead into bulb bottle",
+        "cluster_structure": "Amber contents group inside blue-gray glass outline",
+        "micro_contrast": "Close gold steps sit beside cool glass reflection",
+        "light_and_volume": "Left contents lit and right wall shaded cool",
+        "material_continuity": "Continuous glass rim encloses liquid until neck",
+        "edge_variation": "Bottle shoulder steps outward before narrowing at base",
+        "variant_identity": "Transparent-looking glass and yellow oil distinguish flask",
+        "vanilla_comparison": "Honey bottle illustrates liquid within a cool rim",
+        "construction": "Brown cork sits above narrow glass neck",
+        "surface_turn": "Amber clusters turn inward below widening shoulder",
+        "material_specific_shading": "Glass edge has sharper cool highlights than liquid"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/desert_headwear.png": {
+      "sha256": "8580bbf9c54f09bfbb86cd8b03497feba313ebc20f2988a060c2db0852346737",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_helmet",
+          "minecraft": "1.21.1",
+          "sha256": "fb5c1283c5ad8e2d32ad4154e12f759a94d0431f36ecca49b3da84ffc050cd7c"
+        },
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        }
+      ],
+      "comparison": "White wool values and helmet scale support an enclosed cloth desert wrap",
+      "findings": {
+        "silhouette": "Wrapped head covering has narrow horizontal eye slit",
+        "cluster_structure": "Cream layers overlap in horizontal head bands",
+        "micro_contrast": "Adjacent ivory and beige steps mark cloth folds",
+        "light_and_volume": "Bright upper wrap and shaded lower right layer",
+        "material_continuity": "Cloth ramp continues above and below eye slit",
+        "edge_variation": "Stepped top and lower wrap soften rectangular edges",
+        "variant_identity": "Eye slit distinguishes from fully open grass hood",
+        "vanilla_comparison": "Helmet scale stays compact around the head",
+        "folds_and_seams": "Folded wrap crosses above and below the eye slit",
+        "material_specific_shading": "Dry linen uses restrained low-contrast highlights"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/sun_hat.png": {
+      "sha256": "5349857e059132c0f6c4747a61b59e042cc3661d3f002a573e17334c6d045eb0",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_helmet",
+          "minecraft": "1.21.1",
+          "sha256": "fb5c1283c5ad8e2d32ad4154e12f759a94d0431f36ecca49b3da84ffc050cd7c"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Wheat straw colors and helmet slot proportions calibrate a broad-brimmed woven hat",
+      "findings": {
+        "silhouette": "High crown sits above broad projecting straw brim",
+        "cluster_structure": "Crown weave groups and bright brim planes separate",
+        "micro_contrast": "Close golden shades model crown and brim folds",
+        "light_and_volume": "Upper left crown and brim catch light",
+        "material_continuity": "Straw material spans the brim with darker hatband",
+        "edge_variation": "Wide oval brim narrows at both outer tips",
+        "variant_identity": "Brim differentiates from face-enclosing hood",
+        "vanilla_comparison": "Helmet reference constrains readable equipment scale",
+        "folds_and_seams": "Dark band marks crown-to-brim construction seam",
+        "material_specific_shading": "Golden plant fibers shade in narrow grouped strands"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/leather_face_mask.png": {
+      "sha256": "b49bb1a9c4b411039b96ce3ce37be70fd35a31876e6f7b1f4e95f8660764ffbf",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_helmet",
+          "minecraft": "1.21.1",
+          "sha256": "fb5c1283c5ad8e2d32ad4154e12f759a94d0431f36ecca49b3da84ffc050cd7c"
+        },
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
+        }
+      ],
+      "comparison": "Leather and helmet comparators guide a half-face cover with two attachment ties",
+      "findings": {
+        "silhouette": "Two short ties extend from triangular lower face panel",
+        "cluster_structure": "Warm cheek clusters surround center nose bridge",
+        "micro_contrast": "Adjacent browns model seam and taper",
+        "light_and_volume": "Left cheek receives highlight and right cheek darkens",
+        "material_continuity": "Warm leather remains consistent across ties and body",
+        "edge_variation": "Ties step outward and bottom edge narrows",
+        "variant_identity": "Small mask panel distinguishes from full hood",
+        "vanilla_comparison": "Helmet opening reference informs uncovered eyes",
+        "folds_and_seams": "Nose fold and lower chin seam visible",
+        "material_specific_shading": "Leather uses richer brown transitions than pale fabric"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/fur_boots.png": {
+      "sha256": "f74d6f5e52fac3279ef2e93a3cafb94fba829dbe7ddb3d226df66782d99362d3",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_boots",
+          "minecraft": "1.21.1",
+          "sha256": "d54ca10f90b72004436fd9a6aa8d136a692f89f505056ae47d8395137b46637c"
+        },
+        {
+          "id": "minecraft:item/rabbit_hide",
+          "minecraft": "1.21.1",
+          "sha256": "286b30c43aff496611e206c15a45d127828f909c1f346571162f9656b231acbf"
+        }
+      ],
+      "comparison": "Rabbit hide and leather boots calibrate paired soft fur-lined footwear",
+      "findings": {
+        "silhouette": "Pair of short boots with projecting rounded toes",
+        "cluster_structure": "Cream cuffs and brown toe clusters separate",
+        "micro_contrast": "Close tan shades give soft toe curvature",
+        "light_and_volume": "Left and upper toe planes brighter than sole",
+        "material_continuity": "Brown hide extends from cuff down to foot",
+        "edge_variation": "Two boot tips and sole edges step outward",
+        "variant_identity": "Soft pale cuffs distinguish from strapped grass boots",
+        "vanilla_comparison": "Vanilla boots establish paired footprint and ankle scale",
+        "folds_and_seams": "Cuff seam and sole edge are separately readable",
+        "material_specific_shading": "Warm fur cuffs use softer highlights than soles"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/grass_boots.png": {
+      "sha256": "15418c36a2c11696ec3c05bff46f4925dbc8f4dbb400a492c13b72d1e0c753de",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_boots",
+          "minecraft": "1.21.1",
+          "sha256": "d54ca10f90b72004436fd9a6aa8d136a692f89f505056ae47d8395137b46637c"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Wheat and boot comparators support straw footwear with a distinct binding around each foot",
+      "findings": {
+        "silhouette": "Paired woven shafts with separate toe and sole",
+        "cluster_structure": "Vertical straw clusters end at sole binding",
+        "micro_contrast": "Golden neighboring shades mark shaft texture",
+        "light_and_volume": "Toe upper planes catch light above dark soles",
+        "material_continuity": "Woven straw continues from shaft to toe",
+        "edge_variation": "Pair has stepped sole and ankle outlines",
+        "variant_identity": "Horizontal lashings distinguish these from fur boots",
+        "vanilla_comparison": "Vanilla boots preserve separate foot silhouettes",
+        "folds_and_seams": "Cross-band and sole binding mark woven seams",
+        "material_specific_shading": "Straw fibers use narrow golden midtone steps"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/straw_cape.png": {
+      "sha256": "8b6d60a9d7238ce08435932fa31b72c2716b471b4b3125a157a4ed47e878e0aa",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_chestplate",
+          "minecraft": "1.21.1",
+          "sha256": "bf5990a680964167f9e9eb3d1a362750cef1f0bcd115caec88434e23e90cf0b8"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Wheat material and equipment scale guide a flared woven rain cape rather than a recolored coat",
+      "findings": {
+        "silhouette": "Broad flared cape hangs from narrow neck",
+        "cluster_structure": "Directional straw columns run to irregular tips",
+        "micro_contrast": "Ochre ramps separate adjacent hanging strands",
+        "light_and_volume": "Upper left strands brighten down the front",
+        "material_continuity": "Same dry straw ramp fills full cape",
+        "edge_variation": "Frayed hem has distinct individual strand lengths",
+        "variant_identity": "Flared un-sleeved shape differs from grass coat",
+        "vanilla_comparison": "Chestplate reference anchors wearable shoulder width",
+        "folds_and_seams": "Neck tie and frayed hem mark cape assembly",
+        "material_specific_shading": "Plant strands carry directional narrow highlights"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/waxed_cloak.png": {
+      "sha256": "1f0120488ede2137b4ec0df474907901ae60fe10a77addc2b5b3ad93b733519c",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:item/leather_chestplate",
+          "minecraft": "1.21.1",
+          "sha256": "bf5990a680964167f9e9eb3d1a362750cef1f0bcd115caec88434e23e90cf0b8"
+        },
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
+        }
+      ],
+      "comparison": "Leather comparator and wearable scale guide a clasped cloak with a shaded split hem",
+      "findings": {
+        "silhouette": "Flared leather cloak has visible front split",
+        "cluster_structure": "Long highlights flank shaded central fold",
+        "micro_contrast": "Warm close brown steps describe coated surface",
+        "light_and_volume": "Upper left shoulder catches broad muted reflection",
+        "material_continuity": "Leather continuity follows the long side panels",
+        "edge_variation": "Split hem opens between two unequal side folds",
+        "variant_identity": "Full waxed panels differ from frayed straw cape",
+        "vanilla_comparison": "Chestplate comparison sets shoulder scale not shape",
+        "folds_and_seams": "Center clasp and split hem establish opening",
+        "material_specific_shading": "Smooth muted sheen distinguishes waxed leather from straw"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/bone_needle.png": {
+      "sha256": "4e51104f423df2092e9eb96b1aaf2cf548b6b99add06df5ccfeab309b27a803f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/bone",
+          "minecraft": "1.21.1",
+          "sha256": "f5f2a37e7466f2983c00550874a2a94d2d006eae52b0e73acb722fadeb9bdb3b"
+        }
+      ],
+      "comparison": "Bone comparison supports the ivory material while the eye and tapered shaft distinguish the tool",
+      "findings": {
+        "silhouette": "Slender diagonal point ends in pierced eye",
+        "cluster_structure": "Thin bone shaft connects to widened eye",
+        "micro_contrast": "Ivory middle pixels separate edge shadow",
+        "light_and_volume": "Bright shaft top left and dark opposite edge",
+        "material_continuity": "Same pale bone colors continue to eye",
+        "edge_variation": "Point tapers in steps toward lower left",
+        "variant_identity": "Needle eye separates it from ordinary bone",
+        "vanilla_comparison": "Vanilla bone shows restrained warm ivory ramp",
+        "functional_material_cues": "Open eye and fine point indicate sewing function"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/stone_scraper.png": {
+      "sha256": "1f2158111ee9a600c026a6367a9baf1e159b5dacbeb2f4248b503e422b58cee7",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/flint",
+          "minecraft": "1.21.1",
+          "sha256": "ba7c3c7a261bfcbc2f1d8c67b808d8bce73ff8f7445aa76d8dc62a7f28198fc0"
+        }
+      ],
+      "comparison": "Flint shape and material support an angular stone scraper with a pronounced pale bevel",
+      "findings": {
+        "silhouette": "Angular chipped stone has oblique cutting edge",
+        "cluster_structure": "Asymmetric facet clusters turn along left bevel",
+        "micro_contrast": "Cool neighboring grays describe chipped facets",
+        "light_and_volume": "Bright left edge contrasts with shaded right body",
+        "material_continuity": "Slate-gray stone ramp fills all facets",
+        "edge_variation": "Uneven perimeter narrows at lower tip",
+        "variant_identity": "Sharper edge differs from rounded heating stone",
+        "vanilla_comparison": "Flint comparator has comparable beveled facets",
+        "functional_material_cues": "Light chipped edge identifies the working side"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/hot_stone.png": {
+      "sha256": "85fc2d0d6bfa7a9ce6869943253b339f1435034865faecbb78a1a7061ea9d7e1",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/flint",
+          "minecraft": "1.21.1",
+          "sha256": "ba7c3c7a261bfcbc2f1d8c67b808d8bce73ff8f7445aa76d8dc62a7f28198fc0"
+        },
+        {
+          "id": "minecraft:item/clay_ball",
+          "minecraft": "1.21.1",
+          "sha256": "99d84ef4b14b2fd33474162cce7ed2493ed396bd7d2493385573baa794d18178"
+        }
+      ],
+      "comparison": "Flint and clay ball comparisons support a rounded rock with localized retained heat instead of a generic orange recolor",
+      "findings": {
+        "silhouette": "Rounded stone silhouette with small heat patch",
+        "cluster_structure": "Connected gray rock planes surround warm core",
+        "micro_contrast": "Small orange core shades blend at the crack",
+        "light_and_volume": "Broad top left stone facet and local ember glow",
+        "material_continuity": "Gray host remains visible around heat mark",
+        "edge_variation": "Rounded uneven perimeter avoids flat square shape",
+        "variant_identity": "Heat spot distinguishes it from cold scraper",
+        "vanilla_comparison": "Flint and clay ball show stone volume at scale",
+        "functional_material_cues": "Contained amber heat mark indicates heated stone"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/raw_fiber_bundle.png": {
+      "sha256": "13ab3494b47c0965b8785e72ad14392ddad77a1969eba63e8f6cb032920eec48",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Wheat stalk structure guides a green raw fiber bundle with a contrasting tie",
+      "findings": {
+        "silhouette": "Several narrow upward stems tied near base",
+        "cluster_structure": "Green stalk clusters overlap at lower bundle",
+        "micro_contrast": "Neighboring leaf greens separate adjacent stems",
+        "light_and_volume": "Left plant strips brighter than inner overlap",
+        "material_continuity": "Greens are consistent across raw plant strands",
+        "edge_variation": "Uneven stem tips form branching silhouette",
+        "variant_identity": "Green raw stage contrasts with dry golden fibers",
+        "vanilla_comparison": "Wheat reference shows separated stalk tips",
+        "functional_material_cues": "Warm lower tie visibly binds loose stems"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/dry_fiber.png": {
+      "sha256": "c35ec626c08c953536a450fa37fde099eb0c4da1b99417fcbe500adcf2717413",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "The wheat comparator and dry straw ramp distinguish the dried stage while retaining the same fiber-bundle construction",
+      "findings": {
+        "silhouette": "Loose pointed dry stems tied at base",
+        "cluster_structure": "Golden stalks meet darker binding clusters",
+        "micro_contrast": "Close ochre values define separate dry stems",
+        "light_and_volume": "Left straw highlights follow upright stalks",
+        "material_continuity": "Dry fiber color continues over all strands",
+        "edge_variation": "Uneven individual tips avoid a rectangular outline",
+        "variant_identity": "Golden dry stage contrasts raw green bundle",
+        "vanilla_comparison": "Wheat provides native straw hue and stem grouping",
+        "functional_material_cues": "Tied base and dry straw tips identify processed fiber"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/plant_thread.png": {
+      "sha256": "3a8cac5e5364b98d1788081471434015debe134165cba10efc21ca238cff8c37",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/string",
+          "minecraft": "1.21.1",
+          "sha256": "ded6537ee0356cfd3a0024fccd1a7ee478b58279a0bace73b689cc62369d26da"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Vanilla string and wheat guide an open gold coil instead of a solid generic lump",
+      "findings": {
+        "silhouette": "Open curved loop with a loose trailing end",
+        "cluster_structure": "Thin connected strands circle visible negative space",
+        "micro_contrast": "Adjacent gold shades distinguish overlapped coils",
+        "light_and_volume": "Upper left arc brighter than descending tail",
+        "material_continuity": "Straw-gold color follows the full thread",
+        "edge_variation": "Loop and tail end break outer contour",
+        "variant_identity": "Open coil separates thread from woven material",
+        "vanilla_comparison": "String reference shows readable negative space",
+        "functional_material_cues": "Loose tail and open center identify a thread coil"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/woven_fiber.png": {
+      "sha256": "c1e24ae6a714d29e382db351108e0b19da9cf4650bf18bc2d86cfb04496a1e20",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/paper",
+          "minecraft": "1.21.1",
+          "sha256": "8ffee002bbc339552eb4d6be5948eb4eb66d016c19e7bbc55bc1cd4a575cc44a"
+        },
+        {
+          "id": "minecraft:block/hay_block_side",
+          "minecraft": "1.21.1",
+          "sha256": "b0181d301e7819daa8719067c616ca47aab766e538cdaf1f722a711efac3ea6f"
+        }
+      ],
+      "comparison": "Paper shape and hay fibers guide a dense interwoven pad with intentional weave rather than unrelated noise",
+      "findings": {
+        "silhouette": "Compact angled mat with softened cloth edges",
+        "cluster_structure": "Interlocked small strand clusters occupy broad surface",
+        "micro_contrast": "Nearby gold steps separate over and under threads",
+        "light_and_volume": "Upper left weave brighter than lower right edge",
+        "material_continuity": "Same straw ramp remains throughout weave",
+        "edge_variation": "Uneven corners suggest cut woven material",
+        "variant_identity": "Visible crossing strands distinguish from smooth felt",
+        "vanilla_comparison": "Paper outline and hay texture guide scale and fiber",
+        "functional_material_cues": "Alternating connected thread groups indicate woven mat"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/felt.png": {
+      "sha256": "06985f51e544d2c3fb69f7c8df4976a85a78ef23b5c04ffd925d320f5979c145",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/paper",
+          "minecraft": "1.21.1",
+          "sha256": "8ffee002bbc339552eb4d6be5948eb4eb66d016c19e7bbc55bc1cd4a575cc44a"
+        },
+        {
+          "id": "minecraft:item/rabbit_hide",
+          "minecraft": "1.21.1",
+          "sha256": "286b30c43aff496611e206c15a45d127828f909c1f346571162f9656b231acbf"
+        }
+      ],
+      "comparison": "Paper sheet and rabbit-hide warmth guide a dense, smoothly shaded felt pad distinct from weave",
+      "findings": {
+        "silhouette": "Compact matte pad with slightly rounded corners",
+        "cluster_structure": "Broad warm connected planes with sparse crease edges",
+        "micro_contrast": "Close midtones create restrained compressed surface",
+        "light_and_volume": "Upper left surface brighter than dark thickness edge",
+        "material_continuity": "Muted brown textile ramp covers the pad",
+        "edge_variation": "Soft cut edges vary rather than forming square",
+        "variant_identity": "Matte smoothness distinguishes from woven fiber",
+        "vanilla_comparison": "Paper comparator gives compact sheet scale",
+        "functional_material_cues": "Compressed thick lower edge suggests felt"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/combed_wool.png": {
+      "sha256": "ff4f47985314ba6462777c4b061245e42dd19f555e536beabcbd244ca05ee341",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/feather",
+          "minecraft": "1.21.1",
+          "sha256": "56513599c70b5da268ebf37e3245ef1f0fc9645a8b654aedd69069ec2f757513"
+        },
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        }
+      ],
+      "comparison": "Feather and white wool comparisons support an irregular loose light tuft rather than a solid flat bundle",
+      "findings": {
+        "silhouette": "Soft irregular tuft tapers into lower fiber tips",
+        "cluster_structure": "Pale clustered fibers overlap as several small lobes",
+        "micro_contrast": "Warm ivory midtones separate adjacent wool sections",
+        "light_and_volume": "Upper left tuft brightens above darker underside",
+        "material_continuity": "Single creamy wool ramp links all visible strands",
+        "edge_variation": "Asymmetric fluffy upper edge breaks rounded lump",
+        "variant_identity": "Pale fibrous tuft differs from flat felt",
+        "vanilla_comparison": "Feather direction and wool values calibrate material",
+        "functional_material_cues": "Loose fiber ends identify uncompressed combed wool"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/prepared_hide.png": {
+      "sha256": "62a3811ea0f8a375f8177d3e5d31a5667ac6d068cf89b920e7bf7adc7ad3adbb",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
+        },
+        {
+          "id": "minecraft:item/rabbit_hide",
+          "minecraft": "1.21.1",
+          "sha256": "286b30c43aff496611e206c15a45d127828f909c1f346571162f9656b231acbf"
+        }
+      ],
+      "comparison": "Rabbit hide and leather comparators guide the recognizable pelt shape with warmer interior folds",
+      "findings": {
+        "silhouette": "Pelt shape has four irregular stretched corners",
+        "cluster_structure": "Broad hide planes connect to thinner edge strips",
+        "micro_contrast": "Warm neighboring browns mark stretched grain",
+        "light_and_volume": "Left upper plane brighter than darker cut edge",
+        "material_continuity": "Leather ramp links the center to corner tips",
+        "edge_variation": "Asymmetric tabs break outline in four directions",
+        "variant_identity": "Irregular pelt outline differs from textile pads",
+        "vanilla_comparison": "Vanilla leather and rabbit hide establish silhouette",
+        "functional_material_cues": "Stretched corners and darker rim indicate prepared skin"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/wet_cloth.png": {
+      "sha256": "ea77832b7504ee38e85ebab17d7bdc3b74ce4295489dfd236eb0a2e76642cf6e",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/paper",
+          "minecraft": "1.21.1",
+          "sha256": "8ffee002bbc339552eb4d6be5948eb4eb66d016c19e7bbc55bc1cd4a575cc44a"
+        },
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        }
+      ],
+      "comparison": "Paper and wool guide a folded textile with localized darker moisture and a readable dangling droplet",
+      "findings": {
+        "silhouette": "Folded cloth silhouette includes hanging water drop",
+        "cluster_structure": "Connected blue folds curve across damp front",
+        "micro_contrast": "Cool neighboring shades deepen lower wet seam",
+        "light_and_volume": "Broad pale top light turns into saturated lower shadow",
+        "material_continuity": "Blue textile ramp remains across cloth surface",
+        "edge_variation": "Offset drop and corner steps vary outer contour",
+        "variant_identity": "Visible hanging droplet distinguishes dry felt",
+        "vanilla_comparison": "Paper shape and wool values establish textile scale",
+        "functional_material_cues": "Damp lower fold and water drop identify wet cloth"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/spindle.png": {
+      "sha256": "1ab8b0d9f2eeac04917fded79a604c8ce57574ff53f2e00b4274a775eb37127c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/stick",
+          "minecraft": "1.21.1",
+          "sha256": "2b5a6b7202fcd3a45663ccf249fe87de076e8c735e0b6ab8a3bf2a812332b4ff"
+        },
+        {
+          "id": "minecraft:item/string",
+          "minecraft": "1.21.1",
+          "sha256": "ded6537ee0356cfd3a0024fccd1a7ee478b58279a0bace73b689cc62369d26da"
+        }
+      ],
+      "comparison": "Stick and string comparators support the long shaft and distinctly wound central whorl",
+      "findings": {
+        "silhouette": "Diagonal wooden shaft passes through wound spindle",
+        "cluster_structure": "Golden wound fiber clusters meet shaft ends",
+        "micro_contrast": "Adjacent wood and straw tones separate center winding",
+        "light_and_volume": "Upper left winding catches warm broad light",
+        "material_continuity": "Wood axis stays coherent from end to end",
+        "edge_variation": "Tapered shaft projects beyond both ends",
+        "variant_identity": "Wound center distinguishes from plain stick",
+        "vanilla_comparison": "Stick and string references establish shaft and winding",
+        "functional_material_cues": "Projected handle and central fiber mass indicate spindle"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/wool_comb.png": {
+      "sha256": "d894b6d73b0b0bd1b3698c7f24564dc3e03d88c7240ffabc3a4787abb4e02e73",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/brush",
+          "minecraft": "1.21.1",
+          "sha256": "5142d5d3ce600efe359a1b3f2f80f3bd9505e7dc7b31cda4157ed69a0b01adc2"
+        },
+        {
+          "id": "minecraft:item/bone",
+          "minecraft": "1.21.1",
+          "sha256": "f5f2a37e7466f2983c00550874a2a94d2d006eae52b0e73acb722fadeb9bdb3b"
+        }
+      ],
+      "comparison": "Brush handle and bone tones support a primitive comb with clearly differentiated teeth",
+      "findings": {
+        "silhouette": "Short diagonal handle supports toothed comb head",
+        "cluster_structure": "Pale tooth groups attach to warm wood cluster",
+        "micro_contrast": "Neighboring browns model the curved comb back",
+        "light_and_volume": "Top wooden plane brighter than underside teeth",
+        "material_continuity": "Wood handle and head share same warm grain",
+        "edge_variation": "Individual tooth endpoints interrupt lower silhouette",
+        "variant_identity": "Pale teeth distinguish comb from spindle",
+        "vanilla_comparison": "Brush and bone references establish tool scale",
+        "functional_material_cues": "Rows of pale projecting teeth indicate combing"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/hand_fan.png": {
+      "sha256": "a3f79a4016f7efb787a15d494542ca2038c1963424df4692ffce47cb8faf73ce",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/feather",
+          "minecraft": "1.21.1",
+          "sha256": "56513599c70b5da268ebf37e3245ef1f0fc9645a8b654aedd69069ec2f757513"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Feather and wheat comparisons guide a woven fan with a distinct handle and converging ribs",
+      "findings": {
+        "silhouette": "Broad angled fan blade narrows into handle",
+        "cluster_structure": "Straw clusters follow ribs toward tied handle",
+        "micro_contrast": "Adjacent ochres distinguish blade ribs and overlap",
+        "light_and_volume": "Upper left fan panel lighter than lower right",
+        "material_continuity": "Straw blade and wooden binding are visibly separate",
+        "edge_variation": "Rounded fan outline tapers toward narrow grip",
+        "variant_identity": "Wide blade distinguishes from other hand tools",
+        "vanilla_comparison": "Feather and wheat establish directional fiber shape",
+        "functional_material_cues": "Radial blade and short grip imply airflow tool"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/leather_warmer.png": {
+      "sha256": "9f682a585813d80717ae87ff24af976cb6d57842aad244bc72194bee6e009b72",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
+        },
+        {
+          "id": "minecraft:item/rabbit_hide",
+          "minecraft": "1.21.1",
+          "sha256": "286b30c43aff496611e206c15a45d127828f909c1f346571162f9656b231acbf"
+        }
+      ],
+      "comparison": "Leather comparators guide the soft pouch silhouette and localized warm folds rather than a rigid flask",
+      "findings": {
+        "silhouette": "Rounded pouch narrows at tied upper closure",
+        "cluster_structure": "Connected warm leather planes frame neck binding",
+        "micro_contrast": "Close browns describe seam and bulging body",
+        "light_and_volume": "Upper left pouch bulge receives broad highlight",
+        "material_continuity": "Leather continues through neck and soft body",
+        "edge_variation": "Narrow neck and rounded bottom change contour",
+        "variant_identity": "Drawn closure distinguishes it from capped flask",
+        "vanilla_comparison": "Leather and rabbit hide provide soft-material ramp",
+        "functional_material_cues": "Tied top and rounded pocket indicate warming pouch"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/charcoal_warmer.png": {
+      "sha256": "8821b8a479f371bfc572e3b7b83f5d72ac847ea849e2805a34926c0c1a609997",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/charcoal",
+          "minecraft": "1.21.1",
+          "sha256": "8694dbb742b7aeea35fda24643f078a3624e083109a3968431f944ff3c178473"
+        },
+        {
+          "id": "minecraft:item/iron_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391"
+        }
+      ],
+      "comparison": "Coal and iron comparators calibrate a dark metal shell around a visibly warm recessed fuel opening",
+      "findings": {
+        "silhouette": "Rounded container has small recessed ember opening",
+        "cluster_structure": "Cool metal surround frames dark chamber and glow",
+        "micro_contrast": "Local orange steps separate flame from black recess",
+        "light_and_volume": "Metal left side catches light while chamber glows",
+        "material_continuity": "Cool housing and warm ember remain distinct materials",
+        "edge_variation": "Round shell tapers around dark central aperture",
+        "variant_identity": "Glowing vent distinguishes from leather warmer",
+        "vanilla_comparison": "Charcoal and iron ingot provide fuel and metal cues",
+        "functional_material_cues": "Small hot chamber indicates charcoal heating device"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/fired_brick.png": {
+      "sha256": "c4a594da6761c080e3353d66bb95897ee205355874144a446688d5328f5ebf03",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/bricks",
+          "minecraft": "1.21.1",
+          "sha256": "33f9411f1cb233a2020df0cf3fda32c0f67a4b0fac3751bde2ba6f2fee81b169"
+        }
+      ],
+      "comparison": "Compared with vanilla bricks the individual red courses use close warm steps and readable recessed mortar",
+      "findings": {
+        "silhouette": "Staggered horizontal courses and recessed mortar",
+        "cluster_structure": "Each brick has connected top lip and body plane",
+        "micro_contrast": "Warm adjacent reds separate worn brick faces",
+        "light_and_volume": "Upper brick lips brighten above dark mortar edge",
+        "material_continuity": "Fired clay palette continues across courses",
+        "edge_variation": "Variable brick-face shading breaks uniform rectangles",
+        "variant_identity": "Warm red clay differs from grey stone masonry",
+        "vanilla_comparison": "Vanilla bricks show narrow contrasting mortar joints",
+        "functional_material_cues": "Recessed joints identify laid fired bricks"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/stone_masonry.png": {
+      "sha256": "81042e39d169b379eb6953f4671a277041e28f5e1e56088d99fe781f1768892b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/stone_bricks",
+          "minecraft": "1.21.1",
+          "sha256": "33da66239c5586ee712ffa3fab45927cd7d4968cf111829d3049f84152d85953"
+        }
+      ],
+      "comparison": "Vanilla stone bricks calibrate wider stone beds with muted grey-green faces and visible joints",
+      "findings": {
+        "silhouette": "Broad stone courses have staggered vertical joints",
+        "cluster_structure": "Uneven grey planes sit between connected mortar runs",
+        "micro_contrast": "Cool nearby grays model chipped top edges",
+        "light_and_volume": "Top stone strips are lighter than recess below",
+        "material_continuity": "Neutral masonry palette remains consistent",
+        "edge_variation": "Varying joint locations and top chips break repetition",
+        "variant_identity": "Larger stone beds distinguish from red fired brick",
+        "vanilla_comparison": "Vanilla stone bricks establish cut masonry rhythm",
+        "functional_material_cues": "Recessed mortar and stone faces indicate masonry"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/clay_body.png": {
+      "sha256": "d3ea17447fe7fe880a564d55702d1e739552686e46fecf9e6a1d08dab896ba86",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/terracotta",
+          "minecraft": "1.21.1",
+          "sha256": "0070431576a05bab0e0383afafdc4d2c6f46e04dac2c54a90afecc97f759b4fb"
+        }
+      ],
+      "comparison": "Terracotta comparator guides close warm values; tiled irregular patches remain material texture without a geometric stamp",
+      "findings": {
+        "silhouette": "Matte clay field has irregular shallow plane changes",
+        "cluster_structure": "Connected warm patches vary width across tile",
+        "micro_contrast": "Close orange-brown steps avoid high contrast flecks",
+        "light_and_volume": "Muted upper planes transition into darker lower patches",
+        "material_continuity": "Single fired clay ramp fills whole surface",
+        "edge_variation": "Patch boundaries interlock across tiled edges",
+        "variant_identity": "Plain clay body lacks raised rim bands",
+        "vanilla_comparison": "Vanilla terracotta demonstrates restrained matte contrast",
+        "functional_material_cues": "Matte grain indicates fired clay vessel wall"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/clay_rim.png": {
+      "sha256": "6cbbd0d98b42e649a8f462fc9fce7ea6645891bf4994e1d600e1eb48799affeb",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/terracotta",
+          "minecraft": "1.21.1",
+          "sha256": "0070431576a05bab0e0383afafdc4d2c6f46e04dac2c54a90afecc97f759b4fb"
+        }
+      ],
+      "comparison": "Terracotta matte ramp is retained while an actual raised lip distinguishes the rim texture",
+      "findings": {
+        "silhouette": "Raised top lip and recessed lower band span tile",
+        "cluster_structure": "Connected lip strip and smaller clay clusters",
+        "micro_contrast": "Warm adjacent shades make lip thickness visible",
+        "light_and_volume": "Upper ridge lighter than the recessed horizontal seam",
+        "material_continuity": "Same fired clay ramp as body surface",
+        "edge_variation": "Uneven ridge brightness interrupts the horizontal band",
+        "variant_identity": "Raised lip differentiates rim from plain wall",
+        "vanilla_comparison": "Vanilla terracotta calibrates matte clay material",
+        "functional_material_cues": "Horizontal rim lip marks shaped ceramic edge"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/charcoal_bed.png": {
+      "sha256": "580d616cc390576ebdedee8fc84bbb2c9731d35715394a8bad9271c7864960f3",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/coal_block",
+          "minecraft": "1.21.1",
+          "sha256": "4314b09718c2d53f477c41f1cf4ff23a7e8e048bf63e4e5f84addc049cc8ee81"
+        },
+        {
+          "id": "minecraft:item/charcoal",
+          "minecraft": "1.21.1",
+          "sha256": "8694dbb742b7aeea35fda24643f078a3624e083109a3968431f944ff3c178473"
+        }
+      ],
+      "comparison": "Vanilla coal and charcoal guide clustered fuel pieces with visible gaps and no orange ignition",
+      "findings": {
+        "silhouette": "Overlapping irregular coals form the fuel surface",
+        "cluster_structure": "Dark recesses divide small connected coal facets",
+        "micro_contrast": "Close brown-gray values show edges of pieces",
+        "light_and_volume": "Upper facet highlights fall into shadowed gaps",
+        "material_continuity": "Charcoal palette links individual fuel pieces",
+        "edge_variation": "Uneven clump boundaries break rectangular stamps",
+        "variant_identity": "Cold fuel stays muted beside orange ember bed",
+        "vanilla_comparison": "Coal block and charcoal provide dark faceted reference",
+        "functional_material_cues": "Separated dark chunks indicate solid fuel"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/ember_bed.png": {
+      "sha256": "9a853b8222f25ea12fc689732bdc4f69e3ac90c30a97ed383603a007a7c8118d",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/coal_block",
+          "minecraft": "1.21.1",
+          "sha256": "4314b09718c2d53f477c41f1cf4ff23a7e8e048bf63e4e5f84addc049cc8ee81"
+        },
+        {
+          "id": "minecraft:block/magma",
+          "minecraft": "1.21.1",
+          "sha256": "94d559da1a3229eb012789f2e1adff24de1d4b17523eed94ed5d690f2a9909ad"
+        }
+      ],
+      "comparison": "Coal and the first magma frame guide hot centers within dark fuel masses rather than a flat magma recolor",
+      "findings": {
+        "silhouette": "Irregular fuel clumps surround glowing interior gaps",
+        "cluster_structure": "Connected orange cores meet dark charred boundaries",
+        "micro_contrast": "Orange steps separate hotter centers from dark ash",
+        "light_and_volume": "Hot cores brighten locally rather than across full tile",
+        "material_continuity": "Warm embers retain dark charcoal around them",
+        "edge_variation": "Variable clump shapes avoid rectangular glowing stamps",
+        "variant_identity": "Localized glow identifies active fuel state",
+        "vanilla_comparison": "Magma frame and coal show hot seams and dark masses",
+        "functional_material_cues": "Red-orange internal glow identifies burning fuel"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/wood_board.png": {
+      "sha256": "5764059eaff9bbd5ff1663c8c22bbfa8a000007b20b03f22347be04242dba1be",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "3a33db67a3ba30537d0890a5cb37c8087ca336be89cbb1393a71c23224e361a8"
+        }
+      ],
+      "comparison": "Oak plank reference guides horizontal grain and staggered joined boards with low-contrast local variations",
+      "findings": {
+        "silhouette": "Staggered joined planks with horizontal grain",
+        "cluster_structure": "Connected plank faces contain narrower wood grain",
+        "micro_contrast": "Adjacent tan shades define subtle grain",
+        "light_and_volume": "Upper plank edges lighten over dark joints",
+        "material_continuity": "Warm wood ramp continues along each board",
+        "edge_variation": "Staggered end joints change locations per course",
+        "variant_identity": "Horizontal boards differ from vertical beam grain",
+        "vanilla_comparison": "Vanilla oak planks establish joint spacing",
+        "functional_material_cues": "Visible plank joints indicate cut wood board"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/wood_beam.png": {
+      "sha256": "143026520a10e561ec6dc9dcd478d4ad23cce6d2fdff7107474a5765f59a23b4",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/stripped_oak_log",
+          "minecraft": "1.21.1",
+          "sha256": "a0beb15ad3d8223308d5b36a3ee9c3b9c2b5ed9b4fadc7c5bdbc69823dfb1bc2"
+        }
+      ],
+      "comparison": "Stripped oak log comparison guides uninterrupted construction direction with grain width changes",
+      "findings": {
+        "silhouette": "Vertical grain bends across a continuous beam",
+        "cluster_structure": "Long connected tan grain channels change widths",
+        "micro_contrast": "Close shade steps distinguish ridges and grooves",
+        "light_and_volume": "Paler wood grain ridges contrast with shallow grooves",
+        "material_continuity": "Warm stripped wood ramp follows construction direction",
+        "edge_variation": "Channels narrow and widen along the grain",
+        "variant_identity": "Vertical beam differs from jointed horizontal boards",
+        "vanilla_comparison": "Stripped oak log demonstrates directional wood grain",
+        "functional_material_cues": "Long grain implies solid beam not board mosaic"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/forged_iron.png": {
+      "sha256": "3888c9bda6179d424183556c274d48f9bededdc1e36b02fa9ac1d44fde1bfa7f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/iron_block",
+          "minecraft": "1.21.1",
+          "sha256": "910646c90f391ec42cfebdd356ed1e1be36ad513a684a930e38c36ab610a7a24"
+        },
+        {
+          "id": "minecraft:item/iron_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391"
+        }
+      ],
+      "comparison": "Iron block comparator guides edge bevel while restrained irregular patches suggest forged rather than polished iron",
+      "findings": {
+        "silhouette": "Flat forged panel has beveled perimeter",
+        "cluster_structure": "Connected metal face contains muted hammer marks",
+        "micro_contrast": "Close green-gray shades describe shallow surface irregularity",
+        "light_and_volume": "Top and left lip brighter than lower bevel",
+        "material_continuity": "Metal palette stays neutral across the plate",
+        "edge_variation": "Interior hammer patches interrupt the broad plane",
+        "variant_identity": "Metal surface differs from masonry and wood",
+        "vanilla_comparison": "Iron block and ingot establish bevel and reflection",
+        "functional_material_cues": "Hard beveled edge indicates a forged metal panel"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/sandstone_body.png": {
+      "sha256": "b39a8a9824def0e33f946e39f46e849b51ee9f6aef445a451bbfb992e570731f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/sandstone",
+          "minecraft": "1.21.1",
+          "sha256": "532e1da119576e3ca8a0983c173040fb3e932a935aba29aff79deb4c8a26fb1c"
+        }
+      ],
+      "comparison": "Vanilla sandstone comparison calibrates subdued tan patches in the seamless building surface",
+      "findings": {
+        "silhouette": "Continuous sandy surface has irregular aggregate planes",
+        "cluster_structure": "Connected pale patches overlap across tile",
+        "micro_contrast": "Close sand values form small local contrasts",
+        "light_and_volume": "Soft highlights move across broad sediment planes",
+        "material_continuity": "Pale warm sandstone ramp remains consistent",
+        "edge_variation": "Varied patch widths cross the tile edges",
+        "variant_identity": "Plain stone field differs from cut cap",
+        "vanilla_comparison": "Vanilla sandstone provides muted sedimentary ramp",
+        "functional_material_cues": "Fine irregular planes indicate sedimentary building material"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/sandstone_cap.png": {
+      "sha256": "0e9d39973ca945bc167ed5dd4b7e5a653d9b8ba1359db4b6a90d6c82dd57dbe2",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/cut_sandstone",
+          "minecraft": "1.21.1",
+          "sha256": "3deb1313da4ee31db72e5f29ebaa352d8f6ad77fbd5567bf539a35cc4d6f366e"
+        }
+      ],
+      "comparison": "Cut sandstone comparator supports a slightly dressed pale cap with its own subtle edge bevel",
+      "findings": {
+        "silhouette": "Dressed square cap has shallow perimeter bevel",
+        "cluster_structure": "Connected cap plane holds subdued sediment clusters",
+        "micro_contrast": "Nearby cream-tan steps show slight roughness",
+        "light_and_volume": "Upper lip lighter than shaded lower edge",
+        "material_continuity": "Sandstone ramp continues from body to cap",
+        "edge_variation": "Local face patches interrupt otherwise straight border",
+        "variant_identity": "Cut slab perimeter distinguishes cap from body",
+        "vanilla_comparison": "Cut sandstone reference shows dressed stone surfaces",
+        "functional_material_cues": "Beveled rim indicates shaped top stone"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/sandstone_vent.png": {
+      "sha256": "43cb79af079e4fd63a42f92ada59374031cfebde7b814fd41aeb32356f5585b2",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/cut_sandstone",
+          "minecraft": "1.21.1",
+          "sha256": "3deb1313da4ee31db72e5f29ebaa352d8f6ad77fbd5567bf539a35cc4d6f366e"
+        },
+        {
+          "id": "minecraft:block/furnace_front",
+          "minecraft": "1.21.1",
+          "sha256": "809df7f59ef95a65da1dc2c7c86b5c6288a93dea2fde8ee506ee1e2b753397cb"
+        }
+      ],
+      "comparison": "Furnace recess and cut sandstone comparison guide the dark inset slots within a pale dressed frame",
+      "findings": {
+        "silhouette": "Two deep vertical air slots cut through panel",
+        "cluster_structure": "Connected stone lips frame narrower shadow channels",
+        "micro_contrast": "Close sand shades describe slot recess edges",
+        "light_and_volume": "Bright upper edge contrasts with shaded inner slots",
+        "material_continuity": "Same sandstone rim frames the air gaps",
+        "edge_variation": "Slot shoulders step before terminating at bottom",
+        "variant_identity": "Visible dark recesses distinguish vent from cap",
+        "vanilla_comparison": "Cut sandstone and furnace front establish recess cues",
+        "functional_material_cues": "Vertical openings identify air ventilation"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/porous_ceramic_dry.png": {
+      "sha256": "1cbb809066bc1bccfffdc5c8bc85283052b55e53b9c4e23704ff5e7eb03065a8",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/terracotta",
+          "minecraft": "1.21.1",
+          "sha256": "0070431576a05bab0e0383afafdc4d2c6f46e04dac2c54a90afecc97f759b4fb"
+        },
+        {
+          "id": "minecraft:block/sandstone",
+          "minecraft": "1.21.1",
+          "sha256": "532e1da119576e3ca8a0983c173040fb3e932a935aba29aff79deb4c8a26fb1c"
+        }
+      ],
+      "comparison": "Terracotta and sandstone comparison supports a warm porous clay face with small visible cavities",
+      "findings": {
+        "silhouette": "Matte ceramic surface contains recessed pore groups",
+        "cluster_structure": "Small connected pores sit within larger warm planes",
+        "micro_contrast": "Close tan steps outline each pore wall",
+        "light_and_volume": "Paler pore lips contrast with darker bottoms",
+        "material_continuity": "Single dry ceramic ramp covers surrounding material",
+        "edge_variation": "Slightly varied pore shape and position interrupt stamps",
+        "variant_identity": "Warm dry body differs from dark damp state",
+        "vanilla_comparison": "Terracotta and sandstone calibrate matte porous material",
+        "functional_material_cues": "Small dark channels indicate porous evaporation surface"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/porous_ceramic_wet.png": {
+      "sha256": "8930a51b8e56bd6f0f00854303e329dbe5b6a7c55b68ca0f3e0b8d6291112a58",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/terracotta",
+          "minecraft": "1.21.1",
+          "sha256": "0070431576a05bab0e0383afafdc4d2c6f46e04dac2c54a90afecc97f759b4fb"
+        },
+        {
+          "id": "minecraft:block/cyan_terracotta",
+          "minecraft": "1.21.1",
+          "sha256": "0a5b6294554ab6152626f48aa9ac35d0a6239302f3e8f5199f90c103393df7d2"
+        }
+      ],
+      "comparison": "Terracotta and cyan clay comparators guide a cooled wet face with localized lower moisture darkening",
+      "findings": {
+        "silhouette": "Same pore network has darker lower channels",
+        "cluster_structure": "Connected cool patches gather around existing pores",
+        "micro_contrast": "Close cyan-gray steps identify damp recesses",
+        "light_and_volume": "Moisture darkens lower pores rather than bright rim",
+        "material_continuity": "Cool wet clay remains matte across tile",
+        "edge_variation": "Irregular lower wet region breaks simple uniform recolor",
+        "variant_identity": "Dark saturated lower area indicates wet state",
+        "vanilla_comparison": "Cyan terracotta demonstrates subdued cool clay contrast",
+        "functional_material_cues": "Dark capillary channels indicate wetted evaporation surface"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/wool_raw.png": {
+      "sha256": "7291ba78b8836ef7b0cbe364b55f39138f6e3672e46e0da324b142a2ab5f02e9",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        }
+      ],
+      "comparison": "White wool reference calibrates close values and uneven soft tuft clusters rather than repeated rectangular patches",
+      "findings": {
+        "silhouette": "Loose wool surface contains soft overlapping tuft groups",
+        "cluster_structure": "Small irregular cream clusters form broader tufts",
+        "micro_contrast": "Adjacent ivory-beige shades avoid hard noisy contrast",
+        "light_and_volume": "Upper tuft edges brighter than compressed gaps",
+        "material_continuity": "Consistent wool ramp connects all visible tufts",
+        "edge_variation": "Irregular widths break the previous repeating rows",
+        "variant_identity": "Loose tuft structure differs from pressed felt",
+        "vanilla_comparison": "White wool comparator shows close soft fibers",
+        "functional_material_cues": "Overlapping soft clumps indicate raw wool"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/felt_finished.png": {
+      "sha256": "9ca0976a92aa95ac9f0b987fdc1c86357309597c8ffcf2715a7144ed8a64dc8d",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        },
+        {
+          "id": "minecraft:item/paper",
+          "minecraft": "1.21.1",
+          "sha256": "8ffee002bbc339552eb4d6be5948eb4eb66d016c19e7bbc55bc1cd4a575cc44a"
+        }
+      ],
+      "comparison": "White wool and paper comparators support a dense compressed felt surface with lower contrast than loose wool",
+      "findings": {
+        "silhouette": "Dense smooth wool pad has compressed surface",
+        "cluster_structure": "Broader muted cream patches replace loose tuft groups",
+        "micro_contrast": "Small adjacent cream steps convey compressed fiber",
+        "light_and_volume": "Shallow soft plane changes avoid directional shine",
+        "material_continuity": "Pale textile ramp remains throughout material",
+        "edge_variation": "Irregular patch boundaries avoid identical stamp edges",
+        "variant_identity": "Smoother pressed face distinguishes raw wool",
+        "vanilla_comparison": "White wool and paper calibrate a dense flat pad",
+        "functional_material_cues": "Compact matte texture indicates felted surface"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/hide_raw.png": {
+      "sha256": "276e9f61924d882c748563e4e44f8c848d03c62181b79461b4030d2c90f3ea04",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
+        },
+        {
+          "id": "minecraft:item/rabbit_hide",
+          "minecraft": "1.21.1",
+          "sha256": "286b30c43aff496611e206c15a45d127828f909c1f346571162f9656b231acbf"
+        }
+      ],
+      "comparison": "Leather and rabbit hide comparisons calibrate thicker rough raw hide with a localized crease",
+      "findings": {
+        "silhouette": "Continuous raw hide has irregular thicker crease regions",
+        "cluster_structure": "Warm connected planes meet localized darker scar region",
+        "micro_contrast": "Nearby brown steps model thicker leather grain",
+        "light_and_volume": "Upper warm plane contrasts with darker central crease",
+        "material_continuity": "Leather ramp covers entire stretched skin",
+        "edge_variation": "Uneven crease and patch edges break repetition",
+        "variant_identity": "Darker rough raw hide differs from prepared skin",
+        "vanilla_comparison": "Leather and rabbit hide establish skin hues",
+        "functional_material_cues": "Dark crease region indicates uneven raw skin"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/hide_prepared.png": {
+      "sha256": "55c6b8090b8387e1be07f3bc26d3665536a2ebe2c7af111bceedb883d5bb2b32",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
+        },
+        {
+          "id": "minecraft:item/rabbit_hide",
+          "minecraft": "1.21.1",
+          "sha256": "286b30c43aff496611e206c15a45d127828f909c1f346571162f9656b231acbf"
+        }
+      ],
+      "comparison": "Vanilla hide comparators guide a visibly smoother prepared leather surface distinct from the rough raw stage",
+      "findings": {
+        "silhouette": "Smoothed prepared hide has broad shallow patches",
+        "cluster_structure": "Connected tawny planes contain subtle secondary regions",
+        "micro_contrast": "Close light browns create low grain contrast",
+        "light_and_volume": "Soft top planes gradually turn to mild shadow",
+        "material_continuity": "Consistent prepared leather hue spans tile",
+        "edge_variation": "Irregular patch edges cross tile smoothly",
+        "variant_identity": "Lighter smooth skin differs from rough raw hide",
+        "vanilla_comparison": "Leather and rabbit hide calibrate warm skin material",
+        "functional_material_cues": "Reduced grain contrast indicates prepared hide"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/fiber_raw.png": {
+      "sha256": "6cc595299b59d9084f003d04c10898e388b82793c89882e8105850d15bd57c33",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        },
+        {
+          "id": "minecraft:block/hay_block_side",
+          "minecraft": "1.21.1",
+          "sha256": "b0181d301e7819daa8719067c616ca47aab766e538cdaf1f722a711efac3ea6f"
+        }
+      ],
+      "comparison": "Wheat and hay comparison supports a tangled raw workpiece surface rather than a generic moss placeholder",
+      "findings": {
+        "silhouette": "Tangled green plant fibers overlap at varied angles",
+        "cluster_structure": "Small directional clusters connect into larger strand groups",
+        "micro_contrast": "Close greens separate overlapping fiber ends",
+        "light_and_volume": "Paler cut surfaces contrast with shaded stem gaps",
+        "material_continuity": "Raw plant ramp stays green throughout workpiece",
+        "edge_variation": "Broken strand directions avoid repeating diagonal bands",
+        "variant_identity": "Green tangled material differs from cleaned straw",
+        "vanilla_comparison": "Wheat and hay establish stalk structure",
+        "functional_material_cues": "Overlap of green strands indicates unprocessed fiber"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/straw_edge.png": {
+      "sha256": "d2a4b775c42e22cb830b8b3f4beb5a4328e7c37f06952080de27f151bd45db9f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/hay_block_side",
+          "minecraft": "1.21.1",
+          "sha256": "b0181d301e7819daa8719067c616ca47aab766e538cdaf1f722a711efac3ea6f"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Hay side and wheat comparators guide a bound edge with visible longitudinal strands and transverse ties",
+      "findings": {
+        "silhouette": "Vertical straw stems joined by two horizontal bindings",
+        "cluster_structure": "Connected fiber channels separated by dark ties",
+        "micro_contrast": "Neighboring golden tones model strand width",
+        "light_and_volume": "Pale straw ridges brighten against lashings",
+        "material_continuity": "Dry plant material extends through binding edges",
+        "edge_variation": "Stalk channel widths change across side surface",
+        "variant_identity": "Bound vertical side differs from interlaced top",
+        "vanilla_comparison": "Hay block side shows directional bundled straw",
+        "functional_material_cues": "Two transverse bindings indicate secured straw edge"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/straw_weave.png": {
+      "sha256": "fc25594d2286b1a4e3bae5f445183ba1bd6b2c1e1bd9e51763a8b4fbfe86dfc9",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/hay_block_side",
+          "minecraft": "1.21.1",
+          "sha256": "b0181d301e7819daa8719067c616ca47aab766e538cdaf1f722a711efac3ea6f"
+        }
+      ],
+      "comparison": "Hay straw comparison guides wide deliberate over-under bands for a rigid woven canopy",
+      "findings": {
+        "silhouette": "Broad interwoven straw ribbons cross at right angles",
+        "cluster_structure": "Connected ribbon clusters alternate above and below",
+        "micro_contrast": "Close golden steps distinguish overlap ridges",
+        "light_and_volume": "Upper ribbon faces light while underpasses darken",
+        "material_continuity": "Consistent straw palette follows both directions",
+        "edge_variation": "Weave offsets alternate across rows at ties",
+        "variant_identity": "Broad straw strips differ from finer woven cloth",
+        "vanilla_comparison": "Hay side anchors straw hue and structural rhythm",
+        "functional_material_cues": "Visible crossing ribbons indicate a woven canopy"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/woven_cloth.png": {
+      "sha256": "786b8015cdd805bd191b5be941e4d9a67063f8b62a8e7c934cc8f56e66071c4c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/hay_block_side",
+          "minecraft": "1.21.1",
+          "sha256": "b0181d301e7819daa8719067c616ca47aab766e538cdaf1f722a711efac3ea6f"
+        },
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        }
+      ],
+      "comparison": "Hay and wool references guide a tighter textile weave with reduced relief compared with structural straw",
+      "findings": {
+        "silhouette": "Smaller warp and weft strips form continuous textile",
+        "cluster_structure": "Connected interlacing groups carry shallow relief",
+        "micro_contrast": "Close ochres mark fine thread overlaps",
+        "light_and_volume": "Bright crossings sit above darker underpasses",
+        "material_continuity": "Warm fiber palette spans full textile face",
+        "edge_variation": "Crossing offsets produce woven structural rhythm",
+        "variant_identity": "Tighter lower-contrast cloth differs from straw mat",
+        "vanilla_comparison": "Hay and wool establish textile-like material cues",
+        "functional_material_cues": "Interlocked threads indicate woven cloth surface"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/wet_textile.png": {
+      "sha256": "aa96d04064fd868331ae0841e8eba1b9d141c935f34734d0d9a3dc9161a36cc6",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        },
+        {
+          "id": "minecraft:block/cyan_terracotta",
+          "minecraft": "1.21.1",
+          "sha256": "0a5b6294554ab6152626f48aa9ac35d0a6239302f3e8f5199f90c103393df7d2"
+        }
+      ],
+      "comparison": "Wool and cyan clay calibrate muted cold hues while interlocked threads and a darker lower region preserve wet cloth identity",
+      "findings": {
+        "silhouette": "Continuous woven fabric has darker damp lower region",
+        "cluster_structure": "Crossing strands remain visible through darker patches",
+        "micro_contrast": "Close blue-gray tones separate wet overlap",
+        "light_and_volume": "Upper crossings light while damp lower channels darken",
+        "material_continuity": "Coherent wet textile palette retains woven structure",
+        "edge_variation": "Uneven damp boundary follows crossing thread groups",
+        "variant_identity": "Cool wet patch separates drying rack state",
+        "vanilla_comparison": "Wool and cyan terracotta anchor close wet tones",
+        "functional_material_cues": "Moisture-darkened weave indicates wet fabric"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/ice_bed.png": {
+      "sha256": "61b93ec4d9ae85ffe15d6999b818637415d7405937da3a90479dec0c8c5a9e37",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/packed_ice",
+          "minecraft": "1.21.1",
+          "sha256": "69bbfa529e480c86fac5ba3c8607b8d263e140d0f4d0f1c915fac20b5aa2b691"
+        }
+      ],
+      "comparison": "Packed ice reference guides blue translucent-looking facets interrupted by a thinner irregular fracture",
+      "findings": {
+        "silhouette": "Pale ice planes have an interrupted diagonal fracture",
+        "cluster_structure": "Connected cold facets cross a narrower light fracture",
+        "micro_contrast": "Adjacent blue-white steps distinguish translucent planes",
+        "light_and_volume": "Pale upper facets brighten and deeper planes darken",
+        "material_continuity": "Consistent ice-blue palette spans the whole face",
+        "edge_variation": "Irregular fracture bends through broad plane groups",
+        "variant_identity": "Cold icy planes distinguish from damp cloth",
+        "vanilla_comparison": "Packed ice comparator shows restrained diagonal planes",
+        "functional_material_cues": "Light fracture and blue planes identify solid ice"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/lamp_wick.png": {
+      "sha256": "8094738fc61ece98a8df35c30acbee6c3d8705621f20b3561f3a0cf24278d80b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/string",
+          "minecraft": "1.21.1",
+          "sha256": "ded6537ee0356cfd3a0024fccd1a7ee478b58279a0bace73b689cc62369d26da"
+        },
+        {
+          "id": "minecraft:block/stripped_oak_log",
+          "minecraft": "1.21.1",
+          "sha256": "a0beb15ad3d8223308d5b36a3ee9c3b9c2b5ed9b4fadc7c5bdbc69823dfb1bc2"
+        }
+      ],
+      "comparison": "String and stripped oak comparisons guide dark twisted wick strands with interrupted short cross fibers",
+      "findings": {
+        "silhouette": "Narrow vertical wick strands have staggered cross fibers",
+        "cluster_structure": "Connected warm strands continue through short interruptions",
+        "micro_contrast": "Close brown shades model twisted strand ridges",
+        "light_and_volume": "Paler ridge edges contrast with darker grooves",
+        "material_continuity": "Consistent fiber ramp covers wick material",
+        "edge_variation": "Cross fibers shift at different heights between strands",
+        "variant_identity": "Dark dry wick differs from luminous flame",
+        "vanilla_comparison": "String and stripped oak show directional fiber cues",
+        "functional_material_cues": "Narrow dark longitudinal texture indicates unlit wick"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/lamp_glow.png": {
+      "sha256": "00695b7a4377f601f3b005d59a9bc5e9772fe4176aaa80c81aa3fffb33795aef",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/glowstone",
+          "minecraft": "1.21.1",
+          "sha256": "1715e4d1e3209d5931f468b96fd67ca280e4ba27ce993aec6f66c57bf8bf369b"
+        },
+        {
+          "id": "minecraft:block/furnace_front_on",
+          "minecraft": "1.21.1",
+          "sha256": "a4ff7cbdc6502673e9a2d61472a15673f608e70cbfc7b325a9473819906c73b9"
+        }
+      ],
+      "comparison": "Glowstone and lit furnace comparators guide a warm luminous core with a darker lower flame base",
+      "findings": {
+        "silhouette": "Bright central flame shape tapers to darker base",
+        "cluster_structure": "Connected warm core groups form a luminous tongue",
+        "micro_contrast": "Close amber steps separate white hot center",
+        "light_and_volume": "Core light falls into amber outer envelope",
+        "material_continuity": "Warm flame ramp continues toward shaded base",
+        "edge_variation": "Asymmetrical flame shoulders interrupt rectangular shape",
+        "variant_identity": "Bright flame distinguishes from unlit wick",
+        "vanilla_comparison": "Glowstone and lit furnace calibrate hot values",
+        "functional_material_cues": "Luminous central flame identifies active lamp"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/hearth_face.png": {
+      "sha256": "030f87f3bf10c3c586ec977d777dcc638c7997ddb0a716ed24714bcbd1e1b163",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/terracotta",
+          "minecraft": "1.21.1",
+          "sha256": "0070431576a05bab0e0383afafdc4d2c6f46e04dac2c54a90afecc97f759b4fb"
+        },
+        {
+          "id": "minecraft:block/furnace_front",
+          "minecraft": "1.21.1",
+          "sha256": "809df7f59ef95a65da1dc2c7c86b5c6288a93dea2fde8ee506ee1e2b753397cb"
+        }
+      ],
+      "comparison": "Terracotta and furnace front comparisons guide rounded recessed aperture within a matte clay face",
+      "findings": {
+        "silhouette": "Rounded dark opening inset within clay wall",
+        "cluster_structure": "Connected terracotta frame encloses recessed chamber",
+        "micro_contrast": "Nearby warm clay steps surround dark soot",
+        "light_and_volume": "Upper opening lip brighter than inner recess",
+        "material_continuity": "Clay wall shares same ramp as body texture",
+        "edge_variation": "Rounded opening shoulders step unevenly at edges",
+        "variant_identity": "Dark inactive chamber differs from lit version",
+        "vanilla_comparison": "Terracotta and furnace front calibrate material and opening",
+        "functional_material_cues": "Black soot cavity indicates unlit hearth"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/hearth_face_lit.png": {
+      "sha256": "c976a6013a5a45e6d486a0e84524638e19e04b4e65d72bd9d5e234668f4ce095",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/furnace_front_on",
+          "minecraft": "1.21.1",
+          "sha256": "a4ff7cbdc6502673e9a2d61472a15673f608e70cbfc7b325a9473819906c73b9"
+        },
+        {
+          "id": "minecraft:block/terracotta",
+          "minecraft": "1.21.1",
+          "sha256": "0070431576a05bab0e0383afafdc4d2c6f46e04dac2c54a90afecc97f759b4fb"
+        }
+      ],
+      "comparison": "Lit furnace and clay wall comparisons guide localized combustion while preserving the original hearth frame",
+      "findings": {
+        "silhouette": "Same rounded hearth aperture holds a flame",
+        "cluster_structure": "Warm connected flame group sits inside unchanged clay frame",
+        "micro_contrast": "Adjacent ember shades separate core from dark recess",
+        "light_and_volume": "Localized hot core brightens lower aperture",
+        "material_continuity": "Clay frame retains matching inactive material",
+        "edge_variation": "Flame tips rise at different heights inside arch",
+        "variant_identity": "Lit cavity distinguishes from inactive black opening",
+        "vanilla_comparison": "Lit furnace reference shows fire inside recess",
+        "functional_material_cues": "Bright flame within soot cavity marks active hearth"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/hearth_top.png": {
+      "sha256": "33cfb4352edd6008cf307fc8859dc822138188099a25a68875c0b269cc9870eb",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/terracotta",
+          "minecraft": "1.21.1",
+          "sha256": "0070431576a05bab0e0383afafdc4d2c6f46e04dac2c54a90afecc97f759b4fb"
+        },
+        {
+          "id": "minecraft:block/furnace_top",
+          "minecraft": "1.21.1",
+          "sha256": "d92e36ac9025e4cb46e450ac3bd21692f50c54ebc9373c512530247fc1c2b65c"
+        }
+      ],
+      "comparison": "Terracotta and furnace top guide a clay top with recessed opening and coherent wall material",
+      "findings": {
+        "silhouette": "Dark rounded opening sits in thick clay top",
+        "cluster_structure": "Connected clay lip encloses smaller recessed area",
+        "micro_contrast": "Warm adjacent clay steps define rim thickness",
+        "light_and_volume": "Upper rim catches light above dark interior",
+        "material_continuity": "Same fired clay as hearth front and wall",
+        "edge_variation": "Rounded inner corner steps avoid concentric square rings",
+        "variant_identity": "Top opening differs from front arched cavity",
+        "vanilla_comparison": "Furnace top and terracotta calibrate top face",
+        "functional_material_cues": "Recessed central opening indicates top vent"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/stove_face.png": {
+      "sha256": "e6a5cf48737c77a0192ec05e5fd95c6c0b5d82e13ed00485f308f2761789ef95",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/stone_bricks",
+          "minecraft": "1.21.1",
+          "sha256": "33da66239c5586ee712ffa3fab45927cd7d4968cf111829d3049f84152d85953"
+        },
+        {
+          "id": "minecraft:block/furnace_front",
+          "minecraft": "1.21.1",
+          "sha256": "809df7f59ef95a65da1dc2c7c86b5c6288a93dea2fde8ee506ee1e2b753397cb"
+        }
+      ],
+      "comparison": "Stone brick and furnace front references guide the cold square stove opening with subdued cast stone edges",
+      "findings": {
+        "silhouette": "Squared stone aperture recessed into grey frame",
+        "cluster_structure": "Connected stone surround encloses dark chamber",
+        "micro_contrast": "Cool gray steps model cast opening edge",
+        "light_and_volume": "Upper stone lip lighter than shaded interior",
+        "material_continuity": "Grey masonry ramp continues across frame",
+        "edge_variation": "Opening upper corners step into narrower recess",
+        "variant_identity": "Square stone opening differs from rounded clay hearth",
+        "vanilla_comparison": "Stone bricks and furnace front calibrate stone recess",
+        "functional_material_cues": "Dark rectangular cavity indicates cold stove"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/stove_face_lit.png": {
+      "sha256": "2425868f5a03b5db03f4b05747aa742e8edef5f073bad5eb194f3b5baa730a2e",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/furnace_front_on",
+          "minecraft": "1.21.1",
+          "sha256": "a4ff7cbdc6502673e9a2d61472a15673f608e70cbfc7b325a9473819906c73b9"
+        },
+        {
+          "id": "minecraft:block/stone_bricks",
+          "minecraft": "1.21.1",
+          "sha256": "33da66239c5586ee712ffa3fab45927cd7d4968cf111829d3049f84152d85953"
+        }
+      ],
+      "comparison": "Lit furnace and stone bricks guide a compact glowing fire within the same gray stone surround",
+      "findings": {
+        "silhouette": "Grey stone aperture contains visible active flames",
+        "cluster_structure": "Connected warm flame tongue fills lower recess",
+        "micro_contrast": "Orange intermediate steps link glow and charcoal",
+        "light_and_volume": "Hot center illuminates bottom of chamber",
+        "material_continuity": "Grey frame preserves cold stove material",
+        "edge_variation": "Flame silhouette rises irregularly within opening",
+        "variant_identity": "Flame distinguishes active state without recoloring housing",
+        "vanilla_comparison": "Lit furnace shows localized fire below opening",
+        "functional_material_cues": "Bright recessed flame identifies heated stove"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/block/stove_top.png": {
+      "sha256": "63f3cc41373403a64d50c1098fac72fc0831c7f472cf320e28d0cafd027fb7d5",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/furnace_top",
+          "minecraft": "1.21.1",
+          "sha256": "d92e36ac9025e4cb46e450ac3bd21692f50c54ebc9373c512530247fc1c2b65c"
+        },
+        {
+          "id": "minecraft:block/stone_bricks",
+          "minecraft": "1.21.1",
+          "sha256": "33da66239c5586ee712ffa3fab45927cd7d4968cf111829d3049f84152d85953"
+        }
+      ],
+      "comparison": "Furnace top and stone bricks comparisons guide a shallow cooking inset with muted stone planes",
+      "findings": {
+        "silhouette": "Stone cooking top has inset burner plane",
+        "cluster_structure": "Connected grey clusters define burner and surrounding slab",
+        "micro_contrast": "Nearby grays distinguish shallow surface turns",
+        "light_and_volume": "Upper slab edge lighter than dark burner region",
+        "material_continuity": "Stone ramp follows stove side material",
+        "edge_variation": "Inner burner corners vary with surface chips",
+        "variant_identity": "Shallow burner differs from deep clay opening",
+        "vanilla_comparison": "Furnace top and stone bricks calibrate grey top face",
+        "functional_material_cues": "Central inset plane indicates cooking surface"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/grass_hood.png": {
+      "sha256": "d751430f23bf2cbf97fc1dd0ec40e6d76dd9f59f9d4753b23adbfe8d95431139",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_1",
+          "minecraft": "1.21.1",
+          "sha256": "6c96099472fc44dc11b5823a81c57ec7c207203050cd088a15d2358b3df6b5e7"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Vanilla leather head UV and wheat strands guide a wrapped straw hood; atlas review only",
+      "findings": {
+        "silhouette": "Head atlas includes open front face and covered crown",
+        "cluster_structure": "Connected straw groups wrap crown and side faces",
+        "micro_contrast": "Close golden steps separate face rim strands",
+        "light_and_volume": "Crown brighter than rear head face",
+        "material_continuity": "Woven straw ramp continues across adjacent head faces",
+        "edge_variation": "Transparent opening and lower neck edge define boundary",
+        "variant_identity": "Full woven hood differs from fur cap and mask",
+        "vanilla_comparison": "Leather layer one confirms head face UV arrangement",
+        "folds_and_seams": "Front rim and lower edge indicate hood seam",
+        "material_specific_shading": "Directional straw highlights remain on crown and sides"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/fur_hat.png": {
+      "sha256": "3a74ada9eb8ab8f61bc6cc951e9244c99e9d108455d08be03113e2bf25ed9dc1",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_1",
+          "minecraft": "1.21.1",
+          "sha256": "6c96099472fc44dc11b5823a81c57ec7c207203050cd088a15d2358b3df6b5e7"
+        },
+        {
+          "id": "minecraft:item/rabbit_hide",
+          "minecraft": "1.21.1",
+          "sha256": "286b30c43aff496611e206c15a45d127828f909c1f346571162f9656b231acbf"
+        }
+      ],
+      "comparison": "Leather head atlas and rabbit hide guide fur-lined cap shading, without claiming client rendering",
+      "findings": {
+        "silhouette": "Head UV shows crown and large front opening",
+        "cluster_structure": "Cream fur border clusters meet brown upper panels",
+        "micro_contrast": "Neighboring browns soften crown and pale fur seam",
+        "light_and_volume": "Upper crown lighter than darker rear face",
+        "material_continuity": "Fur and hide colors continue around side surfaces",
+        "edge_variation": "Transparent front aperture and uneven trim edges vary",
+        "variant_identity": "Pale fur border distinguishes from straw hood",
+        "vanilla_comparison": "Leather layer one provides comparable head UV faces",
+        "folds_and_seams": "Thick pale border marks fur lining seam",
+        "material_specific_shading": "Soft fur trim contrasts with brown crown planes"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/desert_headwear.png": {
+      "sha256": "58101e87435a4a5c49c1e4c38bc5ffbb8b446f89952a896bbec50ab2dfec813b",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_1",
+          "minecraft": "1.21.1",
+          "sha256": "6c96099472fc44dc11b5823a81c57ec7c207203050cd088a15d2358b3df6b5e7"
+        },
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        }
+      ],
+      "comparison": "Leather head UV and white wool guide a wrapped linen head covering with eye slit",
+      "findings": {
+        "silhouette": "Head atlas has narrow transparent eye opening",
+        "cluster_structure": "Cream horizontal wrap clusters continue across sides",
+        "micro_contrast": "Close ivory steps define adjacent cloth layers",
+        "light_and_volume": "Top wrap brighter than shadowed rear panel",
+        "material_continuity": "Pale textile material continues around all covered sides",
+        "edge_variation": "Eye opening breaks front face opacity",
+        "variant_identity": "Narrow eye slit distinguishes from open hood",
+        "vanilla_comparison": "Leather layer one confirms head face layout",
+        "folds_and_seams": "Horizontal folded wrap marks the cloth seam",
+        "material_specific_shading": "Soft linen values avoid glossy metal highlights"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/sun_hat.png": {
+      "sha256": "aac6cfe59d8480ab3b30c01b23d26d600fe1962e94645e300fab8b7fd8a61d88",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_1",
+          "minecraft": "1.21.1",
+          "sha256": "6c96099472fc44dc11b5823a81c57ec7c207203050cd088a15d2358b3df6b5e7"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Leather head UV and wheat guide a shallow straw crown; existing armor geometry cannot show projecting brim",
+      "findings": {
+        "silhouette": "Crown top and shallow sides leave lower face transparent",
+        "cluster_structure": "Short golden crown clusters meet darker band",
+        "micro_contrast": "Close ochres describe woven crown planes",
+        "light_and_volume": "Top crown brighter than narrow rear band",
+        "material_continuity": "Straw ramp remains continuous across crown",
+        "edge_variation": "Lower head sides intentionally end in transparency",
+        "variant_identity": "Shallow cap UV differs from full hood coverage",
+        "vanilla_comparison": "Leather head UV confirms placement of crown surfaces",
+        "folds_and_seams": "Dark horizontal band marks lower crown seam",
+        "material_specific_shading": "Directional golden straw shade defines cap weave"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/leather_face_mask.png": {
+      "sha256": "9e8974a6776bc83b0565cfb19e4a988982ea578248c720316ecf2c7731b50724",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_1",
+          "minecraft": "1.21.1",
+          "sha256": "6c96099472fc44dc11b5823a81c57ec7c207203050cd088a15d2358b3df6b5e7"
+        },
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
+        }
+      ],
+      "comparison": "Leather UV and leather item reference guide a lower-face panel with a thin rear strap",
+      "findings": {
+        "silhouette": "Narrow lower front panel leaves eyes uncovered",
+        "cluster_structure": "Connected brown cheek clusters meet side attachment strip",
+        "micro_contrast": "Neighboring warm shades model central nose panel",
+        "light_and_volume": "Front upper fold lighter than rear fastening band",
+        "material_continuity": "Leather ramp follows lower face and attachments",
+        "edge_variation": "Transparent crown and eyes distinguish coverage boundary",
+        "variant_identity": "Only lower face covered unlike hood and cap",
+        "vanilla_comparison": "Leather layer one provides head face coordinate layout",
+        "folds_and_seams": "Side fastening band and chin fold mark construction",
+        "material_specific_shading": "Warm leather shading follows lower face curvature"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/fur_coat.png": {
+      "sha256": "5592110b7dc5b8f41f24ca67823f54593f533d02efcaf5121c244ef21d3b8b69",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_1",
+          "minecraft": "1.21.1",
+          "sha256": "6c96099472fc44dc11b5823a81c57ec7c207203050cd088a15d2358b3df6b5e7"
+        },
+        {
+          "id": "minecraft:item/rabbit_hide",
+          "minecraft": "1.21.1",
+          "sha256": "286b30c43aff496611e206c15a45d127828f909c1f346571162f9656b231acbf"
+        }
+      ],
+      "comparison": "Leather torso UV and rabbit hide guide a fur-lined front, sleeve cuffs and pale hem",
+      "findings": {
+        "silhouette": "Torso and long sleeves occupy chest UV faces",
+        "cluster_structure": "Pale trim surrounds connected brown center panels",
+        "micro_contrast": "Close browns and tan steps model sleeve folds",
+        "light_and_volume": "Upper trim brightens above darker back plane",
+        "material_continuity": "Fur edging continues from torso to cuffs",
+        "edge_variation": "Collar border and cuffs terminate at UV edges",
+        "variant_identity": "Full pale fur edging differentiates plant and linen coats",
+        "vanilla_comparison": "Leather layer one confirms torso and sleeve layout",
+        "folds_and_seams": "Pale front seam and cuffs distinguish lining",
+        "material_specific_shading": "Soft tan fur clusters contrast with darker hide center"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/grass_coat.png": {
+      "sha256": "90a8a76a024230def60a56da6a0819f661a4e9fd671881c3442498ac9dbaf56f",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_1",
+          "minecraft": "1.21.1",
+          "sha256": "6c96099472fc44dc11b5823a81c57ec7c207203050cd088a15d2358b3df6b5e7"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Leather torso UV and wheat guide woven full-sleeved coat with intentionally frayed hem",
+      "findings": {
+        "silhouette": "Torso UV and sleeves terminate in frayed edges",
+        "cluster_structure": "Connected narrow straw clusters form woven chest",
+        "micro_contrast": "Nearby ochres mark strand relief and overlap",
+        "light_and_volume": "Front chest brighter than rear straw panel",
+        "material_continuity": "Golden plant ramp spans sleeves and torso",
+        "edge_variation": "Alternating transparent ends form frayed lower hem",
+        "variant_identity": "Full sleeve coverage differs from shorter cape",
+        "vanilla_comparison": "Leather layer one establishes chest and sleeve coordinates",
+        "folds_and_seams": "Frayed hem and shoulder weave indicate plant construction",
+        "material_specific_shading": "Straw highlights follow the narrow fiber groups"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/linen_clothes.png": {
+      "sha256": "0a5da4cd1a3fdb92f0e2d733503db15923d8c8df45cf9dd88b80c67ee8f81ce9",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_1",
+          "minecraft": "1.21.1",
+          "sha256": "6c96099472fc44dc11b5823a81c57ec7c207203050cd088a15d2358b3df6b5e7"
+        },
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        }
+      ],
+      "comparison": "Leather UV and white wool comparison guide a short-sleeved pale linen garment with open neck",
+      "findings": {
+        "silhouette": "Short sleeve chest UV shows open collar",
+        "cluster_structure": "Broad pale folds connect front and back faces",
+        "micro_contrast": "Close cream shades soften chest surface turns",
+        "light_and_volume": "Lighter front shoulder contrasts with rear face",
+        "material_continuity": "Undyed linen ramp spans sleeves and torso",
+        "edge_variation": "Transparent lower sleeve and collar define garment cut",
+        "variant_identity": "Unbelted cream torso differs from blue tunic",
+        "vanilla_comparison": "Leather layer one confirms torso and sleeve faces",
+        "folds_and_seams": "Open collar and sleeve hem mark garment seams",
+        "material_specific_shading": "Close pale textile values give soft folded appearance"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/light_tunic.png": {
+      "sha256": "eeaa33b38937e82a5536ad4f7f82dd023f654ada031080a0b075f3224d167b78",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_1",
+          "minecraft": "1.21.1",
+          "sha256": "6c96099472fc44dc11b5823a81c57ec7c207203050cd088a15d2358b3df6b5e7"
+        },
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        }
+      ],
+      "comparison": "Leather torso UV and white wool guide a blue short-sleeved garment with a visible warm waist belt",
+      "findings": {
+        "silhouette": "Short sleeved chest atlas has narrow waist band",
+        "cluster_structure": "Connected blue-gray folds meet warm belt strip",
+        "micro_contrast": "Close teal values distinguish cloth surface folds",
+        "light_and_volume": "Upper front brighter than shaded rear torso",
+        "material_continuity": "Blue cloth remains continuous across shoulders",
+        "edge_variation": "Sleeve transparency and belt break lower contour",
+        "variant_identity": "Warm belt and blue hue distinguish undyed linen",
+        "vanilla_comparison": "Leather torso UV confirms belt on torso faces",
+        "folds_and_seams": "Continuous waist belt and open collar mark seams",
+        "material_specific_shading": "Muted teal fabric folds differ from warm belt material"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/waxed_cloak.png": {
+      "sha256": "ffed089ecd901820dfd4063168cf1812e1974011c455eb9da880f4c3ac9604d9",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_1",
+          "minecraft": "1.21.1",
+          "sha256": "6c96099472fc44dc11b5823a81c57ec7c207203050cd088a15d2358b3df6b5e7"
+        },
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
+        }
+      ],
+      "comparison": "Leather torso UV and leather item comparison guide a waxed front panel with visible clasp and split hem",
+      "findings": {
+        "silhouette": "Long torso panel ends with open front split",
+        "cluster_structure": "Connected broad leather folds surround clasp region",
+        "micro_contrast": "Adjacent browns describe coated leather turns",
+        "light_and_volume": "Upper front shoulder lighter than rear folds",
+        "material_continuity": "Warm leather palette continues across torso faces",
+        "edge_variation": "Split lower hem and short sleeve opacity change cut",
+        "variant_identity": "Clasped front opening differentiates woven cape",
+        "vanilla_comparison": "Leather layer one confirms torso face arrangement",
+        "folds_and_seams": "Upper clasp and vertical opening indicate closure",
+        "material_specific_shading": "Broad leather highlights avoid strand-like straw shading"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/straw_cape.png": {
+      "sha256": "a1fe4f51bacd6ade4786abd622d05cd65980981227810c137280468b78b9fbe6",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_1",
+          "minecraft": "1.21.1",
+          "sha256": "6c96099472fc44dc11b5823a81c57ec7c207203050cd088a15d2358b3df6b5e7"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Leather UV and wheat reference guide a straw cape with a neck binding and intentionally frayed ends",
+      "findings": {
+        "silhouette": "Cape atlas covers torso with short frayed sleeves",
+        "cluster_structure": "Connected golden woven clusters fill the panels",
+        "micro_contrast": "Adjacent ochres define crossing fiber ridges",
+        "light_and_volume": "Upper tie brighter than darker rear panel",
+        "material_continuity": "Consistent straw ramp continues around torso",
+        "edge_variation": "Frayed bottom and shorter sleeve transparency vary silhouette",
+        "variant_identity": "Neck band and short coverage distinguish grass coat",
+        "vanilla_comparison": "Leather layer one confirms body and sleeve coordinate layout",
+        "folds_and_seams": "Neck binding and trailing fringe define cape edges",
+        "material_specific_shading": "Golden woven shading differs from smooth leather cloak"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/grass_leggings.png": {
+      "sha256": "2c3870465e3e438cf86c443d98d7fcf35578a73a3921d990816119b1c1a0cde7",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_2",
+          "minecraft": "1.21.1",
+          "sha256": "72e7df28fae9ee52cff987967f4a61996827271045d99bed3dd364a9ba41f839"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Leather leggings UV and wheat guide woven trousers with dark binding and visibly frayed cuffs",
+      "findings": {
+        "silhouette": "Layer two leg faces have woven waistband",
+        "cluster_structure": "Connected golden fibers descend from waist panel",
+        "micro_contrast": "Close ochres distinguish leg strand relief",
+        "light_and_volume": "Front leg brighter than shaded rear leg face",
+        "material_continuity": "Plant fiber colors continue from belt to cuff",
+        "edge_variation": "Frayed bottom ends introduce transparent gaps",
+        "variant_identity": "Golden fringed legs differ from plain wool",
+        "vanilla_comparison": "Leather layer two establishes leggings face positions",
+        "folds_and_seams": "Dark waistband and irregular cuffs mark seams",
+        "material_specific_shading": "Directional straw highlights follow leg length"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/wool_underwear.png": {
+      "sha256": "9099cacf6fc270de1d1e828102743dc69b19b5adc8d7858f4f60ab46f4de6b5b",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_2",
+          "minecraft": "1.21.1",
+          "sha256": "72e7df28fae9ee52cff987967f4a61996827271045d99bed3dd364a9ba41f839"
+        },
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        }
+      ],
+      "comparison": "Leather leggings UV and white wool reference guide pale soft trousers with simple hems",
+      "findings": {
+        "silhouette": "Layer two leg and waist faces are plain cloth",
+        "cluster_structure": "Connected pale textile groups form soft leg folds",
+        "micro_contrast": "Close ivory shades describe soft crease edges",
+        "light_and_volume": "Front leg lighter than shaded back plane",
+        "material_continuity": "Cream wool ramp continues from waist down",
+        "edge_variation": "Simple lower cuffs contrast with fringe openings",
+        "variant_identity": "Unfrayed pale cloth differs from straw trousers",
+        "vanilla_comparison": "Leather layer two verifies leg and belt UV positions",
+        "folds_and_seams": "Waistband and cuff edges suggest sewn underwear",
+        "material_specific_shading": "Soft close-value fabric shading avoids rigid sheen"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/grass_boots.png": {
+      "sha256": "325f8e3ca93178d9db2ef229b7f0ebce20bc1ca12b36a7faa451d89bf5d01023",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_1",
+          "minecraft": "1.21.1",
+          "sha256": "6c96099472fc44dc11b5823a81c57ec7c207203050cd088a15d2358b3df6b5e7"
+        },
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Leather armor UV and wheat guide ankle-height woven boot coverage on the existing vanilla geometry",
+      "findings": {
+        "silhouette": "Only lower leg and sole faces contain material",
+        "cluster_structure": "Connected golden fibers fill ankle and foot band",
+        "micro_contrast": "Near ochre steps show small woven ridges",
+        "light_and_volume": "Front toe face brighter than rear sole edge",
+        "material_continuity": "Straw colors continue around lower leg faces",
+        "edge_variation": "Transparent upper leg marks ankle-height footwear",
+        "variant_identity": "Woven golden cuff differs from fur cuff",
+        "vanilla_comparison": "Leather layer one verifies lower leg UV faces",
+        "folds_and_seams": "Dark lower binding marks sole seam",
+        "material_specific_shading": "Straw uses narrower directional golden clusters"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/fur_boots.png": {
+      "sha256": "19de9860ba30f6d8d8b320585f288f95e089d8029d779949e9c631c53ffead31",
+      "verdict": "PASS",
+      "material_profile": "clothing",
+      "references": [
+        {
+          "id": "minecraft:models/armor/leather_layer_1",
+          "minecraft": "1.21.1",
+          "sha256": "6c96099472fc44dc11b5823a81c57ec7c207203050cd088a15d2358b3df6b5e7"
+        },
+        {
+          "id": "minecraft:item/rabbit_hide",
+          "minecraft": "1.21.1",
+          "sha256": "286b30c43aff496611e206c15a45d127828f909c1f346571162f9656b231acbf"
+        }
+      ],
+      "comparison": "Leather armor UV and rabbit hide guide short fur-lined boots with visible pale cuff",
+      "findings": {
+        "silhouette": "Lower leg UV shows pale ankle cuff and sole",
+        "cluster_structure": "Connected brown lower panels meet lighter fur band",
+        "micro_contrast": "Nearby warm shades model soft toe turns",
+        "light_and_volume": "Front face brighter than rear shadow",
+        "material_continuity": "Brown hide continues beneath pale fur cuff",
+        "edge_variation": "Transparent upper leg defines short footwear cut",
+        "variant_identity": "Pale cuff separates fur boot from straw boot",
+        "vanilla_comparison": "Leather layer one verifies lower leg and sole layout",
+        "folds_and_seams": "Cuff seam and darker sole edge remain distinct",
+        "material_specific_shading": "Soft fur shading contrasts with deeper sole brown"
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/blank.png": {
+      "sha256": "264a61fe7a62cc83622f00bc89f7e0f4775d255c1d3905909c3240deea2d09b4",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/leather_chestplate_overlay",
+          "minecraft": "1.21.1",
+          "sha256": "eec51b2266af48812f347de3b41d10c16205fe602ef0b02efb52af190365edea"
+        }
+      ],
+      "comparison": "Actual vanilla empty overlay provides a comparable transparent technical texture; the 64x32 layer has no visible pixels",
+      "findings": {
+        "silhouette": "No visible silhouette because dye layer is suppressed",
+        "cluster_structure": "No opaque clusters in intentionally empty layer",
+        "micro_contrast": "No RGB contrast in fully transparent pixels",
+        "light_and_volume": "No lighting painted on the hidden dye layer",
+        "material_continuity": "Original colored layer supplies all material continuity",
+        "edge_variation": "All edges remain fully transparent by design",
+        "variant_identity": "Technical blank is not a wearable art variant",
+        "vanilla_comparison": "Vanilla chestplate overlay is likewise completely transparent",
+        "functional_material_cues": "Empty texture prevents double tint on colored armor"
+      }
+    }
+  }
+}
