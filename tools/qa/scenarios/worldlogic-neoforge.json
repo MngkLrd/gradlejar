@@ -1001,6 +1001,17 @@
           "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
         }
       ]
+    },
+    {
+      "id": "rc33-guide-catalog-completeness",
+      "kind": "other",
+      "subject": "All ten bundled reference sections visible without addons, installed-only behavior preserved, biome atlas 58 active entries placed last",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
     }
   ]
 }

@@ -4,8 +4,8 @@
   "order": 10,
   "requires": "hydration",
   "title": {
-    "ru": "Hydration · Вода",
-    "en": "Hydration · Water"
+    "ru": "Гидратация и питьё",
+    "en": "Hydration and drinking"
   },
   "source": "Hydration 0.5.0 candidate",
   "pages": [
@@ -148,6 +148,258 @@
         "en": [
           "Hydration stage thresholds are 70, 50, 25 and 10 game points. Electrolytes range from 0 to 100, balanced at 50.",
           "Salt can reduce or reverse absorbed gain. Contamination is reported to compatible Trauma when present; otherwise fallback fluid loss applies."
+        ]
+      }
+    },
+    {
+      "id": "hud",
+      "title": {
+        "ru": "Шкала жажды",
+        "en": "Thirst HUD"
+      },
+      "models": [
+        "hydration:wooden_cup"
+      ],
+      "body": {
+        "ru": [
+          "Десять капель над шкалой еды: каждая имеет пустое, половинное и полное состояние. Чем меньше заполнение, тем меньше запас гидратации.",
+          "Не путай капли жажды с кровью Trauma или выносливостью Core."
+        ],
+        "en": [
+          "Ten droplets above the food bar, each empty, half or full. Less fill means lower hydration.",
+          "Do not confuse thirst with Trauma blood or Core stamina."
+        ]
+      }
+    },
+    {
+      "id": "item_wooden_cup",
+      "title": {
+        "ru": "Деревянная кружка",
+        "en": "Wooden cup"
+      },
+      "models": [
+        "hydration:wooden_cup"
+      ],
+      "body": {
+        "ru": [
+          "Вместимость 500 мБ. ПКМ по источнику наполняет сосуд; иначе удержание ПКМ позволяет пить порциями по 250 мБ.",
+          "Не предназначен для кипячения.",
+          "С приседанием и вторым сосудом в другой руке можно переливать воду."
+        ],
+        "en": [
+          "Capacity 500 mB. Right-click a source to fill; otherwise hold use to drink 250 mB at a time.",
+          "Not suitable for boiling.",
+          "Sneak-use with another vessel in the offhand transfers water."
+        ]
+      }
+    },
+    {
+      "id": "item_waterskin",
+      "title": {
+        "ru": "Бурдюк",
+        "en": "Waterskin"
+      },
+      "models": [
+        "hydration:waterskin"
+      ],
+      "body": {
+        "ru": [
+          "Вместимость 1500 мБ. ПКМ по источнику наполняет сосуд; иначе удержание ПКМ позволяет пить порциями по 250 мБ.",
+          "Не предназначен для кипячения.",
+          "С приседанием и вторым сосудом в другой руке можно переливать воду."
+        ],
+        "en": [
+          "Capacity 1500 mB. Right-click a source to fill; otherwise hold use to drink 250 mB at a time.",
+          "Not suitable for boiling.",
+          "Sneak-use with another vessel in the offhand transfers water."
+        ]
+      }
+    },
+    {
+      "id": "item_clay_jug",
+      "title": {
+        "ru": "Глиняный кувшин",
+        "en": "Clay jug"
+      },
+      "models": [
+        "hydration:clay_jug"
+      ],
+      "body": {
+        "ru": [
+          "Вместимость 3000 мБ. ПКМ по источнику наполняет сосуд; иначе удержание ПКМ позволяет пить порциями по 250 мБ.",
+          "Термостойкий сосуд подходит для кипячения.",
+          "С приседанием и вторым сосудом в другой руке можно переливать воду."
+        ],
+        "en": [
+          "Capacity 3000 mB. Right-click a source to fill; otherwise hold use to drink 250 mB at a time.",
+          "Heatproof; suitable for boiling.",
+          "Sneak-use with another vessel in the offhand transfers water."
+        ]
+      }
+    },
+    {
+      "id": "item_copper_canteen",
+      "title": {
+        "ru": "Медная фляга",
+        "en": "Copper canteen"
+      },
+      "models": [
+        "hydration:copper_canteen"
+      ],
+      "body": {
+        "ru": [
+          "Вместимость 2000 мБ. ПКМ по источнику наполняет сосуд; иначе удержание ПКМ позволяет пить порциями по 250 мБ.",
+          "Термостойкий сосуд подходит для кипячения.",
+          "С приседанием и вторым сосудом в другой руке можно переливать воду."
+        ],
+        "en": [
+          "Capacity 2000 mB. Right-click a source to fill; otherwise hold use to drink 250 mB at a time.",
+          "Heatproof; suitable for boiling.",
+          "Sneak-use with another vessel in the offhand transfers water."
+        ]
+      }
+    },
+    {
+      "id": "item_charcoal_filter",
+      "title": {
+        "ru": "Угольный фильтр",
+        "en": "Charcoal filter"
+      },
+      "models": [
+        "hydration:charcoal_filter"
+      ],
+      "body": {
+        "ru": [
+          "Во второй руке при обработке сосуда очищает до 3000 мБ; расходуется. В стационарном фильтре даёт 12000 мБ пропускной способности."
+        ],
+        "en": [
+          "Offhand vessel treatment handles up to 3000 mB and consumes one filter. In stationary filter adds 12000 mB throughput."
+        ]
+      }
+    },
+    {
+      "id": "item_copper_condenser",
+      "title": {
+        "ru": "Медный конденсатор",
+        "en": "Copper condenser"
+      },
+      "models": [
+        "hydration:copper_condenser"
+      ],
+      "body": {
+        "ru": [
+          "Во второй руке выбирает дистилляцию при нагреве термостойкого сосуда на костре; выход 70%."
+        ],
+        "en": [
+          "Offhand selects distillation with a heatproof vessel at a lit campfire; 70% yield."
+        ]
+      }
+    },
+    {
+      "id": "item_clay_basin",
+      "title": {
+        "ru": "Глиняный таз",
+        "en": "Clay basin"
+      },
+      "models": [
+        "hydration:clay_basin"
+      ],
+      "body": {
+        "ru": [
+          "3000 мБ; открытая ёмкость, быстрее стареет."
+        ],
+        "en": [
+          "3000 mB; open storage ages faster."
+        ]
+      }
+    },
+    {
+      "id": "item_water_barrel",
+      "title": {
+        "ru": "Бочка для воды",
+        "en": "Water barrel"
+      },
+      "models": [
+        "hydration:water_barrel"
+      ],
+      "body": {
+        "ru": [
+          "16000 мБ; защищённая ёмкость, стареет медленнее."
+        ],
+        "en": [
+          "16000 mB; protected storage ages more slowly."
+        ]
+      }
+    },
+    {
+      "id": "item_rain_collector",
+      "title": {
+        "ru": "Дождесборник",
+        "en": "Rain collector"
+      },
+      "models": [
+        "hydration:rain_collector"
+      ],
+      "body": {
+        "ru": [
+          "8000 мБ; собирает дождь под открытым небом, не снег."
+        ],
+        "en": [
+          "8000 mB; collects rain under open sky, not snow."
+        ]
+      }
+    },
+    {
+      "id": "item_stationary_filter",
+      "title": {
+        "ru": "Стационарный фильтр",
+        "en": "Stationary filter"
+      },
+      "models": [
+        "hydration:stationary_filter"
+      ],
+      "body": {
+        "ru": [
+          "6000 мБ; требует угольный картридж. Максимальный запас пропускной способности 24000 мБ."
+        ],
+        "en": [
+          "6000 mB; requires charcoal filter. Maximum throughput reserve 24000 mB."
+        ]
+      }
+    },
+    {
+      "id": "item_water_intake",
+      "title": {
+        "ru": "Водозабор",
+        "en": "Water intake"
+      },
+      "models": [
+        "hydration:water_intake"
+      ],
+      "body": {
+        "ru": [
+          "1000 мБ; источник должен быть непосредственно над блоком. Не истощает источник."
+        ],
+        "en": [
+          "1000 mB; source directly above the block. Does not deplete source."
+        ]
+      }
+    },
+    {
+      "id": "item_clay_pipe",
+      "title": {
+        "ru": "Глиняная труба",
+        "en": "Clay pipe"
+      },
+      "models": [
+        "hydration:clay_pipe"
+      ],
+      "body": {
+        "ru": [
+          "Направленные вход и выход, до 24 труб на маршрут, только к более низкой ёмкости. Редстоун перекрывает поток."
+        ],
+        "en": [
+          "Directional inlet and outlet; up to 24 pipes per route, lower destination only. Redstone blocks flow."
         ]
       }
     }

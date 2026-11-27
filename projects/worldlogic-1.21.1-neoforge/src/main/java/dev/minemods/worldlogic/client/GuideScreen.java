@@ -31,11 +31,11 @@ public final class GuideScreen extends Screen{
     if(!loaded.containsKey(key)||entry.getKey().getNamespace().equals("worldlogic"))loaded.put(key,c);
    }catch(Exception e){org.slf4j.LoggerFactory.getLogger("WorldLogic").warn("Invalid guide resource {}",entry.getKey(),e);}
   }
-  chapters=GuideBook.visible(loaded.values(),ModList.get()::isLoaded);
+  chapters=GuideBook.catalog(loaded.values(),ModList.get()::isLoaded);
  }
  private GuideBook.Chapter current(){return chapters.get(chapter);}
  private GuideBook.Page article(){return current().pages().get(page);}
- void select(int c,int p){chapter=c;page=p;scroll=0;Minecraft.getInstance().setScreen(this);}
+ void select(int c,int p){chapter=c;page=p;chapterOffset=c;scroll=0;Minecraft.getInstance().setScreen(this);}
  private void changeChapter(int value){chapter=value;page=0;scroll=0;rebuildWidgets();}
  private void changePage(int delta){if(chapters.isEmpty())return;page=Math.max(0,Math.min(current().pages().size()-1,page+delta));scroll=0;rebuildWidgets();}
  @Override protected void init(){
@@ -46,7 +46,7 @@ public final class GuideScreen extends Screen{
   navW=Math.max(78,Math.min(140,panelW/3));contentX=left+navW+12;contentW=panelW-navW-20;
   int bottom=top+panelH;int navRows=Math.max(1,(panelH-122)/22);
   chapterOffset=Math.max(0,Math.min(chapterOffset,Math.max(0,chapters.size()-navRows)));
-  for(int i=0;i<navRows&&chapterOffset+i<chapters.size();i++){int k=chapterOffset+i;button((k==chapter?"> ":"")+chapters.get(k).title().get(russian),left+5,top+30+i*22,navW-9,()->changeChapter(k));}
+  for(int i=0;i<navRows&&chapterOffset+i<chapters.size();i++){int k=chapterOffset+i;button((k==chapter?"> ":"")+(ModList.get().isLoaded(chapters.get(k).requires())?"":"* ")+chapters.get(k).title().get(russian),left+5,top+30+i*22,navW-9,()->changeChapter(k));}
   button(label("Указатель","Index"),left+5,bottom-88,navW-9,()->Minecraft.getInstance().setScreen(new GuideIndexScreen(this,chapters,russian)));
   button(label("Рецепты","Recipes"),left+5,bottom-66,navW-9,()->Minecraft.getInstance().setScreen(new GuideRecipesScreen(this,russian)));
   int half=(navW-11)/2;button("^",left+5,bottom-44,half,()->{chapterOffset=Math.max(0,chapterOffset-navRows);rebuildWidgets();});button("v",left+7+half,bottom-44,half,()->{chapterOffset=Math.min(Math.max(0,chapters.size()-navRows),chapterOffset+navRows);rebuildWidgets();});
@@ -79,7 +79,8 @@ public final class GuideScreen extends Screen{
   g.drawString(font,label("Полевой справочник","Field guide"),left+6,top+10,0xffeadbb7,false);
   if(!chapters.isEmpty()){
    g.drawString(font,font.plainSubstrByWidth(article().title().get(russian),contentW),contentX,top+10,0xff33271e,false);
-   g.drawString(font,font.plainSubstrByWidth(current().source(),contentW),contentX,top+24,0xff75624c,false);
+   String source=ModList.get().isLoaded(current().requires())?current().source():label("Требуется аддон: ","Requires addon: ")+current().requires();
+   g.drawString(font,font.plainSubstrByWidth(source,contentW),contentX,top+24,0xff75624c,false);
    for(var p:previews){
     g.fill(p.x,p.y,p.x+p.size,p.y+p.size,0xffc7ad82);g.renderOutline(p.x,p.y,p.size,p.size,0xffa38b67);
     g.pose().pushPose();g.pose().translate(p.x+2,p.y+2,0);float scale=(p.size-4)/16f;g.pose().scale(scale,scale,1);g.renderItem(p.stack,0,0);g.pose().popPose();

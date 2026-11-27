@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 /** Data-only guide contract. Shared with server QA; no client or addon class references. */
 public final class GuideBook{
  private GuideBook(){}
- public static final List<String> BUILTIN=List.of("core","hydration","thermal","trauma","terrarian","treechopper");
+ public static final List<String> BUILTIN=List.of("core","water","hydration","weather","thermal","trauma","treechopper","terrarian","geology","biomes");
  public record Local(String ru,String en){public String get(boolean russian){return russian?ru:en;}}
  public record Text(List<String> ru,List<String> en){public List<String> get(boolean russian){return russian?ru:en;}}
  public record Page(String id,Local title,List<ResourceLocation> models,Text body,List<ResourceLocation> icons){}
@@ -34,6 +34,10 @@ public final class GuideBook{
  public static List<Chapter> visible(Collection<Chapter> chapters,Predicate<String> installed){
   return chapters.stream().filter(c->installed.test(c.requires())).sorted(Comparator.comparingInt(Chapter::order).thenComparing(Chapter::id)).toList();
  }
+ /** Built-in reference articles remain readable even without their optional addon. */
+ public static List<Chapter> catalog(Collection<Chapter> chapters,Predicate<String> installed){
+  return chapters.stream().filter(c->BUILTIN.contains(c.id())||installed.test(c.requires())).sorted(Comparator.comparingInt(Chapter::order).thenComparing(Chapter::id)).toList();
+ }
  public record Entry(int chapter,int page){}
  public static List<Entry> search(List<Chapter> chapters,String query,boolean ru){
   var words=Arrays.stream(query.toLowerCase(Locale.ROOT).strip().split("\\s+")).filter(w->!w.isEmpty()).toList();var out=new ArrayList<Entry>();
@@ -49,12 +53,14 @@ public final class GuideBook{
    if(c.pages().stream().anyMatch(page->page.models().isEmpty()))throw new IllegalStateException("missing illustrations "+name);
    all.add(c);
   }}
-  if(visible(all,"worldlogic"::equals).size()!=1||visible(all,v->true).size()!=6||visible(all,v->false).size()!=0)throw new IllegalStateException("addon visibility");
+  if(visible(all,"worldlogic"::equals).size()!=5||visible(all,v->true).size()!=10||visible(all,v->false).size()!=0||catalog(all,v->false).size()!=10||!catalog(all,v->false).getLast().id().equals("biomes"))throw new IllegalStateException("addon visibility");
   for(var c:all)for(var page:c.pages())for(var model:page.models())if(model.getNamespace().equals("minecraft")||model.getNamespace().equals("worldlogic"))if(!net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(model))throw new IllegalStateException("missing core guide item "+model);
   var external=read(new StringReader("{\"schema\":1,\"id\":\"future\",\"requires\":\"futuremod\",\"order\":90,\"source\":\"fixture\",\"title\":{\"ru\":\"Дополнение\",\"en\":\"Addon\"},\"pages\":[{\"id\":\"intro\",\"title\":{\"ru\":\"Начало\",\"en\":\"Intro\"},\"models\":[\"minecraft:book\"],\"body\":{\"ru\":[\"Тест\"],\"en\":[\"Test\"]}}]}"));
   if(visible(List.of(external),"futuremod"::equals).size()!=1||!visible(List.of(external),"worldlogic"::equals).isEmpty())throw new IllegalStateException("external chapter filtering");
   if(search(all,"",true).size()!=all.stream().mapToInt(c->c.pages().size()).sum()||search(all,"zz_nonexistent_guide",true).size()!=0||search(all,"перелом",true).isEmpty()||search(all,"fracture",false).isEmpty())throw new IllegalStateException("guide search");
   var trauma=all.stream().filter(c->c.id().equals("trauma")).findFirst().orElseThrow();if(trauma.pages().size()<20||trauma.pages().stream().flatMap(p->p.icons().stream()).distinct().count()<6)throw new IllegalStateException("medical article and icon inventory");
+  for(String name:List.of("water","hydration","weather","thermal","treechopper","geology","biomes"))if(catalog(all,v->false).stream().noneMatch(c->c.id().equals(name)))throw new IllegalStateException("missing guide category "+name);
+  var atlas=all.stream().filter(c->c.id().equals("biomes")).findFirst().orElseThrow();if(atlas.pages().size()!=58)throw new IllegalStateException("active biome inventory");
   boolean rejected=false;try{read(new StringReader("{\"schema\":0}"));}catch(RuntimeException e){rejected=true;}if(!rejected)throw new IllegalStateException("bad schema accepted");
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_GUIDE chapters={} pages={} models={}",all.size(),all.stream().mapToInt(c->c.pages().size()).sum(),all.stream().flatMap(c->c.pages().stream()).mapToInt(v->v.models().size()).sum());
  }

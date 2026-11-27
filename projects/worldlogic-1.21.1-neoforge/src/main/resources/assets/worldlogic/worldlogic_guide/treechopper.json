@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "id": "treechopper",
-  "order": 50,
+  "order": 35,
   "requires": "wl_treechopper",
   "title": {
-    "ru": "TreeChopper · Рубка",
-    "en": "TreeChopper · Felling"
+    "ru": "Рубка деревьев",
+    "en": "Tree chopping"
   },
   "source": "TreeChopper 0.5.4",
   "pages": [
@@ -74,6 +74,27 @@
         "en": [
           "Holding attack retains the notch target. Server validates reach, aim, tool and mode; valid strikes alone trigger swings.",
           "Three-point cutting of a persistent fallen trunk is not implemented."
+        ]
+      }
+    },
+    {
+      "id": "notches",
+      "title": {
+        "ru": "Зарубки и падение",
+        "en": "Notches and falling"
+      },
+      "models": [
+        "minecraft:stone_axe",
+        "minecraft:oak_log"
+      ],
+      "body": {
+        "ru": [
+          "Распознанное дерево получает четыре стадии зарубки. ЛКМ топором с нужной стороны изменяет зарубку; противоположная сторона может ускорить рубку.",
+          "После среза остаётся пень, верхняя часть падает вокруг точки опоры. Верхние брёвна становятся предметами; постоянный лежащий ствол пока не реализован."
+        ],
+        "en": [
+          "Recognized trees have four notch stages. Axe strikes advance the notch; the opposite side may speed felling.",
+          "A stump remains; the upper tree pivots and falls. Upper logs drop as items; persistent fallen trunks are not implemented."
         ]
       }
     }
