@@ -1,11 +1,18 @@
 package dev.minemods.worldlogic;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.LongAdder;
 import net.minecraft.world.level.levelgen.DensityFunction.NoiseHolder;
 /** Seeded macro terrain and bounded D8 drainage. No world access or chunk loads. */
 public final class GeoModel {
  static final int STEP=16,CORE=48,HALO=24,N=CORE+HALO*2+1,BLEND=8;
  private final NoiseHolder continental,tectonic,detail,moisture;
- private final LinkedHashMap<Long,Tile> tiles=new LinkedHashMap<>(32,.75f,true);
+ private static final int CACHE_LIMIT=96;
+ private final ConcurrentHashMap<Long,Tile> tiles=new ConcurrentHashMap<>();
+ private final Object evictionLock=new Object();
+ private final LongAdder builds=new LongAdder(),buildNanos=new LongAdder();
+ private record Sample(int x,int z,Surface surface){}
+ private final ThreadLocal<Sample> lastSample=new ThreadLocal<>();
  private record Tile(double[] height,double[] flow){}
  private record Surface(double height,double flow){}
  GeoModel(NoiseHolder c,NoiseHolder t,NoiseHolder d,NoiseHolder m){continental=c;tectonic=t;detail=d;moisture=m;}
@@ -53,9 +60,17 @@ public final class GeoModel {
   for(int i=0;i<h.length;i++)h[i]-=incision(h[i],flow[i]);
   return new Tile(h,flow);
  }
- private synchronized Tile tile(int tx,int tz){
-  long key=((long)tx<<32)^(tz&0xffffffffL);Tile a=tiles.get(key);if(a!=null)return a;
-  a=build(tx,tz);if(tiles.size()>=32)tiles.remove(tiles.keySet().iterator().next());tiles.put(key,a);return a;
+ private Tile tile(int tx,int tz){
+  long key=((long)tx<<32)^(tz&0xffffffffL);Tile hit=tiles.get(key);if(hit!=null)return hit;
+  // Build different geographic regions concurrently, without holding a global model lock.
+  Tile result=tiles.computeIfAbsent(key,k->{long start=System.nanoTime();Tile made=build(tx,tz);
+   builds.increment();buildNanos.add(System.nanoTime()-start);return made;});
+  // Immutable tiles can safely remain in use after eviction. Eviction never changes terrain.
+  if(tiles.size()>CACHE_LIMIT)synchronized(evictionLock){
+   var it=tiles.entrySet().iterator();
+   while(tiles.size()>CACHE_LIMIT&&it.hasNext()){var entry=it.next();if(entry.getKey()!=key)tiles.remove(entry.getKey(),entry.getValue());}
+  }
+  return result;
  }
  private static double interpolate(double[] a,double x,double z){
   int ix=(int)Math.floor(x),iz=(int)Math.floor(z);double u=x-ix,v=z-iz;
@@ -78,7 +93,10 @@ public final class GeoModel {
   return mix(a,b,wz);
  }
  double value(String field,int x,int z){
-  Surface s=surface(x,z);double h=s.height;
+  Sample previous=lastSample.get();
+  Surface s;if(previous!=null&&previous.x==x&&previous.z==z)s=previous.surface;
+  else{s=surface(x,z);lastSample.set(new Sample(x,z,s));}
+  double h=s.height;
   return switch(field){
    case "offset" -> (h-128)/128;
    case "continents" -> h<63?clamp(-.18-(63-h)*.014,-1.15,-.18):clamp(-.10+(h-63)*.013,-.10,.85);

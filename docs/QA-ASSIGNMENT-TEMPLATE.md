@@ -1,5 +1,7 @@
 # Machine-readable mod QA assignment
 
+Scope tests to the active Minecraft/loader pair during routine development. Only expand the assignment to multiple targets when explicitly requested or during authorized porting. Preserve existing complete-release requirements. See [Development scope](../AGENTS.md#development-scope--product-first-ports-at-the-end).
+
 The assignment is the executable test suite consumed by GitHub Actions, not a prose document for a human or another chat agent. No separate Markdown or natural-language technical specification is required.
 
 ## Required executable files
@@ -21,3 +23,25 @@ If coverage mappings or exceptions need extra structure, keep them in an optiona
 Commit scenarios and their profile references, and use the existing Minecraft Mod Build Hub on GitHub Actions. Inspect actual QA reports and logs for every declared target and exact production JAR SHA-256. Fix failures within scope and rerun. Record unsupported or unexecuted required checks explicitly; do not claim they passed. Existing release gates and client approval requirements remain unchanged. A server assertion is not evidence of GUI/rendering correctness. No human operation of the test bot is required.
 
 Keep shared infrastructure stable. A missing backend or action is a limitation to report, not permission to bypass the gate or silently invent a supported action. Only make shared tooling changes under the repository's existing scope rules.
+
+## Coverage array (P9.0)
+
+For all enrolled server profiles, add the following structure at the top level of the existing executable server scenario, next to its `schema` and `steps`. Do not create a prose assignment. Example structure (replace with actual mechanics and matching named assertions):
+
+```json
+{
+  "coverage": [
+    {
+      "id": "glass-break",
+      "kind": "mechanic",
+      "subject": "Arrow breaks full glass",
+      "checks": [
+        {"backend": "server", "name": "Arrow breaks full glass"},
+        {"backend": "server", "name": "Arrow does not break stone"}
+      ]
+    }
+  ]
+}
+```
+
+Allowed kinds: mechanic, item, block, entity, recipe, effect, menu, other. Optional `targets` lists applicable loader-mcVERSION IDs. Every active reference must match exactly one named assertion with `assertion: true` and a nonempty expectation in the actual active server/player scenario. A player reference requires an enrolled player scenario. The existing runner executes the steps, then the coverage gate maps actual independent assertion evidence to PASS/FAIL/NOT_RUN. Missing or ambiguous references and incomplete declared coverage fail the gate. Supported protocol targets require a player scenario when using coverage. The GitHub job summary shows counts; the JSON report contains individual entries. No automatic discovery of all Java registrations or semantic completeness is claimed. Developers must still reconcile the inventory with actual content. Existing enrolled profiles have declarations. Legacy profiles retain their prior policy; no new legacy exemptions.

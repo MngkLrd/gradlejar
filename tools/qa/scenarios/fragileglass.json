@@ -138,5 +138,115 @@
       "assertion": true,
       "name": "Egg breaks colored glass pane"
     }
+  ],
+  "coverage": [
+    {
+      "id": "glass-1",
+      "kind": "mechanic",
+      "subject": "Arrow breaks full glass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Arrow breaks full glass"
+        }
+      ]
+    },
+    {
+      "id": "glass-2",
+      "kind": "mechanic",
+      "subject": "Snowball breaks pane",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Snowball breaks pane"
+        }
+      ]
+    },
+    {
+      "id": "glass-3",
+      "kind": "mechanic",
+      "subject": "Hard landing breaks floor",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hard landing breaks floor"
+        }
+      ]
+    },
+    {
+      "id": "glass-4",
+      "kind": "mechanic",
+      "subject": "Colored glass breaks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Colored glass breaks"
+        }
+      ]
+    },
+    {
+      "id": "glass-5",
+      "kind": "mechanic",
+      "subject": "Tinted glass breaks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Tinted glass breaks"
+        }
+      ]
+    },
+    {
+      "id": "glass-6",
+      "kind": "mechanic",
+      "subject": "Snowball does not break full glass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Snowball does not break full glass"
+        }
+      ]
+    },
+    {
+      "id": "glass-7",
+      "kind": "mechanic",
+      "subject": "Arrow does not break stone",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Arrow does not break stone"
+        }
+      ]
+    },
+    {
+      "id": "glass-8",
+      "kind": "mechanic",
+      "subject": "Egg breaks colored glass pane",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Egg breaks colored glass pane"
+        }
+      ]
+    },
+    {
+      "id": "instant-mining",
+      "kind": "mechanic",
+      "subject": "Glass instamine and stone negative control",
+      "targets": [
+        "fabric-mc1.20.1",
+        "fabric-mc1.21.1",
+        "fabric-mc1.21.4"
+      ],
+      "checks": [
+        {
+          "backend": "player",
+          "name": "Glass breaks from single START_DESTROY_BLOCK"
+        },
+        {
+          "backend": "player",
+          "name": "Stone does not instamine"
+        }
+      ]
+    }
   ]
 }

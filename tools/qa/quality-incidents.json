@@ -6,10 +6,10 @@
       "projects": [
         "projects/fragileglass-fabric-1.21.1"
       ],
-      "status": "open",
+      "status": "resolved",
       "severity": "gameplay",
-      "evidence": "45750325141 / 139676277262",
-      "description": "Survival START_DESTROY_BLOCK did not instantly break glass; cause not proven."
+      "evidence": "45956448945 / 140363970157",
+      "description": "Regression assertion passed with the exact production Fabric 1.21.1 JAR."
     },
     {
       "id": "QA-CLIENT-GRAPHICS",
@@ -18,6 +18,16 @@
       "severity": "infrastructure",
       "evidence": "45748688125",
       "description": "Software display client cannot initialize required graphics backend; not evidence of a gameplay bug."
+    },
+    {
+      "id": "QA-1214-LEVER",
+      "projects": [
+        "projects/fragileglass-fabric-1.21.4"
+      ],
+      "status": "resolved",
+      "severity": "infrastructure",
+      "evidence": "45956448923 / 140363924081; 45956448945 / 140363970200",
+      "description": "Independent unmodded lever and production Fragile Glass network regressions passed after 1.21.4 player-loaded acknowledgment."
     }
   ]
 }

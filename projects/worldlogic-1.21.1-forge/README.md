@@ -1,6 +1,6 @@
-# World Logic 1.0.0-rc15
+# World Logic 1.0.0-rc18
 Minecraft 1.21.1 / Forge 52.1.0+ / Java 21 / Gradle 8.10.2 / official mappings.
-Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc15.jar.
+Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc18.jar.
 Install on both server and clients. No external dependencies. Burning Arrows excluded.
 
 Config: config/worldlogic.properties. Mods > World Logic > Config (local world or main menu).
@@ -56,3 +56,5 @@ RC16: optional World Logic: Realistic Terrain world preset for NEW worlds. Uses 
 RC17: separate Earthlike Geography preset (worldlogic:earthlike), preserving RC16 worldlogic:realistic unchanged to avoid terrain changes in existing saves. Custom seeded density fields: broad continental shelf, inland relief, narrow warped uplift belts, deterministic D8 flow accumulation over 16-block cells with 24-cell halos and blended tile boundaries, flow-dependent incision, approximate latitudinal temperature and west-wind rain shadow. Bounded shared tile caches; no chunk access from density code. Vanilla structures, surface rules, caves, aquifers, ore veins, height range and Nether/End retained. Drainage is regional, sinks are retained, and above-sea river valleys are not automatically filled with water. No full tectonic simulation or spherical planet. CI checks D8 flow conservation and 81 actual generator height samples for four independent seed states; one actual server world, other seeds sampled through RandomState. Use fresh worlds for Earthlike. Existing RC16 worlds retain legacy terrain. Visual verification pending.
 
 RC17 follow-up: CI verifies drainage conservation in two distinct watersheds, finite and continuous regional height samples at tile seams, aggregate land/ocean coverage over four independent seed states, and actual generated spawn chunk heights for the running seed. Reports per-seed lowland count and maximum sampled boundary delta. These checks do not prove global river connectivity or visual quality.
+
+RC18 performance candidate: preserve RC17 geography math and old registry keys; hide RC16 from normal preset tag. Concurrent bounded tile cache and exact last-coordinate reuse; vanilla spawn climate target prefers inland land and accepts valleys. Existing saves retain their spawn. Production-only startup regression on Forge 52.1.0 and 52.1.20, actual dry spawn-column assertion, timeout thread dumps. No claim of graphical client verification or a measured speedup until evidence is available. The project remains on its existing legacy QA profile.

@@ -8,6 +8,7 @@ from .static import validate_jar
 from .server import run
 from .crash import analyze
 from .assets import inspect as inspect_assets
+from . import coverage
 
 def outputs(report):
     if out:=os.getenv("GITHUB_OUTPUT"):
@@ -24,6 +25,8 @@ def main():
     ap.add_argument("--failure-log")
     args=ap.parse_args()
     report={"schema":1,"project":args.project,"status":"failed","eligible":False,"qa_level":0,"checks":[]}
+    plan=None
+    coverage_prepared=False
     try:
         p=profile(args.project)
         report=report_for(p)
@@ -50,12 +53,17 @@ def main():
         if q["mode"]=="client":
             report.update(status="client-candidate-awaiting-validation",eligible=False)
             return 2
+        report["coverage"]={"status":"invalid-or-not-prepared"}
+        plan=coverage.prepare(p,q)
+        coverage_prepared=True
         after=None
         if q.get("player_scenario"):
             from .player_suite import callback
             after=callback(p,q)
         run(p,q,jar,args.work,report,after_suites=after)
         if after is not None:require(report.get("virtual_player",{}).get("status")=="passed","Required protocol player scenario did not pass")
+        report["coverage"]=coverage.evaluate(plan,report)
+        require(plan is None or report["coverage"]["status"]=="declared-pass","Declared feature coverage incomplete")
         require(report["qa_level"]==4,"Gameplay runtime not verified")
         report.update(status="passed",eligible=True)
         return 0
@@ -69,6 +77,16 @@ def main():
         print("QA FAILED:",report["error"],file=sys.stderr)
         return 1
     finally:
+        if coverage_prepared:
+            report["coverage"]=coverage.evaluate(plan,report)
+        if summary:=os.getenv("GITHUB_STEP_SUMMARY"):
+            c=report.get("coverage",{})
+            counts=c.get("counts",{})
+            with open(summary,"a",encoding="utf-8") as f:
+                f.write("\n### Gameplay QA evidence\n\n")
+                f.write("Status: **"+report["status"]+"** | QA level: "+str(report["qa_level"])+"\n\n")
+                f.write("Declared coverage: "+c.get("status","not applicable or not run")+"; PASS "+str(counts.get("PASS",0))+", FAIL "+str(counts.get("FAIL",0))+", NOT_RUN "+str(counts.get("NOT_RUN",0))+".\n\n")
+                f.write("Full assertion evidence is in the QA report; declared coverage is not semantic completeness.\n")
         write_json(args.report,report)
         outputs(report)
         print("QA:",report["project"],report["status"],"level",report["qa_level"],flush=True)

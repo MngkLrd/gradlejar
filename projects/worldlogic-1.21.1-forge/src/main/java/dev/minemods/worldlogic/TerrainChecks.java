@@ -41,6 +41,10 @@ public final class TerrainChecks {
   require(totalLand>0&&totalSea>0,"multi-seed land/ocean coverage");
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_GEOGRAPHY_AGGREGATE samples={} land={} ocean={} lowland={}",totalLand+totalSea,totalLand,totalSea,totalPlain);
   BlockPos spawn=l.getSharedSpawnPos();int loaded=0,minReal=320,maxReal=-64;
+  int surface=l.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,spawn.getX(),spawn.getZ());
+  BlockPos ground=new BlockPos(spawn.getX(),surface-1,spawn.getZ());
+  require(surface>=63&&l.getFluidState(ground).isEmpty(),"initial spawn column underwater");
+  org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_SPAWN_DRY x={} z={} surface={}",spawn.getX(),spawn.getZ(),surface);
   for(int dx=-16;dx<=16;dx+=8)for(int dz=-16;dz<=16;dz+=8){
    BlockPos p=spawn.offset(dx,0,dz);if(!l.hasChunkAt(p))continue;
    int h=l.getHeight(Heightmap.Types.OCEAN_FLOOR,p.getX(),p.getZ());require(h>-64&&h<=320,"invalid generated chunk surface");

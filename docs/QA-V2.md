@@ -1,5 +1,7 @@
 # MineMods QA v2: contributor guide
 
+**Development scope:** Follow [AGENTS.md — Development scope](../AGENTS.md#development-scope--product-first-ports-at-the-end). Routine product iterations use the established Minecraft/loader pair only. The eleven-target matrix is for explicitly requested porting or release work, not an automatic requirement for every update. Preserve existing cohort and evidence-invalidation rules.
+
 ## P0 — compatibility and release policy
 - `tools/qa/compatibility.json` centralizes the eleven standard targets, runtime Java, pinned baseline loaders, Gradle and separate resource/data pack formats. For newer releases verify Mojang/loader metadata and update the registry intentionally. It is a reference, not an automatic dependency updater. Each project's real Gradle build still controls compile dependencies.
 - `AGENTS.md` is the standard for all contributors. A new profile in the common Build Hub must define QA; missing QA is a failure. The explicit legacy snapshot prevents suddenly blocking existing work. Existing independent workflows are not yet migrated; their releases are not QA-v2 certified.
@@ -85,3 +87,7 @@ Extended pilot: Fabric 1.21.4 has a separate registry baseline (Java 21, resourc
 ## P8.1 — player action library pilot
 
 See [Bot actions](BOT-ACTIONS.md). A separate no-mod Fabric control workflow runs on bot changes, with actual server assertions for movement, crafting, placement, mining, combat and interaction. It does not publish JARs. Existing network scenarios retain their assertions; the lever test now uses an unobstructed fixture and an explicit sequenced use-item-on packet. Actual per-version CI results determine support.
+
+## P8/P9 — validated bot and declared coverage
+
+Bot control and production Fragile Glass network checks passed on Fabric 1.20.1, 1.21.1 and 1.21.4 in runs 45956448923 and 45956448945. Three older Fragile Glass Forge/NeoForge profiles are enrolled as a separate server-only cohort. All enrolled server profiles require machine-readable declared coverage. Initial Fragile Glass and Natural Buoyancy mappings cover existing assertions, not all mechanics. The gate checks named assertions before runtime and execution evidence before eligibility. No frozen exemption is needed for the currently enrolled cohort; existing legacy exemptions remain. Registry reconciliation and modded client actions are not implied. No blanket migration of published mods.
