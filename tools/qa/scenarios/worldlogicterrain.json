@@ -1208,13 +1208,7 @@
     {
       "name": "Mixed meadow and frost patch mechanics",
       "command": "worldlogicterrain patch_check",
-      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 12 climate-aware forage populations verified; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion",
-      "assertion": true
-    },
-    {
-      "name": "Individual agricultural soil exhaustion",
-      "command": "worldlogicterrain soil_check",
-      "expect": "Soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells",
+      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 12 climate-aware forage populations verified; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells",
       "assertion": true
     }
   ],
@@ -4763,7 +4757,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Individual agricultural soil exhaustion"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -4774,7 +4768,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Individual agricultural soil exhaustion"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -4785,7 +4779,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Individual agricultural soil exhaustion"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     }

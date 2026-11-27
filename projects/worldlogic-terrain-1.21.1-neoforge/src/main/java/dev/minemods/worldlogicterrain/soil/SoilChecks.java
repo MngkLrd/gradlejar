@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
-final class SoilChecks {
+public final class SoilChecks {
     static void require(boolean value,String why){if(!value)throw new IllegalStateException(why);}
     static void register(RegisterCommandsEvent e){
         e.getDispatcher().register(Commands.literal("worldlogicterrain").requires(s->s.hasPermission(2)).then(Commands.literal("soil_check").executes(c->{
@@ -21,7 +21,7 @@ final class SoilChecks {
             catch(IllegalStateException ex){c.getSource().sendFailure(Component.literal(ex.getMessage()));return 0;}
         })));
     }
-    static void verify(ServerLevel l){
+    public static void verify(ServerLevel l){
         var soil=new BlockPos(5,245,5);var ground=soil.east(3);var other=soil.east(5);var data=SoilExhaustion.get(l);
         var wheat=Blocks.WHEAT.defaultBlockState();var ripe=((CropBlock)Blocks.WHEAT).getStateForAge(7);
         var melon=Blocks.MELON.defaultBlockState();

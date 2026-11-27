@@ -133,7 +133,12 @@ public final class SoilExhaustion extends SavedData {
             get(l).plant(l,pos.below(),before,now(l));
         if(before.getBlock() instanceof StemBlock&&current.getBlock() instanceof AttachedStemBlock){
             var fruit=pos.relative(current.getValue(BlockStateProperties.HORIZONTAL_FACING));
-            if(l.hasChunkAt(fruit)&&melon(l.getBlockState(fruit)))get(l).plant(l,fruit.below(),l.getBlockState(fruit),now(l));
+            if(l.hasChunkAt(fruit)&&melon(l.getBlockState(fruit))){
+                if(!allowGrowth(l,fruit.below(),l.random)){
+                    // This is the newly created fruit of this exact stem tick, not an existing player block.
+                    l.setBlock(fruit,Blocks.AIR.defaultBlockState(),Block.UPDATE_ALL);
+                }else get(l).plant(l,fruit.below(),l.getBlockState(fruit),now(l));
+            }
         }
     }
     private static void drops(BlockDropsEvent e){
