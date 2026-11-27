@@ -1,0 +1,243 @@
+{
+  "schema": 1,
+  "assets": {
+    "projects/hydration-1.21.1-neoforge/src/main/resources/assets/hydration/textures/item/wooden_cup.png": {
+      "sha256": "eca2deb974e0363dc234f81a5e83de8acf9f144c385dd854e444dfe6818d07bd",
+      "verdict": "PASS",
+      "material_profile": "vessel",
+      "references": [
+        {
+          "id": "minecraft:item/bowl",
+          "minecraft": "1.21.1",
+          "sha256": "4510b6adbf2e162d5af6330e7faa3f162b82b89cacfd36ec5b90f3d29e0513e5"
+        },
+        {
+          "id": "minecraft:block/oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "3a33db67a3ba30537d0890a5cb37c8087ca336be89cbb1393a71c23224e361a8"
+        },
+        {
+          "id": "minecraft:item/bucket",
+          "minecraft": "1.21.1",
+          "sha256": "3f14980d6d2dea8d547e44104a55a51d62bee71bd45f16068113b279b3d2d042"
+        }
+      ],
+      "comparison": "Same-scale 1x and 8x: bowl establishes dark cavity, bucket the upper rim and lower taper, oak planks warm neighboring timber tones; cup adds carved grain and a loop handle.",
+      "findings": {
+        "silhouette": "Wide elliptical mouth and slightly tapered upright wooden body with a right-side loop and open gap.",
+        "cluster_structure": "Light connected lip arc, separate dark cavity cluster and interrupted vertical brown wall clusters.",
+        "micro_contrast": "Small ochre patches alternate with deeper grain grooves without dissolving the wall into noise.",
+        "light_and_volume": "Top-left lip catches light; recessed interior and right-facing wall turn into darker brown; underside is shaded.",
+        "material_continuity": "Warm tan wood runs from rim through front grain; handle continues the timber palette at lower brightness.",
+        "edge_variation": "Stepped rim narrows toward foot, while handle has deliberate negative-space cutout.",
+        "variant_identity": "Tall open mug and loop handle distinguish it from closed leather and ceramic containers.",
+        "vanilla_comparison": "Bucket rim and bowl opening establish recess depth; oak plank shades calibrate restrained grain detail.",
+        "construction": "Thick carved lip surrounds an open cavity; loop meets wall near lip and lower body.",
+        "surface_turn": "Lighter front wall turns into darker side panel below handle and dark tapered lower lip.",
+        "material_specific_shading": "Soft grain changes and interrupted warm strokes differ from hard copper glints and matte clay."
+      }
+    },
+    "projects/hydration-1.21.1-neoforge/src/main/resources/assets/hydration/textures/item/waterskin.png": {
+      "sha256": "959182d59b849c816a02477b3db6d81257c3988f02b4edc031f2ded18097a9c6",
+      "verdict": "PASS",
+      "material_profile": "vessel",
+      "references": [
+        {
+          "id": "minecraft:item/bundle",
+          "minecraft": "1.21.1",
+          "sha256": "357b6eb5f03aceb375157a3bc371b99f92c3bc743e87c538ddccaebc28460315"
+        },
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
+        },
+        {
+          "id": "minecraft:item/glass_bottle",
+          "minecraft": "1.21.1",
+          "sha256": "6a09a39bb6c41bc92bd5eca1f51caf5b582a85f68206b164476c8e14a4669416"
+        }
+      ],
+      "comparison": "Same-scale 1x and 8x: bundle supplies gathered fabric and accent bands, leather warm folds, bottle closure proportions; bag has an asymmetrical sloping shoulder and stitched gusset.",
+      "findings": {
+        "silhouette": "Sloping soft-sided leather pouch widens to lower left with raised narrow stopper at upper right.",
+        "cluster_structure": "Broad warm shoulder folds meet smaller tapered amber clusters; darker right gusset remains separate.",
+        "micro_contrast": "Short light stitches punctuate brown gusset at intervals; stopper has separate cork tones.",
+        "light_and_volume": "Soft ochre upper-left highlight breaks around fold and transitions into shaded lower and right panels.",
+        "material_continuity": "Leather shades connect across bag body while cork and seam accents remain localized to construction.",
+        "edge_variation": "Diagonal shoulder changes widths and the bottom settles into an irregular rounded pouch.",
+        "variant_identity": "Offset neck, slumped body and stitched seam distinguish it from rigid copper and handled clay.",
+        "vanilla_comparison": "Bundle shoulder and leather fold relationships are echoed; bottle keeps closure legible at native size.",
+        "construction": "Tied neck below small stopper and sewn side gusset explain how pouch is sealed and joined.",
+        "surface_turn": "Inflated broad panel narrows into right edge seam and turns into dark bottom.",
+        "material_specific_shading": "Soft worn folds and short seam details replace a metal-like continuous bright reflection."
+      }
+    },
+    "projects/hydration-1.21.1-neoforge/src/main/resources/assets/hydration/textures/item/clay_jug.png": {
+      "sha256": "3a24da08dee86261ff794be3b665f5fef531f0cf4c47a68c23aa99d1d16d3e6d",
+      "verdict": "PASS",
+      "material_profile": "vessel",
+      "references": [
+        {
+          "id": "minecraft:item/flower_pot",
+          "minecraft": "1.21.1",
+          "sha256": "0b6e2be923c5d1fdd29fed01f53aa3bcda1248859ff713dc0b94dc09f9b9529f"
+        },
+        {
+          "id": "minecraft:item/brick",
+          "minecraft": "1.21.1",
+          "sha256": "0c052c23230ff95ec48959b3ee23e88d9b95b04fd4f9b3429da6a585e6e95c81"
+        },
+        {
+          "id": "minecraft:item/glass_bottle",
+          "minecraft": "1.21.1",
+          "sha256": "6a09a39bb6c41bc92bd5eca1f51caf5b582a85f68206b164476c8e14a4669416"
+        }
+      ],
+      "comparison": "Same-scale 1x and 8x: flower pot supplies dark terracotta opening and thick rim, brick fired-clay palette, bottle narrow neck; jug adds an asymmetric belly and visible handle.",
+      "findings": {
+        "silhouette": "Flared neck above a rounded belly and raised right ear handle makes jug recognizable.",
+        "cluster_structure": "Compact rim cluster caps neck; adjacent clay tones form broad left shoulder and irregular belly planes.",
+        "micro_contrast": "Warm reddish patches on lower belly suggest uneven fired clay without random speckles.",
+        "light_and_volume": "Upper-left shoulder is light; neck under rim, right belly and underside progressively darker.",
+        "material_continuity": "Rim, neck, handle and belly remain within coherent muted terracotta ramp.",
+        "edge_variation": "Neck tapers into stepped shoulder and handle retains narrow transparent opening separate from body.",
+        "variant_identity": "Open flared lip, ceramic shoulder and loop handle separate jug from sealed canteen and soft bag.",
+        "vanilla_comparison": "Flower pot supplies recessed rim contrast; brick supplies local clay shade changes rather than metallic streaks.",
+        "construction": "Thick lip surrounds dark mouth; neck, attached handle, rounded body and shaded foot form vessel.",
+        "surface_turn": "Matte adjoining belly clusters expand below shoulder and narrow into shaded right curve and foot.",
+        "material_specific_shading": "Muted clay hues and broad uneven matte patches suggest kiln-fired ceramic without polished specular band."
+      }
+    },
+    "projects/hydration-1.21.1-neoforge/src/main/resources/assets/hydration/textures/item/copper_canteen.png": {
+      "sha256": "f357b7ec1ec186fd8f2bf680e76c2465d9ae5ac54d55122209fcebaec809851e",
+      "verdict": "PASS",
+      "material_profile": "vessel",
+      "references": [
+        {
+          "id": "minecraft:item/copper_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "ebccaba00d1623ef8acce3768e104bf54c8ee157d92ba7c969d7100830414875"
+        },
+        {
+          "id": "minecraft:item/honey_bottle",
+          "minecraft": "1.21.1",
+          "sha256": "c41e02d9398446543c77a4a50678715d6182004e8f170c6b5c12d84578fe5d98"
+        },
+        {
+          "id": "minecraft:block/oxidized_copper",
+          "minecraft": "1.21.1",
+          "sha256": "565994e5f9e3c03cf8ba0f3821bd4f65ab9151ea732a4942d7da6341e7148920"
+        }
+      ],
+      "comparison": "Same-scale 1x and 8x: copper ingot has salmon highlight and rich reddish shadows; honey bottle closure proportions; oxidized copper green hue relationships. Patina confined to lower joint instead of floating spot.",
+      "findings": {
+        "silhouette": "Squat rigid flask with offset brass-colored cap, defined shoulders and flatter foot than clay jug.",
+        "cluster_structure": "Compact bright salmon reflection across left shoulder transitions through copper midtones into darker right rim and joined lower edge.",
+        "micro_contrast": "Small warm reflective clusters break at shoulder and a green ramp traces the lower joint.",
+        "light_and_volume": "Reflective left/front metal catches top-left light with sharper value break while outer right seam is shaded.",
+        "material_continuity": "Copper hues continue across pressed body; brass and green oxidation occur at closure and damp bottom seam.",
+        "edge_variation": "Stepped shoulder rises to cap, right side comparatively straight, body closes with low flat seam.",
+        "variant_identity": "Low rigid flask, brass stopper and bottom oxidation differentiate from soft pouch and handled earthenware.",
+        "vanilla_comparison": "Copper ingot calibrates warm reflection; oxidized copper calibrates subdued green on lower joint.",
+        "construction": "Cap has distinct top and band, neck joins broad shoulders, lower folded seam has dark border.",
+        "surface_turn": "Brighter left shoulder and central face turn into narrow shaded right edge and flatter lower seam.",
+        "material_specific_shading": "Copper uses relatively crisp peach reflection and localized green patina; clay uses muted matte tones."
+      }
+    },
+    "projects/hydration-1.21.1-neoforge/src/main/resources/assets/hydration/textures/item/copper_condenser.png": {
+      "sha256": "ee993bffc885388bf9b03625bf0c718b71ae42aed552bf064b9b7a707868544a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/copper_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "ebccaba00d1623ef8acce3768e104bf54c8ee157d92ba7c969d7100830414875"
+        },
+        {
+          "id": "minecraft:item/spyglass",
+          "minecraft": "1.21.1",
+          "sha256": "b09e9b9046db1935cd9c35a2e4e3b7763485ec3effbc5077ebeaec1c28513b43"
+        },
+        {
+          "id": "minecraft:block/oxidized_copper",
+          "minecraft": "1.21.1",
+          "sha256": "565994e5f9e3c03cf8ba0f3821bd4f65ab9151ea732a4942d7da6341e7148920"
+        }
+      ],
+      "comparison": "Same-scale 1x and 8x: copper ingot calibrates reddish reflection, spyglass the two-metal collar and dark aperture, oxidized copper the green joint accents. Bent pipe has two open connector ends.",
+      "findings": {
+        "silhouette": "Angular bent tube with two brass-rimmed open ports on left and continuous vertical leg on right.",
+        "cluster_structure": "Bright copper strips follow upper and lower runs into elbow; collars have separate dark bore and rim clusters.",
+        "micro_contrast": "Small warm collar highlights frame dark port centers; muted green confined to lower connection.",
+        "light_and_volume": "Top-left tube surfaces and collar rims brighter than outer right edge, underside and inner bend.",
+        "material_continuity": "Continuous copper ramp along main bend; brass rims and oxidation appear at functional joints.",
+        "edge_variation": "Squared collar edges interrupt stepped bend; central notch remains transparent for identifiable tube shape.",
+        "variant_identity": "Two visible apertures and bent tubing distinguish mechanical part from closed copper canteen.",
+        "vanilla_comparison": "Spyglass rim/bore contrast provides connector depth; copper ingot and oxidized copper support materials.",
+        "functional_material_cues": "Both connector mouths have dark recessed opening surrounded by lighter collar; oxidation sits along lower tube joint."
+      }
+    },
+    "projects/hydration-1.21.1-neoforge/src/main/resources/assets/hydration/textures/item/charcoal_filter.png": {
+      "sha256": "c16024754aae120cf213dec510c5de15f9ab9fe4e5424d76e13f122e8634f060",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/charcoal",
+          "minecraft": "1.21.1",
+          "sha256": "8694dbb742b7aeea35fda24643f078a3624e083109a3968431f944ff3c178473"
+        },
+        {
+          "id": "minecraft:item/bundle",
+          "minecraft": "1.21.1",
+          "sha256": "357b6eb5f03aceb375157a3bc371b99f92c3bc743e87c538ddccaebc28460315"
+        },
+        {
+          "id": "minecraft:block/white_wool",
+          "minecraft": "1.21.1",
+          "sha256": "66688395b5ddc7f413c2e91ffabd33abfc78e0a870ce0111c45d7d09d9b4e100"
+        }
+      ],
+      "comparison": "Same-scale 1x and 8x: charcoal has angular dark clusters, bundle cloth folds and dark opening, white wool soft neighboring shades; open filter cartridge rather than closed pot.",
+      "findings": {
+        "silhouette": "Upright wrapped filter cartridge with wide open upper rim and narrower banded base.",
+        "cluster_structure": "Uneven gray-black charcoal clusters fill mouth, bordered by cream cloth lip and broader warm cloth planes.",
+        "micro_contrast": "Neighboring charcoal chips use dark gray value changes; tan patches and horizontal binding add textile detail.",
+        "light_and_volume": "Light rim and left cloth face contrast with recessed charcoal interior and dark right and bottom surfaces.",
+        "material_continuity": "Cloth wrap uses muted warm ramp; charcoal stays dark and mineral-like inside the open mouth.",
+        "edge_variation": "Rounded rim has uneven stepped corners and lower wrap narrows toward its binding.",
+        "variant_identity": "Visible charcoal media and layered cloth bindings distinguish filter from fluid containers and metal fittings.",
+        "vanilla_comparison": "Charcoal clusters at mouth darker and more angular than cloth; bundle and wool establish soft wrapping cues.",
+        "functional_material_cues": "Exposed charcoal bed readable above folded cloth wrap and horizontal binding band, explaining filtration medium."
+      }
+    },
+    "projects/hydration-1.21.1-neoforge/src/main/resources/assets/hydration/textures/block/water_surface.png": {
+      "sha256": "89ec29bebd8e4294214092c9355ed3b573951449138f2c9fbcc393ec13d537b6",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/water_still",
+          "minecraft": "1.21.1",
+          "sha256": "5843e8826507c484dfc15d5d255843d041804bcaa2036ed137320610d7fb9af7"
+        }
+      ],
+      "comparison": "Actual first 16x16 frame of official grayscale animated water_still atlas inspected at 1x and 8x; revised candidate reviewed in 3x3 tiling. Fixed blue surface uses lower contrast and broader connected ripples because it is an opaque tank surface, not tinted animated world fluid.",
+      "findings": {
+        "silhouette": "Full 16x16 opaque liquid surface fills interior model face without introducing a hard border.",
+        "cluster_structure": "Connected cool patches of varying widths form elongated ripple groups with transitional midtones.",
+        "micro_contrast": "Adjacent blues remain close in value so lighter ripple centers do not read as isolated bright marks.",
+        "light_and_volume": "Subdued horizontal ripple highlights suggest level liquid surface rather than raised solid or vertically shaded material.",
+        "material_continuity": "Cool blue shades remain coherent across tile edges and do not introduce foreign speckles.",
+        "edge_variation": "Ripple boundaries widen and narrow unevenly; tile edges use neighboring midtones rather than a directional frame.",
+        "variant_identity": "Water is distinct from surrounding wood and fired-clay walls and used on existing filled tank states.",
+        "vanilla_comparison": "Official water_still frame has irregular connected bright and gray patches; static surface adapts that ripple structure to muted blue.",
+        "functional_material_cues": "Revised 3x3 preview retains low-contrast ripple groups without an obvious dark tile boundary; deliberately static and opaque."
+      }
+    }
+  },
+  "client_rendering": "NOT_RUN",
+  "review_scope": "Private static same-scale native/nearest-neighbor comparison with PNGs from official 1.21.1 client (verified SHA-1 30c73b1c5da787909b2f73340419fdf13b9def88), including first water frame and final 3x3 tile. No in-game render claim."
+}
