@@ -170,16 +170,6 @@
       "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
     },
     {
-      "id": "natural-intake",
-      "status": "NOT_RUN",
-      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
-    },
-    {
-      "id": "pipe-redstone",
-      "status": "NOT_RUN",
-      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
-    },
-    {
       "id": "block-drops",
       "status": "NOT_RUN",
       "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
@@ -223,6 +213,16 @@
       "id": "recipe-clay_pipe",
       "status": "NOT_RUN",
       "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "natural-intake-player-placement",
+      "status": "NOT_RUN",
+      "reason": "Fixture exercises real world source sampling; player placement and full chunk reload still unverified."
+    },
+    {
+      "id": "pipe-redstone-player",
+      "status": "NOT_RUN",
+      "reason": "Fixture covers actual powered and unpowered block state, not player placement or wiring."
     }
   ]
 }

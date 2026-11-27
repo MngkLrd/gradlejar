@@ -119,7 +119,7 @@
     {
       "id": "gravity-flow",
       "kind": "mechanic",
-      "subject": "Real block entities, gravity, capacity, no equal elevation, loop rejection",
+      "subject": "World block entities, downhill, capacity, equal-height/loop rejection and powered pipe",
       "checks": [
         {
           "backend": "server",
@@ -157,6 +157,28 @@
         {
           "backend": "server",
           "name": "Model rules"
+        }
+      ]
+    },
+    {
+      "id": "intake-fixture",
+      "kind": "block",
+      "subject": "Natural water intake with positive and no-source controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Infrastructure world fixture"
+        }
+      ]
+    },
+    {
+      "id": "collector-fixture",
+      "kind": "block",
+      "subject": "Collector capacity and covered negative control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Infrastructure world fixture"
         }
       ]
     }

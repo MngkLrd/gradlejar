@@ -8,7 +8,7 @@
     "cloth": "minecraft:block/white_wool",
     "brick": "minecraft:block/bricks",
     "gravel": "minecraft:block/gravel",
-    "water": "minecraft:block/light_blue_concrete",
+    "water": "hydration:block/water_surface",
     "dark": "minecraft:block/deepslate_tiles",
     "pipe": "minecraft:block/terracotta",
     "particle": "#clay"
@@ -561,48 +561,48 @@
     {
       "from": [
         3,
-        8,
+        7,
         3
       ],
       "to": [
         13,
-        9,
+        8,
         13
       ],
       "faces": {
         "north": {
           "uv": [
             3,
-            7,
+            8,
             13,
-            8
+            9
           ],
           "texture": "#water"
         },
         "south": {
           "uv": [
             3,
-            7,
+            8,
             13,
-            8
+            9
           ],
           "texture": "#water"
         },
         "west": {
           "uv": [
             3,
-            7,
+            8,
             13,
-            8
+            9
           ],
           "texture": "#water"
         },
         "east": {
           "uv": [
             3,
-            7,
+            8,
             13,
-            8
+            9
           ],
           "texture": "#water"
         },

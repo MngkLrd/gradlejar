@@ -11,7 +11,8 @@ public final class InfrastructureChecks {
  private static void require(boolean c,String message){if(!c)throw new IllegalStateException(message);}
  public static void run(ServerLevel l){
   BlockPos from=new BlockPos(8,210,8),pipe=from.east(),down=pipe.east(),to=down.below(),same=down.east();
-  BlockPos[] fixture={from,pipe,down,to,same,from.above(),to.below()};
+  BlockPos intake=new BlockPos(12,210,8),collector=intake.east();
+  BlockPos[] fixture={from,pipe,down,to,same,pipe.above(),intake,intake.above(),collector,collector.above()};
   for(var p:fixture)require(l.hasChunkAt(p)&&l.getBlockState(p).isAir(),"fixture must be loaded and empty "+p);
   try{
    l.setBlock(from,WaterInfrastructure.BARREL.get().defaultBlockState(),Block.UPDATE_ALL);
@@ -31,10 +32,20 @@ public final class InfrastructureChecks {
    l.setBlock(down,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.WEST),Block.UPDATE_ALL);
    source.step(l);require(source.water().ml()==750,"loop rejected");
    l.setBlock(down,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.DOWN),Block.UPDATE_ALL);
-   l.setBlock(to.below(),Blocks.REDSTONE_BLOCK.defaultBlockState(),Block.UPDATE_ALL);
-   // Power the first pipe from adjacent block at source elevation.
-   l.setBlock(from.above(),Blocks.REDSTONE_BLOCK.defaultBlockState(),Block.UPDATE_ALL);
-   require(source.water().ml()==750,"fixture unchanged");
+   l.setBlock(pipe.above(),Blocks.REDSTONE_BLOCK.defaultBlockState(),Block.UPDATE_ALL);
+   require(l.hasNeighborSignal(pipe),"redstone fixture powered");source.step(l);
+   require(source.water().ml()==750&&target.water().ml()==0,"powered pipe stops flow");
+   l.setBlock(pipe.above(),Blocks.AIR.defaultBlockState(),Block.UPDATE_ALL);source.step(l);
+   require(source.water().ml()==500&&target.water().ml()==250,"unpowered pipe resumes flow");
+   l.setBlock(intake,WaterInfrastructure.INTAKE.get().defaultBlockState(),Block.UPDATE_ALL);
+   l.setBlock(collector,WaterInfrastructure.COLLECTOR.get().defaultBlockState(),Block.UPDATE_ALL);
+   var in=(TankEntity)l.getBlockEntity(intake);var rain=(TankEntity)l.getBlockEntity(collector);
+   require(in!=null&&in.capacity()==1000&&rain!=null&&rain.capacity()==8000,"intake/collector registration and capacities");
+   in.step(l);require(in.water().ml()==0,"intake without source");
+   l.setBlock(intake.above(),Blocks.WATER.defaultBlockState(),Block.UPDATE_ALL);in.step(l);
+   require(in.water().ml()==250,"natural intake draws actual source");
+   l.setBlock(collector.above(),Blocks.GLASS.defaultBlockState(),Block.UPDATE_ALL);rain.step(l);
+   require(rain.water().ml()==0,"covered collector stays empty");
    var saved=source.saveWithoutMetadata(l.registryAccess());
    var copy=new TankEntity(from,source.getBlockState());copy.loadWithComponents(saved,l.registryAccess());
    require(copy.water().equals(source.water()),"NBT roundtrip");

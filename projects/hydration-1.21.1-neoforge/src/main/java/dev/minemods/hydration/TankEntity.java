@@ -75,7 +75,7 @@ public final class TankEntity extends BlockEntity {
   if(water.ml()<capacity()){
    if(kind()==TankBlock.Kind.COLLECTOR){
     BlockPos top=worldPosition.above();
-    if(l.hasChunkAt(top)&&l.canSeeSky(top)){
+    if(l.hasChunkAt(top)&&l.getBlockState(top).isAir()&&l.canSeeSky(top)&&l.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,top.getX(),top.getZ())<=top.getY()){
      var at=WorldLogicApi.atmosphere(l,top);
      int amount=at.map(a->GravityFlow.rainMl(!a.environment().covered(),a.precipitation()==WorldLogicApi.Precipitation.RAIN,a.precipitationIntensity())).orElse(0);
      if(amount>0)insert(new WaterBatch(amount,WaterBalance.Quality.TREAT_RECOMMENDED,0,.20,Set.of("RAIN")));
