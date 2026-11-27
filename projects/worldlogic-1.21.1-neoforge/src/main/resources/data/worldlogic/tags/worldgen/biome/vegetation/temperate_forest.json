@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:mixed_forest",
+    "worldlogic:temperate_deciduous_forest",
+    "worldlogic:temperate_rainforest",
+    "worldlogic:warm_broadleaf_forest"
+  ]
+}
