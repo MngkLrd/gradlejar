@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC28 production core/API regression",
+  "name": "World Logic NeoForge RC29 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -188,6 +188,12 @@
       "name": "Detailed water origins, game drinkability, legacy mapping and actual covered/exposed water fixtures",
       "command": "worldlogic qa water_profile",
       "expect": "WORLDLOGIC_WATER_PROFILE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality",
+      "command": "worldlogic qa native_water",
+      "expect": "WORLDLOGIC_NATIVE_WATER_PASSED",
       "assertion": true
     }
   ],
@@ -501,6 +507,105 @@
         {
           "backend": "server",
           "name": "Detailed water origins, game drinkability, legacy mapping and actual covered/exposed water fixtures"
+        }
+      ]
+    },
+    {
+      "id": "native-water-conversion",
+      "kind": "mechanic",
+      "subject": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-sea_water",
+      "kind": "item",
+      "subject": "worldlogic:sea_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-river_water",
+      "kind": "item",
+      "subject": "worldlogic:river_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-lake_water",
+      "kind": "item",
+      "subject": "worldlogic:lake_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-spring_water",
+      "kind": "item",
+      "subject": "worldlogic:spring_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-groundwater",
+      "kind": "item",
+      "subject": "worldlogic:groundwater and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-wetland_water",
+      "kind": "item",
+      "subject": "worldlogic:wetland_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-pond_water",
+      "kind": "item",
+      "subject": "worldlogic:pond_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-brackish_water",
+      "kind": "item",
+      "subject": "worldlogic:brackish_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
         }
       ]
     }

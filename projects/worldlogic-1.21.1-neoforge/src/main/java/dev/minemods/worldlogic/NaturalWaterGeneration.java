@@ -30,9 +30,9 @@ public final class NaturalWaterGeneration{
  public static void convert(WorldGenLevel level,ChunkAccess chunk,ChunkGenerator generator){
   if(!enabled(generator))return;
   var sampler=WorldLogicApi.worldgenSampler(level,generator);
-  convertChunk(chunk,sampler);
+  convertChunk(chunk,sampler,null);
  }
- static int convertChunk(ChunkAccess chunk,java.util.Optional<WorldgenSampler> sampler){
+ static int convertChunk(ChunkAccess chunk,java.util.Optional<WorldgenSampler> sampler,Holder<Biome> fixtureBiome){
   int x0=chunk.getPos().getMinBlockX(),z0=chunk.getPos().getMinBlockZ(),converted=0;
   var p=new BlockPos.MutableBlockPos();
   var kinds=new WaterKind[256];
@@ -51,7 +51,7 @@ public final class NaturalWaterGeneration{
      kind=kinds[index];
      if(kind==null){
       int sy=Math.min(chunk.getMaxBuildHeight()-1,Math.max(chunk.getMinBuildHeight(),Math.max(y,chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG,x,z)-1)));
-      var biome=chunk.getNoiseBiome((x0+x)>>2,sy>>2,(z0+z)>>2);
+      var biome=fixtureBiome!=null?fixtureBiome:chunk.getNoiseBiome((x0+x)>>2,sy>>2,(z0+z)>>2);
       var bed=chunk.getBlockState(p.set(x0+x,Math.max(chunk.getMinBuildHeight(),Math.min(y-1,floor)),z0+z));
       var samplePos=new BlockPos(x0+x,sy,z0+z);
       double river=sampler.map(v->v.sample(samplePos,biome,bed).riverbankPotential()).orElse(0.0);
