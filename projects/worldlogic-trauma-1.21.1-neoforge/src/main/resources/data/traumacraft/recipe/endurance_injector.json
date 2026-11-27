@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " H ",
+    " U ",
+    " S "
+  ],
+  "key": {
+    "H": {
+      "item": "traumacraft:herbal_extract"
+    },
+    "U": {
+      "item": "minecraft:sugar"
+    },
+    "S": {
+      "item": "traumacraft:syringe_body"
+    }
+  },
+  "result": {
+    "id": "traumacraft:endurance_injector",
+    "count": 1
+  }
+}

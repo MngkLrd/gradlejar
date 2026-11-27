@@ -1,0 +1,34 @@
+package dev.minemods.traumacraft;
+import dev.minemods.traumacraft.client.ClientEvents;
+import dev.minemods.traumacraft.command.TraumaCommands;
+import dev.minemods.traumacraft.event.TraumaEvents;
+import dev.minemods.traumacraft.health.VitalityBridge;
+import dev.minemods.traumacraft.network.ModNetwork;
+import dev.minemods.traumacraft.registry.*;
+import dev.minemods.traumacraft.qa.RegressionChecks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.NeoForge;
+@Mod(TraumaCraft.MOD_ID)
+public final class TraumaCraft {
+    public static final String MOD_ID="traumacraft";
+    public TraumaCraft(IEventBus modBus) {
+        if(FMLEnvironment.dist==Dist.CLIENT) ClientEvents.register(modBus);
+        ModItems.register(modBus); ModMenus.register(modBus); ModCreativeTabs.register(modBus);
+        modBus.addListener(ModNetwork::register);
+        var bus=NeoForge.EVENT_BUS;
+        bus.addListener(EventPriority.LOWEST,TraumaEvents::onDamage);
+        bus.addListener(EventPriority.LOWEST,VitalityBridge::onHeal);
+        bus.addListener(TraumaEvents::onPlayerTick);
+        bus.addListener(TraumaEvents::onLogin);
+        bus.addListener(TraumaEvents::onLogout);
+        bus.addListener(TraumaEvents::onClone);
+        bus.addListener(TraumaEvents::onRespawn);
+        bus.addListener(TraumaEvents::onDimension);
+        bus.addListener(TraumaCommands::register);
+        bus.addListener(RegressionChecks::register);
+    }
+}
