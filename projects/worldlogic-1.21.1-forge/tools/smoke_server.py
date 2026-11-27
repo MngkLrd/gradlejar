@@ -1,54 +1,77 @@
-"""Run the production Forge JAR; if official installer download is blocked, run a clearly labeled dev server instead."""
-import pathlib, sys, subprocess, urllib.request, urllib.error, shutil, time, os, signal, zipfile
-project=pathlib.Path(sys.argv[1]).resolve()
-root=project/"build"/"worldlogic-smoke"
-root.mkdir(parents=True,exist_ok=True)
-version="1.21.1-52.1.0"
-installer=root/"forge-installer.jar"
-url=f"https://maven.minecraftforge.net/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
-production=True
-try:
-    req=urllib.request.Request(url,headers={"User-Agent":"Gradle/8.10.2 (World Logic build validation)"})
-    with urllib.request.urlopen(req,timeout=30) as response, installer.open("wb") as out:shutil.copyfileobj(response,out)
-    if not zipfile.is_zipfile(installer):raise OSError("Installer response was not a jar")
-except (urllib.error.URLError,OSError,TimeoutError) as e:
-    print(f"::warning::Official installer unavailable ({e}); running Forge development-server smoke test instead.")
-    production=False
-if production:
-    subprocess.run(["java","-jar",str(installer),"--installServer"],cwd=root,check=True,timeout=300)
-    mods=root/"mods";mods.mkdir(exist_ok=True)
-    jars=[p for p in (project/"build"/"libs").glob("worldlogic-*.jar") if not any(k in p.name for k in ("sources","dev","javadoc"))]
-    assert len(jars)==1,jars
-    shutil.copy2(jars[0],mods/jars[0].name)
+"""Production-only RC18 regression: fresh geography worlds on baseline and reported Forge."""
+import hashlib, json, os, pathlib, re, shutil, signal, subprocess, sys, time, urllib.request, zipfile
+
+project = pathlib.Path(sys.argv[1]).resolve()
+base = project / "build" / "worldlogic-smoke"
+base.mkdir(parents=True, exist_ok=True)
+jars = [p for p in (project/"build"/"libs").glob("worldlogic-*.jar") if not any(k in p.name for k in ("sources","dev","javadoc"))]
+assert len(jars)==1, jars
+jar = jars[0]
+digest=hashlib.sha256(jar.read_bytes()).hexdigest()
+print("WORLDLOGIC_EXACT_JAR", jar.name, digest, flush=True)
+with zipfile.ZipFile(jar) as z:
+    tag=json.loads(z.read("data/minecraft/tags/worldgen/world_preset/normal.json"))
+    assert tag == {"replace":False,"values":["worldlogic:earthlike"]}, tag
+    for name in ("realistic","earthlike"):
+        z.read(f"data/worldlogic/worldgen/world_preset/{name}.json")
+        z.read(f"data/worldlogic/worldgen/noise_settings/{name}.json")
+    target=json.loads(z.read("data/worldlogic/worldgen/noise_settings/earthlike.json"))["spawn_target"]
+    assert len(target)==1 and target[0]["weirdness"]==[-1,1] and target[0]["continentalness"][0]>0, target
+
+def install(loader):
+    root=base/loader
+    root.mkdir(exist_ok=True)
+    version="1.21.1-"+loader
+    installer=root/"forge-installer.jar"
+    url=f"https://maven.minecraftforge.net/net/minecraftforge/forge/{version}/forge-{version}-installer.jar"
+    req=urllib.request.Request(url,headers={"User-Agent":"Gradle/8.10.2 World Logic QA"})
+    with urllib.request.urlopen(req,timeout=30) as response, installer.open("wb") as out:
+        shutil.copyfileobj(response,out)
+    assert zipfile.is_zipfile(installer), "invalid installer"
+    subprocess.run(["java","-jar",str(installer),"--installServer"],cwd=root,check=True,timeout=180)
+    mods=root/"mods"
+    mods.mkdir(exist_ok=True)
+    shutil.copy2(jar,mods/jar.name)
+    assert hashlib.sha256((mods/jar.name).read_bytes()).hexdigest()==digest
     args=root/"libraries"/"net"/"minecraftforge"/"forge"/version/"unix_args.txt"
     assert args.is_file(),args
-    command=["java","-Xmx2G","-Dworldlogic.ci=true","@"+str(args),"nogui"]
-    cwd=root
-else:
-    root=project/"run-server";root.mkdir(exist_ok=True)
-    command=["gradle","--no-daemon","-PworldlogicCi","runServer"]
-    cwd=project
-(root/"eula.txt").write_text("eula=true\n")
-(root/"server.properties").write_text("online-mode=false\nserver-ip=127.0.0.1\nlevel-name=worldlogic-ci\nlevel-seed=1234\nlevel-type=worldlogic:earthlike\nview-distance=3\nsimulation-distance=3\nmax-tick-time=-1\n")
-log=root/"server-smoke.log"
-with log.open("w") as out:
-    process=subprocess.Popen(command,cwd=cwd,stdin=subprocess.PIPE,stdout=out,stderr=subprocess.STDOUT,text=True,start_new_session=True)
-    try:
-        for _ in range(210):
-            text=log.read_text(errors="replace")
-            if "Done (" in text and "WORLDLOGIC_CORE_TESTS_PASSED" in text and "WORLDLOGIC_TERRAIN_TEST_PASSED" in text:
-                print(("Production" if production else "Development")+" Forge server and core regression checks passed.")
-                if production:
-                    process.stdin.write("stop\n");process.stdin.flush()
-                    process.wait(timeout=40)
-                    assert process.returncode==0,process.returncode
-                break
-            if process.poll() is not None:raise RuntimeError("Server exited before startup and tests")
-            time.sleep(1)
-        else:raise TimeoutError("Server did not reach startup and test marker")
-    finally:
-        if process.poll() is None:
-            os.killpg(process.pid,signal.SIGTERM)
-            try:process.wait(timeout=15)
-            except subprocess.TimeoutExpired:os.killpg(process.pid,signal.SIGKILL)
-        print(log.read_text(errors="replace")[-25000:])
+    (root/"eula.txt").write_text("eula=true\n")
+    return root,args
+
+def run(root,args,seed):
+    world=f"worldlogic-{seed}"
+    shutil.rmtree(root/world,ignore_errors=True)
+    (root/"server.properties").write_text(f"online-mode=false\nserver-ip=127.0.0.1\nlevel-name={world}\nlevel-seed={seed}\nlevel-type=worldlogic:earthlike\nview-distance=6\nsimulation-distance=6\nmax-tick-time=-1\n")
+    log=root/f"seed-{seed}.log"
+    start=time.monotonic()
+    with log.open("w") as out:
+        process=subprocess.Popen(["java","-Xmx2G","-Dworldlogic.ci=true","@"+str(args),"nogui"],cwd=root,stdin=subprocess.PIPE,stdout=out,stderr=subprocess.STDOUT,text=True,start_new_session=True)
+        try:
+            while time.monotonic()-start<100:
+                content=log.read_text(errors="replace")
+                if all(marker in content for marker in ("Done (","WORLDLOGIC_CORE_TESTS_PASSED","WORLDLOGIC_GEOGRAPHY_AGGREGATE","WORLDLOGIC_GENERATED_SPAWN","WORLDLOGIC_SPAWN_DRY")):
+                    duration=re.search(r"Done \(([0-9.]+)s\)",content)
+                    assert duration, "missing startup duration"
+                    print("WORLDLOGIC_FRESH_WORLD",root.name,seed,"startup_seconds",duration.group(1),"elapsed",round(time.monotonic()-start,2),flush=True)
+                    process.stdin.write("stop\n")
+                    process.stdin.flush()
+                    process.wait(timeout=30)
+                    assert process.returncode==0, process.returncode
+                    return
+                if process.poll() is not None:
+                    raise RuntimeError(f"server exited before terrain assertions: {root.name}/{seed}")
+                time.sleep(1)
+            # Capture actual Java stacks before terminating a stalled generation.
+            subprocess.run(["jcmd",str(process.pid),"Thread.print"],timeout=10,check=False)
+            raise TimeoutError(f"world generation exceeded 100s: {root.name}/{seed}")
+        finally:
+            if process.poll() is None:
+                os.killpg(process.pid,signal.SIGTERM)
+                try: process.wait(timeout=10)
+                except subprocess.TimeoutExpired: os.killpg(process.pid,signal.SIGKILL)
+            print(log.read_text(errors="replace")[-25000:],flush=True)
+
+for loader,seeds in (("52.1.0",(1234,)),("52.1.20",(-987654321,42))):
+    root,args=install(loader)
+    for seed in seeds:
+        run(root,args,seed)

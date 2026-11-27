@@ -1,5 +1,7 @@
 # Machine-readable mod QA assignment
 
+Scope tests to the active Minecraft/loader pair during routine development. Only expand the assignment to multiple targets when explicitly requested or during authorized porting. Preserve existing complete-release requirements. See [Development scope](../AGENTS.md#development-scope--product-first-ports-at-the-end).
+
 The assignment is the executable test suite consumed by GitHub Actions, not a prose document for a human or another chat agent. No separate Markdown or natural-language technical specification is required.
 
 ## Required executable files
