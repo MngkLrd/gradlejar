@@ -34,7 +34,7 @@ All are 16x16; fully transparent pixels excluded. Metrics describe raw images, n
 
 R1 CI verified client SHA-1 `30c73b1c5da787909b2f73340419fdf13b9def88`. 3,070 PNGs inventoried, 2,886 measured, 96 metadata-bearing, 88 large, zero decode failures. All eleven first pilot Git blob hashes match the official client. General self-test initially failed because Pillow was absent; the optional image test imports are now guarded, while the dedicated research workflow runs the tests with Pillow installed.
 
-Eight additional PNGs were decoded from misode/mcmeta@1.21.1-assets, local Git blob hashes verified and actual images visually inspected in a private comparison sheet. Their hashes are added to the official-client cross-check (pending next run). Total direct visual inspection: 19 assets, not 3,070.
+Eight additional PNGs were decoded from misode/mcmeta@1.21.1-assets, local Git blob hashes verified and actual images visually inspected in a private comparison sheet. All eight hashes were subsequently confirmed against the official client in [run 46016919441](https://github.com/MngkLrd/gradlejar/actions/runs/46016919441), bringing the verified sample total to 19/19. Total direct visual inspection: 19 assets, not 3,070.
 
 | Sample | RGB colors | Visible pixels | Same-color x adjacency | Same-color y adjacency |
 | --- | ---: | ---: | ---: | ---: |
@@ -57,4 +57,24 @@ Eight additional PNGs were decoded from misode/mcmeta@1.21.1-assets, local Git b
 
 ## Continuation checkpoint
 
-Issue #206 is canonical research scope. R1 corpus confirmed; R2 initial 19 visual observations and family data; R3 paired control generator implemented, CI pending. Next: read current PR and CI, fix any failure, inspect aggregate family distributions and real private control sheets, run independent reviewer in a fresh context without key, collect owner-rejected real samples and separate aesthetic decisions. Then validate an independent review mechanism before touching production Art Review Lock. Do not re-review existing mods or introduce new normal build jobs. No raw vanilla PNG redistribution.
+Issue #206 is canonical research scope. R1 corpus confirmed; R2 initial 19 visual observations and family data; R3 paired control generator and 40 pairs confirmed by run 46016919441; PR #207 merged. Next: read current PR and CI, fix any failure, inspect aggregate family distributions and real private control sheets, run independent reviewer in a fresh context without key, collect owner-rejected real samples and separate aesthetic decisions. Then validate an independent review mechanism before touching production Art Review Lock. Do not re-review existing mods or introduce new normal build jobs. No raw vanilla PNG redistribution.
+
+## Confirmed corpus family summary (R2/R3)
+
+Measured on official 1.21.1 client, [research run 46016919441](https://github.com/MngkLrd/gradlejar/actions/runs/46016919441). These are filename-based groups, not visually adjudicated material labels, and include different texture dimensions, masks and utility layers. Do not promote the ranges to automatic acceptance thresholds.
+
+| Family hint | Measured / inventoried | RGB color count min / median / max | Components min / median / max |
+| --- | ---: | --- | --- |
+| Bark | 16 / 18 | 2 / 6 / 23 | 2 / 88.5 / 154 |
+| Log end | 21 / 21 | 4 / 9 / 12 | 21 / 96 / 117 |
+| Foliage | 12 / 12 | 4 / 5 / 14 | 61 / 107.5 / 145 |
+| Sapling | 7 / 7 | 6 / 8 / 12 | 54 / 69 / 81 |
+| Soil | 5 / 5 | 7 / 9 / 77 | 139 / 180 / 251 |
+| Ore | 18 / 18 | 9 / 12 / 16 | 135 / 159 / 204 |
+| Armor icon | 29 / 29 | 1 / 7 / 9 | 4 / 26 / 97 |
+
+R3: 16 additional official source images, 40 paired perturbations (16 visible shuffle, 16 ramp flattening, 8 RGBA shuffle). 24 pairs preserve RGB palette count, all 40 preserve visible pixel count. These controls demonstrate non-identifiability from counts alone. Reviewer status NOT_RUN; no validated aesthetic labels for synthetic mutations. Do not call these a benchmark of final art acceptance.
+
+## R4 — unfitted metric diagnostics
+
+The benchmark now reports five prespecified single-metric directional baselines (more colors, fewer isolated pixels, more same-color neighbor edges, lower adjacent brightness delta, larger connected component). Compare original and perturbed images, count correct source-side choice, wrong choice and abstention for equal/missing values, and break down by perturbation. No fitting, no image-derived learned model, no aesthetics claim. Results are source-identification diagnostics on correlated synthetic pairs, not independent samples or proof of style quality. Never convert these numbers into release gates. Preserve actual measurements and error cases to inform a future independent image-based review. Reviewer must still inspect actual images and judge their meaning, not try to reverse these mutation algorithms.
