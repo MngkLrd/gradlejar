@@ -58,5 +58,12 @@
   "item.worldlogic_thermal.sun_hat": "Woven sun hat",
   "item.worldlogic_thermal.light_tunic": "Light tunic",
   "block.worldlogic_thermal.clay_hearth": "Clay hearth",
-  "block.worldlogic_thermal.evaporative_cooler": "Evaporative cooler"
+  "block.worldlogic_thermal.evaporative_cooler": "Evaporative cooler",
+  "item.worldlogic_thermal.raw_fiber_bundle": "Raw plant bundle",
+  "item.worldlogic_thermal.plant_thread": "Plant thread",
+  "item.worldlogic_thermal.woven_fiber": "Woven plant cloth",
+  "item.worldlogic_thermal.stone_scraper": "Stone scraper",
+  "block.worldlogic_thermal.fiber_workpiece": "Plant fiber workpiece",
+  "message.worldlogic_thermal.fiber_progress": "Cleaned: %s/64",
+  "message.worldlogic_thermal.fiber_ready": "Ready. Strike again to collect fiber."
 }

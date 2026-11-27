@@ -104,6 +104,12 @@
       "command": "thermal qa clothing",
       "expect": "THERMAL_QA_clothing_PASS",
       "assertion": true
+    },
+    {
+      "name": "Stone fiber processing, exact cells, save and resume, scraper wear, completion and support loss",
+      "command": "thermal qa fiber_work",
+      "expect": "THERMAL_QA_fiber_work_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -236,6 +242,17 @@
         {
           "backend": "server",
           "name": "Plant insulation and summer clothing exposure"
+        }
+      ]
+    },
+    {
+      "id": "fiber-work",
+      "kind": "mechanic",
+      "subject": "Stone fiber processing, exact cells, save and resume, scraper wear, completion and support loss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Stone fiber processing, exact cells, save and resume, scraper wear, completion and support loss"
         }
       ]
     }

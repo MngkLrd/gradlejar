@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "worldlogic_thermal:plant_thread"
+    },
+    {
+      "item": "worldlogic_thermal:plant_thread"
+    },
+    {
+      "item": "worldlogic_thermal:plant_thread"
+    }
+  ],
+  "result": {
+    "id": "worldlogic_thermal:woven_fiber",
+    "count": 2
+  }
+}

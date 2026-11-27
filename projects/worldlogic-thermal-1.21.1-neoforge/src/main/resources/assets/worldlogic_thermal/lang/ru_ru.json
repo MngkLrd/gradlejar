@@ -58,5 +58,12 @@
   "item.worldlogic_thermal.sun_hat": "Плетёная шляпа",
   "item.worldlogic_thermal.light_tunic": "Лёгкая туника",
   "block.worldlogic_thermal.clay_hearth": "Глиняный очаг",
-  "block.worldlogic_thermal.evaporative_cooler": "Испарительный охладитель"
+  "block.worldlogic_thermal.evaporative_cooler": "Испарительный охладитель",
+  "item.worldlogic_thermal.raw_fiber_bundle": "Пучок растительного сырья",
+  "item.worldlogic_thermal.plant_thread": "Растительная нить",
+  "item.worldlogic_thermal.woven_fiber": "Плетёное полотно",
+  "item.worldlogic_thermal.stone_scraper": "Каменный скребок",
+  "block.worldlogic_thermal.fiber_workpiece": "Растительное сырьё на камне",
+  "message.worldlogic_thermal.fiber_progress": "Очищено: %s/64",
+  "message.worldlogic_thermal.fiber_ready": "Готово. Ударьте ещё раз, чтобы забрать волокно."
 }

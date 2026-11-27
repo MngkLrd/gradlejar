@@ -14,6 +14,8 @@ public final class ThermalMod {
         var bus = NeoForge.EVENT_BUS;
         bus.addListener(EventPriority.LOWEST, ThermalEvents::tick);
         bus.addListener(EventPriority.LOWEST,dev.minemods.thermal.content.FiberHarvest::onClick);
+        bus.addListener(EventPriority.LOWEST,dev.minemods.thermal.content.FiberInteraction::right);
+        bus.addListener(EventPriority.LOWEST,dev.minemods.thermal.content.FiberInteraction::left);
         bus.addListener(ThermalEvents::clonePlayer);
         bus.addListener(ThermalEvents::registerCommands);
     }

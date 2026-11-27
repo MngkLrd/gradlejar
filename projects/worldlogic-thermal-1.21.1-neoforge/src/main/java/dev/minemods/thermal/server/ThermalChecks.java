@@ -153,6 +153,9 @@ final class ThermalChecks {
                     p.setItemSlot(EquipmentSlot.CHEST,new ItemStack(dev.minemods.thermal.content.ThermalContent.LIGHT_TUNIC.get()));
                     require(EnvironmentSampler.sample(p,0).orElseThrow().exposure().ventilation()>.4,"light tunic ventilates");
                 }
+                case "fiber_work" -> {
+                    dev.minemods.thermal.content.FiberWorkChecks.verify(l,p);
+                }
                 default -> throw new IllegalArgumentException(name);
             }
         } finally {

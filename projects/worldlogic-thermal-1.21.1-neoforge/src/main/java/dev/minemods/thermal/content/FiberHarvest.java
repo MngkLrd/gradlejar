@@ -27,6 +27,6 @@ public final class FiberHarvest {
  public static boolean harvest(ServerLevel level,BlockPos pos,Player p){
   if(!canHarvest(level.getBlockState(pos)))return false;
   if(!level.destroyBlock(pos,false,p))return false;
-  Block.popResource(level,pos,new ItemStack(ThermalContent.FIBER.get(),2));return true;
+  Block.popResource(level,pos,new ItemStack(ThermalContent.RAW_FIBER.get(),1));return true;
  }
 }
