@@ -115,9 +115,9 @@ public final class WorldLogicApi {
   var existing=environment(level,pos);
   if(existing.isEmpty())return Optional.empty();
   var env=existing.orElseThrow();
-  var local=dev.minemods.worldlogic.LocalWeatherRuntime.at(level,pos,env.regionalClimate());
-  if(local.isPresent()){
-   var w=local.orElseThrow();
+  var regionalWeather=dev.minemods.worldlogic.LocalWeatherRuntime.at(level,pos,env.regionalClimate());
+  if(regionalWeather.isPresent()){
+   var w=regionalWeather.orElseThrow();
    return Optional.of(new Atmosphere(env,w.relativeHumidityPercent(),w.windXMps(),w.windZMps(),Math.hypot(w.windXMps(),w.windZMps()),w.precipitation(),w.precipitationIntensity()));
   }
   var biome=level.getBiome(pos).value();
