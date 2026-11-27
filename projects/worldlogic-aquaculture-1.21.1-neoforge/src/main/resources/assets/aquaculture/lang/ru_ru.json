@@ -75,5 +75,9 @@
   "entity.aquaculture.mahi_mahi": "Махи-махи",
   "item.aquaculture.raw_mahi_mahi": "Махи-махи (сырая)",
   "entity.aquaculture.parrotfish": "Рыба-попугай",
-  "item.aquaculture.raw_parrotfish": "Рыба-попугай (сырая)"
+  "item.aquaculture.raw_parrotfish": "Рыба-попугай (сырая)",
+  "aquaculture.feed.fed": "Сытость рыбы: %s%%",
+  "aquaculture.feed.full": "Рыба сыта.",
+  "aquaculture.feed.cooldown": "Рыбе нужно время, чтобы переварить корм.",
+  "aquaculture.feed.dry": "Кормить рыбу можно только в воде."
 }

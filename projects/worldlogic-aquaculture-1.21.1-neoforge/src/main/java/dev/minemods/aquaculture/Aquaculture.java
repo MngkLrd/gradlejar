@@ -155,6 +155,11 @@ public final class Aquaculture {
  }
  private void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("aquaculture").requires(src->src.hasPermission(2))
+   .then(Commands.literal("feeding_selftest").executes(c->{
+    FeedingChecks.run(c.getSource().getLevel());
+    c.getSource().sendSuccess(()->Component.literal("AQUACULTURE_FEEDING_36_PASS"),false);
+    return Command.SINGLE_SUCCESS;
+   }))
    .then(Commands.literal("selftest").executes(c->{
     int count=0;var level=c.getSource().getLevel();
     for(Species s:Species.ALL){

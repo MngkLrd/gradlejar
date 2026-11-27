@@ -6,7 +6,7 @@ import java.util.*;
 import dev.minemods.worldlogic.api.WorldLogicApi.WaterKind;
 
 public record Species(String id,String en,String ru,String region,double minTemp,double maxTemp,double minSalt,double maxSalt,
- int minDepth,int maxGroup,double minKg,double maxKg,double adultLength,double width,double length,double height,int color,int weight) {
+ int minDepth,int maxGroup,double minKg,double maxKg,double adultLength,double width,double length,double height,int color,int weight,String diet,String nursery,int maturityYears,int incubationDays,int hatchMin,int hatchMax,int reproductionCooldownDays) {
  public static final List<Species> ALL=load();
  public static final Map<String,Species> BY_ID=index();
  private static List<Species> load() {
@@ -20,7 +20,7 @@ public record Species(String id,String en,String ru,String region,double minTemp
  private static Map<String,Species> index(){
   Map<String,Species> m=new LinkedHashMap<>();
   for(Species s:ALL){
-   if(m.put(s.id,s)!=null||s.minTemp>s.maxTemp||s.minSalt>s.maxSalt||s.weight<=0||s.minKg<=0||s.maxKg<s.minKg||s.minDepth<1)throw new IllegalStateException("Invalid "+s.id);
+   if(m.put(s.id,s)!=null||s.minTemp>s.maxTemp||s.minSalt>s.maxSalt||s.weight<=0||s.minKg<=0||s.maxKg<s.minKg||s.minDepth<1||s.adultLength<=0||s.adultLength>3.5||s.maturityYears<1||s.incubationDays<1||s.hatchMin<1||s.hatchMax<s.hatchMin||s.reproductionCooldownDays<1||!Set.of("predator","grazer","invertebrate","plankton").contains(s.diet)||!Set.of("gravel","vegetation","open_water","sheltered_bed").contains(s.nursery))throw new IllegalStateException("Invalid "+s.id);
   }
   return Collections.unmodifiableMap(m);
  }

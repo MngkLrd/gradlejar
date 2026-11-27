@@ -75,5 +75,9 @@
   "entity.aquaculture.mahi_mahi": "Mahi-mahi",
   "item.aquaculture.raw_mahi_mahi": "Raw mahi-mahi",
   "entity.aquaculture.parrotfish": "Parrotfish",
-  "item.aquaculture.raw_parrotfish": "Raw parrotfish"
+  "item.aquaculture.raw_parrotfish": "Raw parrotfish",
+  "aquaculture.feed.fed": "Fish satiety: %s%%",
+  "aquaculture.feed.full": "This fish is full.",
+  "aquaculture.feed.cooldown": "Let the fish digest its last meal.",
+  "aquaculture.feed.dry": "Fish can only feed in water."
 }

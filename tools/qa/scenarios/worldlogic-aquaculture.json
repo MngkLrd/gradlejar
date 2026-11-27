@@ -804,6 +804,402 @@
           "name": "All species: actual entity creation, catch data and habitat controls"
         }
       ]
+    },
+    {
+      "id": "feeding-pike",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:pike",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-perch",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:perch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-crucian_carp",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:crucian_carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-carp",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-roach",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:roach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-bream",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:bream",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-trout",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:trout",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-grayling",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:grayling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-char",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:char",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-taimen",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:taimen",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-whitefish",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:whitefish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-burbot",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:burbot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-catfish",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:catfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-tench",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:tench",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-loach",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:loach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-rotan",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:rotan",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-rudd",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:rudd",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-bowfin",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:bowfin",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-piranha",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:piranha",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-arapaima",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:arapaima",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-tilapia",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:tilapia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-pacu",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:pacu",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-snakehead",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:snakehead",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-electric_eel",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:electric_eel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-atlantic_cod",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:atlantic_cod",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-herring",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:herring",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-mackerel",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:mackerel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-halibut",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:halibut",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-haddock",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:haddock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-flounder",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:flounder",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-tuna",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:tuna",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-barracuda",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:barracuda",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-grouper",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:grouper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-snapper",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:snapper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-mahi_mahi",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:mahi_mahi",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-parrotfish",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:parrotfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
     }
   ],
   "steps": [
@@ -811,6 +1207,19 @@
       "name": "All species: actual entity creation, catch data and habitat controls",
       "command": "aquaculture selftest",
       "expect": "AQUACULTURE_36_SPECIES_TRAITS_HABITAT_PASS",
+      "assertion": true
+    },
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls",
+      "command": "aquaculture feeding_selftest",
+      "expect": "AQUACULTURE_FEEDING_36_PASS",
       "assertion": true
     }
   ]
