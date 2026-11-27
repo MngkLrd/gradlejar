@@ -21,7 +21,6 @@ jobs:
     outputs:
       project_dirs: ${{ steps.select.outputs.project_dirs }}
       qa_enabled: ${{ steps.select.outputs.qa_enabled }}
-      legacy_packages: ${{ steps.select.outputs.legacy_packages }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -560,44 +559,6 @@ jobs:
         if: failure()
         run: |
           echo "See the first failed Gradle task above; full logs are in the build step." >> "$GITHUB_STEP_SUMMARY"
-
-  package-legacy:
-    needs: [plan, build]
-    if: success() && needs.plan.outputs.legacy_packages != '[]'
-    name: package-legacy (${{ matrix.slug }})
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJSON(needs.plan.outputs.legacy_packages) }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: jar-${{ matrix.slug }}-*
-          path: legacy-jars
-      - name: Assemble exact static-only legacy cohort
-        id: archive
-        env:
-          SLUG: ${{ matrix.slug }}
-          VERSION: ${{ matrix.version }}
-        run: python3 -m tools.qa.legacy_package "$SLUG" "$VERSION" legacy-jars legacy-bundles
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.archive.outputs.name }}
-          path: ${{ steps.archive.outputs.archive }}
-          if-no-files-found: error
-          retention-days: 30
-      - name: Publish explicitly labeled legacy archive
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ github.token }}
-          SLUG: ${{ matrix.slug }}
-          VERSION: ${{ matrix.version }}
-          ARCHIVE: ${{ steps.archive.outputs.archive }}
-        run: gh release create "${SLUG}-v${VERSION}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}" "$ARCHIVE" --target "$GITHUB_SHA" --title "$SLUG $VERSION - 11 JARs (legacy)" --notes "Historical static-only cohort. Runtime gameplay QA not certified." --prerelease
 
   package-qa-v2:
     needs: [plan, build]

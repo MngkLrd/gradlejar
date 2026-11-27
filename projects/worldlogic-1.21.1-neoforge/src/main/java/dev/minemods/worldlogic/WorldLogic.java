@@ -92,7 +92,11 @@ public final class WorldLogic {
   bus.addListener(AnimalCare::interact);
   bus.addListener(Balance::jump);
   bus.addListener(net.neoforged.bus.api.EventPriority.HIGHEST,Balance::attack);
-  bus.addListener(net.neoforged.bus.api.EventPriority.HIGHEST,Balance::interact);
+  bus.addListener(net.neoforged.bus.api.EventPriority.HIGHEST,(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock e)->Balance.interact(e));
+  bus.addListener(net.neoforged.bus.api.EventPriority.HIGHEST,(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickItem e)->Balance.interact(e));
+  bus.addListener(net.neoforged.bus.api.EventPriority.HIGHEST,(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.EntityInteract e)->Balance.interact(e));
+  bus.addListener(net.neoforged.bus.api.EventPriority.HIGHEST,(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.EntityInteractSpecific e)->Balance.interact(e));
+  bus.addListener(net.neoforged.bus.api.EventPriority.HIGHEST,(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.LeftClickBlock e)->Balance.interact(e));
   bus.addListener(Balance::use);
   bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,Balance::breakSpeed);
   bus.addListener(Balance::logout);

@@ -6,12 +6,12 @@ Minecraft 1.21.1 / NeoForge 21.1.80+ (CI baseline 21.1.262) / Java 21 / official
 
 Put the verified core JAR in the addon's `libs/` folder. This project uses official mappings and NeoForge 21.1; for the same configuration use `implementation files('libs/worldlogic-neoforge-mc1.21.1-1.0.0-rc20.jar')` in the addon's Gradle dependencies. Do not shade or duplicate the core classes. Install the core and addon in the runtime mods directory; do not install duplicate core JARs. If using a Gradle workspace, choose either the file runtime dependency or an equivalent project dependency. Verify runClient/runServer classpath separately.
 
-Add to addon META-INF/mods.toml (replace your_addon with actual mod ID):
+Add to addon META-INF/neoforge.mods.toml (replace your_addon with actual mod ID):
 
 ```toml
 [[dependencies.your_addon]]
 modId="worldlogic"
-mandatory=true
+type="required"
 versionRange="[1.0.0-rc20,)"
 ordering="AFTER"
 side="BOTH"
@@ -57,6 +57,16 @@ void update(ServerPlayer player) {
 | clientFatiguePercent() | OptionalInt for local client; absent before sync or if disabled. Do not call on server. |
 | itemWeight(ItemStack), entityMass(Entity), materialFamily(BlockState) | Core relative gameplay material/weight helpers, not SI units. |
 | ruleEnabled(String), ruleStrength(String) | Core rule and tuning values; read on server for authoritative gameplay. |
+
+## Temperature addon — responsibility boundary (owner direction, 2026-11-27)
+
+World Logic Core is the authoritative provider of world/environment conditions: geography, hydrology, climatology, meteorology and ambient air temperature. Core must remain fully usable without Temperature or any other addon. Temperature depends on Core, never the reverse.
+
+- Temperature owns player body temperature, heat exchange, perceived temperature, clothing insulation, exposure/wetness effects on body heat, sweating, overheating, hypothermia, physiological penalties and its own HUD. Local heat sources, water contact and insulation can refine the player's heat exchange; do not replace the core's regional climate/ambient air model.
+- Consume `WorldLogicApi.environment(level, pos)` on the server thread. RC20 provides approximate ambient Celsius, sky exposure, rain/thunder, solar proxy and optional modeled regional climate. It does NOT provide relative humidity, actual wind speed, precipitation intensity, seasonal weather, indoor insulation or a complete heat-source model. Use explicit bounded fallbacks when data are absent; do not present invented values as core readings. Request missing shared environmental data from the Core developer.
+- Core already has `cold_shock`, `wet_gear` and `wet_bow` rules. Do not silently duplicate their effects or overwrite persistent item wetness (`worldlogic_wet`). Temperature owns thermal consequences of wetness; physical gear/bow effects remain core for now. RC20 has no public item-wetness API or automatic rule arbitration: coordinate the integration and any overlapping cold-shock rule explicitly; do not silently edit server configuration. No core behavior changes are made by this documentation.
+- Use Core's fatigue/addExertion/recoverExertion API when thermal stress affects fatigue; do not create a second stamina pool. Hydration is a future optional addon: Temperature should expose sweat/fluid-loss information through its own stable integration contract when available, without requiring Hydration or modifying thirst itself. Keep vanilla health authoritative and coordinate with Traumatic for medical consequences.
+- Active target: Minecraft 1.21.1 NeoForge / Java 21. Integrate with the verified RC20 JAR; no Forge fallback. Verify standalone core, core + Temperature, and absence of duplicate penalties. The above ownership is a design contract, not evidence that the planned integrations are implemented.
 
 ## Ownership
 
