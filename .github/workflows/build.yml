@@ -21,6 +21,7 @@ jobs:
     outputs:
       project_dirs: ${{ steps.select.outputs.project_dirs }}
       qa_enabled: ${{ steps.select.outputs.qa_enabled }}
+      legacy_packages: ${{ steps.select.outputs.legacy_packages }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -560,264 +561,43 @@ jobs:
         run: |
           echo "See the first failed Gradle task above; full logs are in the build step." >> "$GITHUB_STEP_SUMMARY"
 
-  package-keepsigntext:
+  package-legacy:
     needs: [plan, build]
-    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/keepsigntext-') && github.event_name == 'push' }}
+    if: success() && needs.plan.outputs.legacy_packages != '[]'
+    name: package-legacy (${{ matrix.slug }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.plan.outputs.legacy_packages) }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          pattern: jar-keepsigntext-*
-          path: downloaded-jars
-          merge-multiple: true
-      - name: Assemble exactly eleven loader-sorted JARs
-        shell: bash
-        run: |
-          set -euo pipefail
-          mapfile -d '' jars < <(find downloaded-jars -type f -name 'keepsigntext-*.jar' -print0 | sort -z)
-          if [ "${#jars[@]}" -ne 11 ]; then
-            echo "Expected 11 JARs; found ${#jars[@]}" >&2
-            exit 1
-          fi
-          mkdir -p KeepSignText/{Forge,NeoForge,Fabric}
-          for jar in "${jars[@]}"; do
-            name="$(basename "$jar")"
-            case "$name" in
-              keepsigntext-forge-*) folder=Forge ;;
-              keepsigntext-neoforge-*) folder=NeoForge ;;
-              keepsigntext-fabric-*) folder=Fabric ;;
-              *) echo "Unexpected file: $name" >&2; exit 1 ;;
-            esac
-            cp "$jar" "KeepSignText/$folder/$name"
-          done
-          zip -q -r KeepSignText-ALL-11-JARs.zip KeepSignText
-          unzip -Z1 KeepSignText-ALL-11-JARs.zip | grep -E '\.jar$'
-      - name: Upload complete ZIP
-        uses: actions/upload-artifact@v4
+          pattern: jar-${{ matrix.slug }}-*
+          path: legacy-jars
+      - name: Assemble exact static-only legacy cohort
+        id: archive
+        env:
+          SLUG: ${{ matrix.slug }}
+          VERSION: ${{ matrix.version }}
+        run: python3 -m tools.qa.legacy_package "$SLUG" "$VERSION" legacy-jars legacy-bundles
+      - uses: actions/upload-artifact@v4
         with:
-          name: KeepSignText-ALL-11-JARs
-          path: KeepSignText-ALL-11-JARs.zip
+          name: ${{ steps.archive.outputs.name }}
+          path: ${{ steps.archive.outputs.archive }}
+          if-no-files-found: error
           retention-days: 30
-      - name: Publish ZIP to GitHub Releases
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release create "keepsigntext-v1.0.0-${GITHUB_RUN_NUMBER}" KeepSignText-ALL-11-JARs.zip --repo "${GITHUB_REPOSITORY}" --target "${GITHUB_SHA}" --title "Keep Sign Text 1.0.0 - all 11 loaders" --notes "Only 11 compiled JAR files, sorted into Forge, NeoForge and Fabric directories. GitHub Actions build validation passed; gameplay testing remains pending." --prerelease
-
-  package-campfirebatch:
-    needs: [plan, build]
-    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/campfirebatch-') && github.event_name == 'push' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: jar-campfirebatch-*
-          path: downloaded-campfirebatch
-          merge-multiple: true
-      - name: Assemble and verify exact eleven JAR files
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import zipfile
-          root = Path('downloaded-campfirebatch')
-          files = list(root.rglob('campfirebatch-*.jar'))
-          expected = {f'campfirebatch-{loader}-mc{mc}-1.0.1.jar': loader.title() if loader != 'neoforge' else 'NeoForge' for mc, loaders in [('1.20.1', ['forge','neoforge','fabric']), ('1.21.1',['neoforge','fabric']), ('26.1.2',['neoforge','fabric']), ('26.2',['neoforge','fabric']), ('26.3',['neoforge','fabric'])] for loader in loaders}
-          assert len(files) == 11 and {p.name for p in files} == set(expected), [p.name for p in files]
-          by_name = {p.name:p for p in files}
-          with zipfile.ZipFile('CampfireBatch-1.0.1-ALL-11-JARs.zip','w',zipfile.ZIP_DEFLATED) as out:
-              for folder in ['Forge','NeoForge','Fabric']:
-                  for name, dest in expected.items():
-                      if dest != folder: continue
-                      with zipfile.ZipFile(by_name[name]) as jar:
-                          assert jar.testzip() is None
-                          assert any(n.endswith('/BatchLoader.class') for n in jar.namelist())
-                      out.write(by_name[name], f'{folder}/{name}')
-          with zipfile.ZipFile('CampfireBatch-1.0.1-ALL-11-JARs.zip') as out:
-              assert len(out.namelist()) == 11 and all(n.endswith('.jar') for n in out.namelist())
-              print('\n'.join(out.namelist()))
-          PY
-      - uses: actions/upload-artifact@v4
-        with:
-          name: CampfireBatch-1.0.1-ALL-11-JARs
-          path: CampfireBatch-1.0.1-ALL-11-JARs.zip
-      - name: Publish verified JAR-only archive
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release create "campfirebatch-v1.0.1-${GITHUB_RUN_NUMBER}" CampfireBatch-1.0.1-ALL-11-JARs.zip --target "$GITHUB_SHA" --title "Campfire Batch 1.0.1 - 11 JARs" --notes "Exactly eleven compiled JARs grouped by loader. Runtime gameplay not tested." --prerelease
-
-  package-naturalbuoyancy:
-    needs: [plan, build]
-    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/naturalbuoyancy-') && needs.plan.outputs.qa_enabled != 'true' && github.event_name == 'push' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: jar-naturalbuoyancy-*
-          path: downloaded-naturalbuoyancy
-          merge-multiple: true
-      - name: Assemble exactly eleven verified production JARs
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import zipfile
-          expected=[('Forge','forge','1.20.1')]+[(f,l,mc) for f,l in [('NeoForge','neoforge'),('Fabric','fabric')] for mc in ['1.20.1','1.21.1','26.1.2','26.2','26.3']]
-          jars=list(Path('downloaded-naturalbuoyancy').rglob('naturalbuoyancy-*.jar'))
-          assert len(jars)==11,jars
-          by_name={p.name:p for p in jars}
-          with zipfile.ZipFile('Natural-Buoyancy-1.0.0-ALL-11-JARs.zip','w',zipfile.ZIP_DEFLATED) as out:
-              for folder,loader,mc in expected:
-                  name=f'naturalbuoyancy-{loader}-mc{mc}-1.0.0.jar'
-                  p=by_name[name]
-                  with zipfile.ZipFile(p) as jar:
-                      assert jar.testzip() is None
-                      assert 'dev/minemods/naturalbuoyancy/BuoyancyPhysics.class' in jar.namelist()
-                      assert 'dev/minemods/naturalbuoyancy/DensityRules.class' in jar.namelist()
-                  out.write(p,f'{folder}/{name}')
-          with zipfile.ZipFile('Natural-Buoyancy-1.0.0-ALL-11-JARs.zip') as out:
-              assert len(out.namelist())==11 and all(n.endswith('.jar') for n in out.namelist())
-              print('\n'.join(out.namelist()))
-          PY
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Natural-Buoyancy-1.0.0-ALL-11-JARs
-          path: Natural-Buoyancy-1.0.0-ALL-11-JARs.zip
-      - name: Publish verified archive
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release create "naturalbuoyancy-v1.0.0-${GITHUB_RUN_NUMBER}" Natural-Buoyancy-1.0.0-ALL-11-JARs.zip --target "$GITHUB_SHA" --title "Natural Buoyancy 1.0.0 - all 11 JARs" --notes "Exactly eleven compiled JARs, loader-sorted. Static checks passed; in-game tests pending." --prerelease
-
-  package-realisticdrops:
-    needs: [plan, build]
-    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/realisticdrops-') && github.event_name == 'push' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: jar-realisticdrops-*
-          path: downloaded-realisticdrops
-          merge-multiple: true
-      - name: Assemble and validate exactly eleven production JARs
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import zipfile
-          expected=[('Forge','forge','1.20.1')]+[(f,l,mc) for f,l in [('NeoForge','neoforge'),('Fabric','fabric')] for mc in ['1.20.1','1.21.1','26.1.2','26.2','26.3']]
-          files=list(Path('downloaded-realisticdrops').rglob('realisticdrops-*.jar'))
-          assert len(files)==11,files
-          by_name={p.name:p for p in files}
-          with zipfile.ZipFile('Realistic-Drops-1.0.0-ALL-11-JARs.zip','w',zipfile.ZIP_DEFLATED) as out:
-              for folder,loader,mc in expected:
-                  name=f'realisticdrops-{loader}-mc{mc}-1.0.0.jar'
-                  p=by_name[name]
-                  with zipfile.ZipFile(p) as jar:
-                      assert jar.testzip() is None
-                      assert 'dev/minemods/realisticdrops/DropPhysics.class' in jar.namelist()
-                  out.write(p,f'{folder}/{name}')
-          with zipfile.ZipFile('Realistic-Drops-1.0.0-ALL-11-JARs.zip') as out:
-              assert len(out.namelist())==11 and all(n.endswith('.jar') for n in out.namelist())
-              print('\n'.join(out.namelist()))
-          PY
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Realistic-Drops-1.0.0-ALL-11-JARs
-          path: Realistic-Drops-1.0.0-ALL-11-JARs.zip
-      - name: Publish verified archive
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release create "realisticdrops-v1.0.0-${GITHUB_RUN_NUMBER}" Realistic-Drops-1.0.0-ALL-11-JARs.zip --target "$GITHUB_SHA" --title "Realistic Drops 1.0.0 - all 11 JARs" --notes "Exactly eleven compiled JARs sorted by loader. Static validation passed; gameplay testing pending." --prerelease
-
-  package-fooddigestion:
-    needs: [plan, build]
-    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/fooddigestion-') && github.event_name == 'push' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: jar-fooddigestion-*
-          path: downloaded-fooddigestion
-          merge-multiple: true
-      - name: Verify and assemble all eleven JARs
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import zipfile
-          root = Path('downloaded-fooddigestion')
-          files = list(root.rglob('fooddigestion-*.jar'))
-          expected = {f'fooddigestion-{loader}-mc{mc}-1.0.0.jar': folder for folder, loader, versions in [('Forge','forge',['1.20.1']),('NeoForge','neoforge',['1.20.1','1.21.1','26.1.2','26.2','26.3']),('Fabric','fabric',['1.20.1','1.21.1','26.1.2','26.2','26.3'])] for mc in versions}
-          assert len(files) == 11 and {p.name for p in files} == set(expected), [p.name for p in files]
-          by_name = {p.name:p for p in files}
-          with zipfile.ZipFile('FoodDigestion-1.0.0-ALL-11-JARs.zip','w',zipfile.ZIP_DEFLATED) as out:
-              for name, folder in expected.items():
-                  with zipfile.ZipFile(by_name[name]) as jar:
-                      assert jar.testzip() is None
-                      assert 'fooddigestion.mixins.json' in jar.namelist()
-                      assert 'dev/minemods/fooddigestion/mixin/FoodDataMixin.class' in jar.namelist()
-                  out.write(by_name[name], f'{folder}/{name}')
-          with zipfile.ZipFile('FoodDigestion-1.0.0-ALL-11-JARs.zip') as out:
-              assert len(out.namelist()) == 11 and all(n.endswith('.jar') for n in out.namelist())
-              print('\n'.join(out.namelist()))
-          PY
-      - uses: actions/upload-artifact@v4
-        with:
-          name: FoodDigestion-1.0.0-ALL-11-JARs
-          path: FoodDigestion-1.0.0-ALL-11-JARs.zip
-      - name: Publish verified JAR-only archive
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release create "fooddigestion-v1.0.0-${GITHUB_RUN_NUMBER}" FoodDigestion-1.0.0-ALL-11-JARs.zip --target "$GITHUB_SHA" --title "Food Digestion 1.0.0 - 11 JARs" --notes "Exactly eleven compiled JARs grouped by loader. Static and core tests only; gameplay not tested." --prerelease
-
-
-  package-fragileglass:
-    needs: [plan, build]
-    if: ${{ success() && contains(needs.plan.outputs.project_dirs, 'projects/fragileglass-forge-1.20.1') && contains(needs.plan.outputs.project_dirs, 'projects/fragileglass-fabric-26.3') && needs.plan.outputs.qa_enabled != 'true' && github.event_name == 'push' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: jar-fragileglass-*
-          path: downloaded-fragileglass
-      - name: Assemble exact eleven flat JARs
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import zipfile
-          expected = {'fragileglass-forge-mc1.20.1-1.0.0.jar', 'fragileglass-neoforge-mc1.20.1-1.0.0.jar', 'fragileglass-neoforge-mc1.21.1-1.0.0.jar', 'fragileglass-neoforge-mc26.1.2-1.0.0.jar', 'fragileglass-neoforge-mc26.2-1.0.0.jar', 'fragileglass-neoforge-mc26.3-1.0.0.jar', 'fragileglass-fabric-mc1.20.1-1.0.0.jar', 'fragileglass-fabric-mc1.21.1-1.0.0.jar', 'fragileglass-fabric-mc26.1.2-1.0.0.jar', 'fragileglass-fabric-mc26.2-1.0.0.jar', 'fragileglass-fabric-mc26.3-1.0.0.jar'}
-          files = list(Path('downloaded-fragileglass').rglob('*.jar'))
-          assert len(files) == 11 and {p.name for p in files} == expected, [p.name for p in files]
-          with zipfile.ZipFile('FragileGlass-1.0.0-ALL-11-JARs.zip','w',zipfile.ZIP_DEFLATED) as out:
-              for p in sorted(files,key=lambda p:p.name):
-                  with zipfile.ZipFile(p) as jar:
-                      assert jar.testzip() is None
-                      assert any(n.endswith('/GlassRules.class') for n in jar.namelist())
-                  out.write(p,p.name)
-          PY
-      - uses: actions/upload-artifact@v4
-        with:
-          name: FragileGlass-1.0.0-ALL-11-JARs
-          path: FragileGlass-1.0.0-ALL-11-JARs.zip
-      - name: Publish flat JAR-only archive
+      - name: Publish explicitly labeled legacy archive
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "fragileglass-all-1.0.0-${GITHUB_RUN_NUMBER}" FragileGlass-1.0.0-ALL-11-JARs.zip --repo "${GITHUB_REPOSITORY}" --target "${GITHUB_SHA}" --title "Fragile Glass 1.0.0 - all 11 JARs" --notes "Eleven separately compiled JARs. Runtime gameplay not yet tested." --prerelease
-
-
+          SLUG: ${{ matrix.slug }}
+          VERSION: ${{ matrix.version }}
+          ARCHIVE: ${{ steps.archive.outputs.archive }}
+        run: gh release create "${SLUG}-v${VERSION}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}" "$ARCHIVE" --target "$GITHUB_SHA" --title "$SLUG $VERSION - 11 JARs (legacy)" --notes "Historical static-only cohort. Runtime gameplay QA not certified." --prerelease
 
   package-qa-v2:
     needs: [plan, build]

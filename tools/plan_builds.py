@@ -102,6 +102,7 @@ def select_projects(requested,changed=None):
 
 if __name__=="__main__":
     from resolve_project import read_profile
+    from qa.legacy_package import select as select_legacy_packages
     requested=(sys.argv[1] if len(sys.argv)>1 else "").strip()
     dirs=select_projects(requested)
     profiles=[read_profile(d) for d in dirs]
@@ -110,3 +111,4 @@ if __name__=="__main__":
     with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as f:
         f.write("project_dirs="+result+"\n")
         f.write("qa_enabled="+str(any(p.get("qa") for p in profiles)).lower()+"\n")
+        f.write("legacy_packages="+json.dumps(select_legacy_packages(profiles,os.getenv("GITHUB_EVENT_NAME","")),separators=(",",":"))+"\n")
