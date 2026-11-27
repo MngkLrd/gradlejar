@@ -79,7 +79,7 @@ public final class WaterClassification{
    if(s==SoilType.UNKNOWN)continue;
    sum+=soilRisk(s);n++;
   }
-  return withSoil(w,n==0?0:sum/n);
+  return withSoil(w,(n==0?0:sum/n)+EnvironmentAnalytics.metrics(l,p).map(m->m.soilLoad()*.25).orElse(0.0));
  }
  public static WaterProfile sample(ServerLevel l,BlockPos p){
   if(!loaded(l,p))return profile(WaterKind.UNKNOWN,false,WaterEvidence.UNCLASSIFIED);

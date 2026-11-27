@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=8;
+ public static final int API_REVISION=9;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -114,6 +114,12 @@ public final class WorldLogicApi {
  /** Classifies actual local water; no chunk loads; no thirst or consumption mechanics. */
  public static WaterSource waterSource(ServerLevel level,BlockPos pos){
   serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.waterSource(level,pos);
+ }
+ /** Cell-scale game indices, not measured concentrations. -1 denotes no sample. */
+ public record EnvironmentalMetrics(double airLoad,double naturalDust,double combustionLoad,double soilLoad,
+  long observedTick,int observedCombustionSources,int removedLogs,int minedBlocks,int disturbedSoil,int placedBlocks){}
+ public static Optional<EnvironmentalMetrics> environmentalMetrics(ServerLevel level,BlockPos pos){
+  serverThread(level);return dev.minemods.worldlogic.EnvironmentAnalytics.metrics(level,pos);
  }
  public record Fatigue(boolean enabled,double fatiguePercent,double remainingStaminaPercent){}
  private static void serverThread(ServerLevel level){
