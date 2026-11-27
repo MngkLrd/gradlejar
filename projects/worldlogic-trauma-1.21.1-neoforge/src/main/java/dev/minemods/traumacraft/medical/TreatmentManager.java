@@ -23,7 +23,7 @@ public final class TreatmentManager {
     private TreatmentManager() {}
 
     public static int duration(MedicalItem.Type type) {
-        return switch (type) {
+        return switch (MedicalAction.canonical(type)) {
             case RAG_DRESSING -> 20;
             case STERILE_PATCH, HERBAL_POULTICE -> 30;
             case BANDAGE, COMPRESSION_WRAP, HEMOSTATIC_GEL, TOURNIQUET -> 40;

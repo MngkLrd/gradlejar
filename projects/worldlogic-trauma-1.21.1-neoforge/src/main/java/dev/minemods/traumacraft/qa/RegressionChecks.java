@@ -228,14 +228,14 @@ public final class RegressionChecks {
                 case "targeting" -> {
                     var arm=BodyPart.RIGHT_ARM;
                     b.setBleeding(arm,2);
-                    require(MedicalAction.autoTarget(b,MedicalItem.Type.FIELD_MEDKIT)==arm,"field kit targets bleeding even at full local HP");
-                    require(MedicalAction.apply(p,b,MedicalItem.Type.FIELD_MEDKIT,arm)&&!b.hasBleeding(),"field kit stops bleeding");
+                    require(MedicalAction.autoTarget(b,MedicalItem.Type.TRAUMA_KIT)==arm,"trauma kit targets bleeding even at full local HP");
+                    require(MedicalAction.apply(p,b,MedicalItem.Type.TRAUMA_KIT,arm)&&!b.hasBleeding(),"trauma kit stops bleeding");
                     b.setFractured(arm,true);b.stabilize(arm,4800);
                     require(!MedicalAction.canApply(b,MedicalItem.Type.TRAUMA_KIT,arm),"no wasted kit on stabilized full-health limb");
                     b.setBleeding(arm,1);
-                    require(!MedicalAction.canApply(b,MedicalItem.Type.RECOVERY_SERUM,arm),"serum does not treat isolated bleeding");
+                    require(!MedicalAction.canApply(b,MedicalItem.Type.MEDKIT,arm),"medkit does not treat isolated bleeding");
                     b.damage(arm,9);
-                    require(MedicalAction.canApply(b,MedicalItem.Type.RECOVERY_SERUM,arm),"serum works on tissue damage");
+                    require(MedicalAction.canApply(b,MedicalItem.Type.MEDKIT,arm),"medkit works on living tissue damage");
                 }
                 case "persistence" -> {
                     b.damage(BodyPart.HEAD,BodyPart.HEAD.maximum);

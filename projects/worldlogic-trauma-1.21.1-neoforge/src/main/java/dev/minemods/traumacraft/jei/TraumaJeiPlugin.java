@@ -17,6 +17,11 @@ public final class TraumaJeiPlugin implements IModPlugin {
         return ResourceLocation.fromNamespaceAndPath(TraumaCraft.MOD_ID, "medical");
     }
     @Override
+    public void onRuntimeAvailable(mezz.jei.api.runtime.IJeiRuntime runtime){
+        runtime.getIngredientManager().removeIngredientsAtRuntime(mezz.jei.api.constants.VanillaTypes.ITEM_STACK,
+            ModItems.RETIRED.stream().map(i->new ItemStack(i.get())).toList());
+    }
+    @Override
     public void registerRecipes(IRecipeRegistration registration) {
         for (var item : ModItems.MEDICINE) {
             var id = item.getId().getPath();

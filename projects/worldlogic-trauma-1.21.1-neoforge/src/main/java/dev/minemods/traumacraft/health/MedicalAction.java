@@ -1,170 +1,73 @@
 package dev.minemods.traumacraft.health;
 
 import dev.minemods.traumacraft.item.MedicalItem;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 
-/**
- * Pure medical addon. Combat, damage calculations, armour and trauma creation are untouched.
- * All methods that change inventory/state are called on the logical server.
- */
+/** Canonical medical roles. Old registry IDs remain usable as equivalent medicines, not magic buffs. */
 public final class MedicalAction {
-    private MedicalAction() {}
-
-    private static boolean anyRecoverable(BodyState state) {
-        for (BodyPart zone : BodyPart.values()) {
-            if (state.health(zone) < zone.maximum) return true;
+    private MedicalAction(){}
+    public static MedicalItem.Type canonical(MedicalItem.Type type){
+        return switch(type){
+            case COMPRESSION_WRAP -> MedicalItem.Type.BANDAGE;
+            case FRACTURE_BRACE,BONE_MENDER -> MedicalItem.Type.SPLINT;
+            case STERILE_PATCH,COMPACT_MEDKIT,FIELD_MEDKIT,RECOVERY_SERUM -> MedicalItem.Type.MEDKIT;
+            case ADRENALINE_INJECTOR,GUARDIAN_INJECTOR,FOCUS_INJECTOR,ENDURANCE_INJECTOR -> MedicalItem.Type.ANALGESIC_TABLETS;
+            default -> type;
+        };
+    }
+    private static boolean livingDamage(BodyState b,BodyPart p){return b.health(p)>0&&b.health(p)<p.maximum;}
+    private static boolean limb(BodyPart p){return p.isLeg()||p==BodyPart.LEFT_ARM||p==BodyPart.RIGHT_ARM;}
+    public static boolean canApply(BodyState b,MedicalItem.Type type,BodyPart part){
+        if(b==null||type==null||part==null)return false;
+        return switch(canonical(type)){
+            case BANDAGE -> b.bleeding(part)>0;
+            case HEMOSTATIC_GEL -> b.bleeding(part)==2;
+            case TOURNIQUET -> limb(part)&&b.bleeding(part)==2;
+            case SPLINT -> limb(part)&&b.fractured(part)&&!b.stabilized(part);
+            case MEDKIT -> livingDamage(b,part);
+            case HERBAL_POULTICE -> b.bleeding(part)==0&&!b.fractured(part)&&livingDamage(b,part)&&(b.wounds(part)&WoundKind.CONTUSION.bit)!=0;
+            case RAG_DRESSING -> b.bleeding(part)==1||(b.bleeding(part)==0&&livingDamage(b,part));
+            case TRAUMA_KIT -> livingDamage(b,part)||b.bleeding(part)>0||(limb(part)&&b.fractured(part)&&!b.stabilized(part));
+            case SURGICAL_KIT -> limb(part)&&b.health(part)==0;
+            case ANALGESIC_TABLETS -> b.pain()>0&&b.painkillerTicks()==0;
+            default -> false;
+        };
+    }
+    public static BodyPart autoTarget(BodyState b,MedicalItem.Type type){
+        if(b==null||type==null)return null;
+        var canonical=canonical(type);
+        BodyPart chosen=null;float best=-1;
+        for(var part:BodyPart.values()){
+            if(!canApply(b,canonical,part))continue;
+            float score=switch(canonical){
+                case BANDAGE,HEMOSTATIC_GEL,TOURNIQUET,RAG_DRESSING,TRAUMA_KIT -> b.bleeding(part)*2+(1-b.percent(part));
+                case ANALGESIC_TABLETS -> part==BodyPart.CHEST?2:1;
+                default -> 1-b.percent(part);
+            };
+            if(score>best){best=score;chosen=part;}
         }
-        return false;
+        return chosen;
     }
-
-    public static boolean canApply(BodyState state, MedicalItem.Type type, BodyPart part) {
-        return switch (type) {
-            case BANDAGE, COMPRESSION_WRAP -> state.bleeding(part) > 0;
-            case HEMOSTATIC_GEL, TOURNIQUET -> state.bleeding(part) == 2;
-            case SPLINT, FRACTURE_BRACE, BONE_MENDER -> state.fractured(part) && !state.stabilized(part);
-            case MEDKIT -> state.health(part) < part.maximum;
-            case FIELD_MEDKIT -> state.health(part) < part.maximum || state.bleeding(part) > 0;
-            case HERBAL_POULTICE -> state.bleeding(part)==0&&!state.fractured(part)&&state.health(part)>0&&state.health(part)<part.maximum&&(state.wounds(part)&WoundKind.CONTUSION.bit)!=0;
-            case RAG_DRESSING -> state.bleeding(part)==1 || (state.health(part)>0&&state.health(part)<part.maximum);
-            case STERILE_PATCH, COMPACT_MEDKIT ->
-                    state.health(part) > 0 && state.health(part) < part.maximum;
-            case TRAUMA_KIT ->
-                    state.health(part) < part.maximum || state.bleeding(part) > 0 || (state.fractured(part) && !state.stabilized(part));
-            case SURGICAL_KIT -> state.health(part) == 0;
-            case RECOVERY_SERUM -> anyRecoverable(state);
-            case ADRENALINE_INJECTOR, GUARDIAN_INJECTOR, FOCUS_INJECTOR, ENDURANCE_INJECTOR, ANALGESIC_TABLETS -> true;
-        };
-    }
-
-    private static BodyPart mostRecoverable(BodyState state){
-        BodyPart target=null;float lowest=1;
-        for(var part:BodyPart.values())if(state.percent(part)>0&&state.percent(part)<lowest){target=part;lowest=state.percent(part);}
-        return target;
-    }
-    public static BodyPart autoTarget(BodyState state, MedicalItem.Type type) {
-        return switch (type) {
-            case BANDAGE, COMPRESSION_WRAP -> state.mostBleeding();
-            case HEMOSTATIC_GEL, TOURNIQUET -> {
-                BodyPart target = null;
-                for (BodyPart zone : BodyPart.values()) if (state.bleeding(zone) == 2) {
-                    target = zone; break;
-                }
-                yield target;
-            }
-            case SPLINT, FRACTURE_BRACE, BONE_MENDER -> state.firstFracture();
-            case SURGICAL_KIT -> {
-                BodyPart target = null;
-                for (BodyPart zone : BodyPart.values()) if (state.health(zone) == 0) {
-                    target = zone; break;
-                }
-                yield target;
-            }
-            case HERBAL_POULTICE -> {
-                BodyPart target=null;
-                for(var zone:BodyPart.values())if(canApply(state,type,zone)&&(target==null||state.percent(zone)<state.percent(target)))target=zone;
-                yield target;
-            }
-            case RAG_DRESSING -> {
-                BodyPart target=null;
-                for(var zone:BodyPart.values())if(state.bleeding(zone)==1){target=zone;break;}
-                yield target!=null?target:mostRecoverable(state);
-            }
-            case STERILE_PATCH, COMPACT_MEDKIT -> {
-                BodyPart result = null;
-                float lowest = 1f;
-                for (BodyPart zone : BodyPart.values()) {
-                    if (state.health(zone) > 0 && state.percent(zone) < lowest) {
-                        lowest = state.percent(zone); result = zone;
-                    }
-                }
-                yield result;
-            }
+    public static boolean apply(Player player,BodyState b,MedicalItem.Type type,BodyPart part){
+        if(!canApply(b,type,part))return false;
+        switch(canonical(type)){
+            case BANDAGE,TOURNIQUET -> b.stopBleeding(part);
+            case HEMOSTATIC_GEL -> {b.stopBleeding(part);if(b.health(part)>0)b.heal(part,10);}
+            case SPLINT -> b.stabilize(part,4800);
+            case MEDKIT -> b.heal(part,25);
+            case HERBAL_POULTICE -> {b.heal(part,6);b.setPainkillerTicks(Math.max(b.painkillerTicks(),200));}
+            case RAG_DRESSING -> {if(b.bleeding(part)==1)b.stopBleeding(part);if(b.health(part)>0)b.heal(part,4);}
             case TRAUMA_KIT -> {
-                BodyPart result = state.mostDamaged();
-                if (result == null) result = state.mostBleeding();
-                if (result == null) result = state.firstFracture();
-                yield result;
-            }
-            case MEDKIT -> state.mostDamaged();
-            case FIELD_MEDKIT -> {
-                BodyPart target = state.mostBleeding();
-                yield target != null ? target : state.mostDamaged();
-            }
-            case RECOVERY_SERUM, ADRENALINE_INJECTOR, GUARDIAN_INJECTOR,
-                 FOCUS_INJECTOR, ENDURANCE_INJECTOR, ANALGESIC_TABLETS -> BodyPart.CHEST;
-        };
-    }
-
-    /** The original three treatments retain their previous behaviour. */
-    public static boolean apply(Player player, BodyState state, MedicalItem.Type type, BodyPart part) {
-        if (!canApply(state, type, part)) return false;
-        switch (type) {
-            case BANDAGE -> state.stopBleeding(part);
-            case SPLINT -> state.stabilize(part, 4800);
-            case MEDKIT -> state.heal(part, 25);
-
-            case HERBAL_POULTICE -> {state.heal(part,6);state.setPainkillerTicks(Math.max(state.painkillerTicks(),200));}
-            case RAG_DRESSING -> {if(state.bleeding(part)==1)state.stopBleeding(part);state.heal(part,4);}
-            case STERILE_PATCH -> state.heal(part, 10);
-            case COMPRESSION_WRAP -> {
-                state.stopBleeding(part);
-                state.heal(part, 5);
-            }
-            case HEMOSTATIC_GEL -> {
-                state.stopBleeding(part);
-                state.heal(part, 15);
-            }
-            case TOURNIQUET -> state.stopBleeding(part);
-            case FRACTURE_BRACE -> {
-                state.stabilize(part, 3600);
-                state.heal(part, 10);
-            }
-            case BONE_MENDER -> {
-                state.stabilize(part, 2400);
-                state.heal(part, 25);
-                player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 200, 0));
-            }
-            case COMPACT_MEDKIT -> state.heal(part, 18);
-            case FIELD_MEDKIT -> {
-                state.heal(part, 42);
-                state.stopBleeding(part);
-            }
-            case TRAUMA_KIT -> {
-                state.heal(part, 60);
-                state.stopBleeding(part);
-                if (state.fractured(part) && !state.stabilized(part)) state.stabilize(part, 2400);
+                if(b.health(part)>0)b.heal(part,45);
+                b.stopBleeding(part);
+                if(limb(part)&&b.fractured(part)&&!b.stabilized(part))b.stabilize(part,3600);
             }
             case SURGICAL_KIT -> {
-                state.heal(part, 35);
-                state.stopBleeding(part);
-                if (state.fractured(part) && !state.stabilized(part)) state.stabilize(part, 3600);
+                b.heal(part,15);b.stopBleeding(part);
+                if(b.fractured(part)&&!b.stabilized(part))b.stabilize(part,4800);
             }
-            case RECOVERY_SERUM -> {
-                for (BodyPart zone : BodyPart.values()) state.heal(zone, 8);
-                player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 300, 0));
-            }
-            case ADRENALINE_INJECTOR -> {
-                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 600, 1));
-                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 600, 0));
-            }
-            case GUARDIAN_INJECTOR -> {
-                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 800, 0));
-                player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 800, 1));
-            }
-            case FOCUS_INJECTOR -> {
-                player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 1800, 1));
-                player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 1800, 0));
-            }
-            case ENDURANCE_INJECTOR -> {
-                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 1200, 0));
-                player.addEffect(new MobEffectInstance(MobEffects.JUMP, 1200, 1));
-            }
-            case ANALGESIC_TABLETS -> {
-                state.setPainkillerTicks(2400);
-                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 200, 0));
-            }
+            case ANALGESIC_TABLETS -> b.setPainkillerTicks(2400);
+            default -> {return false;}
         }
         return true;
     }

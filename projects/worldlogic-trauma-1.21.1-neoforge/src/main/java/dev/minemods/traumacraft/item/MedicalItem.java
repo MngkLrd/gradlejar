@@ -31,7 +31,7 @@ public final class MedicalItem extends Item {
     private final Type type;
     public MedicalItem(Properties properties, Type type) {
         super(properties);
-        this.type = type;
+        this.type = MedicalAction.canonical(type);
     }
     public Type medicalType() { return type; }
 
@@ -58,8 +58,7 @@ public final class MedicalItem extends Item {
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
         return switch (type) {
-            case ADRENALINE_INJECTOR, GUARDIAN_INJECTOR, FOCUS_INJECTOR,
-                    ENDURANCE_INJECTOR, BONE_MENDER -> UseAnim.DRINK;
+            case ANALGESIC_TABLETS -> UseAnim.DRINK;
             default -> UseAnim.BOW;
         };
     }
