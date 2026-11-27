@@ -116,6 +116,30 @@
       "command": "thermal qa creative_tab",
       "expect": "THERMAL_QA_creative_tab_PASS",
       "assertion": true
+    },
+    {
+      "name": "All six portable items, hotbar only, charge gradients, no stacking, expiration and reuse",
+      "command": "thermal qa portable",
+      "expect": "THERMAL_QA_portable_PASS",
+      "assertion": true
+    },
+    {
+      "name": "All nine advanced garments with real equipment exposure profiles",
+      "command": "thermal qa advanced_clothes",
+      "expect": "THERMAL_QA_advanced_clothes_PASS",
+      "assertion": true
+    },
+    {
+      "name": "All seven climate devices and three ventilation fixtures, finite activation and cooling controls",
+      "command": "thermal qa devices",
+      "expect": "THERMAL_QA_devices_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Three hand tools and four textile stations, material consumption and batch collection",
+      "command": "thermal qa textile",
+      "expect": "THERMAL_QA_textile_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -270,6 +294,50 @@
         {
           "backend": "server",
           "name": "Dedicated Temperature creative tab registered and complete item inventory"
+        }
+      ]
+    },
+    {
+      "id": "portable",
+      "kind": "mechanic",
+      "subject": "All six portable items, hotbar only, charge gradients, no stacking, expiration and reuse",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All six portable items, hotbar only, charge gradients, no stacking, expiration and reuse"
+        }
+      ]
+    },
+    {
+      "id": "advanced_clothes",
+      "kind": "mechanic",
+      "subject": "All nine advanced garments with real equipment exposure profiles",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All nine advanced garments with real equipment exposure profiles"
+        }
+      ]
+    },
+    {
+      "id": "devices",
+      "kind": "mechanic",
+      "subject": "All seven climate devices and three ventilation fixtures, finite activation and cooling controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All seven climate devices and three ventilation fixtures, finite activation and cooling controls"
+        }
+      ]
+    },
+    {
+      "id": "textile",
+      "kind": "mechanic",
+      "subject": "Three hand tools and four textile stations, material consumption and batch collection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Three hand tools and four textile stations, material consumption and batch collection"
         }
       ]
     }

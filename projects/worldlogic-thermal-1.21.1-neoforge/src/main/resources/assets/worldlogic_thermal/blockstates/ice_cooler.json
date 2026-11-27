@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "phase=0": {
+      "model": "worldlogic_thermal:block/ice_cooler"
+    },
+    "phase=1": {
+      "model": "worldlogic_thermal:block/ice_cooler_active"
+    },
+    "phase=2": {
+      "model": "worldlogic_thermal:block/ice_cooler_ready"
+    }
+  }
+}

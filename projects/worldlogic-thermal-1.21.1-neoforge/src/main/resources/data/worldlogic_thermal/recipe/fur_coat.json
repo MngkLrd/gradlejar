@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "H H",
+    "FFF",
+    "HHH"
+  ],
+  "key": {
+    "H": {
+      "item": "worldlogic_thermal:prepared_hide"
+    },
+    "F": {
+      "item": "worldlogic_thermal:felt"
+    }
+  },
+  "result": {
+    "id": "worldlogic_thermal:fur_coat",
+    "count": 1
+  }
+}

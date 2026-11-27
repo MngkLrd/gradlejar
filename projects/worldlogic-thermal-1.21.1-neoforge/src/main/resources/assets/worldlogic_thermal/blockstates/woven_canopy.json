@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=true": {
+      "model": "worldlogic_thermal:block/woven_canopy"
+    },
+    "open=false": {
+      "model": "worldlogic_thermal:block/woven_canopy_active"
+    }
+  }
+}

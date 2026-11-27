@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "H H",
+    "HHH"
+  ],
+  "key": {
+    "H": {
+      "item": "worldlogic_thermal:prepared_hide"
+    }
+  },
+  "result": {
+    "id": "worldlogic_thermal:leather_face_mask",
+    "count": 1
+  }
+}

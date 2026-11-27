@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "phase=0": {
+      "model": "worldlogic_thermal:block/wind_tower"
+    },
+    "phase=1": {
+      "model": "worldlogic_thermal:block/wind_tower_active"
+    },
+    "phase=2": {
+      "model": "worldlogic_thermal:block/wind_tower_ready"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "S S",
+    "S S",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:sandstone"
+    }
+  },
+  "result": {
+    "id": "worldlogic_thermal:wind_tower",
+    "count": 1
+  }
+}

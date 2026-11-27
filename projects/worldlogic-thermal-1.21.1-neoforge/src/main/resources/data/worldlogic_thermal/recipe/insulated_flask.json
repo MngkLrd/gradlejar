@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " F ",
+    "HBH",
+    " F "
+  ],
+  "key": {
+    "F": {
+      "item": "worldlogic_thermal:felt"
+    },
+    "H": {
+      "item": "worldlogic_thermal:prepared_hide"
+    },
+    "B": {
+      "item": "minecraft:water_bucket"
+    }
+  },
+  "result": {
+    "id": "worldlogic_thermal:insulated_flask",
+    "count": 1
+  }
+}

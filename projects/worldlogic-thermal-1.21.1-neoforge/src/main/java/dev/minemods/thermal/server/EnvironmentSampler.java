@@ -2,7 +2,7 @@ package dev.minemods.thermal.server;
 import dev.minemods.thermal.ThermalModel;
 import dev.minemods.thermal.WeatherReading;
 import dev.minemods.thermal.ClimateComfort;
-import dev.minemods.thermal.content.FixtureBlock;
+import dev.minemods.thermal.content.*;
 import dev.minemods.worldlogic.api.WorldLogicApi;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
@@ -38,20 +38,28 @@ public final class EnvironmentSampler {
         if(!Double.isFinite(air)) return Optional.empty();
         boolean sheltered = env.covered();
         boolean rain = env.rainingAt();
-        var local=localComfort(level,p,air,atmosphere.map(WorldLogicApi.Atmosphere::relativeHumidityPercent).orElse(100.0),sheltered);
+        var local=localComfort(level,p,air,atmosphere.map(WorldLogicApi.Atmosphere::relativeHumidityPercent).orElse(100.0),sheltered,atmosphere.map(a->clamp(a.outdoorWindSpeedMps()/12,0,1)).orElse(0.0));
         double radiant=local.heat();
-        double ins=0,ventilation=0;
+        double ins=0,ventilation=0,rainShield=0,windShield=0,sunShield=0;
         for (ItemStack stack : p.getArmorSlots()) {
             if (stack.isEmpty()) continue;
-            if(stack.is(SUMMER)){ventilation+=.45;ins+=.02;}
+            if(stack.getItem() instanceof ClimateGarment garment){var profile=garment.profile();ins+=profile.insulation();ventilation+=profile.ventilation();rainShield+=profile.rainShield();windShield+=profile.windShield();sunShield+=profile.sunShield();}
+            else if(stack.is(SUMMER)){ventilation+=.45;ins+=.02;}
             else ins += stack.is(PLANT) ? .25 : stack.is(INSULATED) ? .24 : stack.is(LIGHT) ? .13 : stack.is(METAL) ? .045 : .06;
         }
         // API v1 has no core gear moisture or hot-food accessor.
         var a=atmosphere.orElse(null);
         double previous=Double.isFinite(skin)?clamp(skin,0,1):0;
         skin=skinWetness(previous,p.isInWater(),rain,radiant);
+        if(rain&&!p.isInWater())skin=clamp(previous+(skin-previous)*(1-clamp(rainShield,0,.92)),0,1);
         if(!rain&&!p.isInWater()&&a!=null)skin=previous+(skin-previous)*WeatherReading.dryingFactor(a.relativeHumidityPercent());
         double wind=a!=null?WeatherReading.normalizedWind(a.outdoorWindSpeedMps(),sheltered):sheltered?.06:env.globalThunder()?.85:rain?.55:.22;
+        wind*=1-clamp(windShield,0,.8);
+        double solar=env.solarExposure()*(1-clamp(sunShield,0,.95));
+        double shadeCooling=Math.max(0,air-24)*clamp(sunShield,0,.95)*env.solarExposure()*.25;
+        var portable=ThermalPackItem.comfort(ThermalPackItem.hotbar(p,a==null?100:a.relativeHumidityPercent()),air+radiant-local.cooling()-shadeCooling);
+        radiant=ClimateComfort.capRadiant(air,radiant+portable.heat());
+        double cooling=Math.min(18,local.cooling()+shadeCooling+portable.cool());
         // Core ambient includes this day's solar/rain offsets; invert only when not clamped.
         double reference=Math.abs(air)>=99.99?Double.NaN:air-(sheltered?0:4*env.solarExposure()-2)+(rain?2:0);
         String biome=level.getBiome(pos).unwrapKey().map(k->k.location().toString()).orElse("");
@@ -61,25 +69,30 @@ public final class EnvironmentSampler {
             a==null?0:a.precipitation().ordinal(),a==null?0:a.precipitationIntensity(),env.globalThunder(),env.solarExposure(),
             a==null?Double.NaN:reference,regional==null?Double.NaN:regional.absoluteLatitude(),regional==null?Double.NaN:regional.moistureIndex());
         double activity = p.isSprinting() ? 1 : p.isSwimming() ? .75 : p.getDeltaMovement().horizontalDistanceSqr()>.008 ? .35 : 0;
-        return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,p.isInWater(),water(air,air),0,local.cooling(),clamp(ventilation,0,1)),skin,sheltered,env.solarExposure(),weather));
+        return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,p.isInWater(),water(air,air),0,cooling,clamp(ventilation,0,1)),skin,sheltered,solar,weather));
     }
     record LocalComfort(double heat,double cooling){}
     static LocalComfort localComfort(ServerLevel level,ServerPlayer p,double air,double humidity,boolean sheltered) {
+        return localComfort(level,p,air,humidity,sheltered,.5);
+    }
+    static LocalComfort localComfort(ServerLevel level,ServerPlayer p,double air,double humidity,boolean sheltered,double outdoorWind) {
         BlockPos at=p.blockPosition(); double heat=0,cooling=0;
         for(BlockPos b:BlockPos.betweenClosed(at.offset(-4,-2,-4),at.offset(4,3,4))) {
             if(!level.hasChunkAt(b)) continue;
             BlockState s=level.getBlockState(b);
-            double output=output(s); boolean cooler=s.getBlock() instanceof FixtureBlock fixture&&fixture.cooling()&&s.getValue(FixtureBlock.ACTIVE); if(output<=0&&!cooler) continue;
+            double output=output(s); boolean cooler=s.getBlock() instanceof FixtureBlock fixture&&fixture.cooling()&&s.getValue(FixtureBlock.ACTIVE); ClimateDeviceBlock device=s.getBlock() instanceof ClimateDeviceBlock d?d:null; if(output<=0&&!cooler&&device==null) continue;
             Vec3 center=Vec3.atCenterOf(b); double distance=center.distanceTo(p.position().add(0,.8,0));
             if(distance>5) continue;
             BlockHitResult hit=level.clip(new ClipContext(p.getEyePosition(),center,ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,p));
             if(hit.getType()!=HitResult.Type.MISS && !hit.getBlockPos().equals(b)) continue;
-            heat+=ClimateComfort.heat(output,distance);
+            heat+=ClimateComfort.heat(output*(device==null?1:VentBlock.adjustment(level,b)),distance);
+            if(device!=null)cooling+=device.cooling(s,air,humidity,distance,sheltered,outdoorWind,level.canSeeSky(b.above()));
             if(cooler)cooling+=ClimateComfort.cooling(air,humidity,distance,sheltered,true);
         }
         return new LocalComfort(ClimateComfort.capRadiant(air,heat),Math.min(18,cooling));
     }
     private static double output(BlockState s) {
+        if(s.getBlock() instanceof ClimateDeviceBlock device)return device.heat(s);
         if(s.getBlock() instanceof FixtureBlock fixture)return !fixture.cooling()&&s.getValue(FixtureBlock.ACTIVE)?65:0;
         if(s.is(Blocks.LANTERN))return 7;
         if(s.is(Blocks.SOUL_LANTERN))return 4;

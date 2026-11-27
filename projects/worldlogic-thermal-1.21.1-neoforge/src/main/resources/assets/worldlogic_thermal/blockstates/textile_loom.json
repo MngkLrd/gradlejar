@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "phase=0": {
+      "model": "worldlogic_thermal:block/textile_loom"
+    },
+    "phase=1": {
+      "model": "worldlogic_thermal:block/textile_loom_active"
+    },
+    "phase=2": {
+      "model": "worldlogic_thermal:block/textile_loom_ready"
+    }
+  }
+}

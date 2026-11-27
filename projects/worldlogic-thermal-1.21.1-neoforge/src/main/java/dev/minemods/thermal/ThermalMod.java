@@ -16,6 +16,7 @@ public final class ThermalMod {
         bus.addListener(EventPriority.LOWEST,dev.minemods.thermal.content.FiberHarvest::onClick);
         bus.addListener(EventPriority.LOWEST,dev.minemods.thermal.content.FiberInteraction::right);
         bus.addListener(EventPriority.LOWEST,dev.minemods.thermal.content.FiberInteraction::left);
+        bus.addListener(EventPriority.LOWEST,dev.minemods.thermal.content.ThermalPackItem::interact);
         bus.addListener(ThermalEvents::clonePlayer);
         bus.addListener(ThermalEvents::registerCommands);
     }

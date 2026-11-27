@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "FFF",
+    "F F",
+    "F F"
+  ],
+  "key": {
+    "F": {
+      "item": "worldlogic_thermal:felt"
+    }
+  },
+  "result": {
+    "id": "worldlogic_thermal:wool_underwear",
+    "count": 1
+  }
+}

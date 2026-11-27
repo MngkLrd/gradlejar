@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "phase=0": {
+      "model": "worldlogic_thermal:block/hide_frame"
+    },
+    "phase=1": {
+      "model": "worldlogic_thermal:block/hide_frame_active"
+    },
+    "phase=2": {
+      "model": "worldlogic_thermal:block/hide_frame_ready"
+    }
+  }
+}

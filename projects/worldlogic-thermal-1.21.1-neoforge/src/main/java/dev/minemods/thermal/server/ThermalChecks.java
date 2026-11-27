@@ -164,8 +164,12 @@ final class ThermalChecks {
                     var registry=net.minecraft.core.registries.BuiltInRegistries.ITEM;
                     var expected=registry.keySet().stream().filter(k->k.getNamespace().equals("worldlogic_thermal")).collect(java.util.stream.Collectors.toSet());
                     var listed=items.stream().map(registry::getKey).collect(java.util.stream.Collectors.toSet());
-                    require(items.size()==listed.size()&&listed.equals(expected)&&items.size()==13,"all thirteen registered items listed exactly once");
+                    require(items.size()==listed.size()&&listed.equals(expected)&&items.size()==49,"all forty-nine registered items listed exactly once");
                 }
+                case "portable" -> ExpansionChecks.portable(l,p);
+                case "advanced_clothes" -> ExpansionChecks.clothes(l,p);
+                case "devices" -> ExpansionChecks.devices(l,p);
+                case "textile" -> ExpansionChecks.textile(l,p);
                 default -> throw new IllegalArgumentException(name);
             }
         } finally {

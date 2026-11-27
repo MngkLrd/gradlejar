@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CCC",
+    "C C"
+  ],
+  "key": {
+    "C": {
+      "item": "worldlogic_thermal:woven_fiber"
+    }
+  },
+  "result": {
+    "id": "worldlogic_thermal:desert_headwear",
+    "count": 1
+  }
+}
