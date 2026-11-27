@@ -1,0 +1,198 @@
+{
+  "schema": 1,
+  "assets": {
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/ebony_log.png": {
+      "sha256": "90128216cd9e332018883c15a65d98621b2cf117873474b23112b71419439e29",
+      "verdict": "FAIL",
+      "material_profile": "bark",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_log",
+          "minecraft": "1.21.1",
+          "sha256": "10fff32071a6f562064322321e481a4091e9aa21836ad272fe9e19b63527fc2c"
+        }
+      ],
+      "comparison": "Compared with dark oak bark at 1x and tiled: narrow longitudinal furrows read, but the same ridges repeat too regularly; additional local splits and interrupted microclusters are required.",
+      "findings": {},
+      "required_rework": "Compared with dark oak bark at 1x and tiled: narrow longitudinal furrows read, but the same ridges repeat too regularly; additional local splits and interrupted microclusters are required."
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/ebony_log_top.png": {
+      "sha256": "ce0e533477e99836eb1484a2105866dbbc8707b78d025f2d06ad9a22dd609154",
+      "verdict": "FAIL",
+      "material_profile": "log_end",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_log_top",
+          "minecraft": "1.21.1",
+          "sha256": "a1e6627bb321e5751c90ee451f7c96b7cf742be9ef9b0813d9967419effa6e4a"
+        }
+      ],
+      "comparison": "Compared with dark oak cut at native and tiled scale: the dark core and pale sapwood read but the prominent ring is too uniformly rounded and lacks broken local ring structure.",
+      "findings": {},
+      "required_rework": "Compared with dark oak cut at native and tiled scale: the dark core and pale sapwood read but the prominent ring is too uniformly rounded and lacks broken local ring structure."
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/ebony_planks.png": {
+      "sha256": "858fc1270859bd3462a7d5aef43676d5ea0179fb4b13e81438cc1349c97ec6f1",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "2bccdc1ef269b7ae6050d46b70071ead5c3ad4c3a16e3f6baf24fc629752b8bc"
+        }
+      ],
+      "comparison": "Compared at 1x, 4x and tiled 3x3 with dark oak: the four-board construction stays recognizable while the hue is charcoal rather than brown. The dark seams are intentional board joints, not gaps in alpha.",
+      "findings": {
+        "silhouette": "Four horizontal boards with one-pixel seams and staggered end joints remain legible.",
+        "cluster_structure": "Rows 1–3 contain long joined midtone groups with shorter adjoining grain shifts.",
+        "micro_contrast": "The warm charcoal grain changes in small steps within the board faces.",
+        "light_and_volume": "Upper board edge is lighter than the lower edge, implying a shallow bevel.",
+        "material_continuity": "All opaque face pixels use a muted brown-grey ramp consistent with finished ebony.",
+        "edge_variation": "End joints shift from x7 to x12, x3 and x9 across courses.",
+        "variant_identity": "Ebony retains a dark charcoal face unlike mahogany's muted warm red.",
+        "vanilla_comparison": "Dark oak uses the same horizontal board scale and broken joint rhythm.",
+        "functional_material_cues": "Horizontal grain and dark joints distinguish sawn boards from bark."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/ebony_leaves.png": {
+      "sha256": "fafd1a6b820ed41529bcb64f0956e4894d89dcc41a8d9b606da2eab8e4fa4787",
+      "verdict": "FAIL",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_leaves",
+          "minecraft": "1.21.1",
+          "sha256": "7de885f23039edae5cebc02bc208a65d840394448ecac6faa6999f1c558f98c2"
+        }
+      ],
+      "comparison": "Compared with dark oak foliage: actual transparent openings are present, but repeated highlight clusters form a mechanically tiled rhythm instead of varied leaf overlaps.",
+      "findings": {},
+      "required_rework": "Compared with dark oak foliage: actual transparent openings are present, but repeated highlight clusters form a mechanically tiled rhythm instead of varied leaf overlaps."
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/ebony_sapling.png": {
+      "sha256": "a4d301d0f244f110d347661ee721afc8ba430b842941bcc6dbed9e2e9faedc9c",
+      "verdict": "PASS",
+      "material_profile": "sapling",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_sapling",
+          "minecraft": "1.21.1",
+          "sha256": "b16c30ee6297777ae6bb9425bb9fab95e17c1758752598c9679b8212a01fec6e"
+        }
+      ],
+      "comparison": "Compared at native size and 4x with dark oak sapling: a forked woody stem and attached asymmetric leaf groups replace the old simple green cap; the reduced young crown is intentional.",
+      "findings": {
+        "silhouette": "A low irregular crown extends to the left and reaches upward on the right.",
+        "cluster_structure": "The leaf tips at the upper right and lower left connect to shaded leaf bases.",
+        "micro_contrast": "Olive green tip pixels meet darker neighboring green groups.",
+        "light_and_volume": "The brown stem has lighter central faces next to the darker turning branches.",
+        "material_continuity": "Green foliage stays attached to the warm brown wood, with no arbitrary accent flecks.",
+        "edge_variation": "Uneven branch lengths and open space between foliage groups avoid a square crown.",
+        "variant_identity": "The split and leaning ebony leader reads shorter and more asymmetric than mahogany.",
+        "vanilla_comparison": "Dark oak demonstrates recognizable branch attachments and a small native-scale crown.",
+        "branch_hierarchy": "The central woody stem divides into two main arms and a small lower left shoot.",
+        "species_silhouette": "The short spreading side shoots and upright right tip make a squat juvenile.",
+        "foliage_attachment": "Leaf bases meet the brown branch pixels at the tips rather than float separately."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/mahogany_log.png": {
+      "sha256": "19e2c613d41577bd1f940de60bb6d5e55f67a0ae1ddb4a5b97cb4798c3494a63",
+      "verdict": "FAIL",
+      "material_profile": "bark",
+      "references": [
+        {
+          "id": "minecraft:block/jungle_log",
+          "minecraft": "1.21.1",
+          "sha256": "5fbebd043751f997f36cafec1645deb96e7fb46fc65b6942a67759e55b2d40b3"
+        }
+      ],
+      "comparison": "Compared with jungle bark: the warm flake color is distinct, but the tiled image still creates a repeated oblique ridge pattern; break the diagonal and develop shorter flake edges.",
+      "findings": {},
+      "required_rework": "Compared with jungle bark: the warm flake color is distinct, but the tiled image still creates a repeated oblique ridge pattern; break the diagonal and develop shorter flake edges."
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/mahogany_log_top.png": {
+      "sha256": "65c4700ffdbff01f6291b9dd9be6d29a7cc6b751261b00fa0fb86027d1494c3a",
+      "verdict": "FAIL",
+      "material_profile": "log_end",
+      "references": [
+        {
+          "id": "minecraft:block/jungle_log_top",
+          "minecraft": "1.21.1",
+          "sha256": "7de45035995663fe7ad7ad5ad7547298da693e13b69e569700b0a7acf3f7234a"
+        }
+      ],
+      "comparison": "Compared with jungle end grain: the red heartwood reads, but the inner rectangular ring and broad outer band remain too geometrically regular.",
+      "findings": {},
+      "required_rework": "Compared with jungle end grain: the red heartwood reads, but the inner rectangular ring and broad outer band remain too geometrically regular."
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/mahogany_planks.png": {
+      "sha256": "2080d75a43192a700700626dc08f3209a0a294f8c28ceecf5179de142acee659",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/mangrove_planks",
+          "minecraft": "1.21.1",
+          "sha256": "b9b9969300ee9aa3e69c2dd908616ee3dfe5211fbf5706ea787803fd12196d3a"
+        }
+      ],
+      "comparison": "Compared at 1x, 4x and 3x3 with mangrove planks: horizontal construction is preserved, but the reddish-brown face is less saturated and uses its own joint positions.",
+      "findings": {
+        "silhouette": "Four boards remain distinct, each separated by a one-pixel reddish-brown seam.",
+        "cluster_structure": "Warm contiguous grain areas extend along the upper and middle board rows.",
+        "micro_contrast": "The small darker groups inside rows 3 and 7 emphasize the grain without speckles.",
+        "light_and_volume": "A lighter upper rim and restrained lower shadows describe the board edges.",
+        "material_continuity": "Muted terracotta and brown shades carry through each opaque sawn face.",
+        "edge_variation": "The joins shift between the middle, left and right of successive boards.",
+        "variant_identity": "The reddish-brown palette contrasts with ebony's neutral charcoal while keeping the vanilla board motif.",
+        "vanilla_comparison": "Mangrove provides the four-course reference; mahogany uses less purple-red saturation.",
+        "functional_material_cues": "Long horizontal material groups show cut timber, rather than a generic red tile."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/mahogany_leaves.png": {
+      "sha256": "eb57c123fd30ab860409e8ec88a497900a538860d5bbd784d937cd15731d3fa4",
+      "verdict": "FAIL",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/jungle_leaves",
+          "minecraft": "1.21.1",
+          "sha256": "2e3ac2a106e5bd99934fe4b62bdd35c559157989e621f2dbf5d42d6cdba245d6"
+        }
+      ],
+      "comparison": "Compared with jungle foliage: connected leaf groups exist but similar diagonal lobes repeat and fail to represent distinct canopy depth.",
+      "findings": {},
+      "required_rework": "Compared with jungle foliage: connected leaf groups exist but similar diagonal lobes repeat and fail to represent distinct canopy depth."
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/mahogany_sapling.png": {
+      "sha256": "0f6e49c770ea7cf03a8de73c63ebfdd4fc7626e7b3a73b17e22abba61da8f204",
+      "verdict": "PASS",
+      "material_profile": "sapling",
+      "references": [
+        {
+          "id": "minecraft:block/jungle_sapling",
+          "minecraft": "1.21.1",
+          "sha256": "28f2686cca35c16e0d59496902bc7f178404f88be2cfc6920e2c48f7b0432c8d"
+        }
+      ],
+      "comparison": "Compared at native size and 4x with jungle sapling: a taller single leader carries offset leaf clusters instead of a solid oval silhouette; the paired side shoots are deliberate.",
+      "findings": {
+        "silhouette": "The narrow upright profile rises to a terminal crown above two offset lateral tiers.",
+        "cluster_structure": "The upper and side clusters contain small adjoining green shade groups.",
+        "micro_contrast": "Tip greens step into darker greens at the points where leaves meet the twig.",
+        "light_and_volume": "A lighter brown strip on the lower stem sits beside darker wood pixels.",
+        "material_continuity": "The restrained leaf and wood ramps distinguish thin young bark and green foliage.",
+        "edge_variation": "Uneven left and right tier heights break the outer contour.",
+        "variant_identity": "A straight central leader and staggered branches distinguish it from forked ebony.",
+        "vanilla_comparison": "Jungle sapling supplies the tall juvenile role and closely scaled stem reference.",
+        "branch_hierarchy": "A continuous main leader supports smaller side shoots at separate heights.",
+        "species_silhouette": "An erect single leader with paired leaflets suggests a tropical seedling.",
+        "foliage_attachment": "Each side cluster connects inward through a darker leaf base to its branch."
+      }
+    }
+  },
+  "review_status": "DRAFT / BLOCKED — only four of ten revised PNGs accepted; 108 additional project PNGs have no review record. Not eligible for compilation or release under current main lock.",
+  "reference_provenance": "Actual PNGs from InventivetalentDev/minecraft-assets, 1.21.1 branch; inspected at original and nearest-neighbor 4x. Official client SHA-1 could not be verified in this environment. No vanilla assets included.",
+  "client_status": "NOT_RUN"
+}
