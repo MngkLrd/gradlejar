@@ -1,0 +1,975 @@
+{
+  "schema": 1,
+  "reference_source": "Actual 1.21.1 PNGs from InventivetalentDev/minecraft-assets version mirror, inspected at native size and nearest-neighbor enlargement; local official client download unavailable",
+  "scope": "38 native sprites redrawn and inspected; 2 anatomy atlases reviewed and retained to preserve exact UI UVs. No graphical client evidence.",
+  "assets": {
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/bleeding.png": {
+      "sha256": "16ccd846c0cca5c3019bb7f9df8de4ab821e00ddbd58e311a84767373ee09982",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:mob_effect/regeneration",
+          "minecraft": "1.21.1",
+          "sha256": "09bd2e8e8669322ab4a2b57ddf17a9a4518d074da6c0033d5e7b2a6c25ee2d30"
+        }
+      ],
+      "comparison": "Regeneration has a dark red edge and bright core; drop uses similar contrast but a pointed upper tip",
+      "findings": {
+        "silhouette": "Tapered liquid drop widens to a rounded reservoir",
+        "cluster_structure": "Left red cluster follows descending liquid edge",
+        "micro_contrast": "Small pale red gleam separates highlight from midtone",
+        "light_and_volume": "Wine bottom-right curves back into reservoir",
+        "material_continuity": "Continuous red ramp across drop",
+        "edge_variation": "Stepped shoulders widen then contract at base",
+        "variant_identity": "Pointed drop differs from heart lobes and heat symbols",
+        "vanilla_comparison": "Regeneration has a dark red edge and bright core; drop uses similar contrast but a pointed upper tip",
+        "functional_material_cues": "Wet left highlight and liquid reservoir signify bleeding"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/concussion.png": {
+      "sha256": "5e0228b32dccbc8780a28346454cbf08a1c5b2499263865c057ec472f3250ecb",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:mob_effect/weakness",
+          "minecraft": "1.21.1",
+          "sha256": "2c28c388a57e7afb888c94505e05c9ffb7aa5efe8f67eab37b3ee727d4c27866"
+        }
+      ],
+      "comparison": "Weakness uses small accent pixels around a central icon; head and sparks likewise separate primary and secondary elements",
+      "findings": {
+        "silhouette": "Profile head with neck and two sparks",
+        "cluster_structure": "Amber temple cluster and compact paired sparks",
+        "micro_contrast": "Dark eye contrasts with brow",
+        "light_and_volume": "Top forehead light turns into ochre cheek shadow",
+        "material_continuity": "Amber head remains one coherent surface beneath sparks",
+        "edge_variation": "Stepped temple and rectangular neck contrast with sparks",
+        "variant_identity": "Profile with stars differs from sun or capsule",
+        "vanilla_comparison": "Weakness uses small accent pixels around a central icon; head and sparks likewise separate primary and secondary elements",
+        "functional_material_cues": "Two isolated sparks indicate dizziness"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/fracture.png": {
+      "sha256": "8a0eb91841a444923e055e489438a3772205e77f98ee374a5d1b8d37e943a957",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/bone",
+          "minecraft": "1.21.1",
+          "sha256": "f5f2a37e7466f2983c00550874a2a94d2d006eae52b0e73acb722fadeb9bdb3b"
+        }
+      ],
+      "comparison": "Vanilla bone has enlarged pale ends and olive-grey shadow; this version interrupts the shaft",
+      "findings": {
+        "silhouette": "Two diagonal broken bone sections separated by gap",
+        "cluster_structure": "Cream groups at enlarged ends with short shafts",
+        "micro_contrast": "Red jagged interruption distinct from beige ends",
+        "light_and_volume": "Light top rims and darker recessed bone edges",
+        "material_continuity": "Warm off-white bone ramp within both sections",
+        "edge_variation": "Staggered ends and clear separation",
+        "variant_identity": "Separated sections make fracture readable rather than intact bone",
+        "vanilla_comparison": "Vanilla bone has enlarged pale ends and olive-grey shadow; this version interrupts the shaft",
+        "functional_material_cues": "Red break accent links separated ends"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/painkiller.png": {
+      "sha256": "4c546a5efec1e0d80809cbe2df358e2f344524f2d07ceb8d5b34f8952823d315",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/paper",
+          "minecraft": "1.21.1",
+          "sha256": "8ffee002bbc339552eb4d6be5948eb4eb66d016c19e7bbc55bc1cd4a575cc44a"
+        }
+      ],
+      "comparison": "Paper provides warm cream highlight and grey edge; capsule adds colored lower shell",
+      "findings": {
+        "silhouette": "Long diagonal capsule with rounded ends",
+        "cluster_structure": "Cream upper group and blue lower group joined at seam",
+        "micro_contrast": "Bright cream edge and pale cyan gleam",
+        "light_and_volume": "Dark lower blue edge rounds cylinder",
+        "material_continuity": "Each shell has coherent tonal ramp",
+        "edge_variation": "Chamfered diagonal ends and compact straight sides",
+        "variant_identity": "Two shell sections distinguish capsule from bandages",
+        "vanilla_comparison": "Paper provides warm cream highlight and grey edge; capsule adds colored lower shell",
+        "functional_material_cues": "Two-piece shell identifies medicine"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/thermal_cold.png": {
+      "sha256": "d0d3eead21b97c8443aee7b6a91969e09b0a261f18e541dba380d5bad47ad0ac",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/snowball",
+          "minecraft": "1.21.1",
+          "sha256": "4e4dff01a4935f58ad5a3f80700b4b85062baa0b395736b2e53e189107673d81"
+        }
+      ],
+      "comparison": "Snowball uses blue-green shaded edges and near-white ice; these hues outline a crystal",
+      "findings": {
+        "silhouette": "Branched crystal surrounding central hub",
+        "cluster_structure": "Ice-blue branch clusters join pale center",
+        "micro_contrast": "Pale hub contrasts with dark cool stems",
+        "light_and_volume": "Bright center suggests ice reflection",
+        "material_continuity": "Related blue tones link spokes",
+        "edge_variation": "Stems have distinct branching tips",
+        "variant_identity": "Branched silhouette reads as snow rather than fire",
+        "vanilla_comparison": "Snowball uses blue-green shaded edges and near-white ice; these hues outline a crystal",
+        "functional_material_cues": "Spokes and pale core identify cold"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/thermal_heat.png": {
+      "sha256": "06e6df0ba8b41978e4e8a6bd59ee563aa6876f69ae1e4447478bd2e106479e43",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/fire_charge",
+          "minecraft": "1.21.1",
+          "sha256": "d175f39053b128f2677135dfe3f8f83f949cfab3d40e7ce48aa7eae170692e34"
+        }
+      ],
+      "comparison": "Fire charge groups orange spots in dark mass; this version extends warm center into flame",
+      "findings": {
+        "silhouette": "Tall uneven flame with separate rising tongues",
+        "cluster_structure": "Amber base and red outer tongues enclose warm core",
+        "micro_contrast": "Near-white glint contrasts with orange interior",
+        "light_and_volume": "Lower core hottest while red tips recede",
+        "material_continuity": "Red-to-amber ramp follows flame interior",
+        "edge_variation": "Uneven peaks and wide tapered base",
+        "variant_identity": "No alert mark unlike heatstroke icon",
+        "vanilla_comparison": "Fire charge groups orange spots in dark mass; this version extends warm center into flame",
+        "functional_material_cues": "Tapered tongues and warm core express heat"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/thermal_stroke.png": {
+      "sha256": "1e2c2c72b5d6ae5fed39570c9bc9f35af4e6b0ddac76133b302f0ae8a1a296b5",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/fire_charge",
+          "minecraft": "1.21.1",
+          "sha256": "d175f39053b128f2677135dfe3f8f83f949cfab3d40e7ce48aa7eae170692e34"
+        }
+      ],
+      "comparison": "Fire charge provides clustered orange thermal ramp; clinical symbol adds pale warning glyph",
+      "findings": {
+        "silhouette": "Flame contains explicit vertical alert mark",
+        "cluster_structure": "Warm core interrupted by pale bar and dot",
+        "micro_contrast": "Light exclamation contrasts with deep red upper flame",
+        "light_and_volume": "Amber base luminous beneath dark silhouette",
+        "material_continuity": "Red and amber ramp surrounds alert glyph",
+        "edge_variation": "Angular flame tips contrast with flat warning mark",
+        "variant_identity": "Exclamation differentiates severe heat from ordinary heat",
+        "vanilla_comparison": "Fire charge provides clustered orange thermal ramp; clinical symbol adds pale warning glyph",
+        "functional_material_cues": "Detached dot and bar signify dangerous clinical heat"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/thermal_sun.png": {
+      "sha256": "a8d14ac3e042c7bca2e226f997baa0831bfb1214cbe0cd1d92725ae00342e3da",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/fire_charge",
+          "minecraft": "1.21.1",
+          "sha256": "d175f39053b128f2677135dfe3f8f83f949cfab3d40e7ce48aa7eae170692e34"
+        }
+      ],
+      "comparison": "Fire charge has dark warm perimeter and brighter orange groups; disc applies that ramp radially",
+      "findings": {
+        "silhouette": "Angular round disk framed by straight rays",
+        "cluster_structure": "Broad amber disk and smaller pale interior cluster",
+        "micro_contrast": "Near-white center against burnt amber lower edge",
+        "light_and_volume": "Upper-left light and ochre bottom define convex disk",
+        "material_continuity": "Amber tones link rays and disk",
+        "edge_variation": "Octagonal disk contrasts with rectangular rays",
+        "variant_identity": "Radial rays and no flame tongues distinguish sunstroke",
+        "vanilla_comparison": "Fire charge has dark warm perimeter and brighter orange groups; disc applies that ramp radially",
+        "functional_material_cues": "Rays identify solar exposure rather than ambient heat"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/trauma/body.png": {
+      "sha256": "4846958da1343226c9f385e1444da53e9ae9a48a5ff0bf3034e02ec96d512b40",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:gui/sprites/hud/heart/full",
+          "minecraft": "1.21.1",
+          "sha256": "fbc682e09ae677d82fb9bd638eae2fef0e75d3dcb2f556ec9d693fc1ba1321c9"
+        }
+      ],
+      "comparison": "Vanilla heart has bright health fill and dark boundary; anatomy requires independent colored zones",
+      "findings": {
+        "silhouette": "Seven human regions align in five identical state columns",
+        "cluster_structure": "Broad forehead and chest highlights, narrow vertical limb clusters",
+        "micro_contrast": "Dark outlines preserve separation across health states",
+        "light_and_volume": "Torso and limb upper-left highlights turn into right edge shadow",
+        "material_continuity": "One consistent hue ramp per state",
+        "edge_variation": "Shoulders hands and feet preserve click-region separation",
+        "variant_identity": "Five variants intentionally share geometry, green through grey",
+        "vanilla_comparison": "Vanilla heart has bright health fill and dark boundary; anatomy requires independent colored zones",
+        "functional_material_cues": "Exact 240x84 atlas geometry retained for GUI mapping"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/trauma/overlays.png": {
+      "sha256": "f6001cb9888d1fa255e735038277863c88cbb52f1209baf1c9af36d4a5ac2d99",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/bone",
+          "minecraft": "1.21.1",
+          "sha256": "f5f2a37e7466f2983c00550874a2a94d2d006eae52b0e73acb722fadeb9bdb3b"
+        }
+      ],
+      "comparison": "Vanilla bone pale shaft and darker border recur at reduced icon scale",
+      "findings": {
+        "silhouette": "Drop wound spot diagonal bone and brace occupy separate cells",
+        "cluster_structure": "Compact red reservoir, pale bone sections and crossbar clusters",
+        "micro_contrast": "Pale brace ties contrast with wood uprights",
+        "light_and_volume": "Dark right edges add volume to drop and brace",
+        "material_continuity": "Each icon retains material ramp inside cell",
+        "edge_variation": "Transparent margins isolate symbols and avoid UV bleeding",
+        "variant_identity": "Drop bruise bone and brace have distinct shapes",
+        "vanilla_comparison": "Vanilla bone pale shaft and darker border recur at reduced icon scale",
+        "functional_material_cues": "Exact 40x30 atlas positions retained for injury overlays"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/adrenaline_injector.png": {
+      "sha256": "fb17bfef7bfdb8557bae043b7086db03463c5fa645f4babb2d1a26294b9f213c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/iron_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391"
+        }
+      ],
+      "comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
+      "findings": {
+        "silhouette": "Diagonal syringe with fine needle barrel flange and plunger",
+        "cluster_structure": "Steel border surrounds red barrel group with separate flange",
+        "micro_contrast": "Pale metal edge contrasts with bright red fill mark",
+        "light_and_volume": "Upper-left barrel highlight and darker lower edge imply cylinder",
+        "material_continuity": "Steel ramp continuous from plunger to needle, separate from red contents",
+        "edge_variation": "Stepped ends preserve needle and projecting flange",
+        "variant_identity": "Adrenaline red barrel; shared physical construction intentional",
+        "vanilla_comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
+        "functional_material_cues": "Visible needle and plunger identify syringe; bright red fill mark signals contents"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/analgesic_tablets.png": {
+      "sha256": "dbcc0a0112f0758405ac213aec030ddd488930911af2c8eace6cfcfeaf865eed",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/iron_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391"
+        }
+      ],
+      "comparison": "Iron ingot uses bright metallic face and dark facets; blister uses foil contrast around pills",
+      "findings": {
+        "silhouette": "Diagonal blister strip with two raised pockets",
+        "cluster_structure": "Two cream pill groups inside cool grey backing",
+        "micro_contrast": "Pale pill highlights distinguish dark recesses",
+        "light_and_volume": "Upper metallic rim bright and lower backing shaded",
+        "material_continuity": "Grey foil continuous beneath beige pockets",
+        "edge_variation": "Angled strip edges and chamfered pill pockets",
+        "variant_identity": "Two tablets distinct from capsule status symbol",
+        "vanilla_comparison": "Iron ingot uses bright metallic face and dark facets; blister uses foil contrast around pills",
+        "functional_material_cues": "Raised pockets identify tablet pack"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/antiseptic.png": {
+      "sha256": "9e93efa5ccdc1ead42160a77b9df28721a54f48714d0cf381edfc1cc151f3f96",
+      "verdict": "PASS",
+      "material_profile": "vessel",
+      "references": [
+        {
+          "id": "minecraft:item/glass_bottle",
+          "minecraft": "1.21.1",
+          "sha256": "6a09a39bb6c41bc92bd5eca1f51caf5b582a85f68206b164476c8e14a4669416"
+        }
+      ],
+      "comparison": "Vanilla bottle has cyan shoulder reflection and brown neck; filled vessel adds contrasting liquid meniscus",
+      "findings": {
+        "silhouette": "Round bulb with narrow neck",
+        "cluster_structure": "Curved blue glass edge, olive liquid group and brown cork",
+        "micro_contrast": "Pale shoulder reflection above olive meniscus",
+        "light_and_volume": "Shaded lower rim rounds the vessel against bright left shoulder",
+        "material_continuity": "Blue glass surrounds a contiguous olive reservoir",
+        "edge_variation": "Stepped neck joins angled shoulders and flat base",
+        "variant_identity": "Round bulb and olive liquid differentiates the medicine",
+        "vanilla_comparison": "Vanilla bottle has cyan shoulder reflection and brown neck; filled vessel adds contrasting liquid meniscus",
+        "construction": "Round bulb with narrow neck and brown cork form legible vessel construction",
+        "surface_turn": "Shoulder glint transitions to shaded base and right edge",
+        "material_specific_shading": "Cool cyan glass highlights stay separate from the olive contents and brown cork"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/bandage.png": {
+      "sha256": "9ac029cacf0b12a2d72574c5a80ac9a578886ed0bf128de49289640b6a78d6a8",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/paper",
+          "minecraft": "1.21.1",
+          "sha256": "8ffee002bbc339552eb4d6be5948eb4eb66d016c19e7bbc55bc1cd4a575cc44a"
+        }
+      ],
+      "comparison": "Paper reference has pale plane and dark edge; bandage adds curved roll and tail folds",
+      "findings": {
+        "silhouette": "Rolled cylinder with trailing strip",
+        "cluster_structure": "Curl on roll and elongated cream strip group",
+        "micro_contrast": "Dark inner curl next to warm rim",
+        "light_and_volume": "Upper-left roll face recedes into shaded underside",
+        "material_continuity": "Linen ramp continues to tail",
+        "edge_variation": "Curved roll and stepped loose end",
+        "variant_identity": "Spiral center and tail distinguish bandage from patch",
+        "vanilla_comparison": "Paper reference has pale plane and dark edge; bandage adds curved roll and tail folds",
+        "functional_material_cues": "Roll opening and trailing strip indicate wrap"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/bone_mender.png": {
+      "sha256": "a871bddbaf7ea8f7a574839c6187d27c8250a207dfa8d3b484bbabc0a4519705",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/iron_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391"
+        }
+      ],
+      "comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
+      "findings": {
+        "silhouette": "Diagonal syringe with fine needle barrel flange and plunger",
+        "cluster_structure": "Steel border surrounds cyan barrel group with separate flange",
+        "micro_contrast": "Pale metal edge contrasts with unmarked cyan fill",
+        "light_and_volume": "Upper-left barrel highlight and darker lower edge imply cylinder",
+        "material_continuity": "Steel ramp continuous from plunger to needle, separate from cyan contents",
+        "edge_variation": "Stepped ends preserve needle and projecting flange",
+        "variant_identity": "Bone mender plain cyan barrel; shared physical construction intentional",
+        "vanilla_comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
+        "functional_material_cues": "Visible needle and plunger identify syringe; unmarked cyan fill signals contents"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/compact_medkit.png": {
+      "sha256": "5f62b7b11d0c41fae44e7f34dab51c1d32ebf167da70e4cceddd717c5dfe4b9e",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/bundle",
+          "minecraft": "1.21.1",
+          "sha256": "357b6eb5f03aceb375157a3bc371b99f92c3bc743e87c538ddccaebc28460315"
+        }
+      ],
+      "comparison": "Vanilla bundle uses coherent surface shading; this case adds Green upper flap and ivory badge",
+      "findings": {
+        "silhouette": "Low shallow case with short handle",
+        "cluster_structure": "Green upper flap and ivory badge form contiguous clusters",
+        "micro_contrast": "Small shaded right side creates local contrast",
+        "light_and_volume": "Upper-left lip brighter than shaded lower and right edges",
+        "material_continuity": "Material tones continue around closure without random speckling",
+        "edge_variation": "Stepped edges separate handle or rim from side panel",
+        "variant_identity": "Compact green proportions distinguishes kit variant",
+        "vanilla_comparison": "Vanilla bundle uses coherent surface shading; this case adds Green upper flap and ivory badge",
+        "functional_material_cues": "Closure, storage shape and Small shaded right side identify medical equipment"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/compression_wrap.png": {
+      "sha256": "87abbac852ee96ff40622f56dc4a81f1184ceb2536393cdbfd5c1a9d859af324",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/paper",
+          "minecraft": "1.21.1",
+          "sha256": "8ffee002bbc339552eb4d6be5948eb4eb66d016c19e7bbc55bc1cd4a575cc44a"
+        }
+      ],
+      "comparison": "Paper provides a pale fold plane; wrap adds olive curl and fastener",
+      "findings": {
+        "silhouette": "Thick roll with descending folded tail",
+        "cluster_structure": "Olive round face and separate shaded tail group",
+        "micro_contrast": "Light olive rim against dark inner turn",
+        "light_and_volume": "Rounded upper roll narrows into shadow",
+        "material_continuity": "Olive ramp continuous with metal fastener accent",
+        "edge_variation": "Round upper edge narrows toward lower tail",
+        "variant_identity": "Olive roll and buckle distinguish compression from cream bandage",
+        "vanilla_comparison": "Paper provides a pale fold plane; wrap adds olive curl and fastener",
+        "functional_material_cues": "Tail and metal accent suggest adjustable compression"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/crushed_herbs.png": {
+      "sha256": "9c598ba30914ae4dfb0c16ac6d71e89b48562764a78cb47affd7dd513b656c83",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/kelp",
+          "minecraft": "1.21.1",
+          "sha256": "f1f2e2024b930082dc5f6c406ec704e3309a9e15c67b122aa9563bbdebc6f286"
+        }
+      ],
+      "comparison": "Kelp has connected green veins and leaf ramp; fragments retain colors but lose whole-leaf shape",
+      "findings": {
+        "silhouette": "Low irregular pile of broken foliage",
+        "cluster_structure": "Overlapping green fragments and separated chips",
+        "micro_contrast": "Light vein remnants interrupt darker plant surfaces",
+        "light_and_volume": "Upper fragment bright while lower overlaps darken",
+        "material_continuity": "Green ramp links broken pieces",
+        "edge_variation": "Uneven perimeter and detached tiny chips",
+        "variant_identity": "No intact stems unlike raw herb bundle",
+        "vanilla_comparison": "Kelp has connected green veins and leaf ramp; fragments retain colors but lose whole-leaf shape",
+        "functional_material_cues": "Broken pieces indicate processed herbs"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/endurance_injector.png": {
+      "sha256": "8d26466e793432c13d51c924bef4fc066a3e836795bd96a619f8b58e10ec1fde",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/iron_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391"
+        }
+      ],
+      "comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
+      "findings": {
+        "silhouette": "Diagonal syringe with fine needle barrel flange and plunger",
+        "cluster_structure": "Steel border surrounds green barrel group with separate flange",
+        "micro_contrast": "Pale metal edge contrasts with pale green dose mark",
+        "light_and_volume": "Upper-left barrel highlight and darker lower edge imply cylinder",
+        "material_continuity": "Steel ramp continuous from plunger to needle, separate from green contents",
+        "edge_variation": "Stepped ends preserve needle and projecting flange",
+        "variant_identity": "Endurance green barrel; shared physical construction intentional",
+        "vanilla_comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
+        "functional_material_cues": "Visible needle and plunger identify syringe; pale green dose mark signals contents"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/field_medkit.png": {
+      "sha256": "f087c305f52ced5c82b685cce1044ba923355e0f12a525babe268421b5a30c14",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/bundle",
+          "minecraft": "1.21.1",
+          "sha256": "357b6eb5f03aceb375157a3bc371b99f92c3bc743e87c538ddccaebc28460315"
+        }
+      ],
+      "comparison": "Vanilla bundle uses coherent surface shading; this case adds Brown upper flap and central badge",
+      "findings": {
+        "silhouette": "Deep leather carrying case with handle",
+        "cluster_structure": "Brown upper flap and central badge form contiguous clusters",
+        "micro_contrast": "Dark bottom seam and metal latch creates local contrast",
+        "light_and_volume": "Upper-left lip brighter than shaded lower and right edges",
+        "material_continuity": "Material tones continue around closure without random speckling",
+        "edge_variation": "Stepped edges separate handle or rim from side panel",
+        "variant_identity": "Brown field case with recessed seam distinguishes kit variant",
+        "vanilla_comparison": "Vanilla bundle uses coherent surface shading; this case adds Brown upper flap and central badge",
+        "functional_material_cues": "Closure, storage shape and Dark bottom seam and metal latch identify medical equipment"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/focus_injector.png": {
+      "sha256": "049a8d60ff51901da799431cb4298b0cc818fd8cea13e7f37d9e1345d31e1eaa",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/iron_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391"
+        }
+      ],
+      "comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
+      "findings": {
+        "silhouette": "Diagonal syringe with fine needle barrel flange and plunger",
+        "cluster_structure": "Steel border surrounds violet barrel group with separate flange",
+        "micro_contrast": "Pale metal edge contrasts with pale violet dose mark",
+        "light_and_volume": "Upper-left barrel highlight and darker lower edge imply cylinder",
+        "material_continuity": "Steel ramp continuous from plunger to needle, separate from violet contents",
+        "edge_variation": "Stepped ends preserve needle and projecting flange",
+        "variant_identity": "Focus purple barrel; shared physical construction intentional",
+        "vanilla_comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
+        "functional_material_cues": "Visible needle and plunger identify syringe; pale violet dose mark signals contents"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/fracture_brace.png": {
+      "sha256": "33e5c31885ef2d369a2950a2c8db2cdc24464314663923c8342c5fd559077051",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/iron_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391"
+        }
+      ],
+      "comparison": "Iron ingot uses bright face and grey edge; brace applies it to narrow rigid rails",
+      "findings": {
+        "silhouette": "Two vertical metal rails joined by straps",
+        "cluster_structure": "Separate steel rails and pale crossbar groups",
+        "micro_contrast": "Bright rail strips against dark fastener blocks",
+        "light_and_volume": "Bright front and shaded rail side",
+        "material_continuity": "Cool rail ramp distinct from warm fabric",
+        "edge_variation": "Bevelled ends and open middle separate components",
+        "variant_identity": "Open rectangular frame distinguishes brace from splint",
+        "vanilla_comparison": "Iron ingot uses bright face and grey edge; brace applies it to narrow rigid rails",
+        "functional_material_cues": "Two rigid rails and padded straps identify orthopedic brace"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/guardian_injector.png": {
+      "sha256": "6ae02f3f2e5270c8c0f807ec1bd940333f9faddfc906db055eb4cbff4fbd2af3",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/iron_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391"
+        }
+      ],
+      "comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
+      "findings": {
+        "silhouette": "Diagonal syringe with fine needle barrel flange and plunger",
+        "cluster_structure": "Steel border surrounds cyan barrel group with separate flange",
+        "micro_contrast": "Pale metal edge contrasts with light cyan dose mark",
+        "light_and_volume": "Upper-left barrel highlight and darker lower edge imply cylinder",
+        "material_continuity": "Steel ramp continuous from plunger to needle, separate from cyan contents",
+        "edge_variation": "Stepped ends preserve needle and projecting flange",
+        "variant_identity": "Guardian marked cyan barrel; shared physical construction intentional",
+        "vanilla_comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
+        "functional_material_cues": "Visible needle and plunger identify syringe; light cyan dose mark signals contents"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/hemostatic_gel.png": {
+      "sha256": "987d591763c24fadfcbc52342b6af6ca0bd79e7056348363bf018f55fd4f62ea",
+      "verdict": "PASS",
+      "material_profile": "vessel",
+      "references": [
+        {
+          "id": "minecraft:item/glass_bottle",
+          "minecraft": "1.21.1",
+          "sha256": "6a09a39bb6c41bc92bd5eca1f51caf5b582a85f68206b164476c8e14a4669416"
+        }
+      ],
+      "comparison": "Vanilla bottle has cyan shoulder reflection and brown neck; filled vessel adds contrasting liquid meniscus",
+      "findings": {
+        "silhouette": "Narrow capped vial with red reservoir",
+        "cluster_structure": "Curved blue glass edge, red liquid group and steel cap",
+        "micro_contrast": "Pale shoulder reflection above red meniscus",
+        "light_and_volume": "Shaded lower rim rounds the vessel against bright left shoulder",
+        "material_continuity": "Blue glass surrounds a contiguous red reservoir",
+        "edge_variation": "Stepped neck joins angled shoulders and flat base",
+        "variant_identity": "Red gel inside slim vial differentiates the medicine",
+        "vanilla_comparison": "Vanilla bottle has cyan shoulder reflection and brown neck; filled vessel adds contrasting liquid meniscus",
+        "construction": "Narrow capped vial with red reservoir and steel cap form legible vessel construction",
+        "surface_turn": "Shoulder glint transitions to shaded base and right edge",
+        "material_specific_shading": "Cool cyan glass highlights stay separate from the red contents and steel cap"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/herbal_extract.png": {
+      "sha256": "9a82c2471f9f486c001d27e5bd4cdd0145de8b39c72be08498343ca5cef8f64e",
+      "verdict": "PASS",
+      "material_profile": "vessel",
+      "references": [
+        {
+          "id": "minecraft:item/glass_bottle",
+          "minecraft": "1.21.1",
+          "sha256": "6a09a39bb6c41bc92bd5eca1f51caf5b582a85f68206b164476c8e14a4669416"
+        }
+      ],
+      "comparison": "Vanilla bottle has cyan shoulder reflection and brown neck; filled vessel adds contrasting liquid meniscus",
+      "findings": {
+        "silhouette": "Broad flat-bottom flask with cork",
+        "cluster_structure": "Curved blue glass edge, green liquid group and brown cork",
+        "micro_contrast": "Pale shoulder reflection above green meniscus",
+        "light_and_volume": "Shaded lower rim rounds the vessel against bright left shoulder",
+        "material_continuity": "Blue glass surrounds a contiguous green reservoir",
+        "edge_variation": "Stepped neck joins angled shoulders and flat base",
+        "variant_identity": "Broad flask and pale front label differentiates the medicine",
+        "vanilla_comparison": "Vanilla bottle has cyan shoulder reflection and brown neck; filled vessel adds contrasting liquid meniscus",
+        "construction": "Broad flat-bottom flask with cork and brown cork form legible vessel construction",
+        "surface_turn": "Shoulder glint transitions to shaded base and right edge",
+        "material_specific_shading": "Cool cyan glass highlights stay separate from the green contents and brown cork"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/herbal_poultice.png": {
+      "sha256": "d3751ef05803beb7241d8d619ed3fab55fadade7aecc9c819d2bd24dd6dc4f8d",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/paper",
+          "minecraft": "1.21.1",
+          "sha256": "8ffee002bbc339552eb4d6be5948eb4eb66d016c19e7bbc55bc1cd4a575cc44a"
+        }
+      ],
+      "comparison": "Paper provides pale plane and muted edge; poultice adds distinct herb cluster and wrap folds",
+      "findings": {
+        "silhouette": "Soft folded pouch with green filling at top",
+        "cluster_structure": "Cream wrap folds surround green cluster",
+        "micro_contrast": "Pale cloth crease against dark seam and contents",
+        "light_and_volume": "Two raised wrap planes meet in shaded center",
+        "material_continuity": "Linen and plant tones retain separate boundaries",
+        "edge_variation": "Rounded cloth corners and open upper seam",
+        "variant_identity": "Green filling differentiates from rag and pouch",
+        "vanilla_comparison": "Paper provides pale plane and muted edge; poultice adds distinct herb cluster and wrap folds",
+        "functional_material_cues": "Visible contents and folded cloth indicate herbal dressing"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/medical_polymer.png": {
+      "sha256": "fc67ca247ca0e6ad740ba10b052ebc50b2fc44889162734952268e31bf830bdb",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/iron_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391"
+        }
+      ],
+      "comparison": "Iron ingot has light top face and darker side; polymer uses irregular outline and matte lower facet",
+      "findings": {
+        "silhouette": "Irregular faceted solid polymer lump",
+        "cluster_structure": "Upper grey face and shaded lower facet",
+        "micro_contrast": "Pale specular pixel near right face",
+        "light_and_volume": "Visible facets separated by darker angled plane",
+        "material_continuity": "Cool neutral ramp continuous across solid lump",
+        "edge_variation": "Asymmetric polygon corners avoid regular sphere",
+        "variant_identity": "Solid slab differs from steel instrument and pills",
+        "vanilla_comparison": "Iron ingot has light top face and darker side; polymer uses irregular outline and matte lower facet",
+        "functional_material_cues": "Compact solid form suggests prepared material"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/medical_pouch.png": {
+      "sha256": "b886b868e9e17f5c69fd9457df96a38acf8f3f9bb7d87e05974eefbbce3eb4f7",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/bundle",
+          "minecraft": "1.21.1",
+          "sha256": "357b6eb5f03aceb375157a3bc371b99f92c3bc743e87c538ddccaebc28460315"
+        }
+      ],
+      "comparison": "Vanilla bundle uses coherent surface shading; this case adds Brown folded flap and square clasp",
+      "findings": {
+        "silhouette": "Rounded pouch with narrowed neck",
+        "cluster_structure": "Brown folded flap and square clasp form contiguous clusters",
+        "micro_contrast": "Rounded lower seam and strap creates local contrast",
+        "light_and_volume": "Upper-left lip brighter than shaded lower and right edges",
+        "material_continuity": "Material tones continue around closure without random speckling",
+        "edge_variation": "Stepped edges separate handle or rim from side panel",
+        "variant_identity": "Soft pouch without medical badge distinguishes kit variant",
+        "vanilla_comparison": "Vanilla bundle uses coherent surface shading; this case adds Brown folded flap and square clasp",
+        "functional_material_cues": "Closure, storage shape and Rounded lower seam and strap identify medical equipment"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/medkit.png": {
+      "sha256": "3bfa6602556ac23b5d079c1f1db2aa8568f7e81d087adec6be7972a36bec97c8",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/bundle",
+          "minecraft": "1.21.1",
+          "sha256": "357b6eb5f03aceb375157a3bc371b99f92c3bc743e87c538ddccaebc28460315"
+        }
+      ],
+      "comparison": "Vanilla bundle uses coherent surface shading; this case adds Ochre flap and medical badge",
+      "findings": {
+        "silhouette": "Deep amber carrying case with handle",
+        "cluster_structure": "Ochre flap and medical badge form contiguous clusters",
+        "micro_contrast": "Dark base seam and grey latch creates local contrast",
+        "light_and_volume": "Upper-left lip brighter than shaded lower and right edges",
+        "material_continuity": "Material tones continue around closure without random speckling",
+        "edge_variation": "Stepped edges separate handle or rim from side panel",
+        "variant_identity": "Amber standard medical case distinguishes kit variant",
+        "vanilla_comparison": "Vanilla bundle uses coherent surface shading; this case adds Ochre flap and medical badge",
+        "functional_material_cues": "Closure, storage shape and Dark base seam and grey latch identify medical equipment"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/oversized_medkit.png": {
+      "sha256": "eb7d890c442a055b47072cd03b8d573a15b770fc41d74cb6ca8434ad2d78bbe3",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/iron_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391"
+        }
+      ],
+      "comparison": "Vanilla iron_ingot uses coherent surface shading; this case adds Steel lid ridge and central ivory badge",
+      "findings": {
+        "silhouette": "Wide hard case with broad handle and bevelled corners",
+        "cluster_structure": "Steel lid ridge and central ivory badge form contiguous clusters",
+        "micro_contrast": "Dark right side and latch blocks creates local contrast",
+        "light_and_volume": "Upper-left lip brighter than shaded lower and right edges",
+        "material_continuity": "Material tones continue around closure without random speckling",
+        "edge_variation": "Stepped edges separate handle or rim from side panel",
+        "variant_identity": "Oversized hard-shell case distinguishes kit variant",
+        "vanilla_comparison": "Vanilla iron_ingot uses coherent surface shading; this case adds Steel lid ridge and central ivory badge",
+        "functional_material_cues": "Closure, storage shape and Dark right side and latch blocks identify medical equipment"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/rag_dressing.png": {
+      "sha256": "3661d628eb4e227d94da6fb1dccea0d9a2933864be5ebaf859073b819cc07fbd",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/paper",
+          "minecraft": "1.21.1",
+          "sha256": "8ffee002bbc339552eb4d6be5948eb4eb66d016c19e7bbc55bc1cd4a575cc44a"
+        }
+      ],
+      "comparison": "Paper has restrained plane shading; rag replaces regular edge with uneven folds",
+      "findings": {
+        "silhouette": "Irregular torn cloth with uneven corners",
+        "cluster_structure": "Two fold groups interrupted by dark crease",
+        "micro_contrast": "Pale left crease and darker lower fold",
+        "light_and_volume": "Asymmetric upper fold turns into recessed panel",
+        "material_continuity": "Muted textile shades connect both panels",
+        "edge_variation": "Staggered torn corners differ from rectangular sheet",
+        "variant_identity": "Jagged outline distinguishes improvised rag",
+        "vanilla_comparison": "Paper has restrained plane shading; rag replaces regular edge with uneven folds",
+        "functional_material_cues": "Torn ends and soft crease indicate improvised dressing"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/raw_herbs.png": {
+      "sha256": "a45bef4b36240a02db3986de9d453ee0f55d66a061aa9cc0e398f7e7ab7929da",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/kelp",
+          "minecraft": "1.21.1",
+          "sha256": "f1f2e2024b930082dc5f6c406ec704e3309a9e15c67b122aa9563bbdebc6f286"
+        }
+      ],
+      "comparison": "Kelp has connected green leaf clusters and dark perimeter; herbs apply them to attached leaves",
+      "findings": {
+        "silhouette": "Three leafy sprigs tied at stem base",
+        "cluster_structure": "Separate leaf lobes around rising brown stem",
+        "micro_contrast": "Bright veins against deep green margins",
+        "light_and_volume": "Upper leaf surfaces lighter, shadows beneath overlaps",
+        "material_continuity": "Green ramp continuous across leaves, separate brown stem",
+        "edge_variation": "Pointed tips and asymmetric lobes preserve plant structure",
+        "variant_identity": "Tied stems and large leaves differ from crushed fragments",
+        "vanilla_comparison": "Kelp has connected green leaf clusters and dark perimeter; herbs apply them to attached leaves",
+        "functional_material_cues": "Veins and visible twine identify collected bundle"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/recovery_serum.png": {
+      "sha256": "d9a53bb83f9c6a56c37114e9a90278cba731a11827a58b998c6e8583c8bf80fe",
+      "verdict": "PASS",
+      "material_profile": "vessel",
+      "references": [
+        {
+          "id": "minecraft:item/glass_bottle",
+          "minecraft": "1.21.1",
+          "sha256": "6a09a39bb6c41bc92bd5eca1f51caf5b582a85f68206b164476c8e14a4669416"
+        }
+      ],
+      "comparison": "Vanilla bottle has cyan shoulder reflection and brown neck; filled vessel adds contrasting liquid meniscus",
+      "findings": {
+        "silhouette": "Narrow ampoule with rounded bottom",
+        "cluster_structure": "Curved blue glass edge, cyan liquid group and steel cap",
+        "micro_contrast": "Pale shoulder reflection above cyan meniscus",
+        "light_and_volume": "Shaded lower rim rounds the vessel against bright left shoulder",
+        "material_continuity": "Blue glass surrounds a contiguous cyan reservoir",
+        "edge_variation": "Stepped neck joins angled shoulders and flat base",
+        "variant_identity": "Slim cyan vial without paper label differentiates the medicine",
+        "vanilla_comparison": "Vanilla bottle has cyan shoulder reflection and brown neck; filled vessel adds contrasting liquid meniscus",
+        "construction": "Narrow ampoule with rounded bottom and steel cap form legible vessel construction",
+        "surface_turn": "Shoulder glint transitions to shaded base and right edge",
+        "material_specific_shading": "Cool cyan glass highlights stay separate from the cyan contents and steel cap"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/splint.png": {
+      "sha256": "1cc26eef78397433703f37f96a2dd5237521fd331e73c3fcae4d6e5383f3981a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
+        }
+      ],
+      "comparison": "Leather has warm brown material ramp; wood uses longitudinal grain groups and pale ties",
+      "findings": {
+        "silhouette": "Long diagonal wooden slat with two bindings",
+        "cluster_structure": "Long brown grain group crossed by fabric bands",
+        "micro_contrast": "Pale binding edges contrast with dark wood end",
+        "light_and_volume": "Upper length brighter than lower slat side",
+        "material_continuity": "Wood ramp distinct from pale fabric ties",
+        "edge_variation": "Square cut ends and angled strap corners",
+        "variant_identity": "Rigid slat differs from metal brace and looped tourniquet",
+        "vanilla_comparison": "Leather has warm brown material ramp; wood uses longitudinal grain groups and pale ties",
+        "functional_material_cues": "Rigid wooden core and two bindings show immobilization tool"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/sterile_fabric.png": {
+      "sha256": "24ad8dc9c0c3ef1be6e9d81cf7b50ac539f0438b1b9a9f2d14ffd698d895c62a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/paper",
+          "minecraft": "1.21.1",
+          "sha256": "8ffee002bbc339552eb4d6be5948eb4eb66d016c19e7bbc55bc1cd4a575cc44a"
+        }
+      ],
+      "comparison": "Paper has broad pale plane; fabric adds second fold and soft cream shading",
+      "findings": {
+        "silhouette": "Broad folded sheet with offset lower layer",
+        "cluster_structure": "Two cream fold planes separated by diagonal seam",
+        "micro_contrast": "Light upper fold against darker overlap",
+        "light_and_volume": "Upper plane brighter and lower panel shaded",
+        "material_continuity": "Linen ramp continuous across layered folds",
+        "edge_variation": "Straight upper corner breaks into stepped fold",
+        "variant_identity": "Large sheet without adhesive inset differs from patch",
+        "vanilla_comparison": "Paper has broad pale plane; fabric adds second fold and soft cream shading",
+        "functional_material_cues": "Overlapping edges identify sterile cloth"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/sterile_patch.png": {
+      "sha256": "cc9db41233fd2c18549b66d2aa1961d86a4bd087481eba21050d71ee7fc99cba",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/paper",
+          "minecraft": "1.21.1",
+          "sha256": "8ffee002bbc339552eb4d6be5948eb4eb66d016c19e7bbc55bc1cd4a575cc44a"
+        }
+      ],
+      "comparison": "Paper has light face and grey edge; patch adds inset absorbent panel",
+      "findings": {
+        "silhouette": "Angled square pad with rounded corners",
+        "cluster_structure": "Pale inner pad surrounded by darker border",
+        "micro_contrast": "Bright pad corner against midtone rim",
+        "light_and_volume": "Upper-left face and dark lower edge imply thickness",
+        "material_continuity": "Coherent cream ramp instead of checkerboard",
+        "edge_variation": "Chamfered corners and thin border",
+        "variant_identity": "Compact inset pad differs from folded sheet",
+        "vanilla_comparison": "Paper has light face and grey edge; patch adds inset absorbent panel",
+        "functional_material_cues": "Inset dressing surface and perimeter imply adhesive pad"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/surgical_kit.png": {
+      "sha256": "334a7bc51c890aa6d1961717bbfffcc3b4ba93b55b20871cceab721d8dca7f32",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/iron_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391"
+        }
+      ],
+      "comparison": "Vanilla iron_ingot uses coherent surface shading; this case adds Dark inset tray and three pale tools",
+      "findings": {
+        "silhouette": "Open rectangular steel instrument tray",
+        "cluster_structure": "Dark inset tray and three pale tools form contiguous clusters",
+        "micro_contrast": "Bright top rim and side fasteners creates local contrast",
+        "light_and_volume": "Upper-left lip brighter than shaded lower and right edges",
+        "material_continuity": "Material tones continue around closure without random speckling",
+        "edge_variation": "Stepped edges separate handle or rim from side panel",
+        "variant_identity": "Open tray instead of closed case distinguishes kit variant",
+        "vanilla_comparison": "Vanilla iron_ingot uses coherent surface shading; this case adds Dark inset tray and three pale tools",
+        "functional_material_cues": "Closure, storage shape and Bright top rim and side fasteners identify medical equipment"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/syringe_body.png": {
+      "sha256": "6886f37c563abf0a780c614985f010c9ca5c6ea922f8cd9df2f8acc904aaada2",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/iron_ingot",
+          "minecraft": "1.21.1",
+          "sha256": "4625aa2c32c74bd6796c7ba8e7ee6300db8d2f24fb38c9d9324a63b262a44391"
+        }
+      ],
+      "comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
+      "findings": {
+        "silhouette": "Diagonal syringe with fine needle barrel flange and plunger",
+        "cluster_structure": "Steel border surrounds grey barrel group with separate flange",
+        "micro_contrast": "Pale metal edge contrasts with unfilled neutral barrel",
+        "light_and_volume": "Upper-left barrel highlight and darker lower edge imply cylinder",
+        "material_continuity": "Steel ramp continuous from plunger to needle, separate from grey contents",
+        "edge_variation": "Stepped ends preserve needle and projecting flange",
+        "variant_identity": "Empty grey syringe; shared physical construction intentional",
+        "vanilla_comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
+        "functional_material_cues": "Visible needle and plunger identify syringe; unfilled neutral barrel signals contents"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/tourniquet.png": {
+      "sha256": "138707ba70ff16da570767fc40b1357b0f98f8acd19ba9aa87d671e651e0fabb",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
+        }
+      ],
+      "comparison": "Leather uses warm shaded material; strap turns that ramp around a dark loop and adds buckle",
+      "findings": {
+        "silhouette": "Looped strap with metal clasp and descending tail",
+        "cluster_structure": "Brown loop with dark opening and grey buckle cluster",
+        "micro_contrast": "Bright buckle edge contrasts with strap aperture",
+        "light_and_volume": "Light upper rim and shaded inner loop",
+        "material_continuity": "Leather ramp separate from metallic clasp",
+        "edge_variation": "Rounded loop narrows into bent tail",
+        "variant_identity": "Open loop and buckle differ from splint or roll",
+        "vanilla_comparison": "Leather uses warm shaded material; strap turns that ramp around a dark loop and adds buckle",
+        "functional_material_cues": "Buckle and free tail signify tightening mechanism"
+      }
+    },
+    "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/trauma_kit.png": {
+      "sha256": "886a1624c1c0b498b754e387e70f21113fa3d99eb68986a00dabf8890c06e105",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/bundle",
+          "minecraft": "1.21.1",
+          "sha256": "357b6eb5f03aceb375157a3bc371b99f92c3bc743e87c538ddccaebc28460315"
+        }
+      ],
+      "comparison": "Vanilla bundle uses coherent surface shading; this case adds Red front plane and ivory badge",
+      "findings": {
+        "silhouette": "Deep red case with external extra strap",
+        "cluster_structure": "Red front plane and ivory badge form contiguous clusters",
+        "micro_contrast": "Bright upper side accent and lower dark pocket creates local contrast",
+        "light_and_volume": "Upper-left lip brighter than shaded lower and right edges",
+        "material_continuity": "Material tones continue around closure without random speckling",
+        "edge_variation": "Stepped edges separate handle or rim from side panel",
+        "variant_identity": "Red emergency case with extra side detail distinguishes kit variant",
+        "vanilla_comparison": "Vanilla bundle uses coherent surface shading; this case adds Red front plane and ivory badge",
+        "functional_material_cues": "Closure, storage shape and Bright upper side accent and lower dark pocket identify medical equipment"
+      }
+    }
+  }
+}
