@@ -63,6 +63,11 @@ public final class AdminCommands {
    var w=dev.minemods.worldlogic.api.WorldLogicApi.waterProfile(s.getLevel(),p);
    return reply(s,String.format(java.util.Locale.ROOT,"Water: %s; quality=%s; salinity=%.1f g/kg; risk=%.2f; evidence=%s",w.kind(),w.quality(),w.salinityGkg(),w.contaminationRisk(),w.evidence()));
   }));
+  root.then(Commands.literal("addons").executes(c->{return reply(c.getSource(),Rules.addonSummary());}));
+  root.then(Commands.literal("ore_audit").requires(s->s.hasPermission(4)).executes(c->{
+   try{return reply(c.getSource(),GeneratedOreAudit.scan(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())));}
+   catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}
+  }));
   root.then(Commands.literal("biome").executes(c->{var s=c.getSource();var p=net.minecraft.core.BlockPos.containing(s.getPosition());
    var l=s.getLevel();if(!l.hasChunkAt(p))return reply(s,"Biome unavailable: unloaded position.");
    var gen=l.getChunkSource().getGenerator();

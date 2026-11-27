@@ -36,6 +36,7 @@ public final class ReleaseChecks {
   check(CombatConsequences.armorWork(4)>CombatConsequences.armorWork(0),"armor exertion curve");
   check(Expedition.shieldFraction(100)<Expedition.shieldFraction(0),"shield fatigue");
   check(Expedition.restRecovery(true)>Expedition.restRecovery(false),"shelter rest");
+  check(Rules.addonSummary().contains("hydration=")&&Rules.addonSummary().contains("worldlogicterrain="),"all five addon ownership records");
   var baseline=Rules.preset("realistic");
   for(String key:Rules.keys())check(Boolean.parseBoolean(baseline.get(key))==!key.equals("modeled_weather"),"realism default "+key);
   for(String family:Rules.tuningKeys())check(Double.parseDouble(baseline.get("strength."+family))==1,"realism intensity "+family);

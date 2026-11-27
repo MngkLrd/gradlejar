@@ -43,12 +43,12 @@ final class StructureStartChecks {
   int attempts=0;
   for(var chunk:candidates){
    if(++attempts>256)break;
-   var result=structure.generate(l.registryAccess(),gen,gen.getBiomeSource(),state,l.getStructureTemplateManager(),seed,chunk,0,bounds,structure.biomes()::contains);
+   var result=structure.generate(l.registryAccess(),gen,gen.getBiomeSource(),state,l.getServer().getStructureManager(),seed,chunk,0,bounds,structure.biomes()::contains);
    if(!result.isValid())continue;
    require(!result.getPieces().isEmpty()&&result.getChunkPos().equals(chunk),"valid start has pieces at its seeded chunk");
    var box=result.getBoundingBox();
    require(box.minY()>=gen.getMinY()&&box.maxY()<gen.getMinY()+gen.getGenDepth(),"structure bounds "+id);
-   var negative=structure.generate(l.registryAccess(),gen,gen.getBiomeSource(),state,l.getStructureTemplateManager(),seed,chunk,0,bounds,b->false);
+   var negative=structure.generate(l.registryAccess(),gen,gen.getBiomeSource(),state,l.getServer().getStructureManager(),seed,chunk,0,bounds,b->false);
    require(!negative.isValid(),"biome eligibility negative control "+id);
    org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_STRUCTURE_START id={} seed={} chunk={} pieces={} attempts={}",id,seed,chunk,result.getPieces().size(),attempts);
    return;
