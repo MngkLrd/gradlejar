@@ -42,6 +42,8 @@ public final class AdminCommands {
    var v=a.orElseThrow();return reply(s,String.format(Locale.ROOT,"Grid preview: %.1f hPa, %.1f C, %.2f g/kg vapor, %.0f%% RH, tick %d",v.pressureHpa(),v.airC(),v.vaporGkg(),v.relativeHumidityPercent(),v.modeledTick()));
   }));
   root.then(Commands.literal("qa").requires(s->s.hasPermission(4))
+   .then(Commands.literal("unified_a").executes(c->{try{BiomeChecks.verify(c.getSource().getLevel(),1234L);return reply(c.getSource(),"WORLDLOGIC_UNIFIED_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("unified_b").executes(c->{try{BiomeChecks.verify(c.getSource().getLevel(),-6487130996193510395L);return reply(c.getSource(),"WORLDLOGIC_UNIFIED_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("ore_bodies").executes(c->{try{GeologyChecks.verifyOres(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_ORE_BODIES_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("geology").executes(c->{try{GeologyChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_GEOLOGY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("transport_grid").executes(c->{try{ApiChecks.verifyTransportGrid(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_TRANSPORT_GRID_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))

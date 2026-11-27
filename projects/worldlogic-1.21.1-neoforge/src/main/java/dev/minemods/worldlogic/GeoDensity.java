@@ -35,7 +35,7 @@ public final class GeoDensity implements DensityFunction {
  public static java.util.Optional<dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate> regional(net.minecraft.server.level.ServerLevel level,int x,int z){
   var cache=level.getChunkSource();
   if(!(cache.getGenerator() instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator gen)
-    ||!gen.generatorSettings().unwrapKey().map(k->k.location().getNamespace().equals("worldlogic")&&Set.of("earthlike_climate","earthlike_extended").contains(k.location().getPath())).orElse(false))
+    ||!gen.generatorSettings().unwrapKey().map(k->k.location().getNamespace().equals("worldlogic")&&Set.of("earthlike_climate","earthlike_extended","realistic_unified").contains(k.location().getPath())).orElse(false))
    return java.util.Optional.empty();
   var state=cache.randomState();var registry=level.registryAccess().lookupOrThrow(Registries.NOISE);
   java.util.function.Function<net.minecraft.resources.ResourceKey<net.minecraft.world.level.levelgen.synth.NormalNoise.NoiseParameters>,NoiseHolder> noise=
@@ -45,7 +45,7 @@ public final class GeoDensity implements DensityFunction {
   var de=noise.apply(net.minecraft.world.level.levelgen.Noises.EROSION);
   var m=noise.apply(net.minecraft.world.level.levelgen.Noises.VEGETATION);
   var region=model(c,t,de,m).regional(x,z);
-  if(GeologyGeneration.enabled(gen)){
+  if(gen.generatorSettings().unwrapKey().map(k->k.location().getPath().equals("earthlike_extended")).orElse(false)){
    return java.util.Optional.of(extended(region));
   }
   return java.util.Optional.of(region);

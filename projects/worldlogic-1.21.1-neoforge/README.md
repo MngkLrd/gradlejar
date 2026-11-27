@@ -18,3 +18,5 @@ RC22 active recovery: 2.4 fatigue points/s walking, 3 sneaking, 4 standing; one-
 RC23 research: new world preset `worldlogic:earthlike_extended` (-256..511, sea 63) with deterministic geological provinces, local cave systems, surface shafts, static water levels and eight ore families. Old presets untouched. New preset disables vanilla noise caves, carvers and standard ore clusters; custom chunk generation only. Full new-world and client validation pending.
 
 Extended-world cloud height is configured at Y440 through a client-only NeoForge dimension effects registration. The old preset's cloud height is unchanged. The client renderer remains unverified.
+
+RC24: one selectable World Logic Realistic preset (`worldlogic:realistic_unified`), 51 new Overworld biome classes, original RC22 upper density and climate, RC23 geology and extended underground, clouds Y440. Old registry IDs retained. Terrarian supplies plants; without it vegetation is intentionally absent. Initial prototype, real new-world and addon checks pending.

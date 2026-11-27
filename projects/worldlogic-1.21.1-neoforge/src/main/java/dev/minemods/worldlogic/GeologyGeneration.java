@@ -17,7 +17,7 @@ public final class GeologyGeneration {
   Blocks.COPPER_ORE,Blocks.DEEPSLATE_COPPER_ORE,Blocks.GOLD_ORE,Blocks.DEEPSLATE_GOLD_ORE,Blocks.DIAMOND_ORE,Blocks.DEEPSLATE_DIAMOND_ORE,
   Blocks.EMERALD_ORE,Blocks.DEEPSLATE_EMERALD_ORE,Blocks.LAPIS_ORE,Blocks.DEEPSLATE_LAPIS_ORE,Blocks.REDSTONE_ORE,Blocks.DEEPSLATE_REDSTONE_ORE);
  public static boolean enabled(ChunkGenerator g){
-  return g instanceof NoiseBasedChunkGenerator n&&n.generatorSettings().unwrapKey().map(k->k.location().getNamespace().equals("worldlogic")&&k.location().getPath().equals("earthlike_extended")).orElse(false);
+  return g instanceof NoiseBasedChunkGenerator n&&n.generatorSettings().unwrapKey().map(k->k.location().getNamespace().equals("worldlogic")&&Set.of("earthlike_extended","realistic_unified").contains(k.location().getPath())).orElse(false);
  }
  public static boolean replaces(OreConfiguration c){return !c.targetStates.isEmpty()&&c.targetStates.stream().allMatch(t->REPLACED.contains(t.state.getBlock()));}
  static boolean rock(BlockState s){return s.is(Blocks.STONE)||s.is(Blocks.DEEPSLATE)||s.is(Blocks.ANDESITE)||s.is(Blocks.DIORITE)||s.is(Blocks.GRANITE)||s.is(Blocks.TUFF)||s.is(Blocks.CALCITE)||s.is(Blocks.SANDSTONE);}

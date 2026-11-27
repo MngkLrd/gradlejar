@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC23 production core/API regression",
+  "name": "World Logic NeoForge RC24 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -140,6 +140,18 @@
       "name": "All eight mineral types replace actual rock while preserving cave air and bedrock",
       "command": "worldlogic qa ore_bodies",
       "expect": "WORLDLOGIC_ORE_BODIES_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Unified custom biome registry and exact RC22 base-height regression seed a",
+      "command": "worldlogic qa unified_a",
+      "expect": "WORLDLOGIC_UNIFIED_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Unified custom biome registry and exact RC22 base-height regression seed b",
+      "command": "worldlogic qa unified_b",
+      "expect": "WORLDLOGIC_UNIFIED_PASSED",
       "assertion": true
     }
   ],
@@ -310,6 +322,28 @@
         {
           "backend": "server",
           "name": "All eight mineral types replace actual rock while preserving cave air and bedrock"
+        }
+      ]
+    },
+    {
+      "id": "unified-terrain-a",
+      "kind": "mechanic",
+      "subject": "Unified custom biome registry and exact RC22 base-height regression seed a",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "unified-terrain-b",
+      "kind": "mechanic",
+      "subject": "Unified custom biome registry and exact RC22 base-height regression seed b",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed b"
         }
       ]
     }
