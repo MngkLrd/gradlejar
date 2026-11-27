@@ -92,5 +92,15 @@
   "biome.worldlogic.tropical_floodplain": "Тропическая пойма",
   "biome.worldlogic.limestone_cavern": "Известняковые пещеры",
   "biome.worldlogic.deep_rock_cavern": "Глубинные пещеры",
-  "biome.worldlogic.humid_cavern": "Влажные пещеры"
+  "biome.worldlogic.humid_cavern": "Влажные пещеры",
+  "biome.worldlogic.polar_gravel_desert": "Полярная щебнистая пустыня",
+  "biome.worldlogic.lichen_tundra": "Лишайниковая тундра",
+  "biome.worldlogic.light_conifer_taiga": "Светлохвойная тайга",
+  "biome.worldlogic.dark_conifer_taiga": "Темнохвойная тайга",
+  "biome.worldlogic.shortgrass_steppe": "Низкотравная степь",
+  "biome.worldlogic.tallgrass_prairie": "Высокотравная прерия",
+  "biome.worldlogic.temperate_deciduous_forest": "Умеренный листопадный лес",
+  "biome.worldlogic.sclerophyll_woodland": "Жестколистное редколесье",
+  "biome.worldlogic.rock_desert": "Каменистая пустыня",
+  "biome.worldlogic.seasonal_tropical_forest": "Сезонный тропический лес"
 }

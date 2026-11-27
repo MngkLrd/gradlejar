@@ -16,7 +16,7 @@
                 ],
                 "humidity": [
                   -1.2,
-                  -0.55
+                  -0.82
                 ],
                 "continentalness": [
                   -0.045,
@@ -45,7 +45,7 @@
                   -0.55
                 ],
                 "humidity": [
-                  -0.55,
+                  -0.39,
                   -0.22
                 ],
                 "continentalness": [
@@ -225,7 +225,7 @@
                   -0.22
                 ],
                 "humidity": [
-                  -0.22,
+                  -0.06,
                   0.12
                 ],
                 "continentalness": [
@@ -256,7 +256,7 @@
                 ],
                 "humidity": [
                   0.12,
-                  0.48
+                  0.3
                 ],
                 "continentalness": [
                   -0.045,
@@ -345,7 +345,7 @@
                   0.16
                 ],
                 "humidity": [
-                  -0.55,
+                  -0.4,
                   -0.22
                 ],
                 "continentalness": [
@@ -376,7 +376,7 @@
                 ],
                 "humidity": [
                   -0.22,
-                  0.12
+                  0
                 ],
                 "continentalness": [
                   -0.045,
@@ -406,7 +406,7 @@
                 ],
                 "humidity": [
                   0.12,
-                  0.48
+                  0.3
                 ],
                 "continentalness": [
                   -0.045,
@@ -526,7 +526,7 @@
                 ],
                 "humidity": [
                   -0.55,
-                  -0.22
+                  -0.4
                 ],
                 "continentalness": [
                   -0.045,
@@ -676,7 +676,7 @@
                 ],
                 "humidity": [
                   -1.2,
-                  -0.68
+                  -0.83
                 ],
                 "continentalness": [
                   -0.045,
@@ -795,7 +795,7 @@
                   1.2
                 ],
                 "humidity": [
-                  0.18,
+                  0.32,
                   0.48
                 ],
                 "continentalness": [
@@ -1649,6 +1649,306 @@
                 "depth": [
                   1,
                   2
+                ],
+                "weirdness": [
+                  -1.2,
+                  1.2
+                ],
+                "offset": 0
+              }
+            },
+            {
+              "biome": "worldlogic:polar_gravel_desert",
+              "parameters": {
+                "temperature": [
+                  -1.2,
+                  -0.55
+                ],
+                "humidity": [
+                  -0.82,
+                  -0.55
+                ],
+                "continentalness": [
+                  -0.045,
+                  1.2
+                ],
+                "erosion": [
+                  -0.32,
+                  1.2
+                ],
+                "depth": [
+                  -2,
+                  0.36
+                ],
+                "weirdness": [
+                  -1.2,
+                  1.2
+                ],
+                "offset": 0
+              }
+            },
+            {
+              "biome": "worldlogic:lichen_tundra",
+              "parameters": {
+                "temperature": [
+                  -1.2,
+                  -0.55
+                ],
+                "humidity": [
+                  -0.55,
+                  -0.39
+                ],
+                "continentalness": [
+                  -0.045,
+                  1.2
+                ],
+                "erosion": [
+                  -0.32,
+                  1.2
+                ],
+                "depth": [
+                  -2,
+                  0.36
+                ],
+                "weirdness": [
+                  -1.2,
+                  1.2
+                ],
+                "offset": 0
+              }
+            },
+            {
+              "biome": "worldlogic:light_conifer_taiga",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.22
+                ],
+                "humidity": [
+                  -0.22,
+                  -0.06
+                ],
+                "continentalness": [
+                  -0.045,
+                  1.2
+                ],
+                "erosion": [
+                  -0.32,
+                  1.2
+                ],
+                "depth": [
+                  -2,
+                  0.36
+                ],
+                "weirdness": [
+                  -1.2,
+                  1.2
+                ],
+                "offset": 0
+              }
+            },
+            {
+              "biome": "worldlogic:dark_conifer_taiga",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.22
+                ],
+                "humidity": [
+                  0.3,
+                  0.48
+                ],
+                "continentalness": [
+                  -0.045,
+                  1.2
+                ],
+                "erosion": [
+                  -0.32,
+                  1.2
+                ],
+                "depth": [
+                  -2,
+                  0.36
+                ],
+                "weirdness": [
+                  -1.2,
+                  1.2
+                ],
+                "offset": 0
+              }
+            },
+            {
+              "biome": "worldlogic:shortgrass_steppe",
+              "parameters": {
+                "temperature": [
+                  -0.22,
+                  0.16
+                ],
+                "humidity": [
+                  -0.55,
+                  -0.4
+                ],
+                "continentalness": [
+                  -0.045,
+                  1.2
+                ],
+                "erosion": [
+                  -0.32,
+                  1.2
+                ],
+                "depth": [
+                  -2,
+                  0.36
+                ],
+                "weirdness": [
+                  -1.2,
+                  1.2
+                ],
+                "offset": 0
+              }
+            },
+            {
+              "biome": "worldlogic:tallgrass_prairie",
+              "parameters": {
+                "temperature": [
+                  -0.22,
+                  0.16
+                ],
+                "humidity": [
+                  0,
+                  0.12
+                ],
+                "continentalness": [
+                  -0.045,
+                  1.2
+                ],
+                "erosion": [
+                  -0.32,
+                  1.2
+                ],
+                "depth": [
+                  -2,
+                  0.36
+                ],
+                "weirdness": [
+                  -1.2,
+                  1.2
+                ],
+                "offset": 0
+              }
+            },
+            {
+              "biome": "worldlogic:temperate_deciduous_forest",
+              "parameters": {
+                "temperature": [
+                  -0.22,
+                  0.16
+                ],
+                "humidity": [
+                  0.3,
+                  0.48
+                ],
+                "continentalness": [
+                  -0.045,
+                  1.2
+                ],
+                "erosion": [
+                  -0.32,
+                  1.2
+                ],
+                "depth": [
+                  -2,
+                  0.36
+                ],
+                "weirdness": [
+                  -1.2,
+                  1.2
+                ],
+                "offset": 0
+              }
+            },
+            {
+              "biome": "worldlogic:sclerophyll_woodland",
+              "parameters": {
+                "temperature": [
+                  0.16,
+                  0.38
+                ],
+                "humidity": [
+                  -0.4,
+                  -0.22
+                ],
+                "continentalness": [
+                  -0.045,
+                  1.2
+                ],
+                "erosion": [
+                  -0.32,
+                  1.2
+                ],
+                "depth": [
+                  -2,
+                  0.36
+                ],
+                "weirdness": [
+                  -1.2,
+                  1.2
+                ],
+                "offset": 0
+              }
+            },
+            {
+              "biome": "worldlogic:rock_desert",
+              "parameters": {
+                "temperature": [
+                  0.38,
+                  1.2
+                ],
+                "humidity": [
+                  -0.83,
+                  -0.68
+                ],
+                "continentalness": [
+                  -0.045,
+                  1.2
+                ],
+                "erosion": [
+                  -0.32,
+                  1.2
+                ],
+                "depth": [
+                  -2,
+                  0.36
+                ],
+                "weirdness": [
+                  -1.2,
+                  1.2
+                ],
+                "offset": 0
+              }
+            },
+            {
+              "biome": "worldlogic:seasonal_tropical_forest",
+              "parameters": {
+                "temperature": [
+                  0.38,
+                  1.2
+                ],
+                "humidity": [
+                  0.18,
+                  0.32
+                ],
+                "continentalness": [
+                  -0.045,
+                  1.2
+                ],
+                "erosion": [
+                  -0.32,
+                  1.2
+                ],
+                "depth": [
+                  -2,
+                  0.36
                 ],
                 "weirdness": [
                   -1.2,

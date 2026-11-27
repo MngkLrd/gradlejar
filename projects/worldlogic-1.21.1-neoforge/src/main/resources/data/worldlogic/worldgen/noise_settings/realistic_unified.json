@@ -421,6 +421,126 @@
       {
         "type": "minecraft:condition",
         "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "worldlogic:rock_desert"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:above_preliminary_surface"
+          },
+          "then_run": {
+            "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:stone_depth",
+              "add_surface_depth": false,
+              "offset": 0,
+              "secondary_depth_range": 0,
+              "surface_type": "floor"
+            },
+            "then_run": {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:water",
+                "add_stone_depth": false,
+                "offset": 0,
+                "surface_depth_multiplier": 0
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "minecraft:sandstone"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "worldlogic:shortgrass_steppe"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:above_preliminary_surface"
+          },
+          "then_run": {
+            "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:stone_depth",
+              "add_surface_depth": false,
+              "offset": 0,
+              "secondary_depth_range": 0,
+              "surface_type": "floor"
+            },
+            "then_run": {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:water",
+                "add_stone_depth": false,
+                "offset": 0,
+                "surface_depth_multiplier": 0
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "minecraft:coarse_dirt"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "worldlogic:polar_gravel_desert"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:above_preliminary_surface"
+          },
+          "then_run": {
+            "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:stone_depth",
+              "add_surface_depth": false,
+              "offset": 0,
+              "secondary_depth_range": 0,
+              "surface_type": "floor"
+            },
+            "then_run": {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:water",
+                "add_stone_depth": false,
+                "offset": 0,
+                "surface_depth_multiplier": 0
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "minecraft:gravel"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
           "type": "minecraft:above_preliminary_surface"
         },
         "then_run": {
@@ -1413,7 +1533,8 @@
                                   "minecraft:desert",
                                   "worldlogic:temperate_desert",
                                   "worldlogic:subtropical_desert",
-                                  "worldlogic:hot_desert"
+                                  "worldlogic:hot_desert",
+                                  "worldlogic:rock_desert"
                                 ]
                               },
                               "then_run": {
@@ -1643,7 +1764,8 @@
                             "biome_is": [
                               "minecraft:old_growth_pine_taiga",
                               "minecraft:old_growth_spruce_taiga",
-                              "worldlogic:humid_taiga"
+                              "worldlogic:humid_taiga",
+                              "worldlogic:dark_conifer_taiga"
                             ]
                           },
                           "then_run": {
@@ -2206,7 +2328,8 @@
                                   "minecraft:desert",
                                   "worldlogic:temperate_desert",
                                   "worldlogic:subtropical_desert",
-                                  "worldlogic:hot_desert"
+                                  "worldlogic:hot_desert",
+                                  "worldlogic:rock_desert"
                                 ]
                               },
                               "then_run": {
@@ -2450,7 +2573,8 @@
                         "minecraft:desert",
                         "worldlogic:temperate_desert",
                         "worldlogic:subtropical_desert",
-                        "worldlogic:hot_desert"
+                        "worldlogic:hot_desert",
+                        "worldlogic:rock_desert"
                       ]
                     },
                     "then_run": {
