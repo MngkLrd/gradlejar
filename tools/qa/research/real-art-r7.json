@@ -1,0 +1,230 @@
+{
+  "schema": 1,
+  "minecraft": "1.21.1",
+  "repository": "MngkLrd/gradlejar",
+  "scope": "Exploratory real mod candidates; none is owner-labeled. Revision order is not a quality label.",
+  "cases": [
+    {
+      "id": "alluvial_silt",
+      "family": "soil",
+      "intent": "Alluvial silt",
+      "references": [
+        "block/dirt",
+        "block/coarse_dirt",
+        "block/rooted_dirt"
+      ],
+      "candidates": [
+        {
+          "revision": "earlier",
+          "commit": "33115368f2980b41a77b8964cd2dce87adf40a24",
+          "path": "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/alluvial_silt.png",
+          "blob_sha": "a925e6e19a12b9013491fec3a67fd5e689b4cf82"
+        },
+        {
+          "revision": "later",
+          "commit": "44583649121ee97640baf932f4e24aff60841e6a",
+          "path": "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/alluvial_silt.png",
+          "blob_sha": "fcb667ccbf2d28179de1b1815f73d31023b407bf"
+        }
+      ]
+    },
+    {
+      "id": "frozen_soil",
+      "family": "soil",
+      "intent": "Frozen soil",
+      "references": [
+        "block/dirt",
+        "block/coarse_dirt",
+        "block/rooted_dirt"
+      ],
+      "candidates": [
+        {
+          "revision": "earlier",
+          "commit": "33115368f2980b41a77b8964cd2dce87adf40a24",
+          "path": "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/frozen_soil.png",
+          "blob_sha": "da96091b3dd7c61aa118e1cf9bfd610eadf07da7"
+        },
+        {
+          "revision": "later",
+          "commit": "44583649121ee97640baf932f4e24aff60841e6a",
+          "path": "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/frozen_soil.png",
+          "blob_sha": "af55a19623e7d0c20ff79bc871f1c761cf03a884"
+        }
+      ]
+    },
+    {
+      "id": "humus",
+      "family": "soil",
+      "intent": "Organic topsoil",
+      "references": [
+        "block/dirt",
+        "block/coarse_dirt",
+        "block/rooted_dirt"
+      ],
+      "candidates": [
+        {
+          "revision": "earlier",
+          "commit": "33115368f2980b41a77b8964cd2dce87adf40a24",
+          "path": "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/humus.png",
+          "blob_sha": "01e3b3d4f29d03dd4e39f9f8dad3ad7c4372d249"
+        },
+        {
+          "revision": "later",
+          "commit": "44583649121ee97640baf932f4e24aff60841e6a",
+          "path": "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/humus.png",
+          "blob_sha": "38625a785dd3b99020a59c384ee7f069108e78a9"
+        }
+      ]
+    },
+    {
+      "id": "loam",
+      "family": "soil",
+      "intent": "Loamy soil",
+      "references": [
+        "block/dirt",
+        "block/coarse_dirt",
+        "block/rooted_dirt"
+      ],
+      "candidates": [
+        {
+          "revision": "earlier",
+          "commit": "33115368f2980b41a77b8964cd2dce87adf40a24",
+          "path": "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/loam.png",
+          "blob_sha": "b5540aef23216962b2c23ee9c72a500cd694b601"
+        },
+        {
+          "revision": "later",
+          "commit": "44583649121ee97640baf932f4e24aff60841e6a",
+          "path": "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/loam.png",
+          "blob_sha": "425cb81e72b004a64d9b7e52e56f3ccacf51e443"
+        }
+      ]
+    },
+    {
+      "id": "peat",
+      "family": "soil",
+      "intent": "Peat",
+      "references": [
+        "block/dirt",
+        "block/coarse_dirt",
+        "block/rooted_dirt"
+      ],
+      "candidates": [
+        {
+          "revision": "earlier",
+          "commit": "33115368f2980b41a77b8964cd2dce87adf40a24",
+          "path": "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/peat.png",
+          "blob_sha": "471636e28310eed86d9a9c257ee8bf0129f63fdf"
+        },
+        {
+          "revision": "later",
+          "commit": "44583649121ee97640baf932f4e24aff60841e6a",
+          "path": "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/peat.png",
+          "blob_sha": "f28cf9598bb464dfbdfbe5b54ba46f9128707c8"
+        }
+      ]
+    },
+    {
+      "id": "charcoal_filter",
+      "family": "item",
+      "intent": "Charcoal filter",
+      "references": [
+        "item/charcoal",
+        "item/iron_ingot"
+      ],
+      "candidates": [
+        {
+          "revision": "snapshot",
+          "commit": "b9146c189a2ab74f098800282c1cfaf73624765c",
+          "path": "projects/hydration-1.21.1-neoforge/src/main/resources/assets/hydration/textures/item/charcoal_filter.png",
+          "blob_sha": "f89b618ccabd5635b539ebbea691e441068ed05a"
+        }
+      ]
+    },
+    {
+      "id": "clay_jug",
+      "family": "item",
+      "intent": "Clay jug",
+      "references": [
+        "item/brick",
+        "item/glass_bottle"
+      ],
+      "candidates": [
+        {
+          "revision": "snapshot",
+          "commit": "b9146c189a2ab74f098800282c1cfaf73624765c",
+          "path": "projects/hydration-1.21.1-neoforge/src/main/resources/assets/hydration/textures/item/clay_jug.png",
+          "blob_sha": "42187ab08ca9b6e2fa31a58dc80ebdd0ce55f36c"
+        }
+      ]
+    },
+    {
+      "id": "copper_canteen",
+      "family": "item",
+      "intent": "Copper canteen",
+      "references": [
+        "item/copper_ingot",
+        "item/glass_bottle"
+      ],
+      "candidates": [
+        {
+          "revision": "snapshot",
+          "commit": "b9146c189a2ab74f098800282c1cfaf73624765c",
+          "path": "projects/hydration-1.21.1-neoforge/src/main/resources/assets/hydration/textures/item/copper_canteen.png",
+          "blob_sha": "ba843c4e2138d3035a57d98df12942701ad9ef51"
+        }
+      ]
+    },
+    {
+      "id": "copper_condenser",
+      "family": "item",
+      "intent": "Copper condenser",
+      "references": [
+        "item/copper_ingot",
+        "item/bucket"
+      ],
+      "candidates": [
+        {
+          "revision": "snapshot",
+          "commit": "b9146c189a2ab74f098800282c1cfaf73624765c",
+          "path": "projects/hydration-1.21.1-neoforge/src/main/resources/assets/hydration/textures/item/copper_condenser.png",
+          "blob_sha": "1f7ab01befddd525bff7596e5550383d3407757c"
+        }
+      ]
+    },
+    {
+      "id": "waterskin",
+      "family": "item",
+      "intent": "Leather waterskin",
+      "references": [
+        "item/leather",
+        "item/glass_bottle"
+      ],
+      "candidates": [
+        {
+          "revision": "snapshot",
+          "commit": "b9146c189a2ab74f098800282c1cfaf73624765c",
+          "path": "projects/hydration-1.21.1-neoforge/src/main/resources/assets/hydration/textures/item/waterskin.png",
+          "blob_sha": "2022f162889d321e077f0d393db61b754eb88bc6"
+        }
+      ]
+    },
+    {
+      "id": "wooden_cup",
+      "family": "item",
+      "intent": "Wooden cup",
+      "references": [
+        "item/bowl",
+        "block/oak_planks"
+      ],
+      "candidates": [
+        {
+          "revision": "snapshot",
+          "commit": "b9146c189a2ab74f098800282c1cfaf73624765c",
+          "path": "projects/hydration-1.21.1-neoforge/src/main/resources/assets/hydration/textures/item/wooden_cup.png",
+          "blob_sha": "b00b3b81fab245500924ae05c7d49826dfb247c3"
+        }
+      ]
+    }
+  ]
+}
