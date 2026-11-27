@@ -27,3 +27,10 @@ type="required"
 versionRange="[${worldlogic_version}]"
 ordering="AFTER"
 side="BOTH"
+
+[[dependencies.worldlogic_trauma]]
+modId="worldlogic_thermal"
+type="optional"
+versionRange="[0.3.0-rc1,)"
+ordering="AFTER"
+side="BOTH"

@@ -81,5 +81,12 @@
   "condition.traumacraft.bleeding": "Bleeding",
   "screen.traumacraft.bleed_count": "W: %s",
   "screen.traumacraft.fracture_count": "F: %s",
-  "screen.traumacraft.tab": "Trauma"
+  "screen.traumacraft.tab": "Trauma",
+  "thermal.traumacraft.cold": "Cold",
+  "thermal.traumacraft.very_cold": "Very cold",
+  "thermal.traumacraft.hypothermia": "Hypothermia",
+  "thermal.traumacraft.warm": "Warm",
+  "thermal.traumacraft.very_hot": "Very hot",
+  "thermal.traumacraft.hyperthermia": "Hyperthermia",
+  "thermal.traumacraft.recovery": "Recovery rate: %s%%"
 }

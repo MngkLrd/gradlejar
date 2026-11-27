@@ -81,5 +81,12 @@
   "condition.traumacraft.bleeding": "Кровотечение",
   "screen.traumacraft.bleed_count": "Р: %s",
   "screen.traumacraft.fracture_count": "П: %s",
-  "screen.traumacraft.tab": "Травмы"
+  "screen.traumacraft.tab": "Травмы",
+  "thermal.traumacraft.cold": "Холод",
+  "thermal.traumacraft.very_cold": "Сильный холод",
+  "thermal.traumacraft.hypothermia": "Переохлаждение",
+  "thermal.traumacraft.warm": "Жарко",
+  "thermal.traumacraft.very_hot": "Сильная жара",
+  "thermal.traumacraft.hyperthermia": "Перегрев",
+  "thermal.traumacraft.recovery": "Скорость восстановления: %s%%"
 }

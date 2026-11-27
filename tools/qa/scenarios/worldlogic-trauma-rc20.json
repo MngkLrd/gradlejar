@@ -55,6 +55,12 @@
       "expect": "TRAUMAQA identity PASS",
       "assertion": true,
       "name": "TR-IDENTITY: branded loader identity, mandatory core, preserved medical item IDs and save key"
+    },
+    {
+      "command": "traumaqa thermal",
+      "expect": "TRAUMAQA thermal PASS",
+      "assertion": true,
+      "name": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation"
     }
   ],
   "coverage": [
@@ -181,6 +187,20 @@
         {
           "backend": "server",
           "name": "TR-IDENTITY: branded loader identity, mandatory core, preserved medical item IDs and save key"
+        }
+      ]
+    },
+    {
+      "id": "tr-thermal",
+      "kind": "mechanic",
+      "subject": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation"
         }
       ]
     }
