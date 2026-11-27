@@ -979,6 +979,17 @@
           "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
         }
       ]
+    },
+    {
+      "id": "rc33-tab-layout-policy",
+      "kind": "other",
+      "subject": "Shared tab gutter, deterministic ordering, page boundaries and small-screen layout arithmetic (not graphical interaction)",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
     }
   ]
 }

@@ -201,5 +201,9 @@
   "worldlogic.analytics.no_plant_report": "No vegetation report yet",
   "worldlogic.analytics.habitat_fertility": "Effective soil fertility",
   "worldlogic.analytics.biome_id": "Current biome",
-  "item.worldlogic.guidebook": "WorldLogic Field Guide"
+  "item.worldlogic.guidebook": "WorldLogic Field Guide",
+  "worldlogic.tabs.inventory": "Inventory",
+  "worldlogic.tabs.guide": "Field guide",
+  "worldlogic.tabs.previous": "Previous tabs",
+  "worldlogic.tabs.next": "More tabs"
 }

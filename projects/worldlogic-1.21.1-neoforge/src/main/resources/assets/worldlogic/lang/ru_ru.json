@@ -201,5 +201,9 @@
   "worldlogic.analytics.no_plant_report": "Нет данных от аддона растительности",
   "worldlogic.analytics.habitat_fertility": "Эффективное плодородие",
   "worldlogic.analytics.biome_id": "Текущий биом",
-  "item.worldlogic.guidebook": "Полевой справочник WorldLogic"
+  "item.worldlogic.guidebook": "Полевой справочник WorldLogic",
+  "worldlogic.tabs.inventory": "Инвентарь",
+  "worldlogic.tabs.guide": "Полевое руководство",
+  "worldlogic.tabs.previous": "Предыдущие вкладки",
+  "worldlogic.tabs.next": "Другие вкладки"
 }

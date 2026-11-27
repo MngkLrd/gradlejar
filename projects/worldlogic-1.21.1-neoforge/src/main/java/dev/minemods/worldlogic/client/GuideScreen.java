@@ -40,13 +40,15 @@ public final class GuideScreen extends Screen{
  @Override protected void init(){
   russian=Minecraft.getInstance().getLanguageManager().getSelected().startsWith("ru");
   load();chapter=Math.min(chapter,Math.max(0,chapters.size()-1));
-  panelW=Math.min(620,width-8);panelH=Math.min(360,height-8);left=(width-panelW)/2;top=(height-panelH)/2;
+  int usable=dev.minemods.worldlogic.api.client.WorldLogicTabs.contentWidth(width);
+  panelW=Math.min(620,usable-8);panelH=Math.min(360,height-8);left=(usable-panelW)/2;top=(height-panelH)/2;
   navW=Math.max(78,Math.min(140,panelW/3));contentX=left+navW+12;contentW=panelW-navW-20;
   int bottom=top+panelH;int navRows=Math.max(1,(panelH-78)/22);
   chapterOffset=Math.max(0,Math.min(chapterOffset,Math.max(0,chapters.size()-navRows)));
   for(int i=0;i<navRows&&chapterOffset+i<chapters.size();i++){int k=chapterOffset+i;button((k==chapter?"> ":"")+chapters.get(k).title().get(russian),left+5,top+30+i*22,navW-9,()->changeChapter(k));}
   int half=(navW-11)/2;button("^",left+5,bottom-44,half,()->{chapterOffset=Math.max(0,chapterOffset-navRows);rebuildWidgets();});button("v",left+7+half,bottom-44,half,()->{chapterOffset=Math.min(Math.max(0,chapters.size()-navRows),chapterOffset+navRows);rebuildWidgets();});
   button(label("Назад","Back"),left+5,bottom-22,navW-9,this::onClose);
+  TabRail.install(this,this::addRenderableWidget);
   if(chapters.isEmpty())return;
   page=Math.min(page,current().pages().size()-1);
   int ctrl=Math.max(22,Math.min(48,(contentW-10)/4));

@@ -34,6 +34,7 @@ public final class GuideBook{
   return chapters.stream().filter(c->installed.test(c.requires())).sorted(Comparator.comparingInt(Chapter::order).thenComparing(Chapter::id)).toList();
  }
  static void verify()throws IOException{
+  TabLayout.verify();
   var all=new ArrayList<Chapter>();var ids=new HashSet<String>();
   for(String name:BUILTIN){try(var in=GuideBook.class.getResourceAsStream("/assets/worldlogic/worldlogic_guide/"+name+".json")){
    if(in==null)throw new IllegalStateException("missing guide chapter "+name);
