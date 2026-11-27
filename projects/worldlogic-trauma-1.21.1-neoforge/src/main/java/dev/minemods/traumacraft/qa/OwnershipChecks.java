@@ -48,7 +48,7 @@ public final class OwnershipChecks {
             require(restored.health(BodyPart.CHEST)==79&&restored.fractured(BodyPart.LEFT_LEG),"persisted damage and fracture");
             require(TraumaApi.reportInjury(p,TraumaApi.Zone.LEFT_ARM,TraumaApi.Injury.FROSTBITE,4,0),"external addon injury accepted under delegation");
             require(TraumaApi.status(p).orElseThrow().regions().stream().anyMatch(r->r.zone()==TraumaApi.Zone.LEFT_ARM&&r.health()==56),"external injury visible");
-            require(WorldLogicBridge.mergePenalty(p,0)>=.42,"limb movement restriction survives delegation");
+            require(WorldLogicBridge.mergePenalty(p,0)>=.42f,"limb movement restriction survives delegation");
             p.gameMode.changeGameModeForPlayer(GameType.CREATIVE);
             post(p,p.damageSources().fall(),5);
             require(b.health(BodyPart.LEFT_LEG)==45&&!WorldLogicBridge.functionsEnabled(p)&&TraumaApi.status(p).isEmpty(),"creative excluded");
