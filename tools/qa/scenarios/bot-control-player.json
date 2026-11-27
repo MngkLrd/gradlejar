@@ -1,0 +1,275 @@
+{
+  "schema": 1,
+  "name": "Unmodded Fabric network control suite",
+  "steps": [
+    {
+      "command": "gamemode survival MineModsQA",
+      "expect": "Set|game mode|already"
+    },
+    {
+      "command": "clear MineModsQA",
+      "expect": "Removed|No items"
+    },
+    {
+      "command": "tp MineModsQA 5.5 200 3.5",
+      "expect": "Teleported"
+    },
+    {
+      "action": "position",
+      "args": {
+        "x": 5.5,
+        "y": 200,
+        "z": 3.5
+      }
+    },
+    {
+      "command": "setblock 5 200 5 minecraft:lever[face=floor,facing=north,powered=false]",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "execute if block 5 200 5 minecraft:lever[powered=false]",
+      "expect": "Test passed",
+      "name": "Lever initially off",
+      "assertion": true
+    },
+    {
+      "action": "activate",
+      "args": {
+        "x": 5,
+        "y": 200,
+        "z": 5,
+        "block": "lever",
+        "face": 1
+      }
+    },
+    {
+      "wait": 0.8
+    },
+    {
+      "command": "execute if block 5 200 5 minecraft:lever[powered=true]",
+      "expect": "Test passed",
+      "name": "Lever actually toggles",
+      "assertion": true
+    },
+    {
+      "command": "give MineModsQA minecraft:oak_log 1",
+      "expect": "Gave"
+    },
+    {
+      "action": "inventory",
+      "args": {
+        "item": "oak_log",
+        "count": 1
+      }
+    },
+    {
+      "action": "craft",
+      "args": {
+        "item": "oak_planks",
+        "count": 1
+      }
+    },
+    {
+      "wait": 0.5
+    },
+    {
+      "command": "clear MineModsQA minecraft:oak_planks 0",
+      "expect": "\\b4\\b",
+      "name": "Craft four planks",
+      "assertion": true
+    },
+    {
+      "command": "clear MineModsQA minecraft:oak_log 0",
+      "expect": "No items|No matching",
+      "name": "Log consumed",
+      "assertion": true
+    },
+    {
+      "command": "tp MineModsQA 9.5 200 3.5",
+      "expect": "Teleported"
+    },
+    {
+      "action": "position",
+      "args": {
+        "x": 9.5,
+        "y": 200,
+        "z": 3.5
+      }
+    },
+    {
+      "action": "place",
+      "args": {
+        "x": 9,
+        "y": 199,
+        "z": 5,
+        "block": "stone",
+        "item": "oak_planks",
+        "face": 1
+      }
+    },
+    {
+      "wait": 0.8
+    },
+    {
+      "command": "execute if block 9 200 5 minecraft:oak_planks",
+      "expect": "Test passed",
+      "name": "Place crafted plank",
+      "assertion": true
+    },
+    {
+      "command": "clear MineModsQA minecraft:oak_planks 0",
+      "expect": "\\b3\\b",
+      "name": "Placement consumes one",
+      "assertion": true
+    },
+    {
+      "action": "dig",
+      "args": {
+        "x": 9,
+        "y": 200,
+        "z": 5,
+        "block": "oak_planks"
+      }
+    },
+    {
+      "wait": 0.5
+    },
+    {
+      "command": "execute if block 9 200 5 minecraft:air",
+      "expect": "Test passed",
+      "name": "Survival dig removes plank",
+      "assertion": true
+    },
+    {
+      "command": "tp MineModsQA 2.5 200 2.5",
+      "expect": "Teleported"
+    },
+    {
+      "action": "position",
+      "args": {
+        "x": 2.5,
+        "y": 200,
+        "z": 2.5
+      }
+    },
+    {
+      "action": "move",
+      "args": {
+        "direction": "forward",
+        "yaw": 180,
+        "ms": 1000
+      }
+    },
+    {
+      "wait": 0.3
+    },
+    {
+      "command": "execute if entity @a[name=MineModsQA,x=2,y=199,z=4,dx=2,dy=3,dz=6]",
+      "expect": "Test passed",
+      "name": "Server observes forward movement",
+      "assertion": true
+    },
+    {
+      "command": "tp MineModsQA 11.5 200 2.5",
+      "expect": "Teleported"
+    },
+    {
+      "action": "position",
+      "args": {
+        "x": 11.5,
+        "y": 200,
+        "z": 2.5
+      }
+    },
+    {
+      "command": "fill 10 200 4 12 200 4 minecraft:stone",
+      "expect": "Successfully filled|Filled"
+    },
+    {
+      "action": "jump",
+      "args": {
+        "forward": true,
+        "yaw": 180,
+        "ms": 1600
+      }
+    },
+    {
+      "wait": 0.3
+    },
+    {
+      "command": "execute if entity @a[name=MineModsQA,x=10,y=199,z=5,dx=3,dy=4,dz=7]",
+      "expect": "Test passed",
+      "name": "Player crosses one-block obstacle",
+      "assertion": true
+    },
+    {
+      "command": "tp MineModsQA 7.5 200 8.5",
+      "expect": "Teleported"
+    },
+    {
+      "action": "position",
+      "args": {
+        "x": 7.5,
+        "y": 200,
+        "z": 8.5
+      }
+    },
+    {
+      "command": "give MineModsQA minecraft:diamond_sword 1",
+      "expect": "Gave"
+    },
+    {
+      "action": "equip",
+      "args": {
+        "item": "diamond_sword"
+      }
+    },
+    {
+      "wait": 0.6
+    },
+    {
+      "command": "summon minecraft:pig 7.5 200 10.0 {NoAI:1b,Health:1.0f,Tags:[\"qa_target\"]}",
+      "expect": "Summoned new"
+    },
+    {
+      "command": "execute if entity @e[type=minecraft:pig,tag=qa_target]",
+      "expect": "Test passed",
+      "name": "Combat target exists",
+      "assertion": true
+    },
+    {
+      "action": "attack",
+      "args": {
+        "entity": "pig"
+      }
+    },
+    {
+      "wait": 1.2
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:pig,tag=qa_target]",
+      "expect": "Test passed",
+      "name": "Sword attack kills target",
+      "assertion": true
+    },
+    {
+      "command": "give MineModsQA minecraft:stick 2",
+      "expect": "Gave"
+    },
+    {
+      "action": "drop",
+      "args": {
+        "item": "stick"
+      }
+    },
+    {
+      "wait": 0.6
+    },
+    {
+      "command": "clear MineModsQA minecraft:stick 0",
+      "expect": "\\b1\\b",
+      "name": "Drop one stick",
+      "assertion": true
+    }
+  ]
+}

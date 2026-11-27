@@ -1,0 +1,43 @@
+name: MineMods Bot Control QA
+on:
+  pull_request:
+    paths:
+      - 'tools/qa/bot/**'
+      - 'tools/qa/player_suite.py'
+      - 'tools/qa/bot_selftest.py'
+      - 'tools/qa/scenarios/bot-control-*.json'
+      - '.github/workflows/qa-bot-control.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  control:
+    strategy:
+      fail-fast: false
+      matrix:
+        minecraft: ['1.20.1','1.21.1','1.21.4']
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --ignore-scripts --no-audit --no-fund
+        working-directory: tools/qa/bot
+      - run: node --check tools/qa/bot/player.cjs
+      - run: python3 -m unittest tools.qa.tests.test_bot_actions -v
+      - name: Run real unmodded Fabric player controls
+        run: python3 -u -m tools.qa.bot_selftest ${{ matrix.minecraft }} --out bot-control
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bot-control-${{ matrix.minecraft }}
+          path: |
+            bot-control/report.json
+            bot-control/runtime/logs/
+          retention-days: 14

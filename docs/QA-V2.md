@@ -81,3 +81,7 @@ The pilot pack automatically reruns on changes to either member's 26.3 source tr
 - Pilot: older Fragile Glass Fabric 1.20.1 and 1.21.1 v1.0.1 adopt the vanilla-ID fallback and require server and network-player tests. Older Forge/NeoForge ports remain outside this pilot. Existing 26.x cohorts retain their own version and tests. The old naturalbuoyancy legacy packager is disabled on enrolled runs.
 
 Extended pilot: Fabric 1.21.4 has a separate registry baseline (Java 21, resource/data formats 46/61). The scaffold targets=["all"] remains the standard 11; targets=["extended"] includes registered optional versions. Fragile Glass Fabric 1.0.1 cohort includes 1.20.1, 1.21.1 and 1.21.4, all with mandatory network-player scenario. Runtime/compilation is not assumed until CI passes. No unsupported targets are advertised.
+
+## P8.1 — player action library pilot
+
+See [Bot actions](BOT-ACTIONS.md). A separate no-mod Fabric control workflow runs on bot changes, with actual server assertions for movement, crafting, placement, mining, combat and interaction. It does not publish JARs. Existing network scenarios retain their assertions; the lever test now uses an unobstructed fixture and an explicit sequenced use-item-on packet. Actual per-version CI results determine support.

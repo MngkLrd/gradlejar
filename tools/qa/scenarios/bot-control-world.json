@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "name": "Unmodded Fabric control world",
+  "steps": [
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "wait": 2
+    },
+    {
+      "command": "fill 0 199 0 15 199 15 minecraft:stone",
+      "expect": "Successfully filled|Filled"
+    },
+    {
+      "command": "execute if block 2 199 2 minecraft:stone",
+      "expect": "Test passed",
+      "name": "Test floor exists",
+      "assertion": true
+    }
+  ]
+}
