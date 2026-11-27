@@ -4,17 +4,19 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 final class MedicalBridge {
  record Health(float current,float maximum,boolean anatomical){}
- private static Method status,regions,health,maximum;
+ private static Method status,regions,health,maximum,passiveRate;
  private static boolean initialized=false;
  private static void init(){
   if(initialized)return;initialized=true;
   try{
    Class<?> api=Class.forName("dev.minemods.traumacraft.api.TraumaApi");
    status=api.getMethod("status",ServerPlayer.class);
+   try{passiveRate=api.getMethod("passiveRecoveryHpPerMinute",ServerPlayer.class);}catch(NoSuchMethodException ignored){}
    regions=Class.forName(api.getName()+"$Status").getMethod("regions");
    Class<?> region=Class.forName(api.getName()+"$Region");health=region.getMethod("health");maximum=region.getMethod("maximum");
   }catch(ReflectiveOperationException|LinkageError e){status=null;}
  }
+ static double passiveRecovery(ServerPlayer p){init();if(passiveRate!=null)try{double rate=((Number)passiveRate.invoke(null,p)).doubleValue();return Double.isFinite(rate)&&rate>=0?rate:-1;}catch(ReflectiveOperationException|LinkageError|ClassCastException e){}return -1;}
  static Health read(ServerPlayer p){
   init();
   if(status!=null)try{

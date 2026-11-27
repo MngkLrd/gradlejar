@@ -107,5 +107,7 @@
   "metabolism.stat.history_day_6": "Day -6",
   "metabolism.help.history_day_6": "Intake / expenditure in kcal; bar and color represent mean diet quality. One day is 1200 active seconds.",
   "metabolism.stat.history_day_7": "Day -7",
-  "metabolism.help.history_day_7": "Intake / expenditure in kcal; bar and color represent mean diet quality. One day is 1200 active seconds."
+  "metabolism.help.history_day_7": "Intake / expenditure in kcal; bar and color represent mean diet quality. One day is 1200 active seconds.",
+  "metabolism.stat.hp_rate": "Actual passive recovery",
+  "metabolism.help.hp_rate": "Measured passive anatomical HP repair over up to 60 active seconds, excluding instant treatments. ? means unavailable or insufficient samples."
 }
