@@ -1,6 +1,6 @@
-# World Logic 1.0.0-rc19
+# World Logic 1.0.0-rc20
 Minecraft 1.21.1 / Forge 52.1.0+ / Java 21 / Gradle 8.10.2 / official mappings.
-Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc19.jar.
+Build: gradle --no-daemon clean build. Output: build/libs/worldlogic-forge-mc1.21.1-1.0.0-rc20.jar.
 Install on both server and clients. No external dependencies. Burning Arrows excluded.
 
 Config: config/worldlogic.properties. Mods > World Logic > Config (local world or main menu).
@@ -62,3 +62,5 @@ RC18 performance candidate: preserve RC17 geography math and old registry keys; 
 RC18.1: timeout stack shows stronghold biome search and initial spawn waiting on drainage tile builds. Replace arbitrary eviction with bounded locality-aware caches and reuse exact raw terrain/precipitation samples across overlapping tile halos. Preserve original D8 order, coordinates, blend, height and climate equations. CI verifies bitwise raw-sample parity, including negative page coordinates, before accepting a production startup. Existing 100-second timeout retained. Client and speedup not yet verified.
 
 RC19: new worldlogic:earthlike_climate preset, shown under the Earthlike Geography name. Existing worldlogic:earthlike and realistic settings are retained. Climate phase derives from seeded noise; alternating prevailing winds, three upwind ocean/relief samples, approximate equatorial rain and subtropical dry belts. Vanilla hottest land row is desert regardless of humidity: humid hot land is smoothly routed to the warm biome row; ocean thermal categories and cold land unchanged by this adapter. This is a biome-selection parameter, not literal physical temperature. D8 terrain and rainfall inputs retained unchanged for RC18.1 terrain parity; no hydrological climate feedback yet. Production CI tests controlled dry/humid biome selection, seed-phase diversity and actual biome resolver on a 121-point 40,960-block lattice, including the reported seed, plus previous startup/terrain checks. Not a complete biome census; caves and graphical client not verified. New worlds only for RC19 climate; don't change a legacy save's generator.
+
+RC20: Public addon API v1 and server-synchronized fatigue HUD. Existing exertion data/mechanics retained. Network protocol 7; both sides must update. See [API guide](API.md). No change to world generation or existing presets. API temperature is an approximate ambient value, not body temperature; moisture index is not relative humidity. Wind is prevailing direction, not actual wind speed. No seasons, regional weather simulation or health-addon arbitration yet. Client HUD rendering and addon integration require separate verification.
