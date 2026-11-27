@@ -24,7 +24,12 @@ public final class ClientBalance {
  }
  private static boolean local(Player p){return p==Minecraft.getInstance().player&&RuleSync.clientDown()&&p.isAlive()&&!p.isCreative()&&!p.isSpectator();}
  @SubscribeEvent public static void attack(net.neoforged.neoforge.event.entity.player.AttackEntityEvent e){if(local(e.getEntity()))e.setCanceled(true);}
- @SubscribeEvent public static void interact(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent e){if(e instanceof net.neoforged.bus.api.ICancellableEvent c&&local(e.getEntity()))c.setCanceled(true);}
+ private static void interact(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent e){if(e instanceof net.neoforged.bus.api.ICancellableEvent c&&local(e.getEntity()))c.setCanceled(true);}
+ @SubscribeEvent public static void interactRightClickBlock(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock e){interact(e);}
+ @SubscribeEvent public static void interactRightClickItem(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickItem e){interact(e);}
+ @SubscribeEvent public static void interactEntityInteract(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.EntityInteract e){interact(e);}
+ @SubscribeEvent public static void interactEntityInteractSpecific(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.EntityInteractSpecific e){interact(e);}
+ @SubscribeEvent public static void interactLeftClickBlock(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.LeftClickBlock e){interact(e);}
  @SubscribeEvent public static void use(net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent.Start e){if(e.getEntity() instanceof Player p&&local(p))e.setCanceled(true);}
  @SubscribeEvent public static void breakSpeed(net.neoforged.neoforge.event.entity.player.PlayerEvent.BreakSpeed e){if(local(e.getEntity()))e.setNewSpeed(0);}
  private static void clearPose(){if(owner!=null&&owner.getForcedPose()==Pose.SWIMMING)owner.setForcedPose(null);owner=null;}
