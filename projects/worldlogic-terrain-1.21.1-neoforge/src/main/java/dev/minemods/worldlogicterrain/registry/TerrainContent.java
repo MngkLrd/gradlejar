@@ -88,6 +88,12 @@ public final class TerrainContent {
         forage("onion", 2, 0.4f, 0);
         forage("cabbage", 4, 0.5f, 0);
         forage("bell_pepper", 3, 0.45f, 0);
+        for(var fruit:dev.minemods.worldlogicterrain.tree.TreeFruit.values()){
+            BLOCKS.register(fruit.blockId(),()->new dev.minemods.worldlogicterrain.block.HangingFruitBlock(fruit,
+                BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS).randomTicks()));
+            if(fruit!=dev.minemods.worldlogicterrain.tree.TreeFruit.APPLE)
+                FOODS.add(ITEMS.register(fruit.id,()->new ForageFoodItem(fruit.nutrition,fruit.saturation,0)));
+        }
     }
     private static void tree(String name) {
         wood(name+"_log",()->new RotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG)));

@@ -147,9 +147,17 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             boolean shorePalm=coastalTransition&&(ground.is(BlockTags.SAND)||random.nextDouble()<coastal*.48);
             Form form=choose(shorePalm?Zone.COAST:zone,name,local,random,field);
             if(ground.is(BlockTags.SAND)&&zone!=Zone.COAST&&!shorePalm&&!mangrove)continue;
+            var fruit=FruitEcology.select(biome,(shorePalm?Zone.COAST:zone).name(),name,form.wood(),temperature,local,random);
+            // Do not change a sandy/water-rooted tree into an oak or jungle form.
+            if(ground.is(BlockTags.SAND)||mangrove){
+                if(fruit.isPresent()&&fruit.get().replacementForm()!=null)fruit=Optional.empty();
+            }
+            if(fruit.isPresent()&&fruit.get().replacementForm()!=null)
+                form=form(fruit.get().replacementForm(),fruit.get().fruit().wood());
             var key=ResourceKey.create(Registries.CONFIGURED_FEATURE,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","tree_"+form.feature()));
             if(level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(key).value().place(level,generator,random,pos)){
                 placed=true;trunks.add(pos);
+                if(fruit.isPresent())FruitEcology.attach(level,pos,fruit.get().fruit(),random);
                 if(zone==Zone.BOREAL||zone==Zone.TEMPERATE||zone==Zone.WET||zone==Zone.TROPICAL){
                     for(int n=0;n<3;n++){
                         int sx=x+random.nextInt(9)-4,sz=z+random.nextInt(9)-4;
