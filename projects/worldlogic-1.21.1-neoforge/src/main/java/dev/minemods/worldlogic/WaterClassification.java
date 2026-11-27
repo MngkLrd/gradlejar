@@ -34,7 +34,7 @@ public final class WaterClassification{
   if(c.broadWater)return profile(WaterKind.LAKE,c.source,WaterEvidence.LOCAL_GEOMETRY);
   return profile(WaterKind.POND,c.source,WaterEvidence.LOCAL_GEOMETRY);
  }
- private static WaterProfile profile(WaterKind kind,boolean source,WaterEvidence evidence){
+ static WaterProfile profile(WaterKind kind,boolean source,WaterEvidence evidence){
   WaterQuality quality=switch(kind){
    case SEA,BRACKISH->WaterQuality.DESALINATE;
    case RIVER,SPRING,LAKE,POND->WaterQuality.DRINKABLE;
@@ -53,10 +53,40 @@ public final class WaterClassification{
  }
  private static boolean loaded(ServerLevel l,BlockPos p){return !l.isOutsideBuildHeight(p)&&l.hasChunkAt(p);}
  private static boolean water(ServerLevel l,BlockPos p){return loaded(l,p)&&l.getFluidState(p).is(FluidTags.WATER);}
+ public static WaterProfile registeredProfile(net.minecraft.world.level.material.Fluid fluid){
+  var kind=NaturalFluids.kind(fluid);
+  if(kind==WaterKind.UNKNOWN)return profile(fluid==net.minecraft.world.level.material.Fluids.EMPTY?WaterKind.NONE:WaterKind.UNKNOWN,false,WaterEvidence.UNCLASSIFIED);
+  return profile(kind,fluid==NaturalFluids.get(kind).source.get(),WaterEvidence.REGISTERED_FLUID);
+ }
+ static double soilRisk(SoilType soil){return switch(soil){
+  case ROCK->-.07;case SAND->-.04;case FROZEN->-.02;case LOAM->.04;case SILT->.14;case HUMUS->.13;case CLAY->.15;case PEAT->.32;case UNKNOWN->0;
+ };}
+ static WaterProfile withSoil(WaterProfile p,double effect){
+  if(p.contaminationRisk()<0)return p;
+  double risk=Math.max(0,Math.min(1,p.contaminationRisk()+effect));
+  var quality=p.quality();
+  if(quality==WaterQuality.DRINKABLE&&risk>=.65)quality=WaterQuality.TREAT_RECOMMENDED;
+  return new WaterProfile(p.kind(),quality,p.salinityGkg(),risk,p.sourceBlock(),p.flowing(),p.evidence());
+ }
+ private static WaterProfile localQuality(ServerLevel l,BlockPos p,WaterProfile w){
+  double sum=0;int n=0;
+  // Sample only the bed and immediate bank. Water itself is not a soil.
+  for(var d:Direction.values()){
+   if(d==Direction.UP)continue;
+   var q=p.relative(d);
+   if(!loaded(l,q))continue;
+   var s=HydrologyModel.soilType(l.getBlockState(q));
+   if(s==SoilType.UNKNOWN)continue;
+   sum+=soilRisk(s);n++;
+  }
+  return withSoil(w,(n==0?0:sum/n)+EnvironmentAnalytics.metrics(l,p).map(m->m.soilLoad()*.25).orElse(0.0));
+ }
  public static WaterProfile sample(ServerLevel l,BlockPos p){
   if(!loaded(l,p))return profile(WaterKind.UNKNOWN,false,WaterEvidence.UNCLASSIFIED);
   var fluid=l.getFluidState(p);
   if(!fluid.is(FluidTags.WATER))return profile(WaterKind.NONE,false,WaterEvidence.FLUID_ABSENT);
+  var nativeKind=NaturalFluids.kind(fluid.getType());
+  if(nativeKind!=WaterKind.UNKNOWN)return localQuality(l,p,profile(nativeKind,fluid.isSource(),WaterEvidence.REGISTERED_FLUID));
   if(!l.dimensionType().hasSkyLight())return profile(WaterKind.UNKNOWN,false,WaterEvidence.UNCLASSIFIED);
   var b=l.getBiome(p);
   boolean marine=tagged(b,"minecraft","is_ocean")||tagged(b,"worldlogic","water/marine");
@@ -103,6 +133,6 @@ public final class WaterClassification{
    BlockState ground=l.getBlockState(p.below());
    potential=sampler.map(s->s.sample(p,b,ground).riverbankPotential()).orElse(0.0);
   }
-  return classify(new Context(true,true,fluid.isSource(),marine,estuary,wetland,river,solidRoof,spring,potential,broad));
+  return localQuality(l,p,classify(new Context(true,true,fluid.isSource(),marine,estuary,wetland,river,solidRoof,spring,potential,broad)));
  }
 }

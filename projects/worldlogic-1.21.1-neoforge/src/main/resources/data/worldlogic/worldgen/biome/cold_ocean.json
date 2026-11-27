@@ -25,6 +25,12 @@
         "maxCount": 4
       },
       {
+        "type": "minecraft:zombie_villager",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
         "type": "minecraft:skeleton",
         "weight": 100,
         "minCount": 4,
@@ -37,18 +43,43 @@
         "maxCount": 4
       },
       {
+        "type": "minecraft:slime",
+        "weight": 100,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
         "type": "minecraft:enderman",
         "weight": 10,
         "minCount": 1,
         "maxCount": 4
+      },
+      {
+        "type": "minecraft:witch",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "minecraft:drowned",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 1
       }
     ],
     "creature": [],
-    "ambient": [],
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "weight": 10,
+        "minCount": 8,
+        "maxCount": 8
+      }
+    ],
     "water_creature": [
       {
         "type": "minecraft:squid",
-        "weight": 10,
+        "weight": 3,
         "minCount": 1,
         "maxCount": 4
       }
@@ -56,12 +87,25 @@
     "water_ambient": [
       {
         "type": "minecraft:cod",
-        "weight": 12,
+        "weight": 15,
         "minCount": 3,
+        "maxCount": 6
+      },
+      {
+        "type": "minecraft:salmon",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 5
+      }
+    ],
+    "underground_water_creature": [
+      {
+        "type": "minecraft:glow_squid",
+        "weight": 10,
+        "minCount": 4,
         "maxCount": 6
       }
     ],
-    "underground_water_creature": [],
     "axolotls": [],
     "misc": []
   },
@@ -74,10 +118,18 @@
     [],
     [],
     [],
+    [
+      "minecraft:disk_sand",
+      "minecraft:disk_clay",
+      "minecraft:disk_gravel"
+    ],
     [],
     [],
-    [],
-    [],
+    [
+      "minecraft:seagrass_cold",
+      "minecraft:seagrass_simple",
+      "minecraft:kelp_cold"
+    ],
     [
       "minecraft:freeze_top_layer"
     ]

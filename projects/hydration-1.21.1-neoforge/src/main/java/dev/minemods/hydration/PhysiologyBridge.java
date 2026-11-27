@@ -12,6 +12,8 @@ public final class PhysiologyBridge {
  private record Endpoint(Method status,Method a,Method b,Method c,Method regionBleed){}
  private static final org.slf4j.Logger LOG=LoggerFactory.getLogger("hydration");
  private static Endpoint thermal,trauma;
+ private static Method waterIntake,medicalLoss;
+ private static boolean medicalFailed;
  private static boolean initialized,thermalFailed,traumaFailed;
  private PhysiologyBridge(){}
  private static Endpoint resolve(String mod,String api,boolean isThermal){
@@ -28,7 +30,22 @@ public final class PhysiologyBridge {
   if(initialized)return;
   thermal=resolve("worldlogic_thermal","dev.minemods.thermal.api.ThermalApi",true);
   trauma=resolve("worldlogic_trauma","dev.minemods.traumacraft.api.TraumaApi",false);
+  if(trauma!=null)try{
+   Class<?> api=Class.forName("dev.minemods.traumacraft.api.TraumaApi");
+   waterIntake=api.getMethod("reportWaterIntake",ServerPlayer.class,int.class,double.class,double.class);
+   medicalLoss=api.getMethod("fluidLossPointsPerSecond",ServerPlayer.class);
+  }catch(ReflectiveOperationException|LinkageError|RuntimeException ex){waterIntake=null;medicalLoss=null;LOG.info("Trauma waterborne illness API not available; Hydration fallback active");}
   initialized=true;
+ }
+ public static boolean reportIntake(ServerPlayer p,WaterBatch b){
+  init();if(waterIntake==null||medicalLoss==null||medicalFailed)return false;
+  try{waterIntake.invoke(null,p,b.ml(),b.risk(),b.salinity());return true;}
+  catch(ReflectiveOperationException|RuntimeException ex){medicalFailed=true;LOG.warn("Trauma water intake bridge failed",ex);return false;}
+ }
+ public static double illnessLoss(ServerPlayer p){
+  init();if(waterIntake==null||medicalLoss==null||medicalFailed)return Double.NaN;
+  try{double v=((Number)medicalLoss.invoke(null,p)).doubleValue();if(!Double.isFinite(v)||v<0)throw new IllegalStateException("Invalid medical loss");return WaterBalance.clamp(v,0,1.5);}
+  catch(ReflectiveOperationException|RuntimeException ex){medicalFailed=true;LOG.warn("Trauma fluid loss bridge failed",ex);return Double.NaN;}
  }
  public static Sample sample(ServerPlayer p){
   if(!p.serverLevel().getServer().isSameThread())throw new IllegalStateException("Server thread required");

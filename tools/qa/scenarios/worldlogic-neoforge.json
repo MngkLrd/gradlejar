@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC28 production core/API regression",
+  "name": "World Logic NeoForge RC32 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -17,6 +17,12 @@
       "name": "Core calculations and furnace mixin",
       "command": "worldlogic selftest",
       "expect": "WORLDLOGIC_CORE_TESTS_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema",
+      "command": "worldlogic qa guide",
+      "expect": "WORLDLOGIC_GUIDE_PASSED",
       "assertion": true
     },
     {
@@ -188,6 +194,114 @@
       "name": "Detailed water origins, game drinkability, legacy mapping and actual covered/exposed water fixtures",
       "command": "worldlogic qa water_profile",
       "expect": "WORLDLOGIC_WATER_PROFILE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality",
+      "command": "worldlogic qa native_water",
+      "expect": "WORLDLOGIC_NATIVE_WATER_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history",
+      "command": "worldlogic qa analytics",
+      "expect": "WORLDLOGIC_ANALYTICS_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence",
+      "command": "worldlogic qa plant_ecology",
+      "expect": "WORLDLOGIC_PLANT_ECOLOGY_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Marine sediment, polar icebergs and actual native seawater spawn predicates",
+      "command": "worldlogic qa marine",
+      "expect": "WORLDLOGIC_MARINE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags",
+      "command": "worldlogic qa underground_regression",
+      "expect": "WORLDLOGIC_UNDERGROUND_REGRESSION_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded structure start and invalid-biome control: mineshaft",
+      "command": "worldlogic qa structure_mineshaft",
+      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded structure start and invalid-biome control: trial_chambers",
+      "command": "worldlogic qa structure_trial_chambers",
+      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded structure start and invalid-biome control: ancient_city",
+      "command": "worldlogic qa structure_ancient_city",
+      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1",
+      "command": "worldlogic qa biome_survey_0_0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2",
+      "command": "worldlogic qa biome_survey_0_1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3",
+      "command": "worldlogic qa biome_survey_0_2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4",
+      "command": "worldlogic qa biome_survey_0_3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1",
+      "command": "worldlogic qa biome_survey_1_0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2",
+      "command": "worldlogic qa biome_survey_1_1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3",
+      "command": "worldlogic qa biome_survey_1_2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4",
+      "command": "worldlogic qa biome_survey_1_3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "All 58 biomes reached in seeded generation survey",
+      "command": "worldlogic qa biome_coverage",
+      "expect": "WORLDLOGIC_BIOME_COVERAGE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded structure start and invalid-biome control: stronghold",
+      "command": "worldlogic qa structure_stronghold",
+      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
       "assertion": true
     }
   ],
@@ -501,6 +615,357 @@
         {
           "backend": "server",
           "name": "Detailed water origins, game drinkability, legacy mapping and actual covered/exposed water fixtures"
+        }
+      ]
+    },
+    {
+      "id": "native-water-conversion",
+      "kind": "mechanic",
+      "subject": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-sea_water",
+      "kind": "item",
+      "subject": "worldlogic:sea_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-river_water",
+      "kind": "item",
+      "subject": "worldlogic:river_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-lake_water",
+      "kind": "item",
+      "subject": "worldlogic:lake_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-spring_water",
+      "kind": "item",
+      "subject": "worldlogic:spring_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-groundwater",
+      "kind": "item",
+      "subject": "worldlogic:groundwater and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-wetland_water",
+      "kind": "item",
+      "subject": "worldlogic:wetland_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-pond_water",
+      "kind": "item",
+      "subject": "worldlogic:pond_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-brackish_water",
+      "kind": "item",
+      "subject": "worldlogic:brackish_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "environment-analytics",
+      "kind": "mechanic",
+      "subject": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-water-prediction",
+      "kind": "mechanic",
+      "subject": "worldgen-water-prediction",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "plant-water-withdrawal",
+      "kind": "mechanic",
+      "subject": "plant-water-withdrawal",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "plant-root-retention",
+      "kind": "mechanic",
+      "subject": "plant-root-retention",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "soil-salinity",
+      "kind": "mechanic",
+      "subject": "soil-salinity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "forest-recovery",
+      "kind": "mechanic",
+      "subject": "forest-recovery",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "underground-generation-regression",
+      "kind": "mechanic",
+      "subject": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-mineshaft-eligibility",
+      "kind": "mechanic",
+      "subject": "restored-mineshaft-eligibility",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-trial-chamber-eligibility",
+      "kind": "mechanic",
+      "subject": "restored-trial-chamber-eligibility",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-ancient-city-eligibility",
+      "kind": "mechanic",
+      "subject": "restored-ancient-city-eligibility",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-geode-feature",
+      "kind": "mechanic",
+      "subject": "restored-geode-feature",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-monster-room-feature",
+      "kind": "mechanic",
+      "subject": "restored-monster-room-feature",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-deep-monster-room-feature",
+      "kind": "mechanic",
+      "subject": "restored-deep-monster-room-feature",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "all-biomes-seeded-reachability",
+      "kind": "mechanic",
+      "subject": "Every active biome reached; retired registry IDs retained; real base-height and land/water classification regression",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 1 part 1"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 1 part 2"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 1 part 3"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 1 part 4"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 2 part 1"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 2 part 2"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 2 part 3"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 2 part 4"
+        },
+        {
+          "backend": "server",
+          "name": "All 58 biomes reached in seeded generation survey"
+        }
+      ]
+    },
+    {
+      "id": "seeded-start-mineshaft",
+      "kind": "mechanic",
+      "subject": "Seeded mineshaft placement, actual generated start pieces and negative biome control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded structure start and invalid-biome control: mineshaft"
+        }
+      ]
+    },
+    {
+      "id": "seeded-start-trial_chambers",
+      "kind": "mechanic",
+      "subject": "Seeded trial_chambers placement, actual generated start pieces and negative biome control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded structure start and invalid-biome control: trial_chambers"
+        }
+      ]
+    },
+    {
+      "id": "seeded-start-ancient_city",
+      "kind": "mechanic",
+      "subject": "Seeded ancient_city placement, actual generated start pieces and negative biome control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded structure start and invalid-biome control: ancient_city"
+        }
+      ]
+    },
+    {
+      "id": "seeded-start-stronghold",
+      "kind": "mechanic",
+      "subject": "Seeded stronghold placement, actual generated start pieces and negative biome control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded structure start and invalid-biome control: stronghold"
+        }
+      ]
+    },
+    {
+      "id": "marine-ecology",
+      "kind": "mechanic",
+      "subject": "Marine sediment, polar icebergs and actual native seawater spawn predicates",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine sediment, polar icebergs and actual native seawater spawn predicates"
+        }
+      ]
+    },
+    {
+      "id": "guide-data",
+      "kind": "mechanic",
+      "subject": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
         }
       ]
     }

@@ -20,8 +20,9 @@ public final class VesselTreatment {
   e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);
   if(!(e.getEntity() instanceof ServerPlayer p)||!Hydration.active(p))return;
   if(!item.heatproof){p.displayClientMessage(Component.translatable("hydration.treatment.not_heatproof"),true);return;}
-  var stack=e.getItemStack();var b=item.read(stack);if(b.ml()<100)return;
-  if(JOBS.containsKey(p))return;
+  var stack=e.getItemStack();if(JOBS.containsKey(p))return;
+  var b=item.current(stack,Hydration.clock(p));if(b.ml()<100)return;
+  item.write(stack,b);
   boolean distill=p.getOffhandItem().is(HydrationItems.CONDENSER.get());
   long ticks=(distill?160:60)+b.ml()/(distill?5:15);
   JOBS.put(p,new Job(stack,b,e.getPos().immutable(),p.level().dimension(),p.serverLevel().getGameTime()+ticks,distill));
@@ -37,8 +38,9 @@ public final class VesselTreatment {
    JOBS.remove(p);p.displayClientMessage(Component.translatable("hydration.treatment.cancelled"),true);return;
   }
   if(p.serverLevel().getGameTime()<job.due)return;
-  JOBS.remove(p);item.write(job.stack,job.distill?WaterTreatment.distill(job.initial):WaterTreatment.boil(job.initial));p.getInventory().setChanged();
+  JOBS.remove(p);var input=job.initial.aged(Hydration.clock(p),false);item.write(job.stack,job.distill?WaterTreatment.distill(input):WaterTreatment.boil(input));p.getInventory().setChanged();
   p.displayClientMessage(Component.translatable("hydration.treatment.done"),true);
  }
+ static boolean activeJob(ServerPlayer p,ItemStack stack){var job=JOBS.get(p);return job!=null&&job.stack==stack;}
  public static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p)JOBS.remove(p);}
 }

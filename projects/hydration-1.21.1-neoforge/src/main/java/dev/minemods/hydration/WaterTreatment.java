@@ -8,7 +8,7 @@ public final class WaterTreatment {
   if(distilled)q=WaterBalance.Quality.DRINKABLE;
   else if(q==WaterBalance.Quality.DESALINATE||salt>=1)q=WaterBalance.Quality.DESALINATE;
   else if(q!=WaterBalance.Quality.UNKNOWN)q=risk<=.10?WaterBalance.Quality.DRINKABLE:WaterBalance.Quality.TREAT_RECOMMENDED;
-  return new WaterBatch(ml,q,salt,risk,b.origins());
+  return new WaterBatch(ml,q,salt,risk,b.origins(),b.updatedTick());
  }
  public static WaterBatch filter(WaterBatch b){return treated(b,b.ml(),b.salinity(),b.risk()*.55,false);}
  public static WaterBatch boil(WaterBatch b){

@@ -13,6 +13,13 @@ import net.minecraft.server.level.ServerPlayer;
 /** Public server-thread API. Hydration owns fluid balance, never foreign body state. */
 public final class HydrationApi {
  public static final int API_VERSION=1;
+ public static final int API_REVISION=2;
+ public record Physiology(double hydrationPercent,double electrolyteIndex,double exposurePoints,String dehydrationStage){}
+ public static Optional<Physiology> physiology(ServerPlayer p){
+  if(!p.serverLevel().getServer().isSameThread())throw new IllegalStateException("Server thread required");
+  if(!Hydration.active(p))return Optional.empty();
+  var s=Hydration.state(p);return Optional.of(new Physiology(s.water(),s.electrolytes(),s.exposure(),dev.minemods.hydration.WaterBalance.stage(s.water()).name()));
+ }
  public static final int BUCKET_MB=dev.minemods.hydration.FluidUnits.BUCKET_MB;
  public record Status(double hydrationPercent,double reservePoints,double pendingPoints,double exposurePoints){}
  public record LiquidStatus(int volumeMb,String quality,double salinityGkg,double contaminationRisk,Set<String> origins){

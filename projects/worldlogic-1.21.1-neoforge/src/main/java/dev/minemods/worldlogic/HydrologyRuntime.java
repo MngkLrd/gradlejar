@@ -21,6 +21,14 @@ public final class HydrologyRuntime{
  }
  private record Site(BlockPos surface,SoilType soil,double moisture){}
  private static Optional<Site> site(ServerLevel l,int x,int z){
+  // Deterministic alternatives stay within the same 16x16 cell. A tree or pond
+  // at its center must not make all plants in that cell unable to access water.
+  for(int[] offset:new int[][]{{0,0},{-5,-5},{5,-5},{-5,5},{5,5}}){
+   var result=columnSite(l,x+offset[0],z+offset[1]);if(result.isPresent())return result;
+  }
+  return Optional.empty();
+ }
+ private static Optional<Site> columnSite(ServerLevel l,int x,int z){
   if(!l.hasChunkAt(new BlockPos(x,l.getSeaLevel(),z)))return Optional.empty();
   int y=l.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);
   if(y<=l.getMinBuildHeight()||y>=l.getMaxBuildHeight())return Optional.empty();
@@ -46,8 +54,53 @@ public final class HydrologyRuntime{
   var store=c==null?HydrologyModel.initial(s.soil,s.moisture):c.store();
   double sat=HydrologyModel.unit(store.soil()/profile.capacity());
   return Optional.of(new Hydrology(s.soil,store.soil(),profile.capacity(),store.groundwater(),store.snow(),store.pond(),
-   c==null?0:c.runoff(),c==null?0:c.evaporation(),c==null?0:c.recharge(),c==null?0:c.discharge(),sat,profile.fertility(),profile.permeability(),
+   c==null?0:c.runoff(),c==null?0:c.evaporation(),c==null?0:c.recharge(),c==null?0:c.discharge(),sat,PlantSoilModel.snapshot(store,s.soil,stateEco(l,ChunkPos.asLong(cx,cz))).effectiveFertility(),profile.permeability(),
    Math.max(1,32-store.groundwater()*.10),c!=null,c==null?-1:c.tick()));
+ }
+ private static HydrologyState.Eco stateEco(ServerLevel l,long key){return HydrologyState.get(l).ecology.getOrDefault(key,HydrologyState.emptyEco());}
+ private record Access(HydrologyState state,long key,Site site,HydrologyState.Cell cell){}
+ private static Optional<Access> access(ServerLevel l,BlockPos p,boolean create){
+  if(!active(l)||l.isOutsideBuildHeight(p)||!l.hasChunkAt(p))return Optional.empty();
+  int cx=Math.floorDiv(p.getX(),16),cz=Math.floorDiv(p.getZ(),16);long key=ChunkPos.asLong(cx,cz);
+  var found=site(l,cx*16+8,cz*16+8);if(found.isEmpty())return Optional.empty();
+  var s=found.orElseThrow();var state=HydrologyState.get(l);var c=state.cells.get(key);
+  if(c==null){
+   if(create&&state.cells.size()>=HydrologyState.LIMIT)return Optional.empty();
+   c=new HydrologyState.Cell(HydrologyModel.initial(s.soil,s.moisture),0,0,0,0,-1);
+   if(create){state.cells.put(key,c);state.setDirty();}
+  }
+  return Optional.of(new Access(state,key,s,c));
+ }
+ /** Bounded local proxy, no terrain reads and no recursive atmosphere query. */
+ static double transpirationInfluence(ServerLevel l,BlockPos p,double modeledSurfaceY){
+  if(!active(l)||!l.hasChunkAt(p)||p.getY()<modeledSurfaceY-4||p.getY()>modeledSurfaceY+24)return 0;
+  var e=HydrologyState.get(l).ecology.get(EnvironmentAnalytics.key(p));
+  if(e==null)return 0;
+  return PlantSoilModel.vaporInfluence(e,l.getGameTime());
+ }
+ public static Optional<SoilEcology> ecology(ServerLevel l,BlockPos p){
+  return access(l,p,false).map(a->PlantSoilModel.snapshot(a.cell.store(),a.site.soil,a.state.ecology.getOrDefault(a.key,HydrologyState.emptyEco())));
+ }
+ public static Optional<VegetationResult> vegetation(ServerLevel l,BlockPos p,VegetationInput input){
+  PlantSoilModel.validate(input);
+  return access(l,p,true).map(a->{
+   var e=a.state.ecology.getOrDefault(a.key,HydrologyState.emptyEco());
+   var change=PlantSoilModel.vegetation(a.cell.store(),a.site.soil,e,input,l.getGameTime());
+   if(change.applied()){replaceStore(a,change.store());a.state.ecology.put(a.key,change.eco());a.state.setDirty();}
+   return new VegetationResult(change.applied(),change.accepted(),input.waterDemandMm(),PlantSoilModel.snapshot(change.store(),a.site.soil,change.eco()));
+  });
+ }
+ private static void replaceStore(Access a,HydrologyModel.Store store){
+  var c=a.cell;a.state.cells.put(a.key,new HydrologyState.Cell(store,c.runoff(),c.evaporation(),c.recharge(),c.discharge(),c.tick()));
+ }
+ public static double irrigate(ServerLevel l,BlockPos p,double offered,double salinity){
+  PlantSoilModel.validateIrrigation(offered,salinity);
+  return access(l,p,true).map(a->{
+   var e=a.state.ecology.getOrDefault(a.key,HydrologyState.emptyEco());
+   var change=PlantSoilModel.irrigate(a.cell.store(),a.site.soil,e,offered,salinity,l.getGameTime());
+   if(change.applied()){replaceStore(a,change.store());a.state.ecology.put(a.key,change.eco());a.state.setDirty();}
+   return change.accepted();
+  }).orElse(0.0);
  }
  public static WaterSource waterSource(ServerLevel l,BlockPos p){
   return WaterClassification.legacy(WaterClassification.sample(l,p));
@@ -76,7 +129,10 @@ public final class HydrologyRuntime{
   }
  }
  static HydrologyState.Cell advanceCell(HydrologyState state,long key,HydrologyModel.Store store,SoilType soil,double rain,double snow,double temperature,double humidity,double sun,double wind,long now){
-  var step=HydrologyModel.advance(store,soil,rain,snow,temperature,humidity,sun,wind);
+  var e=state.ecology.getOrDefault(key,HydrologyState.emptyEco());
+  double roots=e.vegetationTick()>=0&&now-e.vegetationTick()<=1200?e.roots():0;
+  var step=HydrologyModel.advance(store,soil,rain,snow,temperature,humidity,sun,wind,roots);
+  if(state.ecology.containsKey(key))state.ecology.put(key,PlantSoilModel.leach(e,store,step));
   var cell=new HydrologyState.Cell(step.store(),step.runoff(),step.evaporation(),step.recharge(),step.discharge(),now);
   state.cells.put(key,cell);state.setDirty();return cell;
  }

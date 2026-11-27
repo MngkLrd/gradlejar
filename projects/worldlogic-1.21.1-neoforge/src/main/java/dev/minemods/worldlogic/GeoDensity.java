@@ -16,7 +16,7 @@ public final class GeoDensity implements DensityFunction {
   NoiseHolder.CODEC.fieldOf("detail").forGetter(g->g.detail),
   NoiseHolder.CODEC.fieldOf("moisture").forGetter(g->g.moisture)
  ).apply(i,GeoDensity::new));
- static{TYPES.register("geography",()->CODEC);}
+ static{TYPES.register("geography",()->CODEC);TYPES.register("shore_classification",()->ShoreDensity.CODEC);}
  private final String field;
  private final NoiseHolder continental,tectonic,detail,moisture;
  private final GeoModel model;
@@ -28,7 +28,7 @@ public final class GeoDensity implements DensityFunction {
   GeoModel value=new GeoModel(c,t,d,m);MODELS.put(k,value);return value;
  }
  public GeoDensity(String field,NoiseHolder continental,NoiseHolder tectonic,NoiseHolder detail,NoiseHolder moisture){
-  if(!Set.of("offset","continents","erosion","ridges","temperature","humidity","climate_temperature","climate_humidity","extended_climate_temperature").contains(field))throw new IllegalArgumentException("Unknown geography field: "+field);
+  if(!Set.of("offset","continents","biome_continents","erosion","ridges","temperature","humidity","climate_temperature","climate_humidity","extended_climate_temperature").contains(field))throw new IllegalArgumentException("Unknown geography field: "+field);
   this.field=field;this.continental=continental;this.tectonic=tectonic;this.detail=detail;this.moisture=moisture;this.model=model(continental,tectonic,detail,moisture);
  }
  /** Internal server adapter for the public API; uses the exact existing seeded noise instances. */
