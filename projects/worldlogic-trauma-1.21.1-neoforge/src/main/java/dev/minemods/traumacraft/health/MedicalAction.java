@@ -26,7 +26,8 @@ public final class MedicalAction {
             case SPLINT, FRACTURE_BRACE, BONE_MENDER -> state.fractured(part) && !state.stabilized(part);
             case MEDKIT -> state.health(part) < part.maximum;
             case FIELD_MEDKIT -> state.health(part) < part.maximum || state.bleeding(part) > 0;
-            case RAG_DRESSING, STERILE_PATCH, COMPACT_MEDKIT ->
+            case RAG_DRESSING -> state.bleeding(part)==1 || (state.health(part)>0&&state.health(part)<part.maximum);
+            case STERILE_PATCH, COMPACT_MEDKIT ->
                     state.health(part) > 0 && state.health(part) < part.maximum;
             case TRAUMA_KIT ->
                     state.health(part) < part.maximum || state.bleeding(part) > 0 || (state.fractured(part) && !state.stabilized(part));
@@ -36,6 +37,11 @@ public final class MedicalAction {
         };
     }
 
+    private static BodyPart mostRecoverable(BodyState state){
+        BodyPart target=null;float lowest=1;
+        for(var part:BodyPart.values())if(state.percent(part)>0&&state.percent(part)<lowest){target=part;lowest=state.percent(part);}
+        return target;
+    }
     public static BodyPart autoTarget(BodyState state, MedicalItem.Type type) {
         return switch (type) {
             case BANDAGE, COMPRESSION_WRAP -> state.mostBleeding();
@@ -54,7 +60,12 @@ public final class MedicalAction {
                 }
                 yield target;
             }
-            case RAG_DRESSING, STERILE_PATCH, COMPACT_MEDKIT -> {
+            case RAG_DRESSING -> {
+                BodyPart target=null;
+                for(var zone:BodyPart.values())if(state.bleeding(zone)==1){target=zone;break;}
+                yield target!=null?target:mostRecoverable(state);
+            }
+            case STERILE_PATCH, COMPACT_MEDKIT -> {
                 BodyPart result = null;
                 float lowest = 1f;
                 for (BodyPart zone : BodyPart.values()) {
@@ -88,7 +99,7 @@ public final class MedicalAction {
             case SPLINT -> state.stabilize(part, 4800);
             case MEDKIT -> state.heal(part, 25);
 
-            case RAG_DRESSING -> state.heal(part, 4);
+            case RAG_DRESSING -> {if(state.bleeding(part)==1)state.stopBleeding(part);state.heal(part,4);}
             case STERILE_PATCH -> state.heal(part, 10);
             case COMPRESSION_WRAP -> {
                 state.stopBleeding(part);

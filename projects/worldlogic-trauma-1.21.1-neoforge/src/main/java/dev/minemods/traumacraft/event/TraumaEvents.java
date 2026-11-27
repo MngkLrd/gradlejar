@@ -69,13 +69,13 @@ public final class TraumaEvents {
         if(source.is(DamageTypeTags.IS_FALL)) {
             float points=amount*4f;
             for(BodyPart leg:new BodyPart[]{BodyPart.LEFT_LEG,BodyPart.RIGHT_LEG}){
-                b.damage(leg,points);
+                b.wound(leg,points,WoundKind.CONTUSION);
                 if(points>=17f) b.setFractured(leg,true);
             }
             return;
         }
         if(source.is(DamageTypeTags.IS_EXPLOSION)) {
-            for(BodyPart zone:BodyPart.values()) b.damage(zone,amount*(zone==BodyPart.CHEST?1.5f:.65f));
+            for(BodyPart zone:BodyPart.values()) b.wound(zone,amount*(zone==BodyPart.CHEST?1.5f:.65f),WoundKind.LACERATION);
             // World Logic owns blast concussion; do not generate a second effect.
             return;
         }
@@ -85,18 +85,28 @@ public final class TraumaEvents {
         BodyPart part=physical?HitLocation.locate(p,source):BodyPart.CHEST;
         float points=amount*(projectile?4f:3f);
         // LivingDamageEvent.Pre already reflects armor/resistance. Do not apply armor again.
-        b.damage(part,points);
+        WoundKind wound=null;
+        if(fire)wound=WoundKind.BURN;
+        else if(source.is(net.minecraft.world.damagesource.DamageTypes.FREEZE))wound=WoundKind.FROSTBITE;
+        else if(projectile)wound=WoundKind.PUNCTURE;
+        else if(physical){
+            var tool=source.getDirectEntity() instanceof net.minecraft.world.entity.LivingEntity attacker?attacker.getMainHandItem().getItem():null;
+            wound=tool instanceof net.minecraft.world.item.SwordItem?WoundKind.CUT:
+                tool instanceof net.minecraft.world.item.AxeItem?WoundKind.LACERATION:WoundKind.CONTUSION;
+        }
+        if(wound!=null)b.wound(part,points,wound);else b.damage(part,points);
         if(physical && part==BodyPart.HEAD && points>=12 && p.getRandom().nextFloat()<.45f) b.addConcussion(600);
         if(physical && points>=12) {
             float roll=p.getRandom().nextFloat();
-            if(points>=24&&roll<.35f)b.setBleeding(part,2);
-            else if(roll<.60f)b.setBleeding(part,1);
+            boolean open=wound==WoundKind.CUT||wound==WoundKind.PUNCTURE||wound==WoundKind.LACERATION;
+            if(open&&points>=24&&roll<.45f)b.setBleeding(part,2);
+            else if(roll<(open?.80f:.15f))b.setBleeding(part,1);
         }
     }
     public static void onPlayerTick(EntityTickEvent.Post e) {
         if(!(e.getEntity() instanceof ServerPlayer p)) return;
         FunctionEvents.update(p);
-        if(!WorldLogicBridge.active(p)){TreatmentManager.tick(p);return;}
+        if(!WorldLogicBridge.active(p)){TreatmentManager.tick(p);if(p.tickCount%40==0)ModNetwork.syncGait(p);return;}
         BodyState b=BodyStates.get(p);
         if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
         TreatmentManager.tick(p);

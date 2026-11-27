@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 /** Authoritative player medical state. Saved to player attachment NBT on server. */
 public final class BodyState {
     private final float[] health = new float[BodyPart.values().length];
+    private final byte[] wounds=new byte[BodyPart.values().length];
     private final byte[] bleeding = new byte[BodyPart.values().length];
     private final boolean[] fractured = new boolean[BodyPart.values().length];
     private final int[] boneRecovery = new int[BodyPart.values().length];
@@ -90,6 +91,16 @@ public final class BodyState {
     public BodyState() { reset(); }
 
     public float health(BodyPart part) { return health[part.ordinal()]; }
+    public int wounds(BodyPart part){return wounds[part.ordinal()]&WoundKind.ALL;}
+    public void addWound(BodyPart part,WoundKind kind){
+        int i=part.ordinal(),next=wounds(part)|kind.bit;
+        if(next!=wounds(part)){wounds[i]=(byte)next;dirty=true;}
+    }
+    public void wound(BodyPart part,float points,WoundKind kind){
+        if(!Float.isFinite(points)||points<=0)return;
+        damage(part,points);
+        addWound(part,kind);
+    }
     public int bleeding(BodyPart part) { return bleeding[part.ordinal()]; }
     public boolean fractured(BodyPart part) { return fractured[part.ordinal()]; }
     public float percent(BodyPart part) { return health(part) / part.maximum; }
@@ -156,6 +167,7 @@ public final class BodyState {
     }
     public void stopBleeding(BodyPart part) {
         bleeding[part.ordinal()] = 0;
+        if(health(part)>=part.maximum&&!fractured(part))wounds[part.ordinal()]=0;
         dirty = true;
     }
     public void setFractured(BodyPart part, boolean value) {
@@ -180,7 +192,7 @@ public final class BodyState {
             int i = part.ordinal();
             if (boneRecovery[i] > 0 && fractured[i]) {
                 boneRecovery[i] = Math.max(0, boneRecovery[i] - ticks);
-                if (boneRecovery[i] == 0) fractured[i] = false;
+                if (boneRecovery[i] == 0) {fractured[i] = false;if(health(part)>=part.maximum&&bleeding(part)==0)wounds[i]=0;}
                 dirty = true;
             }
         }
@@ -189,6 +201,7 @@ public final class BodyState {
         if (!Float.isFinite(amount) || amount <= 0 || health(part) >= part.maximum) return false;
         int i = part.ordinal();
         health[i] = Math.min(part.maximum, health[i] + amount);
+        if(health[i]>=part.maximum&&bleeding(part)==0&&!fractured(part))wounds[i]=0;
         if (!vitalDestroyed() && criticalGraceTicks > 0) criticalGraceTicks = 0;
         dirty = true;
         return true;
@@ -232,6 +245,7 @@ public final class BodyState {
         for (BodyPart part : BodyPart.values()) {
             int i = part.ordinal();
             health[i] = part.maximum;
+            wounds[i]=0;
             bleeding[i] = 0;
             fractured[i] = false;
             boneRecovery[i] = 0;
@@ -253,6 +267,7 @@ public final class BodyState {
         for (BodyPart part : BodyPart.values()) {
             CompoundTag zone = new CompoundTag();
             zone.putFloat("hp", health(part));
+            zone.putByte("wounds",wounds[part.ordinal()]);
             zone.putByte("bleed", bleeding[part.ordinal()]);
             zone.putBoolean("fracture", fractured(part));
             zone.putInt("boneRecovery", boneRecovery[part.ordinal()]);
@@ -274,6 +289,7 @@ public final class BodyState {
             int i = part.ordinal();
             float stored = zone.contains("hp", 99) ? zone.getFloat("hp") : part.maximum;
             health[i] = Float.isFinite(stored) ? Math.max(0, Math.min(part.maximum, stored)) : part.maximum;
+            wounds[i]=(byte)(zone.getByte("wounds")&WoundKind.ALL);
             bleeding[i] = (byte) Math.max(0, Math.min(2, zone.getByte("bleed")));
             fractured[i] = zone.getBoolean("fracture");
             boneRecovery[i] = fractured[i] ? Math.max(0, Math.min(12000, zone.getInt("boneRecovery"))) : 0;
