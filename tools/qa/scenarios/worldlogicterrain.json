@@ -26,7 +26,7 @@
     {
       "name": "meadow_grass has loot",
       "command": "loot spawn 1.5 202 1.5 mine 1 200 1 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Meadow Grass\\] from loot table worldlogicterrain:blocks/meadow_grass$",
       "assertion": true
     },
     {
@@ -59,7 +59,7 @@
     {
       "name": "dense_meadow_grass has loot",
       "command": "loot spawn 3.5 202 1.5 mine 3 200 1 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Dense Meadow Grass\\] from loot table worldlogicterrain:blocks/dense_meadow_grass$",
       "assertion": true
     },
     {
@@ -96,7 +96,7 @@
     {
       "name": "dry_grass has loot",
       "command": "loot spawn 5.5 202 1.5 mine 5 200 1 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Dry Grass\\] from loot table worldlogicterrain:blocks/dry_grass$",
       "assertion": true
     },
     {
@@ -133,7 +133,7 @@
     {
       "name": "tall_dry_grass has loot",
       "command": "loot spawn 7.5 202 1.5 mine 7 200 1 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Tall Dry Grass\\] from loot table worldlogicterrain:blocks/tall_dry_grass$",
       "assertion": true
     },
     {
@@ -166,7 +166,7 @@
     {
       "name": "forest_shrub has loot",
       "command": "loot spawn 9.5 202 1.5 mine 9 200 1 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Forest Shrub\\] from loot table worldlogicterrain:blocks/forest_shrub$",
       "assertion": true
     },
     {
@@ -199,7 +199,7 @@
     {
       "name": "dense_underbrush has loot",
       "command": "loot spawn 11.5 202 1.5 mine 11 200 1 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Dense Underbrush\\] from loot table worldlogicterrain:blocks/dense_underbrush$",
       "assertion": true
     },
     {
@@ -232,7 +232,7 @@
     {
       "name": "low_fern has loot",
       "command": "loot spawn 1.5 202 4.5 mine 1 200 4 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Low Fern\\] from loot table worldlogicterrain:blocks/low_fern$",
       "assertion": true
     },
     {
@@ -265,7 +265,7 @@
     {
       "name": "wild_heather has loot",
       "command": "loot spawn 3.5 202 4.5 mine 3 200 4 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Wild Heather\\] from loot table worldlogicterrain:blocks/wild_heather$",
       "assertion": true
     },
     {
@@ -298,7 +298,7 @@
     {
       "name": "sedge has loot",
       "command": "loot spawn 5.5 202 4.5 mine 5 200 4 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Sedge\\] from loot table worldlogicterrain:blocks/sedge$",
       "assertion": true
     },
     {
@@ -335,7 +335,7 @@
     {
       "name": "reed has loot",
       "command": "loot spawn 7.5 202 4.5 mine 7 200 4 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Reed\\] from loot table worldlogicterrain:blocks/reed$",
       "assertion": true
     },
     {
@@ -378,7 +378,7 @@
     {
       "name": "cattail has loot",
       "command": "loot spawn 9.5 202 4.5 mine 9 200 4 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Cattail\\] from loot table worldlogicterrain:blocks/cattail$",
       "assertion": true
     },
     {
@@ -417,7 +417,7 @@
     {
       "name": "dwarf_shrub has loot",
       "command": "loot spawn 11.5 202 4.5 mine 11 200 4 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Dwarf Shrub\\] from loot table worldlogicterrain:blocks/dwarf_shrub$",
       "assertion": true
     },
     {
@@ -454,7 +454,7 @@
     {
       "name": "desert_shrub has loot",
       "command": "loot spawn 1.5 202 7.5 mine 1 200 7 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Desert Shrub\\] from loot table worldlogicterrain:blocks/desert_shrub$",
       "assertion": true
     },
     {
@@ -487,7 +487,7 @@
     {
       "name": "forest_litter has loot",
       "command": "loot spawn 3.5 202 7.5 mine 3 200 7 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Forest Litter\\] from loot table worldlogicterrain:blocks/forest_litter$",
       "assertion": true
     },
     {
@@ -520,7 +520,7 @@
     {
       "name": "fallen_leaves has loot",
       "command": "loot spawn 5.5 202 7.5 mine 5 200 7 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Fallen Leaves\\] from loot table worldlogicterrain:blocks/fallen_leaves$",
       "assertion": true
     },
     {
@@ -553,7 +553,7 @@
     {
       "name": "wild_chamomile has loot",
       "command": "loot spawn 7.5 202 7.5 mine 7 200 7 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Wild Chamomile\\] from loot table worldlogicterrain:blocks/wild_chamomile$",
       "assertion": true
     },
     {
@@ -586,7 +586,7 @@
     {
       "name": "wild_cornflower has loot",
       "command": "loot spawn 9.5 202 7.5 mine 9 200 7 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Wild Cornflower\\] from loot table worldlogicterrain:blocks/wild_cornflower$",
       "assertion": true
     },
     {
@@ -619,7 +619,7 @@
     {
       "name": "wild_clover has loot",
       "command": "loot spawn 11.5 202 7.5 mine 11 200 7 minecraft:shears",
-      "expect": "Dropped 1 items?",
+      "expect": "^Dropped 1 \\[Wild Clover\\] from loot table worldlogicterrain:blocks/wild_clover$",
       "assertion": true
     },
     {
