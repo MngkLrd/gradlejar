@@ -29,6 +29,6 @@ public final class NaturalFluidRendering{
   e.enqueueWork(()->{for(var f:NaturalFluids.families()){
    ItemBlockRenderTypes.setRenderLayer(f.source.get(),RenderType.translucent());
    ItemBlockRenderTypes.setRenderLayer(f.flowing.get(),RenderType.translucent());
-  }});
+  }for(var b:dev.minemods.worldlogic.MarinePlants.blocks())ItemBlockRenderTypes.setRenderLayer(b,RenderType.cutout());});
  }
 }

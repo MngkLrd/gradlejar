@@ -1012,6 +1012,17 @@
           "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
         }
       ]
+    },
+    {
+      "id": "native-sea-aquatic-plants",
+      "kind": "block",
+      "subject": "Four native marine plant states, retained age/half, original freshwater state, kelp growth, seagrass bonemeal, native fluid identity; natural-world QA additionally asserts all sampled marine plants use native water",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine sediment, polar icebergs and actual native seawater spawn predicates"
+        }
+      ]
     }
   ]
 }

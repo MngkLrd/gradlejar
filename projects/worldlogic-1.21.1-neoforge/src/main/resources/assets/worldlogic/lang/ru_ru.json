@@ -205,5 +205,9 @@
   "worldlogic.tabs.inventory": "Инвентарь",
   "worldlogic.tabs.guide": "Полевое руководство",
   "worldlogic.tabs.previous": "Предыдущие вкладки",
-  "worldlogic.tabs.next": "Другие вкладки"
+  "worldlogic.tabs.next": "Другие вкладки",
+  "block.worldlogic.sea_kelp": "Ламинария",
+  "block.worldlogic.sea_kelp_plant": "Ламинария",
+  "block.worldlogic.sea_seagrass": "Морская трава",
+  "block.worldlogic.sea_tall_seagrass": "Высокая морская трава"
 }

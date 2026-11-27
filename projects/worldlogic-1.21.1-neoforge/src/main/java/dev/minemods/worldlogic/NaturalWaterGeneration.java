@@ -69,6 +69,7 @@ public final class NaturalWaterGeneration{
     if(!s.getFluidState().isSource())chunk.markPosForPostprocessing(p);
    }
   }
+  MarinePlants.convertGenerated(chunk,fixtureBiome);
   return converted;
  }
 }

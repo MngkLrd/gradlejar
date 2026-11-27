@@ -213,6 +213,28 @@
           "Not every depression becomes a river. Actual density and continuity are still being verified."
         ]
       }
+    },
+    {
+      "id": "marine_plants",
+      "title": {
+        "ru": "Морская растительность",
+        "en": "Marine plants"
+      },
+      "models": [
+        "minecraft:kelp",
+        "minecraft:seagrass",
+        "worldlogic:sea_water_bucket"
+      ],
+      "body": {
+        "ru": [
+          "Ламинария и морская трава используют морскую воду World Logic в своих блоках. В морской воде можно выращивать ламинарию и увеличивать морскую траву костной мукой.",
+          "Пресноводные ванильные растения не меняются. Другие водонаполняемые блоки пока не переведены."
+        ],
+        "en": [
+          "Kelp and seagrass contain World Logic seawater in their block states. Kelp can grow and bone meal can make seagrass taller in seawater.",
+          "Vanilla freshwater plants are unchanged. Other waterlogged blocks are outside this conversion."
+        ]
+      }
     }
   ]
 }

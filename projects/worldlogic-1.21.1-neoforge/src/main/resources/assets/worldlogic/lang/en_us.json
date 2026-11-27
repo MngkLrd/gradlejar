@@ -205,5 +205,9 @@
   "worldlogic.tabs.inventory": "Inventory",
   "worldlogic.tabs.guide": "Field guide",
   "worldlogic.tabs.previous": "Previous tabs",
-  "worldlogic.tabs.next": "More tabs"
+  "worldlogic.tabs.next": "More tabs",
+  "block.worldlogic.sea_kelp": "Kelp",
+  "block.worldlogic.sea_kelp_plant": "Kelp",
+  "block.worldlogic.sea_seagrass": "Seagrass",
+  "block.worldlogic.sea_tall_seagrass": "Tall Seagrass"
 }

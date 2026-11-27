@@ -7,6 +7,7 @@ public final class WorldLogic {
   GeoDensity.TYPES.register(modBus);
   Content.PARTICLES.register(modBus);
   NaturalFluids.register(modBus);
+  MarinePlants.register();
   Content.BLOCKS.register(modBus);
   Content.ITEMS.register(modBus);
   Rules.load();
@@ -14,6 +15,8 @@ public final class WorldLogic {
   modBus.addListener(MarineEcology::registerSpawns);
   var bus=NeoForge.EVENT_BUS;
   bus.addListener(AdminCommands::register);
+  bus.addListener(MarinePlants::chunkLoaded);
+  bus.addListener(MarinePlants::serverTick);
   bus.addListener(RuleSync::login);
   bus.addListener(GuideItem::login);
   bus.addListener(RuleSync::logout);
