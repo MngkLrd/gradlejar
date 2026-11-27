@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC25 production core/API regression",
+  "name": "World Logic NeoForge RC26 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -164,6 +164,12 @@
       "name": "Karst shaft, connected gallery and flooded chamber across synthetic chunks",
       "command": "worldlogic qa karst",
       "expect": "WORLDLOGIC_KARST_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures",
+      "command": "worldlogic qa worldgen_ecology",
+      "expect": "WORLDLOGIC_WORLDGEN_ECOLOGY_PASSED",
       "assertion": true
     }
   ],
@@ -378,6 +384,17 @@
         {
           "backend": "server",
           "name": "Karst shaft, connected gallery and flooded chamber across synthetic chunks"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-ecology-api",
+      "kind": "mechanic",
+      "subject": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures"
         }
       ]
     }

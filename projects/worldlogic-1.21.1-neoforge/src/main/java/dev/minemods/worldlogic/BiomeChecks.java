@@ -17,7 +17,7 @@ public final class BiomeChecks {
  public static void verify(ServerLevel l,long seed){
   var old=generator(l,"earthlike_climate");var gen=generator(l,"realistic_unified");
   require(gen.getMinY()==-256&&gen.getGenDepth()==768&&gen.getSeaLevel()==63&&GeologyGeneration.enabled(gen),"unified bounds and geology");
-  require(gen.getBiomeSource().possibleBiomes().size()==51,"all custom classes registered");
+  require(gen.getBiomeSource().possibleBiomes().size()==61,"all custom classes registered");
   for(var b:gen.getBiomeSource().possibleBiomes())require(b.unwrapKey().orElseThrow().location().getNamespace().equals("worldlogic"),"vanilla biome leaked");
   var noise=l.registryAccess().lookupOrThrow(Registries.NOISE);
   var a=RandomState.create(old.generatorSettings().value(),noise,seed);var b=RandomState.create(gen.generatorSettings().value(),noise,seed);
