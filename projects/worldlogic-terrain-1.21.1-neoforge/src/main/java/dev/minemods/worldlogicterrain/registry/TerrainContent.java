@@ -25,9 +25,18 @@ import java.util.function.Supplier;
 public final class TerrainContent {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(BuiltInRegistries.BLOCK, WorldLogicTerrain.MOD_ID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, WorldLogicTerrain.MOD_ID);
+    public static final DeferredRegister<net.minecraft.world.item.CreativeModeTab> TABS=DeferredRegister.create(net.minecraft.core.registries.Registries.CREATIVE_MODE_TAB,WorldLogicTerrain.MOD_ID);
+    private static final List<Supplier<Item>> SEEDS=new ArrayList<>();
     private static final List<Supplier<Item>> PLANTS = new ArrayList<>();
     private static final List<Supplier<Item>> FOODS = new ArrayList<>();
     private static final List<Supplier<Item>> WOOD = new ArrayList<>();
+    public static final Supplier<net.minecraft.world.item.CreativeModeTab> TERRARIAN_TAB=TABS.register("terrarian",()->net.minecraft.world.item.CreativeModeTab.builder()
+        .title(net.minecraft.network.chat.Component.translatable("itemGroup.worldlogicterrain.terrarian"))
+        .icon(()->new net.minecraft.world.item.ItemStack(FOODS.get(4).get()))
+        .displayItems((params,output)->{for(var item:allItems())output.accept(item.get());}).build());
+    public static List<Supplier<Item>> allItems(){
+        var result=new ArrayList<Supplier<Item>>();result.addAll(PLANTS);result.addAll(WOOD);result.addAll(FOODS);result.addAll(SEEDS);return List.copyOf(result);
+    }
     static {
         var lily=BLOCKS.register("water_lily",()->new dev.minemods.worldlogicterrain.water.FloatingLeafBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LILY_PAD)));
         PLANTS.add(ITEMS.register("water_lily",()->new net.minecraft.world.item.PlaceOnWaterBlockItem(lily.get(),new Item.Properties())));
@@ -85,7 +94,7 @@ public final class TerrainContent {
         PLANTS.add(ITEMS.register(id, () -> new BlockItem(block.get(), new Item.Properties())));
     }
     private static void forage(String id,int hunger,float saturation,double recovery) {
-        BLOCKS.register("wild_"+id,()->{
+        var wild=BLOCKS.register("wild_"+id,()->{
             var properties=BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS);
             return switch(id){
                 case "strawberry","blueberry","raspberry","blackberry","grape" -> new BerryBushBlock(properties.randomTicks());
@@ -93,6 +102,8 @@ public final class TerrainContent {
             };
         });
         FOODS.add(ITEMS.register(id,()->new ForageFoodItem(hunger,saturation,recovery)));
+        boolean berry=java.util.Set.of("strawberry","blueberry","raspberry","blackberry","grape").contains(id);
+        SEEDS.add(ITEMS.register(id+"_seeds",()->berry?new dev.minemods.worldlogicterrain.food.BerrySeedItem(wild.get()):new Item(new Item.Properties())));
     }
     public static void creative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey().equals(CreativeModeTabs.NATURAL_BLOCKS))

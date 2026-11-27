@@ -13,9 +13,11 @@ import net.minecraft.world.level.Level;
 
 public final class ForageFoodItem extends Item {
     private final double recovery;
+    private final int hunger;
     public ForageFoodItem(int hunger,float saturation,double recovery) {
         super(new Item.Properties().food(new FoodProperties.Builder().nutrition(hunger).saturationModifier(saturation).build()));
         this.recovery=recovery;
+        this.hunger=hunger;
     }
     @Override public ItemStack finishUsingItem(ItemStack stack,Level level,LivingEntity entity) {
         boolean recover= !level.isClientSide && entity instanceof ServerPlayer p && p.canEat(false) && !stack.isEmpty() && recovery>0;
@@ -23,8 +25,14 @@ public final class ForageFoodItem extends Item {
         if(recover && entity instanceof ServerPlayer p)WorldLogicApi.recoverExertion(p,recovery);
         return result;
     }
+    public static double energyIcons(double recovery){return recovery/10.0;}
+    private static String format(double value){return java.math.BigDecimal.valueOf(value).stripTrailingZeros().toPlainString();}
+    private static net.minecraft.network.chat.MutableComponent icon(String glyph){
+        return Component.literal(glyph).withStyle(s->s.withFont(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("worldlogicterrain","food_icons")).withColor(0xFFFFFF));
+    }
     @Override public void appendHoverText(ItemStack stack,Item.TooltipContext context,List<Component> lines,TooltipFlag flag) {
         super.appendHoverText(stack,context,lines,flag);
-        if(recovery>0)lines.add(Component.translatable("tooltip.worldlogicterrain.exertion",(int)recovery));
+        lines.add(icon("\uE000").append(Component.literal(" +"+format(hunger/2.0)).withStyle(s->s.withFont(net.minecraft.resources.ResourceLocation.withDefaultNamespace("default")))));
+        if(recovery>0)lines.add(icon("\uE001").append(Component.literal(" +"+format(energyIcons(recovery))).withStyle(s->s.withFont(net.minecraft.resources.ResourceLocation.withDefaultNamespace("default")))));
     }
 }

@@ -63,7 +63,17 @@ public final class ForageChecks {
         var p=FakePlayerFactory.get(level,PROFILE);
         var pos=level.getSharedSpawnPos();
         var drops=Block.getDrops(plant.defaultBlockState(),level,pos,null,p,ItemStack.EMPTY);
-        require(drops.size()==1&&drops.getFirst().is(item)&&drops.getFirst().getCount()==1,"wrong harvest "+id);
+        var seed=BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("worldlogicterrain",id+"_seeds"));
+        require(seed!=net.minecraft.world.item.Items.AIR,"Missing seed "+id);
+        require(drops.size()==2&&drops.stream().filter(s->s.is(item)&&s.getCount()==1).count()==1&&drops.stream().filter(s->s.is(seed)&&s.getCount()==1).count()==1,"wrong harvest or seed "+id);
+        require(dev.minemods.worldlogicterrain.registry.TerrainContent.allItems().stream().anyMatch(s->s.get()==seed),"seed absent from own tab inventory "+id);
+        require(dev.minemods.worldlogicterrain.registry.TerrainContent.allItems().stream().anyMatch(s->s.get()==item),"food absent from own tab inventory "+id);
+        require(Math.abs(ForageFoodItem.energyIcons(expect.recovery())-expect.recovery()/10.0)<.00001,"HUD recovery conversion "+id);
+        var tab=dev.minemods.worldlogicterrain.registry.TerrainContent.TERRARIAN_TAB.get();
+        require(BuiltInRegistries.CREATIVE_MODE_TAB.getKey(tab).equals(ResourceLocation.fromNamespaceAndPath("worldlogicterrain","terrarian")),"Dedicated creative tab missing");
+        var listed=dev.minemods.worldlogicterrain.registry.TerrainContent.allItems().stream().map(s->BuiltInRegistries.ITEM.getKey(s.get())).collect(java.util.stream.Collectors.toSet());
+        var registered=BuiltInRegistries.ITEM.keySet().stream().filter(k->k.getNamespace().equals("worldlogicterrain")).collect(java.util.stream.Collectors.toSet());
+        require(listed.equals(registered)&&listed.size()==dev.minemods.worldlogicterrain.registry.TerrainContent.allItems().size(),"Creative tab inventory incomplete or duplicate");
         if(plant instanceof BerryBushBlock berry)checkBerry(level,p,berry,item,id);
         var stack=new ItemStack(item,2);
         var food=stack.get(DataComponents.FOOD);
@@ -102,11 +112,22 @@ public final class ForageChecks {
             var empty=level.getBlockState(pos);
             require(empty.is(berry)&&!empty.getValue(BerryBushBlock.RIPE),"bush not preserved "+id);
             var drops=level.getEntitiesOfClass(ItemEntity.class,box,e->!initialIds.contains(e.getUUID()));
-            require(drops.size()==1&&drops.getFirst().getItem().is(food)&&drops.getFirst().getItem().getCount()==1,"right-click yield "+id);
+            var seed=BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("worldlogicterrain",id+"_seeds"));
+            require(drops.size()==2&&drops.stream().filter(e->e.getItem().is(food)&&e.getItem().getCount()==1).count()==1&&drops.stream().filter(e->e.getItem().is(seed)&&e.getItem().getCount()==1).count()==1,"right-click fruit and seed yield "+id);
             require(!berry.useWithoutItem(empty,level,pos,p,hit).consumesAction(),"repeat harvest accepted "+id);
-            require(level.getEntitiesOfClass(ItemEntity.class,box,e->!initialIds.contains(e.getUUID())).size()==1,"duplicate berry drop "+id);
+            require(level.getEntitiesOfClass(ItemEntity.class,box,e->!initialIds.contains(e.getUUID())).size()==2,"duplicate berry drop "+id);
             require(Block.getDrops(empty,level,pos,null,p,ItemStack.EMPTY).isEmpty(),"empty bush drops berries "+id);
             drops.forEach(ItemEntity::discard);
+            // Seed item performs real placement, with no free ripe fruit.
+            level.setBlock(pos,Blocks.AIR.defaultBlockState(),Block.UPDATE_ALL);
+            var held=p.getMainHandItem();
+            try{
+                p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,new ItemStack(seed));
+                var floorHit=new BlockHitResult(Vec3.atCenterOf(pos.below()).add(0,.5,0),Direction.UP,pos.below(),false);
+                var use=new net.minecraft.world.item.context.UseOnContext(p,net.minecraft.world.InteractionHand.MAIN_HAND,floorHit);
+                require(seed.useOn(use).consumesAction()&&level.getBlockState(pos).is(berry)&&!level.getBlockState(pos).getValue(BerryBushBlock.RIPE),"Seed failed to place unripe bush "+id);
+            }finally{p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,held);}
+            require(Block.getDrops(level.getBlockState(pos),level,pos,null,p,ItemStack.EMPTY).isEmpty(),"Planted unripe bush yields free produce "+id);
             // deterministic random-tick path; no forced state reset.
             var random=RandomSource.create(84);
             for(int i=0;i<100&&!level.getBlockState(pos).getValue(BerryBushBlock.RIPE);i++)

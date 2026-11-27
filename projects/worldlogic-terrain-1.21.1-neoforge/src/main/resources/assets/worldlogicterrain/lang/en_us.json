@@ -53,5 +53,18 @@
   "block.worldlogicterrain.larch_planks": "Larch Planks",
   "block.worldlogicterrain.larch_leaves": "Larch Leaves",
   "block.worldlogicterrain.larch_sapling": "Larch Sapling",
-  "block.worldlogicterrain.water_lily": "Water Lily"
+  "block.worldlogicterrain.water_lily": "Water Lily",
+  "itemGroup.worldlogicterrain.terrarian": "WL: Terrarian",
+  "item.worldlogicterrain.strawberry_seeds": "Strawberry Seeds",
+  "item.worldlogicterrain.blueberry_seeds": "Blueberry Seeds",
+  "item.worldlogicterrain.raspberry_seeds": "Raspberry Seeds",
+  "item.worldlogicterrain.blackberry_seeds": "Blackberry Seeds",
+  "item.worldlogicterrain.grape_seeds": "Grape Seeds",
+  "item.worldlogicterrain.pineapple_seeds": "Pineapple Seeds",
+  "item.worldlogicterrain.tomato_seeds": "Tomato Seeds",
+  "item.worldlogicterrain.cucumber_seeds": "Cucumber Seeds",
+  "item.worldlogicterrain.radish_seeds": "Radish Seeds",
+  "item.worldlogicterrain.onion_seeds": "Onion Seeds",
+  "item.worldlogicterrain.cabbage_seeds": "Cabbage Seeds",
+  "item.worldlogicterrain.bell_pepper_seeds": "Bell Pepper Seeds"
 }

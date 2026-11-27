@@ -46,6 +46,8 @@ public final class BerryBushBlock extends BushBlock {
         var id=BuiltInRegistries.BLOCK.getKey(this);
         var food=BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(id.getNamespace(),id.getPath().substring(5)));
         Block.popResource(level,pos,new ItemStack(food));
+        var seed=BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(id.getNamespace(),id.getPath().substring(5)+"_seeds"));
+        Block.popResource(level,pos,new ItemStack(seed));
         level.playSound(null,pos,SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES,SoundSource.BLOCKS,1.0F,0.9F+level.random.nextFloat()*0.2F);
         return InteractionResult.CONSUME;
     }

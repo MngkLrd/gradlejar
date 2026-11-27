@@ -53,5 +53,18 @@
   "block.worldlogicterrain.larch_planks": "Доски лиственницы",
   "block.worldlogicterrain.larch_leaves": "Листва лиственницы",
   "block.worldlogicterrain.larch_sapling": "Саженец лиственницы",
-  "block.worldlogicterrain.water_lily": "Кувшинка"
+  "block.worldlogicterrain.water_lily": "Кувшинка",
+  "itemGroup.worldlogicterrain.terrarian": "WL: Terrarian",
+  "item.worldlogicterrain.strawberry_seeds": "Семена клубники",
+  "item.worldlogicterrain.blueberry_seeds": "Семена черники",
+  "item.worldlogicterrain.raspberry_seeds": "Семена малины",
+  "item.worldlogicterrain.blackberry_seeds": "Семена ежевики",
+  "item.worldlogicterrain.grape_seeds": "Семена винограда",
+  "item.worldlogicterrain.pineapple_seeds": "Семена ананаса",
+  "item.worldlogicterrain.tomato_seeds": "Семена томата",
+  "item.worldlogicterrain.cucumber_seeds": "Семена огурца",
+  "item.worldlogicterrain.radish_seeds": "Семена редиса",
+  "item.worldlogicterrain.onion_seeds": "Семена лука",
+  "item.worldlogicterrain.cabbage_seeds": "Семена капусты",
+  "item.worldlogicterrain.bell_pepper_seeds": "Семена перца"
 }

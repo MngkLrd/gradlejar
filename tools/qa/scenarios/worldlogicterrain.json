@@ -3303,6 +3303,138 @@
           "name": "Mixed meadow and frost patch mechanics"
         }
       ]
+    },
+    {
+      "id": "forage-seed-strawberry",
+      "kind": "item",
+      "subject": "Harvest ripe strawberry yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption strawberry"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-blueberry",
+      "kind": "item",
+      "subject": "Harvest ripe blueberry yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption blueberry"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-raspberry",
+      "kind": "item",
+      "subject": "Harvest ripe raspberry yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption raspberry"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-blackberry",
+      "kind": "item",
+      "subject": "Harvest ripe blackberry yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption blackberry"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-grape",
+      "kind": "item",
+      "subject": "Harvest ripe grape yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption grape"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-pineapple",
+      "kind": "item",
+      "subject": "Harvest ripe pineapple yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption pineapple"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-tomato",
+      "kind": "item",
+      "subject": "Harvest ripe tomato yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption tomato"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-cucumber",
+      "kind": "item",
+      "subject": "Harvest ripe cucumber yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption cucumber"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-radish",
+      "kind": "item",
+      "subject": "Harvest ripe radish yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption radish"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-onion",
+      "kind": "item",
+      "subject": "Harvest ripe onion yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption onion"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-cabbage",
+      "kind": "item",
+      "subject": "Harvest ripe cabbage yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption cabbage"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-bell_pepper",
+      "kind": "item",
+      "subject": "Harvest ripe bell_pepper yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption bell_pepper"
+        }
+      ]
     }
   ]
 }
