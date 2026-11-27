@@ -3,13 +3,13 @@
   "category": "equipment",
   "ingredients": [
     {
-      "item": "minecraft:paper"
+      "item": "traumacraft:bandage"
     },
     {
-      "item": "minecraft:redstone"
+      "item": "traumacraft:sterile_fabric"
     },
     {
-      "item": "minecraft:iron_nugget"
+      "item": "traumacraft:herbal_extract"
     }
   ],
   "result": {

@@ -3,13 +3,10 @@
   "category": "equipment",
   "ingredients": [
     {
-      "item": "minecraft:sugar"
+      "item": "traumacraft:herbal_extract"
     },
     {
       "item": "minecraft:honey_bottle"
-    },
-    {
-      "item": "minecraft:glow_berries"
     }
   ],
   "result": {

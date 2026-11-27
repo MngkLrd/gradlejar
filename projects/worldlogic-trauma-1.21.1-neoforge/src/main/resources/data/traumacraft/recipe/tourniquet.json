@@ -1,18 +1,17 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "equipment",
-  "pattern": [
-    "RR",
-    "RS"
-  ],
-  "key": {
-    "R": {
-      "item": "traumacraft:medical_polymer"
+  "ingredients": [
+    {
+      "item": "minecraft:leather"
     },
-    "S": {
-      "item": "minecraft:iron_nugget"
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:string"
     }
-  },
+  ],
   "result": {
     "id": "traumacraft:tourniquet",
     "count": 1

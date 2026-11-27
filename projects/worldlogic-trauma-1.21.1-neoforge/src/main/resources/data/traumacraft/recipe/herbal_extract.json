@@ -1,15 +1,12 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
+  "category": "equipment",
   "ingredients": [
     {
       "item": "minecraft:glass_bottle"
     },
     {
-      "item": "minecraft:dandelion"
-    },
-    {
-      "item": "minecraft:kelp"
+      "item": "traumacraft:crushed_herbs"
     },
     {
       "item": "minecraft:sugar"
@@ -17,6 +14,6 @@
   ],
   "result": {
     "id": "traumacraft:herbal_extract",
-    "count": 2
+    "count": 1
   }
 }
