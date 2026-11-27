@@ -221,6 +221,125 @@
       "assertion": true
     },
     {
+      "name": "Initialize actual seeded underground fixture",
+      "command": "worldlogic qa underground_start",
+      "expect": "WORLDLOGIC_UNDERGROUND_STARTED",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 1/16",
+      "command": "worldlogic qa underground_columns 0",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=16$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 2/16",
+      "command": "worldlogic qa underground_columns 1",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=32$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 3/16",
+      "command": "worldlogic qa underground_columns 2",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=48$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 4/16",
+      "command": "worldlogic qa underground_columns 3",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=64$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 5/16",
+      "command": "worldlogic qa underground_columns 4",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=80$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 6/16",
+      "command": "worldlogic qa underground_columns 5",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=96$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 7/16",
+      "command": "worldlogic qa underground_columns 6",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=112$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 8/16",
+      "command": "worldlogic qa underground_columns 7",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=128$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 9/16",
+      "command": "worldlogic qa underground_columns 8",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=144$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 10/16",
+      "command": "worldlogic qa underground_columns 9",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=160$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 11/16",
+      "command": "worldlogic qa underground_columns 10",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=176$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 12/16",
+      "command": "worldlogic qa underground_columns 11",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=192$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 13/16",
+      "command": "worldlogic qa underground_columns 12",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=208$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 14/16",
+      "command": "worldlogic qa underground_columns 13",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=224$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 15/16",
+      "command": "worldlogic qa underground_columns 14",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=240$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 16/16",
+      "command": "worldlogic qa underground_columns 15",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=256$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
       "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags",
       "command": "worldlogic qa underground_regression",
       "expect": "WORLDLOGIC_UNDERGROUND_REGRESSION_PASSED",
