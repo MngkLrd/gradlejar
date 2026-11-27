@@ -30,6 +30,9 @@ public final class TextileToolItem extends Item {
         if(!p.getInventory().add(result))p.drop(result,false);
         return true;
     }
+    @Override public void appendHoverText(ItemStack s,TooltipContext c,java.util.List<net.minecraft.network.chat.Component> lines,TooltipFlag f){
+        lines.add(net.minecraft.network.chat.Component.translatable(getDescriptionId()+".info").withStyle(net.minecraft.ChatFormatting.GRAY));
+    }
     @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand hand){
         ItemStack s=p.getItemInHand(hand);if(hand!=InteractionHand.MAIN_HAND)return InteractionResultHolder.pass(s);
         if(!l.isClientSide&&!operate(p,s))return InteractionResultHolder.pass(s);

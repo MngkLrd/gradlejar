@@ -2,12 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "CCC",
+    "CTC",
     "C C"
   ],
   "key": {
     "C": {
       "item": "worldlogic_thermal:woven_fiber"
+    },
+    "T": {
+      "item": "worldlogic_thermal:plant_thread"
     }
   },
   "result": {

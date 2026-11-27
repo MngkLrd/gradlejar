@@ -23,6 +23,8 @@ public final class ClimateDeviceBlock extends Block {
     private final Kind kind;
     public ClimateDeviceBlock(Kind k,Properties p){super(p);kind=k;registerDefaultState(stateDefinition.any().setValue(PHASE,0));}
     public Kind kind(){return kind;}
+    public int activeSeconds(){return kind.burn/20;}
+    public int residualSeconds(){return kind.residual/20;}
     @Override protected VoxelShape getShape(BlockState s,BlockGetter l,BlockPos p,CollisionContext c){
         return switch(kind){
             case LAMP -> Shapes.or(Block.box(3,0,3,13,3,13),Block.box(5,3,5,11,8,11),Block.box(7,8,7,9,10,9));

@@ -10,11 +10,14 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
 
-/** Keep leather's existing gameplay properties and geometry; only replace its two rendered layers. */
+/** Climate garments use armor slots and leather geometry, but provide no combat armor. */
 public class ThermalWearable extends ArmorItem {
     public ThermalWearable(Type type, Properties properties) {
         super(ArmorMaterials.LEATHER, type, properties);
     }
+    @Override public int getDefense(){return 0;}
+    @Override public float getToughness(){return 0;}
+    @Override public net.minecraft.world.item.component.ItemAttributeModifiers getDefaultAttributeModifiers(){return net.minecraft.world.item.component.ItemAttributeModifiers.EMPTY;}
     @Override
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot,
                                             ArmorMaterial.Layer layer, boolean innerModel) {

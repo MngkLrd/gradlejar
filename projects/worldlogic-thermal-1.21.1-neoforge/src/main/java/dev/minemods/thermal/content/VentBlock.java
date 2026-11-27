@@ -22,6 +22,15 @@ public final class VentBlock extends Block {
         if(!l.isClientSide)l.setBlockAndUpdate(p,s.cycle(OPEN));
         return InteractionResult.sidedSuccess(l.isClientSide);
     }
+    /** A woven roof casts shade without requiring a fully enclosed heated room. */
+    public static boolean shades(LevelReader l,BlockPos pos){
+        for(int dy=1;dy<=8;dy++){
+            BlockPos q=pos.above(dy);
+            if(q.getY()>=l.getMaxBuildHeight()||!l.hasChunkAt(q))return false;
+            if(l.getBlockState(q).is(ThermalContent.CANOPY.get()))return true;
+        }
+        return false;
+    }
     public static double adjustment(LevelReader l,BlockPos pos){
         double multiplier=1;
         BlockPos top=pos.above();

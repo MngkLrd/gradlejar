@@ -50,6 +50,23 @@ final class ExpansionChecks {
     static void clothes(ServerLevel l,ServerPlayer p){
         var items=List.of(ThermalContent.FUR_HAT.get(),ThermalContent.FUR_COAT.get(),ThermalContent.FUR_BOOTS.get(),ThermalContent.WOOL_UNDERWEAR.get(),ThermalContent.WAXED_CLOAK.get(),ThermalContent.FACE_MASK.get(),ThermalContent.LINEN_CLOTHES.get(),ThermalContent.DESERT_WRAP.get(),ThermalContent.STRAW_CAPE.get());
         EquipmentSlot[] slots={EquipmentSlot.HEAD,EquipmentSlot.CHEST,EquipmentSlot.FEET,EquipmentSlot.LEGS,EquipmentSlot.CHEST,EquipmentSlot.HEAD,EquipmentSlot.CHEST,EquipmentSlot.HEAD,EquipmentSlot.CHEST};
+        for(Item item:ThermalContent.creativeItems()){
+            var stack=new ItemStack(item);
+            var lines=new ArrayList<net.minecraft.network.chat.Component>();
+            item.appendHoverText(stack,Item.TooltipContext.of(l),lines,TooltipFlag.NORMAL);
+            require(!lines.isEmpty(),"localized item tooltip "+item);
+            if(item instanceof ThermalWearable garment){
+                require(garment.getDefense()==0&&garment.getToughness()==0&&stack.getAttributeModifiers().modifiers().isEmpty(),"zero combat armor "+item);
+            }
+        }
+        var mat=ThermalContent.MAT.get();var thread=ThermalContent.THREAD.get();
+        recipe(l,ThermalContent.GRASS_HOOD.get(),3,2,mat,mat,mat,mat,null,mat);
+        recipe(l,ThermalContent.DESERT_WRAP.get(),3,2,mat,thread,mat,mat,null,mat);
+        recipe(l,ThermalContent.GRASS_COAT.get(),3,3,mat,null,mat,mat,mat,mat,mat,mat,mat);
+        recipe(l,ThermalContent.LINEN_CLOTHES.get(),3,3,mat,null,mat,thread,mat,thread,mat,mat,mat);
+        recipe(l,ThermalContent.HOT_STONE.get(),2,1,Items.COBBLESTONE,Items.FLINT);
+        var obsolete=net.minecraft.world.item.crafting.CraftingInput.of(2,1,List.of(new ItemStack(Items.STONE),new ItemStack(Items.FLINT)));
+        require(l.getRecipeManager().getRecipesFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,obsolete,l).stream().noneMatch(r->r.value().assemble(obsolete,l.registryAccess()).is(ThermalContent.HOT_STONE.get())),"smooth stone recipe removed");
         for(int i=0;i<items.size();i++){
             var item=items.get(i);var slot=slots[i];var old=p.getItemBySlot(slot).copy();
             try{
@@ -61,6 +78,11 @@ final class ExpansionChecks {
                 require(item.profile().rainShield()>=0&&item.profile().sunShield()>=0,"bounded protection");
             }finally{p.setItemSlot(slot,old);}
         }
+    }
+    private static void recipe(ServerLevel l,Item expected,int width,int height,Item... cells){
+        var input=net.minecraft.world.item.crafting.CraftingInput.of(width,height,Arrays.stream(cells).map(item->item==null?ItemStack.EMPTY:new ItemStack(item)).toList());
+        var matches=l.getRecipeManager().getRecipesFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,l);
+        require(matches.size()==1&&matches.getFirst().value().assemble(input,l.registryAccess()).is(expected),"unique live crafting result "+expected);
     }
     static void devices(ServerLevel l,ServerPlayer p){
         BlockPos at=new BlockPos(10,100,8);
@@ -92,7 +114,9 @@ final class ExpansionChecks {
             l.setBlockAndUpdate(at.east(),ThermalContent.DAMPER.get().defaultBlockState().setValue(VentBlock.OPEN,false));
             require(VentBlock.adjustment(l,at)<vented,"closed damper reduces output");
             l.setBlockAndUpdate(at.above(),ThermalContent.CANOPY.get().defaultBlockState());
-            require(l.getBlockState(at.above()).is(ThermalContent.CANOPY.get()),"canopy placed");
+            require(l.getBlockState(at.above()).is(ThermalContent.CANOPY.get())&&VentBlock.shades(l,at),"canopy casts shade");
+            l.setBlockAndUpdate(at.above(),Blocks.AIR.defaultBlockState());
+            require(!VentBlock.shades(l,at),"shade removed with canopy");
         }finally{l.setBlockAndUpdate(at,old);l.setBlockAndUpdate(at.above(),above);l.setBlockAndUpdate(at.east(),side);}
     }
     private static int count(ServerPlayer p,Item item){int count=0;for(int i=0;i<36;i++)if(p.getInventory().getItem(i).is(item))count+=p.getInventory().getItem(i).getCount();return count;}

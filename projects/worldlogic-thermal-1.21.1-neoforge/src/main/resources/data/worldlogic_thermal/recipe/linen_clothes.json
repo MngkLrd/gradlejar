@@ -3,12 +3,15 @@
   "category": "misc",
   "pattern": [
     "C C",
-    "CCC",
+    "TCT",
     "CCC"
   ],
   "key": {
     "C": {
       "item": "worldlogic_thermal:woven_fiber"
+    },
+    "T": {
+      "item": "worldlogic_thermal:plant_thread"
     }
   },
   "result": {

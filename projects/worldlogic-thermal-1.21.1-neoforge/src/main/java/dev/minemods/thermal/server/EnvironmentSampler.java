@@ -58,8 +58,9 @@ public final class EnvironmentSampler {
         double wind=a!=null?WeatherReading.normalizedWind(a.outdoorWindSpeedMps(),sheltered):sheltered?.06:env.globalThunder()?.85:rain?.55:.22;
         if(!sheltered&&regionalWeather.isPresent())wind=Math.max(wind,WeatherReading.normalizedWind(regionalWeather.get().gust()*.65,false));
         wind*=1-clamp(windShield,0,.8);
-        double solar=env.solarExposure()*(1-clamp(sunShield,0,.95));
-        double shadeCooling=Math.max(0,air-24)*clamp(sunShield,0,.95)*env.solarExposure()*.25;
+        double shade=VentBlock.shades(level,pos)?1:clamp(sunShield,0,.95);
+        double solar=env.solarExposure()*(1-shade);
+        double shadeCooling=Math.max(0,air-24)*shade*env.solarExposure()*.25;
         double activity = p.isSprinting() ? 1 : p.isSwimming() ? .75 : p.getDeltaMovement().horizontalDistanceSqr()>.008 ? .35 : 0;
         double retained=clamp(ins,0,1)*(1-.75*skin);
         double warmLimit=28-activity*7-retained*5+clamp(ventilation,0,1)*7;

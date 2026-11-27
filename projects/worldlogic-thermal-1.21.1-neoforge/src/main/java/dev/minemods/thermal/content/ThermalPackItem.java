@@ -71,6 +71,7 @@ public final class ThermalPackItem extends Item {
     @Override public void appendHoverText(ItemStack s,TooltipContext c,List<Component> lines,TooltipFlag f){
         lines.add(Component.translatable("tooltip.worldlogic_thermal.hotbar").withStyle(ChatFormatting.RED));
         lines.add(Component.translatable("tooltip.worldlogic_thermal."+kind.name().toLowerCase(java.util.Locale.ROOT)).withStyle(ChatFormatting.GRAY));
+        lines.add(Component.translatable("tooltip.worldlogic_thermal.pack_power",(int)kind.power,kind.seconds).withStyle(ChatFormatting.DARK_GRAY));
         int charge=(int)Math.round(100*displayCharge(s));String state=charge==0?"neutral":mode(s)>0?"hot":"cold";
         lines.add(Component.translatable("tooltip.worldlogic_thermal."+state,charge).withStyle(charge==0?ChatFormatting.GRAY:mode(s)>0?ChatFormatting.GOLD:ChatFormatting.AQUA));
     }

@@ -41,6 +41,7 @@ final class RoomHeat {
   var cache=ROOMS.computeIfAbsent(l,k->new LinkedHashMap<>(64,.75f,true));
   State old=cache.get(key);double target=Math.max(-8,Math.min(14,(source-cooling)*.35));
   double tau=30+40*mass/boundaries;
+  if(old!=null&&target>0&&target>old.delta())tau/=3.0; // heat accumulation only; preserve passive heat loss
   double delta=old==null?0:Adaptation.approach(old.delta(),target,Math.min(300,Math.max(0,(now-old.tick())/20.0)),tau);
   if(old==null||now>old.tick())cache.put(key.immutable(),new State(now,delta));
   else delta=old.delta();

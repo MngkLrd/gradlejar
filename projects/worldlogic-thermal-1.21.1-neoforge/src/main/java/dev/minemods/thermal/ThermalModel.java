@@ -27,6 +27,8 @@ public final class ThermalModel {
         double hot = Math.max(0, felt - 28 + activity * 7 + meal + retained * 5 - clamp(e.ventilation(),0,1)*7 - clamp(e.heatAdaptation(),0,1)*3 + (1-clamp(e.hydration(),0,1))*4);
         double target = clamp(37 - cold * .14 + hot * .18, 30, 43);
         double tau = e.submerged() ? 80 : (felt>=18&&felt<=28&&previous.bodyC()<36.6 ? 105 : 200);
+        // Recover in a heated room faster, without accelerating cooling or dangerous overheating.
+        if(!e.submerged()&&e.roomDelta()>0&&previous.bodyC()<37&&target>previous.bodyC()&&target<=37.5)tau/=3;
         double dt = Math.min(seconds, 5);
         double next = previous.bodyC() + (target - previous.bodyC()) * -Math.expm1(-dt / tau);
         next = clamp(next,30,43);

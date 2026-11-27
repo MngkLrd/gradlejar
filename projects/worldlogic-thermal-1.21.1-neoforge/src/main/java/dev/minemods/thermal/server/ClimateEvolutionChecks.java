@@ -57,6 +57,12 @@ final class ClimateEvolutionChecks {
    long now=l.getGameTime();
    double initial=RoomHeat.sampleAt(l,center,30,0,true,now);
    double warmed=RoomHeat.sampleAt(l,center,30,0,true,now+1200);
+   require(warmed>=10.5*(1-Math.exp(-60.0/(110.0/3)))-.01,"enclosed room warms at least three times faster than former stone time constant");
+   var chilled=new ThermalModel.State(35,0,35,ThermalModel.Stage.VERY_COLD,0);
+   var roomExposure=new ThermalModel.Exposure(14,0,0,0,0,0,false,14,0,0,0,0,0,1,1,8);
+   var neutralExposure=new ThermalModel.Exposure(22,0,0,0,0,0,false,22,0,0,0,0,0,1,1,0);
+   double fast=ThermalModel.tick(chilled,roomExposure,1).bodyC()-35,normal=ThermalModel.tick(chilled,neutralExposure,1).bodyC()-35;
+   require(fast>2.9*normal&&fast<3.01*normal,"heated-room recovery about threefold at equal felt temperature");
    double retained=RoomHeat.sampleAt(l,center,0,0,true,now+1400);
    require(warmed>initial&&retained>0&&retained<warmed,"enclosed room warms and retains residual heat");
    l.setBlockAndUpdate(center.above(2),Blocks.AIR.defaultBlockState());
