@@ -1,3 +1,7 @@
+import java.security.MessageDigest
+import java.util.zip.ZipFile
+import java.util.jar.Manifest
+
 plugins {
     id 'java-library'
     id 'idea'
@@ -15,22 +19,33 @@ def coreVersion = providers.gradleProperty('worldlogicVersion')
 def coreHash = providers.gradleProperty('worldlogicSha256')
 def coreJar = file(corePath.orElse('libs/worldlogic-neoforge.jar').get())
 tasks.register('verifyWorldLogic') {
-    inputs.file(coreJar).optional()
+    inputs.files(coreJar)
     inputs.property('coreVersion',coreVersion.orElse('MISSING'))
     inputs.property('coreHash',coreHash.orElse('MISSING'))
     doLast {
         if(!coreJar.isFile() || !coreVersion.isPresent() || !coreHash.isPresent())
             throw new GradleException('NeoForge World Logic dependency is not locked: provide -PworldlogicJar, -PworldlogicVersion and -PworldlogicSha256')
-        if(!(coreVersion.get() ==~ /[0-9A-Za-z.\\-]+/) || !(coreHash.get() ==~ /[0-9a-fA-F]{64}/))
+        if(!(coreVersion.get() ==~ /[-0-9A-Za-z.]+/) || !(coreHash.get() ==~ /[0-9a-fA-F]{64}/))
             throw new GradleException('Invalid World Logic version or SHA-256 lock')
-        def actual = java.security.MessageDigest.getInstance('SHA-256').digest(coreJar.bytes).encodeHex().toString()
+        def actual = MessageDigest.getInstance('SHA-256').digest(coreJar.bytes).encodeHex().toString()
         if(!actual.equalsIgnoreCase(coreHash.get())) throw new GradleException('World Logic SHA-256 mismatch')
-        new java.util.zip.ZipFile(coreJar).withCloseable { zip ->
+        new ZipFile(coreJar).withCloseable { zip ->
             def meta = zip.getEntry('META-INF/neoforge.mods.toml')
             if(meta == null) throw new GradleException('World Logic must be the NeoForge build, not Forge')
             def text = zip.getInputStream(meta).withCloseable { it.getText('UTF-8') }
-            if(!(text =~ /(?m)^\\s*modId\\s*=\\s*["']worldlogic["']/))
-                throw new GradleException('Dependency is not World Logic')
+            def own = text.split(/(?m)^\s*\[\[/).find { section ->
+                section.startsWith('mods]]') && (section =~ /(?m)^\s*modId\s*=\s*["']worldlogic["']/)
+            }
+            if(own == null) throw new GradleException('Dependency is not World Logic')
+            def declared = own =~ /(?m)^\s*version\s*=\s*["']([^"']+)["']/
+            if(!declared.find()) throw new GradleException('World Logic mod version missing')
+            def version = declared.group(1)
+            if(version == '${file.jarVersion}') {
+                def entry = zip.getEntry('META-INF/MANIFEST.MF')
+                if(entry == null) throw new GradleException('World Logic manifest missing')
+                version = zip.getInputStream(entry).withCloseable { new Manifest(it).mainAttributes.getValue('Implementation-Version') }
+            }
+            if(version != coreVersion.get()) throw new GradleException('World Logic version mismatch: expected '+coreVersion.get()+', found '+version)
             for (String name : ['Rules','Balance','Survival','Trauma']) {
                 if(zip.getEntry("dev/minemods/worldlogic/${name}.class")==null)
                     throw new GradleException("World Logic bridge target missing: ${name}; adapt bridge to core before building")
