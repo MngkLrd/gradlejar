@@ -26,7 +26,10 @@ final class RoomHeat {
     if(!l.hasChunkAt(next)||next.distManhattan(start)>8||next.getY()<l.getMinBuildHeight()||next.getY()>=l.getMaxBuildHeight())return 0;
     BlockState b=l.getBlockState(next);
     if(b.getCollisionShape(l,next).isEmpty()){
-     if(!b.getFluidState().isEmpty()||l.canSeeSky(next))return 0;
+     // The enclosure flood fill itself detects openings (radius/volume bounds).
+     // Sky light can be stale immediately after placing or removing a roof;
+     // do not reject a fully enclosed room while lighting propagates.
+     if(!b.getFluidState().isEmpty())return 0;
      if(seen.add(next.immutable())){if(seen.size()>256)return 0;queue.add(next.immutable());}
     }else{
      String material=WorldLogicApi.materialFamily(b).toLowerCase(java.util.Locale.ROOT);
