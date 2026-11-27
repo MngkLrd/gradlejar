@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "name": "Thermal RC20 API server integration (FakePlayer)",
+  "steps": [
+    {
+      "command": "worldlogic preset realistic",
+      "expect": "World Logic settings saved"
+    },
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "weather clear",
+      "expect": "weather"
+    },
+    {
+      "command": "fill 5 99 5 12 99 12 minecraft:stone",
+      "expect": "Filled|Successfully filled|blocks"
+    },
+    {
+      "command": "fill 5 100 5 12 103 12 minecraft:air",
+      "expect": "Filled|Successfully filled|No blocks were filled|blocks"
+    },
+    {
+      "name": "Authoritative core climate and loaded chunk guard",
+      "command": "thermal qa climate",
+      "expect": "THERMAL_QA_climate_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Drying without heat and empty radiant fixture",
+      "command": "thermal qa dry",
+      "expect": "THERMAL_QA_dry_PASS",
+      "assertion": true
+    },
+    {
+      "command": "setblock 10 100 8 minecraft:campfire[lit=true]",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "Campfire radiates and accelerates drying",
+      "command": "thermal qa heat",
+      "expect": "THERMAL_QA_heat_PASS",
+      "assertion": true
+    },
+    {
+      "command": "fill 9 100 7 9 102 9 minecraft:stone",
+      "expect": "Filled|Successfully filled|blocks"
+    },
+    {
+      "name": "Solid wall blocks radiant heat",
+      "command": "thermal qa blocked",
+      "expect": "THERMAL_QA_blocked_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Leather insulation exceeds iron and empty slots",
+      "command": "thermal qa armor",
+      "expect": "THERMAL_QA_armor_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Thermal state, shared core fatigue and speed modifier",
+      "command": "thermal qa effects",
+      "expect": "THERMAL_QA_effects_PASS",
+      "assertion": true
+    }
+  ],
+  "coverage": [
+    {
+      "id": "climate",
+      "kind": "mechanic",
+      "subject": "Authoritative core climate and loaded chunk guard",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Authoritative core climate and loaded chunk guard"
+        }
+      ]
+    },
+    {
+      "id": "dry",
+      "kind": "mechanic",
+      "subject": "Drying without heat and empty radiant fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Drying without heat and empty radiant fixture"
+        }
+      ]
+    },
+    {
+      "id": "heat",
+      "kind": "mechanic",
+      "subject": "Campfire radiates and accelerates drying",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Campfire radiates and accelerates drying"
+        }
+      ]
+    },
+    {
+      "id": "blocked",
+      "kind": "mechanic",
+      "subject": "Solid wall blocks radiant heat",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Solid wall blocks radiant heat"
+        }
+      ]
+    },
+    {
+      "id": "armor",
+      "kind": "mechanic",
+      "subject": "Leather insulation exceeds iron and empty slots",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Leather insulation exceeds iron and empty slots"
+        }
+      ]
+    },
+    {
+      "id": "effects",
+      "kind": "mechanic",
+      "subject": "Thermal state, shared core fatigue and speed modifier",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Thermal state, shared core fatigue and speed modifier"
+        }
+      ]
+    }
+  ]
+}

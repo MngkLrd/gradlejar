@@ -1,0 +1,47 @@
+plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
+group = 'dev.minemods'
+version = '0.3.0-dev'
+base.archivesName = 'worldlogic-thermal-neoforge-mc1.21.1'
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+neoForge {
+    version = '21.1.262'
+    runs { client { client() }; server { server(); programArgument '--nogui' } }
+    mods { worldlogic_thermal { sourceSet(sourceSets.main) } }
+}
+repositories { mavenCentral() }
+def coreName = 'worldlogic-neoforge-mc1.21.1-1.0.0-rc20.jar'
+def coreUrl = 'https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc20-1211-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc20.jar'
+def expectedSha = 'c03b7156d8cdcb04fcc0ef11e454b5ca6d018c98c3fbd2b67a8bef84cb10b9be'
+def coreJar = file(providers.gradleProperty('worldlogicJar').orElse('libs/'+coreName).get())
+dependencies { implementation files(coreJar) }
+tasks.register('verifyWorldLogic') {
+    doLast {
+        if (!coreJar.isFile()) {
+            if (providers.gradleProperty('worldlogicJar').isPresent()) throw new GradleException('Explicit core path missing: ' + coreJar)
+            coreJar.parentFile.mkdirs()
+            def temp = new File(coreJar.parentFile,coreJar.name+'.part')
+            try {
+                def connection = new URI(coreUrl).toURL().openConnection()
+                connection.connectTimeout=20000; connection.readTimeout=60000
+                connection.inputStream.withCloseable { input -> temp.withOutputStream { out -> out << input } }
+                def actual = java.security.MessageDigest.getInstance('SHA-256').digest(temp.bytes).encodeHex().toString()
+                if (actual != expectedSha) throw new GradleException('WorldLogic download SHA-256 mismatch')
+                java.nio.file.Files.move(temp.toPath(),coreJar.toPath(),java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+            } finally { temp.delete() }
+        }
+        def actual = java.security.MessageDigest.getInstance('SHA-256').digest(coreJar.bytes).encodeHex().toString()
+        if (actual != expectedSha) throw new GradleException('WorldLogic RC20 SHA-256 mismatch: '+actual)
+        new java.util.zip.ZipFile(coreJar).withCloseable { zip ->
+            if (zip.getEntry('META-INF/neoforge.mods.toml') == null || zip.getEntry('dev/minemods/worldlogic/api/WorldLogicApi.class') == null)
+                throw new GradleException('WorldLogic dependency has no NeoForge metadata or public API')
+        }
+    }
+}
+tasks.named('compileJava') { dependsOn 'verifyWorldLogic' }
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 21 }
+tasks.register('thermalUnitTest', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.minemods.thermal.ThermalModelTest'
+}
+tasks.named('check') { dependsOn thermalUnitTest }

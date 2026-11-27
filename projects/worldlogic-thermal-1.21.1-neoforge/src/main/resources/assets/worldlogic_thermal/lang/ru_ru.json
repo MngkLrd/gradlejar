@@ -1,0 +1,19 @@
+{
+  "screen.worldlogic_thermal.title": "Температура",
+  "screen.worldlogic_thermal.inactive": "Нет данных выживания",
+  "screen.worldlogic_thermal.air": "Температура воздуха",
+  "screen.worldlogic_thermal.felt": "Ощущается как",
+  "screen.worldlogic_thermal.wet": "Влажность тела",
+  "screen.worldlogic_thermal.insulation": "Теплоизоляция",
+  "screen.worldlogic_thermal.heat": "Лучистое тепло",
+  "screen.worldlogic_thermal.trend": "Изменение температуры",
+  "screen.worldlogic_thermal.covered": "Под укрытием",
+  "screen.worldlogic_thermal.exposed": "На открытом воздухе",
+  "stage.worldlogic_thermal.hypothermia": "Переохлаждение",
+  "stage.worldlogic_thermal.very_cold": "Сильный холод",
+  "stage.worldlogic_thermal.cold": "Холод",
+  "stage.worldlogic_thermal.comfortable": "Комфорт",
+  "stage.worldlogic_thermal.warm": "Тепло",
+  "stage.worldlogic_thermal.very_hot": "Сильная жара",
+  "stage.worldlogic_thermal.hyperthermia": "Перегрев"
+}
