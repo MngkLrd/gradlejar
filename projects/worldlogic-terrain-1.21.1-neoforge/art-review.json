@@ -1274,9 +1274,295 @@
         "bark_boundary": "The mottled ochre-brown bark edge connects to the trunk's scarred exterior."
       },
       "intentional_material_deviation": "Palms are monocots without true annual growth rings. Use vascular bundle microstructure rather than fictitious dicot rings."
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/pine_sapling.png": {
+      "sha256": "0f0c8f8a849e1dd824f7c4ad6b3dfe1c3367647e3d4349106558ac5752284ffd",
+      "verdict": "PASS",
+      "material_profile": "sapling",
+      "references": [
+        {
+          "id": "minecraft:block/spruce_sapling",
+          "minecraft": "1.21.1",
+          "sha256": "8559ad02a8a73dc5f9b8bcb51f2eb26ddbb870e99736907a380f2487fe00ff74"
+        }
+      ],
+      "comparison": "Inspected native size and 4x side-by-side with spruce sapling: Open three-tier conical crown above exposed brown stem; Open crown is distinct from dense fir.",
+      "findings": {
+        "silhouette": "Open three-tier conical crown above exposed brown stem",
+        "cluster_structure": "Separate connected needle shelves leave clear gaps",
+        "micro_contrast": "Muted lighter green needle tips against darker interior",
+        "light_and_volume": "Dark lower tiers and brighter upper tips suggest overlapping needles",
+        "material_continuity": "Brown trunk continues into the center of the needles",
+        "edge_variation": "Unequal side tips prevent a rectangular outline",
+        "variant_identity": "Open crown is distinct from dense fir",
+        "vanilla_comparison": "Spruce has a central leader and layered lateral foliage",
+        "branch_hierarchy": "Leader and three lateral tiers are visible",
+        "species_silhouette": "Slender juvenile pine with open tier spacing",
+        "foliage_attachment": "Each tier touches the central leader"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/fir_sapling.png": {
+      "sha256": "3aea3c0df99044fb1cc5ed47a58166abafdea4a5fefa2754af7c04556a10cce6",
+      "verdict": "PASS",
+      "material_profile": "sapling",
+      "references": [
+        {
+          "id": "minecraft:block/spruce_sapling",
+          "minecraft": "1.21.1",
+          "sha256": "8559ad02a8a73dc5f9b8bcb51f2eb26ddbb870e99736907a380f2487fe00ff74"
+        }
+      ],
+      "comparison": "Inspected native size and 4x side-by-side with spruce sapling: Full compact cone with pointed leader; Fuller cool green crown differs from open pine and larch.",
+      "findings": {
+        "silhouette": "Full compact cone with pointed leader",
+        "cluster_structure": "Connected dense blue-green needle masses form overlapping tiers",
+        "micro_contrast": "Subdued pale green pixels break darker needle bases",
+        "light_and_volume": "Central dark divisions separate foreground tiers",
+        "material_continuity": "Stem meets the bottom of the evergreen crown",
+        "edge_variation": "Staggered taper and lower side protrusions",
+        "variant_identity": "Fuller cool green crown differs from open pine and larch",
+        "vanilla_comparison": "Spruce provides the compact evergreen sapling reference",
+        "branch_hierarchy": "Single leader with densely spaced branches",
+        "species_silhouette": "Short bare stem and full triangular fir",
+        "foliage_attachment": "Overlapping tiers remain joined to the central axis"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/larch_sapling.png": {
+      "sha256": "5b074becdfecfb31a8e093bdf73b2bcc2fb43069ce1979f45e8feda0e5f06e8f",
+      "verdict": "PASS",
+      "material_profile": "sapling",
+      "references": [
+        {
+          "id": "minecraft:block/spruce_sapling",
+          "minecraft": "1.21.1",
+          "sha256": "8559ad02a8a73dc5f9b8bcb51f2eb26ddbb870e99736907a380f2487fe00ff74"
+        }
+      ],
+      "comparison": "Inspected native size and 4x side-by-side with spruce sapling: Narrow airy crown with visible stem and unequal side shoots; Lighter sparse larch foliage contrasts with dark compact fir.",
+      "findings": {
+        "silhouette": "Narrow airy crown with visible stem and unequal side shoots",
+        "cluster_structure": "Small yellow-green needle clusters follow branches",
+        "micro_contrast": "Light mossy tips contrast with olive bases",
+        "light_and_volume": "Dark branch junctions divide overlapping clusters",
+        "material_continuity": "Brown axis continues through foliage",
+        "edge_variation": "Irregular lengths and gaps separate boughs",
+        "variant_identity": "Lighter sparse larch foliage contrasts with dark compact fir",
+        "vanilla_comparison": "Spruce demonstrates attached needles but larch uses a more open crown",
+        "branch_hierarchy": "Visible upright leader carries small lateral branches",
+        "species_silhouette": "Open ladder-like arrangement suggests young larch",
+        "foliage_attachment": "Needle masses touch visible wood or central foliage"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/cedar_sapling.png": {
+      "sha256": "524bd48cea7f3b0caee2f95fdb0193f60cff72fe84f16abdf10ad2ef34ccfa49",
+      "verdict": "PASS",
+      "material_profile": "sapling",
+      "references": [
+        {
+          "id": "minecraft:block/spruce_sapling",
+          "minecraft": "1.21.1",
+          "sha256": "8559ad02a8a73dc5f9b8bcb51f2eb26ddbb870e99736907a380f2487fe00ff74"
+        }
+      ],
+      "comparison": "Inspected native size and 4x side-by-side with spruce sapling: Wide spreading low needle shelves with upright tip; Spreading bluish crown is broader than larch.",
+      "findings": {
+        "silhouette": "Wide spreading low needle shelves with upright tip",
+        "cluster_structure": "Small cool-green groups form flattened boughs",
+        "micro_contrast": "Muted blue-green highlights border dark bases",
+        "light_and_volume": "Shade beneath flattened tiers gives branch depth",
+        "material_continuity": "Brown trunk remains connected to lower branches",
+        "edge_variation": "Lateral shelf tips extend at varied lengths",
+        "variant_identity": "Spreading bluish crown is broader than larch",
+        "vanilla_comparison": "Spruce provides the familiar conifer scale and connected tiers",
+        "branch_hierarchy": "Central stem supports horizontal boughs",
+        "species_silhouette": "Broad triangular cedar sapling with shelf-like boughs",
+        "foliage_attachment": "Needle fans attach through branch bases"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/alder_sapling.png": {
+      "sha256": "d3bc4df4c6152d384b6b686c658abc49ef95a9bf31159ac90668663a1deefd96",
+      "verdict": "PASS",
+      "material_profile": "sapling",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_sapling",
+          "minecraft": "1.21.1",
+          "sha256": "b16c30ee6297777ae6bb9425bb9fab95e17c1758752598c9679b8212a01fec6e"
+        }
+      ],
+      "comparison": "Inspected native size and 4x side-by-side with dark_oak sapling: Forked trunk with small rounded upper leaves; Two-pronged rounded crown contrasts with upright beech.",
+      "findings": {
+        "silhouette": "Forked trunk with small rounded upper leaves",
+        "cluster_structure": "Leaf groups around twin stems connect to brown branches",
+        "micro_contrast": "Olive tips meet darker lower pixels",
+        "light_and_volume": "Tan wood faces contrast with shaded stem edges",
+        "material_continuity": "Brown woody forks continue into each small crown",
+        "edge_variation": "Small unequal side shoots punctuate open spaces",
+        "variant_identity": "Two-pronged rounded crown contrasts with upright beech",
+        "vanilla_comparison": "Dark oak provides a broadleaf forked-stem reference",
+        "branch_hierarchy": "Two main stems and a shorter lower branch",
+        "species_silhouette": "Young alder with several small round leaf fans",
+        "foliage_attachment": "Visible brown fork touches foliage bases"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/beech_sapling.png": {
+      "sha256": "9dc1ace4214e2e56d75014604fb6ccc062e047e6ea7dd908168fc12d9003e066",
+      "verdict": "PASS",
+      "material_profile": "sapling",
+      "references": [
+        {
+          "id": "minecraft:block/birch_sapling",
+          "minecraft": "1.21.1",
+          "sha256": "2d96c7b2f694569c5bf32045ea9ae42447aebe3e0d62619243c90cee619bd813"
+        }
+      ],
+      "comparison": "Inspected native size and 4x side-by-side with birch sapling: Slim pale stem with pointed oval leaf fans; Pale gray trunk with spaced pointed leaves differs from alder.",
+      "findings": {
+        "silhouette": "Slim pale stem with pointed oval leaf fans",
+        "cluster_structure": "Small connected leaf clusters alternate on the central stem",
+        "micro_contrast": "Pale olive tips and darker green interiors",
+        "light_and_volume": "Light gray stem side and dark gray edge distinguish wood",
+        "material_continuity": "Gray branch pixels carry through the foliage",
+        "edge_variation": "Alternating asymmetrical side groups leave transparent gaps",
+        "variant_identity": "Pale gray trunk with spaced pointed leaves differs from alder",
+        "vanilla_comparison": "Birch illustrates bright stem and open broadleaf structure",
+        "branch_hierarchy": "Single leader with several short lateral stems",
+        "species_silhouette": "Upright juvenile beech with gray wood",
+        "foliage_attachment": "Leaves touch the pale branch or stem"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/maple_sapling.png": {
+      "sha256": "b77831754dfdfd116883fd1a8a2c5620e4e70c9a420dfa7a1953b197a2163a31",
+      "verdict": "PASS",
+      "material_profile": "sapling",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_sapling",
+          "minecraft": "1.21.1",
+          "sha256": "b16c30ee6297777ae6bb9425bb9fab95e17c1758752598c9679b8212a01fec6e"
+        }
+      ],
+      "comparison": "Inspected native size and 4x side-by-side with dark_oak sapling: Broad lobed fans with multiple lateral shoots; Wider angular fans distinguish maple from beech.",
+      "findings": {
+        "silhouette": "Broad lobed fans with multiple lateral shoots",
+        "cluster_structure": "Connected angular leaves form upper and middle fans",
+        "micro_contrast": "Lighter yellow-green lobes interrupt olive leaf bases",
+        "light_and_volume": "Shadow beneath each fan separates the branches",
+        "material_continuity": "Wood remains visible along lower stem and branching junctions",
+        "edge_variation": "Pointed lobes and varying width break the crown edge",
+        "variant_identity": "Wider angular fans distinguish maple from beech",
+        "vanilla_comparison": "Dark oak offers a broadleaf fan and fork reference",
+        "branch_hierarchy": "Central stem supports upper fork and lower side shoots",
+        "species_silhouette": "Broad lobed juvenile maple silhouette",
+        "foliage_attachment": "Fans connect visibly to woody stems"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/baobab_sapling.png": {
+      "sha256": "dd0b5eb500f8a594984781fc7741c0e076391ff6484c413626f8f32016d03bc6",
+      "verdict": "PASS",
+      "material_profile": "sapling",
+      "references": [
+        {
+          "id": "minecraft:block/acacia_sapling",
+          "minecraft": "1.21.1",
+          "sha256": "4f0eddf27ea5cb34775c53b29caf004a49ea85d4e08a63cd6d7cfa27c930c08b"
+        }
+      ],
+      "comparison": "Inspected native size and 4x side-by-side with acacia sapling: Swollen pale trunk below a shallow divided crown; Thick pale trunk distinguishes baobab from all other juveniles.",
+      "findings": {
+        "silhouette": "Swollen pale trunk below a shallow divided crown",
+        "cluster_structure": "Small connected olive foliage masses at branch tips",
+        "micro_contrast": "Light olive tips and darker inner green pixels",
+        "light_and_volume": "Pale central trunk has shaded brown margins; low contrast suits young smooth bark",
+        "material_continuity": "Forked wood is continuous from base into crown",
+        "edge_variation": "Uneven upper branches and thickened lower stem",
+        "variant_identity": "Thick pale trunk distinguishes baobab from all other juveniles",
+        "vanilla_comparison": "Acacia provides open sparse spreading crown reference",
+        "branch_hierarchy": "Short heavy central trunk separates into two upper forks",
+        "species_silhouette": "Swollen base and small upper foliage characteristic of young baobab",
+        "foliage_attachment": "Leaf masses remain attached to branch ends"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/willow_sapling.png": {
+      "sha256": "1ba599d8183024739d87b6ef5bd8bdb0db5be8dd525b7138cbd119187e73ea9f",
+      "verdict": "PASS",
+      "material_profile": "sapling",
+      "references": [
+        {
+          "id": "minecraft:block/jungle_sapling",
+          "minecraft": "1.21.1",
+          "sha256": "28f2686cca35c16e0d59496902bc7f178404f88be2cfc6920e2c48f7b0432c8d"
+        }
+      ],
+      "comparison": "Inspected native size and 4x side-by-side with jungle sapling: Arching crown with hanging side tendrils and visible stem; Downward foliage orientation differs from every upright sapling.",
+      "findings": {
+        "silhouette": "Arching crown with hanging side tendrils and visible stem",
+        "cluster_structure": "Narrow linked foliage strips follow arching branches",
+        "micro_contrast": "Moss green highlights near upper arch with dark pendant ends",
+        "light_and_volume": "Upper leaf arc lighter than downward tips",
+        "material_continuity": "Brown stem links crown and lower side leaf group",
+        "edge_variation": "Unequal hanging lengths and open interior produce weeping shape",
+        "variant_identity": "Downward foliage orientation differs from every upright sapling",
+        "vanilla_comparison": "Jungle illustrates branching and sparse native-scale foliage",
+        "branch_hierarchy": "Main stem forks upward under arch and carries low side branch",
+        "species_silhouette": "Weeping willow with open hanging foliage",
+        "foliage_attachment": "Pendant foliage connects to arch at top"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/palm_sapling.png": {
+      "sha256": "56992b02a44ba0ad7398b8a88e90c035adc376e2e84800cce7e67da5e6d2ebc0",
+      "verdict": "PASS",
+      "material_profile": "sapling",
+      "references": [
+        {
+          "id": "minecraft:block/jungle_sapling",
+          "minecraft": "1.21.1",
+          "sha256": "28f2686cca35c16e0d59496902bc7f178404f88be2cfc6920e2c48f7b0432c8d"
+        }
+      ],
+      "comparison": "Inspected native size and 4x side-by-side with jungle sapling: Long narrow stem topped by umbrella-like arching fronds; Tall bare stem and broad arch differ from upright date palm.",
+      "findings": {
+        "silhouette": "Long narrow stem topped by umbrella-like arching fronds",
+        "cluster_structure": "Connected green arcs with darker drooping leaflet tips",
+        "micro_contrast": "Bright green upper ridges and dark lower tips",
+        "light_and_volume": "Shaded lower leaflet edges and light stem face",
+        "material_continuity": "Tan trunk meets central frond hub",
+        "edge_variation": "Unequal drooping outer tips break smooth arch",
+        "variant_identity": "Tall bare stem and broad arch differ from upright date palm",
+        "vanilla_comparison": "Jungle provides tropical foliage scale, not a palm anatomy reference",
+        "branch_hierarchy": "Single unbranched axis with terminal frond hub",
+        "species_silhouette": "Juvenile coconut with downward-curving fan",
+        "foliage_attachment": "Fronds all emerge from terminal crown"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/date_palm_sapling.png": {
+      "sha256": "75192a19ef4da409fe69406d680ff074e70f5ee4a5537e7363abb0e52132b647",
+      "verdict": "PASS",
+      "material_profile": "sapling",
+      "references": [
+        {
+          "id": "minecraft:block/jungle_sapling",
+          "minecraft": "1.21.1",
+          "sha256": "28f2686cca35c16e0d59496902bc7f178404f88be2cfc6920e2c48f7b0432c8d"
+        }
+      ],
+      "comparison": "Inspected native size and 4x side-by-side with jungle sapling: Upright spear-like fronds above compact tan stem; More erect cool-colored crown and shorter stem than coconut.",
+      "findings": {
+        "silhouette": "Upright spear-like fronds above compact tan stem",
+        "cluster_structure": "Blue-green groups connect through a crowded terminal fan",
+        "micro_contrast": "Pale sage tips against deeper green bases",
+        "light_and_volume": "Shaded lower fronds and alternating light stem facets",
+        "material_continuity": "Central woody axis extends to base of fan",
+        "edge_variation": "Unequal pointed upward tips create broken silhouette",
+        "variant_identity": "More erect cool-colored crown and shorter stem than coconut",
+        "vanilla_comparison": "Jungle offers tropical sapling visual scale while palm anatomy is separate",
+        "branch_hierarchy": "Unbranched stem ends in several upward fronds",
+        "species_silhouette": "Young date palm with vertical spear crown",
+        "foliage_attachment": "Frond bases converge at top of stem"
+      }
     }
   },
-  "review_status": "DRAFT/BLOCKED: 44 accepted of 118. Rejected and missing records remain.",
+  "review_status": "DRAFT/BLOCKED: 55 accepted of 118. Rejected and missing records remain.",
   "reference_provenance": "Actual PNGs from InventivetalentDev/minecraft-assets, 1.21.1 branch; inspected at original and nearest-neighbor 4x. Official client SHA-1 could not be verified in this environment. No vanilla assets included.",
   "client_status": "NOT_RUN"
 }
