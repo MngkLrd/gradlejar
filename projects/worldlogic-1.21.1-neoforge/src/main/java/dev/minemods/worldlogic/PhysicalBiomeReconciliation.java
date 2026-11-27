@@ -4,7 +4,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.*;
-/** Correct the quart biome palette from actual noise-generated columns, before
+/** Correct the quart biome palette from actual noise-generated columns, before surface material selection and before
  * local cave mouths alter the heightmap. No density or block edits. */
 public final class PhysicalBiomeReconciliation{
  private PhysicalBiomeReconciliation(){}
@@ -43,6 +43,13 @@ public final class PhysicalBiomeReconciliation{
    // Underground land habitats retain their existing depth classification.
    if(!wet[i]&&y<floor-48)return source.getNoiseBiome(t);
    long c=(long)(10000*continental(floor,sea,wet[i],shore[i]));
+   // Preserve the original sampler's non-coastal terrestrial class where it is
+   // already compatible with the physical column, including its climate depth.
+   if(!wet[i]&&!shore[i]){
+    var original=source.getNoiseBiome(t);
+    String id=original.unwrapKey().orElseThrow().location().getPath();
+    if(!id.endsWith("ocean")&&!id.endsWith("coast")&&!id.endsWith("cavern")&&t.continentalness()>=4000)return original;
+   }
    return source.getNoiseBiome(new Climate.TargetPoint(t.temperature(),t.humidity(),c,t.erosion(),0L,t.weirdness()));
   },random.sampler());
  }

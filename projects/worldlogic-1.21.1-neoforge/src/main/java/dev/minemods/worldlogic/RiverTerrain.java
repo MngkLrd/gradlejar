@@ -15,6 +15,7 @@ import dev.minemods.worldlogic.api.WorldLogicApi.WaterKind;
 public final class RiverTerrain {
  private RiverTerrain(){}
  private record Stage(GeoModel.RiverSegment segment,int start,int end){}
+ private record Pool(GeoModel.RiverBasin basin,int stage){}
  private static boolean natural(BlockState b){
   return GeologyGeneration.rock(b)||b.is(BlockTags.DIRT)||b.is(BlockTags.SAND)||b.is(Blocks.GRAVEL)||b.is(Blocks.CLAY)||Content.SOILS.values().stream().anyMatch(v->b.is(v.get()));
  }
@@ -22,7 +23,8 @@ public final class RiverTerrain {
   if(!NaturalWaterGeneration.enabled(gen))return;
   var model=GeoDensity.riverModel(state,access);int x0=c.getPos().getMinBlockX(),z0=c.getPos().getMinBlockZ(),sea=gen.getSeaLevel();
   var segments=model.rivers(x0-15,z0-15,x0+30,z0+30);
-  if(segments.isEmpty())return;
+  var basins=model.basins(x0-15,z0-15,x0+30,z0+30);
+  if(segments.isEmpty()&&basins.isEmpty())return;
   Map<Long,Integer> heights=new HashMap<>();
   java.util.function.BiFunction<Integer,Integer,Integer> height=(x,z)->heights.computeIfAbsent(((long)x<<32)^(z&0xffffffffL),k->gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,c,state)-1);
   var stages=new ArrayList<Stage>();
@@ -33,6 +35,13 @@ public final class RiverTerrain {
    if(a<sea||b>a+3||a-b>28)continue;
    stages.add(new Stage(s,Math.max(sea,a-1),Math.max(sea,b-1)));
   }
+  var pools=new ArrayList<Pool>();
+  for(var b:basins){
+   if(Math.hypot(b.x()-x0-7.5,b.z()-z0-7.5)>b.radius()+13)continue;
+   int h=height.apply(b.x(),b.z());if(h<sea+1)continue;
+   int stage=Math.max(sea,h-1);
+   pools.add(new Pool(b,stage));
+  }
   var p=new BlockPos.MutableBlockPos();var water=NaturalFluids.get(WaterKind.RIVER).block.get().defaultBlockState();
   int[] floor=new int[256];
   for(int x=0;x<16;x++)for(int z=0;z<16;z++)floor[x*16+z]=c.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x,z);
@@ -41,17 +50,23 @@ public final class RiverTerrain {
    Stage selected=null;double best=1;
    best=1.65;
    for(var s:stages){double d=s.segment.distance(wx,wz)/s.segment.radius();if(d<best){best=d;selected=s;}}
-   if(selected==null)continue;
-   var s=selected.segment;int stage=Math.min(h-1,(int)Math.floor(GeoModel.lerp(selected.start,selected.end,s.fraction(wx,wz))));
+   Pool pool=null;double poolDistance=1.65;
+   for(var q:pools){double d=Math.hypot(wx-q.basin.x(),wz-q.basin.z())/q.basin.radius();if(d<poolDistance){poolDistance=d;pool=q;}}
+   if(selected==null&&pool==null)continue;
+   boolean lake=pool!=null&&(selected==null||poolDistance<best);
+   if(lake)best=poolDistance;
+   int stage=Math.min(h-1,lake?pool.stage:(int)Math.floor(GeoModel.lerp(selected.start,selected.end,selected.segment.fraction(wx,wz))));
    if(stage<sea||h-stage>12)continue;
-   int depth=channelDepth(s.discharge(),best);
+   double discharge=lake?pool.basin.discharge():selected.segment.discharge();
+   int depth=channelDepth(discharge,best);
    int bed=best<=1?stage-depth:Math.min(h,stage+1+(int)Math.floor((best-1)*Math.max(3,h-stage)/.65));
    if(h-bed>20||bed<=c.getMinBuildHeight()+5||!natural(c.getBlockState(p.set(wx,bed,wz))))continue;
    boolean valid=true;for(int y=bed+1;y<=h;y++)if(!natural(c.getBlockState(p.set(wx,y,wz)))){valid=false;break;}
    if(!valid)continue;
    if(best<=1){
     c.setBlockState(p.set(wx,bed,wz),Blocks.GRAVEL.defaultBlockState(),false);
-    for(int y=bed+1;y<=stage;y++)c.setBlockState(p.set(wx,y,wz),water,false);
+    var fill=lake?NaturalFluids.get(WaterKind.LAKE).block.get().defaultBlockState():water;
+    for(int y=bed+1;y<=stage;y++)c.setBlockState(p.set(wx,y,wz),fill,false);
    }
    for(int y=Math.max(bed,stage)+1;y<=h;y++)c.setBlockState(p.set(wx,y,wz),Blocks.AIR.defaultBlockState(),false);
   }
@@ -85,7 +100,7 @@ public final class RiverTerrain {
    int a=gen.getBaseHeight(s.x(),s.z(),Heightmap.Types.OCEAN_FLOOR_WG,l,state)-1;
    int b=gen.getBaseHeight(s.endX(),s.endZ(),Heightmap.Types.OCEAN_FLOOR_WG,l,state)-1;
    if(a>=gen.getSeaLevel()+5&&b>=gen.getSeaLevel()+3&&b<=a+2&&a-b<=12)
-    return "RIVER_PROBE x="+((s.x()+s.endX())/2)+" z="+((s.z()+s.endZ())/2)+" discharge="+s.discharge();
+    return "RIVER_PROBE x="+((s.x()+s.endX())/2)+" z="+((s.z()+s.endZ())/2)+" discharge="+s.discharge()+" outlet="+(model.outlet(s.x(),s.z()).ocean()?"ocean":"basin");
   }
   return "RIVER_PROBE no_candidate";
  }

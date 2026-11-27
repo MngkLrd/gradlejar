@@ -177,25 +177,63 @@ public final class GeoModel {
   if(discharge<12)return lerp(2.4,3.8,clamp((discharge-6)/6,0,1));
   return clamp(3.2+Math.log1p(discharge/12)*2.1,3.8,9.5);
  }
+ record DrainEnd(int x,int z,boolean ocean,boolean resolved,int steps){}
+ record RiverBasin(int x,int z,double radius,double discharge,double rim){}
+ private record GridPoint(int x,int z){}
+ private final Cache<GridPoint,DrainEnd> outlets=CacheBuilder.newBuilder().maximumSize(32768).build();
+ private GridPoint next(int x,int z){
+  double high=raw(x,z),best=0;GridPoint out=new GridPoint(x,z);
+  for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++){
+   if(dx==0&&dz==0)continue;
+   int nx=x+dx*STEP,nz=z+dz*STEP;
+   double slope=(high-raw(nx,nz))/Math.hypot(dx,dz);
+   if(slope>best+1e-8){best=slope;out=new GridPoint(nx,nz);}
+  }
+  return out;
+ }
+ DrainEnd outlet(int x,int z){
+  var key=new GridPoint(x,z);
+  try{return outlets.get(key,()->{
+   GridPoint point=key;
+   for(int step=0;step<192;step++){
+    if(raw(point.x,point.z)<63.5)return new DrainEnd(point.x,point.z,true,true,step);
+    var n=next(point.x,point.z);
+    if(n.equals(point))return new DrainEnd(point.x,point.z,false,true,step);
+    point=n;
+   }
+   return new DrainEnd(point.x,point.z,false,false,192);
+  });}catch(ExecutionException e){throw new IllegalStateException("river outlet",e.getCause());}
+ }
+ private RiverBasin basin(int x,int z){
+  double h=raw(x,z),flow=surface(x,z).flow;
+  if(h<65||flow<6||!next(x,z).equals(new GridPoint(x,z)))return null;
+  double rim=Double.POSITIVE_INFINITY;
+  for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++){
+   if(dx==0&&dz==0)continue;
+   rim=Math.min(rim,raw(x+dx*STEP,z+dz*STEP));
+  }
+  // An actual closed macro depression, not an arbitrary circle at every junction.
+  if(rim-h<.3)return null;
+  return new RiverBasin(x,z,clamp(4+Math.log1p(flow/6)*3,5,12),flow,rim);
+ }
+ List<RiverBasin> basins(int minX,int minZ,int maxX,int maxZ){
+  var out=new ArrayList<RiverBasin>();
+  for(int gz=Math.floorDiv(minZ,STEP)-1;gz<=Math.floorDiv(maxZ,STEP)+1;gz++)
+   for(int gx=Math.floorDiv(minX,STEP)-1;gx<=Math.floorDiv(maxX,STEP)+1;gx++){
+    var b=basin(gx*STEP,gz*STEP);if(b!=null)out.add(b);
+   }
+  return List.copyOf(out);
+ }
  List<RiverSegment> rivers(int minX,int minZ,int maxX,int maxZ){
   var out=new ArrayList<RiverSegment>();
   for(int gz=Math.floorDiv(minZ,STEP)-1;gz<=Math.floorDiv(maxZ,STEP)+1;gz++)
    for(int gx=Math.floorDiv(minX,STEP)-1;gx<=Math.floorDiv(maxX,STEP)+1;gx++){
-    int x=gx*STEP,z=gz*STEP;double high=raw(x,z);
-    if(high<63.5)continue;
-    double discharge=surface(x,z).flow;
-    // Headwater streams use the same D8 runoff and retain existing major channels.
+    int x=gx*STEP,z=gz*STEP;double high=raw(x,z),discharge=surface(x,z).flow;
     if(!channelEligible(high,discharge))continue;
-    int ex=x,ez=z;double best=0;
-    for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++){
-     if(dx==0&&dz==0)continue;
-     int nx=x+dx*STEP,nz=z+dz*STEP;
-     double slope=(high-raw(nx,nz))/Math.hypot(dx,dz);
-     if(slope>best+1e-8){best=slope;ex=nx;ez=nz;}
-    }
-    if(ex==x&&ez==z)continue;
-    double radius=channelRadius(discharge);
-    out.add(new RiverSegment(x,z,ex,ez,discharge,radius));
+    var n=next(x,z);if(n.x==x&&n.z==z)continue;
+    var end=outlet(x,z);
+    if(!end.resolved||!end.ocean&&basin(end.x,end.z)==null)continue;
+    out.add(new RiverSegment(x,z,n.x,n.z,discharge,channelRadius(discharge)));
    }
   return List.copyOf(out);
  }

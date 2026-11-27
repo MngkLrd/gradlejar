@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC35 production core/API regression",
+  "name": "World Logic NeoForge RC36 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",

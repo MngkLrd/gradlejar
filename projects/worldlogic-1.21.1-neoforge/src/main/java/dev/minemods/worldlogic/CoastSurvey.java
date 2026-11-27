@@ -34,7 +34,7 @@ final class CoastSurvey {
   if(c==null)return "COAST_AUDIT unavailable";
   int sea=l.getSeaLevel(),x0=c.getPos().getMinBlockX(),z0=c.getPos().getMinBlockZ();
   int ocean=0,wetOcean=0,dry=0,inland=0,unknown=0,dryQuart=0,river=0,links=0;
-  int deep=0;int[] riverY=new int[256];Arrays.fill(riverY,Integer.MIN_VALUE);
+  int deep=0,cross=0;int[] riverY=new int[256];Arrays.fill(riverY,Integer.MIN_VALUE);
   List<String> examples=new ArrayList<>();
   for(int x=0;x<16;x++)for(int z=0;z<16;z++){
    int wx=x0+x,wz=z0+z,h=c.getHeight(Heightmap.Types.OCEAN_FLOOR,x,z);
@@ -64,7 +64,17 @@ final class CoastSurvey {
    if(x<15&&riverY[(x+1)*16+z]!=Integer.MIN_VALUE&&Math.abs(y-riverY[(x+1)*16+z])<=1)links++;
    if(z<15&&riverY[x*16+z+1]!=Integer.MIN_VALUE&&Math.abs(y-riverY[x*16+z+1])<=1)links++;
   }
+  for(int x=0;x<16;x++)for(int z=0;z<16;z++){
+   int y=riverY[x*16+z];if(y==Integer.MIN_VALUE)continue;
+   for(var d:net.minecraft.core.Direction.Plane.HORIZONTAL){
+    int nx=x+d.getStepX(),nz=z+d.getStepZ();if(nx>=0&&nx<16&&nz>=0&&nz<16)continue;
+    int wx=x0+nx,wz=z0+nz;var neighbor=l.getChunkSource().getChunkNow(wx>>4,wz>>4);if(neighbor==null)continue;
+    for(int dy=-1;dy<=1;dy++){var kind=NaturalFluids.kind(neighbor.getFluidState(new BlockPos(wx,y+dy,wz)).getType());
+     if(kind==WaterKind.RIVER||kind==WaterKind.LAKE||kind==WaterKind.SEA||kind==WaterKind.BRACKISH){cross++;break;}
+    }
+   }
+  }
   if(inland>0||dryQuart>0)org.slf4j.LoggerFactory.getLogger("WorldLogic").warn("WORLDLOGIC_DRY_OCEAN chunk={} dryQuart={} inland={} examples={}",c.getPos(),dryQuart,inland,examples);
-  return "COAST_AUDIT columns=256 ocean="+ocean+" wet="+wetOcean+" dry="+dry+" inland="+inland+" unknown="+unknown+" dryQuart="+dryQuart+" river="+river+" links="+links+" deep="+deep+" examples="+examples;
+  return "COAST_AUDIT columns=256 ocean="+ocean+" wet="+wetOcean+" dry="+dry+" inland="+inland+" unknown="+unknown+" dryQuart="+dryQuart+" river="+river+" links="+links+" deep="+deep+" cross="+cross+" examples="+examples;
  }
 }

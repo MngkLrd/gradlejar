@@ -103,7 +103,7 @@ def main():
             require(len(headwaters)>=1,"No independent small-stream candidate")
             report["headwater_candidates"]=headwaters
             sites.extend(headwaters)
-            keys=("columns","ocean","wet","dry","inland","unknown","dryQuart","river","links","deep")
+            keys=("columns","ocean","wet","dry","inland","unknown","dryQuart","river","links","deep","cross")
             pattern="COAST_AUDIT "+" ".join(k+r"=(\d+)" for k in keys)
             report["coast_windows"]=[]
             for label,x,z in sites:
@@ -134,7 +134,7 @@ def main():
             report["coast_totals"]=totals
             require(totals["ocean"]>=1024 and totals["wet"]>=1024,"Insufficient real ocean coverage")
             require(totals["inland"]==0 and totals["dryQuart"]==0,"Dry land labeled ocean; inspect logged coordinates")
-            require(sum(w["river"]>=16 and w["links"]>=12 and w["deep"]>=4 for w in windows if w["site"].startswith("river_"))>=3,"Fewer than three generated connected river catchments")
+            require(sum(w["river"]>=16 and w["links"]>=12 and w["deep"]>=4 and w["cross"]>=2 for w in windows if w["site"].startswith("river_"))>=3,"Fewer than three generated connected river catchments")
             require(any(w["river"]>=8 and w["links"]>=4 for w in windows if w["site"].startswith("headwater_")),"No generated connected headwater stream")
             # Retain independent marine substrate, native-water and flora assertions.
             ax,az=-18432,-30720
@@ -168,6 +168,65 @@ def main():
             except (OSError,EOFError):pass
             conn.close();conn=None;proc.wait(timeout=60)
             require(proc.returncode==0,"Unclean server shutdown")
+            # Compare the final ground profiles, including all carvers and decorations,
+            # against the retained immutable RC22 settings at identical coordinates.
+            conn=None;proc=None
+            props=root/"server.properties"
+            original=props.read_text()
+            props.write_text(original.replace("level-name=ore-world","level-name=rc22-reference").replace("level-type=minecraft:normal","level-type=worldlogic:earthlike_climate"))
+            def snapshot(connection,positions):
+                result={}
+                for x,z in positions:
+                    force=f"{x} {z} {x+15} {z+15}"
+                    connection.cmd("forceload add "+force)
+                    deadline=time.monotonic()+120
+                    while time.monotonic()<deadline:
+                        raw=connection.cmd(f"execute positioned {x} 96 {z} run worldlogic surface_audit")
+                        if "unavailable" not in raw:break
+                        time.sleep(2)
+                    require(raw.startswith("SURFACE_AUDIT ") and "unavailable" not in raw,"Surface audit unavailable "+str((x,z)))
+                    entries=[v.split(",") for v in raw.split("SURFACE_AUDIT ",1)[1].strip().split(";")]
+                    require(len(entries)==64 and all(len(v)==4 for v in entries),"Incomplete final surface profile")
+                    result[f"{x},{z}"]=entries
+                    connection.cmd("forceload remove "+force)
+                return result
+            positions=[(0,0),(512,512)]+[(x//16*16,z//16*16) for _,x,z in sites[:6]]
+            positions=list(dict.fromkeys(positions))
+            comparisons={}
+            for name,properties in [("rc22",props.read_text()),("current",original)]:
+                props.write_text(properties)
+                with (logs/f"surface-{name}.log").open("w") as profile_log:
+                    proc=subprocess.Popen(cmd,cwd=root,stdout=profile_log,stderr=subprocess.STDOUT,start_new_session=True)
+                    deadline=time.monotonic()+420
+                    while time.monotonic()<deadline:
+                        require(proc.poll() is None,"Surface reference startup failed "+name)
+                        if "Done (" in (logs/f"surface-{name}.log").read_text(errors="replace"):
+                            try:conn=Rcon(rport,password);conn.sock.settimeout(120);break
+                            except (OSError,EOFError):pass
+                        time.sleep(2)
+                    require(conn is not None,"Surface reference startup timeout "+name)
+                    conn.cmd("save-all flush")
+                    folder="rc22-reference" if name=="rc22" else "ore-world"
+                    actual=nbtlib.load(root/folder/"level.dat")["Data"]["WorldGenSettings"]["dimensions"]["minecraft:overworld"]["generator"]
+                    expected="worldlogic:earthlike_climate" if name=="rc22" else "worldlogic:realistic_unified"
+                    require(str(actual["settings"])==expected,"Wrong surface reference generator "+name)
+                    comparisons[name]=snapshot(conn,positions)
+                    try:conn.cmd("stop")
+                    except (OSError,EOFError):pass
+                    conn.close();conn=None;proc.wait(timeout=60);require(proc.returncode==0,"Unclean comparison shutdown");proc=None
+            deltas=[];all_deltas=[];sand={"rc22":0,"current":0};excluded=0
+            for key,base in comparisons["rc22"].items():
+                for a,b in zip(base,comparisons["current"][key]):
+                    if a[1]=="?" or b[1]=="?":excluded+=1;continue
+                    delta=abs(int(a[0])-int(b[0]));all_deltas.append(delta)
+                    if int(a[2])==-999 and int(b[2])==-999:deltas.append(delta)
+                    for name,v in [("rc22",a),("current",b)]:
+                        if v[1]=="s" and int(v[0])>70:sand[name]+=1
+            require(len(all_deltas)>=len(positions)*48,"Insufficient observed final terrain columns")
+            report["surface_comparison"]={"positions":positions,"profiles":comparisons,"all_columns":len(all_deltas),"dry_columns":len(deltas),"unknown":excluded,"mean_absolute_height_delta":sum(all_deltas)/len(all_deltas),"dry_columns_within_8":sum(d<=8 for d in deltas),"high_sand_columns":sand}
+            # Guard broad dry relief; intended caves, water channels and different surface
+            # features may differ. Report rather than hide every material/height delta.
+            require(not deltas or sum(d<=8 for d in deltas)>=len(deltas)*.80,"Broad final dry terrain regression versus RC22")
             report["status"]="passed"
     finally:
         if conn is not None:
