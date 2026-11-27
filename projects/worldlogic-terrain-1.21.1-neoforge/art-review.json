@@ -190,9 +190,558 @@
         "species_silhouette": "An erect single leader with paired leaflets suggests a tropical seedling.",
         "foliage_attachment": "Each side cluster connects inward through a darker leaf base to its branch."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/bell_pepper.png": {
+      "sha256": "02f1325fc83afef14fc33e077dc3ccc5cd5f6f7d4dfb479a527798a0a68de614",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Native 1x and nearest-neighbor comparison: Apple has a rounded shaded rind and separate green/brown stem at the same scale. The left lobe catches light; the right lobe recedes into brown-red.",
+      "findings": {
+        "silhouette": "A lobed orange fruit with a short upright green stem.",
+        "cluster_structure": "The tall light stripe on the left joins amber patches across the front.",
+        "micro_contrast": "The warm yellow next to orange distinguishes two lobe planes.",
+        "light_and_volume": "The left lobe catches light; the right lobe recedes into brown-red.",
+        "material_continuity": "Continuous orange skin encloses the two visible lobes.",
+        "edge_variation": "The shoulder bulges on the left and narrows toward its uneven base.",
+        "variant_identity": "Unlike round tomato, the pepper is taller and has a longitudinal split.",
+        "vanilla_comparison": "Apple has a rounded shaded rind and separate green/brown stem at the same scale.",
+        "functional_material_cues": "The elongated rib, thick stem and bulging shoulders identify a pepper."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/blackberry.png": {
+      "sha256": "d996197058dbd0d66d4df58cfb64f39bcb229dcba8be21a618b995a053eb42f7",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/sweet_berries",
+          "minecraft": "1.21.1",
+          "sha256": "df3d2e43e671dd16d2b101e5e2273330e1bcae0bfe36cac5e8db68ce6ce7fc88"
+        }
+      ],
+      "comparison": "Native 1x and nearest-neighbor comparison: Sweet berries establish a small fruit cluster with contrasting green attachment. The upper left of each lobe is lighter than its lower outline.",
+      "findings": {
+        "silhouette": "A compact irregular bunch under a horizontal green stalk.",
+        "cluster_structure": "Short pale purple groups sit on individual dark drupelet lobes.",
+        "micro_contrast": "Lavender corners border medium violet without bright white speckling.",
+        "light_and_volume": "The upper left of each lobe is lighter than its lower outline.",
+        "material_continuity": "The dark purple outer flesh encloses the individual fruitlets.",
+        "edge_variation": "The perimeter steps inward at its lowest lobe rather than forming a circle.",
+        "variant_identity": "The squat compound fruit differs in silhouette from the triangular grape bunch.",
+        "vanilla_comparison": "Sweet berries establish a small fruit cluster with contrasting green attachment.",
+        "functional_material_cues": "Connected small purple fruitlets and a single calyx cue blackberry."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/blueberry.png": {
+      "sha256": "4db1a99a1f2e64a8f319c5e42204384418fe32d424549cbdc707a2bfcf46609c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/sweet_berries",
+          "minecraft": "1.21.1",
+          "sha256": "df3d2e43e671dd16d2b101e5e2273330e1bcae0bfe36cac5e8db68ce6ce7fc88"
+        }
+      ],
+      "comparison": "Native 1x and nearest-neighbor comparison: Sweet berries provide the three-berry construction at inventory scale. Each berry has a darker lower and right contour.",
+      "findings": {
+        "silhouette": "Three distinct rounded berries with a thin upward stalk.",
+        "cluster_structure": "Blue highlight islands are bounded by dark contours at the top of each berry.",
+        "micro_contrast": "Light periwinkle patches distinguish waxy surfaces from deep indigo.",
+        "light_and_volume": "Each berry has a darker lower and right contour.",
+        "material_continuity": "The three blue forms keep separate edges where they touch.",
+        "edge_variation": "The lowest berry projects below the two upper lobes.",
+        "variant_identity": "Three large fruits distinguish it from the tightly packed blackberry.",
+        "vanilla_comparison": "Sweet berries provide the three-berry construction at inventory scale.",
+        "functional_material_cues": "The dark blue rinds and pale bloom are recognizable blueberry cues."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/cabbage.png": {
+      "sha256": "49ed29e49bf8d53df46fb0e347bf8ac1e1777e86c4624d38a46e18bcc7193c15",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/melon_slice",
+          "minecraft": "1.21.1",
+          "sha256": "a1630cbe3d88156ebb55bcb5fa957d332d49a54d3d2a225b6cccf22623f17d50"
+        }
+      ],
+      "comparison": "Native 1x and nearest-neighbor comparison: Melon slice provides a green rind ramp and native food silhouette scale; cabbage uses a folded leaf rather than exposed flesh. The bright upper left fold contrasts with the shaded lower right outer leaf.",
+      "findings": {
+        "silhouette": "A low leafy head with unequal shoulders and a projecting outer leaf.",
+        "cluster_structure": "The pale center is enclosed by broad adjoining olive leaf areas.",
+        "micro_contrast": "Light green transitions around the pale inner fold are small and adjacent.",
+        "light_and_volume": "The bright upper left fold contrasts with the shaded lower right outer leaf.",
+        "material_continuity": "The darker green outline flows into the leaf layers rather than a separate hard rind.",
+        "edge_variation": "The right side projects one pixel farther than the upper left shoulder.",
+        "variant_identity": "A compact layered head differs from the longer green cucumber.",
+        "vanilla_comparison": "Melon slice provides a green rind ramp and native food silhouette scale; cabbage uses a folded leaf rather than exposed flesh.",
+        "functional_material_cues": "Overlapping folded green layers indicate a leafy vegetable."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/cucumber.png": {
+      "sha256": "cc7f95c8a435958c13f2f0e1d2b45cc3c88bed6a5ad06505958dd70e1a5cdcaf",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/carrot",
+          "minecraft": "1.21.1",
+          "sha256": "113a62e7fbee7d2874268f62c7ca5db3dc9b1dc538f7ff5aaa0fae5a4f1f3e0d"
+        }
+      ],
+      "comparison": "Native 1x and nearest-neighbor comparison: Carrot offers a similarly diagonal produce icon; cucumber lacks the taper and leafy top of a root. A narrow bright ridge runs along the upper-left side, with a dark turning right surface.",
+      "findings": {
+        "silhouette": "A narrow elongated green fruit bends toward the top right.",
+        "cluster_structure": "The long green side planes include short interruptions in the central and left groups.",
+        "micro_contrast": "Lighter olive pixels at the center break up the darker rind without noise.",
+        "light_and_volume": "A narrow bright ridge runs along the upper-left side, with a dark turning right surface.",
+        "material_continuity": "The green rind continues around both rounded ends.",
+        "edge_variation": "The lower end curves outward and the upper tip is narrower.",
+        "variant_identity": "Its bent tubular silhouette separates it from the round cabbage and root vegetables.",
+        "vanilla_comparison": "Carrot offers a similarly diagonal produce icon; cucumber lacks the taper and leafy top of a root.",
+        "functional_material_cues": "Subtle irregular rind clusters and the rounded length indicate cucumber."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/grape.png": {
+      "sha256": "ff9195152db3363693a7e1ea6cda0c4fa464d1717aa388fe099c60d5c0082300",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/sweet_berries",
+          "minecraft": "1.21.1",
+          "sha256": "df3d2e43e671dd16d2b101e5e2273330e1bcae0bfe36cac5e8db68ce6ce7fc88"
+        }
+      ],
+      "comparison": "Native 1x and nearest-neighbor comparison: Sweet berries demonstrate readable grouped fruit forms within the same 16-pixel canvas. Individual fruit faces are brighter at the upper-left side.",
+      "findings": {
+        "silhouette": "A broad upper cluster tapers into a single lower fruit under a stalk.",
+        "cluster_structure": "Square grape highlights are grouped inside the darker adjoining purple lobes.",
+        "micro_contrast": "Purple and lavender steps separate fruit skins without introducing white shine.",
+        "light_and_volume": "Individual fruit faces are brighter at the upper-left side.",
+        "material_continuity": "The purple skins share a coherent shade family across the bunch.",
+        "edge_variation": "The bottom lobe narrows the contour while shoulders protrude at different heights.",
+        "variant_identity": "The triangular bunch and larger fruit beads distinguish it from blackberry.",
+        "vanilla_comparison": "Sweet berries demonstrate readable grouped fruit forms within the same 16-pixel canvas.",
+        "functional_material_cues": "The stalk and tapering series of round fruitlets indicate a grape bunch."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/onion.png": {
+      "sha256": "e9dbbfa1d476f8ba0d17e40ffdf5605f3e76aa580993ac5d9e363973ced2403b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/beetroot",
+          "minecraft": "1.21.1",
+          "sha256": "51e6ca1d5d360a1dd8fecb15cc757ee87a3e159ae23248c3785b3d0cb22063e2"
+        }
+      ],
+      "comparison": "Native 1x and nearest-neighbor comparison: Beetroot supplies an inventory-scale root and neck reference, not the onion palette. The pale left surface turns into a dark brown right flank.",
+      "findings": {
+        "silhouette": "A teardrop bulb with short green shoot and broad lower base.",
+        "cluster_structure": "Cream and tan adjoining regions follow the long bulb axis.",
+        "micro_contrast": "The brighter central strip touches restrained ochre midtones.",
+        "light_and_volume": "The pale left surface turns into a dark brown right flank.",
+        "material_continuity": "Warm tan bands describe continuous papery outer skin.",
+        "edge_variation": "The neck is narrow and the base flares unevenly.",
+        "variant_identity": "The pale gold teardrop contrasts with radish's pink root and white tail.",
+        "vanilla_comparison": "Beetroot supplies an inventory-scale root and neck reference, not the onion palette.",
+        "functional_material_cues": "Long skin folds and a flattened root end identify an onion."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/pineapple.png": {
+      "sha256": "5bdc00388164d97932e964cf6f48be1a7f9a01a0616a2714b4fa240e41c2e278",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Native 1x and nearest-neighbor comparison: Apple gives a compact rind and stem comparison; pineapple adds small scale facets at the same pixel size. Brighter upper-left scale facets turn into a dark lower-right edge.",
+      "findings": {
+        "silhouette": "A long golden fruit under a pointed multi-leaf crown.",
+        "cluster_structure": "Gold scale clusters are offset across the body and join neighboring brown groups.",
+        "micro_contrast": "Small ochre to golden transitions break the overly regular previous grid.",
+        "light_and_volume": "Brighter upper-left scale facets turn into a dark lower-right edge.",
+        "material_continuity": "The scales remain within one amber rind below the attached green crown.",
+        "edge_variation": "The crown contains uneven spear lengths and a slightly irregular fruit outline.",
+        "variant_identity": "The tall armored fruit and spiky crown distinguish it from all round fruit icons.",
+        "vanilla_comparison": "Apple gives a compact rind and stem comparison; pineapple adds small scale facets at the same pixel size.",
+        "functional_material_cues": "A rough golden skin and upright crown carry the pineapple identity."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/radish.png": {
+      "sha256": "1ff2529af0894c1478dc9cd9fe5f19efc2c0b28bbb4d8621229346f8899fde31",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/beetroot",
+          "minecraft": "1.21.1",
+          "sha256": "51e6ca1d5d360a1dd8fecb15cc757ee87a3e159ae23248c3785b3d0cb22063e2"
+        }
+      ],
+      "comparison": "Native 1x and nearest-neighbor comparison: Beetroot provides the comparable bulb-and-leaf silhouette and colored skin volume. Left pink face is lit more strongly than the right dark-red outline.",
+      "findings": {
+        "silhouette": "A pink bulb with spreading leaves and a fine white root tail.",
+        "cluster_structure": "Pink highlight groups meet a contiguous cream taper below.",
+        "micro_contrast": "The transition from rosy red to pale cream clarifies the root tip.",
+        "light_and_volume": "Left pink face is lit more strongly than the right dark-red outline.",
+        "material_continuity": "The white lower taper is attached to the pink bulb.",
+        "edge_variation": "Two leaves extend at different angles and the root tail narrows unevenly.",
+        "variant_identity": "The white tail and green fan distinguish it from beetroot and onion.",
+        "vanilla_comparison": "Beetroot provides the comparable bulb-and-leaf silhouette and colored skin volume.",
+        "functional_material_cues": "The red-to-white root and leafy crown identify a radish."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/raspberry.png": {
+      "sha256": "15e0bd726e7012510eb41860f84481c205e9a4e860dc88cec518b392af135baa",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/sweet_berries",
+          "minecraft": "1.21.1",
+          "sha256": "df3d2e43e671dd16d2b101e5e2273330e1bcae0bfe36cac5e8db68ce6ce7fc88"
+        }
+      ],
+      "comparison": "Native 1x and nearest-neighbor comparison: Sweet berries offer comparable cluster scale and red skin contrast. Upper surfaces are brighter than the lower contour of the bunch.",
+      "findings": {
+        "silhouette": "A squat irregular pink-red fruitlet bunch under a green stem.",
+        "cluster_structure": "Small rose highlights are separated by dark burgundy divisions.",
+        "micro_contrast": "Neighboring crimson and pink planes make each rounded lobe legible.",
+        "light_and_volume": "Upper surfaces are brighter than the lower contour of the bunch.",
+        "material_continuity": "Red skins keep coherent color across touching lobes.",
+        "edge_variation": "The outer edge has a rounded shoulder and a small lower protrusion.",
+        "variant_identity": "The squat compound berry differs from pointed strawberry and blue berry trio.",
+        "vanilla_comparison": "Sweet berries offer comparable cluster scale and red skin contrast.",
+        "functional_material_cues": "The joined red drupelets and stalk make a compound raspberry."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/strawberry.png": {
+      "sha256": "649f144fb9a0deb256772cb39e3000ea782c40c91bd3180143634f0a96eafbdf",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Native 1x and nearest-neighbor comparison: Apple provides the comparable red fruit skin and shaded outer contour. The brighter left shoulder and darker lower tip suggest rounded volume.",
+      "findings": {
+        "silhouette": "A heart-shaped pointed berry beneath a wide leafy cap.",
+        "cluster_structure": "Red front planes enclose small pale seed accents in separated locations.",
+        "micro_contrast": "Pale yellow seed points sit against darker red skin instead of arbitrary flecks.",
+        "light_and_volume": "The brighter left shoulder and darker lower tip suggest rounded volume.",
+        "material_continuity": "The green crown is attached to the top of the uninterrupted red body.",
+        "edge_variation": "The pointed bottom and unequal shoulders break the outline.",
+        "variant_identity": "Its pointed fruit with visible seeds differs from smooth round tomato.",
+        "vanilla_comparison": "Apple provides the comparable red fruit skin and shaded outer contour.",
+        "functional_material_cues": "A broad calyx and light seed marks identify strawberry."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/tomato.png": {
+      "sha256": "f47eec6cf39e9decda6a05eee0176b05f7afe2bf0cbc55d2408c3a58670092bf",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Native 1x and nearest-neighbor comparison: Apple demonstrates comparable red skin and a small stem; tomato keeps a flatter body. The lower and right edge turn into shadow beneath the lit face.",
+      "findings": {
+        "silhouette": "A broad flattened red fruit under a small lobed green calyx.",
+        "cluster_structure": "The left red highlight joins orange-red middle planes.",
+        "micro_contrast": "Subtle warm reds step toward darker burgundy along the right.",
+        "light_and_volume": "The lower and right edge turn into shadow beneath the lit face.",
+        "material_continuity": "The red rind is continuous below the separate leafy crown.",
+        "edge_variation": "The top dips around the calyx and the bottom is flattened.",
+        "variant_identity": "A smooth wide fruit differs from the ribbed pepper and seeded strawberry.",
+        "vanilla_comparison": "Apple demonstrates comparable red skin and a small stem; tomato keeps a flatter body.",
+        "functional_material_cues": "A broad juicy rind and star-like green crown indicate tomato."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/alder_planks.png": {
+      "sha256": "d9493c0decebcafb05535e5700c63c33e9916d7b43ea4f86575688efb3bff853",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "2bccdc1ef269b7ae6050d46b70071ead5c3ad4c3a16e3f6baf24fc629752b8bc"
+        },
+        {
+          "id": "minecraft:block/mangrove_planks",
+          "minecraft": "1.21.1",
+          "sha256": "b9b9969300ee9aa3e69c2dd908616ee3dfe5211fbf5706ea787803fd12196d3a"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: alder uses the owner-requested shared vanilla plank construction, comparable with the identical geometry of dark oak and mangrove; row 2 left darker interruption, row 3 right highlight interrupts the warm orange-brown sawn face. No transparency seams.",
+      "findings": {
+        "silhouette": "Four horizontal plank courses with staggered darker end marks at x 7, 14, 4 and 11.",
+        "cluster_structure": "The face has connected long board-tone areas, with row 2 left darker interruption, row 3 right highlight.",
+        "micro_contrast": "The warm orange-brown face carries lighter short strips and adjacent restrained darker grain.",
+        "light_and_volume": "The one-pixel dark course boundaries and lighter upper edges give the alder boards a shallow joint depth.",
+        "material_continuity": "All opaque pixels stay within the sawn warm orange-brown timber ramp across the tile.",
+        "edge_variation": "The vertical end marks shift horizontally by course (7, 14, 4 and 11), rather than aligning into a grid.",
+        "variant_identity": "The warm orange-brown ramp is the deliberate species distinction in the owner's shared processed-wood construction; raw bark and foliage must differ independently.",
+        "vanilla_comparison": "Dark oak and mangrove use the same four-course timber motif with different species colors; the tiled alder face remains readable at the same scale.",
+        "functional_material_cues": "Horizontal grain and dark joints at every fourth row distinguish alder as sawn boards from raw log bark."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/baobab_planks.png": {
+      "sha256": "32a679448d604ed82b53891aa79742f896a0d5d2cc6c4cfeea42e47d898c438c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "2bccdc1ef269b7ae6050d46b70071ead5c3ad4c3a16e3f6baf24fc629752b8bc"
+        },
+        {
+          "id": "minecraft:block/mangrove_planks",
+          "minecraft": "1.21.1",
+          "sha256": "b9b9969300ee9aa3e69c2dd908616ee3dfe5211fbf5706ea787803fd12196d3a"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: baobab uses the owner-requested shared vanilla plank construction, comparable with the identical geometry of dark oak and mangrove; row 1 broad left highlights, row 7 left shadow streak interrupts the light reddish tan sawn face. No transparency seams.",
+      "findings": {
+        "silhouette": "Four horizontal plank courses with staggered darker end marks at x 9, 12, 3 and 11.",
+        "cluster_structure": "The face has connected long board-tone areas, with row 1 broad left highlights, row 7 left shadow streak.",
+        "micro_contrast": "The light reddish tan face carries lighter short strips and adjacent restrained darker grain.",
+        "light_and_volume": "The one-pixel dark course boundaries and lighter upper edges give the baobab boards a shallow joint depth.",
+        "material_continuity": "All opaque pixels stay within the sawn light reddish tan timber ramp across the tile.",
+        "edge_variation": "The vertical end marks shift horizontally by course (9, 12, 3 and 11), rather than aligning into a grid.",
+        "variant_identity": "The light reddish tan ramp is the deliberate species distinction in the owner's shared processed-wood construction; raw bark and foliage must differ independently.",
+        "vanilla_comparison": "Dark oak and mangrove use the same four-course timber motif with different species colors; the tiled baobab face remains readable at the same scale.",
+        "functional_material_cues": "Horizontal grain and dark joints at every fourth row distinguish baobab as sawn boards from raw log bark."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/beech_planks.png": {
+      "sha256": "c9e25803e6cafe8495a7d869dd97f95181ddbac3591b84434d9edb065423ecff",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "2bccdc1ef269b7ae6050d46b70071ead5c3ad4c3a16e3f6baf24fc629752b8bc"
+        },
+        {
+          "id": "minecraft:block/mangrove_planks",
+          "minecraft": "1.21.1",
+          "sha256": "b9b9969300ee9aa3e69c2dd908616ee3dfe5211fbf5706ea787803fd12196d3a"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: beech uses the owner-requested shared vanilla plank construction, comparable with the identical geometry of dark oak and mangrove; row 2 left dark grain, row 3 middle light grain interrupts the pinkish pale beige sawn face. No transparency seams.",
+      "findings": {
+        "silhouette": "Four horizontal plank courses with staggered darker end marks at x 11, 7, 14 and 4.",
+        "cluster_structure": "The face has connected long board-tone areas, with row 2 left dark grain, row 3 middle light grain.",
+        "micro_contrast": "The pinkish pale beige face carries lighter short strips and adjacent restrained darker grain.",
+        "light_and_volume": "The one-pixel dark course boundaries and lighter upper edges give the beech boards a shallow joint depth.",
+        "material_continuity": "All opaque pixels stay within the sawn pinkish pale beige timber ramp across the tile.",
+        "edge_variation": "The vertical end marks shift horizontally by course (11, 7, 14 and 4), rather than aligning into a grid.",
+        "variant_identity": "The pinkish pale beige ramp is the deliberate species distinction in the owner's shared processed-wood construction; raw bark and foliage must differ independently.",
+        "vanilla_comparison": "Dark oak and mangrove use the same four-course timber motif with different species colors; the tiled beech face remains readable at the same scale.",
+        "functional_material_cues": "Horizontal grain and dark joints at every fourth row distinguish beech as sawn boards from raw log bark."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/cedar_planks.png": {
+      "sha256": "a07a04532c711048cab999e42b6100813f565ea54d2e9fdf46298f503ba18e7b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "2bccdc1ef269b7ae6050d46b70071ead5c3ad4c3a16e3f6baf24fc629752b8bc"
+        },
+        {
+          "id": "minecraft:block/mangrove_planks",
+          "minecraft": "1.21.1",
+          "sha256": "b9b9969300ee9aa3e69c2dd908616ee3dfe5211fbf5706ea787803fd12196d3a"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: cedar uses the owner-requested shared vanilla plank construction, comparable with the identical geometry of dark oak and mangrove; row 2 middle dark stroke and row 3 right highlight interrupts the muted warm reddish brown sawn face. No transparency seams.",
+      "findings": {
+        "silhouette": "Four horizontal plank courses with staggered darker end marks at x 3, 9, 5 and 12.",
+        "cluster_structure": "The face has connected long board-tone areas, with row 2 middle dark stroke and row 3 right highlight.",
+        "micro_contrast": "The muted warm reddish brown face carries lighter short strips and adjacent restrained darker grain.",
+        "light_and_volume": "The one-pixel dark course boundaries and lighter upper edges give the cedar boards a shallow joint depth.",
+        "material_continuity": "All opaque pixels stay within the sawn muted warm reddish brown timber ramp across the tile.",
+        "edge_variation": "The vertical end marks shift horizontally by course (3, 9, 5 and 12), rather than aligning into a grid.",
+        "variant_identity": "The muted warm reddish brown ramp is the deliberate species distinction in the owner's shared processed-wood construction; raw bark and foliage must differ independently.",
+        "vanilla_comparison": "Dark oak and mangrove use the same four-course timber motif with different species colors; the tiled cedar face remains readable at the same scale.",
+        "functional_material_cues": "Horizontal grain and dark joints at every fourth row distinguish cedar as sawn boards from raw log bark."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/date_palm_planks.png": {
+      "sha256": "b92977bd1773e41392ac1617bf605465be2531c7df5f1941c1c12bd81cb7513d",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "2bccdc1ef269b7ae6050d46b70071ead5c3ad4c3a16e3f6baf24fc629752b8bc"
+        },
+        {
+          "id": "minecraft:block/mangrove_planks",
+          "minecraft": "1.21.1",
+          "sha256": "b9b9969300ee9aa3e69c2dd908616ee3dfe5211fbf5706ea787803fd12196d3a"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: date_palm uses the owner-requested shared vanilla plank construction, comparable with the identical geometry of dark oak and mangrove; row 1 two extended highlights and row 11 central darker grain interrupts the dry ochre-gold sawn face. No transparency seams.",
+      "findings": {
+        "silhouette": "Four horizontal plank courses with staggered darker end marks at x 9, 12, 3 and 11.",
+        "cluster_structure": "The face has connected long board-tone areas, with row 1 two extended highlights and row 11 central darker grain.",
+        "micro_contrast": "The dry ochre-gold face carries lighter short strips and adjacent restrained darker grain.",
+        "light_and_volume": "The one-pixel dark course boundaries and lighter upper edges give the date_palm boards a shallow joint depth.",
+        "material_continuity": "All opaque pixels stay within the sawn dry ochre-gold timber ramp across the tile.",
+        "edge_variation": "The vertical end marks shift horizontally by course (9, 12, 3 and 11), rather than aligning into a grid.",
+        "variant_identity": "The dry ochre-gold ramp is the deliberate species distinction in the owner's shared processed-wood construction; raw bark and foliage must differ independently.",
+        "vanilla_comparison": "Dark oak and mangrove use the same four-course timber motif with different species colors; the tiled date_palm face remains readable at the same scale.",
+        "functional_material_cues": "Horizontal grain and dark joints at every fourth row distinguish date_palm as sawn boards from raw log bark."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/fir_planks.png": {
+      "sha256": "fdeaab4574cdfe31bc65b404ebace0b264527b3c2dc4ae7d2a3e7ec7da5179ad",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "2bccdc1ef269b7ae6050d46b70071ead5c3ad4c3a16e3f6baf24fc629752b8bc"
+        },
+        {
+          "id": "minecraft:block/mangrove_planks",
+          "minecraft": "1.21.1",
+          "sha256": "b9b9969300ee9aa3e69c2dd908616ee3dfe5211fbf5706ea787803fd12196d3a"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: fir uses the owner-requested shared vanilla plank construction, comparable with the identical geometry of dark oak and mangrove; row 2 left darker patch, row 3 right elongated highlight interrupts the pale yellow with olive undertone sawn face. No transparency seams.",
+      "findings": {
+        "silhouette": "Four horizontal plank courses with staggered darker end marks at x 12, 3, 9 and 5.",
+        "cluster_structure": "The face has connected long board-tone areas, with row 2 left darker patch, row 3 right elongated highlight.",
+        "micro_contrast": "The pale yellow with olive undertone face carries lighter short strips and adjacent restrained darker grain.",
+        "light_and_volume": "The one-pixel dark course boundaries and lighter upper edges give the fir boards a shallow joint depth.",
+        "material_continuity": "All opaque pixels stay within the sawn pale yellow with olive undertone timber ramp across the tile.",
+        "edge_variation": "The vertical end marks shift horizontally by course (12, 3, 9 and 5), rather than aligning into a grid.",
+        "variant_identity": "The pale yellow with olive undertone ramp is the deliberate species distinction in the owner's shared processed-wood construction; raw bark and foliage must differ independently.",
+        "vanilla_comparison": "Dark oak and mangrove use the same four-course timber motif with different species colors; the tiled fir face remains readable at the same scale.",
+        "functional_material_cues": "Horizontal grain and dark joints at every fourth row distinguish fir as sawn boards from raw log bark."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/maple_planks.png": {
+      "sha256": "9bcc302d4d6134158409a7d7504331fce9e88a6e1702440d30e33afeebb5f1cc",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "2bccdc1ef269b7ae6050d46b70071ead5c3ad4c3a16e3f6baf24fc629752b8bc"
+        },
+        {
+          "id": "minecraft:block/mangrove_planks",
+          "minecraft": "1.21.1",
+          "sha256": "b9b9969300ee9aa3e69c2dd908616ee3dfe5211fbf5706ea787803fd12196d3a"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: maple uses the owner-requested shared vanilla plank construction, comparable with the identical geometry of dark oak and mangrove; row 2 left dark stroke, row 3 left-center highlight interrupts the cream-gold sawn face. No transparency seams.",
+      "findings": {
+        "silhouette": "Four horizontal plank courses with staggered darker end marks at x 4, 11, 7 and 14.",
+        "cluster_structure": "The face has connected long board-tone areas, with row 2 left dark stroke, row 3 left-center highlight.",
+        "micro_contrast": "The cream-gold face carries lighter short strips and adjacent restrained darker grain.",
+        "light_and_volume": "The one-pixel dark course boundaries and lighter upper edges give the maple boards a shallow joint depth.",
+        "material_continuity": "All opaque pixels stay within the sawn cream-gold timber ramp across the tile.",
+        "edge_variation": "The vertical end marks shift horizontally by course (4, 11, 7 and 14), rather than aligning into a grid.",
+        "variant_identity": "The cream-gold ramp is the deliberate species distinction in the owner's shared processed-wood construction; raw bark and foliage must differ independently.",
+        "vanilla_comparison": "Dark oak and mangrove use the same four-course timber motif with different species colors; the tiled maple face remains readable at the same scale.",
+        "functional_material_cues": "Horizontal grain and dark joints at every fourth row distinguish maple as sawn boards from raw log bark."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/palm_planks.png": {
+      "sha256": "ee02f27514c92f5e2e3206df84fd551b83ea435bb734ef8b51281d523ecc1c16",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "2bccdc1ef269b7ae6050d46b70071ead5c3ad4c3a16e3f6baf24fc629752b8bc"
+        },
+        {
+          "id": "minecraft:block/mangrove_planks",
+          "minecraft": "1.21.1",
+          "sha256": "b9b9969300ee9aa3e69c2dd908616ee3dfe5211fbf5706ea787803fd12196d3a"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: palm uses the owner-requested shared vanilla plank construction, comparable with the identical geometry of dark oak and mangrove; row 2 short center highlights, row 15 near-right darker grain interrupts the pale sandy brown sawn face. No transparency seams.",
+      "findings": {
+        "silhouette": "Four horizontal plank courses with staggered darker end marks at x 9, 12, 3 and 11.",
+        "cluster_structure": "The face has connected long board-tone areas, with row 2 short center highlights, row 15 near-right darker grain.",
+        "micro_contrast": "The pale sandy brown face carries lighter short strips and adjacent restrained darker grain.",
+        "light_and_volume": "The one-pixel dark course boundaries and lighter upper edges give the palm boards a shallow joint depth.",
+        "material_continuity": "All opaque pixels stay within the sawn pale sandy brown timber ramp across the tile.",
+        "edge_variation": "The vertical end marks shift horizontally by course (9, 12, 3 and 11), rather than aligning into a grid.",
+        "variant_identity": "The pale sandy brown ramp is the deliberate species distinction in the owner's shared processed-wood construction; raw bark and foliage must differ independently.",
+        "vanilla_comparison": "Dark oak and mangrove use the same four-course timber motif with different species colors; the tiled palm face remains readable at the same scale.",
+        "functional_material_cues": "Horizontal grain and dark joints at every fourth row distinguish palm as sawn boards from raw log bark."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/pine_planks.png": {
+      "sha256": "a976ac49e00f424bd1e53403d9e69e71617416dc4866dbdcdb049205a9ee7cb2",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dark_oak_planks",
+          "minecraft": "1.21.1",
+          "sha256": "2bccdc1ef269b7ae6050d46b70071ead5c3ad4c3a16e3f6baf24fc629752b8bc"
+        },
+        {
+          "id": "minecraft:block/mangrove_planks",
+          "minecraft": "1.21.1",
+          "sha256": "b9b9969300ee9aa3e69c2dd908616ee3dfe5211fbf5706ea787803fd12196d3a"
+        }
+      ],
+      "comparison": "Actual native and 3x3 tiled review: pine uses the owner-requested shared vanilla plank construction, comparable with the identical geometry of dark oak and mangrove; row 2 left darker mark, row 7 right light stretch interrupts the honey-orange sawn face. No transparency seams.",
+      "findings": {
+        "silhouette": "Four horizontal plank courses with staggered darker end marks at x 5, 12, 3 and 9.",
+        "cluster_structure": "The face has connected long board-tone areas, with row 2 left darker mark, row 7 right light stretch.",
+        "micro_contrast": "The honey-orange face carries lighter short strips and adjacent restrained darker grain.",
+        "light_and_volume": "The one-pixel dark course boundaries and lighter upper edges give the pine boards a shallow joint depth.",
+        "material_continuity": "All opaque pixels stay within the sawn honey-orange timber ramp across the tile.",
+        "edge_variation": "The vertical end marks shift horizontally by course (5, 12, 3 and 9), rather than aligning into a grid.",
+        "variant_identity": "The honey-orange ramp is the deliberate species distinction in the owner's shared processed-wood construction; raw bark and foliage must differ independently.",
+        "vanilla_comparison": "Dark oak and mangrove use the same four-course timber motif with different species colors; the tiled pine face remains readable at the same scale.",
+        "functional_material_cues": "Horizontal grain and dark joints at every fourth row distinguish pine as sawn boards from raw log bark."
+      }
     }
   },
-  "review_status": "DRAFT / BLOCKED — only four of ten revised PNGs accepted; 108 additional project PNGs have no review record. Not eligible for compilation or release under current main lock.",
+  "review_status": "DRAFT/BLOCKED: 25 accepted of 118; six prior rejected wood candidates; all remaining unaccepted.",
   "reference_provenance": "Actual PNGs from InventivetalentDev/minecraft-assets, 1.21.1 branch; inspected at original and nearest-neighbor 4x. Official client SHA-1 could not be verified in this environment. No vanilla assets included.",
   "client_status": "NOT_RUN"
 }
