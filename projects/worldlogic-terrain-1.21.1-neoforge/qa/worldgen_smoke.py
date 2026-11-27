@@ -71,7 +71,7 @@ def unpack(data, index, bits):
     per = 64 // bits
     return (int(data[index // per]) >> ((index % per) * bits)) & ((1 << bits) - 1)
 
-def surface_biomes(chunk):
+def surface_biomes(chunk, substrates=None):
     sections = {int(sec["Y"]): sec for sec in chunk.get("sections", [])}
     if not sections:
         return Counter()
@@ -96,7 +96,17 @@ def surface_biomes(chunk):
         if not palette:
             continue
         index = 0 if len(palette)==1 else unpack(biomes["data"], ((y%16)//4)*16+((i//16)//4)*4+(i%16)//4, max(1,(len(palette)-1).bit_length()))
-        counts[str(palette[index])] += 1
+        name = str(palette[index])
+        counts[name] += 1
+        if substrates is not None:
+            ground_y = y - 1
+            ground_sec = sections.get(ground_y // 16)
+            if ground_sec is not None:
+                states = ground_sec.get("block_states", {})
+                blocks = states.get("palette", [])
+                if blocks:
+                    bi = 0 if len(blocks) == 1 else unpack(states["data"], (ground_y % 16) * 256 + i, max(4, (len(blocks)-1).bit_length()))
+                    substrates.setdefault(name, Counter())[str(blocks[bi]["Name"])] += 1
     return counts
 
 def read_chunk(region, cx, cz):
@@ -126,24 +136,27 @@ def scan(region, positions):
     counts, biomes, full = Counter(), set(), 0
     addon_columns, grass_columns, meadow_columns = set(), set(), set()
     surface = Counter()
+    substrates = {}
+    tall_columns = set()
     for cx, cz in positions:
         chunk = read_chunk(region, cx, cz)
         if chunk is None or str(chunk.get("Status", "")) not in {"minecraft:full", "full"}:
             continue
         full += 1
-        surface.update(surface_biomes(chunk))
+        surface.update(surface_biomes(chunk, substrates))
         for section in chunk.get("sections", []):
             biomes.update(map(str, section.get("biomes", {}).get("palette", [])))
             states = section.get("block_states", {})
             palette = [str(x["Name"]) for x in states.get("palette", [])]
             targets = {i: name.split(":", 1)[1] for i, name in enumerate(palette)
-                       if name.startswith("worldlogicterrain:") or name == "minecraft:short_grass" or (name.startswith("minecraft:") and name.endswith(("_log","_leaves")))}
+                       if name.startswith("worldlogicterrain:") or name in {"minecraft:short_grass","minecraft:tall_grass"} or (name.startswith("minecraft:") and name.endswith(("_log","_leaves")))}
             if not targets:
                 continue
             if len(palette) == 1:
                 counts[targets[0]] += 4096
                 for i in range(256):
                     if palette[0]=="minecraft:short_grass": grass_columns.add((cx,cz,i))
+                    elif palette[0]=="minecraft:tall_grass": tall_columns.add((cx,cz,i))
                     elif palette[0].startswith("worldlogicterrain:") and not targets[0].endswith(("_log","_leaves","_planks","_sapling")): addon_columns.add((cx,cz,i))
                     if targets[0] in MEADOW:
                         meadow_columns.add((cx*16 + i%16, cz*16 + i//16))
@@ -157,6 +170,7 @@ def scan(region, positions):
                 if index in targets:
                     counts[targets[index]] += 1
                     if palette[index]=="minecraft:short_grass": grass_columns.add((cx,cz,i%256))
+                    elif palette[index]=="minecraft:tall_grass": tall_columns.add((cx,cz,i%256))
                     elif palette[index].startswith("worldlogicterrain:") and not targets[index].endswith(("_log","_leaves","_planks","_sapling")): addon_columns.add((cx,cz,i%256))
                     if targets[index] in MEADOW:
                         meadow_columns.add((cx*16 + i%16, cz*16 + (i%256)//16))
@@ -181,7 +195,10 @@ def scan(region, positions):
     gap_tiles = len({tile(p) for p in grass_columns} - {tile(p) for p in addon_columns})
     distribution = {"meadow_clusters_ge4": sum(n >= 4 for n in clusters),
                     "largest_meadow_cluster": max(clusters, default=0),
-                    "grass_only_gap_tiles_8x8": gap_tiles}
+                    "grass_only_gap_tiles_8x8": gap_tiles,
+                    "vanilla_tall_grass_columns": len(tall_columns),
+                    "tall_grass_tiles_8x8": len({tile(p) for p in tall_columns}),
+                    "surface_substrates_by_biome": {k:dict(v) for k,v in substrates.items()}}
     return full, biomes, counts, len(addon_columns), len(grass_columns), distribution, surface
 
 def main():
@@ -310,7 +327,7 @@ def main():
                     conn.cmd("forceload remove "+force)
                     require(full==len(positions),"Full chunk generation timed out "+target)
                     surface_count=surface.get(target,0)
-                    print("Surface columns",target,surface_count,flush=True)
+                    print("Surface columns",target,surface_count,"ground",distribution.get("surface_substrates_by_biome",{}).get(target,{}),flush=True)
                     if surface_count<32: continue
                     matching=sum(counts.get(n,0) for n in expected)
                     forage_count=sum(counts.get(n,0) for n in forage.get(biome,set()))

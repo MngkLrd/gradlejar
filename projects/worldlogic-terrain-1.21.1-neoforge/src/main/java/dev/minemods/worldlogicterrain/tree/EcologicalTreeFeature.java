@@ -72,6 +72,11 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         int startX=origin.getX()&~15,startZ=origin.getZ()&~15;
         long seed=level.getSeed();
         List<BlockPos> trunks=new ArrayList<>();
+        List<BlockPos> coastCells=new ArrayList<>();
+        for(int dx:new int[]{2,8,13})for(int dz:new int[]{2,8,13}){
+            var shore=LandscapeMosaic.surface(level,startX+dx,startZ+dz);
+            if(LandscapeMosaic.habitat(level,shore,tag("coast"))!=null)coastCells.add(shore);
+        }
         boolean placed=false,deadwood=false;
         // Sample every 4x4 cell before extra boreal attempts. Small biome fragments
         // must not depend on a single random origin or a handful of lucky columns.
@@ -86,11 +91,12 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             // High latitudes can have steep regional relief but still contain real soil benches.
             String name=id(biome);
             boolean mangrove=name.contains("mangrove");
+            double coastal=zone==Zone.COAST?1:coastalInfluence(pos,coastCells);
             BlockState ground=level.getBlockState(pos.below());
             if(ground.is(Blocks.SNOW)&&level.ensureCanWrite(pos.below(2))&&soil(level.getBlockState(pos.below(2)))){
                 pos=pos.below();ground=level.getBlockState(pos.below());
             }
-            if(!soil(ground)&&!(zone==Zone.COAST&&ground.is(BlockTags.SAND))){
+            if(!soil(ground)&&!((zone==Zone.COAST||coastal>.35)&&ground.is(BlockTags.SAND))){
                 // Mangrove roots alone may start in shallow water; no water or terrain is replaced by this selection step.
                 if(!mangrove||!ground.is(Blocks.WATER))continue;
                 BlockPos shallow=pos.below();
@@ -100,6 +106,8 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             var local=sampler.sample(pos,biome,ground);
             double temperature=local.map(CoreHabitat.Sample::temperature).orElse((double)biome.value().getBaseTemperature()*25.0);
             if(zone==Zone.COAST&&temperature<18)continue;
+            boolean coastalTransition=temperature>=22&&coastal>.15&&(zone==Zone.TROPICAL||zone==Zone.DRY||zone==Zone.TEMPERATE);
+            if(ground.is(BlockTags.SAND)&&zone!=Zone.COAST&&!coastalTransition&&!mangrove)continue;
             double field=LandscapeMosaic.forest(seed,x,z);
             double base=switch(zone){
                 case OPEN -> name.equals("snowy_plains")?.035:.105;
@@ -117,7 +125,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             boolean borealStand=zone==Zone.BOREAL&&!name.equals("forest_tundra");
             if(local.isPresent()){
                 var h=local.get();
-                if(h.zone().equals("MARINE")||h.zone().equals("SUBTERRANEAN")||h.slope()>(zone==Zone.BOREAL?55:42)||h.surface().equals("ROCKY")&&zone!=Zone.BOREAL||h.surface().equals("SANDY")&&!mangrove&&zone!=Zone.COAST)continue;
+                if(h.zone().equals("MARINE")||h.zone().equals("SUBTERRANEAN")||h.slope()>(zone==Zone.BOREAL?55:42)||h.surface().equals("ROCKY")&&zone!=Zone.BOREAL||h.surface().equals("SANDY")&&!mangrove&&zone!=Zone.COAST&&!coastalTransition)continue;
                 if((h.temperature() < -10 && zone!=Zone.BOREAL)||name.equals("arctic_wetland"))continue;
                 // Biome identity is authoritative for forest presence; temperature
                 // and moisture select species rather than erasing a mapped taiga.
@@ -136,7 +144,9 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             boolean close=false;
             for(var previous:trunks)if(Math.abs(previous.getX()-x)<=3&&Math.abs(previous.getZ()-z)<=3){close=true;break;}
             if(close)continue;
-            Form form=choose(zone,name,local,random);
+            boolean shorePalm=coastalTransition&&(ground.is(BlockTags.SAND)||random.nextDouble()<coastal*.48);
+            Form form=choose(shorePalm?Zone.COAST:zone,name,local,random,field);
+            if(ground.is(BlockTags.SAND)&&zone!=Zone.COAST&&!shorePalm&&!mangrove)continue;
             var key=ResourceKey.create(Registries.CONFIGURED_FEATURE,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","tree_"+form.feature()));
             if(level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(key).value().place(level,generator,random,pos)){
                 placed=true;trunks.add(pos);
@@ -165,22 +175,32 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         }
         return placed;
     }
+    static double coastalInfluence(BlockPos pos,List<BlockPos> shore){
+        double result=0;
+        for(var p:shore){
+            double distance=Math.hypot((double)p.getX()-pos.getX(),(double)p.getZ()-pos.getZ());
+            result=Math.max(result,1-distance/12.0);
+        }
+        return LandscapeMosaic.clamp(result,0,1);
+    }
     private static Form form(String feature,String wood){return new Form(feature,wood);}
-    private static Form choose(Zone zone,String name,Optional<CoreHabitat.Sample> local,RandomSource random){
+    private static Form choose(Zone zone,String name,Optional<CoreHabitat.Sample> local,RandomSource random,double cover){
         double wind=local.map(CoreHabitat.Sample::wind).orElse(0.0);
         double fertility=local.map(CoreHabitat.Sample::fertility).orElse(.55);
         double moisture=local.map(CoreHabitat.Sample::moisture).orElse(.5);
         double river=local.map(CoreHabitat.Sample::riverbank).orElse(0.0);
-        boolean young=wind>.72||fertility<.28||random.nextInt(5)==0;
+        // Young trees favor edges/disturbed or infertile sites; old forms favor stable dense stands.
+        boolean young=wind>.72||fertility<.28||random.nextDouble()<(cover<.36?.38:.14);
+        boolean oldStand=!young&&cover>.62&&fertility>.42&&wind<.65;
         return switch(zone){
-            case OPEN -> wind>.62?form("oak_windswept","oak"):young?form("oak_young","oak"):random.nextInt(14)==0?form("oak_ancient","oak"):form("oak_spreading","oak");
+            case OPEN -> wind>.62?form("oak_windswept","oak"):young?form("oak_young","oak"):random.nextInt(oldStand?9:20)==0?form("oak_ancient","oak"):form("oak_spreading","oak");
             case TEMPERATE -> {
                 if(!name.contains("birch")&&random.nextInt(5)==0)yield form(young?"maple_young":"maple_spreading","maple");
                 if(!name.contains("birch")&&moisture>.45&&random.nextInt(5)==0)yield form(young?"beech_young":"beech_tall","beech");
                 if(name.contains("birch")||random.nextInt(5)==0)yield form(young?(random.nextBoolean()?"birch_pioneer":"birch_young"):"birch_tall","birch");
                 if(name.equals("dark_forest")&&!young&&random.nextInt(3)==0)yield form("dark_oak_old","dark_oak");
                 if(moisture>.68&&river>.45&&random.nextInt(3)==0)yield form(young?"willow_young":"willow_spreading","willow");
-                yield form(wind>.68?"oak_windswept":young?"oak_young":random.nextInt(15)==0?"oak_ancient":"oak_spreading","oak");
+                yield form(wind>.68?"oak_windswept":young?"oak_young":random.nextInt(oldStand?8:22)==0?"oak_ancient":"oak_spreading","oak");
             }
             case BOREAL -> {
                 if(name.equals("forest_tundra")||name.equals("light_conifer_taiga")||random.nextInt(4)==0)yield form(wind>.62||name.equals("forest_tundra")?"larch_exposed":young?"larch_young":"larch_tall","larch");
@@ -188,20 +208,20 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
                 if(moisture>.60&&random.nextInt(3)==0)yield form(young?"fir_young":"fir_tall","fir");
                 if(!name.equals("forest_tundra")&&random.nextInt(5)==0)yield form(young?"cedar_young":"cedar_spreading","cedar");
                 if(young)yield form("spruce_young","spruce");
-                if(!young&&fertility>.5&&(name.contains("old_growth")||name.contains("dark_conifer"))&&random.nextInt(7)==0)yield form("spruce_old","spruce");
+                if(!young&&fertility>.5&&(oldStand||name.contains("old_growth")||name.contains("dark_conifer"))&&random.nextInt(oldStand?5:9)==0)yield form("spruce_old","spruce");
                 yield moisture>.55||random.nextBoolean()?form("spruce_dense","spruce"):form("pine_tall","pine");
             }
             case WET -> name.contains("mangrove")?form("mangrove_coast","mangrove"):random.nextBoolean()?form(young?"alder_young":"alder_spreading","alder"):form(young?"willow_young":"willow_spreading","willow");
 
             case COAST -> moisture<.45?form(young?"date_palm_young":"date_palm_tall","date_palm"):form(young?"palm_young":"palm_leaning","palm");
             case DRY -> {
-                if(local.map(CoreHabitat.Sample::temperature).orElse(24.0)>21&&random.nextInt(5)==0)yield form(young?"baobab_young":"baobab_ancient","baobab");
+                if(local.map(CoreHabitat.Sample::temperature).orElse(24.0)>21&&random.nextInt(5)==0)yield form(oldStand||!young&&random.nextInt(3)==0?"baobab_ancient":"baobab_young","baobab");
                 yield form(young?"acacia_stunted":"acacia_spreading","acacia");
             }
             case TROPICAL -> {
                 if(random.nextInt(5)==0)yield form(young?"ebony_young":"ebony_spreading","ebony");
                 if(random.nextInt(3)==0)yield form(young?"mahogany_young":"mahogany_canopy","mahogany");
-                yield form(!young&&fertility>.46&&random.nextInt(6)==0?"jungle_giant":"jungle_canopy","jungle");
+                yield form(oldStand&&random.nextInt(5)==0?"jungle_giant":"jungle_canopy","jungle");
             }
             case CHERRY -> form("cherry_spreading","cherry");
             default -> form("oak_young","oak");

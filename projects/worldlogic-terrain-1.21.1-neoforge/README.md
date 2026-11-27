@@ -35,3 +35,5 @@ RC31 additive water prediction: prefer actual registered fluid, otherwise call c
 
 
 1.2.4-rc1 landscape ecology: shared continuous seeded large-scale stand/clearing and grassland fields; stratified local forest/forage searches, surface and soil/quart biome boundary checks, climate-aware species recruitment and understory, variable tall-grass density, twelve bounded edible populations. Existing plant IDs and configured patch references retained; no new textures, aquatic changes, soil simulation, retrogen or new mandatory core version. Forest taiga candidate regression is a fix attempt, not a confirmed pass until natural QA. Legacy RC20 fallback remains. Real client and new core RC32/33 compatibility are not established.
+
+1.2.4-rc1 includes age weighting (young forms at edges/poor soil; ancient forms favored in suitable dense stands) and a bounded twelve-block warm coastal transition based on local coastal cells. Natural-world QA now reports actual surface substrates by biome and tall-grass coverage alongside the unchanged legacy acceptance thresholds. No terrain reshaping or water changes.

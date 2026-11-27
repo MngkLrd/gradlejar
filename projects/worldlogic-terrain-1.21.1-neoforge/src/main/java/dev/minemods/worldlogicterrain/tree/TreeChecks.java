@@ -189,6 +189,8 @@ public final class TreeChecks {
                 min=Math.min(min,a);max=Math.max(max,a);
             }
             require(min<.25&&max>.75,"No actual forest gaps/stands in seeded field");
+            var shore=java.util.List.of(CENTER);
+            require(EcologicalTreeFeature.coastalInfluence(CENTER,shore)==1&&EcologicalTreeFeature.coastalInfluence(CENTER.east(6),shore)==.5&&EcologicalTreeFeature.coastalInfluence(CENTER.east(12),shore)==0,"Coastal transition gradient");
             require(!EcologicalTreeFeature.soil(Blocks.STONE.defaultBlockState())&&!EcologicalTreeFeature.soil(Blocks.ICE.defaultBlockState())&&EcologicalTreeFeature.soil(Blocks.GRASS_BLOCK.defaultBlockState()),"Tree substrate policy");
             if(CoreHabitat.available())require(CoreHabitat.batch(l,l.getChunkSource().getGenerator()).sample(CENTER,l.getBiome(CENTER),l.getBlockState(CENTER.below())).isEmpty(),"Unexpected core sampler on flat generator");
         }finally{
