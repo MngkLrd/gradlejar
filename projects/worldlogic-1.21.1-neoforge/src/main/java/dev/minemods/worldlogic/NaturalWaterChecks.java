@@ -78,7 +78,7 @@ final class NaturalWaterChecks{
     l.setBlock(origin,f.block.get().defaultBlockState(),2|16);
     require(NativeWaterTicks.needsTick(l,origin),"exposed source rearm "+f.id);
     // Execute the actual Fluid tick, not an emulated movement equation.
-    var fs=l.getFluidState(origin);fs.getType().tick(l,origin,fs);
+    var fs=l.getFluidState(origin);fs.tick(l,origin);
     require(NaturalFluids.kind(l.getFluidState(origin.below()).getType())==f.kind&&!l.getFluidState(origin.below()).isSource(),"downward fluid spread "+f.id);
     for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)for(int y=-1;y<=2;y++)l.setBlock(origin.offset(x,y,z),f.block.get().defaultBlockState(),2|16);
     pig.setPos(origin.getX()+.5,origin.getY()+.1,origin.getZ()+.5);pig.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);pig.baseTick();

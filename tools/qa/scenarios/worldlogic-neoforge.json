@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC37 production core/API regression",
+  "name": "World Logic NeoForge RC38 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1703,6 +1703,17 @@
         {
           "backend": "server",
           "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
+    },
+    {
+      "id": "rc38-regional-drainage",
+      "kind": "mechanic",
+      "subject": "Deterministic ocean-rooted graph, converging paths, monotonic grade, negative inland and actual terrain veto, centerline geometry and bounded sampling; natural full chunk evidence separate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
         }
       ]
     }

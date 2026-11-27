@@ -22,8 +22,8 @@ public abstract class GeologyCarverMixin {
  private void worldlogic$geologicalCaves(WorldGenRegion region,long seed,RandomState random,BiomeManager biomes,StructureManager structures,ChunkAccess chunk,GenerationStep.Carving step,CallbackInfo ci){
   if(!GeologyGeneration.enabled((ChunkGenerator)(Object)this))return;
   if(step==GenerationStep.Carving.AIR){
-   GeologyGeneration.carve(seed,chunk);
    dev.minemods.worldlogic.RiverTerrain.prepare((NoiseBasedChunkGenerator)(Object)this,random,region.registryAccess(),chunk);
+   GeologyGeneration.carve(seed,chunk);
   }
   ci.cancel();
  }

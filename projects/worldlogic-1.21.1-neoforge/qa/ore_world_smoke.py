@@ -83,17 +83,21 @@ def main():
             # Probe five separated catchments, then require real generated water
             # and neighbor links instead of merely a predicted river line.
             river_sites=[]
-            for x,z in [(-24576,-32768),(-12288,-32768),(10240,-40960),(20480,-38912),(6144,14336)]:
+            river_regions=[(-24576,-32768),(-12288,-32768),(10240,-40960),(20480,-38912),(6144,14336),
+                           (-18432,-30720),(-20480,-30720),(-10240,-32768),(8192,-38912),(18432,-38912)]
+            for x,z in river_regions:
                 raw=conn.cmd(f"execute positioned {x} 80 {z} run worldlogic river_probe")
                 match=re.search(r"RIVER_PROBE x=(-?\d+) z=(-?\d+)",raw)
                 if match:
                     rx,rz=(int(v) for v in match.groups())
-                    river_sites.append(("river_"+str(len(river_sites)),rx,rz))
+                    if all((rx-x0)**2+(rz-z0)**2>=384**2 for _,x0,z0 in river_sites):
+                        river_sites.append(("river_"+str(len(river_sites)),rx,rz))
+                    if len(river_sites)>=5:break
             report["river_candidates"]=river_sites
             require(len(river_sites)>=3,"Insufficient independent modeled river catchments")
             sites.extend(river_sites)
             headwaters=[]
-            for x,z in [(-24576,-32768),(-12288,-32768),(10240,-40960),(20480,-38912),(6144,14336)]:
+            for x,z in river_regions:
                 raw=conn.cmd(f"execute positioned {x} 80 {z} run worldlogic river_probe headwater")
                 match=re.search(r"RIVER_PROBE x=(-?\d+) z=(-?\d+) discharge=([0-9.]+)",raw)
                 if match and 6<=float(match.group(3))<12:
