@@ -42,9 +42,8 @@ public final class Hydration {
  private static final WeakHashMap<ServerPlayer,Vec3> LAST_POS=new WeakHashMap<>();
  private static final WeakHashMap<ServerPlayer,Long> LAST_SIP=new WeakHashMap<>();
  public Hydration(IEventBus modBus){
-  if(WorldLogicApi.API_VERSION!=1)throw new IllegalStateException("Unsupported World Logic API");
-  // Read the revision reflectively to avoid Java compile-time inlining of the core constant.
-  try {if(WorldLogicApi.class.getField("API_REVISION").getInt(null)<7)throw new IllegalStateException("Hydration requires World Logic API revision 7");}
+  // Read both constants at runtime rather than inlining compile-time values.
+  try {if(WorldLogicApi.class.getField("API_VERSION").getInt(null)!=1||WorldLogicApi.class.getField("API_REVISION").getInt(null)<7)throw new IllegalStateException("Hydration requires World Logic API v1 revision 7 or later");}
   catch(ReflectiveOperationException e){throw new IllegalStateException("World Logic API revision unavailable",e);}
   modBus.addListener(HydrationSync::register);
   var bus=NeoForge.EVENT_BUS;
@@ -142,10 +141,13 @@ public final class Hydration {
  static void sip(ServerPlayer p){
   if(!active(p)||!p.isShiftKeyDown()||!p.getMainHandItem().isEmpty()||!p.getOffhandItem().isEmpty())return;
   long now=p.serverLevel().getGameTime();
-  if(now-LAST_SIP.getOrDefault(p,now-30)<30)return;
+  long previous=LAST_SIP.getOrDefault(p,now-30);
+  if(now>=previous&&now-previous<30)return;
+  LAST_SIP.put(p,now);
+  if(state(p).water()>=100)return;
   var profile=targeted(p);
-  if(profile==null||state(p).water()>=100)return;
-  LAST_SIP.put(p,now);applyDrink(p,quality(profile),125,profile.contaminationRisk());
+  if(profile==null)return;
+  applyDrink(p,quality(profile),125,profile.contaminationRisk());
   p.level().playSound(null,p.getX(),p.getY(),p.getZ(),SoundEvents.GENERIC_DRINK,SoundSource.PLAYERS,.6f,1f);
  }
  private static void tooltip(net.neoforged.neoforge.event.entity.player.ItemTooltipEvent e){
