@@ -20,7 +20,7 @@ If coverage mappings or exceptions need extra structure, keep them in an optiona
 
 ## Execution and evidence
 
-Commit scenarios and their profile references, and use the existing Minecraft Mod Build Hub on GitHub Actions. Inspect actual QA reports and logs for every declared target and exact production JAR SHA-256. Fix failures within scope and rerun. Record unsupported or unexecuted required checks explicitly; do not claim they passed. Existing release gates and client approval requirements remain unchanged. A server assertion is not evidence of GUI/rendering correctness. No human operation of the test bot is required.
+Commit scenarios and their profile references, and use the existing Minecraft Mod Build Hub on GitHub Actions. Inspect actual QA reports and logs for every declared target and exact production JAR SHA-256. Fix failures within scope and rerun. Record unsupported or unexecuted required checks explicitly; do not claim they passed. Existing release gates and client approval requirements remain unchanged. A server assertion is not evidence of GUI/rendering correctness. Follow [Visual QA and art standard](VISUAL-QA.md) for visual assets, HUD and menus. No human operation of the test bot is required.
 
 Keep shared infrastructure stable. A missing backend or action is a limitation to report, not permission to bypass the gate or silently invent a supported action. Only make shared tooling changes under the repository's existing scope rules.
 

@@ -1,0 +1,50 @@
+package dev.minemods.hydration;
+
+import java.lang.reflect.Method;
+import java.util.Optional;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.fml.ModList;
+import org.slf4j.LoggerFactory;
+
+/** Public addon APIs only; optional class resolution once, never access foreign NBT. */
+public final class PhysiologyBridge {
+ public record Sample(double bodyC,int bleeding,double bloodFraction,boolean thermalAvailable,boolean traumaAvailable){}
+ private record Endpoint(Method status,Method a,Method b,Method c,Method regionBleed){}
+ private static final org.slf4j.Logger LOG=LoggerFactory.getLogger("hydration");
+ private static Endpoint thermal,trauma;
+ private static boolean initialized,thermalFailed,traumaFailed;
+ private PhysiologyBridge(){}
+ private static Endpoint resolve(String mod,String api,boolean isThermal){
+  if(!ModList.get().isLoaded(mod))return null;
+  try{
+   Class<?> c=Class.forName(api);
+   if(c.getField("API_VERSION").getInt(null)!=1)throw new IllegalStateException("Unsupported API version");
+   Class<?> status=Class.forName(api+"$Status");
+   return isThermal?new Endpoint(c.getMethod("status",ServerPlayer.class),status.getMethod("bodyC"),null,null,null):
+    new Endpoint(c.getMethod("status",ServerPlayer.class),status.getMethod("bloodMl"),status.getMethod("maximumBloodMl"),status.getMethod("regions"),Class.forName(api+"$Region").getMethod("bleeding"));
+  }catch(ReflectiveOperationException|LinkageError|RuntimeException e){LOG.warn("Hydration optional API unavailable: {}",mod,e);return null;}
+ }
+ private static void init(){
+  if(initialized)return;
+  thermal=resolve("worldlogic_thermal","dev.minemods.thermal.api.ThermalApi",true);
+  trauma=resolve("worldlogic_trauma","dev.minemods.traumacraft.api.TraumaApi",false);
+  initialized=true;
+ }
+ public static Sample sample(ServerPlayer p){
+  if(!p.serverLevel().getServer().isSameThread())throw new IllegalStateException("Server thread required");
+  init();double body=Double.NaN,blood=Double.NaN;int bleed=0;boolean t=false,h=false;
+  if(thermal!=null&&!thermalFailed)try{
+   var v=(Optional<?>)thermal.status.invoke(null,p);
+   if(v.isPresent()){body=((Number)thermal.a.invoke(v.get())).doubleValue();t=Double.isFinite(body)&&body>=20&&body<=50;}
+  }catch(ReflectiveOperationException|RuntimeException ex){thermalFailed=true;LOG.warn("Thermal API failed",ex);}
+  if(trauma!=null&&!traumaFailed)try{
+   var v=(Optional<?>)trauma.status.invoke(null,p);
+   if(v.isPresent()){
+    Object s=v.get();double amount=((Number)trauma.a.invoke(s)).doubleValue(),max=((Number)trauma.b.invoke(s)).doubleValue();
+    if(Double.isFinite(amount)&&Double.isFinite(max)&&max>0){blood=WaterBalance.clamp(amount/max,0,1);h=true;}
+    for(Object r:(Iterable<?>)trauma.c.invoke(s))bleed+=Math.max(0,Math.min(2,((Number)trauma.regionBleed.invoke(r)).intValue()));
+   }
+  }catch(ReflectiveOperationException|RuntimeException ex){traumaFailed=true;bleed=0;h=false;blood=Double.NaN;LOG.warn("Trauma API failed",ex);}
+  return new Sample(t?body:Double.NaN,Math.min(14,bleed),blood,t,h);
+ }
+}

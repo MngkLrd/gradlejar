@@ -1,0 +1,228 @@
+{
+  "target": "neoforge-mc1.21.1",
+  "release_blocked": true,
+  "unexecuted": [
+    {
+      "id": "drinking",
+      "kind": "mechanic",
+      "subject": "Actual bottle consumption with fresh, salt and unknown profiles",
+      "checks": [
+        {
+          "backend": "player",
+          "name": "Fresh bottle queues absorption"
+        },
+        {
+          "backend": "player",
+          "name": "Salt bottle reduces hydration"
+        },
+        {
+          "backend": "player",
+          "name": "Unknown bottle adds exposure"
+        }
+      ],
+      "status": "UNSUPPORTED",
+      "reason": "Current Mineflayer network backend only supports Fabric. Retained player scenario requires adaptation to delayed absorption."
+    },
+    {
+      "id": "food-moisture",
+      "kind": "mechanic",
+      "subject": "Vanilla melon consumption",
+      "checks": [
+        {
+          "backend": "player",
+          "name": "Melon restores hydration"
+        }
+      ],
+      "status": "UNSUPPORTED",
+      "reason": "Current Mineflayer network backend only supports Fabric. Retained player scenario requires adaptation to delayed absorption."
+    },
+    {
+      "id": "creative-immunity",
+      "kind": "mechanic",
+      "subject": "Creative mode water balance unchanged",
+      "checks": [
+        {
+          "backend": "player",
+          "name": "Creative does not lose water"
+        }
+      ],
+      "status": "UNSUPPORTED",
+      "reason": "Current Mineflayer network backend only supports Fabric. Retained player scenario requires adaptation to delayed absorption."
+    },
+    {
+      "id": "bottle-fill",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "direct-sip",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "save-reload",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "optional-thermal-runtime",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "optional-trauma-runtime",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "hud-graphics",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "water-batch-container-integration",
+      "status": "NOT_RUN",
+      "reason": "Requires production integration fixture or graphical client; pure model does not establish this."
+    },
+    {
+      "id": "bottle-profile-roundtrip",
+      "status": "NOT_RUN",
+      "reason": "Requires production NeoForge runtime item component fixture."
+    },
+    {
+      "id": "direct-rmb-sip",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "vessel-fill",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "vessel-drink-animation",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "vessel-transfer-main-offhand",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "filter-consumption",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "campfire-boil-timer-cancel",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "distillation-timer-cancel",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "creative-tab-render",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "recipe-wooden_cup",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "recipe-waterskin",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "recipe-clay_jug",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "recipe-copper_canteen",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "recipe-charcoal_filter",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "recipe-copper_condenser",
+      "status": "NOT_RUN",
+      "reason": "Production player interaction or graphical evidence unavailable; component/model assertions are not a substitute."
+    },
+    {
+      "id": "placed-tank-interaction",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "rain-collection-weather",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "block-drops",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "chunk-reload",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "render-filled-state",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "recipe-clay_basin",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "recipe-water_barrel",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "recipe-rain_collector",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "recipe-stationary_filter",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "recipe-water_intake",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "recipe-clay_pipe",
+      "status": "NOT_RUN",
+      "reason": "Requires production world/client evidence; model and fixture cover only explicit assertions."
+    },
+    {
+      "id": "natural-intake-player-placement",
+      "status": "NOT_RUN",
+      "reason": "Fixture exercises real world source sampling; player placement and full chunk reload still unverified."
+    },
+    {
+      "id": "pipe-redstone-player",
+      "status": "NOT_RUN",
+      "reason": "Fixture covers actual powered and unpowered block state, not player placement or wiring."
+    }
+  ]
+}

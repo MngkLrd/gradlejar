@@ -1,0 +1,241 @@
+{
+  "schema": 1,
+  "name": "Hydration 0.4.1 Minecraft fluid units and infrastructure regression",
+  "coverage": [
+    {
+      "id": "water-balance",
+      "kind": "mechanic",
+      "subject": "Water loss, heat, humidity, activity, boundaries",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
+    },
+    {
+      "id": "source-classification",
+      "kind": "mechanic",
+      "subject": "Actual source versus nonwater",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Fresh pond classification"
+        },
+        {
+          "backend": "server",
+          "name": "Solid is not water"
+        }
+      ]
+    },
+    {
+      "id": "absorption",
+      "kind": "mechanic",
+      "subject": "Gradual absorption and bounded reserve",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
+    },
+    {
+      "id": "physiology",
+      "kind": "mechanic",
+      "subject": "Body temperature replaces environmental heat, active bleeding adds bounded loss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
+    },
+    {
+      "id": "water-transfer-model",
+      "kind": "mechanic",
+      "subject": "Capacity and volume/salt/risk conservation; conservative quality",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
+    },
+    {
+      "id": "wooden_cup",
+      "kind": "item",
+      "subject": "Wooden cup 500 mL",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vessel capacities and component persistence"
+        }
+      ]
+    },
+    {
+      "id": "waterskin",
+      "kind": "item",
+      "subject": "Waterskin 1500 mL",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vessel capacities and component persistence"
+        }
+      ]
+    },
+    {
+      "id": "clay_jug",
+      "kind": "item",
+      "subject": "Clay jug 3000 mL",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vessel capacities and component persistence"
+        }
+      ]
+    },
+    {
+      "id": "copper_canteen",
+      "kind": "item",
+      "subject": "Copper canteen 2000 mL",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vessel capacities and component persistence"
+        }
+      ]
+    },
+    {
+      "id": "treatment-model",
+      "kind": "mechanic",
+      "subject": "Filter, boil, distill quality, volume and salt mass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
+    },
+    {
+      "id": "gravity-flow",
+      "kind": "mechanic",
+      "subject": "World block entities, downhill, capacity, equal-height/loop rejection and powered pipe",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Infrastructure world fixture"
+        }
+      ]
+    },
+    {
+      "id": "filter-station",
+      "kind": "mechanic",
+      "subject": "Stationary filter charge and salt retention",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Infrastructure world fixture"
+        }
+      ]
+    },
+    {
+      "id": "tank-persistence",
+      "kind": "mechanic",
+      "subject": "Tank NBT roundtrip",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Infrastructure world fixture"
+        }
+      ]
+    },
+    {
+      "id": "rain-rate",
+      "kind": "mechanic",
+      "subject": "Rain amount and exposure bounds",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
+    },
+    {
+      "id": "intake-fixture",
+      "kind": "block",
+      "subject": "Natural water intake with positive and no-source controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Infrastructure world fixture"
+        }
+      ]
+    },
+    {
+      "id": "collector-fixture",
+      "kind": "block",
+      "subject": "Collector capacity and covered negative control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Infrastructure world fixture"
+        }
+      ]
+    },
+    {
+      "id": "millibuckets",
+      "kind": "mechanic",
+      "subject": "1000 mB per bucket, 250 mB sip and legacy amount compatibility",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "name": "Model rules",
+      "command": "hydration selftest",
+      "expect": "HYDRATION_MODEL_CHECKS_PASSED",
+      "assertion": true
+    },
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "command": "setblock 3 200 3 minecraft:stone",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 3 201 3 minecraft:water",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "Fresh pond classification",
+      "command": "hydration inspect 3 201 3",
+      "expect": "source=(POND|RIVER|LAKE|SPRING) quality=DRINKABLE",
+      "assertion": true
+    },
+    {
+      "name": "Solid is not water",
+      "command": "hydration inspect 3 200 3",
+      "expect": "source=NONE quality=NOT_WATER",
+      "assertion": true
+    },
+    {
+      "name": "Vessel capacities and component persistence",
+      "command": "hydration vesseltest",
+      "expect": "HYDRATION_VESSEL_CHECKS_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Infrastructure world fixture",
+      "command": "hydration infrastructuretest",
+      "expect": "HYDRATION_INFRASTRUCTURE_CHECKS_PASSED",
+      "assertion": true
+    }
+  ]
+}

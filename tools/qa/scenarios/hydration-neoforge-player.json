@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "name": "Hydration real player drink and food consumption",
+  "steps": [
+    {
+      "command": "gamemode survival MineModsQA",
+      "expect": "Set|game mode"
+    },
+    {
+      "command": "hydration set MineModsQA 40",
+      "expect": "water=40"
+    },
+    {
+      "command": "give MineModsQA minecraft:potion[minecraft:potion_contents={potion:\"minecraft:water\"},minecraft:custom_data={hydration_profile:{kind:\"RIVER\",quality:\"DRINKABLE\",salinity:0.2d,risk:0.7d,evidence:\"BIOME\"}}]",
+      "expect": "Gave"
+    },
+    {
+      "action": "use",
+      "args": {
+        "item": "potion",
+        "ms": 1900
+      }
+    },
+    {
+      "wait": 0.3
+    },
+    {
+      "name": "Fresh bottle queues absorption",
+      "command": "hydration status MineModsQA",
+      "expect": "water=(39|40|41|42) exposure=0 reserve=0 pending=(18|19|20)",
+      "assertion": true
+    },
+    {
+      "command": "clear MineModsQA",
+      "expect": "Removed|No items"
+    },
+    {
+      "command": "hydration set MineModsQA 50",
+      "expect": "water=50"
+    },
+    {
+      "command": "give MineModsQA minecraft:potion[minecraft:potion_contents={potion:\"minecraft:water\"},minecraft:custom_data={hydration_profile:{kind:\"SEA\",quality:\"DESALINATE\",salinity:0.2d,risk:0.7d,evidence:\"BIOME\"}}]",
+      "expect": "Gave"
+    },
+    {
+      "action": "use",
+      "args": {
+        "item": "potion",
+        "ms": 1900
+      }
+    },
+    {
+      "wait": 0.3
+    },
+    {
+      "name": "Salt bottle reduces hydration",
+      "command": "hydration status MineModsQA",
+      "expect": "water=(44|45) exposure=8",
+      "assertion": true
+    },
+    {
+      "command": "clear MineModsQA",
+      "expect": "Removed|No items"
+    },
+    {
+      "command": "hydration set MineModsQA 40",
+      "expect": "water=40"
+    },
+    {
+      "command": "give MineModsQA minecraft:potion[minecraft:potion_contents={potion:\"minecraft:water\"}]",
+      "expect": "Gave"
+    },
+    {
+      "action": "use",
+      "args": {
+        "item": "potion",
+        "ms": 1900
+      }
+    },
+    {
+      "wait": 0.3
+    },
+    {
+      "name": "Unknown bottle adds exposure",
+      "command": "hydration status MineModsQA",
+      "expect": "water=(39|40|41|42) exposure=8 reserve=0 pending=(10|11|12)",
+      "assertion": true
+    },
+    {
+      "command": "clear MineModsQA",
+      "expect": "Removed|No items"
+    },
+    {
+      "command": "hydration set MineModsQA 40",
+      "expect": "water=40"
+    },
+    {
+      "command": "effect give MineModsQA minecraft:hunger 8 100 true",
+      "expect": "Applied|Given"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "give MineModsQA minecraft:melon_slice",
+      "expect": "Gave"
+    },
+    {
+      "action": "use",
+      "args": {
+        "item": "melon_slice",
+        "ms": 1900
+      }
+    },
+    {
+      "wait": 0.3
+    },
+    {
+      "name": "Melon restores hydration",
+      "command": "hydration status MineModsQA",
+      "expect": "water=(39|40|41|42) exposure=0 reserve=0 pending=(3|4|5)",
+      "assertion": true
+    },
+    {
+      "command": "gamemode creative MineModsQA",
+      "expect": "Set|game mode"
+    },
+    {
+      "command": "hydration set MineModsQA 50",
+      "expect": "water=50"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "name": "Creative does not lose water",
+      "command": "hydration status MineModsQA",
+      "expect": "water=50 exposure=0",
+      "assertion": true
+    }
+  ]
+}

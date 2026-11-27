@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "W W",
+    "S S",
+    " B "
+  ],
+  "key": {
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "B": {
+      "item": "hydration:water_barrel"
+    }
+  },
+  "result": {
+    "id": "hydration:rain_collector",
+    "count": 1
+  }
+}
