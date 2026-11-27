@@ -17,7 +17,10 @@ public abstract class GeologyCarverMixin {
  @Inject(method="applyCarvers",at=@At("HEAD"),cancellable=true)
  private void worldlogic$geologicalCaves(WorldGenRegion region,long seed,RandomState random,BiomeManager biomes,StructureManager structures,ChunkAccess chunk,GenerationStep.Carving step,CallbackInfo ci){
   if(!GeologyGeneration.enabled((ChunkGenerator)(Object)this))return;
-  if(step==GenerationStep.Carving.AIR)GeologyGeneration.carve(seed,chunk);
+  if(step==GenerationStep.Carving.AIR){
+   dev.minemods.worldlogic.PhysicalBiomeReconciliation.apply((NoiseBasedChunkGenerator)(Object)this,random,chunk);
+   GeologyGeneration.carve(seed,chunk);
+  }
   ci.cancel();
  }
 }

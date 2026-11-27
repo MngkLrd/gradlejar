@@ -18,7 +18,8 @@
     "GeologyCarverMixin",
     "GeologyDecorationMixin",
     "GeologyOreMixin",
-    "GeologyScatteredOreMixin"
+    "GeologyScatteredOreMixin",
+    "ShipwreckTerrainMixin"
   ],
   "injectors": {
     "defaultRequire": 1

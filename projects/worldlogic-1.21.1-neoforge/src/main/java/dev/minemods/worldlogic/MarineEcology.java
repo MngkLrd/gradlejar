@@ -41,6 +41,10 @@ final class MarineEcology {
    require(!b.getMobSettings().getMobs(MobCategory.WATER_AMBIENT).isEmpty(),"fish inventory "+id);
    if(!id.startsWith("polar"))require(features.get(9).stream().anyMatch(h->h.unwrapKey().map(k->k.location().getPath().startsWith("seagrass_")).orElse(false)),"vanilla seagrass "+id);
   }
+  require(PhysicalBiomeReconciliation.continental(80,63,false,false)>.4,"dry land cannot be ocean");
+  require(PhysicalBiomeReconciliation.continental(40,63,true,false)<-.55,"submerged ocean floor");
+  require(PhysicalBiomeReconciliation.continental(64,63,false,true)==-.20,"narrow physical shore");
+  require(PhysicalBiomeReconciliation.continental(64,63,false,false)>.4,"inland lowland");
   for(double value:new double[]{0,.25,.6,.95}){
    require(MarineTerrain.material("temperate_sandy_coast",value,0).is(Blocks.SAND),"temperate sandy shore is sand");
    require(MarineTerrain.material("tropical_sandy_coast",value,0).is(Blocks.SAND),"tropical sandy shore is sand");
