@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Thermal RC20 API server integration (FakePlayer)",
+  "name": "Thermal RC21 body, weather and journal regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -73,6 +73,18 @@
       "name": "Delayed thermal illness, damage registry, weakness and recovery",
       "command": "thermal qa conditions",
       "expect": "THERMAL_QA_conditions_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Authoritative atmosphere and wind-driven exposure",
+      "command": "thermal qa weather",
+      "expect": "THERMAL_QA_weather_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Live route sample, interval guard, coordinates and NBT persistence",
+      "command": "thermal qa history",
+      "expect": "THERMAL_QA_history_PASS",
       "assertion": true
     }
   ],
@@ -151,6 +163,28 @@
         {
           "backend": "server",
           "name": "Delayed thermal illness, damage registry, weakness and recovery"
+        }
+      ]
+    },
+    {
+      "id": "weather",
+      "kind": "mechanic",
+      "subject": "Authoritative atmosphere and wind-driven exposure",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Authoritative atmosphere and wind-driven exposure"
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "kind": "mechanic",
+      "subject": "Live route sample, interval guard, coordinates and NBT persistence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live route sample, interval guard, coordinates and NBT persistence"
         }
       ]
     }

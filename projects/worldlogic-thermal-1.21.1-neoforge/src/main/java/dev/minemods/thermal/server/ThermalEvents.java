@@ -1,6 +1,7 @@
 package dev.minemods.thermal.server;
 import dev.minemods.thermal.ThermalModel;
 import dev.minemods.thermal.ThermalCondition;
+import dev.minemods.thermal.WeatherReading;
 import dev.minemods.thermal.network.ThermalSync;
 import dev.minemods.worldlogic.api.WorldLogicApi;
 import net.minecraft.commands.Commands;
@@ -29,7 +30,7 @@ public final class ThermalEvents {
         if(!active) {
             penalty(p,0);
             n.remove("coldSeconds");n.remove("hotSeconds");n.remove("sunSeconds");n.remove("condition");root.put(KEY,n);
-            ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),false,37,22,22,0,0,0,0,false,ThermalCondition.Kind.NONE));
+            ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),false,37,22,22,0,0,0,0,false,ThermalCondition.Kind.NONE,WeatherReading.unavailable()));
             return;
         }
         double previous=n.contains("body",Tag.TAG_ANY_NUMERIC)?n.getDouble("body"):37;
@@ -52,7 +53,8 @@ public final class ThermalEvents {
         n.putInt("coldSeconds",progress.coldSeconds());n.putInt("hotSeconds",progress.hotSeconds());
         n.putInt("sunSeconds",progress.sunSeconds());n.putString("condition",progress.kind().name());n.remove("criticalSeconds");
         ThermalInjury.apply(p,progress);
-        ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),true,state.bodyC(),e.airC(),state.feelsLikeC(),state.trendCPerMinute(),e.wetness(),e.insulation(),e.radiantC(),sample.sheltered(),progress.kind()));
+        ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),true,state.bodyC(),e.airC(),state.feelsLikeC(),state.trendCPerMinute(),e.wetness(),e.insulation(),e.radiantC(),sample.sheltered(),progress.kind(),sample.weather()));
+        HistoryStore.tick(p,sample.weather(),state,e.airC());
     }
     static void penalty(ServerPlayer p,double amount) {
         var attribute=p.getAttribute(Attributes.MOVEMENT_SPEED); if(attribute==null) return;
@@ -62,13 +64,14 @@ public final class ThermalEvents {
         if(amount>0) attribute.addTransientModifier(new AttributeModifier(SPEED,-amount,AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
     public static void clonePlayer(PlayerEvent.Clone event) {
+        HistoryStore.cloneHistory(event.getOriginal(),event.getEntity());
         if(!event.isWasDeath() && event.getOriginal().getPersistentData().contains(KEY))
             event.getEntity().getPersistentData().put(KEY,event.getOriginal().getPersistentData().getCompound(KEY).copy());
         else if(event.isWasDeath()) event.getEntity().getPersistentData().remove(KEY);
     }
     public static void registerCommands(RegisterCommandsEvent event) {
         var qa=Commands.literal("qa").requires(s->s.hasPermission(2));
-        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions"}) {
+        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history"}) {
             qa.then(Commands.literal(name).executes(c->{
                 ThermalChecks.verify(c.getSource().getLevel(),name);
                 c.getSource().sendSuccess(()->Component.literal("THERMAL_QA_"+name+"_PASS"),false);

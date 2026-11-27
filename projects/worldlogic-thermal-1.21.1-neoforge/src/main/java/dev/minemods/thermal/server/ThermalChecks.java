@@ -33,7 +33,7 @@ final class ThermalChecks {
                 }
                 case "heat" -> {
                     require(e.radiantC()>1,"campfire gives local heat");
-                    require(s.skinWetness()<.98,"radiant source accelerates drying");
+                    require(s.skinWetness()<1-.015*dev.minemods.thermal.WeatherReading.dryingFactor(s.weather().humidity()),"radiant source accelerates drying at same humidity");
                 }
                 case "blocked" -> require(e.radiantC()==0,"wall blocks campfire radiation");
                 case "armor" -> {
@@ -83,6 +83,30 @@ final class ThermalChecks {
                     ThermalEvents.update(p);
                     require(dev.minemods.thermal.api.ThermalApi.status(p).orElseThrow().condition()==dev.minemods.thermal.ThermalCondition.Kind.NONE,"comfort clears illness");
                     p.removeEffect(net.minecraft.world.effect.MobEffects.WEAKNESS);
+                }
+                case "weather" -> {
+                    var a=WorldLogicApi.atmosphere(l,p.blockPosition()).orElseThrow();
+                    var w=s.weather();
+                    require(w.atmosphere()&&Math.abs(w.humidity()-a.relativeHumidityPercent())<1e-8,"authoritative relative humidity");
+                    require(Math.abs(w.windSpeed()-a.outdoorWindSpeedMps())<1e-8&&w.precipitation()==a.precipitation().ordinal(),"authoritative wind and precipitation");
+                    require(Math.abs(e.wind()-dev.minemods.thermal.WeatherReading.normalizedWind(w.windSpeed(),s.sheltered()))<1e-8,"wind used in exposure");
+                }
+                case "history" -> {
+                    var before=n.getList(HistoryStore.KEY,net.minecraft.nbt.Tag.TAG_COMPOUND).copy();
+                    try{
+                        n.remove(HistoryStore.KEY);
+                        ThermalEvents.update(p);
+                        var points=HistoryStore.read(n);
+                        require(points.size()==1,"real update records a route sample");
+                        var point=points.getFirst();
+                        require(point.x()==p.getBlockX()&&point.y()==p.getBlockY()&&point.z()==p.getBlockZ(),"actual coordinates");
+                        require(point.dimension().equals(l.dimension().location().toString())&&point.biome().equals(s.weather().biome()),"actual location");
+                        require(Math.abs(point.air()-s.exposure().airC())<.01,"actual ambient reading");
+                        ThermalEvents.update(p);
+                        require(HistoryStore.read(n).size()==1,"no duplicate within sample interval");
+                        CompoundTag saved=n.copy();
+                        require(HistoryStore.read(saved).equals(points),"NBT round trip");
+                    }finally{n.put(HistoryStore.KEY,before);}
                 }
                 default -> throw new IllegalArgumentException(name);
             }
