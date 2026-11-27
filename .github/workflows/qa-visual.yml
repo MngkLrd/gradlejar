@@ -1,0 +1,63 @@
+name: MineMods Fast Visual QA
+on:
+  pull_request:
+    paths:
+      - '**/assets/**/textures/**'
+      - '**/assets/**/models/**'
+      - 'tools/qa/visual_lint.py'
+      - 'tools/qa/tests/test_visual_lint.py'
+      - '.github/workflows/qa-visual.yml'
+  push:
+    branches: [main]
+    paths:
+      - '**/assets/**/textures/**'
+      - '**/assets/**/models/**'
+      - 'tools/qa/visual_lint.py'
+      - 'tools/qa/tests/test_visual_lint.py'
+      - '.github/workflows/qa-visual.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual-lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install Pillow==12.0.0
+      - name: Test visual measurements
+        run: python -m unittest tools.qa.tests.test_visual_lint -v
+      - uses: actions/cache@v4
+        with:
+          path: visual-reference.json
+          key: visual-vanilla-1.21.1-${{ hashFiles('tools/qa/visual_lint.py') }}
+      - name: Reference official vanilla textures (cached)
+        run: |
+          if [ ! -f visual-reference.json ]; then
+            python -m tools.qa.visual_lint --make-vanilla-reference 1.21.1 --out visual-reference.json || echo "::warning::Official vanilla reference unavailable; reporting measurements without comparison."
+          fi
+      - name: Inspect changed assets or real-asset pilot
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT" = workflow_dispatch ]; then
+            python -m tools.qa.visual_lint --out visual-qa --reference visual-reference.json --paths projects/bearback-1.20.1/src/main/resources/assets/bearback/textures/item/saddlebags.png projects/creeper-armor-1.20.1/src/main/resources/assets/creeperarmor/textures/item/creeper_powder.png projects/lurelantern-1.3.7/src/main/resources/assets/lurelantern/textures/block/lure_lantern.png projects/bearback-1.20.1/src/main/resources/assets/bearback/textures/entity/bear_saddle.png
+          else
+            git cat-file -e "$BASE^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$BASE"
+            python -m tools.qa.visual_lint --base "$BASE" --out visual-qa --reference visual-reference.json
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: MineMods-Visual-QA
+          path: |
+            visual-qa/
+            visual-reference.json
+          if-no-files-found: warn
+          retention-days: 14
