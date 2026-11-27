@@ -131,7 +131,11 @@ def main():
     p.add_argument("--out",type=Path,required=True)
     a=p.parse_args()
     client,sha=official_client(a.minecraft,a.client)
-    with zipfile.ZipFile(io.BytesIO(client)) as z:rows=inventory(z)
+    from .vanilla_extended import extended_inventory
+    with zipfile.ZipFile(io.BytesIO(client)) as z:
+        rows=inventory(z)
+        extended=extended_inventory(z,rows)
+    extended.update(minecraft=a.minecraft,official_client_sha1=sha)
     by_path={r["path"]:r for r in rows}
     pilot={n:by_path.get(n+".png",{}).get("git_blob_sha1")==expected for n,expected in PILOT.items()} if a.minecraft=="1.21.1" else {}
     summary=summarize(rows)
@@ -140,6 +144,13 @@ def main():
             "pilot_archive_hash_matches":pilot,"total":len(rows),"summary":summary,"assets":rows}
     a.out.mkdir(parents=True,exist_ok=True)
     (a.out/"corpus.json").write_text(json.dumps(report,indent=2)+"\n")
+    (a.out/"extended-corpus.json").write_text(json.dumps(extended,indent=2)+"\n")
+    print("EXTENDED_CORPUS",json.dumps({k:v for k,v in extended.items() if k not in ("assets","role_coverage")},sort_keys=True))
+    for role,counts in extended["role_coverage"].items():
+        print("ROLE_COVERAGE",role,json.dumps(counts,sort_keys=True))
+    for row in extended["assets"]:
+        if row["status"] in ("ANALYSIS_ERROR","ANIMATION_LAYOUT_UNSUPPORTED"):
+            print("DEFERRED_GAP",row["path"],row["reason"])
     print("Official client:",sha,"PNG total:",len(rows),"statuses:",summary["statuses"])
     print("Archive samples confirmed against official client:",sum(pilot.values()),"/",len(pilot))
     for k in ("bark_hint","log_end_hint","foliage_hint","sapling_hint","soil_hint","ore_hint","armor_icon_hint"):
@@ -147,6 +158,6 @@ def main():
     for group in summary["shared_color_layouts"]:
         if any(n.endswith(("_log.png","_leaves.png","_sapling.png","_log_top.png")) for n in group):
             print("SHARED_LAYOUT",json.dumps(group))
-    if not rows or any(r["status"]=="DECODE_FAILED" for r in rows) or (pilot and not all(pilot.values())):
+    if not rows or any(r["status"]=="DECODE_FAILED" for r in rows) or extended["statuses"].get("ANALYSIS_ERROR") or (pilot and not all(pilot.values())):
         raise SystemExit("Corpus verification requires investigation")
 if __name__=="__main__":main()
