@@ -796,7 +796,7 @@
                 ],
                 "humidity": [
                   0.32,
-                  0.48
+                  0.38
                 ],
                 "continentalness": [
                   -0.045,
@@ -805,6 +805,66 @@
                 "erosion": [
                   -0.12,
                   1.2
+                ],
+                "depth": [
+                  -2,
+                  0.36
+                ],
+                "weirdness": [
+                  -1.2,
+                  1.2
+                ],
+                "offset": 0
+              }
+            },
+            {
+              "biome": "worldlogic:tropical_monsoon_forest",
+              "parameters": {
+                "temperature": [
+                  0.38,
+                  1.2
+                ],
+                "humidity": [
+                  0.38,
+                  0.48
+                ],
+                "continentalness": [
+                  0.13,
+                  1.2
+                ],
+                "erosion": [
+                  -0.12,
+                  1.2
+                ],
+                "depth": [
+                  -2,
+                  0.36
+                ],
+                "weirdness": [
+                  -1.2,
+                  1.2
+                ],
+                "offset": 0
+              }
+            },
+            {
+              "biome": "worldlogic:tropical_monsoon_forest",
+              "parameters": {
+                "temperature": [
+                  0.38,
+                  1.2
+                ],
+                "humidity": [
+                  0.38,
+                  0.48
+                ],
+                "continentalness": [
+                  -0.045,
+                  0.13
+                ],
+                "erosion": [
+                  -0.12,
+                  0.55
                 ],
                 "depth": [
                   -2,
@@ -864,7 +924,7 @@
                 ],
                 "erosion": [
                   -0.12,
-                  0.65
+                  0.55
                 ],
                 "depth": [
                   -2,
@@ -1545,7 +1605,7 @@
                   1.2
                 ],
                 "humidity": [
-                  0.48,
+                  0.38,
                   1.2
                 ],
                 "continentalness": [
@@ -1553,7 +1613,7 @@
                   0.13
                 ],
                 "erosion": [
-                  0.65,
+                  0.55,
                   1.2
                 ],
                 "depth": [
