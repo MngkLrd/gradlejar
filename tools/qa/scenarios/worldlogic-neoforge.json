@@ -54,7 +54,7 @@
       "expect": "clear"
     },
     {
-      "wait": 4
+      "wait": 12
     },
     {
       "name": "Atmosphere dry snapshot and model controls",
@@ -67,7 +67,7 @@
       "expect": "rain"
     },
     {
-      "wait": 5
+      "wait": 12
     },
     {
       "name": "Atmosphere rain snapshot and local intensity",
