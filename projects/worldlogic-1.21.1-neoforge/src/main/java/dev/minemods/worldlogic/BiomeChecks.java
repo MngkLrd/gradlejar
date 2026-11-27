@@ -16,6 +16,8 @@ public final class BiomeChecks {
  }
  public static void verify(ServerLevel l,long seed){
   var old=generator(l,"earthlike_climate");var gen=generator(l,"realistic_unified");
+  var normal=l.registryAccess().lookupOrThrow(Registries.WORLD_PRESET).getOrThrow(ResourceKey.create(Registries.WORLD_PRESET,ResourceLocation.withDefaultNamespace("normal"))).value().createWorldDimensions().overworld();
+  require(BiomeSurvey.supported(normal)&&normal.getMinY()==gen.getMinY()&&normal.getGenDepth()==gen.getGenDepth(),"new default world uses unified realism");
   require(gen.getMinY()==-256&&gen.getGenDepth()==768&&gen.getSeaLevel()==63&&GeologyGeneration.enabled(gen),"unified bounds and geology");
   require(gen.getBiomeSource().possibleBiomes().size()==61,"all custom classes registered");
   for(var b:gen.getBiomeSource().possibleBiomes())require(b.unwrapKey().orElseThrow().location().getNamespace().equals("worldlogic"),"vanilla biome leaked");

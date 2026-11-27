@@ -44,7 +44,7 @@ public final class Rules {
   if(mods==null)return true;
   if((key.equals("tree_weight")||key.equals("dangerous_trees"))&&mods.isLoaded("wl_treechopper"))return false;
   if(key.equals("cold_shock")&&mods.isLoaded("worldlogic_thermal"))return false;
-  if(Set.of("injuries","injury_aggravation","shoulder_impact").contains(key)&&mods.isLoaded("worldlogic_trauma"))return false;
+  if((key.equals("injuries")||key.equals("injury_aggravation")||key.equals("shoulder_impact"))&&mods.isLoaded("worldlogic_trauma"))return false;
   return true;
  }
  public static double strength(String family){try{return Double.parseDouble(values.getOrDefault("strength."+family,"1"));}catch(NumberFormatException e){return 1;}}

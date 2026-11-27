@@ -215,6 +215,30 @@
       "assertion": true
     },
     {
+      "name": "Actual seeded structure start and invalid-biome control: mineshaft",
+      "command": "worldlogic qa structure_mineshaft",
+      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded structure start and invalid-biome control: trial_chambers",
+      "command": "worldlogic qa structure_trial_chambers",
+      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded structure start and invalid-biome control: ancient_city",
+      "command": "worldlogic qa structure_ancient_city",
+      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded structure start and invalid-biome control: stronghold",
+      "command": "worldlogic qa structure_stronghold",
+      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
+      "assertion": true
+    },
+    {
       "name": "Seeded biome reachability survey 1 part 1",
       "command": "worldlogic qa biome_survey_0_0",
       "expect": "WORLDLOGIC_BIOME_SURVEY_PART_PASSED",
@@ -864,6 +888,50 @@
         {
           "backend": "server",
           "name": "All 61 biomes reached in seeded generation survey"
+        }
+      ]
+    },
+    {
+      "id": "seeded-start-mineshaft",
+      "kind": "mechanic",
+      "subject": "Seeded mineshaft placement, actual generated start pieces and negative biome control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded structure start and invalid-biome control: mineshaft"
+        }
+      ]
+    },
+    {
+      "id": "seeded-start-trial_chambers",
+      "kind": "mechanic",
+      "subject": "Seeded trial_chambers placement, actual generated start pieces and negative biome control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded structure start and invalid-biome control: trial_chambers"
+        }
+      ]
+    },
+    {
+      "id": "seeded-start-ancient_city",
+      "kind": "mechanic",
+      "subject": "Seeded ancient_city placement, actual generated start pieces and negative biome control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded structure start and invalid-biome control: ancient_city"
+        }
+      ]
+    },
+    {
+      "id": "seeded-start-stronghold",
+      "kind": "mechanic",
+      "subject": "Seeded stronghold placement, actual generated start pieces and negative biome control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded structure start and invalid-biome control: stronghold"
         }
       ]
     }
