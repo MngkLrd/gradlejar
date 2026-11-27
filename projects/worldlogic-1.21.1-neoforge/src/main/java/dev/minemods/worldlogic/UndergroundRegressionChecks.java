@@ -36,7 +36,7 @@ final class UndergroundRegressionChecks{
    require(steps.get(3).stream().anyMatch(v->v.unwrapKey().map(k->k.location().toString().equals("minecraft:monster_room")).orElse(false))&&steps.get(3).stream().anyMatch(v->v.unwrapKey().map(k->k.location().toString().equals("minecraft:monster_room_deep")).orElse(false)),"dungeon features "+h.unwrapKey());
    if(!deep)eligible++;
   }
-  require(eligible==60,"structure eligibility inventory");
+  require(eligible==57&&gen.getBiomeSource().possibleBiomes().size()==58,"structure eligibility inventory after three approved biome merges");
   GeologyModel.Cave chosen=null;
   outer:for(int gx=-10;gx<=10;gx++)for(int gz=-10;gz<=10;gz++){
    var d=GeologyModel.district(42,gx,gz);

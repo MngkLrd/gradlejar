@@ -1,0 +1,137 @@
+{
+  "schema": 1,
+  "id": "thermal",
+  "order": 20,
+  "requires": "worldlogic_thermal",
+  "title": {
+    "ru": "Temperature · Климат тела",
+    "en": "Temperature · Body climate"
+  },
+  "source": "Thermal 0.8.3-rc1",
+  "pages": [
+    {
+      "id": "body",
+      "title": {
+        "ru": "Температура тела",
+        "en": "Body temperature"
+      },
+      "models": [
+        "minecraft:campfire",
+        "worldlogic_thermal:fur_coat",
+        "worldlogic_thermal:sun_hat"
+      ],
+      "body": {
+        "ru": [
+          "В интерфейсе тела показаны температура и её направление изменения. Погода показывает воздух, ощущаемую температуру, ветер и влажность. Журнал сохраняет маршрут и наблюдения.",
+          "Температура воздуха не равна температуре тела. Влажность, ветер, солнце, одежда, активность и питание влияют на состояние. Акклиматизация к теплу и холоду накапливается отдельно.",
+          "При наличии Traumatic длительное охлаждение конечностей может привести к обморожению. Тёплое укрытие и сухая одежда важнее одного числа на HUD."
+        ],
+        "en": [
+          "Body shows temperature and trend; Weather shows air, perceived temperature, wind and humidity; Journal records route observations.",
+          "Air temperature is not body temperature. Wetness, wind, sunlight, clothing, activity and food affect your condition. Cold and heat acclimation accumulate separately.",
+          "With Traumatic, sustained limb exposure may cause frostbite. Warm shelter and dry clothing matter more than one HUD number."
+        ]
+      }
+    },
+    {
+      "id": "fiber",
+      "title": {
+        "ru": "Волокно и ткань",
+        "en": "Fiber and cloth"
+      },
+      "models": [
+        "worldlogic_thermal:raw_fiber_bundle",
+        "worldlogic_thermal:stone_scraper",
+        "worldlogic_thermal:plant_thread",
+        "worldlogic_thermal:textile_loom"
+      ],
+      "body": {
+        "ru": [
+          "ПКМ пустой рукой по подходящей траве, папоротнику или сухому кусту собирает волокна. Сырой пучок можно разместить ПКМ на подходящем камне.",
+          "ЛКМ обрабатывает ячейки сетки 8×8. Каменный скребок очищает крест из пяти ячеек; износ только за полезный удар. После полной обработки следующий клик выдаёт четыре волокна.",
+          "Shift+ЛКМ забирает незавершённую заготовку с сохранением прогресса. Нить и ткань используются для одежды, прялка и ткацкий станок повышают выход."
+        ],
+        "en": [
+          "Empty-hand right-click suitable grass, fern or dead bush to gather fibers. Place a raw bundle on suitable stone with right-click.",
+          "Left-click works the 8x8 grid. A stone scraper clears a five-cell cross and loses durability only on productive hits. After completion, the next click yields four fibers.",
+          "Shift-left-click retrieves partial work with its progress. Thread and cloth supply clothing; spindle and loom improve yield."
+        ]
+      }
+    },
+    {
+      "id": "clothes",
+      "title": {
+        "ru": "Одежда и защита",
+        "en": "Clothing and protection"
+      },
+      "models": [
+        "worldlogic_thermal:grass_coat",
+        "worldlogic_thermal:fur_boots",
+        "worldlogic_thermal:linen_clothes",
+        "worldlogic_thermal:desert_headwear"
+      ],
+      "body": {
+        "ru": [
+          "Ранняя травяная одежда помогает пережить холод, шерстяные и меховые вещи лучше изолируют, летние ткани и головные уборы помогают в жаре.",
+          "Подбирай вещи по тепловым свойствам и слотам брони; отдельной системы многослойной одежды пока нет. Климатическая одежда не даёт боевой защиты.",
+          "Обувь уменьшает контакт с холодным грунтом. Укрытие, питание и переносные источники тепла дополняют одежду."
+        ],
+        "en": [
+          "Early grass clothing helps with cold; wool and fur offer insulation, summer cloth and headwear help in heat.",
+          "Choose garments by thermal properties and armor slots. Separate clothing layers are not implemented. Climate clothes provide no combat armor.",
+          "Footwear reduces cold ground contact. Shelter, food and portable heat complement clothing."
+        ]
+      }
+    },
+    {
+      "id": "devices",
+      "title": {
+        "ru": "Обогрев и охлаждение",
+        "en": "Heating and cooling"
+      },
+      "models": [
+        "worldlogic_thermal:clay_hearth",
+        "worldlogic_thermal:brick_fireplace",
+        "worldlogic_thermal:evaporative_cooler",
+        "worldlogic_thermal:woven_canopy"
+      ],
+      "body": {
+        "ru": [
+          "Глиняный очаг работает на угле или древесном угле. Камин, печь и жаровня дают тепло, дымоход и заслонка меняют эффективность. Закрытое помещение удерживает тепло.",
+          "Испарительный охладитель использует воду и эффективнее в сухую жару. Навес блокирует прямое солнце, ветровая башня помогает охлаждению.",
+          "Устройства не меняют глобальный климат. Проверяй топливо, запас воды и расположение укрытия."
+        ],
+        "en": [
+          "A clay hearth runs on coal or charcoal. Fireplaces, stoves and braziers supply heat; chimneys and dampers affect efficiency. Enclosed rooms retain heat.",
+          "Evaporative cooling consumes water and works better in dry heat. Canopies block direct sun; wind towers assist cooling.",
+          "Devices do not change global climate. Check fuel, water and shelter placement."
+        ]
+      }
+    },
+    {
+      "id": "portable",
+      "title": {
+        "ru": "Переносное тепло и холод",
+        "en": "Portable comfort"
+      },
+      "models": [
+        "worldlogic_thermal:hot_stone",
+        "worldlogic_thermal:charcoal_warmer",
+        "worldlogic_thermal:wet_cloth",
+        "worldlogic_thermal:hand_fan"
+      ],
+      "body": {
+        "ru": [
+          "Горячие предметы заряжаются ПКМ по горящему костру или печи; угольная грелка требует уголь во второй руке. Холодные предметы заряжаются на льду, мокрая ткань — от водяного котла.",
+          "Работают из хотбара, не складывают одинаковые эффекты и постепенно теряют заряд. Веер даёт короткий импульс охлаждения при ПКМ.",
+          "Не заменяют одежду и укрытие; эффект ограничен текущей температурой тела и ощущаемой средой."
+        ],
+        "en": [
+          "Charge warm items by right-clicking a lit furnace or campfire; charcoal warmer needs coal in the offhand. Cold items charge on ice; wet cloth at a water cauldron.",
+          "Comfort works from the hotbar, does not stack and loses charge over time. Right-click a fan for a short cooling pulse.",
+          "These are not substitutes for clothing or shelter; comfort is limited by body and felt temperature."
+        ]
+      }
+    }
+  ]
+}

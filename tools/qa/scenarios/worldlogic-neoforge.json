@@ -20,6 +20,12 @@
       "assertion": true
     },
     {
+      "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema",
+      "command": "worldlogic qa guide",
+      "expect": "WORLDLOGIC_GUIDE_PASSED",
+      "assertion": true
+    },
+    {
       "name": "Stamina active recovery, sprint, hunger and airborne controls",
       "command": "worldlogic qa recovery",
       "expect": "WORLDLOGIC_RECOVERY_PASSED",
@@ -949,6 +955,17 @@
         {
           "backend": "server",
           "name": "Marine sediment, polar icebergs and actual native seawater spawn predicates"
+        }
+      ]
+    },
+    {
+      "id": "guide-data",
+      "kind": "mechanic",
+      "subject": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
         }
       ]
     }
