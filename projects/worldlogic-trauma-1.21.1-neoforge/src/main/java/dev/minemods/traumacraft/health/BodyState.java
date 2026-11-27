@@ -9,6 +9,8 @@ public final class BodyState {
     private final byte[] bleeding = new byte[BodyPart.values().length];
     private final boolean[] fractured = new boolean[BodyPart.values().length];
     private final int[] boneRecovery = new int[BodyPart.values().length];
+    public static final float MAX_BLOOD=5000f;
+    private float bloodMl=MAX_BLOOD;
     private boolean dirty;
     private int concussionTicks;
     private int painkillerTicks;
@@ -21,6 +23,36 @@ public final class BodyState {
     /** Seconds are displayed in the UI; internal countdown is in server ticks. */
     public int criticalGraceTicks() { return criticalGraceTicks; }
 
+    public float bloodMl(){return bloodMl;}
+    public float bloodFraction(){return bloodMl/MAX_BLOOD;}
+    public void loseBlood(float amount){
+        if(!Float.isFinite(amount)||amount<=0)return;
+        float next=Math.max(0,bloodMl-amount);
+        if(next!=bloodMl){bloodMl=next;dirty=true;}
+    }
+    public void recoverBlood(float amount){
+        if(hasBleeding()||!Float.isFinite(amount)||amount<=0)return;
+        float next=Math.min(MAX_BLOOD,bloodMl+amount);
+        if(next!=bloodMl){bloodMl=next;dirty=true;}
+    }
+    public float pain(){
+        float value=0;
+        for(var part:BodyPart.values()){
+            value+=(1-percent(part))*22f;
+            if(fractured(part))value+=stabilized(part)?6f:16f;
+            value+=bleeding(part)*4f;
+        }
+        if(concussionTicks>0)value+=12;
+        return Math.min(100,value)*(painkillerTicks>0?.4f:1f);
+    }
+    public int shockStage(){
+        float blood=bloodFraction(),pain=pain();
+        if(blood<=.4f)return 3;
+        if(blood<=.6f||pain>=85)return 2;
+        if(blood<=.85f||pain>=55)return 1;
+        return 0;
+    }
+    public boolean fatalBloodLoss(){return bloodFraction()<=.20f;}
     public boolean vitalDestroyed() {
         return health(BodyPart.HEAD) <= 0f || health(BodyPart.CHEST) <= 0f;
     }
@@ -67,11 +99,12 @@ public final class BodyState {
      * Weak .35 / severe 1.2 local HP per step; systemic multiplier .5.
      */
     public float bleedStep() {
-        float total=0,overflow=0;
+        float total=0,overflow=0,bloodLoss=0;
         for(BodyPart part:BodyPart.values()){
             int severity=bleeding(part);
             if(severity==0)continue;
             float loss=severity==2?1.2f:.35f;
+            bloodLoss+=severity==2?65f:18f;
             float before=health(part);
             damage(part,loss);
             total+=loss;
@@ -80,6 +113,7 @@ public final class BodyState {
         if(overflow>0)
             for(BodyPart part:BodyPart.values())
                 if(health(part)>0)damage(part,overflow*.5f);
+        loseBlood(bloodLoss);
         return total;
     }
 
@@ -96,6 +130,9 @@ public final class BodyState {
     public boolean hasFracturedLeg() {
         return fractured(BodyPart.LEFT_LEG) || fractured(BodyPart.RIGHT_LEG);
     }
+    public float limbFunction(BodyPart part){
+        return PhysicalFunction.limb(percent(part),fractured(part),stabilized(part));
+    }
     public float legPenalty() {
         float fracturePenalty = 0f;
         if (hasFracturedLeg()) {
@@ -103,7 +140,8 @@ public final class BodyState {
                 (fractured(BodyPart.RIGHT_LEG) && !stabilized(BodyPart.RIGHT_LEG))) ? .42f : .22f;
         }
         float leg = Math.min(percent(BodyPart.LEFT_LEG), percent(BodyPart.RIGHT_LEG));
-        return Math.max(fracturePenalty, leg < 0.20f ? 0.32f : leg < 0.50f ? 0.16f : 0f);
+        float function=(limbFunction(BodyPart.LEFT_LEG)+limbFunction(BodyPart.RIGHT_LEG))/2f;
+        return Math.max(Math.max(fracturePenalty,(1-function)*.60f), leg < 0.20f ? 0.32f : leg < 0.50f ? 0.16f : 0f);
     }
     public void damage(BodyPart part, float value) {
         if (!Float.isFinite(value) || value <= 0) return;
@@ -186,6 +224,7 @@ public final class BodyState {
         return null;
     }
     public void reset() {
+        bloodMl=MAX_BLOOD;
         vitalityLinked = false;
         concussionTicks = 0;
         painkillerTicks = 0;
@@ -206,6 +245,7 @@ public final class BodyState {
     }
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag result = new CompoundTag();
+        result.putFloat("bloodMl",bloodMl);
         result.putBoolean("vitalityLinked", vitalityLinked);
         result.putInt("concussionTicks", concussionTicks);
         result.putInt("painkillerTicks", painkillerTicks);
@@ -222,6 +262,8 @@ public final class BodyState {
     }
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         reset();
+        float storedBlood=nbt.contains("bloodMl",99)?nbt.getFloat("bloodMl"):MAX_BLOOD;
+        bloodMl=Float.isFinite(storedBlood)?Math.max(0,Math.min(MAX_BLOOD,storedBlood)):MAX_BLOOD;
         vitalityLinked = nbt.getBoolean("vitalityLinked");
         concussionTicks = Math.max(0, nbt.getInt("concussionTicks"));
         painkillerTicks = Math.max(0, nbt.getInt("painkillerTicks"));

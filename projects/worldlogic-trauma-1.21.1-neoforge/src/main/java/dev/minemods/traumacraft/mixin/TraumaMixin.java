@@ -13,6 +13,18 @@ public abstract class TraumaMixin {
     private static void traumatic$arm(Player p,CallbackInfoReturnable<Boolean> ci) {
         if(p instanceof ServerPlayer) ci.setReturnValue(WorldLogicBridge.armInjury(p));
     }
+    @Inject(method="mining",at=@At("HEAD"),cancellable=true)
+    private static void traumatic$mining(Player p,CallbackInfoReturnable<Double> ci){
+        if(p instanceof ServerPlayer && WorldLogicBridge.functionsEnabled(p))
+            ci.setReturnValue((double)WorldLogicBridge.miningFactor(p));
+    }
+    @Inject(method="melee",at=@At("HEAD"),cancellable=true)
+    private static void traumatic$melee(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e,CallbackInfo ci){
+        if(!e.isCanceled()&&e.getSource().getDirectEntity() instanceof ServerPlayer p&&WorldLogicBridge.functionsEnabled(p)){
+            e.setAmount(e.getAmount()*WorldLogicBridge.strikeFactor(p));
+            ci.cancel();
+        }
+    }
     @Inject(method="impact",at=@At("RETURN"))
     private static void traumatic$collision(Player p,double severity,String reason,CallbackInfo ci) {
         WorldLogicBridge.collision(p,severity,reason);

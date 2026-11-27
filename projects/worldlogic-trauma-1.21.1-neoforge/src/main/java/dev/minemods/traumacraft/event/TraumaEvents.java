@@ -28,6 +28,7 @@ public final class TraumaEvents {
         TreatmentManager.forget(p);
         WorldLogicBridge.clearLegacyInjuries(p);
         BodyStates.resetForNewLife(p);
+        FunctionEvents.update(p);
         ModNetwork.progress(p,0,0);
     }
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent e) {
@@ -94,18 +95,21 @@ public final class TraumaEvents {
     }
     public static void onPlayerTick(EntityTickEvent.Post e) {
         if(!(e.getEntity() instanceof ServerPlayer p)) return;
+        FunctionEvents.update(p);
         if(!WorldLogicBridge.active(p)){TreatmentManager.tick(p);return;}
         BodyState b=BodyStates.get(p);
-        if(b.vitalDestroyed()){fatalCollapse(p);return;}
+        if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
         TreatmentManager.tick(p);
         if(p.tickCount%20!=0) return;
         b.tickMedicalEffects();
         if(WorldLogicBridge.resting(p)) {
-            ThermalBridge.recover(b,ThermalBridge.condition(p),p.tickCount%100==0);
+            var thermal=ThermalBridge.condition(p);
+            ThermalBridge.recover(b,thermal,p.tickCount%100==0);
+            if(!b.hasBleeding())b.recoverBlood(6f*thermal.recoveryFactor);
         }
         if(p.tickCount%40==0 && b.hasBleeding()) {
             float blood=b.bleedStep();
-            if(b.vitalDestroyed()){fatalCollapse(p);return;}
+            if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
             if(blood>0 && p.getHealth()>1f) p.setHealth(Math.max(1f,p.getHealth()-blood*.20f));
         }
         if(BodyStates.flush(p) || p.tickCount%40==0) ModNetwork.sync(p);

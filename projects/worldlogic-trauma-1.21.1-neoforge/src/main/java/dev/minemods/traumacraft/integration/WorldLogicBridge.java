@@ -13,12 +13,19 @@ public final class WorldLogicBridge {
     public static double fatigue(Player p) { return p instanceof ServerPlayer server ? WorldLogicApi.fatigue(server).fatiguePercent() : 0; }
     public static boolean legInjury(Player p) { return injuryEnabled(p) && BodyStates.get(p).legPenalty()>0; }
     public static boolean armInjury(Player p) { return active(p) && WorldLogicApi.ruleEnabled("shoulder_impact") && BodyStates.get(p).armImpaired(); }
-    public static double mergePenalty(Player p,double original) { return injuryEnabled(p)?Math.max(original,BodyStates.get(p).legPenalty()):original; }
+    public static double mergePenalty(Player p,double original) { return injuryEnabled(p)?Math.max(original,PhysicalFunction.movementPenalty(BodyStates.get(p))):original; }
     public static boolean canTreat(Player p) { return !Balance.down(p); }
     public static boolean resting(Player p) {
         return active(p) && p.onGround() && !p.isSprinting() && !p.isSwimming() && !p.isInWater()
              && !p.isUsingItem() && p.getFoodData().getFoodLevel()>=14 && fatigue(p)<55
              && p.getDeltaMovement().horizontalDistance()<.04 && !Balance.down(p);
+    }
+    public static boolean functionsEnabled(Player p){return injuryEnabled(p);}
+    public static float miningFactor(Player p){return functionsEnabled(p)?PhysicalFunction.mining(BodyStates.get(p),mainArm(p)):1f;}
+    public static float strikeFactor(Player p){return functionsEnabled(p)?PhysicalFunction.strike(BodyStates.get(p),mainArm(p)):1f;}
+    public static BodyPart armForHand(Player p,net.minecraft.world.InteractionHand hand){
+        BodyPart main=mainArm(p);
+        return hand==net.minecraft.world.InteractionHand.MAIN_HAND?main:main==BodyPart.LEFT_ARM?BodyPart.RIGHT_ARM:BodyPart.LEFT_ARM;
     }
     public static BodyPart mainArm(Player p) { return p.getMainArm()==HumanoidArm.LEFT?BodyPart.LEFT_ARM:BodyPart.RIGHT_ARM; }
     /** Trauma is authoritative for anatomy; old core timers must not become new injuries at login/respawn. */
