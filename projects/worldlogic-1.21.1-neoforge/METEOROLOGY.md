@@ -33,3 +33,7 @@ QA: real dedicated-server command checks dry/wet, stable/unstable, no-lift and f
 ## Next implementation gate
 
 Replace provisional synoptic forcing with a bounded persistent transport grid and explicit energy/water exchanges, verify conservation/stability and regional continuity; then couple the column to regional weather events and client synchronization. Do not alter live temperature or rain until the complete gameplay and API path is tested.
+
+## First live integration (RC22)
+
+Opt-in `modeled_weather` (off in all presets), every 200 ticks, uses the loaded overworld spawn column to select clear/rain/thunder from condensate and convection with hysteresis. Actual vanilla weather state, not independent effects. Respects `doWeatherCycle`, no forced chunk loads. This is intentionally a single anchor, NOT per-region rain; actual temperature and wind still use the previous live API. Regional transport and per-position precipitation synchronization remain necessary before default enablement.

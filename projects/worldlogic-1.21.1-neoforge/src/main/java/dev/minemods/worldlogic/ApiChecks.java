@@ -43,6 +43,23 @@ public final class ApiChecks {
    p.getFoodData().setFoodLevel(food);p.setPos(pos.x,pos.y,pos.z);p.setOnGround(grounded);p.setSprinting(sprint);p.setShiftKeyDown(sneak);
   }
  }
+ public static void verifyWeatherController(ServerLevel l){
+  require(WeatherController.choose(.1,true,900,true,true)==WeatherController.Mode.CLEAR,"dry cannot thunder");
+  require(WeatherController.choose(.3,false,0,false,false)==WeatherController.Mode.CLEAR,"rain start threshold");
+  require(WeatherController.choose(.3,false,0,true,false)==WeatherController.Mode.RAIN,"rain hysteresis");
+  require(WeatherController.choose(.8,false,900,false,false)==WeatherController.Mode.RAIN,"stable rain cannot thunder");
+  require(WeatherController.choose(.8,true,300,false,false)==WeatherController.Mode.THUNDER,"moist buoyant storm");
+  var last=WeatherController.last(l);
+  require(last!=null&&l.getGameTime()-last.tick()<=220,"automatic world tick actually applied weather");
+  require(l.getLevelData().isRaining()==(last.mode()!=WeatherController.Mode.CLEAR),"actual rain flag");
+  require(l.getLevelData().isThundering()==(last.mode()==WeatherController.Mode.THUNDER),"actual thunder flag");
+  for(var mode:WeatherController.Mode.values()){
+   WeatherController.apply(l,mode);
+   require(l.getLevelData().isRaining()==(mode!=WeatherController.Mode.CLEAR),"applied rain state "+mode);
+   require(l.getLevelData().isThundering()==(mode==WeatherController.Mode.THUNDER),"applied thunder state "+mode);
+  }
+  WeatherController.apply(l,last.mode());
+ }
  public static void verifyAtmosphere(ServerLevel l,boolean rain){
   BlockPos pos=weatherFixture(l);
   require(l.hasChunkAt(pos)&&l.canSeeSky(pos),"weather fixture must be loaded and exposed");
