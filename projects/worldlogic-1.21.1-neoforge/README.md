@@ -20,3 +20,5 @@ RC23 research: new world preset `worldlogic:earthlike_extended` (-256..511, sea 
 Extended-world cloud height is configured at Y440 through a client-only NeoForge dimension effects registration. The old preset's cloud height is unchanged. The client renderer remains unverified.
 
 RC24: one selectable World Logic Realistic preset (`worldlogic:realistic_unified`), 51 new Overworld biome classes, original RC22 upper density and climate, RC23 geology and extended underground, clouds Y440. Old registry IDs retained. Terrarian supplies plants; without it vegetation is intentionally absent. Initial prototype, real new-world and addon checks pending.
+
+RC25: smaller regional deposits, frequent small shallow and deep ore pockets, improved karst galleries and lake chambers; same unified Realistic preset, no terrain/biome changes. Existing chunks are not regenerated. Use a new world for a uniform ore distribution. Full generated-world visual and economy checks still pending.

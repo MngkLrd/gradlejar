@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC24 production core/API regression",
+  "name": "World Logic NeoForge RC25 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -152,6 +152,18 @@
       "name": "Unified custom biome registry and exact RC22 base-height regression seed b",
       "command": "worldlogic qa unified_b",
       "expect": "WORLDLOGIC_UNIFIED_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Regional ore body size limits, frequent shallow pockets and ordinary chunk abundance",
+      "command": "worldlogic qa ore_balance",
+      "expect": "WORLDLOGIC_ORE_BALANCE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Karst shaft, connected gallery and flooded chamber across synthetic chunks",
+      "command": "worldlogic qa karst",
+      "expect": "WORLDLOGIC_KARST_PASSED",
       "assertion": true
     }
   ],
@@ -344,6 +356,28 @@
         {
           "backend": "server",
           "name": "Unified custom biome registry and exact RC22 base-height regression seed b"
+        }
+      ]
+    },
+    {
+      "id": "ore-distribution-balance",
+      "kind": "mechanic",
+      "subject": "Regional ore body size limits, frequent shallow pockets and ordinary chunk abundance",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Regional ore body size limits, frequent shallow pockets and ordinary chunk abundance"
+        }
+      ]
+    },
+    {
+      "id": "karst-shaft-lake",
+      "kind": "mechanic",
+      "subject": "Karst shaft, connected gallery and flooded chamber across synthetic chunks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Karst shaft, connected gallery and flooded chamber across synthetic chunks"
         }
       ]
     }
