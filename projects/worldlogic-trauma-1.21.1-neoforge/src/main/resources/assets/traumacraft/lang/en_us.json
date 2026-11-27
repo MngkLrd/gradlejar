@@ -112,7 +112,7 @@
   "jei.traumacraft.crushed_herbs": "Crush all 16 cells, then left-click to collect. Used in poultices and extract.",
   "message.traumacraft.herbs_ready": "Ready. Left-click to collect.",
   "message.traumacraft.herbs_progress": "Processed: %s/16",
-  "tooltip.traumacraft.herbs_help": "Right-click a surface; left-click with flint to process. Sneak-right-click with empty hand to inspect drying.",
+  "tooltip.traumacraft.herbs_help": "Grind on stone or planks. Dry on a washed stripped log. Sneak-left-click to retrieve.",
   "illness.traumacraft.kind.gastroenteritis": "Gastroenteritis",
   "illness.traumacraft.kind.enterocolitis": "Enterocolitis",
   "illness.traumacraft.stage.mild": "Mild",
@@ -141,5 +141,10 @@
   "tooltip.traumacraft.herb_dry": "Drying: %s%%",
   "message.traumacraft.herb_drying": "Drying: %s%%",
   "tooltip.traumacraft.chamomile_mix": "Right-click with a rag dressing in your off hand: poultice.",
-  "tooltip.traumacraft.botanical_pending": "Material for further processing."
+  "tooltip.traumacraft.botanical_pending": "Material for further processing.",
+  "message.traumacraft.surface_washed": "Log washed. Spread a plant.",
+  "message.traumacraft.wash_rejected": "Requires an empty stripped log and clean fresh water.",
+  "message.traumacraft.wash_first": "Wash the stripped log with clean water first.",
+  "message.traumacraft.drying_started": "Plant spread for drying.",
+  "message.traumacraft.drying_rejected": "An unground plant is required."
 }

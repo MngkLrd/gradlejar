@@ -19,6 +19,7 @@ public final class HerbRenderer implements BlockEntityRenderer<HerbWorkpieceEnti
     public HerbRenderer(BlockEntityRendererProvider.Context c){}
     @SubscribeEvent public static void register(EntityRenderersEvent.RegisterRenderers e){e.registerBlockEntityRenderer(HerbContent.ENTITY.get(),HerbRenderer::new);}
     @Override public void render(HerbWorkpieceEntity e,float delta,PoseStack pose,MultiBufferSource buffers,int light,int overlay){
+        if(e.emptySurface())return;
         // A thin dark herbal mass below a two-pixel layer of raw foliage.
         // Crushing removes the upper cell; the remaining material is visibly lower.
         VertexConsumer base=buffers.getBuffer(RenderType.entityCutoutNoCull(PASTE));

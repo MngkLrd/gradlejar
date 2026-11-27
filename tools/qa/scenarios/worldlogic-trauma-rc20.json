@@ -697,6 +697,48 @@
           "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
         }
       ]
+    },
+    {
+      "id": "tr-washed-log",
+      "kind": "mechanic",
+      "subject": "Only stripped log; clean whole bottle consumed once and returned empty; empty marker persistence and no drop",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-dry-log-batch",
+      "kind": "mechanic",
+      "subject": "Unwashed rejection; one batch per wash; dry progress pauses; dried bundle pickup and transfer to grinder; identity persisted",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-drying-water-quality",
+      "kind": "mechanic",
+      "subject": "Clean fresh profile accepted; salt, polluted, unknown, incorrect volume and empty bottle rejected",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
     }
   ]
 }

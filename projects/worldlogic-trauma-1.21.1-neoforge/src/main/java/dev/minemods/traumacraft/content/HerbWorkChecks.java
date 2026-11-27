@@ -61,11 +61,34 @@ public final class HerbWorkChecks {
                 ItemStack typed=new ItemStack(ModItems.RAW_HERBS.get());HerbSpecies.write(typed,species,0);
                 check(HerbInteraction.place(l,support,p,typed)&&typed.isEmpty(),"typed placement consumes one "+species);
                 var work=piece(l,at);check(work.species()==species&&work.drySeconds()==0,"identity at placement");
+                check(!work.dryStep(true),"ordinary grinding surface cannot dry");
+                p.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
+                check(HerbInteraction.strike(l,at,p,0,true).equals("removed"),"retrieve for drying");
+                var forDry=l.getEntitiesOfClass(ItemEntity.class,box,e->e.getItem().is(ModItems.RAW_HERBS.get()));check(forDry.size()==1,"one bundle before drying");
+                var drying=forDry.getFirst().getItem().copy();forDry.getFirst().discard();
+                l.setBlockAndUpdate(support,Blocks.OAK_LOG.defaultBlockState());
+                p.setItemSlot(EquipmentSlot.MAINHAND,net.minecraft.world.item.alchemy.PotionContents.createItemStack(Items.POTION,net.minecraft.world.item.alchemy.Potions.WATER));
+                check(!HerbInteraction.wash(l,support,p)&&p.getMainHandItem().is(Items.POTION),"unstripped log rejects water");
+                l.setBlockAndUpdate(support,Blocks.STRIPPED_OAK_LOG.defaultBlockState());
+                check(!HerbInteraction.place(l,support,p,drying)&&drying.getCount()==1,"unwashed log rejects herbs");
+                check(HerbInteraction.wash(l,support,p)&&p.getMainHandItem().is(Items.GLASS_BOTTLE),"one clean bottle consumed and empty returned");
+                check(piece(l,at).washed()&&piece(l,at).emptySurface()&&piece(l,at).result().isEmpty(),"washed empty marker no drop");
+                check(!HerbInteraction.wash(l,support,p),"occupied marker rejects extra wash");
+                var washedNbt=piece(l,at).saveWithoutMetadata(l.registryAccess());var marker=new HerbWorkpieceEntity(at,l.getBlockState(at));marker.loadWithComponents(washedNbt,l.registryAccess());check(marker.washed()&&marker.emptySurface(),"wash persisted");
+                check(HerbInteraction.place(l,support,p,drying)&&drying.isEmpty(),"washed log accepts batch");
+                work=piece(l,at);check(work.washed()&&!work.emptySurface(),"drying occupied");
+                p.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
+                check(HerbInteraction.strike(l,at,p,2,false).equals("ignored")&&work.mask()==0,"drying surface prevents grinding");
                 check(!work.dryStep(false)&&work.drySeconds()==0,"wet or covered drying pauses");
                 for(int sec=0;sec<HerbSpecies.DRY_SECONDS;sec++)check(work.dryStep(true),"dry progress");
                 check(!work.dryStep(true)&&work.drySeconds()==HerbSpecies.DRY_SECONDS,"drying bounded");
                 var savedTyped=work.saveWithoutMetadata(l.registryAccess());var reloaded=new HerbWorkpieceEntity(at,l.getBlockState(at));reloaded.loadWithComponents(savedTyped,l.registryAccess());
-                check(reloaded.species()==species&&reloaded.drySeconds()==HerbSpecies.DRY_SECONDS,"species and drying NBT");
+                check(reloaded.species()==species&&reloaded.drySeconds()==HerbSpecies.DRY_SECONDS&&reloaded.washed(),"species and drying NBT");
+                check(HerbInteraction.strike(l,at,p,0,false).equals("removed"),"collect dry batch without grinding");
+                var dryDrops=l.getEntitiesOfClass(ItemEntity.class,box,e->e.getItem().is(ModItems.RAW_HERBS.get()));check(dryDrops.size()==1,"one dried batch");var dried=dryDrops.getFirst().getItem().copy();dryDrops.getFirst().discard();
+                check(HerbSpecies.dry(dried)==HerbSpecies.DRY_SECONDS&&HerbWorkpieceEntity.fromItem(dried)==0,"dry bundle has no crushed cells");
+                check(!HerbInteraction.place(l,support,p,dried),"new batch requires fresh washing");
+                l.setBlockAndUpdate(support,Blocks.STONE.defaultBlockState());check(HerbInteraction.place(l,support,p,dried),"dried bundle moves to grinder");
                 p.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
                 check(HerbInteraction.strike(l,at,p,2,false).equals("changed"),"typed crush");
                 check(HerbInteraction.strike(l,at,p,2,true).equals("removed"),"typed partial pickup");
@@ -83,6 +106,12 @@ public final class HerbWorkChecks {
                 check(dev.minemods.traumacraft.item.BotanicalPowderItem.prepare(powder,new ItemStack(Items.STICK)).isEmpty(),"wrong substrate rejected");
                 powders.forEach(ItemEntity::discard);
             }
+            check(dev.minemods.traumacraft.integration.SurfaceWater.cleanProfile(250,"DRINKABLE",0,.05),"clean fresh water accepted");
+            check(!dev.minemods.traumacraft.integration.SurfaceWater.cleanProfile(250,"DRINKABLE",35,.01),"sea water rejected");
+            check(!dev.minemods.traumacraft.integration.SurfaceWater.cleanProfile(250,"TREAT_RECOMMENDED",0,.5),"polluted water rejected");
+            check(!dev.minemods.traumacraft.integration.SurfaceWater.cleanProfile(250,"UNKNOWN",0,0),"unknown water rejected");
+            check(!dev.minemods.traumacraft.integration.SurfaceWater.cleanProfile(249,"DRINKABLE",0,0),"incorrect volume rejected");
+            check(!dev.minemods.traumacraft.integration.SurfaceWater.waterBottle(new ItemStack(Items.GLASS_BOTTLE)),"empty bottle rejected");
             var invalid=new ItemStack(ModItems.RAW_HERBS.get());HerbSpecies.write(invalid,HerbSpecies.UNKNOWN,0);
             check(!HerbInteraction.place(l,support,p,invalid)&&invalid.getCount()==1,"invalid identity cannot become legacy");
         }finally{

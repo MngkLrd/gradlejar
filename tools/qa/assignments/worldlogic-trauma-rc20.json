@@ -966,5 +966,14 @@
     "actual_player": "NOT_RUN: existing bot does not support modded inventory IDs",
     "terrarian": "NOT_RUN: actual addon not in pinned standalone runtime; optional source tags for proposed species require confirmation",
     "remaining": "wound washing and decoctions need public exact-volume water withdrawal; drying rack and climate-aware drying not implemented; other species therapeutic effects pending"
+  },
+  "primitive_rc3": {
+    "version": "0.7.0-rc3",
+    "scope": "washed stripped log drying station, one full clean water bottle, persisted marker, separated grinding and drying, rain pauses",
+    "server": "traumaqa primitive",
+    "client": "NOT_RUN: visual renderer, right/left actual network interaction",
+    "hydration": "NOT_RUN: optional public bottleWater adapter; standalone fallback and pure profile predicates tested, vessel withdrawal unavailable",
+    "terrarian": "NOT_RUN: optional stripped custom IDs not confirmed; vanilla stripped logs supported",
+    "remaining": "liquid remedies and wound irrigation, climate-driven drying not implemented"
   }
 }

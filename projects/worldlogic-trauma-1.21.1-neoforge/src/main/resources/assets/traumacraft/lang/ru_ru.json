@@ -112,7 +112,7 @@
   "jei.traumacraft.crushed_herbs": "После обработки всех 16 участков снять заготовку ЛКМ. Используется для компрессов и экстракта.",
   "message.traumacraft.herbs_ready": "Готово. ЛКМ, чтобы забрать травы.",
   "message.traumacraft.herbs_progress": "Обработано: %s/16",
-  "tooltip.traumacraft.herbs_help": "ПКМ по поверхности; ЛКМ кремнем для обработки. Присесть + ПКМ пустой рукой: проверить сушку.",
+  "tooltip.traumacraft.herbs_help": "Измельчение: камень или доски. Сушка: промытое окорённое бревно. Shift+ЛКМ: снять сырьё.",
   "illness.traumacraft.kind.gastroenteritis": "Гастроэнтерит",
   "illness.traumacraft.kind.enterocolitis": "Энтероколит",
   "illness.traumacraft.stage.mild": "Лёгкая степень",
@@ -141,5 +141,10 @@
   "tooltip.traumacraft.herb_dry": "Сушка: %s%%",
   "message.traumacraft.herb_drying": "Сушка: %s%%",
   "tooltip.traumacraft.chamomile_mix": "ПКМ с повязкой во второй руке: компресс.",
-  "tooltip.traumacraft.botanical_pending": "Сырьё для дальнейшей обработки."
+  "tooltip.traumacraft.botanical_pending": "Сырьё для дальнейшей обработки.",
+  "message.traumacraft.surface_washed": "Бревно промыто. Разложите растение.",
+  "message.traumacraft.wash_rejected": "Нужно свободное окорённое бревно и чистая пресная вода.",
+  "message.traumacraft.wash_first": "Сначала промойте окорённое бревно чистой водой.",
+  "message.traumacraft.drying_started": "Растение разложено для сушки.",
+  "message.traumacraft.drying_rejected": "Нужно целое, неизмельчённое растение."
 }
