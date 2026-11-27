@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "FMF",
+    "ATA",
+    "FMF"
+  ],
+  "key": {
+    "F": {
+      "item": "traumacraft:sterile_fabric"
+    },
+    "M": {
+      "item": "traumacraft:field_medkit"
+    },
+    "A": {
+      "item": "traumacraft:antiseptic"
+    },
+    "T": {
+      "item": "traumacraft:trauma_kit"
+    }
+  },
+  "result": {
+    "id": "traumacraft:oversized_medkit",
+    "count": 1
+  }
+}

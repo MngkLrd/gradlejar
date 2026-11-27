@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "target": "forge-mc1.21.1",
+  "status": "draft",
+  "scenario": "tools/qa/scenarios/traumatic-worldlogic-rc16.json",
+  "backend": "RCON component fixture (FakePlayer; no real client)",
+  "coverage": [
+    {
+      "id": "TR-STATE",
+      "assertions": [
+        "TR-STATE"
+      ],
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "TR-TREAT",
+      "assertions": [
+        "TR-TREAT"
+      ],
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "TR-BRIDGE",
+      "assertions": [
+        "TR-BRIDGE"
+      ],
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "TR-DAMAGE",
+      "assertions": [
+        "TR-DAMAGE"
+      ],
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "TR-NETWORK",
+      "state": "UNSUPPORTED",
+      "reason": "Forge modded protocol backend not available"
+    },
+    {
+      "id": "TR-UI",
+      "state": "NOT_RUN",
+      "reason": "requires graphical client"
+    },
+    {
+      "id": "TR-LIFECYCLE",
+      "state": "NOT_RUN",
+      "reason": "requires actual login, dimension change and respawn"
+    },
+    {
+      "id": "TR-ITEMS",
+      "state": "NOT_RUN",
+      "reason": "requires item acquisition, consumption and menu checks",
+      "items": [
+        "adrenaline_injector",
+        "analgesic_tablets",
+        "antiseptic",
+        "bandage",
+        "bone_mender",
+        "compact_medkit",
+        "compression_wrap",
+        "endurance_injector",
+        "field_medkit",
+        "focus_injector",
+        "fracture_brace",
+        "guardian_injector",
+        "hemostatic_gel",
+        "herbal_extract",
+        "medical_polymer",
+        "medical_pouch",
+        "medkit",
+        "oversized_medkit",
+        "rag_dressing",
+        "recovery_serum",
+        "splint",
+        "sterile_fabric",
+        "sterile_patch",
+        "surgical_kit",
+        "syringe_body",
+        "tourniquet",
+        "trauma_kit"
+      ]
+    },
+    {
+      "id": "TR-RECIPES",
+      "state": "NOT_RUN",
+      "reason": "actual crafting fixtures still required",
+      "recipes": [
+        "adrenaline_injector",
+        "analgesic_tablets",
+        "antiseptic",
+        "bandage",
+        "bone_mender",
+        "compact_medkit",
+        "compression_wrap",
+        "endurance_injector",
+        "field_medkit",
+        "focus_injector",
+        "fracture_brace",
+        "guardian_injector",
+        "hemostatic_gel",
+        "herbal_extract",
+        "medical_polymer",
+        "medical_pouch",
+        "medkit",
+        "oversized_medkit",
+        "rag_dressing",
+        "recovery_serum",
+        "splint",
+        "sterile_fabric",
+        "sterile_patch",
+        "surgical_kit",
+        "syringe_body",
+        "tourniquet",
+        "trauma_kit"
+      ]
+    }
+  ]
+}

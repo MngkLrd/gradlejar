@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[52,)"
+license="All Rights Reserved"
+[[mods]]
+modId="traumacraft"
+version="0.5.0-rc1"
+displayName="Traumatic: World Logic"
+description='''Anatomical trauma and medicine for World Logic RC16.'''
+[[dependencies.traumacraft]]
+modId="forge"
+mandatory=true
+versionRange="[52.1.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.traumacraft]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.traumacraft]]
+modId="worldlogic"
+mandatory=true
+versionRange="[1.0.0-rc16]"
+ordering="AFTER"
+side="BOTH"

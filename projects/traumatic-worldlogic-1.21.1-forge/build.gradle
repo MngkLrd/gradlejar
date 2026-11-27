@@ -1,0 +1,52 @@
+plugins {
+ id 'java'
+ id 'idea'
+ id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
+}
+group = 'dev.minemods'
+version = '0.5.0-rc1'
+base { archivesName = 'traumacraft-forge-mc1.21.1' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+def coreJar = file('libs/worldlogic-forge-mc1.21.1-1.0.0-rc16.jar')
+def coreHash = '62d22a39fccd3fd16b01de414f31b14d5da33dd25f097df1bbfcdc04b5691e27'
+def coreUrl = 'https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-forge-1.0.0-rc16-1171-1/worldlogic-forge-mc1.21.1-1.0.0-rc16.jar'
+def verifyCore = { File f ->
+    f.isFile() && java.security.MessageDigest.getInstance('SHA-256').digest(f.bytes).encodeHex().toString() == coreHash
+}
+tasks.register('prepareWorldLogic') {
+    outputs.file(coreJar)
+    outputs.upToDateWhen { verifyCore(coreJar) }
+    doLast {
+        if (!verifyCore(coreJar)) {
+            coreJar.parentFile.mkdirs()
+            def tmp = new File(coreJar.parentFile, coreJar.name + '.tmp')
+            def conn = new URI(coreUrl).toURL().openConnection()
+            conn.connectTimeout = 15000; conn.readTimeout = 60000
+            conn.inputStream.withCloseable { input -> tmp.withOutputStream { out -> out << input } }
+            if (!verifyCore(tmp)) { tmp.delete(); throw new GradleException('World Logic RC16 checksum mismatch') }
+            java.nio.file.Files.move(tmp.toPath(), coreJar.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+        }
+    }
+}
+minecraft {
+ mappings channel: 'official', version: '1.21.1'
+ copyIdeResources = true
+ runs {
+  client { workingDirectory project.file('run'); args '--mixin.config', 'traumacraft.mixins.json'; mods { traumacraft { source sourceSets.main } } }
+  server { workingDirectory project.file('run-server'); args '--nogui', '--mixin.config', 'traumacraft.mixins.json'; mods { traumacraft { source sourceSets.main } } }
+ }
+}
+repositories { maven { url = 'https://maven.blamejared.com/' }; mavenCentral() }
+dependencies {
+ minecraft "net.minecraftforge:forge:1.21.1-${forge_version}"
+ compileOnly files(coreJar)
+ runtimeOnly files(coreJar)
+ compileOnly 'mezz.jei:jei-1.21.1-forge-api:19.51.0.418'
+}
+tasks.withType(JavaCompile).configureEach {
+ dependsOn tasks.named('prepareWorldLogic')
+ options.encoding = 'UTF-8'
+ options.release = 21
+}
+tasks.matching { it.name == 'runClient' || it.name == 'runServer' }.configureEach { dependsOn tasks.named('prepareWorldLogic') }
+jar { manifest.attributes('MixinConfigs': 'traumacraft.mixins.json') }
