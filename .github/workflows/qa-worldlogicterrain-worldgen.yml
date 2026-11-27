@@ -1,0 +1,55 @@
+name: WorldLogic Terrain natural generation QA
+on:
+  pull_request:
+    paths:
+      - 'projects/worldlogic-terrain-1.21.1-neoforge/**'
+      - 'tools/qa/scenarios/worldlogicterrain.json'
+      - '.github/workflows/qa-worldlogicterrain-worldgen.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  natural-world:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch exact successful Build Hub artifact for this commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p natural-inputs
+          run_id=""
+          for i in $(seq 1 36); do
+            run_id=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/build.yml/runs?head_sha=$HEAD_SHA&per_page=10" --jq '.workflow_runs | map(select(.event == "pull_request" or .event == "workflow_dispatch" or .event == "push")) | first | .id // empty')
+            [ -n "$run_id" ] && break
+            sleep 5
+          done
+          [ -n "$run_id" ]
+          gh run watch "$run_id" --repo "$GITHUB_REPOSITORY" --exit-status --interval 10
+          gh run download "$run_id" --repo "$GITHUB_REPOSITORY" --pattern 'jar-worldlogicterrain-1.21.1-neoforge-*' --dir natural-inputs
+          gh run download "$run_id" --repo "$GITHUB_REPOSITORY" --pattern 'qa-report-*' --dir natural-inputs
+      - name: Test actual generated chunks in Earthlike Climate
+        run: |
+          python -m pip install nbtlib==2.0.4
+          PYTHONPATH=. python projects/worldlogic-terrain-1.21.1-neoforge/qa/worldgen_smoke.py natural-inputs natural-world-qa
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: worldlogicterrain-natural-world-evidence
+          path: |
+            natural-world-qa/worldgen-report.json
+            natural-world-qa/logs/
+          if-no-files-found: warn
