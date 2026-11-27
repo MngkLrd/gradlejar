@@ -35,7 +35,7 @@ public final class WeatherController {
   if(env.isEmpty())return;
   var climate=env.orElseThrow().regionalClimate();
   var biome=l.getBiome(anchor).value();
-  double reference=climate.map(v->14+28*v.thermalIndex()).orElse(-12+32*biome.getBaseTemperature());
+  double reference=climate.map(v->14+28*v.thermalIndex()).orElse(-12.0+32.0*biome.getBaseTemperature());
   double moisture=climate.map(WorldLogicApi.RegionalClimate::moistureIndex).orElse(biome.hasPrecipitation()?.55:.15);
   double wx=climate.map(WorldLogicApi.RegionalClimate::prevailingWindX).orElse(0.0),wz=climate.map(WorldLogicApi.RegionalClimate::prevailingWindZ).orElse(0.0);
   var cell=WeatherGridState.get(l).update(l,anchor,reference,moisture,wx,wz);
