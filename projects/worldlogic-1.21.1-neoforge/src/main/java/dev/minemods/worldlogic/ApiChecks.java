@@ -63,6 +63,34 @@ public final class ApiChecks {
   }
   require(wet&&dry,"regional survey includes wet and dry potential");
  }
+ public static void verifyWeatherColumn(ServerLevel l){
+  BlockPos pos=l.getSharedSpawnPos().above(5);
+  var live=WorldLogicApi.atmosphere(l,pos).orElseThrow();
+  var a=WorldLogicApi.weatherColumnPreview(l,pos).orElseThrow();
+  require(a.equals(WorldLogicApi.weatherColumnPreview(l,pos).orElseThrow()),"same-tick column");
+  require(live.equals(WorldLogicApi.atmosphere(l,pos).orElseThrow()),"column must not change live atmosphere");
+  require(WorldLogicApi.weatherColumnPreview(l,new BlockPos(1000000,64,1000000)).isEmpty(),"unloaded column query");
+  require(WorldLogicApi.weatherColumnPreview(l,new BlockPos(pos.getX(),l.getMaxBuildHeight(),pos.getZ())).isEmpty(),"out-of-height column query");
+  require(Math.abs(AtmosphericColumn.saturationHpa(0)-6.112)<1e-6,"saturation reference");
+  require(Math.abs(AtmosphericColumn.dewPoint(AtmosphericColumn.saturationHpa(20))-20)<1e-8,"dew point inverse");
+  var dry=AtmosphericColumn.diagnose(25,1013,5,9,1800,0,3);
+  var wet=AtmosphericColumn.diagnose(25,1013,90,9,1800,0,3);
+  var stable=AtmosphericColumn.diagnose(25,1013,90,2,1800,0,3);
+  var noLift=AtmosphericColumn.diagnose(25,1013,90,9,0,0,3);
+  require(dry.condensedWaterGkg()==0&&dry.precipitationPotential()==0&&!dry.convective(),"dry parcel does not rain");
+  require(wet.condensationLevelM()>=0&&wet.cloudTopM()>wet.cloudBaseM()&&wet.condensedWaterGkg()>0,"humid lifted parcel condenses");
+  require(wet.buoyancyEnergyJkg()>stable.buoyancyEnergyJkg()&&wet.cloudTopM()>stable.cloudTopM(),"stability controls vertical growth");
+  require(noLift.condensedWaterGkg()==0&&!noLift.convective(),"no trigger means no active convection");
+  var fog=AtmosphericColumn.diagnose(10,1013,95,2,0,3,1);
+  var windy=AtmosphericColumn.diagnose(10,1013,95,2,0,3,10);
+  require(fog.fogPotential()>0&&windy.fogPotential()==0,"radiation fog cooling and mixing");
+  for(int t=-50;t<=50;t+=10)for(int rh=0;rh<=100;rh+=10)for(int p:new int[]{800,1013}){
+   var d=AtmosphericColumn.diagnose(t,p,rh,7,1500,2,3);
+   require(Double.isFinite(d.dewPointC())&&Double.isFinite(d.wetBulbC())&&d.dewPointC()<=d.wetBulbC()+1e-6&&d.wetBulbC()<=d.airC()+1e-6,"dew <= wet bulb <= air");
+   require(d.condensedWaterGkg()>=0&&d.condensedWaterGkg()<=d.vaporMixingRatioGkg()+1e-8,"column moisture budget");
+   require(d.cloudFraction()>=0&&d.cloudFraction()<=1&&d.precipitationPotential()>=0&&d.precipitationPotential()<=1&&Double.isFinite(d.buoyancyEnergyJkg()),"column index bounds");
+  }
+ }
  public static void verify(ServerLevel l){
   BlockPos pos=l.getSharedSpawnPos();
   var env=WorldLogicApi.environment(l,pos).orElseThrow();

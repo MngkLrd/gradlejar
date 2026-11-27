@@ -32,9 +32,15 @@
       "assertion": true
     },
     {
-      "name": "Registered custom generator, climate fixtures, seed surveys and heights",
-      "command": "worldlogic qa terrain",
-      "expect": "WORLDLOGIC_TERRAIN_PRESET_PASSED",
+      "name": "Registered custom generator, climate fixtures, first seed survey and heights",
+      "command": "worldlogic qa terrain_seed_a",
+      "expect": "WORLDLOGIC_TERRAIN_SEED_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Registered custom generator, climate fixtures, second seed survey and heights",
+      "command": "worldlogic qa terrain_seed_b",
+      "expect": "WORLDLOGIC_TERRAIN_SEED_PASSED",
       "assertion": true
     },
     {
@@ -77,6 +83,18 @@
       "name": "Weather diagnostics reports live and preview separately",
       "command": "execute positioned 0 70 0 run worldlogic weather",
       "expect": "Live:.*Regional preview:",
+      "assertion": true
+    },
+    {
+      "name": "Vertical parcel thermodynamics, moisture budget, stability, fog and live isolation",
+      "command": "worldlogic qa weather_column",
+      "expect": "WORLDLOGIC_WEATHER_COLUMN_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Weather column diagnostics",
+      "command": "execute positioned 0 70 0 run worldlogic weather_column",
+      "expect": "Column preview:.*condensate.*buoyancy",
       "assertion": true
     }
   ],
@@ -121,7 +139,11 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Registered custom generator, climate fixtures, seed surveys and heights"
+          "name": "Registered custom generator, climate fixtures, first seed survey and heights"
+        },
+        {
+          "backend": "server",
+          "name": "Registered custom generator, climate fixtures, second seed survey and heights"
         }
       ]
     },
@@ -166,6 +188,28 @@
         {
           "backend": "server",
           "name": "Weather diagnostics reports live and preview separately"
+        }
+      ]
+    },
+    {
+      "id": "atmospheric-column",
+      "kind": "mechanic",
+      "subject": "Vertical parcel thermodynamics, moisture budget, stability, fog and live isolation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vertical parcel thermodynamics, moisture budget, stability, fog and live isolation"
+        }
+      ]
+    },
+    {
+      "id": "weather-column-inspection",
+      "kind": "mechanic",
+      "subject": "Weather column diagnostics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Weather column diagnostics"
         }
       ]
     }

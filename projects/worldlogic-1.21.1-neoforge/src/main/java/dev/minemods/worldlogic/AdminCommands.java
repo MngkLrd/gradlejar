@@ -25,6 +25,14 @@ public final class AdminCommands {
    return reply(s,String.format(Locale.ROOT,"Live: %.1f C, RH %.0f%%, wind %.1f m/s, %s. Regional preview: %.1f hPa, anomaly %+.1f C, cloud %.0f%%, precipitation potential %.0f%%, gust %.1f m/s.",
     a.environment().ambientCelsiusEstimate(),a.relativeHumidityPercent(),a.outdoorWindSpeedMps(),a.precipitation(),w.localPressureHpa(),w.temperatureAnomalyC(),w.cloudFraction()*100,w.precipitationPotential()*100,w.gustMps()));
   }));
+  root.then(Commands.literal("weather_column").executes(c->{
+   var s=c.getSource();var pos=net.minecraft.core.BlockPos.containing(s.getPosition());
+   var a=dev.minemods.worldlogic.api.WorldLogicApi.weatherColumnPreview(s.getLevel(),pos);
+   if(a.isEmpty())return reply(s,"Weather column unavailable at this position.");
+   var d=a.orElseThrow();
+   return reply(s,String.format(Locale.ROOT,"Column preview: %.1f C, dew %.1f C, wet bulb %.1f C, vapor %.2f g/kg, LCL %.0f m, cloud %.0f-%.0f m, condensate %.2f g/kg, buoyancy %.0f J/kg, fog index %.2f.",
+    d.airC(),d.dewPointC(),d.wetBulbC(),d.vaporMixingRatioGkg(),d.condensationLevelM(),d.cloudBaseM(),d.cloudTopM(),d.condensedWaterGkg(),d.buoyancyEnergyJkg(),d.fogPotential()));
+  }));
   root.then(Commands.literal("testfall").executes(c->{var p=c.getSource().getPlayer();if(p!=null&&Balance.debug(p))return reply(c.getSource(),"World Logic: test fall triggered.");c.getSource().sendFailure(Component.literal("Enable physical_falls and use in survival."));return 0;}));
   root.then(Commands.literal("selftest").executes(c->{try{ReleaseChecks.run();return reply(c.getSource(),"WORLDLOGIC_CORE_TESTS_PASSED");}catch(Exception e){c.getSource().sendFailure(Component.literal(e.toString()));return 0;}}));
   root.then(Commands.literal("qa").requires(s->s.hasPermission(4))
@@ -32,6 +40,9 @@ public final class AdminCommands {
    .then(Commands.literal("atmosphere_dry").executes(c->{ApiChecks.verifyAtmosphere(c.getSource().getLevel(),false);return reply(c.getSource(),"WORLDLOGIC_ATMOSPHERE_DRY_PASSED");}))
    .then(Commands.literal("atmosphere_rain").executes(c->{ApiChecks.verifyAtmosphere(c.getSource().getLevel(),true);return reply(c.getSource(),"WORLDLOGIC_ATMOSPHERE_RAIN_PASSED");}))
    .then(Commands.literal("regional_weather").executes(c->{ApiChecks.verifyRegionalWeather(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_REGIONAL_WEATHER_PASSED");}))
+   .then(Commands.literal("weather_column").executes(c->{ApiChecks.verifyWeatherColumn(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WEATHER_COLUMN_PASSED");}))
+   .then(Commands.literal("terrain_seed_a").executes(c->{TerrainChecks.verifyPresetSeed(c.getSource().getLevel(),1234L);return reply(c.getSource(),"WORLDLOGIC_TERRAIN_SEED_PASSED");}))
+   .then(Commands.literal("terrain_seed_b").executes(c->{TerrainChecks.verifyPresetSeed(c.getSource().getLevel(),-6487130996193510395L);return reply(c.getSource(),"WORLDLOGIC_TERRAIN_SEED_PASSED");}))
    .then(Commands.literal("terrain").executes(c->{TerrainChecks.verifyPreset(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_TERRAIN_PRESET_PASSED");}))
    .then(Commands.literal("world").executes(c->{ReleaseChecks.verifyWorld(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WORLD_FIXTURE_PASSED");})));
   event.getDispatcher().register(root);

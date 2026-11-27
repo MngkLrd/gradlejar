@@ -17,3 +17,5 @@ Priority: environmental API, weather, hydrology and geology. Preserve existing w
 ## Meteorology sequence
 
 RC22: deterministic regional pressure and moving warm/cold/moist/dry fields, cloud and precipitation potential, diagnostics. Next: reconcile regional controller with server/client weather, local precipitation and vanilla mechanics (water, fire, snow, crops); only then update the live environmental API atomically. Later: terrain/near-water and shelter microclimate, fog/dew, storms, seasons and extreme events. No separate weather addon; Temperature consumes the live core API only.
+
+Scientific direction: [METEOROLOGY.md](METEOROLOGY.md). Replace independent weather effects with a coupled, bounded dynamical and thermodynamic model in staged increments; do not advertise institutional validation or use preview fields for gameplay.

@@ -10,3 +10,5 @@ QA: enrolled NeoForge server scenario validates core calculations, tags, live wo
 RC21: additive atmospheric snapshot and executable dry/rain checks. See [API.md](API.md) and [approved subsystem ownership](ARCHITECTURE.md). No terrain, registry, save-format or existing rule behavior changes.
 
 RC22 adds an experimental continuous regional weather field (pressure, advected thermal/moisture waves, pressure-gradient wind, cloud and precipitation potential) and `/worldlogic weather`. The preview does not drive real rain, snow, thunder, player thermoregulation, or visuals. Existing live RC21 atmosphere remains unchanged. Server QA includes deterministic field, continuity, climate dependence, bounds, live isolation and command output.
+
+RC22 research extension: physically informed parcel-column diagnostics (water vapor, dew/wet-bulb, dry/moist adiabatic cooling, condensation budget, stability and fog proxy). No live weather change. Existing two-seed terrain regression split into two server commands to avoid an observed RCON timeout; both seed surveys and height checks retained.
