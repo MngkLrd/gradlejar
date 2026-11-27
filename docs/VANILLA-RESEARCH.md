@@ -1,5 +1,25 @@
 # Vanilla visual research: R1 pilot (Minecraft Java 1.21.1)
 
+## Current verified status — R9
+
+The R9 mandatory atlas is in main (PR [#215](https://github.com/MngkLrd/gradlejar/pull/215), merge ca8cca0104913dc821851602e00a051821964e6f). Use [Visual QA](VISUAL-QA.md) and [the atlas](VANILLA-ART-ATLAS.md) as current production policy; older sections below are historical research checkpoints. The actual catalog and lock govern the executable contract.
+
+| Evidence | Verified scope |
+| --- | --- |
+| Official client PNG inventory | 3,070 |
+| Initial static metrics | 2,886 |
+| Additional deferred texture analysis | 181 of 184: 51 animation atlases, 42 non-animation metadata, 88 large images; 3 unsupported layouts |
+| Referenced animation frames | 585 (573 distinct within individual atlases) |
+| Direct visual inspection and official hash match | 57 vanilla PNGs |
+| Executable atlas rules | 28 |
+| Synthetic experimental comparisons | 40 pilot + 240 expanded = 280 pairs |
+| Real mod art exploratory inspection | 16 PNGs, 11 case sheets; no independent/owner labels |
+| Independent aesthetic reviewer | NOT_RUN; no measured artistic accuracy |
+| Client visual certification | NOT_RUN in this research |
+
+Source: [R9 verified CI run 46029695582](https://github.com/MngkLrd/gradlejar/actions/runs/46029695582), 15 dedicated tests and 57/57 official reference matches; PR #215 checks 4/4. R6 technical coverage and its exact unsupported layouts are recorded below. A technical inventory is not visual inspection. No production guarantee, no automatic taste score, no manual user review obligation for routine development.
+
+
 Research issue [#206](https://github.com/MngkLrd/gradlejar/issues/206). On 2026-11-27, 11 PNG files were retrieved as Base64 from both `misode/mcmeta@1.21.1-assets` and `InventivetalentDev/minecraft-assets@1.21.1`, using the same assets/minecraft/textures path. The byte strings and returned Git blob SHA-1 matched across both archives. All 11 were decoded locally, each Git blob SHA-1 independently recomputed, and actual images inspected in a private nearest-neighbor comparison sheet. Direct Mojang download was unavailable locally (DNS failure); official-client equivalence for these 11 was subsequently verified in [R1 run 46016223782](https://github.com/MngkLrd/gradlejar/actions/runs/46016223782). No raw PNGs or sheets committed.
 
 | Resource (under textures/) | Visible RGB colors | 4-connected components | Largest component | Dominant color % |
@@ -169,3 +189,20 @@ R7 [run 46024956509](https://github.com/MngkLrd/gradlejar/actions/runs/460249565
 ## R9 — mandatory atlas and expanded visual sample
 
 R8 PR #212 merged (2/2 checks). 24 additional PNGs were decoded locally from the pinned 1.21.1 archive, SHA-256 matched individually against the official corpus from R7 artifact 15212406511, and viewed at 1x/8x with 3x3 tiled block previews. Directly examined total: 57. See [R9 atlas observations](VANILLA-ART-ATLAS.md) and exact hash/rule catalog `tools/qa/research/vanilla-art-rules.json`. Existing original review lock is retained, and new/changed PNGs since fixed R9 adoption require applicable atlas rule and evidence before Gradle. Known catalog SHA-256 values are checked locally; custom/unlisted references still require actual comparison but provenance is attested. No subjective numerical gate or new normal build job. Research and independent evaluation remain distinct; no production quality accuracy claim.
+
+
+### R9 confirmed expanded experimental results
+
+The expanded suite (seed 209) uses 60 official static sources across 12 role/material families, 5 sources and 20 comparisons per family. Exact visible RGB partition fingerprints are distinct and do not overlap the original 40-pair pilot or the 57 atlas references. This is not a family-held-out or perceptual deduplication claim. Counts: 60 whole-palette flattening, 60 localized flattening, 18 repeated quadrants, 42 alpha shuffles, 60 visible shuffles. 169/240 pairs preserve the number of visible RGB colors; all preserve visible pixel count.
+
+| Fixed source-choice heuristic | Correct | Wrong | Abstain |
+| --- | ---: | ---: | ---: |
+| More palette colors | 71 | 0 | 169 |
+| Fewer isolated pixels | 95 | 139 | 6 |
+| More same-color neighbor edges | 89 | 150 | 1 |
+| Lower adjacent mean value delta | 171 | 67 | 2 |
+| Larger connected component | 87 | 125 | 28 |
+
+The more-same-color-edge heuristic incorrectly prefers all 120 global and local flattening perturbations. Even the best of these unfitted single-metric diagnostics recognizes the original in only 171/240 comparisons (71.25%). These are correlated synthetic source-identification controls, not visually adjudicated defect labels or a measure of reviewer artistic accuracy. Do not implement release thresholds from these results.
+
+Current next research priority: broaden direct visual observations of underrepresented material roles, actual GUI/UV/animation contexts, and a fresh independent review with real labeled examples. Keep synthetic and direct-inspection counts distinct. Existing R9 evidence validation is production policy; independent-review certification is not.
