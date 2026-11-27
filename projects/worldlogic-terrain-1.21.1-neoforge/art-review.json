@@ -2188,9 +2188,201 @@
         "vanilla_comparison": "Vanilla short grass provides native vegetation scale; sedge is taller and stiffer.",
         "functional_material_cues": "Long pointed wetland leaves and clustered root base identify sedge."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/cattail.png": {
+      "sha256": "ed690e21bca87b693b82e546e5f93a0e1d70aea5b7c1782379e08ad507cce514",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/sugar_cane",
+          "minecraft": "1.21.1",
+          "sha256": "07ff8cc8729ebfd38130efaea7679b3b26f74661adb116b7679e16be66407eb6"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sugar_cane: Sugar cane gives native vertical stalk structure; cattail uses basal broad blades. Side blades curve differently and upper tips leave asymmetric gaps. Joined pair inspected at 16x32.",
+      "findings": {
+        "silhouette": "Two tall flowering stalks and broad vertical leaves grow from basal clump.",
+        "cluster_structure": "Long left and central blade strips include connected shaded lower regions.",
+        "micro_contrast": "Muted green steps follow broad wetland leaf folds.",
+        "light_and_volume": "Lighter front blade surfaces overlap darker rear stalks.",
+        "material_continuity": "Green leaves and stalks continue into upper half.",
+        "edge_variation": "Side blades curve differently and upper tips leave asymmetric gaps.",
+        "variant_identity": "Cattail has two flowering stalks rather than reed's three narrow stems.",
+        "vanilla_comparison": "Sugar cane gives native vertical stalk structure; cattail uses basal broad blades.",
+        "functional_material_cues": "The x5 and x11 flowering stalks cross upper boundary into matching top."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/cattail_top.png": {
+      "sha256": "e93cb96e3e1f938451b135cad2063a775e75ed9146a0dc2636df767821037ea9",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/wheat_stage7",
+          "minecraft": "1.21.1",
+          "sha256": "3d8c251dd851f06cd019fb02b7f4ab666aa748251c79fb9562c32d2fbb799a0c"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against wheat_stage7: Wheat provides native seed-head scale; cattail uses compact cylinders. Different head heights and tapered end caps break silhouette. Joined pair inspected at 16x32.",
+      "findings": {
+        "silhouette": "Two distinct cylindrical brown seed heads rise above thin green stalks.",
+        "cluster_structure": "Brown head faces have darker borders and narrow lighter clusters along sides.",
+        "micro_contrast": "Adjacent tan and russet shades describe cylindrical seed head surfaces.",
+        "light_and_volume": "Pale left head edges contrast with darker right and lower turning faces.",
+        "material_continuity": "Brown heads attach continuously to green vertical stalks.",
+        "edge_variation": "Different head heights and tapered end caps break silhouette.",
+        "variant_identity": "Long brown cattail cylinders differ from reed's smaller golden panicles.",
+        "vanilla_comparison": "Wheat provides native seed-head scale; cattail uses compact cylinders.",
+        "functional_material_cues": "Two stalks continue through y15 edge, matching lower half at x5 and x11."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/reed.png": {
+      "sha256": "076b5fd25798dbc3f8159417203316678df12ae95a6458d81a9c483f6193a51f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/sugar_cane",
+          "minecraft": "1.21.1",
+          "sha256": "07ff8cc8729ebfd38130efaea7679b3b26f74661adb116b7679e16be66407eb6"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against sugar_cane: Sugar cane provides native stalk comparator; reed adds bent basal foliage. Left blade bends inward while right blade extends higher. Joined pair inspected at 16x32.",
+      "findings": {
+        "silhouette": "Three upright reed stems rise through several pointed basal leaves.",
+        "cluster_structure": "Connected dark and light vertical stalk strips sit behind broad bent leaves.",
+        "micro_contrast": "Local light green steps along left leaf show turning plane.",
+        "light_and_volume": "Dark overlapping stem groups sit behind lighter forward blades.",
+        "material_continuity": "Green stalk ramps continue across joined top and bottom textures.",
+        "edge_variation": "Left blade bends inward while right blade extends higher.",
+        "variant_identity": "Three narrow continuous stalks distinguish reed from two-head cattail.",
+        "vanilla_comparison": "Sugar cane provides native stalk comparator; reed adds bent basal foliage.",
+        "functional_material_cues": "The x3, x8 and x12 stems align with upper-half continuation."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/reed_top.png": {
+      "sha256": "6dc97fa745086491f28c81d111e17fc56bb241e194297875e5970ba61000caf1",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/wheat_stage7",
+          "minecraft": "1.21.1",
+          "sha256": "3d8c251dd851f06cd019fb02b7f4ab666aa748251c79fb9562c32d2fbb799a0c"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against wheat_stage7: Wheat offers native seed-head material and stem scale; reed uses different shapes. Unequal panicle heights and widths prevent uniform row of cylinders. Joined pair inspected at 16x32.",
+      "findings": {
+        "silhouette": "Three small golden reed panicles attach to staggered tall stems.",
+        "cluster_structure": "Each panicle has connected golden face with small lighter upper clusters.",
+        "micro_contrast": "Muted yellow and ochre neighboring shades identify dried seed tissue.",
+        "light_and_volume": "Brighter upper panicle surfaces sit above darker lower tips.",
+        "material_continuity": "Green stems remain continuous beneath warm seed heads.",
+        "edge_variation": "Unequal panicle heights and widths prevent uniform row of cylinders.",
+        "variant_identity": "Compact gold seed clusters are distinct from dark elongated cattail heads.",
+        "vanilla_comparison": "Wheat offers native seed-head material and stem scale; reed uses different shapes.",
+        "functional_material_cues": "Each flowering stem crosses lower edge and matches corresponding reed bottom."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/marsh_marigold.png": {
+      "sha256": "4845a535969a154b60e7c0eb967e515e29cb443ab0a1ffa5d04426a2ea630402",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dandelion",
+          "minecraft": "1.21.1",
+          "sha256": "b8e2897e3dfecc1c863a861dd6b92b66987f33770054c2179c15b5c2abbc0e51"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against dandelion: Dandelion supplies native yellow blossom scale; marigold uses multiple cups. Staggered flower heights and irregular petal edges avoid identical silhouettes.",
+      "findings": {
+        "silhouette": "Three yellow cup flowers rise above broad rounded basal leaves.",
+        "cluster_structure": "Connected golden petal clusters include smaller bright upper groups.",
+        "micro_contrast": "Close yellow and amber shades create readable petal transitions.",
+        "light_and_volume": "Pale petals above dark amber lower rims imply cup depth.",
+        "material_continuity": "Warm flower pigments contrast with coherent green leaf and stem colors.",
+        "edge_variation": "Staggered flower heights and irregular petal edges avoid identical silhouettes.",
+        "variant_identity": "Broad round wetland leaves and yellow cups distinguish marsh marigold.",
+        "vanilla_comparison": "Dandelion supplies native yellow blossom scale; marigold uses multiple cups.",
+        "functional_material_cues": "Glossy-looking broad basal leaf groups and attached yellow cups identify marsh marigold."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_chamomile.png": {
+      "sha256": "862007fd03fc6e1c6837dd2f937fb14d4f583c1d9984d6847e3f188786afeda9",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/oxeye_daisy",
+          "minecraft": "1.21.1",
+          "sha256": "a64161a5f4c5d112935fd1abf86be6e4729e5c7ad4cd80913e7f278785894667"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against oxeye_daisy: Oxeye daisy supplies white ray petals and yellow center; chamomile has smaller grouped flowers. Heads occur at unequal heights, with fine branch tips leaving open spaces.",
+      "findings": {
+        "silhouette": "Three small white ray flowers stand on finely branched green stems.",
+        "cluster_structure": "Small connected off-white petals surround ochre centers rather than large flat disks.",
+        "micro_contrast": "Subtle cream and warm yellow transitions keep tiny heads readable.",
+        "light_and_volume": "Paler upper rays contrast with darker lower petal pixels and stem junctions.",
+        "material_continuity": "Fine foliage and creamy white ray petals remain distinct materials.",
+        "edge_variation": "Heads occur at unequal heights, with fine branch tips leaving open spaces.",
+        "variant_identity": "Chamomile has tiny multi-stem white heads and fine foliage, unlike broad marigold.",
+        "vanilla_comparison": "Oxeye daisy supplies white ray petals and yellow center; chamomile has smaller grouped flowers.",
+        "functional_material_cues": "Slender divided leaves and attached pale flowers with yellow centers distinguish chamomile."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_cornflower.png": {
+      "sha256": "8d79765068ef8725b81e60d1d72814a2c0df5b47b10254d12c175b7212fb56e8",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/cornflower",
+          "minecraft": "1.21.1",
+          "sha256": "df8624ca57077469654576faab3424aceb0bdc512102ec2056a17a0ff890c52d"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against cornflower: Vanilla cornflower provides exact blue flower and narrow leaf visual reference. Serrated petal tips and three unequal head outlines break repetition.",
+      "findings": {
+        "silhouette": "Blue serrated flowers attach to upright branching narrow stems.",
+        "cluster_structure": "Upper-left and central blue petal faces have smaller lighter ray clusters.",
+        "micro_contrast": "Adjacent blue values define petals and darker central areas.",
+        "light_and_volume": "Dark blue inner areas contrast with pale exposed upper ray edges.",
+        "material_continuity": "Blue pigment ramp and green stem leaves remain coherent separately.",
+        "edge_variation": "Serrated petal tips and three unequal head outlines break repetition.",
+        "variant_identity": "Blue angular flower heads and pointed leaves identify cornflower.",
+        "vanilla_comparison": "Vanilla cornflower provides exact blue flower and narrow leaf visual reference.",
+        "functional_material_cues": "Notched blue rays and lance-shaped leaves are functional species cues."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_clover.png": {
+      "sha256": "1f6dc2c3cef9a3a2944871b9d1c8b7c9995c840ad9c2ae0a5fd0bcd8df5dfb9c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/allium",
+          "minecraft": "1.21.1",
+          "sha256": "e821156d752c1cde84a71db59cdd25c308747c607c0759b72ba36a68e959ab7d"
+        }
+      ],
+      "comparison": "Inspected native and enlarged sprite against allium: Allium provides small rounded flower-head reference; clover uses separate trefoil leaves. Flower heads differ in height and low leaflets have unequal widths.",
+      "findings": {
+        "silhouette": "Two compact pink-purple clover heads stand above low trefoil groups.",
+        "cluster_structure": "Small connected rose-colored regions sit inside darker flower outlines.",
+        "micro_contrast": "Adjacent muted rose and mauve values suggest clustered florets.",
+        "light_and_volume": "Pale upper petals and dark lower heads contrast with layered green leaves.",
+        "material_continuity": "Consistent pink floral ramp is distinct from green trefoil leaves.",
+        "edge_variation": "Flower heads differ in height and low leaflets have unequal widths.",
+        "variant_identity": "Trefoil foliage and round heads distinguish clover from tall heather.",
+        "vanilla_comparison": "Allium provides small rounded flower-head reference; clover uses separate trefoil leaves.",
+        "functional_material_cues": "Three-part foliage groups and compact rounded pink inflorescences identify clover."
+      }
     }
   },
-  "review_status": "DRAFT/BLOCKED: 85 accepted of 118. Remaining plants pending; graphical client not run.",
+  "review_status": "DRAFT/BLOCKED: 93 accepted of 118. Remaining plants pending; graphical client not run.",
   "reference_provenance": "Actual PNGs from InventivetalentDev/minecraft-assets, 1.21.1 branch; inspected at original and nearest-neighbor 4x. Official client SHA-1 could not be verified in this environment. No vanilla assets included.",
   "client_status": "NOT_RUN"
 }
