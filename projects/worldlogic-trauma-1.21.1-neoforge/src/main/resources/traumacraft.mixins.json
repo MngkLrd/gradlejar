@@ -15,6 +15,7 @@
     "ClientHumanoidGaitMixin",
     "ClientClimbHandsMixin",
     "ClientClimbHeldItemMixin",
-    "ClientClimbCameraMixin"
+    "ClientClimbCameraMixin",
+    "ClientClimbTravelMixin"
   ]
 }

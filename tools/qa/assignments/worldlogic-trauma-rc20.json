@@ -920,7 +920,8 @@
       "shared route and monotonic bounded timeline",
       "server movement packet guard; no per-tick teleport",
       "client normal position interpolation; climb-only walking bob suppression",
-      "final arrival guard with bounded expiry"
+      "final arrival guard with bounded expiry",
+      "suspend local vanilla travel during climb so gravity cannot fight the shared path"
     ],
     "evidence": [
       "traumaqa climb movement ownership fixture",
