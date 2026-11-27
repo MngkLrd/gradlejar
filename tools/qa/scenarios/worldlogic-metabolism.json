@@ -1,11 +1,77 @@
 {
   "schema": 1,
-  "name": "Metabolism model and persisted digestion regression",
+  "name": "Metabolism 0.2.0 model and schema migration regression",
   "coverage": [
     {
       "id": "nutrition-model",
       "kind": "mechanic",
       "subject": "Actual model: energy, nutrient uptake, toxin, limiting nutrient and NBT",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "individual-nutrient-reserves",
+      "kind": "mechanic",
+      "subject": "individual-nutrient-reserves",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "digestion-and-capacity",
+      "kind": "mechanic",
+      "subject": "digestion-and-capacity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "resting-fat-oxidation",
+      "kind": "mechanic",
+      "subject": "resting-fat-oxidation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "deficiency-trends",
+      "kind": "mechanic",
+      "subject": "deficiency-trends",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "schema-migration",
+      "kind": "mechanic",
+      "subject": "schema-migration",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "energy-forecasts",
+      "kind": "mechanic",
+      "subject": "energy-forecasts",
       "checks": [
         {
           "backend": "server",

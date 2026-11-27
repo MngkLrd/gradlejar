@@ -14,7 +14,10 @@ public final class FoodProfiles {
   Entry e=switch(id){
    case "minecraft:cooked_beef","minecraft:cooked_mutton" -> food(260,25,17,0,0,8,0,2.5,2.6,20,25,0,.98);
    case "minecraft:cooked_porkchop","minecraft:cooked_chicken","minecraft:cooked_rabbit" -> food(230,25,14,0,0,12,0,.6,1.3,15,28,0,.98);
-   case "minecraft:beef","minecraft:porkchop","minecraft:mutton","minecraft:chicken","minecraft:rabbit" -> food(180,18,12,0,0,10,0,1,1.5,15,20,.05,.72);
+   case "minecraft:beef","minecraft:mutton" -> food(180,18,12,0,0,10,0,1.7,2.2,15,20,.04,.78);
+   case "minecraft:porkchop" -> food(210,18,15,0,0,8,0,.7,1.1,14,20,.08,.72);
+   case "minecraft:chicken" -> food(150,18,8,0,0,15,0,.4,1,12,22,.15,.65);
+   case "minecraft:rabbit" -> food(140,21,6,0,0,6,0,2.1,2.1,13,28,.06,.75);
    case "minecraft:cooked_cod","minecraft:cooked_salmon" -> food(190,24,10,0,0,30,0,3,1,25,30,0,.95);
    case "minecraft:cod","minecraft:salmon","minecraft:tropical_fish" -> food(130,20,5,0,0,25,0,2.5,1,20,24,.04,.78);
    case "minecraft:bread" -> food(210,7,2,40,4,0,0,0,2,45,38,0,.95);
@@ -24,10 +27,19 @@ public final class FoodProfiles {
    case "minecraft:carrot","minecraft:golden_carrot" -> food(55,1,0,12,4,1100,8,0,.4,42,16,0,.9);
    case "minecraft:beetroot" -> food(42,1.5,0,9,3,2,5,0,.8,16,23,0,.9);
    case "minecraft:melon_slice","minecraft:sweet_berries","minecraft:glow_berries" -> food(55,1,0,14,2,24,18,0,.5,16,15,0,.9);
-   case "minecraft:mushroom_stew","minecraft:beetroot_soup","minecraft:rabbit_stew" -> food(180,9,6,25,4,75,12,.3,1.4,35,35,0,.95);
-   case "minecraft:cookie","minecraft:pumpkin_pie","minecraft:honey_bottle" -> food(220,3,7,42,1,18,1,0,.8,25,14,0,.97);
+   case "minecraft:mushroom_stew" -> food(145,6,4,23,4,20,3,0,1.3,20,32,0,.95);
+   case "minecraft:beetroot_soup" -> food(110,4,1,24,5,10,14,0,1.6,45,50,0,.95);
+   case "minecraft:rabbit_stew" -> food(320,25,12,28,5,250,15,1.5,2.4,50,45,0,.96);
+   case "minecraft:cookie" -> food(95,1.3,4,14,.7,0,0,0,.5,10,12,0,.97);
+   case "minecraft:pumpkin_pie" -> food(260,5,11,38,3,190,2,.2,1,55,18,0,.95);
+   case "minecraft:honey_bottle" -> food(180,0,0,45,0,0,0,0,.1,3,2,0,.99);
+   case "minecraft:dried_kelp" -> food(35,2,.5,6,2,18,3,0,1,70,50,0,.85);
+   case "minecraft:chorus_fruit" -> food(90,1,.3,22,4,25,12,0,.4,16,15,0,.88);
+   case "minecraft:suspicious_stew" -> food(140,5,5,20,3,50,9,0,1,30,30,.02,.85);
    case "minecraft:rotten_flesh" -> food(120,12,6,0,0,0,0,0,1,10,10,.35,.4);
-   case "minecraft:poisonous_potato","minecraft:pufferfish","minecraft:spider_eye" -> food(75,2,1,12,1,0,0,0,.2,5,5,.65,.3);
+   case "minecraft:poisonous_potato" -> food(75,2,0,17,2,1,8,0,.5,10,16,.55,.4);
+   case "minecraft:pufferfish" -> food(100,17,4,0,0,8,0,1,.4,15,15,.9,.3);
+   case "minecraft:spider_eye" -> food(75,3,3,9,0,0,0,0,.4,5,5,.65,.3);
    default -> new Entry(new MetabolicModel.Meal(component.nutrition()*35.0,new double[MetabolicModel.N],0,.8),false);
   };return Optional.of(e);
  }

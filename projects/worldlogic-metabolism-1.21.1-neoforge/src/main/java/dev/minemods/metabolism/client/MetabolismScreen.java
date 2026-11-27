@@ -21,6 +21,7 @@ public final class MetabolismScreen extends Screen{
  private Component tr(String key){return Component.translatable("metabolism."+key);}
  private static String pct(float x){return Math.round(x*100)+"%";}
  private static String number(float x){return String.format(Locale.ROOT,"%.0f",x);}
+ private static String hours(float x){return String.format(Locale.ROOT,"%.1f h",x);}
  private static String factor(float x){return String.format(Locale.ROOT,"%.2f×",x);}
  private int usable(){return WorldLogicTabs.contentWidth(width);}
  @Override protected void init(){
@@ -32,7 +33,7 @@ public final class MetabolismScreen extends Screen{
  }
  @Override public boolean isPauseScreen(){return false;}
  @Override public void onClose(){Minecraft.getInstance().setScreen(parent);}
- private Row nutrient(int i,float[] v){return new Row(MetabolicModel.KEYS[i],pct(v[i]),v[i],false,ICONS[i]);}
+ private Row nutrient(int i,float[] v){float d=v[N+18+i];String trend=d>.025?" ▲":d<-.025?" ▼":" =";return new Row(MetabolicModel.KEYS[i],pct(v[i])+trend,v[i],false,ICONS[i]);}
  private List<Row> rows(float[] v,boolean anatomical){
   Row health=new Row(anatomical?"anatomical_hp":"vanilla_hp",number(v[N+10])+" / "+number(v[N+11])+" HP",v[N+11]>0?v[N+10]/v[N+11]:0,false,Items.GOLDEN_APPLE);
   Row diet=new Row("quality",pct(v[N+4]),v[N+4],false,Items.BOWL);
@@ -46,12 +47,17 @@ public final class MetabolismScreen extends Screen{
   Row resistance=new Row("resistance",factor(v[N+7]),v[N+7],false,Items.SHIELD);
   Row burn=new Row("burn",number(v[N+9])+" kcal/h",-1,false,Items.BLAZE_POWDER);
   Row fatigue=new Row("fatigue",v[N+12]<0?"—":number(v[N+12])+"%",v[N+12]<0?-1:v[N+12]/100,true,Items.IRON_PICKAXE);
+  Row deficits=new Row("deficits",number(v[N+13])+" / "+N,v[N+13]/N,true,Items.BEETROOT);
+  Row critical=new Row("critical",number(v[N+14])+" / "+N,v[N+14]/N,true,Items.REDSTONE);
+  Row fastTime=new Row("fast_time",hours(v[N+15]),-1,false,Items.CLOCK);
+  Row totalTime=new Row("total_time",hours(v[N+16]),-1,false,Items.CLOCK);
+  Row digestionTime=new Row("digestion_time",hours(v[N+17]),-1,false,Items.CLOCK);
   return switch(tab){
    case 1->{var a=new ArrayList<Row>();for(int i=0;i<N;i++)a.add(nutrient(i,v));yield a;}
-   case 2->List.of(energy,fast,fat,burn,fatigue);
-   case 3->List.of(stomach,absorption,toxins,diet);
-   case 4->List.of(health,recovery,resistance,diet,energy,toxins,fatigue);
-   default->List.of(health,diet,energy,toxins,fast,fat,stomach,absorption,recovery,resistance,burn,fatigue);
+   case 2->List.of(energy,fast,fat,burn,fastTime,totalTime,fatigue);
+   case 3->List.of(stomach,absorption,digestionTime,toxins,diet,deficits,critical);
+   case 4->List.of(health,recovery,resistance,diet,deficits,critical,energy,toxins,fatigue);
+   default->List.of(health,diet,energy,toxins,deficits,critical,fast,fat,stomach,absorption,recovery,resistance,burn,fatigue);
   };
  }
  private void row(GuiGraphics g,Row r,int x,int y,int w,int mx,int my){
@@ -108,7 +114,7 @@ public final class MetabolismScreen extends Screen{
   else {
    var values=state.values();var data=rows(values,state.anatomical());int cols=usable()>=430?3:usable()>=280?2:1;
    int start=left+4;
-   if(tab==1&&usable()>=430&&bottom-top>=144){int chart=Math.min(190,(right-left)/3);radar(g,values,start,top+4,chart-4,bottom-top-8);start+=chart;cols=2;}
+   if((tab==0||tab==1)&&usable()>=480&&bottom-top>=144){int chart=Math.min(190,(right-left)/3);radar(g,values,start,top+4,chart-4,bottom-top-8);start+=chart;cols=2;}
    int lines=Math.max(1,(bottom-top-8)/35),capacity=cols*lines,maxPage=Math.max(0,(data.size()-1)/capacity);
    page=Math.min(page,maxPage);int cell=(right-start-4)/cols;
    for(int i=page*capacity;i<Math.min(data.size(),(page+1)*capacity);i++){
@@ -120,6 +126,7 @@ public final class MetabolismScreen extends Screen{
   for(var h:hits)if(mx>=h.x&&mx<h.x+h.w&&my>=h.y&&my<h.y+h.h){
    var lines=new ArrayList<net.minecraft.util.FormattedCharSequence>();
    lines.add(h.text.getVisualOrderText());lines.addAll(font.split(h.description,Math.max(80,Math.min(230,usable()-20))));lines.add(h.value.getVisualOrderText());
+   if(h.value.getString().endsWith("▲")||h.value.getString().endsWith("▼")||h.value.getString().endsWith("="))lines.addAll(font.split(tr("trend_help"),Math.max(80,Math.min(230,usable()-20))));
    g.renderTooltip(font,lines,mx,my);break;
   }
  }

@@ -57,5 +57,20 @@
   "metabolism.stat.vitamins": "Vitamins",
   "metabolism.stat.minerals": "Minerals",
   "metabolism.help.vitamins": "Average adequacy of vitamins A, C and B12; each is listed separately.",
-  "metabolism.help.minerals": "Average adequacy of iron, calcium and magnesium; each is listed separately."
+  "metabolism.help.minerals": "Average adequacy of iron, calcium and magnesium; each is listed separately.",
+  "metabolism.stat.deficits": "Nutrient shortages",
+  "metabolism.help.deficits": "Number of nutrients below 60% of their target. Surplus of another nutrient cannot replace them.",
+  "metabolism.stat.critical": "Critical shortages",
+  "metabolism.help.critical": "Number of nutrients below 25% of target, limiting recovery.",
+  "metabolism.stat.fast_time": "Fast reserve time",
+  "metabolism.help.fast_time": "Estimated game hours at current expenditure, excluding food and fat fuel.",
+  "metabolism.stat.total_time": "Total reserve time",
+  "metabolism.help.total_time": "Estimated game hours of stored energy at current expenditure, not a starvation death prediction.",
+  "metabolism.stat.digestion_time": "Digestion time",
+  "metabolism.help.digestion_time": "Estimated game hours until the stomach empties at its current rate. Toxins and low fiber slow digestion.",
+  "metabolism.trend_help": "Arrow compares the level with a smoothed one-game-day baseline; = means stable or insufficient data.",
+  "metabolism.food.energy": "Energy: %s kcal",
+  "metabolism.food.unknown": "Unknown food profile; energy is estimated",
+  "metabolism.food.macros": "P %s g | F %s g | C %s g | Fiber %s g",
+  "metabolism.food.toxin": "Toxin load: +%s%%"
 }
