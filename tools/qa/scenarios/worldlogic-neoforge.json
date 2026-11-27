@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC29 production core/API regression",
+  "name": "World Logic NeoForge RC30 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -194,6 +194,12 @@
       "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality",
       "command": "worldlogic qa native_water",
       "expect": "WORLDLOGIC_NATIVE_WATER_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history",
+      "command": "worldlogic qa analytics",
+      "expect": "WORLDLOGIC_ANALYTICS_PASSED",
       "assertion": true
     }
   ],
@@ -606,6 +612,17 @@
         {
           "backend": "server",
           "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "environment-analytics",
+      "kind": "mechanic",
+      "subject": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history"
         }
       ]
     }
