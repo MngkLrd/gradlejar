@@ -5,5 +5,15 @@
   "loader": "neoforge",
   "java": "17",
   "gradle": "9.2.1",
-  "jar_glob": "fragileglass-neoforge-mc1.20.1-1.0.0.jar"
+  "jar_glob": "fragileglass-neoforge-mc1.20.1-1.0.0.jar",
+  "qa": {
+    "mode": "server",
+    "loader_version": "47.1.106",
+    "scenario": "tools/qa/scenarios/fragileglass.json",
+    "release_targets": [
+      "forge-mc1.20.1",
+      "neoforge-mc1.20.1",
+      "neoforge-mc1.21.1"
+    ]
+  }
 }

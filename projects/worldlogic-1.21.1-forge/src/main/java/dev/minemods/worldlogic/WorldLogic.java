@@ -4,6 +4,7 @@ import net.minecraftforge.common.MinecraftForge;
 @Mod("worldlogic")
 public final class WorldLogic {
  public WorldLogic(net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext context) {
+  GeoDensity.TYPES.register(context.getModEventBus());
   Content.PARTICLES.register(context.getModEventBus());
   Content.BLOCKS.register(context.getModEventBus());
   Content.ITEMS.register(context.getModEventBus());

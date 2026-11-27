@@ -29,14 +29,14 @@ else:
     command=["gradle","--no-daemon","-PworldlogicCi","runServer"]
     cwd=project
 (root/"eula.txt").write_text("eula=true\n")
-(root/"server.properties").write_text("online-mode=false\nserver-ip=127.0.0.1\nlevel-name=worldlogic-ci\nlevel-seed=1234\nview-distance=3\nsimulation-distance=3\nmax-tick-time=-1\n")
+(root/"server.properties").write_text("online-mode=false\nserver-ip=127.0.0.1\nlevel-name=worldlogic-ci\nlevel-seed=1234\nlevel-type=worldlogic:earthlike\nview-distance=3\nsimulation-distance=3\nmax-tick-time=-1\n")
 log=root/"server-smoke.log"
 with log.open("w") as out:
     process=subprocess.Popen(command,cwd=cwd,stdin=subprocess.PIPE,stdout=out,stderr=subprocess.STDOUT,text=True,start_new_session=True)
     try:
         for _ in range(210):
             text=log.read_text(errors="replace")
-            if "Done (" in text and "WORLDLOGIC_CORE_TESTS_PASSED" in text:
+            if "Done (" in text and "WORLDLOGIC_CORE_TESTS_PASSED" in text and "WORLDLOGIC_TERRAIN_TEST_PASSED" in text:
                 print(("Production" if production else "Development")+" Forge server and core regression checks passed.")
                 if production:
                     process.stdin.write("stop\n");process.stdin.flush()

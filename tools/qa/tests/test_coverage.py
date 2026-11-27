@@ -40,6 +40,6 @@ class CoverageTests(unittest.TestCase):
     def test_new_profile_requires_coverage(self):
         p=profile("projects/naturalbuoyancy-fabric-26.3")
         q=qa_config(p)
-        with patch("tools.qa.coverage.json.loads",return_value={"schema":1,"steps":[]}),patch("tools.qa.coverage.unchanged_baseline",return_value=False):
+        with patch("tools.qa.coverage.json.loads",return_value={"schema":1,"steps":[]}):
             with self.assertRaisesRegex(ValueError,"requires machine-readable"):
                 prepare(p,q)

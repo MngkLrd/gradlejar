@@ -24,7 +24,7 @@ Keep shared infrastructure stable. A missing backend or action is a limitation t
 
 ## Coverage array (P9.0)
 
-For new or changed enrolled server project trees, add the following structure at the top level of the existing executable server scenario, next to its `schema` and `steps`. Do not create a prose assignment. Example structure (replace with actual mechanics and matching named assertions):
+For all enrolled server profiles, add the following structure at the top level of the existing executable server scenario, next to its `schema` and `steps`. Do not create a prose assignment. Example structure (replace with actual mechanics and matching named assertions):
 
 ```json
 {
@@ -42,4 +42,4 @@ For new or changed enrolled server project trees, add the following structure at
 }
 ```
 
-Allowed kinds: mechanic, item, block, entity, recipe, effect, menu, other. Optional `targets` lists applicable loader-mcVERSION IDs. Every active reference must match exactly one named assertion with `assertion: true` and a nonempty expectation in the actual active server/player scenario. A player reference requires an enrolled player scenario. The existing runner executes the steps, then the coverage gate maps actual independent assertion evidence to PASS/FAIL/NOT_RUN. Missing or ambiguous references and incomplete declared coverage fail the gate. Supported protocol targets require a player scenario when using coverage. The GitHub job summary shows counts; the JSON report contains individual entries. No automatic discovery of all Java registrations or semantic completeness is claimed. Developers must still reconcile the inventory with actual content. Previously enrolled unchanged project trees without declarations are identified as not-declared, never coverage certified; legacy profiles retain their prior policy.
+Allowed kinds: mechanic, item, block, entity, recipe, effect, menu, other. Optional `targets` lists applicable loader-mcVERSION IDs. Every active reference must match exactly one named assertion with `assertion: true` and a nonempty expectation in the actual active server/player scenario. A player reference requires an enrolled player scenario. The existing runner executes the steps, then the coverage gate maps actual independent assertion evidence to PASS/FAIL/NOT_RUN. Missing or ambiguous references and incomplete declared coverage fail the gate. Supported protocol targets require a player scenario when using coverage. The GitHub job summary shows counts; the JSON report contains individual entries. No automatic discovery of all Java registrations or semantic completeness is claimed. Developers must still reconcile the inventory with actual content. Existing enrolled profiles have declarations. Legacy profiles retain their prior policy; no new legacy exemptions.

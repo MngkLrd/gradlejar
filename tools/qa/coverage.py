@@ -1,22 +1,12 @@
 """Enforce declared feature-to-executed-assertion coverage; not semantic verification."""
 import json
 import re
-import subprocess
 from collections import Counter
 from .common import ROOT, REGISTRY, require, safe_path, target
 from .server import scenario_steps
 from .player_suite import SUPPORTED, validate as validate_player
 
-BASELINE = ROOT / "tools/qa/coverage-baseline.json"
 KINDS = {"mechanic", "item", "block", "entity", "recipe", "effect", "menu", "other"}
-
-def unchanged_baseline(p):
-    old = json.loads(BASELINE.read_text())["projects"].get(p["project_dir"])
-    if old is None:
-        return False
-    spec = "HEAD^{tree}" if p["project_dir"] == "." else "HEAD:" + p["project_dir"]
-    current = subprocess.run(["git", "rev-parse", spec], cwd=ROOT, capture_output=True, text=True, check=False)
-    return current.returncode == 0 and current.stdout.strip() == old
 
 def named_assertions(steps):
     return Counter(s["name"] for s in steps
@@ -56,8 +46,6 @@ def validate_plan(rows, current, server_steps, player_steps, known_targets):
 
 def prepare(p, q):
     doc = json.loads(safe_path(ROOT, q["scenario"]).read_text())
-    if "coverage" not in doc and unchanged_baseline(p):
-        return None
     require("coverage" in doc, "New or changed server profile requires machine-readable scenario coverage")
     if (p["loader"], p["minecraft"]) in SUPPORTED:
         require(q.get("player_scenario"), "Supported protocol target requires player_scenario; request reviewed backend exception if incompatible")

@@ -97,7 +97,7 @@ def target(p):
 def filename(p):
     return p["slug"]+"-"+target(p)+"-"+p["version"]+".jar"
 
-EVIDENCE_INPUTS=("tools/qa/compatibility.json","tools/qa/common.py","tools/qa/static.py","tools/qa/assets.py","tools/qa/server.py","tools/qa/gate.py","tools/qa/coverage.py","tools/qa/coverage-baseline.json")
+EVIDENCE_INPUTS=("tools/qa/compatibility.json","tools/qa/common.py","tools/qa/static.py","tools/qa/assets.py","tools/qa/server.py","tools/qa/gate.py","tools/qa/coverage.py")
 def project_tree(project):
     """Legacy tree ID or QA fingerprint of all declared tracked inputs."""
     spec="HEAD^{tree}" if project=="." else "HEAD:"+project
