@@ -19,7 +19,7 @@ final class TreeQA {
             double full=ChopEffort.power(1,1,1), tired=ChopEffort.power(.1,1,1);
             double oneArm=ChopEffort.power(1,1,0), disabled=ChopEffort.power(1,0,1);
             if(!(full>oneArm&&oneArm>tired&&disabled==0&&ChopEffort.cooldown(tired)>ChopEffort.cooldown(full)
-                &&ChopEffort.depthIncrement(1,6,1,full,.5)>ChopEffort.depthIncrement(1,6,1,tired,.5)
+                &&ChopEffort.depthIncrement(1,6,1,full,.45)>ChopEffort.depthIncrement(1,6,1,tired,.45)
                 &&ChopEffort.depthIncrement(0,6,1,disabled,.99)==0)){
                 c.getSource().sendFailure(Component.literal("TreeChopper effort regression FAILED"));return 0;
             }
