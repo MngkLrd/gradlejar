@@ -54,7 +54,12 @@ public final class AdminCommands {
    var s=c.getSource();var w=dev.minemods.worldlogic.api.WorldLogicApi.localWeather(s.getLevel(),net.minecraft.core.BlockPos.containing(s.getPosition()));
    return reply(s,w.map(v->String.format(java.util.Locale.ROOT,"Local weather: %s, intensity %.0f%%, air delta %+.1f C, RH %.0f%%, gust %.1f m/s, fog %.0f%%, exposed=%s",v.kind(),100*v.intensity(),v.temperatureDeltaC(),v.relativeHumidityPercent(),v.gustMps(),100*v.fogDensity(),v.exposed())).orElse("Local weather inactive (unsupported world, unloaded point or regional_weather disabled)."));
   }));
+  root.then(Commands.literal("hydrology").executes(c->{var s=c.getSource();var pos=net.minecraft.core.BlockPos.containing(s.getPosition());
+   var h=dev.minemods.worldlogic.api.WorldLogicApi.hydrology(s.getLevel(),pos);
+   return reply(s,h.map(v->String.format(java.util.Locale.ROOT,"Soil %s; saturation %.0f%%; water %.1f/%.1f mm; groundwater %.1f mm; snow %.1f mm; runoff %.2f mm; simulated=%s",v.soil(),v.saturation()*100,v.soilWaterMm(),v.capacityMm(),v.groundwaterMm(),v.snowWaterMm(),v.lastRunoffMm(),v.simulated())).orElse("Hydrology inactive or no soil at loaded cell."));
+  }));
   root.then(Commands.literal("qa").requires(s->s.hasPermission(4))
+   .then(Commands.literal("hydrology").executes(c->{try{HydrologyChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_HYDROLOGY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("local_weather").executes(c->{try{LocalWeatherChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_LOCAL_WEATHER_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("worldgen_ecology").executes(c->{try{WorldgenApiChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WORLDGEN_ECOLOGY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("ore_balance").executes(c->{try{GeologyChecks.verifyBalance(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_ORE_BALANCE_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))

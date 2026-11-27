@@ -25,3 +25,5 @@ RC22: deterministic regional pressure and moving warm/cold/moist/dry fields, clo
 Scientific direction: [METEOROLOGY.md](METEOROLOGY.md). Replace independent weather effects with a coupled, bounded dynamical and thermodynamic model in staged increments; do not advertise institutional validation or use preview fields for gameplay.
 
 Next world generation design: [extended vertical world and geology-led caves](WORLDGEN-EXTENDED.md). Proposed separate new-world preset; do not change existing generation IDs.
+
+RC28 core Hydrology: sparse 16x16 cell water storage near players, saved data, 200-tick bounded updates. Rain/snow input from atmosphere, freeze-controlled infiltration, snow melt, groundwater recharge/discharge, evaporation and excess runoff. Boundary export and atmospheric evaporation are explicitly accounted outputs; no actual neighboring cell transport, physical floods or spring blocks yet. Five soil profiles influence water capacity/permeability. Hydration addon owns thirst.

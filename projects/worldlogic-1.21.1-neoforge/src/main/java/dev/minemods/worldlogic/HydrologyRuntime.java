@@ -29,6 +29,10 @@ public final class HydrologyRuntime{
   var ground=l.getBlockState(p.below());
   if(!ground.getFluidState().isEmpty())return Optional.empty();
   var type=HydrologyModel.soilType(ground);
+  if(ground.is(net.minecraft.world.level.block.Blocks.GRASS_BLOCK)&&p.getY()-2>=l.getMinBuildHeight()){
+   var lower=HydrologyModel.soilType(l.getBlockState(p.below(2)));
+   if(lower!=SoilType.UNKNOWN&&lower!=SoilType.ROCK)type=lower;
+  }
   if(type==SoilType.UNKNOWN)return Optional.empty();
   double moisture=GeoDensity.regional(l,x,z).map(RegionalClimate::moistureIndex).orElse(.5);
   return Optional.of(new Site(p,type,moisture));
@@ -72,10 +76,13 @@ public final class HydrologyRuntime{
    if(old!=null&&old.tick()==l.getGameTime())continue;
    var store=old==null?HydrologyModel.initial(s.soil,s.moisture):old.store();
    double amount=4*w.precipitationIntensity();
-   var step=HydrologyModel.advance(store,s.soil,w.precipitation()==Precipitation.RAIN?amount:0,w.precipitation()==Precipitation.SNOW?amount:0,
-    w.environment().ambientCelsiusEstimate(),w.relativeHumidityPercent()/100,w.environment().solarExposure(),w.outdoorWindSpeedMps());
-   state.cells.put(key,new HydrologyState.Cell(step.store(),step.runoff(),step.evaporation(),step.recharge(),step.discharge(),l.getGameTime()));
-   state.setDirty();
+   advanceCell(state,key,store,s.soil,w.precipitation()==Precipitation.RAIN?amount:0,w.precipitation()==Precipitation.SNOW?amount:0,
+    w.environment().ambientCelsiusEstimate(),w.relativeHumidityPercent()/100,w.environment().solarExposure(),w.outdoorWindSpeedMps(),l.getGameTime());
   }
+ }
+ static HydrologyState.Cell advanceCell(HydrologyState state,long key,HydrologyModel.Store store,SoilType soil,double rain,double snow,double temperature,double humidity,double sun,double wind,long now){
+  var step=HydrologyModel.advance(store,soil,rain,snow,temperature,humidity,sun,wind);
+  var cell=new HydrologyState.Cell(step.store(),step.runoff(),step.evaporation(),step.recharge(),step.discharge(),now);
+  state.cells.put(key,cell);state.setDirty();return cell;
  }
 }

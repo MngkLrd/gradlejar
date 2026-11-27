@@ -88,6 +88,8 @@ public final class WorldLogicApi {
  public record Hydrology(SoilType soil,double soilWaterMm,double capacityMm,double groundwaterMm,double snowWaterMm,
   double pondedWaterMm,double lastRunoffMm,double lastEvaporationMm,double lastRechargeMm,double lastDischargeMm,
   double saturation,double fertility,double permeability,double estimatedWaterTableDepthBlocks,boolean simulated,long updatedTick){}
+ /** Pure classification of an existing block, safe to use during world generation. */
+ public static SoilType soilType(BlockState state){return dev.minemods.worldlogic.HydrologyModel.soilType(state);}
  public static Optional<Hydrology> hydrology(ServerLevel level,BlockPos pos){
   serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.sample(level,pos);
  }

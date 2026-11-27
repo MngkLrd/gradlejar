@@ -62,6 +62,8 @@ final class WorldgenEcology {
   double dry=unit((1-moisture)*.78+.22*unit((temp-14)/26)+.15*(1-flat)-.25*river);
   var family=surface(ground,moisture,wet,cold);var zone=zone(biome,river);
   double nutrient=switch(family){case NORMAL->.78;case MOIST->.84;case DRY->.42;case SANDY->.20;case BOGGY->.52;case ROCKY->.12;case FROZEN->.18;case UNKNOWN->.25;};
+  var soilType=HydrologyModel.soilType(ground);
+  if(soilType==SoilType.HUMUS||soilType==SoilType.PEAT||soilType==SoilType.SILT)nutrient=HydrologyModel.profile(soilType).fertility();
   double fertility=unit(nutrient*(.72+.28*flat)*(1-.45*cold));
   double strength=unit(fertility*(1-.55*dry)*(1-.38*cold)*(1-.35*Math.max(0,wet-.60)/.40));
   var id=biome.unwrapKey().map(k->k.location()).orElse(ResourceLocation.fromNamespaceAndPath("worldlogic","unknown"));

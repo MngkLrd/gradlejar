@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC27 production core/API regression",
+  "name": "World Logic NeoForge RC28 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -176,6 +176,12 @@
       "name": "Local weather nine types, spatial and temporal variation, exposure, temperature and client packet contract",
       "command": "worldlogic qa local_weather",
       "expect": "WORLDLOGIC_LOCAL_WEATHER_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks",
+      "command": "worldlogic qa hydrology",
+      "expect": "WORLDLOGIC_HYDROLOGY_PASSED",
       "assertion": true
     }
   ],
@@ -412,6 +418,72 @@
         {
           "backend": "server",
           "name": "Local weather nine types, spatial and temporal variation, exposure, temperature and client packet contract"
+        }
+      ]
+    },
+    {
+      "id": "hydrology-soil-cycle",
+      "kind": "mechanic",
+      "subject": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-humus",
+      "kind": "block",
+      "subject": "worldlogic:humus classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-loam",
+      "kind": "block",
+      "subject": "worldlogic:loam classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-peat",
+      "kind": "block",
+      "subject": "worldlogic:peat classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-alluvial_silt",
+      "kind": "block",
+      "subject": "worldlogic:alluvial_silt classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-frozen_soil",
+      "kind": "block",
+      "subject": "worldlogic:frozen_soil classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
         }
       ]
     }
