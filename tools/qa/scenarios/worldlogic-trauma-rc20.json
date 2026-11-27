@@ -73,6 +73,12 @@
       "expect": "TRAUMAQA bloodloss PASS",
       "assertion": true,
       "name": "TR-BLOODLOSS: weak and severe systemic loss, nonbleeding black limb, local bleeding and vital destruction"
+    },
+    {
+      "command": "traumaqa physiology",
+      "expect": "TRAUMAQA physiology PASS",
+      "assertion": true,
+      "name": "TR-PHYSIOLOGY: independent limb function, splint benefit, pain relief, blood volume, shock, persistence and reset"
     }
   ],
   "coverage": [
@@ -255,6 +261,20 @@
         {
           "backend": "server",
           "name": "TR-BLOODLOSS: weak and severe systemic loss, nonbleeding black limb, local bleeding and vital destruction"
+        }
+      ]
+    },
+    {
+      "id": "tr-physiology",
+      "kind": "mechanic",
+      "subject": "TR-PHYSIOLOGY: independent limb function, splint benefit, pain relief, blood volume, shock, persistence and reset",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PHYSIOLOGY: independent limb function, splint benefit, pain relief, blood volume, shock, persistence and reset"
         }
       ]
     }
