@@ -1,0 +1,56 @@
+import groovy.json.JsonOutput
+def species=['oak','spruce','birch','jungle','acacia','dark_oak','mangrove','cherry']
+def generated=layout.buildDirectory.dir('generated/treechopperResources')
+sourceSets.main.resources.srcDir(generated)
+tasks.register('generateTreeGeometry') {
+    outputs.dir(generated)
+    inputs.file('geometry.gradle')
+    doLast {
+        def root=generated.get().asFile
+        def emit={String path,Object data -> def f=new File(root,path); f.parentFile.mkdirs(); f.text=JsonOutput.toJson(data) }
+        def asset='assets/wl_treechopper/'
+        def en=[:]; def ru=[:]
+        species.each { s ->
+            def bark="minecraft:block/${s}_log"
+            def wood="minecraft:block/stripped_${s}_log"
+            def end="minecraft:block/${s}_log_top"
+            def model={String name,int x0,int y0,int z0,int x1,int y1,int z1 ->
+                def faces=[
+                    north:[uv:[16-x1,16-y1,16-x0,16-y0],texture:z0==0?'#bark':'#wood'],
+                    south:[uv:[x0,16-y1,x1,16-y0],texture:z1==16?'#bark':'#wood'],
+                    west:[uv:[z0,16-y1,z1,16-y0],texture:x0==0?'#bark':'#wood'],
+                    east:[uv:[16-z1,16-y1,16-z0,16-y0],texture:x1==16?'#bark':'#wood'],
+                    up:[uv:[x0,z0,x1,z1],texture:'#end'],
+                    down:[uv:[x0,16-z1,x1,16-z0],texture:'#end']
+                ]
+                emit(asset+"models/block/${name}.json",[textures:[particle:bark,bark:bark,wood:wood,end:end],elements:[[from:[x0,y0,z0],to:[x1,y1,z1],faces:faces]]])
+                return [model:"wl_treechopper:block/${name}"]
+            }
+            def cut="cut_${s}"; def stump="stump_${s}"
+            def bottom=model(stump,0,0,0,16,4,16)
+            def top=model(cut+'_top',0,12,0,16,16,16)
+            def multi=[[apply:bottom],[apply:top]]
+            [[4,6,1],[6,10,0],[10,12,1]].eachWithIndex { band,i ->
+                (0..3).each { x -> (0..3).each { z ->
+                    def cond=[:]
+                    [west:x,east:3-x,north:z,south:3-z].each { key,limit ->
+                        cond[key]=(0..Math.min(4,limit+band[2])).join('|')
+                    }
+                    multi << [when:cond,apply:model(cut+"_${i}_${x}_${z}",x*4,band[0],z*4,x*4+4,band[1],z*4+4)]
+                }}
+            }
+            emit(asset+"blockstates/${cut}.json",[multipart:multi])
+            emit(asset+"blockstates/${stump}.json",[variants:['':bottom]])
+            [cut,stump].each { id ->
+                emit("data/wl_treechopper/loot_table/blocks/${id}.json",[type:'minecraft:block',pools:[[rolls:1,entries:[[type:'minecraft:item',name:"minecraft:${s}_log"]],conditions:[[condition:'minecraft:survives_explosion']]]]])
+            }
+            en["block.wl_treechopper.${cut}"]="Notched ${s} log"
+            en["block.wl_treechopper.${stump}"]=" ${s.capitalize()} stump".trim()
+            ru["block.wl_treechopper.${cut}"]="Подрубленный ствол (${s})"
+            ru["block.wl_treechopper.${stump}"]="Пень (${s})"
+        }
+        emit(asset+'lang/en_us.json',en);emit(asset+'lang/ru_ru.json',ru)
+        emit('data/minecraft/tags/block/mineable/axe.json',[replace:false,values:species.collectMany{["wl_treechopper:cut_${it}","wl_treechopper:stump_${it}"]}])
+    }
+}
+tasks.named('processResources') { dependsOn('generateTreeGeometry') }
