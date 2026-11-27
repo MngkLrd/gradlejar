@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:flat_cache",
+  "argument": {
+    "type": "minecraft:spline",
+    "spline": {
+      "coordinate": "worldlogic:realistic/ridges_folded",
+      "points": [
+        {
+          "location": -1.2,
+          "value": 0,
+          "derivative": 0
+        },
+        {
+          "location": -0.7,
+          "value": 0,
+          "derivative": 0
+        },
+        {
+          "location": -0.15,
+          "value": 0.2,
+          "derivative": 0
+        },
+        {
+          "location": 0.5,
+          "value": 0.8,
+          "derivative": 0
+        },
+        {
+          "location": 1.2,
+          "value": 1,
+          "derivative": 0
+        }
+      ]
+    }
+  }
+}

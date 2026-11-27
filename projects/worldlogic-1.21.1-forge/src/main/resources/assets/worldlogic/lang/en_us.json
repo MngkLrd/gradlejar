@@ -35,5 +35,6 @@
   "message.worldlogic.fall_dodge": "You lost balance during a sharp turn!",
   "message.worldlogic.cramped_swing": "No room to swing the heavy weapon.",
   "message.worldlogic.ice_ceiling": "Ice blocks the way up. Look for an opening!",
-  "message.worldlogic.fall_stampede": "The stampede knocked you down!"
+  "message.worldlogic.fall_stampede": "The stampede knocked you down!",
+  "generator.worldlogic.realistic": "World Logic: Realistic Terrain"
 }

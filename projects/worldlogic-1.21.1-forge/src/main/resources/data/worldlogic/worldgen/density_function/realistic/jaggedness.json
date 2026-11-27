@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:mul",
+  "argument1": 0.65,
+  "argument2": "worldlogic:realistic/vanilla_jaggedness"
+}

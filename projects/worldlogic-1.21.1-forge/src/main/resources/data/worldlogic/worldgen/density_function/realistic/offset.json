@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:flat_cache",
+  "argument": {
+    "type": "minecraft:add",
+    "argument1": "worldlogic:realistic/vanilla_offset",
+    "argument2": "worldlogic:realistic/regional_relief"
+  }
+}
