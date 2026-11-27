@@ -14,6 +14,7 @@ public final class WorldLogicTerrain {
     public static final String MOD_ID = "worldlogicterrain";
     public WorldLogicTerrain(IEventBus bus) {
         TerrainContent.BLOCKS.register(bus);
+        dev.minemods.worldlogicterrain.soil.SoilExhaustion.register();
         TerrainContent.ITEMS.register(bus);
         TerrainContent.TABS.register(bus);
         EcologicalTreeFeature.FEATURES.register(bus);

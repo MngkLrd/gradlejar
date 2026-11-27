@@ -43,6 +43,7 @@ public final class BerryBushBlock extends BushBlock {
         BlockState current=level.getBlockState(pos);
         if(!current.is(this)||!current.getValue(RIPE)||player.isSpectator()||!player.mayBuild())return InteractionResult.PASS;
         if(!level.setBlock(pos,current.setValue(RIPE,false),Block.UPDATE_ALL))return InteractionResult.PASS;
+        if(level instanceof ServerLevel server)dev.minemods.worldlogicterrain.soil.SoilExhaustion.berryHarvest(server,pos);
         var id=BuiltInRegistries.BLOCK.getKey(this);
         var food=BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(id.getNamespace(),id.getPath().substring(5)));
         Block.popResource(level,pos,new ItemStack(food));
@@ -52,7 +53,7 @@ public final class BerryBushBlock extends BushBlock {
         return InteractionResult.CONSUME;
     }
     @Override public void randomTick(BlockState state,ServerLevel level,BlockPos pos,RandomSource random){
-        if(!state.getValue(RIPE)&&level.getRawBrightness(pos.above(),0)>=9&&random.nextInt(5)==0)
+        if(!state.getValue(RIPE)&&level.getRawBrightness(pos.above(),0)>=9&&random.nextInt(5)==0&&dev.minemods.worldlogicterrain.soil.SoilExhaustion.allowGrowth(level,pos.below(),random))
             level.setBlock(pos,state.setValue(RIPE,true),Block.UPDATE_ALL);
     }
 }

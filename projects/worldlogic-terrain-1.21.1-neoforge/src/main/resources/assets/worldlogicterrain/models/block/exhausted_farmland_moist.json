@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_farmland",
+  "textures": {
+    "dirt": "worldlogicterrain:block/exhausted_dirt",
+    "top": "worldlogicterrain:block/exhausted_farmland_moist"
+  }
+}

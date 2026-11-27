@@ -126,5 +126,7 @@
   "block.worldlogicterrain.hanging_date": "Hanging Date",
   "item.worldlogicterrain.date": "Date",
   "block.worldlogicterrain.hanging_baobab_fruit": "Hanging Baobab Fruit",
-  "item.worldlogicterrain.baobab_fruit": "Baobab Fruit"
+  "item.worldlogicterrain.baobab_fruit": "Baobab Fruit",
+  "block.worldlogicterrain.exhausted_dirt": "Exhausted Dirt",
+  "block.worldlogicterrain.exhausted_farmland": "Exhausted Farmland"
 }

@@ -4876,6 +4876,124 @@
         "context_type": "icon_family",
         "context_view": "The pale elongated pod differs from both dark amber date and large round coconut. Reviewed the eight-fruit native/enlarged icon family and static isometric preview of the actual hanging cuboid model using opaque cropped texels at unit scale. Real game client not run."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/exhausted_dirt.png": {
+      "sha256": "0efe51d49ef4842746302f67c5061005d5d93dca1e6ead2e6953d63aa580a5e7",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        }
+      ],
+      "comparison": "Inspected exact official-hash-matching vanilla dirt and new 16x16 native and 3x3 images. Brown aggregate hierarchy remains while cool charcoal inclusions are more abundant.",
+      "findings": {
+        "silhouette": "Full opaque square with no artificial edge or border.",
+        "cluster_structure": "Brown stepped groups connect around dark clumps in the upper right and lower left.",
+        "micro_contrast": "Close ochre and brown values separate granules; gray edge pixels transition to near-black centers.",
+        "light_and_volume": "Small lighter brown upper-left granule faces contrast with their deeper brown neighbors.",
+        "material_continuity": "Muted brown dominates and black clumps remain embedded in earth.",
+        "edge_variation": "Dark patches change width by one or two pixels instead of following rectangles.",
+        "variant_identity": "Unfurrowed granular soil reads separately from both cultivated tops.",
+        "vanilla_comparison": "The official-hash dirt reference uses short local brown and gray aggregates rather than a directional plank motif.",
+        "aggregate_structure": "Gray perimeter and charcoal center have irregular neighboring brown clumps.",
+        "tile_rhythm": "Viewed actual 3x3 tile: repeated clump locations are visible but no border seam interrupts the aggregate field."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Use short, irregular neighboring soil clumps and embedded gray marks on a warm brown host.",
+        "reference_limit": "Blackened damage is much darker and more abundant than vanilla dirt by owner request.",
+        "native_view": "Brown remains dominant at native size, with larger dark areas clearly visible.",
+        "context_type": "tile_3x3",
+        "context_view": "Inspected 3x3 nearest-neighbor tiled preview; occasional repeated clump positions remain but no artificial frame."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/exhausted_farmland.png": {
+      "sha256": "02ecf0feda3efe23bff73bbf525b859153d4bbcea0f15b59b17d041b3cb8e9b2",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland",
+          "minecraft": "1.21.1",
+          "sha256": "324fa08c758ea228711d312b6cabec69c5494646173f28b4047372a310573cad"
+        }
+      ],
+      "comparison": "Inspected dirt and version-pinned native farmland texture at 16x16 plus 3x3. Farmland furrows are narrower and more directional than ordinary soil; gray-black deposits interrupt the furrows. Farmland-specific mirror hash not independently confirmed against official archive.",
+      "findings": {
+        "silhouette": "Full top face retains visible vertical cultivation furrows.",
+        "cluster_structure": "Dark deposits span adjacent furrows in asymmetric patches rather than isolated speckles.",
+        "micro_contrast": "Alternating mid-brown ridge and dark trough values remain visible under neutral gray edges.",
+        "light_and_volume": "Ridge-facing tones are lighter than adjacent channels, which continue below the deposits.",
+        "material_continuity": "The deposit color is cooler than the adjacent soil and the soil itself remains a continuous ramp.",
+        "edge_variation": "Broken streaks and uneven deposit contours cross the regularly spaced agricultural grooves.",
+        "variant_identity": "Lighter ochre ridges visibly separate dry from moist farmland.",
+        "vanilla_comparison": "Native farmland has directional ridge rhythm; the darker deposits are intentional additional damage, not a copied vanilla sprite.",
+        "aggregate_structure": "Furrow troughs remain connected where the charcoal clusters do not cover them.",
+        "tile_rhythm": "Viewed actual 3x3 tile: the intended vertical row rhythm continues, with irregular localized deposits rather than a solid stripe."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Use embedded gray inclusions and close brown values; adapt aggregate structure to native directional furrows.",
+        "reference_limit": "The dirt comparator is nondirectional; the separately inspected native farmland top establishes the appropriate furrow geometry.",
+        "native_view": "Dry top reads as lighter ridged soil with neutral dark deposits.",
+        "context_type": "tile_3x3",
+        "context_view": "Inspected 3x3 nearest-neighbor tiled preview after relocating diagonal deposits; rows stay recognizable and clumps break the vertical rhythm. Client rendering not run."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/exhausted_farmland_moist.png": {
+      "sha256": "cd4db9a40f210237b8a52082b10452f3a9d38b50b57ffbc300262e73f128a0d7",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland_moist",
+          "minecraft": "1.21.1",
+          "sha256": "b8f89f1840546beaccd05f2ad340b54e00223fb755d1225c7e2c4c63eacc1c2e"
+        }
+      ],
+      "comparison": "Inspected dirt and version-pinned native farmland texture at 16x16 plus 3x3. Farmland furrows are narrower and more directional than ordinary soil; gray-black deposits interrupt the furrows. Farmland-specific mirror hash not independently confirmed against official archive.",
+      "findings": {
+        "silhouette": "Full top face retains visible vertical cultivation furrows.",
+        "cluster_structure": "Dark deposits span adjacent furrows in asymmetric patches rather than isolated speckles.",
+        "micro_contrast": "Alternating mid-brown ridge and dark trough values remain visible under neutral gray edges.",
+        "light_and_volume": "Ridge-facing tones are lighter than adjacent channels, which continue below the deposits.",
+        "material_continuity": "The deposit color is cooler than the adjacent soil and the soil itself remains a continuous ramp.",
+        "edge_variation": "Broken streaks and uneven deposit contours cross the regularly spaced agricultural grooves.",
+        "variant_identity": "Dark warm soil ramp differentiates moist ground from dry despite shared cultivation geometry.",
+        "vanilla_comparison": "Native farmland has directional ridge rhythm; the darker deposits are intentional additional damage, not a copied vanilla sprite.",
+        "aggregate_structure": "Furrow troughs remain connected where the charcoal clusters do not cover them.",
+        "tile_rhythm": "Viewed actual 3x3 tile: the intended vertical row rhythm continues, with irregular localized deposits rather than a solid stripe."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Use embedded gray inclusions and close brown values; adapt aggregate structure to native directional furrows.",
+        "reference_limit": "The dirt comparator is nondirectional; the separately inspected native farmland top establishes the appropriate furrow geometry.",
+        "native_view": "Wet soil reads darker and warmer than dry, with black clusters distinct from channels.",
+        "context_type": "tile_3x3",
+        "context_view": "Inspected 3x3 nearest-neighbor tiled preview after relocating diagonal deposits; rows stay recognizable and clumps break the vertical rhythm. Client rendering not run."
+      }
     }
   },
   "review_status": "1.2.5 RC1: 118 previously reviewed textures unchanged; seven new original fruit item PNGs individually reviewed in native/enlarged icon family and static hanging-model context. Art Review Lock, Build Hub, natural generation and graphical client verification pending.",

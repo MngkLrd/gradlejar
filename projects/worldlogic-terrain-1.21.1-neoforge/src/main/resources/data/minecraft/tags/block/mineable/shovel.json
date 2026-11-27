@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogicterrain:exhausted_dirt",
+    "worldlogicterrain:exhausted_farmland"
+  ]
+}

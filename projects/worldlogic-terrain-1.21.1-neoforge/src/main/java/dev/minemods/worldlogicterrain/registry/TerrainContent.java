@@ -26,6 +26,8 @@ public final class TerrainContent {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(BuiltInRegistries.BLOCK, WorldLogicTerrain.MOD_ID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, WorldLogicTerrain.MOD_ID);
     public static final DeferredRegister<net.minecraft.world.item.CreativeModeTab> TABS=DeferredRegister.create(net.minecraft.core.registries.Registries.CREATIVE_MODE_TAB,WorldLogicTerrain.MOD_ID);
+    public static final Supplier<Block> EXHAUSTED_DIRT=BLOCKS.register("exhausted_dirt",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.DIRT)));
+    public static final Supplier<Block> EXHAUSTED_FARMLAND=BLOCKS.register("exhausted_farmland",()->new net.minecraft.world.level.block.FarmBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FARMLAND)));
     private static final List<Supplier<Item>> SEEDS=new ArrayList<>();
     private static final List<Supplier<Item>> PLANTS = new ArrayList<>();
     private static final List<Supplier<Item>> FOODS = new ArrayList<>();

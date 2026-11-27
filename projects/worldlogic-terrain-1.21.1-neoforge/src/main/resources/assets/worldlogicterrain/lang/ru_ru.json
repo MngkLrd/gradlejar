@@ -126,5 +126,7 @@
   "block.worldlogicterrain.hanging_date": "Плод на дереве: Финик",
   "item.worldlogicterrain.date": "Финик",
   "block.worldlogicterrain.hanging_baobab_fruit": "Плод на дереве: Плод баобаба",
-  "item.worldlogicterrain.baobab_fruit": "Плод баобаба"
+  "item.worldlogicterrain.baobab_fruit": "Плод баобаба",
+  "block.worldlogicterrain.exhausted_dirt": "Истощённый грунт",
+  "block.worldlogicterrain.exhausted_farmland": "Истощённая почва"
 }

@@ -1,6 +1,5 @@
 package dev.minemods.worldlogicterrain.block;
 
-import dev.minemods.worldlogicterrain.tree.FruitEcology;
 import dev.minemods.worldlogicterrain.tree.TreeFruit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -61,7 +60,7 @@ public final class HangingFruitBlock extends Block {
     @Override public void randomTick(BlockState state,ServerLevel level,BlockPos pos,RandomSource random){
         if(!state.canSurvive(level,pos)){level.destroyBlock(pos,true);return;}
         int age=state.getValue(AGE);
-        if(age<RIPE&&!FruitEcology.isWinter(level.getBiome(pos))&&random.nextInt(3)==0){
+        if(age<RIPE&&random.nextInt(3)==0){
             // Two random-tick growth transitions; the timer is naturally paused in unloaded chunks.
             level.setBlock(pos,state.setValue(AGE,age+1),Block.UPDATE_ALL);
         }
