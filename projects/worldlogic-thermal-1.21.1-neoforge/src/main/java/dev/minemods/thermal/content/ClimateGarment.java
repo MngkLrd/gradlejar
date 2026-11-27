@@ -6,11 +6,11 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.DyedItemColor;
 import java.util.List;
 /** Ordinary armor slots, not a second equipment inventory. */
-public final class ClimateGarment extends ArmorItem {
+public final class ClimateGarment extends ThermalWearable {
     public record Profile(double insulation,double ventilation,double rainShield,double windShield,double sunShield){}
     private final Profile profile;
     public ClimateGarment(Type type,int durability,int rgb,Profile p){
-        super(ArmorMaterials.LEATHER,type,new Item.Properties().durability(type.getDurability(durability)).component(DataComponents.DYED_COLOR,new DyedItemColor(rgb,false)));
+        super(type,new Item.Properties().durability(type.getDurability(durability)).component(DataComponents.DYED_COLOR,new DyedItemColor(rgb,false)));
         profile=p;
     }
     public Profile profile(){return profile;}

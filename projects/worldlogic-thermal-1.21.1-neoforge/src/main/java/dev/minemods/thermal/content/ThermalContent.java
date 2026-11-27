@@ -23,7 +23,7 @@ public final class ThermalContent {
  public static final DeferredBlock<FiberWorkpieceBlock> WORKPIECE=BLOCKS.register("fiber_workpiece",()->new FiberWorkpieceBlock(BlockBehaviour.Properties.of().strength(-1,6).noCollission().noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK).sound(SoundType.GRASS)));
  public static final Supplier<BlockEntityType<FiberWorkpieceEntity>> WORKPIECE_ENTITY=ENTITIES.register("fiber_workpiece",()->BlockEntityType.Builder.of(FiberWorkpieceEntity::new,WORKPIECE.get()).build(null));
  private static DeferredItem<ArmorItem> clothing(String name,ArmorItem.Type type,int life){
-  return ITEMS.register(name,()->new ArmorItem(ArmorMaterials.LEATHER,type,new Item.Properties().durability(type.getDurability(life))));
+  return ITEMS.register(name,()->new ThermalWearable(type,new Item.Properties().durability(type.getDurability(life))));
  }
  public static final DeferredItem<Item> FIBER=ITEMS.register("dry_fiber",()->new Item(new Item.Properties()));
  public static final DeferredItem<ArmorItem> GRASS_HOOD=clothing("grass_hood",ArmorItem.Type.HELMET,3);
