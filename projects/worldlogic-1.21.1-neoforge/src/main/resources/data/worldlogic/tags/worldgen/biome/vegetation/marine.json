@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:polar_ocean",
+    "worldlogic:cold_ocean",
+    "worldlogic:temperate_ocean",
+    "worldlogic:subtropical_ocean",
+    "worldlogic:tropical_ocean",
+    "worldlogic:polar_deep_ocean",
+    "worldlogic:cold_deep_ocean",
+    "worldlogic:temperate_deep_ocean",
+    "worldlogic:warm_deep_ocean"
+  ]
+}

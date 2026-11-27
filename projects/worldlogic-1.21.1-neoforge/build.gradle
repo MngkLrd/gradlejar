@@ -1,7 +1,63 @@
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group='dev.minemods.worldlogic'
-version='1.0.0-rc22'
+version='1.0.0-rc37'
 base.archivesName='worldlogic-neoforge-mc1.21.1'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 neoForge { version=project.neo_version; runs { client { client() }; server { server(); programArgument '--nogui' } }; mods { worldlogic { sourceSet(sourceSets.main) } } }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=21 }
+
+// Patchouli content is generated from the same authoritative bilingual guide
+// chapters; the fallback GUI and Patchouli cannot drift independently.
+def patchouliOutput = layout.buildDirectory.dir('generated/worldlogicPatchouli')
+tasks.register('generatePatchouliGuide') {
+ def source = file('src/main/resources/assets/worldlogic/worldlogic_guide')
+ inputs.dir(source)
+ outputs.dir(patchouliOutput)
+ doLast {
+  def output = patchouliOutput.get().asFile
+  delete(output)
+  def writeJson = { String path, Object value ->
+   def f = new File(output,path);f.parentFile.mkdirs()
+   f.setText(groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(value))+'\n','UTF-8')
+  }
+  writeJson('data/worldlogic/patchouli_books/field_guide/book.json',[
+   name:'item.worldlogic.guidebook',landing_text:'worldlogic.patchouli.landing',
+   use_resource_pack:true,dont_generate_book:true,custom_book_item:'worldlogic:guidebook',
+   book_texture:'patchouli:textures/gui/book_brown.png',i18n:true,show_progress:false,
+   show_toasts:false,version:'37',text_overflow_mode:'resize'])
+  def icons=[core:'minecraft:campfire',water:'minecraft:water_bucket',hydration:'minecraft:glass_bottle',
+   weather:'minecraft:clock',thermal:'minecraft:leather_chestplate',trauma:'minecraft:redstone',
+   treechopper:'minecraft:stone_axe',terrarian:'minecraft:wheat',geology:'minecraft:raw_iron',biomes:'minecraft:map']
+  def parser = new groovy.json.JsonSlurper()
+  source.listFiles().findAll{it.name.endsWith('.json')}.sort{it.name}.each{file ->
+   def chapter=parser.parse(file)
+   ['en_us','ru_ru'].each{locale ->
+    def lang=locale=='ru_ru'?'ru':'en'
+    def root="assets/worldlogic/patchouli_books/field_guide/${locale}"
+    writeJson("${root}/categories/${chapter.id}.json",[name:chapter.title[lang],
+     description:chapter.title[lang],icon:icons[chapter.id]?:'minecraft:book',sortnum:chapter.order])
+    chapter.pages.eachWithIndex{article,index ->
+     def pages=[]
+     // Preserve every paragraph, wrapping long text into bounded page strings.
+     article.body[lang].each{paragraph ->
+      def words=paragraph.split('\\s+');def line=''
+      words.each{word ->
+       if(line && line.length()+word.length()+1>260){pages.add([type:'patchouli:text',text:line]);line=''}
+       line+=(line?' ':'')+word
+      }
+      if(line)pages.add([type:'patchouli:text',text:line])
+     }
+     // Optional addon item references must never break Core-only book loading.
+     article.models.findAll{it.startsWith('minecraft:')||it.startsWith('worldlogic:')}.each{id ->
+      pages.add([type:'patchouli:spotlight',item:id,text:''])
+     }
+     writeJson("${root}/entries/${chapter.id}/${article.id}.json",[
+      name:article.title[lang],category:"worldlogic:${chapter.id}",icon:icons[chapter.id]?:'minecraft:book',
+      sortnum:index,pages:pages])
+    }
+   }
+  }
+ }
+}
+sourceSets.main.resources.srcDir(patchouliOutput)
+tasks.named('processResources') { dependsOn tasks.named('generatePatchouliGuide') }
