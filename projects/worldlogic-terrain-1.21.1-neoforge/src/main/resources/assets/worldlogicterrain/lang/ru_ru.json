@@ -66,5 +66,6 @@
   "item.worldlogicterrain.radish_seeds": "Семена редиса",
   "item.worldlogicterrain.onion_seeds": "Семена лука",
   "item.worldlogicterrain.cabbage_seeds": "Семена капусты",
-  "item.worldlogicterrain.bell_pepper_seeds": "Семена перца"
+  "item.worldlogicterrain.bell_pepper_seeds": "Семена перца",
+  "block.worldlogicterrain.duckweed": "Ряска"
 }

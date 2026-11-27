@@ -41,6 +41,16 @@ public final class AquaticChecks {
             require(!AquaticFeature.placePlant(l,p,"water_lily",0,0),"Lily on stone");
             l.setBlock(p.below(),Blocks.WATER.defaultBlockState().setValue(LiquidBlock.LEVEL,1),2);
             require(!AquaticFeature.placePlant(l,p,"water_lily",0,0),"Lily on flowing water");
+            var duckweed=BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("worldlogicterrain","duckweed"));
+            require(!AquaticFeature.placePlant(l,p,"duckweed",0,0),"Duckweed on flowing water");
+            l.setBlock(p.below(),Blocks.WATER.defaultBlockState(),2);
+            require(AquaticFeature.placePlant(l,p,"duckweed",0,0),"Duckweed rejected vanilla source");
+            require(l.getBlockState(p.below()).is(Blocks.WATER),"Duckweed replaced source");
+            var duckDrops=Block.getDrops(l.getBlockState(p),l,p,null,null,ItemStack.EMPTY);
+            require(duckDrops.size()==1&&duckDrops.getFirst().is(duckweed.asItem()),"Duckweed loot");
+            l.setBlock(p.below(),Blocks.AIR.defaultBlockState(),Block.UPDATE_ALL);
+            require(l.getBlockState(p).isAir(),"Duckweed remained without water");
+            require(!AquaticFeature.placePlant(l,p,"duckweed",0,0),"Duckweed on air");
             l.setBlock(p.below(),Blocks.GRASS_BLOCK.defaultBlockState(),2);
             for(String id:new String[]{"reed","cattail","sedge","marsh_marigold","dry_grass","tall_dry_grass"}){
                 require(AquaticFeature.placePlant(l,p,id,0,0),"Shore plant failed "+id);
@@ -53,6 +63,10 @@ public final class AquaticChecks {
                 require(java.util.Set.of("dry_grass","tall_dry_grass").contains(AquaticFeature.shoreSpecies(AquaticHabitat.Kind.SEA,random)),"Fresh species in marine water");
                 require(java.util.Set.of("reed","sedge").contains(AquaticFeature.shoreSpecies(AquaticHabitat.Kind.SPRING,random)),"Spring flora");
                 require(AquaticFeature.shoreSpecies(AquaticHabitat.Kind.GROUNDWATER,random)==null,"Groundwater surface flora");
+                require(AquaticFeature.floatingSpecies(AquaticHabitat.Kind.SEA,1,random)==null&&AquaticFeature.floatingSpecies(AquaticHabitat.Kind.BRACKISH,1,random)==null,"Floating freshwater plant in salt water");
+                require(AquaticFeature.floatingSpecies(AquaticHabitat.Kind.RIVER,1,random)==null,"Floating plant in river");
+                require(AquaticFeature.floatingSpecies(AquaticHabitat.Kind.LAKE,0,random)==null&&AquaticFeature.floatingSpecies(AquaticHabitat.Kind.LAKE,5,random)==null,"Floating depth limits");
+                require("duckweed".equals(AquaticFeature.floatingSpecies(AquaticHabitat.Kind.WETLAND,2,random))&&"duckweed".equals(AquaticFeature.floatingSpecies(AquaticHabitat.Kind.LAKE,4,random)),"Duckweed depth/wetland palette");
             }
             String[] ids={"sea_water","brackish_water","river_water","lake_water","pond_water","spring_water","wetland_water","groundwater"};
             AquaticHabitat.Kind[] kinds={AquaticHabitat.Kind.SEA,AquaticHabitat.Kind.BRACKISH,AquaticHabitat.Kind.RIVER,AquaticHabitat.Kind.LAKE,AquaticHabitat.Kind.POND,AquaticHabitat.Kind.SPRING,AquaticHabitat.Kind.WETLAND,AquaticHabitat.Kind.GROUNDWATER};
@@ -65,6 +79,11 @@ public final class AquaticChecks {
                 require(AquaticFeature.placePlant(l,p,"water_lily",0,0)==expected,"Native lily tolerance "+ids[i]);
                 require(l.getBlockState(p.below()).is(b),"Native water replaced "+ids[i]);
                 if(expected){l.setBlock(p.below(),Blocks.AIR.defaultBlockState(),Block.UPDATE_ALL);require(l.getBlockState(p).isAir(),"Native water support removal "+ids[i]);}
+                l.setBlock(p,Blocks.AIR.defaultBlockState(),2);
+                l.setBlock(p.below(),b.defaultBlockState(),2);
+                require(AquaticFeature.placePlant(l,p,"duckweed",0,0)==expected,"Native duckweed tolerance "+ids[i]);
+                require(l.getBlockState(p.below()).is(b),"Duckweed replaced native water "+ids[i]);
+                if(expected){l.setBlock(p.below(),Blocks.AIR.defaultBlockState(),Block.UPDATE_ALL);require(l.getBlockState(p).isAir(),"Native duckweed support removal "+ids[i]);}
             }
             require(tested==0||tested==8,"Incomplete native fluid registry");
             var predictor=AquaticHabitat.prediction(l,l.getChunkSource().getGenerator());

@@ -3435,6 +3435,50 @@
           "name": "food consumption bell_pepper"
         }
       ]
+    },
+    {
+      "id": "duckweed-block",
+      "kind": "block",
+      "subject": "duckweed-block",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "duckweed-item",
+      "kind": "item",
+      "subject": "duckweed-item",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "duckweed-saline-depth",
+      "kind": "mechanic",
+      "subject": "duckweed-saline-depth",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "duckweed-native-fluid-preservation",
+      "kind": "mechanic",
+      "subject": "duckweed-native-fluid-preservation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
     }
   ]
 }

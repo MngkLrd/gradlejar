@@ -28,25 +28,43 @@ public final class AquaticFeature extends Feature<NoneFeatureConfiguration> {
         var l=c.level();var r=c.random();int x0=c.origin().getX()&~15,z0=c.origin().getZ()&~15;
         var prediction=AquaticHabitat.prediction(l,c.chunkGenerator());
         boolean any=false;
-        for(int i=0;i<16;i++){
+        for(int i=0;i<24;i++){
             int x=x0+r.nextInt(16),z=z0+r.nextInt(16);
             BlockPos p=new BlockPos(x,l.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z),z);
             if(!inside(l,p,x0,z0)||!inside(l,p.below(),x0,z0)||!l.getBlockState(p).isAir())continue;
             BlockState below=l.getBlockState(p.below());
             if(AquaticHabitat.water(below)){
-                // Source-only floating vegetation, shallow open water and no fluid replacement.
-                if(r.nextInt(4)!=0||!inside(l,p.below(3),x0,z0))continue;
+                // Respect the actual fluid, core forecast and local depth; never replace the fluid block.
+                if(!below.getFluidState().isSource()||r.nextInt(3)!=0)continue;
                 var kind=prediction.classify(l,p.below(),below);
-                if(AquaticHabitat.floating(kind)&&!AquaticHabitat.water(l.getBlockState(p.below(3)))
-                    &&l.getBiome(p).value().getBaseTemperature()>.15f)
-                    any|=placePlant(l,p,"water_lily",x0,z0);
+                if(l.getBiome(p).value().getBaseTemperature()<=.15f)continue;
+                int depth=waterDepth(l,p,x0,z0);
+                String species=floatingSpecies(kind,depth,r);
+                if(species!=null&&placePlant(l,p,species,x0,z0)){
+                    any=true;
+                    if(species.equals("duckweed")){
+                        // One small natural group; check every neighboring water column independently.
+                        for(Direction dir:Direction.Plane.HORIZONTAL){
+                            if(r.nextBoolean())continue;
+                            BlockPos q=p.relative(dir);
+                            if(!inside(l,q,x0,z0)||!inside(l,q.below(),x0,z0)||!l.getBlockState(q).isAir())continue;
+                            var floor=l.getBlockState(q.below());
+                            if(AquaticHabitat.water(floor)&&floor.getFluidState().isSource()&&
+                               AquaticHabitat.floating(prediction.classify(l,q.below(),floor))&&waterDepth(l,q,x0,z0)>=1&&waterDepth(l,q,x0,z0)<=4)
+                                any|=placePlant(l,q,"duckweed",x0,z0);
+                        }
+                    }
+                }
                 continue;
             }
-            // Read only within the decorated chunk and only actual adjacent water.
+            // Shoreline may sit one block above the water surface. Limit reads to this chunk.
             for(Direction dir:Direction.Plane.HORIZONTAL){
                 BlockPos bank=p.below().relative(dir);
                 if(!inside(l,bank,x0,z0))continue;
                 var water=l.getBlockState(bank);
+                if(!AquaticHabitat.water(water)&&water.isAir()&&inside(l,bank.below(),x0,z0)){
+                    bank=bank.below();water=l.getBlockState(bank);
+                }
                 if(!AquaticHabitat.water(water))continue;
                 var kind=prediction.classify(l,bank,water);
                 String species=shoreSpecies(kind,r);
@@ -56,6 +74,22 @@ public final class AquaticFeature extends Feature<NoneFeatureConfiguration> {
             }
         }
         return any;
+    }
+    static int waterDepth(WorldGenLevel l,BlockPos surface,int x0,int z0){
+        int depth=0;
+        for(int i=1;i<=5;i++){
+            BlockPos p=surface.below(i);
+            if(!inside(l,p,x0,z0))return 5;
+            if(!AquaticHabitat.water(l.getBlockState(p)))break;
+            depth++;
+        }
+        return depth;
+    }
+    static String floatingSpecies(AquaticHabitat.Kind kind,int depth,RandomSource random){
+        if(!AquaticHabitat.floating(kind)||depth<1||depth>4)return null;
+        if(depth>2||kind==AquaticHabitat.Kind.POND||kind==AquaticHabitat.Kind.WETLAND)
+            return "duckweed";
+        return random.nextInt(3)==0?"duckweed":"water_lily";
     }
     static String shoreSpecies(AquaticHabitat.Kind kind,RandomSource random){
         return switch(kind){
