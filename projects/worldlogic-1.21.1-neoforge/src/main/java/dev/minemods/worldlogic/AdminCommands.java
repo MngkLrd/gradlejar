@@ -70,17 +70,16 @@ public final class AdminCommands {
    var preset=gen instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator n?n.generatorSettings().unwrapKey().map(k->k.location().toString()).orElse("unknown"):"non-noise";
    return reply(s,"Biome: "+actual+" | generator: "+preset+" | Realistic custom biomes: "+BiomeSurvey.supported(gen));
   }));
-  root.then(Commands.literal("biome_find").then(Commands.argument("id",StringArgumentType.word()).suggests((c,v)->net.minecraft.commands.SharedSuggestionProvider.suggest(c.getSource().getLevel().getChunkSource().getGenerator().getBiomeSource().possibleBiomes().stream().flatMap(h->h.unwrapKey().stream()).map(k->k.location().toString()),v)).executes(c->{
+  root.then(Commands.literal("biome_find").then(Commands.argument("id",StringArgumentType.greedyString()).suggests((c,v)->net.minecraft.commands.SharedSuggestionProvider.suggest(c.getSource().getLevel().getChunkSource().getGenerator().getBiomeSource().possibleBiomes().stream().flatMap(h->h.unwrapKey().stream()).map(k->k.location().toString()),v)).executes(c->{
    var s=c.getSource();var l=s.getLevel();var cache=l.getChunkSource();var generator=cache.getGenerator();
    if(!(generator instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator g)||!BiomeSurvey.supported(g))return reply(s,"Search requires World Logic Realistic world.");
-   var raw=StringArgumentType.getString(c,"id");var id=net.minecraft.resources.ResourceLocation.tryParse(raw.contains(":")?raw:"worldlogic:"+raw);
+   var raw=StringArgumentType.getString(c,"id").trim();var id=net.minecraft.resources.ResourceLocation.tryParse(raw.contains(":")?raw:"worldlogic:"+raw);
    if(id==null)return reply(s,"Invalid biome ID");
    var origin=net.minecraft.core.BlockPos.containing(s.getPosition());var state=cache.randomState();
-   // This is a bounded diagnostic, not vanilla's exhaustive nearest search.
-   var found=BiomeSurvey.find(g,state,origin,id);
-   return reply(s,found.map(p->"Predicted biome "+id+" at "+p.getX()+" "+p.getY()+" "+p.getZ()+" (sampled, not exact nearest)").orElse("No sampled match for "+id+" within 12288 blocks on the search grid. This does not prove absence."));
+   return BiomeSurvey.request(s,g,state,origin,id);
   })));
   root.then(Commands.literal("qa").requires(s->s.hasPermission(4))
+   .then(Commands.literal("underground_regression").executes(c->{try{UndergroundRegressionChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_UNDERGROUND_REGRESSION_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("plant_ecology").executes(c->{try{PlantEcologyChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_PLANT_ECOLOGY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("analytics").executes(c->{try{AnalyticsChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_ANALYTICS_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("native_water").executes(c->{try{NaturalWaterChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_NATIVE_WATER_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))

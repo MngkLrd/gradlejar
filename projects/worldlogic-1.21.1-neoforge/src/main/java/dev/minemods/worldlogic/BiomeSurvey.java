@@ -11,6 +11,21 @@ import net.minecraft.world.level.levelgen.Heightmap;
 /** Bounded climate-only lookup. No chunk loads and no live world access. */
 public final class BiomeSurvey{
  private BiomeSurvey(){}
+ private static final Set<net.minecraft.server.MinecraftServer> BUSY=Collections.newSetFromMap(new WeakHashMap<>());
+ static int request(net.minecraft.commands.CommandSourceStack source,NoiseBasedChunkGenerator gen,RandomState state,BlockPos origin,ResourceLocation id){
+  var server=source.getServer();
+  if(!gen.getBiomeSource().possibleBiomes().stream().anyMatch(b->b.unwrapKey().map(k->k.location().equals(id)).orElse(false))){
+   source.sendFailure(net.minecraft.network.chat.Component.literal("Biome is not in this generator: "+id));return 0;
+  }
+  if(!BUSY.add(server)){source.sendFailure(net.minecraft.network.chat.Component.literal("A biome survey is already running."));return 0;}
+  java.util.concurrent.CompletableFuture.supplyAsync(()->find(gen,state,origin,id),net.minecraft.Util.backgroundExecutor())
+   .whenComplete((result,error)->server.execute(()->{
+    BUSY.remove(server);
+    if(error!=null){source.sendFailure(net.minecraft.network.chat.Component.literal("Biome survey failed: "+error.getMessage()));return;}
+    source.sendSuccess(()->net.minecraft.network.chat.Component.literal(result.map(p->"Predicted biome "+id+" at "+p.getX()+" "+p.getY()+" "+p.getZ()+" (sampled, not exact nearest)").orElse("No sampled match for "+id+" within 12288 blocks on the search grid. This does not prove absence.")),false);
+   }));
+  source.sendSuccess(()->net.minecraft.network.chat.Component.literal("Searching seeded climate grid without loading chunks."),false);return 1;
+ }
  static int modelY(RandomState state,int x,int z){
   return (int)Math.round(128+128*state.router().depth().compute(new DensityFunction.SinglePointContext(x,128,z)));
  }

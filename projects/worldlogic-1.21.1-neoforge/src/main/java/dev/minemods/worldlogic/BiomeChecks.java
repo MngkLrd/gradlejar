@@ -22,7 +22,7 @@ public final class BiomeChecks {
   var noise=l.registryAccess().lookupOrThrow(Registries.NOISE);
   var a=RandomState.create(old.generatorSettings().value(),noise,seed);var b=RandomState.create(gen.generatorSettings().value(),noise,seed);
   var ob=LevelHeightAccessor.create(-64,384);var nb=LevelHeightAccessor.create(-256,768);
-  int maxDelta=0;Set<String> seen=new HashSet<>();
+  int maxDelta=0;Set<String> seen=new TreeSet<>(),subsurface=new TreeSet<>();int depthSamples=0;
   for(int x=-2;x<=2;x++)for(int z=-2;z<=2;z++){
    int px=x*768,pz=z*768;
    int h=old.getBaseHeight(px,pz,Heightmap.Types.OCEAN_FLOOR_WG,ob,a);
@@ -37,8 +37,18 @@ public final class BiomeChecks {
    var id=gen.getBiomeSource().getNoiseBiome(x>>2,h>>2,z>>2,b.sampler()).unwrapKey().orElseThrow().location();
    require(id.getNamespace().equals("worldlogic"),"vanilla biome selected");
    seen.add(id.toString());
+   if(h>=70){
+    var deep=BiomeSurvey.at(gen,b,x,-180,z);
+    require(deep.getPath().equals("deep_rock_cavern"),"deep climate depth at land "+x+","+z+" -> "+deep);
+    depthSamples++;
+    subsurface.add(deep.toString());
+    subsurface.add(BiomeSurvey.at(gen,b,x,h-80,z).toString());
+   }
   }
-  require(seen.size()>=8,"insufficient macro biome diversity "+seen);
+  require(seen.size()>=8&&depthSamples>0,"insufficient macro biome diversity "+seen);
+  Set<String> missing=new TreeSet<>();for(var v:gen.getBiomeSource().possibleBiomes())missing.add(v.unwrapKey().orElseThrow().location().toString());
+  missing.removeAll(seen);missing.removeAll(subsurface);
+  org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_SURVEY seed={} surface={} subterranean={} depthSamples={} unsampled={}",seed,seen.size(),subsurface,depthSamples,missing);
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_UNIFIED seed={} heightSamples=25 maxDelta={} biomeClasses={}",seed,maxDelta,seen);
  }
 }

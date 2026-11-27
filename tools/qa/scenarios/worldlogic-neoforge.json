@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC31 production core/API regression",
+  "name": "World Logic NeoForge RC32 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -206,6 +206,12 @@
       "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence",
       "command": "worldlogic qa plant_ecology",
       "expect": "WORLDLOGIC_PLANT_ECOLOGY_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags",
+      "command": "worldlogic qa underground_regression",
+      "expect": "WORLDLOGIC_UNDERGROUND_REGRESSION_PASSED",
       "assertion": true
     }
   ],
@@ -684,6 +690,17 @@
         {
           "backend": "server",
           "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "underground-generation-regression",
+      "kind": "mechanic",
+      "subject": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
         }
       ]
     }
