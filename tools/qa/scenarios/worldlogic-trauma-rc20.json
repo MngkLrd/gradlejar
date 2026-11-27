@@ -1,0 +1,660 @@
+{
+  "schema": 1,
+  "name": "World Logic Trauma NeoForge RC20 — component regression",
+  "steps": [
+    {
+      "command": "traumaqa state",
+      "expect": "TRAUMAQA state PASS",
+      "assertion": true,
+      "name": "TR-STATE: seven healthy zones, localized damage, NBT roundtrip"
+    },
+    {
+      "command": "traumaqa treatment",
+      "expect": "TRAUMAQA treatment PASS",
+      "assertion": true,
+      "name": "TR-TREAT: reject healthy target, bilateral arm and leg splints, gradual recovery"
+    },
+    {
+      "command": "traumaqa bridge",
+      "expect": "TRAUMAQA bridge PASS",
+      "assertion": true,
+      "name": "TR-BRIDGE: core injury predicate, penalty, arm signal, legacy migration"
+    },
+    {
+      "command": "traumaqa damage",
+      "expect": "TRAUMAQA damage PASS",
+      "assertion": true,
+      "name": "TR-DAMAGE: fall damage, unaffected head, creative exclusion"
+    },
+    {
+      "command": "traumaqa api",
+      "expect": "TRAUMAQA api PASS",
+      "assertion": true,
+      "name": "TR-API: public rule and fatigue API, recovery, creative mode, invalid input"
+    },
+    {
+      "command": "traumaqa procedure",
+      "expect": "TRAUMAQA procedure PASS",
+      "assertion": true,
+      "name": "TR-PROCEDURE: immediate cursor consumption, duplicate and invalid rejection, cursor independence, explicit cancellation"
+    },
+    {
+      "command": "traumaqa targeting",
+      "expect": "TRAUMAQA targeting PASS",
+      "assertion": true,
+      "name": "TR-TARGETING: trauma kit bleed priority, medkit living tissue and no-effect rejection"
+    },
+    {
+      "command": "traumaqa persistence",
+      "expect": "TRAUMAQA persistence PASS",
+      "assertion": true,
+      "name": "Precise emergency grace persistence and invalid local HP safeguards"
+    },
+    {
+      "command": "traumaqa identity",
+      "expect": "TRAUMAQA identity PASS",
+      "assertion": true,
+      "name": "TR-IDENTITY: branded loader identity, mandatory core, preserved medical item IDs and save key"
+    },
+    {
+      "command": "traumaqa thermal",
+      "expect": "TRAUMAQA thermal PASS",
+      "assertion": true,
+      "name": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation"
+    },
+    {
+      "command": "traumaqa respawn",
+      "expect": "TRAUMAQA respawn PASS",
+      "assertion": true,
+      "name": "TR-RESPAWN: healthy first join, death reset persisted, relog and nondeath clone preserve injury"
+    },
+    {
+      "command": "traumaqa bloodloss",
+      "expect": "TRAUMAQA bloodloss PASS",
+      "assertion": true,
+      "name": "TR-BLOODLOSS: weak and severe systemic loss, nonbleeding black limb, local bleeding and vital destruction"
+    },
+    {
+      "command": "traumaqa physiology",
+      "expect": "TRAUMAQA physiology PASS",
+      "assertion": true,
+      "name": "TR-PHYSIOLOGY: independent limb function, splint benefit, pain relief, blood volume, shock, persistence and reset"
+    },
+    {
+      "command": "traumaqa wounds",
+      "expect": "TRAUMAQA wounds PASS",
+      "assertion": true,
+      "name": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry"
+    },
+    {
+      "command": "traumaqa primitive",
+      "expect": "TRAUMAQA primitive PASS",
+      "assertion": true,
+      "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+    },
+    {
+      "command": "traumaqa publicapi",
+      "expect": "TRAUMAQA publicapi PASS",
+      "assertion": true,
+      "name": "TR-PUBLICAPI: immutable seven-region snapshot, external injury, invalid input and creative guards"
+    },
+    {
+      "command": "traumaqa climb",
+      "expect": "TRAUMAQA climb PASS",
+      "assertion": true,
+      "name": "TR-CLIMB: full block ascent, arm selection, duration, headroom and interrupted path"
+    },
+    {
+      "command": "traumaqa ownership",
+      "expect": "TRAUMAQA ownership PASS",
+      "assertion": true,
+      "name": "TR-OWNERSHIP: registered damage event and Trauma API remain active with Core legacy injuries disabled"
+    },
+    {
+      "command": "traumaqa frostcompat",
+      "expect": "TRAUMAQA frostcompat PASS",
+      "assertion": true,
+      "name": "TR-FROST-COMPAT: legacy local exposure at -17 C, modern API ownership, vanilla freeze and insulation"
+    },
+    {
+      "command": "traumaqa waterillness",
+      "expect": "TRAUMAQA waterillness PASS",
+      "assertion": true,
+      "name": "TR-WATER-ILLNESS: dose, incubation, symptoms, treatment, recovery, persistence, illness-only loss"
+    }
+  ],
+  "coverage": [
+    {
+      "id": "tr-state",
+      "kind": "mechanic",
+      "subject": "TR-STATE: seven healthy zones, localized damage, NBT roundtrip",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-STATE: seven healthy zones, localized damage, NBT roundtrip"
+        }
+      ]
+    },
+    {
+      "id": "tr-treat",
+      "kind": "mechanic",
+      "subject": "TR-TREAT: reject healthy target, bilateral arm and leg splints, gradual recovery",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-TREAT: reject healthy target, bilateral arm and leg splints, gradual recovery"
+        }
+      ]
+    },
+    {
+      "id": "tr-bridge",
+      "kind": "mechanic",
+      "subject": "TR-BRIDGE: core injury predicate, penalty, arm signal, legacy migration",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-BRIDGE: core injury predicate, penalty, arm signal, legacy migration"
+        }
+      ]
+    },
+    {
+      "id": "tr-damage",
+      "kind": "mechanic",
+      "subject": "TR-DAMAGE: fall damage, unaffected head, creative exclusion",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DAMAGE: fall damage, unaffected head, creative exclusion"
+        }
+      ]
+    },
+    {
+      "id": "tr-api",
+      "kind": "mechanic",
+      "subject": "Core API v1 fatigue and rule integration",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-API: public rule and fatigue API, recovery, creative mode, invalid input"
+        }
+      ]
+    },
+    {
+      "id": "tr-procedure",
+      "kind": "mechanic",
+      "subject": "Timed cursor treatment: one consumption, duplicate rejection, same-item replacement and cancellation",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PROCEDURE: immediate cursor consumption, duplicate and invalid rejection, cursor independence, explicit cancellation"
+        }
+      ]
+    },
+    {
+      "id": "tr-targeting",
+      "kind": "mechanic",
+      "subject": "Field medkit bleeding target and no-effect treatment rejection",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-TARGETING: trauma kit bleed priority, medkit living tissue and no-effect rejection"
+        }
+      ]
+    },
+    {
+      "id": "tr-persistence",
+      "kind": "mechanic",
+      "subject": "Precise emergency grace persistence and invalid local HP safeguards",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Precise emergency grace persistence and invalid local HP safeguards"
+        }
+      ]
+    },
+    {
+      "id": "tr-identity",
+      "kind": "other",
+      "subject": "TR-IDENTITY: branded loader identity, mandatory core, preserved medical item IDs and save key",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-IDENTITY: branded loader identity, mandatory core, preserved medical item IDs and save key"
+        }
+      ]
+    },
+    {
+      "id": "tr-thermal",
+      "kind": "mechanic",
+      "subject": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation"
+        }
+      ]
+    },
+    {
+      "id": "tr-thermal-diagnosis",
+      "kind": "mechanic",
+      "subject": "Confirmed heatstroke, sunstroke and stale-diagnosis guard",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation"
+        }
+      ]
+    },
+    {
+      "id": "tr-respawn",
+      "kind": "mechanic",
+      "subject": "TR-RESPAWN: healthy first join, death reset persisted, relog and nondeath clone preserve injury",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-RESPAWN: healthy first join, death reset persisted, relog and nondeath clone preserve injury"
+        }
+      ]
+    },
+    {
+      "id": "tr-bloodloss",
+      "kind": "mechanic",
+      "subject": "TR-BLOODLOSS: weak and severe systemic loss, nonbleeding black limb, local bleeding and vital destruction",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-BLOODLOSS: weak and severe systemic loss, nonbleeding black limb, local bleeding and vital destruction"
+        }
+      ]
+    },
+    {
+      "id": "tr-physiology",
+      "kind": "mechanic",
+      "subject": "TR-PHYSIOLOGY: independent limb function, splint benefit, pain relief, blood volume, shock, persistence and reset",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PHYSIOLOGY: independent limb function, splint benefit, pain relief, blood volume, shock, persistence and reset"
+        }
+      ]
+    },
+    {
+      "id": "tr-wounds",
+      "kind": "mechanic",
+      "subject": "Classified wounds, persistence, healing and reset",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry"
+        }
+      ]
+    },
+    {
+      "id": "tr-primitive",
+      "kind": "item",
+      "subject": "Rag dressing and herbal poultice use, negative controls, consumption and recipe registration",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry"
+        }
+      ]
+    },
+    {
+      "id": "tr-retired",
+      "kind": "other",
+      "subject": "Four retired duplicates absent from recipe and creative lists; registry compatibility",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry"
+        }
+      ]
+    },
+    {
+      "id": "tr-herb-workpiece",
+      "kind": "block",
+      "subject": "Workpiece placement, cell processing, saved partial work, pickup and support loss",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-herb-materials",
+      "kind": "item",
+      "subject": "Raw herbs and two crushed herbs; intermediate recipes",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-canonical-medicine",
+      "kind": "mechanic",
+      "subject": "Retired aliases and differentiated treatment roles",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-publicapi",
+      "kind": "other",
+      "subject": "Public TraumaApi v1 immutable snapshots and external injury validation",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PUBLICAPI: immutable seven-region snapshot, external injury, invalid input and creative guards"
+        }
+      ]
+    },
+    {
+      "id": "tr-rag-no-heal",
+      "kind": "mechanic",
+      "subject": "Improvised rag rejects dry bruise and stops weak bleeding without healing tissue",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry"
+        }
+      ]
+    },
+    {
+      "id": "tr-rehabilitation-bleed",
+      "kind": "mechanic",
+      "subject": "Active bleeding pauses bone and tissue rehabilitation",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation"
+        }
+      ]
+    },
+    {
+      "id": "tr-herb-arm",
+      "kind": "mechanic",
+      "subject": "Destroyed main arm rejects herb placement without consuming herbs",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-climb-geometry",
+      "kind": "mechanic",
+      "subject": "One-block ascent, healthy player rejection, obstacle/headroom and support checks",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-CLIMB: full block ascent, arm selection, duration, headroom and interrupted path"
+        }
+      ]
+    },
+    {
+      "id": "tr-climb-arms",
+      "kind": "mechanic",
+      "subject": "Two-arm and exact left/right selection, fracture and shock rejection, duration",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-CLIMB: full block ascent, arm selection, duration, headroom and interrupted path"
+        }
+      ]
+    },
+    {
+      "id": "tr-climb-cancel",
+      "kind": "mechanic",
+      "subject": "Mid-ascent obstruction/support loss interrupts without teleporting through collision",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-CLIMB: full block ascent, arm selection, duration, headroom and interrupted path"
+        }
+      ]
+    },
+    {
+      "id": "tr-climb-movement-guard",
+      "kind": "mechanic",
+      "subject": "Reject client positions only during active climb and release on normal completion or abort",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-CLIMB: full block ascent, arm selection, duration, headroom and interrupted path"
+        }
+      ]
+    },
+    {
+      "id": "tr-ownership-damage",
+      "kind": "mechanic",
+      "subject": "Registered fall/fire damage updates anatomy exactly once with legacy Core rules disabled",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-OWNERSHIP: registered damage event and Trauma API remain active with Core legacy injuries disabled"
+        }
+      ]
+    },
+    {
+      "id": "tr-ownership-sync",
+      "kind": "mechanic",
+      "subject": "Damage persists and is reflected in actual body packet",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-OWNERSHIP: registered damage event and Trauma API remain active with Core legacy injuries disabled"
+        }
+      ]
+    },
+    {
+      "id": "tr-ownership-api",
+      "kind": "mechanic",
+      "subject": "External injury API and limb restrictions active; creative/spectator excluded",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-OWNERSHIP: registered damage event and Trauma API remain active with Core legacy injuries disabled"
+        }
+      ]
+    },
+    {
+      "id": "tr-frost-legacy",
+      "kind": "mechanic",
+      "subject": "Legacy -17 C unprotected dose produces four limb injuries, insulation and warming controls",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-FROST-COMPAT: legacy local exposure at -17 C, modern API ownership, vanilla freeze and insulation"
+        }
+      ]
+    },
+    {
+      "id": "tr-frost-ownership",
+      "kind": "mechanic",
+      "subject": "Modern Thermal version excludes legacy dose, direct API accepts four limb injuries without duplicate hearts",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-FROST-COMPAT: legacy local exposure at -17 C, modern API ownership, vanilla freeze and insulation"
+        }
+      ]
+    },
+    {
+      "id": "tr-freeze-local",
+      "kind": "mechanic",
+      "subject": "Vanilla freeze distributed across peripheral limbs and synchronized wound flags",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-FROST-COMPAT: legacy local exposure at -17 C, modern API ownership, vanilla freeze and insulation"
+        }
+      ]
+    },
+    {
+      "id": "tr-water-dose",
+      "kind": "mechanic",
+      "subject": "Clean and invalid controls, cumulative risky dose, incubation and severity",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-WATER-ILLNESS: dose, incubation, symptoms, treatment, recovery, persistence, illness-only loss"
+        }
+      ]
+    },
+    {
+      "id": "tr-water-symptoms",
+      "kind": "mechanic",
+      "subject": "Gut illness and vomiting; pure bounded loss excluding bleeding",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-WATER-ILLNESS: dose, incubation, symptoms, treatment, recovery, persistence, illness-only loss"
+        }
+      ]
+    },
+    {
+      "id": "tr-water-recovery",
+      "kind": "mechanic",
+      "subject": "Actual treatment manager, single medkit consumption, gradual hydration-dependent recovery",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-WATER-ILLNESS: dose, incubation, symptoms, treatment, recovery, persistence, illness-only loss"
+        }
+      ]
+    },
+    {
+      "id": "tr-water-persistence",
+      "kind": "mechanic",
+      "subject": "Persisted illness, death and creative guards; client symptom fields",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-WATER-ILLNESS: dose, incubation, symptoms, treatment, recovery, persistence, illness-only loss"
+        }
+      ]
+    }
+  ]
+}
