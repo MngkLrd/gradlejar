@@ -1,5 +1,6 @@
 import groovy.json.JsonOutput
-def species=['oak','spruce','birch','jungle','acacia','dark_oak','mangrove','cherry']
+def custom=['willow','larch','pine','fir','cedar','maple','beech','alder','palm','date_palm','baobab','ebony','mahogany']
+def species=['oak','spruce','birch','jungle','acacia','dark_oak','mangrove','cherry']+custom
 def generated=layout.buildDirectory.dir('generated/treechopperResources')
 sourceSets.main.resources.srcDir(generated)
 tasks.register('generateTreeGeometry') {
@@ -11,9 +12,10 @@ tasks.register('generateTreeGeometry') {
         def asset='assets/wl_treechopper/'
         def en=[:]; def ru=[:]
         species.each { s ->
-            def bark="minecraft:block/${s}_log"
-            def wood="minecraft:block/stripped_${s}_log"
-            def end="minecraft:block/${s}_log_top"
+            def namespace=custom.contains(s)?'worldlogicterrain':'minecraft'
+            def bark="${namespace}:block/${s}_log"
+            def end="${namespace}:block/${s}_log_top"
+            def wood=custom.contains(s)?end:"minecraft:block/stripped_${s}_log"
             def model={String name,int x0,int y0,int z0,int x1,int y1,int z1 ->
                 def faces=[
                     north:[uv:[16-x1,16-y1,16-x0,16-y0],texture:z0==0?'#bark':'#wood'],
@@ -42,7 +44,9 @@ tasks.register('generateTreeGeometry') {
             emit(asset+"blockstates/${cut}.json",[multipart:multi])
             emit(asset+"blockstates/${stump}.json",[variants:['':bottom]])
             [cut,stump].each { id ->
-                emit("data/wl_treechopper/loot_table/blocks/${id}.json",[type:'minecraft:block',pools:[[rolls:1,entries:[[type:'minecraft:item',name:"minecraft:${s}_log"]],conditions:[[condition:'minecraft:survives_explosion']]]]])
+                def loot=[type:'minecraft:block',pools:[[rolls:1,entries:[[type:'minecraft:item',name:"${namespace}:${s}_log"]],conditions:[[condition:'minecraft:survives_explosion']]]]]
+                if(custom.contains(s))loot['neoforge:conditions']=[[type:'neoforge:mod_loaded',modid:'worldlogicterrain']]
+                emit("data/wl_treechopper/loot_table/blocks/${id}.json",loot)
             }
             en["block.wl_treechopper.${cut}"]="Notched ${s} log"
             en["block.wl_treechopper.${stump}"]=" ${s.capitalize()} stump".trim()

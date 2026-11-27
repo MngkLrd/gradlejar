@@ -28,7 +28,9 @@ import org.joml.Vector3f;
 @Mod(TreeChopper.ID)
 public final class TreeChopper {
     public static final String ID="wl_treechopper";
-    private static final String[] SPECIES={"oak","spruce","birch","jungle","acacia","dark_oak","mangrove","cherry"};
+    private static final String[] SPECIES={"oak","spruce","birch","jungle","acacia","dark_oak","mangrove","cherry","willow","larch","pine","fir","cedar","maple","beech","alder","palm","date_palm","baobab","ebony","mahogany"};
+    private static final Set<String> CUSTOM=Set.of("willow","larch","pine","fir","cedar","maple","beech","alder","palm","date_palm","baobab","ebony","mahogany");
+    private static final ThreadLocal<Boolean> PROTECTION_CHECK=ThreadLocal.withInitial(()->false);
     private static final Direction[] SIDES={Direction.NORTH,Direction.SOUTH,Direction.WEST,Direction.EAST};
     private static final DeferredRegister.Blocks BLOCKS=DeferredRegister.createBlocks(ID);
     private static final Map<String,DeferredBlock<CutBlock>> CUTS=new LinkedHashMap<>();
@@ -44,21 +46,32 @@ public final class TreeChopper {
     public TreeChopper(IEventBus modBus){
         BLOCKS.register(modBus);
         NeoForge.EVENT_BUS.addListener(TreeChopper::hit);
+        NeoForge.EVENT_BUS.addListener(TreeChopper::guardBreak);
         NeoForge.EVENT_BUS.addListener(TreeChopper::tickDisplay);
         NeoForge.EVENT_BUS.addListener(TreeQA::register);
     }
     static BlockState original(String name){
-        return BuiltInRegistries.BLOCK.get(ResourceLocation.withDefaultNamespace(name+"_log")).defaultBlockState();
+        return BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(CUSTOM.contains(name)?"worldlogicterrain":"minecraft",name+"_log")).defaultBlockState();
     }
     private static String species(BlockState state) {
         for(String s:SPECIES){
             if(state.is(CUTS.get(s).get())) return s;
-            if(state.is(original(s).getBlock()) && state.getValue(BlockStateProperties.AXIS)==Direction.Axis.Y) return s;
+            BlockState source=original(s);
+            if(!source.isAir() && state.is(source.getBlock()) && state.hasProperty(BlockStateProperties.AXIS)) return s;
         }
         return null;
     }
     private static boolean allowed(ServerLevel level,ServerPlayer player,BlockPos pos,BlockState state){
-        return level.mayInteract(player,pos) && !NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(level,pos,state,player)).isCanceled();
+        if(!level.mayInteract(player,pos))return false;
+        PROTECTION_CHECK.set(true);
+        try{return !NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(level,pos,state,player)).isCanceled();}
+        finally{PROTECTION_CHECK.remove();}
+    }
+    private static void guardBreak(BlockEvent.BreakEvent event){
+        if(PROTECTION_CHECK.get() || event.getPlayer().isCreative() || event.getPlayer().isSpectator() || !(event.getLevel() instanceof ServerLevel level))return;
+        BlockState state=event.getState();
+        String s=species(state);
+        if(s!=null && (state.getBlock() instanceof CutBlock || !scan(level,event.getPos(),s).isEmpty()))event.setCanceled(true);
     }
     private static void hit(PlayerInteractEvent.LeftClickBlock event){
         if(!(event.getEntity() instanceof ServerPlayer player) || !(event.getLevel() instanceof ServerLevel level) || player.isCreative() || player.isSpectator())return;
@@ -68,13 +81,17 @@ public final class TreeChopper {
         if(s==null)return;
         boolean cut=old.getBlock() instanceof CutBlock;
         ItemStack axe=player.getMainHandItem();
-        if(!(axe.getItem() instanceof AxeItem)){if(cut)event.setCanceled(true);return;}
         List<Piece> tree=scan(level,pos,s);
         if(tree.isEmpty()&&!cut)return;
         event.setCanceled(true);
+        if(!(axe.getItem() instanceof AxeItem))return;
         if(event.getAction()!=PlayerInteractEvent.LeftClickBlock.Action.START || tree.isEmpty() || !player.mayBuild())return;
         Direction side=event.getFace();
-        if(side==null||side.getAxis().isVertical()) side=player.getDirection().getOpposite();
+        // The hit face can be a horizontal ledge of an existing notch; use the player's approach side.
+        if(side==null||side.getAxis().isVertical()||cut){
+            double dx=player.getX()-(pos.getX()+.5),dz=player.getZ()-(pos.getZ()+.5);
+            side=Math.abs(dx)>Math.abs(dz)?(dx>0?Direction.EAST:Direction.WEST):(dz>0?Direction.SOUTH:Direction.NORTH);
+        }
         double power=WorldLogicIntegration.effort(player).power();
         if(power<=0)return;
         long now=level.getGameTime(); CompoundTag data=player.getPersistentData();
@@ -96,31 +113,66 @@ public final class TreeChopper {
         if(CutBlock.falls(damaged))fall(level,player,pos,s,damaged,tree,side);
     }
     private record Piece(BlockPos pos,BlockState state,boolean log){}
-    /** Conservative initial tree recognizer: straight, single-column trunks with a natural crown. Never loads chunks. */
+    private static boolean naturalLeaf(BlockState b){
+        return b.is(BlockTags.LEAVES)&&b.hasProperty(BlockStateProperties.PERSISTENT)&&!b.getValue(BlockStateProperties.PERSISTENT);
+    }
+    private static boolean sameLog(BlockState b,BlockState source){return !source.isAir()&&b.is(source.getBlock());}
+    /** Bounded connected crown search; no forced chunk loads. Only logs above the chosen cut are removed. */
     private static List<Piece> scan(ServerLevel l,BlockPos base,String species){
-        if(!l.hasChunkAt(base.below()) || !(l.getBlockState(base.below()).is(BlockTags.DIRT)||l.getBlockState(base.below()).is(BlockTags.LOGS)||l.getBlockState(base.below()).is(Blocks.MUD)||l.getBlockState(base.below()).is(Blocks.CLAY))) return List.of();
-        List<Piece> out=new ArrayList<>();
-        BlockState original=original(species);
-        int h=1;
-        for(;h<24;h++){
-            BlockPos p=base.above(h);
-            if(!l.hasChunkAt(p))return List.of();
-            BlockState b=l.getBlockState(p);
-            if(!b.is(original.getBlock())||b.getValue(BlockStateProperties.AXIS)!=Direction.Axis.Y)break;
-            out.add(new Piece(p,b,true));
+        BlockState source=original(species);
+        if(source.isAir()||!l.hasChunkAt(base.below()))return List.of();
+        BlockState below=l.getBlockState(base.below());
+        if(!(below.is(BlockTags.DIRT)||below.is(BlockTags.LOGS)||below.is(Blocks.MUD)||below.is(Blocks.CLAY)||below.is(BlockTags.SAND)))return List.of();
+        Set<BlockPos> logs=new LinkedHashSet<>();
+        ArrayDeque<BlockPos> queue=new ArrayDeque<>();
+        queue.add(base);logs.add(base);
+        while(!queue.isEmpty()){
+            BlockPos p=queue.removeFirst();
+            for(int dy=-1;dy<=1;dy++)for(int dx=-1;dx<=1;dx++)for(int dz=-1;dz<=1;dz++){
+                if(dx==0&&dy==0&&dz==0)continue;
+                // Diagonal upward branches are normal; do not jump sideways between separate same-level trunks.
+                if(dy==0&&Math.abs(dx)+Math.abs(dz)>1)continue;
+                BlockPos n=p.offset(dx,dy,dz);
+                if(n.equals(base)||logs.contains(n)||n.getY()<=base.getY())continue;
+                if(n.getY()-base.getY()>32||Math.abs(n.getX()-base.getX())>10||Math.abs(n.getZ()-base.getZ())>10)continue;
+                if(!l.hasChunkAt(n))continue;
+                if(sameLog(l.getBlockState(n),source)){
+                    if(logs.size()>=256)return List.of();
+                    logs.add(n);queue.addLast(n);
+                }
+            }
         }
-        if(h<3||h>=24)return List.of();
-        int top=base.getY()+h-1;
-        // Reject branching/neighboring trunks rather than accidentally remove a different tree.
-        for(int dy=-2;dy<=2;dy++)for(int x=-3;x<=3;x++)for(int z=-3;z<=3;z++){
-            BlockPos p=new BlockPos(base.getX()+x,top+dy,base.getZ()+z);
-            if(!l.hasChunkAt(p))return List.of();
-            BlockState b=l.getBlockState(p);
-            if((x!=0||z!=0)&&b.is(BlockTags.LOGS))return List.of();
-            if(b.is(BlockTags.LEAVES)&&b.hasProperty(BlockStateProperties.PERSISTENT)&&!b.getValue(BlockStateProperties.PERSISTENT))
-                out.add(new Piece(p,b,false));
+        if(logs.size()<2)return List.of();
+        // Reject independently supported neighboring columns (incl. uncut giant trunks).
+        for(BlockPos log:logs)if(log.getY()==base.getY()+1){
+            BlockPos foot=log.below();
+            if(!foot.equals(base)&&l.hasChunkAt(foot)&&sameLog(l.getBlockState(foot),source))return List.of();
         }
-        if(out.stream().noneMatch(p->!p.log))return List.of();
+        String namespace=CUSTOM.contains(species)?"worldlogicterrain":"minecraft";
+        var leafId=ResourceLocation.fromNamespaceAndPath(namespace,species+"_leaves");
+        Set<BlockPos> leaves=new LinkedHashSet<>();
+        for(BlockPos log:logs){
+            if(log.equals(base))continue;
+            for(int dy=-3;dy<=3;dy++)for(int dx=-3;dx<=3;dx++)for(int dz=-3;dz<=3;dz++){
+                if(Math.abs(dx)+Math.abs(dy)+Math.abs(dz)>4)continue;
+                BlockPos n=log.offset(dx,dy,dz);
+                if(n.getY()<=base.getY()||leaves.contains(n)||!l.hasChunkAt(n))continue;
+                BlockState b=l.getBlockState(n);
+                if(naturalLeaf(b)&&BuiltInRegistries.BLOCK.getKey(b.getBlock()).equals(leafId)){
+                    // Avoid collecting foliage immediately attached to an unrelated trunk.
+                    boolean foreign=false;
+                    for(Direction d:Direction.values()){
+                        BlockPos near=n.relative(d);
+                        if(l.hasChunkAt(near)&&l.getBlockState(near).is(BlockTags.LOGS)&&!logs.contains(near)){foreign=true;break;}
+                    }
+                    if(!foreign){if(leaves.size()>=384)return List.of();leaves.add(n);}
+                }
+            }
+        }
+        if(leaves.isEmpty())return List.of();
+        List<Piece> out=new ArrayList<>(logs.size()+leaves.size());
+        for(BlockPos n:logs)if(!n.equals(base))out.add(new Piece(n,l.getBlockState(n),true));
+        for(BlockPos n:leaves)out.add(new Piece(n,l.getBlockState(n),false));
         return out;
     }
     private static Direction fallDirection(BlockState s, Direction latest){

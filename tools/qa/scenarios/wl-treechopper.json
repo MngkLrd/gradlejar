@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.5.0 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.5.1 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -514,6 +514,73 @@
       "expect": "TreeChopper effort regression PASS",
       "assertion": true,
       "name": "Effort and arm-function tuning"
+    },
+    {
+      "command": "setblock 1040 199 1028 minecraft:grass_block",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1040 200 1028 1040 203 1028 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1041 203 1028 minecraft:oak_log[axis=x]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1042 204 1028 minecraft:oak_log[axis=y]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1042 205 1028 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_break 1040 200 1028",
+      "expect": "TreeChopper vanilla bypass blocked",
+      "assertion": true,
+      "name": "hand-bypass"
+    },
+    {
+      "command": "execute if block 1040 200 1028 minecraft:oak_log",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "hand-intact"
+    },
+    {
+      "command": "wltreechopper qa_hit 1040 200 1028 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1040 200 1028 wl_treechopper:cut_oak[north=1,south=0,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "branch-notch"
+    },
+    {
+      "command": "wltreechopper qa_break 1040 200 1028",
+      "expect": "TreeChopper vanilla bypass blocked",
+      "assertion": true,
+      "name": "cut-bypass"
+    },
+    {
+      "command": "wltreechopper qa_hit 1040 200 1028 south 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1042 204 1028 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "branch-fall"
+    },
+    {
+      "command": "execute if block 1040 200 1028 wl_treechopper:stump_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "branch-stump"
+    },
+    {
+      "wait": 3
     }
   ],
   "coverage": [
@@ -1009,6 +1076,72 @@
         {
           "backend": "server",
           "name": "Effort and arm-function tuning"
+        }
+      ]
+    },
+    {
+      "id": "hand-bypass",
+      "kind": "mechanic",
+      "subject": "Natural tree rejects bare hand and actual ServerPlayerGameMode.destroyBlock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "hand-bypass"
+        }
+      ]
+    },
+    {
+      "id": "hand-intact",
+      "kind": "mechanic",
+      "subject": "Trunk remains after ordinary break attempt",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "hand-intact"
+        }
+      ]
+    },
+    {
+      "id": "branch-notch",
+      "kind": "mechanic",
+      "subject": "Forked trunk receives geometric notch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "branch-notch"
+        }
+      ]
+    },
+    {
+      "id": "cut-bypass",
+      "kind": "mechanic",
+      "subject": "Partially cut log rejects bare hand and actual normal destruction",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-bypass"
+        }
+      ]
+    },
+    {
+      "id": "branch-fall",
+      "kind": "mechanic",
+      "subject": "Diagonal branch removed as part of felling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "branch-fall"
+        }
+      ]
+    },
+    {
+      "id": "branch-stump",
+      "kind": "mechanic",
+      "subject": "Forked trunk leaves stump",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "branch-stump"
         }
       ]
     }

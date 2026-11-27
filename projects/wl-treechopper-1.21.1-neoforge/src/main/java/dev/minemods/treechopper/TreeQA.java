@@ -25,6 +25,17 @@ final class TreeQA {
             }
             c.getSource().sendSuccess(()->Component.literal("TreeChopper effort regression PASS"),false);return 1;
           }))
+          .then(Commands.literal("qa_break").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
+            ServerLevel l=c.getSource().getLevel();
+            BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            var fake=FakePlayerFactory.getMinecraft(l);
+            fake.setPos(p.getX()+.5,p.getY(),p.getZ()-1.5);
+            fake.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
+            var click=NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
+            boolean destroyed=fake.gameMode.destroyBlock(p);
+            if(!click.isCanceled()||destroyed){c.getSource().sendFailure(Component.literal("TreeChopper vanilla bypass FAILED"));return 0;}
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper vanilla bypass blocked"),false);return 1;
+          })))
           .then(Commands.literal("qa_hit").then(Commands.argument("pos",BlockPosArgument.blockPos())
           .then(Commands.argument("side",StringArgumentType.word()).then(Commands.argument("count",IntegerArgumentType.integer(1,16))
           .executes(c->{
