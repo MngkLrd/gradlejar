@@ -76,13 +76,13 @@ public final class BodyState {
         return fractured(BodyPart.LEFT_LEG) || fractured(BodyPart.RIGHT_LEG);
     }
     public float legPenalty() {
+        float fracturePenalty = 0f;
         if (hasFracturedLeg()) {
-            if ((fractured(BodyPart.LEFT_LEG) && !stabilized(BodyPart.LEFT_LEG)) ||
-                (fractured(BodyPart.RIGHT_LEG) && !stabilized(BodyPart.RIGHT_LEG))) return 0.42f;
-            return 0.22f;
+            fracturePenalty = ((fractured(BodyPart.LEFT_LEG) && !stabilized(BodyPart.LEFT_LEG)) ||
+                (fractured(BodyPart.RIGHT_LEG) && !stabilized(BodyPart.RIGHT_LEG))) ? .42f : .22f;
         }
         float leg = Math.min(percent(BodyPart.LEFT_LEG), percent(BodyPart.RIGHT_LEG));
-        return leg < 0.20f ? 0.32f : leg < 0.50f ? 0.16f : 0f;
+        return Math.max(fracturePenalty, leg < 0.20f ? 0.32f : leg < 0.50f ? 0.16f : 0f);
     }
     public void damage(BodyPart part, float value) {
         if (value <= 0) return;
@@ -150,10 +150,7 @@ public final class BodyState {
             if (fraction < worst) { target = part; worst = fraction; }
         }
         if (target == null) return false;
-        int i = target.ordinal();
-        health[i] = Math.min(target.maximum, health[i] + amount);
-        dirty = true;
-        return true;
+        return heal(target, amount);
     }
     public BodyPart mostBleeding() {
         BodyPart found = null;

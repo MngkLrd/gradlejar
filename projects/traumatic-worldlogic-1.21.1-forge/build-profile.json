@@ -10,7 +10,6 @@
   "compile_loader_version": "52.1.0",
   "qa": {
     "mode": "server",
-    "draft": true,
     "loader_version": "52.1.0",
     "scenario": "tools/qa/scenarios/traumatic-worldlogic-rc16.json",
     "release_targets": [
@@ -26,5 +25,6 @@
         "sha256": "62d22a39fccd3fd16b01de414f31b14d5da33dd25f097df1bbfcdc04b5691e27"
       }
     ]
-  }
+  },
+  "draft": true
 }

@@ -25,7 +25,7 @@ public final class WorldLogicBridge {
         if (!active(p)) return;
         var tag=p.getPersistentData(); BodyState b=BodyStates.get(p);
         long now=p.level().getGameTime();
-        long armNow=((ServerPlayer)p).server.overworld().getGameTime();
+        long armNow=((ServerPlayer)p).serverLevel().getServer().overworld().getGameTime();
         if (Rules.on("injuries") && tag.getLong(LEG)>now && !b.hasFracturedLeg()) {
             for (BodyPart part:new BodyPart[]{BodyPart.LEFT_LEG,BodyPart.RIGHT_LEG})
                 if (b.percent(part)>.49f) b.damage(part,b.health(part)-part.maximum*.49f);

@@ -24,7 +24,7 @@ public final class RegressionChecks {
         e.getDispatcher().register(root);
     }
     private static int run(CommandSourceStack source,String name){
-        FakePlayer p=FakePlayerFactory.get(source.getLevel(),new GameProfile(UUID.randomUUID(),"TraumaQAFixture"));
+        FakePlayer p=FakePlayerFactory.get(source.getLevel(),new GameProfile(UUID.nameUUIDFromBytes("traumacraft-qa-fixture".getBytes(java.nio.charset.StandardCharsets.UTF_8)),"TraumaQAFixture"));
         try{
             p.gameMode.changeGameModeForPlayer(GameType.SURVIVAL);
             BodyState b=BodyStates.get(p); b.reset();

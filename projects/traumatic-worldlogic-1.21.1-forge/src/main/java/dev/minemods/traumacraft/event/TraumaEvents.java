@@ -84,16 +84,24 @@ public final class TraumaEvents {
             if(!b.hasBleeding() && p.tickCount%100==0) b.healMostDamaged(.75f);
         }
         if(p.tickCount%40==0 && b.hasBleeding()) {
-            boolean was=b.vitalDestroyed(); float blood=0;
+            boolean was=b.vitalDestroyed(); float blood=0,overflow=0;
             for(BodyPart zone:BodyPart.values()) {
                 int severity=b.bleeding(zone);
                 if(severity==0) continue;
                 float loss=severity==2?1.2f:.35f;
+                float available=b.health(zone);
                 b.damage(zone,loss); blood+=loss;
+                overflow+=Math.max(0,loss-available)*.35f;
             }
-            // Internal blood loss, not an external impact event. Leave at least one heart;
-            // fatal vital collapse is handled by the emergency grace window.
-            if(blood>0) p.setHealth(Math.max(1f,p.getHealth()-blood*.20f));
+            // Bleeding from an exhausted zone still affects circulation.
+            if(overflow>0) {
+                BodyPart reserve=b.health(BodyPart.STOMACH)>0?BodyPart.STOMACH:
+                    b.health(BodyPart.CHEST)>0?BodyPart.CHEST:BodyPart.HEAD;
+                b.damage(reserve,overflow);
+            }
+            // Internal blood loss must never heal a low-health player. The
+            // fatal vital collapse remains governed by the emergency window.
+            if(blood>0 && p.getHealth()>1f) p.setHealth(Math.max(1f,p.getHealth()-blood*.20f));
             if(!was && b.vitalDestroyed()) b.startCriticalGrace(600);
         }
         if(BodyStates.flush(p) || p.tickCount%40==0) ModNetwork.sync(p);

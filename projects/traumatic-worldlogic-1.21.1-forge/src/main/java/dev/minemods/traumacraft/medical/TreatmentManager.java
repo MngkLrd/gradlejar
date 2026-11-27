@@ -38,7 +38,7 @@ public final class TreatmentManager {
 
     public static boolean begin(ServerPlayer player, MedicalItem medicine, BodyPart part,
                                 boolean cursor, InteractionHand hand) {
-        if (!player.isAlive() || player.isSpectator() || !dev.minemods.traumacraft.integration.WorldLogicBridge.canTreat(player)) return false;
+        if (!player.isAlive() || player.isCreative() || player.isSpectator() || !dev.minemods.traumacraft.integration.WorldLogicBridge.canTreat(player)) return false;
         if (ACTIVE.containsKey(player.getUUID())) return false;
         if (cursor && player.containerMenu != player.inventoryMenu) return false;
         ItemStack stack = stack(player, cursor, hand);
@@ -69,7 +69,7 @@ public final class TreatmentManager {
     public static void tick(ServerPlayer player) {
         Pending p = ACTIVE.get(player.getUUID());
         if (p == null) return;
-        if (!player.isAlive() || player.isSpectator() || player.isSprinting() || !dev.minemods.traumacraft.integration.WorldLogicBridge.canTreat(player)
+        if (!player.isAlive() || player.isCreative() || player.isSpectator() || player.isSprinting() || !dev.minemods.traumacraft.integration.WorldLogicBridge.canTreat(player)
                 || (p.cursor() && player.containerMenu != player.inventoryMenu)
                 || (p.treatment() == MedicalItem.Type.SURGICAL_KIT &&
                     (Math.abs(player.getX() - p.x()) > 1.5 || Math.abs(player.getZ() - p.z()) > 1.5))
