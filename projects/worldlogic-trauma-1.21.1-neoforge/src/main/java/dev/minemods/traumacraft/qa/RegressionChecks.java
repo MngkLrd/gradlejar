@@ -23,7 +23,7 @@ public final class RegressionChecks {
     private static void require(boolean ok,String message){if(!ok)throw new IllegalStateException(message);}
     public static void register(RegisterCommandsEvent e){
         var root=Commands.literal("traumaqa").requires(s->s.hasPermission(4)&&s.getEntity()==null);
-        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting"})
+        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity"})
             root.then(Commands.literal(name).executes(c->run(c.getSource(),name)));
         e.getDispatcher().register(root);
     }
@@ -165,6 +165,13 @@ public final class RegressionChecks {
                     malformed.getCompound("RIGHT_ARM").putFloat("hp",Float.NaN);
                     BodyState restored=new BodyState();restored.deserializeNBT(p.registryAccess(),malformed);
                     require(restored.health(BodyPart.RIGHT_ARM)==BodyPart.RIGHT_ARM.maximum,"invalid NBT safe fallback");
+                }
+                case "identity" -> {
+                    require(net.neoforged.fml.ModList.get().isLoaded("worldlogic_trauma"),"new loader identity");
+                    require(net.neoforged.fml.ModList.get().isLoaded("worldlogic"),"required core");
+                    require(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(ModItems.BANDAGE.get()).toString().equals("traumacraft:bandage"),"existing item registry identity");
+                    require(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(ModItems.SPLINT.get()).toString().equals("traumacraft:splint"),"existing splint identity");
+                    require(BodyStates.KEY.equals("traumacraft_body"),"existing save key");
                 }
                 case "damage" -> {
                     TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);

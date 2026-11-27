@@ -9,19 +9,19 @@ authors="MineMods"
 description='''Anatomical trauma and medicine for World Logic.'''
 [[mixins]]
 config="traumacraft.mixins.json"
-[[dependencies.traumacraft]]
+[[dependencies.worldlogic_trauma]]
 modId="neoforge"
 type="required"
 versionRange="[21.1.80,)"
 ordering="NONE"
 side="BOTH"
-[[dependencies.traumacraft]]
+[[dependencies.worldlogic_trauma]]
 modId="minecraft"
 type="required"
 versionRange="[1.21.1,1.21.2)"
 ordering="NONE"
 side="BOTH"
-[[dependencies.traumacraft]]
+[[dependencies.worldlogic_trauma]]
 modId="worldlogic"
 type="required"
 versionRange="[${worldlogic_version}]"

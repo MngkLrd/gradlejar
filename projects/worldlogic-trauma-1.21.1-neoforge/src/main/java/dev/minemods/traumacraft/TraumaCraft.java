@@ -12,8 +12,10 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
-@Mod(TraumaCraft.MOD_ID)
+@Mod(TraumaCraft.LOADER_MOD_ID)
 public final class TraumaCraft {
+    public static final String LOADER_MOD_ID="worldlogic_trauma";
+    // Preserve all established registry, asset and network identifiers across the branding change.
     public static final String MOD_ID="traumacraft";
     public TraumaCraft(IEventBus modBus) {
         if(FMLEnvironment.dist==Dist.CLIENT) ClientEvents.register(modBus);

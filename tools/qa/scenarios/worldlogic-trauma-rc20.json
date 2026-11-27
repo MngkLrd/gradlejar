@@ -49,6 +49,12 @@
       "expect": "TRAUMAQA persistence PASS",
       "assertion": true,
       "name": "Precise emergency grace persistence and invalid local HP safeguards"
+    },
+    {
+      "command": "traumaqa identity",
+      "expect": "TRAUMAQA identity PASS",
+      "assertion": true,
+      "name": "TR-IDENTITY: branded loader identity, mandatory core, preserved medical item IDs and save key"
     }
   ],
   "coverage": [
@@ -161,6 +167,20 @@
         {
           "backend": "server",
           "name": "Precise emergency grace persistence and invalid local HP safeguards"
+        }
+      ]
+    },
+    {
+      "id": "tr-identity",
+      "kind": "other",
+      "subject": "TR-IDENTITY: branded loader identity, mandatory core, preserved medical item IDs and save key",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-IDENTITY: branded loader identity, mandatory core, preserved medical item IDs and save key"
         }
       ]
     }
