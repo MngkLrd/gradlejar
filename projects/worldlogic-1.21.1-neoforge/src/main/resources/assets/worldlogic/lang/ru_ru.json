@@ -199,5 +199,6 @@
   "worldlogic.analytics.plant_recovery": "Восстановление покрова (сумма приростов)",
   "worldlogic.analytics.reported_tick": "Тик последнего отчёта растений",
   "worldlogic.analytics.no_plant_report": "Нет данных от аддона растительности",
-  "worldlogic.analytics.habitat_fertility": "Эффективное плодородие"
+  "worldlogic.analytics.habitat_fertility": "Эффективное плодородие",
+  "worldlogic.analytics.biome_id": "Текущий биом"
 }

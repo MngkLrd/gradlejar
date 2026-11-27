@@ -25,7 +25,24 @@
       "y_scale": 0.5
     },
     "continents": "worldlogic:earthlike/continents",
-    "depth": "worldlogic:earthlike/depth",
+    "depth": {
+      "type": "minecraft:range_choice",
+      "input": "minecraft:y",
+      "min_inclusive": -1000000,
+      "max_exclusive": -64,
+      "when_in_range": {
+        "type": "minecraft:add",
+        "argument1": {
+          "type": "minecraft:y_clamped_gradient",
+          "from_y": -256,
+          "to_y": -64,
+          "from_value": 3,
+          "to_value": 1.5
+        },
+        "argument2": "worldlogic:earthlike/offset"
+      },
+      "when_out_of_range": "worldlogic:earthlike/depth"
+    },
     "erosion": "worldlogic:earthlike/erosion",
     "final_density": {
       "type": "minecraft:range_choice",
@@ -423,6 +440,118 @@
         "if_true": {
           "type": "minecraft:biome",
           "biome_is": [
+            "worldlogic:prairie",
+            "worldlogic:tallgrass_prairie",
+            "worldlogic:temperate_steppe",
+            "worldlogic:shortgrass_steppe",
+            "worldlogic:subtropical_grassland",
+            "worldlogic:humid_savanna",
+            "worldlogic:alpine_meadow"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:above_preliminary_surface"
+          },
+          "then_run": {
+            "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:stone_depth",
+              "add_surface_depth": false,
+              "offset": 0,
+              "secondary_depth_range": 0,
+              "surface_type": "floor"
+            },
+            "then_run": {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:water",
+                "add_stone_depth": false,
+                "offset": 0,
+                "surface_depth_multiplier": 0
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:noise_threshold",
+                  "noise": "minecraft:surface",
+                  "min_threshold": -1.7976931348623157e+308,
+                  "max_threshold": -0.43
+                },
+                "then_run": {
+                  "type": "minecraft:block",
+                  "result_state": {
+                    "Name": "worldlogic:loam"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "worldlogic:mixed_forest",
+            "worldlogic:temperate_deciduous_forest",
+            "worldlogic:warm_broadleaf_forest",
+            "worldlogic:temperate_rainforest",
+            "worldlogic:tropical_monsoon_forest",
+            "worldlogic:equatorial_rainforest",
+            "worldlogic:seasonal_tropical_forest",
+            "worldlogic:subtropical_rainforest",
+            "worldlogic:montane_cloud_forest"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:above_preliminary_surface"
+          },
+          "then_run": {
+            "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:stone_depth",
+              "add_surface_depth": false,
+              "offset": 0,
+              "secondary_depth_range": 0,
+              "surface_type": "floor"
+            },
+            "then_run": {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:water",
+                "add_stone_depth": false,
+                "offset": 0,
+                "surface_depth_multiplier": 0
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:noise_threshold",
+                  "noise": "minecraft:surface",
+                  "min_threshold": 0.4,
+                  "max_threshold": 1.7976931348623157e+308
+                },
+                "then_run": {
+                  "type": "minecraft:block",
+                  "result_state": {
+                    "Name": "worldlogic:humus"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
             "worldlogic:boreal_peatland",
             "worldlogic:arctic_wetland",
             "worldlogic:temperate_marsh"
@@ -766,10 +895,59 @@
                                       ]
                                     },
                                     "then_run": {
-                                      "type": "minecraft:block",
-                                      "result_state": {
-                                        "Name": "worldlogic:humus"
-                                      }
+                                      "type": "minecraft:sequence",
+                                      "sequence": [
+                                        {
+                                          "type": "minecraft:condition",
+                                          "if_true": {
+                                            "type": "minecraft:stone_depth",
+                                            "add_surface_depth": false,
+                                            "offset": 1,
+                                            "secondary_depth_range": 0,
+                                            "surface_type": "floor"
+                                          },
+                                          "then_run": {
+                                            "type": "minecraft:condition",
+                                            "if_true": {
+                                              "type": "minecraft:noise_threshold",
+                                              "noise": "minecraft:surface",
+                                              "min_threshold": -0.48,
+                                              "max_threshold": 1.7976931348623157e+308
+                                            },
+                                            "then_run": {
+                                              "type": "minecraft:block",
+                                              "result_state": {
+                                                "Name": "worldlogic:humus"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "minecraft:condition",
+                                          "if_true": {
+                                            "type": "minecraft:stone_depth",
+                                            "add_surface_depth": false,
+                                            "offset": 2,
+                                            "secondary_depth_range": 0,
+                                            "surface_type": "floor"
+                                          },
+                                          "then_run": {
+                                            "type": "minecraft:condition",
+                                            "if_true": {
+                                              "type": "minecraft:noise_threshold",
+                                              "noise": "minecraft:surface",
+                                              "min_threshold": 0.22,
+                                              "max_threshold": 1.7976931348623157e+308
+                                            },
+                                            "then_run": {
+                                              "type": "minecraft:block",
+                                              "result_state": {
+                                                "Name": "worldlogic:humus"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      ]
                                     }
                                   },
                                   {
@@ -787,10 +965,59 @@
                                       ]
                                     },
                                     "then_run": {
-                                      "type": "minecraft:block",
-                                      "result_state": {
-                                        "Name": "worldlogic:loam"
-                                      }
+                                      "type": "minecraft:sequence",
+                                      "sequence": [
+                                        {
+                                          "type": "minecraft:condition",
+                                          "if_true": {
+                                            "type": "minecraft:stone_depth",
+                                            "add_surface_depth": false,
+                                            "offset": 1,
+                                            "secondary_depth_range": 0,
+                                            "surface_type": "floor"
+                                          },
+                                          "then_run": {
+                                            "type": "minecraft:condition",
+                                            "if_true": {
+                                              "type": "minecraft:noise_threshold",
+                                              "noise": "minecraft:surface",
+                                              "min_threshold": -0.48,
+                                              "max_threshold": 1.7976931348623157e+308
+                                            },
+                                            "then_run": {
+                                              "type": "minecraft:block",
+                                              "result_state": {
+                                                "Name": "worldlogic:loam"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "minecraft:condition",
+                                          "if_true": {
+                                            "type": "minecraft:stone_depth",
+                                            "add_surface_depth": false,
+                                            "offset": 2,
+                                            "secondary_depth_range": 0,
+                                            "surface_type": "floor"
+                                          },
+                                          "then_run": {
+                                            "type": "minecraft:condition",
+                                            "if_true": {
+                                              "type": "minecraft:noise_threshold",
+                                              "noise": "minecraft:surface",
+                                              "min_threshold": 0.22,
+                                              "max_threshold": 1.7976931348623157e+308
+                                            },
+                                            "then_run": {
+                                              "type": "minecraft:block",
+                                              "result_state": {
+                                                "Name": "worldlogic:loam"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      ]
                                     }
                                   },
                                   {
@@ -1941,10 +2168,59 @@
                                             ]
                                           },
                                           "then_run": {
-                                            "type": "minecraft:block",
-                                            "result_state": {
-                                              "Name": "worldlogic:humus"
-                                            }
+                                            "type": "minecraft:sequence",
+                                            "sequence": [
+                                              {
+                                                "type": "minecraft:condition",
+                                                "if_true": {
+                                                  "type": "minecraft:stone_depth",
+                                                  "add_surface_depth": false,
+                                                  "offset": 1,
+                                                  "secondary_depth_range": 0,
+                                                  "surface_type": "floor"
+                                                },
+                                                "then_run": {
+                                                  "type": "minecraft:condition",
+                                                  "if_true": {
+                                                    "type": "minecraft:noise_threshold",
+                                                    "noise": "minecraft:surface",
+                                                    "min_threshold": -0.48,
+                                                    "max_threshold": 1.7976931348623157e+308
+                                                  },
+                                                  "then_run": {
+                                                    "type": "minecraft:block",
+                                                    "result_state": {
+                                                      "Name": "worldlogic:humus"
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "type": "minecraft:condition",
+                                                "if_true": {
+                                                  "type": "minecraft:stone_depth",
+                                                  "add_surface_depth": false,
+                                                  "offset": 2,
+                                                  "secondary_depth_range": 0,
+                                                  "surface_type": "floor"
+                                                },
+                                                "then_run": {
+                                                  "type": "minecraft:condition",
+                                                  "if_true": {
+                                                    "type": "minecraft:noise_threshold",
+                                                    "noise": "minecraft:surface",
+                                                    "min_threshold": 0.22,
+                                                    "max_threshold": 1.7976931348623157e+308
+                                                  },
+                                                  "then_run": {
+                                                    "type": "minecraft:block",
+                                                    "result_state": {
+                                                      "Name": "worldlogic:humus"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            ]
                                           }
                                         },
                                         {
@@ -1962,10 +2238,59 @@
                                             ]
                                           },
                                           "then_run": {
-                                            "type": "minecraft:block",
-                                            "result_state": {
-                                              "Name": "worldlogic:loam"
-                                            }
+                                            "type": "minecraft:sequence",
+                                            "sequence": [
+                                              {
+                                                "type": "minecraft:condition",
+                                                "if_true": {
+                                                  "type": "minecraft:stone_depth",
+                                                  "add_surface_depth": false,
+                                                  "offset": 1,
+                                                  "secondary_depth_range": 0,
+                                                  "surface_type": "floor"
+                                                },
+                                                "then_run": {
+                                                  "type": "minecraft:condition",
+                                                  "if_true": {
+                                                    "type": "minecraft:noise_threshold",
+                                                    "noise": "minecraft:surface",
+                                                    "min_threshold": -0.48,
+                                                    "max_threshold": 1.7976931348623157e+308
+                                                  },
+                                                  "then_run": {
+                                                    "type": "minecraft:block",
+                                                    "result_state": {
+                                                      "Name": "worldlogic:loam"
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "type": "minecraft:condition",
+                                                "if_true": {
+                                                  "type": "minecraft:stone_depth",
+                                                  "add_surface_depth": false,
+                                                  "offset": 2,
+                                                  "secondary_depth_range": 0,
+                                                  "surface_type": "floor"
+                                                },
+                                                "then_run": {
+                                                  "type": "minecraft:condition",
+                                                  "if_true": {
+                                                    "type": "minecraft:noise_threshold",
+                                                    "noise": "minecraft:surface",
+                                                    "min_threshold": 0.22,
+                                                    "max_threshold": 1.7976931348623157e+308
+                                                  },
+                                                  "then_run": {
+                                                    "type": "minecraft:block",
+                                                    "result_state": {
+                                                      "Name": "worldlogic:loam"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            ]
                                           }
                                         },
                                         {
@@ -2211,10 +2536,59 @@
                                     ]
                                   },
                                   "then_run": {
-                                    "type": "minecraft:block",
-                                    "result_state": {
-                                      "Name": "worldlogic:humus"
-                                    }
+                                    "type": "minecraft:sequence",
+                                    "sequence": [
+                                      {
+                                        "type": "minecraft:condition",
+                                        "if_true": {
+                                          "type": "minecraft:stone_depth",
+                                          "add_surface_depth": false,
+                                          "offset": 1,
+                                          "secondary_depth_range": 0,
+                                          "surface_type": "floor"
+                                        },
+                                        "then_run": {
+                                          "type": "minecraft:condition",
+                                          "if_true": {
+                                            "type": "minecraft:noise_threshold",
+                                            "noise": "minecraft:surface",
+                                            "min_threshold": -0.48,
+                                            "max_threshold": 1.7976931348623157e+308
+                                          },
+                                          "then_run": {
+                                            "type": "minecraft:block",
+                                            "result_state": {
+                                              "Name": "worldlogic:humus"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "type": "minecraft:condition",
+                                        "if_true": {
+                                          "type": "minecraft:stone_depth",
+                                          "add_surface_depth": false,
+                                          "offset": 2,
+                                          "secondary_depth_range": 0,
+                                          "surface_type": "floor"
+                                        },
+                                        "then_run": {
+                                          "type": "minecraft:condition",
+                                          "if_true": {
+                                            "type": "minecraft:noise_threshold",
+                                            "noise": "minecraft:surface",
+                                            "min_threshold": 0.22,
+                                            "max_threshold": 1.7976931348623157e+308
+                                          },
+                                          "then_run": {
+                                            "type": "minecraft:block",
+                                            "result_state": {
+                                              "Name": "worldlogic:humus"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {
@@ -2232,10 +2606,59 @@
                                     ]
                                   },
                                   "then_run": {
-                                    "type": "minecraft:block",
-                                    "result_state": {
-                                      "Name": "worldlogic:loam"
-                                    }
+                                    "type": "minecraft:sequence",
+                                    "sequence": [
+                                      {
+                                        "type": "minecraft:condition",
+                                        "if_true": {
+                                          "type": "minecraft:stone_depth",
+                                          "add_surface_depth": false,
+                                          "offset": 1,
+                                          "secondary_depth_range": 0,
+                                          "surface_type": "floor"
+                                        },
+                                        "then_run": {
+                                          "type": "minecraft:condition",
+                                          "if_true": {
+                                            "type": "minecraft:noise_threshold",
+                                            "noise": "minecraft:surface",
+                                            "min_threshold": -0.48,
+                                            "max_threshold": 1.7976931348623157e+308
+                                          },
+                                          "then_run": {
+                                            "type": "minecraft:block",
+                                            "result_state": {
+                                              "Name": "worldlogic:loam"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "type": "minecraft:condition",
+                                        "if_true": {
+                                          "type": "minecraft:stone_depth",
+                                          "add_surface_depth": false,
+                                          "offset": 2,
+                                          "secondary_depth_range": 0,
+                                          "surface_type": "floor"
+                                        },
+                                        "then_run": {
+                                          "type": "minecraft:condition",
+                                          "if_true": {
+                                            "type": "minecraft:noise_threshold",
+                                            "noise": "minecraft:surface",
+                                            "min_threshold": 0.22,
+                                            "max_threshold": 1.7976931348623157e+308
+                                          },
+                                          "then_run": {
+                                            "type": "minecraft:block",
+                                            "result_state": {
+                                              "Name": "worldlogic:loam"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    ]
                                   }
                                 },
                                 {
@@ -2576,10 +2999,59 @@
                                       ]
                                     },
                                     "then_run": {
-                                      "type": "minecraft:block",
-                                      "result_state": {
-                                        "Name": "worldlogic:humus"
-                                      }
+                                      "type": "minecraft:sequence",
+                                      "sequence": [
+                                        {
+                                          "type": "minecraft:condition",
+                                          "if_true": {
+                                            "type": "minecraft:stone_depth",
+                                            "add_surface_depth": false,
+                                            "offset": 1,
+                                            "secondary_depth_range": 0,
+                                            "surface_type": "floor"
+                                          },
+                                          "then_run": {
+                                            "type": "minecraft:condition",
+                                            "if_true": {
+                                              "type": "minecraft:noise_threshold",
+                                              "noise": "minecraft:surface",
+                                              "min_threshold": -0.48,
+                                              "max_threshold": 1.7976931348623157e+308
+                                            },
+                                            "then_run": {
+                                              "type": "minecraft:block",
+                                              "result_state": {
+                                                "Name": "worldlogic:humus"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "minecraft:condition",
+                                          "if_true": {
+                                            "type": "minecraft:stone_depth",
+                                            "add_surface_depth": false,
+                                            "offset": 2,
+                                            "secondary_depth_range": 0,
+                                            "surface_type": "floor"
+                                          },
+                                          "then_run": {
+                                            "type": "minecraft:condition",
+                                            "if_true": {
+                                              "type": "minecraft:noise_threshold",
+                                              "noise": "minecraft:surface",
+                                              "min_threshold": 0.22,
+                                              "max_threshold": 1.7976931348623157e+308
+                                            },
+                                            "then_run": {
+                                              "type": "minecraft:block",
+                                              "result_state": {
+                                                "Name": "worldlogic:humus"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      ]
                                     }
                                   },
                                   {
@@ -2597,10 +3069,59 @@
                                       ]
                                     },
                                     "then_run": {
-                                      "type": "minecraft:block",
-                                      "result_state": {
-                                        "Name": "worldlogic:loam"
-                                      }
+                                      "type": "minecraft:sequence",
+                                      "sequence": [
+                                        {
+                                          "type": "minecraft:condition",
+                                          "if_true": {
+                                            "type": "minecraft:stone_depth",
+                                            "add_surface_depth": false,
+                                            "offset": 1,
+                                            "secondary_depth_range": 0,
+                                            "surface_type": "floor"
+                                          },
+                                          "then_run": {
+                                            "type": "minecraft:condition",
+                                            "if_true": {
+                                              "type": "minecraft:noise_threshold",
+                                              "noise": "minecraft:surface",
+                                              "min_threshold": -0.48,
+                                              "max_threshold": 1.7976931348623157e+308
+                                            },
+                                            "then_run": {
+                                              "type": "minecraft:block",
+                                              "result_state": {
+                                                "Name": "worldlogic:loam"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "minecraft:condition",
+                                          "if_true": {
+                                            "type": "minecraft:stone_depth",
+                                            "add_surface_depth": false,
+                                            "offset": 2,
+                                            "secondary_depth_range": 0,
+                                            "surface_type": "floor"
+                                          },
+                                          "then_run": {
+                                            "type": "minecraft:condition",
+                                            "if_true": {
+                                              "type": "minecraft:noise_threshold",
+                                              "noise": "minecraft:surface",
+                                              "min_threshold": 0.22,
+                                              "max_threshold": 1.7976931348623157e+308
+                                            },
+                                            "then_run": {
+                                              "type": "minecraft:block",
+                                              "result_state": {
+                                                "Name": "worldlogic:loam"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      ]
                                     }
                                   },
                                   {
@@ -3001,10 +3522,59 @@
                                         ]
                                       },
                                       "then_run": {
-                                        "type": "minecraft:block",
-                                        "result_state": {
-                                          "Name": "worldlogic:humus"
-                                        }
+                                        "type": "minecraft:sequence",
+                                        "sequence": [
+                                          {
+                                            "type": "minecraft:condition",
+                                            "if_true": {
+                                              "type": "minecraft:stone_depth",
+                                              "add_surface_depth": false,
+                                              "offset": 1,
+                                              "secondary_depth_range": 0,
+                                              "surface_type": "floor"
+                                            },
+                                            "then_run": {
+                                              "type": "minecraft:condition",
+                                              "if_true": {
+                                                "type": "minecraft:noise_threshold",
+                                                "noise": "minecraft:surface",
+                                                "min_threshold": -0.48,
+                                                "max_threshold": 1.7976931348623157e+308
+                                              },
+                                              "then_run": {
+                                                "type": "minecraft:block",
+                                                "result_state": {
+                                                  "Name": "worldlogic:humus"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          {
+                                            "type": "minecraft:condition",
+                                            "if_true": {
+                                              "type": "minecraft:stone_depth",
+                                              "add_surface_depth": false,
+                                              "offset": 2,
+                                              "secondary_depth_range": 0,
+                                              "surface_type": "floor"
+                                            },
+                                            "then_run": {
+                                              "type": "minecraft:condition",
+                                              "if_true": {
+                                                "type": "minecraft:noise_threshold",
+                                                "noise": "minecraft:surface",
+                                                "min_threshold": 0.22,
+                                                "max_threshold": 1.7976931348623157e+308
+                                              },
+                                              "then_run": {
+                                                "type": "minecraft:block",
+                                                "result_state": {
+                                                  "Name": "worldlogic:humus"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        ]
                                       }
                                     },
                                     {
@@ -3022,10 +3592,59 @@
                                         ]
                                       },
                                       "then_run": {
-                                        "type": "minecraft:block",
-                                        "result_state": {
-                                          "Name": "worldlogic:loam"
-                                        }
+                                        "type": "minecraft:sequence",
+                                        "sequence": [
+                                          {
+                                            "type": "minecraft:condition",
+                                            "if_true": {
+                                              "type": "minecraft:stone_depth",
+                                              "add_surface_depth": false,
+                                              "offset": 1,
+                                              "secondary_depth_range": 0,
+                                              "surface_type": "floor"
+                                            },
+                                            "then_run": {
+                                              "type": "minecraft:condition",
+                                              "if_true": {
+                                                "type": "minecraft:noise_threshold",
+                                                "noise": "minecraft:surface",
+                                                "min_threshold": -0.48,
+                                                "max_threshold": 1.7976931348623157e+308
+                                              },
+                                              "then_run": {
+                                                "type": "minecraft:block",
+                                                "result_state": {
+                                                  "Name": "worldlogic:loam"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          {
+                                            "type": "minecraft:condition",
+                                            "if_true": {
+                                              "type": "minecraft:stone_depth",
+                                              "add_surface_depth": false,
+                                              "offset": 2,
+                                              "secondary_depth_range": 0,
+                                              "surface_type": "floor"
+                                            },
+                                            "then_run": {
+                                              "type": "minecraft:condition",
+                                              "if_true": {
+                                                "type": "minecraft:noise_threshold",
+                                                "noise": "minecraft:surface",
+                                                "min_threshold": 0.22,
+                                                "max_threshold": 1.7976931348623157e+308
+                                              },
+                                              "then_run": {
+                                                "type": "minecraft:block",
+                                                "result_state": {
+                                                  "Name": "worldlogic:loam"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        ]
                                       }
                                     },
                                     {
@@ -3156,10 +3775,59 @@
                                 ]
                               },
                               "then_run": {
-                                "type": "minecraft:block",
-                                "result_state": {
-                                  "Name": "worldlogic:humus"
-                                }
+                                "type": "minecraft:sequence",
+                                "sequence": [
+                                  {
+                                    "type": "minecraft:condition",
+                                    "if_true": {
+                                      "type": "minecraft:stone_depth",
+                                      "add_surface_depth": false,
+                                      "offset": 1,
+                                      "secondary_depth_range": 0,
+                                      "surface_type": "floor"
+                                    },
+                                    "then_run": {
+                                      "type": "minecraft:condition",
+                                      "if_true": {
+                                        "type": "minecraft:noise_threshold",
+                                        "noise": "minecraft:surface",
+                                        "min_threshold": -0.48,
+                                        "max_threshold": 1.7976931348623157e+308
+                                      },
+                                      "then_run": {
+                                        "type": "minecraft:block",
+                                        "result_state": {
+                                          "Name": "worldlogic:humus"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "minecraft:condition",
+                                    "if_true": {
+                                      "type": "minecraft:stone_depth",
+                                      "add_surface_depth": false,
+                                      "offset": 2,
+                                      "secondary_depth_range": 0,
+                                      "surface_type": "floor"
+                                    },
+                                    "then_run": {
+                                      "type": "minecraft:condition",
+                                      "if_true": {
+                                        "type": "minecraft:noise_threshold",
+                                        "noise": "minecraft:surface",
+                                        "min_threshold": 0.22,
+                                        "max_threshold": 1.7976931348623157e+308
+                                      },
+                                      "then_run": {
+                                        "type": "minecraft:block",
+                                        "result_state": {
+                                          "Name": "worldlogic:humus"
+                                        }
+                                      }
+                                    }
+                                  }
+                                ]
                               }
                             },
                             {
@@ -3177,10 +3845,59 @@
                                 ]
                               },
                               "then_run": {
-                                "type": "minecraft:block",
-                                "result_state": {
-                                  "Name": "worldlogic:loam"
-                                }
+                                "type": "minecraft:sequence",
+                                "sequence": [
+                                  {
+                                    "type": "minecraft:condition",
+                                    "if_true": {
+                                      "type": "minecraft:stone_depth",
+                                      "add_surface_depth": false,
+                                      "offset": 1,
+                                      "secondary_depth_range": 0,
+                                      "surface_type": "floor"
+                                    },
+                                    "then_run": {
+                                      "type": "minecraft:condition",
+                                      "if_true": {
+                                        "type": "minecraft:noise_threshold",
+                                        "noise": "minecraft:surface",
+                                        "min_threshold": -0.48,
+                                        "max_threshold": 1.7976931348623157e+308
+                                      },
+                                      "then_run": {
+                                        "type": "minecraft:block",
+                                        "result_state": {
+                                          "Name": "worldlogic:loam"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "minecraft:condition",
+                                    "if_true": {
+                                      "type": "minecraft:stone_depth",
+                                      "add_surface_depth": false,
+                                      "offset": 2,
+                                      "secondary_depth_range": 0,
+                                      "surface_type": "floor"
+                                    },
+                                    "then_run": {
+                                      "type": "minecraft:condition",
+                                      "if_true": {
+                                        "type": "minecraft:noise_threshold",
+                                        "noise": "minecraft:surface",
+                                        "min_threshold": 0.22,
+                                        "max_threshold": 1.7976931348623157e+308
+                                      },
+                                      "then_run": {
+                                        "type": "minecraft:block",
+                                        "result_state": {
+                                          "Name": "worldlogic:loam"
+                                        }
+                                      }
+                                    }
+                                  }
+                                ]
                               }
                             },
                             {

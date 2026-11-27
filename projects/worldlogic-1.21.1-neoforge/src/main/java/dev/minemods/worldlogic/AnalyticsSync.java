@@ -38,6 +38,7 @@ public final class AnalyticsSync{
  private static String fmt(String key,String format,Object... values){return key+"|"+String.format(Locale.ROOT,format,values);}
  static void send(ServerPlayer p,AnalyticsState data){
   var l=p.serverLevel();var pos=p.blockPosition();var c=data.cells.get(EnvironmentAnalytics.key(pos));var air=new ArrayList<String>();var water=new ArrayList<String>();var soil=new ArrayList<String>();var impact=new ArrayList<String>();var ecology=new ArrayList<String>();
+  air.add(fmt("biome_id","%s",l.getBiome(pos).unwrapKey().map(k->k.location().toString()).orElse("unknown")));
   WorldLogicApi.atmosphere(l,pos).ifPresent(a->{air.add(fmt("temperature","%.1f C",a.environment().ambientCelsiusEstimate()));air.add(fmt("humidity","%.0f %%",a.relativeHumidityPercent()));air.add(fmt("wind","%.1f m/s",a.outdoorWindSpeedMps()));air.add(fmt("solar","%.0f %%",a.environment().solarExposure()*100));air.add(fmt("precipitation","%s / %.0f %%",a.precipitation(),a.precipitationIntensity()*100));});
   WorldLogicApi.localWeather(l,pos).ifPresent(w->{air.add(fmt("weather","%s",w.kind()));air.add(fmt("pressure","%.1f hPa",w.pressureHpa()));air.add(fmt("gust","%.1f m/s",w.gustMps()));});
   if(c!=null&&c.tick>=0){air.add(fmt("air_load","%.0f %%",c.air()*100));air.add(fmt("dust","%.0f %%",c.dust*100));air.add(fmt("combustion","%.0f %%",c.combustion*100));air.add(fmt("sources","%d",c.sources));soil.add(fmt("soil_load","%.0f %%",c.soil*100));}

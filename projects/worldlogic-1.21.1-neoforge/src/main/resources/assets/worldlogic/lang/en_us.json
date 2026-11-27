@@ -199,5 +199,6 @@
   "worldlogic.analytics.plant_recovery": "Cumulative plant cover recovery",
   "worldlogic.analytics.reported_tick": "Last plant report tick",
   "worldlogic.analytics.no_plant_report": "No vegetation report yet",
-  "worldlogic.analytics.habitat_fertility": "Effective soil fertility"
+  "worldlogic.analytics.habitat_fertility": "Effective soil fertility",
+  "worldlogic.analytics.biome_id": "Current biome"
 }
