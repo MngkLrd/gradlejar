@@ -9,8 +9,9 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.GameType;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ClientInformation;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import java.util.UUID;
 /** Explicit server-only regression fixture. Not a real network-player or graphical-client test. */
@@ -23,10 +24,13 @@ public final class RegressionChecks {
             root.then(Commands.literal(name).executes(c->run(c.getSource(),name)));
         e.getDispatcher().register(root);
     }
+    private static void setFixtureMode(ServerPlayer p,GameType mode){
+        CompoundTag tag=new CompoundTag();tag.putInt("playerGameType",mode.getId());p.loadGameTypes(tag);
+    }
     private static int run(CommandSourceStack source,String name){
-        FakePlayer p=FakePlayerFactory.get(source.getLevel(),new GameProfile(UUID.nameUUIDFromBytes("traumacraft-qa-fixture".getBytes(java.nio.charset.StandardCharsets.UTF_8)),"TraumaQAFixture"));
+        ServerPlayer p=new ServerPlayer(source.getServer(),source.getLevel(),new GameProfile(UUID.nameUUIDFromBytes("traumacraft-qa-fixture".getBytes(java.nio.charset.StandardCharsets.UTF_8)),"TraumaQAFixture"),ClientInformation.createDefault());
         try{
-            p.gameMode.changeGameModeForPlayer(GameType.SURVIVAL);
+            setFixtureMode(p,GameType.SURVIVAL);
             BodyState b=BodyStates.get(p); b.reset();
             switch(name){
                 case "state" -> {
@@ -66,7 +70,8 @@ public final class RegressionChecks {
                     TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);
                     require(b.health(BodyPart.LEFT_LEG)==45&&b.health(BodyPart.RIGHT_LEG)==45&&b.fractured(BodyPart.LEFT_LEG),"single fall damage");
                     require(b.health(BodyPart.HEAD)==35&&!b.hasBleeding(),"fall negative control");
-                    p.gameMode.changeGameModeForPlayer(GameType.CREATIVE);
+                    setFixtureMode(p,GameType.CREATIVE);
+                    require(p.isCreative(),"fixture creative mode not applied");
                     TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);
                     require(b.health(BodyPart.LEFT_LEG)==45,"creative damage");
                 }

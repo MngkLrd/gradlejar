@@ -6,7 +6,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.*;
-import net.minecraftforge.common.util.FakePlayer;
 public final class ModNetwork {
     private static final SimpleChannel CHANNEL=ChannelBuilder.named("traumacraft:body").networkProtocolVersion(3).simpleChannel();
     private ModNetwork(){}
@@ -25,10 +24,10 @@ public final class ModNetwork {
     }
     public static void request(ApplyMedicalPacket p){CHANNEL.send(p,PacketDistributor.SERVER.noArg());}
     public static void progress(ServerPlayer p,int duration,int elapsed){
-        if(!(p instanceof FakePlayer) && p.connection!=null) CHANNEL.send(new TreatmentProgressPacket(duration,elapsed),PacketDistributor.PLAYER.with(p));
+        if(p.connection!=null) CHANNEL.send(new TreatmentProgressPacket(duration,elapsed),PacketDistributor.PLAYER.with(p));
     }
     public static void sync(ServerPlayer p){
         BodyStates.flush(p);
-        if(!(p instanceof FakePlayer) && p.connection!=null) CHANNEL.send(SyncBodyStatePacket.from(BodyStates.get(p)),PacketDistributor.PLAYER.with(p));
+        if(p.connection!=null) CHANNEL.send(SyncBodyStatePacket.from(BodyStates.get(p)),PacketDistributor.PLAYER.with(p));
     }
 }

@@ -3,7 +3,7 @@
   "target": "forge-mc1.21.1",
   "status": "draft",
   "scenario": "tools/qa/scenarios/traumatic-worldlogic-rc16.json",
-  "backend": "RCON component fixture (FakePlayer; no real client)",
+  "backend": "Draft RCON component fixture (unconnected vanilla ServerPlayer, not a network player)",
   "coverage": [
     {
       "id": "TR-STATE",
@@ -116,5 +116,14 @@
         "trauma_kit"
       ]
     }
-  ]
+  ],
+  "draft_project": "drafts/traumatic-worldlogic-1.21.1-forge",
+  "prior_ci": {
+    "run_id": 45955276725,
+    "status": "FAIL",
+    "stage": "compileJava",
+    "first_error": "Forge 52.1.0 has no net.minecraftforge.common.util.FakePlayer",
+    "corrected_in_source": true,
+    "correction_verified": false
+  }
 }
