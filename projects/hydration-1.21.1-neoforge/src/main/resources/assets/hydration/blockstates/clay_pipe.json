@@ -1,27 +1,115 @@
 {
-  "variants": {
-    "facing=north": {
-      "model": "hydration:block/clay_pipe"
+  "multipart": [
+    {
+      "apply": {
+        "model": "hydration:block/clay_pipe_hub"
+      }
     },
-    "facing=east": {
-      "model": "hydration:block/clay_pipe",
-      "y": 90
+    {
+      "when": {
+        "inlet": "north"
+      },
+      "apply": {
+        "model": "hydration:block/clay_pipe_inlet"
+      }
     },
-    "facing=south": {
-      "model": "hydration:block/clay_pipe",
-      "y": 180
+    {
+      "when": {
+        "facing": "north"
+      },
+      "apply": {
+        "model": "hydration:block/clay_pipe_outlet"
+      }
     },
-    "facing=west": {
-      "model": "hydration:block/clay_pipe",
-      "y": 270
+    {
+      "when": {
+        "inlet": "east"
+      },
+      "apply": {
+        "model": "hydration:block/clay_pipe_inlet",
+        "y": 90
+      }
     },
-    "facing=up": {
-      "model": "hydration:block/clay_pipe",
-      "x": 270
+    {
+      "when": {
+        "facing": "east"
+      },
+      "apply": {
+        "model": "hydration:block/clay_pipe_outlet",
+        "y": 90
+      }
     },
-    "facing=down": {
-      "model": "hydration:block/clay_pipe",
-      "x": 90
+    {
+      "when": {
+        "inlet": "south"
+      },
+      "apply": {
+        "model": "hydration:block/clay_pipe_inlet",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south"
+      },
+      "apply": {
+        "model": "hydration:block/clay_pipe_outlet",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "inlet": "west"
+      },
+      "apply": {
+        "model": "hydration:block/clay_pipe_inlet",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west"
+      },
+      "apply": {
+        "model": "hydration:block/clay_pipe_outlet",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "inlet": "up"
+      },
+      "apply": {
+        "model": "hydration:block/clay_pipe_inlet",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "up"
+      },
+      "apply": {
+        "model": "hydration:block/clay_pipe_outlet",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "inlet": "down"
+      },
+      "apply": {
+        "model": "hydration:block/clay_pipe_inlet",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "down"
+      },
+      "apply": {
+        "model": "hydration:block/clay_pipe_outlet",
+        "x": 90
+      }
     }
-  }
+  ]
 }

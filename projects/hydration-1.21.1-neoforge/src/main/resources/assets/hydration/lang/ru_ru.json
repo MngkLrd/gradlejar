@@ -35,6 +35,6 @@
   "block.hydration.water_intake": "Водозаборник",
   "block.hydration.clay_pipe": "Глиняная труба",
   "hydration.tank.status": "Вода: %s/%s мл | %s | ресурс фильтра: %s мл",
-  "hydration.pipe.direction": "Выход: %s | %s",
+  "hydration.pipe.direction": "Вход: %s | выход: %s | %s",
   "hydration.water.kind.rain": "Дождевая вода"
 }

@@ -17,8 +17,8 @@ public final class InfrastructureChecks {
   try{
    l.setBlock(from,WaterInfrastructure.BARREL.get().defaultBlockState(),Block.UPDATE_ALL);
    l.setBlock(to,WaterInfrastructure.FILTER.get().defaultBlockState(),Block.UPDATE_ALL);
-   l.setBlock(pipe,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.EAST),Block.UPDATE_ALL);
-   l.setBlock(down,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.DOWN),Block.UPDATE_ALL);
+   l.setBlock(pipe,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.EAST).setValue(ClayPipeBlock.IN,Direction.WEST),Block.UPDATE_ALL);
+   l.setBlock(down,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.DOWN).setValue(ClayPipeBlock.IN,Direction.WEST),Block.UPDATE_ALL);
    var source=(TankEntity)l.getBlockEntity(from);var target=(TankEntity)l.getBlockEntity(to);
    require(source!=null&&target!=null&&source.capacity()==16000&&target.capacity()==6000,"registered block entities");
    var b=new WaterBatch(1000,WaterBalance.Quality.DESALINATE,35,.4,Set.of("SEA"));source.insert(b);
@@ -27,11 +27,14 @@ public final class InfrastructureChecks {
    require(target.installFilter(),"cartridge installs");var filtered=target.extract(WaterBatch.empty(),250,250);
    require(filtered.ml()==250&&filtered.salinity()==35&&filtered.risk()<.4&&target.charge()==11750&&target.water().ml()==0,"filter charge and salt");
    l.setBlock(same,WaterInfrastructure.BASIN.get().defaultBlockState(),Block.UPDATE_ALL);
-   l.setBlock(down,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.EAST),Block.UPDATE_ALL);
+   l.setBlock(down,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.EAST).setValue(ClayPipeBlock.IN,Direction.WEST),Block.UPDATE_ALL);
    source.step(l);require(source.water().ml()==750&&((TankEntity)l.getBlockEntity(same)).water().ml()==0,"no equal-height destination");
-   l.setBlock(down,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.WEST),Block.UPDATE_ALL);
+   l.setBlock(down,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.WEST).setValue(ClayPipeBlock.IN,Direction.WEST),Block.UPDATE_ALL);
    source.step(l);require(source.water().ml()==750,"loop rejected");
-   l.setBlock(down,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.DOWN),Block.UPDATE_ALL);
+   l.setBlock(down,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.DOWN).setValue(ClayPipeBlock.IN,Direction.WEST),Block.UPDATE_ALL);
+   l.setBlock(down,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.DOWN).setValue(ClayPipeBlock.IN,Direction.NORTH),Block.UPDATE_ALL);
+   source.step(l);require(source.water().ml()==750,"disconnected elbow rejected");
+   l.setBlock(down,WaterInfrastructure.PIPE.get().defaultBlockState().setValue(ClayPipeBlock.OUT,Direction.DOWN).setValue(ClayPipeBlock.IN,Direction.WEST),Block.UPDATE_ALL);
    l.setBlock(pipe.above(),Blocks.REDSTONE_BLOCK.defaultBlockState(),Block.UPDATE_ALL);
    require(l.hasNeighborSignal(pipe),"redstone fixture powered");source.step(l);
    require(source.water().ml()==750&&target.water().ml()==0,"powered pipe stops flow");

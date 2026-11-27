@@ -3,6 +3,9 @@ import java.util.Optional;
 import dev.minemods.hydration.Hydration;
 import dev.minemods.hydration.WaterBottle;
 import dev.minemods.hydration.VesselItem;
+import dev.minemods.hydration.TankEntity;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import java.util.Set;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,6 +21,12 @@ public final class HydrationApi {
  public static Optional<LiquidStatus> liquidWater(ItemStack stack){
   if(stack.getItem() instanceof VesselItem v){var b=v.read(stack);return Optional.of(new LiquidStatus(b.ml(),b.quality().name(),b.salinity(),b.risk(),b.origins()));}
   return bottleWater(stack);
+ }
+ /** Server-thread-only read of a loaded placed tank; no chunk loading. */
+ public static Optional<LiquidStatus> tankWater(ServerLevel level,BlockPos pos){
+  if(!level.getServer().isSameThread())throw new IllegalStateException("Server thread required");
+  if(!level.hasChunkAt(pos)||!(level.getBlockEntity(pos) instanceof TankEntity tank))return Optional.empty();
+  var b=tank.water();return Optional.of(new LiquidStatus(b.ml(),b.quality().name(),b.salinity(),b.risk(),b.origins()));
  }
  private HydrationApi(){}
  public static Optional<Status> status(ServerPlayer p){

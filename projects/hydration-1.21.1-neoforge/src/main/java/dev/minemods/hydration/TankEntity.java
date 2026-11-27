@@ -93,20 +93,20 @@ public final class TankEntity extends BlockEntity {
   if(water.ml()==0||(filter()&&filterCharge==0))return;
   for(Direction d:Direction.values()){
    if(d==Direction.UP)continue;
-   var target=findOutlet(l,worldPosition.relative(d),worldPosition.getY());
+   var target=findOutlet(l,worldPosition.relative(d),worldPosition.getY(),d.getOpposite());
    if(target==null)continue;
    var result=GravityFlow.move(water,target.water,target.capacity(),worldPosition.getY(),target.worldPosition.getY(),filterCharge,filter());
    if(result.moved()>0){filterCharge=result.remainingFilter();setWater(result.source());target.setWater(result.target());return;}
   }
  }
- static TankEntity findOutlet(ServerLevel l,BlockPos start,int sourceY){
+ static TankEntity findOutlet(ServerLevel l,BlockPos start,int sourceY,Direction inlet){
   BlockPos pos=start;var seen=new HashSet<BlockPos>();
   for(int n=0;n<GravityFlow.MAX_PIPE_LENGTH;n++){
    if(!l.hasChunkAt(pos)||pos.getY()>sourceY||!seen.add(pos))return null;
    var state=l.getBlockState(pos);
-   if(!(state.getBlock() instanceof ClayPipeBlock)||l.hasNeighborSignal(pos))return null;
-   Direction out=state.getValue(ClayPipeBlock.OUT);if(out==Direction.UP)return null;
-   pos=pos.relative(out);
+   if(!(state.getBlock() instanceof ClayPipeBlock)||l.hasNeighborSignal(pos)||state.getValue(ClayPipeBlock.IN)!=inlet)return null;
+   Direction out=state.getValue(ClayPipeBlock.OUT);if(out==Direction.UP||out==inlet)return null;
+   inlet=out.getOpposite();pos=pos.relative(out);
    if(!l.hasChunkAt(pos))return null;
    if(l.getBlockEntity(pos) instanceof TankEntity target)return pos.getY()<sourceY?target:null;
   }

@@ -40,7 +40,7 @@ public final class WaterInfrastructure {
   if(e.getHand()!=InteractionHand.MAIN_HAND||e.getEntity().isSpectator())return;
   var state=e.getLevel().getBlockState(e.getPos());
   if(state.getBlock() instanceof ClayPipeBlock&&e.getItemStack().isEmpty()&&e.getEntity().getOffhandItem().isEmpty()){
-   if(e.getEntity() instanceof ServerPlayer p)p.displayClientMessage(Component.translatable("hydration.pipe.direction",state.getValue(ClayPipeBlock.OUT).getName(),e.getLevel().hasNeighborSignal(e.getPos())?"OFF":"ON"),true);
+   if(e.getEntity() instanceof ServerPlayer p)p.displayClientMessage(Component.translatable("hydration.pipe.direction",state.getValue(ClayPipeBlock.IN).getName(),state.getValue(ClayPipeBlock.OUT).getName(),e.getLevel().hasNeighborSignal(e.getPos())?"OFF":"ON"),true);
    e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);return;
   }
   if(!(state.getBlock() instanceof TankBlock))return;
