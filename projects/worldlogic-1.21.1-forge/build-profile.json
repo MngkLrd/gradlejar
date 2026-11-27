@@ -1,11 +1,11 @@
 {
   "slug": "worldlogic",
-  "version": "1.0.0-rc16",
+  "version": "1.0.0-rc17",
   "minecraft": "1.21.1",
   "loader": "forge",
   "java": "21",
   "gradle": "8.10.2",
-  "jar_glob": "worldlogic-forge-mc1.21.1-1.0.0-rc16.jar",
+  "jar_glob": "worldlogic-forge-mc1.21.1-1.0.0-rc17.jar",
   "minimum_loader_version": "52.1.0",
   "compile_loader_version": "52.1.0"
 }

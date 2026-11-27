@@ -36,5 +36,6 @@
   "message.worldlogic.cramped_swing": "Недостаточно места для размаха тяжёлым оружием.",
   "message.worldlogic.ice_ceiling": "Лёд перекрывает путь наверх. Ищи выход!",
   "message.worldlogic.fall_stampede": "Бегущее стадо сбило тебя с ног!",
-  "generator.worldlogic.realistic": "World Logic: реалистичный рельеф"
+  "generator.worldlogic.realistic": "World Logic: реалистичный рельеф (RC16)",
+  "generator.worldlogic.earthlike": "World Logic: природная география"
 }
