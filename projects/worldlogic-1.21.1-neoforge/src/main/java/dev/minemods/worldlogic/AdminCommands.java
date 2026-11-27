@@ -41,7 +41,12 @@ public final class AdminCommands {
    if(a.isEmpty())return reply(s,"Weather grid not active at this position.");
    var v=a.orElseThrow();return reply(s,String.format(Locale.ROOT,"Grid preview: %.1f hPa, %.1f C, %.2f g/kg vapor, %.0f%% RH, tick %d",v.pressureHpa(),v.airC(),v.vaporGkg(),v.relativeHumidityPercent(),v.modeledTick()));
   }));
+  root.then(Commands.literal("weather_local").executes(c->{
+   var s=c.getSource();var w=dev.minemods.worldlogic.api.WorldLogicApi.localWeather(s.getLevel(),net.minecraft.core.BlockPos.containing(s.getPosition()));
+   return reply(s,w.map(v->String.format(java.util.Locale.ROOT,"Local weather: %s, intensity %.0f%%, air delta %+.1f C, RH %.0f%%, gust %.1f m/s, fog %.0f%%, exposed=%s",v.kind(),100*v.intensity(),v.temperatureDeltaC(),v.relativeHumidityPercent(),v.gustMps(),100*v.fogDensity(),v.exposed())).orElse("Local weather inactive (unsupported world, unloaded point or regional_weather disabled)."));
+  }));
   root.then(Commands.literal("qa").requires(s->s.hasPermission(4))
+   .then(Commands.literal("local_weather").executes(c->{try{LocalWeatherChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_LOCAL_WEATHER_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("worldgen_ecology").executes(c->{try{WorldgenApiChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WORLDGEN_ECOLOGY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("ore_balance").executes(c->{try{GeologyChecks.verifyBalance(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_ORE_BALANCE_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("karst").executes(c->{try{GeologyChecks.verifyKarst(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_KARST_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))

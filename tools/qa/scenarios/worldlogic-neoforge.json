@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC26 production core/API regression",
+  "name": "World Logic NeoForge RC27 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -170,6 +170,12 @@
       "name": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures",
       "command": "worldlogic qa worldgen_ecology",
       "expect": "WORLDLOGIC_WORLDGEN_ECOLOGY_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Local weather nine types, spatial and temporal variation, exposure, temperature and client packet contract",
+      "command": "worldlogic qa local_weather",
+      "expect": "WORLDLOGIC_LOCAL_WEATHER_PASSED",
       "assertion": true
     }
   ],
@@ -395,6 +401,17 @@
         {
           "backend": "server",
           "name": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures"
+        }
+      ]
+    },
+    {
+      "id": "local-weather-runtime-model",
+      "kind": "mechanic",
+      "subject": "Local weather nine types, spatial and temporal variation, exposure, temperature and client packet contract",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Local weather nine types, spatial and temporal variation, exposure, temperature and client packet contract"
         }
       ]
     }
