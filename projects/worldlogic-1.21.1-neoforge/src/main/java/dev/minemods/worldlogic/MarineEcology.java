@@ -37,8 +37,9 @@ final class MarineEcology {
    var b=registry.getOrThrow(ResourceKey.create(Registries.BIOME,ResourceLocation.fromNamespaceAndPath("worldlogic",id))).value();
    var features=b.getGenerationSettings().features();
    require(features.get(6).stream().anyMatch(h->h.unwrapKey().map(k->k.location().toString().equals("minecraft:disk_clay")).orElse(false)),"sediment "+id);
-   if(id.startsWith("polar"))require(features.get(4).stream().anyMatch(h->h.unwrapKey().map(k->k.location().toString().equals("minecraft:iceberg_packed")).orElse(false)),"polar icebergs "+id);
+   if(id.startsWith("polar"))require(features.get(2).stream().anyMatch(h->h.unwrapKey().map(k->k.location().toString().equals("minecraft:iceberg_packed")).orElse(false)),"polar icebergs "+id);
    require(!b.getMobSettings().getMobs(MobCategory.WATER_AMBIENT).isEmpty(),"fish inventory "+id);
+   if(!id.startsWith("polar"))require(features.get(9).stream().anyMatch(h->h.unwrapKey().map(k->k.location().getPath().startsWith("seagrass_")).orElse(false)),"vanilla seagrass "+id);
   }
   BlockPos p=new BlockPos(4,l.getSeaLevel()-5,4);
   require(l.hasChunkAt(p),"loaded aquatic fixture");
@@ -59,7 +60,7 @@ final class MarineEcology {
  static String audit(ServerLevel l,BlockPos origin){
   var chunk=l.getChunkSource().getChunkNow(origin.getX()>>4,origin.getZ()>>4);
   if(chunk==null)return "MARINE_AUDIT unavailable";
-  int ocean=0,wet=0,wrongLand=0,sea=0,stone=0,sediment=0,dirt=0,habitat=0;
+  int ocean=0,wet=0,wrongLand=0,sea=0,stone=0,sediment=0,dirt=0,habitat=0,plants=0;
   int level=l.getSeaLevel(),x0=chunk.getPos().getMinBlockX(),z0=chunk.getPos().getMinBlockZ();
   var p=new BlockPos.MutableBlockPos();
   for(int x=0;x<16;x++)for(int z=0;z<16;z++){
@@ -75,12 +76,13 @@ final class MarineEcology {
    wet++;
    if(nativeSea(l,p))sea++;
    if(submerged(l,p.set(wx,level-5,wz)))habitat++;
+   for(int yy=h+1;yy<level;yy++){var b=chunk.getBlockState(p.set(wx,yy,wz));if(b.is(Blocks.KELP)||b.is(Blocks.KELP_PLANT)||b.is(Blocks.SEAGRASS)||b.is(Blocks.TALL_SEAGRASS))plants++;}
    var bed=chunk.getBlockState(p.set(wx,h,wz));
    if(GeologyGeneration.rock(bed))stone++;
    else if(bed.is(Blocks.SAND)||bed.is(Blocks.GRAVEL)||bed.is(Blocks.CLAY)||bed.is(Blocks.RED_SAND))sediment++;
    else if(bed.is(Blocks.DIRT)||bed.is(Blocks.GRASS_BLOCK)||bed.is(Blocks.COARSE_DIRT))dirt++;
   }
-  return "MARINE_AUDIT ocean="+ocean+" wet="+wet+" wrongLand="+wrongLand+" sea="+sea+" stone="+stone+" sediment="+sediment+" dirt="+dirt+" habitat="+habitat;
+  return "MARINE_AUDIT ocean="+ocean+" wet="+wet+" wrongLand="+wrongLand+" sea="+sea+" stone="+stone+" sediment="+sediment+" dirt="+dirt+" habitat="+habitat+" plants="+plants;
  }
 
 }

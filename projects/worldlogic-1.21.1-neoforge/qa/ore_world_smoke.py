@@ -81,7 +81,7 @@ def main():
             pending={(ax+dx*16,az+dz*16) for dx in (-1,0,1) for dz in (-1,0,1)}
             marine=[]
             deadline=time.monotonic()+180
-            keys=("ocean","wet","wrongLand","sea","stone","sediment","dirt","habitat")
+            keys=("ocean","wet","wrongLand","sea","stone","sediment","dirt","habitat","plants")
             pattern="MARINE_AUDIT "+" ".join(k+r"=(\d+)" for k in keys)
             while pending and time.monotonic()<deadline:
                 for x,z in sorted(pending):
@@ -99,6 +99,7 @@ def main():
             require(totals["wrongLand"]==0,"Dry land labelled ocean")
             require(totals["stone"]>0 and totals["sediment"]>0 and totals["dirt"]<=totals["wet"]*.1,"Seabed is barren or incorrectly soil-covered")
             require(totals["habitat"]>0,"No viable submerged fish habitat")
+            require(totals["plants"]>0,"No actual vanilla ocean plants in generated cold-ocean chunks")
             conn.cmd("forceload remove "+force)
             conn.cmd("save-all flush")
             require(not FATAL.search(log.read_text(errors="replace")),"Fatal generation error")
