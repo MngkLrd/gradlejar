@@ -11,7 +11,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 public final class ModNetwork {
     private ModNetwork(){}
     public static void register(RegisterPayloadHandlersEvent event){
-        var registrar=event.registrar("3");
+        var registrar=event.registrar("4");
         registrar.playToClient(SyncBodyStatePacket.TYPE,SyncBodyStatePacket.STREAM_CODEC,(m,c)->{
             if(FMLEnvironment.dist==Dist.CLIENT)ClientBodyState.accept(m);
         });
@@ -26,6 +26,6 @@ public final class ModNetwork {
     }
     public static void sync(ServerPlayer p){
         BodyStates.flush(p);
-        if(!(p instanceof FakePlayer)&&p.connection!=null)PacketDistributor.sendToPlayer(p,SyncBodyStatePacket.from(BodyStates.get(p)));
+        if(!(p instanceof FakePlayer)&&p.connection!=null)PacketDistributor.sendToPlayer(p,SyncBodyStatePacket.from(BodyStates.get(p),dev.minemods.traumacraft.integration.ThermalBridge.condition(p).wireId));
     }
 }

@@ -1,6 +1,7 @@
 package dev.minemods.traumacraft.client;
 
 import dev.minemods.traumacraft.health.BodyPart;
+import dev.minemods.traumacraft.integration.ThermalCondition;
 import dev.minemods.traumacraft.network.SyncBodyStatePacket;
 
 public final class ClientBodyState {
@@ -11,6 +12,7 @@ public final class ClientBodyState {
     private static boolean received;
     private static int concussionTicks;
     private static int painkillerTicks;
+    private static ThermalCondition thermal=ThermalCondition.NONE;
 
     private ClientBodyState() {}
     public static void accept(SyncBodyStatePacket packet) {
@@ -23,12 +25,14 @@ public final class ClientBodyState {
         }
         concussionTicks = packet.concussion();
         painkillerTicks = packet.painkiller();
+        thermal=ThermalCondition.fromWire(packet.thermalStage());
         received = true;
     }
     public static int concussionTicks() { return received ? concussionTicks : 0; }
     public static int painkillerTicks() { return received ? painkillerTicks : 0; }
     public static boolean hasReceived() { return received; }
-    public static void clear() { received = false; concussionTicks = 0; painkillerTicks = 0; }
+    public static ThermalCondition thermal(){return received?thermal:ThermalCondition.NONE;}
+    public static void clear() { received = false; concussionTicks = 0; painkillerTicks = 0; thermal=ThermalCondition.NONE; }
     public static float hp(BodyPart part) { return received ? HP[part.ordinal()] : part.maximum; }
     public static float fraction(BodyPart part) { return hp(part) / part.maximum; }
     public static int bleeding(BodyPart part) { return received ? BLEEDING[part.ordinal()] : 0; }

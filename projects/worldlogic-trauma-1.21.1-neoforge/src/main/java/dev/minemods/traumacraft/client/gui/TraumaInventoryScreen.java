@@ -101,8 +101,14 @@ public final class TraumaInventoryScreen extends InventoryScreen {
 
         // Draw the body directly on the vanilla panel, without a dark portrait well.
         BodyVisual.draw(gui,bx(),by(),false);
+        var thermal=ClientBodyState.thermal();
+        if(thermal.stressed()){
+            String label=Component.translatable("thermal.traumacraft."+thermal.name().toLowerCase(java.util.Locale.ROOT)).getString();
+            String fitted=font.plainSubstrByWidth(label,AnatomyLayout.COLUMN_WIDTH-4);
+            small(gui,fitted,x+(AnatomyLayout.COLUMN_WIDTH-font.width(fitted))/2,y+24,thermal.cold()?0xFF365F86:0xFFA04830);
+        }
         int count=Integer.bitCount(TraumaHud.activeMask());
-        int cols=Math.min(2,count);
+        int cols=Math.min(count>4?3:2,count);
         if(cols>0) {
             int iconsWidth=HudStatusLayout.ICON_SIZE+(cols-1)*HudStatusLayout.STEP;
             TraumaHud.drawActive(gui,x+(AnatomyLayout.COLUMN_WIDTH-iconsWidth)/2,
@@ -145,7 +151,13 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         super.render(gui,mx,my,delta);
         renderTab(gui,mx,my);
         TreatmentRing.render(gui);
-        if(!anatomyOpen || hovered==null)return;
+        if(!anatomyOpen)return;
+        var thermal=ClientBodyState.thermal();
+        if(thermal.stressed()&&mx>=px()&&mx<px()+AnatomyLayout.COLUMN_WIDTH&&my>=topPos+20&&my<by()){
+            gui.renderComponentTooltip(font,List.of(Component.translatable("thermal.traumacraft."+thermal.name().toLowerCase(java.util.Locale.ROOT)),Component.translatable("thermal.traumacraft.recovery",Math.round(100*thermal.recoveryFactor))),mx,my);
+            return;
+        }
+        if(hovered==null)return;
         List<Component> tooltip=new ArrayList<>();
         tooltip.add(BodyVisual.name(hovered));
         tooltip.add(BodyVisual.condition(hovered));

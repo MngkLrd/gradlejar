@@ -49,6 +49,23 @@ public final class HudStatusLayoutCheck {
         require(AnatomyLayout.palette(.99f,false,false)==1,"minor actual damage");
         require(AnatomyLayout.palette(1,true,false)==1&&AnatomyLayout.palette(1,false,true)==1,"injury flags visible at full HP");
         require(AnatomyLayout.palette(.4f,false,false)==2&&AnatomyLayout.palette(.1f,false,false)==3&&AnatomyLayout.palette(0,false,false)==4,"injury ramp");
+        for(var condition:dev.minemods.traumacraft.integration.ThermalCondition.values()){
+            require(dev.minemods.traumacraft.integration.ThermalCondition.fromWire(condition.wireId)==condition,"thermal wire ID");
+            for(int base=0;base<16;base++){
+                int mask=HudStatusLayout.withThermal(base,condition);
+                require((mask&15)==base,"medical status preservation");
+                require(Integer.bitCount(mask)==Integer.bitCount(base)+(condition.stressed()?1:0),"one actual thermal glyph");
+                require(HudStatusLayout.visible(false,mask)==(mask!=0),"thermal HUD visibility");
+                int cols=HudStatusLayout.hudColumns(mask),rows=(Integer.bitCount(mask)+cols-1)/cols;
+                if(rows>0)require(HudStatusLayout.ICON_SIZE+(rows-1)*HudStatusLayout.STEP<=AnatomyLayout.HEIGHT,"thermal glyph bounds");
+                for(int w:new int[]{320,330,400,480,640,960}){
+                    int x=AnatomyLayout.hudX(w,mask),y=AnatomyLayout.hudY(w,240,mask);
+                    require(x>=4&&x+AnatomyLayout.hudWidth(mask)<=w&&y+AnatomyLayout.HEIGHT<=240,"thermal screen bounds");
+                }
+            }
+        }
+        require(dev.minemods.traumacraft.integration.ThermalCondition.fromWire(99)==dev.minemods.traumacraft.integration.ThermalCondition.NONE,"invalid wire ID");
+        System.out.println("PASS: 128 medical/thermal combinations, wire IDs and optional status layout");
         System.out.println("PASS: seven independent zones, centered lower inventory, 96 HUD layouts, injury palette and status bounds");
         System.out.println("PASS: 16 combinations, "+transitions+" removal transitions, timer boundaries and visibility");
     }

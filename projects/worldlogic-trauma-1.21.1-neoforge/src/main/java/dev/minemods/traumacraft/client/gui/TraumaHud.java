@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 public final class TraumaHud {
     // Ordered exactly as HudStatusLayout bits. No vanilla-effect duplicates.
     private static final ResourceLocation[] ICONS={
-        icon("bleeding"),icon("fracture"),icon("concussion"),icon("painkiller")
+        icon("bleeding"),icon("fracture"),icon("concussion"),icon("painkiller"),icon("thermal_cold"),icon("thermal_heat")
     };
 
     private static ResourceLocation icon(String name) {
@@ -30,8 +30,10 @@ public final class TraumaHud {
         int x=AnatomyLayout.hudX(gui.guiWidth(),mask), y=AnatomyLayout.hudY(gui.guiWidth(),gui.guiHeight(),mask);
         BodyVisual.draw(gui,x,y,true);
         int count=Integer.bitCount(mask);
-        if(count>0)drawActive(gui,x+BodyVisual.WIDTH+4,
-            y+BodyVisual.HEIGHT-HudStatusLayout.ICON_SIZE-(count-1)*HudStatusLayout.STEP,1);
+        if(count>0){
+            int cols=HudStatusLayout.hudColumns(mask),rows=(count+cols-1)/cols;
+            drawActive(gui,x+BodyVisual.WIDTH+4,y+BodyVisual.HEIGHT-HudStatusLayout.ICON_SIZE-(rows-1)*HudStatusLayout.STEP,cols);
+        }
     }
     public static int activeMask(){
         boolean bleeding=false, fracture=false;
@@ -39,7 +41,7 @@ public final class TraumaHud {
             bleeding|=ClientBodyState.bleeding(part)>0;
             fracture|=ClientBodyState.fractured(part);
         }
-        return HudStatusLayout.mask(bleeding,fracture,ClientBodyState.concussionTicks(),ClientBodyState.painkillerTicks());
+        return HudStatusLayout.withThermal(HudStatusLayout.mask(bleeding,fracture,ClientBodyState.concussionTicks(),ClientBodyState.painkillerTicks()),ClientBodyState.thermal());
     }
     public static void drawActive(GuiGraphics gui,int x,int y,int columns){
         if(!ClientBodyState.hasReceived())return;

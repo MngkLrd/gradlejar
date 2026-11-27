@@ -27,7 +27,7 @@ public final class AnatomyLayout {
         return null;
     }
     public static int inventoryBodyX(int panelX){return panelX+(COLUMN_WIDTH-WIDTH)/2;}
-    public static int hudWidth(int mask){return WIDTH+(mask==0?0:4+HudStatusLayout.ICON_SIZE);}
+    public static int hudWidth(int mask){return WIDTH+(mask==0?0:4+HudStatusLayout.ICON_SIZE+(HudStatusLayout.hudColumns(mask)-1)*HudStatusLayout.STEP);}
     public static int hudX(int screenWidth,int mask){
         return Math.max(4,screenWidth/2-91-6-hudWidth(mask));
     }

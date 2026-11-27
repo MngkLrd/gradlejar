@@ -1,5 +1,6 @@
 package dev.minemods.traumacraft.health;
 import dev.minemods.traumacraft.integration.WorldLogicBridge;
+import dev.minemods.traumacraft.integration.ThermalBridge;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffects;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
@@ -13,7 +14,8 @@ public final class VitalityBridge {
         float actual=Math.min(e.getAmount(),Math.max(0,p.getMaxHealth()-p.getHealth()));
         if(actual<=0) return;
         float factor=p.hasEffect(MobEffects.REGENERATION)?2f:0.6f;
-        b.healMostDamaged(actual*factor);
+        float scale=ThermalBridge.condition(p).recoveryFactor;
+        if(scale>0)b.healMostDamaged(actual*factor*scale);
         BodyStates.flush(p);
     }
 }

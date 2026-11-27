@@ -2,6 +2,7 @@ package dev.minemods.traumacraft.event;
 import dev.minemods.traumacraft.combat.HitLocation;
 import dev.minemods.traumacraft.health.*;
 import dev.minemods.traumacraft.integration.WorldLogicBridge;
+import dev.minemods.traumacraft.integration.ThermalBridge;
 import dev.minemods.traumacraft.medical.TreatmentManager;
 import dev.minemods.traumacraft.network.ModNetwork;
 import net.minecraft.server.level.ServerPlayer;
@@ -80,8 +81,7 @@ public final class TraumaEvents {
         if(p.tickCount%20!=0) return;
         b.tickMedicalEffects();
         if(WorldLogicBridge.resting(p)) {
-            b.recoverBones(20);
-            if(!b.hasBleeding() && p.tickCount%100==0) b.healMostDamaged(.75f);
+            ThermalBridge.recover(b,ThermalBridge.condition(p),p.tickCount%100==0);
         }
         if(p.tickCount%40==0 && b.hasBleeding()) {
             boolean was=b.vitalDestroyed(); float blood=0,overflow=0;

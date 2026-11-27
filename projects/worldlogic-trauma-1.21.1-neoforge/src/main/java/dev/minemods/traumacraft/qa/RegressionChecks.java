@@ -23,7 +23,7 @@ public final class RegressionChecks {
     private static void require(boolean ok,String message){if(!ok)throw new IllegalStateException(message);}
     public static void register(RegisterCommandsEvent e){
         var root=Commands.literal("traumaqa").requires(s->s.hasPermission(4)&&s.getEntity()==null);
-        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity"})
+        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal"})
             root.then(Commands.literal(name).executes(c->run(c.getSource(),name)));
         e.getDispatcher().register(root);
     }
@@ -173,6 +173,35 @@ public final class RegressionChecks {
                     require(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(ModItems.SPLINT.get()).toString().equals("traumacraft:splint"),"existing splint identity");
                     require(BodyStates.KEY.equals("traumacraft_body"),"existing save key");
                 }
+                case "thermal" -> {
+                    var none=dev.minemods.traumacraft.integration.ThermalCondition.NONE;
+                    var cold=dev.minemods.traumacraft.integration.ThermalCondition.VERY_COLD;
+                    var extreme=dev.minemods.traumacraft.integration.ThermalCondition.HYPERTHERMIA;
+                    var key=dev.minemods.traumacraft.integration.ThermalBridge.MOD_ID;
+                    var tag=new net.minecraft.nbt.CompoundTag();
+                    tag.putDouble("body",35.5);tag.putString("stage","VERY_COLD");
+                    p.getPersistentData().put(key,tag.copy());
+                    if(!net.neoforged.fml.ModList.get().isLoaded(key))
+                        require(dev.minemods.traumacraft.integration.ThermalBridge.condition(p)==none,"absent addon ignores NBT");
+                    else require(dev.minemods.traumacraft.integration.ThermalBridge.condition(p)==cold,"installed addon stage");
+                    require(dev.minemods.traumacraft.integration.ThermalCondition.read(true,true,"VERY_COLD",35.5)==cold,"thermal contract");
+                    require(dev.minemods.traumacraft.integration.ThermalCondition.read(false,true,"VERY_COLD",35.5)==none,"optional absence");
+                    require(dev.minemods.traumacraft.integration.ThermalCondition.read(true,false,"VERY_COLD",35.5)==none,"inactive player");
+                    require(dev.minemods.traumacraft.integration.ThermalCondition.read(true,true,"INVALID",37)==none,"unknown stage");
+                    require(dev.minemods.traumacraft.integration.ThermalCondition.read(true,true,"VERY_COLD",Double.NaN)==none,"invalid temperature");
+                    b.damage(BodyPart.LEFT_ARM,10);b.setFractured(BodyPart.LEFT_LEG,true);b.stabilize(BodyPart.LEFT_LEG,20);
+                    float hp=b.health(BodyPart.LEFT_ARM);
+                    dev.minemods.traumacraft.integration.ThermalBridge.recover(b,extreme,true);
+                    require(b.health(BodyPart.LEFT_ARM)==hp&&b.stabilized(BodyPart.LEFT_LEG),"extreme pauses recovery");
+                    dev.minemods.traumacraft.integration.ThermalBridge.recover(b,cold,true);
+                    require(b.health(BodyPart.LEFT_ARM)>hp&&b.stabilized(BodyPart.LEFT_LEG),"half-speed recovery");
+                    dev.minemods.traumacraft.integration.ThermalBridge.recover(b,cold,true);
+                    require(!b.fractured(BodyPart.LEFT_LEG),"two half-speed recovery steps");
+                    b.damage(BodyPart.RIGHT_ARM,10);float right=b.health(BodyPart.RIGHT_ARM);
+                    require(MedicalAction.apply(p,b,MedicalItem.Type.MEDKIT,BodyPart.RIGHT_ARM)&&b.health(BodyPart.RIGHT_ARM)>right,"medicine remains functional");
+                    require(p.getPersistentData().getCompound(key).equals(tag),"thermal state not mutated");
+                    p.getPersistentData().remove(key);
+                }
                 case "damage" -> {
                     TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);
                     require(b.health(BodyPart.LEFT_LEG)==45&&b.health(BodyPart.RIGHT_LEG)==45&&b.fractured(BodyPart.LEFT_LEG),"single fall damage");
@@ -185,6 +214,6 @@ public final class RegressionChecks {
             }
             source.sendSuccess(()->Component.literal("TRAUMAQA "+name+" PASS"),false);return 1;
         }catch(Exception ex){source.sendFailure(Component.literal("TRAUMAQA "+name+" FAIL: "+ex));return 0;}
-        finally{TreatmentManager.forget(p);p.inventoryMenu.setCarried(ItemStack.EMPTY);BodyStates.forget(p);p.getPersistentData().remove(BodyStates.KEY);p.getPersistentData().remove("worldlogic_injury");p.getPersistentData().remove("worldlogic_arm_until");}
+        finally{p.getPersistentData().remove("worldlogic_thermal");TreatmentManager.forget(p);p.inventoryMenu.setCarried(ItemStack.EMPTY);BodyStates.forget(p);p.getPersistentData().remove(BodyStates.KEY);p.getPersistentData().remove("worldlogic_injury");p.getPersistentData().remove("worldlogic_arm_until");}
     }
 }
