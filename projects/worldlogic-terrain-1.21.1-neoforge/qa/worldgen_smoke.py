@@ -63,7 +63,7 @@ TREE_EXPECTED = {
     "mixed_forest": {"oak","birch","dark_oak","willow","maple","beech"},
     "continental_taiga": {"larch","spruce","pine","fir","cedar"},
     "temperate_marsh": {"willow","alder"},
-    "equatorial_rainforest": {"jungle"},
+    "equatorial_rainforest": {"jungle","ebony","mahogany"},
 }
 MEADOW = SPECIES["plains"]
 

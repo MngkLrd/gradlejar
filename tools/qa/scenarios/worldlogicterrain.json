@@ -1208,7 +1208,7 @@
     {
       "name": "Mixed meadow and frost patch mechanics",
       "command": "worldlogicterrain patch_check",
-      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 35 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed",
+      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed",
       "assertion": true
     }
   ],
@@ -3935,6 +3935,402 @@
       "id": "form-alder_spreading",
       "kind": "mechanic",
       "subject": "alder_spreading actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-palm-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:palm_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-palm-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:palm_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-palm-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:palm_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-palm-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:palm_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-palm-recipe",
+      "kind": "recipe",
+      "subject": "palm log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-date_palm-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:date_palm_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-date_palm-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:date_palm_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-date_palm-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:date_palm_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-date_palm-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:date_palm_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-date_palm-recipe",
+      "kind": "recipe",
+      "subject": "date_palm log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-baobab-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:baobab_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-baobab-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:baobab_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-baobab-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:baobab_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-baobab-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:baobab_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-baobab-recipe",
+      "kind": "recipe",
+      "subject": "baobab log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-ebony-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:ebony_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-ebony-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:ebony_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-ebony-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:ebony_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-ebony-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:ebony_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-ebony-recipe",
+      "kind": "recipe",
+      "subject": "ebony log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-mahogany-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:mahogany_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-mahogany-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:mahogany_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-mahogany-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:mahogany_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-mahogany-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:mahogany_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-mahogany-recipe",
+      "kind": "recipe",
+      "subject": "mahogany log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-palm_young",
+      "kind": "mechanic",
+      "subject": "palm_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-palm_leaning",
+      "kind": "mechanic",
+      "subject": "palm_leaning actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-date_palm_young",
+      "kind": "mechanic",
+      "subject": "date_palm_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-date_palm_tall",
+      "kind": "mechanic",
+      "subject": "date_palm_tall actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-baobab_young",
+      "kind": "mechanic",
+      "subject": "baobab_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-baobab_ancient",
+      "kind": "mechanic",
+      "subject": "baobab_ancient actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-ebony_young",
+      "kind": "mechanic",
+      "subject": "ebony_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-ebony_spreading",
+      "kind": "mechanic",
+      "subject": "ebony_spreading actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-mahogany_young",
+      "kind": "mechanic",
+      "subject": "mahogany_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-mahogany_canopy",
+      "kind": "mechanic",
+      "subject": "mahogany_canopy actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "palm-sand-and-obstacles",
+      "kind": "mechanic",
+      "subject": "sand support; no stone growth; atomic rejection of obstacle",
       "checks": [
         {
           "backend": "server",

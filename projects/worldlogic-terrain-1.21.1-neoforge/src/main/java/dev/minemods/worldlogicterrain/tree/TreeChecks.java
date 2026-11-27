@@ -64,7 +64,17 @@ public final class TreeChecks {
         new Form("beech_young","worldlogicterrain","beech",7),
         new Form("beech_tall","worldlogicterrain","beech",14),
         new Form("alder_young","worldlogicterrain","alder",6),
-        new Form("alder_spreading","worldlogicterrain","alder",9)
+        new Form("alder_spreading","worldlogicterrain","alder",9),
+        new Form("palm_young","worldlogicterrain","palm",7),
+        new Form("palm_leaning","worldlogicterrain","palm",11),
+        new Form("date_palm_young","worldlogicterrain","date_palm",7),
+        new Form("date_palm_tall","worldlogicterrain","date_palm",12),
+        new Form("baobab_young","worldlogicterrain","baobab",7),
+        new Form("baobab_ancient","worldlogicterrain","baobab",12),
+        new Form("ebony_young","worldlogicterrain","ebony",7),
+        new Form("ebony_spreading","worldlogicterrain","ebony",10),
+        new Form("mahogany_young","worldlogicterrain","mahogany",8),
+        new Form("mahogany_canopy","worldlogicterrain","mahogany",13)
     );
     private record Shape(int logs,int leaves,int branches,int height,int connectedLeaves){}
     private static void require(boolean value,String msg){if(!value)throw new IllegalStateException(msg);}
@@ -104,7 +114,7 @@ public final class TreeChecks {
                     clear(l);
                     if(!place(l,form.feature(),seed))continue;
                     shape=shape(l,block(form.namespace(),form.wood()+"_log"),block(form.namespace(),form.wood()+"_leaves"));
-                    boolean branched=List.of("oak_spreading","oak_ancient","oak_windswept","willow_young","willow_spreading","acacia_stunted","acacia_spreading","cherry_spreading","jungle_canopy","jungle_giant","pine_windswept","cedar_spreading","maple_spreading","alder_spreading").contains(form.feature());
+                    boolean branched=List.of("oak_spreading","oak_ancient","oak_windswept","willow_young","willow_spreading","acacia_stunted","acacia_spreading","cherry_spreading","jungle_canopy","jungle_giant","pine_windswept","cedar_spreading","maple_spreading","alder_spreading","palm_leaning","baobab_ancient","ebony_spreading","mahogany_canopy").contains(form.feature());
                     if(shape.logs()>=4&&shape.leaves()>=6&&shape.height()>=form.minHeight()-1&&shape.connectedLeaves()>0&&(!branched||shape.branches()>0))break;
                     shape=null;
                 }
@@ -113,7 +123,7 @@ public final class TreeChecks {
                 if(form.feature().equals("oak_ancient"))ancient=shape.height();
             }
             require(ancient>young,"Old oak does not exceed young oak height");
-            for(String species:new String[]{"willow","larch","pine","fir","cedar","maple","beech","alder"}){
+            for(String species:new String[]{"willow","larch","pine","fir","cedar","maple","beech","alder","palm","date_palm","baobab","ebony","mahogany"}){
                 clear(l);
                 Block log=block("worldlogicterrain",species+"_log");
                 Block leaves=block("worldlogicterrain",species+"_leaves");
@@ -141,6 +151,16 @@ public final class TreeChecks {
                 require(grown.logs()>3&&grown.leaves()>5,"Sapling did not grow "+species);
             }
             clear(l);
+            l.setBlock(CENTER.below(),Blocks.SAND.defaultBlockState(),2);
+            require(block("worldlogicterrain","palm_sapling").defaultBlockState().canSurvive(l,CENTER),"Palm sapling rejected sand");
+            require(place(l,"palm_young",83),"Palm failed on sand");
+            clear(l);
+            l.setBlock(CENTER.below(),Blocks.STONE.defaultBlockState(),2);
+            require(!place(l,"palm_young",83),"Palm grew on stone");
+            clear(l);
+            l.setBlock(CENTER.above(3),Blocks.STONE.defaultBlockState(),2);
+            require(!place(l,"palm_young",83)&&l.getBlockState(CENTER).isAir(),"Palm overwrote obstacle or partially placed");
+            clear(l);
             require(EcologicalTreeFeature.fallen(l,CENTER,"willow",Direction.EAST,4),"Fallen trunk did not generate");
             require(l.getBlockState(CENTER).getValue(RotatedPillarBlock.AXIS)==Direction.Axis.Y,"Missing vertical stump");
             for(int i=1;i<=4;i++)require(l.getBlockState(CENTER.east(i)).is(block("worldlogicterrain","willow_log"))&&l.getBlockState(CENTER.east(i)).getValue(RotatedPillarBlock.AXIS)==Direction.Axis.X,"Wrong fallen log "+i);
@@ -148,7 +168,7 @@ public final class TreeChecks {
             l.setBlock(CENTER.east(2),Blocks.STONE.defaultBlockState(),2);
             require(!EcologicalTreeFeature.fallen(l,CENTER,"willow",Direction.EAST,4)&&l.getBlockState(CENTER).isAir(),"Fallen log overwrote obstacle");
             clear(l);
-            for(String species:List.of("oak","birch","spruce","willow","larch","pine","fir","cedar","maple","beech","alder")){
+            for(String species:List.of("oak","birch","spruce","willow","larch","pine","fir","cedar","maple","beech","alder","palm","date_palm","baobab","ebony","mahogany")){
                 require(EcologicalTreeFeature.recruit(l,CENTER,species),"Forest recruitment failed "+species);
                 require(l.getBlockState(CENTER).getBlock() instanceof SaplingBlock,"Recruit not a real sapling "+species);
                 require(!EcologicalTreeFeature.recruit(l,CENTER,species),"Recruit replaced existing sapling");

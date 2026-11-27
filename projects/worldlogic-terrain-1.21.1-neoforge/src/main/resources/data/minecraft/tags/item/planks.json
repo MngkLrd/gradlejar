@@ -8,6 +8,11 @@
     "worldlogicterrain:cedar_planks",
     "worldlogicterrain:maple_planks",
     "worldlogicterrain:beech_planks",
-    "worldlogicterrain:alder_planks"
+    "worldlogicterrain:alder_planks",
+    "worldlogicterrain:palm_planks",
+    "worldlogicterrain:date_palm_planks",
+    "worldlogicterrain:baobab_planks",
+    "worldlogicterrain:ebony_planks",
+    "worldlogicterrain:mahogany_planks"
   ]
 }

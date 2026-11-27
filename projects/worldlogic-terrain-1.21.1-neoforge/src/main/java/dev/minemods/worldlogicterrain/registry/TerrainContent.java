@@ -50,6 +50,11 @@ public final class TerrainContent {
         tree("maple");
         tree("beech");
         tree("alder");
+        tree("palm");
+        tree("date_palm");
+        tree("baobab");
+        tree("ebony");
+        tree("mahogany");
         plant("meadow_grass", false);
         plant("frosted_grass", false);
         plant("dense_meadow_grass", false);

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "worldlogicterrain:ebony_log"
+    }
+  ],
+  "result": {
+    "id": "worldlogicterrain:ebony_planks",
+    "count": 4
+  }
+}

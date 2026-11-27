@@ -1,11 +1,11 @@
 {
   "slug": "worldlogicterrain",
-  "version": "1.2.2-rc1",
+  "version": "1.2.3-rc1",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "worldlogicterrain-neoforge-mc1.21.1-1.2.2-rc1.jar",
+  "jar_glob": "worldlogicterrain-neoforge-mc1.21.1-1.2.3-rc1.jar",
   "minimum_loader_version": "21.1.80",
   "compile_loader_version": "21.1.262",
   "qa": {

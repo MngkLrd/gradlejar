@@ -16,6 +16,16 @@
     "worldlogicterrain:beech_log",
     "worldlogicterrain:beech_planks",
     "worldlogicterrain:alder_log",
-    "worldlogicterrain:alder_planks"
+    "worldlogicterrain:alder_planks",
+    "worldlogicterrain:palm_log",
+    "worldlogicterrain:palm_planks",
+    "worldlogicterrain:date_palm_log",
+    "worldlogicterrain:date_palm_planks",
+    "worldlogicterrain:baobab_log",
+    "worldlogicterrain:baobab_planks",
+    "worldlogicterrain:ebony_log",
+    "worldlogicterrain:ebony_planks",
+    "worldlogicterrain:mahogany_log",
+    "worldlogicterrain:mahogany_planks"
   ]
 }

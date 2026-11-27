@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "worldlogicterrain:block/mahogany_log"
+    },
+    "axis=x": {
+      "model": "worldlogicterrain:block/mahogany_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=z": {
+      "model": "worldlogicterrain:block/mahogany_log",
+      "x": 90
+    }
+  }
+}

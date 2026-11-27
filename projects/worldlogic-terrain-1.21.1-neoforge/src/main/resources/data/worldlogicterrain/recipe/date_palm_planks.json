@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "worldlogicterrain:date_palm_log"
+    }
+  ],
+  "result": {
+    "id": "worldlogicterrain:date_palm_planks",
+    "count": 4
+  }
+}

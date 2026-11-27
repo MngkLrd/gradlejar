@@ -8,6 +8,11 @@
     "worldlogicterrain:cedar_sapling",
     "worldlogicterrain:maple_sapling",
     "worldlogicterrain:beech_sapling",
-    "worldlogicterrain:alder_sapling"
+    "worldlogicterrain:alder_sapling",
+    "worldlogicterrain:palm_sapling",
+    "worldlogicterrain:date_palm_sapling",
+    "worldlogicterrain:baobab_sapling",
+    "worldlogicterrain:ebony_sapling",
+    "worldlogicterrain:mahogany_sapling"
   ]
 }

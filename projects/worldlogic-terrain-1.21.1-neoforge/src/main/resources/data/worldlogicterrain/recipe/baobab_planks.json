@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "worldlogicterrain:baobab_log"
+    }
+  ],
+  "result": {
+    "id": "worldlogicterrain:baobab_planks",
+    "count": 4
+  }
+}

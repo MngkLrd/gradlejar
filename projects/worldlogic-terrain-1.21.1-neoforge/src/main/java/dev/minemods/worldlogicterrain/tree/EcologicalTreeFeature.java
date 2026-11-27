@@ -29,12 +29,13 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguration> {
     public static final DeferredRegister<Feature<?>> FEATURES=DeferredRegister.create(BuiltInRegistries.FEATURE,"worldlogicterrain");
     public static final Supplier<Feature<?>> ECOLOGICAL=FEATURES.register("ecological_trees",EcologicalTreeFeature::new);
-    private enum Zone { OPEN,TEMPERATE,BOREAL,WET,DRY,TROPICAL,CHERRY,NONE }
+    private enum Zone { OPEN,TEMPERATE,BOREAL,WET,DRY,TROPICAL,CHERRY,COAST,NONE }
     private record Form(String feature,String wood) {}
     public EcologicalTreeFeature(){super(NoneFeatureConfiguration.CODEC);}
     private static TagKey<Biome> tag(String name){return TagKey.create(Registries.BIOME,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","tree_"+name));}
     private static boolean tagged(Holder<Biome> biome,String zone){return biome.is(tag(zone));}
     private static Zone zone(Holder<Biome> b){
+        if(tagged(b,"coast"))return Zone.COAST;
         if(tagged(b,"cherry"))return Zone.CHERRY;
         if(tagged(b,"wet"))return Zone.WET;
         if(tagged(b,"boreal"))return Zone.BOREAL;
@@ -45,7 +46,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         return Zone.NONE;
     }
     private static String id(Holder<Biome> b){return b.unwrapKey().map(k->k.location().getPath()).orElse("");}
-    private static String namespace(String wood){return java.util.Set.of("willow","larch","pine","fir","cedar","maple","beech","alder").contains(wood)?"worldlogicterrain":"minecraft";}
+    private static String namespace(String wood){return java.util.Set.of("willow","larch","pine","fir","cedar","maple","beech","alder","palm","date_palm","baobab","ebony","mahogany").contains(wood)?"worldlogicterrain":"minecraft";}
     static boolean soil(BlockState state){return state.is(BlockTags.DIRT)||state.is(Blocks.MUD)||state.is(Blocks.CLAY);}
     @Override public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context){
         WorldGenLevel level=context.level();
@@ -71,7 +72,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             if(ground.is(Blocks.SNOW)&&level.ensureCanWrite(pos.below(2))&&soil(level.getBlockState(pos.below(2)))){
                 pos=pos.below();ground=level.getBlockState(pos.below());
             }
-            if(!soil(ground)){
+            if(!soil(ground)&&!(zone==Zone.COAST&&ground.is(BlockTags.SAND))){
                 // Mangrove roots alone may start in shallow water; no water or terrain is replaced by this selection step.
                 if(!mangrove||!ground.is(Blocks.WATER))continue;
                 BlockPos shallow=pos.below();
@@ -79,6 +80,8 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
                 else continue;
             }
             var local=sampler.sample(pos,biome,ground);
+            double temperature=local.map(CoreHabitat.Sample::temperature).orElse((double)biome.value().getBaseTemperature()*25.0);
+            if(zone==Zone.COAST&&temperature<18)continue;
             double field=grove(seed,x,z);
             double base=switch(zone){
                 case OPEN -> name.equals("snowy_plains")?.035:.105;
@@ -88,6 +91,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
                 case DRY -> .15;
                 case TROPICAL -> .82;
                 case CHERRY -> .42;
+                case COAST -> .34;
                 default -> 0;
             };
             // Smooth, seeded groves instead of independent uniform rolls.
@@ -95,10 +99,10 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             if(zone==Zone.BOREAL&&!name.equals("forest_tundra")) probability=Math.max(.24,probability);
             if(local.isPresent()){
                 var h=local.get();
-                if(h.zone().equals("MARINE")||h.zone().equals("SUBTERRANEAN")||h.slope()>42||h.surface().equals("ROCKY")&&zone!=Zone.BOREAL||h.surface().equals("SANDY")&&!mangrove)continue;
+                if(h.zone().equals("MARINE")||h.zone().equals("SUBTERRANEAN")||h.slope()>42||h.surface().equals("ROCKY")&&zone!=Zone.BOREAL||h.surface().equals("SANDY")&&!mangrove&&zone!=Zone.COAST)continue;
                 if((h.temperature() < -10 && zone!=Zone.BOREAL)||name.equals("arctic_wetland"))continue;
                 if(zone==Zone.BOREAL&&h.temperature()>23)probability*=.25;
-                if(h.coldness()>.88&&zone!=Zone.BOREAL||h.dryness()>.92&&zone!=Zone.DRY&&zone!=Zone.BOREAL)continue;
+                if(h.coldness()>.88&&zone!=Zone.BOREAL||h.dryness()>.92&&zone!=Zone.DRY&&zone!=Zone.BOREAL&&zone!=Zone.COAST)continue;
                 if(zone==Zone.BOREAL&&h.dryness()>.92)probability*=.35;
                 probability*=Math.max(.15,Math.min(1.2,.35+.8*h.fertility()+.25*h.strength()));
                 if(h.slope()>25)probability*=.55;
@@ -161,8 +165,17 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
                 yield moisture>.55||random.nextBoolean()?form("spruce_dense","spruce"):form("pine_tall","pine");
             }
             case WET -> name.contains("mangrove")?form("mangrove_coast","mangrove"):random.nextBoolean()?form(young?"alder_young":"alder_spreading","alder"):form(young?"willow_young":"willow_spreading","willow");
-            case DRY -> form(young?"acacia_stunted":"acacia_spreading","acacia");
-            case TROPICAL -> form(!young&&fertility>.46&&random.nextInt(6)==0?"jungle_giant":"jungle_canopy","jungle");
+
+            case COAST -> moisture<.45?form(young?"date_palm_young":"date_palm_tall","date_palm"):form(young?"palm_young":"palm_leaning","palm");
+            case DRY -> {
+                if(local.map(CoreHabitat.Sample::temperature).orElse(24.0)>21&&random.nextInt(5)==0)yield form(young?"baobab_young":"baobab_ancient","baobab");
+                yield form(young?"acacia_stunted":"acacia_spreading","acacia");
+            }
+            case TROPICAL -> {
+                if(random.nextInt(5)==0)yield form(young?"ebony_young":"ebony_spreading","ebony");
+                if(random.nextInt(3)==0)yield form(young?"mahogany_young":"mahogany_canopy","mahogany");
+                yield form(!young&&fertility>.46&&random.nextInt(6)==0?"jungle_giant":"jungle_canopy","jungle");
+            }
             case CHERRY -> form("cherry_spreading","cherry");
             default -> form("oak_young","oak");
         };

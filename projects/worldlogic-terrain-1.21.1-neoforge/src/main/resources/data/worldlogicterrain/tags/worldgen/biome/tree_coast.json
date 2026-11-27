@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:beach",
+    {
+      "id": "worldlogic:tropical_sandy_coast",
+      "required": false
+    }
+  ]
+}
