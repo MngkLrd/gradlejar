@@ -107,7 +107,7 @@ public final class TallGrassPlainsFeature extends Feature<NoneFeatureConfigurati
             if(grass)l.setBlock(new BlockPos(x,231,z),Blocks.SHORT_GRASS.defaultBlockState(),Block.UPDATE_ALL);
         }
     }
-    private static void check(ServerLevel l){
+    static void check(ServerLevel l){
         require(sufficientlyFlat(new int[]{64,65,66,64,65,66,65,66,67},9),"flat plains rejected");
         require(!sufficientlyFlat(new int[]{64,65,66,64,65,66,65,66,68},9),"steep surface accepted");
         require(!sufficientlyFlat(new int[]{64,64,64,64,64,64,64,64,64},6),"insufficient open area accepted");

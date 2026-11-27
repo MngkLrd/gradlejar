@@ -28,9 +28,10 @@ public final class TerrainPatchChecks {
           .then(Commands.literal("patch_check").executes(c->{
             try{
                 check(c.getSource().getLevel());
+                TallGrassPlainsFeature.check(c.getSource().getLevel());
                 dev.minemods.worldlogicterrain.tree.TreeChecks.verify(c.getSource().getLevel());
                 int nativeCount=dev.minemods.worldlogicterrain.water.AquaticChecks.verify(c.getSource().getLevel());
-                c.getSource().sendSuccess(()->Component.literal("Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed"),false);
+                c.getSource().sendSuccess(()->Component.literal("Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation"),false);
                 return 1;
             }catch(IllegalStateException ex){c.getSource().sendFailure(Component.literal(ex.getMessage()));return 0;}
           })));

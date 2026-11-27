@@ -752,12 +752,6 @@
       "assertion": true
     },
     {
-      "name": "Flat plains tall grass generation",
-      "command": "worldlogicterrain tall_grass_check",
-      "expect": "Tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation",
-      "assertion": true
-    },
-    {
       "command": "fill 1 220 1 14 220 14 minecraft:dirt",
       "expect": "Successfully filled"
     },
@@ -1214,7 +1208,7 @@
     {
       "name": "Mixed meadow and frost patch mechanics",
       "command": "worldlogicterrain patch_check",
-      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed",
+      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation",
       "assertion": true
     }
   ],
@@ -4355,7 +4349,7 @@
         },
         {
           "backend": "server",
-          "name": "Flat plains tall grass generation"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     }
