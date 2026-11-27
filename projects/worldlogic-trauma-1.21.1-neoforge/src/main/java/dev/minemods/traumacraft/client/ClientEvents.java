@@ -24,6 +24,7 @@ public final class ClientEvents {
         e.register(ModMenus.MEDICAL_POUCH.get(),MedicalPouchScreen::new);
     }
     private static void registerLayers(RegisterGuiLayersEvent e){
+        e.registerAboveAll(ResourceLocation.fromNamespaceAndPath(TraumaCraft.MOD_ID,"thermal_screen_effects"),ThermalScreenEffects::render);
         e.registerAboveAll(ResourceLocation.fromNamespaceAndPath(TraumaCraft.MOD_ID,"injury_screen_effects"),TraumaticScreenEffects::render);
         e.registerAboveAll(ResourceLocation.fromNamespaceAndPath(TraumaCraft.MOD_ID,"trauma_hud"),TraumaHud::render);
     }
@@ -35,6 +36,6 @@ public final class ClientEvents {
         }
     }
     private static void logout(ClientPlayerNetworkEvent.LoggingOut e){
-        ClientBodyState.clear();ClientTreatmentState.accept(new TreatmentProgressPacket(0,0));
+        ThermalScreenEffects.reset();ClientBodyState.clear();ClientTreatmentState.accept(new TreatmentProgressPacket(0,0));
     }
 }

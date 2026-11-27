@@ -189,6 +189,9 @@ public final class RegressionChecks {
                     require(dev.minemods.traumacraft.integration.ThermalCondition.read(true,false,"VERY_COLD",35.5)==none,"inactive player");
                     require(dev.minemods.traumacraft.integration.ThermalCondition.read(true,true,"INVALID",37)==none,"unknown stage");
                     require(dev.minemods.traumacraft.integration.ThermalCondition.read(true,true,"VERY_COLD",Double.NaN)==none,"invalid temperature");
+                    require(dev.minemods.traumacraft.integration.ThermalCondition.actual("HYPERTHERMIA","SUNSTROKE",40)==dev.minemods.traumacraft.integration.ThermalCondition.SUNSTROKE,"confirmed solar injury");
+                    require(dev.minemods.traumacraft.integration.ThermalCondition.actual("HYPERTHERMIA","HEATSTROKE",40)==dev.minemods.traumacraft.integration.ThermalCondition.HEATSTROKE,"confirmed heat injury");
+                    require(dev.minemods.traumacraft.integration.ThermalCondition.actual("COMFORTABLE","SUNSTROKE",37)==dev.minemods.traumacraft.integration.ThermalCondition.COMFORTABLE,"stale diagnosis ignored");
                     b.damage(BodyPart.LEFT_ARM,10);b.setFractured(BodyPart.LEFT_LEG,true);b.stabilize(BodyPart.LEFT_LEG,20);
                     float hp=b.health(BodyPart.LEFT_ARM);
                     dev.minemods.traumacraft.integration.ThermalBridge.recover(b,extreme,true);

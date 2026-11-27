@@ -48,7 +48,26 @@ public final class TraumaHud {
         int mask=activeMask();
         for(int i=0;i<ICONS.length;i++){
             int row=HudStatusLayout.row(mask,i);
-            if(row>=0)draw(gui,ICONS[i],x+(row%columns)*HudStatusLayout.STEP,y+(row/columns)*HudStatusLayout.STEP);
+            if(row>=0){
+                int dx=x+(row%columns)*HudStatusLayout.STEP,dy=y+(row/columns)*HudStatusLayout.STEP;
+                if(i>=4)drawThermal(gui,dx,dy);
+                else draw(gui,ICONS[i],dx,dy);
+            }
+        }
+    }
+    private static void drawThermal(GuiGraphics g,int x,int y){
+        var state=ClientBodyState.thermal();
+        // Clear snow crystal vs flame; clinical sunstroke uses the distinct solar glyph.
+        ResourceLocation sprite=switch(state){
+            case SUNSTROKE -> icon("thermal_sun");
+            case HEATSTROKE -> icon("thermal_stroke");
+            default -> ICONS[state.cold()?4:5];
+        };
+        draw(g,sprite,x,y);
+        int shade=state.cold()?0xFFC0E5F4:0xFFFFC16A;
+        for(int i=0;i<state.severity();i++){
+            g.fill(x+2+i*4,y+14,x+5+i*4,y+16,0xFF3E4146);
+            g.fill(x+2+i*4,y+14,x+4+i*4,y+15,shade);
         }
     }
     private static void draw(GuiGraphics gui,ResourceLocation icon,int x,int y) {

@@ -11,7 +11,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 public final class ModNetwork {
     private ModNetwork(){}
     public static void register(RegisterPayloadHandlersEvent event){
-        var registrar=event.registrar("4");
+        var registrar=event.registrar("5");
         registrar.playToClient(SyncBodyStatePacket.TYPE,SyncBodyStatePacket.STREAM_CODEC,(m,c)->{
             if(FMLEnvironment.dist==Dist.CLIENT)ClientBodyState.accept(m);
         });
