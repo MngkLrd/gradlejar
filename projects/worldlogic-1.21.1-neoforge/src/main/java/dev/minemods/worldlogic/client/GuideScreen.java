@@ -16,7 +16,7 @@ public final class GuideScreen extends Screen{
  private int chapter,page,chapterOffset,scroll;private boolean russian;
  private int left,top,panelW,panelH,navW,contentX,contentW,textY,visibleLines;
  private List<FormattedCharSequence> lines=List.of();
- private final List<Preview> previews=new ArrayList<>();
+ private final List<Preview> previews=new ArrayList<>();private List<net.minecraft.resources.ResourceLocation> icons=List.of();
  private record Preview(ItemStack stack,int x,int y,int size){}
  public GuideScreen(Screen parent){super(Component.literal("WorldLogic"));this.parent=parent;}
  private String label(String ru,String en){return russian?ru:en;}
@@ -35,6 +35,7 @@ public final class GuideScreen extends Screen{
  }
  private GuideBook.Chapter current(){return chapters.get(chapter);}
  private GuideBook.Page article(){return current().pages().get(page);}
+ void select(int c,int p){chapter=c;page=p;scroll=0;Minecraft.getInstance().setScreen(this);}
  private void changeChapter(int value){chapter=value;page=0;scroll=0;rebuildWidgets();}
  private void changePage(int delta){if(chapters.isEmpty())return;page=Math.max(0,Math.min(current().pages().size()-1,page+delta));scroll=0;rebuildWidgets();}
  @Override protected void init(){
@@ -43,9 +44,11 @@ public final class GuideScreen extends Screen{
   int usable=dev.minemods.worldlogic.api.client.WorldLogicTabs.contentWidth(width);
   panelW=Math.min(620,usable-8);panelH=Math.min(360,height-8);left=(usable-panelW)/2;top=(height-panelH)/2;
   navW=Math.max(78,Math.min(140,panelW/3));contentX=left+navW+12;contentW=panelW-navW-20;
-  int bottom=top+panelH;int navRows=Math.max(1,(panelH-78)/22);
+  int bottom=top+panelH;int navRows=Math.max(1,(panelH-122)/22);
   chapterOffset=Math.max(0,Math.min(chapterOffset,Math.max(0,chapters.size()-navRows)));
   for(int i=0;i<navRows&&chapterOffset+i<chapters.size();i++){int k=chapterOffset+i;button((k==chapter?"> ":"")+chapters.get(k).title().get(russian),left+5,top+30+i*22,navW-9,()->changeChapter(k));}
+  button(label("Указатель","Index"),left+5,bottom-88,navW-9,()->Minecraft.getInstance().setScreen(new GuideIndexScreen(this,chapters,russian)));
+  button(label("Рецепты","Recipes"),left+5,bottom-66,navW-9,()->Minecraft.getInstance().setScreen(new GuideRecipesScreen(this,russian)));
   int half=(navW-11)/2;button("^",left+5,bottom-44,half,()->{chapterOffset=Math.max(0,chapterOffset-navRows);rebuildWidgets();});button("v",left+7+half,bottom-44,half,()->{chapterOffset=Math.min(Math.max(0,chapters.size()-navRows),chapterOffset+navRows);rebuildWidgets();});
   button(label("Назад","Back"),left+5,bottom-22,navW-9,this::onClose);
   TabRail.install(this,this::addRenderableWidget);
@@ -60,7 +63,8 @@ public final class GuideScreen extends Screen{
   int gap=4, total=models.size()*(size+gap)-gap,px=contentX+Math.max(0,(contentW-total)/2);
   int py=top+42;
   for(var id:models){var stack=new ItemStack(BuiltInRegistries.ITEM.get(id));if(!stack.isEmpty())previews.add(new Preview(stack,px,py,size));px+=size+gap;}
-  textY=py+(previews.isEmpty()?0:size+10);
+  icons=article().icons().stream().filter(id->Minecraft.getInstance().getResourceManager().getResource(id).isPresent()).limit(Math.max(0,contentW/20)).toList();
+  textY=py+(previews.isEmpty()?0:size+10)+(icons.isEmpty()?0:22);
   var list=new ArrayList<FormattedCharSequence>();
   for(String paragraph:article().body().get(russian)){list.addAll(font.split(lit(paragraph),Math.max(20,contentW)));list.add(FormattedCharSequence.EMPTY);}
   lines=List.copyOf(list);visibleLines=Math.max(1,(bottom-32-textY)/11);scroll=Math.min(scroll,Math.max(0,lines.size()-visibleLines));
@@ -80,6 +84,7 @@ public final class GuideScreen extends Screen{
     g.fill(p.x,p.y,p.x+p.size,p.y+p.size,0xffc7ad82);g.renderOutline(p.x,p.y,p.size,p.size,0xffa38b67);
     g.pose().pushPose();g.pose().translate(p.x+2,p.y+2,0);float scale=(p.size-4)/16f;g.pose().scale(scale,scale,1);g.renderItem(p.stack,0,0);g.pose().popPose();
    }
+   int iconX=contentX;for(var id:icons){g.blit(id,iconX,textY-20,0,0,16,16,16,16);iconX+=20;}
    for(int i=0;i<visibleLines&&scroll+i<lines.size();i++)g.drawString(font,lines.get(scroll+i),contentX,textY+i*11,0xff372a20,false);
    String position=(page+1)+"/"+current().pages().size();
    g.drawCenteredString(font,position,contentX+contentW/2,bottom-35,0xff6d563e);

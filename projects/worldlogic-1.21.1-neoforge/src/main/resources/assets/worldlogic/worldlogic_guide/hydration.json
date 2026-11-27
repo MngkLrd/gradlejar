@@ -7,7 +7,7 @@
     "ru": "Hydration · Вода",
     "en": "Hydration · Water"
   },
-  "source": "Hydration 0.4.3",
+  "source": "Hydration 0.5.0 candidate",
   "pages": [
     {
       "id": "drink",
@@ -106,6 +106,48 @@
           "An intake draws a source immediately above it. Clay pipes are directional: attachment face is inlet, look direction is outlet. Connections must match.",
           "Water flows only toward a lower destination; up to 24 pipes per route, 250 mB/s per source. Redstone blocks flow.",
           "A stationary filter needs a cartridge. One provides 12000 mB throughput, up to 24000 mB stored charge. Pumps and physical lake depletion are not implemented."
+        ]
+      }
+    },
+    {
+      "id": "water_quality",
+      "title": {
+        "ru": "Качество и хранение воды",
+        "en": "Water quality and storage"
+      },
+      "models": [
+        "hydration:clay_jug",
+        "hydration:water_barrel"
+      ],
+      "body": {
+        "ru": [
+          "Профиль воды сохраняется при заборе, переливании и смешивании. Открытые ёмкости стареют быстрее защищённых; защищённая ёмкость не стерильна.",
+          "Старение рассчитывается по игровым тикам, не по часам вне игры. При следующем обращении учитывается прошедшее игровое время. Соль и загрязнение влияют на усвоение."
+        ],
+        "en": [
+          "Water profile is captured at filling and transfer. Open containers age faster than protected ones; protected is not sterile.",
+          "Aging uses elapsed game ticks, not offline real time. Salt and contamination affect absorbed hydration."
+        ]
+      }
+    },
+    {
+      "id": "electrolytes",
+      "title": {
+        "ru": "Обезвоживание и электролиты",
+        "en": "Dehydration and electrolytes"
+      },
+      "models": [
+        "hydration:clay_jug",
+        "minecraft:water_bucket"
+      ],
+      "body": {
+        "ru": [
+          "Границы ступеней гидратации: 70, 50, 25 и 10 игровых единиц. Индекс электролитов от 0 до 100, равновесие около 50.",
+          "Солёная вода может уменьшать итоговое восстановление или даже давать потерю жидкости. Загрязнение передаётся медицинскому API, когда совместимый Trauma установлен; иначе работает резервная локальная потеря жидкости."
+        ],
+        "en": [
+          "Hydration stage thresholds are 70, 50, 25 and 10 game points. Electrolytes range from 0 to 100, balanced at 50.",
+          "Salt can reduce or reverse absorbed gain. Contamination is reported to compatible Trauma when present; otherwise fallback fluid loss applies."
         ]
       }
     }

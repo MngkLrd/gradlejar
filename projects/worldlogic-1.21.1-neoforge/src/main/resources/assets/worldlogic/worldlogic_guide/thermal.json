@@ -7,7 +7,7 @@
     "ru": "Temperature · Климат тела",
     "en": "Temperature · Body climate"
   },
-  "source": "Thermal 0.8.3-rc1",
+  "source": "Thermal 0.8.4-rc1",
   "pages": [
     {
       "id": "body",
@@ -130,6 +130,94 @@
           "Charge warm items by right-clicking a lit furnace or campfire; charcoal warmer needs coal in the offhand. Cold items charge on ice; wet cloth at a water cauldron.",
           "Comfort works from the hotbar, does not stack and loses charge over time. Right-click a fan for a short cooling pulse.",
           "These are not substitutes for clothing or shelter; comfort is limited by body and felt temperature."
+        ]
+      }
+    },
+    {
+      "id": "solar_exposure",
+      "title": {
+        "ru": "Солнце, тень и ветер",
+        "en": "Sun, shade and wind"
+      },
+      "models": [
+        "worldlogic_thermal:sun_hat",
+        "worldlogic_thermal:woven_canopy"
+      ],
+      "body": {
+        "ru": [
+          "Солнечная радиация и укрытие влияют на ощущаемую среду. Навес блокирует прямое солнце до восьми блоков под ним. Воздух, ветер и влажность остаются отдельными параметрами.",
+          "Солнцезащитная одежда и навес помогают в жаре; солнце не является отдельным глобальным регулятором температуры."
+        ],
+        "en": [
+          "Solar exposure and shelter affect perceived conditions. A canopy removes direct solar exposure within eight blocks below it. Air, wind and humidity remain separate parameters.",
+          "Sun-protective clothing and shade help in heat without changing global climate."
+        ]
+      }
+    },
+    {
+      "id": "fiber_processing",
+      "title": {
+        "ru": "Обработка травы: пошагово",
+        "en": "Grass fiber processing"
+      },
+      "models": [
+        "worldlogic_thermal:raw_fiber_bundle",
+        "worldlogic_thermal:stone_scraper",
+        "worldlogic_thermal:plant_thread"
+      ],
+      "body": {
+        "ru": [
+          "Собери подходящую траву ПКМ пустой рукой. Положи сырой пучок на подходящую каменную поверхность ПКМ.",
+          "Обработай все 64 ячейки ЛКМ. Скребок обрабатывает крест из пяти ячеек; Shift+ЛКМ снимает незавершённый пучок. После завершения следующий клик даёт четыре волокна.",
+          "Из волокон сделай нить, затем ткань. Используй рецепты текущего мира; прялка и станок повышают выход."
+        ],
+        "en": [
+          "Collect eligible grass with empty-hand use; place the raw bundle on suitable stone.",
+          "Process all 64 cells. A scraper works a five-cell cross; sneak-left retrieves partial work. Click again after completion for four fibers.",
+          "Make thread and cloth; use live recipes. Spindle and loom improve yield."
+        ]
+      }
+    },
+    {
+      "id": "leather_processing",
+      "title": {
+        "ru": "Подготовка кожи",
+        "en": "Leather preparation"
+      },
+      "models": [
+        "minecraft:leather",
+        "worldlogic_thermal:fur_coat"
+      ],
+      "body": {
+        "ru": [
+          "Рама обработки кожи подготавливает ванильную кожу. Самостоятельная система добычи сырой шкуры животных пока не реализована.",
+          "Подготовленная кожа и войлок применяются в меховой одежде. Проверь рецепты и подсказки станка в текущей сборке."
+        ],
+        "en": [
+          "The hide frame prepares vanilla leather. Separate raw animal-hide drops are not implemented yet.",
+          "Prepared leather and felt are used in fur-lined clothing. Consult live recipes and station tooltips."
+        ]
+      }
+    },
+    {
+      "id": "first_clothes",
+      "title": {
+        "ru": "Первая одежда",
+        "en": "First clothing"
+      },
+      "models": [
+        "worldlogic_thermal:grass_coat",
+        "worldlogic_thermal:linen_clothes",
+        "worldlogic_thermal:fur_boots"
+      ],
+      "body": {
+        "ru": [
+          "Начни с растительного волокна и ранней травяной одежды. Используй слот брони; климатические вещи не дают боевой защиты.",
+          "Дальше переходи к ткани, летней одежде, меху и обуви в зависимости от условий. Отдельных слоёв нижнего белья пока нет."
+        ],
+        "en": [
+          "Start with plant fiber and early grass clothes. Equip in armor slots; climate clothes offer no combat defense.",
+          "Progress to woven fabric, summer clothing, fur and footwear according to conditions. Separate underwear layers are not implemented."
         ]
       }
     }

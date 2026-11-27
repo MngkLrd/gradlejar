@@ -990,6 +990,17 @@
           "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
         }
       ]
+    },
+    {
+      "id": "rc33-guide-encyclopedia-index",
+      "kind": "other",
+      "subject": "Bilingual index search, full result count, unknown search, individual medical articles and six icon references; GUI and synchronized recipe display require client evidence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
     }
   ]
 }

@@ -7,7 +7,7 @@
     "ru": "Traumatic · Медицина",
     "en": "Traumatic · Medicine"
   },
-  "source": "Trauma 0.5.5 RC17",
+  "source": "Trauma 0.5.5 RC17 / registry, HUD and localized item effects",
   "pages": [
     {
       "id": "anatomy",
@@ -105,6 +105,536 @@
           "A splint helps with fractures. Analgesics relieve pain but do not replace injury treatment. Ordinary medkits cannot revive a destroyed limb.",
           "A surgical kit can restore 15 anatomical HP to a destroyed limb. Bleeding and temperature affect recovery.",
           "With impaired legs, forward+jump at a solid one-block ledge allows an assisted mantle if support and limb condition permit. One arm is slower; damage or lost support interrupts it."
+        ]
+      }
+    },
+    {
+      "id": "zone_hp",
+      "title": {
+        "ru": "Здоровье семи зон",
+        "en": "Seven anatomical HP pools"
+      },
+      "models": [
+        "traumacraft:medkit"
+      ],
+      "body": {
+        "ru": [
+          "Голова: 35 HP. Грудь: 85 HP. Живот: 70 HP. Каждая рука: 60 HP. Каждая нога: 65 HP. Всего 440 анатомических HP.",
+          "В анатомическом меню видны текущие и максимальные HP каждой зоны, общий запас и число разрушенных зон. При наведении видны раны и функция конечности. Нулевые HP конечности не восстанавливаются обычной аптечкой."
+        ],
+        "en": [
+          "Head 35 HP, chest 85, stomach 70, each arm 60, each leg 65. Total 440 anatomical HP.",
+          "The anatomy screen shows current/max local HP, total HP and destroyed zones. Hover for wounds and limb function. A zero-HP limb cannot be restored by a normal medkit."
+        ]
+      }
+    },
+    {
+      "id": "hud_status",
+      "title": {
+        "ru": "Значки состояния на HUD",
+        "en": "HUD status symbols"
+      },
+      "models": [
+        "traumacraft:bandage",
+        "traumacraft:splint",
+        "traumacraft:analgesic_tablets"
+      ],
+      "body": {
+        "ru": [
+          "Слева направо в порядке появления: кровотечение, перелом, сотрясение, действие обезболивающего, холод и перегрев. Показываются только активные состояния.",
+          "Цвет силуэта относится к состоянию отдельной зоны; отметки кровотечения и перелома не заменяют её шкалу HP. При здоровом теле без активных состояний HUD скрывается."
+        ],
+        "en": [
+          "In order: bleeding, fracture, concussion, active pain relief, cold and heat stress. Only active states appear.",
+          "Body colors describe local condition. Bleeding and fracture overlays do not replace HP. The HUD hides when no injuries or status flags are active."
+        ]
+      },
+      "icons": [
+        "traumacraft:textures/gui/status/bleeding.png",
+        "traumacraft:textures/gui/status/fracture.png",
+        "traumacraft:textures/gui/status/concussion.png",
+        "traumacraft:textures/gui/status/painkiller.png",
+        "traumacraft:textures/gui/status/thermal_cold.png",
+        "traumacraft:textures/gui/status/thermal_heat.png"
+      ]
+    },
+    {
+      "id": "blood_pain_shock",
+      "title": {
+        "ru": "Кровь, боль и шок",
+        "en": "Blood, pain and shock"
+      },
+      "models": [
+        "traumacraft:bandage",
+        "traumacraft:analgesic_tablets"
+      ],
+      "body": {
+        "ru": [
+          "Внизу анатомии показаны процент крови, боль и стадия шока; отдельно число слабых и сильных кровотечений. Останови потерю крови прежде, чем лечить HP.",
+          "Шок уменьшает эффективность движения и действий. Стадии 1, 2, 3 дают системные множители 0,88 / 0,65 / 0,25. Обезболивание не сращивает кости и не возвращает HP."
+        ],
+        "en": [
+          "The anatomy footer shows blood percent, pain and shock stage; light and heavy bleeding counts are separate. Stop bleeding before restoring HP.",
+          "Shock stages 1, 2, 3 apply systemic multipliers .88/.65/.25. Pain relief does not repair bones or tissue."
+        ]
+      },
+      "icons": [
+        "traumacraft:textures/gui/status/bleeding.png",
+        "traumacraft:textures/gui/status/painkiller.png"
+      ]
+    },
+    {
+      "id": "limb_function",
+      "title": {
+        "ru": "Функция рук и ног",
+        "en": "Arm and leg function"
+      },
+      "models": [
+        "traumacraft:splint"
+      ],
+      "body": {
+        "ru": [
+          "При нулевых HP функция конечности равна нулю. Незакреплённый перелом ограничивает функцию до 32%, зафиксированный до 68%, даже если HP высокие.",
+          "Для бега обе ноги должны работать лучше 40%, шок ниже второй стадии. При шоке 3 предметы недоступны; двуручное действие требует не менее 35% функции каждой руки."
+        ],
+        "en": [
+          "At zero HP limb function is zero. An unstabilized fracture caps it at 32%; stabilization raises the cap to 68%.",
+          "Sprinting requires both legs above 40% function and shock below stage 2. Shock 3 blocks item use; two-handed use requires both arms at least 35% functional."
+        ]
+      },
+      "icons": [
+        "traumacraft:textures/gui/status/fracture.png"
+      ]
+    },
+    {
+      "id": "treat_controls",
+      "title": {
+        "ru": "Как применять лечение",
+        "en": "Applying treatment"
+      },
+      "models": [
+        "traumacraft:bandage",
+        "traumacraft:medkit",
+        "traumacraft:splint"
+      ],
+      "body": {
+        "ru": [
+          "Возьми медицинский предмет и удерживай ПКМ: игра автоматически выбирает подходящую зону. В анатомическом интерфейсе можно выбрать конкретную область.",
+          "Следи за таймером лечения. После принятия действия предмет уже расходуется; прерванное лечение может не дать результата. Наведение на предмет показывает время и эффект."
+        ],
+        "en": [
+          "Hold use with a medical item to auto-select an eligible zone. Select a specific zone in the anatomy interface instead if needed.",
+          "Watch the treatment countdown. Accepted treatments consume the item; interruption may prevent completion. Hover the item for actual effect and use time."
+        ]
+      }
+    },
+    {
+      "id": "wounds",
+      "title": {
+        "ru": "Типы повреждений",
+        "en": "Wound types"
+      },
+      "models": [
+        "traumacraft:herbal_poultice",
+        "traumacraft:bandage",
+        "traumacraft:splint"
+      ],
+      "body": {
+        "ru": [
+          "Ушиб, резаная, колотая и рваная раны, ожог и обморожение отображаются отдельно в подсказке зоны. Перелом и сотрясение имеют свои признаки.",
+          "Лечение выбирают по состоянию: компресс для ушиба, перевязочный материал для крови, шина для перелома. Один предмет не исправляет автоматически все состояния."
+        ],
+        "en": [
+          "Contusion, cut, puncture, laceration, burn and frostbite are distinct wound flags in the zone tooltip. Fracture and concussion have separate indicators.",
+          "Select treatment by condition: poultice for bruising, dressings for bleeding, splint for fracture. One item does not automatically repair every state."
+        ]
+      },
+      "icons": [
+        "traumacraft:textures/gui/status/concussion.png",
+        "traumacraft:textures/gui/status/fracture.png"
+      ]
+    },
+    {
+      "id": "thermal_recovery",
+      "title": {
+        "ru": "Температура и восстановление",
+        "en": "Temperature and recovery"
+      },
+      "models": [
+        "traumacraft:medkit"
+      ],
+      "body": {
+        "ru": [
+          "При наличии Thermal холод и перегрев отображаются отдельными значками. Состояние температуры влияет на естественное восстановление тканей и костей.",
+          "Обморожение конечности и системное переохлаждение различаются. Одежда и укрытие устраняют причину охлаждения; медицинский предмет сам по себе не заменяет их."
+        ],
+        "en": [
+          "With Thermal installed, cold and heat use separate status icons. Thermal stress affects passive tissue and bone recovery.",
+          "Peripheral frostbite differs from systemic hypothermia. Clothing and shelter address exposure; a medical item cannot replace them."
+        ]
+      },
+      "icons": [
+        "traumacraft:textures/gui/status/thermal_cold.png",
+        "traumacraft:textures/gui/status/thermal_heat.png"
+      ]
+    },
+    {
+      "id": "item_analgesic_tablets",
+      "title": {
+        "ru": "Обезболивающие таблетки",
+        "en": "Analgesic Tablets"
+      },
+      "models": [
+        "traumacraft:analgesic_tablets"
+      ],
+      "body": {
+        "ru": [
+          "Временно уменьшает боль. Не лечит ткани и не даёт сопротивление урону.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Temporarily reduces pain. No tissue healing or damage resistance.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_rag_dressing",
+      "title": {
+        "ru": "Самодельная повязка",
+        "en": "Improvised Dressing"
+      },
+      "models": [
+        "traumacraft:rag_dressing"
+      ],
+      "body": {
+        "ru": [
+          "Останавливает только слабое кровотечение. Не восстанавливает ткани и не останавливает сильное кровотечение.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Stops light bleeding only. Does not restore tissue or stop heavy bleeding.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_herbal_poultice",
+      "title": {
+        "ru": "Травяной компресс",
+        "en": "Herbal poultice"
+      },
+      "models": [
+        "traumacraft:herbal_poultice"
+      ],
+      "body": {
+        "ru": [
+          "Облегчает боль при ушибе и немного восстанавливает ткани. Не лечит переломы, кровотечения и разрушенные зоны.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Briefly relieves contusion pain and restores a little tissue. Cannot treat fractures, bleeding or destroyed zones.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_bandage",
+      "title": {
+        "ru": "Бинт",
+        "en": "Bandage"
+      },
+      "models": [
+        "traumacraft:bandage"
+      ],
+      "body": {
+        "ru": [
+          "Останавливает слабое кровотечение или снижает сильное до слабого.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Stops light bleeding or reduces heavy bleeding to light.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_splint",
+      "title": {
+        "ru": "Шина",
+        "en": "Splint"
+      },
+      "models": [
+        "traumacraft:splint"
+      ],
+      "body": {
+        "ru": [
+          "Фиксирует перелом. Кость срастается постепенно во время отдыха. ПКМ выбирает незафиксированный перелом.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Stabilizes a fracture. The bone recovers gradually while resting. Use in hand to select an unstabilized fracture.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_medkit",
+      "title": {
+        "ru": "Аптечка",
+        "en": "Medkit"
+      },
+      "models": [
+        "traumacraft:medkit"
+      ],
+      "body": {
+        "ru": [
+          "Восстанавливает до 25 HP живой зоны. Не останавливает кровотечение и не восстанавливает разрушенную конечность.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Restores up to 25 HP to living tissue. Does not stop bleeding or restore destroyed limbs.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_hemostatic_gel",
+      "title": {
+        "ru": "Гемостатический гель",
+        "en": "Hemostatic Gel"
+      },
+      "models": [
+        "traumacraft:hemostatic_gel"
+      ],
+      "body": {
+        "ru": [
+          "Останавливает сильное кровотечение любой зоны, восстанавливает до 10 HP живой ткани.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Stops severe bleeding on any zone, restores up to 10 HP of living tissue.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_tourniquet",
+      "title": {
+        "ru": "Кровоостанавливающий жгут",
+        "en": "Tourniquet"
+      },
+      "models": [
+        "traumacraft:tourniquet"
+      ],
+      "body": {
+        "ru": [
+          "Экстренно останавливает сильное кровотечение только на руке или ноге.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Stops severe bleeding on an arm or leg only.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_medical_pouch",
+      "title": {
+        "ru": "Полевая медицинская сумка",
+        "en": "Field Medical Pouch"
+      },
+      "models": [
+        "traumacraft:medical_pouch"
+      ],
+      "body": {
+        "ru": [
+          "Четыре ячейки для медикаментов. ПКМ в основной руке открывает сумку. Большая аптечка занимает колонку 1×2.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Four medicine slots. Right-click in the main hand to open. An oversized kit reserves a 1×2 column.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_trauma_kit",
+      "title": {
+        "ru": "Расширенный травмокомплект",
+        "en": "Advanced Trauma Kit"
+      },
+      "models": [
+        "traumacraft:trauma_kit"
+      ],
+      "body": {
+        "ru": [
+          "Первая помощь: останавливает кровотечение, фиксирует перелом, восстанавливает до 45 HP живой зоны.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "First aid: stops bleeding, splints a fracture and restores up to 45 HP of living tissue.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_surgical_kit",
+      "title": {
+        "ru": "Хирургический набор",
+        "en": "Surgical Kit"
+      },
+      "models": [
+        "traumacraft:surgical_kit"
+      ],
+      "body": {
+        "ru": [
+          "Восстанавливает 15 HP разрушенной конечности, останавливает кровотечение и фиксирует перелом.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Restores 15 HP of a destroyed limb, stops bleeding and stabilizes fractures.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_raw_herbs",
+      "title": {
+        "ru": "Пучок лекарственных трав",
+        "en": "Medicinal herb bundle"
+      },
+      "models": [
+        "traumacraft:raw_herbs"
+      ],
+      "body": {
+        "ru": [
+          "ПКМ по камню или доскам: разложить. ЛКМ по травам рукой, кремнем или булыжником: обработать. Shift + ЛКМ: снять незавершённую заготовку.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Right-click stone or planks to spread. Left-click cells with an empty hand, flint or cobblestone to crush. Sneak + left-click to retrieve partial work.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_crushed_herbs",
+      "title": {
+        "ru": "Растёртые травы",
+        "en": "Crushed herbs"
+      },
+      "models": [
+        "traumacraft:crushed_herbs"
+      ],
+      "body": {
+        "ru": [
+          "После обработки всех 16 участков снять заготовку ЛКМ. Используется для компрессов и экстракта.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Crush all 16 cells, then left-click to collect. Used in poultices and extract.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_sterile_fabric",
+      "title": {
+        "ru": "Стерильная ткань",
+        "en": "Sterile Fabric"
+      },
+      "models": [
+        "traumacraft:sterile_fabric"
+      ],
+      "body": {
+        "ru": [
+          "Чистый перевязочный материал для бинтов, жгутов и аптечек.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Clean cloth material used for dressings and medical kits.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_herbal_extract",
+      "title": {
+        "ru": "Травяной экстракт",
+        "en": "Herbal Extract"
+      },
+      "models": [
+        "traumacraft:herbal_extract"
+      ],
+      "body": {
+        "ru": [
+          "Растительный концентрат для создания медикаментов и инъекций.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "A crafted botanical concentrate used in healing remedies.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_antiseptic",
+      "title": {
+        "ru": "Антисептический раствор",
+        "en": "Antiseptic Solution"
+      },
+      "models": [
+        "traumacraft:antiseptic"
+      ],
+      "body": {
+        "ru": [
+          "Реагент для создания медицинских наборов и инъекций.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "A refined medical reagent for emergency kits and injectors.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_syringe_body",
+      "title": {
+        "ru": "Пустой инъектор",
+        "en": "Empty Injector"
+      },
+      "models": [
+        "traumacraft:syringe_body"
+      ],
+      "body": {
+        "ru": [
+          "Заготовка шприца для изготовления лечебных и усиливающих инъекций.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Crafting component for prepared injection syringes.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
+        ]
+      }
+    },
+    {
+      "id": "item_medical_polymer",
+      "title": {
+        "ru": "Медицинский полимер",
+        "en": "Medical Polymer"
+      },
+      "models": [
+        "traumacraft:medical_polymer"
+      ],
+      "body": {
+        "ru": [
+          "Гибкий прочный материал для шин, жгутов и медицинских кейсов.",
+          "Рецепт, если он доступен в установленной сборке, находится в разделе «Рецепты». Наведи курсор на модель, чтобы увидеть актуальную игровую подсказку."
+        ],
+        "en": [
+          "Tough flexible material for braces, tourniquets and cases.",
+          "If available in the installed pack, its recipe appears in Recipes. Hover the item model for the live in-game tooltip."
         ]
       }
     }
