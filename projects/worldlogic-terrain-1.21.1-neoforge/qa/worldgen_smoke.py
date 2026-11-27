@@ -66,6 +66,41 @@ TREE_EXPECTED = {
     "equatorial_rainforest": {"jungle","ebony","mahogany"},
 }
 MEADOW = SPECIES["plains"]
+FRUIT_HOSTS = {
+    "hanging_apple": "minecraft:oak_leaves",
+    "hanging_pear": "minecraft:oak_leaves",
+    "hanging_plum": "minecraft:oak_leaves",
+    "hanging_fig": "minecraft:oak_leaves",
+    "hanging_mango": "minecraft:jungle_leaves",
+    "hanging_coconut": "worldlogicterrain:palm_leaves",
+    "hanging_date": "worldlogicterrain:date_palm_leaves",
+    "hanging_baobab_fruit": "worldlogicterrain:baobab_leaves",
+}
+
+def biome_at(section, i):
+    biomes = section.get("biomes", {})
+    palette = biomes.get("palette", [])
+    if not palette:
+        return "unknown"
+    qi = ((i//256)//4)*16 + ((i//16)%16//4)*4 + (i%16)//4
+    index = 0 if len(palette)==1 else unpack(biomes["data"], qi, max(1,(len(palette)-1).bit_length()))
+    return str(palette[index])
+
+def block_at(sections, y, x, z):
+    sec = sections.get(y//16)
+    if sec is None:
+        return "minecraft:air"
+    states = sec.get("block_states", {})
+    palette = states.get("palette", [])
+    if not palette:
+        return "minecraft:air"
+    index = 0 if len(palette)==1 else unpack(states["data"],(y%16)*256+z*16+x,max(4,(len(palette)-1).bit_length()))
+    return str(palette[index]["Name"])
+
+def winter_name(name):
+    name = name.split(":")[-1]
+    return any(s in name for s in ("tundra","snow","frozen","arctic","polar","glacier","ice_spikes")) or name in {"grove","jagged_peaks","frozen_peaks"}
+
 
 def unpack(data, index, bits):
     per = 64 // bits
@@ -138,12 +173,15 @@ def scan(region, positions):
     surface = Counter()
     substrates = {}
     tall_columns = set()
+    fruit_biomes, fruit_ages = Counter(), Counter()
+    winter_fruits = unsupported_fruits = 0
     for cx, cz in positions:
         chunk = read_chunk(region, cx, cz)
         if chunk is None or str(chunk.get("Status", "")) not in {"minecraft:full", "full"}:
             continue
         full += 1
         surface.update(surface_biomes(chunk, substrates))
+        sections_by_y = {int(sec["Y"]): sec for sec in chunk.get("sections", [])}
         for section in chunk.get("sections", []):
             biomes.update(map(str, section.get("biomes", {}).get("palette", [])))
             states = section.get("block_states", {})
@@ -152,12 +190,28 @@ def scan(region, positions):
                        if name.startswith("worldlogicterrain:") or name in {"minecraft:short_grass","minecraft:tall_grass"} or (name.startswith("minecraft:") and name.endswith(("_log","_leaves")))}
             if not targets:
                 continue
+            def record_fruit(i, index):
+                name = targets[index]
+                if name not in FRUIT_HOSTS:
+                    return 0, 0
+                biome = biome_at(section,i)
+                fruit_biomes[biome] += 1
+                entry = states["palette"][index]
+                fruit_ages[str(entry.get("Properties",{}).get("age","missing"))] += 1
+                y=int(section["Y"])*16+i//256
+                supported=block_at(sections_by_y,y+1,i%16,(i//16)%16)==FRUIT_HOSTS[name]
+                return int(winter_name(biome)),int(not supported)
             if len(palette) == 1:
                 counts[targets[0]] += 4096
+                if targets[0] in FRUIT_HOSTS:
+                    for i in range(4096):
+                        winter, unsupported = record_fruit(i,0)
+                        winter_fruits += winter
+                        unsupported_fruits += unsupported
                 for i in range(256):
                     if palette[0]=="minecraft:short_grass": grass_columns.add((cx,cz,i))
                     elif palette[0]=="minecraft:tall_grass": tall_columns.add((cx,cz,i))
-                    elif palette[0].startswith("worldlogicterrain:") and not targets[0].endswith(("_log","_leaves","_planks","_sapling")): addon_columns.add((cx,cz,i))
+                    elif palette[0].startswith("worldlogicterrain:") and not targets[0].startswith("hanging_") and not targets[0].endswith(("_log","_leaves","_planks","_sapling")): addon_columns.add((cx,cz,i))
                     if targets[0] in MEADOW:
                         meadow_columns.add((cx*16 + i%16, cz*16 + i//16))
                 continue
@@ -169,9 +223,13 @@ def scan(region, positions):
                 index = (int(packed[i // per]) >> ((i % per) * bits)) & mask
                 if index in targets:
                     counts[targets[index]] += 1
+                    if targets[index] in FRUIT_HOSTS:
+                        winter, unsupported = record_fruit(i,index)
+                        winter_fruits += winter
+                        unsupported_fruits += unsupported
                     if palette[index]=="minecraft:short_grass": grass_columns.add((cx,cz,i%256))
                     elif palette[index]=="minecraft:tall_grass": tall_columns.add((cx,cz,i%256))
-                    elif palette[index].startswith("worldlogicterrain:") and not targets[index].endswith(("_log","_leaves","_planks","_sapling")): addon_columns.add((cx,cz,i%256))
+                    elif palette[index].startswith("worldlogicterrain:") and not targets[index].startswith("hanging_") and not targets[index].endswith(("_log","_leaves","_planks","_sapling")): addon_columns.add((cx,cz,i%256))
                     if targets[index] in MEADOW:
                         meadow_columns.add((cx*16 + i%16, cz*16 + (i%256)//16))
     # Connected 4-neighbour components from actual stored block positions.
@@ -198,7 +256,11 @@ def scan(region, positions):
                     "grass_only_gap_tiles_8x8": gap_tiles,
                     "vanilla_tall_grass_columns": len(tall_columns),
                     "tall_grass_tiles_8x8": len({tile(p) for p in tall_columns}),
-                    "surface_substrates_by_biome": {k:dict(v) for k,v in substrates.items()}}
+                    "surface_substrates_by_biome": {k:dict(v) for k,v in substrates.items()},
+                    "fruit_blocks": sum(counts.get(n,0) for n in FRUIT_HOSTS),
+                    "fruit_species": {n:counts[n] for n in FRUIT_HOSTS if counts[n]},
+                    "fruit_biomes": dict(fruit_biomes), "fruit_ages":dict(fruit_ages),
+                    "winter_fruit_blocks":winter_fruits, "unsupported_fruit_blocks":unsupported_fruits}
     return full, biomes, counts, len(addon_columns), len(grass_columns), distribution, surface
 
 def main():
@@ -359,6 +421,8 @@ def main():
                 require(any(r.get("all_terrain_blocks",{}).get("willow_log",0)+r.get("all_terrain_blocks",{}).get("larch_log",0)>0 for r in passed),"No new tree species verified in RC26")
             if native_water:
                 require(any(r.get("all_terrain_blocks",{}).get("water_lily",0)>0 for r in report["results"]),"No generated aquatic lily found in sampled natural chunks")
+            require(sum(r.get("fruit_blocks",0) for r in report["results"])>0,"No actual hanging fruit found in sampled natural canopies")
+            require(not any(r.get("winter_fruit_blocks",0) or r.get("unsupported_fruit_blocks",0) or "missing" in r.get("fruit_ages",{}) for r in report["results"]),"Natural fruit on winter biome, missing support, or invalid growth state")
             require(not any(r["status"] == "FAIL" for r in report["results"]), "A located target biome has no expected generated vegetation")
             try:
                 conn.cmd("stop")
