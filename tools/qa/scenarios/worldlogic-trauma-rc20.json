@@ -109,6 +109,12 @@
       "expect": "TRAUMAQA ownership PASS",
       "assertion": true,
       "name": "TR-OWNERSHIP: registered damage event and Trauma API remain active with Core legacy injuries disabled"
+    },
+    {
+      "command": "traumaqa frostcompat",
+      "expect": "TRAUMAQA frostcompat PASS",
+      "assertion": true,
+      "name": "TR-FROST-COMPAT: legacy local exposure at -17 C, modern API ownership, vanilla freeze and insulation"
     }
   ],
   "coverage": [
@@ -543,6 +549,48 @@
         {
           "backend": "server",
           "name": "TR-OWNERSHIP: registered damage event and Trauma API remain active with Core legacy injuries disabled"
+        }
+      ]
+    },
+    {
+      "id": "tr-frost-legacy",
+      "kind": "mechanic",
+      "subject": "Legacy -17 C unprotected dose produces four limb injuries, insulation and warming controls",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-FROST-COMPAT: legacy local exposure at -17 C, modern API ownership, vanilla freeze and insulation"
+        }
+      ]
+    },
+    {
+      "id": "tr-frost-ownership",
+      "kind": "mechanic",
+      "subject": "Modern Thermal version excludes legacy dose, direct API accepts four limb injuries without duplicate hearts",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-FROST-COMPAT: legacy local exposure at -17 C, modern API ownership, vanilla freeze and insulation"
+        }
+      ]
+    },
+    {
+      "id": "tr-freeze-local",
+      "kind": "mechanic",
+      "subject": "Vanilla freeze distributed across peripheral limbs and synchronized wound flags",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-FROST-COMPAT: legacy local exposure at -17 C, modern API ownership, vanilla freeze and insulation"
         }
       ]
     }

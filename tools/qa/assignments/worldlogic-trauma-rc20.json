@@ -940,5 +940,14 @@
     "combined_core_rc32": "NOT_RUN: latest Core RC32 CI failed",
     "client": "NOT_RUN",
     "protocol": 9
+  },
+  "rc17": {
+    "version": "0.5.5-rc17",
+    "legacy": "Thermal 0.7.0 successful build has no peripheral sender, compatibility reads existing felt/wet fields",
+    "modern": "Thermal >=0.8.0-rc1 uses public API v1 only; no fallback dose",
+    "systemic": "custom clinical hypothermia chest damage remains distinct; vanilla freezing peripheral",
+    "tests": "traumaqa frostcompat",
+    "combined": "NOT_RUN: latest Thermal 0.8.1 CI failed settlement climate assertion; standalone 0.7.0 artifact lacks release dependency URL",
+    "protocol": 9
   }
 }

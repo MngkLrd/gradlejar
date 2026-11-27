@@ -4,6 +4,7 @@ import dev.minemods.traumacraft.climb.ClimbManager;
 import dev.minemods.traumacraft.health.*;
 import dev.minemods.traumacraft.integration.WorldLogicBridge;
 import dev.minemods.traumacraft.integration.ThermalBridge;
+import dev.minemods.traumacraft.integration.LegacyFrostExposure;
 import dev.minemods.traumacraft.medical.TreatmentManager;
 import dev.minemods.traumacraft.network.ModNetwork;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,6 +31,7 @@ public final class TraumaEvents {
         TreatmentManager.forget(p);
         WorldLogicBridge.clearLegacyInjuries(p);
         BodyStates.resetForNewLife(p);
+        LegacyFrostExposure.clear(p);
         FunctionEvents.update(p);
         ModNetwork.progress(p,0,0);
     }
@@ -38,6 +40,7 @@ public final class TraumaEvents {
     }
     public static void onClone(PlayerEvent.Clone e) {
         BodyStates.copy(e.getOriginal(),e.getEntity(),e.isWasDeath());
+        LegacyFrostExposure.clonePlayer(e.getOriginal(),e.getEntity(),e.isWasDeath());
         if(e.isWasDeath() && e.getEntity() instanceof ServerPlayer p){
             WorldLogicBridge.clearLegacyInjuries(p);
             TreatmentManager.forget(p);
@@ -83,6 +86,11 @@ public final class TraumaEvents {
             // World Logic owns blast concussion; do not generate a second effect.
             return;
         }
+        // Vanilla freezing is peripheral tissue damage; Thermal clinical hypothermia is a separate systemic damage type.
+        if(source.is(net.minecraft.world.damagesource.DamageTypes.FREEZE)){
+            for(BodyPart limb:LegacyFrostExposure.LIMBS)b.wound(limb,amount*.75f,WoundKind.FROSTBITE);
+            return;
+        }
         boolean fire=source.is(DamageTypeTags.IS_FIRE);
         boolean projectile=source.is(DamageTypeTags.IS_PROJECTILE);
         boolean physical=!fire && (source.getEntity()!=null || projectile);
@@ -91,7 +99,6 @@ public final class TraumaEvents {
         // LivingDamageEvent.Pre already reflects armor/resistance. Do not apply armor again.
         WoundKind wound=null;
         if(fire)wound=WoundKind.BURN;
-        else if(source.is(net.minecraft.world.damagesource.DamageTypes.FREEZE))wound=WoundKind.FROSTBITE;
         else if(projectile)wound=WoundKind.PUNCTURE;
         else if(physical){
             var tool=source.getDirectEntity() instanceof net.minecraft.world.entity.LivingEntity attacker?attacker.getMainHandItem().getItem():null;
@@ -117,6 +124,10 @@ public final class TraumaEvents {
         TreatmentManager.tick(p);
         if(p.tickCount%20!=0) return;
         b.tickMedicalEffects();
+        if(LegacyFrostExposure.tick(p,b)){
+            TreatmentManager.cancel(p);
+            ClimbManager.cancel(p);
+        }
         if(!ClimbManager.active(p)&&WorldLogicBridge.resting(p)) {
             var thermal=ThermalBridge.condition(p);
             ThermalBridge.recover(b,thermal,p.tickCount%100==0);

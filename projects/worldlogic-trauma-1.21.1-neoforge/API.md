@@ -21,3 +21,6 @@ This documents the RC12 source contract; combined third-party runtime verificati
 
 ### Ownership arbitration (0.5.4)
 Trauma is the owner of medical injuries while installed. Core's `ruleEnabled("injuries")` / `ruleEnabled("shoulder_impact")` may be false specifically because Core delegates these legacy mechanics to Trauma. Do not use these switches to gate Trauma API calls. Living server-side survival/adventure players remain eligible independently of Core's legacy injury switches; creative/spectator players remain excluded.
+
+### Thermal ownership (0.5.5)
+Thermal >= 0.8.0-rc1 reports local FROSTBITE through the unchanged v1 API. HP does not run its legacy peripheral exposure adapter when this provider is installed. Thermal 0.7.x and older do not have a local injury sender; HP's compatibility adapter consumes existing felt/wet temperature data in that case only. Systemic hypothermia and local frostbite remain distinct.
