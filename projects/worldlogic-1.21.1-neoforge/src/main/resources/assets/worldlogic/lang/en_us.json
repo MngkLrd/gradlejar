@@ -102,5 +102,10 @@
   "biome.worldlogic.temperate_deciduous_forest": "Temperate deciduous forest",
   "biome.worldlogic.sclerophyll_woodland": "Sclerophyll woodland",
   "biome.worldlogic.rock_desert": "Rock desert",
-  "biome.worldlogic.seasonal_tropical_forest": "Seasonal tropical forest"
+  "biome.worldlogic.seasonal_tropical_forest": "Seasonal tropical forest",
+  "block.worldlogic.humus": "Humus",
+  "block.worldlogic.loam": "Loam",
+  "block.worldlogic.peat": "Peat",
+  "block.worldlogic.alluvial_silt": "Alluvial silt",
+  "block.worldlogic.frozen_soil": "Frozen soil"
 }

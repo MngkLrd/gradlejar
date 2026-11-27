@@ -102,5 +102,10 @@
   "biome.worldlogic.temperate_deciduous_forest": "Умеренный листопадный лес",
   "biome.worldlogic.sclerophyll_woodland": "Жестколистное редколесье",
   "biome.worldlogic.rock_desert": "Каменистая пустыня",
-  "biome.worldlogic.seasonal_tropical_forest": "Сезонный тропический лес"
+  "biome.worldlogic.seasonal_tropical_forest": "Сезонный тропический лес",
+  "block.worldlogic.humus": "Гумусовая почва",
+  "block.worldlogic.loam": "Суглинок",
+  "block.worldlogic.peat": "Торф",
+  "block.worldlogic.alluvial_silt": "Аллювиальный ил",
+  "block.worldlogic.frozen_soil": "Мёрзлая почва"
 }
