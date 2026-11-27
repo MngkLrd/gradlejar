@@ -61,6 +61,12 @@
       "expect": "TRAUMAQA thermal PASS",
       "assertion": true,
       "name": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation"
+    },
+    {
+      "command": "traumaqa respawn",
+      "expect": "TRAUMAQA respawn PASS",
+      "assertion": true,
+      "name": "TR-RESPAWN: healthy first join, death reset persisted, relog and nondeath clone preserve injury"
     }
   ],
   "coverage": [
@@ -215,6 +221,20 @@
         {
           "backend": "server",
           "name": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation"
+        }
+      ]
+    },
+    {
+      "id": "tr-respawn",
+      "kind": "mechanic",
+      "subject": "TR-RESPAWN: healthy first join, death reset persisted, relog and nondeath clone preserve injury",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-RESPAWN: healthy first join, death reset persisted, relog and nondeath clone preserve injury"
         }
       ]
     }

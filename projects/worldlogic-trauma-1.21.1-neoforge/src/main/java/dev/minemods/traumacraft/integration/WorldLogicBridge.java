@@ -21,6 +21,11 @@ public final class WorldLogicBridge {
              && p.getDeltaMovement().horizontalDistance()<.04 && !Balance.down(p);
     }
     public static BodyPart mainArm(Player p) { return p.getMainArm()==HumanoidArm.LEFT?BodyPart.LEFT_ARM:BodyPart.RIGHT_ARM; }
+    /** Trauma is authoritative for anatomy; old core timers must not become new injuries at login/respawn. */
+    public static void clearLegacyInjuries(Player p) {
+        p.getPersistentData().remove(LEG);
+        p.getPersistentData().remove(ARM);
+    }
     public static void migrateLegacy(Player p) {
         if (!active(p)) return;
         var tag=p.getPersistentData(); BodyState b=BodyStates.get(p);

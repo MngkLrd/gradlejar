@@ -27,8 +27,8 @@ public final class TraumaCraft {
         bus.addListener(TraumaEvents::onPlayerTick);
         bus.addListener(TraumaEvents::onLogin);
         bus.addListener(TraumaEvents::onLogout);
-        bus.addListener(TraumaEvents::onClone);
-        bus.addListener(TraumaEvents::onRespawn);
+        bus.addListener(EventPriority.LOWEST,TraumaEvents::onClone);
+        bus.addListener(EventPriority.LOWEST,TraumaEvents::onRespawn);
         bus.addListener(TraumaEvents::onDimension);
         bus.addListener(TraumaCommands::register);
         bus.addListener(RegressionChecks::register);

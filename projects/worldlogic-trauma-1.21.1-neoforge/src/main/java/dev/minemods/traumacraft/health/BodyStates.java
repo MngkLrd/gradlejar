@@ -25,9 +25,14 @@ public final class BodyStates {
         return true;
     }
     public static void forget(Player p) { CACHE.remove(p); }
+    /** Replace both cached and serialized state, even if a clone listener copied old NBT. */
+    public static void resetForNewLife(Player p) {
+        CACHE.put(p,new BodyState());
+        flush(p);
+    }
     public static void copy(Player from, Player to, boolean death) {
         CACHE.remove(to);
-        if (death) { to.getPersistentData().remove(KEY); return; }
+        if (death) { resetForNewLife(to); return; }
         CompoundTag tag=get(from).serializeNBT(from.registryAccess());
         to.getPersistentData().put(KEY,tag.copy());
     }

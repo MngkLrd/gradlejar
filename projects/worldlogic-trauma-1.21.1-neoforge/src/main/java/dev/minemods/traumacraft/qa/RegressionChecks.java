@@ -23,7 +23,7 @@ public final class RegressionChecks {
     private static void require(boolean ok,String message){if(!ok)throw new IllegalStateException(message);}
     public static void register(RegisterCommandsEvent e){
         var root=Commands.literal("traumaqa").requires(s->s.hasPermission(4)&&s.getEntity()==null);
-        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal"})
+        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn"})
             root.then(Commands.literal(name).executes(c->run(c.getSource(),name)));
         e.getDispatcher().register(root);
     }
@@ -204,6 +204,45 @@ public final class RegressionChecks {
                     require(MedicalAction.apply(p,b,MedicalItem.Type.MEDKIT,BodyPart.RIGHT_ARM)&&b.health(BodyPart.RIGHT_ARM)>right,"medicine remains functional");
                     require(p.getPersistentData().getCompound(key).equals(tag),"thermal state not mutated");
                     p.getPersistentData().remove(key);
+                }
+                case "respawn" -> {
+                    var legacy=p.getPersistentData();
+                    // First join with old core flags: no fabricated anatomy.
+                    BodyStates.forget(p);legacy.remove(BodyStates.KEY);
+                    legacy.putLong("worldlogic_injury",Long.MAX_VALUE);
+                    legacy.putLong("worldlogic_arm_until",Long.MAX_VALUE);
+                    TraumaEvents.initializeLogin(p);
+                    require(!BodyStates.get(p).hasInjury(),"first join must be healthy");
+                    require(!legacy.contains("worldlogic_injury")&&!legacy.contains("worldlogic_arm_until"),"legacy timers cleared");
+                    b=BodyStates.get(p);
+                    b.damage(BodyPart.LEFT_ARM,23);b.setBleeding(BodyPart.LEFT_ARM,2);
+                    b.setFractured(BodyPart.RIGHT_LEG,true);b.stabilize(BodyPart.RIGHT_LEG,4800);
+                    b.addConcussion(600);b.setPainkillerTicks(100);
+                    BodyStates.flush(p);BodyStates.forget(p);
+                    TraumaEvents.initializeLogin(p);
+                    require(BodyStates.get(p).health(BodyPart.LEFT_ARM)==37&&BodyStates.get(p).stabilized(BodyPart.RIGHT_LEG),"reconnect preserves injury");
+                    // Separate entity with copied persistent data, as on cloning.
+                    FakePlayer next=FakePlayerFactory.get(source.getLevel(),new GameProfile(UUID.nameUUIDFromBytes("trauma-qa-respawn-target".getBytes(java.nio.charset.StandardCharsets.UTF_8)),"TraumaQARespawn"));
+                    try{
+                        setFixtureMode(next,GameType.SURVIVAL);
+                        BodyStates.copy(p,next,false);
+                        require(BodyStates.get(next).health(BodyPart.LEFT_ARM)==37&&BodyStates.get(next).stabilized(BodyPart.RIGHT_LEG),"nondeath clone retains state");
+                        BodyStates.copy(p,next,true);
+                        require(!BodyStates.get(next).hasInjury(),"death clone healthy");
+                        // Simulate copied old data after clone, including cached injury.
+                        next.getPersistentData().put(BodyStates.KEY,p.getPersistentData().getCompound(BodyStates.KEY).copy());
+                        BodyStates.forget(next);
+                        require(BodyStates.get(next).hasInjury(),"stale copied NBT fixture");
+                        next.getPersistentData().putLong("worldlogic_injury",Long.MAX_VALUE);
+                        next.getPersistentData().putLong("worldlogic_arm_until",Long.MAX_VALUE);
+                        TraumaEvents.resetAfterDeath(next);
+                        BodyStates.forget(next);
+                        BodyState clean=BodyStates.get(next);
+                        for(BodyPart part:BodyPart.values())
+                            require(clean.health(part)==part.maximum&&clean.bleeding(part)==0&&!clean.fractured(part)&&!clean.stabilized(part),"respawn clean "+part);
+                        require(clean.concussionTicks()==0&&clean.painkillerTicks()==0&&clean.criticalGraceTicks()==0,"respawn clears timers");
+                        require(!next.getPersistentData().contains("worldlogic_injury")&&!next.getPersistentData().contains("worldlogic_arm_until"),"respawn clears legacy");
+                    }finally{BodyStates.forget(next);next.getPersistentData().remove(BodyStates.KEY);}
                 }
                 case "damage" -> {
                     TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);

@@ -15,14 +15,38 @@ public final class TraumaEvents {
     private static final ThreadLocal<Boolean> INTERNAL=ThreadLocal.withInitial(()->false);
     private TraumaEvents() {}
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent e) {
-        if(e.getEntity() instanceof ServerPlayer p){WorldLogicBridge.migrateLegacy(p);ModNetwork.sync(p);}
+        if(e.getEntity() instanceof ServerPlayer p){initializeLogin(p);ModNetwork.sync(p);}
+    }
+    public static void initializeLogin(ServerPlayer p) {
+        WorldLogicBridge.clearLegacyInjuries(p);
+        // Missing NBT means a new healthy body; persisted anatomy survives ordinary reconnects.
+        BodyStates.flush(p);
+        TreatmentManager.forget(p);
+        ModNetwork.progress(p,0,0);
+    }
+    public static void resetAfterDeath(ServerPlayer p) {
+        TreatmentManager.forget(p);
+        WorldLogicBridge.clearLegacyInjuries(p);
+        BodyStates.resetForNewLife(p);
+        ModNetwork.progress(p,0,0);
     }
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent e) {
         if(e.getEntity() instanceof ServerPlayer p){BodyStates.flush(p);BodyStates.forget(p);TreatmentManager.forget(p);}
     }
-    public static void onClone(PlayerEvent.Clone e) { BodyStates.copy(e.getOriginal(),e.getEntity(),e.isWasDeath()); }
+    public static void onClone(PlayerEvent.Clone e) {
+        BodyStates.copy(e.getOriginal(),e.getEntity(),e.isWasDeath());
+        if(e.isWasDeath() && e.getEntity() instanceof ServerPlayer p){
+            WorldLogicBridge.clearLegacyInjuries(p);
+            TreatmentManager.forget(p);
+        }
+        BodyStates.forget(e.getOriginal());
+    }
     public static void onRespawn(PlayerEvent.PlayerRespawnEvent e) {
-        if(e.getEntity() instanceof ServerPlayer p){TreatmentManager.forget(p);ModNetwork.sync(p);}
+        if(e.getEntity() instanceof ServerPlayer p){
+            if(!e.isEndConquered())resetAfterDeath(p);
+            else {TreatmentManager.forget(p);ModNetwork.progress(p,0,0);}
+            ModNetwork.sync(p);
+        }
     }
     public static void onDimension(PlayerEvent.PlayerChangedDimensionEvent e) {
         if(e.getEntity() instanceof ServerPlayer p){TreatmentManager.cancel(p);ModNetwork.sync(p);}
