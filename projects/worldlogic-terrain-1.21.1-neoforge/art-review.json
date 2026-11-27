@@ -4631,9 +4631,254 @@
         "context_type": "placed_cutout",
         "context_view": "Open gaps beneath lobed leaves and beside trailing stem remain visible. In the static crossed-plane projection the leaf groups and transparent openings remain visible; this is a geometry schematic, not client rendering evidence."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/pear.png": {
+      "sha256": "8fb3b3ed5de023b890e139af21c69dffd72fd0c6c214405b60866a5d05302c68",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Compared with the native apple, the rounded lower body is retained but its shoulders are narrowed into a pear neck. Inspected actual source apple and candidate PNG at native 16x16 and nearest-neighbor enlargement.",
+      "findings": {
+        "silhouette": "Narrow upright neck opens into a broader asymmetric lower belly with a short brown stem.",
+        "cluster_structure": "The yellow green body has connected angular highlight clusters spanning the left neck and belly.",
+        "micro_contrast": "Olive edges, greenish middle and pale yellow accents turn the body without speckled noise.",
+        "light_and_volume": "The upper left light patch follows the narrow neck down toward the broad rounded belly.",
+        "material_continuity": "Olive and yellow-green hues transition coherently across the skin, distinct from the brown stalk.",
+        "edge_variation": "The wider left belly and stepped narrow neck interrupt an otherwise regular round contour.",
+        "variant_identity": "The characteristic neck and broad green lower mass distinguish a pear from the red apple.",
+        "vanilla_comparison": "Compared with the native apple, the rounded lower body is retained but its shoulders are narrowed into a pear neck.",
+        "functional_material_cues": "The short woody stalk and narrow neck describe an intact edible pear."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "food",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "The yellow green body has connected angular highlight clusters spanning the left neck and belly. The upper left light patch follows the narrow neck down toward the broad rounded belly.",
+        "reference_limit": "Compared with the native apple, the rounded lower body is retained but its shoulders are narrowed into a pear neck. Material-specific silhouette and highlights are intentional, not an apple recolor.",
+        "native_view": "Narrow upright neck opens into a broader asymmetric lower belly with a short brown stem. The characteristic neck and broad green lower mass distinguish a pear from the red apple.",
+        "context_type": "icon_family",
+        "context_view": "The characteristic neck and broad green lower mass distinguish a pear from the red apple. Reviewed the eight-fruit native/enlarged icon family and static isometric preview of the actual hanging cuboid model using opaque cropped texels at unit scale. Real game client not run."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/plum.png": {
+      "sha256": "54fa3279f81a85b2037c4a38ec6742cc9b2224f7aa755cc47a9da6d23b31ab98",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "The inspected apple provides a rounded produce reference; the plum replaces glossy red highlights with muted bloom. Inspected actual source apple and candidate PNG at native 16x16 and nearest-neighbor enlargement.",
+      "findings": {
+        "silhouette": "A compact near-round purple fruit has a small brown stem and broad shoulders.",
+        "cluster_structure": "Broad violet central patches connect to a smaller pale bloom cluster instead of isolated dots.",
+        "micro_contrast": "Muted lilac light and neighboring dark plum shades separate the waxy skin from its dark contour.",
+        "light_and_volume": "Concentrated upper-left bloom describes the rounded shoulder and dark lower turn.",
+        "material_continuity": "Cool desaturated violet and mauve remain one connected skin ramp with a separate woody stem.",
+        "edge_variation": "A short irregular left contour and varying lower pixel steps avoid a perfect circle.",
+        "variant_identity": "The rounded purple silhouette with a pale bloom reads differently from the tapered fig.",
+        "vanilla_comparison": "The inspected apple provides a rounded produce reference; the plum replaces glossy red highlights with muted bloom.",
+        "functional_material_cues": "A woody stem and soft waxy purple bloom identify fresh plum skin."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "food",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Broad violet central patches connect to a smaller pale bloom cluster instead of isolated dots. Concentrated upper-left bloom describes the rounded shoulder and dark lower turn.",
+        "reference_limit": "The inspected apple provides a rounded produce reference; the plum replaces glossy red highlights with muted bloom. Material-specific silhouette and highlights are intentional, not an apple recolor.",
+        "native_view": "A compact near-round purple fruit has a small brown stem and broad shoulders. The rounded purple silhouette with a pale bloom reads differently from the tapered fig.",
+        "context_type": "icon_family",
+        "context_view": "The rounded purple silhouette with a pale bloom reads differently from the tapered fig. Reviewed the eight-fruit native/enlarged icon family and static isometric preview of the actual hanging cuboid model using opaque cropped texels at unit scale. Real game client not run."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/fig.png": {
+      "sha256": "c7a7398a48518d2ba4d5444610684f781053ff49b8e7e7822116b0b97115de58",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "The vanilla apple demonstrates native fruit scale; the fig has an elongated shoulder and matte violet flesh instead. Inspected actual source apple and candidate PNG at native 16x16 and nearest-neighbor enlargement.",
+      "findings": {
+        "silhouette": "The distinct teardrop narrows to a small green stem above a flattened broad lower body.",
+        "cluster_structure": "A connected mauve strip follows the rising left shoulder while the darker side stays in a coherent patch.",
+        "micro_contrast": "Neighboring purple and rose values create restrained skin contrast without bright white shine.",
+        "light_and_volume": "An elongated highlight and darker right ridge describe the tapered fig volume.",
+        "material_continuity": "Dusky plum hues and subdued rose form the skin ramp; olive is limited to the neck.",
+        "edge_variation": "Unequal shoulder steps and a wider lower base maintain the teardrop profile.",
+        "variant_identity": "The elongated narrowing shoulder differentiates the fig from the round plum and lighter pear.",
+        "vanilla_comparison": "The vanilla apple demonstrates native fruit scale; the fig has an elongated shoulder and matte violet flesh instead.",
+        "functional_material_cues": "A narrow stem and flared lower fruit body characterize an intact fig."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "food",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "A connected mauve strip follows the rising left shoulder while the darker side stays in a coherent patch. An elongated highlight and darker right ridge describe the tapered fig volume.",
+        "reference_limit": "The vanilla apple demonstrates native fruit scale; the fig has an elongated shoulder and matte violet flesh instead. Material-specific silhouette and highlights are intentional, not an apple recolor.",
+        "native_view": "The distinct teardrop narrows to a small green stem above a flattened broad lower body. The elongated narrowing shoulder differentiates the fig from the round plum and lighter pear.",
+        "context_type": "icon_family",
+        "context_view": "The elongated narrowing shoulder differentiates the fig from the round plum and lighter pear. Reviewed the eight-fruit native/enlarged icon family and static isometric preview of the actual hanging cuboid model using opaque cropped texels at unit scale. Real game client not run."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/mango.png": {
+      "sha256": "24411a51f95a53cb63cc3396b29d0c821582f01662054ec71afed3eda92d183e",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "The apple informs concentrated skin highlights, not the mango's oblique shape or orange-red pigment. Inspected actual source apple and candidate PNG at native 16x16 and nearest-neighbor enlargement.",
+      "findings": {
+        "silhouette": "A slanted asymmetric oval has a broad orange body and a small leafy green tip.",
+        "cluster_structure": "Connected gold shoulder and central orange mass form the fruit surface, with a red-brown blush at the upper edge.",
+        "micro_contrast": "Close ochre and yellow values retain the skin gradient, with a compact bright highlight rather than random dots.",
+        "light_and_volume": "The upper-left light ridge follows the diagonal body into a deeper orange lower curve.",
+        "material_continuity": "Yellow-orange flesh-colored skin joins a warmer red-brown blush; olive leaves remain separate.",
+        "edge_variation": "Uneven upper and lower curves, plus a small leaf silhouette, prevent a symmetric egg shape.",
+        "variant_identity": "The offset golden oval and green leafy tip distinguish mango from the darker date.",
+        "vanilla_comparison": "The apple informs concentrated skin highlights, not the mango's oblique shape or orange-red pigment.",
+        "functional_material_cues": "The elongated golden fruit with a small attached leafy stem communicates ripe mango."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "food",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Connected gold shoulder and central orange mass form the fruit surface, with a red-brown blush at the upper edge. The upper-left light ridge follows the diagonal body into a deeper orange lower curve.",
+        "reference_limit": "The apple informs concentrated skin highlights, not the mango's oblique shape or orange-red pigment. Material-specific silhouette and highlights are intentional, not an apple recolor.",
+        "native_view": "A slanted asymmetric oval has a broad orange body and a small leafy green tip. The offset golden oval and green leafy tip distinguish mango from the darker date.",
+        "context_type": "icon_family",
+        "context_view": "The offset golden oval and green leafy tip distinguish mango from the darker date. Reviewed the eight-fruit native/enlarged icon family and static isometric preview of the actual hanging cuboid model using opaque cropped texels at unit scale. Real game client not run."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/coconut.png": {
+      "sha256": "206d4a23d51c399af79f704bbe0d008e25a015cbe35c9aff5051f5370b8b5a37",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Apple serves as a native rounded object reference, not a shine template for rough coconut fibre. Inspected actual source apple and candidate PNG at native 16x16 and nearest-neighbor enlargement.",
+      "findings": {
+        "silhouette": "A rounded faceted brown shell has a flattened crown and a small cluster of dark eye marks.",
+        "cluster_structure": "Broad tan and mid-brown shell clusters surround short darker directional fibres.",
+        "micro_contrast": "The pale tan ramp contrasts with the dark fibrous creases without saturated glossy accents.",
+        "light_and_volume": "Upper-left tan shell faces turn toward a dark lower and right contour.",
+        "material_continuity": "Warm browns continue through the shell, while local marks interrupt the fibre texture.",
+        "edge_variation": "Uneven polygonal shell edges and small crown marks give a natural husk profile.",
+        "variant_identity": "The brown rough shell and eye marks distinguish coconut from smooth dates and pears.",
+        "vanilla_comparison": "Apple serves as a native rounded object reference, not a shine template for rough coconut fibre.",
+        "functional_material_cues": "Dark crown pores and short fibrous marks identify a mature brown coconut shell."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "food",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Broad tan and mid-brown shell clusters surround short darker directional fibres. Upper-left tan shell faces turn toward a dark lower and right contour.",
+        "reference_limit": "Apple serves as a native rounded object reference, not a shine template for rough coconut fibre. Material-specific silhouette and highlights are intentional, not an apple recolor.",
+        "native_view": "A rounded faceted brown shell has a flattened crown and a small cluster of dark eye marks. The brown rough shell and eye marks distinguish coconut from smooth dates and pears.",
+        "context_type": "icon_family",
+        "context_view": "The brown rough shell and eye marks distinguish coconut from smooth dates and pears. Reviewed the eight-fruit native/enlarged icon family and static isometric preview of the actual hanging cuboid model using opaque cropped texels at unit scale. Real game client not run."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/date.png": {
+      "sha256": "4b451e003f6d469108d0eb672a927e79db3c802b7b25724582e3138521baf820",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Compared with the apple, the date is narrow and less glossy, using short lengthwise wrinkles. Inspected actual source apple and candidate PNG at native 16x16 and nearest-neighbor enlargement.",
+      "findings": {
+        "silhouette": "A narrow elongated amber-brown fruit has a short stalk and rounded lower taper.",
+        "cluster_structure": "An aligned vertical cluster of warm highlights and a dark neighboring furrow follow the long axis.",
+        "micro_contrast": "Adjacent amber and chestnut shades form a small wrinkled skin ramp.",
+        "light_and_volume": "A warm left strip and dark lower-right border convey an oblong turning surface.",
+        "material_continuity": "Related brown-orange values retain dry fruit skin instead of metallic glare.",
+        "edge_variation": "The narrow middle and stepped rounded ends create a long oval with a small stalk.",
+        "variant_identity": "Warm amber color and thin longitudinal form distinguish the date from the wider coconut.",
+        "vanilla_comparison": "Compared with the apple, the date is narrow and less glossy, using short lengthwise wrinkles.",
+        "functional_material_cues": "The brown narrow fruit body and longitudinal folds characterize a mature date."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "food",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "An aligned vertical cluster of warm highlights and a dark neighboring furrow follow the long axis. A warm left strip and dark lower-right border convey an oblong turning surface.",
+        "reference_limit": "Compared with the apple, the date is narrow and less glossy, using short lengthwise wrinkles. Material-specific silhouette and highlights are intentional, not an apple recolor.",
+        "native_view": "A narrow elongated amber-brown fruit has a short stalk and rounded lower taper. Warm amber color and thin longitudinal form distinguish the date from the wider coconut.",
+        "context_type": "icon_family",
+        "context_view": "Warm amber color and thin longitudinal form distinguish the date from the wider coconut. Reviewed the eight-fruit native/enlarged icon family and static isometric preview of the actual hanging cuboid model using opaque cropped texels at unit scale. Real game client not run."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/baobab_fruit.png": {
+      "sha256": "546dd0164020f2d0dc672a6f708fd856e2d8ea5e9b12a4ca15aa3eb160b85a2c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Apple is the native edible icon comparator; baobab uses muted pod material and a long tapered form. Inspected actual source apple and candidate PNG at native 16x16 and nearest-neighbor enlargement.",
+      "findings": {
+        "silhouette": "An elongated tan-olive pod tapers at both ends and hangs from a narrow stem.",
+        "cluster_structure": "The dusty beige face has broad neighboring patches broken by a few muted darker marks.",
+        "micro_contrast": "Subtle low-saturation ochre contrasts give a dry hard husk instead of glossy fruit skin.",
+        "light_and_volume": "A narrow pale upper-left area transitions into a darker flank and lower cap.",
+        "material_continuity": "Tan, olive and straw tones make a consistent matte woody shell ramp.",
+        "edge_variation": "A pointed upper shoulder and uneven lower narrowing preserve a hanging pod silhouette.",
+        "variant_identity": "The pale elongated pod differs from both dark amber date and large round coconut.",
+        "vanilla_comparison": "Apple is the native edible icon comparator; baobab uses muted pod material and a long tapered form.",
+        "functional_material_cues": "The narrow woody stalk and hard dusty shell describe an intact baobab fruit."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "food",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "The dusty beige face has broad neighboring patches broken by a few muted darker marks. A narrow pale upper-left area transitions into a darker flank and lower cap.",
+        "reference_limit": "Apple is the native edible icon comparator; baobab uses muted pod material and a long tapered form. Material-specific silhouette and highlights are intentional, not an apple recolor.",
+        "native_view": "An elongated tan-olive pod tapers at both ends and hangs from a narrow stem. The pale elongated pod differs from both dark amber date and large round coconut.",
+        "context_type": "icon_family",
+        "context_view": "The pale elongated pod differs from both dark amber date and large round coconut. Reviewed the eight-fruit native/enlarged icon family and static isometric preview of the actual hanging cuboid model using opaque cropped texels at unit scale. Real game client not run."
+      }
     }
   },
-  "review_status": "RC2: 118 static artwork reviews, with R9 atlas evidence from actual 1x, nearest-neighbor and context sheets. Only dry_grass, tall_dry_grass, wild_cucumber PNGs changed from RC1. Current-main executable lock, compile, server QA, natural-generation QA and client verification pending.",
+  "review_status": "1.2.5 RC1: 118 previously reviewed textures unchanged; seven new original fruit item PNGs individually reviewed in native/enlarged icon family and static hanging-model context. Art Review Lock, Build Hub, natural generation and graphical client verification pending.",
   "reference_provenance": "Catalogued 1.21.1 reference PNGs opened from a version-pinned mirror, whose SHA-256 values match the official-client R9 atlas catalog; uncatalogued role references inspected and hashed, with independent official archive identity not established. Static context previews are not game rendering.",
   "client_status": "NOT_RUN"
 }

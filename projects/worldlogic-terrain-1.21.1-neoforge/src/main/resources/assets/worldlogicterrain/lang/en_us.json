@@ -111,5 +111,20 @@
   "block.worldlogicterrain.mahogany_log": "Mahogany Log",
   "block.worldlogicterrain.mahogany_planks": "Mahogany Planks",
   "block.worldlogicterrain.mahogany_leaves": "Mahogany Leaves",
-  "block.worldlogicterrain.mahogany_sapling": "Mahogany Sapling"
+  "block.worldlogicterrain.mahogany_sapling": "Mahogany Sapling",
+  "block.worldlogicterrain.hanging_apple": "Hanging Apple",
+  "block.worldlogicterrain.hanging_pear": "Hanging Pear",
+  "item.worldlogicterrain.pear": "Pear",
+  "block.worldlogicterrain.hanging_plum": "Hanging Plum",
+  "item.worldlogicterrain.plum": "Plum",
+  "block.worldlogicterrain.hanging_fig": "Hanging Fig",
+  "item.worldlogicterrain.fig": "Fig",
+  "block.worldlogicterrain.hanging_mango": "Hanging Mango",
+  "item.worldlogicterrain.mango": "Mango",
+  "block.worldlogicterrain.hanging_coconut": "Hanging Coconut",
+  "item.worldlogicterrain.coconut": "Coconut",
+  "block.worldlogicterrain.hanging_date": "Hanging Date",
+  "item.worldlogicterrain.date": "Date",
+  "block.worldlogicterrain.hanging_baobab_fruit": "Hanging Baobab Fruit",
+  "item.worldlogicterrain.baobab_fruit": "Baobab Fruit"
 }

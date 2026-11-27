@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "worldlogicterrain:block/fruit_stem"
+    },
+    "age=1": {
+      "model": "worldlogicterrain:block/fruit_unripe"
+    },
+    "age=2": [
+      {
+        "model": "worldlogicterrain:block/hanging_mango"
+      },
+      {
+        "model": "worldlogicterrain:block/hanging_mango",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/hanging_mango",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/hanging_mango",
+        "y": 270
+      }
+    ]
+  }
+}

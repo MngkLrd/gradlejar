@@ -111,5 +111,20 @@
   "block.worldlogicterrain.mahogany_log": "Бревно махагони",
   "block.worldlogicterrain.mahogany_planks": "Доски махагони",
   "block.worldlogicterrain.mahogany_leaves": "Листва махагони",
-  "block.worldlogicterrain.mahogany_sapling": "Саженец махагони"
+  "block.worldlogicterrain.mahogany_sapling": "Саженец махагони",
+  "block.worldlogicterrain.hanging_apple": "Плод на дереве: Яблоко",
+  "block.worldlogicterrain.hanging_pear": "Плод на дереве: Груша",
+  "item.worldlogicterrain.pear": "Груша",
+  "block.worldlogicterrain.hanging_plum": "Плод на дереве: Слива",
+  "item.worldlogicterrain.plum": "Слива",
+  "block.worldlogicterrain.hanging_fig": "Плод на дереве: Инжир",
+  "item.worldlogicterrain.fig": "Инжир",
+  "block.worldlogicterrain.hanging_mango": "Плод на дереве: Манго",
+  "item.worldlogicterrain.mango": "Манго",
+  "block.worldlogicterrain.hanging_coconut": "Плод на дереве: Кокос",
+  "item.worldlogicterrain.coconut": "Кокос",
+  "block.worldlogicterrain.hanging_date": "Плод на дереве: Финик",
+  "item.worldlogicterrain.date": "Финик",
+  "block.worldlogicterrain.hanging_baobab_fruit": "Плод на дереве: Плод баобаба",
+  "item.worldlogicterrain.baobab_fruit": "Плод баобаба"
 }

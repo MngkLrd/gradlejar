@@ -1,0 +1,146 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "fruit": "worldlogicterrain:item/mango",
+    "stem": "minecraft:block/oak_log",
+    "particle": "worldlogicterrain:item/mango"
+  },
+  "elements": [
+    {
+      "from": [
+        8,
+        14,
+        8
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            1,
+            2,
+            3
+          ],
+          "texture": "#stem"
+        },
+        "south": {
+          "uv": [
+            1,
+            1,
+            2,
+            3
+          ],
+          "texture": "#stem"
+        },
+        "east": {
+          "uv": [
+            1,
+            1,
+            2,
+            3
+          ],
+          "texture": "#stem"
+        },
+        "west": {
+          "uv": [
+            1,
+            1,
+            2,
+            3
+          ],
+          "texture": "#stem"
+        },
+        "up": {
+          "uv": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "texture": "#stem"
+        },
+        "down": {
+          "uv": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "texture": "#stem"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        8,
+        6
+      ],
+      "to": [
+        11,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            5,
+            5,
+            10,
+            11
+          ],
+          "texture": "#fruit"
+        },
+        "south": {
+          "uv": [
+            5,
+            5,
+            10,
+            11
+          ],
+          "texture": "#fruit"
+        },
+        "east": {
+          "uv": [
+            5,
+            6,
+            9,
+            12
+          ],
+          "texture": "#fruit"
+        },
+        "west": {
+          "uv": [
+            5,
+            6,
+            9,
+            12
+          ],
+          "texture": "#fruit"
+        },
+        "up": {
+          "uv": [
+            5,
+            5,
+            10,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "down": {
+          "uv": [
+            2,
+            8,
+            7,
+            12
+          ],
+          "texture": "#fruit"
+        }
+      }
+    }
+  ]
+}
