@@ -1,0 +1,817 @@
+{
+  "schema": 1,
+  "name": "Aquaculture 0.1.0 development regression",
+  "coverage": [
+    {
+      "id": "entity-pike",
+      "kind": "entity",
+      "subject": "aquaculture:pike",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-pike",
+      "kind": "item",
+      "subject": "aquaculture:raw_pike",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-perch",
+      "kind": "entity",
+      "subject": "aquaculture:perch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-perch",
+      "kind": "item",
+      "subject": "aquaculture:raw_perch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-crucian_carp",
+      "kind": "entity",
+      "subject": "aquaculture:crucian_carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-crucian_carp",
+      "kind": "item",
+      "subject": "aquaculture:raw_crucian_carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-carp",
+      "kind": "entity",
+      "subject": "aquaculture:carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-carp",
+      "kind": "item",
+      "subject": "aquaculture:raw_carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-roach",
+      "kind": "entity",
+      "subject": "aquaculture:roach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-roach",
+      "kind": "item",
+      "subject": "aquaculture:raw_roach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-bream",
+      "kind": "entity",
+      "subject": "aquaculture:bream",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-bream",
+      "kind": "item",
+      "subject": "aquaculture:raw_bream",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-trout",
+      "kind": "entity",
+      "subject": "aquaculture:trout",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-trout",
+      "kind": "item",
+      "subject": "aquaculture:raw_trout",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-grayling",
+      "kind": "entity",
+      "subject": "aquaculture:grayling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-grayling",
+      "kind": "item",
+      "subject": "aquaculture:raw_grayling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-char",
+      "kind": "entity",
+      "subject": "aquaculture:char",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-char",
+      "kind": "item",
+      "subject": "aquaculture:raw_char",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-taimen",
+      "kind": "entity",
+      "subject": "aquaculture:taimen",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-taimen",
+      "kind": "item",
+      "subject": "aquaculture:raw_taimen",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-whitefish",
+      "kind": "entity",
+      "subject": "aquaculture:whitefish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-whitefish",
+      "kind": "item",
+      "subject": "aquaculture:raw_whitefish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-burbot",
+      "kind": "entity",
+      "subject": "aquaculture:burbot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-burbot",
+      "kind": "item",
+      "subject": "aquaculture:raw_burbot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-catfish",
+      "kind": "entity",
+      "subject": "aquaculture:catfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-catfish",
+      "kind": "item",
+      "subject": "aquaculture:raw_catfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-tench",
+      "kind": "entity",
+      "subject": "aquaculture:tench",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-tench",
+      "kind": "item",
+      "subject": "aquaculture:raw_tench",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-loach",
+      "kind": "entity",
+      "subject": "aquaculture:loach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-loach",
+      "kind": "item",
+      "subject": "aquaculture:raw_loach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-rotan",
+      "kind": "entity",
+      "subject": "aquaculture:rotan",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-rotan",
+      "kind": "item",
+      "subject": "aquaculture:raw_rotan",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-rudd",
+      "kind": "entity",
+      "subject": "aquaculture:rudd",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-rudd",
+      "kind": "item",
+      "subject": "aquaculture:raw_rudd",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-bowfin",
+      "kind": "entity",
+      "subject": "aquaculture:bowfin",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-bowfin",
+      "kind": "item",
+      "subject": "aquaculture:raw_bowfin",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-piranha",
+      "kind": "entity",
+      "subject": "aquaculture:piranha",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-piranha",
+      "kind": "item",
+      "subject": "aquaculture:raw_piranha",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-arapaima",
+      "kind": "entity",
+      "subject": "aquaculture:arapaima",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-arapaima",
+      "kind": "item",
+      "subject": "aquaculture:raw_arapaima",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-tilapia",
+      "kind": "entity",
+      "subject": "aquaculture:tilapia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-tilapia",
+      "kind": "item",
+      "subject": "aquaculture:raw_tilapia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-pacu",
+      "kind": "entity",
+      "subject": "aquaculture:pacu",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-pacu",
+      "kind": "item",
+      "subject": "aquaculture:raw_pacu",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-snakehead",
+      "kind": "entity",
+      "subject": "aquaculture:snakehead",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-snakehead",
+      "kind": "item",
+      "subject": "aquaculture:raw_snakehead",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-electric_eel",
+      "kind": "entity",
+      "subject": "aquaculture:electric_eel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-electric_eel",
+      "kind": "item",
+      "subject": "aquaculture:raw_electric_eel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-atlantic_cod",
+      "kind": "entity",
+      "subject": "aquaculture:atlantic_cod",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-atlantic_cod",
+      "kind": "item",
+      "subject": "aquaculture:raw_atlantic_cod",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-herring",
+      "kind": "entity",
+      "subject": "aquaculture:herring",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-herring",
+      "kind": "item",
+      "subject": "aquaculture:raw_herring",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-mackerel",
+      "kind": "entity",
+      "subject": "aquaculture:mackerel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-mackerel",
+      "kind": "item",
+      "subject": "aquaculture:raw_mackerel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-halibut",
+      "kind": "entity",
+      "subject": "aquaculture:halibut",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-halibut",
+      "kind": "item",
+      "subject": "aquaculture:raw_halibut",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-haddock",
+      "kind": "entity",
+      "subject": "aquaculture:haddock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-haddock",
+      "kind": "item",
+      "subject": "aquaculture:raw_haddock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-flounder",
+      "kind": "entity",
+      "subject": "aquaculture:flounder",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-flounder",
+      "kind": "item",
+      "subject": "aquaculture:raw_flounder",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-tuna",
+      "kind": "entity",
+      "subject": "aquaculture:tuna",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-tuna",
+      "kind": "item",
+      "subject": "aquaculture:raw_tuna",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-barracuda",
+      "kind": "entity",
+      "subject": "aquaculture:barracuda",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-barracuda",
+      "kind": "item",
+      "subject": "aquaculture:raw_barracuda",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-grouper",
+      "kind": "entity",
+      "subject": "aquaculture:grouper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-grouper",
+      "kind": "item",
+      "subject": "aquaculture:raw_grouper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-snapper",
+      "kind": "entity",
+      "subject": "aquaculture:snapper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-snapper",
+      "kind": "item",
+      "subject": "aquaculture:raw_snapper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-mahi_mahi",
+      "kind": "entity",
+      "subject": "aquaculture:mahi_mahi",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-mahi_mahi",
+      "kind": "item",
+      "subject": "aquaculture:raw_mahi_mahi",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-parrotfish",
+      "kind": "entity",
+      "subject": "aquaculture:parrotfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-parrotfish",
+      "kind": "item",
+      "subject": "aquaculture:raw_parrotfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "habitat-controls",
+      "kind": "mechanic",
+      "subject": "Species habitat selection rejects dry, polluted and shallow locations",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "name": "All species: actual entity creation, catch data and habitat controls",
+      "command": "aquaculture selftest",
+      "expect": "AQUACULTURE_36_SPECIES_TRAITS_HABITAT_PASS",
+      "assertion": true
+    }
+  ]
+}
