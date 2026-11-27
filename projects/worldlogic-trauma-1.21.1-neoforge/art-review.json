@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "reference_source": "Actual 1.21.1 PNGs from InventivetalentDev/minecraft-assets version mirror, inspected at native size and nearest-neighbor enlargement; local official client download unavailable",
-  "scope": "38 native sprites redrawn and inspected; 2 anatomy atlases reviewed and retained to preserve exact UI UVs. No graphical client evidence.",
+  "scope": "38 native sprites redrawn and inspected; 2 anatomy atlases reviewed and retained to preserve exact UI UVs. No graphical client evidence. R9 atlas rule or actual uncovered-category comparator recorded for every asset.",
   "assets": {
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/bleeding.png": {
       "sha256": "16ccd846c0cca5c3019bb7f9df8de4ab821e00ddbd58e311a84767373ee09982",
@@ -25,6 +25,19 @@
         "variant_identity": "Pointed drop differs from heart lobes and heat symbols",
         "vanilla_comparison": "Regeneration has a dark red edge and bright core; drop uses similar contrast but a pointed upper tip",
         "functional_material_cues": "Wet left highlight and liquid reservoir signify bleeding"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:mob_effect/regeneration",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Left red cluster follows descending liquid edge; Wine bottom-right curves back into reservoir.",
+        "reference_limit": "Reference supplies a scale/material or role cue, not the exact medical symbol or item construction; no claim of renderer validation.",
+        "native_view": "Tapered liquid drop widens to a rounded reservoir; Small pale red gleam separates highlight from midtone. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "gui_state",
+        "context_view": "Pointed drop differs from heart lobes and heat symbols; compared all eight status symbols side by side at equal scale, static HUD icon context only.",
+        "custom_reason": "No blood-drop or health-status symbol rule in atlas; the actual regeneration heart gives closely related native red health contrast.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets tag 1.21.1, actual PNG fetched via GitHub contents API and SHA-256 computed over decoded bytes; inspected directly, official client archive unavailable locally."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/concussion.png": {
@@ -49,6 +62,19 @@
         "variant_identity": "Profile with stars differs from sun or capsule",
         "vanilla_comparison": "Weakness uses small accent pixels around a central icon; head and sparks likewise separate primary and secondary elements",
         "functional_material_cues": "Two isolated sparks indicate dizziness"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:mob_effect/weakness",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Amber temple cluster and compact paired sparks; Top forehead light turns into ochre cheek shadow.",
+        "reference_limit": "Reference supplies a scale/material or role cue, not the exact medical symbol or item construction; no claim of renderer validation.",
+        "native_view": "Profile head with neck and two sparks; Dark eye contrasts with brow. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "gui_state",
+        "context_view": "Profile with stars differs from sun or capsule; compared all eight status symbols side by side at equal scale, static HUD icon context only.",
+        "custom_reason": "No concussion or head-profile GUI symbol rule; vanilla weakness effect supplies an actual small status icon with separate secondary accents.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets tag 1.21.1, actual PNG fetched via GitHub contents API and SHA-256 computed over decoded bytes; inspected directly, official client archive unavailable locally."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/fracture.png": {
@@ -73,6 +99,19 @@
         "variant_identity": "Separated sections make fracture readable rather than intact bone",
         "vanilla_comparison": "Vanilla bone has enlarged pale ends and olive-grey shadow; this version interrupts the shaft",
         "functional_material_cues": "Red break accent links separated ends"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/bone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Cream groups at enlarged ends with short shafts; Light top rims and darker recessed bone edges.",
+        "reference_limit": "Reference supplies a scale/material or role cue, not the exact medical symbol or item construction; no claim of renderer validation.",
+        "native_view": "Two diagonal broken bone sections separated by gap; Red jagged interruption distinct from beige ends. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "gui_state",
+        "context_view": "Separated sections make fracture readable rather than intact bone; compared all eight status symbols side by side at equal scale, static HUD icon context only.",
+        "custom_reason": "No bone injury symbol material rule; vanilla bone supplies the actual pale bone shaft and widened ends.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets tag 1.21.1, actual PNG fetched via GitHub contents API and SHA-256 computed over decoded bytes; inspected directly, official client archive unavailable locally."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/painkiller.png": {
@@ -97,6 +136,17 @@
         "variant_identity": "Two shell sections distinguish capsule from bandages",
         "vanilla_comparison": "Paper provides warm cream highlight and grey edge; capsule adds colored lower shell",
         "functional_material_cues": "Two-piece shell identifies medicine"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "paper",
+        "reference": "minecraft:item/paper",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Cream upper group and blue lower group joined at seam; Dark lower blue edge rounds cylinder.",
+        "reference_limit": "A quiet interior is valid; no arbitrary marks to increase detail. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Long diagonal capsule with rounded ends; Bright cream edge and pale cyan gleam. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "gui_state",
+        "context_view": "Two shell sections distinguish capsule from bandages; compared all eight status symbols side by side at equal scale, static HUD icon context only."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/thermal_cold.png": {
@@ -121,6 +171,19 @@
         "variant_identity": "Branched silhouette reads as snow rather than fire",
         "vanilla_comparison": "Snowball uses blue-green shaded edges and near-white ice; these hues outline a crystal",
         "functional_material_cues": "Spokes and pale core identify cold"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/snowball",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Ice-blue branch clusters join pale center; Bright center suggests ice reflection.",
+        "reference_limit": "Reference supplies a scale/material or role cue, not the exact medical symbol or item construction; no claim of renderer validation.",
+        "native_view": "Branched crystal surrounding central hub; Pale hub contrasts with dark cool stems. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "gui_state",
+        "context_view": "Branched silhouette reads as snow rather than fire; compared all eight status symbols side by side at equal scale, static HUD icon context only.",
+        "custom_reason": "No snow-crystal status icon rule; a snowball is the direct item-scale icy ramp comparator, not a tiled snow surface.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets tag 1.21.1, actual PNG fetched via GitHub contents API and SHA-256 computed over decoded bytes; inspected directly, official client archive unavailable locally."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/thermal_heat.png": {
@@ -145,6 +208,19 @@
         "variant_identity": "No alert mark unlike heatstroke icon",
         "vanilla_comparison": "Fire charge groups orange spots in dark mass; this version extends warm center into flame",
         "functional_material_cues": "Tapered tongues and warm core express heat"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/fire_charge",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Amber base and red outer tongues enclose warm core; Lower core hottest while red tips recede.",
+        "reference_limit": "Reference supplies a scale/material or role cue, not the exact medical symbol or item construction; no claim of renderer validation.",
+        "native_view": "Tall uneven flame with separate rising tongues; Near-white glint contrasts with orange interior. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "gui_state",
+        "context_view": "No alert mark unlike heatstroke icon; compared all eight status symbols side by side at equal scale, static HUD icon context only.",
+        "custom_reason": "No thermal flame or clinical sun status symbol rule; actual fire charge has the relevant clustered hot core and dark perimeter.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets tag 1.21.1, actual PNG fetched via GitHub contents API and SHA-256 computed over decoded bytes; inspected directly, official client archive unavailable locally."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/thermal_stroke.png": {
@@ -169,6 +245,19 @@
         "variant_identity": "Exclamation differentiates severe heat from ordinary heat",
         "vanilla_comparison": "Fire charge provides clustered orange thermal ramp; clinical symbol adds pale warning glyph",
         "functional_material_cues": "Detached dot and bar signify dangerous clinical heat"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/fire_charge",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Warm core interrupted by pale bar and dot; Amber base luminous beneath dark silhouette.",
+        "reference_limit": "Reference supplies a scale/material or role cue, not the exact medical symbol or item construction; no claim of renderer validation.",
+        "native_view": "Flame contains explicit vertical alert mark; Light exclamation contrasts with deep red upper flame. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "gui_state",
+        "context_view": "Exclamation differentiates severe heat from ordinary heat; compared all eight status symbols side by side at equal scale, static HUD icon context only.",
+        "custom_reason": "No thermal flame or clinical sun status symbol rule; actual fire charge has the relevant clustered hot core and dark perimeter.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets tag 1.21.1, actual PNG fetched via GitHub contents API and SHA-256 computed over decoded bytes; inspected directly, official client archive unavailable locally."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/status/thermal_sun.png": {
@@ -193,6 +282,19 @@
         "variant_identity": "Radial rays and no flame tongues distinguish sunstroke",
         "vanilla_comparison": "Fire charge has dark warm perimeter and brighter orange groups; disc applies that ramp radially",
         "functional_material_cues": "Rays identify solar exposure rather than ambient heat"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/fire_charge",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Broad amber disk and smaller pale interior cluster; Upper-left light and ochre bottom define convex disk.",
+        "reference_limit": "Reference supplies a scale/material or role cue, not the exact medical symbol or item construction; no claim of renderer validation.",
+        "native_view": "Angular round disk framed by straight rays; Near-white center against burnt amber lower edge. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "gui_state",
+        "context_view": "Radial rays and no flame tongues distinguish sunstroke; compared all eight status symbols side by side at equal scale, static HUD icon context only.",
+        "custom_reason": "No thermal flame or clinical sun status symbol rule; actual fire charge has the relevant clustered hot core and dark perimeter.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets tag 1.21.1, actual PNG fetched via GitHub contents API and SHA-256 computed over decoded bytes; inspected directly, official client archive unavailable locally."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/trauma/body.png": {
@@ -217,6 +319,19 @@
         "variant_identity": "Five variants intentionally share geometry, green through grey",
         "vanilla_comparison": "Vanilla heart has bright health fill and dark boundary; anatomy requires independent colored zones",
         "functional_material_cues": "Exact 240x84 atlas geometry retained for GUI mapping"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:gui/sprites/hud/heart/full",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Broad forehead and chest highlights, narrow vertical limb clusters; Torso and limb upper-left highlights turn into right edge shadow.",
+        "reference_limit": "Reference supplies a scale/material or role cue, not the exact medical symbol or item construction; no claim of renderer validation.",
+        "native_view": "Seven human regions align in five identical state columns; Dark outlines preserve separation across health states. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "gui_state",
+        "context_view": "Inspected all five health color columns at full atlas enlargement; detached head, torso and limbs preserve seven separate regions.",
+        "custom_reason": "No seven-region anatomy status atlas rule; actual vanilla heart is the relevant health-state UI comparator.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets tag 1.21.1, actual PNG fetched via GitHub contents API and SHA-256 computed over decoded bytes; inspected directly, official client archive unavailable locally."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/gui/trauma/overlays.png": {
@@ -241,6 +356,19 @@
         "variant_identity": "Drop bruise bone and brace have distinct shapes",
         "vanilla_comparison": "Vanilla bone pale shaft and darker border recur at reduced icon scale",
         "functional_material_cues": "Exact 40x30 atlas positions retained for injury overlays"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/bone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Compact red reservoir, pale bone sections and crossbar clusters; Dark right edges add volume to drop and brace.",
+        "reference_limit": "Reference supplies a scale/material or role cue, not the exact medical symbol or item construction; no claim of renderer validation.",
+        "native_view": "Drop wound spot diagonal bone and brace occupy separate cells; Pale brace ties contrast with wood uprights. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "gui_state",
+        "context_view": "Inspected all four packed atlas symbols with transparent background and unchanged cell positions.",
+        "custom_reason": "No bone injury symbol material rule; vanilla bone supplies the actual pale bone shaft and widened ends.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets tag 1.21.1, actual PNG fetched via GitHub contents API and SHA-256 computed over decoded bytes; inspected directly, official client archive unavailable locally."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/adrenaline_injector.png": {
@@ -265,6 +393,17 @@
         "variant_identity": "Adrenaline red barrel; shared physical construction intentional",
         "vanilla_comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
         "functional_material_cues": "Visible needle and plunger identify syringe; bright red fill mark signals contents"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "metal_ingot",
+        "reference": "minecraft:item/iron_ingot",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Steel border surrounds red barrel group with separate flange; Upper-left barrel highlight and darker lower edge imply cylinder.",
+        "reference_limit": "Similar silhouettes may differ by surface light response. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Diagonal syringe with fine needle barrel flange and plunger; Pale metal edge contrasts with bright red fill mark. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Adrenaline red barrel; shared physical construction intentional; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/analgesic_tablets.png": {
@@ -289,6 +428,17 @@
         "variant_identity": "Two tablets distinct from capsule status symbol",
         "vanilla_comparison": "Iron ingot uses bright metallic face and dark facets; blister uses foil contrast around pills",
         "functional_material_cues": "Raised pockets identify tablet pack"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "metal_ingot",
+        "reference": "minecraft:item/iron_ingot",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Two cream pill groups inside cool grey backing; Upper metallic rim bright and lower backing shaded.",
+        "reference_limit": "Similar silhouettes may differ by surface light response. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Diagonal blister strip with two raised pockets; Pale pill highlights distinguish dark recesses. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Two tablets distinct from capsule status symbol; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/antiseptic.png": {
@@ -315,6 +465,17 @@
         "construction": "Round bulb with narrow neck and brown cork form legible vessel construction",
         "surface_turn": "Shoulder glint transitions to shaded base and right edge",
         "material_specific_shading": "Cool cyan glass highlights stay separate from the olive contents and brown cork"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "glass_vessel",
+        "reference": "minecraft:item/glass_bottle",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Curved blue glass edge, olive liquid group and brown cork; Shaded lower rim rounds the vessel against bright left shoulder.",
+        "reference_limit": "Cutout glass may have no partial alpha; inspect intended rendering separately. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Round bulb with narrow neck; Pale shoulder reflection above olive meniscus. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Round bulb and olive liquid differentiates the medicine; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/bandage.png": {
@@ -339,6 +500,17 @@
         "variant_identity": "Spiral center and tail distinguish bandage from patch",
         "vanilla_comparison": "Paper reference has pale plane and dark edge; bandage adds curved roll and tail folds",
         "functional_material_cues": "Roll opening and trailing strip indicate wrap"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "paper",
+        "reference": "minecraft:item/paper",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Curl on roll and elongated cream strip group; Upper-left roll face recedes into shaded underside.",
+        "reference_limit": "A quiet interior is valid; no arbitrary marks to increase detail. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Rolled cylinder with trailing strip; Dark inner curl next to warm rim. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Spiral center and tail distinguish bandage from patch; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/bone_mender.png": {
@@ -363,6 +535,17 @@
         "variant_identity": "Bone mender plain cyan barrel; shared physical construction intentional",
         "vanilla_comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
         "functional_material_cues": "Visible needle and plunger identify syringe; unmarked cyan fill signals contents"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "metal_ingot",
+        "reference": "minecraft:item/iron_ingot",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Steel border surrounds cyan barrel group with separate flange; Upper-left barrel highlight and darker lower edge imply cylinder.",
+        "reference_limit": "Similar silhouettes may differ by surface light response. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Diagonal syringe with fine needle barrel flange and plunger; Pale metal edge contrasts with unmarked cyan fill. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Bone mender plain cyan barrel; shared physical construction intentional; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/compact_medkit.png": {
@@ -387,6 +570,19 @@
         "variant_identity": "Compact green proportions distinguishes kit variant",
         "vanilla_comparison": "Vanilla bundle uses coherent surface shading; this case adds Green upper flap and ivory badge",
         "functional_material_cues": "Closure, storage shape and Small shaded right side identify medical equipment"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/bundle",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Green upper flap and ivory badge form contiguous clusters; Upper-left lip brighter than shaded lower and right edges.",
+        "reference_limit": "Reference supplies a scale/material or role cue, not the exact medical symbol or item construction; no claim of renderer validation.",
+        "native_view": "Low shallow case with short handle; Small shaded right side creates local contrast. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Compact green proportions distinguishes kit variant; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets.",
+        "custom_reason": "No medical carrying case construction rule; bundle is an actual inventory container with closure and soft material planes.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets tag 1.21.1, actual PNG fetched via GitHub contents API and SHA-256 computed over decoded bytes; inspected directly, official client archive unavailable locally."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/compression_wrap.png": {
@@ -411,6 +607,17 @@
         "variant_identity": "Olive roll and buckle distinguish compression from cream bandage",
         "vanilla_comparison": "Paper provides a pale fold plane; wrap adds olive curl and fastener",
         "functional_material_cues": "Tail and metal accent suggest adjustable compression"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "paper",
+        "reference": "minecraft:item/paper",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Olive round face and separate shaded tail group; Rounded upper roll narrows into shadow.",
+        "reference_limit": "A quiet interior is valid; no arbitrary marks to increase detail. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Thick roll with descending folded tail; Light olive rim against dark inner turn. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Olive roll and buckle distinguish compression from cream bandage; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/crushed_herbs.png": {
@@ -435,6 +642,19 @@
         "variant_identity": "No intact stems unlike raw herb bundle",
         "vanilla_comparison": "Kelp has connected green veins and leaf ramp; fragments retain colors but lose whole-leaf shape",
         "functional_material_cues": "Broken pieces indicate processed herbs"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/kelp",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Overlapping green fragments and separated chips; Upper fragment bright while lower overlaps darken.",
+        "reference_limit": "Reference supplies a scale/material or role cue, not the exact medical symbol or item construction; no claim of renderer validation.",
+        "native_view": "Low irregular pile of broken foliage; Light vein remnants interrupt darker plant surfaces. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "No intact stems unlike raw herb bundle; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets.",
+        "custom_reason": "No handheld herbal ingredient rule; kelp is an actual plant item with leaf groups, distinct from the tiled foliage-block rules.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets tag 1.21.1, actual PNG fetched via GitHub contents API and SHA-256 computed over decoded bytes; inspected directly, official client archive unavailable locally."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/endurance_injector.png": {
@@ -459,6 +679,17 @@
         "variant_identity": "Endurance green barrel; shared physical construction intentional",
         "vanilla_comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
         "functional_material_cues": "Visible needle and plunger identify syringe; pale green dose mark signals contents"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "metal_ingot",
+        "reference": "minecraft:item/iron_ingot",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Steel border surrounds green barrel group with separate flange; Upper-left barrel highlight and darker lower edge imply cylinder.",
+        "reference_limit": "Similar silhouettes may differ by surface light response. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Diagonal syringe with fine needle barrel flange and plunger; Pale metal edge contrasts with pale green dose mark. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Endurance green barrel; shared physical construction intentional; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/field_medkit.png": {
@@ -470,6 +701,11 @@
           "id": "minecraft:item/bundle",
           "minecraft": "1.21.1",
           "sha256": "357b6eb5f03aceb375157a3bc371b99f92c3bc743e87c538ddccaebc28460315"
+        },
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
         }
       ],
       "comparison": "Vanilla bundle uses coherent surface shading; this case adds Brown upper flap and central badge",
@@ -483,6 +719,17 @@
         "variant_identity": "Brown field case with recessed seam distinguishes kit variant",
         "vanilla_comparison": "Vanilla bundle uses coherent surface shading; this case adds Brown upper flap and central badge",
         "functional_material_cues": "Closure, storage shape and Dark bottom seam and metal latch identify medical equipment"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "leather_material",
+        "reference": "minecraft:item/leather",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Brown upper flap and central badge form contiguous clusters; Upper-left lip brighter than shaded lower and right edges.",
+        "reference_limit": "Grayscale armor tint is a separate rendering concern. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Deep leather carrying case with handle; Dark bottom seam and metal latch creates local contrast. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Brown field case with recessed seam distinguishes kit variant; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/focus_injector.png": {
@@ -507,6 +754,17 @@
         "variant_identity": "Focus purple barrel; shared physical construction intentional",
         "vanilla_comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
         "functional_material_cues": "Visible needle and plunger identify syringe; pale violet dose mark signals contents"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "metal_ingot",
+        "reference": "minecraft:item/iron_ingot",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Steel border surrounds violet barrel group with separate flange; Upper-left barrel highlight and darker lower edge imply cylinder.",
+        "reference_limit": "Similar silhouettes may differ by surface light response. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Diagonal syringe with fine needle barrel flange and plunger; Pale metal edge contrasts with pale violet dose mark. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Focus purple barrel; shared physical construction intentional; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/fracture_brace.png": {
@@ -531,6 +789,17 @@
         "variant_identity": "Open rectangular frame distinguishes brace from splint",
         "vanilla_comparison": "Iron ingot uses bright face and grey edge; brace applies it to narrow rigid rails",
         "functional_material_cues": "Two rigid rails and padded straps identify orthopedic brace"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "metal_ingot",
+        "reference": "minecraft:item/iron_ingot",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Separate steel rails and pale crossbar groups; Bright front and shaded rail side.",
+        "reference_limit": "Similar silhouettes may differ by surface light response. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Two vertical metal rails joined by straps; Bright rail strips against dark fastener blocks. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Open rectangular frame distinguishes brace from splint; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/guardian_injector.png": {
@@ -555,6 +824,17 @@
         "variant_identity": "Guardian marked cyan barrel; shared physical construction intentional",
         "vanilla_comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
         "functional_material_cues": "Visible needle and plunger identify syringe; light cyan dose mark signals contents"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "metal_ingot",
+        "reference": "minecraft:item/iron_ingot",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Steel border surrounds cyan barrel group with separate flange; Upper-left barrel highlight and darker lower edge imply cylinder.",
+        "reference_limit": "Similar silhouettes may differ by surface light response. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Diagonal syringe with fine needle barrel flange and plunger; Pale metal edge contrasts with light cyan dose mark. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Guardian marked cyan barrel; shared physical construction intentional; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/hemostatic_gel.png": {
@@ -581,6 +861,17 @@
         "construction": "Narrow capped vial with red reservoir and steel cap form legible vessel construction",
         "surface_turn": "Shoulder glint transitions to shaded base and right edge",
         "material_specific_shading": "Cool cyan glass highlights stay separate from the red contents and steel cap"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "glass_vessel",
+        "reference": "minecraft:item/glass_bottle",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Curved blue glass edge, red liquid group and steel cap; Shaded lower rim rounds the vessel against bright left shoulder.",
+        "reference_limit": "Cutout glass may have no partial alpha; inspect intended rendering separately. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Narrow capped vial with red reservoir; Pale shoulder reflection above red meniscus. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Red gel inside slim vial differentiates the medicine; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/herbal_extract.png": {
@@ -607,6 +898,17 @@
         "construction": "Broad flat-bottom flask with cork and brown cork form legible vessel construction",
         "surface_turn": "Shoulder glint transitions to shaded base and right edge",
         "material_specific_shading": "Cool cyan glass highlights stay separate from the green contents and brown cork"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "glass_vessel",
+        "reference": "minecraft:item/glass_bottle",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Curved blue glass edge, green liquid group and brown cork; Shaded lower rim rounds the vessel against bright left shoulder.",
+        "reference_limit": "Cutout glass may have no partial alpha; inspect intended rendering separately. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Broad flat-bottom flask with cork; Pale shoulder reflection above green meniscus. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Broad flask and pale front label differentiates the medicine; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/herbal_poultice.png": {
@@ -631,6 +933,17 @@
         "variant_identity": "Green filling differentiates from rag and pouch",
         "vanilla_comparison": "Paper provides pale plane and muted edge; poultice adds distinct herb cluster and wrap folds",
         "functional_material_cues": "Visible contents and folded cloth indicate herbal dressing"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "paper",
+        "reference": "minecraft:item/paper",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Cream wrap folds surround green cluster; Two raised wrap planes meet in shaded center.",
+        "reference_limit": "A quiet interior is valid; no arbitrary marks to increase detail. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Soft folded pouch with green filling at top; Pale cloth crease against dark seam and contents. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Green filling differentiates from rag and pouch; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/medical_polymer.png": {
@@ -655,6 +968,17 @@
         "variant_identity": "Solid slab differs from steel instrument and pills",
         "vanilla_comparison": "Iron ingot has light top face and darker side; polymer uses irregular outline and matte lower facet",
         "functional_material_cues": "Compact solid form suggests prepared material"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "metal_ingot",
+        "reference": "minecraft:item/iron_ingot",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Upper grey face and shaded lower facet; Visible facets separated by darker angled plane.",
+        "reference_limit": "Similar silhouettes may differ by surface light response. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Irregular faceted solid polymer lump; Pale specular pixel near right face. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Solid slab differs from steel instrument and pills; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/medical_pouch.png": {
@@ -666,6 +990,11 @@
           "id": "minecraft:item/bundle",
           "minecraft": "1.21.1",
           "sha256": "357b6eb5f03aceb375157a3bc371b99f92c3bc743e87c538ddccaebc28460315"
+        },
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
         }
       ],
       "comparison": "Vanilla bundle uses coherent surface shading; this case adds Brown folded flap and square clasp",
@@ -679,6 +1008,17 @@
         "variant_identity": "Soft pouch without medical badge distinguishes kit variant",
         "vanilla_comparison": "Vanilla bundle uses coherent surface shading; this case adds Brown folded flap and square clasp",
         "functional_material_cues": "Closure, storage shape and Rounded lower seam and strap identify medical equipment"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "leather_material",
+        "reference": "minecraft:item/leather",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Brown folded flap and square clasp form contiguous clusters; Upper-left lip brighter than shaded lower and right edges.",
+        "reference_limit": "Grayscale armor tint is a separate rendering concern. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Rounded pouch with narrowed neck; Rounded lower seam and strap creates local contrast. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Soft pouch without medical badge distinguishes kit variant; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/medkit.png": {
@@ -690,6 +1030,11 @@
           "id": "minecraft:item/bundle",
           "minecraft": "1.21.1",
           "sha256": "357b6eb5f03aceb375157a3bc371b99f92c3bc743e87c538ddccaebc28460315"
+        },
+        {
+          "id": "minecraft:item/leather",
+          "minecraft": "1.21.1",
+          "sha256": "7af3f49400e6a71b9695ee304fb8398c50f52204d361ccdd7517e52aeefb5054"
         }
       ],
       "comparison": "Vanilla bundle uses coherent surface shading; this case adds Ochre flap and medical badge",
@@ -703,6 +1048,17 @@
         "variant_identity": "Amber standard medical case distinguishes kit variant",
         "vanilla_comparison": "Vanilla bundle uses coherent surface shading; this case adds Ochre flap and medical badge",
         "functional_material_cues": "Closure, storage shape and Dark base seam and grey latch identify medical equipment"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "leather_material",
+        "reference": "minecraft:item/leather",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Ochre flap and medical badge form contiguous clusters; Upper-left lip brighter than shaded lower and right edges.",
+        "reference_limit": "Grayscale armor tint is a separate rendering concern. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Deep amber carrying case with handle; Dark base seam and grey latch creates local contrast. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Amber standard medical case distinguishes kit variant; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/oversized_medkit.png": {
@@ -727,6 +1083,17 @@
         "variant_identity": "Oversized hard-shell case distinguishes kit variant",
         "vanilla_comparison": "Vanilla iron_ingot uses coherent surface shading; this case adds Steel lid ridge and central ivory badge",
         "functional_material_cues": "Closure, storage shape and Dark right side and latch blocks identify medical equipment"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "metal_ingot",
+        "reference": "minecraft:item/iron_ingot",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Steel lid ridge and central ivory badge form contiguous clusters; Upper-left lip brighter than shaded lower and right edges.",
+        "reference_limit": "Similar silhouettes may differ by surface light response. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Wide hard case with broad handle and bevelled corners; Dark right side and latch blocks creates local contrast. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Oversized hard-shell case distinguishes kit variant; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/rag_dressing.png": {
@@ -751,6 +1118,17 @@
         "variant_identity": "Jagged outline distinguishes improvised rag",
         "vanilla_comparison": "Paper has restrained plane shading; rag replaces regular edge with uneven folds",
         "functional_material_cues": "Torn ends and soft crease indicate improvised dressing"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "paper",
+        "reference": "minecraft:item/paper",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Two fold groups interrupted by dark crease; Asymmetric upper fold turns into recessed panel.",
+        "reference_limit": "A quiet interior is valid; no arbitrary marks to increase detail. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Irregular torn cloth with uneven corners; Pale left crease and darker lower fold. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Jagged outline distinguishes improvised rag; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/raw_herbs.png": {
@@ -775,6 +1153,19 @@
         "variant_identity": "Tied stems and large leaves differ from crushed fragments",
         "vanilla_comparison": "Kelp has connected green leaf clusters and dark perimeter; herbs apply them to attached leaves",
         "functional_material_cues": "Veins and visible twine identify collected bundle"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/kelp",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Separate leaf lobes around rising brown stem; Upper leaf surfaces lighter, shadows beneath overlaps.",
+        "reference_limit": "Reference supplies a scale/material or role cue, not the exact medical symbol or item construction; no claim of renderer validation.",
+        "native_view": "Three leafy sprigs tied at stem base; Bright veins against deep green margins. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Tied stems and large leaves differ from crushed fragments; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets.",
+        "custom_reason": "No handheld herbal ingredient rule; kelp is an actual plant item with leaf groups, distinct from the tiled foliage-block rules.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets tag 1.21.1, actual PNG fetched via GitHub contents API and SHA-256 computed over decoded bytes; inspected directly, official client archive unavailable locally."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/recovery_serum.png": {
@@ -801,6 +1192,17 @@
         "construction": "Narrow ampoule with rounded bottom and steel cap form legible vessel construction",
         "surface_turn": "Shoulder glint transitions to shaded base and right edge",
         "material_specific_shading": "Cool cyan glass highlights stay separate from the cyan contents and steel cap"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "glass_vessel",
+        "reference": "minecraft:item/glass_bottle",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Curved blue glass edge, cyan liquid group and steel cap; Shaded lower rim rounds the vessel against bright left shoulder.",
+        "reference_limit": "Cutout glass may have no partial alpha; inspect intended rendering separately. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Narrow ampoule with rounded bottom; Pale shoulder reflection above cyan meniscus. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Slim cyan vial without paper label differentiates the medicine; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/splint.png": {
@@ -825,6 +1227,17 @@
         "variant_identity": "Rigid slat differs from metal brace and looped tourniquet",
         "vanilla_comparison": "Leather has warm brown material ramp; wood uses longitudinal grain groups and pale ties",
         "functional_material_cues": "Rigid wooden core and two bindings show immobilization tool"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "leather_material",
+        "reference": "minecraft:item/leather",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Long brown grain group crossed by fabric bands; Upper length brighter than lower slat side.",
+        "reference_limit": "Grayscale armor tint is a separate rendering concern. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Long diagonal wooden slat with two bindings; Pale binding edges contrast with dark wood end. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Rigid slat differs from metal brace and looped tourniquet; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/sterile_fabric.png": {
@@ -849,6 +1262,17 @@
         "variant_identity": "Large sheet without adhesive inset differs from patch",
         "vanilla_comparison": "Paper has broad pale plane; fabric adds second fold and soft cream shading",
         "functional_material_cues": "Overlapping edges identify sterile cloth"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "paper",
+        "reference": "minecraft:item/paper",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Two cream fold planes separated by diagonal seam; Upper plane brighter and lower panel shaded.",
+        "reference_limit": "A quiet interior is valid; no arbitrary marks to increase detail. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Broad folded sheet with offset lower layer; Light upper fold against darker overlap. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Large sheet without adhesive inset differs from patch; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/sterile_patch.png": {
@@ -873,6 +1297,17 @@
         "variant_identity": "Compact inset pad differs from folded sheet",
         "vanilla_comparison": "Paper has light face and grey edge; patch adds inset absorbent panel",
         "functional_material_cues": "Inset dressing surface and perimeter imply adhesive pad"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "paper",
+        "reference": "minecraft:item/paper",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Pale inner pad surrounded by darker border; Upper-left face and dark lower edge imply thickness.",
+        "reference_limit": "A quiet interior is valid; no arbitrary marks to increase detail. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Angled square pad with rounded corners; Bright pad corner against midtone rim. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Compact inset pad differs from folded sheet; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/surgical_kit.png": {
@@ -897,6 +1332,17 @@
         "variant_identity": "Open tray instead of closed case distinguishes kit variant",
         "vanilla_comparison": "Vanilla iron_ingot uses coherent surface shading; this case adds Dark inset tray and three pale tools",
         "functional_material_cues": "Closure, storage shape and Bright top rim and side fasteners identify medical equipment"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "metal_ingot",
+        "reference": "minecraft:item/iron_ingot",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Dark inset tray and three pale tools form contiguous clusters; Upper-left lip brighter than shaded lower and right edges.",
+        "reference_limit": "Similar silhouettes may differ by surface light response. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Open rectangular steel instrument tray; Bright top rim and side fasteners creates local contrast. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Open tray instead of closed case distinguishes kit variant; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/syringe_body.png": {
@@ -921,6 +1367,17 @@
         "variant_identity": "Empty grey syringe; shared physical construction intentional",
         "vanilla_comparison": "Iron ingot has high-contrast bright steel face and dark edge; injector narrows metal facets around barrel",
         "functional_material_cues": "Visible needle and plunger identify syringe; unfilled neutral barrel signals contents"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "metal_ingot",
+        "reference": "minecraft:item/iron_ingot",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Steel border surrounds grey barrel group with separate flange; Upper-left barrel highlight and darker lower edge imply cylinder.",
+        "reference_limit": "Similar silhouettes may differ by surface light response. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Diagonal syringe with fine needle barrel flange and plunger; Pale metal edge contrasts with unfilled neutral barrel. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Empty grey syringe; shared physical construction intentional; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/tourniquet.png": {
@@ -945,6 +1402,17 @@
         "variant_identity": "Open loop and buckle differ from splint or roll",
         "vanilla_comparison": "Leather uses warm shaded material; strap turns that ramp around a dark loop and adds buckle",
         "functional_material_cues": "Buckle and free tail signify tightening mechanism"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "leather_material",
+        "reference": "minecraft:item/leather",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Brown loop with dark opening and grey buckle cluster; Light upper rim and shaded inner loop.",
+        "reference_limit": "Grayscale armor tint is a separate rendering concern. The comparison is a static sprite, not a rendering test.",
+        "native_view": "Looped strap with metal clasp and descending tail; Bright buckle edge contrasts with strap aperture. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Open loop and buckle differ from splint or roll; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets."
       }
     },
     "projects/worldlogic-trauma-1.21.1-neoforge/src/main/resources/assets/traumacraft/textures/item/trauma_kit.png": {
@@ -969,6 +1437,19 @@
         "variant_identity": "Red emergency case with extra side detail distinguishes kit variant",
         "vanilla_comparison": "Vanilla bundle uses coherent surface shading; this case adds Red front plane and ivory badge",
         "functional_material_cues": "Closure, storage shape and Bright upper side accent and lower dark pocket identify medical equipment"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/bundle",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Red front plane and ivory badge form contiguous clusters; Upper-left lip brighter than shaded lower and right edges.",
+        "reference_limit": "Reference supplies a scale/material or role cue, not the exact medical symbol or item construction; no claim of renderer validation.",
+        "native_view": "Deep red case with external extra strap; Bright upper side accent and lower dark pocket creates local contrast. Reviewed the native pixels and nearest-neighbor enlargement.",
+        "context_type": "icon_family",
+        "context_view": "Red emergency case with extra side detail distinguishes kit variant; compared all inventory variants in equal-scale original/redraw and vanilla comparison sheets.",
+        "custom_reason": "No medical carrying case construction rule; bundle is an actual inventory container with closure and soft material planes.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets tag 1.21.1, actual PNG fetched via GitHub contents API and SHA-256 computed over decoded bytes; inspected directly, official client archive unavailable locally."
       }
     }
   }
