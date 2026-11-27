@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:dry_tundra",
+    "worldlogic:shrub_tundra",
+    "worldlogic:moist_tundra"
+  ]
+}
