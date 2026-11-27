@@ -78,7 +78,7 @@ public final class HudStatusLayoutCheck {
         System.out.println("PASS: 176 medical/thermal combinations and all 11 visual states, fading and alpha");
         int layouts=0;
         for(int w:new int[]{330,360,408,480,640,960})
-            for(int h:new int[]{202,220,240,270,480}){
+            for(int h:new int[]{212,220,240,270,480}){
                 var l=MedicalPanelLayout.of(w,h);
                 require(l.available(w,h)&&176+l.width()+6<=w,"panel fits width");
                 require(l.height()+12<=h&&l.rowHeight()>=17,"panel fits height");

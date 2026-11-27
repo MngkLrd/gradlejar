@@ -23,7 +23,7 @@ public final class RegressionChecks {
     private static void require(boolean ok,String message){if(!ok)throw new IllegalStateException(message);}
     public static void register(RegisterCommandsEvent e){
         var root=Commands.literal("traumaqa").requires(s->s.hasPermission(4)&&s.getEntity()==null);
-        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss"})
+        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss","physiology"})
             root.then(Commands.literal(name).executes(c->run(c.getSource(),name)));
         e.getDispatcher().register(root);
     }
@@ -128,6 +128,42 @@ public final class RegressionChecks {
                     TreatmentManager.cancel(p);
                     p.tickCount+=40;TreatmentManager.tick(p);
                     require(b.bleeding(arm)==2&&replacement.isEmpty(),"explicit cancellation does not refund consumed treatment");
+                }
+                case "physiology" -> {
+                    require(b.bloodMl()==5000&&b.pain()==0&&b.shockStage()==0,"healthy physiology");
+                    require(PhysicalFunction.mining(b,BodyPart.RIGHT_ARM)==1&&PhysicalFunction.canSprint(b),"healthy capabilities");
+                    b.damage(BodyPart.LEFT_ARM,60);
+                    require(PhysicalFunction.arm(b,BodyPart.LEFT_ARM)==0&&PhysicalFunction.arm(b,BodyPart.RIGHT_ARM)==1,"independent arms");
+                    require(!PhysicalFunction.canUse(b,BodyPart.LEFT_ARM,false)&&PhysicalFunction.canUse(b,BodyPart.RIGHT_ARM,false)&&!PhysicalFunction.canUse(b,BodyPart.RIGHT_ARM,true),"hand and two-hand controls");
+                    b.setFractured(BodyPart.LEFT_LEG,true);
+                    require(!PhysicalFunction.canSprint(b)&&PhysicalFunction.jump(b)<.5,"fracture limits movement");
+                    float broken=b.limbFunction(BodyPart.LEFT_LEG);
+                    b.stabilize(BodyPart.LEFT_LEG,4800);
+                    require(b.limbFunction(BodyPart.LEFT_LEG)>broken,"splint restores partial function");
+                    float pain=b.pain();b.setPainkillerTicks(100);
+                    require(b.pain()<pain&&b.limbFunction(BodyPart.LEFT_ARM)==0,"pain relief not limb repair");
+                    b.reset();b.setBleeding(BodyPart.RIGHT_ARM,1);b.bleedStep();require(b.bloodMl()==4982,"weak blood volume loss");
+                    b.recoverBlood(100);require(b.bloodMl()==4982,"no blood recovery while bleeding");
+                    b.reset();b.setBleeding(BodyPart.RIGHT_ARM,2);b.bleedStep();require(b.bloodMl()==4935,"severe blood volume loss");
+                    b.stopBleeding(BodyPart.RIGHT_ARM);b.recoverBlood(6);require(b.bloodMl()==4941,"rest recovery");
+                    b.loseBlood(3000);require(b.shockStage()==3&&!PhysicalFunction.canSprint(b)&&PhysicalFunction.movementPenalty(b)>=.58f,"critical shock");
+                    BodyState restored=new BodyState();restored.deserializeNBT(p.registryAccess(),b.serializeNBT(p.registryAccess()));
+                    require(restored.bloodMl()==b.bloodMl()&&restored.shockStage()==3,"persistent blood");
+                    b.loseBlood(1000);require(b.fatalBloodLoss(),"fatal threshold");
+                    b.reset();require(!b.fatalBloodLoss()&&b.bloodMl()==5000&&b.pain()==0,"new life resets physiology");
+                    if(WorldLogicApi.ruleEnabled("injuries")){
+                        var main=WorldLogicBridge.mainArm(p);
+                        var mining=Class.forName("dev.minemods.worldlogic.Trauma").getDeclaredMethod("mining",net.minecraft.world.entity.player.Player.class);
+                        mining.setAccessible(true);
+                        b.damage(main,main.maximum);
+                        require((double)mining.invoke(null,p)==0,"core mining replacement");
+                        dev.minemods.traumacraft.event.FunctionEvents.update(p);
+                        var a=p.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED);
+                        var id=net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("traumacraft","arm_attack_speed");
+                        require(a!=null&&a.getModifier(id)!=null&&a.getModifier(id).amount()<0,"attack speed modifier");
+                        b.reset();dev.minemods.traumacraft.event.FunctionEvents.update(p);
+                        require(a.getModifier(id)==null,"healthy removes modifier");
+                    }
                 }
                 case "bloodloss" -> {
                     b.damage(BodyPart.LEFT_ARM,60);

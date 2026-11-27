@@ -12,6 +12,8 @@ public final class ClientBodyState {
     private static boolean received;
     private static int concussionTicks;
     private static int painkillerTicks;
+    private static float bloodMl=5000,pain;
+    private static int shock;
     private static ThermalCondition thermal=ThermalCondition.NONE;
 
     private ClientBodyState() {}
@@ -26,8 +28,14 @@ public final class ClientBodyState {
         concussionTicks = packet.concussion();
         painkillerTicks = packet.painkiller();
         thermal=ThermalCondition.fromWire(packet.thermalStage());
+        bloodMl=Float.isFinite(packet.bloodMl())?Math.max(0,Math.min(5000,packet.bloodMl())):5000;
+        pain=Float.isFinite(packet.pain())?Math.max(0,Math.min(100,packet.pain())):0;
+        shock=Math.max(0,Math.min(3,packet.shock()));
         received = true;
     }
+    public static float bloodMl(){return received?bloodMl:5000;}
+    public static float pain(){return received?pain:0;}
+    public static int shock(){return received?shock:0;}
     public static int concussionTicks() { return received ? concussionTicks : 0; }
     public static int painkillerTicks() { return received ? painkillerTicks : 0; }
     public static boolean hasReceived() { return received; }

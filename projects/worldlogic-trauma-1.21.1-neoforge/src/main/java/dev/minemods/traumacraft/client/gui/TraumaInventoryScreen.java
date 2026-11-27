@@ -38,13 +38,13 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         var layout=MedicalPanelLayout.of(width,height);
         panelWidth=layout.width();panelHeight=layout.height();rowHeight=layout.rowHeight();
         bodyScale=layout.bodyScale();columnWidth=layout.columnWidth();
-        if(width < 330 || height < 202) anatomyOpen=false;
+        if(width < 330 || height < 212) anatomyOpen=false;
         imageWidth = anatomyOpen ? VANILLA_WIDTH + panelWidth : VANILLA_WIDTH;
         imageHeight = PANEL_HEIGHT;
         super.init();
     }
 
-    private boolean tabAvailable() { return width>=330 && height>=202 && !getRecipeBookComponent().isVisible(); }
+    private boolean tabAvailable() { return width>=330 && height>=212 && !getRecipeBookComponent().isVisible(); }
     private int tabX() { return leftPos + VANILLA_WIDTH - TAB_WIDTH; }
     private int tabY() { return Math.max(1,topPos - TAB_HEIGHT); }
     private boolean onTab(double mx,double my) {
@@ -106,7 +106,7 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         gui.fill(x+5,y+17,r-5,y+18,0xFF777777);
         int count=Integer.bitCount(TraumaHud.activeMask());
         int cols=Math.min(3,count);
-        boolean iconsBelow=cols>0&&by()+BodyVisual.HEIGHT*bodyScale+3+HudStatusLayout.ICON_SIZE+((count+cols-1)/cols-1)*HudStatusLayout.STEP<=b-39;
+        boolean iconsBelow=cols>0&&by()+BodyVisual.HEIGHT*bodyScale+3+HudStatusLayout.ICON_SIZE+((count+cols-1)/cols-1)*HudStatusLayout.STEP<=b-49;
         int headerIcons=count==0||iconsBelow?0:HudStatusLayout.ICON_SIZE+(count-1)*HudStatusLayout.STEP+4;
         String heading=Component.translatable("screen.traumacraft.body").getString();
         small(gui,font.plainSubstrByWidth(heading,panelWidth-14-headerIcons),x+7,y+5,0xFF3F3F3F);
@@ -131,7 +131,7 @@ public final class TraumaInventoryScreen extends InventoryScreen {
             drawRow(gui,BodyPart.values()[i],rowX(),y+FIRST_ROW_Y+i*rowHeight,
                     rowRight(),hovered==BodyPart.values()[i]);
 
-        int footerY=b-36;
+        int footerY=b-46;
         gui.fill(x+6,footerY-3,r-6,footerY-2,0xFF888888);
         int max=0,dead=0,weak=0,strong=0;float hp=0;
         for(BodyPart part:BodyPart.values()){
@@ -142,8 +142,10 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         }
         String summary=Component.translatable("screen.traumacraft.summary",(int)Math.ceil(hp),max,dead).getString();
         small(gui,font.plainSubstrByWidth(summary,panelWidth-16),x+8,footerY,0xFF333333);
+        String physiology=Component.translatable("screen.traumacraft.physiology",Math.round(ClientBodyState.bloodMl()/50),Math.round(ClientBodyState.pain()),ClientBodyState.shock()).getString();
+        small(gui,font.plainSubstrByWidth(physiology,panelWidth-16),x+8,footerY+10,ClientBodyState.shock()>0?0xFF9A353A:0xFF3D663D);
         String bleeding=Component.translatable("screen.traumacraft.blood",weak,strong).getString();
-        small(gui,font.plainSubstrByWidth(bleeding,panelWidth-16),x+8,footerY+10,weak+strong>0?0xFF9A353A:0xFF3D663D);
+        small(gui,font.plainSubstrByWidth(bleeding,panelWidth-16),x+8,footerY+20,weak+strong>0?0xFF9A353A:0xFF3D663D);
         var thermal=ClientBodyState.thermal();
         String last=thermal.stressed()?Component.translatable("thermal.traumacraft."+thermal.name().toLowerCase(java.util.Locale.ROOT)).getString():
             Component.translatable("screen.traumacraft.drag_to_treat").getString();
@@ -198,6 +200,10 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         tooltip.add(BodyVisual.name(hovered));
         tooltip.add(Component.literal((int)Math.ceil(ClientBodyState.hp(hovered))+" / "+hovered.maximum+" HP"));
         tooltip.add(BodyVisual.condition(hovered));
+        if(hovered==BodyPart.LEFT_ARM||hovered==BodyPart.RIGHT_ARM||hovered.isLeg()){
+            float function=dev.minemods.traumacraft.health.PhysicalFunction.limb(ClientBodyState.fraction(hovered),ClientBodyState.fractured(hovered),ClientBodyState.stabilized(hovered));
+            tooltip.add(Component.translatable("screen.traumacraft.function",Math.round(100*function)));
+        }
         if(ClientBodyState.bleeding(hovered)>0)
             tooltip.add(Component.translatable("condition.traumacraft."+
                 (ClientBodyState.bleeding(hovered)==2?"heavy_bleed":"bleeding")));

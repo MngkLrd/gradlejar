@@ -94,5 +94,7 @@
   "thermal.traumacraft.confirmed_hypothermia": "Clinical hypothermia",
   "screen.traumacraft.summary": "Total HP: %s/%s | Destroyed: %s",
   "screen.traumacraft.blood": "Bleeding: %s light / %s heavy",
-  "screen.traumacraft.treatment": "Treatment: %s s"
+  "screen.traumacraft.treatment": "Treatment: %s s",
+  "screen.traumacraft.physiology": "Blood %s%% | Pain %s | Shock %s",
+  "screen.traumacraft.function": "Function: %s%%"
 }

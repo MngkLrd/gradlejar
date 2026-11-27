@@ -94,5 +94,7 @@
   "thermal.traumacraft.confirmed_hypothermia": "Гипотермия",
   "screen.traumacraft.summary": "Общее HP: %s/%s | Утрачено: %s",
   "screen.traumacraft.blood": "Кровотечение: %s слаб. / %s сильн.",
-  "screen.traumacraft.treatment": "Лечение: %s с"
+  "screen.traumacraft.treatment": "Лечение: %s с",
+  "screen.traumacraft.physiology": "Кровь %s%% | Боль %s | Шок %s",
+  "screen.traumacraft.function": "Работоспособность: %s%%"
 }
