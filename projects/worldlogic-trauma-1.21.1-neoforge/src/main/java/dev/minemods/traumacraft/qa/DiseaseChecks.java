@@ -66,6 +66,10 @@ public final class DiseaseChecks {
             State normal=DiseaseModel.second(treated,new Physiology(100,50,"NORMAL"),true).state();
             State dry=DiseaseModel.second(treated,new Physiology(8,95,"CRITICAL"),true).state();
             State untreated=DiseaseModel.second(heavy,Physiology.UNKNOWN,true).state();
+            State nutritionLow=DiseaseModel.second(treated,new Physiology(100,50,"NORMAL"),true,.25).state();
+            require(nutritionLow.severity()>normal.severity(),"nutrition resistance slows disease recovery");
+            var neutral=dev.minemods.traumacraft.integration.MetabolismBridge.Factors.NEUTRAL;
+            require(neutral.treatment()==1&&neutral.illnessLoss()==0,"neutral no-addon treatment and loss");
             require(normal.severity()<dry.severity()&&normal.severity()<untreated.severity(),"hydration/electrolytes and treatment affect recovery");
             State recovered=normal;boolean diarrhea=false,vomit=false;
             for(int i=0;i<2000&&recovered.symptomatic();i++){var step=DiseaseModel.second(recovered,Physiology.UNKNOWN,true);recovered=step.state();diarrhea|=step.diarrhea();vomit|=step.vomit();}

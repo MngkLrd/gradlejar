@@ -4,6 +4,7 @@ import dev.minemods.traumacraft.climb.ClimbManager;
 import dev.minemods.traumacraft.health.*;
 import dev.minemods.traumacraft.integration.WorldLogicBridge;
 import dev.minemods.traumacraft.integration.ThermalBridge;
+import dev.minemods.traumacraft.integration.MetabolismBridge;
 import dev.minemods.traumacraft.integration.LegacyFrostExposure;
 import dev.minemods.traumacraft.disease.WaterIllness;
 import dev.minemods.traumacraft.medical.TreatmentManager;
@@ -28,6 +29,7 @@ public final class TraumaEvents {
         ModNetwork.progress(p,0,0);
     }
     public static void resetAfterDeath(ServerPlayer p) {
+        MetabolismBridge.forget(p);
         ClimbManager.cancel(p);
         TreatmentManager.forget(p);
         WorldLogicBridge.clearLegacyInjuries(p);
@@ -38,7 +40,7 @@ public final class TraumaEvents {
         ModNetwork.progress(p,0,0);
     }
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent e) {
-        if(e.getEntity() instanceof ServerPlayer p){ClimbManager.cancel(p);ClimbManager.forget(p);BodyStates.flush(p);BodyStates.forget(p);TreatmentManager.forget(p);}
+        if(e.getEntity() instanceof ServerPlayer p){MetabolismBridge.forget(p);ClimbManager.cancel(p);ClimbManager.forget(p);BodyStates.flush(p);BodyStates.forget(p);TreatmentManager.forget(p);}
     }
     public static void onClone(PlayerEvent.Clone e) {
         BodyStates.copy(e.getOriginal(),e.getEntity(),e.isWasDeath());
@@ -80,7 +82,7 @@ public final class TraumaEvents {
             float points=amount*4f;
             for(BodyPart leg:new BodyPart[]{BodyPart.LEFT_LEG,BodyPart.RIGHT_LEG}){
                 b.wound(leg,points,WoundKind.CONTUSION);
-                if(points>=17f) b.setFractured(leg,true);
+                if(points>=17f*MetabolismBridge.read(p).fracture()) b.setFractured(leg,true);
             }
             return;
         }
@@ -127,6 +129,9 @@ public final class TraumaEvents {
         TreatmentManager.tick(p);
         if(p.tickCount%20!=0) return;
         b.tickMedicalEffects();
+        var nutrition=MetabolismBridge.read(p);
+        if(nutrition.toxin()>=.55f&&p.tickCount%100==0&&p.connection!=null&&!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))p.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.CONFUSION,120,0,false,false,true));
+        float before=totalHp(b);
         WaterIllness.tick(p);
         if(LegacyFrostExposure.tick(p,b)){
             TreatmentManager.cancel(p);
@@ -134,9 +139,10 @@ public final class TraumaEvents {
         }
         if(!ClimbManager.active(p)&&WorldLogicBridge.resting(p)) {
             var thermal=ThermalBridge.condition(p);
-            ThermalBridge.recover(b,thermal,p.tickCount%100==0);
-            if(!b.hasBleeding())b.recoverBlood(6f*thermal.recoveryFactor);
+            ThermalBridge.recover(b,thermal,p.tickCount%100==0,nutrition.tissue(),nutrition.bone());
+            if(!b.hasBleeding())b.recoverBlood(6f*thermal.recoveryFactor*nutrition.blood());
         }
+        MetabolismBridge.record(p,Math.max(0,totalHp(b)-before));
         if(p.tickCount%40==0 && b.hasBleeding()) {
             float blood=b.bleedStep();
             if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
@@ -145,6 +151,7 @@ public final class TraumaEvents {
         if(BodyStates.flush(p) || p.tickCount%40==0) ModNetwork.sync(p);
     }
     /** No grace period for a destroyed brain or chest. Direct kill bypasses armor and totems. */
+    private static float totalHp(BodyState b){float hp=0;for(var part:BodyPart.values())hp+=b.health(part);return hp;}
     private static void fatalCollapse(ServerPlayer p){
         ClimbManager.cancel(p);
         TreatmentManager.cancel(p);

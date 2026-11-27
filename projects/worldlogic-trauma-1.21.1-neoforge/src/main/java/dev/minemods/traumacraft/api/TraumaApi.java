@@ -13,7 +13,7 @@ import java.util.EnumSet;
 /** Public server-thread API. Immutable snapshots; no internal NBT or mutable state exposed. */
 public final class TraumaApi {
     public static final int API_VERSION=1;
-    public static final int API_REVISION=2;
+    public static final int API_REVISION=3;
     public enum Zone { HEAD,CHEST,ABDOMEN,LEFT_ARM,RIGHT_ARM,LEFT_LEG,RIGHT_LEG }
     public enum Injury { CONTUSION,CUT,PUNCTURE,LACERATION,BURN,FROSTBITE }
     public record Region(Zone zone,float health,float maximum,float function,int bleeding,boolean fractured,boolean stabilized,Set<Injury> injuries){
@@ -47,8 +47,10 @@ public final class TraumaApi {
     }
     /** Additional illness-only loss in Hydration points per second. Pure read; excludes blood, sweat and salt balance. */
     public static double fluidLossPointsPerSecond(ServerPlayer player){
-        return usable(player)?dev.minemods.traumacraft.disease.WaterIllness.loss(player):0;
+        return usable(player)?dev.minemods.traumacraft.disease.WaterIllness.loss(player)+dev.minemods.traumacraft.integration.MetabolismBridge.read(player).illnessLoss():0;
     }
+    /** Observed passive anatomical HP repair, per real minute; -1 before sufficient samples. */
+    public static double passiveRecoveryHpPerMinute(ServerPlayer p){return usable(p)?dev.minemods.traumacraft.integration.MetabolismBridge.rate(p):-1;}
     public record IllnessStatus(String kind,String stage,double severity,int incubationSeconds,int treatmentSeconds){}
     public static Optional<IllnessStatus> illnessStatus(ServerPlayer player){
         if(!usable(player))return Optional.empty();

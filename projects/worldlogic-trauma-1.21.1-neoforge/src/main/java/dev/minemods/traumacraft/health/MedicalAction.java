@@ -61,16 +61,17 @@ public final class MedicalAction {
     public static boolean apply(Player player,BodyState b,MedicalItem.Type type,BodyPart part){
         if(!canApply(player,b,type,part))return false;
         if(part==BodyPart.STOMACH&&canonical(type)==MedicalItem.Type.MEDKIT&&WaterIllness.canTreat(player))return WaterIllness.treat(player);
+        float repair=dev.minemods.traumacraft.integration.MetabolismBridge.read(player).treatment();
         switch(canonical(type)){
             case BANDAGE -> b.reduceBleeding(part);
             case TOURNIQUET -> b.stopBleeding(part);
-            case HEMOSTATIC_GEL -> {b.stopBleeding(part);if(b.health(part)>0)b.heal(part,10);}
+            case HEMOSTATIC_GEL -> {b.stopBleeding(part);if(b.health(part)>0)b.heal(part,10*repair);}
             case SPLINT -> b.stabilize(part,4800);
-            case MEDKIT -> b.heal(part,25);
-            case HERBAL_POULTICE -> {b.heal(part,6);b.setPainkillerTicks(Math.max(b.painkillerTicks(),200));}
+            case MEDKIT -> b.heal(part,25*repair);
+            case HERBAL_POULTICE -> {b.heal(part,6*repair);b.setPainkillerTicks(Math.max(b.painkillerTicks(),200));}
             case RAG_DRESSING -> b.stopBleeding(part);
             case TRAUMA_KIT -> {
-                if(b.health(part)>0)b.heal(part,45);
+                if(b.health(part)>0)b.heal(part,45*repair);
                 b.stopBleeding(part);
                 if(limb(part)&&b.fractured(part)&&!b.stabilized(part))b.stabilize(part,3600);
             }

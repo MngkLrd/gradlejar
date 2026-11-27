@@ -47,7 +47,7 @@ public final class WaterIllness {
         if(!WorldLogicBridge.active(p))return;
         var before=load(p);if(before.equals(DiseaseModel.State.HEALTHY))return;
         var physiology=HydrationBridge.read(p).orElse(DiseaseModel.Physiology.UNKNOWN);
-        var step=DiseaseModel.second(before,physiology,WorldLogicBridge.resting(p));var after=step.state();store(p,after);
+        var step=DiseaseModel.second(before,physiology,WorldLogicBridge.resting(p),dev.minemods.traumacraft.integration.MetabolismBridge.read(p).resistance());var after=step.state();store(p,after);
         if(step.vomit()){
             TreatmentManager.cancel(p);ClimbManager.cancel(p);
             if(p.connection!=null&&!(p instanceof net.neoforged.neoforge.common.util.FakePlayer)){
