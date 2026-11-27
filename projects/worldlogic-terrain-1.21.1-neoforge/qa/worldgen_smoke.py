@@ -187,6 +187,8 @@ def scan(region, positions):
 def main():
     global PRESET
     rc26 = len(sys.argv)>3
+    native_water = len(sys.argv)>4 and sys.argv[4]=="rc30"
+    core_name = "worldlogic-neoforge-mc1.21.1-1.0.0-rc30.jar" if native_water else CORE_RC26_JAR
     species = CORE_SPECIES if rc26 else SPECIES
     forage = CORE_FORAGE if rc26 else NEW_FORAGE
     namespace = 'worldlogic' if rc26 else 'minecraft'
@@ -220,12 +222,12 @@ def main():
         require(sha256(mods / jar.name) == digest, "Installed terrain hash mismatch")
         if rc26:
             core_inputs=Path(sys.argv[3]).resolve()
-            cores=list(core_inputs.rglob(CORE_RC26_JAR))
-            require(len(cores)==1,"Expected one exact RC26 production JAR")
+            cores=list(core_inputs.rglob(core_name))
+            require(len(cores)==1,"Expected one exact selected core production JAR")
             core_reports=[json.loads(f.read_text()) for f in core_inputs.rglob("qa-report-*.json")]
-            valid=[r for r in core_reports if r.get("jar")==CORE_RC26_JAR and r.get("eligible") is True]
-            require(len(valid)==1 and valid[0].get("sha256")==sha256(cores[0]),"RC26 artifact report/hash mismatch")
-            shutil.copy2(cores[0],mods/CORE_RC26_JAR)
+            valid=[r for r in core_reports if r.get("jar")==core_name and r.get("eligible") is True]
+            require(len(valid)==1 and valid[0].get("sha256")==sha256(cores[0]),"Selected core artifact report/hash mismatch")
+            shutil.copy2(cores[0],mods/core_name)
             report["core_sha256"]=sha256(cores[0])
         else:
             for dep in qa["dependencies"]:
@@ -269,6 +271,11 @@ def main():
                 require("Core habitat sampled:" in sample,sample)
                 report["core_habitat_sample"]=sample
                 print(sample,flush=True)
+            if native_water:
+                aquatic=conn.cmd("worldlogicterrain aquatic_check")
+                require("Aquatic checks passed; native fluids=8" in aquatic,aquatic)
+                report["native_aquatic_checks"]=aquatic
+                print(aquatic,flush=True)
             region = root / "natural-world" / "region"
             for biome, expected in species.items():
                 target=namespace+":"+biome
@@ -330,6 +337,8 @@ def main():
             if rc26:
                 require(any(r.get("tree_logs",0)>0 for r in passed),"No ecological trees verified in RC26")
                 require(any(r.get("all_terrain_blocks",{}).get("willow_log",0)+r.get("all_terrain_blocks",{}).get("larch_log",0)>0 for r in passed),"No new tree species verified in RC26")
+            if native_water:
+                require(any(r.get("all_terrain_blocks",{}).get("water_lily",0)>0 for r in report["results"]),"No generated aquatic lily found in sampled natural chunks")
             require(not any(r["status"] == "FAIL" for r in report["results"]), "A located target biome has no expected generated vegetation")
             try:
                 conn.cmd("stop")

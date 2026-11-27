@@ -1210,6 +1210,12 @@
       "command": "worldlogicterrain patch_check",
       "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 20 tree forms, saplings, wood recipes, fallen logs and habitat checks",
       "assertion": true
+    },
+    {
+      "name": "Aquatic ecology placement and fluid preservation",
+      "command": "worldlogicterrain aquatic_check",
+      "expect": "Aquatic checks passed; native fluids=0",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -3246,6 +3252,61 @@
         {
           "backend": "server",
           "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "aquatic-lily-block",
+      "kind": "block",
+      "subject": "aquatic-lily-block",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Aquatic ecology placement and fluid preservation"
+        }
+      ]
+    },
+    {
+      "id": "aquatic-lily-item",
+      "kind": "item",
+      "subject": "aquatic-lily-item",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Aquatic ecology placement and fluid preservation"
+        }
+      ]
+    },
+    {
+      "id": "aquatic-source-only",
+      "kind": "mechanic",
+      "subject": "aquatic-source-only",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Aquatic ecology placement and fluid preservation"
+        }
+      ]
+    },
+    {
+      "id": "aquatic-shore-species",
+      "kind": "mechanic",
+      "subject": "aquatic-shore-species",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Aquatic ecology placement and fluid preservation"
+        }
+      ]
+    },
+    {
+      "id": "aquatic-fluid-preservation",
+      "kind": "mechanic",
+      "subject": "aquatic-fluid-preservation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Aquatic ecology placement and fluid preservation"
         }
       ]
     }

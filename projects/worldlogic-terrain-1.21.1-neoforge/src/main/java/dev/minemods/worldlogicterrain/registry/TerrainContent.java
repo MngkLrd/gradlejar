@@ -29,6 +29,8 @@ public final class TerrainContent {
     private static final List<Supplier<Item>> FOODS = new ArrayList<>();
     private static final List<Supplier<Item>> WOOD = new ArrayList<>();
     static {
+        var lily=BLOCKS.register("water_lily",()->new dev.minemods.worldlogicterrain.water.FloatingLeafBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LILY_PAD)));
+        PLANTS.add(ITEMS.register("water_lily",()->new net.minecraft.world.item.PlaceOnWaterBlockItem(lily.get(),new Item.Properties())));
         tree("willow");
         tree("larch");
         plant("meadow_grass", false);

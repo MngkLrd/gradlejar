@@ -74,6 +74,7 @@ public final class TerrainWorldgenChecks {
         checkPreset(gen, "open_meadow", "open_meadow", Set.of("plains","sunflower_plains","meadow","windswept_hills","windswept_forest","windswept_gravelly_hills"));
         checkPreset(gen, "frosted_grass", "frosted_ground", Set.of("snowy_plains","snowy_taiga","grove","snowy_slopes","frozen_river","snowy_beach"));
             checkTrees(gen);
+            checkAquatic(gen);
         }
     }
     private static void checkPreset(NoiseBasedChunkGenerator gen,String plant,String group,Set<String> expected) {
@@ -92,6 +93,19 @@ public final class TerrainWorldgenChecks {
             if(vanilla&&wanted)positives++;
         }
         if(vanillaCount>0&&positives!=expected.size())throw new IllegalStateException("Missing expected core biome for "+plant+": "+positives);
+    }
+    private static void checkAquatic(NoiseBasedChunkGenerator gen){
+        var key=ResourceKey.create(Registries.PLACED_FEATURE,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","aquatic_ecology"));
+        var habitat=TagKey.create(Registries.BIOME,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","aquatic_habitat"));
+        int step=GenerationStep.Decoration.VEGETAL_DECORATION.ordinal();
+        int positives=0;
+        for(var biome:gen.getBiomeSource().possibleBiomes()){
+            var settings=biome.value().getGenerationSettings().features();
+            boolean present=settings.size()>step&&settings.get(step).stream().anyMatch(h->h.is(key));
+            if(present!=biome.is(habitat))throw new IllegalStateException("Incorrect aquatic habitat "+biome.unwrapKey());
+            if(present)positives++;
+        }
+        if(positives==0)throw new IllegalStateException("Aquatic feature has no attached biome");
     }
     private static void checkTrees(NoiseBasedChunkGenerator gen){
         var key=ResourceKey.create(Registries.PLACED_FEATURE,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","ecological_trees"));

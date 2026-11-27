@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:aquatic_habitat",
+  "features": "worldlogicterrain:aquatic_ecology",
+  "step": "vegetal_decoration"
+}

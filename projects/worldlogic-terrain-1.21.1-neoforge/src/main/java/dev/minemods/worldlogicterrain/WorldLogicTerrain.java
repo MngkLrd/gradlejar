@@ -16,6 +16,8 @@ public final class WorldLogicTerrain {
         TerrainContent.BLOCKS.register(bus);
         TerrainContent.ITEMS.register(bus);
         EcologicalTreeFeature.FEATURES.register(bus);
+        dev.minemods.worldlogicterrain.water.AquaticFeature.FEATURES.register(bus);
+        NeoForge.EVENT_BUS.addListener(dev.minemods.worldlogicterrain.water.AquaticChecks::register);
         bus.addListener(TerrainContent::creative);
         NeoForge.EVENT_BUS.addListener(TerrainMobility::tick);
         NeoForge.EVENT_BUS.addListener(TerrainMobility::register);
