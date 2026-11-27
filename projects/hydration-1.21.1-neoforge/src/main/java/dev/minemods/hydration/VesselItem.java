@@ -30,6 +30,7 @@ public final class VesselItem extends Item {
   int ml=n.getInt("ml");if(ml<=0)return WaterBatch.empty();
   ml=Math.min(capacity,ml);
   try{
+   if(!n.contains("salt")||!n.contains("risk"))throw new IllegalArgumentException("Incomplete profile");
    var q=WaterBalance.Quality.valueOf(n.getString("quality"));
    var origins=new HashSet<String>();for(Tag t:n.getList("origins",Tag.TAG_STRING))origins.add(t.getAsString());
    double salt=n.getDouble("salt");if(salt>=1)q=WaterBalance.Quality.DESALINATE;
@@ -63,21 +64,23 @@ public final class VesselItem extends Item {
    return InteractionResultHolder.sidedSuccess(stack,level.isClientSide);
   }
   var hit=player.pick(Math.min(4.5,player.blockInteractionRange()),1f,true);
-  boolean water=hit instanceof net.minecraft.world.phys.BlockHitResult h&&hit.getType()==net.minecraft.world.phys.HitResult.Type.BLOCK&&level.getFluidState(h.getBlockPos()).is(net.minecraft.tags.FluidTags.WATER);
+  boolean water=hit instanceof net.minecraft.world.phys.BlockHitResult h&&hit.getType()==net.minecraft.world.phys.HitResult.Type.BLOCK&&level.getFluidState(h.getBlockPos()).is(net.minecraft.tags.FluidTags.WATER)&&level.getBlockState(h.getBlockPos()).getBlock() instanceof net.minecraft.world.level.block.LiquidBlock;
   if(water){
-   if(player instanceof ServerPlayer p){
-    var profile=Hydration.targeted(p);
-    if(profile!=null&&profile.sourceBlock()&&b.ml()<capacity){
-     var source=WaterBottle.fromSource(profile);var pool=new WaterBatch(capacity,source.quality(),source.salinity(),source.risk(),source.origins());
-     var t=WaterBatch.transfer(pool,b,capacity,capacity);write(stack,t.target());p.getInventory().setChanged();
-     level.playSound(null,p.getX(),p.getY(),p.getZ(),SoundEvents.BOTTLE_FILL,SoundSource.PLAYERS,1f,1f);
-    }
-   }
+   if(player instanceof ServerPlayer p)fillFromSource(p,stack);
    return InteractionResultHolder.sidedSuccess(stack,level.isClientSide);
   }
   if(b.ml()<=0)return InteractionResultHolder.pass(stack);
   if(player instanceof ServerPlayer p&&!WaterBalance.canDrink(Hydration.state(p)))return InteractionResultHolder.fail(stack);
   player.startUsingItem(hand);return InteractionResultHolder.consume(stack);
+ }
+ public void fillFromSource(ServerPlayer p,ItemStack stack){
+  if(p.isSpectator()||p.getMainHandItem()!=stack)return;
+  var b=read(stack);if(b.ml()>=capacity)return;
+  if(p.isShiftKeyDown()&&(p.getOffhandItem().getItem() instanceof VesselItem||p.getOffhandItem().is(HydrationItems.FILTER.get())))return;
+  var profile=Hydration.targeted(p);if(profile==null||!profile.sourceBlock())return;
+  var source=WaterBottle.fromSource(profile);var pool=new WaterBatch(capacity,source.quality(),source.salinity(),source.risk(),source.origins());
+  var t=WaterBatch.transfer(pool,b,capacity,capacity);write(stack,t.target());p.getInventory().setChanged();
+  p.level().playSound(null,p.getX(),p.getY(),p.getZ(),SoundEvents.BOTTLE_FILL,SoundSource.PLAYERS,1f,1f);
  }
  @Override public int getUseDuration(ItemStack stack,LivingEntity entity){return 24;}
  @Override public UseAnim getUseAnimation(ItemStack stack){return UseAnim.DRINK;}

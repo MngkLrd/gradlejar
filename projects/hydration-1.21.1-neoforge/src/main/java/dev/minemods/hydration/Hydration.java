@@ -94,7 +94,7 @@ public final class Hydration {
    ClipContext.Block.OUTLINE,ClipContext.Fluid.ANY,p));
   if(hit.getType()!=HitResult.Type.BLOCK)return null;
   BlockPos pos=hit.getBlockPos();
-  if(!p.serverLevel().hasChunkAt(pos)||!p.serverLevel().getFluidState(pos).is(net.minecraft.tags.FluidTags.WATER))return null;
+  if(!p.serverLevel().hasChunkAt(pos)||!p.serverLevel().getFluidState(pos).is(net.minecraft.tags.FluidTags.WATER)||!(p.serverLevel().getBlockState(pos).getBlock() instanceof net.minecraft.world.level.block.LiquidBlock))return null;
   var profile=WorldLogicApi.waterProfile(p.serverLevel(),pos);
   return profile.quality()==WorldLogicApi.WaterQuality.NOT_WATER?null:profile;
  }
