@@ -137,6 +137,12 @@ public final class WorldLogicApi {
    d.dewPointC(),d.wetBulbC(),d.environmentalLapseCPerKm(),d.condensationLevelM(),d.cloudBaseM(),d.cloudTopM(),
    d.condensedWaterGkg(),d.buoyancyEnergyJkg(),d.cloudFraction(),d.precipitationPotential(),d.fogPotential(),d.convective()));
  }
+ /** Experimental persisted transport domain; not the authoritative player environment. */
+ public static Optional<dev.minemods.worldlogic.WeatherGridState.Conditions> transportGridPreview(ServerLevel level,BlockPos pos){
+  serverThread(level);
+  if(!Rules.on("modeled_weather")||level!=level.getServer().overworld()||level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
+  return dev.minemods.worldlogic.WeatherGridState.sample(level,pos);
+ }
  public static Fatigue fatigue(ServerPlayer player){
   serverThread(player.serverLevel());
   boolean enabled=Rules.on("exertion")&&!player.isCreative()&&!player.isSpectator();

@@ -35,7 +35,14 @@ public final class AdminCommands {
   }));
   root.then(Commands.literal("testfall").executes(c->{var p=c.getSource().getPlayer();if(p!=null&&Balance.debug(p))return reply(c.getSource(),"World Logic: test fall triggered.");c.getSource().sendFailure(Component.literal("Enable physical_falls and use in survival."));return 0;}));
   root.then(Commands.literal("selftest").executes(c->{try{ReleaseChecks.run();return reply(c.getSource(),"WORLDLOGIC_CORE_TESTS_PASSED");}catch(Exception e){c.getSource().sendFailure(Component.literal(e.toString()));return 0;}}));
+  root.then(Commands.literal("weather_grid").executes(c->{
+   var s=c.getSource();var pos=net.minecraft.core.BlockPos.containing(s.getPosition());
+   var a=dev.minemods.worldlogic.api.WorldLogicApi.transportGridPreview(s.getLevel(),pos);
+   if(a.isEmpty())return reply(s,"Weather grid not active at this position.");
+   var v=a.orElseThrow();return reply(s,String.format(Locale.ROOT,"Grid preview: %.1f hPa, %.1f C, %.2f g/kg vapor, %.0f%% RH, tick %d",v.pressureHpa(),v.airC(),v.vaporGkg(),v.relativeHumidityPercent(),v.modeledTick()));
+  }));
   root.then(Commands.literal("qa").requires(s->s.hasPermission(4))
+   .then(Commands.literal("transport_grid").executes(c->{try{ApiChecks.verifyTransportGrid(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_TRANSPORT_GRID_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("weather_controller").executes(c->{try{ApiChecks.verifyWeatherController(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WEATHER_CONTROLLER_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("recovery").executes(c->{try{ApiChecks.verifyRecovery(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_RECOVERY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("api").executes(c->{ApiChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_API_CHECKS_PASSED");}))

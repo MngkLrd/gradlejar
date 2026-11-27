@@ -104,6 +104,12 @@
       "assertion": true
     },
     {
+      "name": "Conservative air heat and vapor transport, interpolation and persistence",
+      "command": "worldlogic qa transport_grid",
+      "expect": "WORLDLOGIC_TRANSPORT_GRID_PASSED",
+      "assertion": true
+    },
+    {
       "command": "worldlogic rule modeled_weather true",
       "expect": "World Logic settings saved"
     },
@@ -259,6 +265,17 @@
         {
           "backend": "server",
           "name": "Opt-in automatic weather tick and vanilla rain/thunder transitions"
+        }
+      ]
+    },
+    {
+      "id": "conservative-atmosphere-grid",
+      "kind": "mechanic",
+      "subject": "Conservative air heat and vapor transport, interpolation and persistence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Conservative air heat and vapor transport, interpolation and persistence"
         }
       ]
     }

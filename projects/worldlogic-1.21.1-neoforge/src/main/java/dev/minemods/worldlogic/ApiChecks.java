@@ -43,6 +43,24 @@ public final class ApiChecks {
    p.getFoodData().setFoodLevel(food);p.setPos(pos.x,pos.y,pos.z);p.setOnGround(grounded);p.setSprinting(sprint);p.setShiftKeyDown(sneak);
   }
  }
+ public static void verifyTransportGrid(ServerLevel l){
+  var g=AtmosphericGrid.initialize(42,0,0,0,20,.7,1,0);
+  var initial=g.budget();var initialCell=g.sample(0,0,0);
+  for(int i=1;i<=200;i++)g.advance(42,i*200L);
+  var finalBudget=g.budget();
+  require(Math.abs(initial.mass()-finalBudget.mass())<1e-8,"air mass conservation");
+  require(Math.abs(initial.heat()-finalBudget.heat())<1e-6,"temperature tracer conservation");
+  require(Math.abs(initial.water()-finalBudget.water())<1e-8,"water vapor conservation");
+  require(AtmosphericGrid.valid(g.mass,g.heat,g.water),"positive finite transported cells");
+  require(!initialCell.equals(g.sample(0,0,0)),"transport evolves conditions");
+  require(g.sample(0,0,200).pressureHpa()<g.sample(0,0,0).pressureHpa(),"scaled pressure decreases with altitude");
+  var left=g.sample(1023,0,0);var right=g.sample(1025,0,0);
+  require(Math.abs(left.airC()-right.airC())<.2,"interpolated grid boundary");
+  var state=new WeatherGridState();state.grid=g;
+  var copy=WeatherGridState.load(state.save(new net.minecraft.nbt.CompoundTag(),l.registryAccess()),l.registryAccess());
+  require(copy.grid!=null&&copy.grid.budget().equals(g.budget())&&copy.grid.lastTick==g.lastTick&&copy.grid.sample(500,500,40).equals(g.sample(500,500,40)),"persistent grid roundtrip");
+  require(WorldLogicApi.transportGridPreview(l,weatherFixture(l)).isEmpty(),"disabled controller has no grid API");
+ }
  public static void verifyWeatherController(ServerLevel l){
   require(WeatherController.choose(.1,true,900,true,true)==WeatherController.Mode.CLEAR,"dry cannot thunder");
   require(WeatherController.choose(.3,false,0,false,false)==WeatherController.Mode.CLEAR,"rain start threshold");
@@ -51,6 +69,7 @@ public final class ApiChecks {
   require(WeatherController.choose(.8,true,300,false,false)==WeatherController.Mode.THUNDER,"moist buoyant storm");
   var last=WeatherController.last(l);
   require(last!=null&&l.getGameTime()-last.tick()<=220,"automatic world tick actually applied weather");
+  require(WorldLogicApi.transportGridPreview(l,last.anchor()).isPresent(),"live controller consumed persisted grid");
   require(l.getLevelData().isRaining()==(last.mode()!=WeatherController.Mode.CLEAR),"actual rain flag");
   require(l.getLevelData().isThundering()==(last.mode()==WeatherController.Mode.THUNDER),"actual thunder flag");
   for(var mode:WeatherController.Mode.values()){

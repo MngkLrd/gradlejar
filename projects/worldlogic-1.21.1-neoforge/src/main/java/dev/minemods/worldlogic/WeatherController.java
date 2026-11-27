@@ -31,9 +31,18 @@ public final class WeatherController {
   if(!l.hasChunkAt(spawn))return;
   int y=Math.min(l.getMaxBuildHeight()-1,Math.max(l.getMinBuildHeight(),l.getHeight(Heightmap.Types.MOTION_BLOCKING,spawn.getX(),spawn.getZ())+1));
   BlockPos anchor=new BlockPos(spawn.getX(),y,spawn.getZ());
-  var preview=WorldLogicApi.weatherColumnPreview(l,anchor);
-  if(preview.isEmpty())return;
-  var c=preview.orElseThrow();
+  var env=WorldLogicApi.environment(l,anchor);
+  if(env.isEmpty())return;
+  var climate=env.orElseThrow().regionalClimate();
+  var biome=l.getBiome(anchor).value();
+  double reference=climate.map(v->14+28*v.thermalIndex()).orElse(-12+32*biome.getBaseTemperature());
+  double moisture=climate.map(WorldLogicApi.RegionalClimate::moistureIndex).orElse(biome.hasPrecipitation()?.55:.15);
+  double wx=climate.map(WorldLogicApi.RegionalClimate::prevailingWindX).orElse(0.0),wz=climate.map(WorldLogicApi.RegionalClimate::prevailingWindZ).orElse(0.0);
+  var cell=WeatherGridState.get(l).update(l,anchor,reference,moisture,wx,wz);
+  var steering=RegionalWeatherModel.sample(l.getSeed(),anchor.getX(),anchor.getZ(),l.getGameTime(),0,moisture,wx,wz);
+  double low=Math.max(0,Math.min(1,(1017-cell.pressureHpa())/28));
+  double sun=env.orElseThrow().solarExposure();
+  var c=AtmosphericColumn.diagnose(cell.airC(),cell.pressureHpa(),cell.relativeHumidity(),4.5+3*low+2*sun,200+1800*low+600*sun,(1-sun)*(1-steering.cloudFraction())*4,Math.hypot(steering.windX(),steering.windZ()));
   Mode mode=choose(c.precipitationPotential(),c.convective(),c.buoyancyEnergyJkg(),l.getLevelData().isRaining(),l.getLevelData().isThundering());
   apply(l,mode);LAST.put(l,new Applied(l.getGameTime(),mode,anchor));
  }
