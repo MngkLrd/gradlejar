@@ -57,12 +57,12 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         long seed=level.getSeed();
         List<BlockPos> trunks=new ArrayList<>();
         boolean placed=false,deadwood=false;
-        for(int i=0;i<8;i++){
+        for(int i=0;i<24;i++){
             int x=startX+random.nextInt(16),z=startZ+random.nextInt(16);
             BlockPos pos=new BlockPos(x,level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z),z);
             if(level.isOutsideBuildHeight(pos)||!level.ensureCanWrite(pos)||!level.ensureCanWrite(pos.below()))continue;
             var biome=level.getBiome(pos);Zone zone=zone(biome);
-            if(zone==Zone.NONE)continue;
+            if(zone==Zone.NONE||(i>=8&&zone!=Zone.BOREAL))continue;
             String name=id(biome);
             boolean mangrove=name.contains("mangrove");
             BlockState ground=level.getBlockState(pos.below());
@@ -78,7 +78,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             double base=switch(zone){
                 case OPEN -> name.equals("snowy_plains")?.035:.105;
                 case TEMPERATE -> .68;
-                case BOREAL -> name.equals("forest_tundra")?.14:.64;
+                case BOREAL -> name.equals("forest_tundra")?.14:.70;
                 case WET -> mangrove?.68:.36;
                 case DRY -> .15;
                 case TROPICAL -> .82;
@@ -87,12 +87,14 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             };
             // Smooth, seeded groves instead of independent uniform rolls.
             double probability=base*Math.max(0,Math.min(1.35,(field-.16)*1.8));
+            if(zone==Zone.BOREAL&&!name.equals("forest_tundra")) probability=Math.max(.24,probability);
             if(local.isPresent()){
                 var h=local.get();
-                if(h.zone().equals("MARINE")||h.zone().equals("SUBTERRANEAN")||h.slope()>42||h.surface().equals("ROCKY")||h.surface().equals("SANDY")&&!mangrove)continue;
+                if(h.zone().equals("MARINE")||h.zone().equals("SUBTERRANEAN")||h.slope()>42||h.surface().equals("ROCKY")&&zone!=Zone.BOREAL||h.surface().equals("SANDY")&&!mangrove)continue;
                 if((h.temperature() < -10 && zone!=Zone.BOREAL)||name.equals("arctic_wetland"))continue;
                 if(zone==Zone.BOREAL&&h.temperature()>23)probability*=.25;
-                if(h.coldness()>.88&&zone!=Zone.BOREAL||h.dryness()>.92&&zone!=Zone.DRY)continue;
+                if(h.coldness()>.88&&zone!=Zone.BOREAL||h.dryness()>.92&&zone!=Zone.DRY&&zone!=Zone.BOREAL)continue;
+                if(zone==Zone.BOREAL&&h.dryness()>.92)probability*=.35;
                 probability*=Math.max(.15,Math.min(1.2,.35+.8*h.fertility()+.25*h.strength()));
                 if(h.slope()>25)probability*=.55;
                 if(h.waterlogging()>.8&&zone!=Zone.WET)probability*=.3;
@@ -106,6 +108,15 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             var key=ResourceKey.create(Registries.CONFIGURED_FEATURE,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","tree_"+form.feature()));
             if(level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(key).value().place(level,generator,random,pos)){
                 placed=true;trunks.add(pos);
+                if(zone==Zone.BOREAL||zone==Zone.TEMPERATE||zone==Zone.WET){
+                    for(int n=0;n<3;n++){
+                        int sx=x+random.nextInt(9)-4,sz=z+random.nextInt(9)-4;
+                        if((sx&~15)!=startX||(sz&~15)!=startZ)continue;
+                        BlockPos floor=new BlockPos(sx,level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,sx,sz),sz);
+                        if(random.nextInt(4)==0)recruit(level,floor,form.wood());
+                        else understory(level,floor,random.nextBoolean()?"forest_litter":"fallen_leaves");
+                    }
+                }
             }
             // Deadwood is a separate rare feature on nearby free, level ground.
             if(!deadwood&&!mangrove&&(zone==Zone.TEMPERATE||zone==Zone.BOREAL||zone==Zone.WET)&&random.nextInt(32)==0){
@@ -128,13 +139,14 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         return switch(zone){
             case OPEN -> wind>.62?form("oak_windswept","oak"):young?form("oak_young","oak"):random.nextInt(14)==0?form("oak_ancient","oak"):form("oak_spreading","oak");
             case TEMPERATE -> {
-                if(name.contains("birch")||random.nextInt(5)==0)yield form(young?"birch_young":"birch_tall","birch");
+                if(name.contains("birch")||random.nextInt(5)==0)yield form(young?(random.nextBoolean()?"birch_pioneer":"birch_young"):"birch_tall","birch");
                 if(name.equals("dark_forest")&&!young&&random.nextInt(3)==0)yield form("dark_oak_old","dark_oak");
                 if(moisture>.68&&river>.45&&random.nextInt(3)==0)yield form(young?"willow_young":"willow_spreading","willow");
                 yield form(wind>.68?"oak_windswept":young?"oak_young":random.nextInt(15)==0?"oak_ancient":"oak_spreading","oak");
             }
             case BOREAL -> {
-                if(name.equals("forest_tundra")||random.nextInt(4)==0)yield form(young?"larch_young":"larch_tall","larch");
+                if(name.equals("forest_tundra")||name.equals("light_conifer_taiga")||random.nextInt(4)==0)yield form(wind>.62||name.equals("forest_tundra")?"larch_exposed":young?"larch_young":"larch_tall","larch");
+                if(young)yield form("spruce_young","spruce");
                 if(!young&&fertility>.5&&(name.contains("old_growth")||name.contains("dark_conifer"))&&random.nextInt(7)==0)yield form("spruce_old","spruce");
                 yield form(moisture>.55||random.nextBoolean()?"spruce_dense":"pine_tall","spruce");
             }
@@ -160,6 +172,24 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
     private static Direction fallDirection(CoreHabitat.Sample h){
         if(Math.abs(h.windX())>=Math.abs(h.windZ()))return h.windX()>=0?Direction.EAST:Direction.WEST;
         return h.windZ()>=0?Direction.SOUTH:Direction.NORTH;
+    }
+    private static boolean safeFloor(WorldGenLevel level,BlockPos pos){
+        return !level.isOutsideBuildHeight(pos)&&level.ensureCanWrite(pos)&&level.ensureCanWrite(pos.below())
+            &&level.getBlockState(pos).isAir()&&soil(level.getBlockState(pos.below()));
+    }
+    static boolean recruit(WorldGenLevel level,BlockPos pos,String wood){
+        if(!safeFloor(level,pos)||wood.equals("mangrove")||wood.equals("dark_oak"))return false;
+        String namespace=wood.equals("larch")||wood.equals("willow")?"worldlogicterrain":"minecraft";
+        Block sapling=BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(namespace,wood+"_sapling"));
+        BlockState state=sapling.defaultBlockState();
+        if(!(sapling instanceof net.minecraft.world.level.block.SaplingBlock)||!state.canSurvive(level,pos))return false;
+        // Real saplings use the normal random-tick growth rules after chunk generation.
+        return level.setBlock(pos,state,2);
+    }
+    static boolean understory(WorldGenLevel level,BlockPos pos,String name){
+        if(!safeFloor(level,pos)||!(name.equals("forest_litter")||name.equals("fallen_leaves")))return false;
+        BlockState state=BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("worldlogicterrain",name)).defaultBlockState();
+        return !state.isAir()&&state.canSurvive(level,pos)&&level.setBlock(pos,state,2);
     }
     static boolean fallen(WorldGenLevel level,BlockPos start,String wood,Direction dir,int length){
         String namespace=wood.equals("larch")||wood.equals("willow")?"worldlogicterrain":"minecraft";

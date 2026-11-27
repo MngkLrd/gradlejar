@@ -31,6 +31,9 @@ public final class TreeChecks {
     private record Form(String feature,String namespace,String wood,int minHeight){}
     private static final List<Form> FORMS=List.of(
         new Form("oak_young","minecraft","oak",5),
+        new Form("birch_pioneer","minecraft","birch",4),
+        new Form("larch_exposed","worldlogicterrain","larch",5),
+        new Form("spruce_young","minecraft","spruce",5),
         new Form("oak_spreading","minecraft","oak",6),
         new Form("oak_ancient","minecraft","oak",10),
         new Form("oak_windswept","minecraft","oak",4),
@@ -132,6 +135,21 @@ public final class TreeChecks {
             clear(l);
             l.setBlock(CENTER.east(2),Blocks.STONE.defaultBlockState(),2);
             require(!EcologicalTreeFeature.fallen(l,CENTER,"willow",Direction.EAST,4)&&l.getBlockState(CENTER).isAir(),"Fallen log overwrote obstacle");
+            clear(l);
+            for(String species:List.of("oak","birch","spruce","willow","larch")){
+                require(EcologicalTreeFeature.recruit(l,CENTER,species),"Forest recruitment failed "+species);
+                require(l.getBlockState(CENTER).getBlock() instanceof SaplingBlock,"Recruit not a real sapling "+species);
+                require(!EcologicalTreeFeature.recruit(l,CENTER,species),"Recruit replaced existing sapling");
+                clear(l);
+            }
+            for(String cover:List.of("forest_litter","fallen_leaves")){
+                require(EcologicalTreeFeature.understory(l,CENTER,cover)&&l.getBlockState(CENTER).is(block("worldlogicterrain",cover)),"Missing forest cover "+cover);
+                require(!EcologicalTreeFeature.understory(l,CENTER,cover),"Cover replaced occupied ground");
+                clear(l);
+            }
+            l.setBlock(CENTER.below(),Blocks.STONE.defaultBlockState(),2);
+            require(!EcologicalTreeFeature.recruit(l,CENTER,"larch")&&!EcologicalTreeFeature.understory(l,CENTER,"forest_litter")&&l.getBlockState(CENTER).isAir(),"Forest renewal on stone");
+            clear(l);
             double min=1,max=0;
             for(int x=-256;x<=256;x+=16)for(int z=-256;z<=256;z+=16){
                 double a=EcologicalTreeFeature.grove(24,x,z);

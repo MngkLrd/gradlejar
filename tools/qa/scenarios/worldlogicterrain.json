@@ -3181,6 +3181,73 @@
           "name": "WorldLogic preset vegetation attachment"
         }
       ]
+    },
+    {
+      "id": "tree-birch_pioneer",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape birch_pioneer, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-larch_exposed",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape larch_exposed, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-spruce_young",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape spruce_young, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "forest-recruitment",
+      "kind": "mechanic",
+      "subject": "Real native and addon saplings, no occupied or stone replacement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-understory",
+      "kind": "mechanic",
+      "subject": "Actual litter beside forest trees, no occupied or stone replacement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
     }
   ]
 }
