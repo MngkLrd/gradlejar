@@ -65,3 +65,31 @@ class VisualLintTests(unittest.TestCase):
         ref={"samples":[{"kind":"item","metrics":m}]}
         self.assertEqual(reference_ranges(ref,"item",(16,16))["ranges"]["palette_colors"],[1,1])
         self.assertIsNone(reference_ranges(ref,"item",(32,32)))
+
+    def test_flat_four_color_clothing_requires_review(self):
+        from tools.qa.visual_lint import inspect, art_review_inventory, review_queue
+        im=Image.new("RGBA",(16,16),(0,0,0,0))
+        for y in range(3,14):
+            for x in range(3,13):
+                shade=(95,81,62) if x in (3,12) or y==13 else ((222,210,185) if y==3 else ((150,132,108) if x==11 else (184,169,143)))
+                im.putpixel((x,y),(*shade,255))
+        name="assets/test/textures/item/linen_clothes.png"
+        with tempfile.TemporaryDirectory() as tmp:
+            report=inspect([name],{name:self.png(im)}.get,Path(tmp))
+            self.assertEqual(report["textures"][0]["metrics"]["palette_colors"],4)
+            self.assertTrue(any("limited item palette" in w for w in report["textures"][0]["warnings"]))
+            self.assertEqual(report["evidence"]["structural_lint"],"PASS")
+            self.assertEqual(report["evidence"]["aesthetic_review"],"NOT_RUN")
+            self.assertEqual(len(review_queue(report)["tasks"]),1)
+            self.assertEqual(art_review_inventory(report)["tasks"][0]["priority"],"FLAGGED")
+
+    def test_tiny_simple_icon_not_rejected_for_palette(self):
+        from tools.qa.visual_lint import inspect, art_review_inventory
+        im=Image.new("RGBA",(16,16),(0,0,0,0))
+        im.putpixel((8,8),(255,255,255,255))
+        name="assets/test/textures/item/dot.png"
+        with tempfile.TemporaryDirectory() as tmp:
+            report=inspect([name],{name:self.png(im)}.get,Path(tmp))
+            self.assertEqual(report["textures"][0]["warnings"],[])
+            self.assertEqual(report["status"],"measured")
+            self.assertEqual(art_review_inventory(report)["tasks"][0]["status"],"NOT_RUN")

@@ -11,6 +11,10 @@ This is the canonical MineMods visual procedure under [AGENTS.md](../AGENTS.md).
 
 The following review procedure is **our engineering standard**, derived from those references. It is not a Mojang certification or a reproduction of their internal guidelines.
 
+## Mojang developer guidance: practical application
+
+Jasper Boerstra's [June 2021 developer Q&A](https://www.minecraft.net/en-us/article/caves---cliffs--part-i--dev-q-a) emphasizes pixel-art fundamentals, pixel relationships and color theory. His [texture-update interview](https://www.minecraft.net/en-us/article/try-new-minecraft-textures) warns that excessive anti-aliasing blurs low-resolution art. Apply these as concrete reviews: use hue/value/saturation ramps, deliberate cluster placement, clear silhouettes, and readable material cues; do not generate noise or fake extra colors to satisfy metrics. Mojang's [Bedrock Copper Age changelog](https://www.minecraft.net/en-us/article/the-copper-age---minecraft--bedrock-edition-1-21-111-changelog) also explains the dye redesign in terms of visual consistency and distinguishable shapes for colorblind accessibility. Apply this general art principle to Java items and status icons: do not rely on hue alone to distinguish states. These are first-party statements; the detailed acceptance procedure and numerical warnings below are MineMods policy, not Mojang-mandated thresholds.
+
 ## Art production and review
 
 ### All assets
@@ -23,6 +27,8 @@ The following review procedure is **our engineering standard**, derived from tho
 ### Items and equipment
 
 - Normal drawn item icons use the 16x16 canvas, with readable silhouette, controlled outline, top-left illumination and material-specific details. Inspect at native size, then with nearest-neighbor enlargement. Larger canvases, armor layers and 3D items are legitimate only when the design/reference warrants them; consistent effective texel density matters more than a universal PNG size.
+- For clothing and armor icons, compare actual vanilla leather chestplate, leggings or comparable equipment and the intended material before drawing. Use the base silhouette and outline, then develop the color ramp and place fabric folds, collar, sleeve/cuff, hem or seams where recognizable at native size. Leather, linen and metal should not share identical highlights or the same flat fill. Check worn texture separately from the inventory icon. Preserve simple readable shapes; do not add meaningless detail to every pixel.
+- A four-color palette is a review signal for a substantial item, not an automatic failure or a universal minimum. A base fill plus outline and two accents is insufficient if it does not depict material and form. Inspect the distribution and placement of shades, not just their number. Do not solve a flat texture by adding unused colors, random one-pixel flecks, noise or gradients.
 - Check inventory/creative slots and tooltip readability, first- and third-person hands, dropped item and item frame where relevant; preserve vanilla-scale grip, angle and size. Compare left/right-hand transforms when supported. A flat generated item is acceptable for a sprite; an intended 3D item must actually render as 3D.
 - Inspect layering, tint, transparency and special use states (e.g. charged, damaged, held at mouth). No clipping through the hand or invisible parts, missing-texture checkerboards or unexplained color differences between display contexts.
 
@@ -55,13 +61,18 @@ The following review procedure is **our engineering standard**, derived from tho
 
 Record PASS only for a review actually performed; use FAIL, NOT_RUN, UNSUPPORTED or N/A as appropriate. These are review outcomes, not new automated QA-level definitions. A structural defect under the existing applicable asset gate blocks a verified release; heuristic warnings require judgment and are not automatic aesthetic failures. A material visual defect should be corrected rather than ignored. If no suitable client is available, deliver honestly labeled development evidence and report exactly which views remain untested; existing release and manual client approval rules still apply. Group screenshots or animation checks by feature rather than launching a client for every PNG. No new blocking subjective-score gate, no required manual user QA during ordinary development.
 
-## Existing Fast Visual QA implementation (current main)
+## Mandatory evidence for each changed asset
+
+Inspect every new or changed asset, including those without lint warnings. Use `art-review-inventory.json` (all inspected textures/models, grouped by content hash), then `redraw-queue.json` for flagged candidates. Review actual native PNG/model or preview against a named vanilla asset and game version, with a specific judgment about shape, palette/material and shading/scale. If preview budget is exhausted, open the source asset directly. A zero-warning item is NOT_RUN until reviewed. Record separate structural lint, aesthetic review and real client rendering results in the normal delivery evidence; do not claim Visual QA PASS without stating the scope. A green workflow only means its executed checks succeeded. A reviewer can accept a genuinely simple icon with a reason, or reject a technically valid flat clothing sprite. Correct material flaws and review the revised hash. A screenshot of an asset thumbnail is not the original PNG or in-game evidence.
+
+## Fast Visual QA implementation
 
 The separate visual workflow runs on relevant texture/model/tool changes and does not start Minecraft or Gradle. It does not impose a new automatic release gate or mutate existing textures. The existing final-JAR asset gate remains active.
 
 - Item/block/entity PNG: exact four-neighbor connected RGB clusters (ignore fully transparent pixels), isolated/small cluster fractions, palette count, equal-color neighbor fraction, adjacent HSV steps, partial alpha and alternating 2x2 patterns. Metrics and heuristic warnings are not aesthetic grades. Animated atlases/metadata are identified; frame-level style warnings and tiling omitted.
 - Models: element counts, subpixel geometry and estimated unequal UV texel density for explicit JSON faces with resolvable local textures. Not inherited models, runtime/Blockbench meshes, material semantics or exact geometry certification.
 - Real vanilla reference: selected item/block/entity textures from official 1.21.1 client, metadata and client SHA-1 verified, cached metrics only. Matching category/size ranges are contextual examples, not acceptance thresholds. The CI default is 1.21.1; select comparable actual-version references separately if needed. No redistribution of vanilla PNGs.
+- Advisory low-complexity signals: for non-animated item textures with at least 32 visible pixels, four or fewer distinct visible RGB colors or a dominant color occupying at least 75% of those pixels prompts contextual review. These are deliberately conservative MineMods heuristics, not artistic pass/fail thresholds. Vanilla reference samples include armor icons. All inspected assets enter the review inventory even if no warning fires; automated aesthetic and client statuses remain NOT_RUN.
 - Previews: native PNG, nearest-neighbor enlargement and 3x3 block tile for up to 32 unique textures. Review tiling visually. Transparent materials, thin elements, dithering and nonstandard sizes can be intentional.
 - Structural errors: unreadable PNG, malformed model JSON, invalid explicit UV are job failures. Heuristic style warnings are advisory. Review the hash-bound redraw queue; make one targeted correction by default where a real flaw exists and recheck. Do not repaint good art to improve an arbitrary score.
 - Full graphical gameplay validation, automatic visual regression, GUI semantic layout validation and animation analysis are not implemented by this linter; protocol bot has no renderer. No numerical threshold can certify vanilla art style.

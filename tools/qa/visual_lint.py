@@ -27,7 +27,7 @@ PILOT = [
     "projects/bearback-1.20.1/src/main/resources/assets/bearback/textures/entity/bear_saddle.png",
 ]
 VANILLA = {
-    "item": ["iron_ingot", "iron_sword", "stick", "leather", "apple", "brick", "diamond", "paper", "gold_ingot"],
+    "item": ["iron_ingot", "iron_sword", "stick", "leather", "apple", "brick", "diamond", "paper", "gold_ingot", "leather_chestplate", "chainmail_chestplate", "iron_chestplate", "leather_leggings", "leather_boots"],
     "block": ["oak_planks", "stone", "bricks", "iron_block", "glass", "white_wool", "dirt"],
     "entity": ["cow/cow", "pig/pig", "zombie/zombie", "creeper/creeper", "skeleton/skeleton"],
 }
@@ -109,6 +109,7 @@ def stats(im):
     return {
         "width":w,"height":h,"visible_pixels":visible,"palette_colors":len(palette),
         "partial_alpha_pixels":sum(0<p[3]<255 for p in px),
+        "dominant_color_fraction":round(max(palette.values())/visible,4),
         "clusters_4_connected":len(sizes),"median_cluster_area":statistics.median(sizes),
         "largest_cluster_area":max(sizes),
         "singleton_pixel_fraction":round(sizes.count(1)/visible,4),
@@ -128,6 +129,10 @@ def style_notes(kind, m, animated=False):
     notes = []
     if kind == "item" and (m["width"],m["height"]) != (16,16):
         notes.append("Non-16x16 item texture: review icon/model scale; larger atlases may be intentional.")
+    if kind == "item" and m["visible_pixels"] >= 32 and m["palette_colors"] <= 4:
+        notes.append("Very limited item palette (4 or fewer visible RGB colors): review volume, material cues and comparable vanilla items; intentional simple icons may be valid.")
+    if kind == "item" and m["visible_pixels"] >= 32 and m["dominant_color_fraction"] >= .75:
+        notes.append("One color covers at least 75% of visible item pixels: inspect flat fill, missing surface cues and intentional simplicity.")
     if m["partial_alpha_pixels"]:
         notes.append("Partial alpha: review intended translucency versus accidental smoothing.")
     if m["visible_pixels"] >= 32 and m["singleton_pixel_fraction"] > .45:
@@ -282,7 +287,7 @@ def inspect(names, read, out, ref=None):
                 data=read(name)
                 if data is None: continue
                 row=model_metrics(data,name,read)
-                result["models"].append(dict(row,file=name))
+                result["models"].append(dict(row,file=name,sha256=hashlib.sha256(data).hexdigest()))
                 result["errors"].extend({"file":name,"reason":x} for x in row["errors"])
                 result["warnings"].extend({"file":name,"reason":x} for x in row["warnings"])
         except (OSError,ValueError,TypeError,OverflowError,Image.DecompressionBombError) as e:
@@ -290,6 +295,12 @@ def inspect(names, read, out, ref=None):
     result["counts"]={"textures":len(result["textures"]),"unique_textures":len(cache),"models":len(result["models"]),
                       "errors":len(result["errors"]),"warnings":len(result["warnings"]),"previews":preview_count}
     result["status"]="failed" if result["errors"] else ("review" if result["warnings"] else ("measured" if result["textures"] or result["models"] else "not-applicable"))
+    # A successful lint run is not an art or rendering review. Never infer PASS from zero warnings.
+    result["evidence"]={
+        "structural_lint": "FAIL" if result["errors"] else ("PASS" if result["textures"] or result["models"] else "N/A"),
+        "aesthetic_review": "NOT_RUN",
+        "client_rendering": "NOT_RUN",
+    }
     return result
 
 def review_queue(report):
@@ -304,6 +315,27 @@ def review_queue(report):
         task["files"].append(t["file"])
     return {"schema":1,"scope":"Agent review and targeted redraw only for confirmed defects; no unattended image generation or aesthetic pass claim.",
             "tasks":list(groups.values())}
+
+def art_review_inventory(report):
+    """Review all inspected assets, even when metrics have no warnings; no automatic art verdict."""
+    groups={}
+    for category in ("textures","models"):
+        for row in report.get(category,[]):
+            key=(category,row["sha256"],row.get("kind"))
+            task=groups.setdefault(key,{
+                "status":"NOT_RUN","category":category,"kind":row.get("kind"),
+                "sha256":row["sha256"],"files":[],"warnings":[],
+                "preview":row.get("preview"),"metrics":row.get("metrics"),
+                "priority":"NORMAL",
+                "required_review":["comparable vanilla asset ID and version","silhouette and scale",
+                    "material, palette and shading","actual asset or native-size preview"],
+            })
+            task["files"].append(row["file"])
+            for warning in row.get("warnings",[]):
+                if warning not in task["warnings"]:task["warnings"].append(warning)
+            if task["warnings"]:task["priority"]="FLAGGED"
+    return {"schema":1,"scope":"All inspected assets require contextual agent review; no automatic aesthetic or rendered-client PASS.",
+            "tasks":sorted(groups.values(),key=lambda t:(t["priority"]!="FLAGGED",t["files"][0]))}
 
 def changed(base):
     if not re.fullmatch(r"[0-9a-f]{40}",base):
@@ -344,8 +376,10 @@ def main():
         r=inspect(names,read,a.out,ref)
     (a.out/"visual-report.json").write_text(json.dumps(r,indent=2,ensure_ascii=False)+"\n")
     (a.out/"redraw-queue.json").write_text(json.dumps(review_queue(r),indent=2,ensure_ascii=False)+"\n")
+    inventory=art_review_inventory(r)
+    (a.out/"art-review-inventory.json").write_text(json.dumps(inventory,indent=2,ensure_ascii=False)+"\n")
     c=r["counts"]
-    summary=f"Visual QA: {r['status']} | {c['textures']} textures, {c['models']} models, {c['errors']} errors, {c['warnings']} advisory warnings. Native PNG metrics, no in-game rendering."
+    summary=f"Visual lint ONLY: {r['status']} | {c['textures']} textures, {c['models']} models, {c['errors']} errors, {c['warnings']} advisory warnings. Structural lint: {r['evidence']['structural_lint']}; aesthetic review: NOT_RUN ({len(inventory['tasks'])} groups); client rendering: NOT_RUN."
     print(summary)
     import os
     if os.getenv("GITHUB_STEP_SUMMARY"):
