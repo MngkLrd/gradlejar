@@ -77,8 +77,8 @@
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/ebony_leaves.png": {
-      "sha256": "fafd1a6b820ed41529bcb64f0956e4894d89dcc41a8d9b606da2eab8e4fa4787",
-      "verdict": "FAIL",
+      "sha256": "af969168bf50d25a7108c335794c6fecb802415e0952a5fc7eb2900b06c802dc",
+      "verdict": "PASS",
       "material_profile": "broadleaf",
       "references": [
         {
@@ -87,9 +87,20 @@
           "sha256": "7de885f23039edae5cebc02bc208a65d840394448ecac6faa6999f1c558f98c2"
         }
       ],
-      "comparison": "Compared with dark oak foliage: actual transparent openings are present, but repeated highlight clusters form a mechanically tiled rhythm instead of varied leaf overlaps.",
-      "findings": {},
-      "required_rework": "Compared with dark oak foliage: actual transparent openings are present, but repeated highlight clusters form a mechanically tiled rhythm instead of varied leaf overlaps."
+      "comparison": "Inspected native size, 4x and tiled 3x3 with dark_oak_leaves: Dark oak provides a dense broadleaf comparator; ebony deliberately retains a darker green canopy. Unequal rounded edges and asymmetrical cutouts break the previously repeated diagonal stamp.",
+      "findings": {
+        "silhouette": "Broad glossy dark green leaves overlap in a relatively dense canopy.",
+        "cluster_structure": "The x1–5 y1–4 face has a curved lighter ridge and small intermediate shade beneath it.",
+        "micro_contrast": "Close green shade steps give the large leaf interiors detail without whitening the tips.",
+        "light_and_volume": "Lighter upper leaf facets and deep dark junctions separate several overlapping planes.",
+        "material_continuity": "The deep cool green palette remains coherent and distinct from bark.",
+        "edge_variation": "Unequal rounded edges and asymmetrical cutouts break the previously repeated diagonal stamp.",
+        "variant_identity": "Ebony uses broad glossy dark faces, unlike narrow compound mahogany.",
+        "vanilla_comparison": "Dark oak provides a dense broadleaf comparator; ebony deliberately retains a darker green canopy.",
+        "leaf_groups": "Overlapping large upper-left and center-right leaf faces remain discernible.",
+        "canopy_depth": "Darker lower-right groups and shaded bases sit behind lit broad leaf surfaces.",
+        "structural_transparency": "Open spaces between x6–7 y5–6 and x7–8 y9–10 reveal leaf contours rather than a checker grid."
+      }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/ebony_sapling.png": {
       "sha256": "a4d301d0f244f110d347661ee721afc8ba430b842941bcc6dbed9e2e9faedc9c",
@@ -193,8 +204,8 @@
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/mahogany_leaves.png": {
-      "sha256": "eb57c123fd30ab860409e8ec88a497900a538860d5bbd784d937cd15731d3fa4",
-      "verdict": "FAIL",
+      "sha256": "7d40c2271dca23baffc288cf2bfe98a45bd651c417cb3b72308f8ea6da8cb33c",
+      "verdict": "PASS",
       "material_profile": "broadleaf",
       "references": [
         {
@@ -203,9 +214,20 @@
           "sha256": "2e3ac2a106e5bd99934fe4b62bdd35c559157989e621f2dbf5d42d6cdba245d6"
         }
       ],
-      "comparison": "Compared with jungle foliage: connected leaf groups exist but similar diagonal lobes repeat and fail to represent distinct canopy depth.",
-      "findings": {},
-      "required_rework": "Compared with jungle foliage: connected leaf groups exist but similar diagonal lobes repeat and fail to represent distinct canopy depth."
+      "comparison": "Inspected native size, 4x and tiled 3x3 with jungle_leaves: Jungle leaves provide comparable tropical canopy scale; the compound leaf shape is species-specific. Different leaflet lengths and small gaps around their tips break the repeated lobes.",
+      "findings": {
+        "silhouette": "Small lanceolate leaflets with unequal angles form a compound leaf canopy.",
+        "cluster_structure": "Adjacent olive clusters along the x7–12 y3–9 spray include smaller pointed highlights.",
+        "micro_contrast": "The x10 y6–7 ridge meets muted mid-green surrounding the leaflet base.",
+        "light_and_volume": "Bright leaflet centers and dark branch junctions separate overlapping shoots.",
+        "material_continuity": "The warm tropical green ramp is consistent across the different compound leaflets.",
+        "edge_variation": "Different leaflet lengths and small gaps around their tips break the repeated lobes.",
+        "variant_identity": "Mahogany's smaller compound leaflets differ from ebony's large rounded leaf faces.",
+        "vanilla_comparison": "Jungle leaves provide comparable tropical canopy scale; the compound leaf shape is species-specific.",
+        "leaf_groups": "Individual pointed pairs occupy upper center, central right and lower left branches.",
+        "canopy_depth": "Dark overlapping leaflet bases alternate with brighter green exposed faces.",
+        "structural_transparency": "Openings at x5–6 y4–5 and x9–10 y12–13 follow compound-leaf separation."
+      }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/mahogany_sapling.png": {
       "sha256": "0f6e49c770ea7cf03a8de73c63ebfdd4fc7626e7b3a73b17e22abba61da8f204",
@@ -1688,9 +1710,291 @@
         "vanilla_comparison": "Like vanilla dark oak and mangrove planks, willow deliberately retains a shared processed-board motif.",
         "functional_material_cues": "Horizontal sawn grain and staggered end joints make a clear timber construction surface."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/alder_leaves.png": {
+      "sha256": "d3165e8ce8150bf0a997b57ebaf0562ecfe02a672d75f33dac46717893aa04eb",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/oak_leaves",
+          "minecraft": "1.21.1",
+          "sha256": "69c9c7048695e014aee6b8a2c4cb080607bd7a2a5291c06218b8134cbfcdc04f"
+        }
+      ],
+      "comparison": "Inspected native size, 4x and tiled 3x3 with oak_leaves: Oak offers a comparable broadleaf cluster scale; alder uses slightly rounder larger leaf faces. Openings between the upper and lower groups vary in width and shape.",
+      "findings": {
+        "silhouette": "Rounded individual leaf faces alternate around darker branch junctions.",
+        "cluster_structure": "Connected upper-center leaf faces have smaller lighter ridges beside shaded bases.",
+        "micro_contrast": "The short moss-green highlight near x2 y6 meets mid green rather than a white speckle.",
+        "light_and_volume": "The darker central junctions lie behind the light upper-left leaf surfaces.",
+        "material_continuity": "The olive green family stays consistent across all leaf groups.",
+        "edge_variation": "Openings between the upper and lower groups vary in width and shape.",
+        "variant_identity": "Alder's rounded oval forms contrast with beech's longer pointed blades.",
+        "vanilla_comparison": "Oak offers a comparable broadleaf cluster scale; alder uses slightly rounder larger leaf faces.",
+        "leaf_groups": "The small rounded leaves at x1–6 y5–9 overlap irregularly with neighboring groups.",
+        "canopy_depth": "Dark junctions beneath the center and lower-right leaves suggest foreground and rear layers.",
+        "structural_transparency": "Openings at x6–7 y10–11 and around the right edge follow separating leaf contours."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/beech_leaves.png": {
+      "sha256": "5a50b94929d4dc34333168354308794c56ae972e2f9138665ec811a777b45788",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/oak_leaves",
+          "minecraft": "1.21.1",
+          "sha256": "69c9c7048695e014aee6b8a2c4cb080607bd7a2a5291c06218b8134cbfcdc04f"
+        }
+      ],
+      "comparison": "Inspected native size, 4x and tiled 3x3 with oak_leaves: Oak's small broadleaf groups provide comparable scale; beech retains a more elongated blade structure. Narrow pointed tips and offset lower leaf faces avoid repeated square blocks.",
+      "findings": {
+        "silhouette": "Pointed oblong blades occupy unequal positions on intersecting sprays.",
+        "cluster_structure": "Elongated medium-green faces include thin brighter vein-side groups at x7–8 y2–3.",
+        "micro_contrast": "Small adjacent olive value changes keep the leaf blade surface readable.",
+        "light_and_volume": "The bright short central lines lie above the deep green leaf tips and junctions.",
+        "material_continuity": "A restrained yellow-green palette ties the broadleaf surfaces together.",
+        "edge_variation": "Narrow pointed tips and offset lower leaf faces avoid repeated square blocks.",
+        "variant_identity": "Beech's oblong pointed forms are distinct from alder's rounded foliage.",
+        "vanilla_comparison": "Oak's small broadleaf groups provide comparable scale; beech retains a more elongated blade structure.",
+        "leaf_groups": "The x2–6 y5–9 and lower-right faces suggest alternating pointed leaves.",
+        "canopy_depth": "Overlapping darker bases separate foreground blades from deeper canopy.",
+        "structural_transparency": "Open gaps around x8–10 y5 and x12–14 y8 follow leaf margins and branch spacing."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/maple_leaves.png": {
+      "sha256": "25c127feeb601795710c9980a825f0a606b0e583cecc83a6bc58d3ad430537c7",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/oak_leaves",
+          "minecraft": "1.21.1",
+          "sha256": "69c9c7048695e014aee6b8a2c4cb080607bd7a2a5291c06218b8134cbfcdc04f"
+        }
+      ],
+      "comparison": "Inspected native size, 4x and tiled 3x3 with oak_leaves: Oak provides a broadleaf texture at the same scale; maple has palmate angular outlines. The central openings have unequal boundaries and are broken by small leaves and branch tips.",
+      "findings": {
+        "silhouette": "Angular lobed maple leaves form separated broad faces with irregular forked tips.",
+        "cluster_structure": "The left-center face and lower-right face contain short adjacent light groups around their lobes.",
+        "micro_contrast": "The small yellow-olive steps at x5–6 y9 clarify vein-side plane changes.",
+        "light_and_volume": "Dark olive leaf bases and brighter inner lobes define overlapping planes.",
+        "material_continuity": "The canopy maintains a warm muted green-yellow ramp rather than random contrast.",
+        "edge_variation": "The central openings have unequal boundaries and are broken by small leaves and branch tips.",
+        "variant_identity": "Lobed angular silhouette separates maple from round alder and narrow willow.",
+        "vanilla_comparison": "Oak provides a broadleaf texture at the same scale; maple has palmate angular outlines.",
+        "leaf_groups": "The large x3–7 y5–10 group displays several lobes rather than an oval spot.",
+        "canopy_depth": "Shaded leaf edges and overlapping darker groups maintain depth between lighter fans.",
+        "structural_transparency": "Openings at x8–9 y4 and x10 y10–11 remain connected to leaf-outline gaps."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/baobab_leaves.png": {
+      "sha256": "ac87d0eb9f70502c81afe3696480ef1643168ce3da879ff8e541cd9ac34262cd",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/acacia_leaves",
+          "minecraft": "1.21.1",
+          "sha256": "e9578d4e462ca2865a6f8db3492a783705844d2748fb030a53e1964d664e9b57"
+        }
+      ],
+      "comparison": "Inspected native size, 4x and tiled 3x3 with acacia_leaves: Acacia gives a comparable dry-climate broadleaf canopy scale; baobab's fans are more palmate. Finger tips have unequal lengths and vary between the upper and lower groups.",
+      "findings": {
+        "silhouette": "Broad palmate leaf groups have several uneven projecting fingers.",
+        "cluster_structure": "The central fan includes light x7 y8–10 and smaller neighboring olive leaf facets.",
+        "micro_contrast": "Pale sage-green leaf ridges meet deeper olive bases in small connected steps.",
+        "light_and_volume": "The darker bases around the central fan separate several overlapping palmate groups.",
+        "material_continuity": "Muted dry-savanna yellow-green tones remain consistent over the leaf surfaces.",
+        "edge_variation": "Finger tips have unequal lengths and vary between the upper and lower groups.",
+        "variant_identity": "Baobab has broad fingered fans unlike maple's smaller angular lobes or alder ovals.",
+        "vanilla_comparison": "Acacia gives a comparable dry-climate broadleaf canopy scale; baobab's fans are more palmate.",
+        "leaf_groups": "Leaf fingers converge around the x7 y9 branch junction and the right-hand fan.",
+        "canopy_depth": "Dark overlapping bases are visible between broad, comparatively light faces.",
+        "structural_transparency": "Gaps at x5–6 y5–6 and x12–13 y11 sit between fan tips, not arbitrary holes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/willow_leaves.png": {
+      "sha256": "63f5c2ebc8684a3a844efd36ab630ed4df9f1de3168add9cded898cac62e325e",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/oak_leaves",
+          "minecraft": "1.21.1",
+          "sha256": "69c9c7048695e014aee6b8a2c4cb080607bd7a2a5291c06218b8134cbfcdc04f"
+        }
+      ],
+      "comparison": "Inspected native size, 4x and tiled 3x3 with oak_leaves: Oak provides a native broadleaf scale; willow uses much narrower hanging shapes. Openings at differing heights interrupt the long vertical shapes and expose their curves.",
+      "findings": {
+        "silhouette": "Long narrow drooping blades bend in multiple directions along thin stems.",
+        "cluster_structure": "Vertical blade groups have short adjacent lighter green strips and dark undersides.",
+        "micro_contrast": "Near x2–4 y8–10, small value steps follow the curve of a leaf instead of forming dots.",
+        "light_and_volume": "The lit central faces lie in front of darker bending leaf edges.",
+        "material_continuity": "Cool muted moss-green leaves use the same material ramp throughout.",
+        "edge_variation": "Openings at differing heights interrupt the long vertical shapes and expose their curves.",
+        "variant_identity": "Willow's pendant lanceolate leaves are intentionally unlike rounded oak or palm fronds.",
+        "vanilla_comparison": "Oak provides a native broadleaf scale; willow uses much narrower hanging shapes.",
+        "leaf_groups": "The left drooping strip curves toward x4 y10 while center blades bend differently.",
+        "canopy_depth": "Darker blade margins and crossing shoots establish layered foliage depth.",
+        "structural_transparency": "Transparent spaces at x3 y0–2 and x11 y12–13 separate narrow hanging leaf silhouettes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/pine_leaves.png": {
+      "sha256": "9dda1494abeb7eaf896560aae56bd35a848c780b177e78e945a670b3ed1b655c",
+      "verdict": "PASS",
+      "material_profile": "conifer",
+      "references": [
+        {
+          "id": "minecraft:block/spruce_leaves",
+          "minecraft": "1.21.1",
+          "sha256": "1f6c193f73cdd1399e94809c0bd7dce0b1b76dcdae1da2088e481dbba714edb2"
+        }
+      ],
+      "comparison": "Inspected native size, 4x and tiled 3x3 with spruce_leaves: Spruce establishes directed needle clusters; pine has longer needles and more open fans. Needle fans have unequal lengths and branch directions rather than a uniform repeated mesh.",
+      "findings": {
+        "silhouette": "Long narrow pine needles fan out from several overlapping dark axes.",
+        "cluster_structure": "The upper-left branch supports long light needle strips with darker contiguous bases.",
+        "micro_contrast": "Short moss-green tip highlights have nearby intermediate green pixels.",
+        "light_and_volume": "Dark rear branch patches contrast with exposed needles along their upper edges.",
+        "material_continuity": "Moss-green needles and deeper green bases share a restrained conifer palette.",
+        "edge_variation": "Needle fans have unequal lengths and branch directions rather than a uniform repeated mesh.",
+        "variant_identity": "Pine's open long needle fans differ from fir's shorter, cooler needles.",
+        "vanilla_comparison": "Spruce establishes directed needle clusters; pine has longer needles and more open fans.",
+        "needle_direction": "Needles radiate outward along the branch from x2 y3 toward x7 y0 and x3 y10.",
+        "structural_transparency": "Transparent openings lie between the radiating needles and beneath overlapping sprays."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/fir_leaves.png": {
+      "sha256": "49e26014e6b05e28f3811684086f5e68f43054d88a86ead53964cdd78f020b17",
+      "verdict": "PASS",
+      "material_profile": "conifer",
+      "references": [
+        {
+          "id": "minecraft:block/spruce_leaves",
+          "minecraft": "1.21.1",
+          "sha256": "1f6c193f73cdd1399e94809c0bd7dce0b1b76dcdae1da2088e481dbba714edb2"
+        }
+      ],
+      "comparison": "Inspected native size, 4x and tiled 3x3 with spruce_leaves: Spruce provides the native conifer structure; fir uses shorter flattened alternating needles. Needle tips and gaps differ between the horizontal upper spray and diagonal lower-right spray.",
+      "findings": {
+        "silhouette": "Short flat needles line dense cool green fir branches.",
+        "cluster_structure": "The horizontal upper-left branch at y4–5 has contiguous rear foliage and small bright needle tips.",
+        "micro_contrast": "Pale blue-green highlights are tempered by adjacent middle green needles.",
+        "light_and_volume": "Darker underlying sprays give depth beneath the shorter lit tips.",
+        "material_continuity": "The cool green shade family carries through all needle and branch groups.",
+        "edge_variation": "Needle tips and gaps differ between the horizontal upper spray and diagonal lower-right spray.",
+        "variant_identity": "Fir's cool short alternating needles differ from longer warm pine and larch tufts.",
+        "vanilla_comparison": "Spruce provides the native conifer structure; fir uses shorter flattened alternating needles.",
+        "needle_direction": "Needles alternate above and below the branch axis at x2–8 y4–5.",
+        "structural_transparency": "Transparent spaces sit between the short needle groups, exposing the branch structure."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/cedar_leaves.png": {
+      "sha256": "cb6d18ff0c1e1af4b91c7a89667804604c564c5ebf685050523b1869b0330c9f",
+      "verdict": "PASS",
+      "material_profile": "conifer",
+      "references": [
+        {
+          "id": "minecraft:block/spruce_leaves",
+          "minecraft": "1.21.1",
+          "sha256": "1f6c193f73cdd1399e94809c0bd7dce0b1b76dcdae1da2088e481dbba714edb2"
+        }
+      ],
+      "comparison": "Inspected native size, 4x and tiled 3x3 with spruce_leaves: Spruce gives a native needle scale; cedar uses more flattened branching fans. The center-left downward spray interrupts the upper upward diagonal and varies the edge gaps.",
+      "findings": {
+        "silhouette": "Flattened blue-green cedar sprays fork into short branching fans.",
+        "cluster_structure": "The crossed center-left spray uses a connected darker base with several smaller bright tips.",
+        "micro_contrast": "Muted sage and teal steps define the edges of individual short sprays.",
+        "light_and_volume": "Dark overlapping fans under the brighter shoots create a layered canopy.",
+        "material_continuity": "The cool bluish evergreen palette remains continuous across crossed branches.",
+        "edge_variation": "The center-left downward spray interrupts the upper upward diagonal and varies the edge gaps.",
+        "variant_identity": "Cedar retains broad flattened fans instead of pine's long paired needles or larch tufts.",
+        "vanilla_comparison": "Spruce gives a native needle scale; cedar uses more flattened branching fans.",
+        "needle_direction": "The new center axis runs from x0 y6 toward x8 y10, with short alternating side needles.",
+        "structural_transparency": "Irregular transparent openings follow gaps between crossed flattened sprays."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/larch_leaves.png": {
+      "sha256": "d1a7fb63f50ced5ac4754b393c59e17f3f8d917a5ad43895b3e92d0ab965b7fb",
+      "verdict": "PASS",
+      "material_profile": "conifer",
+      "references": [
+        {
+          "id": "minecraft:block/spruce_leaves",
+          "minecraft": "1.21.1",
+          "sha256": "1f6c193f73cdd1399e94809c0bd7dce0b1b76dcdae1da2088e481dbba714edb2"
+        }
+      ],
+      "comparison": "Inspected native size, 4x and tiled 3x3 with spruce_leaves: Spruce establishes a native conifer scale; larch deliberately uses clustered radial tufts. Tuft centers and ray lengths differ, leaving uneven openings between them.",
+      "findings": {
+        "silhouette": "Small radial tufts of soft needles emerge from several intersecting short branches.",
+        "cluster_structure": "The x5 y4 and x6 y9 tuft cores contain dark centers with connected green rays.",
+        "micro_contrast": "Yellow-green needle tips are adjacent to softer olive middle colors.",
+        "light_and_volume": "Darker rear tufts overlap brighter short radial needles at varying depths.",
+        "material_continuity": "The warm yellow-green needle family stays coherent throughout the larch canopy.",
+        "edge_variation": "Tuft centers and ray lengths differ, leaving uneven openings between them.",
+        "variant_identity": "Larch's short radial tufts and warmer tones differ from the linear evergreen pine and fir sprays.",
+        "vanilla_comparison": "Spruce establishes a native conifer scale; larch deliberately uses clustered radial tufts.",
+        "needle_direction": "Short needles radiate from multiple tuft roots rather than one parallel direction.",
+        "structural_transparency": "Transparent gaps separate the tuft outlines and follow individual radial needles."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/palm_leaves.png": {
+      "sha256": "ca6c13e877533a4a4cacd4fce97e3d6cbeabca6a79973fb66990433df2cf6d19",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/jungle_leaves",
+          "minecraft": "1.21.1",
+          "sha256": "2e3ac2a106e5bd99934fe4b62bdd35c559157989e621f2dbf5d42d6cdba245d6"
+        }
+      ],
+      "comparison": "Inspected native size, 4x and tiled 3x3 with jungle_leaves: Jungle foliage provides native tropical leaf scale; feather anatomy is intentionally different. The upper arc and shorter lower arc curve differently, with varying leaflet lengths.",
+      "findings": {
+        "silhouette": "Long curved feather-shaped palm fronds consist of narrow alternating leaflets.",
+        "cluster_structure": "The sweep from x2 y2 toward x8 y7 carries a dark curved base and adjacent light leaflets.",
+        "micro_contrast": "Neighboring warm green values around the central stem and tips give restrained blade relief.",
+        "light_and_volume": "Dark frond bases sit behind lighter exposed leaflet surfaces.",
+        "material_continuity": "The warm tropical green ramp is shared by the connected feather fronds.",
+        "edge_variation": "The upper arc and shorter lower arc curve differently, with varying leaflet lengths.",
+        "variant_identity": "Coconut palm's sweeping curved fronds differ from the stiffer silvery date palm fans.",
+        "vanilla_comparison": "Jungle foliage provides native tropical leaf scale; feather anatomy is intentionally different.",
+        "leaf_groups": "Narrow leaflets join a bent rachis on opposite sides rather than forming circular broadleaf spots.",
+        "canopy_depth": "The shaded underlying arcs and foreground brighter tips suggest overlapping fronds.",
+        "structural_transparency": "Openings between the long feather leaflets follow their actual spacing and curved edges."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/date_palm_leaves.png": {
+      "sha256": "2ad9e9763c4de7aaf2f80fc2d03b72bd607bf5b958ea931753d58d2a69bb9cee",
+      "verdict": "PASS",
+      "material_profile": "broadleaf",
+      "references": [
+        {
+          "id": "minecraft:block/jungle_leaves",
+          "minecraft": "1.21.1",
+          "sha256": "2e3ac2a106e5bd99934fe4b62bdd35c559157989e621f2dbf5d42d6cdba245d6"
+        }
+      ],
+      "comparison": "Inspected native size, 4x and tiled 3x3 with jungle_leaves: Jungle leaves supply native tropical scale; date palm frond geometry is deliberately distinct. The crossed upper fan interrupts the lower diagonal; unequal tips preserve irregular gaps.",
+      "findings": {
+        "silhouette": "Stiff straight feather fronds intersect at unequal angles in a sparse silvery canopy.",
+        "cluster_structure": "The upper-left descending branch has connected darker base and short alternating blue-green leaflet groups.",
+        "micro_contrast": "Sage-grey highlights on the short blades meet deeper green adjacent values.",
+        "light_and_volume": "The dark crossed rachises appear behind the pale exposed leaflet tips.",
+        "material_continuity": "Cool grey-green date palm tones stay coherent along the individual fronds.",
+        "edge_variation": "The crossed upper fan interrupts the lower diagonal; unequal tips preserve irregular gaps.",
+        "variant_identity": "Date palm's stiffer cooler narrow feather fronds differ from warm curved coconut foliage.",
+        "vanilla_comparison": "Jungle leaves supply native tropical scale; date palm frond geometry is deliberately distinct.",
+        "leaf_groups": "Alternating small leaflets emerge from the descending upper rachis and rising lower branch.",
+        "canopy_depth": "Dark crossing branch segments and bright foreground blades separate overlapping frond layers.",
+        "structural_transparency": "Open spaces between the long rigid leaflet tips expose their structure rather than a square grid."
+      }
     }
   },
-  "review_status": "DRAFT/BLOCKED: 64 accepted of 118. Rejected and missing records remain.",
+  "review_status": "DRAFT/BLOCKED: 77 accepted of 118. Remaining plants pending; graphical client not run.",
   "reference_provenance": "Actual PNGs from InventivetalentDev/minecraft-assets, 1.21.1 branch; inspected at original and nearest-neighbor 4x. Official client SHA-1 could not be verified in this environment. No vanilla assets included.",
   "client_status": "NOT_RUN"
 }
