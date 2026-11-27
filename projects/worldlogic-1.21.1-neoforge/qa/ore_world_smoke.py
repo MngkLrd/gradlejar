@@ -173,6 +173,27 @@ def main():
             conn=None;proc=None
             props=root/"server.properties"
             original=props.read_text()
+            # The legacy preset is intentionally hidden in the default preset list.
+            # DedicatedServerProperties can fall back to normal for its ID. Seed a
+            # separate EMPTY reference save with the retained preset's exact dimension
+            # and generator NBT instead; never copy generated regions or player data.
+            legacy=json.loads((PROJECT/"src/main/resources/data/worldlogic/worldgen/world_preset/earthlike_climate.json").read_text())["dimensions"]["minecraft:overworld"]
+            reference=root/"rc22-reference"
+            reference.mkdir(exist_ok=False)
+            legacy_level=nbtlib.load(root/"ore-world"/"level.dat")
+            data=legacy_level["Data"]
+            data["LevelName"]=nbtlib.String("rc22-reference")
+            data.pop("Player",None)
+            data["WorldGenSettings"]["dimensions"]["minecraft:overworld"]=nbtlib.Compound({
+                "type":nbtlib.String(legacy["type"]),
+                "generator":nbtlib.Compound({
+                    "type":nbtlib.String(legacy["generator"]["type"]),
+                    "settings":nbtlib.String(legacy["generator"]["settings"]),
+                    "biome_source":nbtlib.Compound({k:nbtlib.String(v) for k,v in legacy["generator"]["biome_source"].items()})
+                })
+            })
+            legacy_level.save(reference/"level.dat",gzipped=True)
+            require(not (reference/"region").exists(),"Reference must have no generated regions")
             props.write_text(original.replace("level-name=ore-world","level-name=rc22-reference").replace("level-type=minecraft:normal","level-type=worldlogic:earthlike_climate"))
             def snapshot(connection,positions):
                 result={}
