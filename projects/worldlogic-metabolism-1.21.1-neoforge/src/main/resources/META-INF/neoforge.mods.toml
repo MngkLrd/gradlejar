@@ -3,7 +3,7 @@ loaderVersion="[1,)"
 license="All Rights Reserved"
 [[mods]]
 modId="metabolism"
-version="0.2.0"
+version="0.8.0"
 displayName="WorldLogic: Metabolism"
 description="Nutrition, digestion and energy metabolism for WorldLogic."
 [[dependencies.metabolism]]
@@ -26,6 +26,27 @@ ordering="AFTER"
 side="BOTH"
 [[dependencies.metabolism]]
 modId="worldlogic_trauma"
+type="optional"
+versionRange="[0,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.metabolism]]
+modId="hydration"
+type="optional"
+versionRange="[0,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.metabolism]]
+modId="worldlogic_thermal"
+type="optional"
+versionRange="[0,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.metabolism]]
+modId="worldlogicterrain"
 type="optional"
 versionRange="[0,)"
 ordering="AFTER"

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Metabolism 0.2.0 model and schema migration regression",
+  "name": "Metabolism 0.8.0 model regression",
   "coverage": [
     {
       "id": "nutrition-model",
@@ -72,6 +72,50 @@
       "id": "energy-forecasts",
       "kind": "mechanic",
       "subject": "energy-forecasts",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "clinical-factors",
+      "kind": "mechanic",
+      "subject": "clinical-factors",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "hydration-thermal-factors",
+      "kind": "mechanic",
+      "subject": "hydration-thermal-factors",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "daily-history",
+      "kind": "mechanic",
+      "subject": "daily-history",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "history-persistence",
+      "kind": "mechanic",
+      "subject": "history-persistence",
       "checks": [
         {
           "backend": "server",

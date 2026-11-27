@@ -14,7 +14,7 @@ public final class MetabolismScreen extends Screen{
  private final Screen parent;private int tab,page;private final ArrayList<Hit> hits=new ArrayList<>();
  private record Hit(int x,int y,int w,int h,Component text,Component description,Component value){}
  private record Row(String key,String value,float fraction,boolean risk,Item icon){}
- private static final String[] TABS={"overview","nutrition","energy","digestion","recovery"};
+ private static final String[] TABS={"overview","nutrition","energy","digestion","recovery","history"};
  private static final Item[] ICONS={Items.COOKED_BEEF,Items.SALMON,Items.BREAD,Items.CARROT,Items.GOLDEN_CARROT,Items.APPLE,Items.COOKED_COD,Items.IRON_NUGGET,Items.BONE_MEAL,Items.BEETROOT};
  private static final int N=MetabolicModel.N;
  public MetabolismScreen(Screen parent){super(Component.translatable("metabolism.title"));this.parent=parent;}
@@ -52,11 +52,21 @@ public final class MetabolismScreen extends Screen{
   Row fastTime=new Row("fast_time",hours(v[N+15]),-1,false,Items.CLOCK);
   Row totalTime=new Row("total_time",hours(v[N+16]),-1,false,Items.CLOCK);
   Row digestionTime=new Row("digestion_time",hours(v[N+17]),-1,false,Items.CLOCK);
+  int k=2*N+18;
+  Row water=new Row("water",v[k]<0?"?":number(v[k])+"%",v[k]<0?-1:v[k]/100,false,Items.WATER_BUCKET);
+  Row salts=new Row("salts",v[k+1]<0?"?":number(v[k+1]),v[k+1]<0?-1:1-Math.abs(v[k+1]-50)/50,false,Items.SUGAR);
+  Row temp=new Row("body_temp",v[k+2]<0?"?":String.format(Locale.ROOT,"%.1f °C",v[k+2]),-1,false,Items.BLAZE_POWDER);
+  Row thermal=new Row("thermal_cost",factor(v[k+3]),-1,false,Items.CAMPFIRE);
+  Row waterFactor=new Row("water_factor",factor(v[k+4]),v[k+4],false,Items.POTION);
+  Row tissue=new Row("tissue_factor",factor(v[k+5]),v[k+5],false,Items.GLISTERING_MELON_SLICE);
+  Row bone=new Row("bone_factor",factor(v[k+6]),v[k+6],false,Items.BONE);
+  Row blood=new Row("blood_factor",factor(v[k+7]),v[k+7],false,Items.REDSTONE);
   return switch(tab){
    case 1->{var a=new ArrayList<Row>();for(int i=0;i<N;i++)a.add(nutrient(i,v));yield a;}
-   case 2->List.of(energy,fast,fat,burn,fastTime,totalTime,fatigue);
-   case 3->List.of(stomach,absorption,digestionTime,toxins,diet,deficits,critical);
-   case 4->List.of(health,recovery,resistance,diet,deficits,critical,energy,toxins,fatigue);
+   case 2->List.of(energy,fast,fat,burn,fastTime,totalTime,fatigue,temp,thermal);
+   case 3->List.of(stomach,absorption,digestionTime,toxins,diet,deficits,critical,water,salts,waterFactor);
+   case 4->List.of(health,recovery,tissue,bone,blood,resistance,diet,deficits,critical,energy,toxins,fatigue);
+   case 5->{var out=new ArrayList<Row>();out.add(new Row("today_intake",number(v[k+8])+" kcal",-1,false,Items.BREAD));out.add(new Row("today_burn",number(v[k+9])+" kcal",-1,false,Items.BLAZE_POWDER));for(int i=0;i<7;i++){int off=k+11+i*3;if(v[off]<0)continue;out.add(new Row("history_day_"+(i+1),number(v[off])+" / "+number(v[off+1])+" kcal",v[off+2],false,Items.BOOK));}yield out;}
    default->List.of(health,diet,energy,toxins,deficits,critical,fast,fat,stomach,absorption,recovery,resistance,burn,fatigue);
   };
  }

@@ -24,6 +24,12 @@ public final class ModelChecks {
   MetabolicModel.tick(reserved,0);require(reserved.reserve<21000&&reserved.fast+reserved.reserve<prior,"resting fat oxidation conserves energy");
   require(reserved.totalHours()>reserved.fastHours(),"reserve forecast");
   var old=Metabolism.encode(fed);old.putInt("schema",1);var migrated=Metabolism.decode(old);require(migrated.baseline[0]==migrated.stores[0]&&migrated.observedSeconds==0,"schema 1 migration");
+  var low=new MetabolicModel.State();low.stores[0]=0;low.stores[5]=0;low.stores[7]=0;low.stores[8]=0;
+  require(low.tissueFactor()<new MetabolicModel.State().tissueFactor()&&low.boneFactor()<.5&&low.bloodFactor()<.5&&low.fractureThresholdFactor()<1,"clinical factors");
+  var dry=new MetabolicModel.State();dry.water=20;dry.salts=90;dry.bodyC=39;require(dry.digestionRate()<new MetabolicModel.State().digestionRate()&&dry.thermalCost()>1,"optional physiology");
+  var hist=new MetabolicModel.State();MetabolicModel.ingest(hist,new MetabolicModel.Meal(200,n,0,1),true);for(int i=0;i<1200;i++)MetabolicModel.tick(hist,0);
+  require(hist.historyCount==1&&hist.historyIntake[0]==200&&hist.historyBurn[0]>0&&hist.daySeconds==0,"history rollover");
+  var historyRestored=Metabolism.decode(Metabolism.encode(hist));require(historyRestored.historyCount==1&&historyRestored.historyIntake[0]==200,"history persistence");
   var restored=Metabolism.decode(Metabolism.encode(fed));require(restored.fast==fed.fast&&restored.pending[0]==fed.pending[0]&&restored.stomach==fed.stomach&&restored.baseline[0]==fed.baseline[0]&&restored.observedSeconds==fed.observedSeconds,"NBT roundtrip");
  }
 }

@@ -33,18 +33,18 @@ public final class Metabolism {
   var s=new MetabolicModel.State();var root=p.getPersistentData();if(!root.contains(KEY))return s;return decode(root.getCompound(KEY));
  }
  static CompoundTag encode(MetabolicModel.State s){
-  var n=new CompoundTag();n.putInt("schema",2);n.putDouble("fast",s.fast);n.putDouble("reserve",s.reserve);n.putDouble("stomach",s.stomach);
+  var n=new CompoundTag();n.putInt("schema",3);n.putDouble("fast",s.fast);n.putDouble("reserve",s.reserve);n.putDouble("stomach",s.stomach);
   n.putDouble("queued",s.queuedEnergy);n.putDouble("toxin",s.toxin);n.putDouble("absorption",s.absorption);
-  n.putDouble("burn",s.burn);n.putDouble("activity",s.activity);n.putDouble("unknown",s.unknown);n.putDouble("observed",s.observedSeconds);
+  n.putDouble("burn",s.burn);n.putDouble("activity",s.activity);n.putDouble("unknown",s.unknown);n.putDouble("observed",s.observedSeconds);n.putInt("daySeconds",s.daySeconds);n.putDouble("dayIntake",s.dayIntake);n.putDouble("dayBurn",s.dayBurn);n.putDouble("dayQuality",s.dayQuality);n.putInt("historyCount",s.historyCount);for(int i=0;i<MetabolicModel.State.HISTORY;i++){n.putDouble("hi_"+i,s.historyIntake[i]);n.putDouble("hb_"+i,s.historyBurn[i]);n.putDouble("hq_"+i,s.historyQuality[i]);}
   for(int i=0;i<MetabolicModel.N;i++){n.putDouble("s_"+i,s.stores[i]);n.putDouble("p_"+i,s.pending[i]);n.putDouble("b_"+i,s.baseline[i]);}return n;
  }
  static MetabolicModel.State decode(CompoundTag n){
-  var s=new MetabolicModel.State();int schema=n.getInt("schema");if(schema!=1&&schema!=2)return s;
+  var s=new MetabolicModel.State();int schema=n.getInt("schema");if(schema<1||schema>3)return s;
   s.fast=MetabolicModel.clamp(n.getDouble("fast"),0,MetabolicModel.FAST_MAX);s.reserve=MetabolicModel.clamp(n.getDouble("reserve"),0,MetabolicModel.FAT_MAX);
   s.stomach=MetabolicModel.clamp(n.getDouble("stomach"),0,MetabolicModel.STOMACH_MAX);s.queuedEnergy=MetabolicModel.clamp(n.getDouble("queued"),0,s.stomach);
-  s.toxin=MetabolicModel.clamp(n.getDouble("toxin"),0,1);s.absorption=MetabolicModel.clamp(n.getDouble("absorption"),.15,1);s.burn=MetabolicModel.clamp(n.getDouble("burn"),90,320);
-  s.activity=MetabolicModel.clamp(n.getDouble("activity"),0,1);s.unknown=MetabolicModel.clamp(n.getDouble("unknown"),0,999);s.observedSeconds=schema==2?MetabolicModel.clamp(n.getDouble("observed"),0,MetabolicModel.GAME_DAY_SECONDS):0;
-  for(int i=0;i<MetabolicModel.N;i++){s.stores[i]=MetabolicModel.clamp(n.getDouble("s_"+i),0,1.5);s.pending[i]=MetabolicModel.clamp(n.getDouble("p_"+i),0,8);s.baseline[i]=schema==2&&n.contains("b_"+i)?MetabolicModel.clamp(n.getDouble("b_"+i),0,1.5):s.stores[i];}return s;
+  s.toxin=MetabolicModel.clamp(n.getDouble("toxin"),0,1);s.absorption=MetabolicModel.clamp(n.getDouble("absorption"),.15,1);s.burn=MetabolicModel.clamp(n.getDouble("burn"),90,500);
+  s.activity=MetabolicModel.clamp(n.getDouble("activity"),0,1);s.unknown=MetabolicModel.clamp(n.getDouble("unknown"),0,999);s.observedSeconds=schema>=2?MetabolicModel.clamp(n.getDouble("observed"),0,MetabolicModel.GAME_DAY_SECONDS):0;
+  for(int i=0;i<MetabolicModel.N;i++){s.stores[i]=MetabolicModel.clamp(n.getDouble("s_"+i),0,1.5);s.pending[i]=MetabolicModel.clamp(n.getDouble("p_"+i),0,8);s.baseline[i]=schema>=2&&n.contains("b_"+i)?MetabolicModel.clamp(n.getDouble("b_"+i),0,1.5):s.stores[i];}if(schema>=3){s.daySeconds=(int)MetabolicModel.clamp(n.getInt("daySeconds"),0,1199);s.dayIntake=MetabolicModel.clamp(n.getDouble("dayIntake"),0,10000000);s.dayBurn=MetabolicModel.clamp(n.getDouble("dayBurn"),0,100000);s.dayQuality=MetabolicModel.clamp(n.getDouble("dayQuality"),0,s.daySeconds);s.historyCount=(int)MetabolicModel.clamp(n.getInt("historyCount"),0,7);for(int i=0;i<7;i++){s.historyIntake[i]=MetabolicModel.clamp(n.getDouble("hi_"+i),0,10000000);s.historyBurn[i]=MetabolicModel.clamp(n.getDouble("hb_"+i),0,100000);s.historyQuality[i]=MetabolicModel.clamp(n.getDouble("hq_"+i),0,1);}}return s;
  }
  static void store(ServerPlayer p,MetabolicModel.State s){p.getPersistentData().put(KEY,encode(s));}
  private static void tick(PlayerTickEvent.Post e){
@@ -53,8 +53,8 @@ public final class Metabolism {
   Vec3 old=POS.put(p,p.position());double distance=old==null?0:Math.sqrt(p.position().distanceToSqr(old));
   double intensity=distance>20?0:Math.min(1,distance/5.5);if(distance>.2&&p.isSprinting())intensity=Math.max(intensity,.8);
   if(distance>.2&&p.isSwimming())intensity=Math.max(intensity,.65);
-  var s=state(p);MetabolicModel.tick(s,intensity);store(p,s);
-  if(s.energy()<.15&&intensity>.1&&p.tickCount%100==0)WorldLogicApi.addExertion(p,(.15-s.energy())*3);
+  var s=state(p);EnvironmentBridge.sample(p,s);MetabolicModel.tick(s,intensity);store(p,s);
+  if(intensity>.1&&p.tickCount%100==0){double extra=Math.max(0,.15-s.energy())*3+(1-s.physicalFactor())*.35*intensity;if(extra>0)WorldLogicApi.addExertion(p,extra);}
   if(p.tickCount%40==0)MetabolismSync.send(p);
  }
  private static void finish(LivingEntityUseItemEvent.Finish e){

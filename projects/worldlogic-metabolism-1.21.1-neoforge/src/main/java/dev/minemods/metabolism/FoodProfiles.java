@@ -12,6 +12,25 @@ public final class FoodProfiles {
   var component=stack.get(DataComponents.FOOD);if(component==null)return Optional.empty();
   String id=BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
   Entry e=switch(id){
+   case "worldlogicterrain:strawberry" -> food(45,0.8,0.3,10,3,2,60,0,0.4,16,13,0,.92);
+   case "worldlogicterrain:blueberry" -> food(58,0.7,0.3,14,2.4,3,10,0,0.3,6,6,0,.92);
+   case "worldlogicterrain:raspberry" -> food(52,1.2,0.7,12,6.5,2,26,0,0.7,25,22,0,.92);
+   case "worldlogicterrain:blackberry" -> food(43,1.4,0.5,10,5,11,21,0,0.6,29,20,0,.92);
+   case "worldlogicterrain:grape" -> food(69,0.7,0.2,18,0.9,3,4,0,0.4,10,7,0,.92);
+   case "worldlogicterrain:pineapple" -> food(80,0.8,0.2,21,2.3,5,76,0,0.5,21,19,0,.92);
+   case "worldlogicterrain:tomato" -> food(22,1.1,0.2,5,1.5,50,17,0,0.3,12,13,0,.92);
+   case "worldlogicterrain:cucumber" -> food(18,0.8,0.1,4,1,5,4,0,0.3,19,16,0,.92);
+   case "worldlogicterrain:radish" -> food(20,0.8,0.1,4,2,0,18,0,0.4,30,12,0,.92);
+   case "worldlogicterrain:onion" -> food(40,1.1,0.1,9,1.7,0,7,0,0.2,23,10,0,.92);
+   case "worldlogicterrain:cabbage" -> food(25,1.3,0.1,6,2.5,5,37,0,0.5,40,12,0,.92);
+   case "worldlogicterrain:bell_pepper" -> food(31,1,0.3,6,2,157,127,0,0.4,7,12,0,.92);
+   case "worldlogicterrain:pear" -> food(100,0.6,0.2,27,5,2,7,0,0.3,16,12,0,.92);
+   case "worldlogicterrain:plum" -> food(46,0.7,0.3,11,1.4,17,10,0,0.2,6,7,0,.92);
+   case "worldlogicterrain:fig" -> food(74,0.8,0.3,19,3,7,2,0,0.4,35,17,0,.92);
+   case "worldlogicterrain:mango" -> food(120,1.6,0.8,30,3.2,108,72,0,0.3,22,20,0,.92);
+   case "worldlogicterrain:coconut" -> food(200,2,19,8,5,0,2,0,1.3,8,18,0,.92);
+   case "worldlogicterrain:date" -> food(100,0.7,0,27,2.5,0,0,0,0.4,18,16,0,.92);
+   case "worldlogicterrain:baobab_fruit" -> food(95,2,0.5,22,7,4,80,0,1,80,30,0,.92);
    case "minecraft:cooked_beef","minecraft:cooked_mutton" -> food(260,25,17,0,0,8,0,2.5,2.6,20,25,0,.98);
    case "minecraft:cooked_porkchop","minecraft:cooked_chicken","minecraft:cooked_rabbit" -> food(230,25,14,0,0,12,0,.6,1.3,15,28,0,.98);
    case "minecraft:beef","minecraft:mutton" -> food(180,18,12,0,0,10,0,1.7,2.2,15,20,.04,.78);
