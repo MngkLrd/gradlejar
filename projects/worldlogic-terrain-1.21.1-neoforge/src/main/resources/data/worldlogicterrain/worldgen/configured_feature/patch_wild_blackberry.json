@@ -9,10 +9,27 @@
         "type": "minecraft:simple_block",
         "config": {
           "to_place": {
-            "type": "minecraft:simple_state_provider",
-            "state": {
-              "Name": "worldlogicterrain:wild_blackberry"
-            }
+            "type": "minecraft:weighted_state_provider",
+            "entries": [
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_blackberry",
+                  "Properties": {
+                    "ripe": "false"
+                  }
+                },
+                "weight": 45
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_blackberry",
+                  "Properties": {
+                    "ripe": "true"
+                  }
+                },
+                "weight": 55
+              }
+            ]
           }
         }
       },
