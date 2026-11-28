@@ -14,6 +14,11 @@ final class FallenTimber {
         return p.getY()>=l.getMinBuildHeight()&&p.getY()<l.getMaxBuildHeight()&&l.hasChunkAt(p)
             &&(removed.contains(p)||l.getBlockState(p).isAir());
     }
+    static boolean landable(ServerLevel l,BlockPos p){
+        if(!l.hasChunkAt(p)||l.isOutsideBuildHeight(p))return false;
+        BlockState b=l.getBlockState(p);
+        return b.isAir()||((b.is(Blocks.SHORT_GRASS)||b.is(Blocks.TALL_GRASS)||b.is(Blocks.FERN)||b.is(Blocks.LARGE_FERN)||b.is(Blocks.SNOW))&&b.getFluidState().isEmpty());
+    }
     // The animation's persisted coordinator is the sole owner of the log yield.
     static boolean land(ServerLevel l,BlockPos origin,CompoundTag data){
         ListTag plan=data.getList("landing",Tag.TAG_COMPOUND);
@@ -29,7 +34,7 @@ final class FallenTimber {
         }
         ItemStack log=new ItemStack(TreeChopper.original(species).getBlock());
         // If a player placed an obstruction during the animation, never overwrite it.
-        if(positions.stream().anyMatch(p->!clear(l,p,Set.of()))){
+        if(positions.stream().anyMatch(p->!landable(l,p))){
             drop(l,origin,log,positions.size());return true;
         }
         int sections=Math.min(3,positions.size());

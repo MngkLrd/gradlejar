@@ -45,7 +45,8 @@ public final class TreeChopper {
     private static final Map<String,DeferredBlock<StumpBlock>> STUMPS=new LinkedHashMap<>();
     private static final Map<String,DeferredBlock<Block>> UPPERS=new LinkedHashMap<>();
     private static final Map<String,DeferredBlock<FallenLogBlock>> FALLEN=new LinkedHashMap<>();
-    private static final String COOLDOWN="wl_treechopper:last_hit", FALL="wl_treechopper_fall";
+    private static final String COOLDOWN="wl_treechopper:last_hit";
+    static final String FALL="wl_treechopper_fall";
     private static final int FALL_TICKS=36;
     static {
         for(String name:SPECIES){
@@ -68,6 +69,7 @@ public final class TreeChopper {
         NeoForge.EVENT_BUS.addListener(TreeChopper::hit);
         NeoForge.EVENT_BUS.addListener(TreeChopper::guardBreak);
         NeoForge.EVENT_BUS.addListener(TreeChopper::tickDisplay);
+        NeoForge.EVENT_BUS.addListener(FallingTree::attack);
         NeoForge.EVENT_BUS.addListener(TreeQA::register);
     }
     static BlockState original(String name){
@@ -331,23 +333,14 @@ public final class TreeChopper {
         Set<BlockPos> source=new HashSet<>(roots);
         for(Piece p:tree)source.add(p.pos);
         ListTag plan=new ListTag();
-        Set<BlockPos> occupied=new HashSet<>();
+        Set<BlockPos> occupied=new HashSet<>();boolean gridAllowed=true;
         for(Piece p:tree)if(p.log){
             BlockPos end=landingPosition(base,p.pos,direction,1f);
-            if(rootSet.contains(end)||!occupied.add(end)||!FallenTimber.clear(l,end,source)||!l.mayInteract(player,end)){
-                player.displayClientMessage(Component.translatable("message.wl_treechopper.landing_blocked"),true);return false;
-            }
-            // Sweep transformed volume (not just center); subdivide by distance to pivot.
-            int steps=Math.max(16,Math.min(96,(int)Math.ceil(Math.sqrt(p.pos.distSqr(base))*3)));
-            for(int step=1;step<=steps;step++){
-                if(!sweepClear(l,base,p.pos,direction,step/(float)steps,source)){
-                    player.displayClientMessage(Component.translatable("message.wl_treechopper.landing_blocked"),true);return false;
-                }
-            }
+            if(rootSet.contains(end)||!occupied.add(end)||!l.hasChunkAt(end)||!l.mayInteract(player,end))gridAllowed=false;
             Direction.Axis originalAxis=p.state.getValue(BlockStateProperties.AXIS);
             Vector3f axis=rotation(direction,(float)(Math.PI*.5)).transform(new Vector3f(originalAxis==Direction.Axis.X?1:0,originalAxis==Direction.Axis.Y?1:0,originalAxis==Direction.Axis.Z?1:0));
             Direction.Axis endAxis=Math.abs(axis.x)>.5?Direction.Axis.X:Math.abs(axis.y)>.5?Direction.Axis.Y:Direction.Axis.Z;
-            CompoundTag entry=new CompoundTag();entry.putLong("pos",end.asLong());entry.putString("axis",endAxis.getName());
+            CompoundTag entry=new CompoundTag();entry.putLong("pos",end.asLong());entry.putLong("source",p.pos.asLong());entry.putString("axis",endAxis.getName());
             plan.add(entry);
         }
         plan.sort(Comparator.comparingInt(t->{
@@ -359,6 +352,7 @@ public final class TreeChopper {
         // This display has no item yield; the actual stump accounts for the original log.
         for(BlockPos root:roots)pieces.add(0,new Piece(root,UPPERS.get(species).get().defaultBlockState(),false));
         List<Display.BlockDisplay> displays=new ArrayList<>();
+        ListTag members=new ListTag();Display.BlockDisplay master=null;
         // All pieces share a common pivot, so rotation preserves the tree silhouette.
         for(Piece piece:pieces){
             boolean cap=rootSet.contains(piece.pos);
@@ -381,14 +375,21 @@ public final class TreeChopper {
             fall.putInt("x",piece.pos.getX()-base.getX());fall.putInt("y",piece.pos.getY()-base.getY());fall.putInt("z",piece.pos.getZ()-base.getZ());
             fall.putBoolean("leaf",leaf);
             fall.putBoolean("planned",true);
-            if(coordinator){fall.put("landing",plan.copy());fall.putUUID("group",UUID.randomUUID());}
+            fall.putBoolean("dynamic",!leaf);
+            if(coordinator){fall.put("landing",plan.copy());fall.putUUID("group",UUID.randomUUID());fall.putLong("base",base.asLong());fall.putBoolean("gridAllowed",gridAllowed);fall.putLongArray("roots",roots.stream().mapToLong(BlockPos::asLong).toArray());}
             fall.putBoolean("coordinator",coordinator);
             fall.putBoolean("hinge",true);fall.putBoolean("cap",cap);fall.putBoolean("wholeUpper",true);
             fall.putString("direction",direction.getName());fall.putBoolean("log",piece.log);fall.putString("species",species);fall.putInt("age",0);
             d.getPersistentData().put(FALL,fall);
             if(!l.addFreshEntity(d)){displays.forEach(Entity::discard);return false;}
             displays.add(d);
+            if(coordinator)master=d;
+            if(!leaf){
+                CompoundTag member=new CompoundTag();member.putUUID("entity",d.getUUID());member.putLong("source",piece.pos.asLong());member.putBoolean("log",piece.log);member.putBoolean("cap",cap);member.put("state",NbtUtils.writeBlockState(piece.state));members.add(member);
+            }
         }
+        if(master==null){displays.forEach(Entity::discard);return false;}
+        master.getPersistentData().getCompound(FALL).put("members",members);
         for(BlockPos root:roots)l.setBlock(root,STUMPS.get(species).get().defaultBlockState(),Block.UPDATE_ALL);
         // Remove all tree blocks before notifying neighbors to avoid leaf decay/drop duplication.
         for(Piece p:tree)l.setBlock(p.pos,Blocks.AIR.defaultBlockState(),Block.UPDATE_CLIENTS);
@@ -397,7 +398,7 @@ public final class TreeChopper {
         return true;
     }
     /** Conservative swept AABB per rotated log. No forced chunk loading or destructive collision. */
-    private static boolean sweepClear(ServerLevel l,BlockPos base,BlockPos piece,Direction dir,float progress,Set<BlockPos> source){
+    static boolean sweepClear(ServerLevel l,BlockPos base,BlockPos piece,Direction dir,float progress,Set<BlockPos> source){
         Vector3f off=fallOffset(piece.getX()-base.getX(),piece.getY()-base.getY(),piece.getZ()-base.getZ(),dir,progress,false,true,true);
         Quaternionf q=rotation(dir,(float)(Math.PI*.5*progress*progress));
         double ox=base.getX()+.5+.5*dir.getStepX()+off.x,oy=base.getY()+.25+off.y,oz=base.getZ()+.5+.5*dir.getStepZ()+off.z;
@@ -427,7 +428,7 @@ public final class TreeChopper {
     private static ListTag floats(float... v){
         ListTag list=new ListTag();for(float x:v)list.add(FloatTag.valueOf(x));return list;
     }
-    private static Quaternionf rotation(Direction dir,float angle){
+    static Quaternionf rotation(Direction dir,float angle){
         return new Quaternionf().rotationAxis(angle,dir.getStepZ(),0,-dir.getStepX());
     }
     private static float settle(float progress){
@@ -435,7 +436,7 @@ public final class TreeChopper {
         return t*t*(3-2*t);
     }
     /** Transform relative to the hinge. Old in-flight displays retain their original pivot. */
-    private static Vector3f fallOffset(float x,float y,float z,Direction dir,float progress,boolean cap,boolean hinge,boolean wholeUpper){
+    static Vector3f fallOffset(float x,float y,float z,Direction dir,float progress,boolean cap,boolean hinge,boolean wholeUpper){
         float angle=(float)(Math.PI*.5*progress*progress);
         float edge=hinge?.5f:0;
         Vector3f off=rotation(dir,angle).transform(new Vector3f(x-.5f-edge*dir.getStepX(),y-.25f+(cap?(wholeUpper?.25f:.75f):0),z-.5f-edge*dir.getStepZ()));
@@ -448,7 +449,7 @@ public final class TreeChopper {
         }
         return off;
     }
-    private static CompoundTag fallTransform(float x,float y,float z,Direction dir,float progress,boolean cap,boolean hinge,boolean wholeUpper){
+    static CompoundTag fallTransform(float x,float y,float z,Direction dir,float progress,boolean cap,boolean hinge,boolean wholeUpper){
         float angle=(float)(Math.PI*.5*progress*progress);
         Quaternionf q=rotation(dir,angle);Vector3f off=fallOffset(x,y,z,dir,progress,cap,hinge,wholeUpper);
         CompoundTag t=new CompoundTag();
@@ -478,6 +479,10 @@ public final class TreeChopper {
     private static void tickDisplay(EntityTickEvent.Post event){
         if(!(event.getEntity() instanceof Display.BlockDisplay d)||!(d.level() instanceof ServerLevel l)||!d.getPersistentData().contains(FALL))return;
         CompoundTag f=d.getPersistentData().getCompound(FALL);
+        if(f.getBoolean("dynamic")){
+            if(f.getBoolean("coordinator"))FallingTree.tick(l,d,f);
+            return;
+        }
         int age=f.getInt("age")+1;f.putInt("age",age);
         Direction dir=Direction.byName(f.getString("direction"));
         if(dir==null){d.discard();return;}

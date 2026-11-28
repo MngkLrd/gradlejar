@@ -1,11 +1,11 @@
 {
   "slug": "wl_treechopper",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "wl_treechopper-neoforge-mc1.21.1-0.6.0.jar",
+  "jar_glob": "wl_treechopper-neoforge-mc1.21.1-0.6.1.jar",
   "minimum_loader_version": "21.1.262",
   "compile_loader_version": "21.1.262",
   "qa": {

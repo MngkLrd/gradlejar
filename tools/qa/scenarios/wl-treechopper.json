@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.6.0 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.6.1 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -875,30 +875,38 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1020 200 1038 minecraft:stone",
-      "expect": "Test passed",
-      "assertion": true,
-      "name": "obstruction-preserved"
+      "wait": 3
     },
     {
-      "command": "execute if block 1020 201 1040 minecraft:oak_log",
+      "name": "obstruction-preserved",
+      "command": "execute if block 1020 200 1038 minecraft:stone",
       "expect": "Test passed",
-      "assertion": true,
-      "name": "blocked-tree-intact"
+      "assertion": true
+    },
+    {
+      "name": "blocked-tree-intact",
+      "command": "execute if block 1020 200 1040 wl_treechopper:stump_oak",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "inclined-rest",
+      "command": "wltreechopper qa_resting 1020 200 1040",
+      "expect": "TreeChopper resting pose PASS",
+      "assertion": true
     },
     {
       "command": "setblock 1020 200 1038 minecraft:air",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
-      "command": "wltreechopper qa_hit 1020 200 1040 north 1",
-      "expect": "TreeChopper QA hit dispatched"
+      "wait": 3
     },
     {
-      "command": "execute if block 1020 200 1040 wl_treechopper:stump_oak",
+      "name": "cleared-fall",
+      "command": "execute if block 1020 200 1038 wl_treechopper:fallen_oak",
       "expect": "Test passed",
-      "assertion": true,
-      "name": "cleared-fall"
+      "assertion": true
     },
     {
       "wait": 3
@@ -956,6 +964,71 @@
       "expect": "Test passed",
       "assertion": true,
       "name": "multi-landing-3"
+    },
+    {
+      "command": "setblock 1026 199 1038 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1026 200 1038 1026 203 1038 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1026 204 1038 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1026 200 1036 minecraft:stone",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1026 200 1038 north 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "name": "inclined-buck-order",
+      "command": "wltreechopper qa_inclined_buck 1026 200 1038 1 0",
+      "expect": "TreeChopper inclined bucking PASS",
+      "assertion": true
+    },
+    {
+      "name": "inclined-buck-first",
+      "command": "wltreechopper qa_inclined_buck 1026 200 1038 0 1",
+      "expect": "TreeChopper inclined bucking PASS",
+      "assertion": true
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "inclined-buck-second",
+      "command": "wltreechopper qa_inclined_buck 1026 200 1038 1 1",
+      "expect": "TreeChopper inclined bucking PASS",
+      "assertion": true
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "inclined-buck-third",
+      "command": "wltreechopper qa_inclined_buck 1026 200 1038 2 1",
+      "expect": "TreeChopper inclined bucking PASS",
+      "assertion": true
+    },
+    {
+      "name": "inclined-buck-clean",
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_resting,x=1026,y=200,z=1038,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "inclined-obstacle-kept",
+      "command": "execute if block 1026 200 1036 minecraft:stone",
+      "expect": "Test passed",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -1831,7 +1904,7 @@
     {
       "id": "blocked-tree-intact",
       "kind": "mechanic",
-      "subject": "Tree stays standing if destination obstructed",
+      "subject": "Felling completes and leaves stump even with an obstacle",
       "checks": [
         {
           "backend": "server",
@@ -1842,7 +1915,7 @@
     {
       "id": "cleared-fall",
       "kind": "mechanic",
-      "subject": "Clearing obstruction allows retry and felling",
+      "subject": "Removing support resumes movement and creates actual fallen logs without another axe strike",
       "checks": [
         {
           "backend": "server",
@@ -1891,6 +1964,83 @@
         {
           "backend": "server",
           "name": "multi-landing-3"
+        }
+      ]
+    },
+    {
+      "id": "inclined-rest",
+      "kind": "mechanic",
+      "subject": "Persisted coordinator has strictly intermediate angle and three interaction markers",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-rest"
+        }
+      ]
+    },
+    {
+      "id": "inclined-buck-order",
+      "kind": "mechanic",
+      "subject": "Inclined trunk section interaction and obstacle preservation: inclined-buck-order",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-buck-order"
+        }
+      ]
+    },
+    {
+      "id": "inclined-buck-first",
+      "kind": "mechanic",
+      "subject": "Inclined trunk section interaction and obstacle preservation: inclined-buck-first",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-buck-first"
+        }
+      ]
+    },
+    {
+      "id": "inclined-buck-second",
+      "kind": "mechanic",
+      "subject": "Inclined trunk section interaction and obstacle preservation: inclined-buck-second",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-buck-second"
+        }
+      ]
+    },
+    {
+      "id": "inclined-buck-third",
+      "kind": "mechanic",
+      "subject": "Inclined trunk section interaction and obstacle preservation: inclined-buck-third",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-buck-third"
+        }
+      ]
+    },
+    {
+      "id": "inclined-buck-clean",
+      "kind": "mechanic",
+      "subject": "Inclined trunk section interaction and obstacle preservation: inclined-buck-clean",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-buck-clean"
+        }
+      ]
+    },
+    {
+      "id": "inclined-obstacle-kept",
+      "kind": "mechanic",
+      "subject": "Inclined trunk section interaction and obstacle preservation: inclined-obstacle-kept",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-obstacle-kept"
         }
       ]
     }
