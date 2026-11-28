@@ -783,6 +783,17 @@
       ],
       "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
       "status": "implemented"
+    },
+    {
+      "id": "worldlogic.active_peer_physiology.negotiation",
+      "capabilities": [
+        "worldlogic:trauma_status",
+        "worldlogic:hydration_physiology",
+        "worldlogic:thermal_status",
+        "worldlogic:metabolism_physiology"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
     }
   ]
 }

@@ -22,6 +22,7 @@ final class HealChecks{
    var result=WorldLogicApi.adminRestore(p);
    require(movement.getModifier(key)==null,"immediate removal of Core movement modifier");
    require(result.restored().contains("vanilla/Core"),"Core reports actual reset");
+   PeerPhysiology.verifyNegotiation(p,result);
    require(p.getHealth()==p.getMaxHealth()&&p.getFoodData().getFoodLevel()==20&&Survival.fatigue(p)==0,"health, food and stamina");
    for(String key:java.util.List.of("worldlogic_injury","worldlogic_smoke","worldlogic_arm_until","worldlogic_impact_load","worldlogic_combat_heal_until"))require(!tag.contains(key),"cleared "+key);
    if(java.util.stream.Stream.of("worldlogic_trauma","hydration","worldlogic_thermal","metabolism").noneMatch(id->ModList.get().isLoaded(id)))require(result.complete(),"absent optional addons do not fail heal");

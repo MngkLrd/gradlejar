@@ -46,6 +46,19 @@ public final class PeerPhysiology {
   if(ModList.get().isLoaded(METABOLIC_REST.mod())&&method(METABOLIC_REST).isEmpty())missing.add(METABOLIC_REST.mod()+"/"+METABOLIC_REST.method());
   return List.copyOf(missing);
  }
+ /** Assert optional absent/installed endpoint negotiation and the explicit result of each actual reset attempt. */
+ static void verifyNegotiation(ServerPlayer player,HealResult result){
+  for(var peer:HEAL){
+   boolean installed=ModList.get().isLoaded(peer.mod());
+   boolean restored=result.restored().contains(peer.mod());
+   boolean unavailable=result.unavailable().stream().anyMatch(x->x.startsWith(peer.mod()+" ("));
+   if(installed!=(restored||unavailable)||restored&&unavailable)
+    throw new IllegalStateException("heal provider result not attributed: "+peer.mod());
+   if(method(peer).isEmpty()&&restored)throw new IllegalStateException("absent or incompatible provider reported restored: "+peer.mod());
+  }
+  if(usesMetabolicRestRecovery(player))throw new IllegalStateException("FakePlayer must not own native metabolic rest");
+  if(!restRate(player).isEmpty())throw new IllegalStateException("FakePlayer must retain standalone rest");
+ }
  public record HealResult(List<String> restored,List<String> unavailable){
   public HealResult{restored=List.copyOf(restored);unavailable=List.copyOf(unavailable);}
   public boolean complete(){return unavailable.isEmpty();}

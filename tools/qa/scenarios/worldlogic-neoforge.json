@@ -2142,7 +2142,7 @@
     {
       "id": "core6-admin-heal",
       "kind": "mechanic",
-      "subject": "Core admin restore health, hunger, stamina and legacy state; absent optional providers do not fail standalone heal; immediate Core movement modifier cleanup",
+      "subject": "Core admin restore health, hunger, stamina and legacy state; absent optional providers do not fail standalone heal; immediate Core movement modifier cleanup; absent/installed optional provider attribution and FakePlayer native metabolic policy exclusion",
       "checks": [
         {
           "backend": "server",
