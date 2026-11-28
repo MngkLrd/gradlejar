@@ -142,6 +142,7 @@ public final class HudStatusLayoutCheck {
         }
         require(!DeathReportLayout.available(299,174)&&!DeathReportLayout.available(300,173),"small screen falls back to native death screen");
         System.out.println("PASS: "+deathLayouts+" death report layouts");
+        DeathRenderOrderCheck.verify();
         System.out.println("PASS: 16 combinations, "+transitions+" removal transitions, timer boundaries and visibility");
     }
 }

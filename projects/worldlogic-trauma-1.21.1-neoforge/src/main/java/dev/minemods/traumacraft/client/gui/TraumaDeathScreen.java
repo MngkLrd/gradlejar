@@ -21,14 +21,14 @@ public final class TraumaDeathScreen extends Screen {
     private final DeathReport report;
     private DeathReportLayout l;
     private int historyPage=-1;
-    private Button historyButton;
+    private Button continueButton,historyButton;
     public TraumaDeathScreen(DeathScreen original,DeathReport report){
         super(original==null?t("archive_title"):Component.translatable("deathScreen.title"));this.original=original;this.report=report;
     }
     @Override protected void init(){
         l=DeathReportLayout.of(width,height);
         int center=l.x()+l.width()/2;
-        addRenderableWidget(Button.builder(t(original==null?"close":"continue"),b->onClose()).bounds(center-119,l.buttonY(),116,18).build());
+        continueButton=addRenderableWidget(Button.builder(t(original==null?"close":"continue"),b->onClose()).bounds(center-119,l.buttonY(),116,18).build());
         historyButton=addRenderableWidget(Button.builder(historyLabel(),b->{historyPage=historyPage+1>=pages()?-1:historyPage+1;b.setMessage(historyLabel());}).bounds(center+3,l.buttonY(),116,18).build());
     }
     @Override public void onClose(){if(minecraft!=null)minecraft.setScreen(original);}
@@ -83,6 +83,12 @@ public final class TraumaDeathScreen extends Screen {
         if(mx<l.organX()-3||mx>=l.organRight()+2||my<l.rowTop())return null;
         int i=(my-l.rowTop())/l.organRow();return i<OrganState.Organ.values().length?OrganState.Organ.values()[i]:null;
     }
+    // Screen.render on 1.21.1 renders the background again before widgets.
+    // The report has already been painted, so calling it here blurs the medical foreground.
+    private void renderReportButtons(GuiGraphics g,int mx,int my,float delta){
+        continueButton.render(g,mx,my,delta);
+        historyButton.render(g,mx,my,delta);
+    }
     private void renderHistory(GuiGraphics g,int mx,int my,float delta){
         int x=l.x(),r=x+l.width(),top=l.rowTop(),fy=l.footerY(),rows=l.historyRows();
         label(g,t("history_hint"),x+7,fy,l.width()-14,TEXT);
@@ -99,7 +105,7 @@ public final class TraumaDeathScreen extends Screen {
             label(g,zones.getString().isEmpty()?eventDetail(event):zones,x+l.width()/2,yy+2,l.width()/2-9,TEXT);
             if(mx>=x+6&&mx<r-6&&my>=yy&&my<yy+14){tip.add(name);if(!zones.getString().isEmpty())tip.add(zones);tip.add(eventDetail(event));}
         }
-        super.render(g,mx,my,delta);if(!tip.isEmpty())g.renderComponentTooltip(font,tip,mx,my);
+        renderReportButtons(g,mx,my,delta);if(!tip.isEmpty())g.renderComponentTooltip(font,tip,mx,my);
     }
     @Override public void render(GuiGraphics g,int mx,int my,float delta){
         if(!DeathReportLayout.available(width,height)){onClose();return;}
@@ -147,7 +153,7 @@ public final class TraumaDeathScreen extends Screen {
         label(g,t("legend_fatal"),x+7,fy,l.width()/3-10,FATAL);
         label(g,t("legend_bleeding"),x+l.width()/3,fy,l.width()/3-7,BLEED);
         label(g,t("legend_destroyed"),x+l.width()*2/3,fy,l.width()/3-7,TEXT);
-        super.render(g,mx,my,delta);
+        renderReportButtons(g,mx,my,delta);
         List<Component> tip=new ArrayList<>();
         if(selectedOrgan!=null){
             var o=selectedOrgan;tip.add(organName(o));

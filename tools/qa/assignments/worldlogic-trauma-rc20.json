@@ -1054,5 +1054,28 @@
     "compatibility": "Older providers reflection fallback; separate old-provider runtime on this version not yet executed",
     "client": "NOT_RUN: actual report tooltip and full modded client",
     "release": "Not stable while Core gate fails. No guessed collision inputs."
+  },
+  "version_0_8_11": {
+    "version": "0.8.11",
+    "scope": "Fix confirmed death report blur: renderBackground once before content, render existing two Button widgets directly in both anatomy and history instead of Screen.render, preserve registered widget input and original death controls. Medical inventory already separates custom and vanilla rendering; no changes there.",
+    "static_gui": {
+      "id": "tr-death-render-order",
+      "target": "neoforge-mc1.21.1",
+      "test": "checkHudStatusLayout -> DeathRenderOrderCheck.verify; javap actual compiled client methods, one background, no inherited Screen.render, both page button paths, separate inventory branch",
+      "negative": "old duplicate Screen.render fails"
+    },
+    "client": {
+      "status": "NOT_RUN",
+      "reason": "Graphical client unavailable in current backend",
+      "actions": [
+        "die in survival and inspect report text, anatomy and buttons at menu blur 0 and nonzero",
+        "toggle History and Anatomy",
+        "hover for tooltips",
+        "Continue to vanilla death screen, respawn, /traumadeath",
+        "open health tab and check readability"
+      ],
+      "expected": "Only backdrop blurred; report panel, anatomy, text, history and widgets crisp; normal input and navigation"
+    },
+    "server": "Existing scenario unchanged; run full regression with pinned Core 1.2.1 diagnostic candidate. No API/gameplay/texture changes."
   }
 }
