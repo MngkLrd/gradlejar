@@ -105,28 +105,38 @@ public final class BiomeChecks {
    samples++;
   }
   require(samples==29,"complete biome audit row");
-  // The unchanged 2048-block lattice can alias small humid subtropical patches.
-  // Supplement it with an independent half-cell-shifted lattice only while the
-  // rare class is missing; use the actual terrain height and actual seeded resolver.
-  // This never substitutes synthetic parameter fixtures for natural reachability.
+  // Retain every original point. Additional climate-directed search is independent
+  // of the 2048 lattice. Sample actual seeded climate, never fabricate a climate
+  // point or inject a biome. Only candidate columns need expensive base heights.
   String rare="worldlogic:subtropical_rainforest";
-  int rareProbes=0;
-  if(!seen.contains(rare))for(int ix=-14;ix<=14;ix++){
-   int x=ix*2048+1024,z=iz*2048+1024;
-   int model=BiomeSurvey.modelY(state,x,z);if(model<gen.getSeaLevel()+2)continue;
-   var climate=state.sampler().sample(x>>2,0,z>>2);
-   if(climate.temperature()<1400||climate.temperature()>4000||climate.humidity()<3400)continue;
-   rareProbes++;
-   int actual=Math.max(gen.getSeaLevel(),gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state));
-   if(actual<=gen.getSeaLevel()+2)continue;
-   var found=BiomeSurvey.at(gen,state,x,actual,z);
-   if(found.toString().equals(rare)){
-    seen.add(rare);
-    org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_REACHED {} seed={} x={} y={} z={} probe=offset_lattice",found,seed,x,actual,z);
-    break;
+  int rareProbes=0,climateCandidates=0;
+  if(!seen.contains(rare)&&gen.getBiomeSource() instanceof net.minecraft.world.level.biome.MultiNoiseBiomeSource source){
+   search: for(int dz:new int[]{256,768,1280,1792})for(int ix=-56;ix<=56;ix++){
+    int x=ix*512+((row&1)*256),z=iz*2048+dz;
+    var climate=state.sampler().sample(x>>2,0,z>>2);
+    if(climate.temperature()<1600||climate.temperature()>3800||climate.humidity()<3600||climate.erosion()<-1200)continue;
+    climateCandidates++;
+    int model=BiomeSurvey.modelY(state,x,z);
+    if(model<gen.getSeaLevel()-4)continue;
+    int actual=gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state);
+    rareProbes++;
+    if(actual<=gen.getSeaLevel()+4)continue;
+    // Dry inland column: same elevation-derived continentalness and edge
+    // resolution as PhysicalBiomeReconciliation. At this height the surface
+    // palette does not use shore or underwater rules.
+    long coast=(long)(10000*PhysicalBiomeReconciliation.continental(actual,gen.getSeaLevel(),false,false));
+    var surface=RegionalBiomeEdges.resolve(source,(qx,qz)->state.sampler().sample(qx,0,qz),x>>2,z>>2,coast);
+    var raw=BiomeSurvey.at(gen,state,x,actual,z);
+    var id=surface.unwrapKey().orElseThrow().location();
+    if(raw.toString().equals(rare)&&id.toString().equals(rare)){
+     seen.add(rare);
+     org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_REACHED {} seed={} x={} y={} z={} probe=dense_climate_verified_surface",id,seed,x,actual,z);
+     break search;
+    }
+    org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_SUBTROPICAL_CANDIDATE seed={} x={} y={} z={} temperature={} humidity={} erosion={} continental={} raw={} reconciled={}",seed,x,actual,z,climate.temperature(),climate.humidity(),climate.erosion(),coast,raw,id);
    }
   }
-  if(rareProbes>0)org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_SUBTROPICAL_PROBE seed={} row={} actualHeightChecks={} reached={}",seed,ordinal,rareProbes,seen.contains(rare));
+  if(climateCandidates>0)org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_SUBTROPICAL_PROBE seed={} row={} climateCandidates={} actualHeightChecks={} reached={}",seed,ordinal,climateCandidates,rareProbes,seen.contains(rare));
   NEXT_ROW.put(l,ordinal+1);
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_COVERAGE_ROW seed={} band={} row={} points={} new={} cumulative={}",seed,band,row,samples,seen.size()-before,seen.size());
   return (ordinal+1)*29;

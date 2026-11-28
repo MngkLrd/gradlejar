@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge 1.3.4 development / RC55 tree descent and field guide",
+  "name": "World Logic NeoForge 1.3.5 development / RC55 rare biome reachability diagnosis",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -2092,6 +2092,17 @@
         {
           "backend": "server",
           "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "rc55-dense-subtropical-diagnostic",
+      "kind": "mechanic",
+      "subject": "Independent dense seeded climate search; require both raw biome and reconciled dry inland palette to match at actual terrain height; original 2320-point and all 58-biome gate retained",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 58 biomes reached in seeded generation survey"
         }
       ]
     }

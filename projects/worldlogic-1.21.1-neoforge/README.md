@@ -169,3 +169,6 @@ Owner client image still shows submerged internal water surfaces. The previous v
 
 ## 1.3.4 / RC55
 Shift-right-click vertical logs for controlled descent, empty main hand, held Shift; no collision bypass. Live catalogue covers actual installed ecosystem item models. Ordinary and registered processing recipes share the native guide, with optional JEI focus shortcuts. Patchouli remains accessible in the guide, with custom filler and real item previews/recipe pages. Runtime player input, graphical rendering and cross-addon registrations remain to be verified. No changes to terrain generation or network protocol.
+
+## 1.3.5 / RC55 rare biome QA diagnosis
+Build 46113320085 compiled but failed reachability 57/58. Prior offset probe checked only five eligible actual-height columns across both seeds. Supplement the unchanged 2320-point survey with an independent 512-block climate-directed lattice, requiring both the actual-height raw biome and the actual dry inland surface reconciliation to match for supplemental evidence. Log rejected climate candidates and their real classifier results. No biome partition, climate, terrain, registry or gameplay changes. The 58-ID gate is unchanged; this is diagnosis, not a confirmed generation fix. API 18, protocol 11 unchanged.
