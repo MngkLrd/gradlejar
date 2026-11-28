@@ -1,19 +1,23 @@
 # Minecraft Mod Build Hub — MineMods QA v2
 
+[Documentation by task](docs/README.md): development, QA, art and research. Read the relevant branch, not every document.
+
 Shared Gradle build infrastructure for real Minecraft mods. The bootstrap project (FieldKit) lives at root; independent ports live in `projects/<project>`.
 
-**Development contract:** [AGENTS.md](AGENTS.md) · **QA guide:** [QA-V2.md](docs/QA-V2.md) · **Compatibility registry:** [compatibility.json](tools/qa/compatibility.json)
+**Development contract:** [AGENTS.md](AGENTS.md) · **QA guide:** [QA-V2.md](docs/qa/QA-V2.md) · **Compatibility registry:** [compatibility.json](tools/qa/compatibility.json)
 
-**Task-specific references:** [Gameplay QA assignment](docs/QA-ASSIGNMENT-TEMPLATE.md) · [Bot actions](docs/BOT-ACTIONS.md) · [Recipe QA](docs/RECIPE-QA.md) · [Visual QA and art standard](docs/VISUAL-QA.md) · [Mandatory vanilla art atlas](docs/VANILLA-ART-ATLAS.md) · [Visual research status](docs/VANILLA-RESEARCH.md). Read the current main documents; historical/pending branches are not current policy.
+**Task-specific references:** [Gameplay QA assignment](docs/qa/QA-ASSIGNMENT-TEMPLATE.md) · [Bot actions](docs/qa/BOT-ACTIONS.md) · [Recipe QA](docs/qa/RECIPE-QA.md) · [Visual QA and art standard](docs/art/VISUAL-QA.md) · [Mandatory vanilla art atlas](docs/art/VANILLA-ART-ATLAS.md) · [Visual research status](docs/research/VANILLA-RESEARCH.md). Read the current main documents; historical/pending branches are not current policy.
 
-**Naming and versions:** [Mandatory mod naming standard](docs/MOD-NAMING.md). Use three numeric product version components and the standardized player-facing JAR name; do not confuse it with the older internal Build Hub filename.
+**Naming and versions:** [Mandatory mod naming standard](docs/development/MOD-NAMING.md). Use three numeric product version components and the standardized player-facing JAR name; do not confuse it with the older internal Build Hub filename.
+
+**External reference mods:** [MOD-ADAPTATION.md](docs/development/MOD-ADAPTATION.md) defines mandatory source analysis, independent design adaptation, licensing and behavioral verification.
 
 ## Build
 Open [Build Hub Actions](https://github.com/MngkLrd/gradlejar/actions/workflows/build.yml) → **Minecraft Mod Build Hub** → **Run workflow**. Enter a project directory, `.` for FieldKit, or `@slug` to run every enrolled QA port of a mod. Main pushes build affected projects across the complete commit range. Pull requests do not publish.
 
 Common CI compiles genuine Gradle projects using the profile's pinned Java/Gradle, verifies the JAR, evaluates the QA policy and uploads evidence. New gameplay projects require production-server runtime assertions; new client-only projects remain manual-validation candidates. Legacy projects in the explicit snapshot continue with the old static-only pipeline. Independent historical workflows remain outside the v2 gate until migrated.
 
-Before building changed textures, follow [the mandatory atlas review](docs/VISUAL-QA.md#mandatory-atlas-application-r9). The existing Build Hub pre-Gradle lock checks the per-PNG art-review evidence and catalogued official reference hashes. Use current main tooling on your development branch. For a local committed-source preflight, run `python3 -m tools.qa.art_review_lock --projects '["projects/your-project"]' --check` (use an actual project path). This checks evidence, not artistic truth or rendered gameplay.
+Before building changed textures, follow [the mandatory atlas review](docs/art/VISUAL-QA.md#mandatory-atlas-application-r9). The existing Build Hub pre-Gradle lock checks the per-PNG art-review evidence and catalogued official reference hashes. Use current main tooling on your development branch. For a local committed-source preflight, run `python3 -m tools.qa.art_review_lock --projects '["projects/your-project"]' --check` (use an actual project path). This checks evidence, not artistic truth or rendered gameplay.
 
 ## Artifacts
 - `jar-*`: eligible individual JAR and SHA-256.
