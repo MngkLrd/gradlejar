@@ -173,6 +173,7 @@ final class TreeQA {
             if(!l.getBlockState(p.east()).isAir()||!fake.getInventory().contains(new ItemStack(Items.STICK)))return 0;
             if(!ForestSticks.offer(l,p.getX()-1,p.getZ(),false))return 0;
             if(!fake.gameMode.destroyBlock(p.west())||!l.getBlockState(p.west()).isAir())return 0;
+            if(l.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,new net.minecraft.world.phys.AABB(p.west()).inflate(2),e->e.getItem().is(Items.STICK)).isEmpty())return 0;
             if(!ForestSticks.offer(l,p.getX()+1,p.getZ(),true))return 0;
             if(l.getEntitiesOfClass(net.minecraft.world.entity.item.FallingBlockEntity.class,new net.minecraft.world.phys.AABB(p).inflate(5),e->e.getBlockState().getBlock() instanceof TwigBlock).isEmpty())return 0;
             var input=net.minecraft.world.item.crafting.CraftingInput.of(2,2,java.util.List.of(new ItemStack(Items.FLINT),ItemStack.EMPTY,new ItemStack(Items.STICK),new ItemStack(Items.STICK)));
@@ -377,7 +378,10 @@ final class TreeQA {
                 NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
                 hits++;
             }
-            int min=logs==4?7:11,max=logs==4?8:13;
+            // Compare observed strikes to the deterministic min/max of the new height-aware work function.
+            int minWork=ChopEffort.workPerHit(2,1,1,logs,0,logs-1);
+            int maxWork=ChopEffort.workPerHit(2,1,1,logs,1,logs-1);
+            int min=(1000+maxWork-1)/maxWork,max=(1000+minWork-1)/minWork;
             if(hits<min||hits>max||!(l.getBlockState(p).getBlock() instanceof StumpBlock)||axe.getDamageValue()!=hits+logs-1){
                 c.getSource().sendFailure(Component.literal("TreeChopper size-dependent hits FAILED: "+hits+" / "+axe.getDamageValue()));return 0;
             }

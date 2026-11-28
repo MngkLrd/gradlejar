@@ -24,7 +24,7 @@ public final class TwigBlock extends FallingBlock {
     @Override protected com.mojang.serialization.MapCodec<? extends FallingBlock> codec(){return simpleCodec(p->new TwigBlock(p,species));}
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){b.add(FACING);}
     @Override protected VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext ctx){
-        return state.getValue(FACING).getAxis()==Direction.Axis.Z?Block.box(3,0,1,13,3,15):Block.box(1,0,3,15,3,13);
+        return state.getValue(FACING).getAxis()==Direction.Axis.Z?Block.box(2,0,1,14,2,16):Block.box(1,0,2,16,2,14);
     }
     @Override protected VoxelShape getCollisionShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext ctx){return Shapes.empty();}
     @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit){

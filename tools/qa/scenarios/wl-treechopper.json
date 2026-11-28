@@ -1941,7 +1941,7 @@
     {
       "id": "size-hit-4",
       "kind": "mechanic",
-      "subject": "Actual wooden axe fells 4 logs in calibrated hit range, exact cumulative durability",
+      "subject": "Wooden axe observed strikes are within theoretical min/max of height-aware physical effort for the actual trunk, and wear matches the number of strikes plus upper logs",
       "checks": [
         {
           "backend": "server",
@@ -1952,7 +1952,7 @@
     {
       "id": "size-hit-12",
       "kind": "mechanic",
-      "subject": "Actual wooden axe fells 12 logs in calibrated hit range, exact cumulative durability",
+      "subject": "Wooden axe observed strikes are within theoretical min/max of height-aware physical effort for the actual trunk, and wear matches the number of strikes plus upper logs",
       "checks": [
         {
           "backend": "server",
