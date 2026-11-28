@@ -12,8 +12,7 @@
     "ecosystem": "worldlogic",
     "module": "worldlogic_structures",
     "role": "addon",
-    "core_module": "worldlogic",
-    "parent_module": "worldlogic"
+    "core_module": "worldlogic"
   },
   "qa": {
     "mode": "server",
