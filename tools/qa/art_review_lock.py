@@ -147,10 +147,11 @@ def project_errors(root,project,paths,atlas_paths=(),catalog=None):
         errors.extend(path+": "+e for e in validate(rows.get(path),digest,path in atlas_paths,catalog))
     return errors
 
-def main():
+def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--projects",required=True,help="JSON selected project directories")
-    args=parser.parse_args()
+    parser.add_argument("--check",action="store_true",help="Local committed-source preflight: exit 1 if any project is blocked; no GITHUB_OUTPUT required")
+    args=parser.parse_args(argv)
     projects=json.loads(args.projects)
     if not isinstance(projects,list) or any(not isinstance(p,str) or (p!="." and not re.fullmatch(r"projects/[A-Za-z0-9_.-]+",p)) for p in projects):
         raise ValueError("Invalid project selection")
@@ -165,7 +166,9 @@ def main():
             print(f"ART REVIEW LOCK: {project} BLOCKED ({len(errors)} issues)")
             for error in errors:print("  "+error)
         else:print(f"ART REVIEW LOCK: {project} evidence check clear (not automated artistic approval)")
+    if args.check:return 1 if blocked else 0
     with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as f:
         f.write("blocked="+json.dumps(blocked,separators=(",",":"))+"\n")
+    return 0
 
-if __name__=="__main__":main()
+if __name__=="__main__":raise SystemExit(main())
