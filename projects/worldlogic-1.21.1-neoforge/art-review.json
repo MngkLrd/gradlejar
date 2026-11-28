@@ -1033,7 +1033,7 @@
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/limestone.png": {
-      "sha256": "8edc6a69bb6313c9bab3b053c6eca50d8aac129ed235328a4621454c8b2e55c0",
+      "sha256": "c582e525d4bb5d301070391e0b554792b4fe0ac8a52ccc10b74979d8c60f0cb4",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
@@ -1041,35 +1041,40 @@
           "id": "minecraft:block/stone",
           "minecraft": "1.21.1",
           "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        },
+        {
+          "id": "minecraft:block/calcite",
+          "minecraft": "1.21.1",
+          "sha256": "e86f627a56d98168784b4f630c502f4490450072d763057a0bea3660ed84cf8f"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: Natural pale cream-gray carbonate with uneven compact clusters; vanilla stone uses less directional medium gray aggregates.",
+      "comparison": "Compared at native size, 6x and tiled scale to calcite: upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area; the pale cream carbonate, interlocking compact lenses palette differs intentionally.",
       "findings": {
-        "silhouette": "Full surface, pale cream-gray carbonate with uneven compact clusters, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Coherent pale cream-gray carbonate with uneven compact clusters aggregates rather than isolated speckles.",
-        "micro_contrast": "Five adjacent mineral shades give distinct local boundaries in pale cream-gray carbonate with uneven compact clusters.",
-        "light_and_volume": "Lighter mineral planes abut localized darker cleavages or recessed grains.",
-        "material_continuity": "pale cream-gray carbonate with uneven compact clusters palette stays continuous across the interior; rock bands or aggregate groups retain their own palette.",
-        "edge_variation": "Natural edges follow unequal local planes and broken mineral bands.",
-        "variant_identity": "Raw face has no geometric construction seam.",
-        "vanilla_comparison": "Natural pale cream-gray carbonate with uneven compact clusters; vanilla stone uses less directional medium gray aggregates.",
-        "aggregate_structure": "pale cream-gray carbonate with uneven compact clusters; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 preview has repeated pale cream-gray carbonate with uneven compact clusters; raw directional bedding may show a repeat, but there is no added masonry frame."
+        "silhouette": "Opaque full block, continuous natural rock face, irregular broken material planes; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area; adjacent midtone chips break the larger face.",
+        "micro_contrast": "Five close mineral tones connect the primary faces with secondary two-to-four-texel chips rather than a sparse motif over a broad background.",
+        "light_and_volume": "Local pale shoulders abut darker recesses in pale cream carbonate, interlocking compact lenses; highlights are not a repeated identical dot in every cluster.",
+        "material_continuity": "pale cream carbonate, interlocking compact lenses remains recognizable in the whole surface; mineral edges are broken rather than full-width artificial seams.",
+        "edge_variation": "Primary mineral planes have unequal spans and contain distinct short offset midtone transitions; selected shapes cross tile boundaries.",
+        "variant_identity": "limestone retains pale cream carbonate, interlocking compact lenses; natural face lacks all masonry or cut-perimeter framing.",
+        "vanilla_comparison": "Compared at native size, 6x and tiled scale to calcite: upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area; the pale cream carbonate, interlocking compact lenses palette differs intentionally.",
+        "aggregate_structure": "upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: repeated stone grain remains visible but there is no full-width mechanical stripe or uniform field."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
         "reference": "minecraft:block/stone",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "pale cream-gray carbonate with uneven compact clusters; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "Natural pale cream-gray carbonate with uneven compact clusters; vanilla stone uses less directional medium gray aggregates. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains pale cream-gray carbonate with uneven compact clusters and geological grain.",
-        "context_view": "3x3 actual tiled inspection: repeated geological bands or aggregate patterns remain visible without artificial masonry borders.",
+        "applied_pattern": "continuous natural rock face, irregular broken material planes; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared at native size, 6x and tiled scale to calcite: upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area; the pale cream carbonate, interlocking compact lenses palette differs intentionally. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; the pattern retains material grain; fixed-tile repetition remains possible. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/polished_limestone.png": {
-      "sha256": "fd0e93197d46d94737f74a8beeaaa1e215538ca7af2d38073d85dab6d26ae4db",
+      "sha256": "4731f580852c809d15158c97c664d33842e5261dbbb09bd266d28f72f9bda5d2",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
@@ -1084,33 +1089,33 @@
           "sha256": "ffe83daad907f1240fa6f872c5a89aed1d17c5a5c65815e0cdc5cc896069ca16"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: pale cream-gray carbonate with uneven compact clusters is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+      "comparison": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area.",
       "findings": {
-        "silhouette": "Full surface, single squared tile with a top/left light bevel and darker lower/right edge, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Broad quiet pale cream-gray carbonate with uneven compact clusters face with small retained mineral planes inside the bevel.",
-        "micro_contrast": "Interior contrast is reduced to adjacent midtones; cut edge remains visible.",
-        "light_and_volume": "A one-texel bright upper and left bevel meets a shaded bottom/right perimeter.",
-        "material_continuity": "pale cream-gray carbonate with uneven compact clusters palette stays continuous across the interior; bevel belongs to the same stone.",
-        "edge_variation": "Straight bevel edges are intentional cut geometry; interior retains small irregular planes.",
-        "variant_identity": "Single bevel frame distinguishes polished surface from jointed masonry.",
-        "vanilla_comparison": "pale cream-gray carbonate with uneven compact clusters is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
-        "aggregate_structure": "single squared tile with a top/left light bevel and darker lower/right edge; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 tile forms square cut stones with deliberate perimeter joins."
+        "silhouette": "Opaque full block, single cut face with narrow, material-dependent top/left and lower/right edge ramp; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area; internal material clusters remain after polishing.",
+        "micro_contrast": "Retained all five mineral tones, with subdued differences between adjacent shades and visible small midtone groups.",
+        "light_and_volume": "One-pixel top/left cut-edge ramp and darker lower/right establish worked relief; face planes remain distinct inside the border.",
+        "material_continuity": "pale cream carbonate, interlocking compact lenses remains recognizable in the whole surface; the intact internal mineral map preserves the original rock type.",
+        "edge_variation": "Cut edges are straight by construction but adjacent values vary along the edge; no thick constant solid frame.",
+        "variant_identity": "polished_limestone retains pale cream carbonate, interlocking compact lenses; polished face has lower local contrast and a cut perimeter, unlike raw rock.",
+        "vanilla_comparison": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area.",
+        "aggregate_structure": "upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: repeating cut-square edges are intentional, mineral regions remain visible within each square."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
         "reference": "minecraft:block/stone",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "single squared tile with a top/left light bevel and darker lower/right edge; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "pale cream-gray carbonate with uneven compact clusters is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains pale cream-gray carbonate with uneven compact clusters and cut edge.",
-        "context_view": "3x3 actual tiled inspection: deliberate tile perimeter reads as worked stone.",
+        "applied_pattern": "single cut face with narrow, material-dependent top/left and lower/right edge ramp; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; the cut frame remains visible without erasing the mineral detail. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/limestone_bricks.png": {
-      "sha256": "04420c50ebbb48a4f02e62ef79d3956061567770e7c77f3484a99b4a038005d7",
+      "sha256": "9bd4785cc2b23f5899403ed33335388fe21fc7f80fff03a210a1b702ade8e900",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
@@ -1120,81 +1125,81 @@
           "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
         },
         {
-          "id": "minecraft:block/bricks",
+          "id": "minecraft:block/stone_bricks",
           "minecraft": "1.21.1",
-          "sha256": "33f9411f1cb233a2020df0cf3fda32c0f67a4b0fac3751bde2ba6f2fee81b169"
+          "sha256": "33da66239c5586ee712ffa3fab45927cd7d4968cf111829d3049f84152d85953"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: pale cream-gray carbonate with uneven compact clusters inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+      "comparison": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent pale cream carbonate, interlocking compact lenses clusters and restrained local edge shading.",
       "findings": {
-        "silhouette": "Full surface, offset 8x8 running-bond stone units with one-pixel mortar joints, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Distinct staggered mortar courses surround the pale cream-gray carbonate with uneven compact clusters faces.",
-        "micro_contrast": "Dark mortar and modest stone-edge highlights distinguish blocks from interior grain.",
-        "light_and_volume": "Light upper and left planes and darker lower/right edges describe carved rectangular faces.",
-        "material_continuity": "pale cream-gray carbonate with uneven compact clusters palette stays continuous across the interior; mortar alone interrupts the material.",
-        "edge_variation": "Offset second course breaks vertical mortar continuity; repeated straight seams are intentional masonry.",
-        "variant_identity": "Worked masonry has a staggered joint pattern distinct from raw or polished rock.",
-        "vanilla_comparison": "pale cream-gray carbonate with uneven compact clusters inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
-        "aggregate_structure": "offset 8x8 running-bond stone units with one-pixel mortar joints; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 tile displays aligned offset masonry courses; regular seams are construction cues."
+        "silhouette": "Opaque full block, two 16×8 running-bond courses, one-pixel mortar, offset lower vertical joint at x=7 and upper joint at x=15; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area; clusters continue across each brick face but stop at mortar.",
+        "micro_contrast": "One-pixel joints remain distinct from the face, with narrower localized transitions than the rejected four-sided thick frames.",
+        "light_and_volume": "Upper face edge is selectively lighter, lower bed is darker; side shadows are localized instead of outlining every pixel.",
+        "material_continuity": "pale cream carbonate, interlocking compact lenses remains recognizable in the whole surface; construction joints interrupt mineral areas only at brick boundaries.",
+        "edge_variation": "Joint placement follows a half-width course offset; small light and shadow edge interruptions depend on the material face.",
+        "variant_identity": "limestone_bricks retains pale cream carbonate, interlocking compact lenses; elongated masonry geometry is different from the polished single tile and the old square brick units.",
+        "vanilla_comparison": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent pale cream carbonate, interlocking compact lenses clusters and restrained local edge shading.",
+        "aggregate_structure": "upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: elongated courses read as brickwork, with shifted vertical seams. Repetition is intentional for masonry."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
         "reference": "minecraft:block/stone",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "offset 8x8 running-bond stone units with one-pixel mortar joints; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "pale cream-gray carbonate with uneven compact clusters inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains pale cream-gray carbonate with uneven compact clusters and mortar.",
-        "context_view": "3x3 actual tiled inspection: staggered joints meet at tile boundaries.",
+        "applied_pattern": "two 16×8 running-bond courses, one-pixel mortar, offset lower vertical joint at x=7 and upper joint at x=15; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent pale cream carbonate, interlocking compact lenses clusters and restrained local edge shading. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; upper-left shaded lens touches a pale shoulder, center-right smaller clasts divide the former broad flat area.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; one full upper brick and offset lower course replace square tiled units. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/shale.png": {
-      "sha256": "3fe8edcd39cc24ba1addf00c8c1a7c2dd4cdc351691d9b1d582556184761ad3c",
+      "sha256": "d398647a176ffc3f5541882f953685548db57ab45c136483496e6624242c6d87",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
         {
-          "id": "minecraft:block/stone",
+          "id": "minecraft:block/deepslate",
           "minecraft": "1.21.1",
-          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+          "sha256": "b4c5e7f5538608a371fd4c1f6b398e4b76f723702d10144432636a85a1a61832"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: Natural olive-gray fine sedimentary horizontal bedding; vanilla stone uses less directional medium gray aggregates.",
+      "comparison": "Compared at native size, 6x and tiled scale to deepslate: short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes; the olive-gray fine, broken horizontal sediment lenses palette differs intentionally.",
       "findings": {
-        "silhouette": "Full surface, olive-gray fine sedimentary horizontal bedding, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Coherent olive-gray fine sedimentary horizontal bedding aggregates rather than isolated speckles.",
-        "micro_contrast": "Five adjacent mineral shades give distinct local boundaries in olive-gray fine sedimentary horizontal bedding.",
-        "light_and_volume": "Lighter mineral planes abut localized darker cleavages or recessed grains.",
-        "material_continuity": "olive-gray fine sedimentary horizontal bedding palette stays continuous across the interior; rock bands or aggregate groups retain their own palette.",
-        "edge_variation": "Natural edges follow unequal local planes and broken mineral bands.",
-        "variant_identity": "Raw face has no geometric construction seam.",
-        "vanilla_comparison": "Natural olive-gray fine sedimentary horizontal bedding; vanilla stone uses less directional medium gray aggregates.",
-        "aggregate_structure": "olive-gray fine sedimentary horizontal bedding; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 preview has repeated olive-gray fine sedimentary horizontal bedding; raw directional bedding may show a repeat, but there is no added masonry frame."
+        "silhouette": "Opaque full block, continuous natural rock face, irregular broken material planes; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes; adjacent midtone chips break the larger face.",
+        "micro_contrast": "Five close mineral tones connect the primary faces with secondary two-to-four-texel chips rather than a sparse motif over a broad background.",
+        "light_and_volume": "Local pale shoulders abut darker recesses in olive-gray fine, broken horizontal sediment lenses; highlights are not a repeated identical dot in every cluster.",
+        "material_continuity": "olive-gray fine, broken horizontal sediment lenses remains recognizable in the whole surface; mineral edges are broken rather than full-width artificial seams.",
+        "edge_variation": "Primary mineral planes have unequal spans and contain distinct short offset midtone transitions; selected shapes cross tile boundaries.",
+        "variant_identity": "shale retains olive-gray fine, broken horizontal sediment lenses; natural face lacks all masonry or cut-perimeter framing.",
+        "vanilla_comparison": "Compared at native size, 6x and tiled scale to deepslate: short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes; the olive-gray fine, broken horizontal sediment lenses palette differs intentionally.",
+        "aggregate_structure": "short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: repeated stone grain remains visible but there is no full-width mechanical stripe or uniform field."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
-        "reference": "minecraft:block/stone",
+        "reference": "minecraft:block/deepslate",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "olive-gray fine sedimentary horizontal bedding; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "Natural olive-gray fine sedimentary horizontal bedding; vanilla stone uses less directional medium gray aggregates. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains olive-gray fine sedimentary horizontal bedding and geological grain.",
-        "context_view": "3x3 actual tiled inspection: repeated geological bands or aggregate patterns remain visible without artificial masonry borders.",
+        "applied_pattern": "continuous natural rock face, irregular broken material planes; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared at native size, 6x and tiled scale to deepslate: short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes; the olive-gray fine, broken horizontal sediment lenses palette differs intentionally. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; the pattern retains material grain; fixed-tile repetition remains possible. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/polished_shale.png": {
-      "sha256": "229c3db76ec1a19c56dae0d824ee617b8c9a765569cf438ec395755fa359fe71",
+      "sha256": "a282006039880056ab70a211ec582ed12762ac7658981a95f9b97a629105310e",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
         {
-          "id": "minecraft:block/stone",
+          "id": "minecraft:block/deepslate",
           "minecraft": "1.21.1",
-          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+          "sha256": "b4c5e7f5538608a371fd4c1f6b398e4b76f723702d10144432636a85a1a61832"
         },
         {
           "id": "minecraft:block/polished_andesite",
@@ -1202,117 +1207,117 @@
           "sha256": "ffe83daad907f1240fa6f872c5a89aed1d17c5a5c65815e0cdc5cc896069ca16"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: olive-gray fine sedimentary horizontal bedding is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+      "comparison": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes.",
       "findings": {
-        "silhouette": "Full surface, single squared tile with a top/left light bevel and darker lower/right edge, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Broad quiet olive-gray fine sedimentary horizontal bedding face with small retained mineral planes inside the bevel.",
-        "micro_contrast": "Interior contrast is reduced to adjacent midtones; cut edge remains visible.",
-        "light_and_volume": "A one-texel bright upper and left bevel meets a shaded bottom/right perimeter.",
-        "material_continuity": "olive-gray fine sedimentary horizontal bedding palette stays continuous across the interior; bevel belongs to the same stone.",
-        "edge_variation": "Straight bevel edges are intentional cut geometry; interior retains small irregular planes.",
-        "variant_identity": "Single bevel frame distinguishes polished surface from jointed masonry.",
-        "vanilla_comparison": "olive-gray fine sedimentary horizontal bedding is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
-        "aggregate_structure": "single squared tile with a top/left light bevel and darker lower/right edge; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 tile forms square cut stones with deliberate perimeter joins."
+        "silhouette": "Opaque full block, single cut face with narrow, material-dependent top/left and lower/right edge ramp; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes; internal material clusters remain after polishing.",
+        "micro_contrast": "Retained all five mineral tones, with subdued differences between adjacent shades and visible small midtone groups.",
+        "light_and_volume": "One-pixel top/left cut-edge ramp and darker lower/right establish worked relief; face planes remain distinct inside the border.",
+        "material_continuity": "olive-gray fine, broken horizontal sediment lenses remains recognizable in the whole surface; the intact internal mineral map preserves the original rock type.",
+        "edge_variation": "Cut edges are straight by construction but adjacent values vary along the edge; no thick constant solid frame.",
+        "variant_identity": "polished_shale retains olive-gray fine, broken horizontal sediment lenses; polished face has lower local contrast and a cut perimeter, unlike raw rock.",
+        "vanilla_comparison": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes.",
+        "aggregate_structure": "short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: repeating cut-square edges are intentional, mineral regions remain visible within each square."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
-        "reference": "minecraft:block/stone",
+        "reference": "minecraft:block/deepslate",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "single squared tile with a top/left light bevel and darker lower/right edge; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "olive-gray fine sedimentary horizontal bedding is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains olive-gray fine sedimentary horizontal bedding and cut edge.",
-        "context_view": "3x3 actual tiled inspection: deliberate tile perimeter reads as worked stone.",
+        "applied_pattern": "single cut face with narrow, material-dependent top/left and lower/right edge ramp; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; the cut frame remains visible without erasing the mineral detail. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/shale_bricks.png": {
-      "sha256": "edcedd5658bb9f0f8925b4230938e70a3092cd0e3abaef8d14f1d30e30583630",
+      "sha256": "d95f844c28feb84df1ac7cc6d71adc8b456a3603467fb7357e663981390ff90a",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
         {
-          "id": "minecraft:block/stone",
+          "id": "minecraft:block/deepslate",
           "minecraft": "1.21.1",
-          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+          "sha256": "b4c5e7f5538608a371fd4c1f6b398e4b76f723702d10144432636a85a1a61832"
         },
         {
-          "id": "minecraft:block/bricks",
+          "id": "minecraft:block/stone_bricks",
           "minecraft": "1.21.1",
-          "sha256": "33f9411f1cb233a2020df0cf3fda32c0f67a4b0fac3751bde2ba6f2fee81b169"
+          "sha256": "33da66239c5586ee712ffa3fab45927cd7d4968cf111829d3049f84152d85953"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: olive-gray fine sedimentary horizontal bedding inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+      "comparison": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent olive-gray fine, broken horizontal sediment lenses clusters and restrained local edge shading.",
       "findings": {
-        "silhouette": "Full surface, offset 8x8 running-bond stone units with one-pixel mortar joints, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Distinct staggered mortar courses surround the olive-gray fine sedimentary horizontal bedding faces.",
-        "micro_contrast": "Dark mortar and modest stone-edge highlights distinguish blocks from interior grain.",
-        "light_and_volume": "Light upper and left planes and darker lower/right edges describe carved rectangular faces.",
-        "material_continuity": "olive-gray fine sedimentary horizontal bedding palette stays continuous across the interior; mortar alone interrupts the material.",
-        "edge_variation": "Offset second course breaks vertical mortar continuity; repeated straight seams are intentional masonry.",
-        "variant_identity": "Worked masonry has a staggered joint pattern distinct from raw or polished rock.",
-        "vanilla_comparison": "olive-gray fine sedimentary horizontal bedding inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
-        "aggregate_structure": "offset 8x8 running-bond stone units with one-pixel mortar joints; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 tile displays aligned offset masonry courses; regular seams are construction cues."
+        "silhouette": "Opaque full block, two 16×8 running-bond courses, one-pixel mortar, offset lower vertical joint at x=7 and upper joint at x=15; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes; clusters continue across each brick face but stop at mortar.",
+        "micro_contrast": "One-pixel joints remain distinct from the face, with narrower localized transitions than the rejected four-sided thick frames.",
+        "light_and_volume": "Upper face edge is selectively lighter, lower bed is darker; side shadows are localized instead of outlining every pixel.",
+        "material_continuity": "olive-gray fine, broken horizontal sediment lenses remains recognizable in the whole surface; construction joints interrupt mineral areas only at brick boundaries.",
+        "edge_variation": "Joint placement follows a half-width course offset; small light and shadow edge interruptions depend on the material face.",
+        "variant_identity": "shale_bricks retains olive-gray fine, broken horizontal sediment lenses; elongated masonry geometry is different from the polished single tile and the old square brick units.",
+        "vanilla_comparison": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent olive-gray fine, broken horizontal sediment lenses clusters and restrained local edge shading.",
+        "aggregate_structure": "short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: elongated courses read as brickwork, with shifted vertical seams. Repetition is intentional for masonry."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
-        "reference": "minecraft:block/stone",
+        "reference": "minecraft:block/deepslate",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "offset 8x8 running-bond stone units with one-pixel mortar joints; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "olive-gray fine sedimentary horizontal bedding inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains olive-gray fine sedimentary horizontal bedding and mortar.",
-        "context_view": "3x3 actual tiled inspection: staggered joints meet at tile boundaries.",
+        "applied_pattern": "two 16×8 running-bond courses, one-pixel mortar, offset lower vertical joint at x=7 and upper joint at x=15; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent olive-gray fine, broken horizontal sediment lenses clusters and restrained local edge shading. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; short dark recesses below the offset layers near x=3–6,y=3–4 and x=10–12,y=9–10; no whole-width dark stripes.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; one full upper brick and offset lower course replace square tiled units. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/slate.png": {
-      "sha256": "7fa59668fdab575e2d7df3b96f06d6a1f8d9849ae2bdbafef89acf7933ad45e9",
+      "sha256": "74e5635f59d1fe7105506625114538d64227731003286deecb3c4683fbbe18df",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
         {
-          "id": "minecraft:block/stone",
+          "id": "minecraft:block/deepslate",
           "minecraft": "1.21.1",
-          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+          "sha256": "b4c5e7f5538608a371fd4c1f6b398e4b76f723702d10144432636a85a1a61832"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: Natural blue-gray irregular thin cleavage planes; vanilla stone uses less directional medium gray aggregates.",
+      "comparison": "Compared at native size, 6x and tiled scale to deepslate: broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars; the cool blue-gray irregular cleavage plates palette differs intentionally.",
       "findings": {
-        "silhouette": "Full surface, blue-gray irregular thin cleavage planes, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Coherent blue-gray irregular thin cleavage planes aggregates rather than isolated speckles.",
-        "micro_contrast": "Five adjacent mineral shades give distinct local boundaries in blue-gray irregular thin cleavage planes.",
-        "light_and_volume": "Lighter mineral planes abut localized darker cleavages or recessed grains.",
-        "material_continuity": "blue-gray irregular thin cleavage planes palette stays continuous across the interior; rock bands or aggregate groups retain their own palette.",
-        "edge_variation": "Natural edges follow unequal local planes and broken mineral bands.",
-        "variant_identity": "Raw face has no geometric construction seam.",
-        "vanilla_comparison": "Natural blue-gray irregular thin cleavage planes; vanilla stone uses less directional medium gray aggregates.",
-        "aggregate_structure": "blue-gray irregular thin cleavage planes; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 preview has repeated blue-gray irregular thin cleavage planes; raw directional bedding may show a repeat, but there is no added masonry frame."
+        "silhouette": "Opaque full block, continuous natural rock face, irregular broken material planes; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars; adjacent midtone chips break the larger face.",
+        "micro_contrast": "Five close mineral tones connect the primary faces with secondary two-to-four-texel chips rather than a sparse motif over a broad background.",
+        "light_and_volume": "Local pale shoulders abut darker recesses in cool blue-gray irregular cleavage plates; highlights are not a repeated identical dot in every cluster.",
+        "material_continuity": "cool blue-gray irregular cleavage plates remains recognizable in the whole surface; mineral edges are broken rather than full-width artificial seams.",
+        "edge_variation": "Primary mineral planes have unequal spans and contain distinct short offset midtone transitions; selected shapes cross tile boundaries.",
+        "variant_identity": "slate retains cool blue-gray irregular cleavage plates; natural face lacks all masonry or cut-perimeter framing.",
+        "vanilla_comparison": "Compared at native size, 6x and tiled scale to deepslate: broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars; the cool blue-gray irregular cleavage plates palette differs intentionally.",
+        "aggregate_structure": "broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: repeated stone grain remains visible but there is no full-width mechanical stripe or uniform field."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
-        "reference": "minecraft:block/stone",
+        "reference": "minecraft:block/deepslate",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "blue-gray irregular thin cleavage planes; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "Natural blue-gray irregular thin cleavage planes; vanilla stone uses less directional medium gray aggregates. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains blue-gray irregular thin cleavage planes and geological grain.",
-        "context_view": "3x3 actual tiled inspection: repeated geological bands or aggregate patterns remain visible without artificial masonry borders.",
+        "applied_pattern": "continuous natural rock face, irregular broken material planes; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared at native size, 6x and tiled scale to deepslate: broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars; the cool blue-gray irregular cleavage plates palette differs intentionally. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; the pattern retains material grain; fixed-tile repetition remains possible. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/polished_slate.png": {
-      "sha256": "e081b343c6ca5e2814812867dfa9a2489aeebac7e88a0c481ff2f3bdfd240858",
+      "sha256": "7d14705831e2d298b06fc29c68e9c3c3da0566be1ec9d0cad963c96801076eaf",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
         {
-          "id": "minecraft:block/stone",
+          "id": "minecraft:block/deepslate",
           "minecraft": "1.21.1",
-          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+          "sha256": "b4c5e7f5538608a371fd4c1f6b398e4b76f723702d10144432636a85a1a61832"
         },
         {
           "id": "minecraft:block/polished_andesite",
@@ -1320,74 +1325,74 @@
           "sha256": "ffe83daad907f1240fa6f872c5a89aed1d17c5a5c65815e0cdc5cc896069ca16"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: blue-gray irregular thin cleavage planes is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+      "comparison": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars.",
       "findings": {
-        "silhouette": "Full surface, single squared tile with a top/left light bevel and darker lower/right edge, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Broad quiet blue-gray irregular thin cleavage planes face with small retained mineral planes inside the bevel.",
-        "micro_contrast": "Interior contrast is reduced to adjacent midtones; cut edge remains visible.",
-        "light_and_volume": "A one-texel bright upper and left bevel meets a shaded bottom/right perimeter.",
-        "material_continuity": "blue-gray irregular thin cleavage planes palette stays continuous across the interior; bevel belongs to the same stone.",
-        "edge_variation": "Straight bevel edges are intentional cut geometry; interior retains small irregular planes.",
-        "variant_identity": "Single bevel frame distinguishes polished surface from jointed masonry.",
-        "vanilla_comparison": "blue-gray irregular thin cleavage planes is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
-        "aggregate_structure": "single squared tile with a top/left light bevel and darker lower/right edge; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 tile forms square cut stones with deliberate perimeter joins."
+        "silhouette": "Opaque full block, single cut face with narrow, material-dependent top/left and lower/right edge ramp; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars; internal material clusters remain after polishing.",
+        "micro_contrast": "Retained all five mineral tones, with subdued differences between adjacent shades and visible small midtone groups.",
+        "light_and_volume": "One-pixel top/left cut-edge ramp and darker lower/right establish worked relief; face planes remain distinct inside the border.",
+        "material_continuity": "cool blue-gray irregular cleavage plates remains recognizable in the whole surface; the intact internal mineral map preserves the original rock type.",
+        "edge_variation": "Cut edges are straight by construction but adjacent values vary along the edge; no thick constant solid frame.",
+        "variant_identity": "polished_slate retains cool blue-gray irregular cleavage plates; polished face has lower local contrast and a cut perimeter, unlike raw rock.",
+        "vanilla_comparison": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars.",
+        "aggregate_structure": "broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: repeating cut-square edges are intentional, mineral regions remain visible within each square."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
-        "reference": "minecraft:block/stone",
+        "reference": "minecraft:block/deepslate",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "single squared tile with a top/left light bevel and darker lower/right edge; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "blue-gray irregular thin cleavage planes is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains blue-gray irregular thin cleavage planes and cut edge.",
-        "context_view": "3x3 actual tiled inspection: deliberate tile perimeter reads as worked stone.",
+        "applied_pattern": "single cut face with narrow, material-dependent top/left and lower/right edge ramp; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; the cut frame remains visible without erasing the mineral detail. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/slate_bricks.png": {
-      "sha256": "373f4a80f58e86ee0f514df5fa8db29fa99e64b35086eca06b1a3afd21afa1c3",
+      "sha256": "03c8ab7ba3e5a5727100a7d717638815564adc69af40b85d005c880d3137162d",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
         {
-          "id": "minecraft:block/stone",
+          "id": "minecraft:block/deepslate",
           "minecraft": "1.21.1",
-          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+          "sha256": "b4c5e7f5538608a371fd4c1f6b398e4b76f723702d10144432636a85a1a61832"
         },
         {
-          "id": "minecraft:block/bricks",
+          "id": "minecraft:block/stone_bricks",
           "minecraft": "1.21.1",
-          "sha256": "33f9411f1cb233a2020df0cf3fda32c0f67a4b0fac3751bde2ba6f2fee81b169"
+          "sha256": "33da66239c5586ee712ffa3fab45927cd7d4968cf111829d3049f84152d85953"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: blue-gray irregular thin cleavage planes inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+      "comparison": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent cool blue-gray irregular cleavage plates clusters and restrained local edge shading.",
       "findings": {
-        "silhouette": "Full surface, offset 8x8 running-bond stone units with one-pixel mortar joints, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Distinct staggered mortar courses surround the blue-gray irregular thin cleavage planes faces.",
-        "micro_contrast": "Dark mortar and modest stone-edge highlights distinguish blocks from interior grain.",
-        "light_and_volume": "Light upper and left planes and darker lower/right edges describe carved rectangular faces.",
-        "material_continuity": "blue-gray irregular thin cleavage planes palette stays continuous across the interior; mortar alone interrupts the material.",
-        "edge_variation": "Offset second course breaks vertical mortar continuity; repeated straight seams are intentional masonry.",
-        "variant_identity": "Worked masonry has a staggered joint pattern distinct from raw or polished rock.",
-        "vanilla_comparison": "blue-gray irregular thin cleavage planes inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
-        "aggregate_structure": "offset 8x8 running-bond stone units with one-pixel mortar joints; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 tile displays aligned offset masonry courses; regular seams are construction cues."
+        "silhouette": "Opaque full block, two 16×8 running-bond courses, one-pixel mortar, offset lower vertical joint at x=7 and upper joint at x=15; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars; clusters continue across each brick face but stop at mortar.",
+        "micro_contrast": "One-pixel joints remain distinct from the face, with narrower localized transitions than the rejected four-sided thick frames.",
+        "light_and_volume": "Upper face edge is selectively lighter, lower bed is darker; side shadows are localized instead of outlining every pixel.",
+        "material_continuity": "cool blue-gray irregular cleavage plates remains recognizable in the whole surface; construction joints interrupt mineral areas only at brick boundaries.",
+        "edge_variation": "Joint placement follows a half-width course offset; small light and shadow edge interruptions depend on the material face.",
+        "variant_identity": "slate_bricks retains cool blue-gray irregular cleavage plates; elongated masonry geometry is different from the polished single tile and the old square brick units.",
+        "vanilla_comparison": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent cool blue-gray irregular cleavage plates clusters and restrained local edge shading.",
+        "aggregate_structure": "broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: elongated courses read as brickwork, with shifted vertical seams. Repetition is intentional for masonry."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
-        "reference": "minecraft:block/stone",
+        "reference": "minecraft:block/deepslate",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "offset 8x8 running-bond stone units with one-pixel mortar joints; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "blue-gray irregular thin cleavage planes inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains blue-gray irregular thin cleavage planes and mortar.",
-        "context_view": "3x3 actual tiled inspection: staggered joints meet at tile boundaries.",
+        "applied_pattern": "two 16×8 running-bond courses, one-pixel mortar, offset lower vertical joint at x=7 and upper joint at x=15; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent cool blue-gray irregular cleavage plates clusters and restrained local edge shading. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; broken blue-gray cleavage planes near x=2–8,y=5–10 and the offset lower-right group; thin lighter shoulders rather than full horizontal bars.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; one full upper brick and offset lower course replace square tiled units. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/gneiss.png": {
-      "sha256": "1aa19f1311ced2a2c2214cbf1bba544091fc7f7d455e397e4d7126792f491d67",
+      "sha256": "fbef64812d85c50e4474b4e997e6db516a55ffc20210aac79637862532006106",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
@@ -1397,33 +1402,33 @@
           "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: Natural contrasting cream and steel-gray folded mineral bands; vanilla stone uses less directional medium gray aggregates.",
+      "comparison": "Compared at native size, 6x and tiled scale to stone: light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation; the alternating cream feldspar-rich and gray dark mineral domains palette differs intentionally.",
       "findings": {
-        "silhouette": "Full surface, contrasting cream and steel-gray folded mineral bands, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Coherent contrasting cream and steel-gray folded mineral bands aggregates rather than isolated speckles.",
-        "micro_contrast": "Five adjacent mineral shades give distinct local boundaries in contrasting cream and steel-gray folded mineral bands.",
-        "light_and_volume": "Lighter mineral planes abut localized darker cleavages or recessed grains.",
-        "material_continuity": "contrasting cream and steel-gray folded mineral bands palette stays continuous across the interior; rock bands or aggregate groups retain their own palette.",
-        "edge_variation": "Natural edges follow unequal local planes and broken mineral bands.",
-        "variant_identity": "Raw face has no geometric construction seam.",
-        "vanilla_comparison": "Natural contrasting cream and steel-gray folded mineral bands; vanilla stone uses less directional medium gray aggregates.",
-        "aggregate_structure": "contrasting cream and steel-gray folded mineral bands; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 preview has repeated contrasting cream and steel-gray folded mineral bands; raw directional bedding may show a repeat, but there is no added masonry frame."
+        "silhouette": "Opaque full block, continuous natural rock face, irregular broken material planes; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation; adjacent midtone chips break the larger face.",
+        "micro_contrast": "Five close mineral tones connect the primary faces with secondary two-to-four-texel chips rather than a sparse motif over a broad background.",
+        "light_and_volume": "Local pale shoulders abut darker recesses in alternating cream feldspar-rich and gray dark mineral domains; highlights are not a repeated identical dot in every cluster.",
+        "material_continuity": "alternating cream feldspar-rich and gray dark mineral domains remains recognizable in the whole surface; mineral edges are broken rather than full-width artificial seams.",
+        "edge_variation": "Primary mineral planes have unequal spans and contain distinct short offset midtone transitions; selected shapes cross tile boundaries.",
+        "variant_identity": "gneiss retains alternating cream feldspar-rich and gray dark mineral domains; natural face lacks all masonry or cut-perimeter framing.",
+        "vanilla_comparison": "Compared at native size, 6x and tiled scale to stone: light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation; the alternating cream feldspar-rich and gray dark mineral domains palette differs intentionally.",
+        "aggregate_structure": "light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: diagonal mineral-domain repeat is still visible; this is a residual static texture limitation."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
         "reference": "minecraft:block/stone",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "contrasting cream and steel-gray folded mineral bands; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "Natural contrasting cream and steel-gray folded mineral bands; vanilla stone uses less directional medium gray aggregates. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains contrasting cream and steel-gray folded mineral bands and geological grain.",
-        "context_view": "3x3 actual tiled inspection: repeated geological bands or aggregate patterns remain visible without artificial masonry borders.",
+        "applied_pattern": "continuous natural rock face, irregular broken material planes; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared at native size, 6x and tiled scale to stone: light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation; the alternating cream feldspar-rich and gray dark mineral domains palette differs intentionally. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; the pattern retains material grain; fixed-tile repetition remains possible. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/polished_gneiss.png": {
-      "sha256": "482cd151b7c5aae6067e7de8d8cb4c6f897e4d3a88d22935c0ee609d10fc0aca",
+      "sha256": "d64421af29fc26fe31a0a1cf9e7ced6647c66a2ad50bfee68857adee868be67c",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
@@ -1438,33 +1443,33 @@
           "sha256": "ffe83daad907f1240fa6f872c5a89aed1d17c5a5c65815e0cdc5cc896069ca16"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: contrasting cream and steel-gray folded mineral bands is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+      "comparison": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation.",
       "findings": {
-        "silhouette": "Full surface, single squared tile with a top/left light bevel and darker lower/right edge, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Broad quiet contrasting cream and steel-gray folded mineral bands face with small retained mineral planes inside the bevel.",
-        "micro_contrast": "Interior contrast is reduced to adjacent midtones; cut edge remains visible.",
-        "light_and_volume": "A one-texel bright upper and left bevel meets a shaded bottom/right perimeter.",
-        "material_continuity": "contrasting cream and steel-gray folded mineral bands palette stays continuous across the interior; bevel belongs to the same stone.",
-        "edge_variation": "Straight bevel edges are intentional cut geometry; interior retains small irregular planes.",
-        "variant_identity": "Single bevel frame distinguishes polished surface from jointed masonry.",
-        "vanilla_comparison": "contrasting cream and steel-gray folded mineral bands is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
-        "aggregate_structure": "single squared tile with a top/left light bevel and darker lower/right edge; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 tile forms square cut stones with deliberate perimeter joins."
+        "silhouette": "Opaque full block, single cut face with narrow, material-dependent top/left and lower/right edge ramp; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation; internal material clusters remain after polishing.",
+        "micro_contrast": "Retained all five mineral tones, with subdued differences between adjacent shades and visible small midtone groups.",
+        "light_and_volume": "One-pixel top/left cut-edge ramp and darker lower/right establish worked relief; face planes remain distinct inside the border.",
+        "material_continuity": "alternating cream feldspar-rich and gray dark mineral domains remains recognizable in the whole surface; the intact internal mineral map preserves the original rock type.",
+        "edge_variation": "Cut edges are straight by construction but adjacent values vary along the edge; no thick constant solid frame.",
+        "variant_identity": "polished_gneiss retains alternating cream feldspar-rich and gray dark mineral domains; polished face has lower local contrast and a cut perimeter, unlike raw rock.",
+        "vanilla_comparison": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation.",
+        "aggregate_structure": "light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: repeating cut-square edges are intentional, mineral regions remain visible within each square."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
         "reference": "minecraft:block/stone",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "single squared tile with a top/left light bevel and darker lower/right edge; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "contrasting cream and steel-gray folded mineral bands is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains contrasting cream and steel-gray folded mineral bands and cut edge.",
-        "context_view": "3x3 actual tiled inspection: deliberate tile perimeter reads as worked stone.",
+        "applied_pattern": "single cut face with narrow, material-dependent top/left and lower/right edge ramp; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; the cut frame remains visible without erasing the mineral detail. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/gneiss_bricks.png": {
-      "sha256": "ea9a135b82b5c922a29c4526b5bdcda0687e2042c239bd82773613843a38bd07",
+      "sha256": "d00a87709087b37f30998a925b27eae1789d98f528a385909df0e49118fed4f3",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
@@ -1474,38 +1479,38 @@
           "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
         },
         {
-          "id": "minecraft:block/bricks",
+          "id": "minecraft:block/stone_bricks",
           "minecraft": "1.21.1",
-          "sha256": "33f9411f1cb233a2020df0cf3fda32c0f67a4b0fac3751bde2ba6f2fee81b169"
+          "sha256": "33da66239c5586ee712ffa3fab45927cd7d4968cf111829d3049f84152d85953"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: contrasting cream and steel-gray folded mineral bands inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+      "comparison": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent alternating cream feldspar-rich and gray dark mineral domains clusters and restrained local edge shading.",
       "findings": {
-        "silhouette": "Full surface, offset 8x8 running-bond stone units with one-pixel mortar joints, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Distinct staggered mortar courses surround the contrasting cream and steel-gray folded mineral bands faces.",
-        "micro_contrast": "Dark mortar and modest stone-edge highlights distinguish blocks from interior grain.",
-        "light_and_volume": "Light upper and left planes and darker lower/right edges describe carved rectangular faces.",
-        "material_continuity": "contrasting cream and steel-gray folded mineral bands palette stays continuous across the interior; mortar alone interrupts the material.",
-        "edge_variation": "Offset second course breaks vertical mortar continuity; repeated straight seams are intentional masonry.",
-        "variant_identity": "Worked masonry has a staggered joint pattern distinct from raw or polished rock.",
-        "vanilla_comparison": "contrasting cream and steel-gray folded mineral bands inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
-        "aggregate_structure": "offset 8x8 running-bond stone units with one-pixel mortar joints; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 tile displays aligned offset masonry courses; regular seams are construction cues."
+        "silhouette": "Opaque full block, two 16×8 running-bond courses, one-pixel mortar, offset lower vertical joint at x=7 and upper joint at x=15; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation; clusters continue across each brick face but stop at mortar.",
+        "micro_contrast": "One-pixel joints remain distinct from the face, with narrower localized transitions than the rejected four-sided thick frames.",
+        "light_and_volume": "Upper face edge is selectively lighter, lower bed is darker; side shadows are localized instead of outlining every pixel.",
+        "material_continuity": "alternating cream feldspar-rich and gray dark mineral domains remains recognizable in the whole surface; construction joints interrupt mineral areas only at brick boundaries.",
+        "edge_variation": "Joint placement follows a half-width course offset; small light and shadow edge interruptions depend on the material face.",
+        "variant_identity": "gneiss_bricks retains alternating cream feldspar-rich and gray dark mineral domains; elongated masonry geometry is different from the polished single tile and the old square brick units.",
+        "vanilla_comparison": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent alternating cream feldspar-rich and gray dark mineral domains clusters and restrained local edge shading.",
+        "aggregate_structure": "light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: elongated courses read as brickwork, with shifted vertical seams. Repetition is intentional for masonry."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
         "reference": "minecraft:block/stone",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "offset 8x8 running-bond stone units with one-pixel mortar joints; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "contrasting cream and steel-gray folded mineral bands inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains contrasting cream and steel-gray folded mineral bands and mortar.",
-        "context_view": "3x3 actual tiled inspection: staggered joints meet at tile boundaries.",
+        "applied_pattern": "two 16×8 running-bond courses, one-pixel mortar, offset lower vertical joint at x=7 and upper joint at x=15; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent alternating cream feldspar-rich and gray dark mineral domains clusters and restrained local edge shading. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; light domains at upper right and lower left interrupted by darker mineral lenses and intermediate gray boundaries; visible diagonal repeat is retained as foliation.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; one full upper brick and offset lower course replace square tiled units. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/polished_volcanic_tuff.png": {
-      "sha256": "936f3e1c6223e59354edfe0ea079d6f77b9ca4944747725a9979bc320477b7db",
+      "sha256": "27c159a4f113eed0d88163f1e2024465619b94c38b798aba7a59f691b7e6d9bc",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
@@ -1518,35 +1523,40 @@
           "id": "minecraft:block/polished_andesite",
           "minecraft": "1.21.1",
           "sha256": "ffe83daad907f1240fa6f872c5a89aed1d17c5a5c65815e0cdc5cc896069ca16"
+        },
+        {
+          "id": "minecraft:block/tuff",
+          "minecraft": "1.21.1",
+          "sha256": "f418841b6de0de42ea5c31c65ddad368c8d721ef172f59cf3b975923413a66ab"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: muted gray-brown compressed volcanic grains is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+      "comparison": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. mid-gray-brown angular inclusions near x=5–8,y=8–12 and upper-right fragments with local shadow, not sparse isolated pale flecks.",
       "findings": {
-        "silhouette": "Full surface, single squared tile with a top/left light bevel and darker lower/right edge, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Broad quiet muted gray-brown compressed volcanic grains face with small retained mineral planes inside the bevel.",
-        "micro_contrast": "Interior contrast is reduced to adjacent midtones; cut edge remains visible.",
-        "light_and_volume": "A one-texel bright upper and left bevel meets a shaded bottom/right perimeter.",
-        "material_continuity": "muted gray-brown compressed volcanic grains palette stays continuous across the interior; bevel belongs to the same stone.",
-        "edge_variation": "Straight bevel edges are intentional cut geometry; interior retains small irregular planes.",
-        "variant_identity": "Single bevel frame distinguishes polished surface from jointed masonry.",
-        "vanilla_comparison": "muted gray-brown compressed volcanic grains is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
-        "aggregate_structure": "single squared tile with a top/left light bevel and darker lower/right edge; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 tile forms square cut stones with deliberate perimeter joins."
+        "silhouette": "Opaque full block, single cut face with narrow, material-dependent top/left and lower/right edge ramp; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "mid-gray-brown angular inclusions near x=5–8,y=8–12 and upper-right fragments with local shadow, not sparse isolated pale flecks; internal material clusters remain after polishing.",
+        "micro_contrast": "Retained all five mineral tones, with subdued differences between adjacent shades and visible small midtone groups.",
+        "light_and_volume": "One-pixel top/left cut-edge ramp and darker lower/right establish worked relief; face planes remain distinct inside the border.",
+        "material_continuity": "gray-brown ash matrix with angular compacted fragments remains recognizable in the whole surface; the intact internal mineral map preserves the original rock type.",
+        "edge_variation": "Cut edges are straight by construction but adjacent values vary along the edge; no thick constant solid frame.",
+        "variant_identity": "polished_volcanic_tuff retains gray-brown ash matrix with angular compacted fragments; polished face has lower local contrast and a cut perimeter, unlike raw rock.",
+        "vanilla_comparison": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. mid-gray-brown angular inclusions near x=5–8,y=8–12 and upper-right fragments with local shadow, not sparse isolated pale flecks.",
+        "aggregate_structure": "mid-gray-brown angular inclusions near x=5–8,y=8–12 and upper-right fragments with local shadow, not sparse isolated pale flecks; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: repeating cut-square edges are intentional, mineral regions remain visible within each square."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
         "reference": "minecraft:block/stone",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "single squared tile with a top/left light bevel and darker lower/right edge; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "muted gray-brown compressed volcanic grains is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains muted gray-brown compressed volcanic grains and cut edge.",
-        "context_view": "3x3 actual tiled inspection: deliberate tile perimeter reads as worked stone.",
+        "applied_pattern": "single cut face with narrow, material-dependent top/left and lower/right edge ramp; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared to actual polished_andesite: five retained mineral shades fill the interior rather than the rejected near-flat two-shade fill. mid-gray-brown angular inclusions near x=5–8,y=8–12 and upper-right fragments with local shadow, not sparse isolated pale flecks. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; mid-gray-brown angular inclusions near x=5–8,y=8–12 and upper-right fragments with local shadow, not sparse isolated pale flecks.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; the cut frame remains visible without erasing the mineral detail. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     },
     "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/volcanic_tuff_bricks.png": {
-      "sha256": "b2275e3d3bb2b93b02a5f22b44fc06acc06d6ac9f0bae32856cae2666a68334a",
+      "sha256": "bd43cb41af081917abf15412aef61e06f7ba3efb9b9e6bbac3a5582ab993f485",
       "verdict": "PASS",
       "material_profile": "soil",
       "references": [
@@ -1556,33 +1566,38 @@
           "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
         },
         {
-          "id": "minecraft:block/bricks",
+          "id": "minecraft:block/stone_bricks",
           "minecraft": "1.21.1",
-          "sha256": "33f9411f1cb233a2020df0cf3fda32c0f67a4b0fac3751bde2ba6f2fee81b169"
+          "sha256": "33da66239c5586ee712ffa3fab45927cd7d4968cf111829d3049f84152d85953"
+        },
+        {
+          "id": "minecraft:block/tuff",
+          "minecraft": "1.21.1",
+          "sha256": "f418841b6de0de42ea5c31c65ddad368c8d721ef172f59cf3b975923413a66ab"
         }
       ],
-      "comparison": "Actual native, enlarged and tiled inspection: muted gray-brown compressed volcanic grains inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+      "comparison": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent gray-brown ash matrix with angular compacted fragments clusters and restrained local edge shading.",
       "findings": {
-        "silhouette": "Full surface, offset 8x8 running-bond stone units with one-pixel mortar joints, no transparent holes; model shape remains separate.",
-        "cluster_structure": "Distinct staggered mortar courses surround the muted gray-brown compressed volcanic grains faces.",
-        "micro_contrast": "Dark mortar and modest stone-edge highlights distinguish blocks from interior grain.",
-        "light_and_volume": "Light upper and left planes and darker lower/right edges describe carved rectangular faces.",
-        "material_continuity": "muted gray-brown compressed volcanic grains palette stays continuous across the interior; mortar alone interrupts the material.",
-        "edge_variation": "Offset second course breaks vertical mortar continuity; repeated straight seams are intentional masonry.",
-        "variant_identity": "Worked masonry has a staggered joint pattern distinct from raw or polished rock.",
-        "vanilla_comparison": "muted gray-brown compressed volcanic grains inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
-        "aggregate_structure": "offset 8x8 running-bond stone units with one-pixel mortar joints; grain scale is consistent with the material and the 16-pixel block.",
-        "tile_rhythm": "3x3 tile displays aligned offset masonry courses; regular seams are construction cues."
+        "silhouette": "Opaque full block, two 16×8 running-bond courses, one-pixel mortar, offset lower vertical joint at x=7 and upper joint at x=15; geometry for stairs and slabs remains in vanilla model parents.",
+        "cluster_structure": "mid-gray-brown angular inclusions near x=5–8,y=8–12 and upper-right fragments with local shadow, not sparse isolated pale flecks; clusters continue across each brick face but stop at mortar.",
+        "micro_contrast": "One-pixel joints remain distinct from the face, with narrower localized transitions than the rejected four-sided thick frames.",
+        "light_and_volume": "Upper face edge is selectively lighter, lower bed is darker; side shadows are localized instead of outlining every pixel.",
+        "material_continuity": "gray-brown ash matrix with angular compacted fragments remains recognizable in the whole surface; construction joints interrupt mineral areas only at brick boundaries.",
+        "edge_variation": "Joint placement follows a half-width course offset; small light and shadow edge interruptions depend on the material face.",
+        "variant_identity": "volcanic_tuff_bricks retains gray-brown ash matrix with angular compacted fragments; elongated masonry geometry is different from the polished single tile and the old square brick units.",
+        "vanilla_comparison": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent gray-brown ash matrix with angular compacted fragments clusters and restrained local edge shading.",
+        "aggregate_structure": "mid-gray-brown angular inclusions near x=5–8,y=8–12 and upper-right fragments with local shadow, not sparse isolated pale flecks; primary groups are split locally by smaller related-color chips, not automatic dithering or removal of inner shades.",
+        "tile_rhythm": "Viewed actual 3×3 tile: elongated courses read as brickwork, with shifted vertical seams. Repetition is intentional for masonry."
       },
       "atlas": {
         "revision": "r9",
         "rule": "stone_surface",
         "reference": "minecraft:block/stone",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "offset 8x8 running-bond stone units with one-pixel mortar joints; related adjacent material shades instead of unrelated random colors.",
-        "reference_limit": "muted gray-brown compressed volcanic grains inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
-        "native_view": "16px view retains muted gray-brown compressed volcanic grains and mortar.",
-        "context_view": "3x3 actual tiled inspection: staggered joints meet at tile boundaries.",
+        "applied_pattern": "two 16×8 running-bond courses, one-pixel mortar, offset lower vertical joint at x=7 and upper joint at x=15; adjacent mineral planes and selective intermediate clusters preserve material rather than fill an empty template.",
+        "reference_limit": "Compared directly to actual 1.21.1 stone_bricks rather than clay bricks: matching masonry scale and half-offset courses, independent gray-brown ash matrix with angular compacted fragments clusters and restrained local edge shading. Source comparator pixels were not redistributed.",
+        "native_view": "Inspected the actual 16×16 and 6x view; mid-gray-brown angular inclusions near x=5–8,y=8–12 and upper-right fragments with local shadow, not sparse isolated pale flecks.",
+        "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; one full upper brick and offset lower course replace square tiled units. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
     }

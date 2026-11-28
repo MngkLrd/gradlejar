@@ -22,7 +22,7 @@ public final class SoilFarmland{
  }
  static{
   for(String id:IDS){
-   var b=Content.BLOCKS.register(id+"_farmland",()->new Tilled(id));FARMS.put(id,b);
+   var b=Content.BLOCKS.register(id+"_farmland",()->new Tilled(id));FARMS.put(id,b::get);
    Content.ITEMS.register(id+"_farmland",()->new BlockItem(b.get(),new Item.Properties()));
   }
  }
