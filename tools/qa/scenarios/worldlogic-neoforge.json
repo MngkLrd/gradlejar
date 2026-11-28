@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge 1.1.0 development / RC52 rocks and farmland",
+  "name": "World Logic NeoForge 1.2.0 development / RC53 physical materials",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1846,6 +1846,72 @@
         {
           "backend": "server",
           "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc53-material-registry",
+      "kind": "mechanic",
+      "subject": "SI material profiles, separate wood species, Janka hardness, fungal wood, unknown/duplicate controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc53-material-rocks",
+      "kind": "mechanic",
+      "subject": "Five rock families: all raw/polished/bricks/slabs/stairs/walls, double slabs and ore host/inclusion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc53-material-soils",
+      "kind": "mechanic",
+      "subject": "Seven tilled soil profiles and parent material, moisture mass and thermal transport",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc53-material-composition",
+      "kind": "mechanic",
+      "subject": "Compound axe, block item versus placed material, stack scaling, empty item, persistent item state and legacy weight API",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc53-material-fluids",
+      "kind": "mechanic",
+      "subject": "Eight native fluid families including source/flowing/bucket/block, SI litre and voxel units and saline density",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc53-material-loaded",
+      "kind": "mechanic",
+      "subject": "Loaded-only world query and out-of-height negative control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
         }
       ]
     }
