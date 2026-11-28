@@ -62,18 +62,21 @@ public final class PhysicalMaterials {
    double massKg,double heatCapacityJK,double conductivityWmK,double compressiveMPa,double tensileMPa,double modulusGPa){}
  public static Optional<ComponentResult> componentProperties(Component c,State state){
   var m=MATERIALS.get(c.materialId());if(m==null)return Optional.empty();
-  double density=m.dryDensityKgM3();
-  if(m.id().equals(id("fresh_water"))&&Double.isFinite(state.temperatureC())&&state.temperatureC()>=0&&state.temperatureC()<=100){
-   double t=state.temperatureC();density=1000*(1-((t+288.9414)/(508929.2*(t+68.12963)))*Math.pow(t-3.9863,2));
+  double density=m.dryDensityKgM3(),specificHeat=m.heatCapacityJkgK();
+  double salinity=m.id().equals(id("fresh_water"))?0:m.id().equals(id("brackish_water"))?12:m.id().equals(id("sea_water"))?35:N;
+  if(Double.isFinite(salinity)&&Double.isFinite(state.temperatureC())){
+   var solution=PhysicalWater.solution(salinity,state.temperatureC());
+   density=solution.map(PhysicalWater.Solution::densityKgM3).orElse(N);
+   specificHeat=solution.map(PhysicalWater.Solution::specificHeatJkgK).orElse(N);
   }
   double wet=m.phase()==Phase.SOLID||m.phase()==Phase.GRANULAR?(Double.isNaN(state.moistureKgKg())?m.referenceMoistureKgKg():state.moistureKgKg()):0;
-  if(Double.isFinite(wet)&&Double.isFinite(m.porosity())&&density>0)wet=Math.min(wet,m.porosity()*1000/density);
+  if(!WOOD_PROPERTIES.containsKey(m.id())&&Double.isFinite(wet)&&Double.isFinite(m.porosity())&&density>0)wet=Math.min(wet,m.porosity()*1000/density);
   double dry=density*c.volumeM3(),water=dry*wet;
   // Bounded game proxy: added water changes effective thermal transport in porous solids/soil.
   double k=m.conductivityWmK();
   if(Double.isFinite(k)&&Double.isFinite(wet)&&wet>0&&m.phase()!=Phase.LIQUID&&m.phase()!=Phase.GAS)k*=1+Math.min(1,wet)*.65;
   // No unsupported universal strength-vs-temperature curve; keep nominal values.
-  return Optional.of(new ComponentResult(c,m,wet,dry+water,dry*m.heatCapacityJkgK()+water*4182,k,m.compressiveMPa(),m.tensileMPa(),m.modulusGPa()));
+  return Optional.of(new ComponentResult(c,m,wet,dry+water,dry*specificHeat+water*4182,k,m.compressiveMPa(),m.tensileMPa(),m.modulusGPa()));
  }
  private record Key(Domain domain,ResourceLocation id){}
  private static final Map<ResourceLocation,MaterialProfile> MATERIALS=new ConcurrentHashMap<>();
@@ -134,7 +137,6 @@ public final class PhysicalMaterials {
   registerMaterial(new MaterialProfile(id(name),phase,d,h,c,t,e,por,wet,k,cp,melt,ignite,burn,friction,perm,visc));
  }
  private static void rock(String n,double d,double h,double c,double t,double e,double p,double k){m(n,Phase.SOLID,d,h,c,t,e,p,0,k,850,N,N,0,.65,N,N);}
- private static void wood(String n,double d,double c,double t,double e,double wet){m(n,Phase.SOLID,d,N,c,t,e,N,wet,.13,1700,N,300,.8,.5,N,N);}
  private static void soil(String n,double d,double p,double wet,double k,double perm){m(n,Phase.GRANULAR,d,N,N,N,N,p,wet,k,850,N,N,0,.6,perm,N);}
  private static void metal(String n,double d,double h,double t,double e,double k,double cp,double melt){m(n,Phase.SOLID,d,h,N,t,e,0,0,k,cp,melt,N,0,.4,0,N);}
  private static void liquid(String n,double d,double k,double cp,double visc){m(n,Phase.LIQUID,d,N,N,N,N,N,0,k,cp,N,N,0,N,N,visc);}
@@ -571,6 +573,7 @@ public final class PhysicalMaterials {
   String n=m.id().getPath();double distance;
   boolean soft=n.equals("snow")||n.equals("wool")||n.equals("straw")||m.phase()==Phase.GRANULAR;
   if(soft){
+   if(!(b.getBlock() instanceof net.minecraft.world.level.block.SnowLayerBlock)&&!b.isCollisionShapeFullBlock(level,pos)&&c.volumeM3()<.9)return Optional.empty();
    var below=pos.below();
    if(level.isOutsideBuildHeight(below)||!level.hasChunkAt(below)||!level.getBlockState(below).isCollisionShapeFullBlock(level,below))return Optional.empty();
    double wet=componentProperties(c,r.get().state()).map(ComponentResult::moistureKgKg).orElse(N);
