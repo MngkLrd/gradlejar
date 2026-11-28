@@ -95,3 +95,5 @@ Player screenshot exposed flat crossed planes and a zero-thickness foundation. A
 
 ### 1.7.0 — forest microhabitat
 13 blocks/items: two epiphytes, two climbing vines, three roots, three thorn plants and three forest floor covers. Natural tree-attached generation uses existing Core habitat, independent random stream, and chunk-local bounded attempts. Vines grow downward on natural supports with four-segment limit. Thorn contact uses vanilla damage and existing mobility factor. No player-built plank attachment or forced chunk loads. Existing IDs and 1.6.6 moss models retained. Runtime/player/client natural-world evidence pending.
+
+The forest fixture exercises all five generated groups on an actual tree site, natural stone attachment, processed support rejection, and the actual moving-contact damage callback. These are assertions pending CI, not a claim of executed validation.

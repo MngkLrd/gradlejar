@@ -56,6 +56,18 @@ public final class ForestEcology {
             Direction outward=Direction.from2DDataValue(r.nextInt(4));var p=trunk.above(3+r.nextInt(3)).relative(outward);
             for(int n=0;n<3;n++){if(!place(l,p.below(n),s,outward.getOpposite(),n,x0,z0))break;count++;}
         }
+        // Natural exposed rock faces near moist wooded sites, never a forced rock replacement.
+        if(h!=null&&epiphyteHabitat(temperature,moisture,dryness)&&r.nextInt(3)==0){
+            for(int n=0;n<3;n++){
+                int x=trunk.getX()+r.nextInt(9)-4,z=trunk.getZ()+r.nextInt(9)-4;
+                if((x&~15)!=x0||(z&~15)!=z0)continue;
+                var host=ground(l,x,z).below();
+                if(!inside(l,host,x0,z0)||!l.getBlockState(host).is(net.minecraft.tags.BlockTags.BASE_STONE_OVERWORLD))continue;
+                Direction outward=Direction.from2DDataValue(r.nextInt(4));
+                ForestSpecies flora=vineHabitat(temperature,moisture,dryness)&&r.nextInt(4)==0?ForestSpecies.IVY:ForestSpecies.BARK_MOSS;
+                if(place(l,host.relative(outward),flora,outward.getOpposite(),0,x0,z0))count++;
+            }
+        }
         int litter=0;
         for(int i=0;i<12&&litter<5;i++){
             int x=trunk.getX()+r.nextInt(9)-4,z=trunk.getZ()+r.nextInt(9)-4;
