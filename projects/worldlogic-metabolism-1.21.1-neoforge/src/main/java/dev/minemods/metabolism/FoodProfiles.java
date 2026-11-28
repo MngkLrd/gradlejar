@@ -8,8 +8,9 @@ public final class FoodProfiles {
  private static Entry food(double kcal,double p,double f,double c,double fiber,double a,double vitc,double b12,double iron,double ca,double mg,double toxin,double absorption){
   return new Entry(new MetabolicModel.Meal(kcal,new double[]{p,f,c,fiber,a,vitc,b12,iron,ca,mg},toxin,absorption),true);
  }
- public static Optional<Entry> profile(ItemStack stack){
-  var component=stack.get(DataComponents.FOOD);
+ public static Optional<Entry> profile(ItemStack stack){return profile(stack,null);}
+ public static Optional<Entry> profile(ItemStack stack,net.minecraft.world.entity.LivingEntity eater){
+  var component=stack.getFoodProperties(eater);
   if(stack.is(net.minecraft.world.item.Items.MILK_BUCKET))return Optional.of(food(155,8,8,12,0,60,0,1.1,.1,275,24,0,.93));
   if(component==null)return Optional.empty();
   String id=BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();

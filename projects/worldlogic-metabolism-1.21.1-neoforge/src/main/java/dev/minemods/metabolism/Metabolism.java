@@ -108,7 +108,7 @@ public final class Metabolism {
  private static void finish(LivingEntityUseItemEvent.Finish e){
   if(!(e.getEntity() instanceof ServerPlayer p)||!active(p))return;
   var start=DRINKS.remove(p);var item=e.getItem();
-  var food=FoodProfiles.profile(item);if(food.isPresent()){var f=food.get();acceptMeal(p,f.meal(),f.known());return;}
+  var food=FoodProfiles.profile(item,p);if(food.isPresent()){var f=food.get();acceptMeal(p,f.meal(),f.known());return;}
   if(start!=null&&item.is(start.item())){
    var after=WaterIntakeBridge.read(e.getResultStack());
    if(e.getResultStack().is(start.item())&&after!=null){int volume=start.water().volume()-after.volume();if(volume>0)acceptWater(p,volume,start.water().risk(),start.water().salt());return;}
@@ -120,7 +120,7 @@ public final class Metabolism {
  private static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p)MetabolismSync.send(p);}
  private static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p){POS.remove(p);DRINKS.remove(p);}}
  private static String status(ServerPlayer p){var s=state(p);return String.format(Locale.ROOT,"Metabolism quality=%.0f energy=%.0f stomach=%.1f toxin=%.1f deficient=%d critical=%d recovery=%.3f",100*s.quality(),100*s.energy(),s.stomach,100*s.toxin,s.deficient(),s.critical(),s.recovery());}
- private static void foodTooltip(ItemTooltipEvent e){FoodProfiles.profile(e.getItemStack()).ifPresent(f->{var meal=f.meal();var n=meal.nutrients();var list=e.getToolTip();
+ private static void foodTooltip(ItemTooltipEvent e){FoodProfiles.profile(e.getItemStack(),e.getEntity()).ifPresent(f->{var meal=f.meal();var n=meal.nutrients();var list=e.getToolTip();
   list.add(Component.translatable("metabolism.food.energy",Math.round(meal.kcal())).withStyle(ChatFormatting.GOLD));
   if(!f.known()){list.add(Component.translatable("metabolism.food.unknown").withStyle(ChatFormatting.GRAY));return;}
   list.add(Component.translatable("metabolism.food.macros",fmt(n[0]),fmt(n[1]),fmt(n[2]),fmt(n[3])).withStyle(ChatFormatting.GRAY));

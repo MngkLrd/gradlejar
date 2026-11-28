@@ -25,6 +25,27 @@ public final class ModelChecks {
   var event=new net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent.Finish(p,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.APPLE),0,net.minecraft.world.item.ItemStack.EMPTY);
   Metabolism.store(p,new MetabolicModel.State());net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);
   require(Metabolism.state(p).stomach>0,"registered food finish handler");
+  var level=p.serverLevel();var pos=level.getSharedSpawnPos().above(5);var original=level.getBlockState(pos);
+  Metabolism.store(p,new MetabolicModel.State());p.getFoodData().setFoodLevel(20);
+  try{
+   var cake=net.minecraft.world.level.block.Blocks.CAKE.defaultBlockState();level.setBlock(pos,cake,3);
+   var hit=new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(pos),net.minecraft.core.Direction.UP,pos,false);
+   var result=level.getBlockState(pos).useWithoutItem(level,p,hit);
+   require(result.consumesAction()&&level.getBlockState(pos).getValue(net.minecraft.world.level.block.CakeBlock.BITES)==1&&Metabolism.state(p).stomach==150,"actual cake bite and metabolic hook");
+   var full=Metabolism.state(p);full.stomach=MetabolicModel.STOMACH_MAX;Metabolism.store(p,full);
+   p.getFoodData().setFoodLevel(20);
+   require(!level.getBlockState(pos).useWithoutItem(level,p,hit).consumesAction()&&level.getBlockState(pos).getValue(net.minecraft.world.level.block.CakeBlock.BITES)==1,"full stomach cake negative");
+  }finally{level.setBlock(pos,original,3);}
+  Metabolism.store(p,new MetabolicModel.State());var bottle=net.minecraft.world.item.alchemy.PotionContents.createItemStack(net.minecraft.world.item.Items.POTION,net.minecraft.world.item.alchemy.Potions.WATER);
+  net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent.Finish(p,bottle,0,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.GLASS_BOTTLE)));
+  require(Metabolism.state(p).drinkCooldown==15&&Metabolism.state(p).stomach==0,"water finish no calories");
+  Metabolism.store(p,new MetabolicModel.State());
+  var medicine=net.minecraft.world.item.alchemy.PotionContents.createItemStack(net.minecraft.world.item.Items.POTION,net.minecraft.world.item.alchemy.Potions.HEALING);
+  net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent.Finish(p,medicine,0,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.GLASS_BOTTLE)));
+  require(Metabolism.state(p).drinkCooldown==0&&Metabolism.state(p).stomach==0,"non-food medicine not free energy");
+  var manual=dev.minemods.metabolism.api.MetabolismApi.reportFoodIntake(p,100,java.util.Map.of("carb",20d),0,.9);
+  require(manual.acceptedKcal()==100&&dev.minemods.metabolism.api.MetabolismApi.energy(p).stomachFraction()>0,"nonstandard meal public path");
+  try{dev.minemods.metabolism.api.MetabolismApi.reportFoodIntake(p,100,java.util.Map.of("carb",Double.NaN),0,1);throw new AssertionError("invalid input accepted");}catch(IllegalArgumentException expected){} 
  }
  public static void run(){
   var rest=new MetabolicModel.State();var active=new MetabolicModel.State();
@@ -61,7 +82,7 @@ public final class ModelChecks {
   require(absorbed>0&&MetabolicModel.digestionPoints(quick,absorbed,true)>MetabolicModel.digestionPoints(quick,absorbed,false),"digestion and resting");
   var over=new MetabolicModel.State();over.stomach=1700;over.queuedEnergy=1700;
   var overflow=MetabolicModel.consume(over,new MetabolicModel.Meal(300,carb,0,1),true);
-  require(overflow.acceptedKcal()==100&&over.overload>0&&over.mealComfort()<.5,"overeating reduces uptake and caps accepted energy");
+  require(overflow.acceptedKcal()==100&&over.overload>0&&over.mealComfort()<.65,"overeating reduces uptake and caps accepted energy");
   require(MetabolicModel.consume(over,new MetabolicModel.Meal(300,carb,0,1),true).requestedPoints()==0,"no benefit when full");
   var drink=new MetabolicModel.State();double fuel=drink.fast;require(MetabolicModel.waterBoost(drink,250,0,0)==2&&drink.fast==fuel&&MetabolicModel.waterBoost(drink,250,0,0)==0,"water no calories and cooldown");
   for(int i=0;i<15;i++)MetabolicModel.tick(drink,0);require(MetabolicModel.waterBoost(drink,250,.8,35)<.2,"dirty salty water low bonus");

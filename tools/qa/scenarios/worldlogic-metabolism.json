@@ -210,6 +210,39 @@
           "name": "Metabolic model and NBT"
         }
       ]
+    },
+    {
+      "id": "cake-bite",
+      "kind": "mechanic",
+      "subject": "Real vanilla cake block consumption and full stomach negative",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "water-item",
+      "kind": "mechanic",
+      "subject": "Completed water bottle event and medicine negative",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "external-food-contract",
+      "kind": "mechanic",
+      "subject": "Validated external meal and actual energy snapshot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
     }
   ],
   "steps": [
