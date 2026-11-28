@@ -15,6 +15,7 @@ final class HydrologyChecks{
  static void verify(ServerLevel l){
   require(Rules.on("hydrology"),"enabled by default");
   GroundChecks.verify(l);
+  RockSoilChecks.verify(l);
   RegionalDrainage.verify();BasinTerrain.verify(l);
   RiverProfiles.verify();
   require(!GeoModel.channelEligible(90,5.99)&&GeoModel.channelEligible(90,6)&&GeoModel.channelEligible(90,12)&&!GeoModel.channelEligible(62,20),"runoff threshold and submerged negative control");

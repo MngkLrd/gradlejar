@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC51 natural materials and volcanic geology",
+  "name": "World Logic NeoForge 1.1.0 development / RC52 rocks and farmland",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1831,6 +1831,17 @@
       "id": "rc51-natural-ground",
       "kind": "mechanic",
       "subject": "Seven actual registered block/items, mineable tags, loot, falling sand/ash, three soil horizons and soil API, regional material controls, actual basalt/tuff uplift and volcanic crater geometry; natural frequency and client evidence separate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc52-rock-soil",
+      "kind": "mechanic",
+      "subject": "Seven real soil-specific hoe actions and blocked controls, moisture and crop survival, parent soil restoration and loot, 60 stone family blocks and 85 real stonecutting recipe matches/output counts, double slabs, hardness, full-depth geological strata and preservation controls",
       "checks": [
         {
           "backend": "server",

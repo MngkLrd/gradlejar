@@ -42,7 +42,6 @@ public final class RockContent{
   if(b.is(Blocks.TUFF))return 1.05f;
   if(b.is(Blocks.SANDSTONE)||b.is(Blocks.RED_SANDSTONE))return 1.25f;
   if(b.is(Blocks.BASALT)||b.is(Blocks.SMOOTH_BASALT))return 3.3f;
-  if(b.is(GroundMaterials.block("volcanic_tuff")))return 1.1f;
   return original;
  }
  /** Continuous folded sediment/metamorphic horizons, bounded to existing solid rock. */
@@ -56,8 +55,32 @@ public final class RockContent{
    case CRATON->y< -48&&band<24?block("gneiss"):band<12?Blocks.GRANITE:null;
   };
  }
+ static void stratify(net.minecraft.world.level.chunk.ChunkAccess c,int x,int z,int top,GeologyModel.Province p,int fold){
+  var pos=new net.minecraft.core.BlockPos.MutableBlockPos();
+  for(int y=c.getMinBuildHeight()+8;y<=top;y++){
+   Block host=host(p,y,fold);if(host==null)continue;
+   var s=c.getBlockState(pos.set(x,y,z));
+   if(s.is(Blocks.STONE)||s.is(Blocks.DEEPSLATE))c.setBlockState(pos,host.defaultBlockState(),false);
+  }
+ }
+ static String audit(net.minecraft.server.level.ServerLevel l,net.minecraft.core.BlockPos origin){
+  var c=l.getChunkSource().getChunkNow(origin.getX()>>4,origin.getZ()>>4);if(c==null)return "ROCK_AUDIT unavailable";
+  var counts=new LinkedHashMap<String,Integer>();for(var f:FAMILIES)counts.put(f.id,0);
+  var pos=new net.minecraft.core.BlockPos.MutableBlockPos();
+  for(int x=2;x<16;x+=4)for(int z=2;z<16;z+=4){
+   int top=c.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.OCEAN_FLOOR,x,z)-6;
+   for(int y=Math.max(c.getMinBuildHeight()+8,-240);y<=top;y+=4){
+    var s=c.getBlockState(pos.set(c.getPos().getMinBlockX()+x,y,c.getPos().getMinBlockZ()+z));
+    for(var f:FAMILIES)if(s.is(block(f.id)))counts.put(f.id,counts.get(f.id)+1);
+   }
+  }
+  var out=new StringJoiner(" ","ROCK_AUDIT ","");counts.forEach((k,v)->out.add(k+"="+v));return out.toString();
+ }
  public static void creative(BuildCreativeModeTabContentsEvent e){
   if(e.getTabKey().equals(CreativeModeTabs.BUILDING_BLOCKS))for(var b:BLOCKS.values())e.accept(b.get());
-  if(e.getTabKey().equals(CreativeModeTabs.NATURAL_BLOCKS))for(var f:FAMILIES)e.accept(block(f.id));
+  if(e.getTabKey().equals(CreativeModeTabs.NATURAL_BLOCKS)){
+   for(var f:FAMILIES)e.accept(block(f.id));
+   for(String id:List.of("white_sand","volcanic_sand","chernozem","sandy_loam","laterite","volcanic_ash"))e.accept(GroundMaterials.block(id));
+  }
  }
 }

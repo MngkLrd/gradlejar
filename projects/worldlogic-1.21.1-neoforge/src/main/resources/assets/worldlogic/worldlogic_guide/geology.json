@@ -7,7 +7,7 @@
     "ru": "Геология и руды",
     "en": "Geology and ores"
   },
-  "source": "WorldLogic RC51",
+  "source": "WorldLogic 1.1.0 development",
   "pages": [
     {
       "id": "geography",
@@ -351,6 +351,34 @@
           "Chernozem forms in steppe and meadow soils. Sandy loam occurs on drier ground, lateritic soils in warm wet regions. Fertility and water retention differ.",
           "White carbonate sand occurs on warm reef-associated coasts. Black sand is linked to volcanic areas; ash and tuff to volcanic cones.",
           "Volcanoes have craters and basalt/tuff layers. They are dormant terrain features, generated only in new chunks."
+        ]
+      }
+    },
+    {
+      "id": "rock_working",
+      "title": {
+        "ru": "Породы и обработка камня",
+        "en": "Rocks and stoneworking"
+      },
+      "models": [
+        "worldlogic:limestone",
+        "worldlogic:shale",
+        "worldlogic:slate",
+        "worldlogic:gneiss",
+        "worldlogic:polished_gneiss",
+        "worldlogic:limestone_bricks",
+        "minecraft:stonecutter"
+      ],
+      "body": {
+        "ru": [
+          "Известняк образует карбонатные пласты, глинистый сланец — осадочные, гнейс и кровельный сланец — метаморфические. Пласты продолжаются вглубь мира; прочность пород различается.",
+          "Камнерез создаёт шлифованные блоки, каменные кирпичи, плиты, ступени и ограды. Из блока получается две плиты либо один другой результат.",
+          "Семь видов почвы можно вспахать. При высыхании или вытаптывании сохраняется исходная земля. Показатели почвы доступны Terrarian."
+        ],
+        "en": [
+          "Limestone forms carbonate layers, shale sedimentary layers, gneiss and slate metamorphic layers. Strata continue deep underground and hardness varies.",
+          "A stonecutter produces polished blocks, bricks, slabs, stairs and walls: two slabs or one other result from a full block.",
+          "Seven soil types can be tilled. Drying or trampling restores the original soil. Terrarian can read soil properties."
         ]
       }
     }

@@ -21,7 +21,7 @@ public final class GroundMaterials{
   register("white_sand",()->new ColoredFallingBlock(new ColorRGBA(0xffdfd8c6),BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(net.minecraft.world.level.material.MapColor.SAND)));
   register("volcanic_sand",()->new ColoredFallingBlock(new ColorRGBA(0xff494844),BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(net.minecraft.world.level.material.MapColor.COLOR_GRAY)));
   register("volcanic_ash",()->new ColoredFallingBlock(new ColorRGBA(0xff827d78),BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(net.minecraft.world.level.material.MapColor.COLOR_LIGHT_GRAY).strength(.4f)));
-  register("volcanic_tuff",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.TUFF).mapColor(net.minecraft.world.level.material.MapColor.TERRACOTTA_GRAY)));
+  register("volcanic_tuff",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.TUFF).mapColor(net.minecraft.world.level.material.MapColor.TERRACOTTA_GRAY).strength(1.1f,3.5f).requiresCorrectToolForDrops()));
  }
  private static void register(String id,Supplier<Block> factory){
   var block=Content.BLOCKS.register(id,factory);MATERIALS.put(id,block);

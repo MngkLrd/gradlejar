@@ -115,6 +115,7 @@ def main():
             report["coast_windows"]=[]
             report["biome_patches"]=[]
             report["ground_windows"]=[]
+            report["rock_windows"]=[]
             for label,x,z in sites:
                 ax,az=x//16*16,z//16*16
                 # A 5x5 loaded halo surrounds the 3x3 inspected chunks, so dry
@@ -143,6 +144,13 @@ def main():
                         material_counts={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",gm.group(1))}
                         require(len(material_counts)==8,"Incomplete ground counts")
                         report["ground_windows"].append(dict(material_counts,x=xx,z=zz,site=label))
+                        rock=conn.cmd(f"execute positioned {xx} 96 {zz} run worldlogic rock_audit")
+                        if "unavailable" in rock:continue
+                        rm=re.search(r"ROCK_AUDIT (.*)",rock)
+                        require(rm is not None,"Rock audit failed: "+rock)
+                        rock_counts={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",rm.group(1))}
+                        require(len(rock_counts)==5,"Incomplete rock counts")
+                        report["rock_windows"].append(dict(rock_counts,x=xx,z=zz,site=label))
                         row.update(x=xx,z=zz,raw=raw);rows.append(row);pending.remove((xx,zz))
                         print(json.dumps(row),flush=True)
                     if pending:time.sleep(3)
@@ -150,6 +158,8 @@ def main():
                 sums={k:sum(c[k] for c in rows) for k in keys}
                 report["coast_windows"].append({"site":label,"chunks":rows,**sums})
                 conn.cmd("forceload remove "+force)
+            report["rock_totals"]={k:sum(v[k] for v in report["rock_windows"]) for k in ("limestone","shale","slate","gneiss","volcanic_tuff")}
+            require(all(report["rock_totals"][k]>=32 for k in ("limestone","shale","slate","gneiss")),"Missing actual regional underground rock family")
             windows=report["coast_windows"]
             totals={k:sum(w[k] for w in windows) for k in keys}
             report["coast_totals"]=totals

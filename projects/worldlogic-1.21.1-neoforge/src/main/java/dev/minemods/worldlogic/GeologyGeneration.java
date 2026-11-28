@@ -39,14 +39,9 @@ public final class GeologyGeneration {
   for(int x=x0;x<x0+16;x++)for(int z=z0;z<z0+16;z++){
    int surface=chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x&15,z&15);
    var province=GeologyModel.province(seed,x,z);
-   int top=surface-6,bottom=chunk.getMinBuildHeight()+8;
+   int top=surface-6;
    int fold=(int)(6*Math.sin(x*.018)+5*Math.cos(z*.016));
-   for(int y=bottom;y<=top;y++){
-    Block host=RockContent.host(province,y,fold);
-    if(host==null)continue;
-    pos.set(x,y,z);var s=chunk.getBlockState(pos);
-    if(s.is(Blocks.STONE)||s.is(Blocks.DEEPSLATE))chunk.setBlockState(pos,host.defaultBlockState(),false);
-   }
+   RockContent.stratify(chunk,x,z,top,province,fold);
    for(var d:districts)for(var c:d.caves()){
     if(Math.abs(x-c.x())>96||Math.abs(z-c.z())>96)continue;
     int low=Math.max(chunk.getMinBuildHeight()+8,c.minY()),high=Math.min(chunk.getMaxBuildHeight()-1,c.shaft()&&Math.hypot(x-c.x(),z-c.z())<10?Math.max(c.maxY(),surface+1):c.maxY());
