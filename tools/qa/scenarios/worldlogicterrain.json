@@ -1208,13 +1208,7 @@
     {
       "name": "Mixed meadow and frost patch mechanics",
       "command": "worldlogicterrain patch_check",
-      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 32 climate-aware forage populations verified; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells; 20 regional plants and seven existing crops verified: growth, quality, harvest, season boundaries and HUD data; 20 benthic species verified: water families, habitat, source retention, support, height and loot",
-      "assertion": true
-    },
-    {
-      "name": "Wood physics profiles and wetness",
-      "command": "worldlogicterrain wood_check",
-      "expect": "Wood physics verified: 24 profiles, 48 registered log/plank blocks, stripped identity, moisture, mass, hardness, bending, fire immunity and wet fixture",
+      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 32 climate-aware forage populations verified; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells; 20 regional plants and seven existing crops verified: growth, quality, harvest, season boundaries and HUD data; 20 benthic species verified: water families, habitat, source retention, support, height and loot; Core wood physics verified: 24 profiles, 48 blocks, BlockItem composition, Janka units, SI wet mass and unknown values",
       "assertion": true
     }
   ],
@@ -5852,7 +5846,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5863,7 +5857,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5874,7 +5868,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5885,7 +5879,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5896,7 +5890,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5907,7 +5901,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5918,7 +5912,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5929,7 +5923,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5940,7 +5934,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5951,7 +5945,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5962,7 +5956,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5973,7 +5967,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5984,7 +5978,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5995,7 +5989,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6006,7 +6000,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6017,7 +6011,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6028,7 +6022,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6039,7 +6033,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6050,7 +6044,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6061,7 +6055,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6072,7 +6066,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6083,7 +6077,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6094,7 +6088,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6105,7 +6099,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6116,7 +6110,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     }
