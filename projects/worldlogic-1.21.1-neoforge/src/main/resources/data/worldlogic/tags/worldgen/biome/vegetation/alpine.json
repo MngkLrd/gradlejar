@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:nival_zone",
+    "worldlogic:alpine_tundra",
+    "worldlogic:alpine_meadow"
+  ]
+}

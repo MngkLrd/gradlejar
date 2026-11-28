@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "worldlogic:limestone_bricks"
+  },
+  "result": {
+    "id": "worldlogic:limestone_bricks_stairs",
+    "count": 1
+  }
+}

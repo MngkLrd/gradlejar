@@ -1,0 +1,578 @@
+{
+  "schema": 2,
+  "ecosystem": "worldlogic",
+  "module": "worldlogic",
+  "role": "core",
+  "core_module": "worldlogic",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "neoforge"
+  },
+  "provides": [
+    {
+      "id": "worldlogic:material_properties",
+      "version": 1,
+      "revision": 2,
+      "domains": [
+        "material_properties"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.PhysicalMaterials",
+        "dev.minemods.worldlogic.api.PhysicalWater"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalMaterials.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalWater.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/MineralContent.java"
+      ],
+      "operations": [
+        {
+          "id": "evaluate",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.PhysicalMaterials",
+          "semantics": "Evaluate composition and state in SI units."
+        },
+        {
+          "id": "register",
+          "kind": "extension",
+          "entrypoint": "dev.minemods.worldlogic.api.PhysicalMaterials",
+          "semantics": "Register addon material, wood, object and individual item profiles."
+        },
+        {
+          "id": "aqueous_solution",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.PhysicalWater",
+          "semantics": "Return bounded water properties at supplied salinity and temperature."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:environment",
+      "version": 1,
+      "revision": 16,
+      "domains": [
+        "environment"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicApi"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicApi.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GeoDensity.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/SeasonRuntime.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/HydrologyRuntime.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/WaterClassification.java"
+      ],
+      "operations": [
+        {
+          "id": "environment",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Read loaded world environment and atmosphere, water and soil."
+        },
+        {
+          "id": "season",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Read server-owned local season."
+        },
+        {
+          "id": "worldgen",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Read deterministic worldgen habitat without chunk loads."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:survival_physics",
+      "version": 1,
+      "revision": 17,
+      "domains": [
+        "survival_physics"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicApi"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicApi.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Survival.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Combat.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TravelPhysics.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/ExertionModifiers.java"
+      ],
+      "operations": [
+        {
+          "id": "exertion",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Read Core survival and legacy physics quantities, preserving their documented non-SI units."
+        },
+        {
+          "id": "exertion_factors",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Return the same exertion-only movement, attack, mining factors and sprint threshold used by Core."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:client_navigation",
+      "version": 1,
+      "revision": 1,
+      "domains": [
+        "client_navigation"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.client.WorldLogicTabs"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/client/WorldLogicTabs.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TabLayout.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/TabRail.java"
+      ],
+      "operations": [
+        {
+          "id": "register_tab",
+          "kind": "extension",
+          "entrypoint": "dev.minemods.worldlogic.api.client.WorldLogicTabs",
+          "semantics": "Register an optional client screen in shared navigation."
+        },
+        {
+          "id": "content_width",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.client.WorldLogicTabs",
+          "semantics": "Reserve right-side navigation gutter."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:capability_discovery",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "capability_discovery"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicCapabilities"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicCapabilities.java"
+      ],
+      "operations": [
+        {
+          "id": "register",
+          "kind": "extension",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicCapabilities",
+          "semantics": "Register typed versioned capability"
+        },
+        {
+          "id": "find",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicCapabilities",
+          "semantics": "Version, revision and Java contract negotiation"
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:field_processing",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "field_processing"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicRecipes"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicRecipes.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/compat/WorldLogicJeiPlugin.java"
+      ],
+      "operations": [
+        {
+          "id": "register_processing_provider",
+          "kind": "extension",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicRecipes",
+          "semantics": "Register authoritative read-only processing descriptors"
+        },
+        {
+          "id": "processing",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicRecipes",
+          "semantics": "Return namespaced immutable processing recipes"
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:dashboards",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "dashboards"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicDashboards"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicDashboards.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/DashboardSync.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/PeerDashboardSnapshots.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/DashboardScreen.java"
+      ],
+      "operations": [
+        {
+          "id": "register",
+          "kind": "extension",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicDashboards",
+          "semantics": "Server-side provider of player statistics"
+        },
+        {
+          "id": "snapshots",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicDashboards",
+          "semantics": "Immutable read-only synchronized stats"
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:hostile_spawn_policy",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "ecology"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicApi"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/HostileSpawnPolicy.java"
+      ],
+      "operations": [
+        {
+          "id": "permits_natural_hostile_spawn",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Additional veto on natural Overworld monster spawns by time; never forces a spawn."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:tree_descent",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "movement"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicApi"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TreeDescent.java"
+      ],
+      "operations": [
+        {
+          "id": "trunk",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Check eligible vertical log state."
+        },
+        {
+          "id": "descending",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Read active tree descent grip."
+        }
+      ]
+    }
+  ],
+  "consumes": [],
+  "features": [
+    {
+      "id": "material_properties",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalMaterials.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalWater.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/MineralContent.java"
+      ],
+      "provides": [
+        "worldlogic:material_properties"
+      ],
+      "consumes": [],
+      "integration_review": "RC54 contracts inspected in Trauma #219, Terrarian #250, TreeChopper #241, Aqua #242, Hydration and Temperature; Core authoritative."
+    },
+    {
+      "id": "environment",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicApi.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GeoDensity.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/SeasonRuntime.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/HydrologyRuntime.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/WaterClassification.java"
+      ],
+      "provides": [
+        "worldlogic:environment"
+      ],
+      "consumes": [],
+      "integration_review": "Thermal #186 and Terrarian #250 use environment and worldgen; Hydration and Aqua use water profile. Existing server fixtures retained."
+    },
+    {
+      "id": "survival_physics",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicApi.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Survival.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Combat.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TravelPhysics.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/ExertionModifiers.java"
+      ],
+      "provides": [
+        "worldlogic:survival_physics"
+      ],
+      "consumes": [],
+      "integration_review": "Trauma #219 consumes collision and injury context; no medical or nutrition ownership transferred. Core alone owns exertion speed and attack factors; do not apply them again from peers."
+    },
+    {
+      "id": "client_navigation",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/client/WorldLogicTabs.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TabLayout.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/TabRail.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/compat/NativePeerViews.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/compat/NativeTraumaView.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/client/NativeTraumaScreenMixin.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/RailIcons.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/VanillaPanels.java"
+      ],
+      "provides": [
+        "worldlogic:client_navigation"
+      ],
+      "consumes": [],
+      "integration_review": "Native registered views override compatibility factories and generic snapshots. Inspected Trauma #219 interactive anatomy and inventory, Temperature #186 four original pages and Metabolism #221 native provider. Core owns shared navigation; native addon screens retain rendering and authoritative interaction. Old binaries use bounded optional UI-only compatibility. No medical writes. Client rendering and input tests remain required."
+    },
+    {
+      "id": "capability_discovery",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicCapabilities.java"
+      ],
+      "provides": [
+        "worldlogic:capability_discovery"
+      ],
+      "consumes": [],
+      "integration_review": "Shared runtime negotiation, preserves existing static APIs."
+    },
+    {
+      "id": "field_processing",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicRecipes.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/compat/WorldLogicJeiPlugin.java"
+      ],
+      "provides": [
+        "worldlogic:field_processing"
+      ],
+      "consumes": [],
+      "integration_review": "Trauma #219 processing is not a vanilla recipe; provider is owned by implementing addon. Core renders JEI. Actual addon registration and graphical tests pending."
+    },
+    {
+      "id": "dashboards",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicDashboards.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/DashboardSync.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/PeerDashboardSnapshots.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/DashboardScreen.java"
+      ],
+      "provides": [
+        "worldlogic:dashboards"
+      ],
+      "consumes": [],
+      "integration_review": "Existing Metabolism, Trauma and Thermal public APIs inspected; optional reflection fallback; no medical or nutrition mechanics moved to Core."
+    },
+    {
+      "id": "water_render",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/WaterRenderCompatibility.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/client/LiquidRendererMixin.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/client/SodiumWaterRendererMixin.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/client/SodiumWaterOcclusionMixin.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/ShaderPlantMapping.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Vanilla and Sodium render equivalence only; water physics unchanged. RC55 1.3.3 explicitly intercepts NeoForge's active isNeighborStateHidingOverlay and Sodium BlockOcclusionCache, including native/vanilla waterlogged blocks; shader material inheritance follows pack water IDs only when unmapped. Actual render evidence remains required.",
+      "no_public_surface_reason": "Internal presentation adapter, not an addon gameplay API."
+    },
+    {
+      "id": "shader_vegetation",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/ShaderPlantMapping.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/client/IrisPlantMaterialMixin.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Inherit actual shaderpack grass IDs for tagged Terrarian vegetation; explicit pack mappings win.",
+      "no_public_surface_reason": "Internal presentation adapter, not an addon gameplay API."
+    },
+    {
+      "id": "journeymap_seasons",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/compat/JourneyMapSeasons.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/SeasonDisplay.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "JourneyMap 2.0 API optional; Core season authoritative.",
+      "no_public_surface_reason": "Internal presentation adapter, not an addon gameplay API."
+    },
+    {
+      "id": "patchouli_catalog",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/GuideRecipesScreen.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GuideBook.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Core resources and vanilla recipes, optional addon content not fabricated.",
+      "no_public_surface_reason": "Internal presentation adapter, not an addon gameplay API."
+    },
+    {
+      "id": "core_creative_catalog",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/CoreCreativeTab.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Registry-derived creative category for the worldlogic item namespace; existing vanilla tabs preserved, Terrarian and other addon namespaces remain their owners' responsibility. JEI native ingredient discovery remains independent.",
+      "no_public_surface_reason": "Private inventory presentation over Minecraft's existing item registry."
+    },
+    {
+      "id": "hostile_spawn_policy",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/HostileSpawnPolicy.java"
+      ],
+      "provides": [
+        "worldlogic:hostile_spawn_policy"
+      ],
+      "consumes": [],
+      "integration_review": "Core owns world ecology; no changes to Terrarian trees, Aqua passive aquatic spawns or existing entities. Natural Overworld monster category night only; non-natural spawners and other dimensions unaffected."
+    },
+    {
+      "id": "tree_descent",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TreeDescent.java"
+      ],
+      "provides": [
+        "worldlogic:tree_descent"
+      ],
+      "consumes": [],
+      "integration_review": "Core movement, shared exertion and tagged vertical logs; no TreeChopper mechanics."
+    },
+    {
+      "id": "live_guide_catalog",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GuideCatalog.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/GuideCatalogScreen.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/GuideJeiLookup.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/GuideRecipesScreen.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/GuideScreen.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Registry-derived actual ecosystem item models, native RecipeManager and provider recipes, JEI focus. Patchouli remains optional; addon owners ship native item/recipe resources for their pages.",
+      "no_public_surface_reason": "Private client catalogue over public item and recipe registries."
+    },
+    {
+      "id": "regional_minerals",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/MineralContent.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GeologyModel.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GeologyGeneration.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GeneratedOreAudit.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Independent seeded real mineral families after original eight ore and pocket placements; Core material API and normal registries are authoritative. No production chains. Existing terrain and fluids untouched.",
+      "no_public_surface_reason": "Worldgen internal placement; physical data exposed by existing material API and registry."
+    }
+  ],
+  "tests": [
+    {
+      "id": "worldlogic.material_properties.contract",
+      "capabilities": [
+        "worldlogic:material_properties"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.environment.contract",
+      "capabilities": [
+        "worldlogic:environment"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.survival_physics.contract",
+      "capabilities": [
+        "worldlogic:survival_physics"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.client_navigation.contract",
+      "capabilities": [
+        "worldlogic:client_navigation"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.capability_discovery.contract",
+      "capabilities": [
+        "worldlogic:capability_discovery"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.field_processing.contract",
+      "capabilities": [
+        "worldlogic:field_processing"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.dashboards.contract",
+      "capabilities": [
+        "worldlogic:dashboards"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.hostile_spawn_policy.contract",
+      "capabilities": [
+        "worldlogic:hostile_spawn_policy"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.tree_descent.contract",
+      "capabilities": [
+        "worldlogic:tree_descent"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    }
+  ]
+}

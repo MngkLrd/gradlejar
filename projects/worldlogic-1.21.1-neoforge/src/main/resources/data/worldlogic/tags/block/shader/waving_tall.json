@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "worldlogicterrain:reed",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:cattail",
+      "required": false
+    }
+  ]
+}

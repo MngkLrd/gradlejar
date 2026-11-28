@@ -1,0 +1,201 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "worldlogicterrain:meadow_grass",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:frosted_grass",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:dense_meadow_grass",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:dry_grass",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:tall_dry_grass",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:forest_shrub",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:dense_underbrush",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:low_fern",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_heather",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:sedge",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:dwarf_shrub",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:desert_shrub",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_chamomile",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_cornflower",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_clover",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:bracken",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:marsh_marigold",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_agave",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_aloe",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_arctic_poppy",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_bell_pepper",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_blackberry",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_blueberry",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_bog_rosemary",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_cabbage",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_cloudberry",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_cucumber",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_edelweiss",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_fireweed",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_ginger",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_grape",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_horsetail",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_lavender",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_lemongrass",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_lingonberry",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_marsh_cinquefoil",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_nettle",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_onion",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_pineapple",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_plantain",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_radish",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_raspberry",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_sage",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_strawberry",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_thyme",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_tomato",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_wild_mint",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_wormwood",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_yarrow",
+      "required": false
+    }
+  ]
+}

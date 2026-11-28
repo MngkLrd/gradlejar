@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "id": "core",
+  "order": 0,
+  "requires": "worldlogic",
+  "title": {
+    "ru": "Начало и выживание",
+    "en": "Getting started and survival"
+  },
+  "source": "WorldLogic RC33",
+  "pages": [
+    {
+      "id": "start",
+      "title": {
+        "ru": "Первые шаги",
+        "en": "Getting started"
+      },
+      "models": [
+        "minecraft:book",
+        "minecraft:compass",
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "WorldLogic меняет природные законы мира. Для новой игры используется Realistic: отдельного облегчённого режима нет. Установи одинаковые версии ядра и нужных аддонов на клиент и сервер.",
+          "Осмотрись: оцени воду, укрытие, погоду и растительность. Сначала обеспечь безопасный путь обратно и место отдыха. Спринт и тяжёлая работа расходуют силы.",
+          "Здесь собраны механики установленных дополнений. Предметы в иллюстрациях — реальные игровые модели, а не рецепты. Старые миры сохраняют ранее созданные чанки."
+        ],
+        "en": [
+          "WorldLogic changes natural laws. New worlds use Realistic, without a separate easy mode. Match Core and addon versions on client and server.",
+          "Look for water, shelter, weather and vegetation. Establish a safe route home and a place to rest. Sprinting and heavy work consume energy.",
+          "This book shows installed modules. Illustrations use real game models, not recipes. Existing worlds retain generated chunks."
+        ]
+      }
+    },
+    {
+      "id": "fatigue",
+      "title": {
+        "ru": "Выносливость и восстановление",
+        "en": "Stamina and recovery"
+      },
+      "models": [
+        "minecraft:iron_pickaxe",
+        "minecraft:iron_axe",
+        "minecraft:bread"
+      ],
+      "body": {
+        "ru": [
+          "Индикатор энергии над здоровьем показывает запас сил. Тяжёлые действия и движение расходуют выносливость. При низком запасе лучше остановиться, чем продолжать тяжёлую работу.",
+          "После короткой паузы стоя восстановление быстрее, чем при ходьбе; плавание, лазание и прыжки не дают такого отдыха. Голод снижает восстановление.",
+          "Не путай выносливость с кровью, жаждой или температурой тела: это отдельные механики аддонов."
+        ],
+        "en": [
+          "The energy icons above health show remaining stamina. Demanding actions and movement consume it. Stop working when energy is low.",
+          "After a short cooldown, standing recovers faster than walking; swimming, climbing and jumping do not provide the same rest. Hunger reduces recovery.",
+          "Stamina is separate from blood, thirst and body temperature."
+        ]
+      }
+    },
+    {
+      "id": "physics",
+      "title": {
+        "ru": "Физика и безопасность",
+        "en": "Physics and safety"
+      },
+      "models": [
+        "minecraft:anvil",
+        "minecraft:shield",
+        "minecraft:oak_boat",
+        "minecraft:torch"
+      ],
+      "body": {
+        "ru": [
+          "Масса материалов и объектов, сцепление с поверхностью, удары и устойчивость конструкций влияют на выживание. Будь осторожен на склонах, мокрой поверхности и при тяжёлых работах.",
+          "Падения, удары, огонь и холод могут приводить к дополнительным последствиям. Если установлен Traumatic, анатомия и лечение принадлежат ему.",
+          "Не все физические системы являются полной симуляцией: некоторые работают как приближённые игровые правила. Оцени окружение, не полагайся только на ванильные привычки."
+        ],
+        "en": [
+          "Material mass, surface friction, impacts and structural stability affect survival. Take care on slopes, wet ground and during heavy work.",
+          "Falls, impacts, fire and cold can have additional consequences. If Traumatic is installed, it owns anatomy and treatment.",
+          "Some systems are approximate gameplay rules rather than a full simulation. Assess your surroundings instead of relying solely on vanilla habits."
+        ]
+      }
+    },
+    {
+      "id": "analytics",
+      "title": {
+        "ru": "Наблюдения за средой",
+        "en": "Environmental observations"
+      },
+      "models": [
+        "minecraft:book",
+        "minecraft:map",
+        "minecraft:compass"
+      ],
+      "body": {
+        "ru": [
+          "В меню паузы открой аналитику WorldLogic. Там доступны воздух, вода, почва, воздействие, экология и история наблюдений.",
+          "Показатели являются локальными оценками, а не лабораторными измерениями. Карта ближайших участков помогает сравнить загрязнение и состояние почвы.",
+          "Часть данных требует наблюдений рядом с игроком; отсутствие данных не означает отсутствие явления."
+        ],
+        "en": [
+          "Open WorldLogic analytics in the pause menu for air, water, soil, impact, ecology and history.",
+          "Values are local estimates rather than laboratory measurements. Nearby cells help compare pollution and soil condition.",
+          "Some data requires local observations; missing data does not prove that a process is absent."
+        ]
+      }
+    },
+    {
+      "id": "tree_descent",
+      "title": {
+        "ru": "Спуск по деревьям",
+        "en": "Tree descent"
+      },
+      "models": [
+        "minecraft:oak_log",
+        "minecraft:spruce_log"
+      ],
+      "body": {
+        "ru": [
+          "Подойдите к вертикальному стволу, освободите основную руку, зажмите Shift и нажмите ПКМ по боковой грани. Удерживайте Shift при спуске. Сцепление прекращается при разрыве ствола, отходе, усталости или отпускании Shift.",
+          "Доски, лестницы, ступени, листья и горизонтальные брёвна не дают такого сцепления. Спуск не проходит сквозь препятствия."
+        ],
+        "en": [
+          "Approach a vertical trunk with an empty main hand, hold Shift and right-click its side. Keep Shift held during descent. Grip stops at a trunk gap, loss of contact, exhaustion or when Shift is released.",
+          "Planks, ladders, stairs, leaves and horizontal logs do not provide this grip. Descent respects collisions."
+        ]
+      }
+    }
+  ]
+}

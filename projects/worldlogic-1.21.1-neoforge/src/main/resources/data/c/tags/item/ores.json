@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "#c:ores/hematite",
+    "#c:ores/magnetite",
+    "#c:ores/cassiterite",
+    "#c:ores/galena",
+    "#c:ores/sphalerite",
+    "#c:ores/pyrite",
+    "#c:ores/malachite",
+    "#c:ores/bauxite",
+    "#c:ores/fluorite",
+    "#c:ores/cinnabar"
+  ]
+}

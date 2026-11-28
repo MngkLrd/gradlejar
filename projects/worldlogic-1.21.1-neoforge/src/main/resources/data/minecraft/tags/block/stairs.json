@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:limestone_stairs",
+    "worldlogic:polished_limestone_stairs",
+    "worldlogic:limestone_bricks_stairs",
+    "worldlogic:shale_stairs",
+    "worldlogic:polished_shale_stairs",
+    "worldlogic:shale_bricks_stairs",
+    "worldlogic:slate_stairs",
+    "worldlogic:polished_slate_stairs",
+    "worldlogic:slate_bricks_stairs",
+    "worldlogic:gneiss_stairs",
+    "worldlogic:polished_gneiss_stairs",
+    "worldlogic:gneiss_bricks_stairs",
+    "worldlogic:volcanic_tuff_stairs",
+    "worldlogic:polished_volcanic_tuff_stairs",
+    "worldlogic:volcanic_tuff_bricks_stairs"
+  ]
+}

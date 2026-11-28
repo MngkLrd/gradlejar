@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:hematite_ore",
+    "worldlogic:deepslate_hematite_ore",
+    "worldlogic:magnetite_ore",
+    "worldlogic:deepslate_magnetite_ore",
+    "worldlogic:cassiterite_ore",
+    "worldlogic:deepslate_cassiterite_ore",
+    "worldlogic:pyrite_ore",
+    "worldlogic:deepslate_pyrite_ore"
+  ]
+}
