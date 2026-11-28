@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "id": "worldlogic-excavation",
+  "description": "Core 1.5.0 and Excavation exact same-commit production JARs, joint runtime",
+  "targets": [
+    {
+      "id": "neoforge-mc1.21.1",
+      "minecraft": "1.21.1",
+      "loader": "neoforge",
+      "loader_version": "21.1.262",
+      "members": [
+        {
+          "project": "projects/worldlogic-1.21.1-neoforge",
+          "scenario": "tools/qa/scenarios/worldlogic-neoforge.json"
+        },
+        {
+          "project": "projects/worldlogic-excavation-1.21.1-neoforge",
+          "scenario": "tools/qa/scenarios/worldlogic-excavation.json"
+        }
+      ],
+      "dependencies": []
+    }
+  ]
+}
