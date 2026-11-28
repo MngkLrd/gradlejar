@@ -24,6 +24,34 @@
       "expect": "TreeChopper real Core/Terrarian physical API PASS",
       "assertion": true,
       "name": "integration-oak"
+    },
+    {
+      "command": "setblock 1000 199 1000 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1000 201 1000 1000 203 1000 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1000 204 1000 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1000 200 1000 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1000 200 1000 wl_treechopper:cut_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "core-axe-cut"
+    },
+    {
+      "command": "execute if block 1000 201 1000 minecraft:oak_log",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "core-upper-log-preserved"
     }
   ],
   "coverage": [
@@ -39,6 +67,21 @@
         {
           "backend": "server",
           "name": "integration-oak"
+        }
+      ]
+    },
+    {
+      "id": "core-axe-gameplay",
+      "kind": "mechanic",
+      "subject": "Core active, real FakePlayer axe strike creates a notch and retains the uncut upper log",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "core-axe-cut"
+        },
+        {
+          "backend": "server",
+          "name": "core-upper-log-preserved"
         }
       ]
     }
