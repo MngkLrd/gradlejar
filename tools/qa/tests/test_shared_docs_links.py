@@ -1,4 +1,4 @@
-"""Check internal inline links in the seven shared MineMods reference documents."""
+"""Check internal inline links in the shared MineMods reference and research documents."""
 import re
 import subprocess
 import unittest
@@ -10,6 +10,8 @@ ROOT = Path(__file__).resolve().parents[3]
 DOCS = (
     "AGENTS.md", "README.md", "docs/QA-V2.md", "docs/QA-ASSIGNMENT-TEMPLATE.md",
     "docs/BOT-ACTIONS.md", "docs/RECIPE-QA.md", "docs/VISUAL-QA.md",
+    "docs/VANILLA-ART-ATLAS.md", "docs/VANILLA-RESEARCH.md", "docs/VANILLA-REAL-ART-REVIEW.md",
+    "docs/MOD-NAMING.md", "docs/MOD-ADAPTATION.md", "docs/ITEM-ARMOR-ART.md",
 )
 INLINE = re.compile(r"!?\[[^\]\n]*\]\((?:<([^>\n]+)>|([^\s)\n]+))(?:[ \t]+[\"'][^)\n]*[\"'])?\)")
 HEADING = re.compile(r"^ {0,3}#{1,6}\s+(.+?)\s*#*\s*$")
