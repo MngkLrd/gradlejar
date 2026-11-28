@@ -67,6 +67,7 @@ public final class TreeChopper {
         return FALLEN.get(species).get().defaultBlockState().setValue(BlockStateProperties.AXIS,axis).setValue(FallenLogBlock.MARKER,marker);
     }
     public TreeChopper(IEventBus modBus){
+        LooseRocks.register(BLOCKS,modBus);
         BLOCKS.register(modBus);
         ENTITIES.register(modBus);
         BLOCK_ENTITIES.register(modBus);
@@ -77,6 +78,8 @@ public final class TreeChopper {
         NeoForge.EVENT_BUS.addListener(FallingTree::attack);
         NeoForge.EVENT_BUS.addListener(TreeQA::register);
         NeoForge.EVENT_BUS.addListener(ForestSticks::tick);
+        NeoForge.EVENT_BUS.addListener(PrimitiveRecipeSync::tick);
+        modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event)->event.enqueueWork(LooseRocks::bindCore));
     }
     static BlockState twigState(BlockState leaf,Direction facing){
         var id=BuiltInRegistries.BLOCK.getKey(leaf.getBlock());

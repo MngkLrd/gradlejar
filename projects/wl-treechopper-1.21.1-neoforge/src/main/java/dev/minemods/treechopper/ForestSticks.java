@@ -12,10 +12,14 @@ final class ForestSticks {
     private ForestSticks(){}
     static void tick(PlayerTickEvent.Post event){
         if(!(event.getEntity() instanceof ServerPlayer player)||!(player.level() instanceof ServerLevel l)||player.isSpectator()||player.isCreative())return;
-        if((l.getGameTime()+player.getId())%160!=0)return;
-        for(int i=0;i<8;i++){
-            int x=player.blockPosition().getX()+l.random.nextInt(19)-9,z=player.blockPosition().getZ()+l.random.nextInt(19)-9;
-            if(offer(l,x,z,l.random.nextInt(4)==0))break;
+        // A bounded burst on entering a world, then three candidates every two seconds.
+        // Ground twigs are persistent; the local spacing test caps the long-term density.
+        if(player.tickCount>2&&(l.getGameTime()+player.getId())%40!=0)return;
+        int twigs=0,rocks=0;
+        for(int i=0;i<32&&(twigs<3||rocks<2);i++){
+            int x=player.blockPosition().getX()+l.random.nextInt(25)-12,z=player.blockPosition().getZ()+l.random.nextInt(25)-12;
+            if(twigs<3&&offer(l,x,z,l.random.nextInt(8)==0))twigs++;
+            if(rocks<2&&LooseRocks.offer(l,x,z))rocks++;
         }
     }
     static boolean offer(ServerLevel l,int x,int z,boolean fromCanopy){
@@ -35,10 +39,10 @@ final class ForestSticks {
             if(!state.isFaceSturdy(l,p,Direction.UP)||lowestLeaf-y<2)return false;
             BlockPos floor=p.above();
             if(!l.getBlockState(floor).isAir())return false;
-            for(BlockPos near:BlockPos.betweenClosed(floor.offset(-2,-2,-2),floor.offset(2,2,2))){
+            for(BlockPos near:BlockPos.betweenClosed(floor.offset(-1,-1,-1),floor.offset(1,1,1))){
                 if(l.hasChunkAt(near)&&l.getBlockState(near).getBlock() instanceof TwigBlock)return false;
             }
-            if(!l.getEntitiesOfClass(FallingBlockEntity.class,new net.minecraft.world.phys.AABB(floor).inflate(2,40,2),e->e.getBlockState().getBlock() instanceof TwigBlock).isEmpty())return false;
+            if(!l.getEntitiesOfClass(FallingBlockEntity.class,new net.minecraft.world.phys.AABB(floor).inflate(1,40,1),e->e.getBlockState().getBlock() instanceof TwigBlock).isEmpty())return false;
             if(!fromCanopy)return l.setBlock(floor,twig,Block.UPDATE_ALL);
             BlockPos spawn=new BlockPos(x,lowestLeaf-1,z);
             if(!l.getBlockState(spawn).isAir())return false;

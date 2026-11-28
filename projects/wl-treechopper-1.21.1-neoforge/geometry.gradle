@@ -94,6 +94,56 @@ tasks.register('generateTreeGeometry') {
             ru["block.wl_treechopper.${cut}"]="Подрубленный ствол (${s})"
             ru["block.wl_treechopper.${stump}"]="Пень (${s})"
         }
+        // Raw stone fragments: independent low-poly shapes, using the parent's native texture.
+        def rawRockNames=[
+            stone:['Stone','Камень'], granite:['Granite','Гранит'], diorite:['Diorite','Диорит'], andesite:['Andesite','Андезит'],
+            deepslate:['Deepslate','Глубинный сланец'], tuff:['Tuff','Туф'], calcite:['Calcite','Кальцит'], basalt:['Basalt','Базальт'],
+            smooth_basalt:['Smooth basalt','Гладкий базальт'], blackstone:['Blackstone','Чернит'], sandstone:['Sandstone','Песчаник'],
+            red_sandstone:['Red sandstone','Красный песчаник'], dripstone_block:['Dripstone','Карстовый камень'],
+            limestone:['Limestone','Известняк'], shale:['Shale','Глинистый сланец'], slate:['Slate','Сланец'], gneiss:['Gneiss','Гнейс'], volcanic_tuff:['Volcanic tuff','Вулканический туф'],
+            gravel:['Flint','Кремень']
+        ]
+        def coreRocks=['limestone','shale','slate','gneiss','volcanic_tuff']
+        rawRockNames.each { name, names ->
+            boolean flint=name=='gravel'
+            def id=flint?'loose_flint':"pebble_${name}"
+            def namespace=coreRocks.contains(name)?'worldlogic':'minecraft'
+            def texture=flint?'minecraft:block/blackstone':"${namespace}:block/${name=='basalt'?'basalt_side':name}"
+            // Broad irregular rounded chips vs thin angular conchoidal flint shards.
+            def forms=flint?[
+                [[5,0,5,11,1,10,0],[6,1,6,10,2,9,22.5],[7,2,7,9,3,8,0]],
+                [[5,0,6,11,1,10,-22.5],[7,1,6,11,2,9,0],[8,2,7,10,3,8,0]]
+            ]:[
+                [[5,0,5,11,2,10,0],[6,2,6,10,3,9,0],[4,0,6,5,1,9,0]],
+                [[5,0,6,11,2,11,0],[6,2,7,10,3,10,0],[7,0,4,10,1,6,0]],
+                [[5,0,5,10,2,11,0],[6,2,6,9,3,10,0],[10,0,7,12,1,10,0]]
+            ]
+            def variants=[]
+            forms.eachWithIndex { form,i ->
+                def elements=form.collect { p ->
+                    def x0=p[0],y0=p[1],z0=p[2],x1=p[3],y1=p[4],z1=p[5]
+                    def faces=[
+                        north:[uv:[x0,16-y1,x1,16-y0],texture:'#rock'],
+                        south:[uv:[x0,16-y1,x1,16-y0],texture:'#rock'],
+                        west:[uv:[z0,16-y1,z1,16-y0],texture:'#rock'],
+                        east:[uv:[z0,16-y1,z1,16-y0],texture:'#rock'],
+                        up:[uv:[x0,z0,x1,z1],texture:'#rock'],
+                        down:[uv:[x0,z0,x1,z1],texture:'#rock']
+                    ]
+                    def e=[from:p[0..2],to:p[3..5],faces:faces]
+                    if(p[6]!=0)e.rotation=[origin:[8,0,8],axis:'y',angle:p[6],rescale:false]
+                    e
+                }
+                def model="wl_treechopper:block/${id}_${i}"
+                emit(asset+"models/block/${id}_${i}.json",[textures:[particle:texture,rock:texture],elements:elements])
+                [0,90,180,270].each { r -> variants << [model:model,y:r] }
+            }
+            emit(asset+"blockstates/${id}.json",[variants:['':variants]])
+            if(!flint)emit(asset+"models/item/${id}.json",[parent:"wl_treechopper:block/${id}_0",display:[gui:[rotation:[30,225,0],translation:[0,4,0],scale:[1.5,1.5,1.5]],ground:[translation:[0,2,0],scale:[1,1,1]],firstperson_righthand:[rotation:[0,45,0],translation:[0,3,0],scale:[1,1,1]]]])
+            emit("data/wl_treechopper/loot_table/blocks/${id}.json",[type:'minecraft:block',pools:[[rolls:1,entries:[[type:'minecraft:item',name:flint?'minecraft:flint':"wl_treechopper:${id}"]],conditions:[[condition:'minecraft:survives_explosion']]]]])
+            en["block.wl_treechopper.${id}"]=flint?'Loose flint':"${names[0]} pebble"
+            ru["block.wl_treechopper.${id}"]=flint?'Лежащий кремень':"Камушек (${names[1]})"
+        }
         emit(asset+'lang/en_us.json',en);emit(asset+'lang/ru_ru.json',ru)
         emit('data/minecraft/tags/block/mineable/axe.json',[replace:false,values:species.collectMany{["wl_treechopper:cut_${it}","wl_treechopper:stump_${it}","wl_treechopper:fallen_${it}"]}])
     }

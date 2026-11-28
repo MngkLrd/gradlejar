@@ -181,6 +181,35 @@ final class TreeQA {
             if(recipe.isEmpty()||!recipe.get().id().equals(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(TreeChopper.ID,"primitive_axe"))||!recipe.get().value().assemble(input,l.registryAccess()).is(Items.STONE_AXE))return 0;
             var invalid=net.minecraft.world.item.crafting.CraftingInput.of(2,2,java.util.List.of(ItemStack.EMPTY,ItemStack.EMPTY,new ItemStack(Items.STICK),new ItemStack(Items.STICK)));
             if(l.getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,invalid,l).isPresent())return 0;
+            // Exercise the real 2x2 result slot, not only RecipeManager matching.
+            var menu=fake.inventoryMenu;
+            menu.getSlot(1).set(new ItemStack(Items.FLINT));
+            menu.getSlot(2).set(ItemStack.EMPTY);
+            menu.getSlot(3).set(new ItemStack(Items.STICK));
+            menu.getSlot(4).set(new ItemStack(Items.STICK));
+            if(!menu.getSlot(0).getItem().is(Items.STONE_AXE))return 0;
+            menu.getSlot(1).set(ItemStack.EMPTY);
+            if(!menu.getSlot(0).getItem().isEmpty())return 0;
+            menu.getSlot(3).set(ItemStack.EMPTY);menu.getSlot(4).set(ItemStack.EMPTY);
+            // Raw granite and gravel create different collectible types; dirt and worked stone do not.
+            BlockPos rockPos=new BlockPos(997,200,1010),flintPos=new BlockPos(1002,200,1010);
+            l.setBlock(rockPos.below(),net.minecraft.world.level.block.Blocks.GRANITE.defaultBlockState(),3);
+            l.setBlock(flintPos.below(),net.minecraft.world.level.block.Blocks.GRAVEL.defaultBlockState(),3);
+            if(!LooseRocks.offer(l,rockPos.getX(),rockPos.getZ())||LooseRocks.offer(l,rockPos.getX(),rockPos.getZ())||!LooseRocks.offer(l,flintPos.getX(),flintPos.getZ()))return 0;
+            var rock=TreeChopperApi.looseFind(l,rockPos).orElseThrow();
+            var flint=TreeChopperApi.looseFind(l,flintPos).orElseThrow();
+            if(rock.kind()!=TreeChopperApi.LooseKind.PEBBLE||!rock.sourceBlock().toString().equals("minecraft:granite")||!rock.yieldItem().toString().equals("wl_treechopper:pebble_granite")
+               ||flint.kind()!=TreeChopperApi.LooseKind.FLINT||!flint.yieldItem().toString().equals("minecraft:flint")
+               ||TreeChopperApi.rockForSurface(net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState()).isPresent()
+               ||TreeChopperApi.rockForSurface(net.minecraft.world.level.block.Blocks.STONE_BRICKS.defaultBlockState()).isPresent())return 0;
+            var rockState=l.getBlockState(rockPos);
+            var pebble=(PebbleBlock)rockState.getBlock();
+            fake.setPos(rockPos.getX()+.5,rockPos.getY(),rockPos.getZ()+.5);
+            pebble.useWithoutItem(rockState,l,rockPos,fake,new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(rockPos),Direction.UP,rockPos,false));
+            if(!l.getBlockState(rockPos).isAir()||!fake.getInventory().contains(new ItemStack(pebble.asItem())))return 0;
+            fake.setPos(flintPos.getX()+.5,flintPos.getY(),flintPos.getZ()+.5);
+            if(!fake.gameMode.destroyBlock(flintPos)||!l.getBlockState(flintPos).isAir()
+                ||l.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,new net.minecraft.world.phys.AABB(flintPos).inflate(2),drop->drop.getItem().is(Items.FLINT)).isEmpty())return 0;
             c.getSource().sendSuccess(()->Component.literal("TreeChopper forest start PASS"),false);return 1;
           }))
           .then(Commands.literal("qa_crown_ownership").executes(c->{

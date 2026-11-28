@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.8.1 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.9.0 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -2372,7 +2372,7 @@
     {
       "id": "forest-start",
       "kind": "mechanic",
-      "subject": "Natural oak twig block, duplicate cap, right click pickup and left click break, actual falling twig and primitive recipe",
+      "subject": "Natural oak twig block, duplicate cap, right click pickup and left click break, actual falling twig and primitive recipe; real inventory crafting output, raw granite and gravel spawn exact pebble/flint, reject dirt and worked stone, right click pebble and left click flint, public API identities",
       "checks": [
         {
           "backend": "server",
