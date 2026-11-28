@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge 1.2.0 development / RC53 physical materials",
+  "name": "World Logic NeoForge 1.2.1 development / RC54 addon physical API",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1908,6 +1908,72 @@
       "id": "rc53-material-loaded",
       "kind": "mechanic",
       "subject": "Loaded-only world query and out-of-height negative control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "rc54-thermal",
+      "kind": "mechanic",
+      "subject": "Flax, fur, straw, felt and series conduction with wet/unknown controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc54-water",
+      "kind": "mechanic",
+      "subject": "Salinity/temperature density, heat, viscosity, all native freezing thresholds, boiling and salt mass balance; range rejection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc54-wood",
+      "kind": "mechanic",
+      "subject": "Canonical 12% density, distinct Janka/MOR, green moisture, extensible properties and moisture response",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc54-individual",
+      "kind": "mechanic",
+      "subject": "Aquatic material profiles and actual ItemStack provider, copy/stack, unknown volume and fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc54-contact",
+      "kind": "mechanic",
+      "subject": "Explicit mass/normal speed energy and selected constituent with negative controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc54-surface",
+      "kind": "mechanic",
+      "subject": "Actual loaded block contact response stone, wool, timber, air and invalid location",
       "checks": [
         {
           "backend": "server",
