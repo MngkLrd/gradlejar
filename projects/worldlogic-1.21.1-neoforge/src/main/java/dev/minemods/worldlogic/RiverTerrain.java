@@ -27,7 +27,7 @@ public final class RiverTerrain {
   try{return cache(state).get(key,()->RegionalDrainage.build(rx,rz,model::raw,(x,z)->gen.getBaseHeight((int)x,(int)z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state)-1));}
   catch(ExecutionException e){throw new IllegalStateException("regional river network",e.getCause());}
  }
- private static RegionalDrainage.Network at(NoiseBasedChunkGenerator gen,RandomState state,RegistryAccess access,int x,int z){
+ static RegionalDrainage.Network regionalNetwork(NoiseBasedChunkGenerator gen,RandomState state,RegistryAccess access,int x,int z){
   return network(gen,state,access,Math.floorDiv(x,RegionalDrainage.SIZE),Math.floorDiv(z,RegionalDrainage.SIZE));
  }
  private static boolean natural(BlockState b){
@@ -36,7 +36,7 @@ public final class RiverTerrain {
  public static void prepare(NoiseBasedChunkGenerator gen,RandomState state,RegistryAccess access,ChunkAccess c){
   if(!NaturalWaterGeneration.enabled(gen))return;
   int x0=c.getPos().getMinBlockX(),z0=c.getPos().getMinBlockZ(),sea=gen.getSeaLevel();
-  var net=at(gen,state,access,x0,z0);
+  var net=regionalNetwork(gen,state,access,x0,z0);
   if(net.edges().stream().noneMatch(e->e.near(x0+7.5,z0+7.5,12)))return;
   var p=new BlockPos.MutableBlockPos();var water=NaturalFluids.get(WaterKind.RIVER).block.get().defaultBlockState();
   int[] floors=new int[256];for(int x=0;x<16;x++)for(int z=0;z<16;z++)floors[x*16+z]=c.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x,z);
@@ -80,7 +80,7 @@ public final class RiverTerrain {
  static String probe(ServerLevel l,BlockPos origin){return probe(l,origin,false);}
  static String probe(ServerLevel l,BlockPos origin,boolean headwater){
   if(!(l.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator gen)||!NaturalWaterGeneration.enabled(gen))return "RIVER_PROBE unavailable";
-  var state=l.getChunkSource().randomState();var net=at(gen,state,l.registryAccess(),origin.getX(),origin.getZ());
+  var state=l.getChunkSource().randomState();var net=regionalNetwork(gen,state,l.registryAccess(),origin.getX(),origin.getZ());
   var candidates=new ArrayList<>(net.edges());candidates.sort(Comparator.comparingDouble(e->Math.hypot(e.x(.5)-origin.getX(),e.z(.5)-origin.getZ())));
   for(var e:candidates){
    if(headwater?e.tributaries()!=1:e.tributaries()<2)continue;

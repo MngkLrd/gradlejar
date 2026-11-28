@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC40 source milestone / RC45 deferred QA",
+  "name": "World Logic NeoForge RC41 source milestone / RC45 deferred QA",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1743,6 +1743,17 @@
       "id": "rc40-regional-biome-climate",
       "kind": "mechanic",
       "subject": "Bounded continuous regional climate and deterministic anchors; extreme dry/wet edge policy, exclusion of marine/underground/relief classes. Actual final-world adjacency verification deferred to RC45.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc41-landscape-blend",
+      "kind": "mechanic",
+      "subject": "Continuous foothill/ridge weighting, bounded local shaping and coastal, summit, water and open-cavity guards; real ProtoChunk column fixture; final-world and client proof deferred",
       "checks": [
         {
           "backend": "server",
