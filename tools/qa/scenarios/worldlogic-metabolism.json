@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Metabolism 0.9.2 natural rest and admin feed",
+  "name": "Metabolism 0.9.3 peer integration",
   "coverage": [
     {
       "id": "nutrition-model",
@@ -281,6 +281,39 @@
       "id": "nonfood-ominous-bottle",
       "kind": "mechanic",
       "subject": "Non-nutritive potion carrier exclusion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "trauma-organ-functions",
+      "kind": "mechanic",
+      "subject": "Digestive throughput, quick intake, hepatic clearance, zero/invalid/missing inputs and persistence isolation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "native-core-ownership",
+      "kind": "mechanic",
+      "subject": "Native Core handshake or verified old Core fallback; no second action expenditure",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "hydration-authoritative-intake",
+      "kind": "mechanic",
+      "subject": "Hydration rev5 callback precedence and standalone fallback, no duplicated intake",
       "checks": [
         {
           "backend": "server",

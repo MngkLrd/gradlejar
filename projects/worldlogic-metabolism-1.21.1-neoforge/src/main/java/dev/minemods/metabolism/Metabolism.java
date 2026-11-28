@@ -60,7 +60,7 @@ public final class Metabolism {
   if(!(e.getEntity() instanceof ServerPlayer p))return;
   if(!active(p)){POS.remove(p);REST.remove(p);if(p.tickCount%40==0)MetabolismSync.send(p);return;}
   var sample=REST.computeIfAbsent(p,k->new RestSample());
-  if(sample.level!=p.serverLevel()){sample.level=p.serverLevel();sample.position=null;}
+  if(sample.level!=p.serverLevel()){REST.remove(p);sample=new RestSample();REST.put(p,sample);sample.level=p.serverLevel();POS.remove(p);}
   boolean second=p.tickCount%20==0;
   if(second||sample.position==null){var s=state(p);EnvironmentBridge.sample(p,s);sample.rate=s.restRate(p.getFoodData().getFoodLevel());sample.delegated=RestRecovery.coreOwns(p);}
   if(second){Vec3 old=POS.put(p,p.position());double distance=old==null?0:Math.sqrt(p.position().distanceToSqr(old));
@@ -69,7 +69,7 @@ public final class Metabolism {
   var s=state(p);EnvironmentBridge.sample(p,s);double absorbed=MetabolicModel.tick(s,intensity);
   boolean resting=intensity<.08&&!p.isSprinting()&&!p.isSwimming()&&!p.isUsingItem();
   s.lastDigest=recover(p,MetabolicModel.digestionPoints(s,absorbed,resting));store(p,s);
-  if(intensity>.4&&p.tickCount%100==0){double extra=Math.max(0,.10-s.energy())*2+(1-s.physicalFactor())*.35*intensity+s.overload*.55*intensity;if(extra>0)WorldLogicApi.addExertion(p,extra);}
+  // Core owns action costs and exertion penalties. Metabolic activity already debits kcal in the model.
   sample.rate=s.restRate(p.getFoodData().getFoodLevel());}
   // Only actual stationary/safe rest. Mining/attacking raises authoritative fatigue and resets the budget.
   Vec3 here=p.position();boolean still=sample.position!=null&&here.distanceToSqr(sample.position)<.00015625;
@@ -92,14 +92,14 @@ public final class Metabolism {
  public static IntakeResult acceptMeal(ServerPlayer p,MetabolicModel.Meal meal,boolean known){
   if(!active(p))return new IntakeResult(0,0,0);
   var s=state(p);EnvironmentBridge.sample(p,s);var result=MetabolicModel.consume(s,meal,known);
-  s.lastInstant=recover(p,result.requestedPoints());store(p,s);MetabolismSync.send(p);
+  s.lastInstant=recover(p,result.requestedPoints());store(p,s);REST.remove(p);MetabolismSync.send(p);
   return new IntakeResult(result.acceptedKcal(),result.quickKcal(),s.lastInstant);
  }
  public static double acceptWater(ServerPlayer p,int volume,double risk,double salt){
   if(!active(p))return 0;
   var s=state(p);double requested=MetabolicModel.waterBoost(s,volume,risk,salt);
   if(requested<=0)return 0;
-  s.lastInstant=recover(p,requested);store(p,s);MetabolismSync.send(p);return s.lastInstant;
+  s.lastInstant=recover(p,requested);store(p,s);REST.remove(p);MetabolismSync.send(p);return s.lastInstant;
  }
  public static void cake(ServerPlayer p){var food=FoodProfiles.cakeSlice();acceptMeal(p,food.meal(),true);}
  /** Called from the vanilla canEat return; never blocks an otherwise permitted vanilla use. */
@@ -124,6 +124,8 @@ public final class Metabolism {
   if(!(e.getEntity() instanceof ServerPlayer p)||!active(p))return;
   var start=DRINKS.remove(p);var item=e.getItem();
   var food=FoodProfiles.profile(item,p);if(food.isPresent()){var f=food.get();acceptMeal(p,f.meal(),f.known());return;}
+  // Hydration rev5+ reports actual aged/consumed batches, so the pre-use snapshot must not win its cooldown.
+  if(!WaterIntakeBridge.useItemFallback(WaterIntakeBridge.callbackOwnsWater(),start!=null||waterPotion(item)||WaterIntakeBridge.read(item)!=null))return;
   if(start!=null&&item.is(start.item())){
    var after=WaterIntakeBridge.read(e.getResultStack());
    if(e.getResultStack().is(start.item())&&after!=null){int volume=start.water().volume()-after.volume();if(volume>0)acceptWater(p,volume,start.water().risk(),start.water().salt());return;}
@@ -145,10 +147,12 @@ public final class Metabolism {
  private static String fmt(double n){return String.format(Locale.ROOT,"%.1f",n);}
  public static boolean restoreNutrition(ServerPlayer p,boolean clearDisorders){
   if(!active(p))return false;
-  var s=state(p);MetabolicModel.restoreNutrition(s,clearDisorders);p.getFoodData().setFoodLevel(20);p.getFoodData().setSaturation(20);store(p,s);REST.remove(p);MetabolismSync.send(p);return true;
+  var s=state(p);MetabolicModel.restoreNutrition(s,clearDisorders);p.getFoodData().setFoodLevel(20);p.getFoodData().setSaturation(20);p.getFoodData().setExhaustion(0);store(p,s);REST.remove(p);MetabolismSync.send(p);return true;
  }
  public static double restingRecoveryPointsPerSecond(ServerPlayer p){
   if(!active(p)||!WorldLogicApi.fatigue(p).enabled())return 0;
+  // Core 1.5.1 may query each tick. Reuse the one-second authoritative sample; intake/reset invalidate it.
+  var cached=REST.get(p);if(cached!=null&&cached.level==p.serverLevel()&&cached.position!=null&&cached.rate>0)return cached.rate;
   var s=state(p);EnvironmentBridge.sample(p,s);return s.restRate(p.getFoodData().getFoodLevel());
  }
  private static int feed(com.mojang.brigadier.context.CommandContext<net.minecraft.commands.CommandSourceStack> c,java.util.Collection<ServerPlayer> players){
@@ -159,6 +163,8 @@ public final class Metabolism {
   return Commands.literal(name).requires(s->s.hasPermission(2)).executes(c->feed(c,java.util.List.of(c.getSource().getPlayerOrException())))
    .then(Commands.argument("players",EntityArgument.players()).executes(c->feed(c,EntityArgument.getPlayers(c,"players"))));
  }
+ public record OrganInputs(boolean available,double digestiveFunction,double hepaticFunction){}
+ public static OrganInputs organInputs(ServerPlayer p){var s=state(p);EnvironmentBridge.sampleOrgans(p,s);return new OrganInputs(s.organInputsAvailable,s.digestiveFunction,s.hepaticFunction);}
  private static void commands(RegisterCommandsEvent e){
   var dispatcher=e.getDispatcher();var root=dispatcher.getRoot().getChild("worldlogic");
   if(dispatcher.getRoot().getChild("feed")==null)dispatcher.register(feedCommand("feed"));

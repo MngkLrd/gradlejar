@@ -13,7 +13,7 @@
     {
       "id": "worldlogic:metabolism_physiology",
       "version": 1,
-      "revision": 6,
+      "revision": 7,
       "domains": [
         "nutrition",
         "digestion",
@@ -75,6 +75,12 @@
           "kind": "command",
           "entrypoint": "dev.minemods.metabolism.api.MetabolismApi",
           "semantics": "Trusted admin operation restores nutrition; optionally clears metabolic toxin, never other addon state."
+        },
+        {
+          "id": "organ_inputs",
+          "kind": "query",
+          "entrypoint": "dev.minemods.metabolism.api.MetabolismApi",
+          "semantics": "Actual public Trauma digestive/hepatic inputs, neutral if absent; read-only transient snapshot."
         }
       ]
     }
@@ -124,7 +130,8 @@
         "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/WaterIntakeBridge.java",
         "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/mixin/PlayerFoodMixin.java",
         "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/mixin/CakeFoodMixin.java",
-        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/RestRecovery.java"
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/RestRecovery.java",
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/EnvironmentBridge.java"
       ],
       "provides": [
         "worldlogic:metabolism_physiology"
@@ -135,7 +142,7 @@
         "worldlogic:thermal_status",
         "worldlogic:trauma_status"
       ],
-      "integration_review": "Inspected Core RC54 public fatigue API and Survival natural rest; published RC22 same signatures. Hydration v1 rev2 liquidWater and physiology, Thermal public status and Trauma API rev3. No foreign state mutation or second stamina pool. Missing source sip callback tracked in issue #257. Core RC56 natural recovery remains 4/s and no policy hook; #265 requests Core ownership, interim observed net-credit supplemental rest through public API only. Trauma disorder UI/reset #266, Hydration and Thermal reset #267."
+      "integration_review": "Inspected Core RC54 public fatigue API and Survival natural rest; published RC22 same signatures. Hydration v1 rev2 liquidWater and physiology, Thermal public status and Trauma API rev3. No foreign state mutation or second stamina pool. Missing source sip callback tracked in issue #257. Core RC56 natural recovery remains 4/s and no policy hook; #265 requests Core ownership, interim observed net-credit supplemental rest through public API only. Trauma disorder UI/reset #266, Hydration and Thermal reset #267. Core 1.5.1 API21 native rest handshake and heal coordinator inspected in #270; no extra exertion debit. Hydration 0.6.0 API5 actual batch callback #271 owns water item completion. Trauma API6 organ inputs now applied once to digestive throughput/immediate uptake and hepatic toxin clearance. No foreign state writes. Exact peer runtime pending."
     },
     {
       "id": "dashboard",

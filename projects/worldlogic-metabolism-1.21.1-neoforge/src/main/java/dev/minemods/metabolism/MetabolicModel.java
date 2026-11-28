@@ -22,6 +22,10 @@ public final class MetabolicModel {
   public final double[] historyIntake=new double[HISTORY],historyBurn=new double[HISTORY],historyQuality=new double[HISTORY];
   public int historyCount,daySeconds,drinkCooldown;
   public double overload,lastInstant,lastDigest;
+  // Transient public Trauma physiology, never persisted or owned by Metabolism.
+  public double digestiveFunction=1,hepaticFunction=1;
+  public boolean organInputsAvailable;
+  public void organInputs(boolean available,double digestive,double hepatic){organInputsAvailable=available&&Double.isFinite(digestive)&&Double.isFinite(hepatic)&&digestive>=0&&digestive<=1&&hepatic>=0&&hepatic<=1;digestiveFunction=organInputsAvailable?digestive:1;hepaticFunction=organInputsAvailable?hepatic:1;}
   public double fullness(){return clamp(stomach/STOMACH_MAX,0,1);}
   public double restScore(int foodLevel){return clamp(Math.min(Math.min(quality(),energy()/.75),clamp(foodLevel/20.0,0,1))*hydrationFactor()*(1-.65*toxin)*(1-.45*overload),0,1);}
   public int restSeconds(int foodLevel){double v=restScore(foodLevel);return v>=.90?3:v>=.75?5:v>=.50?7:v>=.25?10:12;}
@@ -41,7 +45,7 @@ public final class MetabolicModel {
   public double fastHours(){return fast/Math.max(1,burn);}
   public double totalHours(){return (fast+.85*reserve)/Math.max(1,burn);}
   public double digestiveHours(){return stomach/Math.max(.01,digestionRate())/50;}
-  public double digestionRate(){return BASE_DIGEST_KCAL_PER_SECOND*mealComfort()*hydrationFactor()*(1-.5*toxin)*(.7+.3*Math.min(1,adequacy(3)));}
+  public double digestionRate(){return BASE_DIGEST_KCAL_PER_SECOND*digestiveFunction*mealComfort()*hydrationFactor()*(1-.5*toxin)*(.7+.3*Math.min(1,adequacy(3)));}
   public double adequacy(int i){return clamp(stores[i],0,1.5);}
   public double quality(){double sum=0,min=1;for(int i=0;i<N;i++){double v=Math.min(1,adequacy(i));sum+=v;min=Math.min(min,v);}return .65*sum/N+.35*min;}
   public double energy(){return clamp(.75*fast/FAST_MAX+.25*reserve/FAT_MAX,0,1);}
@@ -72,11 +76,11 @@ public final class MetabolicModel {
   double accepted=ingest(s,meal,known);
   if(accepted<=0)return new Intake(0,0,0);
   double carbShare=clamp(meal.nutrients[2]*4/Math.max(1,meal.kcal),0,1);
-  double quickRaw=Math.min(s.queuedEnergy,accepted*(.08+.22*carbShare));
+  double quickRaw=Math.min(s.queuedEnergy,accepted*(.08+.22*carbShare)*s.digestiveFunction);
   double quick=quickRaw*s.absorptionEfficiency();
   s.queuedEnergy-=quickRaw;
   deposit(s,quick);
-  double points=clamp((accepted*.012+quick*.065)*s.mealComfort()*(1-.8*s.toxin),0,8);
+  double points=clamp((accepted*.012*s.digestiveFunction+quick*.065)*s.mealComfort()*(1-.8*s.toxin),0,8);
   return new Intake(accepted,quick,points);
  }
  private static void deposit(State s,double kcal){
@@ -112,7 +116,7 @@ public final class MetabolicModel {
   double fast=s.fast+kcal-(use-fatFuel);
   if(fast>FAST_MAX){s.reserve=clamp(s.reserve+(fast-FAST_MAX)*.8,0,FAT_MAX);fast=FAST_MAX;}
   if(fast<0){double fromFat=Math.min(s.reserve,-fast/0.85);s.reserve-=fromFat;fast+=fromFat*.85;}
-  s.fast=clamp(fast,0,FAST_MAX);s.toxin=clamp(s.toxin-.00035,0,1);
+  s.fast=clamp(fast,0,FAST_MAX);s.toxin=clamp(s.toxin-.00035*s.hepaticFunction,0,1);
   if(++s.daySeconds>=1200){for(int i=State.HISTORY-1;i>0;i--){s.historyIntake[i]=s.historyIntake[i-1];s.historyBurn[i]=s.historyBurn[i-1];s.historyQuality[i]=s.historyQuality[i-1];}s.historyIntake[0]=s.dayIntake;s.historyBurn[0]=s.dayBurn;s.historyQuality[0]=s.dayQuality/s.daySeconds;s.historyCount=Math.min(State.HISTORY,s.historyCount+1);s.daySeconds=0;s.dayIntake=0;s.dayBurn=0;s.dayQuality=0;}
   return kcal;
  }

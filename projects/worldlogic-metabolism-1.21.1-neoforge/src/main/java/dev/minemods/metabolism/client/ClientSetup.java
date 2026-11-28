@@ -33,6 +33,7 @@ public final class ClientSetup {
     Function<Screen,Screen> screen=MetabolismScreen::new;
     register.invoke(null,ResourceLocation.fromNamespaceAndPath("metabolism","dashboard"),50,Component.translatable("metabolism.title"),icon,screen);
     widthMethod=width;
+    try{api.getMethod("registerSelfBackground",Class.class).invoke(null,MetabolismScreen.class);}catch(NoSuchMethodException legacy){}
    }catch(ReflectiveOperationException|LinkageError ex){widthMethod=null;}
   });
  }

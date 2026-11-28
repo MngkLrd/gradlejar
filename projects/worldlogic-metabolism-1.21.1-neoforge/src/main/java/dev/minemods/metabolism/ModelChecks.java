@@ -57,6 +57,10 @@ public final class ModelChecks {
   Metabolism.store(p,new MetabolicModel.State());var bottle=net.minecraft.world.item.alchemy.PotionContents.createItemStack(net.minecraft.world.item.Items.POTION,net.minecraft.world.item.alchemy.Potions.WATER);
   net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent.Finish(p,bottle,0,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.GLASS_BOTTLE)));
   require(Metabolism.state(p).drinkCooldown==15&&Metabolism.state(p).stomach==0,"water finish no calories");
+  require(!WaterIntakeBridge.useItemFallback(true,true)&&WaterIntakeBridge.useItemFallback(false,true)&&WaterIntakeBridge.useItemFallback(true,false),"Hydration callback owns water, legacy standalone fallback remains");
+  var organs=dev.minemods.metabolism.api.MetabolismApi.organInputs(p);
+  if(!net.neoforged.fml.ModList.get().isLoaded("worldlogic_trauma"))require(!organs.available()&&organs.digestiveFunction()==1&&organs.hepaticFunction()==1,"missing Trauma neutral public snapshot");
+  if(dev.minemods.worldlogic.api.WorldLogicApi.class.getDeclaredMethods().length>0){try{var handshake=dev.minemods.worldlogic.api.WorldLogicApi.class.getMethod("usesMetabolicRestRecovery",net.minecraft.server.level.ServerPlayer.class);require(Boolean.TRUE.equals(handshake.invoke(null,p))&&RestRecovery.coreOwns(p),"native Core policy handshake");}catch(NoSuchMethodException oldCore){require(!RestRecovery.coreOwns(p),"legacy Core fallback");}catch(ReflectiveOperationException ex){throw new AssertionError(ex);}}
   Metabolism.store(p,new MetabolicModel.State());
   var medicine=net.minecraft.world.item.alchemy.PotionContents.createItemStack(net.minecraft.world.item.Items.POTION,net.minecraft.world.item.alchemy.Potions.HEALING);
   net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent.Finish(p,medicine,0,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.GLASS_BOTTLE)));
@@ -93,6 +97,16 @@ public final class ModelChecks {
   MetabolicModel.ingest(fed,new MetabolicModel.Meal(300,n,0,1),true);
   require(fed.stomach==300&&fed.fast==1350&&fed.pending[0]>0,"queued, not immediate");
   MetabolicModel.tick(fed,0);require(fed.stomach<300&&fed.stores[0]>1&&fed.fast>1350,"digestion");
+  var healthyGut=new MetabolicModel.State();var damagedGut=new MetabolicModel.State();
+  MetabolicModel.ingest(healthyGut,new MetabolicModel.Meal(300,n,0,1),true);MetabolicModel.ingest(damagedGut,new MetabolicModel.Meal(300,n,0,1),true);
+  damagedGut.organInputs(true,.4,.25);healthyGut.toxin=.4;damagedGut.toxin=.4;
+  double hAbs=MetabolicModel.tick(healthyGut,0),dAbs=MetabolicModel.tick(damagedGut,0);
+  require(Math.abs(dAbs/hAbs-.4)<1e-6&&Math.abs((.4-damagedGut.toxin)/(.4-healthyGut.toxin)-.25)<1e-6,"organ factors applied once to throughput and clearance");
+  var stopped=new MetabolicModel.State();stopped.organInputs(true,0,0);stopped.toxin=.3;var blocked=MetabolicModel.consume(stopped,new MetabolicModel.Meal(100,n,0,1),true);
+  require(blocked.quickKcal()==0&&blocked.requestedPoints()==0&&MetabolicModel.tick(stopped,0)==0&&stopped.toxin==.3,"zero digestive/hepatic function blocks own pathways");
+  stopped.organInputs(false,0,0);require(stopped.digestionRate()>0&&stopped.digestiveFunction==1&&stopped.hepaticFunction==1,"missing provider restores neutral");
+  stopped.organInputs(true,Double.NaN,.5);require(!stopped.organInputsAvailable&&stopped.digestiveFunction==1,"invalid organ input neutral");
+  var transientOrgans=Metabolism.decode(Metabolism.encode(damagedGut));require(!transientOrgans.organInputsAvailable&&transientOrgans.digestiveFunction==1&&transientOrgans.hepaticFunction==1,"organ state not copied to save");
   var toxin=new MetabolicModel.State();MetabolicModel.ingest(toxin,new MetabolicModel.Meal(100,n,.5,1),true);
   require(toxin.recovery()<new MetabolicModel.State().recovery(),"toxin penalizes recovery");
   double before=toxin.toxin;MetabolicModel.tick(toxin,0);require(toxin.toxin<before,"clearance");
