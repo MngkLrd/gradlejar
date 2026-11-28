@@ -457,6 +457,1134 @@
         "context_view": "Inspected a 3x3 wall: repeated clusters are visible, but continuous background crosses tile boundaries without a hard seam.",
         "context_type": "tile_3x3"
       }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/humus_farmland.png": {
+      "sha256": "30dbd3f513b916dc3612a277c2c6b66be91ed84ae91e07363ce404785ab60dac",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland",
+          "minecraft": "1.21.1",
+          "sha256": "324fa08c758ea228711d312b6cabec69c5494646173f28b4047372a310573cad"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Dry warm dark-brown organic earth retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular warm dark-brown organic earth shoulder clods.",
+        "micro_contrast": "Five related soil shades; dry clod tops are visibly lighter than recesses.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "warm dark-brown organic earth palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Dry warm dark-brown organic earth differs from other soil palettes.",
+        "vanilla_comparison": "Dry warm dark-brown organic earth retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Dry warm dark-brown organic earth retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains warm dark-brown organic earth and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/humus_farmland_moist.png": {
+      "sha256": "3deecaed5ad27db78f231d1578d8e3bcdaecaeedb3f6ca3021828247204804d0",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland_moist",
+          "minecraft": "1.21.1",
+          "sha256": "b8f89f1840546beaccd05f2ad340b54e00223fb755d1225c7e2c4c63eacc1c2e"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Wet darkened warm dark-brown organic earth retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular warm dark-brown organic earth shoulder clods.",
+        "micro_contrast": "Five related soil shades; wet color ramp is 73 percent of dry brightness.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "warm dark-brown organic earth palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Moist version retains dry furrow geometry while using darker original soil shades.",
+        "vanilla_comparison": "Wet darkened warm dark-brown organic earth retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Wet darkened warm dark-brown organic earth retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains warm dark-brown organic earth and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/loam_farmland.png": {
+      "sha256": "dc1b2a973f905f99ed5b972050c7927c0edad7b41032dea570effe956c3dd916",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland",
+          "minecraft": "1.21.1",
+          "sha256": "324fa08c758ea228711d312b6cabec69c5494646173f28b4047372a310573cad"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Dry ochre-brown crumb soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular ochre-brown crumb soil shoulder clods.",
+        "micro_contrast": "Five related soil shades; dry clod tops are visibly lighter than recesses.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "ochre-brown crumb soil palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Dry ochre-brown crumb soil differs from other soil palettes.",
+        "vanilla_comparison": "Dry ochre-brown crumb soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Dry ochre-brown crumb soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains ochre-brown crumb soil and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/loam_farmland_moist.png": {
+      "sha256": "5a08f1c719d36ad96b7bf5d9afde4af38085a6b16f7b0d67d5260001e11f792c",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland_moist",
+          "minecraft": "1.21.1",
+          "sha256": "b8f89f1840546beaccd05f2ad340b54e00223fb755d1225c7e2c4c63eacc1c2e"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Wet darkened ochre-brown crumb soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular ochre-brown crumb soil shoulder clods.",
+        "micro_contrast": "Five related soil shades; wet color ramp is 73 percent of dry brightness.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "ochre-brown crumb soil palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Moist version retains dry furrow geometry while using darker original soil shades.",
+        "vanilla_comparison": "Wet darkened ochre-brown crumb soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Wet darkened ochre-brown crumb soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains ochre-brown crumb soil and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/peat_farmland.png": {
+      "sha256": "a79bdb9400cc81662ba69d661f8165e5f8ae1150c6dfb04596258a12967334ed",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland",
+          "minecraft": "1.21.1",
+          "sha256": "324fa08c758ea228711d312b6cabec69c5494646173f28b4047372a310573cad"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Dry near-black brown fibrous peat retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular near-black brown fibrous peat shoulder clods.",
+        "micro_contrast": "Five related soil shades; dry clod tops are visibly lighter than recesses.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "near-black brown fibrous peat palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Dry near-black brown fibrous peat differs from other soil palettes.",
+        "vanilla_comparison": "Dry near-black brown fibrous peat retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Dry near-black brown fibrous peat retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains near-black brown fibrous peat and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/peat_farmland_moist.png": {
+      "sha256": "d85cc0ec90cf63022cc23fb0cc8e85c8d17c4e90ba62d6088e323b89a00f19f9",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland_moist",
+          "minecraft": "1.21.1",
+          "sha256": "b8f89f1840546beaccd05f2ad340b54e00223fb755d1225c7e2c4c63eacc1c2e"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Wet darkened near-black brown fibrous peat retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular near-black brown fibrous peat shoulder clods.",
+        "micro_contrast": "Five related soil shades; wet color ramp is 73 percent of dry brightness.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "near-black brown fibrous peat palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Moist version retains dry furrow geometry while using darker original soil shades.",
+        "vanilla_comparison": "Wet darkened near-black brown fibrous peat retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Wet darkened near-black brown fibrous peat retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains near-black brown fibrous peat and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/alluvial_silt_farmland.png": {
+      "sha256": "098017cf955667d26bdf992b337b2e0bd65c8951cd5d5267e92fad574f3a85d3",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland",
+          "minecraft": "1.21.1",
+          "sha256": "324fa08c758ea228711d312b6cabec69c5494646173f28b4047372a310573cad"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Dry gray-beige fine sediment retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular gray-beige fine sediment shoulder clods.",
+        "micro_contrast": "Five related soil shades; dry clod tops are visibly lighter than recesses.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "gray-beige fine sediment palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Dry gray-beige fine sediment differs from other soil palettes.",
+        "vanilla_comparison": "Dry gray-beige fine sediment retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Dry gray-beige fine sediment retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains gray-beige fine sediment and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/alluvial_silt_farmland_moist.png": {
+      "sha256": "defda1274639c804b50155aa489c6e8a83432d91294d1642bdaf06de83af8cd1",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland_moist",
+          "minecraft": "1.21.1",
+          "sha256": "b8f89f1840546beaccd05f2ad340b54e00223fb755d1225c7e2c4c63eacc1c2e"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Wet darkened gray-beige fine sediment retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular gray-beige fine sediment shoulder clods.",
+        "micro_contrast": "Five related soil shades; wet color ramp is 73 percent of dry brightness.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "gray-beige fine sediment palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Moist version retains dry furrow geometry while using darker original soil shades.",
+        "vanilla_comparison": "Wet darkened gray-beige fine sediment retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Wet darkened gray-beige fine sediment retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains gray-beige fine sediment and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/chernozem_farmland.png": {
+      "sha256": "364e14d0f2050a8377ea7455a44412d30339442d19b564bea1d83cfc31a7cc35",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland",
+          "minecraft": "1.21.1",
+          "sha256": "324fa08c758ea228711d312b6cabec69c5494646173f28b4047372a310573cad"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Dry dark chocolate humic earth retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular dark chocolate humic earth shoulder clods.",
+        "micro_contrast": "Five related soil shades; dry clod tops are visibly lighter than recesses.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "dark chocolate humic earth palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Dry dark chocolate humic earth differs from other soil palettes.",
+        "vanilla_comparison": "Dry dark chocolate humic earth retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Dry dark chocolate humic earth retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains dark chocolate humic earth and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/chernozem_farmland_moist.png": {
+      "sha256": "701ceb8e440be3c87f3d554dc02797ff0155271b976a06a631b2d929c55dad59",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland_moist",
+          "minecraft": "1.21.1",
+          "sha256": "b8f89f1840546beaccd05f2ad340b54e00223fb755d1225c7e2c4c63eacc1c2e"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Wet darkened dark chocolate humic earth retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular dark chocolate humic earth shoulder clods.",
+        "micro_contrast": "Five related soil shades; wet color ramp is 73 percent of dry brightness.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "dark chocolate humic earth palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Moist version retains dry furrow geometry while using darker original soil shades.",
+        "vanilla_comparison": "Wet darkened dark chocolate humic earth retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Wet darkened dark chocolate humic earth retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains dark chocolate humic earth and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/sandy_loam_farmland.png": {
+      "sha256": "70d09567b2a475148a66d0c952fd5d4181d7c2d942d5f879e539063d513f5035",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland",
+          "minecraft": "1.21.1",
+          "sha256": "324fa08c758ea228711d312b6cabec69c5494646173f28b4047372a310573cad"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Dry tan sandy mineral soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular tan sandy mineral soil shoulder clods.",
+        "micro_contrast": "Five related soil shades; dry clod tops are visibly lighter than recesses.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "tan sandy mineral soil palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Dry tan sandy mineral soil differs from other soil palettes.",
+        "vanilla_comparison": "Dry tan sandy mineral soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Dry tan sandy mineral soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains tan sandy mineral soil and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/sandy_loam_farmland_moist.png": {
+      "sha256": "0ca53e89726f2e141fca058a01a0670675a7b92e1b5abf9d4970a7db8df430e7",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland_moist",
+          "minecraft": "1.21.1",
+          "sha256": "b8f89f1840546beaccd05f2ad340b54e00223fb755d1225c7e2c4c63eacc1c2e"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Wet darkened tan sandy mineral soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular tan sandy mineral soil shoulder clods.",
+        "micro_contrast": "Five related soil shades; wet color ramp is 73 percent of dry brightness.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "tan sandy mineral soil palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Moist version retains dry furrow geometry while using darker original soil shades.",
+        "vanilla_comparison": "Wet darkened tan sandy mineral soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Wet darkened tan sandy mineral soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains tan sandy mineral soil and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/laterite_farmland.png": {
+      "sha256": "17e2edaafe75ff074ecb36f61d3bd2af3f4bc0aa291091a77e07458bfcc8554b",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland",
+          "minecraft": "1.21.1",
+          "sha256": "324fa08c758ea228711d312b6cabec69c5494646173f28b4047372a310573cad"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Dry rust-orange iron-rich soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular rust-orange iron-rich soil shoulder clods.",
+        "micro_contrast": "Five related soil shades; dry clod tops are visibly lighter than recesses.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "rust-orange iron-rich soil palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Dry rust-orange iron-rich soil differs from other soil palettes.",
+        "vanilla_comparison": "Dry rust-orange iron-rich soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Dry rust-orange iron-rich soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains rust-orange iron-rich soil and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/laterite_farmland_moist.png": {
+      "sha256": "deb2821628076685299fff8a36487f45ea9d59a39f706e08f2b86487c4d3af25",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/farmland_moist",
+          "minecraft": "1.21.1",
+          "sha256": "b8f89f1840546beaccd05f2ad340b54e00223fb755d1225c7e2c4c63eacc1c2e"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Wet darkened rust-orange iron-rich soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+      "findings": {
+        "silhouette": "Full surface, two curved 8-pixel-spaced furrows with stepped clod shoulders, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Dark troughs bend one pixel in alternating rows, with adjoining irregular rust-orange iron-rich soil shoulder clods.",
+        "micro_contrast": "Five related soil shades; wet color ramp is 73 percent of dry brightness.",
+        "light_and_volume": "Raised ridges receive narrow bright pixels; troughs remain consistently darker.",
+        "material_continuity": "rust-orange iron-rich soil palette stays continuous across the interior; no artificial gray gravel speckles were inserted.",
+        "edge_variation": "Curved furrow boundaries change by one pixel along the row and occasional clod pixels interrupt straight edges.",
+        "variant_identity": "Moist version retains dry furrow geometry while using darker original soil shades.",
+        "vanilla_comparison": "Wet darkened rust-orange iron-rich soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks.",
+        "aggregate_structure": "two curved 8-pixel-spaced furrows with stepped clod shoulders; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview reads as continuous planting rows; periodic furrow waviness remains visible intentionally."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "two curved 8-pixel-spaced furrows with stepped clod shoulders; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Wet darkened rust-orange iron-rich soil retains curved furrows; vanilla farmland is more mottled and has more gray mineral flecks. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains rust-orange iron-rich soil and readable furrows.",
+        "context_view": "3x3 actual tiled inspection: rows align; staggered clod shoulders soften the furrow pattern.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/limestone.png": {
+      "sha256": "8edc6a69bb6313c9bab3b053c6eca50d8aac129ed235328a4621454c8b2e55c0",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Natural pale cream-gray carbonate with uneven compact clusters; vanilla stone uses less directional medium gray aggregates.",
+      "findings": {
+        "silhouette": "Full surface, pale cream-gray carbonate with uneven compact clusters, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Coherent pale cream-gray carbonate with uneven compact clusters aggregates rather than isolated speckles.",
+        "micro_contrast": "Five adjacent mineral shades give distinct local boundaries in pale cream-gray carbonate with uneven compact clusters.",
+        "light_and_volume": "Lighter mineral planes abut localized darker cleavages or recessed grains.",
+        "material_continuity": "pale cream-gray carbonate with uneven compact clusters palette stays continuous across the interior; rock bands or aggregate groups retain their own palette.",
+        "edge_variation": "Natural edges follow unequal local planes and broken mineral bands.",
+        "variant_identity": "Raw face has no geometric construction seam.",
+        "vanilla_comparison": "Natural pale cream-gray carbonate with uneven compact clusters; vanilla stone uses less directional medium gray aggregates.",
+        "aggregate_structure": "pale cream-gray carbonate with uneven compact clusters; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview has repeated pale cream-gray carbonate with uneven compact clusters; raw directional bedding may show a repeat, but there is no added masonry frame."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "pale cream-gray carbonate with uneven compact clusters; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Natural pale cream-gray carbonate with uneven compact clusters; vanilla stone uses less directional medium gray aggregates. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains pale cream-gray carbonate with uneven compact clusters and geological grain.",
+        "context_view": "3x3 actual tiled inspection: repeated geological bands or aggregate patterns remain visible without artificial masonry borders.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/polished_limestone.png": {
+      "sha256": "fd0e93197d46d94737f74a8beeaaa1e215538ca7af2d38073d85dab6d26ae4db",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        },
+        {
+          "id": "minecraft:block/polished_andesite",
+          "minecraft": "1.21.1",
+          "sha256": "ffe83daad907f1240fa6f872c5a89aed1d17c5a5c65815e0cdc5cc896069ca16"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: pale cream-gray carbonate with uneven compact clusters is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+      "findings": {
+        "silhouette": "Full surface, single squared tile with a top/left light bevel and darker lower/right edge, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Broad quiet pale cream-gray carbonate with uneven compact clusters face with small retained mineral planes inside the bevel.",
+        "micro_contrast": "Interior contrast is reduced to adjacent midtones; cut edge remains visible.",
+        "light_and_volume": "A one-texel bright upper and left bevel meets a shaded bottom/right perimeter.",
+        "material_continuity": "pale cream-gray carbonate with uneven compact clusters palette stays continuous across the interior; bevel belongs to the same stone.",
+        "edge_variation": "Straight bevel edges are intentional cut geometry; interior retains small irregular planes.",
+        "variant_identity": "Single bevel frame distinguishes polished surface from jointed masonry.",
+        "vanilla_comparison": "pale cream-gray carbonate with uneven compact clusters is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+        "aggregate_structure": "single squared tile with a top/left light bevel and darker lower/right edge; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 tile forms square cut stones with deliberate perimeter joins."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "single squared tile with a top/left light bevel and darker lower/right edge; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "pale cream-gray carbonate with uneven compact clusters is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains pale cream-gray carbonate with uneven compact clusters and cut edge.",
+        "context_view": "3x3 actual tiled inspection: deliberate tile perimeter reads as worked stone.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/limestone_bricks.png": {
+      "sha256": "04420c50ebbb48a4f02e62ef79d3956061567770e7c77f3484a99b4a038005d7",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        },
+        {
+          "id": "minecraft:block/bricks",
+          "minecraft": "1.21.1",
+          "sha256": "33f9411f1cb233a2020df0cf3fda32c0f67a4b0fac3751bde2ba6f2fee81b169"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: pale cream-gray carbonate with uneven compact clusters inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+      "findings": {
+        "silhouette": "Full surface, offset 8x8 running-bond stone units with one-pixel mortar joints, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Distinct staggered mortar courses surround the pale cream-gray carbonate with uneven compact clusters faces.",
+        "micro_contrast": "Dark mortar and modest stone-edge highlights distinguish blocks from interior grain.",
+        "light_and_volume": "Light upper and left planes and darker lower/right edges describe carved rectangular faces.",
+        "material_continuity": "pale cream-gray carbonate with uneven compact clusters palette stays continuous across the interior; mortar alone interrupts the material.",
+        "edge_variation": "Offset second course breaks vertical mortar continuity; repeated straight seams are intentional masonry.",
+        "variant_identity": "Worked masonry has a staggered joint pattern distinct from raw or polished rock.",
+        "vanilla_comparison": "pale cream-gray carbonate with uneven compact clusters inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+        "aggregate_structure": "offset 8x8 running-bond stone units with one-pixel mortar joints; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 tile displays aligned offset masonry courses; regular seams are construction cues."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "offset 8x8 running-bond stone units with one-pixel mortar joints; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "pale cream-gray carbonate with uneven compact clusters inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains pale cream-gray carbonate with uneven compact clusters and mortar.",
+        "context_view": "3x3 actual tiled inspection: staggered joints meet at tile boundaries.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/shale.png": {
+      "sha256": "3fe8edcd39cc24ba1addf00c8c1a7c2dd4cdc351691d9b1d582556184761ad3c",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Natural olive-gray fine sedimentary horizontal bedding; vanilla stone uses less directional medium gray aggregates.",
+      "findings": {
+        "silhouette": "Full surface, olive-gray fine sedimentary horizontal bedding, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Coherent olive-gray fine sedimentary horizontal bedding aggregates rather than isolated speckles.",
+        "micro_contrast": "Five adjacent mineral shades give distinct local boundaries in olive-gray fine sedimentary horizontal bedding.",
+        "light_and_volume": "Lighter mineral planes abut localized darker cleavages or recessed grains.",
+        "material_continuity": "olive-gray fine sedimentary horizontal bedding palette stays continuous across the interior; rock bands or aggregate groups retain their own palette.",
+        "edge_variation": "Natural edges follow unequal local planes and broken mineral bands.",
+        "variant_identity": "Raw face has no geometric construction seam.",
+        "vanilla_comparison": "Natural olive-gray fine sedimentary horizontal bedding; vanilla stone uses less directional medium gray aggregates.",
+        "aggregate_structure": "olive-gray fine sedimentary horizontal bedding; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview has repeated olive-gray fine sedimentary horizontal bedding; raw directional bedding may show a repeat, but there is no added masonry frame."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "olive-gray fine sedimentary horizontal bedding; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Natural olive-gray fine sedimentary horizontal bedding; vanilla stone uses less directional medium gray aggregates. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains olive-gray fine sedimentary horizontal bedding and geological grain.",
+        "context_view": "3x3 actual tiled inspection: repeated geological bands or aggregate patterns remain visible without artificial masonry borders.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/polished_shale.png": {
+      "sha256": "229c3db76ec1a19c56dae0d824ee617b8c9a765569cf438ec395755fa359fe71",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        },
+        {
+          "id": "minecraft:block/polished_andesite",
+          "minecraft": "1.21.1",
+          "sha256": "ffe83daad907f1240fa6f872c5a89aed1d17c5a5c65815e0cdc5cc896069ca16"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: olive-gray fine sedimentary horizontal bedding is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+      "findings": {
+        "silhouette": "Full surface, single squared tile with a top/left light bevel and darker lower/right edge, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Broad quiet olive-gray fine sedimentary horizontal bedding face with small retained mineral planes inside the bevel.",
+        "micro_contrast": "Interior contrast is reduced to adjacent midtones; cut edge remains visible.",
+        "light_and_volume": "A one-texel bright upper and left bevel meets a shaded bottom/right perimeter.",
+        "material_continuity": "olive-gray fine sedimentary horizontal bedding palette stays continuous across the interior; bevel belongs to the same stone.",
+        "edge_variation": "Straight bevel edges are intentional cut geometry; interior retains small irregular planes.",
+        "variant_identity": "Single bevel frame distinguishes polished surface from jointed masonry.",
+        "vanilla_comparison": "olive-gray fine sedimentary horizontal bedding is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+        "aggregate_structure": "single squared tile with a top/left light bevel and darker lower/right edge; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 tile forms square cut stones with deliberate perimeter joins."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "single squared tile with a top/left light bevel and darker lower/right edge; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "olive-gray fine sedimentary horizontal bedding is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains olive-gray fine sedimentary horizontal bedding and cut edge.",
+        "context_view": "3x3 actual tiled inspection: deliberate tile perimeter reads as worked stone.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/shale_bricks.png": {
+      "sha256": "edcedd5658bb9f0f8925b4230938e70a3092cd0e3abaef8d14f1d30e30583630",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        },
+        {
+          "id": "minecraft:block/bricks",
+          "minecraft": "1.21.1",
+          "sha256": "33f9411f1cb233a2020df0cf3fda32c0f67a4b0fac3751bde2ba6f2fee81b169"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: olive-gray fine sedimentary horizontal bedding inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+      "findings": {
+        "silhouette": "Full surface, offset 8x8 running-bond stone units with one-pixel mortar joints, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Distinct staggered mortar courses surround the olive-gray fine sedimentary horizontal bedding faces.",
+        "micro_contrast": "Dark mortar and modest stone-edge highlights distinguish blocks from interior grain.",
+        "light_and_volume": "Light upper and left planes and darker lower/right edges describe carved rectangular faces.",
+        "material_continuity": "olive-gray fine sedimentary horizontal bedding palette stays continuous across the interior; mortar alone interrupts the material.",
+        "edge_variation": "Offset second course breaks vertical mortar continuity; repeated straight seams are intentional masonry.",
+        "variant_identity": "Worked masonry has a staggered joint pattern distinct from raw or polished rock.",
+        "vanilla_comparison": "olive-gray fine sedimentary horizontal bedding inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+        "aggregate_structure": "offset 8x8 running-bond stone units with one-pixel mortar joints; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 tile displays aligned offset masonry courses; regular seams are construction cues."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "offset 8x8 running-bond stone units with one-pixel mortar joints; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "olive-gray fine sedimentary horizontal bedding inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains olive-gray fine sedimentary horizontal bedding and mortar.",
+        "context_view": "3x3 actual tiled inspection: staggered joints meet at tile boundaries.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/slate.png": {
+      "sha256": "7fa59668fdab575e2d7df3b96f06d6a1f8d9849ae2bdbafef89acf7933ad45e9",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Natural blue-gray irregular thin cleavage planes; vanilla stone uses less directional medium gray aggregates.",
+      "findings": {
+        "silhouette": "Full surface, blue-gray irregular thin cleavage planes, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Coherent blue-gray irregular thin cleavage planes aggregates rather than isolated speckles.",
+        "micro_contrast": "Five adjacent mineral shades give distinct local boundaries in blue-gray irregular thin cleavage planes.",
+        "light_and_volume": "Lighter mineral planes abut localized darker cleavages or recessed grains.",
+        "material_continuity": "blue-gray irregular thin cleavage planes palette stays continuous across the interior; rock bands or aggregate groups retain their own palette.",
+        "edge_variation": "Natural edges follow unequal local planes and broken mineral bands.",
+        "variant_identity": "Raw face has no geometric construction seam.",
+        "vanilla_comparison": "Natural blue-gray irregular thin cleavage planes; vanilla stone uses less directional medium gray aggregates.",
+        "aggregate_structure": "blue-gray irregular thin cleavage planes; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview has repeated blue-gray irregular thin cleavage planes; raw directional bedding may show a repeat, but there is no added masonry frame."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "blue-gray irregular thin cleavage planes; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Natural blue-gray irregular thin cleavage planes; vanilla stone uses less directional medium gray aggregates. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains blue-gray irregular thin cleavage planes and geological grain.",
+        "context_view": "3x3 actual tiled inspection: repeated geological bands or aggregate patterns remain visible without artificial masonry borders.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/polished_slate.png": {
+      "sha256": "e081b343c6ca5e2814812867dfa9a2489aeebac7e88a0c481ff2f3bdfd240858",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        },
+        {
+          "id": "minecraft:block/polished_andesite",
+          "minecraft": "1.21.1",
+          "sha256": "ffe83daad907f1240fa6f872c5a89aed1d17c5a5c65815e0cdc5cc896069ca16"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: blue-gray irregular thin cleavage planes is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+      "findings": {
+        "silhouette": "Full surface, single squared tile with a top/left light bevel and darker lower/right edge, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Broad quiet blue-gray irregular thin cleavage planes face with small retained mineral planes inside the bevel.",
+        "micro_contrast": "Interior contrast is reduced to adjacent midtones; cut edge remains visible.",
+        "light_and_volume": "A one-texel bright upper and left bevel meets a shaded bottom/right perimeter.",
+        "material_continuity": "blue-gray irregular thin cleavage planes palette stays continuous across the interior; bevel belongs to the same stone.",
+        "edge_variation": "Straight bevel edges are intentional cut geometry; interior retains small irregular planes.",
+        "variant_identity": "Single bevel frame distinguishes polished surface from jointed masonry.",
+        "vanilla_comparison": "blue-gray irregular thin cleavage planes is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+        "aggregate_structure": "single squared tile with a top/left light bevel and darker lower/right edge; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 tile forms square cut stones with deliberate perimeter joins."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "single squared tile with a top/left light bevel and darker lower/right edge; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "blue-gray irregular thin cleavage planes is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains blue-gray irregular thin cleavage planes and cut edge.",
+        "context_view": "3x3 actual tiled inspection: deliberate tile perimeter reads as worked stone.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/slate_bricks.png": {
+      "sha256": "373f4a80f58e86ee0f514df5fa8db29fa99e64b35086eca06b1a3afd21afa1c3",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        },
+        {
+          "id": "minecraft:block/bricks",
+          "minecraft": "1.21.1",
+          "sha256": "33f9411f1cb233a2020df0cf3fda32c0f67a4b0fac3751bde2ba6f2fee81b169"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: blue-gray irregular thin cleavage planes inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+      "findings": {
+        "silhouette": "Full surface, offset 8x8 running-bond stone units with one-pixel mortar joints, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Distinct staggered mortar courses surround the blue-gray irregular thin cleavage planes faces.",
+        "micro_contrast": "Dark mortar and modest stone-edge highlights distinguish blocks from interior grain.",
+        "light_and_volume": "Light upper and left planes and darker lower/right edges describe carved rectangular faces.",
+        "material_continuity": "blue-gray irregular thin cleavage planes palette stays continuous across the interior; mortar alone interrupts the material.",
+        "edge_variation": "Offset second course breaks vertical mortar continuity; repeated straight seams are intentional masonry.",
+        "variant_identity": "Worked masonry has a staggered joint pattern distinct from raw or polished rock.",
+        "vanilla_comparison": "blue-gray irregular thin cleavage planes inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+        "aggregate_structure": "offset 8x8 running-bond stone units with one-pixel mortar joints; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 tile displays aligned offset masonry courses; regular seams are construction cues."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "offset 8x8 running-bond stone units with one-pixel mortar joints; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "blue-gray irregular thin cleavage planes inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains blue-gray irregular thin cleavage planes and mortar.",
+        "context_view": "3x3 actual tiled inspection: staggered joints meet at tile boundaries.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/gneiss.png": {
+      "sha256": "1aa19f1311ced2a2c2214cbf1bba544091fc7f7d455e397e4d7126792f491d67",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: Natural contrasting cream and steel-gray folded mineral bands; vanilla stone uses less directional medium gray aggregates.",
+      "findings": {
+        "silhouette": "Full surface, contrasting cream and steel-gray folded mineral bands, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Coherent contrasting cream and steel-gray folded mineral bands aggregates rather than isolated speckles.",
+        "micro_contrast": "Five adjacent mineral shades give distinct local boundaries in contrasting cream and steel-gray folded mineral bands.",
+        "light_and_volume": "Lighter mineral planes abut localized darker cleavages or recessed grains.",
+        "material_continuity": "contrasting cream and steel-gray folded mineral bands palette stays continuous across the interior; rock bands or aggregate groups retain their own palette.",
+        "edge_variation": "Natural edges follow unequal local planes and broken mineral bands.",
+        "variant_identity": "Raw face has no geometric construction seam.",
+        "vanilla_comparison": "Natural contrasting cream and steel-gray folded mineral bands; vanilla stone uses less directional medium gray aggregates.",
+        "aggregate_structure": "contrasting cream and steel-gray folded mineral bands; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 preview has repeated contrasting cream and steel-gray folded mineral bands; raw directional bedding may show a repeat, but there is no added masonry frame."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "contrasting cream and steel-gray folded mineral bands; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "Natural contrasting cream and steel-gray folded mineral bands; vanilla stone uses less directional medium gray aggregates. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains contrasting cream and steel-gray folded mineral bands and geological grain.",
+        "context_view": "3x3 actual tiled inspection: repeated geological bands or aggregate patterns remain visible without artificial masonry borders.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/polished_gneiss.png": {
+      "sha256": "482cd151b7c5aae6067e7de8d8cb4c6f897e4d3a88d22935c0ee609d10fc0aca",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        },
+        {
+          "id": "minecraft:block/polished_andesite",
+          "minecraft": "1.21.1",
+          "sha256": "ffe83daad907f1240fa6f872c5a89aed1d17c5a5c65815e0cdc5cc896069ca16"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: contrasting cream and steel-gray folded mineral bands is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+      "findings": {
+        "silhouette": "Full surface, single squared tile with a top/left light bevel and darker lower/right edge, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Broad quiet contrasting cream and steel-gray folded mineral bands face with small retained mineral planes inside the bevel.",
+        "micro_contrast": "Interior contrast is reduced to adjacent midtones; cut edge remains visible.",
+        "light_and_volume": "A one-texel bright upper and left bevel meets a shaded bottom/right perimeter.",
+        "material_continuity": "contrasting cream and steel-gray folded mineral bands palette stays continuous across the interior; bevel belongs to the same stone.",
+        "edge_variation": "Straight bevel edges are intentional cut geometry; interior retains small irregular planes.",
+        "variant_identity": "Single bevel frame distinguishes polished surface from jointed masonry.",
+        "vanilla_comparison": "contrasting cream and steel-gray folded mineral bands is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+        "aggregate_structure": "single squared tile with a top/left light bevel and darker lower/right edge; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 tile forms square cut stones with deliberate perimeter joins."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "single squared tile with a top/left light bevel and darker lower/right edge; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "contrasting cream and steel-gray folded mineral bands is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains contrasting cream and steel-gray folded mineral bands and cut edge.",
+        "context_view": "3x3 actual tiled inspection: deliberate tile perimeter reads as worked stone.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/gneiss_bricks.png": {
+      "sha256": "ea9a135b82b5c922a29c4526b5bdcda0687e2042c239bd82773613843a38bd07",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        },
+        {
+          "id": "minecraft:block/bricks",
+          "minecraft": "1.21.1",
+          "sha256": "33f9411f1cb233a2020df0cf3fda32c0f67a4b0fac3751bde2ba6f2fee81b169"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: contrasting cream and steel-gray folded mineral bands inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+      "findings": {
+        "silhouette": "Full surface, offset 8x8 running-bond stone units with one-pixel mortar joints, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Distinct staggered mortar courses surround the contrasting cream and steel-gray folded mineral bands faces.",
+        "micro_contrast": "Dark mortar and modest stone-edge highlights distinguish blocks from interior grain.",
+        "light_and_volume": "Light upper and left planes and darker lower/right edges describe carved rectangular faces.",
+        "material_continuity": "contrasting cream and steel-gray folded mineral bands palette stays continuous across the interior; mortar alone interrupts the material.",
+        "edge_variation": "Offset second course breaks vertical mortar continuity; repeated straight seams are intentional masonry.",
+        "variant_identity": "Worked masonry has a staggered joint pattern distinct from raw or polished rock.",
+        "vanilla_comparison": "contrasting cream and steel-gray folded mineral bands inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+        "aggregate_structure": "offset 8x8 running-bond stone units with one-pixel mortar joints; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 tile displays aligned offset masonry courses; regular seams are construction cues."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "offset 8x8 running-bond stone units with one-pixel mortar joints; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "contrasting cream and steel-gray folded mineral bands inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains contrasting cream and steel-gray folded mineral bands and mortar.",
+        "context_view": "3x3 actual tiled inspection: staggered joints meet at tile boundaries.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/polished_volcanic_tuff.png": {
+      "sha256": "936f3e1c6223e59354edfe0ea079d6f77b9ca4944747725a9979bc320477b7db",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        },
+        {
+          "id": "minecraft:block/polished_andesite",
+          "minecraft": "1.21.1",
+          "sha256": "ffe83daad907f1240fa6f872c5a89aed1d17c5a5c65815e0cdc5cc896069ca16"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: muted gray-brown compressed volcanic grains is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+      "findings": {
+        "silhouette": "Full surface, single squared tile with a top/left light bevel and darker lower/right edge, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Broad quiet muted gray-brown compressed volcanic grains face with small retained mineral planes inside the bevel.",
+        "micro_contrast": "Interior contrast is reduced to adjacent midtones; cut edge remains visible.",
+        "light_and_volume": "A one-texel bright upper and left bevel meets a shaded bottom/right perimeter.",
+        "material_continuity": "muted gray-brown compressed volcanic grains palette stays continuous across the interior; bevel belongs to the same stone.",
+        "edge_variation": "Straight bevel edges are intentional cut geometry; interior retains small irregular planes.",
+        "variant_identity": "Single bevel frame distinguishes polished surface from jointed masonry.",
+        "vanilla_comparison": "muted gray-brown compressed volcanic grains is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains.",
+        "aggregate_structure": "single squared tile with a top/left light bevel and darker lower/right edge; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 tile forms square cut stones with deliberate perimeter joins."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "single squared tile with a top/left light bevel and darker lower/right edge; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "muted gray-brown compressed volcanic grains is subdued within a square cut face, flatter than natural rock; vanilla polished andesite has a similar cut-edge frame and more irregular gray grains. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains muted gray-brown compressed volcanic grains and cut edge.",
+        "context_view": "3x3 actual tiled inspection: deliberate tile perimeter reads as worked stone.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/volcanic_tuff_bricks.png": {
+      "sha256": "b2275e3d3bb2b93b02a5f22b44fc06acc06d6ac9f0bae32856cae2666a68334a",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        },
+        {
+          "id": "minecraft:block/bricks",
+          "minecraft": "1.21.1",
+          "sha256": "33f9411f1cb233a2020df0cf3fda32c0f67a4b0fac3751bde2ba6f2fee81b169"
+        }
+      ],
+      "comparison": "Actual native, enlarged and tiled inspection: muted gray-brown compressed volcanic grains inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+      "findings": {
+        "silhouette": "Full surface, offset 8x8 running-bond stone units with one-pixel mortar joints, no transparent holes; model shape remains separate.",
+        "cluster_structure": "Distinct staggered mortar courses surround the muted gray-brown compressed volcanic grains faces.",
+        "micro_contrast": "Dark mortar and modest stone-edge highlights distinguish blocks from interior grain.",
+        "light_and_volume": "Light upper and left planes and darker lower/right edges describe carved rectangular faces.",
+        "material_continuity": "muted gray-brown compressed volcanic grains palette stays continuous across the interior; mortar alone interrupts the material.",
+        "edge_variation": "Offset second course breaks vertical mortar continuity; repeated straight seams are intentional masonry.",
+        "variant_identity": "Worked masonry has a staggered joint pattern distinct from raw or polished rock.",
+        "vanilla_comparison": "muted gray-brown compressed volcanic grains inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast.",
+        "aggregate_structure": "offset 8x8 running-bond stone units with one-pixel mortar joints; grain scale is consistent with the material and the 16-pixel block.",
+        "tile_rhythm": "3x3 tile displays aligned offset masonry courses; regular seams are construction cues."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "offset 8x8 running-bond stone units with one-pixel mortar joints; related adjacent material shades instead of unrelated random colors.",
+        "reference_limit": "muted gray-brown compressed volcanic grains inside staggered stone units; vanilla clay brick has shorter rectangular units and a warm mortar contrast. Additional processed comparator is inspected where applicable; no vanilla PNG pixels shipped.",
+        "native_view": "16px view retains muted gray-brown compressed volcanic grains and mortar.",
+        "context_view": "3x3 actual tiled inspection: staggered joints meet at tile boundaries.",
+        "context_type": "tile_3x3"
+      }
     }
   }
 }

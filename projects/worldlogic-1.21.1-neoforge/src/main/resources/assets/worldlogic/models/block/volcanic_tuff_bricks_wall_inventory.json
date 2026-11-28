@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "worldlogic:block/volcanic_tuff_bricks"
+  }
+}
