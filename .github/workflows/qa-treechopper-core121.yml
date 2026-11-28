@@ -1,0 +1,71 @@
+name: TreeChopper exact Core 1.2.1 diagnostic
+on:
+  pull_request:
+    paths:
+      - 'projects/wl-treechopper-1.21.1-neoforge/**'
+      - 'tools/qa/scenarios/wl-treechopper-core121.json'
+      - '.github/workflows/qa-treechopper-core121.yml'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  exact-candidate:
+    if: github.event.pull_request.head.ref == 'worldlogic-treechopper-0.5.0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+          cache-read-only: true
+      - name: Download exact Core candidate from run 46103365227
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46103365227
+          name: qa-candidate-NOT-RELEASE-0-1
+          path: exact-core
+      - name: Verify Core bytes, compile production TreeChopper
+        run: |
+          set -euo pipefail
+          echo '33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56  exact-core/worldlogic-neoforge-mc1.21.1-1.2.1.jar' | sha256sum -c -
+          cd projects/wl-treechopper-1.21.1-neoforge
+          gradle --no-daemon --stacktrace clean build
+      - name: Run existing production server QA against both exact JARs
+        run: |
+          python3 - <<'PY'
+          import json, pathlib
+          from tools.qa.server import run
+          root=pathlib.Path('projects/wl-treechopper-1.21.1-neoforge')
+          p=json.loads((root/'build-profile.json').read_text())
+          jar=root/'build/libs'/p['jar_glob']
+          core=pathlib.Path('exact-core/worldlogic-neoforge-mc1.21.1-1.2.1.jar')
+          out=pathlib.Path('treechopper-core121-diagnostic')
+          out.mkdir()
+          report={'kind':'exact-candidate-compatibility','eligible':False,'status':'failed','qa_level':0,'checks':[],'core_run':46103365227,'core_artifact':15246915092}
+          try:
+              run(p,p['qa'],jar,out/'runtime',report,extra_jars=[core],scenarios=[('treechopper-core121','tools/qa/scenarios/wl-treechopper-core121.json')])
+              report['status']='passed'
+          except Exception as e:
+              report['error']=str(e)
+              raise
+          finally:
+              (out/'report.json').write_text(json.dumps(report,indent=2))
+          PY
+      - name: Retain diagnostic evidence only (not release eligible)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: treechopper-core121-diagnostic-NOT-RELEASE
+          path: |
+            treechopper-core121-diagnostic/report.json
+            treechopper-core121-diagnostic/runtime/logs/
+            projects/wl-treechopper-1.21.1-neoforge/build/libs/wl_treechopper-neoforge-mc1.21.1-0.6.4.jar
+          if-no-files-found: warn
