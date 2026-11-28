@@ -55,7 +55,7 @@ public final class ThermalBridge {
         recover(b,s,healTissue,1,1);
     }
     public static void recover(BodyState b,ThermalCondition s,boolean healTissue,float tissue,float bone){
-        if(b.hasAnyBleeding())return;
+        if(b.hasAnyBleeding()||b.organs().unconscious()||b.vitalDestroyed()||b.fatalBloodLoss())return;
         float perfusion=b.organs().repairFactor(b.bloodFraction());
         int ticks=Math.round(s.recoveryTicks(20)*bone*perfusion);
         if(ticks>0)b.recoverBones(ticks);

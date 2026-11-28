@@ -95,5 +95,23 @@ public final class OrganChecks {
         var clinical=TraumaApi.physiology(p).orElseThrow();
         require(clinical.circulationSupport()==stressed.circulation()&&clinical.shockLoad()==o.shockLoad()&&!clinical.unconscious(),"public clinical read only");
         b.reset();require(!o.unconscious()&&o.shockLoad()==0&&o.circulationSupport()==1,"reset clears systemic state");
+        b.reset();b.impact(BodyPart.CHEST,70,WoundKind.PUNCTURE,OrganState.Organ.LEFT_LUNG);
+        require(o.ventilation()>.5f&&o.ventilation()<1&&o.integrity(OrganState.Organ.RIGHT_LUNG)==1,"one lung partially compensates without repairing damaged lung");
+        b.reset();for(int i=0;i<35;i++)b.physiologySecond(false,false,1);
+        require(o.oxygenDebt()>=18&&o.integrity(O)>0,"hypoxic injury fixture");
+        boolean reached=false;
+        for(int i=0;i<30;i++){
+            float brain=o.integrity(O);
+            b.physiologySecond(true,false,1);
+            if(o.delivery(b.bloodFraction())>=.45f){reached=true;require(o.integrity(O)>=brain,"no further hypoxic damage once delivery restored");}
+        }
+        require(reached,"oxygen delivery restored");
+        b.reset();b.damage(BodyPart.LEFT_ARM,20);b.setFractured(BodyPart.LEFT_ARM,true);b.stabilize(BodyPart.LEFT_ARM,4800);
+        for(int i=0;i<20;i++)b.physiologySecond(false,false,1);
+        float hp=b.health(BodyPart.LEFT_ARM);
+        require(o.unconscious(),"unconscious recovery fixture");
+        dev.minemods.traumacraft.integration.ThermalBridge.recover(b,dev.minemods.traumacraft.integration.ThermalCondition.NONE,true,1,1);
+        require(b.health(BodyPart.LEFT_ARM)==hp,"unconscious natural tissue repair blocked");
+        b.reset();
     }
 }

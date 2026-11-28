@@ -171,12 +171,13 @@ public final class TraumaEvents {
         var support=dev.minemods.traumacraft.integration.OrganSupport.read(p,thermal,nutrition);
         b.physiologySecond(p.getAirSupply()>0,resting,support.repair(),support.circulation());
         if(b.organs().unconscious()){TreatmentManager.cancel(p);ClimbManager.cancel(p);}
-        if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
+        if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p,b.fatalBloodLoss()?DeathReport.Cause.INTERNAL_BLEEDING:DeathReport.Cause.HYPOXIA);return;}
         WaterIllness.tick(p);
         if(LegacyFrostExposure.tick(p,b)){
             TreatmentManager.cancel(p);
             ClimbManager.cancel(p);
         }
+        if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p,null);return;}
         float before=totalHp(b);
         if(resting) {
             ThermalBridge.recover(b,thermal,p.tickCount%100==0,nutrition.tissue(),nutrition.bone());
@@ -185,7 +186,7 @@ public final class TraumaEvents {
         MetabolismBridge.record(p,Math.max(0,totalHp(b)-before));
         if(p.tickCount%40==0 && b.hasBleeding()) {
             b.bleedStep();
-            if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
+            if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p,DeathReport.Cause.EXTERNAL_BLEEDING);return;}
         }
         if(BodyStates.flush(p) || p.tickCount%40==0) ModNetwork.sync(p);
     }

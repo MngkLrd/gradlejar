@@ -87,7 +87,7 @@ public final class TraumaDeathScreen extends Screen {
         if(report.cause()==Cause.HYPOXIA)reason.append(" | ").append(Component.translatable("screen.traumacraft.oxygen",Math.round(report.body().clinical().oxygen()*100)+"%"));
         label(g,reason,x+7,y+16,l.width()-14,FATAL);
         var trigger=Component.translatable("death.traumacraft.trigger",origin(report.origin()));
-        var critical=criticalNames();if(!critical.getString().isEmpty())trigger.append(" | ").append(critical);
+        var criticalLabel=criticalNames();if(!criticalLabel.getString().isEmpty())trigger.append(" | ").append(criticalLabel);
         label(g,trigger,x+7,y+27,l.width()-14,TEXT);
         g.fill(x+5,y+37,r-5,y+38,0xFF888888);
         g.fill(l.organX()-7,l.rowTop(),l.organX()-6,l.footerY()-2,0xFF999999);

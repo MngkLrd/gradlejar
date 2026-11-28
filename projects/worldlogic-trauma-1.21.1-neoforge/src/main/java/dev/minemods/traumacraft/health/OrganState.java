@@ -29,7 +29,7 @@ public final class OrganState {
     public boolean unconscious(){return unconscious;}
     public int systemicShock(){return shockLoad>=.78f?3:shockLoad>=.48f?2:shockLoad>=.20f?1:0;}
     public float circulationSupport(){return circulationSupport;}
-    public float ventilation(){return (integrity(Organ.LEFT_LUNG)+integrity(Organ.RIGHT_LUNG))*.5f;}
+    public float ventilation(){float l=integrity(Organ.LEFT_LUNG),r=integrity(Organ.RIGHT_LUNG);return clamp((l+r)*.5f+.18f*Math.abs(l-r),0,1);}
     public float renalFunction(){return (integrity(Organ.LEFT_KIDNEY)+integrity(Organ.RIGHT_KIDNEY))*.5f;}
     public float digestiveFunction(){return (integrity(Organ.STOMACH)+integrity(Organ.INTESTINES))*.5f;}
     public float perfusion(float bloodFraction){
@@ -93,14 +93,14 @@ public final class OrganState {
         if(low){lowSeconds=Math.min(30,lowSeconds+1);stableSeconds=0;}else{lowSeconds=0;if(delivered>.45f&&integrity(Organ.BRAIN)>.28f&&bloodFraction>.35f)stableSeconds=Math.min(30,stableSeconds+1);else stableSeconds=0;}
         if(lowSeconds>=3)unconscious=true;
         if(unconscious&&stableSeconds>=6)unconscious=false;
-        if(deficit>=18)injure(Organ.BRAIN,.008f+(.45f-Math.min(.45f,delivered))*.025f,0);
+        if(deficit>=18&&delivered<.45f)injure(Organ.BRAIN,.008f+(.45f-delivered)*.025f,0);
         // Only low-rate internal leaks can close on their own under safe conditions.
-        if(resting&&delivered>=.50f){
+        if(resting&&delivered>=.50f&&!unconscious){
             for(int i=0;i<bleeding.length;i++)if(bleeding[i]>0&&bleeding[i]<=2.5f)bleeding[i]=Math.max(0,bleeding[i]-.025f);
         }
-        if(resting&&delivered>=.55f&&!hasInternalBleeding()&&deficit<1){
+        if(resting&&delivered>=.55f&&!unconscious&&!hasInternalBleeding()&&deficit<1){
             float rate=.0006f*clamp(repair,0,1)*repairFactor(bloodFraction);
-            for(int i=0;i<integrity.length;i++)if(integrity[i]>0&&integrity[i]<1)integrity[i]=Math.min(1,integrity[i]+rate);
+            for(int i=0;i<integrity.length;i++)if(integrity[i]>0&&integrity[i]<1)integrity[i]=Math.min(1,integrity[i]+rate*(.35f+.65f*integrity[i]));
         }
         return loss;
     }

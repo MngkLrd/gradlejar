@@ -1017,5 +1017,12 @@
     "static_gui": "checkHudStatusLayout: 30 report layouts and native fallback bounds",
     "client": "NOT_RUN: real vanilla death screen transition, report hover, respawn/hardcore, instant respawn gamerule and live network ordering; custom protocol unsupported by bot",
     "remaining": "No full damage history, unknown native source uses original death message; no arbitrary fatal organ inference. No changes to organs/treatments/damage balance."
+  },
+  "version_0_8_7": {
+    "version": "0.8.7",
+    "scope": "Correct 0.8.6 compilation; distinguish terminal phase; prevent residual hypoxic damage with restored delivery; paired lung compensation; slower severe organ repair; no passive tissue/bone repair while unconscious.",
+    "server": "traumaqa organs, deathreport; existing regression retained",
+    "client": "NOT_RUN",
+    "balance": "Initial game-scale calibration; no real client playtest or full pack tuning."
   }
 }

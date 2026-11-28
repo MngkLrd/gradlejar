@@ -919,6 +919,20 @@
           "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
         }
       ]
+    },
+    {
+      "id": "tr-physiology-balance",
+      "kind": "mechanic",
+      "subject": "Partial contralateral lung compensation, hypoxic injury stops once oxygen delivery restored, unconscious tissue recovery guard and graded organ healing",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
     }
   ]
 }
