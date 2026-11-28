@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:subtropical_rainforest",
+    "worldlogic:tropical_monsoon_forest",
+    "worldlogic:equatorial_rainforest",
+    "worldlogic:montane_cloud_forest"
+  ]
+}

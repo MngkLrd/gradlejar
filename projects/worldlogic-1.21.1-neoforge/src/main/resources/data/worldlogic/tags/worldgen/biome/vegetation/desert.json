@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:temperate_desert",
+    "worldlogic:subtropical_desert",
+    "worldlogic:hot_desert"
+  ]
+}

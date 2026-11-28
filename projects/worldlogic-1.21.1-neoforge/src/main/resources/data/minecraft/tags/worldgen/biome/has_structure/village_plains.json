@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:cold_steppe",
+    "worldlogic:temperate_steppe",
+    "worldlogic:prairie",
+    "worldlogic:subtropical_grassland"
+  ]
+}

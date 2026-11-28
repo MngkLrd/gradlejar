@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:forest_tundra",
+    "worldlogic:continental_taiga",
+    "worldlogic:humid_taiga",
+    "worldlogic:montane_conifer_forest"
+  ]
+}
