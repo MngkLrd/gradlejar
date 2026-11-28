@@ -42,7 +42,7 @@ public final class GeologyChecks {
    }
    if(chamber==null&&d.province()==GeologyModel.Province.CARBONATE)chamber=d.caves().get(2);
   }
-  require(types.size()==8&&provinces.size()==5&&chamber!=null&&deposit!=null,"all mineral and province families");
+  require(types.size()==GeologyModel.Ore.values().length&&provinces.size()==5&&chamber!=null&&deposit!=null,"all mineral and province families");
   require(!GeologyModel.district(42,0,0).equals(GeologyModel.district(43,0,0)),"seed affects geology");
   var fixture=fixture(l,bounds,(int)Math.floor(chamber.x()),(int)Math.floor(chamber.z()));
   GeologyGeneration.carve(42,fixture);
@@ -65,7 +65,7 @@ public final class GeologyChecks {
   var deposits=new java.util.EnumMap<GeologyModel.Ore,GeologyModel.Body>(GeologyModel.Ore.class);
   for(int gx=-12;gx<=12;gx++)for(int gz=-12;gz<=12;gz++)
    for(var o:GeologyModel.district(42,gx,gz).ores())deposits.putIfAbsent(o.ore(),o);
-  require(deposits.size()==8,"all eight ore families present");
+  require(deposits.size()==GeologyModel.Ore.values().length,"all original and new mineral families present");
   var counts=new java.util.EnumMap<GeologyModel.Ore,Integer>(GeologyModel.Ore.class);
   for(var entry:deposits.entrySet()){
    var ore=entry.getKey();var body=entry.getValue();

@@ -11,6 +11,8 @@ public final class WorldLogic {
   GroundMaterials.register();
   SoilFarmland.register();
   RockContent.register();
+  MineralContent.register();
+  modBus.addListener(MineralContent::creative);
   modBus.addListener(SoilFarmland::creative);
   modBus.addListener(RockContent::creative);
   Content.BLOCKS.register(modBus);

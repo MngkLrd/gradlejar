@@ -8,7 +8,9 @@ public final class GeologyModel {
  private GeologyModel(){}
  public static final int DISTRICT=192;
  public enum Province { SEDIMENTARY, CARBONATE, INTRUSIVE, METAMORPHIC, CRATON }
- public enum Ore { COAL, IRON, COPPER, GOLD, DIAMOND, EMERALD, LAPIS, REDSTONE }
+ public enum Ore { COAL, IRON, COPPER, GOLD, DIAMOND, EMERALD, LAPIS, REDSTONE, HEMATITE, MAGNETITE, CASSITERITE, GALENA, SPHALERITE, PYRITE, MALACHITE, BAUXITE, FLUORITE, CINNABAR;
+  public boolean additional(){return ordinal()>REDSTONE.ordinal();}
+ }
  public record Body(Ore ore,double x,double y,double z,double along,double across,double vertical,double angle,double dip,double grade,long salt){
   public double score(int px,int py,int pz){
    double dx=px-x,dz=pz-z,a=dx*Math.cos(angle)+dz*Math.sin(angle),b=-dx*Math.sin(angle)+dz*Math.cos(angle);
@@ -129,7 +131,20 @@ public final class GeologyModel {
   }else if(p==Province.METAMORPHIC||p==Province.INTRUSIVE){
    caves.add(new Cave(x,r.nextDouble(-82,-15),z,64,3,13,a,.24,-100,r.nextDouble()<.02));
   }else caves.add(new Cave(x,r.nextDouble(-120,-40),z,42,3,3,a,.12,-160,false));
+  // Independent random stream after existing ores and caves.
+  var extra=new SplittableRandom(hash(seed^0x56b73d9a41c2efL,gx,19,gz));
+  switch(p){
+   case SEDIMENTARY -> {extra(ores,extra,Ore.HEMATITE,x,z,-60,18,24,12,3,.10,.48);extra(ores,extra,Ore.BAUXITE,x,z,30,57,20,12,2,.03,.43);}
+   case CARBONATE -> {extra(ores,extra,Ore.GALENA,x,z,-75,18,26,4,6,.22,.46);extra(ores,extra,Ore.FLUORITE,x,z,-55,35,20,5,5,.25,.38);extra(ores,extra,Ore.SPHALERITE,x,z,-90,12,17,5,6,.15,.37);}
+   case INTRUSIVE -> {extra(ores,extra,Ore.CASSITERITE,x,z,-110,10,24,4,8,.35,.36);extra(ores,extra,Ore.MAGNETITE,x,z,-125,-15,20,10,8,.10,.46);extra(ores,extra,Ore.CINNABAR,x,z,-30,43,14,3,5,.30,.32);extra(ores,extra,Ore.MALACHITE,x,z,22,57,14,5,3,.12,.43);}
+   case METAMORPHIC -> {extra(ores,extra,Ore.PYRITE,x,z,-95,30,23,6,6,.25,.46);extra(ores,extra,Ore.SPHALERITE,x,z,-90,0,20,4,6,.35,.36);extra(ores,extra,Ore.HEMATITE,x,z,-125,-20,22,8,4,.18,.4);}
+   case CRATON -> {extra(ores,extra,Ore.MAGNETITE,x,z,-175,-60,24,10,4,.08,.42);extra(ores,extra,Ore.HEMATITE,x,z,-150,-50,21,11,4,.12,.44);}
+  }
   return new District(p,List.copyOf(ores),List.copyOf(caves));
+ }
+ private static void extra(List<Body> ores,SplittableRandom r,Ore ore,double x,double z,double ymin,double ymax,double a,double b,double v,double dip,double grade){
+  if(r.nextDouble()>.82)return;
+  ores.add(body(r,ore,x+r.nextDouble(-24,24),r.nextDouble(ymin,ymax),z+r.nextDouble(-24,24),a,b,v,r.nextDouble(2*Math.PI),dip,grade));
  }
  public static List<District> around(long seed,int x,int z){
   int gx=Math.floorDiv(x,DISTRICT),gz=Math.floorDiv(z,DISTRICT);var out=new ArrayList<District>(9);
