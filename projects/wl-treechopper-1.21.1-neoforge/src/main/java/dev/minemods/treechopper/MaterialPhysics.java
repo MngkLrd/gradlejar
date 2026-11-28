@@ -18,6 +18,8 @@ final class MaterialPhysics {
     private static boolean initialized;
     private static Core core;
     private static Wood wood;
+    private static CanonicalWood canonical;
+    private record CanonicalWood(Method properties,Method atMoisture,Method green,Method janka,Method density){}
     private record Core(Method block,Method placed,Method evaluate,Constructor<?> state,Method reference,
                         Method components,Method evidence,Method volume,Method materialId,
                         Method mass,Method hardness){}
@@ -38,15 +40,21 @@ final class MaterialPhysics {
         if(ModList.get().isLoaded("worldlogic"))try{
             Class<?> api=Class.forName("dev.minemods.worldlogic.api.WorldLogicApi");
             Class<?> p=Class.forName("dev.minemods.worldlogic.api.PhysicalMaterials");
-            if(api.getField("API_VERSION").getInt(null)!=1||api.getField("API_REVISION").getInt(null)<14
-                ||p.getField("REVISION").getInt(null)!=1)throw new IllegalStateException("Expected Core API 1 revision >=14 / PhysicalMaterials revision 1");
+            int revision=p.getField("REVISION").getInt(null), apiRevision=api.getField("API_REVISION").getInt(null);
+            if(api.getField("API_VERSION").getInt(null)!=1||apiRevision<14||revision<1||revision>2
+                ||(revision==2&&apiRevision<15))throw new IllegalStateException("Expected Core API 1 rev14+/PhysicalMaterials rev1 or API rev15+/PhysicalMaterials rev2");
             Class<?> object=Class.forName(p.getName()+"$ObjectProfile"),state=Class.forName(p.getName()+"$State");
             Class<?> component=Class.forName(p.getName()+"$Component"),result=Class.forName(p.getName()+"$Result");
             core=new Core(p.getMethod("block",BlockState.class),p.getMethod("placed",ServerLevel.class,BlockPos.class),
                 p.getMethod("evaluate",object,state),state.getConstructor(double.class,double.class),state.getMethod("reference"),
                 object.getMethod("components"),object.getMethod("evidence"),object.getMethod("volumeM3"),component.getMethod("materialId"),
                 result.getMethod("massKg"),p.getMethod("woodHardnessKN",ResourceLocation.class));
-        }catch(ReflectiveOperationException|LinkageError|RuntimeException e){warn("Core PhysicalMaterials",e);}
+            if(revision==2){
+                Class<?> properties=Class.forName(p.getName()+"$WoodProperties"), sample=Class.forName(p.getName()+"$WoodSample");
+                canonical=new CanonicalWood(p.getMethod("woodProperties",ResourceLocation.class),p.getMethod("woodAtMoisture",ResourceLocation.class,double.class),
+                    properties.getMethod("greenMoistureKgKg"),sample.getMethod("jankaKN"),sample.getMethod("densityKgM3"));
+            }
+        }catch(ReflectiveOperationException|LinkageError|RuntimeException e){core=null;canonical=null;warn("Core PhysicalMaterials",e);}
         if(ModList.get().isLoaded("worldlogicterrain"))try{
             Class<?> p=Class.forName("dev.minemods.worldlogicterrain.api.WoodPhysicsApi");
             if(p.getField("API_VERSION").getInt(null)!=1)throw new IllegalStateException("Expected WoodPhysicsApi v1");
@@ -58,6 +66,7 @@ final class MaterialPhysics {
     }
     static boolean coreAvailable(){init();return core!=null;}
     static boolean woodAvailable(){init();return wood!=null;}
+    static boolean canonicalAvailable(){init();return canonical!=null;}
     private static Object woodSample(ServerLevel l,BlockPos pos,BlockState original,double saved) throws ReflectiveOperationException{
         if(wood==null)return null;
         if(Double.isFinite(saved)){
@@ -78,7 +87,7 @@ final class MaterialPhysics {
         Object sample=null;
         if(log&&wood!=null)try{
             sample=woodSample(l,pos,original,saved);
-            if(sample!=null){moisture=number(wood.moisture.invoke(sample));hardness=number(wood.hardness.invoke(sample));}
+            if(sample!=null){moisture=number(wood.moisture.invoke(sample));if(canonical==null)hardness=number(wood.hardness.invoke(sample));}
         }catch(ReflectiveOperationException|LinkageError|RuntimeException e){warn("WoodPhysicsApi sample",e);}
         String source="unknown";
         if(core!=null)try{
@@ -90,6 +99,20 @@ final class MaterialPhysics {
             // Exact registrations always win. A generic tag estimate is not species-specific.
             boolean generic=material==null||material.getPath().equals("generic_wood");
             boolean specific=!evidence.equals("UNKNOWN")&&(evidence.equals("EXPLICIT")||!generic||!log);
+            if(log&&canonical!=null){
+                // RC54 owns all physical wood properties. Terrarian supplies local moisture only.
+                // Unregistered custom wood remains unknown rather than using a conflicting species table.
+                if(material==null||generic||evidence.equals("UNKNOWN"))return new Data(v,Double.NaN,Double.NaN,moisture,"unknown");
+                var properties=(Optional<?>)canonical.properties.invoke(null,material);
+                if(properties.isEmpty())return new Data(v,Double.NaN,Double.NaN,moisture,"unknown");
+                if(!Double.isFinite(moisture))moisture=number(canonical.green.invoke(properties.get()))*100d;
+                var effective=(Optional<?>)canonical.atMoisture.invoke(null,material,moisture/100d);
+                if(effective.isEmpty())return new Data(v,Double.NaN,Double.NaN,moisture,"unknown");
+                double density=number(canonical.density.invoke(effective.get()));
+                double janka=number(canonical.janka.invoke(effective.get()));
+                // Volume is Core occupied geometry; no local moisture/density response.
+                return new Data(v,positive(v)&&positive(density)?v*density:Double.NaN,positive(janka)?janka*1000d:Double.NaN,moisture,"core");
+            }
             if(log&&!positive(hardness)&&material!=null){
                 OptionalDouble h=(OptionalDouble)core.hardness.invoke(null,material);
                 if(h.isPresent())hardness=h.getAsDouble()*1000; // kN -> N
@@ -108,7 +131,7 @@ final class MaterialPhysics {
         }catch(ReflectiveOperationException|LinkageError|RuntimeException e){warn("PhysicalMaterials read",e);}
         // Core may only know generic_wood/unknown for a new species. Terrarian owns that profile.
         // Full uncut log geometry is one nominal cubic metre if Core has not mapped it yet.
-        if(log&&sample!=null&&!positive(mass))try{
+        if(log&&canonical==null&&sample!=null&&!positive(mass))try{
             if(!positive(v))v=1d;
             mass=number(wood.mass.invoke(sample,v));if(positive(mass))source="terrarian";
         }catch(ReflectiveOperationException|LinkageError|RuntimeException e){warn("WoodPhysicsApi massKg",e);}

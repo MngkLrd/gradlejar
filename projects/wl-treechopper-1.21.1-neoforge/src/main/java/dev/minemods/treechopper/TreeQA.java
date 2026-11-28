@@ -154,13 +154,33 @@ final class TreeQA {
             var dry=MaterialPhysics.read(l,p,state,true,12);
             var wet=MaterialPhysics.read(l,p,state,true,90);
             var actual=MaterialPhysics.read(l,p,state,true,Double.NaN);
-            if(!MaterialPhysics.coreAvailable()||!MaterialPhysics.woodAvailable()||!dry.known()||!wet.known()||!actual.known()
+            if(!MaterialPhysics.coreAvailable()||!dry.known()||!wet.known()||!actual.known()
+                ||(MaterialPhysics.canonicalAvailable()&&(!dry.source().equals("core")||!wet.source().equals("core")||!actual.source().equals("core")))
+                ||(!MaterialPhysics.canonicalAvailable()&&!MaterialPhysics.woodAvailable())
                 ||Math.abs(dry.volumeM3()-wet.volumeM3())>1e-8||wet.massKg()<=dry.massKg()
                 ||!Double.isFinite(dry.hardnessN())||wet.hardnessN()>=dry.hardnessN()
                 ||!Double.isFinite(actual.moisturePercent())||!Double.isFinite(MaterialPhysics.oakMassKg())){
                 c.getSource().sendFailure(Component.literal("TreeChopper real Core/Terrarian physical API FAILED"));return 0;
             }
             c.getSource().sendSuccess(()->Component.literal("TreeChopper real Core/Terrarian physical API PASS: "+actual.source()+" "+actual.massKg()+" kg"),false);return 1;
+          })))
+          .then(Commands.literal("qa_canonical_wood").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            var state=l.getBlockState(p);
+            var dry=MaterialPhysics.read(l,p,state,true,12);
+            var wet=MaterialPhysics.read(l,p,state,true,90);
+            var invalid=MaterialPhysics.read(l,p,state,true,251);
+            var actual=MaterialPhysics.read(l,p,state,true,Double.NaN);
+            boolean oak=state.is(net.minecraft.world.level.block.Blocks.OAK_LOG);
+            if(!MaterialPhysics.canonicalAvailable()||!dry.known()||!wet.known()||!actual.known()
+                ||!dry.source().equals("core")||!wet.source().equals("core")||!actual.source().equals("core")
+                ||Math.abs(dry.volumeM3()-wet.volumeM3())>1e-8||wet.massKg()<=dry.massKg()
+                ||!Double.isFinite(dry.hardnessN())||wet.hardnessN()>=dry.hardnessN()
+                ||invalid.known()||!Double.isFinite(actual.moisturePercent())
+                ||(oak&&(Math.abs(dry.massKg()/dry.volumeM3()-710)>1e-6||Math.abs(dry.hardnessN()-5900)>1e-6))){
+                c.getSource().sendFailure(Component.literal("TreeChopper canonical wood FAILED: "+dry+" / "+wet+" / "+actual));return 0;
+            }
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper canonical wood PASS"),false);return 1;
           })))
           .then(Commands.literal("qa_effort").executes(c->{
             double full=ChopEffort.power(1,1,1), tired=ChopEffort.power(.1,1,1);
