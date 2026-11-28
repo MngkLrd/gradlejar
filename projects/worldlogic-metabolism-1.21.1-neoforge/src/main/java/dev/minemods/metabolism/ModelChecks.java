@@ -19,6 +19,22 @@ public final class ModelChecks {
   p.getFoodData().setFoodLevel(20);require(p.canEat(false),"full hunger allows room in metabolic stomach");
   var filled=Metabolism.state(p);filled.stomach=MetabolicModel.STOMACH_MAX;Metabolism.store(p,filled);require(!p.canEat(false),"full stomach does not override vanilla");
   require(FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.MILK_BUCKET)).orElseThrow().meal().kcal()>0,"milk calories");
+  var ids=net.minecraft.core.registries.BuiltInRegistries.ITEM;
+  int audited=0;
+  for(var item:ids){if(!ids.getKey(item).getNamespace().equals("minecraft"))continue;var stack=new net.minecraft.world.item.ItemStack(item);var prof=FoodProfiles.profile(stack,p);if(prof.isEmpty())continue;
+   var e=prof.get();require(e.known(),"all vanilla food is explicitly profiled: "+ids.getKey(item));
+   var mm=e.meal();var n=mm.nutrients();require(Math.abs(mm.kcal()-(4*n[0]+9*n[1]+4*n[2]+2*n[3]))<1e-6,"macro energy consistency "+ids.getKey(item));audited++;
+  }
+  require(audited>=35,"vanilla food coverage");
+  var cod=FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COOKED_COD)).orElseThrow().meal();
+  var salmon=FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COOKED_SALMON)).orElseThrow().meal();
+  var chicken=FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COOKED_CHICKEN)).orElseThrow().meal();
+  var pork=FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COOKED_PORKCHOP)).orElseThrow().meal();
+  var honey=FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.HONEY_BOTTLE)).orElseThrow().meal();
+  require(salmon.nutrients()[1]>cod.nutrients()[1]*5&&salmon.kcal()>cod.kcal()&&chicken.nutrients()[0]>pork.nutrients()[0]&&pork.nutrients()[1]>chicken.nutrients()[1]*2,"species-specific macros");
+  require(honey.nutrients()[0]==0&&honey.nutrients()[2]>40,"honey carbohydrate");
+  var profile=dev.minemods.metabolism.api.MetabolismApi.foodProfile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COOKED_SALMON),p).orElseThrow();
+  require(profile.known()&&profile.fatG()==salmon.nutrients()[1]&&profile.kcal()==salmon.kcal(),"public food profile");
   var generic=new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.STICK);
   generic.set(net.minecraft.core.component.DataComponents.FOOD,new net.minecraft.world.food.FoodProperties.Builder().nutrition(5).saturationModifier(.6f).build());
   require(FoodProfiles.profile(generic).orElseThrow().meal().kcal()>0&&!FoodProfiles.profile(generic).orElseThrow().known(),"generic FOOD component");
@@ -31,7 +47,7 @@ public final class ModelChecks {
    var cake=net.minecraft.world.level.block.Blocks.CAKE.defaultBlockState();level.setBlock(pos,cake,3);
    var hit=new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(pos),net.minecraft.core.Direction.UP,pos,false);
    var result=level.getBlockState(pos).useWithoutItem(level,p,hit);
-   require(result.consumesAction()&&level.getBlockState(pos).getValue(net.minecraft.world.level.block.CakeBlock.BITES)==1&&Metabolism.state(p).stomach==150,"actual cake bite and metabolic hook");
+   require(result.consumesAction()&&level.getBlockState(pos).getValue(net.minecraft.world.level.block.CakeBlock.BITES)==1&&Math.abs(Metabolism.state(p).stomach-FoodProfiles.cakeSlice().meal().kcal())<1e-6,"actual cake bite and metabolic hook");
    var full=Metabolism.state(p);full.stomach=MetabolicModel.STOMACH_MAX;Metabolism.store(p,full);
    p.getFoodData().setFoodLevel(20);
    require(!level.getBlockState(pos).useWithoutItem(level,p,hit).consumesAction()&&level.getBlockState(pos).getValue(net.minecraft.world.level.block.CakeBlock.BITES)==1,"full stomach cake negative");

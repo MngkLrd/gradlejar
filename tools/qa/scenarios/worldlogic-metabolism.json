@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Metabolism 0.9.0 energy recovery and nutrition regression",
+  "name": "Metabolism 0.9.1 nutrient composition and energy regression",
   "coverage": [
     {
       "id": "nutrition-model",
@@ -237,6 +237,17 @@
       "id": "external-food-contract",
       "kind": "mechanic",
       "subject": "Validated external meal and actual energy snapshot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "vanilla-food-composition",
+      "kind": "mechanic",
+      "subject": "Explicit vanilla food profiles, consistent macronutrient kcal and species differences, public read-only food composition",
       "checks": [
         {
           "backend": "server",

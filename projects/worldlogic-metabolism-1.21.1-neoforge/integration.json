@@ -13,7 +13,7 @@
     {
       "id": "worldlogic:metabolism_physiology",
       "version": 1,
-      "revision": 4,
+      "revision": 5,
       "domains": [
         "nutrition",
         "digestion",
@@ -57,6 +57,12 @@
           "kind": "command",
           "entrypoint": "dev.minemods.metabolism.api.MetabolismApi",
           "semantics": "Successful water-only consumption, mB, risk and salinity, bounded deduplicated stamina response."
+        },
+        {
+          "id": "food_profile",
+          "kind": "query",
+          "entrypoint": "dev.minemods.metabolism.api.MetabolismApi",
+          "semantics": "Edible item serving nutrition and calorie estimate, nullable unknown macros, immutable micronutrients in domain units."
         }
       ]
     }
