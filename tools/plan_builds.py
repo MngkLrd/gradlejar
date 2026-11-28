@@ -100,10 +100,41 @@ def select_projects(requested,changed=None):
     if len(projects)>256: raise ValueError("GitHub matrix exceeds 256 targets; dispatch enrolled cohorts separately")
     return sorted(projects)
 
+def ecosystem_preview(requested, selected):
+    """Advisory only: existing build selection and all gates stay unchanged."""
+    if __package__:
+        from .qa.ecosystem import build_preview
+    else:
+        from qa.ecosystem import build_preview
+    base = None
+    if requested.startswith("@changed:"):
+        base = requested[9:]
+    elif not requested:
+        payload = event_payload()
+        event = os.getenv("GITHUB_EVENT_NAME", "")
+        if event == "pull_request":
+            parent = git("rev-parse", "--verify", "HEAD^1")
+            base = parent.stdout.strip() if parent.returncode == 0 else payload.get("pull_request", {}).get("base", {}).get("sha")
+        elif event == "push":
+            base = payload.get("before")
+    # select_projects already resolves/fetches the required range. Do not fetch
+    # another history or guess at a missing base for this advisory step.
+    if not isinstance(base,str) or not re.fullmatch(r"[a-f0-9]{40}",base) or base == "0"*40 or git("cat-file","-e",base+"^{commit}").returncode:
+        base = None
+    try:
+        report = build_preview(ROOT, selected, base)
+        if report is not None:
+            print("ECOSYSTEM IMPACT (advisory; integration QA NOT_RUN): " + json.dumps(report,sort_keys=True), file=sys.stderr)
+    except (OSError,ValueError,TypeError,KeyError,AttributeError,subprocess.SubprocessError) as exc:
+        # A new advisory tool must never suppress unrelated releases or change
+        # existing gate semantics. Standalone validator remains strict.
+        print("ECOSYSTEM IMPACT NOT_RUN: " + str(exc), file=sys.stderr)
+
 if __name__=="__main__":
     from resolve_project import read_profile
     requested=(sys.argv[1] if len(sys.argv)>1 else "").strip()
     dirs=select_projects(requested)
+    ecosystem_preview(requested, dirs)
     profiles=[read_profile(d) for d in dirs]
     result=json.dumps(dirs,separators=(",",":"))
     print("Projects: "+result,file=sys.stderr)
