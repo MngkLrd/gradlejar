@@ -68,3 +68,93 @@ class ArtReviewLockTests(unittest.TestCase):
             p.write_bytes(b"old")
             git("add",".");git("commit","-qm","revert texture")
             self.assertEqual(changed(root,baseline),[])
+
+    def atlas_row(self):
+        from tools.qa.art_review_lock import load_atlas
+        c=load_atlas()
+        row=self.row("b"*64)
+        row["references"][0]["sha256"]=c["references"]["block/spruce_log_top"]
+        row["atlas"]={"revision":c["revision"],"rule":"growth_rings","reference":"minecraft:block/spruce_log_top",
+            "reference_minecraft":"1.21.1","applied_pattern":"Break ring edges with secondary warm shade.",
+            "reference_limit":"Ring shape depends on heartwood and bark.",
+            "native_view":"Outer border is distinct at native size.",
+            "context_view":"Repeat three by three; no unplanned seams.",
+            "context_type":"tile_3x3"}
+        return row,c
+
+    def test_atlas_required_and_hash_verified(self):
+        row,c=self.atlas_row()
+        self.assertEqual(validate(row,"b"*64,True,c),[])
+        row["references"][0]["sha256"]="f"*64
+        self.assertTrue(any("Official atlas SHA-256" in e for e in validate(row,"b"*64,True,c)))
+        del row["atlas"]
+        self.assertTrue(any("Missing mandatory atlas" in e for e in validate(row,"b"*64,True,c)))
+        self.assertEqual(validate(row,"b"*64),[])  # original evidence contract retained for unchanged old assets
+
+    def test_wrong_rule_custom_and_context_rejected(self):
+        row,c=self.atlas_row()
+        row["atlas"]["rule"]="needles"
+        self.assertTrue(any("profile" in e for e in validate(row,"b"*64,True,c)))
+        row["atlas"]["rule"]="custom"
+        self.assertTrue(any("reserved" in e for e in validate(row,"b"*64,True,c)))
+        row["atlas"]["rule"]="growth_rings";row["atlas"]["context_type"]="icon_family"
+        self.assertTrue(any("3x3" in e for e in validate(row,"b"*64,True,c)))
+
+    def test_duplicate_atlas_observations_and_unbound_reference(self):
+        row,c=self.atlas_row()
+        row["atlas"]["context_view"]=row["atlas"]["native_view"]
+        row["atlas"]["reference"]="minecraft:block/oak_log_top"
+        errs=validate(row,"b"*64,True,c)
+        self.assertTrue(any("Duplicate atlas" in e for e in errs))
+        self.assertTrue(any("matching actual reference" in e for e in errs))
+
+    def test_atlas_scope_is_per_asset_not_global_migration(self):
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t);project="projects/demo";p=root/project;p.mkdir(parents=True)
+            (p/"build-profile.json").write_text("{}")
+            path=project+"/src/main/resources/assets/demo/textures/block/test.png"
+            f=root/path;f.parent.mkdir(parents=True);f.write_bytes(b"fixture")
+            row=self.row(hashlib.sha256(b"fixture").hexdigest())
+            (p/"art-review.json").write_text(json.dumps({"schema":1,"assets":{path:row}}))
+            self.assertEqual(project_errors(root,project,[path]),[])
+            self.assertTrue(any("Missing mandatory atlas" in e for e in project_errors(root,project,[path],{path})))
+
+    def test_catalog_integrity_and_custom_uncovered_profile(self):
+        from tools.qa.art_review_lock import load_atlas
+        c=load_atlas()
+        self.assertEqual(len(c["references"]),57)
+        all_refs=set()
+        for rule in c["rules"].values():
+            self.assertTrue(set(rule["profiles"]).issubset(PROFILES))
+            self.assertTrue(set(rule["reference_ids"]).issubset(c["references"]))
+            all_refs.update(rule["reference_ids"])
+        self.assertEqual(all_refs,set(c["references"]))
+        row=self.row("b"*64);row["material_profile"]="other"
+        row["findings"]={k:f"Fixture observation for distinct criterion {k}" for k in COMMON+PROFILES["other"]}
+        row["references"]=[{"id":"minecraft:gui/sprites/test","minecraft":"1.21.1","sha256":"a"*64}]
+        row["atlas"]={"revision":"r9","rule":"custom","reference":"minecraft:gui/sprites/test","reference_minecraft":"1.21.1",
+                      "applied_pattern":"Purposeful panel border and icon inset.",
+                      "reference_limit":"Not a tile or material texture.",
+                      "native_view":"Icon readable at original display size.",
+                      "context_view":"Panel needs inspection with adjacent slots.",
+                      "context_type":"gui_state","custom_reason":"Uncovered interface type needs GUI comparator.",
+                      "reference_source":"Official client exact resource path and digest."}
+        self.assertEqual(validate(row,"b"*64,True,c),[])
+
+    def test_local_preflight_exit_and_ci_output_contract(self):
+        from unittest.mock import patch
+        from tools.qa import art_review_lock as lock
+        from contextlib import redirect_stdout
+        import io
+        import os
+        with tempfile.TemporaryDirectory() as t, redirect_stdout(io.StringIO()):
+            out=Path(t)/"github-output"
+            args=["--projects",'["projects/demo"]']
+            with patch.object(lock,"changed",return_value=["projects/demo/src/main/resources/assets/demo/textures/block/test.png"]), patch.object(lock,"load_atlas",return_value={}), patch.object(lock,"project_errors",return_value=["Missing atlas evidence"]) as check, patch.dict(os.environ,{"GITHUB_OUTPUT":str(out)}):
+                self.assertEqual(lock.main(args+["--check"]),1)
+                self.assertFalse(out.exists())
+                self.assertEqual(lock.main(args),0)
+                self.assertEqual(out.read_text(),'blocked=["projects/demo"]\n')
+                self.assertTrue(check.call_args.args[3])
+                check.return_value=[]
+                self.assertEqual(lock.main(args+["--check"]),0)
