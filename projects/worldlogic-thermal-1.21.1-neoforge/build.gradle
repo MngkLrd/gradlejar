@@ -38,11 +38,13 @@ tasks.register('verifyWorldLogic') {
             } finally { temp.delete() }
         }
         def actual = java.security.MessageDigest.getInstance('SHA-256').digest(coreJar.bytes).encodeHex().toString()
-        def accepted = providers.gradleProperty('worldlogicJar').isPresent() ? [expectedSha, '9cb8c75897f313f274f88b2a12f15f37b8af97aef773674c7b0db5a8fa33cd67'] : [expectedSha]
+        def accepted = providers.gradleProperty('worldlogicJar').isPresent() ? [expectedSha, '9cb8c75897f313f274f88b2a12f15f37b8af97aef773674c7b0db5a8fa33cd67', '33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56'] : [expectedSha]
         if (!accepted.contains(actual)) throw new GradleException('WorldLogic dependency SHA-256 mismatch: '+actual)
         new java.util.zip.ZipFile(coreJar).withCloseable { zip ->
             if (zip.getEntry('META-INF/neoforge.mods.toml') == null || zip.getEntry('dev/minemods/worldlogic/api/WorldLogicApi.class') == null)
                 throw new GradleException('WorldLogic dependency has no NeoForge metadata or public API')
+            if (actual == '33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56' && (zip.getEntry('dev/minemods/worldlogic/api/PhysicalMaterials$ThermalLayer.class') == null || zip.getEntry('dev/minemods/worldlogic/api/PhysicalWater.class') == null))
+                throw new GradleException('Exact RC54 candidate lacks expected public endpoints')
         }
     }
 }

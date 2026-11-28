@@ -26,6 +26,7 @@ final class PhysicalChecks {
   require(EnvironmentSampler.materialInsulation(leather)>EnvironmentSampler.materialInsulation(iron),"production gear uses registry");
   require(PhysicalBridge.waterInertia(Fluids.WATER)==1,"freshwater reference from Core");
   require(PhysicalBridge.item(ItemStack.EMPTY).isEmpty(),"empty item has no physical insulation");
+  if(PhysicalBridge.advertised15())require(PhysicalBridge.revision2(),"Core advertises revision 15: both new public API endpoints must be usable");
   if(PhysicalBridge.revision2()){
    var coat=new ItemStack(dev.minemods.thermal.content.ThermalContent.FUR_COAT.get());
    var linen=new ItemStack(dev.minemods.thermal.content.ThermalContent.LINEN_CLOTHES.get());

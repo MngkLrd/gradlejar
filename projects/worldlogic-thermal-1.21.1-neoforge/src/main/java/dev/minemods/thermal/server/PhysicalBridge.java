@@ -50,6 +50,10 @@ public final class PhysicalBridge {
   }catch(ReflectiveOperationException|LinkageError|RuntimeException ex){LOG.error("Core advertises materials but its public API is unavailable",ex);return null;}
  }
  static boolean available(){return API!=null;}
+ static boolean advertised15(){
+  try{return Class.forName("dev.minemods.worldlogic.api.WorldLogicApi").getField("API_REVISION").getInt(null)>=15;}
+  catch(ReflectiveOperationException|LinkageError ex){return false;}
+ }
  static boolean revision2(){return LAYERS!=null&&WATER!=null;}
  private static Layers layers(){
   if(API==null)return null;
