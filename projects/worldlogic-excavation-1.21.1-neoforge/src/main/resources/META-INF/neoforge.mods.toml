@@ -3,7 +3,7 @@ loaderVersion="[1,)"
 license="All Rights Reserved"
 [[mods]]
 modId="worldlogicexcavation"
-version="0.2.0"
+version="0.2.1"
 displayName="WorldLogic Excavation"
 description="Discrete pickaxe strikes, physical rock notches and conserved ore fragments."
 [[dependencies.worldlogicexcavation]]
@@ -21,6 +21,6 @@ side="BOTH"
 [[dependencies.worldlogicexcavation]]
 modId="worldlogic"
 type="required"
-versionRange="[1.5.0]"
+versionRange="[1.5.1,1.6.0)"
 ordering="AFTER"
 side="BOTH"

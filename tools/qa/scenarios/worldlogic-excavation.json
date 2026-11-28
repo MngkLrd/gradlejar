@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic Excavation 0.2.0 FakePlayer server-path regression: timings and soil",
+  "name": "WorldLogic Excavation 0.2.1 server regression and exact Core rev21 arbitration",
   "coverage": [
     {
       "id": "wrong-tier",
@@ -859,6 +859,17 @@
           "name": "soil-fast-tool"
         }
       ]
+    },
+    {
+      "id": "core-rev21-arbitration",
+      "kind": "mechanic",
+      "subject": "Core late denial zero debit, original proxy composition, canonical mineral recipe mappings, accepted intermediate effort and once-only final debit",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "core-rev21-arbitration"
+        }
+      ]
     }
   ],
   "steps": [
@@ -1648,6 +1659,16 @@
       "expect": "Excavation QA PASS soilfast",
       "assertion": true,
       "name": "soil-fast-tool"
+    },
+    {
+      "command": "setblock 1044 200 1038 minecraft:iron_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1044 200 1038 integration",
+      "expect": "Excavation QA PASS integration",
+      "assertion": true,
+      "name": "core-rev21-arbitration"
     }
   ]
 }

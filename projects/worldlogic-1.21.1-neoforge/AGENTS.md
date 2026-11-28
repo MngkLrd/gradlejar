@@ -13,3 +13,9 @@ Owner explicitly requested no JAR compilation before RC45. Keep intermediate sou
 
 ## OWNER DIRECTION: LANDSCAPE FIRST (RC44–47)
 Resume landscape development from RC41. Preserve RC42–43 experiments on separate branches; no new ore types, prospecting or surface ore indicators in the landscape line. Keep RC22 macro geography and world bounds. RC44 source-only; cumulative build/QA permitted from RC45 onward. Do not equate modeled drainage or synthetic tests with actual generated channel continuity.
+
+## OWNER DIRECTION (2026-11-28): retain current terrain
+Owner supersedes exact RC22 landscape matching as a development target: preserve the existing 1.5.0 generator and saves, no landscape redesign for matching RC22. Keep natural ore/soil generation and existing QA gates; local verified defects can be fixed independently. Core 6 integration scope: shared stamina, admin heal, safe break protection, original mineral state; see #264–267. Fauna design #268 remains separate and will take the next appropriate API revision after rev21.
+
+## OWNER DIRECTION: movement hotfix (2026-11-28)
+Temporarily disable automatic downhill and failed-jump knockdowns in Realistic, pending actual gameplay tuning. Preserve implementation, normal fall damage, combat and other independent mechanics. Diagnostic rules remain opt-in for testing only; restart restores off defaults.

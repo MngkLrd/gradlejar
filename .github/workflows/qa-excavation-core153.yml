@@ -1,0 +1,80 @@
+name: Excavation exact Core 1.5.3 diagnostic
+on:
+  pull_request:
+    paths:
+      - 'projects/worldlogic-excavation-1.21.1-neoforge/**'
+      - 'tools/qa/scenarios/worldlogic-excavation.json'
+      - '.github/workflows/qa-excavation-core153.yml'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  exact-core:
+    if: github.event.pull_request.head.ref == 'worldlogic-excavation-0.1.0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+          cache-read-only: true
+      - name: Verify scoped integration declaration
+        run: python3 -m tools.qa.ecosystem --check-project projects/worldlogic-excavation-1.21.1-neoforge
+      - name: Verify exact Core run identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/46130839650" --jq '.head_sha + " " + .conclusion' | grep -Fx '0ff6c555e6942c01b51b7d9ae0e9d090b2a94a10 success'
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46130839650
+          name: jar-worldlogic-1.21.1-neoforge-1.5.3-0
+          path: exact-core
+      - name: Compile production addon and execute math verification
+        run: |
+          cd projects/worldlogic-excavation-1.21.1-neoforge
+          gradle --no-daemon --stacktrace clean build
+      - name: Run existing production server harness against exact Core
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,pathlib
+          from tools.qa.server import run
+          root=pathlib.Path('projects/worldlogic-excavation-1.21.1-neoforge')
+          p=json.loads((root/'build-profile.json').read_text())
+          jar=root/'build/libs'/p['jar_glob']
+          core=next(pathlib.Path('exact-core').rglob('worldlogic-neoforge-mc1.21.1-1.5.3.jar'))
+          digest=lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
+          assert digest(core)=='ee4fa6e113dca3b5e4e5d384f644abc8e29ad8d763608f31f8eaf502d2436d01'
+          out=pathlib.Path('excavation-diagnostic')
+          out.mkdir()
+          report={'kind':'exact-candidate-compatibility','eligible':False,'status':'failed','qa_level':0,'checks':[],'jars':{x.name:digest(x) for x in [jar,core]}}
+          try:
+              run(p,p['qa'],jar,out/'server',report,extra_jars=[core])
+              report['status']='passed'
+          except Exception as e:
+              report['error']=str(e)
+              raise
+          finally:
+              (out/'report.json').write_text(json.dumps(report,indent=2))
+          PY
+      - name: Retain diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: excavation-core153-diagnostic-evidence
+          path: excavation-diagnostic/
+          if-no-files-found: warn
+      - name: Retain tested candidate only on successful diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: worldlogic_excavation_0.2.1_1.21.1_neoforge-NOT-RELEASE
+          path: projects/worldlogic-excavation-1.21.1-neoforge/build/libs/worldlogicexcavation-neoforge-mc1.21.1-0.2.1.jar
+          if-no-files-found: error

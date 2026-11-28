@@ -51,9 +51,14 @@ public final class Excavation {
         }
     }
     private static net.minecraft.world.level.block.state.BlockBehaviour.Properties chipProperties(Catalog.Spec spec){
-        var p=net.minecraft.world.level.block.state.BlockBehaviour.Properties.of().strength(spec.soil()?.5f:spec.ore()?3f:1.5f,6f)
-            .sound(spec.soil()?SoundType.GRAVEL:SoundType.STONE).noOcclusion().dynamicShape();
-        return spec.soil()?p:p.requiresCorrectToolForDrops();
+        // Core's completed-mining debit reads the actual broken state's hardness.
+        // Match the source instead of charging a fixed generic proxy hardness.
+        var original=spec.original();
+        if(original.isAir())throw new IllegalStateException("Missing excavation source "+spec.source());
+        float hardness=original.getDestroySpeed(net.minecraft.world.level.EmptyBlockGetter.INSTANCE,BlockPos.ZERO);
+        var p=net.minecraft.world.level.block.state.BlockBehaviour.Properties.of().strength(hardness,original.getBlock().getExplosionResistance())
+            .sound(original.getSoundType()).noOcclusion().dynamicShape();
+        return original.requiresCorrectToolForDrops()?p.requiresCorrectToolForDrops():p;
     }
     static final DeferredItem<Item> COPPER_NUGGET=ITEMS.register("copper_nugget",()->new Item(new Item.Properties()));
     public Excavation(IEventBus modBus){
@@ -63,10 +68,12 @@ public final class Excavation {
         NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST,Excavation::guardClick);
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,Excavation::guardFinalDrops);
         NeoForge.EVENT_BUS.addListener(ExcavationQA::register);
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,ExcavationQA::observeBreak);
     }
     private static void setup(FMLCommonSetupEvent event){
         event.enqueueWork(()->{
             ExcavationApi.register();
+            verifyMineralProducts();
             for(var f:Catalog.DATA.families()){
                 // Ancient debris is not refined scrap; do not copy refined physical properties.
                 if(f.id().equals("ancient_debris"))continue;
@@ -84,6 +91,18 @@ public final class Excavation {
                 }
             }
         });
+    }
+    // Recipes are generated from the stable catalog; fail explicitly if Core's canonical destinations change.
+    static void verifyMineralProducts(){
+        var core=WorldLogicCapabilities.find(WorldLogicExcavation.KEY,1).orElseThrow(()->new IllegalStateException("Core excavation API v1 rev1 required"));
+        for(var spec:Catalog.DATA.specs()){
+            if(!spec.coreMineral())continue;
+            var family=Catalog.DATA.families().stream().filter(f->f.id().equals(spec.family())).findFirst().orElseThrow();
+            var mapped=core.mineralProduct(spec.original()).orElseThrow(()->new IllegalStateException("Core mineral mapping missing: "+spec.source()));
+            if(!BuiltInRegistries.ITEM.getKey(mapped.specimen()).equals(ResourceLocation.parse("worldlogic:"+family.id()))
+                ||!BuiltInRegistries.ITEM.getKey(mapped.product()).equals(ResourceLocation.parse(family.product()))
+                ||mapped.refined()!=family.processing().equals("metal"))throw new IllegalStateException("Core mineral recipe mismatch: "+spec.source());
+        }
     }
     private static void creative(BuildCreativeModeTabContentsEvent event){
         if(!event.getTabKey().equals(CreativeModeTabs.INGREDIENTS))return;
@@ -114,7 +133,15 @@ public final class Excavation {
         var spec=Catalog.spec(level.getBlockState(pos));if(spec==null)return Optional.empty();
         var original=spec.original();var tool=player.getMainHandItem();
         if(!suitable(spec,original,tool))return Optional.empty();
-        float speed=tool.getDestroySpeed(original),hardness=original.getDestroySpeed(level,pos);
+        var core=WorldLogicCapabilities.find(WorldLogicExcavation.KEY,1).orElse(null);
+        if(core==null)return Optional.empty();
+        var inspected=core.inspectOriginal(level,pos,original,tool).orElse(null);
+        if(inspected==null||!inspected.toolSuitableForDrops()||inspected.kind()!=(spec.soil()?WorldLogicExcavation.Kind.SOIL:WorldLogicExcavation.Kind.ROCK_OR_ORE))return Optional.empty();
+        return timingFrom(player,pos,spec,original,tool,inspected);
+    }
+    private static Optional<FractureMath.Timing> timingFrom(ServerPlayer player,BlockPos pos,Catalog.Spec spec,BlockState original,ItemStack tool,WorldLogicExcavation.Target inspected){
+        ServerLevel level=player.serverLevel();
+        float speed=tool.getDestroySpeed(original),hardness=inspected.vanillaResistance();
         float progress=original.getDestroyProgress(player,level,pos);
         if(hardness<0||!Float.isFinite(hardness)||!Float.isFinite(progress)||progress<=0||!Float.isFinite(speed)||speed<=0)return Optional.empty();
         return Optional.of(FractureMath.timing(progress,speed,hardness,spec.ore(),spec.soil()));
@@ -156,19 +183,15 @@ public final class Excavation {
         BlockState state=level.getBlockState(pos);
         Catalog.Spec spec=Catalog.spec(state);if(spec==null)return reject(ExcavationApi.Status.NOT_TARGET,level,pos);
         ItemStack tool=player.getMainHandItem();
-        var core=WorldLogicCapabilities.find(WorldLogicExcavation.KEY,0).orElse(null);
+        var core=WorldLogicCapabilities.find(WorldLogicExcavation.KEY,1).orElse(null);
         if(core==null)return reject(ExcavationApi.Status.CORE_UNAVAILABLE,level,pos);
         BlockState original=spec.original();
         if(!suitable(spec,original,tool))
             return reject(ExcavationApi.Status.WRONG_TOOL,level,pos);
         boolean chipped=state.getBlock() instanceof ChipBlock;
-        float hardness=original.getDestroySpeed(level,pos);
-        if(!chipped){
-            var inspected=core.inspect(level,pos,tool);
-            if(inspected.isEmpty()||inspected.get().kind()!=(spec.soil()?WorldLogicExcavation.Kind.SOIL:WorldLogicExcavation.Kind.ROCK_OR_ORE)||!inspected.get().toolSuitableForDrops())return reject(ExcavationApi.Status.WRONG_TOOL,level,pos);
-            hardness=inspected.get().vanillaResistance();
-        }
-        var timing=timing(player,pos).orElse(null);
+        var inspected=core.inspectOriginal(level,pos,original,tool).orElse(null);
+        if(inspected==null||inspected.kind()!=(spec.soil()?WorldLogicExcavation.Kind.SOIL:WorldLogicExcavation.Kind.ROCK_OR_ORE)||!inspected.toolSuitableForDrops())return reject(ExcavationApi.Status.WRONG_TOOL,level,pos);
+        var timing=timingFrom(player,pos,spec,original,tool,inspected).orElse(null);
         if(timing==null)return reject(ExcavationApi.Status.WRONG_TOOL,level,pos);
         int required=timing.hits();
         Cadence last=LAST.get(player);
@@ -205,10 +228,9 @@ public final class Excavation {
                 if(item!=Items.AIR)Block.popResource(level,pos,new ItemStack(item));
             }
         }else{
-            // BreakEvent-only claim systems get one permission probe per nonfinal hit.
-            // Core 1.5.0 also charges this event; do NOT add duplicate exertion until #264 arbitration is available.
+            // Core marks the scoped event as protection-only; no debit or mutation in Core.
             BREAK.set(permit);
-            try{permitted=!NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(level,pos,state,player)).isCanceled();}
+            try{permitted=core.checkProtection(level,player,pos,state);}
             finally{BREAK.remove();}
             if(!permitted||!level.getBlockState(pos).equals(state))return reject(ExcavationApi.Status.DENIED,level,pos);
             if(!chipped&&!level.setBlock(pos,Catalog.CHIPS.get(spec.key()).get().defaultBlockState(),Block.UPDATE_ALL))return reject(ExcavationApi.Status.INVALID_STATE,level,pos);
@@ -219,6 +241,8 @@ public final class Excavation {
             progress.write(plan,energy);
             if(spec.ore())emit(level,pos,spec,plan.units());
             tool.hurtAndBreak(1,player,EquipmentSlot.MAINHAND);
+            // Accepted intermediate effort only. Core charges the successful final break itself.
+            WorldLogicApi.addExertion(player,intermediateEffort(inspected.vanillaResistance(),required));
         }
         LAST.put(player,new Cadence(player.tickCount,plan.complete()?1:timing.gapAfter(FractureMath.acceptedIndex(old,timing))));
         player.swing(InteractionHand.MAIN_HAND,true);
@@ -242,5 +266,6 @@ public final class Excavation {
         if(units>=4){Block.popResource(level,pos,Catalog.fragment(spec.family(),4,units/4));units%=4;}
         if(units>0)Block.popResource(level,pos,Catalog.fragment(spec.family(),1,units));
     }
+    static double intermediateEffort(float hardness,int hits){return Math.min(5,.6+hardness*.5)/Math.max(1,hits);}
     static void qaReset(ServerPlayer p){LAST.remove(p);}
 }

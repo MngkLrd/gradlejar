@@ -8,7 +8,7 @@ public final class Rules {
  +"tool_momentum cobweb grip ladder_grip exhausted_sprint armor_noise breath_debt exhausted_breath cold_shock wet_bow wet_gear "
  +"water_drag water_extinguish slippery_rain mud_tracks snow_compression rain_weight wind "
  +"campfire_sparks residual_heat thermal_shock fire_needs_air draft_smoke ashes wet_torches "
- +"crop_crowding flood_stress scent herd_panic hot_meal spoilage heavy_items doors_have_mass weighted_redstone finite_air tree_weight snow_weight exertion injuries smoke_inhalation campfire_fuel soil_fatigue mine_instability interrupted_meals shield_fatigue armored_diving sheltered_sleep mining_noise combat_recovery fragile_cargo dangerous_retreat unstable_climbing armor_fatigue environmental_wear persistent_pursuit blood_trail predator_memory boat_overload heavy_swing leash_resistance wall_collision torch_lifetime physical_falls injured_balance cargo_burden weak_condition dangerous_darkness desperate_climb heavy_landing animal_hunger unstable_carrying tool_grip rough_terrain ground_recovery dynamic_knockdown emergency_grab rolling_descent chain_collision desperate_recovery unstable_footing combat_disarm landing_shockwave broken_guard desperate_dodge injury_aggravation shoulder_impact mob_weight dangerous_trees blast_concussion repeated_impact structural_stress water_pressure debris_impact ice_entrapment animal_stampede weapon_obstruction cramped_mining blast_chain_reaction thermal_expansion burning_structures modeled_weather regional_weather hydrology no_daytime_hostiles tree_descent ground_inertia downhill_falls").split(" ");
+ +"crop_crowding flood_stress scent herd_panic hot_meal spoilage heavy_items doors_have_mass weighted_redstone finite_air tree_weight snow_weight exertion injuries smoke_inhalation campfire_fuel soil_fatigue mine_instability interrupted_meals shield_fatigue armored_diving sheltered_sleep mining_noise combat_recovery fragile_cargo dangerous_retreat unstable_climbing armor_fatigue environmental_wear persistent_pursuit blood_trail predator_memory boat_overload heavy_swing leash_resistance wall_collision torch_lifetime physical_falls injured_balance cargo_burden weak_condition dangerous_darkness desperate_climb heavy_landing animal_hunger unstable_carrying tool_grip rough_terrain ground_recovery dynamic_knockdown emergency_grab rolling_descent chain_collision desperate_recovery unstable_footing combat_disarm landing_shockwave broken_guard desperate_dodge injury_aggravation shoulder_impact mob_weight dangerous_trees blast_concussion repeated_impact structural_stress water_pressure debris_impact ice_entrapment animal_stampede weapon_obstruction cramped_mining blast_chain_reaction thermal_expansion burning_structures modeled_weather regional_weather hydrology no_daytime_hostiles tree_descent ground_inertia downhill_falls failed_jump_falls").split(" ");
  private static final Map<String,Double> DEFAULTS=Map.of("impact",1.0,"movement",1.0,"air",1.0,"weather",1.0,"fire",1.0,"ecology",1.0);
  private static volatile Map<String,String> values=Map.of();
  public static List<String> keys(){return List.of(KEYS);}
@@ -17,7 +17,7 @@ public final class Rules {
  public static Map<String,String> preset(String name){
   if(!name.equals("realistic"))throw new IllegalArgumentException("Unknown preset");
   Map<String,String> m=new LinkedHashMap<>();m.put("preset",name);
-  for(String k:KEYS)m.put(k,Boolean.toString(!k.equals("modeled_weather")));
+  for(String k:KEYS)m.put(k,Boolean.toString(!Set.of("modeled_weather","downhill_falls","failed_jump_falls").contains(k)));
   for(String k:tuningKeys())m.put("strength."+k,Double.toString(1.0));
   return m;
  }
@@ -50,8 +50,8 @@ public final class Rules {
  static String addonSummary(){
   var mods=net.neoforged.fml.ModList.get();
   var result=new StringJoiner("; ","World Logic ownership: ","");
-  for(String id:List.of("worldlogic_thermal","worldlogic_trauma","wl_treechopper","hydration","worldlogicterrain"))result.add(id+"="+(mods!=null&&mods.isLoaded(id)?"loaded":"absent"));
-  return result+"; Core owns hydrology, soil, geology, friction and fall risk; Hydration owns drinking; Terrarian owns flora and continuous surface speed";
+  for(String id:List.of("worldlogic_thermal","worldlogic_trauma","wl_treechopper","hydration","worldlogicterrain","metabolism","worldlogic_aqua"))result.add(id+"="+(mods!=null&&mods.isLoaded(id)?"loaded":"absent"));
+  return result+"; Core owns hydrology, soil, geology, friction, fall risk and stamina; Hydration owns fluid balance; Terrarian owns flora and continuous surface speed; Trauma owns anatomy; Thermal owns body temperature; Metabolism owns nutrition and rest rate; Aqua owns fish behavior; TreeChopper owns accepted chopping work";
  }
  public static double strength(String family){try{return Double.parseDouble(values.getOrDefault("strength."+family,"1"));}catch(NumberFormatException e){return 1;}}
  public static double chance(String family,double base){return Math.max(0,Math.min(1,base*strength(family)));}

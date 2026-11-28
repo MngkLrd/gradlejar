@@ -7,81 +7,13 @@
     "ru": "Рубка деревьев",
     "en": "Tree chopping"
   },
-  "source": "TreeChopper 0.5.4",
+  "source": "WorldLogic integration overview",
   "pages": [
     {
-      "id": "fell",
+      "id": "overview",
       "title": {
-        "ru": "Как срубить дерево",
-        "en": "How to fell a tree"
-      },
-      "models": [
-        "minecraft:stone_axe",
-        "minecraft:oak_log",
-        "minecraft:oak_leaves"
-      ],
-      "body": {
-        "ru": [
-          "Топор рубит распознанный естественный ствол ударами, создавая четыре стадии зарубки. Работа с противоположной стороны может ускорить рубку. Качество удара зависит от выносливости и состояния рук.",
-          "После завершения дерево падает анимацией вокруг точки опоры. Остаётся пень; верхние брёвна превращаются в предметы, листья служат декорацией анимации.",
-          "Без топора и пустой рукой сохраняется ванильная добыча одного блока. Независимые многокорневые деревья и некоторые сложные конструкции пока не распознаются."
-        ],
-        "en": [
-          "Axes cut recognized natural trunks through four notch depths. Opposite-face cuts can help. Hit quality depends on stamina and arm function.",
-          "After completion, the tree falls around a pivot in an animation. A stump remains; upper logs become items and leaves are decorative.",
-          "Without an axe, vanilla single-block mining remains. Independently rooted multitrunk trees and some complex structures are not recognized."
-        ]
-      }
-    },
-    {
-      "id": "safety",
-      "title": {
-        "ru": "Ограничения и совместимость",
-        "en": "Limits and compatibility"
-      },
-      "models": [
-        "minecraft:oak_log",
-        "minecraft:spruce_log",
-        "minecraft:iron_axe"
-      ],
-      "body": {
-        "ru": [
-          "Поддерживаются обычные ванильные породы и предусмотрены зарубки для 13 пород Terrarian. Распознавание ограничено, чтобы не разрушать постройки как деревья.",
-          "Рубка не создаёт отдельную шкалу энергии: она использует ядро, а при Traumatic учитывает функции рук. Не каждый сложный ствол будет рубиться целиком.",
-          "Падение пока кинематическое, без полноценного столкновения с рельефом и без постоянного лежащего ствола. Распил в трёх точках ещё не реализован."
-        ],
-        "en": [
-          "Vanilla woods are supported, with optional notch assets for 13 Terrarian species. Recognition is conservative to avoid destroying buildings.",
-          "Felling uses Core stamina rather than another energy pool and considers arm function with Traumatic. Not every complex trunk can be felled whole.",
-          "Falling is kinematic, without full terrain collision or persistent fallen trunk. Three-point bucking is not implemented."
-        ]
-      }
-    },
-    {
-      "id": "held_attack",
-      "title": {
-        "ru": "Удержание топора",
-        "en": "Held axe attack"
-      },
-      "models": [
-        "minecraft:stone_axe"
-      ],
-      "body": {
-        "ru": [
-          "Удержание ЛКМ сохраняет выбранную зарубку; сервер проверяет дальность, прицел, инструмент и режим игры. Звук и взмах только за действительный удар.",
-          "Распил лежащего ствола в трёх точках пока не реализован."
-        ],
-        "en": [
-          "Holding attack retains the notch target. Server validates reach, aim, tool and mode; valid strikes alone trigger swings.",
-          "Three-point cutting of a persistent fallen trunk is not implemented."
-        ]
-      }
-    },
-    {
-      "id": "notches",
-      "title": {
-        "ru": "Зарубки и падение",
-        "en": "Notches and falling"
+        "ru": "Рубка деревьев: обзор",
+        "en": "Tree chopping: overview"
       },
       "models": [
         "minecraft:stone_axe",
@@ -89,12 +21,12 @@
       ],
       "body": {
         "ru": [
-          "Распознанное дерево получает четыре стадии зарубки. ЛКМ топором с нужной стороны изменяет зарубку; противоположная сторона может ускорить рубку.",
-          "После среза остаётся пень, верхняя часть падает вокруг точки опоры. Верхние брёвна становятся предметами; постоянный лежащий ствол пока не реализован."
+          "TreeChopper управляет рубкой и падением деревьев. Ядро предоставляет характеристики материалов, выносливость и проверку разрешений; Terrarian предоставляет влажность древесины, Trauma — состояние рук.",
+          "Актуальные инструкции по зарубкам, поваленным стволам, инструментам и обработке древесины находятся в собственной главе TreeChopper и его разделе Patchouli. Не применяйте инструкции от старых версий к новым механикам."
         ],
         "en": [
-          "Recognized trees have four notch stages. Axe strikes advance the notch; the opposite side may speed felling.",
-          "A stump remains; the upper tree pivots and falls. Upper logs drop as items; persistent fallen trunks are not implemented."
+          "TreeChopper owns tree cutting and felling. Core provides material properties, stamina and protection checks; Terrarian provides wood moisture and Trauma provides arm function.",
+          "See the addon-owned TreeChopper chapter and its Patchouli entries for current notches, fallen trunks, tools and wood processing. Do not apply instructions from older versions to current mechanics."
         ]
       }
     }

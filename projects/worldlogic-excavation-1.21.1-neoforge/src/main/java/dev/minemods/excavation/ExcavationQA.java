@@ -17,6 +17,16 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 final class ExcavationQA {
+    private static FakePlayer observedPlayer;
+    private static BlockPos observedPos;
+    private static boolean deny,probeObserved;
+    static void observeBreak(net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e){
+        if(observedPlayer==null||e.getPlayer()!=observedPlayer||!e.getPos().equals(observedPos))return;
+        probeObserved=dev.minemods.worldlogic.api.WorldLogicBreaks.isProtectionProbe(e);
+        if(deny)e.setCanceled(true);
+    }
+    private static double fatigue(FakePlayer p){return dev.minemods.worldlogic.api.WorldLogicApi.fatigue(p).fatigue();}
+    private static void clear(FakePlayer p){dev.minemods.worldlogic.api.WorldLogicApi.recoverExertion(p,100);}
     private static void check(boolean test,String message){if(!test)throw new IllegalStateException(message);}
     static void register(RegisterCommandsEvent event){
         event.getDispatcher().register(Commands.literal("wlexcavation").requires(s->s.hasPermission(2))
@@ -34,6 +44,39 @@ final class ExcavationQA {
     }
     private static List<ItemEntity> drops(ServerLevel l,BlockPos p){return l.getEntitiesOfClass(ItemEntity.class,new AABB(p).inflate(2));}
     private static int oreUnits(ServerLevel l,BlockPos p,Catalog.Spec spec){return drops(l,p).stream().mapToInt(e->Catalog.units(e.getItem(),spec.family())).sum();}
+    private static void integration(ServerLevel l,BlockPos pos,FakePlayer fake,net.minecraft.world.level.block.state.BlockState original,ItemStack tool,ExcavationApi.Contract api){
+        var core=dev.minemods.worldlogic.api.WorldLogicCapabilities.find(dev.minemods.worldlogic.api.WorldLogicExcavation.KEY,1).orElseThrow();
+        Excavation.verifyMineralProducts();
+        // Measure the actual Core multiplier via its public API rather than private NBT.
+        clear(fake);dev.minemods.worldlogic.api.WorldLogicApi.addExertion(fake,1);
+        double factor=fatigue(fake);clear(fake);check(factor>0,"Core exertion must be enabled");
+        double initial=fatigue(fake);int wear=tool.getDamageValue();
+        observedPlayer=fake;observedPos=pos.immutable();deny=true;probeObserved=false;
+        try{
+            check(api.strike(fake,pos).status()==ExcavationApi.Status.DENIED,"Late denied strike");
+            check(probeObserved&&fatigue(fake)==initial&&tool.getDamageValue()==wear&&l.getBlockState(pos).equals(original)&&drops(l,pos).isEmpty(),"Denied probe has zero side effects");
+            deny=false;
+            var timing=api.timing(fake,pos).orElseThrow();check(timing.hits()>1,"Fixture must need multiple strikes");
+            for(int i=0;i<timing.hits();i++){
+                Excavation.qaReset(fake);aim(fake,pos,false);
+                var actual=l.getBlockState(pos);
+                var target=core.inspectOriginal(l,pos,original,tool).orElseThrow();
+                check(target.state().equals(original)&&!target.constituents().isEmpty()&&l.getBlockState(pos).equals(actual),"Proxy inspection preserves original and world");
+                var now=api.timing(fake,pos).orElseThrow();
+                double before=fatigue(fake);
+                var result=api.strike(fake,pos);
+                boolean done=result.status()==ExcavationApi.Status.BROKEN;
+                check(done||result.status()==ExcavationApi.Status.ACCEPTED,"Integration strike "+result.status());
+                double expected=done?Math.min(5,.6+target.vanillaResistance()*.5):Excavation.intermediateEffort(target.vanillaResistance(),now.hits());
+                check(Math.abs(fatigue(fake)-before-expected*factor)<1e-6,"Exactly one effort debit, expected "+expected*factor+" got "+(fatigue(fake)-before));
+                check(probeObserved!=done,"Only intermediate strike is a probe");
+                if(done)return;
+                check(api.strike(fake,pos).status()==ExcavationApi.Status.COOLDOWN,"Immediate repeated hit");
+                check(Math.abs(fatigue(fake)-before-expected*factor)<1e-6,"Cooldown has zero debit");
+            }
+            throw new IllegalStateException("Integration did not finish");
+        }finally{observedPlayer=null;observedPos=null;deny=false;probeObserved=false;clear(fake);}
+    }
     private static void run(ServerLevel l,BlockPos pos,String name){
         var state=l.getBlockState(pos);var spec=Catalog.spec(state);
         check(spec!=null&&!(state.getBlock() instanceof ChipBlock),"Fixture must be a fresh catalog block");
@@ -41,7 +84,8 @@ final class ExcavationQA {
         FakePlayer fake=FakePlayerFactory.getMinecraft(l);aim(fake,pos,false);
         var api=dev.minemods.worldlogic.api.WorldLogicCapabilities.find(ExcavationApi.KEY,0).orElseThrow();
         ItemStack tool=name.equals("hands")?ItemStack.EMPTY:new ItemStack(spec.soil()?(name.equals("soilfast")?Items.DIAMOND_SHOVEL:Items.IRON_SHOVEL):name.equals("bad")?Items.WOODEN_PICKAXE:name.equals("iron")||name.equals("switch")?Items.IRON_PICKAXE:Items.DIAMOND_PICKAXE);
-        fake.setItemSlot(EquipmentSlot.MAINHAND,tool);Excavation.qaReset(fake);
+        fake.setItemSlot(EquipmentSlot.MAINHAND,tool);Excavation.qaReset(fake);clear(fake);
+        if(name.equals("integration")){integration(l,pos,fake,state,tool,api);return;}
         if(name.equals("bad")){
             check(api.strike(fake,pos).status()==ExcavationApi.Status.WRONG_TOOL,"Wrong tier accepted");
             check(l.getBlockState(pos).equals(state)&&drops(l,pos).isEmpty()&&tool.getDamageValue()==0,"Wrong tool changed state/yield/wear");

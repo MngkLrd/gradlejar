@@ -68,5 +68,6 @@ public final class TravelPhysics {
    if(factor<.85&&now%100==0)p.displayClientMessage(Component.translatable("message.worldlogic.boat_loaded",Math.round(factor*100)),true);
   }
  }
- public static void logout(PlayerEvent.PlayerLoggedOutEvent e){Player p=e.getEntity();STEPS.remove(p);IMPACT.remove(p);SWING.remove(p);TENSION.remove(p);}
+ static void adminRestore(Player p){STEPS.remove(p);IMPACT.remove(p);SWING.remove(p);TENSION.remove(p);}
+ public static void logout(PlayerEvent.PlayerLoggedOutEvent e){adminRestore(e.getEntity());}
 }

@@ -1,6 +1,8 @@
-# WorldLogic Excavation 0.2.0
+# WorldLogic Excavation 0.2.1
 Draft development for Minecraft 1.21.1 NeoForge; see API.md. Core 1.5.0 candidate is a required build/runtime dependency. Separate press per strike; no held mining. Source includes vanilla raw rock and ore families plus the five Core rocks and ten Core ore families. Do not publish or merge as production until Core's exact artifact, combined runtime, and visual QA pass.
 
 Reference: TreeChopper 0.9.1 branch worldlogic-treechopper-0.5.0 @ 3249de4 (TreeChopperApi, ChopNetwork, CutProgress, CutGeometry, CutWoodModel). ADAPT discrete authenticated strike, persistent damage and chunk-baked geometry; independent 3D rock voxel carving on six faces and conserved fractional ore. INTEGRATE Core #262 actual typed excavation and material contracts. REJECT pebble integration for stone after owner's revision; TreeChopper's rockForSurface and looseFind are read-only and no longer needed. No upstream copied art; source texture references only. The project is isolated from other modules and doesn't mutate Core or TreeChopper.
 
-0.2.0: vanilla-effective mining-time correlation (1.5× soil/rock, 2× ore), feasible separate-click count and distributed tick cadence; 16 compact soil variants with native final loot; bare hands soil allowed. Single-strike exception for near-instant vanilla blocks. Sand/gravel and farmland remain vanilla until their special lifecycle can be preserved. Gradle verification source set fixes previous test-discovery error.
+0.2.1: vanilla-effective mining-time correlation (1.5× soil/rock, 2× ore), feasible separate-click count and distributed tick cadence; 16 compact soil variants with native final loot; bare hands soil allowed. Single-strike exception for near-instant vanilla blocks. Sand/gravel and farmland remain vanilla until their special lifecycle can be preserved. Gradle verification source set fixes previous test-discovery error.
+
+0.2.1 consumes Core rev21 protection-only check and original state, charges successful intermediate hits exactly once, delegates final mining to Core, verifies Core mineral product destinations. 1.5.3 exact binary joint server diagnostic.

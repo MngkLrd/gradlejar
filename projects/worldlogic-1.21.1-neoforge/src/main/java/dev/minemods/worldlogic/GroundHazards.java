@@ -52,5 +52,6 @@ public final class GroundHazards {
    Vec3 v=p.getDeltaMovement();p.setDeltaMovement(v.x,-.20,v.z);p.hurtMarked=true;Survival.work(p,3);
   }
  }
- public static void logout(PlayerEvent.PlayerLoggedOutEvent e){Player p=e.getEntity();LANDING.remove(p);SLIP.remove(p);GRIP.remove(p);}
+ static void adminRestore(Player p){LANDING.remove(p);SLIP.remove(p);GRIP.remove(p);}
+ public static void logout(PlayerEvent.PlayerLoggedOutEvent e){adminRestore(e.getEntity());}
 }

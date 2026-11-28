@@ -53,10 +53,10 @@
     {
       "id": "worldlogic:excavation",
       "version": 1,
-      "min_revision": 0,
+      "min_revision": 1,
       "required": true,
       "status": "implemented",
-      "fallback": "No mining override without required compatible Core; typed candidate dependency pinned, production JAR joint runtime not yet certified."
+      "fallback": "Required Core excavation v1 rev1; no raw synthetic BreakEvent or private NBT fallback."
     },
     {
       "id": "worldlogic:material_properties",
@@ -65,6 +65,14 @@
       "required": true,
       "status": "implemented",
       "fallback": "Unknown physical contact stays absent; no invented material profiles."
+    },
+    {
+      "id": "worldlogic:survival_physics",
+      "version": 1,
+      "min_revision": 19,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Core 1.5.1+ required; accepted intermediate exertion only, successful final destroyBlock handled by Core."
     }
   ],
   "features": [
@@ -81,9 +89,10 @@
       ],
       "consumes": [
         "worldlogic:excavation",
-        "worldlogic:material_properties"
+        "worldlogic:material_properties",
+        "worldlogic:survival_physics"
       ],
-      "integration_review": "Core 1.5.0 PR #262 and issue #264; protection-only effort arbitration requested. TreeChopper v1 rev1 inspected; pebble yield superseded, no dependency."
+      "integration_review": "Core #270/#275: typed inspectOriginal and scoped checkProtection; addExertion only after accepted intermediate mutation; Core charges final destruction once."
     },
     {
       "id": "persistent_multiface_notches",
@@ -113,7 +122,7 @@
       "consumes": [
         "worldlogic:material_properties"
       ],
-      "integration_review": "Fixed reserve conserved across tool and player switches; Core specimens retained for minerals without established refined item."
+      "integration_review": "Core canonical mineralProduct checked for every Core ore recipe; seven retain specimen pending metallurgy."
     },
     {
       "id": "timed_soil_excavation",
@@ -128,7 +137,8 @@
         "worldlogic:rock_fracture"
       ],
       "consumes": [
-        "worldlogic:excavation"
+        "worldlogic:excavation",
+        "worldlogic:survival_physics"
       ],
       "integration_review": "Core SOIL role and current player vanilla break progress; compact soil notches preserve native final loot, no parallel fatigue pool."
     }
@@ -157,6 +167,16 @@
       "capabilities": [
         "worldlogic:rock_fracture",
         "worldlogic:excavation"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-excavation.json",
+      "status": "implemented"
+    },
+    {
+      "id": "excavation.core_rev21_arbitration",
+      "capabilities": [
+        "worldlogic:rock_fracture",
+        "worldlogic:excavation",
+        "worldlogic:survival_physics"
       ],
       "ref": "tools/qa/scenarios/worldlogic-excavation.json",
       "status": "implemented"

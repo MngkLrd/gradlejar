@@ -96,12 +96,13 @@
     {
       "id": "worldlogic:survival_physics",
       "version": 1,
-      "revision": 18,
+      "revision": 19,
       "domains": [
         "survival_physics"
       ],
       "entrypoints": [
-        "dev.minemods.worldlogic.api.WorldLogicApi"
+        "dev.minemods.worldlogic.api.WorldLogicApi",
+        "dev.minemods.worldlogic.api.WorldLogicBreaks"
       ],
       "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
       "source_paths": [
@@ -111,7 +112,11 @@
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TravelPhysics.java",
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/ExertionModifiers.java",
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GroundMotion.java",
-        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Balance.java"
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Balance.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/PeerPhysiology.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicBreaks.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/CompletedMiningMixin.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/AdminCommands.java"
       ],
       "operations": [
         {
@@ -131,6 +136,24 @@
           "kind": "query",
           "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
           "semantics": "Read actual movement retention coefficient and local wetness."
+        },
+        {
+          "id": "metabolic_rest_policy",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Core-owned optional native Metabolism stationary recovery negotiation."
+        },
+        {
+          "id": "admin_restore",
+          "kind": "command",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Trusted server heal orchestration with explicit restored and unavailable providers."
+        },
+        {
+          "id": "check_break_protection",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicBreaks",
+          "semantics": "Scoped normal BreakEvent protection-only probe; skips Core gameplay mutations and debit."
         }
       ]
     },
@@ -311,7 +334,7 @@
     {
       "id": "worldlogic:excavation",
       "version": 1,
-      "revision": 0,
+      "revision": 1,
       "domains": [
         "excavation"
       ],
@@ -320,7 +343,10 @@
       ],
       "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
       "source_paths": [
-        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicExcavation.java"
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicExcavation.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicBreaks.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalMaterials.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/MineralContent.java"
       ],
       "operations": [
         {
@@ -334,11 +360,56 @@
           "kind": "query",
           "entrypoint": "dev.minemods.worldlogic.api.WorldLogicExcavation",
           "semantics": "Compute incident impact energy and contact energy per area using existing PhysicalMaterials without mutating block or item."
+        },
+        {
+          "id": "inspect_original",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicExcavation",
+          "semantics": "Read exact saved original state at loaded proxy without replacing blocks."
+        },
+        {
+          "id": "mineral_product",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicExcavation",
+          "semantics": "Canonical registered mineral specimen and intended processing product, no new recipes."
         }
       ]
     }
   ],
-  "consumes": [],
+  "consumes": [
+    {
+      "id": "worldlogic:trauma_status",
+      "version": 1,
+      "min_revision": 7,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Installed compatible reset required for full heal; older or absent provider never written by Core."
+    },
+    {
+      "id": "worldlogic:hydration_physiology",
+      "version": 1,
+      "min_revision": 5,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Installed compatible reset required for full heal; absent provider no hydration state."
+    },
+    {
+      "id": "worldlogic:thermal_status",
+      "version": 1,
+      "min_revision": 4,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Installed compatible reset required for full heal; absent provider no thermal state."
+    },
+    {
+      "id": "worldlogic:metabolism_physiology",
+      "version": 1,
+      "min_revision": 6,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Legacy Core stationary recovery when absent/incompatible; full heal reports unavailable installed reset."
+    }
+  ],
   "features": [
     {
       "id": "material_properties",
@@ -375,13 +446,28 @@
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Survival.java",
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Combat.java",
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TravelPhysics.java",
-        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/ExertionModifiers.java"
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/ExertionModifiers.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/PeerPhysiology.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicBreaks.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/CompletedMiningMixin.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/AdminCommands.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Body.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GroundHazards.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/ImpactDynamics.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Rules.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Balance.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/ReleaseChecks.java"
       ],
       "provides": [
         "worldlogic:survival_physics"
       ],
-      "consumes": [],
-      "integration_review": "Trauma #219 consumes collision and injury context; no medical or nutrition ownership transferred. Core alone owns exertion speed and attack factors; do not apply them again from peers."
+      "consumes": [
+        "worldlogic:trauma_status",
+        "worldlogic:hydration_physiology",
+        "worldlogic:thermal_status",
+        "worldlogic:metabolism_physiology"
+      ],
+      "integration_review": "Trauma #219 consumes collision and injury context; no medical or nutrition ownership transferred. Core alone owns exertion speed and attack factors; do not apply them again from peers. Core calls Metabolism rev6 native rest and public admin provider methods only; #265–267. Missing installed reset is explicitly incomplete. TreeChopper/Excavation consume protection marker and explicit accepted work; #264. Core 1.5.2 checks actual Trauma rev7, Hydration rev5, Thermal rev4, Metabolism rev6+ public methods; no new API revision or ownership. Core clears its own transient motion/impact timers and modifier immediately on heal. Core 1.5.3 temporarily disables automatic downhill and failed-jump knockdowns only; no API signature or ownership changes."
     },
     {
       "id": "client_navigation",
@@ -559,13 +645,16 @@
     {
       "id": "excavation_foundations",
       "source_paths": [
-        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicExcavation.java"
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicExcavation.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicBreaks.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalMaterials.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/MineralContent.java"
       ],
       "provides": [
         "worldlogic:excavation"
       ],
       "consumes": [],
-      "integration_review": "Uses authoritative PhysicalMaterials and existing block/tool registries; upcoming excavation addon owns actual progressive geometry, strike lifecycle, block mutation, drops and permissions."
+      "integration_review": "Uses authoritative PhysicalMaterials and existing block/tool registries; upcoming excavation addon owns actual progressive geometry, strike lifecycle, block mutation, drops and permissions. Rev1 supplies original proxy-state inspection, scoped shared permission-only probe and mineral product mapping. Addon owns hit authorization, explicit accepted nonfinal work and final normal destruction; no duplicate debit."
     },
     {
       "id": "surface_traction_and_descent",
@@ -685,6 +774,26 @@
       "id": "worldlogic.ground_traction.contract",
       "capabilities": [
         "worldlogic:survival_physics"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.integration_rev21.contract",
+      "capabilities": [
+        "worldlogic:survival_physics",
+        "worldlogic:excavation"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.active_peer_physiology.negotiation",
+      "capabilities": [
+        "worldlogic:trauma_status",
+        "worldlogic:hydration_physiology",
+        "worldlogic:thermal_status",
+        "worldlogic:metabolism_physiology"
       ],
       "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
       "status": "implemented"

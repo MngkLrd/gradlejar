@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge 1.4.0 development / RC56 mineral families and 3D ores",
+  "name": "World Logic NeoForge 1.5.3 / downhill and failed-jump hotfix",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -2114,6 +2114,50 @@
         {
           "backend": "server",
           "name": "All 18 mineral types replace actual rock while preserving cave air and bedrock"
+        }
+      ]
+    },
+    {
+      "id": "core6-rest-policy",
+      "kind": "mechanic",
+      "subject": "Fractional 3/5/7/10/12 second rest rate math and standalone legacy rest controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Stamina active recovery, sprint, hunger and airborne controls"
+        }
+      ]
+    },
+    {
+      "id": "core6-break-protection",
+      "kind": "mechanic",
+      "subject": "Protection marker scope, late denial and unchanged block/stamina, confirmed real break once, original proxy composition and all ten mineral processing destinations",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "core6-admin-heal",
+      "kind": "mechanic",
+      "subject": "Core admin restore health, hunger, stamina and legacy state; absent optional providers do not fail standalone heal; immediate Core movement modifier cleanup; absent/installed optional provider attribution and FakePlayer native metabolic policy exclusion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "core6-movement-falls-suspended",
+      "kind": "mechanic",
+      "subject": "Default-disabled downhill and failed jump Balance entry guards, explicit diagnostic reenable, unrelated landing/impact mechanics preserved",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
         }
       ]
     }

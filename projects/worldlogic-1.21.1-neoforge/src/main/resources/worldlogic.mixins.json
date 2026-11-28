@@ -23,7 +23,8 @@
     "MarinePlantPlacementMixin",
     "NativeWaterEntityMixin",
     "SoilFarmlandMixin",
-    "RockHardnessMixin"
+    "RockHardnessMixin",
+    "CompletedMiningMixin"
   ],
   "injectors": {
     "defaultRequire": 1
