@@ -74,6 +74,25 @@ final class AddonBridge {
    return Boolean.TRUE.equals(TRAUMA.report().invoke(null,p,zone,injury,amount,0));
   }catch(ReflectiveOperationException|RuntimeException e){if(!warnedTrauma){LOG.warn("Trauma injury API failed",e);warnedTrauma=true;}return false;}
  }
+ private static final Method WATER=method("dev.minemods.worldlogic.api.WorldLogicApi","waterProfile",ServerLevel.class,BlockPos.class);
+ private static final Method SEASON=method("dev.minemods.worldlogic.api.WorldLogicApi","season",ServerLevel.class,BlockPos.class);
+ private static boolean warnedWater,warnedSeason;
+ static String waterKind(ServerLevel level,BlockPos pos){
+   if(WATER==null)return "UNKNOWN";
+   try{
+     Object profile=WATER.invoke(null,level,pos);
+     return profile==null?"UNKNOWN":profile.getClass().getMethod("kind").invoke(profile).toString();
+   }catch(ReflectiveOperationException|LinkageError|RuntimeException e){if(!warnedWater){LOG.warn("Core water profile unavailable",e);warnedWater=true;}return "UNKNOWN";}
+ }
+ static double seasonalOffset(ServerLevel level,BlockPos pos){
+   if(SEASON==null)return 0;
+   try{
+     Object season=((Optional<?>)SEASON.invoke(null,level,pos)).orElse(null);
+     if(season==null)return 0;
+     double offset=number(season,"temperatureOffsetC");
+     return Double.isFinite(offset)?Math.max(-35,Math.min(35,offset)):0;
+   }catch(ReflectiveOperationException|LinkageError|RuntimeException e){if(!warnedSeason){LOG.warn("Core season unavailable",e);warnedSeason=true;}return 0;}
+ }
  record Local(String kind,double gust,double pressure,double cloud,double fog,double intensity){}
  static Optional<Local> weather(ServerLevel l,BlockPos p){
   if(WEATHER==null)return Optional.empty();

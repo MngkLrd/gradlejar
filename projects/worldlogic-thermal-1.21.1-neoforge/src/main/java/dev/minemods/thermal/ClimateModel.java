@@ -13,6 +13,21 @@ public final class ClimateModel {
         return cycle*(covered ? 2 : 5) - (storm && !covered ? 3 : 0);
     }
     public static double water(double air, double base) { return clamp(base*.65+air*.35, 1, 32); }
+    /** Natural-water thermal inertia: seasonal regional reference, actual surface air and depth. */
+    public static double naturalWater(double air,double base,String kind,int depth) {
+        double d=clamp(depth,0,48);
+        double influence=switch(kind) {
+            case "SEA" -> .18; case "LAKE" -> .30; case "RIVER" -> .52;
+            case "SPRING","GROUNDWATER" -> .08; case "WETLAND","POND" -> .70;
+            case "BRACKISH" -> .36; default -> .48;
+        };
+        double anchor=base;
+        if(kind.equals("GROUNDWATER")||kind.equals("SPRING"))anchor=clamp(8+base*.32,3,22);
+        double surface=anchor+(air-anchor)*influence;
+        double deep=kind.equals("SEA")?clamp(3+base*.24,1,13):kind.equals("SPRING")||kind.equals("GROUNDWATER")?anchor:clamp(4+base*.22,3,17);
+        double mix=1-Math.exp(-d/(kind.equals("SEA")?16:kind.equals("RIVER")?24:9));
+        return clamp(surface+(deep-surface)*mix,kind.equals("SEA")?-1.8:kind.equals("BRACKISH")?-.6:.1,38);
+    }
     public static double skinWetness(double previous, boolean water, boolean rain, double radiant) {
         return clamp(water ? 1 : previous + (rain ? .08 : -.015 - Math.max(0,radiant)*.003),0,1);
     }

@@ -3,7 +3,7 @@ loaderVersion="[4,)"
 license="All Rights Reserved"
 [[mods]]
 modId="worldlogic_thermal"
-version="0.9.1-rc1"
+version="0.9.2-rc1"
 displayName="WorldLogic: Thermal Dynamics"
 description="Thermal exposure and body temperature for WorldLogic."
 [[dependencies.worldlogic_thermal]]

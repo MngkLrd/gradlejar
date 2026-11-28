@@ -44,7 +44,10 @@ public final class EnvironmentSampler {
         double outdoorHumidity=atmosphere.map(WorldLogicApi.Atmosphere::relativeHumidityPercent).orElse(100.0);
         double outdoorWind=atmosphere.map(a->clamp(a.outdoorWindSpeedMps()/12,0,1)).orElse(0.0);
         var roomReading=RoomHeat.sample(level,pos,air,outdoorHumidity,outdoorWind);
-        double room=roomReading.indoor()?clamp(roomReading.airC()-air,-8,14):0;
+        double room=roomReading.indoor()?roomReading.airC()-air:0;
+        var waterContact=WaterExposure.contact(p);
+        boolean submerged=waterContact.isPresent()||p.isInWater();
+        double waterC=waterContact.map(q->WaterExposure.sample(level,q,air).celsius()).orElseGet(()->water(air,air));
         double localAir=air+room,localHumidity=roomReading.indoor()?roomReading.humidity():outdoorHumidity;
         var local=localComfort(level,p,localAir,localHumidity,sheltered||roomReading.indoor(),outdoorWind,candidates(level,pos));
         double radiant=local.heat();
@@ -59,9 +62,9 @@ public final class EnvironmentSampler {
         // API v1 has no core gear moisture or hot-food accessor.
         var a=atmosphere.orElse(null);
         double previous=Double.isFinite(skin)?clamp(skin,0,1):0;
-        skin=skinWetness(previous,p.isInWater(),rain&&!roomReading.indoor(),radiant);
-        if(rain&&!roomReading.indoor()&&!p.isInWater())skin=clamp(previous+(skin-previous)*(1-clamp(rainShield,0,.92)),0,1);
-        if((!rain||roomReading.indoor())&&!p.isInWater()&&a!=null)skin=previous+(skin-previous)*WeatherReading.dryingFactor(localHumidity);
+        skin=skinWetness(previous,submerged,rain&&!roomReading.indoor(),radiant);
+        if(rain&&!roomReading.indoor()&&!submerged)skin=clamp(previous+(skin-previous)*(1-clamp(rainShield,0,.92)),0,1);
+        if((!rain||roomReading.indoor())&&!submerged&&a!=null)skin=previous+(skin-previous)*WeatherReading.dryingFactor(localHumidity);
         double wind=a!=null?WeatherReading.normalizedWind(a.outdoorWindSpeedMps(),sheltered):sheltered?.06:env.globalThunder()?.85:rain?.55:.22;
         if(!sheltered&&regionalWeather.isPresent())wind=Math.max(wind,WeatherReading.normalizedWind(regionalWeather.get().gust()*.65,false));
         if(roomReading.indoor())wind=Math.max(.06,roomReading.ventilation()*outdoorWind+.02);
@@ -73,7 +76,7 @@ public final class EnvironmentSampler {
         double retained=clamp(ins,0,1)*(1-.75*skin);
         double warmLimit=28-activity*7-retained*5+clamp(ventilation,0,1)*7;
         double currentBody=p.getPersistentData().getCompound(ThermalEvents.KEY).contains("body")?p.getPersistentData().getCompound(ThermalEvents.KEY).getDouble("body"):37;
-        double effective=air+room+radiant-local.cooling()-shadeCooling-wind*(2+5*skin)-6*skin;
+        double effective=submerged?waterC+radiant*.30-local.cooling()*.40:air+room+radiant-local.cooling()-shadeCooling-wind*(2+5*skin)-6*skin;
         var portable=ThermalPackItem.comfort(ThermalPackItem.hotbar(p,localHumidity),effective,warmLimit,currentBody);
         radiant=ClimateComfort.capRadiant(localAir,radiant+portable.heat());
         double cooling=Math.min(18,local.cooling()+shadeCooling+portable.cool());
@@ -93,13 +96,13 @@ public final class EnvironmentSampler {
         // Metabolism already accounts for digestion and energy. Keep the legacy meal bonus only without that provider.
         double meal=physiology.metabolism()?0:clamp(n.getDouble("mealWarmth"),0,1);
         // Share heat between immediate radiant exchange and bounded retained room heat.
-        if(room!=0)radiant*=.8;
+        if(roomReading.indoor())radiant*=.8;
         double contact=0;
         var floor=level.getBlockState(pos.below());
-        if(!p.isInWater()&&p.onGround()&&(floor.is(Blocks.ICE)||floor.is(Blocks.PACKED_ICE)||floor.is(Blocks.BLUE_ICE)||floor.is(Blocks.SNOW_BLOCK)))
+        if(!submerged&&p.onGround()&&(floor.is(Blocks.ICE)||floor.is(Blocks.PACKED_ICE)||floor.is(Blocks.BLUE_ICE)||floor.is(Blocks.SNOW_BLOCK)))
             contact=2*(1-LimbExposure.protection(p.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET)));
         cooling=Math.min(18,cooling+contact);
-        return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,p.isInWater(),water(air,air),meal,cooling,clamp(ventilation,0,1),adaptation.cold(),adaptation.heat(),nutrition,hydration,room,physiology.circulation()),skin,sheltered,solar,weather,roomReading,physiology));
+        return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,submerged,waterC,meal,cooling,clamp(ventilation,0,1),adaptation.cold(),adaptation.heat(),nutrition,hydration,room,physiology.circulation()),skin,sheltered,solar,weather,roomReading,physiology));
     }
     record LocalComfort(double heat,double cooling){}
     static LocalComfort localComfort(ServerLevel level,ServerPlayer p,double air,double humidity,boolean sheltered) {

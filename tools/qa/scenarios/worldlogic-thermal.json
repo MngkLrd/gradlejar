@@ -200,6 +200,18 @@
       "command": "thermal qa integration",
       "expect": "THERMAL_QA_integration_PASS",
       "assertion": true
+    },
+    {
+      "name": "Natural water depth and type, real immersion, attenuated local heat and cooling",
+      "command": "thermal qa water_exposure",
+      "expect": "THERMAL_QA_water_exposure_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Uncapped room differential, thermal inertia, fresh public status",
+      "command": "thermal qa room_response",
+      "expect": "THERMAL_QA_room_response_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -508,6 +520,28 @@
         {
           "backend": "server",
           "name": "Optional physiology providers, energy, electrolytes, circulation and public snapshot"
+        }
+      ]
+    },
+    {
+      "id": "water-exposure",
+      "kind": "mechanic",
+      "subject": "Natural water depth and type, real immersion, attenuated local heat and cooling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Natural water depth and type, real immersion, attenuated local heat and cooling"
+        }
+      ]
+    },
+    {
+      "id": "room-response",
+      "kind": "mechanic",
+      "subject": "Uncapped room differential, thermal inertia, fresh public status",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Uncapped room differential, thermal inertia, fresh public status"
         }
       ]
     }

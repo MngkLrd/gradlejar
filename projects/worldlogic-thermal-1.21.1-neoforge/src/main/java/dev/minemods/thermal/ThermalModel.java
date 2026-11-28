@@ -22,8 +22,9 @@ public final class ThermalModel {
         double wet = clamp(e.wetness(),0,1), wind = clamp(e.wind(),0,1), insulation = clamp(e.insulation(),0,1);
         double activity = clamp(e.activity(),0,1), meal = clamp(e.mealWarmth(),0,1);
         double retained = insulation * (1 - 0.75 * wet);
-        double felt = e.submerged() ? e.waterC() : e.airC() + clamp(e.roomDelta(),-8,14) + clamp(e.radiantC(),0,55)-clamp(e.coolingC(),0,18)
-            - wind * (2 + 5 * wet) - 6 * wet;
+        // Immersion replaces ambient convection and evaporation, not all local thermal sources.
+        double felt = e.submerged() ? e.waterC()+clamp(e.radiantC(),0,55)*.30-clamp(e.coolingC(),0,18)*.40
+            : e.airC()+e.roomDelta()+clamp(e.radiantC(),0,55)-clamp(e.coolingC(),0,18)-wind*(2+5*wet)-6*wet;
         double cold = Math.max(0, 12 - felt - activity * 6 - meal * 2 - retained * 6 - clamp(e.coldAdaptation(),0,1)*3 + (1-clamp(e.nutrition(),0,1))*5) * (1 - retained * .90);
         double hot = Math.max(0, felt - 28 + activity * 7 + meal + retained * 5 - clamp(e.ventilation(),0,1)*7 - clamp(e.heatAdaptation(),0,1)*3 + (1-clamp(e.hydration(),0,1))*4);
         // Reduced circulating blood impairs heat distribution under thermal stress,

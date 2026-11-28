@@ -22,7 +22,7 @@ public final class RoomPhysics {
         double exteriorVapor=saturation(outdoor)*clamp(in.humidity(),0,100)/100;
         while(remaining>0){
             double dt=Math.min(10,remaining);remaining-=dt;
-            double target=outdoor+clamp(source+retention*(s.mass()-outdoor),-8,14);
+            double target=clamp(outdoor+clamp(source+retention*(s.mass()-outdoor),-24,40),-100,100);
             double airTau=(30+40*mass)/(1+vent*4+conduct*.25);
             if(source>0&&target>s.air())airTau/=3;
             double air=approach(s.air(),target,dt,airTau);
@@ -30,7 +30,8 @@ public final class RoomPhysics {
             // Mixing uses absolute vapor, so heating alone lowers RH without magically removing water.
             double vaporTarget=exteriorVapor+Math.max(0,in.moisture())/(Math.max(4,in.volume())*(.06+vent*.8));
             double vapor=approach(s.vapor(),vaporTarget,dt,65/(.25+vent*3));
-            s=new State(clamp(air,outdoor-8,outdoor+14),clamp(wall,-100,100),clamp(vapor,0,saturation(air)));
+            // Stored air must not snap to a new outdoor temperature.
+            s=new State(clamp(air,-100,100),clamp(wall,-100,100),clamp(vapor,0,saturation(air)));
         }
         return s;
     }

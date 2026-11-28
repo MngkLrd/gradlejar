@@ -30,7 +30,7 @@ public final class ThermalEvents {
         boolean active=!p.isCreative()&&!p.isSpectator();
         if(!active) {
             penalty(p,0);
-            n.remove("room");n.remove("physiology");
+            n.remove("room");n.remove("physiology");n.remove("sampleTick");n.remove("sampleDimension");
             n.remove("coldSeconds");n.remove("hotSeconds");n.remove("sunSeconds");n.remove("condition");root.put(KEY,n);
             ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),false,37,22,22,0,0,0,0,false,ThermalCondition.Kind.NONE,WeatherReading.unavailable(),0,0,1,0));
             return;
@@ -39,7 +39,10 @@ public final class ThermalEvents {
         if(!Double.isFinite(previous)) previous=37;
         previous=clamp(previous,30,43);
         var sampled=EnvironmentSampler.sample(p,n.getDouble("skinWet"));
-        if(sampled.isEmpty()) return;
+        if(sampled.isEmpty()) {
+            penalty(p,0);n.remove("sampleTick");n.remove("sampleDimension");n.remove("room");n.remove("physiology");root.put(KEY,n);
+            return;
+        }
         var sample=sampled.get(); var e=sample.exposure();
         var state=ThermalModel.tick(new ThermalModel.State(previous,22,37,ThermalModel.stage(previous),0),e,1);
         var adapted=Adaptation.step(new Adaptation.State(e.coldAdaptation(),e.heatAdaptation()),state.feelsLikeC(),state.bodyC());
@@ -53,6 +56,7 @@ public final class ThermalEvents {
         var phTag=new CompoundTag();phTag.putBoolean("metabolism",ph.metabolism());phTag.putBoolean("hydration",ph.hydration());phTag.putBoolean("trauma",ph.trauma());
         phTag.putDouble("energy",ph.energy());phTag.putDouble("diet",ph.dietQuality());phTag.putDouble("water",ph.waterPercent());phTag.putDouble("salts",ph.electrolyteIndex());phTag.putDouble("blood",ph.bloodFraction());
         phTag.putDouble("nutrition",e.nutrition());phTag.putDouble("cooling",e.hydration());phTag.putLong("tick",p.serverLevel().getGameTime());phTag.putString("dimension",p.serverLevel().dimension().location().toString());n.put("physiology",phTag);
+        n.putLong("sampleTick",p.serverLevel().getGameTime());n.putString("sampleDimension",p.serverLevel().dimension().location().toString());
         n.putDouble("body",state.bodyC()); n.putDouble("air",e.airC()); n.putDouble("felt",state.feelsLikeC());
         n.putDouble("skinWet",sample.skinWetness()); n.putDouble("wet",e.wetness()); n.putDouble("insulation",e.insulation());
         n.putDouble("trend",state.trendCPerMinute()); n.putDouble("radiant",e.radiantC()); n.putString("stage",state.stage().name());
@@ -100,7 +104,7 @@ public final class ThermalEvents {
     }
     public static void registerCommands(RegisterCommandsEvent event) {
         var qa=Commands.literal("qa").requires(s->s.hasPermission(2));
-        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile","adaptation","frostbite","nutrition","room_inertia","room_ventilation","room_humidity","room_persistence","room_cache","village_climate","integration"}) {
+        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile","adaptation","frostbite","nutrition","room_inertia","room_ventilation","room_humidity","room_persistence","room_cache","village_climate","integration","water_exposure","room_response"}) {
             qa.then(Commands.literal(name).executes(c->{
                 ThermalChecks.verify(c.getSource().getLevel(),name);
                 c.getSource().sendSuccess(()->Component.literal("THERMAL_QA_"+name+"_PASS"),false);

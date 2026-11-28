@@ -39,7 +39,9 @@ public final class ThermalApi {
         if(!p.serverLevel().getServer().isSameThread()) throw new IllegalStateException("Thermal API requires server thread");
         if(!p.isAlive()||p.isCreative()||p.isSpectator())return Optional.empty();
         var n=p.getPersistentData().getCompound("worldlogic_thermal");
-        if(!n.contains("body"))return Optional.empty();
+        if(!n.contains("body")||!n.contains("sampleTick"))return Optional.empty();
+        long age=p.serverLevel().getGameTime()-n.getLong("sampleTick");
+        if(age<0||age>40||!n.getString("sampleDimension").equals(p.serverLevel().dimension().location().toString())||!Double.isFinite(n.getDouble("body")))return Optional.empty();
         return Optional.of(new Status(n.getDouble("body"),ThermalCondition.parse(n.getString("condition")),n.getInt("coldSeconds"),n.getInt("hotSeconds"),n.getInt("sunSeconds")));
     }
 }
