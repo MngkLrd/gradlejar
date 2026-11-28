@@ -16,26 +16,48 @@ final class RegionalBiomeEdges{
  static Climate.TargetPoint surface(Climate.TargetPoint t,long continental){
   return new Climate.TargetPoint(t.temperature(),t.humidity(),continental,t.erosion(),0L,t.weirdness());
  }
- static Holder<Biome> resolve(MultiNoiseBiomeSource source,Climate.Sampler sampler,int qx,int qz,long continental){
-  var center=surface(sampler.sample(qx,0,qz),continental);
-  var base=source.getNoiseBiome(center);int rank=rank(id(base));
-  if(continental<4000||rank<0||rank==1||rank==2)return base;
-  long sum=0;int count=0;
-  for(int[] d:new int[][]{{1,0},{-1,0},{0,1},{0,-1}}){
-   var n=sampler.sample(qx+d[0],0,qz+d[1]);
-   if(n.continentalness()<4000)continue;
-   var neighbour=source.getNoiseBiome(surface(n,n.continentalness()));
-   if(incompatible(rank,rank(id(neighbour)))){sum+=n.humidity();count++;}
+ private static final int[][] NEIGHBOURS={{1,0},{-1,0},{0,1},{0,-1},{3,0},{-3,0},{0,3},{0,-3}};
+ private record Vote(String id,int rank,long humidity,long temperature,int weight){}
+ static long transitionHumidity(long center,List<Vote> votes){
+  long total=0;int weights=0;
+  for(var v:votes){total+=v.humidity*v.weight;weights+=v.weight;}
+  return weights==0?center:center+Math.max(-1800L,Math.min(1800L,(total/weights-center)*2/3));
+ }
+ static Holder<Biome> resolve(MultiNoiseBiomeSource source,java.util.function.BiFunction<Integer,Integer,Climate.TargetPoint> sampler,int qx,int qz,long continental){
+  var center=surface(sampler.apply(qx,qz),continental);
+  var base=source.getNoiseBiome(center);String name=id(base);int rank=rank(name);
+  if(continental<4000||rank<0)return base;
+  var votes=new ArrayList<Vote>();var extremes=new ArrayList<Vote>();var counts=new HashMap<String,Integer>();
+  int own=0,total=0;
+  for(int i=0;i<NEIGHBOURS.length;i++){
+   var d=NEIGHBOURS[i];var n=sampler.apply(qx+d[0],qz+d[1]);
+   if(n.continentalness()<4000||Math.abs(n.temperature()-center.temperature())>850)continue;
+   var neighbour=source.getNoiseBiome(surface(n,n.continentalness()));String nid=id(neighbour);int r=rank(nid);
+   if(r<0)continue;int w=i<4?2:1;
+   var v=new Vote(nid,r,n.humidity(),n.temperature(),w);votes.add(v);
+   counts.merge(nid,w,Integer::sum);total+=w;if(name.equals(nid))own+=w;
+   if(incompatible(rank,r)&&i<4)extremes.add(v);
   }
-  if(count==0)return base;
-  // Move toward the midpoint only on an extreme edge. Preserve temperature,
-  // erosion, depth and the physical land constraint from the original point.
-  long humidity=(center.humidity()+sum/count)/2;
-  var transition=source.getNoiseBiome(new Climate.TargetPoint(center.temperature(),humidity,continental,center.erosion(),0L,center.weirdness()));
-  int r=rank(id(transition));
-  return r==1||r==2?transition:base;
+  // Strong moisture transitions take precedence, but keep the center's
+  // thermal belt and relief controls. No mutable neighbour palettes.
+  if(!extremes.isEmpty()){
+   long humidity=(center.humidity()+extremes.stream().mapToLong(Vote::humidity).sum()/extremes.size())/2;
+   var t=source.getNoiseBiome(new Climate.TargetPoint(center.temperature(),humidity,continental,center.erosion(),0L,center.weirdness()));
+   int r=rank(id(t));if(r==1||r==2)return t;
+  }
+  // Suppress only small isolated slivers backed by a strong, compatible
+  // surrounding consensus. Never replace a rare climate core simply because
+  // it is unusual; the changed point must remain near its original climate.
+  if(total>=8&&own<=1){
+   long humidity=transitionHumidity(center.humidity(),votes);
+   var candidate=source.getNoiseBiome(new Climate.TargetPoint(center.temperature(),humidity,continental,center.erosion(),0L,center.weirdness()));
+   int r=rank(id(candidate));int support=counts.getOrDefault(id(candidate),0);
+   if(r>=0&&Math.abs(rank-r)<=1&&support>=Math.max(6,total*2/3))return candidate;
+  }
+  return base;
  }
  static void verify(){
+  if(transitionHumidity(0,List.of(new Vote("prairie",1,10000,0,2)))!=1800||transitionHumidity(0,List.of(new Vote("prairie",1,-10000,0,2)))!=-1800||transitionHumidity(420,List.of())!=420)throw new IllegalStateException("bounded climate transition");
   if(!incompatible(rank("hot_desert"),rank("equatorial_rainforest"))||
      !incompatible(rank("temperate_desert"),rank("temperate_rainforest"))||
      incompatible(rank("prairie"),rank("mixed_forest"))||

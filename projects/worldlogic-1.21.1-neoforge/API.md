@@ -169,3 +169,5 @@ RC46: final generated relief may include bounded local valley/foothill/plateau s
 RC47: local erosion and sediment are internal worldgen passes, not simulated over player builds or old chunks. Actual final surface may differ from immutable RC22 base height within intended terrain shaping limits. No changed public signatures.
 
 RC48 coastal relief and reef habitats are internal worldgen passes; existing ocean biome IDs, WaterKind and all addon API signatures preserved. No new coral item/registry IDs. Reef diagnostics report actual loaded coral blocks, not a modeled assertion of their presence.
+
+RC49 changes only surface biome classification, not actual environmental climate API. Final generated biome palettes may differ from modeled locate results; use actual world biome for loaded positions. All 58 registered active classes retained, reachability gates unchanged.

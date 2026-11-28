@@ -113,6 +113,7 @@ def main():
             keys=("columns","ocean","wet","dry","inland","unknown","dryQuart","river","links","deep","cross")
             pattern="COAST_AUDIT "+" ".join(k+r"=(\d+)" for k in keys)
             report["coast_windows"]=[]
+            report["biome_patches"]=[]
             for label,x,z in sites:
                 ax,az=x//16*16,z//16*16
                 # A 5x5 loaded halo surrounds the 3x3 inspected chunks, so dry
@@ -129,6 +130,11 @@ def main():
                         require(match is not None,"Coast audit failed: "+raw)
                         row=dict(zip(keys,map(int,match.groups())))
                         if row["unknown"]:continue
+                        patch=conn.cmd(f"execute positioned {xx} 96 {zz} run worldlogic biome_patch_audit")
+                        if "unavailable" in patch:continue
+                        pm=re.search(r"BIOME_PATCH land=(\d+) links=(\d+) same=(\d+) extreme=(\d+) isolated=(\d+) classes=(\d+)",patch)
+                        require(pm is not None,"Biome patch audit failed: "+patch)
+                        report["biome_patches"].append(dict(zip(("land","links","same","extreme","isolated","classes"),map(int,pm.groups())),x=xx,z=zz,site=label))
                         row.update(x=xx,z=zz,raw=raw);rows.append(row);pending.remove((xx,zz))
                         print(json.dumps(row),flush=True)
                     if pending:time.sleep(3)
@@ -141,6 +147,12 @@ def main():
             report["coast_totals"]=totals
             require(totals["ocean"]>=1024 and totals["wet"]>=1024,"Insufficient real ocean coverage")
             require(totals["inland"]==0 and totals["dryQuart"]==0,"Dry land labeled ocean; inspect logged coordinates")
+            patches=report["biome_patches"]
+            patch_totals={k:sum(v[k] for v in patches) for k in ("land","links","same","extreme","isolated")}
+            report["biome_patch_totals"]=patch_totals
+            require(patch_totals["land"]>=64 and patch_totals["links"]>=128,"Insufficient actual inland biome adjacency coverage")
+            require(patch_totals["extreme"]<=patch_totals["links"]*.02,"Excessive direct arid/wet biome contacts")
+            require(patch_totals["same"]>=patch_totals["links"]*.65,"Excessively fragmented inland biome patches")
             require(sum(w["river"]>=16 and w["links"]>=12 and w["deep"]>=4 and w["cross"]>=2 for w in windows if w["site"].startswith("river_"))>=3,"Fewer than three generated connected river catchments")
             require(any(w["river"]>=8 and w["links"]>=4 for w in windows if w["site"].startswith("headwater_")),"No generated connected headwater stream")
             # Natural pools: verify actual generated water and connected surface, not

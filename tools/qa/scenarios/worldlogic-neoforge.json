@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC48 coastal reefs",
+  "name": "World Logic NeoForge RC49 coherent regional biomes",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1813,6 +1813,17 @@
         {
           "backend": "server",
           "name": "Marine sediment, polar icebergs and actual native seawater spawn predicates"
+        }
+      ]
+    },
+    {
+      "id": "rc49-biome-coherence",
+      "kind": "mechanic",
+      "subject": "Bounded regional climate, extreme-preserving interpolation and compatible neighbourhood transition policy; independent natural final-quart adjacency and fragmentation audit",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
         }
       ]
     }

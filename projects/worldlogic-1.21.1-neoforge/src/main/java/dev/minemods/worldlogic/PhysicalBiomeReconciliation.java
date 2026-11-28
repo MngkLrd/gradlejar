@@ -40,10 +40,12 @@ public final class PhysicalBiomeReconciliation{
   // Resolve each surface quart exactly once. Vertical surface and flight
   // samples share a single palette; subterranean sampling remains independent.
   var palette=new java.util.ArrayList<net.minecraft.core.Holder<Biome>>(16);
+  var samples=new java.util.HashMap<Long,Climate.TargetPoint>();
+  java.util.function.BiFunction<Integer,Integer,Climate.TargetPoint> sampler=(qx,qz)->samples.computeIfAbsent(((long)qx<<32)^(qz&0xffffffffL),k->random.sampler().sample(qx,0,qz));
   for(int x=0;x<4;x++)for(int z=0;z<4;z++){
    int i=x*4+z;long coast=(long)(10000*continental(heights[i],sea,wet[i],shore[i]));
    int qx=(x0>>2)+x,qz=(z0>>2)+z;
-   palette.add(RegionalBiomeEdges.resolve(source,random.sampler(),qx,qz,coast));
+   palette.add(RegionalBiomeEdges.resolve(source,sampler,qx,qz,coast));
   }
   chunk.fillBiomesFromNoise((qx,qy,qz,sampler)->{
    int i=Math.floorMod(qx,4)*4+Math.floorMod(qz,4),floor=heights[i],y=qy*4;
