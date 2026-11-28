@@ -227,10 +227,13 @@ public final class TreeChopper {
             return;
         }
         float speed=Math.max(axe.getDestroySpeed(original(s)),((AxeItem)axe.getItem()).getTier().getSpeed());
-        float resistance=s.equals("dark_oak")||s.equals("mangrove")?1.18f:s.equals("birch")?0.86f:1f;
+        MaterialPhysics.Data wood=MaterialPhysics.read(level,pos,original(s),true,CutProgress.moisture(level,pos));
+        double resistance=MaterialPhysics.resistance(wood.hardnessN(),MaterialPhysics.oakHardnessN());
+        MassData mass=measure(level,roots,tree,s,pos,wood);
+        double equivalent=MaterialPhysics.equivalentLogs(mass.complete?mass.fullMassKg:Double.NaN,MaterialPhysics.oakMassKg(),upperLogs(tree)+roots.size())/supports.size();
         int idx=CutProgress.index(side);
         int guide=FallBalance.guideForStrike(work,idx,CutProgress.guide(level,pos));
-        int proposed=Math.min(ChopEffort.COMPLETE,work[idx]+ChopEffort.workPerHit(speed,resistance,power,Math.max(4,(upperLogs(tree)+roots.size()+supports.size()-1)/supports.size()),level.random.nextDouble()));
+        int proposed=Math.min(ChopEffort.COMPLETE,work[idx]+ChopEffort.workPerHit(speed,resistance,power,Math.max(4,equivalent),level.random.nextDouble()));
         work[idx]=FallBalance.counterWork(work,idx,guide,proposed);
         if(!FallBalance.validGuide(work,guide))guide=-1;
         damaged=damaged.setValue(CutBlock.side(side),ChopEffort.depth(work[idx]));
@@ -241,6 +244,7 @@ public final class TreeChopper {
         if(!old.equals(damaged)&&!level.setBlock(pos,damaged,Block.UPDATE_ALL))return;
         if(!(level.getBlockEntity(pos) instanceof CutProgress progress))return;
         progress.write(work,guide);
+        progress.rememberMoisture(wood.moisturePercent());
         ((ChopSwing)player).wl$markSwing();
         if(!(player instanceof FakePlayer))PacketDistributor.sendToPlayersTrackingEntityAndSelf(player,new ChopNetwork.Swing(player.getId()));
         player.swing(InteractionHand.MAIN_HAND,true);
@@ -321,8 +325,24 @@ public final class TreeChopper {
         for(BlockPos n:leaves)out.add(new Piece(n,l.getBlockState(n),false));
         return out;
     }
-    private record Balance(Direction direction,double centerX,double centerZ,double leanX,double leanZ,int guides){}
-    private static Balance balance(Level l,List<BlockPos> roots,List<Piece> tree,Direction latest){
+
+    private record MassData(Map<BlockPos,MaterialPhysics.Data> values,boolean complete,double fullMassKg){}
+    private static MassData measure(ServerLevel l,List<BlockPos> roots,List<Piece> tree,String species,BlockPos cachedPos,MaterialPhysics.Data cached){
+        Map<BlockPos,MaterialPhysics.Data> values=new HashMap<>();
+        boolean complete=true;double total=0;
+        for(BlockPos p:roots){
+            MaterialPhysics.Data d=p.equals(cachedPos)&&cached!=null?cached:MaterialPhysics.read(l,p,original(species),true,CutProgress.moisture(l,p));
+            values.put(p,d);if(d.known())total+=d.massKg();else complete=false;
+        }
+        for(Piece p:tree){
+            MaterialPhysics.Data d=MaterialPhysics.read(l,p.pos,p.state,p.log,Double.NaN);
+            values.put(p.pos,d);if(d.known())total+=d.massKg();else complete=false;
+        }
+        return new MassData(values,complete,complete?total:Double.NaN);
+    }
+    private record Balance(Direction direction,double centerX,double centerZ,double leanX,double leanZ,int guides,double fallingMassKg){}
+    private static Balance balance(ServerLevel l,List<BlockPos> roots,List<Piece> tree,String species,Direction latest){
+        MassData mass=measure(l,roots,tree,species,null,null);
         double rootX=roots.stream().mapToDouble(p->p.getX()+.5).average().orElse(0);
         double rootZ=roots.stream().mapToDouble(p->p.getZ()+.5).average().orElse(0);
         int rootY=roots.get(0).getY();
@@ -330,14 +350,18 @@ public final class TreeChopper {
         int maxY=tree.stream().filter(Piece::log).mapToInt(p->p.pos.getY()-rootY).max().orElse(1);
         for(Piece p:tree){
             Direction.Axis axis=p.state.hasProperty(BlockStateProperties.AXIS)?p.state.getValue(BlockStateProperties.AXIS):Direction.Axis.Y;
-            double m=FallBalance.mass(p.log,axis),x=p.pos.getX()+.5-rootX,z=p.pos.getZ()+.5-rootZ;
+            double m=mass.complete?mass.values.get(p.pos).massKg():FallBalance.mass(p.log,axis),x=p.pos.getX()+.5-rootX,z=p.pos.getZ()+.5-rootZ;
             total+=m;mx+=m*x;mz+=m*z;
             if(p.log&&axis==Direction.Axis.Y&&p.pos.getY()-rootY>=Math.max(1,maxY*.5)){
                 upperWeight+=m;ux+=m*x;uz+=m*z;
             }
         }
         // The severed upper portions of the bases are also part of the falling mass.
-        total+=.75*roots.size();
+        for(BlockPos p:roots){
+            // Existing 12/16 cap model is exactly 75% of the original full log volume.
+            double m=.75*(mass.complete?mass.values.get(p).massKg():1d);
+            total+=m;mx+=m*(p.getX()+.5-rootX);mz+=m*(p.getZ()+.5-rootZ);
+        }
         double cx=total>0?mx/total:0,cz=total>0?mz/total:0;
         double lx=upperWeight>0?ux/upperWeight:0,lz=upperWeight>0?uz/upperWeight:0;
         double cutX=0,cutZ=0;int guided=0;
@@ -349,18 +373,18 @@ public final class TreeChopper {
             double[] v=FallBalance.cutVector(work,guide);cutX+=v[0];cutZ+=v[1];
         }
         double n=Math.max(1,supports.size());
-        return new Balance(FallBalance.choose(cutX/n,cutZ/n,cx,cz,lx,lz,latest),cx,cz,lx,lz,guided);
+        return new Balance(FallBalance.choose(cutX/n,cutZ/n,cx,cz,lx,lz,latest),cx,cz,lx,lz,guided,mass.complete?total:Double.NaN);
     }
-    static Direction qaBalance(Level l,BlockPos base,String species,Direction fallback){
+    static Direction qaBalance(ServerLevel l,BlockPos base,String species,Direction fallback){
         List<Piece> tree=scan(l,base,species);
-        return tree.isEmpty()?null:balance(l,roots(l,base,species),tree,fallback).direction;
+        return tree.isEmpty()?null:balance(l,roots(l,base,species),tree,species,fallback).direction;
     }
     private static boolean fall(ServerLevel l,ServerPlayer player,BlockPos hitBase,String species,BlockState cut,List<Piece> tree,Direction latest,boolean retry){
         if(tree.stream().anyMatch(p->!l.getBlockState(p.pos).equals(p.state)||!allowed(l,player,p.pos,p.state)))return false;
         List<BlockPos> roots=roots(l,hitBase,species);
         Set<BlockPos> rootSet=new HashSet<>(roots);
         if(roots.stream().anyMatch(p->!p.equals(hitBase)&&!allowed(l,player,p,l.getBlockState(p))))return false;
-        Balance balance=balance(l,roots,tree,latest);
+        Balance balance=balance(l,roots,tree,species,latest);
         Direction direction=balance.direction;
         BlockPos base=roots.stream().max(Comparator.comparingInt(p->p.getX()*direction.getStepX()+p.getZ()*direction.getStepZ())).orElse(hitBase);
         Set<BlockPos> source=new HashSet<>(roots);
@@ -409,7 +433,7 @@ public final class TreeChopper {
             fall.putBoolean("leaf",leaf);
             fall.putBoolean("planned",true);
             fall.putBoolean("dynamic",!leaf);
-            if(coordinator){fall.put("landing",plan.copy());fall.putUUID("group",UUID.randomUUID());fall.putLong("base",base.asLong());fall.putBoolean("gridAllowed",gridAllowed);fall.putLongArray("roots",roots.stream().mapToLong(BlockPos::asLong).toArray());fall.putDouble("centerX",balance.centerX);fall.putDouble("centerZ",balance.centerZ);fall.putDouble("leanX",balance.leanX);fall.putDouble("leanZ",balance.leanZ);fall.putInt("guides",balance.guides);}
+            if(coordinator){fall.put("landing",plan.copy());fall.putUUID("group",UUID.randomUUID());fall.putLong("base",base.asLong());fall.putBoolean("gridAllowed",gridAllowed);fall.putLongArray("roots",roots.stream().mapToLong(BlockPos::asLong).toArray());fall.putDouble("centerX",balance.centerX);fall.putDouble("centerZ",balance.centerZ);fall.putDouble("leanX",balance.leanX);fall.putDouble("leanZ",balance.leanZ);fall.putInt("guides",balance.guides);if(Double.isFinite(balance.fallingMassKg))fall.putDouble("massKg",balance.fallingMassKg);}
             fall.putBoolean("coordinator",coordinator);
             fall.putBoolean("hinge",true);fall.putBoolean("cap",cap);fall.putBoolean("wholeUpper",true);
             fall.putString("direction",direction.getName());fall.putBoolean("log",piece.log);fall.putString("species",species);fall.putInt("age",0);

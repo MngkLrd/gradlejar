@@ -10,7 +10,7 @@ final class ChopEffort {
     }
     static int cooldown(double power){return (int)Math.ceil(15+10*(1-clamp(power)));}
     static int fellingWear(int upperLogs,boolean finalStrike){return Math.max(0,upperLogs)+(finalStrike?1:0);}
-    static int workPerHit(double speed,double resistance,double power,int logs,double roll){
+    static int workPerHit(double speed,double resistance,double power,double logs,double roll){
         if(power<=0)return 0;
         double mass=Math.sqrt(Math.max(4,logs)/4.0);
         return Math.max(1,(int)Math.round((100+25*Math.max(0,speed))*clamp(power)*(.9+.2*clamp(roll))/(mass*Math.max(.1,resistance))));

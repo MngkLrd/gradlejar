@@ -136,6 +136,32 @@ final class TreeQA {
             if(found!=expected){c.getSource().sendFailure(Component.literal("TreeChopper world mass direction FAILED: "+found));return 0;}
             c.getSource().sendSuccess(()->Component.literal("TreeChopper world mass direction PASS"),false);return 1;
           }))))
+          .then(Commands.literal("qa_physics_fallback").executes(c->{
+            ServerLevel l=c.getSource().getLevel();
+            var data=MaterialPhysics.read(l,BlockPos.ZERO,net.minecraft.world.level.block.Blocks.OAK_LOG.defaultBlockState(),true,Double.NaN);
+            if(MaterialPhysics.coreAvailable()||MaterialPhysics.woodAvailable()||data.known()||Double.isFinite(data.massKg())
+                ||MaterialPhysics.resistance(Double.NaN,Double.NaN)!=1
+                ||MaterialPhysics.equivalentLogs(Double.NaN,Double.NaN,12)!=12
+                ||MaterialPhysics.equivalentLogs(1800,600,12)!=3
+                ||MaterialPhysics.resistance(6000,3000)!=2){
+                c.getSource().sendFailure(Component.literal("TreeChopper physical fallback FAILED"));return 0;
+            }
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper physical fallback PASS"),false);return 1;
+          }))
+          .then(Commands.literal("qa_physics_integration").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            var state=l.getBlockState(p);
+            var dry=MaterialPhysics.read(l,p,state,true,12);
+            var wet=MaterialPhysics.read(l,p,state,true,90);
+            var actual=MaterialPhysics.read(l,p,state,true,Double.NaN);
+            if(!MaterialPhysics.coreAvailable()||!MaterialPhysics.woodAvailable()||!dry.known()||!wet.known()||!actual.known()
+                ||Math.abs(dry.volumeM3()-wet.volumeM3())>1e-8||wet.massKg()<=dry.massKg()
+                ||!Double.isFinite(dry.hardnessN())||wet.hardnessN()>=dry.hardnessN()
+                ||!Double.isFinite(actual.moisturePercent())||!Double.isFinite(MaterialPhysics.oakMassKg())){
+                c.getSource().sendFailure(Component.literal("TreeChopper real Core/Terrarian physical API FAILED"));return 0;
+            }
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper real Core/Terrarian physical API PASS: "+actual.source()+" "+actual.massKg()+" kg"),false);return 1;
+          })))
           .then(Commands.literal("qa_effort").executes(c->{
             double full=ChopEffort.power(1,1,1), tired=ChopEffort.power(.1,1,1);
             double oneArm=ChopEffort.power(1,1,0), disabled=ChopEffort.power(1,0,1);

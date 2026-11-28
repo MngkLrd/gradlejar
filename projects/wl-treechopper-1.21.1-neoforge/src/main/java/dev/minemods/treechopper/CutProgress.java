@@ -12,6 +12,7 @@ final class CutProgress extends BlockEntity {
     private static final Direction[] FACES={Direction.NORTH,Direction.SOUTH,Direction.WEST,Direction.EAST};
     private int[] work;
     private int guide=-1;
+    private double moisturePercent=Double.NaN;
     CutProgress(BlockPos pos,BlockState state){super(TreeChopper.PROGRESS.get(),pos,state);}
     static int index(Direction face){return switch(face){case NORTH->0;case SOUTH->1;case WEST->2;case EAST->3;default->0;};}
     static int[] read(Level level,BlockPos pos,BlockState state){
@@ -21,15 +22,19 @@ final class CutProgress extends BlockEntity {
         return legacy;
     }
     static int guide(Level l,BlockPos pos){return l.getBlockEntity(pos) instanceof CutProgress p?p.guide:-1;}
+    static double moisture(Level l,BlockPos pos){return l.getBlockEntity(pos) instanceof CutProgress p?p.moisturePercent:Double.NaN;}
+    void rememberMoisture(double value){if(Double.isFinite(value)&&value>=0&&value<=250){moisturePercent=value;setChanged();}}
     void write(int[] value){write(value,-1);}
     void write(int[] value,int face){work=value.clone();guide=FallBalance.validGuide(work,face)?face:-1;setChanged();}
     @Override protected void saveAdditional(CompoundTag tag,HolderLookup.Provider lookup){
-        super.saveAdditional(tag,lookup);if(work!=null)tag.putIntArray("work",work);if(guide>=0)tag.putInt("guide",guide);
+        super.saveAdditional(tag,lookup);if(work!=null)tag.putIntArray("work",work);if(guide>=0)tag.putInt("guide",guide);if(Double.isFinite(moisturePercent))tag.putDouble("moisturePercent",moisturePercent);
     }
     @Override protected void loadAdditional(CompoundTag tag,HolderLookup.Provider lookup){
         super.loadAdditional(tag,lookup);int[] v=tag.getIntArray("work");
         work=v.length==4?v:null;
         if(work!=null)for(int i=0;i<4;i++)work[i]=Math.max(0,Math.min(ChopEffort.COMPLETE,work[i]));
+        double wet=tag.contains("moisturePercent")?tag.getDouble("moisturePercent"):Double.NaN;
+        moisturePercent=Double.isFinite(wet)&&wet>=0&&wet<=250?wet:Double.NaN;
         int saved=tag.contains("guide")?tag.getInt("guide"):-1;guide=work!=null&&FallBalance.validGuide(work,saved)?saved:-1;
     }
 }

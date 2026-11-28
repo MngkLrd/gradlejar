@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.6.2 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.6.3 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -1114,6 +1114,12 @@
       "expect": "TreeChopper world mass direction PASS",
       "assertion": true,
       "name": "leaning-direction"
+    },
+    {
+      "command": "wltreechopper qa_physics_fallback",
+      "expect": "TreeChopper physical fallback PASS",
+      "assertion": true,
+      "name": "physical-api-standalone"
     }
   ],
   "coverage": [
@@ -2181,6 +2187,17 @@
         {
           "backend": "server",
           "name": "leaning-direction"
+        }
+      ]
+    },
+    {
+      "id": "physical-api-standalone",
+      "kind": "mechanic",
+      "subject": "Absent optional APIs preserve neutral relative gameplay and do not invent SI mass; ratio calculations use explicit input values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "physical-api-standalone"
         }
       ]
     }
