@@ -1,6 +1,7 @@
 package dev.minemods.worldlogic;
 
 import dev.minemods.worldlogic.api.PhysicalMaterials;
+import dev.minemods.worldlogic.api.PhysicalAddonChecks;
 import dev.minemods.worldlogic.api.PhysicalMaterials.*;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -22,6 +23,7 @@ public final class PhysicalMaterialChecks {
  private static Result of(net.minecraft.world.level.block.Block b){return PhysicalMaterials.evaluate(PhysicalMaterials.block(b.defaultBlockState()),State.reference());}
  private static boolean material(ObjectProfile p,String name){return p.components().stream().anyMatch(c->c.materialId().equals(id(name)));}
  public static void verify(){
+  PhysicalAddonChecks.verify();
   require(PhysicalMaterials.materials().size()>=65,"builtin registry");
   require(of(Blocks.IRON_BLOCK).massKg()>of(Blocks.OAK_LOG).massKg(),"iron vs timber density");
   require(of(Blocks.OAK_LOG).massKg()>of(Blocks.SPRUCE_LOG).massKg(),"independent wood species");
@@ -96,6 +98,7 @@ public final class PhysicalMaterialChecks {
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_PHYSICAL_COVERAGE blocks={}/{} items={}/{} fluids={}/{}",blocks-unknownBlocks,blocks,items-unknownItems,items,fluids-unknownFluids,fluids);
  }
  public static void verifyLoaded(ServerLevel level){
+  PhysicalAddonChecks.verifyLoaded(level);
   var outside=new BlockPos(0,level.getMaxBuildHeight(),0);
   require(PhysicalMaterials.placed(level,outside).isEmpty(),"out-of-height read");
   var pos=level.getSharedSpawnPos();

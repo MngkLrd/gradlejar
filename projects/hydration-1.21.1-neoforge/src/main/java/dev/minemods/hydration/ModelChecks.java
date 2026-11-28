@@ -33,13 +33,15 @@ public final class ModelChecks {
   var fresh=new WaterBatch(500,Quality.DRINKABLE,.2,.1,java.util.Set.of("RIVER"));
   var t=WaterBatch.transfer(sea,fresh,750,1000);
   check(t.moved()==500&&t.source().ml()==500&&t.target().ml()==1000,"volume conservation/capacity");
-  check(Math.abs(t.target().salinity()*1000+t.source().salinity()*500-(35*1000+.2*500))<.001,"salt mass conservation");
+  var massA=WaterPhysics.batch(sea.withVolume(500)).massKg();var massB=WaterPhysics.batch(fresh).massKg();
+  var mixed=dev.minemods.worldlogic.api.PhysicalWater.mixedSalinityGkg(massA,35,massB,.2).orElseThrow();
+  check(Math.abs(t.target().salinity()-mixed)<1e-10,"Core mass-weighted salinity");
   check(Math.abs(t.target().risk()*1000+t.source().risk()*500-(.3*1000+.1*500))<.001,"contamination conservation");
   check(t.target().quality()==Quality.DESALINATE,"salt cannot be laundered");
   check(t.target().origins().equals(java.util.Set.of("SEA","RIVER"))&&t.source().origins().equals(java.util.Set.of("SEA")),"provenance survives mixing and split");
   check(WaterBatch.transfer(sea,t.target(),100,1000).moved()==0,"full target");
   check(WaterTreatment.filter(sea).salinity()==35&&WaterTreatment.filter(sea).quality()==Quality.DESALINATE,"filter retains salt");
-  var boiled=WaterTreatment.boil(sea);check(boiled.ml()==950&&boiled.quality()==Quality.DESALINATE&&Math.abs(boiled.salinity()*boiled.ml()-35000)<.001,"boil retains salt");
+  var boiled=WaterTreatment.boil(sea);check(boiled.ml()==950&&boiled.quality()==Quality.DESALINATE&&Math.abs(WaterPhysics.batch(boiled).massKg()*boiled.salinity()-WaterPhysics.batch(sea).massKg()*sea.salinity())<1e-8,"boil retains salt");
   var distilled=WaterTreatment.distill(sea);check(distilled.ml()==700&&distilled.salinity()==0&&distilled.quality()==Quality.DRINKABLE&&distilled.origins().equals(sea.origins()),"distill");
   var swamp=new WaterBatch(1000,Quality.TREAT_RECOMMENDED,.2,.9,java.util.Set.of("WETLAND"));
   check(WaterTreatment.filter(swamp).quality()==Quality.TREAT_RECOMMENDED&&WaterTreatment.boil(swamp).quality()==Quality.TREAT_RECOMMENDED,"individual steps");
@@ -68,6 +70,11 @@ public final class ModelChecks {
   check(tick(s,.5).electrolytes()<s.electrolytes()&&eat(new State(40,0,0,0,30),4).electrolytes()>30,"electrolyte loss and food recovery");
   check(stage(70)==Dehydration.NORMAL&&stage(50)==Dehydration.MILD&&stage(25)==Dehydration.MODERATE&&stage(10)==Dehydration.SEVERE&&stage(9)==Dehydration.CRITICAL,"dehydration stages");
   check(illnessLoss(50)>illnessLoss(12)&&illnessLoss(0)==0,"fallback illness fluid loss");
+  check(WaterPhysics.freezing(sea).orElseThrow()<0&&WaterPhysics.boiling(sea).orElseThrow()>100,"Core phase thresholds, no simulation");
+  check(WaterPhysics.solution(sea,-1).isEmpty()&&WaterPhysics.solution(sea,101).isEmpty(),"unsupported temperatures");
+  var concentrated=new WaterBatch(250,Quality.DESALINATE,121,.3);
+  check(!WaterPhysics.batch(concentrated).known()&&WaterPhysics.boiling(concentrated).isEmpty(),"unsupported salinity remains unknown");
+  check(WaterPhysics.batch(t.target()).known(),"arbitrary mixture now has physical properties");
   var unknown=new WaterBatch(100,Quality.UNKNOWN,0,1);
   check(WaterBatch.transfer(unknown,fresh,100,1000).target().quality()==Quality.UNKNOWN,"unknown cannot be laundered");
  }

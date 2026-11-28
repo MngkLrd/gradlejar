@@ -8,7 +8,7 @@ on:
         default: physics
         type: string
   pull_request:
-    branches: [worldlogic-hydration-0.1.0, worldlogic-hydration-0.5.0]
+    branches: [worldlogic-hydration-0.1.0, worldlogic-hydration-0.5.0, worldlogic-hydration-0.5.1-material-physics]
     paths:
       - 'projects/worldlogic-trauma-1.21.1-neoforge/**'
       - 'projects/hydration-1.21.1-neoforge/**'
@@ -43,7 +43,7 @@ jobs:
       - name: Resolve pack
         id: pack
         env:
-          PACK_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.pack || (github.event_name == 'pull_request' && (github.head_ref == 'worldlogic-hydration-0.5.0' || github.head_ref == 'worldlogic-hydration-0.5.1-material-physics') && 'worldlogic-hydration') || 'physics' }}
+          PACK_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.pack || (github.event_name == 'pull_request' && (github.head_ref == 'worldlogic-hydration-0.5.0' || github.head_ref == 'worldlogic-hydration-0.5.1-material-physics' || github.head_ref == 'worldlogic-hydration-0.5.2-rc54') && 'worldlogic-hydration') || 'physics' }}
         run: |
           [[ "$PACK_ID" =~ ^[a-z][a-z0-9_-]{0,60}$ ]]
           echo "id=$PACK_ID" >> "$GITHUB_OUTPUT"
@@ -75,6 +75,22 @@ jobs:
         with:
           gradle-version: ${{ steps.profile.outputs.gradle }}
           cache-read-only: true
+      - name: Fetch exact RC54 Core candidate from upstream run
+        if: github.head_ref == 'worldlogic-hydration-0.5.2-rc54' && matrix.member.slug == 'hydration'
+        uses: actions/download-artifact@v4
+        with:
+          name: qa-candidate-NOT-RELEASE-0-1
+          run-id: 46103365227
+          github-token: ${{ github.token }}
+          path: pinned-rc54
+      - name: Verify pinned Core binary for Hydration compilation
+        if: github.head_ref == 'worldlogic-hydration-0.5.2-rc54' && matrix.member.slug == 'hydration'
+        shell: bash
+        run: |
+          set -euo pipefail
+          jar="$GITHUB_WORKSPACE/pinned-rc54/worldlogic-neoforge-mc1.21.1-1.2.1.jar"
+          echo "33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56  $jar" | sha256sum -c -
+          echo "HYDRATION_CORE_JAR=$jar" >> "$GITHUB_ENV"
       - name: Compile production mod (no dev fallback)
         env:
           PROJECT: ${{ matrix.member.project }}
@@ -98,6 +114,22 @@ jobs:
           path: member-output/
           retention-days: 7
           if-no-files-found: error
+      - name: Test Hydration production JAR with exact upstream RC54 binary
+        if: github.head_ref == 'worldlogic-hydration-0.5.2-rc54' && matrix.member.slug == 'hydration'
+        env:
+          HYDRATION_JAR: ${{ steps.jar.outputs.jar_path }}
+        run: |
+          python3 projects/hydration-1.21.1-neoforge/qa/exact_core_runtime.py
+      - name: Upload exact upstream binary runtime evidence
+        if: always() && github.head_ref == 'worldlogic-hydration-0.5.2-rc54' && matrix.member.slug == 'hydration'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hydration-rc54-exact-binary-evidence-${{ github.run_attempt }}
+          path: |
+            hydration-exact-evidence/report.json
+            hydration-exact-evidence/runtime/logs/
+          if-no-files-found: warn
+          retention-days: 30
   compatibility:
     needs: [plan, build-members]
     if: always() && needs.plan.result == 'success'

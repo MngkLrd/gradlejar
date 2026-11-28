@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Hydration 0.5.1: native waters, storage, physiology and Core physical data",
+  "name": "Hydration 0.5.2: RC54 solution properties and existing gameplay",
   "coverage": [
     {
       "id": "water-balance",
@@ -53,7 +53,7 @@
     {
       "id": "water-transfer-model",
       "kind": "mechanic",
-      "subject": "Capacity and volume/salt/risk conservation; conservative quality",
+      "subject": "Capacity, volume/risk conservation and Core input-mass-weighted salinity",
       "checks": [
         {
           "backend": "server",
@@ -251,7 +251,7 @@
     {
       "id": "core-fluid-si",
       "kind": "mechanic",
-      "subject": "All eight native source samples match Core mass and density at 250 mB; tank API and viscosity",
+      "subject": "Eight native water batch samples match Core solution at 250 mB",
       "checks": [
         {
           "backend": "server",
@@ -262,7 +262,7 @@
     {
       "id": "vessel-physical-api",
       "kind": "mechanic",
-      "subject": "Core nominal water mass/density; copy, empty, distilled and unmodeled mixed/unknown water controls",
+      "subject": "Core solution data, copy, empty, distilled, arbitrary mixed and unknown controls",
       "checks": [
         {
           "backend": "server",

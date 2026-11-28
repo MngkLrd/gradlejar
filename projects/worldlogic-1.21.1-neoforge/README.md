@@ -1,3 +1,7 @@
+# World Logic 1.2.1 development / RC54 — addon physical API
+
+API revision 15 / PhysicalMaterials revision 2. Implements requests from Temperature, Hydration, Trauma #244, TreeChopper #241, Aqua #242 and Terrarian discussion #240. See API.md for exact interfaces and scope. No added gameplay burden, world generation changes, or addon source changes. Core 1.2.0 -> 1.2.1 incremental API extension, internal archive worldlogic-neoforge-mc1.21.1-1.2.1.jar. Joint addon tests and existing biome QA gate remain required.
+
 # World Logic 1.2.0 development candidate / RC53 — NeoForge 1.21.1
 
 Core-owned SI physical material and object registry, constituent profiles, opt-in item state, loaded world queries and addon API revision 14. See API.md for units, ownership and limitations. No new encumbrance, movement penalties or gameplay effects. Internal CI archive: `worldlogic-neoforge-mc1.21.1-1.2.0.jar`; eligible public delivery name: `worldlogic_core_1.2.0_1.21.1_neoforge.jar`. Version increments 1.1.0 (RC52) to 1.2.0 for the new subsystem; RC53 is development provenance only. Existing RC22 macro geography and legacy gameplay coefficient behavior unchanged.

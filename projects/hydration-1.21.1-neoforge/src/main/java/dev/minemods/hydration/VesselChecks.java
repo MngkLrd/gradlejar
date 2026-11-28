@@ -17,7 +17,8 @@ public final class VesselChecks {
    require(dev.minemods.hydration.api.HydrationApi.liquidPhysics(s).orElseThrow().materialId().equals("worldlogic:fresh_water"),"distilled not source salt "+i);
    v.write(s,new WaterBatch(250,WaterBalance.Quality.DESALINATE,17.5,.3,Set.of("SEA","RIVER")));
    var mix=dev.minemods.hydration.api.HydrationApi.liquidPhysics(s).orElseThrow();
-   require(!mix.known()&&Double.isNaN(mix.massKg())&&Math.abs(mix.volumeM3()-.00025)<1e-12,"unmodeled mixture not fabricated "+i);
+   require(mix.known()&&Math.abs(mix.volumeM3()-.00025)<1e-12&&Math.abs(mix.densityKgM3()-dev.minemods.worldlogic.api.PhysicalWater.solution(17.5,20).orElseThrow().densityKgM3())<1e-10,"Core arbitrary mixture "+i);
+   require(dev.minemods.hydration.api.HydrationApi.liquidSolution(s,40).orElseThrow().temperatureC()==40,"caller temperature "+i);
    v.write(s,new WaterBatch(250,WaterBalance.Quality.UNKNOWN,0,1));
    require(!dev.minemods.hydration.api.HydrationApi.liquidPhysics(s).orElseThrow().known(),"unknown remains unknown "+i);
    v.write(s,WaterBatch.empty());require(v.read(s).ml()==0,"empty write "+i);
