@@ -21,7 +21,7 @@ final class FallBalance {
     }
     static int counterWork(int[] work,int struck,int guide,int proposed){
         if(guide<0||struck!=(guide^1))return proposed;
-        int target=Math.max(work[struck]+1,750-work[guide]);
+        int target=Math.max(work[struck]+1,Math.max(750-work[guide],(1000-work[guide]+2)/3));
         return Math.min(proposed,Math.min(250,target));
     }
     static double[] cutVector(int[] work,int guide){

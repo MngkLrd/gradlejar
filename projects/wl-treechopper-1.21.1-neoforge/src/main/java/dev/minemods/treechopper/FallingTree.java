@@ -208,6 +208,27 @@ final class FallingTree {
             }else collider.setBox(box);
         }
     }
+    static int crushLeaves(ServerLevel l,ServerPlayer owner,net.minecraft.world.phys.AABB bounds){
+        if(owner==null)return 0;
+        var box=bounds.deflate(.001);int removed=0;
+        for(BlockPos p:BlockPos.betweenClosed(BlockPos.containing(box.minX,box.minY,box.minZ),BlockPos.containing(box.maxX,box.maxY,box.maxZ))){
+            if(!l.hasChunkAt(p))continue;
+            var state=l.getBlockState(p);
+            if(!TreeChopper.naturalLeaf(state)||!TreeChopper.allowed(l,owner,p,state))continue;
+            if(l.destroyBlock(p,false,owner)){removed++;l.sendParticles(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK,state),p.getX()+.5,p.getY()+.5,p.getZ()+.5,4,.2,.2,.2,.02);}
+        }
+        return removed;
+    }
+    private static void crushPose(ServerLevel l,CompoundTag f){
+        if(!f.hasUUID("owner"))return;
+        ServerPlayer owner=l.getServer().getPlayerList().getPlayer(f.getUUID("owner"));
+        if(owner==null){var fake=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(l);if(fake.getUUID().equals(f.getUUID("owner")))owner=fake;}
+        if(owner==null)return;
+        for(int i=0;i<members(f).size();i++){
+            CompoundTag m=members(f).getCompound(i);
+            if(m.getBoolean("log")&&!m.getBoolean("removed"))crushLeaves(l,owner,TreeChopper.timberBounds(base(f),BlockPos.of(m.getLong("source")),direction(f),f.getFloat("progress"),false,offset(f,m)));
+        }
+    }
     private static void pose(ServerLevel l,Display.BlockDisplay master,CompoundTag f,float progress){
         ListTag list=members(f);
         BlockPos b=base(f);Direction dir=direction(f);
@@ -285,7 +306,7 @@ final class FallingTree {
                 double lift=rotationLift(l,f,next,candidate);
                 if(!Double.isFinite(lift))break;
                 if(lift>0)f.putDouble("dropY",f.getDouble("dropY")+lift);
-                next=candidate;
+                next=candidate;f.putFloat("progress",next);crushPose(l,f);
             }
         }
         f.putFloat("progress",next);
@@ -302,6 +323,7 @@ final class FallingTree {
         // Branching trunks may settle on real branch contacts; cut remnants always release.
         boolean descending=(mask(f)!=0||next>=.99999f||(!rotating&&branched))&&settle(l,f);
         if(rotating||descending){
+            if(descending)crushPose(l,f);
             removeMarkers(l,f,true);master.removeTag(REST);pose(l,master,f,next);
         }
         if(!descending&&next>=.99999f&&mask(f)==0){

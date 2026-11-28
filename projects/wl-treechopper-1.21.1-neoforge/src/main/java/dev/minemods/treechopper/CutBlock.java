@@ -12,10 +12,10 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.*;
 
 public final class CutBlock extends Block implements EntityBlock {
-    public static final IntegerProperty NORTH=IntegerProperty.create("north",0,4);
-    public static final IntegerProperty SOUTH=IntegerProperty.create("south",0,4);
-    public static final IntegerProperty WEST=IntegerProperty.create("west",0,4);
-    public static final IntegerProperty EAST=IntegerProperty.create("east",0,4);
+    public static final IntegerProperty NORTH=IntegerProperty.create("north",0,8);
+    public static final IntegerProperty SOUTH=IntegerProperty.create("south",0,8);
+    public static final IntegerProperty WEST=IntegerProperty.create("west",0,8);
+    public static final IntegerProperty EAST=IntegerProperty.create("east",0,8);
     public CutBlock(Properties p) {
         super(p);
         registerDefaultState(stateDefinition.any().setValue(NORTH,0).setValue(SOUTH,0).setValue(WEST,0).setValue(EAST,0));
@@ -32,8 +32,8 @@ public final class CutBlock extends Block implements EntityBlock {
         return CutGeometry.falls(s.getValue(NORTH),s.getValue(SOUTH),s.getValue(WEST),s.getValue(EAST));
     }
     private static VoxelShape band(int bottom,int top,int n,int s,int w,int e) {
-        if(w+e>=4 || n+s>=4) return Shapes.empty();
-        return Block.box(w*4,bottom,n*4,16-e*4,top,16-s*4);
+        if(w+e>=8 || n+s>=8) return Shapes.empty();
+        return Block.box(w*2,bottom,n*2,16-e*2,top,16-s*2);
     }
     @Override protected VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext ctx) {
         int n=state.getValue(NORTH),s=state.getValue(SOUTH),w=state.getValue(WEST),e=state.getValue(EAST);

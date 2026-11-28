@@ -128,6 +128,15 @@ final class TreeQA {
             if(axe.getDamageValue()!=expected){c.getSource().sendFailure(Component.literal("TreeChopper multi-root wear FAILED: "+axe.getDamageValue()+" expected "+expected));return 0;}
             c.getSource().sendSuccess(()->Component.literal("TreeChopper multi-root PASS"),false);return 1;
           }))))
+          .then(Commands.literal("qa_notch_shape").then(Commands.argument("pos",BlockPosArgument.blockPos()).then(Commands.argument("opposite",IntegerArgumentType.integer(0,1)).executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            var snapshot=TreeChopperApi.cut(l,p);if(snapshot.isEmpty())return 0;
+            var cut=snapshot.get();var state=l.getBlockState(p);
+            boolean opposite=IntegerArgumentType.getInteger(c,"opposite")==1;
+            if(cut.north()<=0||(opposite?cut.south()<=0:cut.south()!=0)||cut.west()!=0||cut.east()!=0
+                ||CutBlock.depth(state,Direction.NORTH)!=ChopEffort.depth(cut.north())||CutBlock.depth(state,Direction.SOUTH)!=ChopEffort.depth(cut.south()))return 0;
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper notch geometry PASS"),false);return 1;
+          }))))
           .then(Commands.literal("qa_crosscut").executes(c->{
             ServerLevel l=c.getSource().getLevel();BlockPos p=new BlockPos(1002,200,1017);
             l.setBlock(p,net.minecraft.world.level.block.Blocks.OAK_LOG.defaultBlockState(),3);
@@ -185,6 +194,11 @@ final class TreeQA {
             boolean placedClear=TreeChopper.sweepClear(l,base,target,Direction.NORTH,0,java.util.Set.of());
             l.setBlock(target,net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
             if(!naturalClear||placedClear)return 0;
+            var fake=FakePlayerFactory.getMinecraft(l);
+            l.setBlock(target,leaves,3);l.setBlock(target.east(),oak,3);
+            var box=new net.minecraft.world.phys.AABB(target).expandTowards(1,0,0);
+            if(FallingTree.crushLeaves(l,fake,box)!=1||!l.getBlockState(target).isAir()||!l.getBlockState(target.east()).is(oak.getBlock()))return 0;
+            if(ChopEffort.workPerHit(2,1,1,8,.5,16)>=ChopEffort.workPerHit(2,1,1,8,.5,4)||ChopEffort.depth(999)!=7)return 0;
             c.getSource().sendSuccess(()->Component.literal("TreeChopper crown ownership PASS"),false);return 1;
           }))
           .then(Commands.literal("qa_leafless_cut").executes(c->{

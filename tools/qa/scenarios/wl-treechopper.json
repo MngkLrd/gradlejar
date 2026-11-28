@@ -26,8 +26,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1000 200 1000 wl_treechopper:cut_oak[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1000 200 1000 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-oak"
     },
@@ -36,8 +36,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1000 200 1000 wl_treechopper:cut_oak[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1000 200 1000 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-oak"
     },
@@ -166,8 +166,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1009 200 1000 wl_treechopper:cut_spruce[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1009 200 1000 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-spruce"
     },
@@ -176,8 +176,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1009 200 1000 wl_treechopper:cut_spruce[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1009 200 1000 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-spruce"
     },
@@ -219,8 +219,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1018 200 1000 wl_treechopper:cut_birch[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1018 200 1000 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-birch"
     },
@@ -229,8 +229,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1018 200 1000 wl_treechopper:cut_birch[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1018 200 1000 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-birch"
     },
@@ -272,8 +272,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1027 200 1000 wl_treechopper:cut_jungle[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1027 200 1000 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-jungle"
     },
@@ -282,8 +282,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1027 200 1000 wl_treechopper:cut_jungle[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1027 200 1000 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-jungle"
     },
@@ -325,8 +325,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1000 200 1009 wl_treechopper:cut_acacia[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1000 200 1009 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-acacia"
     },
@@ -335,8 +335,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1000 200 1009 wl_treechopper:cut_acacia[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1000 200 1009 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-acacia"
     },
@@ -378,8 +378,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1009 200 1009 wl_treechopper:cut_dark_oak[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1009 200 1009 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-dark_oak"
     },
@@ -388,8 +388,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1009 200 1009 wl_treechopper:cut_dark_oak[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1009 200 1009 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-dark_oak"
     },
@@ -431,8 +431,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1018 200 1009 wl_treechopper:cut_mangrove[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1018 200 1009 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-mangrove"
     },
@@ -441,8 +441,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1018 200 1009 wl_treechopper:cut_mangrove[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1018 200 1009 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-mangrove"
     },
@@ -484,8 +484,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1027 200 1009 wl_treechopper:cut_cherry[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1027 200 1009 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-cherry"
     },
@@ -494,8 +494,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1027 200 1009 wl_treechopper:cut_cherry[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1027 200 1009 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-cherry"
     },
@@ -607,8 +607,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1040 200 1028 wl_treechopper:cut_oak[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1040 200 1028 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "branch-notch"
     },
@@ -717,7 +717,7 @@
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
-      "command": "setblock 1048 200 1018 wl_treechopper:cut_oak[north=3,south=0,east=0,west=0]",
+      "command": "setblock 1048 200 1018 wl_treechopper:cut_oak[north=6,south=0,east=0,west=0]",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -738,7 +738,7 @@
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
-      "command": "setblock 1038 200 1018 wl_treechopper:cut_oak[north=3,south=0,east=0,west=0]",
+      "command": "setblock 1038 200 1018 wl_treechopper:cut_oak[north=6,south=0,east=0,west=0]",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -1013,7 +1013,7 @@
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
-      "command": "setblock 1010 200 1038 wl_treechopper:cut_oak[north=3,south=0,east=0,west=0]",
+      "command": "setblock 1010 200 1038 wl_treechopper:cut_oak[north=6,south=0,east=0,west=0]",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {

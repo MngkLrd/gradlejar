@@ -246,10 +246,10 @@ public final class TreeChopper {
         double equivalent=MaterialPhysics.equivalentLogs(mass.complete?mass.fullMassKg:Double.NaN,MaterialPhysics.oakMassKg(),upperLogs(tree)+roots.size())/supports.size();
         int idx=CutProgress.index(side);
         int guide=FallBalance.guideForStrike(work,idx,CutProgress.guide(level,pos));
-        int proposed=Math.min(ChopEffort.COMPLETE,work[idx]+ChopEffort.workPerHit(speed,resistance,power,Math.max(4,equivalent),level.random.nextDouble()));
+        int proposed=Math.min(ChopEffort.COMPLETE,work[idx]+ChopEffort.workPerHit(speed,resistance,power,Math.max(4,equivalent),level.random.nextDouble(),tree.stream().filter(Piece::log).mapToInt(p->p.pos.getY()-pos.getY()).max().orElse(1)));
         work[idx]=FallBalance.counterWork(work,idx,guide,proposed);
         if(!FallBalance.validGuide(work,guide))guide=-1;
-        damaged=damaged.setValue(CutBlock.side(side),ChopEffort.depth(work[idx]));
+        for(int face=0;face<4;face++)damaged=damaged.setValue(CutBlock.side(SIDES[face]),ChopEffort.depth(work[face]));
         boolean severed=ChopEffort.severed(work);
         boolean allReady=severed&&readySupports(level,supports,pos,work)==supports.size();
         int wear=allReady?ChopEffort.fellingWear(upperLogs(tree)+extraCore,true):1;
@@ -263,7 +263,7 @@ public final class TreeChopper {
         player.swing(InteractionHand.MAIN_HAND,true);
         if(!(player instanceof FakePlayer)){
             if(severed&&!allReady)player.displayClientMessage(Component.translatable("message.wl_treechopper.supports",readySupports(level,supports,pos,work),supports.size()),true);
-            else if(!severed)player.displayClientMessage(Component.translatable("message.wl_treechopper.cut_progress",ChopEffort.progress(work)/10),true);
+
         }
         level.playSound(null,pos,SoundEvents.WOOD_HIT,SoundSource.BLOCKS,1f,.8f+level.random.nextFloat()*.25f);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,original(s)),pos.getX()+.5+side.getStepX()*.47,pos.getY()+.5,pos.getZ()+.5+side.getStepZ()*.47,8,.12,.12,.12,.08);

@@ -18,7 +18,7 @@ final class CutProgress extends BlockEntity {
     static int[] read(Level level,BlockPos pos,BlockState state){
         if(level.getBlockEntity(pos) instanceof CutProgress p&&p.work!=null)return p.work.clone();
         int[] legacy=new int[4];
-        if(state.getBlock() instanceof CutBlock)for(int i=0;i<4;i++)legacy[i]=250*CutBlock.depth(state,FACES[i]);
+        if(state.getBlock() instanceof CutBlock)for(int i=0;i<4;i++)legacy[i]=125*CutBlock.depth(state,FACES[i]);
         return legacy;
     }
     static int guide(Level l,BlockPos pos){return l.getBlockEntity(pos) instanceof CutProgress p?p.guide:-1;}
