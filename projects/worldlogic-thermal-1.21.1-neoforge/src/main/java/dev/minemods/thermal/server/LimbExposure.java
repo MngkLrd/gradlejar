@@ -12,6 +12,10 @@ final class LimbExposure {
  static double protection(ItemStack s){
   if(s.isEmpty())return 0;
   if(s.getItem() instanceof ClimateGarment g)return Math.min(1,g.profile().insulation()*2.2+g.profile().windShield()*.3);
+  var physical=PhysicalBridge.insulation(s);
+  if(physical.isPresent())return Math.min(1,physical.getAsDouble()*2.2);
+  if(PhysicalBridge.advertised())return Math.min(1,EnvironmentSampler.materialInsulation(s)*2.2);
+  // Preserve old-Core fallback behavior until the verified dependency can be advanced.
   String id=net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(s.getItem()).getPath();
   return id.contains("grass")||id.startsWith("leather_")?.55:id.contains("iron")||id.contains("gold")||id.contains("diamond")||id.contains("netherite")?.12:.25;
  }

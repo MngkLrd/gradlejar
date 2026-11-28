@@ -86,7 +86,7 @@ public final class RoomHeat {
   if(!loaded(l,start)||!roof(l,start))return null;
   BlockState first=l.getBlockState(start);if(portal(first)||Block.isShapeFullBlock(first.getCollisionShape(l,start))||!first.getFluidState().isEmpty())return null;
   Set<BlockPos> cells=new HashSet<>(),walls=new HashSet<>(),ports=new HashSet<>();
-  Map<BlockPos,Boolean> roofs=new HashMap<>();ArrayDeque<BlockPos> todo=new ArrayDeque<>();
+  Map<BlockPos,Boolean> roofs=new HashMap<>();Map<BlockPos,PhysicalBridge.Wall> physicalWalls=new HashMap<>();ArrayDeque<BlockPos> todo=new ArrayDeque<>();
   cells.add(start.immutable());todo.add(start.immutable());roofs.put(start.immutable(),true);
   BlockPos key=start.immutable();double mass=0,conduct=0;int faces=0,holes=0;
   while(!todo.isEmpty()){
@@ -97,19 +97,15 @@ public final class RoomHeat {
     if(!loaded(l,q))return null;
     BlockState s=l.getBlockState(q);
     if(portal(s)){
-      ports.add(q);walls.add(q);mass+=.45;conduct+=.85;faces++;continue;
+      ports.add(q);walls.add(q);var t=physicalWalls.computeIfAbsent(q,b->PhysicalBridge.wall(l,b,new PhysicalBridge.Wall(.45,.85)));mass+=t.massFactor();conduct+=t.conductance();faces++;continue;
     }
     if(s.is(ThermalContent.CHIMNEY.get())||s.is(ThermalContent.DAMPER.get())){
-      ports.add(q);walls.add(q);mass+=.7;conduct+=1;faces++;continue;
+      ports.add(q);walls.add(q);var t=physicalWalls.computeIfAbsent(q,b->PhysicalBridge.wall(l,b,new PhysicalBridge.Wall(.7,1)));mass+=t.massFactor();conduct+=t.conductance();faces++;continue;
     }
     if(Block.isShapeFullBlock(s.getCollisionShape(l,q))||isGlass(s)||!s.getFluidState().isEmpty()){
-      walls.add(q);String material=WorldLogicApi.materialFamily(s).toLowerCase(Locale.ROOT);
-      boolean stone=material.contains("stone")||s.is(Blocks.STONE)||s.is(Blocks.COBBLESTONE)||s.is(Blocks.BRICKS);
-      boolean wood=material.contains("wood")||s.is(Blocks.OAK_PLANKS);
-      boolean metal=material.contains("metal")||s.is(Blocks.IRON_BLOCK);
-      boolean glass=isGlass(s);
-      mass+=stone?2.3:metal?2.6:wood?1.15:glass?.65:.85;
-      conduct+=metal?2.6:glass?1.7:stone?.85:wood?.48:.75;faces++;continue;
+      walls.add(q);
+      var t=physicalWalls.computeIfAbsent(q,b->PhysicalBridge.wall(l,b,legacyWall(s)));
+      mass+=t.massFactor();conduct+=t.conductance();faces++;continue;
     }
     if(!roofs.computeIfAbsent(q,b->roof(l,b))){holes++;continue;}
     if(q.distManhattan(start)>16||cells.size()>=MAX_VOLUME)return null;
@@ -122,6 +118,16 @@ public final class RoomHeat {
   Set<BlockPos> possible=new HashSet<>(cells);possible.addAll(walls);
   var sources=possible.stream().filter(q->{var s=l.getBlockState(q);return EnvironmentSampler.potential(s)||s.getFluidState().is(net.minecraft.tags.FluidTags.WATER);}).toList();
   return new Geometry(key,sig,now,Set.copyOf(cells),Set.copyOf(walls),Set.copyOf(ports),sources,holes,mass/faces,conduct/faces);
+ }
+ /** Only a legacy gameplay fallback for old Core; RC53 unknown materials use a neutral estimate. */
+ private static PhysicalBridge.Wall legacyWall(BlockState s){
+  if(PhysicalBridge.advertised())return new PhysicalBridge.Wall(.85,.75);
+  String material=WorldLogicApi.materialFamily(s).toLowerCase(Locale.ROOT);
+  boolean stone=material.contains("stone")||s.is(Blocks.STONE)||s.is(Blocks.COBBLESTONE)||s.is(Blocks.BRICKS);
+  boolean wood=material.contains("wood")||s.is(Blocks.OAK_PLANKS);
+  boolean metal=material.contains("metal")||s.is(Blocks.IRON_BLOCK);
+  boolean glass=isGlass(s);
+  return new PhysicalBridge.Wall(stone?2.3:metal?2.6:wood?1.15:glass?.65:.85,metal?2.6:glass?1.7:stone?.85:wood?.48:.75);
  }
  private static double ventilation(ServerLevel l,Geometry g,double wind){
   double openings=g.openings();

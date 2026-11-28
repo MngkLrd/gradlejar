@@ -28,6 +28,10 @@ public final class EnvironmentSampler {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("worldlogic_thermal",path));
     }
     private static final TagKey<Item> INSULATED = gear("insulated_gear"), LIGHT = gear("light_gear"), METAL = gear("metal_gear"), PLANT = gear("plant_insulation"), SUMMER = gear("summer_gear");
+    static double materialInsulation(ItemStack stack){
+        if(stack.isEmpty())return 0;
+        return PhysicalBridge.insulation(stack).orElseGet(()->stack.is(PLANT)?.25:stack.is(INSULATED)?.24:stack.is(LIGHT)?.13:stack.is(METAL)?.045:.06);
+    }
     public record Sample(ThermalModel.Exposure exposure, double skinWetness, boolean sheltered, double solarExposure, WeatherReading weather,RoomReading room,PhysiologyInputs physiology) {}
     private EnvironmentSampler() {}
     public static Optional<Sample> sample(ServerPlayer p, double skin) {
@@ -58,7 +62,7 @@ public final class EnvironmentSampler {
             if (stack.isEmpty()) continue;
             if(stack.getItem() instanceof ClimateGarment garment){var profile=garment.profile();ins+=profile.insulation();ventilation+=profile.ventilation();rainShield+=profile.rainShield();windShield+=profile.windShield();sunShield+=profile.sunShield();}
             else if(stack.is(SUMMER)){ventilation+=.45;ins+=.02;}
-            else ins += stack.is(PLANT) ? .25 : stack.is(INSULATED) ? .24 : stack.is(LIGHT) ? .13 : stack.is(METAL) ? .045 : .06;
+            else ins += materialInsulation(stack);
         }
         // API v1 has no core gear moisture or hot-food accessor.
         var a=atmosphere.orElse(null);

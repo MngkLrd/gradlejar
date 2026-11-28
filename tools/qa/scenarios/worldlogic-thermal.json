@@ -218,6 +218,12 @@
       "command": "thermal qa hud_signals",
       "expect": "THERMAL_QA_hud_signals_PASS",
       "assertion": true
+    },
+    {
+      "name": "Physical material normalization, legacy fallback and advertised Core registry integration",
+      "command": "thermal qa physical_materials",
+      "expect": "THERMAL_QA_physical_materials_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -559,6 +565,17 @@
         {
           "backend": "server",
           "name": "Responsive HUD layout, strong trend and signed temperature jumps"
+        }
+      ]
+    },
+    {
+      "id": "physical-materials",
+      "kind": "mechanic",
+      "subject": "Physical material normalization, legacy fallback and advertised Core registry integration",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Physical material normalization, legacy fallback and advertised Core registry integration"
         }
       ]
     }

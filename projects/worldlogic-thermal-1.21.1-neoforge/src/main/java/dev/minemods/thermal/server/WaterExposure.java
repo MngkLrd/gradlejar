@@ -42,6 +42,6 @@ final class WaterExposure {
         double base=env.flatMap(WorldLogicApi.Environment::regionalClimate)
             .map(r->14+28*r.thermalIndex()-Math.max(-80,Math.min(160,top.getY()-r.modeledSurfaceY()))*.065+AddonBridge.seasonalOffset(l,top))
             .orElseGet(()->ClimateModel.biomeAir(l.getBiome(top).value().getBaseTemperature(),top.getY(),l.getSeaLevel())+AddonBridge.seasonalOffset(l,top));
-        return new Reading(kind,depth,ClimateModel.naturalWater(air,base,kind,depth));
+        return new Reading(kind,depth,ClimateModel.naturalWater(air,base,kind,depth,PhysicalBridge.waterInertia(l.getFluidState(at).getType())));
     }
 }

@@ -179,6 +179,7 @@ final class ThermalChecks {
                 case "village_climate" -> ClimateEvolutionChecks.settlement(l,p);
                 case "integration" -> IntegrationChecks.verify(l,p);
                 case "water_exposure","room_response","hud_signals" -> StabilityChecks.verify(l,p,name);
+                case "physical_materials" -> PhysicalChecks.verify(l,p);
                 default -> throw new IllegalArgumentException(name);
             }
         } finally {
