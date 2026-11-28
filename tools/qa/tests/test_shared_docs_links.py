@@ -26,6 +26,7 @@ DOCS = (
     "docs/development/ECOSYSTEM-INTEGRATION.md",
     "docs/README.md",
     "docs/art/BLOCK-ART.md",
+    "docs/art/STRUCTURE-QA.md",
     "docs/art/UI-ART.md",
     "docs/art/MOB-ART.md",
 )
