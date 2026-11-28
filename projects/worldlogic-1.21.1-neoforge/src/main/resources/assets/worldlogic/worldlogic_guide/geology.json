@@ -7,7 +7,7 @@
     "ru": "Геология и руды",
     "en": "Geology and ores"
   },
-  "source": "WorldLogic RC46",
+  "source": "WorldLogic RC47",
   "pages": [
     {
       "id": "geography",
@@ -278,6 +278,28 @@
         "en": [
           "Mountain systems retain continental geography. Slopes and foothills respond to surrounding peaks, and valleys consider elevated terrain on opposite sides.",
           "High plateaux and low plains retain their character. Local relief adjustments do not move continents or sea level."
+        ]
+      }
+    },
+    {
+      "id": "erosion",
+      "title": {
+        "ru": "Эрозия и отложения",
+        "en": "Erosion and sediments"
+      },
+      "models": [
+        "minecraft:gravel",
+        "worldlogic:alluvial_silt",
+        "minecraft:stone"
+      ],
+      "body": {
+        "ru": [
+          "На влажных склонах сток может формировать мелкие ложбины. На выпуклых склонах порода постепенно разрушается, а в спокойных влажных понижениях откладывается ил.",
+          "Каменистые осыпи и аллювиальный ил появляются с учётом формы рельефа. Это начальная география мира, не динамическое разрушение построек игрока."
+        ],
+        "en": [
+          "On moist slopes runoff can shape shallow gullies. Convex slopes wear down; silt accumulates in quiet humid depressions.",
+          "Rock scree and alluvial silt follow relief profiles. This is initial terrain generation, not dynamic erosion of player buildings."
         ]
       }
     }

@@ -34,8 +34,8 @@ public final class LandscapeBlend{
   mean/=weight;
   double plateau=smooth(112,146,center)*(1-smooth(5,24,nearMax-nearMin))*smooth(center-18,center-5,pairedHigh);
   double valley=smooth(10,48,pairedHigh-center)*(1-smooth(125,180,center))*(1-plateau);
-  double ridge=smooth(114,168,center)*(1-plateau)*(1-valley);
-  double shoulders=smooth(75,101,center)*smooth(108,158,peak)*(1-plateau)*(1-valley)*(1-ridge);
+  double ridge=smooth(114,168,center)*Math.max(0,1-plateau-valley);
+  double shoulders=smooth(75,101,center)*smooth(108,158,peak)*Math.max(0,1-plateau-valley-ridge);
   double lowland=Math.max(0,1-plateau-valley-ridge-shoulders);
   // Broad shoulders are supported by an existing elevated neighbourhood.
   // High plateaux are gently smoothed, not converted to flat terraces.
@@ -54,10 +54,13 @@ public final class LandscapeBlend{
   double u=smooth(0,1,Math.floorMod(x,GRID)/(double)GRID),v=smooth(0,1,Math.floorMod(z,GRID)/(double)GRID);
   return mix(mix(nodes.apply(gx,gz),nodes.apply(gx+GRID,gz),u),mix(nodes.apply(gx,gz+GRID),nodes.apply(gx+GRID,gz+GRID),u),v);
  }
- static int adjustment(Profile p,int floor,int sea,boolean protectedWater){
-  if(protectedWater||floor<sea+12)return 0;
-  double guard=smooth(sea+12,sea+28,floor)*(1-smooth(175,225,floor));
-  return (int)Math.round(clamp(p.delta*guard,-MAX_LOWER,MAX_RAISE));
+ static int adjustment(Profile p,int floor,int sea,boolean protectedWater){return adjustment(p,0,floor,sea,protectedWater);}
+ static int adjustment(Profile p,double erosion,int floor,int sea,boolean protectedWater){
+  if(protectedWater||floor<sea+5)return 0;
+  double summit=1-smooth(175,225,floor);
+  double guard=smooth(sea+12,sea+28,floor)*summit;
+  double micro=smooth(sea+5,sea+17,floor)*summit;
+  return (int)Math.round(clamp(p.delta*guard+erosion*micro,-MAX_LOWER,MAX_RAISE));
  }
  public static void prepare(NoiseBasedChunkGenerator gen,RandomState random,RegistryAccess access,ChunkAccess chunk){
   if(!NaturalWaterGeneration.enabled(gen))return;
@@ -65,8 +68,9 @@ public final class LandscapeBlend{
   var model=GeoDensity.riverModel(random,access);
   Map<Long,Profile> profiles=new HashMap<>();
   java.util.function.BiFunction<Integer,Integer,Profile> nodes=(x,z)->profiles.computeIfAbsent(((long)x<<32)^(z&0xffffffffL),k->profile(model::raw,x,z));
+  var erosion=SurfaceErosion.field(model);
   boolean active=false;
-  for(int x:new int[]{x0,x0+7,x0+15})for(int z:new int[]{z0,z0+7,z0+15})if(Math.abs(sample(x,z,nodes).delta)>=.45)active=true;
+  for(int x:new int[]{x0,x0+7,x0+15})for(int z:new int[]{z0,z0+7,z0+15})if(Math.abs(sample(x,z,nodes).delta)+Math.abs(erosion.apply(x,z).delta())>=.45)active=true;
   if(!active)return;
   var rivers=RiverTerrain.regionalNetwork(gen,random,access,x0,z0);
   var lake=BasinTerrain.at(gen,random,access,x0,z0).orElse(null);
@@ -74,9 +78,9 @@ public final class LandscapeBlend{
   for(int x=0;x<16;x++)for(int z=0;z<16;z++)floors[x*16+z]=chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x,z);
   for(int x=0;x<16;x++)for(int z=0;z<16;z++){
    int wx=x0+x,wz=z0+z,floor=floors[x*16+z];
-   if(floor<sea+12)continue;
+   if(floor<sea+5)continue;
    boolean protectedWater=(lake!=null&&lake.protects(wx,wz))||rivers.nearest(wx,wz)!=null||chunk.getFluidState(new BlockPos(wx,floor+1,wz)).is(FluidTags.WATER);
-   int delta=adjustment(sample(wx,wz,nodes),floor,sea,protectedWater);
+   int delta=adjustment(sample(wx,wz,nodes),erosion.apply(wx,wz).delta(),floor,sea,protectedWater);
    if(delta!=0)reshape(chunk,wx,wz,floor,delta);
   }
  }
@@ -101,7 +105,7 @@ public final class LandscapeBlend{
   var shoulder=sample(96,0,grid);
   if(shoulder.foothill<=0||shoulder.delta<=0)throw new IllegalStateException("connected foothill support");
   var table=profile((x,z)->155,0,0);
-  if(table.plateau<.95||table.delta!=0)throw new IllegalStateException("broad high plateau preserves level");
+  if(table.plateau<.95||Math.abs(table.delta)>1e-8)throw new IllegalStateException("broad high plateau preserves level");
   var valley=profile((x,z)->100+65*(1-Math.exp(-Math.pow(x/65,2))),0,0);
   if(valley.valley<.9||valley.delta>=0)throw new IllegalStateException("elongated valley between opposing slopes");
   var flat=profile((x,z)->80,0,0);

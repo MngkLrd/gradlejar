@@ -15,7 +15,7 @@ public final class BiomeChecks {
   return (NoiseBasedChunkGenerator)l.registryAccess().lookupOrThrow(Registries.WORLD_PRESET).getOrThrow(key).value().createWorldDimensions().overworld();
  }
  public static void verify(ServerLevel l,long seed){
-  RegionalBiomeClimate.verify();RegionalBiomeEdges.verify();LandscapeBlend.verify();
+  RegionalBiomeClimate.verify();RegionalBiomeEdges.verify();LandscapeBlend.verify();SurfaceErosion.verify(l);
   verifyLocalRelief(l);
   var old=generator(l,"earthlike_climate");var gen=generator(l,"realistic_unified");
   var normal=l.registryAccess().lookupOrThrow(Registries.WORLD_PRESET).getOrThrow(ResourceKey.create(Registries.WORLD_PRESET,ResourceLocation.withDefaultNamespace("normal"))).value().createWorldDimensions().overworld();

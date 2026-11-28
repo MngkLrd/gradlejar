@@ -165,3 +165,5 @@ RC44: internal drainage planning domain enlarged; WaterKind and all addon APIs u
 RC45: existing WaterKind identities used for physically generated natural pools and small spring/estuary source areas. No new public API or registry IDs. Basin candidate probe is operator-only, does not load chunks, and is modeled rather than an observed lake.
 
 RC46: final generated relief may include bounded local valley/foothill/plateau shaping (+14/-4 maximum), distinct from unchanged modeled base-height queries. No new public interfaces.
+
+RC47: local erosion and sediment are internal worldgen passes, not simulated over player builds or old chunks. Actual final surface may differ from immutable RC22 base height within intended terrain shaping limits. No changed public signatures.

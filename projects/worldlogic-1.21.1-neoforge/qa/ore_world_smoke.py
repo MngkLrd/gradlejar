@@ -143,6 +143,36 @@ def main():
             require(totals["inland"]==0 and totals["dryQuart"]==0,"Dry land labeled ocean; inspect logged coordinates")
             require(sum(w["river"]>=16 and w["links"]>=12 and w["deep"]>=4 and w["cross"]>=2 for w in windows if w["site"].startswith("river_"))>=3,"Fewer than three generated connected river catchments")
             require(any(w["river"]>=8 and w["links"]>=4 for w in windows if w["site"].startswith("headwater_")),"No generated connected headwater stream")
+            # Natural pools: verify actual generated water and connected surface, not
+            # just a closed-rim planning fixture. Search bounded separated land tiles.
+            report["basin_candidates"]=[]
+            report["basin_windows"]=[]
+            basin_anchors=[]
+            for _,x,z in river_sites+headwaters:
+                for dx,dz in [(0,0),(512,0),(-512,0),(0,512),(0,-512),(512,512),(-512,-512)]:
+                    k=((x+dx)//512*512,(z+dz)//512*512)
+                    if k not in basin_anchors:basin_anchors.append(k)
+            for x,z in basin_anchors[:42]:
+                raw=conn.cmd(f"execute positioned {x} 96 {z} run worldlogic basin_probe")
+                m=re.search(r"BASIN_PROBE x=(-?\d+) z=(-?\d+) radius=(\d+) stage=(-?\d+) kind=(\w+)",raw)
+                if not m:continue
+                xx,zz,r,y=map(int,m.groups()[:4]);kind=m.group(5)
+                report["basin_candidates"].append(dict(x=xx,z=zz,radius=r,stage=y,kind=kind))
+                force=f"{xx-r-16} {zz-r-16} {xx+r+16} {zz+r+16}"
+                conn.cmd("forceload add "+force)
+                deadline=time.monotonic()+240
+                while time.monotonic()<deadline:
+                    raw=conn.cmd(f"execute positioned {xx} {y} {zz} run worldlogic basin_audit")
+                    m=re.search(r"BASIN_AUDIT wet=(\d+) connected=(\d+) deep=(\d+) rimLeak=(\d+) kind=(\w+)",raw)
+                    if m:break
+                    time.sleep(3)
+                conn.cmd("forceload remove "+force)
+                require(m is not None,"Basin survey chunks not ready")
+                wet,connected,deep,leak=map(int,m.groups()[:4])
+                report["basin_windows"].append(dict(x=xx,z=zz,wet=wet,connected=connected,deep=deep,rimLeak=leak,kind=kind))
+                if wet>=12 and connected>=wet*.80 and deep>=3 and leak==0:break
+                if len(report["basin_windows"])>=3:break
+            require(any(w["wet"]>=12 and w["connected"]>=w["wet"]*.80 and w["deep"]>=3 and w["rimLeak"]==0 for w in report["basin_windows"]),"No confirmed natural connected closed basin")
             # Retain independent marine substrate, native-water and flora assertions.
             ax,az=-18432,-30720
             force=f"{ax-16} {az-16} {ax+31} {az+31}"

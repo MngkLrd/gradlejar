@@ -108,13 +108,36 @@ public final class BasinTerrain{
   if(net.edges().stream().anyMatch(e->e.near(pool.x,pool.z,pool.radius+3)))return "BASIN_PROBE river_conflict";
   return "BASIN_PROBE x="+pool.x+" z="+pool.z+" radius="+pool.radius+" stage="+pool.stage+" kind="+pool.kind;
  }
+ static String audit(ServerLevel l,BlockPos origin){
+  if(!(l.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator g)||!NaturalWaterGeneration.enabled(g))return "BASIN_AUDIT unavailable";
+  var pool=at(g,l.getChunkSource().randomState(),l.registryAccess(),origin.getX(),origin.getZ()).orElse(null);
+  if(pool==null)return "BASIN_AUDIT no_candidate";
+  int size=pool.radius*2+1,wet=0,leaks=0,deep=0,largest=0;
+  boolean[][] water=new boolean[size][size];
+  for(int dx=-pool.radius;dx<=pool.radius;dx++)for(int dz=-pool.radius;dz<=pool.radius;dz++){
+   int x=pool.x+dx,z=pool.z+dz;var c=l.getChunkSource().getChunkNow(x>>4,z>>4);
+   if(c==null)return "BASIN_AUDIT unavailable";
+   var kind=NaturalFluids.kind(c.getFluidState(new BlockPos(x,pool.stage,z)).getType());
+   boolean rim=Math.abs(dx)==pool.radius||Math.abs(dz)==pool.radius;
+   if(rim&&kind==pool.kind)leaks++;
+   if(!rim&&kind==pool.kind){wet++;water[dx+pool.radius][dz+pool.radius]=true;
+    if(NaturalFluids.kind(c.getFluidState(new BlockPos(x,pool.stage-1,z)).getType())==pool.kind)deep++;}
+  }
+  int[][] steps={{1,0},{-1,0},{0,1},{0,-1}};
+  for(int x=0;x<size;x++)for(int z=0;z<size;z++)if(water[x][z]){
+   var q=new ArrayDeque<int[]>();q.add(new int[]{x,z});water[x][z]=false;int count=0;
+   while(!q.isEmpty()){var p=q.remove();count++;for(var d:steps){int nx=p[0]+d[0],nz=p[1]+d[1];if(nx>=0&&nz>=0&&nx<size&&nz<size&&water[nx][nz]){water[nx][nz]=false;q.add(new int[]{nx,nz});}}}
+   largest=Math.max(largest,count);
+  }
+  return "BASIN_AUDIT wet="+wet+" connected="+largest+" deep="+deep+" rimLeak="+leaks+" kind="+pool.kind;
+ }
  static void verify(ServerLevel l){
   DoubleBinaryOperator bowl=(x,z)->80+Math.min(8,Math.hypot(x-8,z-8)*.55);
   var p=validate(8,8,16,.5,bowl).orElseThrow();
   if(p.kind!=WaterKind.LAKE||p.stage<=82||p.stage>=88)throw new IllegalStateException("closed basin stage");
   if(validate(8,8,16,.8,(x,z)->x==24&&z==9?79:bowl.applyAsDouble(x,z)).isPresent())throw new IllegalStateException("one-block rim outlet");
   if(validate(8,8,16,.8,(x,z)->80).isPresent())throw new IllegalStateException("flat land is not a basin");
-  var marsh=validate(8,8,16,.85,(x,z)->80+Math.min(4,Math.hypot(x-8,z-8)*.25)).orElseThrow();
+  var marsh=validate(8,8,16,.85,(x,z)->80+Math.min(4,Math.max(0,Math.hypot(x-8,z-8)-6)*.5)).orElseThrow();
   if(marsh.kind!=WaterKind.WETLAND||marsh.stage!=82)throw new IllegalStateException("shallow wetland");
   var c=new net.minecraft.world.level.chunk.ProtoChunk(new net.minecraft.world.level.ChunkPos(0,0),net.minecraft.world.level.chunk.UpgradeData.EMPTY,LevelHeightAccessor.create(-256,768),l.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.BIOME),null);
   var pos=new BlockPos.MutableBlockPos();
