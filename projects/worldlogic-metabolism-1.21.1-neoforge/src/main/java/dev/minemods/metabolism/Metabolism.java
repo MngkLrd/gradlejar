@@ -28,6 +28,8 @@ import net.minecraft.ChatFormatting;
 public final class Metabolism {
  private static final String KEY="worldlogic_metabolism";
  private static final WeakHashMap<ServerPlayer,Vec3> POS=new WeakHashMap<>();
+ private static final WeakHashMap<ServerPlayer,RestSample> REST=new WeakHashMap<>();
+ private static final class RestSample {final RestRecovery.Clock clock=new RestRecovery.Clock();net.minecraft.server.level.ServerLevel level;Vec3 position;double rate;boolean delegated;}
  public Metabolism(IEventBus modBus){
   modBus.addListener(MetabolismSync::register);
   var bus=NeoForge.EVENT_BUS;
@@ -55,16 +57,29 @@ public final class Metabolism {
  }
  static void store(ServerPlayer p,MetabolicModel.State s){p.getPersistentData().put(KEY,encode(s));}
  private static void tick(PlayerTickEvent.Post e){
-  if(!(e.getEntity() instanceof ServerPlayer p)||p.tickCount%20!=0)return;
-  if(!active(p)){POS.remove(p);if(p.tickCount%40==0)MetabolismSync.send(p);return;}
-  Vec3 old=POS.put(p,p.position());double distance=old==null?0:Math.sqrt(p.position().distanceToSqr(old));
+  if(!(e.getEntity() instanceof ServerPlayer p))return;
+  if(!active(p)){POS.remove(p);REST.remove(p);if(p.tickCount%40==0)MetabolismSync.send(p);return;}
+  var sample=REST.computeIfAbsent(p,k->new RestSample());
+  if(sample.level!=p.serverLevel()){sample.level=p.serverLevel();sample.position=null;}
+  boolean second=p.tickCount%20==0;
+  if(second||sample.position==null){var s=state(p);EnvironmentBridge.sample(p,s);sample.rate=s.restRate(p.getFoodData().getFoodLevel());sample.delegated=RestRecovery.coreOwns(p);}
+  if(second){Vec3 old=POS.put(p,p.position());double distance=old==null?0:Math.sqrt(p.position().distanceToSqr(old));
   double intensity=distance>20?0:Math.min(1,distance/5.5);if(distance>.2&&p.isSprinting())intensity=Math.max(intensity,.8);
   if(distance>.2&&p.isSwimming())intensity=Math.max(intensity,.65);
   var s=state(p);EnvironmentBridge.sample(p,s);double absorbed=MetabolicModel.tick(s,intensity);
   boolean resting=intensity<.08&&!p.isSprinting()&&!p.isSwimming()&&!p.isUsingItem();
   s.lastDigest=recover(p,MetabolicModel.digestionPoints(s,absorbed,resting));store(p,s);
   if(intensity>.4&&p.tickCount%100==0){double extra=Math.max(0,.10-s.energy())*2+(1-s.physicalFactor())*.35*intensity+s.overload*.55*intensity;if(extra>0)WorldLogicApi.addExertion(p,extra);}
-  if(p.tickCount%40==0)MetabolismSync.send(p);
+  sample.rate=s.restRate(p.getFoodData().getFoodLevel());}
+  // Only actual stationary/safe rest. Mining/attacking raises authoritative fatigue and resets the budget.
+  Vec3 here=p.position();boolean still=sample.position!=null&&here.distanceToSqr(sample.position)<.00015625;
+  sample.position=here;
+  boolean safe=still&&!p.isPassenger()&&p.onGround()&&!p.isSprinting()&&!p.isSwimming()&&!p.isInWater()&&!p.isInLava()&&!p.onClimbable()&&!p.isUsingItem();
+  var fatigue=WorldLogicApi.fatigue(p);
+  double before=fatigue.fatiguePercent();
+  double request=sample.clock.request(before,safe&&fatigue.enabled()&&!sample.delegated,sample.rate);
+  if(request>1e-8){double restored=recover(p,request);sample.clock.settled(before,before-restored);}
+  if(p.tickCount%20==0)MetabolismSync.send(p);
  }
  /** Core alone owns stamina. Return the actual accepted points, not the theoretical bonus. */
  static double recover(ServerPlayer p,double points){
@@ -118,7 +133,7 @@ public final class Metabolism {
  }
  private static void clonePlayer(PlayerEvent.Clone e){if(e.getEntity() instanceof ServerPlayer p&&e.getOriginal() instanceof ServerPlayer old)store(p,e.isWasDeath()?new MetabolicModel.State():state(old));}
  private static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p)MetabolismSync.send(p);}
- private static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p){POS.remove(p);DRINKS.remove(p);}}
+ private static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p){POS.remove(p);DRINKS.remove(p);REST.remove(p);}}
  private static String status(ServerPlayer p){var s=state(p);return String.format(Locale.ROOT,"Metabolism quality=%.0f energy=%.0f stomach=%.1f toxin=%.1f deficient=%d critical=%d recovery=%.3f",100*s.quality(),100*s.energy(),s.stomach,100*s.toxin,s.deficient(),s.critical(),s.recovery());}
  private static void foodTooltip(ItemTooltipEvent e){FoodProfiles.profile(e.getItemStack(),e.getEntity()).ifPresent(f->{var meal=f.meal();var n=meal.nutrients();var list=e.getToolTip();
   list.add(Component.translatable("metabolism.food.energy",Math.round(meal.kcal())).withStyle(ChatFormatting.GOLD));
@@ -128,7 +143,26 @@ public final class Metabolism {
   if(meal.toxin()>0)list.add(Component.translatable("metabolism.food.toxin",Math.round(meal.toxin()*100)).withStyle(ChatFormatting.RED));
  });}
  private static String fmt(double n){return String.format(Locale.ROOT,"%.1f",n);}
+ public static boolean restoreNutrition(ServerPlayer p,boolean clearDisorders){
+  if(!active(p))return false;
+  var s=state(p);MetabolicModel.restoreNutrition(s,clearDisorders);p.getFoodData().setFoodLevel(20);p.getFoodData().setSaturation(20);store(p,s);REST.remove(p);MetabolismSync.send(p);return true;
+ }
+ public static double restingRecoveryPointsPerSecond(ServerPlayer p){
+  if(!active(p)||!WorldLogicApi.fatigue(p).enabled())return 0;
+  var s=state(p);EnvironmentBridge.sample(p,s);return s.restRate(p.getFoodData().getFoodLevel());
+ }
+ private static int feed(com.mojang.brigadier.context.CommandContext<net.minecraft.commands.CommandSourceStack> c,java.util.Collection<ServerPlayer> players){
+  int count=0;for(var p:players)if(restoreNutrition(p,false))count++;
+  final int done=count;c.getSource().sendSuccess(()->Component.literal("Metabolism: fed "+done+" player(s)"),true);return done;
+ }
+ private static com.mojang.brigadier.builder.LiteralArgumentBuilder<net.minecraft.commands.CommandSourceStack> feedCommand(String name){
+  return Commands.literal(name).requires(s->s.hasPermission(2)).executes(c->feed(c,java.util.List.of(c.getSource().getPlayerOrException())))
+   .then(Commands.argument("players",EntityArgument.players()).executes(c->feed(c,EntityArgument.getPlayers(c,"players"))));
+ }
  private static void commands(RegisterCommandsEvent e){
+  var dispatcher=e.getDispatcher();var root=dispatcher.getRoot().getChild("worldlogic");
+  if(dispatcher.getRoot().getChild("feed")==null)dispatcher.register(feedCommand("feed"));
+  if(root==null||root.getChild("feed")==null)dispatcher.register(Commands.literal("worldlogic").requires(s->s.hasPermission(2)).then(feedCommand("feed")));
   e.getDispatcher().register(Commands.literal("metabolism").then(Commands.literal("status").executes(c->{var p=c.getSource().getPlayerOrException();c.getSource().sendSuccess(()->Component.literal(status(p)),false);return 1;}).then(Commands.argument("player",EntityArgument.player()).requires(s->s.hasPermission(2)).executes(c->{var p=EntityArgument.getPlayer(c,"player");c.getSource().sendSuccess(()->Component.literal(status(p)),false);return 1;}))).then(Commands.literal("selftest").requires(s->s.hasPermission(2)).executes(c->{ModelChecks.run();ModelChecks.verifyCore(c.getSource().getServer());c.getSource().sendSuccess(()->Component.literal("METABOLISM_MODEL_CHECKS_PASSED"),false);return 1;})));
  }
 }

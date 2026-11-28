@@ -10,7 +10,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import java.util.UUID;
 public final class MetabolismSync {
- public static final int SIZE=2*MetabolicModel.N+18+37;
+ public static final int SIZE=2*MetabolicModel.N+18+38;
  public record State(UUID player,boolean active,boolean anatomical,float[] values) implements CustomPacketPayload{
   static final Type<State> TYPE=new Type<>(ResourceLocation.fromNamespaceAndPath("metabolism","state"));
   public State{values=values.clone();if(values.length!=SIZE)throw new IllegalArgumentException("size");}
@@ -19,7 +19,7 @@ public final class MetabolismSync {
  }
  public static volatile State client;
  public static void register(RegisterPayloadHandlersEvent e){
-  e.registrar("5").playToClient(State.TYPE,StreamCodec.<RegistryFriendlyByteBuf,State>of((b,s)->{
+  e.registrar("6").playToClient(State.TYPE,StreamCodec.<RegistryFriendlyByteBuf,State>of((b,s)->{
    b.writeUUID(s.player);b.writeBoolean(s.active);b.writeBoolean(s.anatomical);for(float v:s.values)b.writeFloat(v);
   },b->{UUID id=b.readUUID();boolean active=b.readBoolean(),anatomical=b.readBoolean();float[] v=new float[SIZE];for(int i=0;i<SIZE;i++)v[i]=b.readFloat();return new State(id,active,anatomical,v);}),
   (s,c)->c.enqueueWork(()->client=s));
@@ -35,7 +35,7 @@ public final class MetabolismSync {
   v[k++]=(float)s.tissueFactor();v[k++]=(float)s.boneFactor();v[k++]=(float)s.bloodFactor();
   v[k++]=(float)s.dayIntake;v[k++]=(float)s.dayBurn;v[k++]=(float)s.daySeconds;
   for(int i=0;i<7;i++){v[k++]=i<s.historyCount?(float)s.historyIntake[i]:-1;v[k++]=i<s.historyCount?(float)s.historyBurn[i]:-1;v[k++]=i<s.historyCount?(float)s.historyQuality[i]:-1;}
-  v[k++]=(float)MedicalBridge.passiveRecovery(p);v[k++]=(float)s.overload;v[k++]=(float)s.lastInstant;v[k++]=(float)s.lastDigest;v[k]=s.drinkCooldown;
+  v[k++]=(float)MedicalBridge.passiveRecovery(p);v[k++]=(float)s.overload;v[k++]=(float)s.lastInstant;v[k++]=(float)s.lastDigest;v[k++]=s.drinkCooldown;v[k]=s.restSeconds(p.getFoodData().getFoodLevel());
   PacketDistributor.sendToPlayer(p,new State(p.getUUID(),Metabolism.active(p),h.anatomical(),v));
  }
  private MetabolismSync(){}

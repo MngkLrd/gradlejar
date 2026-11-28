@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Metabolism 0.9.1 nutrient composition and energy regression",
+  "name": "Metabolism 0.9.2 natural rest and admin feed",
   "coverage": [
     {
       "id": "nutrition-model",
@@ -248,6 +248,39 @@
       "id": "vanilla-food-composition",
       "kind": "mechanic",
       "subject": "Explicit vanilla food profiles, consistent macronutrient kcal and species differences, public read-only food composition",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "rest-recovery-tiers",
+      "kind": "mechanic",
+      "subject": "3/5/7/10/12 seconds with and without existing Core passive recovery; effort negative and poor metabolism",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "admin-feed",
+      "kind": "mechanic",
+      "subject": "Admin nutrition restore public API and command registration",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "nonfood-ominous-bottle",
+      "kind": "mechanic",
+      "subject": "Non-nutritive potion carrier exclusion",
       "checks": [
         {
           "backend": "server",

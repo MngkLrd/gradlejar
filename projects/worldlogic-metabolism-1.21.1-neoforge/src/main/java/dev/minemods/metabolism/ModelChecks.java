@@ -8,6 +8,7 @@ public final class ModelChecks {
   require(Double.isFinite(fatigue.fatiguePercent())&&fatigue.fatiguePercent()>=0&&fatigue.fatiguePercent()<=100,"actual Core fatigue API");
   dev.minemods.worldlogic.api.WorldLogicApi.addExertion(p,0);
   require(fatigue.enabled(),"Core exertion enabled in QA");
+  require(server.getCommands().getDispatcher().getRoot().getChild("feed")!=null&&server.getCommands().getDispatcher().getRoot().getChild("worldlogic").getChild("feed")!=null,"operator feed aliases");
   for(int i=0;i<5;i++)dev.minemods.worldlogic.api.WorldLogicApi.addExertion(p,100);
   double before=dev.minemods.worldlogic.api.WorldLogicApi.fatigue(p).fatiguePercent();
   var meal=FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.BREAD)).orElseThrow();
@@ -26,6 +27,7 @@ public final class ModelChecks {
    var mm=e.meal();var n=mm.nutrients();require(Math.abs(mm.kcal()-(4*n[0]+9*n[1]+4*n[2]+2*n[3]))<1e-6,"macro energy consistency "+ids.getKey(item));audited++;
   }
   require(audited>=35,"vanilla food coverage");
+  require(FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.OMINOUS_BOTTLE),p).isEmpty(),"ominous bottle is not nutrition");
   var cod=FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COOKED_COD)).orElseThrow().meal();
   var salmon=FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COOKED_SALMON)).orElseThrow().meal();
   var chicken=FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COOKED_CHICKEN)).orElseThrow().meal();
@@ -59,12 +61,33 @@ public final class ModelChecks {
   var medicine=net.minecraft.world.item.alchemy.PotionContents.createItemStack(net.minecraft.world.item.Items.POTION,net.minecraft.world.item.alchemy.Potions.HEALING);
   net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent.Finish(p,medicine,0,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.GLASS_BOTTLE)));
   require(Metabolism.state(p).drinkCooldown==0&&Metabolism.state(p).stomach==0,"non-food medicine not free energy");
+  require(dev.minemods.metabolism.api.MetabolismApi.restoreNutrition(p,true)&&p.getFoodData().getFoodLevel()==20&&Metabolism.state(p).fast==MetabolicModel.FAST_MAX&&dev.minemods.metabolism.api.MetabolismApi.restingRecoveryPointsPerSecond(p)>33,"actual nutrition reset and rest API");
   var manual=dev.minemods.metabolism.api.MetabolismApi.reportFoodIntake(p,100,java.util.Map.of("carb",20d),0,.9);
   require(manual.acceptedKcal()==100&&dev.minemods.metabolism.api.MetabolismApi.energy(p).stomachFraction()>0,"nonstandard meal public path");
   try{dev.minemods.metabolism.api.MetabolismApi.reportFoodIntake(p,100,java.util.Map.of("carb",Double.NaN),0,1);throw new AssertionError("invalid input accepted");}catch(IllegalArgumentException expected){} 
  }
  public static void run(){
   var rest=new MetabolicModel.State();var active=new MetabolicModel.State();
+  int[] seconds={3,5,7,10,12};int[] hunger={20,16,12,6,0};
+  for(int i=0;i<seconds.length;i++){
+   var s=new MetabolicModel.State();s.fast=MetabolicModel.FAST_MAX;require(s.restSeconds(hunger[i])==seconds[i],"rest tier "+seconds[i]);
+   for(boolean core:new boolean[]{false,true}){
+    var clock=new RestRecovery.Clock();double fatigue=100;int elapsed=0;
+    for(int tick=1;tick<=seconds[i]*20;tick++){
+     if(core&&tick%20==0)fatigue=Math.max(0,fatigue-4);
+     double requested=clock.request(fatigue,true,s.restRate(hunger[i])),after=Math.max(0,fatigue-requested);
+     clock.settled(fatigue,after);fatigue=after;
+     if(fatigue<=1e-7&&elapsed==0)elapsed=tick;
+    }
+    require(fatigue<1e-6&&elapsed>0&&elapsed>=seconds[i]*20-10&&elapsed<=seconds[i]*20,"full rest recovery duration "+seconds[i]+": "+elapsed);
+   }
+  }
+  var clock=new RestRecovery.Clock();require(clock.request(100,false,100d/3)==0,"no resting bonus while active");
+  double req=clock.request(90,true,100d/3);clock.settled(90,90-req);require(clock.request(95,true,100d/3)==0,"new exertion interrupts rest");
+  var sick=new MetabolicModel.State();sick.toxin=.8;sick.fast=0;sick.reserve=10000;sick.stores[0]=0;
+  require(sick.restSeconds(20)>=10,"poor metabolism slows rest");
+  MetabolicModel.restoreNutrition(sick,false);require(sick.fast==MetabolicModel.FAST_MAX&&sick.quality()==1&&sick.toxin==.8&&sick.reserve==10000,"feed does not cure poison or increase fat");
+  MetabolicModel.restoreNutrition(sick,true);require(sick.toxin==0&&sick.restSeconds(20)==3,"full nutritional reset");
   MetabolicModel.tick(rest,0);MetabolicModel.tick(active,1);require(active.fast<rest.fast,"activity costs more");
   var fed=new MetabolicModel.State();double[] n=new double[MetabolicModel.N];n[0]=65;
   MetabolicModel.ingest(fed,new MetabolicModel.Meal(300,n,0,1),true);

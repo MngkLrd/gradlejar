@@ -23,6 +23,9 @@ public final class MetabolicModel {
   public int historyCount,daySeconds,drinkCooldown;
   public double overload,lastInstant,lastDigest;
   public double fullness(){return clamp(stomach/STOMACH_MAX,0,1);}
+  public double restScore(int foodLevel){return clamp(Math.min(Math.min(quality(),energy()/.75),clamp(foodLevel/20.0,0,1))*hydrationFactor()*(1-.65*toxin)*(1-.45*overload),0,1);}
+  public int restSeconds(int foodLevel){double v=restScore(foodLevel);return v>=.90?3:v>=.75?5:v>=.50?7:v>=.25?10:12;}
+  public double restRate(int foodLevel){return 100.0/restSeconds(foodLevel);}
   public double mealComfort(){return clamp(1-.55*overload-.35*Math.max(0,(fullness()-.75)/.25),.2,1);}
   public double dayIntake,dayBurn,dayQuality,water=-1,salts=-1,bodyC=-1;
   public double tissueFactor(){return clamp(recovery()*(.35+.65*Math.min(1,adequacy(0)))*(.4+.6*Math.min(1,adequacy(5))),.1,1);}
@@ -45,6 +48,12 @@ public final class MetabolicModel {
   public double recovery(){return clamp((.35+.65*quality())*(.45+.55*energy())*(1-.65*toxin),.1,1);}
   public double resistance(){return clamp((.5+.5*quality())*(1-.5*toxin),.1,1);}
   public double absorptionEfficiency(){return clamp(absorption*(1-.4*toxin)*hydrationFactor()*mealComfort(),.15,1);}
+ }
+ /** Admin food refill is not an increase in body fat or a foreign medical cure. */
+ public static void restoreNutrition(State s,boolean clearDisorders){
+  s.fast=FAST_MAX;s.stomach=0;s.queuedEnergy=0;s.absorption=1;s.overload=0;s.lastInstant=0;s.lastDigest=0;
+  Arrays.fill(s.stores,1);Arrays.fill(s.pending,0);Arrays.fill(s.baseline,1);
+  if(clearDisorders){s.toxin=0;s.drinkCooldown=0;}
  }
  public static double clamp(double x,double lo,double hi){return Double.isFinite(x)?Math.max(lo,Math.min(hi,x)):lo;}
  public static double ingest(State s,Meal m,boolean known){

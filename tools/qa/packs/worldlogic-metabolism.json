@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "worldlogic-metabolism",
-  "description": "Core RC33 and Metabolism 0.9.1 joint runtime",
+  "description": "Core RC33 and Metabolism 0.9.2 joint runtime",
   "targets": [
     {
       "id": "neoforge-mc1.21.1",

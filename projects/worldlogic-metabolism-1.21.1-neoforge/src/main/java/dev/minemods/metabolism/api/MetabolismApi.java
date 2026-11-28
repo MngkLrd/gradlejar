@@ -2,7 +2,7 @@ package dev.minemods.metabolism.api;
 import dev.minemods.metabolism.Metabolism;
 import net.minecraft.server.level.ServerPlayer;
 public final class MetabolismApi {
- public static final int API_VERSION=1,API_REVISION=5;
+ public static final int API_VERSION=1,API_REVISION=6;
  public record NutrientStatus(String id,double adequacy,double trend){}
  public record Digestion(double fastKcal,double fatKcal,double queuedKcal,double kcalPerGameHour,int deficient,int critical,double estimatedFastHours,double estimatedTotalHours){}
  public static java.util.List<NutrientStatus> nutrients(ServerPlayer player){if(!player.serverLevel().getServer().isSameThread())throw new IllegalStateException("server thread required");var s=Metabolism.state(player);var out=new java.util.ArrayList<NutrientStatus>();for(int i=0;i<dev.minemods.metabolism.MetabolicModel.N;i++)out.add(new NutrientStatus(dev.minemods.metabolism.MetabolicModel.KEYS[i],s.adequacy(i),s.trend(i)));return java.util.List.copyOf(out);}
@@ -43,5 +43,9 @@ public final class MetabolismApi {
   if(stack==null||stack.isEmpty())return java.util.Optional.empty();
   return dev.minemods.metabolism.FoodProfiles.profile(stack,eater).map(e->{var m=e.meal();var n=m.nutrients();var micro=new java.util.LinkedHashMap<String,Double>();if(e.known())for(int i=4;i<dev.minemods.metabolism.MetabolicModel.N;i++)micro.put(dev.minemods.metabolism.MetabolicModel.KEYS[i],n[i]);return new FoodProfile(e.known(),m.kcal(),e.known()?n[0]:null,e.known()?n[1]:null,e.known()?n[2]:null,e.known()?n[3]:null,micro,m.toxin(),m.absorption());});
  }
+ /** Core's natural stationary recovery policy, points per real second at 20 TPS. Zero when inactive. */
+ public static double restingRecoveryPointsPerSecond(ServerPlayer p){thread(p);return Metabolism.restingRecoveryPointsPerSecond(p);}
+ /** Trusted server/admin orchestration; this restores nutrition only. True also clears metabolic toxin/cooldown, never foreign medical state. */
+ public static boolean restoreNutrition(ServerPlayer p,boolean clearMetabolicDisorders){thread(p);return Metabolism.restoreNutrition(p,clearMetabolicDisorders);}
  private MetabolismApi(){}
 }

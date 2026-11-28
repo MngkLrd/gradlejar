@@ -52,6 +52,7 @@ public final class MetabolismScreen extends Screen{
   Row totalTime=new Row("total_time",hours(v[N+16]),-1,false,Items.CLOCK);
   Row digestionTime=new Row("digestion_time",hours(v[N+17]),-1,false,Items.CLOCK);
   int k=2*N+18;
+  Row rest=new Row("rest_time",number(v[k+37])+" s",-1,false,Items.CLOCK);
   Row stamina=new Row("stamina",v[N+12]<0?"?":number(100-v[N+12])+" / 100",v[N+12]<0?-1:1-v[N+12]/100,false,Items.IRON_PICKAXE);
   Row intake=new Row("intake_boost",String.format(Locale.ROOT,"+%.1f",v[k+34]),-1,false,Items.HONEY_BOTTLE);
   Row digestBoost=new Row("digest_boost",String.format(Locale.ROOT,"+%.2f/s",v[k+35]),-1,false,Items.BREAD);
@@ -67,7 +68,7 @@ public final class MetabolismScreen extends Screen{
   Row blood=new Row("blood_factor",factor(v[k+7]),v[k+7],false,Items.REDSTONE);
   return switch(tab){
    case 1->{var a=new ArrayList<Row>();for(int i=0;i<N;i++)a.add(nutrient(i,v));yield a;}
-   case 2->List.of(stamina,intake,digestBoost,energy,fast,fat,burn,fastTime,totalTime,fatigue,temp,thermal);
+   case 2->List.of(stamina,rest,intake,digestBoost,energy,fast,fat,burn,fastTime,totalTime,fatigue,temp,thermal);
    case 3->List.of(stomach,overeating,absorption,digestionTime,toxins,diet,deficits,critical,water,salts,waterFactor);
    case 4->List.of(health,hpRate,recovery,tissue,bone,blood,resistance,diet,deficits,critical,energy,toxins,fatigue);
    case 5->{var out=new ArrayList<Row>();out.add(new Row("today_intake",number(v[k+8])+" kcal",-1,false,Items.BREAD));out.add(new Row("today_burn",number(v[k+9])+" kcal",-1,false,Items.BLAZE_POWDER));for(int i=0;i<7;i++){int off=k+11+i*3;if(v[off]<0)continue;out.add(new Row("history_day_"+(i+1),number(v[off])+" / "+number(v[off+1])+" kcal",v[off+2],false,Items.BOOK));}yield out;}

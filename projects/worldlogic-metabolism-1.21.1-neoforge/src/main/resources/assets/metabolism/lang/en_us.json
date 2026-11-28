@@ -119,5 +119,7 @@
   "metabolism.stat.digest_boost": "Digestion recovery",
   "metabolism.help.digest_boost": "Actual stamina points recovered from absorbed food in the last active second.",
   "metabolism.stat.overeating": "Overeating",
-  "metabolism.help.overeating": "Overfilling reduces digestion and recovery efficiency. It gradually subsides."
+  "metabolism.help.overeating": "Overfilling reduces digestion and recovery efficiency. It gradually subsides.",
+  "metabolism.stat.rest_time": "Rest recovery",
+  "metabolism.help.rest_time": "Time to recover the full stamina bar at stationary rest with current nutrition (20 TPS). Effort interrupts recovery."
 }

@@ -13,6 +13,8 @@ public final class FoodProfiles {
  }
  public static Optional<Entry> profile(ItemStack stack){return profile(stack,null);}
  public static Optional<Entry> profile(ItemStack stack,net.minecraft.world.entity.LivingEntity eater){
+  // Ominous bottle is a non-nutritive effect carrier despite its vanilla FOOD component.
+  if(stack.is(net.minecraft.world.item.Items.OMINOUS_BOTTLE))return Optional.empty();
   var component=stack.getFoodProperties(eater);
   if(stack.is(net.minecraft.world.item.Items.MILK_BUCKET))return Optional.of(food(8,8,12,0,60,0,1.1,.1,275,24,0,.93));
   if(component==null)return Optional.empty();

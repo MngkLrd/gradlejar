@@ -13,7 +13,7 @@
     {
       "id": "worldlogic:metabolism_physiology",
       "version": 1,
-      "revision": 5,
+      "revision": 6,
       "domains": [
         "nutrition",
         "digestion",
@@ -63,6 +63,18 @@
           "kind": "query",
           "entrypoint": "dev.minemods.metabolism.api.MetabolismApi",
           "semantics": "Edible item serving nutrition and calorie estimate, nullable unknown macros, immutable micronutrients in domain units."
+        },
+        {
+          "id": "resting_recovery",
+          "kind": "query",
+          "entrypoint": "dev.minemods.metabolism.api.MetabolismApi",
+          "semantics": "Authoritative nutrition-conditioned stationary recovery rate for Core, points per second at 20 TPS."
+        },
+        {
+          "id": "restore_nutrition",
+          "kind": "command",
+          "entrypoint": "dev.minemods.metabolism.api.MetabolismApi",
+          "semantics": "Trusted admin operation restores nutrition; optionally clears metabolic toxin, never other addon state."
         }
       ]
     }
@@ -111,7 +123,8 @@
         "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/api/MetabolismApi.java",
         "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/WaterIntakeBridge.java",
         "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/mixin/PlayerFoodMixin.java",
-        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/mixin/CakeFoodMixin.java"
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/mixin/CakeFoodMixin.java",
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/RestRecovery.java"
       ],
       "provides": [
         "worldlogic:metabolism_physiology"
@@ -122,7 +135,7 @@
         "worldlogic:thermal_status",
         "worldlogic:trauma_status"
       ],
-      "integration_review": "Inspected Core RC54 public fatigue API and Survival natural rest; published RC22 same signatures. Hydration v1 rev2 liquidWater and physiology, Thermal public status and Trauma API rev3. No foreign state mutation or second stamina pool. Missing source sip callback tracked in issue #257."
+      "integration_review": "Inspected Core RC54 public fatigue API and Survival natural rest; published RC22 same signatures. Hydration v1 rev2 liquidWater and physiology, Thermal public status and Trauma API rev3. No foreign state mutation or second stamina pool. Missing source sip callback tracked in issue #257. Core RC56 natural recovery remains 4/s and no policy hook; #265 requests Core ownership, interim observed net-credit supplemental rest through public API only. Trauma disorder UI/reset #266, Hydration and Thermal reset #267."
     },
     {
       "id": "dashboard",
