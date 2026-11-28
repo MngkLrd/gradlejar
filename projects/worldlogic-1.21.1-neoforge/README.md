@@ -155,3 +155,5 @@ RC52 corrective art pass: owner rejected the first stone textures (source 07c0a0
 
 ## 1.3.0 / RC55 candidate
 Core owns shared processing presentation, statistics rail, seasonal JourneyMap integration, water render continuity and shader vegetation classification. Patchouli catalog rebuilt from actual Core models and recipes. Nonstandard recipes still require authoritative addon providers. Optional client integrations require client validation. API revision 16, physical API revision 2, protocol 11. No terrain redesign.
+
+RC55 also registers a WorldLogic: Core creative tab backed by all enabled items in the Core namespace, including future item registrations. Existing vanilla category placements remain. Technical blocks with no item form and addon items are excluded.

@@ -2017,6 +2017,17 @@
           "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
         }
       ]
+    },
+    {
+      "id": "core-creative-catalog",
+      "kind": "mechanic",
+      "subject": "Core creative tab exact registry coverage, no duplicate stacks, all registered soils and water buckets",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
     }
   ]
 }

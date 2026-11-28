@@ -15,6 +15,7 @@ public final class WorldLogic {
   modBus.addListener(RockContent::creative);
   Content.BLOCKS.register(modBus);
   Content.ITEMS.register(modBus);
+  CoreCreativeTab.register(modBus);
   Rules.load();
   dev.minemods.worldlogic.api.WorldLogicCapabilities.register(dev.minemods.worldlogic.api.WorldLogicRecipes.CAPABILITY,0,"worldlogic",dev.minemods.worldlogic.api.WorldLogicRecipes::processing);
   dev.minemods.worldlogic.api.WorldLogicCapabilities.register(dev.minemods.worldlogic.api.WorldLogicDashboards.CAPABILITY,0,"worldlogic",dev.minemods.worldlogic.api.WorldLogicDashboards::snapshots);

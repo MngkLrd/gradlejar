@@ -60,6 +60,7 @@ public final class ReleaseChecks {
  }
  public static void verifyWorld(net.minecraft.server.level.ServerLevel l){
   PhysicalMaterialChecks.verifyLoaded(l);
+  CoreCreativeTab.verify(l);
   check(Material.block(Blocks.GLASS.defaultBlockState(),"glass"),"glass tag");
   check(Material.block(Blocks.IRON_BLOCK.defaultBlockState(),"ricochet_metal"),"metal tag");
   check(Material.item(new ItemStack(Items.GLASS_BOTTLE),"fragile_cargo"),"fragile cargo tag");

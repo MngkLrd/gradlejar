@@ -371,6 +371,16 @@
       "consumes": [],
       "integration_review": "Core resources and vanilla recipes, optional addon content not fabricated.",
       "no_public_surface_reason": "Internal presentation adapter, not an addon gameplay API."
+    },
+    {
+      "id": "core_creative_catalog",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/CoreCreativeTab.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Registry-derived creative category for the worldlogic item namespace; existing vanilla tabs preserved, Terrarian and other addon namespaces remain their owners' responsibility. JEI native ingredient discovery remains independent.",
+      "no_public_surface_reason": "Private inventory presentation over Minecraft's existing item registry."
     }
   ],
   "tests": [

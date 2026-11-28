@@ -314,5 +314,6 @@
   "worldlogic.stats.section.clinical": "Recovery",
   "worldlogic.stats.section.illnessStatus": "Illness",
   "worldlogic.stats.section.passiveRecoveryHpPerMinute": "HP recovery",
-  "worldlogic.stats.section.roomClimate": "Room climate"
+  "worldlogic.stats.section.roomClimate": "Room climate",
+  "itemGroup.worldlogic.core": "WorldLogic: Core"
 }

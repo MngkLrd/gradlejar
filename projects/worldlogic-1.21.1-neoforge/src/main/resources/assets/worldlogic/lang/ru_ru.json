@@ -327,5 +327,6 @@
   "worldlogic.stats.field.oxygenFraction": "Кислород",
   "worldlogic.stats.field.fastKcal": "Быстрая энергия, ккал",
   "worldlogic.stats.field.fatKcal": "Резерв, ккал",
-  "worldlogic.stats.field.queuedKcal": "В пищеварении, ккал"
+  "worldlogic.stats.field.queuedKcal": "В пищеварении, ккал",
+  "itemGroup.worldlogic.core": "WorldLogic: Ядро"
 }
