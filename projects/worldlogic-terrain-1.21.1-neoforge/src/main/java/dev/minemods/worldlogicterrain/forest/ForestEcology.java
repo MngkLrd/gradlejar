@@ -45,6 +45,8 @@ public final class ForestEcology {
             if(place(l,p,ForestSpecies.root(site.wood()),outward.getOpposite(),0,x0,z0))count++;
         }
         if(!site.forest())return count;
+        dev.minemods.worldlogicterrain.botany.TreeResourceBlock.attach(l,trunk,site.wood(),
+            RandomSource.create(l.getSeed()^trunk.asLong()^0x424F54414E59L),x0,z0);
         if(h!=null&&epiphyteHabitat(temperature,moisture,dryness)&&r.nextInt(3)!=0){
             for(int n=0;n<3;n++){
                 Direction outward=Direction.from2DDataValue(r.nextInt(4));var p=trunk.above(1+r.nextInt(4)).relative(outward);

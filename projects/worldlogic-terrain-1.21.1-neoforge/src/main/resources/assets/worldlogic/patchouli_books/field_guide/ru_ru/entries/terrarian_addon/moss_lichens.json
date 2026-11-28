@@ -1,0 +1,21 @@
+{
+  "name": "Мох и лишайники",
+  "category": "worldlogic:terrarian",
+  "icon": "worldlogicterrain:reindeer_moss",
+  "sortnum": 22,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:sheet_moss",
+      "link_recipe": true,
+      "text": "Лесной мох растёт во влажных местах и около мёртвой древесины. Другие виды предпочитают болота или иной климат."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:iceland_moss",
+      "link_recipe": true,
+      "text": "Цетрария и ягель дают немного пищи в игре. Ирландский мох растёт в море. Не вся пресноводная растительность съедобна."
+    }
+  ],
+  "flag": "mod:worldlogicterrain"
+}

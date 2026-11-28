@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,ripe=true": {
+      "model": "worldlogicterrain:block/willow_bark_node"
+    },
+    "facing=north,ripe=false": {
+      "model": "worldlogicterrain:block/willow_bark_node_spent"
+    },
+    "facing=east,ripe=true": {
+      "model": "worldlogicterrain:block/willow_bark_node",
+      "y": 90
+    },
+    "facing=east,ripe=false": {
+      "model": "worldlogicterrain:block/willow_bark_node_spent",
+      "y": 90
+    },
+    "facing=south,ripe=true": {
+      "model": "worldlogicterrain:block/willow_bark_node",
+      "y": 180
+    },
+    "facing=south,ripe=false": {
+      "model": "worldlogicterrain:block/willow_bark_node_spent",
+      "y": 180
+    },
+    "facing=west,ripe=true": {
+      "model": "worldlogicterrain:block/willow_bark_node",
+      "y": 270
+    },
+    "facing=west,ripe=false": {
+      "model": "worldlogicterrain:block/willow_bark_node_spent",
+      "y": 270
+    }
+  }
+}

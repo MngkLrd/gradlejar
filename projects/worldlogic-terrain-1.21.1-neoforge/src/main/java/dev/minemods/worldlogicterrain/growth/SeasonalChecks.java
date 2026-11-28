@@ -40,7 +40,7 @@ public final class SeasonalChecks {
     public static void verify(ServerLevel l){
         var all=new ArrayList<PlantSpecies.Profile>(PlantSpecies.newSpecies());
         for(String id:new String[]{"pineapple","tomato","cucumber","radish","onion","cabbage","bell_pepper"})all.add(PlantSpecies.byId(id));
-        require(all.size()==27,"Missing species");
+        require(all.size()==30,"Missing species");
         var rarity=new HashSet<Integer>();
         var pos=new BlockPos(10,246,10);var before=l.getBlockState(pos);var floor=l.getBlockState(pos.below());
         var player=FakePlayerFactory.get(l,new GameProfile(UUID.fromString("c6130ade-3414-459f-b399-2cc7277e36fa"),"[SeasonalQA]"));

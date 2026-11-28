@@ -1,0 +1,27 @@
+{
+  "name": "Лесная микросреда",
+  "category": "worldlogic:terrarian",
+  "icon": "worldlogicterrain:climbing_ivy",
+  "sortnum": 23,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:exposed_root",
+      "link_recipe": true,
+      "text": "Оголённые корни появляются около деревьев, особенно на склонах и берегах. Кора и хвоя образуют неоднородную подстилку."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:climbing_ivy",
+      "link_recipe": true,
+      "text": "Эпифиты и лианы крепятся к природным стволам и камням. Рост лиан вниз ограничен."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:thorn_scrub",
+      "link_recipe": true,
+      "text": "Крапива, чертополох и колючие кусты замедляют движение и могут ранить движущихся существ. Обходите заросли."
+    }
+  ],
+  "flag": "mod:worldlogicterrain"
+}

@@ -100,3 +100,6 @@ The forest fixture exercises all five generated groups on an actual tree site, n
 
 ### 1.7.1 QA declaration and review correction
 1.7.0 compilation succeeded but exceeded the existing 500-row coverage limit. Combine 13 Block/BlockItem pairs that use exactly the same executed assertion, retaining 498 executable coverage rows and all 511 original content mappings in tools/qa/assignments/worldlogicterrain.json. The 250 executable steps remain byte-for-byte unchanged as structured data. Corrected duplicate art observations for 18 reviewed textures and supplied the missing actual comparator provenance for four bark overlays. No texture or gameplay change, no gate modification. Build Hub still requires an eligible Core dependency; diagnostic evidence is separate.
+
+### 1.8.0 — inter-addon integration and medical botany
+Pin exact eligible Core 1.5.1 artifact, add three climate-aware seasonal species and mature harvest parts, native flax fiber recipe, renewable willow bark and pine resin tree sites, optional Trauma mint tag, shader classifications and bilingual guide entries. Existing IDs and physical/Metabolism behavior preserved. Standard dependency publication, joint player and natural-world QA still require verification.

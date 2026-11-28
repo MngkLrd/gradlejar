@@ -196,6 +196,44 @@
           "semantics": "Evaluate epiphyte and vine tolerance from supplied Core climate."
         }
       ]
+    },
+    {
+      "id": "worldlogicterrain:botanical_resources",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "botanical_resources"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogicterrain.botany.TreeResourceBlock",
+        "dev.minemods.worldlogicterrain.growth.PlantSpecies"
+      ],
+      "documentation": "projects/worldlogic-terrain-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/botany/TreeResourceBlock.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/botany/BotanyChecks.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/growth/PlantSpecies.java"
+      ],
+      "operations": [
+        {
+          "id": "species",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.growth.PlantSpecies",
+          "semantics": "Enumerate real climate-aware botanical plant species."
+        },
+        {
+          "id": "resource",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.botany.TreeResourceBlock",
+          "semantics": "Inspect resource host, output and ripe state."
+        },
+        {
+          "id": "harvest",
+          "kind": "command",
+          "entrypoint": "dev.minemods.worldlogicterrain.botany.TreeResourceBlock",
+          "semantics": "Harvest a ripe loaded resource node exactly once, preserving host and resetting growth."
+        }
+      ]
     }
   ],
   "consumes": [
@@ -205,7 +243,7 @@
       "min_revision": 11,
       "required": false,
       "status": "implemented",
-      "fallback": "Older Core uses the existing biome fallback and no fabricated calendar; actual Core 1.2.1 diagnostic artifact supports environment, hydrology and worldgen sampler."
+      "fallback": "Older Core uses the existing biome fallback and no fabricated calendar; exact eligible Core 1.5.1 artifact supplies climate, hydrology and worldgen sampler."
     },
     {
       "id": "worldlogic:material_properties",
@@ -340,6 +378,23 @@
         "worldlogic:survival_physics"
       ],
       "integration_review": "Use existing Core habitat sample and Terrarian movement factor; no duplicate climate or injury model; damage uses native sweet berry bush source. Generated roots remain distinct from TreeChopper log registry, no stick drops. Vines bounded four segments; no global tick."
+    },
+    {
+      "id": "medical_botany",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/botany/TreeResourceBlock.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/botany/BotanyChecks.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/growth/PlantSpecies.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/registry/TerrainContent.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestEcology.java"
+      ],
+      "provides": [
+        "worldlogicterrain:botanical_resources"
+      ],
+      "consumes": [
+        "worldlogic:environment"
+      ],
+      "integration_review": "Trauma issue #222: actual existing yarrow and plantain plus wet-site wild mint with original stable ID bridged via optional trauma tag, new seasonal calendula, marshmallow and flax; real part drops and native flax fiber recipe; renewable nodes on real willow/pine hosts. No treatment or physiology duplicated."
     }
   ],
   "tests": [
@@ -404,6 +459,15 @@
         "worldlogic:forest_microhabitat",
         "worldlogic:environment",
         "worldlogic:survival_physics"
+      ],
+      "ref": "tools/qa/scenarios/worldlogicterrain.json",
+      "status": "implemented"
+    },
+    {
+      "id": "terrarian.medical_botany",
+      "capabilities": [
+        "worldlogicterrain:botanical_resources",
+        "worldlogic:environment"
       ],
       "ref": "tools/qa/scenarios/worldlogicterrain.json",
       "status": "implemented"

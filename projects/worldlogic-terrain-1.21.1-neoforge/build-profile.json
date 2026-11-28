@@ -1,11 +1,11 @@
 {
   "slug": "worldlogicterrain",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "worldlogicterrain-neoforge-mc1.21.1-1.7.1.jar",
+  "jar_glob": "worldlogicterrain-neoforge-mc1.21.1-1.8.0.jar",
   "minimum_loader_version": "21.1.80",
   "compile_loader_version": "21.1.262",
   "qa": {
@@ -20,9 +20,9 @@
     ],
     "dependencies": [
       {
-        "name": "worldlogic-neoforge-mc1.21.1-1.2.1.jar",
-        "url": "https://api.github.com/repos/MngkLrd/gradlejar/actions/artifacts/15246915092/zip",
-        "sha256": "33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56"
+        "name": "worldlogic-neoforge-mc1.21.1-1.5.1.jar",
+        "url": "https://api.github.com/repos/MngkLrd/gradlejar/actions/artifacts/15254721484/zip",
+        "sha256": "a966fb939988e794586cd6a1ea18fafe340296447b67ef8a9827963328e20548"
       }
     ]
   },

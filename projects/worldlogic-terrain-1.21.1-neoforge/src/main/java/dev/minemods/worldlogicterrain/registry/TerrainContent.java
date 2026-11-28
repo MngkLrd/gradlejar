@@ -99,6 +99,11 @@ public final class TerrainContent {
                 BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS).randomTicks()));
             PLANTS.add(ITEMS.register(id,()->new dev.minemods.worldlogicterrain.growth.SeasonalSeedItem(block.get())));
         }
+        for(String id:new String[]{"marshmallow_root","flax_stalk","flax_fiber","willow_bark","pine_resin"})
+            PLANTS.add(ITEMS.register(id,()->new Item(new Item.Properties())));
+        for(var resource:dev.minemods.worldlogicterrain.botany.TreeResourceBlock.Resource.values())
+            BLOCKS.register(resource.node,()->new dev.minemods.worldlogicterrain.botany.TreeResourceBlock(resource,
+                BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.WOOD).randomTicks()));
         for(var species:dev.minemods.worldlogicterrain.forest.ForestSpecies.values()){
             var block=BLOCKS.register(species.id,()->{
                 var props=BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(

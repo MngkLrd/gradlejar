@@ -2,7 +2,7 @@ import java.security.MessageDigest
 import java.net.URI
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group='dev.minemods.worldlogicterrain'
-version='1.7.1'
+version='1.8.0'
 base.archivesName='worldlogicterrain-neoforge-mc1.21.1'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 neoForge {
@@ -10,9 +10,9 @@ neoForge {
  runs { client { client() }; server { server(); programArgument '--nogui' } }
  mods { worldlogicterrain { sourceSet(sourceSets.main) } }
 }
-def coreUrl='https://api.github.com/repos/MngkLrd/gradlejar/actions/artifacts/15246915092/zip'
-def coreHash='33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56'
-def coreJar=layout.buildDirectory.file('worldlogic-dependency/worldlogic-neoforge-mc1.21.1-1.2.1.jar')
+def coreUrl='https://api.github.com/repos/MngkLrd/gradlejar/actions/artifacts/15254721484/zip'
+def coreHash='a966fb939988e794586cd6a1ea18fafe340296447b67ef8a9827963328e20548'
+def coreJar=layout.buildDirectory.file('worldlogic-dependency/worldlogic-neoforge-mc1.21.1-1.5.1.jar')
 def digest={ File f -> MessageDigest.getInstance('SHA-256').digest(f.bytes).encodeHex().toString() }
 def fetchCore=tasks.register('fetchWorldLogic') {
  inputs.property('url',coreUrl)
@@ -31,7 +31,7 @@ def fetchCore=tasks.register('fetchWorldLogic') {
    java.nio.file.Files.copy(cached.toPath(),out.toPath(),java.nio.file.StandardCopyOption.REPLACE_EXISTING)
    return
   }
-  if(coreUrl.endsWith('/zip')) throw new GradleException('RC54 is NOT-RELEASE; exact artifact must be preloaded in MINEMODS_DEP_CACHE for diagnostic integration only')
+  if(coreUrl.endsWith('/zip')) throw new GradleException('Core 1.5.1 is an eligible CI artifact, not a published direct JAR; preload the checksum-verified JAR in MINEMODS_DEP_CACHE')
   def connection=URI.create(coreUrl).toURL().openConnection()
   connection.connectTimeout=30000
   connection.readTimeout=90000

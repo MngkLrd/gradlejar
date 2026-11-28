@@ -8427,6 +8427,302 @@
         "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
         "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_calendula.png": {
+      "sha256": "c6ef2b949540c1bedcb043facdf8f44f57e5c9c41e5453d1cb19f41f5b574b16",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dandelion",
+          "minecraft": "1.21.1",
+          "sha256": "b8e2897e3dfecc1c863a861dd6b92b66987f33770054c2179c15b5c2abbc0e51"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Unlike vanilla dandelion, the main flower is broad orange and has a smaller side bloom. A large orange flower and smaller offset blossom crown a bent green stalk.",
+      "findings": {
+        "silhouette": "A large orange flower and smaller offset blossom crown a bent green stalk.",
+        "cluster_structure": "Two flower disks of unequal size, with a warm central ring and separate green leaf clusters.",
+        "micro_contrast": "Yellow-orange petal tips surround a deeper rust center.",
+        "light_and_volume": "The bright upper petals sit over a darker lower ring, with leaf highlights on one side.",
+        "material_continuity": "Orange bloom and dark green stem meet at a small distinct joint.",
+        "edge_variation": "The larger bloom has stepped petal edges; two leaves interrupt the narrow stem.",
+        "variant_identity": "The plant is identifiable by orange heads even next to the two new botanical species.",
+        "vanilla_comparison": "Unlike vanilla dandelion, the main flower is broad orange and has a smaller side bloom.",
+        "functional_material_cues": "Flower heads identify the harvested aerial parts rather than an edible root."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/dandelion",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. Two flower disks of unequal size, with a warm central ring and separate green leaf clusters.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Unlike vanilla dandelion, the main flower is broad orange and has a smaller side bloom.",
+        "native_view": "Candidate actual sprite: A large orange flower and smaller offset blossom crown a bent green stalk. Yellow-orange petal tips surround a deeper rust center.",
+        "context_type": "placed_cutout",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. The plant is identifiable by orange heads even next to the two new botanical species. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/dandelion.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_marshmallow.png": {
+      "sha256": "e0306f6a40e5640c55316fe893ffb03a998d6eb2ebbe1faaaa8302f9e26eb7f3",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/allium",
+          "minecraft": "1.21.1",
+          "sha256": "e821156d752c1cde84a71db59cdd25c308747c607c0759b72ba36a68e959ab7d"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Allium gives flower scale but the marshmallow has broad gray-green leaves and pale separate blossoms. A tall branching stalk with two pale pink flower groups and broad leaves.",
+      "findings": {
+        "silhouette": "A tall branching stalk with two pale pink flower groups and broad leaves.",
+        "cluster_structure": "Pink flowers form separate clusters above staggered leaves and a dark continuous stem.",
+        "micro_contrast": "Soft cream-pink centers contrast with muted purple-pink margins.",
+        "light_and_volume": "Light petal patches sit above darker flower centers; leaf faces alternate olive tones.",
+        "material_continuity": "The stalk joins the flowers and leaves rather than floating blossoms.",
+        "edge_variation": "Broad stepped leaves and uneven flower outlines leave negative space.",
+        "variant_identity": "The plant is identifiable by pale pink blossoms with broad leaves even next to the two new botanical species.",
+        "vanilla_comparison": "Allium gives flower scale but the marshmallow has broad gray-green leaves and pale separate blossoms.",
+        "functional_material_cues": "The large leaves and pale flowers distinguish the root-bearing marsh plant."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/allium",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. Pink flowers form separate clusters above staggered leaves and a dark continuous stem.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Allium gives flower scale but the marshmallow has broad gray-green leaves and pale separate blossoms.",
+        "native_view": "Candidate actual sprite: A tall branching stalk with two pale pink flower groups and broad leaves. Soft cream-pink centers contrast with muted purple-pink margins.",
+        "context_type": "placed_cutout",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. The plant is identifiable by pale pink blossoms with broad leaves even next to the two new botanical species. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/allium.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_flax.png": {
+      "sha256": "47037c635358eae822f9f11049c292f0c2d91d40418dd872e003b1f6430af0bb",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/cornflower",
+          "minecraft": "1.21.1",
+          "sha256": "df8624ca57077469654576faab3424aceb0bdc512102ec2056a17a0ff890c52d"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Cornflower gives small blue flower scale; flax has several slender stems rather than a single large head. Three thin upright stalks end in small blue blooms.",
+      "findings": {
+        "silhouette": "Three thin upright stalks end in small blue blooms.",
+        "cluster_structure": "Separate three-pixel blooms connect to narrow green stems and short leaf strokes.",
+        "micro_contrast": "Pale blue center pixels contrast with darker blue outer petals.",
+        "light_and_volume": "A lighter stem runs beside two darker stems to suggest depth.",
+        "material_continuity": "Blue flower and green stem meet directly at the tip of each stem.",
+        "edge_variation": "Stems branch at different heights, leaving open gaps between flowers.",
+        "variant_identity": "The plant is identifiable by slender multiple blue-flowered stalks even next to the two new botanical species.",
+        "vanilla_comparison": "Cornflower gives small blue flower scale; flax has several slender stems rather than a single large head.",
+        "functional_material_cues": "Long stalks visually indicate fiber-bearing material."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/cornflower",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. Separate three-pixel blooms connect to narrow green stems and short leaf strokes.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Cornflower gives small blue flower scale; flax has several slender stems rather than a single large head.",
+        "native_view": "Candidate actual sprite: Three thin upright stalks end in small blue blooms. Pale blue center pixels contrast with darker blue outer petals.",
+        "context_type": "placed_cutout",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. The plant is identifiable by slender multiple blue-flowered stalks even next to the two new botanical species. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/cornflower.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/marshmallow_root.png": {
+      "sha256": "962a9657d35fce99f0cbf2057e32820ae992eef21847fde6aebf4a488a4b0d0b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/stick",
+          "minecraft": "1.21.1",
+          "sha256": "2b5a6b7202fcd3a45663ccf249fe87de076e8c735e0b6ab8a3bf2a812332b4ff"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. The narrow woody stick provides a scale reference, but the root is broad and tapered. A thick tapering tan taproot with three thin lateral roots.",
+      "findings": {
+        "silhouette": "A thick tapering tan taproot with three thin lateral roots.",
+        "cluster_structure": "A connected central root narrows into distinct angled rootlets.",
+        "micro_contrast": "Pale exposed inner fibers sit against medium-brown exterior edges.",
+        "light_and_volume": "A light vertical core and darker right margin give the root body volume.",
+        "material_continuity": "Rootlets share the same warm earth palette as the main taproot.",
+        "edge_variation": "The tips fork asymmetrically and thin to a single pixel.",
+        "variant_identity": "In the reviewed icon family marshmallow root has a different contour and material from the other botanical resources.",
+        "vanilla_comparison": "The narrow woody stick provides a scale reference, but the root is broad and tapered.",
+        "functional_material_cues": "The thick storage root and branching rootlets identify the harvested underground material."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/stick",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. A connected central root narrows into distinct angled rootlets.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. The narrow woody stick provides a scale reference, but the root is broad and tapered.",
+        "native_view": "Candidate actual sprite: A thick tapering tan taproot with three thin lateral roots. Pale exposed inner fibers sit against medium-brown exterior edges.",
+        "context_type": "icon_family",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. In the reviewed icon family marshmallow root has a different contour and material from the other botanical resources. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/item/stick.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/flax_stalk.png": {
+      "sha256": "6eca2ab4f0104e8f09ea8b00a64c0754d90f62603b5a1840793f91f38426c658",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Wheat provides a harvest-bundle scale, but flax lacks a heavy cereal ear. A diagonal bundle of straight straw-colored stems with a small top cluster.",
+      "findings": {
+        "silhouette": "A diagonal bundle of straight straw-colored stems with a small top cluster.",
+        "cluster_structure": "Five closely parallel stalks spread into offset tips and a lower binding.",
+        "micro_contrast": "Olive tan lines alternate with pale straw highlights.",
+        "light_and_volume": "Darker lower strokes contrast with brighter exposed stem lengths.",
+        "material_continuity": "The dry stalks have muted green-tan coloration throughout.",
+        "edge_variation": "Ends fan outward, unlike a single straight stick.",
+        "variant_identity": "In the reviewed icon family flax stalk has a different contour and material from the other botanical resources.",
+        "vanilla_comparison": "Wheat provides a harvest-bundle scale, but flax lacks a heavy cereal ear.",
+        "functional_material_cues": "The long stiff stems are raw material before extracting fiber."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/wheat",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. Five closely parallel stalks spread into offset tips and a lower binding.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Wheat provides a harvest-bundle scale, but flax lacks a heavy cereal ear.",
+        "native_view": "Candidate actual sprite: A diagonal bundle of straight straw-colored stems with a small top cluster. Olive tan lines alternate with pale straw highlights.",
+        "context_type": "icon_family",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. In the reviewed icon family flax stalk has a different contour and material from the other botanical resources. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/item/wheat.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/flax_fiber.png": {
+      "sha256": "cd57470a1ba583f6563e20ed9f910a261785d4246857864054096dbd78390a4b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Wheat is the natural material scale reference, but the fiber has no kernels and a softer outline. A pale gathered bundle of loosened fibers with trailing strands.",
+      "findings": {
+        "silhouette": "A pale gathered bundle of loosened fibers with trailing strands.",
+        "cluster_structure": "Curving strands gather into a dark central tie and separate near the ends.",
+        "micro_contrast": "Cream and light ochre fibers stand out against the brown binding.",
+        "light_and_volume": "Bright inner strands and darker crossing lines distinguish loose fiber layers.",
+        "material_continuity": "Fibers retain a pale flax color, with no green leaves or seed heads.",
+        "edge_variation": "Several separated ends break the outer diagonal contour.",
+        "variant_identity": "In the reviewed icon family flax fiber has a different contour and material from the other botanical resources.",
+        "vanilla_comparison": "Wheat is the natural material scale reference, but the fiber has no kernels and a softer outline.",
+        "functional_material_cues": "The loose pale strands distinguish processed fiber from intact stalks."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/wheat",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. Curving strands gather into a dark central tie and separate near the ends.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Wheat is the natural material scale reference, but the fiber has no kernels and a softer outline.",
+        "native_view": "Candidate actual sprite: A pale gathered bundle of loosened fibers with trailing strands. Cream and light ochre fibers stand out against the brown binding.",
+        "context_type": "icon_family",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. In the reviewed icon family flax fiber has a different contour and material from the other botanical resources. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/item/wheat.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/willow_bark.png": {
+      "sha256": "f5f20ee0411339791a50d31a7d7fbd0b8024174b0bcdfc8f884da66168e2d7a4",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/stick",
+          "minecraft": "1.21.1",
+          "sha256": "2b5a6b7202fcd3a45663ccf249fe87de076e8c735e0b6ab8a3bf2a812332b4ff"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Stick provides the wood-material and inventory scale but bark is split into flat pieces. Two overlapping irregular strips of bark, one wider than the other.",
+      "findings": {
+        "silhouette": "Two overlapping irregular strips of bark, one wider than the other.",
+        "cluster_structure": "A broad split piece and a narrower second strip contain longitudinal marks.",
+        "micro_contrast": "Tan exposed edges are contrasted by darker olive-brown grooves.",
+        "light_and_volume": "Highlights along the inner face and recessed seams distinguish curled strips.",
+        "material_continuity": "Both pieces share the muted woody color of willow.",
+        "edge_variation": "Broken tapered ends and unequal widths prevent a rectangular silhouette.",
+        "variant_identity": "In the reviewed icon family willow bark has a different contour and material from the other botanical resources.",
+        "vanilla_comparison": "Stick provides the wood-material and inventory scale but bark is split into flat pieces.",
+        "functional_material_cues": "Long fibers and curled edges identify removable bark rather than a complete log."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/stick",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. A broad split piece and a narrower second strip contain longitudinal marks.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Stick provides the wood-material and inventory scale but bark is split into flat pieces.",
+        "native_view": "Candidate actual sprite: Two overlapping irregular strips of bark, one wider than the other. Tan exposed edges are contrasted by darker olive-brown grooves.",
+        "context_type": "icon_family",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. In the reviewed icon family willow bark has a different contour and material from the other botanical resources. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/item/stick.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/pine_resin.png": {
+      "sha256": "c61eda31f52f47eef7ac4ca993d893eba8ccacadc8fdb2b85991bd29da546c74",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/clay_ball",
+          "minecraft": "1.21.1",
+          "sha256": "99d84ef4b14b2fd33474162cce7ed2493ed396bd7d2493385573baa794d18178"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Clay ball provides a small gathered lump scale, but resin uses a translucent-looking amber highlight instead of matte gray. An amber teardrop beside a small separate rounded resin lump.",
+      "findings": {
+        "silhouette": "An amber teardrop beside a small separate rounded resin lump.",
+        "cluster_structure": "A tapered drop widens to a connected body and a second small droplet.",
+        "micro_contrast": "Golden yellow glints are set against warm dark amber margins.",
+        "light_and_volume": "Bright upper-left patches and a darker rounded base give a thick resin appearance.",
+        "material_continuity": "Both droplets use a consistent amber-orange ramp.",
+        "edge_variation": "The pointed top and small off-axis lump give an irregular silhouette.",
+        "variant_identity": "In the reviewed icon family pine resin has a different contour and material from the other botanical resources.",
+        "vanilla_comparison": "Clay ball provides a small gathered lump scale, but resin uses a translucent-looking amber highlight instead of matte gray.",
+        "functional_material_cues": "The warm teardrop and glints distinguish viscous pine resin from wood or stone."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/clay_ball",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. A tapered drop widens to a connected body and a second small droplet.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Clay ball provides a small gathered lump scale, but resin uses a translucent-looking amber highlight instead of matte gray.",
+        "native_view": "Candidate actual sprite: An amber teardrop beside a small separate rounded resin lump. Golden yellow glints are set against warm dark amber margins.",
+        "context_type": "icon_family",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. In the reviewed icon family pine resin has a different contour and material from the other botanical resources. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/item/clay_ball.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
     }
   },
   "review_status": "1.2.5 RC1: 118 previously reviewed textures unchanged; seven new original fruit item PNGs individually reviewed in native/enlarged icon family and static hanging-model context. Art Review Lock, Build Hub, natural generation and graphical client verification pending.",

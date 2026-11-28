@@ -1,0 +1,35 @@
+{
+  "name": "Wood, cultivation and fungi",
+  "category": "worldlogic:terrarian",
+  "icon": "worldlogicterrain:willow_log",
+  "sortnum": 24,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:willow_log",
+      "link_recipe": true,
+      "text": "Species have different densities and strength. Moisture changes the effective material properties. TreeChopper uses the shared wood contract."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:wild_yarrow",
+      "link_recipe": true,
+      "text": "Seasonal growth depends on temperature, moisture, light and cultivation soil. Mature quality influences yield."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:morel",
+      "link_recipe": true,
+      "text": "Mushroom colonies have growth stages. Harvest ripe fruiting bodies and leave the colony for regrowth."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogicterrain:willow_planks"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogicterrain:fungal_stew"
+    }
+  ],
+  "flag": "mod:worldlogicterrain"
+}

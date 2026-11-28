@@ -192,7 +192,7 @@ public final class ForagePopulationFeature extends Feature<ForagePopulationFeatu
     }
     public static void verify(ServerLevel l){
         LandscapeMosaic.verify();
-        // All 32 actual registered plants must share the same bounded population placement.
+        // All 35 actual registered plants must share the same bounded population placement.
         var saved=new HashMap<BlockPos,BlockState>();
         BlockPos center=new BlockPos(8,231,8);
         for(int x=4;x<=12;x++)for(int z=4;z<=12;z++)for(int y=230;y<=232;y++){

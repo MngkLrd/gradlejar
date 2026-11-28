@@ -2,6 +2,10 @@
   "replace": false,
   "values": [
     "worldlogicterrain:stinging_nettle",
-    "worldlogicterrain:wild_thistle"
+    "worldlogicterrain:wild_thistle",
+    "worldlogicterrain:wild_calendula",
+    "worldlogicterrain:wild_marshmallow",
+    "worldlogicterrain:wild_flax",
+    "worldlogicterrain:thorn_scrub"
   ]
 }

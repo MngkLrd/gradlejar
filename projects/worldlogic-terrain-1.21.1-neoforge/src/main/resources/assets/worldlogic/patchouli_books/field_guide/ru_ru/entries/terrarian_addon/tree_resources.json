@@ -1,0 +1,21 @@
+{
+  "name": "Возобновляемые древесные ресурсы",
+  "category": "worldlogic:terrarian",
+  "icon": "worldlogicterrain:pine_resin",
+  "sortnum": 21,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:willow_bark",
+      "link_recipe": true,
+      "text": "Ищите места сбора коры на стволах ив. Нажмите ПКМ пустой рукой по созревшему участку. Он постепенно восстанавливается. Бревно не нужно ломать."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:pine_resin",
+      "link_recipe": true,
+      "text": "Янтарные капли смолы встречаются на соснах. Соберите пустой рукой и дождитесь восстановления. При разрушении ствола участок исчезнет."
+    }
+  ],
+  "flag": "mod:worldlogicterrain"
+}
