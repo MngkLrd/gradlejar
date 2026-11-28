@@ -52,6 +52,7 @@ public final class Aquaculture {
  }
  public Aquaculture(IEventBus bus){
   ENTITIES.register(bus);ITEMS.register(bus);bus.addListener(this::attributes);
+  bus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event)->event.enqueueWork(AquaPhysical::register));
   NeoForge.EVENT_BUS.addListener(PopulationRuntime::tick);NeoForge.EVENT_BUS.addListener(PopulationRuntime::load);NeoForge.EVENT_BUS.addListener(PopulationRuntime::unload);NeoForge.EVENT_BUS.addListener(this::drops);NeoForge.EVENT_BUS.addListener(this::commands);
  }
  private void attributes(EntityAttributeCreationEvent e){
@@ -150,6 +151,9 @@ public final class Aquaculture {
  }
  private void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("aquaculture").requires(src->src.hasPermission(2))
+   .then(Commands.literal("physical_selftest").executes(c->{
+    AquaPhysicalChecks.run(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("AQUA_PHYSICAL_PASS"),false);return Command.SINGLE_SUCCESS;
+   }))
    .then(Commands.literal("marine_selftest").executes(c->{
     MarineChecks.run(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("AQUA_MARINE_PASS"),false);return Command.SINGLE_SUCCESS;
    }))
@@ -197,7 +201,7 @@ public final class Aquaculture {
     var pos=BlockPos.containing(c.getSource().getPosition());
     var h=habitat(l,pos);
     if(h==null){c.getSource().sendFailure(Component.literal("No loaded water at command position"));return 0;}
-    c.getSource().sendSuccess(()->Component.literal(h.toString()+" eligible="+SpawnSelection.probabilities(h,Map.of())),false);
+    c.getSource().sendSuccess(()->Component.literal(h.toString()+AquaPhysical.describe(h)+" eligible="+SpawnSelection.probabilities(h,Map.of())),false);
     return Command.SINGLE_SUCCESS;
    }))
    .then(Commands.literal("water_selftest").executes(c->{

@@ -3,7 +3,7 @@ loaderVersion="[1,)"
 license="All Rights Reserved"
 [[mods]]
 modId="worldlogic_aqua"
-version="0.4.0"
+version="0.4.1"
 displayName="WorldLogic: Aqua"
 description="Regional fish fauna and environmental habitat selection for WorldLogic."
 [[dependencies.worldlogic_aqua]]
@@ -21,7 +21,7 @@ side="BOTH"
 [[dependencies.worldlogic_aqua]]
 modId="worldlogic"
 type="required"
-versionRange="[1.0.0-rc37,)"
+versionRange="[1.2.1,)"
 ordering="AFTER"
 side="BOTH"
 

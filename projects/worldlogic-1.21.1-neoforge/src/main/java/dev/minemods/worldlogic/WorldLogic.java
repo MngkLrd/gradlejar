@@ -8,6 +8,11 @@ public final class WorldLogic {
   Content.PARTICLES.register(modBus);
   NaturalFluids.register(modBus);
   MarinePlants.register();
+  GroundMaterials.register();
+  SoilFarmland.register();
+  RockContent.register();
+  modBus.addListener(SoilFarmland::creative);
+  modBus.addListener(RockContent::creative);
   Content.BLOCKS.register(modBus);
   Content.ITEMS.register(modBus);
   Rules.load();
@@ -40,6 +45,7 @@ public final class WorldLogic {
   bus.addListener(MineInstability::placed);
   bus.addListener(MineInstability::tick);
   bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,Cleanup::broken);
+  bus.addListener(SoilFarmland::till);
   bus.addListener(Soil::harvest);
   bus.addListener(Soil::grow);
   bus.addListener(Soil::fertilize);

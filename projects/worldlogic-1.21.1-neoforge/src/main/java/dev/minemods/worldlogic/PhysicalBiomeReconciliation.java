@@ -37,20 +37,20 @@ public final class PhysicalBiomeReconciliation{
     else if(gen.getBaseHeight(x0+nx*4+2,z0+nz*4+2,Heightmap.Types.OCEAN_FLOOR_WG,chunk,random)<sea-1)shore[i]=true;
    }
   }
-  chunk.fillBiomesFromNoise((qx,qy,qz,sampler)->{
+  // Resolve each surface quart exactly once. Vertical surface and flight
+  // samples share a single palette; subterranean sampling remains independent.
+  var palette=new java.util.ArrayList<net.minecraft.core.Holder<Biome>>(16);
+  var samples=new java.util.HashMap<Long,Climate.TargetPoint>();
+  java.util.function.BiFunction<Integer,Integer,Climate.TargetPoint> sampler=(qx,qz)->samples.computeIfAbsent(((long)qx<<32)^(qz&0xffffffffL),k->random.sampler().sample(qx,0,qz));
+  for(int x=0;x<4;x++)for(int z=0;z<4;z++){
+   int i=x*4+z;long coast=(long)(10000*continental(heights[i],sea,wet[i],shore[i]));
+   int qx=(x0>>2)+x,qz=(z0>>2)+z;
+   palette.add(RegionalBiomeEdges.resolve(source,sampler,qx,qz,coast));
+  }
+  chunk.fillBiomesFromNoise((qx,qy,qz,ignoredSampler)->{
    int i=Math.floorMod(qx,4)*4+Math.floorMod(qz,4),floor=heights[i],y=qy*4;
-   var t=sampler.sample(qx,qy,qz);
-   // Underground land habitats retain their existing depth classification.
-   if(!wet[i]&&y<floor-48)return source.getNoiseBiome(t);
-   long c=(long)(10000*continental(floor,sea,wet[i],shore[i]));
-   // Preserve the original sampler's non-coastal terrestrial class where it is
-   // already compatible with the physical column, including its climate depth.
-   if(!wet[i]&&!shore[i]){
-    var original=source.getNoiseBiome(t);
-    String id=original.unwrapKey().orElseThrow().location().getPath();
-    if(!id.endsWith("ocean")&&!id.endsWith("coast")&&!id.endsWith("cavern")&&t.continentalness()>=4000)return original;
-   }
-   return source.getNoiseBiome(new Climate.TargetPoint(t.temperature(),t.humidity(),c,t.erosion(),0L,t.weirdness()));
+   if(!wet[i]&&y<floor-48)return source.getNoiseBiome(ignoredSampler.sample(qx,qy,qz));
+   return palette.get(i);
   },random.sampler());
  }
 }

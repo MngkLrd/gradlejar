@@ -37,7 +37,7 @@ public final class HydrologyRuntime{
   var ground=l.getBlockState(p.below());
   if(!ground.getFluidState().isEmpty())return Optional.empty();
   var type=HydrologyModel.soilType(ground);
-  if(ground.is(net.minecraft.world.level.block.Blocks.GRASS_BLOCK)&&p.getY()-2>=l.getMinBuildHeight()){
+  if((ground.is(net.minecraft.world.level.block.Blocks.GRASS_BLOCK)||ground.is(net.minecraft.world.level.block.Blocks.FARMLAND)||ground.is(net.minecraft.world.level.block.Blocks.PODZOL))&&p.getY()-2>=l.getMinBuildHeight()){
    var lower=HydrologyModel.soilType(l.getBlockState(p.below(2)));
    if(lower!=SoilType.UNKNOWN&&lower!=SoilType.ROCK)type=lower;
   }

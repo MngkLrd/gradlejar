@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC37 production core/API regression",
+  "name": "World Logic NeoForge 1.2.1 development / RC54 addon physical API",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1703,6 +1703,281 @@
         {
           "backend": "server",
           "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
+    },
+    {
+      "id": "rc38-regional-drainage",
+      "kind": "mechanic",
+      "subject": "Deterministic ocean-rooted graph, converging paths, monotonic grade, negative inland and actual terrain veto, centerline geometry and bounded sampling; natural full chunk evidence separate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc39-river-current-palette",
+      "kind": "mechanic",
+      "subject": "Sixteen directional source states and actual fluid flow vectors, neutral default, palette roundtrip; graphical and save/reload evidence pending",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "rc39-valley-partitions",
+      "kind": "mechanic",
+      "subject": "Exact indexed candidate lookup against exhaustive scan and monotonic blended profile endpoints",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc40-regional-biome-climate",
+      "kind": "mechanic",
+      "subject": "Bounded continuous regional climate and deterministic anchors; extreme dry/wet edge policy, exclusion of marine/underground/relief classes. Actual final-world adjacency verification deferred to RC45.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc41-landscape-blend",
+      "kind": "mechanic",
+      "subject": "Continuous foothill/ridge weighting, bounded local shaping and coastal, summit, water and open-cavity guards; real ProtoChunk column fixture; final-world and client proof deferred",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc44-multiregion-drainage",
+      "kind": "mechanic",
+      "subject": "Bounded macro-basin, routes cross former regional boundaries, shared downstream graph and unchanged natural river gates",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc45-natural-basins",
+      "kind": "mechanic",
+      "subject": "Closed-rim validation at individual blocks, flat/open negative control, wetland profile and actual chunk lake fill; natural frequency and outlet connection pending",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc46-relief-profiles",
+      "kind": "mechanic",
+      "subject": "Directional multiscale valley/plateau and ridge support, normalized profile weights, local height limits and real natural column tests; RC22 base-height gate retained",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc47-erosion-microrelief",
+      "kind": "mechanic",
+      "subject": "Slope, moisture and concavity response, continuous bounded microrelief and actual scree/silt placement with water negative control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc48-coastal-reef",
+      "kind": "mechanic",
+      "subject": "Warm/cold, fringe/barrier/lagoon selection, bounded submerged framework and five actual living coral blocks in native seawater; natural frequency and client rendering separate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine sediment, polar icebergs and actual native seawater spawn predicates"
+        }
+      ]
+    },
+    {
+      "id": "rc49-biome-coherence",
+      "kind": "mechanic",
+      "subject": "Bounded regional climate, extreme-preserving interpolation and compatible neighbourhood transition policy; independent natural final-quart adjacency and fragmentation audit",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc51-natural-ground",
+      "kind": "mechanic",
+      "subject": "Seven actual registered block/items, mineable tags, loot, falling sand/ash, three soil horizons and soil API, regional material controls, actual basalt/tuff uplift and volcanic crater geometry; natural frequency and client evidence separate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc52-rock-soil",
+      "kind": "mechanic",
+      "subject": "Seven real soil-specific hoe actions and blocked controls, moisture and crop survival, parent soil restoration and loot, 60 stone family blocks and 85 real stonecutting recipe matches/output counts, double slabs, hardness, full-depth geological strata and preservation controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc53-material-registry",
+      "kind": "mechanic",
+      "subject": "SI material profiles, separate wood species, Janka hardness, fungal wood, unknown/duplicate controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc53-material-rocks",
+      "kind": "mechanic",
+      "subject": "Five rock families: all raw/polished/bricks/slabs/stairs/walls, double slabs and ore host/inclusion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc53-material-soils",
+      "kind": "mechanic",
+      "subject": "Seven tilled soil profiles and parent material, moisture mass and thermal transport",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc53-material-composition",
+      "kind": "mechanic",
+      "subject": "Compound axe, block item versus placed material, stack scaling, empty item, persistent item state and legacy weight API",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc53-material-fluids",
+      "kind": "mechanic",
+      "subject": "Eight native fluid families including source/flowing/bucket/block, SI litre and voxel units and saline density",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc53-material-loaded",
+      "kind": "mechanic",
+      "subject": "Loaded-only world query and out-of-height negative control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "rc54-thermal",
+      "kind": "mechanic",
+      "subject": "Flax, fur, straw, felt and series conduction with wet/unknown controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc54-water",
+      "kind": "mechanic",
+      "subject": "Salinity/temperature density, heat, viscosity, all native freezing thresholds, boiling and salt mass balance; range rejection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc54-wood",
+      "kind": "mechanic",
+      "subject": "Canonical 12% density, distinct Janka/MOR, green moisture, extensible properties and moisture response",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc54-individual",
+      "kind": "mechanic",
+      "subject": "Aquatic material profiles and actual ItemStack provider, copy/stack, unknown volume and fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc54-contact",
+      "kind": "mechanic",
+      "subject": "Explicit mass/normal speed energy and selected constituent with negative controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc54-surface",
+      "kind": "mechanic",
+      "subject": "Actual loaded block contact response stone, wool, timber, air and invalid location",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
         }
       ]
     }

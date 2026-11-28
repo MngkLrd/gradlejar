@@ -29,6 +29,9 @@ public final class GeoModel {
  private final double climatePhase;
  private record ClimateSample(int x,int z,double thermal,double humidity,double biomeTemperature,double latitude,double windX,double windZ){}
  private final ThreadLocal<ClimateSample> lastClimate=new ThreadLocal<>();
+ private final Cache<Long,RegionalBiomeClimate.Sample> biomeAnchors=CacheBuilder.newBuilder().maximumSize(8192).build();
+ private record BiomeClimateAt(int x,int z,RegionalBiomeClimate.Sample sample){}
+ private final ThreadLocal<BiomeClimateAt> lastBiomeClimate=new ThreadLocal<>();
  private record Tile(double[] height,double[] flow){}
  private record Surface(double height,double flow){}
  GeoModel(NoiseHolder c,NoiseHolder t,NoiseHolder d,NoiseHolder m){
@@ -44,6 +47,10 @@ public final class GeoModel {
  private double t(double x,double z){return tectonic.getValue(x*.115,0,z*.115);}
  private double d(double x,double z,double s){return detail.getValue(x*s,0,z*s);}
  private double m(double x,double z){return moisture.getValue(x*.16,0,z*.16);}
+ /** Tectonic-belt proxy used only for rare volcanic local landforms. */
+ double volcanicPotential(double x,double z){
+  double warp=d(x,z,.075)*130;return Math.exp(-Math.abs(t(x+warp*.7,z-warp*.7))*9);
+ }
  /** Broad ocean basins, shelves, quiet interiors and narrow uplift belts. */
  double raw(double x,double z){
   double warp=d(x,z,.075)*130;double cont=c(x+warp,z-warp);
@@ -263,6 +270,18 @@ public final class GeoModel {
   ClimateSample made=new ClimateSample(x,z,thermal,humidity,biomeTemperature(thermal,humidity,h),latitude,dx,dz);
   lastClimate.set(made);return made;
  }
+ private RegionalBiomeClimate.Sample rawBiomeClimate(int x,int z){
+  var c=climate(x,z,surface(x,z).height);return new RegionalBiomeClimate.Sample(c.biomeTemperature,c.humidity);
+ }
+ private RegionalBiomeClimate.Sample biomeAnchor(int x,int z){
+  try{return biomeAnchors.get(((long)x<<32)^(z&0xffffffffL),()->rawBiomeClimate(x,z));}
+  catch(ExecutionException e){throw new IllegalStateException("biome climate anchor",e.getCause());}
+ }
+ private RegionalBiomeClimate.Sample biomeClimate(int x,int z){
+  var previous=lastBiomeClimate.get();if(previous!=null&&previous.x==x&&previous.z==z)return previous.sample;
+  var sample=RegionalBiomeClimate.blend(x,z,rawBiomeClimate(x,z),this::biomeAnchor);
+  lastBiomeClimate.set(new BiomeClimateAt(x,z,sample));return sample;
+ }
  dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate regional(int x,int z){
   Surface s=surface(x,z);ClimateSample c=climate(x,z,s.height);
   return new dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate(c.thermal,(c.humidity+1)*.5,c.latitude*90,c.windX,c.windZ,s.height);
@@ -297,6 +316,8 @@ public final class GeoModel {
    case "ridges" -> h<78&&s.flow>30?0:clamp(t(x,z)*1.25,-1,1);
    case "climate_temperature" -> climate(x,z,h).biomeTemperature;
    case "climate_humidity" -> climate(x,z,h).humidity;
+   case "regional_biome_temperature" -> biomeClimate(x,z).temperature();
+   case "regional_biome_humidity" -> biomeClimate(x,z).humidity();
    case "temperature" -> clamp(.66*Math.cos(z*Math.PI/22000.0)+d(x,z,.11)*.30-Math.max(0,h-65)*.004,-1,1);
    case "humidity" -> {
     // Prevailing west wind approximation: upwind relief and coastal moisture.

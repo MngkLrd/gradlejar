@@ -1,107 +1,113 @@
 package dev.minemods.worldlogic;
 import java.util.*;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import java.util.concurrent.ExecutionException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.Vec3;
 import dev.minemods.worldlogic.api.WorldLogicApi.WaterKind;
-/** Local channel incision over existing drainage, with native water above sea level.
- * No global terrain-noise changes, no arbitrary water strips, no neighboring chunk edits. */
+/** Regional network first, graded valley second; no legacy grid incision. */
 public final class RiverTerrain {
  private RiverTerrain(){}
- private record Stage(GeoModel.RiverSegment segment,int start,int end){}
- private record Pool(GeoModel.RiverBasin basin,int stage){}
- private static boolean natural(BlockState b){
-  return GeologyGeneration.rock(b)||b.is(BlockTags.DIRT)||b.is(BlockTags.SAND)||b.is(Blocks.GRAVEL)||b.is(Blocks.CLAY)||Content.SOILS.values().stream().anyMatch(v->b.is(v.get()));
+ private static final Map<RandomState,Cache<Long,RegionalDrainage.Network>> NETWORKS=new WeakHashMap<>();
+ private static synchronized Cache<Long,RegionalDrainage.Network> cache(RandomState state){
+  return NETWORKS.computeIfAbsent(state,s->CacheBuilder.newBuilder().maximumSize(96).build());
+ }
+ private static RegionalDrainage.Network network(NoiseBasedChunkGenerator gen,RandomState state,RegistryAccess access,int rx,int rz){
+  var model=GeoDensity.riverModel(state,access);var bounds=LevelHeightAccessor.create(gen.getMinY(),gen.getGenDepth());
+  long key=((long)rx<<32)^(rz&0xffffffffL);
+  try{return cache(state).get(key,()->RegionalDrainage.build(rx,rz,model::raw,(x,z)->gen.getBaseHeight((int)x,(int)z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state)-1));}
+  catch(ExecutionException e){throw new IllegalStateException("regional river network",e.getCause());}
+ }
+ static RegionalDrainage.Network regionalNetwork(NoiseBasedChunkGenerator gen,RandomState state,RegistryAccess access,int x,int z){
+  return network(gen,state,access,Math.floorDiv(x,RegionalDrainage.SIZE),Math.floorDiv(z,RegionalDrainage.SIZE));
+ }
+ static boolean natural(BlockState b){
+  return GeologyGeneration.rock(b)||b.is(BlockTags.DIRT)||b.is(BlockTags.SAND)||b.is(Blocks.GRAVEL)||b.is(Blocks.CLAY)||b.is(Blocks.SNOW_BLOCK)||b.is(Blocks.ICE)||b.is(Blocks.PACKED_ICE)||b.is(Blocks.SANDSTONE)||Content.SOILS.values().stream().anyMatch(v->b.is(v.get()));
  }
  public static void prepare(NoiseBasedChunkGenerator gen,RandomState state,RegistryAccess access,ChunkAccess c){
   if(!NaturalWaterGeneration.enabled(gen))return;
-  var model=GeoDensity.riverModel(state,access);int x0=c.getPos().getMinBlockX(),z0=c.getPos().getMinBlockZ(),sea=gen.getSeaLevel();
-  var segments=model.rivers(x0-15,z0-15,x0+30,z0+30);
-  var basins=model.basins(x0-15,z0-15,x0+30,z0+30);
-  if(segments.isEmpty()&&basins.isEmpty())return;
-  Map<Long,Integer> heights=new HashMap<>();
-  java.util.function.BiFunction<Integer,Integer,Integer> height=(x,z)->heights.computeIfAbsent(((long)x<<32)^(z&0xffffffffL),k->gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,c,state)-1);
-  var stages=new ArrayList<Stage>();
-  for(var s:segments){
-   // Skip distant segments before querying expensive actual base heights.
-   if(s.distance(x0+7.5,z0+7.5)>27)continue;
-   int a=height.apply(s.x(),s.z()),b=height.apply(s.endX(),s.endZ());
-   if(a<sea||b>a+3||a-b>28)continue;
-   stages.add(new Stage(s,Math.max(sea,a-1),Math.max(sea,b-1)));
-  }
-  var pools=new ArrayList<Pool>();
-  for(var b:basins){
-   if(Math.hypot(b.x()-x0-7.5,b.z()-z0-7.5)>b.radius()+13)continue;
-   int h=height.apply(b.x(),b.z());if(h<sea+1)continue;
-   int stage=Math.max(sea,h-1);
-   pools.add(new Pool(b,stage));
-  }
+  int x0=c.getPos().getMinBlockX(),z0=c.getPos().getMinBlockZ(),sea=gen.getSeaLevel();
+  var net=regionalNetwork(gen,state,access,x0,z0);
+  // A 16-block-aligned chunk lies entirely in one 64-block partition;
+  // the index already expands each reach by its bank and curve bounds.
+  if(net.candidates(x0+7.5,z0+7.5).stream().noneMatch(e->e.near(x0+7.5,z0+7.5,12)))return;
   var p=new BlockPos.MutableBlockPos();var water=NaturalFluids.get(WaterKind.RIVER).block.get().defaultBlockState();
-  int[] floor=new int[256];
-  for(int x=0;x<16;x++)for(int z=0;z<16;z++)floor[x*16+z]=c.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x,z);
+  var incoming=new HashSet<RegionalDrainage.Node>();var outgoing=new HashSet<RegionalDrainage.Node>();
+  for(var e:net.edges()){incoming.add(e.to());outgoing.add(e.from());}
+  var springs=new ArrayList<RegionalDrainage.Node>();var mouths=new ArrayList<RegionalDrainage.Node>();
+  var model=GeoDensity.riverModel(state,access);
+  for(var e:net.edges()){
+   if(!incoming.contains(e.from())&&e.start()>sea+5&&e.near(x0+7.5,z0+7.5,12)&&model.regional(e.from().x(),e.from().z()).moistureIndex()>.62)springs.add(e.from());
+   if(!outgoing.contains(e.to())&&e.to().height()<=sea-1&&e.near(x0+7.5,z0+7.5,12))mouths.add(e.to());
+  }
+  int[] floors=new int[256];for(int x=0;x<16;x++)for(int z=0;z<16;z++)floors[x*16+z]=c.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x,z);
   for(int x=0;x<16;x++)for(int z=0;z<16;z++){
-   int wx=x0+x,wz=z0+z,h=floor[x*16+z];if(h<sea+1||!natural(c.getBlockState(p.set(wx,h,wz))))continue;
-   Stage selected=null;double best=1;
-   best=1.65;
-   for(var s:stages){double d=s.segment.distance(wx,wz)/s.segment.radius();if(d<best){best=d;selected=s;}}
-   Pool pool=null;double poolDistance=1.65;
-   for(var q:pools){double d=Math.hypot(wx-q.basin.x(),wz-q.basin.z())/q.basin.radius();if(d<poolDistance){poolDistance=d;pool=q;}}
-   if(selected==null&&pool==null)continue;
-   boolean lake=pool!=null&&(selected==null||poolDistance<best);
-   if(lake)best=poolDistance;
-   int stage=Math.min(h-1,lake?pool.stage:(int)Math.floor(GeoModel.lerp(selected.start,selected.end,selected.segment.fraction(wx,wz))));
-   if(stage<sea||h-stage>12)continue;
-   double discharge=lake?pool.basin.discharge():selected.segment.discharge();
-   int depth=channelDepth(discharge,best);
-   int bed=best<=1?stage-depth:Math.min(h,stage+1+(int)Math.floor((best-1)*Math.max(3,h-stage)/.65));
-   if(h-bed>20||bed<=c.getMinBuildHeight()+5||!natural(c.getBlockState(p.set(wx,bed,wz))))continue;
-   boolean valid=true;for(int y=bed+1;y<=h;y++)if(!natural(c.getBlockState(p.set(wx,y,wz)))){valid=false;break;}
+   int wx=x0+x,wz=z0+z,h=floors[x*16+z];
+   if(h<sea-1||!natural(c.getBlockState(p.set(wx,h,wz))))continue;
+   var hit=net.nearest(wx,wz);if(hit==null)continue;
+   int stage=(int)Math.floor(hit.stage()),bed;
+   if(stage<sea-1||h-stage>15||stage-h>2)continue;
+   var section=RiverProfiles.sample(hit,h);boolean wet=section.wet();
+   bed=wet?(int)Math.floor(section.bed()):(int)Math.round(section.bed());
+   if(bed<=c.getMinBuildHeight()+5||h-bed>23)continue;
+   // Do not fill open caves or replace structures. Small low bank corrections
+   // use natural sediment, never walls of floating source blocks.
+   boolean valid=true;for(int y=Math.min(h,bed);y<=h;y++)if(!natural(c.getBlockState(p.set(wx,y,wz)))){valid=false;break;}
    if(!valid)continue;
-   if(best<=1){
-    c.setBlockState(p.set(wx,bed,wz),Blocks.GRAVEL.defaultBlockState(),false);
-    var fill=lake?NaturalFluids.get(WaterKind.LAKE).block.get().defaultBlockState():water;
-    for(int y=bed+1;y<=stage;y++)c.setBlockState(p.set(wx,y,wz),fill,false);
+   // Validate all non-rock cells that could be filled above the original floor.
+   for(int y=h+1;y<=Math.max(bed,wet?stage:h);y++){
+    var s=c.getBlockState(p.set(wx,y,wz));if(!s.isAir()&&s.getFluidState().isEmpty()){valid=false;break;}
    }
-   for(int y=Math.max(bed,stage)+1;y<=h;y++)c.setBlockState(p.set(wx,y,wz),Blocks.AIR.defaultBlockState(),false);
+   if(!valid)continue;
+   var top=c.getBlockState(p.set(wx,h,wz));
+   if(wet){
+    if(bed<h){
+     var sediment=GeologyGeneration.rock(c.getBlockState(p.set(wx,bed-1,wz)))?Blocks.GRAVEL.defaultBlockState():Blocks.STONE.defaultBlockState();
+     c.setBlockState(p.set(wx,bed,wz),sediment,false);
+    }
+    else if(bed>h)for(int y=h+1;y<=bed;y++)c.setBlockState(p.set(wx,y,wz),Blocks.GRAVEL.defaultBlockState(),false);
+    var directed=water.setValue(DirectedRiverBlock.CURRENT,DirectedRiverBlock.encode(hit.dx(),hit.dz()));
+    var fill=directed;
+    if(springs.stream().anyMatch(n->Math.hypot(wx-n.x(),wz-n.z())<2.5))fill=NaturalFluids.get(WaterKind.SPRING).block.get().defaultBlockState();
+    else if(stage<=sea+1&&mouths.stream().anyMatch(n->Math.hypot(wx-n.x(),wz-n.z())<15))fill=NaturalFluids.get(WaterKind.BRACKISH).block.get().defaultBlockState();
+    for(int y=bed+1;y<=stage;y++){c.setBlockState(p.set(wx,y,wz),fill,false);if(y==stage)c.markPosForPostprocessing(p);}
+    for(int y=stage+1;y<=h;y++)c.setBlockState(p.set(wx,y,wz),Blocks.AIR.defaultBlockState(),false);
+   }else if(bed<h){
+    c.setBlockState(p.set(wx,bed,wz),top,false);
+    for(int y=bed+1;y<=h;y++)c.setBlockState(p.set(wx,y,wz),Blocks.AIR.defaultBlockState(),false);
+   }else if(bed>h&&bed-h<=3){
+    for(int y=h+1;y<=bed;y++)if(c.getBlockState(p.set(wx,y,wz)).isAir())c.setBlockState(p,Blocks.GRAVEL.defaultBlockState(),false);
+   }
   }
  }
+ // Kept for historical profile fixtures and existing package-private callers.
  static int channelDepth(double discharge,double relativeDistance){
   int center=discharge<12?3:Math.min(7,4+(int)Math.floor(Math.log1p(discharge/25)));
   return Math.max(1,(int)Math.ceil(center*(1-Math.pow(Math.min(1,Math.max(0,relativeDistance)),1.7))));
  }
- /** Runtime current derives from the same directed channel arc, even for full source blocks. */
- public static net.minecraft.world.phys.Vec3 current(ServerLevel l,BlockPos p){
-  if(!NaturalWaterGeneration.enabled(l.getChunkSource().getGenerator())||!l.hasChunkAt(p))return net.minecraft.world.phys.Vec3.ZERO;
-  var model=GeoDensity.riverModel(l.getChunkSource().randomState(),l.registryAccess());
-  GeoModel.RiverSegment best=null;double distance=1.25;
-  for(var s:model.rivers(p.getX()-12,p.getZ()-12,p.getX()+12,p.getZ()+12)){
-   double d=s.distance(p.getX(),p.getZ())/s.radius();if(d<distance){distance=d;best=s;}
-  }
-  if(best==null)return net.minecraft.world.phys.Vec3.ZERO;
-  int surface=l.getHeight(Heightmap.Types.OCEAN_FLOOR,p.getX(),p.getZ());
-  if(p.getY()<surface-1||p.getY()>surface+8)return net.minecraft.world.phys.Vec3.ZERO;
-  return best.direction(p.getX(),p.getZ()).scale(.65);
+ public static Vec3 current(ServerLevel l,BlockPos p){
+  if(!l.hasChunkAt(p))return Vec3.ZERO;
+  return DirectedRiverBlock.flow(l,p,Vec3.ZERO);
  }
- /** Bounded candidate search. Actual generated river is verified independently by CoastSurvey. */
  static String probe(ServerLevel l,BlockPos origin){return probe(l,origin,false);}
  static String probe(ServerLevel l,BlockPos origin,boolean headwater){
   if(!(l.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator gen)||!NaturalWaterGeneration.enabled(gen))return "RIVER_PROBE unavailable";
-  var state=l.getChunkSource().randomState();var model=GeoDensity.riverModel(state,l.registryAccess());
-  var list=new ArrayList<>(model.rivers(origin.getX()-192,origin.getZ()-192,origin.getX()+192,origin.getZ()+192));
-  list.sort(Comparator.comparingDouble(s->Math.hypot(s.x()-origin.getX(),s.z()-origin.getZ())));
-  for(var s:list){
-   if(headwater?s.discharge()>=12:s.discharge()<12)continue;
-   int a=gen.getBaseHeight(s.x(),s.z(),Heightmap.Types.OCEAN_FLOOR_WG,l,state)-1;
-   int b=gen.getBaseHeight(s.endX(),s.endZ(),Heightmap.Types.OCEAN_FLOOR_WG,l,state)-1;
-   if(a>=gen.getSeaLevel()+5&&b>=gen.getSeaLevel()+3&&b<=a+2&&a-b<=12)
-    return "RIVER_PROBE x="+((s.x()+s.endX())/2)+" z="+((s.z()+s.endZ())/2)+" discharge="+s.discharge()+" outlet="+(model.outlet(s.x(),s.z()).ocean()?"ocean":"basin");
+  var state=l.getChunkSource().randomState();var net=regionalNetwork(gen,state,l.registryAccess(),origin.getX(),origin.getZ());
+  var candidates=new ArrayList<>(net.edges());candidates.sort(Comparator.comparingDouble(e->Math.hypot(e.x(.5)-origin.getX(),e.z(.5)-origin.getZ())));
+  for(var e:candidates){
+   if(headwater?e.tributaries()!=1:e.tributaries()<2)continue;
+   if(e.start()<gen.getSeaLevel()+3||e.end()<gen.getSeaLevel()+2)continue;
+   return "RIVER_PROBE x="+(int)Math.round(e.x(.5))+" z="+(int)Math.round(e.z(.5))+" discharge="+(headwater?8.0:12.0*e.tributaries())+" outlet=ocean sources="+net.sources()+" mouths="+net.mouths()+" edges="+net.edges().size();
   }
-  return "RIVER_PROBE no_candidate";
+  return "RIVER_PROBE no_candidate sources="+net.sources()+" mouths="+net.mouths()+" edges="+net.edges().size();
  }
 }

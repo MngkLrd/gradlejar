@@ -59,7 +59,7 @@ public final class WaterClassification{
   return profile(kind,fluid==NaturalFluids.get(kind).source.get(),WaterEvidence.REGISTERED_FLUID);
  }
  static double soilRisk(SoilType soil){return switch(soil){
-  case ROCK->-.07;case SAND->-.04;case FROZEN->-.02;case LOAM->.04;case SILT->.14;case HUMUS->.13;case CLAY->.15;case PEAT->.32;case UNKNOWN->0;
+  case ROCK->-.07;case SAND,WHITE_SAND,VOLCANIC_SAND->-.04;case FROZEN->-.02;case LOAM,SANDY_LOAM->.04;case SILT->.14;case HUMUS,CHERNOZEM->.13;case CLAY,LATERITE->.15;case PEAT->.32;case VOLCANIC_ASH->.12;case UNKNOWN->0;
  };}
  static WaterProfile withSoil(WaterProfile p,double effect){
   if(p.contaminationRisk()<0)return p;

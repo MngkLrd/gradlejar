@@ -2399,6 +2399,39 @@
           "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
         }
       ]
+    },
+    {
+      "id": "individual-catch-provider",
+      "kind": "mechanic",
+      "subject": "individual-catch-provider",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core RC54 physical API: individual catches for all 36 species, old NBT, copy/drop, missing mass and water solution controls"
+        }
+      ]
+    },
+    {
+      "id": "core-water-solution",
+      "kind": "mechanic",
+      "subject": "core-water-solution",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core RC54 physical API: individual catches for all 36 species, old NBT, copy/drop, missing mass and water solution controls"
+        }
+      ]
+    },
+    {
+      "id": "legacy-catch-nbt",
+      "kind": "mechanic",
+      "subject": "legacy-catch-nbt",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core RC54 physical API: individual catches for all 36 species, old NBT, copy/drop, missing mass and water solution controls"
+        }
+      ]
     }
   ],
   "steps": [
@@ -2468,6 +2501,12 @@
       "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures",
       "command": "aquaculture marine_selftest",
       "expect": "AQUA_MARINE_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Core RC54 physical API: individual catches for all 36 species, old NBT, copy/drop, missing mass and water solution controls",
+      "command": "aquaculture physical_selftest",
+      "expect": "AQUA_PHYSICAL_PASS",
       "assertion": true
     }
   ]

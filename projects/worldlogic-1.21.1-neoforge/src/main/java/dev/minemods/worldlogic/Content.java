@@ -11,7 +11,7 @@ public final class Content {
  public static final DeferredRegister<Item> ITEMS=DeferredRegister.create(net.minecraft.core.registries.BuiltInRegistries.ITEM,"worldlogic");
  public static final java.util.Map<String,java.util.function.Supplier<net.minecraft.world.level.block.Block>> SOILS=new java.util.LinkedHashMap<>();
  static{
-  for(String name:new String[]{"humus","loam","peat","alluvial_silt","frozen_soil"}){
+  for(String name:new String[]{"humus","loam","peat","alluvial_silt","frozen_soil","chernozem","sandy_loam","laterite"}){
    var block=BLOCKS.register(name,()->new net.minecraft.world.level.block.Block(net.minecraft.world.level.block.state.BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.DIRT).strength(name.equals("frozen_soil")?1.2f:.5f)));
    SOILS.put(name,block);
    ITEMS.register(name,()->new net.minecraft.world.item.BlockItem(block.get(),new Item.Properties()));

@@ -16,14 +16,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class GeologyCarverMixin {
  @Inject(method="buildSurface",at=@At("HEAD"))
  private void worldlogic$physicalSurfaceBiomes(WorldGenRegion region,StructureManager structures,RandomState random,ChunkAccess chunk,CallbackInfo ci){
+  dev.minemods.worldlogic.LandscapeBlend.prepare((NoiseBasedChunkGenerator)(Object)this,random,region.registryAccess(),chunk);
+  dev.minemods.worldlogic.CoastalTerrain.prepare((NoiseBasedChunkGenerator)(Object)this,random,region.registryAccess(),chunk,region.getSeed());
+  dev.minemods.worldlogic.VolcanicTerrain.prepare((NoiseBasedChunkGenerator)(Object)this,random,region.registryAccess(),chunk,region.getSeed());
   dev.minemods.worldlogic.PhysicalBiomeReconciliation.apply((NoiseBasedChunkGenerator)(Object)this,random,chunk);
  }
  @Inject(method="applyCarvers",at=@At("HEAD"),cancellable=true)
  private void worldlogic$geologicalCaves(WorldGenRegion region,long seed,RandomState random,BiomeManager biomes,StructureManager structures,ChunkAccess chunk,GenerationStep.Carving step,CallbackInfo ci){
   if(!GeologyGeneration.enabled((ChunkGenerator)(Object)this))return;
   if(step==GenerationStep.Carving.AIR){
-   GeologyGeneration.carve(seed,chunk);
+   dev.minemods.worldlogic.SurfaceErosion.decorate((NoiseBasedChunkGenerator)(Object)this,random,region.registryAccess(),chunk);
    dev.minemods.worldlogic.RiverTerrain.prepare((NoiseBasedChunkGenerator)(Object)this,random,region.registryAccess(),chunk);
+   dev.minemods.worldlogic.BasinTerrain.prepare((NoiseBasedChunkGenerator)(Object)this,random,region.registryAccess(),chunk);
+   GeologyGeneration.carve(seed,chunk);
   }
   ci.cancel();
  }
