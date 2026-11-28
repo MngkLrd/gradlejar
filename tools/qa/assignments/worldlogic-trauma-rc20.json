@@ -1024,5 +1024,13 @@
     "server": "traumaqa organs, deathreport; existing regression retained",
     "client": "NOT_RUN",
     "balance": "Initial game-scale calibration; no real client playtest or full pack tuning."
+  },
+  "version_0_8_8": {
+    "version": "0.8.8",
+    "scope": "Recent medical event timeline (last 12 entries within 120 game seconds), actual deltas, shock and consciousness transitions, persisted last death archive accessible with /traumadeath, protocol 13, page navigation and native death controls preserved.",
+    "server": "traumaqa deathreport: history delta, age, bound, no zero-hit, archive roundtrip/reset/corruption; previous tests retained",
+    "static_gui": "checkHudStatusLayout: history rows and both buttons across 30 layouts",
+    "client": "NOT_RUN: actual death transition, history pages, archive open, keyboard and GUI scale; custom protocol unsupported by bot",
+    "remaining": "Timeline is recent observations, not complete damage history; events outside window and previous login omitted, not a reconstruction; archival clone/relog and actual GUI need live validation."
   }
 }

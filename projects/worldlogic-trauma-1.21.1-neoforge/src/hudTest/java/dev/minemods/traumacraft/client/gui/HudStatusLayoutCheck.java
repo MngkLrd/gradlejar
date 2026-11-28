@@ -137,6 +137,7 @@ public final class HudStatusLayoutCheck {
             require(l.bodyX()+48*l.scale()<l.regionX()&&l.regionX()<l.regionRight()&&l.regionRight()<l.organX(),"death columns");
             require(l.bodyY()+82*l.scale()<=l.footerY()&&l.rowTop()+7*l.regionRow()<=l.footerY()&&l.rowTop()+9*l.organRow()<=l.footerY(),"all death rows visible");
             require(l.organRow()>=9&&l.buttonY()>=l.footerY()+11&&l.buttonY()+18<=l.y()+l.height()&&l.buttonX()+116<=l.x()+l.width(),"death exit and labels");
+            require(l.historyRows()>=1&&l.rowTop()+l.historyRows()*15<=l.footerY()&&l.x()+l.width()/2-119>=l.x()+5&&l.x()+l.width()/2+119<=l.x()+l.width()-5,"history and both buttons fit");
             deathLayouts++;
         }
         require(!DeathReportLayout.available(299,174)&&!DeathReportLayout.available(300,173),"small screen falls back to native death screen");

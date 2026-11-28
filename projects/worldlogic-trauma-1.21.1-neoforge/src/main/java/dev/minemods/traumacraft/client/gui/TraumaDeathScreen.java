@@ -20,14 +20,23 @@ public final class TraumaDeathScreen extends Screen {
     private final DeathScreen original;
     private final DeathReport report;
     private DeathReportLayout l;
+    private int historyPage=-1;
+    private Button historyButton;
     public TraumaDeathScreen(DeathScreen original,DeathReport report){
-        super(Component.translatable("deathScreen.title"));this.original=original;this.report=report;
+        super(original==null?t("archive_title"):Component.translatable("deathScreen.title"));this.original=original;this.report=report;
     }
     @Override protected void init(){
         l=DeathReportLayout.of(width,height);
-        addRenderableWidget(Button.builder(t("continue"),b->onClose()).bounds(l.buttonX(),l.buttonY(),116,18).build());
+        int center=l.x()+l.width()/2;
+        addRenderableWidget(Button.builder(t(original==null?"close":"continue"),b->onClose()).bounds(center-119,l.buttonY(),116,18).build());
+        historyButton=addRenderableWidget(Button.builder(historyLabel(),b->{historyPage=historyPage+1>=pages()?-1:historyPage+1;b.setMessage(historyLabel());}).bounds(center+3,l.buttonY(),116,18).build());
     }
     @Override public void onClose(){if(minecraft!=null)minecraft.setScreen(original);}
+    private int pages(){return Math.max(1,(report.history().size()+l.historyRows()-1)/l.historyRows());}
+    private Component historyLabel(){return historyPage<0?t("history"):historyPage+1>=pages()?t("anatomy"):Component.translatable("death.traumacraft.history_page",historyPage+1,pages());}
+    private Component eventName(TraumaHistory.Entry e){return t("event."+e.kind().name().toLowerCase(Locale.ROOT));}
+    private Component eventZones(TraumaHistory.Entry e){List<String> names=new ArrayList<>();for(var p:BodyPart.values())if((e.regions()&(1<<p.ordinal()))!=0)names.add(BodyVisual.name(p).getString());for(var o:OrganState.Organ.values())if((e.organs()&(1<<o.ordinal()))!=0)names.add(organName(o).getString());return Component.literal(String.join(", ",names));}
+    private Component eventDetail(TraumaHistory.Entry e){return Component.translatable("death.traumacraft.event_detail",String.format(Locale.ROOT,"%.1f",e.hpLoss()),String.format(Locale.ROOT,"%.1f",e.bloodLoss()),e.shock());}
     @Override public boolean isPauseScreen(){return false;}
     private static Component t(String key){return Component.translatable("death.traumacraft."+key);}
     private static Component cause(DeathReport.Cause c){return t("cause."+c.name().toLowerCase(Locale.ROOT));}
@@ -74,6 +83,24 @@ public final class TraumaDeathScreen extends Screen {
         if(mx<l.organX()-3||mx>=l.organRight()+2||my<l.rowTop())return null;
         int i=(my-l.rowTop())/l.organRow();return i<OrganState.Organ.values().length?OrganState.Organ.values()[i]:null;
     }
+    private void renderHistory(GuiGraphics g,int mx,int my,float delta){
+        int x=l.x(),r=x+l.width(),top=l.rowTop(),fy=l.footerY(),rows=l.historyRows();
+        label(g,t("history_hint"),x+7,fy,l.width()-14,TEXT);
+        if(report.history().isEmpty())label(g,t("history_empty"),x+7,top+5,l.width()-14,TEXT);
+        List<Component> tip=new ArrayList<>();
+        int start=historyPage*rows;
+        for(int i=0;i<rows&&start+i<report.history().size();i++){
+            var event=report.history().get(start+i);int yy=top+i*15;
+            if((i&1)==0)g.fill(x+6,yy,r-6,yy+14,0x18777777);
+            label(g,Component.literal("-"+event.ageSeconds()+"s"),x+8,yy+2,37,TEXT);
+            var name=eventName(event).copy();if(event.kind()==TraumaHistory.Kind.IMPACT)name.append(" / ").append(origin(event.origin()));
+            label(g,name,x+49,yy+2,l.width()/2-50,event.kind()==TraumaHistory.Kind.UNCONSCIOUS?FATAL:TEXT);
+            var zones=eventZones(event);
+            label(g,zones.getString().isEmpty()?eventDetail(event):zones,x+l.width()/2,yy+2,l.width()/2-9,TEXT);
+            if(mx>=x+6&&mx<r-6&&my>=yy&&my<yy+14){tip.add(name);if(!zones.getString().isEmpty())tip.add(zones);tip.add(eventDetail(event));}
+        }
+        super.render(g,mx,my,delta);if(!tip.isEmpty())g.renderComponentTooltip(font,tip,mx,my);
+    }
     @Override public void render(GuiGraphics g,int mx,int my,float delta){
         if(!DeathReportLayout.available(width,height)){onClose();return;}
         renderBackground(g,mx,my,delta);
@@ -90,6 +117,7 @@ public final class TraumaDeathScreen extends Screen {
         var criticalLabel=criticalNames();if(!criticalLabel.getString().isEmpty())trigger.append(" | ").append(criticalLabel);
         label(g,trigger,x+7,y+27,l.width()-14,TEXT);
         g.fill(x+5,y+37,r-5,y+38,0xFF888888);
+        if(historyPage>=0){renderHistory(g,mx,my,delta);return;}
         g.fill(l.organX()-7,l.rowTop(),l.organX()-6,l.footerY()-2,0xFF999999);
         drawBody(g);
         var selected=regionHit(mx,my);var selectedOrgan=organHit(mx,my);

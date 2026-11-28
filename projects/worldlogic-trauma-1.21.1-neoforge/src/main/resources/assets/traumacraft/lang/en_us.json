@@ -200,5 +200,20 @@
   "death.traumacraft.origin.suffocation": "Suffocation",
   "death.traumacraft.origin.magic": "Magic / harmful effect",
   "death.traumacraft.origin.lightning": "Lightning",
-  "death.traumacraft.critical_zone": "Critical region: %s"
+  "death.traumacraft.critical_zone": "Critical region: %s",
+  "death.traumacraft.archive_title": "Last death report",
+  "death.traumacraft.close": "Close",
+  "death.traumacraft.history": "History",
+  "death.traumacraft.anatomy": "Anatomy",
+  "death.traumacraft.history_page": "History %s/%s",
+  "death.traumacraft.history_hint": "Recent observed events, not proven causes",
+  "death.traumacraft.history_empty": "No recent events recorded",
+  "death.traumacraft.no_archive": "No saved death report",
+  "death.traumacraft.event_detail": "HP lost: %s | Blood lost: %s ml | Shock: %s/3",
+  "death.traumacraft.event.impact": "Injury",
+  "death.traumacraft.event.internal_decline": "Internal decline",
+  "death.traumacraft.event.external_bleed": "External bleeding",
+  "death.traumacraft.event.shock": "Shock changed",
+  "death.traumacraft.event.unconscious": "Lost consciousness",
+  "death.traumacraft.event.waking": "Regained consciousness"
 }

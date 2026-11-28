@@ -933,6 +933,20 @@
           "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
         }
       ]
+    },
+    {
+      "id": "tr-death-history",
+      "kind": "mechanic",
+      "subject": "Observed actual HP deltas, no zero-damage event, bounded recent history, age expiry, encoded persistent last death archive survives reset and malformed archive ignored",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+        }
+      ]
     }
   ]
 }

@@ -200,5 +200,20 @@
   "death.traumacraft.origin.suffocation": "Удушье",
   "death.traumacraft.origin.magic": "Магия / вредный эффект",
   "death.traumacraft.origin.lightning": "Молния",
-  "death.traumacraft.critical_zone": "Критическая зона: %s"
+  "death.traumacraft.critical_zone": "Критическая зона: %s",
+  "death.traumacraft.archive_title": "Последний отчёт о смерти",
+  "death.traumacraft.close": "Закрыть",
+  "death.traumacraft.history": "История",
+  "death.traumacraft.anatomy": "Анатомия",
+  "death.traumacraft.history_page": "История %s/%s",
+  "death.traumacraft.history_hint": "Недавние события, не доказанные причины",
+  "death.traumacraft.history_empty": "Нет записанных недавних событий",
+  "death.traumacraft.no_archive": "Сохранённого отчёта о смерти нет",
+  "death.traumacraft.event_detail": "Потеря HP: %s | Кровь: %s мл | Шок: %s/3",
+  "death.traumacraft.event.impact": "Травма",
+  "death.traumacraft.event.internal_decline": "Внутреннее ухудшение",
+  "death.traumacraft.event.external_bleed": "Наружное кровотечение",
+  "death.traumacraft.event.shock": "Изменение шока",
+  "death.traumacraft.event.unconscious": "Потеря сознания",
+  "death.traumacraft.event.waking": "Возвращение сознания"
 }

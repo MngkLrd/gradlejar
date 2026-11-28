@@ -9,6 +9,7 @@ public record DeathReportLayout(int x,int y,int width,int height,int bodyX,int b
         int bx=x+7,by=top+Math.max(0,(space-82*s)/2);
         return new DeathReportLayout(x,y,pw,ph,bx,by,s,bx+48*s+7,divider-5,divider+7,x+pw-7,top,Math.min(26,space/7),Math.min(21,space/9),footer);
     }
+    public int historyRows(){return Math.max(1,(footerY-rowTop)/15);}
     public int buttonX(){return x+(width-116)/2;}
     public int buttonY(){return y+height-22;}
 }
