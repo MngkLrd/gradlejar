@@ -221,5 +221,12 @@
   "worldlogic.analytics.season_temp": "Seasonal air offset",
   "worldlogic.analytics.season_solar": "Solar factor",
   "worldlogic.analytics.season_wet": "Wet-season strength",
-  "worldlogic.patchouli.landing": "World Logic field guide. Select a chapter: climate, water, health, plants, geology and survival."
+  "worldlogic.patchouli.landing": "World Logic field guide. Select a chapter: climate, water, health, plants, geology and survival.",
+  "block.worldlogic.white_sand": "White Carbonate Sand",
+  "block.worldlogic.volcanic_sand": "Black Volcanic Sand",
+  "block.worldlogic.chernozem": "Chernozem",
+  "block.worldlogic.sandy_loam": "Sandy Loam",
+  "block.worldlogic.laterite": "Lateritic Soil",
+  "block.worldlogic.volcanic_ash": "Volcanic Ash",
+  "block.worldlogic.volcanic_tuff": "Volcanic Tuff"
 }

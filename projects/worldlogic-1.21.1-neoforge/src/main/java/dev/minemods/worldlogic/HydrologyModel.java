@@ -14,8 +14,21 @@ public final class HydrologyModel {
   case FROZEN->new Soil(70,.035,.80,.17);case SAND->new Soil(48,.95,.29,.26);
   case CLAY->new Soil(145,.18,.84,.57);case ROCK->new Soil(12,.08,.25,.08);
   case UNKNOWN->new Soil(75,.40,.55,.35);
+  case CHERNOZEM->new Soil(165,.66,.69,.98);
+  case SANDY_LOAM->new Soil(85,.82,.45,.67);
+  case LATERITE->new Soil(110,.42,.64,.39);
+  case WHITE_SAND->new Soil(42,.97,.25,.12);
+  case VOLCANIC_SAND->new Soil(53,.91,.32,.24);
+  case VOLCANIC_ASH->new Soil(100,.53,.57,.30);
  };}
  public static SoilType soilType(BlockState b){
+  if(GroundMaterials.is(b,"chernozem"))return SoilType.CHERNOZEM;
+  if(GroundMaterials.is(b,"sandy_loam"))return SoilType.SANDY_LOAM;
+  if(GroundMaterials.is(b,"laterite"))return SoilType.LATERITE;
+  if(GroundMaterials.is(b,"white_sand"))return SoilType.WHITE_SAND;
+  if(GroundMaterials.is(b,"volcanic_sand"))return SoilType.VOLCANIC_SAND;
+  if(GroundMaterials.is(b,"volcanic_ash"))return SoilType.VOLCANIC_ASH;
+  if(GroundMaterials.volcanicRock(b))return SoilType.ROCK;
   if(b.is(Content.SOILS.get("humus").get()))return SoilType.HUMUS;
   if(b.is(Content.SOILS.get("loam").get()))return SoilType.LOAM;
   if(b.is(Content.SOILS.get("peat").get()))return SoilType.PEAT;
@@ -26,6 +39,27 @@ public final class HydrologyModel {
   if(b.is(BlockTags.DIRT)||b.is(Blocks.FARMLAND))return SoilType.LOAM;
   if(b.is(BlockTags.BASE_STONE_OVERWORLD)||b.is(Blocks.GRAVEL)||b.is(Blocks.SANDSTONE)||b.is(Blocks.CALCITE))return SoilType.ROCK;
   return SoilType.UNKNOWN;
+ }
+ public static dev.minemods.worldlogic.api.WorldLogicApi.GroundProfile groundProfile(BlockState b){
+  var t=soilType(b);var hyd=profile(t);
+  double[] f=switch(t){
+   case CHERNOZEM->new double[]{.30,.45,.25,.065,7.0};
+   case SANDY_LOAM->new double[]{.65,.23,.12,.025,6.3};
+   case LATERITE->new double[]{.34,.20,.46,.015,5.1};
+   case WHITE_SAND->new double[]{.94,.04,.02,.002,8.1};
+   case VOLCANIC_SAND->new double[]{.90,.07,.03,.004,6.5};
+   case VOLCANIC_ASH->new double[]{.32,.56,.12,.003,6.0};
+   case LOAM->new double[]{.40,.40,.20,.035,6.5};
+   case HUMUS->new double[]{.25,.45,.30,.09,6.4};
+   case PEAT->new double[]{.25,.40,.35,.55,4.7};
+   case SILT->new double[]{.18,.68,.14,.035,6.8};
+   case SAND->new double[]{.92,.06,.02,.008,6.8};
+   case CLAY->new double[]{.20,.26,.54,.025,6.3};
+   case FROZEN->new double[]{.40,.40,.20,.02,6.0};
+   case ROCK,UNKNOWN->new double[]{0,0,0,0,-1};
+  };
+  boolean rootable=t!=SoilType.ROCK&&t!=SoilType.UNKNOWN&&t!=SoilType.FROZEN;
+  return new dev.minemods.worldlogic.api.WorldLogicApi.GroundProfile(t,f[0],f[1],f[2],f[3],f[4],hyd.fertility,hyd.capacity,hyd.permeability,hyd.fieldCapacity,rootable);
  }
  record Store(double soil,double groundwater,double snow,double pond){
   double mass(){return soil+groundwater+snow+pond;}

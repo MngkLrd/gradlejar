@@ -47,9 +47,9 @@ public final class PhysicalBiomeReconciliation{
    int qx=(x0>>2)+x,qz=(z0>>2)+z;
    palette.add(RegionalBiomeEdges.resolve(source,sampler,qx,qz,coast));
   }
-  chunk.fillBiomesFromNoise((qx,qy,qz,sampler)->{
+  chunk.fillBiomesFromNoise((qx,qy,qz,ignoredSampler)->{
    int i=Math.floorMod(qx,4)*4+Math.floorMod(qz,4),floor=heights[i],y=qy*4;
-   if(!wet[i]&&y<floor-48)return source.getNoiseBiome(sampler.sample(qx,qy,qz));
+   if(!wet[i]&&y<floor-48)return source.getNoiseBiome(ignoredSampler.sample(qx,qy,qz));
    return palette.get(i);
   },random.sampler());
  }

@@ -5,6 +5,12 @@
     "worldlogic:loam",
     "worldlogic:peat",
     "worldlogic:alluvial_silt",
-    "worldlogic:frozen_soil"
+    "worldlogic:frozen_soil",
+    "worldlogic:white_sand",
+    "worldlogic:volcanic_sand",
+    "worldlogic:chernozem",
+    "worldlogic:sandy_loam",
+    "worldlogic:laterite",
+    "worldlogic:volcanic_ash"
   ]
 }

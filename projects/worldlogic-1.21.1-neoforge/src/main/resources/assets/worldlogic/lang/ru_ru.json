@@ -221,5 +221,12 @@
   "worldlogic.analytics.season_temp": "Сезонная поправка воздуха",
   "worldlogic.analytics.season_solar": "Множитель солнца",
   "worldlogic.analytics.season_wet": "Влажная фаза",
-  "worldlogic.patchouli.landing": "Полевое руководство World Logic. Выберите раздел: климат, вода, здоровье, растения, геология и выживание."
+  "worldlogic.patchouli.landing": "Полевое руководство World Logic. Выберите раздел: климат, вода, здоровье, растения, геология и выживание.",
+  "block.worldlogic.white_sand": "Белый карбонатный песок",
+  "block.worldlogic.volcanic_sand": "Чёрный вулканический песок",
+  "block.worldlogic.chernozem": "Чернозём",
+  "block.worldlogic.sandy_loam": "Супесь",
+  "block.worldlogic.laterite": "Латеритная почва",
+  "block.worldlogic.volcanic_ash": "Вулканический пепел",
+  "block.worldlogic.volcanic_tuff": "Вулканический туф"
 }

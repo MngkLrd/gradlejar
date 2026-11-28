@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=11;
+ public static final int API_REVISION=12;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -119,13 +119,29 @@ public final class WorldLogicApi {
  public static WaterProfile waterProfile(ServerLevel level,BlockPos pos){
   serverThread(level);return dev.minemods.worldlogic.WaterClassification.sample(level,pos);
  }
- public enum SoilType { LOAM,HUMUS,PEAT,SILT,FROZEN,SAND,CLAY,ROCK,UNKNOWN }
+ public enum SoilType { LOAM,HUMUS,PEAT,SILT,FROZEN,SAND,CLAY,ROCK,UNKNOWN,CHERNOZEM,SANDY_LOAM,LATERITE,WHITE_SAND,VOLCANIC_SAND,VOLCANIC_ASH }
  /** Model stores expressed in mm water equivalent per horizontal area; rates per 200-tick update. */
  public record Hydrology(SoilType soil,double soilWaterMm,double capacityMm,double groundwaterMm,double snowWaterMm,
   double pondedWaterMm,double lastRunoffMm,double lastEvaporationMm,double lastRechargeMm,double lastDischargeMm,
   double saturation,double fertility,double permeability,double estimatedWaterTableDepthBlocks,boolean simulated,long updatedTick){}
  /** Pure classification of an existing block, safe to use during world generation. */
  public static SoilType soilType(BlockState state){return dev.minemods.worldlogic.HydrologyModel.soilType(state);}
+ /** Representative game parameters. Mineral fractions sum to 1 for soils.
+  * Organic fraction is a separate whole-soil estimate; pH -1 is not applicable.
+  * Not a measured chemical sample; use soilEcology/hydrology for live state. */
+ public record GroundProfile(SoilType soil,double sandFraction,double siltFraction,double clayFraction,
+  double organicMatterFraction,double nominalPh,double fertility,double waterCapacityMm,double permeability,double fieldCapacityFraction,boolean rootable){}
+ public static GroundProfile soilProfile(BlockState state){return dev.minemods.worldlogic.HydrologyModel.groundProfile(state);}
+ /** Ground position, not plant position. Read actual root horizon under grass/farmland without loading chunks. */
+ public static Optional<GroundProfile> soilProfile(ServerLevel level,BlockPos ground){
+  serverThread(level);
+  if(level.isOutsideBuildHeight(ground)||!level.hasChunkAt(ground))return Optional.empty();
+  var b=level.getBlockState(ground);
+  if((b.is(net.minecraft.world.level.block.Blocks.GRASS_BLOCK)||b.is(net.minecraft.world.level.block.Blocks.FARMLAND)||b.is(net.minecraft.world.level.block.Blocks.PODZOL))&&!level.isOutsideBuildHeight(ground.below())){
+   var sub=soilProfile(level.getBlockState(ground.below()));if(sub.rootable())return Optional.of(sub);
+  }
+  return Optional.of(soilProfile(b));
+ }
  public static Optional<Hydrology> hydrology(ServerLevel level,BlockPos pos){
   serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.sample(level,pos);
  }
