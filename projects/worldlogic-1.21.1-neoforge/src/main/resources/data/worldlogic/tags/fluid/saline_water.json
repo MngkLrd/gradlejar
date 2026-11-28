@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:sea_water",
+    "worldlogic:flowing_sea_water",
+    "worldlogic:brackish_water",
+    "worldlogic:flowing_brackish_water"
+  ]
+}
