@@ -314,8 +314,9 @@ public final class TreeChopper {
             BlockPos foot=log.below();
             if(!rootSet.contains(foot)&&l.hasChunkAt(foot)&&baseLog(l.getBlockState(foot),species,source))return List.of();
         }
-        Set<BlockPos> leaves=CrownOwnership.owned(l,logs);
-        if(leaves.isEmpty()&&!previousCut)return List.of();
+        var crown=CrownOwnership.scan(l,logs);
+        if(!crown.complete()||(!crown.natural()&&!previousCut))return List.of();
+        Set<BlockPos> leaves=crown.owned();
         List<Piece> out=new ArrayList<>(logs.size()+leaves.size());
         for(BlockPos n:logs)if(!rootSet.contains(n))out.add(new Piece(n,l.getBlockState(n),true));
         for(BlockPos n:leaves)out.add(new Piece(n,l.getBlockState(n),false));

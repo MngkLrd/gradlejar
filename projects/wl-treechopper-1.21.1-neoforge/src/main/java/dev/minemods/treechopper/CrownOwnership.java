@@ -11,11 +11,14 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 final class CrownOwnership {
     private static final int LIMIT=6, MAX_VISITED=8192;
     private CrownOwnership(){}
-    static Set<BlockPos> owned(Level l,Set<BlockPos> logs){
+    record Crown(Set<BlockPos> owned,boolean natural,boolean complete){}
+    static Set<BlockPos> owned(Level l,Set<BlockPos> logs){return scan(l,logs).owned();}
+    static Crown scan(Level l,Set<BlockPos> logs){
         Map<BlockPos,Integer> own=new HashMap<>();
         Deque<BlockPos> queue=new ArrayDeque<>();
         for(BlockPos log:logs){own.put(log,0);queue.add(log);}
-        if(!spread(l,own,queue))return Set.of();
+        if(!spread(l,own,queue))return new Crown(Set.of(),false,false);
+        boolean natural=own.size()>logs.size();
         Map<BlockPos,Integer> foreign=new HashMap<>();
         Deque<BlockPos> other=new ArrayDeque<>();
         // Candidate canopy leaves adjacent to any other actual timber receive competing support.
@@ -36,7 +39,7 @@ final class CrownOwnership {
                 }
             }
         }
-        if(!spread(l,foreign,other))return Set.of();
+        if(!spread(l,foreign,other))return new Crown(Set.of(),natural,false);
         Set<BlockPos> result=new LinkedHashSet<>();
         for(var e:own.entrySet()){
             if(e.getValue()==0)continue;
@@ -45,7 +48,7 @@ final class CrownOwnership {
             if(state.hasProperty(BlockStateProperties.DISTANCE)&&state.getValue(BlockStateProperties.DISTANCE)<e.getValue())continue;
             if(foreign.getOrDefault(p,99)>e.getValue())result.add(p);
         }
-        return result;
+        return new Crown(Set.copyOf(result),natural,true);
     }
     private static boolean spread(Level l,Map<BlockPos,Integer> distances,Deque<BlockPos> queue){
         while(!queue.isEmpty()){
