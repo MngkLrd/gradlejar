@@ -19,8 +19,8 @@ final class TreeQA {
             double full=ChopEffort.power(1,1,1), tired=ChopEffort.power(.1,1,1);
             double oneArm=ChopEffort.power(1,1,0), disabled=ChopEffort.power(1,0,1);
             if(!(full>oneArm&&oneArm>tired&&disabled==0&&ChopEffort.cooldown(tired)>ChopEffort.cooldown(full)
-                &&ChopEffort.depthIncrement(1,6,1,full,.8)>ChopEffort.depthIncrement(1,6,1,tired,.8)
-                &&ChopEffort.depthIncrement(0,6,1,disabled,.99)==0)){
+                &&ChopEffort.workPerHit(6,1,full,4,.8)>ChopEffort.workPerHit(6,1,tired,4,.8)
+                &&ChopEffort.workPerHit(6,1,disabled,4,.99)==0)){
                 c.getSource().sendFailure(Component.literal("TreeChopper effort regression FAILED"));return 0;
             }
             c.getSource().sendSuccess(()->Component.literal("TreeChopper effort regression PASS"),false);return 1;
@@ -33,18 +33,47 @@ final class TreeQA {
                 int total=0;
                 for(int sample=0;sample<100;sample++){
                     int depth=0,hits=0;
-                    while(depth<4&&hits<4){
-                        depth+=ChopEffort.depthIncrement(depth,speed,1,1,((sample+hits*31)%100+.5)/100);
+                    while(depth<1000&&hits<64){
+                        depth+=ChopEffort.workPerHit(speed,1,1,4,((sample+hits*31)%100+.5)/100);
                         hits++;
                     }
-                    if(depth<4){c.getSource().sendFailure(Component.literal("TreeChopper axe tier progression FAILED"));return 0;}
+                    if(depth<1000){c.getSource().sendFailure(Component.literal("TreeChopper axe tier progression FAILED"));return 0;}
                     total+=hits;
                 }
-                if(total>=previous){c.getSource().sendFailure(Component.literal("TreeChopper axe tier order FAILED"));return 0;}
+                if(total>=previous||(item==Items.WOODEN_AXE&&total<600)){c.getSource().sendFailure(Component.literal("TreeChopper axe tier order FAILED"));return 0;}
                 previous=total;
             }
             c.getSource().sendSuccess(()->Component.literal("TreeChopper axe tier progression PASS"),false);return 1;
           }))
+          .then(Commands.literal("qa_swing").executes(c->{
+            var fake=FakePlayerFactory.getMinecraft(c.getSource().getLevel());
+            ChopSwing swing=(ChopSwing)fake;
+            swing.wl$markSwing();
+            if(swing.wl$swingDuration()!=12||ChopEffort.cooldown(1)<12){
+                c.getSource().sendFailure(Component.literal("TreeChopper slow swing FAILED"));return 0;
+            }
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper slow swing PASS"),false);return 1;
+          }))
+          .then(Commands.literal("qa_count").then(Commands.argument("pos",BlockPosArgument.blockPos()).then(Commands.argument("logs",IntegerArgumentType.integer(4,32)).executes(c->{
+            ServerLevel l=c.getSource().getLevel();
+            BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            int logs=IntegerArgumentType.getInteger(c,"logs");
+            var fake=FakePlayerFactory.getMinecraft(l);
+            fake.setPos(p.getX()+.5,p.getY(),p.getZ()-1.5);
+            ItemStack axe=new ItemStack(Items.WOODEN_AXE);
+            fake.setItemSlot(EquipmentSlot.MAINHAND,axe);
+            int hits=0;
+            while(hits<24&&!(l.getBlockState(p).getBlock() instanceof StumpBlock)){
+                TreeChopper.qaResetCooldown(fake);
+                NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
+                hits++;
+            }
+            int min=logs==4?7:11,max=logs==4?8:13;
+            if(hits<min||hits>max||!(l.getBlockState(p).getBlock() instanceof StumpBlock)||axe.getDamageValue()!=hits+logs-1){
+                c.getSource().sendFailure(Component.literal("TreeChopper size-dependent hits FAILED: "+hits+" / "+axe.getDamageValue()));return 0;
+            }
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper size-dependent hits PASS"),false);return 1;
+          }))))
           .then(Commands.literal("qa_wear").then(Commands.argument("pos",BlockPosArgument.blockPos()).then(Commands.argument("logs",IntegerArgumentType.integer(2,32)).executes(c->{
             ServerLevel l=c.getSource().getLevel();
             BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
@@ -53,6 +82,8 @@ final class TreeQA {
             fake.setPos(p.getX()+.5,p.getY(),p.getZ()-1.5);
             // Start one step before severing. A worn axe must not gain the tree for free.
             var source=l.getBlockState(p);
+            if(!(l.getBlockEntity(p) instanceof CutProgress saved)){c.getSource().sendFailure(Component.literal("TreeChopper cut storage FAILED"));return 0;}
+            saved.write(new int[]{999,0,0,0});
             ItemStack weak=new ItemStack(Items.WOODEN_AXE);
             weak.setDamageValue(weak.getMaxDamage()-1);
             fake.setItemSlot(EquipmentSlot.MAINHAND,weak);
@@ -100,15 +131,16 @@ final class TreeQA {
             fake.setPos(p.getX()+.5,p.getY(),p.getZ()-1.5);
             fake.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(Items.IRON_AXE));
             int depth=0;
-            for(int i=0;i<4;i++){
+            for(int i=0;i<12;i++){
                 TreeChopper.qaResetCooldown(fake);
                 NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
                 var state=l.getBlockState(p);
                 if(state.getBlock() instanceof StumpBlock){
                     c.getSource().sendSuccess(()->Component.literal("TreeChopper single-side progression PASS"),false);return 1;
                 }
-                if(!(state.getBlock() instanceof CutBlock)||CutBlock.depth(state,Direction.NORTH)<=depth)break;
-                depth=CutBlock.depth(state,Direction.NORTH);
+                int actual=CutProgress.read(l,p,state)[0];
+                if(!(state.getBlock() instanceof CutBlock)||actual<=depth)break;
+                depth=actual;
             }
             c.getSource().sendFailure(Component.literal("TreeChopper single-side progression FAILED"));return 0;
           })))

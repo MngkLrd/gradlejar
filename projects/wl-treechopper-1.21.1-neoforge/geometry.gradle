@@ -10,7 +10,7 @@ tasks.register('generateTreeGeometry') {
         def root=generated.get().asFile
         def emit={String path,Object data -> def f=new File(root,path); f.parentFile.mkdirs(); f.text=JsonOutput.toJson(data) }
         def asset='assets/wl_treechopper/'
-        def en=['message.wl_treechopper.axe_worn':'Not enough axe durability to fell the tree (need %s).']; def ru=['message.wl_treechopper.axe_worn':'Недостаточно прочности топора для валки дерева (нужно %s).']
+        def en=['message.wl_treechopper.cut_progress':'Cut on this side: %s%%','message.wl_treechopper.axe_worn':'Not enough axe durability to fell the tree (need %s).']; def ru=['message.wl_treechopper.cut_progress':'Сруб с этой стороны: %s%%','message.wl_treechopper.axe_worn':'Недостаточно прочности топора для валки дерева (нужно %s).']
         species.each { s ->
             def namespace=custom.contains(s)?'worldlogicterrain':'minecraft'
             def bark="${namespace}:block/${s}_log"

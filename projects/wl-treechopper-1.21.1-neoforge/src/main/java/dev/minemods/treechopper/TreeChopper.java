@@ -14,6 +14,10 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.*;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import java.util.function.Supplier;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.InteractionHand;
@@ -49,8 +53,11 @@ public final class TreeChopper {
             UPPERS.put(name,BLOCKS.register("fallen_upper_"+name,()->new Block(BlockBehaviour.Properties.of().strength(2).sound(SoundType.WOOD).noOcclusion().noCollission())));
         }
     }
+    private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES=DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE,ID);
+    static final Supplier<BlockEntityType<CutProgress>> PROGRESS=BLOCK_ENTITIES.register("cut_progress",()->BlockEntityType.Builder.of(CutProgress::new,CUTS.values().stream().map(DeferredBlock::get).toArray(Block[]::new)).build(null));
     public TreeChopper(IEventBus modBus){
         BLOCKS.register(modBus);
+        BLOCK_ENTITIES.register(modBus);
         modBus.addListener(ChopNetwork::register);
         NeoForge.EVENT_BUS.addListener(TreeChopper::hit);
         NeoForge.EVENT_BUS.addListener(TreeChopper::guardBreak);
@@ -138,24 +145,27 @@ public final class TreeChopper {
         BlockState damaged=cut?old:CUTS.get(s).get().defaultBlockState();
         // A previously fully severed hinge may have been held by a protection hook.
         // Retry felling without claiming a new cut or playing a phantom strike.
-        if(cut&&CutBlock.falls(old)){
+        int[] work=CutProgress.read(level,pos,damaged);
+        if(cut&&ChopEffort.severed(work)){
             int wear=ChopEffort.fellingWear(upperLogs(tree),false);
             if(canPay(player,axe,wear)&&fall(level,player,pos,s,old,tree,side))axe.hurtAndBreak(wear,player,EquipmentSlot.MAINHAND);
             return;
         }
-        int before=CutBlock.depth(damaged,side);
         float speed=Math.max(axe.getDestroySpeed(original(s)),((AxeItem)axe.getItem()).getTier().getSpeed());
         float resistance=s.equals("dark_oak")||s.equals("mangrove")?1.18f:s.equals("birch")?0.86f:1f;
-        double roll=level.random.nextDouble();
-        int step=ChopEffort.depthIncrement(before,speed,resistance,power,roll);
-        int next=Math.min(4,before+step);
-        if(next<=before)return;
-        damaged=damaged.setValue(CutBlock.side(side),next);
-        boolean severed=CutBlock.falls(damaged);
+        int idx=CutProgress.index(side);
+        work[idx]=Math.min(ChopEffort.COMPLETE,work[idx]+ChopEffort.workPerHit(speed,resistance,power,1+upperLogs(tree),level.random.nextDouble()));
+        damaged=damaged.setValue(CutBlock.side(side),ChopEffort.depth(work[idx]));
+        boolean severed=ChopEffort.severed(work);
         int wear=severed?ChopEffort.fellingWear(upperLogs(tree),true):1;
         if(!canPay(player,axe,wear))return;
-        if(!level.setBlock(pos,damaged,Block.UPDATE_ALL))return;
+        if(!old.equals(damaged)&&!level.setBlock(pos,damaged,Block.UPDATE_ALL))return;
+        if(!(level.getBlockEntity(pos) instanceof CutProgress progress))return;
+        progress.write(work);
+        ((ChopSwing)player).wl$markSwing();
+        if(!(player instanceof FakePlayer))PacketDistributor.sendToPlayersTrackingEntityAndSelf(player,new ChopNetwork.Swing(player.getId()));
         player.swing(InteractionHand.MAIN_HAND,true);
+        if(!severed&&!(player instanceof FakePlayer))player.displayClientMessage(Component.translatable("message.wl_treechopper.cut_progress",work[idx]/10),true);
         level.playSound(null,pos,SoundEvents.WOOD_HIT,SoundSource.BLOCKS,1f,.8f+level.random.nextFloat()*.25f);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,original(s)),pos.getX()+.5+side.getStepX()*.47,pos.getY()+.5,pos.getZ()+.5+side.getStepZ()*.47,8,.12,.12,.12,.08);
         boolean felled=severed&&fall(level,player,pos,s,damaged,tree,side);
@@ -255,8 +265,11 @@ public final class TreeChopper {
             d.setNoGravity(true);
             d.addTag(FALL);
             if(cap)d.addTag("wl_treechopper_cut_cap");
+            boolean leaf=!cap&&!piece.log;
+            if(leaf)d.addTag("wl_treechopper_leaf");
             CompoundTag fall=new CompoundTag();
             fall.putInt("x",piece.pos.getX()-base.getX());fall.putInt("y",piece.pos.getY()-base.getY());fall.putInt("z",piece.pos.getZ()-base.getZ());
+            fall.putBoolean("leaf",leaf);
             fall.putBoolean("hinge",true);fall.putBoolean("cap",cap);fall.putBoolean("wholeUpper",true);
             fall.putString("direction",direction.getName());fall.putBoolean("log",piece.log);fall.putString("species",species);fall.putInt("age",0);
             d.getPersistentData().put(FALL,fall);
@@ -330,6 +343,15 @@ public final class TreeChopper {
         float x=f.getInt("x"),y=f.getInt("y"),z=f.getInt("z");
         boolean hinge=f.getBoolean("hinge"),cap=f.getBoolean("cap"),wholeUpper=f.getBoolean("wholeUpper");
         float progress=Math.min(1,age/(float)FALL_TICKS);
+        boolean leaf=f.getBoolean("leaf");
+        float leafDrop=leaf?Math.min(8f,.055f*age*age):0;
+        if(leaf&&age>=12){
+            Vector3f off=fallOffset(x,y,z,dir,progress,false,hinge,wholeUpper);
+            String name=f.getString("species");
+            BlockState foliage=BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(CUSTOM.contains(name)?"worldlogicterrain":"minecraft",name+"_leaves")).defaultBlockState();
+            if(!foliage.isAir())l.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,foliage),d.getX()+off.x+.5,d.getY()+off.y+.5-leafDrop,d.getZ()+off.z+.5,4,.22,.35,.22,.06);
+            d.discard();return;
+        }
         if(age>=FALL_TICKS+3){
             if(f.getBoolean("log")&&CUTS.containsKey(f.getString("species"))){
                 Vector3f off=fallOffset(x,y,z,dir,1,false,hinge,wholeUpper).add(rotation(dir,(float)(Math.PI*.5)).transform(new Vector3f(.5f,.5f,.5f)));
@@ -342,7 +364,9 @@ public final class TreeChopper {
         if(age%2!=0)return;
         CompoundTag tag=d.saveWithoutId(new CompoundTag());
         tag.putInt("interpolation_duration",2);tag.putInt("start_interpolation",0);
-        tag.put("transformation",fallTransform(x,y,z,dir,progress,cap,hinge,wholeUpper));
+        CompoundTag pose=fallTransform(x,y,z,dir,progress,cap,hinge,wholeUpper);
+        if(leaf){Vector3f off=fallOffset(x,y,z,dir,progress,false,hinge,wholeUpper);pose.put("translation",floats(off.x,off.y-leafDrop,off.z));}
+        tag.put("transformation",pose);
         d.load(tag);
     }
     static void qaResetCooldown(ServerPlayer player){player.getPersistentData().remove(COOLDOWN);}

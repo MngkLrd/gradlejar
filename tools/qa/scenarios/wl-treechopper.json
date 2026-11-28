@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.5.5 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.5.6 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -62,6 +62,27 @@
       "expect": "Test passed",
       "assertion": true,
       "name": "animation"
+    },
+    {
+      "command": "execute if entity @e[type=minecraft:block_display,tag=wl_treechopper_leaf,x=1000,y=200,z=1000,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "leaf-detach"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_leaf,x=1000,y=200,z=1000,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "leaf-fast-cleanup"
+    },
+    {
+      "command": "execute if entity @e[type=minecraft:block_display,tag=wl_treechopper_cut_cap,x=1000,y=200,z=1000,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "trunk-after-leaves"
     },
     {
       "wait": 3
@@ -726,6 +747,54 @@
     },
     {
       "wait": 3
+    },
+    {
+      "command": "wltreechopper qa_swing",
+      "expect": "TreeChopper slow swing PASS",
+      "assertion": true,
+      "name": "slow-swing"
+    },
+    {
+      "command": "setblock 1000 199 1048 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1000 200 1048 1000 203 1048 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1000 204 1048 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_count 1000 200 1048 4",
+      "expect": "TreeChopper size-dependent hits PASS",
+      "assertion": true,
+      "name": "size-hit-4"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "setblock 1010 199 1048 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1010 200 1048 1010 211 1048 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1010 212 1048 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_count 1010 200 1048 12",
+      "expect": "TreeChopper size-dependent hits PASS",
+      "assertion": true,
+      "name": "size-hit-12"
+    },
+    {
+      "wait": 3
     }
   ],
   "coverage": [
@@ -1337,7 +1406,7 @@
     {
       "id": "single-side-progress",
       "kind": "mechanic",
-      "subject": "Each effective same-side strike advances depth or fells, within four strikes",
+      "subject": "Each same-side strike advances saved work or fells, including hits between visual stages",
       "checks": [
         {
           "backend": "server",
@@ -1392,7 +1461,7 @@
     {
       "id": "axe-material-tiers",
       "kind": "mechanic",
-      "subject": "Real vanilla axe tier speeds yield strictly decreasing mean hit counts in fixed 100-sample progression for wood, stone, iron, diamond, netherite, gold",
+      "subject": "Real vanilla axe tier speeds yield strictly decreasing mean hit counts, wood at least six, on a four-log tree",
       "checks": [
         {
           "backend": "server",
@@ -1419,6 +1488,72 @@
         {
           "backend": "server",
           "name": "axe-wear-12"
+        }
+      ]
+    },
+    {
+      "id": "leaf-detach",
+      "kind": "mechanic",
+      "subject": "Foliage display created independently",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "leaf-detach"
+        }
+      ]
+    },
+    {
+      "id": "leaf-fast-cleanup",
+      "kind": "mechanic",
+      "subject": "Foliage is gone before one second",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "leaf-fast-cleanup"
+        }
+      ]
+    },
+    {
+      "id": "trunk-after-leaves",
+      "kind": "mechanic",
+      "subject": "Trunk continues falling after foliage detaches",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "trunk-after-leaves"
+        }
+      ]
+    },
+    {
+      "id": "slow-swing",
+      "kind": "mechanic",
+      "subject": "Actual mixed-in living-entity swing duration is twelve ticks, cooldown exceeds the swing",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "slow-swing"
+        }
+      ]
+    },
+    {
+      "id": "size-hit-4",
+      "kind": "mechanic",
+      "subject": "Actual wooden axe fells 4 logs in calibrated hit range, exact cumulative durability",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "size-hit-4"
+        }
+      ]
+    },
+    {
+      "id": "size-hit-12",
+      "kind": "mechanic",
+      "subject": "Actual wooden axe fells 12 logs in calibrated hit range, exact cumulative durability",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "size-hit-12"
         }
       ]
     }

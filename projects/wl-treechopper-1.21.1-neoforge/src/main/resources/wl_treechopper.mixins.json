@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "dev.minemods.treechopper.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "LivingSwingMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

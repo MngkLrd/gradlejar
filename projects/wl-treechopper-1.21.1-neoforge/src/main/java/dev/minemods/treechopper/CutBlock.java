@@ -4,12 +4,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.*;
 
-public final class CutBlock extends Block {
+public final class CutBlock extends Block implements EntityBlock {
     public static final IntegerProperty NORTH=IntegerProperty.create("north",0,4);
     public static final IntegerProperty SOUTH=IntegerProperty.create("south",0,4);
     public static final IntegerProperty WEST=IntegerProperty.create("west",0,4);
@@ -18,6 +20,7 @@ public final class CutBlock extends Block {
         super(p);
         registerDefaultState(stateDefinition.any().setValue(NORTH,0).setValue(SOUTH,0).setValue(WEST,0).setValue(EAST,0));
     }
+    @Override public BlockEntity newBlockEntity(BlockPos pos,BlockState state){return new CutProgress(pos,state);}
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b) {
         b.add(NORTH,SOUTH,WEST,EAST);
     }
