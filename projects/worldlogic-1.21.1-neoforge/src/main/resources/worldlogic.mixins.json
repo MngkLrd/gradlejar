@@ -33,6 +33,7 @@
     "client.SodiumWaterRendererMixin",
     "client.OwnedScreenBackgroundMixin",
     "client.IrisPlantMaterialMixin",
-    "client.NativeTraumaScreenMixin"
+    "client.NativeTraumaScreenMixin",
+    "client.SodiumWaterOcclusionMixin"
   ]
 }

@@ -30,6 +30,13 @@ public final class PhysicalMaterialChecks {
   dev.minemods.worldlogic.api.WorldLogicDashboards.verify();
   for(var a:NaturalFluids.families()){
    require(WaterRenderCompatibility.same(a.source.get(),net.minecraft.world.level.material.Fluids.WATER),"native/vanilla render equivalence");
+   var fs=a.source.get().defaultFluidState();
+   var slab=Blocks.OAK_SLAB.defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED,true);
+   require(WaterRenderCompatibility.hidesAdjacentFace(fs,slab),"native/waterlogged render interface");
+   require(WaterRenderCompatibility.hidesAdjacentFace(fs,Blocks.SEAGRASS.defaultBlockState()),"native/vanilla marine plant interface");
+   require(WaterRenderCompatibility.hidesAdjacentFace(fs,Blocks.WATER.defaultBlockState()),"native/vanilla block interface");
+   require(WaterRenderCompatibility.hidesAdjacentFace(net.minecraft.world.level.material.Fluids.WATER.defaultFluidState(),a.block.get().defaultBlockState()),"vanilla/native reverse interface");
+   require(!WaterRenderCompatibility.hidesAdjacentFace(fs,Blocks.LAVA.defaultBlockState())&&!WaterRenderCompatibility.hidesAdjacentFace(fs,Blocks.AIR.defaultBlockState())&&!WaterRenderCompatibility.hidesAdjacentFace(fs,Blocks.STONE.defaultBlockState()),"no false water culling");
    for(var b:NaturalFluids.families()){
     require(WaterRenderCompatibility.same(a.source.get(),b.flowing.get()),"continuous water render family");
     if(a!=b)require(!a.source.get().isSame(b.source.get()),"distinct fluid identity preserved");

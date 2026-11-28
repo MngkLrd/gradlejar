@@ -13,6 +13,14 @@ public final class ShaderPlantMapping{
  public static final TagKey<Block> GRASS=TagKey.create(Registries.BLOCK,ResourceLocation.fromNamespaceAndPath("worldlogic","shader/waving_grass"));
  public static final TagKey<Block> TALL=TagKey.create(Registries.BLOCK,ResourceLocation.fromNamespaceAndPath("worldlogic","shader/waving_tall"));
  public static void apply(Object2IntMap<BlockState> ids){
+  // Iris resolves rendered fluids through their legacy block-state material.
+  // Match the pack's own water ID, not a hardcoded shader ID.
+  var water=Blocks.WATER.defaultBlockState();
+  int waterId=ids.containsKey(water)?ids.getInt(water):-1;
+  for(var f:NaturalFluids.families())for(var state:f.block.get().getStateDefinition().getPossibleStates()){
+   var vanilla=water.setValue(LiquidBlock.LEVEL,state.getValue(LiquidBlock.LEVEL));
+   inherit(ids,state,ids.containsKey(vanilla)?ids.getInt(vanilla):waterId);
+  }
   var shortGrass=Blocks.SHORT_GRASS.defaultBlockState();
   int grass=ids.containsKey(shortGrass)?ids.getInt(shortGrass):-1;
   for(var b:BuiltInRegistries.BLOCK)for(var s:b.getStateDefinition().getPossibleStates()){
@@ -32,5 +40,12 @@ public final class ShaderPlantMapping{
   ids.put(explicit,42);inherit(ids,explicit,12);inherit(ids,unmapped,-1);
   if(ids.getInt(explicit)!=42||ids.containsKey(unmapped))throw new IllegalStateException("shader mapping override or fabricated ID");
   inherit(ids,unmapped,12);if(ids.getInt(unmapped)!=12)throw new IllegalStateException("shader inheritance");
+  var water=Blocks.WATER.defaultBlockState();
+  ids.put(water,100);
+  var nativeWater=NaturalFluids.get(dev.minemods.worldlogic.api.WorldLogicApi.WaterKind.SEA).block.get().defaultBlockState();
+  var explicitNative=NaturalFluids.get(dev.minemods.worldlogic.api.WorldLogicApi.WaterKind.RIVER).block.get().defaultBlockState();
+  ids.put(explicitNative,101);apply(ids);
+  if(ids.getInt(nativeWater)!=100||ids.getInt(explicitNative)!=101)throw new IllegalStateException("water shader inheritance");
+  if(ids.containsKey(Blocks.LAVA.defaultBlockState()))throw new IllegalStateException("lava shader alias");
  }
 }

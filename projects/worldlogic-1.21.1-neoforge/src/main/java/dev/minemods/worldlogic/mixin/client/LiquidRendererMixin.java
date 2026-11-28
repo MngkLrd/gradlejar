@@ -3,6 +3,8 @@ import dev.minemods.worldlogic.WaterRenderCompatibility;
 import net.minecraft.client.renderer.block.LiquidBlockRenderer;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,6 +16,13 @@ abstract class LiquidRendererMixin {
  @Inject(method="isNeighborSameFluid",at=@At("HEAD"),cancellable=true)
  private static void worldlogic$sharedFace(FluidState a,FluidState b,CallbackInfoReturnable<Boolean> cir){
   if(WaterRenderCompatibility.same(a.getType(),b.getType()))cir.setReturnValue(true);
+ }
+ // NeoForge's actual tesselate() path uses this overload rather than
+ // vanilla isNeighborSameFluid. Keep the existing special overlay rules for
+ // nonmatching fluids and never alter Fluid.isSame globally.
+ @Inject(method="isNeighborStateHidingOverlay",at=@At("HEAD"),cancellable=true,remap=false,require=1)
+ private static void worldlogic$neoForgeSharedFace(FluidState self,BlockState neighbor,Direction face,CallbackInfoReturnable<Boolean> cir){
+  if(WaterRenderCompatibility.hidesAdjacentFace(self,neighbor))cir.setReturnValue(true);
  }
  @Redirect(method="getHeight",at=@At(value="INVOKE",target="Lnet/minecraft/world/level/material/Fluid;isSame(Lnet/minecraft/world/level/material/Fluid;)Z"),require=0)
  private boolean worldlogic$continuousHeight(Fluid a,Fluid b){return WaterRenderCompatibility.same(a,b);}
