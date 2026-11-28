@@ -1,7 +1,7 @@
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group='dev.minemods.aquaculture'
-version='0.1.0'
-base.archivesName='aquaculture-neoforge-mc1.21.1'
+version='0.1.1'
+base.archivesName='worldlogic_aqua-neoforge-mc1.21.1'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 evaluationDependsOn(':worldlogic')
 dependencies { implementation project(':worldlogic') }

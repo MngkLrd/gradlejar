@@ -1200,6 +1200,61 @@
           "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
         }
       ]
+    },
+    {
+      "id": "fish-immersion",
+      "kind": "mechanic",
+      "subject": "fish-immersion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Native and vanilla water: cod, salmon and Aqua breathing, source/flow, dry control, ice and spawn"
+        }
+      ]
+    },
+    {
+      "id": "fish-breathing",
+      "kind": "mechanic",
+      "subject": "fish-breathing",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Native and vanilla water: cod, salmon and Aqua breathing, source/flow, dry control, ice and spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-water-spawn",
+      "kind": "mechanic",
+      "subject": "native-water-spawn",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Native and vanilla water: cod, salmon and Aqua breathing, source/flow, dry control, ice and spawn"
+        }
+      ]
+    },
+    {
+      "id": "under-ice-spawn-search",
+      "kind": "mechanic",
+      "subject": "under-ice-spawn-search",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Native and vanilla water: cod, salmon and Aqua breathing, source/flow, dry control, ice and spawn"
+        }
+      ]
+    },
+    {
+      "id": "groundwater-exclusion",
+      "kind": "mechanic",
+      "subject": "groundwater-exclusion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Native and vanilla water: cod, salmon and Aqua breathing, source/flow, dry control, ice and spawn"
+        }
+      ]
     }
   ],
   "steps": [
@@ -1220,6 +1275,12 @@
       "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls",
       "command": "aquaculture feeding_selftest",
       "expect": "AQUACULTURE_FEEDING_36_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Native and vanilla water: cod, salmon and Aqua breathing, source/flow, dry control, ice and spawn",
+      "command": "aquaculture water_selftest",
+      "expect": "AQUA_NATIVE_FISH_WATER_PASS",
       "assertion": true
     }
   ]

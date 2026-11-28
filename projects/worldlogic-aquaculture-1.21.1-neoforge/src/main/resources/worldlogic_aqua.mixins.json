@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.minemods.aquaculture.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "FishImmersionMixin",
+    "FishAirMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

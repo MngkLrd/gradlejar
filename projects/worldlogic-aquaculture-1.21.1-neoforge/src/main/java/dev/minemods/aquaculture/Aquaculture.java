@@ -70,7 +70,7 @@ public final class Aquaculture {
   return tag;
  }
  public static boolean water(ServerLevel level,BlockPos pos){
-  return level.hasChunkAt(pos)&&level.getFluidState(pos).is(FluidTags.WATER);
+  return !level.isOutsideBuildHeight(pos)&&level.hasChunkAt(pos)&&level.getFluidState(pos).is(FluidTags.WATER);
  }
  public static int depth(ServerLevel level,BlockPos pos){
   if(!water(level,pos))return 0;
@@ -101,12 +101,26 @@ public final class Aquaculture {
   }
   return null;
  }
+ public static BlockPos findWaterColumn(ServerLevel level,int x,int z,int nearY){
+  BlockPos probe=new BlockPos(x,nearY,z);
+  if(!level.hasChunkAt(probe))return null;
+  // First inspect the player's vertical band, then the actual water surface below vegetation/ice.
+  int top=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z)-1;
+  for(int start:new int[]{nearY,top}){
+   for(int offset=0;offset<=10;offset++){
+    BlockPos pos=new BlockPos(x,start-offset,z);
+    if(Math.abs(pos.getY()-nearY)>48||level.isOutsideBuildHeight(pos))continue;
+    if(water(level,pos)&&water(level,pos.below()))return pos;
+   }
+  }
+  return null;
+ }
  public static Fish spawn(ServerLevel level,BlockPos pos,Species s,Habitat h){
   if(s==null||h==null||!water(level,pos)||!s.suitable(h.kind,h.temp,h.salt,h.risk,h.depth))return null;
   var entity=TYPES.get(s.id()).get().create(level);
   if(!(entity instanceof Fish fish))return null;
   fish.moveTo(pos.getX()+.5,pos.getY()+.1,pos.getZ()+.5,level.random.nextFloat()*360,0);
-  if(!level.noCollision(fish))return null;
+  if(!level.noCollision(fish)||!FishWater.contact(fish))return null;
   traits(fish,s);
   return level.addFreshEntity(fish)?fish:null;
  }
@@ -124,21 +138,20 @@ public final class Aquaculture {
     int dx=level.random.nextInt(65)-32,dz=level.random.nextInt(65)-32;
     if(dx*dx+dz*dz<64)continue;
     int x=origin.getX()+dx,z=origin.getZ()+dz;
-    BlockPos probe=new BlockPos(x,origin.getY(),z);
-    if(!level.hasChunkAt(probe))continue;
-    int y=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE,x,z)-1;
-    BlockPos pos=new BlockPos(x,y,z);
-    if(!water(level,pos))continue;
-    int d=depth(level,pos);
-    if(d<2)continue;
-    pos=pos.below(level.random.nextInt(Math.min(d,8)));
-    if(Math.abs(pos.getY()-origin.getY())>48)continue;
-    Habitat h=habitat(level,pos);
-    Species s=choose(h,level.random);
-    if(s==null)continue;
-    long count=nearby.stream().filter(f->species(f)==s).count();
-    if(count>=Math.min(12,s.maxGroup()))continue;
-    if(spawn(level,pos,s,h)!=null)break;
+    BlockPos surface=findWaterColumn(level,x,z,origin.getY());
+    if(surface==null)continue;
+    // Search distinct depths; one unsuitable or obstructed cell must not discard the entire column.
+    for(int b=0;b<6;b++){
+     BlockPos pos=surface.below(b);
+     if(!water(level,pos)||Math.abs(pos.getY()-origin.getY())>48)break;
+     Habitat h=habitat(level,pos);
+     if(h==null)continue;
+     Species s=choose(h,level.random);
+     if(s==null)continue;
+     long count=nearby.stream().filter(f->species(f)==s).count();
+     if(count>=Math.min(12,s.maxGroup()))continue;
+     if(spawn(level,pos,s,h)!=null){a=8;break;}
+    }
    }
   }
  }
@@ -155,6 +168,11 @@ public final class Aquaculture {
  }
  private void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("aquaculture").requires(src->src.hasPermission(2))
+   .then(Commands.literal("water_selftest").executes(c->{
+    WaterChecks.run(c.getSource().getLevel());
+    c.getSource().sendSuccess(()->Component.literal("AQUA_NATIVE_FISH_WATER_PASS"),false);
+    return Command.SINGLE_SUCCESS;
+   }))
    .then(Commands.literal("feeding_selftest").executes(c->{
     FeedingChecks.run(c.getSource().getLevel());
     c.getSource().sendSuccess(()->Component.literal("AQUACULTURE_FEEDING_36_PASS"),false);
