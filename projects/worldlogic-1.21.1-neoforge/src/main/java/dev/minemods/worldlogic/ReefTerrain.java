@@ -50,9 +50,30 @@ public final class ReefTerrain{
    place(c,wx,wz,h,sea,n,species);
   }
  }
+ static String probe(ServerLevel l,BlockPos origin){
+  if(!(l.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator gen)||!NaturalWaterGeneration.enabled(gen))return "REEF_PROBE unavailable";
+  var state=l.getChunkSource().randomState();var model=GeoDensity.riverModel(state,l.registryAccess());
+  var bounds=net.minecraft.world.level.LevelHeightAccessor.create(gen.getMinY(),gen.getGenDepth());
+  var field=CoastalTerrain.field(model,l.getSeed());int measured=0,sea=gen.getSeaLevel();
+  // Search a bounded neighbourhood without loading or generating chunks.
+  for(int ring=0;ring<=10;ring++)for(int dz=-ring;dz<=ring;dz++)for(int dx=-ring;dx<=ring;dx++){
+   if(Math.max(Math.abs(dx),Math.abs(dz))!=ring)continue;
+   int x=origin.getX()+dx*48,z=origin.getZ()+dz*48;
+   double macro=model.raw(x,z);if(macro>sea-3||macro<sea-28)continue;
+   var p=field.apply(x,z);if(p.thermal()<.30)continue;
+   var predicted=CoastalTerrain.zone(p,sea-(int)Math.round(macro));
+   if(predicted!=CoastalTerrain.Zone.BARRIER&&predicted!=CoastalTerrain.Zone.FRINGE&&predicted!=CoastalTerrain.Zone.PATCH)continue;
+   if(measured++>=18)return "REEF_PROBE no_candidate measured="+measured;
+   int h=gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state)-1;
+   if(h>sea-4||h<sea-24||!warm(BiomeSurvey.at(gen,state,x,sea-1,z).getPath()))continue;
+   var zone=CoastalTerrain.zone(p,sea-h);
+   if(zone==CoastalTerrain.Zone.BARRIER||zone==CoastalTerrain.Zone.FRINGE||zone==CoastalTerrain.Zone.PATCH)return "REEF_PROBE x="+x+" z="+z+" zone="+zone;
+  }
+  return "REEF_PROBE no_candidate measured="+measured;
+ }
  static String audit(ServerLevel l,BlockPos origin){
   var c=l.getChunkSource().getChunkNow(origin.getX()>>4,origin.getZ()>>4);if(c==null)return "REEF_AUDIT unavailable";
-  int colonies=0,live=0,wrong=0,sea=l.getSeaLevel();Set<Block> species=new HashSet<>();
+  int colonies=0,live=0,wrong=0,adjacentSea=0,sea=l.getSeaLevel();Set<Block> species=new HashSet<>();
   var p=new BlockPos.MutableBlockPos();
   for(int x=0;x<16;x++)for(int z=0;z<16;z++){
    int wx=c.getPos().getMinBlockX()+x,wz=c.getPos().getMinBlockZ()+z;
@@ -60,11 +81,12 @@ public final class ReefTerrain{
    for(int y=sea-25;y<=sea-3;y++){
     var s=c.getBlockState(p.set(wx,y,wz));if(!coral(s))continue;
     found=true;live++;species.add(s.getBlock());
+    if(NaturalFluids.kind(c.getFluidState(new BlockPos(wx,y+1,wz)).getType())==WaterKind.SEA)adjacentSea++;
     if(!warm(l.getBiome(p).unwrapKey().orElseThrow().location().getPath())||!l.getFluidState(new BlockPos(wx,sea-1,wz)).is(FluidTags.WATER))wrong++;
    }
    if(found)colonies++;
   }
-  return "REEF_AUDIT colonies="+colonies+" live="+live+" species="+species.size()+" wrong="+wrong;
+  return "REEF_AUDIT colonies="+colonies+" live="+live+" species="+species.size()+" wrong="+wrong+" nativeAbove="+adjacentSea;
  }
  static void verify(ServerLevel l){
   CoastalTerrain.verify();

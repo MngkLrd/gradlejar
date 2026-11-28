@@ -13,6 +13,11 @@ public final class LandscapeBlend{
  private LandscapeBlend(){}
  static final int GRID=64,MAX_RAISE=14,MAX_LOWER=4;
  record Profile(double lowland,double foothill,double ridge,double valley,double plateau,double delta){}
+ private static final Map<GeoModel,com.google.common.cache.Cache<Long,Profile>> FIELDS=new WeakHashMap<>();
+ private static synchronized com.google.common.cache.Cache<Long,Profile> cache(GeoModel m){return FIELDS.computeIfAbsent(m,k->com.google.common.cache.CacheBuilder.newBuilder().maximumSize(8192).build());}
+ static boolean hasDryLand(ChunkAccess c,int min){
+  for(int x=0;x<16;x++)for(int z=0;z<16;z++)if(c.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x,z)>=min)return true;return false;
+ }
  private static double smooth(double a,double b,double x){return GeoModel.smooth(a,b,x);}
  private static double clamp(double x,double a,double b){return GeoModel.clamp(x,a,b);}
  static Profile profile(DoubleBinaryOperator elevation,int x,int z){
@@ -65,9 +70,13 @@ public final class LandscapeBlend{
  public static void prepare(NoiseBasedChunkGenerator gen,RandomState random,RegistryAccess access,ChunkAccess chunk){
   if(!NaturalWaterGeneration.enabled(gen))return;
   int x0=chunk.getPos().getMinBlockX(),z0=chunk.getPos().getMinBlockZ(),sea=gen.getSeaLevel();
-  var model=GeoDensity.riverModel(random,access);
+  if(!hasDryLand(chunk,sea+5))return;
+  var model=GeoDensity.riverModel(random,access);var shared=cache(model);
   Map<Long,Profile> profiles=new HashMap<>();
-  java.util.function.BiFunction<Integer,Integer,Profile> nodes=(x,z)->profiles.computeIfAbsent(((long)x<<32)^(z&0xffffffffL),k->profile(model::raw,x,z));
+  java.util.function.BiFunction<Integer,Integer,Profile> nodes=(x,z)->profiles.computeIfAbsent(((long)x<<32)^(z&0xffffffffL),k->{
+   try{return shared.get(k,()->profile(model::raw,x,z));}
+   catch(java.util.concurrent.ExecutionException e){throw new IllegalStateException("relief anchor",e.getCause());}
+  });
   var erosion=SurfaceErosion.field(model);
   boolean active=false;
   for(int x:new int[]{x0,x0+7,x0+15})for(int z:new int[]{z0,z0+7,z0+15})if(Math.abs(sample(x,z,nodes).delta)+Math.abs(erosion.apply(x,z).delta())>=.45)active=true;

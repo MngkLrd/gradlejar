@@ -171,3 +171,5 @@ RC47: local erosion and sediment are internal worldgen passes, not simulated ove
 RC48 coastal relief and reef habitats are internal worldgen passes; existing ocean biome IDs, WaterKind and all addon API signatures preserved. No new coral item/registry IDs. Reef diagnostics report actual loaded coral blocks, not a modeled assertion of their presence.
 
 RC49 changes only surface biome classification, not actual environmental climate API. Final generated biome palettes may differ from modeled locate results; use actual world biome for loaded positions. All 58 registered active classes retained, reachability gates unchanged.
+
+RC50 internal cache limits and early guards do not change public interfaces or intended model values. Actual reef, basin and biome audit commands require operator access and read generated loaded chunks only; probes search modeled candidates without chunk loads.

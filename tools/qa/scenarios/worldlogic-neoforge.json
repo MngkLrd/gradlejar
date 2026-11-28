@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC49 coherent regional biomes",
+  "name": "World Logic NeoForge RC50 cumulative landscape and marine regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",

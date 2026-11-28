@@ -37,7 +37,9 @@ public final class RiverTerrain {
   if(!NaturalWaterGeneration.enabled(gen))return;
   int x0=c.getPos().getMinBlockX(),z0=c.getPos().getMinBlockZ(),sea=gen.getSeaLevel();
   var net=regionalNetwork(gen,state,access,x0,z0);
-  if(net.candidates(x0+7.5,z0+7.5).stream().noneMatch(e->e.near(x0+7.5,z0+7.5,12))&&net.edges().stream().noneMatch(e->e.near(x0+7.5,z0+7.5,12)))return;
+  // A 16-block-aligned chunk lies entirely in one 64-block partition;
+  // the index already expands each reach by its bank and curve bounds.
+  if(net.candidates(x0+7.5,z0+7.5).stream().noneMatch(e->e.near(x0+7.5,z0+7.5,12)))return;
   var p=new BlockPos.MutableBlockPos();var water=NaturalFluids.get(WaterKind.RIVER).block.get().defaultBlockState();
   var incoming=new HashSet<RegionalDrainage.Node>();var outgoing=new HashSet<RegionalDrainage.Node>();
   for(var e:net.edges()){incoming.add(e.to());outgoing.add(e.from());}

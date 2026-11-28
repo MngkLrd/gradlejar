@@ -40,9 +40,14 @@ public final class SurfaceErosion{
   double u=GeoModel.smooth(0,1,Math.floorMod(x,GRID)/(double)GRID),v=GeoModel.smooth(0,1,Math.floorMod(z,GRID)/(double)GRID);
   return mix(mix(nodes.apply(gx,gz),nodes.apply(gx+GRID,gz),u),mix(nodes.apply(gx,gz+GRID),nodes.apply(gx+GRID,gz+GRID),u),v);
  }
+ private static final Map<GeoModel,com.google.common.cache.Cache<Long,Sample>> FIELDS=new WeakHashMap<>();
+ private static synchronized com.google.common.cache.Cache<Long,Sample> cache(GeoModel m){return FIELDS.computeIfAbsent(m,k->com.google.common.cache.CacheBuilder.newBuilder().maximumSize(16384).build());}
  static BiFunction<Integer,Integer,Sample> field(GeoModel model){
-  Map<Long,Sample> anchors=new HashMap<>();
-  BiFunction<Integer,Integer,Sample> node=(x,z)->anchors.computeIfAbsent(((long)x<<32)^(z&0xffffffffL),k->profile(model::raw,(a,b)->model.regional((int)a,(int)b).moistureIndex(),x,z));
+  var shared=cache(model);Map<Long,Sample> anchors=new HashMap<>();
+  BiFunction<Integer,Integer,Sample> node=(x,z)->anchors.computeIfAbsent(((long)x<<32)^(z&0xffffffffL),k->{
+   try{return shared.get(k,()->profile(model::raw,(a,b)->model.regional((int)a,(int)b).moistureIndex(),x,z));}
+   catch(java.util.concurrent.ExecutionException e){throw new IllegalStateException("erosion anchor",e.getCause());}
+  });
   return (x,z)->sample(x,z,node);
  }
  static Material material(Sample s,BlockState top){
@@ -64,6 +69,7 @@ public final class SurfaceErosion{
  public static void decorate(NoiseBasedChunkGenerator gen,RandomState state,RegistryAccess access,ChunkAccess c){
   if(!NaturalWaterGeneration.enabled(gen))return;
   int x0=c.getPos().getMinBlockX(),z0=c.getPos().getMinBlockZ(),sea=gen.getSeaLevel();
+  if(!LandscapeBlend.hasDryLand(c,sea+5))return;
   var field=field(GeoDensity.riverModel(state,access));var net=RiverTerrain.regionalNetwork(gen,state,access,x0,z0);
   var lake=BasinTerrain.at(gen,state,access,x0,z0).orElse(null);
   for(int x=0;x<16;x++)for(int z=0;z<16;z++){

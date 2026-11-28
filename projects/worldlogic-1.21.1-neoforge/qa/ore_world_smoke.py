@@ -211,6 +211,40 @@ def main():
             require(totals["habitat"]>0,"No viable submerged fish habitat")
             require(totals["plants"]>0 and totals["nativePlants"]==totals["plants"] and totals["vanillaPlantWater"]==0,"Marine plants missing or contain non-native water")
             conn.cmd("forceload remove "+force)
+            # Warm coastal reef audit: actual living coral blocks and surrounding
+            # native seawater, not the predicted habitat alone.
+            report["reef_candidates"]=[]
+            report["reef_windows"]=[]
+            reef_anchors=[(x,z) for label,x,z in sites if label in ("tropical","subtropical","warm_deep","tropical_coast")]
+            reef_anchors.extend([(-28672,-39936),(-26624,-35840),(-4096,-39936),(-5120,-40960),(10240,-40960),(20480,-38912)])
+            for x,z in reef_anchors:
+                raw=conn.cmd(f"execute positioned {x} 63 {z} run worldlogic reef_probe")
+                m=re.search(r"REEF_PROBE x=(-?\d+) z=(-?\d+) zone=(\w+)",raw)
+                if not m:continue
+                xx,zz=map(int,m.groups()[:2]);zone=m.group(3)
+                if any((xx-v["x"])**2+(zz-v["z"])**2<128**2 for v in report["reef_candidates"]):continue
+                report["reef_candidates"].append(dict(x=xx,z=zz,zone=zone))
+                ax,az=xx//16*16,zz//16*16
+                force=f"{ax-16} {az-16} {ax+31} {az+31}"
+                conn.cmd("forceload add "+force)
+                pending={(ax+dx*16,az+dz*16) for dx in (-1,0,1) for dz in (-1,0,1)}
+                rows=[];deadline=time.monotonic()+240
+                while pending and time.monotonic()<deadline:
+                    for qx,qz in sorted(pending):
+                        raw=conn.cmd(f"execute positioned {qx} 63 {qz} run worldlogic reef_audit")
+                        if "unavailable" in raw:continue
+                        m=re.search(r"REEF_AUDIT colonies=(\d+) live=(\d+) species=(\d+) wrong=(\d+) nativeAbove=(\d+)",raw)
+                        require(m is not None,"Reef audit failed: "+raw)
+                        row=dict(zip(("colonies","live","species","wrong","nativeAbove"),map(int,m.groups())),x=qx,z=qz)
+                        rows.append(row);pending.remove((qx,qz))
+                    if pending:time.sleep(2)
+                require(not pending,"Reef survey not fully loaded")
+                conn.cmd("forceload remove "+force)
+                sums={k:sum(v[k] for v in rows) for k in ("colonies","live","wrong","nativeAbove")}
+                report["reef_windows"].append(dict(x=xx,z=zz,zone=zone,chunks=rows,**sums,species=max(v["species"] for v in rows)))
+                if len(report["reef_windows"])>=3:break
+            require(any(w["colonies"]>=12 and w["live"]>=12 and w["species"]>=2 and w["nativeAbove"]>=w["colonies"]*.8 for w in report["reef_windows"]),"No confirmed living warm-water reef in generated chunks")
+            require(all(w["wrong"]==0 for w in report["reef_windows"]),"Coral in unsuitable biome or exposed column")
             conn.cmd("save-all flush")
             require(not FATAL.search(log.read_text(errors="replace")),"Fatal generation error")
             try:conn.cmd("stop")

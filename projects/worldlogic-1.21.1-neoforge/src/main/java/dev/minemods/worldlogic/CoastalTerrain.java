@@ -37,9 +37,15 @@ public final class CoastalTerrain{
   return GeoModel.lerp(GeoModel.lerp(hash(seed,gx,gz),hash(seed,gx+1,gz),u),GeoModel.lerp(hash(seed,gx,gz+1),hash(seed,gx+1,gz+1),u),v);
  }
  private static Profile mix(Profile a,Profile b,double t){return new Profile(GeoModel.lerp(a.shore,b.shore,t),GeoModel.lerp(a.thermal,b.thermal,t),GeoModel.lerp(a.variation,b.variation,t));}
+ private record Anchor(long seed,int x,int z){}
+ private static final Map<GeoModel,com.google.common.cache.Cache<Anchor,Profile>> FIELDS=new WeakHashMap<>();
+ private static synchronized com.google.common.cache.Cache<Anchor,Profile> cache(GeoModel m){return FIELDS.computeIfAbsent(m,k->com.google.common.cache.CacheBuilder.newBuilder().maximumSize(16384).build());}
  static java.util.function.BiFunction<Integer,Integer,Profile> field(GeoModel model,long seed){
-  var anchors=new HashMap<Long,Profile>();
-  java.util.function.BiFunction<Integer,Integer,Profile> node=(x,z)->anchors.computeIfAbsent(((long)x<<32)^(z&0xffffffffL),k->profile(model::raw,(a,b)->model.regional((int)a,(int)b).thermalIndex(),x,z,seed));
+  var shared=cache(model);var anchors=new HashMap<Long,Profile>();
+  java.util.function.BiFunction<Integer,Integer,Profile> node=(x,z)->anchors.computeIfAbsent(((long)x<<32)^(z&0xffffffffL),k->{
+   try{return shared.get(new Anchor(seed,x,z),()->profile(model::raw,(a,b)->model.regional((int)a,(int)b).thermalIndex(),x,z,seed));}
+   catch(java.util.concurrent.ExecutionException e){throw new IllegalStateException("coast anchor",e.getCause());}
+  });
   return (x,z)->{
    int gx=Math.floorDiv(x,GRID)*GRID,gz=Math.floorDiv(z,GRID)*GRID;
    double u=GeoModel.smooth(0,1,Math.floorMod(x,GRID)/(double)GRID),v=GeoModel.smooth(0,1,Math.floorMod(z,GRID)/(double)GRID);
