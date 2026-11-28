@@ -18,6 +18,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
 
 public final class TreeResourceBlock extends Block {
+    public static final int API_VERSION=1,API_REVISION=0;
     public enum Resource {
         BARK("willow_bark_node","willow_log","willow_bark",48),
         RESIN("pine_resin_node","pine_log","pine_resin",32);

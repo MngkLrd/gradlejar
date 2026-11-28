@@ -198,7 +198,7 @@
       ]
     },
     {
-      "id": "worldlogicterrain:botanical_resources",
+      "id": "worldlogic:botanical_resources",
       "version": 1,
       "revision": 0,
       "domains": [
@@ -389,7 +389,7 @@
         "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestEcology.java"
       ],
       "provides": [
-        "worldlogicterrain:botanical_resources"
+        "worldlogic:botanical_resources"
       ],
       "consumes": [
         "worldlogic:environment"
@@ -466,7 +466,7 @@
     {
       "id": "terrarian.medical_botany",
       "capabilities": [
-        "worldlogicterrain:botanical_resources",
+        "worldlogic:botanical_resources",
         "worldlogic:environment"
       ],
       "ref": "tools/qa/scenarios/worldlogicterrain.json",

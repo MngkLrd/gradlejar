@@ -20,6 +20,9 @@ public final class BotanyChecks {
         for(var x:List.of(p,p.below(),p.north(),p.above(),p.above().north()))saved.put(x,l.getBlockState(x));
         try{
             for(String s:List.of("wild_yarrow","wild_plantain","wild_wild_mint","wild_calendula","marshmallow_root","flax_stalk","flax_fiber","willow_bark","pine_resin"))stack(s);
+            var mint=net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                ResourceLocation.fromNamespaceAndPath("traumacraft","herbs/water_mint"));
+            require(stack("wild_wild_mint").is(mint),"Trauma water mint tag");
             l.setBlock(p.below(),Blocks.DIRT.defaultBlockState(),Block.UPDATE_ALL);
             for(String[] pair:new String[][]{{"wild_marshmallow","marshmallow_root"},{"wild_flax","flax_stalk"}}){
                 var b=BuiltInRegistries.BLOCK.get(id(pair[0]));var item=stack(pair[1]).getItem();

@@ -28,3 +28,5 @@ Metabolism API v1 revision >=4 owns ordinary FOOD completion and immediate meal 
 
 ## Medical botany v1 rev0
 Existing items wild_yarrow, wild_plantain and wild_wild_mint; new wild_calendula, marshmallow_root, flax_stalk, flax_fiber, willow_bark and pine_resin. Mint retains its existing ID; optional Trauma water_mint tag includes it. Plants use PlantSpecies profiles and mature-only drops; flax stalk has a native shapeless fiber recipe. TreeResourceBlock.Resource lists actual host and output; ripe nodes are attached to a generated raw willow or pine log; harvest returns an ItemStack once, resets the ripe property and leaves the host intact. No treatment effects in Terrarian. Core 1.5.1 Build Hub report is eligible; artifact pinned by SHA-256, no assumption of published release URL.
+
+`TreeResourceBlock.API_VERSION=1, API_REVISION=0`. The capability manifest identifies `worldlogic:botanical_resources` within the WorldLogic ecosystem. Core JEI indexes actual native recipes (including flax fiber) without a duplicate processing descriptor. Tree gathering is an interaction with a renewable site, not a crafting recipe.

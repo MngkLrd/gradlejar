@@ -103,3 +103,5 @@ The forest fixture exercises all five generated groups on an actual tree site, n
 
 ### 1.8.0 — inter-addon integration and medical botany
 Pin exact eligible Core 1.5.1 artifact, add three climate-aware seasonal species and mature harvest parts, native flax fiber recipe, renewable willow bark and pine resin tree sites, optional Trauma mint tag, shader classifications and bilingual guide entries. Existing IDs and physical/Metabolism behavior preserved. Standard dependency publication, joint player and natural-world QA still require verification.
+
+Shader classification now owned by Terrarian for 54 standing plants and two tall species; roots, litter, fungi, submerged species, attached plants, moss and woody thorn scrub are intentionally excluded from grass-wave assignment. Client rendering is not certified by the tag declaration.
