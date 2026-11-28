@@ -50,7 +50,7 @@ public final class TabRail {
   String namespace=NativePeerViews.namespace(screen);
   if(namespace!=null)return WorldLogicTabs.primaryView(namespace).map(WorldLogicTabs.Tab::id).orElse(ResourceLocation.fromNamespaceAndPath(namespace,"dashboard"));
   if(screen instanceof InventoryScreen)return INVENTORY;
-  if(screen instanceof GuideScreen||screen instanceof GuideIndexScreen||screen instanceof GuideRecipesScreen)return GUIDE;
+  if(screen instanceof GuideScreen||screen instanceof GuideIndexScreen||screen instanceof GuideRecipesScreen||screen instanceof GuideCatalogScreen)return GUIDE;
   if(screen instanceof AnalyticsScreen)return ANALYTICS;
   return OWNED.get(screen);
  }
@@ -146,7 +146,7 @@ public final class TabRail {
    old.forEach(e::removeListener);
   }
   // Built-in screens install during init too, including rebuildWidgets.
-  if(!(s instanceof GuideScreen)&&!(s instanceof AnalyticsScreen)&&!(s instanceof GuideIndexScreen)&&!(s instanceof GuideRecipesScreen)&&!(s instanceof DashboardScreen)&&current(s)!=null)install(s,e::addListener);
+  if(!(s instanceof GuideScreen)&&!(s instanceof AnalyticsScreen)&&!(s instanceof GuideIndexScreen)&&!(s instanceof GuideRecipesScreen)&&!(s instanceof GuideCatalogScreen)&&!(s instanceof DashboardScreen)&&current(s)!=null)install(s,e::addListener);
  }
  @SubscribeEvent public static void render(ScreenEvent.Render.Pre e){
   var rail=RAILS.get(e.getScreen());if(rail!=null)layout(e.getScreen(),rail);

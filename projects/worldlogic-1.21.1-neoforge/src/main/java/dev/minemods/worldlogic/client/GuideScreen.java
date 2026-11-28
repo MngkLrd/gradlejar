@@ -14,7 +14,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModList;
 /** Two-page field guide: table of contents, chapter contents and complete article spreads. */
-public final class GuideScreen extends ClearScreen{
+public final class GuideScreen extends ClearScreen implements GuideJeiLookup.Hovered{
  private final Screen parent;private List<GuideBook.Chapter> chapters=List.of();
  private enum View{CONTENTS,CHAPTER,ARTICLE}
  private View view=View.CONTENTS;private int chapter,page,spread,listOffset;private boolean russian;
@@ -52,6 +52,9 @@ public final class GuideScreen extends ClearScreen{
  private GuideBook.Chapter current(){return chapters.get(chapter);}
  private GuideBook.Page article(){return current().pages().get(page);}
  void select(int c,int p){chapter=c;page=p;view=View.ARTICLE;spread=0;listOffset=0;Minecraft.getInstance().setScreen(this);}
+ @Override public ItemStack hovered(double x,double y){if(view==View.ARTICLE&&spread==0)for(var p:previews)if(x>=p.x&&x<p.x+16&&y>=p.y&&y<p.y+16)return p.stack;return ItemStack.EMPTY;}
+ @Override public boolean keyPressed(int key,int scan,int mods){return GuideJeiLookup.key(this,key,scan)||super.keyPressed(key,scan,mods);}
+ @Override public boolean mouseClicked(double x,double y,int button){var st=hovered(x,y);if(!st.isEmpty()&&(button==0||button==1)){if(!GuideJeiLookup.show(st,button==1))Minecraft.getInstance().setScreen(new GuideRecipesScreen(this,russian,st,button==1));return true;}return super.mouseClicked(x,y,button);}
  private void contents(){view=View.CONTENTS;listOffset=0;rebuildWidgets();}
  private void chapter(int value){chapter=value;page=0;view=View.CHAPTER;listOffset=0;rebuildWidgets();}
  private void openArticle(int value){page=value;spread=0;view=View.ARTICLE;rebuildWidgets();}
@@ -69,8 +72,9 @@ public final class GuideScreen extends ClearScreen{
   if(!b.readable()){button(label("Назад","Back"),4,Math.max(4,height-22),Math.max(12,width-40),this::onClose);return;}
   int y=b.bottom()-28, half=Math.max(18,(b.textW()-4)/2);
   button(label("Оглавление","Contents"),b.leftText(),b.textTop()+3,b.textW(),this::contents);
-  button(label("Указатель","Index"),b.rightText(),b.textTop()+3,half,()->Minecraft.getInstance().setScreen(new GuideIndexScreen(this,chapters,russian)));
+  button(label("Каталог","Catalog"),b.rightText(),b.textTop()+3,half,()->Minecraft.getInstance().setScreen(new GuideCatalogScreen(this,russian)));
   button(label("Рецепты","Recipes"),b.rightText()+half+4,b.textTop()+3,half,()->Minecraft.getInstance().setScreen(new GuideRecipesScreen(this,russian)));
+  if(view==View.CONTENTS){int w=Math.max(12,(b.textW()-32)/2);button(label("Поиск","Search"),b.rightText(),y,w,()->Minecraft.getInstance().setScreen(new GuideIndexScreen(this,chapters,russian)));if(ModList.get().isLoaded("patchouli"))button("Patchouli",b.rightText()+w+4,y,w,()->GuideOpener.openPatchouli(this));}
   if(chapters.isEmpty()){button(label("Назад","Back"),b.leftText(),y,b.textW(),this::onClose);return;}
   if(view==View.ARTICLE){
    page=Math.min(page,current().pages().size()-1);

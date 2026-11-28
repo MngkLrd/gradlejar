@@ -21,6 +21,12 @@ import net.minecraft.world.item.Items;
 @JeiPlugin
 public final class WorldLogicJeiPlugin implements IModPlugin {
  private static final RecipeType<ProcessingRecipe> TYPE=RecipeType.create("worldlogic","field_processing",ProcessingRecipe.class);
+ @Override public void onRuntimeAvailable(mezz.jei.api.runtime.IJeiRuntime runtime){
+  dev.minemods.worldlogic.client.GuideJeiLookup.install((stack,uses)->{
+   runtime.getRecipesGui().show(runtime.getJeiHelpers().getFocusFactory().createFocus(uses?RecipeIngredientRole.INPUT:RecipeIngredientRole.OUTPUT,VanillaTypes.ITEM_STACK,stack));return true;
+  });
+ }
+ @Override public void onRuntimeUnavailable(){dev.minemods.worldlogic.client.GuideJeiLookup.install(null);}
  @Override public ResourceLocation getPluginUid(){return ResourceLocation.fromNamespaceAndPath("worldlogic","processing");}
  @Override public void registerCategories(IRecipeCategoryRegistration registration){registration.addRecipeCategories(new Category(registration.getJeiHelpers().getGuiHelper()));}
  @Override public void registerRecipes(IRecipeRegistration registration){registration.addRecipes(TYPE,WorldLogicRecipes.processing());}

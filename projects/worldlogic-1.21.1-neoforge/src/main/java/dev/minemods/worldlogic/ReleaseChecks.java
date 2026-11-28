@@ -64,6 +64,7 @@ public final class ReleaseChecks {
   HostileSpawnPolicy.verify(l);
   ExertionModifiers.verify(net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(l));
   CoreCreativeTab.verify(l);
+  GuideCatalog.verify(l);
   check(Material.block(Blocks.GLASS.defaultBlockState(),"glass"),"glass tag");
   check(Material.block(Blocks.IRON_BLOCK.defaultBlockState(),"ricochet_metal"),"metal tag");
   check(Material.item(new ItemStack(Items.GLASS_BOTTLE),"fragile_cargo"),"fragile cargo tag");

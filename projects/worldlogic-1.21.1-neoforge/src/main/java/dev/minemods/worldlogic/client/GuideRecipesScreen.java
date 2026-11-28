@@ -10,10 +10,11 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 final class GuideRecipesScreen extends ClearScreen{
  private static final Set<String> NS=Set.of("worldlogic","hydration","traumacraft","worldlogic_thermal","worldlogicterrain","wl_treechopper","worldlogic_metabolism","metabolism","worldlogic_trauma","worldlogic_aqua","worldlogic_aquaculture");
- private final Screen parent;private final boolean ru;private int selected;private EditBox search;
+ private final Screen parent;private final boolean ru;private final ItemStack focus;private final boolean uses;private int selected;private EditBox search;
  private record Entry(RecipeHolder<?> holder,ItemStack output){}
  private List<Entry> recipes=List.of();
- GuideRecipesScreen(Screen parent,boolean ru){super(Component.literal(ru?"Рецепты":"Recipes"));this.parent=parent;this.ru=ru;}
+ GuideRecipesScreen(Screen parent,boolean ru){this(parent,ru,ItemStack.EMPTY,false);}
+ GuideRecipesScreen(Screen parent,boolean ru,ItemStack focus,boolean uses){super(Component.literal(ru?"Рецепты":"Recipes"));this.parent=parent;this.ru=ru;this.focus=focus.copy();this.uses=uses;}
  private List<Entry> matches(){String q=search==null?"":search.getValue().toLowerCase(Locale.ROOT);return recipes.stream().filter(e->(e.output().getHoverName().getString()+" "+e.holder().id()).toLowerCase(Locale.ROOT).contains(q)).toList();}
  private int usable(){return dev.minemods.worldlogic.api.client.WorldLogicTabs.contentWidth(width);}
  @Override protected void init(){
@@ -21,6 +22,7 @@ final class GuideRecipesScreen extends ClearScreen{
   if(mc.level!=null)for(var h:mc.level.getRecipeManager().getRecipes()){
    var r=h.value();if(r.getIngredients().isEmpty()||r.getIngredients().size()>9)continue;
    var out=r.getResultItem(mc.level.registryAccess());if(out.isEmpty()||!(NS.contains(h.id().getNamespace())||NS.contains(BuiltInRegistries.ITEM.getKey(out.getItem()).getNamespace())))continue;
+   if(!focus.isEmpty()&&(uses?r.getIngredients().stream().noneMatch(i->i.test(focus)):!out.is(focus.getItem())))continue;
    entries.add(new Entry(h,out.copy()));
   }
   entries.sort(Comparator.comparing(e->e.holder().id().toString()));recipes=List.copyOf(entries);
