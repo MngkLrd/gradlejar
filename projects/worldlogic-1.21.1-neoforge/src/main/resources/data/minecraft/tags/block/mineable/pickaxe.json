@@ -60,6 +60,26 @@
     "worldlogic:volcanic_tuff_bricks",
     "worldlogic:volcanic_tuff_bricks_slab",
     "worldlogic:volcanic_tuff_bricks_stairs",
-    "worldlogic:volcanic_tuff_bricks_wall"
+    "worldlogic:volcanic_tuff_bricks_wall",
+    "worldlogic:hematite_ore",
+    "worldlogic:deepslate_hematite_ore",
+    "worldlogic:magnetite_ore",
+    "worldlogic:deepslate_magnetite_ore",
+    "worldlogic:cassiterite_ore",
+    "worldlogic:deepslate_cassiterite_ore",
+    "worldlogic:galena_ore",
+    "worldlogic:deepslate_galena_ore",
+    "worldlogic:sphalerite_ore",
+    "worldlogic:deepslate_sphalerite_ore",
+    "worldlogic:pyrite_ore",
+    "worldlogic:deepslate_pyrite_ore",
+    "worldlogic:malachite_ore",
+    "worldlogic:deepslate_malachite_ore",
+    "worldlogic:bauxite_ore",
+    "worldlogic:deepslate_bauxite_ore",
+    "worldlogic:fluorite_ore",
+    "worldlogic:deepslate_fluorite_ore",
+    "worldlogic:cinnabar_ore",
+    "worldlogic:deepslate_cinnabar_ore"
   ]
 }
