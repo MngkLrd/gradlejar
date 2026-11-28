@@ -4,6 +4,14 @@ version='1.2.2'
 base.archivesName='worldlogic-neoforge-mc1.21.1'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 neoForge { version=project.neo_version; runs { client { client() }; server { server(); programArgument '--nogui' } }; mods { worldlogic { sourceSet(sourceSets.main) } } }
+repositories {
+ mavenCentral()
+ maven { url='https://maven.blamejared.com/'; content { includeGroup 'mezz.jei'; includeGroup 'info.journeymap' } }
+}
+dependencies {
+ compileOnly 'info.journeymap:journeymap-api-neoforge:2.0.0-1.21.1'
+ compileOnly 'mezz.jei:jei-1.21.1-neoforge-api:19.21.2.313'
+}
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=21 }
 
 // Patchouli content is generated from the same authoritative bilingual guide

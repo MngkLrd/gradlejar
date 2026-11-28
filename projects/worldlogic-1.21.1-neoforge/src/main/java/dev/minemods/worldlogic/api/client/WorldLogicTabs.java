@@ -17,6 +17,10 @@ public final class WorldLogicTabs {
   Objects.requireNonNull(id);Objects.requireNonNull(title);Objects.requireNonNull(icon);Objects.requireNonNull(factory);
   if(TABS.putIfAbsent(id,new Tab(id,order,title,icon,factory))!=null)throw new IllegalArgumentException("Duplicate World Logic tab: "+id);
  }
+ private static final Set<String> SELF_BACKGROUND=new HashSet<>(Set.of("dev.minemods.metabolism.client.MetabolismScreen"));
+ /** Only screens which draw a complete background themselves may opt out of vanilla post-content blur. */
+ public static void registerSelfBackground(Class<? extends Screen> screen){SELF_BACKGROUND.add(Objects.requireNonNull(screen).getName());}
+ public static boolean drawsOwnBackground(Screen screen){return SELF_BACKGROUND.contains(screen.getClass().getName());}
  public static int contentWidth(int width){return TabLayout.contentWidth(width);}
  public static List<Tab> available(){
   return TABS.values().stream().filter(t->ModList.get().isLoaded(t.id().getNamespace())).sorted(Comparator.comparingInt(Tab::order).thenComparing(t->t.id().toString())).toList();

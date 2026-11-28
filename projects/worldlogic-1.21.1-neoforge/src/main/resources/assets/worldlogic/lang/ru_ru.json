@@ -294,5 +294,7 @@
   "block.worldlogic.volcanic_tuff_bricks": "Кирпичи: вулканический туф",
   "block.worldlogic.volcanic_tuff_bricks_slab": "Плита: кирпичи: вулканический туф",
   "block.worldlogic.volcanic_tuff_bricks_stairs": "Ступени: кирпичи: вулканический туф",
-  "block.worldlogic.volcanic_tuff_bricks_wall": "Ограда: кирпичи: вулканический туф"
+  "block.worldlogic.volcanic_tuff_bricks_wall": "Ограда: кирпичи: вулканический туф",
+  "worldlogic.journeymap.season": "Время года",
+  "worldlogic.journeymap.season.tooltip": "Местное время года WorldLogic под миникартой"
 }

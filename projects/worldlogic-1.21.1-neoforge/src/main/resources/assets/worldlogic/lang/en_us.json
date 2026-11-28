@@ -294,5 +294,7 @@
   "block.worldlogic.volcanic_tuff_bricks": "Volcanic Tuff Bricks",
   "block.worldlogic.volcanic_tuff_bricks_slab": "Volcanic Tuff Bricks Slab",
   "block.worldlogic.volcanic_tuff_bricks_stairs": "Volcanic Tuff Bricks Stairs",
-  "block.worldlogic.volcanic_tuff_bricks_wall": "Volcanic Tuff Bricks Wall"
+  "block.worldlogic.volcanic_tuff_bricks_wall": "Volcanic Tuff Bricks Wall",
+  "worldlogic.journeymap.season": "Season",
+  "worldlogic.journeymap.season.tooltip": "Local WorldLogic season below the minimap"
 }

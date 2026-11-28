@@ -24,6 +24,14 @@ public final class PhysicalMaterialChecks {
  private static boolean material(ObjectProfile p,String name){return p.components().stream().anyMatch(c->c.materialId().equals(id(name)));}
  public static void verify(){
   PhysicalAddonChecks.verify();
+  for(var a:NaturalFluids.families()){
+   require(WaterRenderCompatibility.same(a.source.get(),net.minecraft.world.level.material.Fluids.WATER),"native/vanilla render equivalence");
+   for(var b:NaturalFluids.families()){
+    require(WaterRenderCompatibility.same(a.source.get(),b.flowing.get()),"continuous water render family");
+    if(a!=b)require(!a.source.get().isSame(b.source.get()),"distinct fluid identity preserved");
+   }
+   require(!WaterRenderCompatibility.same(a.source.get(),net.minecraft.world.level.material.Fluids.LAVA),"lava not merged");
+  }
   require(PhysicalMaterials.materials().size()>=65,"builtin registry");
   require(of(Blocks.IRON_BLOCK).massKg()>of(Blocks.OAK_LOG).massKg(),"iron vs timber density");
   require(of(Blocks.OAK_LOG).massKg()>of(Blocks.SPRUCE_LOG).massKg(),"independent wood species");
