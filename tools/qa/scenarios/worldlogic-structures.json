@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "name": "Structures 0.1.0 catalogue, placement plan and native registries",
+  "steps": [
+    {
+      "name": "Climate catalogue, rotation, entrances, ladder, no containers, native registry and capability",
+      "command": "worldlogic_structures selftest",
+      "expect": "STRUCTURES_CHECKS_PASSED designs=27 families=8",
+      "assertion": true
+    }
+  ]
+}

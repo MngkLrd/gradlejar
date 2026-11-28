@@ -1,0 +1,42 @@
+{
+  "structures": [
+    {
+      "structure": "worldlogic_structures:cold",
+      "weight": 1
+    },
+    {
+      "structure": "worldlogic_structures:boreal",
+      "weight": 1
+    },
+    {
+      "structure": "worldlogic_structures:temperate",
+      "weight": 1
+    },
+    {
+      "structure": "worldlogic_structures:arid",
+      "weight": 1
+    },
+    {
+      "structure": "worldlogic_structures:tropical",
+      "weight": 1
+    },
+    {
+      "structure": "worldlogic_structures:wetland",
+      "weight": 1
+    },
+    {
+      "structure": "worldlogic_structures:alpine",
+      "weight": 1
+    },
+    {
+      "structure": "worldlogic_structures:coast",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 24,
+    "separation": 9,
+    "salt": 138673912
+  }
+}

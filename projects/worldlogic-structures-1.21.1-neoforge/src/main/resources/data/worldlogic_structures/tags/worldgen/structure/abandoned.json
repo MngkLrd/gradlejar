@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic_structures:cold",
+    "worldlogic_structures:boreal",
+    "worldlogic_structures:temperate",
+    "worldlogic_structures:arid",
+    "worldlogic_structures:tropical",
+    "worldlogic_structures:wetland",
+    "worldlogic_structures:alpine",
+    "worldlogic_structures:coast"
+  ]
+}
