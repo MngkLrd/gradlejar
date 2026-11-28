@@ -67,7 +67,7 @@ public final class PopulationRuntime {
    boolean allowed=coastal?CoastalHabitat.eligible(s,h)&&CoastalHabitat.canFound(data,area,s):!data.seeded(area,s)&&data.room(area,s)>=2;
    if(!allowed)excluded.put(s.id(),SpawnSelection.speciesCap(s));
   }
-  Species s=SpawnSelection.choose(h,excluded,l.random);if(s==null)return false;
+  Species s=SpawnSelection.choose(h,excluded,l.random,RiverBehavior.sample(l,p));if(s==null)return false;
   boolean alreadySeeded=data.seeded(area,s);
   Fish first=Aquaculture.spawn(l,p,s,h);if(first==null)return false;
   founder(first,s,true,l.getGameTime());
@@ -77,6 +77,7 @@ public final class PopulationRuntime {
    if(!l.isPositionEntityTicking(p2)||(coastal&&!CoastalHabitat.nearBank(l,p2)))continue;
    var h2=Aquaculture.habitat(l,p2);
    if(h2==null||!PopulationData.area(p2,h2.kind()).equals(area)||(coastal&&!CoastalHabitat.eligible(s,h2)))continue;
+   if(RiverBehavior.weight(s,RiverBehavior.sample(l,p2))<=0)continue;
    Fish second=Aquaculture.spawn(l,p2,s,h2);
    if(second!=null){founder(second,s,false,l.getGameTime());data.markSeeded(area,s);if(coastal)data.markShoreSeeded(area,s);return true;}
   }

@@ -31,6 +31,7 @@ public final class GeologyGeneration {
   case EMERALD -> (deep?Blocks.DEEPSLATE_EMERALD_ORE:Blocks.EMERALD_ORE).defaultBlockState();
   case LAPIS -> (deep?Blocks.DEEPSLATE_LAPIS_ORE:Blocks.LAPIS_ORE).defaultBlockState();
   case REDSTONE -> (deep?Blocks.DEEPSLATE_REDSTONE_ORE:Blocks.REDSTONE_ORE).defaultBlockState();
+  default -> MineralContent.ore(type,deep);
  };}
  public static void carve(long seed,ChunkAccess chunk){
   int x0=chunk.getPos().getMinBlockX(),z0=chunk.getPos().getMinBlockZ();
@@ -44,7 +45,7 @@ public final class GeologyGeneration {
    RockContent.stratify(chunk,x,z,top,province,fold);
    for(var d:districts)for(var c:d.caves()){
     if(Math.abs(x-c.x())>96||Math.abs(z-c.z())>96)continue;
-    int low=Math.max(chunk.getMinBuildHeight()+8,c.minY()),high=Math.min(chunk.getMaxBuildHeight()-1,c.shaft()&&Math.hypot(x-c.x(),z-c.z())<10?Math.max(c.maxY(),surface+1):c.maxY());
+    int low=Math.max(chunk.getMinBuildHeight()+8,c.minY()),high=Math.min(chunk.getMaxBuildHeight()-1,c.shaft()&&Math.hypot(x-c.x(),z-c.z())<10?Math.max(c.maxY(),c.shaftTop(surface)):c.maxY());
     for(int y=low;y<=high;y++){
      boolean shaft=c.shaftAt(x,y,z,surface);
      if(!shaft&&(y>surface-5||c.score(x,y,z)>1))continue;
@@ -61,8 +62,9 @@ public final class GeologyGeneration {
   int x0=chunk.getPos().getMinBlockX(),z0=chunk.getPos().getMinBlockZ();
   var districts=GeologyModel.around(seed,x0+8,z0+8);
   var pos=new BlockPos.MutableBlockPos();
-  for(var d:districts)for(var o:d.ores())placeBody(chunk,x0,z0,pos,o,false);
+  for(var d:districts)for(var o:d.ores())if(!o.ore().additional())placeBody(chunk,x0,z0,pos,o,false);
   for(var p:GeologyModel.nearbyPockets(seed,x0+8,z0+8))placeBody(chunk,x0,z0,pos,p.body(),p.relative());
+  for(var d:districts)for(var o:d.ores())if(o.ore().additional())placeBody(chunk,x0,z0,pos,o,false);
  }
  private static void placeBody(ChunkAccess chunk,int x0,int z0,BlockPos.MutableBlockPos pos,GeologyModel.Body o,boolean relative){
   double reach=Math.max(o.along(),o.across())+2;

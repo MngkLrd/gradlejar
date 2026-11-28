@@ -187,6 +187,7 @@ public final class FishEcology {
    }
   }
   if(sample&&FishLife.courtship(l,f,s)){tag.putString("wl_fish_activity","courtship");return;}
+  if(RiverBehavior.step(l,f,s))return;
   Vec3 school=schoolTarget(f,s,neighbors);
   if(school!=null&&reachable(l,f,school)){steer(l,f,school,.12);tag.putString("wl_fish_activity","schooling");return;}
   if(sample){

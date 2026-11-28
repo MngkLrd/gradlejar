@@ -1,4 +1,4 @@
-name: Aqua RC54 exact-binary integration diagnostics
+name: Aqua 1.5.1 exact-binary integration diagnostics
 on:
   push:
     branches: [worldlogic-aquaculture-0.1.0]
@@ -23,18 +23,18 @@ jobs:
         with:
           gradle-version: '9.2.1'
           cache-read-only: true
-      - name: Download original Core RC54 test candidate
+      - name: Download original Core 1.5.1 test candidate
         uses: actions/download-artifact@v4
         with:
-          name: qa-candidate-NOT-RELEASE-0-1
-          run-id: 46103365227
+          name: jar-worldlogic-1.21.1-neoforge-1.5.1-0
+          run-id: 46123087105
           github-token: ${{ github.token }}
           path: exact-core
       - name: Check original binary and compile Aqua against it
         run: |
           set -eu
-          CORE="$PWD/exact-core/worldlogic-neoforge-mc1.21.1-1.2.1.jar"
-          echo "33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56  $CORE" | sha256sum -c -
+          CORE="$PWD/exact-core/worldlogic-neoforge-mc1.21.1-1.5.1.jar"
+          echo "a966fb939988e794586cd6a1ea18fafe340296447b67ef8a9827963328e20548  $CORE" | sha256sum -c -
           cd projects/worldlogic-aquaculture-1.21.1-neoforge
           gradle --no-daemon --stacktrace :clean :build -PworldlogicCoreJar="$CORE"
       - name: Verify actual Aqua JAR
@@ -48,8 +48,8 @@ jobs:
           project="projects/worldlogic-aquaculture-1.21.1-neoforge"
           p=profile(project)
           jar=Path(project)/"build/libs"/p["jar_glob"]
-          core=Path("exact-core/worldlogic-neoforge-mc1.21.1-1.2.1.jar")
-          report={"schema":1,"kind":"aqua-exact-core-diagnostic","eligible":False,"status":"failed","checks":[],"qa_level":0,"core_origin_run":46103365227,"core_origin_artifact":15246915092,"core_sha256":sha256(core),"aqua_sha256":sha256(jar)}
+          core=Path("exact-core/worldlogic-neoforge-mc1.21.1-1.5.1.jar")
+          report={"schema":1,"kind":"aqua-exact-core-diagnostic","eligible":False,"status":"failed","checks":[],"qa_level":0,"core_origin_run":46123087105,"core_origin_artifact":15254721484,"core_sha256":sha256(core),"aqua_sha256":sha256(jar)}
           try:
               run(p,p["qa"],jar,Path("exact-evidence/runtime"),report,extra_jars=[core])
               assert report["qa_level"]==4
@@ -65,9 +65,9 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: aqua-rc54-NOT-RELEASE
+          name: aqua-core151-NOT-RELEASE
           path: |
-            projects/worldlogic-aquaculture-1.21.1-neoforge/build/libs/worldlogic_aqua-neoforge-mc1.21.1-0.4.4.jar
+            projects/worldlogic-aquaculture-1.21.1-neoforge/build/libs/worldlogic_aqua-neoforge-mc1.21.1-0.4.5.jar
             exact-evidence/report.json
             exact-evidence/runtime/logs/
           if-no-files-found: warn

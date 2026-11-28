@@ -42,7 +42,7 @@ public final class GeologyChecks {
    }
    if(chamber==null&&d.province()==GeologyModel.Province.CARBONATE)chamber=d.caves().get(2);
   }
-  require(types.size()==8&&provinces.size()==5&&chamber!=null&&deposit!=null,"all mineral and province families");
+  require(types.size()==GeologyModel.Ore.values().length&&provinces.size()==5&&chamber!=null&&deposit!=null,"all mineral and province families");
   require(!GeologyModel.district(42,0,0).equals(GeologyModel.district(43,0,0)),"seed affects geology");
   var fixture=fixture(l,bounds,(int)Math.floor(chamber.x()),(int)Math.floor(chamber.z()));
   GeologyGeneration.carve(42,fixture);
@@ -65,7 +65,7 @@ public final class GeologyChecks {
   var deposits=new java.util.EnumMap<GeologyModel.Ore,GeologyModel.Body>(GeologyModel.Ore.class);
   for(int gx=-12;gx<=12;gx++)for(int gz=-12;gz<=12;gz++)
    for(var o:GeologyModel.district(42,gx,gz).ores())deposits.putIfAbsent(o.ore(),o);
-  require(deposits.size()==8,"all eight ore families present");
+  require(deposits.size()==GeologyModel.Ore.values().length,"all original and new mineral families present");
   var counts=new java.util.EnumMap<GeologyModel.Ore,Integer>(GeologyModel.Ore.class);
   for(var entry:deposits.entrySet()){
    var ore=entry.getKey();var body=entry.getValue();
@@ -82,6 +82,14 @@ public final class GeologyChecks {
       if(chunk.getBlockState(p.set(x,y,z)).equals(GeologyGeneration.ore(ore,y<0)))count++;
     }
    require(count>0,"actual chunk generated ore "+ore);counts.put(ore,count);
+  }
+  for(String name:MineralContent.IDS){
+   var ore=GeologyModel.Ore.valueOf(name.toUpperCase(java.util.Locale.ROOT));
+   var shallow=MineralContent.ore(ore,false);var deep=MineralContent.ore(ore,true);
+   require(MineralContent.type(shallow)==ore&&MineralContent.type(deep)==ore,"registered ore variants "+name);
+   var profile=dev.minemods.worldlogic.api.PhysicalMaterials.block(shallow);
+   require(profile.components().size()==2&&Double.isFinite(dev.minemods.worldlogic.api.PhysicalMaterials.evaluate(profile,dev.minemods.worldlogic.api.PhysicalMaterials.State.reference()).massKg()),"ore mass "+name);
+   require(dev.minemods.worldlogic.api.PhysicalMaterials.itemResult(new net.minecraft.world.item.ItemStack(MineralContent.specimen(ore))).massKg()>0,"specimen mass "+name);
   }
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_ORE_FIXTURES {}",counts);
  }
@@ -134,7 +142,7 @@ public final class GeologyChecks {
   GeologyModel.District d=null;
   outer:for(int gx=-12;gx<=12;gx++)for(int gz=-12;gz<=12;gz++){
    var candidate=GeologyModel.district(42,gx,gz);
-   if(candidate.province()==GeologyModel.Province.CARBONATE&&candidate.caves().get(0).shaft()){d=candidate;break outer;}
+   if(candidate.province()==GeologyModel.Province.CARBONATE&&candidate.caves().get(0).shaft()&&!candidate.caves().get(0).surfaceOpening()){d=candidate;break outer;}
   }
   require(d!=null&&d.caves().size()>=4,"shaft, network and lake district");
   var shaft=d.caves().get(0);var lake=d.caves().get(3);
@@ -145,7 +153,11 @@ public final class GeologyChecks {
    return ch.getBlockState(pos);
   };
   int x=(int)Math.floor(shaft.x()),z=(int)Math.floor(shaft.z());
-  for(int y=(int)Math.ceil(shaft.y());y<=100;y++)require(block.apply(new BlockPos(x,y,z)).isAir(),"open shaft at "+y);
+  for(int y=(int)Math.ceil(shaft.y());y<=88;y++)require(block.apply(new BlockPos(x,y,z)).isAir(),"buried shaft at "+y);
+  for(int y=89;y<=100;y++)require(!block.apply(new BlockPos(x,y,z)).isAir(),"intact karst roof at "+y);
+  int shafts=0,openings=0;
+  for(int gx=-48;gx<=48;gx++)for(int gz=-48;gz<=48;gz++)for(var cave:GeologyModel.district(42,gx,gz).caves())if(cave.shaft()){shafts++;if(cave.surfaceOpening())openings++;}
+  require(shafts>100&&openings>0&&openings*10<shafts,"rare surface shafts "+openings+"/"+shafts);
   require(block.apply(new BlockPos(x+5,100,z)).is(Blocks.STONE),"narrow shaft does not erase nearby surface");
   int lx=(int)Math.floor(lake.x()),lz=(int)Math.floor(lake.z()),water=lake.waterY();
   require(block.apply(new BlockPos(lx,water-2,lz)).is(Blocks.WATER),"subterranean lake water");

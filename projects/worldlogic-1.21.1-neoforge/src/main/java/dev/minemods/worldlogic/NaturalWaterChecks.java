@@ -103,7 +103,17 @@ final class NaturalWaterChecks{
     var f=l.getFluidState(p);var vector=f.getFlow(l,p);var expected=DirectedRiverBlock.vector(sector);
     require(f.isSource()&&NaturalFluids.kind(f.getType())==WaterKind.RIVER&&vector.distanceTo(expected)<1e-8,"stored current vector "+sector);
     require(DirectedRiverBlock.encode(expected.x,expected.z)==sector,"direction quantization");
+    var current=WorldLogicApi.riverCurrent(l,p).orElseThrow();
+    require(current.velocityMps().normalize().dot(expected.normalize())>.999&&current.speedMps()>=1.4,"live river API "+sector);
+    var fish=net.minecraft.world.entity.EntityType.COD.create(l);
+    require(fish!=null,"fish fixture");
+    fish.setPos(p.getX()+.5,p.getY()+.1,p.getZ()+.5);fish.baseTick();fish.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);
+    require(RiverCurrent.pushAquatic(fish)&&fish.getDeltaMovement().dot(expected)>0,"fish drift "+sector);fish.discard();
    }
+   l.setBlock(p,base,2|16);
+   require(WorldLogicApi.riverCurrent(l,p).isEmpty(),"undirected river has no prescribed current");
+   l.setBlock(p,NaturalFluids.get(WaterKind.LAKE).block.get().defaultBlockState(),2|16);
+   require(WorldLogicApi.riverCurrent(l,p).isEmpty(),"lake has no river advection");
   }finally{l.setBlock(p,old,2|16);}
  }
 

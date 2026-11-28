@@ -1,3 +1,4 @@
 {
-  "parent": "minecraft:item/book"
+  "parent": "minecraft:item/generated",
+  "textures": {"layer0": "worldlogic:item/guidebook"}
 }

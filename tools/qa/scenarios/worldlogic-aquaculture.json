@@ -2487,6 +2487,17 @@
           "name": "Coastal diversity and actual bank fixture, persistent coastal origin and shark snout front/rear/flank contact"
         }
       ]
+    },
+    {
+      "id": "core-river-current",
+      "kind": "mechanic",
+      "subject": "Core riverCurrent habitat and swimming",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core directed river: species flow preferences, actual swimming intention, undirected and dry controls"
+        }
+      ]
     }
   ],
   "steps": [
@@ -2525,6 +2536,12 @@
       "name": "Coastal diversity and actual bank fixture, persistent coastal origin and shark snout front/rear/flank contact",
       "command": "aquaculture coast_bite_selftest",
       "expect": "AQUA_COAST_BITE_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Core directed river: species flow preferences, actual swimming intention, undirected and dry controls",
+      "command": "aquaculture river_selftest",
+      "expect": "AQUA_RIVER_CURRENT_PASS",
       "assertion": true
     },
     {

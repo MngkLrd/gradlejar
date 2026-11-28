@@ -1,11 +1,11 @@
 {
   "slug": "worldlogic_aqua",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "worldlogic_aqua-neoforge-mc1.21.1-0.4.4.jar",
+  "jar_glob": "worldlogic_aqua-neoforge-mc1.21.1-0.4.5.jar",
   "minimum_loader_version": "21.1.80",
   "compile_loader_version": "21.1.262",
   "qa": {
@@ -19,5 +19,12 @@
       "tools/qa/scenarios/worldlogic-aquaculture.json",
       "projects/worldlogic-1.21.1-neoforge/"
     ]
+  },
+  "ecosystem_membership": {
+    "ecosystem": "worldlogic",
+    "module": "aqua",
+    "role": "addon",
+    "core_module": "worldlogic",
+    "parent_module": "worldlogic"
   }
 }

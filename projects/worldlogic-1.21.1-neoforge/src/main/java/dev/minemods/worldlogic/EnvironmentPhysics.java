@@ -51,12 +51,20 @@ public final class EnvironmentPhysics {
  }
  private static void water(ServerLevel l,Player p,long now){
   if(!p.isInWater()||p.isPassenger()||p.getAbilities().flying)return;
-  if(Rules.on("water_pressure")&&now%2==0){
+  if(Rules.on("water_pressure")){
+   var directed=RiverCurrent.atEntity(p);
+   if(directed.isPresent()){
+    var current=directed.get();
+    double opposing=Math.max(0,-p.getDeltaMovement().dot(current.velocityMps().normalize()));
+    RiverCurrent.push(p,current);
+    if(opposing>.045&&now%20==0)Survival.work(p,1.2+current.speedMps()*.4);
+   }else if(now%2==0){
    Vec3 flow=flow(l,p);if(flow.lengthSqr()>.04){
     Vec3 v=p.getDeltaMovement(),dir=flow.normalize();
     double opposing=Math.max(0,-v.dot(dir));double force=currentStrength(Material.mass(p),Rules.strength("movement"));
     if(v.dot(dir)<.26){p.setDeltaMovement(v.add(dir.scale(force*(1+Math.min(.5,opposing*2)))));p.hurtMarked=true;}
     if(opposing>.045&&now%20==0)Survival.work(p,1.2);
+   }
    }
   }
   if(!Rules.on("ice_entrapment")||!p.isEyeInFluid(FluidTags.WATER)||p.getDeltaMovement().y<.025)return;

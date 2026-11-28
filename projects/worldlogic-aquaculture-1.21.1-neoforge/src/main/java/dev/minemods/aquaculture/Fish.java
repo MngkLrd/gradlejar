@@ -13,6 +13,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 
 public final class Fish extends Cod {
+ private net.minecraft.world.phys.Vec3 riverTarget;
+ private double riverSpeed;
+ private int riverUntil;
+ void clearRiverIntent(){riverTarget=null;}
+ void setRiverIntent(net.minecraft.world.phys.Vec3 target,double speed){riverTarget=target;riverSpeed=speed;riverUntil=tickCount+12;}
+ private void swimRiver(net.minecraft.server.level.ServerLevel l){
+  if(riverTarget==null||tickCount>riverUntil||ecologyPanic()||!FishWater.contact(this)){riverTarget=null;return;}
+  var here=position().add(0,Math.min(.2,getBbHeight()*.5),0);var delta=riverTarget.subtract(here);
+  if(delta.lengthSqr()<.16||!FishEcology.clearWaterPath(l,here,riverTarget)){riverTarget=null;return;}
+  var motion=delta.normalize().scale(riverSpeed);
+  if(!l.noCollision(this,getBoundingBox().move(motion))){riverTarget=null;return;}
+  // Active propulsion replaces this tick's swim intention, never adds Core's passive current.
+  getNavigation().stop();setDeltaMovement(motion);
+  float yaw=(float)(Math.atan2(-motion.x,motion.z)*180/Math.PI);setYRot(yaw);yBodyRot=yaw;yHeadRot=yaw;
+ }
  private static final EntityDataAccessor<Boolean> ECO_PANIC=SynchedEntityData.defineId(Fish.class,EntityDataSerializers.BOOLEAN);
  public boolean ecologyPanic(){return entityData.get(ECO_PANIC);}
  public void setEcologyPanic(boolean value){if(!level().isClientSide)entityData.set(ECO_PANIC,value);}
@@ -73,8 +88,9 @@ public final class Fish extends Cod {
     }
    }
    if((tickCount+getId())%10==0){
-    Species s=Aquaculture.species(this);if(s!=null)FishEcology.step(l,this,s);
+    Species s=Aquaculture.species(this);clearRiverIntent();if(s!=null)FishEcology.step(l,this,s);
    }
+   swimRiver(l);
   }
  }
 }
