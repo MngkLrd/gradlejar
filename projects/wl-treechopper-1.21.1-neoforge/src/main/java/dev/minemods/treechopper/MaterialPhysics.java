@@ -86,8 +86,14 @@ final class MaterialPhysics {
         double v=Double.NaN,mass=Double.NaN,hardness=Double.NaN,moisture=saved;
         Object sample=null;
         if(log&&wood!=null)try{
-            sample=woodSample(l,pos,original,saved);
-            if(sample!=null){moisture=number(wood.moisture.invoke(sample));if(canonical==null)hardness=number(wood.hardness.invoke(sample));}
+            if(canonical==null){
+                sample=woodSample(l,pos,original,saved);
+                if(sample!=null){moisture=number(wood.moisture.invoke(sample));hardness=number(wood.hardness.invoke(sample));}
+            }else if(!Double.isFinite(saved)&&l.hasChunkAt(pos)&&l.getBlockState(pos).getBlock()==original.getBlock()){
+                // Only local ecology comes from Terrarian. Persisted moisture and Core green reference are not replaced.
+                sample=((Optional<?>)wood.sample.invoke(null,l,pos)).orElse(null);
+                if(sample!=null)moisture=number(wood.moisture.invoke(sample));
+            }
         }catch(ReflectiveOperationException|LinkageError|RuntimeException e){warn("WoodPhysicsApi sample",e);}
         String source="unknown";
         if(core!=null)try{
@@ -110,8 +116,10 @@ final class MaterialPhysics {
                 if(effective.isEmpty())return new Data(v,Double.NaN,Double.NaN,moisture,"unknown");
                 double density=number(canonical.density.invoke(effective.get()));
                 double janka=number(canonical.janka.invoke(effective.get()));
-                // Volume is Core occupied geometry; no local moisture/density response.
-                return new Data(v,positive(v)&&positive(density)?v*density:Double.NaN,positive(janka)?janka*1000d:Double.NaN,moisture,"core");
+                Object result=core.evaluate.invoke(null,object,core.state.newInstance(20d,moisture/100d));
+                double kg=number(core.mass.invoke(result));
+                // Core supplies both effective density and aggregate mass; no local moisture response.
+                return new Data(v,positive(v)&&positive(density)&&positive(kg)?kg:Double.NaN,positive(janka)?janka*1000d:Double.NaN,moisture,"core");
             }
             if(log&&!positive(hardness)&&material!=null){
                 OptionalDouble h=(OptionalDouble)core.hardness.invoke(null,material);
