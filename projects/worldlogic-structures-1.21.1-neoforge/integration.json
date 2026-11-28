@@ -13,7 +13,7 @@
     {
       "id": "worldlogic:structures",
       "version": 1,
-      "revision": 0,
+      "revision": 1,
       "domains": [
         "architectural_structures"
       ],
@@ -24,7 +24,8 @@
       "source_paths": [
         "projects/worldlogic-structures-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicstructures/api/StructuresApi.java",
         "projects/worldlogic-structures-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicstructures/RegionalStructure.java",
-        "projects/worldlogic-structures-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicstructures/Architecture.java"
+        "projects/worldlogic-structures-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicstructures/Architecture.java",
+        "projects/worldlogic-structures-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicstructures/WinterCabin.java"
       ],
       "operations": [
         {
@@ -38,6 +39,12 @@
           "kind": "query",
           "entrypoint": "dev.minemods.worldlogicstructures.api.StructuresApi",
           "semantics": "Choose architectural family from an authoritative Core worldgen habitat; unknown and marine or cave contexts are excluded."
+        },
+        {
+          "id": "active_designs",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicstructures.api.StructuresApi",
+          "semantics": "Enumerate owner-approved designs eligible for new native starts, distinct from legacy saved IDs."
         }
       ]
     }
@@ -68,7 +75,8 @@
         "projects/worldlogic-structures-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicstructures/Architecture.java",
         "projects/worldlogic-structures-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicstructures/RegionalStructure.java",
         "projects/worldlogic-structures-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicstructures/ArchitecturePiece.java",
-        "projects/worldlogic-structures-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicstructures/StructuresMod.java"
+        "projects/worldlogic-structures-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicstructures/StructuresMod.java",
+        "projects/worldlogic-structures-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicstructures/WinterCabin.java"
       ],
       "provides": [
         "worldlogic:structures"
@@ -77,7 +85,7 @@
         "worldlogic:environment",
         "worldlogic:capability_discovery"
       ],
-      "integration_review": "Inspected Core RC55 266eebbf, WorldgenEnvironment, WorldgenSampler and WorldLogicCapabilities; use real long-term climate and native structure starts, never live weather or force-loaded chunks. Existing Core gneiss, slate and limestone bricks used as construction palettes; no vegetation generation or terrain changes."
+      "integration_review": "Inspected Core RC55 266eebbf, WorldgenEnvironment, WorldgenSampler and WorldLogicCapabilities; use real long-term climate and native structure starts, never live weather or force-loaded chunks. Existing Core gneiss, slate and limestone bricks used as construction palettes; no vegetation generation or terrain changes. Owner-approved cold cabin is the only active new placement; legacy designs retained for saved starts. Preview uses the same authored plan, no new Core dependency."
     }
   ],
   "tests": [

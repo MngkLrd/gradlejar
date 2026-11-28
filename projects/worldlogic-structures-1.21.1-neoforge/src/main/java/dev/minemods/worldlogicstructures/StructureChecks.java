@@ -64,6 +64,14 @@ final class StructureChecks {
     require(Math.abs(q.getX())<=8&&Math.abs(q.getZ())<=8&&q.getY()>=-7&&q.getY()<=Architecture.maxHeight(d)+1,d.id()+" bounds");
    }
   }
+  require(api.activeDesigns().size()==1&&api.activeDesigns().getFirst().id().equals("winter_cabin"),"approval gate");
+  var cabin=WinterCabin.build();require(cabin.cells.equals(WinterCabin.build().cells),"authored deterministic");
+  for(int y=1;y<=2;y++)require(cabin.cells.get(new BlockPos(2,y,5)).isAir(),"cabin entrance");
+  for(int z=-2;z<=4;z++)for(int y=1;y<=2;y++)require(cabin.cells.get(new BlockPos(0,y,z)).isAir(),"cabin circulation");
+  require(cabin.cells.values().stream().anyMatch(s->s.is(Blocks.BROWN_BED))&&cabin.cells.values().stream().anyMatch(s->s.is(Blocks.CAULDRON))&&cabin.cells.values().stream().anyMatch(s->s.is(Blocks.STRIPPED_SPRUCE_LOG)),"cabin furnishing");
+  require(cabin.cells.values().stream().noneMatch(s->s.is(Blocks.CHEST)||s.is(Blocks.TRAPPED_CHEST)||s.is(Blocks.BARREL)),"cabin no containers");
+  for(var pos:cabin.cells.keySet())require(Math.abs(pos.getX())<=WinterCabin.RADIUS&&Math.abs(pos.getZ())<=WinterCabin.RADIUS&&pos.getY()>=-8&&pos.getY()<=WinterCabin.HEIGHT,"cabin bounds");
+  for(var pos:cabin.footings)require(cabin.cells.containsKey(pos)&&!cabin.cells.get(pos).isAir(),"cabin footing");
   // Real core sampling for the current generator, without force-loading any chunks.
   var generator=level.getChunkSource().getGenerator();
   var sampler=WorldLogicApi.worldgenSampler(level.getChunkSource().randomState(),level.registryAccess(),generator);
@@ -90,6 +98,7 @@ final class StructureChecks {
    var sampler=WorldLogicApi.worldgenSampler(state,registry,gen).orElseThrow();
    RandomSpreadStructurePlacement spread=null;
    for(var family:Family.values()){
+    if(StructuresApi.CATALOGUE.activeDesigns(family).isEmpty())continue;
     var holder=structures.getOrThrow(ResourceKey.create(Registries.STRUCTURE,family.locateId()));
     var placements=placementState.getPlacementsForStructure(holder);
     require(!placements.isEmpty(),"missing native placement "+family);
@@ -99,7 +108,7 @@ final class StructureChecks {
     if(spread==null)spread=candidate;
    }
    boolean found=false;int count=0;
-   search: for(int ring=0;ring<=5;ring++)for(int x=-ring;x<=ring;x++)for(int z=-ring;z<=ring;z++){
+   search: for(int ring=0;ring<=12;ring++)for(int x=-ring;x<=ring;x++)for(int z=-ring;z<=ring;z++){
     if(Math.max(Math.abs(x),Math.abs(z))!=ring)continue;
     var chunk=spread.getPotentialStructureChunk(seed,x*spread.spacing(),z*spread.spacing());
     if(!spread.isStructureChunk(placementState,chunk.x,chunk.z))continue;
@@ -110,7 +119,7 @@ final class StructureChecks {
     var biome=gen.getBiomeSource().getNoiseBiome(QuartPos.fromBlock(wx),QuartPos.fromBlock(y),QuartPos.fromBlock(wz),state.sampler());
     var ground=gen.getBaseColumn(wx,wz,height,state).getBlock(y-1);
     var family=StructuresApi.CATALOGUE.family(sampler.sample(new BlockPos(wx,y,wz),biome,ground));
-    if(family.isEmpty())continue;
+    if(family.isEmpty()||StructuresApi.CATALOGUE.activeDesigns(family.get()).isEmpty())continue;
     var structure=structures.getOrThrow(ResourceKey.create(Registries.STRUCTURE,family.get().locateId())).value();
     var start=structure.generate(registry,gen,gen.getBiomeSource(),state,level.getServer().getStructureManager(),seed,chunk,0,height,structure.biomes()::contains);
     if(!start.isValid())continue;

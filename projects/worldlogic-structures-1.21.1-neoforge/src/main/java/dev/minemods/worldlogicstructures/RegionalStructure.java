@@ -25,6 +25,8 @@ public final class RegionalStructure extends Structure {
   return c.chunkGenerator().getBaseHeight(x,z,type,c.heightAccessor(),c.randomState());
  }
  @Override protected Optional<GenerationStub> findGenerationPoint(GenerationContext c){
+  var designs=StructuresApi.CATALOGUE.activeDesigns(family);
+  if(designs.isEmpty())return Optional.empty();
   var sampler=WorldLogicApi.worldgenSampler(c.randomState(),c.registryAccess(),c.chunkGenerator());
   if(sampler.isEmpty())return Optional.empty();
   int x=c.chunkPos().getMiddleBlockX(),z=c.chunkPos().getMiddleBlockZ();
@@ -36,7 +38,6 @@ public final class RegionalStructure extends Structure {
   var ground=c.chunkGenerator().getBaseColumn(x,z,c.heightAccessor(),c.randomState()).getBlock(y-1);
   var habitat=sampler.get().sample(center,biome,ground);
   if(StructuresApi.CATALOGUE.family(habitat).orElse(null)!=family||!Double.isFinite(habitat.slopeDegrees())||habitat.slopeDegrees()>22)return Optional.empty();
-  var designs=StructuresApi.CATALOGUE.designs(family);
   int start=c.random().nextInt(designs.size()),turn=c.random().nextInt(4);
   long seed=c.random().nextLong();
   boolean warm=habitat.temperatureCelsius()>=20;
@@ -59,9 +60,10 @@ public final class RegionalStructure extends Structure {
   int w=d.halfWidth(),l=d.halfDepth(),max=Integer.MIN_VALUE,min=Integer.MAX_VALUE;
   boolean shallow=false;
   // Check the whole building, eaves and access envelope; never flatten terrain.
-  int front=l+d.raised()+2;
-  for(int a=-w-1;a<=w+1;a++)for(int b=-l-1;b<=front;b++){
-   if(b>l+1&&Math.abs(a)>1)continue;
+  boolean cabin=d.id().equals("winter_cabin");
+  int front=cabin?9:l+d.raised()+2;
+  for(int a=cabin?-6:-w-1;a<=w+1;a++)for(int b=-l-1;b<=front;b++){
+   if(b>l+1&&(cabin?(a< -1||a>5):Math.abs(a)>1))continue;
    BlockPos offset=Architecture.transform(a,0,b,rotation);
    int wx=x+offset.getX(),wz=z+offset.getZ();
    var column=columns.computeIfAbsent((((long)wx)<<32)^(wz&0xffffffffL),k->new Column(height(c,wx,wz,Heightmap.Types.OCEAN_FLOOR_WG),height(c,wx,wz,Heightmap.Types.WORLD_SURFACE_WG)));
@@ -77,7 +79,7 @@ public final class RegionalStructure extends Structure {
   }
   if(d.kind()==Kind.PLATFORM&&!shallow)return OptionalInt.empty();
   int floor=max+d.raised();
-  if(floor-7<c.heightAccessor().getMinBuildHeight()||floor+Architecture.maxHeight(d)>=c.heightAccessor().getMaxBuildHeight())return OptionalInt.empty();
+  if(floor-7<c.heightAccessor().getMinBuildHeight()||floor+(cabin?WinterCabin.HEIGHT+1:Architecture.maxHeight(d))>=c.heightAccessor().getMaxBuildHeight())return OptionalInt.empty();
   return OptionalInt.of(floor);
  }
 }

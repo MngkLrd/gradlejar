@@ -3,7 +3,7 @@ loaderVersion="[1,)"
 license="All Rights Reserved"
 [[mods]]
 modId="worldlogic_structures"
-version="0.1.0"
+version="0.2.0"
 displayName="WorldLogic: Structures"
 description="Climate-adapted abandoned architecture, without loot."
 [[dependencies.worldlogic_structures]]

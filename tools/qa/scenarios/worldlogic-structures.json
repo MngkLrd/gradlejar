@@ -1,11 +1,11 @@
 {
   "schema": 1,
-  "name": "Structures 0.1.0 native regional architecture",
+  "name": "Structures 0.2.0 approved winter cabin and native regional architecture",
   "coverage": [
     {
       "id": "climate-catalogue",
       "kind": "mechanic",
-      "subject": "All 27 design variants, four rotations, two damage masks, no loot, entrance and support roots",
+      "subject": "All 27 design variants, four rotations, two damage masks, no loot, entrance and support roots; approved winter cabin, interior aisle and furnishing",
       "checks": [
         {
           "backend": "server",
@@ -40,7 +40,7 @@
     {
       "name": "Climate catalogue, rotation, entrances, ladder, no containers, native registry and capability",
       "command": "worldlogic_structures selftest",
-      "expect": "STRUCTURES_CHECKS_PASSED designs=27 families=8",
+      "expect": "STRUCTURES_CHECKS_PASSED designs=27 families=8 active=1",
       "assertion": true
     },
     {

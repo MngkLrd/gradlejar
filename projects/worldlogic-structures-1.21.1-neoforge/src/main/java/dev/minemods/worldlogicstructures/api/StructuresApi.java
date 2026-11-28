@@ -21,6 +21,8 @@ public final class StructuresApi {
  public interface Catalogue {
   List<Design> designs();
   Optional<Family> family(WorldgenEnvironment habitat);
+  default List<Design> activeDesigns(){return designs().stream().filter(d->d.id().equals("winter_cabin")).map(d->new Design(d.id(),d.family(),d.kind(),4,5,4,d.roof(),d.raised())).toList();}
+  default List<Design> activeDesigns(Family family){return activeDesigns().stream().filter(d->d.family()==family).toList();}
   default List<Design> designs(Family family){return designs().stream().filter(d->d.family()==family).toList();}
  }
  private static final List<Design> DESIGNS=List.of(

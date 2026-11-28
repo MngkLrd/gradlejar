@@ -20,23 +20,31 @@ final class ArchitecturePiece extends StructurePiece {
  private final Rotation rotation;
  private final long seed;
  private final boolean warm;
+ private final boolean authored;
  ArchitecturePiece(Design d,int x,int y,int z,Rotation rotation,long seed,boolean warm){
-  super(StructuresMod.ARCHITECTURE.get(),0,new BoundingBox(x-8,y-7,z-8,x+8,y+Architecture.maxHeight(d)+1,z+8));
-  this.designId=d.id();this.x=x;this.y=y;this.z=z;this.rotation=rotation;this.seed=seed;this.warm=warm;
+  super(StructuresMod.ARCHITECTURE.get(),0,bounds(d,x,y,z));
+  this.designId=d.id();this.x=x;this.y=y;this.z=z;this.rotation=rotation;this.seed=seed;this.warm=warm;this.authored=d.id().equals("winter_cabin");
+ }
+ private static BoundingBox bounds(Design d,int x,int y,int z){
+  boolean cabin=d.id().equals("winter_cabin");int radius=cabin?WinterCabin.RADIUS:8;int top=cabin?WinterCabin.HEIGHT:Architecture.maxHeight(d)+1;
+  return new BoundingBox(x-radius,y-8,z-radius,x+radius,y+top,z+radius);
  }
  ArchitecturePiece(CompoundTag tag){
   super(StructuresMod.ARCHITECTURE.get(),tag);
   designId=tag.getString("Design");x=tag.getInt("X");y=tag.getInt("Y");z=tag.getInt("Z");
-  rotation=Rotation.values()[Math.floorMod(tag.getInt("Rotation"),4)];seed=tag.getLong("Seed");warm=tag.getBoolean("Warm");
+  rotation=Rotation.values()[Math.floorMod(tag.getInt("Rotation"),4)];seed=tag.getLong("Seed");warm=tag.getBoolean("Warm");authored=tag.getBoolean("AuthoredCabin");
  }
  @Override protected void addAdditionalSaveData(StructurePieceSerializationContext c,CompoundTag tag){
-  tag.putString("Design",designId);tag.putInt("X",x);tag.putInt("Y",y);tag.putInt("Z",z);tag.putInt("Rotation",rotation.ordinal());tag.putLong("Seed",seed);tag.putBoolean("Warm",warm);
+  tag.putString("Design",designId);tag.putInt("X",x);tag.putInt("Y",y);tag.putInt("Z",z);tag.putInt("Rotation",rotation.ordinal());tag.putLong("Seed",seed);tag.putBoolean("Warm",warm);tag.putBoolean("AuthoredCabin",authored);
  }
  private BlockPos global(BlockPos local){return Architecture.transform(local.getX(),local.getY(),local.getZ(),rotation).offset(x,y,z);}
  @Override public void postProcess(WorldGenLevel level,StructureManager manager,ChunkGenerator generator,RandomSource random,BoundingBox clip,ChunkPos chunk,BlockPos pivot){
+  place(level,clip);
+ }
+ void place(LevelAccessor level,BoundingBox clip){
   var d=StructuresApi.CATALOGUE.designs().stream().filter(v->v.id().equals(designId)).findFirst().orElse(null);
   if(d==null)return;
-  var plan=Architecture.build(d,seed,warm);
+  var plan=authored?WinterCabin.build():Architecture.build(d,seed,warm);
   var palette=Architecture.palette(d.family(),warm);
   for(var footing:plan.footings){
    BlockPos at=global(footing);
