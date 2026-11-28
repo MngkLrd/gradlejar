@@ -1,0 +1,55 @@
+{
+  "variants": {
+    "age=0": [
+      {
+        "model": "worldlogicterrain:block/oyster_mushroom_colony_0"
+      },
+      {
+        "model": "worldlogicterrain:block/oyster_mushroom_colony_0",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/oyster_mushroom_colony_0",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/oyster_mushroom_colony_0",
+        "y": 270
+      }
+    ],
+    "age=1": [
+      {
+        "model": "worldlogicterrain:block/oyster_mushroom_colony_1"
+      },
+      {
+        "model": "worldlogicterrain:block/oyster_mushroom_colony_1",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/oyster_mushroom_colony_1",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/oyster_mushroom_colony_1",
+        "y": 270
+      }
+    ],
+    "age=2": [
+      {
+        "model": "worldlogicterrain:block/oyster_mushroom_colony_2"
+      },
+      {
+        "model": "worldlogicterrain:block/oyster_mushroom_colony_2",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/oyster_mushroom_colony_2",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/oyster_mushroom_colony_2",
+        "y": 270
+      }
+    ]
+  }
+}

@@ -209,5 +209,13 @@
   "block.worldlogicterrain.pondweed": "Pondweed",
   "block.worldlogicterrain.water_crowfoot": "Water Crowfoot",
   "block.worldlogicterrain.river_moss": "River Moss",
-  "block.worldlogicterrain.water_starwort": "Water Starwort"
+  "block.worldlogicterrain.water_starwort": "Water Starwort",
+  "block.worldlogicterrain.porcini_colony": "Porcini Colony",
+  "item.worldlogicterrain.porcini": "Porcini",
+  "block.worldlogicterrain.chanterelle_colony": "Chanterelle Colony",
+  "item.worldlogicterrain.chanterelle": "Chanterelle",
+  "block.worldlogicterrain.morel_colony": "Morel Colony",
+  "item.worldlogicterrain.morel": "Morel",
+  "block.worldlogicterrain.oyster_mushroom_colony": "Oyster Mushroom Colony",
+  "item.worldlogicterrain.oyster_mushroom": "Oyster Mushroom"
 }

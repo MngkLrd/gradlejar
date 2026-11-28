@@ -75,6 +75,7 @@ public final class TerrainWorldgenChecks {
         checkPreset(gen, "open_meadow", "open_meadow", Set.of("plains","sunflower_plains","meadow","windswept_hills","windswept_forest","windswept_gravelly_hills"));
         checkPreset(gen, "frosted_grass", "frosted_ground", Set.of("snowy_plains","snowy_taiga","grove","snowy_slopes","frozen_river","snowy_beach"));
             checkTrees(gen);
+            checkFungi(gen);
             checkAquatic(gen);
             for(var p:dev.minemods.worldlogicterrain.growth.PlantSpecies.newSpecies())checkSeasonal(gen,p.id(),p.habitat());
         }
@@ -104,6 +105,17 @@ public final class TerrainWorldgenChecks {
             var settings=biome.value().getGenerationSettings().features();
             boolean present=settings.size()>step&&settings.get(step).stream().anyMatch(h->h.is(key));
             if(present!=biome.is(habitat))throw new IllegalStateException("Wrong seasonal plant habitat "+plant+" / "+biome.unwrapKey());
+        }
+    }
+    private static void checkFungi(NoiseBasedChunkGenerator gen){
+        int step=GenerationStep.Decoration.VEGETAL_DECORATION.ordinal();
+        for(var species:dev.minemods.worldlogicterrain.growth.FungalEcology.Species.values()){
+            var key=ResourceKey.create(Registries.PLACED_FEATURE,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","fungal_"+species.id));
+            for(var biome:gen.getBiomeSource().possibleBiomes()){
+                var settings=biome.value().getGenerationSettings().features();
+                boolean present=settings.size()>step&&settings.get(step).stream().anyMatch(h->h.is(key));
+                if(present!=biome.is(FungalFeature.habitat(species)))throw new IllegalStateException("Wrong fungal habitat "+species.id+" / "+biome.unwrapKey());
+            }
         }
     }
     private static void checkAquatic(NoiseBasedChunkGenerator gen){

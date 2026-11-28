@@ -92,6 +92,13 @@ public final class SeasonalChecks {
                 require(p.habitatFitness(p.minTemp()-1,p.optimalMoisture(),1)==0&&p.habitatFitness(p.optimalTemp(),p.optimalMoisture(),1)>.9,"Climate suitability "+p.id());
             }
             require(rarity.size()>=6,"Plant frequencies collapsed");
+            for(String berry:new String[]{"strawberry","blueberry","raspberry","blackberry","grape"}){
+                var p=PlantSpecies.byId(berry);
+                var winterBerry=SeasonalGrowth.evaluateBerry(p,new SeasonalGrowth.Input("WINTER",p.optimalTemp(),p.optimalMoisture(),1,15,false));
+                var summerBerry=SeasonalGrowth.evaluateBerry(p,new SeasonalGrowth.Input("SUMMER",p.optimalTemp(),p.optimalMoisture(),1,15,false));
+                require(winterBerry.season().equals("all")&&winterBerry.rate()==summerBerry.rate()&&winterBerry.rate()>.99,"Calendar still blocks berry fruiting "+berry);
+                require(SeasonalGrowth.evaluateBerry(p,new SeasonalGrowth.Input("WINTER",p.minTemp()-1,p.optimalMoisture(),1,15,false)).rate()==0,"Berry cold limit "+berry);
+            }
             var wheat=PlantSpecies.byId("wheat");
             require(SeasonalGrowth.evaluate(wheat,new SeasonalGrowth.Input("WINTER",20,.5,1,15,false),true).rate()==0,"Native winter gate");
             require(SeasonalGrowth.evaluate(wheat,new SeasonalGrowth.Input("none",-30,0,0,0,false),true).rate()==1,"Legacy crop compatibility");

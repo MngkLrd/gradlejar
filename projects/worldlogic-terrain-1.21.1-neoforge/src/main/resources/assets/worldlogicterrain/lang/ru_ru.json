@@ -209,5 +209,13 @@
   "block.worldlogicterrain.pondweed": "Рдест",
   "block.worldlogicterrain.water_crowfoot": "Водяной лютик",
   "block.worldlogicterrain.river_moss": "Речной мох",
-  "block.worldlogicterrain.water_starwort": "Болотник"
+  "block.worldlogicterrain.water_starwort": "Болотник",
+  "block.worldlogicterrain.porcini_colony": "Грибница: белый гриб",
+  "item.worldlogicterrain.porcini": "Белый гриб",
+  "block.worldlogicterrain.chanterelle_colony": "Грибница: лисичка",
+  "item.worldlogicterrain.chanterelle": "Лисичка",
+  "block.worldlogicterrain.morel_colony": "Грибница: сморчок",
+  "item.worldlogicterrain.morel": "Сморчок",
+  "block.worldlogicterrain.oyster_mushroom_colony": "Грибница: вёшенка",
+  "item.worldlogicterrain.oyster_mushroom": "Вёшенка"
 }

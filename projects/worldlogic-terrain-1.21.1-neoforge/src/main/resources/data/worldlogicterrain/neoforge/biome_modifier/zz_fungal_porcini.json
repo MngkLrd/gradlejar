@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:cool_woodland",
+  "features": "worldlogicterrain:fungal_porcini",
+  "step": "vegetal_decoration"
+}

@@ -33,10 +33,17 @@ public final class SeasonalGrowth {
         double rate=PlantSpecies.clamp(t*m*(.5+.5*e.fertility())*soil);
         return new Result(e.season(),rate<.45?"slow":"growing",rate,quality,e.temperature(),e.moisture());
     }
+    // Berry fruiting is not calendar-gated; retain actual temperature, moisture, light and soil limits.
+    static Result evaluateBerry(PlantSpecies.Profile p,Input e){
+        if(e.season().equals("none"))return evaluate(p,e,true);
+        var r=evaluate(p,new Input("none",e.temperature(),e.moisture(),e.fertility(),e.light(),e.exhausted()),false);
+        return new Result("all",r.status(),r.rate(),r.quality(),r.temperature(),r.moisture());
+    }
     static Result at(ServerLevel l,BlockPos pos,BlockState state){
         var p=PlantSpecies.profile(state);
         if(p==null)return null;
-        return evaluate(p,CorePlantClimate.sample(l,pos),!(state.getBlock() instanceof SeasonalPlantBlock));
+        var input=CorePlantClimate.sample(l,pos);
+        return state.getBlock() instanceof BerryBushBlock?evaluateBerry(p,input):evaluate(p,input,!(state.getBlock() instanceof SeasonalPlantBlock));
     }
     /** Existing vanilla/berry soil gate already applies exhaustion, so do not roll it twice. */
     public static boolean allowSeason(ServerLevel l,BlockPos pos,BlockState state,RandomSource random){
@@ -44,11 +51,12 @@ public final class SeasonalGrowth {
         var e=CorePlantClimate.sample(l,pos);
         if(e.season().equals("none"))return true;
         var withoutSoil=new Input(e.season(),e.temperature(),e.moisture(),e.fertility(),e.light(),false);
-        var v=evaluate(p,withoutSoil,true);
+        var v=state.getBlock() instanceof BerryBushBlock?evaluateBerry(p,withoutSoil):evaluate(p,withoutSoil,true);
         return random.nextDouble()<v.rate();
     }
     private static int percent(double v){return v<0?-1:(int)Math.round(PlantSpecies.clamp(v)*100);}
     public static View view(ServerLevel l,BlockPos pos,BlockState state){
+        if(state.getBlock() instanceof FungalColonyBlock)return FungalEcology.view(l,pos,state);
         if(state.getBlock() instanceof HangingFruitBlock){
             int age=state.getValue(HangingFruitBlock.AGE);
             return new View(age*50,age==2?0:100,-1,age==2?"mature":"perennial","all",-999,-1);

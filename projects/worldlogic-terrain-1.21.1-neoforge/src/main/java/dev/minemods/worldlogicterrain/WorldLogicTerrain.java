@@ -25,6 +25,7 @@ public final class WorldLogicTerrain {
         dev.minemods.worldlogicterrain.worldgen.ForagePopulationFeature.FEATURES.register(bus);
         dev.minemods.worldlogicterrain.tree.TropicalTreeFeature.FEATURES.register(bus);
         dev.minemods.worldlogicterrain.water.AquaticFeature.FEATURES.register(bus);
+        dev.minemods.worldlogicterrain.worldgen.FungalFeature.FEATURES.register(bus);
         NeoForge.EVENT_BUS.addListener(dev.minemods.worldlogicterrain.water.AquaticChecks::register);
         bus.addListener(TerrainContent::creative);
         NeoForge.EVENT_BUS.addListener(TerrainMobility::tick);

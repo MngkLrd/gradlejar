@@ -101,6 +101,13 @@ public final class TerrainContent {
                 BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.WET_GRASS).randomTicks()));
             PLANTS.add(ITEMS.register(species.id,()->new BlockItem(block.get(),new Item.Properties())));
         }
+        for(var species:dev.minemods.worldlogicterrain.growth.FungalEcology.Species.values()){
+            var block=BLOCKS.register(species.id+"_colony",()->new dev.minemods.worldlogicterrain.growth.FungalColonyBlock(species,
+                BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS).randomTicks()));
+            PLANTS.add(ITEMS.register(species.id,()->new BlockItem(block.get(),new Item.Properties()){
+                @Override public String getDescriptionId(){return getOrCreateDescriptionId();}
+            }));
+        }
         for(var fruit:dev.minemods.worldlogicterrain.tree.TreeFruit.values()){
             BLOCKS.register(fruit.blockId(),()->new dev.minemods.worldlogicterrain.block.HangingFruitBlock(fruit,
                 BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS).randomTicks()));
