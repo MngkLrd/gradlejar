@@ -1,0 +1,7 @@
+{
+  "name": "Выживание: температура",
+  "description": "Практические инструкции Thermal для выживания, отопления и одежды.",
+  "icon": "worldlogic_thermal:leaf_canopy",
+  "sortnum": 21,
+  "flag": "mod:worldlogic_thermal"
+}

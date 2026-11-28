@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=true": {
+      "model": "worldlogic_thermal:block/thermal_damper"
+    },
+    "open=false": {
+      "model": "worldlogic_thermal:block/thermal_damper_active"
+    }
+  }
+}

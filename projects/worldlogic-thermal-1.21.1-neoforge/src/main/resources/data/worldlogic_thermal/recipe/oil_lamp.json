@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " S ",
+    "BOB",
+    " B "
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:string"
+    },
+    "B": {
+      "item": "minecraft:brick"
+    },
+    "O": {
+      "item": "worldlogic_thermal:plant_oil"
+    }
+  },
+  "result": {
+    "id": "worldlogic_thermal:oil_lamp",
+    "count": 1
+  }
+}

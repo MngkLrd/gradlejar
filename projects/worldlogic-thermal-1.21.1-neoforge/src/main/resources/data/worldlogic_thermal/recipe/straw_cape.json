@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "F F",
+    "CCC",
+    "FFF"
+  ],
+  "key": {
+    "F": {
+      "item": "worldlogic_thermal:dry_fiber"
+    },
+    "C": {
+      "item": "worldlogic_thermal:woven_fiber"
+    }
+  },
+  "result": {
+    "id": "worldlogic_thermal:straw_cape",
+    "count": 1
+  }
+}

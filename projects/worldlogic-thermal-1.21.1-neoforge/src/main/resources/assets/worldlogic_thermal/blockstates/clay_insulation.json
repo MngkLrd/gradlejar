@@ -1,0 +1,23 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "worldlogic_thermal:block/clay_insulation",
+      "uvlock": true
+    },
+    "facing=east": {
+      "model": "worldlogic_thermal:block/clay_insulation",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=south": {
+      "model": "worldlogic_thermal:block/clay_insulation",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=west": {
+      "model": "worldlogic_thermal:block/clay_insulation",
+      "y": 270,
+      "uvlock": true
+    }
+  }
+}

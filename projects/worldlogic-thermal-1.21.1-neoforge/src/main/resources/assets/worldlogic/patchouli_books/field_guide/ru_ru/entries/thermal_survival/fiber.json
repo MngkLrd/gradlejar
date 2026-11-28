@@ -1,0 +1,75 @@
+{
+  "name": "Обработка волокон",
+  "category": "worldlogic:thermal_survival",
+  "icon": "worldlogic_thermal:raw_fiber_bundle",
+  "sortnum": 6,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogic_thermal:raw_fiber_bundle",
+      "link_recipe": true,
+      "text": "ПКМ пустой рукой по траве, мерзлой траве, камышу и другим подходящим растениям. Подберите зелёный пучок. Для обработки нажмите ПКМ пучком по верхней грани камня."
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "Рабочая поверхность",
+      "multiblock": {
+        "pattern": [
+          [
+            "W"
+          ],
+          [
+            "0"
+          ]
+        ],
+        "mapping": {
+          "0": "minecraft:stone",
+          "W": "worldlogic_thermal:fiber_workpiece"
+        }
+      },
+      "enable_visualize": false,
+      "text": "Пучок лежит на камне. Сам блок работы не нужно крафтить."
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Очистка: 64 ячейки",
+      "images": [
+        "worldlogic_thermal:textures/gui/guide/fiber_stage_0.png",
+        "worldlogic_thermal:textures/gui/guide/fiber_stage_1.png",
+        "worldlogic_thermal:textures/gui/guide/fiber_stage_2.png"
+      ],
+      "border": false,
+      "text": "Листайте кадры: зелёное сырьё → очистка → золотистое волокно. ЛКМ по клетке; скребок очищает крест."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Ручная работа",
+      "text": "Рукой можно очистить все 64 клетки без инструментов. Shift + ЛКМ поднимает незавершённый пучок с сохранением прогресса. Когда всё золотистое, ещё раз нажмите ЛКМ: получите 4 волокна."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:plant_thread"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:woven_fiber"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Без верстака: 2 волокна → 1 нить, 3 нити → 1 полотно в сетке 2×2. Веретено и станок экономят сырьё: 2 волокна → 4 нити, 3 нити → 2 полотна."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:stone_scraper"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:spindle"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:textile_loom"
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}

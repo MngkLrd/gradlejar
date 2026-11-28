@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic_thermal:grass_hood",
+    "worldlogic_thermal:grass_coat",
+    "worldlogic_thermal:grass_leggings",
+    "worldlogic_thermal:grass_boots"
+  ]
+}

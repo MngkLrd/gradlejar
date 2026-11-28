@@ -1,0 +1,29 @@
+{
+  "name": "Reading temperatures",
+  "category": "worldlogic:thermal_survival",
+  "icon": "minecraft:blaze_powder",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:blaze_powder",
+      "link_recipe": true,
+      "text": "Air is Core's ambient estimate. Feels like includes wind, wetness, room, radiant warmth, cooling and immersion. Body is your physiological state and changes gradually."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Body readings",
+      "text": "37 °C is normal body temperature. Below 36.6 °C is cold; below 35 °C dangerous hypothermia. Above 37.5 °C is warm, from 39.5 °C dangerous overheating. Apparent temperature is not body temperature."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Frostbite",
+      "text": "Frostbite is separate limb injury. Unprotected at −15 °C it takes about 5 minutes, −28 °C 2 minutes, −40 °C 75 seconds. Wind, wetness and clothing modify risk. These are game values."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Snow does not create heat; it retains it. Air can be above zero during a thaw. Core defines regional temperature; Thermal computes exposure."
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "worldlogic_thermal:woven_fiber"
+    }
+  ],
+  "result": {
+    "id": "worldlogic_thermal:wet_cloth",
+    "count": 1
+  }
+}

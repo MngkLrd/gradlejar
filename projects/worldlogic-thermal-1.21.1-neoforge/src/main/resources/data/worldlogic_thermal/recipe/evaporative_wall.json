@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "TCT",
+    "TCT",
+    "TCT"
+  ],
+  "key": {
+    "T": {
+      "item": "minecraft:terracotta"
+    },
+    "C": {
+      "item": "worldlogic_thermal:woven_fiber"
+    }
+  },
+  "result": {
+    "id": "worldlogic_thermal:evaporative_wall",
+    "count": 1
+  }
+}

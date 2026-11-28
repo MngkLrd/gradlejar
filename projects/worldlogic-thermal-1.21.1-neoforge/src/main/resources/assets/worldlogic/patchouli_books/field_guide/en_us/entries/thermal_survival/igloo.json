@@ -1,0 +1,67 @@
+{
+  "name": "Snow shelters",
+  "category": "worldlogic:thermal_survival",
+  "icon": "minecraft:snow_block",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:snow_block",
+      "link_recipe": true,
+      "text": "No shovel: sneak + right-click a snow layer or full snow block with an empty main hand. Pick up drops. Four snowballs pack into one block in the 2×2 inventory grid."
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "Igloo: 24 blocks",
+      "multiblock": {
+        "pattern": [
+          [
+            "____",
+            "_SS_",
+            "_SS_",
+            "____"
+          ],
+          [
+            "_SS_",
+            "S  S",
+            "S  S",
+            "_SS_"
+          ],
+          [
+            "_SS_",
+            "S0 S",
+            "S  S",
+            "_SS_"
+          ],
+          [
+            "____",
+            "_SS_",
+            "_SS_",
+            "____"
+          ]
+        ],
+        "mapping": {
+          "S": "minecraft:snow_block"
+        }
+      },
+      "enable_visualize": true,
+      "text": "2×2×2 inside: four floor, four roof, sixteen walls. Leave a two-high entrance, then close from within."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Construction",
+      "text": "Use existing snow drifts and slopes for some walls. Fill gaps. No workbench, wood, bedding, fire or shovel required. Ice is a poorer insulator."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Check the room",
+      "text": "Close the entrance and open Room: it should report volume 8. Body heat warms the air gradually. Empty igloos do not heat themselves. Severe cold may still be dangerous."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "When snow is scarce",
+      "text": "If snow is sparse, dig a small cavity in soil or a drift and close its entrance with full blocks. Do not spend the first minutes on a large house. Powder snow is not a wall."
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}

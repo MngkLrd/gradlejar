@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "BBB",
+    "BFB",
+    "BBB"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:brick"
+    },
+    "F": {
+      "item": "minecraft:campfire"
+    }
+  },
+  "result": {
+    "id": "worldlogic_thermal:brick_fireplace",
+    "count": 1
+  }
+}

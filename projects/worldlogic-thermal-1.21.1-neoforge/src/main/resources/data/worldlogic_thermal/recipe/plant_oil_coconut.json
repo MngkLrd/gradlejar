@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "worldlogic_thermal:oil_fruits"
+    },
+    {
+      "tag": "worldlogic_thermal:oil_fruits"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    }
+  ],
+  "result": {
+    "id": "worldlogic_thermal:plant_oil",
+    "count": 1
+  }
+}

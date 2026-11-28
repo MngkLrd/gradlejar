@@ -1,0 +1,269 @@
+{
+  "schema": 2,
+  "ecosystem": "worldlogic",
+  "module": "worldlogic_thermal",
+  "role": "addon",
+  "core_module": "worldlogic",
+  "parent_module": "worldlogic",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "neoforge"
+  },
+  "provides": [
+    {
+      "id": "worldlogic:thermal_status",
+      "version": 1,
+      "revision": 4,
+      "domains": [
+        "body_temperature",
+        "thermal_physiology"
+      ],
+      "entrypoints": [
+        "dev.minemods.thermal.api.ThermalApi"
+      ],
+      "documentation": "projects/worldlogic-thermal-1.21.1-neoforge/README.md",
+      "source_paths": [
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/api/ThermalApi.java"
+      ],
+      "operations": [
+        {
+          "id": "status",
+          "kind": "query",
+          "entrypoint": "dev.minemods.thermal.api.ThermalApi",
+          "semantics": "Read current authoritative body temperature and condition; empty when stale or inactive."
+        },
+        {
+          "id": "physiology",
+          "kind": "query",
+          "entrypoint": "dev.minemods.thermal.api.ThermalApi",
+          "semantics": "Read the actual sampled physiology inputs and thermal factors."
+        },
+        {
+          "id": "admin_restore",
+          "kind": "command",
+          "entrypoint": "dev.minemods.thermal.api.ThermalApi",
+          "semantics": "Trusted server coordinator resets only Thermal-owned physiological state and penalty; preserves adaptation and history."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:room_climate",
+      "version": 1,
+      "revision": 4,
+      "domains": [
+        "room_climate",
+        "wall_insulation"
+      ],
+      "entrypoints": [
+        "dev.minemods.thermal.api.ThermalApi"
+      ],
+      "documentation": "projects/worldlogic-thermal-1.21.1-neoforge/README.md",
+      "source_paths": [
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/api/ThermalApi.java"
+      ],
+      "operations": [
+        {
+          "id": "room_climate",
+          "kind": "query",
+          "entrypoint": "dev.minemods.thermal.api.ThermalApi",
+          "semantics": "Read shared room temperature, humidity, ventilation and volume at a loaded coordinate."
+        },
+        {
+          "id": "wall_insulation",
+          "kind": "query",
+          "entrypoint": "dev.minemods.thermal.api.ThermalApi",
+          "semantics": "Query the selected wall face for applied cladding thickness and effective conductance multiplier."
+        }
+      ]
+    }
+  ],
+  "consumes": [
+    {
+      "id": "worldlogic:environment",
+      "version": 1,
+      "min_revision": 2,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Core atmosphere/environment; no thermal update if absent."
+    },
+    {
+      "id": "worldlogic:survival_physics",
+      "version": 1,
+      "min_revision": 0,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Core authoritative fatigue; respects disabled rule."
+    },
+    {
+      "id": "worldlogic:material_properties",
+      "version": 1,
+      "min_revision": 2,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Pre-RC54 uses explicit legacy gameplay factors; no duplicate SI database."
+    },
+    {
+      "id": "worldlogic:hydration_physiology",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Neutral cooling and legacy status when optional hydration API absent."
+    },
+    {
+      "id": "worldlogic:metabolism_physiology",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Vanilla nutrition fallback when optional metabolism API absent."
+    },
+    {
+      "id": "worldlogic:trauma_status",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Neutral circulation when optional trauma API absent."
+    },
+    {
+      "id": "worldlogic:client_navigation",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Old Core retains native inventory shortcut and optional EMI; Patchouli resources load only with a compatible Core book."
+    },
+    {
+      "id": "worldlogic:dashboards",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Old Core retains native inventory shortcut and optional EMI; Patchouli resources load only with a compatible Core book."
+    },
+    {
+      "id": "worldlogic:field_processing",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Old Core retains native inventory shortcut and optional EMI; Patchouli resources load only with a compatible Core book."
+    },
+    {
+      "id": "worldlogic:excavation",
+      "version": 1,
+      "min_revision": 1,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Old Core local permission only; API 21 probe failure denies direct harvest."
+    }
+  ],
+  "features": [
+    {
+      "id": "body_temperature",
+      "source_paths": [
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/ThermalModel.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/server/EnvironmentSampler.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/server/ThermalEvents.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/server/AddonBridge.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/server/LimbExposure.java"
+      ],
+      "provides": [
+        "worldlogic:thermal_status"
+      ],
+      "consumes": [
+        "worldlogic:environment",
+        "worldlogic:survival_physics",
+        "worldlogic:material_properties",
+        "worldlogic:hydration_physiology",
+        "worldlogic:metabolism_physiology",
+        "worldlogic:trauma_status"
+      ],
+      "integration_review": "Thermal owns body and peripheral exposure; Core supplies world conditions, fatigue and material data, optional sibling snapshots retain their owners. No independent shared resource budget. Core #267 adminRestore is public revision 4; no foreign cure. Trauma #239 uses public physiology perfusion as authoritative heat-distribution input, replacing blood proxy when available. Frostbite exposure uses bounded local game-time timing; successful Trauma report resets full local budget, no duplicate injury or changes to Trauma records."
+    },
+    {
+      "id": "room_climate",
+      "source_paths": [
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/server/RoomHeat.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/RoomPhysics.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/server/PhysicalBridge.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/server/WaterExposure.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/WallInsulationBlock.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/SnowGathering.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/VentBlock.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/HarvestPermission.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/FiberHarvest.java"
+      ],
+      "provides": [
+        "worldlogic:room_climate"
+      ],
+      "consumes": [
+        "worldlogic:environment",
+        "worldlogic:material_properties",
+        "worldlogic:excavation",
+        "worldlogic:survival_physics"
+      ],
+      "integration_review": "RC54 Core API 15 PhysicalMaterials thermalResistance is authoritative for series wall resistance. Thermal owns cladding placement, geometric thickness and room air evolution; API exposes the actual face query used by the solver. Straw uses vanilla hay fire hooks, clay is nonflammable; native block lifecycle invalidates actual room state, so no separate fire capability or duplicate material table is needed. Enclosed air receives bounded waste heat from living noncreative nonspectator occupants, using Thermal's room solver and Core material profiles for snow/ice; no new resource deduction or global weather change. Leaf canopy consumes optional Terrarian resource tags; compact snow insulation and bare-handed packing operate on actual vanilla snow. No duplicate provider state. Core 1.5.1 protection-only break check gates direct gathering and accepted work charges Core once; no foreign state. Guide describes the authoritative room geometry and tool-free snow recovery; Core climate inconsistency tracked at #276 without consumer override."
+    },
+    {
+      "id": "devices_and_clothing",
+      "source_paths": [
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/ThermalContent.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/ClimateGarment.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/ThermalPackItem.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/VentBlock.java"
+      ],
+      "provides": [],
+      "consumes": [
+        "worldlogic:material_properties"
+      ],
+      "integration_review": "Existing devices, wearable layers and portable heat sources feed Thermal exposure and room simulation; physical data are read from Core where supported.",
+      "no_public_surface_reason": "Device and garment contributions are implementation details already reflected by public body and room snapshots."
+    },
+    {
+      "id": "core_presentation",
+      "source_paths": [
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/integration/CorePresentation.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/client/ThermalCoreClient.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/client/ThermalScreen.java"
+      ],
+      "provides": [],
+      "consumes": [
+        "worldlogic:client_navigation",
+        "worldlogic:dashboards",
+        "worldlogic:field_processing"
+      ],
+      "integration_review": "Core owns navigation, synchronized dashboard and JEI processing categories. Thermal registers native four-panel screen and read-only authoritative snapshots, supplies existing station/tool mechanics as descriptors and unique bilingual resource-pack book entries.",
+      "no_public_surface_reason": "Presentation uses Core extension surfaces; no second public dashboard or recipe system."
+    }
+  ],
+  "tests": [
+    {
+      "id": "thermal.server.contract",
+      "capabilities": [
+        "worldlogic:thermal_status",
+        "worldlogic:room_climate",
+        "worldlogic:environment",
+        "worldlogic:survival_physics",
+        "worldlogic:material_properties",
+        "worldlogic:hydration_physiology",
+        "worldlogic:metabolism_physiology",
+        "worldlogic:trauma_status",
+        "worldlogic:excavation"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-thermal.json",
+      "status": "implemented"
+    },
+    {
+      "id": "thermal.presentation.contract",
+      "capabilities": [
+        "worldlogic:client_navigation",
+        "worldlogic:dashboards",
+        "worldlogic:field_processing"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-thermal.json",
+      "status": "implemented"
+    }
+  ]
+}

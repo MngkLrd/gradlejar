@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " H ",
+    "HBH",
+    " H "
+  ],
+  "key": {
+    "H": {
+      "item": "minecraft:leather"
+    },
+    "B": {
+      "item": "minecraft:water_bucket"
+    }
+  },
+  "result": {
+    "id": "worldlogic_thermal:leather_warmer",
+    "count": 1
+  }
+}

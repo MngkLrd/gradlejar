@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=true": {
+      "model": "worldlogic_thermal:block/chimney"
+    },
+    "open=false": {
+      "model": "worldlogic_thermal:block/chimney_active"
+    }
+  }
+}

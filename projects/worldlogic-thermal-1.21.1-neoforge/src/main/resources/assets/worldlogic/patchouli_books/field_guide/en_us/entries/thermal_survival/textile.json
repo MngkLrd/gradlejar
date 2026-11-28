@@ -1,0 +1,43 @@
+{
+  "name": "Wool, hide and repair",
+  "category": "worldlogic:thermal_survival",
+  "icon": "worldlogic_thermal:felting_board",
+  "sortnum": 8,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogic_thermal:felting_board",
+      "link_recipe": true,
+      "text": "Comb one wool block to obtain two combed wool. Hold wool in offhand and comb in main hand, then use. Four combed wool on a felting board gives two felt after ten seconds."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Hide frame: insert leather and collect prepared hide after ten seconds. Drying rack: charged wet cloth dries in 30 seconds. Collect completed batches with empty hand."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Repair: bone needle in main hand, damaged Thermal armor in offhand and one thread in inventory. Right-click restores up to one quarter of maximum durability."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:wool_comb"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:felting_board"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:hide_frame"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:drying_rack"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:bone_needle"
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}

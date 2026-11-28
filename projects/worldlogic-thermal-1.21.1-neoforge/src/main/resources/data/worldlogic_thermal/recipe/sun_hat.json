@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " F ",
+    "FFF"
+  ],
+  "key": {
+    "F": {
+      "item": "worldlogic_thermal:woven_fiber"
+    }
+  },
+  "result": {
+    "id": "worldlogic_thermal:sun_hat",
+    "count": 1
+  }
+}

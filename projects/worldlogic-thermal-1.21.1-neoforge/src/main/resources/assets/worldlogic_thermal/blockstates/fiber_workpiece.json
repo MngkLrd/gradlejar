@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "worldlogic_thermal:block/fiber_workpiece"
+    }
+  }
+}

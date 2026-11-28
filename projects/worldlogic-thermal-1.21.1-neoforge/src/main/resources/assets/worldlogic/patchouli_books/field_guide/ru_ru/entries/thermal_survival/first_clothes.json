@@ -1,0 +1,39 @@
+{
+  "name": "Первая одежда",
+  "category": "worldlogic:thermal_survival",
+  "icon": "worldlogic_thermal:straw_cape",
+  "sortnum": 7,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogic_thermal:straw_cape",
+      "link_recipe": true,
+      "text": "Аварийная накидка: 4 свежих растительных пучка в сетке 2×2. Не требует камня, верстака, веретена или нитей. Это слабая временная защита; полноценная одежда теплее."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:emergency_straw_cape"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Для полноценной одежды обработайте сырьё на камне, сделайте нить и полотно. Накидка из полотна, штаны, капюшон и обувь требуют верстака. Сухая одежда лучше влажной."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:grass_hood"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:grass_coat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:grass_leggings"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:grass_boots"
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}

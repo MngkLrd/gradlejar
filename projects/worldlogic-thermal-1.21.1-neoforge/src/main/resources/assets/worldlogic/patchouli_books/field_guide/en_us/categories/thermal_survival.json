@@ -1,0 +1,7 @@
+{
+  "name": "Thermal survival",
+  "description": "Practical Thermal instructions for shelter, warmth and clothing.",
+  "icon": "worldlogic_thermal:leaf_canopy",
+  "sortnum": 21,
+  "flag": "mod:worldlogic_thermal"
+}

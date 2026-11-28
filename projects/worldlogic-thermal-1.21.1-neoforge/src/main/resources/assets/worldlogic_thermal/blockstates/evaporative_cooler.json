@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "worldlogic_thermal:block/evaporative_cooler"
+    },
+    "active=true": {
+      "model": "worldlogic_thermal:block/evaporative_cooler_active"
+    }
+  }
+}

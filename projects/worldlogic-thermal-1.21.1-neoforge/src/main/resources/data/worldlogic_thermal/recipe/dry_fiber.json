@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "worldlogic_thermal:fiber_plants"
+    }
+  ],
+  "result": {
+    "id": "worldlogic_thermal:raw_fiber_bundle",
+    "count": 1
+  }
+}

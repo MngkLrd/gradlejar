@@ -1,0 +1,43 @@
+{
+  "name": "Шерсть, шкуры и ремонт",
+  "category": "worldlogic:thermal_survival",
+  "icon": "worldlogic_thermal:felting_board",
+  "sortnum": 8,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogic_thermal:felting_board",
+      "link_recipe": true,
+      "text": "Расчешите блок шерсти, чтобы получить две порции шерсти. Шерсть во второй руке, гребень в основной, ПКМ. Четыре порции на доске дают два войлока через десять секунд."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Рама: поместите кожу, через десять секунд заберите подготовленную шкуру. Сушилка: мокрая заряженная ткань высохнет за 30 секунд. Забирайте готовое пустой рукой."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Ремонт: костяная игла в основной руке, повреждённая одежда Thermal во второй, нить в инвентаре. ПКМ восстанавливает до четверти максимальной прочности."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:wool_comb"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:felting_board"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:hide_frame"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:drying_rack"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:bone_needle"
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}

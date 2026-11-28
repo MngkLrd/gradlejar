@@ -1,0 +1,747 @@
+{
+  "schema": 1,
+  "name": "Thermal 0.9.1 climate, rooms and physiology regression",
+  "steps": [
+    {
+      "command": "worldlogic preset realistic",
+      "expect": "World Logic settings saved"
+    },
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "weather clear",
+      "expect": "weather"
+    },
+    {
+      "command": "fill 5 99 5 12 99 12 minecraft:stone",
+      "expect": "Filled|Successfully filled|blocks"
+    },
+    {
+      "command": "fill 5 100 5 12 103 12 minecraft:air",
+      "expect": "Filled|Successfully filled|No blocks were filled|blocks"
+    },
+    {
+      "name": "Authoritative core climate and loaded chunk guard",
+      "command": "thermal qa climate",
+      "expect": "THERMAL_QA_climate_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Drying without heat and empty radiant fixture",
+      "command": "thermal qa dry",
+      "expect": "THERMAL_QA_dry_PASS",
+      "assertion": true
+    },
+    {
+      "command": "setblock 10 100 8 minecraft:campfire[lit=true]",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "Campfire radiates and accelerates drying",
+      "command": "thermal qa heat",
+      "expect": "THERMAL_QA_heat_PASS",
+      "assertion": true
+    },
+    {
+      "command": "fill 9 100 7 9 102 9 minecraft:stone",
+      "expect": "Filled|Successfully filled|blocks"
+    },
+    {
+      "name": "Solid wall blocks radiant heat",
+      "command": "thermal qa blocked",
+      "expect": "THERMAL_QA_blocked_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Leather insulation exceeds iron and empty slots",
+      "command": "thermal qa armor",
+      "expect": "THERMAL_QA_armor_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Thermal state, shared core fatigue and speed modifier",
+      "command": "thermal qa effects",
+      "expect": "THERMAL_QA_effects_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Delayed thermal illness, damage registry, weakness and recovery",
+      "command": "thermal qa conditions",
+      "expect": "THERMAL_QA_conditions_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Authoritative atmosphere and wind-driven exposure",
+      "command": "thermal qa weather",
+      "expect": "THERMAL_QA_weather_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Live route sample, interval guard, coordinates and NBT persistence",
+      "command": "thermal qa history",
+      "expect": "THERMAL_QA_history_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Campfire at zero, lantern and lit furnace, no heat through wall",
+      "command": "thermal qa comfort",
+      "expect": "THERMAL_QA_comfort_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Finite-resource fixture activation and humidity-limited cooling",
+      "command": "thermal qa fixtures",
+      "expect": "THERMAL_QA_fixtures_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Plant insulation and summer clothing exposure",
+      "command": "thermal qa clothing",
+      "expect": "THERMAL_QA_clothing_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Stone fiber processing, exact cells, save and resume, scraper wear, completion and support loss",
+      "command": "thermal qa fiber_work",
+      "expect": "THERMAL_QA_fiber_work_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Dedicated Temperature creative tab registered and complete item inventory",
+      "command": "thermal qa creative_tab",
+      "expect": "THERMAL_QA_creative_tab_PASS",
+      "assertion": true
+    },
+    {
+      "name": "All six portable items, hotbar only, charge gradients, no stacking, expiration and reuse",
+      "command": "thermal qa portable",
+      "expect": "THERMAL_QA_portable_PASS",
+      "assertion": true
+    },
+    {
+      "name": "All nine advanced garments with real equipment exposure profiles",
+      "command": "thermal qa advanced_clothes",
+      "expect": "THERMAL_QA_advanced_clothes_PASS",
+      "assertion": true
+    },
+    {
+      "name": "All seven climate devices and three ventilation fixtures, finite activation and cooling controls",
+      "command": "thermal qa devices",
+      "expect": "THERMAL_QA_devices_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Three hand tools and four textile stations, material consumption and batch collection",
+      "command": "thermal qa textile",
+      "expect": "THERMAL_QA_textile_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Acclimation persistence, moderate exposure, opposite climate and heat response",
+      "command": "thermal qa adaptation",
+      "expect": "THERMAL_QA_adaptation_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Local frostbite timing across seven cold bands, clothing, wetness, recovery and migration",
+      "command": "thermal qa frostbite",
+      "expect": "THERMAL_QA_frostbite_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Hunger and hydration effects on body model, live food reserve",
+      "command": "thermal qa nutrition",
+      "expect": "THERMAL_QA_nutrition_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Room air and wall thermal mass, real heating, retained heat and roof opening",
+      "command": "thermal qa room_inertia",
+      "expect": "THERMAL_QA_room_inertia_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Climate equipment selection and safe placement without overwriting",
+      "command": "thermal qa village_climate",
+      "expect": "THERMAL_QA_village_climate_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Open and closed door, wind, window breach and preserved thermal mass",
+      "command": "thermal qa room_ventilation",
+      "expect": "THERMAL_QA_room_ventilation_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Absolute vapor conservation, indoor humidity and evaporative cooling",
+      "command": "thermal qa room_humidity",
+      "expect": "THERMAL_QA_room_humidity_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Dimension SavedData serialization, retained state and passive decay",
+      "command": "thermal qa room_persistence",
+      "expect": "THERMAL_QA_room_persistence_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Shared room and source caches, expiry, live exposure and public room API",
+      "command": "thermal qa room_cache",
+      "expect": "THERMAL_QA_room_cache_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Optional physiology providers, energy, electrolytes, circulation and public snapshot",
+      "command": "thermal qa integration",
+      "expect": "THERMAL_QA_integration_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Natural water depth and type, real immersion, attenuated local heat and cooling",
+      "command": "thermal qa water_exposure",
+      "expect": "THERMAL_QA_water_exposure_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Uncapped room differential, thermal inertia, fresh public status",
+      "command": "thermal qa room_response",
+      "expect": "THERMAL_QA_room_response_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Responsive HUD layout, strong trend and signed temperature jumps",
+      "command": "thermal qa hud_signals",
+      "expect": "THERMAL_QA_hud_signals_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Physical material normalization, legacy fallback and advertised Core registry integration",
+      "command": "thermal qa physical_materials",
+      "expect": "THERMAL_QA_physical_materials_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Exterior clay and straw cladding, face-specific room conductance and support removal",
+      "command": "thermal qa wall_insulation",
+      "expect": "THERMAL_QA_wall_insulation_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Vanilla fire consumes straw cladding, clay survives and room cache loses insulation",
+      "command": "thermal qa insulation_fire",
+      "expect": "THERMAL_QA_insulation_fire_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Snow shelter geometry, snow versus ice conduction and bounded occupant warmth",
+      "command": "thermal qa snow_shelter",
+      "expect": "THERMAL_QA_snow_shelter_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Leaf canopy cover and combustion",
+      "command": "thermal qa leaf_canopy",
+      "expect": "THERMAL_QA_leaf_canopy_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Compact snow shelter, exact 24-block guide igloo, bare-handed snow gathering and emergency cape",
+      "command": "thermal qa polar_survival",
+      "expect": "THERMAL_QA_polar_survival_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Core admin reset restores thermal state, preserves adaptation and clears own penalty",
+      "command": "thermal qa admin_restore",
+      "expect": "THERMAL_QA_admin_restore_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Core presentation registry and actual Thermal processing descriptors",
+      "command": "thermal qa presentation",
+      "expect": "THERMAL_QA_presentation_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Core 1.5.1 admin coordinator invokes actual Thermal reset",
+      "command": "thermal qa core_heal",
+      "expect": "THERMAL_QA_core_heal_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Direct emergency gathering rejects stale or canceled Core protection probes",
+      "command": "thermal qa gather_protection",
+      "expect": "THERMAL_QA_gather_protection_PASS",
+      "assertion": true
+    }
+  ],
+  "coverage": [
+    {
+      "id": "climate",
+      "kind": "mechanic",
+      "subject": "Authoritative core climate and loaded chunk guard",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Authoritative core climate and loaded chunk guard"
+        }
+      ]
+    },
+    {
+      "id": "dry",
+      "kind": "mechanic",
+      "subject": "Drying without heat and empty radiant fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Drying without heat and empty radiant fixture"
+        }
+      ]
+    },
+    {
+      "id": "heat",
+      "kind": "mechanic",
+      "subject": "Campfire radiates and accelerates drying",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Campfire radiates and accelerates drying"
+        }
+      ]
+    },
+    {
+      "id": "blocked",
+      "kind": "mechanic",
+      "subject": "Solid wall blocks radiant heat",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Solid wall blocks radiant heat"
+        }
+      ]
+    },
+    {
+      "id": "armor",
+      "kind": "mechanic",
+      "subject": "Leather insulation exceeds iron and empty slots",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Leather insulation exceeds iron and empty slots"
+        }
+      ]
+    },
+    {
+      "id": "effects",
+      "kind": "mechanic",
+      "subject": "Thermal state, shared core fatigue and speed modifier",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Thermal state, shared core fatigue and speed modifier"
+        }
+      ]
+    },
+    {
+      "id": "conditions",
+      "kind": "mechanic",
+      "subject": "Delayed thermal illness, damage registry, weakness and recovery",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Delayed thermal illness, damage registry, weakness and recovery"
+        }
+      ]
+    },
+    {
+      "id": "weather",
+      "kind": "mechanic",
+      "subject": "Authoritative atmosphere and wind-driven exposure",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Authoritative atmosphere and wind-driven exposure"
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "kind": "mechanic",
+      "subject": "Live route sample, interval guard, coordinates and NBT persistence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live route sample, interval guard, coordinates and NBT persistence"
+        }
+      ]
+    },
+    {
+      "id": "comfort",
+      "kind": "mechanic",
+      "subject": "Campfire at zero, lantern and lit furnace, no heat through wall",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Campfire at zero, lantern and lit furnace, no heat through wall"
+        }
+      ]
+    },
+    {
+      "id": "fixtures",
+      "kind": "mechanic",
+      "subject": "Finite-resource fixture activation and humidity-limited cooling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Finite-resource fixture activation and humidity-limited cooling"
+        }
+      ]
+    },
+    {
+      "id": "clothing",
+      "kind": "mechanic",
+      "subject": "Plant insulation and summer clothing exposure",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Plant insulation and summer clothing exposure"
+        }
+      ]
+    },
+    {
+      "id": "fiber-work",
+      "kind": "mechanic",
+      "subject": "Stone fiber processing, exact cells, save and resume, scraper wear, completion and support loss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Stone fiber processing, exact cells, save and resume, scraper wear, completion and support loss"
+        }
+      ]
+    },
+    {
+      "id": "creative-tab",
+      "kind": "menu",
+      "subject": "Dedicated Temperature creative tab registered and complete item inventory",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Dedicated Temperature creative tab registered and complete item inventory"
+        }
+      ]
+    },
+    {
+      "id": "portable",
+      "kind": "mechanic",
+      "subject": "All six portable items, hotbar only, charge gradients, no stacking, expiration and reuse",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All six portable items, hotbar only, charge gradients, no stacking, expiration and reuse"
+        }
+      ]
+    },
+    {
+      "id": "advanced_clothes",
+      "kind": "mechanic",
+      "subject": "All nine advanced garments with real equipment exposure profiles",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All nine advanced garments with real equipment exposure profiles"
+        }
+      ]
+    },
+    {
+      "id": "devices",
+      "kind": "mechanic",
+      "subject": "All seven climate devices and three ventilation fixtures, finite activation and cooling controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All seven climate devices and three ventilation fixtures, finite activation and cooling controls"
+        }
+      ]
+    },
+    {
+      "id": "textile",
+      "kind": "mechanic",
+      "subject": "Three hand tools and four textile stations, material consumption and batch collection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Three hand tools and four textile stations, material consumption and batch collection"
+        }
+      ]
+    },
+    {
+      "id": "adaptation",
+      "kind": "mechanic",
+      "subject": "Acclimation persistence, moderate exposure, opposite climate and heat response",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Acclimation persistence, moderate exposure, opposite climate and heat response"
+        }
+      ]
+    },
+    {
+      "id": "frostbite",
+      "kind": "mechanic",
+      "subject": "Four separate limb exposures, local insulation and wetness",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Local frostbite timing across seven cold bands, clothing, wetness, recovery and migration"
+        }
+      ]
+    },
+    {
+      "id": "nutrition",
+      "kind": "mechanic",
+      "subject": "Hunger and hydration effects on body model, live food reserve",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hunger and hydration effects on body model, live food reserve"
+        }
+      ]
+    },
+    {
+      "id": "room_inertia",
+      "kind": "mechanic",
+      "subject": "Room air and wall thermal mass, real heating, retained heat and roof opening",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Room air and wall thermal mass, real heating, retained heat and roof opening"
+        }
+      ]
+    },
+    {
+      "id": "village_climate",
+      "kind": "mechanic",
+      "subject": "Climate equipment selection and safe placement without overwriting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Climate equipment selection and safe placement without overwriting"
+        }
+      ]
+    },
+    {
+      "id": "room-ventilation",
+      "kind": "mechanic",
+      "subject": "Open and closed door, wind, window breach and preserved thermal mass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Open and closed door, wind, window breach and preserved thermal mass"
+        }
+      ]
+    },
+    {
+      "id": "room-humidity",
+      "kind": "mechanic",
+      "subject": "Absolute vapor conservation, indoor humidity and evaporative cooling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Absolute vapor conservation, indoor humidity and evaporative cooling"
+        }
+      ]
+    },
+    {
+      "id": "room-persistence",
+      "kind": "mechanic",
+      "subject": "Dimension SavedData serialization, retained state and passive decay",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Dimension SavedData serialization, retained state and passive decay"
+        }
+      ]
+    },
+    {
+      "id": "room-cache",
+      "kind": "mechanic",
+      "subject": "Shared room and source caches, expiry, live exposure and public room API",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Shared room and source caches, expiry, live exposure and public room API"
+        }
+      ]
+    },
+    {
+      "id": "physiology-integration",
+      "kind": "mechanic",
+      "subject": "Optional physiology providers, energy, electrolytes, circulation and public snapshot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Optional physiology providers, energy, electrolytes, circulation and public snapshot"
+        }
+      ]
+    },
+    {
+      "id": "water-exposure",
+      "kind": "mechanic",
+      "subject": "Natural water depth and type, real immersion, attenuated local heat and cooling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Natural water depth and type, real immersion, attenuated local heat and cooling"
+        }
+      ]
+    },
+    {
+      "id": "room-response",
+      "kind": "mechanic",
+      "subject": "Uncapped room differential, thermal inertia, fresh public status",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Uncapped room differential, thermal inertia, fresh public status"
+        }
+      ]
+    },
+    {
+      "id": "hud-signals",
+      "kind": "menu",
+      "subject": "Responsive HUD layout, strong trend and signed temperature jumps",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Responsive HUD layout, strong trend and signed temperature jumps"
+        }
+      ]
+    },
+    {
+      "id": "physical-materials",
+      "kind": "mechanic",
+      "subject": "Physical material normalization, legacy fallback and advertised Core registry integration",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Physical material normalization, legacy fallback and advertised Core registry integration"
+        }
+      ]
+    },
+    {
+      "id": "clay-insulation",
+      "kind": "block",
+      "subject": "clay-insulation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Exterior clay and straw cladding, face-specific room conductance and support removal"
+        }
+      ]
+    },
+    {
+      "id": "straw-insulation",
+      "kind": "block",
+      "subject": "straw-insulation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Exterior clay and straw cladding, face-specific room conductance and support removal"
+        }
+      ]
+    },
+    {
+      "id": "insulation-fire",
+      "kind": "mechanic",
+      "subject": "Vanilla fire consumes straw cladding, clay survives and room cache loses insulation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vanilla fire consumes straw cladding, clay survives and room cache loses insulation"
+        }
+      ]
+    },
+    {
+      "id": "snow-shelter",
+      "kind": "mechanic",
+      "subject": "Snow shelter geometry, snow versus ice conduction and bounded occupant warmth",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Snow shelter geometry, snow versus ice conduction and bounded occupant warmth"
+        }
+      ]
+    },
+    {
+      "id": "leaf-canopy",
+      "kind": "block",
+      "subject": "Leaf canopy cover and combustion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Leaf canopy cover and combustion"
+        }
+      ]
+    },
+    {
+      "id": "polar-survival",
+      "kind": "mechanic",
+      "subject": "Compact snow shelter and bare-handed snow gathering",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Compact snow shelter, exact 24-block guide igloo, bare-handed snow gathering and emergency cape"
+        }
+      ]
+    },
+    {
+      "id": "admin-restore",
+      "kind": "mechanic",
+      "subject": "Core admin reset restores thermal state, preserves adaptation and clears own penalty",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core admin reset restores thermal state, preserves adaptation and clears own penalty"
+        }
+      ]
+    },
+    {
+      "id": "core-presentation",
+      "kind": "mechanic",
+      "subject": "Core presentation registry and actual Thermal processing descriptors",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core presentation registry and actual Thermal processing descriptors"
+        }
+      ]
+    },
+    {
+      "id": "core-heal",
+      "kind": "mechanic",
+      "subject": "Core 1.5.1 admin coordinator invokes actual Thermal reset",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core 1.5.1 admin coordinator invokes actual Thermal reset"
+        }
+      ]
+    },
+    {
+      "id": "gather-protection",
+      "kind": "mechanic",
+      "subject": "Direct emergency gathering rejects stale or canceled Core protection probes",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Direct emergency gathering rejects stale or canceled Core protection probes"
+        }
+      ]
+    }
+  ]
+}

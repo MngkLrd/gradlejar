@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "worldlogic_thermal:straw_sources"
+    },
+    {
+      "tag": "worldlogic_thermal:straw_sources"
+    },
+    {
+      "tag": "worldlogic_thermal:straw_sources"
+    }
+  ],
+  "result": {
+    "id": "worldlogic_thermal:straw_insulation",
+    "count": 4
+  }
+}

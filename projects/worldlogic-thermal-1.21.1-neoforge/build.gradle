@@ -1,0 +1,90 @@
+plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
+group = 'dev.minemods'
+version = '0.12.3'
+base.archivesName = 'worldlogic_thermal-neoforge-mc1.21.1'
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+neoForge {
+    version = project.neo_version
+    runs { client { client() }; server { server(); programArgument '--nogui' } }
+    mods { worldlogic_thermal { sourceSet(sourceSets.main) } }
+}
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.terraformersmc.com/releases/'; content { includeGroup 'dev.emi' } }
+}
+def coreName = 'worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar'
+def coreUrl = 'https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc22-1246-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar'
+def expectedSha = '1c0d23ca034cd17f783e4d1abbf01f1eda8783ac0ba3b48cf6afdc1291d21dc8'
+def coreJar = file(providers.gradleProperty('worldlogicJar').orElse('libs/'+coreName).get())
+dependencies {
+    implementation files(coreJar)
+    compileOnly 'dev.emi:emi-neoforge:1.1.22+1.21.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.4'
+}
+tasks.register('verifyWorldLogic') {
+    doLast {
+        if (!coreJar.isFile()) {
+            if (providers.gradleProperty('worldlogicJar').isPresent()) throw new GradleException('Explicit core path missing: ' + coreJar)
+            coreJar.parentFile.mkdirs()
+            def temp = new File(coreJar.parentFile,coreJar.name+'.part')
+            try {
+                def connection = new URI(coreUrl).toURL().openConnection()
+                connection.connectTimeout=20000; connection.readTimeout=60000
+                connection.inputStream.withCloseable { input -> temp.withOutputStream { out -> out << input } }
+                def actual = java.security.MessageDigest.getInstance('SHA-256').digest(temp.bytes).encodeHex().toString()
+                if (actual != expectedSha) throw new GradleException('WorldLogic download SHA-256 mismatch')
+                java.nio.file.Files.move(temp.toPath(),coreJar.toPath(),java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+            } finally { temp.delete() }
+        }
+        def actual = java.security.MessageDigest.getInstance('SHA-256').digest(coreJar.bytes).encodeHex().toString()
+        def accepted = providers.gradleProperty('worldlogicJar').isPresent() ? [expectedSha, '9cb8c75897f313f274f88b2a12f15f37b8af97aef773674c7b0db5a8fa33cd67', '33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56','581e25d192c55123599cbc5ed380db10f708c2981345ba8683f83e64df910805','a966fb939988e794586cd6a1ea18fafe340296447b67ef8a9827963328e20548'] : [expectedSha]
+        if (!accepted.contains(actual)) throw new GradleException('WorldLogic dependency SHA-256 mismatch: '+actual)
+        new java.util.zip.ZipFile(coreJar).withCloseable { zip ->
+            if (zip.getEntry('META-INF/neoforge.mods.toml') == null || zip.getEntry('dev/minemods/worldlogic/api/WorldLogicApi.class') == null)
+                throw new GradleException('WorldLogic dependency has no NeoForge metadata or public API')
+            if (actual == '33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56' && (zip.getEntry('dev/minemods/worldlogic/api/PhysicalMaterials$ThermalLayer.class') == null || zip.getEntry('dev/minemods/worldlogic/api/PhysicalWater.class') == null))
+                throw new GradleException('Exact RC54 candidate lacks expected public endpoints')
+        }
+    }
+}
+tasks.named('compileJava') { dependsOn 'verifyWorldLogic' }
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 21 }
+tasks.named('test', Test) { useJUnitPlatform() }
+
+tasks.register('verifyThermalGuide') {
+    inputs.dir('src/main/resources/assets/worldlogic/patchouli_books/field_guide')
+    doLast {
+        def base = file('src/main/resources/assets/worldlogic/patchouli_books/field_guide')
+        def parser = new groovy.json.JsonSlurper()
+        def locales = ['en_us','ru_ru']
+        def sets = locales.collect { loc ->
+            def category = parser.parse(new File(base, loc+'/categories/thermal_survival.json'))
+            assert category.flag == 'mod:worldlogic_thermal'
+            def entries = new File(base, loc+'/entries/thermal_survival').listFiles().findAll { it.name.endsWith('.json') }
+            assert entries.size() == 10
+            entries.each { entry ->
+                def data = parser.parse(entry)
+                assert data.category == 'worldlogic:thermal_survival' && data.flag == 'mod:worldlogic_thermal'
+                assert data.pages[0].type == 'patchouli:spotlight' && data.pages[0].link_recipe
+                data.pages.findAll { it.type == 'patchouli:image' }.each { page ->
+                    assert !page.images.isEmpty()
+                    page.images.each { image -> assert file('src/main/resources/assets/'+image.replace(':','/')).isFile() }
+                }
+                data.pages.findAll { it.type == 'patchouli:multiblock' }.each { page ->
+                    assert page.multiblock.pattern.flatten().join('').count('0') == 1
+                    assert page.multiblock.pattern.collect { it.size() }.unique().size() == 1
+                    assert page.multiblock.pattern.flatten().collect { it.length() }.unique().size() == 1
+                }
+                data.pages.findAll { it.type == 'patchouli:crafting' }.each { page ->
+                    assert page.recipe.startsWith('worldlogic_thermal:')
+                    assert file('src/main/resources/data/worldlogic_thermal/recipe/'+page.recipe.split(':')[1]+'.json').isFile()
+                }
+                if (data.icon.startsWith('worldlogic_thermal:')) assert file('src/main/resources/assets/worldlogic_thermal/models/item/'+data.icon.split(':')[1]+'.json').isFile()
+            }
+            entries.collect { it.name }.toSet()
+        }
+        assert sets[0] == sets[1]
+    }
+}
+tasks.named('processResources') { dependsOn 'verifyThermalGuide' }
