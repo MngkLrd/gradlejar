@@ -176,6 +176,15 @@ final class TreeQA {
             l.setBlock(p.north(),leaves.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.PERSISTENT,true),3);
             var owned=CrownOwnership.owned(l,java.util.Set.of(p));
             if(!owned.contains(p.east())||owned.contains(p.east(2))||owned.contains(p.east(3))||owned.contains(p.north()))return 0;
+            // At the upright pose the transformed upper log occupies exactly the chosen source cell.
+            // A natural leaf is not a timber support; an intentionally placed leaf remains solid.
+            BlockPos base=new BlockPos(1024,215,1015),target=base.above();
+            l.setBlock(target,leaves,3);
+            boolean naturalClear=TreeChopper.sweepClear(l,base,target,Direction.NORTH,0,java.util.Set.of());
+            l.setBlock(target,leaves.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.PERSISTENT,true),3);
+            boolean placedClear=TreeChopper.sweepClear(l,base,target,Direction.NORTH,0,java.util.Set.of());
+            l.setBlock(target,net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
+            if(!naturalClear||placedClear)return 0;
             c.getSource().sendSuccess(()->Component.literal("TreeChopper crown ownership PASS"),false);return 1;
           }))
           .then(Commands.literal("qa_leafless_cut").executes(c->{

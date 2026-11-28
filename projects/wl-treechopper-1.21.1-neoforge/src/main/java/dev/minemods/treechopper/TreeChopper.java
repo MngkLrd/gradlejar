@@ -407,8 +407,11 @@ public final class TreeChopper {
         List<Display.BlockDisplay> displays=new ArrayList<>();
         ListTag members=new ListTag();Display.BlockDisplay master=null;
         // All pieces share a common pivot, so rotation preserves the tree silhouette.
+        int animatedLeaves=0;
         for(Piece piece:pieces){
             boolean cap=rootSet.contains(piece.pos);
+            // Removal is authoritative for the whole owned crown; particles/displays are capped.
+            if(!cap&&!piece.log&&animatedLeaves++>=384)continue;
             boolean coordinator=piece.pos.equals(base);
             Display.BlockDisplay d=new Display.BlockDisplay(EntityType.BLOCK_DISPLAY,l);
             CompoundTag tag=new CompoundTag();
