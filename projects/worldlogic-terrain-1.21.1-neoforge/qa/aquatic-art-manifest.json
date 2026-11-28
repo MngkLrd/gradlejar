@@ -1,0 +1,167 @@
+{
+  "schema": 1,
+  "assets": {
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/barrel_sponge.png": {
+      "sha": "2b5d42a5e8f54768e3cfe49ca443812728c46ec2",
+      "sha256": "74b6abce5e343d9f0f77fa9f70896bf78549ceb3476ab1ef59131fe5b55169b8"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/blue_sea_star.png": {
+      "sha": "fd809a8e502d0972de18f6fcb99c8a6591855c8a",
+      "sha256": "6898087d78e1dee927c25ba6eabce2af36bc38e0ebaa764433d4863c106c6bb4"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/coralline_algae.png": {
+      "sha": "8b75c5ae0b6dfe0bc81ec5c56d49814ecbf1dbf1",
+      "sha256": "dac225426de16aa877f39aa8594477ec396a40c7ac9d3cd611cd737b73a9b776"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/eelgrass.png": {
+      "sha": "59742ed6f3167a23e41f7f295c9b7d43e4809db5",
+      "sha256": "9c2cc27ce4ee2b6a8b96e60a28c416a08a7dbc6e7f8c4b2f9d083d7820fc6f79"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/giant_kelp.png": {
+      "sha": "db50980483ffc6e2727fcbc45b19d8eb82eb063a",
+      "sha256": "9eefee7fb7057179a3a0a6107ea83b025b5b536c36d78a0c86c6ade24783bc22"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/hornwort.png": {
+      "sha": "dc8db9f0452e8ab8038b405e6e50d21dcedb3cef",
+      "sha256": "4a56c369ea4f4e7a9c05f8ac6e78e9b2c0c930fa54ffa1c0ee059448c7871461"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/mussel_bed.png": {
+      "sha": "7084648972a6a889f2cded03b0321d0e5f7556d8",
+      "sha256": "f15368732f74422ed7182fceffe531d5c4e091846ba23f3ef2080fce6f9bffa2"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/pondweed.png": {
+      "sha": "81a30dc6d73417a4f6c1d5d9915e42321d6df0d2",
+      "sha256": "bd4fef5c223fff5642b6e64b8d4b5b2f8a05280b037eab88f037bb0e703d72d3"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/red_dulse.png": {
+      "sha": "d268f21a5bea66c4098547fe6a26158b53102984",
+      "sha256": "16b0f982218e98c3dc1c109a9327f66b291a96dd1058b5eba3b28906f7cb0e79"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/red_sea_star.png": {
+      "sha": "a421611d657cf7e5c126530088a70e8dd5a02e49",
+      "sha256": "5015cd500d5d135eb335a454fa5238be6f09c2acdb54453506474b601decc2b6"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/river_moss.png": {
+      "sha": "46de9e900b8170d04ba59f0a202112e645b4613a",
+      "sha256": "96e826ee799fc66dcfd179664424143abc23d742e2aafa7b023e4ed5b419b0a1"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sargassum.png": {
+      "sha": "71ef0ecfae9da061ccac8c24f43531b6e4b8dd0d",
+      "sha256": "942eb3cb7408cbd22099a078302a242fee340dc88b995abc77a49ade637bc304"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sea_anemone.png": {
+      "sha": "c50b6bd69b2a17bd8924f34d74bc83a0ef08411d",
+      "sha256": "9133ea067f75646f0cae4afa5b8787e1dd0cf9fbbb815a7ae34c52084fabb257"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sea_fan.png": {
+      "sha": "9a22e7e7dcfc4b980390708b1987e2dc36d5ac4b",
+      "sha256": "5cbd5f3b68984b0e4e7570173cce1fa1a8c47cdea37ffc09568096ba34defe93"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sea_lettuce.png": {
+      "sha": "0ebd76ae671c5537ef267c4a0503a2bfa22523a0",
+      "sha256": "ef9f9b9a4c973d6c2a126f5e4277eaa2be4f4d608afaa892e34aeea20c29e832"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sea_urchin.png": {
+      "sha": "da8be41ba87b75856c2000595201c29e3574624f",
+      "sha256": "9292a54f1e1cdfe1858145bde88695fcf7c321948b056880125d5423874270eb"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/water_crowfoot.png": {
+      "sha": "d04cf9840289eccde1f6457e0a48e8e1964571f3",
+      "sha256": "785d7c8e6e473713e2b748b92d6b2a6bd2eb6a52f5173d71991a15157105828b"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/water_milfoil.png": {
+      "sha": "eca7f0d799591ed9b12bdcdda9ec39bc9500e3e1",
+      "sha256": "e0c7b1fad85a5999f0c7cdeb07b0c9d093ee3d9a5a6f3096110cb5b500506a4d"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/water_starwort.png": {
+      "sha": "401dd32ed2110ad8f6b74a60a55af675cb6525b6",
+      "sha256": "7d696b4cda6e55557f97cab18926828c4d870587f2614b4d698077ba0bbd1884"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/widgeon_grass.png": {
+      "sha": "8ab8ad9ef67ce3d435aedd53c77792d2c010eedc",
+      "sha256": "f1b1c67c5e963d2daa13afc79633c24fee7ade28d933439aefe2c1ea48277457"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/barrel_sponge.png": {
+      "sha": "552dd8670dbbc9f8740a914da2de711bb23b716e",
+      "sha256": "475d7ec6c3eb06c7786759474f8c83cf4e58832c8cdc8b28767d978dfed26a15"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/blue_sea_star.png": {
+      "sha": "bb4e11cafc29b7773a24553797ad4c5f813c6893",
+      "sha256": "a8543614ff27efeddb41cebff2b922258b058fb6f0405d9f4789287ece1b3a67"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/coralline_algae.png": {
+      "sha": "446a7af5e6b02acc948120d43c06d263e3a9b346",
+      "sha256": "5951b3a6c5432250a04e665aa79cc2cc9b47d5e0f54b8e9501b954ca93277b49"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/eelgrass.png": {
+      "sha": "0cf8be5c33eab5283956617de6ecea4221a6231e",
+      "sha256": "37bf8ea8ede963a1ff57322c3350411442cfdc3ec288d3fc0dec92028c0baff3"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/giant_kelp.png": {
+      "sha": "f3e40b81c1a1aa54c1a56af26eec39b11d0242bf",
+      "sha256": "00f5c63f5506ebe4f34cc8e19c15b01bd74c028ce024b32e2474de930e068ee1"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/hornwort.png": {
+      "sha": "cea54558a4d85e69614533404f6447f2e4ca7fb2",
+      "sha256": "a8f42a33e1b212851214477fb39327c3ba81cfb72d40c51fe1f80fa26dfc57be"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/mussel_bed.png": {
+      "sha": "01c099c3b5816f9d258542cfa06fdc868505e636",
+      "sha256": "582d2c29d4bb4f0337f36e3d3432bb8dee2d3b25016f1e40626a89508bfb447a"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/pondweed.png": {
+      "sha": "a9f76668ce0fca431cda92464d61940fa3257a03",
+      "sha256": "12f1d90519f6e2a0eea42e76ba641bdc3612ee19770a2f461361d2479659ead8"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/red_dulse.png": {
+      "sha": "940b93f52fe68767a5a809ab22b8cba5950a7f56",
+      "sha256": "ccc42b0649ae681ec1872146e75598ba05b3089b58befd52f5b5bba430eb1cef"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/red_sea_star.png": {
+      "sha": "5a8d6306f3d6c36e5468d3db94a5fa29022b57c8",
+      "sha256": "22b0b0849e9ee81ac87d224e7d6872f7fa1d2e939174c6c6aef86568bd7ee21c"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/river_moss.png": {
+      "sha": "caae0224521ab2fbc2f4a5f79eccbefc9515295b",
+      "sha256": "c5211b48676a9448cfd5be89dab29ce0cda325f43a1503bf27228f54a57b8afe"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/sargassum.png": {
+      "sha": "9de45c5654bb2b667f3b70f3e7248d07ae05fb17",
+      "sha256": "91d4acbf3cba03d7e8b68eda45393cff2b86efa5de8921a14d65bca2346f793f"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/sea_anemone.png": {
+      "sha": "dcd1af9d76438b858b2bc5602dfced2f2c04d093",
+      "sha256": "bae33f099849bd9223f928a673f5005b9cea255316b4004de0ae58cad8e0634a"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/sea_fan.png": {
+      "sha": "e2221152a84fa71e18557c9743b051df45fd9554",
+      "sha256": "1c836ca53c5fcab8d520c5ec7c3d821cbd8ba3e308a3fbb1abddff2375b0694e"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/sea_lettuce.png": {
+      "sha": "3a25c9ece4eeca0550fe4509d7ddd266070a28b6",
+      "sha256": "32286ce08c6f3cf5424de4c8a985c3de787503259b4f0d0b06aa8dd362204391"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/sea_urchin.png": {
+      "sha": "331cb5a9ab9f3481af79de012df198693db2183b",
+      "sha256": "1524b1c3380d69f6a608945a6748874d56e4d698f7ab4f7a86776d9674882997"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/water_crowfoot.png": {
+      "sha": "d99bb10a2c9ded697954c28bcc9c5bf4b9a6f10d",
+      "sha256": "b8d6aab46bd7f3d8bc193adc3a341400adc0c6cade06505516d01e12c56708c0"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/water_milfoil.png": {
+      "sha": "4445095e2ed72b247eb39a7878dd198d73a16a50",
+      "sha256": "b559672dcbb8d1e8b227152bcba1856b36e8a8f25a6aae453ff512075d45af11"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/water_starwort.png": {
+      "sha": "88e0614554034289f90103be0cebc8ad46cfc5d6",
+      "sha256": "bb971a98af16cca089b2ae182700d07475d5dfae5b8e5b140ecded30d77df84d"
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/widgeon_grass.png": {
+      "sha": "5deb4051f40470ed6d221931f079d7d7ed888079",
+      "sha256": "1b66870066f13765000235fb120795a6bfe873be88aae9bc8486723209bfb232"
+    }
+  },
+  "model_count": 40,
+  "source": "Original 16x16 icons and 32x32 world textures; exact static previews inspected, actual Minecraft rendering untested."
+}
