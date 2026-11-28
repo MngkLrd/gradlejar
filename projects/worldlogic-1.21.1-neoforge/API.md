@@ -1,3 +1,7 @@
+# NON-NEGOTIABLE OWNER REQUIREMENT: RC22 GEOGRAPHY MUST NOT REGRESS
+
+Preserve RC22 Earthlike Climate surface relief, coastlines, continents, mountains, plains and drainage. Do not amplify, flatten, reroll or replace its terrain noise to add biomes. New biome classes partition the same climate fields. Compare exact base height at identical coordinates and seeds against the immutable RC22 preset; intentional local cave mouths/soil features are separately reviewed. Do not remove old registry IDs needed by existing saves. This rule overrides older plans to amplify mountain height. Core owns geography, climate, biome classification, geology, hydrology and animals; Terrarian owns plant generation (trees, grass, shrubs and other flora). One selectable Realistic preset for new World Logic worlds, with legacy IDs retained for old saves. Full generated-world and client checks remain required before release-quality claims.
+
 # World Logic API v1 (RC20 baseline, RC21 additive revision)
 
 Minecraft 1.21.1 / NeoForge 21.1.80+ (CI baseline 21.1.262) / Java 21 / official mappings.
@@ -93,3 +97,7 @@ QA: the production server regression exercises environment sampling vs seeded ro
 Opt-in `modeled_weather` selects actual overworld vanilla weather from the spawn parcel column every 200 ticks. Default off in all presets, respects `doWeatherCycle`. Existing live API observes vanilla weather flags; regional anomaly previews are still not authoritative. No per-player local weather yet. `/worldlogic rule modeled_weather true` enables the controller. Stamina now recovers while walking at 2.4 points/s, sneaking at 3, standing at 4 after a one-second effort cooldown, with reduced recovery at low hunger.
 
 RC22 transport grid preview: `transportGridPreview(level,pos)` is present only with modeled_weather enabled, a persisted grid, loaded position, and inside the bounded overworld domain. Pressure in hPa, air temperature in C, vapor mixing ratio g/kg, RH percent, last model tick. It is not authoritative player temperature; live API remains unchanged. `/worldlogic weather_grid` inspects the active model.
+
+RC23 extended preset: `regionalClimate` recognizes `earthlike_extended`, reports amplified modeled surface height and adjusts thermal index for extra relief. Existing preset and public records unchanged. New geology is worldgen-only and no ore location is exposed via public API.
+
+RC24: `realistic_unified` retains RC22 modeled regional climate/surface height. Stable biome tags `worldlogic:vegetation/{polar,tundra,wetland,boreal,grassland,desert,temperate_forest,scrub,tropical_forest,savanna,marine,coast,alpine,subterranean}` are the Terrarian integration contract; core generates no vegetation features for these biomes. New registry IDs under worldlogic namespace. Old API records unchanged.

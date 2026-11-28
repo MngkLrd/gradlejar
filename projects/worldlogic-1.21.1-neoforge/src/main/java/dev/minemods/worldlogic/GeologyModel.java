@@ -1,0 +1,98 @@
+package dev.minemods.worldlogic;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SplittableRandom;
+
+/** Game-scale seeded geological provinces and deposits; not literal USGS tonnages. */
+public final class GeologyModel {
+ private GeologyModel(){}
+ public static final int DISTRICT=192;
+ public enum Province { SEDIMENTARY, CARBONATE, INTRUSIVE, METAMORPHIC, CRATON }
+ public enum Ore { COAL, IRON, COPPER, GOLD, DIAMOND, EMERALD, LAPIS, REDSTONE }
+ public record Body(Ore ore,double x,double y,double z,double along,double across,double vertical,double angle,double dip,double grade,long salt){
+  public double score(int px,int py,int pz){
+   double dx=px-x,dz=pz-z,a=dx*Math.cos(angle)+dz*Math.sin(angle),b=-dx*Math.sin(angle)+dz*Math.cos(angle);
+   double h=py-y-a*dip-1.8*Math.sin(a*.075+salt%13);
+   return a*a/(along*along)+b*b/(across*across)+h*h/(vertical*vertical);
+  }
+  public boolean contains(int px,int py,int pz){double s=score(px,py,pz);return s<=1&&unit(hash(salt,px,py,pz))<grade*(1-.65*s);}
+  public int minY(){return (int)Math.floor(y-vertical-Math.abs(dip)*along-2);}
+  public int maxY(){return (int)Math.ceil(y+vertical+Math.abs(dip)*along+2);}
+ }
+ public record Cave(double x,double y,double z,double along,double across,double vertical,double angle,double dip,int waterY,boolean shaft){
+  public double score(int px,int py,int pz){
+   double dx=px-x,dz=pz-z,a=dx*Math.cos(angle)+dz*Math.sin(angle),b=-dx*Math.sin(angle)+dz*Math.cos(angle);
+   double h=py-y-a*dip-3*Math.sin(a*.06);
+   return a*a/(along*along)+b*b/(across*across)+h*h/(vertical*vertical);
+  }
+  public int minY(){return (int)Math.floor(y-vertical-Math.abs(dip)*along-4);}
+  public int maxY(){return (int)Math.ceil(y+vertical+Math.abs(dip)*along+4);}
+  public boolean shaftAt(int px,int py,int pz,int surface){
+   if(!shaft||surface<67||py<y||py>surface+1)return false;
+   double distance=Math.hypot(px-x,pz-z);
+   double radius=2.2+Math.max(0,Math.min(1,(py-(surface-12))/12.0))*7;
+   return distance<radius;
+  }
+ }
+ public record District(Province province,List<Body> ores,List<Cave> caves){}
+ public static long hash(long seed,int x,int y,int z){
+  long h=seed^(x*0x9e3779b97f4a7c15L)^(y*0x632be59bd9b4e019L)^(z*0xc2b2ae3d27d4eb4fL);
+  h=(h^(h>>>30))*0xbf58476d1ce4e5b9L;h=(h^(h>>>27))*0x94d049bb133111ebL;return h^(h>>>31);
+ }
+ static double unit(long h){return (h>>>11)*0x1.0p-53;}
+ public static Province province(long seed,int x,int z){
+  return Province.values()[(int)Math.floorMod(hash(seed,Math.floorDiv(x,DISTRICT*3),0,Math.floorDiv(z,DISTRICT*3)),5)];
+ }
+ private static double normal(SplittableRandom r){return Math.sqrt(-2*Math.log(Math.max(1e-12,r.nextDouble())))*Math.cos(2*Math.PI*r.nextDouble());}
+ private static Body body(SplittableRandom r,Ore ore,double x,double y,double z,double a,double b,double v,double angle,double dip,double grade){
+  // USGS grade/tonnage models frequently use lognormal distributions. The medians and
+  // truncation below are game calibration values; not direct conversions of economic grades.
+  double size=Math.max(.72,Math.min(1.20,Math.exp(.23*normal(r))));
+  double richness=Math.max(.70,Math.min(1.25,Math.exp(.28*normal(r))));
+  return new Body(ore,x,y,z,a*size,b*size,v,angle,dip,Math.max(.06,Math.min(.90,grade*richness)),r.nextLong());
+ }
+ public static District district(long seed,int gx,int gz){
+  var r=new SplittableRandom(hash(seed,gx,1,gz));
+  double x=gx*(double)DISTRICT+DISTRICT*(.3+.4*r.nextDouble()),z=gz*(double)DISTRICT+DISTRICT*(.3+.4*r.nextDouble());
+  var p=province(seed,(int)x,(int)z);
+  double a=r.nextDouble(2*Math.PI),dip=r.nextDouble(-.18,.18);
+  var ores=new ArrayList<Body>();var caves=new ArrayList<Cave>();
+  if(p==Province.SEDIMENTARY||p==Province.CARBONATE){
+   ores.add(body(r,Ore.COAL,x,r.nextDouble(20,68),z,62,38,2.4,a,dip,.82));
+   ores.add(body(r,Ore.COAL,x+8,r.nextDouble(-38,10),z-8,43,30,1.9,a,dip,.72));
+   ores.add(body(r,Ore.IRON,x,r.nextDouble(-65,-12),z,46,22,4,a,dip,.48));
+  }
+  if(p==Province.INTRUSIVE){
+   ores.add(body(r,Ore.COPPER,x,r.nextDouble(-24,48),z,42,26,20,a,.2,.29));
+   ores.add(body(r,Ore.GOLD,x+12,r.nextDouble(-75,-20),z,48,3.8,7,a,.48,.43));
+   ores.add(body(r,Ore.IRON,x-18,r.nextDouble(-80,-30),z,32,14,9,a,.18,.46));
+  }
+  if(p==Province.METAMORPHIC){
+   ores.add(body(r,Ore.GOLD,x,r.nextDouble(-125,-40),z,56,3,7,a,.52,.45));
+   ores.add(body(r,Ore.EMERALD,x+10,r.nextDouble(10,65),z-12,32,4,10,a,.35,.25));
+   ores.add(body(r,Ore.LAPIS,x-18,r.nextDouble(-55,15),z+8,27,12,8,a,.18,.34));
+  }
+  if(p==Province.CRATON){
+   ores.add(body(r,Ore.IRON,x,r.nextDouble(-145,-70),z,58,27,5,a,dip,.56));
+   if(r.nextDouble()<.35)ores.add(body(r,Ore.DIAMOND,x,r.nextDouble(-188,-140),z,8,7,48,a,.04,.16));
+   ores.add(body(r,Ore.REDSTONE,x-16,r.nextDouble(-190,-120),z+10,45,13,12,a,.24,.46));
+  }
+  ores.add(body(r,Ore.IRON,x+23,r.nextDouble(-25,55),z-20,20,10,7,a,.15,.36));
+  if(r.nextDouble()<.55)ores.add(body(r,Ore.COPPER,x-18,r.nextDouble(5,48),z+15,24,10,8,a,.18,.32));
+  if(r.nextDouble()<.5)ores.add(body(r,Ore.LAPIS,x+8,r.nextDouble(-85,-20),z+16,16,8,6,a,.1,.32));
+  if(r.nextDouble()<.65)ores.add(body(r,Ore.REDSTONE,x,r.nextDouble(-205,-125),z,30,10,8,a,.1,.35));
+  if(p==Province.CARBONATE){
+   double y=r.nextDouble(-42,25);int water=r.nextInt(-35,3);
+   caves.add(new Cave(x,y,z,82,5,4,a,.12,water,r.nextDouble()<.45));
+   caves.add(new Cave(x,y,z,60,4,6,a+Math.PI*.48,-.10,water,false));
+   caves.add(new Cave(x,y-4,z,16,13,10,a,0,water,false));
+  }else if(p==Province.METAMORPHIC||p==Province.INTRUSIVE){
+   caves.add(new Cave(x,r.nextDouble(-82,-15),z,64,3,13,a,.24,-100,r.nextDouble()<.13));
+  }else caves.add(new Cave(x,r.nextDouble(-120,-40),z,42,3,3,a,.12,-160,false));
+  return new District(p,List.copyOf(ores),List.copyOf(caves));
+ }
+ public static List<District> around(long seed,int x,int z){
+  int gx=Math.floorDiv(x,DISTRICT),gz=Math.floorDiv(z,DISTRICT);var out=new ArrayList<District>(9);
+  for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++)out.add(district(seed,gx+dx,gz+dz));return out;
+ }
+}

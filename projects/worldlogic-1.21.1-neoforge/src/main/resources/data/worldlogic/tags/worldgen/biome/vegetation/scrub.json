@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:mediterranean_scrub",
+    "worldlogic:thorn_scrub",
+    "worldlogic:montane_dry_scrub"
+  ]
+}
