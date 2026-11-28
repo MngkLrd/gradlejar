@@ -19,6 +19,8 @@ public final class FoodProfiles {
   if(stack.is(net.minecraft.world.item.Items.MILK_BUCKET))return Optional.of(food(8,8,12,0,60,0,1.1,.1,275,24,0,.93));
   if(component==null)return Optional.empty();
   String id=BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+  // Aqua is authoritative for valid edible mass and preparation; never guess a whole catch or invalid portion.
+  if(id.startsWith("aquaculture:raw_")||id.startsWith("aquaculture:cooked_"))return AquaFoodBridge.read(stack).flatMap(p->FishNutrition.portion(p.species(),p.grams(),p.cooked()));
   Entry e=switch(id){
    case "worldlogicterrain:strawberry" -> food(0.8,0.3,10,3,2,60,0,0.4,16,13,0,.92);
    case "worldlogicterrain:blueberry" -> food(0.7,0.3,14,2.4,3,10,0,0.3,6,6,0,.92);

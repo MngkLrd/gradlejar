@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Metabolism 0.9.3 peer integration",
+  "name": "Metabolism 0.9.4 peer integration and fish portions",
   "coverage": [
     {
       "id": "nutrition-model",
@@ -314,6 +314,17 @@
       "id": "hydration-authoritative-intake",
       "kind": "mechanic",
       "subject": "Hydration rev5 callback precedence and standalone fallback, no duplicated intake",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "aqua-fish-nutrition",
+      "kind": "mechanic",
+      "subject": "All 36 Aqua fish species, 17/100 g raw and 80 g cooked scaling, retention, lean/fatty and invalid/whole catches",
       "checks": [
         {
           "backend": "server",

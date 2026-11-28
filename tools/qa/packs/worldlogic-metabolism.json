@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "worldlogic-metabolism",
-  "description": "Metabolism 0.9.3 and checked-out Core source joint runtime; current Core 1.5.1 exact binary requires separate compatibility execution.",
+  "description": "Metabolism 0.9.4 and checked-out Core source joint runtime; current Core 1.5.1 exact binary requires separate compatibility execution.",
   "targets": [
     {
       "id": "neoforge-mc1.21.1",

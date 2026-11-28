@@ -27,6 +27,7 @@ public final class ModelChecks {
    var mm=e.meal();var n=mm.nutrients();require(Math.abs(mm.kcal()-(4*n[0]+9*n[1]+4*n[2]+2*n[3]))<1e-6,"macro energy consistency "+ids.getKey(item));audited++;
   }
   require(audited>=35,"vanilla food coverage");
+  if(net.neoforged.fml.ModList.get().isLoaded("worldlogic_aqua"))for(var item:ids){String id=ids.getKey(item).toString();if(id.startsWith("aquaculture:raw_")||id.startsWith("aquaculture:cooked_"))require(FoodProfiles.profile(new net.minecraft.world.item.ItemStack(item),p).isEmpty(),"blank whole/portion must not grant nutrition: "+id);}
   require(FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.OMINOUS_BOTTLE),p).isEmpty(),"ominous bottle is not nutrition");
   var cod=FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COOKED_COD)).orElseThrow().meal();
   var salmon=FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COOKED_SALMON)).orElseThrow().meal();
@@ -71,6 +72,17 @@ public final class ModelChecks {
   try{dev.minemods.metabolism.api.MetabolismApi.reportFoodIntake(p,100,java.util.Map.of("carb",Double.NaN),0,1);throw new AssertionError("invalid input accepted");}catch(IllegalArgumentException expected){} 
  }
  public static void run(){
+  var expectedFish=java.util.Set.of("pike","perch","crucian_carp","carp","roach","bream","trout","grayling","char","taimen","whitefish","burbot","catfish","tench","loach","rotan","rudd","bowfin","piranha","arapaima","tilapia","pacu","snakehead","electric_eel","atlantic_cod","herring","mackerel","halibut","haddock","flounder","tuna","barracuda","grouper","snapper","mahi_mahi","parrotfish");
+  require(FishNutrition.species().equals(expectedFish),"all 36 actual Aqua species profiled");
+  for(String id:expectedFish){
+   var raw=FishNutrition.portion(id,100,false).orElseThrow().meal();var small=FishNutrition.portion(id,17,false).orElseThrow().meal();
+   var cooked=FishNutrition.portion(id,80,true).orElseThrow().meal();
+   for(int i=0;i<MetabolicModel.N;i++)require(Math.abs(small.nutrients()[i]-raw.nutrients()[i]*.17)<1e-8,"mass scaling "+id);
+   require(Math.abs(small.kcal()-raw.kcal()*.17)<1e-8&&cooked.kcal()<=raw.kcal()&&cooked.kcal()>raw.kcal()*.89,"cooking yield and retention "+id);
+   require(raw.nutrients()[2]==0&&raw.toxin()>cooked.toxin()&&raw.absorption()<cooked.absorption(),"raw cooked differences "+id);
+  }
+  require(FishNutrition.portion("mackerel",100,false).orElseThrow().meal().nutrients()[1]>10*FishNutrition.portion("atlantic_cod",100,false).orElseThrow().meal().nutrients()[1],"lean vs fatty fish");
+  require(FishNutrition.portion("halibut",17,false).orElseThrow().meal().kcal()>0&&FishNutrition.portion("halibut",100,true).isEmpty()&&FishNutrition.portion("halibut",0,false).isEmpty()&&FishNutrition.portion("unknown",100,false).isEmpty(),"fish invalid and halibut");
   var rest=new MetabolicModel.State();var active=new MetabolicModel.State();
   int[] seconds={3,5,7,10,12};int[] hunger={20,16,12,6,0};
   for(int i=0;i<seconds.length;i++){
