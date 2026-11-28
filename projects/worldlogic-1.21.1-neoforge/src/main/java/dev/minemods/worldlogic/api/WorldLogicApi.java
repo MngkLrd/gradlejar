@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=3;
+ public static final int API_REVISION=10;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -36,6 +36,16 @@ public final class WorldLogicApi {
                            boolean rainingAt,boolean globalThunder,double solarExposure,
                            Optional<RegionalClimate> regionalClimate){}
  public enum Precipitation { NONE, RAIN, SNOW }
+ public enum WeatherKind { CLEAR, RAIN, DOWNPOUR, THUNDERSTORM, SNOW, BLIZZARD, DUST_STORM, MONSOON, FOG }
+ /** Authoritative local gameplay conditions in geographic presets. Intensity, cloud, fog and solar transmission: 0..1. */
+ public record LocalWeather(WeatherKind kind,double intensity,double temperatureDeltaC,double relativeHumidityPercent,
+  double windXMps,double windZMps,double gustMps,double cloudFraction,double fogDensity,double solarTransmission,
+  Precipitation precipitation,double precipitationIntensity,double pressureHpa,boolean exposed){}
+ /** Empty for disabled rules, unsupported dimensions/generators and unloaded positions. Server thread only. */
+ public static Optional<LocalWeather> localWeather(ServerLevel level,BlockPos pos){
+  serverThread(level);
+  return dev.minemods.worldlogic.LocalWeatherRuntime.at(level,pos);
+ }
  /** Modeled relative humidity and open-air wind; local precipitation reflects vanilla weather.
   * Wind vector components and speed are estimated m/s, not a physical fluid simulation.
   * Local precipitation is normalized 0..1, not mm/hour. */
@@ -52,6 +62,101 @@ public final class WorldLogicApi {
   double relativeHumidityPercent,double dewPointC,double wetBulbC,double environmentalLapseCPerKm,
   double condensationLevelM,double cloudBaseM,double cloudTopM,double condensedWaterGkg,
   double buoyancyEnergyJkg,double cloudFraction,double precipitationPotential,double fogPotential,boolean convective){}
+ /** World generation only: long-term modeled habitat, never instantaneous weather. */
+ public enum Zone { OPEN_PLAINS,TEMPERATE_FOREST,COLD_FOREST,WETLAND,DRYLAND,TROPICAL,ALPINE,RIVERBANK,TUNDRA,COAST,MARINE,SUBTERRANEAN,UNKNOWN }
+ public enum SurfaceFamily { NORMAL,DRY,MOIST,SANDY,BOGGY,ROCKY,FROZEN,UNKNOWN }
+ public record WorldgenEnvironment(double temperatureCelsius,double moisture,double fertility,double dryness,double waterlogging,
+  double coldness,double environmentStrength,Zone zone,SurfaceFamily surfaceFamily,double slopeDegrees,double windExposure,
+  double prevailingWindX,double prevailingWindZ,double modeledSurfaceY,double riverbankPotential,net.minecraft.resources.ResourceLocation biomeId){}
+ @FunctionalInterface public interface WorldgenSampler {
+  /** No world/block/chunk queries. Pass the already available biome and ground block; do not retain across worlds/reloads. */
+  WorldgenEnvironment sample(BlockPos pos,net.minecraft.core.Holder<Biome> biome,BlockState ground);
+  /** Predict the identity of an actual or hypothetical water block before decoration conversion.
+   * Caller supplies column ocean-floor height (same heightmap convention as generator),
+   * biome at surface and bed state, and surface sample position. No reads or writes.
+   * Does not predict the existence of water. */
+  default WaterProfile predictWater(BlockPos waterPos,BlockPos surfacePos,int oceanFloorY,
+    net.minecraft.core.Holder<Biome> surfaceBiome,BlockState bed){
+   return dev.minemods.worldlogic.NaturalWaterGeneration.predict(waterPos,oceanFloorY,surfaceBiome,
+    sample(surfacePos,surfaceBiome,bed).riverbankPotential());
+  }
+ }
+ /** Build from the caller's existing generator state. No live server-thread assertion, world access or chunk loading. */
+ public static Optional<WorldgenSampler> worldgenSampler(net.minecraft.world.level.levelgen.RandomState state,
+   net.minecraft.core.RegistryAccess registry,net.minecraft.world.level.chunk.ChunkGenerator generator){
+  return GeoDensity.worldgenSampler(state,registry,generator);
+ }
+ /** Convenience for a feature in the existing WorldGenLevel. Reads only generator state and registry references. */
+ public static Optional<WorldgenSampler> worldgenSampler(net.minecraft.world.level.WorldGenLevel level,net.minecraft.world.level.chunk.ChunkGenerator generator){
+  return worldgenSampler(level.getLevel().getChunkSource().randomState(),level.registryAccess(),generator);
+ }
+ /** Natural-water classification, not a medical assessment of drinking safety. */
+ public enum WaterSource { NONE, FRESH_SURFACE, SALINE, GROUNDWATER, UNKNOWN }
+ /** Detailed in-game source class. Existing WaterSource is retained as a compatibility projection. */
+ public enum WaterKind { NONE, SEA, RIVER, LAKE, SPRING, GROUNDWATER, WETLAND, POND, BRACKISH, UNKNOWN }
+ /** Gameplay treatment recommendation; never a real-world potability assessment. */
+ public enum WaterQuality { DRINKABLE, TREAT_RECOMMENDED, DESALINATE, UNKNOWN, NOT_WATER }
+ public enum WaterEvidence { FLUID_ABSENT, BIOME, TERRAIN_PROXY, LOCAL_GEOMETRY, UNCLASSIFIED, REGISTERED_FLUID }
+ /** Estimated salinity in g/kg (-1 unknown); contamination risk 0..1 (-1 unknown).
+  * Game balance estimates, not measured water chemistry. Flowing describes vanilla fluid state, not river current. */
+ public record WaterProfile(WaterKind kind,WaterQuality quality,double salinityGkg,double contaminationRisk,
+  boolean sourceBlock,boolean flowing,WaterEvidence evidence){}
+ /** Loaded block only, no forced chunk loads. Detailed natural-source inference for Hydration. */
+ /** Registry identity and intrinsic quality, for tanks, buckets and modded fluid handlers.
+  * Does not include surrounding soil; the positional overload adds that local effect. */
+ public static WaterProfile waterProfile(net.minecraft.world.level.material.Fluid fluid){
+  return dev.minemods.worldlogic.WaterClassification.registeredProfile(fluid);
+ }
+ public static WaterProfile waterProfile(ServerLevel level,BlockPos pos){
+  serverThread(level);return dev.minemods.worldlogic.WaterClassification.sample(level,pos);
+ }
+ public enum SoilType { LOAM,HUMUS,PEAT,SILT,FROZEN,SAND,CLAY,ROCK,UNKNOWN }
+ /** Model stores expressed in mm water equivalent per horizontal area; rates per 200-tick update. */
+ public record Hydrology(SoilType soil,double soilWaterMm,double capacityMm,double groundwaterMm,double snowWaterMm,
+  double pondedWaterMm,double lastRunoffMm,double lastEvaporationMm,double lastRechargeMm,double lastDischargeMm,
+  double saturation,double fertility,double permeability,double estimatedWaterTableDepthBlocks,boolean simulated,long updatedTick){}
+ /** Pure classification of an existing block, safe to use during world generation. */
+ public static SoilType soilType(BlockState state){return dev.minemods.worldlogic.HydrologyModel.soilType(state);}
+ public static Optional<Hydrology> hydrology(ServerLevel level,BlockPos pos){
+  serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.sample(level,pos);
+ }
+ /** Classifies actual local water; no chunk loads; no thirst or consumption mechanics. */
+ public static WaterSource waterSource(ServerLevel level,BlockPos pos){
+  serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.waterSource(level,pos);
+ }
+ /** Cell-scale game indices, not measured concentrations. -1 denotes no sample. */
+ public record EnvironmentalMetrics(double airLoad,double naturalDust,double combustionLoad,double soilLoad,
+  long observedTick,int observedCombustionSources,int removedLogs,int minedBlocks,int disturbedSoil,int placedBlocks){}
+ public static Optional<EnvironmentalMetrics> environmentalMetrics(ServerLevel level,BlockPos pos){
+  serverThread(level);return dev.minemods.worldlogic.EnvironmentAnalytics.metrics(level,pos);
+ }
+ /** Aggregate input for one 16x16 horizontal soil cell per 200 game ticks.
+  * Water mm is equivalent to liters per square meter (256 L/mm per cell).
+  * Cover, root retention, and litter are normalized 0..1. Demand is total transpiration,
+  * not per-tree; maximum accepted demand is 4 mm per interval. */
+ public record VegetationInput(double waterDemandMm,double cover,double rootRetention,double litter){}
+ /** Actual water withdrawal and updated state. Repeated reports in one interval are rejected. */
+ public record VegetationResult(boolean applied,double consumedMm,double requestedMm,SoilEcology ecology){}
+ public record SoilEcology(double saltGm2,double salinityGPerLiter,double effectiveFertility,
+  double vegetationCover,double rootRetention,double lastTranspirationMm,double totalTranspirationMm,
+  double lastSaltExportGm2,double recoveredCover,long lastVegetationTick){}
+ public static Optional<VegetationResult> applyVegetation(ServerLevel level,BlockPos pos,VegetationInput input){
+  serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.vegetation(level,pos,input);
+ }
+ /** Report externally supplied irrigation already removed from a container/source.
+  * Returns accepted mm; caller must account for unaccepted volume. Salt input is g/L.
+  * One report per cell per 200 ticks. No fluid blocks are created. */
+ public static double irrigateSoil(ServerLevel level,BlockPos pos,double offeredMm,double salinityGPerLiter){
+  serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.irrigate(level,pos,offeredMm,salinityGPerLiter);
+ }
+ public static Optional<SoilEcology> soilEcology(ServerLevel level,BlockPos pos){
+  serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.ecology(level,pos);
+ }
+ /** Observed top-leaf fraction of 256 columns, not tree count or global forest inventory. */
+ public record ForestObservation(double canopyCover,double baselineCover,double cumulativeRecovery,long observedTick){}
+ public static Optional<ForestObservation> forestObservation(ServerLevel level,BlockPos pos){
+  serverThread(level);return dev.minemods.worldlogic.EnvironmentAnalytics.forest(level,pos);
+ }
  public record Fatigue(boolean enabled,double fatiguePercent,double remainingStaminaPercent){}
  private static void serverThread(ServerLevel level){
   if(!level.getServer().isSameThread())throw new IllegalStateException("World Logic API requires server thread");
@@ -67,6 +172,13 @@ public final class WorldLogicApi {
   boolean sky=level.dimensionType().hasSkyLight()&&level.canSeeSky(pos);
   double sun=sky?Math.max(0,Math.cos((Math.floorMod(level.getDayTime(),24000L)-6000)*Math.PI/12000.0)):0;
   sun*=level.getBrightness(LightLayer.SKY,pos)/15.0;
+  var weather=dev.minemods.worldlogic.LocalWeatherRuntime.at(level,pos,regional);
+  if(weather.isPresent()){
+   var w=weather.orElseThrow();sun*=w.solarTransmission();
+   // This is the actual air temperature reference; do not apply the anomaly again in Temperature.
+   double ambient=clamp(base+(sky?sun*4-2:0)+w.temperatureDeltaC(),-100,100);
+   return Optional.of(new Environment(ambient,pos.getY()-level.getSeaLevel(),!sky,w.precipitation()==Precipitation.RAIN,w.kind()==WeatherKind.THUNDERSTORM,sun,regional));
+  }
   if(level.isRaining())sun*=.35;
   boolean rain=level.isRainingAt(pos);
   double ambient=clamp(base+(sky?sun*4-2:0)-(rain?2:0),-100,100);
@@ -79,6 +191,11 @@ public final class WorldLogicApi {
   var existing=environment(level,pos);
   if(existing.isEmpty())return Optional.empty();
   var env=existing.orElseThrow();
+  var regionalWeather=dev.minemods.worldlogic.LocalWeatherRuntime.at(level,pos,env.regionalClimate());
+  if(regionalWeather.isPresent()){
+   var w=regionalWeather.orElseThrow();
+   return Optional.of(new Atmosphere(env,w.relativeHumidityPercent(),w.windXMps(),w.windZMps(),Math.hypot(w.windXMps(),w.windZMps()),w.precipitation(),w.precipitationIntensity()));
+  }
   var biome=level.getBiome(pos).value();
   var regional=env.regionalClimate();
   double moisture=regional.map(RegionalClimate::moistureIndex).orElse(biome.hasPrecipitation()?.55:.15);
@@ -140,7 +257,7 @@ public final class WorldLogicApi {
  /** Experimental persisted transport domain; not the authoritative player environment. */
  public static Optional<dev.minemods.worldlogic.WeatherGridState.Conditions> transportGridPreview(ServerLevel level,BlockPos pos){
   serverThread(level);
-  if(!Rules.on("modeled_weather")||level!=level.getServer().overworld()||level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
+  if(dev.minemods.worldlogic.LocalWeatherRuntime.active(level)||!Rules.on("modeled_weather")||level!=level.getServer().overworld()||level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
   return dev.minemods.worldlogic.WeatherGridState.sample(level,pos);
  }
  public static Fatigue fatigue(ServerPlayer player){
