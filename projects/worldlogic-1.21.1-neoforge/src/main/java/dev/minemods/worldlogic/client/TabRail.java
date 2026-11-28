@@ -27,8 +27,23 @@ public final class TabRail {
   WorldLogicTabs.register(INVENTORY,0,Component.translatable("worldlogic.tabs.inventory"),()->new ItemStack(Items.CHEST),parent->parent);
   WorldLogicTabs.register(GUIDE,10,Component.translatable("worldlogic.tabs.guide"),()->new ItemStack(Items.BOOK),GuideScreen::new);
   WorldLogicTabs.register(ANALYTICS,90,Component.translatable("worldlogic.analytics.title"),()->new ItemStack(Items.COMPASS),AnalyticsScreen::new);
+  dashboard("metabolism",30,"worldlogic.stats.metabolism",Items.COOKED_BEEF);
+  dashboard("worldlogic_trauma",40,"worldlogic.stats.trauma",Items.REDSTONE);
+  dashboard("worldlogic_thermal",50,"worldlogic.stats.temperature",Items.BLAZE_POWDER);
+ }
+ private static void dashboard(String mod,int order,String title,Item item){
+  var id=ResourceLocation.fromNamespaceAndPath(mod,"dashboard");var label=Component.translatable(title);
+  WorldLogicTabs.registerDashboardTab(id,order,label,()->new ItemStack(item),parent->new DashboardScreen(parent,id,label));
+ }
+ private static void syncedDashboards(){
+  var state=dev.minemods.worldlogic.DashboardSync.client();if(state==null)return;
+  for(var s:state.dashboards()){
+   var title=Component.translatable(s.title());
+   WorldLogicTabs.registerDashboardTab(s.id(),s.order(),title,()->new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(s.icon())),parent->new DashboardScreen(parent,s.id(),title));
+  }
  }
  private static ResourceLocation current(Screen screen){
+  if(screen instanceof DashboardScreen d)return d.dashboardId();
   if(screen instanceof InventoryScreen)return INVENTORY;
   if(screen instanceof GuideScreen||screen instanceof GuideIndexScreen||screen instanceof GuideRecipesScreen)return GUIDE;
   if(screen instanceof AnalyticsScreen)return ANALYTICS;
@@ -65,6 +80,7 @@ public final class TabRail {
  private static java.lang.ref.WeakReference<Screen> weak(Screen screen){return new java.lang.ref.WeakReference<>(screen);}
  static void install(Screen screen,Consumer<AbstractWidget> add){
   if(current(screen)==null)return;
+  syncedDashboards();
   var ref=weak(screen);var rail=new Rail();
   for(var tab:WorldLogicTabs.available()){
    var b=new IconButton(tab.title(),tab.icon(),tab.id().equals(current(screen)),clicked->{Screen s=ref.get();if(s!=null)open(s,tab);});
@@ -103,7 +119,7 @@ public final class TabRail {
  @SubscribeEvent public static void init(ScreenEvent.Init.Post e){
   Screen s=e.getScreen();
   // Built-in screens install during init too, including rebuildWidgets.
-  if(!(s instanceof GuideScreen)&&!(s instanceof AnalyticsScreen)&&!(s instanceof GuideIndexScreen)&&!(s instanceof GuideRecipesScreen)&&current(s)!=null)install(s,e::addListener);
+  if(!(s instanceof GuideScreen)&&!(s instanceof AnalyticsScreen)&&!(s instanceof GuideIndexScreen)&&!(s instanceof GuideRecipesScreen)&&!(s instanceof DashboardScreen)&&current(s)!=null)install(s,e::addListener);
  }
  @SubscribeEvent public static void render(ScreenEvent.Render.Pre e){
   var rail=RAILS.get(e.getScreen());if(rail!=null)layout(e.getScreen(),rail);

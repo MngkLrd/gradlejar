@@ -22,7 +22,14 @@ public final class WorldLogicTabs {
  public static void registerSelfBackground(Class<? extends Screen> screen){SELF_BACKGROUND.add(Objects.requireNonNull(screen).getName());}
  public static boolean drawsOwnBackground(Screen screen){return SELF_BACKGROUND.contains(screen.getClass().getName());}
  public static int contentWidth(int width){return TabLayout.contentWidth(width);}
+ private static final Map<ResourceLocation,Tab> DASHBOARDS=new HashMap<>();
+ public static void registerDashboardTab(ResourceLocation id,int order,Component title,Supplier<ItemStack> icon,Function<Screen,Screen> factory){
+  DASHBOARDS.put(id,new Tab(id,order,title,icon,factory));
+ }
+ public static Optional<Tab> legacyFor(ResourceLocation id){return TABS.values().stream().filter(t->t.id().getNamespace().equals(id.getNamespace())&&!t.id().equals(id)).findFirst();}
  public static List<Tab> available(){
-  return TABS.values().stream().filter(t->ModList.get().isLoaded(t.id().getNamespace())).sorted(Comparator.comparingInt(Tab::order).thenComparing(t->t.id().toString())).toList();
+  var dashboards=DASHBOARDS.values().stream().filter(t->ModList.get().isLoaded(t.id().getNamespace())).toList();
+  var namespaces=dashboards.stream().map(t->t.id().getNamespace()).collect(java.util.stream.Collectors.toSet());
+  return java.util.stream.Stream.concat(TABS.values().stream().filter(t->ModList.get().isLoaded(t.id().getNamespace())&&!namespaces.contains(t.id().getNamespace())),dashboards.stream()).sorted(Comparator.comparingInt(Tab::order).thenComparing(t->t.id().toString())).toList();
  }
 }

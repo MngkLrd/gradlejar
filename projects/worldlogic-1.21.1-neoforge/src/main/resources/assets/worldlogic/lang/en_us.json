@@ -301,5 +301,18 @@
   "worldlogic.jei.role.input": "Input",
   "worldlogic.jei.role.support": "Base",
   "worldlogic.jei.role.tool": "Tool",
-  "worldlogic.jei.role.output": "Output"
+  "worldlogic.jei.role.output": "Output",
+  "worldlogic.stats.metabolism": "Metabolism",
+  "worldlogic.stats.trauma": "Trauma",
+  "worldlogic.stats.temperature": "Temperature",
+  "worldlogic.stats.details": "Details",
+  "worldlogic.stats.waiting": "No current data",
+  "worldlogic.stats.section.status": "Status",
+  "worldlogic.stats.section.physiology": "Physiology",
+  "worldlogic.stats.section.nutrients": "Nutrients",
+  "worldlogic.stats.section.digestion": "Digestion",
+  "worldlogic.stats.section.clinical": "Recovery",
+  "worldlogic.stats.section.illnessStatus": "Illness",
+  "worldlogic.stats.section.passiveRecoveryHpPerMinute": "HP recovery",
+  "worldlogic.stats.section.roomClimate": "Room climate"
 }
