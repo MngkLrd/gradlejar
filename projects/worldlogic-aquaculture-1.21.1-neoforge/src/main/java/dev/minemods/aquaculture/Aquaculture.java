@@ -144,7 +144,9 @@ public final class Aquaculture {
      if(!water(level,pos)||Math.abs(pos.getY()-origin.getY())>48)break;
      Habitat h=habitat(level,pos);
      if(h==null)continue;
-     Species s=SpawnSelection.choose(h,counts,level.random);
+     Map<String,Integer> adjusted=new HashMap<>(counts);
+     AquaEcologyData.get(level).pressures(pos,h.kind(),level.getGameTime()).forEach((id,n)->adjusted.merge(id,n,Integer::sum));
+     Species s=SpawnSelection.choose(h,adjusted,level.random);
      if(s==null)continue;
      if(spawn(level,pos,s,h)!=null){counts.merge(s.id(),1,Integer::sum);added++;break;}
     }
@@ -159,11 +161,31 @@ public final class Aquaculture {
  private void drops(LivingDropsEvent e){
   if(!(e.getEntity() instanceof Fish fish))return;
   Species s=species(fish);if(s==null)return;
+  // Predation consumes an actual fish rather than generating a second catch item.
+  if(e.getSource().getEntity() instanceof Fish hunter&&species(hunter)!=null&&species(hunter).diet().equals("predator")){
+   e.getDrops().clear();return;
+  }
+  if(e.getSource().getEntity() instanceof net.minecraft.world.entity.player.Player&&fish.level() instanceof ServerLevel l){
+   var profile=WorldLogicApi.waterProfile(l,fish.blockPosition());
+   AquaEcologyData.get(l).harvest(fish.blockPosition(),profile.kind(),s,l.getGameTime());
+  }
   e.getDrops().removeIf(drop->drop.getItem().is(Items.COD)||drop.getItem().is(Items.COOKED_COD));
   e.getDrops().add(new ItemEntity(fish.level(),fish.getX(),fish.getY(),fish.getZ(),catchStack(fish,s)));
  }
  private void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("aquaculture").requires(src->src.hasPermission(2))
+   .then(Commands.literal("ecology_selftest").executes(c->{
+    EcologyChecks.run(c.getSource().getLevel());
+    c.getSource().sendSuccess(()->Component.literal("AQUA_ECOLOGY_PASS"),false);
+    return Command.SINGLE_SUCCESS;
+   }))
+   .then(Commands.literal("ecology").executes(c->{
+    var l=c.getSource().getLevel();var p=BlockPos.containing(c.getSource().getPosition());
+    var h=habitat(l,p);if(h==null){c.getSource().sendFailure(Component.literal("No loaded water at command position"));return 0;}
+    var data=AquaEcologyData.get(l);var now=l.getGameTime();var kind=h.kind();
+    c.getSource().sendSuccess(()->Component.literal("Aqua "+kind+" plants="+data.foodAvailable(p,kind,AquaEcologyData.Food.PLANTS,now)+" plankton="+data.foodAvailable(p,kind,AquaEcologyData.Food.PLANKTON,now)+" benthos="+data.foodAvailable(p,kind,AquaEcologyData.Food.BENTHOS,now)+" harvest="+data.pressures(p,kind,now)),false);
+    return Command.SINGLE_SUCCESS;
+   }))
    .then(Commands.literal("visual_selftest").executes(c->{
     FishVisualChecks.run(c.getSource().getLevel());
     c.getSource().sendSuccess(()->Component.literal("AQUA_VISUAL_ASSETS_SIZE_36_PASS"),false);

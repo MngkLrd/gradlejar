@@ -13,9 +13,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 
 public final class Fish extends Cod {
+ private static final EntityDataAccessor<Boolean> ECO_PANIC=SynchedEntityData.defineId(Fish.class,EntityDataSerializers.BOOLEAN);
+ public boolean ecologyPanic(){return entityData.get(ECO_PANIC);}
+ public void setEcologyPanic(boolean value){if(!level().isClientSide)entityData.set(ECO_PANIC,value);}
  private static final EntityDataAccessor<Float> VISUAL_LENGTH=SynchedEntityData.defineId(Fish.class,EntityDataSerializers.FLOAT);
  @Override protected void defineSynchedData(SynchedEntityData.Builder builder){
-  super.defineSynchedData(builder);builder.define(VISUAL_LENGTH,0f);
+  super.defineSynchedData(builder);builder.define(VISUAL_LENGTH,0f);builder.define(ECO_PANIC,false);
  }
  public static float visualLengthOf(Species s,double length){
   double value=Double.isFinite(length)&&length>0?length:s.adultLength()*.8;
@@ -31,6 +34,16 @@ public final class Fish extends Cod {
   if(player.getItemInHand(hand).is(Items.WATER_BUCKET))return InteractionResult.FAIL;
   Species s=Aquaculture.species(this);
   var food=player.getItemInHand(hand);
+  if(s!=null&&food.isEmpty()&&player.isShiftKeyDown()){
+   if(!level().isClientSide){
+    var tag=Aquaculture.traits(this,s);
+    player.displayClientMessage(Component.translatable("aquaculture.ecology.inspect",getName(),
+     String.format(java.util.Locale.ROOT,"%.2f",tag.getDouble("wl_fish_length_m")),
+     String.format(java.util.Locale.ROOT,"%.2f",tag.getDouble("wl_fish_mass_kg")),
+     FishFeeding.satiety(this,level().getGameTime()),Math.round(tag.getDouble("wl_fish_stress")*100)),true);
+   }
+   return level().isClientSide?InteractionResult.SUCCESS:InteractionResult.CONSUME;
+  }
   if(s!=null&&!food.isEmpty()&&food.is(FishFeeding.foodTag(s))){
    if(level().isClientSide)return InteractionResult.SUCCESS;
    var result=FishFeeding.offer(this,s,food,player.getAbilities().instabuild);
@@ -45,9 +58,11 @@ public final class Fish extends Cod {
  }
  @Override public void tick(){
   super.tick();
-  if(!level().isClientSide&&tickCount==1){
-   Species s=Aquaculture.species(this);
-   if(s!=null)Aquaculture.traits(this,s);
+  if(level() instanceof net.minecraft.server.level.ServerLevel l){
+   if(tickCount==1){Species s=Aquaculture.species(this);if(s!=null)Aquaculture.traits(this,s);}
+   if((tickCount+getId())%10==0){
+    Species s=Aquaculture.species(this);if(s!=null)FishEcology.step(l,this,s);
+   }
   }
  }
 }

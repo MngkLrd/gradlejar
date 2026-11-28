@@ -20,6 +20,18 @@ public final class FishFeeding {
   long remaining=Math.max(0,fish.getPersistentData().getLong("wl_fish_fed_until")-now);
   return (int)Math.min(100,(remaining*100L+DIGEST_TICKS-1)/DIGEST_TICKS);
  }
+ public static boolean canFeed(Fish f,long now){
+  var tag=f.getPersistentData();
+  return satiety(f,now)<75&&(!tag.contains("wl_fish_last_feed")||now-tag.getLong("wl_fish_last_feed")>=FEED_COOLDOWN);
+ }
+ public static void feedNatural(Fish f,Species s,long now){
+  if(!f.level().isClientSide&&canFeed(f,now)){
+   var tag=Aquaculture.traits(f,s);
+   long remaining=Math.max(0,Math.min(DIGEST_TICKS,tag.getLong("wl_fish_fed_until")-now));
+   tag.putLong("wl_fish_fed_until",now+Math.min(DIGEST_TICKS,remaining+DIGEST_TICKS/2));
+   tag.putLong("wl_fish_last_feed",now);
+  }
+ }
  public static boolean mature(Fish fish,Species s){
   return Aquaculture.traits(fish,s).getInt("wl_fish_age_years")>=s.maturityYears();
  }

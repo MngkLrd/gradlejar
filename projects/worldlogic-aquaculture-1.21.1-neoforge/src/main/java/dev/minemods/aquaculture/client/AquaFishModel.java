@@ -28,7 +28,7 @@ final class AquaFishModel extends HierarchicalModel<Cod>{
   root.getAllParts().forEach(ModelPart::resetPose);
   boolean wet=fish.isInWaterOrBubble()||FishWater.contact(fish);
   float speed=Math.max(activity,Math.min(1,(float)fish.getDeltaMovement().horizontalDistance()*6));
-  var pose=FishMotion.sample(shape.motion(),age,stride,speed,(float)fish.getDeltaMovement().y,wet,fish.hurtTime>0,fish.getId()*.37f);
+  var pose=FishMotion.sample(shape.motion(),age,stride,speed,(float)fish.getDeltaMovement().y,wet,(fish.hurtTime>0||(fish instanceof Fish f&&f.ecologyPanic())),fish.getId()*.37f);
   var body=parts.get("body");body.yRot+=pose.body();body.zRot+=pose.roll();body.xRot+=pose.pitch();body.y+=pose.lift();
   parts.get("head").yRot+=pose.head();parts.get("rear").yRot+=pose.rear();parts.get("tail").yRot+=pose.tail();
   rotateFin("left_fin",pose.fins());rotateFin("right_fin",-pose.fins());

@@ -2047,6 +2047,138 @@
           "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
         }
       ]
+    },
+    {
+      "id": "ecology-finite-forage",
+      "kind": "mechanic",
+      "subject": "finite-forage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-forage-regeneration",
+      "kind": "mechanic",
+      "subject": "forage-regeneration",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-harvest-pressure",
+      "kind": "mechanic",
+      "subject": "harvest-pressure",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-ecology-nbt",
+      "kind": "mechanic",
+      "subject": "ecology-nbt",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-pressure-spawn-filter",
+      "kind": "mechanic",
+      "subject": "pressure-spawn-filter",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-school-target",
+      "kind": "mechanic",
+      "subject": "school-target",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-predation-eligibility",
+      "kind": "mechanic",
+      "subject": "predation-eligibility",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-water-obstacle",
+      "kind": "mechanic",
+      "subject": "water-obstacle",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-dropped-bait",
+      "kind": "mechanic",
+      "subject": "dropped-bait",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-wrong-bait-cooldown",
+      "kind": "mechanic",
+      "subject": "wrong-bait-cooldown",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-benthic-forage",
+      "kind": "mechanic",
+      "subject": "benthic-forage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-habitat-stress",
+      "kind": "mechanic",
+      "subject": "habitat-stress",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
     }
   ],
   "steps": [
@@ -2085,6 +2217,12 @@
       "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)",
       "command": "aquaculture visual_selftest",
       "expect": "AQUA_VISUAL_ASSETS_SIZE_36_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait",
+      "command": "aquaculture ecology_selftest",
+      "expect": "AQUA_ECOLOGY_PASS",
       "assertion": true
     }
   ]

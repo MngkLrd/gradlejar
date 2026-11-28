@@ -79,5 +79,6 @@
   "aquaculture.feed.fed": "Fish satiety: %s%%",
   "aquaculture.feed.full": "This fish is full.",
   "aquaculture.feed.cooldown": "Let the fish digest its last meal.",
-  "aquaculture.feed.dry": "Fish can only feed in water."
+  "aquaculture.feed.dry": "Fish can only feed in water.",
+  "aquaculture.ecology.inspect": "%s | %s m | %s kg | Satiety: %s%% | Stress: %s%%"
 }
