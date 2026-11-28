@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:limestone",
+    "worldlogic:shale",
+    "worldlogic:slate",
+    "worldlogic:gneiss",
+    "worldlogic:volcanic_tuff"
+  ]
+}

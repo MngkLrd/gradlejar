@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_farmland",
+  "textures": {
+    "dirt": "worldlogic:block/chernozem",
+    "top": "worldlogic:block/chernozem_farmland_moist"
+  }
+}

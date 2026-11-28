@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "worldlogic:polished_slate"
+  },
+  "result": {
+    "id": "worldlogic:polished_slate_slab",
+    "count": 2
+  }
+}

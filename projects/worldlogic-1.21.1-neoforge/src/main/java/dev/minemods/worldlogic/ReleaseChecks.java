@@ -9,24 +9,21 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 public final class ReleaseChecks {
  private static void check(boolean ok,String detail){if(!ok)throw new IllegalStateException("World Logic test failed: "+detail);}
  public static void run(){
+  PhysicalMaterialChecks.verify();
   check(Rules.keys().size()>=115,"rule count");
   check(EnvironmentPhysics.crampedFactor(2,true)<EnvironmentPhysics.crampedFactor(2,false),"cramped mining geometry");
   check(EnvironmentPhysics.swingFactor(2)<EnvironmentPhysics.swingFactor(0),"weapon clearance");
   check(EnvironmentPhysics.currentStrength(4,1)<EnvironmentPhysics.currentStrength(1,1),"current mass");
   check(StructuralHazards.minBurn(2)<StructuralHazards.minBurn(1),"burn exposure");
   check(StructuralHazards.quenched(Blocks.STONE_BRICKS.defaultBlockState()).is(Blocks.CRACKED_STONE_BRICKS),"quench reaction");
-  check(Rules.preset("realistic").get("burning_structures").equals("false"),"structural safety");
   check(Trauma.guardRisk(10,3,90)>Trauma.guardRisk(4,1,0),"guard overload curve");
   check(Trauma.aggravation(100)>Trauma.aggravation(0),"injury aggravation curve");
   check(Trauma.armFactor(true)<Trauma.armFactor(false),"arm injury mining penalty");
-  check(Rules.preset("realistic").get("dangerous_trees").equals("false"),"tree safety");
   check(ImpactDynamics.hitRisk(10,3,80,true)>ImpactDynamics.hitRisk(2,1,0,false),"knockdown risk");
   check(ImpactDynamics.collisionRisk(.4,3)>ImpactDynamics.collisionRisk(.1,1),"collision momentum");
   check(ImpactDynamics.shockRadius(10,40)<=5,"shockwave bound");
-  check(Rules.preset("realistic").get("combat_disarm").equals("false"),"disarm opt-in");
   check(GroundHazards.recoveryExtra(100,4,8)>GroundHazards.recoveryExtra(0,0,0),"ground recovery curve");
   check(GroundHazards.landingRisk(6,4,true,80)>GroundHazards.landingRisk(3,0,false,0),"heavy landing curve");
-  check(Rules.preset("realistic").get("unstable_carrying").equals("false"),"cargo loss opt-in");
   check(Balance.threshold(true,80,2)<Balance.threshold(false,0,0),"injury lowers balance threshold");
   check(Balance.slipRisk(true,80,2,.1)>Balance.slipRisk(false,0,0,0),"injured slip risk");
   check(Balance.duration(1,true)>Balance.duration(.5,false),"fall recovery time");
@@ -34,16 +31,20 @@ public final class ReleaseChecks {
   check(TravelPhysics.boatFactor(7)<TravelPhysics.boatFactor(1),"boat overload curve");
   check(TravelPhysics.crashDamage(.2)==0&&TravelPhysics.crashDamage(.8)>0,"wall impact threshold");
   check(TorchLifetime.lifetime(2)<TorchLifetime.lifetime(1),"torch lifetime scaling");
-  check(Rules.preset("realistic").get("torch_lifetime").equals("false"),"torch opt-in");
   check(Expedition.armorLoad(new ItemStack(Items.IRON_CHESTPLATE))>Expedition.armorLoad(new ItemStack(Items.LEATHER_CHESTPLATE)),"armor diving tradeoff");
   check(CombatConsequences.healDelay(10,1)>CombatConsequences.healDelay(2,1),"damage recovery curve");
   check(CombatConsequences.cargoLoss(4,1)==0&&CombatConsequences.cargoLoss(20,2)==3,"bounded cargo breakage");
   check(CombatConsequences.armorWork(4)>CombatConsequences.armorWork(0),"armor exertion curve");
-  check(Rules.preset("realistic").get("fragile_cargo").equals("false"),"cargo opt-in");
   check(Expedition.shieldFraction(100)<Expedition.shieldFraction(0),"shield fatigue");
   check(Expedition.restRecovery(true)>Expedition.restRecovery(false),"shelter rest");
-  check(Rules.preset("light").get("tree_weight").equals("false"),"light safety");
-  check(Rules.preset("hardcore").get("tree_weight").equals("true"),"hardcore coverage");
+  check(Rules.addonSummary().contains("hydration=")&&Rules.addonSummary().contains("worldlogicterrain="),"all five addon ownership records");
+  var baseline=Rules.preset("realistic");
+  for(String key:Rules.keys())check(Boolean.parseBoolean(baseline.get(key))==!key.equals("modeled_weather"),"realism default "+key);
+  for(String family:Rules.tuningKeys())check(Double.parseDouble(baseline.get("strength."+family))==1,"realism intensity "+family);
+  for(String retired:new String[]{"light","hardcore","custom"}){
+   boolean rejected=false;try{Rules.preset(retired);}catch(IllegalArgumentException ex){rejected=true;}
+   check(rejected,"retired profile "+retired);
+  }
   var i=new Impulse(new Vec3(1,0,2),2);check(Math.abs(i.energy()-5)<.0001,"impact energy");
   var r=i.reflect(new Vec3(1,0,0),.5);check(Math.abs(r.x+.5)<.0001&&Math.abs(r.z-1)<.0001,"reflection");
   check(Material.weight(new ItemStack(Items.IRON_BLOCK))>Material.weight(new ItemStack(Items.FEATHER)),"item weights");
@@ -58,6 +59,7 @@ public final class ReleaseChecks {
   verifyWorld(l);
  }
  public static void verifyWorld(net.minecraft.server.level.ServerLevel l){
+  PhysicalMaterialChecks.verifyLoaded(l);
   check(Material.block(Blocks.GLASS.defaultBlockState(),"glass"),"glass tag");
   check(Material.block(Blocks.IRON_BLOCK.defaultBlockState(),"ricochet_metal"),"metal tag");
   check(Material.item(new ItemStack(Items.GLASS_BOTTLE),"fragile_cargo"),"fragile cargo tag");

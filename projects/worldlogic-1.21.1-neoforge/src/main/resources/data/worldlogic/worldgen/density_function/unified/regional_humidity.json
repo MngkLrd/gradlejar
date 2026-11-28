@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:flat_cache",
+  "argument": {
+    "type": "worldlogic:geography",
+    "field": "regional_biome_humidity",
+    "continental": "minecraft:continentalness",
+    "tectonic": "minecraft:ridge",
+    "detail": "minecraft:erosion",
+    "moisture": "minecraft:vegetation"
+  }
+}

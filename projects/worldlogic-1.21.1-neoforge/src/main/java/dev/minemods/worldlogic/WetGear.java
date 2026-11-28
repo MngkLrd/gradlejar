@@ -10,7 +10,7 @@ public final class WetGear {
  static int wet(ItemStack s){return s.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getInt("worldlogic_wet");}
  static void tick(ServerLevel l,Player p,Body.State state){
   if(!Rules.on("wet_gear")&&!Rules.on("wet_bow"))return;
-  boolean wet=p.isInWater()||l.isRainingAt(p.blockPosition());int dry=wet?0:AirAndFire.nearHeat(l,p.blockPosition(),2)?8:2;
+  boolean wet=p.isInWater()||LocalWeatherRuntime.rainingAt(l,p.blockPosition());int dry=wet?0:AirAndFire.nearHeat(l,p.blockPosition(),2)?8:2;
   state.wet=Math.max(0,Math.min(100,state.wet+(wet?10:-dry)));
   for(int i=0;i<p.getInventory().getContainerSize();i++){ItemStack s=p.getInventory().getItem(i);if(!absorbent(s))continue;boolean exposed=s==p.getMainHandItem()||s==p.getOffhandItem();if(!exposed)for(ItemStack armor:p.getArmorSlots())if(armor==s){exposed=true;break;}
    int old=wet(s);int next=Math.max(0,Math.min(100,old+(wet&&exposed?10:-Math.max(1,dry))));if(next==old)continue;
