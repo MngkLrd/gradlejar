@@ -1,0 +1,38 @@
+{
+  "variants": {
+    "ripe=true": [
+      {
+        "model": "worldlogicterrain:block/wild_blueberry"
+      },
+      {
+        "model": "worldlogicterrain:block/wild_blueberry",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_blueberry",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_blueberry",
+        "y": 270
+      }
+    ],
+    "ripe=false": [
+      {
+        "model": "worldlogicterrain:block/wild_blueberry_unripe"
+      },
+      {
+        "model": "worldlogicterrain:block/wild_blueberry_unripe",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_blueberry_unripe",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_blueberry_unripe",
+        "y": 270
+      }
+    ]
+  }
+}

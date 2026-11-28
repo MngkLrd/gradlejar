@@ -1,0 +1,38 @@
+{
+  "variants": {
+    "ripe=true": [
+      {
+        "model": "worldlogicterrain:block/wild_grape"
+      },
+      {
+        "model": "worldlogicterrain:block/wild_grape",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_grape",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_grape",
+        "y": 270
+      }
+    ],
+    "ripe=false": [
+      {
+        "model": "worldlogicterrain:block/wild_grape_unripe"
+      },
+      {
+        "model": "worldlogicterrain:block/wild_grape_unripe",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_grape_unripe",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_grape_unripe",
+        "y": 270
+      }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:desert",
+    "minecraft:savanna",
+    "minecraft:savanna_plateau",
+    "minecraft:windswept_savanna",
+    "minecraft:badlands",
+    "minecraft:wooded_badlands",
+    "minecraft:eroded_badlands",
+    "minecraft:beach",
+    {
+      "id": "#worldlogic:vegetation/desert",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/scrub",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/savanna",
+      "required": false
+    },
+    {
+      "id": "worldlogic:temperate_sandy_coast",
+      "required": false
+    },
+    {
+      "id": "worldlogic:tropical_sandy_coast",
+      "required": false
+    }
+  ]
+}

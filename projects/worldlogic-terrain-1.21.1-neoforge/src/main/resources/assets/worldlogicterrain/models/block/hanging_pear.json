@@ -1,0 +1,214 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "fruit": "worldlogicterrain:item/pear",
+    "stem": "minecraft:block/oak_log",
+    "particle": "worldlogicterrain:item/pear"
+  },
+  "elements": [
+    {
+      "from": [
+        8,
+        14,
+        8
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            1,
+            2,
+            3
+          ],
+          "texture": "#stem"
+        },
+        "south": {
+          "uv": [
+            1,
+            1,
+            2,
+            3
+          ],
+          "texture": "#stem"
+        },
+        "east": {
+          "uv": [
+            1,
+            1,
+            2,
+            3
+          ],
+          "texture": "#stem"
+        },
+        "west": {
+          "uv": [
+            1,
+            1,
+            2,
+            3
+          ],
+          "texture": "#stem"
+        },
+        "up": {
+          "uv": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "texture": "#stem"
+        },
+        "down": {
+          "uv": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "texture": "#stem"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        8,
+        6
+      ],
+      "to": [
+        11,
+        12,
+        11
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            4,
+            7,
+            9,
+            11
+          ],
+          "texture": "#fruit"
+        },
+        "south": {
+          "uv": [
+            4,
+            7,
+            9,
+            11
+          ],
+          "texture": "#fruit"
+        },
+        "east": {
+          "uv": [
+            4,
+            7,
+            9,
+            11
+          ],
+          "texture": "#fruit"
+        },
+        "west": {
+          "uv": [
+            4,
+            7,
+            9,
+            11
+          ],
+          "texture": "#fruit"
+        },
+        "up": {
+          "uv": [
+            6,
+            6,
+            11,
+            11
+          ],
+          "texture": "#fruit"
+        },
+        "down": {
+          "uv": [
+            4,
+            7,
+            9,
+            12
+          ],
+          "texture": "#fruit"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        12,
+        7
+      ],
+      "to": [
+        10,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            4,
+            7,
+            7,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "south": {
+          "uv": [
+            4,
+            7,
+            7,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "east": {
+          "uv": [
+            4,
+            7,
+            7,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "west": {
+          "uv": [
+            4,
+            7,
+            7,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "up": {
+          "uv": [
+            5,
+            7,
+            8,
+            10
+          ],
+          "texture": "#fruit"
+        },
+        "down": {
+          "uv": [
+            6,
+            12,
+            9,
+            15
+          ],
+          "texture": "#fruit"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:marsh",
+  "features": "worldlogicterrain:patch_reed",
+  "step": "vegetal_decoration"
+}

@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogicterrain:willow_leaves",
+    "worldlogicterrain:larch_leaves",
+    "worldlogicterrain:pine_leaves",
+    "worldlogicterrain:fir_leaves",
+    "worldlogicterrain:cedar_leaves",
+    "worldlogicterrain:maple_leaves",
+    "worldlogicterrain:beech_leaves",
+    "worldlogicterrain:alder_leaves",
+    "worldlogicterrain:palm_leaves",
+    "worldlogicterrain:date_palm_leaves",
+    "worldlogicterrain:baobab_leaves",
+    "worldlogicterrain:ebony_leaves",
+    "worldlogicterrain:mahogany_leaves"
+  ]
+}

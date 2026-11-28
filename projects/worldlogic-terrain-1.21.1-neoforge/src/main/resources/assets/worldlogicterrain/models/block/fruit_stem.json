@@ -1,0 +1,77 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "stem": "minecraft:block/oak_log",
+    "particle": "minecraft:block/oak_log"
+  },
+  "elements": [
+    {
+      "from": [
+        8,
+        14,
+        8
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            1,
+            2,
+            3
+          ],
+          "texture": "#stem"
+        },
+        "south": {
+          "uv": [
+            1,
+            1,
+            2,
+            3
+          ],
+          "texture": "#stem"
+        },
+        "east": {
+          "uv": [
+            1,
+            1,
+            2,
+            3
+          ],
+          "texture": "#stem"
+        },
+        "west": {
+          "uv": [
+            1,
+            1,
+            2,
+            3
+          ],
+          "texture": "#stem"
+        },
+        "up": {
+          "uv": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "texture": "#stem"
+        },
+        "down": {
+          "uv": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "texture": "#stem"
+        }
+      }
+    }
+  ]
+}

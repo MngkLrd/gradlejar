@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/widgeon_grass"
+      },
+      {
+        "model": "worldlogicterrain:block/widgeon_grass",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/widgeon_grass",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/widgeon_grass",
+        "y": 270
+      }
+    ]
+  }
+}

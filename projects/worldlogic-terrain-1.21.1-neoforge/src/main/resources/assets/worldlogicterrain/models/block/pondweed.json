@@ -1,0 +1,98 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "worldlogicterrain:block/pondweed",
+    "main": "worldlogicterrain:block/pondweed",
+    "accent": "worldlogicterrain:block/pondweed"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        8
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "texture": "#main",
+          "uv": [
+            0,
+            0,
+            8,
+            8
+          ]
+        },
+        "south": {
+          "texture": "#main",
+          "uv": [
+            0,
+            0,
+            8,
+            8
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        8
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "texture": "#accent",
+          "uv": [
+            8,
+            0,
+            16,
+            8
+          ]
+        },
+        "south": {
+          "texture": "#accent",
+          "uv": [
+            8,
+            0,
+            16,
+            8
+          ]
+        }
+      }
+    }
+  ],
+  "render_type": "minecraft:cutout"
+}

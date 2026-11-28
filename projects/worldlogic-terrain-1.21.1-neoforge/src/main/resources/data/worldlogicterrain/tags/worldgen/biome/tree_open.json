@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "minecraft:meadow",
+    "minecraft:windswept_hills",
+    "minecraft:windswept_gravelly_hills",
+    "minecraft:snowy_plains",
+    {
+      "id": "#worldlogic:vegetation/grassland",
+      "required": false
+    }
+  ]
+}

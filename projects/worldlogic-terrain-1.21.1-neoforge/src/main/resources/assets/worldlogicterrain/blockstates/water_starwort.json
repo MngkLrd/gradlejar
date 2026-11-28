@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/water_starwort"
+      },
+      {
+        "model": "worldlogicterrain:block/water_starwort",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/water_starwort",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/water_starwort",
+        "y": 270
+      }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:warm_woodland",
+  "features": "worldlogicterrain:patch_wild_grape",
+  "step": "vegetal_decoration"
+}

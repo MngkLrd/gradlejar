@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:forest",
+    "minecraft:birch_forest",
+    "minecraft:old_growth_birch_forest",
+    "minecraft:flower_forest",
+    "minecraft:dark_forest",
+    "minecraft:taiga",
+    {
+      "id": "#worldlogic:vegetation/temperate_forest",
+      "required": false
+    },
+    {
+      "id": "worldlogic:light_conifer_taiga",
+      "required": false
+    }
+  ]
+}

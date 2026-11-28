@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/mussel_bed"
+      },
+      {
+        "model": "worldlogicterrain:block/mussel_bed",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/mussel_bed",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/mussel_bed",
+        "y": 270
+      }
+    ]
+  }
+}

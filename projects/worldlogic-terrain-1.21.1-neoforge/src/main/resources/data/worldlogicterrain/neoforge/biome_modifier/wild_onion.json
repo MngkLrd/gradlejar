@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:open_field",
+  "features": "worldlogicterrain:patch_wild_onion",
+  "step": "vegetal_decoration"
+}

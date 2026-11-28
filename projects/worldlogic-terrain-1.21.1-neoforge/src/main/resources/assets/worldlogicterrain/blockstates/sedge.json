@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/sedge",
+        "y": 0
+      },
+      {
+        "model": "worldlogicterrain:block/sedge",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/sedge",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/sedge",
+        "y": 270
+      }
+    ]
+  }
+}

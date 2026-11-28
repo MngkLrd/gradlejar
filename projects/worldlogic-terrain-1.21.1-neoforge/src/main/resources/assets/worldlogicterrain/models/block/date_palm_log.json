@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "worldlogicterrain:block/date_palm_log",
+    "end": "worldlogicterrain:block/date_palm_log_top"
+  }
+}

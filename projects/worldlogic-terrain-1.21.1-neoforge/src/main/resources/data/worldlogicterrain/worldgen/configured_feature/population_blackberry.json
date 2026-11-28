@@ -1,0 +1,6 @@
+{
+  "type": "worldlogicterrain:forage_population",
+  "config": {
+    "species": "blackberry"
+  }
+}

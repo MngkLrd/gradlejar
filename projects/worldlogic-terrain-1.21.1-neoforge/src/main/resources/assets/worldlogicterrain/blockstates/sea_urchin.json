@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/sea_urchin"
+      },
+      {
+        "model": "worldlogicterrain:block/sea_urchin",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/sea_urchin",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/sea_urchin",
+        "y": 270
+      }
+    ]
+  }
+}

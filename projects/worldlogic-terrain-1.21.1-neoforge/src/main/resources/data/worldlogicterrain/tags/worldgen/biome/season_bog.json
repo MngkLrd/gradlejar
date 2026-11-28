@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:swamp",
+    "minecraft:taiga",
+    "minecraft:snowy_taiga",
+    {
+      "id": "worldlogic:moist_tundra",
+      "required": false
+    },
+    {
+      "id": "worldlogic:arctic_wetland",
+      "required": false
+    },
+    {
+      "id": "worldlogic:boreal_bog",
+      "required": false
+    },
+    {
+      "id": "worldlogic:humid_taiga",
+      "required": false
+    },
+    {
+      "id": "worldlogic:temperate_wetland",
+      "required": false
+    }
+  ]
+}

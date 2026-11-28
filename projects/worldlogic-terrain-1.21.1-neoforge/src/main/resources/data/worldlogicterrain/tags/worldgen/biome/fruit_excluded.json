@@ -1,0 +1,31 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:snowy_plains",
+    "minecraft:ice_spikes",
+    "minecraft:snowy_taiga",
+    "minecraft:snowy_beach",
+    "minecraft:grove",
+    "minecraft:frozen_peaks",
+    "minecraft:jagged_peaks",
+    "minecraft:frozen_river",
+    "minecraft:frozen_ocean",
+    "minecraft:deep_frozen_ocean",
+    {
+      "id": "#worldlogic:vegetation/polar",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/tundra",
+      "required": false
+    },
+    {
+      "id": "worldlogic:forest_tundra",
+      "required": false
+    },
+    {
+      "id": "worldlogic:arctic_wetland",
+      "required": false
+    }
+  ]
+}

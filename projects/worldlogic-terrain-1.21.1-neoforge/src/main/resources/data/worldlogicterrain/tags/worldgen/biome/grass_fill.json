@@ -1,0 +1,73 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "minecraft:meadow",
+    "minecraft:forest",
+    "minecraft:flower_forest",
+    "minecraft:birch_forest",
+    "minecraft:old_growth_birch_forest",
+    "minecraft:dark_forest",
+    "minecraft:taiga",
+    "minecraft:old_growth_pine_taiga",
+    "minecraft:old_growth_spruce_taiga",
+    "minecraft:jungle",
+    "minecraft:sparse_jungle",
+    "minecraft:bamboo_jungle",
+    "minecraft:savanna",
+    "minecraft:savanna_plateau",
+    "minecraft:windswept_savanna",
+    "minecraft:windswept_hills",
+    "minecraft:windswept_forest",
+    "minecraft:swamp",
+    "minecraft:mangrove_swamp",
+    "minecraft:river",
+    "minecraft:wooded_badlands",
+    "minecraft:windswept_gravelly_hills",
+    {
+      "id": "#worldlogic:vegetation/temperate_forest",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/tropical_forest",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/savanna",
+      "required": false
+    },
+    {
+      "id": "worldlogic:temperate_steppe",
+      "required": false
+    },
+    {
+      "id": "worldlogic:shortgrass_steppe",
+      "required": false
+    },
+    {
+      "id": "worldlogic:prairie",
+      "required": false
+    },
+    {
+      "id": "worldlogic:tallgrass_prairie",
+      "required": false
+    },
+    {
+      "id": "worldlogic:subtropical_grassland",
+      "required": false
+    },
+    {
+      "id": "worldlogic:temperate_marsh",
+      "required": false
+    },
+    {
+      "id": "worldlogic:tropical_floodplain",
+      "required": false
+    },
+    {
+      "id": "worldlogic:temperate_sandy_coast",
+      "required": false
+    }
+  ]
+}

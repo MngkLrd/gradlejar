@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "worldlogicterrain:larch_log"
+    }
+  ],
+  "result": {
+    "id": "worldlogicterrain:larch_planks",
+    "count": 4
+  }
+}

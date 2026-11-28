@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:trees_plains",
+    "minecraft:trees_birch_and_oak",
+    "minecraft:trees_birch",
+    "minecraft:dark_forest_vegetation",
+    "minecraft:trees_taiga",
+    "minecraft:trees_jungle",
+    "minecraft:trees_savanna",
+    "minecraft:trees_swamp",
+    "minecraft:trees_mangrove",
+    "minecraft:trees_old_growth_pine_taiga",
+    "minecraft:trees_flower_forest",
+    "minecraft:birch_tall",
+    "minecraft:trees_old_growth_spruce_taiga",
+    "minecraft:trees_sparse_jungle",
+    "minecraft:bamboo_vegetation",
+    "minecraft:trees_windswept_savanna",
+    "minecraft:trees_windswept_forest",
+    "minecraft:trees_grove",
+    "minecraft:trees_cherry",
+    "minecraft:trees_meadow",
+    "minecraft:trees_windswept_hills",
+    "minecraft:trees_badlands",
+    "minecraft:trees_snowy",
+    "minecraft:trees_water"
+  ]
+}

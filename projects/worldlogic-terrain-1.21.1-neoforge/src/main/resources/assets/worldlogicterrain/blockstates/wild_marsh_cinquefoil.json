@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "worldlogicterrain:block/wild_marsh_cinquefoil_stage0"
+    },
+    "age=1": {
+      "model": "worldlogicterrain:block/wild_marsh_cinquefoil_stage1"
+    },
+    "age=2": {
+      "model": "worldlogicterrain:block/wild_marsh_cinquefoil_stage2"
+    },
+    "age=3": {
+      "model": "worldlogicterrain:block/wild_marsh_cinquefoil"
+    }
+  }
+}

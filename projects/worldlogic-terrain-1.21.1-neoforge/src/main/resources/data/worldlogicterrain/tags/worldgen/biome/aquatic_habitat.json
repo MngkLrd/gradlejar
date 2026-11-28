@@ -1,0 +1,54 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:is_overworld",
+    {
+      "id": "#worldlogic:vegetation/wetland",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/coast",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/marine",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/grassland",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/temperate_forest",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/boreal",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/scrub",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/tropical_forest",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/savanna",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/desert",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/tundra",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/alpine",
+      "required": false
+    }
+  ]
+}

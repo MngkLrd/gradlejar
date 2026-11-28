@@ -1,0 +1,35 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:snowy_plains",
+    "minecraft:snowy_taiga",
+    "minecraft:grove",
+    "minecraft:windswept_hills",
+    "minecraft:windswept_forest",
+    "minecraft:taiga",
+    {
+      "id": "#worldlogic:vegetation/tundra",
+      "required": false
+    },
+    {
+      "id": "worldlogic:forest_tundra",
+      "required": false
+    },
+    {
+      "id": "worldlogic:cold_steppe",
+      "required": false
+    },
+    {
+      "id": "worldlogic:arctic_wetland",
+      "required": false
+    },
+    {
+      "id": "worldlogic:alpine_tundra",
+      "required": false
+    },
+    {
+      "id": "worldlogic:alpine_meadow",
+      "required": false
+    }
+  ]
+}

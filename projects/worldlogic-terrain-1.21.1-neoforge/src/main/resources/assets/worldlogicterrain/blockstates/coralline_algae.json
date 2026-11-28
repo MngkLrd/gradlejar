@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/coralline_algae"
+      },
+      {
+        "model": "worldlogicterrain:block/coralline_algae",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/coralline_algae",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/coralline_algae",
+        "y": 270
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "minecraft:dark_forest",
+  "features": [
+    "worldlogicterrain:dark_forest_red_mushroom",
+    "worldlogicterrain:dark_forest_brown_mushroom"
+  ],
+  "step": "vegetal_decoration"
+}

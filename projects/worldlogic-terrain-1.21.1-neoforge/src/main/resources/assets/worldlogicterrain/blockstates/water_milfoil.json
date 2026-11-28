@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/water_milfoil"
+      },
+      {
+        "model": "worldlogicterrain:block/water_milfoil",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/water_milfoil",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/water_milfoil",
+        "y": 270
+      }
+    ]
+  }
+}

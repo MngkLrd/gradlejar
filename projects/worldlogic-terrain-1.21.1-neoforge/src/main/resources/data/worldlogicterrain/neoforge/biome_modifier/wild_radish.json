@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:temperate_meadow",
+  "features": "worldlogicterrain:patch_wild_radish",
+  "step": "vegetal_decoration"
+}

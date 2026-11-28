@@ -1,0 +1,6124 @@
+{
+  "schema": 1,
+  "name": "Terrain plants soil survival and loot",
+  "steps": [
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "setblock 1 199 1 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 1 200 1 worldlogicterrain:meadow_grass",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "meadow_grass survives on soil",
+      "command": "execute if block 1 200 1 worldlogicterrain:meadow_grass",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "meadow_grass has loot",
+      "command": "loot spawn 1.5 202 1.5 mine 1 200 1 minecraft:shears",
+      "expect": "^Dropped 1 \\[Meadow Grass\\] from loot table worldlogicterrain:blocks/meadow_grass$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 1 199 1 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "meadow_grass loses support",
+      "command": "execute if block 1 200 1 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 3 199 1 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 3 200 1 worldlogicterrain:dense_meadow_grass",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "dense_meadow_grass survives on soil",
+      "command": "execute if block 3 200 1 worldlogicterrain:dense_meadow_grass",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "dense_meadow_grass has loot",
+      "command": "loot spawn 3.5 202 1.5 mine 3 200 1 minecraft:shears",
+      "expect": "^Dropped 1 \\[Dense Meadow Grass\\] from loot table worldlogicterrain:blocks/dense_meadow_grass$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 3 199 1 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "dense_meadow_grass loses support",
+      "command": "execute if block 3 200 1 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 5 198 1 minecraft:stone",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 5 199 1 minecraft:sand",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 5 200 1 worldlogicterrain:dry_grass",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "dry_grass survives on soil",
+      "command": "execute if block 5 200 1 worldlogicterrain:dry_grass",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "dry_grass has loot",
+      "command": "loot spawn 5.5 202 1.5 mine 5 200 1 minecraft:shears",
+      "expect": "^Dropped 1 \\[Dry Grass\\] from loot table worldlogicterrain:blocks/dry_grass$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 5 199 1 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "dry_grass loses support",
+      "command": "execute if block 5 200 1 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 7 198 1 minecraft:stone",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 7 199 1 minecraft:sand",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 7 200 1 worldlogicterrain:tall_dry_grass",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "tall_dry_grass survives on soil",
+      "command": "execute if block 7 200 1 worldlogicterrain:tall_dry_grass",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "tall_dry_grass has loot",
+      "command": "loot spawn 7.5 202 1.5 mine 7 200 1 minecraft:shears",
+      "expect": "^Dropped 1 \\[Tall Dry Grass\\] from loot table worldlogicterrain:blocks/tall_dry_grass$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 7 199 1 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "tall_dry_grass loses support",
+      "command": "execute if block 7 200 1 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 9 199 1 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 9 200 1 worldlogicterrain:forest_shrub",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "forest_shrub survives on soil",
+      "command": "execute if block 9 200 1 worldlogicterrain:forest_shrub",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "forest_shrub has loot",
+      "command": "loot spawn 9.5 202 1.5 mine 9 200 1 minecraft:shears",
+      "expect": "^Dropped 1 \\[Forest Shrub\\] from loot table worldlogicterrain:blocks/forest_shrub$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 9 199 1 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "forest_shrub loses support",
+      "command": "execute if block 9 200 1 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 11 199 1 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 11 200 1 worldlogicterrain:dense_underbrush",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "dense_underbrush survives on soil",
+      "command": "execute if block 11 200 1 worldlogicterrain:dense_underbrush",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "dense_underbrush has loot",
+      "command": "loot spawn 11.5 202 1.5 mine 11 200 1 minecraft:shears",
+      "expect": "^Dropped 1 \\[Dense Underbrush\\] from loot table worldlogicterrain:blocks/dense_underbrush$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 11 199 1 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "dense_underbrush loses support",
+      "command": "execute if block 11 200 1 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 1 199 4 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 1 200 4 worldlogicterrain:low_fern",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "low_fern survives on soil",
+      "command": "execute if block 1 200 4 worldlogicterrain:low_fern",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "low_fern has loot",
+      "command": "loot spawn 1.5 202 4.5 mine 1 200 4 minecraft:shears",
+      "expect": "^Dropped 1 \\[Low Fern\\] from loot table worldlogicterrain:blocks/low_fern$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 1 199 4 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "low_fern loses support",
+      "command": "execute if block 1 200 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 3 199 4 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 3 200 4 worldlogicterrain:wild_heather",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "wild_heather survives on soil",
+      "command": "execute if block 3 200 4 worldlogicterrain:wild_heather",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "wild_heather has loot",
+      "command": "loot spawn 3.5 202 4.5 mine 3 200 4 minecraft:shears",
+      "expect": "^Dropped 1 \\[Wild Heather\\] from loot table worldlogicterrain:blocks/wild_heather$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 3 199 4 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "wild_heather loses support",
+      "command": "execute if block 3 200 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 5 199 4 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 5 200 4 worldlogicterrain:sedge",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "sedge survives on soil",
+      "command": "execute if block 5 200 4 worldlogicterrain:sedge",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "sedge has loot",
+      "command": "loot spawn 5.5 202 4.5 mine 5 200 4 minecraft:shears",
+      "expect": "^Dropped 1 \\[Sedge\\] from loot table worldlogicterrain:blocks/sedge$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 5 199 4 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "sedge loses support",
+      "command": "execute if block 5 200 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 7 199 4 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 7 200 4 worldlogicterrain:reed[half=lower]",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 7 201 4 worldlogicterrain:reed[half=upper]",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "reed survives on soil",
+      "command": "execute if block 7 200 4 worldlogicterrain:reed",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "reed has loot",
+      "command": "loot spawn 7.5 202 4.5 mine 7 200 4 minecraft:shears",
+      "expect": "^Dropped 1 \\[Reed\\] from loot table worldlogicterrain:blocks/reed$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 7 199 4 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "reed loses support",
+      "command": "execute if block 7 200 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "reed upper removed",
+      "command": "execute if block 7 201 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 9 199 4 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 9 200 4 worldlogicterrain:cattail[half=lower]",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 9 201 4 worldlogicterrain:cattail[half=upper]",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "cattail survives on soil",
+      "command": "execute if block 9 200 4 worldlogicterrain:cattail",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "cattail has loot",
+      "command": "loot spawn 9.5 202 4.5 mine 9 200 4 minecraft:shears",
+      "expect": "^Dropped 1 \\[Cattail\\] from loot table worldlogicterrain:blocks/cattail$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 9 199 4 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "cattail loses support",
+      "command": "execute if block 9 200 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "cattail upper removed",
+      "command": "execute if block 9 201 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 11 199 4 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 11 200 4 worldlogicterrain:dwarf_shrub",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "dwarf_shrub survives on soil",
+      "command": "execute if block 11 200 4 worldlogicterrain:dwarf_shrub",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "dwarf_shrub has loot",
+      "command": "loot spawn 11.5 202 4.5 mine 11 200 4 minecraft:shears",
+      "expect": "^Dropped 1 \\[Dwarf Shrub\\] from loot table worldlogicterrain:blocks/dwarf_shrub$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 11 199 4 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "dwarf_shrub loses support",
+      "command": "execute if block 11 200 4 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 1 198 7 minecraft:stone",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 1 199 7 minecraft:sand",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 1 200 7 worldlogicterrain:desert_shrub",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "desert_shrub survives on soil",
+      "command": "execute if block 1 200 7 worldlogicterrain:desert_shrub",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "desert_shrub has loot",
+      "command": "loot spawn 1.5 202 7.5 mine 1 200 7 minecraft:shears",
+      "expect": "^Dropped 1 \\[Desert Shrub\\] from loot table worldlogicterrain:blocks/desert_shrub$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 1 199 7 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "desert_shrub loses support",
+      "command": "execute if block 1 200 7 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 3 199 7 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 3 200 7 worldlogicterrain:forest_litter",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "forest_litter survives on soil",
+      "command": "execute if block 3 200 7 worldlogicterrain:forest_litter",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "forest_litter has loot",
+      "command": "loot spawn 3.5 202 7.5 mine 3 200 7 minecraft:shears",
+      "expect": "^Dropped 1 \\[Forest Litter\\] from loot table worldlogicterrain:blocks/forest_litter$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 3 199 7 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "forest_litter loses support",
+      "command": "execute if block 3 200 7 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 5 199 7 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 5 200 7 worldlogicterrain:fallen_leaves",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "fallen_leaves survives on soil",
+      "command": "execute if block 5 200 7 worldlogicterrain:fallen_leaves",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "fallen_leaves has loot",
+      "command": "loot spawn 5.5 202 7.5 mine 5 200 7 minecraft:shears",
+      "expect": "^Dropped 1 \\[Fallen Leaves\\] from loot table worldlogicterrain:blocks/fallen_leaves$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 5 199 7 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "fallen_leaves loses support",
+      "command": "execute if block 5 200 7 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 7 199 7 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 7 200 7 worldlogicterrain:wild_chamomile",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "wild_chamomile survives on soil",
+      "command": "execute if block 7 200 7 worldlogicterrain:wild_chamomile",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "wild_chamomile has loot",
+      "command": "loot spawn 7.5 202 7.5 mine 7 200 7 minecraft:shears",
+      "expect": "^Dropped 1 \\[Wild Chamomile\\] from loot table worldlogicterrain:blocks/wild_chamomile$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 7 199 7 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "wild_chamomile loses support",
+      "command": "execute if block 7 200 7 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 9 199 7 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 9 200 7 worldlogicterrain:wild_cornflower",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "wild_cornflower survives on soil",
+      "command": "execute if block 9 200 7 worldlogicterrain:wild_cornflower",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "wild_cornflower has loot",
+      "command": "loot spawn 9.5 202 7.5 mine 9 200 7 minecraft:shears",
+      "expect": "^Dropped 1 \\[Wild Cornflower\\] from loot table worldlogicterrain:blocks/wild_cornflower$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 9 199 7 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "wild_cornflower loses support",
+      "command": "execute if block 9 200 7 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "setblock 11 199 7 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 11 200 7 worldlogicterrain:wild_clover",
+      "expect": "Changed the block"
+    },
+    {
+      "name": "wild_clover survives on soil",
+      "command": "execute if block 11 200 7 worldlogicterrain:wild_clover",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "wild_clover has loot",
+      "command": "loot spawn 11.5 202 7.5 mine 11 200 7 minecraft:shears",
+      "expect": "^Dropped 1 \\[Wild Clover\\] from loot table worldlogicterrain:blocks/wild_clover$",
+      "assertion": true
+    },
+    {
+      "command": "setblock 11 199 7 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "name": "wild_clover loses support",
+      "command": "execute if block 11 200 7 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "worldlogic strength movement 1",
+      "expect": "settings saved"
+    },
+    {
+      "command": "weather clear",
+      "expect": "weather"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:stone",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 13 198 13 minecraft:stone",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=1\\.000 API=1",
+      "assertion": true,
+      "name": "mobility stone"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:grass_block",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=1\\.000 API=1",
+      "assertion": true,
+      "name": "mobility grass_block"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:gravel",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=0\\.900 API=1",
+      "assertion": true,
+      "name": "mobility gravel"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:sand",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=0\\.800 API=1",
+      "assertion": true,
+      "name": "mobility sand"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:mud",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=0\\.750 API=1",
+      "assertion": true,
+      "name": "mobility mud"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:dirt_path",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=1\\.050 API=1",
+      "assertion": true,
+      "name": "mobility dirt_path"
+    },
+    {
+      "command": "setblock 13 199 13 minecraft:grass_block",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 13 200 13 worldlogicterrain:dense_underbrush",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=0\\.750 API=1",
+      "assertion": true,
+      "name": "vegetation mobility"
+    },
+    {
+      "command": "worldlogic strength movement 0.5",
+      "expect": "settings saved"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=0\\.875 API=1",
+      "assertion": true,
+      "name": "core movement strength integration"
+    },
+    {
+      "command": "worldlogic strength movement 1",
+      "expect": "settings saved"
+    },
+    {
+      "command": "setblock 13 200 13 minecraft:air",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "worldlogicterrain inspect 13 200 13",
+      "expect": "Terrain factor=1\\.000 API=1",
+      "assertion": true,
+      "name": "neutral after clearing vegetation"
+    },
+    {
+      "name": "WorldLogic preset vegetation attachment",
+      "command": "worldlogicterrain worldgen_check",
+      "expect": "legacy and available unified core presets, 56 plant features and ecological trees, biome attachment verified",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:dirt",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_meadow_grass 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_meadow_grass\""
+    },
+    {
+      "name": "generated patch meadow_grass",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:meadow_grass",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_dense_meadow_grass 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_dense_meadow_grass\""
+    },
+    {
+      "name": "generated patch dense_meadow_grass",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:dense_meadow_grass",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 219 1 14 219 14 minecraft:stone",
+      "expect": "Successfully filled|No blocks were filled"
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:sand",
+      "expect": "Successfully filled|No blocks were filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_dry_grass 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_dry_grass\""
+    },
+    {
+      "name": "generated patch dry_grass",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:dry_grass",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:sand",
+      "expect": "Successfully filled|No blocks were filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_tall_dry_grass 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_tall_dry_grass\""
+    },
+    {
+      "name": "generated patch tall_dry_grass",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:tall_dry_grass",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:dirt",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:sand",
+      "expect": "Successfully filled|No blocks were filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_desert_shrub 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_desert_shrub\""
+    },
+    {
+      "name": "generated patch desert_shrub",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:desert_shrub",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:dirt",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_forest_shrub 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_forest_shrub\""
+    },
+    {
+      "name": "generated patch forest_shrub",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:forest_shrub",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_dense_underbrush 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_dense_underbrush\""
+    },
+    {
+      "name": "generated patch dense_underbrush",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:dense_underbrush",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_low_fern 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_low_fern\""
+    },
+    {
+      "name": "generated patch low_fern",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:low_fern",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_heather 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_heather\""
+    },
+    {
+      "name": "generated patch wild_heather",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_heather",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_sedge 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_sedge\""
+    },
+    {
+      "name": "generated patch sedge",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:sedge",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_reed 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_reed\""
+    },
+    {
+      "name": "generated patch reed",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:reed",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_cattail 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_cattail\""
+    },
+    {
+      "name": "generated patch cattail",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:cattail",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_dwarf_shrub 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_dwarf_shrub\""
+    },
+    {
+      "name": "generated patch dwarf_shrub",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:dwarf_shrub",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_forest_litter 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_forest_litter\""
+    },
+    {
+      "name": "generated patch forest_litter",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:forest_litter",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_fallen_leaves 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_fallen_leaves\""
+    },
+    {
+      "name": "generated patch fallen_leaves",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:fallen_leaves",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_chamomile 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_chamomile\""
+    },
+    {
+      "name": "generated patch wild_chamomile",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_chamomile",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_cornflower 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_cornflower\""
+    },
+    {
+      "name": "generated patch wild_cornflower",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_cornflower",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_clover 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_clover\""
+    },
+    {
+      "name": "generated patch wild_clover",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_clover",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:stone",
+      "expect": "Successfully filled"
+    },
+    {
+      "name": "No meadow growth on stone",
+      "command": "place feature worldlogicterrain:patch_meadow_grass 8 221 8",
+      "expect": "Failed to place feature",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:dirt",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_strawberry 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_strawberry\""
+    },
+    {
+      "name": "generated patch wild_strawberry",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_strawberry",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_blueberry 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_blueberry\""
+    },
+    {
+      "name": "generated patch wild_blueberry",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_blueberry",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_raspberry 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_raspberry\""
+    },
+    {
+      "name": "generated patch wild_raspberry",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_raspberry",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_blackberry 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_blackberry\""
+    },
+    {
+      "name": "generated patch wild_blackberry",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_blackberry",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_grape 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_grape\""
+    },
+    {
+      "name": "generated patch wild_grape",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_grape",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_pineapple 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_pineapple\""
+    },
+    {
+      "name": "generated patch wild_pineapple",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_pineapple",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_tomato 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_tomato\""
+    },
+    {
+      "name": "generated patch wild_tomato",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_tomato",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_cucumber 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_cucumber\""
+    },
+    {
+      "name": "generated patch wild_cucumber",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_cucumber",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_radish 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_radish\""
+    },
+    {
+      "name": "generated patch wild_radish",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_radish",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_onion 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_onion\""
+    },
+    {
+      "name": "generated patch wild_onion",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_onion",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_cabbage 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_cabbage\""
+    },
+    {
+      "name": "generated patch wild_cabbage",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_cabbage",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_wild_bell_pepper 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_wild_bell_pepper\""
+    },
+    {
+      "name": "generated patch wild_bell_pepper",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:wild_bell_pepper",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_bracken 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_bracken\""
+    },
+    {
+      "name": "generated patch bracken",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:bracken",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_marsh_marigold 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_marsh_marigold\""
+    },
+    {
+      "name": "generated patch marsh_marigold",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace worldlogicterrain:marsh_marigold",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "name": "food consumption strawberry",
+      "command": "worldlogicterrain food_check strawberry",
+      "expect": "Forage verified strawberry: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption blueberry",
+      "command": "worldlogicterrain food_check blueberry",
+      "expect": "Forage verified blueberry: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption raspberry",
+      "command": "worldlogicterrain food_check raspberry",
+      "expect": "Forage verified raspberry: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption blackberry",
+      "command": "worldlogicterrain food_check blackberry",
+      "expect": "Forage verified blackberry: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption grape",
+      "command": "worldlogicterrain food_check grape",
+      "expect": "Forage verified grape: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption pineapple",
+      "command": "worldlogicterrain food_check pineapple",
+      "expect": "Forage verified pineapple: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption tomato",
+      "command": "worldlogicterrain food_check tomato",
+      "expect": "Forage verified tomato: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption cucumber",
+      "command": "worldlogicterrain food_check cucumber",
+      "expect": "Forage verified cucumber: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption radish",
+      "command": "worldlogicterrain food_check radish",
+      "expect": "Forage verified radish: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption onion",
+      "command": "worldlogicterrain food_check onion",
+      "expect": "Forage verified onion: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption cabbage",
+      "command": "worldlogicterrain food_check cabbage",
+      "expect": "Forage verified cabbage: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "food consumption bell_pepper",
+      "command": "worldlogicterrain food_check bell_pepper",
+      "expect": "Forage verified bell_pepper: loot, food, saturation, consumption, core stamina",
+      "assertion": true
+    },
+    {
+      "name": "Short grass rejects plain dirt",
+      "command": "place feature worldlogicterrain:patch_short_grass 8 221 8",
+      "expect": "Failed to place feature",
+      "assertion": true
+    },
+    {
+      "command": "fill 1 220 1 14 220 14 minecraft:grass_block",
+      "expect": "Successfully filled"
+    },
+    {
+      "command": "place feature worldlogicterrain:patch_short_grass 8 221 8",
+      "expect": "Placed \"worldlogicterrain:patch_short_grass\""
+    },
+    {
+      "name": "Short grass generated on turf",
+      "command": "fill 1 221 1 14 222 14 minecraft:air replace minecraft:short_grass",
+      "expect": "Successfully filled [1-9][0-9]* block",
+      "assertion": true
+    },
+    {
+      "name": "Mixed meadow and frost patch mechanics",
+      "command": "worldlogicterrain patch_check",
+      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 32 climate-aware forage populations verified; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells; 20 regional plants and seven existing crops verified: growth, quality, harvest, season boundaries and HUD data; 20 benthic species verified: water families, habitat, source retention, support, height and loot",
+      "assertion": true
+    },
+    {
+      "name": "Wood physics profiles and wetness",
+      "command": "worldlogicterrain wood_check",
+      "expect": "Wood physics verified: 24 profiles, 48 registered log/plank blocks, stripped identity, moisture, mass, hardness, bending, fire immunity and wet fixture",
+      "assertion": true
+    }
+  ],
+  "coverage": [
+    {
+      "id": "block-meadow_grass",
+      "kind": "block",
+      "subject": "worldlogicterrain:meadow_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "meadow_grass survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "meadow_grass has loot"
+        },
+        {
+          "backend": "server",
+          "name": "meadow_grass loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-meadow_grass",
+      "kind": "item",
+      "subject": "worldlogicterrain:meadow_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "meadow_grass has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-dense_meadow_grass",
+      "kind": "block",
+      "subject": "worldlogicterrain:dense_meadow_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dense_meadow_grass survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "dense_meadow_grass has loot"
+        },
+        {
+          "backend": "server",
+          "name": "dense_meadow_grass loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-dense_meadow_grass",
+      "kind": "item",
+      "subject": "worldlogicterrain:dense_meadow_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dense_meadow_grass has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-dry_grass",
+      "kind": "block",
+      "subject": "worldlogicterrain:dry_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dry_grass survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "dry_grass has loot"
+        },
+        {
+          "backend": "server",
+          "name": "dry_grass loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-dry_grass",
+      "kind": "item",
+      "subject": "worldlogicterrain:dry_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dry_grass has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-tall_dry_grass",
+      "kind": "block",
+      "subject": "worldlogicterrain:tall_dry_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "tall_dry_grass survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "tall_dry_grass has loot"
+        },
+        {
+          "backend": "server",
+          "name": "tall_dry_grass loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-tall_dry_grass",
+      "kind": "item",
+      "subject": "worldlogicterrain:tall_dry_grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "tall_dry_grass has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-forest_shrub",
+      "kind": "block",
+      "subject": "worldlogicterrain:forest_shrub",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "forest_shrub survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "forest_shrub has loot"
+        },
+        {
+          "backend": "server",
+          "name": "forest_shrub loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-forest_shrub",
+      "kind": "item",
+      "subject": "worldlogicterrain:forest_shrub",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "forest_shrub has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-dense_underbrush",
+      "kind": "block",
+      "subject": "worldlogicterrain:dense_underbrush",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dense_underbrush survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "dense_underbrush has loot"
+        },
+        {
+          "backend": "server",
+          "name": "dense_underbrush loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-dense_underbrush",
+      "kind": "item",
+      "subject": "worldlogicterrain:dense_underbrush",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dense_underbrush has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-low_fern",
+      "kind": "block",
+      "subject": "worldlogicterrain:low_fern",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "low_fern survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "low_fern has loot"
+        },
+        {
+          "backend": "server",
+          "name": "low_fern loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-low_fern",
+      "kind": "item",
+      "subject": "worldlogicterrain:low_fern",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "low_fern has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-wild_heather",
+      "kind": "block",
+      "subject": "worldlogicterrain:wild_heather",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_heather survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "wild_heather has loot"
+        },
+        {
+          "backend": "server",
+          "name": "wild_heather loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-wild_heather",
+      "kind": "item",
+      "subject": "worldlogicterrain:wild_heather",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_heather has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-sedge",
+      "kind": "block",
+      "subject": "worldlogicterrain:sedge",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "sedge survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "sedge has loot"
+        },
+        {
+          "backend": "server",
+          "name": "sedge loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-sedge",
+      "kind": "item",
+      "subject": "worldlogicterrain:sedge",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "sedge has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-reed",
+      "kind": "block",
+      "subject": "worldlogicterrain:reed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "reed survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "reed has loot"
+        },
+        {
+          "backend": "server",
+          "name": "reed loses support"
+        },
+        {
+          "backend": "server",
+          "name": "reed upper removed"
+        }
+      ]
+    },
+    {
+      "id": "item-reed",
+      "kind": "item",
+      "subject": "worldlogicterrain:reed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "reed has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-cattail",
+      "kind": "block",
+      "subject": "worldlogicterrain:cattail",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cattail survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "cattail has loot"
+        },
+        {
+          "backend": "server",
+          "name": "cattail loses support"
+        },
+        {
+          "backend": "server",
+          "name": "cattail upper removed"
+        }
+      ]
+    },
+    {
+      "id": "item-cattail",
+      "kind": "item",
+      "subject": "worldlogicterrain:cattail",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cattail has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-dwarf_shrub",
+      "kind": "block",
+      "subject": "worldlogicterrain:dwarf_shrub",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dwarf_shrub survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "dwarf_shrub has loot"
+        },
+        {
+          "backend": "server",
+          "name": "dwarf_shrub loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-dwarf_shrub",
+      "kind": "item",
+      "subject": "worldlogicterrain:dwarf_shrub",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "dwarf_shrub has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-desert_shrub",
+      "kind": "block",
+      "subject": "worldlogicterrain:desert_shrub",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "desert_shrub survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "desert_shrub has loot"
+        },
+        {
+          "backend": "server",
+          "name": "desert_shrub loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-desert_shrub",
+      "kind": "item",
+      "subject": "worldlogicterrain:desert_shrub",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "desert_shrub has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-forest_litter",
+      "kind": "block",
+      "subject": "worldlogicterrain:forest_litter",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "forest_litter survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "forest_litter has loot"
+        },
+        {
+          "backend": "server",
+          "name": "forest_litter loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-forest_litter",
+      "kind": "item",
+      "subject": "worldlogicterrain:forest_litter",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "forest_litter has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-fallen_leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:fallen_leaves",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "fallen_leaves survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "fallen_leaves has loot"
+        },
+        {
+          "backend": "server",
+          "name": "fallen_leaves loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-fallen_leaves",
+      "kind": "item",
+      "subject": "worldlogicterrain:fallen_leaves",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "fallen_leaves has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-wild_chamomile",
+      "kind": "block",
+      "subject": "worldlogicterrain:wild_chamomile",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_chamomile survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "wild_chamomile has loot"
+        },
+        {
+          "backend": "server",
+          "name": "wild_chamomile loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-wild_chamomile",
+      "kind": "item",
+      "subject": "worldlogicterrain:wild_chamomile",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_chamomile has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-wild_cornflower",
+      "kind": "block",
+      "subject": "worldlogicterrain:wild_cornflower",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_cornflower survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "wild_cornflower has loot"
+        },
+        {
+          "backend": "server",
+          "name": "wild_cornflower loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-wild_cornflower",
+      "kind": "item",
+      "subject": "worldlogicterrain:wild_cornflower",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_cornflower has loot"
+        }
+      ]
+    },
+    {
+      "id": "block-wild_clover",
+      "kind": "block",
+      "subject": "worldlogicterrain:wild_clover",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_clover survives on soil"
+        },
+        {
+          "backend": "server",
+          "name": "wild_clover has loot"
+        },
+        {
+          "backend": "server",
+          "name": "wild_clover loses support"
+        }
+      ]
+    },
+    {
+      "id": "item-wild_clover",
+      "kind": "item",
+      "subject": "worldlogicterrain:wild_clover",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wild_clover has loot"
+        }
+      ]
+    },
+    {
+      "id": "mobility-stone",
+      "kind": "mechanic",
+      "subject": "Surface factor stone",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "mobility stone"
+        }
+      ]
+    },
+    {
+      "id": "mobility-grass_block",
+      "kind": "mechanic",
+      "subject": "Surface factor grass_block",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "mobility grass_block"
+        }
+      ]
+    },
+    {
+      "id": "mobility-gravel",
+      "kind": "mechanic",
+      "subject": "Surface factor gravel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "mobility gravel"
+        }
+      ]
+    },
+    {
+      "id": "mobility-sand",
+      "kind": "mechanic",
+      "subject": "Surface factor sand",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "mobility sand"
+        }
+      ]
+    },
+    {
+      "id": "mobility-mud",
+      "kind": "mechanic",
+      "subject": "Surface factor mud",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "mobility mud"
+        }
+      ]
+    },
+    {
+      "id": "mobility-dirt_path",
+      "kind": "mechanic",
+      "subject": "Surface factor dirt_path",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "mobility dirt_path"
+        }
+      ]
+    },
+    {
+      "id": "vegetation-mobility",
+      "kind": "mechanic",
+      "subject": "Vegetation and core movement strength",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "vegetation mobility"
+        },
+        {
+          "backend": "server",
+          "name": "core movement strength integration"
+        },
+        {
+          "backend": "server",
+          "name": "neutral after clearing vegetation"
+        }
+      ]
+    },
+    {
+      "id": "core-preset-vegetation",
+      "kind": "mechanic",
+      "subject": "All 35 placed features attached to appropriate biomes of all 3 core presets",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-meadow_grass",
+      "kind": "block",
+      "subject": "Actual configured feature generates meadow_grass in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch meadow_grass"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-dense_meadow_grass",
+      "kind": "block",
+      "subject": "Actual configured feature generates dense_meadow_grass in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch dense_meadow_grass"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-dry_grass",
+      "kind": "block",
+      "subject": "Actual configured feature generates dry_grass in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch dry_grass"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-tall_dry_grass",
+      "kind": "block",
+      "subject": "Actual configured feature generates tall_dry_grass in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch tall_dry_grass"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-desert_shrub",
+      "kind": "block",
+      "subject": "Actual configured feature generates desert_shrub in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch desert_shrub"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-forest_shrub",
+      "kind": "block",
+      "subject": "Actual configured feature generates forest_shrub in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch forest_shrub"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-dense_underbrush",
+      "kind": "block",
+      "subject": "Actual configured feature generates dense_underbrush in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch dense_underbrush"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-low_fern",
+      "kind": "block",
+      "subject": "Actual configured feature generates low_fern in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch low_fern"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_heather",
+      "kind": "block",
+      "subject": "Actual configured feature generates wild_heather in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_heather"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-sedge",
+      "kind": "block",
+      "subject": "Actual configured feature generates sedge in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch sedge"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-reed",
+      "kind": "block",
+      "subject": "Actual configured feature generates reed in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch reed"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-cattail",
+      "kind": "block",
+      "subject": "Actual configured feature generates cattail in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch cattail"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-dwarf_shrub",
+      "kind": "block",
+      "subject": "Actual configured feature generates dwarf_shrub in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch dwarf_shrub"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-forest_litter",
+      "kind": "block",
+      "subject": "Actual configured feature generates forest_litter in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch forest_litter"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-fallen_leaves",
+      "kind": "block",
+      "subject": "Actual configured feature generates fallen_leaves in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch fallen_leaves"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_chamomile",
+      "kind": "block",
+      "subject": "Actual configured feature generates wild_chamomile in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_chamomile"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_cornflower",
+      "kind": "block",
+      "subject": "Actual configured feature generates wild_cornflower in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_cornflower"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_clover",
+      "kind": "block",
+      "subject": "Actual configured feature generates wild_clover in valid soil fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_clover"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-invalid-substrate",
+      "kind": "mechanic",
+      "subject": "No meadow generation on stone",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "No meadow growth on stone"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_strawberry",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_strawberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_strawberry"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_blueberry",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_blueberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_blueberry"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_raspberry",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_raspberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_raspberry"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_blackberry",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_blackberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_blackberry"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_grape",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_grape",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_grape"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_pineapple",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_pineapple",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_pineapple"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_tomato",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_tomato",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_tomato"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_cucumber",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_cucumber",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_cucumber"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_radish",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_radish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_radish"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_onion",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_onion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_onion"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_cabbage",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_cabbage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_cabbage"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-wild_bell_pepper",
+      "kind": "block",
+      "subject": "Natural feature and biome placement wild_bell_pepper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch wild_bell_pepper"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-bracken",
+      "kind": "block",
+      "subject": "Natural feature and biome placement bracken",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch bracken"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-marsh_marigold",
+      "kind": "block",
+      "subject": "Natural feature and biome placement marsh_marigold",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "generated patch marsh_marigold"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "food-strawberry",
+      "kind": "item",
+      "subject": "Harvest and consume strawberry with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption strawberry"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_strawberry"
+        }
+      ]
+    },
+    {
+      "id": "food-blueberry",
+      "kind": "item",
+      "subject": "Harvest and consume blueberry with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption blueberry"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_blueberry"
+        }
+      ]
+    },
+    {
+      "id": "food-raspberry",
+      "kind": "item",
+      "subject": "Harvest and consume raspberry with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption raspberry"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_raspberry"
+        }
+      ]
+    },
+    {
+      "id": "food-blackberry",
+      "kind": "item",
+      "subject": "Harvest and consume blackberry with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption blackberry"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_blackberry"
+        }
+      ]
+    },
+    {
+      "id": "food-grape",
+      "kind": "item",
+      "subject": "Harvest and consume grape with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption grape"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_grape"
+        }
+      ]
+    },
+    {
+      "id": "food-pineapple",
+      "kind": "item",
+      "subject": "Harvest and consume pineapple with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption pineapple"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_pineapple"
+        }
+      ]
+    },
+    {
+      "id": "food-tomato",
+      "kind": "item",
+      "subject": "Harvest and consume tomato with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption tomato"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_tomato"
+        }
+      ]
+    },
+    {
+      "id": "food-cucumber",
+      "kind": "item",
+      "subject": "Harvest and consume cucumber with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption cucumber"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_cucumber"
+        }
+      ]
+    },
+    {
+      "id": "food-radish",
+      "kind": "item",
+      "subject": "Harvest and consume radish with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption radish"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_radish"
+        }
+      ]
+    },
+    {
+      "id": "food-onion",
+      "kind": "item",
+      "subject": "Harvest and consume onion with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption onion"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_onion"
+        }
+      ]
+    },
+    {
+      "id": "food-cabbage",
+      "kind": "item",
+      "subject": "Harvest and consume cabbage with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption cabbage"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_cabbage"
+        }
+      ]
+    },
+    {
+      "id": "food-bell_pepper",
+      "kind": "item",
+      "subject": "Harvest and consume bell_pepper with distinct food and core stamina values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption bell_pepper"
+        },
+        {
+          "backend": "server",
+          "name": "generated patch wild_bell_pepper"
+        }
+      ]
+    },
+    {
+      "id": "right-click-strawberry",
+      "kind": "mechanic",
+      "subject": "Right-click harvest, preserved unripe bush, no repeat or unripe drop, random tick regrowth strawberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption strawberry"
+        }
+      ]
+    },
+    {
+      "id": "right-click-blueberry",
+      "kind": "mechanic",
+      "subject": "Right-click harvest, preserved unripe bush, no repeat or unripe drop, random tick regrowth blueberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption blueberry"
+        }
+      ]
+    },
+    {
+      "id": "right-click-raspberry",
+      "kind": "mechanic",
+      "subject": "Right-click harvest, preserved unripe bush, no repeat or unripe drop, random tick regrowth raspberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption raspberry"
+        }
+      ]
+    },
+    {
+      "id": "right-click-blackberry",
+      "kind": "mechanic",
+      "subject": "Right-click harvest, preserved unripe bush, no repeat or unripe drop, random tick regrowth blackberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption blackberry"
+        }
+      ]
+    },
+    {
+      "id": "right-click-grape",
+      "kind": "mechanic",
+      "subject": "Right-click harvest, preserved unripe bush, no repeat or unripe drop, random tick regrowth grape",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption grape"
+        }
+      ]
+    },
+    {
+      "id": "vanilla-short-grass",
+      "kind": "mechanic",
+      "subject": "Vanilla short grass only on turf, actual placement and negative substrate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Short grass rejects plain dirt"
+        },
+        {
+          "backend": "server",
+          "name": "Short grass generated on turf"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "mixed-meadow-patch",
+      "kind": "mechanic",
+      "subject": "Compact mixed-species patch, vanilla short grass replacement and unchanged gap grass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "frosted-grass-block",
+      "kind": "block",
+      "subject": "Frozen grass compact generation on soil, not ice or stone, support removal and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "frosted-grass-item",
+      "kind": "item",
+      "subject": "Registered item from actual frost grass loot table",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-oak_young",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape oak_young, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-oak_spreading",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape oak_spreading, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-oak_ancient",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape oak_ancient, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-oak_windswept",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape oak_windswept, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-birch_young",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape birch_young, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-birch_tall",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape birch_tall, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-pine_tall",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape pine_tall, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-spruce_dense",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape spruce_dense, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-spruce_old",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape spruce_old, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-larch_young",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape larch_young, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-larch_tall",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape larch_tall, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-willow_young",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape willow_young, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-willow_spreading",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape willow_spreading, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-acacia_stunted",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape acacia_stunted, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-acacia_spreading",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape acacia_spreading, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-jungle_canopy",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape jungle_canopy, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-jungle_giant",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape jungle_giant, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-dark_oak_old",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape dark_oak_old, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-cherry_spreading",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape cherry_spreading, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-mangrove_coast",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape mangrove_coast, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "wood-willow-log",
+      "kind": "block",
+      "subject": "willow log actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-willow-log",
+      "kind": "item",
+      "subject": "willow log item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-willow-leaves",
+      "kind": "block",
+      "subject": "willow leaves actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-willow-leaves",
+      "kind": "item",
+      "subject": "willow leaves item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-willow-sapling",
+      "kind": "block",
+      "subject": "willow sapling actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-willow-sapling",
+      "kind": "item",
+      "subject": "willow sapling item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-willow-planks",
+      "kind": "block",
+      "subject": "willow planks actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-willow-planks",
+      "kind": "item",
+      "subject": "willow planks item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-larch-log",
+      "kind": "block",
+      "subject": "larch log actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-larch-log",
+      "kind": "item",
+      "subject": "larch log item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-larch-leaves",
+      "kind": "block",
+      "subject": "larch leaves actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-larch-leaves",
+      "kind": "item",
+      "subject": "larch leaves item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-larch-sapling",
+      "kind": "block",
+      "subject": "larch sapling actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-larch-sapling",
+      "kind": "item",
+      "subject": "larch sapling item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-larch-planks",
+      "kind": "block",
+      "subject": "larch planks actual registered drop, wood tag/growth or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-item-larch-planks",
+      "kind": "item",
+      "subject": "larch planks item acquired by loot or crafting",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-recipe-willow",
+      "kind": "recipe",
+      "subject": "willow log crafts four own planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-recipe-larch",
+      "kind": "recipe",
+      "subject": "larch log crafts four own planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "ecological-grove-field",
+      "kind": "mechanic",
+      "subject": "Deterministic bounded seeded grove distribution with both gaps and stands",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "fallen-tree-stump",
+      "kind": "mechanic",
+      "subject": "Actual fallen wood and stump with correct log axes, obstacle rejection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "rc26-flora-habitats",
+      "kind": "mechanic",
+      "subject": "Flora and tree biome attachment to old and available unified core presets",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-birch_pioneer",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape birch_pioneer, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-larch_exposed",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape larch_exposed, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "tree-spruce_young",
+      "kind": "mechanic",
+      "subject": "Actual configured tree shape spruce_young, logs, connected leaves and height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "forest-recruitment",
+      "kind": "mechanic",
+      "subject": "Real native and addon saplings, no occupied or stone replacement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-understory",
+      "kind": "mechanic",
+      "subject": "Actual litter beside forest trees, no occupied or stone replacement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "aquatic-lily-block",
+      "kind": "block",
+      "subject": "aquatic-lily-block",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "aquatic-lily-item",
+      "kind": "item",
+      "subject": "aquatic-lily-item",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "aquatic-source-only",
+      "kind": "mechanic",
+      "subject": "aquatic-source-only",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "aquatic-shore-species",
+      "kind": "mechanic",
+      "subject": "aquatic-shore-species",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "aquatic-fluid-preservation",
+      "kind": "mechanic",
+      "subject": "aquatic-fluid-preservation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-strawberry",
+      "kind": "item",
+      "subject": "Harvest ripe strawberry yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption strawberry"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-blueberry",
+      "kind": "item",
+      "subject": "Harvest ripe blueberry yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption blueberry"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-raspberry",
+      "kind": "item",
+      "subject": "Harvest ripe raspberry yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption raspberry"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-blackberry",
+      "kind": "item",
+      "subject": "Harvest ripe blackberry yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption blackberry"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-grape",
+      "kind": "item",
+      "subject": "Harvest ripe grape yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption grape"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-pineapple",
+      "kind": "item",
+      "subject": "Harvest ripe pineapple yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption pineapple"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-tomato",
+      "kind": "item",
+      "subject": "Harvest ripe tomato yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption tomato"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-cucumber",
+      "kind": "item",
+      "subject": "Harvest ripe cucumber yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption cucumber"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-radish",
+      "kind": "item",
+      "subject": "Harvest ripe radish yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption radish"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-onion",
+      "kind": "item",
+      "subject": "Harvest ripe onion yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption onion"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-cabbage",
+      "kind": "item",
+      "subject": "Harvest ripe cabbage yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption cabbage"
+        }
+      ]
+    },
+    {
+      "id": "forage-seed-bell_pepper",
+      "kind": "item",
+      "subject": "Harvest ripe bell_pepper yields a registered seed, no duplicate berry harvest; own tab inventory and HUD scale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption bell_pepper"
+        }
+      ]
+    },
+    {
+      "id": "duckweed-block",
+      "kind": "block",
+      "subject": "duckweed-block",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "duckweed-item",
+      "kind": "item",
+      "subject": "duckweed-item",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "duckweed-saline-depth",
+      "kind": "mechanic",
+      "subject": "duckweed-saline-depth",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "duckweed-native-fluid-preservation",
+      "kind": "mechanic",
+      "subject": "duckweed-native-fluid-preservation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-pine-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:pine_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-pine-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:pine_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-pine-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:pine_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-pine-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:pine_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-pine-recipe",
+      "kind": "recipe",
+      "subject": "pine log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-fir-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:fir_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-fir-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:fir_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-fir-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:fir_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-fir-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:fir_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-fir-recipe",
+      "kind": "recipe",
+      "subject": "fir log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-cedar-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:cedar_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-cedar-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:cedar_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-cedar-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:cedar_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-cedar-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:cedar_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-cedar-recipe",
+      "kind": "recipe",
+      "subject": "cedar log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-maple-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:maple_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-maple-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:maple_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-maple-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:maple_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-maple-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:maple_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-maple-recipe",
+      "kind": "recipe",
+      "subject": "maple log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-beech-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:beech_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-beech-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:beech_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-beech-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:beech_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-beech-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:beech_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-beech-recipe",
+      "kind": "recipe",
+      "subject": "beech log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-alder-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:alder_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-alder-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:alder_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-alder-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:alder_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-alder-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:alder_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-alder-recipe",
+      "kind": "recipe",
+      "subject": "alder log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-pine_young",
+      "kind": "mechanic",
+      "subject": "pine_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-pine_windswept",
+      "kind": "mechanic",
+      "subject": "pine_windswept actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-fir_young",
+      "kind": "mechanic",
+      "subject": "fir_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-fir_tall",
+      "kind": "mechanic",
+      "subject": "fir_tall actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-cedar_young",
+      "kind": "mechanic",
+      "subject": "cedar_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-cedar_spreading",
+      "kind": "mechanic",
+      "subject": "cedar_spreading actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-maple_young",
+      "kind": "mechanic",
+      "subject": "maple_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-maple_spreading",
+      "kind": "mechanic",
+      "subject": "maple_spreading actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-beech_young",
+      "kind": "mechanic",
+      "subject": "beech_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-beech_tall",
+      "kind": "mechanic",
+      "subject": "beech_tall actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-alder_young",
+      "kind": "mechanic",
+      "subject": "alder_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-alder_spreading",
+      "kind": "mechanic",
+      "subject": "alder_spreading actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-palm-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:palm_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-palm-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:palm_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-palm-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:palm_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-palm-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:palm_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-palm-recipe",
+      "kind": "recipe",
+      "subject": "palm log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-date_palm-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:date_palm_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-date_palm-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:date_palm_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-date_palm-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:date_palm_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-date_palm-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:date_palm_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-date_palm-recipe",
+      "kind": "recipe",
+      "subject": "date_palm log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-baobab-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:baobab_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-baobab-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:baobab_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-baobab-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:baobab_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-baobab-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:baobab_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-baobab-recipe",
+      "kind": "recipe",
+      "subject": "baobab log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-ebony-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:ebony_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-ebony-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:ebony_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-ebony-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:ebony_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-ebony-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:ebony_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-ebony-recipe",
+      "kind": "recipe",
+      "subject": "ebony log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-mahogany-log",
+      "kind": "block",
+      "subject": "worldlogicterrain:mahogany_log registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-mahogany-leaves",
+      "kind": "block",
+      "subject": "worldlogicterrain:mahogany_leaves registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-mahogany-planks",
+      "kind": "block",
+      "subject": "worldlogicterrain:mahogany_planks registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-mahogany-sapling",
+      "kind": "block",
+      "subject": "worldlogicterrain:mahogany_sapling registration, loot and species mechanics",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-mahogany-recipe",
+      "kind": "recipe",
+      "subject": "mahogany log to 4 planks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-palm_young",
+      "kind": "mechanic",
+      "subject": "palm_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-palm_leaning",
+      "kind": "mechanic",
+      "subject": "palm_leaning actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-date_palm_young",
+      "kind": "mechanic",
+      "subject": "date_palm_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-date_palm_tall",
+      "kind": "mechanic",
+      "subject": "date_palm_tall actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-baobab_young",
+      "kind": "mechanic",
+      "subject": "baobab_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-baobab_ancient",
+      "kind": "mechanic",
+      "subject": "baobab_ancient actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-ebony_young",
+      "kind": "mechanic",
+      "subject": "ebony_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-ebony_spreading",
+      "kind": "mechanic",
+      "subject": "ebony_spreading actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-mahogany_young",
+      "kind": "mechanic",
+      "subject": "mahogany_young actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "form-mahogany_canopy",
+      "kind": "mechanic",
+      "subject": "mahogany_canopy actual generated logs, leaves, height and connected foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "palm-sand-and-obstacles",
+      "kind": "mechanic",
+      "subject": "sand support; no stone growth; atomic rejection of obstacle",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-tall-grass-plains",
+      "kind": "mechanic",
+      "subject": "Additional vanilla two-block tall grass in broad flat open grasslands; steep, insufficiently open and stone controls; no flower overwrite",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        },
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "landscape-forest-mosaic",
+      "kind": "mechanic",
+      "subject": "Seeded continuous forest stands, edge gradient and openings",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "landscape-grass-mosaic",
+      "kind": "mechanic",
+      "subject": "Coherent tall grass density field with dense prairies and sparse openings",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "population-strawberry",
+      "kind": "mechanic",
+      "subject": "Actual bounded strawberry population, soil and occupied-block rejection, climate fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "population-blueberry",
+      "kind": "mechanic",
+      "subject": "Actual bounded blueberry population, soil and occupied-block rejection, climate fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "population-raspberry",
+      "kind": "mechanic",
+      "subject": "Actual bounded raspberry population, soil and occupied-block rejection, climate fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "population-blackberry",
+      "kind": "mechanic",
+      "subject": "Actual bounded blackberry population, soil and occupied-block rejection, climate fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "population-grape",
+      "kind": "mechanic",
+      "subject": "Actual bounded grape population, soil and occupied-block rejection, climate fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "population-pineapple",
+      "kind": "mechanic",
+      "subject": "Actual bounded pineapple population, soil and occupied-block rejection, climate fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "population-tomato",
+      "kind": "mechanic",
+      "subject": "Actual bounded tomato population, soil and occupied-block rejection, climate fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "population-cucumber",
+      "kind": "mechanic",
+      "subject": "Actual bounded cucumber population, soil and occupied-block rejection, climate fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "population-radish",
+      "kind": "mechanic",
+      "subject": "Actual bounded radish population, soil and occupied-block rejection, climate fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "population-onion",
+      "kind": "mechanic",
+      "subject": "Actual bounded onion population, soil and occupied-block rejection, climate fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "population-cabbage",
+      "kind": "mechanic",
+      "subject": "Actual bounded cabbage population, soil and occupied-block rejection, climate fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "population-bell_pepper",
+      "kind": "mechanic",
+      "subject": "Actual bounded bell_pepper population, soil and occupied-block rejection, climate fallback",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "WorldLogic preset vegetation attachment"
+        }
+      ]
+    },
+    {
+      "id": "hanging-fruit-apple",
+      "kind": "block",
+      "subject": "Actual apple hanging below its generated host canopy; ripe-only loot, server right-click, two random-tick growth transitions, duplicate prevention and support loss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-fruit-food-apple",
+      "kind": "item",
+      "subject": "Native minecraft apple acquired from hanging fruit, nutritional properties and actual server consumption",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "hanging-fruit-pear",
+      "kind": "block",
+      "subject": "Actual pear hanging below its generated host canopy; ripe-only loot, server right-click, two random-tick growth transitions, duplicate prevention and support loss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-fruit-food-pear",
+      "kind": "item",
+      "subject": "Terrarian pear acquired from hanging fruit, nutritional properties and actual server consumption",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "hanging-fruit-plum",
+      "kind": "block",
+      "subject": "Actual plum hanging below its generated host canopy; ripe-only loot, server right-click, two random-tick growth transitions, duplicate prevention and support loss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-fruit-food-plum",
+      "kind": "item",
+      "subject": "Terrarian plum acquired from hanging fruit, nutritional properties and actual server consumption",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "hanging-fruit-fig",
+      "kind": "block",
+      "subject": "Actual fig hanging below its generated host canopy; ripe-only loot, server right-click, two random-tick growth transitions, duplicate prevention and support loss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-fruit-food-fig",
+      "kind": "item",
+      "subject": "Terrarian fig acquired from hanging fruit, nutritional properties and actual server consumption",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "hanging-fruit-mango",
+      "kind": "block",
+      "subject": "Actual mango hanging below its generated host canopy; ripe-only loot, server right-click, two random-tick growth transitions, duplicate prevention and support loss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-fruit-food-mango",
+      "kind": "item",
+      "subject": "Terrarian mango acquired from hanging fruit, nutritional properties and actual server consumption",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "hanging-fruit-coconut",
+      "kind": "block",
+      "subject": "Actual coconut hanging below its generated host canopy; ripe-only loot, server right-click, two random-tick growth transitions, duplicate prevention and support loss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-fruit-food-coconut",
+      "kind": "item",
+      "subject": "Terrarian coconut acquired from hanging fruit, nutritional properties and actual server consumption",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "hanging-fruit-date",
+      "kind": "block",
+      "subject": "Actual date hanging below its generated host canopy; ripe-only loot, server right-click, two random-tick growth transitions, duplicate prevention and support loss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-fruit-food-date",
+      "kind": "item",
+      "subject": "Terrarian date acquired from hanging fruit, nutritional properties and actual server consumption",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "hanging-fruit-baobab_fruit",
+      "kind": "block",
+      "subject": "Actual baobab_fruit hanging below its generated host canopy; ripe-only loot, server right-click, two random-tick growth transitions, duplicate prevention and support loss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "tree-fruit-food-baobab_fruit",
+      "kind": "item",
+      "subject": "Terrarian baobab_fruit acquired from hanging fruit, nutritional properties and actual server consumption",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "regional-fruit-selection",
+      "kind": "mechanic",
+      "subject": "All eight climate-specific fruit choices; snowy/tundra/cold and missing leaf controls; no fruit on unrelated foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "soil-cycle",
+      "kind": "mechanic",
+      "subject": "Three continuous crop cycles exhaust one block; duplicate and manually placed fruit rejected; fallow reset and two-day recovery",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "soil-exhausted-dirt",
+      "kind": "block",
+      "subject": "Exhausted dirt: actual conversion and recovery, independent cell, persistence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "soil-exhausted-farmland",
+      "kind": "block",
+      "subject": "Exhausted farmland: moisture retained, normal crop support, growth penalty, recovery",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-plantain",
+      "kind": "block",
+      "subject": "wild_plantain: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-plantain",
+      "kind": "item",
+      "subject": "wild_plantain: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-nettle",
+      "kind": "block",
+      "subject": "wild_nettle: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-nettle",
+      "kind": "item",
+      "subject": "wild_nettle: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-yarrow",
+      "kind": "block",
+      "subject": "wild_yarrow: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-yarrow",
+      "kind": "item",
+      "subject": "wild_yarrow: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-sage",
+      "kind": "block",
+      "subject": "wild_sage: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-sage",
+      "kind": "item",
+      "subject": "wild_sage: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-thyme",
+      "kind": "block",
+      "subject": "wild_thyme: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-thyme",
+      "kind": "item",
+      "subject": "wild_thyme: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-lavender",
+      "kind": "block",
+      "subject": "wild_lavender: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-lavender",
+      "kind": "item",
+      "subject": "wild_lavender: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-wormwood",
+      "kind": "block",
+      "subject": "wild_wormwood: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-wormwood",
+      "kind": "item",
+      "subject": "wild_wormwood: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-wild_mint",
+      "kind": "block",
+      "subject": "wild_wild_mint: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-wild_mint",
+      "kind": "item",
+      "subject": "wild_wild_mint: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-horsetail",
+      "kind": "block",
+      "subject": "wild_horsetail: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-horsetail",
+      "kind": "item",
+      "subject": "wild_horsetail: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-marsh_cinquefoil",
+      "kind": "block",
+      "subject": "wild_marsh_cinquefoil: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-marsh_cinquefoil",
+      "kind": "item",
+      "subject": "wild_marsh_cinquefoil: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-bog_rosemary",
+      "kind": "block",
+      "subject": "wild_bog_rosemary: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-bog_rosemary",
+      "kind": "item",
+      "subject": "wild_bog_rosemary: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-cloudberry",
+      "kind": "block",
+      "subject": "wild_cloudberry: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-cloudberry",
+      "kind": "item",
+      "subject": "wild_cloudberry: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-lingonberry",
+      "kind": "block",
+      "subject": "wild_lingonberry: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-lingonberry",
+      "kind": "item",
+      "subject": "wild_lingonberry: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-arctic_poppy",
+      "kind": "block",
+      "subject": "wild_arctic_poppy: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-arctic_poppy",
+      "kind": "item",
+      "subject": "wild_arctic_poppy: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-edelweiss",
+      "kind": "block",
+      "subject": "wild_edelweiss: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-edelweiss",
+      "kind": "item",
+      "subject": "wild_edelweiss: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-fireweed",
+      "kind": "block",
+      "subject": "wild_fireweed: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-fireweed",
+      "kind": "item",
+      "subject": "wild_fireweed: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-aloe",
+      "kind": "block",
+      "subject": "wild_aloe: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-aloe",
+      "kind": "item",
+      "subject": "wild_aloe: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-agave",
+      "kind": "block",
+      "subject": "wild_agave: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-agave",
+      "kind": "item",
+      "subject": "wild_agave: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-ginger",
+      "kind": "block",
+      "subject": "wild_ginger: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-ginger",
+      "kind": "item",
+      "subject": "wild_ginger: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-lemongrass",
+      "kind": "block",
+      "subject": "wild_lemongrass: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-lemongrass",
+      "kind": "item",
+      "subject": "wild_lemongrass: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-pineapple",
+      "kind": "block",
+      "subject": "wild_pineapple: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-pineapple",
+      "kind": "item",
+      "subject": "wild_pineapple: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-tomato",
+      "kind": "block",
+      "subject": "wild_tomato: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-tomato",
+      "kind": "item",
+      "subject": "wild_tomato: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-cucumber",
+      "kind": "block",
+      "subject": "wild_cucumber: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-cucumber",
+      "kind": "item",
+      "subject": "wild_cucumber: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-radish",
+      "kind": "block",
+      "subject": "wild_radish: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-radish",
+      "kind": "item",
+      "subject": "wild_radish: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-onion",
+      "kind": "block",
+      "subject": "wild_onion: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-onion",
+      "kind": "item",
+      "subject": "wild_onion: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-cabbage",
+      "kind": "block",
+      "subject": "wild_cabbage: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-cabbage",
+      "kind": "item",
+      "subject": "wild_cabbage: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-block-bell_pepper",
+      "kind": "block",
+      "subject": "wild_bell_pepper: growth stages, climate, support, mature yield",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-item-bell_pepper",
+      "kind": "item",
+      "subject": "wild_bell_pepper: harvest and planting item or seed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "seasonal-growth",
+      "kind": "mechanic",
+      "subject": "Seasonal dormancy, temperature/moisture/light limits, quality, exhaustion, mature crops, legacy behavior and tree fruit exclusion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-eelgrass",
+      "kind": "block",
+      "subject": "eelgrass: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-eelgrass",
+      "kind": "item",
+      "subject": "eelgrass: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-sea_lettuce",
+      "kind": "block",
+      "subject": "sea_lettuce: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-sea_lettuce",
+      "kind": "item",
+      "subject": "sea_lettuce: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-sargassum",
+      "kind": "block",
+      "subject": "sargassum: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-sargassum",
+      "kind": "item",
+      "subject": "sargassum: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-giant_kelp",
+      "kind": "block",
+      "subject": "giant_kelp: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-giant_kelp",
+      "kind": "item",
+      "subject": "giant_kelp: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-red_dulse",
+      "kind": "block",
+      "subject": "red_dulse: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-red_dulse",
+      "kind": "item",
+      "subject": "red_dulse: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-coralline_algae",
+      "kind": "block",
+      "subject": "coralline_algae: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-coralline_algae",
+      "kind": "item",
+      "subject": "coralline_algae: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-red_sea_star",
+      "kind": "block",
+      "subject": "red_sea_star: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-red_sea_star",
+      "kind": "item",
+      "subject": "red_sea_star: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-blue_sea_star",
+      "kind": "block",
+      "subject": "blue_sea_star: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-blue_sea_star",
+      "kind": "item",
+      "subject": "blue_sea_star: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-sea_urchin",
+      "kind": "block",
+      "subject": "sea_urchin: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-sea_urchin",
+      "kind": "item",
+      "subject": "sea_urchin: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-barrel_sponge",
+      "kind": "block",
+      "subject": "barrel_sponge: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-barrel_sponge",
+      "kind": "item",
+      "subject": "barrel_sponge: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-sea_anemone",
+      "kind": "block",
+      "subject": "sea_anemone: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-sea_anemone",
+      "kind": "item",
+      "subject": "sea_anemone: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-sea_fan",
+      "kind": "block",
+      "subject": "sea_fan: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-sea_fan",
+      "kind": "item",
+      "subject": "sea_fan: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-mussel_bed",
+      "kind": "block",
+      "subject": "mussel_bed: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-mussel_bed",
+      "kind": "item",
+      "subject": "mussel_bed: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-widgeon_grass",
+      "kind": "block",
+      "subject": "widgeon_grass: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-widgeon_grass",
+      "kind": "item",
+      "subject": "widgeon_grass: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-water_milfoil",
+      "kind": "block",
+      "subject": "water_milfoil: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-water_milfoil",
+      "kind": "item",
+      "subject": "water_milfoil: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-hornwort",
+      "kind": "block",
+      "subject": "hornwort: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-hornwort",
+      "kind": "item",
+      "subject": "hornwort: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-pondweed",
+      "kind": "block",
+      "subject": "pondweed: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-pondweed",
+      "kind": "item",
+      "subject": "pondweed: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-water_crowfoot",
+      "kind": "block",
+      "subject": "water_crowfoot: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-water_crowfoot",
+      "kind": "item",
+      "subject": "water_crowfoot: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-river_moss",
+      "kind": "block",
+      "subject": "river_moss: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-river_moss",
+      "kind": "item",
+      "subject": "river_moss: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-block-water_starwort",
+      "kind": "block",
+      "subject": "water_starwort: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-item-water_starwort",
+      "kind": "item",
+      "subject": "water_starwort: habitat, source retention, support and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "benthic-growth",
+      "kind": "mechanic",
+      "subject": "Submerged colonies and vertical growth; native source identity, unsuitable habitats and support loss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-minecraft-oak",
+      "kind": "mechanic",
+      "subject": "minecraft:oak reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-minecraft-spruce",
+      "kind": "mechanic",
+      "subject": "minecraft:spruce reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-minecraft-birch",
+      "kind": "mechanic",
+      "subject": "minecraft:birch reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-minecraft-jungle",
+      "kind": "mechanic",
+      "subject": "minecraft:jungle reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-minecraft-acacia",
+      "kind": "mechanic",
+      "subject": "minecraft:acacia reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-minecraft-dark_oak",
+      "kind": "mechanic",
+      "subject": "minecraft:dark_oak reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-minecraft-mangrove",
+      "kind": "mechanic",
+      "subject": "minecraft:mangrove reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-minecraft-cherry",
+      "kind": "mechanic",
+      "subject": "minecraft:cherry reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-minecraft-bamboo",
+      "kind": "mechanic",
+      "subject": "minecraft:bamboo reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-minecraft-crimson",
+      "kind": "mechanic",
+      "subject": "minecraft:crimson reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-minecraft-warped",
+      "kind": "mechanic",
+      "subject": "minecraft:warped reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-worldlogicterrain-willow",
+      "kind": "mechanic",
+      "subject": "worldlogicterrain:willow reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-worldlogicterrain-larch",
+      "kind": "mechanic",
+      "subject": "worldlogicterrain:larch reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-worldlogicterrain-pine",
+      "kind": "mechanic",
+      "subject": "worldlogicterrain:pine reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-worldlogicterrain-fir",
+      "kind": "mechanic",
+      "subject": "worldlogicterrain:fir reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-worldlogicterrain-cedar",
+      "kind": "mechanic",
+      "subject": "worldlogicterrain:cedar reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-worldlogicterrain-maple",
+      "kind": "mechanic",
+      "subject": "worldlogicterrain:maple reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-worldlogicterrain-beech",
+      "kind": "mechanic",
+      "subject": "worldlogicterrain:beech reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-worldlogicterrain-alder",
+      "kind": "mechanic",
+      "subject": "worldlogicterrain:alder reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-worldlogicterrain-palm",
+      "kind": "mechanic",
+      "subject": "worldlogicterrain:palm reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-worldlogicterrain-date_palm",
+      "kind": "mechanic",
+      "subject": "worldlogicterrain:date_palm reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-worldlogicterrain-baobab",
+      "kind": "mechanic",
+      "subject": "worldlogicterrain:baobab reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-worldlogicterrain-ebony",
+      "kind": "mechanic",
+      "subject": "worldlogicterrain:ebony reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-worldlogicterrain-mahogany",
+      "kind": "mechanic",
+      "subject": "worldlogicterrain:mahogany reference and wet material properties",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    },
+    {
+      "id": "wood-physics-environment",
+      "kind": "mechanic",
+      "subject": "Read-only environmental moisture estimate, unknown-block rejection and wet fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Wood physics profiles and wetness"
+        }
+      ]
+    }
+  ]
+}

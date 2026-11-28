@@ -1,0 +1,35 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "minecraft:meadow",
+    "minecraft:windswept_hills",
+    "minecraft:windswept_forest",
+    "minecraft:windswept_gravelly_hills",
+    {
+      "id": "worldlogic:prairie",
+      "required": false
+    },
+    {
+      "id": "worldlogic:tallgrass_prairie",
+      "required": false
+    },
+    {
+      "id": "worldlogic:temperate_steppe",
+      "required": false
+    },
+    {
+      "id": "worldlogic:shortgrass_steppe",
+      "required": false
+    },
+    {
+      "id": "worldlogic:subtropical_grassland",
+      "required": false
+    },
+    {
+      "id": "worldlogic:alpine_meadow",
+      "required": false
+    }
+  ]
+}

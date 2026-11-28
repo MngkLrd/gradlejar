@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:grass_fill",
+  "features": "worldlogicterrain:patch_short_grass",
+  "step": "vegetal_decoration"
+}

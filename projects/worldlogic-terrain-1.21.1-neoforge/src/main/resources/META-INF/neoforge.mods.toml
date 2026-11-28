@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="All Rights Reserved"
+[[mods]]
+modId="worldlogicterrain"
+version="1.5.0"
+displayName="WorldLogic: Terrarian"
+description="Natural vegetation, ecological forests and surface mobility for WorldLogic."
+[[dependencies.worldlogicterrain]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.80,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.worldlogicterrain]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
+[[dependencies.worldlogicterrain]]
+modId="worldlogic"
+type="required"
+versionRange="[1.0.0-rc20,)"
+ordering="AFTER"
+side="BOTH"

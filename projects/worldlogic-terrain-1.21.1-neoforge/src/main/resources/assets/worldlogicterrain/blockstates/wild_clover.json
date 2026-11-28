@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/wild_clover",
+        "y": 0
+      },
+      {
+        "model": "worldlogicterrain:block/wild_clover",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_clover",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_clover",
+        "y": 270
+      }
+    ]
+  }
+}

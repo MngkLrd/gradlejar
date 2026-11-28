@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/sargassum"
+      },
+      {
+        "model": "worldlogicterrain:block/sargassum",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/sargassum",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/sargassum",
+        "y": 270
+      }
+    ]
+  }
+}

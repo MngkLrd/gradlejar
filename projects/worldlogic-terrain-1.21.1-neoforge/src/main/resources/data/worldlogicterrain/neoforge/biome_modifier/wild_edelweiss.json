@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:season_alpine",
+  "features": "worldlogicterrain:patch_wild_edelweiss",
+  "step": "vegetal_decoration"
+}
