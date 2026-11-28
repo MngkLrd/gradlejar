@@ -85,6 +85,15 @@ final class FallingTree {
     private static boolean canLower(ServerLevel l,CompoundTag f,List<CompoundTag> group,double amount){
         for(CompoundTag m:group){
             if(!TreeChopper.sweepClear(l,base(f),BlockPos.of(m.getLong("source")),direction(f),f.getFloat("progress"),Set.of(),offset(f,m)-amount))return false;
+            if(mask(f)!=0){
+                var candidate=TreeChopper.timberBounds(base(f),BlockPos.of(m.getLong("source")),direction(f),f.getFloat("progress"),false,offset(f,m)-amount).deflate(.001);
+                for(int i=0;i<members(f).size();i++){
+                    CompoundTag other=members(f).getCompound(i);
+                    if(!other.getBoolean("log")||other.getBoolean("removed")||group.contains(other))continue;
+                    var otherBox=TreeChopper.timberBounds(base(f),BlockPos.of(other.getLong("source")),direction(f),f.getFloat("progress"),false,offset(f,other)).deflate(.001);
+                    if(candidate.intersects(otherBox))return false;
+                }
+            }
         }
         return !group.isEmpty();
     }
@@ -119,6 +128,15 @@ final class FallingTree {
                 if(!canLower(l,f,group,.125))break;
                 for(CompoundTag m:group)m.putDouble("extraDrop",m.getDouble("extraDrop")-.125);
                 moved=true;
+            }
+        }
+        if(mask(f)!=0)for(int i=0;i<members(f).size();i++){
+            CompoundTag cap=members(f).getCompound(i);
+            if(!cap.getBoolean("cap")||cap.getBoolean("removed"))continue;
+            BlockPos p=BlockPos.of(cap.getLong("source"));
+            for(int j=0;j<members(f).size();j++){
+                CompoundTag m=members(f).getCompound(j);
+                if(m.getBoolean("log")&&!m.getBoolean("removed")&&BlockPos.of(m.getLong("source")).distManhattan(p)==1){cap.putDouble("extraDrop",m.getDouble("extraDrop"));break;}
             }
         }
         return moved;

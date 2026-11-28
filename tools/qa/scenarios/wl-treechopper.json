@@ -128,10 +128,6 @@
       "name": "bucking-free-order"
     },
     {
-      "command": "fill 999 199 1001 1001 199 1005 minecraft:stone",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "wltreechopper qa_buck 1000 200 1002 1",
       "expect": "TreeChopper bucking PASS",
       "assertion": true,
