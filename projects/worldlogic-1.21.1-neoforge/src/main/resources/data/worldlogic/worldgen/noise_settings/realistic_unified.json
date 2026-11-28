@@ -379,8 +379,8 @@
       "y_scale": 1
     },
     "ridges": "worldlogic:earthlike/ridges",
-    "temperature": "worldlogic:earthlike_climate/temperature",
-    "vegetation": "worldlogic:earthlike_climate/humidity",
+    "temperature": "worldlogic:unified/regional_temperature",
+    "vegetation": "worldlogic:unified/regional_humidity",
     "vein_gap": 0,
     "vein_ridged": 0,
     "vein_toggle": 0

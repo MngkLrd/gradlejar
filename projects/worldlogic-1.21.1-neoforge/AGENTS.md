@@ -7,3 +7,6 @@ Thirst, drinking, hydration physiology and dehydration are separate Hydration ad
 
 ## OWNER DIRECTION (2026-11-27): SINGLE REALISTIC MODE
 No Light/Hardcore gameplay profiles. All implemented Core rules active at balanced baseline, except mutually exclusive legacy alternatives and explicitly delegated addon mechanics. New default worlds use the unified Realistic preset, preserving RC22 base geography; keep old registered world IDs and do not rewrite existing chunks. Operator diagnostics may temporarily override rules, never silently persist a reduced baseline.
+
+## OWNER DIRECTION: RC40–RC44 source-only development
+Owner explicitly requested no JAR compilation before RC45. Keep intermediate source commits on branches without PRs or dispatch, retain all existing release gates and scenarios. Execute cumulative compilation, required server and natural-world QA at RC45; do not describe intermediate source as verified or release-ready. Preserve RC22 base geography; limited local foothill/valley shaping is allowed separately, no changing macro density or vertical world dimensions.

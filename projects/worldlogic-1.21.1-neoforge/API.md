@@ -155,3 +155,5 @@ RC35 river water remains the same registered fluid IDs; server flow vector incor
 RC38 regional drainage changes internal river geometry only. Existing hydrology API and RC22 climate/terrain field semantics are unchanged. Current vectors use the cached regional plan; old worlds or evicted plans fall back to vanilla local flow until a plan is available. Regional plan does not yet expose a public watershed API.
 
 RC39 `RiverTerrain.current` reads persisted source-block direction (neutral for older/placed/ordinary flowing states), never reconstructs a watershed during player ticks. Existing WaterKind and fluid IDs unchanged. Direction encoded in block state `current=0..16`; external callers should continue using fluid APIs rather than treating this internal property as stable public API.
+
+RC40: Realistic biome classification uses separate bounded regional climate fields; WorldLogicApi regionalClimate, actual environmental climate, RC22 base-height fields and legacy presets keep their original meaning. Existing biome IDs unchanged. Biome lookup remains a modeled candidate rather than a guarantee of generated terrain.

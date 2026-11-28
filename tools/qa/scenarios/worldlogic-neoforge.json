@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC39 production core/API regression",
+  "name": "World Logic NeoForge RC40 source milestone / RC45 deferred QA",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1736,6 +1736,17 @@
         {
           "backend": "server",
           "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc40-regional-biome-climate",
+      "kind": "mechanic",
+      "subject": "Bounded continuous regional climate and deterministic anchors; extreme dry/wet edge policy, exclusion of marine/underground/relief classes. Actual final-world adjacency verification deferred to RC45.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
         }
       ]
     }
