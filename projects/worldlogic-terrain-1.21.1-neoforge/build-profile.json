@@ -25,5 +25,11 @@
         "sha256": "33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56"
       }
     ]
+  },
+  "ecosystem_membership": {
+    "ecosystem": "worldlogic",
+    "module": "worldlogicterrain",
+    "role": "addon",
+    "core_module": "worldlogic"
   }
 }
