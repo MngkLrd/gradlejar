@@ -13,8 +13,8 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 final class TreeQA {
-    static void register(RegisterCommandsEvent e){
-        e.getDispatcher().register(Commands.literal("wltreechopper").requires(s->s.hasPermission(2))
+    static void register(RegisterCommandsEvent registrationEvent){
+        registrationEvent.getDispatcher().register(Commands.literal("wltreechopper").requires(s->s.hasPermission(2))
           .then(Commands.literal("qa_buck").then(Commands.argument("pos",BlockPosArgument.blockPos()).then(Commands.argument("expected",IntegerArgumentType.integer(0,1)).executes(c->{
             ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
             var fake=FakePlayerFactory.getMinecraft(l);fake.setPos(p.getX()+.5,p.getY(),p.getZ()-1.5);
