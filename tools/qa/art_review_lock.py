@@ -140,7 +140,7 @@ def mob_errors(root,project,shared,path,record,catalog):
     eid=e.get("entity_id")
     if not isinstance(eid,str) or not ENTITY_ID.fullmatch(eid) or any(p in ("",".","..") for p in eid.split(":",1)[1].split("/")):
         errors.append("Invalid mob registry ID")
-    if e.get("behavior") not in MOB_BEHAVIORS:errors.append("Declare peaceful, neutral or hostile behavior toward player")
+    if not isinstance(e.get("behavior"),str) or e["behavior"] not in MOB_BEHAVIORS:errors.append("Declare peaceful, neutral or hostile behavior toward player")
     for key in ("behavior_conditions","model_binding","motion_review","client_evidence"):
         if not observation(e.get(key)):errors.append("Missing concrete mob observation: "+key)
     if e.get("client_status") not in ("PASS","NOT_RUN","UNSUPPORTED"):

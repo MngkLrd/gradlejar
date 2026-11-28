@@ -247,3 +247,16 @@ class ArtReviewLockTests(unittest.TestCase):
         self.assertEqual(mob_errors(Path("."),"projects/demo",[],path,row,c),[])
         row["mob"]["base_texture"]["sha256"]="f"*64
         self.assertTrue(any("Unverified" in e for e in mob_errors(Path("."),"projects/demo",[],path,row,c)))
+
+    def test_r12_project_gate_scoped_to_changed_pngs(self):
+        from tools.qa.art_review_lock import load_atlas
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t);project="projects/demo";p=root/project;p.mkdir(parents=True)
+            (p/"build-profile.json").write_text('{"minecraft":"1.21.1"}')
+            path=project+"/src/main/resources/assets/demo/textures/entity/frog.png"
+            f=root/path;f.parent.mkdir(parents=True);f.write_bytes(b"fixture")
+            row=self.row(hashlib.sha256(b"fixture").hexdigest())
+            (p/"art-review.json").write_text(json.dumps({"schema":1,"assets":{path:row}}))
+            self.assertEqual(project_errors(root,project,[path]),[])
+            errors=project_errors(root,project,[path],catalog=load_atlas(),mob_paths={path})
+            self.assertTrue(any("non-mob" in e for e in errors))

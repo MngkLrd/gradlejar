@@ -80,7 +80,7 @@ The existing pre-Gradle Art Review Lock validates required fields, profile/role 
 
 ## Scope still open
 
-This pilot covers 17 creature examples across 28 PNG paths (including layers and variants), not every vanilla mob and not every life stage. More direct research is needed for horses/riders, bears, cats, reptiles, bats, aquatic variants, slime deformation, custom body plans, baby models, layered equipment, animation code and actual in-client render. Don't generalize static texture observations as confirmed animation behavior.
+This pilot covers 18 creature examples across 28 PNG paths (including layers and variants), not every vanilla mob and not every life stage. More direct research is needed for horses/riders, bears, cats, reptiles, bats, aquatic variants, slime deformation, custom body plans, baby models, layered equipment, animation code and actual in-client render. Don't generalize static texture observations as confirmed animation behavior.
 
 ## Existing common entity requirements
 

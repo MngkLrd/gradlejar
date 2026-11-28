@@ -1,6 +1,10 @@
 # Vanilla visual research: R1 pilot (Minecraft Java 1.21.1)
 
-## Current verified status — R9
+## Current research summary — R12
+
+R11 is verified: 100/100 reference resource paths, 44 rules. R12 extends to 128 resource paths and 54 rules, with 28 additional directly viewed mob atlases and matching Git blob IDs from the official corpus; extended SHA-256 CI reverification pending. Sample counts include layers/aliases/variants, not independent species. Technical inventory remains 3,070 PNGs (3,067 technically analyzed to differing depths); 280 historical synthetic comparisons and 16 real mod sprite observations. Independent aesthetic reviewer and actual client rendering remain NOT_RUN. Read the applicable canonical art guide for production work; this history is optional evidence.
+
+## Historical verified status — R9
 
 The R9 mandatory atlas is in main (PR [#215](https://github.com/MngkLrd/gradlejar/pull/215), merge ca8cca0104913dc821851602e00a051821964e6f). Use [Visual QA](../art/VISUAL-QA.md) and [the atlas](../art/VANILLA-ART-ATLAS.md) as current production policy; older sections below are historical research checkpoints. The actual catalog and lock govern the executable contract.
 
