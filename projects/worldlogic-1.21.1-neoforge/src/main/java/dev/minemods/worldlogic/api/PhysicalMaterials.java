@@ -46,7 +46,7 @@ public final class PhysicalMaterials {
   public Component { Objects.requireNonNull(materialId); if(!Double.isFinite(volumeM3)||volumeM3<=0)throw new IllegalArgumentException("volume"); }
  }
  public record ObjectProfile(List<Component> components, Evidence evidence) {
-  public ObjectProfile { components=List.copyOf(components); Objects.requireNonNull(evidence); if(components.isEmpty()&&evidence!=Evidence.UNKNOWN)throw new IllegalArgumentException("empty composition"); }
+  public ObjectProfile { components=List.copyOf(components); Objects.requireNonNull(evidence); if(components.isEmpty()&&evidence!=Evidence.UNKNOWN&&evidence!=Evidence.BUILTIN)throw new IllegalArgumentException("empty composition"); }
   public double volumeM3(){return evidence==Evidence.UNKNOWN?Double.NaN:components.stream().mapToDouble(Component::volumeM3).sum();}
  }
  /** Moisture override is kg added water per kg dry material, NaN uses each material's reference.
@@ -63,7 +63,7 @@ public final class PhysicalMaterials {
  private static final Map<Key,ObjectProfile> TAGS=new ConcurrentHashMap<>();
  private static final double N=Double.NaN;
  private static final ObjectProfile UNKNOWN=new ObjectProfile(List.of(),Evidence.UNKNOWN);
- private static final ObjectProfile EMPTY=new ObjectProfile(List.of(new Component(id("vacuum"),1)),Evidence.BUILTIN);
+ private static final ObjectProfile EMPTY=new ObjectProfile(List.of(),Evidence.BUILTIN);
  private static void nonnegative(double x){if(!Double.isNaN(x)&&(!Double.isFinite(x)||x<0))throw new IllegalArgumentException("nonnegative value");}
  private static void fractionOrUnknown(double x){nonnegative(x);if(x>1)throw new IllegalArgumentException("fraction");}
  private static void temperature(double x){if(!Double.isNaN(x)&&(!Double.isFinite(x)||x< -273.15))throw new IllegalArgumentException("temperature");}
@@ -89,7 +89,7 @@ public final class PhysicalMaterials {
  private static void metal(String n,double d,double h,double t,double e,double k,double cp,double melt){m(n,Phase.SOLID,d,h,N,t,e,0,0,k,cp,melt,N,0,.4,0,N);}
  private static void liquid(String n,double d,double k,double cp,double visc){m(n,Phase.LIQUID,d,N,N,N,N,N,0,k,cp,N,N,0,N,N,visc);}
  static {
-  m("vacuum",Phase.GAS,0,N,N,N,N,N,0,0,0,N,N,0,N,N,N);
+  m("air",Phase.GAS,1.204,N,N,N,N,N,0,.026,1005,N,N,0,N,N,1.81e-5);
   rock("stone",2650,6,120,8,45,.03,2.5);
   rock("granite",2700,6.5,160,10,55,.015,3);
   rock("diorite",2800,6,170,11,60,.02,2.7);
@@ -136,8 +136,8 @@ public final class PhysicalMaterials {
   wood("mangrove",820,55,90,13,.25);
   wood("cherry",560,43,82,10,.12);
   wood("bamboo",650,50,140,15,.12);
-  wood("crimson",650,45,80,10,.15);
-  wood("warped",600,40,75,9,.15);
+  m("crimson",Phase.SOLID,650,N,45,80,10,N,.15,.13,1700,N,N,0,.5,N,N);
+  m("warped",Phase.SOLID,600,N,40,75,9,N,.15,.13,1700,N,N,0,.5,N,N);
   wood("generic_wood",550,40,70,10,.12);
   metal("iron",7870,4,250,200,80,450,1538);
   metal("gold",19320,2.5,120,79,315,129,1064);
@@ -156,11 +156,17 @@ public final class PhysicalMaterials {
   liquid("brackish_water",1010,.60,4050,.00104);
   liquid("lava",2700,1.5,1200,100);
   liquid("milk",1030,.53,3900,.002);
+  liquid("honey",1420,.50,2300,8);
+  m("rubber_like",Phase.SOLID,1100,N,N,10,.01,.04,.01,.15,1700,N,320,.8,.9,N,N);
+  m("wax",Phase.SOLID,960,N,N,2,.1,.02,0,.25,2100,63,200,.9,.3,N,N);
+  m("food",Phase.SOLID,700,N,N,N,N,.30,.40,.45,2100,N,N,.2,.4,N,N);
+  m("ceramic",Phase.SOLID,2200,6,100,10,35,.10,0,1.5,850,N,N,0,.5,N,N);
+  m("charcoal",Phase.SOLID,300,1.5,N,N,N,.70,.05,.1,1000,N,350,.95,.6,N,N);
  }
  private static ObjectProfile single(String m,double v,Evidence e){return new ObjectProfile(List.of(new Component(id(m),v)),e);}
  private static ObjectProfile resize(ObjectProfile p,double f){
   if(p.evidence()==Evidence.UNKNOWN)return p;
-  if(f<=0)return single("vacuum",1e-12,Evidence.BUILTIN);
+  if(f<=0)return EMPTY;
   if(f==1)return p;
   return new ObjectProfile(p.components().stream().map(c->new Component(c.materialId(),c.volumeM3()*f)).toList(),p.evidence());
  }
@@ -188,7 +194,7 @@ public final class PhysicalMaterials {
  private static String ground(String p){
   for(String n:new String[]{"volcanic_ash","volcanic_sand","white_sand","sandy_loam","chernozem","laterite","humus","peat","silt","loam","gravel","clay","sand"})if(named(p,n))return n;
   if(named(p,"dirt")||p.equals("grass_block")||p.equals("farmland")||p.equals("podzol")||p.equals("mycelium")||p.equals("mud")||p.equals("muddy_mangrove_roots"))return "loam";
-  if(p.equals("frozen_soil"))return "loam";
+  if(p.equals("frozen_soil")||p.equals("dirt_path"))return "loam";
   return null;
  }
  private static double blockVolume(String p){
@@ -212,7 +218,7 @@ public final class PhysicalMaterials {
  private static ObjectProfile builtinBlock(ResourceLocation key){
   String p=key.getPath(); boolean known=key.getNamespace().equals("minecraft")||key.getNamespace().equals("worldlogic");
   Evidence e=known?Evidence.BUILTIN:Evidence.ESTIMATED;
-  if(p.equals("air")||p.equals("cave_air")||p.equals("void_air"))return EMPTY;
+  if(p.equals("air")||p.equals("cave_air")||p.equals("void_air"))return single("air",1,Evidence.BUILTIN);
   if(p.endsWith("_ore")||p.equals("ancient_debris")){
    String host=p.startsWith("deepslate_")?"deepslate":p.startsWith("nether_")||p.equals("ancient_debris")?"netherrack":"stone";
    String mineral=solidName(p.replace("deepslate_","").replace("nether_","").replace("_ore",""));
@@ -225,9 +231,22 @@ public final class PhysicalMaterials {
   String w=woodName(p);
   if(p.endsWith("_leaves")||p.endsWith("_sapling")||p.endsWith("_flower")||p.endsWith("_roots")&&!p.equals("muddy_mangrove_roots"))return single("plant",blockVolume(p),e);
   if(w!=null)return single(w,blockVolume(p),e);
+  if(p.equals("furnace")||p.equals("smoker")||p.equals("blast_furnace"))return part("stone",.52,"iron",.015);
+  if(p.equals("anvil")||p.endsWith("_anvil"))return single("iron",.28,Evidence.ESTIMATED);
+  if(p.equals("chain"))return single("iron",.025,Evidence.ESTIMATED);
+  if(p.equals("rail")||p.endsWith("_rail"))return part("iron",.014,"generic_wood",.04);
+  if(p.equals("torch")||p.endsWith("_torch"))return part("generic_wood",.004,"coal",.001);
+  if(p.equals("lantern")||p.equals("soul_lantern"))return part("iron",.003,"glass",.002);
+  if(p.endsWith("_bed"))return part("generic_wood",.16,"wool",.20);
+  if(p.endsWith("_candle")||p.equals("candle"))return single("wax",.001,Evidence.ESTIMATED);
+  if(p.equals("honey_block"))return single("honey",1,Evidence.ESTIMATED);
+  if(p.equals("slime_block"))return single("rubber_like",1,Evidence.ESTIMATED);
+  if(p.equals("cauldron")||p.endsWith("_cauldron"))return single("iron",.13,Evidence.ESTIMATED);
+  if(p.equals("decorated_pot"))return single("ceramic",.045,Evidence.ESTIMATED);
+  if(p.equals("sponge")||p.equals("wet_sponge"))return single("plant",1,Evidence.ESTIMATED);
   if(p.equals("crafting_table")||p.equals("chest")||p.equals("trapped_chest")||p.equals("barrel")||p.equals("bookshelf")||p.equals("ladder"))return single("generic_wood",p.equals("ladder")?.08:.35,Evidence.ESTIMATED);
-  String s=solidName(p);if(s!=null)return single(s,blockVolume(p),e);
   String g=ground(p);if(g!=null)return single(g,blockVolume(p),e);
+  String s=solidName(p);if(s!=null)return single(s,blockVolume(p),e);
   if(p.equals("grass")||p.equals("short_grass")||p.equals("tall_grass")||p.equals("vine")||p.equals("kelp")||p.equals("seagrass")||p.equals("lily_pad"))return single("plant",.01,e);
   if(p.equals("water")||p.endsWith("_water")||p.equals("groundwater")||p.equals("lava"))return builtinFluid(key);
   return UNKNOWN;
@@ -250,7 +269,7 @@ public final class PhysicalMaterials {
  }
  private static ObjectProfile builtinFluid(ResourceLocation key){
   String p=key.getPath();if(p.startsWith("flowing_"))p=p.substring(8);
-  String m=switch(p){case "water","river_water","lake_water","spring_water","groundwater","wetland_water","pond_water"->"fresh_water";case "sea_water"->"sea_water";case "brackish_water"->"brackish_water";case "lava"->"lava";case "milk"->"milk";default->null;};
+  String m=switch(p){case "water","river_water","lake_water","spring_water","groundwater","wetland_water","pond_water"->"fresh_water";case "sea_water"->"sea_water";case "brackish_water"->"brackish_water";case "lava"->"lava";case "milk"->"milk";case "honey"->"honey";default->null;};
   return m==null?UNKNOWN:single(m,1,key.getNamespace().equals("minecraft")||key.getNamespace().equals("worldlogic")?Evidence.BUILTIN:Evidence.ESTIMATED);
  }
  /** Profile of a cubic metre of fluid; use fluidVolume for actual container volume. */
@@ -278,6 +297,11 @@ public final class PhysicalMaterials {
   if(p.equals("shield"))return part("generic_wood",.006,"iron",.00008);
   if(p.equals("bow")||p.equals("crossbow"))return part("generic_wood",.001,"plant",.00002);
   if(p.equals("fishing_rod"))return part("generic_wood",.0005,"plant",.00002);
+  if(p.equals("item_frame")||p.equals("glow_item_frame"))return part("generic_wood",.001,"leather",.0003);
+  if(p.equals("armor_stand"))return part("generic_wood",.015,"stone",.006);
+  if(p.equals("painting"))return part("generic_wood",.0004,"wool",.0002);
+  if(p.equals("charcoal"))return single("charcoal",.0004,Evidence.ESTIMATED);
+  if(p.equals("honey_bottle"))return part("glass",.00007,"honey",.00025);
   if(p.equals("glass_bottle"))return single("glass",.00007,Evidence.ESTIMATED);
   if(p.equals("bucket"))return single("iron",.00012,Evidence.ESTIMATED);
   if(p.endsWith("_bucket")){
@@ -300,14 +324,19 @@ public final class PhysicalMaterials {
  }
  /** One item, regardless of count. BlockItems retain their block material composition. */
  public static ObjectProfile item(ItemStack stack){
-  if(stack.isEmpty())return UNKNOWN;
+  if(stack.isEmpty())return EMPTY;
   var key=BuiltInRegistries.ITEM.getKey(stack.getItem());
   var p=EXACT.get(new Key(Domain.ITEM,key));if(p==null)p=tagged(stack);
   if(p!=null)return p;
   if(stack.getItem() instanceof BlockItem b)return block(b.getBlock().defaultBlockState());
-  return builtinItem(key);
+  p=builtinItem(key);
+  if(p.evidence()==Evidence.UNKNOWN&&stack.get(net.minecraft.core.component.DataComponents.FOOD)!=null)return single("food",.00025,Evidence.ESTIMATED);
+  return p;
  }
- public static ObjectProfile stack(ItemStack stack){return resize(item(stack),stack.getCount());}
+ public static ObjectProfile stack(ItemStack stack){return stack.isEmpty()?EMPTY:resize(item(stack),stack.getCount());}
+ /** Item payload only, not the frame or stand that supports it. */
+ public static ObjectProfile displayedItem(net.minecraft.world.entity.decoration.ItemFrame frame){return stack(frame.getItem());}
+ public static ObjectProfile droppedItem(net.minecraft.world.entity.item.ItemEntity entity){return stack(entity.getItem());}
  /** Pure aggregate. Heat capacity uses dry component mass plus absorbed water.
   * No averaging of strength, hardness or fracture limits across unrelated parts. */
  public static Result evaluate(ObjectProfile p,State state){
@@ -328,7 +357,7 @@ public final class PhysicalMaterials {
    double water=dry*wet;
    mass+=dry+water;heat+=dry*m.heatCapacityJkgK()+water*4182;
   }
-  return new Result(p,state,v,mass,mass/v,heat,mass>0?heat/mass:N);
+  return new Result(p,state,v,mass,v>0?mass/v:N,heat,mass>0?heat/mass:N);
  }
  /** Loaded positions only. Waterlogged blocks do not silently include fluid; query fluidBlock separately.
   * Soil moisture is the existing Core cell estimate, not a new block-level storage or water budget. */
