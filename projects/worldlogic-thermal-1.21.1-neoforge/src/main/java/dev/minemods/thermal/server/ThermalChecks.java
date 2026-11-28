@@ -180,6 +180,7 @@ final class ThermalChecks {
                 case "integration" -> IntegrationChecks.verify(l,p);
                 case "presentation" -> {ThermalEvents.update(p);dev.minemods.thermal.integration.CorePresentation.verify(p);}
                 case "core_heal" -> {
+                    try {
                     java.lang.reflect.Method heal;
                     try{heal=WorldLogicApi.class.getMethod("adminRestore",net.minecraft.server.level.ServerPlayer.class);}
                     catch(NoSuchMethodException oldCore){require(WorldLogicApi.class.getField("API_REVISION").getInt(null)<21,"Core API 21 must provide heal");break;}
@@ -189,6 +190,7 @@ final class ThermalChecks {
                     require(restored.contains("worldlogic_thermal"),"Core actually calls Thermal heal: "+restored);
                     var after=n.getCompound(ThermalEvents.KEY);
                     require(after.getDouble("body")==37&&after.getDouble("skinWet")==0&&after.getInt("coldSeconds")==0&&after.getDouble("adaptCold")==.3,"coordinated heal resets only transient temperature state");
+                    }catch(ReflectiveOperationException ex){throw new IllegalStateException("Core heal reflection contract",ex);}
                 }
                 case "water_exposure","room_response","hud_signals" -> StabilityChecks.verify(l,p,name);
                 case "physical_materials" -> PhysicalChecks.verify(l,p);
