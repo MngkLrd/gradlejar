@@ -13,6 +13,7 @@ public final class ShoreDensity implements DensityFunction {
  private final DensityFunction macro,terrain;
  private record Last(int x,int z,double value){}
  private final ThreadLocal<Last> last=new ThreadLocal<>();
+ private final com.google.common.cache.Cache<Long,Double> columns=com.google.common.cache.CacheBuilder.newBuilder().maximumSize(32768).build();
  private ShoreDensity(DensityFunction macro,DensityFunction terrain){this.macro=macro;this.terrain=terrain;}
  private double density(int x,int y,int z){return terrain.compute(new SinglePointContext(x,y,z));}
  private double macroY(int x,int z){return 128+128*macro.compute(new SinglePointContext(x,128,z));}
@@ -37,12 +38,18 @@ public final class ShoreDensity implements DensityFunction {
  @Override public double compute(FunctionContext c){
   int x=c.blockX()&~3,z=c.blockZ()&~3;
   var previous=last.get();if(previous!=null&&previous.x==x&&previous.z==z)return previous.value;
+  long key=((long)x<<32)^(z&0xffffffffL);
+  try{
+   double value=columns.get(key,()->classify(x,z));last.set(new Last(x,z,value));return value;
+  }catch(java.util.concurrent.ExecutionException e){throw new IllegalStateException("shore classification",e.getCause());}
+ }
+ private double classify(int x,int z){
   double h=macroY(x,z),actual=floor(x,z,h),value;
   if(actual<61)value=actual<25?-1.08:-.70;
   else if(actual<=65&&nearOpenWater(x,z))value=-.20;
   else if(actual<63)value=-.70;
   else value=Math.min(1.10,.44+Math.max(0,actual-63)*.012);
-  last.set(new Last(x,z,value));return value;
+  return value;
  }
  @Override public void fillArray(double[] a,ContextProvider p){p.fillAllDirectly(a,this);}
  @Override public DensityFunction mapAll(Visitor v){return v.apply(new ShoreDensity(macro.mapAll(v),terrain.mapAll(v)));}

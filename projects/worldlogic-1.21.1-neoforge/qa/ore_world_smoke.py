@@ -83,17 +83,24 @@ def main():
             # Probe five separated catchments, then require real generated water
             # and neighbor links instead of merely a predicted river line.
             river_sites=[]
-            for x,z in [(-24576,-32768),(-12288,-32768),(10240,-40960),(20480,-38912),(6144,14336)]:
+            river_regions=[(-24576,-32768),(-12288,-32768),(10240,-40960),(20480,-38912),(6144,14336),
+                           (-18432,-30720),(-20480,-30720),(-10240,-32768),(8192,-38912),(18432,-38912),
+                           (-32256,-18432),(-23040,-9216),(-13824,-4608),(-4608,4608),
+                           (4608,9216),(13824,18432),(23040,27648),(32256,36864),
+                           (-27648,23040),(-18432,32256),(18432,-23040),(27648,-13824)]
+            for x,z in river_regions:
                 raw=conn.cmd(f"execute positioned {x} 80 {z} run worldlogic river_probe")
                 match=re.search(r"RIVER_PROBE x=(-?\d+) z=(-?\d+)",raw)
                 if match:
                     rx,rz=(int(v) for v in match.groups())
-                    river_sites.append(("river_"+str(len(river_sites)),rx,rz))
+                    if all((rx-x0)**2+(rz-z0)**2>=384**2 for _,x0,z0 in river_sites):
+                        river_sites.append(("river_"+str(len(river_sites)),rx,rz))
+                    if len(river_sites)>=5:break
             report["river_candidates"]=river_sites
             require(len(river_sites)>=3,"Insufficient independent modeled river catchments")
             sites.extend(river_sites)
             headwaters=[]
-            for x,z in [(-24576,-32768),(-12288,-32768),(10240,-40960),(20480,-38912),(6144,14336)]:
+            for x,z in river_regions:
                 raw=conn.cmd(f"execute positioned {x} 80 {z} run worldlogic river_probe headwater")
                 match=re.search(r"RIVER_PROBE x=(-?\d+) z=(-?\d+) discharge=([0-9.]+)",raw)
                 if match and 6<=float(match.group(3))<12:
@@ -106,6 +113,9 @@ def main():
             keys=("columns","ocean","wet","dry","inland","unknown","dryQuart","river","links","deep","cross")
             pattern="COAST_AUDIT "+" ".join(k+r"=(\d+)" for k in keys)
             report["coast_windows"]=[]
+            report["biome_patches"]=[]
+            report["ground_windows"]=[]
+            report["rock_windows"]=[]
             for label,x,z in sites:
                 ax,az=x//16*16,z//16*16
                 # A 5x5 loaded halo surrounds the 3x3 inspected chunks, so dry
@@ -122,6 +132,25 @@ def main():
                         require(match is not None,"Coast audit failed: "+raw)
                         row=dict(zip(keys,map(int,match.groups())))
                         if row["unknown"]:continue
+                        patch=conn.cmd(f"execute positioned {xx} 96 {zz} run worldlogic biome_patch_audit")
+                        if "unavailable" in patch:continue
+                        pm=re.search(r"BIOME_PATCH land=(\d+) links=(\d+) same=(\d+) extreme=(\d+) isolated=(\d+) classes=(\d+)",patch)
+                        require(pm is not None,"Biome patch audit failed: "+patch)
+                        report["biome_patches"].append(dict(zip(("land","links","same","extreme","isolated","classes"),map(int,pm.groups())),x=xx,z=zz,site=label))
+                        ground=conn.cmd(f"execute positioned {xx} 96 {zz} run worldlogic ground_audit")
+                        if "unavailable" in ground:continue
+                        gm=re.search(r"GROUND_AUDIT (.*)",ground)
+                        require(gm is not None,"Ground audit failed: "+ground)
+                        material_counts={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",gm.group(1))}
+                        require(len(material_counts)==8,"Incomplete ground counts")
+                        report["ground_windows"].append(dict(material_counts,x=xx,z=zz,site=label))
+                        rock=conn.cmd(f"execute positioned {xx} 96 {zz} run worldlogic rock_audit")
+                        if "unavailable" in rock:continue
+                        rm=re.search(r"ROCK_AUDIT (.*)",rock)
+                        require(rm is not None,"Rock audit failed: "+rock)
+                        rock_counts={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",rm.group(1))}
+                        require(len(rock_counts)==5,"Incomplete rock counts")
+                        report["rock_windows"].append(dict(rock_counts,x=xx,z=zz,site=label))
                         row.update(x=xx,z=zz,raw=raw);rows.append(row);pending.remove((xx,zz))
                         print(json.dumps(row),flush=True)
                     if pending:time.sleep(3)
@@ -129,13 +158,106 @@ def main():
                 sums={k:sum(c[k] for c in rows) for k in keys}
                 report["coast_windows"].append({"site":label,"chunks":rows,**sums})
                 conn.cmd("forceload remove "+force)
+            report["rock_totals"]={k:sum(v[k] for v in report["rock_windows"]) for k in ("limestone","shale","slate","gneiss","volcanic_tuff")}
+            require(all(report["rock_totals"][k]>=32 for k in ("limestone","shale","slate","gneiss")),"Missing actual regional underground rock family")
             windows=report["coast_windows"]
             totals={k:sum(w[k] for w in windows) for k in keys}
             report["coast_totals"]=totals
             require(totals["ocean"]>=1024 and totals["wet"]>=1024,"Insufficient real ocean coverage")
             require(totals["inland"]==0 and totals["dryQuart"]==0,"Dry land labeled ocean; inspect logged coordinates")
+            patches=report["biome_patches"]
+            patch_totals={k:sum(v[k] for v in patches) for k in ("land","links","same","extreme","isolated")}
+            report["biome_patch_totals"]=patch_totals
+            require(patch_totals["land"]>=64 and patch_totals["links"]>=128,"Insufficient actual inland biome adjacency coverage")
+            require(patch_totals["extreme"]<=patch_totals["links"]*.02,"Excessive direct arid/wet biome contacts")
+            require(patch_totals["same"]>=patch_totals["links"]*.65,"Excessively fragmented inland biome patches")
             require(sum(w["river"]>=16 and w["links"]>=12 and w["deep"]>=4 and w["cross"]>=2 for w in windows if w["site"].startswith("river_"))>=3,"Fewer than three generated connected river catchments")
             require(any(w["river"]>=8 and w["links"]>=4 for w in windows if w["site"].startswith("headwater_")),"No generated connected headwater stream")
+            # Additional natural ground evidence uses actual chunks, independent
+            # of the fixed-height synthetic fixture or the predicted material.
+            def ground_window(label,x,z):
+                ax,az=x//16*16,z//16*16
+                force=f"{ax-16} {az-16} {ax+31} {az+31}"
+                conn.cmd("forceload add "+force)
+                pending={(ax+dx*16,az+dz*16) for dx in (-1,0,1) for dz in (-1,0,1)}
+                rows=[];deadline=time.monotonic()+240
+                while pending and time.monotonic()<deadline:
+                    for xx,zz in sorted(pending):
+                        raw=conn.cmd(f"execute positioned {xx} 96 {zz} run worldlogic ground_audit")
+                        if "unavailable" in raw:continue
+                        m=re.search(r"GROUND_AUDIT (.*)",raw)
+                        require(m is not None,"Ground audit failed: "+raw)
+                        counts={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",m.group(1))}
+                        require(len(counts)==8,"Incomplete natural ground counts")
+                        row=dict(counts,x=xx,z=zz,site=label)
+                        rows.append(row);report["ground_windows"].append(row);pending.remove((xx,zz))
+                    if pending:time.sleep(2)
+                conn.cmd("forceload remove "+force)
+                require(not pending,"Ground survey unavailable")
+                return rows
+            report["ground_candidates"]=[]
+            anchors=[(x,z) for label,x,z in sites if not label.startswith(("river_","headwater_"))]
+            anchors.extend([(-24576,-31744),(-20480,-30720),(-3072,-40960),(-26624,-35840),(20480,-38912),(6144,14336)])
+            for material in ("chernozem","sandy_loam","laterite","white_sand"):
+                if sum(v[material] for v in report["ground_windows"])>=24:continue
+                inspected=0
+                for x,z in anchors:
+                    raw=conn.cmd(f"execute positioned {x} 80 {z} run worldlogic ground_probe {material}")
+                    m=re.search(r"GROUND_PROBE x=(-?\d+) z=(-?\d+) material=(\w+)",raw)
+                    if not m:continue
+                    xx,zz=map(int,m.groups()[:2])
+                    report["ground_candidates"].append(dict(x=xx,z=zz,material=material))
+                    ground_window(material,xx,zz);inspected+=1
+                    if sum(v[material] for v in report["ground_windows"])>=24 or inspected>=2:break
+            report["volcano_candidates"]=[]
+            report["volcano_windows"]=[]
+            volcano_anchors=list(dict.fromkeys((x//2048*2048,z//2048*2048) for x,z in anchors+river_regions))
+            for x,z in volcano_anchors:
+                raw=conn.cmd(f"execute positioned {x} 96 {z} run worldlogic volcano_probe")
+                m=re.search(r"VOLCANO_PROBE x=(-?\d+) z=(-?\d+) radius=(\d+) height=(\d+)",raw)
+                if not m:continue
+                xx,zz,r,h=map(int,m.groups())
+                report["volcano_candidates"].append(dict(x=xx,z=zz,radius=r,height=h))
+                rows=ground_window("volcano_core",xx,zz)+ground_window("volcano_apron",xx+r,zz)
+                sums={k:sum(v[k] for v in rows) for k in ("basalt","volcanic_tuff","volcanic_ash")}
+                report["volcano_windows"].append(dict(x=xx,z=zz,**sums))
+                if sums["basalt"]>=32 and sums["volcanic_tuff"]>=16 and sums["volcanic_ash"]>=8:break
+                if len(report["volcano_windows"])>=2:break
+            report["ground_totals"]={k:sum(v[k] for v in report["ground_windows"]) for k in ("chernozem","sandy_loam","laterite","white_sand","volcanic_sand","volcanic_ash","volcanic_tuff","basalt")}
+            require(all(report["ground_totals"][k]>=24 for k in ("chernozem","sandy_loam","laterite","white_sand")),"Missing actual regional soil or carbonate sand deposits")
+            require(any(v["basalt"]>=32 and v["volcanic_tuff"]>=16 and v["volcanic_ash"]>=8 for v in report["volcano_windows"]),"No confirmed natural volcanic rock and ash landform")
+            # Black volcanic beach frequency is separately recorded, not silently
+            # assumed from a volcanic cone. A coastal-specific survey is still needed.
+            # Natural pools: verify actual generated water and connected surface, not
+            # just a closed-rim planning fixture. Search bounded separated land tiles.
+            report["basin_candidates"]=[]
+            report["basin_windows"]=[]
+            basin_anchors=[]
+            for _,x,z in river_sites+headwaters:
+                for dx,dz in [(0,0),(512,0),(-512,0),(0,512),(0,-512),(512,512),(-512,-512)]:
+                    k=((x+dx)//512*512,(z+dz)//512*512)
+                    if k not in basin_anchors:basin_anchors.append(k)
+            for x,z in basin_anchors[:42]:
+                raw=conn.cmd(f"execute positioned {x} 96 {z} run worldlogic basin_probe")
+                m=re.search(r"BASIN_PROBE x=(-?\d+) z=(-?\d+) radius=(\d+) stage=(-?\d+) kind=(\w+)",raw)
+                if not m:continue
+                xx,zz,r,y=map(int,m.groups()[:4]);kind=m.group(5)
+                report["basin_candidates"].append(dict(x=xx,z=zz,radius=r,stage=y,kind=kind))
+                force=f"{xx-r-16} {zz-r-16} {xx+r+16} {zz+r+16}"
+                conn.cmd("forceload add "+force)
+                deadline=time.monotonic()+240
+                while time.monotonic()<deadline:
+                    raw=conn.cmd(f"execute positioned {xx} {y} {zz} run worldlogic basin_audit")
+                    m=re.search(r"BASIN_AUDIT wet=(\d+) connected=(\d+) deep=(\d+) rimLeak=(\d+) kind=(\w+)",raw)
+                    if m:break
+                    time.sleep(3)
+                conn.cmd("forceload remove "+force)
+                require(m is not None,"Basin survey chunks not ready")
+                wet,connected,deep,leak=map(int,m.groups()[:4])
+                report["basin_windows"].append(dict(x=xx,z=zz,wet=wet,connected=connected,deep=deep,rimLeak=leak,kind=kind))
+                if wet>=12 and connected>=wet*.80 and deep>=3 and leak==0:break
+                if len(report["basin_windows"])>=3:break
+            require(any(w["wet"]>=12 and w["connected"]>=w["wet"]*.80 and w["deep"]>=3 and w["rimLeak"]==0 for w in report["basin_windows"]),"No confirmed natural connected closed basin")
             # Retain independent marine substrate, native-water and flora assertions.
             ax,az=-18432,-30720
             force=f"{ax-16} {az-16} {ax+31} {az+31}"
@@ -162,6 +284,42 @@ def main():
             require(totals["habitat"]>0,"No viable submerged fish habitat")
             require(totals["plants"]>0 and totals["nativePlants"]==totals["plants"] and totals["vanillaPlantWater"]==0,"Marine plants missing or contain non-native water")
             conn.cmd("forceload remove "+force)
+            # Warm coastal reef audit: actual living coral blocks and surrounding
+            # native seawater, not the predicted habitat alone.
+            report["reef_candidates"]=[]
+            report["reef_windows"]=[]
+            reef_anchors=[(x,z) for label,x,z in sites if label in ("tropical","subtropical","warm_deep","tropical_coast")]
+            reef_anchors.extend([(-28672,-39936),(-26624,-35840),(-4096,-39936),(-5120,-40960),(10240,-40960),(20480,-38912)])
+            for x,z,barrier in [(x,z,True) for x,z in reef_anchors]+[(x,z,False) for x,z in reef_anchors]:
+                raw=conn.cmd(f"execute positioned {x} 63 {z} run worldlogic reef_probe"+(" barrier" if barrier else ""))
+                m=re.search(r"REEF_PROBE x=(-?\d+) z=(-?\d+) zone=(\w+)",raw)
+                if not m:continue
+                xx,zz=map(int,m.groups()[:2]);zone=m.group(3)
+                if any((xx-v["x"])**2+(zz-v["z"])**2<128**2 for v in report["reef_candidates"]):continue
+                report["reef_candidates"].append(dict(x=xx,z=zz,zone=zone))
+                ax,az=xx//16*16,zz//16*16
+                force=f"{ax-16} {az-16} {ax+31} {az+31}"
+                conn.cmd("forceload add "+force)
+                pending={(ax+dx*16,az+dz*16) for dx in (-1,0,1) for dz in (-1,0,1)}
+                rows=[];deadline=time.monotonic()+240
+                while pending and time.monotonic()<deadline:
+                    for qx,qz in sorted(pending):
+                        raw=conn.cmd(f"execute positioned {qx} 63 {qz} run worldlogic reef_audit")
+                        if "unavailable" in raw:continue
+                        m=re.search(r"REEF_AUDIT colonies=(\d+) live=(\d+) species=(\d+) wrong=(\d+) nativeAbove=(\d+) barrier=(\d+)",raw)
+                        require(m is not None,"Reef audit failed: "+raw)
+                        row=dict(zip(("colonies","live","species","wrong","nativeAbove","barrier"),map(int,m.groups())),x=qx,z=qz)
+                        rows.append(row);pending.remove((qx,qz))
+                    if pending:time.sleep(2)
+                require(not pending,"Reef survey not fully loaded")
+                conn.cmd("forceload remove "+force)
+                sums={k:sum(v[k] for v in rows) for k in ("colonies","live","wrong","nativeAbove","barrier")}
+                report["reef_windows"].append(dict(x=xx,z=zz,zone=zone,chunks=rows,**sums,species=max(v["species"] for v in rows)))
+                if len(report["reef_windows"])>=3 and any(w["barrier"]>=12 for w in report["reef_windows"]):break
+                if len(report["reef_windows"])>=5:break
+            require(any(w["colonies"]>=12 and w["live"]>=12 and w["species"]>=2 and w["nativeAbove"]>=w["colonies"]*.8 for w in report["reef_windows"]),"No confirmed living warm-water reef in generated chunks")
+            require(any(w["zone"]=="BARRIER" and w["barrier"]>=12 and w["nativeAbove"]>=12 for w in report["reef_windows"]),"No confirmed living barrier reef")
+            require(all(w["wrong"]==0 for w in report["reef_windows"]),"Coral in unsuitable biome or exposed column")
             conn.cmd("save-all flush")
             require(not FATAL.search(log.read_text(errors="replace")),"Fatal generation error")
             try:conn.cmd("stop")

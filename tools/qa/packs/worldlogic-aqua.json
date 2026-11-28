@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "id": "worldlogic-aqua",
+  "description": "Core and Aqua exact production JARs on the same server",
+  "targets": [
+    {
+      "id": "neoforge-mc1.21.1",
+      "minecraft": "1.21.1",
+      "loader": "neoforge",
+      "loader_version": "21.1.262",
+      "members": [
+        {
+          "project": "projects/worldlogic-1.21.1-neoforge",
+          "scenario": "tools/qa/scenarios/worldlogic-neoforge.json"
+        },
+        {
+          "project": "projects/worldlogic-aquaculture-1.21.1-neoforge",
+          "scenario": "tools/qa/scenarios/worldlogic-aquaculture.json"
+        }
+      ],
+      "dependencies": []
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
+group='dev.minemods.aquaculture'
+version='0.4.7'
+base.archivesName='worldlogic_aqua-neoforge-mc1.21.1'
+java.toolchain.languageVersion=JavaLanguageVersion.of(21)
+def exactCore = providers.gradleProperty('worldlogicCoreJar').orNull
+if (exactCore == null) evaluationDependsOn(':worldlogic')
+dependencies {
+ if (exactCore != null) implementation files(exactCore)
+ else implementation project(':worldlogic')
+}
+neoForge {
+ version=project.neo_version
+ runs { client { client() }; server { server(); programArgument '--nogui' } }
+ mods { worldlogic_aqua { sourceSet(sourceSets.main) }; if (exactCore == null) { worldlogic { sourceSet(project(':worldlogic').sourceSets.main) } } }
+}
+tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=21 }
+

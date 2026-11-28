@@ -1,0 +1,13 @@
+{
+  "type": "aquaculture:portion_campfire",
+  "category": "food",
+  "ingredient": {
+    "item": "aquaculture:raw_parrotfish_portion"
+  },
+  "result": {
+    "id": "aquaculture:cooked_parrotfish_portion",
+    "count": 1
+  },
+  "experience": 0.1,
+  "cookingtime": 600
+}

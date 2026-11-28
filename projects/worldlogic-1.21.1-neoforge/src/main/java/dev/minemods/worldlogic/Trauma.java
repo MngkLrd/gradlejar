@@ -99,5 +99,9 @@ public final class Trauma {
   }
   mobContact(l,p,now);
  }
+ static void adminRestore(Player p){
+  p.getPersistentData().remove(ARM);p.getPersistentData().remove(LOAD);
+  MOTION.remove(p);DODGE.remove(p);CONTACT.remove(p);BLAST.remove(p);GUARD.remove(p);
+ }
  public static void logout(PlayerEvent.PlayerLoggedOutEvent e){Player p=e.getEntity();MOTION.remove(p);DODGE.remove(p);CONTACT.remove(p);BLAST.remove(p);GUARD.remove(p);}
 }

@@ -21,9 +21,22 @@
     "GeologyScatteredOreMixin",
     "ShipwreckTerrainMixin",
     "MarinePlantPlacementMixin",
-    "NativeWaterEntityMixin"
+    "NativeWaterEntityMixin",
+    "SoilFarmlandMixin",
+    "RockHardnessMixin",
+    "CompletedMiningMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "client.LiquidRendererMixin",
+    "client.SodiumWaterRendererMixin",
+    "client.OwnedScreenBackgroundMixin",
+    "client.IrisPlantMaterialMixin",
+    "client.NativeTraumaScreenMixin",
+    "client.SodiumWaterOcclusionMixin",
+    "client.TreeDescentModelMixin",
+    "client.NaturalDarknessMixin"
+  ]
 }

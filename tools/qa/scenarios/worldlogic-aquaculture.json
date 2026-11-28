@@ -1,0 +1,3417 @@
+{
+  "schema": 1,
+  "name": "Aquaculture 0.1.0 development regression",
+  "coverage": [
+    {
+      "id": "entity-pike",
+      "kind": "entity",
+      "subject": "aquaculture:pike",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-pike",
+      "kind": "item",
+      "subject": "aquaculture:raw_pike",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-perch",
+      "kind": "entity",
+      "subject": "aquaculture:perch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-perch",
+      "kind": "item",
+      "subject": "aquaculture:raw_perch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-crucian_carp",
+      "kind": "entity",
+      "subject": "aquaculture:crucian_carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-crucian_carp",
+      "kind": "item",
+      "subject": "aquaculture:raw_crucian_carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-carp",
+      "kind": "entity",
+      "subject": "aquaculture:carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-carp",
+      "kind": "item",
+      "subject": "aquaculture:raw_carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-roach",
+      "kind": "entity",
+      "subject": "aquaculture:roach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-roach",
+      "kind": "item",
+      "subject": "aquaculture:raw_roach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-bream",
+      "kind": "entity",
+      "subject": "aquaculture:bream",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-bream",
+      "kind": "item",
+      "subject": "aquaculture:raw_bream",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-trout",
+      "kind": "entity",
+      "subject": "aquaculture:trout",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-trout",
+      "kind": "item",
+      "subject": "aquaculture:raw_trout",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-grayling",
+      "kind": "entity",
+      "subject": "aquaculture:grayling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-grayling",
+      "kind": "item",
+      "subject": "aquaculture:raw_grayling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-char",
+      "kind": "entity",
+      "subject": "aquaculture:char",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-char",
+      "kind": "item",
+      "subject": "aquaculture:raw_char",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-taimen",
+      "kind": "entity",
+      "subject": "aquaculture:taimen",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-taimen",
+      "kind": "item",
+      "subject": "aquaculture:raw_taimen",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-whitefish",
+      "kind": "entity",
+      "subject": "aquaculture:whitefish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-whitefish",
+      "kind": "item",
+      "subject": "aquaculture:raw_whitefish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-burbot",
+      "kind": "entity",
+      "subject": "aquaculture:burbot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-burbot",
+      "kind": "item",
+      "subject": "aquaculture:raw_burbot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-catfish",
+      "kind": "entity",
+      "subject": "aquaculture:catfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-catfish",
+      "kind": "item",
+      "subject": "aquaculture:raw_catfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-tench",
+      "kind": "entity",
+      "subject": "aquaculture:tench",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-tench",
+      "kind": "item",
+      "subject": "aquaculture:raw_tench",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-loach",
+      "kind": "entity",
+      "subject": "aquaculture:loach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-loach",
+      "kind": "item",
+      "subject": "aquaculture:raw_loach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-rotan",
+      "kind": "entity",
+      "subject": "aquaculture:rotan",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-rotan",
+      "kind": "item",
+      "subject": "aquaculture:raw_rotan",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-rudd",
+      "kind": "entity",
+      "subject": "aquaculture:rudd",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-rudd",
+      "kind": "item",
+      "subject": "aquaculture:raw_rudd",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-bowfin",
+      "kind": "entity",
+      "subject": "aquaculture:bowfin",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-bowfin",
+      "kind": "item",
+      "subject": "aquaculture:raw_bowfin",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-piranha",
+      "kind": "entity",
+      "subject": "aquaculture:piranha",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-piranha",
+      "kind": "item",
+      "subject": "aquaculture:raw_piranha",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-arapaima",
+      "kind": "entity",
+      "subject": "aquaculture:arapaima",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-arapaima",
+      "kind": "item",
+      "subject": "aquaculture:raw_arapaima",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-tilapia",
+      "kind": "entity",
+      "subject": "aquaculture:tilapia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-tilapia",
+      "kind": "item",
+      "subject": "aquaculture:raw_tilapia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-pacu",
+      "kind": "entity",
+      "subject": "aquaculture:pacu",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-pacu",
+      "kind": "item",
+      "subject": "aquaculture:raw_pacu",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-snakehead",
+      "kind": "entity",
+      "subject": "aquaculture:snakehead",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-snakehead",
+      "kind": "item",
+      "subject": "aquaculture:raw_snakehead",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-electric_eel",
+      "kind": "entity",
+      "subject": "aquaculture:electric_eel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-electric_eel",
+      "kind": "item",
+      "subject": "aquaculture:raw_electric_eel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-atlantic_cod",
+      "kind": "entity",
+      "subject": "aquaculture:atlantic_cod",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-atlantic_cod",
+      "kind": "item",
+      "subject": "aquaculture:raw_atlantic_cod",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-herring",
+      "kind": "entity",
+      "subject": "aquaculture:herring",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-herring",
+      "kind": "item",
+      "subject": "aquaculture:raw_herring",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-mackerel",
+      "kind": "entity",
+      "subject": "aquaculture:mackerel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-mackerel",
+      "kind": "item",
+      "subject": "aquaculture:raw_mackerel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-halibut",
+      "kind": "entity",
+      "subject": "aquaculture:halibut",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-halibut",
+      "kind": "item",
+      "subject": "aquaculture:raw_halibut",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-haddock",
+      "kind": "entity",
+      "subject": "aquaculture:haddock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-haddock",
+      "kind": "item",
+      "subject": "aquaculture:raw_haddock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-flounder",
+      "kind": "entity",
+      "subject": "aquaculture:flounder",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-flounder",
+      "kind": "item",
+      "subject": "aquaculture:raw_flounder",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-tuna",
+      "kind": "entity",
+      "subject": "aquaculture:tuna",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-tuna",
+      "kind": "item",
+      "subject": "aquaculture:raw_tuna",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-barracuda",
+      "kind": "entity",
+      "subject": "aquaculture:barracuda",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-barracuda",
+      "kind": "item",
+      "subject": "aquaculture:raw_barracuda",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-grouper",
+      "kind": "entity",
+      "subject": "aquaculture:grouper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-grouper",
+      "kind": "item",
+      "subject": "aquaculture:raw_grouper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-snapper",
+      "kind": "entity",
+      "subject": "aquaculture:snapper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-snapper",
+      "kind": "item",
+      "subject": "aquaculture:raw_snapper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-mahi_mahi",
+      "kind": "entity",
+      "subject": "aquaculture:mahi_mahi",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-mahi_mahi",
+      "kind": "item",
+      "subject": "aquaculture:raw_mahi_mahi",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "entity-parrotfish",
+      "kind": "entity",
+      "subject": "aquaculture:parrotfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "raw-parrotfish",
+      "kind": "item",
+      "subject": "aquaculture:raw_parrotfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "habitat-controls",
+      "kind": "mechanic",
+      "subject": "Species habitat selection rejects dry, polluted and shallow locations",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All species: actual entity creation, catch data and habitat controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-pike",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:pike",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-perch",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:perch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-crucian_carp",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:crucian_carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-carp",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-roach",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:roach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-bream",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:bream",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-trout",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:trout",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-grayling",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:grayling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-char",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:char",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-taimen",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:taimen",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-whitefish",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:whitefish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-burbot",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:burbot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-catfish",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:catfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-tench",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:tench",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-loach",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:loach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-rotan",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:rotan",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-rudd",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:rudd",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-bowfin",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:bowfin",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-piranha",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:piranha",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-arapaima",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:arapaima",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-tilapia",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:tilapia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-pacu",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:pacu",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-snakehead",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:snakehead",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-electric_eel",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:electric_eel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-atlantic_cod",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:atlantic_cod",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-herring",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:herring",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-mackerel",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:mackerel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-halibut",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:halibut",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-haddock",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:haddock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-flounder",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:flounder",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-tuna",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:tuna",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-barracuda",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:barracuda",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-grouper",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:grouper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-snapper",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:snapper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-mahi_mahi",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:mahi_mahi",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "feeding-parrotfish",
+      "kind": "mechanic",
+      "subject": "Species-specific food and digestion: aquaculture:parrotfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls"
+        }
+      ]
+    },
+    {
+      "id": "fish-immersion",
+      "kind": "mechanic",
+      "subject": "fish-immersion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Native and vanilla water: cod, salmon and Aqua breathing, source/flow, dry control, ice and spawn"
+        }
+      ]
+    },
+    {
+      "id": "fish-breathing",
+      "kind": "mechanic",
+      "subject": "fish-breathing",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Native and vanilla water: cod, salmon and Aqua breathing, source/flow, dry control, ice and spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-water-spawn",
+      "kind": "mechanic",
+      "subject": "native-water-spawn",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Native and vanilla water: cod, salmon and Aqua breathing, source/flow, dry control, ice and spawn"
+        }
+      ]
+    },
+    {
+      "id": "under-ice-spawn-search",
+      "kind": "mechanic",
+      "subject": "under-ice-spawn-search",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Native and vanilla water: cod, salmon and Aqua breathing, source/flow, dry control, ice and spawn"
+        }
+      ]
+    },
+    {
+      "id": "groundwater-exclusion",
+      "kind": "mechanic",
+      "subject": "groundwater-exclusion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Native and vanilla water: cod, salmon and Aqua breathing, source/flow, dry control, ice and spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-pike",
+      "kind": "mechanic",
+      "subject": "aquaculture:pike",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-perch",
+      "kind": "mechanic",
+      "subject": "aquaculture:perch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-crucian_carp",
+      "kind": "mechanic",
+      "subject": "aquaculture:crucian_carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-carp",
+      "kind": "mechanic",
+      "subject": "aquaculture:carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-roach",
+      "kind": "mechanic",
+      "subject": "aquaculture:roach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-bream",
+      "kind": "mechanic",
+      "subject": "aquaculture:bream",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-trout",
+      "kind": "mechanic",
+      "subject": "aquaculture:trout",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-grayling",
+      "kind": "mechanic",
+      "subject": "aquaculture:grayling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-char",
+      "kind": "mechanic",
+      "subject": "aquaculture:char",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-taimen",
+      "kind": "mechanic",
+      "subject": "aquaculture:taimen",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-whitefish",
+      "kind": "mechanic",
+      "subject": "aquaculture:whitefish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-burbot",
+      "kind": "mechanic",
+      "subject": "aquaculture:burbot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-catfish",
+      "kind": "mechanic",
+      "subject": "aquaculture:catfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-tench",
+      "kind": "mechanic",
+      "subject": "aquaculture:tench",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-loach",
+      "kind": "mechanic",
+      "subject": "aquaculture:loach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-rotan",
+      "kind": "mechanic",
+      "subject": "aquaculture:rotan",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-rudd",
+      "kind": "mechanic",
+      "subject": "aquaculture:rudd",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-bowfin",
+      "kind": "mechanic",
+      "subject": "aquaculture:bowfin",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-piranha",
+      "kind": "mechanic",
+      "subject": "aquaculture:piranha",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-arapaima",
+      "kind": "mechanic",
+      "subject": "aquaculture:arapaima",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-tilapia",
+      "kind": "mechanic",
+      "subject": "aquaculture:tilapia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-pacu",
+      "kind": "mechanic",
+      "subject": "aquaculture:pacu",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-snakehead",
+      "kind": "mechanic",
+      "subject": "aquaculture:snakehead",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-electric_eel",
+      "kind": "mechanic",
+      "subject": "aquaculture:electric_eel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-atlantic_cod",
+      "kind": "mechanic",
+      "subject": "aquaculture:atlantic_cod",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-herring",
+      "kind": "mechanic",
+      "subject": "aquaculture:herring",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-mackerel",
+      "kind": "mechanic",
+      "subject": "aquaculture:mackerel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-halibut",
+      "kind": "mechanic",
+      "subject": "aquaculture:halibut",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-haddock",
+      "kind": "mechanic",
+      "subject": "aquaculture:haddock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-flounder",
+      "kind": "mechanic",
+      "subject": "aquaculture:flounder",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-tuna",
+      "kind": "mechanic",
+      "subject": "aquaculture:tuna",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-barracuda",
+      "kind": "mechanic",
+      "subject": "aquaculture:barracuda",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-grouper",
+      "kind": "mechanic",
+      "subject": "aquaculture:grouper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-snapper",
+      "kind": "mechanic",
+      "subject": "aquaculture:snapper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-mahi_mahi",
+      "kind": "mechanic",
+      "subject": "aquaculture:mahi_mahi",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "native-spawn-parrotfish",
+      "kind": "mechanic",
+      "subject": "aquaculture:parrotfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
+        }
+      ]
+    },
+    {
+      "id": "visual-pike",
+      "kind": "mechanic",
+      "subject": "aquaculture:pike",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-perch",
+      "kind": "mechanic",
+      "subject": "aquaculture:perch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-crucian_carp",
+      "kind": "mechanic",
+      "subject": "aquaculture:crucian_carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-carp",
+      "kind": "mechanic",
+      "subject": "aquaculture:carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-roach",
+      "kind": "mechanic",
+      "subject": "aquaculture:roach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-bream",
+      "kind": "mechanic",
+      "subject": "aquaculture:bream",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-trout",
+      "kind": "mechanic",
+      "subject": "aquaculture:trout",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-grayling",
+      "kind": "mechanic",
+      "subject": "aquaculture:grayling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-char",
+      "kind": "mechanic",
+      "subject": "aquaculture:char",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-taimen",
+      "kind": "mechanic",
+      "subject": "aquaculture:taimen",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-whitefish",
+      "kind": "mechanic",
+      "subject": "aquaculture:whitefish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-burbot",
+      "kind": "mechanic",
+      "subject": "aquaculture:burbot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-catfish",
+      "kind": "mechanic",
+      "subject": "aquaculture:catfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-tench",
+      "kind": "mechanic",
+      "subject": "aquaculture:tench",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-loach",
+      "kind": "mechanic",
+      "subject": "aquaculture:loach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-rotan",
+      "kind": "mechanic",
+      "subject": "aquaculture:rotan",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-rudd",
+      "kind": "mechanic",
+      "subject": "aquaculture:rudd",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-bowfin",
+      "kind": "mechanic",
+      "subject": "aquaculture:bowfin",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-piranha",
+      "kind": "mechanic",
+      "subject": "aquaculture:piranha",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-arapaima",
+      "kind": "mechanic",
+      "subject": "aquaculture:arapaima",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-tilapia",
+      "kind": "mechanic",
+      "subject": "aquaculture:tilapia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-pacu",
+      "kind": "mechanic",
+      "subject": "aquaculture:pacu",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-snakehead",
+      "kind": "mechanic",
+      "subject": "aquaculture:snakehead",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-electric_eel",
+      "kind": "mechanic",
+      "subject": "aquaculture:electric_eel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-atlantic_cod",
+      "kind": "mechanic",
+      "subject": "aquaculture:atlantic_cod",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-herring",
+      "kind": "mechanic",
+      "subject": "aquaculture:herring",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-mackerel",
+      "kind": "mechanic",
+      "subject": "aquaculture:mackerel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-halibut",
+      "kind": "mechanic",
+      "subject": "aquaculture:halibut",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-haddock",
+      "kind": "mechanic",
+      "subject": "aquaculture:haddock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-flounder",
+      "kind": "mechanic",
+      "subject": "aquaculture:flounder",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-tuna",
+      "kind": "mechanic",
+      "subject": "aquaculture:tuna",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-barracuda",
+      "kind": "mechanic",
+      "subject": "aquaculture:barracuda",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-grouper",
+      "kind": "mechanic",
+      "subject": "aquaculture:grouper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-snapper",
+      "kind": "mechanic",
+      "subject": "aquaculture:snapper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-mahi_mahi",
+      "kind": "mechanic",
+      "subject": "aquaculture:mahi_mahi",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-parrotfish",
+      "kind": "mechanic",
+      "subject": "aquaculture:parrotfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "ecology-finite-forage",
+      "kind": "mechanic",
+      "subject": "finite-forage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-forage-regeneration",
+      "kind": "mechanic",
+      "subject": "forage-regeneration",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-harvest-pressure",
+      "kind": "mechanic",
+      "subject": "harvest-pressure",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-ecology-nbt",
+      "kind": "mechanic",
+      "subject": "ecology-nbt",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-pressure-spawn-filter",
+      "kind": "mechanic",
+      "subject": "pressure-spawn-filter",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-school-target",
+      "kind": "mechanic",
+      "subject": "school-target",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-predation-eligibility",
+      "kind": "mechanic",
+      "subject": "predation-eligibility",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-water-obstacle",
+      "kind": "mechanic",
+      "subject": "water-obstacle",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-dropped-bait",
+      "kind": "mechanic",
+      "subject": "dropped-bait",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-wrong-bait-cooldown",
+      "kind": "mechanic",
+      "subject": "wrong-bait-cooldown",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-benthic-forage",
+      "kind": "mechanic",
+      "subject": "benthic-forage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "ecology-habitat-stress",
+      "kind": "mechanic",
+      "subject": "habitat-stress",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
+        }
+      ]
+    },
+    {
+      "id": "population-uuid",
+      "kind": "mechanic",
+      "subject": "population-uuid",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-capacity",
+      "kind": "mechanic",
+      "subject": "population-capacity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-extinction",
+      "kind": "mechanic",
+      "subject": "population-extinction",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-migration",
+      "kind": "mechanic",
+      "subject": "population-migration",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-save-reload",
+      "kind": "mechanic",
+      "subject": "population-save-reload",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-season",
+      "kind": "mechanic",
+      "subject": "population-season",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "roe_clutch",
+      "kind": "entity",
+      "subject": "aquaculture:roe_clutch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-juvenile",
+      "kind": "mechanic",
+      "subject": "population-juvenile",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-birth-conservation",
+      "kind": "mechanic",
+      "subject": "population-birth-conservation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "player-independent-incubation",
+      "kind": "mechanic",
+      "subject": "player-independent-incubation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Real server ticks without players: native seawater clutch hatches one juvenile, dry clutch dies"
+        }
+      ]
+    },
+    {
+      "id": "actual-juvenile-hatch",
+      "kind": "mechanic",
+      "subject": "actual-juvenile-hatch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Real server ticks without players: native seawater clutch hatches one juvenile, dry clutch dies"
+        }
+      ]
+    },
+    {
+      "id": "dry-roe-mortality",
+      "kind": "mechanic",
+      "subject": "dry-roe-mortality",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Real server ticks without players: native seawater clutch hatches one juvenile, dry clutch dies"
+        }
+      ]
+    },
+    {
+      "id": "marine-great_white_shark",
+      "kind": "entity",
+      "subject": "aquaculture:great_white_shark",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-tiger_shark",
+      "kind": "entity",
+      "subject": "aquaculture:tiger_shark",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-narwhal",
+      "kind": "entity",
+      "subject": "aquaculture:narwhal",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-humpback_whale",
+      "kind": "entity",
+      "subject": "aquaculture:humpback_whale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-blue_whale",
+      "kind": "entity",
+      "subject": "aquaculture:blue_whale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-sea_snake",
+      "kind": "entity",
+      "subject": "aquaculture:sea_snake",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-electric_ray",
+      "kind": "entity",
+      "subject": "aquaculture:electric_ray",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-manta_ray",
+      "kind": "entity",
+      "subject": "aquaculture:manta_ray",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "individual-catch-provider",
+      "kind": "mechanic",
+      "subject": "individual-catch-provider",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core RC54 physical API: individual catches for all 36 species, old NBT, copy/drop, missing mass and water solution controls"
+        }
+      ]
+    },
+    {
+      "id": "core-water-solution",
+      "kind": "mechanic",
+      "subject": "core-water-solution",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core RC54 physical API: individual catches for all 36 species, old NBT, copy/drop, missing mass and water solution controls"
+        }
+      ]
+    },
+    {
+      "id": "legacy-catch-nbt",
+      "kind": "mechanic",
+      "subject": "legacy-catch-nbt",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core RC54 physical API: individual catches for all 36 species, old NBT, copy/drop, missing mass and water solution controls"
+        }
+      ]
+    },
+    {
+      "id": "creative-aqua-content",
+      "kind": "mechanic",
+      "subject": "creative-aqua-content",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Creative content: 36 catches, 44 typed spawn eggs, registered tab and vanilla natural spawn filtering with manual/custom controls"
+        }
+      ]
+    },
+    {
+      "id": "natural-vanilla-fish-filter",
+      "kind": "mechanic",
+      "subject": "natural-vanilla-fish-filter",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Creative content: 36 catches, 44 typed spawn eggs, registered tab and vanilla natural spawn filtering with manual/custom controls"
+        }
+      ]
+    },
+    {
+      "id": "catch-item-models",
+      "kind": "mechanic",
+      "subject": "catch-item-models",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Creative content: 36 catches, 44 typed spawn eggs, registered tab and vanilla natural spawn filtering with manual/custom controls"
+        }
+      ]
+    },
+    {
+      "id": "coastal-population",
+      "kind": "mechanic",
+      "subject": "coastal-population",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Coastal diversity and actual bank fixture, persistent coastal origin and shark snout front/rear/flank contact"
+        }
+      ]
+    },
+    {
+      "id": "shark-frontal-bite",
+      "kind": "mechanic",
+      "subject": "shark-frontal-bite",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Coastal diversity and actual bank fixture, persistent coastal origin and shark snout front/rear/flank contact"
+        }
+      ]
+    },
+    {
+      "id": "core-river-current",
+      "kind": "mechanic",
+      "subject": "Core riverCurrent habitat and swimming",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core directed river: species flow preferences, actual swimming intention, undirected and dry controls"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_pike",
+      "kind": "item",
+      "subject": "aquaculture:raw_pike_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_pike",
+      "kind": "item",
+      "subject": "aquaculture:cooked_pike_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_perch",
+      "kind": "item",
+      "subject": "aquaculture:raw_perch_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_perch",
+      "kind": "item",
+      "subject": "aquaculture:cooked_perch_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_crucian_carp",
+      "kind": "item",
+      "subject": "aquaculture:raw_crucian_carp_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_crucian_carp",
+      "kind": "item",
+      "subject": "aquaculture:cooked_crucian_carp_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_carp",
+      "kind": "item",
+      "subject": "aquaculture:raw_carp_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_carp",
+      "kind": "item",
+      "subject": "aquaculture:cooked_carp_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_roach",
+      "kind": "item",
+      "subject": "aquaculture:raw_roach_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_roach",
+      "kind": "item",
+      "subject": "aquaculture:cooked_roach_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_bream",
+      "kind": "item",
+      "subject": "aquaculture:raw_bream_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_bream",
+      "kind": "item",
+      "subject": "aquaculture:cooked_bream_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_trout",
+      "kind": "item",
+      "subject": "aquaculture:raw_trout_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_trout",
+      "kind": "item",
+      "subject": "aquaculture:cooked_trout_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_grayling",
+      "kind": "item",
+      "subject": "aquaculture:raw_grayling_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_grayling",
+      "kind": "item",
+      "subject": "aquaculture:cooked_grayling_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_char",
+      "kind": "item",
+      "subject": "aquaculture:raw_char_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_char",
+      "kind": "item",
+      "subject": "aquaculture:cooked_char_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_taimen",
+      "kind": "item",
+      "subject": "aquaculture:raw_taimen_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_taimen",
+      "kind": "item",
+      "subject": "aquaculture:cooked_taimen_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_whitefish",
+      "kind": "item",
+      "subject": "aquaculture:raw_whitefish_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_whitefish",
+      "kind": "item",
+      "subject": "aquaculture:cooked_whitefish_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_burbot",
+      "kind": "item",
+      "subject": "aquaculture:raw_burbot_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_burbot",
+      "kind": "item",
+      "subject": "aquaculture:cooked_burbot_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_catfish",
+      "kind": "item",
+      "subject": "aquaculture:raw_catfish_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_catfish",
+      "kind": "item",
+      "subject": "aquaculture:cooked_catfish_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_tench",
+      "kind": "item",
+      "subject": "aquaculture:raw_tench_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_tench",
+      "kind": "item",
+      "subject": "aquaculture:cooked_tench_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_loach",
+      "kind": "item",
+      "subject": "aquaculture:raw_loach_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_loach",
+      "kind": "item",
+      "subject": "aquaculture:cooked_loach_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_rotan",
+      "kind": "item",
+      "subject": "aquaculture:raw_rotan_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_rotan",
+      "kind": "item",
+      "subject": "aquaculture:cooked_rotan_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_rudd",
+      "kind": "item",
+      "subject": "aquaculture:raw_rudd_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_rudd",
+      "kind": "item",
+      "subject": "aquaculture:cooked_rudd_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_bowfin",
+      "kind": "item",
+      "subject": "aquaculture:raw_bowfin_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_bowfin",
+      "kind": "item",
+      "subject": "aquaculture:cooked_bowfin_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_piranha",
+      "kind": "item",
+      "subject": "aquaculture:raw_piranha_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_piranha",
+      "kind": "item",
+      "subject": "aquaculture:cooked_piranha_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_arapaima",
+      "kind": "item",
+      "subject": "aquaculture:raw_arapaima_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_arapaima",
+      "kind": "item",
+      "subject": "aquaculture:cooked_arapaima_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_tilapia",
+      "kind": "item",
+      "subject": "aquaculture:raw_tilapia_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_tilapia",
+      "kind": "item",
+      "subject": "aquaculture:cooked_tilapia_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_pacu",
+      "kind": "item",
+      "subject": "aquaculture:raw_pacu_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_pacu",
+      "kind": "item",
+      "subject": "aquaculture:cooked_pacu_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_snakehead",
+      "kind": "item",
+      "subject": "aquaculture:raw_snakehead_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_snakehead",
+      "kind": "item",
+      "subject": "aquaculture:cooked_snakehead_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_electric_eel",
+      "kind": "item",
+      "subject": "aquaculture:raw_electric_eel_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_electric_eel",
+      "kind": "item",
+      "subject": "aquaculture:cooked_electric_eel_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_atlantic_cod",
+      "kind": "item",
+      "subject": "aquaculture:raw_atlantic_cod_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_atlantic_cod",
+      "kind": "item",
+      "subject": "aquaculture:cooked_atlantic_cod_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_herring",
+      "kind": "item",
+      "subject": "aquaculture:raw_herring_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_herring",
+      "kind": "item",
+      "subject": "aquaculture:cooked_herring_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_mackerel",
+      "kind": "item",
+      "subject": "aquaculture:raw_mackerel_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_mackerel",
+      "kind": "item",
+      "subject": "aquaculture:cooked_mackerel_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_halibut",
+      "kind": "item",
+      "subject": "aquaculture:raw_halibut_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_halibut",
+      "kind": "item",
+      "subject": "aquaculture:cooked_halibut_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_haddock",
+      "kind": "item",
+      "subject": "aquaculture:raw_haddock_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_haddock",
+      "kind": "item",
+      "subject": "aquaculture:cooked_haddock_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_flounder",
+      "kind": "item",
+      "subject": "aquaculture:raw_flounder_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_flounder",
+      "kind": "item",
+      "subject": "aquaculture:cooked_flounder_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_tuna",
+      "kind": "item",
+      "subject": "aquaculture:raw_tuna_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_tuna",
+      "kind": "item",
+      "subject": "aquaculture:cooked_tuna_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_barracuda",
+      "kind": "item",
+      "subject": "aquaculture:raw_barracuda_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_barracuda",
+      "kind": "item",
+      "subject": "aquaculture:cooked_barracuda_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_grouper",
+      "kind": "item",
+      "subject": "aquaculture:raw_grouper_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_grouper",
+      "kind": "item",
+      "subject": "aquaculture:cooked_grouper_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_snapper",
+      "kind": "item",
+      "subject": "aquaculture:raw_snapper_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_snapper",
+      "kind": "item",
+      "subject": "aquaculture:cooked_snapper_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_mahi_mahi",
+      "kind": "item",
+      "subject": "aquaculture:raw_mahi_mahi_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_mahi_mahi",
+      "kind": "item",
+      "subject": "aquaculture:cooked_mahi_mahi_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_parrotfish",
+      "kind": "item",
+      "subject": "aquaculture:raw_parrotfish_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_parrotfish",
+      "kind": "item",
+      "subject": "aquaculture:cooked_parrotfish_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-processing-api",
+      "kind": "mechanic",
+      "subject": "Mass-conserving portion processing and public edible serving contract",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "catch-meal-balance",
+      "kind": "mechanic",
+      "subject": "All species at most four servings, ordinary catch one, legacy migration",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "name": "All species: actual entity creation, catch data and habitat controls",
+      "command": "aquaculture selftest",
+      "expect": "AQUACULTURE_36_SPECIES_TRAITS_HABITAT_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Core RC54 physical API: individual catches for all 36 species, old NBT, copy/drop, missing mass and water solution controls",
+      "command": "aquaculture physical_selftest",
+      "expect": "AQUA_PHYSICAL_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Creative content: 36 catches, 44 typed spawn eggs, registered tab and vanilla natural spawn filtering with manual/custom controls",
+      "command": "aquaculture content_selftest",
+      "expect": "AQUA_CONTENT_152_PASS",
+      "assertion": true
+    },
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls",
+      "command": "aquaculture feeding_selftest",
+      "expect": "AQUACULTURE_FEEDING_36_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Coastal diversity and actual bank fixture, persistent coastal origin and shark snout front/rear/flank contact",
+      "command": "aquaculture coast_bite_selftest",
+      "expect": "AQUA_COAST_BITE_PASS",
+      "assertion": true
+    },
+    {
+      "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue",
+      "command": "aquaculture portion_selftest",
+      "expect": "AQUA_PORTION_36_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Core directed river: species flow preferences, actual swimming intention, undirected and dry controls",
+      "command": "aquaculture river_selftest",
+      "expect": "AQUA_RIVER_CURRENT_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Native and vanilla water: cod, salmon and Aqua breathing, source/flow, dry control, ice and spawn",
+      "command": "aquaculture water_selftest",
+      "expect": "AQUA_NATIVE_FISH_WATER_PASS",
+      "assertion": true
+    },
+    {
+      "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn",
+      "command": "aquaculture spawn_selftest",
+      "expect": "AQUA_SPAWN_36_PASS",
+      "assertion": true
+    },
+    {
+      "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)",
+      "command": "aquaculture visual_selftest",
+      "expect": "AQUA_VISUAL_ASSETS_SIZE_36_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait",
+      "command": "aquaculture ecology_selftest",
+      "expect": "AQUA_ECOLOGY_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records",
+      "command": "aquaculture population_selftest",
+      "expect": "AQUA_POPULATION_PASS",
+      "assertion": true
+    },
+    {
+      "command": "aquaculture population_tick_prepare",
+      "expect": "AQUA_POPULATION_TICK_READY"
+    },
+    {
+      "wait": 9
+    },
+    {
+      "name": "Real server ticks without players: native seawater clutch hatches one juvenile, dry clutch dies",
+      "command": "aquaculture population_tick_verify",
+      "expect": "AQUA_POPULATION_NO_PLAYER_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures",
+      "command": "aquaculture marine_selftest",
+      "expect": "AQUA_MARINE_PASS",
+      "assertion": true
+    }
+  ]
+}

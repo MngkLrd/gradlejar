@@ -608,66 +608,6 @@
               }
             },
             {
-              "biome": "worldlogic:warm_broadleaf_forest",
-              "parameters": {
-                "temperature": [
-                  0.16,
-                  0.38
-                ],
-                "humidity": [
-                  0.36,
-                  0.48
-                ],
-                "continentalness": [
-                  0.63,
-                  1.2
-                ],
-                "erosion": [
-                  -0.12,
-                  1.2
-                ],
-                "depth": [
-                  -2,
-                  0.36
-                ],
-                "weirdness": [
-                  -1.2,
-                  1.2
-                ],
-                "offset": 0
-              }
-            },
-            {
-              "biome": "worldlogic:warm_broadleaf_forest",
-              "parameters": {
-                "temperature": [
-                  0.16,
-                  0.38
-                ],
-                "humidity": [
-                  0.36,
-                  0.48
-                ],
-                "continentalness": [
-                  0.4,
-                  0.63
-                ],
-                "erosion": [
-                  -0.12,
-                  0.5
-                ],
-                "depth": [
-                  -2,
-                  0.36
-                ],
-                "weirdness": [
-                  -1.2,
-                  1.2
-                ],
-                "offset": 0
-              }
-            },
-            {
               "biome": "worldlogic:subtropical_rainforest",
               "parameters": {
                 "temperature": [
@@ -675,7 +615,7 @@
                   0.38
                 ],
                 "humidity": [
-                  0.48,
+                  0.36,
                   1.2
                 ],
                 "continentalness": [
@@ -705,7 +645,7 @@
                   0.38
                 ],
                 "humidity": [
-                  0.48,
+                  0.36,
                   1.2
                 ],
                 "continentalness": [
@@ -735,7 +675,7 @@
                   0.38
                 ],
                 "humidity": [
-                  0.48,
+                  0.36,
                   1.2
                 ],
                 "continentalness": [

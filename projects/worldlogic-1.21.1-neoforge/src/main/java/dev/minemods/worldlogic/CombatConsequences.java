@@ -19,6 +19,7 @@ public final class CombatConsequences {
  private record Recovery(long until,long staggerUntil){}
  private static final Map<Player,Recovery> RECOVERY=new WeakHashMap<>();
  private static final String HEAL_UNTIL="worldlogic_combat_heal_until";
+ static void adminRestore(Player p){p.getPersistentData().remove(HEAL_UNTIL);RECOVERY.remove(p);}
  public static boolean canNaturallyHeal(Player p){return !Rules.on("combat_recovery")||!Survival.active(p)||!(p.level() instanceof ServerLevel l)||p.getPersistentData().getLong(HEAL_UNTIL)<=l.getServer().overworld().getGameTime();}
  static int healDelay(float damage,double strength){return (int)Math.min(240,Math.round((60+Math.min(12,damage)*8)*strength));}
  static int cargoLoss(float damage,double strength){return damage<5?0:Math.min(3,Math.max(1,(int)Math.floor((damage-3)*strength/3)));}

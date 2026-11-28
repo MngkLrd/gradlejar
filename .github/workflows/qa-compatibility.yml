@@ -8,9 +8,11 @@ on:
         default: physics
         type: string
   push:
-    branches: [main]
+    branches: [main, worldlogic-aquaculture-0.1.0]
     paths:
       - 'tools/qa/packs/**'
+      - 'projects/worldlogic-aquaculture-1.21.1-neoforge/**'
+      - tools/qa/scenarios/worldlogic-aquaculture.json
       - tools/qa/pack.py
       - tools/qa/server.py
       - tools/qa/scenarios/fragileglass.json
@@ -36,7 +38,7 @@ jobs:
       - name: Resolve pack
         id: pack
         env:
-          PACK_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.pack || 'physics' }}
+          PACK_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.pack || (github.ref_name == 'worldlogic-aquaculture-0.1.0' && 'worldlogic-aqua' || 'physics') }}
         run: |
           [[ "$PACK_ID" =~ ^[a-z][a-z0-9_-]{0,60}$ ]]
           echo "id=$PACK_ID" >> "$GITHUB_OUTPUT"

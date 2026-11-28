@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=11;
+ public static final int API_REVISION=21;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -119,13 +119,42 @@ public final class WorldLogicApi {
  public static WaterProfile waterProfile(ServerLevel level,BlockPos pos){
   serverThread(level);return dev.minemods.worldlogic.WaterClassification.sample(level,pos);
  }
- public enum SoilType { LOAM,HUMUS,PEAT,SILT,FROZEN,SAND,CLAY,ROCK,UNKNOWN }
+ /** Persisted directed river velocity in m/s at nominal 20 TPS. Local geometry proxy.
+  * Empty for still, unclassified, unloaded or undirected water; no chunks are loaded. */
+ public record RiverCurrent(net.minecraft.world.phys.Vec3 velocityMps,double speedMps,int localDepthBlocks,int waterNeighbors){}
+ public static Optional<RiverCurrent> riverCurrent(ServerLevel level,BlockPos pos){
+  serverThread(level);return dev.minemods.worldlogic.RiverCurrent.sample(level,pos);
+ }
+ /** Game movement retention coefficient, not physical static friction. */
+ public record GroundTraction(float retention,boolean wet){}
+ public static Optional<GroundTraction> groundTraction(ServerLevel level,BlockPos pos,Entity entity){
+  serverThread(level);return dev.minemods.worldlogic.GroundMotion.sample(level,pos,entity);
+ }
+ public enum SoilType { LOAM,HUMUS,PEAT,SILT,FROZEN,SAND,CLAY,ROCK,UNKNOWN,CHERNOZEM,SANDY_LOAM,LATERITE,WHITE_SAND,VOLCANIC_SAND,VOLCANIC_ASH }
  /** Model stores expressed in mm water equivalent per horizontal area; rates per 200-tick update. */
  public record Hydrology(SoilType soil,double soilWaterMm,double capacityMm,double groundwaterMm,double snowWaterMm,
   double pondedWaterMm,double lastRunoffMm,double lastEvaporationMm,double lastRechargeMm,double lastDischargeMm,
   double saturation,double fertility,double permeability,double estimatedWaterTableDepthBlocks,boolean simulated,long updatedTick){}
  /** Pure classification of an existing block, safe to use during world generation. */
  public static SoilType soilType(BlockState state){return dev.minemods.worldlogic.HydrologyModel.soilType(state);}
+ /** Representative game parameters. Mineral fractions sum to 1 for soils.
+  * Organic fraction is a separate whole-soil estimate; pH -1 is not applicable.
+  * Not a measured chemical sample; use soilEcology/hydrology for live state. */
+ public record GroundProfile(SoilType soil,double sandFraction,double siltFraction,double clayFraction,
+  double organicMatterFraction,double nominalPh,double fertility,double waterCapacityMm,double permeability,double fieldCapacityFraction,boolean rootable){}
+ public static boolean cultivatedSoil(BlockState state){return state.getBlock() instanceof net.minecraft.world.level.block.FarmBlock;}
+ public static BlockState parentSoil(BlockState state){return dev.minemods.worldlogic.SoilFarmland.original(state);}
+ public static GroundProfile soilProfile(BlockState state){return dev.minemods.worldlogic.HydrologyModel.groundProfile(state);}
+ /** Ground position, not plant position. Read actual root horizon under grass/farmland without loading chunks. */
+ public static Optional<GroundProfile> soilProfile(ServerLevel level,BlockPos ground){
+  serverThread(level);
+  if(level.isOutsideBuildHeight(ground)||!level.hasChunkAt(ground))return Optional.empty();
+  var b=level.getBlockState(ground);
+  if((b.is(net.minecraft.world.level.block.Blocks.GRASS_BLOCK)||b.is(net.minecraft.world.level.block.Blocks.FARMLAND)||b.is(net.minecraft.world.level.block.Blocks.PODZOL))&&!level.isOutsideBuildHeight(ground.below())){
+   var sub=soilProfile(level.getBlockState(ground.below()));if(sub.rootable())return Optional.of(sub);
+  }
+  return Optional.of(soilProfile(b));
+ }
  public static Optional<Hydrology> hydrology(ServerLevel level,BlockPos pos){
   serverThread(level);return dev.minemods.worldlogic.HydrologyRuntime.sample(level,pos);
  }
@@ -167,6 +196,14 @@ public final class WorldLogicApi {
   serverThread(level);return dev.minemods.worldlogic.EnvironmentAnalytics.forest(level,pos);
  }
  public record Fatigue(boolean enabled,double fatiguePercent,double remainingStaminaPercent){}
+ /** True when Core owns the installed Metabolism rest policy; the peer must not supplement it. */
+ public static boolean usesMetabolicRestRecovery(ServerPlayer player){
+  serverThread(player.serverLevel());return dev.minemods.worldlogic.PeerPhysiology.usesMetabolicRestRecovery(player);
+ }
+ /** Trusted server/admin operation; caller is responsible for command permission. Missing installed providers are explicit. */
+ public static dev.minemods.worldlogic.PeerPhysiology.HealResult adminRestore(ServerPlayer player){
+  serverThread(player.serverLevel());return dev.minemods.worldlogic.PeerPhysiology.heal(player);
+ }
  private static void serverThread(ServerLevel level){
   if(!level.getServer().isSameThread())throw new IllegalStateException("World Logic API requires server thread");
  }
@@ -272,6 +309,16 @@ public final class WorldLogicApi {
   if(dev.minemods.worldlogic.LocalWeatherRuntime.active(level)||!Rules.on("modeled_weather")||level!=level.getServer().overworld()||level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
   return dev.minemods.worldlogic.WeatherGridState.sample(level,pos);
  }
+ /** Exertion-only factors; other physical and injury effects remain independently authoritative. */
+ public static dev.minemods.worldlogic.ExertionModifiers.Factors exertionFactors(ServerPlayer player){
+  serverThread(player.serverLevel());return dev.minemods.worldlogic.ExertionModifiers.current(player);
+ }
+ /** Additional Core veto only; true does NOT force vanilla or addon spawn checks to succeed. */
+ public static boolean permitsNaturalHostileSpawn(ServerLevel level,net.minecraft.world.entity.EntityType<?> type,net.minecraft.world.entity.MobSpawnType reason){
+  serverThread(level);return dev.minemods.worldlogic.HostileSpawnPolicy.permits(level,type,reason);
+ }
+ public static boolean isTreeDescentTrunk(BlockState state){return dev.minemods.worldlogic.TreeDescent.trunk(state);}
+ public static boolean isDescendingTree(ServerPlayer player){serverThread(player.serverLevel());return dev.minemods.worldlogic.TreeDescent.gripping(player);}
  public static Fatigue fatigue(ServerPlayer player){
   serverThread(player.serverLevel());
   boolean enabled=Rules.on("exertion")&&!player.isCreative()&&!player.isSpectator();
@@ -291,6 +338,13 @@ public final class WorldLogicApi {
  }
  /** Local client only: synchronized integer percentage, empty until sync/when disabled. */
  public static OptionalInt clientFatiguePercent(){return RuleSync.clientFatiguePercent();}
+ /** RC53 physical profiles in SI. Does not alter legacy relative gameplay weight or mass.
+  * For registration, component properties, item state and explicit liquid volumes use PhysicalMaterials. */
+ public static PhysicalMaterials.ObjectProfile physicalBlock(BlockState state){return PhysicalMaterials.block(state);}
+ public static PhysicalMaterials.Result physicalItem(ItemStack stack){return PhysicalMaterials.itemResult(stack);}
+ public static PhysicalMaterials.Result physicalStack(ItemStack stack){return PhysicalMaterials.stackResult(stack);}
+ public static PhysicalMaterials.ObjectProfile physicalFluid(net.minecraft.world.level.material.Fluid fluid){return PhysicalMaterials.fluid(fluid);}
+ public static Optional<PhysicalMaterials.Result> physicalPlaced(ServerLevel level,BlockPos pos){return PhysicalMaterials.placed(level,pos);}
  /** Relative gameplay weight and mass, not SI kilograms. */
  public static double itemWeight(ItemStack stack){return Material.weight(stack);}
  public static double entityMass(Entity entity){return Material.mass(entity);}

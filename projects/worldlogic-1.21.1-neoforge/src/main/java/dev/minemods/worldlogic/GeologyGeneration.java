@@ -20,7 +20,7 @@ public final class GeologyGeneration {
   return g instanceof NoiseBasedChunkGenerator n&&n.generatorSettings().unwrapKey().map(k->k.location().getNamespace().equals("worldlogic")&&Set.of("earthlike_extended","realistic_unified").contains(k.location().getPath())).orElse(false);
  }
  public static boolean replaces(OreConfiguration c){return !c.targetStates.isEmpty()&&c.targetStates.stream().allMatch(t->REPLACED.contains(t.state.getBlock()));}
- static boolean rock(BlockState s){return s.is(Blocks.STONE)||s.is(Blocks.DEEPSLATE)||s.is(Blocks.ANDESITE)||s.is(Blocks.DIORITE)||s.is(Blocks.GRANITE)||s.is(Blocks.TUFF)||s.is(Blocks.CALCITE)||s.is(Blocks.SANDSTONE);}
+ static boolean rock(BlockState s){return s.is(Blocks.STONE)||s.is(Blocks.DEEPSLATE)||s.is(Blocks.ANDESITE)||s.is(Blocks.DIORITE)||s.is(Blocks.GRANITE)||s.is(Blocks.TUFF)||s.is(Blocks.CALCITE)||s.is(Blocks.SANDSTONE)||GroundMaterials.volcanicRock(s)||RockContent.natural(s);}
  private static boolean shaftRock(BlockState s){return rock(s)||s.is(net.minecraft.tags.BlockTags.DIRT)||s.is(Blocks.GRASS_BLOCK)||s.is(Blocks.DIRT)||s.is(Blocks.COARSE_DIRT)||s.is(Blocks.GRAVEL)||s.is(Blocks.SAND)||s.is(Blocks.SANDSTONE);}
  static BlockState ore(GeologyModel.Ore type,boolean deep){return switch(type){
   case COAL -> (deep?Blocks.DEEPSLATE_COAL_ORE:Blocks.COAL_ORE).defaultBlockState();
@@ -31,6 +31,7 @@ public final class GeologyGeneration {
   case EMERALD -> (deep?Blocks.DEEPSLATE_EMERALD_ORE:Blocks.EMERALD_ORE).defaultBlockState();
   case LAPIS -> (deep?Blocks.DEEPSLATE_LAPIS_ORE:Blocks.LAPIS_ORE).defaultBlockState();
   case REDSTONE -> (deep?Blocks.DEEPSLATE_REDSTONE_ORE:Blocks.REDSTONE_ORE).defaultBlockState();
+  default -> MineralContent.ore(type,deep);
  };}
  public static void carve(long seed,ChunkAccess chunk){
   int x0=chunk.getPos().getMinBlockX(),z0=chunk.getPos().getMinBlockZ();
@@ -39,21 +40,12 @@ public final class GeologyGeneration {
   for(int x=x0;x<x0+16;x++)for(int z=z0;z<z0+16;z++){
    int surface=chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x&15,z&15);
    var province=GeologyModel.province(seed,x,z);
-   int top=Math.min(surface-6,75),bottom=Math.max(chunk.getMinBuildHeight()+8,-112);
+   int top=surface-6;
    int fold=(int)(6*Math.sin(x*.018)+5*Math.cos(z*.016));
-   for(int y=bottom;y<=top;y++){
-    int band=Math.floorMod(y+fold,38);Block host=null;
-    if(province==GeologyModel.Province.CARBONATE&&band<20)host=Blocks.CALCITE;
-    if(province==GeologyModel.Province.SEDIMENTARY&&band<7)host=Blocks.SANDSTONE;
-    if(province==GeologyModel.Province.INTRUSIVE&&band<13)host=Blocks.GRANITE;
-    if(province==GeologyModel.Province.METAMORPHIC&&band<12)host=Blocks.DIORITE;
-    if(host==null)continue;
-    pos.set(x,y,z);var s=chunk.getBlockState(pos);
-    if(s.is(Blocks.STONE)||s.is(Blocks.DEEPSLATE))chunk.setBlockState(pos,host.defaultBlockState(),false);
-   }
+   RockContent.stratify(chunk,x,z,top,province,fold);
    for(var d:districts)for(var c:d.caves()){
     if(Math.abs(x-c.x())>96||Math.abs(z-c.z())>96)continue;
-    int low=Math.max(chunk.getMinBuildHeight()+8,c.minY()),high=Math.min(chunk.getMaxBuildHeight()-1,c.shaft()&&Math.hypot(x-c.x(),z-c.z())<10?Math.max(c.maxY(),surface+1):c.maxY());
+    int low=Math.max(chunk.getMinBuildHeight()+8,c.minY()),high=Math.min(chunk.getMaxBuildHeight()-1,c.shaft()&&Math.hypot(x-c.x(),z-c.z())<10?Math.max(c.maxY(),c.shaftTop(surface)):c.maxY());
     for(int y=low;y<=high;y++){
      boolean shaft=c.shaftAt(x,y,z,surface);
      if(!shaft&&(y>surface-5||c.score(x,y,z)>1))continue;
@@ -70,8 +62,9 @@ public final class GeologyGeneration {
   int x0=chunk.getPos().getMinBlockX(),z0=chunk.getPos().getMinBlockZ();
   var districts=GeologyModel.around(seed,x0+8,z0+8);
   var pos=new BlockPos.MutableBlockPos();
-  for(var d:districts)for(var o:d.ores())placeBody(chunk,x0,z0,pos,o,false);
+  for(var d:districts)for(var o:d.ores())if(!o.ore().additional())placeBody(chunk,x0,z0,pos,o,false);
   for(var p:GeologyModel.nearbyPockets(seed,x0+8,z0+8))placeBody(chunk,x0,z0,pos,p.body(),p.relative());
+  for(var d:districts)for(var o:d.ores())if(o.ore().additional())placeBody(chunk,x0,z0,pos,o,false);
  }
  private static void placeBody(ChunkAccess chunk,int x0,int z0,BlockPos.MutableBlockPos pos,GeologyModel.Body o,boolean relative){
   double reach=Math.max(o.along(),o.across())+2;

@@ -1,0 +1,37 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="All Rights Reserved"
+[[mods]]
+modId="worldlogic_aqua"
+version="0.4.7"
+displayName="WorldLogic: Aqua"
+description="Regional fish fauna and environmental habitat selection for WorldLogic."
+[[dependencies.worldlogic_aqua]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.80,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.worldlogic_aqua]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
+[[dependencies.worldlogic_aqua]]
+modId="worldlogic"
+type="required"
+versionRange="[1.5.1,)"
+ordering="AFTER"
+side="BOTH"
+
+
+[[mixins]]
+config="worldlogic_aqua.mixins.json"
+
+[[dependencies.worldlogic_aqua]]
+modId="worldlogic_trauma"
+type="optional"
+versionRange="[0,)"
+ordering="AFTER"
+side="BOTH"

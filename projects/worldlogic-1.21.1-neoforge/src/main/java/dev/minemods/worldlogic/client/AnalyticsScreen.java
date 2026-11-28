@@ -3,18 +3,19 @@ import dev.minemods.worldlogic.AnalyticsSync;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import java.util.*;
 public final class AnalyticsScreen extends ClearScreen{
- private final Screen parent;private int tab,page;
+ private final Screen parent;private int tab,page;private final Button[] buttons=new Button[7];
  private static final String[] TABS={"air","water","soil","impact","ecology","seasons","history"};
  public AnalyticsScreen(Screen parent){super(Component.translatable("worldlogic.analytics.title"));this.parent=parent;}
  private Component tr(String s){return Component.translatable("worldlogic.analytics."+s);}
  @Override protected void init(){
   int usable=dev.minemods.worldlogic.api.client.WorldLogicTabs.contentWidth(width);
   int left=12,w=(usable-24)/TABS.length;
-  for(int i=0;i<TABS.length;i++){final int k=i;addRenderableWidget(Button.builder(Component.literal(font.plainSubstrByWidth(tr(TABS[i]).getString(),Math.max(1,w-8))),b->{tab=k;page=0;}).bounds(left+i*w,32,w-2,20).build());}
+  for(int i=0;i<TABS.length;i++){final int k=i;buttons[i]=addRenderableWidget(Button.builder(Component.literal(font.plainSubstrByWidth(tr(TABS[i]).getString(),Math.max(1,w-8))),b->{tab=k;page=0;}).bounds(left+i*w,32,w-2,20).build());buttons[i].setTooltip(Tooltip.create(tr(TABS[i])));}
   addRenderableWidget(Button.builder(Component.literal("<"),b->page=Math.max(0,page-1)).bounds(12,height-28,26,20).build());
   addRenderableWidget(Button.builder(Component.literal(">"),b->page=Math.min(50,page+1)).bounds(42,height-28,26,20).build());
   addRenderableWidget(Button.builder(Component.translatable("gui.back"),b->onClose()).bounds(usable-94,height-28,82,20).build());
@@ -23,15 +24,16 @@ public final class AnalyticsScreen extends ClearScreen{
  @Override public boolean isPauseScreen(){return false;}
  @Override public void onClose(){Minecraft.getInstance().setScreen(parent);}
  @Override public void render(GuiGraphics g,int mx,int my,float delta){
-  g.fill(0,0,width,height,0xff171c20);
+  VanillaPanels.backdrop(g,width,height);
+  for(int i=0;i<buttons.length;i++)if(buttons[i]!=null)buttons[i].active=i!=tab;
   int usable=dev.minemods.worldlogic.api.client.WorldLogicTabs.contentWidth(width);
   g.drawCenteredString(font,title,usable/2,10,0xffeeeeee);
   var state=AnalyticsSync.client();var level=Minecraft.getInstance().level;
-  g.fill(12,58,usable-12,height-34,0xff222a2e);
+  VanillaPanels.panel(g,12,58,usable-12,height-34);
   if(state==null||level==null||!state.dimension().equals(level.dimension().location().toString())){
-   g.drawCenteredString(font,tr("waiting"),usable/2,76,0xffcccccc);
+   g.drawCenteredString(font,tr("waiting"),usable/2,76,VanillaPanels.MUTED);
   }else{
-   g.drawString(font,Component.literal("X "+state.x()+"  Y "+state.y()+"  Z "+state.z()+"  |  t "+state.tick()),18,64,0xffacb9bf,false);
+   g.drawString(font,Component.literal("X "+state.x()+"  Y "+state.y()+"  Z "+state.z()+"  |  t "+state.tick()),18,64,VanillaPanels.MUTED,false);
    if(tab<6&&state.tabs().size()>tab){
     var lines=new ArrayList<net.minecraft.util.FormattedCharSequence>();
     for(String row:state.tabs().get(tab)){
@@ -43,7 +45,7 @@ public final class AnalyticsScreen extends ClearScreen{
     if(lines.isEmpty())lines.addAll(font.split(tr("no_data"),usable-40));
     int visible=Math.max(1,(height-116)/12);int maxPage=Math.max(0,(lines.size()-1)/visible);page=Math.min(page,maxPage);
     int end=Math.min(lines.size(),(page+1)*visible),y=82;
-    for(int i=page*visible;i<end;i++,y+=12)g.drawString(font,lines.get(i),18,y,0xffe6ebed,false);
+    for(int i=page*visible;i<end;i++,y+=12){g.drawString(font,lines.get(i),18,y,VanillaPanels.TEXT,false);g.fill(18,y+10,usable-18,y+11,VanillaPanels.LINE);}
     g.drawString(font,(page+1)+"/"+(maxPage+1),76,height-22,0xffbac4c9,false);
    }else if(tab==6){history(g,state);}
   }
@@ -52,7 +54,7 @@ public final class AnalyticsScreen extends ClearScreen{
  private int color(float v){int r=(int)(55+170*v),green=(int)(180-120*v);return 0xff000000|(r<<16)|(green<<8)|65;}
  private void history(GuiGraphics g,AnalyticsSync.State s){
   int x=18,y=82,cell=Math.max(9,Math.min(23,(height-146)/4));
-  g.drawString(font,tr(page%2==0?"map_air":"map_soil"),x,y,0xffe6ebed,false);
+  g.drawString(font,tr(page%2==0?"map_air":"map_soil"),x,y,VanillaPanels.TEXT,false);
   y+=13;for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++){
    float v=-1;for(var c:s.nearby())if(c.dx()==dx&&c.dz()==dz)v=page%2==0?c.air():c.soil();
    int xx=x+(dx+1)*cell,yy=y+(dz+1)*cell;g.fill(xx,yy,xx+cell-1,yy+cell-1,v<0?0xff434b50:color(v));
@@ -60,8 +62,8 @@ public final class AnalyticsScreen extends ClearScreen{
   }
   int gx=x+cell*3+12,gw=dev.minemods.worldlogic.api.client.WorldLogicTabs.contentWidth(width)-gx-22,gh=Math.max(10,height-151),gy=95;
   if(gw>16){
-   g.drawString(font,tr("history_chart"),gx,82,0xffe6ebed,false);
-   g.fill(gx,gy,gx+gw,gy+gh,0xff13191d);
+   g.drawString(font,tr("history_chart"),gx,82,VanillaPanels.TEXT,false);
+   g.fill(gx,gy,gx+gw,gy+gh,0xff272727);
    var h=s.history();int n=h.size();
    if(n==0)g.drawString(font,tr("no_data"),gx+3,gy+3,0xffaaaaaa,false);
    else for(int i=0;i<n;i++){int xx=gx+i*gw/n,xx2=gx+(i+1)*gw/n;var point=h.get(i);int ah=(int)(point.air()*gh),sh=(int)(point.soil()*gh);
@@ -69,6 +71,6 @@ public final class AnalyticsScreen extends ClearScreen{
     if(sh>0)g.fill(xx,gy+gh-sh,Math.max(xx+1,xx2-1),gy+gh-sh+1,0xff82bc8c);
    }
   }
-  g.drawString(font,tr("legend"),18,height-46,0xffb7c3c6,false);
+  g.drawString(font,tr("legend"),18,height-46,VanillaPanels.MUTED,false);
  }
 }

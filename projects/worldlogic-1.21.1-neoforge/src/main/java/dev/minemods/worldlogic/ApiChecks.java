@@ -12,6 +12,11 @@ public final class ApiChecks {
   return new BlockPos(0,Math.min(l.getMaxBuildHeight()-1,Math.max(70,l.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,0,0)+5)),0);
  }
  public static void verifyRecovery(ServerLevel l){
+  for(int seconds:new int[]{3,5,7,10,12}){
+   double debt=100;
+   for(int tick=0;tick<seconds*20;tick++)debt=Math.max(0,debt-Survival.recoveryAmount(100.0/seconds,1));
+   require(debt<1e-7,"fractional metabolic recovery "+seconds+" seconds");
+  }
   var p=FakePlayerFactory.getMinecraft(l);double old=Survival.fatigue(p);int food=p.getFoodData().getFoodLevel();
   var pos=p.position();boolean grounded=p.onGround(),sprint=p.isSprinting(),sneak=p.isShiftKeyDown();
   try{

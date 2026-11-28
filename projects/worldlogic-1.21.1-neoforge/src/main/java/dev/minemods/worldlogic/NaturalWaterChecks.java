@@ -49,6 +49,7 @@ final class NaturalWaterChecks{
    require(WorldLogicApi.waterProfile(l,p).quality()==WaterQuality.DESALINATE,"salt cannot become drinkable by soil");
   }finally{l.setBlock(p,original,2);old.forEach((q,s)->l.setBlock(q,s,2));}
   verifyMotion(l);
+  verifyDirectedRiver(l);
   var chunk=new ProtoChunk(new ChunkPos(0,0),UpgradeData.EMPTY,LevelHeightAccessor.create(-256,768),l.registryAccess().registryOrThrow(Registries.BIOME),null);
   // Construct an actual vertical underground pool and surface pool. This is a chunk fixture, not a fully generated world.
   var pos=new BlockPos.MutableBlockPos();
@@ -78,7 +79,7 @@ final class NaturalWaterChecks{
     l.setBlock(origin,f.block.get().defaultBlockState(),2|16);
     require(NativeWaterTicks.needsTick(l,origin),"exposed source rearm "+f.id);
     // Execute the actual Fluid tick, not an emulated movement equation.
-    var fs=l.getFluidState(origin);fs.getType().tick(l,origin,fs);
+    var fs=l.getFluidState(origin);fs.tick(l,origin);
     require(NaturalFluids.kind(l.getFluidState(origin.below()).getType())==f.kind&&!l.getFluidState(origin.below()).isSource(),"downward fluid spread "+f.id);
     for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)for(int y=-1;y<=2;y++)l.setBlock(origin.offset(x,y,z),f.block.get().defaultBlockState(),2|16);
     pig.setPos(origin.getX()+.5,origin.getY()+.1,origin.getZ()+.5);pig.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);pig.baseTick();
@@ -88,6 +89,32 @@ final class NaturalWaterChecks{
    pig.baseTick();require(!pig.isInWater()&&!pig.isEyeInFluid(FluidTags.WATER),"dry entity negative control");
   }finally{pig.discard();saved.forEach((p,s)->l.setBlock(p,s,2|16));}
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_NATIVE_WATER_MOTION families=8 verticalSpread=8 immersion=8 dryControl=PASS");
+ }
+
+ private static void verifyDirectedRiver(ServerLevel l){
+  var p=new BlockPos(4,110,4);var old=l.getBlockState(p);
+  try{
+   var family=NaturalFluids.get(WaterKind.RIVER);var base=family.block.get().defaultBlockState();
+   require(base.getValue(DirectedRiverBlock.CURRENT)==0,"bucket and old-state current default");
+   for(int sector=1;sector<=16;sector++){
+    var state=base.setValue(DirectedRiverBlock.CURRENT,sector);
+    require(net.minecraft.world.level.block.Block.stateById(net.minecraft.world.level.block.Block.getId(state))==state,"current block palette identity");
+    l.setBlock(p,state,2|16);
+    var f=l.getFluidState(p);var vector=f.getFlow(l,p);var expected=DirectedRiverBlock.vector(sector);
+    require(f.isSource()&&NaturalFluids.kind(f.getType())==WaterKind.RIVER&&vector.distanceTo(expected)<1e-8,"stored current vector "+sector);
+    require(DirectedRiverBlock.encode(expected.x,expected.z)==sector,"direction quantization");
+    var current=WorldLogicApi.riverCurrent(l,p).orElseThrow();
+    require(current.velocityMps().normalize().dot(expected.normalize())>.999&&current.speedMps()>=1.4,"live river API "+sector);
+    var fish=net.minecraft.world.entity.EntityType.COD.create(l);
+    require(fish!=null,"fish fixture");
+    fish.setPos(p.getX()+.5,p.getY()+.1,p.getZ()+.5);fish.baseTick();fish.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);
+    require(RiverCurrent.pushAquatic(fish)&&fish.getDeltaMovement().dot(expected)>0,"fish drift "+sector);fish.discard();
+   }
+   l.setBlock(p,base,2|16);
+   require(WorldLogicApi.riverCurrent(l,p).isEmpty(),"undirected river has no prescribed current");
+   l.setBlock(p,NaturalFluids.get(WaterKind.LAKE).block.get().defaultBlockState(),2|16);
+   require(WorldLogicApi.riverCurrent(l,p).isEmpty(),"lake has no river advection");
+  }finally{l.setBlock(p,old,2|16);}
  }
 
 }

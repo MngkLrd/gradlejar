@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:galena_ore",
+    "worldlogic:deepslate_galena_ore",
+    "worldlogic:sphalerite_ore",
+    "worldlogic:deepslate_sphalerite_ore",
+    "worldlogic:malachite_ore",
+    "worldlogic:deepslate_malachite_ore",
+    "worldlogic:bauxite_ore",
+    "worldlogic:deepslate_bauxite_ore",
+    "worldlogic:fluorite_ore",
+    "worldlogic:deepslate_fluorite_ore",
+    "worldlogic:cinnabar_ore",
+    "worldlogic:deepslate_cinnabar_ore"
+  ]
+}

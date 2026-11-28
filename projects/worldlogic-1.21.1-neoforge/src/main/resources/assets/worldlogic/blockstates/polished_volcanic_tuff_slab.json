@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "worldlogic:block/polished_volcanic_tuff_slab"
+    },
+    "type=top": {
+      "model": "worldlogic:block/polished_volcanic_tuff_slab_top"
+    },
+    "type=double": {
+      "model": "worldlogic:block/polished_volcanic_tuff"
+    }
+  }
+}

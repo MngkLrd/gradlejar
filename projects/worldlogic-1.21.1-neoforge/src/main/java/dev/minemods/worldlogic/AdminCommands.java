@@ -8,8 +8,16 @@ import java.util.*;
 public final class AdminCommands {
  private static int reply(CommandSourceStack s,String message){s.sendSuccess(()->Component.literal(message),false);return 1;}
  private static int change(CommandSourceStack s,Map<String,String> m){if(!Rules.apply(m)){s.sendFailure(Component.literal("World Logic: config write failed"));return 0;}return reply(s,"World Logic settings saved.");}
+ private static int heal(CommandSourceStack s,net.minecraft.server.level.ServerPlayer p){
+  var result=dev.minemods.worldlogic.api.WorldLogicApi.adminRestore(p);
+  String detail="WorldLogic heal "+p.getScoreboardName()+": "+String.join(", ",result.restored());
+  if(!result.complete()){s.sendFailure(Component.literal(detail+"; INCOMPLETE: "+String.join(", ",result.unavailable())));return 0;}
+  return reply(s,detail);
+ }
  public static void register(RegisterCommandsEvent event){
   var root=Commands.literal("worldlogic").requires(s->s.hasPermission(2)).executes(c->reply(c.getSource(),"World Logic: Realistic | operator diagnostics: rule, strength, reload, inspect, selftest"));
+  root.then(Commands.literal("heal").executes(c->heal(c.getSource(),c.getSource().getPlayerOrException()))
+   .then(Commands.argument("player",net.minecraft.commands.arguments.EntityArgument.player()).executes(c->heal(c.getSource(),net.minecraft.commands.arguments.EntityArgument.getPlayer(c,"player")))));
   var preset=Commands.literal("preset");for(String name:List.of("realistic"))preset.then(Commands.literal(name).executes(c->change(c.getSource(),Rules.preset(name))));root.then(preset);
   root.then(Commands.literal("rule").then(Commands.argument("key",StringArgumentType.word()).suggests((c,b)->net.minecraft.commands.SharedSuggestionProvider.suggest(Rules.keys(),b)).then(Commands.argument("enabled",BoolArgumentType.bool()).executes(c->{String k=StringArgumentType.getString(c,"key");if(!Rules.keys().contains(k)){c.getSource().sendFailure(Component.literal("Unknown rule"));return 0;}var m=Rules.snapshot();m.put(k,Boolean.toString(BoolArgumentType.getBool(c,"enabled")));return change(c.getSource(),m);}))));
   root.then(Commands.literal("strength").then(Commands.argument("family",StringArgumentType.word()).suggests((c,b)->net.minecraft.commands.SharedSuggestionProvider.suggest(Rules.tuningKeys(),b)).then(Commands.argument("factor",DoubleArgumentType.doubleArg(.25,2)).executes(c->{String k=StringArgumentType.getString(c,"family");if(!Rules.tuningKeys().contains(k)){c.getSource().sendFailure(Component.literal("Unknown family"));return 0;}var m=Rules.snapshot();m.put("strength."+k,Double.toString(DoubleArgumentType.getDouble(c,"factor")));return change(c.getSource(),m);}))));
@@ -71,7 +79,16 @@ public final class AdminCommands {
   root.then(Commands.literal("surface_audit").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),SurfaceSurvey.audit(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
   root.then(Commands.literal("coast_audit").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),CoastSurvey.audit(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
   root.then(Commands.literal("river_probe").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),RiverTerrain.probe(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))).then(Commands.literal("headwater").executes(c->reply(c.getSource(),RiverTerrain.probe(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition()),true)))));
+  root.then(Commands.literal("biome_patch_audit").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),BiomePatchAudit.audit(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
+  root.then(Commands.literal("rock_audit").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),RockContent.audit(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
+  root.then(Commands.literal("ground_probe").requires(s->s.hasPermission(4)).then(Commands.argument("material",com.mojang.brigadier.arguments.StringArgumentType.word()).executes(c->reply(c.getSource(),GroundMaterials.probe(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition()),com.mojang.brigadier.arguments.StringArgumentType.getString(c,"material"))))));
+  root.then(Commands.literal("ground_audit").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),GroundMaterials.audit(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
+  root.then(Commands.literal("volcano_probe").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),VolcanicTerrain.probe(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
+  root.then(Commands.literal("reef_probe").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),ReefTerrain.probe(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))).then(Commands.literal("barrier").executes(c->reply(c.getSource(),ReefTerrain.probe(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition()),true)))));
+  root.then(Commands.literal("reef_audit").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),ReefTerrain.audit(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
   root.then(Commands.literal("marine_audit").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),MarineEcology.audit(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
+  root.then(Commands.literal("basin_audit").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),BasinTerrain.audit(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
+  root.then(Commands.literal("basin_probe").requires(s->s.hasPermission(4)).executes(c->reply(c.getSource(),BasinTerrain.probe(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())))));
   root.then(Commands.literal("ore_audit").requires(s->s.hasPermission(4)).executes(c->{
    try{return reply(c.getSource(),GeneratedOreAudit.scan(c.getSource().getLevel(),net.minecraft.core.BlockPos.containing(c.getSource().getPosition())));}
    catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}

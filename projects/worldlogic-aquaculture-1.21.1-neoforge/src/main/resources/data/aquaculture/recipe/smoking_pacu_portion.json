@@ -1,0 +1,13 @@
+{
+  "type": "aquaculture:portion_smoking",
+  "category": "food",
+  "ingredient": {
+    "item": "aquaculture:raw_pacu_portion"
+  },
+  "result": {
+    "id": "aquaculture:cooked_pacu_portion",
+    "count": 1
+  },
+  "experience": 0.1,
+  "cookingtime": 100
+}
