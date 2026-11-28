@@ -28,14 +28,14 @@ public final class GeoDensity implements DensityFunction {
   GeoModel value=new GeoModel(c,t,d,m);MODELS.put(k,value);return value;
  }
  public GeoDensity(String field,NoiseHolder continental,NoiseHolder tectonic,NoiseHolder detail,NoiseHolder moisture){
-  if(!Set.of("offset","continents","erosion","ridges","temperature","humidity","climate_temperature","climate_humidity").contains(field))throw new IllegalArgumentException("Unknown geography field: "+field);
+  if(!Set.of("offset","continents","erosion","ridges","temperature","humidity","climate_temperature","climate_humidity","extended_climate_temperature").contains(field))throw new IllegalArgumentException("Unknown geography field: "+field);
   this.field=field;this.continental=continental;this.tectonic=tectonic;this.detail=detail;this.moisture=moisture;this.model=model(continental,tectonic,detail,moisture);
  }
  /** Internal server adapter for the public API; uses the exact existing seeded noise instances. */
  public static java.util.Optional<dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate> regional(net.minecraft.server.level.ServerLevel level,int x,int z){
   var cache=level.getChunkSource();
   if(!(cache.getGenerator() instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator gen)
-    ||!gen.generatorSettings().unwrapKey().map(k->k.location().equals(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("worldlogic","earthlike_climate"))).orElse(false))
+    ||!gen.generatorSettings().unwrapKey().map(k->k.location().getNamespace().equals("worldlogic")&&Set.of("earthlike_climate","earthlike_extended").contains(k.location().getPath())).orElse(false))
    return java.util.Optional.empty();
   var state=cache.randomState();var registry=level.registryAccess().lookupOrThrow(Registries.NOISE);
   java.util.function.Function<net.minecraft.resources.ResourceKey<net.minecraft.world.level.levelgen.synth.NormalNoise.NoiseParameters>,NoiseHolder> noise=
@@ -44,9 +44,23 @@ public final class GeoDensity implements DensityFunction {
   var t=noise.apply(net.minecraft.world.level.levelgen.Noises.RIDGE);
   var de=noise.apply(net.minecraft.world.level.levelgen.Noises.EROSION);
   var m=noise.apply(net.minecraft.world.level.levelgen.Noises.VEGETATION);
-  return java.util.Optional.of(model(c,t,de,m).regional(x,z));
+  var region=model(c,t,de,m).regional(x,z);
+  if(GeologyGeneration.enabled(gen)){
+   return java.util.Optional.of(extended(region));
+  }
+  return java.util.Optional.of(region);
  }
- @Override public double compute(FunctionContext c){return model.value(field,c.blockX(),c.blockZ());}
+ private static dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate extended(dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate r){
+  double old=r.modeledSurfaceY(),surface=old<=110?old:110+(old-110)*1.6;
+  return new dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate(Math.max(-1,r.thermalIndex()-(surface-old)*.065/28),r.moistureIndex(),r.absoluteLatitude(),r.prevailingWindX(),r.prevailingWindZ(),surface);
+ }
+ @Override public double compute(FunctionContext c){
+  if(field.equals("extended_climate_temperature")){
+   var r=extended(model.regional(c.blockX(),c.blockZ()));
+   return GeoModel.biomeTemperature(r.thermalIndex(),r.moistureIndex()*2-1,r.modeledSurfaceY());
+  }
+  return model.value(field,c.blockX(),c.blockZ());
+ }
  @Override public void fillArray(double[] a,ContextProvider p){p.fillAllDirectly(a,this);}
  @Override public DensityFunction mapAll(Visitor v){return v.apply(new GeoDensity(field,v.visitNoise(continental),v.visitNoise(tectonic),v.visitNoise(detail),v.visitNoise(moisture)));}
  @Override public double minValue(){return -2;}

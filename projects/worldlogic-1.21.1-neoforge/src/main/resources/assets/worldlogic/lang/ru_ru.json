@@ -39,5 +39,6 @@
   "generator.worldlogic.realistic": "World Logic: реалистичный рельеф (RC16)",
   "generator.worldlogic.earthlike": "World Logic: природная география (RC18)",
   "generator.worldlogic.earthlike_climate": "World Logic: природная география",
-  "hud.worldlogic.fatigue": "Усталость"
+  "hud.worldlogic.fatigue": "Усталость",
+  "generator.worldlogic.earthlike_extended": "World Logic: Расширенная геология"
 }

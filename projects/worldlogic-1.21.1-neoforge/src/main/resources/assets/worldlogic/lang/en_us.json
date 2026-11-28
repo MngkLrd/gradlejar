@@ -39,5 +39,6 @@
   "generator.worldlogic.realistic": "World Logic: Realistic Terrain (Legacy)",
   "generator.worldlogic.earthlike": "World Logic: Earthlike Geography (Legacy RC18)",
   "generator.worldlogic.earthlike_climate": "World Logic: Earthlike Geography",
-  "hud.worldlogic.fatigue": "Fatigue"
+  "hud.worldlogic.fatigue": "Fatigue",
+  "generator.worldlogic.earthlike_extended": "World Logic: Extended Geology"
 }
