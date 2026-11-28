@@ -56,6 +56,8 @@ public final class TreeChopper {
             FALLEN.put(name,BLOCKS.register("fallen_"+name,()->new FallenLogBlock(BlockBehaviour.Properties.of().strength(2).sound(SoundType.WOOD).noOcclusion(),name)));
         }
     }
+    private static final DeferredRegister<EntityType<?>> ENTITIES=DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE,ID);
+    static final Supplier<EntityType<TimberCollider>> COLLIDER=ENTITIES.register("timber_collider",()->EntityType.Builder.<TimberCollider>of(TimberCollider::new,MobCategory.MISC).sized(1,1).noSave().noSummon().clientTrackingRange(10).updateInterval(1).build(ID+":timber_collider"));
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES=DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE,ID);
     static final Supplier<BlockEntityType<CutProgress>> PROGRESS=BLOCK_ENTITIES.register("cut_progress",()->BlockEntityType.Builder.of(CutProgress::new,CUTS.values().stream().map(DeferredBlock::get).toArray(Block[]::new)).build(null));
     static final Supplier<BlockEntityType<FallenProgress>> FALLEN_PROGRESS=BLOCK_ENTITIES.register("fallen_progress",()->BlockEntityType.Builder.of(FallenProgress::new,FALLEN.values().stream().map(DeferredBlock::get).toArray(Block[]::new)).build(null));
@@ -64,6 +66,7 @@ public final class TreeChopper {
     }
     public TreeChopper(IEventBus modBus){
         BLOCKS.register(modBus);
+        ENTITIES.register(modBus);
         BLOCK_ENTITIES.register(modBus);
         modBus.addListener(ChopNetwork::register);
         NeoForge.EVENT_BUS.addListener(TreeChopper::hit);
@@ -433,7 +436,7 @@ public final class TreeChopper {
             fall.putBoolean("leaf",leaf);
             fall.putBoolean("planned",true);
             fall.putBoolean("dynamic",!leaf);
-            if(coordinator){fall.put("landing",plan.copy());fall.putUUID("group",UUID.randomUUID());fall.putLong("base",base.asLong());fall.putBoolean("gridAllowed",gridAllowed);fall.putLongArray("roots",roots.stream().mapToLong(BlockPos::asLong).toArray());fall.putDouble("centerX",balance.centerX);fall.putDouble("centerZ",balance.centerZ);fall.putDouble("leanX",balance.leanX);fall.putDouble("leanZ",balance.leanZ);fall.putInt("guides",balance.guides);if(Double.isFinite(balance.fallingMassKg))fall.putDouble("massKg",balance.fallingMassKg);}
+            if(coordinator){fall.put("landing",plan.copy());fall.putUUID("group",UUID.randomUUID());fall.putLong("base",base.asLong());fall.putBoolean("gridAllowed",gridAllowed);fall.putUUID("owner",player.getUUID());fall.putLongArray("roots",roots.stream().mapToLong(BlockPos::asLong).toArray());fall.putDouble("centerX",balance.centerX);fall.putDouble("centerZ",balance.centerZ);fall.putDouble("leanX",balance.leanX);fall.putDouble("leanZ",balance.leanZ);fall.putInt("guides",balance.guides);if(Double.isFinite(balance.fallingMassKg))fall.putDouble("massKg",balance.fallingMassKg);}
             fall.putBoolean("coordinator",coordinator);
             fall.putBoolean("hinge",true);fall.putBoolean("cap",cap);fall.putBoolean("wholeUpper",true);
             fall.putString("direction",direction.getName());fall.putBoolean("log",piece.log);fall.putString("species",species);fall.putInt("age",0);
@@ -454,26 +457,46 @@ public final class TreeChopper {
         l.playSound(null,base,SoundEvents.WOOD_BREAK,SoundSource.BLOCKS,1.3f,.62f);
         return true;
     }
-    /** Conservative swept AABB per rotated log. No forced chunk loading or destructive collision. */
-    static boolean sweepClear(ServerLevel l,BlockPos base,BlockPos piece,Direction dir,float progress,Set<BlockPos> source){
-        Vector3f off=fallOffset(piece.getX()-base.getX(),piece.getY()-base.getY(),piece.getZ()-base.getZ(),dir,progress,false,true,true);
+    /** World-space bounds of the transformed wood, shared by display and physical collider. */
+    static AABB timberBounds(BlockPos base,BlockPos piece,Direction dir,float progress,boolean cap,double dy){
+        Vector3f off=fallOffset(piece.getX()-base.getX(),piece.getY()-base.getY(),piece.getZ()-base.getZ(),dir,progress,cap,true,true);
         Quaternionf q=rotation(dir,(float)(Math.PI*.5*progress*progress));
-        double ox=base.getX()+.5+.5*dir.getStepX()+off.x,oy=base.getY()+.25+off.y,oz=base.getZ()+.5+.5*dir.getStepZ()+off.z;
+        double ox=base.getX()+.5+.5*dir.getStepX()+off.x,oy=base.getY()+.25+off.y+dy,oz=base.getZ()+.5+.5*dir.getStepZ()+off.z;
         double minX=Double.POSITIVE_INFINITY,minY=minX,minZ=minX,maxX=Double.NEGATIVE_INFINITY,maxY=maxX,maxZ=maxX;
         for(int x=0;x<=1;x++)for(int y=0;y<=1;y++)for(int z=0;z<=1;z++){
-            Vector3f v=q.transform(new Vector3f(x,y,z));
+            Vector3f v=q.transform(new Vector3f(x,cap?y*.75f:y,z));
             minX=Math.min(minX,ox+v.x);maxX=Math.max(maxX,ox+v.x);
             minY=Math.min(minY,oy+v.y);maxY=Math.max(maxY,oy+v.y);
             minZ=Math.min(minZ,oz+v.z);maxZ=Math.max(maxZ,oz+v.z);
         }
-        double e=.001;AABB box=new AABB(minX+e,minY+e,minZ+e,maxX-e,maxY-e,maxZ-e);
+        return new AABB(minX,minY,minZ,maxX,maxY,maxZ);
+    }
+    static boolean sweepClear(ServerLevel l,BlockPos base,BlockPos piece,Direction dir,float progress,Set<BlockPos> source){
+        return sweepClear(l,base,piece,dir,progress,source,0);
+    }
+    /** Actual rotated cube vs world voxel shapes, not just its enlarged AABB.
+     * Rotation is in the vertical cardinal plane, so world and cube face normals suffice for SAT. */
+    static boolean sweepClear(ServerLevel l,BlockPos base,BlockPos piece,Direction dir,float progress,Set<BlockPos> source,double dy){
+        AABB bounds=timberBounds(base,piece,dir,progress,false,dy);
+        double e=.0001;AABB box=bounds.deflate(e);
+        var center=bounds.getCenter();
+        Quaternionf q=rotation(dir,(float)(Math.PI*.5*progress*progress));
+        Vector3f[] axes={q.transform(new Vector3f(1,0,0)),q.transform(new Vector3f(0,1,0)),q.transform(new Vector3f(0,0,1))};
         for(int x=(int)Math.floor(box.minX);x<=Math.floor(box.maxX);x++)for(int y=(int)Math.floor(box.minY);y<=Math.floor(box.maxY);y++)for(int z=(int)Math.floor(box.minZ);z<=Math.floor(box.maxZ);z++){
             BlockPos p=new BlockPos(x,y,z);
             if(source.contains(p))continue;
             if(!l.hasChunkAt(p)||l.isOutsideBuildHeight(p))return false;
             BlockState state=l.getBlockState(p);
             if(state.isAir())continue;
-            for(AABB shape:state.getCollisionShape(l,p).toAabbs())if(box.intersects(shape.move(x,y,z)))return false;
+            for(AABB shape:state.getCollisionShape(l,p).toAabbs()){
+                AABB world=shape.move(x,y,z);if(!box.intersects(world))continue;
+                Vec3 delta=world.getCenter().subtract(center);boolean separated=false;
+                for(Vector3f axis:axes){
+                    double radius=.5*(Math.abs(axis.x)*world.getXsize()+Math.abs(axis.y)*world.getYsize()+Math.abs(axis.z)*world.getZsize());
+                    if(Math.abs(delta.x*axis.x+delta.y*axis.y+delta.z*axis.z)>=.5+radius-e){separated=true;break;}
+                }
+                if(!separated)return false;
+            }
         }
         return true;
     }

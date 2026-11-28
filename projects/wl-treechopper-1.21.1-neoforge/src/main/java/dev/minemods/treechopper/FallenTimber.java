@@ -81,12 +81,6 @@ final class FallenTimber {
         if(!marker.equals(pos)){
             player.displayClientMessage(Component.translatable("message.wl_treechopper.find_notch"),true);return false;
         }
-        if(fp.hasPrevious){
-            BlockPos prior=BlockPos.of(fp.previous);
-            if(!l.hasChunkAt(prior)||same(l,prior,fp.group)){
-                player.displayClientMessage(Component.translatable("message.wl_treechopper.notch_order"),true);return false;
-            }
-        }
         if(fp.members.length==0)return single(l,player,pos,state,logBlock);
         List<BlockPos> harvest=new ArrayList<>();
         for(long cell:fp.members){
@@ -97,13 +91,67 @@ final class FallenTimber {
             harvest.add(p);
         }
         int count=0;
-        // Remove the marker last, so failures cannot unlock the next section early.
+        // Remove the marker last so a partial failure retains section ownership.
         harvest.sort(Comparator.comparing(p->p.equals(pos)));
         for(BlockPos p:harvest){
             if(l.setBlock(p,Blocks.AIR.defaultBlockState(),Block.UPDATE_ALL))count++;
         }
-        if(count>0){drop(l,pos,new ItemStack(TreeChopper.original(logBlock.species).getBlock()),count);l.playSound(null,pos,SoundEvents.WOOD_BREAK,SoundSource.BLOCKS,1f,1f);}
+        if(count>0){drop(l,pos,new ItemStack(TreeChopper.original(logBlock.species).getBlock()),count);l.playSound(null,pos,SoundEvents.WOOD_BREAK,SoundSource.BLOCKS,1f,1f);settleRemaining(l,player,fp.group,harvest);}
         return count>0;
+    }
+    private static void settleRemaining(ServerLevel l,ServerPlayer player,UUID group,List<BlockPos> removed){
+        Set<BlockPos> visited=new HashSet<>();
+        for(BlockPos gap:removed)for(int dx=-1;dx<=1;dx++)for(int dy=-1;dy<=1;dy++)for(int dz=-1;dz<=1;dz++){
+            BlockPos seed=gap.offset(dx,dy,dz);
+            if(visited.contains(seed)||!l.hasChunkAt(seed)||!same(l,seed,group))continue;
+            Set<BlockPos> component=new LinkedHashSet<>();Deque<BlockPos> queue=new ArrayDeque<>();queue.add(seed);component.add(seed);
+            boolean loaded=true;
+            while(!queue.isEmpty()){
+                BlockPos p=queue.removeFirst();
+                if(!(l.getBlockEntity(p) instanceof FallenProgress fp))continue;
+                BlockPos anchor=BlockPos.of(fp.marker);
+                if(!l.hasChunkAt(anchor)){loaded=false;continue;}
+                if(same(l,anchor,group)&&component.add(anchor))queue.add(anchor);
+                if(l.getBlockEntity(anchor) instanceof FallenProgress marker&&group.equals(marker.group))for(long member:marker.members){
+                    BlockPos cell=BlockPos.of(member);
+                    if(!l.hasChunkAt(cell)){loaded=false;continue;}
+                    if(same(l,cell,group)&&component.add(cell))queue.add(cell);
+                }
+                for(int x=-1;x<=1;x++)for(int y=-1;y<=1;y++)for(int z=-1;z<=1;z++){
+                    BlockPos next=p.offset(x,y,z);
+                    if(!l.hasChunkAt(next)){loaded=false;continue;}
+                    if(same(l,next,group)&&component.add(next))queue.add(next);
+                }
+            }
+            visited.addAll(component);if(!loaded)continue;
+            int shift=0;
+            outer: for(int step=1;step<=l.getMaxBuildHeight()-l.getMinBuildHeight();step++){
+                for(BlockPos p:component){
+                    BlockPos dest=p.below(step);
+                    if(!component.contains(dest)&&(!landable(l,dest)||!l.mayInteract(player,dest)))break outer;
+                }
+                shift=step;
+            }
+            if(shift==0)continue;
+            record Saved(BlockState state,long marker,long[] members){}
+            Map<BlockPos,Saved> saved=new LinkedHashMap<>();
+            for(BlockPos p:component)if(l.getBlockEntity(p) instanceof FallenProgress fp)
+                saved.put(p,new Saved(l.getBlockState(p),fp.marker,fp.members.clone()));
+            if(saved.size()!=component.size())continue;
+            final int fall=shift;
+            for(BlockPos p:component)l.setBlock(p,Blocks.AIR.defaultBlockState(),Block.UPDATE_CLIENTS);
+            for(var entry:saved.entrySet()){
+                BlockPos dest=entry.getKey().below(fall);Saved data=entry.getValue();
+                l.setBlock(dest,data.state(),Block.UPDATE_ALL);
+                if(l.getBlockEntity(dest) instanceof FallenProgress fp){
+                    BlockPos anchor=BlockPos.of(data.marker());
+                    long[] cells=Arrays.stream(data.members()).map(cell->component.contains(BlockPos.of(cell))?BlockPos.of(cell).below(fall).asLong():cell).toArray();
+                    fp.assign(group,component.contains(anchor)?anchor.below(fall):anchor,null,cells);
+                }
+            }
+            visited.addAll(component.stream().map(p->p.below(fall)).toList());
+            for(BlockPos p:component)l.updateNeighborsAt(p,Blocks.AIR);
+        }
     }
     private static boolean single(ServerLevel l,ServerPlayer player,BlockPos pos,BlockState state,FallenLogBlock b){
         if(!TreeChopper.allowed(l,player,pos,state)||!l.setBlock(pos,Blocks.AIR.defaultBlockState(),Block.UPDATE_ALL))return false;

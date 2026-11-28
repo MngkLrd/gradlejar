@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.6.4 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.6.5 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -8,6 +8,10 @@
     },
     {
       "wait": 3
+    },
+    {
+      "command": "fill 992 199 992 1055 199 1055 minecraft:stone",
+      "expect": "Changed the block|Successfully filled|Filled"
     },
     {
       "command": "setblock 1000 199 1000 minecraft:dirt",
@@ -118,10 +122,10 @@
       "name": "no-instant-drops"
     },
     {
-      "command": "wltreechopper qa_buck 1000 200 1003 0",
+      "command": "wltreechopper qa_buck 1000 200 1003 1",
       "expect": "TreeChopper bucking PASS",
       "assertion": true,
-      "name": "bucking-out-of-order"
+      "name": "bucking-free-order"
     },
     {
       "command": "fill 999 199 1001 1001 199 1005 minecraft:stone",
@@ -134,10 +138,10 @@
       "name": "bucking-first"
     },
     {
-      "command": "wltreechopper qa_buck 1000 200 1003 1",
+      "command": "wltreechopper qa_buck 1000 200 1003 0",
       "expect": "TreeChopper bucking PASS",
       "assertion": true,
-      "name": "bucking-second"
+      "name": "bucking-no-duplicate"
     },
     {
       "command": "wltreechopper qa_buck 1000 200 1004 1",
@@ -989,10 +993,19 @@
       "wait": 3
     },
     {
-      "name": "inclined-buck-order",
-      "command": "wltreechopper qa_inclined_buck 1026 200 1038 1 0",
+      "command": "wltreechopper qa_timber_collision 1026 200 1038",
+      "expect": "TreeChopper physical timber collision PASS",
+      "assertion": true,
+      "name": "inclined-wood-collision"
+    },
+    {
+      "name": "inclined-buck-free-order",
+      "command": "wltreechopper qa_inclined_buck 1026 200 1038 1 1",
       "expect": "TreeChopper inclined bucking PASS",
       "assertion": true
+    },
+    {
+      "wait": 2
     },
     {
       "name": "inclined-buck-first",
@@ -1001,13 +1014,19 @@
       "assertion": true
     },
     {
+      "wait": 2
+    },
+    {
       "wait": 1
     },
     {
-      "name": "inclined-buck-second",
-      "command": "wltreechopper qa_inclined_buck 1026 200 1038 1 1",
+      "name": "inclined-buck-no-duplicate",
+      "command": "wltreechopper qa_inclined_buck 1026 200 1038 1 0",
       "expect": "TreeChopper inclined bucking PASS",
       "assertion": true
+    },
+    {
+      "wait": 2
     },
     {
       "wait": 1
@@ -1120,6 +1139,37 @@
       "expect": "TreeChopper physical fallback PASS",
       "assertion": true,
       "name": "physical-api-standalone"
+    },
+    {
+      "command": "setblock 994 202 1030 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 994 203 1030 994 206 1030 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 994 207 1030 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 994 203 1030 north 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "wait": 5
+    },
+    {
+      "command": "execute if block 994 200 1028 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-terrace-landing"
+    },
+    {
+      "command": "execute if block 994 203 1028 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-no-floating-block"
     }
   ],
   "coverage": [
@@ -1927,13 +1977,13 @@
       ]
     },
     {
-      "id": "bucking-out-of-order",
+      "id": "bucking-free-order",
       "kind": "mechanic",
-      "subject": "Second marker refuses processing while first remains",
+      "subject": "Independent section processing, retained yield and protection",
       "checks": [
         {
           "backend": "server",
-          "name": "bucking-out-of-order"
+          "name": "bucking-free-order"
         }
       ]
     },
@@ -1949,13 +1999,13 @@
       ]
     },
     {
-      "id": "bucking-second",
+      "id": "bucking-no-duplicate",
       "kind": "mechanic",
-      "subject": "Second notch processes its section",
+      "subject": "Independent section processing, retained yield and protection",
       "checks": [
         {
           "backend": "server",
-          "name": "bucking-second"
+          "name": "bucking-no-duplicate"
         }
       ]
     },
@@ -2070,13 +2120,13 @@
       ]
     },
     {
-      "id": "inclined-buck-order",
+      "id": "inclined-buck-free-order",
       "kind": "mechanic",
-      "subject": "Inclined trunk section interaction and obstacle preservation: inclined-buck-order",
+      "subject": "Independent section processing, retained yield and protection",
       "checks": [
         {
           "backend": "server",
-          "name": "inclined-buck-order"
+          "name": "inclined-buck-free-order"
         }
       ]
     },
@@ -2092,13 +2142,13 @@
       ]
     },
     {
-      "id": "inclined-buck-second",
+      "id": "inclined-buck-no-duplicate",
       "kind": "mechanic",
-      "subject": "Inclined trunk section interaction and obstacle preservation: inclined-buck-second",
+      "subject": "Independent section processing, retained yield and protection",
       "checks": [
         {
           "backend": "server",
-          "name": "inclined-buck-second"
+          "name": "inclined-buck-no-duplicate"
         }
       ]
     },
@@ -2198,6 +2248,32 @@
         {
           "backend": "server",
           "name": "physical-api-standalone"
+        }
+      ]
+    },
+    {
+      "id": "inclined-wood-collision",
+      "kind": "mechanic",
+      "subject": "Resting display logs have server entity collision proxies; not pickable and registered in actual collision query",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-wood-collision"
+        }
+      ]
+    },
+    {
+      "id": "gravity-terrace",
+      "kind": "mechanic",
+      "subject": "Trunk settles onto lower terrain rather than cut height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "gravity-terrace-landing"
+        },
+        {
+          "backend": "server",
+          "name": "gravity-no-floating-block"
         }
       ]
     }

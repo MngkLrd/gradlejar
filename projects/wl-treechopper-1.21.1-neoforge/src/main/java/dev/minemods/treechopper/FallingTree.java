@@ -25,6 +25,9 @@ final class FallingTree {
     private static Direction direction(CompoundTag f){return Direction.byName(f.getString("direction"));}
     private static ListTag members(CompoundTag f){return f.getList("members",Tag.TAG_COMPOUND);}
     private static ListTag plan(CompoundTag f){return f.getList("landing",Tag.TAG_COMPOUND);}
+    private static int mask(CompoundTag f){return f.contains("processedMask")?f.getInt("processedMask"):(1<<Math.min(3,f.getInt("processed")))-1;}
+    private static boolean processed(CompoundTag f,int s){return (mask(f)&(1<<s))!=0;}
+    private static double offset(CompoundTag f,CompoundTag m){return f.getDouble("dropY")+(m==null?0:m.getDouble("extraDrop"));}
     private static int sections(CompoundTag f){return Math.min(3,plan(f).size());}
     private static int from(CompoundTag f,int s){return s*plan(f).size()/sections(f);}
     private static int to(CompoundTag f,int s){return (s+1)*plan(f).size()/sections(f);}
@@ -40,7 +43,7 @@ final class FallingTree {
         BlockPos b=base(f);Direction dir=direction(f);
         Vector3f off=TreeChopper.fallOffset(p.getX()-b.getX(),p.getY()-b.getY(),p.getZ()-b.getZ(),dir,progress,false,true,true);
         off.add(TreeChopper.rotation(dir,(float)(Math.PI*.5*progress*progress)).transform(new Vector3f(.5f,.5f,.5f)));
-        return new Vec3(b.getX()+.5+.5*dir.getStepX()+off.x,b.getY()+.25+off.y,b.getZ()+.5+.5*dir.getStepZ()+off.z);
+        return new Vec3(b.getX()+.5+.5*dir.getStepX()+off.x,b.getY()+.25+off.y+offset(f,member(f,p.asLong())),b.getZ()+.5+.5*dir.getStepZ()+off.z);
     }
     private static boolean allPresent(ServerLevel l,CompoundTag f){
         ListTag list=members(f);
@@ -56,18 +59,88 @@ final class FallingTree {
         ListTag list=members(f);
         for(int i=0;i<list.size();i++){
             CompoundTag m=list.getCompound(i);
-            if(m.getBoolean("log")&&!m.getBoolean("removed")&&!TreeChopper.sweepClear(l,base(f),BlockPos.of(m.getLong("source")),direction(f),progress,roots))return false;
+            if(m.getBoolean("log")&&!m.getBoolean("removed")&&!TreeChopper.sweepClear(l,base(f),BlockPos.of(m.getLong("source")),direction(f),progress,roots,offset(f,m)))return false;
         }
         return true;
     }
-    private static boolean gridClear(ServerLevel l,CompoundTag f){
-        if(!f.getBoolean("gridAllowed"))return false;
-        ListTag list=plan(f);
-        for(int i=0;i<list.size();i++){
-            BlockPos p=BlockPos.of(list.getCompound(i).getLong("pos"));
-            if(!FallenTimber.landable(l,p))return false;
+    private static CompoundTag landingAt(ServerLevel l,CompoundTag f){
+        if(!f.getBoolean("gridAllowed")||mask(f)!=0)return null;
+        double dy=f.getDouble("dropY");int shift=(int)Math.round(dy);
+        if(Math.abs(dy-shift)>.015)return null;
+        ServerPlayer owner=null;
+        if(shift!=0){
+            if(!f.hasUUID("owner"))return null;
+            owner=l.getServer().getPlayerList().getPlayer(f.getUUID("owner"));
+            if(owner==null){var fake=net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(l);if(fake.getUUID().equals(f.getUUID("owner")))owner=fake;}
+            if(owner==null)return null;
         }
-        return true;
+        ListTag adjusted=new ListTag();
+        for(int i=0;i<plan(f).size();i++){
+            CompoundTag entry=plan(f).getCompound(i).copy();BlockPos p=BlockPos.of(entry.getLong("pos")).offset(0,shift,0);
+            if(!FallenTimber.landable(l,p)||(owner!=null&&!l.mayInteract(owner,p)))return null;
+            entry.putLong("pos",p.asLong());adjusted.add(entry);
+        }
+        CompoundTag copy=f.copy();copy.put("landing",adjusted);return copy;
+    }
+    private static boolean canLower(ServerLevel l,CompoundTag f,List<CompoundTag> group,double amount){
+        for(CompoundTag m:group){
+            if(!TreeChopper.sweepClear(l,base(f),BlockPos.of(m.getLong("source")),direction(f),f.getFloat("progress"),Set.of(),offset(f,m)-amount))return false;
+        }
+        return !group.isEmpty();
+    }
+    private static List<List<CompoundTag>> components(CompoundTag f){
+        List<List<CompoundTag>> groups=new ArrayList<>();Map<BlockPos,CompoundTag> unseen=new HashMap<>();
+        for(int i=0;i<members(f).size();i++){
+            CompoundTag m=members(f).getCompound(i);
+            if(m.getBoolean("log")&&!m.getBoolean("removed"))unseen.put(BlockPos.of(m.getLong("source")),m);
+        }
+        while(!unseen.isEmpty()){
+            BlockPos first=unseen.keySet().iterator().next();List<CompoundTag> group=new ArrayList<>();
+            Deque<BlockPos> queue=new ArrayDeque<>();queue.add(first);group.add(unseen.remove(first));
+            while(!queue.isEmpty()){
+                BlockPos p=queue.removeFirst();
+                for(int x=-1;x<=1;x++)for(int y=-1;y<=1;y++)for(int z=-1;z<=1;z++){
+                    BlockPos next=p.offset(x,y,z);CompoundTag m=unseen.get(next);
+                    if(m!=null&&Math.abs(m.getDouble("extraDrop")-group.get(0).getDouble("extraDrop"))<.0001){group.add(unseen.remove(next));queue.add(next);}
+                }
+            }
+            groups.add(group);
+        }
+        return groups;
+    }
+    /** Gravity continues after release of the hinge, including independently supported remnants. */
+    private static boolean settle(ServerLevel l,CompoundTag f){
+        List<List<CompoundTag>> groups=components(f);boolean moved=false;
+        if(mask(f)==0){
+            List<CompoundTag> whole=new ArrayList<>();groups.forEach(whole::addAll);
+            for(int i=0;i<4;i++){if(!canLower(l,f,whole,.125))break;f.putDouble("dropY",f.getDouble("dropY")-.125);moved=true;}
+        }else for(List<CompoundTag> group:groups){
+            for(int i=0;i<4;i++){
+                if(!canLower(l,f,group,.125))break;
+                for(CompoundTag m:group)m.putDouble("extraDrop",m.getDouble("extraDrop")-.125);
+                moved=true;
+            }
+        }
+        return moved;
+    }
+    private static void removeCollider(ServerLevel l,CompoundTag m){
+        if(m.hasUUID("collider")&&l.getEntity(m.getUUID("collider")) instanceof TimberCollider collider)collider.discard();
+        m.remove("collider");
+    }
+    private static void colliders(ServerLevel l,Display.BlockDisplay master,CompoundTag f){
+        for(int i=0;i<members(f).size();i++){
+            CompoundTag m=members(f).getCompound(i);
+            if(m.getBoolean("removed")||!m.getBoolean("log")){removeCollider(l,m);continue;}
+            var box=TreeChopper.timberBounds(base(f),BlockPos.of(m.getLong("source")),direction(f),f.getFloat("progress"),false,offset(f,m));
+            if(!l.hasChunkAt(BlockPos.containing(box.getCenter())))continue;
+            TimberCollider collider=m.hasUUID("collider")&&l.getEntity(m.getUUID("collider")) instanceof TimberCollider t?t:null;
+            if(collider==null){
+                collider=TreeChopper.COLLIDER.get().create(l);if(collider==null)continue;
+                collider.owner=master.getUUID();collider.setBox(box);
+                if(!l.addFreshEntity(collider))continue;
+                m.putUUID("collider",collider.getUUID());
+            }else collider.setBox(box);
+        }
     }
     private static void pose(ServerLevel l,Display.BlockDisplay master,CompoundTag f,float progress){
         ListTag list=members(f);
@@ -79,7 +152,10 @@ final class FallingTree {
             BlockPos p=BlockPos.of(m.getLong("source"));
             CompoundTag tag=d.saveWithoutId(new CompoundTag());
             tag.putInt("interpolation_duration",2);tag.putInt("start_interpolation",0);
-            tag.put("transformation",TreeChopper.fallTransform(p.getX()-b.getX(),p.getY()-b.getY(),p.getZ()-b.getZ(),dir,progress,m.getBoolean("cap"),true,true));
+            CompoundTag transform=TreeChopper.fallTransform(p.getX()-b.getX(),p.getY()-b.getY(),p.getZ()-b.getZ(),dir,progress,m.getBoolean("cap"),true,true);
+            ListTag translation=transform.getList("translation",Tag.TAG_FLOAT);
+            translation.set(1,FloatTag.valueOf(translation.getFloat(1)+(float)offset(f,m)));
+            tag.put("transformation",transform);
             d.load(tag);
         }
         // load() replaces the persistent tag; retain the authoritative coordinator state.
@@ -102,7 +178,8 @@ final class FallingTree {
     private static void markers(ServerLevel l,Display.BlockDisplay master,CompoundTag f){
         if(f.contains("markers")||sections(f)==0)return;
         ListTag marks=new ListTag();ListTag landing=plan(f);
-        for(int s=f.getInt("processed");s<sections(f);s++){
+        for(int s=0;s<sections(f);s++){
+            if(processed(f,s))continue;
             int i=from(f,s)+(to(f,s)-from(f,s)-1)/2;
             CompoundTag entry=landing.getCompound(i);long source=entry.getLong("source");
             CompoundTag m=member(f,source);if(m==null)continue;
@@ -125,35 +202,37 @@ final class FallingTree {
     private static void discard(ServerLevel l,Display.BlockDisplay master,CompoundTag f){
         removeMarkers(l,f,false);
         ListTag list=members(f);
-        for(int i=0;i<list.size();i++){Display.BlockDisplay d=display(l,list.getCompound(i));if(d!=null&&d!=master)d.discard();}
+        for(int i=0;i<list.size();i++){CompoundTag m=list.getCompound(i);removeCollider(l,m);Display.BlockDisplay d=display(l,m);if(d!=null&&d!=master)d.discard();}
         master.discard();
     }
     static void tick(ServerLevel l,Display.BlockDisplay master,CompoundTag f){
         if(direction(f)==null||members(f).isEmpty())return;
-        if(!allPresent(l,f))return; // preserve the group until its entities are loaded.
-        float old=f.getFloat("progress");
-        if(f.getInt("processed")>0){markers(l,master,f);return;}
-        if(master.getTags().contains(REST)&&l.getGameTime()%5!=0)return;
-        float next=old;
-        float goal=Math.min(1f,old+1f/36f);
-        // Small bounded steps; the high end of a tall tree moves much farther than its base.
-        int subdivisions=4;
-        for(int i=1;i<=subdivisions;i++){
-            float candidate=old+(goal-old)*i/subdivisions;
-            if(!clearAt(l,f,candidate))break;
-            next=candidate;
+        if(!allPresent(l,f))return;
+        float old=f.getFloat("progress"),next=old;
+        boolean wasRest=master.getTags().contains(REST);
+        if(wasRest&&l.getGameTime()%5!=0){colliders(l,master,f);return;}
+        if(mask(f)==0){
+            float goal=Math.min(1f,old+1f/36f);
+            for(int i=1;i<=4;i++){
+                float candidate=old+(goal-old)*i/4;
+                if(!clearAt(l,f,candidate))break;
+                next=candidate;
+            }
         }
-        if(next>old+.00001f){
-            removeMarkers(l,f,true);master.removeTag(REST);
-            f.putFloat("progress",next);pose(l,master,f,next);
+        f.putFloat("progress",next);
+        boolean rotating=next>old+.00001f;
+        boolean descending=(mask(f)!=0||next>=.99999f||!rotating)&&settle(l,f);
+        if(rotating||descending){
+            removeMarkers(l,f,true);master.removeTag(REST);pose(l,master,f,next);
         }
-        if(next>=.99999f&&gridClear(l,f)){
-            if(FallenTimber.land(l,base(f),f))discard(l,master,f);
-            return;
+        if(!descending&&next>=.99999f&&mask(f)==0){
+            CompoundTag landing=landingAt(l,f);
+            if(landing!=null&&FallenTimber.land(l,base(f),landing)){discard(l,master,f);return;}
         }
-        if(next<=old+.00001f||next>=.99999f){
+        colliders(l,master,f);
+        if(!rotating&&!descending){
             boolean first=master.addTag(REST);
-            if(first)l.playSound(null,base(f),SoundEvents.WOOD_BREAK,SoundSource.BLOCKS,1.3f,.6f);
+            if(first&&!wasRest)l.playSound(null,base(f),SoundEvents.WOOD_BREAK,SoundSource.BLOCKS,1.3f,.6f);
             markers(l,master,f);
         }
         master.getPersistentData().put(TreeChopper.FALL,f);
@@ -168,9 +247,7 @@ final class FallingTree {
         CompoundTag f=master.getPersistentData().getCompound(TreeChopper.FALL);
         if(!master.getTags().contains(REST)||!allPresent(l,f))return;
         int s=data.getInt("section");
-        if(s<0||s>=sections(f)||s!=f.getInt("processed")){
-            player.displayClientMessage(Component.translatable("message.wl_treechopper.notch_order"),true);return;
-        }
+        if(s<0||s>=sections(f)||processed(f,s))return;
         ListTag marks=f.getList("markers",Tag.TAG_COMPOUND);
         boolean valid=false;
         for(int i=0;i<marks.size();i++){CompoundTag m=marks.getCompound(i);if(m.hasUUID("entity")&&marker.getUUID().equals(m.getUUID("entity")))valid=true;}
@@ -188,16 +265,27 @@ final class FallingTree {
             harvest.add(m);
         }
         if(harvest.isEmpty())return;
-        for(CompoundTag m:harvest){Display.BlockDisplay d=display(l,m);if(d!=null)d.discard();m.putBoolean("removed",true);}
-        f.putInt("processed",s+1);f.putLong("lastBuck",l.getGameTime());
+        for(CompoundTag m:harvest){removeCollider(l,m);Display.BlockDisplay d=display(l,m);if(d!=null)d.discard();m.putBoolean("removed",true);}
+        int done=mask(f)|(1<<s);f.putInt("processedMask",done);f.putInt("processed",Integer.bitCount(done));f.putLong("lastBuck",l.getGameTime());
+        // Decorative root caps must not hang in space after their supporting logs have been cut.
+        for(int i=0;i<members(f).size();i++){
+            CompoundTag cap=members(f).getCompound(i);
+            if(!cap.getBoolean("cap")||cap.getBoolean("removed"))continue;
+            BlockPos p=BlockPos.of(cap.getLong("source"));boolean attached=false;
+            for(int j=0;j<members(f).size();j++){
+                CompoundTag m=members(f).getCompound(j);
+                if(m.getBoolean("log")&&!m.getBoolean("removed")&&BlockPos.of(m.getLong("source")).distManhattan(p)==1){attached=true;break;}
+            }
+            if(!attached){Display.BlockDisplay d=display(l,cap);if(d==master){model(l,cap,NbtUtils.writeBlockState(net.minecraft.world.level.block.Blocks.AIR.defaultBlockState()));d.removeTag("wl_treechopper_cut_cap");}else if(d!=null)d.discard();cap.putBoolean("removed",true);}
+        }
         BlockPos dropAt=BlockPos.containing(marker.position());ItemStack log=new ItemStack(TreeChopper.original(f.getString("species")).getBlock());
         int count=harvest.size();
         while(count>0&&!log.isEmpty()){int n=Math.min(count,log.getMaxStackSize());Block.popResource(l,dropAt,log.copyWithCount(n));count-=n;}
         ((ChopSwing)player).wl$markSwing();if(!(player instanceof FakePlayer))PacketDistributor.sendToPlayersTrackingEntityAndSelf(player,new ChopNetwork.Swing(player.getId()));
         player.swing(InteractionHand.MAIN_HAND,true);
         l.playSound(null,dropAt,SoundEvents.WOOD_BREAK,SoundSource.BLOCKS,1f,1f);
-        marker.discard();
-        if(s+1>=sections(f))discard(l,master,f);
-        else master.getPersistentData().put(TreeChopper.FALL,f);
+        removeMarkers(l,f,true);
+        if(Integer.bitCount(done)>=sections(f))discard(l,master,f);
+        else{master.removeTag(REST);master.getPersistentData().put(TreeChopper.FALL,f);}
     }
 }

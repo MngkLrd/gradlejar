@@ -47,7 +47,7 @@ final class TreeQA {
             var marks=f.getList("markers",net.minecraft.nbt.Tag.TAG_COMPOUND);
             net.minecraft.world.entity.Interaction marker=null;
             for(int i=0;i<marks.size();i++){var mark=marks.getCompound(i);if(mark.getInt("section")==section&&l.getEntity(mark.getUUID("entity")) instanceof net.minecraft.world.entity.Interaction e2)marker=e2;}
-            if(marker==null)return 0;
+            if(marker==null){if(!expected&&(f.getInt("processedMask")&(1<<section))!=0){c.getSource().sendSuccess(()->Component.literal("TreeChopper inclined bucking PASS"),false);return 1;}return 0;}
             var fake=FakePlayerFactory.getMinecraft(l);fake.setPos(marker.getX(),marker.getY()-1,marker.getZ()-1);
             ItemStack axe=new ItemStack(Items.IRON_AXE);fake.setItemSlot(EquipmentSlot.MAINHAND,axe);
             NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.player.AttackEntityEvent(fake,marker));
@@ -56,6 +56,14 @@ final class TreeQA {
             }
             c.getSource().sendSuccess(()->Component.literal("TreeChopper inclined bucking PASS"),false);return 1;
           })))))
+          .then(Commands.literal("qa_timber_collision").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            var list=l.getEntitiesOfClass(TimberCollider.class,new net.minecraft.world.phys.AABB(p).inflate(8),t->t.isAlive());
+            if(list.isEmpty()||list.stream().anyMatch(t->!t.canBeCollidedWith()||t.isPickable()))return 0;
+            var fake=FakePlayerFactory.getMinecraft(l);var box=list.get(0).getBoundingBox();
+            if(l.getEntityCollisions(fake,box.deflate(.05)).isEmpty())return 0;
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper physical timber collision PASS"),false);return 1;
+          })))
           .then(Commands.literal("qa_multi").then(Commands.argument("pos",BlockPosArgument.blockPos()).then(Commands.argument("width",IntegerArgumentType.integer(2,3)).executes(c->{
             ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");int width=IntegerArgumentType.getInteger(c,"width");
             var fake=FakePlayerFactory.getMinecraft(l);

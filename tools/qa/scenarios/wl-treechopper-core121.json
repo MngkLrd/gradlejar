@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "TreeChopper 0.6.4 with exact Core 1.2.1 candidate; separate runtime scenario",
+  "name": "TreeChopper 0.6.5 with exact Core 1.2.1 candidate; separate runtime scenario",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
