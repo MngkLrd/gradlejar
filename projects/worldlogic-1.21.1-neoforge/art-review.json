@@ -1,0 +1,462 @@
+{
+  "schema": 1,
+  "assets": {
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/alluvial_silt.png": {
+      "sha256": "a4c24a7843c582facb63169a8a47ee547399303efd72b0e93a6e5e3e2094bc62",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/clay",
+          "minecraft": "1.21.1",
+          "sha256": "9684ba263ef0878ecdb5447cefc518c3f2509ab361b93f9851e9dbe3b8fcf855"
+        },
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        }
+      ],
+      "comparison": "Vanilla clay uses fine low-contrast mineral patches; the silt uses similarly quiet transitions in tan, with short interrupted beds instead of the former parallel bands.",
+      "findings": {
+        "silhouette": "Fine compact sediment rather than raised stones or granular dirt.",
+        "cluster_structure": "Short flattened deposits interlock with smaller irregular midtone gaps; center gray lens is embedded.",
+        "micro_contrast": "Light tan edges around upper-left deposit turn into adjacent ochre midtone rather than white accents.",
+        "light_and_volume": "Low relief indicated by a narrow pale upper plane on each major sediment body and a muted edge below.",
+        "material_continuity": "Warm mineral base remains continuous through gray sediment inclusion around x7–10, y7–8.",
+        "edge_variation": "Broken short beds terminate at different offsets, avoiding uninterrupted horizontal stripes.",
+        "variant_identity": "Tan fine sediment has flatter, less contrasty structure than loam and humus.",
+        "vanilla_comparison": "Vanilla clay comparison at native size shows restrained tonal differences, with warm silt rather than blue clay.",
+        "aggregate_structure": "Elongated small mineral aggregates vary in length and neighboring value.",
+        "tile_rhythm": "3x3 tiled review shows short recurring beds but no uninterrupted hard seam or full-width stripe."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Small interrupted sediment beds use contiguous tan midtones rather than isolated random dots.",
+        "reference_limit": "Dirt's darker angular clods are unsuitable for fine silt; the clay-like flatter plane remains the material-specific distinction.",
+        "native_view": "Vanilla clay comparison at native size shows restrained tonal differences, with warm silt rather than blue clay.",
+        "context_view": "3x3 tiled review shows short recurring beds but no uninterrupted hard seam or full-width stripe.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/frozen_soil.png": {
+      "sha256": "bbf53556a5de57590222335d3b93b626a176183d59a9fd29ab9a6ef84b6438fc",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/rooted_dirt",
+          "minecraft": "1.21.1",
+          "sha256": "26cf902a828def31843782e171d638894dc8e408aeae2133d8a1ceb0073e407d"
+        },
+        {
+          "id": "minecraft:block/snow",
+          "minecraft": "1.21.1",
+          "sha256": "05201107fc2c60db4dc59f778a9ca7cb6101b2a332da696b33ce4b0cd2a02019"
+        },
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        }
+      ],
+      "comparison": "Rooted dirt preserves brown earth around organic inclusions; frozen soil similarly keeps its host readable, replacing former broad pale blobs with narrow desaturated icy fissures. Snow is a cool-value reference, not a copied white palette.",
+      "findings": {
+        "silhouette": "Brown compact earth remains the predominant surface; ice reads as seams within it.",
+        "cluster_structure": "Several earth clods interlock with short irregular frost lenses, including a branching upper-left seam.",
+        "micro_contrast": "Muted gray-green transition pixels surround small pale blue cores.",
+        "light_and_volume": "The ice center is brighter than its shaded boundary; brown clods have shallow upper highlights.",
+        "material_continuity": "Frost occupies a small fraction of the soil and stays bounded by neutral intermediate pixels.",
+        "edge_variation": "Upper-left branch, right lens, lower-left wedge and bottom fissure have different contours.",
+        "variant_identity": "Distinguishes frozen soil by cold inclusions and cooler earth, not by painting the entire surface white.",
+        "vanilla_comparison": "Rooted dirt and snow viewed at equal native scale show useful embedded contrast and cool ramp behavior respectively.",
+        "aggregate_structure": "Clods retain earthy irregular dark recesses while ice follows interstitial gaps.",
+        "tile_rhythm": "Repeated tile keeps the soil base continuous; frost shapes recur at block cadence but do not form broad white spots."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "cold_surface",
+        "reference": "minecraft:block/snow",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Restrained pale blue frost cores use closely related cool boundary tones against compact brown soil.",
+        "reference_limit": "The snow reference is a cool-value ramp, not an instruction to cover the brown host with white.",
+        "native_view": "Rooted dirt and snow viewed at equal native scale show useful embedded contrast and cool ramp behavior respectively.",
+        "context_view": "Repeated tile keeps the soil base continuous; frost shapes recur at block cadence but do not form broad white spots.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/humus.png": {
+      "sha256": "fd022d204ba8aa63916e573c2d732e15ab428376a5a260a0426ab24a388fecb4",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        },
+        {
+          "id": "minecraft:block/rooted_dirt",
+          "minecraft": "1.21.1",
+          "sha256": "26cf902a828def31843782e171d638894dc8e408aeae2133d8a1ceb0073e407d"
+        }
+      ],
+      "comparison": "Compared to actual dirt, the warm brown palette and small embedded gray particle retain material continuity while narrower dark cavities and varied clod edges give humus a darker organic appearance without the old flat repeated pattern.",
+      "findings": {
+        "silhouette": "Irregular earth crumbs read as friable organic soil rather than cobblestone.",
+        "cluster_structure": "Primary aggregates vary in size; small dark recesses separate the clods around the upper center and lower center.",
+        "micro_contrast": "A few warm highlights mark turning planes, with mid-brown adjacent pixels mediating the contrast.",
+        "light_and_volume": "Highlights on the upper edge of selected clods contrast with dark crevices instead of uniform pillow shading.",
+        "material_continuity": "Brown base is close to vanilla dirt; one subdued gray inclusion is contained within a clod boundary.",
+        "edge_variation": "Clods are nonidentical and several cross the tile edges rather than ending in a straight frame.",
+        "variant_identity": "Darker and more crumbly than loam; no pale ice or sediment lenses.",
+        "vanilla_comparison": "At 1x and enlarged scale the new warm brown ramp sits closer to dirt than the old flat four-color pattern.",
+        "aggregate_structure": "Small connected soil crumbs with visible interstitial shadows, especially center and bottom.",
+        "tile_rhythm": "3x3 tiling shows no rectangular frame; adjoining vanilla dirt retains a compatible brown hue although a horizon contrast remains."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Unequal interlocked earth crumbs with narrow dark recesses use the dirt aggregate construction principle.",
+        "reference_limit": "Humus needs darker organic cavities than dirt, not exact reproduction of vanilla mineral speckles.",
+        "native_view": "At 1x and enlarged scale the new warm brown ramp sits closer to dirt than the old flat four-color pattern.",
+        "context_view": "3x3 tiling shows no rectangular frame; adjoining vanilla dirt retains a compatible brown hue although a horizon contrast remains.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/loam.png": {
+      "sha256": "2a305b5101da135c03b437036ec9602d969120c62b00069283966f3132badd86",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        }
+      ],
+      "comparison": "The actual vanilla dirt reference is more contrasty and stone-speckled; loam retains its brown identity with brighter ochre planes and smaller, shallower crevices instead of a recolor of humus.",
+      "findings": {
+        "silhouette": "Friable warm mineral soil formed by flatter angular crumb faces.",
+        "cluster_structure": "Several broad light planes and dark irregular seams interlock; one small gray fragment lies at the right center.",
+        "micro_contrast": "Restrained tan highlights and adjacent orange-brown transitions soften the individual aggregate boundaries.",
+        "light_and_volume": "Light along selected upper edges creates low relief; recessed pixels are localized instead of outlining every clod.",
+        "material_continuity": "Warm continuous brown background surrounds one small mineral-colored fragment.",
+        "edge_variation": "Clods at upper-left, middle and lower-right have different widths and contours.",
+        "variant_identity": "Lighter ochre and shallower cavities separate loam from dark humus and peat.",
+        "vanilla_comparison": "Native-scale comparison with dirt retains earthy orange hue while reducing its strong dark mottling.",
+        "aggregate_structure": "Mineral crumbs and shallow recesses suggest a mixed sand/clay soil rather than packed stones.",
+        "tile_rhythm": "3x3 tiled preview retains a quiet repeated ground rhythm; edge clods cross tile boundaries and no black border occurs."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Unequal angular crumb planes and localized ochre turning edges retain a coherent warm dirt-family aggregate structure.",
+        "reference_limit": "Loam has shallower crevices and lighter mineral planes than dirt; do not copy the darker dirt distribution.",
+        "native_view": "Native-scale comparison with dirt retains earthy orange hue while reducing its strong dark mottling.",
+        "context_view": "3x3 tiled preview retains a quiet repeated ground rhythm; edge clods cross tile boundaries and no black border occurs.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/peat.png": {
+      "sha256": "729dc63356a69d01077566bd6295a7c83db25795c9378b9f385c2d2f9f3d92ca",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/mud",
+          "minecraft": "1.21.1",
+          "sha256": "758f2c1e87cc21f7a59a58d0ef1addb4d16fe120f8e311470ca43793301b49c9"
+        },
+        {
+          "id": "minecraft:block/rooted_dirt",
+          "minecraft": "1.21.1",
+          "sha256": "26cf902a828def31843782e171d638894dc8e408aeae2133d8a1ceb0073e407d"
+        }
+      ],
+      "comparison": "Vanilla mud establishes a dark wet material and rooted dirt provides embedded organic cues; peat uses brown-black recesses with muted short fibers rather than gray mud or the old diagonal bands.",
+      "findings": {
+        "silhouette": "Dark compressed organic clods, with sparse root-like traces visible on the surface.",
+        "cluster_structure": "Short fibers cross several irregular flattened clods and interrupt the darker cavities.",
+        "micro_contrast": "Warm brown tips contrast locally against deep charcoal-brown recesses without bright isolated stone specks.",
+        "light_and_volume": "Selective upper-plane brown accents give compressed material shallow relief.",
+        "material_continuity": "Dark earth stays continuous and the fiber tones remain within its brown material family.",
+        "edge_variation": "Short crooked traces change direction and length rather than extending across the whole block.",
+        "variant_identity": "Peat is darker and more fibrous than humus; no mineral-gray inclusion or pale frost.",
+        "vanilla_comparison": "Same-scale mud comparison shows similar low overall brightness but a warmer and more organic structure.",
+        "aggregate_structure": "Interlocked dark clumps have compressed fiber-like edges and shadowed gaps.",
+        "tile_rhythm": "3x3 repeat has a dark coherent rhythm; there are no straight full-width stripe seams."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/rooted_dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Compressed irregular clods use sparse embedded crooked fiber traces, like the root inclusions in rooted dirt.",
+        "reference_limit": "Rooted dirt is a construction reference for embedded organics, not a palette target; peat stays dark and wet.",
+        "native_view": "Same-scale mud comparison shows similar low overall brightness but a warmer and more organic structure.",
+        "context_view": "3x3 repeat has a dark coherent rhythm; there are no straight full-width stripe seams.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/white_sand.png": {
+      "sha256": "2f46cd1c6e7599ee995cd88b5cd128c66f612a1e78fc3b17db01b0cd0eca0cfb",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/sand",
+          "minecraft": "1.21.1",
+          "sha256": "8875040fbee9e8c40ef1d6472e1548230d9ef1bad32d58e4e2fa857f1ae08027"
+        }
+      ],
+      "comparison": "Viewed native 16px, enlarged and tiled alongside verified sand: much paler than vanilla sand, small compact groups instead of broad yellow flecks.",
+      "findings": {
+        "silhouette": "Solid cube surface of cream and pale ivory grains; no cutout or border.",
+        "cluster_structure": "subtle fine L-shaped carbonate grains, a pale fleck near the upper left; neighboring shades interlock.",
+        "micro_contrast": "Restrained five-color cream and pale ivory grains ramp, dark contacts are localized instead of outlining every fragment.",
+        "light_and_volume": "Small lighter upper planes over midtones and lower recessed pixels communicate shallow material relief in subtle fine L-shaped carbonate grains, a pale fleck near the upper left.",
+        "material_continuity": "Continuous cream and pale ivory grains background remains between clusters, no isolated foreign-colored specks.",
+        "edge_variation": "Short stepped motifs rotate or mirror at unequal positions; one passes the tile edge.",
+        "variant_identity": "much paler than vanilla sand, small compact groups instead of broad yellow flecks; distinct material palette and local motif from other ground variants.",
+        "vanilla_comparison": "Reference sand was opened and hash-checked; much paler than vanilla sand, small compact groups instead of broad yellow flecks.",
+        "aggregate_structure": "subtle fine L-shaped carbonate grains, a pale fleck near the upper left; smaller particle groups distinguish material scale.",
+        "tile_rhythm": "3x3 tiled view shows the repeated grain pattern of cream and pale ivory grains but no full-width hard seam or border."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/sand",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Interlocked restrained aggregate shades and subtle fine L-shaped carbonate grains, a pale fleck near the upper left.",
+        "reference_limit": "much paler than vanilla sand, small compact groups instead of broad yellow flecks; material-specific scale retained rather than copying the reference pixel layout.",
+        "native_view": "16px sample reads as cream and pale ivory grains; nearest-neighbor enlargement reveals short irregular plane edges.",
+        "context_view": "Inspected a 3x3 wall: repeated clusters are visible, but continuous background crosses tile boundaries without a hard seam.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/volcanic_sand.png": {
+      "sha256": "246f1ef7a15162b00065f09501b9fc4dfb04e402c14a8b34c07ec58c462a9d12",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/sand",
+          "minecraft": "1.21.1",
+          "sha256": "8875040fbee9e8c40ef1d6472e1548230d9ef1bad32d58e4e2fa857f1ae08027"
+        }
+      ],
+      "comparison": "Viewed native 16px, enlarged and tiled alongside verified sand: dark basaltic fragments with stronger local contrast than pale vanilla sand.",
+      "findings": {
+        "silhouette": "Solid cube surface of charcoal and warm slate granules; no cutout or border.",
+        "cluster_structure": "angular dark grit, offset tiny light gray planes near upper left and center; neighboring shades interlock.",
+        "micro_contrast": "Restrained five-color charcoal and warm slate granules ramp, dark contacts are localized instead of outlining every fragment.",
+        "light_and_volume": "Small lighter upper planes over midtones and lower recessed pixels communicate shallow material relief in angular dark grit, offset tiny light gray planes near upper left and center.",
+        "material_continuity": "Continuous charcoal and warm slate granules background remains between clusters, no isolated foreign-colored specks.",
+        "edge_variation": "Short stepped motifs rotate or mirror at unequal positions; one passes the tile edge.",
+        "variant_identity": "dark basaltic fragments with stronger local contrast than pale vanilla sand; distinct material palette and local motif from other ground variants.",
+        "vanilla_comparison": "Reference sand was opened and hash-checked; dark basaltic fragments with stronger local contrast than pale vanilla sand.",
+        "aggregate_structure": "angular dark grit, offset tiny light gray planes near upper left and center; smaller particle groups distinguish material scale.",
+        "tile_rhythm": "3x3 tiled view shows the repeated grain pattern of charcoal and warm slate granules but no full-width hard seam or border."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/sand",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Interlocked restrained aggregate shades and angular dark grit, offset tiny light gray planes near upper left and center.",
+        "reference_limit": "dark basaltic fragments with stronger local contrast than pale vanilla sand; material-specific scale retained rather than copying the reference pixel layout.",
+        "native_view": "16px sample reads as charcoal and warm slate granules; nearest-neighbor enlargement reveals short irregular plane edges.",
+        "context_view": "Inspected a 3x3 wall: repeated clusters are visible, but continuous background crosses tile boundaries without a hard seam.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/chernozem.png": {
+      "sha256": "e2ef981fb5feb8530b8f085cca97c486319185df1e3ca6d8a22fb6e75bc62560",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        }
+      ],
+      "comparison": "Viewed native 16px, enlarged and tiled alongside verified dirt: darker humus-rich soil with no conspicuous gray pebbles unlike vanilla dirt.",
+      "findings": {
+        "silhouette": "Solid cube surface of deep brown organic crumbs; no cutout or border.",
+        "cluster_structure": "interlocked broad chocolate-brown clods and dark localized recesses; neighboring shades interlock.",
+        "micro_contrast": "Restrained five-color deep brown organic crumbs ramp, dark contacts are localized instead of outlining every fragment.",
+        "light_and_volume": "Small lighter upper planes over midtones and lower recessed pixels communicate shallow material relief in interlocked broad chocolate-brown clods and dark localized recesses.",
+        "material_continuity": "Continuous deep brown organic crumbs background remains between clusters, no isolated foreign-colored specks.",
+        "edge_variation": "Short stepped motifs rotate or mirror at unequal positions; one passes the tile edge.",
+        "variant_identity": "darker humus-rich soil with no conspicuous gray pebbles unlike vanilla dirt; distinct material palette and local motif from other ground variants.",
+        "vanilla_comparison": "Reference dirt was opened and hash-checked; darker humus-rich soil with no conspicuous gray pebbles unlike vanilla dirt.",
+        "aggregate_structure": "interlocked broad chocolate-brown clods and dark localized recesses; larger mineral/organic aggregate planes distinguish material scale.",
+        "tile_rhythm": "3x3 tiled view shows the repeated grain pattern of deep brown organic crumbs but no full-width hard seam or border."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Interlocked restrained aggregate shades and interlocked broad chocolate-brown clods and dark localized recesses.",
+        "reference_limit": "darker humus-rich soil with no conspicuous gray pebbles unlike vanilla dirt; material-specific scale retained rather than copying the reference pixel layout.",
+        "native_view": "16px sample reads as deep brown organic crumbs; nearest-neighbor enlargement reveals short irregular plane edges.",
+        "context_view": "Inspected a 3x3 wall: repeated clusters are visible, but continuous background crosses tile boundaries without a hard seam.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/sandy_loam.png": {
+      "sha256": "12dc2ab402a5edebe23277ba5f0f7d8f477bc29b2a50a763836b99e165cb0dcd",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/sand",
+          "minecraft": "1.21.1",
+          "sha256": "8875040fbee9e8c40ef1d6472e1548230d9ef1bad32d58e4e2fa857f1ae08027"
+        }
+      ],
+      "comparison": "Viewed native 16px, enlarged and tiled alongside verified sand: coarser and darker crumb planes than the fine vanilla sand granules.",
+      "findings": {
+        "silhouette": "Solid cube surface of warm ochre mineral crumbs; no cutout or border.",
+        "cluster_structure": "larger tan clumps with small darker corner crevices; neighboring shades interlock.",
+        "micro_contrast": "Restrained five-color warm ochre mineral crumbs ramp, dark contacts are localized instead of outlining every fragment.",
+        "light_and_volume": "Small lighter upper planes over midtones and lower recessed pixels communicate shallow material relief in larger tan clumps with small darker corner crevices.",
+        "material_continuity": "Continuous warm ochre mineral crumbs background remains between clusters, no isolated foreign-colored specks.",
+        "edge_variation": "Short stepped motifs rotate or mirror at unequal positions; one passes the tile edge.",
+        "variant_identity": "coarser and darker crumb planes than the fine vanilla sand granules; distinct material palette and local motif from other ground variants.",
+        "vanilla_comparison": "Reference sand was opened and hash-checked; coarser and darker crumb planes than the fine vanilla sand granules.",
+        "aggregate_structure": "larger tan clumps with small darker corner crevices; larger mineral/organic aggregate planes distinguish material scale.",
+        "tile_rhythm": "3x3 tiled view shows the repeated grain pattern of warm ochre mineral crumbs but no full-width hard seam or border."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/sand",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Interlocked restrained aggregate shades and larger tan clumps with small darker corner crevices.",
+        "reference_limit": "coarser and darker crumb planes than the fine vanilla sand granules; material-specific scale retained rather than copying the reference pixel layout.",
+        "native_view": "16px sample reads as warm ochre mineral crumbs; nearest-neighbor enlargement reveals short irregular plane edges.",
+        "context_view": "Inspected a 3x3 wall: repeated clusters are visible, but continuous background crosses tile boundaries without a hard seam.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/laterite.png": {
+      "sha256": "e45c5352e13f9ab33e02bf1edeeb373e86e46ddbcc1d9529111ea6b743876020",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/dirt",
+          "minecraft": "1.21.1",
+          "sha256": "1f0f0e619e7dfe683ea45b9254859f14b0ed5f1debdb242ea878828575be5bf0"
+        }
+      ],
+      "comparison": "Viewed native 16px, enlarged and tiled alongside verified dirt: warmer reddish and less pebbled than vanilla dirt.",
+      "findings": {
+        "silhouette": "Solid cube surface of iron-oxide orange and rust soil; no cutout or border.",
+        "cluster_structure": "irregular rust-orange aggregate planes with dark russet recesses; neighboring shades interlock.",
+        "micro_contrast": "Restrained five-color iron-oxide orange and rust soil ramp, dark contacts are localized instead of outlining every fragment.",
+        "light_and_volume": "Small lighter upper planes over midtones and lower recessed pixels communicate shallow material relief in irregular rust-orange aggregate planes with dark russet recesses.",
+        "material_continuity": "Continuous iron-oxide orange and rust soil background remains between clusters, no isolated foreign-colored specks.",
+        "edge_variation": "Short stepped motifs rotate or mirror at unequal positions; one passes the tile edge.",
+        "variant_identity": "warmer reddish and less pebbled than vanilla dirt; distinct material palette and local motif from other ground variants.",
+        "vanilla_comparison": "Reference dirt was opened and hash-checked; warmer reddish and less pebbled than vanilla dirt.",
+        "aggregate_structure": "irregular rust-orange aggregate planes with dark russet recesses; larger mineral/organic aggregate planes distinguish material scale.",
+        "tile_rhythm": "3x3 tiled view shows the repeated grain pattern of iron-oxide orange and rust soil but no full-width hard seam or border."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/dirt",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Interlocked restrained aggregate shades and irregular rust-orange aggregate planes with dark russet recesses.",
+        "reference_limit": "warmer reddish and less pebbled than vanilla dirt; material-specific scale retained rather than copying the reference pixel layout.",
+        "native_view": "16px sample reads as iron-oxide orange and rust soil; nearest-neighbor enlargement reveals short irregular plane edges.",
+        "context_view": "Inspected a 3x3 wall: repeated clusters are visible, but continuous background crosses tile boundaries without a hard seam.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/volcanic_ash.png": {
+      "sha256": "b678e441492c06c4d805c126f849b5531cd8622c4328eb3a16b60c8e312d5ab7",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/sand",
+          "minecraft": "1.21.1",
+          "sha256": "8875040fbee9e8c40ef1d6472e1548230d9ef1bad32d58e4e2fa857f1ae08027"
+        }
+      ],
+      "comparison": "Viewed native 16px, enlarged and tiled alongside verified sand: gray and less saturated than vanilla sand, soft fine grain rather than coarse grit.",
+      "findings": {
+        "silhouette": "Solid cube surface of muted warm gray fine particles; no cutout or border.",
+        "cluster_structure": "fine low-relief gray groups and scattered dark short marks; neighboring shades interlock.",
+        "micro_contrast": "Restrained five-color muted warm gray fine particles ramp, dark contacts are localized instead of outlining every fragment.",
+        "light_and_volume": "Small lighter upper planes over midtones and lower recessed pixels communicate shallow material relief in fine low-relief gray groups and scattered dark short marks.",
+        "material_continuity": "Continuous muted warm gray fine particles background remains between clusters, no isolated foreign-colored specks.",
+        "edge_variation": "Short stepped motifs rotate or mirror at unequal positions; one passes the tile edge.",
+        "variant_identity": "gray and less saturated than vanilla sand, soft fine grain rather than coarse grit; distinct material palette and local motif from other ground variants.",
+        "vanilla_comparison": "Reference sand was opened and hash-checked; gray and less saturated than vanilla sand, soft fine grain rather than coarse grit.",
+        "aggregate_structure": "fine low-relief gray groups and scattered dark short marks; smaller particle groups distinguish material scale.",
+        "tile_rhythm": "3x3 tiled view shows the repeated grain pattern of muted warm gray fine particles but no full-width hard seam or border."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "ground_aggregates",
+        "reference": "minecraft:block/sand",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Interlocked restrained aggregate shades and fine low-relief gray groups and scattered dark short marks.",
+        "reference_limit": "gray and less saturated than vanilla sand, soft fine grain rather than coarse grit; material-specific scale retained rather than copying the reference pixel layout.",
+        "native_view": "16px sample reads as muted warm gray fine particles; nearest-neighbor enlargement reveals short irregular plane edges.",
+        "context_view": "Inspected a 3x3 wall: repeated clusters are visible, but continuous background crosses tile boundaries without a hard seam.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/volcanic_tuff.png": {
+      "sha256": "b727e382a198760834b82d604cf2cf5c7bff3f2ccb254d0bf08bc0f187345d91",
+      "verdict": "PASS",
+      "material_profile": "soil",
+      "references": [
+        {
+          "id": "minecraft:block/stone",
+          "minecraft": "1.21.1",
+          "sha256": "33ac70ba8cb701087642a12c5fd29c1ba3006dc4730e9b014ed3a19ce7cdda7b"
+        }
+      ],
+      "comparison": "Viewed native 16px, enlarged and tiled alongside verified stone: warmer porous aggregate than vanilla stone's gray broad faces.",
+      "findings": {
+        "silhouette": "Solid cube surface of gray-brown consolidated fragments; no cutout or border.",
+        "cluster_structure": "larger irregular compressed planes and dark pores; neighboring shades interlock.",
+        "micro_contrast": "Restrained five-color gray-brown consolidated fragments ramp, dark contacts are localized instead of outlining every fragment.",
+        "light_and_volume": "Small lighter upper planes over midtones and lower recessed pixels communicate shallow material relief in larger irregular compressed planes and dark pores.",
+        "material_continuity": "Continuous gray-brown consolidated fragments background remains between clusters, no isolated foreign-colored specks.",
+        "edge_variation": "Short stepped motifs rotate or mirror at unequal positions; one passes the tile edge.",
+        "variant_identity": "warmer porous aggregate than vanilla stone's gray broad faces; distinct material palette and local motif from other ground variants.",
+        "vanilla_comparison": "Reference stone was opened and hash-checked; warmer porous aggregate than vanilla stone's gray broad faces.",
+        "aggregate_structure": "larger irregular compressed planes and dark pores; larger mineral/organic aggregate planes distinguish material scale.",
+        "tile_rhythm": "3x3 tiled view shows the repeated grain pattern of gray-brown consolidated fragments but no full-width hard seam or border."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "stone_surface",
+        "reference": "minecraft:block/stone",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Interlocked restrained aggregate shades and larger irregular compressed planes and dark pores.",
+        "reference_limit": "warmer porous aggregate than vanilla stone's gray broad faces; material-specific scale retained rather than copying the reference pixel layout.",
+        "native_view": "16px sample reads as gray-brown consolidated fragments; nearest-neighbor enlargement reveals short irregular plane edges.",
+        "context_view": "Inspected a 3x3 wall: repeated clusters are visible, but continuous background crosses tile boundaries without a hard seam.",
+        "context_type": "tile_3x3"
+      }
+    }
+  }
+}
