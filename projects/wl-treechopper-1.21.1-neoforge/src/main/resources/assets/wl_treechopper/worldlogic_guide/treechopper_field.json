@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "id": "treechopper_field",
+  "order": 36,
+  "requires": "wl_treechopper",
+  "title": {
+    "ru": "Рубка деревьев: полевое руководство",
+    "en": "Tree chopping: field instructions"
+  },
+  "source": "TreeChopper 0.9.3",
+  "pages": [
+    {
+      "id": "start",
+      "title": {
+        "ru": "Первый топор",
+        "en": "First axe"
+      },
+      "models": [
+        "minecraft:flint",
+        "minecraft:stick",
+        "minecraft:stone_axe"
+      ],
+      "body": {
+        "ru": [
+          "Под естественной кроной ищи упавшие ветки, на открытом камне — камешки, а на гравии — кремень. Собери ветки и кремень. Каменный топор из одного кремня и двух палок создаётся даже в личной сетке 2×2.",
+          "Ветки и камешки появляются при генерации новых чанков; иногда ветки падают естественно. Камешек не превращается в целый блок камня."
+        ],
+        "en": [
+          "Look for fallen twigs beneath natural canopies, loose rocks on exposed stone and flint on gravel. Gather sticks and flint. Craft a stone axe from one flint and two sticks even in the personal 2×2 grid.",
+          "Ground litter generates in new chunks; branches also occasionally fall naturally. A pebble is not a full stone block."
+        ]
+      }
+    },
+    {
+      "id": "notches",
+      "title": {
+        "ru": "Зарубки и выносливость",
+        "en": "Notches and stamina"
+      },
+      "models": [
+        "minecraft:stone_axe",
+        "minecraft:oak_log"
+      ],
+      "body": {
+        "ru": [
+          "Руби естественный ствол топором. Удары накапливают работу на четырёх сторонах, визуально до восьми глубин зарубки. Встречные зарубки ускоряют срез. Без топора сырую древесину добыть нельзя.",
+          "При Core 1.5.1 энергия расходуется за принятые удары, а не за проверки защиты. Масса и твёрдость зависят от породы, влажность учитывается через Terrarian. При Trauma учитывается работоспособность рук."
+        ],
+        "en": [
+          "Strike a natural trunk with an axe. Work accumulates on four faces with up to eight visible notch depths. Opposing cuts accelerate severing. Raw wood cannot be harvested bare-handed.",
+          "With Core 1.5.1 energy is spent on accepted strikes, not protection checks. Species and moisture affect mass and hardness through Core and Terrarian. Trauma arm function affects chopping when installed."
+        ]
+      }
+    },
+    {
+      "id": "falling",
+      "title": {
+        "ru": "Падение и распил",
+        "en": "Felling and bucking"
+      },
+      "models": [
+        "minecraft:oak_log",
+        "minecraft:iron_axe"
+      ],
+      "body": {
+        "ru": [
+          "После среза остаётся пень. Ствол падает с учётом направления, массы ветвей и препятствий. Лежащую или наклонённую древесину разбирай топором по доступным участкам в любом порядке.",
+          "Тяжёлые деревья требуют больше работы. Опоры и соседние деревья могут мешать падению. Система не является универсальной симуляцией твёрдых тел; не все сложные стволы распознаются."
+        ],
+        "en": [
+          "Severing leaves a stump. The trunk falls according to direction, branch mass and obstacles. Use an axe on accessible sections of a landed or inclined trunk in any order.",
+          "Larger trees require more work. Supports and neighboring trees can obstruct the fall. This is not a general rigid-body simulation; not every complex trunk is recognized."
+        ]
+      }
+    }
+  ]
+}

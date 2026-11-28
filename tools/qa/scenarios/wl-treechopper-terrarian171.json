@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "name": "TreeChopper with actual Core 1.5.0 and Terrarian 1.7.1 WoodPhysicsApi v3",
+  "steps": [
+    {
+      "command": "forceload add 992 992 1055 1055",
+      "expect": "force loaded|force-loaded|Marked"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "setblock 1000 200 1000 minecraft:oak_log",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 1001 200 1000 minecraft:water",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "wltreechopper qa_terrarian_moisture 1000 200 1000",
+      "expect": "TreeChopper Terrarian moisture PASS",
+      "assertion": true,
+      "name": "terrarian-oak-moisture"
+    },
+    {
+      "command": "setblock 1005 199 1000 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "fill 1005 200 1000 1005 203 1000 worldlogicterrain:willow_log",
+      "expect": "Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1005 204 1000 worldlogicterrain:willow_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "setblock 1006 200 1000 minecraft:water",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "wltreechopper qa_terrarian_moisture 1005 200 1000",
+      "expect": "TreeChopper Terrarian moisture PASS",
+      "assertion": true,
+      "name": "terrarian-willow-moisture"
+    },
+    {
+      "command": "wltreechopper qa_canonical_wood 1005 200 1000",
+      "expect": "TreeChopper canonical wood PASS",
+      "assertion": true,
+      "name": "canonical-willow"
+    },
+    {
+      "command": "wltreechopper qa_hit 1005 200 1000 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1005 200 1000 wl_treechopper:cut_willow",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "willow-cut"
+    },
+    {
+      "command": "wltreechopper qa_api 1005 200 1000 1",
+      "expect": "TreeChopper API contract PASS",
+      "assertion": true,
+      "name": "willow-api"
+    },
+    {
+      "command": "execute if block 1005 201 1000 worldlogicterrain:willow_log",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "willow-upper-log"
+    }
+  ],
+  "coverage": [
+    {
+      "id": "terrarian-live-moisture",
+      "kind": "mechanic",
+      "subject": "Real oak and willow moisture sample via Terrarian v3, Core mass and saved moisture parity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "terrarian-oak-moisture"
+        },
+        {
+          "backend": "server",
+          "name": "terrarian-willow-moisture"
+        },
+        {
+          "backend": "server",
+          "name": "canonical-willow"
+        }
+      ]
+    },
+    {
+      "id": "terrarian-willow-cut",
+      "kind": "mechanic",
+      "subject": "Actual custom wood hit creates correct notch, API reports it and retains upper log",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "willow-cut"
+        },
+        {
+          "backend": "server",
+          "name": "willow-api"
+        },
+        {
+          "backend": "server",
+          "name": "willow-upper-log"
+        }
+      ]
+    }
+  ]
+}

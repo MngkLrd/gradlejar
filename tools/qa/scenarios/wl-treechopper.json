@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.4.0 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.9.0 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -10,7 +10,7 @@
       "wait": 3
     },
     {
-      "command": "setblock 1000 199 1000 minecraft:dirt",
+      "command": "fill 992 199 992 1055 199 1055 minecraft:dirt",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -26,18 +26,24 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1000 200 1000 wl_treechopper:cut_oak[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1000 200 1000 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-oak"
+    },
+    {
+      "command": "wltreechopper qa_api 1000 200 1000 0",
+      "expect": "TreeChopper API contract PASS",
+      "assertion": true,
+      "name": "direct-api-contract"
     },
     {
       "command": "wltreechopper qa_hit 1000 200 1000 south 1",
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1000 200 1000 wl_treechopper:cut_oak[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1000 200 1000 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-oak"
     },
@@ -64,6 +70,27 @@
       "name": "animation"
     },
     {
+      "command": "execute if entity @e[type=minecraft:block_display,tag=wl_treechopper_leaf,x=1000,y=200,z=1000,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "leaf-detach"
+    },
+    {
+      "wait": 1
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_leaf,x=1000,y=200,z=1000,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "leaf-fast-cleanup"
+    },
+    {
+      "command": "execute if entity @e[type=minecraft:block_display,tag=wl_treechopper_cut_cap,x=1000,y=200,z=1000,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "trunk-after-leaves"
+    },
+    {
       "wait": 3
     },
     {
@@ -73,14 +100,64 @@
       "name": "cleanup-oak"
     },
     {
+      "command": "execute if block 1000 200 1002 wl_treechopper:fallen_oak[axis=z,marker=true]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "fallen-first"
+    },
+    {
+      "command": "execute if block 1000 200 1003 wl_treechopper:fallen_oak[axis=z,marker=true]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "fallen-second"
+    },
+    {
+      "command": "execute if block 1000 200 1004 wl_treechopper:fallen_oak[axis=z,marker=true]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "fallen-third"
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:item,x=1000,y=200,z=1000,distance=..8,nbt={Item:{id:\"minecraft:oak_log\"}}]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "no-instant-drops"
+    },
+    {
+      "command": "wltreechopper qa_buck 1000 200 1003 1",
+      "expect": "TreeChopper bucking PASS",
+      "assertion": true,
+      "name": "bucking-free-order"
+    },
+    {
+      "command": "wltreechopper qa_buck 1000 200 1002 1",
+      "expect": "TreeChopper bucking PASS",
+      "assertion": true,
+      "name": "bucking-first"
+    },
+    {
+      "command": "wltreechopper qa_buck 1000 200 1003 0",
+      "expect": "TreeChopper bucking PASS",
+      "assertion": true,
+      "name": "bucking-no-duplicate"
+    },
+    {
+      "command": "wltreechopper qa_buck 1000 200 1004 1",
+      "expect": "TreeChopper bucking PASS",
+      "assertion": true,
+      "name": "bucking-third"
+    },
+    {
       "command": "execute if entity @e[type=minecraft:item,x=1000,y=200,z=1000,distance=..8,nbt={Item:{id:\"minecraft:oak_log\"}}]",
       "expect": "Test passed",
       "assertion": true,
       "name": "drops"
     },
     {
-      "command": "setblock 1009 199 1000 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
+      "command": "execute if block 1000 200 1004 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "bucking-cleanup"
     },
     {
       "command": "fill 1009 200 1000 1009 203 1000 minecraft:spruce_log",
@@ -95,8 +172,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1009 200 1000 wl_treechopper:cut_spruce[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1009 200 1000 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-spruce"
     },
@@ -105,8 +182,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1009 200 1000 wl_treechopper:cut_spruce[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1009 200 1000 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-spruce"
     },
@@ -136,10 +213,6 @@
       "name": "cleanup-spruce"
     },
     {
-      "command": "setblock 1018 199 1000 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1018 200 1000 1018 203 1000 minecraft:birch_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -152,8 +225,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1018 200 1000 wl_treechopper:cut_birch[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1018 200 1000 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-birch"
     },
@@ -162,8 +235,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1018 200 1000 wl_treechopper:cut_birch[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1018 200 1000 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-birch"
     },
@@ -193,10 +266,6 @@
       "name": "cleanup-birch"
     },
     {
-      "command": "setblock 1027 199 1000 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1027 200 1000 1027 203 1000 minecraft:jungle_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -209,8 +278,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1027 200 1000 wl_treechopper:cut_jungle[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1027 200 1000 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-jungle"
     },
@@ -219,8 +288,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1027 200 1000 wl_treechopper:cut_jungle[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1027 200 1000 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-jungle"
     },
@@ -250,10 +319,6 @@
       "name": "cleanup-jungle"
     },
     {
-      "command": "setblock 1000 199 1009 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1000 200 1009 1000 203 1009 minecraft:acacia_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -266,8 +331,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1000 200 1009 wl_treechopper:cut_acacia[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1000 200 1009 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-acacia"
     },
@@ -276,8 +341,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1000 200 1009 wl_treechopper:cut_acacia[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1000 200 1009 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-acacia"
     },
@@ -307,10 +372,6 @@
       "name": "cleanup-acacia"
     },
     {
-      "command": "setblock 1009 199 1009 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1009 200 1009 1009 203 1009 minecraft:dark_oak_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -323,8 +384,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1009 200 1009 wl_treechopper:cut_dark_oak[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1009 200 1009 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-dark_oak"
     },
@@ -333,8 +394,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1009 200 1009 wl_treechopper:cut_dark_oak[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1009 200 1009 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-dark_oak"
     },
@@ -364,10 +425,6 @@
       "name": "cleanup-dark_oak"
     },
     {
-      "command": "setblock 1018 199 1009 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1018 200 1009 1018 203 1009 minecraft:mangrove_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -380,8 +437,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1018 200 1009 wl_treechopper:cut_mangrove[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1018 200 1009 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-mangrove"
     },
@@ -390,8 +447,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1018 200 1009 wl_treechopper:cut_mangrove[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1018 200 1009 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-mangrove"
     },
@@ -421,10 +478,6 @@
       "name": "cleanup-mangrove"
     },
     {
-      "command": "setblock 1027 199 1009 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1027 200 1009 1027 203 1009 minecraft:cherry_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -437,8 +490,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1027 200 1009 wl_treechopper:cut_cherry[north=1,south=0,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1027 200 1009 0",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "cut-cherry"
     },
@@ -447,8 +500,8 @@
       "expect": "TreeChopper QA hit dispatched"
     },
     {
-      "command": "execute if block 1027 200 1009 wl_treechopper:cut_cherry[north=1,south=1,east=0,west=0]",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_notch_shape 1027 200 1009 1",
+      "expect": "TreeChopper notch geometry PASS",
       "assertion": true,
       "name": "opposite-cherry"
     },
@@ -478,10 +531,6 @@
       "name": "cleanup-cherry"
     },
     {
-      "command": "setblock 1044 199 1044 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "setblock 1044 200 1044 minecraft:oak_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -508,6 +557,647 @@
       "expect": "Test passed",
       "assertion": true,
       "name": "stone"
+    },
+    {
+      "command": "wltreechopper qa_effort",
+      "expect": "TreeChopper effort regression PASS",
+      "assertion": true,
+      "name": "Effort and arm-function tuning"
+    },
+    {
+      "command": "setblock 1040 199 1028 minecraft:grass_block",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1040 200 1028 1040 203 1028 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1041 203 1028 minecraft:oak_log[axis=x]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1042 204 1028 minecraft:oak_log[axis=y]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1042 205 1028 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_break 1040 200 1028",
+      "expect": "TreeChopper hand break blocked",
+      "assertion": true,
+      "name": "hand-bypass"
+    },
+    {
+      "command": "execute if block 1040 201 1028 minecraft:oak_log",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "hand-intact"
+    },
+    {
+      "command": "execute if block 1040 200 1028 minecraft:oak_log",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "hand-no-felling"
+    },
+    {
+      "command": "wltreechopper qa_axe_break 1040 200 1028",
+      "expect": "TreeChopper axe bypass blocked",
+      "assertion": true,
+      "name": "axe-normal-bypass"
+    },
+    {
+      "command": "wltreechopper qa_hit 1040 200 1028 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "wltreechopper qa_notch_shape 1040 200 1028 0",
+      "expect": "TreeChopper notch geometry PASS",
+      "assertion": true,
+      "name": "branch-notch"
+    },
+    {
+      "command": "wltreechopper qa_axe_break 1040 200 1028",
+      "expect": "TreeChopper axe bypass blocked",
+      "assertion": true,
+      "name": "cut-bypass"
+    },
+    {
+      "command": "wltreechopper qa_hit 1040 200 1028 south 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1042 204 1028 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "branch-fall"
+    },
+    {
+      "command": "execute if block 1040 200 1028 wl_treechopper:stump_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "branch-stump"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "setblock 1040 200 1028 wl_treechopper:cut_oak{work:[I;125,0,0,0]}",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_break 1040 200 1028",
+      "expect": "TreeChopper hand break blocked",
+      "assertion": true,
+      "name": "hand-cut-break"
+    },
+    {
+      "command": "wltreechopper qa_landing",
+      "expect": "TreeChopper landing geometry PASS",
+      "assertion": true,
+      "name": "landing-pose"
+    },
+    {
+      "command": "fill 1048 200 1038 1048 203 1038 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1048 204 1038 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_progress 1048 200 1038",
+      "expect": "TreeChopper single-side progression PASS",
+      "assertion": true,
+      "name": "single-side-progress"
+    },
+    {
+      "command": "execute if entity @e[type=minecraft:block_display,tag=wl_treechopper_cut_cap,x=1048,y=200,z=1038,distance=..2,nbt={block_state:{Name:\"wl_treechopper:fallen_upper_oak\"}}]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cut-cap-present"
+    },
+    {
+      "command": "execute if block 1048 200 1038 wl_treechopper:stump_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "stump-kept"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_cut_cap,x=1048,y=200,z=1038,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cut-cap-cleanup"
+    },
+    {
+      "command": "fill 1048 200 1048 1048 203 1048 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1048 204 1048 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_network 1048 200 1048",
+      "expect": "TreeChopper network validation PASS",
+      "assertion": true,
+      "name": "network-strike-validation"
+    },
+    {
+      "command": "wltreechopper qa_axe_tiers",
+      "expect": "TreeChopper axe tier progression PASS",
+      "assertion": true,
+      "name": "axe-material-tiers"
+    },
+    {
+      "command": "fill 1048 201 1018 1048 203 1018 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1048 204 1018 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1048 200 1018 wl_treechopper:cut_oak{work:[I;750,0,0,0]}",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_wear 1048 200 1018 4",
+      "expect": "TreeChopper per-log durability PASS",
+      "assertion": true,
+      "name": "axe-wear-4"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "fill 1038 201 1018 1038 211 1018 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1038 212 1018 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1038 200 1018 wl_treechopper:cut_oak{work:[I;750,0,0,0]}",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_wear 1038 200 1018 12",
+      "expect": "TreeChopper per-log durability PASS",
+      "assertion": true,
+      "name": "axe-wear-12"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "wltreechopper qa_swing",
+      "expect": "TreeChopper slow swing PASS",
+      "assertion": true,
+      "name": "slow-swing"
+    },
+    {
+      "command": "fill 1000 200 1048 1000 203 1048 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1000 204 1048 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_count 1000 200 1048 4",
+      "expect": "TreeChopper size-dependent hits PASS",
+      "assertion": true,
+      "name": "size-hit-4"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "fill 1010 200 1048 1010 211 1048 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1010 212 1048 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_count 1010 200 1048 12",
+      "expect": "TreeChopper size-dependent hits PASS",
+      "assertion": true,
+      "name": "size-hit-12"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "fill 1020 200 1040 1020 203 1040 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1020 204 1040 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1020 200 1038 1020 205 1038 minecraft:stone",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1020 200 1040 north 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "name": "obstruction-preserved",
+      "command": "execute if block 1020 200 1038 minecraft:stone",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "blocked-tree-intact",
+      "command": "execute if block 1020 200 1040 wl_treechopper:stump_oak",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "inclined-rest",
+      "command": "wltreechopper qa_resting 1020 200 1040",
+      "expect": "TreeChopper resting pose PASS",
+      "assertion": true
+    },
+    {
+      "command": "fill 1020 200 1038 1020 205 1038 minecraft:air",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "name": "cleared-fall",
+      "command": "wltreechopper qa_resumed_landing 1020 200 1040 1020 200 1038",
+      "expect": "TreeChopper resumed landing PASS",
+      "assertion": true
+    },
+    {
+      "command": "fill 1032 200 1048 1033 203 1049 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1032 204 1048 1033 204 1049 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_multi 1032 200 1048 2",
+      "expect": "TreeChopper multi-root PASS",
+      "assertion": true,
+      "name": "multi-root-2"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute if block 1032 200 1046 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "multi-landing-2"
+    },
+    {
+      "command": "fill 1048 200 1048 1050 203 1050 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1048 204 1048 1050 204 1050 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_multi 1048 200 1048 3",
+      "expect": "TreeChopper multi-root PASS",
+      "assertion": true,
+      "name": "multi-root-3"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute if block 1048 200 1046 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "multi-landing-3"
+    },
+    {
+      "command": "fill 1026 200 1038 1026 203 1038 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1026 204 1038 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1026 200 1036 1026 205 1036 minecraft:stone",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1026 200 1038 north 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "wltreechopper qa_support 1026 200 1038",
+      "expect": "TreeChopper timber supported PASS",
+      "assertion": true,
+      "name": "inclined-physical-support"
+    },
+    {
+      "command": "wltreechopper qa_timber_collision 1026 200 1038",
+      "expect": "TreeChopper physical timber collision PASS",
+      "assertion": true,
+      "name": "inclined-wood-collision"
+    },
+    {
+      "name": "inclined-buck-free-order",
+      "command": "wltreechopper qa_inclined_buck 1026 200 1038 1 1",
+      "expect": "TreeChopper inclined bucking PASS",
+      "assertion": true
+    },
+    {
+      "wait": 2
+    },
+    {
+      "name": "inclined-buck-first",
+      "command": "wltreechopper qa_inclined_buck 1026 200 1038 0 1",
+      "expect": "TreeChopper inclined bucking PASS",
+      "assertion": true
+    },
+    {
+      "wait": 3
+    },
+    {
+      "name": "inclined-buck-no-duplicate",
+      "command": "wltreechopper qa_inclined_buck 1026 200 1038 1 0",
+      "expect": "TreeChopper inclined bucking PASS",
+      "assertion": true
+    },
+    {
+      "wait": 3
+    },
+    {
+      "name": "inclined-buck-third",
+      "command": "wltreechopper qa_inclined_buck 1026 200 1038 2 1",
+      "expect": "TreeChopper inclined bucking PASS",
+      "assertion": true
+    },
+    {
+      "name": "inclined-buck-clean",
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_resting,x=1026,y=200,z=1038,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "name": "inclined-obstacle-kept",
+      "command": "execute if block 1026 200 1036 minecraft:stone",
+      "expect": "Test passed",
+      "assertion": true
+    },
+    {
+      "command": "wltreechopper qa_balance_math",
+      "expect": "TreeChopper directional balance PASS",
+      "assertion": true,
+      "name": "direction-math"
+    },
+    {
+      "command": "fill 1000 200 1038 1000 203 1038 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1000 204 1038 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_guide 1000 200 1038",
+      "expect": "TreeChopper guided fall PASS",
+      "assertion": true,
+      "name": "guided-actual-fall"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute if block 1000 200 1036 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "guided-landing"
+    },
+    {
+      "command": "fill 1010 200 1038 1010 204 1038 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1011 204 1038 1016 204 1038 minecraft:oak_log[axis=x]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1014 205 1038 1016 205 1038 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1010 200 1038 wl_treechopper:cut_oak{work:[I;750,0,0,0]}",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_mass 1010 200 1038 east",
+      "expect": "TreeChopper world mass direction PASS",
+      "assertion": true,
+      "name": "heavy-branch-direction"
+    },
+    {
+      "command": "fill 1010 200 1024 1010 202 1024 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1011 203 1024 1011 204 1024 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1012 205 1024 1012 207 1024 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1012 208 1024 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_mass 1010 200 1024 east",
+      "expect": "TreeChopper world mass direction PASS",
+      "assertion": true,
+      "name": "leaning-direction"
+    },
+    {
+      "command": "wltreechopper qa_physics_fallback",
+      "expect": "TreeChopper physical fallback PASS",
+      "assertion": true,
+      "name": "physical-api-standalone"
+    },
+    {
+      "command": "setblock 994 202 1030 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 994 203 1030 994 206 1030 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 994 207 1030 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 994 203 1030 north 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "wait": 5
+    },
+    {
+      "command": "execute if block 994 200 1028 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-terrace-landing"
+    },
+    {
+      "command": "execute if block 994 203 1028 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-no-floating-block"
+    },
+    {
+      "command": "setblock 994 200 1017 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 994 200 1014 minecraft:stone",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 994 201 1017 994 204 1017 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 994 205 1017 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 994 201 1017 north 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "wait": 5
+    },
+    {
+      "command": "execute if block 994 201 1014 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-supported-middle"
+    },
+    {
+      "command": "wltreechopper qa_buck 994 201 1014 1",
+      "expect": "TreeChopper bucking PASS",
+      "assertion": true,
+      "name": "gravity-remove-middle"
+    },
+    {
+      "command": "execute if block 994 200 1013 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-detached-crown"
+    },
+    {
+      "command": "execute if block 994 200 1015 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-detached-base"
+    },
+    {
+      "command": "execute if block 994 201 1013 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-detached-no-float"
+    },
+    {
+      "command": "execute if block 994 200 1014 minecraft:stone",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-support-preserved"
+    },
+    {
+      "command": "fill 1005 200 1025 1005 207 1025 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1005 202 1023 1005 202 1024 minecraft:oak_log[axis=z]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1005 208 1025 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1005 200 1025 north 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "wltreechopper qa_hit 1005 200 1025 north 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "wait": 8
+    },
+    {
+      "command": "wltreechopper qa_branch_support 1005 200 1025",
+      "expect": "TreeChopper branched terrain support PASS",
+      "assertion": true,
+      "name": "branched-ground-support"
+    },
+    {
+      "command": "wltreechopper qa_crosscut",
+      "expect": "TreeChopper cumulative cut PASS",
+      "assertion": true,
+      "name": "cumulative-cut"
+    },
+    {
+      "command": "wltreechopper qa_forest_start",
+      "expect": "TreeChopper forest start PASS",
+      "assertion": true,
+      "name": "forest-start"
+    },
+    {
+      "wait": 2
+    },
+    {
+      "command": "wltreechopper qa_crown_ownership",
+      "expect": "TreeChopper crown ownership PASS",
+      "assertion": true,
+      "name": "crown-ownership"
+    },
+    {
+      "command": "wltreechopper qa_leafless_cut",
+      "expect": "TreeChopper leafless section PASS",
+      "assertion": true,
+      "name": "leafless-section"
+    },
+    {
+      "command": "execute if block 996 200 1007 wl_treechopper:twig_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "twig-fall-land"
     }
   ],
   "coverage": [
@@ -580,7 +1270,7 @@
     {
       "id": "drops",
       "kind": "mechanic",
-      "subject": "Log drops after animation",
+      "subject": "Actual log items obtained after ordered processing instead of instant felling drops",
       "checks": [
         {
           "backend": "server",
@@ -992,6 +1682,745 @@
         {
           "backend": "server",
           "name": "stone"
+        }
+      ]
+    },
+    {
+      "id": "effort-model",
+      "kind": "mechanic",
+      "subject": "Fatigue and arm function reduce chopping quality and increase cooldown; disabled primary arm prevents chopping",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Effort and arm-function tuning"
+        }
+      ]
+    },
+    {
+      "id": "hand-bypass",
+      "kind": "mechanic",
+      "subject": "Bare-hand mining is blocked on natural raw timber by both interaction and BreakEvent",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "hand-bypass"
+        }
+      ]
+    },
+    {
+      "id": "hand-intact",
+      "kind": "mechanic",
+      "subject": "Bare-hand strike leaves upper timber intact",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "hand-intact"
+        }
+      ]
+    },
+    {
+      "id": "branch-notch",
+      "kind": "mechanic",
+      "subject": "Forked trunk receives geometric notch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "branch-notch"
+        }
+      ]
+    },
+    {
+      "id": "cut-bypass",
+      "kind": "mechanic",
+      "subject": "Axe cannot bypass the geometric notch via normal server destruction",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-bypass"
+        }
+      ]
+    },
+    {
+      "id": "branch-fall",
+      "kind": "mechanic",
+      "subject": "Diagonal branch removed as part of felling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "branch-fall"
+        }
+      ]
+    },
+    {
+      "id": "branch-stump",
+      "kind": "mechanic",
+      "subject": "Forked trunk leaves stump",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "branch-stump"
+        }
+      ]
+    },
+    {
+      "id": "hand-no-felling",
+      "kind": "mechanic",
+      "subject": "Bare-hand strike leaves the base log intact",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "hand-no-felling"
+        }
+      ]
+    },
+    {
+      "id": "axe-normal-bypass",
+      "kind": "mechanic",
+      "subject": "Axe cannot bypass chopping on an intact recognized trunk",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "axe-normal-bypass"
+        }
+      ]
+    },
+    {
+      "id": "hand-cut-break",
+      "kind": "mechanic",
+      "subject": "Bare hands cannot bypass an existing notch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "hand-cut-break"
+        }
+      ]
+    },
+    {
+      "id": "landing-pose",
+      "kind": "mechanic",
+      "subject": "Exact display transform keeps the cut cap attached and full trunk on local ground in four directions",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "landing-pose"
+        }
+      ]
+    },
+    {
+      "id": "single-side-progress",
+      "kind": "mechanic",
+      "subject": "Each same-side strike advances saved work or fells, including hits between visual stages",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "single-side-progress"
+        }
+      ]
+    },
+    {
+      "id": "cut-cap-present",
+      "kind": "mechanic",
+      "subject": "Actual falling display uses the new full 12px upper log, not a 4px stump mesh",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-cap-present"
+        }
+      ]
+    },
+    {
+      "id": "stump-kept",
+      "kind": "mechanic",
+      "subject": "Cut base is a persistent real stump while the cap falls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "stump-kept"
+        }
+      ]
+    },
+    {
+      "id": "cut-cap-cleanup",
+      "kind": "mechanic",
+      "subject": "Visual severed cap is removed with the completed animation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-cap-cleanup"
+        }
+      ]
+    },
+    {
+      "id": "network-strike-validation",
+      "kind": "mechanic",
+      "subject": "Production packet handler path with actual player aim, cooldown and range rejection (FakePlayer not actual client packets); exact stored work unchanged on rejected network strikes",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "network-strike-validation"
+        }
+      ]
+    },
+    {
+      "id": "axe-material-tiers",
+      "kind": "mechanic",
+      "subject": "Real vanilla axe tier speeds yield strictly decreasing mean hit counts, wood at least six, on a four-log tree",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "axe-material-tiers"
+        }
+      ]
+    },
+    {
+      "id": "axe-wear-4",
+      "kind": "mechanic",
+      "subject": "A nearly broken axe refuses final strike without wear or block loss; healthy axe costs exactly 4 durability for final strike plus upper logs, not leaves",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "axe-wear-4"
+        }
+      ]
+    },
+    {
+      "id": "axe-wear-12",
+      "kind": "mechanic",
+      "subject": "A nearly broken axe refuses final strike without wear or block loss; healthy axe costs exactly 12 durability for final strike plus upper logs, not leaves",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "axe-wear-12"
+        }
+      ]
+    },
+    {
+      "id": "leaf-detach",
+      "kind": "mechanic",
+      "subject": "Foliage display created independently",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "leaf-detach"
+        }
+      ]
+    },
+    {
+      "id": "leaf-fast-cleanup",
+      "kind": "mechanic",
+      "subject": "Foliage is gone before one second",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "leaf-fast-cleanup"
+        }
+      ]
+    },
+    {
+      "id": "trunk-after-leaves",
+      "kind": "mechanic",
+      "subject": "Trunk continues falling after foliage detaches",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "trunk-after-leaves"
+        }
+      ]
+    },
+    {
+      "id": "slow-swing",
+      "kind": "mechanic",
+      "subject": "Actual mixed-in living-entity swing duration is twelve ticks, cooldown exceeds the swing",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "slow-swing"
+        }
+      ]
+    },
+    {
+      "id": "size-hit-4",
+      "kind": "mechanic",
+      "subject": "Wooden axe observed strikes are within theoretical min/max of height-aware physical effort for the actual trunk, and wear matches the number of strikes plus upper logs",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "size-hit-4"
+        }
+      ]
+    },
+    {
+      "id": "size-hit-12",
+      "kind": "mechanic",
+      "subject": "Wooden axe observed strikes are within theoretical min/max of height-aware physical effort for the actual trunk, and wear matches the number of strikes plus upper logs",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "size-hit-12"
+        }
+      ]
+    },
+    {
+      "id": "fallen-first",
+      "kind": "mechanic",
+      "subject": "First visible marker on persistent fallen trunk",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "fallen-first"
+        }
+      ]
+    },
+    {
+      "id": "fallen-second",
+      "kind": "mechanic",
+      "subject": "Second visible marker",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "fallen-second"
+        }
+      ]
+    },
+    {
+      "id": "fallen-third",
+      "kind": "mechanic",
+      "subject": "Third visible marker",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "fallen-third"
+        }
+      ]
+    },
+    {
+      "id": "no-instant-drops",
+      "kind": "mechanic",
+      "subject": "Felling alone yields no loose log items",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "no-instant-drops"
+        }
+      ]
+    },
+    {
+      "id": "bucking-free-order",
+      "kind": "mechanic",
+      "subject": "Independent section processing, retained yield and protection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "bucking-free-order"
+        }
+      ]
+    },
+    {
+      "id": "bucking-first",
+      "kind": "mechanic",
+      "subject": "First notch processes its section without double durability",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "bucking-first"
+        }
+      ]
+    },
+    {
+      "id": "bucking-no-duplicate",
+      "kind": "mechanic",
+      "subject": "Independent section processing, retained yield and protection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "bucking-no-duplicate"
+        }
+      ]
+    },
+    {
+      "id": "bucking-third",
+      "kind": "mechanic",
+      "subject": "Third notch processes its section",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "bucking-third"
+        }
+      ]
+    },
+    {
+      "id": "bucking-cleanup",
+      "kind": "mechanic",
+      "subject": "Processed trunk is removed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "bucking-cleanup"
+        }
+      ]
+    },
+    {
+      "id": "obstruction-preserved",
+      "kind": "mechanic",
+      "subject": "Blocked landing never overwrites stone",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "obstruction-preserved"
+        }
+      ]
+    },
+    {
+      "id": "blocked-tree-intact",
+      "kind": "mechanic",
+      "subject": "Felling completes and leaves stump even with an obstacle",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "blocked-tree-intact"
+        }
+      ]
+    },
+    {
+      "id": "cleared-fall",
+      "kind": "mechanic",
+      "subject": "Removing support resumes movement and creates actual fallen logs without another axe strike",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cleared-fall"
+        }
+      ]
+    },
+    {
+      "id": "multi-root-2",
+      "kind": "mechanic",
+      "subject": "A 2x2 supported square stays standing until all exposed roots are cut, then all roots become stumps with exact wear",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "multi-root-2"
+        }
+      ]
+    },
+    {
+      "id": "multi-landing-2",
+      "kind": "mechanic",
+      "subject": "Rotated outer column persists as fallen log after common pivot animation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "multi-landing-2"
+        }
+      ]
+    },
+    {
+      "id": "multi-root-3",
+      "kind": "mechanic",
+      "subject": "A 3x3 supported square stays standing until all exposed roots are cut, then all roots become stumps with exact wear",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "multi-root-3"
+        }
+      ]
+    },
+    {
+      "id": "multi-landing-3",
+      "kind": "mechanic",
+      "subject": "Rotated outer column persists as fallen log after common pivot animation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "multi-landing-3"
+        }
+      ]
+    },
+    {
+      "id": "inclined-rest",
+      "kind": "mechanic",
+      "subject": "Persisted coordinator has strictly intermediate angle and three interaction markers",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-rest"
+        }
+      ]
+    },
+    {
+      "id": "inclined-buck-free-order",
+      "kind": "mechanic",
+      "subject": "Independent section processing, retained yield and protection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-buck-free-order"
+        }
+      ]
+    },
+    {
+      "id": "inclined-buck-first",
+      "kind": "mechanic",
+      "subject": "Inclined trunk section interaction and obstacle preservation: inclined-buck-first",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-buck-first"
+        }
+      ]
+    },
+    {
+      "id": "inclined-buck-no-duplicate",
+      "kind": "mechanic",
+      "subject": "Independent section processing, retained yield and protection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-buck-no-duplicate"
+        }
+      ]
+    },
+    {
+      "id": "inclined-buck-third",
+      "kind": "mechanic",
+      "subject": "Inclined trunk section interaction and obstacle preservation: inclined-buck-third",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-buck-third"
+        }
+      ]
+    },
+    {
+      "id": "inclined-buck-clean",
+      "kind": "mechanic",
+      "subject": "Inclined trunk section interaction and obstacle preservation: inclined-buck-clean",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-buck-clean"
+        }
+      ]
+    },
+    {
+      "id": "inclined-obstacle-kept",
+      "kind": "mechanic",
+      "subject": "Inclined trunk section interaction and obstacle preservation: inclined-obstacle-kept",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-obstacle-kept"
+        }
+      ]
+    },
+    {
+      "id": "direction-math",
+      "kind": "mechanic",
+      "subject": "Guided opposing strike shallow, normal one-face unguided, natural lean and branch mass can override ordinary cut",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "direction-math"
+        }
+      ]
+    },
+    {
+      "id": "guided-actual-fall",
+      "kind": "mechanic",
+      "subject": "Actual FakePlayer cuts deep north then shallow south, coordinator falls north with one recorded guide",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "guided-actual-fall"
+        }
+      ]
+    },
+    {
+      "id": "guided-landing",
+      "kind": "mechanic",
+      "subject": "Directed fall produces actual timber on north side",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "guided-landing"
+        }
+      ]
+    },
+    {
+      "id": "heavy-branch-direction",
+      "kind": "mechanic",
+      "subject": "Actual scanned asymmetric log mass biases an otherwise north cut to east",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "heavy-branch-direction"
+        }
+      ]
+    },
+    {
+      "id": "leaning-direction",
+      "kind": "mechanic",
+      "subject": "Actual stepped vertical trunk geometry biases east without a guide",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "leaning-direction"
+        }
+      ]
+    },
+    {
+      "id": "physical-api-standalone",
+      "kind": "mechanic",
+      "subject": "Absent optional APIs preserve neutral relative gameplay and do not invent SI mass; ratio calculations use explicit input values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "physical-api-standalone"
+        }
+      ]
+    },
+    {
+      "id": "inclined-wood-collision",
+      "kind": "mechanic",
+      "subject": "Resting display logs have server entity collision proxies; not pickable and registered in actual collision query",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-wood-collision"
+        }
+      ]
+    },
+    {
+      "id": "gravity-terrace",
+      "kind": "mechanic",
+      "subject": "Trunk settles onto lower terrain rather than cut height",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "gravity-terrace-landing"
+        },
+        {
+          "backend": "server",
+          "name": "gravity-no-floating-block"
+        }
+      ]
+    },
+    {
+      "id": "gravity-remnants",
+      "kind": "mechanic",
+      "subject": "Middle section harvested first from a trunk supported on a pedestal; both remaining detached sections settle to lower floor, terrain preserved",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "gravity-supported-middle"
+        },
+        {
+          "backend": "server",
+          "name": "gravity-remove-middle"
+        },
+        {
+          "backend": "server",
+          "name": "gravity-detached-crown"
+        },
+        {
+          "backend": "server",
+          "name": "gravity-detached-base"
+        },
+        {
+          "backend": "server",
+          "name": "gravity-detached-no-float"
+        },
+        {
+          "backend": "server",
+          "name": "gravity-support-preserved"
+        }
+      ]
+    },
+    {
+      "id": "inclined-physical-support",
+      "kind": "mechanic",
+      "subject": "Resting tilted tree cannot descend another 5 mm into world geometry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-physical-support"
+        }
+      ]
+    },
+    {
+      "id": "branched-ground-support",
+      "kind": "mechanic",
+      "subject": "Actually felled 8-log trunk with two projecting logs reaches terrain support without loss or unsupported hanging",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "branched-ground-support"
+        }
+      ]
+    },
+    {
+      "id": "cumulative-cut",
+      "kind": "mechanic",
+      "subject": "Real alternating perpendicular axe strikes increase shared cut progress, preserve individual faces and fell the trunk",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cumulative-cut"
+        }
+      ]
+    },
+    {
+      "id": "forest-start",
+      "kind": "mechanic",
+      "subject": "Natural oak twig block, duplicate cap, right click pickup and left click break, actual falling twig and primitive recipe; real inventory crafting output, raw granite and gravel spawn exact pebble/flint, reject dirt and worked stone, right click pebble and left click flint, public API identities; bounded actual late decoration on canopy/exposed rock fixture, rare grass uses local parent rock, overhead blocks reject hidden rock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "forest-start"
+        }
+      ]
+    },
+    {
+      "id": "crown-ownership",
+      "kind": "mechanic",
+      "subject": "Natural canopy ownership, natural vs persistent collision, foliage destruction preserves adjacent log, height and visual depth scaling; single blockstate, all depth tuples, bounded collision cache, actual collision mutation, NBT roundtrip and update tag",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "crown-ownership"
+        }
+      ]
+    },
+    {
+      "id": "leafless-section",
+      "kind": "mechanic",
+      "subject": "Existing notch can fell remaining logs with no leaves",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "leafless-section"
+        }
+      ]
+    },
+    {
+      "id": "twig-fall-land",
+      "kind": "mechanic",
+      "subject": "Falling oak branch lands as a persistent block",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "twig-fall-land"
+        }
+      ]
+    },
+    {
+      "id": "direct-api-contract",
+      "kind": "mechanic",
+      "subject": "Standalone public tree cut and ground resource contract, loaded-only negative control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "direct-api-contract"
         }
       ]
     }

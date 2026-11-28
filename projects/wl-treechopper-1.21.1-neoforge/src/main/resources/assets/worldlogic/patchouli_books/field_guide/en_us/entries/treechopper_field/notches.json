@@ -1,0 +1,18 @@
+{
+  "name": "Notches and stamina",
+  "category": "worldlogic:treechopper_field",
+  "icon": "minecraft:stone_axe",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:stone_axe",
+      "link_recipe": true,
+      "text": "Strike a natural trunk with an axe. Work accumulates on four faces with up to eight visible notch depths. Opposing cuts accelerate severing. Raw wood cannot be harvested bare-handed."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "With Core 1.5.1 energy is spent on accepted strikes, not protection checks. Species and moisture affect mass and hardness through Core and Terrarian. Trauma arm function affects chopping when installed."
+    }
+  ]
+}

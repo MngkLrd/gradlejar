@@ -1,0 +1,152 @@
+{
+  "schema": 1,
+  "name": "TreeChopper 0.9.3 with exact Core 1.5.1",
+  "steps": [
+    {
+      "command": "forceload add 992 992 1055 1055",
+      "expect": "force loaded|force-loaded|Marked"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "setblock 1000 200 1000 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_canonical_wood 1000 200 1000",
+      "expect": "TreeChopper canonical wood PASS",
+      "assertion": true,
+      "name": "canonical-oak"
+    },
+    {
+      "command": "wltreechopper qa_physics_integration 1000 200 1000",
+      "expect": "TreeChopper real Core/Terrarian physical API PASS",
+      "assertion": true,
+      "name": "integration-oak"
+    },
+    {
+      "command": "setblock 1000 199 1000 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1000 201 1000 1000 203 1000 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1000 204 1000 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1000 200 1000 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1000 200 1000 wl_treechopper:cut_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "core-axe-cut"
+    },
+    {
+      "command": "wltreechopper qa_api 1000 200 1000 1",
+      "expect": "TreeChopper API contract PASS",
+      "assertion": true,
+      "name": "typed-core-discovery"
+    },
+    {
+      "command": "execute if block 1000 201 1000 minecraft:oak_log",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "core-upper-log-preserved"
+    },
+    {
+      "command": "wltreechopper qa_rock_material",
+      "expect": "TreeChopper Core pebble materials PASS",
+      "assertion": true,
+      "name": "core-pebble-composition"
+    },
+    {
+      "command": "setblock 1010 199 1000 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "fill 1010 200 1000 1010 203 1000 minecraft:oak_log",
+      "expect": "Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1010 204 1000 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "wltreechopper qa_safe_strike 1010 200 1000",
+      "expect": "TreeChopper safe strike PASS",
+      "assertion": true,
+      "name": "safe-strike-debit"
+    }
+  ],
+  "coverage": [
+    {
+      "id": "canonical-wood-rev2",
+      "kind": "mechanic",
+      "subject": "Core rev2 canonical oak density, Janka, wet response, invalid input and provider provenance",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "canonical-oak"
+        },
+        {
+          "backend": "server",
+          "name": "integration-oak"
+        }
+      ]
+    },
+    {
+      "id": "core-axe-gameplay",
+      "kind": "mechanic",
+      "subject": "Core active, real FakePlayer axe strike creates a notch and retains the uncut upper log",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "core-axe-cut"
+        },
+        {
+          "backend": "server",
+          "name": "core-upper-log-preserved"
+        }
+      ]
+    },
+    {
+      "id": "core-pebble-composition",
+      "kind": "mechanic",
+      "subject": "Core-owned granite and limestone composition and density preserved in held and placed pebbles, scaled nominal volume and mass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "core-pebble-composition"
+        }
+      ]
+    },
+    {
+      "id": "typed-core-discovery",
+      "kind": "mechanic",
+      "subject": "Runtime capability discovery and revision negotiation, actual notch and loose rock queries",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "typed-core-discovery"
+        }
+      ]
+    },
+    {
+      "id": "safe-strike-debit",
+      "kind": "mechanic",
+      "subject": "Core rev21 probe zero debit, late denial and cooldown zero debit, one actual debit per accepted notch and successful direct felling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "safe-strike-debit"
+        }
+      ]
+    }
+  ]
+}

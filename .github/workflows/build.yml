@@ -21,6 +21,7 @@ jobs:
     outputs:
       project_dirs: ${{ steps.select.outputs.project_dirs }}
       qa_enabled: ${{ steps.select.outputs.qa_enabled }}
+      art_blocked: ${{ steps.art-review.outputs.blocked }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,6 +30,11 @@ jobs:
         env:
           PROJECT_DIR: ${{ github.event_name == 'workflow_dispatch' && inputs.project_dir || '' }}
         run: python3 tools/plan_builds.py "$PROJECT_DIR"
+      - name: Validate changed texture review evidence
+        id: art-review
+        env:
+          PROJECTS: ${{ steps.select.outputs.project_dirs }}
+        run: python3 -m tools.qa.art_review_lock --projects "$PROJECTS"
 
   build:
     needs: plan
@@ -41,6 +47,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
+      - name: Enforce visual review before Gradle
+        env:
+          ART_BLOCKED: ${{ needs.plan.outputs.art_blocked }}
+          PROJECT: ${{ matrix.project_dir }}
+        run: |
+          python3 -c 'import json,os,sys; sys.exit("Art review evidence missing or invalid; inspect plan job" if os.environ["PROJECT"] in json.loads(os.environ["ART_BLOCKED"]) else 0)'
       - name: Checkout sources
         uses: actions/checkout@v4
       - name: Restore Pocket Realms sources

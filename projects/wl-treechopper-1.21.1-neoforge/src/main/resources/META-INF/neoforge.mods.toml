@@ -3,7 +3,7 @@ loaderVersion="[1,)"
 license="All Rights Reserved"
 [[mods]]
 modId="wl_treechopper"
-version="0.4.0"
+version="0.9.3"
 displayName="WorldLogic TreeChopper"
 description="Directional geometric axe cuts and animated tree felling."
 [[dependencies.wl_treechopper]]
@@ -24,3 +24,19 @@ type="optional"
 versionRange="[1.0.0-rc20,)"
 ordering="AFTER"
 side="BOTH"
+
+[[dependencies.wl_treechopper]]
+modId="worldlogic_trauma"
+type="optional"
+versionRange="[0,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.wl_treechopper]]
+modId="worldlogicterrain"
+type="optional"
+versionRange="[0,)"
+ordering="AFTER"
+side="BOTH"
+
+[[mixins]]
+config="wl_treechopper.mixins.json"

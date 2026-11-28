@@ -1,0 +1,180 @@
+{
+  "schema": 2,
+  "ecosystem": "worldlogic",
+  "module": "wl_treechopper",
+  "role": "addon",
+  "core_module": "worldlogic",
+  "parent_module": "worldlogic",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "neoforge"
+  },
+  "provides": [
+    {
+      "id": "worldlogic:tree_chopping",
+      "version": 1,
+      "revision": 2,
+      "domains": [
+        "tree_chopping",
+        "ground_resources"
+      ],
+      "entrypoints": [
+        "dev.minemods.treechopper.TreeChopperApi"
+      ],
+      "documentation": "projects/wl-treechopper-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/TreeChopperApi.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/TreeChopper.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/CutProgress.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/LooseRocks.java"
+      ],
+      "operations": [
+        {
+          "id": "cut",
+          "kind": "query",
+          "entrypoint": "dev.minemods.treechopper.TreeChopperApi",
+          "semantics": "Read loaded persisted four-face work and severed status without mutation."
+        },
+        {
+          "id": "requires_axe",
+          "kind": "query",
+          "entrypoint": "dev.minemods.treechopper.TreeChopperApi",
+          "semantics": "Read the actual raw timber tool requirement."
+        },
+        {
+          "id": "loose_find",
+          "kind": "query",
+          "entrypoint": "dev.minemods.treechopper.TreeChopperApi",
+          "semantics": "Read ground fragment species, yield item and nominal volume."
+        },
+        {
+          "id": "rock_for_surface",
+          "kind": "query",
+          "entrypoint": "dev.minemods.treechopper.TreeChopperApi",
+          "semantics": "Read exact substrate-to-pebble mapping without generating blocks."
+        }
+      ]
+    }
+  ],
+  "consumes": [
+    {
+      "id": "worldlogic:material_properties",
+      "version": 1,
+      "min_revision": 2,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Legacy Core rev1 uses existing physical facade; no Core yields unknown physical data, neutral gameplay tuning."
+    },
+    {
+      "id": "worldlogic:survival_physics",
+      "version": 1,
+      "min_revision": 19,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Core API v1 rev21 uses protection-only probes and one explicit debit per accepted axe action; older Core retains legacy event-based debit behavior; standalone has neutral stamina."
+    },
+    {
+      "id": "worldlogic:wood_species",
+      "version": 1,
+      "min_revision": 3,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Older Terrarian v1 remains supported; absent compatible provider uses Core green reference."
+    },
+    {
+      "id": "worldlogic:capability_discovery",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Older Core or standalone uses direct public TreeChopperApi without registry."
+    }
+  ],
+  "features": [
+    {
+      "id": "notch_and_felling",
+      "source_paths": [
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/TreeChopper.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/TreeChopperApi.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/CutProgress.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/CutGeometry.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/ChopNetwork.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/ChopClient.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/ChopSwing.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/CutBlock.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/CutWoodModel.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/FallingTree.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/FallBalance.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/FallenTimber.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/FallenProgress.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/FallenLogBlock.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/TimberCollider.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/TimberColliderClient.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/CrownOwnership.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/ChopEffort.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/WorldLogicIntegration.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/MaterialPhysics.java"
+      ],
+      "provides": [
+        "worldlogic:tree_chopping"
+      ],
+      "consumes": [
+        "worldlogic:material_properties",
+        "worldlogic:survival_physics",
+        "worldlogic:wood_species",
+        "worldlogic:capability_discovery"
+      ],
+      "integration_review": "Core #262 actual API rev20 owns fatigue and SI data; Terrarian #250 actual WoodPhysicsApi v3 owns local moisture; Trauma #219 legacy public arm-function bridge retained, no invented capability ID; Excavation #264 uses separate mining domain and has no TreeChopper dependency. Core #270 rev21 WorldLogicBreaks is consumed; accepted strikes debit only via Core addExertion. Old Core compatibility remains legacy."
+    },
+    {
+      "id": "ground_litter_and_primitive_tools",
+      "source_paths": [
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/ForestSticks.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/GroundResourcesFeature.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/LooseRocks.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/PebbleBlock.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/TwigBlock.java",
+        "projects/wl-treechopper-1.21.1-neoforge/src/main/java/dev/minemods/treechopper/PrimitiveRecipeSync.java"
+      ],
+      "provides": [
+        "worldlogic:tree_chopping"
+      ],
+      "consumes": [
+        "worldlogic:material_properties"
+      ],
+      "integration_review": "Core #246 canonical material composition; Excavation #264 switched to final cobblestone so no cross-addon dependency; ordinary 2x2 recipe and renewable litter retain owner behavior."
+    }
+  ],
+  "tests": [
+    {
+      "id": "treechopper.direct",
+      "capabilities": [
+        "worldlogic:tree_chopping"
+      ],
+      "ref": "tools/qa/scenarios/wl-treechopper.json",
+      "status": "implemented"
+    },
+    {
+      "id": "treechopper.core150",
+      "capabilities": [
+        "worldlogic:tree_chopping",
+        "worldlogic:material_properties",
+        "worldlogic:survival_physics",
+        "worldlogic:capability_discovery"
+      ],
+      "ref": "tools/qa/scenarios/wl-treechopper-core150.json",
+      "status": "implemented"
+    },
+    {
+      "id": "treechopper.terrarian171",
+      "capabilities": [
+        "worldlogic:tree_chopping",
+        "worldlogic:material_properties",
+        "worldlogic:wood_species",
+        "worldlogic:capability_discovery"
+      ],
+      "ref": "tools/qa/scenarios/wl-treechopper-terrarian171.json",
+      "status": "implemented"
+    }
+  ]
+}

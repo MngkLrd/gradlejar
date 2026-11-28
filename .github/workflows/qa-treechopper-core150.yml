@@ -1,0 +1,105 @@
+name: TreeChopper Core 1.5.1 and Terrarian 1.7.1 exact-artifact diagnostic
+on:
+  pull_request:
+    paths:
+      - 'projects/wl-treechopper-1.21.1-neoforge/**'
+      - 'tools/qa/scenarios/wl-treechopper-core150.json'
+      - 'tools/qa/scenarios/wl-treechopper-terrarian171.json'
+      - '.github/workflows/qa-treechopper-core150.yml'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  exact-peers:
+    if: github.event.pull_request.head.ref == 'worldlogic-treechopper-0.5.0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+          cache-read-only: true
+      - name: Validate scoped schema 2 declaration with current canonical main validator
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/treechopper-schema/tools/qa"
+          gh api "repos/$GITHUB_REPOSITORY/contents/tools/qa/ecosystem.py?ref=2ef31184d8bcdd5541a095ffd738fbdadbc7bfda" --jq .content | base64 -d > "$RUNNER_TEMP/treechopper-schema/tools/qa/ecosystem.py"
+          python3 "$RUNNER_TEMP/treechopper-schema/tools/qa/ecosystem.py" --root "$GITHUB_WORKSPACE" --check-project projects/wl-treechopper-1.21.1-neoforge
+      - name: Verify peer run and artifact identities
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/46123087105" --jq '.head_sha + " " + .conclusion' | grep -Fx '4a3e510fd4dcfae50e4292b2b2f95eca2f26a0e4 success'
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/46120028304" --jq '.head_sha + " " + .conclusion' | grep -Fx '5a22f3e7ef036d2ab1f2fd726e162899421cf2cb success'
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/15254721484" --jq '.name + " " + .digest' | grep -Fx 'jar-worldlogic-1.21.1-neoforge-1.5.1-0 sha256:e95602851bd5daac5e2a05acaff437ab5b05e989c05c84e9adb8d7131d6c146f'
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/15253745402" --jq '.name + " " + .digest' | grep -Fx 'terrarian-1.7.1-core-1.2.1-NOT-RELEASE sha256:701014de9fa86dd530abcad8ac89f07c9cfc5207d0b89a0ed9627fa865c4ea02'
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/15253376133" --jq '.name + " " + .digest' | grep -Fx 'terrarian-1.7.1-diagnostic-evidence sha256:13b1be7a690685d1c8cb0a8b21e3c9845021fdd701d5886ab8f51a9ed9701e67'
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46123087105
+          name: jar-worldlogic-1.21.1-neoforge-1.5.1-0
+          path: exact-core
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46120028304
+          name: terrarian-1.7.1-core-1.2.1-NOT-RELEASE
+          path: exact-terrarian
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46120028304
+          name: terrarian-1.7.1-diagnostic-evidence
+          path: terrarian-evidence
+      - name: Compile production TreeChopper
+        run: |
+          set -euo pipefail
+          cd projects/wl-treechopper-1.21.1-neoforge
+          gradle --no-daemon --stacktrace clean build
+      - name: Verify exact JARs and run both real server scenarios
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,pathlib
+          from tools.qa.server import run
+          root=pathlib.Path('projects/wl-treechopper-1.21.1-neoforge')
+          p=json.loads((root/'build-profile.json').read_text())
+          jar=root/'build/libs'/p['jar_glob']
+          core=next(pathlib.Path('exact-core').rglob('worldlogic-neoforge-mc1.21.1-1.5.1.jar'))
+          terrarian=next(pathlib.Path('exact-terrarian').rglob('worldlogicterrain-neoforge-mc1.21.1-1.7.1.jar'))
+          meta=json.loads(next(pathlib.Path('terrarian-evidence').rglob('terrarian-diagnostic-report.json')).read_text())
+          digest=lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
+          assert digest(core)=='a966fb939988e794586cd6a1ea18fafe340296447b67ef8a9827963328e20548'
+          assert meta['jar']==terrarian.name and meta['sha256']==digest(terrarian)
+          out=pathlib.Path('treechopper-core150-diagnostic')
+          out.mkdir()
+          failures=[]
+          for name, peers, fixture in [('core150',[core],'tools/qa/scenarios/wl-treechopper-core150.json'),('terrarian171',[core,terrarian],'tools/qa/scenarios/wl-treechopper-terrarian171.json')]:
+              report={'kind':'exact-candidate-compatibility','eligible':False,'status':'failed','qa_level':0,'checks':[],'jars':{x.name:digest(x) for x in [jar,*peers]}}
+              try:
+                  run(p,p['qa'],jar,out/name,report,extra_jars=peers,scenarios=[(name,fixture)])
+                  report['status']='passed'
+              except Exception as e:
+                  report['error']=str(e)
+                  failures.append(name+': '+str(e))
+              finally:
+                  (out/(name+'.json')).write_text(json.dumps(report,indent=2))
+          if failures: raise RuntimeError('; '.join(failures))
+          PY
+      - name: Retain diagnostic evidence, not release eligible
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: treechopper-core150-terrarian171-NOT-RELEASE
+          path: treechopper-core150-diagnostic/
+          if-no-files-found: warn
