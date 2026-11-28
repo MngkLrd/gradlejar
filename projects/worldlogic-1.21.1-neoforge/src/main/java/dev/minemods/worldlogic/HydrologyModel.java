@@ -22,13 +22,14 @@ public final class HydrologyModel {
   case VOLCANIC_ASH->new Soil(100,.53,.57,.30);
  };}
  public static SoilType soilType(BlockState b){
+  b=SoilFarmland.original(b);
   if(GroundMaterials.is(b,"chernozem"))return SoilType.CHERNOZEM;
   if(GroundMaterials.is(b,"sandy_loam"))return SoilType.SANDY_LOAM;
   if(GroundMaterials.is(b,"laterite"))return SoilType.LATERITE;
   if(GroundMaterials.is(b,"white_sand"))return SoilType.WHITE_SAND;
   if(GroundMaterials.is(b,"volcanic_sand"))return SoilType.VOLCANIC_SAND;
   if(GroundMaterials.is(b,"volcanic_ash"))return SoilType.VOLCANIC_ASH;
-  if(GroundMaterials.volcanicRock(b))return SoilType.ROCK;
+  if(GroundMaterials.volcanicRock(b)||RockContent.natural(b))return SoilType.ROCK;
   if(b.is(Content.SOILS.get("humus").get()))return SoilType.HUMUS;
   if(b.is(Content.SOILS.get("loam").get()))return SoilType.LOAM;
   if(b.is(Content.SOILS.get("peat").get()))return SoilType.PEAT;

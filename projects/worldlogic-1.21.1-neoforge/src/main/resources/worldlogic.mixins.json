@@ -21,7 +21,9 @@
     "GeologyScatteredOreMixin",
     "ShipwreckTerrainMixin",
     "MarinePlantPlacementMixin",
-    "NativeWaterEntityMixin"
+    "NativeWaterEntityMixin",
+    "SoilFarmlandMixin",
+    "RockHardnessMixin"
   ],
   "injectors": {
     "defaultRequire": 1

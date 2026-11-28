@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=12;
+ public static final int API_REVISION=13;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -131,6 +131,8 @@ public final class WorldLogicApi {
   * Not a measured chemical sample; use soilEcology/hydrology for live state. */
  public record GroundProfile(SoilType soil,double sandFraction,double siltFraction,double clayFraction,
   double organicMatterFraction,double nominalPh,double fertility,double waterCapacityMm,double permeability,double fieldCapacityFraction,boolean rootable){}
+ public static boolean cultivatedSoil(BlockState state){return state.getBlock() instanceof net.minecraft.world.level.block.FarmBlock;}
+ public static BlockState parentSoil(BlockState state){return dev.minemods.worldlogic.SoilFarmland.original(state);}
  public static GroundProfile soilProfile(BlockState state){return dev.minemods.worldlogic.HydrologyModel.groundProfile(state);}
  /** Ground position, not plant position. Read actual root horizon under grass/farmland without loading chunks. */
  public static Optional<GroundProfile> soilProfile(ServerLevel level,BlockPos ground){
