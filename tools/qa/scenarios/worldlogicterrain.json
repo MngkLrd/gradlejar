@@ -1208,7 +1208,7 @@
     {
       "name": "Mixed meadow and frost patch mechanics",
       "command": "worldlogicterrain patch_check",
-      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 32 climate-aware forage populations verified; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells; 20 regional plants and seven existing crops verified: growth, quality, harvest, season boundaries and HUD data; 20 benthic species verified: water families, habitat, source retention, support, height and loot; Core wood physics verified: 24 profiles, 48 blocks, BlockItem composition, Janka, MOR, green moisture, SI wet mass and flammability",
+      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 32 climate-aware forage populations verified; natural plant ages and qualities verified for 27 four-stage plants, five berry bushes and twelve legacy patch providers; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells; 20 regional plants and seven existing crops verified: growth, quality, harvest, season boundaries and HUD data; 20 benthic species verified: water families, habitat, source retention, support, height and loot; Core wood physics verified: 24 profiles, 48 blocks, BlockItem composition, Janka, MOR, green moisture, SI wet mass and flammability",
       "assertion": true
     }
   ],
@@ -6107,6 +6107,358 @@
       "id": "wood-physics-environment",
       "kind": "mechanic",
       "subject": "Read-only environmental moisture estimate, unknown-block rejection and wet fixture",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-strawberry",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: strawberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-blueberry",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: blueberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-raspberry",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: raspberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-blackberry",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: blackberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-grape",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: grape",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-pineapple",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: pineapple",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-tomato",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: tomato",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-cucumber",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: cucumber",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-radish",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: radish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-onion",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: onion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-cabbage",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: cabbage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-bell_pepper",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: bell_pepper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-plantain",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: plantain",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-nettle",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: nettle",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-yarrow",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: yarrow",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-sage",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: sage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-thyme",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: thyme",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-lavender",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: lavender",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-wormwood",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: wormwood",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-wild_mint",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: wild_mint",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-horsetail",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: horsetail",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-marsh_cinquefoil",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: marsh_cinquefoil",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-bog_rosemary",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: bog_rosemary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-cloudberry",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: cloudberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-lingonberry",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: lingonberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-arctic_poppy",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: arctic_poppy",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-edelweiss",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: edelweiss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-fireweed",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: fireweed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-aloe",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: aloe",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-agave",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: agave",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-ginger",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: ginger",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-lemongrass",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: lemongrass",
       "checks": [
         {
           "backend": "server",

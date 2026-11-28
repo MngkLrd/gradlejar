@@ -2,6 +2,11 @@ package dev.minemods.worldlogicterrain.worldgen;
 
 import com.mojang.serialization.Codec;
 import dev.minemods.worldlogicterrain.tree.CoreHabitat;
+import dev.minemods.worldlogicterrain.block.BerryBushBlock;
+import dev.minemods.worldlogicterrain.growth.SeasonalPlantBlock;
+import dev.minemods.worldlogicterrain.growth.SeasonalGrowth;
+import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -120,6 +125,25 @@ public final class ForagePopulationFeature extends Feature<ForagePopulationFeatu
             return pos;
         })>0;
     }
+    // Separate deterministic stream: age does not change habitat, population cap,
+    // cluster position or the feature random sequence. Initial quality represents
+    // prior natural growth, not a second climate or live growth-rate calculation.
+    static BlockState naturalState(BlockState plant,long worldSeed,BlockPos pos){
+        long seed=worldSeed^(pos.asLong()*0x9E3779B97F4A7C15L)^BuiltInRegistries.BLOCK.getKey(plant.getBlock()).hashCode();
+        seed=(seed^(seed>>>30))*0xBF58476D1CE4E5B9L;
+        seed=(seed^(seed>>>27))*0x94D049BB133111EBL;
+        var random=RandomSource.create(seed^(seed>>>31));
+        if(plant.getBlock() instanceof SeasonalPlantBlock){
+            int age=weighted(random.nextInt(100),15,40,70);
+            int grade=weighted(random.nextInt(100),10,40,85);
+            return plant.setValue(SeasonalPlantBlock.AGE,age).setValue(SeasonalPlantBlock.QUALITY,grade);
+        }
+        if(plant.getBlock() instanceof BerryBushBlock)return plant.setValue(BerryBushBlock.RIPE,random.nextInt(100)<55);
+        return plant;
+    }
+    private static int weighted(int roll,int a,int b,int c){
+        return roll<a?0:roll<b?1:roll<c?2:3;
+    }
     static int populate(WorldGenLevel level,RandomSource random,BlockPos center,int sx,int sz,int cap,BlockState plant,
                         BiFunction<Integer,Integer,BlockPos> ground){
         int count=0;
@@ -129,14 +153,46 @@ public final class ForagePopulationFeature extends Feature<ForagePopulationFeatu
             if((x&~15)!=sx||(z&~15)!=sz)continue;
             BlockPos pos=ground.apply(x,z);
             if(pos==null||Math.abs(pos.getY()-center.getY())>2||!usable(level,pos,plant))continue;
-            if(level.setBlock(pos,plant,Block.UPDATE_CLIENTS))count++;
+            if(level.setBlock(pos,naturalState(plant,level.getSeed(),pos),Block.UPDATE_CLIENTS))count++;
         }
         return count;
     }
     private static void require(boolean value,String msg){if(!value)throw new IllegalStateException(msg);}
+    private static void verifyVariety(BlockState plant,java.util.function.IntFunction<BlockState> sample,String label){
+        var ages=new java.util.BitSet();
+        var grades=new java.util.BitSet();
+        var matureGrades=new java.util.BitSet();
+        for(int i=0;i<512;i++){
+            var state=sample.apply(i);
+            require(state.is(plant.getBlock()),"Wrong generated species "+label);
+            if(plant.getBlock() instanceof SeasonalPlantBlock){
+                int age=state.getValue(SeasonalPlantBlock.AGE),grade=state.getValue(SeasonalPlantBlock.QUALITY);
+                ages.set(age);grades.set(grade);
+                if(age==3)matureGrades.set(grade);
+            }else if(plant.getBlock() instanceof BerryBushBlock){
+                ages.set(state.getValue(BerryBushBlock.RIPE)?1:0);
+            }
+        }
+        if(plant.getBlock() instanceof SeasonalPlantBlock)
+            require(ages.cardinality()==4&&grades.cardinality()==4&&matureGrades.cardinality()==4,"Missing natural age/quality "+label);
+        else if(plant.getBlock() instanceof BerryBushBlock)
+            require(ages.cardinality()==2,"Missing natural berry stage "+label);
+    }
+    private static void verifyLegacyPatch(ServerLevel l,String species,BlockState plant,BlockPos center){
+        var key=net.minecraft.resources.ResourceKey.create(Registries.CONFIGURED_FEATURE,
+            ResourceLocation.fromNamespaceAndPath("worldlogicterrain","patch_wild_"+species));
+        var configured=l.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(key).value();
+        require(configured.config() instanceof RandomPatchConfiguration,"Legacy patch type changed "+species);
+        var patch=(RandomPatchConfiguration)configured.config();
+        var inner=patch.feature().value().feature().value().config();
+        require(inner instanceof SimpleBlockConfiguration,"Legacy simple feature missing "+species);
+        var provider=((SimpleBlockConfiguration)inner).toPlace();
+        var random=RandomSource.create(7184);
+        verifyVariety(plant,i->provider.getState(random,center),"legacy patch "+species);
+    }
     public static void verify(ServerLevel l){
         LandscapeMosaic.verify();
-        // All 12 actual registered plants must share the same bounded population placement.
+        // All 32 actual registered plants must share the same bounded population placement.
         var saved=new HashMap<BlockPos,BlockState>();
         BlockPos center=new BlockPos(8,231,8);
         for(int x=4;x<=12;x++)for(int z=4;z<=12;z++)for(int y=230;y<=232;y++){
@@ -147,6 +203,9 @@ public final class ForagePopulationFeature extends Feature<ForagePopulationFeatu
             for(var entry:RULES.entrySet()){
                 String species=entry.getKey();
                 BlockState state=plant(species);
+                verifyVariety(state,i->naturalState(state,124,new BlockPos(i%32,231,i/32)),"population "+species);
+                require(naturalState(state,124,center).equals(naturalState(state,124,center)),"Unstable natural state "+species);
+                if(!dev.minemods.worldlogicterrain.growth.PlantSpecies.isNew(species))verifyLegacyPatch(l,species,state,center);
                 for(int x=4;x<=12;x++)for(int z=4;z<=12;z++){
                     var pos=new BlockPos(x,231,z);
                     l.setBlock(pos,Blocks.AIR.defaultBlockState(),Block.UPDATE_ALL);
@@ -158,9 +217,21 @@ public final class ForagePopulationFeature extends Feature<ForagePopulationFeatu
                 int cap=entry.getValue().cap(),count=populate(l,RandomSource.create(124),center,0,0,cap,state,fixture);
                 int actual=0;
                 for(int x=4;x<=12;x++)for(int z=4;z<=12;z++){
-                    if(l.getBlockState(new BlockPos(x,231,z)).is(state.getBlock())){
+                    var pos=new BlockPos(x,231,z);
+                    var placed=l.getBlockState(pos);
+                    if(placed.is(state.getBlock())){
                         actual++;
                         require(Math.abs(x-8)<=3&&Math.abs(z-8)<=3,"Population escaped group "+species);
+                        require(placed.equals(naturalState(state,l.getSeed(),pos)),"Placed state not initialized "+species);
+                        var view=SeasonalGrowth.view(l,pos,placed);
+                        require(view!=null,"Missing growth HUD state "+species);
+                        if(placed.getBlock() instanceof SeasonalPlantBlock){
+                            int age=placed.getValue(SeasonalPlantBlock.AGE);
+                            require(view.progress()==age*100/3,"Natural HUD age mismatch "+species);
+                            if(age==3)require(view.quality()==placed.getValue(SeasonalPlantBlock.QUALITY)*100/3,"Natural HUD quality mismatch "+species);
+                        }else if(placed.getBlock() instanceof BerryBushBlock){
+                            require(view.progress()==(placed.getValue(BerryBushBlock.RIPE)?100:0),"Natural berry HUD mismatch "+species);
+                        }
                     }
                 }
                 require(count==actual&&count>=3&&count<=cap,"Population count mismatch "+species+" "+count);
