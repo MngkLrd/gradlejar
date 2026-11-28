@@ -29,9 +29,9 @@ final class PopulationChecks {
    var e=Aquaculture.TYPES.get(species.id()).get().create(l);require(e instanceof Fish,"fish "+species.id());
    Fish f=(Fish)e;FishLife.juvenile(f,species,l.getGameTime());
    require(!FishLife.mature(f,species)&&f.getPersistentData().getInt("wl_fish_age_years")==0,"juvenile "+species.id());
-   float length=f.visualLength(species);FishFeeding.feedNatural(f,species,l.getGameTime()+23000);
+   double length=f.getPersistentData().getDouble("wl_fish_length_m");FishFeeding.feedNatural(f,species,l.getGameTime()+23000);
    FishLife.age(f,species,l.getGameTime()+24000);
-   require(f.getPersistentData().getLong("wl_life_age")==24000&&f.visualLength(species)>length,"age "+species.id());
+   require(f.getPersistentData().getLong("wl_life_age")==24000&&f.getPersistentData().getDouble("wl_fish_length_m")>length,"age "+species.id());
    f.discard();
    var roe=Aquaculture.ROE.get().create(l);require(roe!=null,"roe factory");
    roe.initialize(species,WaterKind.LAKE,species.hatchMin());

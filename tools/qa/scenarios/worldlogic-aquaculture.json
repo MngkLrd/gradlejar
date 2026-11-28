@@ -2278,6 +2278,39 @@
           "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
         }
       ]
+    },
+    {
+      "id": "player-independent-incubation",
+      "kind": "mechanic",
+      "subject": "player-independent-incubation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Real server ticks without players: native seawater clutch hatches one juvenile, dry clutch dies"
+        }
+      ]
+    },
+    {
+      "id": "actual-juvenile-hatch",
+      "kind": "mechanic",
+      "subject": "actual-juvenile-hatch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Real server ticks without players: native seawater clutch hatches one juvenile, dry clutch dies"
+        }
+      ]
+    },
+    {
+      "id": "dry-roe-mortality",
+      "kind": "mechanic",
+      "subject": "dry-roe-mortality",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Real server ticks without players: native seawater clutch hatches one juvenile, dry clutch dies"
+        }
+      ]
     }
   ],
   "steps": [
@@ -2328,6 +2361,19 @@
       "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records",
       "command": "aquaculture population_selftest",
       "expect": "AQUA_POPULATION_PASS",
+      "assertion": true
+    },
+    {
+      "command": "aquaculture population_tick_prepare",
+      "expect": "AQUA_POPULATION_TICK_READY"
+    },
+    {
+      "wait": 9
+    },
+    {
+      "name": "Real server ticks without players: native seawater clutch hatches one juvenile, dry clutch dies",
+      "command": "aquaculture population_tick_verify",
+      "expect": "AQUA_POPULATION_NO_PLAYER_PASS",
       "assertion": true
     }
   ]

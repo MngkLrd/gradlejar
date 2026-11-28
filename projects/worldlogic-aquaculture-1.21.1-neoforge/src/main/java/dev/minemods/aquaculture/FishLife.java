@@ -13,6 +13,7 @@ final class FishLife {
   var n=Aquaculture.traits(f,s);n.putInt("wl_fish_age_years",0);
   n.putLong("wl_life_age",0);n.putLong("wl_life_last",now);n.putBoolean("wl_juvenile",true);
   n.putDouble("wl_fish_length_m",Math.max(.05,s.adultLength()*.12));n.putDouble("wl_fish_mass_kg",Math.max(.001,s.maxKg()*.001728));
+  n.putLong("wl_fish_fed_until",now+FishFeeding.DIGEST_TICKS/2);
   f.syncVisualLength(s,n);
  }
  static void age(Fish f,Species s,long now){

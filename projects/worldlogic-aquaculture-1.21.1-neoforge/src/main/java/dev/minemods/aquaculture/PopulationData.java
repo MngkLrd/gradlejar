@@ -24,6 +24,9 @@ public final class PopulationData extends SavedData {
  public int room(Area a,Species s){return Math.max(0,Math.min(SpawnSelection.LOCAL_CAP-total(a),SpawnSelection.speciesCap(s)-total(a,s.id())));}
  public boolean seeded(Area a,Species s){return seeded.contains(new Origin(a,s.id()));}
  public void markSeeded(Area a,Species s){if(seeded.add(new Origin(a,s.id())))setDirty();}
+ void rollbackFailedFounders(Area a,Species s){
+  if(total(a,s.id())==0&&seeded.remove(new Origin(a,s.id())))setDirty();
+ }
  private void delta(Member m,int change){
   var map=totals.computeIfAbsent(m.area,k->new HashMap<>());
   int n=map.getOrDefault(m.species,0)+change*m.amount;

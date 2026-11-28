@@ -69,7 +69,9 @@ public final class RoeClutch extends Entity {
   if(!pop.takeEgg(getUUID())){discard();return;}
   Fish baby=Aquaculture.spawn(l,blockPosition(),s,h);
   if(baby==null){pop.returnEgg(getUUID(),area,s);return;}
-  FishLife.juvenile(baby,s,l.getGameTime());entityData.set(EGGS,eggs()-1);
+  FishLife.juvenile(baby,s,l.getGameTime());
+  baby.getPersistentData().putUUID("wl_roe_origin",getUUID());
+  entityData.set(EGGS,eggs()-1);
   if(eggs()==0)discard();
  }
 }

@@ -21,7 +21,7 @@ public final class FishEcology {
  public static boolean bottom(Species s){return BOTTOM.contains(s.id());}
  public static boolean canHunt(Fish predator,Species hunter,Fish prey,Species victim){
   return hunter!=null&&victim!=null&&predator!=prey&&prey.isAlive()&&hunter!=victim
-   &&hunter.diet().equals("predator")&&predator.visualLength(hunter)>=prey.visualLength(victim)*1.8f
+   &&!predator.getPersistentData().getBoolean("wl_juvenile")&&hunter.diet().equals("predator")&&predator.visualLength(hunter)>=prey.visualLength(victim)*1.8f
    &&prey.visualLength(victim)<=.70f;
  }
  public static double habitatStress(Species s,Aquaculture.Habitat h){
@@ -81,7 +81,9 @@ public final class FishEcology {
  }
  static boolean forage(ServerLevel l,Fish f,Species s,AquaEcologyData data,WorldLogicApi.WaterKind kind){
   long now=l.getGameTime();if(!FishFeeding.canFeed(f,now)||FishFeeding.satiety(f,now)>=40)return false;
-  var food=localFood(l,f.blockPosition(),s);
+  // Fry use microscopic prey rather than trying to swallow adult fish.
+  var food=f.getPersistentData().getBoolean("wl_juvenile")?
+   (nearBed(l,f.blockPosition())?AquaEcologyData.Food.BENTHOS:AquaEcologyData.Food.PLANKTON):localFood(l,f.blockPosition(),s);
   if(food==null||!data.takeFood(f.blockPosition(),kind,food,now))return false;
   FishFeeding.feedNatural(f,s,now);return true;
  }

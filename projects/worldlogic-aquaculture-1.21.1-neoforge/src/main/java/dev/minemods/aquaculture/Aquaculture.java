@@ -143,6 +143,12 @@ public final class Aquaculture {
  }
  private void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("aquaculture").requires(src->src.hasPermission(2))
+   .then(Commands.literal("population_tick_prepare").executes(c->{
+    PopulationTickChecks.prepare(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("AQUA_POPULATION_TICK_READY"),false);return Command.SINGLE_SUCCESS;
+   }))
+   .then(Commands.literal("population_tick_verify").executes(c->{
+    PopulationTickChecks.verify(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("AQUA_POPULATION_NO_PLAYER_PASS"),false);return Command.SINGLE_SUCCESS;
+   }))
    .then(Commands.literal("population_selftest").executes(c->{
     PopulationChecks.run(c.getSource().getLevel());
     c.getSource().sendSuccess(()->Component.literal("AQUA_POPULATION_PASS"),false);

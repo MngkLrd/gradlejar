@@ -59,6 +59,7 @@ public final class PopulationRuntime {
     Fish second=Aquaculture.spawn(l,p2,s,h2);
     if(second!=null){founder(second,s,false,l.getGameTime());paired=true;}
    }
+   if(!paired){first.discard();data.rollbackFailedFounders(area,s);continue;}
    data.markSeeded(area,s);return;
   }
  }
