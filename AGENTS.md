@@ -13,6 +13,7 @@ Read this contract for every task. [Documentation index](docs/README.md) is the 
 | Network player actions | [Bot actions](docs/qa/BOT-ACTIONS.md) |
 | Recipes | [Recipe QA](docs/qa/RECIPE-QA.md) |
 | Studying other mods, interpreting ideas, adapting mechanics or upstream code | [Reference mod analysis and adaptation](docs/development/MOD-ADAPTATION.md) |
+| Explicit multi-mod ecosystem development or integration (WorldLogic mandatory) | [Ecosystem integration standard](docs/development/ECOSYSTEM-INTEGRATION.md) |
 | Mod naming, versioning and delivery filenames | [Mandatory naming standard](docs/development/MOD-NAMING.md) |
 | Living entities, animals, mobs, textures and animation | [Mob and animal art](docs/art/MOB-ART.md) plus common Visual QA |
 | Blocks and vegetation art | [Block art](docs/art/BLOCK-ART.md) plus common Visual QA |
@@ -46,6 +47,10 @@ Mandatory for agents working with this repository: read the current AGENTS.md fr
 ## Reference mod analysis and adaptation — mandatory
 
 When the user names another mod, modpack, game or external implementation as a reference, follow [MOD-ADAPTATION.md](docs/development/MOD-ADAPTATION.md) before implementing. Determine whether the request concerns behavior, architecture, algorithm, content, visuals, interoperability or an explicitly authorized fork. Inspect the actual relevant upstream version, source/docs/observable behavior and license boundaries; distinguish verified findings from assumptions. Extract the requested design principle, compare it with our current mechanics and public APIs, then produce an independent, target-native implementation with justified improvements and executable positive/negative/regression tests. Do not copy entire subsystems, merely rename upstream classes, introduce unnecessary dependencies, redistribute unlicensed assets or claim code provenance without evidence. If actual reuse is requested, verify applicable permission and fulfill its conditions before copying; open repository access is not permission by itself. Preserve existing save IDs, world generation invariants and subsystem ownership; for WorldLogic, Core is the authoritative shared provider and addons consume its public API. If data/API are missing, specify the missing contract and coordinate with its owner rather than invent or duplicate it. Record source/version, selected principle, adaptation decisions, provenance and test IDs in a compact project-local reference note when implementing a nontrivial adaptation. Implement the authorized mechanics; do not end at a research report unless research was the requested task. No automatic porting or unrelated product changes.
+
+## Ecosystem integration — scoped mandatory standard
+
+Follow [ECOSYSTEM-INTEGRATION.md](docs/development/ECOSYSTEM-INTEGRATION.md) for all WorldLogic modules and other explicitly designated multi-mod ecosystems. Before changing a subsystem, inspect the actual peer contracts and active PRs, reuse authoritative capabilities, expose coherent relevant public operations with versioned semantics, maintain the project-local integration manifest, implement available relevant integrations and test affected module combinations. Coordinate missing capabilities directly through GitHub issues/PRs; avoid duplicate requests and do not require routine owner relay. Ownership is declared by each provider, not a fixed addon list. Standalone mods are not enrolled merely because they share this repository: no compulsory APIs, manifests, capability registry or ecosystem QA for them. Do not equate this development policy with implemented runtime discovery or automated CI enforcement. Preserve existing QA gates and target scope.
 
 ## Minecraft visual style — mandatory when creating or changing assets
 
