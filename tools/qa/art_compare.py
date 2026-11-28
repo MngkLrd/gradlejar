@@ -13,7 +13,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 from .visual_lint import decode, fetch
 
-REFERENCE = re.compile(r"(item|block|entity)/[a-z0-9_./-]+")
+REFERENCE = re.compile(r"(item|block|entity|models/armor)/[a-z0-9_./-]+")
 MAX_SIDE = 128
 
 def reference_path(value):

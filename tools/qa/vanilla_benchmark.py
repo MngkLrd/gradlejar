@@ -123,7 +123,7 @@ def expanded_layout_audit(z,catalog):
         if path+".mcmeta" in z.namelist():raise ValueError("Animation not supported: "+path)
         im=decode(z.read(path))
         return extra_metrics(im)["layout_sha256"],im
-    old={read_layout(ref)[0] for ref in list(catalog["references"])+[n for refs in HOLDOUT.values() for n in refs]}
+    old={read_layout(ref)[0] for ref in list(catalog.get("benchmark_r9_reference_ids",catalog["references"]))+[n for refs in HOLDOUT.values() for n in refs]}
     seen=set()
     for refs in EXPANDED.values():
         for ref in refs:
