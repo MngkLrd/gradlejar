@@ -80,5 +80,7 @@
   "aquaculture.feed.full": "Рыба сыта.",
   "aquaculture.feed.cooldown": "Рыбе нужно время, чтобы переварить корм.",
   "aquaculture.feed.dry": "Кормить рыбу можно только в воде.",
-  "aquaculture.ecology.inspect": "%s | %s м | %s кг | Сытость: %s%% | Стресс: %s%%"
+  "aquaculture.ecology.inspect": "%s | %s м | %s кг | Сытость: %s%% | Стресс: %s%%",
+  "entity.aquaculture.roe_clutch": "Кладка рыбьей икры",
+  "aquaculture.roe.inspect": "%s | Икринок: %s | Инкубация: %s%%"
 }

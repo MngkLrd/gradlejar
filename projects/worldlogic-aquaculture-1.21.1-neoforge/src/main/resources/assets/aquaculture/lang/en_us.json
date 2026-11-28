@@ -80,5 +80,7 @@
   "aquaculture.feed.full": "This fish is full.",
   "aquaculture.feed.cooldown": "Let the fish digest its last meal.",
   "aquaculture.feed.dry": "Fish can only feed in water.",
-  "aquaculture.ecology.inspect": "%s | %s m | %s kg | Satiety: %s%% | Stress: %s%%"
+  "aquaculture.ecology.inspect": "%s | %s m | %s kg | Satiety: %s%% | Stress: %s%%",
+  "entity.aquaculture.roe_clutch": "Fish roe clutch",
+  "aquaculture.roe.inspect": "%s | Eggs: %s | Incubation: %s%%"
 }

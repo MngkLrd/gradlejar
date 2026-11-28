@@ -1332,6 +1332,154 @@
         "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
         "context_type": "model_uv"
       }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/roe/gravel.png": {
+      "sha256": "db584e15b3b94cb730a2942652defd89a1f295f65f23255bc41910986a2f57b1",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/frogspawn",
+          "minecraft": "1.21.1",
+          "sha256": "bb4b2e237b596c86f0b24ebe529805c49126314799d8ecb767417f92a58c7b00"
+        }
+      ],
+      "comparison": "Actual vanilla frogspawn has spaced dark centers and translucent grey membranes; compact uneven gravel cluster uses three-dimensional beads with amber yolk, dark brown membrane. Static comparison only.",
+      "findings": {
+        "silhouette": "compact uneven gravel cluster is visible in the top-view layout.",
+        "cluster_structure": "Each face is a coherent nine-texel group with a central yolk and enclosing rim.",
+        "micro_contrast": "amber yolk, dark brown membrane contrasts with a small dark lateral embryo mark.",
+        "light_and_volume": "Top highlight and less bright bottom distinguish face orientation on the cube.",
+        "material_continuity": "Six face islands share the membrane ramp; empty atlas pixels are outside UV islands.",
+        "edge_variation": "Individual cubes are spaced and vertically offset in the compact uneven gravel cluster.",
+        "variant_identity": "amber yolk, dark brown membrane and the compact uneven gravel cluster identify this nursery form.",
+        "vanilla_comparison": "Vanilla frogspawn PNG has dark centers and separated transparent contours; this uses thicker clustered eggs.",
+        "functional_material_cues": "Translucent outer rim surrounds the brighter yolk, with a darker lateral embryo texel."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/frogspawn",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish roe entity UVs are not covered by the block and item atlas rules.",
+        "reference_source": "Decoded actual 1.21.1 PNG from InventivetalentDev version-pinned mirror; SHA-256 recorded, official client archive not independently checked.",
+        "applied_pattern": "Separated egg clusters and translucent membrane cues inspired by frogspawn, original colors and geometry.",
+        "reference_limit": "Frogspawn is a flat block texture, not an entity cuboid atlas; no direct renderer equivalence.",
+        "native_view": "Actual 16x16 UVs and nearest-neighbor comparison inspected.",
+        "context_view": "Static top-view assembly shows compact uneven gravel cluster; Minecraft client rendering is not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/roe/vegetation.png": {
+      "sha256": "04764815a443433538118b5a13fff7779e079301a09ee7793417e26df54effdf",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/frogspawn",
+          "minecraft": "1.21.1",
+          "sha256": "bb4b2e237b596c86f0b24ebe529805c49126314799d8ecb767417f92a58c7b00"
+        }
+      ],
+      "comparison": "Actual vanilla frogspawn has spaced dark centers and translucent grey membranes; vertical clustered attachment uses three-dimensional beads with olive membrane with pale yellow center. Static comparison only.",
+      "findings": {
+        "silhouette": "vertical clustered attachment is visible in the top-view layout.",
+        "cluster_structure": "Each face is a coherent nine-texel group with a central yolk and enclosing rim.",
+        "micro_contrast": "olive membrane with pale yellow center contrasts with a small dark lateral embryo mark.",
+        "light_and_volume": "Top highlight and less bright bottom distinguish face orientation on the cube.",
+        "material_continuity": "Six face islands share the membrane ramp; empty atlas pixels are outside UV islands.",
+        "edge_variation": "Individual cubes are spaced and vertically offset in the vertical clustered attachment.",
+        "variant_identity": "olive membrane with pale yellow center and the vertical clustered attachment identify this nursery form.",
+        "vanilla_comparison": "Vanilla frogspawn PNG has dark centers and separated transparent contours; this uses thicker clustered eggs.",
+        "functional_material_cues": "Translucent outer rim surrounds the brighter yolk, with a darker lateral embryo texel."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/frogspawn",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish roe entity UVs are not covered by the block and item atlas rules.",
+        "reference_source": "Decoded actual 1.21.1 PNG from InventivetalentDev version-pinned mirror; SHA-256 recorded, official client archive not independently checked.",
+        "applied_pattern": "Separated egg clusters and translucent membrane cues inspired by frogspawn, original colors and geometry.",
+        "reference_limit": "Frogspawn is a flat block texture, not an entity cuboid atlas; no direct renderer equivalence.",
+        "native_view": "Actual 16x16 UVs and nearest-neighbor comparison inspected.",
+        "context_view": "Static top-view assembly shows vertical clustered attachment; Minecraft client rendering is not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/roe/open_water.png": {
+      "sha256": "71d767a0211dda5404f2aefbf3dbd771815f861b42c5bde2f7a855d3b250a624",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/frogspawn",
+          "minecraft": "1.21.1",
+          "sha256": "bb4b2e237b596c86f0b24ebe529805c49126314799d8ecb767417f92a58c7b00"
+        }
+      ],
+      "comparison": "Actual vanilla frogspawn has spaced dark centers and translucent grey membranes; loose scattered suspended beads uses three-dimensional beads with pale translucent blue-green membrane. Static comparison only.",
+      "findings": {
+        "silhouette": "loose scattered suspended beads is visible in the top-view layout.",
+        "cluster_structure": "Each face is a coherent nine-texel group with a central yolk and enclosing rim.",
+        "micro_contrast": "pale translucent blue-green membrane contrasts with a small dark lateral embryo mark.",
+        "light_and_volume": "Top highlight and less bright bottom distinguish face orientation on the cube.",
+        "material_continuity": "Six face islands share the membrane ramp; empty atlas pixels are outside UV islands.",
+        "edge_variation": "Individual cubes are spaced and vertically offset in the loose scattered suspended beads.",
+        "variant_identity": "pale translucent blue-green membrane and the loose scattered suspended beads identify this nursery form.",
+        "vanilla_comparison": "Vanilla frogspawn PNG has dark centers and separated transparent contours; this uses thicker clustered eggs.",
+        "functional_material_cues": "Translucent outer rim surrounds the brighter yolk, with a darker lateral embryo texel."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/frogspawn",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish roe entity UVs are not covered by the block and item atlas rules.",
+        "reference_source": "Decoded actual 1.21.1 PNG from InventivetalentDev version-pinned mirror; SHA-256 recorded, official client archive not independently checked.",
+        "applied_pattern": "Separated egg clusters and translucent membrane cues inspired by frogspawn, original colors and geometry.",
+        "reference_limit": "Frogspawn is a flat block texture, not an entity cuboid atlas; no direct renderer equivalence.",
+        "native_view": "Actual 16x16 UVs and nearest-neighbor comparison inspected.",
+        "context_view": "Static top-view assembly shows loose scattered suspended beads; Minecraft client rendering is not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/roe/sheltered_bed.png": {
+      "sha256": "3cbae4f91a91ab4ba5c59e7ca23de5a21cadb94c4b004182ce8306a0f165c009",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/frogspawn",
+          "minecraft": "1.21.1",
+          "sha256": "bb4b2e237b596c86f0b24ebe529805c49126314799d8ecb767417f92a58c7b00"
+        }
+      ],
+      "comparison": "Actual vanilla frogspawn has spaced dark centers and translucent grey membranes; dense staggered nest uses three-dimensional beads with salmon-orange yolk and warm rust membrane. Static comparison only.",
+      "findings": {
+        "silhouette": "dense staggered nest is visible in the top-view layout.",
+        "cluster_structure": "Each face is a coherent nine-texel group with a central yolk and enclosing rim.",
+        "micro_contrast": "salmon-orange yolk and warm rust membrane contrasts with a small dark lateral embryo mark.",
+        "light_and_volume": "Top highlight and less bright bottom distinguish face orientation on the cube.",
+        "material_continuity": "Six face islands share the membrane ramp; empty atlas pixels are outside UV islands.",
+        "edge_variation": "Individual cubes are spaced and vertically offset in the dense staggered nest.",
+        "variant_identity": "salmon-orange yolk and warm rust membrane and the dense staggered nest identify this nursery form.",
+        "vanilla_comparison": "Vanilla frogspawn PNG has dark centers and separated transparent contours; this uses thicker clustered eggs.",
+        "functional_material_cues": "Translucent outer rim surrounds the brighter yolk, with a darker lateral embryo texel."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/frogspawn",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish roe entity UVs are not covered by the block and item atlas rules.",
+        "reference_source": "Decoded actual 1.21.1 PNG from InventivetalentDev version-pinned mirror; SHA-256 recorded, official client archive not independently checked.",
+        "applied_pattern": "Separated egg clusters and translucent membrane cues inspired by frogspawn, original colors and geometry.",
+        "reference_limit": "Frogspawn is a flat block texture, not an entity cuboid atlas; no direct renderer equivalence.",
+        "native_view": "Actual 16x16 UVs and nearest-neighbor comparison inspected.",
+        "context_view": "Static top-view assembly shows dense staggered nest; Minecraft client rendering is not run.",
+        "context_type": "model_uv"
+      }
     }
   }
 }

@@ -2179,6 +2179,105 @@
           "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait"
         }
       ]
+    },
+    {
+      "id": "population-uuid",
+      "kind": "mechanic",
+      "subject": "population-uuid",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-capacity",
+      "kind": "mechanic",
+      "subject": "population-capacity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-extinction",
+      "kind": "mechanic",
+      "subject": "population-extinction",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-migration",
+      "kind": "mechanic",
+      "subject": "population-migration",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-save-reload",
+      "kind": "mechanic",
+      "subject": "population-save-reload",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-season",
+      "kind": "mechanic",
+      "subject": "population-season",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "roe_clutch",
+      "kind": "entity",
+      "subject": "aquaculture:roe_clutch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-juvenile",
+      "kind": "mechanic",
+      "subject": "population-juvenile",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
+    },
+    {
+      "id": "population-birth-conservation",
+      "kind": "mechanic",
+      "subject": "population-birth-conservation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records"
+        }
+      ]
     }
   ],
   "steps": [
@@ -2223,6 +2322,12 @@
       "name": "Ecology: finite forage, recovery, persisted harvest pressure, species selection, schools, predation eligibility and actual dropped bait",
       "command": "aquaculture ecology_selftest",
       "expect": "AQUA_ECOLOGY_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Population: unique fish IDs, finite clutch reservations, birth conservation, extinction, migration, persistent state and all 36 juvenile/roe records",
+      "command": "aquaculture population_selftest",
+      "expect": "AQUA_POPULATION_PASS",
       "assertion": true
     }
   ]
