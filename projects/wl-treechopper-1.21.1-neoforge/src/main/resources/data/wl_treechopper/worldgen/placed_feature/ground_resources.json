@@ -1,0 +1,11 @@
+{
+  "feature": "wl_treechopper:ground_resources",
+  "placement": [
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

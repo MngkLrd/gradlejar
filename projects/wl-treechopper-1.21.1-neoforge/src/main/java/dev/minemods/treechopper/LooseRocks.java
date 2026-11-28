@@ -41,18 +41,33 @@ final class LooseRocks {
         var rock=ROCKS.get(BuiltInRegistries.BLOCK.getKey(surface.getBlock()));
         return rock==null?null:rock.get().defaultBlockState();
     }
-    static boolean offer(ServerLevel l,int x,int z){
-        BlockPos column=new BlockPos(x,l.getMinBuildHeight(),z);
-        if(!l.hasChunkAt(column))return false;
-        int y=l.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z)-1;
+    record Site(BlockPos pos,BlockState state,boolean grass){}
+    /** Only the top exposed dry surface; no caves, leaf canopy, roofs of plants or underwater placements. */
+    static Site site(net.minecraft.world.level.LevelReader l,int x,int z,boolean allowGrass){
+        int y=l.getHeight(Heightmap.Types.WORLD_SURFACE,x,z)-1;
         BlockPos ground=new BlockPos(x,y,z),pos=ground.above();
-        if(l.isOutsideBuildHeight(pos)||!l.getBlockState(pos).isAir())return false;
-        var state=forSurface(l.getBlockState(ground));
-        if(state==null||!state.canSurvive(l,pos))return false;
-        for(BlockPos near:BlockPos.betweenClosed(pos.offset(-2,-1,-2),pos.offset(2,1,2))){
+        if(y<l.getMinBuildHeight()||l.isOutsideBuildHeight(pos)||!l.getBlockState(pos).isAir()||!l.getBlockState(ground).getFluidState().isEmpty())return null;
+        var surface=l.getBlockState(ground);
+        var state=forSurface(surface);
+        boolean grass=false;
+        if(state==null&&allowGrass&&surface.is(Blocks.GRASS_BLOCK)){
+            // Preserve a real local rock identity: choose the first natural stone beneath the turf.
+            for(int depth=1;depth<=8&&y-depth>=l.getMinBuildHeight();depth++){
+                var below=forSurface(l.getBlockState(ground.below(depth)));
+                if(below!=null&&below.getBlock() instanceof PebbleBlock p&&!p.flint){state=below;grass=true;break;}
+            }
+        }
+        if(state==null||!state.canSurvive(l,pos))return null;
+        return new Site(pos,state,grass);
+    }
+    static boolean offer(ServerLevel l,int x,int z){
+        if(!l.hasChunkAt(new BlockPos(x,l.getMinBuildHeight(),z)))return false;
+        var site=site(l,x,z,false);
+        if(site==null||!l.canSeeSky(site.pos()))return false;
+        for(BlockPos near:BlockPos.betweenClosed(site.pos().offset(-2,-1,-2),site.pos().offset(2,1,2))){
             if(l.hasChunkAt(near)&&l.getBlockState(near).getBlock() instanceof PebbleBlock)return false;
         }
-        return l.setBlock(pos,state,Block.UPDATE_ALL);
+        return l.setBlock(site.pos(),site.state(),Block.UPDATE_ALL);
     }
     static boolean qaCoreMaterials(){
         try{

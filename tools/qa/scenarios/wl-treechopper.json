@@ -2372,7 +2372,7 @@
     {
       "id": "forest-start",
       "kind": "mechanic",
-      "subject": "Natural oak twig block, duplicate cap, right click pickup and left click break, actual falling twig and primitive recipe; real inventory crafting output, raw granite and gravel spawn exact pebble/flint, reject dirt and worked stone, right click pebble and left click flint, public API identities",
+      "subject": "Natural oak twig block, duplicate cap, right click pickup and left click break, actual falling twig and primitive recipe; real inventory crafting output, raw granite and gravel spawn exact pebble/flint, reject dirt and worked stone, right click pebble and left click flint, public API identities; bounded actual late decoration on canopy/exposed rock fixture, rare grass uses local parent rock, overhead blocks reject hidden rock",
       "checks": [
         {
           "backend": "server",

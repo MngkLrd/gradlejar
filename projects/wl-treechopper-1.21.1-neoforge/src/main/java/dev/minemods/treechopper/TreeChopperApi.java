@@ -32,7 +32,7 @@ public final class TreeChopperApi {
         if(!l.getServer().isSameThread()||!l.hasChunkAt(pos)||l.isOutsideBuildHeight(pos))return Optional.empty();
         return looseFind(l.getBlockState(pos));
     }
-    /** Supported substrate -> exact matching loose block. Empty for dirt, sand, worked masonry and unsupported materials. */
+    /** Supported substrate -> exact matching loose block. Empty for dirt, sand, worked masonry and unsupported materials. Grass generation uses nearby underlying raw stone identity, not this exact-substrate mapping. */
     public static Optional<BlockState> rockForSurface(BlockState state){return Optional.ofNullable(LooseRocks.forSurface(state));}
     public static boolean requiresAxe(BlockState state){return TreeChopper.requiresAxe(state);}
     public static Optional<CutSnapshot> cut(ServerLevel l,BlockPos pos){

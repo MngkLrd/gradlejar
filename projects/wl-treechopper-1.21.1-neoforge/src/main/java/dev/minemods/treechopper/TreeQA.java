@@ -214,6 +214,31 @@ final class TreeQA {
             fake.setPos(flintPos.getX()+.5,flintPos.getY(),flintPos.getZ()+.5);
             if(!fake.gameMode.destroyBlock(flintPos)||!l.getBlockState(flintPos).isAir()
                 ||l.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,new net.minecraft.world.phys.AABB(flintPos).inflate(2),drop->drop.getItem().is(Items.FLINT)).isEmpty())return 0;
+            // Actual late decoration code on a controlled, loaded mixed surface chunk.
+            var chunk=new net.minecraft.world.level.ChunkPos(65,65);
+            var granite=net.minecraft.world.level.block.Blocks.GRANITE.defaultBlockState();
+            for(int x=1040;x<=1055;x++)for(int z=1040;z<=1055;z++){
+                l.setBlock(new BlockPos(x,249,z),granite,2);
+                if(x<1048)l.setBlock(new BlockPos(x,254,z),leaves,2);
+            }
+            int generated=GroundResourcesFeature.populate(l,chunk,net.minecraft.util.RandomSource.create(812));
+            int twigs=0,rocks=0;
+            for(int x=1040;x<=1055;x++)for(int z=1040;z<=1055;z++){
+                var state=l.getBlockState(new BlockPos(x,250,z));
+                if(state.getBlock() instanceof TwigBlock)twigs++;
+                if(state.getBlock() instanceof PebbleBlock peb){
+                    if(x<1048||!peb.source.toString().equals("minecraft:granite"))return 0;
+                    rocks++;
+                }
+            }
+            if(generated!=twigs+rocks||twigs<2||twigs>GroundResourcesFeature.TWIG_LIMIT||rocks<1||rocks>GroundResourcesFeature.ROCK_LIMIT)return 0;
+            BlockPos turf=new BlockPos(1054,256,1054);
+            l.setBlock(turf.below(2),granite,2);l.setBlock(turf.below(),net.minecraft.world.level.block.Blocks.GRASS_BLOCK.defaultBlockState(),2);
+            var rare=LooseRocks.site(l,turf.getX(),turf.getZ(),true);
+            if(LooseRocks.site(l,turf.getX(),turf.getZ(),false)!=null||rare==null||!rare.grass()||!(rare.state().getBlock() instanceof PebbleBlock rarePeb)||!rarePeb.source.toString().equals("minecraft:granite"))return 0;
+            // Roof blocks prevent buried stone from being selected.
+            l.setBlock(turf.above(),net.minecraft.world.level.block.Blocks.OAK_PLANKS.defaultBlockState(),2);
+            if(LooseRocks.site(l,turf.getX(),turf.getZ(),true)!=null)return 0;
             c.getSource().sendSuccess(()->Component.literal("TreeChopper forest start PASS"),false);return 1;
           }))
           .then(Commands.literal("qa_crown_ownership").executes(c->{

@@ -68,6 +68,7 @@ public final class TreeChopper {
     }
     public TreeChopper(IEventBus modBus){
         LooseRocks.register(BLOCKS,modBus);
+        GroundResourcesFeature.register(modBus);
         BLOCKS.register(modBus);
         ENTITIES.register(modBus);
         BLOCK_ENTITIES.register(modBus);

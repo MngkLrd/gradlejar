@@ -21,8 +21,9 @@ public final class PebbleBlock extends Block {
     PebbleBlock(Properties properties,ResourceLocation source,boolean flint){super(properties);this.source=source;this.flint=flint;}
     ItemStack collectedStack(){return new ItemStack(flint?Items.FLINT:asItem());}
     @Override protected boolean canSurvive(BlockState state,LevelReader level,BlockPos pos){
-        return BuiltInRegistries.BLOCK.getKey(level.getBlockState(pos.below()).getBlock()).equals(source)
-            &&level.getBlockState(pos.below()).isFaceSturdy(level,pos.below(),Direction.UP);
+        var support=level.getBlockState(pos.below());
+        return (BuiltInRegistries.BLOCK.getKey(support.getBlock()).equals(source)||!flint&&support.is(Blocks.GRASS_BLOCK))
+            &&support.isFaceSturdy(level,pos.below(),Direction.UP);
     }
     @Override protected BlockState updateShape(BlockState state,Direction direction,BlockState neighbor,LevelAccessor level,BlockPos pos,BlockPos neighborPos){
         return direction==Direction.DOWN&&!state.canSurvive(level,pos)?Blocks.AIR.defaultBlockState():super.updateShape(state,direction,neighbor,level,pos,neighborPos);

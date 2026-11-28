@@ -108,12 +108,12 @@ tasks.register('generateTreeGeometry') {
             boolean flint=name=='gravel'
             def id=flint?'loose_flint':"pebble_${name}"
             def namespace=coreRocks.contains(name)?'worldlogic':'minecraft'
-            def texture=flint?'minecraft:block/blackstone':"${namespace}:block/${name=='basalt'?'basalt_side':name}"
+            def texture = flint ? 'minecraft:block/blackstone' : "${namespace}:block/${name == 'basalt' ? 'basalt_side' : name}"
             // Broad irregular rounded chips vs thin angular conchoidal flint shards.
-            def forms=flint?[
+            def forms = flint ? [
                 [[5,0,5,11,1,10,0],[6,1,6,10,2,9,22.5],[7,2,7,9,3,8,0]],
                 [[5,0,6,11,1,10,-22.5],[7,1,6,11,2,9,0],[8,2,7,10,3,8,0]]
-            ]:[
+            ] : [
                 [[5,0,5,11,2,10,0],[6,2,6,10,3,9,0],[4,0,6,5,1,9,0]],
                 [[5,0,6,11,2,11,0],[6,2,7,10,3,10,0],[7,0,4,10,1,6,0]],
                 [[5,0,5,10,2,11,0],[6,2,6,9,3,10,0],[10,0,7,12,1,10,0]]
@@ -140,7 +140,7 @@ tasks.register('generateTreeGeometry') {
             }
             emit(asset+"blockstates/${id}.json",[variants:['':variants]])
             if(!flint)emit(asset+"models/item/${id}.json",[parent:"wl_treechopper:block/${id}_0",display:[gui:[rotation:[30,225,0],translation:[0,4,0],scale:[1.5,1.5,1.5]],ground:[translation:[0,2,0],scale:[1,1,1]],firstperson_righthand:[rotation:[0,45,0],translation:[0,3,0],scale:[1,1,1]]]])
-            emit("data/wl_treechopper/loot_table/blocks/${id}.json",[type:'minecraft:block',pools:[[rolls:1,entries:[[type:'minecraft:item',name:flint?'minecraft:flint':"wl_treechopper:${id}"]],conditions:[[condition:'minecraft:survives_explosion']]]]])
+            emit("data/wl_treechopper/loot_table/blocks/${id}.json",[type:'minecraft:block',pools:[[rolls:1,entries:[[type:'minecraft:item',name:(flint ? 'minecraft:flint' : "wl_treechopper:${id}")]],conditions:[[condition:'minecraft:survives_explosion']]]]])
             en["block.wl_treechopper.${id}"]=flint?'Loose flint':"${names[0]} pebble"
             ru["block.wl_treechopper.${id}"]=flint?'Лежащий кремень':"Камушек (${names[1]})"
         }

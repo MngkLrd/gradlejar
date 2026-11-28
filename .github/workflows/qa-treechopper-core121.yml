@@ -67,5 +67,5 @@ jobs:
           path: |
             treechopper-core121-diagnostic/report.json
             treechopper-core121-diagnostic/runtime/logs/
-            projects/wl-treechopper-1.21.1-neoforge/build/libs/wl_treechopper-neoforge-mc1.21.1-0.9.0.jar
+            projects/wl-treechopper-1.21.1-neoforge/build/libs/wl_treechopper-neoforge-mc1.21.1-0.9.1.jar
           if-no-files-found: warn
