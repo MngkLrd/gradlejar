@@ -199,5 +199,6 @@
   "death.traumacraft.origin.starvation": "Starvation",
   "death.traumacraft.origin.suffocation": "Suffocation",
   "death.traumacraft.origin.magic": "Magic / harmful effect",
-  "death.traumacraft.origin.lightning": "Lightning"
+  "death.traumacraft.origin.lightning": "Lightning",
+  "death.traumacraft.critical_zone": "Critical region: %s"
 }

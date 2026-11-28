@@ -36,6 +36,12 @@ public final class TraumaDeathScreen extends Screen {
     private float hp(BodyPart p){return report.body().hp()[p.ordinal()];}
     private float integrity(OrganState.Organ o){return report.body().clinical().integrity()[o.ordinal()];}
     private int palette(BodyPart p){int i=p.ordinal();return AnatomyLayout.palette(hp(p)/p.maximum,report.body().bleeding()[i]>0,report.body().fracture()[i]);}
+    private Component criticalNames(){
+        List<String> names=new ArrayList<>();
+        for(var organ:OrganState.Organ.values())if(report.critical(organ))names.add(organName(organ).getString());
+        for(var p:BodyPart.values())if(report.critical(p)&&!(p==BodyPart.HEAD&&report.critical(OrganState.Organ.BRAIN)))names.add(BodyVisual.name(p).getString());
+        return names.isEmpty()?Component.empty():Component.translatable("death.traumacraft.critical_zone",String.join(", ",names));
+    }
     private static boolean bloodCause(Cause c){return c==Cause.BLOOD_LOSS||c==Cause.INTERNAL_BLEEDING||c==Cause.EXTERNAL_BLEEDING;}
     private void label(GuiGraphics g,Component text,int x,int y,int w,int color){
         g.drawString(font,font.plainSubstrByWidth(text.getString(),Math.max(0,w)),x,y,color,false);
@@ -76,8 +82,13 @@ public final class TraumaDeathScreen extends Screen {
         g.fill(x+2,y+1,r-2,b-1,0xFFE9E9E9);g.fill(x+3,y+3,r-3,b-3,0xFFC6C6C6);
         g.fill(r-3,y+3,r-2,b-3,0xFF555555);g.fill(x+3,b-3,r-2,b-2,0xFF555555);
         g.drawCenteredString(font,title,x+l.width()/2,y+5,0xFF9B2529);
-        label(g,Component.translatable("death.traumacraft.reason",cause(report.cause())),x+7,y+16,l.width()-14,FATAL);
-        label(g,Component.translatable("death.traumacraft.trigger",origin(report.origin())),x+7,y+27,l.width()-14,TEXT);
+        var reason=Component.translatable("death.traumacraft.reason",cause(report.cause()));
+        if(bloodCause(report.cause()))reason.append(" | ").append(Component.translatable("screen.traumacraft.blood_volume",Math.round(report.body().bloodMl())+"/5000 ml"));
+        if(report.cause()==Cause.HYPOXIA)reason.append(" | ").append(Component.translatable("screen.traumacraft.oxygen",Math.round(report.body().clinical().oxygen()*100)+"%"));
+        label(g,reason,x+7,y+16,l.width()-14,FATAL);
+        var trigger=Component.translatable("death.traumacraft.trigger",origin(report.origin()));
+        var critical=criticalNames();if(!critical.getString().isEmpty())trigger.append(" | ").append(critical);
+        label(g,trigger,x+7,y+27,l.width()-14,TEXT);
         g.fill(x+5,y+37,r-5,y+38,0xFF888888);
         g.fill(l.organX()-7,l.rowTop(),l.organX()-6,l.footerY()-2,0xFF999999);
         drawBody(g);
@@ -129,6 +140,7 @@ public final class TraumaDeathScreen extends Screen {
             for(var k:WoundKind.values())if((report.body().wounds()[i]&k.bit)!=0)tip.add(Component.translatable("wound.traumacraft."+k.name().toLowerCase(Locale.ROOT)));
         }else if(mx>=x&&mx<r&&my>=y&&my<l.rowTop()){
             tip.add(cause(report.cause()));tip.add(origin(report.origin()));
+            var names=criticalNames();if(!names.getString().isEmpty())tip.add(names);
             if(!report.sourceId().isEmpty())tip.add(Component.literal(report.sourceId()));
             tip.add(Component.translatable("screen.traumacraft.blood_volume",Math.round(report.body().bloodMl())+"/5000 ml"));
             tip.add(Component.translatable("screen.traumacraft.oxygen",Math.round(report.body().clinical().oxygen()*100)+"%"));

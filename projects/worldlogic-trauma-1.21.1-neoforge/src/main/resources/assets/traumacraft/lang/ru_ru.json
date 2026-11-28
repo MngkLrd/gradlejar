@@ -199,5 +199,6 @@
   "death.traumacraft.origin.starvation": "Голод",
   "death.traumacraft.origin.suffocation": "Удушье",
   "death.traumacraft.origin.magic": "Магия / вредный эффект",
-  "death.traumacraft.origin.lightning": "Молния"
+  "death.traumacraft.origin.lightning": "Молния",
+  "death.traumacraft.critical_zone": "Критическая зона: %s"
 }

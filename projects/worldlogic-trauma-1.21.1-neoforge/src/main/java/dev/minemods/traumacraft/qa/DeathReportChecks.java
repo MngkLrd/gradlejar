@@ -48,6 +48,10 @@ public final class DeathReportChecks {
             require(DeathReports.consume(p,b,kill).origin()==Origin.FALL,"engine collapse retains direct fatal hit context");
             b.reset();DeathReports.hit(p,b,fall,false);
             require(DeathReports.consume(p,b,kill).cause()==Cause.VANILLA,"nonlethal hit cannot become cause");
+            b.reset();
+            var event=new net.neoforged.neoforge.event.entity.living.LivingDamageEvent.Pre(p,new net.neoforged.neoforge.common.damagesource.DamageContainer(kill,100f));
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);
+            require(event.getNewDamage()==100f&&b.health(BodyPart.CHEST)==85&&!b.hasInjury(),"native kill preserves true pre-death anatomy");
         }finally{DeathReports.clear(p);b.reset();}
     }
 }

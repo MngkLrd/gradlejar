@@ -72,6 +72,8 @@ public final class TraumaEvents {
         TreatmentManager.cancel(p);
         if(!WorldLogicBridge.injuryEnabled(p)) return;
         BodyState b=BodyStates.get(p);
+        // Engine kill/void are not physical impacts; retain the real pre-death anatomy in the report.
+        if(VitalityBridge.engineFatalSource(e.getSource())){DeathReports.clear(p);return;}
         boolean alreadyFatal=b.vitalDestroyed()||b.fatalBloodLoss();
         applyDamage(p,b,e.getSource(),amount);
         DeathReports.hit(p,b,e.getSource(),alreadyFatal);
