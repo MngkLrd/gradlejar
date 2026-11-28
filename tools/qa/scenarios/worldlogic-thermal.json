@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Thermal 0.9.0 body, weather, rooms and journal regression",
+  "name": "Thermal 0.9.1 climate, rooms and physiology regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -193,6 +193,12 @@
       "name": "Shared room and source caches, expiry, live exposure and public room API",
       "command": "thermal qa room_cache",
       "expect": "THERMAL_QA_room_cache_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Optional physiology providers, energy, electrolytes, circulation and public snapshot",
+      "command": "thermal qa integration",
+      "expect": "THERMAL_QA_integration_PASS",
       "assertion": true
     }
   ],
@@ -491,6 +497,17 @@
         {
           "backend": "server",
           "name": "Shared room and source caches, expiry, live exposure and public room API"
+        }
+      ]
+    },
+    {
+      "id": "physiology-integration",
+      "kind": "mechanic",
+      "subject": "Optional physiology providers, energy, electrolytes, circulation and public snapshot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Optional physiology providers, energy, electrolytes, circulation and public snapshot"
         }
       ]
     }

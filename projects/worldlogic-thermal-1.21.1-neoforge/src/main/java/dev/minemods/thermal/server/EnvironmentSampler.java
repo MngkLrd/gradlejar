@@ -6,6 +6,7 @@ import dev.minemods.thermal.content.*;
 import dev.minemods.worldlogic.api.WorldLogicApi;
 import java.util.*;
 import dev.minemods.thermal.RoomReading;
+import dev.minemods.thermal.PhysiologyInputs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -27,7 +28,7 @@ public final class EnvironmentSampler {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("worldlogic_thermal",path));
     }
     private static final TagKey<Item> INSULATED = gear("insulated_gear"), LIGHT = gear("light_gear"), METAL = gear("metal_gear"), PLANT = gear("plant_insulation"), SUMMER = gear("summer_gear");
-    public record Sample(ThermalModel.Exposure exposure, double skinWetness, boolean sheltered, double solarExposure, WeatherReading weather,RoomReading room) {}
+    public record Sample(ThermalModel.Exposure exposure, double skinWetness, boolean sheltered, double solarExposure, WeatherReading weather,RoomReading room,PhysiologyInputs physiology) {}
     private EnvironmentSampler() {}
     public static Optional<Sample> sample(ServerPlayer p, double skin) {
         ServerLevel level = p.serverLevel(); BlockPos pos = p.blockPosition();
@@ -38,7 +39,7 @@ public final class EnvironmentSampler {
         double air = env.ambientCelsiusEstimate();
         if(!Double.isFinite(air)) return Optional.empty();
         boolean sheltered = env.covered();
-        boolean rain = env.rainingAt();
+        boolean rain = env.rainingAt()&&!sheltered;
 
         double outdoorHumidity=atmosphere.map(WorldLogicApi.Atmosphere::relativeHumidityPercent).orElse(100.0);
         double outdoorWind=atmosphere.map(a->clamp(a.outdoorWindSpeedMps()/12,0,1)).orElse(0.0);
@@ -86,9 +87,11 @@ public final class EnvironmentSampler {
             a==null?Double.NaN:reference,regional==null?Double.NaN:regional.absoluteLatitude(),regional==null?Double.NaN:regional.moistureIndex(),regionalWeather.map(AddonBridge.Local::kind).orElse(""),regionalWeather.map(AddonBridge.Local::gust).orElse(Double.NaN),regionalWeather.map(AddonBridge.Local::pressure).orElse(Double.NaN),regionalWeather.map(AddonBridge.Local::cloud).orElse(Double.NaN),regionalWeather.map(AddonBridge.Local::fog).orElse(Double.NaN));
         var n=p.getPersistentData().getCompound(ThermalEvents.KEY);
         var adaptation=new dev.minemods.thermal.Adaptation.State(n.getDouble("adaptCold"),n.getDouble("adaptHeat"));
-        double nutrition=dev.minemods.thermal.Adaptation.nutrition(p.getFoodData().getFoodLevel(),p.getFoodData().getSaturationLevel());
-        double hydration=AddonBridge.hydration(p);
-        double meal=clamp(n.getDouble("mealWarmth"),0,1);
+        var physiology=AddonBridge.physiology(p);
+        double nutrition=physiology.nutrition(dev.minemods.thermal.Adaptation.nutrition(p.getFoodData().getFoodLevel(),p.getFoodData().getSaturationLevel()));
+        double hydration=physiology.coolingCapacity();
+        // Metabolism already accounts for digestion and energy. Keep the legacy meal bonus only without that provider.
+        double meal=physiology.metabolism()?0:clamp(n.getDouble("mealWarmth"),0,1);
         // Share heat between immediate radiant exchange and bounded retained room heat.
         if(room!=0)radiant*=.8;
         double contact=0;
@@ -96,7 +99,7 @@ public final class EnvironmentSampler {
         if(!p.isInWater()&&p.onGround()&&(floor.is(Blocks.ICE)||floor.is(Blocks.PACKED_ICE)||floor.is(Blocks.BLUE_ICE)||floor.is(Blocks.SNOW_BLOCK)))
             contact=2*(1-LimbExposure.protection(p.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET)));
         cooling=Math.min(18,cooling+contact);
-        return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,p.isInWater(),water(air,air),meal,cooling,clamp(ventilation,0,1),adaptation.cold(),adaptation.heat(),nutrition,hydration,room),skin,sheltered,solar,weather,roomReading));
+        return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,p.isInWater(),water(air,air),meal,cooling,clamp(ventilation,0,1),adaptation.cold(),adaptation.heat(),nutrition,hydration,room,physiology.circulation()),skin,sheltered,solar,weather,roomReading,physiology));
     }
     record LocalComfort(double heat,double cooling){}
     static LocalComfort localComfort(ServerLevel level,ServerPlayer p,double air,double humidity,boolean sheltered) {

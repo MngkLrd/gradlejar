@@ -5,13 +5,14 @@ public final class ThermalModel {
     public enum Stage { HYPOTHERMIA, VERY_COLD, COLD, COMFORTABLE, WARM, VERY_HOT, HYPERTHERMIA }
     public record Exposure(double airC, double radiantC, double wind, double wetness,
                            double insulation, double activity, boolean submerged, double waterC,
-                           double mealWarmth, double coolingC, double ventilation, double coldAdaptation,double heatAdaptation,double nutrition,double hydration,double roomDelta) {
+                           double mealWarmth, double coolingC, double ventilation, double coldAdaptation,double heatAdaptation,double nutrition,double hydration,double roomDelta,double circulation) {
+        public Exposure(double airC,double radiantC,double wind,double wetness,double insulation,double activity,boolean submerged,double waterC,double mealWarmth,double coolingC,double ventilation,double coldAdaptation,double heatAdaptation,double nutrition,double hydration,double roomDelta){this(airC,radiantC,wind,wetness,insulation,activity,submerged,waterC,mealWarmth,coolingC,ventilation,coldAdaptation,heatAdaptation,nutrition,hydration,roomDelta,1);}
         public Exposure(double airC,double radiantC,double wind,double wetness,double insulation,double activity,boolean submerged,double waterC,double mealWarmth,double coolingC,double ventilation){this(airC,radiantC,wind,wetness,insulation,activity,submerged,waterC,mealWarmth,coolingC,ventilation,0,0,1,1,0);}
         public Exposure(double airC,double radiantC,double wind,double wetness,double insulation,double activity,boolean submerged,double waterC,double mealWarmth){this(airC,radiantC,wind,wetness,insulation,activity,submerged,waterC,mealWarmth,0,0);}
         public Exposure {
             if (!Double.isFinite(airC) || !Double.isFinite(radiantC) || !Double.isFinite(wind)
                 || !Double.isFinite(wetness) || !Double.isFinite(insulation) || !Double.isFinite(activity)
-                || !Double.isFinite(waterC) || !Double.isFinite(mealWarmth) || !Double.isFinite(coolingC) || !Double.isFinite(ventilation)||!Double.isFinite(coldAdaptation)||!Double.isFinite(heatAdaptation)||!Double.isFinite(nutrition)||!Double.isFinite(hydration)||!Double.isFinite(roomDelta)) throw new IllegalArgumentException("non-finite exposure");
+                || !Double.isFinite(waterC) || !Double.isFinite(mealWarmth) || !Double.isFinite(coolingC) || !Double.isFinite(ventilation)||!Double.isFinite(coldAdaptation)||!Double.isFinite(heatAdaptation)||!Double.isFinite(nutrition)||!Double.isFinite(hydration)||!Double.isFinite(roomDelta)||!Double.isFinite(circulation)) throw new IllegalArgumentException("non-finite exposure");
         }
     }
     public record State(double bodyC, double feelsLikeC, double targetC, Stage stage, double trendCPerMinute) {}
@@ -25,6 +26,10 @@ public final class ThermalModel {
             - wind * (2 + 5 * wet) - 6 * wet;
         double cold = Math.max(0, 12 - felt - activity * 6 - meal * 2 - retained * 6 - clamp(e.coldAdaptation(),0,1)*3 + (1-clamp(e.nutrition(),0,1))*5) * (1 - retained * .90);
         double hot = Math.max(0, felt - 28 + activity * 7 + meal + retained * 5 - clamp(e.ventilation(),0,1)*7 - clamp(e.heatAdaptation(),0,1)*3 + (1-clamp(e.hydration(),0,1))*4);
+        // Reduced circulating blood impairs heat distribution under thermal stress,
+        // never creates a second bleeding or shock simulation.
+        double circulation=clamp(e.circulation(),0,1);
+        cold*=1+.45*(1-circulation);hot*=1+.30*(1-circulation);
         double target = clamp(37 - cold * .14 + hot * .18, 30, 43);
         double tau = e.submerged() ? 80 : (felt>=18&&felt<=28&&previous.bodyC()<36.6 ? 105 : 200);
         // Recover in a heated room faster, without accelerating cooling or dangerous overheating.

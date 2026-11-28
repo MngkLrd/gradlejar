@@ -22,7 +22,7 @@ final class LimbExposure {
    String key="frost_"+LIMBS[i];
    double dose=Adaptation.frostDose(n.getDouble(key),state.feelsLikeC(),i<2?arms:legs,e.wetness());
    // Distinct peripheral tissue damage, not a second application of the systemic damage event.
-   if(dose>=120){AddonBridge.frostbite(p,LIMBS[i],1.5f);dose=60;}
+   if(dose>=120){dose=AddonBridge.frostbite(p,LIMBS[i],1.5f)?60:120;}
    n.putDouble(key,dose);
   }
  }

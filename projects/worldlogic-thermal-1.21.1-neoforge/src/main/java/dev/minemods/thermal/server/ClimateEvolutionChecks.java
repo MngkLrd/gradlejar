@@ -43,7 +43,9 @@ final class ClimateEvolutionChecks {
   require(ThermalModel.tick(a,exp(40,0,0,1,.1),1).targetC()>ThermalModel.tick(a,exp(40,0,0,1,1),1).targetC(),"dehydration worsens heat");
   int old=p.getFoodData().getFoodLevel();float sat=p.getFoodData().getSaturationLevel();
   try{p.getFoodData().setFoodLevel(1);p.getFoodData().setSaturation(0);
-   require(EnvironmentSampler.sample(p,0).orElseThrow().exposure().nutrition()<.1,"live hunger affects exposure");
+   var sample=EnvironmentSampler.sample(p,0).orElseThrow();
+   if(sample.physiology().metabolism())require(Math.abs(sample.exposure().nutrition()-sample.physiology().nutrition(0))<1e-8,"metabolism energy and diet own nutrition");
+   else require(sample.exposure().nutrition()<.1,"live hunger fallback affects exposure");
   }finally{p.getFoodData().setFoodLevel(old);p.getFoodData().setSaturation(sat);}
  }
  static void room(ServerLevel l,ServerPlayer p){RoomChecks.verify(l,p,"room_inertia");}
