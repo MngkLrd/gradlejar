@@ -1,0 +1,143 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "worldlogicterrain:block/sphagnum_moss_atlas",
+    "main": "worldlogicterrain:block/sphagnum_moss_atlas"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0.08,
+        0
+      ],
+      "to": [
+        16,
+        0.08,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#main",
+          "uv": [
+            0,
+            0,
+            8,
+            8
+          ]
+        },
+        "down": {
+          "texture": "#main",
+          "uv": [
+            0,
+            0,
+            8,
+            8
+          ]
+        }
+      },
+      "shade": false
+    },
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        8,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#main",
+          "uv": [
+            8,
+            4,
+            16,
+            8
+          ]
+        },
+        "south": {
+          "texture": "#main",
+          "uv": [
+            8,
+            4,
+            16,
+            8
+          ]
+        }
+      },
+      "shade": false
+    },
+    {
+      "from": [
+        8,
+        0,
+        0
+      ],
+      "to": [
+        8,
+        8,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#main",
+          "uv": [
+            8,
+            4,
+            16,
+            8
+          ]
+        },
+        "west": {
+          "texture": "#main",
+          "uv": [
+            8,
+            4,
+            16,
+            8
+          ]
+        }
+      },
+      "shade": false
+    },
+    {
+      "from": [
+        3,
+        0,
+        4
+      ],
+      "to": [
+        13,
+        8,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#main",
+          "uv": [
+            9.5,
+            4,
+            14.5,
+            8
+          ]
+        },
+        "south": {
+          "texture": "#main",
+          "uv": [
+            9.5,
+            4,
+            14.5,
+            8
+          ]
+        }
+      },
+      "shade": false
+    }
+  ]
+}

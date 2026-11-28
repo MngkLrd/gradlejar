@@ -29,7 +29,8 @@ public enum BenthicSpecies {
     PONDWEED("pondweed","LAKE POND RIVER FRESH_HINT",-0.2,1.65,1,10,"SOFT",3,17,7),
     WATER_CROWFOOT("water_crowfoot","RIVER SPRING",-0.15,1.5,1,7,"ANY",2,18,8),
     RIVER_MOSS("river_moss","RIVER SPRING",-0.4,1.65,1,9,"ROCK",1,22,0),
-    WATER_STARWORT("water_starwort","RIVER SPRING POND WETLAND",-0.15,1.6,1,5,"SOFT",2,14,8);
+    WATER_STARWORT("water_starwort","RIVER SPRING POND WETLAND",-0.15,1.6,1,5,"SOFT",2,14,8),
+    IRISH_MOSS("irish_moss","SEA",-0.35,1.30,1,9,"ROCK",1,12,0);
     public final String id,waters,substrate;
     public final double minTemp,maxTemp;
     public final int minDepth,maxDepth,height,weight,growth;

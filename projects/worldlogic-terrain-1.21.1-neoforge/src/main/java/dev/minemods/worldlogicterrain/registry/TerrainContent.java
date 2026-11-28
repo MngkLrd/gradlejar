@@ -99,10 +99,15 @@ public final class TerrainContent {
                 BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS).randomTicks()));
             PLANTS.add(ITEMS.register(id,()->new dev.minemods.worldlogicterrain.growth.SeasonalSeedItem(block.get())));
         }
+        for(var species:dev.minemods.worldlogicterrain.moss.MossSpecies.values()){
+            var block=BLOCKS.register(species.id,()->new dev.minemods.worldlogicterrain.moss.MossBlock(species,
+                BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.MOSS_CARPET)));
+            PLANTS.add(ITEMS.register(species.id,()->new BlockItem(block.get(),mossFood(species.edible))));
+        }
         for(var species:dev.minemods.worldlogicterrain.water.BenthicSpecies.values()){
             var block=BLOCKS.register(species.id,()->new dev.minemods.worldlogicterrain.water.BenthicBlock(species,
                 BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.WET_GRASS).randomTicks()));
-            PLANTS.add(ITEMS.register(species.id,()->new BlockItem(block.get(),new Item.Properties())));
+            PLANTS.add(ITEMS.register(species.id,()->new BlockItem(block.get(),mossFood(species==dev.minemods.worldlogicterrain.water.BenthicSpecies.IRISH_MOSS))));
         }
         for(var species:dev.minemods.worldlogicterrain.growth.FungalEcology.Species.values()){
             var block=BLOCKS.register(species.id+"_colony",()->new dev.minemods.worldlogicterrain.growth.FungalColonyBlock(species,
@@ -117,6 +122,11 @@ public final class TerrainContent {
             if(fruit!=dev.minemods.worldlogicterrain.tree.TreeFruit.APPLE)
                 FOODS.add(ITEMS.register(fruit.id,()->new ForageFoodItem(fruit.nutrition,fruit.saturation,0)));
         }
+    }
+    private static Item.Properties mossFood(boolean edible){
+        var properties=new Item.Properties();
+        if(edible)properties.food(new net.minecraft.world.food.FoodProperties.Builder().nutrition(1).saturationModifier(.2f).build());
+        return properties;
     }
     private static void tree(String name) {
         wood(name+"_log",()->new RotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG)));
@@ -156,8 +166,10 @@ public final class TerrainContent {
                 String path=BuiltInRegistries.ITEM.getKey(item).getPath();
                 return path.endsWith("_log")||path.endsWith("_planks");
             }).forEach(event::accept);
-        if(event.getTabKey().equals(CreativeModeTabs.FOOD_AND_DRINKS))
+        if(event.getTabKey().equals(CreativeModeTabs.FOOD_AND_DRINKS)){
             FOODS.forEach(item -> event.accept(item.get()));
+            PLANTS.stream().map(Supplier::get).filter(item->item.getDefaultInstance().has(net.minecraft.core.component.DataComponents.FOOD)).forEach(event::accept);
+        }
     }
     private TerrainContent() {}
 }

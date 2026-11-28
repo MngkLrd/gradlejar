@@ -62,8 +62,8 @@ final class MossyDeadwoodChecks {
                 var dry=center.south(2);
                 var count=MossyDeadwood.decorate(l,center,east,4,RandomSource.create(81),p->!p.equals(dry));
                 int top=0,around=0;
-                for(int i=1;i<=4;i++)if(l.getBlockState(center.east(i).above()).is(Blocks.MOSS_CARPET))top++;
-                for(int x=0;x<=4;x++)for(int z=-2;z<=2;z++)if(z!=0&&l.getBlockState(center.offset(x,0,z)).is(Blocks.MOSS_CARPET))around++;
+                for(int i=1;i<=4;i++)if(l.getBlockState(center.east(i).above()).is(dev.minemods.worldlogicterrain.moss.MossSpecies.SHEET.block()))top++;
+                for(int x=0;x<=4;x++)for(int z=-2;z<=2;z++)if(z!=0&&l.getBlockState(center.offset(x,0,z)).is(dev.minemods.worldlogicterrain.moss.MossSpecies.SHEET.block()))around++;
                 require(top>=1&&around>=1&&count==top+around,"Missing top/ground moss: "+top+"/"+around);
                 require(l.getBlockState(obstacle).is(Blocks.DANDELION)&&l.getBlockState(dry).isAir(),"Moss replaced protected or dry ground");
             }

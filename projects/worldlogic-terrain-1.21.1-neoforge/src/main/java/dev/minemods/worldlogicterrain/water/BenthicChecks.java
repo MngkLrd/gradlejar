@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 final class BenthicChecks {
     private static void require(boolean v,String msg){if(!v)throw new IllegalStateException("Benthic: "+msg);}
     static void verify(ServerLevel l){
-        require(BenthicSpecies.values().length==20,"species count");
+        require(BenthicSpecies.values().length==21,"species count");
         var p=new BlockPos(6,250,6);var saved=new LinkedHashMap<BlockPos,BlockState>();
         for(int i=-1;i<=7;i++){var q=p.above(i);saved.put(q,l.getBlockState(q));}
         try{
@@ -20,6 +20,8 @@ final class BenthicChecks {
                 var kind=AquaticHabitat.Kind.valueOf(sp.waters.split(" ")[0]);
                 require(BenthicEcology.habitat(sp,kind,(sp.minTemp+sp.maxTemp)/2,sp.minDepth),"suitable habitat "+sp.id);
                 require(!BenthicEcology.habitat(sp,AquaticHabitat.Kind.GROUNDWATER,1,sp.minDepth),"groundwater "+sp.id);
+                if(sp==BenthicSpecies.IRISH_MOSS)require(!sp.accepts(AquaticHabitat.Kind.RIVER)&&!sp.accepts(AquaticHabitat.Kind.LAKE)
+                    &&sp.accepts(AquaticHabitat.Kind.SEA),"Irish moss is marine only");
                 require(!BenthicEcology.habitat(sp,kind,sp.maxTemp+1,sp.minDepth)&&!BenthicEcology.habitat(sp,kind,1,sp.maxDepth+1),"climate/depth boundary "+sp.id);
                 int nativeId=BenthicBlock.nativeIndex(kind);
                 int f=BenthicBlock.nativeAvailable()?nativeId:0;

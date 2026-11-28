@@ -229,5 +229,16 @@
   "block.worldlogicterrain.mossy_cedar_log": "Замшелое бревно кедра",
   "block.worldlogicterrain.mossy_maple_log": "Замшелое бревно клёна",
   "block.worldlogicterrain.mossy_beech_log": "Замшелое бревно бука",
-  "block.worldlogicterrain.mossy_alder_log": "Замшелое бревно ольхи"
+  "block.worldlogicterrain.mossy_alder_log": "Замшелое бревно ольхи",
+  "block.worldlogicterrain.sheet_moss": "Плевроций (лесной мох)",
+  "block.worldlogicterrain.cushion_moss": "Подушковидный мох",
+  "block.worldlogicterrain.sphagnum_moss": "Сфагнум",
+  "block.worldlogicterrain.iceland_moss": "Цетрария исландская",
+  "block.worldlogicterrain.reindeer_moss": "Ягель (олений мох)",
+  "block.worldlogicterrain.irish_moss": "Ирландский мох",
+  "block.worldlogicterrain.mossy_palm_log": "Замшелое бревно пальмы",
+  "block.worldlogicterrain.mossy_date_palm_log": "Замшелое бревно финиковой пальмы",
+  "block.worldlogicterrain.mossy_baobab_log": "Замшелое бревно баобаба",
+  "block.worldlogicterrain.mossy_ebony_log": "Замшелое бревно эбенового дерева",
+  "block.worldlogicterrain.mossy_mahogany_log": "Замшелое бревно махагони"
 }

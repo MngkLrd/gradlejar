@@ -229,5 +229,16 @@
   "block.worldlogicterrain.mossy_cedar_log": "Mossy Cedar Log",
   "block.worldlogicterrain.mossy_maple_log": "Mossy Maple Log",
   "block.worldlogicterrain.mossy_beech_log": "Mossy Beech Log",
-  "block.worldlogicterrain.mossy_alder_log": "Mossy Alder Log"
+  "block.worldlogicterrain.mossy_alder_log": "Mossy Alder Log",
+  "block.worldlogicterrain.sheet_moss": "Sheet moss",
+  "block.worldlogicterrain.cushion_moss": "Cushion moss",
+  "block.worldlogicterrain.sphagnum_moss": "Sphagnum moss",
+  "block.worldlogicterrain.iceland_moss": "Iceland moss",
+  "block.worldlogicterrain.reindeer_moss": "Reindeer lichen",
+  "block.worldlogicterrain.irish_moss": "Irish moss",
+  "block.worldlogicterrain.mossy_palm_log": "Mossy palm log",
+  "block.worldlogicterrain.mossy_date_palm_log": "Mossy date palm log",
+  "block.worldlogicterrain.mossy_baobab_log": "Mossy baobab log",
+  "block.worldlogicterrain.mossy_ebony_log": "Mossy ebony log",
+  "block.worldlogicterrain.mossy_mahogany_log": "Mossy mahogany log"
 }

@@ -1208,7 +1208,13 @@
     {
       "name": "Mixed meadow and frost patch mechanics",
       "command": "worldlogicterrain patch_check",
-      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 32 climate-aware forage populations verified; natural plant ages and qualities verified for 27 four-stage plants, five berry bushes and twelve legacy patch providers; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells; 20 regional plants and seven existing crops verified: growth, quality, harvest, season boundaries and HUD data; 20 benthic species verified: water families, habitat, source retention, support, height and loot; four fungal colonies verified: habitat, stage diversity, climate, harvest, replant, spread cap, support, stew and HUD; berry fruiting verified year-round; four mushroom counts per block verified; mossy deadwood verified: host species, bark, top and ground moss, climate and obstacle rejection; Core wood physics verified: 24 profiles, 48 blocks, BlockItem composition, Janka, MOR, green moisture, SI wet mass and flammability",
+      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 32 climate-aware forage populations verified; natural plant ages and qualities verified for 27 four-stage plants, five berry bushes and twelve legacy patch providers; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells; 20 regional plants and seven existing crops verified: growth, quality, harvest, season boundaries and HUD data; 21 benthic species verified: water families, habitat, source retention, support, height and loot; four fungal colonies verified: habitat, stage diversity, climate, harvest, replant, spread cap, support, stew and HUD; berry fruiting verified year-round; four mushroom counts per block verified; mossy deadwood verified: host species, bark, top and ground moss, climate and obstacle rejection; Core wood physics verified: 24 profiles, 48 blocks, BlockItem composition, Janka, MOR, green moisture, SI wet mass and flammability",
+      "assertion": true
+    },
+    {
+      "name": "Moss and lichen mechanics",
+      "command": "worldlogicterrain moss_check",
+      "expect": "Moss verified: terrestrial species, climate, support, placement, loot and edible lichens",
       "assertion": true
     }
   ],
@@ -6804,6 +6810,212 @@
         {
           "backend": "server",
           "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "block-sheet_moss",
+      "kind": "block",
+      "subject": "sheet_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Moss and lichen mechanics"
+        }
+      ]
+    },
+    {
+      "id": "item-sheet_moss",
+      "kind": "item",
+      "subject": "sheet_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Moss and lichen mechanics"
+        }
+      ]
+    },
+    {
+      "id": "block-cushion_moss",
+      "kind": "block",
+      "subject": "cushion_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Moss and lichen mechanics"
+        }
+      ]
+    },
+    {
+      "id": "item-cushion_moss",
+      "kind": "item",
+      "subject": "cushion_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Moss and lichen mechanics"
+        }
+      ]
+    },
+    {
+      "id": "block-sphagnum_moss",
+      "kind": "block",
+      "subject": "sphagnum_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Moss and lichen mechanics"
+        }
+      ]
+    },
+    {
+      "id": "item-sphagnum_moss",
+      "kind": "item",
+      "subject": "sphagnum_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Moss and lichen mechanics"
+        }
+      ]
+    },
+    {
+      "id": "block-iceland_moss",
+      "kind": "block",
+      "subject": "iceland_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Moss and lichen mechanics"
+        }
+      ]
+    },
+    {
+      "id": "item-iceland_moss",
+      "kind": "item",
+      "subject": "iceland_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Moss and lichen mechanics"
+        }
+      ]
+    },
+    {
+      "id": "block-reindeer_moss",
+      "kind": "block",
+      "subject": "reindeer_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Moss and lichen mechanics"
+        }
+      ]
+    },
+    {
+      "id": "item-reindeer_moss",
+      "kind": "item",
+      "subject": "reindeer_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Moss and lichen mechanics"
+        }
+      ]
+    },
+    {
+      "id": "block-irish_moss",
+      "kind": "block",
+      "subject": "irish_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Moss and lichen mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "item-irish_moss",
+      "kind": "item",
+      "subject": "irish_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Moss and lichen mechanics"
+        },
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-palm",
+      "kind": "block",
+      "subject": "mossy palm log species, axis, loot, recipes and Core physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-date_palm",
+      "kind": "block",
+      "subject": "mossy date_palm log species, axis, loot, recipes and Core physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-baobab",
+      "kind": "block",
+      "subject": "mossy baobab log species, axis, loot, recipes and Core physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-ebony",
+      "kind": "block",
+      "subject": "mossy ebony log species, axis, loot, recipes and Core physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-mahogany",
+      "kind": "block",
+      "subject": "mossy mahogany log species, axis, loot, recipes and Core physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "moss-local-ecology",
+      "kind": "mechanic",
+      "subject": "Local moss habitat, actual supported placement and unsuitable-site rejection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Moss and lichen mechanics"
         }
       ]
     }

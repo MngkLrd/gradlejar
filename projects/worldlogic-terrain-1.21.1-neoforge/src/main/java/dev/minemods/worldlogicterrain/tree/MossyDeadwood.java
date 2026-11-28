@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 /** Mossy deadwood preserves the host species and Core material identity.
  * Local habitat is sampled by the owning tree feature; no climate simulation here. */
 public final class MossyDeadwood {
-    public static final List<String> SPECIES=List.of("oak","dark_oak","birch","spruce","willow","larch","pine","fir","cedar","maple","beech","alder");
+    public static final List<String> SPECIES=List.of("oak","dark_oak","birch","spruce","willow","larch","pine","fir","cedar","maple","beech","alder","palm","date_palm","baobab","ebony","mahogany");
     private MossyDeadwood(){}
     public static ResourceLocation mossyId(String wood){return ResourceLocation.fromNamespaceAndPath("worldlogicterrain","mossy_"+wood+"_log");}
     public static ResourceLocation originalId(String wood){
@@ -65,7 +65,7 @@ public final class MossyDeadwood {
      * carpet when a free top exists; scattered patches preserve existing plants. */
     static int decorate(WorldGenLevel l,BlockPos start,Direction dir,int length,RandomSource random,Predicate<BlockPos> suitable){
         int top=0,around=0;
-        var carpet=Blocks.MOSS_CARPET.defaultBlockState();
+        var carpet=dev.minemods.worldlogicterrain.moss.MossSpecies.SHEET.block().defaultBlockState();
         for(int i=1;i<=length;i++){
             var p=start.relative(dir,i).above();
             if(free(l,p)&&carpet.canSurvive(l,p)&&(top==0||random.nextDouble()<.68)){

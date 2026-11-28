@@ -7731,6 +7731,372 @@
         "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
         "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sheet_moss_atlas.png": {
+      "sha256": "d0fa60183a85235bc04aad562c8163c6bfb05790e1f6b664d9b8416035cd1218",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 32x32 atlas and vanilla 1.21.1 fern viewed as a nearest-neighbor family sheet. Low connected dark-green mat and short spreading shoots. The atlas uses two 16x16 native-scale cutouts rather than a stretched texture. No source pixels copied.",
+      "findings": {
+        "silhouette": "Low connected dark-green mat and short spreading shoots.",
+        "cluster_structure": "Connected mat patches and separately drawn upright tips.",
+        "micro_contrast": "Four neighboring material colors distinguish dark margins and lighter tips.",
+        "light_and_volume": "Dark base edge and selected highlights identify raised growth; upright cutouts add height.",
+        "material_continuity": "The species-specific ramp remains coherent across the mat and upright frond.",
+        "edge_variation": "Asymmetric transparent edges and separated growth points.",
+        "variant_identity": "Low connected dark-green mat and short spreading shoots.",
+        "vanilla_comparison": "Vanilla fern provides native-scale foliage and structural transparency, not the species outline.",
+        "functional_material_cues": "A ground-contact mat and multiple independently oriented fronds identify the low colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native-scale cutouts with intentional structural transparency.",
+        "reference_limit": "Fern is not a moss or lichen; the mat and branch silhouette are original.",
+        "native_view": "Low connected dark-green mat and short spreading shoots.",
+        "context_type": "placed_cutout",
+        "context_view": "Actual nearest-neighbor atlas family preview on muted terrain-color background inspected; model UV ranges checked in source. Graphical client and in-world lighting NOT_RUN.",
+        "custom_reason": "Moss and lichen mat plus upright frond atlas has no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/fern.png actual PNG inspected, checksum recorded by prior asset review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/cushion_moss_atlas.png": {
+      "sha256": "9f5596c3d87f5dabcfd8b780fc0afd6832d8d596a338c3b72852bc675301130d",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 32x32 atlas and vanilla 1.21.1 fern viewed as a nearest-neighbor family sheet. Two rounded, light green cushions and compact upright tips. The atlas uses two 16x16 native-scale cutouts rather than a stretched texture. No source pixels copied.",
+      "findings": {
+        "silhouette": "Two rounded, light green cushions and compact upright tips.",
+        "cluster_structure": "Connected mat patches and separately drawn upright tips.",
+        "micro_contrast": "Four neighboring material colors distinguish dark margins and lighter tips.",
+        "light_and_volume": "Dark base edge and selected highlights identify raised growth; upright cutouts add height.",
+        "material_continuity": "The species-specific ramp remains coherent across the mat and upright frond.",
+        "edge_variation": "Asymmetric transparent edges and separated growth points.",
+        "variant_identity": "Two rounded, light green cushions and compact upright tips.",
+        "vanilla_comparison": "Vanilla fern provides native-scale foliage and structural transparency, not the species outline.",
+        "functional_material_cues": "A ground-contact mat and multiple independently oriented fronds identify the low colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native-scale cutouts with intentional structural transparency.",
+        "reference_limit": "Fern is not a moss or lichen; the mat and branch silhouette are original.",
+        "native_view": "Two rounded, light green cushions and compact upright tips.",
+        "context_type": "placed_cutout",
+        "context_view": "Actual nearest-neighbor atlas family preview on muted terrain-color background inspected; model UV ranges checked in source. Graphical client and in-world lighting NOT_RUN.",
+        "custom_reason": "Moss and lichen mat plus upright frond atlas has no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/fern.png actual PNG inspected, checksum recorded by prior asset review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sphagnum_moss_atlas.png": {
+      "sha256": "5f5e16598962a7037ed5eaad3a4161c1471d996bc7608d702e8dba5121e71e7c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 32x32 atlas and vanilla 1.21.1 fern viewed as a nearest-neighbor family sheet. Olive ochre broken rosette with pale forked growing tips. The atlas uses two 16x16 native-scale cutouts rather than a stretched texture. No source pixels copied.",
+      "findings": {
+        "silhouette": "Olive ochre broken rosette with pale forked growing tips.",
+        "cluster_structure": "Connected mat patches and separately drawn upright tips.",
+        "micro_contrast": "Four neighboring material colors distinguish dark margins and lighter tips.",
+        "light_and_volume": "Dark base edge and selected highlights identify raised growth; upright cutouts add height.",
+        "material_continuity": "The species-specific ramp remains coherent across the mat and upright frond.",
+        "edge_variation": "Asymmetric transparent edges and separated growth points.",
+        "variant_identity": "Olive ochre broken rosette with pale forked growing tips.",
+        "vanilla_comparison": "Vanilla fern provides native-scale foliage and structural transparency, not the species outline.",
+        "functional_material_cues": "A ground-contact mat and multiple independently oriented fronds identify the low colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native-scale cutouts with intentional structural transparency.",
+        "reference_limit": "Fern is not a moss or lichen; the mat and branch silhouette are original.",
+        "native_view": "Olive ochre broken rosette with pale forked growing tips.",
+        "context_type": "placed_cutout",
+        "context_view": "Actual nearest-neighbor atlas family preview on muted terrain-color background inspected; model UV ranges checked in source. Graphical client and in-world lighting NOT_RUN.",
+        "custom_reason": "Moss and lichen mat plus upright frond atlas has no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/fern.png actual PNG inspected, checksum recorded by prior asset review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/iceland_moss_atlas.png": {
+      "sha256": "0f7faf92224fa3c34b91884a468fa69d4eeab5c8506433166dab33e85992837e",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 32x32 atlas and vanilla 1.21.1 fern viewed as a nearest-neighbor family sheet. Brown olive lichen with upright branching lobes and warm tips. The atlas uses two 16x16 native-scale cutouts rather than a stretched texture. No source pixels copied.",
+      "findings": {
+        "silhouette": "Brown olive lichen with upright branching lobes and warm tips.",
+        "cluster_structure": "Connected mat patches and separately drawn upright tips.",
+        "micro_contrast": "Four neighboring material colors distinguish dark margins and lighter tips.",
+        "light_and_volume": "Dark base edge and selected highlights identify raised growth; upright cutouts add height.",
+        "material_continuity": "The species-specific ramp remains coherent across the mat and upright frond.",
+        "edge_variation": "Asymmetric transparent edges and separated growth points.",
+        "variant_identity": "Brown olive lichen with upright branching lobes and warm tips.",
+        "vanilla_comparison": "Vanilla fern provides native-scale foliage and structural transparency, not the species outline.",
+        "functional_material_cues": "A ground-contact mat and multiple independently oriented fronds identify the low colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native-scale cutouts with intentional structural transparency.",
+        "reference_limit": "Fern is not a moss or lichen; the mat and branch silhouette are original.",
+        "native_view": "Brown olive lichen with upright branching lobes and warm tips.",
+        "context_type": "placed_cutout",
+        "context_view": "Actual nearest-neighbor atlas family preview on muted terrain-color background inspected; model UV ranges checked in source. Graphical client and in-world lighting NOT_RUN.",
+        "custom_reason": "Moss and lichen mat plus upright frond atlas has no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/fern.png actual PNG inspected, checksum recorded by prior asset review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/reindeer_moss_atlas.png": {
+      "sha256": "b69b809c89a4cf097852a36391ffb41dbd1379d01a4d38338c106b5613e468c7",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 32x32 atlas and vanilla 1.21.1 fern viewed as a nearest-neighbor family sheet. Ash-gray branching lichen with distinct pale forked silhouettes. The atlas uses two 16x16 native-scale cutouts rather than a stretched texture. No source pixels copied.",
+      "findings": {
+        "silhouette": "Ash-gray branching lichen with distinct pale forked silhouettes.",
+        "cluster_structure": "Connected mat patches and separately drawn upright tips.",
+        "micro_contrast": "Four neighboring material colors distinguish dark margins and lighter tips.",
+        "light_and_volume": "Dark base edge and selected highlights identify raised growth; upright cutouts add height.",
+        "material_continuity": "The species-specific ramp remains coherent across the mat and upright frond.",
+        "edge_variation": "Asymmetric transparent edges and separated growth points.",
+        "variant_identity": "Ash-gray branching lichen with distinct pale forked silhouettes.",
+        "vanilla_comparison": "Vanilla fern provides native-scale foliage and structural transparency, not the species outline.",
+        "functional_material_cues": "A ground-contact mat and multiple independently oriented fronds identify the low colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native-scale cutouts with intentional structural transparency.",
+        "reference_limit": "Fern is not a moss or lichen; the mat and branch silhouette are original.",
+        "native_view": "Ash-gray branching lichen with distinct pale forked silhouettes.",
+        "context_type": "placed_cutout",
+        "context_view": "Actual nearest-neighbor atlas family preview on muted terrain-color background inspected; model UV ranges checked in source. Graphical client and in-world lighting NOT_RUN.",
+        "custom_reason": "Moss and lichen mat plus upright frond atlas has no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/fern.png actual PNG inspected, checksum recorded by prior asset review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/irish_moss_atlas.png": {
+      "sha256": "9de99162ce642e2ad26288722ea7526cea02effb11b0f4757a626ccc36454b7b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 32x32 atlas and vanilla 1.21.1 fern viewed as a nearest-neighbor family sheet. Deep burgundy algal holdfast with branching red fronds. The atlas uses two 16x16 native-scale cutouts rather than a stretched texture. No source pixels copied.",
+      "findings": {
+        "silhouette": "Deep burgundy algal holdfast with branching red fronds.",
+        "cluster_structure": "Connected mat patches and separately drawn upright tips.",
+        "micro_contrast": "Four neighboring material colors distinguish dark margins and lighter tips.",
+        "light_and_volume": "Dark base edge and selected highlights identify raised growth; upright cutouts add height.",
+        "material_continuity": "The species-specific ramp remains coherent across the mat and upright frond.",
+        "edge_variation": "Asymmetric transparent edges and separated growth points.",
+        "variant_identity": "Deep burgundy algal holdfast with branching red fronds.",
+        "vanilla_comparison": "Vanilla fern provides native-scale foliage and structural transparency, not the species outline.",
+        "functional_material_cues": "A ground-contact mat and multiple independently oriented fronds identify the low colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native-scale cutouts with intentional structural transparency.",
+        "reference_limit": "Fern is not a moss or lichen; the mat and branch silhouette are original.",
+        "native_view": "Deep burgundy algal holdfast with branching red fronds.",
+        "context_type": "placed_cutout",
+        "context_view": "Actual nearest-neighbor atlas family preview on muted terrain-color background inspected; model UV ranges checked in source. Graphical client and in-world lighting NOT_RUN.",
+        "custom_reason": "Moss and lichen mat plus upright frond atlas has no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/fern.png actual PNG inspected, checksum recorded by prior asset review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_moss_broadleaf.png": {
+      "sha256": "c557b6f6a08bf71cdd38137e9e4fd0dd1e26a53e8eb9b93103e40e690a40d81a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/oak_log",
+          "minecraft": "1.21.1",
+          "sha256": "060c93128fb65aa350a84e4b6576e616c47d40211bbe537cfe923a81d072e30c"
+        }
+      ],
+      "comparison": "Actual 16px transparent overlay viewed in nearest-neighbor 3x3 tiled sheet on approximate host colors. Irregular long green clusters leave strips of native bark visible. Native host bark remains a separate texture; no vanilla source pixels copied.",
+      "findings": {
+        "silhouette": "Irregular long green clusters leave strips of native bark visible.",
+        "cluster_structure": "Unequal contiguous patches taper at their margins.",
+        "micro_contrast": "Neighboring green shades and restrained highlights preserve host contrast.",
+        "light_and_volume": "Darker patch perimeter and lighter inner growth.",
+        "material_continuity": "Transparent gaps preserve the original wood color and grain.",
+        "edge_variation": "Broken boundaries interrupt the patch rhythm.",
+        "variant_identity": "Irregular long green clusters leave strips of native bark visible.",
+        "vanilla_comparison": "Compared native bark scale and lichen-like cutout behavior; distinct original overlay.",
+        "functional_material_cues": "Superficial moss cover leaves the host grain and exposed log end intact."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/oak_log",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Preserve the native bark scale and avoid covering its entire face.",
+        "reference_limit": "Overlay is not the host bark texture; compare actual bark through transparent areas.",
+        "native_view": "Irregular long green clusters leave strips of native bark visible.",
+        "context_type": "tile_3x3",
+        "context_view": "Actual 3x3 nearest-neighbor overlay tiles examined on approximated bark-color grounds, not an actual game-client render. Model review/client lighting NOT_RUN.",
+        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_moss_dark.png": {
+      "sha256": "ce0214642a52550b95be464a7ec168f9fa5372819a46c9748381d053726059c3",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/oak_log",
+          "minecraft": "1.21.1",
+          "sha256": "060c93128fb65aa350a84e4b6576e616c47d40211bbe537cfe923a81d072e30c"
+        }
+      ],
+      "comparison": "Actual 16px transparent overlay viewed in nearest-neighbor 3x3 tiled sheet on approximate host colors. Dark subdued green patches retain the dark host bark as the dominant surface. Native host bark remains a separate texture; no vanilla source pixels copied.",
+      "findings": {
+        "silhouette": "Dark subdued green patches retain the dark host bark as the dominant surface.",
+        "cluster_structure": "Unequal contiguous patches taper at their margins.",
+        "micro_contrast": "Neighboring green shades and restrained highlights preserve host contrast.",
+        "light_and_volume": "Darker patch perimeter and lighter inner growth.",
+        "material_continuity": "Transparent gaps preserve the original wood color and grain.",
+        "edge_variation": "Broken boundaries interrupt the patch rhythm.",
+        "variant_identity": "Dark subdued green patches retain the dark host bark as the dominant surface.",
+        "vanilla_comparison": "Compared native bark scale and lichen-like cutout behavior; distinct original overlay.",
+        "functional_material_cues": "Superficial moss cover leaves the host grain and exposed log end intact."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/oak_log",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Preserve the native bark scale and avoid covering its entire face.",
+        "reference_limit": "Overlay is not the host bark texture; compare actual bark through transparent areas.",
+        "native_view": "Dark subdued green patches retain the dark host bark as the dominant surface.",
+        "context_type": "tile_3x3",
+        "context_view": "Actual 3x3 nearest-neighbor overlay tiles examined on approximated bark-color grounds, not an actual game-client render. Model review/client lighting NOT_RUN.",
+        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_moss_birch.png": {
+      "sha256": "76f59a61bbc300cd9afe5c046152e9921f5d0ecc1aa22c90047e331cb886277c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/oak_log",
+          "minecraft": "1.21.1",
+          "sha256": "060c93128fb65aa350a84e4b6576e616c47d40211bbe537cfe923a81d072e30c"
+        }
+      ],
+      "comparison": "Actual 16px transparent overlay viewed in nearest-neighbor 3x3 tiled sheet on approximate host colors. Brighter asymmetric green patches contrast with pale native bark. Native host bark remains a separate texture; no vanilla source pixels copied.",
+      "findings": {
+        "silhouette": "Brighter asymmetric green patches contrast with pale native bark.",
+        "cluster_structure": "Unequal contiguous patches taper at their margins.",
+        "micro_contrast": "Neighboring green shades and restrained highlights preserve host contrast.",
+        "light_and_volume": "Darker patch perimeter and lighter inner growth.",
+        "material_continuity": "Transparent gaps preserve the original wood color and grain.",
+        "edge_variation": "Broken boundaries interrupt the patch rhythm.",
+        "variant_identity": "Brighter asymmetric green patches contrast with pale native bark.",
+        "vanilla_comparison": "Compared native bark scale and lichen-like cutout behavior; distinct original overlay.",
+        "functional_material_cues": "Superficial moss cover leaves the host grain and exposed log end intact."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/oak_log",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Preserve the native bark scale and avoid covering its entire face.",
+        "reference_limit": "Overlay is not the host bark texture; compare actual bark through transparent areas.",
+        "native_view": "Brighter asymmetric green patches contrast with pale native bark.",
+        "context_type": "tile_3x3",
+        "context_view": "Actual 3x3 nearest-neighbor overlay tiles examined on approximated bark-color grounds, not an actual game-client render. Model review/client lighting NOT_RUN.",
+        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_moss_conifer.png": {
+      "sha256": "8972920bfcd99df258039220ef8941441228a8d6be327ee99ac137ac9b09b74b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/oak_log",
+          "minecraft": "1.21.1",
+          "sha256": "060c93128fb65aa350a84e4b6576e616c47d40211bbe537cfe923a81d072e30c"
+        }
+      ],
+      "comparison": "Actual 16px transparent overlay viewed in nearest-neighbor 3x3 tiled sheet on approximate host colors. Cool green narrow patches follow the host bark's long furrows. Native host bark remains a separate texture; no vanilla source pixels copied.",
+      "findings": {
+        "silhouette": "Cool green narrow patches follow the host bark's long furrows.",
+        "cluster_structure": "Unequal contiguous patches taper at their margins.",
+        "micro_contrast": "Neighboring green shades and restrained highlights preserve host contrast.",
+        "light_and_volume": "Darker patch perimeter and lighter inner growth.",
+        "material_continuity": "Transparent gaps preserve the original wood color and grain.",
+        "edge_variation": "Broken boundaries interrupt the patch rhythm.",
+        "variant_identity": "Cool green narrow patches follow the host bark's long furrows.",
+        "vanilla_comparison": "Compared native bark scale and lichen-like cutout behavior; distinct original overlay.",
+        "functional_material_cues": "Superficial moss cover leaves the host grain and exposed log end intact."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/oak_log",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Preserve the native bark scale and avoid covering its entire face.",
+        "reference_limit": "Overlay is not the host bark texture; compare actual bark through transparent areas.",
+        "native_view": "Cool green narrow patches follow the host bark's long furrows.",
+        "context_type": "tile_3x3",
+        "context_view": "Actual 3x3 nearest-neighbor overlay tiles examined on approximated bark-color grounds, not an actual game-client render. Model review/client lighting NOT_RUN.",
+        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material."
+      }
     }
   },
   "review_status": "1.2.5 RC1: 118 previously reviewed textures unchanged; seven new original fruit item PNGs individually reviewed in native/enlarged icon family and static hanging-model context. Art Review Lock, Build Hub, natural generation and graphical client verification pending.",

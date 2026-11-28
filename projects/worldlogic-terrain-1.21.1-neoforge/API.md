@@ -15,3 +15,7 @@ Snapshot.count() exposes the persistent 1..4 fruiting capacity; legacy construct
 
 ## Mossy deadwood v1 revision 0
 `tree.MossyDeadwood.original(BlockState)` returns original log resource ID or empty; `suitable(CoreHabitat.Sample)` checks local moss ecological constraints, not a climate model. Moss variants use Core original material composition, retain log axes and block tags; no independent wood profile.
+
+
+## Moss ecology v1 revision 0
+`moss.MossSpecies.values()`, `block()`, `supports(BlockGetter,BlockPos)`, `suitable(CoreHabitat.Sample)` describe terrestrial moss and lichen substrate and Core-provided habitat. Irish moss is a marine `water.BenthicSpecies.IRISH_MOSS` and retains native source identity. Food values are normal Minecraft food components; Metabolism may consume them through its normal food path. No new energy model or independent weather simulation.
