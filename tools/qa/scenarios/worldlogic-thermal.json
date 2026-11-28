@@ -250,7 +250,7 @@
       "assertion": true
     },
     {
-      "name": "Compact snow shelter and bare-handed snow gathering",
+      "name": "Compact snow shelter, exact 24-block guide igloo, bare-handed snow gathering and emergency cape",
       "command": "thermal qa polar_survival",
       "expect": "THERMAL_QA_polar_survival_PASS",
       "assertion": true
@@ -695,7 +695,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Compact snow shelter and bare-handed snow gathering"
+          "name": "Compact snow shelter, exact 24-block guide igloo, bare-handed snow gathering and emergency cape"
         }
       ]
     },

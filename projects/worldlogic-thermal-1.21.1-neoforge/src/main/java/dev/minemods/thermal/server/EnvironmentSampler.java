@@ -107,7 +107,7 @@ public final class EnvironmentSampler {
         double contact=0;
         var floor=level.getBlockState(pos.below());
         if(!submerged&&p.onGround()&&(floor.is(Blocks.ICE)||floor.is(Blocks.PACKED_ICE)||floor.is(Blocks.BLUE_ICE)||floor.is(Blocks.SNOW_BLOCK)))
-            contact=2*(1-LimbExposure.protection(p.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET)));
+            contact=(floor.is(Blocks.SNOW_BLOCK)?.6:2)*(1-LimbExposure.protection(p.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET)));
         cooling=Math.min(18,cooling+contact);
         return Optional.of(new Sample(new ThermalModel.Exposure(air,radiant,wind,skin,clamp(ins,0,1),activity,submerged,waterC,meal,cooling,clamp(ventilation,0,1),adaptation.cold(),adaptation.heat(),nutrition,hydration,room,physiology.circulation()),skin,sheltered,solar,weather,roomReading,physiology));
     }

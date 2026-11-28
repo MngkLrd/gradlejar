@@ -187,7 +187,7 @@
   "block.worldlogic_thermal.drying_rack.info": "ПКМ заряженной мокрой тканью; заберите после сушки.",
   "block.worldlogic_thermal.hide_frame.info": "ПКМ кожей; заберите подготовленную кожу пустой рукой.",
   "block.worldlogic_thermal.felting_board.info": "ПКМ чёсаной шерстью; заберите войлок пустой рукой.",
-  "item.worldlogic_thermal.raw_fiber_bundle.info": "Сырьё для очистки на камне каменным скребком.",
+  "item.worldlogic_thermal.raw_fiber_bundle.info": "ПКМ пустой рукой по подходящему растению. Обработайте на камне рукой или скребком; 4 пучка дают аварийную накидку.",
   "item.worldlogic_thermal.dry_fiber.info": "Материал для прядения растительной нити.",
   "item.worldlogic_thermal.plant_thread.info": "Ткачество, шитьё и ремонт одежды.",
   "item.worldlogic_thermal.woven_fiber.info": "Плетёное полотно для одежды и навесов.",
@@ -254,5 +254,6 @@
   "worldlogic_thermal.processing.station.collect": "Заберите результат пустой рукой.",
   "worldlogic_thermal.processing.rack.step": "Поместите заряженную мокрую ткань, подождите 30 секунд. Ткань высохнет.",
   "worldlogic_thermal.processing.repair.title": "Починка одежды",
-  "worldlogic_thermal.processing.repair.step": "Игла в основной руке, повреждённая одежда во второй. Одна нить восстанавливает до 25% прочности."
+  "worldlogic_thermal.processing.repair.step": "Игла в основной руке, повреждённая одежда во второй. Одна нить восстанавливает до 25% прочности.",
+  "message.worldlogic_thermal.snow_gathered": "Снег собран. Четыре снежка можно упаковать в блок в инвентаре."
 }

@@ -187,7 +187,7 @@
   "block.worldlogic_thermal.drying_rack.info": "Right-click with charged wet cloth; collect after drying.",
   "block.worldlogic_thermal.hide_frame.info": "Right-click with leather; collect prepared hide with an empty hand.",
   "block.worldlogic_thermal.felting_board.info": "Right-click with combed wool; collect felt with an empty hand.",
-  "item.worldlogic_thermal.raw_fiber_bundle.info": "Raw material for processing on stone with a scraper.",
+  "item.worldlogic_thermal.raw_fiber_bundle.info": "Empty-hand right-click suitable plants. Process on stone by hand or scraper; four bundles make an emergency cape.",
   "item.worldlogic_thermal.dry_fiber.info": "Material for spinning plant thread.",
   "item.worldlogic_thermal.plant_thread.info": "Weaving, sewing and garment repair.",
   "item.worldlogic_thermal.woven_fiber.info": "Woven fabric for clothing and canopies.",
@@ -254,5 +254,6 @@
   "worldlogic_thermal.processing.station.collect": "Collect with an empty hand.",
   "worldlogic_thermal.processing.rack.step": "Load a charged wet cloth; wait 30 seconds. Output is neutral cloth.",
   "worldlogic_thermal.processing.repair.title": "Repair clothing",
-  "worldlogic_thermal.processing.repair.step": "Hold needle in main hand, damaged garment in offhand. One thread repairs up to 25% of maximum durability."
+  "worldlogic_thermal.processing.repair.step": "Hold needle in main hand, damaged garment in offhand. One thread repairs up to 25% of maximum durability.",
+  "message.worldlogic_thermal.snow_gathered": "Snow gathered. Pack four snowballs into a block in your inventory."
 }

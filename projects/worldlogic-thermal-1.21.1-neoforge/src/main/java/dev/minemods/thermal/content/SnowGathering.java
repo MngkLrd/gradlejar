@@ -28,6 +28,7 @@ public final class SnowGathering {
   if(!l.destroyBlock(pos,false,p))return false;
   HarvestPermission.accepted(p,.10);
   Block.popResource(l,pos,drop);
+  p.displayClientMessage(net.minecraft.network.chat.Component.translatable("message.worldlogic_thermal.snow_gathered"),true);
   return true;
  }
 }

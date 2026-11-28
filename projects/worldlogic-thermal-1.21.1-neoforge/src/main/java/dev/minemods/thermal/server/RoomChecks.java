@@ -161,6 +161,20 @@ final class RoomChecks {
      require(!SnowGathering.gather(l,snow,p),"no duplicate snow");
      l.setBlock(snow,Blocks.POWDER_SNOW.defaultBlockState(),3);
      require(!SnowGathering.gather(l,snow,p)&&l.getBlockState(snow).is(Blocks.POWDER_SNOW),"powder snow excluded");
+     // Exact Patchouli 2x2x2 template: only 24 face blocks, corners optional.
+     BlockPos origin=CENTER.offset(-1,-1,-1);
+     for(BlockPos b:BlockPos.betweenClosed(origin.offset(-1,-1,-1),origin.offset(2,2,2))){
+      BlockPos q=b.immutable();old.putIfAbsent(q,l.getBlockState(q));
+      int x=q.getX()-origin.getX(),y=q.getY()-origin.getY(),z=q.getZ()-origin.getZ();
+      int edge=(x<0||x>1?1:0)+(y<0||y>1?1:0)+(z<0||z>1?1:0);
+      l.setBlock(q,edge==1?Blocks.SNOW_BLOCK.defaultBlockState():Blocks.AIR.defaultBlockState(),2);
+     }
+     RoomHeat.invalidate(l);RoomHeat.forget(l,origin,now);
+     var actual=RoomHeat.sampleAt(l,origin,-30,60,.5,now);
+     require(actual.indoor()&&actual.volume()==8,"actual 24-block Patchouli igloo recognizes eight interior cells");
+     var raw=ThermalContent.RAW_FIBER.get();var input=net.minecraft.world.item.crafting.CraftingInput.of(2,2,java.util.List.of(new net.minecraft.world.item.ItemStack(raw),new net.minecraft.world.item.ItemStack(raw),new net.minecraft.world.item.ItemStack(raw),new net.minecraft.world.item.ItemStack(raw)));
+     var matches=l.getRecipeManager().getRecipesFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,l);
+     require(matches.size()==1&&matches.getFirst().value().assemble(input,l.registryAccess()).is(ThermalContent.STRAW_CAPE.get()),"emergency cape from four bundles in personal crafting grid");
      var initial=RoomPhysics.initial(-30,60);
      var compact=RoomPhysics.step(initial,new RoomPhysics.Inputs(-30,60,.035,.22,.35,8,RoomPhysics.occupantHeat(1,8,1),0,0),120);
      var unoccupied=RoomPhysics.step(initial,new RoomPhysics.Inputs(-30,60,.035,.22,.35,8,0,0,0),120);
