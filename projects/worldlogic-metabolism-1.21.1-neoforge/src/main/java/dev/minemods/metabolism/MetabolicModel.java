@@ -8,7 +8,7 @@ public final class MetabolicModel {
  public static final double[] DAILY={65,70,250,25,900,90,2.4,12,900,320};
  public static final double FAST_MAX=1800,FAT_MAX=30000,STOMACH_MAX=1800;
  public static final int N=KEYS.length;
- public static final double GAME_DAY_SECONDS=1200, BASE_DIGEST_KCAL_PER_SECOND=2.5;
+ public static final double GAME_DAY_SECONDS=1200, BASE_DIGEST_KCAL_PER_SECOND=5.0;
  private static final double[] BUFFER_DAYS={1.5,2,1.25,1.5,12,4,30,12,14,5};
  public record Meal(double kcal,double[] nutrients,double toxin,double absorption) {
   public Meal { nutrients=nutrients.clone(); if(nutrients.length!=N)throw new IllegalArgumentException("nutrients"); }
@@ -20,7 +20,10 @@ public final class MetabolicModel {
   public State(){Arrays.fill(stores,1);Arrays.fill(baseline,1);}
   public static final int HISTORY=7;
   public final double[] historyIntake=new double[HISTORY],historyBurn=new double[HISTORY],historyQuality=new double[HISTORY];
-  public int historyCount,daySeconds;
+  public int historyCount,daySeconds,drinkCooldown;
+  public double overload,lastInstant,lastDigest;
+  public double fullness(){return clamp(stomach/STOMACH_MAX,0,1);}
+  public double mealComfort(){return clamp(1-.55*overload-.35*Math.max(0,(fullness()-.75)/.25),.2,1);}
   public double dayIntake,dayBurn,dayQuality,water=-1,salts=-1,bodyC=-1;
   public double tissueFactor(){return clamp(recovery()*(.35+.65*Math.min(1,adequacy(0)))*(.4+.6*Math.min(1,adequacy(5))),.1,1);}
   public double boneFactor(){return clamp(recovery()*(.3+.7*Math.min(1,adequacy(8))),.1,1);}
@@ -35,25 +38,56 @@ public final class MetabolicModel {
   public double fastHours(){return fast/Math.max(1,burn);}
   public double totalHours(){return (fast+.85*reserve)/Math.max(1,burn);}
   public double digestiveHours(){return stomach/Math.max(.01,digestionRate())/50;}
-  public double digestionRate(){return BASE_DIGEST_KCAL_PER_SECOND*hydrationFactor()*(1-.5*toxin)*(.7+.3*Math.min(1,adequacy(3)));}
+  public double digestionRate(){return BASE_DIGEST_KCAL_PER_SECOND*mealComfort()*hydrationFactor()*(1-.5*toxin)*(.7+.3*Math.min(1,adequacy(3)));}
   public double adequacy(int i){return clamp(stores[i],0,1.5);}
   public double quality(){double sum=0,min=1;for(int i=0;i<N;i++){double v=Math.min(1,adequacy(i));sum+=v;min=Math.min(min,v);}return .65*sum/N+.35*min;}
   public double energy(){return clamp(.75*fast/FAST_MAX+.25*reserve/FAT_MAX,0,1);}
   public double recovery(){return clamp((.35+.65*quality())*(.45+.55*energy())*(1-.65*toxin),.1,1);}
   public double resistance(){return clamp((.5+.5*quality())*(1-.5*toxin),.1,1);}
-  public double absorptionEfficiency(){return clamp(absorption*(1-.4*toxin)*hydrationFactor(),.15,1);}
+  public double absorptionEfficiency(){return clamp(absorption*(1-.4*toxin)*hydrationFactor()*mealComfort(),.15,1);}
  }
  public static double clamp(double x,double lo,double hi){return Double.isFinite(x)?Math.max(lo,Math.min(hi,x)):lo;}
- public static void ingest(State s,Meal m,boolean known){
+ public static double ingest(State s,Meal m,boolean known){
   double kcal=clamp(m.kcal,0,10000),room=Math.max(0,STOMACH_MAX-s.stomach),accepted=Math.min(kcal,room),ratio=kcal>0?accepted/kcal:0;
   double old=s.stomach;s.stomach+=accepted;s.queuedEnergy+=accepted;s.dayIntake+=accepted;
+  s.overload=clamp(s.overload+Math.max(0,kcal-accepted)/STOMACH_MAX+Math.max(0,s.fullness()-.78)*accepted/350,0,1);
   if(s.stomach>0)s.absorption=clamp((s.absorption*old+clamp(m.absorption,.15,1)*accepted)/s.stomach,.15,1);
   for(int i=0;i<N;i++)s.pending[i]=clamp(s.pending[i]+clamp(m.nutrients[i],0,DAILY[i]*4)/DAILY[i]*ratio,0,8);
   s.toxin=clamp(s.toxin+clamp(m.toxin,0,1),0,1);
   if(!known)s.unknown=Math.min(999,s.unknown+1);
+  return accepted;
  }
- /** Exactly one real second at 20 TPS = 0.02 in-game hours. Offline time does not advance. */
- public static void tick(State s,double intensity){
+ public record Intake(double acceptedKcal,double quickKcal,double requestedPoints){}
+ /** A small carbohydrate-dependent fraction leaves the digestion queue immediately; no duplicated calories. */
+ public static Intake consume(State s,Meal meal,boolean known){
+  double accepted=ingest(s,meal,known);
+  if(accepted<=0)return new Intake(0,0,0);
+  double carbShare=clamp(meal.nutrients[2]*4/Math.max(1,meal.kcal),0,1);
+  double quickRaw=Math.min(s.queuedEnergy,accepted*(.08+.22*carbShare));
+  double quick=quickRaw*s.absorptionEfficiency();
+  s.queuedEnergy-=quickRaw;
+  deposit(s,quick);
+  double points=clamp((accepted*.012+quick*.065)*s.mealComfort()*(1-.8*s.toxin),0,8);
+  return new Intake(accepted,quick,points);
+ }
+ private static void deposit(State s,double kcal){
+  double fast=s.fast+kcal;
+  if(fast>FAST_MAX){s.reserve=clamp(s.reserve+(fast-FAST_MAX)*.8,0,FAT_MAX);fast=FAST_MAX;}
+  s.fast=clamp(fast,0,FAST_MAX);
+ }
+ /** A non-caloric short-term relief bonus, not a second water budget. */
+ public static double waterBoost(State s,int volumeMb,double risk,double salt){
+  if(volumeMb<=0||volumeMb>10000||!Double.isFinite(risk)||risk< -1||risk>1||!Double.isFinite(salt)||salt< -1||s.drinkCooldown>0)return 0;
+  s.drinkCooldown=15;
+  double quality=(1-.7*(risk<0?.5:risk))*(salt<0?.7:clamp(1-salt/20,.1,1));
+  return clamp(2*Math.min(1.5,volumeMb/250.0)*quality,0,3);
+ }
+ public static double digestionPoints(State s,double absorbed,boolean resting){
+  return clamp(absorbed*.32*(resting?1:.40)*(1-.5*s.toxin),0,1.8);
+ }
+ /** Exactly one real second at 20 TPS = 0.02 in-game hours. Offline time does not advance. Returns actually assimilated kcal. */
+ public static double tick(State s,double intensity){
+  if(s.drinkCooldown>0)s.drinkCooldown--;s.overload=clamp(s.overload-.003,0,1);
   s.activity=clamp(intensity,0,1);s.burn=(90+230*s.activity)*s.thermalCost();
   double digested=Math.min(s.stomach,s.digestionRate()),fraction=s.stomach>0?digested/s.stomach:0;
   double kcal=s.queuedEnergy*fraction*s.absorptionEfficiency();s.queuedEnergy*=1-fraction;s.stomach-=digested;
@@ -71,6 +105,7 @@ public final class MetabolicModel {
   if(fast<0){double fromFat=Math.min(s.reserve,-fast/0.85);s.reserve-=fromFat;fast+=fromFat*.85;}
   s.fast=clamp(fast,0,FAST_MAX);s.toxin=clamp(s.toxin-.00035,0,1);
   if(++s.daySeconds>=1200){for(int i=State.HISTORY-1;i>0;i--){s.historyIntake[i]=s.historyIntake[i-1];s.historyBurn[i]=s.historyBurn[i-1];s.historyQuality[i]=s.historyQuality[i-1];}s.historyIntake[0]=s.dayIntake;s.historyBurn[0]=s.dayBurn;s.historyQuality[0]=s.dayQuality/s.daySeconds;s.historyCount=Math.min(State.HISTORY,s.historyCount+1);s.daySeconds=0;s.dayIntake=0;s.dayBurn=0;s.dayQuality=0;}
+  return kcal;
  }
  private MetabolicModel(){}
 }

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Metabolism 0.8.1 model regression with published Core dependency",
+  "name": "Metabolism 0.9.0 energy recovery and nutrition regression",
   "coverage": [
     {
       "id": "nutrition-model",
@@ -127,6 +127,83 @@
       "id": "core-dependency-runtime",
       "kind": "mechanic",
       "subject": "Actual Core fatigue and exertion API on installed dependency",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "instant-food-energy",
+      "kind": "mechanic",
+      "subject": "Actual immediate Core energy and calorie conservation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "digestion-energy",
+      "kind": "mechanic",
+      "subject": "Gradual recovery stronger at rest",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "water-energy",
+      "kind": "mechanic",
+      "subject": "Actual water boost and cooldown, no calories",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "overeating-energy",
+      "kind": "mechanic",
+      "subject": "Bounded meal capacity and overload persistence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "generic-food",
+      "kind": "mechanic",
+      "subject": "Vanilla and unknown FOOD component and milk support",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "full-hunger-food",
+      "kind": "mechanic",
+      "subject": "Vanilla full-hunger compatibility with stomach capacity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "food-finish-event",
+      "kind": "mechanic",
+      "subject": "Registered completed consumption event",
       "checks": [
         {
           "backend": "server",

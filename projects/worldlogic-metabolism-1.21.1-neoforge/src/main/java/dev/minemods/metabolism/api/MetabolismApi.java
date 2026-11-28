@@ -2,7 +2,7 @@ package dev.minemods.metabolism.api;
 import dev.minemods.metabolism.Metabolism;
 import net.minecraft.server.level.ServerPlayer;
 public final class MetabolismApi {
- public static final int API_VERSION=1,API_REVISION=3;
+ public static final int API_VERSION=1,API_REVISION=4;
  public record NutrientStatus(String id,double adequacy,double trend){}
  public record Digestion(double fastKcal,double fatKcal,double queuedKcal,double kcalPerGameHour,int deficient,int critical,double estimatedFastHours,double estimatedTotalHours){}
  public static java.util.List<NutrientStatus> nutrients(ServerPlayer player){if(!player.serverLevel().getServer().isSameThread())throw new IllegalStateException("server thread required");var s=Metabolism.state(player);var out=new java.util.ArrayList<NutrientStatus>();for(int i=0;i<dev.minemods.metabolism.MetabolicModel.N;i++)out.add(new NutrientStatus(dev.minemods.metabolism.MetabolicModel.KEYS[i],s.adequacy(i),s.trend(i)));return java.util.List.copyOf(out);}
@@ -18,5 +18,22 @@ public final class MetabolismApi {
   if(!p.isAlive()||p.isCreative()||p.isSpectator())return new Clinical(1,1,1,1,1,0);
   var s=Metabolism.state(p);return new Clinical(s.tissueFactor(),s.boneFactor(),s.bloodFactor(),s.fractureThresholdFactor(),s.resistance(),s.toxin);
  }
+ public record Energy(double metabolicReserveFraction,double coreStaminaPoints,double stomachFraction,double overeating,double lastIntakePoints,double lastDigestionPoints,int waterCooldownSeconds){}
+ public static Energy energy(ServerPlayer p){
+  thread(p);var s=Metabolism.state(p);var fatigue=dev.minemods.worldlogic.api.WorldLogicApi.fatigue(p);
+  return new Energy(s.energy(),fatigue.enabled()?fatigue.remainingStaminaPercent():-1,s.fullness(),s.overload,s.lastInstant,s.lastDigest,s.drinkCooldown);
+ }
+ /** Actual completed non-item food portion only; ordinary FOOD and vanilla cake already handled. Server thread. */
+ public static Metabolism.IntakeResult reportFoodIntake(ServerPlayer p,double kcal,java.util.Map<String,Double> nutrients,double toxin,double absorption){
+  thread(p);if(!Double.isFinite(kcal)||kcal<=0||kcal>10000||nutrients==null||!Double.isFinite(toxin)||toxin<0||toxin>1||!Double.isFinite(absorption)||absorption<.15||absorption>1)throw new IllegalArgumentException("Invalid meal");
+  var n=new double[dev.minemods.metabolism.MetabolicModel.N];
+  for(var entry:nutrients.entrySet()){int i=java.util.Arrays.asList(dev.minemods.metabolism.MetabolicModel.KEYS).indexOf(entry.getKey());Double v=entry.getValue();if(i<0||v==null||!Double.isFinite(v)||v<0||v>dev.minemods.metabolism.MetabolicModel.DAILY[i]*4)throw new IllegalArgumentException("Invalid nutrient");n[i]=v;}
+  return Metabolism.acceptMeal(p,new dev.minemods.metabolism.MetabolicModel.Meal(kcal,n,toxin,absorption),true);
+ }
+ /** Owner reports successful water-only intake once, not food moisture. Actual stamina points; no kcal or hydration mutation. */
+ public static double reportWaterIntake(ServerPlayer p,int volumeMb,double contaminationRisk,double salinityGkg){
+  thread(p);return Metabolism.acceptWater(p,volumeMb,contaminationRisk,salinityGkg);
+ }
+ private static void thread(ServerPlayer p){if(p==null||!p.serverLevel().getServer().isSameThread())throw new IllegalStateException("server thread required");}
  private MetabolismApi(){}
 }

@@ -33,8 +33,8 @@
   "metabolism.help.vanilla_hp": "Trauma data unavailable. Shows Minecraft health without conversion to anatomical HP.",
   "metabolism.stat.quality": "Diet quality",
   "metabolism.help.quality": "Ten nutrient adequacy values. A severe shortage reduces the score even when other nutrients are abundant.",
-  "metabolism.stat.energy": "Available energy",
-  "metabolism.help.energy": "Combined fast and fat energy reserves, not a separate stamina bar.",
+  "metabolism.stat.energy": "Metabolic reserves",
+  "metabolism.help.energy": "Stored metabolic fuel, not the Core stamina bar.",
   "metabolism.stat.toxins": "Toxin load",
   "metabolism.help.toxins": "Hazardous food adds toxins. They clear over time and reduce absorption and recovery potential.",
   "metabolism.stat.glycogen": "Fast reserve",
@@ -111,5 +111,13 @@
   "metabolism.stat.hp_rate": "Actual passive recovery",
   "metabolism.help.hp_rate": "Measured passive anatomical HP repair over up to 60 active seconds, excluding instant treatments. ? means unavailable or insufficient samples.",
   "key.metabolism.dashboard": "Open metabolism",
-  "key.categories.metabolism": "WorldLogic: Metabolism"
+  "key.categories.metabolism": "WorldLogic: Metabolism",
+  "metabolism.stat.stamina": "Core stamina",
+  "metabolism.help.stamina": "Same 0–100 gameplay stamina bar; food and rest restore it via Core.",
+  "metabolism.stat.intake_boost": "Last immediate gain",
+  "metabolism.help.intake_boost": "Actual stamina points restored after the last meal or drink.",
+  "metabolism.stat.digest_boost": "Digestion recovery",
+  "metabolism.help.digest_boost": "Actual stamina points recovered from absorbed food in the last active second.",
+  "metabolism.stat.overeating": "Overeating",
+  "metabolism.help.overeating": "Overfilling reduces digestion and recovery efficiency. It gradually subsides."
 }

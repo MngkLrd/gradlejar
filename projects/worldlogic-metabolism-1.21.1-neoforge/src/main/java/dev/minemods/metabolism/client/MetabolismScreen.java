@@ -52,6 +52,10 @@ public final class MetabolismScreen extends Screen{
   Row totalTime=new Row("total_time",hours(v[N+16]),-1,false,Items.CLOCK);
   Row digestionTime=new Row("digestion_time",hours(v[N+17]),-1,false,Items.CLOCK);
   int k=2*N+18;
+  Row stamina=new Row("stamina",v[N+12]<0?"?":number(100-v[N+12])+" / 100",v[N+12]<0?-1:1-v[N+12]/100,false,Items.IRON_PICKAXE);
+  Row intake=new Row("intake_boost",String.format(Locale.ROOT,"+%.1f",v[k+34]),-1,false,Items.HONEY_BOTTLE);
+  Row digestBoost=new Row("digest_boost",String.format(Locale.ROOT,"+%.2f/s",v[k+35]),-1,false,Items.BREAD);
+  Row overeating=new Row("overeating",pct(v[k+33]),v[k+33],true,Items.BOWL);
   Row water=new Row("water",v[k]<0?"?":number(v[k])+"%",v[k]<0?-1:v[k]/100,false,Items.WATER_BUCKET);
   Row salts=new Row("salts",v[k+1]<0?"?":number(v[k+1]),v[k+1]<0?-1:1-Math.abs(v[k+1]-50)/50,false,Items.SUGAR);
   Row temp=new Row("body_temp",v[k+2]<0?"?":String.format(Locale.ROOT,"%.1f °C",v[k+2]),-1,false,Items.BLAZE_POWDER);
@@ -63,11 +67,11 @@ public final class MetabolismScreen extends Screen{
   Row blood=new Row("blood_factor",factor(v[k+7]),v[k+7],false,Items.REDSTONE);
   return switch(tab){
    case 1->{var a=new ArrayList<Row>();for(int i=0;i<N;i++)a.add(nutrient(i,v));yield a;}
-   case 2->List.of(energy,fast,fat,burn,fastTime,totalTime,fatigue,temp,thermal);
-   case 3->List.of(stomach,absorption,digestionTime,toxins,diet,deficits,critical,water,salts,waterFactor);
+   case 2->List.of(stamina,intake,digestBoost,energy,fast,fat,burn,fastTime,totalTime,fatigue,temp,thermal);
+   case 3->List.of(stomach,overeating,absorption,digestionTime,toxins,diet,deficits,critical,water,salts,waterFactor);
    case 4->List.of(health,hpRate,recovery,tissue,bone,blood,resistance,diet,deficits,critical,energy,toxins,fatigue);
    case 5->{var out=new ArrayList<Row>();out.add(new Row("today_intake",number(v[k+8])+" kcal",-1,false,Items.BREAD));out.add(new Row("today_burn",number(v[k+9])+" kcal",-1,false,Items.BLAZE_POWDER));for(int i=0;i<7;i++){int off=k+11+i*3;if(v[off]<0)continue;out.add(new Row("history_day_"+(i+1),number(v[off])+" / "+number(v[off+1])+" kcal",v[off+2],false,Items.BOOK));}yield out;}
-   default->List.of(health,diet,energy,toxins,deficits,critical,fast,fat,stomach,absorption,recovery,resistance,burn,fatigue);
+   default->List.of(health,diet,stamina,energy,toxins,deficits,critical,fast,fat,stomach,absorption,recovery,resistance,burn,fatigue);
   };
  }
  private void row(GuiGraphics g,Row r,int x,int y,int w,int mx,int my){

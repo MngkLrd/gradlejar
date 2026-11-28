@@ -7,6 +7,24 @@ public final class ModelChecks {
   var fatigue=dev.minemods.worldlogic.api.WorldLogicApi.fatigue(p);
   require(Double.isFinite(fatigue.fatiguePercent())&&fatigue.fatiguePercent()>=0&&fatigue.fatiguePercent()<=100,"actual Core fatigue API");
   dev.minemods.worldlogic.api.WorldLogicApi.addExertion(p,0);
+  require(fatigue.enabled(),"Core exertion enabled in QA");
+  for(int i=0;i<5;i++)dev.minemods.worldlogic.api.WorldLogicApi.addExertion(p,100);
+  double before=dev.minemods.worldlogic.api.WorldLogicApi.fatigue(p).fatiguePercent();
+  var meal=FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.BREAD)).orElseThrow();
+  var eaten=Metabolism.acceptMeal(p,meal.meal(),meal.known());
+  require(eaten.staminaPoints()>2&&dev.minemods.worldlogic.api.WorldLogicApi.fatigue(p).fatiguePercent()<before,"actual Core recovery from food");
+  var water=dev.minemods.metabolism.api.MetabolismApi.reportWaterIntake(p,250,0,0);
+  require(Math.abs(water-2)<1e-5&&dev.minemods.metabolism.api.MetabolismApi.reportWaterIntake(p,250,0,0)==0,"actual water boost and duplicate/cooldown");
+  require(Metabolism.state(p).drinkCooldown==15,"drink persistence");
+  p.getFoodData().setFoodLevel(20);require(p.canEat(false),"full hunger allows room in metabolic stomach");
+  var filled=Metabolism.state(p);filled.stomach=MetabolicModel.STOMACH_MAX;Metabolism.store(p,filled);require(!p.canEat(false),"full stomach does not override vanilla");
+  require(FoodProfiles.profile(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.MILK_BUCKET)).orElseThrow().meal().kcal()>0,"milk calories");
+  var generic=new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.STICK);
+  generic.set(net.minecraft.core.component.DataComponents.FOOD,new net.minecraft.world.food.FoodProperties.Builder().nutrition(5).saturationModifier(.6f).build());
+  require(FoodProfiles.profile(generic).orElseThrow().meal().kcal()>0&&!FoodProfiles.profile(generic).orElseThrow().known(),"generic FOOD component");
+  var event=new net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent.Finish(p,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.APPLE),0,net.minecraft.world.item.ItemStack.EMPTY);
+  Metabolism.store(p,new MetabolicModel.State());net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);
+  require(Metabolism.state(p).stomach>0,"registered food finish handler");
  }
  public static void run(){
   var rest=new MetabolicModel.State();var active=new MetabolicModel.State();
@@ -36,6 +54,18 @@ public final class ModelChecks {
   var hist=new MetabolicModel.State();MetabolicModel.ingest(hist,new MetabolicModel.Meal(200,n,0,1),true);for(int i=0;i<1200;i++)MetabolicModel.tick(hist,0);
   require(hist.historyCount==1&&hist.historyIntake[0]==200&&hist.historyBurn[0]>0&&hist.daySeconds==0,"history rollover");
   var historyRestored=Metabolism.decode(Metabolism.encode(hist));require(historyRestored.historyCount==1&&historyRestored.historyIntake[0]==200,"history persistence");
+  var quick=new MetabolicModel.State();quick.fast=0;quick.reserve=0;double[] carb=new double[MetabolicModel.N];carb[2]=45;
+  var q=MetabolicModel.consume(quick,new MetabolicModel.Meal(180,carb,0,1),true);
+  require(q.requestedPoints()>2&&quick.fast>0&&quick.queuedEnergy<180&&quick.fast+quick.queuedEnergy<=180.00001,"quick energy conservation");
+  double absorbed=MetabolicModel.tick(quick,0);
+  require(absorbed>0&&MetabolicModel.digestionPoints(quick,absorbed,true)>MetabolicModel.digestionPoints(quick,absorbed,false),"digestion and resting");
+  var over=new MetabolicModel.State();over.stomach=1700;over.queuedEnergy=1700;
+  var overflow=MetabolicModel.consume(over,new MetabolicModel.Meal(300,carb,0,1),true);
+  require(overflow.acceptedKcal()==100&&over.overload>0&&over.mealComfort()<.5,"overeating reduces uptake and caps accepted energy");
+  require(MetabolicModel.consume(over,new MetabolicModel.Meal(300,carb,0,1),true).requestedPoints()==0,"no benefit when full");
+  var drink=new MetabolicModel.State();double fuel=drink.fast;require(MetabolicModel.waterBoost(drink,250,0,0)==2&&drink.fast==fuel&&MetabolicModel.waterBoost(drink,250,0,0)==0,"water no calories and cooldown");
+  for(int i=0;i<15;i++)MetabolicModel.tick(drink,0);require(MetabolicModel.waterBoost(drink,250,.8,35)<.2,"dirty salty water low bonus");
+  var round=Metabolism.decode(Metabolism.encode(over));require(round.overload==over.overload,"overeating persistence");
   var restored=Metabolism.decode(Metabolism.encode(fed));require(restored.fast==fed.fast&&restored.pending[0]==fed.pending[0]&&restored.stomach==fed.stomach&&restored.baseline[0]==fed.baseline[0]&&restored.observedSeconds==fed.observedSeconds,"NBT roundtrip");
  }
 }

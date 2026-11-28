@@ -5,6 +5,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -25,7 +31,7 @@ public final class Metabolism {
  public Metabolism(IEventBus modBus){
   modBus.addListener(MetabolismSync::register);
   var bus=NeoForge.EVENT_BUS;
-  bus.addListener(Metabolism::tick);bus.addListener(Metabolism::finish);bus.addListener(Metabolism::clonePlayer);
+  bus.addListener(Metabolism::tick);bus.addListener(Metabolism::startDrink);bus.addListener(Metabolism::stopDrink);bus.addListener(Metabolism::finish);bus.addListener(Metabolism::clonePlayer);
   bus.addListener(Metabolism::login);bus.addListener(Metabolism::logout);bus.addListener(Metabolism::commands);bus.addListener(Metabolism::foodTooltip);
  }
  static boolean active(ServerPlayer p){return p.isAlive()&&!p.isCreative()&&!p.isSpectator()&&!(p instanceof FakePlayer);}
@@ -33,13 +39,14 @@ public final class Metabolism {
   var s=new MetabolicModel.State();var root=p.getPersistentData();if(!root.contains(KEY))return s;return decode(root.getCompound(KEY));
  }
  static CompoundTag encode(MetabolicModel.State s){
-  var n=new CompoundTag();n.putInt("schema",3);n.putDouble("fast",s.fast);n.putDouble("reserve",s.reserve);n.putDouble("stomach",s.stomach);
+  var n=new CompoundTag();n.putInt("schema",4);n.putDouble("overload",s.overload);n.putInt("drinkCooldown",s.drinkCooldown);n.putDouble("lastInstant",s.lastInstant);n.putDouble("lastDigest",s.lastDigest);n.putDouble("fast",s.fast);n.putDouble("reserve",s.reserve);n.putDouble("stomach",s.stomach);
   n.putDouble("queued",s.queuedEnergy);n.putDouble("toxin",s.toxin);n.putDouble("absorption",s.absorption);
   n.putDouble("burn",s.burn);n.putDouble("activity",s.activity);n.putDouble("unknown",s.unknown);n.putDouble("observed",s.observedSeconds);n.putInt("daySeconds",s.daySeconds);n.putDouble("dayIntake",s.dayIntake);n.putDouble("dayBurn",s.dayBurn);n.putDouble("dayQuality",s.dayQuality);n.putInt("historyCount",s.historyCount);for(int i=0;i<MetabolicModel.State.HISTORY;i++){n.putDouble("hi_"+i,s.historyIntake[i]);n.putDouble("hb_"+i,s.historyBurn[i]);n.putDouble("hq_"+i,s.historyQuality[i]);}
   for(int i=0;i<MetabolicModel.N;i++){n.putDouble("s_"+i,s.stores[i]);n.putDouble("p_"+i,s.pending[i]);n.putDouble("b_"+i,s.baseline[i]);}return n;
  }
  static MetabolicModel.State decode(CompoundTag n){
-  var s=new MetabolicModel.State();int schema=n.getInt("schema");if(schema<1||schema>3)return s;
+  var s=new MetabolicModel.State();int schema=n.getInt("schema");if(schema<1||schema>4)return s;
+  if(schema>=4){s.overload=MetabolicModel.clamp(n.getDouble("overload"),0,1);s.drinkCooldown=(int)MetabolicModel.clamp(n.getInt("drinkCooldown"),0,15);s.lastInstant=MetabolicModel.clamp(n.getDouble("lastInstant"),0,8);s.lastDigest=MetabolicModel.clamp(n.getDouble("lastDigest"),0,1.8);}
   s.fast=MetabolicModel.clamp(n.getDouble("fast"),0,MetabolicModel.FAST_MAX);s.reserve=MetabolicModel.clamp(n.getDouble("reserve"),0,MetabolicModel.FAT_MAX);
   s.stomach=MetabolicModel.clamp(n.getDouble("stomach"),0,MetabolicModel.STOMACH_MAX);s.queuedEnergy=MetabolicModel.clamp(n.getDouble("queued"),0,s.stomach);
   s.toxin=MetabolicModel.clamp(n.getDouble("toxin"),0,1);s.absorption=MetabolicModel.clamp(n.getDouble("absorption"),.15,1);s.burn=MetabolicModel.clamp(n.getDouble("burn"),90,500);
@@ -53,17 +60,65 @@ public final class Metabolism {
   Vec3 old=POS.put(p,p.position());double distance=old==null?0:Math.sqrt(p.position().distanceToSqr(old));
   double intensity=distance>20?0:Math.min(1,distance/5.5);if(distance>.2&&p.isSprinting())intensity=Math.max(intensity,.8);
   if(distance>.2&&p.isSwimming())intensity=Math.max(intensity,.65);
-  var s=state(p);EnvironmentBridge.sample(p,s);MetabolicModel.tick(s,intensity);store(p,s);
-  if(intensity>.1&&p.tickCount%100==0){double extra=Math.max(0,.15-s.energy())*3+(1-s.physicalFactor())*.35*intensity;if(extra>0)WorldLogicApi.addExertion(p,extra);}
+  var s=state(p);EnvironmentBridge.sample(p,s);double absorbed=MetabolicModel.tick(s,intensity);
+  boolean resting=intensity<.08&&!p.isSprinting()&&!p.isSwimming()&&!p.isUsingItem();
+  s.lastDigest=recover(p,MetabolicModel.digestionPoints(s,absorbed,resting));store(p,s);
+  if(intensity>.4&&p.tickCount%100==0){double extra=Math.max(0,.10-s.energy())*2+(1-s.physicalFactor())*.35*intensity+s.overload*.55*intensity;if(extra>0)WorldLogicApi.addExertion(p,extra);}
   if(p.tickCount%40==0)MetabolismSync.send(p);
+ }
+ /** Core alone owns stamina. Return the actual accepted points, not the theoretical bonus. */
+ static double recover(ServerPlayer p,double points){
+  if(!active(p)||!Double.isFinite(points)||points<=0)return 0;
+  var before=WorldLogicApi.fatigue(p);if(!before.enabled()||before.fatiguePercent()<=0)return 0;
+  WorldLogicApi.recoverExertion(p,Math.min(before.fatiguePercent(),points));
+  return Math.max(0,before.fatiguePercent()-WorldLogicApi.fatigue(p).fatiguePercent());
+ }
+ public record IntakeResult(double acceptedKcal,double immediateKcal,double staminaPoints){}
+ public static IntakeResult acceptMeal(ServerPlayer p,MetabolicModel.Meal meal,boolean known){
+  if(!active(p))return new IntakeResult(0,0,0);
+  var s=state(p);EnvironmentBridge.sample(p,s);var result=MetabolicModel.consume(s,meal,known);
+  s.lastInstant=recover(p,result.requestedPoints());store(p,s);MetabolismSync.send(p);
+  return new IntakeResult(result.acceptedKcal(),result.quickKcal(),s.lastInstant);
+ }
+ public static double acceptWater(ServerPlayer p,int volume,double risk,double salt){
+  if(!active(p))return 0;
+  var s=state(p);double requested=MetabolicModel.waterBoost(s,volume,risk,salt);
+  if(requested<=0)return 0;
+  s.lastInstant=recover(p,requested);store(p,s);MetabolismSync.send(p);return s.lastInstant;
+ }
+ public static void cake(ServerPlayer p){var food=FoodProfiles.cakeSlice();acceptMeal(p,food.meal(),true);}
+ /** Called from the vanilla canEat return; never blocks an otherwise permitted vanilla use. */
+ public static boolean canEatMore(Player p){
+  if(!p.isAlive()||p.isCreative()||p.isSpectator())return false;
+  if(p instanceof ServerPlayer sp)return active(sp)&&state(sp).stomach<MetabolicModel.STOMACH_MAX-1;
+  var s=MetabolismSync.client;
+  return s!=null&&s.active()&&s.player().equals(p.getUUID())&&s.values()[MetabolicModel.N+2]<MetabolicModel.STOMACH_MAX-1;
+ }
+ private record DrinkStart(net.minecraft.world.item.Item item,WaterIntakeBridge.Water water){}
+ private static final WeakHashMap<ServerPlayer,DrinkStart> DRINKS=new WeakHashMap<>();
+ private static void startDrink(LivingEntityUseItemEvent.Start e){
+  if(!(e.getEntity() instanceof ServerPlayer p)||!active(p))return;
+  DRINKS.remove(p);var w=WaterIntakeBridge.read(e.getItem());if(w!=null&&w.volume()>0)DRINKS.put(p,new DrinkStart(e.getItem().getItem(),w));
+ }
+ private static void stopDrink(LivingEntityUseItemEvent.Stop e){if(e.getEntity() instanceof ServerPlayer p)DRINKS.remove(p);}
+ private static boolean waterPotion(ItemStack stack){
+  var potion=stack.get(DataComponents.POTION_CONTENTS);
+  return stack.is(Items.POTION)&&potion!=null&&potion.is(Potions.WATER)&&!potion.hasEffects();
  }
  private static void finish(LivingEntityUseItemEvent.Finish e){
   if(!(e.getEntity() instanceof ServerPlayer p)||!active(p))return;
-  FoodProfiles.profile(e.getItem()).ifPresent(f->{var s=state(p);MetabolicModel.ingest(s,f.meal(),f.known());store(p,s);MetabolismSync.send(p);});
+  var start=DRINKS.remove(p);var item=e.getItem();
+  var food=FoodProfiles.profile(item);if(food.isPresent()){var f=food.get();acceptMeal(p,f.meal(),f.known());return;}
+  if(start!=null&&item.is(start.item())){
+   var after=WaterIntakeBridge.read(e.getResultStack());
+   if(e.getResultStack().is(start.item())&&after!=null){int volume=start.water().volume()-after.volume();if(volume>0)acceptWater(p,volume,start.water().risk(),start.water().salt());return;}
+   if(item.is(Items.POTION)&&e.getResultStack().is(Items.GLASS_BOTTLE)){acceptWater(p,start.water().volume(),start.water().risk(),start.water().salt());return;}
+  }
+  if(waterPotion(item)&&e.getResultStack().is(Items.GLASS_BOTTLE))acceptWater(p,250,0,0);
  }
  private static void clonePlayer(PlayerEvent.Clone e){if(e.getEntity() instanceof ServerPlayer p&&e.getOriginal() instanceof ServerPlayer old)store(p,e.isWasDeath()?new MetabolicModel.State():state(old));}
  private static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p)MetabolismSync.send(p);}
- private static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p)POS.remove(p);}
+ private static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p){POS.remove(p);DRINKS.remove(p);}}
  private static String status(ServerPlayer p){var s=state(p);return String.format(Locale.ROOT,"Metabolism quality=%.0f energy=%.0f stomach=%.1f toxin=%.1f deficient=%d critical=%d recovery=%.3f",100*s.quality(),100*s.energy(),s.stomach,100*s.toxin,s.deficient(),s.critical(),s.recovery());}
  private static void foodTooltip(ItemTooltipEvent e){FoodProfiles.profile(e.getItemStack()).ifPresent(f->{var meal=f.meal();var n=meal.nutrients();var list=e.getToolTip();
   list.add(Component.translatable("metabolism.food.energy",Math.round(meal.kcal())).withStyle(ChatFormatting.GOLD));

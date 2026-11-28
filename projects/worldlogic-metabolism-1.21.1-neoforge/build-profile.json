@@ -1,11 +1,11 @@
 {
   "slug": "metabolism",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "metabolism-neoforge-mc1.21.1-0.8.2.jar",
+  "jar_glob": "metabolism-neoforge-mc1.21.1-0.9.0.jar",
   "minimum_loader_version": "21.1.80",
   "compile_loader_version": "21.1.262",
   "qa": {
@@ -26,5 +26,11 @@
         "sha256": "1c0d23ca034cd17f783e4d1abbf01f1eda8783ac0ba3b48cf6afdc1291d21dc8"
       }
     ]
+  },
+  "ecosystem_membership": {
+    "ecosystem": "worldlogic",
+    "module": "metabolism",
+    "role": "addon",
+    "core_module": "worldlogic"
   }
 }

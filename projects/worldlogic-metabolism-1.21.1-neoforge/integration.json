@@ -1,0 +1,150 @@
+{
+  "schema": 2,
+  "ecosystem": "worldlogic",
+  "module": "metabolism",
+  "role": "addon",
+  "core_module": "worldlogic",
+  "parent_module": "worldlogic",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "neoforge"
+  },
+  "provides": [
+    {
+      "id": "worldlogic:metabolism_physiology",
+      "version": 1,
+      "revision": 4,
+      "domains": [
+        "nutrition",
+        "digestion",
+        "metabolic_energy",
+        "nutrient_deficiencies"
+      ],
+      "entrypoints": [
+        "dev.minemods.metabolism.api.MetabolismApi"
+      ],
+      "documentation": "projects/worldlogic-metabolism-1.21.1-neoforge/README.md",
+      "source_paths": [
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/api/MetabolismApi.java"
+      ],
+      "operations": [
+        {
+          "id": "physiology",
+          "kind": "query",
+          "entrypoint": "dev.minemods.metabolism.api.MetabolismApi",
+          "semantics": "Immutable diet/energy/recovery/resistance/absorption snapshot."
+        },
+        {
+          "id": "clinical",
+          "kind": "query",
+          "entrypoint": "dev.minemods.metabolism.api.MetabolismApi",
+          "semantics": "Clinical nutritional factors; Trauma owns medical consequences."
+        },
+        {
+          "id": "energy",
+          "kind": "query",
+          "entrypoint": "dev.minemods.metabolism.api.MetabolismApi",
+          "semantics": "Current Core stamina, metabolic reserves, fullness, overload and actual recovery."
+        },
+        {
+          "id": "report_food_intake",
+          "kind": "command",
+          "entrypoint": "dev.minemods.metabolism.api.MetabolismApi",
+          "semantics": "Actual completed non-item meal, validated kcal and nutrients; automatic FOOD/cake excluded."
+        },
+        {
+          "id": "report_water_intake",
+          "kind": "command",
+          "entrypoint": "dev.minemods.metabolism.api.MetabolismApi",
+          "semantics": "Successful water-only consumption, mB, risk and salinity, bounded deduplicated stamina response."
+        }
+      ]
+    }
+  ],
+  "consumes": [
+    {
+      "id": "worldlogic:fatigue",
+      "version": 1,
+      "min_revision": 0,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Core owns stamina, disabled rule yields no stamina bonus."
+    },
+    {
+      "id": "worldlogic:hydration_physiology",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Neutral physiology when Hydration unavailable; use vanilla water completion."
+    },
+    {
+      "id": "worldlogic:thermal_status",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Neutral thermal cost without snapshot."
+    },
+    {
+      "id": "worldlogic:trauma_status",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Vanilla health display or unknown measured anatomical HP/min."
+    }
+  ],
+  "features": [
+    {
+      "id": "metabolic_energy",
+      "source_paths": [
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/MetabolicModel.java",
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/Metabolism.java",
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/FoodProfiles.java",
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/api/MetabolismApi.java",
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/WaterIntakeBridge.java",
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/mixin/PlayerFoodMixin.java",
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/mixin/CakeFoodMixin.java"
+      ],
+      "provides": [
+        "worldlogic:metabolism_physiology"
+      ],
+      "consumes": [
+        "worldlogic:fatigue",
+        "worldlogic:hydration_physiology",
+        "worldlogic:thermal_status",
+        "worldlogic:trauma_status"
+      ],
+      "integration_review": "Inspected Core RC54 public fatigue API and Survival natural rest; published RC22 same signatures. Hydration v1 rev2 liquidWater and physiology, Thermal public status and Trauma API rev3. No foreign state mutation or second stamina pool. Missing source sip callback tracked in issue #257."
+    },
+    {
+      "id": "dashboard",
+      "source_paths": [
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/client/MetabolismScreen.java",
+        "projects/worldlogic-metabolism-1.21.1-neoforge/src/main/java/dev/minemods/metabolism/MetabolismSync.java"
+      ],
+      "provides": [],
+      "consumes": [
+        "worldlogic:fatigue",
+        "worldlogic:trauma_status"
+      ],
+      "integration_review": "Native WorldLogic style retained. Uses actual Core stamina and medical snapshots, no private peer rendering dependency.",
+      "no_public_surface_reason": "Client presentation of public domain snapshots only."
+    }
+  ],
+  "tests": [
+    {
+      "id": "metabolism.server.contract",
+      "capabilities": [
+        "worldlogic:metabolism_physiology",
+        "worldlogic:fatigue",
+        "worldlogic:hydration_physiology",
+        "worldlogic:thermal_status",
+        "worldlogic:trauma_status"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-metabolism.json",
+      "status": "implemented"
+    }
+  ]
+}

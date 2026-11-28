@@ -9,7 +9,9 @@ public final class FoodProfiles {
   return new Entry(new MetabolicModel.Meal(kcal,new double[]{p,f,c,fiber,a,vitc,b12,iron,ca,mg},toxin,absorption),true);
  }
  public static Optional<Entry> profile(ItemStack stack){
-  var component=stack.get(DataComponents.FOOD);if(component==null)return Optional.empty();
+  var component=stack.get(DataComponents.FOOD);
+  if(stack.is(net.minecraft.world.item.Items.MILK_BUCKET))return Optional.of(food(155,8,8,12,0,60,0,1.1,.1,275,24,0,.93));
+  if(component==null)return Optional.empty();
   String id=BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
   Entry e=switch(id){
    case "worldlogicterrain:strawberry" -> food(45,0.8,0.3,10,3,2,60,0,0.4,16,13,0,.92);
@@ -59,8 +61,9 @@ public final class FoodProfiles {
    case "minecraft:poisonous_potato" -> food(75,2,0,17,2,1,8,0,.5,10,16,.55,.4);
    case "minecraft:pufferfish" -> food(100,17,4,0,0,8,0,1,.4,15,15,.9,.3);
    case "minecraft:spider_eye" -> food(75,3,3,9,0,0,0,0,.4,5,5,.65,.3);
-   default -> new Entry(new MetabolicModel.Meal(component.nutrition()*35.0,new double[MetabolicModel.N],0,.8),false);
+   default -> new Entry(new MetabolicModel.Meal(Math.max(0,component.nutrition()*38.0+component.saturation()*9.0),new double[MetabolicModel.N],0,.8),false);
   };return Optional.of(e);
  }
+ static Entry cakeSlice(){return food(150,2,6,23,1,25,0,.1,.4,35,12,0,.95);}
  private FoodProfiles(){}
 }
