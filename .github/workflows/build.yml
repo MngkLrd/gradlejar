@@ -55,6 +55,10 @@ jobs:
           python3 -c 'import json,os,sys; sys.exit("Art review evidence missing or invalid; inspect plan job" if os.environ["PROJECT"] in json.loads(os.environ["ART_BLOCKED"]) else 0)'
       - name: Checkout sources
         uses: actions/checkout@v4
+      - name: Validate scoped API-first ecosystem evidence before Gradle
+        env:
+          PROJECT: ${{ matrix.project_dir }}
+        run: python3 -m tools.qa.ecosystem --check-project "$PROJECT"
       - name: Restore Pocket Realms sources
         if: matrix.project_dir == 'projects/pocketrealms'
         run: python3 tools/unpack_pocketrealms.py

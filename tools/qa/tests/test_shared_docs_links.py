@@ -23,6 +23,7 @@ DOCS = (
     "docs/research/VANILLA-REAL-ART-REVIEW.md",
     "docs/development/MOD-NAMING.md",
     "docs/development/MOD-ADAPTATION.md",
+    "docs/development/ECOSYSTEM-INTEGRATION.md",
     "docs/README.md",
     "docs/art/BLOCK-ART.md",
     "docs/art/UI-ART.md",
