@@ -25,7 +25,7 @@ final class ExcavationQA {
         probeObserved=dev.minemods.worldlogic.api.WorldLogicBreaks.isProtectionProbe(e);
         if(deny)e.setCanceled(true);
     }
-    private static double fatigue(FakePlayer p){return dev.minemods.worldlogic.api.WorldLogicApi.fatigue(p).fatigue();}
+    private static double fatigue(FakePlayer p){return dev.minemods.worldlogic.api.WorldLogicApi.fatigue(p).fatiguePercent();}
     private static void clear(FakePlayer p){dev.minemods.worldlogic.api.WorldLogicApi.recoverExertion(p,100);}
     private static void check(boolean test,String message){if(!test)throw new IllegalStateException(message);}
     static void register(RegisterCommandsEvent event){
