@@ -5734,6 +5734,746 @@
         "custom_reason": "The relevant asset is a standing vegetation cutout rather than a covered atlas cube, sapling, leaf block or food item; the vanilla plant role comparator is more specific.",
         "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; this uncatalogued comparator was not independently verified against the official client archive."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/eelgrass.png": {
+      "sha256": "45f5181a11687e752f60183aae59be053b31518de492a03210b2661080d2589d",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout. Broader and more upright than the three fine olive widgeon blades.",
+      "findings": {
+        "silhouette": "Four upright narrow blades spread from the bed.",
+        "cluster_structure": "Long stepped green striations follow the blade axes.",
+        "micro_contrast": "Muted light-green stripes flank deeper green interior bands.",
+        "light_and_volume": "The narrow cuboid side faces darken naturally against the lighter blade fronts.",
+        "material_continuity": "The blade surfaces read as connected green tissue rather than clay.",
+        "edge_variation": "Slanted outer blades and visible gaps keep the rooted tuft open.",
+        "variant_identity": "Broader and more upright than the three fine olive widgeon blades.",
+        "functional_material_cues": "Long parallel ribs identify strap-shaped submerged leaves.",
+        "vanilla_comparison": "Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Long stepped green striations follow the blade axes. The narrow cuboid side faces darken naturally against the lighter blade fronts.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Muted light-green stripes flank deeper green interior bands. The blade surfaces read as connected green tissue rather than clay.",
+        "context_type": "model_uv",
+        "context_view": "Four upright narrow blades spread from the bed. Slanted outer blades and visible gaps keep the rooted tuft open. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sea_lettuce.png": {
+      "sha256": "04704381429c9051b80b3802ceeb315a84626eddf72e93e741f096d135151ab0",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout. The low lime-green ruffled form differs from tall brown kelp.",
+      "findings": {
+        "silhouette": "Short layered leafy rosette with flared edges.",
+        "cluster_structure": "Broad green fold groups and short pale cross-veins form the leaf faces.",
+        "micro_contrast": "Lime accents are concentrated on raised leaf folds.",
+        "light_and_volume": "The brighter horizontal leaves overlap deeper green side faces.",
+        "material_continuity": "Warm bright green remains continuous through stacked leaf sheets.",
+        "edge_variation": "Protruding bent plates break up the low rosette boundary.",
+        "variant_identity": "The low lime-green ruffled form differs from tall brown kelp.",
+        "functional_material_cues": "Wide thin sheets communicate leafy sea lettuce.",
+        "vanilla_comparison": "Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Broad green fold groups and short pale cross-veins form the leaf faces. The brighter horizontal leaves overlap deeper green side faces.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Lime accents are concentrated on raised leaf folds. Warm bright green remains continuous through stacked leaf sheets.",
+        "context_type": "model_uv",
+        "context_view": "Short layered leafy rosette with flared edges. Protruding bent plates break up the low rosette boundary. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sargassum.png": {
+      "sha256": "69a07d1289e95aa2468fff096935a49bf66294c12ea2786accfb380a4a8a5961",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout. Amber bladder clusters distinguish the brown stem from giant kelp blades.",
+      "findings": {
+        "silhouette": "Tall ochre stem with alternating shelves and small bladders.",
+        "cluster_structure": "Stalk lines and rounded ochre bladder marks occupy distinct atlas quarters.",
+        "micro_contrast": "Small bright golden spots distinguish bladder tops from their brown rims.",
+        "light_and_volume": "Raised bladder cuboids and shaded sides stand apart from the stem.",
+        "material_continuity": "Golden brown remains coherent across branching marine algae.",
+        "edge_variation": "Unequal projections alternate along the stalk at different heights.",
+        "variant_identity": "Amber bladder clusters distinguish the brown stem from giant kelp blades.",
+        "functional_material_cues": "Small raised yellow-brown nodes suggest floating air bladders.",
+        "vanilla_comparison": "Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Stalk lines and rounded ochre bladder marks occupy distinct atlas quarters. Raised bladder cuboids and shaded sides stand apart from the stem.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Small bright golden spots distinguish bladder tops from their brown rims. Golden brown remains coherent across branching marine algae.",
+        "context_type": "model_uv",
+        "context_view": "Tall ochre stem with alternating shelves and small bladders. Unequal projections alternate along the stalk at different heights. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/giant_kelp.png": {
+      "sha256": "72c2e68334443fe214a142b6452144393d1294fb4f75005519bb3ae8a5a01940",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout. Broad olive fronds lack sargassum's golden bladder nodes.",
+      "findings": {
+        "silhouette": "One tall central stalk supports broad alternating fronds.",
+        "cluster_structure": "Dark upright stalk strips and broad olive cross-veins form separate mapped surfaces.",
+        "micro_contrast": "Light ochre ribs break the darker olive leaf folds.",
+        "light_and_volume": "Side shading on the central stalk emphasizes the projecting horizontal fronds.",
+        "material_continuity": "Brown-green and olive ramps remain tied to algal tissue.",
+        "edge_variation": "Alternating broad side leaves give the vertical segment a stepped profile.",
+        "variant_identity": "Broad olive fronds lack sargassum's golden bladder nodes.",
+        "functional_material_cues": "Continuous central stalk connects the leafy stacked segments.",
+        "vanilla_comparison": "Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Dark upright stalk strips and broad olive cross-veins form separate mapped surfaces. Side shading on the central stalk emphasizes the projecting horizontal fronds.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Light ochre ribs break the darker olive leaf folds. Brown-green and olive ramps remain tied to algal tissue.",
+        "context_type": "model_uv",
+        "context_view": "One tall central stalk supports broad alternating fronds. Alternating broad side leaves give the vertical segment a stepped profile. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/red_dulse.png": {
+      "sha256": "486d18ca38deb23ee111126ad40ec399c4af0fdb529790a8ff3f3a91213e92fd",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout. Reddish broad fronds differ from the low pink crust and green grass.",
+      "findings": {
+        "silhouette": "Broad crimson blades branch upward from a narrow base.",
+        "cluster_structure": "Deep burgundy fold clusters cross the broader pink leaf planes.",
+        "micro_contrast": "Short pale red ridges break the darker folds.",
+        "light_and_volume": "Angled cuboids show lighter broad faces and shaded thin edges.",
+        "material_continuity": "Wine-red foliage uses related red and violet tones instead of stone.",
+        "edge_variation": "Tilted branches and offset blades produce an uneven open top.",
+        "variant_identity": "Reddish broad fronds differ from the low pink crust and green grass.",
+        "functional_material_cues": "Flat flexible-looking crimson blades identify red algae.",
+        "vanilla_comparison": "Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Deep burgundy fold clusters cross the broader pink leaf planes. Angled cuboids show lighter broad faces and shaded thin edges.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Short pale red ridges break the darker folds. Wine-red foliage uses related red and violet tones instead of stone.",
+        "context_type": "model_uv",
+        "context_view": "Broad crimson blades branch upward from a narrow base. Tilted branches and offset blades produce an uneven open top. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/coralline_algae.png": {
+      "sha256": "fd62981503b76645bdfa7dcd97c6df67bd37754063f09a8b3917ed117a4680fe",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brain_coral_block",
+          "minecraft": "1.21.1",
+          "sha256": "eae25e54905340ad74ded8440a029ce1eece22ac03cc3ab9f93c0f409143e000"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. The inspected vanilla brain_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern. The spread crust lacks the red star's long five arms.",
+      "findings": {
+        "silhouette": "Low overlapping pink encrusting patches stay close to the floor.",
+        "cluster_structure": "Interlocked rose and mauve regions create a mineral-like algal crust.",
+        "micro_contrast": "Small pale nodules stand above muted darker boundaries.",
+        "light_and_volume": "Layered shallow cuboids make small raised lobes visible in projection.",
+        "material_continuity": "Pink and purple subdued ramps read as calcified living crust.",
+        "edge_variation": "Several irregular low plates avoid a full square covering.",
+        "variant_identity": "The spread crust lacks the red star's long five arms.",
+        "functional_material_cues": "Connected mineral-looking lobes communicate encrusting algae.",
+        "vanilla_comparison": "The inspected vanilla brain_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brain_coral_block",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Interlocked rose and mauve regions create a mineral-like algal crust. Layered shallow cuboids make small raised lobes visible in projection.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Small pale nodules stand above muted darker boundaries. Pink and purple subdued ramps read as calcified living crust.",
+        "context_type": "model_uv",
+        "context_view": "Low overlapping pink encrusting patches stay close to the floor. Several irregular low plates avoid a full square covering. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/red_sea_star.png": {
+      "sha256": "fa46f03dbdd9cf7b0aa4a9fb55d32f8c68b6c2f5d2b2f57ce6fc049d7cecb43b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fire_coral_block",
+          "minecraft": "1.21.1",
+          "sha256": "b2188aa481419260a1dd5602366cc1405cc558525300322c38d8d9eca52337ed"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. The inspected vanilla fire_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern. Orange skin and brighter central node distinguish this color morph.",
+      "findings": {
+        "silhouette": "Five low arms radiate from a raised central disk.",
+        "cluster_structure": "Orange-red dermal plate clusters have small lighter ridges.",
+        "micro_contrast": "Warm highlights sit on top of each darker red plate.",
+        "light_and_volume": "Thicker central cuboids rise above the thinner shaded arms.",
+        "material_continuity": "A coral-red animal skin ramp replaces the former coral-block fill.",
+        "edge_variation": "Rotated arms and raised center produce real open gaps in plan.",
+        "variant_identity": "Orange skin and brighter central node distinguish this color morph.",
+        "functional_material_cues": "Rounded plate marks suggest starfish dermal ossicles rather than coral cavities.",
+        "vanilla_comparison": "The inspected vanilla fire_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fire_coral_block",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Orange-red dermal plate clusters have small lighter ridges. Thicker central cuboids rise above the thinner shaded arms.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Warm highlights sit on top of each darker red plate. A coral-red animal skin ramp replaces the former coral-block fill.",
+        "context_type": "model_uv",
+        "context_view": "Five low arms radiate from a raised central disk. Rotated arms and raised center produce real open gaps in plan. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/blue_sea_star.png": {
+      "sha256": "d4f58b1a48a1be1e71858d804d2471756343161f32a2fdcf08ce362ff2d71023",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/tube_coral",
+          "minecraft": "1.21.1",
+          "sha256": "cf86f748f18c20217f8216205f4419ad13f15990146cfa59e01d717ff9982bdc"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. The inspected vanilla tube_coral uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern. Blue skin uses the same star body plan as the red color morph.",
+      "findings": {
+        "silhouette": "Five low blue arms surround a visibly raised center.",
+        "cluster_structure": "Dark-blue skin plate groups are interrupted by small pale blue marks.",
+        "micro_contrast": "Cool cyan accents sit along the upper plate ridges.",
+        "light_and_volume": "Side faces become navy compared with the lit upper disk.",
+        "material_continuity": "Slate and cyan-blue skin values remain coherent across the arms.",
+        "edge_variation": "The angled arms remain separated around the small raised center.",
+        "variant_identity": "Blue skin uses the same star body plan as the red color morph.",
+        "functional_material_cues": "Small plate markings identify an animal's textured surface, not a tube coral.",
+        "vanilla_comparison": "The inspected vanilla tube_coral uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/tube_coral",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Dark-blue skin plate groups are interrupted by small pale blue marks. Side faces become navy compared with the lit upper disk.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Cool cyan accents sit along the upper plate ridges. Slate and cyan-blue skin values remain coherent across the arms.",
+        "context_type": "model_uv",
+        "context_view": "Five low blue arms surround a visibly raised center. The angled arms remain separated around the small raised center. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sea_urchin.png": {
+      "sha256": "5e0d1a54d5cf5459c7aadb318116faa709c33bb2a72544fa08fccd80eebd8d83",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brain_coral_block",
+          "minecraft": "1.21.1",
+          "sha256": "eae25e54905340ad74ded8440a029ce1eece22ac03cc3ab9f93c0f409143e000"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. The inspected vanilla brain_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern. Dark radial shell differs from the open hollow sponge body.",
+      "findings": {
+        "silhouette": "Compact purple body with projecting lateral and top spines.",
+        "cluster_structure": "Dark violet body nodes contrast with linear marks on separate spine surfaces.",
+        "micro_contrast": "Light lavender ridges break the deep purple spine sides.",
+        "light_and_volume": "Stacked body cuboids and outward projections show real raised volume.",
+        "material_continuity": "Muted purples maintain a coherent animal body and spine palette.",
+        "edge_variation": "Spines project beyond the compact central shell in multiple directions.",
+        "variant_identity": "Dark radial shell differs from the open hollow sponge body.",
+        "functional_material_cues": "Purple radial projections read as coarse rigid spines rather than petals.",
+        "vanilla_comparison": "The inspected vanilla brain_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brain_coral_block",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Dark violet body nodes contrast with linear marks on separate spine surfaces. Stacked body cuboids and outward projections show real raised volume.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Light lavender ridges break the deep purple spine sides. Muted purples maintain a coherent animal body and spine palette.",
+        "context_type": "model_uv",
+        "context_view": "Compact purple body with projecting lateral and top spines. Spines project beyond the compact central shell in multiple directions. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/barrel_sponge.png": {
+      "sha256": "735af512cc8598b7d9d56ebabe360bed6ecf006bfe40a612cd2a178da10b6295",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/horn_coral_block",
+          "minecraft": "1.21.1",
+          "sha256": "e6a57b447ee8fbadf2f67f5636334e8e6004cb1bcc249f20501917628e63f68a"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. The inspected vanilla horn_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern. Porous brown barrel contrasts with tentacled pink anemone.",
+      "findings": {
+        "silhouette": "Tall hollow barrel made of a base and four surrounding walls.",
+        "cluster_structure": "Individual dark brown pores are grouped beneath ochre rims.",
+        "micro_contrast": "Pale short rim pixels separate pores from sandy brown tissue.",
+        "light_and_volume": "The open top exposes a shaded inner floor and thick raised walls.",
+        "material_continuity": "Tan and ochre porous tissue is warmer than the grey stone material.",
+        "edge_variation": "Wall corners and visible mouth retain an unmistakable hollow shape.",
+        "variant_identity": "Porous brown barrel contrasts with tentacled pink anemone.",
+        "functional_material_cues": "Dark pore openings and the recessed mouth identify a sponge.",
+        "vanilla_comparison": "The inspected vanilla horn_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/horn_coral_block",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Individual dark brown pores are grouped beneath ochre rims. The open top exposes a shaded inner floor and thick raised walls.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Pale short rim pixels separate pores from sandy brown tissue. Tan and ochre porous tissue is warmer than the grey stone material.",
+        "context_type": "model_uv",
+        "context_view": "Tall hollow barrel made of a base and four surrounding walls. Wall corners and visible mouth retain an unmistakable hollow shape. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sea_anemone.png": {
+      "sha256": "6d07719282d5304c6f974913e483659446c36158b789ec187c1a570282b25bed",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brain_coral_block",
+          "minecraft": "1.21.1",
+          "sha256": "eae25e54905340ad74ded8440a029ce1eece22ac03cc3ab9f93c0f409143e000"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. The inspected vanilla brain_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern. Soft pink upward arms differ from the rigid spines of the urchin.",
+      "findings": {
+        "silhouette": "Low pink body supports multiple upright and tilted tentacles.",
+        "cluster_structure": "Vertical rose folds are separate from the lighter tentacle markings.",
+        "micro_contrast": "Pale pink tips and short side streaks accent the purple-red bases.",
+        "light_and_volume": "The cup-like base and raised arms read at different heights.",
+        "material_continuity": "Pink and muted purple tissue colors connect body and appendages.",
+        "edge_variation": "Irregular tentacle ends break the upper rim outline.",
+        "variant_identity": "Soft pink upward arms differ from the rigid spines of the urchin.",
+        "functional_material_cues": "Linear soft tissue ridges and upward tentacles suggest a polyp.",
+        "vanilla_comparison": "The inspected vanilla brain_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brain_coral_block",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Vertical rose folds are separate from the lighter tentacle markings. The cup-like base and raised arms read at different heights.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Pale pink tips and short side streaks accent the purple-red bases. Pink and muted purple tissue colors connect body and appendages.",
+        "context_type": "model_uv",
+        "context_view": "Low pink body supports multiple upright and tilted tentacles. Irregular tentacle ends break the upper rim outline. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sea_fan.png": {
+      "sha256": "b4e5577cd11759efb854b69b293b160269a33af03cb79bc5142b05fc92634bd9",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fire_coral_block",
+          "minecraft": "1.21.1",
+          "sha256": "b2188aa481419260a1dd5602366cc1405cc558525300322c38d8d9eca52337ed"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. The inspected vanilla fire_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern. The vertical branched silhouette differs from a horizontal red star.",
+      "findings": {
+        "silhouette": "Narrow upright branching fan with several open gaps.",
+        "cluster_structure": "Short orange branching streaks interrupt darker red surfaces.",
+        "micro_contrast": "Creamy coral pixels sit along selected upper-facing streaks.",
+        "light_and_volume": "Branch thickness remains visible in shaded side faces.",
+        "material_continuity": "Warm ochre-red tissue values remain consistent on the fan.",
+        "edge_variation": "Forked side branches end at staggered heights.",
+        "variant_identity": "The vertical branched silhouette differs from a horizontal red star.",
+        "functional_material_cues": "Network of branching marks complements the fan-like coral skeleton.",
+        "vanilla_comparison": "The inspected vanilla fire_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fire_coral_block",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Short orange branching streaks interrupt darker red surfaces. Branch thickness remains visible in shaded side faces.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Creamy coral pixels sit along selected upper-facing streaks. Warm ochre-red tissue values remain consistent on the fan.",
+        "context_type": "model_uv",
+        "context_view": "Narrow upright branching fan with several open gaps. Forked side branches end at staggered heights. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/mussel_bed.png": {
+      "sha256": "ba5254709964188b075b7b209bd023505a9cdf83b3bf861dc9a05bdf48c0d979",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brain_coral_block",
+          "minecraft": "1.21.1",
+          "sha256": "eae25e54905340ad74ded8440a029ce1eece22ac03cc3ab9f93c0f409143e000"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. The inspected vanilla brain_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern. Dark low elongated shell cluster differs from rounded purple urchin.",
+      "findings": {
+        "silhouette": "Three dark raised elongated shells overlap close to the bed.",
+        "cluster_structure": "Curved blue-gray growth streaks follow separate shell surfaces.",
+        "micro_contrast": "Muted pale arcs interrupt charcoal-blue faces.",
+        "light_and_volume": "Small raised shell ridge cuboids cast visibly darker side planes.",
+        "material_continuity": "Steel-blue and charcoal shell surfaces avoid the look of living green foliage.",
+        "edge_variation": "Rotated shell cuboids produce uneven colony boundaries.",
+        "variant_identity": "Dark low elongated shell cluster differs from rounded purple urchin.",
+        "functional_material_cues": "Layered growth lines and elongated dark shapes identify mussel shells.",
+        "vanilla_comparison": "The inspected vanilla brain_coral_block uses a compact color ramp and localized material groups; this species uses its own mapped animal or algae surface cues rather than the borrowed coral pattern."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brain_coral_block",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Curved blue-gray growth streaks follow separate shell surfaces. Small raised shell ridge cuboids cast visibly darker side planes.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Muted pale arcs interrupt charcoal-blue faces. Steel-blue and charcoal shell surfaces avoid the look of living green foliage.",
+        "context_type": "model_uv",
+        "context_view": "Three dark raised elongated shells overlap close to the bed. Rotated shell cuboids produce uneven colony boundaries. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/widgeon_grass.png": {
+      "sha256": "8342fb82affa8efd56ce889d715d1e84417b7be67f39b535f0d8cbf99d0f2783",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout. Sparser and narrower than the thicker eelgrass blades.",
+      "findings": {
+        "silhouette": "Three fine diverging olive stems form a sparse rooted tuft.",
+        "cluster_structure": "Broken thin vertical rib groups follow long stem faces.",
+        "micro_contrast": "Yellow-green lines are restrained against muted olive midtones.",
+        "light_and_volume": "Dark narrow side faces separate the angled stalks in projection.",
+        "material_continuity": "Olive greens distinguish softer leaves from the brown marine algae.",
+        "edge_variation": "Thin stems end at different heights with broad open gaps.",
+        "variant_identity": "Sparser and narrower than the thicker eelgrass blades.",
+        "functional_material_cues": "Needle-like stems and narrow leaf fibers identify fine aquatic grass.",
+        "vanilla_comparison": "Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Broken thin vertical rib groups follow long stem faces. Dark narrow side faces separate the angled stalks in projection.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Yellow-green lines are restrained against muted olive midtones. Olive greens distinguish softer leaves from the brown marine algae.",
+        "context_type": "model_uv",
+        "context_view": "Three fine diverging olive stems form a sparse rooted tuft. Thin stems end at different heights with broad open gaps. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/water_milfoil.png": {
+      "sha256": "97b9fda7bc71e53e003f8101ed5dac552e6eb20d9c782365f6c81c7edea8bd3e",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout. Finer dense teal leaves contrast with broad sparse pondweed shelves.",
+      "findings": {
+        "silhouette": "Dense alternating small leaf whorls rise around one stem.",
+        "cluster_structure": "Feather-like angled short strokes form groups on green leaf faces.",
+        "micro_contrast": "Small mint-green ribs interrupt darker teal-green tissue.",
+        "light_and_volume": "Overlapping horizontal leaf shelves read above shaded lower branches.",
+        "material_continuity": "Cool green tones carry through the narrow branching leaves.",
+        "edge_variation": "Repeated whorls alternate sides at several heights.",
+        "variant_identity": "Finer dense teal leaves contrast with broad sparse pondweed shelves.",
+        "functional_material_cues": "Short lateral feather marks suggest dissected submerged foliage.",
+        "vanilla_comparison": "Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Feather-like angled short strokes form groups on green leaf faces. Overlapping horizontal leaf shelves read above shaded lower branches.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Small mint-green ribs interrupt darker teal-green tissue. Cool green tones carry through the narrow branching leaves.",
+        "context_type": "model_uv",
+        "context_view": "Dense alternating small leaf whorls rise around one stem. Repeated whorls alternate sides at several heights. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/hornwort.png": {
+      "sha256": "dbc8543db402e9ba0db935acd7b2e40be580e1779cf3f96e555241aae850b50f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout. More open basal silhouette than upright milfoil despite similar whorls.",
+      "findings": {
+        "silhouette": "Layered central whorls accompanied by two outward slender blades.",
+        "cluster_structure": "Short oblique green needles branch from deeper green leaf lines.",
+        "micro_contrast": "Yellow-green tips are visible against darker olive leaf bases.",
+        "light_and_volume": "Dark central support is partly screened by outward fronds.",
+        "material_continuity": "Olive green ramp remains continuous across branches and needles.",
+        "edge_variation": "Additional tilted outer blades widen the profile near the floor.",
+        "variant_identity": "More open basal silhouette than upright milfoil despite similar whorls.",
+        "functional_material_cues": "Pointed short foliage marks suggest a stiff forked leaf habit.",
+        "vanilla_comparison": "Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Short oblique green needles branch from deeper green leaf lines. Dark central support is partly screened by outward fronds.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Yellow-green tips are visible against darker olive leaf bases. Olive green ramp remains continuous across branches and needles.",
+        "context_type": "model_uv",
+        "context_view": "Layered central whorls accompanied by two outward slender blades. Additional tilted outer blades widen the profile near the floor. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/pondweed.png": {
+      "sha256": "593ea55087a34e0a70bdc46972ddf629c6fd4567a4c883d4ea20f67fe2cbcda2",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout. Three sparse leaf pairs are broader and less dense than milfoil.",
+      "findings": {
+        "silhouette": "One stem holds widely separated broad horizontal leaf shelves.",
+        "cluster_structure": "Broad leaf folds and distinct central ribs fill the accent surfaces.",
+        "micro_contrast": "Pale olive veins cross a darker green blade.",
+        "light_and_volume": "Shelf tops are brighter than the thin shaded lateral faces.",
+        "material_continuity": "Natural mid-green with yellow-green foliage connects stem and leaves.",
+        "edge_variation": "Widely spaced leaf layers preserve open water between nodes.",
+        "variant_identity": "Three sparse leaf pairs are broader and less dense than milfoil.",
+        "functional_material_cues": "Broad projecting leaves with central ribs suggest pondweed.",
+        "vanilla_comparison": "Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Broad leaf folds and distinct central ribs fill the accent surfaces. Shelf tops are brighter than the thin shaded lateral faces.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Pale olive veins cross a darker green blade. Natural mid-green with yellow-green foliage connects stem and leaves.",
+        "context_type": "model_uv",
+        "context_view": "One stem holds widely separated broad horizontal leaf shelves. Widely spaced leaf layers preserve open water between nodes. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/water_crowfoot.png": {
+      "sha256": "92e910dd4ecff4e2832b8239cbaf0db9da5b62bb267fc4d532997e8314b2a0d8",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout. The white-yellow top identifies this plant among other stacked green stems.",
+      "findings": {
+        "silhouette": "Green branching stem terminates in a small pale flower.",
+        "cluster_structure": "Feathery green foliage and a cream-yellow flower atlas region remain separate.",
+        "micro_contrast": "Gold central accent contrasts with subdued off-white petal area.",
+        "light_and_volume": "The pale upper flower sits above shaded green leaf shelves.",
+        "material_continuity": "Green stem and cream blossom use separate biologically plausible ramps.",
+        "edge_variation": "Staggered shelves leave visible gaps below the small blossom.",
+        "variant_identity": "The white-yellow top identifies this plant among other stacked green stems.",
+        "functional_material_cues": "Pale floral disk and dissected leaves communicate water crowfoot.",
+        "vanilla_comparison": "Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Feathery green foliage and a cream-yellow flower atlas region remain separate. The pale upper flower sits above shaded green leaf shelves.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Gold central accent contrasts with subdued off-white petal area. Green stem and cream blossom use separate biologically plausible ramps.",
+        "context_type": "model_uv",
+        "context_view": "Green branching stem terminates in a small pale flower. Staggered shelves leave visible gaps below the small blossom. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/river_moss.png": {
+      "sha256": "53e6787d763a171f10a56edbf8dd402d108e407f997c13c1051d9dddfc66d807",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout. The horizontal mat contrasts with rooted upright freshwater plants.",
+      "findings": {
+        "silhouette": "Low layered green mat spreads over the bed in irregular lobes.",
+        "cluster_structure": "Connected olive clusters form broad mossy patches.",
+        "micro_contrast": "Small pale growing-tip marks break the dark green boundaries.",
+        "light_and_volume": "Raised thin mats overlap darker side faces close to the ground.",
+        "material_continuity": "Moss-green tones remain more subdued than bright aquatic leaves.",
+        "edge_variation": "Unequal low plate edges leave spaces around the mat.",
+        "variant_identity": "The horizontal mat contrasts with rooted upright freshwater plants.",
+        "functional_material_cues": "Patchy low growth and short green tips suggest attached river moss.",
+        "vanilla_comparison": "Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Connected olive clusters form broad mossy patches. Raised thin mats overlap darker side faces close to the ground.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Small pale growing-tip marks break the dark green boundaries. Moss-green tones remain more subdued than bright aquatic leaves.",
+        "context_type": "model_uv",
+        "context_view": "Low layered green mat spreads over the bed in irregular lobes. Unequal low plate edges leave spaces around the mat. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/water_starwort.png": {
+      "sha256": "23391440c55dfdc17c27708bd1dcae7674d549e7ad88121d5858619b2e9413fe",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Inspected native 32x32 and enlarged original atlas plus reconstructed static isometric view with the exact cuboid geometry and mapped faces. Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout. The terminal green rosette differs from crowfoot's cream blossom.",
+      "findings": {
+        "silhouette": "Upright stem supports a broad cross-like top rosette.",
+        "cluster_structure": "Separate light-green ribbed upper leaves spread around the stalk.",
+        "micro_contrast": "Pale lime ridges distinguish the terminal whorl from lower leaves.",
+        "light_and_volume": "The elevated rosette casts darker sides over the stem's shelves.",
+        "material_continuity": "Fresh green and brighter upper leaf values remain coherent.",
+        "edge_variation": "A broad terminal leaf spread interrupts the narrow vertical stem.",
+        "variant_identity": "The terminal green rosette differs from crowfoot's cream blossom.",
+        "functional_material_cues": "Larger top leaf whorl marks the starwort growth form.",
+        "vanilla_comparison": "Vanilla fern uses small directed neighboring foliage marks and a simple open form; the new painted material follows leaf axes on actual cuboid surfaces rather than copying the flat cutout."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Separate light-green ribbed upper leaves spread around the stalk. The elevated rosette casts darker sides over the stem's shelves.",
+        "reference_limit": "No matching vanilla organism or cuboid UV atlas exists; the comparator establishes pixel grouping only, not a texture to reuse.",
+        "native_view": "Pale lime ridges distinguish the terminal whorl from lower leaves. Fresh green and brighter upper leaf values remain coherent.",
+        "context_type": "model_uv",
+        "context_view": "Upright stem supports a broad cross-like top rosette. A broad terminal leaf spread interrupts the narrow vertical stem. Checked static isometric preview with explicit per-face 1:1 texel density; Minecraft client not run.",
+        "custom_reason": "The relevant asset is a four-region UV atlas for a unique aquatic organism, not a catalogued full block or standalone item material.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed locally; uncatalogued comparator not independently checked against official archive."
+      }
     }
   },
   "review_status": "1.2.5 RC1: 118 previously reviewed textures unchanged; seven new original fruit item PNGs individually reviewed in native/enlarged icon family and static hanging-model context. Art Review Lock, Build Hub, natural generation and graphical client verification pending.",
