@@ -29,6 +29,7 @@ public final class TraumaEvents {
         ModNetwork.progress(p,0,0);
     }
     public static void resetAfterDeath(ServerPlayer p) {
+        DeathReports.clear(p);
         MetabolismBridge.forget(p);
         ClimbManager.cancel(p);
         TreatmentManager.forget(p);
@@ -40,7 +41,7 @@ public final class TraumaEvents {
         ModNetwork.progress(p,0,0);
     }
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent e) {
-        if(e.getEntity() instanceof ServerPlayer p){MetabolismBridge.forget(p);ClimbManager.cancel(p);ClimbManager.forget(p);BodyStates.flush(p);BodyStates.forget(p);TreatmentManager.forget(p);}
+        if(e.getEntity() instanceof ServerPlayer p){DeathReports.clear(p);MetabolismBridge.forget(p);ClimbManager.cancel(p);ClimbManager.forget(p);BodyStates.flush(p);BodyStates.forget(p);TreatmentManager.forget(p);}
     }
     public static void onClone(PlayerEvent.Clone e) {
         BodyStates.copy(e.getOriginal(),e.getEntity(),e.isWasDeath());
@@ -72,6 +73,7 @@ public final class TraumaEvents {
         if(!WorldLogicBridge.injuryEnabled(p)) return;
         BodyState b=BodyStates.get(p);
         applyDamage(p,b,e.getSource(),amount);
+        DeathReports.hit(p,b,e.getSource());
         // Anatomical damage is the only normal survival damage. Preserve engine-level kill/void.
         if(!VitalityBridge.engineFatalSource(e.getSource())) e.setNewDamage(b.vitalDestroyed()?Math.max(amount,p.getHealth()+p.getAbsorptionAmount()+1):0f);
         ModNetwork.sync(p);
@@ -153,7 +155,8 @@ public final class TraumaEvents {
         ClimbManager.tick(p);
         if(!WorldLogicBridge.active(p)){TreatmentManager.tick(p);if(p.tickCount%40==0)ModNetwork.syncGait(p);return;}
         BodyState b=BodyStates.get(p);
-        if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
+        if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p,null);return;}
+        DeathReports.clear(p);
         VitalityBridge.maintainBackingHealth(p);
         TreatmentManager.tick(p);
         if(p.tickCount%20!=0) return;
@@ -185,14 +188,15 @@ public final class TraumaEvents {
     }
     /** No grace period for a destroyed brain or chest. Direct kill bypasses armor and totems. */
     private static float totalHp(BodyState b){float hp=0;for(var part:BodyPart.values())hp+=b.health(part);return hp;}
-    private static void fatalCollapse(ServerPlayer p){
+    private static void fatalCollapse(ServerPlayer p,DeathReport.Cause phase){
+        DeathReports.collapse(p,BodyStates.get(p),phase);
         ClimbManager.cancel(p);
         TreatmentManager.cancel(p);
         BodyStates.flush(p);
         try{
             INTERNAL.set(true);
             p.kill();
-        }finally{INTERNAL.set(false);}
+        }finally{INTERNAL.set(false);DeathReports.clear(p);}
         if(p.isAlive())ModNetwork.sync(p);
     }
     // Existing admin command calls this after reset. World Logic alone owns movement modifiers.

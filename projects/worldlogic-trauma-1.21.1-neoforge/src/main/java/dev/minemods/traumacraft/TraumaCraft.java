@@ -25,6 +25,7 @@ public final class TraumaCraft {
         modBus.addListener(ModNetwork::register);
         var bus=NeoForge.EVENT_BUS;
         bus.addListener(EventPriority.LOWEST,TraumaEvents::onDamage);
+        bus.addListener(EventPriority.LOWEST,dev.minemods.traumacraft.event.DeathReports::onDeath);
         bus.addListener(EventPriority.LOWEST,VitalityBridge::onHeal);
         bus.addListener(TraumaEvents::onPlayerTick);
         bus.addListener(EventPriority.HIGHEST,FunctionEvents::attack);
