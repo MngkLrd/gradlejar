@@ -17,7 +17,7 @@ final class RailIcons{
  private static final String[] CHART={
  "................","..dddddddddddd..","..dwwwwwwwwwsd..","..dwaaaaaaawsd..",
  "..dwa.....awsd..","..dwa....gawsd..","..dwa...ggaasd..","..dwa..gg.aasd..",
- "..dwa.gg..aawsd.","..dwagg...aawsd.","..dwa.....awsd..","..dwaaaaaaawsd..",
+ "..dwa.gg..awsd..","..dwagg...awsd..","..dwa.....awsd..","..dwaaaaaaawsd..",
  "..dssssssssssd..","..dddddddddddd..","................","................"};
  static boolean draw(GuiGraphics g,ResourceLocation id,int x,int y){
   String[] art=switch(id.getNamespace()){case "worldlogic_thermal"->THERMOMETER;case "worldlogic_trauma"->MEDICAL;case "worldlogic"->id.getPath().equals("analytics")?CHART:null;default->null;};

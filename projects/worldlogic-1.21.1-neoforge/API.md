@@ -225,3 +225,6 @@ All 1.2.1 public physical interfaces and material calculations remain unchanged 
 - JourneyMap 6 API 2.0 optional seasonal info slot; uses synchronized Core season, not calendar estimation. Client/server Core versions must match (network protocol 11). Physical Materials remains revision 2.
 
 Graphical JEI/JourneyMap/Iris/Sodium/Patchouli and exact multi-addon client evidence is pending. Server fixtures test contracts, not rendered pixels.
+
+### 1.3.1 / RC55 native UI correction
+Client navigation capability revision 1: the existing WorldLogicTabs.register native screen factory takes precedence over optional compatibility factories and generic snapshot views. Register the actual screen, not a second summary. Keep native inventory controls, tooltips, graphs and treatments. Core owns rail order/icons, screen navigation and neutral vanilla panel style for its own views. Existing 1.3.0 snapshot and network contracts remain unchanged (API 16, protocol 11). Legacy adapters are specific to inspected ThermalScreen(Screen), MetabolismScreen(Screen) and TraumaInventoryScreen(Player) with interactive anatomy mode; avoid private UI bridging in new addon releases by registering a native factory. Addon-native layout and functional behavior remain under their owners. No gameplay or world generation changes. Graphical client proof pending.

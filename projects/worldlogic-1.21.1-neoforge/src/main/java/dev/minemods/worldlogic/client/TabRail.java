@@ -104,6 +104,10 @@ public final class TabRail {
   boolean safe=true;
   if(NativePeerViews.anatomy(screen)){
    safe=TabLayout.nativeRailFits(screen.width,screen.height)&&screen instanceof InventoryScreen inv&&inv.getMenu().getCarried().isEmpty();
+  }else if("worldlogic_thermal".equals(NativePeerViews.namespace(screen))){
+   // The old thermal panel uses the entire window for centering; keep its
+   // original geometry and back button rather than overlaying it on small screens.
+   safe=screen.width>=316;
   }else if(screen instanceof InventoryScreen inv){
    int right=inv.getGuiLeft()+inv.getXSize();x=right+4;y=inv.getGuiTop();available=Math.min(inv.getYSize(),screen.height-y);
    var player=Minecraft.getInstance().player;

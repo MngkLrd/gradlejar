@@ -328,5 +328,14 @@
   "worldlogic.stats.field.fastKcal": "Быстрая энергия, ккал",
   "worldlogic.stats.field.fatKcal": "Резерв, ккал",
   "worldlogic.stats.field.queuedKcal": "В пищеварении, ккал",
-  "itemGroup.worldlogic.core": "WorldLogic: Ядро"
+  "itemGroup.worldlogic.core": "WorldLogic: Ядро",
+  "worldlogic.stats.previous_section": "Предыдущий раздел",
+  "worldlogic.stats.next_section": "Следующий раздел",
+  "worldlogic.stats.field.condition": "Состояние",
+  "worldlogic.stats.field.coldSeconds": "Время на холоде, с",
+  "worldlogic.stats.field.hotSeconds": "Время на жаре, с",
+  "worldlogic.stats.field.sunSeconds": "Время под солнцем, с",
+  "worldlogic.stats.value.none": "Норма",
+  "worldlogic.stats.value.true": "Да",
+  "worldlogic.stats.value.false": "Нет"
 }

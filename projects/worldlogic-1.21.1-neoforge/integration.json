@@ -114,7 +114,7 @@
     {
       "id": "worldlogic:client_navigation",
       "version": 1,
-      "revision": 0,
+      "revision": 1,
       "domains": [
         "client_navigation"
       ],
@@ -282,13 +282,18 @@
       "source_paths": [
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/client/WorldLogicTabs.java",
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TabLayout.java",
-        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/TabRail.java"
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/TabRail.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/compat/NativePeerViews.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/compat/NativeTraumaView.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/client/NativeTraumaScreenMixin.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/RailIcons.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/VanillaPanels.java"
       ],
       "provides": [
         "worldlogic:client_navigation"
       ],
       "consumes": [],
-      "integration_review": "Metabolism #221 uses tab rail; existing layout fixtures do not establish graphical client evidence."
+      "integration_review": "Native registered views override compatibility factories and generic snapshots. Inspected Trauma #219 interactive anatomy and inventory, Temperature #186 four original pages and Metabolism #221 native provider. Core owns shared navigation; native addon screens retain rendering and authoritative interaction. Old binaries use bounded optional UI-only compatibility. No medical writes. Client rendering and input tests remain required."
     },
     {
       "id": "capability_discovery",

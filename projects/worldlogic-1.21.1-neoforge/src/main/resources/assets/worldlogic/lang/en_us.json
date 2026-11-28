@@ -315,5 +315,14 @@
   "worldlogic.stats.section.illnessStatus": "Illness",
   "worldlogic.stats.section.passiveRecoveryHpPerMinute": "HP recovery",
   "worldlogic.stats.section.roomClimate": "Room climate",
-  "itemGroup.worldlogic.core": "WorldLogic: Core"
+  "itemGroup.worldlogic.core": "WorldLogic: Core",
+  "worldlogic.stats.previous_section": "Previous section",
+  "worldlogic.stats.next_section": "Next section",
+  "worldlogic.stats.field.condition": "Condition",
+  "worldlogic.stats.field.coldSeconds": "Cold exposure, s",
+  "worldlogic.stats.field.hotSeconds": "Heat exposure, s",
+  "worldlogic.stats.field.sunSeconds": "Sun exposure, s",
+  "worldlogic.stats.value.none": "Normal",
+  "worldlogic.stats.value.true": "Yes",
+  "worldlogic.stats.value.false": "No"
 }
