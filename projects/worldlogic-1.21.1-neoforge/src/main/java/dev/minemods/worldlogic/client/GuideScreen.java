@@ -74,7 +74,7 @@ public final class GuideScreen extends ClearScreen implements GuideJeiLookup.Hov
   button(label("Оглавление","Contents"),b.leftText(),b.textTop()+3,b.textW(),this::contents);
   button(label("Каталог","Catalog"),b.rightText(),b.textTop()+3,half,()->Minecraft.getInstance().setScreen(new GuideCatalogScreen(this,russian)));
   button(label("Рецепты","Recipes"),b.rightText()+half+4,b.textTop()+3,half,()->Minecraft.getInstance().setScreen(new GuideRecipesScreen(this,russian)));
-  if(view==View.CONTENTS){int w=Math.max(12,(b.textW()-32)/2);button(label("Поиск","Search"),b.rightText(),y,w,()->Minecraft.getInstance().setScreen(new GuideIndexScreen(this,chapters,russian)));if(ModList.get().isLoaded("patchouli"))button("Patchouli",b.rightText()+w+4,y,w,()->GuideOpener.openPatchouli(this));}
+  if(view==View.CONTENTS){int w=Math.max(12,(b.textW()-32)/2);button(label("Поиск","Search"),b.rightText(),y,w,()->Minecraft.getInstance().setScreen(new GuideIndexScreen(this,chapters,russian)));}
   if(chapters.isEmpty()){button(label("Назад","Back"),b.leftText(),y,b.textW(),this::onClose);return;}
   if(view==View.ARTICLE){
    page=Math.min(page,current().pages().size()-1);

@@ -27,7 +27,7 @@ public final class TabRail {
  private static ResourceLocation id(String path){return ResourceLocation.fromNamespaceAndPath("worldlogic",path);}
  static {
   WorldLogicTabs.register(INVENTORY,0,Component.translatable("worldlogic.tabs.inventory"),()->new ItemStack(Items.CHEST),parent->parent);
-  WorldLogicTabs.register(GUIDE,10,Component.translatable("worldlogic.tabs.guide"),()->new ItemStack(Items.BOOK),GuideScreen::new);
+  WorldLogicTabs.register(GUIDE,10,Component.translatable("worldlogic.tabs.guide"),()->new ItemStack(dev.minemods.worldlogic.Content.GUIDE.get()),GuideScreen::new);
   WorldLogicTabs.register(ANALYTICS,90,Component.translatable("worldlogic.analytics.title"),()->new ItemStack(Items.COMPASS),AnalyticsScreen::new);
   dashboard("metabolism",30,"worldlogic.stats.metabolism",Items.COOKED_BEEF);
   dashboard("worldlogic_trauma",40,"worldlogic.stats.trauma",Items.REDSTONE);

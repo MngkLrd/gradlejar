@@ -35,7 +35,7 @@ tasks.register('generatePatchouliGuide') {
   writeJson('data/worldlogic/patchouli_books/field_guide/book.json',[
    name:'item.worldlogic.guidebook',landing_text:'worldlogic.patchouli.landing',
    use_resource_pack:true,dont_generate_book:true,custom_book_item:'worldlogic:guidebook',
-   book_texture:'patchouli:textures/gui/book_brown.png',filler_texture:'worldlogic:textures/gui/patchouli_generated/field_filler.png',i18n:true,show_progress:false,
+   book_texture:'patchouli:textures/gui/book_green.png',text_color:'302e24',header_color:'365640',link_color:'37664c',link_hover_color:'548264',filler_texture:'worldlogic:textures/gui/patchouli_generated/field_filler.png',i18n:true,show_progress:false,
    show_toasts:false,version:'57',text_overflow_mode:'resize'])
   // Page filler: subtle ink line-art of a field compass and a leaf, rather
   // than the default floating cubes. Pixel coordinates on Patchouli's 128px canvas.
@@ -51,29 +51,30 @@ tasks.register('generatePatchouliGuide') {
   fillerFile.parentFile.mkdirs();javax.imageio.ImageIO.write(filler,'png',fillerFile)
   def icons=[core:'minecraft:campfire',water:'minecraft:water_bucket',hydration:'minecraft:glass_bottle',
    weather:'minecraft:clock',thermal:'minecraft:leather_chestplate',trauma:'minecraft:redstone',
-   treechopper:'minecraft:stone_axe',terrarian:'minecraft:wheat',geology:'minecraft:raw_iron',biomes:'minecraft:map']
+   treechopper:'minecraft:stone_axe',terrarian:'minecraft:wheat',geology:'minecraft:raw_iron',aqua:'minecraft:cod',metabolism:'minecraft:cooked_beef',structures:'minecraft:bricks',biomes:'minecraft:map']
   def parser = new groovy.json.JsonSlurper()
   source.listFiles().findAll{it.name.endsWith('.json')}.sort{it.name}.each{file ->
    def chapter=parser.parse(file)
    ['en_us','ru_ru'].each{locale ->
     def lang=locale=='ru_ru'?'ru':'en'
     def root="assets/worldlogic/patchouli_books/field_guide/${locale}"
-    writeJson("${root}/categories/${chapter.id}.json",[name:chapter.title[lang],
-     description:chapter.pages[0].body[lang][0],icon:icons[chapter.id]?:'minecraft:book',sortnum:chapter.order])
+    def category=[name:chapter.title[lang],description:chapter.pages[0].body[lang][0],icon:icons[chapter.id]?:'worldlogic:guidebook',sortnum:chapter.order]
+    if(chapter.requires!='worldlogic')category.flag='mod:'+chapter.requires
+    writeJson("${root}/categories/${chapter.id}.json",category)
     chapter.pages.eachWithIndex{article,index ->
      def pages=[]
-     // Preserve every paragraph, wrapping long text into bounded page strings.
+     // Shorter first page allows a real item illustration plus meaningful article text.
+     def primary=article.models.find{it.startsWith('worldlogic:') || (chapter.requires!='worldlogic' && !it.startsWith('minecraft:'))}
      article.body[lang].each{paragraph ->
       def words=paragraph.split('\\s+');def line=''
       words.each{word ->
-       if(line && line.length()+word.length()+1>260){pages.add([type:'patchouli:text',text:line]);line=''}
+       if(line && line.length()+word.length()+1>(primary&&pages.isEmpty()?125:260)){pages.add([type:'patchouli:text',text:line]);line=''}
        line+=(line?' ':'')+word
       }
       if(line)pages.add([type:'patchouli:text',text:line])
      }
      // Illustrate only actual Core objects in articles; vanilla props no longer occupy empty pages.
      // Each Core object has its own material catalogue entry.
-     def primary=article.models.find{it.startsWith('worldlogic:')}
      if(primary && !pages.isEmpty()){
       def first=pages.remove(0)
       pages.add(0,[type:'patchouli:spotlight',item:primary,link_recipe:true,text:first.text])
@@ -97,9 +98,9 @@ tasks.register('generatePatchouliGuide') {
       }
      }
      if(pages.size()%2!=0)pages.add([type:'patchouli:empty',draw_filler:false])
-     writeJson("${root}/entries/${chapter.id}/${article.id}.json",[
-      name:article.title[lang],category:"worldlogic:${chapter.id}",icon:article.models.find{it.startsWith('minecraft:')||it.startsWith('worldlogic:')}?:icons[chapter.id]?:'minecraft:book',
-      sortnum:index,pages:pages])
+     def entry=[name:article.title[lang],category:"worldlogic:${chapter.id}",icon:primary?:icons[chapter.id]?:'worldlogic:guidebook',sortnum:index,pages:pages]
+     if(chapter.requires!='worldlogic')entry.flag='mod:'+chapter.requires
+     writeJson("${root}/entries/${chapter.id}/${article.id}.json",entry)
     }
    }
   }

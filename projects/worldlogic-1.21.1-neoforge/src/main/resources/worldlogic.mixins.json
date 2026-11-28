@@ -34,6 +34,7 @@
     "client.OwnedScreenBackgroundMixin",
     "client.IrisPlantMaterialMixin",
     "client.NativeTraumaScreenMixin",
-    "client.SodiumWaterOcclusionMixin"
+    "client.SodiumWaterOcclusionMixin",
+    "client.TreeDescentModelMixin"
   ]
 }

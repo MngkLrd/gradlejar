@@ -41,6 +41,8 @@ public final class TreeDescent {
   }
   return best;
  }
+ private static void release(Player p){if(GRIPS.remove(p)!=null)TreeDescentSync.send(p,false);}
+ private static void grip(Player p,Grip g){GRIPS.put(p,g);TreeDescentSync.send(p,true);}
  public static boolean gripping(Player p){return GRIPS.containsKey(p);}
  public static void interact(PlayerInteractEvent.RightClickBlock e){
   if(e.isCanceled()||e.getHand()!=InteractionHand.MAIN_HAND||!(e.getLevel() instanceof ServerLevel l)||!eligible(e.getEntity()))return;
@@ -48,19 +50,20 @@ public final class TreeDescent {
   if(face==null||!face.getAxis().isHorizontal()||!trunk(l.getBlockState(pos))||p.getEyePosition().distanceToSqr(e.getHitVec().getLocation())>9)return;
   var grip=new Grip(pos.getX(),pos.getZ(),face,l,l.getGameTime());
   if(!support(l,p,grip))return;
-  GRIPS.put(p,grip);e.setCanceled(true);e.setCancellationResult(InteractionResult.SUCCESS);
+  grip(p,grip);e.setCanceled(true);e.setCancellationResult(InteractionResult.SUCCESS);
  }
  public static void tick(PlayerTickEvent.Post e){
   var p=e.getEntity();
-  if(!(p.level() instanceof ServerLevel l)||!eligible(p)||Survival.fatigue(p)>=98||ImpactDynamics.hanging(p)){GRIPS.remove(p);return;}
+  if(!(p.level() instanceof ServerLevel l)||!eligible(p)||Survival.fatigue(p)>=98||ImpactDynamics.hanging(p)){release(p);return;}
   var grip=GRIPS.get(p);
-  if(grip==null){grip=nearbyGrip(l,p);if(grip==null)return;GRIPS.put(p,grip);}
-  if(!support(l,p,grip)){GRIPS.remove(p);return;}
-  if(p.onGround()||!l.noCollision(p,p.getBoundingBox().move(0,-.12,0))){if(l.getGameTime()-grip.start()>40)GRIPS.remove(p);return;}
+  if(grip==null){grip=nearbyGrip(l,p);if(grip==null)return;grip(p,grip);}
+  if(!support(l,p,grip)){release(p);return;}
+  if(p.onGround()||!l.noCollision(p,p.getBoundingBox().move(0,-.12,0))){release(p);return;}
   var v=p.getDeltaMovement();p.setDeltaMovement(v.x*.55,-.12,v.z*.55);p.fallDistance=0;p.hurtMarked=true;
+  if(p.tickCount%10==0)TreeDescentSync.send(p,true);
   if(l.getGameTime()%20==0)Survival.work(p,.8);
  }
- public static void logout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent e){GRIPS.remove(e.getEntity());}
+ public static void logout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent e){release(e.getEntity());}
  static void verify(){
   if(!trunk(net.minecraft.world.level.block.Blocks.OAK_LOG.defaultBlockState())||trunk(net.minecraft.world.level.block.Blocks.OAK_LOG.defaultBlockState().setValue(BlockStateProperties.AXIS,Direction.Axis.X))||trunk(net.minecraft.world.level.block.Blocks.OAK_PLANKS.defaultBlockState())||trunk(net.minecraft.world.level.block.Blocks.OAK_STAIRS.defaultBlockState())||trunk(net.minecraft.world.level.block.Blocks.OAK_LEAVES.defaultBlockState()))throw new IllegalStateException("tree descent trunk filter");
  }

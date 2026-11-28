@@ -1600,6 +1600,42 @@
         "context_view": "Inspected 3×3 actual repeat against old sprite and role comparator; one full upper brick and offset lower course replace square tiled units. This is static art review, not client proof.",
         "context_type": "tile_3x3"
       }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/guidebook.png": {
+      "sha256": "222f11964f10aea2fe0a3128b12738f3452808f50f0e04406da33d1deda903c8",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/book",
+          "minecraft": "1.21.1",
+          "sha256": "e9f710d62e16776df7e5bf05dcaa187d40cc1428f4fd18644e3ff67062f9fff2"
+        }
+      ],
+      "comparison": "Inspected the actual target book sprite beside the original notebook at 16px and nearest-neighbor 10x. The diagonal cover and page wedge match the book family scale, but green cloth, brass compass and red marker distinguish the field journal.",
+      "findings": {
+        "silhouette": "A compact diagonal notebook with closed cover and readable ivory page wedge.",
+        "cluster_structure": "Broad green cover and contiguous brass clasp with a small compass motif.",
+        "micro_contrast": "Gold accents have a dark muted needle and warm highlight, not scattered noise.",
+        "light_and_volume": "Pale top edge and shaded binding imply thickness above the ivory pages.",
+        "material_continuity": "Deep green cover wraps the spine, with warm cream page edges beneath.",
+        "edge_variation": "Stepped corners and darker binding preserve a deliberate pixel silhouette.",
+        "variant_identity": "Green field journal and red marker contrast with the plain brown vanilla book.",
+        "vanilla_comparison": "Vanilla 1.21.1 book from misode/mcmeta target asset archive has a similar readable closed-volume silhouette.",
+        "functional_material_cues": "Compass-shaped ornament and bookmark indicate an annotated field guide; page wedge identifies the book."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/book",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Closed bound field notebook has no exact atlas book comparator. Inspected Minecraft 1.21.1 book PNG from misode/mcmeta 1.21.1-assets, git blob bae14bfdbedc1abb5b88ebaf6e6f3d7b3a78298d; computed SHA-256 from decoded bytes. Official client archive not independently downloaded.",
+        "applied_pattern": "Retain diagonal cover/spine/page wedge with a different cloth and compass motif.",
+        "reference_limit": "Vanilla book is leather brown, not a green expedition notebook; no claim of official client rendering.",
+        "native_view": "At 16px the ivory lower edge and green cover distinguish the guide from vanilla.",
+        "context_view": "Compared the native item silhouettes side by side and at nearest-neighbor 10x; graphical inventory context not run.",
+        "context_type": "icon_family"
+      }
     }
   }
 }
