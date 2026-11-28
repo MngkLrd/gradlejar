@@ -22,3 +22,6 @@ Snapshot.count() exposes the persistent 1..4 fruiting capacity; legacy construct
 
 ## Optional Metabolism integration
 Metabolism API v1 revision >=4 owns ordinary FOOD completion and immediate meal recovery. `food.MetabolismBridge.automaticFood()` discovers the compatible peer by its actual version fields; `ForageFoodItem.legacyRecovery()` is zero when it is available, otherwise returns the previous direct Core recovery. The legacy energy tooltip uses the same policy. Ordinary FOOD never calls reportFoodIntake. See issue #258.
+
+## Forest microhabitat v1 revision 0
+`forest.ForestSpecies.values()`, `block()`, `supports(BlockGetter,BlockPos,Direction)`, `contactDamage` (vanilla HP per contact opportunity), `movement` (unitless factor), `root(String)` expose actual block traits; `forest.ForestEcology.epiphyteHabitat` and `vineHabitat` evaluate supplied temperature C, moisture/dryness fractions. World generation is bounded to actual generated-tree sites and chunk-local supported cells. Vine growth is bounded to four segments and does not force chunk loads. Native damage source and existing mobility API own physical effects; no new medical state.

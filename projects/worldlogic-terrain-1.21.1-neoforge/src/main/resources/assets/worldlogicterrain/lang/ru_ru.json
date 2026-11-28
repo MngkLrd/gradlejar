@@ -240,5 +240,18 @@
   "block.worldlogicterrain.mossy_date_palm_log": "Замшелое бревно финиковой пальмы",
   "block.worldlogicterrain.mossy_baobab_log": "Замшелое бревно баобаба",
   "block.worldlogicterrain.mossy_ebony_log": "Замшелое бревно эбенового дерева",
-  "block.worldlogicterrain.mossy_mahogany_log": "Замшелое бревно махагони"
+  "block.worldlogicterrain.mossy_mahogany_log": "Замшелое бревно махагони",
+  "block.worldlogicterrain.bark_moss": "Эпифитный мох",
+  "block.worldlogicterrain.hanging_lichen": "Свисающий лишайник",
+  "block.worldlogicterrain.climbing_ivy": "Плющ",
+  "block.worldlogicterrain.woodland_vine": "Лесная лиана",
+  "block.worldlogicterrain.exposed_root": "Оголённый корень",
+  "block.worldlogicterrain.conifer_root": "Оголённый корень хвойного дерева",
+  "block.worldlogicterrain.pale_root": "Светлый оголённый корень",
+  "block.worldlogicterrain.stinging_nettle": "Крапива",
+  "block.worldlogicterrain.wild_thistle": "Чертополох",
+  "block.worldlogicterrain.thorn_scrub": "Колючий кустарник",
+  "block.worldlogicterrain.needle_litter": "Хвойная подстилка",
+  "block.worldlogicterrain.bark_litter": "Опавшая кора",
+  "block.worldlogicterrain.damp_leaf_litter": "Влажная листовая подстилка"
 }

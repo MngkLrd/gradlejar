@@ -158,6 +158,44 @@
           "semantics": "Evaluate moss habitat against an actual supplied Core habitat sample."
         }
       ]
+    },
+    {
+      "id": "worldlogic:forest_microhabitat",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "forest_microhabitat"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogicterrain.forest.ForestSpecies",
+        "dev.minemods.worldlogicterrain.forest.ForestEcology"
+      ],
+      "documentation": "projects/worldlogic-terrain-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestSpecies.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestBlock.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestEcology.java"
+      ],
+      "operations": [
+        {
+          "id": "species",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.forest.ForestSpecies",
+          "semantics": "Enumerate real block species and contact/movement/support traits."
+        },
+        {
+          "id": "supports",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.forest.ForestSpecies",
+          "semantics": "Check real support and orientation."
+        },
+        {
+          "id": "habitat",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.forest.ForestEcology",
+          "semantics": "Evaluate epiphyte and vine tolerance from supplied Core climate."
+        }
+      ]
     }
   ],
   "consumes": [
@@ -284,6 +322,24 @@
       ],
       "integration_review": "Use existing Core legacy movement and exertion contract without SI mass substitution. Inspected Metabolism 0.9.0 API v1 rev4 and 0.9.1 v1 rev5; ordinary FOOD completion handled by peer; no reportFoodIntake call. Issue #258.",
       "no_public_surface_reason": "Consumer-only movement and food effects use Core's authoritative survival state."
+    },
+    {
+      "id": "forest_microhabitat",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestSpecies.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestBlock.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestEcology.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/tree/EcologicalTreeFeature.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/mobility/TerrainMobility.java"
+      ],
+      "provides": [
+        "worldlogic:forest_microhabitat"
+      ],
+      "consumes": [
+        "worldlogic:environment",
+        "worldlogic:survival_physics"
+      ],
+      "integration_review": "Use existing Core habitat sample and Terrarian movement factor; no duplicate climate or injury model; damage uses native sweet berry bush source. Generated roots remain distinct from TreeChopper log registry, no stick drops. Vines bounded four segments; no global tick."
     }
   ],
   "tests": [
@@ -338,6 +394,16 @@
       "capabilities": [
         "worldlogic:survival_physics",
         "worldlogic:metabolism_physiology"
+      ],
+      "ref": "tools/qa/scenarios/worldlogicterrain.json",
+      "status": "implemented"
+    },
+    {
+      "id": "terrarian.forest_microhabitat",
+      "capabilities": [
+        "worldlogic:forest_microhabitat",
+        "worldlogic:environment",
+        "worldlogic:survival_physics"
       ],
       "ref": "tools/qa/scenarios/worldlogicterrain.json",
       "status": "implemented"

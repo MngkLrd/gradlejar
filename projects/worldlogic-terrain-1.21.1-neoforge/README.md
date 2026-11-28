@@ -92,3 +92,6 @@ The 1.6.4 diagnostic compiled but stopped before starting its server: 252 steps 
 
 ### 1.6.6 — moss geometry correction
 Player screenshot exposed flat crossed planes and a zero-thickness foundation. All six moss/lichen models now have a full 16×16×1 carpet and original opaque 32px atlas, 13–30 actual solid cuboids, connected branches, native 1:1 UVs. Four existing rotations preserved. Static two-angle voxel raster and face connectivity inspected; Gradle verifyMossVolume enforces geometry and texture rules. Existing spawning, food, source water, IDs and collision behavior unchanged. In-client visual test and shader rendering not yet verified.
+
+### 1.7.0 — forest microhabitat
+13 blocks/items: two epiphytes, two climbing vines, three roots, three thorn plants and three forest floor covers. Natural tree-attached generation uses existing Core habitat, independent random stream, and chunk-local bounded attempts. Vines grow downward on natural supports with four-segment limit. Thorn contact uses vanilla damage and existing mobility factor. No player-built plank attachment or forced chunk loads. Existing IDs and 1.6.6 moss models retained. Runtime/player/client natural-world evidence pending.

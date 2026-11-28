@@ -87,6 +87,7 @@ public final class TerrainMobility {
         };
     }
     private static double vegetation(BlockState b) {
+        if(b.getBlock() instanceof dev.minemods.worldlogicterrain.forest.ForestBlock f)return f.species().movement;
         if(b.is(Blocks.SHORT_GRASS))return .97;
         if(b.is(Blocks.TALL_GRASS))return .88;
         if(b.is(Blocks.FERN))return .95;

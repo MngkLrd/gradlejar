@@ -240,5 +240,18 @@
   "block.worldlogicterrain.mossy_date_palm_log": "Mossy date palm log",
   "block.worldlogicterrain.mossy_baobab_log": "Mossy baobab log",
   "block.worldlogicterrain.mossy_ebony_log": "Mossy ebony log",
-  "block.worldlogicterrain.mossy_mahogany_log": "Mossy mahogany log"
+  "block.worldlogicterrain.mossy_mahogany_log": "Mossy mahogany log",
+  "block.worldlogicterrain.bark_moss": "Bark moss",
+  "block.worldlogicterrain.hanging_lichen": "Hanging lichen",
+  "block.worldlogicterrain.climbing_ivy": "Climbing ivy",
+  "block.worldlogicterrain.woodland_vine": "Woodland vine",
+  "block.worldlogicterrain.exposed_root": "Exposed root",
+  "block.worldlogicterrain.conifer_root": "Exposed conifer root",
+  "block.worldlogicterrain.pale_root": "Pale exposed root",
+  "block.worldlogicterrain.stinging_nettle": "Stinging nettle",
+  "block.worldlogicterrain.wild_thistle": "Wild thistle",
+  "block.worldlogicterrain.thorn_scrub": "Thorn scrub",
+  "block.worldlogicterrain.needle_litter": "Needle litter",
+  "block.worldlogicterrain.bark_litter": "Bark litter",
+  "block.worldlogicterrain.damp_leaf_litter": "Damp leaf litter"
 }

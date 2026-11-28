@@ -99,6 +99,15 @@ public final class TerrainContent {
                 BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS).randomTicks()));
             PLANTS.add(ITEMS.register(id,()->new dev.minemods.worldlogicterrain.growth.SeasonalSeedItem(block.get())));
         }
+        for(var species:dev.minemods.worldlogicterrain.forest.ForestSpecies.values()){
+            var block=BLOCKS.register(species.id,()->{
+                var props=BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(
+                    species.kind==dev.minemods.worldlogicterrain.forest.ForestSpecies.Kind.ROOT?SoundType.WOOD:SoundType.GRASS);
+                if(species.kind==dev.minemods.worldlogicterrain.forest.ForestSpecies.Kind.VINE)props.randomTicks();
+                return new dev.minemods.worldlogicterrain.forest.ForestBlock(species,props);
+            });
+            PLANTS.add(ITEMS.register(species.id,()->new BlockItem(block.get(),new Item.Properties())));
+        }
         for(var species:dev.minemods.worldlogicterrain.moss.MossSpecies.values()){
             var block=BLOCKS.register(species.id,()->new dev.minemods.worldlogicterrain.moss.MossBlock(species,
                 BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.MOSS_CARPET)));

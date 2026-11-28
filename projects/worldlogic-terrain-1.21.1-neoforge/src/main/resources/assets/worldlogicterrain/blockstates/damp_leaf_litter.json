@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,segment=0": {
+      "model": "worldlogicterrain:block/damp_leaf_litter"
+    },
+    "facing=north,segment=1": {
+      "model": "worldlogicterrain:block/damp_leaf_litter"
+    },
+    "facing=north,segment=2": {
+      "model": "worldlogicterrain:block/damp_leaf_litter"
+    },
+    "facing=north,segment=3": {
+      "model": "worldlogicterrain:block/damp_leaf_litter"
+    },
+    "facing=east,segment=0": {
+      "model": "worldlogicterrain:block/damp_leaf_litter",
+      "y": 90
+    },
+    "facing=east,segment=1": {
+      "model": "worldlogicterrain:block/damp_leaf_litter",
+      "y": 90
+    },
+    "facing=east,segment=2": {
+      "model": "worldlogicterrain:block/damp_leaf_litter",
+      "y": 90
+    },
+    "facing=east,segment=3": {
+      "model": "worldlogicterrain:block/damp_leaf_litter",
+      "y": 90
+    },
+    "facing=south,segment=0": {
+      "model": "worldlogicterrain:block/damp_leaf_litter",
+      "y": 180
+    },
+    "facing=south,segment=1": {
+      "model": "worldlogicterrain:block/damp_leaf_litter",
+      "y": 180
+    },
+    "facing=south,segment=2": {
+      "model": "worldlogicterrain:block/damp_leaf_litter",
+      "y": 180
+    },
+    "facing=south,segment=3": {
+      "model": "worldlogicterrain:block/damp_leaf_litter",
+      "y": 180
+    },
+    "facing=west,segment=0": {
+      "model": "worldlogicterrain:block/damp_leaf_litter",
+      "y": 270
+    },
+    "facing=west,segment=1": {
+      "model": "worldlogicterrain:block/damp_leaf_litter",
+      "y": 270
+    },
+    "facing=west,segment=2": {
+      "model": "worldlogicterrain:block/damp_leaf_litter",
+      "y": 270
+    },
+    "facing=west,segment=3": {
+      "model": "worldlogicterrain:block/damp_leaf_litter",
+      "y": 270
+    }
+  }
+}

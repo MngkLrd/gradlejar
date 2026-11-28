@@ -76,6 +76,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         int startX=origin.getX()&~15,startZ=origin.getZ()&~15;
         long seed=level.getSeed();
         List<BlockPos> trunks=new ArrayList<>();
+        List<dev.minemods.worldlogicterrain.forest.ForestEcology.Site> forestSites=new ArrayList<>();
         List<BlockPos> coastCells=new ArrayList<>();
         for(int dx:new int[]{2,8,13})for(int dz:new int[]{2,8,13}){
             var shore=LandscapeMosaic.surface(level,startX+dx,startZ+dz);
@@ -162,6 +163,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             var key=ResourceKey.create(Registries.CONFIGURED_FEATURE,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","tree_"+form.feature()));
             if(level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(key).value().place(level,generator,random,pos)){
                 placed=true;trunks.add(pos);
+                forestSites.add(new dev.minemods.worldlogicterrain.forest.ForestEcology.Site(pos,form.wood(),local,zone==Zone.BOREAL||zone==Zone.TEMPERATE||zone==Zone.WET||zone==Zone.TROPICAL||zone==Zone.CHERRY));
                 if(fruit.isPresent())FruitEcology.attach(level,pos,fruit.get().fruit(),fruitRandom);
                 if(zone==Zone.BOREAL||zone==Zone.TEMPERATE||zone==Zone.WET||zone==Zone.TROPICAL){
                     for(int n=0;n<3;n++){
@@ -192,6 +194,8 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
                 placed|=deadwood;
             }
         }
+        for(var site:forestSites)dev.minemods.worldlogicterrain.forest.ForestEcology.decorate(level,site,
+            RandomSource.create(seed^site.trunk().asLong()^0x464F52455354L),startX,startZ);
         return placed;
     }
     static double coastalInfluence(BlockPos pos,List<BlockPos> shore){

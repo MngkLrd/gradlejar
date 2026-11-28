@@ -8127,6 +8127,302 @@
         "context_view": "Actual 3x3 nearest-neighbor overlay tiles examined on approximated bark-color grounds, not an actual game-client render. Model review/client lighting NOT_RUN.",
         "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/climbing_ivy.png": {
+      "sha256": "fd8b1ba00504fd57e06ea769cd26066d9e14b4c75757488f99fe7af1a3d80dec",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Dark climbing woody stem with offset lobed leaves. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Dark climbing woody stem with offset lobed leaves.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "Dark climbing woody stem with offset lobed leaves.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Dark climbing woody stem with offset lobed leaves.",
+        "context_type": "placed_cutout",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/woodland_vine.png": {
+      "sha256": "e5a0f8afb9ab0d0be9a54f19f9e7c01b7ed53b29475b48278b3449a69f8c671f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Two winding brown stems and sparse warm-green leaf groups. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Two winding brown stems and sparse warm-green leaf groups.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "Two winding brown stems and sparse warm-green leaf groups.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Two winding brown stems and sparse warm-green leaf groups.",
+        "context_type": "placed_cutout",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/stinging_nettle.png": {
+      "sha256": "4e7ed0032ed146e22ec50a74403db4ed72e97e4e19ed8a2352a0b68e14a429b2",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Upright green stem with paired serrated leaf groups and light tips. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Upright green stem with paired serrated leaf groups and light tips.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "Upright green stem with paired serrated leaf groups and light tips.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Upright green stem with paired serrated leaf groups and light tips.",
+        "context_type": "placed_cutout",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_thistle.png": {
+      "sha256": "8ee5097d5c1cf7547547b4cefd5ef0c1055d77ec23e20b23491d4adfbb88bd1f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Spiny green foliage and a mauve composite flower head. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Spiny green foliage and a mauve composite flower head.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "Spiny green foliage and a mauve composite flower head.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Spiny green foliage and a mauve composite flower head.",
+        "context_type": "placed_cutout",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/thorn_scrub.png": {
+      "sha256": "02f014b6f663007aa850d10452c84f3cc44ffe543296ac961b0015596c6ab587",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "d7d9bf83464ef649e52c8658e15b080f1abb36928ecdbaf2306a292b5bda5cb1"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Forked brown stems with pale thorns and separated leaf clusters. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Forked brown stems with pale thorns and separated leaf clusters.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "Forked brown stems with pale thorns and separated leaf clusters.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/sweet_berry_bush_stage3",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Forked brown stems with pale thorns and separated leaf clusters.",
+        "context_type": "placed_cutout",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/needle_litter.png": {
+      "sha256": "9109aac2df7110e6396d2ef04d8ee2321de416ebb57205536edf4f6d04e6d2c4",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/pink_petals",
+          "minecraft": "1.21.1",
+          "sha256": "2ea08d4b868a8d59a7e1b7393fc5ffed49905235da6d176867a59e2070c55400"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Scattered ochre and brown slender needles crossing at different angles. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Scattered ochre and brown slender needles crossing at different angles.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "Scattered ochre and brown slender needles crossing at different angles.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/pink_petals",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Scattered ochre and brown slender needles crossing at different angles.",
+        "context_type": "tile_3x3",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_litter.png": {
+      "sha256": "9d60b70ce8190101dc4a0a994b8c074ba099da35b8d4ed5ac4c55a8a0c18117b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/pink_petals",
+          "minecraft": "1.21.1",
+          "sha256": "2ea08d4b868a8d59a7e1b7393fc5ffed49905235da6d176867a59e2070c55400"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Broken irregular umber bark fragments with dark grain and warm exposed edges. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Broken irregular umber bark fragments with dark grain and warm exposed edges.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "Broken irregular umber bark fragments with dark grain and warm exposed edges.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/pink_petals",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Broken irregular umber bark fragments with dark grain and warm exposed edges.",
+        "context_type": "tile_3x3",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/damp_leaf_litter.png": {
+      "sha256": "add203d97648483ad7e27c196b7e9dd8b6e00a75eb69a8a855fac6ca5c7f5bb8",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/pink_petals",
+          "minecraft": "1.21.1",
+          "sha256": "2ea08d4b868a8d59a7e1b7393fc5ffed49905235da6d176867a59e2070c55400"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Uneven olive-brown broad leaf pieces with dark vein strokes. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Uneven olive-brown broad leaf pieces with dark vein strokes.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "Uneven olive-brown broad leaf pieces with dark vein strokes.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/pink_petals",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Uneven olive-brown broad leaf pieces with dark vein strokes.",
+        "context_type": "tile_3x3",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
     }
   },
   "review_status": "1.2.5 RC1: 118 previously reviewed textures unchanged; seven new original fruit item PNGs individually reviewed in native/enlarged icon family and static hanging-model context. Art Review Lock, Build Hub, natural generation and graphical client verification pending.",
