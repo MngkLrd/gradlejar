@@ -78,6 +78,7 @@ public final class TreeChopper {
         NeoForge.EVENT_BUS.addListener(TreeChopper::tickDisplay);
         NeoForge.EVENT_BUS.addListener(FallingTree::attack);
         NeoForge.EVENT_BUS.addListener(TreeQA::register);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST,TreeQA::protectionObserver);
         NeoForge.EVENT_BUS.addListener(ForestSticks::tick);
         NeoForge.EVENT_BUS.addListener(PrimitiveRecipeSync::tick);
         modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event)->event.enqueueWork(()->{LooseRocks.bindCore();TreeChopperApi.registerCore();}));
@@ -127,9 +128,12 @@ public final class TreeChopper {
     }
     static boolean allowed(ServerLevel level,ServerPlayer player,BlockPos pos,BlockState state){
         if(!level.mayInteract(player,pos))return false;
+        boolean previous=PROTECTION_CHECK.get();
         PROTECTION_CHECK.set(true);
-        try{return !NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(level,pos,state,player)).isCanceled();}
-        finally{PROTECTION_CHECK.remove();}
+        try{
+            if(WorldLogicIntegration.safeStrikes())return WorldLogicIntegration.checkProtection(level,player,pos,state);
+            return !NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(level,pos,state,player)).isCanceled();
+        }finally{if(previous)PROTECTION_CHECK.set(true);else PROTECTION_CHECK.remove();}
     }
     private static void guardBreak(BlockEvent.BreakEvent event){
         if(PROTECTION_CHECK.get() || event.getPlayer().isCreative() || event.getPlayer().isSpectator() || !(event.getLevel() instanceof ServerLevel level))return;
@@ -204,6 +208,7 @@ public final class TreeChopper {
                 long now=level.getGameTime(); CompoundTag data=player.getPersistentData();
                 if(power>0&&(!data.contains(COOLDOWN)||now<data.getLong(COOLDOWN)||now-data.getLong(COOLDOWN)>=ChopEffort.cooldown(power))){
                     if(FallenTimber.process(level,player,pos)){
+                        WorldLogicIntegration.acceptedStrike(player);
                         data.putLong(COOLDOWN,now);
                         ((ChopSwing)player).wl$markSwing();
                         if(!(player instanceof FakePlayer))PacketDistributor.sendToPlayersTrackingEntityAndSelf(player,new ChopNetwork.Swing(player.getId()));
@@ -249,7 +254,10 @@ public final class TreeChopper {
                 player.displayClientMessage(Component.translatable("message.wl_treechopper.supports",readySupports(level,supports,pos,work),supports.size()),true);return;
             }
             int wear=ChopEffort.fellingWear(upperLogs(tree)+extraCore,false);
-            if(canPay(player,axe,wear)&&fall(level,player,pos,s,old,tree,side,true))axe.hurtAndBreak(wear,player,EquipmentSlot.MAINHAND);
+            if(canPay(player,axe,wear)&&fall(level,player,pos,s,old,tree,side,true)){
+                WorldLogicIntegration.acceptedStrike(player);
+                axe.hurtAndBreak(wear,player,EquipmentSlot.MAINHAND);
+            }
             return;
         }
         float speed=Math.max(axe.getDestroySpeed(original(s)),((AxeItem)axe.getItem()).getTier().getSpeed());
@@ -270,6 +278,7 @@ public final class TreeChopper {
         if(!(level.getBlockEntity(pos) instanceof CutProgress progress))return;
         progress.write(work,guide);
         progress.rememberMoisture(wood.moisturePercent());
+        WorldLogicIntegration.acceptedStrike(player);
         ((ChopSwing)player).wl$markSwing();
         if(!(player instanceof FakePlayer))PacketDistributor.sendToPlayersTrackingEntityAndSelf(player,new ChopNetwork.Swing(player.getId()));
         player.swing(InteractionHand.MAIN_HAND,true);

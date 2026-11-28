@@ -939,10 +939,7 @@
       "assertion": true
     },
     {
-      "wait": 2
-    },
-    {
-      "wait": 1
+      "wait": 3
     },
     {
       "name": "inclined-buck-no-duplicate",
@@ -951,10 +948,7 @@
       "assertion": true
     },
     {
-      "wait": 2
-    },
-    {
-      "wait": 1
+      "wait": 3
     },
     {
       "name": "inclined-buck-third",

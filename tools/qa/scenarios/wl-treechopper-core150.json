@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "TreeChopper 0.9.2 with exact Core 1.5.0",
+  "name": "TreeChopper 0.9.3 with exact Core 1.5.1",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -64,6 +64,24 @@
       "expect": "TreeChopper Core pebble materials PASS",
       "assertion": true,
       "name": "core-pebble-composition"
+    },
+    {
+      "command": "setblock 1010 199 1000 minecraft:dirt",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "fill 1010 200 1000 1010 203 1000 minecraft:oak_log",
+      "expect": "Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1010 204 1000 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block"
+    },
+    {
+      "command": "wltreechopper qa_safe_strike 1010 200 1000",
+      "expect": "TreeChopper safe strike PASS",
+      "assertion": true,
+      "name": "safe-strike-debit"
     }
   ],
   "coverage": [
@@ -116,6 +134,17 @@
         {
           "backend": "server",
           "name": "typed-core-discovery"
+        }
+      ]
+    },
+    {
+      "id": "safe-strike-debit",
+      "kind": "mechanic",
+      "subject": "Core rev21 probe zero debit, late denial and cooldown zero debit, one actual debit per accepted notch and successful direct felling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "safe-strike-debit"
         }
       ]
     }

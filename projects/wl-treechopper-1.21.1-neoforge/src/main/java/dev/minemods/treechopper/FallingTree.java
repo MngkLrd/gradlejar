@@ -395,6 +395,7 @@ final class FallingTree {
         }
         if(harvest.isEmpty())return;
         for(CompoundTag m:harvest){removeCollider(l,m);Display.BlockDisplay d=display(l,m);if(d!=null)d.discard();m.putBoolean("removed",true);}
+        WorldLogicIntegration.acceptedStrike(player);
         int done=mask(f)|(1<<s);f.putInt("processedMask",done);f.putInt("processed",Integer.bitCount(done));f.putLong("lastBuck",l.getGameTime());
         // Decorative root caps must not hang in space after their supporting logs have been cut.
         for(int i=0;i<members(f).size();i++){

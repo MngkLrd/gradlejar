@@ -1,0 +1,27 @@
+{
+  "name": "First axe",
+  "category": "worldlogic:treechopper_field",
+  "icon": "minecraft:flint",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:flint",
+      "link_recipe": true,
+      "text": "Look for fallen twigs beneath natural canopies, loose rocks on exposed stone and flint on gravel. Gather sticks and flint. Craft a stone axe from one flint and two sticks even in the personal 2×2 grid."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "wl_treechopper:primitive_axe",
+      "text": "One flint and two sticks."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Ground litter generates in new chunks; branches also occasionally fall naturally. A pebble is not a full stone block."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": false
+    }
+  ]
+}

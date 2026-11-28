@@ -1,0 +1,27 @@
+{
+  "name": "Первый топор",
+  "category": "worldlogic:treechopper_field",
+  "icon": "minecraft:flint",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:flint",
+      "link_recipe": true,
+      "text": "Под естественной кроной ищи упавшие ветки, на открытом камне — камешки, а на гравии — кремень. Собери ветки и кремень. Каменный топор из одного кремня и двух палок создаётся даже в личной сетке 2×2."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "wl_treechopper:primitive_axe",
+      "text": "Один кремень и две палки."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Ветки и камешки появляются при генерации новых чанков; иногда ветки падают естественно. Камешек не превращается в целый блок камня."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": false
+    }
+  ]
+}

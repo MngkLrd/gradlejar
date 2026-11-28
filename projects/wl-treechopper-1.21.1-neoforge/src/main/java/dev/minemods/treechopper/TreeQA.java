@@ -13,8 +13,54 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 final class TreeQA {
+    private static net.minecraft.server.level.ServerPlayer denyPlayer;
+    private static BlockPos denyPos;
+    static void protectionObserver(net.neoforged.neoforge.event.level.BlockEvent.BreakEvent event){
+        if(denyPlayer!=null&&event.getPlayer()==denyPlayer&&event.getPos().equals(denyPos))event.setCanceled(true);
+    }
+    private static boolean qaSafeStrike(ServerLevel l,BlockPos p) throws ReflectiveOperationException{
+        if(!WorldLogicIntegration.safeStrikes())return false;
+        var fake=FakePlayerFactory.getMinecraft(l);
+        fake.setPos(p.getX()+.5,p.getY(),p.getZ()-1.5);
+        var axe=new ItemStack(Items.IRON_AXE);fake.setItemSlot(EquipmentSlot.MAINHAND,axe);
+        var before=l.getBlockState(p);
+        WorldLogicIntegration.qaResetEffort(fake);
+        WorldLogicIntegration.acceptedStrike(fake);
+        double expected=WorldLogicIntegration.qaFatigue(fake);
+        WorldLogicIntegration.qaResetEffort(fake);
+        if(expected<=0)return false;
+        try{
+            if(!TreeChopper.allowed(l,fake,p,before)||WorldLogicIntegration.qaFatigue(fake)!=0||!l.getBlockState(p).equals(before))return false;
+            denyPlayer=fake;denyPos=p.immutable();
+            TreeChopper.qaResetCooldown(fake);
+            NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
+            if(WorldLogicIntegration.qaFatigue(fake)!=0||!l.getBlockState(p).equals(before)||axe.getDamageValue()!=0)return false;
+            denyPlayer=null;denyPos=null;
+            TreeChopper.qaResetCooldown(fake);
+            NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
+            if(!(l.getBlockState(p).getBlock() instanceof CutBlock)||Math.abs(WorldLogicIntegration.qaFatigue(fake)-expected)>1e-8||axe.getDamageValue()!=1)return false;
+            int progress=TreeChopperApi.cut(l,p).orElseThrow().totalPermille();
+            NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
+            if(TreeChopperApi.cut(l,p).orElseThrow().totalPermille()!=progress||Math.abs(WorldLogicIntegration.qaFatigue(fake)-expected)>1e-8||axe.getDamageValue()!=1)return false;
+            // Each successive accepted strike costs exactly one unit, including successful direct felling.
+            for(int i=0;i<32;i++){
+                double prior=WorldLogicIntegration.qaFatigue(fake);
+                TreeChopper.qaResetCooldown(fake);
+                NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
+                if(Math.abs(WorldLogicIntegration.qaFatigue(fake)-prior-expected)>1e-7)return false;
+                if(l.getBlockState(p).getBlock() instanceof StumpBlock)return true;
+            }
+            return false;
+        }finally{denyPlayer=null;denyPos=null;WorldLogicIntegration.qaResetEffort(fake);}
+    }
     static void register(RegisterCommandsEvent registrationEvent){
         registrationEvent.getDispatcher().register(Commands.literal("wltreechopper").requires(s->s.hasPermission(2))
+          .then(Commands.literal("qa_safe_strike").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
+            try{
+                if(!qaSafeStrike(c.getSource().getLevel(),BlockPosArgument.getLoadedBlockPos(c,"pos")))return 0;
+            }catch(ReflectiveOperationException e){c.getSource().sendFailure(Component.literal("TreeChopper safe strike FAILED: "+e));return 0;}
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper safe strike PASS"),false);return 1;
+          })))
           .then(Commands.literal("qa_api").then(Commands.argument("pos",BlockPosArgument.blockPos()).then(Commands.argument("registered",IntegerArgumentType.integer(0,1)).executes(c->{
             ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
             boolean expected=IntegerArgumentType.getInteger(c,"registered")==1;

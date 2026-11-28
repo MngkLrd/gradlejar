@@ -1,0 +1,6 @@
+{
+  "name": "Tree chopping: field instructions",
+  "description": "Current 3Chop mechanics: gathering, felling and bucking.",
+  "icon": "minecraft:stone_axe",
+  "sortnum": 36
+}

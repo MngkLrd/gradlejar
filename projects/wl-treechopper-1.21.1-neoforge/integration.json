@@ -68,10 +68,10 @@
     {
       "id": "worldlogic:survival_physics",
       "version": 1,
-      "min_revision": 0,
+      "min_revision": 19,
       "required": false,
       "status": "implemented",
-      "fallback": "Missing Core fatigue uses neutral stamina; no duplicate private fatigue store."
+      "fallback": "Core API v1 rev21 uses protection-only probes and one explicit debit per accepted axe action; older Core retains legacy event-based debit behavior; standalone has neutral stamina."
     },
     {
       "id": "worldlogic:wood_species",
@@ -124,7 +124,7 @@
         "worldlogic:wood_species",
         "worldlogic:capability_discovery"
       ],
-      "integration_review": "Core #262 actual API rev20 owns fatigue and SI data; Terrarian #250 actual WoodPhysicsApi v3 owns local moisture; Trauma #219 legacy public arm-function bridge retained, no invented capability ID; Excavation #264 uses separate mining domain and has no TreeChopper dependency."
+      "integration_review": "Core #262 actual API rev20 owns fatigue and SI data; Terrarian #250 actual WoodPhysicsApi v3 owns local moisture; Trauma #219 legacy public arm-function bridge retained, no invented capability ID; Excavation #264 uses separate mining domain and has no TreeChopper dependency. Core #270 rev21 WorldLogicBreaks is consumed; accepted strikes debit only via Core addExertion. Old Core compatibility remains legacy."
     },
     {
       "id": "ground_litter_and_primitive_tools",

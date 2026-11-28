@@ -1,4 +1,4 @@
-name: TreeChopper Core 1.5.0 and Terrarian 1.7.1 exact-artifact diagnostic
+name: TreeChopper Core 1.5.1 and Terrarian 1.7.1 exact-artifact diagnostic
 on:
   pull_request:
     paths:
@@ -39,16 +39,16 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          gh api "repos/$GITHUB_REPOSITORY/actions/runs/46119926441" --jq '.head_sha + " " + .conclusion' | grep -Fx 'e69ac212de92609f3200eb30de34a411ba46d684 success'
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/46123087105" --jq '.head_sha + " " + .conclusion' | grep -Fx '4a3e510fd4dcfae50e4292b2b2f95eca2f26a0e4 success'
           gh api "repos/$GITHUB_REPOSITORY/actions/runs/46120028304" --jq '.head_sha + " " + .conclusion' | grep -Fx '5a22f3e7ef036d2ab1f2fd726e162899421cf2cb success'
-          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/15253830826" --jq '.name + " " + .digest' | grep -Fx 'jar-worldlogic-1.21.1-neoforge-1.5.0-0 sha256:9586476717e4812b424c42d65c52d6ccc5cc22adea7b49e478b0832ac7e9a4a9'
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/15254721484" --jq '.name + " " + .digest' | grep -Fx 'jar-worldlogic-1.21.1-neoforge-1.5.1-0 sha256:e95602851bd5daac5e2a05acaff437ab5b05e989c05c84e9adb8d7131d6c146f'
           gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/15253745402" --jq '.name + " " + .digest' | grep -Fx 'terrarian-1.7.1-core-1.2.1-NOT-RELEASE sha256:701014de9fa86dd530abcad8ac89f07c9cfc5207d0b89a0ed9627fa865c4ea02'
           gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/15253376133" --jq '.name + " " + .digest' | grep -Fx 'terrarian-1.7.1-diagnostic-evidence sha256:13b1be7a690685d1c8cb0a8b21e3c9845021fdd701d5886ab8f51a9ed9701e67'
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
-          run-id: 46119926441
-          name: jar-worldlogic-1.21.1-neoforge-1.5.0-0
+          run-id: 46123087105
+          name: jar-worldlogic-1.21.1-neoforge-1.5.1-0
           path: exact-core
       - uses: actions/download-artifact@v4
         with:
@@ -75,11 +75,11 @@ jobs:
           root=pathlib.Path('projects/wl-treechopper-1.21.1-neoforge')
           p=json.loads((root/'build-profile.json').read_text())
           jar=root/'build/libs'/p['jar_glob']
-          core=next(pathlib.Path('exact-core').rglob('worldlogic-neoforge-mc1.21.1-1.5.0.jar'))
+          core=next(pathlib.Path('exact-core').rglob('worldlogic-neoforge-mc1.21.1-1.5.1.jar'))
           terrarian=next(pathlib.Path('exact-terrarian').rglob('worldlogicterrain-neoforge-mc1.21.1-1.7.1.jar'))
           meta=json.loads(next(pathlib.Path('terrarian-evidence').rglob('terrarian-diagnostic-report.json')).read_text())
           digest=lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
-          assert digest(core)=='581e25d192c55123599cbc5ed380db10f708c2981345ba8683f83e64df910805'
+          assert digest(core)=='a966fb939988e794586cd6a1ea18fafe340296447b67ef8a9827963328e20548'
           assert meta['jar']==terrarian.name and meta['sha256']==digest(terrarian)
           out=pathlib.Path('treechopper-core150-diagnostic')
           out.mkdir()

@@ -1,0 +1,18 @@
+{
+  "name": "Felling and bucking",
+  "category": "worldlogic:treechopper_field",
+  "icon": "minecraft:oak_log",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:oak_log",
+      "link_recipe": true,
+      "text": "Severing leaves a stump. The trunk falls according to direction, branch mass and obstacles. Use an axe on accessible sections of a landed or inclined trunk in any order."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Larger trees require more work. Supports and neighboring trees can obstruct the fall. This is not a general rigid-body simulation; not every complex trunk is recognized."
+    }
+  ]
+}
