@@ -13,7 +13,17 @@ import net.minecraft.server.level.ServerPlayer;
 /** Public server-thread API. Hydration owns fluid balance, never foreign body state. */
 public final class HydrationApi {
  public static final int API_VERSION=1;
- public static final int API_REVISION=2;
+ public static final int API_REVISION=3;
+ /** Reference-temperature SI parameters for water contents only, not the vessel shell. */
+ public static Optional<dev.minemods.hydration.WaterPhysics.Properties> liquidPhysics(ItemStack stack){
+  if(stack.getItem() instanceof VesselItem v)return Optional.of(dev.minemods.hydration.WaterPhysics.batch(v.read(stack)));
+  return WaterBottle.read(stack).map(dev.minemods.hydration.WaterPhysics::batch);
+ }
+ public static Optional<dev.minemods.hydration.WaterPhysics.Properties> tankPhysics(ServerLevel level,BlockPos pos){
+  if(!level.getServer().isSameThread())throw new IllegalStateException("Server thread required");
+  if(!level.hasChunkAt(pos)||!(level.getBlockEntity(pos) instanceof TankEntity tank))return Optional.empty();
+  return Optional.of(dev.minemods.hydration.WaterPhysics.batch(tank.water()));
+ }
  public record Physiology(double hydrationPercent,double electrolyteIndex,double exposurePoints,String dehydrationStage){}
  public static Optional<Physiology> physiology(ServerPlayer p){
   if(!p.serverLevel().getServer().isSameThread())throw new IllegalStateException("Server thread required");

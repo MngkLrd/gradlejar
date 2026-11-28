@@ -4,10 +4,10 @@
   "order": 0,
   "requires": "worldlogic",
   "title": {
-    "ru": "Мир и выживание",
-    "en": "World & survival"
+    "ru": "Начало и выживание",
+    "en": "Getting started and survival"
   },
-  "source": "WorldLogic RC32",
+  "source": "WorldLogic RC33",
   "pages": [
     {
       "id": "start",
@@ -30,131 +30,6 @@
           "WorldLogic changes natural laws. New worlds use Realistic, without a separate easy mode. Match Core and addon versions on client and server.",
           "Look for water, shelter, weather and vegetation. Establish a safe route home and a place to rest. Sprinting and heavy work consume energy.",
           "This book shows installed modules. Illustrations use real game models, not recipes. Existing worlds retain generated chunks."
-        ]
-      }
-    },
-    {
-      "id": "geography",
-      "title": {
-        "ru": "География и биомы",
-        "en": "Geography and biomes"
-      },
-      "models": [
-        "minecraft:grass_block",
-        "minecraft:sand",
-        "minecraft:gravel",
-        "minecraft:stone"
-      ],
-      "body": {
-        "ru": [
-          "Материки, горы, широты и влажность определяют природные зоны. В новом мире RC32 активны 58 биомов; старые идентификаторы сохранены для сохранений.",
-          "Уровень моря Y=63. Мир простирается от Y=-256 до Y=511. Прибрежные биомы должны находиться у воды, а песчаные берега состоят преимущественно из песка.",
-          "Тропики обычно теплее, высокогорья и полярные области холоднее. Растения и деревья зависят от Terrarian; ванильное морское наполнение временно восстановлено."
-        ],
-        "en": [
-          "Continents, mountains, latitude and moisture shape ecological zones. RC32 uses 58 active biomes for new worlds; old IDs remain for saves.",
-          "Sea level is Y=63; world bounds are Y=-256 to 511. Shores belong near water, with sandy beaches mainly sand.",
-          "Tropics tend to be warm; mountains and polar regions cold. Terrarian supplies terrestrial flora; vanilla marine decoration is temporarily restored."
-        ]
-      }
-    },
-    {
-      "id": "weather",
-      "title": {
-        "ru": "Погода и атмосфера",
-        "en": "Weather and atmosphere"
-      },
-      "models": [
-        "minecraft:spyglass",
-        "minecraft:lightning_rod",
-        "minecraft:snow_block"
-      ],
-      "body": {
-        "ru": [
-          "Погода зависит от местного климата, давления и переноса воздушных масс. В разных областях могут идти разные осадки: дождь, снег, ливень, метель, гроза, туман, муссон, пыльная буря или ясная погода.",
-          "Под открытым небом ветер и осадки сильнее влияют на ощущаемую среду. Укрытие уменьшает воздействие. Для температуры тела нужен Temperature.",
-          "Сезоны и полноценные атмосферные процессы пока не завершены; гроза не гарантирует новые физические молнии."
-        ],
-        "en": [
-          "Local weather depends on climate, pressure and moving air fields. Regions may have clear weather, rain, snow, downpour, blizzard, thunderstorm, fog, monsoon or dust storm.",
-          "Exposure increases the effects of wind and precipitation; shelter helps. Temperature handles body heat.",
-          "Seasons and full atmospheric dynamics are not complete; storms do not guarantee custom physical lightning."
-        ]
-      }
-    },
-    {
-      "id": "soil",
-      "title": {
-        "ru": "Почвы и экология",
-        "en": "Soils and ecology"
-      },
-      "models": [
-        "worldlogic:humus",
-        "worldlogic:loam",
-        "worldlogic:peat",
-        "worldlogic:alluvial_silt",
-        "worldlogic:frozen_soil"
-      ],
-      "body": {
-        "ru": [
-          "Гумус — органическая почва; суглинок — минеральная; торф удерживает влагу; аллювиальный ил связан с осадками воды; мёрзлая почва хуже пропускает воду.",
-          "Осадки пополняют запас воды в почве, снег накапливается и тает, часть влаги испаряется, уходит в грунт или сток. Модель учитывает проницаемость и плодородие.",
-          "Экология корней, опада и засоления доступна через ядро. Автоматический полный жизненный цикл растений ещё не реализован."
-        ],
-        "en": [
-          "Humus is organic soil; loam mineral-rich; peat retains moisture; alluvial silt represents water deposits; frozen soil limits infiltration.",
-          "Precipitation replenishes soil water; snow accumulates and melts; water evaporates, recharges groundwater or runs off. Permeability and fertility matter.",
-          "Root, litter and salinity budgets are available through Core. A complete automatic plant lifecycle is not implemented."
-        ]
-      }
-    },
-    {
-      "id": "geology",
-      "title": {
-        "ru": "Руды и пещеры",
-        "en": "Ores and caves"
-      },
-      "models": [
-        "minecraft:iron_ore",
-        "minecraft:copper_ore",
-        "minecraft:deepslate_diamond_ore",
-        "minecraft:calcite"
-      ],
-      "body": {
-        "ru": [
-          "Руды формируются региональными месторождениями и более мелкими залежами. Геология зависит от местности и глубины, поэтому не все ресурсы распределены одинаково.",
-          "Ищи подходящие породы и исследуй несколько участков, а не только одну высоту. Встречаются карстовые полости, шахты, глубокие пещеры и подземная вода.",
-          "Ванильные рудные жилы в новом Realistic отключены. Не рассчитывай на старые таблицы добычи; полная природная проверка месторождений ещё не завершена."
-        ],
-        "en": [
-          "Ores form regional deposits and smaller pockets. Geology depends on location and depth, so resources are not uniformly distributed.",
-          "Look for suitable host rocks and explore different areas. Karst cavities, shafts, deep caves and groundwater can occur.",
-          "Vanilla ore veins are disabled in new Realistic worlds. Old mining tables are not reliable; full natural-world deposit QA remains incomplete."
-        ]
-      }
-    },
-    {
-      "id": "water",
-      "title": {
-        "ru": "Природная вода",
-        "en": "Natural water"
-      },
-      "models": [
-        "worldlogic:river_water_bucket",
-        "worldlogic:sea_water_bucket",
-        "worldlogic:groundwater_bucket",
-        "worldlogic:wetland_water_bucket"
-      ],
-      "body": {
-        "ru": [
-          "В ядре различаются морская, речная, озёрная, родниковая, грунтовая, болотная, прудовая и солоноватая вода. Источник и местная почва влияют на качество.",
-          "Морская и солоноватая требуют опреснения. Речная и родниковая по игровому балансу обычно пригоднее, но качество конкретного источника может меняться.",
-          "Жажда, питьё и очистка — раздел Hydration. Ядро моделирует воду и почву, но не полноценные физические паводки или истощение озёр."
-        ],
-        "en": [
-          "Core distinguishes sea, river, lake, spring, groundwater, wetland, pond and brackish water. Origin and local soil affect quality.",
-          "Sea and brackish water require desalination. River and spring water are generally safer by gameplay balance, but local quality can vary.",
-          "Hydration handles drinking, thirst and treatment. Core models water and soil, not full physical floods or lake depletion."
         ]
       }
     },

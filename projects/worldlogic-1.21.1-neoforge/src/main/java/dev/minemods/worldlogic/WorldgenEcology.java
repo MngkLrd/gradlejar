@@ -37,7 +37,10 @@ final class WorldgenEcology {
   if(soil==SoilType.FROZEN)return SurfaceFamily.FROZEN;
   if(soil==SoilType.PEAT)return SurfaceFamily.BOGGY;
   if(soil==SoilType.SILT)return wet>.72?SurfaceFamily.BOGGY:SurfaceFamily.MOIST;
-  if(soil==SoilType.HUMUS)return moisture>.65?SurfaceFamily.MOIST:SurfaceFamily.NORMAL;
+  if(soil==SoilType.HUMUS||soil==SoilType.CHERNOZEM)return moisture>.65?SurfaceFamily.MOIST:SurfaceFamily.NORMAL;
+  if(soil==SoilType.VOLCANIC_ASH)return SurfaceFamily.DRY;
+  if(soil==SoilType.SANDY_LOAM||soil==SoilType.LATERITE)return moisture<.30?SurfaceFamily.DRY:SurfaceFamily.NORMAL;
+  if(soil==SoilType.ROCK)return SurfaceFamily.ROCKY;
   if(b.is(Blocks.SNOW)||b.is(Blocks.SNOW_BLOCK)||b.is(Blocks.ICE)||b.is(Blocks.PACKED_ICE)||b.is(Blocks.POWDER_SNOW)||b.is(Blocks.FROSTED_ICE))return SurfaceFamily.FROZEN;
   if(b.is(BlockTags.SAND))return SurfaceFamily.SANDY;
   if(b.is(BlockTags.BASE_STONE_OVERWORLD)||b.is(Blocks.CALCITE)||b.is(Blocks.GRAVEL)||b.is(Blocks.SANDSTONE)||b.is(Blocks.RED_SANDSTONE)||b.is(Blocks.TERRACOTTA))return SurfaceFamily.ROCKY;
@@ -63,7 +66,7 @@ final class WorldgenEcology {
   var family=surface(ground,moisture,wet,cold);var zone=zone(biome,river);
   double nutrient=switch(family){case NORMAL->.78;case MOIST->.84;case DRY->.42;case SANDY->.20;case BOGGY->.52;case ROCKY->.12;case FROZEN->.18;case UNKNOWN->.25;};
   var soilType=HydrologyModel.soilType(ground);
-  if(soilType==SoilType.HUMUS||soilType==SoilType.PEAT||soilType==SoilType.SILT)nutrient=HydrologyModel.profile(soilType).fertility();
+  if(soilType!=SoilType.UNKNOWN&&soilType!=SoilType.LOAM)nutrient=HydrologyModel.profile(soilType).fertility();
   double fertility=unit(nutrient*(.72+.28*flat)*(1-.45*cold));
   double strength=unit(fertility*(1-.55*dry)*(1-.38*cold)*(1-.35*Math.max(0,wet-.60)/.40));
   var id=biome.unwrapKey().map(k->k.location()).orElse(ResourceLocation.fromNamespaceAndPath("worldlogic","unknown"));

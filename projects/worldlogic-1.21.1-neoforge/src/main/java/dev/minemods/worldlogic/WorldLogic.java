@@ -7,6 +7,12 @@ public final class WorldLogic {
   GeoDensity.TYPES.register(modBus);
   Content.PARTICLES.register(modBus);
   NaturalFluids.register(modBus);
+  MarinePlants.register();
+  GroundMaterials.register();
+  SoilFarmland.register();
+  RockContent.register();
+  modBus.addListener(SoilFarmland::creative);
+  modBus.addListener(RockContent::creative);
   Content.BLOCKS.register(modBus);
   Content.ITEMS.register(modBus);
   Rules.load();
@@ -14,7 +20,12 @@ public final class WorldLogic {
   modBus.addListener(MarineEcology::registerSpawns);
   var bus=NeoForge.EVENT_BUS;
   bus.addListener(AdminCommands::register);
+  bus.addListener(MarinePlants::chunkLoaded);
+  bus.addListener(NativeWaterTicks::load);
+  bus.addListener(NativeWaterTicks::tick);
+  bus.addListener(MarinePlants::serverTick);
   bus.addListener(RuleSync::login);
+  bus.addListener(GuideItem::login);
   bus.addListener(RuleSync::logout);
   bus.addListener(RuleSync::tick);
   bus.addListener(ReleaseChecks::started);
@@ -34,6 +45,7 @@ public final class WorldLogic {
   bus.addListener(MineInstability::placed);
   bus.addListener(MineInstability::tick);
   bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,Cleanup::broken);
+  bus.addListener(SoilFarmland::till);
   bus.addListener(Soil::harvest);
   bus.addListener(Soil::grow);
   bus.addListener(Soil::fertilize);
@@ -110,6 +122,7 @@ public final class WorldLogic {
   bus.addListener(Weather::tick);
   bus.addListener(WeatherController::tick);
   bus.addListener(LocalWeatherRuntime::tick);
+  bus.addListener(SeasonRuntime::tick);
   bus.addListener(HydrologyRuntime::tick);
   bus.addListener(EnvironmentAnalytics::tick);
   bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,EnvironmentAnalytics::broken);

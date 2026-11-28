@@ -23,13 +23,18 @@ final class LocalWeatherModel {
  static double unit(double x){return Math.max(0,Math.min(1,x));}
  static double smooth(double a,double b,double x){double t=unit((x-a)/(b-a));return t*t*(3-2*t);}
  static LocalWeather sample(long seed,int x,int z,long tick,int elevation,Climate c,boolean exposed){
+  // Legacy presets retain their former weather behavior. Realistic supplies the authoritative season.
+  double angle=GeologyModel.unit(GeologyModel.hash(seed,0,9,0))*Math.PI*2;
+  return sample(seed,x,z,tick,elevation,c,exposed,.5+.5*Math.sin(tick/(24000.0*8)*Math.PI*2+angle));
+ }
+ static LocalWeather sample(long seed,int x,int z,long tick,int elevation,Climate c,boolean exposed,double wetSeason){
   var w=RegionalWeatherModel.sample(seed,x,z,tick,0,c.moisture,c.prevailingX,c.prevailingZ);
   // A faster, spatially advecting mesoscale field overlays the slow pressure waves.
   double angle=GeologyModel.unit(GeologyModel.hash(seed,0,9,0))*Math.PI*2;
   double u=(x*Math.cos(angle)+z*Math.sin(angle))/420.0-tick/2300.0+angle;
   double v=(-x*Math.sin(angle)+z*Math.cos(angle))/670.0-tick/3900.0+angle*2;
   double front=.5+.33*Math.sin(u)+.17*Math.sin(v);
-  double season=.5+.5*Math.sin(tick/(24000.0*8)*Math.PI*2+angle);
+  double season=unit(wetSeason);
   double wet=unit(.64*c.moisture+.36*w.moistureFraction());
   double monsoon=smooth(.42,.80,wet)*smooth(35,12,c.latitude)*smooth(.40,.85,season);
   double wind=Math.hypot(w.windX(),w.windZ());

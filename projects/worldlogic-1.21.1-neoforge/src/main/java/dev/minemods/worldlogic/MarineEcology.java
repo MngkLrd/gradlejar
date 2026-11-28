@@ -41,6 +41,12 @@ final class MarineEcology {
    require(!b.getMobSettings().getMobs(MobCategory.WATER_AMBIENT).isEmpty(),"fish inventory "+id);
    if(!id.startsWith("polar"))require(features.get(9).stream().anyMatch(h->h.unwrapKey().map(k->k.location().getPath().startsWith("seagrass_")).orElse(false)),"vanilla seagrass "+id);
   }
+  MarinePlants.verify(l);
+  ReefTerrain.verify(l);
+  require(PhysicalBiomeReconciliation.continental(80,63,false,false)>.4,"dry land cannot be ocean");
+  require(PhysicalBiomeReconciliation.continental(40,63,true,false)<-.55,"submerged ocean floor");
+  require(PhysicalBiomeReconciliation.continental(64,63,false,true)==-.20,"narrow physical shore");
+  require(PhysicalBiomeReconciliation.continental(64,63,false,false)>.4,"inland lowland");
   for(double value:new double[]{0,.25,.6,.95}){
    require(MarineTerrain.material("temperate_sandy_coast",value,0).is(Blocks.SAND),"temperate sandy shore is sand");
    require(MarineTerrain.material("tropical_sandy_coast",value,0).is(Blocks.SAND),"tropical sandy shore is sand");
@@ -65,7 +71,7 @@ final class MarineEcology {
  static String audit(ServerLevel l,BlockPos origin){
   var chunk=l.getChunkSource().getChunkNow(origin.getX()>>4,origin.getZ()>>4);
   if(chunk==null)return "MARINE_AUDIT unavailable";
-  int ocean=0,wet=0,wrongLand=0,sea=0,stone=0,sediment=0,dirt=0,habitat=0,plants=0;
+  int ocean=0,wet=0,wrongLand=0,sea=0,stone=0,sediment=0,dirt=0,habitat=0,plants=0,nativePlants=0,vanillaPlantWater=0;
   int level=l.getSeaLevel(),x0=chunk.getPos().getMinBlockX(),z0=chunk.getPos().getMinBlockZ();
   var p=new BlockPos.MutableBlockPos();
   for(int x=0;x<16;x++)for(int z=0;z<16;z++){
@@ -77,17 +83,24 @@ final class MarineEcology {
    ocean++;
    if(h>=level+4){wrongLand++;continue;}
    p.set(wx,level-1,wz);
-   if(!chunk.getFluidState(p).is(FluidTags.WATER))continue;
+   if(!chunk.getFluidState(p).is(FluidTags.WATER)){
+    var b=chunk.getBlockState(p);
+    if(!(b.is(Blocks.ICE)||b.is(Blocks.PACKED_ICE)||b.is(Blocks.BLUE_ICE)))wrongLand++;
+    continue;
+   }
    wet++;
    if(nativeSea(l,p))sea++;
    if(submerged(l,p.set(wx,level-5,wz)))habitat++;
-   for(int yy=h+1;yy<level;yy++){var b=chunk.getBlockState(p.set(wx,yy,wz));if(b.is(Blocks.KELP)||b.is(Blocks.KELP_PLANT)||b.is(Blocks.SEAGRASS)||b.is(Blocks.TALL_SEAGRASS))plants++;}
+   for(int yy=Math.max(chunk.getMinBuildHeight(),h-1);yy<level;yy++){
+    var b=chunk.getBlockState(p.set(wx,yy,wz));
+    if(MarinePlants.isPlant(b)){plants++;if(nativeSea(l,p))nativePlants++;else if(b.getFluidState().getType()==net.minecraft.world.level.material.Fluids.WATER)vanillaPlantWater++;}
+   }
    var bed=chunk.getBlockState(p.set(wx,h,wz));
-   if(GeologyGeneration.rock(bed))stone++;
-   else if(bed.is(Blocks.SAND)||bed.is(Blocks.GRAVEL)||bed.is(Blocks.CLAY)||bed.is(Blocks.RED_SAND))sediment++;
+   if(GeologyGeneration.rock(bed)||ReefTerrain.coral(bed))stone++;
+   else if(bed.is(net.minecraft.tags.BlockTags.SAND)||bed.is(Blocks.GRAVEL)||bed.is(Blocks.CLAY))sediment++;
    else if(bed.is(Blocks.DIRT)||bed.is(Blocks.GRASS_BLOCK)||bed.is(Blocks.COARSE_DIRT))dirt++;
   }
-  return "MARINE_AUDIT ocean="+ocean+" wet="+wet+" wrongLand="+wrongLand+" sea="+sea+" stone="+stone+" sediment="+sediment+" dirt="+dirt+" habitat="+habitat+" plants="+plants;
+  return "MARINE_AUDIT ocean="+ocean+" wet="+wet+" wrongLand="+wrongLand+" sea="+sea+" stone="+stone+" sediment="+sediment+" dirt="+dirt+" habitat="+habitat+" plants="+plants+" nativePlants="+nativePlants+" vanillaPlantWater="+vanillaPlantWater;
  }
 
 }

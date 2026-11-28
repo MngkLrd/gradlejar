@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:limestone_wall",
+    "worldlogic:polished_limestone_wall",
+    "worldlogic:limestone_bricks_wall",
+    "worldlogic:shale_wall",
+    "worldlogic:polished_shale_wall",
+    "worldlogic:shale_bricks_wall",
+    "worldlogic:slate_wall",
+    "worldlogic:polished_slate_wall",
+    "worldlogic:slate_bricks_wall",
+    "worldlogic:gneiss_wall",
+    "worldlogic:polished_gneiss_wall",
+    "worldlogic:gneiss_bricks_wall",
+    "worldlogic:volcanic_tuff_wall",
+    "worldlogic:polished_volcanic_tuff_wall",
+    "worldlogic:volcanic_tuff_bricks_wall"
+  ]
+}

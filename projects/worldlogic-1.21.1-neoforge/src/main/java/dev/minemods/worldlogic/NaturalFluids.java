@@ -32,12 +32,23 @@ public final class NaturalFluids{
      .canSwim(true).canDrown(true).canPushEntity(true).canExtinguish(true).canHydrate(true).supportsBoating(true)
      .canConvertToSource(true).fallDistanceModifier(0).motionScale(.014)
      .sound(SoundActions.BUCKET_FILL,SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY,SoundEvents.BUCKET_EMPTY)));
-   source=FLUIDS.register(id,()->new BaseFlowingFluid.Source(properties()));
-   flowing=FLUIDS.register("flowing_"+id,()->new BaseFlowingFluid.Flowing(properties()));
-   block=Content.BLOCKS.register(id,()->new LiquidBlock(source.get(),BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
+   source=FLUIDS.register(id,()->kind==WaterKind.RIVER?new RiverSource(properties()):new BaseFlowingFluid.Source(properties()));
+   flowing=FLUIDS.register("flowing_"+id,()->kind==WaterKind.RIVER?new RiverFlowing(properties()):new BaseFlowingFluid.Flowing(properties()));
+   block=Content.BLOCKS.register(id,()->kind==WaterKind.RIVER?new DirectedRiverBlock(source.get(),BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)):new LiquidBlock(source.get(),BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
    bucket=Content.ITEMS.register(id+"_bucket",()->new BucketItem(source.get(),new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET)));
   }
   private BaseFlowingFluid.Properties properties(){return new BaseFlowingFluid.Properties(type,source,flowing).block(block).bucket(bucket).slopeFindDistance(4).levelDecreasePerBlock(1).tickRate(5).explosionResistance(100);}
+ }
+ private static net.minecraft.world.phys.Vec3 riverFlow(net.minecraft.world.level.BlockGetter level,net.minecraft.core.BlockPos pos,net.minecraft.world.phys.Vec3 vanilla){
+  return DirectedRiverBlock.flow(level,pos,vanilla);
+ }
+ private static final class RiverSource extends BaseFlowingFluid.Source{
+  RiverSource(BaseFlowingFluid.Properties p){super(p);}
+  @Override public net.minecraft.world.phys.Vec3 getFlow(net.minecraft.world.level.BlockGetter level,net.minecraft.core.BlockPos pos,FluidState state){return riverFlow(level,pos,super.getFlow(level,pos,state));}
+ }
+ private static final class RiverFlowing extends BaseFlowingFluid.Flowing{
+  RiverFlowing(BaseFlowingFluid.Properties p){super(p);}
+  @Override public net.minecraft.world.phys.Vec3 getFlow(net.minecraft.world.level.BlockGetter level,net.minecraft.core.BlockPos pos,FluidState state){return riverFlow(level,pos,super.getFlow(level,pos,state));}
  }
  static{
   add(WaterKind.SEA,"sea_water",0xff315f91);

@@ -40,8 +40,11 @@ public final class LocalWeatherRuntime {
   boolean dry=biome.is(TagKey.create(Registries.BIOME,ResourceLocation.fromNamespaceAndPath("worldlogic","vegetation/desert")))||
     biome.is(TagKey.create(Registries.BIOME,ResourceLocation.fromNamespaceAndPath("worldlogic","vegetation/scrub")))||!biome.value().hasPrecipitation();
   double temperature=14+28*c.thermalIndex()-.065*Math.max(-80,Math.min(160,p.getY()-c.modeledSurfaceY()));
-  var w=LocalWeatherModel.sample(l.getSeed(),p.getX(),p.getZ(),l.getGameTime(),p.getY()-l.getSeaLevel(),
-   new LocalWeatherModel.Climate(temperature,c.moistureIndex(),c.absoluteLatitude(),c.prevailingWindX(),c.prevailingWindZ(),dry),l.canSeeSky(p));
+  var season=SeasonRuntime.at(l,p,region);
+  var climate=new LocalWeatherModel.Climate(temperature+season.map(Season::temperatureOffsetC).orElse(0.0),
+    LocalWeatherModel.unit(c.moistureIndex()+season.map(Season::moistureOffset).orElse(0.0)),c.absoluteLatitude(),c.prevailingWindX(),c.prevailingWindZ(),dry);
+  var w=season.isPresent()?LocalWeatherModel.sample(l.getSeed(),p.getX(),p.getZ(),l.getGameTime(),p.getY()-l.getSeaLevel(),climate,l.canSeeSky(p),season.get().wetSeasonStrength()):
+    LocalWeatherModel.sample(l.getSeed(),p.getX(),p.getZ(),l.getGameTime(),p.getY()-l.getSeaLevel(),climate,l.canSeeSky(p));
   var d=DEMOS.get(l);
   if(d!=null){
    if(d.expires<=l.getGameTime())DEMOS.remove(l);

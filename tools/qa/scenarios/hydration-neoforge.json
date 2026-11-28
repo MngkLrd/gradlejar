@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Hydration 0.5.0 native waters, storage and physiology regression",
+  "name": "Hydration 0.5.1: native waters, storage, physiology and Core physical data",
   "coverage": [
     {
       "id": "water-balance",
@@ -241,6 +241,28 @@
       "id": "timestamp-item-roundtrip",
       "kind": "mechanic",
       "subject": "Aging timestamp survives component and stack copy",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vessel capacities and component persistence"
+        }
+      ]
+    },
+    {
+      "id": "core-fluid-si",
+      "kind": "mechanic",
+      "subject": "All eight native source samples match Core mass and density at 250 mB; tank API and viscosity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Infrastructure world fixture"
+        }
+      ]
+    },
+    {
+      "id": "vessel-physical-api",
+      "kind": "mechanic",
+      "subject": "Core nominal water mass/density; copy, empty, distilled and unmodeled mixed/unknown water controls",
       "checks": [
         {
           "backend": "server",

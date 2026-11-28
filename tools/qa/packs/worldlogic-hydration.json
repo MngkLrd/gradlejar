@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "worldlogic-hydration",
-  "description": "Exact pinned Core RC32 + Hydration 0.5.0 + Trauma 0.6.0-rc18 integration; joint runtime evidence required",
+  "description": "Core 1.2.0 RC53 snapshot + Hydration 0.5.1 + existing Trauma 0.6.0 integration; not release-approved",
   "targets": [
     {
       "id": "neoforge-mc1.21.1",

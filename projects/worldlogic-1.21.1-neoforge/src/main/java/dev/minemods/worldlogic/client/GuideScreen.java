@@ -1,89 +1,161 @@
 package dev.minemods.worldlogic.client;
+import dev.minemods.worldlogic.BookLayout;
 import dev.minemods.worldlogic.GuideBook;
 import java.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModList;
-/** Local encyclopedia. Models are rendered through vanilla's real baked item renderer. */
-public final class GuideScreen extends Screen{
+/** Two-page field guide: table of contents, chapter contents and complete article spreads. */
+public final class GuideScreen extends ClearScreen{
  private final Screen parent;private List<GuideBook.Chapter> chapters=List.of();
- private int chapter,page,chapterOffset,scroll;private boolean russian;
- private int left,top,panelW,panelH,navW,contentX,contentW,textY,visibleLines;
+ private enum View{CONTENTS,CHAPTER,ARTICLE}
+ private View view=View.CONTENTS;private int chapter,page,spread,listOffset;private boolean russian;
+ private BookLayout b;private int firstRows,firstCapacity,spreadCount,previewY,iconY;
  private List<FormattedCharSequence> lines=List.of();
- private final List<Preview> previews=new ArrayList<>();
- private record Preview(ItemStack stack,int x,int y,int size){}
+ private final List<Preview> previews=new ArrayList<>();private List<ResourceLocation> icons=List.of();
+ private record Preview(ItemStack stack,int x,int y){}
  public GuideScreen(Screen parent){super(Component.literal("WorldLogic"));this.parent=parent;}
  private String label(String ru,String en){return russian?ru:en;}
  private Component lit(String s){return Component.literal(s);}
- private void button(String text,int x,int y,int w,Runnable action){addRenderableWidget(Button.builder(lit(font.plainSubstrByWidth(text,Math.max(1,w-8))),b->action.run()).bounds(x,y,w,20).build());}
+ private void button(String text,int x,int y,int w,Runnable action){
+  if(w<12)return;
+  var button=Button.builder(lit(font.plainSubstrByWidth(text,Math.max(1,w-8))),v->action.run()).bounds(x,y,w,18).build();
+  button.setTooltip(Tooltip.create(lit(text)));addRenderableWidget(button);
+ }
+ private void link(String text,int x,int y,int w,Runnable action){
+  var widget=new Button(x,y,w,15,lit(text),v->action.run(),v->v.get()){
+   @Override protected void renderWidget(GuiGraphics g,int mx,int my,float delta){
+    if(isHoveredOrFocused())g.fill(getX(),getY(),getX()+getWidth(),getY()+getHeight(),0xffd5b786);
+    g.drawString(font,font.plainSubstrByWidth(getMessage().getString(),Math.max(1,getWidth()-6)),getX()+3,getY()+3,0xff48311e,false);
+   }
+  };
+  widget.setTooltip(Tooltip.create(lit(text)));addRenderableWidget(widget);
+ }
  private void load(){
   var mc=Minecraft.getInstance();var loaded=new TreeMap<String,GuideBook.Chapter>();
   for(var entry:mc.getResourceManager().listResources("worldlogic_guide",id->id.getPath().endsWith(".json")).entrySet().stream().sorted(Map.Entry.comparingByKey()).toList()){
    try(var reader=entry.getValue().openAsReader()){
     var c=GuideBook.read(reader);String key=c.id();
-    // Built-in chapters have priority over duplicate IDs from a different namespace.
     if(!loaded.containsKey(key)||entry.getKey().getNamespace().equals("worldlogic"))loaded.put(key,c);
    }catch(Exception e){org.slf4j.LoggerFactory.getLogger("WorldLogic").warn("Invalid guide resource {}",entry.getKey(),e);}
   }
-  chapters=GuideBook.visible(loaded.values(),ModList.get()::isLoaded);
+  chapters=GuideBook.catalog(loaded.values(),ModList.get()::isLoaded);
  }
  private GuideBook.Chapter current(){return chapters.get(chapter);}
  private GuideBook.Page article(){return current().pages().get(page);}
- private void changeChapter(int value){chapter=value;page=0;scroll=0;rebuildWidgets();}
- private void changePage(int delta){if(chapters.isEmpty())return;page=Math.max(0,Math.min(current().pages().size()-1,page+delta));scroll=0;rebuildWidgets();}
+ void select(int c,int p){chapter=c;page=p;view=View.ARTICLE;spread=0;listOffset=0;Minecraft.getInstance().setScreen(this);}
+ private void contents(){view=View.CONTENTS;listOffset=0;rebuildWidgets();}
+ private void chapter(int value){chapter=value;page=0;view=View.CHAPTER;listOffset=0;rebuildWidgets();}
+ private void openArticle(int value){page=value;spread=0;view=View.ARTICLE;rebuildWidgets();}
+ private void step(int d){
+  if(view!=View.ARTICLE)return;
+  if(spread+d>=0&&spread+d<spreadCount){spread+=d;rebuildWidgets();return;}
+  if(page+d>=0&&page+d<current().pages().size()){page+=d;spread=d<0?Integer.MAX_VALUE:0;rebuildWidgets();}
+ }
+ private int listRows(){return Math.max(1,(b.pageH()-68)/17);}
  @Override protected void init(){
   russian=Minecraft.getInstance().getLanguageManager().getSelected().startsWith("ru");
-  load();chapter=Math.min(chapter,Math.max(0,chapters.size()-1));
-  panelW=Math.min(620,width-8);panelH=Math.min(360,height-8);left=(width-panelW)/2;top=(height-panelH)/2;
-  navW=Math.max(78,Math.min(140,panelW/3));contentX=left+navW+12;contentW=panelW-navW-20;
-  int bottom=top+panelH;int navRows=Math.max(1,(panelH-78)/22);
-  chapterOffset=Math.max(0,Math.min(chapterOffset,Math.max(0,chapters.size()-navRows)));
-  for(int i=0;i<navRows&&chapterOffset+i<chapters.size();i++){int k=chapterOffset+i;button((k==chapter?"> ":"")+chapters.get(k).title().get(russian),left+5,top+30+i*22,navW-9,()->changeChapter(k));}
-  int half=(navW-11)/2;button("^",left+5,bottom-44,half,()->{chapterOffset=Math.max(0,chapterOffset-navRows);rebuildWidgets();});button("v",left+7+half,bottom-44,half,()->{chapterOffset=Math.min(Math.max(0,chapters.size()-navRows),chapterOffset+navRows);rebuildWidgets();});
-  button(label("Назад","Back"),left+5,bottom-22,navW-9,this::onClose);
-  if(chapters.isEmpty())return;
-  page=Math.min(page,current().pages().size()-1);
-  int ctrl=Math.max(22,Math.min(48,(contentW-10)/4));
-  button("<",contentX,bottom-22,ctrl,()->changePage(-1));button(">",contentX+ctrl+2,bottom-22,ctrl,()->changePage(1));
-  button("^",contentX+contentW-2*ctrl-2,bottom-22,ctrl,()->scroll=Math.max(0,scroll-visibleLines));
-  button("v",contentX+contentW-ctrl,bottom-22,ctrl,()->scroll=Math.min(Math.max(0,lines.size()-visibleLines),scroll+visibleLines));
-  previews.clear();var models=article().models().stream().filter(BuiltInRegistries.ITEM::containsKey).limit(5).toList();
-  int size=Math.min(panelH<175?23:34,Math.max(16,(contentW-4)/Math.max(1,models.size())-4));
-  int gap=4, total=models.size()*(size+gap)-gap,px=contentX+Math.max(0,(contentW-total)/2);
-  int py=top+42;
-  for(var id:models){var stack=new ItemStack(BuiltInRegistries.ITEM.get(id));if(!stack.isEmpty())previews.add(new Preview(stack,px,py,size));px+=size+gap;}
-  textY=py+(previews.isEmpty()?0:size+10);
+  load();chapter=Math.min(chapter,Math.max(0,chapters.size()-1));b=BookLayout.of(width,height);
+  previews.clear();icons=List.of();lines=List.of();
+  TabRail.install(this,this::addRenderableWidget);
+  if(!b.readable()){button(label("Назад","Back"),4,Math.max(4,height-22),Math.max(12,width-40),this::onClose);return;}
+  int y=b.bottom()-28, half=Math.max(18,(b.textW()-4)/2);
+  button(label("Оглавление","Contents"),b.leftText(),b.textTop()+3,b.textW(),this::contents);
+  button(label("Указатель","Index"),b.rightText(),b.textTop()+3,half,()->Minecraft.getInstance().setScreen(new GuideIndexScreen(this,chapters,russian)));
+  button(label("Рецепты","Recipes"),b.rightText()+half+4,b.textTop()+3,half,()->Minecraft.getInstance().setScreen(new GuideRecipesScreen(this,russian)));
+  if(chapters.isEmpty()){button(label("Назад","Back"),b.leftText(),y,b.textW(),this::onClose);return;}
+  if(view==View.ARTICLE){
+   page=Math.min(page,current().pages().size()-1);
+   prepareArticle();
+   spread=Math.max(0,Math.min(spread,spreadCount-1));
+   button("<",b.leftText(),y,24,()->step(-1));
+   button(">",b.rightText()+b.textW()-24,y,24,()->step(1));
+   button(label("Глава","Chapter"),b.leftText()+28,y,Math.max(12,b.textW()-28),()->{view=View.CHAPTER;listOffset=(page/(2*listRows()))*2*listRows();rebuildWidgets();});
+  }else{
+   int count=view==View.CONTENTS?chapters.size():current().pages().size(),rows=listRows(),capacity=rows*2;
+   listOffset=Math.max(0,Math.min(listOffset,Math.max(0,(count-1)/capacity*capacity)));
+   for(int i=0;i<capacity&&listOffset+i<count;i++){
+    int k=listOffset+i,x=i<rows?b.leftText():b.rightText(),yy=b.textTop()+43+(i%rows)*17;
+    String title=view==View.CONTENTS?((ModList.get().isLoaded(chapters.get(k).requires())?"":"* ")+chapters.get(k).title().get(russian)):current().pages().get(k).title().get(russian);
+    link((k+1)+". "+title,x,yy,b.textW(),()->{if(view==View.CONTENTS)chapter(k);else openArticle(k);});
+   }
+   button("<",b.leftText(),y,24,()->{listOffset=Math.max(0,listOffset-capacity);rebuildWidgets();});
+   button(">",b.rightText()+b.textW()-24,y,24,()->{listOffset=Math.min(Math.max(0,(count-1)/capacity*capacity),listOffset+capacity);rebuildWidgets();});
+   button(label("Назад","Back"),b.leftText()+28,y,Math.max(12,b.textW()-28),view==View.CONTENTS?this::onClose:this::contents);
+  }
+ }
+ private void prepareArticle(){
   var list=new ArrayList<FormattedCharSequence>();
-  for(String paragraph:article().body().get(russian)){list.addAll(font.split(lit(paragraph),Math.max(20,contentW)));list.add(FormattedCharSequence.EMPTY);}
-  lines=List.copyOf(list);visibleLines=Math.max(1,(bottom-32-textY)/11);scroll=Math.min(scroll,Math.max(0,lines.size()-visibleLines));
+  for(String paragraph:article().body().get(russian)){list.addAll(font.split(lit(paragraph),b.textW()));list.add(FormattedCharSequence.EMPTY);}
+  lines=List.copyOf(list);
+  var models=article().models().stream().filter(BuiltInRegistries.ITEM::containsKey).limit(Math.max(0,b.textW()/20)).toList();
+  previewY=b.textTop()+43;
+  // Short screens keep the text readable, rather than overlapping the footer.
+  if(b.rows()>=5){
+   int px=b.leftText();
+   for(var id:models){var st=new ItemStack(BuiltInRegistries.ITEM.get(id));if(!st.isEmpty()){previews.add(new Preview(st,px,previewY));px+=20;}}
+   icons=article().icons().stream().filter(id->Minecraft.getInstance().getResourceManager().getResource(id).isPresent()).limit(Math.max(0,b.textW()/20)).toList();
+  }
+  iconY=previewY+(previews.isEmpty()?0:22);
+  int extra=(previews.isEmpty()?0:2)+(icons.isEmpty()?0:2);
+  firstRows=Math.max(1,b.rows()-extra);firstCapacity=firstRows+b.rows();spreadCount=b.spreads(lines.size(),firstCapacity);
  }
  @Override public boolean isPauseScreen(){return false;}
  @Override public void onClose(){Minecraft.getInstance().setScreen(parent);}
+ @Override public boolean mouseScrolled(double x,double y,double dx,double dy){
+  if(view==View.ARTICLE&&dy!=0){step(dy<0?1:-1);return true;}
+  return super.mouseScrolled(x,y,dx,dy);
+ }
+ private void drawBook(GuiGraphics g){
+  int x=b.x(),y=b.y(),w=b.w(),h=b.h(),mid=b.right(),bottom=b.bottom();
+  g.fill(x+3,y+4,x+w+3,bottom+4,0x88000000);
+  // Stepped leather cover, page edges, two facing sheets and a central binding.
+  g.fill(x+2,y,x+w-2,bottom,0xff513520);g.fill(x,y+3,x+w,bottom-3,0xff65432a);
+  g.fill(x+3,y+3,x+w-3,bottom-3,0xff936b40);g.fill(x+5,y+5,x+w-5,bottom-5,0xff513520);
+  g.fill(b.left()-3,y+8,mid,bottom-7,0xffa99066);g.fill(mid,y+8,b.right()+b.pageW()+3,bottom-7,0xffa99066);
+  for(int yy=bottom-13;yy<bottom-7;yy+=2)g.fill(x+10,yy,x+w-10,yy+1,0xffc7ad7d);
+  g.fill(b.left()-1,y+7,mid,bottom-13,0xffebd8af);g.fill(mid,y+7,b.right()+b.pageW()+1,bottom-13,0xffefdfba);
+  g.fill(mid-5,y+8,mid-3,bottom-13,0xffddc59b);g.fill(mid-3,y+8,mid-1,bottom-13,0xffcbb085);
+  g.fill(mid-1,y+8,mid+1,bottom-13,0xff9f805a);g.fill(mid+1,y+8,mid+3,bottom-13,0xffcbb085);
+  g.fill(mid+3,y+8,mid+5,bottom-13,0xffddc59b);
+  g.fill(b.left(),y+7,mid-5,y+8,0xfff7e7c7);g.fill(mid+5,y+7,b.right()+b.pageW(),y+8,0xfff7e7c7);
+ }
+ private void heading(GuiGraphics g,String text,int x){
+  g.drawString(font,font.plainSubstrByWidth(text,b.textW()),x,b.textTop()+25,0xff4b3420,false);
+  g.fill(x,b.textTop()+37,x+b.textW(),b.textTop()+38,0xffb79a72);
+ }
  @Override public void render(GuiGraphics g,int mx,int my,float delta){
   g.fill(0,0,width,height,0xb0101010);
-  int right=left+panelW,bottom=top+panelH;
-  g.fill(left,top,right,bottom,0xff46362b);g.renderOutline(left,top,panelW,panelH,0xff2b211b);
-  g.fill(left+navW,top+4,right-4,bottom-4,0xffe6d3ac);
-  g.drawString(font,label("Полевой справочник","Field guide"),left+6,top+10,0xffeadbb7,false);
-  if(!chapters.isEmpty()){
-   g.drawString(font,font.plainSubstrByWidth(article().title().get(russian),contentW),contentX,top+10,0xff33271e,false);
-   g.drawString(font,font.plainSubstrByWidth(current().source(),contentW),contentX,top+24,0xff75624c,false);
-   for(var p:previews){
-    g.fill(p.x,p.y,p.x+p.size,p.y+p.size,0xffc7ad82);g.renderOutline(p.x,p.y,p.size,p.size,0xffa38b67);
-    g.pose().pushPose();g.pose().translate(p.x+2,p.y+2,0);float scale=(p.size-4)/16f;g.pose().scale(scale,scale,1);g.renderItem(p.stack,0,0);g.pose().popPose();
+  if(b.readable()){
+   drawBook(g);
+   if(chapters.isEmpty())heading(g,label("Нет глав","No chapters"),b.leftText());
+   else if(view!=View.ARTICLE){
+    heading(g,view==View.CONTENTS?label("Полевой справочник","Field guide"):current().title().get(russian),b.leftText());
+    heading(g,view==View.CONTENTS?label("Разделы","Chapters"):label("Статьи","Articles"),b.rightText());
+    g.drawCenteredString(font,Integer.toString(listOffset/(2*listRows())+1),b.rightText()+b.textW()/2,b.bottom()-24,0xff6d563e);
+   }else{
+    heading(g,article().title().get(russian),b.leftText());
+    heading(g,spread==0?current().title().get(russian):label("Продолжение","Continued"),b.rightText());
+    int leftRows=spread==0?firstRows:b.rows(),start=b.offset(spread,firstCapacity),top=b.textTop()+43;
+    if(spread==0){
+     for(var p:previews){g.renderItem(p.stack,p.x,p.y);}
+     int ix=b.leftText();for(var id:icons){g.blit(id,ix,iconY,0,0,16,16,16,16);ix+=20;}
+     top+=(b.rows()-firstRows)*11;
+    }
+    for(int i=0;i<leftRows&&start+i<lines.size();i++)g.drawString(font,lines.get(start+i),b.leftText(),top+i*11,0xff372a20,false);
+    for(int i=0;i<b.rows()&&start+leftRows+i<lines.size();i++)g.drawString(font,lines.get(start+leftRows+i),b.rightText(),b.textTop()+43+i*11,0xff372a20,false);
+    g.drawCenteredString(font,(page+1)+"/"+current().pages().size()+" · "+(spread+1)+"/"+spreadCount,b.rightText()+b.textW()/2,b.bottom()-24,0xff6d563e);
    }
-   for(int i=0;i<visibleLines&&scroll+i<lines.size();i++)g.drawString(font,lines.get(scroll+i),contentX,textY+i*11,0xff372a20,false);
-   String position=(page+1)+"/"+current().pages().size();
-   g.drawCenteredString(font,position,contentX+contentW/2,bottom-35,0xff6d563e);
-   if(lines.size()>visibleLines){int x=right-8,available=Math.max(4,bottom-33-textY);g.fill(x,textY,x+2,textY+available,0xffb49a76);int h=Math.max(3,available*visibleLines/lines.size());int y=textY+(available-h)*scroll/Math.max(1,lines.size()-visibleLines);g.fill(x,y,x+2,y+h,0xff795b3e);}
-  }else g.drawString(font,label("Нет доступных глав","No chapters available"),contentX,top+34,0xff33271e,false);
+  }else g.drawCenteredString(font,label("Уменьшите масштаб интерфейса","Reduce GUI scale"),Math.max(1,width/2),Math.max(0,height/2-12),0xffeeeeee);
   super.render(g,mx,my,delta);
-  for(var p:previews)if(mx>=p.x&&mx<p.x+p.size&&my>=p.y&&my<p.y+p.size){g.renderTooltip(font,p.stack,mx,my);break;}
+  if(view==View.ARTICLE&&spread==0)for(var p:previews)if(mx>=p.x&&mx<p.x+16&&my>=p.y&&my<p.y+16){g.renderTooltip(font,p.stack,mx,my);break;}
  }
 }

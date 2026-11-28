@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "worldlogic:block/polished_shale",
+    "side": "worldlogic:block/polished_shale",
+    "top": "worldlogic:block/polished_shale"
+  }
+}

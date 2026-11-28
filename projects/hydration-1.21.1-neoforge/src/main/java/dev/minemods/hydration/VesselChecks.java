@@ -10,7 +10,18 @@ public final class VesselChecks {
   for(int i=0;i<items.length;i++){
    var v=items[i];var s=new ItemStack(v);require(v.capacity==caps[i]&&v.read(s).ml()==0,"capacity/empty "+i);
    v.write(s,b);require(v.read(s).equals(b)&&v.read(s.copy()).equals(b),"NBT/copy "+i);
+   var physics=dev.minemods.hydration.api.HydrationApi.liquidPhysics(s).orElseThrow();
+   require(physics.known()&&Math.abs(physics.volumeM3()-.00025)<1e-12&&physics.materialId().equals("worldlogic:sea_water"),"vessel water physics "+i);
+   require(dev.minemods.hydration.api.HydrationApi.liquidPhysics(s.copy()).orElseThrow().equals(physics),"physical snapshot copy "+i);
+   var distilled=WaterTreatment.distill(b);v.write(s,distilled);
+   require(dev.minemods.hydration.api.HydrationApi.liquidPhysics(s).orElseThrow().materialId().equals("worldlogic:fresh_water"),"distilled not source salt "+i);
+   v.write(s,new WaterBatch(250,WaterBalance.Quality.DESALINATE,17.5,.3,Set.of("SEA","RIVER")));
+   var mix=dev.minemods.hydration.api.HydrationApi.liquidPhysics(s).orElseThrow();
+   require(!mix.known()&&Double.isNaN(mix.massKg())&&Math.abs(mix.volumeM3()-.00025)<1e-12,"unmodeled mixture not fabricated "+i);
+   v.write(s,new WaterBatch(250,WaterBalance.Quality.UNKNOWN,0,1));
+   require(!dev.minemods.hydration.api.HydrationApi.liquidPhysics(s).orElseThrow().known(),"unknown remains unknown "+i);
    v.write(s,WaterBatch.empty());require(v.read(s).ml()==0,"empty write "+i);
+   var empty=dev.minemods.hydration.api.HydrationApi.liquidPhysics(s).orElseThrow();require(empty.volumeM3()==0&&empty.massKg()==0&&!empty.known(),"empty physical volume "+i);
   }
   require(!items[0].heatproof&&!items[1].heatproof&&items[2].heatproof&&items[3].heatproof,"heatproof boundary");
   var a=new ItemStack(items[2]);var d=new ItemStack(items[0]);

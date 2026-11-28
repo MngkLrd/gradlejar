@@ -132,9 +132,7 @@
     [],
     [],
     [
-      "minecraft:warm_ocean_vegetation",
-      "minecraft:seagrass_warm",
-      "minecraft:sea_pickle"
+      "minecraft:seagrass_warm"
     ],
     [
       "minecraft:freeze_top_layer"
