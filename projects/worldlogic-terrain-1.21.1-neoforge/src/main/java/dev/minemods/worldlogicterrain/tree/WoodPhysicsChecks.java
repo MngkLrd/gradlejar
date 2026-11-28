@@ -40,9 +40,18 @@ public final class WoodPhysicsChecks {
             var expected=PhysicalMaterials.componentProperties(new PhysicalMaterials.Component(m.id(),1),new PhysicalMaterials.State(20,1)).orElseThrow();
             require(dry.densityKgM3()==m.dryDensityKgM3()&&wet.densityKgM3()==expected.massKg(),"Core SI mass "+species);
             require(wet.densityKgM3()>dry.densityKgM3()&&wet.massKg(.5)==expected.massKg()*.5,"Wet mass conversion "+species);
-            require(Double.compare(dry.hardnessN(),PhysicalMaterials.woodHardnessKN(m.id()).orElse(Double.NaN)*1000)==0,"Janka units "+species);
-            require(Double.isNaN(dry.bendingStrengthMPa())&&Double.isNaN(profile.greenMoisturePercent()),"Unknown characteristics "+species);
-            require(dry.flammability()==m.flammability(),"Nominal fire "+species);
+            require(Double.compare(profile.hardnessN(),PhysicalMaterials.woodHardnessKN(m.id()).orElse(Double.NaN)*1000)==0,"Janka units "+species);
+            var coreDry=PhysicalMaterials.woodAtMoisture(m.id(),0).orElseThrow();
+            var coreWet=PhysicalMaterials.woodAtMoisture(m.id(),1).orElseThrow();
+            var ref=PhysicalMaterials.woodAtMoisture(m.id(),m.referenceMoistureKgKg()).orElseThrow();
+            require(Double.compare(dry.hardnessN(),coreDry.jankaKN()*1000)==0&&Double.compare(wet.hardnessN(),coreWet.jankaKN()*1000)==0,"Effective Janka "+species);
+            require(dry.bendingStrengthMPa()==coreDry.bendingStrengthMPa()&&wet.bendingStrengthMPa()==coreWet.bendingStrengthMPa(),"Effective MOR "+species);
+            require(profile.greenMoisturePercent()==ref.properties().greenMoistureKgKg()*100,"Green moisture "+species);
+            require(profile.densityKgM3()==ref.densityKgM3()&&profile.bendingStrengthMPa()==ref.bendingStrengthMPa(),"Reference basis "+species);
+            require(dry.flammability()==coreDry.flammability()&&wet.flammability()==coreWet.flammability(),"Effective fire "+species);
+            require(wet.bendingStrengthMPa()<dry.bendingStrengthMPa(),"Wet bending response "+species);
+            if(m.flammability()>0)require(wet.flammability()<dry.flammability(),"Wet fire response "+species);
+            if(Double.isFinite(dry.hardnessN()))require(wet.hardnessN()<dry.hardnessN(),"Wet Janka response "+species);
         }
         require(registered==48,"Registered coverage");
         require(WoodPhysicsApi.profile(Blocks.STONE.defaultBlockState()).isEmpty(),"Stone misclassified");
@@ -58,7 +67,7 @@ public final class WoodPhysicsChecks {
             var seasoned=WoodPhysicsApi.sample(l,pos).orElseThrow();
             l.setBlock(pos.east(),Blocks.WATER.defaultBlockState(),2);
             var damp=WoodPhysicsApi.sample(l,pos).orElseThrow();
-            require(damp.moisturePercent()>seasoned.moisturePercent()&&damp.densityKgM3()>seasoned.densityKgM3(),"Core wet world fixture");
+            require(damp.moisturePercent()>seasoned.moisturePercent()&&damp.densityKgM3()>seasoned.densityKgM3()&&damp.bendingStrengthMPa()<seasoned.bendingStrengthMPa()&&damp.flammability()<seasoned.flammability(),"Core wet world fixture");
             l.setBlock(pos,Blocks.STONE.defaultBlockState(),2);
             require(WoodPhysicsApi.sample(l,pos).isEmpty(),"Unknown world block");
         }finally{l.setBlock(pos,before,2);l.setBlock(pos.east(),neighbor,2);}

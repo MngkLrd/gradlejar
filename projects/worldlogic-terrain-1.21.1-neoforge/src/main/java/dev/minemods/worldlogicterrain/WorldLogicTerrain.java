@@ -33,7 +33,8 @@ public final class WorldLogicTerrain {
         NeoForge.EVENT_BUS.addListener(TerrainPatchChecks::register);
         NeoForge.EVENT_BUS.addListener(dev.minemods.worldlogicterrain.worldgen.TallGrassPlainsFeature::registerChecks);
         NeoForge.EVENT_BUS.addListener(TreeChecks::register);
-        bus.addListener(dev.minemods.worldlogicterrain.api.TerrarianMaterialRegistration::setup);
+        if(dev.minemods.worldlogicterrain.api.WoodPhysicsApi.available())
+            bus.addListener(dev.minemods.worldlogicterrain.api.TerrarianMaterialRegistration::setup);
         NeoForge.EVENT_BUS.addListener(ForageChecks::register);
         NeoForge.EVENT_BUS.addListener(TerrainMobility::logout);
     }
