@@ -131,6 +131,10 @@ The validator checks rule/profile compatibility, reference membership/version an
 
 Read current main, integrate its applicable QA tooling and catalog into the working branch without overwriting concurrent work, and verify the actual branch contains them before submitting changed textures. Main being updated does not automatically update existing branch CI. After committing the candidate PNGs and their truthful review records, run `python3 -m tools.qa.art_review_lock --projects '["projects/your-project"]' --check` from the repository root, substituting the actual project path (or `["."]` for the root project). Exit code 1 means evidence was blocked; the command prints each affected project and diagnostic. This local check evaluates committed-path changes and current bytes; it does not detect untracked files, replace final-JAR QA or certify aesthetics. CI mode remains unchanged and emits blocked projects through GITHUB_OUTPUT. No extra production job.
 
+### R11 item and equipment extension
+
+Follow [Item and armor art standard](ITEM-ARMOR-ART.md) for flat functional sprites, stateful models and worn equipment. The atlas now has additional role-specific rules and profiles; the original schema-1/r9 evidence format remains compatible. R11 adds scoped evidence requirements to conventional 1.21.1 tool/armor PNGs changed relative to adoption tree `327a26138826b6142651918f684ee454eadea222`. Exact counterpart hashes, slot/layer consistency and separate client status are checked before Gradle. See the dedicated guide for fields and limits. It is not a gameplay type detector, UV renderer or independent artistic verdict. Older game versions and custom geometry require their actual target-specific binding; no forced historical migration.
+
 ## Evidence and acceptance
 
 | Evidence | What it establishes | What it cannot establish |

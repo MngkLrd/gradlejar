@@ -49,3 +49,7 @@ Use `tools.qa.vanilla_benchmark` privately with a fresh seed; the existing 40-pa
 ## Real mod comparison: production lessons
 
 See [R8 observed real assets](VANILLA-REAL-ART-REVIEW.md). For ground textures, view 3x3 at native scale and enlarged before choosing a variant; look for recurring diagonal/horizontal bands and identical high-contrast inclusion positions. The five pairs show how breaking mechanical bands into irregular material-specific aggregates helps; a relative improvement does not certify the tile. For groups of containers, compare the whole family in one native-scale sheet: clay, copper and leather must differ in contour/construction and material light response, not simply hue or a different accent pixel. A clear outline alone is not a finished icon. Review actual intended function before adding seams, rims, holes or fittings. These are exploratory observations, not numerical gates.
+
+## R11 items and armor
+
+See [dedicated item and armor standard](ITEM-ARMOR-ART.md) for 43 newly inspected reference paths, functional silhouettes, tool families, model states, inventory armor and worn UV layers. The executable catalog extends R9 without replacing the historical 57-reference sample or changing its revision token. The original 280 synthetic comparisons remain historical; newly inspected sources overlap those experimental sets and must not be used as unseen holdouts. Official-client verification of all extended catalog hashes is part of research CI.
