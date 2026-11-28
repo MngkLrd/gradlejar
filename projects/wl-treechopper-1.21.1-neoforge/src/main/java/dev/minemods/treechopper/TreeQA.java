@@ -27,6 +27,33 @@ final class TreeQA {
             }
             c.getSource().sendSuccess(()->Component.literal("TreeChopper bucking PASS"),false);return 1;
           }))))
+          .then(Commands.literal("qa_multi").then(Commands.argument("pos",BlockPosArgument.blockPos()).then(Commands.argument("width",IntegerArgumentType.integer(2,3)).executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");int width=IntegerArgumentType.getInteger(c,"width");
+            var fake=FakePlayerFactory.getMinecraft(l);
+            ItemStack axe=new ItemStack(Items.DIAMOND_AXE);fake.setItemSlot(EquipmentSlot.MAINHAND,axe);
+            java.util.List<BlockPos> feet=new java.util.ArrayList<>();
+            for(int x=0;x<width;x++)for(int z=0;z<width;z++)if(width==2||x!=1||z!=1)feet.add(p.offset(x,0,z));
+            int hits=0;
+            for(int i=0;i<feet.size();i++){
+                BlockPos foot=feet.get(i);fake.setPos(foot.getX()+.5,foot.getY(),foot.getZ()-1.5);
+                int guard=0;
+                while(guard++<32&&!(l.getBlockState(foot).getBlock() instanceof StumpBlock)&&!ChopEffort.severed(CutProgress.read(l,foot,l.getBlockState(foot)))){
+                    TreeChopper.qaResetCooldown(fake);
+                    NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,foot,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));hits++;
+                }
+                if(i<feet.size()-1&&(!l.getBlockState(foot.above()).is(net.minecraft.world.level.block.Blocks.OAK_LOG)||!ChopEffort.severed(CutProgress.read(l,foot,l.getBlockState(foot))))){
+                    c.getSource().sendFailure(Component.literal("TreeChopper premature multi-root fall FAILED"));return 0;
+                }
+            }
+            for(int x=0;x<width;x++)for(int z=0;z<width;z++){
+                if(!(l.getBlockState(p.offset(x,0,z)).getBlock() instanceof StumpBlock)||!l.getBlockState(p.offset(x,1,z)).isAir()){
+                    c.getSource().sendFailure(Component.literal("TreeChopper complete multi-root fall FAILED"));return 0;
+                }
+            }
+            int expected=hits+width*width*3+(width==3?1:0);
+            if(axe.getDamageValue()!=expected){c.getSource().sendFailure(Component.literal("TreeChopper multi-root wear FAILED: "+axe.getDamageValue()+" expected "+expected));return 0;}
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper multi-root PASS"),false);return 1;
+          }))))
           .then(Commands.literal("qa_effort").executes(c->{
             double full=ChopEffort.power(1,1,1), tired=ChopEffort.power(.1,1,1);
             double oneArm=ChopEffort.power(1,1,0), disabled=ChopEffort.power(1,0,1);

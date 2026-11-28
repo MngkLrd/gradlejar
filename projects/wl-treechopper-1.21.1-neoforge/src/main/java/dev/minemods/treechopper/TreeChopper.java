@@ -121,6 +121,48 @@ public final class TreeChopper {
         if(s!=null && (state.getBlock() instanceof CutBlock || !scan(level,event.getPos(),s).isEmpty()))event.setCanceled(true);
     }
     private static int upperLogs(List<Piece> tree){return (int)tree.stream().filter(Piece::log).count();}
+    private static boolean ground(BlockState state){
+        return state.is(BlockTags.DIRT)||state.is(Blocks.MUD)||state.is(Blocks.CLAY)||state.is(BlockTags.SAND);
+    }
+    private static boolean baseLog(BlockState b,String species,BlockState source){
+        return sameLog(b,source)||b.is(CUTS.get(species).get());
+    }
+    /** Contiguous, square, soil-supported 2x2/3x3 footprints. Never merge scattered roots. */
+    private static List<BlockPos> roots(Level l,BlockPos base,String species){
+        BlockState source=original(species);
+        if(!l.hasChunkAt(base.below())||!ground(l.getBlockState(base.below())))return List.of(base);
+        Set<BlockPos> found=new LinkedHashSet<>();ArrayDeque<BlockPos> queue=new ArrayDeque<>();
+        found.add(base);queue.add(base);
+        while(!queue.isEmpty()){
+            BlockPos p=queue.remove();
+            for(Direction d:SIDES){
+                BlockPos n=p.relative(d);
+                if(found.contains(n)||!l.hasChunkAt(n)||!l.hasChunkAt(n.below())||!l.hasChunkAt(n.above()))continue;
+                if(!ground(l.getBlockState(n.below()))||!baseLog(l.getBlockState(n),species,source)||!sameLog(l.getBlockState(n.above()),source))continue;
+                if(found.size()>=9)return List.of(base);
+                found.add(n);queue.add(n);
+            }
+        }
+        int minX=found.stream().mapToInt(BlockPos::getX).min().orElse(base.getX()),maxX=found.stream().mapToInt(BlockPos::getX).max().orElse(base.getX());
+        int minZ=found.stream().mapToInt(BlockPos::getZ).min().orElse(base.getZ()),maxZ=found.stream().mapToInt(BlockPos::getZ).max().orElse(base.getZ());
+        int width=maxX-minX+1;
+        if(width<2||width>3||width!=maxZ-minZ+1||found.size()!=width*width)return List.of(base);
+        if(!sameLog(l.getBlockState(base.above()),source))return List.of(base);
+        return List.copyOf(found);
+    }
+    private static List<BlockPos> exposedSupports(List<BlockPos> roots){
+        if(roots.size()!=9)return roots;
+        Set<BlockPos> cells=new HashSet<>(roots);
+        return roots.stream().filter(p->Arrays.stream(SIDES).anyMatch(d->!cells.contains(p.relative(d)))).toList();
+    }
+    private static int readySupports(Level l,List<BlockPos> supports,BlockPos changed,int[] work){
+        int n=0;
+        for(BlockPos p:supports){
+            BlockState b=l.getBlockState(p);
+            if(p.equals(changed)?ChopEffort.severed(work):b.getBlock() instanceof CutBlock&&ChopEffort.severed(CutProgress.read(l,p,b)))n++;
+        }
+        return n;
+    }
     private static boolean canPay(ServerPlayer player,ItemStack axe,int cost){
         if(!axe.isDamageableItem()||axe.getMaxDamage()-axe.getDamageValue()>=cost)return true;
         player.displayClientMessage(Component.translatable("message.wl_treechopper.axe_worn",cost),true);
@@ -171,18 +213,25 @@ public final class TreeChopper {
         // A previously fully severed hinge may have been held by a protection hook.
         // Retry felling without claiming a new cut or playing a phantom strike.
         int[] work=CutProgress.read(level,pos,damaged);
+        List<BlockPos> roots=roots(level,pos,s), supports=exposedSupports(roots);
+        if(!supports.contains(pos))return;
+        int extraCore=roots.size()-supports.size();
         if(cut&&ChopEffort.severed(work)){
-            int wear=ChopEffort.fellingWear(upperLogs(tree),false);
+            if(readySupports(level,supports,pos,work)<supports.size()){
+                player.displayClientMessage(Component.translatable("message.wl_treechopper.supports",readySupports(level,supports,pos,work),supports.size()),true);return;
+            }
+            int wear=ChopEffort.fellingWear(upperLogs(tree)+extraCore,false);
             if(canPay(player,axe,wear)&&fall(level,player,pos,s,old,tree,side,true))axe.hurtAndBreak(wear,player,EquipmentSlot.MAINHAND);
             return;
         }
         float speed=Math.max(axe.getDestroySpeed(original(s)),((AxeItem)axe.getItem()).getTier().getSpeed());
         float resistance=s.equals("dark_oak")||s.equals("mangrove")?1.18f:s.equals("birch")?0.86f:1f;
         int idx=CutProgress.index(side);
-        work[idx]=Math.min(ChopEffort.COMPLETE,work[idx]+ChopEffort.workPerHit(speed,resistance,power,1+upperLogs(tree),level.random.nextDouble()));
+        work[idx]=Math.min(ChopEffort.COMPLETE,work[idx]+ChopEffort.workPerHit(speed,resistance,power,Math.max(4,(upperLogs(tree)+roots.size()+supports.size()-1)/supports.size()),level.random.nextDouble()));
         damaged=damaged.setValue(CutBlock.side(side),ChopEffort.depth(work[idx]));
         boolean severed=ChopEffort.severed(work);
-        int wear=severed?ChopEffort.fellingWear(upperLogs(tree),true):1;
+        boolean allReady=severed&&readySupports(level,supports,pos,work)==supports.size();
+        int wear=allReady?ChopEffort.fellingWear(upperLogs(tree)+extraCore,true):1;
         if(!canPay(player,axe,wear))return;
         if(!old.equals(damaged)&&!level.setBlock(pos,damaged,Block.UPDATE_ALL))return;
         if(!(level.getBlockEntity(pos) instanceof CutProgress progress))return;
@@ -190,10 +239,13 @@ public final class TreeChopper {
         ((ChopSwing)player).wl$markSwing();
         if(!(player instanceof FakePlayer))PacketDistributor.sendToPlayersTrackingEntityAndSelf(player,new ChopNetwork.Swing(player.getId()));
         player.swing(InteractionHand.MAIN_HAND,true);
-        if(!severed&&!(player instanceof FakePlayer))player.displayClientMessage(Component.translatable("message.wl_treechopper.cut_progress",work[idx]/10),true);
+        if(!(player instanceof FakePlayer)){
+            if(severed&&!allReady)player.displayClientMessage(Component.translatable("message.wl_treechopper.supports",readySupports(level,supports,pos,work),supports.size()),true);
+            else if(!severed)player.displayClientMessage(Component.translatable("message.wl_treechopper.cut_progress",work[idx]/10),true);
+        }
         level.playSound(null,pos,SoundEvents.WOOD_HIT,SoundSource.BLOCKS,1f,.8f+level.random.nextFloat()*.25f);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,original(s)),pos.getX()+.5+side.getStepX()*.47,pos.getY()+.5,pos.getZ()+.5+side.getStepZ()*.47,8,.12,.12,.12,.08);
-        boolean felled=severed&&fall(level,player,pos,s,damaged,tree,side,false);
+        boolean felled=allReady&&fall(level,player,pos,s,damaged,tree,side,false);
         // Every real strike costs one point; every additional harvested log costs one
         // more, only after successful felling. Vanilla damage processing handles enchantments.
         axe.hurtAndBreak(felled?wear:1,player,EquipmentSlot.MAINHAND);
@@ -211,7 +263,9 @@ public final class TreeChopper {
         if(!(below.is(BlockTags.DIRT)||below.is(BlockTags.LOGS)||below.is(Blocks.MUD)||below.is(Blocks.CLAY)||below.is(BlockTags.SAND)))return List.of();
         Set<BlockPos> logs=new LinkedHashSet<>();
         ArrayDeque<BlockPos> queue=new ArrayDeque<>();
-        queue.add(base);logs.add(base);
+        List<BlockPos> roots=roots(l,base,species);
+        Set<BlockPos> rootSet=new HashSet<>(roots);
+        queue.addAll(roots);logs.addAll(roots);
         while(!queue.isEmpty()){
             BlockPos p=queue.removeFirst();
             for(int dy=-1;dy<=1;dy++)for(int dx=-1;dx<=1;dx++)for(int dz=-1;dz<=1;dz++){
@@ -228,17 +282,17 @@ public final class TreeChopper {
                 }
             }
         }
-        if(logs.size()<2)return List.of();
+        if(logs.size()<=roots.size())return List.of();
         // Reject independently supported neighboring columns (incl. uncut giant trunks).
         for(BlockPos log:logs)if(log.getY()==base.getY()+1){
             BlockPos foot=log.below();
-            if(!foot.equals(base)&&l.hasChunkAt(foot)&&sameLog(l.getBlockState(foot),source))return List.of();
+            if(!rootSet.contains(foot)&&l.hasChunkAt(foot)&&baseLog(l.getBlockState(foot),species,source))return List.of();
         }
         String namespace=CUSTOM.contains(species)?"worldlogicterrain":"minecraft";
         var leafId=ResourceLocation.fromNamespaceAndPath(namespace,species+"_leaves");
         Set<BlockPos> leaves=new LinkedHashSet<>();
         for(BlockPos log:logs){
-            if(log.equals(base))continue;
+            if(rootSet.contains(log))continue;
             for(int dy=-3;dy<=3;dy++)for(int dx=-3;dx<=3;dx++)for(int dz=-3;dz<=3;dz++){
                 if(Math.abs(dx)+Math.abs(dy)+Math.abs(dz)>4)continue;
                 BlockPos n=log.offset(dx,dy,dz);
@@ -257,7 +311,7 @@ public final class TreeChopper {
         }
         if(leaves.isEmpty())return List.of();
         List<Piece> out=new ArrayList<>(logs.size()+leaves.size());
-        for(BlockPos n:logs)if(!n.equals(base))out.add(new Piece(n,l.getBlockState(n),true));
+        for(BlockPos n:logs)if(!rootSet.contains(n))out.add(new Piece(n,l.getBlockState(n),true));
         for(BlockPos n:leaves)out.add(new Piece(n,l.getBlockState(n),false));
         return out;
     }
@@ -267,22 +321,26 @@ public final class TreeChopper {
         for(Direction d:SIDES){int n=CutBlock.depth(s,d);if(n>max){best=d;max=n;}}
         return best;
     }
-    private static boolean fall(ServerLevel l,ServerPlayer player,BlockPos base,String species,BlockState cut,List<Piece> tree,Direction latest,boolean retry){
+    private static boolean fall(ServerLevel l,ServerPlayer player,BlockPos hitBase,String species,BlockState cut,List<Piece> tree,Direction latest,boolean retry){
         if(tree.stream().anyMatch(p->!l.getBlockState(p.pos).equals(p.state)||!allowed(l,player,p.pos,p.state)))return false;
-        Direction direction=retry?latest:fallDirection(cut,latest);
-        Set<BlockPos> source=new HashSet<>();
-        source.add(base);for(Piece p:tree)source.add(p.pos);
+        List<BlockPos> roots=roots(l,hitBase,species);
+        Set<BlockPos> rootSet=new HashSet<>(roots);
+        if(roots.stream().anyMatch(p->!p.equals(hitBase)&&!allowed(l,player,p,l.getBlockState(p))))return false;
+        Direction direction=retry||roots.size()>1?latest:fallDirection(cut,latest);
+        BlockPos base=roots.stream().max(Comparator.comparingInt(p->p.getX()*direction.getStepX()+p.getZ()*direction.getStepZ())).orElse(hitBase);
+        Set<BlockPos> source=new HashSet<>(roots);
+        for(Piece p:tree)source.add(p.pos);
         ListTag plan=new ListTag();
         Set<BlockPos> occupied=new HashSet<>();
         for(Piece p:tree)if(p.log){
             BlockPos end=landingPosition(base,p.pos,direction,1f);
-            if(end.equals(base)||!occupied.add(end)||!FallenTimber.clear(l,end,source)||!l.mayInteract(player,end)){
+            if(rootSet.contains(end)||!occupied.add(end)||!FallenTimber.clear(l,end,source)||!l.mayInteract(player,end)){
                 player.displayClientMessage(Component.translatable("message.wl_treechopper.landing_blocked"),true);return false;
             }
-            // Sample the log center through the sweep, conservatively rejecting solid obstacles.
-            for(int step=1;step<8;step++){
-                BlockPos through=landingPosition(base,p.pos,direction,step/8f);
-                if(!FallenTimber.clear(l,through,source)){
+            // Sweep transformed volume (not just center); subdivide by distance to pivot.
+            int steps=Math.max(16,Math.min(96,(int)Math.ceil(Math.sqrt(p.pos.distSqr(base))*3)));
+            for(int step=1;step<=steps;step++){
+                if(!sweepClear(l,base,p.pos,direction,step/(float)steps,source)){
                     player.displayClientMessage(Component.translatable("message.wl_treechopper.landing_blocked"),true);return false;
                 }
             }
@@ -299,11 +357,12 @@ public final class TreeChopper {
         List<Piece> pieces=new ArrayList<>(tree);
         // Preserve the complete upper 12px of the cut block. The lower 4px stays in the world.
         // This display has no item yield; the actual stump accounts for the original log.
-        pieces.add(0,new Piece(base,UPPERS.get(species).get().defaultBlockState(),false));
+        for(BlockPos root:roots)pieces.add(0,new Piece(root,UPPERS.get(species).get().defaultBlockState(),false));
         List<Display.BlockDisplay> displays=new ArrayList<>();
         // All pieces share a common pivot, so rotation preserves the tree silhouette.
         for(Piece piece:pieces){
-            boolean cap=piece.pos.equals(base);
+            boolean cap=rootSet.contains(piece.pos);
+            boolean coordinator=piece.pos.equals(base);
             Display.BlockDisplay d=new Display.BlockDisplay(EntityType.BLOCK_DISPLAY,l);
             CompoundTag tag=new CompoundTag();
             tag.put("block_state",NbtUtils.writeBlockState(piece.state));
@@ -322,18 +381,42 @@ public final class TreeChopper {
             fall.putInt("x",piece.pos.getX()-base.getX());fall.putInt("y",piece.pos.getY()-base.getY());fall.putInt("z",piece.pos.getZ()-base.getZ());
             fall.putBoolean("leaf",leaf);
             fall.putBoolean("planned",true);
-            if(cap){fall.put("landing",plan.copy());fall.putUUID("group",UUID.randomUUID());}
+            if(coordinator){fall.put("landing",plan.copy());fall.putUUID("group",UUID.randomUUID());}
+            fall.putBoolean("coordinator",coordinator);
             fall.putBoolean("hinge",true);fall.putBoolean("cap",cap);fall.putBoolean("wholeUpper",true);
             fall.putString("direction",direction.getName());fall.putBoolean("log",piece.log);fall.putString("species",species);fall.putInt("age",0);
             d.getPersistentData().put(FALL,fall);
             if(!l.addFreshEntity(d)){displays.forEach(Entity::discard);return false;}
             displays.add(d);
         }
-        if(!l.setBlock(base,STUMPS.get(species).get().defaultBlockState(),Block.UPDATE_ALL)){displays.forEach(Entity::discard);return false;}
+        for(BlockPos root:roots)l.setBlock(root,STUMPS.get(species).get().defaultBlockState(),Block.UPDATE_ALL);
         // Remove all tree blocks before notifying neighbors to avoid leaf decay/drop duplication.
         for(Piece p:tree)l.setBlock(p.pos,Blocks.AIR.defaultBlockState(),Block.UPDATE_CLIENTS);
         for(Piece p:tree)l.updateNeighborsAt(p.pos,Blocks.AIR);
         l.playSound(null,base,SoundEvents.WOOD_BREAK,SoundSource.BLOCKS,1.3f,.62f);
+        return true;
+    }
+    /** Conservative swept AABB per rotated log. No forced chunk loading or destructive collision. */
+    private static boolean sweepClear(ServerLevel l,BlockPos base,BlockPos piece,Direction dir,float progress,Set<BlockPos> source){
+        Vector3f off=fallOffset(piece.getX()-base.getX(),piece.getY()-base.getY(),piece.getZ()-base.getZ(),dir,progress,false,true,true);
+        Quaternionf q=rotation(dir,(float)(Math.PI*.5*progress*progress));
+        double ox=base.getX()+.5+.5*dir.getStepX()+off.x,oy=base.getY()+.25+off.y,oz=base.getZ()+.5+.5*dir.getStepZ()+off.z;
+        double minX=Double.POSITIVE_INFINITY,minY=minX,minZ=minX,maxX=Double.NEGATIVE_INFINITY,maxY=maxX,maxZ=maxX;
+        for(int x=0;x<=1;x++)for(int y=0;y<=1;y++)for(int z=0;z<=1;z++){
+            Vector3f v=q.transform(new Vector3f(x,y,z));
+            minX=Math.min(minX,ox+v.x);maxX=Math.max(maxX,ox+v.x);
+            minY=Math.min(minY,oy+v.y);maxY=Math.max(maxY,oy+v.y);
+            minZ=Math.min(minZ,oz+v.z);maxZ=Math.max(maxZ,oz+v.z);
+        }
+        double e=.001;AABB box=new AABB(minX+e,minY+e,minZ+e,maxX-e,maxY-e,maxZ-e);
+        for(int x=(int)Math.floor(box.minX);x<=Math.floor(box.maxX);x++)for(int y=(int)Math.floor(box.minY);y<=Math.floor(box.maxY);y++)for(int z=(int)Math.floor(box.minZ);z<=Math.floor(box.maxZ);z++){
+            BlockPos p=new BlockPos(x,y,z);
+            if(source.contains(p))continue;
+            if(!l.hasChunkAt(p)||l.isOutsideBuildHeight(p))return false;
+            BlockState state=l.getBlockState(p);
+            if(state.isAir())continue;
+            for(AABB shape:state.getCollisionShape(l,p).toAabbs())if(box.intersects(shape.move(x,y,z)))return false;
+        }
         return true;
     }
     private static BlockPos landingPosition(BlockPos base,BlockPos piece,Direction dir,float progress){
@@ -412,7 +495,7 @@ public final class TreeChopper {
         }
         if(age>=FALL_TICKS+3){
             if(f.getBoolean("planned")){
-                if(cap&&!FallenTimber.land(l,d.blockPosition(),f))return;
+                if((f.getBoolean("coordinator")||f.contains("landing"))&&!FallenTimber.land(l,d.blockPosition(),f))return;
                 d.discard();return;
             }
             if(f.getBoolean("log")&&CUTS.containsKey(f.getString("species"))){

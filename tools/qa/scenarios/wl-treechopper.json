@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.5.8 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.6.0 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -902,6 +902,60 @@
     },
     {
       "wait": 3
+    },
+    {
+      "command": "fill 1032 199 1048 1033 199 1049 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1032 200 1048 1033 203 1049 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1032 204 1048 1033 204 1049 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_multi 1032 200 1048 2",
+      "expect": "TreeChopper multi-root PASS",
+      "assertion": true,
+      "name": "multi-root-2"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute if block 1032 200 1046 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "multi-landing-2"
+    },
+    {
+      "command": "fill 1048 199 1048 1050 199 1050 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1048 200 1048 1050 203 1050 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1048 204 1048 1050 204 1050 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_multi 1048 200 1048 3",
+      "expect": "TreeChopper multi-root PASS",
+      "assertion": true,
+      "name": "multi-root-3"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute if block 1048 200 1046 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "multi-landing-3"
     }
   ],
   "coverage": [
@@ -1793,6 +1847,50 @@
         {
           "backend": "server",
           "name": "cleared-fall"
+        }
+      ]
+    },
+    {
+      "id": "multi-root-2",
+      "kind": "mechanic",
+      "subject": "A 2x2 supported square stays standing until all exposed roots are cut, then all roots become stumps with exact wear",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "multi-root-2"
+        }
+      ]
+    },
+    {
+      "id": "multi-landing-2",
+      "kind": "mechanic",
+      "subject": "Rotated outer column persists as fallen log after common pivot animation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "multi-landing-2"
+        }
+      ]
+    },
+    {
+      "id": "multi-root-3",
+      "kind": "mechanic",
+      "subject": "A 3x3 supported square stays standing until all exposed roots are cut, then all roots become stumps with exact wear",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "multi-root-3"
+        }
+      ]
+    },
+    {
+      "id": "multi-landing-3",
+      "kind": "mechanic",
+      "subject": "Rotated outer column persists as fallen log after common pivot animation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "multi-landing-3"
         }
       ]
     }
