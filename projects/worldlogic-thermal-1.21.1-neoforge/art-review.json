@@ -3445,7 +3445,7 @@
         "light_and_volume": "Top-down schematic intentionally flat; no simulated lighting",
         "material_continuity": "Existing workpiece texture retained at nearest neighbor",
         "edge_variation": "Uniform square frame; edges deliberately match diagram",
-        "variant_identity": "Uncleaned green",
+        "variant_identity": "All 64 grid cells remain green; raw green bundle at lower left and empty progress bar distinguish the unprocessed stage.",
         "vanilla_comparison": "Wheat reference shows separated stalk tips",
         "functional_material_cues": "Stage icon and progress bar indicate processing outcome"
       },
@@ -3456,9 +3456,9 @@
         "reference_minecraft": "1.21.1",
         "applied_pattern": "Green stalk clusters overlap at lower bundle. Left plant strips brighter than inner overlap.",
         "reference_limit": "Wheat is dry and golden; retain green fresh leaves and uneven stem tips. Green raw stage contrasts with dry golden fibers.",
-        "native_view": "200x200 content within 256x256 Patchouli page; stages viewed side by side.",
+        "native_view": "Final indexed 256×256 PNG inspected at the visible 200×200 crop; grid and stage icon remain legible.",
         "context_type": "icon_family",
-        "context_view": "Three sequential diagrams show actual green to gold material and cross-shaped scraper cell selection.",
+        "context_view": "All 64 grid cells remain green; raw green bundle at lower left and empty progress bar distinguish the unprocessed stage. Reviewed side by side with both other final frames.",
         "custom_reason": "Instructional UI diagram uses existing in-game textures, wheat as material reference only; not an item or block sprite.",
         "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 extracted source PNG, directly viewed in the contact sheet; SHA-256 of inspected mirror bytes recorded above."
       }
@@ -3482,7 +3482,7 @@
         "light_and_volume": "Top-down schematic intentionally flat; no simulated lighting",
         "material_continuity": "Existing workpiece texture retained at nearest neighbor",
         "edge_variation": "Uniform square frame; edges deliberately match diagram",
-        "variant_identity": "Partial clean with highlighted cross",
+        "variant_identity": "Golden upper rows contrast against green lower rows; pale cross highlights the five cells affected by one scraper strike, with partial progress.",
         "vanilla_comparison": "Wheat reference shows separated stalk tips",
         "functional_material_cues": "Stage icon and progress bar indicate processing outcome"
       },
@@ -3493,9 +3493,9 @@
         "reference_minecraft": "1.21.1",
         "applied_pattern": "Green stalk clusters overlap at lower bundle. Left plant strips brighter than inner overlap.",
         "reference_limit": "Wheat is dry and golden; retain green fresh leaves and uneven stem tips. Green raw stage contrasts with dry golden fibers.",
-        "native_view": "200x200 content within 256x256 Patchouli page; stages viewed side by side.",
+        "native_view": "Final indexed 256×256 PNG inspected at the visible 200×200 crop; grid and stage icon remain legible.",
         "context_type": "icon_family",
-        "context_view": "Three sequential diagrams show actual green to gold material and cross-shaped scraper cell selection.",
+        "context_view": "Golden upper rows contrast against green lower rows; pale cross highlights the five cells affected by one scraper strike, with partial progress. Reviewed side by side with both other final frames.",
         "custom_reason": "Instructional UI diagram uses existing in-game textures, wheat as material reference only; not an item or block sprite.",
         "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 extracted source PNG, directly viewed in the contact sheet; SHA-256 of inspected mirror bytes recorded above."
       }
@@ -3519,7 +3519,7 @@
         "light_and_volume": "Top-down schematic intentionally flat; no simulated lighting",
         "material_continuity": "Existing workpiece texture retained at nearest neighbor",
         "edge_variation": "Uniform square frame; edges deliberately match diagram",
-        "variant_identity": "Fully clean golden",
+        "variant_identity": "All 64 cells have golden straw texture, full progress bar and dry fiber icon identify the finished state.",
         "vanilla_comparison": "Wheat reference shows separated stalk tips",
         "functional_material_cues": "Stage icon and progress bar indicate processing outcome"
       },
@@ -3530,9 +3530,9 @@
         "reference_minecraft": "1.21.1",
         "applied_pattern": "Green stalk clusters overlap at lower bundle. Left plant strips brighter than inner overlap.",
         "reference_limit": "Wheat is dry and golden; retain green fresh leaves and uneven stem tips. Green raw stage contrasts with dry golden fibers.",
-        "native_view": "200x200 content within 256x256 Patchouli page; stages viewed side by side.",
+        "native_view": "Final indexed 256×256 PNG inspected at the visible 200×200 crop; grid and stage icon remain legible.",
         "context_type": "icon_family",
-        "context_view": "Three sequential diagrams show actual green to gold material and cross-shaped scraper cell selection.",
+        "context_view": "All 64 cells have golden straw texture, full progress bar and dry fiber icon identify the finished state. Reviewed side by side with both other final frames.",
         "custom_reason": "Instructional UI diagram uses existing in-game textures, wheat as material reference only; not an item or block sprite.",
         "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 extracted source PNG, directly viewed in the contact sheet; SHA-256 of inspected mirror bytes recorded above."
       }
