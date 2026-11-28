@@ -50,8 +50,8 @@ public final class Rules {
  static String addonSummary(){
   var mods=net.neoforged.fml.ModList.get();
   var result=new StringJoiner("; ","World Logic ownership: ","");
-  for(String id:List.of("worldlogic_thermal","worldlogic_trauma","wl_treechopper","hydration","worldlogicterrain"))result.add(id+"="+(mods!=null&&mods.isLoaded(id)?"loaded":"absent"));
-  return result+"; Core owns hydrology, soil, geology, friction and fall risk; Hydration owns drinking; Terrarian owns flora and continuous surface speed";
+  for(String id:List.of("worldlogic_thermal","worldlogic_trauma","wl_treechopper","hydration","worldlogicterrain","metabolism","worldlogic_aqua"))result.add(id+"="+(mods!=null&&mods.isLoaded(id)?"loaded":"absent"));
+  return result+"; Core owns hydrology, soil, geology, friction, fall risk and stamina; Hydration owns fluid balance; Terrarian owns flora and continuous surface speed; Trauma owns anatomy; Thermal owns body temperature; Metabolism owns nutrition and rest rate; Aqua owns fish behavior; TreeChopper owns accepted chopping work";
  }
  public static double strength(String family){try{return Double.parseDouble(values.getOrDefault("strength."+family,"1"));}catch(NumberFormatException e){return 1;}}
  public static double chance(String family,double base){return Math.max(0,Math.min(1,base*strength(family)));}

@@ -10,8 +10,8 @@ public final class PeerPhysiology {
  private record Peer(String mod,String api,int revision,String method,boolean nutrition){}
  private static final Peer METABOLIC_REST=new Peer("metabolism","dev.minemods.metabolism.api.MetabolismApi",6,"restingRecoveryPointsPerSecond",false);
  private static final List<Peer> HEAL=List.of(
-  new Peer("worldlogic_trauma","dev.minemods.traumacraft.api.TraumaApi",6,"adminRestore",false),
-  new Peer("hydration","dev.minemods.hydration.api.HydrationApi",0,"adminRestore",false),
+  new Peer("worldlogic_trauma","dev.minemods.traumacraft.api.TraumaApi",7,"adminRestore",false),
+  new Peer("hydration","dev.minemods.hydration.api.HydrationApi",5,"adminRestore",false),
   new Peer("worldlogic_thermal","dev.minemods.thermal.api.ThermalApi",4,"adminRestore",false),
   new Peer("metabolism","dev.minemods.metabolism.api.MetabolismApi",6,"restoreNutrition",true));
  private static final Map<Peer,Optional<Method>> METHODS=new HashMap<>();
@@ -38,6 +38,13 @@ public final class PeerPhysiology {
   var m=method(METABOLIC_REST);if(m.isEmpty())return OptionalDouble.empty();
   try{double rate=((Number)m.get().invoke(null,player)).doubleValue();return Double.isFinite(rate)&&rate>=0&&rate<=100?OptionalDouble.of(rate):OptionalDouble.empty();}
   catch(ReflectiveOperationException|LinkageError|RuntimeException ex){warn(METABOLIC_REST,ex);return OptionalDouble.empty();}
+ }
+ /** Read-only inspection of actual installed public reset and rest endpoints, not a gameplay test. */
+ static List<String> missingEndpoints(){
+  var missing=new ArrayList<String>();
+  for(var peer:HEAL)if(ModList.get().isLoaded(peer.mod())&&method(peer).isEmpty())missing.add(peer.mod()+"/"+peer.method());
+  if(ModList.get().isLoaded(METABOLIC_REST.mod())&&method(METABOLIC_REST).isEmpty())missing.add(METABOLIC_REST.mod()+"/"+METABOLIC_REST.method());
+  return List.copyOf(missing);
  }
  public record HealResult(List<String> restored,List<String> unavailable){
   public HealResult{restored=List.copyOf(restored);unavailable=List.copyOf(unavailable);}
