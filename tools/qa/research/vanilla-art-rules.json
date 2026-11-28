@@ -3,7 +3,7 @@
   "revision": "r9",
   "minecraft": "1.21.1",
   "official_client_sha1": "30c73b1c5da787909b2f73340419fdf13b9def88",
-  "scope": "100 directly inspected vanilla texture resource IDs (57 R9 + 43 R11; includes identical-byte aliases and layer assets). Exact SHA-256 comparator index, not an automated art grade.",
+  "scope": "128 inspected vanilla texture resource IDs (57 R9 + 43 R11 + 28 R12); aliases, variants and layers are not independent designs. Exact comparator hashes, not an aesthetic grade.",
   "references": {
     "block/spruce_log": "f28e8ce2783a0d14cc6f23904faf6858fba1295290a732735db82b54392574fd",
     "block/spruce_log_top": "b153bde175085ba46e5badacf9d7dd4dc909a75f02118b73b9338685f06c5b42",
@@ -104,7 +104,35 @@
     "item/honey_bottle": "c41e02d9398446543c77a4a50678715d6182004e8f170c6b5c12d84578fe5d98",
     "item/netherite_chestplate": "2a8be1d0598d7e9e0f26340dfb8df695e47e9bdbba65b13970f17b45c29f7160",
     "models/armor/netherite_layer_1": "118ec4ea6f7adf31b962ef92cf851e4d569c37120eacd114e5282647139147d5",
-    "models/armor/netherite_layer_2": "49b55a02eae5dee8c182f52b84060705b72a5fae3e3c624fbbd19b0225510407"
+    "models/armor/netherite_layer_2": "49b55a02eae5dee8c182f52b84060705b72a5fae3e3c624fbbd19b0225510407",
+    "entity/cow/cow": "47ae8e77011e8b86a64047388a60bd8cfc9bd071301d6072a554c2134065996a",
+    "entity/pig/pig": "8dd8df187e9f0014d39fa1eddd7f96e1dcefdb88c9d019d4b16c3fefe8603305",
+    "entity/sheep/sheep": "a2a0c932e5cce63fb47e61731d35a99423a74c536bbed6555b04bfef3e241080",
+    "entity/sheep/sheep_fur": "4bb089b142bd96ef829eb1e77a09cc579e27f7a54520e4cdb9917bfd811e329d",
+    "entity/chicken": "80340dc8559bbeaa994728c23ea7df655d8f8e6b462257c7570dd5a8cf57b36b",
+    "entity/fish/cod": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345",
+    "entity/fish/salmon": "4e273b660cd2833e24dc177aa9b782324a0fe0c8250369b7e27780b3c4d7ddd0",
+    "entity/frog/temperate_frog": "1ebb7f0ae0fd377cea85506def3e472f3c960af78f45592c655232a56f022f38",
+    "entity/wolf/wolf": "b4b32521f2b6baf0f73a9d279b191e9638203a56246bc3e06ad52c4cfdde6f5d",
+    "entity/wolf/wolf_angry": "a2c4f1c2a55683ff278596d8e3087231e72a1fd4401d3bcadc9f365f70a153d7",
+    "entity/wolf/wolf_tame": "d56a902771a9cb21b432205a98237d41c5be4870c4298c0d7d5ad4af8ba3540b",
+    "entity/wolf/wolf_collar": "a5791b414c8217f7568bff652a745ea3ff1f6ba26058214733865c8d56fe3572",
+    "entity/bee/bee": "254ee6e34f909e84dd3591b690dc9457841c2ca0b7121a87d23e66edcae87250",
+    "entity/bee/bee_angry": "ede49ed10fb50e93b029cdcbe386f657ea3a3737f053f2fe50ef9e5525519075",
+    "entity/bee/bee_nectar": "d5294088f28a30ba0f3623dea4e6701bc6cb7606b049ff8ccd004b3612ef97c2",
+    "entity/goat/goat": "9ea8a5129b13f9a275975004cf8a3a392600c7f2a8232a6731c53a7ad42eb231",
+    "entity/enderman/enderman": "ac2a712566f11083a7e7f44ca904088662157144d35e764002be04fc9c34d50c",
+    "entity/enderman/enderman_eyes": "da9b3ab2eea2011c5cafbd7d99f33e0a70ba72bcf43254fb98a24972c02ec19c",
+    "entity/spider/spider": "12771d3524ad137812b2a94d52b6943401c5e0a942baa6946e783e822c46c554",
+    "entity/zombie/zombie": "1c879744424077ab6f7d8b13b015dfc9d5e0efee6c70696de5c2ee588f4f563a",
+    "entity/skeleton/skeleton": "66524aa68d4e94fd3117df9b6e40cb48da5526e24a7f079c2c4852bca0d1c20e",
+    "entity/creeper/creeper": "a98947a543623cedca72016e06aa24dc34807251ff8e2433be158c86a977c9e9",
+    "entity/creeper/creeper_armor": "6aeb93bfc947d6ccf1e4dd101ff34fdffa276328a8c2514dd5298eb733dbca98",
+    "entity/blaze": "55ecacf801ffd66ed3e48c646e0cf6dff75e5970c87369c67637053ac2fad99f",
+    "entity/phantom": "085d1106c0a2a94c72e16b9115fdb1820d0b0ea7e2b42ffb369fbd857b67e118",
+    "entity/warden/warden": "244f0c7c645afc0b480deb07cb4bf1e37494ca865008853a02e45f40705d459c",
+    "entity/warden/warden_bioluminescent_layer": "7c41de39f822af32f4110af3747c01fbb508724f9282fccc31b20dde22c54e52",
+    "entity/warden/warden_heart": "4cb4c0e3bbcbc8cc57667ce4d451cffd9a4bf3c7ff0e0710833c9614907f5bfe"
   },
   "rules": {
     "vertical_bark": {
@@ -635,6 +663,124 @@
       ],
       "principle": "Use transparent cutouts and related metal link clusters along actual UV regions; check seams and player skin visibility.",
       "limit": "Periodic cutout motifs are appropriate mail construction, unlike unrelated mechanical ground repetition."
+    },
+    "mob_ungulate": {
+      "profiles": [
+        "mob_body"
+      ],
+      "reference_ids": [
+        "entity/cow/cow",
+        "entity/pig/pig",
+        "entity/sheep/sheep",
+        "entity/goat/goat"
+      ],
+      "principle": "Species-specific torso, muzzle, limbs and coat distribution; mark hooves, snout and coat panels on correct UV faces.",
+      "limit": "A shared quadruped topology may fit related animals; don't recolor the same geometry for unrelated species."
+    },
+    "mob_bird": {
+      "profiles": [
+        "mob_body"
+      ],
+      "reference_ids": [
+        "entity/chicken"
+      ],
+      "principle": "Read beak, head, body, wings and legs; compact feather groups and articulated wing pivot.",
+      "limit": "Do not scale a quadruped template or paint wings onto a static body when flight is required."
+    },
+    "mob_fish": {
+      "profiles": [
+        "mob_body"
+      ],
+      "reference_ids": [
+        "entity/fish/cod",
+        "entity/fish/salmon"
+      ],
+      "principle": "Species-specific lateral silhouette, mouth, fin placement, back/flank/belly and tail articulation; shade in relation to swimming axis.",
+      "limit": "A 32x32 atlas is an observed baseline, not a requirement; fin planes and negative space are purposeful."
+    },
+    "mob_amphibian": {
+      "profiles": [
+        "mob_body"
+      ],
+      "reference_ids": [
+        "entity/frog/temperate_frog"
+      ],
+      "principle": "Compact body, broad mouth/eyes, bent leg segments and appropriate land/swim/jump movement.",
+      "limit": "Atlas 48x48; not every creature needs a power-of-two or square texture."
+    },
+    "mob_canid": {
+      "profiles": [
+        "mob_body"
+      ],
+      "reference_ids": [
+        "entity/wolf/wolf",
+        "entity/wolf/wolf_angry",
+        "entity/wolf/wolf_tame"
+      ],
+      "principle": "Muzzle, ears, torso and tail define species; retain coat identity across calm, anger and tame states; change face/pose and intentional cues.",
+      "limit": "Behaviour states can share geometry and much of texture; do not make every neutral animal a wolf."
+    },
+    "mob_insect": {
+      "profiles": [
+        "mob_body"
+      ],
+      "reference_ids": [
+        "entity/bee/bee",
+        "entity/bee/bee_angry",
+        "entity/bee/bee_nectar"
+      ],
+      "principle": "Readable segmented body, eyes, wings and markings; preserve state-specific nectar/anger cues and articulated wings.",
+      "limit": "Vanilla bee is intentionally oversized; use intended gameplay scale, not strict real-world scale."
+    },
+    "mob_dark_creature": {
+      "profiles": [
+        "mob_body"
+      ],
+      "reference_ids": [
+        "entity/enderman/enderman",
+        "entity/spider/spider"
+      ],
+      "principle": "Distinct long-limbed or many-legged body plan, dark material with restrained local detail; threat cues via pose and correctly attached eyes.",
+      "limit": "Enderman base has only three colors. Do not equate neutral or conditional aggression with bright red or dark skin."
+    },
+    "mob_undead": {
+      "profiles": [
+        "mob_body"
+      ],
+      "reference_ids": [
+        "entity/zombie/zombie",
+        "entity/skeleton/skeleton"
+      ],
+      "principle": "Separate skin, clothing or bone planes; silhouette communicates anatomy, not random exposed patches.",
+      "limit": "Zombie 64x64 and skeleton 64x32 differ; use actual model UVs and equipped item layers."
+    },
+    "mob_monster": {
+      "profiles": [
+        "mob_body"
+      ],
+      "reference_ids": [
+        "entity/creeper/creeper",
+        "entity/blaze",
+        "entity/phantom",
+        "entity/warden/warden"
+      ],
+      "principle": "Signature geometry and readable action poses, deliberate material and effect regions; threat telegraph linked to actual state.",
+      "limit": "Creeper has unusually many colors; Warden uses 128x128. Neither establishes universal density or color thresholds."
+    },
+    "mob_layer": {
+      "profiles": [
+        "mob_layer"
+      ],
+      "reference_ids": [
+        "entity/sheep/sheep_fur",
+        "entity/wolf/wolf_collar",
+        "entity/enderman/enderman_eyes",
+        "entity/creeper/creeper_armor",
+        "entity/warden/warden_bioluminescent_layer",
+        "entity/warden/warden_heart"
+      ],
+      "principle": "Align layer to real base model UVs and render purpose, tint/visibility/animation state; inspect composition and revealed regions.",
+      "limit": "Sparse or transparent pixels and different render modes can be intentional. Layer is not an independent base skin."
     }
   },
   "benchmark_r9_reference_ids": [
@@ -701,6 +847,11 @@
       "adoption_tree": "327a26138826b6142651918f684ee454eadea222",
       "reference_count": 43,
       "scope": "Item/armor extension; original r9 record revision remains compatible. Newly inspected archive PNGs independently verified by official-client research CI."
+    },
+    "r12_mobs": {
+      "adoption_tree": "73464b88ad7af3089a30fd21244f4688d5c2346e",
+      "reference_count": 28,
+      "scope": "28 directly viewed entity texture resource paths; archive Git blob IDs matched official R11 corpus; R12 independently rechecks catalog SHA-256. No actual client renders."
     }
   }
 }
