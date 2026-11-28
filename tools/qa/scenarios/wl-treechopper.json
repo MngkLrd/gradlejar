@@ -10,11 +10,7 @@
       "wait": 3
     },
     {
-      "command": "fill 992 199 992 1055 199 1055 minecraft:stone",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
-      "command": "setblock 1000 199 1000 minecraft:dirt",
+      "command": "fill 992 199 992 1055 199 1055 minecraft:dirt",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -158,10 +154,6 @@
       "name": "bucking-cleanup"
     },
     {
-      "command": "setblock 1009 199 1000 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1009 200 1000 1009 203 1000 minecraft:spruce_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -213,10 +205,6 @@
       "expect": "Test passed",
       "assertion": true,
       "name": "cleanup-spruce"
-    },
-    {
-      "command": "setblock 1018 199 1000 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
     },
     {
       "command": "fill 1018 200 1000 1018 203 1000 minecraft:birch_log",
@@ -272,10 +260,6 @@
       "name": "cleanup-birch"
     },
     {
-      "command": "setblock 1027 199 1000 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1027 200 1000 1027 203 1000 minecraft:jungle_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -327,10 +311,6 @@
       "expect": "Test passed",
       "assertion": true,
       "name": "cleanup-jungle"
-    },
-    {
-      "command": "setblock 1000 199 1009 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
     },
     {
       "command": "fill 1000 200 1009 1000 203 1009 minecraft:acacia_log",
@@ -386,10 +366,6 @@
       "name": "cleanup-acacia"
     },
     {
-      "command": "setblock 1009 199 1009 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1009 200 1009 1009 203 1009 minecraft:dark_oak_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -441,10 +417,6 @@
       "expect": "Test passed",
       "assertion": true,
       "name": "cleanup-dark_oak"
-    },
-    {
-      "command": "setblock 1018 199 1009 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
     },
     {
       "command": "fill 1018 200 1009 1018 203 1009 minecraft:mangrove_log",
@@ -500,10 +472,6 @@
       "name": "cleanup-mangrove"
     },
     {
-      "command": "setblock 1027 199 1009 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1027 200 1009 1027 203 1009 minecraft:cherry_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -555,10 +523,6 @@
       "expect": "Test passed",
       "assertion": true,
       "name": "cleanup-cherry"
-    },
-    {
-      "command": "setblock 1044 199 1044 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
     },
     {
       "command": "setblock 1044 200 1044 minecraft:oak_log",
@@ -694,10 +658,6 @@
       "name": "landing-pose"
     },
     {
-      "command": "setblock 1048 199 1038 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1048 200 1038 1048 203 1038 minecraft:oak_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -733,10 +693,6 @@
       "name": "cut-cap-cleanup"
     },
     {
-      "command": "setblock 1048 199 1048 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1048 200 1048 1048 203 1048 minecraft:oak_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -755,10 +711,6 @@
       "expect": "TreeChopper axe tier progression PASS",
       "assertion": true,
       "name": "axe-material-tiers"
-    },
-    {
-      "command": "setblock 1048 199 1018 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
     },
     {
       "command": "fill 1048 201 1018 1048 203 1018 minecraft:oak_log",
@@ -780,10 +732,6 @@
     },
     {
       "wait": 3
-    },
-    {
-      "command": "setblock 1038 199 1018 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
     },
     {
       "command": "fill 1038 201 1018 1038 211 1018 minecraft:oak_log",
@@ -813,10 +761,6 @@
       "name": "slow-swing"
     },
     {
-      "command": "setblock 1000 199 1048 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1000 200 1048 1000 203 1048 minecraft:oak_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -834,10 +778,6 @@
       "wait": 3
     },
     {
-      "command": "setblock 1010 199 1048 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1010 200 1048 1010 211 1048 minecraft:oak_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -853,10 +793,6 @@
     },
     {
       "wait": 3
-    },
-    {
-      "command": "setblock 1020 199 1040 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
     },
     {
       "command": "fill 1020 200 1040 1020 203 1040 minecraft:oak_log",
@@ -912,10 +848,6 @@
       "wait": 3
     },
     {
-      "command": "fill 1032 199 1048 1033 199 1049 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1032 200 1048 1033 203 1049 minecraft:oak_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -939,10 +871,6 @@
       "name": "multi-landing-2"
     },
     {
-      "command": "fill 1048 199 1048 1050 199 1050 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1048 200 1048 1050 203 1050 minecraft:oak_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -964,10 +892,6 @@
       "expect": "Test passed",
       "assertion": true,
       "name": "multi-landing-3"
-    },
-    {
-      "command": "setblock 1026 199 1038 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
     },
     {
       "command": "fill 1026 200 1038 1026 203 1038 minecraft:oak_log",
@@ -1058,10 +982,6 @@
       "name": "direction-math"
     },
     {
-      "command": "setblock 1000 199 1038 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1000 200 1038 1000 203 1038 minecraft:oak_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -1085,10 +1005,6 @@
       "name": "guided-landing"
     },
     {
-      "command": "setblock 1010 199 1038 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
-    },
-    {
       "command": "fill 1010 200 1038 1010 204 1038 minecraft:oak_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -1109,10 +1025,6 @@
       "expect": "TreeChopper world mass direction PASS",
       "assertion": true,
       "name": "heavy-branch-direction"
-    },
-    {
-      "command": "setblock 1010 199 1024 minecraft:dirt",
-      "expect": "Changed the block|Successfully filled|Filled"
     },
     {
       "command": "fill 1010 200 1024 1010 202 1024 minecraft:oak_log",
