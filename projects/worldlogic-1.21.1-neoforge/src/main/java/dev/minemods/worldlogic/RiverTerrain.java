@@ -30,7 +30,7 @@ public final class RiverTerrain {
  static RegionalDrainage.Network regionalNetwork(NoiseBasedChunkGenerator gen,RandomState state,RegistryAccess access,int x,int z){
   return network(gen,state,access,Math.floorDiv(x,RegionalDrainage.SIZE),Math.floorDiv(z,RegionalDrainage.SIZE));
  }
- private static boolean natural(BlockState b){
+ static boolean natural(BlockState b){
   return GeologyGeneration.rock(b)||b.is(BlockTags.DIRT)||b.is(BlockTags.SAND)||b.is(Blocks.GRAVEL)||b.is(Blocks.CLAY)||b.is(Blocks.SNOW_BLOCK)||b.is(Blocks.ICE)||b.is(Blocks.PACKED_ICE)||b.is(Blocks.SANDSTONE)||Content.SOILS.values().stream().anyMatch(v->b.is(v.get()));
  }
  public static void prepare(NoiseBasedChunkGenerator gen,RandomState state,RegistryAccess access,ChunkAccess c){
@@ -39,6 +39,14 @@ public final class RiverTerrain {
   var net=regionalNetwork(gen,state,access,x0,z0);
   if(net.candidates(x0+7.5,z0+7.5).stream().noneMatch(e->e.near(x0+7.5,z0+7.5,12))&&net.edges().stream().noneMatch(e->e.near(x0+7.5,z0+7.5,12)))return;
   var p=new BlockPos.MutableBlockPos();var water=NaturalFluids.get(WaterKind.RIVER).block.get().defaultBlockState();
+  var incoming=new HashSet<RegionalDrainage.Node>();var outgoing=new HashSet<RegionalDrainage.Node>();
+  for(var e:net.edges()){incoming.add(e.to());outgoing.add(e.from());}
+  var springs=new ArrayList<RegionalDrainage.Node>();var mouths=new ArrayList<RegionalDrainage.Node>();
+  var model=GeoDensity.riverModel(state,access);
+  for(var e:net.edges()){
+   if(!incoming.contains(e.from())&&e.start()>sea+5&&e.near(x0+7.5,z0+7.5,12)&&model.regional(e.from().x(),e.from().z()).moistureIndex()>.62)springs.add(e.from());
+   if(!outgoing.contains(e.to())&&e.to().height()<=sea-1&&e.near(x0+7.5,z0+7.5,12))mouths.add(e.to());
+  }
   int[] floors=new int[256];for(int x=0;x<16;x++)for(int z=0;z<16;z++)floors[x*16+z]=c.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x,z);
   for(int x=0;x<16;x++)for(int z=0;z<16;z++){
    int wx=x0+x,wz=z0+z,h=floors[x*16+z];
@@ -60,10 +68,16 @@ public final class RiverTerrain {
    if(!valid)continue;
    var top=c.getBlockState(p.set(wx,h,wz));
    if(wet){
-    if(bed<h)c.setBlockState(p.set(wx,bed,wz),GeologyGeneration.rock(c.getBlockState(p.set(wx,bed-1,wz)))?Blocks.GRAVEL.defaultBlockState():Blocks.STONE.defaultBlockState(),false);
+    if(bed<h){
+     var sediment=GeologyGeneration.rock(c.getBlockState(p.set(wx,bed-1,wz)))?Blocks.GRAVEL.defaultBlockState():Blocks.STONE.defaultBlockState();
+     c.setBlockState(p.set(wx,bed,wz),sediment,false);
+    }
     else if(bed>h)for(int y=h+1;y<=bed;y++)c.setBlockState(p.set(wx,y,wz),Blocks.GRAVEL.defaultBlockState(),false);
     var directed=water.setValue(DirectedRiverBlock.CURRENT,DirectedRiverBlock.encode(hit.dx(),hit.dz()));
-    for(int y=bed+1;y<=stage;y++){c.setBlockState(p.set(wx,y,wz),directed,false);if(y==stage)c.markPosForPostprocessing(p);}
+    var fill=directed;
+    if(springs.stream().anyMatch(n->Math.hypot(wx-n.x(),wz-n.z())<2.5))fill=NaturalFluids.get(WaterKind.SPRING).block.get().defaultBlockState();
+    else if(stage<=sea+1&&mouths.stream().anyMatch(n->Math.hypot(wx-n.x(),wz-n.z())<15))fill=NaturalFluids.get(WaterKind.BRACKISH).block.get().defaultBlockState();
+    for(int y=bed+1;y<=stage;y++){c.setBlockState(p.set(wx,y,wz),fill,false);if(y==stage)c.markPosForPostprocessing(p);}
     for(int y=stage+1;y<=h;y++)c.setBlockState(p.set(wx,y,wz),Blocks.AIR.defaultBlockState(),false);
    }else if(bed<h){
     c.setBlockState(p.set(wx,bed,wz),top,false);

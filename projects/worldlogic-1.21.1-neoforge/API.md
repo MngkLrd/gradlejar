@@ -161,3 +161,5 @@ RC40: Realistic biome classification uses separate bounded regional climate fiel
 RC41: base-height queries still return the immutable RC22-derived noise surface; final generated World Logic terrain may contain bounded local foothill/shoulder changes and separate river/cave shaping. Consumers needing actual surface should use the generated world heightmap, not assume a modeled height is the final terrain. Public API signatures unchanged.
 
 RC44: internal drainage planning domain enlarged; WaterKind and all addon APIs unchanged. Regional graph is still a bounded approximation, not a global continent-wide watershed guarantee.
+
+RC45: existing WaterKind identities used for physically generated natural pools and small spring/estuary source areas. No new public API or registry IDs. Basin candidate probe is operator-only, does not load chunks, and is modeled rather than an observed lake.

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC44 multi-region drainage",
+  "name": "World Logic NeoForge RC45 natural basins",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1765,6 +1765,17 @@
       "id": "rc44-multiregion-drainage",
       "kind": "mechanic",
       "subject": "Bounded macro-basin, routes cross former regional boundaries, shared downstream graph and unchanged natural river gates",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc45-natural-basins",
+      "kind": "mechanic",
+      "subject": "Closed-rim validation at individual blocks, flat/open negative control, wetland profile and actual chunk lake fill; natural frequency and outlet connection pending",
       "checks": [
         {
           "backend": "server",

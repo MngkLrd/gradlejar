@@ -55,12 +55,13 @@ public final class LandscapeBlend{
   for(int x:new int[]{x0,x0+7,x0+15})for(int z:new int[]{z0,z0+7,z0+15})if(Math.abs(sample(x,z,nodes).delta)>=.45)active=true;
   if(!active)return;
   var rivers=RiverTerrain.regionalNetwork(gen,random,access,x0,z0);
+  var lake=BasinTerrain.at(gen,random,access,x0,z0).orElse(null);
   int[] floors=new int[256];
   for(int x=0;x<16;x++)for(int z=0;z<16;z++)floors[x*16+z]=chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x,z);
   for(int x=0;x<16;x++)for(int z=0;z<16;z++){
    int wx=x0+x,wz=z0+z,floor=floors[x*16+z];
    if(floor<sea+12)continue;
-   boolean protectedWater=rivers.nearest(wx,wz)!=null||chunk.getFluidState(new BlockPos(wx,floor+1,wz)).is(FluidTags.WATER);
+   boolean protectedWater=(lake!=null&&lake.protects(wx,wz))||rivers.nearest(wx,wz)!=null||chunk.getFluidState(new BlockPos(wx,floor+1,wz)).is(FluidTags.WATER);
    int delta=adjustment(sample(wx,wz,nodes),floor,sea,protectedWater);
    if(delta!=0)reshape(chunk,wx,wz,floor,delta);
   }
