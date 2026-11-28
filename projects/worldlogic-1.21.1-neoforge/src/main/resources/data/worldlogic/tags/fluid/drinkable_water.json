@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:river_water",
+    "worldlogic:flowing_river_water",
+    "worldlogic:lake_water",
+    "worldlogic:flowing_lake_water",
+    "worldlogic:spring_water",
+    "worldlogic:flowing_spring_water",
+    "worldlogic:pond_water",
+    "worldlogic:flowing_pond_water"
+  ]
+}
