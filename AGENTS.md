@@ -14,6 +14,7 @@ Read this contract for every task. [Documentation index](docs/README.md) is the 
 | Recipes | [Recipe QA](docs/qa/RECIPE-QA.md) |
 | Studying other mods, interpreting ideas, adapting mechanics or upstream code | [Reference mod analysis and adaptation](docs/development/MOD-ADAPTATION.md) |
 | Explicit multi-mod ecosystem development or integration (WorldLogic mandatory) | [Ecosystem integration standard](docs/development/ECOSYSTEM-INTEGRATION.md) |
+| Active module/infrastructure work and cross-agent requests | [Agent issue inbox](docs/development/AGENT-ISSUE-INBOX.md) (one scoped lookup per working iteration) |
 | Mod naming, versioning and delivery filenames | [Mandatory naming standard](docs/development/MOD-NAMING.md) |
 | Living entities, animals, mobs, textures and animation | [Mob and animal art](docs/art/MOB-ART.md) plus common Visual QA |
 | Blocks and vegetation art | [Block art](docs/art/BLOCK-ART.md) plus common Visual QA |
@@ -48,6 +49,10 @@ Mandatory for agents working with this repository: read the current AGENTS.md fr
 ## Reference mod analysis and adaptation — mandatory
 
 When the user names another mod, modpack, game or external implementation as a reference, follow [MOD-ADAPTATION.md](docs/development/MOD-ADAPTATION.md) before implementing. Determine whether the request concerns behavior, architecture, algorithm, content, visuals, interoperability or an explicitly authorized fork. Inspect the actual relevant upstream version, source/docs/observable behavior and license boundaries; distinguish verified findings from assumptions. Extract the requested design principle, compare it with our current mechanics and public APIs, then produce an independent, target-native implementation with justified improvements and executable positive/negative/regression tests. Do not copy entire subsystems, merely rename upstream classes, introduce unnecessary dependencies, redistribute unlicensed assets or claim code provenance without evidence. If actual reuse is requested, verify applicable permission and fulfill its conditions before copying; open repository access is not permission by itself. Preserve existing save IDs, world generation invariants and subsystem ownership; for WorldLogic, Core is the authoritative shared provider and addons consume its public API. If data/API are missing, specify the missing contract and coordinate with its owner rather than invent or duplicate it. Record source/version, selected principle, adaptation decisions, provenance and test IDs in a compact project-local reference note when implementing a nontrivial adaptation. Implement the authorized mechanics; do not end at a research report unless research was the requested task. No automatic porting or unrelated product changes.
+
+## Durable agent issue inbox — mandatory for active work
+
+At the start of each implementation/fix/integration/delivery continuation for your assigned module or infrastructure component, check its open GitHub Issues once using [AGENT-ISSUE-INBOX.md](docs/development/AGENT-ISSUE-INBOX.md). Read only matching requests, execute actionable in-scope work, verify and close already-fulfilled requests using existing evidence, and leave genuinely blocked requests open with the concrete next action. Use stable recipient markers for new requests, recognize legacy formats, and close completed requests with commit/CI/artifact evidence. No broad repeat scans per tool call or build, no unrelated work, no extra CI, no assumption of background execution. Status-only questions do not trigger a new full inbox pass.
 
 ## Ecosystem integration — scoped mandatory standard
 

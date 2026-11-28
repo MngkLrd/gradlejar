@@ -6,6 +6,7 @@ Current main is canonical. Start with [AGENTS.md](../AGENTS.md), then read only 
 | --- | --- |
 | Naming / version / delivery | [Naming](development/MOD-NAMING.md) |
 | First-party addon / multi-mod ecosystem / WorldLogic integration | [Ecosystem integration](development/ECOSYSTEM-INTEGRATION.md) |
+| Active module/infrastructure iteration, incoming requests and issue closure | [Agent issue inbox](development/AGENT-ISSUE-INBOX.md) |
 | Study or adapt another mod | [Adaptation](development/MOD-ADAPTATION.md) |
 | Build, release and compatibility | [QA v2](qa/QA-V2.md) |
 | Executable coverage | [QA assignment](qa/QA-ASSIGNMENT-TEMPLATE.md) |
