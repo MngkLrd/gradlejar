@@ -1,0 +1,28 @@
+{
+  "slug": "worldlogic_structures",
+  "version": "0.2.0",
+  "minecraft": "1.21.1",
+  "loader": "neoforge",
+  "java": "21",
+  "gradle": "9.2.1",
+  "jar_glob": "worldlogic_structures-neoforge-mc1.21.1-0.2.0.jar",
+  "minimum_loader_version": "21.1.80",
+  "compile_loader_version": "21.1.262",
+  "ecosystem_membership": {
+    "ecosystem": "worldlogic",
+    "module": "worldlogic_structures",
+    "role": "addon",
+    "core_module": "worldlogic"
+  },
+  "qa": {
+    "mode": "server",
+    "loader_version": "21.1.262",
+    "scenario": "tools/qa/scenarios/worldlogic-structures.json",
+    "release_targets": [
+      "neoforge-mc1.21.1"
+    ],
+    "watch_paths": [
+      "tools/qa/scenarios/worldlogic-structures.json"
+    ]
+  }
+}
