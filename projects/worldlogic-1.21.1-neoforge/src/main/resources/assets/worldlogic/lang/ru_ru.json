@@ -367,5 +367,8 @@
   "block.worldlogic.deepslate_fluorite_ore": "Флюорит в глубинном сланце",
   "item.worldlogic.cinnabar": "Киноварь",
   "block.worldlogic.cinnabar_ore": "Киноварь в камне",
-  "block.worldlogic.deepslate_cinnabar_ore": "Киноварь в глубинном сланце"
+  "block.worldlogic.deepslate_cinnabar_ore": "Киноварь в глубинном сланце",
+  "message.worldlogic.fall_slope": "Вы потеряли равновесие на крутом спуске.",
+  "rule.worldlogic.ground_inertia": "Инерция и сцепление с поверхностью",
+  "rule.worldlogic.downhill_falls": "Падения на крутых спусках"
 }

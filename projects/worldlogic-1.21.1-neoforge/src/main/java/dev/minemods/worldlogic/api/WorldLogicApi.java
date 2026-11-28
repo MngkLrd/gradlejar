@@ -125,6 +125,11 @@ public final class WorldLogicApi {
  public static Optional<RiverCurrent> riverCurrent(ServerLevel level,BlockPos pos){
   serverThread(level);return dev.minemods.worldlogic.RiverCurrent.sample(level,pos);
  }
+ /** Game movement retention coefficient, not physical static friction. */
+ public record GroundTraction(float retention,boolean wet){}
+ public static Optional<GroundTraction> groundTraction(ServerLevel level,BlockPos pos,Entity entity){
+  serverThread(level);return dev.minemods.worldlogic.GroundMotion.sample(level,pos,entity);
+ }
  public enum SoilType { LOAM,HUMUS,PEAT,SILT,FROZEN,SAND,CLAY,ROCK,UNKNOWN,CHERNOZEM,SANDY_LOAM,LATERITE,WHITE_SAND,VOLCANIC_SAND,VOLCANIC_ASH }
  /** Model stores expressed in mm water equivalent per horizontal area; rates per 200-tick update. */
  public record Hydrology(SoilType soil,double soilWaterMm,double capacityMm,double groundwaterMm,double snowWaterMm,

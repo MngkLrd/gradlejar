@@ -96,7 +96,7 @@
     {
       "id": "worldlogic:survival_physics",
       "version": 1,
-      "revision": 17,
+      "revision": 18,
       "domains": [
         "survival_physics"
       ],
@@ -109,7 +109,9 @@
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Survival.java",
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Combat.java",
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TravelPhysics.java",
-        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/ExertionModifiers.java"
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/ExertionModifiers.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GroundMotion.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Balance.java"
       ],
       "operations": [
         {
@@ -123,6 +125,12 @@
           "kind": "query",
           "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
           "semantics": "Return the same exertion-only movement, attack, mining factors and sprint threshold used by Core."
+        },
+        {
+          "id": "ground_traction",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Read actual movement retention coefficient and local wetness."
         }
       ]
     },
@@ -558,6 +566,30 @@
       ],
       "consumes": [],
       "integration_review": "Uses authoritative PhysicalMaterials and existing block/tool registries; upcoming excavation addon owns actual progressive geometry, strike lifecycle, block mutation, drops and permissions."
+    },
+    {
+      "id": "surface_traction_and_descent",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GroundMotion.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Balance.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/FrictionMixin.java"
+      ],
+      "provides": [
+        "worldlogic:survival_physics"
+      ],
+      "consumes": [],
+      "integration_review": "Core movement and existing Balance fall state. Terrarian continuous surface speed unchanged, Trauma remains injury owner."
+    },
+    {
+      "id": "natural_darkness",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/NaturalDarkness.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/client/NaturalDarknessMixin.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Local lightmap rendering only; no server light or gameplay spawn changes.",
+      "no_public_surface_reason": "Private client lightmap implementation; existing lighting rule owns enablement."
     }
   ],
   "tests": [
@@ -645,6 +677,14 @@
       "id": "worldlogic.excavation.contract",
       "capabilities": [
         "worldlogic:excavation"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.ground_traction.contract",
+      "capabilities": [
+        "worldlogic:survival_physics"
       ],
       "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
       "status": "implemented"

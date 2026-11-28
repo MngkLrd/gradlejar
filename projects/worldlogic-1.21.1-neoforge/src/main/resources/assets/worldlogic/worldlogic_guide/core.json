@@ -7,7 +7,7 @@
     "ru": "Начало и выживание",
     "en": "Getting started and survival"
   },
-  "source": "WorldLogic Core 1.4.1",
+  "source": "WorldLogic Core 1.5.0",
   "pages": [
     {
       "id": "start",
@@ -144,6 +144,28 @@
         "en": [
           "An exposed ordinary torch may become wet and extinguish. Place lights beneath shelter when rain is expected.",
           "Relight an extinguished torch with flint and steel. Do not rely on permanent lighting along exposed paths in bad weather."
+        ]
+      }
+    },
+    {
+      "id": "traction",
+      "title": {
+        "ru": "Сцепление и крутые склоны",
+        "en": "Traction and steep slopes"
+      },
+      "models": [
+        "minecraft:gravel",
+        "minecraft:stone",
+        "minecraft:ice"
+      ],
+      "body": {
+        "ru": [
+          "На рыхлом песке и гравии торможение отличается от твёрдых поверхностей. Мокрый камень, глина и лёд хуже удерживают ноги. Не разгоняйся перед крутым спуском: при быстрой потере высоты можно потерять равновесие и упасть.",
+          "Приседание и медленное движение снижают риск. В темноте лучше использовать источник света: настройка яркости не заменяет освещение."
+        ],
+        "en": [
+          "Loose sand and gravel brake differently from solid surfaces. Wet stone, clay and ice reduce footing. Avoid sprinting down steep slopes: rapid descent can cause a fall.",
+          "Sneak or move slowly on slopes. Carry light in the dark; brightness settings cannot replace illumination."
         ]
       }
     }

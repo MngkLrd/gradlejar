@@ -354,5 +354,8 @@
   "block.worldlogic.deepslate_fluorite_ore": "Deepslate Fluorite ore",
   "item.worldlogic.cinnabar": "Cinnabar",
   "block.worldlogic.cinnabar_ore": "Cinnabar ore",
-  "block.worldlogic.deepslate_cinnabar_ore": "Deepslate Cinnabar ore"
+  "block.worldlogic.deepslate_cinnabar_ore": "Deepslate Cinnabar ore",
+  "message.worldlogic.fall_slope": "You lost your footing on a steep descent.",
+  "rule.worldlogic.ground_inertia": "Ground inertia and traction",
+  "rule.worldlogic.downhill_falls": "Steep descent falls"
 }

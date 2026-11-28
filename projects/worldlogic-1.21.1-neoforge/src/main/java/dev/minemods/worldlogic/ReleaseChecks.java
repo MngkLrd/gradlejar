@@ -11,7 +11,7 @@ public final class ReleaseChecks {
  public static void run(){
   PhysicalMaterialChecks.verify();
   TreeDescent.verify();
-  RiverCurrent.verify();
+  RiverCurrent.verify();GroundMotion.verify();NaturalDarkness.verify();
   check(Rules.keys().size()>=115,"rule count");
   check(EnvironmentPhysics.crampedFactor(2,true)<EnvironmentPhysics.crampedFactor(2,false),"cramped mining geometry");
   check(EnvironmentPhysics.swingFactor(2)<EnvironmentPhysics.swingFactor(0),"weapon clearance");
