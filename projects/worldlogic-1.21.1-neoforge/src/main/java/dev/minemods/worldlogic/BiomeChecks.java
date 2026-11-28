@@ -133,6 +133,11 @@ public final class BiomeChecks {
   c.setBlockState(p.set(4,105,4),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),false);
   c.setBlockState(p.set(4,103,4),net.minecraft.world.level.block.Blocks.CAVE_AIR.defaultBlockState(),false);
   require(!LandscapeBlend.reshape(c,4,4,104,-2),"open cavity negative control");
+  var q=new net.minecraft.core.BlockPos.MutableBlockPos();
+  for(int y=85;y<=100;y++)c.setBlockState(q.set(9,y,9),net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(),false);
+  require(LandscapeBlend.reshape(c,9,9,100,14),"extended natural shoulder");
+  require(!LandscapeBlend.reshape(c,9,9,114,15),"local mountain uplift bound");
+  require(LandscapeBlend.reshape(c,9,9,114,-4)&&c.getBlockState(q.set(9,110,9)).is(net.minecraft.world.level.block.Blocks.STONE),"bounded valley adjustment");
  }
 
 }

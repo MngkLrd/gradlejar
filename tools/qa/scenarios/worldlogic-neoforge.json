@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC45 natural basins",
+  "name": "World Logic NeoForge RC46 mountain and plateau profiles",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1780,6 +1780,17 @@
         {
           "backend": "server",
           "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc46-relief-profiles",
+      "kind": "mechanic",
+      "subject": "Directional multiscale valley/plateau and ridge support, normalized profile weights, local height limits and real natural column tests; RC22 base-height gate retained",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
         }
       ]
     }

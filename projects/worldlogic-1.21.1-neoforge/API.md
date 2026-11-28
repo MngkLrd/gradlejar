@@ -163,3 +163,5 @@ RC41: base-height queries still return the immutable RC22-derived noise surface;
 RC44: internal drainage planning domain enlarged; WaterKind and all addon APIs unchanged. Regional graph is still a bounded approximation, not a global continent-wide watershed guarantee.
 
 RC45: existing WaterKind identities used for physically generated natural pools and small spring/estuary source areas. No new public API or registry IDs. Basin candidate probe is operator-only, does not load chunks, and is modeled rather than an observed lake.
+
+RC46: final generated relief may include bounded local valley/foothill/plateau shaping (+14/-4 maximum), distinct from unchanged modeled base-height queries. No new public interfaces.

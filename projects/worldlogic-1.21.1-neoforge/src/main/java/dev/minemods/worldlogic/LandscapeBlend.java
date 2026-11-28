@@ -11,29 +11,43 @@ import net.minecraft.world.level.levelgen.*;
  * limits and climate stay untouched. Operates before biome surface materials. */
 public final class LandscapeBlend{
  private LandscapeBlend(){}
- static final int GRID=64,MAX_RAISE=8,MAX_LOWER=2;
- record Profile(double lowland,double foothill,double ridge,double delta){}
+ static final int GRID=64,MAX_RAISE=14,MAX_LOWER=4;
+ record Profile(double lowland,double foothill,double ridge,double valley,double plateau,double delta){}
  private static double smooth(double a,double b,double x){return GeoModel.smooth(a,b,x);}
  private static double clamp(double x,double a,double b){return GeoModel.clamp(x,a,b);}
- private static Profile profile(DoubleBinaryOperator elevation,int x,int z){
+ static Profile profile(DoubleBinaryOperator elevation,int x,int z){
   double center=elevation.applyAsDouble(x,z),peak=center,mean=center*4,weight=4;
-  for(int ring:new int[]{64,128})for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++){
-   if(dx==0&&dz==0)continue;
-   double h=elevation.applyAsDouble(x+dx*ring,z+dz*ring);
-   peak=Math.max(peak,h);
-   double w=(ring==64?1:.45)/(dx!=0&&dz!=0?1.41421356237:1);
-   mean+=w*h;weight+=w;
+  double nearMin=center,nearMax=center,pairedHigh=center,pairedLow=center,farSupport=0;
+  // Opposite samples are paired: a long ridge or valley has directional
+  // support, unlike a single isolated tall neighbour.
+  int[][] axes={{1,0},{0,1},{1,1},{1,-1}};
+  for(int ring:new int[]{64,128,256})for(int[] a:axes){
+   double dx=a[0]*ring,dz=a[1]*ring;
+   double left=elevation.applyAsDouble(x-dx,z-dz),right=elevation.applyAsDouble(x+dx,z+dz);
+   peak=Math.max(peak,Math.max(left,right));
+   double w=(ring==64?1:ring==128?.55:.23)/Math.hypot(a[0],a[1]);
+   mean+=w*(left+right);weight+=2*w;
+   if(ring==64){nearMin=Math.min(nearMin,Math.min(left,right));nearMax=Math.max(nearMax,Math.max(left,right));}
+   if(ring==128){pairedHigh=Math.max(pairedHigh,Math.min(left,right));pairedLow=Math.min(pairedLow,Math.max(left,right));}
+   if(ring==256)farSupport=Math.max(farSupport,Math.min(left,right));
   }
   mean/=weight;
-  double ridge=smooth(115,170,center);
-  double foothill=smooth(75,105,center)*(1-ridge)*smooth(105,155,peak);
-  double lowland=Math.max(0,1-ridge-foothill);
-  double shoulder=clamp((peak-center)*.16,0,MAX_RAISE)*foothill;
-  double ridgeTexture=clamp((mean-center)*.08,-MAX_LOWER,0)*ridge;
-  return new Profile(lowland,foothill,ridge,clamp(shoulder+ridgeTexture,-MAX_LOWER,MAX_RAISE));
+  double plateau=smooth(112,146,center)*(1-smooth(5,24,nearMax-nearMin))*smooth(center-18,center-5,pairedHigh);
+  double valley=smooth(10,48,pairedHigh-center)*(1-smooth(125,180,center))*(1-plateau);
+  double ridge=smooth(114,168,center)*(1-plateau)*(1-valley);
+  double shoulders=smooth(75,101,center)*smooth(108,158,peak)*(1-plateau)*(1-valley)*(1-ridge);
+  double lowland=Math.max(0,1-plateau-valley-ridge-shoulders);
+  // Broad shoulders are supported by an existing elevated neighbourhood.
+  // High plateaux are gently smoothed, not converted to flat terraces.
+  double support=.65+.35*smooth(95,150,Math.max(farSupport,pairedHigh));
+  double raised=clamp((peak-center)*.27,0,MAX_RAISE)*shoulders*support;
+  double incised=-MAX_LOWER*valley*smooth(80,110,center);
+  double summit=clamp((mean-center)*.07,-2,0)*ridge*smooth(3,25,center-pairedLow);
+  double table=clamp((mean-center)*.10,-2,2)*plateau;
+  return new Profile(lowland,shoulders,ridge,valley,plateau,clamp(raised+incised+summit+table,-MAX_LOWER,MAX_RAISE));
  }
  private static Profile mix(Profile a,Profile b,double f){
-  return new Profile(GeoModel.lerp(a.lowland,b.lowland,f),GeoModel.lerp(a.foothill,b.foothill,f),GeoModel.lerp(a.ridge,b.ridge,f),GeoModel.lerp(a.delta,b.delta,f));
+  return new Profile(GeoModel.lerp(a.lowland,b.lowland,f),GeoModel.lerp(a.foothill,b.foothill,f),GeoModel.lerp(a.ridge,b.ridge,f),GeoModel.lerp(a.valley,b.valley,f),GeoModel.lerp(a.plateau,b.plateau,f),GeoModel.lerp(a.delta,b.delta,f));
  }
  static Profile sample(int x,int z,java.util.function.BiFunction<Integer,Integer,Profile> nodes){
   int gx=Math.floorDiv(x,GRID)*GRID,gz=Math.floorDiv(z,GRID)*GRID;
@@ -86,16 +100,20 @@ public final class LandscapeBlend{
   java.util.function.BiFunction<Integer,Integer,Profile> grid=(x,z)->profile(ridge,x,z);
   var shoulder=sample(96,0,grid);
   if(shoulder.foothill<=0||shoulder.delta<=0)throw new IllegalStateException("connected foothill support");
+  var table=profile((x,z)->155,0,0);
+  if(table.plateau<.95||table.delta!=0)throw new IllegalStateException("broad high plateau preserves level");
+  var valley=profile((x,z)->100+65*(1-Math.exp(-Math.pow(x/65,2))),0,0);
+  if(valley.valley<.9||valley.delta>=0)throw new IllegalStateException("elongated valley between opposing slopes");
   var flat=profile((x,z)->80,0,0);
   if(flat.delta!=0||flat.lowland!=1)throw new IllegalStateException("flat landscape changed");
   for(int x=-256;x<=256;x+=4)for(int z=-128;z<=128;z+=8){
    var p=sample(x,z,grid);
-   if(Math.abs(p.lowland+p.foothill+p.ridge-1)>1e-8||p.delta>MAX_RAISE+1e-8||p.delta< -MAX_LOWER-1e-8)throw new IllegalStateException("landscape profile weights/bounds");
+   if(Math.abs(p.lowland+p.foothill+p.ridge+p.valley+p.plateau-1)>1e-8||p.delta>MAX_RAISE+1e-8||p.delta< -MAX_LOWER-1e-8)throw new IllegalStateException("landscape profile weights/bounds");
    if(adjustment(p,70,63,false)!=0||adjustment(p,105,63,true)!=0||adjustment(p,230,63,false)!=0)throw new IllegalStateException("water/coast/summit guard");
   }
   for(int x:new int[]{-64,0,64}){
    var a=sample(x-1,0,grid);var b=sample(x+1,0,grid);
-   if(Math.abs(a.delta-b.delta)>.1)throw new IllegalStateException("landscape seam discontinuity");
+   if(Math.abs(a.delta-b.delta)>.15)throw new IllegalStateException("landscape seam discontinuity");
   }
  }
 }
