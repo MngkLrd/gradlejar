@@ -39,7 +39,7 @@ public final class Hydration {
  private static final WeakHashMap<ServerPlayer,Long> LAST_SIP=new WeakHashMap<>();
  public Hydration(IEventBus modBus){
   // Read both constants at runtime rather than inlining compile-time values.
-  try {if(WorldLogicApi.class.getField("API_VERSION").getInt(null)!=1||WorldLogicApi.class.getField("API_REVISION").getInt(null)<14)throw new IllegalStateException("Hydration requires World Logic API v1 revision 14 or later");}
+  try {if(WorldLogicApi.class.getField("API_VERSION").getInt(null)!=1||WorldLogicApi.class.getField("API_REVISION").getInt(null)<15)throw new IllegalStateException("Hydration requires World Logic API v1 revision 15 or later");}
   catch(ReflectiveOperationException e){throw new IllegalStateException("World Logic API revision unavailable",e);}
   HydrationItems.register(modBus);
   modBus.addListener(HydrationSync::register);

@@ -13,7 +13,17 @@ import net.minecraft.server.level.ServerPlayer;
 /** Public server-thread API. Hydration owns fluid balance, never foreign body state. */
 public final class HydrationApi {
  public static final int API_VERSION=1;
- public static final int API_REVISION=3;
+ public static final int API_REVISION=4;
+ /** Caller-supplied liquid temperature, no stored-temperature simulation. Empty for unknown or unsupported solutions. */
+ public static Optional<dev.minemods.worldlogic.api.PhysicalWater.Solution> liquidSolution(ItemStack stack,double temperatureC){
+  if(stack.getItem() instanceof VesselItem v)return dev.minemods.hydration.WaterPhysics.solution(v.read(stack),temperatureC);
+  return WaterBottle.read(stack).flatMap(b->dev.minemods.hydration.WaterPhysics.solution(b,temperatureC));
+ }
+ public static Optional<dev.minemods.worldlogic.api.PhysicalWater.Solution> tankSolution(ServerLevel level,BlockPos pos,double temperatureC){
+  if(!level.getServer().isSameThread())throw new IllegalStateException("Server thread required");
+  if(!level.hasChunkAt(pos)||!(level.getBlockEntity(pos) instanceof TankEntity tank))return Optional.empty();
+  return dev.minemods.hydration.WaterPhysics.solution(tank.water(),temperatureC);
+ }
  /** Reference-temperature SI parameters for water contents only, not the vessel shell. */
  public static Optional<dev.minemods.hydration.WaterPhysics.Properties> liquidPhysics(ItemStack stack){
   if(stack.getItem() instanceof VesselItem v)return Optional.of(dev.minemods.hydration.WaterPhysics.batch(v.read(stack)));

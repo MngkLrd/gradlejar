@@ -13,7 +13,7 @@ public final class WaterTreatment {
  public static WaterBatch filter(WaterBatch b){return treated(b,b.ml(),b.salinity(),b.risk()*.55,false);}
  public static WaterBatch boil(WaterBatch b){
   int ml=b.ml()-Math.max(1,b.ml()/20);
-  return treated(b,ml,b.ml()==0?0:Math.min(1000,b.salinity()*b.ml()/Math.max(1,ml)),b.risk()*.12,false);
+  return treated(b,ml,b.ml()==0?0:WaterPhysics.concentrated(b,ml).orElseGet(()->Math.min(1000,b.salinity()*b.ml()/Math.max(1,ml))),b.risk()*.12,false);
  }
  public static WaterBatch distill(WaterBatch b){return treated(b,b.ml()*7/10,0,.01,true);}
 }

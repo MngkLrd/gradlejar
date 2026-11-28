@@ -1,7 +1,7 @@
 package dev.minemods.hydration;
 import java.util.Set;
 import java.util.HashSet;
-/** Conserves volume, salt and modeled contamination in a closed transfer. */
+/** Conserves integer gameplay volume and modeled contamination; Core mass-weighted salinity for supported inputs. */
 public record WaterBatch(int ml, WaterBalance.Quality quality, double salinity, double risk, Set<String> origins,long updatedTick) {
  public WaterBatch {
   if(origins==null||origins.size()>16||origins.stream().anyMatch(x->x==null||!x.matches("[A-Z_]{1,32}")))throw new IllegalArgumentException("Invalid origins");
@@ -36,7 +36,7 @@ public record WaterBatch(int ml, WaterBalance.Quality quality, double salinity, 
   int moved=Math.min(requested,Math.min(source.ml,capacity-target.ml));
   if(moved==0)return new Transfer(source,target,0);
   int total=target.ml+moved;
-  double salt=(source.salinity*moved+target.salinity*target.ml)/total;
+  double salt=target.ml==0?source.salinity:WaterPhysics.mixed(source,target,moved).orElseGet(()->(source.salinity*moved+target.salinity*target.ml)/total);
   double dirt=(source.risk*moved+target.risk*target.ml)/total;
   var q=target.ml==0?source.quality:conservative(source.quality,target.quality);
   if(salt>=1)q=WaterBalance.Quality.DESALINATE;
