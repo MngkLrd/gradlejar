@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "ecosystem": "example",
+  "module": "example_provider",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "neoforge"
+  },
+  "provides": [
+    {
+      "id": "example:material_properties",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "example material properties"
+      ],
+      "entrypoints": [
+        "example.api.MaterialProperties"
+      ],
+      "documentation": "projects/example-provider/API.md"
+    }
+  ],
+  "consumes": [
+    {
+      "id": "example:environment",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "planned",
+      "fallback": "Use documented independent behavior without claiming environmental accuracy.",
+      "issue": "https://github.com/OWNER/REPOSITORY/issues/123"
+    }
+  ],
+  "tests": [
+    {
+      "id": "example.material_properties.contract",
+      "capabilities": [
+        "example:material_properties"
+      ],
+      "ref": "tools/qa/scenarios/example-provider.json",
+      "status": "planned"
+    }
+  ]
+}
