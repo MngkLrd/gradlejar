@@ -72,7 +72,7 @@ public final class ThermalEvents {
         ThermalInjury.apply(p,progress);
         LimbExposure.update(p,n,e,state);
         root.put(KEY,n);
-        ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),true,state.bodyC(),e.airC(),state.feelsLikeC(),state.trendCPerMinute(),e.wetness(),e.insulation(),e.radiantC(),sample.sheltered(),progress.kind(),sample.weather(),adapted.cold(),adapted.heat(),e.nutrition(),e.roomDelta(),sample.room()));
+        ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),true,state.bodyC(),e.airC(),state.feelsLikeC(),state.trendCPerMinute(),e.wetness(),e.insulation(),e.radiantC(),sample.sheltered(),progress.kind(),sample.weather(),adapted.cold(),adapted.heat(),e.nutrition(),e.roomDelta(),sample.room(),e.submerged()?e.waterC():Double.NaN));
         HistoryStore.tick(p,sample.weather(),state,e.airC());
     }
     static void penalty(ServerPlayer p,double amount) {
@@ -104,7 +104,7 @@ public final class ThermalEvents {
     }
     public static void registerCommands(RegisterCommandsEvent event) {
         var qa=Commands.literal("qa").requires(s->s.hasPermission(2));
-        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile","adaptation","frostbite","nutrition","room_inertia","room_ventilation","room_humidity","room_persistence","room_cache","village_climate","integration","water_exposure","room_response"}) {
+        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile","adaptation","frostbite","nutrition","room_inertia","room_ventilation","room_humidity","room_persistence","room_cache","village_climate","integration","water_exposure","room_response","hud_signals"}) {
             qa.then(Commands.literal(name).executes(c->{
                 ThermalChecks.verify(c.getSource().getLevel(),name);
                 c.getSource().sendSuccess(()->Component.literal("THERMAL_QA_"+name+"_PASS"),false);

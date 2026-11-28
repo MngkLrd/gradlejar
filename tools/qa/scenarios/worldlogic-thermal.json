@@ -212,6 +212,12 @@
       "command": "thermal qa room_response",
       "expect": "THERMAL_QA_room_response_PASS",
       "assertion": true
+    },
+    {
+      "name": "Responsive HUD layout, strong trend and signed temperature jumps",
+      "command": "thermal qa hud_signals",
+      "expect": "THERMAL_QA_hud_signals_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -542,6 +548,17 @@
         {
           "backend": "server",
           "name": "Uncapped room differential, thermal inertia, fresh public status"
+        }
+      ]
+    },
+    {
+      "id": "hud-signals",
+      "kind": "menu",
+      "subject": "Responsive HUD layout, strong trend and signed temperature jumps",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Responsive HUD layout, strong trend and signed temperature jumps"
         }
       ]
     }

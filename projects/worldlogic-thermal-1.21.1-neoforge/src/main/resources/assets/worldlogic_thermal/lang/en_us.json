@@ -220,5 +220,14 @@
   "tooltip.worldlogic_thermal.info.room_humidity": "Indoor relative humidity. Evaporative devices add vapor; heating without added water reduces relative humidity.",
   "tooltip.worldlogic_thermal.info.room_ventilation": "Modeled airflow index from 0 to 100%. Open doors, gaps and wind increase exchange with outdoor air.",
   "tooltip.worldlogic_thermal.info.room_mass": "Modeled wall and floor thermal mass temperature. It changes more slowly than air and retains heat after heating stops.",
-  "tooltip.worldlogic_thermal.info.room_volume": "Number of detected interior air and passable cells. Very large or open spaces may not be recognized."
+  "tooltip.worldlogic_thermal.info.room_volume": "Number of detected interior air and passable cells. Very large or open spaces may not be recognized.",
+  "hud.worldlogic_thermal.body": "Body",
+  "hud.worldlogic_thermal.room": "Inside",
+  "hud.worldlogic_thermal.air": "Air",
+  "hud.worldlogic_thermal.water": "Water",
+  "hud.worldlogic_thermal.felt": "Feels",
+  "hud.worldlogic_thermal.jump": "Shift",
+  "hud.worldlogic_thermal.wet": "Wet",
+  "hud.worldlogic_thermal.rate": "Rate",
+  "hud.worldlogic_thermal.state": "State"
 }

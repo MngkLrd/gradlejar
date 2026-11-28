@@ -28,7 +28,7 @@ final class ThermalPanel {
         g.drawString(f,body,x+w-14-f.width(body),y+25,color,true);
         String status=Component.translatable("stage.worldlogic_thermal."+stage.name().toLowerCase(Locale.ROOT)).getString();
         g.drawString(f,f.plainSubstrByWidth(status,w-32-f.width(body)),x+14,y+25,color,false);
-        ThermalHud.scale(g,x+10,y+41,w-20,stage.ordinal());
+        ThermalHud.scale(g,x+10,y+41,w-20,s.body());
         changingRow(g,x,y+50,w,"air",String.format(Locale.ROOT,"%+.1f °C",s.air()),ThermalColors.air(s.air()),old==null?0:s.air()-old.air(),.04);
         changingRow(g,x,y+61,w,"felt",String.format(Locale.ROOT,"%+.1f °C",s.felt()),ThermalColors.air(s.felt()),old==null?0:s.felt()-old.felt(),.04);
         changingRow(g,x,y+72,w,"wet",String.format(Locale.ROOT,"%.0f%%",s.wet()*100),s.wet()>.3?0xff255f99:0xff555555,old==null?0:s.wet()-old.wet(),.004);

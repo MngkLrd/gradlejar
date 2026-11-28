@@ -46,6 +46,15 @@ final class StabilityChecks {
       n.putLong("sampleTick",l.getGameTime()-41);
       require(dev.minemods.thermal.api.ThermalApi.status(p).isEmpty(),"expired status rejected");
     }
+    case "hud_signals" -> {
+      require(HudSignals.jump(20,25)==5&&HudSignals.jump(20,15)==-5&&HudSignals.jump(20,21)==0,"signed sudden change threshold");
+      require(HudSignals.trend(.6).equals("↑↑")&&HudSignals.trend(-.6).equals("↓↓")&&HudSignals.trend(0).equals("="),"strong trend distinguishable");
+      require(HudSignals.bodyPosition(30)==0&&HudSignals.bodyPosition(43)==1&&HudSignals.bodyPosition(37)>.5,"continuous body marker");
+      for(int width:new int[]{160,320,480,960}){
+        var r=dev.minemods.thermal.client.ThermalLayout.hud(width,180);
+        require(r.x()>=0&&r.y()>=0&&r.x()+r.w()<=width&&r.y()+r.h()<=180,"HUD in viewport");
+      }
+    }
     default -> throw new IllegalArgumentException(name);
    }
  }

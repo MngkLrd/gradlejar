@@ -178,7 +178,7 @@ final class ThermalChecks {
                 case "room_ventilation","room_humidity","room_persistence","room_cache" -> RoomChecks.verify(l,p,name);
                 case "village_climate" -> ClimateEvolutionChecks.settlement(l,p);
                 case "integration" -> IntegrationChecks.verify(l,p);
-                case "water_exposure","room_response" -> StabilityChecks.verify(l,p,name);
+                case "water_exposure","room_response","hud_signals" -> StabilityChecks.verify(l,p,name);
                 default -> throw new IllegalArgumentException(name);
             }
         } finally {

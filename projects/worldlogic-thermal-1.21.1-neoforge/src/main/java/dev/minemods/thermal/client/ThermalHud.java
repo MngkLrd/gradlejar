@@ -24,14 +24,14 @@ public final class ThermalHud {
     @SubscribeEvent public static void layers(RegisterGuiLayersEvent event){
         event.registerAboveAll(ResourceLocation.fromNamespaceAndPath(ThermalMod.ID,"temperature"),ThermalHud::render);
     }
-    static void scale(GuiGraphics g,int x,int y,int w,int stage){
-        g.fill(x-1,y-1,x+w+1,y+5,0xff1a1b1c);
+    static void scale(GuiGraphics g,int x,int y,int w,double body){
+        g.fill(x-1,y-1,x+w+1,y+4,0xff121212);
         for(int i=0;i<w;i++){
-            int c=ThermalColors.gradient((double)i/Math.max(1,w-1));
-            g.fill(x+i,y,x+i+1,y+4,c);
+            double c=30+13.0*i/Math.max(1,w-1);
+            g.fill(x+i,y,x+i+1,y+3,COLORS[ThermalModel.stage(c).ordinal()]);
         }
-        int m=x+(stage*w/7+(stage+1)*w/7)/2;
-        g.fill(m-1,y-2,m+2,y,0xffeeeeee);g.fill(m,y,m+1,y+4,0xffeeeeee);
+        int marker=x+(int)Math.round(dev.minemods.thermal.HudSignals.bodyPosition(body)*(w-1));
+        g.fill(marker-1,y-2,marker+2,y,0xfffaf5df);g.fill(marker,y,marker+1,y+4,0xfffaf5df);
     }
     private static void render(GuiGraphics g,DeltaTracker delta){
         var mc=Minecraft.getInstance();var p=mc.player;
@@ -39,20 +39,36 @@ public final class ThermalHud {
         var s=ThermalSync.current(p.getId());if(s==null||!s.active())return;
         var r=ThermalLayout.hud(g.guiWidth(),g.guiHeight());int x=r.x(),y=r.y(),w=r.w();
         var stage=ThermalModel.stage(s.body());int color=COLORS[stage.ordinal()];
-        g.fill(x+1,y+1,x+w+1,y+r.h()+1,0x70000000);
-        g.fill(x,y,x+w,y+r.h(),0xcf252729);
-        g.fill(x+1,y+1,x+w-1,y+2,0xff67696a);g.fill(x+1,y+2,x+2,y+r.h()-1,0xff4c4e50);
-        g.fill(x+2,y+r.h()-2,x+w-1,y+r.h()-1,0xff171819);g.fill(x+w-2,y+2,x+w-1,y+r.h()-1,0xff171819);
-        g.drawString(mc.font,String.format(Locale.ROOT,"%.1f°",s.body()),x+6,y+4,color,true);
-        String trend=ThermalColors.arrow(s.trend());
-        g.drawString(mc.font,trend,x+w-13,y+4,ThermalColors.trend(s.trend()),true);
-        g.fill(x+8,y+14,x+w-5,y+15,0x504e5052);
-        g.drawString(mc.font,String.format(Locale.ROOT,"%+.0f°",s.air()),x+6,y+16,0xffd3d6d7,true);
-        // Only show a recognizable drop when wet and a sun glyph when local radiant heat exists.
-        if(s.wet()>.05){int dx=x+w-23,dy=y+16;g.fill(dx+2,dy,dx+3,dy+2,0xff78b4e1);g.fill(dx+1,dy+2,dx+4,dy+4,0xff78b4e1);g.fill(dx,dy+4,dx+5,dy+6,0xff78b4e1);g.fill(dx+1,dy+6,dx+4,dy+7,0xff78b4e1);}
-        if(s.radiant()>.5){int dx=x+w-12,dy=y+16;g.fill(dx+2,dy,dx+4,dy+7,0xffe99b54);g.fill(dx,dy+2,dx+6,dy+5,0xffe99b54);g.fill(dx+2,dy+2,dx+4,dy+5,0xffffd78a);}
-        if(s.condition()!=ThermalCondition.Kind.NONE)g.fill(x+3,y+3,x+4,y+23,0xffd64b40);
-        scale(g,x+5,y+27,w-10,stage.ordinal());
+        // Pixel-aligned bevel and inset, based on the vanilla inventory/status widget.
+        g.fill(x+1,y+1,x+w+1,y+r.h()+1,0x80000000);
+        g.fill(x,y,x+w,y+r.h(),0xee171717);
+        g.fill(x+1,y+1,x+w-1,y+r.h()-1,0xff858585);
+        g.fill(x+1,y+1,x+w-2,y+2,0xffdedede);g.fill(x+1,y+2,x+2,y+r.h()-2,0xffdedede);
+        g.fill(x+w-2,y+2,x+w-1,y+r.h()-1,0xff383838);g.fill(x+2,y+r.h()-2,x+w-1,y+r.h()-1,0xff383838);
+        g.fill(x+3,y+3,x+w-3,y+r.h()-3,0xe5232525);
+        var font=mc.font;
+        String body=String.format(Locale.ROOT,"%.1f°",s.body())+" "+dev.minemods.thermal.HudSignals.trend(s.trend());
+        row(g,font,x,y+5,w,"body",body,color);
+        boolean water=Double.isFinite(s.waterC());
+        double local=water?s.waterC():s.room().indoor()?s.room().airC():s.air();
+        row(g,font,x,y+15,w,water?"water":s.room().indoor()?"room":"air",String.format(Locale.ROOT,"%+.1f°",local),water?0xff91c8f0:0xffe0ded4);
+        row(g,font,x,y+25,w,"felt",String.format(Locale.ROOT,"%+.1f°",s.felt()),s.felt()<12?0xff91c8f0:s.felt()>28?0xffffa363:0xffc7dfb4);
+        scale(g,x+6,y+36,w-12,s.body());
+        row(g,font,x,y+43,w,"rate",String.format(Locale.ROOT,"%+.2f°/m",s.trend()),ThermalColors.trend(s.trend()));
+        double jump=ThermalSync.recentJump(p.getId());
+        if(s.condition()!=ThermalCondition.Kind.NONE)g.fill(x+3,y+4,x+4,y+34,0xffd64b40);
+        if(jump!=0)row(g,font,x,y+53,w,"jump",String.format(Locale.ROOT,"%s %+.1f°",jump>0?"↑↑":"↓↓",jump),ThermalColors.trend(jump));
+        else if(s.wet()>.05)row(g,font,x,y+53,w,"wet",String.format(Locale.ROOT,"%.0f%%",s.wet()*100),0xff92c9ef);
+        else row(g,font,x,y+53,w,"state",Component.translatable("stage.worldlogic_thermal."+stage.name().toLowerCase(Locale.ROOT)).getString(),color);
+    }
+    private static void row(GuiGraphics g,net.minecraft.client.gui.Font font,int x,int y,int w,String label,String value,int color){
+        int right=x+w-6;
+        String name=Component.translatable("hud.worldlogic_thermal."+label).getString();
+        int maxValue=Math.max(0,w-16-Math.min(30,font.width(name)));
+        String v=font.plainSubstrByWidth(value,maxValue);
+        int vx=right-font.width(v);
+        g.drawString(font,font.plainSubstrByWidth(name,Math.max(0,vx-x-9)),x+6,y,0xffbdbdb7,true);
+        g.drawString(font,v,vx,y,color,true);
     }
     @EventBusSubscriber(modid=ThermalMod.ID,bus=EventBusSubscriber.Bus.GAME,value=Dist.CLIENT)
     public static final class Connection {

@@ -220,5 +220,14 @@
   "tooltip.worldlogic_thermal.info.room_humidity": "Относительная влажность воздуха внутри. Испарительные устройства добавляют влагу; отопление без добавления воды снижает относительную влажность.",
   "tooltip.worldlogic_thermal.info.room_ventilation": "Условная интенсивность воздухообмена от 0 до 100%. Открытые двери, проёмы и ветер ускоряют обмен с наружным воздухом.",
   "tooltip.worldlogic_thermal.info.room_mass": "Расчётная температура тепловой массы стен и пола. Она меняется медленнее воздуха и поддерживает тепло после выключения отопления.",
-  "tooltip.worldlogic_thermal.info.room_volume": "Число распознанных внутренних блоков воздуха и проходимых клеток. Большие или открытые помещения могут не распознаваться."
+  "tooltip.worldlogic_thermal.info.room_volume": "Число распознанных внутренних блоков воздуха и проходимых клеток. Большие или открытые помещения могут не распознаваться.",
+  "hud.worldlogic_thermal.body": "Тело",
+  "hud.worldlogic_thermal.room": "Внутри",
+  "hud.worldlogic_thermal.air": "Воздух",
+  "hud.worldlogic_thermal.water": "Вода",
+  "hud.worldlogic_thermal.felt": "Ощущ.",
+  "hud.worldlogic_thermal.jump": "Скачок",
+  "hud.worldlogic_thermal.wet": "Мокро",
+  "hud.worldlogic_thermal.rate": "Темп",
+  "hud.worldlogic_thermal.state": "Статус"
 }

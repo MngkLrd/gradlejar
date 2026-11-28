@@ -11,21 +11,24 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 public final class ThermalSync {
     public record Snapshot(int entityId, boolean active, double body, double air, double felt,
-                           double trend, double wet, double insulation, double radiant, boolean sheltered, ThermalCondition.Kind condition, WeatherReading weather,double coldAdaptation,double heatAdaptation,double nutrition,double roomDelta,RoomReading room)
+                           double trend, double wet, double insulation, double radiant, boolean sheltered, ThermalCondition.Kind condition, WeatherReading weather,double coldAdaptation,double heatAdaptation,double nutrition,double roomDelta,RoomReading room,double waterC)
             implements CustomPacketPayload {
         public Snapshot(int entityId,boolean active,double body,double air,double felt,double trend,double wet,double insulation,double radiant,boolean sheltered,ThermalCondition.Kind condition,WeatherReading weather,double coldAdaptation,double heatAdaptation,double nutrition,double roomDelta){
-            this(entityId,active,body,air,felt,trend,wet,insulation,radiant,sheltered,condition,weather,coldAdaptation,heatAdaptation,nutrition,roomDelta,RoomReading.outside(air,weather.humidity()));
+            this(entityId,active,body,air,felt,trend,wet,insulation,radiant,sheltered,condition,weather,coldAdaptation,heatAdaptation,nutrition,roomDelta,RoomReading.outside(air,weather.humidity()),Double.NaN);
+        }
+        public Snapshot(int entityId,boolean active,double body,double air,double felt,double trend,double wet,double insulation,double radiant,boolean sheltered,ThermalCondition.Kind condition,WeatherReading weather,double coldAdaptation,double heatAdaptation,double nutrition,double roomDelta,RoomReading room){
+            this(entityId,active,body,air,felt,trend,wet,insulation,radiant,sheltered,condition,weather,coldAdaptation,heatAdaptation,nutrition,roomDelta,room,Double.NaN);
         }
         public static final Type<Snapshot> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath("worldlogic_thermal", "state"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Snapshot> CODEC = new StreamCodec<>() {
             @Override public Snapshot decode(RegistryFriendlyByteBuf b) {
                 return new Snapshot(b.readVarInt(), b.readBoolean(), b.readDouble(), b.readDouble(), b.readDouble(),
-                    b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readBoolean(), b.readEnum(ThermalCondition.Kind.class),readWeather(b),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble(),new RoomReading(b.readBoolean(),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble(),b.readVarInt()));
+                    b.readDouble(), b.readDouble(), b.readDouble(), b.readDouble(), b.readBoolean(), b.readEnum(ThermalCondition.Kind.class),readWeather(b),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble(),new RoomReading(b.readBoolean(),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble(),b.readVarInt()),b.readDouble());
             }
             @Override public void encode(RegistryFriendlyByteBuf b, Snapshot s) {
                 b.writeVarInt(s.entityId); b.writeBoolean(s.active); b.writeDouble(s.body); b.writeDouble(s.air);
                 b.writeDouble(s.felt); b.writeDouble(s.trend); b.writeDouble(s.wet); b.writeDouble(s.insulation);
-                b.writeDouble(s.radiant); b.writeBoolean(s.sheltered); b.writeEnum(s.condition); writeWeather(b,s.weather);b.writeDouble(s.coldAdaptation);b.writeDouble(s.heatAdaptation);b.writeDouble(s.nutrition);b.writeDouble(s.roomDelta);b.writeBoolean(s.room.indoor());b.writeDouble(s.room.airC());b.writeDouble(s.room.humidity());b.writeDouble(s.room.ventilation());b.writeDouble(s.room.massC());b.writeVarInt(s.room.volume());
+                b.writeDouble(s.radiant); b.writeBoolean(s.sheltered); b.writeEnum(s.condition); writeWeather(b,s.weather);b.writeDouble(s.coldAdaptation);b.writeDouble(s.heatAdaptation);b.writeDouble(s.nutrition);b.writeDouble(s.roomDelta);b.writeBoolean(s.room.indoor());b.writeDouble(s.room.airC());b.writeDouble(s.room.humidity());b.writeDouble(s.room.ventilation());b.writeDouble(s.room.massC());b.writeVarInt(s.room.volume());b.writeDouble(s.waterC());
             }
         };
         @Override public Type<Snapshot> type() { return TYPE; }
@@ -39,18 +42,25 @@ public final class ThermalSync {
     private static WeatherReading readWeather(RegistryFriendlyByteBuf b){
         return new WeatherReading(b.readUtf(256),b.readUtf(256),b.readInt(),b.readBoolean(),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble(),b.readVarInt(),b.readDouble(),b.readBoolean(),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble(),b.readUtf(48),b.readDouble(),b.readDouble(),b.readDouble(),b.readDouble());
     }
-    private record Received(Snapshot snapshot, Snapshot previous, long time) {}
+    private record Received(Snapshot snapshot, Snapshot previous, long time, double jump, long jumpTime) {}
     private static volatile Received latest;
     private ThermalSync() {}
     public static void register(RegisterPayloadHandlersEvent event) {
-        event.registrar("5").playToClient(Snapshot.TYPE, Snapshot.CODEC,
+        event.registrar("6").playToClient(Snapshot.TYPE, Snapshot.CODEC,
             (s, context) -> accept(s));
         HistorySync.register(event);
     }
     private static void accept(Snapshot s){
         long now=System.nanoTime();Received old=latest;
-        Snapshot previous=old!=null&&old.snapshot().entityId()==s.entityId()&&old.snapshot().active()&&s.active()&&now-old.time()<3_000_000_000L?old.snapshot():null;
-        latest=new Received(s,previous,now);
+        Snapshot previous=old!=null&&old.snapshot().entityId()==s.entityId()&&old.snapshot().active()&&s.active()&&old.snapshot().weather().dimension().equals(s.weather().dimension())&&now-old.time()<3_000_000_000L?old.snapshot():null;
+        double jump=previous==null?0:dev.minemods.thermal.HudSignals.jump(previous.felt(),s.felt());
+        long jumpTime=jump!=0?now:previous!=null?old.jumpTime():0;
+        if(jump==0&&previous!=null&&now-jumpTime<4_000_000_000L)jump=old.jump();
+        latest=new Received(s,previous,now,jump,jumpTime);
+    }
+    public static double recentJump(int id){
+        Received r=latest;
+        return r!=null&&r.snapshot().entityId()==id&&System.nanoTime()-r.jumpTime()<4_000_000_000L?r.jump():0;
     }
     public static Snapshot previous(int id){
         Received r=latest;
