@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:arctic_coast",
+    "worldlogic:rocky_coast",
+    "worldlogic:temperate_sandy_coast",
+    "worldlogic:tropical_sandy_coast"
+  ]
+}
