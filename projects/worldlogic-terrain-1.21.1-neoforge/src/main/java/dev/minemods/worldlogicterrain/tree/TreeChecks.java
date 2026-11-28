@@ -195,6 +195,8 @@ public final class TreeChecks {
             l.setBlock(CENTER.east(2),Blocks.STONE.defaultBlockState(),2);
             require(!EcologicalTreeFeature.fallen(l,CENTER,"willow",Direction.EAST,4)&&l.getBlockState(CENTER).isAir(),"Fallen log overwrote obstacle");
             clear(l);
+            MossyDeadwoodChecks.verify(l,CENTER);
+            clear(l);
             for(String species:List.of("oak","birch","spruce","willow","larch","pine","fir","cedar","maple","beech","alder","palm","date_palm","baobab","ebony","mahogany")){
                 require(EcologicalTreeFeature.recruit(l,CENTER,species),"Forest recruitment failed "+species);
                 require(l.getBlockState(CENTER).getBlock() instanceof SaplingBlock,"Recruit not a real sapling "+species);

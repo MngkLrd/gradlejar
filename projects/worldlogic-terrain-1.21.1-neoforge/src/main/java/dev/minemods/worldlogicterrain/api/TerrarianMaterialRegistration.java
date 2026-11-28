@@ -25,6 +25,13 @@ public final class TerrarianMaterialRegistration {
         wood("baobab",250,0.7,25,1.8,0.45);
         wood("ebony",1000,13,155,0.48,0.43);
         wood("mahogany",590,3.8,86,0.65,0.62);
+        // Moss is superficial bark cover, not a second wood species or invented mass.
+        for(String wood:dev.minemods.worldlogicterrain.tree.MossyDeadwood.SPECIES){
+            var original=dev.minemods.worldlogicterrain.tree.MossyDeadwood.originalId(wood);
+            var material=ResourceLocation.fromNamespaceAndPath(original.getNamespace().equals("minecraft")?"worldlogic":"worldlogicterrain",wood);
+            PhysicalMaterials.registerObject(PhysicalMaterials.Domain.BLOCK,
+                dev.minemods.worldlogicterrain.tree.MossyDeadwood.mossyId(wood),List.of(new PhysicalMaterials.Component(material,1)));
+        }
     }
     private static void wood(String name,double densityAtTwelvePercent,double jankaKN,double bendingMPa,double greenMoistureKgKg,double flammability){
         var material=id(name);

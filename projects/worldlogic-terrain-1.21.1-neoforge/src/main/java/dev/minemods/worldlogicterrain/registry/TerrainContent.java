@@ -57,6 +57,9 @@ public final class TerrainContent {
         tree("baobab");
         tree("ebony");
         tree("mahogany");
+        for(String species:dev.minemods.worldlogicterrain.tree.MossyDeadwood.SPECIES)
+            wood("mossy_"+species+"_log",()->new RotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(
+                Blocks.OAK_LOG)));
         plant("meadow_grass", false);
         plant("frosted_grass", false);
         plant("dense_meadow_grass", false);

@@ -12,3 +12,6 @@ Core is the required parent; ecosystem declaration matches the Core RC55 branch 
 `api.WoodPhysicsApi` revision 3, `available()`, `profiles()`, `profile(BlockState/ResourceLocation)`, `sample(ServerLevel,BlockPos)` and `atMoisture(Profile,double percent)`. Density kg/m³, hardness N, bending MPa, moisture dry-mass percent; mass kg for supplied volume m³. Core revision 2 owns physical calculations; older Core => empty queries and unsupported explicit moisture evaluation. Nether Janka unknown. See README for diagnostic dependency and QA provenance.
 
 Snapshot.count() exposes the persistent 1..4 fruiting capacity; legacy constructor defaults to one. Harvest yield equals count, same-species placement increments capacity up to four, daughter colonies start at one.
+
+## Mossy deadwood v1 revision 0
+`tree.MossyDeadwood.original(BlockState)` returns original log resource ID or empty; `suitable(CoreHabitat.Sample)` checks local moss ecological constraints, not a climate model. Moss variants use Core original material composition, retain log axes and block tags; no independent wood profile.

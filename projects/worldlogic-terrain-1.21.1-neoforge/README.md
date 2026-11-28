@@ -1,4 +1,4 @@
-# WorldLogic Terrarian 1.6.1
+# WorldLogic Terrarian 1.6.2
 Minecraft 1.21.1, NeoForge, Java 21, Gradle 9.2.1, official mappings. Requires WorldLogic RC20+ API v1. Build verifies pinned RC20 JAR; no shaded core. Runtime QA installs the same dependency. Metadata minimum 21.1.80, QA pin 21.1.262.
 32 plants, 46 textures (20 old + 26 new), 12 new edible items, block items, loot, RU/EN and natural tab. Surface and vegetation movement uses core API as before.
 Worldgen: 32 separate configured and placed random-patch features, 22 editable biome tags, NeoForge add_features at vegetal_decoration. All WorldLogic presets use the standard overworld multi_noise biome source and their own noise settings. No overwriting core presets, no new dimensions, no forced chunk loading/retrogen. Features also run in vanilla overworld biomes if the core is installed; biome modifiers deliberately act at the shared decoration layer. Existing chunks do not regenerate. Tall wetland plants support mud/clay. Plant distribution is biome/ground based, not direct climate API access (server API is not safe on worldgen threads).
@@ -76,3 +76,6 @@ RC54 candidate dependency provenance: run 46103365227, artifact 15246915092, com
 
 
 1.6.1: fix missing SoilExhaustion import. Candle-inspired (Minecraft 1.21.1 blockstates and four-candle template inspected, no copied assets/code) count=1..4 independent of age. Same species can be stacked by placement; mature group harvests exactly count items, retains count through mycelium and regrowth. Natural colonies generate mixed counts, daughter mycelium starts at one. Existing 1.6.0 states default to one. No mixed species within one block.
+
+
+1.6.2: Mossy variants of twelve forest woods retain the original species and horizontal log axis; Core material composition aliases original wood rather than creating duplicate species. Existing rare fallen trunk generator selects moss only for actual humid, nonfrozen, nonflooded boreal/temperate/wet habitat samples (>=0.60 moisture, <=0.48 dryness, 1..32 C). Every trunk cell and ground carpet is independently checked. Vanilla moss carpet on free trunk tops and scattered adjacent suitable ground; no replacement of trees, water or other established plants. No separate moss population or retrogen. Bark models use original log textures with native moss-texture patches; no new PNGs or redistributed vanilla textures. Core fallback without worldgen sampler leaves ordinary fallen logs unchanged.
