@@ -1637,6 +1637,376 @@
         "context_type": "icon_family",
         "reference_source": "https://github.com/misode/mcmeta/blob/1.21.1-assets/assets/minecraft/textures/item/book.png ; target archive decoded PNG inspected and SHA-256 calculated; official client not independently checked."
       }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/bauxite.png": {
+      "sha256": "05dbc0d2be2238407a6cf331fef069c0bae1638700e47e1d3bfb981c7f220a1a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Inspected the actual transparent 16x16 mineral icon and target vanilla raw_iron asset: orange-brown broad irregular clump; both use irregular stepped item contours, but this mineral uses its own earthy warm tones and rounded outline. Static inventory-sprite review only.",
+      "findings": {
+        "silhouette": "orange-brown broad irregular clump",
+        "cluster_structure": "peach and tan clusters over brown base",
+        "micro_contrast": "pale upper left tan face",
+        "light_and_volume": "Upper planes sit above brown shadow on lower rim, defining a small solid fragment.",
+        "material_continuity": "peach and tan clusters over brown base; related hues remain within the mineral mass.",
+        "edge_variation": "Stepped outer contour around orange-brown broad irregular clump avoids a rectangular tile.",
+        "variant_identity": "earthy warm tones and rounded outline",
+        "vanilla_comparison": "Actual 1.21.1 raw_iron sprite is a comparator for small fragment silhouettes and face lighting, not a mineral species template.",
+        "functional_material_cues": "Inventory specimen reads as a discrete mineral fragment with pale upper left tan face rather than a full ore block."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The atlas has no matching raw mineral specimen icon rule; ore block rules apply to tiling host rock, not an isolated inventory sprite.",
+        "reference_source": "https://github.com/misode/mcmeta/blob/1.21.1-assets/assets/minecraft/textures/item/raw_iron.png ; decoded target-version PNG inspected, Git blob d8a8dd173d7a2ddd07d704372e1792d1543ed9c6, SHA-256 computed from bytes; official client not separately downloaded.",
+        "applied_pattern": "Use irregular fragment edges and connected upper/lower color planes: peach and tan clusters over brown base.",
+        "reference_limit": "Vanilla comparator is a different mineral and does not establish geological identity or game rendering.",
+        "native_view": "Inspected the actual 16px candidate: pale upper left tan face and brown shadow on lower rim.",
+        "context_view": "Inspected the set of ten actual item icons and vanilla comparator: earthy warm tones and rounded outline. No graphical inventory session claimed.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/cassiterite.png": {
+      "sha256": "5eb220b690ea8f5346b465b9665e61402d7193cfa5f47721a716cab62d5b7614",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Inspected the actual transparent 16x16 mineral icon and target vanilla raw_iron asset: compact uneven brown lump with raised middle; both use irregular stepped item contours, but this mineral uses its own more subdued brown and less orange than bauxite. Static inventory-sprite review only.",
+      "findings": {
+        "silhouette": "compact uneven brown lump with raised middle",
+        "cluster_structure": "tan flecks within deeper brown planes",
+        "micro_contrast": "gold-brown upper cluster",
+        "light_and_volume": "Upper planes sit above dark brown bottom edge, defining a small solid fragment.",
+        "material_continuity": "tan flecks within deeper brown planes; related hues remain within the mineral mass.",
+        "edge_variation": "Stepped outer contour around compact uneven brown lump with raised middle avoids a rectangular tile.",
+        "variant_identity": "more subdued brown and less orange than bauxite",
+        "vanilla_comparison": "Actual 1.21.1 raw_iron sprite is a comparator for small fragment silhouettes and face lighting, not a mineral species template.",
+        "functional_material_cues": "Inventory specimen reads as a discrete mineral fragment with gold-brown upper cluster rather than a full ore block."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The atlas has no matching raw mineral specimen icon rule; ore block rules apply to tiling host rock, not an isolated inventory sprite.",
+        "reference_source": "https://github.com/misode/mcmeta/blob/1.21.1-assets/assets/minecraft/textures/item/raw_iron.png ; decoded target-version PNG inspected, Git blob d8a8dd173d7a2ddd07d704372e1792d1543ed9c6, SHA-256 computed from bytes; official client not separately downloaded.",
+        "applied_pattern": "Use irregular fragment edges and connected upper/lower color planes: tan flecks within deeper brown planes.",
+        "reference_limit": "Vanilla comparator is a different mineral and does not establish geological identity or game rendering.",
+        "native_view": "Inspected the actual 16px candidate: gold-brown upper cluster and dark brown bottom edge.",
+        "context_view": "Inspected the set of ten actual item icons and vanilla comparator: more subdued brown and less orange than bauxite. No graphical inventory session claimed.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/cinnabar.png": {
+      "sha256": "92364dfb5beae21de8cf061c63eb5b48904a706df33ff1663be35e589ca1a142",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_copper",
+          "minecraft": "1.21.1",
+          "sha256": "2cdb294f66fda088faf7e606a8412993d01120e29ea3f440d800111fc9b9313a"
+        }
+      ],
+      "comparison": "Inspected the actual transparent 16x16 mineral icon and target vanilla raw_copper asset: small irregular rounded red fragment; both use irregular stepped item contours, but this mineral uses its own red hue distinguishes the mineral from orange-brown ores. Static inventory-sprite review only.",
+      "findings": {
+        "silhouette": "small irregular rounded red fragment",
+        "cluster_structure": "muted pink-red planes with dark crimson gaps",
+        "micro_contrast": "pink-red patches on upper surface",
+        "light_and_volume": "Upper planes sit above maroon lower edge, defining a small solid fragment.",
+        "material_continuity": "muted pink-red planes with dark crimson gaps; related hues remain within the mineral mass.",
+        "edge_variation": "Stepped outer contour around small irregular rounded red fragment avoids a rectangular tile.",
+        "variant_identity": "red hue distinguishes the mineral from orange-brown ores",
+        "vanilla_comparison": "Actual 1.21.1 raw_copper sprite is a comparator for small fragment silhouettes and face lighting, not a mineral species template.",
+        "functional_material_cues": "Inventory specimen reads as a discrete mineral fragment with pink-red patches on upper surface rather than a full ore block."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_copper",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The atlas has no matching raw mineral specimen icon rule; ore block rules apply to tiling host rock, not an isolated inventory sprite.",
+        "reference_source": "https://github.com/misode/mcmeta/blob/1.21.1-assets/assets/minecraft/textures/item/raw_copper.png ; decoded target-version PNG inspected, Git blob 84c6d60ddc69727cc148990ff2ee6ab6ab3c8cb4, SHA-256 computed from bytes; official client not separately downloaded.",
+        "applied_pattern": "Use irregular fragment edges and connected upper/lower color planes: muted pink-red planes with dark crimson gaps.",
+        "reference_limit": "Vanilla comparator is a different mineral and does not establish geological identity or game rendering.",
+        "native_view": "Inspected the actual 16px candidate: pink-red patches on upper surface and maroon lower edge.",
+        "context_view": "Inspected the set of ten actual item icons and vanilla comparator: red hue distinguishes the mineral from orange-brown ores. No graphical inventory session claimed.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/fluorite.png": {
+      "sha256": "170f1b793c65f8a5c0a2d28817c567c1bd63952dc87e12b25f44487c168c13f6",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/amethyst_shard",
+          "minecraft": "1.21.1",
+          "sha256": "24fa75f6b75202d890019ec7a901d525918cfacd3e8c0e6cb0580c7b7933b363"
+        }
+      ],
+      "comparison": "Inspected the actual transparent 16x16 mineral icon and target vanilla amethyst_shard asset: low, stepped violet crystal cluster; both use irregular stepped item contours, but this mineral uses its own lavender instead of warm earth tones. Static inventory-sprite review only.",
+      "findings": {
+        "silhouette": "low, stepped violet crystal cluster",
+        "cluster_structure": "blue-violet planes with pale purple facets",
+        "micro_contrast": "light lilac upper facets",
+        "light_and_volume": "Upper planes sit above indigo lower faces, defining a small solid fragment.",
+        "material_continuity": "blue-violet planes with pale purple facets; related hues remain within the mineral mass.",
+        "edge_variation": "Stepped outer contour around low, stepped violet crystal cluster avoids a rectangular tile.",
+        "variant_identity": "lavender instead of warm earth tones",
+        "vanilla_comparison": "Actual 1.21.1 amethyst_shard sprite is a comparator for small fragment silhouettes and face lighting, not a mineral species template.",
+        "functional_material_cues": "Inventory specimen reads as a discrete mineral fragment with light lilac upper facets rather than a full ore block."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/amethyst_shard",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The atlas has no matching raw mineral specimen icon rule; ore block rules apply to tiling host rock, not an isolated inventory sprite.",
+        "reference_source": "https://github.com/misode/mcmeta/blob/1.21.1-assets/assets/minecraft/textures/item/amethyst_shard.png ; decoded target-version PNG inspected, Git blob fd134b0a340158362ceba373fecbc1ccaa81ed63, SHA-256 computed from bytes; official client not separately downloaded.",
+        "applied_pattern": "Use irregular fragment edges and connected upper/lower color planes: blue-violet planes with pale purple facets.",
+        "reference_limit": "Vanilla comparator is a different mineral and does not establish geological identity or game rendering.",
+        "native_view": "Inspected the actual 16px candidate: light lilac upper facets and indigo lower faces.",
+        "context_view": "Inspected the set of ten actual item icons and vanilla comparator: lavender instead of warm earth tones. No graphical inventory session claimed.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/galena.png": {
+      "sha256": "4234ae5566db41795de4b5249462d347f1795c84d07fd51b622f42763265c582",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Inspected the actual transparent 16x16 mineral icon and target vanilla raw_iron asset: blocky irregular silver-gray fragment; both use irregular stepped item contours, but this mineral uses its own brighter, more angular silver than magnetite. Static inventory-sprite review only.",
+      "findings": {
+        "silhouette": "blocky irregular silver-gray fragment",
+        "cluster_structure": "pale gray angular top over blue-gray base",
+        "micro_contrast": "light gray stepped upper faces",
+        "light_and_volume": "Upper planes sit above slate underside, defining a small solid fragment.",
+        "material_continuity": "pale gray angular top over blue-gray base; related hues remain within the mineral mass.",
+        "edge_variation": "Stepped outer contour around blocky irregular silver-gray fragment avoids a rectangular tile.",
+        "variant_identity": "brighter, more angular silver than magnetite",
+        "vanilla_comparison": "Actual 1.21.1 raw_iron sprite is a comparator for small fragment silhouettes and face lighting, not a mineral species template.",
+        "functional_material_cues": "Inventory specimen reads as a discrete mineral fragment with light gray stepped upper faces rather than a full ore block."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The atlas has no matching raw mineral specimen icon rule; ore block rules apply to tiling host rock, not an isolated inventory sprite.",
+        "reference_source": "https://github.com/misode/mcmeta/blob/1.21.1-assets/assets/minecraft/textures/item/raw_iron.png ; decoded target-version PNG inspected, Git blob d8a8dd173d7a2ddd07d704372e1792d1543ed9c6, SHA-256 computed from bytes; official client not separately downloaded.",
+        "applied_pattern": "Use irregular fragment edges and connected upper/lower color planes: pale gray angular top over blue-gray base.",
+        "reference_limit": "Vanilla comparator is a different mineral and does not establish geological identity or game rendering.",
+        "native_view": "Inspected the actual 16px candidate: light gray stepped upper faces and slate underside.",
+        "context_view": "Inspected the set of ten actual item icons and vanilla comparator: brighter, more angular silver than magnetite. No graphical inventory session claimed.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/hematite.png": {
+      "sha256": "ce72c988d28a066026ace6d84912a5ef85f9bc30d2d62330d8b7d4b1e31680a9",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Inspected the actual transparent 16x16 mineral icon and target vanilla raw_iron asset: flattened irregular reddish-brown stone; both use irregular stepped item contours, but this mineral uses its own subdued red-brown contrasts with vivid cinnabar. Static inventory-sprite review only.",
+      "findings": {
+        "silhouette": "flattened irregular reddish-brown stone",
+        "cluster_structure": "rose-brown face over charcoal gray lower edge",
+        "micro_contrast": "muted pink upper cluster",
+        "light_and_volume": "Upper planes sit above dark gray-brown underside, defining a small solid fragment.",
+        "material_continuity": "rose-brown face over charcoal gray lower edge; related hues remain within the mineral mass.",
+        "edge_variation": "Stepped outer contour around flattened irregular reddish-brown stone avoids a rectangular tile.",
+        "variant_identity": "subdued red-brown contrasts with vivid cinnabar",
+        "vanilla_comparison": "Actual 1.21.1 raw_iron sprite is a comparator for small fragment silhouettes and face lighting, not a mineral species template.",
+        "functional_material_cues": "Inventory specimen reads as a discrete mineral fragment with muted pink upper cluster rather than a full ore block."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The atlas has no matching raw mineral specimen icon rule; ore block rules apply to tiling host rock, not an isolated inventory sprite.",
+        "reference_source": "https://github.com/misode/mcmeta/blob/1.21.1-assets/assets/minecraft/textures/item/raw_iron.png ; decoded target-version PNG inspected, Git blob d8a8dd173d7a2ddd07d704372e1792d1543ed9c6, SHA-256 computed from bytes; official client not separately downloaded.",
+        "applied_pattern": "Use irregular fragment edges and connected upper/lower color planes: rose-brown face over charcoal gray lower edge.",
+        "reference_limit": "Vanilla comparator is a different mineral and does not establish geological identity or game rendering.",
+        "native_view": "Inspected the actual 16px candidate: muted pink upper cluster and dark gray-brown underside.",
+        "context_view": "Inspected the set of ten actual item icons and vanilla comparator: subdued red-brown contrasts with vivid cinnabar. No graphical inventory session claimed.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/magnetite.png": {
+      "sha256": "b8f54d8cbe0d914bd78f8141b8321e64bf2f26c481f0ad75ba649b2d47e722f0",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Inspected the actual transparent 16x16 mineral icon and target vanilla raw_iron asset: compact dark angular fragment; both use irregular stepped item contours, but this mineral uses its own dark neutral ramp, darker than galena. Static inventory-sprite review only.",
+      "findings": {
+        "silhouette": "compact dark angular fragment",
+        "cluster_structure": "charcoal and cool gray planes",
+        "micro_contrast": "small cool gray highlights at top",
+        "light_and_volume": "Upper planes sit above deep blue-black base, defining a small solid fragment.",
+        "material_continuity": "charcoal and cool gray planes; related hues remain within the mineral mass.",
+        "edge_variation": "Stepped outer contour around compact dark angular fragment avoids a rectangular tile.",
+        "variant_identity": "dark neutral ramp, darker than galena",
+        "vanilla_comparison": "Actual 1.21.1 raw_iron sprite is a comparator for small fragment silhouettes and face lighting, not a mineral species template.",
+        "functional_material_cues": "Inventory specimen reads as a discrete mineral fragment with small cool gray highlights at top rather than a full ore block."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The atlas has no matching raw mineral specimen icon rule; ore block rules apply to tiling host rock, not an isolated inventory sprite.",
+        "reference_source": "https://github.com/misode/mcmeta/blob/1.21.1-assets/assets/minecraft/textures/item/raw_iron.png ; decoded target-version PNG inspected, Git blob d8a8dd173d7a2ddd07d704372e1792d1543ed9c6, SHA-256 computed from bytes; official client not separately downloaded.",
+        "applied_pattern": "Use irregular fragment edges and connected upper/lower color planes: charcoal and cool gray planes.",
+        "reference_limit": "Vanilla comparator is a different mineral and does not establish geological identity or game rendering.",
+        "native_view": "Inspected the actual 16px candidate: small cool gray highlights at top and deep blue-black base.",
+        "context_view": "Inspected the set of ten actual item icons and vanilla comparator: dark neutral ramp, darker than galena. No graphical inventory session claimed.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/malachite.png": {
+      "sha256": "9aa24cc4cdfb851d670d654593433d7cbf17b750f3f5d23139d22e2caee1827b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_copper",
+          "minecraft": "1.21.1",
+          "sha256": "2cdb294f66fda088faf7e606a8412993d01120e29ea3f440d800111fc9b9313a"
+        }
+      ],
+      "comparison": "Inspected the actual transparent 16x16 mineral icon and target vanilla raw_copper asset: rounded uneven green lump; both use irregular stepped item contours, but this mineral uses its own green hue and rounded mass rather than orange copper flecks. Static inventory-sprite review only.",
+      "findings": {
+        "silhouette": "rounded uneven green lump",
+        "cluster_structure": "green patches over deep green base",
+        "micro_contrast": "lighter green upper face",
+        "light_and_volume": "Upper planes sit above dark green lower outline, defining a small solid fragment.",
+        "material_continuity": "green patches over deep green base; related hues remain within the mineral mass.",
+        "edge_variation": "Stepped outer contour around rounded uneven green lump avoids a rectangular tile.",
+        "variant_identity": "green hue and rounded mass rather than orange copper flecks",
+        "vanilla_comparison": "Actual 1.21.1 raw_copper sprite is a comparator for small fragment silhouettes and face lighting, not a mineral species template.",
+        "functional_material_cues": "Inventory specimen reads as a discrete mineral fragment with lighter green upper face rather than a full ore block."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_copper",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The atlas has no matching raw mineral specimen icon rule; ore block rules apply to tiling host rock, not an isolated inventory sprite.",
+        "reference_source": "https://github.com/misode/mcmeta/blob/1.21.1-assets/assets/minecraft/textures/item/raw_copper.png ; decoded target-version PNG inspected, Git blob 84c6d60ddc69727cc148990ff2ee6ab6ab3c8cb4, SHA-256 computed from bytes; official client not separately downloaded.",
+        "applied_pattern": "Use irregular fragment edges and connected upper/lower color planes: green patches over deep green base.",
+        "reference_limit": "Vanilla comparator is a different mineral and does not establish geological identity or game rendering.",
+        "native_view": "Inspected the actual 16px candidate: lighter green upper face and dark green lower outline.",
+        "context_view": "Inspected the set of ten actual item icons and vanilla comparator: green hue and rounded mass rather than orange copper flecks. No graphical inventory session claimed.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/pyrite.png": {
+      "sha256": "8e3c2a295235f51eff254e2df389774494e491fc9aef990a67b84b048f694609",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Inspected the actual transparent 16x16 mineral icon and target vanilla raw_iron asset: angular yellow-gold cluster; both use irregular stepped item contours, but this mineral uses its own strong yellow highlights unlike orange bauxite. Static inventory-sprite review only.",
+      "findings": {
+        "silhouette": "angular yellow-gold cluster",
+        "cluster_structure": "yellow and ochre planes over brown edge",
+        "micro_contrast": "bright cream-yellow upper facets",
+        "light_and_volume": "Upper planes sit above dark golden-brown underside, defining a small solid fragment.",
+        "material_continuity": "yellow and ochre planes over brown edge; related hues remain within the mineral mass.",
+        "edge_variation": "Stepped outer contour around angular yellow-gold cluster avoids a rectangular tile.",
+        "variant_identity": "strong yellow highlights unlike orange bauxite",
+        "vanilla_comparison": "Actual 1.21.1 raw_iron sprite is a comparator for small fragment silhouettes and face lighting, not a mineral species template.",
+        "functional_material_cues": "Inventory specimen reads as a discrete mineral fragment with bright cream-yellow upper facets rather than a full ore block."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The atlas has no matching raw mineral specimen icon rule; ore block rules apply to tiling host rock, not an isolated inventory sprite.",
+        "reference_source": "https://github.com/misode/mcmeta/blob/1.21.1-assets/assets/minecraft/textures/item/raw_iron.png ; decoded target-version PNG inspected, Git blob d8a8dd173d7a2ddd07d704372e1792d1543ed9c6, SHA-256 computed from bytes; official client not separately downloaded.",
+        "applied_pattern": "Use irregular fragment edges and connected upper/lower color planes: yellow and ochre planes over brown edge.",
+        "reference_limit": "Vanilla comparator is a different mineral and does not establish geological identity or game rendering.",
+        "native_view": "Inspected the actual 16px candidate: bright cream-yellow upper facets and dark golden-brown underside.",
+        "context_view": "Inspected the set of ten actual item icons and vanilla comparator: strong yellow highlights unlike orange bauxite. No graphical inventory session claimed.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/sphalerite.png": {
+      "sha256": "eb19bae6782ceb3bd64a434ba75045c91e2e590a2e9524e3b3cf7c9e27a161a9",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Inspected the actual transparent 16x16 mineral icon and target vanilla raw_iron asset: irregular compact amber-brown lump; both use irregular stepped item contours, but this mineral uses its own warmer orange-gold than subdued cassiterite. Static inventory-sprite review only.",
+      "findings": {
+        "silhouette": "irregular compact amber-brown lump",
+        "cluster_structure": "orange and tan cluster over brown mass",
+        "micro_contrast": "light amber upper patches",
+        "light_and_volume": "Upper planes sit above dark brown base, defining a small solid fragment.",
+        "material_continuity": "orange and tan cluster over brown mass; related hues remain within the mineral mass.",
+        "edge_variation": "Stepped outer contour around irregular compact amber-brown lump avoids a rectangular tile.",
+        "variant_identity": "warmer orange-gold than subdued cassiterite",
+        "vanilla_comparison": "Actual 1.21.1 raw_iron sprite is a comparator for small fragment silhouettes and face lighting, not a mineral species template.",
+        "functional_material_cues": "Inventory specimen reads as a discrete mineral fragment with light amber upper patches rather than a full ore block."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The atlas has no matching raw mineral specimen icon rule; ore block rules apply to tiling host rock, not an isolated inventory sprite.",
+        "reference_source": "https://github.com/misode/mcmeta/blob/1.21.1-assets/assets/minecraft/textures/item/raw_iron.png ; decoded target-version PNG inspected, Git blob d8a8dd173d7a2ddd07d704372e1792d1543ed9c6, SHA-256 computed from bytes; official client not separately downloaded.",
+        "applied_pattern": "Use irregular fragment edges and connected upper/lower color planes: orange and tan cluster over brown mass.",
+        "reference_limit": "Vanilla comparator is a different mineral and does not establish geological identity or game rendering.",
+        "native_view": "Inspected the actual 16px candidate: light amber upper patches and dark brown base.",
+        "context_view": "Inspected the set of ten actual item icons and vanilla comparator: warmer orange-gold than subdued cassiterite. No graphical inventory session claimed.",
+        "context_type": "icon_family"
+      }
     }
   }
 }
