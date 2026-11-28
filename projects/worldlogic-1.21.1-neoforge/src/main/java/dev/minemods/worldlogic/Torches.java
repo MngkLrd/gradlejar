@@ -14,10 +14,10 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 public final class Torches {
  private static final Map<ServerLevel,Map<BlockPos,Long>> WET=new WeakHashMap<>();
  public static void tick(PlayerTickEvent.Post e){
-  if(!Rules.on("wet_torches")||!(e.getEntity().level() instanceof ServerLevel l)||l.getGameTime()%20!=0||!l.isRaining())return;
+  if(!Rules.on("wet_torches")||!(e.getEntity().level() instanceof ServerLevel l)||l.getGameTime()%20!=0||!LocalWeatherRuntime.rainingAt(l,e.getEntity().blockPosition()))return;
   long now=l.getGameTime();var wet=WET.computeIfAbsent(l,k->new HashMap<>());wet.entrySet().removeIf(x->now-x.getValue()>1600);if(wet.size()>2048)wet.clear();
   BlockPos center=e.getEntity().blockPosition();for(int i=0;i<192;i++){BlockPos q=center.offset(l.random.nextInt(17)-8,l.random.nextInt(9)-4,l.random.nextInt(17)-8);
-   if(!l.hasChunkAt(q)||!l.isRainingAt(q))continue;BlockState s=l.getBlockState(q);
+   if(!l.hasChunkAt(q)||!LocalWeatherRuntime.rainingAt(l,q))continue;BlockState s=l.getBlockState(q);
    if(!s.is(Blocks.TORCH)&&!s.is(Blocks.WALL_TORCH))continue;long first=wet.computeIfAbsent(q.immutable(),k->now);
    l.sendParticles(ParticleTypes.SMOKE,q.getX()+.5,q.getY()+.65,q.getZ()+.5,2,.05,.07,.05,.01);
    if(now-first<120)continue;
