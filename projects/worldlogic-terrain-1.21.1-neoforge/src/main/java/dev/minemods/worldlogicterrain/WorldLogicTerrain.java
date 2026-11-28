@@ -33,6 +33,7 @@ public final class WorldLogicTerrain {
         NeoForge.EVENT_BUS.addListener(TerrainPatchChecks::register);
         NeoForge.EVENT_BUS.addListener(dev.minemods.worldlogicterrain.worldgen.TallGrassPlainsFeature::registerChecks);
         NeoForge.EVENT_BUS.addListener(TreeChecks::register);
+        NeoForge.EVENT_BUS.addListener(dev.minemods.worldlogicterrain.tree.WoodPhysicsChecks::register);
         NeoForge.EVENT_BUS.addListener(ForageChecks::register);
         NeoForge.EVENT_BUS.addListener(TerrainMobility::logout);
     }
