@@ -7,7 +7,7 @@
     "ru": "Геология и руды",
     "en": "Geology and ores"
   },
-  "source": "WorldLogic RC33",
+  "source": "WorldLogic RC42",
   "pages": [
     {
       "id": "geography",
@@ -256,6 +256,30 @@
         "en": [
           "Deep iron/lapis pocket centers Y −115…−35, redstone/gold −215…−80, possible diamonds −225…−105. Ranges do not guarantee ore at every position.",
           "Ranges describe modeled body centers, not guaranteed layers. Background pockets and regional bodies may overlap."
+        ]
+      }
+    },
+    {
+      "id": "regional_strata",
+      "title": {
+        "ru": "Региональные слои пород",
+        "en": "Regional rock strata"
+      },
+      "models": [
+        "minecraft:calcite",
+        "minecraft:sandstone",
+        "minecraft:granite",
+        "minecraft:diorite",
+        "minecraft:deepslate"
+      ],
+      "body": {
+        "ru": [
+          "Осадочные, карбонатные, интрузивные, метаморфические области и кратоны имеют разные последовательности пород. Границы залежей не обязаны совпадать с биомами.",
+          "Мощность пластов меняется между регионами, а внутри региона слои изгибаются непрерывно. Реальный разрез может быть прерван пещерой или месторождением."
+        ],
+        "en": [
+          "Sedimentary, carbonate, intrusive, metamorphic and craton regions have different rock sequences. Geological contacts do not have to follow biome boundaries.",
+          "Layer thickness varies by region and boundaries fold continuously within a region. A real section may be interrupted by a cave or a deposit."
         ]
       }
     }

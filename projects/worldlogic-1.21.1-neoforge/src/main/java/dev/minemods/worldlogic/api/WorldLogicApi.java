@@ -23,8 +23,18 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=11;
+ public static final int API_REVISION=12;
  private WorldLogicApi(){}
+ /** Predicted regional host rock and observed block, deliberately separate. */
+ public record GeologicalLayer(String province,String modeledHost,int bottomY,int topY,Optional<String> observedHost){}
+ public static Optional<GeologicalLayer> geology(ServerLevel level,BlockPos pos){
+  serverThread(level);
+  if(!dev.minemods.worldlogic.GeologyGeneration.enabled(level.getChunkSource().getGenerator())||!level.hasChunkAt(pos)||level.isOutsideBuildHeight(pos))return Optional.empty();
+  var column=dev.minemods.worldlogic.RockStrata.column(level.getSeed(),pos.getX(),pos.getZ());var layer=column.at(pos.getY());
+  var modeled=layer.host()==dev.minemods.worldlogic.RockStrata.Host.BASEMENT&&pos.getY()<0?dev.minemods.worldlogic.RockStrata.Host.DEEP_BASEMENT:layer.host();
+  return Optional.of(new GeologicalLayer(column.region().province().name(),modeled.name(),layer.bottom(),layer.top(),
+   dev.minemods.worldlogic.RockStrata.observed(level.getBlockState(pos).getBlock()).map(Enum::name)));
+ }
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
   * Surface elevation is the macro terrain model, not an actual block height. */

@@ -71,7 +71,7 @@ public final class GeologyModel {
  }
  static double unit(long h){return (h>>>11)*0x1.0p-53;}
  public static Province province(long seed,int x,int z){
-  return Province.values()[(int)Math.floorMod(hash(seed,Math.floorDiv(x,DISTRICT*3),0,Math.floorDiv(z,DISTRICT*3)),5)];
+  return RockStrata.region(seed,x,z).province();
  }
  private static double normal(SplittableRandom r){return Math.sqrt(-2*Math.log(Math.max(1e-12,r.nextDouble())))*Math.cos(2*Math.PI*r.nextDouble());}
  private static Body body(SplittableRandom r,Ore ore,double x,double y,double z,double a,double b,double v,double angle,double dip,double grade){

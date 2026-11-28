@@ -16,6 +16,8 @@ import net.minecraft.world.level.levelgen.RandomState;
 public final class GeologyChecks {
  private static void require(boolean v,String s){if(!v)throw new IllegalStateException("geology: "+s);}
  public static void verify(ServerLevel l){
+  RockStrata.verify();
+  verifyStrata(l);
   var key=ResourceKey.create(Registries.WORLD_PRESET,ResourceLocation.fromNamespaceAndPath("worldlogic","earthlike_extended"));
   var preset=l.registryAccess().lookupOrThrow(Registries.WORLD_PRESET).getOrThrow(key).value();
   var gen=(NoiseBasedChunkGenerator)preset.createWorldDimensions().overworld();
@@ -169,4 +171,23 @@ public final class GeologyChecks {
   }
   Heightmap.primeHeightmaps(chunk,EnumSet.of(Heightmap.Types.OCEAN_FLOOR_WG));return chunk;
  }
+ private static void verifyStrata(ServerLevel l){
+  var bounds=LevelHeightAccessor.create(-256,768);
+  var chunk=fixture(l,bounds,-33,65);int x=chunk.getPos().getMinBlockX(),z=chunk.getPos().getMinBlockZ();
+  var cavity=new BlockPos(x,-150,z);var water=new BlockPos(x,-149,z);
+  chunk.setBlockState(cavity,Blocks.CAVE_AIR.defaultBlockState(),false);
+  chunk.setBlockState(water,Blocks.WATER.defaultBlockState(),false);
+  GeologyGeneration.carve(42,chunk);
+  int matched=0;var column=RockStrata.column(42,x,z);
+  for(int y=-248;y<94;y++){
+   var b=chunk.getBlockState(new BlockPos(x,y,z));if(!GeologyGeneration.rock(b))continue;
+   var host=column.at(y).host();var expected=host==RockStrata.Host.BASEMENT&&y<0?Blocks.DEEPSLATE:host.block;
+   require(b.is(expected),"actual stratigraphic host "+y);matched++;
+  }
+  require(matched>=200,"meaningful actual rock column");
+  require(chunk.getBlockState(cavity).isAir()&&chunk.getBlockState(water).is(Blocks.WATER),"stratigraphy preserves cavities and water");
+  require(chunk.getBlockState(new BlockPos(x,-256,z)).is(Blocks.BEDROCK),"stratigraphy preserves bedrock");
+  require(chunk.getBlockState(new BlockPos(x,100,z)).is(Blocks.STONE),"surface protection");
+ }
+
 }

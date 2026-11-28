@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC41 source milestone / RC45 deferred QA",
+  "name": "World Logic NeoForge RC42 source milestone / RC45 deferred QA",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1758,6 +1758,17 @@
         {
           "backend": "server",
           "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc42-regional-strata",
+      "kind": "mechanic",
+      "subject": "Deterministic irregular provinces, continuous folded rock layers, eight host materials, real ProtoChunk strata and bedrock/cavity/water/surface controls; RC45 execution deferred",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Extended preset registry, geological provinces, ore bodies and synthetic chunk carving"
         }
       ]
     }

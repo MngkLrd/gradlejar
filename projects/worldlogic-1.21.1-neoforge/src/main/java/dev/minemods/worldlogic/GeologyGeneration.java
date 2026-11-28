@@ -38,18 +38,16 @@ public final class GeologyGeneration {
   var pos=new BlockPos.MutableBlockPos();
   for(int x=x0;x<x0+16;x++)for(int z=z0;z<z0+16;z++){
    int surface=chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x&15,z&15);
-   var province=GeologyModel.province(seed,x,z);
-   int top=Math.min(surface-6,75),bottom=Math.max(chunk.getMinBuildHeight()+8,-112);
-   int fold=(int)(6*Math.sin(x*.018)+5*Math.cos(z*.016));
-   for(int y=bottom;y<=top;y++){
-    int band=Math.floorMod(y+fold,38);Block host=null;
-    if(province==GeologyModel.Province.CARBONATE&&band<20)host=Blocks.CALCITE;
-    if(province==GeologyModel.Province.SEDIMENTARY&&band<7)host=Blocks.SANDSTONE;
-    if(province==GeologyModel.Province.INTRUSIVE&&band<13)host=Blocks.GRANITE;
-    if(province==GeologyModel.Province.METAMORPHIC&&band<12)host=Blocks.DIORITE;
-    if(host==null)continue;
-    pos.set(x,y,z);var s=chunk.getBlockState(pos);
-    if(s.is(Blocks.STONE)||s.is(Blocks.DEEPSLATE))chunk.setBlockState(pos,host.defaultBlockState(),false);
+   var column=RockStrata.column(seed,x,z);
+   int top=Math.min(surface-6,chunk.getMaxBuildHeight()-1),bottom=chunk.getMinBuildHeight()+8;
+   for(var layer:column.layers()){
+    int low=Math.max(bottom,layer.bottom()),high=Math.min(top,layer.top());
+    for(int y=low;y<=high;y++){
+     pos.set(x,y,z);var s=chunk.getBlockState(pos);
+     if(!s.is(Blocks.STONE)&&!s.is(Blocks.DEEPSLATE))continue;
+     var host=layer.host()==RockStrata.Host.BASEMENT&&y<0?Blocks.DEEPSLATE:layer.host().block;
+     if(!s.is(host))chunk.setBlockState(pos,host.defaultBlockState(),false);
+    }
    }
    for(var d:districts)for(var c:d.caves()){
     if(Math.abs(x-c.x())>96||Math.abs(z-c.z())>96)continue;
