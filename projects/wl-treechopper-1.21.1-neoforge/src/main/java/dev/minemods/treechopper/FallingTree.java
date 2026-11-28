@@ -325,7 +325,22 @@ final class FallingTree {
             if(mask(f)!=0||f.getFloat("progress")>=.99999f||Math.abs(f.getDouble("dropY"))>.0001)return false;
             // An unprocessed straight trunk is still held by its cut hinge until rotation completes.
             // Verify that the actual original stump exists rather than assume support in air.
-            if(!(l.getBlockState(base(f)).getBlock() instanceof StumpBlock))return false;
+            BlockPos root=base(f);
+            if(!(l.getBlockState(root).getBlock() instanceof StumpBlock))return false;
+            for(CompoundTag m:group){
+                BlockPos p=BlockPos.of(m.getLong("source"));
+                if(p.getX()!=root.getX()||p.getZ()!=root.getZ())return false;
+            }
+            CompoundTag cap=member(f,root.asLong());
+            if(cap==null||cap.getBoolean("removed")||!cap.getBoolean("cap"))return false;
+            var bounds=TreeChopper.timberBounds(root,root,direction(f),f.getFloat("progress"),true,offset(f,cap));
+            boolean contact=false;
+            for(var shape:l.getBlockState(root).getCollisionShape(l,root).toAabbs()){
+                var world=shape.move(root.getX(),root.getY(),root.getZ());
+                if(Math.abs(bounds.minY-world.maxY)<.005&&bounds.maxX>=world.minX-.005&&bounds.minX<=world.maxX+.005
+                    &&bounds.maxZ>=world.minZ-.005&&bounds.minZ<=world.maxZ+.005){contact=true;break;}
+            }
+            if(!contact)return false;
         }
         return true;
     }
