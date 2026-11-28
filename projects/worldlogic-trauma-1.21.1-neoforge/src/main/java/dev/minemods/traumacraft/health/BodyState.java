@@ -142,6 +142,7 @@ public final class BodyState {
         return false;
     }
     public boolean hasInjury() {
+        if(organs.impaired())return true;
         for (BodyPart part : BodyPart.values()) {
             if (health(part) < part.maximum || bleeding(part) > 0 || fractured(part)) return true;
         }

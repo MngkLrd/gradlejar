@@ -78,13 +78,15 @@ public final class OrganState {
         if(resting&&delivered>=.50f){
             for(int i=0;i<bleeding.length;i++)if(bleeding[i]>0&&bleeding[i]<=2.5f)bleeding[i]=Math.max(0,bleeding[i]-.025f);
         }
-        if(resting&&delivered>=.70f&&!hasInternalBleeding()&&deficit<1){
+        if(resting&&delivered>=.55f&&!hasInternalBleeding()&&deficit<1){
             float rate=.0006f*clamp(nutrition,0,1)*repairFactor(bloodFraction);
             for(int i=0;i<integrity.length;i++)if(integrity[i]>0&&integrity[i]<1)integrity[i]=Math.min(1,integrity[i]+rate);
         }
         return loss;
     }
     /** Existing advanced trauma kit supplies stabilization, not organ HP or instant internal closure. */
+    public boolean canStabilize(BodyPart region){for(var organ:Organ.values())if(organ.region==region&&bleeding(organ)>2.5f)return true;return false;}
+    public boolean impaired(){if(oxygen<.999f||deficit>0||hasInternalBleeding())return true;for(float x:integrity)if(x<1)return true;return false;}
     public boolean stabilize(BodyPart region){
         boolean changed=false;
         for(var organ:Organ.values())if(organ.region==region&&bleeding(organ)>2.5f){

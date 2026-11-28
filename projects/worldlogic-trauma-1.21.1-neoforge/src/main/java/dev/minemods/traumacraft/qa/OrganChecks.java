@@ -33,8 +33,11 @@ public final class OrganChecks {
         require(o.integrity(OrganState.Organ.LIVER)<1&&o.renalFunction()<1&&o.digestiveFunction()<1&&o.repairFactor(1)<1,"abdominal organ functions");
         require(o.integrity(OrganState.Organ.HEART)==1&&o.ventilation()==1,"abdomen does not damage heart and lungs");
         require(!b.stabilizeInternal(BodyPart.LEFT_ARM),"wrong site cannot stabilize");
-        b.reset();for(int i=0;i<3;i++)b.impact(BodyPart.CHEST,80,WoundKind.PUNCTURE);
-        float severe=o.internalLossPerSecond();require(b.stabilizeInternal(BodyPart.CHEST)&&o.internalLossPerSecond()<severe&&o.internalLossPerSecond()>0,"advanced support reduces severe leak without magic closure");
+        b.reset();b.impact(BodyPart.CHEST,80,WoundKind.PUNCTURE);
+        float severe=o.internalLossPerSecond(),heartBefore=o.integrity(OrganState.Organ.HEART);
+        b.heal(BodyPart.CHEST,85);
+        require(MedicalAction.canApply(b,dev.minemods.traumacraft.item.MedicalItem.Type.TRAUMA_KIT,BodyPart.CHEST),"internal bleed remains treatable despite healed external HP");
+        require(MedicalAction.apply(p,b,dev.minemods.traumacraft.item.MedicalItem.Type.TRAUMA_KIT,BodyPart.CHEST)&&o.internalLossPerSecond()<severe&&o.internalLossPerSecond()>0&&o.integrity(OrganState.Organ.HEART)==heartBefore,"advanced support reduces severe leak without magic closure or organ repair");
         b.reset();b.impact(BodyPart.CHEST,32,WoundKind.CONTUSION);
         float mild=o.internalLossPerSecond();require(mild>0&&mild<2.5,"mild leak");
         for(int i=0;i<100;i++)b.physiologySecond(true,true,1);
