@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "name": "Core 1.5.2 current six-peer diagnostic (Aqua unavailable)",
+  "steps": [
+    {
+      "command": "worldlogic preset realistic",
+      "expect": "World Logic settings saved"
+    },
+    {
+      "command": "forceload add 0 0",
+      "expect": "force loaded"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "name": "Installed physiology methods and all six addon mod IDs",
+      "command": "worldlogic addons",
+      "expect": "worldlogic_thermal=loaded; worldlogic_trauma=loaded; wl_treechopper=loaded; hydration=loaded; worldlogicterrain=loaded; metabolism=loaded; worldlogic_aqua=absent.*compatible installed providers",
+      "assertion": true
+    },
+    {
+      "name": "Core guide and actual registry",
+      "command": "worldlogic qa guide",
+      "expect": "WORLDLOGIC_GUIDE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Core recovery and action controls",
+      "command": "worldlogic qa recovery",
+      "expect": "WORLDLOGIC_RECOVERY_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Core world and optional heal attribution",
+      "command": "worldlogic qa world",
+      "expect": "WORLDLOGIC_WORLD_FIXTURE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Terrarian ordinary FOOD ownership",
+      "command": "worldlogicterrain food_owner_check metabolism",
+      "expect": "Food owner verified metabolism: all 12 foods, version boundary, legacy stamina and tooltip policy",
+      "assertion": true
+    },
+    {
+      "name": "Hydration model",
+      "command": "hydration selftest",
+      "expect": "HYDRATION_MODEL_CHECKS_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Hydration vessels",
+      "command": "hydration vesseltest",
+      "expect": "HYDRATION_VESSEL_CHECKS_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Thermal physiology peers",
+      "command": "thermal qa integration",
+      "expect": "THERMAL_QA_integration_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Thermal material model",
+      "command": "thermal qa physical_materials",
+      "expect": "THERMAL_QA_physical_materials_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Thermal reset",
+      "command": "thermal qa admin_restore",
+      "expect": "THERMAL_QA_admin_restore_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Thermal presentation",
+      "command": "thermal qa presentation",
+      "expect": "THERMAL_QA_presentation_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Trauma legacy ownership",
+      "command": "traumaqa ownership",
+      "expect": "TRAUMAQA ownership PASS",
+      "assertion": true
+    },
+    {
+      "name": "Trauma reset",
+      "command": "traumaqa adminrestore",
+      "expect": "TRAUMAQA adminrestore PASS",
+      "assertion": true
+    },
+    {
+      "name": "Metabolism model",
+      "command": "metabolism selftest",
+      "expect": "METABOLISM_MODEL_CHECKS_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "TreeChopper effort and arm function",
+      "command": "wltreechopper qa_effort",
+      "expect": "TreeChopper effort regression PASS",
+      "assertion": true
+    }
+  ]
+}
