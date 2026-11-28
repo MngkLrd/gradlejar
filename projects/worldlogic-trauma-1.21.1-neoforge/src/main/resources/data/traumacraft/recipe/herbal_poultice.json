@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "traumacraft:rag_dressing"
+    },
+    {
+      "item": "traumacraft:crushed_herbs"
+    }
+  ],
+  "result": {
+    "id": "traumacraft:herbal_poultice",
+    "count": 1
+  }
+}

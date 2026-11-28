@@ -1,0 +1,953 @@
+{
+  "schema": 1,
+  "target": "neoforge-mc1.21.1",
+  "status": "RC12 development",
+  "scenario": "tools/qa/scenarios/worldlogic-trauma-rc20.json",
+  "coverage": [
+    {
+      "id": "tr-state",
+      "assertions": [
+        "TR-STATE"
+      ],
+      "state": "NOT_RUN",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-treat",
+      "assertions": [
+        "TR-TREAT"
+      ],
+      "state": "NOT_RUN",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-bridge",
+      "assertions": [
+        "TR-BRIDGE"
+      ],
+      "state": "NOT_RUN",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-damage",
+      "assertions": [
+        "TR-DAMAGE"
+      ],
+      "state": "NOT_RUN",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-network",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ]
+    },
+    {
+      "id": "tr-ui",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ]
+    },
+    {
+      "id": "tr-lifecycle",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ]
+    },
+    {
+      "id": "tr-items",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "items": [
+        "adrenaline_injector",
+        "analgesic_tablets",
+        "antiseptic",
+        "bandage",
+        "bone_mender",
+        "compact_medkit",
+        "compression_wrap",
+        "endurance_injector",
+        "field_medkit",
+        "focus_injector",
+        "fracture_brace",
+        "guardian_injector",
+        "hemostatic_gel",
+        "herbal_extract",
+        "medical_polymer",
+        "medical_pouch",
+        "medkit",
+        "oversized_medkit",
+        "rag_dressing",
+        "recovery_serum",
+        "splint",
+        "sterile_fabric",
+        "sterile_patch",
+        "surgical_kit",
+        "syringe_body",
+        "tourniquet",
+        "trauma_kit"
+      ],
+      "targets": [
+        "neoforge-mc1.21.1"
+      ]
+    },
+    {
+      "id": "tr-recipes",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "recipes": [
+        "adrenaline_injector",
+        "analgesic_tablets",
+        "antiseptic",
+        "bandage",
+        "bone_mender",
+        "compact_medkit",
+        "compression_wrap",
+        "endurance_injector",
+        "field_medkit",
+        "focus_injector",
+        "fracture_brace",
+        "guardian_injector",
+        "hemostatic_gel",
+        "herbal_extract",
+        "medical_polymer",
+        "medical_pouch",
+        "medkit",
+        "oversized_medkit",
+        "rag_dressing",
+        "recovery_serum",
+        "splint",
+        "sterile_fabric",
+        "sterile_patch",
+        "surgical_kit",
+        "syringe_body",
+        "tourniquet",
+        "trauma_kit"
+      ],
+      "targets": [
+        "neoforge-mc1.21.1"
+      ]
+    },
+    {
+      "id": "tr-art-medical_pouch",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/medical_pouch.png",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "tr-art-medkit",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/medkit.png",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "tr-art-rag_dressing",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/rag_dressing.png",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "tr-art-compression_wrap",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/compression_wrap.png",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "tr-art-sterile_fabric",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/sterile_fabric.png",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "tr-art-splint",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/splint.png",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "tr-art-antiseptic",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/antiseptic.png",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "tr-art-bandage",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/bandage.png",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "tr-hud-pixel",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "HUD renders at integer 1x when injured; no healthy/creative HUD; no hotbar overlap at narrow scales",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ]
+    },
+    {
+      "id": "tr-anatomy-ui",
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "2x anatomy, correct mirrored sides and treatment hit targets, qualitative localized statuses, small-screen vanilla fallback, no misleading raw HP total",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ]
+    },
+    {
+      "id": "tr-hud-atlas",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "All seven zones use the correct palette; mirrored leg alignment; 2 px abdomen-to-leg gap; 20x20 icon frames and independent dynamic injury overlays; click targets match body sprite coordinates."
+    },
+    {
+      "id": "tr-hud-frame",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "76x94 HUD fits beside hotbar; at narrow GUI width relocates to top-left; healthy and creative HUD remains hidden."
+    },
+    {
+      "id": "tr-hud-bleed",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
+      "expected": "Show if any bleeding severity is positive; remove when all bleeding is stopped"
+    },
+    {
+      "id": "tr-hud-fracture",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
+      "expected": "Show if any fracture exists, including stabilized; remove after all recover"
+    },
+    {
+      "id": "tr-hud-concussion",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
+      "expected": "Show while server concussion ticks > 0; disappear on expiry"
+    },
+    {
+      "id": "tr-hud-painkiller",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
+      "expected": "Show while server painkiller ticks > 0; disappear on expiry"
+    },
+    {
+      "id": "tr-hud-compact",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
+      "expected": "No placeholders; reflow rows for all active combinations; hide healthy/dead player HUD"
+    },
+    {
+      "id": "tr-tab-default",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "New inventory opens at vanilla width, medical panel hidden; healthy body all green on opening tab"
+    },
+    {
+      "id": "tr-tab-toggle",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "Click tab toggles panel; no loss of inventory cursor stack; closing and reopening inventory resets tab"
+    },
+    {
+      "id": "tr-tab-limbs",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "Click each independent limb to apply medicine; splint only on treated limb; both legs and both arms independently show overlays; overlay disappears after recovery"
+    },
+    {
+      "id": "tr-tab-active",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "Display only active effects in two-column grid; zero placeholders"
+    },
+    {
+      "id": "tr-tab-recipe",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "Vanilla recipe book and medical tab do not overlap; narrow screen stays vanilla"
+    },
+    {
+      "id": "tr-tab-cursor",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "Click empty medical panel must not drop cursor item"
+    },
+    {
+      "id": "tr-neoforge-payloads",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "All seven zones and independent stabilization flags synchronize, server validates cursor medicine, disconnect clears UI",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-neoforge-core-lock",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Exact published NeoForge core hash, metadata, mapped methods and runtime dependency verified; Forge core rejected",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-api",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Fatigue, recovery, rules and creative behavior use core public API",
+      "assertion": "TR-API: public rule and fatigue API, recovery, creative mode, invalid input",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-procedure",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "TR-PROCEDURE: immediate cursor consumption, duplicate and invalid rejection, cursor independence, explicit cancellation",
+      "assertion": "TR-PROCEDURE: immediate cursor consumption, duplicate and invalid rejection, cursor independence, explicit cancellation",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-targeting",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "TR-TARGETING: trauma kit bleed priority, medkit living tissue and no-effect rejection",
+      "assertion": "TR-TARGETING: trauma kit bleed priority, medkit living tissue and no-effect rejection",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-persistence",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Precise emergency grace persistence and invalid local HP safeguards",
+      "assertion": "Precise emergency grace persistence and invalid local HP safeguards",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-identity",
+      "state": "NOT_RUN",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "assertion": "TR-IDENTITY: branded loader identity, mandatory core, preserved medical item IDs and save key",
+      "expected": "TR-IDENTITY: branded loader identity, mandatory core, preserved medical item IDs and save key",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-ui-frameless",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "No portrait well in inventory or frame around HUD; silhouette centered and lower"
+    },
+    {
+      "id": "tr-ui-native-tab",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "Tab uses vanilla widget style; temperature addon coexistence checked in actual client"
+    },
+    {
+      "id": "tr-ui-bleed",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "One or two wound glyphs only with active bleeding; splint independent per limb; healthy fully green"
+    },
+    {
+      "id": "tr-ui-geometry",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "RC12 exact build requires fresh evidence",
+      "expected": "Seven nonoverlapping zones and hit targets; HUD remains within bounds and avoids hotbar"
+    },
+    {
+      "id": "tr-thermal",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation",
+      "assertion": "TR-THERMAL: optional provider guard, valid stage, scaled recovery and no thermal mutation",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-thermal-combined",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Actual Thermal + Trauma loaded together, all stages propagated, UI and no duplicate debuffs",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-thermal-ui",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Cold/heat glyph and stage text appear only for actual stress; clear on comfortable/absence",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-thermal-api",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "ThermalApi v1 preferred when available; legacy optional state fallback; confirmed diagnoses",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-thermal-overlay",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Progressive frost and warm peripheral shimmer fade; no effect at comfort, spectator, creative or logout",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-respawn",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "TR-RESPAWN: healthy first join, death reset persisted, relog and nondeath clone preserve injury",
+      "assertion": "TR-RESPAWN: healthy first join, death reset persisted, relog and nondeath clone preserve injury",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-respawn-network",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Actual death and respawn packet order, no stale client visuals or treatment progress; End return preserves injuries",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-bloodloss",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "TR-BLOODLOSS: weak and severe systemic loss, nonbleeding black limb, local bleeding and vital destruction",
+      "assertion": "TR-BLOODLOSS: weak and severe systemic loss, nonbleeding black limb, local bleeding and vital destruction",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-vital-real-death",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Actual player head/chest destruction causes death even after a totem, clean respawn",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-rc9-panel",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Expanded panel at multiple GUI scales, per-zone HP, status, click and cursor progress, no overlap",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-physiology",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "TR-PHYSIOLOGY: independent limb function, splint benefit, pain relief, blood volume, shock, persistence and reset",
+      "assertion": "TR-PHYSIOLOGY: independent limb function, splint benefit, pain relief, blood volume, shock, persistence and reset",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-physical-player",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Actual player hand interactions, mining, combat, bow, jumping and sprinting, core/thermal coexistence",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-physiology-ui",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Blood, pain, shock and limb function synchronized and displayed without overlap",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-wounds",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry",
+      "assertion": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-primitive",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry",
+      "assertion": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-retired",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry",
+      "assertion": "TR-WOUNDS: classification, persistence, primitive treatments, retired recipes and stable registry",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-gait-client",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Actual local and remote third-person left/right limp, armor and outer skin alignment; no walking override while swimming/riding/airborne",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-injury-visual",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Gradual red pain/bleed, dark shock/blood, gray concussion and no effect after new life; coexistence with thermal overlay",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-primitive-craft-player",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Actual player crafts and consumes primitive treatments; retired recipes unavailable",
+      "reason": "RC12 exact build requires fresh evidence"
+    },
+    {
+      "id": "tr-herb-workpiece",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles",
+      "assertion": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+    },
+    {
+      "id": "tr-herb-materials",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles",
+      "assertion": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+    },
+    {
+      "id": "tr-canonical-medicine",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles",
+      "assertion": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+    },
+    {
+      "id": "tr-publicapi",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "TR-PUBLICAPI: immutable seven-region snapshot, external injury, invalid input and creative guards",
+      "assertion": "TR-PUBLICAPI: immutable seven-region snapshot, external injury, invalid input and creative guards"
+    },
+    {
+      "id": "tr-herb-player-render",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "Actual right-click spread, left-click aim, disappearing raw cells, crouch pickup and progress tooltip",
+      "reason": "Server fixture calls real placement and strike methods; modded network-player and graphical backend unavailable"
+    },
+    {
+      "id": "tr-canonical-jei",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "expected": "All retired IDs hidden from JEI, remaining recipes display correctly",
+      "reason": "JEI client unavailable"
+    }
+  ],
+  "prior_forge_assignment": "Archived on branch traumatic-worldlogic-rc16, commit 35619e0767f324e284015ef25a82b6ff40fcc446",
+  "core": {
+    "status": "LOCKED",
+    "version": "1.0.0-rc22",
+    "api": 1,
+    "source_main": "6b95fd4c199fd7a185794be6509e901402edbde4",
+    "dependency": {
+      "name": "worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar",
+      "url": "https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc22-1246-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar",
+      "sha256": "1c0d23ca034cd17f783e4d1abbf01f1eda8783ac0ba3b48cf6afdc1291d21dc8"
+    },
+    "mixins": "Survival and Trauma retained because API v1 has no trauma override or balance/down hooks",
+    "runtime_range": "[1.0.0-rc20,)",
+    "note": "User requested open-ended runtime range; actual integration verified per iteration, no future version guarantee"
+  },
+  "backend": "NeoForge FakePlayer component tests; not a network player or graphical client",
+  "graphical_client": "NOT_RUN",
+  "production_jar": "NOT_RUN",
+  "asset_source": "35619e0767f324e284015ef25a82b6ff40fcc446",
+  "release_blockers": [
+    "Actual network interaction, client visuals and full item/recipe gameplay coverage still outstanding; no merge or release on this draft PR."
+  ],
+  "build_incident": {
+    "run": 45971933892,
+    "stage": "test",
+    "cause": "Gradle 9.2.1 discovered a standalone Java main under src/test, but no framework tests",
+    "resolution": "Move the standalone executable to hudTest source set; check still depends on checkHudStatusLayout",
+    "state": "PASS_ON_RETRY",
+    "retry_run": 45972234091
+  },
+  "static_incident": {
+    "run": 45972234091,
+    "stage": "Verify JAR",
+    "cause": "modId traumacraft must match profile slug",
+    "resolution": "preserve existing registry namespace and align profile slug/filename",
+    "state": "PASS_ON_RETRY",
+    "retry_run": 45972506159
+  },
+  "qa_schema_incident": {
+    "run": 45972506159,
+    "stage": "QA v2 production JAR release gate",
+    "cause": "Coverage IDs must match [a-z][a-z0-9_.-]{0,95}; uppercase TR IDs rejected before server boot",
+    "resolution": "Normalize coverage IDs to lowercase; preserve all assertions",
+    "state": "PASS_ON_RETRY",
+    "retry_run": 45972807939
+  },
+  "previous_rc3": {
+    "run": 45972807939,
+    "level": 4,
+    "assertions": 5,
+    "client": "NOT_RUN",
+    "artifact": 15185873750
+  },
+  "previous_rc4": {
+    "run": 45973405860,
+    "level": 4,
+    "assertions": 8,
+    "artifact": 15185992354,
+    "sha256": "52ea15e82ddff5901e15fc2bdecde50eab1830bbb03385a7ca2df1a2dffd9480"
+  },
+  "branding": {
+    "display_name": "World Logic: Trauma",
+    "loader_id": "worldlogic_trauma",
+    "registry_namespace": "traumacraft",
+    "save_key": "traumacraft_body",
+    "filename": "worldlogic_trauma-neoforge-mc1.21.1-0.5.0-rc4.jar",
+    "note": "Required by standard filename=slug-target-version and modId=slug. Old registry and resource namespace retained for save compatibility. Full migration of existing worlds and client not yet tested. Do not install old and new binaries together."
+  },
+  "ui_rc5": {
+    "asset_scope": "new 240x84 five-palette body atlas; 40x30 overlays with more visible blood; four unframed 16x16 glyphs",
+    "reference": "Blockbench Minecraft Style Guide, vanilla 1.21.1 turtle helmet palette reference, user screenshots",
+    "render": "HUD and inventory backgrounds removed behind anatomy; vanilla tab sprite; inventory center x and y+37; lower HUD except hotbar clearance; only actual conditions",
+    "component_test": "projects/worldlogic-trauma-1.21.1-neoforge/src/hudTest/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
+    "graphical_client": "NOT_RUN",
+    "note": "PNG composite is a native asset preview, not a game screenshot. Visual lint heuristics omit GUI sprites, so local PNG decode, alpha and geometry checks are separate."
+  },
+  "thermal_rc6": {
+    "source": "Thermal branch e02d618a58c51ae91ac178dde70e9ebf1c7271c7: ThermalEvents KEY and ThermalModel.Stage; core API RC20 climate/fatigue only",
+    "transport": "existing persistent stage/body read-only, own synchronized wire stage",
+    "recovery_factors": [
+      1,
+      0.8,
+      0.5,
+      0
+    ],
+    "test": "component fixture covers absent addon, decoding, recovery and no NBT mutation; true combined runtime not run (no published Thermal JAR dependency URL); no client claim"
+  },
+  "art_rc6": {
+    "changed": [
+      "analgesic_tablets",
+      "sterile_patch",
+      "tourniquet",
+      "fracture_brace",
+      "bone_mender",
+      "compact_medkit",
+      "field_medkit",
+      "oversized_medkit",
+      "trauma_kit",
+      "surgical_kit",
+      "hemostatic_gel",
+      "herbal_extract",
+      "medical_polymer",
+      "syringe_body",
+      "adrenaline_injector",
+      "guardian_injector",
+      "focus_injector",
+      "endurance_injector",
+      "recovery_serum",
+      "thermal_cold",
+      "thermal_heat"
+    ],
+    "native": [
+      16,
+      16
+    ],
+    "review": "manual silhouette/palette review, actual vanilla reference textures, PNG alpha validation; client NOT_RUN"
+  },
+  "thermal_rc7": {
+    "provider": "Thermal 0.3.1-rc1 compiled artifact 15188071690; javap verified API_VERSION, status, bodyC, condition and ThermalModel.stage",
+    "fallback": "0.3.0-rc1 read-only state",
+    "protocol": 5,
+    "visual": "vanilla frost and slow heat gradients, not refraction; no duplicate game penalties",
+    "combined": "NOT_RUN",
+    "client": "NOT_RUN"
+  },
+  "respawn_incident": {
+    "reported": "User observed injuries immediately after respawn",
+    "cause": "Potential stale persistent data and login legacy migration; no confirmed live event order trace",
+    "fix": "Write full healthy state on death clone and non-End respawn, remove legacy injury timers on login/respawn, sync fresh body and clear treatment",
+    "scope": "No immunity from actual new damage after respawn"
+  },
+  "rc9": {
+    "balance": "Local 0.35/1.2 HP per 40 ticks; each surviving zone takes 0.5 times overflow; no new limb penalties; chest remains fatal; cursor consumption irreversible at acceptance",
+    "client": "NOT_RUN",
+    "network": "NOT_RUN",
+    "passive_recovery": "Destroyed zones excluded from natural tissue regeneration; existing explicit medical actions remain unchanged.",
+    "panel_layout": "30 layout combinations via pure Java test; compact rows keep HP, condition and bar; active icons move to header when necessary."
+  },
+  "rc10": {
+    "blood": "5000 ml game scale; 18/65 ml per 40 ticks; 6 ml/s rest with no bleeding; fatal <=20%",
+    "pain": "derived injury and bleeding; analgesic reduces perception only",
+    "shock": "0/1/2/3 thresholds from blood and pain; no forced pose",
+    "core": "existing mining/melee replaced; movement max merge; no new movement attribute",
+    "protocol": 6
+  },
+  "rc11": {
+    "wounds": "six independent persistent bit flags by damage source; existing fracture/concussion state",
+    "gait": "HumanoidModel client mixin, two tracking functions, no physics modification",
+    "effects": "bounded slow peripheral color gradients, no flashing, no shader",
+    "retired": [
+      "oversized_medkit",
+      "compact_medkit",
+      "compression_wrap",
+      "bone_mender"
+    ],
+    "primitive": [
+      "rag_dressing",
+      "splint",
+      "herbal_poultice"
+    ],
+    "asset": "new 16x16 poultice, hand drawn with vanilla paper/dandelion references; graphical review pending",
+    "protocol": 7
+  },
+  "rc12": {
+    "api": "TraumaApi v1, immutable status, validated reportInjury, server-thread only",
+    "workpiece": "4x4 persistent mask; empty hand one cell, flint/cobble up to five; full result 2; partial retains exact mask",
+    "retired": [
+      "oversized_medkit",
+      "compact_medkit",
+      "compression_wrap",
+      "bone_mender",
+      "sterile_patch",
+      "fracture_brace",
+      "field_medkit",
+      "recovery_serum",
+      "adrenaline_injector",
+      "guardian_injector",
+      "focus_injector",
+      "endurance_injector"
+    ],
+    "medicine": "11 canonical creative entries including pouch; no fantasy buffs; legacy items alias",
+    "assets": "two hand-drawn native 16x16 items; vanilla moss and green terracotta surfaces; client NOT_RUN",
+    "dependency": "core exact build RC22, runtime open-ended; Thermal optional"
+  },
+  "rc13": {
+    "version": "0.5.1-rc13",
+    "mechanics": [
+      "rag controls weak bleeding without healing",
+      "active bleeding pauses passive bone and tissue recovery",
+      "destroyed main arm blocks herb placement"
+    ],
+    "evidence": "component assertions in existing wounds, thermal and primitive scenarios",
+    "client": "NOT_RUN",
+    "network": "NOT_RUN",
+    "combined_rc28_thermal": "NOT_RUN"
+  },
+  "rc14": {
+    "version": "0.5.2-rc14",
+    "input": "forward+jump near one-block full ledge",
+    "server": "swept AABB checks and server-owned arm mask/tickwise movement",
+    "animation": "HumanoidModel and first-person ItemInHandRenderer; actual graphical contact and network interpolation NOT_RUN",
+    "protocol": 8,
+    "checks": "traumaqa climb",
+    "limitations": [
+      "no half-blocks, two-block climbing or general parkour",
+      "tickwise server correction needs network-player QA",
+      "core RC22 pinned"
+    ]
+  },
+  "rc15": {
+    "version": "0.5.3-rc15",
+    "reported": "camera jerks during mantle",
+    "cause": "RC14 connection.teleport per tick resets client position and teleport acknowledgement; walking bob and phase resets compound jitter",
+    "changes": [
+      "shared route and monotonic bounded timeline",
+      "server movement packet guard; no per-tick teleport",
+      "client normal position interpolation; climb-only walking bob suppression",
+      "final arrival guard with bounded expiry",
+      "suspend local vanilla travel during climb so gravity cannot fight the shared path"
+    ],
+    "evidence": [
+      "traumaqa climb movement ownership fixture",
+      "checkHudStatusLayout monotonic synthetic packet jitter"
+    ],
+    "graphical_client": "NOT_RUN",
+    "network_player": "NOT_RUN",
+    "protocol": 9
+  },
+  "rc16": {
+    "version": "0.5.4-rc16",
+    "reported": "All body regions stop receiving damage with recent Core",
+    "confirmed_source": "Core RC32 Rules.on disables injuries, injury_aggravation, shoulder_impact with worldlogic_trauma loaded; old HP used ruleEnabled as own gate",
+    "fix": "HP owns anatomy and limb functions independently of Core legacy switches",
+    "regression": "registered LivingDamageEvent.Pre under disabled legacy switches; persistence/sync packet, external API, mode exclusions",
+    "combined_core_rc32": "NOT_RUN: latest Core RC32 CI failed",
+    "client": "NOT_RUN",
+    "protocol": 9
+  },
+  "rc17": {
+    "version": "0.5.5-rc17",
+    "legacy": "Thermal 0.7.0 successful build has no peripheral sender, compatibility reads existing felt/wet fields",
+    "modern": "Thermal >=0.8.0-rc1 uses public API v1 only; no fallback dose",
+    "systemic": "custom clinical hypothermia chest damage remains distinct; vanilla freezing peripheral",
+    "tests": "traumaqa frostcompat",
+    "combined": "NOT_RUN: latest Thermal 0.8.1 CI failed settlement climate assertion; standalone 0.7.0 artifact lacks release dependency URL",
+    "protocol": 9
+  }
+}
