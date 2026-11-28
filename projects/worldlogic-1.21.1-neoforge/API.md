@@ -234,3 +234,5 @@ API revision 17; physical revision 2 and protocol 11 unchanged. `WorldLogicApi.p
 
 ### 1.3.4 / RC55
 API revision 18. WorldLogicApi.isTreeDescentTrunk(BlockState) and isDescendingTree(ServerPlayer) expose a bounded server-owned descent grip on vertical LOGS, with empty main hand and held sneak, no collision bypass.
+
+Guide catalogue uses the actual item registry and all loaded registered processing descriptors. JEI integration uses the runtime focus API and JEI configured recipe/uses keybindings; vanilla recipes remain native. Patchouli item entries use actual spotlights, with Core recipe pages and a field-guide filler. Addons may ship resources directly under assets/worldlogic/patchouli_books/field_guide/<locale>/entries/<addon-specific path>, and unique categories. Do not copy gameplay recipes or register speculative IDs.

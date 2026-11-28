@@ -2083,6 +2083,17 @@
           "name": "Core calculations and furnace mixin"
         }
       ]
+    },
+    {
+      "id": "rc55-guide-catalog",
+      "kind": "mechanic",
+      "subject": "Live guide item registry coverage including enabled features, no duplicate IDs, excludes vanilla items from ecosystem catalog",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
     }
   ]
 }

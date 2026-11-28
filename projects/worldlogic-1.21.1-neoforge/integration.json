@@ -470,6 +470,20 @@
       ],
       "consumes": [],
       "integration_review": "Core movement, shared exertion and tagged vertical logs; no TreeChopper mechanics."
+    },
+    {
+      "id": "live_guide_catalog",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GuideCatalog.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/GuideCatalogScreen.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/GuideJeiLookup.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/GuideRecipesScreen.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/GuideScreen.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Registry-derived actual ecosystem item models, native RecipeManager and provider recipes, JEI focus. Patchouli remains optional; addon owners ship native item/recipe resources for their pages.",
+      "no_public_surface_reason": "Private client catalogue over public item and recipe registries."
     }
   ],
   "tests": [
