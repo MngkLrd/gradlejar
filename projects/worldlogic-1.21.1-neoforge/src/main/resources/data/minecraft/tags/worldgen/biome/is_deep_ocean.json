@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:polar_deep_ocean",
+    "worldlogic:cold_deep_ocean",
+    "worldlogic:temperate_deep_ocean",
+    "worldlogic:warm_deep_ocean"
+  ]
+}

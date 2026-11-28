@@ -1,3 +1,7 @@
+# NON-NEGOTIABLE OWNER REQUIREMENT: RC22 GEOGRAPHY MUST NOT REGRESS
+
+Preserve RC22 Earthlike Climate surface relief, coastlines, continents, mountains, plains and drainage. Do not amplify, flatten, reroll or replace its terrain noise to add biomes. New biome classes partition the same climate fields. Compare exact base height at identical coordinates and seeds against the immutable RC22 preset; intentional local cave mouths/soil features are separately reviewed. Do not remove old registry IDs needed by existing saves. This rule overrides older plans to amplify mountain height. Core owns geography, climate, biome classification, geology, hydrology and animals; Terrarian owns plant generation (trees, grass, shrubs and other flora). One selectable Realistic preset for new World Logic worlds, with legacy IDs retained for old saves. Full generated-world and client checks remain required before release-quality claims.
+
 # World Logic subsystem ownership — approved 2026-11-27
 
 Active target: Minecraft 1.21.1 / NeoForge / Java 21 / official mappings. Core works without addons; addons depend on Core, not the reverse.
@@ -21,3 +25,5 @@ RC22: deterministic regional pressure and moving warm/cold/moist/dry fields, clo
 Scientific direction: [METEOROLOGY.md](METEOROLOGY.md). Replace independent weather effects with a coupled, bounded dynamical and thermodynamic model in staged increments; do not advertise institutional validation or use preview fields for gameplay.
 
 Next world generation design: [extended vertical world and geology-led caves](WORLDGEN-EXTENDED.md). Proposed separate new-world preset; do not change existing generation IDs.
+
+RC28 core Hydrology: sparse 16x16 cell water storage near players, saved data, 200-tick bounded updates. Rain/snow input from atmosphere, freeze-controlled infiltration, snow melt, groundwater recharge/discharge, evaporation and excess runoff. Boundary export and atmospheric evaporation are explicitly accounted outputs; no actual neighboring cell transport, physical floods or spring blocks yet. Five soil profiles influence water capacity/permeability. Hydration addon owns thirst.

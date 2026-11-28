@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:forest_tundra",
+    "worldlogic:continental_taiga",
+    "worldlogic:light_conifer_taiga",
+    "worldlogic:humid_taiga",
+    "worldlogic:dark_conifer_taiga",
+    "worldlogic:montane_conifer_forest",
+    "worldlogic:mixed_forest",
+    "worldlogic:temperate_deciduous_forest",
+    "worldlogic:temperate_rainforest",
+    "worldlogic:warm_broadleaf_forest",
+    "worldlogic:subtropical_rainforest",
+    "worldlogic:tropical_monsoon_forest",
+    "worldlogic:seasonal_tropical_forest",
+    "worldlogic:equatorial_rainforest",
+    "worldlogic:montane_cloud_forest"
+  ]
+}
