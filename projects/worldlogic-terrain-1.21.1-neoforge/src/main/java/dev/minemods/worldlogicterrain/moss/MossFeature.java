@@ -2,7 +2,7 @@ package dev.minemods.worldlogicterrain.moss;
 
 import dev.minemods.worldlogicterrain.tree.CoreHabitat;
 import dev.minemods.worldlogicterrain.worldgen.LandscapeMosaic;
-import java.util.Supplier;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;

@@ -50,24 +50,50 @@ jobs:
       - name: Execute existing production server QA without release authorization
         run: |
           set -euo pipefail
-          python3 -m tools.qa.gate "$PROJECT" --jar "$PROJECT/build/libs/worldlogicterrain-neoforge-mc1.21.1-1.6.3.jar" --report terrarian-diagnostic-report.json --work terrarian-diagnostic-work
+          python3 -m tools.qa.gate "$PROJECT" --jar "$PROJECT/build/libs/worldlogicterrain-neoforge-mc1.21.1-1.6.4.jar" --report terrarian-diagnostic-report.json --work terrarian-diagnostic-work
+      - name: Verify optional Metabolism 0.9.0 peer and run combined server diagnostic
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/46113533767" --jq '.head_sha + " " + .conclusion' | grep -Fx '6f1806448dc661e2533d60f3f748456d4e008b13 success'
+          mkdir -p metabolism-candidate metabolism-report
+          gh run download 46113533767 --repo "$GITHUB_REPOSITORY" --name jar-metabolism-1.21.1-neoforge-0.9.0-0 --dir metabolism-candidate
+          gh run download 46113533767 --repo "$GITHUB_REPOSITORY" --name qa-report-0-1 --dir metabolism-report
+          python3 - <<'PY'
+          import hashlib,json,pathlib
+          from tools.qa import server
+          jar=next(pathlib.Path("metabolism-candidate").rglob("metabolism-neoforge-mc1.21.1-0.9.0.jar"))
+          report_path=next(pathlib.Path("metabolism-report").rglob("qa-report-0.json"))
+          meta=json.loads(report_path.read_text())
+          assert meta["eligible"] and meta["jar"]==jar.name and meta["sha256"]==hashlib.sha256(jar.read_bytes()).hexdigest()
+          project=pathlib.Path("projects/worldlogic-terrain-1.21.1-neoforge")
+          p=json.loads((project/"build-profile.json").read_text())
+          report={"kind":"terrarian-metabolism-diagnostic","eligible":False,"checks":[]}
+          try:
+              server.run(p,p["qa"],project/"build/libs"/p["jar_glob"],"terrarian-metabolism-work",report,extra_jars=[jar],scenarios=[("food_ownership","tools/qa/scenarios/worldlogicterrain-metabolism.json")])
+          finally:
+              pathlib.Path("terrarian-metabolism-report.json").write_text(json.dumps(report,indent=2))
+          PY
       - name: Upload diagnostic JAR only, never a release
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: terrarian-1.6.3-core-1.2.1-NOT-RELEASE
-          path: projects/worldlogic-terrain-1.21.1-neoforge/build/libs/worldlogicterrain-neoforge-mc1.21.1-1.6.3.jar
+          name: terrarian-1.6.4-core-1.2.1-NOT-RELEASE
+          path: projects/worldlogic-terrain-1.21.1-neoforge/build/libs/worldlogicterrain-neoforge-mc1.21.1-1.6.4.jar
           if-no-files-found: warn
           retention-days: 7
       - name: Upload diagnostic QA evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: terrarian-1.6.3-diagnostic-evidence
+          name: terrarian-1.6.4-diagnostic-evidence
           path: |
             core-report/qa-report-0.json
             terrarian-diagnostic-report.json
             terrarian-build.log
             terrarian-diagnostic-work/logs/
+            terrarian-metabolism-report.json
+            terrarian-metabolism-work/logs/
           if-no-files-found: warn
           retention-days: 7

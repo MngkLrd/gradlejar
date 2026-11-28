@@ -184,6 +184,14 @@
       "required": true,
       "status": "implemented",
       "fallback": "Existing required Core provides movement and exertion API. No independent stamina."
+    },
+    {
+      "id": "worldlogic:metabolism_physiology",
+      "version": 1,
+      "min_revision": 4,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Without compatible Metabolism retain original Core stamina recovery and tooltip; compatible peer owns automatic FOOD completion."
     }
   ],
   "features": [
@@ -266,13 +274,15 @@
       "id": "mobility_food",
       "source_paths": [
         "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/mobility/TerrainMobility.java",
-        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/food/ForageFoodItem.java"
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/food/ForageFoodItem.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/food/MetabolismBridge.java"
       ],
       "provides": [],
       "consumes": [
-        "worldlogic:survival_physics"
+        "worldlogic:survival_physics",
+        "worldlogic:metabolism_physiology"
       ],
-      "integration_review": "Use existing Core legacy movement and exertion contract without SI mass substitution.",
+      "integration_review": "Use existing Core legacy movement and exertion contract without SI mass substitution. Inspected Metabolism 0.9.0 API v1 rev4 and 0.9.1 v1 rev5; ordinary FOOD completion handled by peer; no reportFoodIntake call. Issue #258.",
       "no_public_surface_reason": "Consumer-only movement and food effects use Core's authoritative survival state."
     }
   ],
@@ -319,6 +329,15 @@
         "worldlogic:mossy_deadwood",
         "worldlogic:environment",
         "worldlogic:material_properties"
+      ],
+      "ref": "tools/qa/scenarios/worldlogicterrain.json",
+      "status": "implemented"
+    },
+    {
+      "id": "terrarian.food_ownership",
+      "capabilities": [
+        "worldlogic:survival_physics",
+        "worldlogic:metabolism_physiology"
       ],
       "ref": "tools/qa/scenarios/worldlogicterrain.json",
       "status": "implemented"

@@ -45,6 +45,16 @@ public final class ForageChecks {
     private static void require(boolean ok,String msg){if(!ok)throw new IllegalStateException(msg);}
     public static void register(RegisterCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("worldlogicterrain").requires(s->s.hasPermission(2))
+          .then(Commands.literal("food_owner_check").then(Commands.argument("expected",StringArgumentType.word()).executes(c->{
+            String expected=StringArgumentType.getString(c,"expected");
+            boolean peer=MetabolismBridge.automaticFood();
+            if(!expected.equals(peer?"metabolism":"terrarian")){c.getSource().sendFailure(Component.literal("Food owner mismatch"));return 0;}
+            try{
+                for(var entry:EXPECTED.entrySet())check(c.getSource().getLevel(),entry.getKey(),entry.getValue());
+                c.getSource().sendSuccess(()->Component.literal("Food owner verified "+expected+": all 12 foods, version boundary, legacy stamina and tooltip policy"),false);return 1;
+            }catch(IllegalStateException ex){c.getSource().sendFailure(Component.literal(ex.getMessage()));return 0;}
+          }))));
+        event.getDispatcher().register(Commands.literal("worldlogicterrain").requires(s->s.hasPermission(2))
           .then(Commands.literal("food_check").then(Commands.argument("food",StringArgumentType.word()).executes(c->{
             String id=StringArgumentType.getString(c,"food");
             if(!EXPECTED.containsKey(id))return 0;
@@ -60,6 +70,11 @@ public final class ForageChecks {
         var item=BuiltInRegistries.ITEM.get(key);
         var plant=BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("worldlogicterrain","wild_"+id));
         require(item instanceof ForageFoodItem,"missing food "+id);
+        require(!MetabolismBridge.supportsAutomaticFood(1,3)&&MetabolismBridge.supportsAutomaticFood(1,4)
+            &&MetabolismBridge.supportsAutomaticFood(1,5)&&!MetabolismBridge.supportsAutomaticFood(2,4),"Metabolism version boundary");
+        var forage=(ForageFoodItem)item;
+        double legacy=MetabolismBridge.automaticFood()?0:expect.recovery();
+        require(forage.legacyRecovery()==legacy,"legacy food/tooltip recovery ownership "+id);
         var p=FakePlayerFactory.get(level,PROFILE);
         var pos=level.getSharedSpawnPos();
         var drops=Block.getDrops(plant.defaultBlockState(),level,pos,null,p,ItemStack.EMPTY);
@@ -90,7 +105,7 @@ public final class ForageChecks {
             require(data.getFoodLevel()==8+expect.hunger(),"hunger not restored "+id+" actual="+data.getFoodLevel());
             require(Math.abs(data.getSaturationLevel()-expect.saturation())<.01,"saturation not restored "+id);
             double after=WorldLogicApi.fatigue(p).fatiguePercent();
-            require(Math.abs(after-Math.max(0,before-expect.recovery()))<.001,"wrong core recovery "+id+" before="+before+" after="+after);
+            require(Math.abs(after-Math.max(0,before-legacy))<.001,"wrong core recovery "+id+" before="+before+" after="+after);
         }finally{
             data.setFoodLevel(oldFood);data.setSaturation(oldSat);
             WorldLogicApi.recoverExertion(p,100);

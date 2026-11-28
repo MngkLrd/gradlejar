@@ -19,3 +19,6 @@ Snapshot.count() exposes the persistent 1..4 fruiting capacity; legacy construct
 
 ## Moss ecology v1 revision 0
 `moss.MossSpecies.values()`, `block()`, `supports(BlockGetter,BlockPos)`, `suitable(CoreHabitat.Sample)` describe terrestrial moss and lichen substrate and Core-provided habitat. Irish moss is a marine `water.BenthicSpecies.IRISH_MOSS` and retains native source identity. Food values are normal Minecraft food components; Metabolism may consume them through its normal food path. No new energy model or independent weather simulation.
+
+## Optional Metabolism integration
+Metabolism API v1 revision >=4 owns ordinary FOOD completion and immediate meal recovery. `food.MetabolismBridge.automaticFood()` discovers the compatible peer by its actual version fields; `ForageFoodItem.legacyRecovery()` is zero when it is available, otherwise returns the previous direct Core recovery. The legacy energy tooltip uses the same policy. Ordinary FOOD never calls reportFoodIntake. See issue #258.

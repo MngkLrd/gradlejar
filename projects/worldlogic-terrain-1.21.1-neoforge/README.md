@@ -83,3 +83,6 @@ RC54 candidate dependency provenance: run 46103365227, artifact 15246915092, com
 
 ### 1.6.3 moss ecology
 Five terrestrial moss/lichen species and marine Irish moss, edible block items for the three requested food types; original native-scale atlases and four bark-overlay patterns. Seventeen mossy log variants include all thirteen Terrarian woods; placement is still climate-gated and dry palms/baobabs are not forced to generate moss. No Core climate duplication. Client visual and natural-world QA pending; diagnostic dependency remains NOT-RELEASE.
+
+### 1.6.4
+Fix incorrect Supplier import in MossFeature. Optional Metabolism v1 revision 4+ takes over FOOD recovery; retain standalone recovery and hide redundant legacy energy tooltip only with the compatible peer. No mandatory dependency or duplicated reportFoodIntake. Combined diagnostic is separate from release qualification.

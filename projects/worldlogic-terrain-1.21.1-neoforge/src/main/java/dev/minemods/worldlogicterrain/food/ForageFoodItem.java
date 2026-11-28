@@ -20,11 +20,12 @@ public final class ForageFoodItem extends Item {
         this.hunger=hunger;
     }
     @Override public ItemStack finishUsingItem(ItemStack stack,Level level,LivingEntity entity) {
-        boolean recover= !level.isClientSide && entity instanceof ServerPlayer p && p.canEat(false) && !stack.isEmpty() && recovery>0;
+        boolean recover= !MetabolismBridge.automaticFood() && !level.isClientSide && entity instanceof ServerPlayer p && p.canEat(false) && !stack.isEmpty() && recovery>0;
         ItemStack result=super.finishUsingItem(stack,level,entity);
         if(recover && entity instanceof ServerPlayer p)WorldLogicApi.recoverExertion(p,recovery);
         return result;
     }
+    public double legacyRecovery(){return MetabolismBridge.automaticFood()?0:recovery;}
     public static double energyIcons(double recovery){return recovery/10.0;}
     private static String format(double value){return java.math.BigDecimal.valueOf(value).stripTrailingZeros().toPlainString();}
     private static net.minecraft.network.chat.MutableComponent icon(String glyph){
@@ -33,6 +34,6 @@ public final class ForageFoodItem extends Item {
     @Override public void appendHoverText(ItemStack stack,Item.TooltipContext context,List<Component> lines,TooltipFlag flag) {
         super.appendHoverText(stack,context,lines,flag);
         lines.add(icon("\uE000").append(Component.literal(" +"+format(hunger/2.0)).withStyle(s->s.withFont(net.minecraft.resources.ResourceLocation.withDefaultNamespace("default")))));
-        if(recovery>0)lines.add(icon("\uE001").append(Component.literal(" +"+format(energyIcons(recovery))).withStyle(s->s.withFont(net.minecraft.resources.ResourceLocation.withDefaultNamespace("default")))));
+        if(legacyRecovery()>0)lines.add(icon("\uE001").append(Component.literal(" +"+format(energyIcons(legacyRecovery()))).withStyle(s->s.withFont(net.minecraft.resources.ResourceLocation.withDefaultNamespace("default")))));
     }
 }

@@ -1216,6 +1216,12 @@
       "command": "worldlogicterrain moss_check",
       "expect": "Moss verified: terrestrial species, climate, support, placement, loot and edible lichens",
       "assertion": true
+    },
+    {
+      "name": "Standalone Terrarian food ownership",
+      "command": "worldlogicterrain food_owner_check terrarian",
+      "expect": "Food owner verified terrarian: all 12 foods, version boundary, legacy stamina and tooltip policy",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -7016,6 +7022,17 @@
         {
           "backend": "server",
           "name": "Moss and lichen mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forage-food-owner",
+      "kind": "mechanic",
+      "subject": "Standalone legacy recovery, version boundary, unchanged food consumption and tooltip policy",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Standalone Terrarian food ownership"
         }
       ]
     }
