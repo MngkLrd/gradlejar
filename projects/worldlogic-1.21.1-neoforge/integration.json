@@ -262,6 +262,35 @@
           "semantics": "Additional veto on natural Overworld monster spawns by time; never forces a spawn."
         }
       ]
+    },
+    {
+      "id": "worldlogic:tree_descent",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "movement"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicApi"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TreeDescent.java"
+      ],
+      "operations": [
+        {
+          "id": "trunk",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Check eligible vertical log state."
+        },
+        {
+          "id": "descending",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Read active tree descent grip."
+        }
+      ]
     }
   ],
   "consumes": [],
@@ -430,6 +459,17 @@
       ],
       "consumes": [],
       "integration_review": "Core owns world ecology; no changes to Terrarian trees, Aqua passive aquatic spawns or existing entities. Natural Overworld monster category night only; non-natural spawners and other dimensions unaffected."
+    },
+    {
+      "id": "tree_descent",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TreeDescent.java"
+      ],
+      "provides": [
+        "worldlogic:tree_descent"
+      ],
+      "consumes": [],
+      "integration_review": "Core movement, shared exertion and tagged vertical logs; no TreeChopper mechanics."
     }
   ],
   "tests": [
@@ -493,6 +533,14 @@
       "id": "worldlogic.hostile_spawn_policy.contract",
       "capabilities": [
         "worldlogic:hostile_spawn_policy"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.tree_descent.contract",
+      "capabilities": [
+        "worldlogic:tree_descent"
       ],
       "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
       "status": "implemented"

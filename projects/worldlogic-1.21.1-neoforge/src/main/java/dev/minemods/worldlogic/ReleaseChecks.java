@@ -10,6 +10,7 @@ public final class ReleaseChecks {
  private static void check(boolean ok,String detail){if(!ok)throw new IllegalStateException("World Logic test failed: "+detail);}
  public static void run(){
   PhysicalMaterialChecks.verify();
+  TreeDescent.verify();
   check(Rules.keys().size()>=115,"rule count");
   check(EnvironmentPhysics.crampedFactor(2,true)<EnvironmentPhysics.crampedFactor(2,false),"cramped mining geometry");
   check(EnvironmentPhysics.swingFactor(2)<EnvironmentPhysics.swingFactor(0),"weapon clearance");

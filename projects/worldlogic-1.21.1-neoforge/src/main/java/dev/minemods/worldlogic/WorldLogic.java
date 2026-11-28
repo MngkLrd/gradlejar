@@ -120,6 +120,9 @@ public final class WorldLogic {
   bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,Balance::breakSpeed);
   bus.addListener(Balance::logout);
   bus.addListener(Body::tick);
+  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,TreeDescent::interact);
+  bus.addListener(TreeDescent::tick);
+  bus.addListener(TreeDescent::logout);
   bus.addListener(Body::jump);
   bus.addListener(Body::breakSpeed);
   bus.addListener(Body::onBreak);

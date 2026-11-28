@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge 1.3.3 development / RC55 water rendering",
+  "name": "World Logic NeoForge 1.3.4 development / RC55 tree descent and field guide",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -2066,6 +2066,17 @@
       "id": "rc55-water-interface-regression",
       "kind": "mechanic",
       "subject": "Render equivalence at native/vanilla and waterlogged block interfaces, air/lava/stone negative controls, shader water material mapping and explicit mapping preservation; client geometry remains separate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc55-tree-descent-filter",
+      "kind": "mechanic",
+      "subject": "Vertical log eligibility with plank, stair, leaf and horizontal log negative controls; player input QA separately pending",
       "checks": [
         {
           "backend": "server",

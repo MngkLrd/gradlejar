@@ -105,6 +105,27 @@
           "Some data requires local observations; missing data does not prove that a process is absent."
         ]
       }
+    },
+    {
+      "id": "tree_descent",
+      "title": {
+        "ru": "Спуск по деревьям",
+        "en": "Tree descent"
+      },
+      "models": [
+        "minecraft:oak_log",
+        "minecraft:spruce_log"
+      ],
+      "body": {
+        "ru": [
+          "Подойдите к вертикальному стволу, освободите основную руку, зажмите Shift и нажмите ПКМ по боковой грани. Удерживайте Shift при спуске. Сцепление прекращается при разрыве ствола, отходе, усталости или отпускании Shift.",
+          "Доски, лестницы, ступени, листья и горизонтальные брёвна не дают такого сцепления. Спуск не проходит сквозь препятствия."
+        ],
+        "en": [
+          "Approach a vertical trunk with an empty main hand, hold Shift and right-click its side. Keep Shift held during descent. Grip stops at a trunk gap, loss of contact, exhaustion or when Shift is released.",
+          "Planks, ladders, stairs, leaves and horizontal logs do not provide this grip. Descent respects collisions."
+        ]
+      }
     }
   ]
 }

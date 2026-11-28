@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=17;
+ public static final int API_REVISION=18;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -298,6 +298,8 @@ public final class WorldLogicApi {
  public static boolean permitsNaturalHostileSpawn(ServerLevel level,net.minecraft.world.entity.EntityType<?> type,net.minecraft.world.entity.MobSpawnType reason){
   serverThread(level);return dev.minemods.worldlogic.HostileSpawnPolicy.permits(level,type,reason);
  }
+ public static boolean isTreeDescentTrunk(BlockState state){return dev.minemods.worldlogic.TreeDescent.trunk(state);}
+ public static boolean isDescendingTree(ServerPlayer player){serverThread(player.serverLevel());return dev.minemods.worldlogic.TreeDescent.gripping(player);}
  public static Fatigue fatigue(ServerPlayer player){
   serverThread(player.serverLevel());
   boolean enabled=Rules.on("exertion")&&!player.isCreative()&&!player.isSpectator();
