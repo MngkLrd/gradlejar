@@ -217,5 +217,17 @@
   "block.worldlogicterrain.morel_colony": "Грибница: сморчок",
   "item.worldlogicterrain.morel": "Сморчок",
   "block.worldlogicterrain.oyster_mushroom_colony": "Грибница: вёшенка",
-  "item.worldlogicterrain.oyster_mushroom": "Вёшенка"
+  "item.worldlogicterrain.oyster_mushroom": "Вёшенка",
+  "block.worldlogicterrain.mossy_oak_log": "Замшелое бревно дуба",
+  "block.worldlogicterrain.mossy_dark_oak_log": "Замшелое бревно тёмного дуба",
+  "block.worldlogicterrain.mossy_birch_log": "Замшелое бревно берёзы",
+  "block.worldlogicterrain.mossy_spruce_log": "Замшелое бревно ели",
+  "block.worldlogicterrain.mossy_willow_log": "Замшелое бревно ивы",
+  "block.worldlogicterrain.mossy_larch_log": "Замшелое бревно лиственницы",
+  "block.worldlogicterrain.mossy_pine_log": "Замшелое бревно сосны",
+  "block.worldlogicterrain.mossy_fir_log": "Замшелое бревно пихты",
+  "block.worldlogicterrain.mossy_cedar_log": "Замшелое бревно кедра",
+  "block.worldlogicterrain.mossy_maple_log": "Замшелое бревно клёна",
+  "block.worldlogicterrain.mossy_beech_log": "Замшелое бревно бука",
+  "block.worldlogicterrain.mossy_alder_log": "Замшелое бревно ольхи"
 }

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "worldlogicterrain:mossy_cedar_log"
+    }
+  ],
+  "result": {
+    "id": "worldlogicterrain:cedar_planks",
+    "count": 4
+  }
+}

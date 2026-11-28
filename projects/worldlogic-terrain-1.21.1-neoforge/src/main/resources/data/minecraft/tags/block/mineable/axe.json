@@ -26,6 +26,18 @@
     "worldlogicterrain:ebony_log",
     "worldlogicterrain:ebony_planks",
     "worldlogicterrain:mahogany_log",
-    "worldlogicterrain:mahogany_planks"
+    "worldlogicterrain:mahogany_planks",
+    "worldlogicterrain:mossy_oak_log",
+    "worldlogicterrain:mossy_dark_oak_log",
+    "worldlogicterrain:mossy_birch_log",
+    "worldlogicterrain:mossy_spruce_log",
+    "worldlogicterrain:mossy_willow_log",
+    "worldlogicterrain:mossy_larch_log",
+    "worldlogicterrain:mossy_pine_log",
+    "worldlogicterrain:mossy_fir_log",
+    "worldlogicterrain:mossy_cedar_log",
+    "worldlogicterrain:mossy_maple_log",
+    "worldlogicterrain:mossy_beech_log",
+    "worldlogicterrain:mossy_alder_log"
   ]
 }

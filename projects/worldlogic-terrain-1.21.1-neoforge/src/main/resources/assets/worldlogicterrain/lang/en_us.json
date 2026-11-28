@@ -217,5 +217,17 @@
   "block.worldlogicterrain.morel_colony": "Morel Colony",
   "item.worldlogicterrain.morel": "Morel",
   "block.worldlogicterrain.oyster_mushroom_colony": "Oyster Mushroom Colony",
-  "item.worldlogicterrain.oyster_mushroom": "Oyster Mushroom"
+  "item.worldlogicterrain.oyster_mushroom": "Oyster Mushroom",
+  "block.worldlogicterrain.mossy_oak_log": "Mossy Oak Log",
+  "block.worldlogicterrain.mossy_dark_oak_log": "Mossy Dark Oak Log",
+  "block.worldlogicterrain.mossy_birch_log": "Mossy Birch Log",
+  "block.worldlogicterrain.mossy_spruce_log": "Mossy Spruce Log",
+  "block.worldlogicterrain.mossy_willow_log": "Mossy Willow Log",
+  "block.worldlogicterrain.mossy_larch_log": "Mossy Larch Log",
+  "block.worldlogicterrain.mossy_pine_log": "Mossy Pine Log",
+  "block.worldlogicterrain.mossy_fir_log": "Mossy Fir Log",
+  "block.worldlogicterrain.mossy_cedar_log": "Mossy Cedar Log",
+  "block.worldlogicterrain.mossy_maple_log": "Mossy Maple Log",
+  "block.worldlogicterrain.mossy_beech_log": "Mossy Beech Log",
+  "block.worldlogicterrain.mossy_alder_log": "Mossy Alder Log"
 }
