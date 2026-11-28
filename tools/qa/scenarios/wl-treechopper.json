@@ -1,0 +1,999 @@
+{
+  "schema": 1,
+  "name": "WorldLogic TreeChopper 0.4.0 server regression (NeoForge FakePlayer event backend)",
+  "steps": [
+    {
+      "command": "forceload add 992 992 1055 1055",
+      "expect": "force loaded|force-loaded|Marked"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "setblock 1000 199 1000 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1000 200 1000 1000 203 1000 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1000 204 1000 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1000 200 1000 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1000 200 1000 wl_treechopper:cut_oak[north=1,south=0,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cut-oak"
+    },
+    {
+      "command": "wltreechopper qa_hit 1000 200 1000 south 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1000 200 1000 wl_treechopper:cut_oak[north=1,south=1,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "opposite-oak"
+    },
+    {
+      "command": "wltreechopper qa_hit 1000 200 1000 south 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1000 200 1000 wl_treechopper:stump_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "stump-oak"
+    },
+    {
+      "command": "execute if block 1000 201 1000 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "trunk-oak"
+    },
+    {
+      "command": "execute if entity @e[type=minecraft:block_display,tag=wl_treechopper_fall,x=1000,y=200,z=1000,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "animation"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_fall,x=1000,y=200,z=1000,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cleanup-oak"
+    },
+    {
+      "command": "execute if entity @e[type=minecraft:item,x=1000,y=200,z=1000,distance=..8,nbt={Item:{id:\"minecraft:oak_log\"}}]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "drops"
+    },
+    {
+      "command": "setblock 1009 199 1000 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1009 200 1000 1009 203 1000 minecraft:spruce_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1009 204 1000 minecraft:spruce_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1009 200 1000 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1009 200 1000 wl_treechopper:cut_spruce[north=1,south=0,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cut-spruce"
+    },
+    {
+      "command": "wltreechopper qa_hit 1009 200 1000 south 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1009 200 1000 wl_treechopper:cut_spruce[north=1,south=1,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "opposite-spruce"
+    },
+    {
+      "command": "wltreechopper qa_hit 1009 200 1000 south 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1009 200 1000 wl_treechopper:stump_spruce",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "stump-spruce"
+    },
+    {
+      "command": "execute if block 1009 201 1000 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "trunk-spruce"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_fall,x=1009,y=200,z=1000,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cleanup-spruce"
+    },
+    {
+      "command": "setblock 1018 199 1000 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1018 200 1000 1018 203 1000 minecraft:birch_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1018 204 1000 minecraft:birch_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1018 200 1000 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1018 200 1000 wl_treechopper:cut_birch[north=1,south=0,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cut-birch"
+    },
+    {
+      "command": "wltreechopper qa_hit 1018 200 1000 south 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1018 200 1000 wl_treechopper:cut_birch[north=1,south=1,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "opposite-birch"
+    },
+    {
+      "command": "wltreechopper qa_hit 1018 200 1000 south 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1018 200 1000 wl_treechopper:stump_birch",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "stump-birch"
+    },
+    {
+      "command": "execute if block 1018 201 1000 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "trunk-birch"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_fall,x=1018,y=200,z=1000,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cleanup-birch"
+    },
+    {
+      "command": "setblock 1027 199 1000 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1027 200 1000 1027 203 1000 minecraft:jungle_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1027 204 1000 minecraft:jungle_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1027 200 1000 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1027 200 1000 wl_treechopper:cut_jungle[north=1,south=0,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cut-jungle"
+    },
+    {
+      "command": "wltreechopper qa_hit 1027 200 1000 south 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1027 200 1000 wl_treechopper:cut_jungle[north=1,south=1,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "opposite-jungle"
+    },
+    {
+      "command": "wltreechopper qa_hit 1027 200 1000 south 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1027 200 1000 wl_treechopper:stump_jungle",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "stump-jungle"
+    },
+    {
+      "command": "execute if block 1027 201 1000 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "trunk-jungle"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_fall,x=1027,y=200,z=1000,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cleanup-jungle"
+    },
+    {
+      "command": "setblock 1000 199 1009 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1000 200 1009 1000 203 1009 minecraft:acacia_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1000 204 1009 minecraft:acacia_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1000 200 1009 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1000 200 1009 wl_treechopper:cut_acacia[north=1,south=0,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cut-acacia"
+    },
+    {
+      "command": "wltreechopper qa_hit 1000 200 1009 south 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1000 200 1009 wl_treechopper:cut_acacia[north=1,south=1,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "opposite-acacia"
+    },
+    {
+      "command": "wltreechopper qa_hit 1000 200 1009 south 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1000 200 1009 wl_treechopper:stump_acacia",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "stump-acacia"
+    },
+    {
+      "command": "execute if block 1000 201 1009 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "trunk-acacia"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_fall,x=1000,y=200,z=1009,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cleanup-acacia"
+    },
+    {
+      "command": "setblock 1009 199 1009 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1009 200 1009 1009 203 1009 minecraft:dark_oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1009 204 1009 minecraft:dark_oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1009 200 1009 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1009 200 1009 wl_treechopper:cut_dark_oak[north=1,south=0,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cut-dark_oak"
+    },
+    {
+      "command": "wltreechopper qa_hit 1009 200 1009 south 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1009 200 1009 wl_treechopper:cut_dark_oak[north=1,south=1,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "opposite-dark_oak"
+    },
+    {
+      "command": "wltreechopper qa_hit 1009 200 1009 south 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1009 200 1009 wl_treechopper:stump_dark_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "stump-dark_oak"
+    },
+    {
+      "command": "execute if block 1009 201 1009 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "trunk-dark_oak"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_fall,x=1009,y=200,z=1009,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cleanup-dark_oak"
+    },
+    {
+      "command": "setblock 1018 199 1009 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1018 200 1009 1018 203 1009 minecraft:mangrove_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1018 204 1009 minecraft:mangrove_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1018 200 1009 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1018 200 1009 wl_treechopper:cut_mangrove[north=1,south=0,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cut-mangrove"
+    },
+    {
+      "command": "wltreechopper qa_hit 1018 200 1009 south 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1018 200 1009 wl_treechopper:cut_mangrove[north=1,south=1,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "opposite-mangrove"
+    },
+    {
+      "command": "wltreechopper qa_hit 1018 200 1009 south 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1018 200 1009 wl_treechopper:stump_mangrove",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "stump-mangrove"
+    },
+    {
+      "command": "execute if block 1018 201 1009 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "trunk-mangrove"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_fall,x=1018,y=200,z=1009,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cleanup-mangrove"
+    },
+    {
+      "command": "setblock 1027 199 1009 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1027 200 1009 1027 203 1009 minecraft:cherry_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1027 204 1009 minecraft:cherry_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1027 200 1009 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1027 200 1009 wl_treechopper:cut_cherry[north=1,south=0,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cut-cherry"
+    },
+    {
+      "command": "wltreechopper qa_hit 1027 200 1009 south 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1027 200 1009 wl_treechopper:cut_cherry[north=1,south=1,east=0,west=0]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "opposite-cherry"
+    },
+    {
+      "command": "wltreechopper qa_hit 1027 200 1009 south 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1027 200 1009 wl_treechopper:stump_cherry",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "stump-cherry"
+    },
+    {
+      "command": "execute if block 1027 201 1009 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "trunk-cherry"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:block_display,tag=wl_treechopper_fall,x=1027,y=200,z=1009,distance=..2]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cleanup-cherry"
+    },
+    {
+      "command": "setblock 1044 199 1044 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1044 200 1044 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1044 200 1044 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1044 200 1044 minecraft:oak_log",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "construction"
+    },
+    {
+      "command": "setblock 1046 200 1044 minecraft:stone",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1046 200 1044 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1046 200 1044 minecraft:stone",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "stone"
+    }
+  ],
+  "coverage": [
+    {
+      "id": "cut-oak",
+      "kind": "block",
+      "subject": "First directional cut oak",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-oak"
+        }
+      ]
+    },
+    {
+      "id": "opposite-oak",
+      "kind": "mechanic",
+      "subject": "Opposing notch oak",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "opposite-oak"
+        }
+      ]
+    },
+    {
+      "id": "stump-oak",
+      "kind": "block",
+      "subject": "Felling leaves stump oak",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "stump-oak"
+        }
+      ]
+    },
+    {
+      "id": "trunk-oak",
+      "kind": "mechanic",
+      "subject": "Upper trunk removed oak",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "trunk-oak"
+        }
+      ]
+    },
+    {
+      "id": "animation",
+      "kind": "entity",
+      "subject": "Display entity exists during fall",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "animation"
+        }
+      ]
+    },
+    {
+      "id": "cleanup-oak",
+      "kind": "mechanic",
+      "subject": "Fall display cleanup oak",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cleanup-oak"
+        }
+      ]
+    },
+    {
+      "id": "drops",
+      "kind": "mechanic",
+      "subject": "Log drops after animation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "drops"
+        }
+      ]
+    },
+    {
+      "id": "cut-spruce",
+      "kind": "block",
+      "subject": "First directional cut spruce",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-spruce"
+        }
+      ]
+    },
+    {
+      "id": "opposite-spruce",
+      "kind": "mechanic",
+      "subject": "Opposing notch spruce",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "opposite-spruce"
+        }
+      ]
+    },
+    {
+      "id": "stump-spruce",
+      "kind": "block",
+      "subject": "Felling leaves stump spruce",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "stump-spruce"
+        }
+      ]
+    },
+    {
+      "id": "trunk-spruce",
+      "kind": "mechanic",
+      "subject": "Upper trunk removed spruce",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "trunk-spruce"
+        }
+      ]
+    },
+    {
+      "id": "cleanup-spruce",
+      "kind": "mechanic",
+      "subject": "Fall display cleanup spruce",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cleanup-spruce"
+        }
+      ]
+    },
+    {
+      "id": "cut-birch",
+      "kind": "block",
+      "subject": "First directional cut birch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-birch"
+        }
+      ]
+    },
+    {
+      "id": "opposite-birch",
+      "kind": "mechanic",
+      "subject": "Opposing notch birch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "opposite-birch"
+        }
+      ]
+    },
+    {
+      "id": "stump-birch",
+      "kind": "block",
+      "subject": "Felling leaves stump birch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "stump-birch"
+        }
+      ]
+    },
+    {
+      "id": "trunk-birch",
+      "kind": "mechanic",
+      "subject": "Upper trunk removed birch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "trunk-birch"
+        }
+      ]
+    },
+    {
+      "id": "cleanup-birch",
+      "kind": "mechanic",
+      "subject": "Fall display cleanup birch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cleanup-birch"
+        }
+      ]
+    },
+    {
+      "id": "cut-jungle",
+      "kind": "block",
+      "subject": "First directional cut jungle",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-jungle"
+        }
+      ]
+    },
+    {
+      "id": "opposite-jungle",
+      "kind": "mechanic",
+      "subject": "Opposing notch jungle",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "opposite-jungle"
+        }
+      ]
+    },
+    {
+      "id": "stump-jungle",
+      "kind": "block",
+      "subject": "Felling leaves stump jungle",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "stump-jungle"
+        }
+      ]
+    },
+    {
+      "id": "trunk-jungle",
+      "kind": "mechanic",
+      "subject": "Upper trunk removed jungle",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "trunk-jungle"
+        }
+      ]
+    },
+    {
+      "id": "cleanup-jungle",
+      "kind": "mechanic",
+      "subject": "Fall display cleanup jungle",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cleanup-jungle"
+        }
+      ]
+    },
+    {
+      "id": "cut-acacia",
+      "kind": "block",
+      "subject": "First directional cut acacia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-acacia"
+        }
+      ]
+    },
+    {
+      "id": "opposite-acacia",
+      "kind": "mechanic",
+      "subject": "Opposing notch acacia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "opposite-acacia"
+        }
+      ]
+    },
+    {
+      "id": "stump-acacia",
+      "kind": "block",
+      "subject": "Felling leaves stump acacia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "stump-acacia"
+        }
+      ]
+    },
+    {
+      "id": "trunk-acacia",
+      "kind": "mechanic",
+      "subject": "Upper trunk removed acacia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "trunk-acacia"
+        }
+      ]
+    },
+    {
+      "id": "cleanup-acacia",
+      "kind": "mechanic",
+      "subject": "Fall display cleanup acacia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cleanup-acacia"
+        }
+      ]
+    },
+    {
+      "id": "cut-dark_oak",
+      "kind": "block",
+      "subject": "First directional cut dark_oak",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-dark_oak"
+        }
+      ]
+    },
+    {
+      "id": "opposite-dark_oak",
+      "kind": "mechanic",
+      "subject": "Opposing notch dark_oak",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "opposite-dark_oak"
+        }
+      ]
+    },
+    {
+      "id": "stump-dark_oak",
+      "kind": "block",
+      "subject": "Felling leaves stump dark_oak",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "stump-dark_oak"
+        }
+      ]
+    },
+    {
+      "id": "trunk-dark_oak",
+      "kind": "mechanic",
+      "subject": "Upper trunk removed dark_oak",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "trunk-dark_oak"
+        }
+      ]
+    },
+    {
+      "id": "cleanup-dark_oak",
+      "kind": "mechanic",
+      "subject": "Fall display cleanup dark_oak",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cleanup-dark_oak"
+        }
+      ]
+    },
+    {
+      "id": "cut-mangrove",
+      "kind": "block",
+      "subject": "First directional cut mangrove",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-mangrove"
+        }
+      ]
+    },
+    {
+      "id": "opposite-mangrove",
+      "kind": "mechanic",
+      "subject": "Opposing notch mangrove",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "opposite-mangrove"
+        }
+      ]
+    },
+    {
+      "id": "stump-mangrove",
+      "kind": "block",
+      "subject": "Felling leaves stump mangrove",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "stump-mangrove"
+        }
+      ]
+    },
+    {
+      "id": "trunk-mangrove",
+      "kind": "mechanic",
+      "subject": "Upper trunk removed mangrove",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "trunk-mangrove"
+        }
+      ]
+    },
+    {
+      "id": "cleanup-mangrove",
+      "kind": "mechanic",
+      "subject": "Fall display cleanup mangrove",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cleanup-mangrove"
+        }
+      ]
+    },
+    {
+      "id": "cut-cherry",
+      "kind": "block",
+      "subject": "First directional cut cherry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cut-cherry"
+        }
+      ]
+    },
+    {
+      "id": "opposite-cherry",
+      "kind": "mechanic",
+      "subject": "Opposing notch cherry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "opposite-cherry"
+        }
+      ]
+    },
+    {
+      "id": "stump-cherry",
+      "kind": "block",
+      "subject": "Felling leaves stump cherry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "stump-cherry"
+        }
+      ]
+    },
+    {
+      "id": "trunk-cherry",
+      "kind": "mechanic",
+      "subject": "Upper trunk removed cherry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "trunk-cherry"
+        }
+      ]
+    },
+    {
+      "id": "cleanup-cherry",
+      "kind": "mechanic",
+      "subject": "Fall display cleanup cherry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cleanup-cherry"
+        }
+      ]
+    },
+    {
+      "id": "construction",
+      "kind": "mechanic",
+      "subject": "Isolated placed log not intercepted",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "construction"
+        }
+      ]
+    },
+    {
+      "id": "stone",
+      "kind": "mechanic",
+      "subject": "Non-log unaffected",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "stone"
+        }
+      ]
+    }
+  ]
+}

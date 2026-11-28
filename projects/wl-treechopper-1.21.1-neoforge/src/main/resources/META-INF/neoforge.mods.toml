@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="All Rights Reserved"
+[[mods]]
+modId="wl_treechopper"
+version="0.4.0"
+displayName="WorldLogic TreeChopper"
+description="Directional geometric axe cuts and animated tree felling."
+[[dependencies.wl_treechopper]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.262,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.wl_treechopper]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
+[[dependencies.wl_treechopper]]
+modId="worldlogic"
+type="optional"
+versionRange="[1.0.0-rc20,)"
+ordering="AFTER"
+side="BOTH"
