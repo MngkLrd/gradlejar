@@ -1157,7 +1157,11 @@
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
-      "command": "wltreechopper qa_hit 1005 200 1025 north 32",
+      "command": "wltreechopper qa_hit 1005 200 1025 north 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "wltreechopper qa_hit 1005 200 1025 north 16",
       "expect": "TreeChopper QA hit dispatched"
     },
     {
