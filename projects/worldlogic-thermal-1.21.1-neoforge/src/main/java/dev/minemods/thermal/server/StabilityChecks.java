@@ -20,6 +20,7 @@ final class StabilityChecks {
       require(ClimateModel.naturalWater(5,15,"GROUNDWATER",0)>ClimateModel.naturalWater(-15,15,"POND",0),"groundwater buffered from cold");
       var plain=model(12,0,0,0,true,0);
       require(model(12,20,0,0,true,0).feelsLikeC()>plain.feelsLikeC(),"immersed radiant heating");
+      require(ClimateComfort.capRadiant(5,40)>ClimateComfort.capRadiant(35,40),"cold water, not warm air, sets radiant ceiling");
       require(model(12,0,8,0,true,0).feelsLikeC()<plain.feelsLikeC(),"immersed local cooling");
       require(model(12,0,0,1,true,0).feelsLikeC()==plain.feelsLikeC(),"no duplicate evaporative wind chill underwater");
       BlockPos at=p.blockPosition();var old=l.getBlockState(at);var above=l.getBlockState(at.above());

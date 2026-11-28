@@ -49,7 +49,8 @@ public final class EnvironmentSampler {
         boolean submerged=waterContact.isPresent()||p.isInWater();
         double waterC=waterContact.map(q->WaterExposure.sample(level,q,air).celsius()).orElseGet(()->water(air,air));
         double localAir=air+room,localHumidity=roomReading.indoor()?roomReading.humidity():outdoorHumidity;
-        var local=localComfort(level,p,localAir,localHumidity,sheltered||roomReading.indoor(),outdoorWind,candidates(level,pos));
+        double thermalMedium=submerged?waterC:localAir;
+        var local=localComfort(level,p,thermalMedium,localHumidity,sheltered||roomReading.indoor(),outdoorWind,candidates(level,pos));
         double radiant=local.heat();
         var regionalWeather=AddonBridge.weather(level,pos);
         double ins=0,ventilation=0,rainShield=0,windShield=0,sunShield=0;
@@ -71,14 +72,14 @@ public final class EnvironmentSampler {
         wind*=1-clamp(windShield,0,.8);
         double shade=VentBlock.shades(level,pos)?1:clamp(sunShield,0,.95);
         double solar=env.solarExposure()*(1-shade);
-        double shadeCooling=Math.max(0,air-24)*shade*env.solarExposure()*.25;
+        double shadeCooling=submerged?0:Math.max(0,air-24)*shade*env.solarExposure()*.25;
         double activity = p.isSprinting() ? 1 : p.isSwimming() ? .75 : p.getDeltaMovement().horizontalDistanceSqr()>.008 ? .35 : 0;
         double retained=clamp(ins,0,1)*(1-.75*skin);
         double warmLimit=28-activity*7-retained*5+clamp(ventilation,0,1)*7;
         double currentBody=p.getPersistentData().getCompound(ThermalEvents.KEY).contains("body")?p.getPersistentData().getCompound(ThermalEvents.KEY).getDouble("body"):37;
         double effective=submerged?waterC+radiant*.30-local.cooling()*.40:air+room+radiant-local.cooling()-shadeCooling-wind*(2+5*skin)-6*skin;
         var portable=ThermalPackItem.comfort(ThermalPackItem.hotbar(p,localHumidity),effective,warmLimit,currentBody);
-        radiant=ClimateComfort.capRadiant(localAir,radiant+portable.heat());
+        radiant=ClimateComfort.capRadiant(thermalMedium,radiant+portable.heat());
         double cooling=Math.min(18,local.cooling()+shadeCooling+portable.cool());
         // Core ambient includes this day's solar/rain offsets; invert only when not clamped.
         double reference=regionalWeather.isPresent()?Double.NaN:Math.abs(air)>=99.99?Double.NaN:air-(sheltered?0:4*env.solarExposure()-2)+(rain?2:0);
