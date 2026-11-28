@@ -2,7 +2,7 @@ import java.security.MessageDigest
 import java.net.URI
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group='dev.minemods.worldlogicterrain'
-version='1.4.1'
+version='1.4.2'
 base.archivesName='worldlogicterrain-neoforge-mc1.21.1'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 neoForge {
@@ -41,7 +41,7 @@ tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.re
 tasks.register('verifyBenthicArt') {
     def names = ['eelgrass','sea_lettuce','sargassum','giant_kelp','red_dulse','coralline_algae','red_sea_star','blue_sea_star','sea_urchin','barrel_sponge','sea_anemone','sea_fan','mussel_bed','widgeon_grass','water_milfoil','hornwort','pondweed','water_crowfoot','river_moss','water_starwort']
     def root = file('src/main/resources/assets/worldlogicterrain')
-    inputs.files(names.collectMany { n -> [new File(root,"textures/block/${n}.png"),new File(root,"models/block/${n}.json"),new File(root,"models/item/${n}.json")] })
+    inputs.files(names.collectMany { n -> [new File(root,"textures/block/${n}.png"),new File(root,"textures/item/${n}.png"),new File(root,"models/block/${n}.json"),new File(root,"models/item/${n}.json")] })
     doLast {
         def hashes = [] as Set
         def json = new groovy.json.JsonSlurper()
@@ -62,9 +62,12 @@ tasks.register('verifyBenthicArt') {
                 }
             }
             def item = json.parse(new File(root,"models/item/${n}.json"))
-            if(item.parent!=expected) throw new GradleException("Aquatic item model mismatch: ${n}")
+            def iconFile = new File(root,"textures/item/${n}.png")
+            def icon = javax.imageio.ImageIO.read(iconFile)
+            if(icon==null || icon.width!=16 || icon.height!=16 || !icon.colorModel.hasAlpha() || !hashes.add(digest(iconFile))) throw new GradleException("Missing, malformed or duplicate aquatic inventory icon: ${n}")
+            if(item.parent!='minecraft:item/generated' || item.textures?.layer0!="worldlogicterrain:item/${n}".toString()) throw new GradleException("Aquatic item must use its own sprite: ${n}")
         }
-        logger.lifecycle("Verified original textures and 1:1 UVs for ${names.size()} benthic species")
+        logger.lifecycle("Verified original block textures, dedicated item icons and 1:1 UVs for ${names.size()} benthic species")
     }
 }
 tasks.named('processResources') { dependsOn tasks.named('verifyBenthicArt') }

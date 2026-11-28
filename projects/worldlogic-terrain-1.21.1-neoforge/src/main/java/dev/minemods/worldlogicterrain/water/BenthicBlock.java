@@ -70,8 +70,8 @@ public final class BenthicBlock extends Block {
         return s.canSurvive(l,p)?s:null;
     }
     @Override protected VoxelShape getShape(BlockState s,BlockGetter l,BlockPos p,CollisionContext ctx){
-        int h=species.height>1?16:switch(species){case RED_SEA_STAR,BLUE_SEA_STAR,CORALLINE_ALGAE,RIVER_MOSS,MUSSEL_BED->4;case SEA_URCHIN->8;default->14;};
-        return Block.box(2,0,2,14,h,14);
+        int h=species.height>1?16:switch(species){case RED_SEA_STAR,BLUE_SEA_STAR,CORALLINE_ALGAE,RIVER_MOSS,MUSSEL_BED->4;case SEA_URCHIN->13;case SEA_LETTUCE->10;default->14;};
+        return Block.box(0,0,0,16,h,16);
     }
     @Override protected boolean isRandomlyTicking(BlockState s){return species.growth>0&&s.getValue(SEGMENT)<species.height-1;}
     @Override protected void randomTick(BlockState s,ServerLevel l,BlockPos p,RandomSource random){

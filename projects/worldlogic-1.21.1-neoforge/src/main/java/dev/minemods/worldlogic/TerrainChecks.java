@@ -47,6 +47,10 @@ public final class TerrainChecks {
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_CLIMATE_SURVEY_PASSED seed={} samples={} land={} water={} landBands={} humidWarm={} humidDesert={} biomes={}",seed,land+water,land,water,bands.size(),wet,wetDesert,counts);
  }
  public static void verifyPreset(ServerLevel l){
+  verifyPresetSeed(l,1234L);
+  verifyPresetSeed(l,-6487130996193510395L);
+ }
+ public static void verifyPresetSeed(ServerLevel l,long seed){
   var key=net.minecraft.resources.ResourceKey.create(Registries.WORLD_PRESET,ResourceLocation.fromNamespaceAndPath("worldlogic","earthlike_climate"));
   var preset=l.registryAccess().lookupOrThrow(Registries.WORLD_PRESET).getOrThrow(key).value();
   var generator=preset.createWorldDimensions().overworld();
@@ -57,7 +61,7 @@ public final class TerrainChecks {
   require(GeoModel.drainageFixture(),"D8 conservation");
   climateFixtures(gen);
   // Real registry/biome source and RandomState; no generated chunks asserted here.
-  for(long seed:new long[]{1234L,-6487130996193510395L}){
+  {
    var state=RandomState.create(gen.generatorSettings().value(),l.registryAccess().lookupOrThrow(Registries.NOISE),seed);
    survey(gen,state,seed);
    int land=0,sea=0;
