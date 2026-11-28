@@ -8,6 +8,8 @@ import net.minecraft.server.level.ServerPlayer;
 public final class WorldLogicDashboards{
  private WorldLogicDashboards(){}
  public static final int API_VERSION=1,API_REVISION=0;
+ @FunctionalInterface public interface Catalog{List<Snapshot> snapshots(ServerPlayer player);}
+ public static final WorldLogicCapabilities.Key<Catalog> CAPABILITY=new WorldLogicCapabilities.Key<>(ResourceLocation.fromNamespaceAndPath("worldlogic","dashboards"),API_VERSION,Catalog.class);
  public record Row(String label,String value,double fraction){
   public Row{Objects.requireNonNull(label);Objects.requireNonNull(value);if(label.isBlank()||label.length()>128||value.length()>128||(!Double.isNaN(fraction)&&(!Double.isFinite(fraction)||fraction<0||fraction>1)))throw new IllegalArgumentException("dashboard row");}
  }

@@ -1995,6 +1995,28 @@
           "name": "All 58 biomes reached in seeded generation survey"
         }
       ]
+    },
+    {
+      "id": "rc55-presentation-contracts",
+      "kind": "mechanic",
+      "subject": "Recipe descriptors, dashboard immutability, capability negotiation, water render identities and shader inheritance",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc55-patchouli-resources",
+      "kind": "mechanic",
+      "subject": "Generated Patchouli spotlight pages, recipe catalog and no cube filler",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
     }
   ]
 }

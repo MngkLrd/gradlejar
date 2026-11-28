@@ -20,4 +20,10 @@ public final class WorldLogicCapabilities {
   return e==null||e.descriptor.version()!=key.version()||e.descriptor.revision()<minimumRevision||e.contract!=key.contract()?Optional.empty():Optional.of(key.contract().cast(e.instance));
  }
  public static List<Descriptor> available(){return ENTRIES.values().stream().map(Entry::descriptor).sorted(Comparator.comparing(x->x.id().toString())).toList();}
+ public static void verify(){
+  var key=new Key<>(ResourceLocation.fromNamespaceAndPath("worldlogic","qa_capability"),1,String.class);
+  register(key,2,"worldlogic","fixture");
+  try{if(!find(key,2).orElseThrow().equals("fixture")||find(key,3).isPresent()||find(new Key<>(key.id(),2,String.class),0).isPresent()||find(new Key<>(key.id(),1,Integer.class),0).isPresent())throw new IllegalStateException("capability negotiation");}
+  finally{ENTRIES.remove(key.id());}
+ }
 }

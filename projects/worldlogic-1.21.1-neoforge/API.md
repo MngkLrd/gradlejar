@@ -214,3 +214,14 @@ QA: executable tests in PhysicalAddonChecks through existing Core selftest/world
 ### 1.2.2 biome hotfix
 
 All 1.2.1 public physical interfaces and material calculations remain unchanged (API revision 15 / PhysicalMaterials revision 2). Use the exact 1.2.2 binary/checksum for integration QA once available; 1.2.1 is still a development candidate, not an eligible release.
+
+## RC55 / Core 1.3.0 (API revision 16)
+
+- `WorldLogicRecipes.registerProcessingProvider(ResourceLocation, Supplier<List<ProcessingRecipe>>)`: common setup; supplier evaluated on client after tags/registries sync. Return actual input, support, tool and output alternatives and translated steps. Use unique owner namespace. Ordinary RecipeManager recipes are handled by JEI directly. No execution or gameplay mutation. JEI optional. Providers must be registered by owning addon; no automatic recovery of arbitrary event-driven recipes.
+- `WorldLogicDashboards.register(ResourceLocation, Function<ServerPlayer, Snapshot>)`: server-authoritative read-only player statistics; use addon mod ID namespace, `dashboard` path to replace legacy bridge. Sections/rows carry translations and values; fraction NaN means no progress bar. No medical/nutrition logic belongs in renderer. Existing public peer APIs are optional fallback, not hard dependencies.
+- `WorldLogicCapabilities.Key<T>`, `register`, `find`, `available`: typed contract version and revision negotiation. Recipe and dashboard catalog keys exposed; existing APIs stay valid.
+- `WorldLogicTabs.registerSelfBackground`: opt-out only for complete self-painted backgrounds. Core-owned dashboard is shown in right rail; legacy details remain accessible if registered.
+- Iris compatibility tags: `worldlogic:shader/waving_grass`, `worldlogic:shader/waving_tall` (block tags). Shaderpack must animate its corresponding vanilla grass material. Explicit pack IDs retained. No universal forced animation.
+- JourneyMap 6 API 2.0 optional seasonal info slot; uses synchronized Core season, not calendar estimation. Client/server Core versions must match (network protocol 11). Physical Materials remains revision 2.
+
+Graphical JEI/JourneyMap/Iris/Sodium/Patchouli and exact multi-addon client evidence is pending. Server fixtures test contracts, not rendered pixels.

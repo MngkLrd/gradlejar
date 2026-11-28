@@ -24,6 +24,8 @@ public final class PhysicalMaterialChecks {
  private static boolean material(ObjectProfile p,String name){return p.components().stream().anyMatch(c->c.materialId().equals(id(name)));}
  public static void verify(){
   PhysicalAddonChecks.verify();
+  dev.minemods.worldlogic.api.WorldLogicCapabilities.verify();
+  ShaderPlantMapping.verify();
   dev.minemods.worldlogic.api.WorldLogicRecipes.verify();
   dev.minemods.worldlogic.api.WorldLogicDashboards.verify();
   for(var a:NaturalFluids.families()){

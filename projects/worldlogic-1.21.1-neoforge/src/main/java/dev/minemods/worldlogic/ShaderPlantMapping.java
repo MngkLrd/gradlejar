@@ -13,7 +13,8 @@ public final class ShaderPlantMapping{
  public static final TagKey<Block> GRASS=TagKey.create(Registries.BLOCK,ResourceLocation.fromNamespaceAndPath("worldlogic","shader/waving_grass"));
  public static final TagKey<Block> TALL=TagKey.create(Registries.BLOCK,ResourceLocation.fromNamespaceAndPath("worldlogic","shader/waving_tall"));
  public static void apply(Object2IntMap<BlockState> ids){
-  int grass=ids.getInt(Blocks.SHORT_GRASS.defaultBlockState());
+  var shortGrass=Blocks.SHORT_GRASS.defaultBlockState();
+  int grass=ids.containsKey(shortGrass)?ids.getInt(shortGrass):-1;
   for(var b:BuiltInRegistries.BLOCK)for(var s:b.getStateDefinition().getPossibleStates()){
    if(ids.containsKey(s)||(!s.is(GRASS)&&!s.is(TALL)))continue;
    int target=grass;
@@ -21,7 +22,15 @@ public final class ShaderPlantMapping{
     var vanilla=Blocks.TALL_GRASS.defaultBlockState().setValue(BlockStateProperties.DOUBLE_BLOCK_HALF,s.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF));
     if(ids.containsKey(vanilla))target=ids.getInt(vanilla);
    }
-   if(target>=0)ids.put(s,target);
+   inherit(ids,s,target);
   }
+ }
+ static void inherit(Object2IntMap<BlockState> ids,BlockState state,int target){if(target>=0&&!ids.containsKey(state))ids.put(state,target);}
+ public static void verify(){
+  var ids=new it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap<BlockState>();
+  var explicit=Blocks.DANDELION.defaultBlockState();var unmapped=Blocks.POPPY.defaultBlockState();
+  ids.put(explicit,42);inherit(ids,explicit,12);inherit(ids,unmapped,-1);
+  if(ids.getInt(explicit)!=42||ids.containsKey(unmapped))throw new IllegalStateException("shader mapping override or fabricated ID");
+  inherit(ids,unmapped,12);if(ids.getInt(unmapped)!=12)throw new IllegalStateException("shader inheritance");
  }
 }

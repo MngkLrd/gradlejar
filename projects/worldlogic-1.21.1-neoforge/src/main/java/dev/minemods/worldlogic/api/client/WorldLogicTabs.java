@@ -26,7 +26,7 @@ public final class WorldLogicTabs {
  public static void registerDashboardTab(ResourceLocation id,int order,Component title,Supplier<ItemStack> icon,Function<Screen,Screen> factory){
   DASHBOARDS.put(id,new Tab(id,order,title,icon,factory));
  }
- public static Optional<Tab> legacyFor(ResourceLocation id){return TABS.values().stream().filter(t->t.id().getNamespace().equals(id.getNamespace())&&!t.id().equals(id)).findFirst();}
+ public static Optional<Tab> legacyFor(ResourceLocation id){return TABS.values().stream().filter(t->t.id().getNamespace().equals(id.getNamespace())).findFirst();}
  public static List<Tab> available(){
   var dashboards=DASHBOARDS.values().stream().filter(t->ModList.get().isLoaded(t.id().getNamespace())).toList();
   var namespaces=dashboards.stream().map(t->t.id().getNamespace()).collect(java.util.stream.Collectors.toSet());

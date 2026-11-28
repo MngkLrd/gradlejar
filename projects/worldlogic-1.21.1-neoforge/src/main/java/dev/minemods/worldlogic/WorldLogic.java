@@ -16,6 +16,8 @@ public final class WorldLogic {
   Content.BLOCKS.register(modBus);
   Content.ITEMS.register(modBus);
   Rules.load();
+  dev.minemods.worldlogic.api.WorldLogicCapabilities.register(dev.minemods.worldlogic.api.WorldLogicRecipes.CAPABILITY,0,"worldlogic",dev.minemods.worldlogic.api.WorldLogicRecipes::processing);
+  dev.minemods.worldlogic.api.WorldLogicCapabilities.register(dev.minemods.worldlogic.api.WorldLogicDashboards.CAPABILITY,0,"worldlogic",dev.minemods.worldlogic.api.WorldLogicDashboards::snapshots);
   modBus.addListener(RuleSync::init);
   modBus.addListener(MarineEcology::registerSpawns);
   var bus=NeoForge.EVENT_BUS;

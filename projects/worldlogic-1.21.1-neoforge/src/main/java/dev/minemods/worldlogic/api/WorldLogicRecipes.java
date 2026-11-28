@@ -8,6 +8,8 @@ import net.minecraft.world.item.ItemStack;
 public final class WorldLogicRecipes {
  private WorldLogicRecipes(){}
  public static final int API_VERSION=1,API_REVISION=0;
+ @FunctionalInterface public interface Catalog{List<ProcessingRecipe> recipes();}
+ public static final WorldLogicCapabilities.Key<Catalog> CAPABILITY=new WorldLogicCapabilities.Key<>(ResourceLocation.fromNamespaceAndPath("worldlogic","field_processing"),API_VERSION,Catalog.class);
  public enum Role { INPUT,SUPPORT,TOOL,OUTPUT }
  public record Slot(Role role,List<ItemStack> alternatives){
   public Slot{Objects.requireNonNull(role);alternatives=alternatives.stream().filter(s->!s.isEmpty()).map(ItemStack::copy).toList();if(alternatives.isEmpty()||alternatives.size()>4096)throw new IllegalArgumentException("alternatives");}

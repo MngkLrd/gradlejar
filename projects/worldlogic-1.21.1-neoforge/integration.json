@@ -49,7 +49,7 @@
     {
       "id": "worldlogic:environment",
       "version": 1,
-      "revision": 15,
+      "revision": 16,
       "domains": [
         "environment"
       ],
@@ -88,7 +88,7 @@
     {
       "id": "worldlogic:survival_physics",
       "version": 1,
-      "revision": 15,
+      "revision": 16,
       "domains": [
         "survival_physics"
       ],
@@ -139,6 +139,97 @@
           "kind": "query",
           "entrypoint": "dev.minemods.worldlogic.api.client.WorldLogicTabs",
           "semantics": "Reserve right-side navigation gutter."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:capability_discovery",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "capability_discovery"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicCapabilities"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicCapabilities.java"
+      ],
+      "operations": [
+        {
+          "id": "register",
+          "kind": "extension",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicCapabilities",
+          "semantics": "Register typed versioned capability"
+        },
+        {
+          "id": "find",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicCapabilities",
+          "semantics": "Version, revision and Java contract negotiation"
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:field_processing",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "field_processing"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicRecipes"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicRecipes.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/compat/WorldLogicJeiPlugin.java"
+      ],
+      "operations": [
+        {
+          "id": "register_processing_provider",
+          "kind": "extension",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicRecipes",
+          "semantics": "Register authoritative read-only processing descriptors"
+        },
+        {
+          "id": "processing",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicRecipes",
+          "semantics": "Return namespaced immutable processing recipes"
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:dashboards",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "dashboards"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicDashboards"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicDashboards.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/DashboardSync.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/PeerDashboardSnapshots.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/DashboardScreen.java"
+      ],
+      "operations": [
+        {
+          "id": "register",
+          "kind": "extension",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicDashboards",
+          "semantics": "Server-side provider of player statistics"
+        },
+        {
+          "id": "snapshots",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicDashboards",
+          "semantics": "Immutable read-only synchronized stats"
         }
       ]
     }
@@ -198,6 +289,88 @@
       ],
       "consumes": [],
       "integration_review": "Metabolism #221 uses tab rail; existing layout fixtures do not establish graphical client evidence."
+    },
+    {
+      "id": "capability_discovery",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicCapabilities.java"
+      ],
+      "provides": [
+        "worldlogic:capability_discovery"
+      ],
+      "consumes": [],
+      "integration_review": "Shared runtime negotiation, preserves existing static APIs."
+    },
+    {
+      "id": "field_processing",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicRecipes.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/compat/WorldLogicJeiPlugin.java"
+      ],
+      "provides": [
+        "worldlogic:field_processing"
+      ],
+      "consumes": [],
+      "integration_review": "Trauma #219 processing is not a vanilla recipe; provider is owned by implementing addon. Core renders JEI. Actual addon registration and graphical tests pending."
+    },
+    {
+      "id": "dashboards",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicDashboards.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/DashboardSync.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/PeerDashboardSnapshots.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/DashboardScreen.java"
+      ],
+      "provides": [
+        "worldlogic:dashboards"
+      ],
+      "consumes": [],
+      "integration_review": "Existing Metabolism, Trauma and Thermal public APIs inspected; optional reflection fallback; no medical or nutrition mechanics moved to Core."
+    },
+    {
+      "id": "water_render",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/WaterRenderCompatibility.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/client/LiquidRendererMixin.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/client/SodiumWaterRendererMixin.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Vanilla and Sodium render equivalence only; water physics unchanged.",
+      "no_public_surface_reason": "Internal presentation adapter, not an addon gameplay API."
+    },
+    {
+      "id": "shader_vegetation",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/ShaderPlantMapping.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/client/IrisPlantMaterialMixin.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Inherit actual shaderpack grass IDs for tagged Terrarian vegetation; explicit pack mappings win.",
+      "no_public_surface_reason": "Internal presentation adapter, not an addon gameplay API."
+    },
+    {
+      "id": "journeymap_seasons",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/compat/JourneyMapSeasons.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/SeasonDisplay.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "JourneyMap 2.0 API optional; Core season authoritative.",
+      "no_public_surface_reason": "Internal presentation adapter, not an addon gameplay API."
+    },
+    {
+      "id": "patchouli_catalog",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/GuideRecipesScreen.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GuideBook.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Core resources and vanilla recipes, optional addon content not fabricated.",
+      "no_public_surface_reason": "Internal presentation adapter, not an addon gameplay API."
     }
   ],
   "tests": [
@@ -229,6 +402,30 @@
       "id": "worldlogic.client_navigation.contract",
       "capabilities": [
         "worldlogic:client_navigation"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.capability_discovery.contract",
+      "capabilities": [
+        "worldlogic:capability_discovery"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.field_processing.contract",
+      "capabilities": [
+        "worldlogic:field_processing"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.dashboards.contract",
+      "capabilities": [
+        "worldlogic:dashboards"
       ],
       "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
       "status": "implemented"
