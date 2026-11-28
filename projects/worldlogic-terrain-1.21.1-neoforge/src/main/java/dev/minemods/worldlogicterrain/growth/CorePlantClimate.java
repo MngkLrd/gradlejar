@@ -31,7 +31,7 @@ final class CorePlantClimate {
     static SeasonalGrowth.Input sample(ServerLevel l,BlockPos pos){
         String season=season(l,pos);
         var env=WorldLogicApi.environment(l,pos);
-        double temp=env.map(WorldLogicApi.Environment::ambientCelsiusEstimate).orElseGet(()->-5+18*l.getBiome(pos).value().getBaseTemperature());
+        double temp=env.map(WorldLogicApi.Environment::ambientCelsiusEstimate).orElseGet(()->-5.0+18.0*l.getBiome(pos).value().getBaseTemperature());
         double moisture=env.flatMap(WorldLogicApi.Environment::regionalClimate).map(WorldLogicApi.RegionalClimate::moistureIndex)
             .orElse(l.getBiome(pos).value().hasPrecipitation()?.55:.20);
         double fertility=.65;
