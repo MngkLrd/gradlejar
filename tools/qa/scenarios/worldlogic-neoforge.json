@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge 1.3.5 development / RC55 rare biome reachability diagnosis",
+  "name": "World Logic NeoForge 1.4.0 development / RC56 mineral families and 3D ores",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -143,7 +143,7 @@
       "assertion": true
     },
     {
-      "name": "All eight mineral types replace actual rock while preserving cave air and bedrock",
+      "name": "All 18 mineral types replace actual rock while preserving cave air and bedrock",
       "command": "worldlogic qa ore_bodies",
       "expect": "WORLDLOGIC_ORE_BODIES_PASSED",
       "assertion": true
@@ -1109,7 +1109,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "All eight mineral types replace actual rock while preserving cave air and bedrock"
+          "name": "All 18 mineral types replace actual rock while preserving cave air and bedrock"
         }
       ]
     },
@@ -2103,6 +2103,17 @@
         {
           "backend": "server",
           "name": "All 58 biomes reached in seeded generation survey"
+        }
+      ]
+    },
+    {
+      "id": "rc56-mineral-content",
+      "kind": "mechanic",
+      "subject": "Ten new minerals, 20 registered block variants and specimens, mineral composition, actual synthetic district placement, old cave and bedrock controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 18 mineral types replace actual rock while preserving cave air and bedrock"
         }
       ]
     }

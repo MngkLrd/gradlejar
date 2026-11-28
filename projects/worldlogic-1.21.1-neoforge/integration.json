@@ -23,7 +23,8 @@
       "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
       "source_paths": [
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalMaterials.java",
-        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalWater.java"
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalWater.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/MineralContent.java"
       ],
       "operations": [
         {
@@ -299,7 +300,8 @@
       "id": "material_properties",
       "source_paths": [
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalMaterials.java",
-        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalWater.java"
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalWater.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/MineralContent.java"
       ],
       "provides": [
         "worldlogic:material_properties"
@@ -484,6 +486,19 @@
       "consumes": [],
       "integration_review": "Registry-derived actual ecosystem item models, native RecipeManager and provider recipes, JEI focus. Patchouli remains optional; addon owners ship native item/recipe resources for their pages.",
       "no_public_surface_reason": "Private client catalogue over public item and recipe registries."
+    },
+    {
+      "id": "regional_minerals",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/MineralContent.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GeologyModel.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GeologyGeneration.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GeneratedOreAudit.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Independent seeded real mineral families after original eight ore and pocket placements; Core material API and normal registries are authoritative. No production chains. Existing terrain and fluids untouched.",
+      "no_public_surface_reason": "Worldgen internal placement; physical data exposed by existing material API and registry."
     }
   ],
   "tests": [
