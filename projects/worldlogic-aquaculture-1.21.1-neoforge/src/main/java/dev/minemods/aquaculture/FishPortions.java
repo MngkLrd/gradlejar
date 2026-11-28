@@ -14,7 +14,7 @@ final class FishPortions {
  private FishPortions(){}
  static final int PORTION_G=100;
  // Gameplay fillet-yield priors, not chemical analyses. Bones, skin and viscera are discarded.
- static double yield(Species s){return switch(s.id()){
+ static double edibleYield(Species s){return switch(s.id()){
   case "halibut","flounder","tuna","mahi_mahi","arapaima"->.60;
   case "carp","crucian_carp","bream","pacu","piranha","loach","rotan"->.40;
   default->.50;
@@ -25,7 +25,7 @@ final class FishPortions {
   if(!tag.contains("wl_fish_mass_kg",Tag.TAG_ANY_NUMERIC))return 0;
   double kg=tag.getDouble("wl_fish_mass_kg");
   if(!Double.isFinite(kg)||kg<=0||kg>s.maxKg()*1.01)return 0;
-  return (int)Math.floor(kg*1000*yield(s));
+  return (int)Math.floor(kg*1000*edibleYield(s));
  }
  static ItemStack stack(Species s,AquaApi.Preparation prep,int grams){
   var map=prep==AquaApi.Preparation.RAW?Aquaculture.RAW_PORTIONS:Aquaculture.COOKED_PORTIONS;
