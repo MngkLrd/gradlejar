@@ -28,8 +28,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.*;
 import java.util.function.Supplier;
 
-@Mod(Aquaculture.ID)
+@Mod(Aquaculture.MOD_ID)
 public final class Aquaculture {
+ public static final String MOD_ID="worldlogic_aqua";
+ // Keep established registry IDs for existing worlds and food tags.
  public static final String ID="aquaculture";
  public static final DeferredRegister<EntityType<?>> ENTITIES=DeferredRegister.create(Registries.ENTITY_TYPE,ID);
  public static final DeferredRegister<Item> ITEMS=DeferredRegister.create(Registries.ITEM,ID);
@@ -90,16 +92,7 @@ public final class Aquaculture {
   return new Habitat(profile.kind(),temp,profile.salinityGkg(),profile.contaminationRisk(),depth(level,pos));
  }
  public static Species choose(Habitat h,net.minecraft.util.RandomSource random){
-  if(h==null)return null;
-  int total=0;
-  for(Species s:Species.ALL)total+=s.habitatWeight(h.kind,h.temp,h.salt,h.risk,h.depth);
-  if(total==0)return null;
-  int draw=random.nextInt(total);
-  for(Species s:Species.ALL){
-   draw-=s.habitatWeight(h.kind,h.temp,h.salt,h.risk,h.depth);
-   if(draw<0)return s;
-  }
-  return null;
+  return SpawnSelection.choose(h,Map.of(),random);
  }
  public static BlockPos findWaterColumn(ServerLevel level,int x,int z,int nearY){
   BlockPos probe=new BlockPos(x,nearY,z);
@@ -110,7 +103,7 @@ public final class Aquaculture {
    for(int offset=0;offset<=10;offset++){
     BlockPos pos=new BlockPos(x,start-offset,z);
     if(Math.abs(pos.getY()-nearY)>48||level.isOutsideBuildHeight(pos))continue;
-    if(water(level,pos)&&water(level,pos.below()))return pos;
+    if(water(level,pos))return pos;
    }
   }
   return null;
@@ -126,31 +119,33 @@ public final class Aquaculture {
  }
  private void tick(ServerTickEvent.Post event){
   var server=event.getServer();
-  if(server.getTickCount()%80!=0)return;
+  if(server.getTickCount()%60!=0)return;
   for(ServerPlayer player:server.getPlayerList().getPlayers()){
    if(player.isSpectator())continue;
    ServerLevel level=player.serverLevel();
    if(!level.dimension().equals(Level.OVERWORLD))continue;
    BlockPos origin=player.blockPosition();
    var nearby=level.getEntitiesOfClass(Fish.class,new AABB(origin).inflate(48));
-   if(nearby.size()>=30)continue;
-   for(int a=0;a<8;a++){
-    int dx=level.random.nextInt(65)-32,dz=level.random.nextInt(65)-32;
-    if(dx*dx+dz*dz<64)continue;
+   if(nearby.size()>=SpawnSelection.LOCAL_CAP)continue;
+   Map<String,Integer> counts=new HashMap<>();
+   for(Fish fish:nearby){Species s=species(fish);if(s!=null)counts.merge(s.id(),1,Integer::sum);}
+   int added=0;
+   // Alternate nearby shore/river samples and more distant open-water samples.
+   for(int a=0;a<16&&added<2&&nearby.size()+added<SpawnSelection.LOCAL_CAP;a++){
+    int radius=a%2==0?18:40;
+    int dx=level.random.nextInt(radius*2+1)-radius,dz=level.random.nextInt(radius*2+1)-radius;
+    if(dx*dx+dz*dz<36||dx*dx+dz*dz>radius*radius)continue;
     int x=origin.getX()+dx,z=origin.getZ()+dz;
     BlockPos surface=findWaterColumn(level,x,z,origin.getY());
     if(surface==null)continue;
-    // Search distinct depths; one unsuitable or obstructed cell must not discard the entire column.
     for(int b=0;b<6;b++){
      BlockPos pos=surface.below(b);
      if(!water(level,pos)||Math.abs(pos.getY()-origin.getY())>48)break;
      Habitat h=habitat(level,pos);
      if(h==null)continue;
-     Species s=choose(h,level.random);
+     Species s=SpawnSelection.choose(h,counts,level.random);
      if(s==null)continue;
-     long count=nearby.stream().filter(f->species(f)==s).count();
-     if(count>=Math.min(12,s.maxGroup()))continue;
-     if(spawn(level,pos,s,h)!=null){a=8;break;}
+     if(spawn(level,pos,s,h)!=null){counts.merge(s.id(),1,Integer::sum);added++;break;}
     }
    }
   }
@@ -168,6 +163,19 @@ public final class Aquaculture {
  }
  private void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("aquaculture").requires(src->src.hasPermission(2))
+   .then(Commands.literal("spawn_selftest").executes(c->{
+    SpawnChecks.run(c.getSource().getLevel());
+    c.getSource().sendSuccess(()->Component.literal("AQUA_SPAWN_36_PASS"),false);
+    return Command.SINGLE_SUCCESS;
+   }))
+   .then(Commands.literal("habitat").executes(c->{
+    var l=c.getSource().getLevel();
+    var pos=BlockPos.containing(c.getSource().getPosition());
+    var h=habitat(l,pos);
+    if(h==null){c.getSource().sendFailure(Component.literal("No loaded water at command position"));return 0;}
+    c.getSource().sendSuccess(()->Component.literal(h.toString()+" eligible="+SpawnSelection.probabilities(h,Map.of())),false);
+    return Command.SINGLE_SUCCESS;
+   }))
    .then(Commands.literal("water_selftest").executes(c->{
     WaterChecks.run(c.getSource().getLevel());
     c.getSource().sendSuccess(()->Component.literal("AQUA_NATIVE_FISH_WATER_PASS"),false);
@@ -183,7 +191,7 @@ public final class Aquaculture {
     for(Species s:Species.ALL){
      var kind=s.region().startsWith("marine")?WorldLogicApi.WaterKind.SEA:s.region().equals("wetland")?WorldLogicApi.WaterKind.WETLAND:WorldLogicApi.WaterKind.LAKE;
      double temp=(s.minTemp()+s.maxTemp())/2,salt=(s.minSalt()+s.maxSalt())/2;
-     if(!s.suitable(kind,temp,salt,.1,s.minDepth())||s.suitable(WorldLogicApi.WaterKind.NONE,temp,salt,.1,s.minDepth())||s.suitable(kind,temp,salt,.99,s.minDepth())||s.suitable(kind,temp,salt,.1,0))throw new IllegalStateException("habitat "+s.id());
+     if(!s.suitable(kind,temp,salt,.1,s.minDepth())||s.suitable(WorldLogicApi.WaterKind.NONE,temp,salt,.1,s.minDepth())||s.suitable(kind,temp,salt,1.01,s.minDepth())||s.suitable(kind,temp,salt,.1,0))throw new IllegalStateException("habitat "+s.id());
      var entity=TYPES.get(s.id()).get().create(level);
      if(!(entity instanceof Fish f))throw new IllegalStateException("entity "+s.id());
      var stack=catchStack(f,s);

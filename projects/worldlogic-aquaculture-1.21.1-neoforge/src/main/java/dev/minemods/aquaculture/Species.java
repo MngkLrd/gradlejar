@@ -24,8 +24,12 @@ public record Species(String id,String en,String ru,String region,double minTemp
   }
   return Collections.unmodifiableMap(m);
  }
+ // Core's wetland contamination index includes natural peat, not just toxic pollution.
+ public double maxRisk(WaterKind kind){
+  return kind==WaterKind.WETLAND&&region.equals("wetland")?1.0:.85;
+ }
  public boolean suitable(WaterKind kind,double temp,double salt,double risk,int depth){
-  if(!Double.isFinite(temp)||!Double.isFinite(salt)||!Double.isFinite(risk)||salt<0||risk<0||risk>.85||depth<minDepth||temp<minTemp||temp>maxTemp||salt<minSalt||salt>maxSalt)return false;
+  if(!Double.isFinite(temp)||!Double.isFinite(salt)||!Double.isFinite(risk)||salt<0||risk<0||risk>maxRisk(kind)||depth<minDepth||temp<minTemp||temp>maxTemp||salt<minSalt||salt>maxSalt)return false;
   boolean marine=kind==WaterKind.SEA||kind==WaterKind.BRACKISH;
   if(region.startsWith("marine"))return marine;
   if(marine)return kind==WaterKind.BRACKISH&&maxSalt>=5;
@@ -38,7 +42,7 @@ public record Species(String id,String en,String ru,String region,double minTemp
  public int habitatWeight(WaterKind kind,double temp,double salt,double risk,int depth){
   if(!suitable(kind,temp,salt,risk,depth))return 0;
   double center=(minTemp+maxTemp)/2, half=Math.max(1,(maxTemp-minTemp)/2);
-  return Math.max(1,(int)Math.round(weight*(1-.65*Math.abs(temp-center)/half)*(1-.65*risk)));
+  return Math.max(1,(int)Math.round(weight*(1-.65*Math.abs(temp-center)/half)*(1-.85*risk)));
  }
 }
 

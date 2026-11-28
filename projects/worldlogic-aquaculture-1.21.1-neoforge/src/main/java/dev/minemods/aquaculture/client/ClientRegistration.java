@@ -9,7 +9,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
-@EventBusSubscriber(modid=Aquaculture.ID,bus=EventBusSubscriber.Bus.MOD,value=Dist.CLIENT)
+@EventBusSubscriber(modid=Aquaculture.MOD_ID,bus=EventBusSubscriber.Bus.MOD,value=Dist.CLIENT)
 public final class ClientRegistration {
  @SubscribeEvent public static void register(EntityRenderersEvent.RegisterRenderers e){
   for(var s:Species.ALL)e.registerEntityRenderer(Aquaculture.TYPES.get(s.id()).get(),ctx->new RegionalFishRenderer(ctx,s));
