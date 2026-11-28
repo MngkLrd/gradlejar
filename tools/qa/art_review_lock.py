@@ -15,6 +15,8 @@ BASELINE="cb29b55f45f87782094b77e6fd0670d7fc601ddc"
 ATLAS_BASELINE="8e7d5b44a17360965ec0965874268d4112129d2d"
 # R11 item/armor-specific obligations only apply to new/changed artwork since adoption.
 ITEM_BASELINE="327a26138826b6142651918f684ee454eadea222"
+# R12 mob evidence is scoped to new/changed artwork, not historical migration.
+MOB_BASELINE="73464b88ad7af3089a30fd21244f4688d5c2346e"
 ATLAS_FILE=ROOT/"tools/qa/research/vanilla-art-rules.json"
 ATLAS_FINDINGS=("applied_pattern","reference_limit","native_view","context_view")
 CONTEXT_TYPES={"tile_3x3","icon_family","model_uv","placed_cutout","gui_state","animation_frames","other"}
@@ -33,6 +35,8 @@ PROFILES.update({
     "armor_icon":["slot_silhouette","construction_and_material","equipped_identity"],
     "armor_icon_overlay":["base_alignment","composite_readability","tint_role"],
     "armor_uv":["uv_face_layout","slot_coverage","seam_and_layer_alignment","equipped_identity"],
+    "mob_body":["species_anatomy","uv_face_layout","pivot_and_motion","behavior_readability"],
+    "mob_layer":["base_alignment","layer_render_role","state_visibility","behavior_readability"],
 })
 ARMOR_SLOTS={"helmet","chestplate","leggings","boots"}
 ARMOR_ICON=re.compile(r"(?:^|/)textures/item/(?:[^/]+/)*[^/]+_(helmet|chestplate|leggings|boots)(_overlay)?\.png$")
@@ -118,6 +122,49 @@ def equipment_errors(root,project,shared,path,record,catalog):
     if covered!=set(slots):errors.append("Missing valid counterpart for every declared equipment slot")
     return errors
 
+MOB_PROFILES={"mob_body","mob_layer"}
+MOB_BEHAVIORS={"peaceful","neutral","hostile"}
+ENTITY_PNG=re.compile(r"(?:^|/)textures/entity/.+\.png$")
+ENTITY_ID=re.compile(r"[a-z0-9_.-]+:[a-z0-9_./-]+")
+
+def mob_errors(root,project,shared,path,record,catalog):
+    if not isinstance(record,dict):return []
+    profile=record.get("material_profile")
+    if profile not in MOB_PROFILES:
+        if ENTITY_PNG.search(path) and not observation(record.get("non_mob_reason")):
+            return ["Entity texture requires mob_body/mob_layer or concrete non-mob render-role explanation"]
+        return []
+    e=record.get("mob")
+    if not isinstance(e,dict):return ["Missing mob review evidence"]
+    errors=[]
+    eid=e.get("entity_id")
+    if not isinstance(eid,str) or not ENTITY_ID.fullmatch(eid) or any(p in ("",".","..") for p in eid.split(":",1)[1].split("/")):
+        errors.append("Invalid mob registry ID")
+    if not isinstance(e.get("behavior"),str) or e["behavior"] not in MOB_BEHAVIORS:errors.append("Declare peaceful, neutral or hostile behavior toward player")
+    for key in ("behavior_conditions","model_binding","motion_review","client_evidence"):
+        if not observation(e.get(key)):errors.append("Missing concrete mob observation: "+key)
+    if e.get("client_status") not in ("PASS","NOT_RUN","UNSUPPORTED"):
+        errors.append("Declare separate actual client status for mob")
+    role=e.get("role")
+    if role not in (("base","variant") if profile=="mob_body" else ("overlay",)):
+        errors.append("Mob role/profile mismatch")
+    if role in ("variant","overlay"):
+        link=e.get("base_texture")
+        if not isinstance(link,dict):
+            return errors+["Mob variant/overlay requires actual base texture binding"]
+        digest=link.get("sha256");rel=link.get("path");ref=link.get("vanilla_reference")
+        if not isinstance(digest,str) or not SHA.fullmatch(digest) or (rel is None)==(ref is None):
+            return errors+["Invalid mob base texture locator/hash"]
+        if rel is not None:
+            if not isinstance(rel,str) or not TEXTURE.search(rel) or any(x in ("",".","..") for x in rel.split("/")) or not belongs(rel,project,shared) or rel==path:
+                return errors+["Invalid mob base texture path"]
+            f=(root/rel).resolve()
+            if not f.is_relative_to(root.resolve()) or not f.is_file() or hashlib.sha256(f.read_bytes()).hexdigest()!=digest:
+                errors.append("Missing or stale mob base texture: "+rel)
+        elif not isinstance(ref,str) or not ref.startswith("entity/") or not isinstance(catalog,dict) or catalog["references"].get(ref)!=digest or not observation(link.get("reuse_reason")):
+            errors.append("Unverified or unexplained vanilla mob base texture")
+    return errors
+
 def git(root,*args):
     return subprocess.check_output(["git",*args],cwd=root)
 
@@ -161,8 +208,8 @@ def atlas_errors(record,profile,catalog):
         if ref.get("minecraft")==catalog["minecraft"] and path in known and ref.get("sha256")!=known[path]:
             errors.append("Official atlas SHA-256 mismatch: "+rid)
     if rule_id=="custom":
-        if profile not in ("other","tool","stateful_item","functional_item","consumable","armor_icon","armor_icon_overlay","armor_uv"):
-            errors.append("Custom atlas rule is reserved for genuinely uncovered other or specialized item/armor profiles")
+        if profile not in ("other","tool","stateful_item","functional_item","consumable","armor_icon","armor_icon_overlay","armor_uv","mob_body","mob_layer"):
+            errors.append("Custom atlas rule is reserved for genuinely uncovered other or specialized item/armor/mob profiles")
         if any(profile in q["profiles"] and n in q["reference_ids"] for q in catalog["rules"].values()):
             errors.append("Known applicable comparator requires an atlas rule, not custom")
         if not observation(evidence.get("custom_reason")):
@@ -187,6 +234,8 @@ def atlas_errors(record,profile,catalog):
         errors.append("Item sprite requires native icon-family review context")
     elif profile=="armor_uv" and context!="model_uv":
         errors.append("Worn armor requires actual model/UV preview review context")
+    elif profile in MOB_PROFILES and context!="model_uv":
+        errors.append("Mob art requires actual model/UV preview review context")
     return errors
 
 def validate(record,digest,atlas_required=False,catalog=None):
@@ -226,7 +275,7 @@ def belongs(path,project,shared):
     if project==".":return path.startswith("src/")
     return path.startswith(project.rstrip("/")+"/")
 
-def project_errors(root,project,paths,atlas_paths=(),catalog=None,item_paths=()):
+def project_errors(root,project,paths,atlas_paths=(),catalog=None,item_paths=(),mob_paths=()):
     profile=json.loads((root/project/"build-profile.json").read_text(encoding="utf-8"))
     relevant=[p for p in paths if belongs(p,project,profile.get("shared_sources",[]))]
     if not relevant:return []
@@ -246,6 +295,8 @@ def project_errors(root,project,paths,atlas_paths=(),catalog=None,item_paths=())
         errors.extend(path+": "+e for e in validate(rows.get(path),digest,path in atlas_paths,catalog))
         if path in item_paths and profile.get("minecraft")=="1.21.1":
             errors.extend(path+": "+e for e in equipment_errors(root,project,profile.get("shared_sources",[]),path,rows.get(path),catalog))
+        if path in mob_paths:
+            errors.extend(path+": "+e for e in mob_errors(root,project,profile.get("shared_sources",[]),path,rows.get(path),catalog))
     return errors
 
 def main(argv=None):
@@ -258,11 +309,12 @@ def main(argv=None):
         raise ValueError("Invalid project selection")
     atlas_paths=set(changed(ROOT,ATLAS_BASELINE)) if projects else set()
     item_paths=set(changed(ROOT,ITEM_BASELINE)) if projects else set()
-    paths=sorted(set(changed(ROOT))|atlas_paths|item_paths) if projects else []
-    catalog=load_atlas() if atlas_paths or item_paths else None
+    mob_paths=set(changed(ROOT,MOB_BASELINE)) if projects else set()
+    paths=sorted(set(changed(ROOT))|atlas_paths|item_paths|mob_paths) if projects else []
+    catalog=load_atlas() if atlas_paths or item_paths or mob_paths else None
     blocked=[]
     for project in projects:
-        errors=project_errors(ROOT,project,paths,atlas_paths,catalog,item_paths)
+        errors=project_errors(ROOT,project,paths,atlas_paths,catalog,item_paths,mob_paths)
         if errors:
             blocked.append(project)
             print(f"ART REVIEW LOCK: {project} BLOCKED ({len(errors)} issues)")

@@ -12,6 +12,21 @@ DOCS = (
     "docs/BOT-ACTIONS.md", "docs/RECIPE-QA.md", "docs/VISUAL-QA.md",
     "docs/VANILLA-ART-ATLAS.md", "docs/VANILLA-RESEARCH.md", "docs/VANILLA-REAL-ART-REVIEW.md",
     "docs/MOD-NAMING.md", "docs/MOD-ADAPTATION.md", "docs/ITEM-ARMOR-ART.md",
+    "docs/qa/QA-V2.md",
+    "docs/qa/QA-ASSIGNMENT-TEMPLATE.md",
+    "docs/qa/BOT-ACTIONS.md",
+    "docs/qa/RECIPE-QA.md",
+    "docs/art/VISUAL-QA.md",
+    "docs/art/ITEM-ARMOR-ART.md",
+    "docs/art/VANILLA-ART-ATLAS.md",
+    "docs/research/VANILLA-RESEARCH.md",
+    "docs/research/VANILLA-REAL-ART-REVIEW.md",
+    "docs/development/MOD-NAMING.md",
+    "docs/development/MOD-ADAPTATION.md",
+    "docs/README.md",
+    "docs/art/BLOCK-ART.md",
+    "docs/art/UI-ART.md",
+    "docs/art/MOB-ART.md",
 )
 INLINE = re.compile(r"!?\[[^\]\n]*\]\((?:<([^>\n]+)>|([^\s)\n]+))(?:[ \t]+[\"'][^)\n]*[\"'])?\)")
 HEADING = re.compile(r"^ {0,3}#{1,6}\s+(.+?)\s*#*\s*$")
@@ -79,6 +94,16 @@ class SharedDocsLinks(unittest.TestCase):
     def test_shared_reference_links(self):
         tracked = set(subprocess.check_output(["git","ls-files","-z"],cwd=ROOT,text=True).split("\0"))
         self.assertEqual(inspect(ROOT,tracked), [])
+
+    def test_canonical_topic_docs_and_legacy_pointers(self):
+        for old,new in [["docs/QA-V2.md","docs/qa/QA-V2.md"],["docs/QA-ASSIGNMENT-TEMPLATE.md","docs/qa/QA-ASSIGNMENT-TEMPLATE.md"],["docs/BOT-ACTIONS.md","docs/qa/BOT-ACTIONS.md"],["docs/RECIPE-QA.md","docs/qa/RECIPE-QA.md"],["docs/VISUAL-QA.md","docs/art/VISUAL-QA.md"],["docs/ITEM-ARMOR-ART.md","docs/art/ITEM-ARMOR-ART.md"],["docs/VANILLA-ART-ATLAS.md","docs/art/VANILLA-ART-ATLAS.md"],["docs/VANILLA-RESEARCH.md","docs/research/VANILLA-RESEARCH.md"],["docs/VANILLA-REAL-ART-REVIEW.md","docs/research/VANILLA-REAL-ART-REVIEW.md"],["docs/MOD-NAMING.md","docs/development/MOD-NAMING.md"],["docs/MOD-ADAPTATION.md","docs/development/MOD-ADAPTATION.md"]]:
+            self.assertIn(old,DOCS)
+            self.assertIn(new,DOCS)
+            text=(ROOT/old).read_text(encoding="utf-8")
+            self.assertIn("Canonical content moved",text)
+            self.assertIn(new,text)
+            self.assertGreater((ROOT/new).stat().st_size,0)
+        self.assertIn("docs/README.md",DOCS)
 
     def test_missing_file_wrong_case_and_heading(self):
         import tempfile
