@@ -7,7 +7,7 @@ import net.neoforged.fml.ModList;
  * No Patchouli classes are linked when the mod is absent. */
 final class GuideOpener{
  private static final ResourceLocation BOOK=ResourceLocation.fromNamespaceAndPath("worldlogic","field_guide");
- static void open(Screen parent){Minecraft.getInstance().setScreen(new GuideScreen(parent));}
+ static void open(Screen parent){openPatchouli(parent);}
  static void openPatchouli(Screen parent){
   if(ModList.get().isLoaded("patchouli")){
    try{

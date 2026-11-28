@@ -90,8 +90,10 @@ public final class GuideBook{
       if(type.equals("patchouli:spotlight"))actualModels.add(obj.get("item").getAsString());
       if(type.equals("patchouli:empty")&&(!obj.has("draw_filler")||obj.get("draw_filler").getAsBoolean()))throw new IllegalStateException("Patchouli placeholder cube");
      }
-     for(var model:page.models())if((model.getNamespace().equals("minecraft")||model.getNamespace().equals("worldlogic"))&&!actualModels.contains(model.toString()))throw new IllegalStateException("missing Patchouli spotlight "+model);
-     for(var e:pages){var obj=e.getAsJsonObject();if(obj.get("type").getAsString().equals("patchouli:text"))text.add(obj.get("text").getAsString());}
+     var primary=page.models().stream().filter(m->m.getNamespace().equals("worldlogic")).findFirst();
+     if(primary.isPresent()&&!actualModels.contains(primary.get().toString()))throw new IllegalStateException("missing Patchouli spotlight "+primary.get());
+     if(actualModels.stream().anyMatch(m->!m.startsWith("worldlogic:")))throw new IllegalStateException("vanilla placeholder spotlight");
+     for(var e:pages){var obj=e.getAsJsonObject();if(Set.of("patchouli:text","patchouli:spotlight").contains(obj.get("type").getAsString())){String content=obj.get("text").getAsString();if(content.contains("Предмет или блок, связанный")||content.contains("Item or block referenced"))throw new IllegalStateException("placeholder guide text");text.add(content);}}
      String original=String.join(" ",page.body().get(lang.equals("ru_ru"))).replaceAll("\\s+"," ").strip();
      if(!String.join(" ",text).equals(original))throw new IllegalStateException("Patchouli text loss "+name+"/"+page.id()+"/"+lang);
      count++;

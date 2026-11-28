@@ -28,6 +28,19 @@ public final class TreeDescent {
   for(int dy=0;dy<=1;dy++){var pos=new BlockPos(g.x(),y+dy,g.z());if(!l.hasChunkAt(pos)||!trunk(l.getBlockState(pos)))return false;}
   return true;
  }
+ private static Grip nearbyGrip(ServerLevel l,Player p){
+  if(p.onGround()||p.getDeltaMovement().y>0||p.getDeltaMovement().y<-.8)return null;
+  var eye=p.getLookAngle();
+  int bx=p.blockPosition().getX(),bz=p.blockPosition().getZ();
+  Grip best=null;double nearest=Double.POSITIVE_INFINITY;
+  for(int x=bx-1;x<=bx+1;x++)for(int z=bz-1;z<=bz+1;z++)for(Direction face:Direction.Plane.HORIZONTAL){
+   if(!near(p,x,z,face)||eye.x*face.getStepX()+eye.z*face.getStepZ()>-.35)continue;
+   var grip=new Grip(x,z,face,l,l.getGameTime());
+   double distance=Math.hypot(p.getX()-x-.5,p.getZ()-z-.5);
+   if(distance<nearest&&support(l,p,grip)){nearest=distance;best=grip;}
+  }
+  return best;
+ }
  public static boolean gripping(Player p){return GRIPS.containsKey(p);}
  public static void interact(PlayerInteractEvent.RightClickBlock e){
   if(e.isCanceled()||e.getHand()!=InteractionHand.MAIN_HAND||!(e.getLevel() instanceof ServerLevel l)||!eligible(e.getEntity()))return;
@@ -38,8 +51,11 @@ public final class TreeDescent {
   GRIPS.put(p,grip);e.setCanceled(true);e.setCancellationResult(InteractionResult.SUCCESS);
  }
  public static void tick(PlayerTickEvent.Post e){
-  var p=e.getEntity();var grip=GRIPS.get(p);if(grip==null)return;
-  if(!(p.level() instanceof ServerLevel l)||!eligible(p)||!support(l,p,grip)||Survival.fatigue(p)>=98||ImpactDynamics.hanging(p)){GRIPS.remove(p);return;}
+  var p=e.getEntity();
+  if(!(p.level() instanceof ServerLevel l)||!eligible(p)||Survival.fatigue(p)>=98||ImpactDynamics.hanging(p)){GRIPS.remove(p);return;}
+  var grip=GRIPS.get(p);
+  if(grip==null){grip=nearbyGrip(l,p);if(grip==null)return;GRIPS.put(p,grip);}
+  if(!support(l,p,grip)){GRIPS.remove(p);return;}
   if(p.onGround()||!l.noCollision(p,p.getBoundingBox().move(0,-.12,0))){if(l.getGameTime()-grip.start()>40)GRIPS.remove(p);return;}
   var v=p.getDeltaMovement();p.setDeltaMovement(v.x*.55,-.12,v.z*.55);p.fallDistance=0;p.hurtMarked=true;
   if(l.getGameTime()%20==0)Survival.work(p,.8);

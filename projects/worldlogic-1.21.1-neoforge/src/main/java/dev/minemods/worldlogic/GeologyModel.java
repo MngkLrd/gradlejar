@@ -30,10 +30,15 @@ public final class GeologyModel {
   }
   public int minY(){return (int)Math.floor(y-vertical-Math.abs(dip)*along-4);}
   public int maxY(){return (int)Math.ceil(y+vertical+Math.abs(dip)*along+4);}
+  /** Preserve all existing underground shafts; only a deterministic 1/32 can reach daylight. */
+  public boolean surfaceOpening(){
+   return shaft&&Math.floorMod(hash(0x57c2b19d91e2L,(int)Math.floor(x),(int)Math.floor(y),(int)Math.floor(z)),32)==0;
+  }
+  public int shaftTop(int surface){return surfaceOpening()?surface+1:surface-12;}
   public boolean shaftAt(int px,int py,int pz,int surface){
-   if(!shaft||surface<67||py<y||py>surface+1)return false;
+   if(!shaft||surface<67||py<y||py>shaftTop(surface))return false;
    double distance=Math.hypot(px-x,pz-z);
-   double radius=1.6+Math.max(0,Math.min(1,(py-(surface-6))/6.0))*1.6;
+   double radius=surfaceOpening()?1.6+Math.max(0,Math.min(1,(py-(surface-6))/6.0))*1.6:1.6;
    return distance<radius;
   }
  }

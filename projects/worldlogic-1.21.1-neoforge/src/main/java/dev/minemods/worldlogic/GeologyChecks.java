@@ -142,7 +142,7 @@ public final class GeologyChecks {
   GeologyModel.District d=null;
   outer:for(int gx=-12;gx<=12;gx++)for(int gz=-12;gz<=12;gz++){
    var candidate=GeologyModel.district(42,gx,gz);
-   if(candidate.province()==GeologyModel.Province.CARBONATE&&candidate.caves().get(0).shaft()){d=candidate;break outer;}
+   if(candidate.province()==GeologyModel.Province.CARBONATE&&candidate.caves().get(0).shaft()&&!candidate.caves().get(0).surfaceOpening()){d=candidate;break outer;}
   }
   require(d!=null&&d.caves().size()>=4,"shaft, network and lake district");
   var shaft=d.caves().get(0);var lake=d.caves().get(3);
@@ -153,7 +153,11 @@ public final class GeologyChecks {
    return ch.getBlockState(pos);
   };
   int x=(int)Math.floor(shaft.x()),z=(int)Math.floor(shaft.z());
-  for(int y=(int)Math.ceil(shaft.y());y<=100;y++)require(block.apply(new BlockPos(x,y,z)).isAir(),"open shaft at "+y);
+  for(int y=(int)Math.ceil(shaft.y());y<=88;y++)require(block.apply(new BlockPos(x,y,z)).isAir(),"buried shaft at "+y);
+  for(int y=89;y<=100;y++)require(!block.apply(new BlockPos(x,y,z)).isAir(),"intact karst roof at "+y);
+  int shafts=0,openings=0;
+  for(int gx=-48;gx<=48;gx++)for(int gz=-48;gz<=48;gz++)for(var cave:GeologyModel.district(42,gx,gz).caves())if(cave.shaft()){shafts++;if(cave.surfaceOpening())openings++;}
+  require(shafts>100&&openings>0&&openings*10<shafts,"rare surface shafts "+openings+"/"+shafts);
   require(block.apply(new BlockPos(x+5,100,z)).is(Blocks.STONE),"narrow shaft does not erase nearby surface");
   int lx=(int)Math.floor(lake.x()),lz=(int)Math.floor(lake.z()),water=lake.waterY();
   require(block.apply(new BlockPos(lx,water-2,lz)).is(Blocks.WATER),"subterranean lake water");

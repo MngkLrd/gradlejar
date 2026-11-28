@@ -1,6 +1,6 @@
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group='dev.minemods.worldlogic'
-version='1.4.0'
+version='1.4.1'
 base.archivesName='worldlogic-neoforge-mc1.21.1'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 neoForge { version=project.neo_version; runs { client { client() }; server { server(); programArgument '--nogui' } }; mods { worldlogic { sourceSet(sourceSets.main) } } }
@@ -36,7 +36,7 @@ tasks.register('generatePatchouliGuide') {
    name:'item.worldlogic.guidebook',landing_text:'worldlogic.patchouli.landing',
    use_resource_pack:true,dont_generate_book:true,custom_book_item:'worldlogic:guidebook',
    book_texture:'patchouli:textures/gui/book_brown.png',filler_texture:'worldlogic:textures/gui/patchouli_generated/field_filler.png',i18n:true,show_progress:false,
-   show_toasts:false,version:'56',text_overflow_mode:'resize'])
+   show_toasts:false,version:'57',text_overflow_mode:'resize'])
   // Page filler: subtle ink line-art of a field compass and a leaf, rather
   // than the default floating cubes. Pixel coordinates on Patchouli's 128px canvas.
   def filler=new java.awt.image.BufferedImage(128,128,java.awt.image.BufferedImage.TYPE_INT_ARGB)
@@ -59,7 +59,7 @@ tasks.register('generatePatchouliGuide') {
     def lang=locale=='ru_ru'?'ru':'en'
     def root="assets/worldlogic/patchouli_books/field_guide/${locale}"
     writeJson("${root}/categories/${chapter.id}.json",[name:chapter.title[lang],
-     description:chapter.title[lang],icon:icons[chapter.id]?:'minecraft:book',sortnum:chapter.order])
+     description:chapter.pages[0].body[lang][0],icon:icons[chapter.id]?:'minecraft:book',sortnum:chapter.order])
     chapter.pages.eachWithIndex{article,index ->
      def pages=[]
      // Preserve every paragraph, wrapping long text into bounded page strings.
@@ -71,8 +71,12 @@ tasks.register('generatePatchouliGuide') {
       }
       if(line)pages.add([type:'patchouli:text',text:line])
      }
-     article.models.findAll{it.startsWith('minecraft:')||it.startsWith('worldlogic:')}.unique().each{id ->
-      pages.add([type:'patchouli:spotlight',item:id,link_recipe:true,text:lang=='ru'?'Предмет или блок, связанный с этой статьёй.':'Item or block referenced by this article.'])
+     // Illustrate only actual Core objects in articles; vanilla props no longer occupy empty pages.
+     // Each Core object has its own material catalogue entry.
+     def primary=article.models.find{it.startsWith('worldlogic:')}
+     if(primary && !pages.isEmpty()){
+      def first=pages.remove(0)
+      pages.add(0,[type:'patchouli:spotlight',item:primary,link_recipe:true,text:first.text])
      }
      (article.icons?:[]).findAll{it.startsWith('worldlogic:textures/')}.unique().eachWithIndex{loc,idx ->
       def src=file('src/main/resources/assets/worldlogic/'+loc.split(':',2)[1])

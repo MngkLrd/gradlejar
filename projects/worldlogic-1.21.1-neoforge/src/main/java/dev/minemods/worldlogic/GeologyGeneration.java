@@ -45,7 +45,7 @@ public final class GeologyGeneration {
    RockContent.stratify(chunk,x,z,top,province,fold);
    for(var d:districts)for(var c:d.caves()){
     if(Math.abs(x-c.x())>96||Math.abs(z-c.z())>96)continue;
-    int low=Math.max(chunk.getMinBuildHeight()+8,c.minY()),high=Math.min(chunk.getMaxBuildHeight()-1,c.shaft()&&Math.hypot(x-c.x(),z-c.z())<10?Math.max(c.maxY(),surface+1):c.maxY());
+    int low=Math.max(chunk.getMinBuildHeight()+8,c.minY()),high=Math.min(chunk.getMaxBuildHeight()-1,c.shaft()&&Math.hypot(x-c.x(),z-c.z())<10?Math.max(c.maxY(),c.shaftTop(surface)):c.maxY());
     for(int y=low;y<=high;y++){
      boolean shaft=c.shaftAt(x,y,z,surface);
      if(!shaft&&(y>surface-5||c.score(x,y,z)>1))continue;
