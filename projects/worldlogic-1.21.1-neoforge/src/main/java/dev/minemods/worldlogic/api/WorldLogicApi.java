@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=3;
+ public static final int API_REVISION=4;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -52,6 +52,25 @@ public final class WorldLogicApi {
   double relativeHumidityPercent,double dewPointC,double wetBulbC,double environmentalLapseCPerKm,
   double condensationLevelM,double cloudBaseM,double cloudTopM,double condensedWaterGkg,
   double buoyancyEnergyJkg,double cloudFraction,double precipitationPotential,double fogPotential,boolean convective){}
+ /** World generation only: long-term modeled habitat, never instantaneous weather. */
+ public enum Zone { OPEN_PLAINS,TEMPERATE_FOREST,COLD_FOREST,WETLAND,DRYLAND,TROPICAL,ALPINE,RIVERBANK,TUNDRA,COAST,MARINE,SUBTERRANEAN,UNKNOWN }
+ public enum SurfaceFamily { NORMAL,DRY,MOIST,SANDY,BOGGY,ROCKY,FROZEN,UNKNOWN }
+ public record WorldgenEnvironment(double temperatureCelsius,double moisture,double fertility,double dryness,double waterlogging,
+  double coldness,double environmentStrength,Zone zone,SurfaceFamily surfaceFamily,double slopeDegrees,double windExposure,
+  double prevailingWindX,double prevailingWindZ,double modeledSurfaceY,double riverbankPotential,net.minecraft.resources.ResourceLocation biomeId){}
+ @FunctionalInterface public interface WorldgenSampler {
+  /** No world/block/chunk queries. Pass the already available biome and ground block; do not retain across worlds/reloads. */
+  WorldgenEnvironment sample(BlockPos pos,net.minecraft.core.Holder<Biome> biome,BlockState ground);
+ }
+ /** Build from the caller's existing generator state. No live server-thread assertion, world access or chunk loading. */
+ public static Optional<WorldgenSampler> worldgenSampler(net.minecraft.world.level.levelgen.RandomState state,
+   net.minecraft.core.RegistryAccess registry,net.minecraft.world.level.chunk.ChunkGenerator generator){
+  return GeoDensity.worldgenSampler(state,registry,generator);
+ }
+ /** Convenience for a feature in the existing WorldGenLevel. Reads only generator state and registry references. */
+ public static Optional<WorldgenSampler> worldgenSampler(net.minecraft.world.level.WorldGenLevel level,net.minecraft.world.level.chunk.ChunkGenerator generator){
+  return worldgenSampler(level.getLevel().getChunkSource().randomState(),level.registryAccess(),generator);
+ }
  public record Fatigue(boolean enabled,double fatiguePercent,double remainingStaminaPercent){}
  private static void serverThread(ServerLevel level){
   if(!level.getServer().isSameThread())throw new IllegalStateException("World Logic API requires server thread");

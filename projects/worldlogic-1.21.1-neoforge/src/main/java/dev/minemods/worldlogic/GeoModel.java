@@ -185,6 +185,21 @@ public final class GeoModel {
   Surface s=surface(x,z);ClimateSample c=climate(x,z,s.height);
   return new dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate(c.thermal,(c.humidity+1)*.5,c.latitude*90,c.windX,c.windZ,s.height);
  }
+ /** Immutable terrain-only sample. Existing RC22 density, drainage and climate are unchanged. */
+ WorldgenSite site(int x,int z,boolean extended){
+  Surface s=surface(x,z);var regional=regional(x,z);
+  double h=height(s.height,extended);
+  double dx=(height(surface(x+16,z).height,extended)-height(surface(x-16,z).height,extended))/32;
+  double dz=(height(surface(x,z+16).height,extended)-height(surface(x,z-16).height,extended))/32;
+  double slope=Math.toDegrees(Math.atan(Math.hypot(dx,dz)));
+  double wx=regional.prevailingWindX(),wz=regional.prevailingWindZ();
+  double up=height(raw(x-wx*192,z-wz*192),extended);
+  double exposure=clamp(.52+(h-up)*.012+.25*(dx*wx+dz*wz),0,1);
+  double thermal=clamp(regional.thermalIndex()-(h-s.height)*.065/28,-1,1);
+  return new WorldgenSite(h,thermal,regional.moistureIndex(),s.flow,slope,exposure,wx,wz);
+ }
+ private static double height(double y,boolean extended){return extended&&y>110?110+(y-110)*1.6:y;}
+ record WorldgenSite(double height,double thermal,double moisture,double drainage,double slope,double exposure,double windX,double windZ){}
  double value(String field,int x,int z){
   Sample previous=lastSample.get();
   Surface s;if(previous!=null&&previous.x==x&&previous.z==z)s=previous.surface;

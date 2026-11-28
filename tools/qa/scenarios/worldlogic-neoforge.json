@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC22 production core/API regression",
+  "name": "World Logic NeoForge RC26 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -129,6 +129,48 @@
     {
       "command": "weather clear 2400",
       "expect": "clear"
+    },
+    {
+      "name": "Extended preset registry, geological provinces, ore bodies and synthetic chunk carving",
+      "command": "worldlogic qa geology",
+      "expect": "WORLDLOGIC_GEOLOGY_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "All eight mineral types replace actual rock while preserving cave air and bedrock",
+      "command": "worldlogic qa ore_bodies",
+      "expect": "WORLDLOGIC_ORE_BODIES_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Unified custom biome registry and exact RC22 base-height regression seed a",
+      "command": "worldlogic qa unified_a",
+      "expect": "WORLDLOGIC_UNIFIED_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Unified custom biome registry and exact RC22 base-height regression seed b",
+      "command": "worldlogic qa unified_b",
+      "expect": "WORLDLOGIC_UNIFIED_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Regional ore body size limits, frequent shallow pockets and ordinary chunk abundance",
+      "command": "worldlogic qa ore_balance",
+      "expect": "WORLDLOGIC_ORE_BALANCE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Karst shaft, connected gallery and flooded chamber across synthetic chunks",
+      "command": "worldlogic qa karst",
+      "expect": "WORLDLOGIC_KARST_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures",
+      "command": "worldlogic qa worldgen_ecology",
+      "expect": "WORLDLOGIC_WORLDGEN_ECOLOGY_PASSED",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -276,6 +318,83 @@
         {
           "backend": "server",
           "name": "Conservative air heat and vapor transport, interpolation and persistence"
+        }
+      ]
+    },
+    {
+      "id": "extended-geology",
+      "kind": "mechanic",
+      "subject": "Extended preset registry, geological provinces, ore bodies and synthetic chunk carving",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Extended preset registry, geological provinces, ore bodies and synthetic chunk carving"
+        }
+      ]
+    },
+    {
+      "id": "ore-bodies-eight-types",
+      "kind": "mechanic",
+      "subject": "All eight mineral types replace actual rock while preserving cave air and bedrock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All eight mineral types replace actual rock while preserving cave air and bedrock"
+        }
+      ]
+    },
+    {
+      "id": "unified-terrain-a",
+      "kind": "mechanic",
+      "subject": "Unified custom biome registry and exact RC22 base-height regression seed a",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "unified-terrain-b",
+      "kind": "mechanic",
+      "subject": "Unified custom biome registry and exact RC22 base-height regression seed b",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed b"
+        }
+      ]
+    },
+    {
+      "id": "ore-distribution-balance",
+      "kind": "mechanic",
+      "subject": "Regional ore body size limits, frequent shallow pockets and ordinary chunk abundance",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Regional ore body size limits, frequent shallow pockets and ordinary chunk abundance"
+        }
+      ]
+    },
+    {
+      "id": "karst-shaft-lake",
+      "kind": "mechanic",
+      "subject": "Karst shaft, connected gallery and flooded chamber across synthetic chunks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Karst shaft, connected gallery and flooded chamber across synthetic chunks"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-ecology-api",
+      "kind": "mechanic",
+      "subject": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures"
         }
       ]
     }

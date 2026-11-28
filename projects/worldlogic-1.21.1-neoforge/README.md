@@ -14,3 +14,13 @@ RC22 adds an experimental continuous regional weather field (pressure, advected 
 RC22 research extension: physically informed parcel-column diagnostics (water vapor, dew/wet-bulb, dry/moist adiabatic cooling, condensation budget, stability and fog proxy). No live weather change. Existing two-seed terrain regression split into two server commands to avoid an observed RCON timeout; both seed surveys and height checks retained.
 
 RC22 active recovery: 2.4 fatigue points/s walking, 3 sneaking, 4 standing; one-second post-effort cooldown, hunger reduces recovery. Actual position delta distinguishes standing and walking; no recovery while airborne, swimming, riding or climbing. Weather checks use force-loaded open coordinates and return explicit failure diagnostics.
+
+RC23 research: new world preset `worldlogic:earthlike_extended` (-256..511, sea 63) with deterministic geological provinces, local cave systems, surface shafts, static water levels and eight ore families. Old presets untouched. New preset disables vanilla noise caves, carvers and standard ore clusters; custom chunk generation only. Full new-world and client validation pending.
+
+Extended-world cloud height is configured at Y440 through a client-only NeoForge dimension effects registration. The old preset's cloud height is unchanged. The client renderer remains unverified.
+
+RC24: one selectable World Logic Realistic preset (`worldlogic:realistic_unified`), 51 new Overworld biome classes, original RC22 upper density and climate, RC23 geology and extended underground, clouds Y440. Old registry IDs retained. Terrarian supplies plants; without it vegetation is intentionally absent. Initial prototype, real new-world and addon checks pending.
+
+RC25: smaller regional deposits, frequent small shallow and deep ore pockets, improved karst galleries and lake chambers; same unified Realistic preset, no terrain/biome changes. Existing chunks are not regenerated. Use a new world for a uniform ore distribution. Full generated-world visual and economy checks still pending.
+
+RC26: 61 custom biomes, 10 refinements of RC24 climate intervals; WorldLogic API revision 4 includes an immutable worldgen habitat sampler for Terrarian. Temperature, moisture, soil fertility/dryness/waterlogging/coldness, generic suitability, zone/surface family, slope and wind exposure; no chunk reads or live weather. Existing RC22 terrain and RC25 geology unchanged. See BIOME-ECOLOGY.md and API.md. Full addon and generated-world checks pending.
