@@ -38,8 +38,9 @@ public final class WorldLogic {
   bus.addListener(RuleSync::logout);
   bus.addListener(RuleSync::tick);
   bus.addListener(ReleaseChecks::started);
-  bus.addListener(Structure::onBreak);
-  bus.addListener(Trees::breakBase);
+  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,ExcavationChecks::probeObserver);
+  bus.addListener((net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e)->{if(!dev.minemods.worldlogic.api.WorldLogicBreaks.isProtectionProbe(e))Structure.onBreak(e);});
+  bus.addListener((net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e)->{if(!dev.minemods.worldlogic.api.WorldLogicBreaks.isProtectionProbe(e))Trees.breakBase(e);});
   bus.addListener(Trees::placed);
   bus.addListener(Trees::tick);
   bus.addListener(Structure::onImpact);
@@ -55,7 +56,7 @@ public final class WorldLogic {
   bus.addListener(MineInstability::tick);
   bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,(net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e)->{if(!dev.minemods.worldlogic.api.WorldLogicBreaks.isProtectionProbe(e))Cleanup.broken(e);});
   bus.addListener(SoilFarmland::till);
-  bus.addListener(Soil::harvest);
+  bus.addListener((net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e)->{if(!dev.minemods.worldlogic.api.WorldLogicBreaks.isProtectionProbe(e))Soil.harvest(e);});
   bus.addListener(Soil::grow);
   bus.addListener(Soil::fertilize);
   bus.addListener(CampfireFuel::feed);

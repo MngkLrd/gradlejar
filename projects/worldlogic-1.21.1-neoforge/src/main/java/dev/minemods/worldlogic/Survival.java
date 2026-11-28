@@ -26,8 +26,10 @@ public final class Survival {
   if(warm&&speed<.25)rate*=1.6;
   return rate;
  }
+ static double recoveryAmount(double perSecond,int elapsedTicks){return perSecond*elapsedTicks/20.0;}
  static void updateExertion(Player p,ServerLevel l,long now){
-  if(!active(p)||!Rules.on("exertion"))return;
+  if(!active(p))return;
+  if(!Rules.on("exertion")){clearExertionTracking(p);ExertionModifiers.clear(p);return;}
   RestSample previous=REST_SAMPLE.put(p,new RestSample(l,p.getX(),p.getZ(),now));
   double speed=previous!=null&&previous.level()==l&&now>previous.time()&&now-previous.time()<=40
    ?Math.hypot(p.getX()-previous.x(),p.getZ()-previous.z())*20.0/(now-previous.time()):4.3;
@@ -44,7 +46,7 @@ public final class Survival {
    double rate;
    if(metabolic.isPresent())rate=metabolic.getAsDouble();
    else{boolean warm=speed<.25&&AirAndFire.nearHeat(l,p.blockPosition(),2);rate=recoveryRate(p.getFoodData().getFoodLevel(),speed,p.isShiftKeyDown(),warm);}
-   rest(p,rate*seconds);
+   rest(p,recoveryAmount(rate,elapsed));
   }
   ExertionModifiers.apply(p);
  }

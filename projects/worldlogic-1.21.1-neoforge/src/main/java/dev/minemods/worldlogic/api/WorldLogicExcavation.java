@@ -18,10 +18,24 @@ public final class WorldLogicExcavation{
  }
  /** J/m² is incident energy per contact area, NOT fracture toughness, stress, damage or failure threshold. */
  public record Strike(PhysicalMaterials.ItemContact contact,double incidentEnergyPerAreaJm2){}
+ /** Gameplay processing destination, not a smelting recipe or chemical yield. Other minerals stay raw. */
+ public record MineralProduct(net.minecraft.world.item.Item specimen,net.minecraft.world.item.Item product,boolean refined){}
+ public static Optional<MineralProduct> mineralProduct(BlockState state){
+  var ore=dev.minemods.worldlogic.MineralContent.type(state);if(ore==null)return Optional.empty();
+  var specimen=dev.minemods.worldlogic.MineralContent.specimen(ore);
+  var product=switch(ore){
+   case HEMATITE,MAGNETITE->net.minecraft.world.item.Items.IRON_INGOT;
+   case MALACHITE->net.minecraft.world.item.Items.COPPER_INGOT;
+   default->specimen;
+  };
+  return Optional.of(new MineralProduct(specimen,product,product!=specimen));
+ }
  public interface Contract{
   Optional<Target> inspect(ServerLevel level,BlockPos pos,ItemStack tool);
   Optional<Strike> strike(ItemStack tool,int componentIndex,double contactAreaM2,double movingMassKg,double normalSpeedMps);
   default Optional<Target> inspectOriginal(ServerLevel level,BlockPos pos,BlockState original,ItemStack tool){return WorldLogicExcavation.inspectOriginal(level,pos,original,tool);}
+  default boolean checkProtection(ServerLevel level,net.minecraft.server.level.ServerPlayer player,BlockPos pos,BlockState actual){return WorldLogicBreaks.checkProtection(level,player,pos,actual);}
+  default Optional<MineralProduct> mineralProduct(BlockState state){return WorldLogicExcavation.mineralProduct(state);}
  }
  public static final WorldLogicCapabilities.Key<Contract> KEY=new WorldLogicCapabilities.Key<>(ResourceLocation.fromNamespaceAndPath("worldlogic","excavation"),1,Contract.class);
  public static void register(){WorldLogicCapabilities.register(KEY,REVISION,"worldlogic",new Contract(){

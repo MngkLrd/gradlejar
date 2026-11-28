@@ -198,7 +198,7 @@ public final class WorldLogicApi {
  public record Fatigue(boolean enabled,double fatiguePercent,double remainingStaminaPercent){}
  /** True when Core owns the installed Metabolism rest policy; the peer must not supplement it. */
  public static boolean usesMetabolicRestRecovery(ServerPlayer player){
-  serverThread(player.serverLevel());return dev.minemods.worldlogic.PeerPhysiology.usesMetabolicRestRecovery();
+  serverThread(player.serverLevel());return dev.minemods.worldlogic.PeerPhysiology.usesMetabolicRestRecovery(player);
  }
  /** Trusted server/admin operation; caller is responsible for command permission. Missing installed providers are explicit. */
  public static dev.minemods.worldlogic.PeerPhysiology.HealResult adminRestore(ServerPlayer player){

@@ -32,8 +32,9 @@ public final class PeerPhysiology {
  private static void warn(Peer p,Throwable ex){
   if(WARNED.add(p))org.slf4j.LoggerFactory.getLogger("WorldLogic").warn("Optional physiology endpoint unavailable: "+p.mod()+"/"+p.method(),ex);
  }
- public static boolean usesMetabolicRestRecovery(){return method(METABOLIC_REST).isPresent();}
+ public static boolean usesMetabolicRestRecovery(ServerPlayer player){return !(player instanceof net.neoforged.neoforge.common.util.FakePlayer)&&method(METABOLIC_REST).isPresent();}
  static OptionalDouble restRate(ServerPlayer player){
+  if(!usesMetabolicRestRecovery(player))return OptionalDouble.empty();
   var m=method(METABOLIC_REST);if(m.isEmpty())return OptionalDouble.empty();
   try{double rate=((Number)m.get().invoke(null,player)).doubleValue();return Double.isFinite(rate)&&rate>=0&&rate<=100?OptionalDouble.of(rate):OptionalDouble.empty();}
   catch(ReflectiveOperationException|LinkageError|RuntimeException ex){warn(METABOLIC_REST,ex);return OptionalDouble.empty();}
@@ -49,7 +50,7 @@ public final class PeerPhysiology {
   player.removeAllEffects();
   player.setHealth(player.getMaxHealth());player.getFoodData().setFoodLevel(20);player.getFoodData().setSaturation(20);player.getFoodData().setExhaustion(0);
   player.setAirSupply(player.getMaxAirSupply());player.clearFire();player.setTicksFrozen(0);player.fallDistance=0;
-  Survival.adminRestore(player);Trauma.adminRestore(player);Balance.adminRestore(player);Body.adminRestore(player);
+  Survival.adminRestore(player);Trauma.adminRestore(player);Balance.adminRestore(player);Body.adminRestore(player);CombatConsequences.adminRestore(player);
   done.add("vanilla/Core");
   for(var peer:HEAL){
    if(!ModList.get().isLoaded(peer.mod()))continue;
