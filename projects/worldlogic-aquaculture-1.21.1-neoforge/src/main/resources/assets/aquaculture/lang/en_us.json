@@ -82,5 +82,13 @@
   "aquaculture.feed.dry": "Fish can only feed in water.",
   "aquaculture.ecology.inspect": "%s | %s m | %s kg | Satiety: %s%% | Stress: %s%%",
   "entity.aquaculture.roe_clutch": "Fish roe clutch",
-  "aquaculture.roe.inspect": "%s | Eggs: %s | Incubation: %s%%"
+  "aquaculture.roe.inspect": "%s | Eggs: %s | Incubation: %s%%",
+  "entity.aquaculture.great_white_shark": "Great white shark",
+  "entity.aquaculture.tiger_shark": "Tiger shark",
+  "entity.aquaculture.narwhal": "Narwhal",
+  "entity.aquaculture.humpback_whale": "Humpback whale",
+  "entity.aquaculture.blue_whale": "Blue whale",
+  "entity.aquaculture.sea_snake": "Sea snake",
+  "entity.aquaculture.electric_ray": "Electric ray",
+  "entity.aquaculture.manta_ray": "Manta ray"
 }

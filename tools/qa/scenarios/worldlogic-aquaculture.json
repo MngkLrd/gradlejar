@@ -2311,6 +2311,94 @@
           "name": "Real server ticks without players: native seawater clutch hatches one juvenile, dry clutch dies"
         }
       ]
+    },
+    {
+      "id": "marine-great_white_shark",
+      "kind": "entity",
+      "subject": "aquaculture:great_white_shark",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-tiger_shark",
+      "kind": "entity",
+      "subject": "aquaculture:tiger_shark",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-narwhal",
+      "kind": "entity",
+      "subject": "aquaculture:narwhal",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-humpback_whale",
+      "kind": "entity",
+      "subject": "aquaculture:humpback_whale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-blue_whale",
+      "kind": "entity",
+      "subject": "aquaculture:blue_whale",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-sea_snake",
+      "kind": "entity",
+      "subject": "aquaculture:sea_snake",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-electric_ray",
+      "kind": "entity",
+      "subject": "aquaculture:electric_ray",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
+    },
+    {
+      "id": "marine-manta_ray",
+      "kind": "entity",
+      "subject": "aquaculture:manta_ray",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures"
+        }
+      ]
     }
   ],
   "steps": [
@@ -2374,6 +2462,12 @@
       "name": "Real server ticks without players: native seawater clutch hatches one juvenile, dry clutch dies",
       "command": "aquaculture population_tick_verify",
       "expect": "AQUA_POPULATION_NO_PLAYER_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Marine fauna: all eight entity factories, attribute and habitat limits, model UV integrity and distinct textures",
+      "command": "aquaculture marine_selftest",
+      "expect": "AQUA_MARINE_PASS",
       "assertion": true
     }
   ]

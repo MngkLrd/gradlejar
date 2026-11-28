@@ -82,5 +82,13 @@
   "aquaculture.feed.dry": "Кормить рыбу можно только в воде.",
   "aquaculture.ecology.inspect": "%s | %s м | %s кг | Сытость: %s%% | Стресс: %s%%",
   "entity.aquaculture.roe_clutch": "Кладка рыбьей икры",
-  "aquaculture.roe.inspect": "%s | Икринок: %s | Инкубация: %s%%"
+  "aquaculture.roe.inspect": "%s | Икринок: %s | Инкубация: %s%%",
+  "entity.aquaculture.great_white_shark": "Большая белая акула",
+  "entity.aquaculture.tiger_shark": "Тигровая акула",
+  "entity.aquaculture.narwhal": "Нарвал",
+  "entity.aquaculture.humpback_whale": "Горбатый кит",
+  "entity.aquaculture.blue_whale": "Синий кит",
+  "entity.aquaculture.sea_snake": "Морская змея",
+  "entity.aquaculture.electric_ray": "Электрический скат",
+  "entity.aquaculture.manta_ray": "Манта"
 }

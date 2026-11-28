@@ -1480,6 +1480,302 @@
         "context_view": "Static top-view assembly shows dense staggered nest; Minecraft client rendering is not run.",
         "context_type": "model_uv"
       }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/marine/great_white_shark.png": {
+      "sha256": "17e0a728254a8c7daadc804d50fa6396858a7ce28ec7988c803fe64b3b96e2a1",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared actual vanilla cod UV planes with Great white shark: narrow snout, tall dorsal and asymmetric vertical tail; blue-grey back and pale ventral plane. Original cuboid anatomy and face-specific colors. Static candidate art, not a rendered gameplay review.",
+      "findings": {
+        "silhouette": "narrow snout, tall dorsal and asymmetric vertical tail is visible in the static side and top projection.",
+        "cluster_structure": "blue-grey back and pale ventral plane occupies contiguous face regions with local marking clusters.",
+        "micro_contrast": "blue-grey back and pale ventral plane and the darker head marks are distinct at native texel scale.",
+        "light_and_volume": "Dark upper plane, midtone side and lighter ventral UV plane provide underwater countershading.",
+        "material_continuity": "Adjacent body and rear parts share blue-grey back and pale ventral plane, with separate UV islands for fins.",
+        "edge_variation": "narrow snout, tall dorsal and asymmetric vertical tail is built from stepped part dimensions, not a scaled cod mesh.",
+        "variant_identity": "narrow snout, tall dorsal and asymmetric vertical tail and blue-grey back and pale ventral plane distinguish the species within the eight-animal projection.",
+        "vanilla_comparison": "Actual cod source PNG inspected; own model layout and texture colors, no copied pixels.",
+        "functional_material_cues": "narrow snout, tall dorsal and asymmetric vertical tail distinguishes propulsion/anatomy; side and top planes have separate UVs."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Large marine entity UV sheets have no applicable block/item atlas role.",
+        "reference_source": "Version-pinned InventivetalentDev Minecraft assets 1.21.1 PNG, inspected directly, SHA-256 from decoded bytes.",
+        "applied_pattern": "Distinct silhouette and restrained face-specific dark-back/light-belly planes based on aquatic reference.",
+        "reference_limit": "Reference animal is smaller; large creature geometry and scale differ. Prototype cuboid shapes remain angular.",
+        "native_view": "Actual 128x128 indexed PNG decoded and displayed, no UV rectangle overlap.",
+        "context_view": "Side and top static orthographic projections generated from actual UV bytes and geometry; live client rendering not tested.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/marine/tiger_shark.png": {
+      "sha256": "737926824b7c1ca047569032fa59a6644f3388eb1571b72c465a6432fe18078d",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared actual vanilla cod UV planes with Tiger shark: blunter broader snout and swept rear tail; dark clustered flank stripes on grey-olive side. Original cuboid anatomy and face-specific colors. Static candidate art, not a rendered gameplay review.",
+      "findings": {
+        "silhouette": "blunter broader snout and swept rear tail is visible in the static side and top projection.",
+        "cluster_structure": "dark clustered flank stripes on grey-olive side occupies contiguous face regions with local marking clusters.",
+        "micro_contrast": "dark clustered flank stripes on grey-olive side and the darker head marks are distinct at native texel scale.",
+        "light_and_volume": "Dark upper plane, midtone side and lighter ventral UV plane provide underwater countershading.",
+        "material_continuity": "Adjacent body and rear parts share dark clustered flank stripes on grey-olive side, with separate UV islands for fins.",
+        "edge_variation": "blunter broader snout and swept rear tail is built from stepped part dimensions, not a scaled cod mesh.",
+        "variant_identity": "blunter broader snout and swept rear tail and dark clustered flank stripes on grey-olive side distinguish the species within the eight-animal projection.",
+        "vanilla_comparison": "Actual cod source PNG inspected; own model layout and texture colors, no copied pixels.",
+        "functional_material_cues": "blunter broader snout and swept rear tail distinguishes propulsion/anatomy; side and top planes have separate UVs."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Large marine entity UV sheets have no applicable block/item atlas role.",
+        "reference_source": "Version-pinned InventivetalentDev Minecraft assets 1.21.1 PNG, inspected directly, SHA-256 from decoded bytes.",
+        "applied_pattern": "Distinct silhouette and restrained face-specific dark-back/light-belly planes based on aquatic reference.",
+        "reference_limit": "Reference animal is smaller; large creature geometry and scale differ. Prototype cuboid shapes remain angular.",
+        "native_view": "Actual 128x128 indexed PNG decoded and displayed, no UV rectangle overlap.",
+        "context_view": "Side and top static orthographic projections generated from actual UV bytes and geometry; live client rendering not tested.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/marine/narwhal.png": {
+      "sha256": "e60608ed415734bd1f34f2a2139aabe44efe149b2d94fe6b12de3a314f56ab9c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/dolphin",
+          "minecraft": "1.21.1",
+          "sha256": "2ff9511e10803b98cd4e81d16699d2ca24286d629d24385e70a6204a39f68ef9"
+        }
+      ],
+      "comparison": "Compared actual vanilla dolphin UV planes with Narwhal: asymmetric long tusk and horizontal flukes; pale mottled grey-blue flank and cream tusk. Original cuboid anatomy and face-specific colors. Static candidate art, not a rendered gameplay review.",
+      "findings": {
+        "silhouette": "asymmetric long tusk and horizontal flukes is visible in the static side and top projection.",
+        "cluster_structure": "pale mottled grey-blue flank and cream tusk occupies contiguous face regions with local marking clusters.",
+        "micro_contrast": "pale mottled grey-blue flank and cream tusk and the darker head marks are distinct at native texel scale.",
+        "light_and_volume": "Dark upper plane, midtone side and lighter ventral UV plane provide underwater countershading.",
+        "material_continuity": "Adjacent body and rear parts share pale mottled grey-blue flank and cream tusk, with separate UV islands for fins.",
+        "edge_variation": "asymmetric long tusk and horizontal flukes is built from stepped part dimensions, not a scaled cod mesh.",
+        "variant_identity": "asymmetric long tusk and horizontal flukes and pale mottled grey-blue flank and cream tusk distinguish the species within the eight-animal projection.",
+        "vanilla_comparison": "Actual dolphin source PNG inspected; own model layout and texture colors, no copied pixels.",
+        "functional_material_cues": "asymmetric long tusk and horizontal flukes distinguishes propulsion/anatomy; side and top planes have separate UVs."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/dolphin",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Large marine entity UV sheets have no applicable block/item atlas role.",
+        "reference_source": "Version-pinned InventivetalentDev Minecraft assets 1.21.1 PNG, inspected directly, SHA-256 from decoded bytes.",
+        "applied_pattern": "Distinct silhouette and restrained face-specific dark-back/light-belly planes based on aquatic reference.",
+        "reference_limit": "Reference animal is smaller; large creature geometry and scale differ. Prototype cuboid shapes remain angular.",
+        "native_view": "Actual 128x128 indexed PNG decoded and displayed, no UV rectangle overlap.",
+        "context_view": "Side and top static orthographic projections generated from actual UV bytes and geometry; live client rendering not tested.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/marine/humpback_whale.png": {
+      "sha256": "c4cc4932d75333f70c27e2c70bfd0a5b84b0825fcee86b219565e0d4592ec8a6",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/dolphin",
+          "minecraft": "1.21.1",
+          "sha256": "2ff9511e10803b98cd4e81d16699d2ca24286d629d24385e70a6204a39f68ef9"
+        }
+      ],
+      "comparison": "Compared actual vanilla dolphin UV planes with Humpback whale: long wide paired flippers and horizontal flukes; dark blue back, pale flippers and ventral pleat marks. Original cuboid anatomy and face-specific colors. Static candidate art, not a rendered gameplay review.",
+      "findings": {
+        "silhouette": "long wide paired flippers and horizontal flukes is visible in the static side and top projection.",
+        "cluster_structure": "dark blue back, pale flippers and ventral pleat marks occupies contiguous face regions with local marking clusters.",
+        "micro_contrast": "dark blue back, pale flippers and ventral pleat marks and the darker head marks are distinct at native texel scale.",
+        "light_and_volume": "Dark upper plane, midtone side and lighter ventral UV plane provide underwater countershading.",
+        "material_continuity": "Adjacent body and rear parts share dark blue back, pale flippers and ventral pleat marks, with separate UV islands for fins.",
+        "edge_variation": "long wide paired flippers and horizontal flukes is built from stepped part dimensions, not a scaled cod mesh.",
+        "variant_identity": "long wide paired flippers and horizontal flukes and dark blue back, pale flippers and ventral pleat marks distinguish the species within the eight-animal projection.",
+        "vanilla_comparison": "Actual dolphin source PNG inspected; own model layout and texture colors, no copied pixels.",
+        "functional_material_cues": "long wide paired flippers and horizontal flukes distinguishes propulsion/anatomy; side and top planes have separate UVs."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/dolphin",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Large marine entity UV sheets have no applicable block/item atlas role.",
+        "reference_source": "Version-pinned InventivetalentDev Minecraft assets 1.21.1 PNG, inspected directly, SHA-256 from decoded bytes.",
+        "applied_pattern": "Distinct silhouette and restrained face-specific dark-back/light-belly planes based on aquatic reference.",
+        "reference_limit": "Reference animal is smaller; large creature geometry and scale differ. Prototype cuboid shapes remain angular.",
+        "native_view": "Actual 128x128 indexed PNG decoded and displayed, no UV rectangle overlap.",
+        "context_view": "Side and top static orthographic projections generated from actual UV bytes and geometry; live client rendering not tested.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/marine/blue_whale.png": {
+      "sha256": "9ee0f5e96e216e3f17e7a8cafedc08b0f1e43a2bab0988af0f8a282039ecf1c5",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/dolphin",
+          "minecraft": "1.21.1",
+          "sha256": "2ff9511e10803b98cd4e81d16699d2ca24286d629d24385e70a6204a39f68ef9"
+        }
+      ],
+      "comparison": "Compared actual vanilla dolphin UV planes with Blue whale: long heavy tapered body and short flippers; blue-grey flank mottling and pale underside. Original cuboid anatomy and face-specific colors. Static candidate art, not a rendered gameplay review.",
+      "findings": {
+        "silhouette": "long heavy tapered body and short flippers is visible in the static side and top projection.",
+        "cluster_structure": "blue-grey flank mottling and pale underside occupies contiguous face regions with local marking clusters.",
+        "micro_contrast": "blue-grey flank mottling and pale underside and the darker head marks are distinct at native texel scale.",
+        "light_and_volume": "Dark upper plane, midtone side and lighter ventral UV plane provide underwater countershading.",
+        "material_continuity": "Adjacent body and rear parts share blue-grey flank mottling and pale underside, with separate UV islands for fins.",
+        "edge_variation": "long heavy tapered body and short flippers is built from stepped part dimensions, not a scaled cod mesh.",
+        "variant_identity": "long heavy tapered body and short flippers and blue-grey flank mottling and pale underside distinguish the species within the eight-animal projection.",
+        "vanilla_comparison": "Actual dolphin source PNG inspected; own model layout and texture colors, no copied pixels.",
+        "functional_material_cues": "long heavy tapered body and short flippers distinguishes propulsion/anatomy; side and top planes have separate UVs."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/dolphin",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Large marine entity UV sheets have no applicable block/item atlas role.",
+        "reference_source": "Version-pinned InventivetalentDev Minecraft assets 1.21.1 PNG, inspected directly, SHA-256 from decoded bytes.",
+        "applied_pattern": "Distinct silhouette and restrained face-specific dark-back/light-belly planes based on aquatic reference.",
+        "reference_limit": "Reference animal is smaller; large creature geometry and scale differ. Prototype cuboid shapes remain angular.",
+        "native_view": "Actual 128x128 indexed PNG decoded and displayed, no UV rectangle overlap.",
+        "context_view": "Side and top static orthographic projections generated from actual UV bytes and geometry; live client rendering not tested.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/marine/sea_snake.png": {
+      "sha256": "65c61c29f5fa7e64a370570a6458a31b20a9d832585d566222882e2158ab4e1c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared actual vanilla cod UV planes with Sea snake: segmented narrow body and flattened paddle tip; dark alternating flank bands over light grey-green. Original cuboid anatomy and face-specific colors. Static candidate art, not a rendered gameplay review.",
+      "findings": {
+        "silhouette": "segmented narrow body and flattened paddle tip is visible in the static side and top projection.",
+        "cluster_structure": "dark alternating flank bands over light grey-green occupies contiguous face regions with local marking clusters.",
+        "micro_contrast": "dark alternating flank bands over light grey-green and the darker head marks are distinct at native texel scale.",
+        "light_and_volume": "Dark upper plane, midtone side and lighter ventral UV plane provide underwater countershading.",
+        "material_continuity": "Adjacent body and rear parts share dark alternating flank bands over light grey-green, with separate UV islands for fins.",
+        "edge_variation": "segmented narrow body and flattened paddle tip is built from stepped part dimensions, not a scaled cod mesh.",
+        "variant_identity": "segmented narrow body and flattened paddle tip and dark alternating flank bands over light grey-green distinguish the species within the eight-animal projection.",
+        "vanilla_comparison": "Actual cod source PNG inspected; own model layout and texture colors, no copied pixels.",
+        "functional_material_cues": "segmented narrow body and flattened paddle tip distinguishes propulsion/anatomy; side and top planes have separate UVs."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Large marine entity UV sheets have no applicable block/item atlas role.",
+        "reference_source": "Version-pinned InventivetalentDev Minecraft assets 1.21.1 PNG, inspected directly, SHA-256 from decoded bytes.",
+        "applied_pattern": "Distinct silhouette and restrained face-specific dark-back/light-belly planes based on aquatic reference.",
+        "reference_limit": "Reference animal is smaller; large creature geometry and scale differ. Prototype cuboid shapes remain angular.",
+        "native_view": "Actual 128x128 indexed PNG decoded and displayed, no UV rectangle overlap.",
+        "context_view": "Side and top static orthographic projections generated from actual UV bytes and geometry; live client rendering not tested.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/marine/electric_ray.png": {
+      "sha256": "147d027d0b0436d7a76e8c329972b12f7762c6627779fc6812e2a25c1454d736",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared actual vanilla cod UV planes with Electric ray: low wide disk with stepped lateral fin tips and short thick tail; ochre-brown disc with dark dorsal spots. Original cuboid anatomy and face-specific colors. Static candidate art, not a rendered gameplay review.",
+      "findings": {
+        "silhouette": "low wide disk with stepped lateral fin tips and short thick tail is visible in the static side and top projection.",
+        "cluster_structure": "ochre-brown disc with dark dorsal spots occupies contiguous face regions with local marking clusters.",
+        "micro_contrast": "ochre-brown disc with dark dorsal spots and the darker head marks are distinct at native texel scale.",
+        "light_and_volume": "Dark upper plane, midtone side and lighter ventral UV plane provide underwater countershading.",
+        "material_continuity": "Adjacent body and rear parts share ochre-brown disc with dark dorsal spots, with separate UV islands for fins.",
+        "edge_variation": "low wide disk with stepped lateral fin tips and short thick tail is built from stepped part dimensions, not a scaled cod mesh.",
+        "variant_identity": "low wide disk with stepped lateral fin tips and short thick tail and ochre-brown disc with dark dorsal spots distinguish the species within the eight-animal projection.",
+        "vanilla_comparison": "Actual cod source PNG inspected; own model layout and texture colors, no copied pixels.",
+        "functional_material_cues": "low wide disk with stepped lateral fin tips and short thick tail distinguishes propulsion/anatomy; side and top planes have separate UVs."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Large marine entity UV sheets have no applicable block/item atlas role.",
+        "reference_source": "Version-pinned InventivetalentDev Minecraft assets 1.21.1 PNG, inspected directly, SHA-256 from decoded bytes.",
+        "applied_pattern": "Distinct silhouette and restrained face-specific dark-back/light-belly planes based on aquatic reference.",
+        "reference_limit": "Reference animal is smaller; large creature geometry and scale differ. Prototype cuboid shapes remain angular.",
+        "native_view": "Actual 128x128 indexed PNG decoded and displayed, no UV rectangle overlap.",
+        "context_view": "Side and top static orthographic projections generated from actual UV bytes and geometry; live client rendering not tested.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/marine/manta_ray.png": {
+      "sha256": "65307c51d517af7e1fc60de577afe901a35ab23e7c8772054d818482f3cfb6bc",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared actual vanilla cod UV planes with Manta ray: broad wings, paired head lobes and slender long tail; dark ocean-blue upper surface and pale underside. Original cuboid anatomy and face-specific colors. Static candidate art, not a rendered gameplay review.",
+      "findings": {
+        "silhouette": "broad wings, paired head lobes and slender long tail is visible in the static side and top projection.",
+        "cluster_structure": "dark ocean-blue upper surface and pale underside occupies contiguous face regions with local marking clusters.",
+        "micro_contrast": "dark ocean-blue upper surface and pale underside and the darker head marks are distinct at native texel scale.",
+        "light_and_volume": "Dark upper plane, midtone side and lighter ventral UV plane provide underwater countershading.",
+        "material_continuity": "Adjacent body and rear parts share dark ocean-blue upper surface and pale underside, with separate UV islands for fins.",
+        "edge_variation": "broad wings, paired head lobes and slender long tail is built from stepped part dimensions, not a scaled cod mesh.",
+        "variant_identity": "broad wings, paired head lobes and slender long tail and dark ocean-blue upper surface and pale underside distinguish the species within the eight-animal projection.",
+        "vanilla_comparison": "Actual cod source PNG inspected; own model layout and texture colors, no copied pixels.",
+        "functional_material_cues": "broad wings, paired head lobes and slender long tail distinguishes propulsion/anatomy; side and top planes have separate UVs."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Large marine entity UV sheets have no applicable block/item atlas role.",
+        "reference_source": "Version-pinned InventivetalentDev Minecraft assets 1.21.1 PNG, inspected directly, SHA-256 from decoded bytes.",
+        "applied_pattern": "Distinct silhouette and restrained face-specific dark-back/light-belly planes based on aquatic reference.",
+        "reference_limit": "Reference animal is smaller; large creature geometry and scale differ. Prototype cuboid shapes remain angular.",
+        "native_view": "Actual 128x128 indexed PNG decoded and displayed, no UV rectangle overlap.",
+        "context_view": "Side and top static orthographic projections generated from actual UV bytes and geometry; live client rendering not tested.",
+        "context_type": "model_uv"
+      }
     }
   }
 }
