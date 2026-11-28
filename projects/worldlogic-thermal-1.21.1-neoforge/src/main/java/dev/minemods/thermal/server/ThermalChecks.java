@@ -178,6 +178,7 @@ final class ThermalChecks {
                 case "room_ventilation","room_humidity","room_persistence","room_cache","wall_insulation","insulation_fire","snow_shelter","leaf_canopy","polar_survival" -> RoomChecks.verify(l,p,name);
                 case "village_climate" -> ClimateEvolutionChecks.settlement(l,p);
                 case "integration" -> IntegrationChecks.verify(l,p);
+                case "presentation" -> {ThermalEvents.update(p);dev.minemods.thermal.integration.CorePresentation.verify(p);}
                 case "water_exposure","room_response","hud_signals" -> StabilityChecks.verify(l,p,name);
                 case "physical_materials" -> PhysicalChecks.verify(l,p);
                 case "admin_restore" -> {

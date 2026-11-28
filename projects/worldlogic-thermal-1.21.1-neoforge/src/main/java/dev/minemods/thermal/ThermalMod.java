@@ -11,6 +11,7 @@ public final class ThermalMod {
     public ThermalMod(IEventBus modBus) {
         dev.minemods.thermal.content.ThermalContent.register(modBus);
         modBus.addListener(ThermalSync::register);
+        modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event)->event.enqueueWork(dev.minemods.thermal.integration.CorePresentation::register));
         var bus = NeoForge.EVENT_BUS;
         bus.addListener(EventPriority.LOWEST, ThermalEvents::tick);
         bus.addListener(EventPriority.LOWEST,dev.minemods.thermal.content.FiberHarvest::onClick);

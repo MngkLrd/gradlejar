@@ -18,8 +18,9 @@ public final class FiberWorkpieceEntity extends BlockEntity {
         if(level!=null&&!level.isClientSide)level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),3);
     }
     public static long fromItem(ItemStack stack){return stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getLong(MASK);}
+    public static ItemStack finishedOutput(){return new ItemStack(ThermalContent.FIBER.get(),4);}
     public ItemStack result(){
-        if(FiberMask.finished(mask))return new ItemStack(ThermalContent.FIBER.get(),4);
+        if(FiberMask.finished(mask))return finishedOutput();
         ItemStack raw=new ItemStack(ThermalContent.RAW_FIBER.get());
         if(mask!=0){CompoundTag n=new CompoundTag();n.putLong(MASK,mask);raw.set(DataComponents.CUSTOM_DATA,CustomData.of(n));}
         return raw;

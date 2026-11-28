@@ -1,6 +1,6 @@
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group = 'dev.minemods'
-version = '0.11.0'
+version = '0.12.0'
 base.archivesName = 'worldlogic_thermal-neoforge-mc1.21.1'
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 neoForge {
@@ -38,7 +38,7 @@ tasks.register('verifyWorldLogic') {
             } finally { temp.delete() }
         }
         def actual = java.security.MessageDigest.getInstance('SHA-256').digest(coreJar.bytes).encodeHex().toString()
-        def accepted = providers.gradleProperty('worldlogicJar').isPresent() ? [expectedSha, '9cb8c75897f313f274f88b2a12f15f37b8af97aef773674c7b0db5a8fa33cd67', '33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56'] : [expectedSha]
+        def accepted = providers.gradleProperty('worldlogicJar').isPresent() ? [expectedSha, '9cb8c75897f313f274f88b2a12f15f37b8af97aef773674c7b0db5a8fa33cd67', '33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56','581e25d192c55123599cbc5ed380db10f708c2981345ba8683f83e64df910805'] : [expectedSha]
         if (!accepted.contains(actual)) throw new GradleException('WorldLogic dependency SHA-256 mismatch: '+actual)
         new java.util.zip.ZipFile(coreJar).withCloseable { zip ->
             if (zip.getEntry('META-INF/neoforge.mods.toml') == null || zip.getEntry('dev/minemods/worldlogic/api/WorldLogicApi.class') == null)
