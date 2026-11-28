@@ -1,0 +1,13 @@
+{
+  "name": "Water Intake",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:water_intake",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:water_intake",
+      "link_recipe": true,
+      "text": "Capacity: 1000 mB. Draws from a source directly above."
+    }
+  ]
+}

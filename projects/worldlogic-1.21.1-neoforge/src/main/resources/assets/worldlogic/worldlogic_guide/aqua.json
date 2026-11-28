@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "id": "aqua",
+  "order": 73,
+  "requires": "worldlogic_aqua",
+  "title": {
+    "ru": "Водоёмы и рыбы",
+    "en": "Waterways and fish"
+  },
+  "source": "Aqua PR #228 inspected registry and README",
+  "pages": [
+    {
+      "id": "habitat",
+      "title": {
+        "ru": "Где искать рыбу",
+        "en": "Finding fish"
+      },
+      "models": [
+        "aquaculture:raw_perch"
+      ],
+      "body": {
+        "ru": [
+          "В Aqua виды распределены по среде обитания: пресная или солёная вода, глубина и климат. Ищи рыбу не только у поверхности, но и в толще воды. Не все виды живут возле берега.",
+          "На некоторых видах рыбы можно проверить массу, длину, сытость и стресс: присядь и взаимодействуй с рыбой пустой рукой. Избегай шума и резких движений."
+        ],
+        "en": [
+          "Aqua separates species by freshwater or saltwater, depth and climate. Look below the surface as well as near shore; not all fish inhabit shallows.",
+          "Sneak and interact with a fish using an empty hand to inspect length, mass, satiety and stress. Avoid noise and abrupt movement."
+        ]
+      }
+    },
+    {
+      "id": "harvest",
+      "title": {
+        "ru": "Улов и сохранение популяций",
+        "en": "Catch and population"
+      },
+      "models": [
+        "aquaculture:raw_pike",
+        "aquaculture:raw_carp"
+      ],
+      "body": {
+        "ru": [
+          "Улов хранит индивидуальные характеристики рыбы. По этим данным можно отличить разные экземпляры одного вида. Не считай любой сырой улов готовой пищей: проверяй свойства конкретного предмета.",
+          "Рыбы имеют ограниченные кормовые запасы и размножаются в подходящей среде. Не истребляй целую стаю; оставляй взрослых особей и кладки икры."
+        ],
+        "en": [
+          "Catch items retain individual fish traits. Inspect the item before treating raw catch as edible food.",
+          "Fish use finite local forage and reproduce in suitable habitats. Avoid wiping out a school; leave adults and roe clutches."
+        ]
+      }
+    },
+    {
+      "id": "danger",
+      "title": {
+        "ru": "Морские животные",
+        "en": "Marine wildlife"
+      },
+      "models": [
+        "aquaculture:raw_atlantic_cod"
+      ],
+      "body": {
+        "ru": [
+          "В океане встречаются крупные животные и хищники. Не подходи вплотную к акулам, морским змеям и электрическим скатам. Некоторые виды атакуют добычу, другие реагируют на угрозу.",
+          "Киты и другие дышащие воздухом животные поднимаются к поверхности. Сохраняй дистанцию и возвращайся к суше, если выносливость падает."
+        ],
+        "en": [
+          "Oceans include large animals and predators. Keep distance from sharks, sea snakes and electric rays. Some hunt prey; others respond defensively.",
+          "Air-breathing wildlife surfaces for air. Keep a safe distance and return to land before exhausting your stamina."
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Copper Canteen",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:copper_canteen",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:copper_canteen",
+      "link_recipe": true,
+      "text": "Capacity: 2000 mB. Sneak-use a heatproof filled vessel (at least 100 mB) on a lit campfire; stay within four blocks and hold the same vessel. Duration 60 ticks + volume/15; 5% volume evaporates; salt remains."
+    }
+  ]
+}

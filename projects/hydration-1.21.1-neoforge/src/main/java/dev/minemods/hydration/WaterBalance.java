@@ -26,13 +26,21 @@ public final class WaterBalance {
   double sun=sheltered||thermal?0:clamp(solar,0,1)*.025;
   return .045+activity+heat*(.055+.045*(1-humidity/100))+sun+.012*clamp(bleeding,0,14);
  }
- public static State tick(State s,double cost){
+ public static State restored(){return new State(100,0,0,0,50);}
+ private static double renal(double f){return Double.isFinite(f)&&f>=0&&f<=1?f:1;}
+ /** Replace only the existing .045 basal fluid term; never scale sweat, bleeding or illness. */
+ public static double regulateBasalLoss(State s,double ordinaryLoss,double function){
+  double need=clamp((50-s.water)/50,-1,1);
+  return ordinaryLoss+.045*.25*(1-renal(function))*need;
+ }
+ public static State tick(State s,double cost){return tick(s,cost,1);}
+ public static State tick(State s,double cost,double renalFunction){
   double c=clamp(cost,0,2);
   double reserve=Math.max(0,s.reserve-c);
   double water=Math.max(0,s.water-Math.max(0,c-s.reserve));
   double absorbed=Math.min(.65*(1-.35*electrolyteStress(s.electrolytes))*(1-.35*clamp(s.exposure/100,0,1)),Math.min(s.pending,100-water+MAX_RESERVE-reserve));
   double main=Math.min(absorbed,100-water);
-  return new State(water+main,s.exposure-.035,reserve+absorbed-main,s.pending-absorbed,s.electrolytes-.10*c);
+  return new State(water+main,s.exposure-.035,reserve+absorbed-main,s.pending-absorbed,s.electrolytes-.10*c*(s.electrolytes>50?renal(renalFunction):1+.5*(1-renal(renalFunction))));
  }
  public static boolean canDrink(State s){return s.pending<MAX_PENDING-.01 && s.water+s.reserve+s.pending<100+MAX_RESERVE-.01;}
  public static State drink(State s,Quality quality,double ml,double risk){

@@ -39,11 +39,17 @@ public final class GroundMaterials{
  private static final Set<String> TROPICAL=Set.of("equatorial_rainforest","tropical_monsoon_forest","seasonal_tropical_forest","humid_savanna","subtropical_rainforest","warm_broadleaf_forest");
  private static final Set<String> DRY=Set.of("temperate_steppe","shortgrass_steppe","subtropical_grassland","mediterranean_scrub","sclerophyll_woodland","thorn_scrub","dry_savanna");
  static String soil(String biome,double thermal,double humidity,double slope,double patch){
-  if(STEPPE.contains(biome)&&thermal>-.48&&thermal<.38&&humidity>=.33&&humidity<=.73&&slope<.20&&patch>.20)return "chernozem";
-  if(TROPICAL.contains(biome)&&thermal>.22&&humidity>.55&&slope<.35&&patch>.32)return "laterite";
-  if(DRY.contains(biome)&&humidity<.42&&slope<.32&&patch>.28)return "sandy_loam";
+  if(STEPPE.contains(biome)&&thermal>-.48&&thermal<.38&&humidity>=.33&&humidity<=.73&&slope<.20&&patch>.06)return "chernozem";
+  if(TROPICAL.contains(biome)&&thermal>.22&&humidity>.55&&slope<.35&&patch>.14)return "laterite";
+  if(DRY.contains(biome)&&humidity<.42&&slope<.32&&patch>.10)return "sandy_loam";
   return "";
  }
+ static boolean whiteSand(String biome,double thermal,double shore,boolean carbonate,double patch){
+  // Carbonate beaches dominate only suitable existing sand/gravel substrates.
+  return thermal>.22&&shore<100&&(carbonate||biome.equals("tropical_sandy_coast"))&&patch>.08
+   &&(biome.equals("tropical_sandy_coast")||ReefTerrain.warm(biome));
+ }
+ static boolean volcanicSand(double distance,double radius,double patch){return distance<radius+200&&patch>.10;}
  static boolean topSoil(BlockState b){
   return b.is(Blocks.GRASS_BLOCK)||b.is(Blocks.DIRT)||b.is(Blocks.COARSE_DIRT)||b.is(Blocks.PODZOL)||b.is(Blocks.ROOTED_DIRT)||b.is(Content.SOILS.get("loam").get())||b.is(Content.SOILS.get("humus").get());
  }
@@ -82,9 +88,9 @@ public final class GroundMaterials{
    if(beach||marine){
     if(h>sea+3||h<sea-20)continue;
     if(marine&&!c.getFluidState(p.set(wx,sea-1,wz)).is(FluidTags.WATER))continue;
-    if(volcano!=null&&volcano.distance(wx,wz)<volcano.radius()+155&&patch>.24){sand(c,wx,wz,h,"volcanic_sand",2+(patch>.7?1:0));continue;}
+    if(volcano!=null&&volcanicSand(volcano.distance(wx,wz),volcano.radius(),patch)){sand(c,wx,wz,h,"volcanic_sand",2+(patch>.7?1:0));continue;}
     var cf=coast.apply(wx,wz);boolean carbonate=GeologyModel.province(seed,wx,wz)==GeologyModel.Province.CARBONATE||cf.variation()>.47;
-    if(cf.thermal()>.30&&cf.shore()<66&&carbonate&&patch>.27&&(biome.equals("tropical_sandy_coast")||ReefTerrain.warm(biome)))sand(c,wx,wz,h,"white_sand",2+(patch>.76?1:0));
+    if(whiteSand(biome,cf.thermal(),cf.shore(),carbonate,patch))sand(c,wx,wz,h,"white_sand",2+(patch>.76?1:0));
     continue;
    }
    if(h<sea+4||!c.getBlockState(p.set(wx,h+1,wz)).isAir())continue;
@@ -120,10 +126,10 @@ public final class GroundMaterials{
     if(!biome.endsWith("_coast")&&!biome.endsWith("ocean"))continue;
     if(id.equals("white_sand")){
      var cf=coast.apply(x,z);boolean carbonate=GeologyModel.province(l.getSeed(),x,z)==GeologyModel.Province.CARBONATE||cf.variation()>.47;
-     if(cf.thermal()<=.30||cf.shore()>=66||!carbonate||patch<=.27||(!biome.equals("tropical_sandy_coast")&&!ReefTerrain.warm(biome)))continue;
+     if(!whiteSand(biome,cf.thermal(),cf.shore(),carbonate,patch))continue;
     }else{
      var v=VolcanicTerrain.at(g,s,l.registryAccess(),l.getSeed(),x,z).orElse(null);
-     if(v==null||v.distance(x,z)>=v.radius()+155||patch<=.24)continue;
+     if(v==null||!volcanicSand(v.distance(x,z),v.radius(),patch))continue;
     }
    }else{
     var climate=model.regional(x,z);

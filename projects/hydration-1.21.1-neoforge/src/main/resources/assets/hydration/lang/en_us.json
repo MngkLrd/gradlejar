@@ -41,5 +41,11 @@
   "hydration.stage.mild": "Mild dehydration",
   "hydration.stage.moderate": "Moderate dehydration",
   "hydration.stage.severe": "Severe dehydration",
-  "hydration.stage.critical": "Critical dehydration"
+  "hydration.stage.critical": "Critical dehydration",
+  "hydration.processing.filter": "Charcoal filtration",
+  "hydration.processing.filter.step": "Sneak-use a filled vessel (up to 3000 mB) with a charcoal filter in the offhand; consumes one filter, reduces contamination, does not remove salt.",
+  "hydration.processing.boil": "Boil water",
+  "hydration.processing.boil.step": "Sneak-use a heatproof filled vessel (at least 100 mB) on a lit campfire; stay within four blocks and hold the same vessel. Duration 60 ticks + volume/15; 5% volume evaporates; salt remains.",
+  "hydration.processing.distill": "Distill water",
+  "hydration.processing.distill.step": "Sneak-use a heatproof filled vessel (at least 100 mB) on a lit campfire with copper condenser in offhand; keep both until finished. Duration 160 ticks + volume/5; yields 70% fresh water."
 }

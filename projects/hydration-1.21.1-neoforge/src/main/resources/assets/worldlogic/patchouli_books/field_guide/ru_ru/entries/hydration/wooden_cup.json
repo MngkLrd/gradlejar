@@ -1,0 +1,13 @@
+{
+  "name": "Деревянная кружка",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:wooden_cup",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:wooden_cup",
+      "link_recipe": true,
+      "text": "Вместимость: 500 мБ."
+    }
+  ]
+}

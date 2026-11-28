@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "id": "metabolism",
+  "order": 74,
+  "requires": "metabolism",
+  "title": {
+    "ru": "Питание и обмен веществ",
+    "en": "Nutrition and metabolism"
+  },
+  "source": "Metabolism PR #221 README and current localization",
+  "pages": [
+    {
+      "id": "diet",
+      "title": {
+        "ru": "Рацион и нутриенты",
+        "en": "Diet and nutrients"
+      },
+      "models": [
+        "minecraft:cooked_beef",
+        "minecraft:bread",
+        "minecraft:apple"
+      ],
+      "body": {
+        "ru": [
+          "Открой вкладку метаболизма и проверь белки, жиры, углеводы, клетчатку, витамины и минералы. Один продукт не компенсирует дефицит всех остальных веществ.",
+          "Чередуй мясо и растительные продукты. Белок, витамин C и энергия влияют на потенциал восстановления тканей; железо и B12 важны для кроветворения."
+        ],
+        "en": [
+          "Open the Metabolism dashboard and inspect protein, fat, carbohydrates, fiber, vitamins and minerals. One food cannot correct every deficiency.",
+          "Vary meat and plant foods. Protein, vitamin C and energy affect tissue recovery potential; iron and B12 matter for blood recovery."
+        ]
+      }
+    },
+    {
+      "id": "energy",
+      "title": {
+        "ru": "Энергия, пищеварение и переедание",
+        "en": "Energy, digestion and overeating"
+      },
+      "models": [
+        "minecraft:bread",
+        "minecraft:honey_bottle"
+      ],
+      "body": {
+        "ru": [
+          "Запасы калорий не равны шкале выносливости Core. Еда и питьё могут дать быстрый прирост выносливости, а усвоенная пища продолжает восстанавливать её.",
+          "Не переполняй желудок: переедание снижает эффективность пищеварения и восстановления. Проверяй быстрый и жировой резерв, токсическую нагрузку и историю питания."
+        ],
+        "en": [
+          "Calorie reserves are not the Core stamina bar. Food and drink may provide an immediate stamina boost; digestion can continue restoring it.",
+          "Avoid overeating: a full stomach reduces absorption and recovery efficiency. Check fast and fat reserves, toxins and dietary history."
+        ]
+      }
+    }
+  ]
+}

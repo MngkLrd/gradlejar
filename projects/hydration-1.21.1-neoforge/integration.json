@@ -1,0 +1,210 @@
+{
+  "schema": 2,
+  "ecosystem": "worldlogic",
+  "module": "hydration",
+  "role": "addon",
+  "core_module": "worldlogic",
+  "parent_module": "worldlogic",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "neoforge"
+  },
+  "provides": [
+    {
+      "id": "worldlogic:hydration_physiology",
+      "version": 1,
+      "revision": 5,
+      "domains": [
+        "hydration",
+        "water_electrolytes",
+        "container_water"
+      ],
+      "entrypoints": [
+        "dev.minemods.hydration.api.HydrationApi"
+      ],
+      "documentation": "projects/hydration-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/api/HydrationApi.java"
+      ],
+      "operations": [
+        {
+          "id": "physiology",
+          "kind": "query",
+          "entrypoint": "dev.minemods.hydration.api.HydrationApi",
+          "semantics": "Immutable hydration, electrolyte and exposure snapshot"
+        },
+        {
+          "id": "liquid_water",
+          "kind": "query",
+          "entrypoint": "dev.minemods.hydration.api.HydrationApi",
+          "semantics": "Container/tank snapshot in mB"
+        },
+        {
+          "id": "solution",
+          "kind": "query",
+          "entrypoint": "dev.minemods.hydration.api.HydrationApi",
+          "semantics": "Core solution properties with explicit temperature"
+        },
+        {
+          "id": "admin_restore",
+          "kind": "command",
+          "entrypoint": "dev.minemods.hydration.api.HydrationApi",
+          "semantics": "Reset Hydration state only"
+        },
+        {
+          "id": "preview_withdrawal",
+          "kind": "query",
+          "entrypoint": "dev.minemods.hydration.api.HydrationApi",
+          "semantics": "Refreshed exact held-container dose and detached remainder"
+        },
+        {
+          "id": "withdraw_exact",
+          "kind": "command",
+          "entrypoint": "dev.minemods.hydration.api.HydrationApi",
+          "semantics": "Same-tick validated single-use external debit"
+        }
+      ]
+    }
+  ],
+  "consumes": [
+    {
+      "id": "worldlogic:environment",
+      "version": 1,
+      "min_revision": 0,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Required Core; fail clearly on incompatible API."
+    },
+    {
+      "id": "worldlogic:material_properties",
+      "version": 1,
+      "min_revision": 2,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Required Core; fail clearly on incompatible API."
+    },
+    {
+      "id": "worldlogic:survival_physics",
+      "version": 1,
+      "min_revision": 0,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Required Core; fail clearly on incompatible API."
+    },
+    {
+      "id": "worldlogic:field_processing",
+      "version": 1,
+      "min_revision": 0,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Required Core; fail clearly on incompatible API."
+    },
+    {
+      "id": "worldlogic:metabolism_physiology",
+      "version": 1,
+      "min_revision": 4,
+      "required": false,
+      "status": "implemented",
+      "fallback": "No metabolic water bonus without provider."
+    },
+    {
+      "id": "worldlogic:trauma_status",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Neutral renal function and local exposure fallback."
+    },
+    {
+      "id": "worldlogic:thermal_status",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Ambient heat fallback."
+    }
+  ],
+  "features": [
+    {
+      "id": "water_balance",
+      "source_paths": [
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/Hydration.java",
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/WaterBalance.java",
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/PhysiologyBridge.java",
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/api/HydrationApi.java"
+      ],
+      "provides": [
+        "worldlogic:hydration_physiology"
+      ],
+      "consumes": [
+        "worldlogic:environment",
+        "worldlogic:survival_physics",
+        "worldlogic:metabolism_physiology",
+        "worldlogic:trauma_status",
+        "worldlogic:thermal_status"
+      ],
+      "integration_review": "Core #270 heal, Metabolism #257 and Trauma #239 actual peer APIs inspected; one owner per state."
+    },
+    {
+      "id": "container_water",
+      "source_paths": [
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/WaterBatch.java",
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/WaterPhysics.java",
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/WaterWithdrawal.java",
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/VesselItem.java",
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/WaterBottle.java",
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/TankEntity.java",
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/WaterInfrastructure.java",
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/WaterTreatment.java",
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/GravityFlow.java"
+      ],
+      "provides": [
+        "worldlogic:hydration_physiology"
+      ],
+      "consumes": [
+        "worldlogic:material_properties"
+      ],
+      "integration_review": "Core PhysicalWater and Trauma #220; exact external debit separate from drinking."
+    },
+    {
+      "id": "field_processing",
+      "source_paths": [
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/ProcessingCatalog.java",
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/VesselTreatment.java"
+      ],
+      "provides": [],
+      "consumes": [
+        "worldlogic:field_processing"
+      ],
+      "integration_review": "Core #253 descriptor provider; actual treatment used to build display examples.",
+      "no_public_surface_reason": "Read-only presentation of existing treatment operations."
+    },
+    {
+      "id": "hud_sync",
+      "source_paths": [
+        "projects/hydration-1.21.1-neoforge/src/main/java/dev/minemods/hydration/HydrationSync.java"
+      ],
+      "provides": [],
+      "consumes": [],
+      "integration_review": "Preserve existing player HUD synchronization.",
+      "no_public_surface_reason": "Private client/server presentation."
+    }
+  ],
+  "tests": [
+    {
+      "id": "hydration.server.contract",
+      "capabilities": [
+        "worldlogic:hydration_physiology",
+        "worldlogic:environment",
+        "worldlogic:material_properties",
+        "worldlogic:survival_physics",
+        "worldlogic:field_processing",
+        "worldlogic:metabolism_physiology",
+        "worldlogic:trauma_status",
+        "worldlogic:thermal_status"
+      ],
+      "ref": "tools/qa/scenarios/hydration-neoforge.json",
+      "status": "implemented"
+    }
+  ]
+}

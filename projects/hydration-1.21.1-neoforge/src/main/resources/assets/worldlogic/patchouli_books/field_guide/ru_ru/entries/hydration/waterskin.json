@@ -1,0 +1,13 @@
+{
+  "name": "Бурдюк",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:waterskin",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:waterskin",
+      "link_recipe": true,
+      "text": "Вместимость: 1500 мБ."
+    }
+  ]
+}

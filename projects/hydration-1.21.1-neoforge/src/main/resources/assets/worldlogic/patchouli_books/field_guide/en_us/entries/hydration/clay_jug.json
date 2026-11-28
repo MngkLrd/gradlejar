@@ -1,0 +1,13 @@
+{
+  "name": "Clay Jug",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:clay_jug",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:clay_jug",
+      "link_recipe": true,
+      "text": "Capacity: 3000 mB. Sneak-use a heatproof filled vessel (at least 100 mB) on a lit campfire; stay within four blocks and hold the same vessel. Duration 60 ticks + volume/15; 5% volume evaporates; salt remains."
+    }
+  ]
+}

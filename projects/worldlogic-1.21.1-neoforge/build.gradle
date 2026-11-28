@@ -1,9 +1,17 @@
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group='dev.minemods.worldlogic'
-version='1.2.1'
+version='1.5.1'
 base.archivesName='worldlogic-neoforge-mc1.21.1'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 neoForge { version=project.neo_version; runs { client { client() }; server { server(); programArgument '--nogui' } }; mods { worldlogic { sourceSet(sourceSets.main) } } }
+repositories {
+ mavenCentral()
+ maven { url='https://maven.blamejared.com/'; content { includeGroup 'mezz.jei'; includeGroup 'info.journeymap' } }
+}
+dependencies {
+ compileOnly 'info.journeymap:journeymap-api-neoforge:2.0.0-1.21.1'
+ compileOnly 'mezz.jei:jei-1.21.1-neoforge-api:19.21.2.313'
+}
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=21 }
 
 // Patchouli content is generated from the same authoritative bilingual guide
@@ -12,6 +20,10 @@ def patchouliOutput = layout.buildDirectory.dir('generated/worldlogicPatchouli')
 tasks.register('generatePatchouliGuide') {
  def source = file('src/main/resources/assets/worldlogic/worldlogic_guide')
  inputs.dir(source)
+ inputs.dir(file('src/main/resources/assets/worldlogic/models/item'))
+ inputs.dir(file('src/main/resources/assets/worldlogic/textures'))
+ inputs.dir(file('src/main/resources/data/worldlogic/recipe'))
+ inputs.dir(file('src/main/resources/assets/worldlogic/lang'))
  outputs.dir(patchouliOutput)
  doLast {
   def output = patchouliOutput.get().asFile
@@ -23,38 +35,100 @@ tasks.register('generatePatchouliGuide') {
   writeJson('data/worldlogic/patchouli_books/field_guide/book.json',[
    name:'item.worldlogic.guidebook',landing_text:'worldlogic.patchouli.landing',
    use_resource_pack:true,dont_generate_book:true,custom_book_item:'worldlogic:guidebook',
-   book_texture:'patchouli:textures/gui/book_brown.png',i18n:true,show_progress:false,
-   show_toasts:false,version:'37',text_overflow_mode:'resize'])
+   book_texture:'patchouli:textures/gui/book_green.png',text_color:'302e24',header_color:'365640',link_color:'37664c',link_hover_color:'548264',filler_texture:'worldlogic:textures/gui/patchouli_generated/field_filler.png',i18n:true,show_progress:false,
+   show_toasts:false,version:'57',text_overflow_mode:'resize'])
+  // Page filler: subtle ink line-art of a field compass and a leaf, rather
+  // than the default floating cubes. Pixel coordinates on Patchouli's 128px canvas.
+  def filler=new java.awt.image.BufferedImage(128,128,java.awt.image.BufferedImage.TYPE_INT_ARGB)
+  def pen=filler.createGraphics()
+  pen.setColor(new java.awt.Color(114,87,53,95))
+  pen.setStroke(new java.awt.BasicStroke(2))
+  pen.drawOval(31,27,64,64);pen.drawOval(37,33,52,52)
+  pen.drawLine(63,20,63,29);pen.drawLine(63,90,63,99);pen.drawLine(24,59,32,59);pen.drawLine(94,59,103,59)
+  pen.drawPolygon([63,52,63,74] as int[],[38,64,80,54] as int[],4)
+  pen.drawLine(41,105,87,105);pen.drawLine(49,109,79,109);pen.dispose()
+  def fillerFile=new File(output,'assets/worldlogic/textures/gui/patchouli_generated/field_filler.png')
+  fillerFile.parentFile.mkdirs();javax.imageio.ImageIO.write(filler,'png',fillerFile)
   def icons=[core:'minecraft:campfire',water:'minecraft:water_bucket',hydration:'minecraft:glass_bottle',
    weather:'minecraft:clock',thermal:'minecraft:leather_chestplate',trauma:'minecraft:redstone',
-   treechopper:'minecraft:stone_axe',terrarian:'minecraft:wheat',geology:'minecraft:raw_iron',biomes:'minecraft:map']
+   treechopper:'minecraft:stone_axe',terrarian:'minecraft:wheat',geology:'minecraft:raw_iron',aqua:'minecraft:cod',metabolism:'minecraft:cooked_beef',structures:'minecraft:bricks',biomes:'minecraft:map']
   def parser = new groovy.json.JsonSlurper()
   source.listFiles().findAll{it.name.endsWith('.json')}.sort{it.name}.each{file ->
    def chapter=parser.parse(file)
    ['en_us','ru_ru'].each{locale ->
     def lang=locale=='ru_ru'?'ru':'en'
     def root="assets/worldlogic/patchouli_books/field_guide/${locale}"
-    writeJson("${root}/categories/${chapter.id}.json",[name:chapter.title[lang],
-     description:chapter.title[lang],icon:icons[chapter.id]?:'minecraft:book',sortnum:chapter.order])
+    def category=[name:chapter.title[lang],description:chapter.pages[0].body[lang][0],icon:icons[chapter.id]?:'worldlogic:guidebook',sortnum:chapter.order]
+    if(chapter.requires!='worldlogic')category.flag='mod:'+chapter.requires
+    writeJson("${root}/categories/${chapter.id}.json",category)
     chapter.pages.eachWithIndex{article,index ->
      def pages=[]
-     // Preserve every paragraph, wrapping long text into bounded page strings.
+     // Shorter first page allows a real item illustration plus meaningful article text.
+     def primary=article.models.find{it.startsWith('worldlogic:') || (chapter.requires!='worldlogic' && !it.startsWith('minecraft:'))}
      article.body[lang].each{paragraph ->
       def words=paragraph.split('\\s+');def line=''
       words.each{word ->
-       if(line && line.length()+word.length()+1>260){pages.add([type:'patchouli:text',text:line]);line=''}
+       if(line && line.length()+word.length()+1>(primary&&pages.isEmpty()?125:260)){pages.add([type:'patchouli:text',text:line]);line=''}
        line+=(line?' ':'')+word
       }
       if(line)pages.add([type:'patchouli:text',text:line])
      }
-     // Optional addon item references must never break Core-only book loading.
-     article.models.findAll{it.startsWith('minecraft:')||it.startsWith('worldlogic:')}.each{id ->
-      pages.add([type:'patchouli:spotlight',item:id,text:''])
+     // Illustrate only actual Core objects in articles; vanilla props no longer occupy empty pages.
+     // Each Core object has its own material catalogue entry.
+     if(primary && !pages.isEmpty()){
+      def first=pages.remove(0)
+      pages.add(0,[type:'patchouli:spotlight',item:primary,link_recipe:true,text:first.text])
      }
-     writeJson("${root}/entries/${chapter.id}/${article.id}.json",[
-      name:article.title[lang],category:"worldlogic:${chapter.id}",icon:icons[chapter.id]?:'minecraft:book',
-      sortnum:index,pages:pages])
+     (article.icons?:[]).findAll{it.startsWith('worldlogic:textures/')}.unique().eachWithIndex{loc,idx ->
+      def src=file('src/main/resources/assets/worldlogic/'+loc.split(':',2)[1])
+      if(src.isFile()){
+       def image=javax.imageio.ImageIO.read(src)
+       if(image!=null){
+        def canvas=new java.awt.image.BufferedImage(256,256,java.awt.image.BufferedImage.TYPE_INT_ARGB)
+        def gg=canvas.createGraphics()
+        gg.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION,java.awt.RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
+        double scale=Math.min(192d/image.width,192d/image.height)
+        int ww=Math.max(1,(int)Math.round(image.width*scale)),hh=Math.max(1,(int)Math.round(image.height*scale))
+        gg.drawImage(image,(200-ww).intdiv(2),(200-hh).intdiv(2),ww,hh,null);gg.dispose()
+        def imageName='textures/gui/patchouli_generated/'+chapter.id+'/'+article.id+'_'+idx+'.png'
+        def dest=new File(output,'assets/worldlogic/'+imageName);dest.parentFile.mkdirs()
+        javax.imageio.ImageIO.write(canvas,'png',dest)
+        pages.add([type:'patchouli:image',images:['worldlogic:'+imageName],border:false,text:lang=='ru'?'Иллюстрация к статье.':'Article illustration.'])
+       }
+      }
+     }
+     if(pages.size()%2!=0)pages.add([type:'patchouli:empty',draw_filler:false])
+     def entry=[name:article.title[lang],category:"worldlogic:${chapter.id}",icon:primary?:icons[chapter.id]?:'worldlogic:guidebook',sortnum:index,pages:pages]
+     if(chapter.requires!='worldlogic')entry.flag='mod:'+chapter.requires
+     writeJson("${root}/entries/${chapter.id}/${article.id}.json",entry)
     }
+   }
+  }
+  def recipes=fileTree('src/main/resources/data/worldlogic/recipe').matching{include '**/*.json'}.files.sort{it.path}
+  def coreItems=file('src/main/resources/assets/worldlogic/models/item').listFiles().findAll{it.name.endsWith('.json')}.sort{it.name}
+  ['en_us','ru_ru'].each{locale ->
+   boolean ru=locale=='ru_ru'
+   def root='assets/worldlogic/patchouli_books/field_guide/'+locale
+   writeJson(root+'/categories/material_catalog.json',[name:ru?'Блоки и предметы':'Blocks and items',description:ru?'Каталог материалов ядра.':'Core material catalog.',icon:'minecraft:stone',sortnum:95])
+   def langMap=parser.parse(file('src/main/resources/assets/worldlogic/lang/'+locale+'.json'))
+   coreItems.eachWithIndex{model,index ->
+    def path=model.name.replaceFirst(/\.json$/,'')
+    def item='worldlogic:'+path
+    def title=langMap['item.worldlogic.'+path]?:langMap['block.worldlogic.'+path]?:path
+    def pages=[[type:'patchouli:spotlight',item:item,link_recipe:true,text:ru?'Наведите курсор для названия и свойств предмета. R — рецепты, U — применение (JEI).':'Hover for the item name and properties. R — recipes, U — uses (JEI).']]
+    recipes.each{rf ->
+     def recipe=parser.parse(rf)
+     def result=recipe.result instanceof Map?(recipe.result.id?:recipe.result.item):recipe.result
+     if(result!=item)return
+     def rel=file('src/main/resources/data/worldlogic/recipe').toPath().relativize(rf.toPath()).toString().replace('\\','/').replaceFirst(/\.json$/,'')
+     if(recipe.type in ['minecraft:crafting_shaped','minecraft:crafting_shapeless'])pages.add([type:'patchouli:crafting',recipe:'worldlogic:'+rel])
+     else if(recipe.type=='minecraft:smelting')pages.add([type:'patchouli:smelting',recipe:'worldlogic:'+rel])
+    }
+    // Include a useful note even for naturally generated or uncraftable items.
+    def count=pages.size()-1
+    pages.add([type:'patchouli:text',text:ru?('Реестр: '+item+'. Рецептов, отображаемых на страницах: '+count+'. Для полного списка способов получения и применения используйте JEI или каталог полевого справочника.') : ('Registry: '+item+'. Recipes displayed on pages: '+count+'. Use JEI or the field guide catalogue for the full list of acquisition methods and uses.')])
+    if(pages.size()%2!=0)pages.add([type:'patchouli:empty',draw_filler:false])
+    writeJson(root+'/entries/material_catalog/'+path+'.json',[name:title,category:'worldlogic:material_catalog',icon:item,sortnum:index,pages:pages])
    }
   }
  }

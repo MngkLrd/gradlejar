@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "worldlogic-hydration",
-  "description": "Core 1.2.1 RC54 + Hydration 0.5.2 + existing Trauma integration; same-run pack, separate exact-binary check",
+  "description": "Core 1.5.1 snapshot + Hydration 0.6.0 + historical Trauma integration; current peers require separate exact binary QA",
   "targets": [
     {
       "id": "neoforge-mc1.21.1",

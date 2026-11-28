@@ -1,0 +1,13 @@
+{
+  "name": "Clay Basin",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:clay_basin",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:clay_basin",
+      "link_recipe": true,
+      "text": "Capacity: 3000 mB."
+    }
+  ]
+}

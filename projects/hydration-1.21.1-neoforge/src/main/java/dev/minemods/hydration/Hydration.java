@@ -39,9 +39,10 @@ public final class Hydration {
  private static final WeakHashMap<ServerPlayer,Long> LAST_SIP=new WeakHashMap<>();
  public Hydration(IEventBus modBus){
   // Read both constants at runtime rather than inlining compile-time values.
-  try {if(WorldLogicApi.class.getField("API_VERSION").getInt(null)!=1||WorldLogicApi.class.getField("API_REVISION").getInt(null)<15)throw new IllegalStateException("Hydration requires World Logic API v1 revision 15 or later");}
+  try {if(WorldLogicApi.class.getField("API_VERSION").getInt(null)!=1||WorldLogicApi.class.getField("API_REVISION").getInt(null)<18)throw new IllegalStateException("Hydration requires World Logic API v1 revision 18 or later");}
   catch(ReflectiveOperationException e){throw new IllegalStateException("World Logic API revision unavailable",e);}
   HydrationItems.register(modBus);
+  modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event)->event.enqueueWork(ProcessingCatalog::register));
   modBus.addListener(HydrationSync::register);
   var bus=NeoForge.EVENT_BUS;
   bus.addListener(Hydration::tick);
@@ -70,11 +71,16 @@ public final class Hydration {
  public static void applyDrink(ServerPlayer p,WaterBalance.Quality q,double ml,double risk){
   if(active(p)) {store(p,WaterBalance.drink(state(p),q,ml,risk));HydrationSync.send(p);}
  }
+ /** Trusted server-thread owner reset; no other mod or shared potion mutation. */
+ public static boolean adminRestore(ServerPlayer p){
+  if(p==null||!p.serverLevel().getServer().isSameThread()||!active(p))return false;
+  store(p,WaterBalance.restored());LAST_STAGE.remove(p);LAST_POS.remove(p);LAST_SIP.remove(p);HydrationSync.forget(p);HydrationSync.send(p);return true;
+ }
  public static long clock(ServerPlayer p){return p.serverLevel().getServer().overworld().getGameTime();}
  public static void applyDrink(ServerPlayer p,WaterBatch batch){
   if(!active(p)||batch.ml()<=0)return;
   store(p,WaterBalance.drink(state(p),batch.quality(),batch.ml(),batch.risk(),batch.salinity()));
-  PhysiologyBridge.reportIntake(p,batch);HydrationSync.send(p);
+  PhysiologyBridge.reportIntake(p,batch);PhysiologyBridge.reportMetabolicIntake(p,batch);HydrationSync.send(p);
  }
  private static void refreshInventory(ServerPlayer p){
   long now=clock(p);boolean changed=false;
@@ -101,7 +107,8 @@ public final class Hydration {
   var old=state(p);double medical=PhysiologyBridge.illnessLoss(p);
   double extra=Double.isFinite(medical)?medical:WaterBalance.illnessLoss(old.exposure());
   double loss=WaterBalance.loss(c,rh,moving,p.isSprinting()&&moving,p.isSwimming()&&moving,covered,solar,body.bodyC(),body.bleeding());
-  var s=WaterBalance.tick(old,loss+extra+.08*WaterBalance.electrolyteStress(old.electrolytes()));
+  double renal=PhysiologyBridge.renalFunction(p);
+  var s=WaterBalance.tick(old,WaterBalance.regulateBasalLoss(old,loss,renal)+extra+.08*WaterBalance.electrolyteStress(old.electrolytes()),renal);
   store(p,s);var stage=WaterBalance.stage(s.water());var previousStage=LAST_STAGE.put(p,stage);
   if(previousStage!=stage&&(previousStage!=null||stage!=WaterBalance.Dehydration.NORMAL))p.displayClientMessage(Component.translatable("hydration.stage."+stage.name().toLowerCase(Locale.ROOT)),true);
   if(p.tickCount%100==0){

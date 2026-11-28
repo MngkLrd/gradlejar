@@ -13,7 +13,17 @@ import net.minecraft.server.level.ServerPlayer;
 /** Public server-thread API. Hydration owns fluid balance, never foreign body state. */
 public final class HydrationApi {
  public static final int API_VERSION=1;
- public static final int API_REVISION=4;
+ public static final int API_REVISION=5;
+ /** Trusted server-thread reset of Hydration only. Core owns command permissions. */
+ public static boolean adminRestore(ServerPlayer p){return Hydration.adminRestore(p);}
+ /** Same-tick quote for actual held container, no mutation. */
+ public static Optional<dev.minemods.hydration.WaterWithdrawal.Quote> previewWithdrawal(ServerPlayer p,net.minecraft.world.InteractionHand hand,int volumeMb){
+  return dev.minemods.hydration.WaterWithdrawal.preview(p,hand,volumeMb);
+ }
+ /** Commit once, only if the held container and quote are still current. */
+ public static Optional<LiquidStatus> withdrawExact(ServerPlayer p,dev.minemods.hydration.WaterWithdrawal.Quote quote){
+  return dev.minemods.hydration.WaterWithdrawal.commit(p,quote);
+ }
  /** Caller-supplied liquid temperature, no stored-temperature simulation. Empty for unknown or unsupported solutions. */
  public static Optional<dev.minemods.worldlogic.api.PhysicalWater.Solution> liquidSolution(ItemStack stack,double temperatureC){
   if(stack.getItem() instanceof VesselItem v)return dev.minemods.hydration.WaterPhysics.solution(v.read(stack),temperatureC);

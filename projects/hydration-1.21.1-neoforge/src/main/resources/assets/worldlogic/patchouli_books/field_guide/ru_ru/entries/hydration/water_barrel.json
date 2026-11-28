@@ -1,0 +1,13 @@
+{
+  "name": "Бочка для воды",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:water_barrel",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:water_barrel",
+      "link_recipe": true,
+      "text": "Вместимость: 16000 мБ."
+    }
+  ]
+}

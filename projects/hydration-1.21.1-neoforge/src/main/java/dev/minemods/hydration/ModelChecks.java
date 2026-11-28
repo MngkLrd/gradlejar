@@ -75,6 +75,11 @@ public final class ModelChecks {
   var concentrated=new WaterBatch(250,Quality.DESALINATE,121,.3);
   check(!WaterPhysics.batch(concentrated).known()&&WaterPhysics.boiling(concentrated).isEmpty(),"unsupported salinity remains unknown");
   check(WaterPhysics.batch(t.target()).known(),"arbitrary mixture now has physical properties");
+  var high=new State(40,20,0,10,80);
+  check(tick(high,.5,1).equals(tick(high,.5))&&tick(high,.5,Double.NaN).equals(tick(high,.5)),"neutral renal fallback");
+  check(tick(high,.5,0).electrolytes()>tick(high,.5,1).electrolytes(),"renal impairment slows electrolyte excretion");
+  check(regulateBasalLoss(high,.4,1)==.4&&regulateBasalLoss(high,.4,0)>.4&&regulateBasalLoss(new State(100,0),.4,0)<.4,"renal modulation of existing basal term");
+  check(restored().equals(new State(100,0,0,0,50)),"admin reset state");
   var unknown=new WaterBatch(100,Quality.UNKNOWN,0,1);
   check(WaterBatch.transfer(unknown,fresh,100,1000).target().quality()==Quality.UNKNOWN,"unknown cannot be laundered");
  }

@@ -1,0 +1,13 @@
+{
+  "name": "Water Barrel",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:water_barrel",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:water_barrel",
+      "link_recipe": true,
+      "text": "Capacity: 16000 mB."
+    }
+  ]
+}

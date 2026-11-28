@@ -1,0 +1,13 @@
+{
+  "name": "Charcoal Filter",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:charcoal_filter",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:charcoal_filter",
+      "link_recipe": true,
+      "text": "Sneak-use a filled vessel (up to 3000 mB) with a charcoal filter in the offhand; consumes one filter, reduces contamination, does not remove salt."
+    }
+  ]
+}

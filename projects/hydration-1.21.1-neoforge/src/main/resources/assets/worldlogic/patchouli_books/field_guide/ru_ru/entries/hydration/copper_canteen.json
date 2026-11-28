@@ -1,0 +1,13 @@
+{
+  "name": "Медная фляга",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:copper_canteen",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:copper_canteen",
+      "link_recipe": true,
+      "text": "Вместимость: 2000 мБ. Присядьте и используйте термостойкую ёмкость (от 100 мБ) на горящем костре. Оставайтесь в пределах четырёх блоков с той же ёмкостью. Время: 60 тиков + объём/15; испаряется 5%, соль остаётся."
+    }
+  ]
+}

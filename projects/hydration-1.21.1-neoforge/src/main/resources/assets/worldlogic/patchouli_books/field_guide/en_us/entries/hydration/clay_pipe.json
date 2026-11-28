@@ -1,0 +1,13 @@
+{
+  "name": "Clay Pipe",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:clay_pipe",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:clay_pipe",
+      "link_recipe": true,
+      "text": "Directional downhill flow; maximum route 24 blocks. Redstone stops flow."
+    }
+  ]
+}
