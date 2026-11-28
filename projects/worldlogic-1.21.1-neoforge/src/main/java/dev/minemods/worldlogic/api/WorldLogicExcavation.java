@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 /** Core-owned material/contact inputs for discrete excavation addons. No break progress, drops or mutation. */
 public final class WorldLogicExcavation{
  private WorldLogicExcavation(){}
- public static final int REVISION=0;
+ public static final int REVISION=1;
  public enum Kind{ROCK_OR_ORE,SOIL,OTHER}
  public record Target(BlockState state,Kind kind,float vanillaResistance,boolean requiresCorrectTool,
   boolean toolSuitableForDrops,PhysicalMaterials.Result composition,List<PhysicalMaterials.ComponentResult> constituents,
@@ -21,6 +21,7 @@ public final class WorldLogicExcavation{
  public interface Contract{
   Optional<Target> inspect(ServerLevel level,BlockPos pos,ItemStack tool);
   Optional<Strike> strike(ItemStack tool,int componentIndex,double contactAreaM2,double movingMassKg,double normalSpeedMps);
+  default Optional<Target> inspectOriginal(ServerLevel level,BlockPos pos,BlockState original,ItemStack tool){return WorldLogicExcavation.inspectOriginal(level,pos,original,tool);}
  }
  public static final WorldLogicCapabilities.Key<Contract> KEY=new WorldLogicCapabilities.Key<>(ResourceLocation.fromNamespaceAndPath("worldlogic","excavation"),1,Contract.class);
  public static void register(){WorldLogicCapabilities.register(KEY,REVISION,"worldlogic",new Contract(){
@@ -31,13 +32,19 @@ public final class WorldLogicExcavation{
   Objects.requireNonNull(tool);
   if(!level.getServer().isSameThread())throw new IllegalStateException("server thread required");
   if(level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
-  var state=level.getBlockState(pos);
+  return inspectOriginal(level,pos,level.getBlockState(pos),tool);
+ }
+ /** Original state supplied by the owning proxy block. This is data-only, not permission to mutate a block. */
+ public static Optional<Target> inspectOriginal(ServerLevel level,BlockPos pos,BlockState state,ItemStack tool){
+  Objects.requireNonNull(state);Objects.requireNonNull(tool);
+  if(!level.getServer().isSameThread())throw new IllegalStateException("server thread required");
+  if(level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
   if(state.isAir()||!state.getFluidState().isEmpty())return Optional.empty();
   float hardness=state.getDestroySpeed(level,pos);
   if(hardness<0||!Float.isFinite(hardness))return Optional.empty();
   Kind kind=state.is(BlockTags.MINEABLE_WITH_PICKAXE)?Kind.ROCK_OR_ORE:state.is(BlockTags.MINEABLE_WITH_SHOVEL)?Kind.SOIL:Kind.OTHER;
   // Tags are Minecraft tool roles, not a mineralogical diagnosis.
-  var physical=PhysicalMaterials.placed(level,pos).orElseThrow();
+  var physical=PhysicalMaterials.atState(level,pos,state,null).orElseThrow();
   var parts=physical.object().components().stream().map(c->PhysicalMaterials.componentProperties(c,physical.state())).flatMap(Optional::stream).toList();
   return Optional.of(new Target(state,kind,hardness,state.requiresCorrectToolForDrops(),
    !state.requiresCorrectToolForDrops()||tool.isCorrectToolForDrops(state),physical,parts,WorldLogicApi.soilProfile(state)));

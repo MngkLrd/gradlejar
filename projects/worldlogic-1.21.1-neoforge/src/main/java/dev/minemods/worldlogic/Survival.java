@@ -31,15 +31,20 @@ public final class Survival {
   RestSample previous=REST_SAMPLE.put(p,new RestSample(l,p.getX(),p.getZ(),now));
   double speed=previous!=null&&previous.level()==l&&now>previous.time()&&now-previous.time()<=40
    ?Math.hypot(p.getX()-previous.x(),p.getZ()-previous.z())*20.0/(now-previous.time()):4.3;
+  int elapsed=previous!=null&&previous.level()==l&&now>previous.time()&&now-previous.time()<=40?(int)Math.min(20,now-previous.time()):1;
+  double seconds=elapsed/20.0;
   boolean effort=!p.isPassenger()&&(p.isSprinting()||p.isSwimming()||p.onClimbable()&&p.getDeltaMovement().y>.05);
   if(effort){
    double mass=Material.mass(p),armor=Rules.on("armor_fatigue")?CombatConsequences.armorWork(Expedition.armorLoad(p)):1;
-   work(p,(p.isSwimming()?2.4:1.45)*Math.max(.8,mass)*armor*Condition.workFactor(p));
-   p.causeFoodExhaustion((float)(.08*Math.max(1,mass)*armor*Condition.workFactor(p)*Rules.strength("movement")));
+   work(p,(p.isSwimming()?2.4:1.45)*Math.max(.8,mass)*armor*Condition.workFactor(p)*seconds);
+   p.causeFoodExhaustion((float)(.08*Math.max(1,mass)*armor*Condition.workFactor(p)*Rules.strength("movement")*seconds));
   }else if(!p.isPassenger()&&p.onGround()&&!p.isInWater()&&!p.isInLava()&&!p.isUsingItem()&&!p.onClimbable()
        &&now-LAST_WORK.getOrDefault(p,now-20)>=20&&fatigue(p)>0){
-   boolean warm=speed<.25&&AirAndFire.nearHeat(l,p.blockPosition(),2);
-   rest(p,recoveryRate(p.getFoodData().getFoodLevel(),speed,p.isShiftKeyDown(),warm));
+   var metabolic=speed<.25&&p instanceof net.minecraft.server.level.ServerPlayer server?PeerPhysiology.restRate(server):OptionalDouble.empty();
+   double rate;
+   if(metabolic.isPresent())rate=metabolic.getAsDouble();
+   else{boolean warm=speed<.25&&AirAndFire.nearHeat(l,p.blockPosition(),2);rate=recoveryRate(p.getFoodData().getFoodLevel(),speed,p.isShiftKeyDown(),warm);}
+   rest(p,rate*seconds);
   }
   ExertionModifiers.apply(p);
  }
@@ -47,7 +52,14 @@ public final class Survival {
  public static double fatigue(Player p){return Math.max(0,Math.min(100,p.getPersistentData().getDouble(FATIGUE)));}
  public static void rest(Player p,double amount){if(active(p)&&Rules.on("exertion"))p.getPersistentData().putDouble(FATIGUE,Math.max(0,fatigue(p)-amount));}
  public static void work(Player p,double amount){if(active(p)&&Rules.on("exertion")){LAST_WORK.put(p,p.level().getGameTime());p.getPersistentData().putDouble(FATIGUE,Math.min(100,fatigue(p)+amount*Rules.strength("movement")));}}
- public static void mine(BlockEvent.BreakEvent e){if(!e.isCanceled()&&active(e.getPlayer())){float hardness=e.getState().getDestroySpeed(e.getLevel(),e.getPos());if(hardness>0)work(e.getPlayer(),Math.min(5,.6+hardness*.5));}}
+ /** Called only after ServerPlayerGameMode confirms the actual world block changed. */
+ public static void completedMining(net.minecraft.server.level.ServerPlayer p,float hardness){
+  if(Float.isFinite(hardness)&&hardness>0&&active(p))work(p,Math.min(5,.6+hardness*.5));
+ }
+ static void adminRestore(Player p){
+  p.getPersistentData().remove(FATIGUE);p.getPersistentData().remove(INJURY);p.getPersistentData().remove(SMOKE);
+  clearExertionTracking(p);ExertionModifiers.clear(p);
+ }
  public static void jump(LivingEvent.LivingJumpEvent e){if(e.getEntity() instanceof Player p)work(p,1.2);}
  public static void hit(LivingIncomingDamageEvent e){if(!e.isCanceled()&&e.getSource().getEntity() instanceof Player p)work(p,1.8);}
  public static void fall(LivingFallEvent e){if(!(e.getEntity() instanceof Player p)||!active(p)||!Rules.on("injuries")||e.getDistance()<6||e.getDamageMultiplier()<=0)return;var l=(ServerLevel)p.level();long duration=(long)Math.min(1800,(e.getDistance()-5)*75*Rules.strength("impact"));p.getPersistentData().putLong(INJURY,Math.max(p.getPersistentData().getLong(INJURY),l.getGameTime()+duration));p.displayClientMessage(Component.literal("Your legs are injured. Rest and avoid heavy work."),true);}
@@ -62,9 +74,9 @@ public final class Survival {
  public static void logout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent e){clearExertionTracking(e.getEntity());ExertionModifiers.clear(e.getEntity());}
  public static void tick(PlayerTickEvent.Post e){
   Player p=e.getEntity();if(!active(p)||!(p.level() instanceof ServerLevel l))return;long now=l.getGameTime();
+  updateExertion(p,l,now);
   if(now%20!=0)return;
   var tag=p.getPersistentData();
-  updateExertion(p,l,now);
   if(Rules.on("injuries")&&tag.getLong(INJURY)>now&&p.onGround()&&!p.isSprinting()&&p.getFoodData().getFoodLevel()>=14&&p.getDeltaMovement().horizontalDistance()<.04&&AirAndFire.nearHeat(l,p.blockPosition(),2))tag.putLong(INJURY,Math.max(now,tag.getLong(INJURY)-30));
   if(Rules.on("smoke_inhalation")){
    int smoke=tag.getInt(SMOKE);boolean exposed=false;

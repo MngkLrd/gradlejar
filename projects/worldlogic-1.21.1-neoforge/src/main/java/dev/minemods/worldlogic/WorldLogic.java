@@ -50,16 +50,15 @@ public final class WorldLogic {
   bus.addListener(Combat::fall);
   bus.addListener(Combat::shield);
   bus.addListener(Combat::visibility);
-  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,MineInstability::mined);
+  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,(net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e)->{if(!dev.minemods.worldlogic.api.WorldLogicBreaks.isProtectionProbe(e))MineInstability.mined(e);});
   bus.addListener(MineInstability::placed);
   bus.addListener(MineInstability::tick);
-  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,Cleanup::broken);
+  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,(net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e)->{if(!dev.minemods.worldlogic.api.WorldLogicBreaks.isProtectionProbe(e))Cleanup.broken(e);});
   bus.addListener(SoilFarmland::till);
   bus.addListener(Soil::harvest);
   bus.addListener(Soil::grow);
   bus.addListener(Soil::fertilize);
   bus.addListener(CampfireFuel::feed);
-  bus.addListener(Survival::mine);
   bus.addListener(Survival::jump);
   bus.addListener(Survival::hit);
   bus.addListener(Survival::fall);
@@ -69,7 +68,7 @@ public final class WorldLogic {
   bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,Expedition::shield);
   bus.addListener(Expedition::tick);
   bus.addListener(Expedition::wake);
-  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,Expedition::mined);
+  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,(net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e)->{if(!dev.minemods.worldlogic.api.WorldLogicBreaks.isProtectionProbe(e))Expedition.mined(e);});
   bus.addListener(Expedition::logout);
   bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,CombatConsequences::damage);
   bus.addListener(CombatConsequences::tick);
@@ -83,7 +82,7 @@ public final class WorldLogic {
   bus.addListener(PredatorEcology::tick);
   bus.addListener(PredatorEcology::hunt);
   bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,TorchLifetime::placed);
-  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,TorchLifetime::broken);
+  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,(net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e)->{if(!dev.minemods.worldlogic.api.WorldLogicBreaks.isProtectionProbe(e))TorchLifetime.broken(e);});
   bus.addListener(TorchLifetime::tick);
   bus.addListener(Condition::tick);
   bus.addListener(Condition::hurt);
@@ -96,7 +95,7 @@ public final class WorldLogic {
   bus.addListener(EnvironmentPhysics::tick);
   bus.addListener(EnvironmentPhysics::logout);
   bus.addListener(EnvironmentPhysics::melee);
-  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,StructuralHazards::broken);
+  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,(net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e)->{if(!dev.minemods.worldlogic.api.WorldLogicBreaks.isProtectionProbe(e))StructuralHazards.broken(e);});
   bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,StructuralHazards::place);
   bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,StructuralHazards::blast);
   bus.addListener(StructuralHazards::tick);
@@ -129,7 +128,7 @@ public final class WorldLogic {
   bus.addListener(TreeDescent::logout);
   bus.addListener(Body::jump);
   bus.addListener(Body::breakSpeed);
-  bus.addListener(Body::onBreak);
+  bus.addListener((net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e)->{if(!dev.minemods.worldlogic.api.WorldLogicBreaks.isProtectionProbe(e))Body.onBreak(e);});
   bus.addListener(Body::logout);
   bus.addListener(Weather::tick);
   bus.addListener(WeatherController::tick);
@@ -138,7 +137,7 @@ public final class WorldLogic {
   bus.addListener(HydrologyRuntime::tick);
   bus.addListener(EnvironmentAnalytics::tick);
   bus.addListener(DashboardSync::tick);
-  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,EnvironmentAnalytics::broken);
+  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,(net.neoforged.neoforge.event.level.BlockEvent.BreakEvent e)->{if(!dev.minemods.worldlogic.api.WorldLogicBreaks.isProtectionProbe(e))EnvironmentAnalytics.broken(e);});
   bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,EnvironmentAnalytics::placed);
   bus.addListener(LocalWeatherRuntime::playerTick);
   bus.addListener(Ecology::crop);

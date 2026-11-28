@@ -144,6 +144,7 @@ public final class Balance {
  public static void interact(PlayerInteractEvent e){if(e instanceof net.neoforged.bus.api.ICancellableEvent c&&down(e.getEntity()))c.setCanceled(true);}
  public static void use(LivingEntityUseItemEvent.Start e){if(e.getEntity() instanceof Player p&&down(p))e.setCanceled(true);}
  public static void breakSpeed(PlayerEvent.BreakSpeed e){if(down(e.getEntity()))e.setNewSpeed(0);}
+ static void adminRestore(Player p){State s=STATES.remove(p);if(s!=null)release(p,s);}
  public static void logout(PlayerEvent.PlayerLoggedOutEvent e){State s=STATES.remove(e.getEntity());if(s!=null&&s.owned&&e.getEntity().getForcedPose()==Pose.SWIMMING)e.getEntity().setForcedPose(null);}
  public static boolean debug(Player p){if(!eligible(p)||!Rules.on("physical_falls")||p.getForcedPose()!=null)return false;State s=state(p);fall((ServerLevel)p.level(),p,s,p.getLookAngle(),"debug",.5,Survival.injured(p,p.level().getGameTime()));return s.owned;}
 }

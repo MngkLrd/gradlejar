@@ -551,7 +551,13 @@ public final class PhysicalMaterials {
  public static Optional<Result> placed(ServerLevel level,BlockPos pos,State supplied){
   if(!level.getServer().isSameThread())throw new IllegalStateException("server thread required");
   if(level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
-  BlockState b=level.getBlockState(pos);
+  return atState(level,pos,level.getBlockState(pos),supplied);
+ }
+ /** Caller-owned original state at an already loaded location, e.g. an excavation proxy. Does not mutate terrain. */
+ public static Optional<Result> atState(ServerLevel level,BlockPos pos,BlockState b,State supplied){
+  Objects.requireNonNull(b);
+  if(!level.getServer().isSameThread())throw new IllegalStateException("server thread required");
+  if(level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
   if(b.getBlock() instanceof net.minecraft.world.level.block.LiquidBlock)return Optional.of(evaluate(fluidBlock(b.getFluidState()),supplied==null?State.reference():supplied));
   if(supplied!=null)return Optional.of(evaluate(block(b),supplied));
   ObjectProfile p=block(b);double wet=N;

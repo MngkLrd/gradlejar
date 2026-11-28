@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=20;
+ public static final int API_REVISION=21;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -196,6 +196,14 @@ public final class WorldLogicApi {
   serverThread(level);return dev.minemods.worldlogic.EnvironmentAnalytics.forest(level,pos);
  }
  public record Fatigue(boolean enabled,double fatiguePercent,double remainingStaminaPercent){}
+ /** True when Core owns the installed Metabolism rest policy; the peer must not supplement it. */
+ public static boolean usesMetabolicRestRecovery(ServerPlayer player){
+  serverThread(player.serverLevel());return dev.minemods.worldlogic.PeerPhysiology.usesMetabolicRestRecovery();
+ }
+ /** Trusted server/admin operation; caller is responsible for command permission. Missing installed providers are explicit. */
+ public static dev.minemods.worldlogic.PeerPhysiology.HealResult adminRestore(ServerPlayer player){
+  serverThread(player.serverLevel());return dev.minemods.worldlogic.PeerPhysiology.heal(player);
+ }
  private static void serverThread(ServerLevel level){
   if(!level.getServer().isSameThread())throw new IllegalStateException("World Logic API requires server thread");
  }
