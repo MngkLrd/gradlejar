@@ -37,8 +37,13 @@ public final class Aquaculture {
  public static final DeferredRegister<Item> ITEMS=DeferredRegister.create(Registries.ITEM,ID);
  public static final Map<String,Supplier<EntityType<Cod>>> TYPES=new LinkedHashMap<>();
  public static final Supplier<EntityType<RoeClutch>> ROE=ENTITIES.register("roe_clutch",()->EntityType.Builder.<RoeClutch>of(RoeClutch::new,MobCategory.MISC).sized(.65f,.35f).clientTrackingRange(6).build(ID+":roe_clutch"));
+ public static final Map<MarineSpecies,Supplier<EntityType<MarineAnimal>>> MARINE=new EnumMap<>(MarineSpecies.class);
  public static final Map<String,Supplier<Item>> RAW=new LinkedHashMap<>();
  static {
+  for(MarineSpecies s:MarineSpecies.values()){
+   MARINE.put(s,ENTITIES.register(s.id,()->EntityType.Builder.<MarineAnimal>of((type,level)->new MarineAnimal(type,level,s),MobCategory.WATER_CREATURE)
+    .sized(s.width,s.height).clientTrackingRange(s.whale()?12:8).build(ID+":"+s.id)));
+  }
   for(Species s:Species.ALL){
    TYPES.put(s.id(),ENTITIES.register(s.id(),()->EntityType.Builder.<Cod>of(Fish::new,MobCategory.WATER_AMBIENT)
     .sized((float)Math.max(.22,s.width()*1.7),(float)Math.max(.18,s.height())).clientTrackingRange(6).build(ID+":"+s.id())));
@@ -50,6 +55,7 @@ public final class Aquaculture {
   NeoForge.EVENT_BUS.addListener(PopulationRuntime::tick);NeoForge.EVENT_BUS.addListener(PopulationRuntime::load);NeoForge.EVENT_BUS.addListener(PopulationRuntime::unload);NeoForge.EVENT_BUS.addListener(this::drops);NeoForge.EVENT_BUS.addListener(this::commands);
  }
  private void attributes(EntityAttributeCreationEvent e){
+  for(MarineSpecies s:MarineSpecies.values())e.put(MARINE.get(s).get(),MarineAnimal.attributes(s).build());
   for(Species s:Species.ALL)e.put(TYPES.get(s.id()).get(),Cod.createAttributes().build());
  }
  public static Species species(Entity entity){
@@ -131,6 +137,7 @@ public final class Aquaculture {
   if(!(e.getEntity() instanceof Fish fish))return;
   Species s=species(fish);if(s==null)return;
   // Predation consumes an actual fish rather than generating a second catch item.
+  if(e.getSource().getEntity() instanceof MarineAnimal){e.getDrops().clear();return;}
   if(e.getSource().getEntity() instanceof Fish hunter&&species(hunter)!=null&&species(hunter).diet().equals("predator")){
    e.getDrops().clear();return;
   }
@@ -143,6 +150,9 @@ public final class Aquaculture {
  }
  private void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("aquaculture").requires(src->src.hasPermission(2))
+   .then(Commands.literal("marine_selftest").executes(c->{
+    MarineChecks.run(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("AQUA_MARINE_PASS"),false);return Command.SINGLE_SUCCESS;
+   }))
    .then(Commands.literal("population_tick_prepare").executes(c->{
     PopulationTickChecks.prepare(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("AQUA_POPULATION_TICK_READY"),false);return Command.SINGLE_SUCCESS;
    }))

@@ -42,6 +42,8 @@ public final class PopulationRuntime {
    BlockPos p=new BlockPos(x,surface-i,z);if(Aquaculture.water(l,p)){pos=p;break;}
   }
   if(pos==null)return;
+  // Large animals need water below the surface, even when small-fish cells are already full.
+  MarineRuntime.trySeed(l,pos.below(4+l.random.nextInt(5)));
   var data=PopulationData.get(l);
   for(int d=0;d<6;d++){
    BlockPos p=pos.below(d);var h=Aquaculture.habitat(l,p);if(h==null)break;

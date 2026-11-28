@@ -140,6 +140,12 @@ public final class FishEcology {
     if(d<dangerDistance&&d<25&&reachable(l,f,center(other))){danger=center(other);dangerDistance=d;}
    }
   }
+  for(MarineAnimal predator:l.getEntitiesOfClass(MarineAnimal.class,f.getBoundingBox().inflate(9))){
+   if(!predator.isAlive()||!predator.species().diet.equals("hunter"))continue;
+   if(f.visualLength(s)>predator.species().length*.35)continue;
+   double d=f.distanceToSqr(predator);
+   if(d<dangerDistance&&reachable(l,f,predator.position().add(0,.3,0))){danger=predator.position();dangerDistance=d;}
+  }
   if(danger!=null){
    f.setEcologyPanic(true);tag.putLong("wl_fish_panic_until",now+60);flee(l,f,danger);tag.putString("wl_fish_activity","fleeing");return;
   }
