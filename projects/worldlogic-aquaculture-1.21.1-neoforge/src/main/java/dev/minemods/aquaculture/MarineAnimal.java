@@ -33,7 +33,6 @@ public final class MarineAnimal extends WaterAnimal {
  @Override protected void registerGoals(){}
  @Override public boolean isInWater(){return super.isInWater()||FishWater.contact(this);}
  @Override public boolean isInWaterOrBubble(){return super.isInWaterOrBubble()||FishWater.contact(this);}
- @Override public boolean canBreatheUnderwater(){return true;}
  @Override protected void handleAirSupply(int previous){
   if(!(level() instanceof ServerLevel l)||!isAlive())return;
   boolean wet=FishWater.contact(this);
