@@ -1,6 +1,7 @@
 package dev.minemods.worldlogic;
 
 import dev.minemods.worldlogic.api.PhysicalMaterials;
+import dev.minemods.worldlogic.api.PhysicalAddonChecks;
 import dev.minemods.worldlogic.api.PhysicalMaterials.*;
 import java.util.List;
 import net.minecraft.core.BlockPos;

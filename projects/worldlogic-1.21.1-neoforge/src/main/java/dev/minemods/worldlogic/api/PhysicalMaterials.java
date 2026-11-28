@@ -446,6 +446,12 @@ public final class PhysicalMaterials {
  public static void registerIndividualItemProvider(ResourceLocation itemId,IndividualItemProvider provider){
   if(INDIVIDUAL_ITEMS.putIfAbsent(Objects.requireNonNull(itemId),Objects.requireNonNull(provider))!=null)throw new IllegalArgumentException("duplicate individual provider "+itemId);
  }
+ // Package-private fixture cleanup. Only the exact QA-owned registration is removed.
+ static void removeQaFixture(ResourceLocation materialId,ResourceLocation itemId,IndividualItemProvider provider){
+  if(!materialId.getNamespace().equals("worldlogic_qa"))throw new IllegalArgumentException("fixture namespace");
+  INDIVIDUAL_ITEMS.remove(itemId,provider);
+  WOOD_PROPERTIES.remove(materialId);MATERIALS.remove(materialId);
+ }
  private static Optional<IndividualItem> individual(ItemStack stack){
   if(stack.isEmpty())return Optional.empty();
   var provider=INDIVIDUAL_ITEMS.get(BuiltInRegistries.ITEM.getKey(stack.getItem()));

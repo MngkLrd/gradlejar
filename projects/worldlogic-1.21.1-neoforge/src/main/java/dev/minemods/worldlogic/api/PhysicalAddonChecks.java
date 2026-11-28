@@ -1,9 +1,8 @@
-package dev.minemods.worldlogic;
+package dev.minemods.worldlogic.api;
 
 import java.util.*;
-import dev.minemods.worldlogic.api.PhysicalMaterials;
+import dev.minemods.worldlogic.NaturalFluids;
 import dev.minemods.worldlogic.api.PhysicalMaterials.*;
-import dev.minemods.worldlogic.api.PhysicalWater;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -15,32 +14,34 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 
-final class PhysicalAddonChecks {
+public final class PhysicalAddonChecks {
  private static ResourceLocation id(String key){return ResourceLocation.fromNamespaceAndPath("worldlogic",key);}
  private static void require(boolean value,String label){if(!value)throw new IllegalStateException("Physical addon API: "+label);}
  private static void equal(double actual,double expected,double tolerance,String label){require(Math.abs(actual-expected)<=tolerance,label+" actual="+actual+" expected="+expected);}
- private static boolean registered;
  private static final ResourceLocation TEST_WOOD=ResourceLocation.fromNamespaceAndPath("worldlogic_qa","test_wood");
- private static synchronized void registerFixtures(){
-  if(registered)return;
-  var n=Double.NaN;
-  PhysicalMaterials.registerMaterial(new MaterialProfile(TEST_WOOD,Phase.SOLID,500,n,30,50,8,n,.12,.15,1500,n,300,.7,.5,n,n));
-  PhysicalMaterials.registerWoodProperties(TEST_WOOD,new WoodProperties(3,70,.8));
-  PhysicalMaterials.registerIndividualItemProvider(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(Items.PAPER),stack->{
+ private static final IndividualItemProvider PROVIDER=stack->{
    require(stack.getCount()==1,"provider receives one item");
    var custom=stack.get(DataComponents.CUSTOM_DATA);
    if(custom==null)return Optional.empty();
    var tag=custom.copyTag();
    if(!tag.contains("worldlogic_qa_mass"))return Optional.empty();
    return Optional.of(new IndividualItem(tag.getDouble("worldlogic_qa_mass"),tag.getBoolean("worldlogic_qa_unknown")?List.of():List.of(new Component(id("fish_tissue"),1))));
-  });
-  registered=true;
+ };
+ private static ResourceLocation testItemId(){return net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(Items.PAPER);}
+ private static void registerFixtures(){
+  var n=Double.NaN;
+  PhysicalMaterials.registerMaterial(new MaterialProfile(TEST_WOOD,Phase.SOLID,500,n,30,50,8,n,.12,.15,1500,n,300,.7,.5,n,n));
+  try{
+   PhysicalMaterials.registerWoodProperties(TEST_WOOD,new WoodProperties(3,70,.8));
+   PhysicalMaterials.registerIndividualItemProvider(testItemId(),PROVIDER);
+  }catch(RuntimeException ex){PhysicalMaterials.removeQaFixture(TEST_WOOD,testItemId(),PROVIDER);throw ex;}
  }
  private static ItemStack specimen(double mass,int count,boolean unknown){
   var s=new ItemStack(Items.PAPER,count);var data=new CompoundTag();data.putDouble("worldlogic_qa_mass",mass);data.putBoolean("worldlogic_qa_unknown",unknown);s.set(DataComponents.CUSTOM_DATA,CustomData.of(data));return s;
  }
- static void verify(){
+ public static void verify(){
   registerFixtures();
+  try{
   for(String name:List.of("flax","fur","straw","felt","fish_tissue","fish_scale","aquatic_shell","crustacean_shell")){
    var m=PhysicalMaterials.material(id(name)).orElseThrow();
    require(m.dryDensityKgM3()>0&&m.heatCapacityJkgK()>0&&m.conductivityWmK()>0,name+" valid profile");
@@ -103,8 +104,9 @@ final class PhysicalAddonChecks {
   var handle=PhysicalMaterials.itemContact(axe,1,.002,1,4).orElseThrow();
   require(!head.contactingComponent().material().id().equals(handle.contactingComponent().material().id()),"actual component selected");
   require(PhysicalMaterials.itemContact(axe,2,.001,1,4).isEmpty()&&PhysicalMaterials.itemContact(axe,0,0,1,4).isEmpty(),"invalid contact");
+  }finally{PhysicalMaterials.removeQaFixture(TEST_WOOD,testItemId(),PROVIDER);}
  }
- static void verifyLoaded(ServerLevel l){
+ public static void verifyLoaded(ServerLevel l){
   var spawn=l.getSharedSpawnPos();var p=new BlockPos(spawn.getX(),Math.min(l.getMaxBuildHeight()-2,Math.max(l.getMinBuildHeight()+2,spawn.getY()+4)),spawn.getZ());
   require(l.hasChunkAt(p),"contact fixture loaded");
   var old=l.getBlockState(p);var oldBelow=l.getBlockState(p.below());
