@@ -512,6 +512,23 @@ jobs:
           if [ ! -s "$REPORT" ]; then
             python3 -m tools.qa.gate "$PROJECT_DIR" --report "$REPORT" --work "$QA_WORK" --failure-log "$BUILD_LOG" || true
           fi
+      - name: Discover packaged content and reconcile exact QA references
+        if: always() && steps.verify.outcome == 'success' && (steps.qa-policy.outputs.mode == 'server' || steps.qa-policy.outputs.mode == 'client')
+        continue-on-error: true
+        env:
+          JAR_PATH: ${{ steps.verify.outputs.jar_path }}
+          MOD_ID: ${{ steps.profile.outputs.slug }}
+          REPORT: qa-report-${{ strategy.job-index }}.json
+          CONTENT_OUT: content-discovery-${{ strategy.job-index }}.json
+        run: python3 -m tools.qa.content_discovery "$JAR_PATH" --modid "$MOD_ID" --qa-report "$REPORT" --out "$CONTENT_OUT"
+      - name: Upload advisory content discovery
+        if: always() && steps.verify.outcome == 'success' && (steps.qa-policy.outputs.mode == 'server' || steps.qa-policy.outputs.mode == 'client')
+        uses: actions/upload-artifact@v4
+        with:
+          name: content-discovery-${{ strategy.job-index }}-${{ github.run_attempt }}
+          path: content-discovery-${{ strategy.job-index }}.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Upload machine-readable QA result
         if: always()
         uses: actions/upload-artifact@v4
