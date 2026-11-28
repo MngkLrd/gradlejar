@@ -29,8 +29,9 @@ public final class SpawnSelection {
   for(var c:candidates)result.put(c.species.id(),(1-DIVERSITY_SHARE)*c.weight/total+DIVERSITY_SHARE/candidates.size());
   return result;
  }
- public static Species choose(Aquaculture.Habitat h,Map<String,Integer> counts,RandomSource random){
-  var candidates=candidates(h,counts);
+ public static Species choose(Aquaculture.Habitat h,Map<String,Integer> counts,RandomSource random){return choose(h,counts,random,Optional.empty());}
+ public static Species choose(Aquaculture.Habitat h,Map<String,Integer> counts,RandomSource random,Optional<dev.minemods.worldlogic.api.WorldLogicApi.RiverCurrent> flow){
+  var candidates=candidates(h,counts,flow);
   if(candidates.isEmpty())return null;
   if(random.nextDouble()<DIVERSITY_SHARE)return candidates.get(random.nextInt(candidates.size())).species;
   double total=candidates.stream().mapToDouble(Candidate::weight).sum();
