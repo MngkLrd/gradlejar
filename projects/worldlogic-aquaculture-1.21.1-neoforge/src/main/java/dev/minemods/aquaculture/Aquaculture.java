@@ -50,10 +50,20 @@ public final class Aquaculture {
    RAW.put(s.id(),ITEMS.register("raw_"+s.id(),()->new RawFish(new Item.Properties().stacksTo(1))));
   }
  }
+ public static final DeferredRegister<CreativeModeTab> TABS=DeferredRegister.create(Registries.CREATIVE_MODE_TAB,ID);
+ public static final Map<String,Supplier<Item>> EGGS=new LinkedHashMap<>();
+ static {
+  for(Species s:Species.ALL)EGGS.put(s.id(),ITEMS.register(s.id()+"_spawn_egg",()->new net.neoforged.neoforge.common.DeferredSpawnEggItem(TYPES.get(s.id()),s.color()&0xffffff,0xd4c4a0,new Item.Properties())));
+  int[] colors={0x697881,0x806f58,0x819ba9,0x536171,0x3c617f,0x657040,0x947352,0x454954};
+  for(MarineSpecies s:MarineSpecies.values())EGGS.put(s.id,ITEMS.register(s.id+"_spawn_egg",()->new net.neoforged.neoforge.common.DeferredSpawnEggItem(MARINE.get(s),colors[s.ordinal()],0xd5d9d4,new Item.Properties())));
+ }
+ public static final Supplier<CreativeModeTab> AQUA_TAB=TABS.register("aqua",()->CreativeModeTab.builder()
+  .title(Component.translatable("itemGroup.aquaculture.aqua")).icon(()->new ItemStack(RAW.get("perch").get()))
+  .displayItems((parameters,output)->{RAW.values().forEach(item->output.accept(item.get()));EGGS.values().forEach(item->output.accept(item.get()));}).build());
  public Aquaculture(IEventBus bus){
-  ENTITIES.register(bus);ITEMS.register(bus);bus.addListener(this::attributes);
+  ENTITIES.register(bus);ITEMS.register(bus);TABS.register(bus);bus.addListener(this::attributes);
   bus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event)->event.enqueueWork(AquaPhysical::register));
-  NeoForge.EVENT_BUS.addListener(PopulationRuntime::tick);NeoForge.EVENT_BUS.addListener(PopulationRuntime::load);NeoForge.EVENT_BUS.addListener(PopulationRuntime::unload);NeoForge.EVENT_BUS.addListener(this::drops);NeoForge.EVENT_BUS.addListener(this::commands);
+  NeoForge.EVENT_BUS.addListener(AquaSpawns::filter);NeoForge.EVENT_BUS.addListener(AquaSpawns::placement);NeoForge.EVENT_BUS.addListener(PopulationRuntime::tick);NeoForge.EVENT_BUS.addListener(PopulationRuntime::load);NeoForge.EVENT_BUS.addListener(PopulationRuntime::unload);NeoForge.EVENT_BUS.addListener(this::drops);NeoForge.EVENT_BUS.addListener(this::commands);
  }
  private void attributes(EntityAttributeCreationEvent e){
   for(MarineSpecies s:MarineSpecies.values())e.put(MARINE.get(s).get(),MarineAnimal.attributes(s).build());
@@ -156,6 +166,10 @@ public final class Aquaculture {
  }
  private void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("aquaculture").requires(src->src.hasPermission(2))
+   .then(Commands.literal("content_selftest").executes(c->{
+    try{AquaContentChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}
+    c.getSource().sendSuccess(()->Component.literal("AQUA_CONTENT_80_PASS"),false);return Command.SINGLE_SUCCESS;
+   }))
    .then(Commands.literal("physical_selftest").executes(c->{
     try{AquaPhysicalChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}c.getSource().sendSuccess(()->Component.literal("AQUA_PHYSICAL_PASS"),false);return Command.SINGLE_SUCCESS;
    }))

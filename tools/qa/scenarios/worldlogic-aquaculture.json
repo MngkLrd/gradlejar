@@ -2432,6 +2432,39 @@
           "name": "Core RC54 physical API: individual catches for all 36 species, old NBT, copy/drop, missing mass and water solution controls"
         }
       ]
+    },
+    {
+      "id": "creative-aqua-content",
+      "kind": "mechanic",
+      "subject": "creative-aqua-content",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Creative content: 36 catches, 44 typed spawn eggs, registered tab and vanilla natural spawn filtering with manual/custom controls"
+        }
+      ]
+    },
+    {
+      "id": "natural-vanilla-fish-filter",
+      "kind": "mechanic",
+      "subject": "natural-vanilla-fish-filter",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Creative content: 36 catches, 44 typed spawn eggs, registered tab and vanilla natural spawn filtering with manual/custom controls"
+        }
+      ]
+    },
+    {
+      "id": "catch-item-models",
+      "kind": "mechanic",
+      "subject": "catch-item-models",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Creative content: 36 catches, 44 typed spawn eggs, registered tab and vanilla natural spawn filtering with manual/custom controls"
+        }
+      ]
     }
   ],
   "steps": [
@@ -2445,6 +2478,12 @@
       "name": "Core RC54 physical API: individual catches for all 36 species, old NBT, copy/drop, missing mass and water solution controls",
       "command": "aquaculture physical_selftest",
       "expect": "AQUA_PHYSICAL_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Creative content: 36 catches, 44 typed spawn eggs, registered tab and vanilla natural spawn filtering with manual/custom controls",
+      "command": "aquaculture content_selftest",
+      "expect": "AQUA_CONTENT_80_PASS",
       "assertion": true
     },
     {
