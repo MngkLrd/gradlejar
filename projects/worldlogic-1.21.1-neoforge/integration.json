@@ -1,0 +1,237 @@
+{
+  "schema": 2,
+  "ecosystem": "worldlogic",
+  "module": "worldlogic",
+  "role": "core",
+  "core_module": "worldlogic",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "neoforge"
+  },
+  "provides": [
+    {
+      "id": "worldlogic:material_properties",
+      "version": 1,
+      "revision": 2,
+      "domains": [
+        "material_properties"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.PhysicalMaterials",
+        "dev.minemods.worldlogic.api.PhysicalWater"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalMaterials.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalWater.java"
+      ],
+      "operations": [
+        {
+          "id": "evaluate",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.PhysicalMaterials",
+          "semantics": "Evaluate composition and state in SI units."
+        },
+        {
+          "id": "register",
+          "kind": "extension",
+          "entrypoint": "dev.minemods.worldlogic.api.PhysicalMaterials",
+          "semantics": "Register addon material, wood, object and individual item profiles."
+        },
+        {
+          "id": "aqueous_solution",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.PhysicalWater",
+          "semantics": "Return bounded water properties at supplied salinity and temperature."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:environment",
+      "version": 1,
+      "revision": 15,
+      "domains": [
+        "environment"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicApi"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicApi.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GeoDensity.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/SeasonRuntime.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/HydrologyRuntime.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/WaterClassification.java"
+      ],
+      "operations": [
+        {
+          "id": "environment",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Read loaded world environment and atmosphere, water and soil."
+        },
+        {
+          "id": "season",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Read server-owned local season."
+        },
+        {
+          "id": "worldgen",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Read deterministic worldgen habitat without chunk loads."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:survival_physics",
+      "version": 1,
+      "revision": 15,
+      "domains": [
+        "survival_physics"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicApi"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicApi.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Survival.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Combat.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TravelPhysics.java"
+      ],
+      "operations": [
+        {
+          "id": "exertion",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Read Core survival and legacy physics quantities, preserving their documented non-SI units."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:client_navigation",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "client_navigation"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.client.WorldLogicTabs"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/client/WorldLogicTabs.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TabLayout.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/TabRail.java"
+      ],
+      "operations": [
+        {
+          "id": "register_tab",
+          "kind": "extension",
+          "entrypoint": "dev.minemods.worldlogic.api.client.WorldLogicTabs",
+          "semantics": "Register an optional client screen in shared navigation."
+        },
+        {
+          "id": "content_width",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.client.WorldLogicTabs",
+          "semantics": "Reserve right-side navigation gutter."
+        }
+      ]
+    }
+  ],
+  "consumes": [],
+  "features": [
+    {
+      "id": "material_properties",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalMaterials.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/PhysicalWater.java"
+      ],
+      "provides": [
+        "worldlogic:material_properties"
+      ],
+      "consumes": [],
+      "integration_review": "RC54 contracts inspected in Trauma #219, Terrarian #250, TreeChopper #241, Aqua #242, Hydration and Temperature; Core authoritative."
+    },
+    {
+      "id": "environment",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicApi.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GeoDensity.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/SeasonRuntime.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/HydrologyRuntime.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/WaterClassification.java"
+      ],
+      "provides": [
+        "worldlogic:environment"
+      ],
+      "consumes": [],
+      "integration_review": "Thermal #186 and Terrarian #250 use environment and worldgen; Hydration and Aqua use water profile. Existing server fixtures retained."
+    },
+    {
+      "id": "survival_physics",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicApi.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Survival.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Combat.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TravelPhysics.java"
+      ],
+      "provides": [
+        "worldlogic:survival_physics"
+      ],
+      "consumes": [],
+      "integration_review": "Trauma #219 consumes collision and injury context; no medical or nutrition ownership transferred."
+    },
+    {
+      "id": "client_navigation",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/client/WorldLogicTabs.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/TabLayout.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/client/TabRail.java"
+      ],
+      "provides": [
+        "worldlogic:client_navigation"
+      ],
+      "consumes": [],
+      "integration_review": "Metabolism #221 uses tab rail; existing layout fixtures do not establish graphical client evidence."
+    }
+  ],
+  "tests": [
+    {
+      "id": "worldlogic.material_properties.contract",
+      "capabilities": [
+        "worldlogic:material_properties"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.environment.contract",
+      "capabilities": [
+        "worldlogic:environment"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.survival_physics.contract",
+      "capabilities": [
+        "worldlogic:survival_physics"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.client_navigation.contract",
+      "capabilities": [
+        "worldlogic:client_navigation"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    }
+  ]
+}

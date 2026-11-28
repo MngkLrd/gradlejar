@@ -15,5 +15,11 @@
     "release_targets": [
       "neoforge-mc1.21.1"
     ]
+  },
+  "ecosystem_membership": {
+    "ecosystem": "worldlogic",
+    "module": "worldlogic",
+    "role": "core",
+    "core_module": "worldlogic"
   }
 }
