@@ -56,6 +56,28 @@ final class TreeQA {
             }
             c.getSource().sendSuccess(()->Component.literal("TreeChopper inclined bucking PASS"),false);return 1;
           })))))
+          .then(Commands.literal("qa_branch_support").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            var list=l.getEntitiesOfClass(net.minecraft.world.entity.Display.BlockDisplay.class,new net.minecraft.world.phys.AABB(p).inflate(2),d->d.getTags().contains(FallingTree.REST));
+            boolean supported=false;
+            if(list.size()==1){
+                var data=list.get(0).getPersistentData().getCompound(TreeChopper.FALL);
+                var members=data.getList("members",net.minecraft.nbt.Tag.TAG_COMPOUND);int logs=0;
+                for(int i=0;i<members.size();i++)if(members.getCompound(i).getBoolean("log")&&!members.getCompound(i).getBoolean("removed"))logs++;
+                supported=logs==9&&data.getFloat("progress")>.6f&&FallingTree.qaSupported(l,data);
+            }else if(list.isEmpty()){
+                // On an integral final grid, the branch may land as solid blocks instead of displays.
+                java.util.Set<BlockPos> logs=new java.util.HashSet<>();java.util.Set<java.util.UUID> groups=new java.util.HashSet<>();
+                for(int y=0;y<=5;y++)for(int z=-12;z<=-1;z++){
+                    BlockPos cell=p.offset(0,y,z);
+                    if(l.getBlockEntity(cell) instanceof FallenProgress fp&&fp.group!=null){logs.add(cell);groups.add(fp.group);}
+                }
+                boolean contact=logs.stream().anyMatch(cell->!logs.contains(cell.below())&&!l.getBlockState(cell.below()).getCollisionShape(l,cell.below()).isEmpty());
+                supported=logs.size()==9&&groups.size()==1&&contact;
+            }
+            if(!supported){c.getSource().sendFailure(Component.literal("TreeChopper branched terrain support FAILED"));return 0;}
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper branched terrain support PASS"),false);return 1;
+          })))
           .then(Commands.literal("qa_support").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
             ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
             var list=l.getEntitiesOfClass(net.minecraft.world.entity.Display.BlockDisplay.class,new net.minecraft.world.phys.AABB(p).inflate(2),d->d.getTags().contains(FallingTree.REST));

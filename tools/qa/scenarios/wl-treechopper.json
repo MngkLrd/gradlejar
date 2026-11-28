@@ -1143,6 +1143,31 @@
       "expect": "Test passed",
       "assertion": true,
       "name": "gravity-support-preserved"
+    },
+    {
+      "command": "fill 1005 200 1025 1005 207 1025 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1005 202 1023 1005 202 1024 minecraft:oak_log[axis=z]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1005 208 1025 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1005 200 1025 north 32",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "wait": 8
+    },
+    {
+      "command": "wltreechopper qa_branch_support 1005 200 1025",
+      "expect": "TreeChopper branched terrain support PASS",
+      "assertion": true,
+      "name": "branched-ground-support"
     }
   ],
   "coverage": [
@@ -2289,6 +2314,17 @@
         {
           "backend": "server",
           "name": "inclined-physical-support"
+        }
+      ]
+    },
+    {
+      "id": "branched-ground-support",
+      "kind": "mechanic",
+      "subject": "Actually felled 8-log trunk with two projecting logs reaches terrain support without loss or unsupported hanging",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "branched-ground-support"
         }
       ]
     }
