@@ -24,8 +24,9 @@ public final class RawFish extends Item{
  }
  @Override public void appendHoverText(ItemStack stack,TooltipContext context,List<Component> lines,TooltipFlag flag){
   var t=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
-  if(!t.contains("wl_fish_mass_kg"))return;
-  lines.add(Component.translatable("aquaculture.mass",String.format(Locale.ROOT,"%.2f",t.getDouble("wl_fish_mass_kg"))));
+  Species s=Species.ALL.stream().filter(x->stack.is(Aquaculture.RAW.get(x.id()).get())).findFirst().orElse(null);
+  if(s==null)return;var mass=FishMass.read(t,s);if(mass.isEmpty())return;
+  lines.add(Component.translatable("aquaculture.mass",String.format(Locale.ROOT,"%.3f",mass.getAsDouble())));
   lines.add(Component.translatable("aquaculture.length",Math.round(t.getDouble("wl_fish_length_m")*100)));
   lines.add(Component.translatable("aquaculture.age",t.getInt("wl_fish_age_years")));
   lines.add(Component.translatable(t.getBoolean("wl_fish_female")?"aquaculture.female":"aquaculture.male"));

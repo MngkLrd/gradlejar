@@ -10,8 +10,8 @@
     "maxSalt": 3,
     "minDepth": 2,
     "maxGroup": 20,
-    "minKg": 1.1,
-    "maxKg": 10,
+    "minKg": 0.16,
+    "maxKg": 0.76,
     "adultLength": 1.1,
     "width": 0.22,
     "length": 0.9,
@@ -24,7 +24,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 10
   },
   {
     "id": "perch",
@@ -37,8 +38,8 @@
     "maxSalt": 5,
     "minDepth": 1,
     "maxGroup": 30,
-    "minKg": 0.14,
-    "maxKg": 1.6,
+    "minKg": 0.1,
+    "maxKg": 0.2,
     "adultLength": 0.36,
     "width": 0.18,
     "length": 0.47,
@@ -51,7 +52,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 1.6
   },
   {
     "id": "crucian_carp",
@@ -64,8 +66,8 @@
     "maxSalt": 3,
     "minDepth": 1,
     "maxGroup": 28,
-    "minKg": 0.1,
-    "maxKg": 1.8,
+    "minKg": 0.12,
+    "maxKg": 0.25,
     "adultLength": 0.34,
     "width": 0.2,
     "length": 0.4,
@@ -78,7 +80,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 1.8
   },
   {
     "id": "carp",
@@ -91,8 +94,8 @@
     "maxSalt": 4,
     "minDepth": 2,
     "maxGroup": 24,
-    "minKg": 0.8,
-    "maxKg": 12,
+    "minKg": 0.2,
+    "maxKg": 1,
     "adultLength": 0.65,
     "width": 0.26,
     "length": 0.65,
@@ -105,7 +108,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 12
   },
   {
     "id": "roach",
@@ -118,8 +122,8 @@
     "maxSalt": 6,
     "minDepth": 1,
     "maxGroup": 35,
-    "minKg": 0.06,
-    "maxKg": 0.8,
+    "minKg": 0.09,
+    "maxKg": 0.2,
     "adultLength": 0.27,
     "width": 0.14,
     "length": 0.35,
@@ -132,7 +136,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 0.8
   },
   {
     "id": "bream",
@@ -145,8 +150,8 @@
     "maxSalt": 4,
     "minDepth": 3,
     "maxGroup": 18,
-    "minKg": 0.3,
-    "maxKg": 4,
+    "minKg": 0.13,
+    "maxKg": 0.5,
     "adultLength": 0.48,
     "width": 0.21,
     "length": 0.43,
@@ -159,7 +164,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 4
   },
   {
     "id": "trout",
@@ -172,8 +178,8 @@
     "maxSalt": 3,
     "minDepth": 1,
     "maxGroup": 12,
-    "minKg": 0.2,
-    "maxKg": 3,
+    "minKg": 0.13,
+    "maxKg": 0.36,
     "adultLength": 0.44,
     "width": 0.17,
     "length": 0.55,
@@ -186,7 +192,8 @@
     "incubationDays": 5,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 3
   },
   {
     "id": "grayling",
@@ -199,8 +206,8 @@
     "maxSalt": 2,
     "minDepth": 1,
     "maxGroup": 17,
-    "minKg": 0.15,
-    "maxKg": 1.8,
+    "minKg": 0.1,
+    "maxKg": 0.2,
     "adultLength": 0.38,
     "width": 0.15,
     "length": 0.48,
@@ -213,7 +220,8 @@
     "incubationDays": 5,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 1.8
   },
   {
     "id": "char",
@@ -226,8 +234,8 @@
     "maxSalt": 6,
     "minDepth": 2,
     "maxGroup": 18,
-    "minKg": 0.25,
-    "maxKg": 4,
+    "minKg": 0.14,
+    "maxKg": 0.36,
     "adultLength": 0.49,
     "width": 0.18,
     "length": 0.57,
@@ -240,7 +248,8 @@
     "incubationDays": 5,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 4
   },
   {
     "id": "taimen",
@@ -253,8 +262,8 @@
     "maxSalt": 2,
     "minDepth": 3,
     "maxGroup": 18,
-    "minKg": 2,
-    "maxKg": 35,
+    "minKg": 0.2,
+    "maxKg": 0.8,
     "adultLength": 1.25,
     "width": 0.28,
     "length": 1,
@@ -267,7 +276,8 @@
     "incubationDays": 5,
     "hatchMin": 1,
     "hatchMax": 2,
-    "reproductionCooldownDays": 8
+    "reproductionCooldownDays": 8,
+    "legacyMaxKg": 35
   },
   {
     "id": "whitefish",
@@ -280,8 +290,8 @@
     "maxSalt": 5,
     "minDepth": 2,
     "maxGroup": 20,
-    "minKg": 0.15,
-    "maxKg": 3,
+    "minKg": 0.1,
+    "maxKg": 0.32,
     "adultLength": 0.48,
     "width": 0.17,
     "length": 0.5,
@@ -294,7 +304,8 @@
     "incubationDays": 5,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 3
   },
   {
     "id": "burbot",
@@ -307,8 +318,8 @@
     "maxSalt": 3,
     "minDepth": 3,
     "maxGroup": 15,
-    "minKg": 0.4,
-    "maxKg": 8,
+    "minKg": 0.16,
+    "maxKg": 0.6,
     "adultLength": 0.72,
     "width": 0.2,
     "length": 0.75,
@@ -321,7 +332,8 @@
     "incubationDays": 5,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 8
   },
   {
     "id": "catfish",
@@ -334,8 +346,8 @@
     "maxSalt": 3,
     "minDepth": 3,
     "maxGroup": 18,
-    "minKg": 1.5,
-    "maxKg": 50,
+    "minKg": 0.2,
+    "maxKg": 0.8,
     "adultLength": 1.5,
     "width": 0.35,
     "length": 1.05,
@@ -348,7 +360,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 2,
-    "reproductionCooldownDays": 8
+    "reproductionCooldownDays": 8,
+    "legacyMaxKg": 50
   },
   {
     "id": "tench",
@@ -361,8 +374,8 @@
     "maxSalt": 4,
     "minDepth": 2,
     "maxGroup": 30,
-    "minKg": 0.2,
-    "maxKg": 3,
+    "minKg": 0.1,
+    "maxKg": 0.3,
     "adultLength": 0.43,
     "width": 0.23,
     "length": 0.48,
@@ -375,7 +388,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 3
   },
   {
     "id": "loach",
@@ -388,8 +402,8 @@
     "maxSalt": 2,
     "minDepth": 1,
     "maxGroup": 30,
-    "minKg": 0.03,
-    "maxKg": 0.25,
+    "minKg": 0.04,
+    "maxKg": 0.14,
     "adultLength": 0.23,
     "width": 0.11,
     "length": 0.34,
@@ -402,7 +416,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 0.25
   },
   {
     "id": "rotan",
@@ -415,8 +430,8 @@
     "maxSalt": 3,
     "minDepth": 1,
     "maxGroup": 35,
-    "minKg": 0.04,
-    "maxKg": 0.4,
+    "minKg": 0.06,
+    "maxKg": 0.2,
     "adultLength": 0.2,
     "width": 0.15,
     "length": 0.3,
@@ -429,7 +444,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 0.4
   },
   {
     "id": "rudd",
@@ -442,8 +458,8 @@
     "maxSalt": 4,
     "minDepth": 1,
     "maxGroup": 35,
-    "minKg": 0.06,
-    "maxKg": 1.2,
+    "minKg": 0.09,
+    "maxKg": 0.2,
     "adultLength": 0.31,
     "width": 0.15,
     "length": 0.38,
@@ -456,7 +472,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 1.2
   },
   {
     "id": "bowfin",
@@ -469,8 +486,8 @@
     "maxSalt": 4,
     "minDepth": 2,
     "maxGroup": 25,
-    "minKg": 0.5,
-    "maxKg": 6,
+    "minKg": 0.16,
+    "maxKg": 0.6,
     "adultLength": 0.62,
     "width": 0.2,
     "length": 0.68,
@@ -483,7 +500,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 6
   },
   {
     "id": "piranha",
@@ -497,7 +515,7 @@
     "minDepth": 1,
     "maxGroup": 20,
     "minKg": 0.1,
-    "maxKg": 1.8,
+    "maxKg": 0.25,
     "adultLength": 0.28,
     "width": 0.18,
     "length": 0.34,
@@ -510,7 +528,8 @@
     "incubationDays": 2,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 1.8
   },
   {
     "id": "arapaima",
@@ -523,8 +542,8 @@
     "maxSalt": 3,
     "minDepth": 4,
     "maxGroup": 18,
-    "minKg": 5,
-    "maxKg": 100,
+    "minKg": 0.18,
+    "maxKg": 0.66,
     "adultLength": 2,
     "width": 0.38,
     "length": 1.35,
@@ -537,7 +556,8 @@
     "incubationDays": 2,
     "hatchMin": 1,
     "hatchMax": 2,
-    "reproductionCooldownDays": 8
+    "reproductionCooldownDays": 8,
+    "legacyMaxKg": 100
   },
   {
     "id": "tilapia",
@@ -551,7 +571,7 @@
     "minDepth": 1,
     "maxGroup": 35,
     "minKg": 0.1,
-    "maxKg": 2.5,
+    "maxKg": 0.2,
     "adultLength": 0.36,
     "width": 0.18,
     "length": 0.42,
@@ -564,7 +584,8 @@
     "incubationDays": 2,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 2.5
   },
   {
     "id": "pacu",
@@ -577,8 +598,8 @@
     "maxSalt": 3,
     "minDepth": 3,
     "maxGroup": 20,
-    "minKg": 0.6,
-    "maxKg": 15,
+    "minKg": 0.2,
+    "maxKg": 1,
     "adultLength": 0.61,
     "width": 0.25,
     "length": 0.58,
@@ -591,7 +612,8 @@
     "incubationDays": 2,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 15
   },
   {
     "id": "snakehead",
@@ -604,8 +626,8 @@
     "maxSalt": 5,
     "minDepth": 1,
     "maxGroup": 24,
-    "minKg": 0.3,
-    "maxKg": 6,
+    "minKg": 0.16,
+    "maxKg": 0.6,
     "adultLength": 0.63,
     "width": 0.2,
     "length": 0.7,
@@ -618,7 +640,8 @@
     "incubationDays": 2,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 6
   },
   {
     "id": "electric_eel",
@@ -631,8 +654,8 @@
     "maxSalt": 2,
     "minDepth": 3,
     "maxGroup": 20,
-    "minKg": 0.8,
-    "maxKg": 18,
+    "minKg": 0.14,
+    "maxKg": 0.5,
     "adultLength": 1.25,
     "width": 0.19,
     "length": 1,
@@ -645,7 +668,8 @@
     "incubationDays": 2,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 18
   },
   {
     "id": "atlantic_cod",
@@ -658,8 +682,8 @@
     "maxSalt": 38,
     "minDepth": 4,
     "maxGroup": 28,
-    "minKg": 0.4,
-    "maxKg": 12,
+    "minKg": 0.16,
+    "maxKg": 0.6,
     "adultLength": 0.7,
     "width": 0.22,
     "length": 0.69,
@@ -672,7 +696,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 12
   },
   {
     "id": "herring",
@@ -686,7 +711,7 @@
     "minDepth": 2,
     "maxGroup": 40,
     "minKg": 0.08,
-    "maxKg": 0.7,
+    "maxKg": 0.2,
     "adultLength": 0.31,
     "width": 0.13,
     "length": 0.42,
@@ -699,7 +724,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 0.7
   },
   {
     "id": "mackerel",
@@ -712,8 +738,8 @@
     "maxSalt": 39,
     "minDepth": 4,
     "maxGroup": 40,
-    "minKg": 0.15,
-    "maxKg": 2.5,
+    "minKg": 0.12,
+    "maxKg": 0.26,
     "adultLength": 0.45,
     "width": 0.15,
     "length": 0.57,
@@ -726,7 +752,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 2.5
   },
   {
     "id": "halibut",
@@ -739,8 +766,8 @@
     "maxSalt": 39,
     "minDepth": 5,
     "maxGroup": 25,
-    "minKg": 2,
-    "maxKg": 60,
+    "minKg": 0.2,
+    "maxKg": 0.66,
     "adultLength": 1.2,
     "width": 0.42,
     "length": 0.82,
@@ -753,7 +780,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 2,
-    "reproductionCooldownDays": 8
+    "reproductionCooldownDays": 8,
+    "legacyMaxKg": 60
   },
   {
     "id": "haddock",
@@ -766,8 +794,8 @@
     "maxSalt": 39,
     "minDepth": 4,
     "maxGroup": 22,
-    "minKg": 0.3,
-    "maxKg": 4,
+    "minKg": 0.14,
+    "maxKg": 0.4,
     "adultLength": 0.55,
     "width": 0.18,
     "length": 0.6,
@@ -780,7 +808,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 4
   },
   {
     "id": "flounder",
@@ -793,8 +822,8 @@
     "maxSalt": 39,
     "minDepth": 1,
     "maxGroup": 30,
-    "minKg": 0.12,
-    "maxKg": 2,
+    "minKg": 0.1,
+    "maxKg": 0.33,
     "adultLength": 0.4,
     "width": 0.31,
     "length": 0.45,
@@ -807,7 +836,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 2
   },
   {
     "id": "tuna",
@@ -820,8 +850,8 @@
     "maxSalt": 40,
     "minDepth": 5,
     "maxGroup": 30,
-    "minKg": 2,
-    "maxKg": 70,
+    "minKg": 0.2,
+    "maxKg": 0.66,
     "adultLength": 1.4,
     "width": 0.31,
     "length": 1.1,
@@ -834,7 +864,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 2,
-    "reproductionCooldownDays": 8
+    "reproductionCooldownDays": 8,
+    "legacyMaxKg": 70
   },
   {
     "id": "barracuda",
@@ -847,8 +878,8 @@
     "maxSalt": 40,
     "minDepth": 2,
     "maxGroup": 18,
-    "minKg": 0.8,
-    "maxKg": 18,
+    "minKg": 0.18,
+    "maxKg": 0.8,
     "adultLength": 1,
     "width": 0.2,
     "length": 0.84,
@@ -861,7 +892,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 18
   },
   {
     "id": "grouper",
@@ -874,8 +906,8 @@
     "maxSalt": 40,
     "minDepth": 4,
     "maxGroup": 20,
-    "minKg": 1,
-    "maxKg": 25,
+    "minKg": 0.18,
+    "maxKg": 0.8,
     "adultLength": 0.9,
     "width": 0.32,
     "length": 0.78,
@@ -888,7 +920,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 2,
-    "reproductionCooldownDays": 8
+    "reproductionCooldownDays": 8,
+    "legacyMaxKg": 25
   },
   {
     "id": "snapper",
@@ -901,8 +934,8 @@
     "maxSalt": 40,
     "minDepth": 2,
     "maxGroup": 26,
-    "minKg": 0.3,
-    "maxKg": 6,
+    "minKg": 0.14,
+    "maxKg": 0.4,
     "adultLength": 0.52,
     "width": 0.23,
     "length": 0.56,
@@ -915,7 +948,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 6
   },
   {
     "id": "mahi_mahi",
@@ -928,8 +962,8 @@
     "maxSalt": 40,
     "minDepth": 5,
     "maxGroup": 22,
-    "minKg": 1,
-    "maxKg": 20,
+    "minKg": 0.18,
+    "maxKg": 0.66,
     "adultLength": 0.9,
     "width": 0.21,
     "length": 0.8,
@@ -942,7 +976,8 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 2,
-    "reproductionCooldownDays": 8
+    "reproductionCooldownDays": 8,
+    "legacyMaxKg": 20
   },
   {
     "id": "parrotfish",
@@ -955,8 +990,8 @@
     "maxSalt": 40,
     "minDepth": 2,
     "maxGroup": 28,
-    "minKg": 0.2,
-    "maxKg": 4,
+    "minKg": 0.1,
+    "maxKg": 0.3,
     "adultLength": 0.44,
     "width": 0.22,
     "length": 0.48,
@@ -969,6 +1004,7 @@
     "incubationDays": 3,
     "hatchMin": 1,
     "hatchMax": 4,
-    "reproductionCooldownDays": 5
+    "reproductionCooldownDays": 5,
+    "legacyMaxKg": 4
   }
 ]

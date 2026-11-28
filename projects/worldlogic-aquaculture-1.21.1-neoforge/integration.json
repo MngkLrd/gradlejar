@@ -103,13 +103,14 @@
       "id": "individual_catch_physics",
       "source_paths": [
         "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/AquaPhysical.java",
-        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/RawFish.java"
+        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/RawFish.java",
+        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/FishMass.java"
       ],
       "provides": [],
       "consumes": [
         "worldlogic:material_properties"
       ],
-      "integration_review": "RC54 provider verified, retained on Core 1.5.1; authoritative measured specimen mass, no legacy relative scores.",
+      "integration_review": "RC54 provider verified, retained on Core 1.5.1; authoritative measured specimen mass, no legacy relative scores. 0.4.7: owner-approved gameplay-scale masses, legacy one-time normalization and max four portions; all consumers use identical mass.",
       "no_public_surface_reason": "Exposed via Core individual item provider."
     },
     {
@@ -119,7 +120,8 @@
         "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/FishPortions.java",
         "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/FishCooking.java",
         "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/RawFish.java",
-        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/api/AquaApi.java"
+        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/api/AquaApi.java",
+        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/FishMass.java"
       ],
       "provides": [
         "worldlogic_aqua:food_portion"
@@ -129,7 +131,7 @@
         "worldlogic:field_processing",
         "worldlogic:material_properties"
       ],
-      "integration_review": "Inspected Metabolism API v1 rev6 and actual FoodProfiles/finish path; ordinary FOOD completion only, peer nutrition profiles still pending #259. Core owns registry and physical result; Aqua owns real edible yield and preparation."
+      "integration_review": "Inspected Metabolism API v1 rev6 and actual FoodProfiles/finish path; ordinary FOOD completion only, peer nutrition profiles still pending #259. Core owns registry and physical result; Aqua owns real edible yield and preparation. 0.4.7: owner-approved gameplay-scale masses, legacy one-time normalization and max four portions; all consumers use identical mass."
     }
   ],
   "tests": [

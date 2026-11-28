@@ -80,16 +80,17 @@ public final class Aquaculture {
   CompoundTag tag=fish.getPersistentData();
   if(!tag.contains("wl_fish_mass_kg")){
    var random=fish.getRandom();
-   double f=Math.pow(random.nextDouble(),2.1);
+   double f=Math.pow(random.nextDouble(),2.8);
    double mass=s.minKg()+(s.maxKg()-s.minKg())*f;
    double ratio=Math.cbrt(mass/s.maxKg());
-   tag.putDouble("wl_fish_mass_kg",mass);
+   tag.putDouble("wl_fish_mass_kg",mass);FishMass.mark(tag);
    tag.putDouble("wl_fish_length_m",Math.max(.05,s.adultLength()*ratio));
    tag.putInt("wl_fish_age_years",Math.max(1,(int)Math.round(1+8*f)));
    tag.putBoolean("wl_fish_female",random.nextBoolean());
    tag.putString("wl_fish_species",s.id());
    tag.putDouble("wl_fish_health",1);
   }
+  FishMass.migrate(tag,s);
   fish.syncVisualLength(s,tag);
   return tag;
  }

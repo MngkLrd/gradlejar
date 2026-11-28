@@ -29,6 +29,15 @@ final class PortionChecks{
    int actual=portions.stream().mapToInt(p->api.foodPortion(p).orElseThrow().edibleMassGrams()*p.getCount()).sum();
    require(actual==expected&&actual<=tag.getDouble("wl_fish_mass_kg")*1000&&!portions.isEmpty(),"mass conservation "+s.id());
    require(whole.getCount()==1,"pure split "+s.id());
+   require(actual<=400&&portions.stream().mapToInt(ItemStack::getCount).sum()<=4,"maximum four meals "+s.id());
+   tag.putDouble(FishMass.KG,s.minKg());FishMass.mark(tag);whole.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));
+   require(FishPortions.split(whole,s).stream().mapToInt(ItemStack::getCount).sum()==1,"ordinary small catch one meal "+s.id());
+   tag.putDouble(FishMass.KG,s.maxKg());whole.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));
+   int maxMeals=FishPortions.split(whole,s).stream().mapToInt(ItemStack::getCount).sum();
+   require(maxMeals>=1&&maxMeals<=4,"largest individual meal cap "+s.id());
+   if(Set.of("halibut","catfish","tuna","carp","taimen").contains(s.id()))require(maxMeals>=3&&s.adultLength()>=.65,"large species yield and size "+s.id());
+   var legacy=new CompoundTag();legacy.putDouble(FishMass.KG,s.legacyMaxKg());whole.set(DataComponents.CUSTOM_DATA,CustomData.of(legacy));
+   require(FishPortions.split(whole,s).stream().mapToInt(ItemStack::getCount).sum()==maxMeals,"legacy catch balance "+s.id());
    var blank=new ItemStack(Aquaculture.RAW_PORTIONS.get(s.id()).get());require(api.foodPortion(blank).isEmpty()&&blank.getFoodProperties(null)==null,"missing mass "+s.id());
    for(int g:new int[]{17,100}){
     var raw=FishPortions.stack(s,AquaApi.Preparation.RAW,g);raw.setCount(2);

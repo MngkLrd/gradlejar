@@ -17,19 +17,17 @@ final class AquaPhysical {
  private AquaPhysical(){}
  static void register(){
   for(Species s:Species.ALL)PhysicalMaterials.registerIndividualItemProvider(
-   ResourceLocation.fromNamespaceAndPath(Aquaculture.ID,"raw_"+s.id()),AquaPhysical::individual);
+   ResourceLocation.fromNamespaceAndPath(Aquaculture.ID,"raw_"+s.id()),stack->individual(stack,s));
   for(Species s:Species.ALL)for(String prefix:List.of("raw_","cooked_"))PhysicalMaterials.registerIndividualItemProvider(ResourceLocation.fromNamespaceAndPath(Aquaculture.ID,prefix+s.id()+"_portion"),AquaPhysical::portion);
  }
  private static Optional<PhysicalMaterials.IndividualItem> portion(ItemStack stack){
   return dev.minemods.aquaculture.api.AquaApi.foodPortion(stack).map(p->new PhysicalMaterials.IndividualItem(p.edibleMassGrams()/1000.0,p.preparation()==dev.minemods.aquaculture.api.AquaApi.Preparation.RAW?List.of(new PhysicalMaterials.Component(TISSUE,1)):List.of()));
  }
- private static Optional<PhysicalMaterials.IndividualItem> individual(ItemStack stack){
+ private static Optional<PhysicalMaterials.IndividualItem> individual(ItemStack stack,Species s){
   var tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
-  if(!tag.contains("wl_fish_mass_kg",Tag.TAG_ANY_NUMERIC))return Optional.empty();
-  double mass=tag.getDouble("wl_fish_mass_kg");
-  if(!Double.isFinite(mass)||mass<=0)return Optional.empty();
+  var mass=FishMass.read(tag,s);if(mass.isEmpty())return Optional.empty();
   // One relative tissue volume, not one cubic metre of actual fish. Core scales it to specimen mass.
-  return Optional.of(new PhysicalMaterials.IndividualItem(mass,List.of(new PhysicalMaterials.Component(TISSUE,1))));
+  return Optional.of(new PhysicalMaterials.IndividualItem(mass.getAsDouble(),List.of(new PhysicalMaterials.Component(TISSUE,1))));
  }
  static Optional<PhysicalWater.Solution> water(Aquaculture.Habitat h){
   return PhysicalWater.solution(h.salt(),h.temp());

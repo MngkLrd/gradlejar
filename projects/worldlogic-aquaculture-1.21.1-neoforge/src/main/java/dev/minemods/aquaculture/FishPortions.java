@@ -22,10 +22,9 @@ final class FishPortions {
  static int edibleGrams(ItemStack catchStack,Species s){
   if(!catchStack.is(Aquaculture.RAW.get(s.id()).get())||catchStack.getCount()!=1)return 0;
   var tag=catchStack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
-  if(!tag.contains("wl_fish_mass_kg",Tag.TAG_ANY_NUMERIC))return 0;
-  double kg=tag.getDouble("wl_fish_mass_kg");
-  if(!Double.isFinite(kg)||kg<=0||kg>s.maxKg()*1.01)return 0;
-  return (int)Math.floor(kg*1000*edibleYield(s));
+  var mass=FishMass.read(tag,s);
+  if(mass.isEmpty())return 0;
+  return Math.min(4*PORTION_G,(int)Math.floor(mass.getAsDouble()*1000*edibleYield(s)+1e-8));
  }
  static ItemStack stack(Species s,AquaApi.Preparation prep,int grams){
   var map=prep==AquaApi.Preparation.RAW?Aquaculture.RAW_PORTIONS:Aquaculture.COOKED_PORTIONS;

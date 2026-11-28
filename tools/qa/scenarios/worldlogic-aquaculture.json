@@ -3301,6 +3301,17 @@
           "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
         }
       ]
+    },
+    {
+      "id": "catch-meal-balance",
+      "kind": "mechanic",
+      "subject": "All species at most four servings, ordinary catch one, legacy migration",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
     }
   ],
   "steps": [
