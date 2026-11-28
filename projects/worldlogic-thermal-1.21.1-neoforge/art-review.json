@@ -261,7 +261,7 @@
     "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/grass_leggings.png": {
       "sha256": "938871504e71afe8d94fbc9c2bbdd2ad38577e617775cffbcb07c0c1127690fc",
       "verdict": "PASS",
-      "material_profile": "clothing",
+      "material_profile": "armor_icon",
       "references": [
         {
           "id": "minecraft:item/leather_leggings",
@@ -279,29 +279,46 @@
           "sha256": "bf5990a680964167f9e9eb3d1a362750cef1f0bcd115caec88434e23e90cf0b8"
         }
       ],
-      "comparison": "Vanilla leg separation and wheat straw ramp guide the high-waisted woven trousers",
+      "comparison": "The 1.21.1 leather leggings base and overlay show a recognizable waist and two separated legs; the custom gold trousers carry the same slot structure with a straighter woven construction.",
       "findings": {
-        "silhouette": "Waistband joins two clearly separated tapered legs",
-        "cluster_structure": "Straw strips descend from connected waist groups",
-        "micro_contrast": "Alternating adjacent ochres break leg fill",
-        "light_and_volume": "Left leg front is lighter than inner gap",
-        "material_continuity": "Plant fibers continue from belt into leg faces",
-        "edge_variation": "Bottom cuffs have staggered straw endpoints",
-        "variant_identity": "Golden rough legs differ from pale wool leggings",
-        "vanilla_comparison": "Vanilla leggings show the separation below waist",
-        "folds_and_seams": "Waist seam and frayed cuffs delimit woven legs",
-        "material_specific_shading": "Narrow fiber highlights differ from wool folds"
+        "silhouette": "A broad joined waist spans two vertical trouser legs separated by a tall central transparent opening.",
+        "cluster_structure": "The ochre waistband connects both leg groups, which extend downward as continuous shaded columns.",
+        "micro_contrast": "Small adjacent golden and tan groups change value along each leg without breaking the outline.",
+        "light_and_volume": "A bright waist/front group contrasts with the olive side contours and shaded inner leg edges.",
+        "material_continuity": "The yellow straw ramp carries across the joined waist and down both legs.",
+        "edge_variation": "The outer leg silhouette steps outward into short dark cuffs near the bottom.",
+        "variant_identity": "A continuous waist bridge distinguishes this sprite from the separate tall grass boots.",
+        "vanilla_comparison": "The actual leather leggings icon also joins two legs at a clear waist and uses a central split; the custom trousers are more rectangular and colored straw.",
+        "slot_silhouette": "The waist bridge and central split visibly distinguish the leggings slot at native scale.",
+        "construction_and_material": "The upper light band suggests a woven waistband while vertical ochre strips and darker cuffs imply fabric construction.",
+        "equipped_identity": "The counterpart has gold waist and leg UV islands with the same olive shadow ramp, preserving the straw identity without making the flat icon a literal atlas."
       },
       "atlas": {
         "revision": "r9",
-        "rule": "clothing",
-        "reference": "minecraft:item/leather_chestplate",
+        "rule": "armor_soft_icon",
+        "reference": "minecraft:item/leather_leggings",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "Straw strips descend from connected waist groups. Left leg front is lighter than inner gap.",
-        "reference_limit": "The comparator is an inventory armor shape, not a template for an unrelated slot or a worn atlas; the direct equipment/material comparator in references retains slot-specific information. Golden rough legs differ from pale wool leggings.",
-        "native_view": "Waistband joins two clearly separated tapered legs. Alternating adjacent ochres break leg fill.",
+        "applied_pattern": "Maintained the joined waist and central leg gap, using connected ochre patches and a darker inside edge to separate the legs.",
+        "reference_limit": "Vanilla leather uses a grayscale base and dye overlay; the precolored plant-fiber trousers use a different material ramp and are an icon representation only.",
+        "native_view": "At 16x16 the light horizontal waist and tall dark central opening read as trousers rather than two independent boots.",
         "context_type": "icon_family",
-        "context_view": "Plant fibers continue from belt into leg faces. Bottom cuffs have staggered straw endpoints."
+        "context_view": "In the native family sheet, the gold trousers match straw footwear in palette but keep the joined waist; the 64x32 worn counterpart shows waist and leg face regions."
+      },
+      "equipment": {
+        "slots": [
+          "leggings"
+        ],
+        "binding": "Generated inventory model layer0 points to worldlogic_thermal:item/grass_leggings; ThermalWearable extends ArmorItem and getArmorTexture resolves the registered item path for the non-dyeable layer, using blank for the dyeable layer. Custom garment geometry is client-owned.",
+        "client_status": "NOT_RUN",
+        "client_evidence": "Actual native and nearest-neighbor PNGs and matching 64x32 UV were inspected from the 0.9.2 JAR; no equipped game client was run during this review.",
+        "counterparts": [
+          {
+            "slot": "leggings",
+            "role": "worn_uv",
+            "path": "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/grass_leggings.png",
+            "sha256": "2c3870465e3e438cf86c443d98d7fcf35578a73a3921d990816119b1c1a0cde7"
+          }
+        ]
       }
     },
     "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/wool_underwear.png": {
@@ -560,7 +577,7 @@
     "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/fur_boots.png": {
       "sha256": "f74d6f5e52fac3279ef2e93a3cafb94fba829dbe7ddb3d226df66782d99362d3",
       "verdict": "PASS",
-      "material_profile": "clothing",
+      "material_profile": "armor_icon",
       "references": [
         {
           "id": "minecraft:item/leather_boots",
@@ -578,35 +595,52 @@
           "sha256": "bf5990a680964167f9e9eb3d1a362750cef1f0bcd115caec88434e23e90cf0b8"
         }
       ],
-      "comparison": "Rabbit hide and leather boots calibrate paired soft fur-lined footwear",
+      "comparison": "The actual 1.21.1 leather boots icon uses two separated grayscale forms with enlarged feet; the colored custom pair retains those slot cues and introduces taller lined brown shafts.",
       "findings": {
-        "silhouette": "Pair of short boots with projecting rounded toes",
-        "cluster_structure": "Cream cuffs and brown toe clusters separate",
-        "micro_contrast": "Close tan shades give soft toe curvature",
-        "light_and_volume": "Left and upper toe planes brighter than sole",
-        "material_continuity": "Brown hide extends from cuff down to foot",
-        "edge_variation": "Two boot tips and sole edges step outward",
-        "variant_identity": "Soft pale cuffs distinguish from strapped grass boots",
-        "vanilla_comparison": "Vanilla boots establish paired footprint and ankle scale",
-        "folds_and_seams": "Cuff seam and sole edge are separately readable",
-        "material_specific_shading": "Warm fur cuffs use softer highlights than soles"
+        "silhouette": "Two upright shafts separated by transparent vertical space and broad outward foot tips.",
+        "cluster_structure": "Broad contiguous brown foot groups join the long shafts at ankle level.",
+        "micro_contrast": "Neighboring tan and ochre pixels form narrow vertical highlights against brown sides.",
+        "light_and_volume": "The cream upper patches and lighter front toe rectangles give the dark sole a lower plane.",
+        "material_continuity": "Warm brown side contour is maintained from both shaft tops to each foot.",
+        "edge_variation": "Each shaft steps outward at the bottom into a wider foot with a dark one-pixel sole.",
+        "variant_identity": "Paler cream shaft tops and reddish brown edge distinguish these from the gold straw pair.",
+        "vanilla_comparison": "Vanilla leather boots also separate the two shafts and widen the feet; the custom design uses taller shafts and colored hide instead of grayscale dye base.",
+        "slot_silhouette": "Both ankle shafts and enlarged paired toes remain identifiable at 16 pixels.",
+        "construction_and_material": "The light top interior reads as lining against the darker leather-like shell; dark bottom edges indicate soles.",
+        "equipped_identity": "The 64x32 counterpart has warm tan toe and cuff bands on the lower-leg face islands, with the same brown outline; the icon exaggerates shaft height for recognition."
       },
       "atlas": {
         "revision": "r9",
-        "rule": "clothing",
-        "reference": "minecraft:item/leather_chestplate",
+        "rule": "armor_soft_icon",
+        "reference": "minecraft:item/leather_boots",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "Cream cuffs and brown toe clusters separate. Left and upper toe planes brighter than sole.",
-        "reference_limit": "The comparator is an inventory armor shape, not a template for an unrelated slot or a worn atlas; the direct equipment/material comparator in references retains slot-specific information. Soft pale cuffs distinguish from strapped grass boots.",
-        "native_view": "Pair of short boots with projecting rounded toes. Close tan shades give soft toe curvature.",
+        "applied_pattern": "Retained the vanilla two-foot silhouette and used contiguous light front patches bounded by darker side and sole planes.",
+        "reference_limit": "Vanilla leather base is grayscale and uses an overlay/tint; this generated icon is precolored. Its taller shafts are an icon shorthand rather than a literal 3D height.",
+        "native_view": "At 16x16, the paired tan shafts and brown soles are readable without the enlarged preview.",
         "context_type": "icon_family",
-        "context_view": "Brown hide extends from cuff down to foot. Two boot tips and sole edges step outward."
+        "context_view": "In the three-icon sheet the warm hide is clearly distinct from gold straw; the separate 64x32 UV uses related tan and brown lower-leg patches rather than a shrunk icon."
+      },
+      "equipment": {
+        "slots": [
+          "boots"
+        ],
+        "binding": "Generated inventory model layer0 points to worldlogic_thermal:item/fur_boots; ThermalWearable extends ArmorItem and getArmorTexture resolves the registered item path for the non-dyeable layer, using blank for the dyeable layer. Custom garment geometry is client-owned.",
+        "client_status": "NOT_RUN",
+        "client_evidence": "Actual native and nearest-neighbor PNGs and matching 64x32 UV were inspected from the 0.9.2 JAR; no equipped game client was run during this review.",
+        "counterparts": [
+          {
+            "slot": "boots",
+            "role": "worn_uv",
+            "path": "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/fur_boots.png",
+            "sha256": "19de9860ba30f6d8d8b320585f288f95e089d8029d779949e9c631c53ffead31"
+          }
+        ]
       }
     },
     "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/grass_boots.png": {
       "sha256": "15418c36a2c11696ec3c05bff46f4925dbc8f4dbb400a492c13b72d1e0c753de",
       "verdict": "PASS",
-      "material_profile": "clothing",
+      "material_profile": "armor_icon",
       "references": [
         {
           "id": "minecraft:item/leather_boots",
@@ -624,29 +658,46 @@
           "sha256": "bf5990a680964167f9e9eb3d1a362750cef1f0bcd115caec88434e23e90cf0b8"
         }
       ],
-      "comparison": "Wheat and boot comparators support straw footwear with a distinct binding around each foot",
+      "comparison": "Compared with the actual vanilla leather boot base and overlay, the straw icon keeps the paired opening and foot construction but communicates a golden plant-fiber material rather than gray dyed leather.",
       "findings": {
-        "silhouette": "Paired woven shafts with separate toe and sole",
-        "cluster_structure": "Vertical straw clusters end at sole binding",
-        "micro_contrast": "Golden neighboring shades mark shaft texture",
-        "light_and_volume": "Toe upper planes catch light above dark soles",
-        "material_continuity": "Woven straw continues from shaft to toe",
-        "edge_variation": "Pair has stepped sole and ankle outlines",
-        "variant_identity": "Horizontal lashings distinguish these from fur boots",
-        "vanilla_comparison": "Vanilla boots preserve separate foot silhouettes",
-        "folds_and_seams": "Cross-band and sole binding mark woven seams",
-        "material_specific_shading": "Straw fibers use narrow golden midtone steps"
+        "silhouette": "Two narrow upright gold shafts open into broad paired feet below a transparent central channel.",
+        "cluster_structure": "The shaft highlights form connected narrow ochre columns; foot groups are wider blocks of gold.",
+        "micro_contrast": "Adjacent pale and olive-gold pixels alternate along the shaft fronts without losing their continuity.",
+        "light_and_volume": "Lighter toe fronts sit above darker brown-green soles and shaded outer edges.",
+        "material_continuity": "The dry yellow-green palette persists from top rims down into toe faces.",
+        "edge_variation": "Foot contours step outward below the narrow shaft, with low flat sole edges.",
+        "variant_identity": "Olive-dark borders and golden straw colors separate the pair from the reddish fur footwear.",
+        "vanilla_comparison": "The vanilla leather boots comparator uses a central gap and wider foot shapes; the straw pair retains these cues with a deliberately warmer woven palette.",
+        "slot_silhouette": "The paired foot shapes identify boots even though the narrow shafts are taller than in the comparator.",
+        "construction_and_material": "Dark side binding surrounds light vertical straw strands and a darker horizontal bottom edge.",
+        "equipped_identity": "The corresponding 64x32 worn sheet uses gold and olive lower-leg strips, with unpainted upper regions; the elongated icon emphasizes the woven shaft."
       },
       "atlas": {
         "revision": "r9",
-        "rule": "clothing",
-        "reference": "minecraft:item/leather_chestplate",
+        "rule": "armor_soft_icon",
+        "reference": "minecraft:item/leather_boots",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "Vertical straw clusters end at sole binding. Toe upper planes catch light above dark soles.",
-        "reference_limit": "The comparator is an inventory armor shape, not a template for an unrelated slot or a worn atlas; the direct equipment/material comparator in references retains slot-specific information. Horizontal lashings distinguish these from fur boots.",
-        "native_view": "Paired woven shafts with separate toe and sole. Golden neighboring shades mark shaft texture.",
+        "applied_pattern": "Used a separated two-shaft silhouette, local front highlights and darker sole edges instead of copying vanilla grayscale pixels.",
+        "reference_limit": "The vanilla image is a dyeable base with an overlay; the custom icon is a precolored generated sprite and does not reproduce the UV geometry.",
+        "native_view": "The two slim gold shafts and widened feet remain distinguishable in the native 16x16 preview.",
         "context_type": "icon_family",
-        "context_view": "Woven straw continues from shaft to toe. Pair has stepped sole and ankle outlines."
+        "context_view": "The gold boot pair shares the straw leggings palette while differing in outline; the lower-leg UV strips preserve the same olive and ochre material cues."
+      },
+      "equipment": {
+        "slots": [
+          "boots"
+        ],
+        "binding": "Generated inventory model layer0 points to worldlogic_thermal:item/grass_boots; ThermalWearable extends ArmorItem and getArmorTexture resolves the registered item path for the non-dyeable layer, using blank for the dyeable layer. Custom garment geometry is client-owned.",
+        "client_status": "NOT_RUN",
+        "client_evidence": "Actual native and nearest-neighbor PNGs and matching 64x32 UV were inspected from the 0.9.2 JAR; no equipped game client was run during this review.",
+        "counterparts": [
+          {
+            "slot": "boots",
+            "role": "worn_uv",
+            "path": "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/models/armor/grass_boots.png",
+            "sha256": "325f8e3ca93178d9db2ef229b7f0ebce20bc1ca12b36a7faa451d89bf5d01023"
+          }
+        ]
       }
     },
     "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/straw_cape.png": {
