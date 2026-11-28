@@ -36,6 +36,10 @@ public final class BenthicBlock extends Block {
     }
     static int nativeIndex(AquaticHabitat.Kind kind){return switch(kind){
         case SEA->1;case BRACKISH->2;case RIVER->3;case LAKE->4;case POND->5;case SPRING->6;case WETLAND->7;case GROUNDWATER->8;default->-1;};}
+    static AquaticHabitat.Kind kind(int idx){return switch(idx){
+        case 1->AquaticHabitat.Kind.SEA;case 2->AquaticHabitat.Kind.BRACKISH;case 3->AquaticHabitat.Kind.RIVER;
+        case 4->AquaticHabitat.Kind.LAKE;case 5->AquaticHabitat.Kind.POND;case 6->AquaticHabitat.Kind.SPRING;
+        case 7->AquaticHabitat.Kind.WETLAND;case 8->AquaticHabitat.Kind.GROUNDWATER;default->AquaticHabitat.Kind.UNKNOWN;};}
     static boolean nativeAvailable(){return fluid(1)!=Fluids.EMPTY;}
     static int worldgenIndex(BlockState water,AquaticHabitat.Kind kind,boolean prediction){
         if(!AquaticHabitat.water(water)||!water.getFluidState().isSource())return -1;
@@ -48,7 +52,7 @@ public final class BenthicBlock extends Block {
     private static BlockState liquid(BlockState s){return s.getFluidState().createLegacyBlock();}
     @Override protected boolean canSurvive(BlockState s,LevelReader l,BlockPos p){
         int n=s.getValue(SEGMENT);int f=s.getValue(WATER);
-        if(fluid(f)==Fluids.EMPTY||n>=species.height)return false;
+        if(fluid(f)==Fluids.EMPTY||n>=species.height||f>0&&!species.accepts(kind(f)))return false;
         if(n==0)return species.supports(l,p.below());
         var below=l.getBlockState(p.below());
         return below.is(this)&&below.getValue(WATER)==f&&below.getValue(SEGMENT)==n-1;

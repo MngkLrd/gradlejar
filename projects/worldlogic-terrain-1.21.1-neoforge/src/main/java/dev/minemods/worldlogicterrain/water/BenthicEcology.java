@@ -16,7 +16,7 @@ public final class BenthicEcology {
     static BenthicBlock block(BenthicSpecies species){return (BenthicBlock)BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("worldlogicterrain",species.id));}
     static boolean inside(WorldGenLevel l,BlockPos p,int x0,int z0){return (p.getX()&~15)==x0&&(p.getZ()&~15)==z0&&!l.isOutsideBuildHeight(p)&&l.ensureCanWrite(p);}
     private record Column(BlockPos bed,int depth,double temperature,AquaticHabitat.Kind kind,int fluid){}
-    private static Column column(WorldGenLevel l,AquaticHabitat.Prediction pred,int x,int z,int x0,int z0){
+    private static Column column(WorldGenLevel l,AquaticHabitat.Prediction pred,int x,int z,int x0,int z0,boolean nativeWorld){
         int top=l.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);
         int y=l.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x,z);
         var p=new BlockPos(x,y,z);
@@ -27,9 +27,9 @@ public final class BenthicEcology {
         if(!inside(l,surface,x0,z0)||!AquaticHabitat.water(l.getBlockState(surface)))return null;
         var state=l.getBlockState(p);if(!AquaticHabitat.water(state)||!state.getFluidState().isSource())return null;
         var kind=pred.classify(l,p,state);
-        if(!pred.available()&&BenthicBlock.nativeAvailable()&&state.is(net.minecraft.world.level.block.Blocks.WATER))return null;
+        if(nativeWorld&&!pred.available()&&BenthicBlock.nativeAvailable()&&state.is(net.minecraft.world.level.block.Blocks.WATER))return null;
         if(kind==AquaticHabitat.Kind.NONE||kind==AquaticHabitat.Kind.UNKNOWN||kind==AquaticHabitat.Kind.GROUNDWATER)return null;
-        int f=BenthicBlock.worldgenIndex(state,kind,pred.available());if(f<0)return null;
+        int f=BenthicBlock.worldgenIndex(state,kind,nativeWorld&&pred.available());if(f<0)return null;
         return new Column(p,depth,l.getBiome(surface).value().getBaseTemperature(),kind,f);
     }
     static boolean habitat(BenthicSpecies s,AquaticHabitat.Kind kind,double t,int depth){return s.accepts(kind)&&s.climate(t,depth);}
@@ -54,11 +54,11 @@ public final class BenthicEcology {
         }
         return placed;
     }
-    static boolean generate(WorldGenLevel l,AquaticHabitat.Prediction pred,RandomSource r,int x0,int z0){
+    static boolean generate(WorldGenLevel l,AquaticHabitat.Prediction pred,RandomSource r,int x0,int z0,boolean nativeWorld){
         boolean any=false;
         for(int i=0;i<36;i++){
             int x=x0+r.nextInt(16),z=z0+r.nextInt(16);
-            var col=column(l,pred,x,z,x0,z0);if(col==null)continue;
+            var col=column(l,pred,x,z,x0,z0,nativeWorld);if(col==null)continue;
             // Keep clear spaces; shallow freshwater vegetation is denser than deep marine fauna.
             double chance=col.kind==AquaticHabitat.Kind.SEA?(col.depth>18?.40:.70):.76;
             if(r.nextDouble()>=chance)continue;
@@ -71,7 +71,7 @@ public final class BenthicEcology {
             for(int n=0;n<spread;n++){
                 int nx=x+r.nextInt(5)-2,nz=z+r.nextInt(5)-2;
                 if((nx&~15)!=x0||(nz&~15)!=z0)continue;
-                var other=column(l,pred,nx,nz,x0,z0);
+                var other=column(l,pred,nx,nz,x0,z0,nativeWorld);
                 if(other==null||other.kind!=col.kind||Math.abs(other.bed.getY()-col.bed.getY())>2||!habitat(s,other.kind,other.temperature,other.depth))continue;
                 any|=placeColumn(l,other.bed,s,other.fluid,Math.min(other.depth,1+r.nextInt(s.height)),x0,z0);
             }

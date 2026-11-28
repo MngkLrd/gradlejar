@@ -49,3 +49,5 @@ RC31 additive water prediction: prefer actual registered fluid, otherwise call c
 
 
 1.4.0-rc1: 20 benthic species with custom model geometry, vanilla material textures referenced by ID (not copied). Fresh, brackish and marine populations depend on water identity, depth, temperature, substrate and weighted colony frequency; 6-block kelp and other stacked water plants grow into matching source water. Exact native fluids retained in each segment, no vanilla-water substitution when the Core predictor is available. Old Core uses provisional vanilla biome hints. Native Core without the additive predictor skips provisional-water submerged decoration in native unified terrain. Sea stars, sponges, urchins, anemones and mussels are static benthic blocks; mobile fauna stays in Aqua. New chunks only, no retrogen. No client renderer evidence yet.
+
+Benthic natural QA now inspects exact saved block-state water indices in separately generated ocean and river windows on RC31 and RC34; direct fixtures also exercise native lake growth and wrong-water rejection. Aquatic columns are excluded from terrestrial cover fraction, since aquatic density is a separate ecosystem metric.

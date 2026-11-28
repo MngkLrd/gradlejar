@@ -27,7 +27,7 @@ public final class AquaticFeature extends Feature<NoneFeatureConfiguration> {
     @Override public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> c){
         var l=c.level();var r=c.random();int x0=c.origin().getX()&~15,z0=c.origin().getZ()&~15;
         var prediction=AquaticHabitat.prediction(l,c.chunkGenerator());
-        boolean any=BenthicEcology.generate(l,prediction,r,x0,z0);
+        boolean any=false;
         for(int i=0;i<24;i++){
             int x=x0+r.nextInt(16),z=z0+r.nextInt(16);
             BlockPos p=new BlockPos(x,l.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z),z);
@@ -73,7 +73,10 @@ public final class AquaticFeature extends Feature<NoneFeatureConfiguration> {
                 break;
             }
         }
-        return any;
+        boolean nativeWorld=c.chunkGenerator() instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator n
+            &&n.generatorSettings().unwrapKey().map(k->k.location().toString().equals("worldlogic:realistic_unified")).orElse(false);
+        // Keep the earlier surface-plant random sequence unchanged.
+        return BenthicEcology.generate(l,prediction,r,x0,z0,nativeWorld)|any;
     }
     static int waterDepth(WorldGenLevel l,BlockPos surface,int x0,int z0){
         int depth=0;

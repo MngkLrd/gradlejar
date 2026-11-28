@@ -42,6 +42,31 @@ final class BenthicChecks {
                 for(int i=0;i<sp.height;i++)require(l.getBlockState(p.above(i)).equals(water),"support removal/source restoration "+sp.id+" segment "+i);
                 require(!BenthicEcology.placeColumn(l,p,sp,f,1,0,0),"unsupported planting "+sp.id);
             }
+            // Exercise the real upward growth path in a source column and reject another fluid.
+            var growing=BenthicSpecies.PONDWEED;var b=BenthicEcology.block(growing);
+            int f=BenthicBlock.nativeAvailable()?4:0;
+            var fluid=BenthicBlock.fluid(f);var water=fluid.defaultFluidState().createLegacyBlock();
+            l.setBlock(p.below(),Blocks.SAND.defaultBlockState(),2|16);
+            for(int i=0;i<5;i++)l.setBlock(p.above(i),water,2|16);
+            require(BenthicEcology.placeColumn(l,p,growing,f,1,0,0),"growth fixture");
+            // Vanilla flat fixture may have arbitrary biome temperatures, so assert the actual native/fresh classification
+            // and the live growth path only in a compatible fixture.
+            var biome=l.getBiome(p).value().getBaseTemperature();
+            var habitat=AquaticHabitat.hint(water,l.getBiome(p));
+            if(growing.accepts(habitat)&&biome>=growing.minTemp&&biome<=growing.maxTemp){
+                require(b.grow(l,p,l.getBlockState(p)),"live first growth");
+                require(b.grow(l,p.above(),l.getBlockState(p.above())),"live second growth");
+                require(!b.grow(l,p.above(2),l.getBlockState(p.above(2))),"growth beyond limit");
+                require(l.getBlockState(p.above(2)).getFluidState().getType()==fluid,"live growth changed fluid");
+            }
+            l.setBlock(p.above(),Blocks.AIR.defaultBlockState(),Block.UPDATE_ALL);
+            require(!b.grow(l,p,l.getBlockState(p)),"growth into air");
+            if(BenthicBlock.nativeAvailable()){
+                l.setBlock(p.above(),BenthicBlock.fluid(1).defaultFluidState().createLegacyBlock(),2|16);
+                require(!b.grow(l,p,l.getBlockState(p)),"growth into sea water");
+                l.setBlock(p,water,2|16);
+                require(!BenthicEcology.placeColumn(l,p,BenthicSpecies.RED_SEA_STAR,4,1,0,0),"marine star accepted lake water");
+            }
             require(!BenthicSpecies.RED_SEA_STAR.accepts(AquaticHabitat.Kind.RIVER)&&!BenthicSpecies.PONDWEED.accepts(AquaticHabitat.Kind.SEA),"salinity boundaries");
         }finally{saved.forEach((q,s)->l.setBlock(q,s,2|16));}
     }

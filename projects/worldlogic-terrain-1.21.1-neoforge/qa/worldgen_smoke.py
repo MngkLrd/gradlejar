@@ -167,6 +167,44 @@ def read_chunk(region, cx, cz):
         raise ValueError(f"Unsupported region codec {codec}")
     return nbtlib.File.parse(io.BytesIO(data))
 
+BENTHIC_WATERS = {
+    "eelgrass": {1,2}, "sea_lettuce": {1,2}, "sargassum": {1}, "giant_kelp": {1},
+    "red_dulse": {1}, "coralline_algae": {1}, "red_sea_star": {1}, "blue_sea_star": {1},
+    "sea_urchin": {1}, "barrel_sponge": {1}, "sea_anemone": {1}, "sea_fan": {1}, "mussel_bed": {1,2},
+    "widgeon_grass": {2,4,5}, "water_milfoil": {4,5,7}, "hornwort": {4,5,7},
+    "pondweed": {3,4,5}, "water_crowfoot": {3,6}, "river_moss": {3,6}, "water_starwort": {3,5,6,7},
+}
+
+def scan_benthic(region, positions):
+    counts, waters, invalid = Counter(), Counter(), []
+    full = 0
+    for cx, cz in positions:
+        chunk = read_chunk(region, cx, cz)
+        if chunk is None or str(chunk.get("Status", "")) not in {"minecraft:full", "full"}:
+            continue
+        full += 1
+        for sec in chunk.get("sections", []):
+            states = sec.get("block_states", {})
+            palette = states.get("palette", [])
+            targets = {}
+            for i, entry in enumerate(palette):
+                name = str(entry["Name"]).removeprefix("worldlogicterrain:")
+                if str(entry["Name"]).startswith("worldlogicterrain:") and name in BENTHIC_WATERS:
+                    targets[i] = (name, int(str(entry.get("Properties",{}).get("water","-1"))))
+            if not targets:
+                continue
+            bits = max(4,(len(palette)-1).bit_length())
+            freq = Counter(0 if len(palette)==1 else unpack(states["data"],i,bits) for i in range(4096))
+            for i,(name,water) in targets.items():
+                n = freq[i]
+                if not n:
+                    continue
+                counts[name] += n
+                waters[str(water)] += n
+                if water not in BENTHIC_WATERS[name]:
+                    invalid.append({"species":name,"water":water,"count":n,"chunk":[cx,cz]})
+    return full,counts,waters,invalid
+
 def scan(region, positions):
     counts, biomes, full = Counter(), set(), 0
     addon_columns, grass_columns, meadow_columns = set(), set(), set()
@@ -211,7 +249,7 @@ def scan(region, positions):
                 for i in range(256):
                     if palette[0]=="minecraft:short_grass": grass_columns.add((cx,cz,i))
                     elif palette[0]=="minecraft:tall_grass": tall_columns.add((cx,cz,i))
-                    elif palette[0].startswith("worldlogicterrain:") and not targets[0].startswith("hanging_") and not targets[0].endswith(("_log","_leaves","_planks","_sapling")): addon_columns.add((cx,cz,i))
+                    elif palette[0].startswith("worldlogicterrain:") and targets[0] not in BENTHIC_WATERS and not targets[0].startswith("hanging_") and not targets[0].endswith(("_log","_leaves","_planks","_sapling")): addon_columns.add((cx,cz,i))
                     if targets[0] in MEADOW:
                         meadow_columns.add((cx*16 + i%16, cz*16 + i//16))
                 continue
@@ -229,7 +267,7 @@ def scan(region, positions):
                         unsupported_fruits += unsupported
                     if palette[index]=="minecraft:short_grass": grass_columns.add((cx,cz,i%256))
                     elif palette[index]=="minecraft:tall_grass": tall_columns.add((cx,cz,i%256))
-                    elif palette[index].startswith("worldlogicterrain:") and not targets[index].startswith("hanging_") and not targets[index].endswith(("_log","_leaves","_planks","_sapling")): addon_columns.add((cx,cz,i%256))
+                    elif palette[index].startswith("worldlogicterrain:") and targets[index] not in BENTHIC_WATERS and not targets[index].startswith("hanging_") and not targets[index].endswith(("_log","_leaves","_planks","_sapling")): addon_columns.add((cx,cz,i%256))
                     if targets[index] in MEADOW:
                         meadow_columns.add((cx*16 + i%16, cz*16 + (i%256)//16))
     # Connected 4-neighbour components from actual stored block positions.
@@ -369,6 +407,30 @@ def main():
                     print(sample,flush=True)
                 report["live_season_checks"]=seasonal
             region = root / "natural-world" / "region"
+            if native_water and sys.argv[4] in {"rc31","rc34"}:
+                aquatic_results = []
+                for target, wanted in (("#minecraft:is_ocean","1"),("#minecraft:is_river","3")):
+                    found = conn.cmd("locate biome "+target)
+                    coords = re.search(r"\\[\\s*(-?\\d+)\\s*,\\s*(?:~|-?\\d+)\\s*,\\s*(-?\\d+)\\s*\\]",found)
+                    if coords is None:
+                        aquatic_results.append({"habitat":target,"status":"NOT_FOUND","detail":found})
+                        continue
+                    x,z = map(int,coords.groups());cx,cz=x//16,z//16
+                    positions=[(a,b) for a in range(cx-2,cx+3) for b in range(cz-2,cz+3)]
+                    force=f"{(cx-2)*16} {(cz-2)*16} {(cx+2)*16+15} {(cz+2)*16+15}"
+                    conn.cmd("forceload add "+force)
+                    deadline=time.monotonic()+150
+                    full,counts,waters,invalid=0,Counter(),Counter(),[]
+                    while time.monotonic()<deadline:
+                        time.sleep(5);conn.cmd("save-all flush")
+                        full,counts,waters,invalid=scan_benthic(region,positions)
+                        if full==len(positions): break
+                    conn.cmd("forceload remove "+force)
+                    row={"habitat":target,"status":"PASS" if full==len(positions) and waters[wanted]>0 and not invalid else "FAIL",
+                         "species":dict(counts),"native_water_states":dict(waters),"invalid":invalid}
+                    aquatic_results.append(row)
+                    print(json.dumps(row),flush=True)
+                report["benthic_natural"]=aquatic_results
             for biome, expected in species.items():
                 target=namespace+":"+biome
                 # A locate result may refer only to an underground/vertical biome.
@@ -423,6 +485,8 @@ def main():
                 report["results"].append(row)
                 print(json.dumps(row),flush=True)
             require(not FATAL.search(log.read_text(errors="replace")), "Fatal custom world error")
+            if "benthic_natural" in report:
+                require(all(r["status"]=="PASS" for r in report["benthic_natural"]), "Natural marine or river benthic population missing or wrong native fluid")
             passed=[r for r in report["results"] if r["status"]=="PASS"]
             require(len(passed)>=(3 if rc26 else 4),"Too few verified surface biomes")
             require(any(r["biome"].endswith(":shrub_tundra" if rc26 else ":snowy_plains") for r in passed),"Frost grass regression not verified at a real cold surface")
