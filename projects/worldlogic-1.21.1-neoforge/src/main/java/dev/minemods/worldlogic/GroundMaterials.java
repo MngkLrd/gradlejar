@@ -102,6 +102,40 @@ public final class GroundMaterials{
    if(!id.isEmpty())horizon(c,wx,wz,h,id,id.equals("chernozem")?2+(patch>.62?1:0):2);
   }
  }
+ static String probe(ServerLevel l,BlockPos origin,String id){
+  if(!(l.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator g)||!NaturalWaterGeneration.enabled(g))return "GROUND_PROBE unavailable";
+  if(!Set.of("chernozem","sandy_loam","laterite","white_sand","volcanic_sand").contains(id))return "GROUND_PROBE unknown";
+  var s=l.getChunkSource().randomState();var model=GeoDensity.riverModel(s,l.registryAccess());
+  var bounds=net.minecraft.world.level.LevelHeightAccessor.create(g.getMinY(),g.getGenDepth());
+  var coast=CoastalTerrain.field(model,l.getSeed());var erosion=SurfaceErosion.field(model);int sea=g.getSeaLevel(),measured=0;
+  boolean marine=id.endsWith("_sand");
+  for(int ring=0;ring<=8;ring++)for(int dz=-ring;dz<=ring;dz++)for(int dx=-ring;dx<=ring;dx++){
+   if(Math.max(Math.abs(dx),Math.abs(dz))!=ring)continue;
+   int x=origin.getX()+dx*64,z=origin.getZ()+dz*64;
+   double macro=model.raw(x,z);if(marine?(macro<sea-20||macro>sea+6):macro<sea+5)continue;
+   double patch=CoastalTerrain.noise(l.getSeed()^0x73a121L,x,z,56);
+   int guess=Math.max(sea,(int)Math.round(macro));
+   String biome=BiomeSurvey.at(g,s,x,guess,z).getPath();
+   if(marine){
+    if(!biome.endsWith("_coast")&&!biome.endsWith("ocean"))continue;
+    if(id.equals("white_sand")){
+     var cf=coast.apply(x,z);boolean carbonate=GeologyModel.province(l.getSeed(),x,z)==GeologyModel.Province.CARBONATE||cf.variation()>.47;
+     if(cf.thermal()<=.30||cf.shore()>=66||!carbonate||patch<=.27||(!biome.equals("tropical_sandy_coast")&&!ReefTerrain.warm(biome)))continue;
+    }else{
+     var v=VolcanicTerrain.at(g,s,l.registryAccess(),l.getSeed(),x,z).orElse(null);
+     if(v==null||v.distance(x,z)>=v.radius()+155||patch<=.24)continue;
+    }
+   }else{
+    var climate=model.regional(x,z);
+    if(!soil(biome,climate.thermalIndex(),climate.moistureIndex(),erosion.apply(x,z).slope(),patch).equals(id))continue;
+   }
+   if(measured++>=18)return "GROUND_PROBE no_candidate";
+   int h=g.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,s)-1;
+   if(marine?h>sea+3||h<sea-20:h<sea+4)continue;
+   return "GROUND_PROBE x="+x+" z="+z+" material="+id;
+  }
+  return "GROUND_PROBE no_candidate";
+ }
  static String audit(ServerLevel l,BlockPos origin){
   var c=l.getChunkSource().getChunkNow(origin.getX()>>4,origin.getZ()>>4);if(c==null)return "GROUND_AUDIT unavailable";
   var counts=new LinkedHashMap<String,Integer>();for(String id:List.of("white_sand","volcanic_sand","chernozem","sandy_loam","laterite","volcanic_ash","volcanic_tuff","basalt"))counts.put(id,0);

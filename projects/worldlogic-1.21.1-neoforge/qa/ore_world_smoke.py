@@ -114,6 +114,7 @@ def main():
             pattern="COAST_AUDIT "+" ".join(k+r"=(\d+)" for k in keys)
             report["coast_windows"]=[]
             report["biome_patches"]=[]
+            report["ground_windows"]=[]
             for label,x,z in sites:
                 ax,az=x//16*16,z//16*16
                 # A 5x5 loaded halo surrounds the 3x3 inspected chunks, so dry
@@ -135,6 +136,13 @@ def main():
                         pm=re.search(r"BIOME_PATCH land=(\d+) links=(\d+) same=(\d+) extreme=(\d+) isolated=(\d+) classes=(\d+)",patch)
                         require(pm is not None,"Biome patch audit failed: "+patch)
                         report["biome_patches"].append(dict(zip(("land","links","same","extreme","isolated","classes"),map(int,pm.groups())),x=xx,z=zz,site=label))
+                        ground=conn.cmd(f"execute positioned {xx} 96 {zz} run worldlogic ground_audit")
+                        if "unavailable" in ground:continue
+                        gm=re.search(r"GROUND_AUDIT (.*)",ground)
+                        require(gm is not None,"Ground audit failed: "+ground)
+                        material_counts={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",gm.group(1))}
+                        require(len(material_counts)==8,"Incomplete ground counts")
+                        report["ground_windows"].append(dict(material_counts,x=xx,z=zz,site=label))
                         row.update(x=xx,z=zz,raw=raw);rows.append(row);pending.remove((xx,zz))
                         print(json.dumps(row),flush=True)
                     if pending:time.sleep(3)
@@ -155,6 +163,61 @@ def main():
             require(patch_totals["same"]>=patch_totals["links"]*.65,"Excessively fragmented inland biome patches")
             require(sum(w["river"]>=16 and w["links"]>=12 and w["deep"]>=4 and w["cross"]>=2 for w in windows if w["site"].startswith("river_"))>=3,"Fewer than three generated connected river catchments")
             require(any(w["river"]>=8 and w["links"]>=4 for w in windows if w["site"].startswith("headwater_")),"No generated connected headwater stream")
+            # Additional natural ground evidence uses actual chunks, independent
+            # of the fixed-height synthetic fixture or the predicted material.
+            def ground_window(label,x,z):
+                ax,az=x//16*16,z//16*16
+                force=f"{ax-16} {az-16} {ax+31} {az+31}"
+                conn.cmd("forceload add "+force)
+                pending={(ax+dx*16,az+dz*16) for dx in (-1,0,1) for dz in (-1,0,1)}
+                rows=[];deadline=time.monotonic()+240
+                while pending and time.monotonic()<deadline:
+                    for xx,zz in sorted(pending):
+                        raw=conn.cmd(f"execute positioned {xx} 96 {zz} run worldlogic ground_audit")
+                        if "unavailable" in raw:continue
+                        m=re.search(r"GROUND_AUDIT (.*)",raw)
+                        require(m is not None,"Ground audit failed: "+raw)
+                        counts={k:int(v) for k,v in re.findall(r"(\w+)=(\d+)",m.group(1))}
+                        require(len(counts)==8,"Incomplete natural ground counts")
+                        row=dict(counts,x=xx,z=zz,site=label)
+                        rows.append(row);report["ground_windows"].append(row);pending.remove((xx,zz))
+                    if pending:time.sleep(2)
+                conn.cmd("forceload remove "+force)
+                require(not pending,"Ground survey unavailable")
+                return rows
+            report["ground_candidates"]=[]
+            anchors=[(x,z) for label,x,z in sites if not label.startswith(("river_","headwater_"))]
+            anchors.extend([(-24576,-31744),(-20480,-30720),(-3072,-40960),(-26624,-35840),(20480,-38912),(6144,14336)])
+            for material in ("chernozem","sandy_loam","laterite","white_sand"):
+                if sum(v[material] for v in report["ground_windows"])>=24:continue
+                inspected=0
+                for x,z in anchors:
+                    raw=conn.cmd(f"execute positioned {x} 80 {z} run worldlogic ground_probe {material}")
+                    m=re.search(r"GROUND_PROBE x=(-?\d+) z=(-?\d+) material=(\w+)",raw)
+                    if not m:continue
+                    xx,zz=map(int,m.groups()[:2])
+                    report["ground_candidates"].append(dict(x=xx,z=zz,material=material))
+                    ground_window(material,xx,zz);inspected+=1
+                    if sum(v[material] for v in report["ground_windows"])>=24 or inspected>=2:break
+            report["volcano_candidates"]=[]
+            report["volcano_windows"]=[]
+            volcano_anchors=list(dict.fromkeys((x//2048*2048,z//2048*2048) for x,z in anchors+river_regions))
+            for x,z in volcano_anchors:
+                raw=conn.cmd(f"execute positioned {x} 96 {z} run worldlogic volcano_probe")
+                m=re.search(r"VOLCANO_PROBE x=(-?\d+) z=(-?\d+) radius=(\d+) height=(\d+)",raw)
+                if not m:continue
+                xx,zz,r,h=map(int,m.groups())
+                report["volcano_candidates"].append(dict(x=xx,z=zz,radius=r,height=h))
+                rows=ground_window("volcano_core",xx,zz)+ground_window("volcano_apron",xx+r,zz)
+                sums={k:sum(v[k] for v in rows) for k in ("basalt","volcanic_tuff","volcanic_ash")}
+                report["volcano_windows"].append(dict(x=xx,z=zz,**sums))
+                if sums["basalt"]>=32 and sums["volcanic_tuff"]>=16 and sums["volcanic_ash"]>=8:break
+                if len(report["volcano_windows"])>=2:break
+            report["ground_totals"]={k:sum(v[k] for v in report["ground_windows"]) for k in ("chernozem","sandy_loam","laterite","white_sand","volcanic_sand","volcanic_ash","volcanic_tuff","basalt")}
+            require(all(report["ground_totals"][k]>=24 for k in ("chernozem","sandy_loam","laterite","white_sand")),"Missing actual regional soil or carbonate sand deposits")
+            require(any(v["basalt"]>=32 and v["volcanic_tuff"]>=16 and v["volcanic_ash"]>=8 for v in report["volcano_windows"]),"No confirmed natural volcanic rock and ash landform")
+            # Black volcanic beach frequency is separately recorded, not silently
+            # assumed from a volcanic cone. A coastal-specific survey is still needed.
             # Natural pools: verify actual generated water and connected surface, not
             # just a closed-rim planning fixture. Search bounded separated land tiles.
             report["basin_candidates"]=[]
