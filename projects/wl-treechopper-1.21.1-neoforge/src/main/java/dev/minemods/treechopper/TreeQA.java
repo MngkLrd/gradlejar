@@ -173,9 +173,9 @@ final class TreeQA {
             if(!l.getBlockState(p.east()).isAir()||!fake.getInventory().contains(new ItemStack(Items.STICK)))return 0;
             if(!ForestSticks.offer(l,p.getX()-1,p.getZ(),false))return 0;
             if(!fake.gameMode.destroyBlock(p.west())||!l.getBlockState(p.west()).isAir())return 0;
-            if(l.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,new net.minecraft.world.phys.AABB(p.west()).inflate(2),e->e.getItem().is(Items.STICK)).isEmpty())return 0;
+            if(l.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,new net.minecraft.world.phys.AABB(p.west()).inflate(2),drop->drop.getItem().is(Items.STICK)).isEmpty())return 0;
             if(!ForestSticks.offer(l,p.getX()+1,p.getZ(),true))return 0;
-            if(l.getEntitiesOfClass(net.minecraft.world.entity.item.FallingBlockEntity.class,new net.minecraft.world.phys.AABB(p).inflate(5),e->e.getBlockState().getBlock() instanceof TwigBlock).isEmpty())return 0;
+            if(l.getEntitiesOfClass(net.minecraft.world.entity.item.FallingBlockEntity.class,new net.minecraft.world.phys.AABB(p).inflate(5),falling->falling.getBlockState().getBlock() instanceof TwigBlock).isEmpty())return 0;
             var input=net.minecraft.world.item.crafting.CraftingInput.of(2,2,java.util.List.of(new ItemStack(Items.FLINT),ItemStack.EMPTY,new ItemStack(Items.STICK),new ItemStack(Items.STICK)));
             var recipe=l.getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,l);
             if(recipe.isEmpty()||!recipe.get().id().equals(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(TreeChopper.ID,"primitive_axe"))||!recipe.get().value().assemble(input,l.registryAccess()).is(Items.STONE_AXE))return 0;
