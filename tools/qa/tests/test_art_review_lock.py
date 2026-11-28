@@ -122,7 +122,9 @@ class ArtReviewLockTests(unittest.TestCase):
     def test_catalog_integrity_and_custom_uncovered_profile(self):
         from tools.qa.art_review_lock import load_atlas
         c=load_atlas()
-        self.assertEqual(len(c["references"]),57)
+        self.assertEqual(len(c["references"]),128)
+        self.assertEqual(len(c["benchmark_r9_reference_ids"]),57)
+        self.assertTrue(set(c["benchmark_r9_reference_ids"]).issubset(c["references"]))
         all_refs=set()
         for rule in c["rules"].values():
             self.assertTrue(set(rule["profiles"]).issubset(PROFILES))
@@ -158,3 +160,103 @@ class ArtReviewLockTests(unittest.TestCase):
                 self.assertTrue(check.call_args.args[3])
                 check.return_value=[]
                 self.assertEqual(lock.main(args+["--check"]),0)
+
+    def test_equipment_path_profile_and_counterpart(self):
+        from tools.qa.art_review_lock import equipment_errors, conventional_profile, load_atlas
+        c=load_atlas()
+        self.assertEqual(conventional_profile("assets/demo/textures/item/copper_axe.png"),"tool")
+        self.assertEqual(conventional_profile("assets/demo/textures/item/copper_chestplate_overlay.png"),"armor_icon_overlay")
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t);project="projects/demo"
+            prefix=project+"/src/main/resources/assets/demo/textures/"
+            path=prefix+"item/copper_chestplate.png"
+            uv=prefix+"models/armor/copper_layer_1.png"
+            f=root/uv;f.parent.mkdir(parents=True);f.write_bytes(b"uv")
+            row={"material_profile":"armor_icon","equipment":{"slots":["chestplate"],
+                "binding":"Material resolves outer copper layer.",
+                "client_status":"NOT_RUN","client_evidence":"Graphical client is not available.",
+                "counterparts":[{"slot":"chestplate","role":"worn_uv","path":uv,"sha256":hashlib.sha256(b"uv").hexdigest()}]}}
+            self.assertEqual(equipment_errors(root,project,[],path,row,c),[])
+            f.write_bytes(b"changed")
+            self.assertTrue(any("stale" in e for e in equipment_errors(root,project,[],path,row,c)))
+            row["material_profile"]="other"
+            self.assertTrue(any("requires armor_icon" in e for e in equipment_errors(root,project,[],path,row,c)))
+
+    def test_armor_layers_and_context(self):
+        from tools.qa.art_review_lock import equipment_errors, load_atlas
+        c=load_atlas()
+        path="projects/demo/src/main/resources/assets/demo/textures/models/armor/copper_layer_2.png"
+        row={"material_profile":"armor_uv","equipment":{"slots":["chestplate"],
+             "binding":"Actual inner layer resource binding.",
+             "client_status":"NOT_RUN","client_evidence":"No graphical client in this environment.",
+             "counterparts":[{"slot":"chestplate","role":"icon","vanilla_reference":"item/iron_chestplate",
+             "sha256":c["references"]["item/iron_chestplate"],"reuse_reason":"Explicitly reuse existing vanilla inventory model."}]}}
+        self.assertTrue(any("inner/outer" in e for e in equipment_errors(Path("."),"projects/demo",[],path,row,c)))
+        row,c=self.atlas_row()
+        row["material_profile"]="armor_uv"
+        row["findings"]={k:f"Fixture observation for distinct criterion {k}" for k in COMMON+PROFILES["armor_uv"]}
+        ref="models/armor/iron_layer_1"
+        row["references"]=[{"id":"minecraft:"+ref,"minecraft":"1.21.1","sha256":c["references"][ref]}]
+        row["atlas"].update(rule="armor_metal_uv",reference="minecraft:"+ref,context_type="icon_family")
+        self.assertTrue(any("model/UV" in e for e in validate(row,"b"*64,True,c)))
+        row["atlas"]["context_type"]="model_uv"
+        self.assertEqual(validate(row,"b"*64,True,c),[])
+
+    def test_mob_roles_and_base_hash(self):
+        from tools.qa.art_review_lock import mob_errors, load_atlas
+        c=load_atlas()
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t);project="projects/demo"
+            prefix=project+"/src/main/resources/assets/demo/textures/entity/"
+            base=prefix+"deer.png";path=prefix+"deer_angry.png"
+            f=root/base;f.parent.mkdir(parents=True);f.write_bytes(b"base")
+            row={"material_profile":"mob_body","mob":{"entity_id":"demo:deer","behavior":"neutral",
+                 "behavior_conditions":"Attacks only when directly provoked.",
+                 "model_binding":"Registered deer renderer uses actual model.",
+                 "motion_review":"Reviewed model walking and pivot layout.",
+                 "client_status":"NOT_RUN","client_evidence":"Graphical client is not available.",
+                 "role":"variant","base_texture":{"path":base,"sha256":hashlib.sha256(b"base").hexdigest()}}}
+            self.assertEqual(mob_errors(root,project,[],path,row,c),[])
+            f.write_bytes(b"new")
+            self.assertTrue(any("stale" in e for e in mob_errors(root,project,[],path,row,c)))
+            row["mob"]["behavior"]="monster"
+            self.assertTrue(any("behavior" in e for e in mob_errors(root,project,[],path,row,c)))
+            row["material_profile"]="other"
+            self.assertTrue(any("non-mob" in e for e in mob_errors(root,project,[],path,row,c)))
+            row["non_mob_reason"]="Actually a registered nonliving projectile renderer."
+            self.assertEqual(mob_errors(root,project,[],path,row,c),[])
+
+    def test_mob_layer_role_and_context(self):
+        from tools.qa.art_review_lock import mob_errors, load_atlas
+        row,c=self.atlas_row()
+        row["material_profile"]="mob_layer"
+        row["findings"]={k:f"Fixture observation for distinct criterion {k}" for k in COMMON+PROFILES["mob_layer"]}
+        ref="entity/sheep/sheep_fur"
+        row["references"]=[{"id":"minecraft:"+ref,"minecraft":"1.21.1","sha256":c["references"][ref]}]
+        row["atlas"].update(rule="mob_layer",reference="minecraft:"+ref,context_type="icon_family")
+        self.assertTrue(any("model/UV" in e for e in validate(row,"b"*64,True,c)))
+        row["atlas"]["context_type"]="model_uv"
+        self.assertEqual(validate(row,"b"*64,True,c),[])
+        path="projects/demo/src/main/resources/assets/demo/textures/entity/fur.png"
+        row["mob"]={"entity_id":"demo:sheep","behavior":"peaceful","role":"overlay",
+                    "behavior_conditions":"Does not deliberately attack players.",
+                    "model_binding":"Actual registered model and fur layer.",
+                    "motion_review":"Previewed fur movement with body.",
+                    "client_status":"NOT_RUN","client_evidence":"No graphical client is available.",
+                    "base_texture":{"vanilla_reference":"entity/sheep/sheep","sha256":c["references"]["entity/sheep/sheep"],"reuse_reason":"Explicitly registered vanilla sheep base."}}
+        self.assertEqual(mob_errors(Path("."),"projects/demo",[],path,row,c),[])
+        row["mob"]["base_texture"]["sha256"]="f"*64
+        self.assertTrue(any("Unverified" in e for e in mob_errors(Path("."),"projects/demo",[],path,row,c)))
+
+    def test_r12_project_gate_scoped_to_changed_pngs(self):
+        from tools.qa.art_review_lock import load_atlas
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t);project="projects/demo";p=root/project;p.mkdir(parents=True)
+            (p/"build-profile.json").write_text('{"minecraft":"1.21.1"}')
+            path=project+"/src/main/resources/assets/demo/textures/entity/frog.png"
+            f=root/path;f.parent.mkdir(parents=True);f.write_bytes(b"fixture")
+            row=self.row(hashlib.sha256(b"fixture").hexdigest())
+            (p/"art-review.json").write_text(json.dumps({"schema":1,"assets":{path:row}}))
+            self.assertEqual(project_errors(root,project,[path]),[])
+            errors=project_errors(root,project,[path],catalog=load_atlas(),mob_paths={path})
+            self.assertTrue(any("non-mob" in e for e in errors))
