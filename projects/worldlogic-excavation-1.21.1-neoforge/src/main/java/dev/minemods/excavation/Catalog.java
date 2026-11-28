@@ -11,7 +11,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 
 final class Catalog {
-    record Spec(String source,String texture,String host,String mineral,boolean coreMineral,String family,String en,String ru,String drop){
+    record Spec(String source,String texture,String host,String mineral,boolean coreMineral,String family,String en,String ru,String drop,boolean soil,String top,String bottom,boolean tintTop){
         boolean ore(){return !family.isEmpty();}
         String key(){return source.replace(':','_');}
         BlockState original(){return BuiltInRegistries.BLOCK.get(ResourceLocation.parse(source)).defaultBlockState();}

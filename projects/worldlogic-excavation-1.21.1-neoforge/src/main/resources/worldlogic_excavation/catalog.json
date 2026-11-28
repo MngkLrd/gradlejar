@@ -9,7 +9,11 @@
       "family": "",
       "en": "Stone",
       "ru": "Камень",
-      "drop": "minecraft:cobblestone"
+      "drop": "minecraft:cobblestone",
+      "soil": false,
+      "top": "minecraft:block/stone",
+      "bottom": "minecraft:block/stone",
+      "tintTop": false
     },
     {
       "source": "minecraft:deepslate",
@@ -20,7 +24,11 @@
       "family": "",
       "en": "Deepslate",
       "ru": "Глубинный сланец",
-      "drop": "minecraft:cobbled_deepslate"
+      "drop": "minecraft:cobbled_deepslate",
+      "soil": false,
+      "top": "minecraft:block/deepslate",
+      "bottom": "minecraft:block/deepslate",
+      "tintTop": false
     },
     {
       "source": "minecraft:granite",
@@ -31,7 +39,11 @@
       "family": "",
       "en": "Granite",
       "ru": "Гранит",
-      "drop": "minecraft:granite"
+      "drop": "minecraft:granite",
+      "soil": false,
+      "top": "minecraft:block/granite",
+      "bottom": "minecraft:block/granite",
+      "tintTop": false
     },
     {
       "source": "minecraft:diorite",
@@ -42,7 +54,11 @@
       "family": "",
       "en": "Diorite",
       "ru": "Диорит",
-      "drop": "minecraft:diorite"
+      "drop": "minecraft:diorite",
+      "soil": false,
+      "top": "minecraft:block/diorite",
+      "bottom": "minecraft:block/diorite",
+      "tintTop": false
     },
     {
       "source": "minecraft:andesite",
@@ -53,7 +69,11 @@
       "family": "",
       "en": "Andesite",
       "ru": "Андезит",
-      "drop": "minecraft:andesite"
+      "drop": "minecraft:andesite",
+      "soil": false,
+      "top": "minecraft:block/andesite",
+      "bottom": "minecraft:block/andesite",
+      "tintTop": false
     },
     {
       "source": "minecraft:tuff",
@@ -64,7 +84,11 @@
       "family": "",
       "en": "Tuff",
       "ru": "Туф",
-      "drop": "minecraft:tuff"
+      "drop": "minecraft:tuff",
+      "soil": false,
+      "top": "minecraft:block/tuff",
+      "bottom": "minecraft:block/tuff",
+      "tintTop": false
     },
     {
       "source": "minecraft:calcite",
@@ -75,7 +99,11 @@
       "family": "",
       "en": "Calcite",
       "ru": "Кальцит",
-      "drop": "minecraft:calcite"
+      "drop": "minecraft:calcite",
+      "soil": false,
+      "top": "minecraft:block/calcite",
+      "bottom": "minecraft:block/calcite",
+      "tintTop": false
     },
     {
       "source": "minecraft:blackstone",
@@ -86,7 +114,11 @@
       "family": "",
       "en": "Blackstone",
       "ru": "Чернит",
-      "drop": "minecraft:blackstone"
+      "drop": "minecraft:blackstone",
+      "soil": false,
+      "top": "minecraft:block/blackstone",
+      "bottom": "minecraft:block/blackstone",
+      "tintTop": false
     },
     {
       "source": "minecraft:basalt",
@@ -97,7 +129,11 @@
       "family": "",
       "en": "Basalt",
       "ru": "Базальт",
-      "drop": "minecraft:basalt"
+      "drop": "minecraft:basalt",
+      "soil": false,
+      "top": "minecraft:block/basalt_side",
+      "bottom": "minecraft:block/basalt_side",
+      "tintTop": false
     },
     {
       "source": "minecraft:end_stone",
@@ -108,7 +144,11 @@
       "family": "",
       "en": "End stone",
       "ru": "Эндерняк",
-      "drop": "minecraft:end_stone"
+      "drop": "minecraft:end_stone",
+      "soil": false,
+      "top": "minecraft:block/end_stone",
+      "bottom": "minecraft:block/end_stone",
+      "tintTop": false
     },
     {
       "source": "minecraft:netherrack",
@@ -119,7 +159,11 @@
       "family": "",
       "en": "Netherrack",
       "ru": "Незерак",
-      "drop": "minecraft:netherrack"
+      "drop": "minecraft:netherrack",
+      "soil": false,
+      "top": "minecraft:block/netherrack",
+      "bottom": "minecraft:block/netherrack",
+      "tintTop": false
     },
     {
       "source": "minecraft:obsidian",
@@ -130,7 +174,11 @@
       "family": "",
       "en": "Obsidian",
       "ru": "Обсидиан",
-      "drop": "minecraft:obsidian"
+      "drop": "minecraft:obsidian",
+      "soil": false,
+      "top": "minecraft:block/obsidian",
+      "bottom": "minecraft:block/obsidian",
+      "tintTop": false
     },
     {
       "source": "worldlogic:limestone",
@@ -141,7 +189,11 @@
       "family": "",
       "en": "Limestone",
       "ru": "Известняк",
-      "drop": "worldlogic:limestone"
+      "drop": "worldlogic:limestone",
+      "soil": false,
+      "top": "worldlogic:block/limestone",
+      "bottom": "worldlogic:block/limestone",
+      "tintTop": false
     },
     {
       "source": "worldlogic:shale",
@@ -152,7 +204,11 @@
       "family": "",
       "en": "Shale",
       "ru": "Глинистый сланец",
-      "drop": "worldlogic:shale"
+      "drop": "worldlogic:shale",
+      "soil": false,
+      "top": "worldlogic:block/shale",
+      "bottom": "worldlogic:block/shale",
+      "tintTop": false
     },
     {
       "source": "worldlogic:slate",
@@ -163,7 +219,11 @@
       "family": "",
       "en": "Slate",
       "ru": "Сланец",
-      "drop": "worldlogic:slate"
+      "drop": "worldlogic:slate",
+      "soil": false,
+      "top": "worldlogic:block/slate",
+      "bottom": "worldlogic:block/slate",
+      "tintTop": false
     },
     {
       "source": "worldlogic:gneiss",
@@ -174,7 +234,11 @@
       "family": "",
       "en": "Gneiss",
       "ru": "Гнейс",
-      "drop": "worldlogic:gneiss"
+      "drop": "worldlogic:gneiss",
+      "soil": false,
+      "top": "worldlogic:block/gneiss",
+      "bottom": "worldlogic:block/gneiss",
+      "tintTop": false
     },
     {
       "source": "worldlogic:volcanic_tuff",
@@ -185,7 +249,11 @@
       "family": "",
       "en": "Volcanic tuff",
       "ru": "Вулканический туф",
-      "drop": "worldlogic:volcanic_tuff"
+      "drop": "worldlogic:volcanic_tuff",
+      "soil": false,
+      "top": "worldlogic:block/volcanic_tuff",
+      "bottom": "worldlogic:block/volcanic_tuff",
+      "tintTop": false
     },
     {
       "source": "minecraft:iron_ore",
@@ -196,7 +264,11 @@
       "family": "iron",
       "en": "Iron ore",
       "ru": "Железная руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/iron_ore",
+      "bottom": "minecraft:block/iron_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:deepslate_iron_ore",
@@ -207,7 +279,11 @@
       "family": "iron",
       "en": "Iron ore",
       "ru": "Железная руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate_iron_ore",
+      "bottom": "minecraft:block/deepslate_iron_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:gold_ore",
@@ -218,7 +294,11 @@
       "family": "gold",
       "en": "Gold ore",
       "ru": "Золотая руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/gold_ore",
+      "bottom": "minecraft:block/gold_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:deepslate_gold_ore",
@@ -229,7 +309,11 @@
       "family": "gold",
       "en": "Gold ore",
       "ru": "Золотая руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate_gold_ore",
+      "bottom": "minecraft:block/deepslate_gold_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:nether_gold_ore",
@@ -240,7 +324,11 @@
       "family": "gold",
       "en": "Gold ore",
       "ru": "Золотая руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/nether_gold_ore",
+      "bottom": "minecraft:block/nether_gold_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:copper_ore",
@@ -251,7 +339,11 @@
       "family": "copper",
       "en": "Copper ore",
       "ru": "Медная руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/copper_ore",
+      "bottom": "minecraft:block/copper_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:deepslate_copper_ore",
@@ -262,7 +354,11 @@
       "family": "copper",
       "en": "Copper ore",
       "ru": "Медная руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate_copper_ore",
+      "bottom": "minecraft:block/deepslate_copper_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:coal_ore",
@@ -273,7 +369,11 @@
       "family": "coal",
       "en": "Coal",
       "ru": "Уголь",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/coal_ore",
+      "bottom": "minecraft:block/coal_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:deepslate_coal_ore",
@@ -284,7 +384,11 @@
       "family": "coal",
       "en": "Coal",
       "ru": "Уголь",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate_coal_ore",
+      "bottom": "minecraft:block/deepslate_coal_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:diamond_ore",
@@ -295,7 +399,11 @@
       "family": "diamond",
       "en": "Diamond ore",
       "ru": "Алмазная руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/diamond_ore",
+      "bottom": "minecraft:block/diamond_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:deepslate_diamond_ore",
@@ -306,7 +414,11 @@
       "family": "diamond",
       "en": "Diamond ore",
       "ru": "Алмазная руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate_diamond_ore",
+      "bottom": "minecraft:block/deepslate_diamond_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:emerald_ore",
@@ -317,7 +429,11 @@
       "family": "emerald",
       "en": "Emerald ore",
       "ru": "Изумрудная руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/emerald_ore",
+      "bottom": "minecraft:block/emerald_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:deepslate_emerald_ore",
@@ -328,7 +444,11 @@
       "family": "emerald",
       "en": "Emerald ore",
       "ru": "Изумрудная руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate_emerald_ore",
+      "bottom": "minecraft:block/deepslate_emerald_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:lapis_ore",
@@ -339,7 +459,11 @@
       "family": "lapis",
       "en": "Lapis ore",
       "ru": "Лазуритовая руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/lapis_ore",
+      "bottom": "minecraft:block/lapis_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:deepslate_lapis_ore",
@@ -350,7 +474,11 @@
       "family": "lapis",
       "en": "Lapis ore",
       "ru": "Лазуритовая руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate_lapis_ore",
+      "bottom": "minecraft:block/deepslate_lapis_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:redstone_ore",
@@ -361,7 +489,11 @@
       "family": "redstone",
       "en": "Redstone ore",
       "ru": "Редстоуновая руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/redstone_ore",
+      "bottom": "minecraft:block/redstone_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:deepslate_redstone_ore",
@@ -372,7 +504,11 @@
       "family": "redstone",
       "en": "Redstone ore",
       "ru": "Редстоуновая руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate_redstone_ore",
+      "bottom": "minecraft:block/deepslate_redstone_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:nether_quartz_ore",
@@ -383,7 +519,11 @@
       "family": "quartz",
       "en": "Quartz ore",
       "ru": "Кварцевая руда",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/nether_quartz_ore",
+      "bottom": "minecraft:block/nether_quartz_ore",
+      "tintTop": false
     },
     {
       "source": "minecraft:ancient_debris",
@@ -394,7 +534,11 @@
       "family": "ancient_debris",
       "en": "Ancient debris",
       "ru": "Древние обломки",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/ancient_debris_side",
+      "bottom": "minecraft:block/ancient_debris_side",
+      "tintTop": false
     },
     {
       "source": "worldlogic:hematite_ore",
@@ -405,7 +549,11 @@
       "family": "hematite",
       "en": "Hematite",
       "ru": "Гематит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/stone",
+      "bottom": "minecraft:block/stone",
+      "tintTop": false
     },
     {
       "source": "worldlogic:deepslate_hematite_ore",
@@ -416,7 +564,11 @@
       "family": "hematite",
       "en": "Hematite",
       "ru": "Гематит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate",
+      "bottom": "minecraft:block/deepslate",
+      "tintTop": false
     },
     {
       "source": "worldlogic:magnetite_ore",
@@ -427,7 +579,11 @@
       "family": "magnetite",
       "en": "Magnetite",
       "ru": "Магнетит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/stone",
+      "bottom": "minecraft:block/stone",
+      "tintTop": false
     },
     {
       "source": "worldlogic:deepslate_magnetite_ore",
@@ -438,7 +594,11 @@
       "family": "magnetite",
       "en": "Magnetite",
       "ru": "Магнетит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate",
+      "bottom": "minecraft:block/deepslate",
+      "tintTop": false
     },
     {
       "source": "worldlogic:cassiterite_ore",
@@ -449,7 +609,11 @@
       "family": "cassiterite",
       "en": "Cassiterite",
       "ru": "Касситерит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/stone",
+      "bottom": "minecraft:block/stone",
+      "tintTop": false
     },
     {
       "source": "worldlogic:deepslate_cassiterite_ore",
@@ -460,7 +624,11 @@
       "family": "cassiterite",
       "en": "Cassiterite",
       "ru": "Касситерит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate",
+      "bottom": "minecraft:block/deepslate",
+      "tintTop": false
     },
     {
       "source": "worldlogic:galena_ore",
@@ -471,7 +639,11 @@
       "family": "galena",
       "en": "Galena",
       "ru": "Галенит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/stone",
+      "bottom": "minecraft:block/stone",
+      "tintTop": false
     },
     {
       "source": "worldlogic:deepslate_galena_ore",
@@ -482,7 +654,11 @@
       "family": "galena",
       "en": "Galena",
       "ru": "Галенит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate",
+      "bottom": "minecraft:block/deepslate",
+      "tintTop": false
     },
     {
       "source": "worldlogic:sphalerite_ore",
@@ -493,7 +669,11 @@
       "family": "sphalerite",
       "en": "Sphalerite",
       "ru": "Сфалерит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/stone",
+      "bottom": "minecraft:block/stone",
+      "tintTop": false
     },
     {
       "source": "worldlogic:deepslate_sphalerite_ore",
@@ -504,7 +684,11 @@
       "family": "sphalerite",
       "en": "Sphalerite",
       "ru": "Сфалерит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate",
+      "bottom": "minecraft:block/deepslate",
+      "tintTop": false
     },
     {
       "source": "worldlogic:pyrite_ore",
@@ -515,7 +699,11 @@
       "family": "pyrite",
       "en": "Pyrite",
       "ru": "Пирит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/stone",
+      "bottom": "minecraft:block/stone",
+      "tintTop": false
     },
     {
       "source": "worldlogic:deepslate_pyrite_ore",
@@ -526,7 +714,11 @@
       "family": "pyrite",
       "en": "Pyrite",
       "ru": "Пирит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate",
+      "bottom": "minecraft:block/deepslate",
+      "tintTop": false
     },
     {
       "source": "worldlogic:malachite_ore",
@@ -537,7 +729,11 @@
       "family": "malachite",
       "en": "Malachite",
       "ru": "Малахит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/stone",
+      "bottom": "minecraft:block/stone",
+      "tintTop": false
     },
     {
       "source": "worldlogic:deepslate_malachite_ore",
@@ -548,7 +744,11 @@
       "family": "malachite",
       "en": "Malachite",
       "ru": "Малахит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate",
+      "bottom": "minecraft:block/deepslate",
+      "tintTop": false
     },
     {
       "source": "worldlogic:bauxite_ore",
@@ -559,7 +759,11 @@
       "family": "bauxite",
       "en": "Bauxite",
       "ru": "Боксит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/stone",
+      "bottom": "minecraft:block/stone",
+      "tintTop": false
     },
     {
       "source": "worldlogic:deepslate_bauxite_ore",
@@ -570,7 +774,11 @@
       "family": "bauxite",
       "en": "Bauxite",
       "ru": "Боксит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate",
+      "bottom": "minecraft:block/deepslate",
+      "tintTop": false
     },
     {
       "source": "worldlogic:fluorite_ore",
@@ -581,7 +789,11 @@
       "family": "fluorite",
       "en": "Fluorite",
       "ru": "Флюорит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/stone",
+      "bottom": "minecraft:block/stone",
+      "tintTop": false
     },
     {
       "source": "worldlogic:deepslate_fluorite_ore",
@@ -592,7 +804,11 @@
       "family": "fluorite",
       "en": "Fluorite",
       "ru": "Флюорит",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate",
+      "bottom": "minecraft:block/deepslate",
+      "tintTop": false
     },
     {
       "source": "worldlogic:cinnabar_ore",
@@ -603,7 +819,11 @@
       "family": "cinnabar",
       "en": "Cinnabar",
       "ru": "Киноварь",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/stone",
+      "bottom": "minecraft:block/stone",
+      "tintTop": false
     },
     {
       "source": "worldlogic:deepslate_cinnabar_ore",
@@ -614,7 +834,251 @@
       "family": "cinnabar",
       "en": "Cinnabar",
       "ru": "Киноварь",
-      "drop": ""
+      "drop": "",
+      "soil": false,
+      "top": "minecraft:block/deepslate",
+      "bottom": "minecraft:block/deepslate",
+      "tintTop": false
+    },
+    {
+      "source": "minecraft:dirt",
+      "texture": "minecraft:block/dirt",
+      "host": "minecraft:block/dirt",
+      "mineral": "minecraft:block/dirt",
+      "coreMineral": false,
+      "family": "",
+      "en": "Dirt",
+      "ru": "Земля",
+      "drop": "minecraft:dirt",
+      "soil": true,
+      "top": "minecraft:block/dirt",
+      "bottom": "minecraft:block/dirt",
+      "tintTop": false
+    },
+    {
+      "source": "minecraft:grass_block",
+      "texture": "minecraft:block/grass_block_side",
+      "host": "minecraft:block/dirt",
+      "mineral": "minecraft:block/grass_block_side",
+      "coreMineral": false,
+      "family": "",
+      "en": "Grass block",
+      "ru": "Дёрн",
+      "drop": "minecraft:grass_block",
+      "soil": true,
+      "top": "minecraft:block/grass_block_top",
+      "bottom": "minecraft:block/dirt",
+      "tintTop": true
+    },
+    {
+      "source": "minecraft:coarse_dirt",
+      "texture": "minecraft:block/coarse_dirt",
+      "host": "minecraft:block/coarse_dirt",
+      "mineral": "minecraft:block/coarse_dirt",
+      "coreMineral": false,
+      "family": "",
+      "en": "Coarse dirt",
+      "ru": "Каменистая земля",
+      "drop": "minecraft:coarse_dirt",
+      "soil": true,
+      "top": "minecraft:block/coarse_dirt",
+      "bottom": "minecraft:block/coarse_dirt",
+      "tintTop": false
+    },
+    {
+      "source": "minecraft:rooted_dirt",
+      "texture": "minecraft:block/rooted_dirt",
+      "host": "minecraft:block/rooted_dirt",
+      "mineral": "minecraft:block/rooted_dirt",
+      "coreMineral": false,
+      "family": "",
+      "en": "Rooted dirt",
+      "ru": "Корнистая земля",
+      "drop": "minecraft:rooted_dirt",
+      "soil": true,
+      "top": "minecraft:block/rooted_dirt",
+      "bottom": "minecraft:block/rooted_dirt",
+      "tintTop": false
+    },
+    {
+      "source": "minecraft:podzol",
+      "texture": "minecraft:block/podzol_side",
+      "host": "minecraft:block/dirt",
+      "mineral": "minecraft:block/podzol_side",
+      "coreMineral": false,
+      "family": "",
+      "en": "Podzol",
+      "ru": "Подзол",
+      "drop": "minecraft:podzol",
+      "soil": true,
+      "top": "minecraft:block/podzol_top",
+      "bottom": "minecraft:block/dirt",
+      "tintTop": false
+    },
+    {
+      "source": "minecraft:mycelium",
+      "texture": "minecraft:block/mycelium_side",
+      "host": "minecraft:block/dirt",
+      "mineral": "minecraft:block/mycelium_side",
+      "coreMineral": false,
+      "family": "",
+      "en": "Mycelium",
+      "ru": "Мицелий",
+      "drop": "minecraft:mycelium",
+      "soil": true,
+      "top": "minecraft:block/mycelium_top",
+      "bottom": "minecraft:block/dirt",
+      "tintTop": false
+    },
+    {
+      "source": "minecraft:mud",
+      "texture": "minecraft:block/mud",
+      "host": "minecraft:block/mud",
+      "mineral": "minecraft:block/mud",
+      "coreMineral": false,
+      "family": "",
+      "en": "Mud",
+      "ru": "Грязь",
+      "drop": "minecraft:mud",
+      "soil": true,
+      "top": "minecraft:block/mud",
+      "bottom": "minecraft:block/mud",
+      "tintTop": false
+    },
+    {
+      "source": "minecraft:clay",
+      "texture": "minecraft:block/clay",
+      "host": "minecraft:block/clay",
+      "mineral": "minecraft:block/clay",
+      "coreMineral": false,
+      "family": "",
+      "en": "Clay",
+      "ru": "Глина",
+      "drop": "minecraft:clay",
+      "soil": true,
+      "top": "minecraft:block/clay",
+      "bottom": "minecraft:block/clay",
+      "tintTop": false
+    },
+    {
+      "source": "worldlogic:humus",
+      "texture": "worldlogic:block/humus",
+      "host": "worldlogic:block/humus",
+      "mineral": "worldlogic:block/humus",
+      "coreMineral": false,
+      "family": "",
+      "en": "Humus",
+      "ru": "Гумус",
+      "drop": "worldlogic:humus",
+      "soil": true,
+      "top": "worldlogic:block/humus",
+      "bottom": "worldlogic:block/humus",
+      "tintTop": false
+    },
+    {
+      "source": "worldlogic:loam",
+      "texture": "worldlogic:block/loam",
+      "host": "worldlogic:block/loam",
+      "mineral": "worldlogic:block/loam",
+      "coreMineral": false,
+      "family": "",
+      "en": "Loam",
+      "ru": "Суглинок",
+      "drop": "worldlogic:loam",
+      "soil": true,
+      "top": "worldlogic:block/loam",
+      "bottom": "worldlogic:block/loam",
+      "tintTop": false
+    },
+    {
+      "source": "worldlogic:peat",
+      "texture": "worldlogic:block/peat",
+      "host": "worldlogic:block/peat",
+      "mineral": "worldlogic:block/peat",
+      "coreMineral": false,
+      "family": "",
+      "en": "Peat",
+      "ru": "Торф",
+      "drop": "worldlogic:peat",
+      "soil": true,
+      "top": "worldlogic:block/peat",
+      "bottom": "worldlogic:block/peat",
+      "tintTop": false
+    },
+    {
+      "source": "worldlogic:alluvial_silt",
+      "texture": "worldlogic:block/alluvial_silt",
+      "host": "worldlogic:block/alluvial_silt",
+      "mineral": "worldlogic:block/alluvial_silt",
+      "coreMineral": false,
+      "family": "",
+      "en": "Alluvial silt",
+      "ru": "Аллювиальный ил",
+      "drop": "worldlogic:alluvial_silt",
+      "soil": true,
+      "top": "worldlogic:block/alluvial_silt",
+      "bottom": "worldlogic:block/alluvial_silt",
+      "tintTop": false
+    },
+    {
+      "source": "worldlogic:frozen_soil",
+      "texture": "worldlogic:block/frozen_soil",
+      "host": "worldlogic:block/frozen_soil",
+      "mineral": "worldlogic:block/frozen_soil",
+      "coreMineral": false,
+      "family": "",
+      "en": "Frozen soil",
+      "ru": "Мёрзлая почва",
+      "drop": "worldlogic:frozen_soil",
+      "soil": true,
+      "top": "worldlogic:block/frozen_soil",
+      "bottom": "worldlogic:block/frozen_soil",
+      "tintTop": false
+    },
+    {
+      "source": "worldlogic:chernozem",
+      "texture": "worldlogic:block/chernozem",
+      "host": "worldlogic:block/chernozem",
+      "mineral": "worldlogic:block/chernozem",
+      "coreMineral": false,
+      "family": "",
+      "en": "Chernozem",
+      "ru": "Чернозём",
+      "drop": "worldlogic:chernozem",
+      "soil": true,
+      "top": "worldlogic:block/chernozem",
+      "bottom": "worldlogic:block/chernozem",
+      "tintTop": false
+    },
+    {
+      "source": "worldlogic:sandy_loam",
+      "texture": "worldlogic:block/sandy_loam",
+      "host": "worldlogic:block/sandy_loam",
+      "mineral": "worldlogic:block/sandy_loam",
+      "coreMineral": false,
+      "family": "",
+      "en": "Sandy loam",
+      "ru": "Супесь",
+      "drop": "worldlogic:sandy_loam",
+      "soil": true,
+      "top": "worldlogic:block/sandy_loam",
+      "bottom": "worldlogic:block/sandy_loam",
+      "tintTop": false
+    },
+    {
+      "source": "worldlogic:laterite",
+      "texture": "worldlogic:block/laterite",
+      "host": "worldlogic:block/laterite",
+      "mineral": "worldlogic:block/laterite",
+      "coreMineral": false,
+      "family": "",
+      "en": "Laterite",
+      "ru": "Латерит",
+      "drop": "worldlogic:laterite",
+      "soil": true,
+      "top": "worldlogic:block/laterite",
+      "bottom": "worldlogic:block/laterite",
+      "tintTop": false
     }
   ],
   "families": [

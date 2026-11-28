@@ -12,7 +12,7 @@
     {
       "id": "worldlogic:rock_fracture",
       "version": 1,
-      "revision": 0,
+      "revision": 1,
       "domains": [
         "discrete_rock_fracture"
       ],
@@ -38,6 +38,12 @@
           "kind": "command",
           "entrypoint": "dev.minemods.excavation.ExcavationApi",
           "semantics": "Server-authoritative aimed discrete strike with tool, reach, cooldown and permission validation."
+        },
+        {
+          "id": "timing",
+          "kind": "query",
+          "entrypoint": "dev.minemods.excavation.ExcavationApi",
+          "semantics": "Return vanilla baseline ticks, category target ticks and feasible click cadence for actual held tool and loaded source."
         }
       ],
       "runtime_id": "worldlogicexcavation:fracture"
@@ -108,6 +114,23 @@
         "worldlogic:material_properties"
       ],
       "integration_review": "Fixed reserve conserved across tool and player switches; Core specimens retained for minerals without established refined item."
+    },
+    {
+      "id": "timed_soil_excavation",
+      "source_paths": [
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/Excavation.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/FractureMath.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/Catalog.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/ChipModel.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/ExcavationQA.java"
+      ],
+      "provides": [
+        "worldlogic:rock_fracture"
+      ],
+      "consumes": [
+        "worldlogic:excavation"
+      ],
+      "integration_review": "Core SOIL role and current player vanilla break progress; compact soil notches preserve native final loot, no parallel fatigue pool."
     }
   ],
   "tests": [
@@ -125,6 +148,15 @@
       "capabilities": [
         "worldlogic:rock_fracture",
         "worldlogic:material_properties"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-excavation.json",
+      "status": "implemented"
+    },
+    {
+      "id": "excavation.timing_and_soil",
+      "capabilities": [
+        "worldlogic:rock_fracture",
+        "worldlogic:excavation"
       ],
       "ref": "tools/qa/scenarios/worldlogic-excavation.json",
       "status": "implemented"

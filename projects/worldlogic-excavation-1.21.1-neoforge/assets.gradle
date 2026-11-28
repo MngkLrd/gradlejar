@@ -8,16 +8,17 @@ tasks.register('generateExcavationAssets') {
   def root=generated.get().asFile;delete(root)
   def write={String path,Object content->def f=new File(root,path);f.parentFile.mkdirs();f.setText(groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(content))+'\n','UTF-8')}
   def ns='worldlogicexcavation',asset="assets/${ns}", datap="data/${ns}"
-  def en=[:],ru=[:],pickaxe=[]
+  def en=[:],ru=[:],pickaxe=[],shovel=[]
   data.specs.each { s ->
    def id='chipped_'+s.source.replace(':','_')
    write("${asset}/blockstates/${id}.json",[variants:['':[model:"${ns}:block/${id}"]]])
-   write("${asset}/models/block/${id}.json",[parent:'minecraft:block/block',loader:"${ns}:chip",core_mineral:s.coreMineral,textures:[particle:s.texture,surface:s.texture,host:s.host,mineral:s.mineral]])
+   write("${asset}/models/block/${id}.json",[parent:'minecraft:block/block',loader:"${ns}:chip",core_mineral:s.coreMineral,tint_top:s.tintTop,textures:[particle:s.texture,surface:s.texture,host:s.host,mineral:s.mineral,top:s.top,bottom:s.bottom]])
    write("${datap}/loot_table/blocks/${id}.json",[type:'minecraft:block',pools:[]])
-   pickaxe.add("${ns}:${id}")
+   (s.soil?shovel:pickaxe).add("${ns}:${id}")
    en["block.${ns}.${id}"]="Chipped "+s.en;ru["block.${ns}.${id}"]="Скол: "+s.ru
   }
   write('data/minecraft/tags/block/mineable/pickaxe.json',[replace:false,values:pickaxe])
+  write('data/minecraft/tags/block/mineable/shovel.json',[replace:false,values:shovel])
   def shapeless={String id,List ingredients,String result,int count ->
    write("${datap}/recipe/${id}.json",[type:'minecraft:crafting_shapeless',category:'misc',ingredients:ingredients.collect{[item:it]},result:[id:result,count:count]])
   }

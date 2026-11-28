@@ -30,7 +30,7 @@ final class ExcavationQA {
     }
     private static void aim(FakePlayer fake,BlockPos p,boolean south){
         fake.setPos(p.getX()+.5,p.getY()+.5-fake.getEyeHeight(),p.getZ()+.5+(south?2.5:-2.5));
-        fake.setYRot(south?180:0);fake.setYHeadRot(south?180:0);fake.setXRot(0);
+        fake.setYRot(south?180:0);fake.setYHeadRot(south?180:0);fake.setXRot(0);fake.setOnGround(true);
     }
     private static List<ItemEntity> drops(ServerLevel l,BlockPos p){return l.getEntitiesOfClass(ItemEntity.class,new AABB(p).inflate(2));}
     private static int oreUnits(ServerLevel l,BlockPos p,Catalog.Spec spec){return drops(l,p).stream().mapToInt(e->Catalog.units(e.getItem(),spec.family())).sum();}
@@ -40,7 +40,7 @@ final class ExcavationQA {
         check(drops(l,pos).isEmpty(),"Dirty item fixture");
         FakePlayer fake=FakePlayerFactory.getMinecraft(l);aim(fake,pos,false);
         var api=dev.minemods.worldlogic.api.WorldLogicCapabilities.find(ExcavationApi.KEY,0).orElseThrow();
-        ItemStack tool=new ItemStack(name.equals("bad")?Items.WOODEN_PICKAXE:name.equals("iron")||name.equals("switch")?Items.IRON_PICKAXE:Items.DIAMOND_PICKAXE);
+        ItemStack tool=name.equals("hands")?ItemStack.EMPTY:new ItemStack(spec.soil()?(name.equals("soilfast")?Items.DIAMOND_SHOVEL:Items.IRON_SHOVEL):name.equals("bad")?Items.WOODEN_PICKAXE:name.equals("iron")||name.equals("switch")?Items.IRON_PICKAXE:Items.DIAMOND_PICKAXE);
         fake.setItemSlot(EquipmentSlot.MAINHAND,tool);Excavation.qaReset(fake);
         if(name.equals("bad")){
             check(api.strike(fake,pos).status()==ExcavationApi.Status.WRONG_TOOL,"Wrong tier accepted");
@@ -48,7 +48,13 @@ final class ExcavationQA {
             check(!fake.gameMode.destroyBlock(pos),"Vanilla bypass");
             return;
         }
-        int expected=FractureMath.hits(tool.getDestroySpeed(state),state.getDestroySpeed(l,pos),spec.ore());
+        var timing=api.timing(fake,pos).orElseThrow();
+        int expected=timing.hits();
+        check(timing.targetTicks()<=2L*timing.vanillaTicks(),"Timing cap");
+        check(timing.targetTicks()==(long)timing.vanillaTicks()*(spec.ore()?4:3)/2,"Category multiplier");
+        int elapsed=0;for(int n=1;n<expected;n++)elapsed+=timing.gapAfter(n);
+        check(expected==1||elapsed==timing.targetTicks(),"Exact scheduled duration");
+        var expectedSoil=spec.soil()?net.minecraft.world.level.block.Block.getDrops(state,l,pos,null,fake,tool):List.<ItemStack>of();
         int total=0,key=0,work=0,used=0;
         for(int i=0;i<9;i++){
             Excavation.qaReset(fake);aim(fake,pos,name.equals("switch")&&(i&1)==1);
@@ -56,7 +62,7 @@ final class ExcavationQA {
             int beforeDamage=tool.getDamageValue();
             var result=api.strike(fake,pos);
             check(result.status()==ExcavationApi.Status.ACCEPTED||result.status()==ExcavationApi.Status.BROKEN,"Strike "+i+" status "+result.status());
-            check(tool.getDamageValue()==beforeDamage+1,"Durability must cost exactly one");
+            if(!tool.isEmpty())check(tool.getDamageValue()==beforeDamage+1,"Durability must cost exactly one");
             used++;total+=result.emittedOreUnits();
             if(spec.ore()){
                 check(result.emittedOreUnits()>0&&oreUnits(l,pos,spec)==total,"Ore reserve/entity yield mismatch");
@@ -65,7 +71,12 @@ final class ExcavationQA {
             if(result.status()==ExcavationApi.Status.BROKEN){
                 check(l.getBlockState(pos).isAir()&&api.inspect(l,pos).isEmpty(),"Final normal break did not remove block");
                 if(spec.ore())check(total==9,"Ore total must equal nine units");
-                else {
+                else if(spec.soil()){
+                    // Random-sensitive loot (e.g. clay) is deterministic for the selected compact soils.
+                    int count=expectedSoil.stream().mapToInt(ItemStack::getCount).sum();
+                    check(drops(l,pos).stream().mapToInt(e->e.getItem().getCount()).sum()==count,"Soil final native loot count");
+                    for(var stack:expectedSoil)check(drops(l,pos).stream().filter(e->e.getItem().is(stack.getItem())).mapToInt(e->e.getItem().getCount()).sum()==stack.getCount(),"Soil native loot type");
+                }else {
                     Item item=BuiltInRegistries.ITEM.get(ResourceLocation.parse(spec.drop()));
                     check(drops(l,pos).stream().filter(e->e.getItem().is(item)).mapToInt(e->e.getItem().getCount()).sum()==1,"Stone must drop one final block");
                 }

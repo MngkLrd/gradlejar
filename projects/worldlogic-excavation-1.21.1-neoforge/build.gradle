@@ -1,11 +1,19 @@
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group='dev.minemods.excavation'
-version='0.1.0'
+version='0.2.0'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 neoForge { version=project.neo_version; runs { client { client() }; server { server(); programArgument '--nogui' } }; mods { worldlogicexcavation { sourceSet(sourceSets.main) } } }
 dependencies { compileOnly 'dev.minemods.worldlogic:worldlogic-neoforge-mc1.21.1:1.5.0'; runtimeOnly 'dev.minemods.worldlogic:worldlogic-neoforge-mc1.21.1:1.5.0' }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=21 }
-tasks.named('jar') { archiveFileName='worldlogicexcavation-neoforge-mc1.21.1-0.1.0.jar' }
+tasks.named('jar') { archiveFileName='worldlogicexcavation-neoforge-mc1.21.1-0.2.0.jar' }
 apply from: 'assets.gradle'
-tasks.register('fractureMathCheck', JavaExec) { dependsOn tasks.named('testClasses'); classpath=sourceSets.test.runtimeClasspath; mainClass='dev.minemods.excavation.FractureMathCheck' }
+// Standalone executable verification belongs to its own source set, not Gradle's JUnit discovery.
+sourceSets {
+ verification {
+  java.srcDir 'src/verification/java'
+  compileClasspath += sourceSets.main.output
+  runtimeClasspath += sourceSets.main.output
+ }
+}
+tasks.register('fractureMathCheck', JavaExec) { dependsOn tasks.named('verificationClasses'); classpath=sourceSets.verification.runtimeClasspath; mainClass='dev.minemods.excavation.FractureMathCheck' }
 tasks.named('check') { dependsOn tasks.named('fractureMathCheck') }

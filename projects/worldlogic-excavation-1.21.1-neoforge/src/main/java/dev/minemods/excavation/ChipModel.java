@@ -15,6 +15,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.world.level.GrassColor;
 import net.neoforged.neoforge.client.model.IDynamicBakedModel;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.geometry.*;
@@ -26,24 +29,28 @@ public final class ChipModel {
     @SubscribeEvent public static void register(ModelEvent.RegisterGeometryLoaders event){
         event.register(ResourceLocation.fromNamespaceAndPath(Excavation.ID,"chip"),new Loader());
     }
-    private static final class Loader implements IGeometryLoader<Geometry>{
-        @Override public Geometry read(JsonObject json,JsonDeserializationContext context){return new Geometry(json.has("core_mineral")&&json.get("core_mineral").getAsBoolean());}
+    @SubscribeEvent public static void colors(RegisterColorHandlersEvent.Block event){
+        for(var spec:Catalog.DATA.specs())if(spec.tintTop())
+            event.register((s,l,p,t)->t==0?(l!=null&&p!=null?BiomeColors.getAverageGrassColor(l,p):GrassColor.getDefaultColor()):-1,Catalog.CHIPS.get(spec.key()).get());
     }
-    private record Geometry(boolean coreMineral) implements IUnbakedGeometry<Geometry>{
+    private static final class Loader implements IGeometryLoader<Geometry>{
+        @Override public Geometry read(JsonObject json,JsonDeserializationContext context){return new Geometry(json.has("core_mineral")&&json.get("core_mineral").getAsBoolean(),json.has("tint_top")&&json.get("tint_top").getAsBoolean());}
+    }
+    private record Geometry(boolean coreMineral,boolean tintTop) implements IUnbakedGeometry<Geometry>{
         @Override public BakedModel bake(IGeometryBakingContext context,ModelBaker baker,Function<Material,TextureAtlasSprite> sprites,ModelState state,ItemOverrides overrides){
-            return new Rock(sprites.apply(context.getMaterial("surface")),sprites.apply(context.getMaterial("host")),sprites.apply(context.getMaterial("mineral")),coreMineral,state,overrides);
+            return new Rock(sprites.apply(context.getMaterial("surface")),sprites.apply(context.getMaterial("host")),sprites.apply(context.getMaterial("mineral")),sprites.apply(context.getMaterial("top")),sprites.apply(context.getMaterial("bottom")),coreMineral,tintTop,state,overrides);
         }
     }
     private record Mesh(List<BakedQuad> inner,List<List<BakedQuad>> sides){}
     private static final class Rock implements IDynamicBakedModel {
-        private final TextureAtlasSprite surface,host,mineral;
-        private final boolean coreMineral;
+        private final TextureAtlasSprite surface,host,mineral,top,bottom;
+        private final boolean coreMineral,tintTop;
         private final ModelState state;
         private final ItemOverrides overrides;
         private final FaceBakery bakery=new FaceBakery();
         private final Map<Integer,Mesh> cache=new LinkedHashMap<>(8,.75f,true);
-        Rock(TextureAtlasSprite surface,TextureAtlasSprite host,TextureAtlasSprite mineral,boolean coreMineral,ModelState state,ItemOverrides overrides){
-            this.surface=surface;this.host=host;this.mineral=mineral;this.coreMineral=coreMineral;this.state=state;this.overrides=overrides;
+        Rock(TextureAtlasSprite surface,TextureAtlasSprite host,TextureAtlasSprite mineral,TextureAtlasSprite top,TextureAtlasSprite bottom,boolean coreMineral,boolean tintTop,ModelState state,ItemOverrides overrides){
+            this.surface=surface;this.host=host;this.mineral=mineral;this.top=top;this.bottom=bottom;this.coreMineral=coreMineral;this.tintTop=tintTop;this.state=state;this.overrides=overrides;
         }
         @Override public boolean useAmbientOcclusion(){return true;}
         @Override public boolean isGui3d(){return true;}
@@ -63,7 +70,8 @@ public final class ChipModel {
             for(var f:NotchGeometry.get(key).faces()){
                 Direction d=Direction.values()[f.side()];
                 List<BakedQuad> out=f.exterior()?sides.get(f.side()):inner;
-                face(out,f.box(),d,f.exterior()?surface:host,0,false);
+                TextureAtlasSprite sprite=!f.exterior()?host:d==Direction.UP?top:d==Direction.DOWN?bottom:surface;
+                face(out,f.box(),d,sprite,0,false,f.exterior()&&d==Direction.UP&&tintTop?0:-1);
                 if(coreMineral)fleck(out,f.box(),d);
             }
             found=new Mesh(List.copyOf(inner),sides.stream().map(List::copyOf).toList());
@@ -81,9 +89,9 @@ public final class ChipModel {
             NotchGeometry.Box patch=d.getAxis()==Direction.Axis.X?new NotchGeometry.Box(b.x0(),v,u,b.x1(),v+2,u+3):
                 d.getAxis()==Direction.Axis.Y?new NotchGeometry.Box(u,b.y0(),v,u+3,b.y1(),v+2):
                     new NotchGeometry.Box(u,v,b.z0(),u+3,v+2,b.z1());
-            face(out,patch,d,mineral,.015f,true);
+            face(out,patch,d,mineral,.015f,true,-1);
         }
-        private void face(List<BakedQuad> out,NotchGeometry.Box b,Direction d,TextureAtlasSprite sprite,float offset,boolean patch){
+        private void face(List<BakedQuad> out,NotchGeometry.Box b,Direction d,TextureAtlasSprite sprite,float offset,boolean patch,int tint){
             int x0=b.x0(),x1=b.x1(),y0=b.y0(),y1=b.y1(),z0=b.z0(),z1=b.z1();
             float[] uv=patch?new float[]{6,6,9,8}:switch(d){
                 case NORTH->new float[]{16-x1,16-y1,16-x0,16-y0};
@@ -93,7 +101,7 @@ public final class ChipModel {
                 case UP->new float[]{x0,z0,x1,z1};
                 case DOWN->new float[]{x0,16-z1,x1,16-z0};
             };
-            var f=new BlockElementFace(null,-1,"#surface",new BlockFaceUV(uv,0));
+            var f=new BlockElementFace(null,tint,"#surface",new BlockFaceUV(uv,0));
             float dx=d.getStepX()*offset,dy=d.getStepY()*offset,dz=d.getStepZ()*offset;
             out.add(bakery.bakeQuad(new Vector3f(x0+dx,y0+dy,z0+dz),new Vector3f(x1+dx,y1+dy,z1+dz),f,sprite,d,state,null,true));
         }

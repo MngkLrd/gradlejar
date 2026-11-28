@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic Excavation FakePlayer server-path regression",
+  "name": "WorldLogic Excavation 0.2.0 FakePlayer server-path regression: timings and soil",
   "coverage": [
     {
       "id": "wrong-tier",
@@ -661,6 +661,204 @@
           "name": "family-worldlogic-deepslate-cinnabar-ore"
         }
       ]
+    },
+    {
+      "id": "soil-minecraft-dirt",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:dirt",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-dirt"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-grass-block",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:grass_block",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-grass-block"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-coarse-dirt",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:coarse_dirt",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-coarse-dirt"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-rooted-dirt",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:rooted_dirt",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-rooted-dirt"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-podzol",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:podzol",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-podzol"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-mycelium",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:mycelium",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-mycelium"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-mud",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:mud",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-mud"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-clay",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:clay",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-clay"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-humus",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:humus",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-humus"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-loam",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:loam",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-loam"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-peat",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:peat",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-peat"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-alluvial-silt",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:alluvial_silt",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-alluvial-silt"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-frozen-soil",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:frozen_soil",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-frozen-soil"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-chernozem",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:chernozem",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-chernozem"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-sandy-loam",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:sandy_loam",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-sandy-loam"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-laterite",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:laterite",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-laterite"
+        }
+      ]
+    },
+    {
+      "id": "soil-bare-hands",
+      "kind": "mechanic",
+      "subject": "Bare hands remain valid for slow soil excavation.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-bare-hands"
+        }
+      ]
+    },
+    {
+      "id": "soil-fast-tool",
+      "kind": "mechanic",
+      "subject": "Fast shovel uses feasible reduced hit count and native final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-fast-tool"
+        }
+      ]
     }
   ],
   "steps": [
@@ -1270,6 +1468,186 @@
       "expect": "Excavation QA PASS family",
       "assertion": true,
       "name": "family-worldlogic-deepslate-cinnabar-ore"
+    },
+    {
+      "command": "setblock 996 200 1032 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 996 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-dirt"
+    },
+    {
+      "command": "setblock 1002 200 1032 minecraft:grass_block",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1002 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-grass-block"
+    },
+    {
+      "command": "setblock 1008 200 1032 minecraft:coarse_dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1008 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-coarse-dirt"
+    },
+    {
+      "command": "setblock 1014 200 1032 minecraft:rooted_dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1014 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-rooted-dirt"
+    },
+    {
+      "command": "setblock 1020 200 1032 minecraft:podzol",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1020 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-podzol"
+    },
+    {
+      "command": "setblock 1026 200 1032 minecraft:mycelium",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1026 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-mycelium"
+    },
+    {
+      "command": "setblock 1032 200 1032 minecraft:mud",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1032 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-mud"
+    },
+    {
+      "command": "setblock 1038 200 1032 minecraft:clay",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1038 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-clay"
+    },
+    {
+      "command": "setblock 1044 200 1032 worldlogic:humus",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1044 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-humus"
+    },
+    {
+      "command": "setblock 1050 200 1032 worldlogic:loam",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1050 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-loam"
+    },
+    {
+      "command": "setblock 996 200 1038 worldlogic:peat",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 996 200 1038 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-peat"
+    },
+    {
+      "command": "setblock 1002 200 1038 worldlogic:alluvial_silt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1002 200 1038 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-alluvial-silt"
+    },
+    {
+      "command": "setblock 1008 200 1038 worldlogic:frozen_soil",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1008 200 1038 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-frozen-soil"
+    },
+    {
+      "command": "setblock 1014 200 1038 worldlogic:chernozem",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1014 200 1038 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-chernozem"
+    },
+    {
+      "command": "setblock 1020 200 1038 worldlogic:sandy_loam",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1020 200 1038 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-sandy-loam"
+    },
+    {
+      "command": "setblock 1026 200 1038 worldlogic:laterite",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1026 200 1038 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-laterite"
+    },
+    {
+      "command": "setblock 1032 200 1038 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1032 200 1038 hands",
+      "expect": "Excavation QA PASS hands",
+      "assertion": true,
+      "name": "soil-bare-hands"
+    },
+    {
+      "command": "setblock 1038 200 1038 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1038 200 1038 soilfast",
+      "expect": "Excavation QA PASS soilfast",
+      "assertion": true,
+      "name": "soil-fast-tool"
     }
   ]
 }

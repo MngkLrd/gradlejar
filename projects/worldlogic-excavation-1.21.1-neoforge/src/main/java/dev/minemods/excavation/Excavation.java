@@ -25,6 +25,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.registries.*;
 
 @Mod(Excavation.ID)
@@ -35,12 +36,13 @@ public final class Excavation {
     private static final DeferredRegister<BlockEntityType<?>> ENTITIES=DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE,ID);
     private record Permit(ServerPlayer player,BlockPos pos){}
     private static final ThreadLocal<Permit> BREAK=new ThreadLocal<>(), CLICK=new ThreadLocal<>();
-    private static final Map<ServerPlayer,Integer> LAST=new WeakHashMap<>();
+    private record Cadence(int lastTick,int gap){}
+    private static final Map<ServerPlayer,Cadence> LAST=new WeakHashMap<>();
     static final Supplier<BlockEntityType<ChipProgress>> PROGRESS=ENTITIES.register("fracture",()->BlockEntityType.Builder.of(ChipProgress::new,Catalog.CHIPS.values().stream().map(DeferredBlock::get).toArray(Block[]::new)).build(null));
     static {
         for(var spec:Catalog.DATA.specs()){
             Catalog.CHIPS.put(spec.key(),BLOCKS.register("chipped_"+spec.key(),()->new ChipBlock(
-                net.minecraft.world.level.block.state.BlockBehaviour.Properties.of().strength(spec.ore()?3f:1.5f,6f).sound(SoundType.STONE).requiresCorrectToolForDrops().noOcclusion().dynamicShape(),spec)));
+                chipProperties(spec),spec)));
         }
         for(var family:Catalog.DATA.families()){
             Map<Integer,DeferredItem<Item>> items=new LinkedHashMap<>();
@@ -48,12 +50,18 @@ public final class Excavation {
             Catalog.FRAGMENTS.put(family.id(),items);
         }
     }
+    private static net.minecraft.world.level.block.state.BlockBehaviour.Properties chipProperties(Catalog.Spec spec){
+        var p=net.minecraft.world.level.block.state.BlockBehaviour.Properties.of().strength(spec.soil()?.5f:spec.ore()?3f:1.5f,6f)
+            .sound(spec.soil()?SoundType.GRAVEL:SoundType.STONE).noOcclusion().dynamicShape();
+        return spec.soil()?p:p.requiresCorrectToolForDrops();
+    }
     static final DeferredItem<Item> COPPER_NUGGET=ITEMS.register("copper_nugget",()->new Item(new Item.Properties()));
     public Excavation(IEventBus modBus){
         BLOCKS.register(modBus);ITEMS.register(modBus);ENTITIES.register(modBus);
         modBus.addListener(StrikeNetwork::register);modBus.addListener(Excavation::setup);modBus.addListener(Excavation::creative);
         NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST,Excavation::guardBreak);
         NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST,Excavation::guardClick);
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,Excavation::guardFinalDrops);
         NeoForge.EVENT_BUS.addListener(ExcavationQA::register);
     }
     private static void setup(FMLCommonSetupEvent event){
@@ -94,6 +102,28 @@ public final class Excavation {
         if(event.getPlayer().isCreative()||event.getPlayer().isSpectator()||!target(event.getState()))return;
         if(!allowed(BREAK.get(),event.getPlayer(),event.getPos()))event.setCanceled(true);
     }
+    private static void guardFinalDrops(BlockDropsEvent event){
+        var permit=BREAK.get();
+        if(permit==null||event.getBreaker()!=permit.player()||!event.getPos().equals(permit.pos()))return;
+        if(!target(event.getState()))return;
+        event.getDrops().clear();event.setDroppedExperience(0);
+    }
+    static Optional<FractureMath.Timing> timing(ServerPlayer player,BlockPos pos){
+        ServerLevel level=(ServerLevel)player.level();
+        if(!level.getServer().isSameThread()||level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
+        var spec=Catalog.spec(level.getBlockState(pos));if(spec==null)return Optional.empty();
+        var original=spec.original();var tool=player.getMainHandItem();
+        if(!suitable(spec,original,tool))return Optional.empty();
+        float speed=tool.getDestroySpeed(original),hardness=original.getDestroySpeed(level,pos);
+        float progress=original.getDestroyProgress(player,level,pos);
+        if(hardness<0||!Float.isFinite(hardness)||!Float.isFinite(progress)||progress<=0||!Float.isFinite(speed)||speed<=0)return Optional.empty();
+        return Optional.of(FractureMath.timing(progress,speed,hardness,spec.ore(),spec.soil()));
+    }
+    private static boolean suitable(Catalog.Spec spec,BlockState original,ItemStack tool){
+        if(original.isAir()||!original.is(spec.soil()?BlockTags.MINEABLE_WITH_SHOVEL:BlockTags.MINEABLE_WITH_PICKAXE))return false;
+        // Hands and non-shovel tools retain the slow vanilla soil path, avoiding a progression dead end.
+        return (spec.soil()||tool.is(ItemTags.PICKAXES))&&(!original.requiresCorrectToolForDrops()||tool.isCorrectToolForDrops(original));
+    }
     private static ExcavationApi.Result reject(ExcavationApi.Status status,ServerLevel l,BlockPos pos){
         return new ExcavationApi.Result(status,0,inspect(l,pos));
     }
@@ -126,24 +156,23 @@ public final class Excavation {
         BlockState state=level.getBlockState(pos);
         Catalog.Spec spec=Catalog.spec(state);if(spec==null)return reject(ExcavationApi.Status.NOT_TARGET,level,pos);
         ItemStack tool=player.getMainHandItem();
-        if(!tool.is(ItemTags.PICKAXES))return reject(ExcavationApi.Status.WRONG_TOOL,level,pos);
         var core=WorldLogicCapabilities.find(WorldLogicExcavation.KEY,0).orElse(null);
         if(core==null)return reject(ExcavationApi.Status.CORE_UNAVAILABLE,level,pos);
         BlockState original=spec.original();
-        if(original.isAir()||!original.is(BlockTags.MINEABLE_WITH_PICKAXE)||original.requiresCorrectToolForDrops()&&!tool.isCorrectToolForDrops(original))
+        if(!suitable(spec,original,tool))
             return reject(ExcavationApi.Status.WRONG_TOOL,level,pos);
         boolean chipped=state.getBlock() instanceof ChipBlock;
         float hardness=original.getDestroySpeed(level,pos);
         if(!chipped){
             var inspected=core.inspect(level,pos,tool);
-            if(inspected.isEmpty()||inspected.get().kind()!=WorldLogicExcavation.Kind.ROCK_OR_ORE||!inspected.get().toolSuitableForDrops())return reject(ExcavationApi.Status.WRONG_TOOL,level,pos);
+            if(inspected.isEmpty()||inspected.get().kind()!=(spec.soil()?WorldLogicExcavation.Kind.SOIL:WorldLogicExcavation.Kind.ROCK_OR_ORE)||!inspected.get().toolSuitableForDrops())return reject(ExcavationApi.Status.WRONG_TOOL,level,pos);
             hardness=inspected.get().vanillaResistance();
         }
-        float speed=tool.getDestroySpeed(original);
-        if(!Float.isFinite(speed)||speed<=0||!Float.isFinite(hardness)||hardness<0)return reject(ExcavationApi.Status.WRONG_TOOL,level,pos);
-        int required=FractureMath.hits(speed,hardness,spec.ore());
-        int cooldown=Math.max(7,Math.min(22,5+2*required-(spec.ore()?0:2)));
-        Integer last=LAST.get(player);if(last!=null&&player.tickCount>=last&&player.tickCount-last<cooldown)return reject(ExcavationApi.Status.COOLDOWN,level,pos);
+        var timing=timing(player,pos).orElse(null);
+        if(timing==null)return reject(ExcavationApi.Status.WRONG_TOOL,level,pos);
+        int required=timing.hits();
+        Cadence last=LAST.get(player);
+        if(last!=null&&player.tickCount>=last.lastTick()&&player.tickCount-last.lastTick()<last.gap())return reject(ExcavationApi.Status.COOLDOWN,level,pos);
         // When the ray strikes an interior shoulder, keep cutting from the actual entry face.
         Direction face=entryFace(player,pos,bh.getDirection());
         FractureMath.State old;
@@ -160,14 +189,17 @@ public final class Excavation {
         if(!permitted||!level.getBlockState(pos).equals(state))return reject(ExcavationApi.Status.DENIED,level,pos);
         double energy=incident(core,tool);
         if(plan.complete()){
-            // Normal vanilla final break event and durability path. The proxy has no loot table.
-            if(!chipped)return reject(ExcavationApi.Status.INVALID_STATE,level,pos);
+            // Single-click fast blocks can finish from their original state.
+            // Soil uses original vanilla loot (grass->dirt, clay balls, Silk Touch, etc.).
+            // The scoped BlockDropsEvent suppresses the engine's original/proxy loot exactly once.
+            List<ItemStack> soilDrops=spec.soil()?Block.getDrops(original,level,pos,null,player,tool):List.of();
             BREAK.set(permit);
             boolean broke;
             try{broke=player.gameMode.destroyBlock(pos);}
             finally{BREAK.remove();}
             if(!broke||level.getBlockState(pos).getBlock()==state.getBlock())return reject(ExcavationApi.Status.DENIED,level,pos);
             if(spec.ore())emit(level,pos,spec,plan.units());
+            else if(spec.soil())for(var stack:soilDrops)Block.popResource(level,pos,stack);
             else{
                 Item item=BuiltInRegistries.ITEM.get(ResourceLocation.parse(spec.drop()));
                 if(item!=Items.AIR)Block.popResource(level,pos,new ItemStack(item));
@@ -188,7 +220,7 @@ public final class Excavation {
             if(spec.ore())emit(level,pos,spec,plan.units());
             tool.hurtAndBreak(1,player,EquipmentSlot.MAINHAND);
         }
-        LAST.put(player,player.tickCount);
+        LAST.put(player,new Cadence(player.tickCount,plan.complete()?1:timing.gapAfter(FractureMath.acceptedIndex(old,timing))));
         player.swing(InteractionHand.MAIN_HAND,true);
         level.playSound(null,pos,original.getSoundType().getHitSound(),SoundSource.BLOCKS,1,.85f+level.random.nextFloat()*.2f);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,original),pos.getX()+.5+face.getStepX()*.48,pos.getY()+.5+face.getStepY()*.48,pos.getZ()+.5+face.getStepZ()*.48,8,.12,.12,.12,.08);
@@ -206,6 +238,7 @@ public final class Excavation {
     }
     private static void emit(ServerLevel level,BlockPos pos,Catalog.Spec spec,int units){
         // No normal ore loot or Fortune/Silk Touch duplicate; every emitted piece spends the same reserve.
+        if(units==9){Block.popResource(level,pos,Catalog.fragment(spec.family(),9,1));return;}
         if(units>=4){Block.popResource(level,pos,Catalog.fragment(spec.family(),4,units/4));units%=4;}
         if(units>0)Block.popResource(level,pos,Catalog.fragment(spec.family(),1,units));
     }

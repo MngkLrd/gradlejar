@@ -27,6 +27,25 @@ public final class FractureMathCheck {
             check(volume==g.remaining()&&volume>0&&volume<4096,"box volume");
             check(!g.faces().isEmpty(),"surface mesh");
         }
+        // Every vanilla duration across representative tiers/categories; exact integer schedule and hard cap.
+        int timingCases=0;
+        for(int ticks=1;ticks<=600;ticks++)for(float speed:new float[]{1,2,4,6,8,9,12,25,100})for(int kind=0;kind<3;kind++){
+            boolean ore=kind==1,soil=kind==2;
+            var timing=FractureMath.timing(1f/ticks,speed,ore?3f:soil?.5f:1.5f,ore,soil);
+            check(timing.targetTicks()==(long)timing.vanillaTicks()*(ore?4:3)/2,"category target");
+            check(timing.targetTicks()<=2L*timing.vanillaTicks(),"hard cap");
+            int elapsed=0;
+            for(int n=1;n<timing.hits();n++){
+                int gap=timing.gapAfter(n);check(gap>=4,"manual cadence");elapsed+=gap;
+            }
+            check(timing.hits()==1||elapsed==timing.targetTicks(),"exact schedule");
+            if(timing.hits()==1){
+                var plan=FractureMath.strike(new FractureMath.State(0,0,0),1,2,ore);
+                check(plan.complete()&&plan.units()==(ore?9:0),"fast single strike");
+            }
+            timingCases++;
+        }
+        System.out.println("EXCAVATION_TIMING_PASS: "+timingCases+" duration/tier/category cases");
         check(NotchGeometry.cacheSize()<=128,"bounded cache");
         System.out.println("EXCAVATION_MATH_PASS: 1024 mixed-tool sequences, 90 directional geometries, conserved reserve and bounded cache");
     }
