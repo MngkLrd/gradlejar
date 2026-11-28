@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:cassiterite_ore",
+    "worldlogic:galena_ore",
+    "worldlogic:sphalerite_ore",
+    "worldlogic:garnierite_ore",
+    "worldlogic:graphite_ore",
+    "worldlogic:halite_ore",
+    "worldlogic:sulfur_ore"
+  ]
+}

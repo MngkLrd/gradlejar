@@ -7,7 +7,7 @@
     "ru": "Геология и руды",
     "en": "Geology and ores"
   },
-  "source": "WorldLogic RC42",
+  "source": "WorldLogic RC43",
   "pages": [
     {
       "id": "geography",
@@ -280,6 +280,34 @@
         "en": [
           "Sedimentary, carbonate, intrusive, metamorphic and craton regions have different rock sequences. Geological contacts do not have to follow biome boundaries.",
           "Layer thickness varies by region and boundaries fold continuously within a region. A real section may be interrupted by a cave or a deposit."
+        ]
+      }
+    },
+    {
+      "id": "new_minerals",
+      "title": {
+        "ru": "Минеральное сырьё",
+        "en": "Mineral resources"
+      },
+      "models": [
+        "worldlogic:raw_cassiterite",
+        "worldlogic:raw_galena",
+        "worldlogic:raw_sphalerite",
+        "worldlogic:raw_garnierite",
+        "worldlogic:raw_graphite",
+        "worldlogic:raw_halite",
+        "worldlogic:raw_sulfur"
+      ],
+      "body": {
+        "ru": [
+          "Касситерит содержит олово, галенит — свинец, сфалерит — цинк, гарниерит — никель. Также встречаются графит, галит (каменная соль) и сера.",
+          "Месторождения имеют объёмные, пластовые и трубчатые формы. Они связаны с породами и глубиной; гарниерит пока использует вулканические и диоритовые породы как игровое приближение.",
+          "Бедная руда даёт одну единицу сырья, обычная — две, богатая — три. Дальнейшая переработка относится к отдельному Metallurgy."
+        ],
+        "en": [
+          "Cassiterite is a tin ore, galena a lead ore, sphalerite a zinc ore, and garnierite a nickel ore. Graphite, halite (rock salt) and sulfur also occur.",
+          "Deposits have cluster, disc and pipe shapes and depend on host rocks and depth; garnierite uses volcanic and dioritic rock as a game-scale proxy.",
+          "Poor ore yields one raw mineral, normal two, and rich three. Further processing belongs to the separate Metallurgy addon."
         ]
       }
     }

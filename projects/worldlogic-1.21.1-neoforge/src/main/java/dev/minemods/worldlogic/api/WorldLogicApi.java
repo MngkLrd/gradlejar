@@ -23,8 +23,14 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=12;
+ public static final int API_REVISION=13;
  private WorldLogicApi(){}
+ /** Actual mineral block state, not an undiscovered-deposit locator. */
+ public record MineralInfo(String mineral,String resource,int grade){}
+ public static Optional<MineralInfo> mineral(BlockState state){
+  if(!(state.getBlock() instanceof dev.minemods.worldlogic.MineralOreBlock ore))return Optional.empty();
+  return Optional.of(new MineralInfo(ore.mineral().id(),ore.mineral().resource,state.getValue(dev.minemods.worldlogic.MineralOreBlock.RICHNESS)));
+ }
  /** Predicted regional host rock and observed block, deliberately separate. */
  public record GeologicalLayer(String province,String modeledHost,int bottomY,int topY,Optional<String> observedHost){}
  public static Optional<GeologicalLayer> geology(ServerLevel level,BlockPos pos){

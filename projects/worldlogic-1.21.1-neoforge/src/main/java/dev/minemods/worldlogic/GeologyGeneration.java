@@ -70,6 +70,7 @@ public final class GeologyGeneration {
   var pos=new BlockPos.MutableBlockPos();
   for(var d:districts)for(var o:d.ores())placeBody(chunk,x0,z0,pos,o,false);
   for(var p:GeologyModel.nearbyPockets(seed,x0+8,z0+8))placeBody(chunk,x0,z0,pos,p.body(),p.relative());
+  MineralDeposits.mineralize(seed,chunk);
  }
  private static void placeBody(ChunkAccess chunk,int x0,int z0,BlockPos.MutableBlockPos pos,GeologyModel.Body o,boolean relative){
   double reach=Math.max(o.along(),o.across())+2;

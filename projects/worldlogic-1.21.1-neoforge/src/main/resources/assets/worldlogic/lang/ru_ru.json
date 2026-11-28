@@ -221,5 +221,19 @@
   "worldlogic.analytics.season_temp": "Сезонная поправка воздуха",
   "worldlogic.analytics.season_solar": "Множитель солнца",
   "worldlogic.analytics.season_wet": "Влажная фаза",
-  "worldlogic.patchouli.landing": "Полевое руководство World Logic. Выберите раздел: климат, вода, здоровье, растения, геология и выживание."
+  "worldlogic.patchouli.landing": "Полевое руководство World Logic. Выберите раздел: климат, вода, здоровье, растения, геология и выживание.",
+  "block.worldlogic.cassiterite_ore": "Касситерит (руда)",
+  "item.worldlogic.raw_cassiterite": "Необработанный касситерит",
+  "block.worldlogic.galena_ore": "Галенит (руда)",
+  "item.worldlogic.raw_galena": "Необработанный галенит",
+  "block.worldlogic.sphalerite_ore": "Сфалерит (руда)",
+  "item.worldlogic.raw_sphalerite": "Необработанный сфалерит",
+  "block.worldlogic.garnierite_ore": "Гарниерит (руда)",
+  "item.worldlogic.raw_garnierite": "Необработанный гарниерит",
+  "block.worldlogic.graphite_ore": "Графит (руда)",
+  "item.worldlogic.raw_graphite": "Необработанный графит",
+  "block.worldlogic.halite_ore": "Галит (руда)",
+  "item.worldlogic.raw_halite": "Необработанный галит",
+  "block.worldlogic.sulfur_ore": "Сера (руда)",
+  "item.worldlogic.raw_sulfur": "Необработанный сера"
 }

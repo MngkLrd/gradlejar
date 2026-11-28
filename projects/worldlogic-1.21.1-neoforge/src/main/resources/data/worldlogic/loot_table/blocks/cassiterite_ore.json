@@ -1,0 +1,94 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "worldlogic:cassiterite_ore",
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "predicates": {
+                      "minecraft:enchantments": [
+                        {
+                          "enchantments": "minecraft:silk_touch",
+                          "levels": {
+                            "min": 1
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ],
+              "functions": [
+                {
+                  "function": "minecraft:copy_state",
+                  "block": "worldlogic:cassiterite_ore",
+                  "properties": [
+                    "richness"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "worldlogic:raw_cassiterite",
+              "functions": [
+                {
+                  "function": "minecraft:set_count",
+                  "count": 1,
+                  "conditions": [
+                    {
+                      "condition": "minecraft:block_state_property",
+                      "block": "worldlogic:cassiterite_ore",
+                      "properties": {
+                        "richness": "1"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "function": "minecraft:set_count",
+                  "count": 2,
+                  "conditions": [
+                    {
+                      "condition": "minecraft:block_state_property",
+                      "block": "worldlogic:cassiterite_ore",
+                      "properties": {
+                        "richness": "2"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "function": "minecraft:set_count",
+                  "count": 3,
+                  "conditions": [
+                    {
+                      "condition": "minecraft:block_state_property",
+                      "block": "worldlogic:cassiterite_ore",
+                      "properties": {
+                        "richness": "3"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "function": "minecraft:explosion_decay"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "random_sequence": "worldlogic:blocks/cassiterite_ore"
+}

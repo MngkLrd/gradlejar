@@ -8,6 +8,7 @@ public final class WorldLogic {
   Content.PARTICLES.register(modBus);
   NaturalFluids.register(modBus);
   MarinePlants.register();
+  MineralContent.register();
   Content.BLOCKS.register(modBus);
   Content.ITEMS.register(modBus);
   Rules.load();

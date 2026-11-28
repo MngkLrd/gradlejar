@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC42 source milestone / RC45 deferred QA",
+  "name": "World Logic NeoForge RC43 source milestone / RC45 deferred QA",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -146,6 +146,12 @@
       "name": "All eight mineral types replace actual rock while preserving cave air and bedrock",
       "command": "worldlogic qa ore_bodies",
       "expect": "WORLDLOGIC_ORE_BODIES_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seven mineral families, actual host-specific deposit placement, richness states and loot",
+      "command": "worldlogic qa minerals",
+      "expect": "WORLDLOGIC_MINERALS_PASSED",
       "assertion": true
     },
     {
@@ -1769,6 +1775,17 @@
         {
           "backend": "server",
           "name": "Extended preset registry, geological provinces, ore bodies and synthetic chunk carving"
+        }
+      ]
+    },
+    {
+      "id": "rc43-mineral-deposits",
+      "kind": "mechanic",
+      "subject": "Seven reachable host-specific mineral families, actual placement and grade states, 21 real loot cases, air/bedrock protection; cumulative RC45 QA",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Seven mineral families, actual host-specific deposit placement, richness states and loot"
         }
       ]
     }

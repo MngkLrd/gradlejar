@@ -205,6 +205,524 @@
         "context_view": "3x3 repeat has a dark coherent rhythm; there are no straight full-width stripe seams.",
         "context_type": "tile_3x3"
       }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/cassiterite_ore.png": {
+      "sha256": "ad6d3d762f4d8a2f14b3c3a21fbb885d1f12fcb8dc04f1e8c8d70508badd3296",
+      "verdict": "PASS",
+      "material_profile": "ore",
+      "references": [
+        {
+          "id": "minecraft:block/iron_ore",
+          "minecraft": "1.21.1",
+          "sha256": "d3a50d2c689f8ade6445488f2edc68ca107c343ef09df8eaa27e51aa83d5a5ed"
+        }
+      ],
+      "comparison": "Compared at native scale and enlarged with vanilla iron ore: similar continuous host, original an off-centre angular upper-left shard and smaller diagonal grains; mineral palette deliberately differs.",
+      "findings": {
+        "silhouette": "Solid cube retains stone as the majority of every face; angular silver-gray shards read as inclusions.",
+        "cluster_structure": "Connected local planes: an off-centre angular upper-left shard and smaller diagonal grains; not isolated random dots.",
+        "micro_contrast": "angular silver-gray shards use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Mineral facets have upper-left highlights and darker contact boundaries inside continuous host.",
+        "material_continuity": "Muted independent gray aggregates remain uninterrupted around the inclusions.",
+        "edge_variation": "Inclusions end at varied offsets and have irregular boundaries; host has no hard seam.",
+        "variant_identity": "angular silver-gray shards use an off-centre angular upper-left shard and smaller diagonal grains rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Iron ore uses irregular warm fragments on restrained gray; our angular silver-gray shards have a separate inclusion layout.",
+        "host_rock": "Four restrained gray rock values form small interlocking planes rather than a flat background.",
+        "mineral_inclusion": "an off-centre angular upper-left shard and smaller diagonal grains; contact pixels remain darker than the body.",
+        "inclusion_light": "A compact lighter plane in angular silver-gray shards indicates embedded mineral rather than luminous speckles."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "mineral_inclusions",
+        "reference": "minecraft:block/iron_ore",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Host-first construction, with an off-centre angular upper-left shard and smaller diagonal grains embedded in a quiet gray base.",
+        "reference_limit": "Iron ore's warm clustered shapes are not copied; angular silver-gray shards have different habit and hue.",
+        "native_view": "Viewed 16px and 8x: angular silver-gray shards remain visible on gray without covering the majority of the face.",
+        "context_view": "3x3 tiled inspection after redraw: an off-centre angular upper-left shard and smaller diagonal grains; repeated pattern remains visible at large walls but no hard full-width seam.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/raw_cassiterite.png": {
+      "sha256": "d0ce18d60632023ce33098cd9acee114d16ec84f63cb1d944a6dec7f1c43176a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Compared at 16px with raw iron: smaller original angular broad light facet with a separate small chip; fewer broad facets, distinct angular silver-gray shards.",
+      "findings": {
+        "silhouette": "Recognizable angular broad light facet with a separate small chip, cutout rather than a full cube.",
+        "cluster_structure": "Connected local planes: angular broad light facet with a separate small chip; not isolated random dots.",
+        "micro_contrast": "angular silver-gray shards use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Top-left facets of angular broad light facet with a separate small chip are lighter, with lower-right dark edge and no smooth gradient.",
+        "material_continuity": "The angular silver-gray shards palette remains coherent across main fragment and secondary piece.",
+        "edge_variation": "Stepped outer contour of angular broad light facet with a separate small chip has unequal edge lengths and transparent exterior.",
+        "variant_identity": "angular silver-gray shards use angular broad light facet with a separate small chip rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Raw iron has more overlapping chunks and larger warm highlights; this material uses the explicitly drawn angular broad light facet with a separate small chip.",
+        "functional_material_cues": "Unprocessed angular silver-gray shards, no ingot outline or polished-metal rim."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Unprocessed fragment with angular broad light facet with a separate small chip and coherent edge shading.",
+        "reference_limit": "Vanilla raw iron is warm, comparatively large and lumpy; angular silver-gray shards need their own silhouette and palette.",
+        "native_view": "Viewed 16px and 8x: angular broad light facet with a separate small chip stays legible, with a transparent exterior.",
+        "context_view": "Seven raw-mineral icons compared as a family; angular broad light facet with a separate small chip distinguishes this one, color also helps.",
+        "context_type": "icon_family",
+        "custom_reason": "Atlas has no unprocessed mineral fragment item rule; an ingot or block is not the appropriate silhouette comparator.",
+        "reference_source": "misode/mcmeta@1.21.1-assets item/raw_iron.png SHA256 verified against official client corpus artifact 15212406511, viewed native and 8x."
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/galena_ore.png": {
+      "sha256": "e7a8d547fc86d7dc8754b5821a17668c5fe11ac7619d7675a99379f9e19a179c",
+      "verdict": "PASS",
+      "material_profile": "ore",
+      "references": [
+        {
+          "id": "minecraft:block/iron_ore",
+          "minecraft": "1.21.1",
+          "sha256": "d3a50d2c689f8ade6445488f2edc68ca107c343ef09df8eaa27e51aa83d5a5ed"
+        }
+      ],
+      "comparison": "Compared at native scale and enlarged with vanilla iron ore: similar continuous host, original two squared crystals separated by uninterrupted gray host; mineral palette deliberately differs.",
+      "findings": {
+        "silhouette": "Solid cube retains stone as the majority of every face; blue-gray cubic crystals read as inclusions.",
+        "cluster_structure": "Connected local planes: two squared crystals separated by uninterrupted gray host; not isolated random dots.",
+        "micro_contrast": "blue-gray cubic crystals use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Mineral facets have upper-left highlights and darker contact boundaries inside continuous host.",
+        "material_continuity": "Muted independent gray aggregates remain uninterrupted around the inclusions.",
+        "edge_variation": "Inclusions end at varied offsets and have irregular boundaries; host has no hard seam.",
+        "variant_identity": "blue-gray cubic crystals use two squared crystals separated by uninterrupted gray host rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Iron ore uses irregular warm fragments on restrained gray; our blue-gray cubic crystals have a separate inclusion layout.",
+        "host_rock": "Four restrained gray rock values form small interlocking planes rather than a flat background.",
+        "mineral_inclusion": "two squared crystals separated by uninterrupted gray host; contact pixels remain darker than the body.",
+        "inclusion_light": "A compact lighter plane in blue-gray cubic crystals indicates embedded mineral rather than luminous speckles."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "mineral_inclusions",
+        "reference": "minecraft:block/iron_ore",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Host-first construction, with two squared crystals separated by uninterrupted gray host embedded in a quiet gray base.",
+        "reference_limit": "Iron ore's warm clustered shapes are not copied; blue-gray cubic crystals have different habit and hue.",
+        "native_view": "Viewed 16px and 8x: blue-gray cubic crystals remain visible on gray without covering the majority of the face.",
+        "context_view": "3x3 tiled inspection after redraw: two squared crystals separated by uninterrupted gray host; repeated pattern remains visible at large walls but no hard full-width seam.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/raw_galena.png": {
+      "sha256": "bafe710492738ab21f23fc03772e7b3e6e0d5baafce0ef31d92f617d230a820b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Compared at 16px with raw iron: smaller original two offset cubical fragments with dark side planes; fewer broad facets, distinct blue-gray cubic crystals.",
+      "findings": {
+        "silhouette": "Recognizable two offset cubical fragments with dark side planes, cutout rather than a full cube.",
+        "cluster_structure": "Connected local planes: two offset cubical fragments with dark side planes; not isolated random dots.",
+        "micro_contrast": "blue-gray cubic crystals use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Top-left facets of two offset cubical fragments with dark side planes are lighter, with lower-right dark edge and no smooth gradient.",
+        "material_continuity": "The blue-gray cubic crystals palette remains coherent across main fragment and secondary piece.",
+        "edge_variation": "Stepped outer contour of two offset cubical fragments with dark side planes has unequal edge lengths and transparent exterior.",
+        "variant_identity": "blue-gray cubic crystals use two offset cubical fragments with dark side planes rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Raw iron has more overlapping chunks and larger warm highlights; this material uses the explicitly drawn two offset cubical fragments with dark side planes.",
+        "functional_material_cues": "Unprocessed blue-gray cubic crystals, no ingot outline or polished-metal rim."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Unprocessed fragment with two offset cubical fragments with dark side planes and coherent edge shading.",
+        "reference_limit": "Vanilla raw iron is warm, comparatively large and lumpy; blue-gray cubic crystals need their own silhouette and palette.",
+        "native_view": "Viewed 16px and 8x: two offset cubical fragments with dark side planes stays legible, with a transparent exterior.",
+        "context_view": "Seven raw-mineral icons compared as a family; two offset cubical fragments with dark side planes distinguishes this one, color also helps.",
+        "context_type": "icon_family",
+        "custom_reason": "Atlas has no unprocessed mineral fragment item rule; an ingot or block is not the appropriate silhouette comparator.",
+        "reference_source": "misode/mcmeta@1.21.1-assets item/raw_iron.png SHA256 verified against official client corpus artifact 15212406511, viewed native and 8x."
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/sphalerite_ore.png": {
+      "sha256": "c4d016ed8a32da2f4d12f894ef31b4cc849091de80ef47ec3be5c144f76c85ae",
+      "verdict": "PASS",
+      "material_profile": "ore",
+      "references": [
+        {
+          "id": "minecraft:block/iron_ore",
+          "minecraft": "1.21.1",
+          "sha256": "d3a50d2c689f8ade6445488f2edc68ca107c343ef09df8eaa27e51aa83d5a5ed"
+        }
+      ],
+      "comparison": "Compared at native scale and enlarged with vanilla iron ore: similar continuous host, original irregular rounded copper-brown grains and a small intervening fleck; mineral palette deliberately differs.",
+      "findings": {
+        "silhouette": "Solid cube retains stone as the majority of every face; amber-brown resinous grains read as inclusions.",
+        "cluster_structure": "Connected local planes: irregular rounded copper-brown grains and a small intervening fleck; not isolated random dots.",
+        "micro_contrast": "amber-brown resinous grains use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Mineral facets have upper-left highlights and darker contact boundaries inside continuous host.",
+        "material_continuity": "Muted independent gray aggregates remain uninterrupted around the inclusions.",
+        "edge_variation": "Inclusions end at varied offsets and have irregular boundaries; host has no hard seam.",
+        "variant_identity": "amber-brown resinous grains use irregular rounded copper-brown grains and a small intervening fleck rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Iron ore uses irregular warm fragments on restrained gray; our amber-brown resinous grains have a separate inclusion layout.",
+        "host_rock": "Four restrained gray rock values form small interlocking planes rather than a flat background.",
+        "mineral_inclusion": "irregular rounded copper-brown grains and a small intervening fleck; contact pixels remain darker than the body.",
+        "inclusion_light": "A compact lighter plane in amber-brown resinous grains indicates embedded mineral rather than luminous speckles."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "mineral_inclusions",
+        "reference": "minecraft:block/iron_ore",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Host-first construction, with irregular rounded copper-brown grains and a small intervening fleck embedded in a quiet gray base.",
+        "reference_limit": "Iron ore's warm clustered shapes are not copied; amber-brown resinous grains have different habit and hue.",
+        "native_view": "Viewed 16px and 8x: amber-brown resinous grains remain visible on gray without covering the majority of the face.",
+        "context_view": "3x3 tiled inspection after redraw: irregular rounded copper-brown grains and a small intervening fleck; repeated pattern remains visible at large walls but no hard full-width seam.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/raw_sphalerite.png": {
+      "sha256": "4d825a29dd196356eb69bc3c79668c95c2a28108acee61e26c3e57d3fbde9bca",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Compared at 16px with raw iron: smaller original one warm angular amber lump and a detached chip; fewer broad facets, distinct amber-brown resinous grains.",
+      "findings": {
+        "silhouette": "Recognizable one warm angular amber lump and a detached chip, cutout rather than a full cube.",
+        "cluster_structure": "Connected local planes: one warm angular amber lump and a detached chip; not isolated random dots.",
+        "micro_contrast": "amber-brown resinous grains use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Top-left facets of one warm angular amber lump and a detached chip are lighter, with lower-right dark edge and no smooth gradient.",
+        "material_continuity": "The amber-brown resinous grains palette remains coherent across main fragment and secondary piece.",
+        "edge_variation": "Stepped outer contour of one warm angular amber lump and a detached chip has unequal edge lengths and transparent exterior.",
+        "variant_identity": "amber-brown resinous grains use one warm angular amber lump and a detached chip rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Raw iron has more overlapping chunks and larger warm highlights; this material uses the explicitly drawn one warm angular amber lump and a detached chip.",
+        "functional_material_cues": "Unprocessed amber-brown resinous grains, no ingot outline or polished-metal rim."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Unprocessed fragment with one warm angular amber lump and a detached chip and coherent edge shading.",
+        "reference_limit": "Vanilla raw iron is warm, comparatively large and lumpy; amber-brown resinous grains need their own silhouette and palette.",
+        "native_view": "Viewed 16px and 8x: one warm angular amber lump and a detached chip stays legible, with a transparent exterior.",
+        "context_view": "Seven raw-mineral icons compared as a family; one warm angular amber lump and a detached chip distinguishes this one, color also helps.",
+        "context_type": "icon_family",
+        "custom_reason": "Atlas has no unprocessed mineral fragment item rule; an ingot or block is not the appropriate silhouette comparator.",
+        "reference_source": "misode/mcmeta@1.21.1-assets item/raw_iron.png SHA256 verified against official client corpus artifact 15212406511, viewed native and 8x."
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/garnierite_ore.png": {
+      "sha256": "1735806be180bd7cf90c43525a4558e5f96b302219fd68baea4e472e36b470a6",
+      "verdict": "PASS",
+      "material_profile": "ore",
+      "references": [
+        {
+          "id": "minecraft:block/iron_ore",
+          "minecraft": "1.21.1",
+          "sha256": "d3a50d2c689f8ade6445488f2edc68ca107c343ef09df8eaa27e51aa83d5a5ed"
+        }
+      ],
+      "comparison": "Compared at native scale and enlarged with vanilla iron ore: similar continuous host, original adjacent uneven green patches at the left and isolated flecks; mineral palette deliberately differs.",
+      "findings": {
+        "silhouette": "Solid cube retains stone as the majority of every face; muted green mineral patches read as inclusions.",
+        "cluster_structure": "Connected local planes: adjacent uneven green patches at the left and isolated flecks; not isolated random dots.",
+        "micro_contrast": "muted green mineral patches use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Mineral facets have upper-left highlights and darker contact boundaries inside continuous host.",
+        "material_continuity": "Muted independent gray aggregates remain uninterrupted around the inclusions.",
+        "edge_variation": "Inclusions end at varied offsets and have irregular boundaries; host has no hard seam.",
+        "variant_identity": "muted green mineral patches use adjacent uneven green patches at the left and isolated flecks rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Iron ore uses irregular warm fragments on restrained gray; our muted green mineral patches have a separate inclusion layout.",
+        "host_rock": "Four restrained gray rock values form small interlocking planes rather than a flat background.",
+        "mineral_inclusion": "adjacent uneven green patches at the left and isolated flecks; contact pixels remain darker than the body.",
+        "inclusion_light": "A compact lighter plane in muted green mineral patches indicates embedded mineral rather than luminous speckles."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "mineral_inclusions",
+        "reference": "minecraft:block/iron_ore",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Host-first construction, with adjacent uneven green patches at the left and isolated flecks embedded in a quiet gray base.",
+        "reference_limit": "Iron ore's warm clustered shapes are not copied; muted green mineral patches have different habit and hue.",
+        "native_view": "Viewed 16px and 8x: muted green mineral patches remain visible on gray without covering the majority of the face.",
+        "context_view": "3x3 tiled inspection after redraw: adjacent uneven green patches at the left and isolated flecks; repeated pattern remains visible at large walls but no hard full-width seam.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/raw_garnierite.png": {
+      "sha256": "02c8aa9c7678e2ed6b73fd672795017db7c7b6dd74dfcd5c8b614b8f43ca0010",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Compared at 16px with raw iron: smaller original elongated curved green fragment and an offset small piece; fewer broad facets, distinct muted green mineral patches.",
+      "findings": {
+        "silhouette": "Recognizable elongated curved green fragment and an offset small piece, cutout rather than a full cube.",
+        "cluster_structure": "Connected local planes: elongated curved green fragment and an offset small piece; not isolated random dots.",
+        "micro_contrast": "muted green mineral patches use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Top-left facets of elongated curved green fragment and an offset small piece are lighter, with lower-right dark edge and no smooth gradient.",
+        "material_continuity": "The muted green mineral patches palette remains coherent across main fragment and secondary piece.",
+        "edge_variation": "Stepped outer contour of elongated curved green fragment and an offset small piece has unequal edge lengths and transparent exterior.",
+        "variant_identity": "muted green mineral patches use elongated curved green fragment and an offset small piece rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Raw iron has more overlapping chunks and larger warm highlights; this material uses the explicitly drawn elongated curved green fragment and an offset small piece.",
+        "functional_material_cues": "Unprocessed muted green mineral patches, no ingot outline or polished-metal rim."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Unprocessed fragment with elongated curved green fragment and an offset small piece and coherent edge shading.",
+        "reference_limit": "Vanilla raw iron is warm, comparatively large and lumpy; muted green mineral patches need their own silhouette and palette.",
+        "native_view": "Viewed 16px and 8x: elongated curved green fragment and an offset small piece stays legible, with a transparent exterior.",
+        "context_view": "Seven raw-mineral icons compared as a family; elongated curved green fragment and an offset small piece distinguishes this one, color also helps.",
+        "context_type": "icon_family",
+        "custom_reason": "Atlas has no unprocessed mineral fragment item rule; an ingot or block is not the appropriate silhouette comparator.",
+        "reference_source": "misode/mcmeta@1.21.1-assets item/raw_iron.png SHA256 verified against official client corpus artifact 15212406511, viewed native and 8x."
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/graphite_ore.png": {
+      "sha256": "cfd0f22ef83ef704aad2a4a34ea16a2546903b129fc2bc8b9ec10249ec976e25",
+      "verdict": "PASS",
+      "material_profile": "ore",
+      "references": [
+        {
+          "id": "minecraft:block/iron_ore",
+          "minecraft": "1.21.1",
+          "sha256": "d3a50d2c689f8ade6445488f2edc68ca107c343ef09df8eaa27e51aa83d5a5ed"
+        }
+      ],
+      "comparison": "Compared at native scale and enlarged with vanilla iron ore: similar continuous host, original flattened steel-gray bands with broken ends at unequal offsets; mineral palette deliberately differs.",
+      "findings": {
+        "silhouette": "Solid cube retains stone as the majority of every face; dark platy graphite flakes read as inclusions.",
+        "cluster_structure": "Connected local planes: flattened steel-gray bands with broken ends at unequal offsets; not isolated random dots.",
+        "micro_contrast": "dark platy graphite flakes use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Mineral facets have upper-left highlights and darker contact boundaries inside continuous host.",
+        "material_continuity": "Muted independent gray aggregates remain uninterrupted around the inclusions.",
+        "edge_variation": "Inclusions end at varied offsets and have irregular boundaries; host has no hard seam.",
+        "variant_identity": "dark platy graphite flakes use flattened steel-gray bands with broken ends at unequal offsets rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Iron ore uses irregular warm fragments on restrained gray; our dark platy graphite flakes have a separate inclusion layout.",
+        "host_rock": "Four restrained gray rock values form small interlocking planes rather than a flat background.",
+        "mineral_inclusion": "flattened steel-gray bands with broken ends at unequal offsets; contact pixels remain darker than the body.",
+        "inclusion_light": "A compact lighter plane in dark platy graphite flakes indicates embedded mineral rather than luminous speckles."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "mineral_inclusions",
+        "reference": "minecraft:block/iron_ore",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Host-first construction, with flattened steel-gray bands with broken ends at unequal offsets embedded in a quiet gray base.",
+        "reference_limit": "Iron ore's warm clustered shapes are not copied; dark platy graphite flakes have different habit and hue.",
+        "native_view": "Viewed 16px and 8x: dark platy graphite flakes remain visible on gray without covering the majority of the face.",
+        "context_view": "3x3 tiled inspection after redraw: flattened steel-gray bands with broken ends at unequal offsets; repeated pattern remains visible at large walls but no hard full-width seam.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/raw_graphite.png": {
+      "sha256": "a39933485910601d1545e5b4cdf3cfc9e26661242260d8f3e5a2cd687f0be936",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Compared at 16px with raw iron: smaller original two flattened dark flakes with staggered edges; fewer broad facets, distinct dark platy graphite flakes.",
+      "findings": {
+        "silhouette": "Recognizable two flattened dark flakes with staggered edges, cutout rather than a full cube.",
+        "cluster_structure": "Connected local planes: two flattened dark flakes with staggered edges; not isolated random dots.",
+        "micro_contrast": "dark platy graphite flakes use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Top-left facets of two flattened dark flakes with staggered edges are lighter, with lower-right dark edge and no smooth gradient.",
+        "material_continuity": "The dark platy graphite flakes palette remains coherent across main fragment and secondary piece.",
+        "edge_variation": "Stepped outer contour of two flattened dark flakes with staggered edges has unequal edge lengths and transparent exterior.",
+        "variant_identity": "dark platy graphite flakes use two flattened dark flakes with staggered edges rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Raw iron has more overlapping chunks and larger warm highlights; this material uses the explicitly drawn two flattened dark flakes with staggered edges.",
+        "functional_material_cues": "Unprocessed dark platy graphite flakes, no ingot outline or polished-metal rim."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Unprocessed fragment with two flattened dark flakes with staggered edges and coherent edge shading.",
+        "reference_limit": "Vanilla raw iron is warm, comparatively large and lumpy; dark platy graphite flakes need their own silhouette and palette.",
+        "native_view": "Viewed 16px and 8x: two flattened dark flakes with staggered edges stays legible, with a transparent exterior.",
+        "context_view": "Seven raw-mineral icons compared as a family; two flattened dark flakes with staggered edges distinguishes this one, color also helps.",
+        "context_type": "icon_family",
+        "custom_reason": "Atlas has no unprocessed mineral fragment item rule; an ingot or block is not the appropriate silhouette comparator.",
+        "reference_source": "misode/mcmeta@1.21.1-assets item/raw_iron.png SHA256 verified against official client corpus artifact 15212406511, viewed native and 8x."
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/halite_ore.png": {
+      "sha256": "42d79c151db4375005b444c84c37dcd80c58ecaf4d1b885ef082a2b82bf28afe",
+      "verdict": "PASS",
+      "material_profile": "ore",
+      "references": [
+        {
+          "id": "minecraft:block/iron_ore",
+          "minecraft": "1.21.1",
+          "sha256": "d3a50d2c689f8ade6445488f2edc68ca107c343ef09df8eaa27e51aa83d5a5ed"
+        }
+      ],
+      "comparison": "Compared at native scale and enlarged with vanilla iron ore: similar continuous host, original pale squared inclusions at dissimilar positions on muted gray; mineral palette deliberately differs.",
+      "findings": {
+        "silhouette": "Solid cube retains stone as the majority of every face; pale gray-white salt crystals read as inclusions.",
+        "cluster_structure": "Connected local planes: pale squared inclusions at dissimilar positions on muted gray; not isolated random dots.",
+        "micro_contrast": "pale gray-white salt crystals use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Mineral facets have upper-left highlights and darker contact boundaries inside continuous host.",
+        "material_continuity": "Muted independent gray aggregates remain uninterrupted around the inclusions.",
+        "edge_variation": "Inclusions end at varied offsets and have irregular boundaries; host has no hard seam.",
+        "variant_identity": "pale gray-white salt crystals use pale squared inclusions at dissimilar positions on muted gray rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Iron ore uses irregular warm fragments on restrained gray; our pale gray-white salt crystals have a separate inclusion layout.",
+        "host_rock": "Four restrained gray rock values form small interlocking planes rather than a flat background.",
+        "mineral_inclusion": "pale squared inclusions at dissimilar positions on muted gray; contact pixels remain darker than the body.",
+        "inclusion_light": "A compact lighter plane in pale gray-white salt crystals indicates embedded mineral rather than luminous speckles."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "mineral_inclusions",
+        "reference": "minecraft:block/iron_ore",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Host-first construction, with pale squared inclusions at dissimilar positions on muted gray embedded in a quiet gray base.",
+        "reference_limit": "Iron ore's warm clustered shapes are not copied; pale gray-white salt crystals have different habit and hue.",
+        "native_view": "Viewed 16px and 8x: pale gray-white salt crystals remain visible on gray without covering the majority of the face.",
+        "context_view": "3x3 tiled inspection after redraw: pale squared inclusions at dissimilar positions on muted gray; repeated pattern remains visible at large walls but no hard full-width seam.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/raw_halite.png": {
+      "sha256": "dd72ed275f492290fc1d88fc58864a91f0319b1128de0f1348a02617e99faef6",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Compared at 16px with raw iron: smaller original two pale offset cubic crystals; fewer broad facets, distinct pale gray-white salt crystals.",
+      "findings": {
+        "silhouette": "Recognizable two pale offset cubic crystals, cutout rather than a full cube.",
+        "cluster_structure": "Connected local planes: two pale offset cubic crystals; not isolated random dots.",
+        "micro_contrast": "pale gray-white salt crystals use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Top-left facets of two pale offset cubic crystals are lighter, with lower-right dark edge and no smooth gradient.",
+        "material_continuity": "The pale gray-white salt crystals palette remains coherent across main fragment and secondary piece.",
+        "edge_variation": "Stepped outer contour of two pale offset cubic crystals has unequal edge lengths and transparent exterior.",
+        "variant_identity": "pale gray-white salt crystals use two pale offset cubic crystals rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Raw iron has more overlapping chunks and larger warm highlights; this material uses the explicitly drawn two pale offset cubic crystals.",
+        "functional_material_cues": "Unprocessed pale gray-white salt crystals, no ingot outline or polished-metal rim."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Unprocessed fragment with two pale offset cubic crystals and coherent edge shading.",
+        "reference_limit": "Vanilla raw iron is warm, comparatively large and lumpy; pale gray-white salt crystals need their own silhouette and palette.",
+        "native_view": "Viewed 16px and 8x: two pale offset cubic crystals stays legible, with a transparent exterior.",
+        "context_view": "Seven raw-mineral icons compared as a family; two pale offset cubic crystals distinguishes this one, color also helps.",
+        "context_type": "icon_family",
+        "custom_reason": "Atlas has no unprocessed mineral fragment item rule; an ingot or block is not the appropriate silhouette comparator.",
+        "reference_source": "misode/mcmeta@1.21.1-assets item/raw_iron.png SHA256 verified against official client corpus artifact 15212406511, viewed native and 8x."
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/block/sulfur_ore.png": {
+      "sha256": "773226eb0eb8d55efa2326a58d816c88227e6ee4d60e158bb4a98817039ae344",
+      "verdict": "PASS",
+      "material_profile": "ore",
+      "references": [
+        {
+          "id": "minecraft:block/iron_ore",
+          "minecraft": "1.21.1",
+          "sha256": "d3a50d2c689f8ade6445488f2edc68ca107c343ef09df8eaa27e51aa83d5a5ed"
+        }
+      ],
+      "comparison": "Compared at native scale and enlarged with vanilla iron ore: similar continuous host, original small golden irregular grains at staggered positions; mineral palette deliberately differs.",
+      "findings": {
+        "silhouette": "Solid cube retains stone as the majority of every face; ochre-yellow sulfur granules read as inclusions.",
+        "cluster_structure": "Connected local planes: small golden irregular grains at staggered positions; not isolated random dots.",
+        "micro_contrast": "ochre-yellow sulfur granules use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Mineral facets have upper-left highlights and darker contact boundaries inside continuous host.",
+        "material_continuity": "Muted independent gray aggregates remain uninterrupted around the inclusions.",
+        "edge_variation": "Inclusions end at varied offsets and have irregular boundaries; host has no hard seam.",
+        "variant_identity": "ochre-yellow sulfur granules use small golden irregular grains at staggered positions rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Iron ore uses irregular warm fragments on restrained gray; our ochre-yellow sulfur granules have a separate inclusion layout.",
+        "host_rock": "Four restrained gray rock values form small interlocking planes rather than a flat background.",
+        "mineral_inclusion": "small golden irregular grains at staggered positions; contact pixels remain darker than the body.",
+        "inclusion_light": "A compact lighter plane in ochre-yellow sulfur granules indicates embedded mineral rather than luminous speckles."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "mineral_inclusions",
+        "reference": "minecraft:block/iron_ore",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Host-first construction, with small golden irregular grains at staggered positions embedded in a quiet gray base.",
+        "reference_limit": "Iron ore's warm clustered shapes are not copied; ochre-yellow sulfur granules have different habit and hue.",
+        "native_view": "Viewed 16px and 8x: ochre-yellow sulfur granules remain visible on gray without covering the majority of the face.",
+        "context_view": "3x3 tiled inspection after redraw: small golden irregular grains at staggered positions; repeated pattern remains visible at large walls but no hard full-width seam.",
+        "context_type": "tile_3x3"
+      }
+    },
+    "projects/worldlogic-1.21.1-neoforge/src/main/resources/assets/worldlogic/textures/item/raw_sulfur.png": {
+      "sha256": "f27ad04b9b428d62febd079fdfae0dcc3b8212a066340b834f5ccf3a6d2fbbe0",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/raw_iron",
+          "minecraft": "1.21.1",
+          "sha256": "5ac9321000afa9b49215970326fde0eb88bb7de518a8974d4e8ec38373c49ae6"
+        }
+      ],
+      "comparison": "Compared at 16px with raw iron: smaller original golden irregular fragment and smaller grain; fewer broad facets, distinct ochre-yellow sulfur granules.",
+      "findings": {
+        "silhouette": "Recognizable golden irregular fragment and smaller grain, cutout rather than a full cube.",
+        "cluster_structure": "Connected local planes: golden irregular fragment and smaller grain; not isolated random dots.",
+        "micro_contrast": "ochre-yellow sulfur granules use restrained neighboring midtones with a compact bright facet, separated from darker contact pixels.",
+        "light_and_volume": "Top-left facets of golden irregular fragment and smaller grain are lighter, with lower-right dark edge and no smooth gradient.",
+        "material_continuity": "The ochre-yellow sulfur granules palette remains coherent across main fragment and secondary piece.",
+        "edge_variation": "Stepped outer contour of golden irregular fragment and smaller grain has unequal edge lengths and transparent exterior.",
+        "variant_identity": "ochre-yellow sulfur granules use golden irregular fragment and smaller grain rather than a uniform recolor of the entire family.",
+        "vanilla_comparison": "Raw iron has more overlapping chunks and larger warm highlights; this material uses the explicitly drawn golden irregular fragment and smaller grain.",
+        "functional_material_cues": "Unprocessed ochre-yellow sulfur granules, no ingot outline or polished-metal rim."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/raw_iron",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Unprocessed fragment with golden irregular fragment and smaller grain and coherent edge shading.",
+        "reference_limit": "Vanilla raw iron is warm, comparatively large and lumpy; ochre-yellow sulfur granules need their own silhouette and palette.",
+        "native_view": "Viewed 16px and 8x: golden irregular fragment and smaller grain stays legible, with a transparent exterior.",
+        "context_view": "Seven raw-mineral icons compared as a family; golden irregular fragment and smaller grain distinguishes this one, color also helps.",
+        "context_type": "icon_family",
+        "custom_reason": "Atlas has no unprocessed mineral fragment item rule; an ingot or block is not the appropriate silhouette comparator.",
+        "reference_source": "misode/mcmeta@1.21.1-assets item/raw_iron.png SHA256 verified against official client corpus artifact 15212406511, viewed native and 8x."
+      }
     }
   }
 }

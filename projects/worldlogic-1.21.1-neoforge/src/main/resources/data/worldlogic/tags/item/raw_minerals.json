@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:raw_cassiterite",
+    "worldlogic:raw_galena",
+    "worldlogic:raw_sphalerite",
+    "worldlogic:raw_garnierite",
+    "worldlogic:raw_graphite",
+    "worldlogic:raw_halite",
+    "worldlogic:raw_sulfur"
+  ]
+}

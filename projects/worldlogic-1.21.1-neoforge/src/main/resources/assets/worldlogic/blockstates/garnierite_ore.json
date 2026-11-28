@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "richness=1": {
+      "model": "worldlogic:block/garnierite_ore"
+    },
+    "richness=2": {
+      "model": "worldlogic:block/garnierite_ore"
+    },
+    "richness=3": {
+      "model": "worldlogic:block/garnierite_ore"
+    }
+  }
+}

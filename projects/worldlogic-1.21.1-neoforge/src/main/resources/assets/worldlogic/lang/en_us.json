@@ -221,5 +221,19 @@
   "worldlogic.analytics.season_temp": "Seasonal air offset",
   "worldlogic.analytics.season_solar": "Solar factor",
   "worldlogic.analytics.season_wet": "Wet-season strength",
-  "worldlogic.patchouli.landing": "World Logic field guide. Select a chapter: climate, water, health, plants, geology and survival."
+  "worldlogic.patchouli.landing": "World Logic field guide. Select a chapter: climate, water, health, plants, geology and survival.",
+  "block.worldlogic.cassiterite_ore": "Cassiterite Ore",
+  "item.worldlogic.raw_cassiterite": "Raw Cassiterite",
+  "block.worldlogic.galena_ore": "Galena Ore",
+  "item.worldlogic.raw_galena": "Raw Galena",
+  "block.worldlogic.sphalerite_ore": "Sphalerite Ore",
+  "item.worldlogic.raw_sphalerite": "Raw Sphalerite",
+  "block.worldlogic.garnierite_ore": "Garnierite Ore",
+  "item.worldlogic.raw_garnierite": "Raw Garnierite",
+  "block.worldlogic.graphite_ore": "Graphite Ore",
+  "item.worldlogic.raw_graphite": "Raw Graphite",
+  "block.worldlogic.halite_ore": "Halite Ore",
+  "item.worldlogic.raw_halite": "Raw Halite",
+  "block.worldlogic.sulfur_ore": "Sulfur Ore",
+  "item.worldlogic.raw_sulfur": "Raw Sulfur"
 }
