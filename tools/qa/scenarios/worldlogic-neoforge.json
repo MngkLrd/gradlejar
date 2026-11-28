@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC47 cumulative landscape regression",
+  "name": "World Logic NeoForge RC48 coastal reefs",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1802,6 +1802,17 @@
         {
           "backend": "server",
           "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc48-coastal-reef",
+      "kind": "mechanic",
+      "subject": "Warm/cold, fringe/barrier/lagoon selection, bounded submerged framework and five actual living coral blocks in native seawater; natural frequency and client rendering separate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine sediment, polar icebergs and actual native seawater spawn predicates"
         }
       ]
     }

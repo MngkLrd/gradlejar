@@ -42,6 +42,7 @@ final class MarineEcology {
    if(!id.startsWith("polar"))require(features.get(9).stream().anyMatch(h->h.unwrapKey().map(k->k.location().getPath().startsWith("seagrass_")).orElse(false)),"vanilla seagrass "+id);
   }
   MarinePlants.verify(l);
+  ReefTerrain.verify(l);
   require(PhysicalBiomeReconciliation.continental(80,63,false,false)>.4,"dry land cannot be ocean");
   require(PhysicalBiomeReconciliation.continental(40,63,true,false)<-.55,"submerged ocean floor");
   require(PhysicalBiomeReconciliation.continental(64,63,false,true)==-.20,"narrow physical shore");
@@ -95,7 +96,7 @@ final class MarineEcology {
     if(MarinePlants.isPlant(b)){plants++;if(nativeSea(l,p))nativePlants++;else if(b.getFluidState().getType()==net.minecraft.world.level.material.Fluids.WATER)vanillaPlantWater++;}
    }
    var bed=chunk.getBlockState(p.set(wx,h,wz));
-   if(GeologyGeneration.rock(bed))stone++;
+   if(GeologyGeneration.rock(bed)||ReefTerrain.coral(bed))stone++;
    else if(bed.is(Blocks.SAND)||bed.is(Blocks.GRAVEL)||bed.is(Blocks.CLAY)||bed.is(Blocks.RED_SAND))sediment++;
    else if(bed.is(Blocks.DIRT)||bed.is(Blocks.GRASS_BLOCK)||bed.is(Blocks.COARSE_DIRT))dirt++;
   }

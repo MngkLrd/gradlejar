@@ -167,3 +167,5 @@ RC45: existing WaterKind identities used for physically generated natural pools 
 RC46: final generated relief may include bounded local valley/foothill/plateau shaping (+14/-4 maximum), distinct from unchanged modeled base-height queries. No new public interfaces.
 
 RC47: local erosion and sediment are internal worldgen passes, not simulated over player builds or old chunks. Actual final surface may differ from immutable RC22 base height within intended terrain shaping limits. No changed public signatures.
+
+RC48 coastal relief and reef habitats are internal worldgen passes; existing ocean biome IDs, WaterKind and all addon API signatures preserved. No new coral item/registry IDs. Reef diagnostics report actual loaded coral blocks, not a modeled assertion of their presence.

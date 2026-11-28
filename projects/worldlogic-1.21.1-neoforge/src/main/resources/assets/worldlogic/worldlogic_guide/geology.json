@@ -7,7 +7,7 @@
     "ru": "Геология и руды",
     "en": "Geology and ores"
   },
-  "source": "WorldLogic RC47",
+  "source": "WorldLogic RC48",
   "pages": [
     {
       "id": "geography",
@@ -300,6 +300,29 @@
         "en": [
           "On moist slopes runoff can shape shallow gullies. Convex slopes wear down; silt accumulates in quiet humid depressions.",
           "Rock scree and alluvial silt follow relief profiles. This is initial terrain generation, not dynamic erosion of player buildings."
+        ]
+      }
+    },
+    {
+      "id": "coral_coasts",
+      "title": {
+        "ru": "Коралловые побережья",
+        "en": "Coral coasts"
+      },
+      "models": [
+        "minecraft:tube_coral_block",
+        "minecraft:brain_coral_block",
+        "minecraft:fire_coral_block",
+        "minecraft:calcite"
+      ],
+      "body": {
+        "ru": [
+          "В тёплой мелкой морской воде растут пять видов кораллов. Береговые рифы примыкают к суше, барьерные отделены лагуной, отдельные колонии образуют пятнистые рифы.",
+          "Рифовые гребни остаются под водой, а лагуны сохраняют свободные песчаные участки. Холодные и глубокие океаны не получают тропические коралловые колонии."
+        ],
+        "en": [
+          "Five coral types grow in warm shallow seawater. Fringing reefs follow the shore, barrier reefs are separated by a lagoon, and scattered colonies form patch reefs.",
+          "Reef crests stay submerged and lagoons retain open sandy areas. Cold and deep oceans do not receive tropical coral colonies."
         ]
       }
     }

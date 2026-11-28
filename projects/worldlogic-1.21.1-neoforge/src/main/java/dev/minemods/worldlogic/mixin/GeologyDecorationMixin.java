@@ -20,5 +20,7 @@ public abstract class GeologyDecorationMixin {
   var generator=(ChunkGenerator)(Object)this;
   if(GeologyGeneration.enabled(generator))GeologyGeneration.mineralize(level.getSeed(),chunk);
   dev.minemods.worldlogic.NaturalWaterGeneration.convert(level,chunk,generator);
+  if(level instanceof net.minecraft.server.level.WorldGenRegion region&&generator instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator noise)
+   dev.minemods.worldlogic.ReefTerrain.decorate(noise,region.getLevel().getChunkSource().randomState(),region.registryAccess(),chunk,level.getSeed());
  }
 }

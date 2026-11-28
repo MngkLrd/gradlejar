@@ -17,6 +17,7 @@ public abstract class GeologyCarverMixin {
  @Inject(method="buildSurface",at=@At("HEAD"))
  private void worldlogic$physicalSurfaceBiomes(WorldGenRegion region,StructureManager structures,RandomState random,ChunkAccess chunk,CallbackInfo ci){
   dev.minemods.worldlogic.LandscapeBlend.prepare((NoiseBasedChunkGenerator)(Object)this,random,region.registryAccess(),chunk);
+  dev.minemods.worldlogic.CoastalTerrain.prepare((NoiseBasedChunkGenerator)(Object)this,random,region.registryAccess(),chunk,region.getSeed());
   dev.minemods.worldlogic.PhysicalBiomeReconciliation.apply((NoiseBasedChunkGenerator)(Object)this,random,chunk);
  }
  @Inject(method="applyCarvers",at=@At("HEAD"),cancellable=true)
