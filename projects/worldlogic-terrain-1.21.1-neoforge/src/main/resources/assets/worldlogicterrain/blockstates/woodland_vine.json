@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,segment=0": {
+      "model": "worldlogicterrain:block/woodland_vine"
+    },
+    "facing=north,segment=1": {
+      "model": "worldlogicterrain:block/woodland_vine"
+    },
+    "facing=north,segment=2": {
+      "model": "worldlogicterrain:block/woodland_vine"
+    },
+    "facing=north,segment=3": {
+      "model": "worldlogicterrain:block/woodland_vine"
+    },
+    "facing=east,segment=0": {
+      "model": "worldlogicterrain:block/woodland_vine",
+      "y": 90
+    },
+    "facing=east,segment=1": {
+      "model": "worldlogicterrain:block/woodland_vine",
+      "y": 90
+    },
+    "facing=east,segment=2": {
+      "model": "worldlogicterrain:block/woodland_vine",
+      "y": 90
+    },
+    "facing=east,segment=3": {
+      "model": "worldlogicterrain:block/woodland_vine",
+      "y": 90
+    },
+    "facing=south,segment=0": {
+      "model": "worldlogicterrain:block/woodland_vine",
+      "y": 180
+    },
+    "facing=south,segment=1": {
+      "model": "worldlogicterrain:block/woodland_vine",
+      "y": 180
+    },
+    "facing=south,segment=2": {
+      "model": "worldlogicterrain:block/woodland_vine",
+      "y": 180
+    },
+    "facing=south,segment=3": {
+      "model": "worldlogicterrain:block/woodland_vine",
+      "y": 180
+    },
+    "facing=west,segment=0": {
+      "model": "worldlogicterrain:block/woodland_vine",
+      "y": 270
+    },
+    "facing=west,segment=1": {
+      "model": "worldlogicterrain:block/woodland_vine",
+      "y": 270
+    },
+    "facing=west,segment=2": {
+      "model": "worldlogicterrain:block/woodland_vine",
+      "y": 270
+    },
+    "facing=west,segment=3": {
+      "model": "worldlogicterrain:block/woodland_vine",
+      "y": 270
+    }
+  }
+}

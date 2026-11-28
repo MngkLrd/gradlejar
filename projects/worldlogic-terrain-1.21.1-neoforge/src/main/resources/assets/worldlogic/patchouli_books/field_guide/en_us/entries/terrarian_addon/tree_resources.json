@@ -1,0 +1,21 @@
+{
+  "name": "Renewable tree materials",
+  "category": "worldlogic:terrarian",
+  "icon": "worldlogicterrain:pine_resin",
+  "sortnum": 21,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:willow_bark",
+      "link_recipe": true,
+      "text": "Look for bark harvest sites on living willow trunks. Right-click a ripe site with an empty hand; it regrows over time. Do not remove the log."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:pine_resin",
+      "link_recipe": true,
+      "text": "Amber resin sites occur on pine trunks. Harvest with an empty hand and allow the site to recover. Removing its host removes the site."
+    }
+  ],
+  "flag": "mod:worldlogicterrain"
+}

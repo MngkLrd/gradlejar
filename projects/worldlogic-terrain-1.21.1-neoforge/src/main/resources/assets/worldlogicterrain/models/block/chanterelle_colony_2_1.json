@@ -1,0 +1,97 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "plant": "worldlogicterrain:block/chanterelle",
+    "particle": "#plant"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        8
+      ],
+      "to": [
+        12,
+        10,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            6,
+            9,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            6,
+            9,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        8
+      ],
+      "to": [
+        12,
+        10,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            6,
+            9,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            6,
+            9,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    }
+  ]
+}

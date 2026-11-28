@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/sheet_moss"
+      },
+      {
+        "model": "worldlogicterrain:block/sheet_moss",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/sheet_moss",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/sheet_moss",
+        "y": 270
+      }
+    ]
+  }
+}

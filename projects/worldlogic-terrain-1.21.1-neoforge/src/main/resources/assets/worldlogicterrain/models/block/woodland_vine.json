@@ -1,0 +1,110 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "worldlogicterrain:block/woodland_vine",
+    "main": "worldlogicterrain:block/woodland_vine"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0.1
+      ],
+      "to": [
+        16,
+        16,
+        0.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#main",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#main",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "shade": false
+    },
+    {
+      "from": [
+        3,
+        3,
+        0
+      ],
+      "to": [
+        3,
+        13,
+        2
+      ],
+      "faces": {
+        "east": {
+          "texture": "#main",
+          "uv": [
+            4,
+            3,
+            6,
+            13
+          ]
+        },
+        "west": {
+          "texture": "#main",
+          "uv": [
+            4,
+            3,
+            6,
+            13
+          ]
+        }
+      },
+      "shade": false
+    },
+    {
+      "from": [
+        11,
+        1,
+        0
+      ],
+      "to": [
+        11,
+        12,
+        3
+      ],
+      "faces": {
+        "east": {
+          "texture": "#main",
+          "uv": [
+            9,
+            4,
+            12,
+            15
+          ]
+        },
+        "west": {
+          "texture": "#main",
+          "uv": [
+            9,
+            4,
+            12,
+            15
+          ]
+        }
+      },
+      "shade": false
+    }
+  ]
+}

@@ -2,6 +2,9 @@
   "replace": false,
   "values": [
     "worldlogicterrain:forest_litter",
-    "worldlogicterrain:fallen_leaves"
+    "worldlogicterrain:fallen_leaves",
+    "worldlogicterrain:needle_litter",
+    "worldlogicterrain:bark_litter",
+    "worldlogicterrain:damp_leaf_litter"
   ]
 }

@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "name": "Terrarian and Metabolism optional food ownership diagnostic",
+  "steps": [
+    {
+      "name": "Metabolism owns ordinary FOOD",
+      "command": "worldlogicterrain food_owner_check metabolism",
+      "expect": "Food owner verified metabolism: all 12 foods, version boundary, legacy stamina and tooltip policy",
+      "assertion": true
+    }
+  ]
+}

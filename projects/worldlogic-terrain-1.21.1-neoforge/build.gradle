@@ -2,7 +2,7 @@ import java.security.MessageDigest
 import java.net.URI
 plugins { id 'java-library'; id 'net.neoforged.moddev' version '2.0.148' }
 group='dev.minemods.worldlogicterrain'
-version='1.5.0'
+version='1.8.0'
 base.archivesName='worldlogicterrain-neoforge-mc1.21.1'
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 neoForge {
@@ -10,9 +10,9 @@ neoForge {
  runs { client { client() }; server { server(); programArgument '--nogui' } }
  mods { worldlogicterrain { sourceSet(sourceSets.main) } }
 }
-def coreUrl='https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc20-1211-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc20.jar'
-def coreHash='c03b7156d8cdcb04fcc0ef11e454b5ca6d018c98c3fbd2b67a8bef84cb10b9be'
-def coreJar=layout.buildDirectory.file('worldlogic-dependency/worldlogic-neoforge-mc1.21.1-1.0.0-rc20.jar')
+def coreUrl='https://api.github.com/repos/MngkLrd/gradlejar/actions/artifacts/15254721484/zip'
+def coreHash='a966fb939988e794586cd6a1ea18fafe340296447b67ef8a9827963328e20548'
+def coreJar=layout.buildDirectory.file('worldlogic-dependency/worldlogic-neoforge-mc1.21.1-1.5.1.jar')
 def digest={ File f -> MessageDigest.getInstance('SHA-256').digest(f.bytes).encodeHex().toString() }
 def fetchCore=tasks.register('fetchWorldLogic') {
  inputs.property('url',coreUrl)
@@ -23,6 +23,15 @@ def fetchCore=tasks.register('fetchWorldLogic') {
   File out=coreJar.get().asFile
   out.parentFile.mkdirs()
   File tmp=new File(out.parentFile,out.name+'.tmp')
+  // Diagnostic CI preloads the actual RC54 JAR from the exact artifact into the QA dependency cache.
+  def cacheDir=System.getenv('MINEMODS_DEP_CACHE')
+  File cached=cacheDir ? new File(cacheDir,coreHash) : null
+  if(cached?.isFile()) {
+   if(digest(cached)!=coreHash) throw new GradleException('WorldLogic core checksum mismatch in dependency cache')
+   java.nio.file.Files.copy(cached.toPath(),out.toPath(),java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+   return
+  }
+  if(coreUrl.endsWith('/zip')) throw new GradleException('Core 1.5.1 is an eligible CI artifact, not a published direct JAR; preload the checksum-verified JAR in MINEMODS_DEP_CACHE')
   def connection=URI.create(coreUrl).toURL().openConnection()
   connection.connectTimeout=30000
   connection.readTimeout=90000
@@ -71,3 +80,53 @@ tasks.register('verifyBenthicArt') {
     }
 }
 tasks.named('processResources') { dependsOn tasks.named('verifyBenthicArt') }
+
+
+// Prevent recurrence of the flat crossed-plane moss regression. All faces have native texel density.
+tasks.register('verifyMossVolume') {
+    def heights = [sheet_moss:4, cushion_moss:6, sphagnum_moss:8, iceland_moss:10, reindeer_moss:11, irish_moss:12]
+    def root = file('src/main/resources/assets/worldlogicterrain')
+    inputs.files(heights.keySet().collectMany { n -> [new File(root,"textures/block/${n}_atlas.png"),new File(root,"models/block/${n}.json")] })
+    doLast {
+        def json = new groovy.json.JsonSlurper()
+        def hashes = [] as Set
+        heights.each { n, height ->
+            def tex = new File(root,"textures/block/${n}_atlas.png")
+            def image = javax.imageio.ImageIO.read(tex)
+            if(image==null || image.width!=32 || image.height!=32 || !hashes.add(digest(tex))) throw new GradleException("Invalid moss atlas: ${n}")
+            for(int y=0;y<32;y++) for(int x=0;x<32;x++) if((image.getRGB(x,y) >>> 24)!=255) throw new GradleException("Transparent solid moss face: ${n}")
+            def model = json.parse(new File(root,"models/block/${n}.json"))
+            def elements = model.elements
+            if(!elements || elements.size()<8 || elements.size()>36 || elements[0].from!=[0,0,0] || elements[0].to!=[16,1,16] ||
+                elements.collect { it.to[1] }.max()!=height) throw new GradleException("Moss must have one-unit carpet and bounded branches: ${n}")
+            def cells = new HashSet<Integer>()
+            elements.each { el ->
+                def size = (0..2).collect { i -> el.to[i]-el.from[i] }
+                if(size.any { it<=0 } || el.from.any { it<0 || it!=it.intValue() } || el.to.any { it>16 || it!=it.intValue() } ||
+                    el.faces.keySet()!=['north','south','east','west','up','down'].toSet()) throw new GradleException("Degenerate moss element: ${n}")
+                el.faces.each { face, f ->
+                    def width = face in ['east','west'] ? size[2] : size[0]
+                    def h = face in ['up','down'] ? size[2] : size[1]
+                    if(f.texture!='#main' || f.uv?.size()!=4 || f.uv.any { it<0 || it>16 } ||
+                        (f.uv[2]-f.uv[0])*2!=width || (f.uv[3]-f.uv[1])*2!=h) throw new GradleException("Moss UV mismatch: ${n} ${face}")
+                }
+                for(int x=el.from[0];x<el.to[0];x++) for(int y=el.from[1];y<el.to[1];y++) for(int z=el.from[2];z<el.to[2];z++) cells.add(x+16*z+256*y)
+            }
+            def connected = new HashSet<Integer>()
+            def queue = new ArrayDeque<Integer>()
+            connected.add(0); queue.add(0)
+            while(!queue.isEmpty()){
+                int v=queue.removeFirst()
+                int x=v%16, z=(v>>4)&15, y=v>>8
+                def next=[]
+                if(x>0)next.add(v-1); if(x<15)next.add(v+1)
+                if(z>0)next.add(v-16); if(z<15)next.add(v+16)
+                if(y>0)next.add(v-256); if(y<15)next.add(v+256)
+                next.each { k -> if(cells.contains(k) && connected.add(k)) queue.add(k) }
+            }
+            if(connected.size()!=cells.size()) throw new GradleException("Detached moss branch: ${n}")
+        }
+        logger.lifecycle("Verified six solid moss carpets, connected volumetric branches and native 1:1 UVs")
+    }
+}
+tasks.named('processResources') { dependsOn tasks.named('verifyMossVolume') }

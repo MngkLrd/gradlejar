@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-/** Old worlds and natural populations remain mature by default. Planting always uses age zero. */
+/** Old worlds retain their mature default; natural generators explicitly choose ages and quality. Planting always uses age zero. */
 public final class SeasonalPlantBlock extends BushBlock {
     public static final MapCodec<SeasonalPlantBlock> CODEC=simpleCodec(SeasonalPlantBlock::new);
     public static final IntegerProperty AGE=IntegerProperty.create("age",0,3),QUALITY=IntegerProperty.create("quality",0,3);

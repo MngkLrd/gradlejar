@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#worldlogicterrain:cool_woodland",
+    "#worldlogicterrain:temperate_woodland",
+    "#worldlogicterrain:warm_woodland",
+    "#worldlogicterrain:tree_wet",
+    "#worldlogicterrain:lush"
+  ]
+}

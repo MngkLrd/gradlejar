@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "worldlogicterrain:mossy_mahogany_log"
+    }
+  ],
+  "result": {
+    "id": "worldlogicterrain:mahogany_planks",
+    "count": 4
+  }
+}

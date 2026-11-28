@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "worldlogicterrain:fungal_foods"
+    },
+    {
+      "tag": "worldlogicterrain:fungal_foods"
+    },
+    {
+      "item": "minecraft:bowl"
+    }
+  ],
+  "result": {
+    "id": "minecraft:mushroom_stew",
+    "count": 1
+  }
+}

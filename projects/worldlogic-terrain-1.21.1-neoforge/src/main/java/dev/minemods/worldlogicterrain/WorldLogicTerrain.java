@@ -25,6 +25,9 @@ public final class WorldLogicTerrain {
         dev.minemods.worldlogicterrain.worldgen.ForagePopulationFeature.FEATURES.register(bus);
         dev.minemods.worldlogicterrain.tree.TropicalTreeFeature.FEATURES.register(bus);
         dev.minemods.worldlogicterrain.water.AquaticFeature.FEATURES.register(bus);
+        dev.minemods.worldlogicterrain.worldgen.FungalFeature.FEATURES.register(bus);
+        dev.minemods.worldlogicterrain.moss.MossFeature.FEATURES.register(bus);
+        NeoForge.EVENT_BUS.addListener(dev.minemods.worldlogicterrain.moss.MossChecks::register);
         NeoForge.EVENT_BUS.addListener(dev.minemods.worldlogicterrain.water.AquaticChecks::register);
         bus.addListener(TerrainContent::creative);
         NeoForge.EVENT_BUS.addListener(TerrainMobility::tick);
@@ -33,7 +36,8 @@ public final class WorldLogicTerrain {
         NeoForge.EVENT_BUS.addListener(TerrainPatchChecks::register);
         NeoForge.EVENT_BUS.addListener(dev.minemods.worldlogicterrain.worldgen.TallGrassPlainsFeature::registerChecks);
         NeoForge.EVENT_BUS.addListener(TreeChecks::register);
-        NeoForge.EVENT_BUS.addListener(dev.minemods.worldlogicterrain.tree.WoodPhysicsChecks::register);
+        if(dev.minemods.worldlogicterrain.api.WoodPhysicsApi.available())
+            bus.addListener(dev.minemods.worldlogicterrain.api.TerrarianMaterialRegistration::setup);
         NeoForge.EVENT_BUS.addListener(ForageChecks::register);
         NeoForge.EVENT_BUS.addListener(TerrainMobility::logout);
     }

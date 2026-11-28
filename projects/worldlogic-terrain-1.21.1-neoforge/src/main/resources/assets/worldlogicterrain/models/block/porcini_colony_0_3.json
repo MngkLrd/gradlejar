@@ -1,0 +1,97 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "plant": "worldlogicterrain:block/fungal_mycelium",
+    "particle": "#plant"
+  },
+  "elements": [
+    {
+      "from": [
+        1.5,
+        0,
+        8
+      ],
+      "to": [
+        14.5,
+        4,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            2,
+            12,
+            15,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            2,
+            12,
+            15,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        0,
+        8
+      ],
+      "to": [
+        14.5,
+        4,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            2,
+            12,
+            15,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            2,
+            12,
+            15,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    }
+  ]
+}

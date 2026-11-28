@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#worldlogicterrain:moss_woodland",
+    "#worldlogicterrain:moss_cool",
+    "#worldlogicterrain:season_bog"
+  ]
+}

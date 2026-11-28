@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "worldlogicterrain:item/willow_bark",
+    "main": "worldlogicterrain:item/willow_bark"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        3,
+        0.1
+      ],
+      "to": [
+        13,
+        13,
+        0.1
+      ],
+      "shade": false,
+      "faces": {
+        "north": {
+          "texture": "#main",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#main",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

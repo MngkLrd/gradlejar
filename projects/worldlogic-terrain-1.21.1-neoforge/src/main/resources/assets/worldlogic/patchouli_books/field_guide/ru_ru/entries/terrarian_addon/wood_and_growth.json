@@ -1,0 +1,35 @@
+{
+  "name": "Древесина, выращивание и грибы",
+  "category": "worldlogic:terrarian",
+  "icon": "worldlogicterrain:willow_log",
+  "sortnum": 24,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:willow_log",
+      "link_recipe": true,
+      "text": "Породы различаются плотностью и прочностью. Влажность изменяет свойства материала. TreeChopper использует общий контракт древесины."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:wild_yarrow",
+      "link_recipe": true,
+      "text": "Рост зависит от температуры, влажности, света и состояния почвы. Качество зрелого растения влияет на урожай."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:morel",
+      "link_recipe": true,
+      "text": "Грибные колонии проходят стадии роста. Собирайте зрелые грибы и оставляйте колонию для восстановления."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogicterrain:willow_planks"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogicterrain:fungal_stew"
+    }
+  ],
+  "flag": "mod:worldlogicterrain"
+}

@@ -1,0 +1,49 @@
+{
+  "name": "Лекарственные растения и сбор",
+  "category": "worldlogic:terrarian",
+  "icon": "worldlogicterrain:wild_calendula",
+  "sortnum": 20,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:wild_yarrow",
+      "link_recipe": true,
+      "text": "Тысячелистник растёт на умеренных лугах. Собирайте зрелое цветущее растение. Лечение и приготовление лекарств относятся к Trauma."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:wild_plantain",
+      "link_recipe": true,
+      "text": "Подорожник предпочитает умеренные луга. Незрелые растения не дают сырья."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:wild_wild_mint",
+      "link_recipe": true,
+      "text": "Водная мята растёт на пресноводных болотах и берегах. Старый идентификатор сохранён."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:wild_calendula",
+      "link_recipe": true,
+      "text": "Календула растёт на тёплых открытых участках. Собирайте зрелые цветущие растения."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:marshmallow_root",
+      "link_recipe": true,
+      "text": "Алтей растёт на влажной почве. Зрелое растение даёт корень и посадочный материал."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:flax_stalk",
+      "link_recipe": true,
+      "text": "Лён растёт на умеренных лугах. Зрелый лён даёт стебли и семена. Волокно отделяется в сетке крафта."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogicterrain:flax_fiber"
+    }
+  ],
+  "flag": "mod:worldlogicterrain"
+}

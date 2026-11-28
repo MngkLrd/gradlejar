@@ -46,7 +46,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         if(tagged(b,"open"))return Zone.OPEN;
         return Zone.NONE;
     }
-    private static Holder<Biome> localBiome(WorldGenLevel level,BlockPos pos){
+    static Holder<Biome> localBiome(WorldGenLevel level,BlockPos pos){
         var boreal=LandscapeMosaic.habitat(level,pos,tag("boreal"));
         if(boreal!=null)return boreal;
         var ground=level.getBiome(pos.below());
@@ -58,6 +58,10 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             if(candidate!=null)return candidate;
         }
         return surface;
+    }
+    static boolean mossBiome(Holder<Biome> b){
+        var z=zone(b);
+        return z==Zone.BOREAL||z==Zone.TEMPERATE||z==Zone.WET;
     }
     private static String id(Holder<Biome> b){return b.unwrapKey().map(k->k.location().getPath()).orElse("");}
     private static String namespace(String wood){return java.util.Set.of("willow","larch","pine","fir","cedar","maple","beech","alder","palm","date_palm","baobab","ebony","mahogany").contains(wood)?"worldlogicterrain":"minecraft";}
@@ -72,6 +76,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         int startX=origin.getX()&~15,startZ=origin.getZ()&~15;
         long seed=level.getSeed();
         List<BlockPos> trunks=new ArrayList<>();
+        List<dev.minemods.worldlogicterrain.forest.ForestEcology.Site> forestSites=new ArrayList<>();
         List<BlockPos> coastCells=new ArrayList<>();
         for(int dx:new int[]{2,8,13})for(int dz:new int[]{2,8,13}){
             var shore=LandscapeMosaic.surface(level,startX+dx,startZ+dz);
@@ -158,6 +163,7 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
             var key=ResourceKey.create(Registries.CONFIGURED_FEATURE,ResourceLocation.fromNamespaceAndPath("worldlogicterrain","tree_"+form.feature()));
             if(level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(key).value().place(level,generator,random,pos)){
                 placed=true;trunks.add(pos);
+                forestSites.add(new dev.minemods.worldlogicterrain.forest.ForestEcology.Site(pos,form.wood(),local,zone==Zone.BOREAL||zone==Zone.TEMPERATE||zone==Zone.WET||zone==Zone.TROPICAL||zone==Zone.CHERRY));
                 if(fruit.isPresent())FruitEcology.attach(level,pos,fruit.get().fruit(),fruitRandom);
                 if(zone==Zone.BOREAL||zone==Zone.TEMPERATE||zone==Zone.WET||zone==Zone.TROPICAL){
                     for(int n=0;n<3;n++){
@@ -178,10 +184,18 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
                 BlockPos start=new BlockPos(startX+3+random.nextInt(10),pos.getY(),startZ+3+random.nextInt(10));
                 start=new BlockPos(start.getX(),level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,start.getX(),start.getZ()),start.getZ());
                 Direction fall=local.map(EcologicalTreeFeature::fallDirection).orElseGet(()->random.nextBoolean()?Direction.EAST:Direction.SOUTH);
-                deadwood=fallen(level,start,form.wood(),fall,3+random.nextInt(3));
+                int length=3+random.nextInt(3);
+                // Re-sample the actual deadwood and every ground patch, not the nearby living tree.
+                java.util.function.Predicate<BlockPos> mossSite=p->MossyDeadwood.mossSite(level,p,sampler);
+                boolean moss=MossyDeadwood.canMoss(level,start,form.wood(),fall,length,mossSite);
+                deadwood=fallen(level,start,form.wood(),fall,length,moss);
+                if(deadwood&&moss)MossyDeadwood.decorate(level,start,fall,length,
+                    RandomSource.create(seed^start.asLong()^0x4D4F5353L),mossSite);
                 placed|=deadwood;
             }
         }
+        for(var site:forestSites)dev.minemods.worldlogicterrain.forest.ForestEcology.decorate(level,site,
+            RandomSource.create(seed^site.trunk().asLong()^0x464F52455354L),startX,startZ);
         return placed;
     }
     static double coastalInfluence(BlockPos pos,List<BlockPos> shore){
@@ -271,8 +285,12 @@ public final class EcologicalTreeFeature extends Feature<NoneFeatureConfiguratio
         return !state.isAir()&&state.canSurvive(level,pos)&&level.setBlock(pos,state,2);
     }
     static boolean fallen(WorldGenLevel level,BlockPos start,String wood,Direction dir,int length){
+        return fallen(level,start,wood,dir,length,false);
+    }
+    static boolean fallen(WorldGenLevel level,BlockPos start,String wood,Direction dir,int length,boolean moss){
         String namespace=namespace(wood);
-        Block log=BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(namespace,wood+"_log"));
+        if(moss&&!MossyDeadwood.SPECIES.contains(wood))return false;
+        Block log=BuiltInRegistries.BLOCK.get(moss?MossyDeadwood.mossyId(wood):ResourceLocation.fromNamespaceAndPath(namespace,wood+"_log"));
         if(!log.defaultBlockState().hasProperty(RotatedPillarBlock.AXIS)||length<3||length>5)return false;
         for(int i=0;i<=length;i++){
             BlockPos p=start.relative(dir,i);

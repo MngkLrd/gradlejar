@@ -1116,73 +1116,73 @@
     {
       "name": "food consumption strawberry",
       "command": "worldlogicterrain food_check strawberry",
-      "expect": "Forage verified strawberry: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified strawberry: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption blueberry",
       "command": "worldlogicterrain food_check blueberry",
-      "expect": "Forage verified blueberry: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified blueberry: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption raspberry",
       "command": "worldlogicterrain food_check raspberry",
-      "expect": "Forage verified raspberry: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified raspberry: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption blackberry",
       "command": "worldlogicterrain food_check blackberry",
-      "expect": "Forage verified blackberry: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified blackberry: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption grape",
       "command": "worldlogicterrain food_check grape",
-      "expect": "Forage verified grape: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified grape: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption pineapple",
       "command": "worldlogicterrain food_check pineapple",
-      "expect": "Forage verified pineapple: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified pineapple: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption tomato",
       "command": "worldlogicterrain food_check tomato",
-      "expect": "Forage verified tomato: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified tomato: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption cucumber",
       "command": "worldlogicterrain food_check cucumber",
-      "expect": "Forage verified cucumber: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified cucumber: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption radish",
       "command": "worldlogicterrain food_check radish",
-      "expect": "Forage verified radish: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified radish: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption onion",
       "command": "worldlogicterrain food_check onion",
-      "expect": "Forage verified onion: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified onion: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption cabbage",
       "command": "worldlogicterrain food_check cabbage",
-      "expect": "Forage verified cabbage: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified cabbage: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption bell_pepper",
       "command": "worldlogicterrain food_check bell_pepper",
-      "expect": "Forage verified bell_pepper: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified bell_pepper: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
@@ -1208,13 +1208,7 @@
     {
       "name": "Mixed meadow and frost patch mechanics",
       "command": "worldlogicterrain patch_check",
-      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 32 climate-aware forage populations verified; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells; 20 regional plants and seven existing crops verified: growth, quality, harvest, season boundaries and HUD data; 20 benthic species verified: water families, habitat, source retention, support, height and loot",
-      "assertion": true
-    },
-    {
-      "name": "Wood physics profiles and wetness",
-      "command": "worldlogicterrain wood_check",
-      "expect": "Wood physics verified: 24 profiles, 48 registered log/plank blocks, stripped identity, moisture, mass, hardness, bending, fire immunity and wet fixture",
+      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 35 climate-aware forage populations verified; natural plant ages and qualities verified for 30 four-stage plants, five berry bushes and twelve legacy patch providers; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells; 23 regional plants and seven existing crops verified: growth, quality, harvest, season boundaries and HUD data; 21 benthic species verified: water families, habitat, source retention, support, height and loot; four fungal colonies verified: habitat, stage diversity, climate, harvest, replant, spread cap, support, stew and HUD; berry fruiting verified year-round; four mushroom counts per block verified; mossy deadwood verified: host species, bark, top and ground moss, climate and obstacle rejection; Core wood physics verified: 24 profiles, 48 blocks, BlockItem composition, Janka, MOR, green moisture, SI wet mass and flammability; Moss verified: terrestrial species, climate, support, placement, loot and edible lichens; Forest verified: 13 species, four orientations, support, loot, bounded vine growth, actual thorn damage and generated forest site; Botanical verified: eight Trauma resources, mature-only roots and stalks, native flax recipe, renewable tree harvest and support",
       "assertion": true
     }
   ],
@@ -5852,7 +5846,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5863,7 +5857,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5874,7 +5868,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5885,7 +5879,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5896,7 +5890,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5907,7 +5901,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5918,7 +5912,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5929,7 +5923,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5940,7 +5934,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5951,7 +5945,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5962,7 +5956,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5973,7 +5967,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5984,7 +5978,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -5995,7 +5989,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6006,7 +6000,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6017,7 +6011,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6028,7 +6022,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6039,7 +6033,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6050,7 +6044,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6061,7 +6055,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6072,7 +6066,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6083,7 +6077,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6094,7 +6088,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6105,7 +6099,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6116,7 +6110,1162 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Wood physics profiles and wetness"
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-strawberry",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: strawberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-blueberry",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: blueberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-raspberry",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: raspberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-blackberry",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: blackberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-grape",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: grape",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-pineapple",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: pineapple",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-tomato",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: tomato",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-cucumber",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: cucumber",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-radish",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: radish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-onion",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: onion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-cabbage",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: cabbage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-bell_pepper",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: bell_pepper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-plantain",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: plantain",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-nettle",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: nettle",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-yarrow",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: yarrow",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-sage",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: sage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-thyme",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: thyme",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-lavender",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: lavender",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-wormwood",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: wormwood",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-wild_mint",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: wild_mint",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-horsetail",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: horsetail",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-marsh_cinquefoil",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: marsh_cinquefoil",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-bog_rosemary",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: bog_rosemary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-cloudberry",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: cloudberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-lingonberry",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: lingonberry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-arctic_poppy",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: arctic_poppy",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-edelweiss",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: edelweiss",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-fireweed",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: fireweed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-aloe",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: aloe",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-agave",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: agave",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-ginger",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: ginger",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "natural-growth-stage-lemongrass",
+      "kind": "mechanic",
+      "subject": "Natural population maturity and initial quality: lemongrass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-block-porcini",
+      "kind": "block",
+      "subject": "porcini colony, all three stages, placement, support, harvest and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-item-porcini",
+      "kind": "item",
+      "subject": "porcini collected inoculum, placement consumption and stew",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-ecology-porcini",
+      "kind": "mechanic",
+      "subject": "porcini natural population, climate response, regrowth, local spread and HUD",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-block-chanterelle",
+      "kind": "block",
+      "subject": "chanterelle colony, all three stages, placement, support, harvest and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-item-chanterelle",
+      "kind": "item",
+      "subject": "chanterelle collected inoculum, placement consumption and stew",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-ecology-chanterelle",
+      "kind": "mechanic",
+      "subject": "chanterelle natural population, climate response, regrowth, local spread and HUD",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-block-morel",
+      "kind": "block",
+      "subject": "morel colony, all three stages, placement, support, harvest and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-item-morel",
+      "kind": "item",
+      "subject": "morel collected inoculum, placement consumption and stew",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-ecology-morel",
+      "kind": "mechanic",
+      "subject": "morel natural population, climate response, regrowth, local spread and HUD",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-block-oyster_mushroom",
+      "kind": "block",
+      "subject": "oyster_mushroom colony, all three stages, placement, support, harvest and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-item-oyster_mushroom",
+      "kind": "item",
+      "subject": "oyster_mushroom collected inoculum, placement consumption and stew",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-ecology-oyster_mushroom",
+      "kind": "mechanic",
+      "subject": "oyster_mushroom natural population, climate response, regrowth, local spread and HUD",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-stew-recipe",
+      "kind": "recipe",
+      "subject": "Two collected mushrooms and bowl craft mushroom stew",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "berry-year-round-fruiting",
+      "kind": "mechanic",
+      "subject": "All five berry bushes use calendar-independent fruiting while retaining cold limit",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-count-porcini",
+      "kind": "mechanic",
+      "subject": "porcini 1-4 mushrooms, stack consumption, counted loot and regrowth",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-count-chanterelle",
+      "kind": "mechanic",
+      "subject": "chanterelle 1-4 mushrooms, stack consumption, counted loot and regrowth",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-count-morel",
+      "kind": "mechanic",
+      "subject": "morel 1-4 mushrooms, stack consumption, counted loot and regrowth",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "fungal-count-oyster_mushroom",
+      "kind": "mechanic",
+      "subject": "oyster_mushroom 1-4 mushrooms, stack consumption, counted loot and regrowth",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-oak",
+      "kind": "block",
+      "subject": "mossy oak log species, axis, loot and physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-dark_oak",
+      "kind": "block",
+      "subject": "mossy dark_oak log species, axis, loot and physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-birch",
+      "kind": "block",
+      "subject": "mossy birch log species, axis, loot and physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-spruce",
+      "kind": "block",
+      "subject": "mossy spruce log species, axis, loot and physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-willow",
+      "kind": "block",
+      "subject": "mossy willow log species, axis, loot and physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-larch",
+      "kind": "block",
+      "subject": "mossy larch log species, axis, loot and physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-pine",
+      "kind": "block",
+      "subject": "mossy pine log species, axis, loot and physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-fir",
+      "kind": "block",
+      "subject": "mossy fir log species, axis, loot and physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-cedar",
+      "kind": "block",
+      "subject": "mossy cedar log species, axis, loot and physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-maple",
+      "kind": "block",
+      "subject": "mossy maple log species, axis, loot and physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-beech",
+      "kind": "block",
+      "subject": "mossy beech log species, axis, loot and physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-alder",
+      "kind": "block",
+      "subject": "mossy alder log species, axis, loot and physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-habitat",
+      "kind": "mechanic",
+      "subject": "Mossy trunk selection, local humid climate, supported top and surrounding carpet, dry and obstacle rejection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "block-sheet_moss",
+      "kind": "block",
+      "subject": "sheet_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "item-sheet_moss",
+      "kind": "item",
+      "subject": "sheet_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "block-cushion_moss",
+      "kind": "block",
+      "subject": "cushion_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "item-cushion_moss",
+      "kind": "item",
+      "subject": "cushion_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "block-sphagnum_moss",
+      "kind": "block",
+      "subject": "sphagnum_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "item-sphagnum_moss",
+      "kind": "item",
+      "subject": "sphagnum_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "block-iceland_moss",
+      "kind": "block",
+      "subject": "iceland_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "item-iceland_moss",
+      "kind": "item",
+      "subject": "iceland_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "block-reindeer_moss",
+      "kind": "block",
+      "subject": "reindeer_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "item-reindeer_moss",
+      "kind": "item",
+      "subject": "reindeer_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "block-irish_moss",
+      "kind": "block",
+      "subject": "irish_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "item-irish_moss",
+      "kind": "item",
+      "subject": "irish_moss: native placement, support, loot, habitat and food boundary",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-palm",
+      "kind": "block",
+      "subject": "mossy palm log species, axis, loot, recipes and Core physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-date_palm",
+      "kind": "block",
+      "subject": "mossy date_palm log species, axis, loot, recipes and Core physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-baobab",
+      "kind": "block",
+      "subject": "mossy baobab log species, axis, loot, recipes and Core physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-ebony",
+      "kind": "block",
+      "subject": "mossy ebony log species, axis, loot, recipes and Core physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "mossy-deadwood-mahogany",
+      "kind": "block",
+      "subject": "mossy mahogany log species, axis, loot, recipes and Core physical identity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "moss-local-ecology",
+      "kind": "mechanic",
+      "subject": "Local moss habitat, actual supported placement and unsuitable-site rejection",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forage-food-owner",
+      "kind": "mechanic",
+      "subject": "Standalone legacy recovery, version boundary, unchanged food consumption and tooltip policy",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "food consumption strawberry"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption blueberry"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption raspberry"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption blackberry"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption grape"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption pineapple"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption tomato"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption cucumber"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption radish"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption onion"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption cabbage"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption bell_pepper"
+        }
+      ]
+    },
+    {
+      "id": "forest-habitat",
+      "kind": "mechanic",
+      "subject": "forest-habitat",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-vine-growth",
+      "kind": "mechanic",
+      "subject": "forest-vine-growth",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-contact-policy",
+      "kind": "mechanic",
+      "subject": "forest-contact-policy",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-generated-site",
+      "kind": "mechanic",
+      "subject": "Generated site actual five groups, chunk-local placement and per-tree cap",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-content-bark_moss",
+      "kind": "other",
+      "subject": "Block and matching BlockItem worldlogicterrain:bark_moss; registry, placement, support, orientation and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-content-hanging_lichen",
+      "kind": "other",
+      "subject": "Block and matching BlockItem worldlogicterrain:hanging_lichen; registry, placement, support, orientation and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-content-climbing_ivy",
+      "kind": "other",
+      "subject": "Block and matching BlockItem worldlogicterrain:climbing_ivy; registry, placement, support, orientation and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-content-woodland_vine",
+      "kind": "other",
+      "subject": "Block and matching BlockItem worldlogicterrain:woodland_vine; registry, placement, support, orientation and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-content-exposed_root",
+      "kind": "other",
+      "subject": "Block and matching BlockItem worldlogicterrain:exposed_root; registry, placement, support, orientation and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-content-conifer_root",
+      "kind": "other",
+      "subject": "Block and matching BlockItem worldlogicterrain:conifer_root; registry, placement, support, orientation and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-content-pale_root",
+      "kind": "other",
+      "subject": "Block and matching BlockItem worldlogicterrain:pale_root; registry, placement, support, orientation and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-content-stinging_nettle",
+      "kind": "other",
+      "subject": "Block and matching BlockItem worldlogicterrain:stinging_nettle; registry, placement, support, orientation and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-content-wild_thistle",
+      "kind": "other",
+      "subject": "Block and matching BlockItem worldlogicterrain:wild_thistle; registry, placement, support, orientation and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-content-thorn_scrub",
+      "kind": "other",
+      "subject": "Block and matching BlockItem worldlogicterrain:thorn_scrub; registry, placement, support, orientation and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-content-needle_litter",
+      "kind": "other",
+      "subject": "Block and matching BlockItem worldlogicterrain:needle_litter; registry, placement, support, orientation and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-content-bark_litter",
+      "kind": "other",
+      "subject": "Block and matching BlockItem worldlogicterrain:bark_litter; registry, placement, support, orientation and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "forest-content-damp_leaf_litter",
+      "kind": "other",
+      "subject": "Block and matching BlockItem worldlogicterrain:damp_leaf_litter; registry, placement, support, orientation and loot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "botanical-medicinal-flora",
+      "kind": "other",
+      "subject": "Calendula, marshmallow, flax seasonal block/items; yarrow, plantain and water mint stable harvested IDs; mature root and stem drops; flax fiber native recipe",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
+        }
+      ]
+    },
+    {
+      "id": "botanical-renewable-tree-resources",
+      "kind": "other",
+      "subject": "Willow bark and pine resin natural host node, real harvest, no duplicate, regrowth, support removal",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     }

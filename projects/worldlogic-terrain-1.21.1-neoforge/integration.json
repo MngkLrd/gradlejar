@@ -1,0 +1,476 @@
+{
+  "schema": 2,
+  "ecosystem": "worldlogic",
+  "module": "worldlogicterrain",
+  "role": "addon",
+  "core_module": "worldlogic",
+  "parent_module": "worldlogic",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "neoforge"
+  },
+  "provides": [
+    {
+      "id": "worldlogic:fungal_ecology",
+      "version": 1,
+      "revision": 1,
+      "domains": [
+        "fungal_ecology"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogicterrain.growth.FungalEcology"
+      ],
+      "documentation": "projects/worldlogic-terrain-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/growth/FungalEcology.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/growth/FungalColonyBlock.java"
+      ],
+      "operations": [
+        {
+          "id": "snapshot",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.growth.FungalEcology",
+          "semantics": "Read loaded colony species, maturity, substrate and local growth conditions without mutation."
+        },
+        {
+          "id": "species",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.growth.FungalEcology",
+          "semantics": "Enumerate species and ecological habitat profiles."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:plant_growth",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "plant_growth"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogicterrain.growth.SeasonalGrowth"
+      ],
+      "documentation": "projects/worldlogic-terrain-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/growth/SeasonalGrowth.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/growth/PlantSpecies.java"
+      ],
+      "operations": [
+        {
+          "id": "view",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.growth.SeasonalGrowth",
+          "semantics": "Read plant growth and maturity view from authoritative server state."
+        },
+        {
+          "id": "evaluate",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.growth.SeasonalGrowth",
+          "semantics": "Evaluate growth with supplied climate and soil conditions."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:wood_species",
+      "version": 1,
+      "revision": 3,
+      "domains": [
+        "wood_species"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogicterrain.api.WoodPhysicsApi"
+      ],
+      "documentation": "projects/worldlogic-terrain-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/api/WoodPhysicsApi.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/api/CoreWoodBridge.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/api/TerrarianMaterialRegistration.java"
+      ],
+      "operations": [
+        {
+          "id": "profile",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.api.WoodPhysicsApi",
+          "semantics": "Read Core-derived species profiles and actual local moisture sample."
+        },
+        {
+          "id": "at_moisture",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.api.WoodPhysicsApi",
+          "semantics": "Evaluate wood moisture response through Core revision 2."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:soil_exhaustion",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "cultivation_exhaustion"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogicterrain.soil.SoilExhaustion"
+      ],
+      "documentation": "projects/worldlogic-terrain-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/soil/SoilExhaustion.java"
+      ],
+      "operations": [
+        {
+          "id": "exhausted",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.soil.SoilExhaustion",
+          "semantics": "Identify exhausted cultivation substrate."
+        },
+        {
+          "id": "plant_growth",
+          "kind": "command",
+          "entrypoint": "dev.minemods.worldlogicterrain.soil.SoilExhaustion",
+          "semantics": "Record successful plant growth for the existing cultivation exhaustion lifecycle."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:mossy_deadwood",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "mossy_deadwood"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogicterrain.tree.MossyDeadwood"
+      ],
+      "documentation": "projects/worldlogic-terrain-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/tree/MossyDeadwood.java"
+      ],
+      "operations": [
+        {
+          "id": "original",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.tree.MossyDeadwood",
+          "semantics": "Resolve moss-covered log to original wood species without mutating state."
+        },
+        {
+          "id": "suitable",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.tree.MossyDeadwood",
+          "semantics": "Evaluate moss habitat against an actual supplied Core habitat sample."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:forest_microhabitat",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "forest_microhabitat"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogicterrain.forest.ForestSpecies",
+        "dev.minemods.worldlogicterrain.forest.ForestEcology"
+      ],
+      "documentation": "projects/worldlogic-terrain-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestSpecies.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestBlock.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestEcology.java"
+      ],
+      "operations": [
+        {
+          "id": "species",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.forest.ForestSpecies",
+          "semantics": "Enumerate real block species and contact/movement/support traits."
+        },
+        {
+          "id": "supports",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.forest.ForestSpecies",
+          "semantics": "Check real support and orientation."
+        },
+        {
+          "id": "habitat",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.forest.ForestEcology",
+          "semantics": "Evaluate epiphyte and vine tolerance from supplied Core climate."
+        }
+      ]
+    },
+    {
+      "id": "worldlogic:botanical_resources",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "botanical_resources"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogicterrain.botany.TreeResourceBlock",
+        "dev.minemods.worldlogicterrain.growth.PlantSpecies"
+      ],
+      "documentation": "projects/worldlogic-terrain-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/botany/TreeResourceBlock.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/botany/BotanyChecks.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/growth/PlantSpecies.java"
+      ],
+      "operations": [
+        {
+          "id": "species",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.growth.PlantSpecies",
+          "semantics": "Enumerate real climate-aware botanical plant species."
+        },
+        {
+          "id": "resource",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogicterrain.botany.TreeResourceBlock",
+          "semantics": "Inspect resource host, output and ripe state."
+        },
+        {
+          "id": "harvest",
+          "kind": "command",
+          "entrypoint": "dev.minemods.worldlogicterrain.botany.TreeResourceBlock",
+          "semantics": "Harvest a ripe loaded resource node exactly once, preserving host and resetting growth."
+        }
+      ]
+    }
+  ],
+  "consumes": [
+    {
+      "id": "worldlogic:environment",
+      "version": 1,
+      "min_revision": 11,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Older Core uses the existing biome fallback and no fabricated calendar; exact eligible Core 1.5.1 artifact supplies climate, hydrology and worldgen sampler."
+    },
+    {
+      "id": "worldlogic:material_properties",
+      "version": 1,
+      "min_revision": 2,
+      "required": false,
+      "status": "implemented",
+      "fallback": "WoodPhysicsApi returns empty on Core versions without revision 2."
+    },
+    {
+      "id": "worldlogic:survival_physics",
+      "version": 1,
+      "min_revision": 0,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Existing required Core provides movement and exertion API. No independent stamina."
+    },
+    {
+      "id": "worldlogic:metabolism_physiology",
+      "version": 1,
+      "min_revision": 4,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Without compatible Metabolism retain original Core stamina recovery and tooltip; compatible peer owns automatic FOOD completion."
+    }
+  ],
+  "features": [
+    {
+      "id": "fungal_colonies",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/growth/FungalEcology.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/growth/FungalColonyBlock.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/worldgen/FungalFeature.java"
+      ],
+      "provides": [
+        "worldlogic:fungal_ecology"
+      ],
+      "consumes": [
+        "worldlogic:environment"
+      ],
+      "integration_review": "Reviewed Core RC54 5c6a56da climate, hydrology and habitat sampler; reuse CorePlantClimate and CoreHabitat. No calendar or soil duplicate, no log conversion."
+    },
+    {
+      "id": "seasonal_flora",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/growth/SeasonalGrowth.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/worldgen/ForagePopulationFeature.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/block/HangingFruitBlock.java"
+      ],
+      "provides": [
+        "worldlogic:plant_growth"
+      ],
+      "consumes": [
+        "worldlogic:environment"
+      ],
+      "integration_review": "Use existing Core climate and season state; fruiting calendar independent, player crop cultivation remains seasonal."
+    },
+    {
+      "id": "wood_material_registration",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/api/WoodPhysicsApi.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/api/CoreWoodBridge.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/api/TerrarianMaterialRegistration.java"
+      ],
+      "provides": [
+        "worldlogic:wood_species"
+      ],
+      "consumes": [
+        "worldlogic:material_properties",
+        "worldlogic:environment"
+      ],
+      "integration_review": "Core owns materials; TreeChopper consumes unchanged facade and reference units."
+    },
+    {
+      "id": "cultivation_soil",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/soil/SoilExhaustion.java"
+      ],
+      "provides": [
+        "worldlogic:soil_exhaustion"
+      ],
+      "consumes": [
+        "worldlogic:environment"
+      ],
+      "integration_review": "Use Core environment as inputs and preserve cultivation-specific exhaustion owned by Terrarian."
+    },
+    {
+      "id": "natural_terrain",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/tree/EcologicalTreeFeature.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/water/AquaticFeature.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/worldgen/TallGrassPlainsFeature.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/tree/MossyDeadwood.java"
+      ],
+      "provides": [
+        "worldlogic:mossy_deadwood"
+      ],
+      "consumes": [
+        "worldlogic:environment"
+      ],
+      "integration_review": "Worldgen uses existing Core habitat and water prediction; generated block states are the public world representation."
+    },
+    {
+      "id": "mobility_food",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/mobility/TerrainMobility.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/food/ForageFoodItem.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/food/MetabolismBridge.java"
+      ],
+      "provides": [],
+      "consumes": [
+        "worldlogic:survival_physics",
+        "worldlogic:metabolism_physiology"
+      ],
+      "integration_review": "Use existing Core legacy movement and exertion contract without SI mass substitution. Inspected Metabolism 0.9.0 API v1 rev4 and 0.9.1 v1 rev5; ordinary FOOD completion handled by peer; no reportFoodIntake call. Issue #258.",
+      "no_public_surface_reason": "Consumer-only movement and food effects use Core's authoritative survival state."
+    },
+    {
+      "id": "forest_microhabitat",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestSpecies.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestBlock.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestEcology.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/tree/EcologicalTreeFeature.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/mobility/TerrainMobility.java"
+      ],
+      "provides": [
+        "worldlogic:forest_microhabitat"
+      ],
+      "consumes": [
+        "worldlogic:environment",
+        "worldlogic:survival_physics"
+      ],
+      "integration_review": "Use existing Core habitat sample and Terrarian movement factor; no duplicate climate or injury model; damage uses native sweet berry bush source. Generated roots remain distinct from TreeChopper log registry, no stick drops. Vines bounded four segments; no global tick."
+    },
+    {
+      "id": "medical_botany",
+      "source_paths": [
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/botany/TreeResourceBlock.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/botany/BotanyChecks.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/growth/PlantSpecies.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/registry/TerrainContent.java",
+        "projects/worldlogic-terrain-1.21.1-neoforge/src/main/java/dev/minemods/worldlogicterrain/forest/ForestEcology.java"
+      ],
+      "provides": [
+        "worldlogic:botanical_resources"
+      ],
+      "consumes": [
+        "worldlogic:environment"
+      ],
+      "integration_review": "Trauma issue #222: actual existing yarrow and plantain plus wet-site wild mint with original stable ID bridged via optional trauma tag, new seasonal calendula, marshmallow and flax; real part drops and native flax fiber recipe; renewable nodes on real willow/pine hosts. No treatment or physiology duplicated."
+    }
+  ],
+  "tests": [
+    {
+      "id": "terrarian.fungal_colonies",
+      "capabilities": [
+        "worldlogic:fungal_ecology",
+        "worldlogic:environment"
+      ],
+      "ref": "tools/qa/scenarios/worldlogicterrain.json",
+      "status": "implemented"
+    },
+    {
+      "id": "terrarian.plant_and_soil",
+      "capabilities": [
+        "worldlogic:plant_growth",
+        "worldlogic:soil_exhaustion",
+        "worldlogic:environment"
+      ],
+      "ref": "tools/qa/scenarios/worldlogicterrain.json",
+      "status": "implemented"
+    },
+    {
+      "id": "terrarian.wood",
+      "capabilities": [
+        "worldlogic:wood_species",
+        "worldlogic:material_properties"
+      ],
+      "ref": "tools/qa/scenarios/worldlogicterrain.json",
+      "status": "implemented"
+    },
+    {
+      "id": "terrarian.mobility_food",
+      "capabilities": [
+        "worldlogic:survival_physics"
+      ],
+      "ref": "tools/qa/scenarios/worldlogicterrain.json",
+      "status": "implemented"
+    },
+    {
+      "id": "terrarian.mossy_deadwood",
+      "capabilities": [
+        "worldlogic:mossy_deadwood",
+        "worldlogic:environment",
+        "worldlogic:material_properties"
+      ],
+      "ref": "tools/qa/scenarios/worldlogicterrain.json",
+      "status": "implemented"
+    },
+    {
+      "id": "terrarian.food_ownership",
+      "capabilities": [
+        "worldlogic:survival_physics",
+        "worldlogic:metabolism_physiology"
+      ],
+      "ref": "tools/qa/scenarios/worldlogicterrain.json",
+      "status": "implemented"
+    },
+    {
+      "id": "terrarian.forest_microhabitat",
+      "capabilities": [
+        "worldlogic:forest_microhabitat",
+        "worldlogic:environment",
+        "worldlogic:survival_physics"
+      ],
+      "ref": "tools/qa/scenarios/worldlogicterrain.json",
+      "status": "implemented"
+    },
+    {
+      "id": "terrarian.medical_botany",
+      "capabilities": [
+        "worldlogic:botanical_resources",
+        "worldlogic:environment"
+      ],
+      "ref": "tools/qa/scenarios/worldlogicterrain.json",
+      "status": "implemented"
+    }
+  ]
+}

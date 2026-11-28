@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:moss_habitat",
+  "features": "worldlogicterrain:moss_ecology",
+  "step": "vegetal_decoration"
+}

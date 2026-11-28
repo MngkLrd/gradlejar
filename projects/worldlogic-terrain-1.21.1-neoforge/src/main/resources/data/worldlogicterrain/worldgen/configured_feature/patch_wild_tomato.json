@@ -9,10 +9,169 @@
         "type": "minecraft:simple_block",
         "config": {
           "to_place": {
-            "type": "minecraft:simple_state_provider",
-            "state": {
-              "Name": "worldlogicterrain:wild_tomato"
-            }
+            "type": "minecraft:weighted_state_provider",
+            "entries": [
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "0",
+                    "quality": "0"
+                  }
+                },
+                "weight": 150
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "0",
+                    "quality": "1"
+                  }
+                },
+                "weight": 450
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "0",
+                    "quality": "2"
+                  }
+                },
+                "weight": 675
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "0",
+                    "quality": "3"
+                  }
+                },
+                "weight": 225
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "1",
+                    "quality": "0"
+                  }
+                },
+                "weight": 250
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "1",
+                    "quality": "1"
+                  }
+                },
+                "weight": 750
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "1",
+                    "quality": "2"
+                  }
+                },
+                "weight": 1125
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "1",
+                    "quality": "3"
+                  }
+                },
+                "weight": 375
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "2",
+                    "quality": "0"
+                  }
+                },
+                "weight": 300
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "2",
+                    "quality": "1"
+                  }
+                },
+                "weight": 900
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "2",
+                    "quality": "2"
+                  }
+                },
+                "weight": 1350
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "2",
+                    "quality": "3"
+                  }
+                },
+                "weight": 450
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "3",
+                    "quality": "0"
+                  }
+                },
+                "weight": 300
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "3",
+                    "quality": "1"
+                  }
+                },
+                "weight": 900
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "3",
+                    "quality": "2"
+                  }
+                },
+                "weight": 1350
+              },
+              {
+                "data": {
+                  "Name": "worldlogicterrain:wild_tomato",
+                  "Properties": {
+                    "age": "3",
+                    "quality": "3"
+                  }
+                },
+                "weight": 450
+              }
+            ]
           }
         }
       },

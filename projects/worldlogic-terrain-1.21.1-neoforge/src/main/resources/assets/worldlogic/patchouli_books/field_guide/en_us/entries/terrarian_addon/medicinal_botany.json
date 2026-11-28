@@ -1,0 +1,49 @@
+{
+  "name": "Medicinal plants and harvest",
+  "category": "worldlogic:terrarian",
+  "icon": "worldlogicterrain:wild_calendula",
+  "sortnum": 20,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:wild_yarrow",
+      "link_recipe": true,
+      "text": "Yarrow grows in temperate meadows. Break a mature flowering plant for its aerial material. Trauma owns treatment and preparation."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:wild_plantain",
+      "link_recipe": true,
+      "text": "Broadleaf plantain favors moist temperate meadows. Immature plants yield no harvest."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:wild_wild_mint",
+      "link_recipe": true,
+      "text": "Water mint grows at freshwater marshes and banks. Its original registry ID is preserved."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:wild_calendula",
+      "link_recipe": true,
+      "text": "Calendula grows in warm open fields. Harvest mature flowers and replant if desired."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:marshmallow_root",
+      "link_recipe": true,
+      "text": "Marshmallow grows on moist ground. Break a mature plant for the root and planting material."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:flax_stalk",
+      "link_recipe": true,
+      "text": "Flax grows in temperate meadows. Mature flax yields stems and seeds. Separate fibers in the crafting grid."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogicterrain:flax_fiber"
+    }
+  ],
+  "flag": "mod:worldlogicterrain"
+}

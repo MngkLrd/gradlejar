@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogicterrain:porcini",
+    "worldlogicterrain:chanterelle",
+    "worldlogicterrain:morel",
+    "worldlogicterrain:oyster_mushroom"
+  ]
+}

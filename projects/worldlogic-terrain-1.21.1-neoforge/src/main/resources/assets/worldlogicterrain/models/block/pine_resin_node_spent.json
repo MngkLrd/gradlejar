@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "worldlogicterrain:block/pine_log",
+    "main": "worldlogicterrain:block/pine_log"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        3,
+        0.1
+      ],
+      "to": [
+        13,
+        13,
+        0.1
+      ],
+      "shade": false,
+      "faces": {
+        "north": {
+          "texture": "#main",
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ]
+        },
+        "south": {
+          "texture": "#main",
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Moss and lichens",
+  "category": "worldlogic:terrarian",
+  "icon": "worldlogicterrain:reindeer_moss",
+  "sortnum": 22,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:sheet_moss",
+      "link_recipe": true,
+      "text": "Forest moss grows in shaded moist habitats and on deadwood. Other mosses prefer bogs or different temperatures."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:iceland_moss",
+      "link_recipe": true,
+      "text": "Iceland moss and reindeer lichen are low-nutrition food items in the game. Irish moss is marine; not every freshwater plant is edible."
+    }
+  ],
+  "flag": "mod:worldlogicterrain"
+}

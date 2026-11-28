@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:temperate_meadow",
+  "features": "worldlogicterrain:fungal_morel",
+  "step": "vegetal_decoration"
+}

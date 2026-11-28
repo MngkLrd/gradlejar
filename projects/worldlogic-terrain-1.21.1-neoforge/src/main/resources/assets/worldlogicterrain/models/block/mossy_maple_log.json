@@ -1,0 +1,150 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "render_type": "minecraft:cutout_mipped",
+  "textures": {
+    "side": "worldlogicterrain:block/maple_log",
+    "end": "worldlogicterrain:block/maple_log_top",
+    "particle": "worldlogicterrain:block/maple_log",
+    "moss": "worldlogicterrain:block/bark_moss_broadleaf"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#side",
+          "cullface": "north"
+        },
+        "east": {
+          "texture": "#side",
+          "cullface": "east"
+        },
+        "south": {
+          "texture": "#side",
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#side",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#end",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#end",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        -0.02
+      ],
+      "to": [
+        16,
+        16,
+        -0.02
+      ],
+      "faces": {
+        "north": {
+          "texture": "#moss",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "north",
+          "rotation": 180
+        }
+      }
+    },
+    {
+      "from": [
+        16.02,
+        0,
+        0
+      ],
+      "to": [
+        16.02,
+        16,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#moss",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "east",
+          "rotation": 0
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        16.02
+      ],
+      "to": [
+        16,
+        16,
+        16.02
+      ],
+      "faces": {
+        "south": {
+          "texture": "#moss",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "south",
+          "rotation": 180
+        }
+      }
+    },
+    {
+      "from": [
+        -0.02,
+        0,
+        0
+      ],
+      "to": [
+        -0.02,
+        16,
+        16
+      ],
+      "faces": {
+        "west": {
+          "texture": "#moss",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "west",
+          "rotation": 0
+        }
+      }
+    }
+  ]
+}

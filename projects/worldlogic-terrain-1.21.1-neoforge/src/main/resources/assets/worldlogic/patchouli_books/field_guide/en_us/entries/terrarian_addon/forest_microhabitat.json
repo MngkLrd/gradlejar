@@ -1,0 +1,27 @@
+{
+  "name": "Forest microhabitats",
+  "category": "worldlogic:terrarian",
+  "icon": "worldlogicterrain:climbing_ivy",
+  "sortnum": 23,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:exposed_root",
+      "link_recipe": true,
+      "text": "Exposed roots occur near trees, especially on slopes and river banks. Loose bark and needles form varied forest litter."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:climbing_ivy",
+      "link_recipe": true,
+      "text": "Epiphytes and vines attach to natural trunks or exposed rock. Vines have limited downward growth."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogicterrain:thorn_scrub",
+      "link_recipe": true,
+      "text": "Nettle, thistle and thorn scrub slow movement and can injure moving creatures. Walk around dense patches."
+    }
+  ],
+  "flag": "mod:worldlogicterrain"
+}

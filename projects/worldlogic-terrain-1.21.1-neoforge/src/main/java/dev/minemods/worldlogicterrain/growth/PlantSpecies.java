@@ -32,6 +32,9 @@ public final class PlantSpecies {
         add("lavender","dry",13,3,8,24,37,0.1,0.3,0.65,"SPRING SUMMER AUTUMN",10);NEW.add(ALL.get("lavender"));
         add("wormwood","dry",6,5,2,20,36,0.05,0.27,0.7,"SPRING SUMMER AUTUMN",6);NEW.add(ALL.get("wormwood"));
         add("wild_mint","fresh_marsh",8,4,6,19,32,0.42,0.75,1,"SPRING SUMMER AUTUMN",6);NEW.add(ALL.get("wild_mint"));
+        add("calendula","warm_field",10,4,8,22,34,.18,.48,.86,"SPRING SUMMER AUTUMN",7);NEW.add(ALL.get("calendula"));
+        add("marshmallow","fresh_marsh",12,4,5,20,32,.42,.76,1,"SPRING SUMMER AUTUMN",8);NEW.add(ALL.get("marshmallow"));
+        add("flax","temperate_meadow",9,4,4,19,32,.20,.53,.88,"SPRING SUMMER AUTUMN",7);NEW.add(ALL.get("flax"));
         add("horsetail","fresh_marsh",6,5,1,15,28,0.48,0.8,1,"SPRING SUMMER AUTUMN",5);NEW.add(ALL.get("horsetail"));
         add("marsh_cinquefoil","fresh_marsh",13,3,0,14,26,0.55,0.82,1,"SPRING SUMMER",9);NEW.add(ALL.get("marsh_cinquefoil"));
         add("bog_rosemary","season_bog",15,3,-2,12,24,0.55,0.83,1,"SPRING SUMMER",10);NEW.add(ALL.get("bog_rosemary"));

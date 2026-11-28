@@ -7254,6 +7254,1475 @@
         "custom_reason": "Specific collected aquatic specimen is not represented by the catalogued equipment, food or utility tools; this aquatic comparator is closer in function.",
         "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed from its bytes; uncatalogued reference not independently verified against official client archive."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/porcini_young.png": {
+      "sha256": "330750796452990434558e0762eb4ca90931f4f57d8a7ff4a0d5f5df99161e5f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: wide umber cap with a broad cream stalk; short juvenile cap rooted at the bottom, smaller than the mature cluster.",
+      "findings": {
+        "silhouette": "wide umber cap with a broad cream stalk; short juvenile cap rooted at the bottom, smaller than the mature cluster",
+        "cluster_structure": "upper cap has two adjacent honey-brown highlights and a dark underside",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "short juvenile cap rooted at the bottom, smaller than the mature cluster; small secondary cap is offset to the right",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/porcini.png": {
+      "sha256": "8d40481eb926125075bb098754860cd3634c7b53e948792c1ad7cd910c79cf92",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: wide umber cap with a broad cream stalk; small secondary cap is offset to the right.",
+      "findings": {
+        "silhouette": "wide umber cap with a broad cream stalk; small secondary cap is offset to the right",
+        "cluster_structure": "upper cap has two adjacent honey-brown highlights and a dark underside",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "small secondary cap is offset to the right; small secondary cap is offset to the right",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/porcini.png": {
+      "sha256": "5743af0dc5d47263422a301f4f469e85d9e3fbd0dcf3d3c1cc12a748f8ba1d1d",
+      "verdict": "PASS",
+      "material_profile": "consumable",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: wide umber cap with a broad cream stalk; single collected body lifted off ground with clear transparent margin.",
+      "findings": {
+        "silhouette": "wide umber cap with a broad cream stalk; single collected body lifted off ground with clear transparent margin",
+        "cluster_structure": "upper cap has two adjacent honey-brown highlights and a dark underside",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "single collected body lifted off ground with clear transparent margin; small secondary cap is offset to the right",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "edible_or_liquid_material": "Matte fleshy cap is distinguished from the pale fibrous stalk.",
+        "container_or_food_shape": "A single collected mushroom shape is centered with empty surrounding pixels."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "consumable_icon",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/chanterelle_young.png": {
+      "sha256": "528da80e0f8ac6f29600b37dea57a7928cc8fe0fe1dd751a081e7cdcdf164807",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: forked golden funnel with a narrow tapered stalk; short juvenile cap rooted at the bottom, smaller than the mature cluster.",
+      "findings": {
+        "silhouette": "forked golden funnel with a narrow tapered stalk; short juvenile cap rooted at the bottom, smaller than the mature cluster",
+        "cluster_structure": "two raised yellow rim lobes join a wider orange funnel",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "short juvenile cap rooted at the bottom, smaller than the mature cluster; the open rim and thin stem contrast with porcini",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/chanterelle.png": {
+      "sha256": "f233c646335559fbf7cb5c49906a454905953ef04b47fa324eb48a4c37c9e056",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: forked golden funnel with a narrow tapered stalk; the open rim and thin stem contrast with porcini.",
+      "findings": {
+        "silhouette": "forked golden funnel with a narrow tapered stalk; the open rim and thin stem contrast with porcini",
+        "cluster_structure": "two raised yellow rim lobes join a wider orange funnel",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "the open rim and thin stem contrast with porcini; the open rim and thin stem contrast with porcini",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/chanterelle.png": {
+      "sha256": "ef015ed492961f981c81d28b5b89b5564a1c8601acbb88c42cc7c5620d5eef33",
+      "verdict": "PASS",
+      "material_profile": "consumable",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: forked golden funnel with a narrow tapered stalk; single collected body lifted off ground with clear transparent margin.",
+      "findings": {
+        "silhouette": "forked golden funnel with a narrow tapered stalk; single collected body lifted off ground with clear transparent margin",
+        "cluster_structure": "two raised yellow rim lobes join a wider orange funnel",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "single collected body lifted off ground with clear transparent margin; the open rim and thin stem contrast with porcini",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "edible_or_liquid_material": "Matte fleshy cap is distinguished from the pale fibrous stalk.",
+        "container_or_food_shape": "A single collected mushroom shape is centered with empty surrounding pixels."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "consumable_icon",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/morel_young.png": {
+      "sha256": "3b3a74125568a370152740775dafb64d8ef7fc8ee9cae369270cf226b8761576",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: upright narrow ochre honeycomb cap and cream stem; short juvenile cap rooted at the bottom, smaller than the mature cluster.",
+      "findings": {
+        "silhouette": "upright narrow ochre honeycomb cap and cream stem; short juvenile cap rooted at the bottom, smaller than the mature cluster",
+        "cluster_structure": "dark two-pixel pits alternate with connected ochre cap ridges",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "short juvenile cap rooted at the bottom, smaller than the mature cluster; elongated cap identifies the species even in grayscale",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/morel.png": {
+      "sha256": "24e49cd6e5c8b1d4840a9263cfd800e50272741ae81d0121fc085dbb297d1c82",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: upright narrow ochre honeycomb cap and cream stem; elongated cap identifies the species even in grayscale.",
+      "findings": {
+        "silhouette": "upright narrow ochre honeycomb cap and cream stem; elongated cap identifies the species even in grayscale",
+        "cluster_structure": "dark two-pixel pits alternate with connected ochre cap ridges",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "elongated cap identifies the species even in grayscale; elongated cap identifies the species even in grayscale",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/morel.png": {
+      "sha256": "5401ad0a55618eb7b34c210682e2b6c6c528310884b5950c3f9ad9033a78d855",
+      "verdict": "PASS",
+      "material_profile": "consumable",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: upright narrow ochre honeycomb cap and cream stem; single collected body lifted off ground with clear transparent margin.",
+      "findings": {
+        "silhouette": "upright narrow ochre honeycomb cap and cream stem; single collected body lifted off ground with clear transparent margin",
+        "cluster_structure": "dark two-pixel pits alternate with connected ochre cap ridges",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "single collected body lifted off ground with clear transparent margin; elongated cap identifies the species even in grayscale",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "edible_or_liquid_material": "Matte fleshy cap is distinguished from the pale fibrous stalk.",
+        "container_or_food_shape": "A single collected mushroom shape is centered with empty surrounding pixels."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "consumable_icon",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/oyster_mushroom_young.png": {
+      "sha256": "e2cdb432e50573d53e5eae48665a366867528dd18b53dccb1dbd33420e418422",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: two asymmetric grey-beige shelf caps; short juvenile cap rooted at the bottom, smaller than the mature cluster.",
+      "findings": {
+        "silhouette": "two asymmetric grey-beige shelf caps; short juvenile cap rooted at the bottom, smaller than the mature cluster",
+        "cluster_structure": "pale cap edges and cream gills separate from mauve shaded undersides",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "short juvenile cap rooted at the bottom, smaller than the mature cluster; offset overlapping fans imply growth from wood",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/oyster_mushroom.png": {
+      "sha256": "f3b2b6081f64c8ee51b7f90dd5e59eee8a3f16efd7894c8ad35fb59a7e6b692a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: two asymmetric grey-beige shelf caps; offset overlapping fans imply growth from wood.",
+      "findings": {
+        "silhouette": "two asymmetric grey-beige shelf caps; offset overlapping fans imply growth from wood",
+        "cluster_structure": "pale cap edges and cream gills separate from mauve shaded undersides",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "offset overlapping fans imply growth from wood; offset overlapping fans imply growth from wood",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/oyster_mushroom.png": {
+      "sha256": "4f9b863adc6404a9bf97a0181a3067bf0b24b67d59fd6a95b5ea32091a8d7bd3",
+      "verdict": "PASS",
+      "material_profile": "consumable",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: two asymmetric grey-beige shelf caps; single collected body lifted off ground with clear transparent margin.",
+      "findings": {
+        "silhouette": "two asymmetric grey-beige shelf caps; single collected body lifted off ground with clear transparent margin",
+        "cluster_structure": "pale cap edges and cream gills separate from mauve shaded undersides",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "single collected body lifted off ground with clear transparent margin; offset overlapping fans imply growth from wood",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "edible_or_liquid_material": "Matte fleshy cap is distinguished from the pale fibrous stalk.",
+        "container_or_food_shape": "A single collected mushroom shape is centered with empty surrounding pixels."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "consumable_icon",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/fungal_mycelium.png": {
+      "sha256": "a4ac6e6ba3c4e3cf6ca46695a2225fa4e61e781a855758bbdea90af416b5a6ed",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: low irregular ivory hyphal branches at the substrate; shallow filament silhouette contrasts with upright fruit bodies.",
+      "findings": {
+        "silhouette": "low irregular ivory hyphal branches at the substrate; shallow filament silhouette contrasts with upright fruit bodies",
+        "cluster_structure": "two separated branching clusters meet the ground at y15",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "shallow filament silhouette contrasts with upright fruit bodies; shallow filament silhouette contrasts with upright fruit bodies",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sheet_moss_atlas.png": {
+      "sha256": "3e4d09581460cb4f94345620c676f9c68a7459d4c0d7edd2ab23d1ab3e4386f9",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/moss_block",
+          "minecraft": "1.21.1",
+          "sha256": "ff2be8de2198aa42ce405734b69e69a2c220cd6996e2e170f29e4f5a8f649eb1"
+        },
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual 32x32 opaque atlas at native scale and voxel-model raster views from opposite corners inspected. Compared version-pinned vanilla moss_block pixels and moss_carpet parent reference. Low horizontal creeping shoots with several raised uneven patches. The original carpet is one unit thick with visible side faces; 14 full-volume elements replace the former zero-thickness planes. No vanilla pixels copied.",
+      "findings": {
+        "silhouette": "Low horizontal creeping shoots with several raised uneven patches.",
+        "cluster_structure": "Contiguous low carpet and individually shaped branch groups connected to its surface.",
+        "micro_contrast": "Clustered neighboring six-color values; lighter frond tips and darker side ramp.",
+        "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
+        "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
+        "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
+        "variant_identity": "The lowest member of the moss family reaches only four model units; it spreads rather than standing upright.",
+        "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
+        "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/moss_block",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native carpet thickness and clustered palette transitions, opaque faces with independent atlas regions.",
+        "reference_limit": "Vanilla moss carpet has no raised branches; all additional geometry and texture are original.",
+        "native_view": "Low horizontal creeping shoots with several raised uneven patches.",
+        "context_type": "model_uv",
+        "context_view": "Exact occupied-voxel geometry and atlas-sampled visible faces statically rasterized from two opposite corners and inspected; connectedness validated. 14 elements, maximum height 4/16. Not an actual client render or shader test.",
+        "custom_reason": "Full-volume species-specific moss/lichen geometry with 32px atlas; no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/moss_block.png actual PNG inspected, SHA-256 computed from decoded bytes; moss_carpet model inspected."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/cushion_moss_atlas.png": {
+      "sha256": "35868e5c2e7ea894de725e14290bd1c8061691840d20601981651912a0123efa",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/moss_block",
+          "minecraft": "1.21.1",
+          "sha256": "ff2be8de2198aa42ce405734b69e69a2c220cd6996e2e170f29e4f5a8f649eb1"
+        },
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual 32x32 opaque atlas at native scale and voxel-model raster views from opposite corners inspected. Compared version-pinned vanilla moss_block pixels and moss_carpet parent reference. Two rounded stepped cushions with smaller offsets. The original carpet is one unit thick with visible side faces; 13 full-volume elements replace the former zero-thickness planes. No vanilla pixels copied.",
+      "findings": {
+        "silhouette": "Two rounded stepped cushions with smaller offsets.",
+        "cluster_structure": "Contiguous low carpet and individually shaped branch groups connected to its surface.",
+        "micro_contrast": "Clustered neighboring six-color values; lighter frond tips and darker side ramp.",
+        "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
+        "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
+        "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
+        "variant_identity": "The paired mounds make this six-unit moss denser than sheet moss; the color ramp is brighter and warmer.",
+        "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
+        "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/moss_block",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native carpet thickness and clustered palette transitions, opaque faces with independent atlas regions.",
+        "reference_limit": "Vanilla moss carpet has no raised branches; all additional geometry and texture are original.",
+        "native_view": "Two rounded stepped cushions with smaller offsets.",
+        "context_type": "model_uv",
+        "context_view": "Exact occupied-voxel geometry and atlas-sampled visible faces statically rasterized from two opposite corners and inspected; connectedness validated. 13 elements, maximum height 6/16. Not an actual client render or shader test.",
+        "custom_reason": "Full-volume species-specific moss/lichen geometry with 32px atlas; no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/moss_block.png actual PNG inspected, SHA-256 computed from decoded bytes; moss_carpet model inspected."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sphagnum_moss_atlas.png": {
+      "sha256": "ffa92b0a58af100d1dab3e63826e76124fc9201854ecd772f23cfadb60275ed6",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/moss_block",
+          "minecraft": "1.21.1",
+          "sha256": "ff2be8de2198aa42ce405734b69e69a2c220cd6996e2e170f29e4f5a8f649eb1"
+        },
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual 32x32 opaque atlas at native scale and voxel-model raster views from opposite corners inspected. Compared version-pinned vanilla moss_block pixels and moss_carpet parent reference. Olive and ochre clustered shoots with short radial branches. The original carpet is one unit thick with visible side faces; 20 full-volume elements replace the former zero-thickness planes. No vanilla pixels copied.",
+      "findings": {
+        "silhouette": "Olive and ochre clustered shoots with short radial branches.",
+        "cluster_structure": "Contiguous low carpet and individually shaped branch groups connected to its surface.",
+        "micro_contrast": "Clustered neighboring six-color values; lighter frond tips and darker side ramp.",
+        "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
+        "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
+        "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
+        "variant_identity": "Yellow-green and ochre coloration differentiates the eight-unit bog shoots from the more saturated forest moss.",
+        "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
+        "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/moss_block",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native carpet thickness and clustered palette transitions, opaque faces with independent atlas regions.",
+        "reference_limit": "Vanilla moss carpet has no raised branches; all additional geometry and texture are original.",
+        "native_view": "Olive and ochre clustered shoots with short radial branches.",
+        "context_type": "model_uv",
+        "context_view": "Exact occupied-voxel geometry and atlas-sampled visible faces statically rasterized from two opposite corners and inspected; connectedness validated. 20 elements, maximum height 8/16. Not an actual client render or shader test.",
+        "custom_reason": "Full-volume species-specific moss/lichen geometry with 32px atlas; no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/moss_block.png actual PNG inspected, SHA-256 computed from decoded bytes; moss_carpet model inspected."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/iceland_moss_atlas.png": {
+      "sha256": "4a29184efd5f3ca85ffbd788b5812cd2168ce66104f66ebbdccc48aea8a51783",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/moss_block",
+          "minecraft": "1.21.1",
+          "sha256": "ff2be8de2198aa42ce405734b69e69a2c220cd6996e2e170f29e4f5a8f649eb1"
+        },
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual 32x32 opaque atlas at native scale and voxel-model raster views from opposite corners inspected. Compared version-pinned vanilla moss_block pixels and moss_carpet parent reference. Brown broad upright lobes with stepped asymmetric forks. The original carpet is one unit thick with visible side faces; 21 full-volume elements replace the former zero-thickness planes. No vanilla pixels copied.",
+      "findings": {
+        "silhouette": "Brown broad upright lobes with stepped asymmetric forks.",
+        "cluster_structure": "Contiguous low carpet and individually shaped branch groups connected to its surface.",
+        "micro_contrast": "Clustered neighboring six-color values; lighter frond tips and darker side ramp.",
+        "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
+        "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
+        "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
+        "variant_identity": "Warm tan-to-brown palette and wider lobe tips distinguish this ten-unit terrestrial lichen from the pale twig-like reindeer lichen.",
+        "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
+        "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/moss_block",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native carpet thickness and clustered palette transitions, opaque faces with independent atlas regions.",
+        "reference_limit": "Vanilla moss carpet has no raised branches; all additional geometry and texture are original.",
+        "native_view": "Brown broad upright lobes with stepped asymmetric forks.",
+        "context_type": "model_uv",
+        "context_view": "Exact occupied-voxel geometry and atlas-sampled visible faces statically rasterized from two opposite corners and inspected; connectedness validated. 21 elements, maximum height 10/16. Not an actual client render or shader test.",
+        "custom_reason": "Full-volume species-specific moss/lichen geometry with 32px atlas; no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/moss_block.png actual PNG inspected, SHA-256 computed from decoded bytes; moss_carpet model inspected."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/reindeer_moss_atlas.png": {
+      "sha256": "e3dac24f06c3b439148aeb32681e505875b2933c0cf0f0de8ef4028004d130f2",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/moss_block",
+          "minecraft": "1.21.1",
+          "sha256": "ff2be8de2198aa42ce405734b69e69a2c220cd6996e2e170f29e4f5a8f649eb1"
+        },
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual 32x32 opaque atlas at native scale and voxel-model raster views from opposite corners inspected. Compared version-pinned vanilla moss_block pixels and moss_carpet parent reference. Pale gray-green fine forked stems extend along both horizontal axes. The original carpet is one unit thick with visible side faces; 30 full-volume elements replace the former zero-thickness planes. No vanilla pixels copied.",
+      "findings": {
+        "silhouette": "Pale gray-green fine forked stems extend along both horizontal axes.",
+        "cluster_structure": "Contiguous low carpet and individually shaped branch groups connected to its surface.",
+        "micro_contrast": "Clustered neighboring six-color values; lighter frond tips and darker side ramp.",
+        "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
+        "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
+        "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
+        "variant_identity": "The thirty-cuboid, eleven-unit pale branching network is the finest and most ramified of the terrestrial lichens.",
+        "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
+        "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/moss_block",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native carpet thickness and clustered palette transitions, opaque faces with independent atlas regions.",
+        "reference_limit": "Vanilla moss carpet has no raised branches; all additional geometry and texture are original.",
+        "native_view": "Pale gray-green fine forked stems extend along both horizontal axes.",
+        "context_type": "model_uv",
+        "context_view": "Exact occupied-voxel geometry and atlas-sampled visible faces statically rasterized from two opposite corners and inspected; connectedness validated. 30 elements, maximum height 11/16. Not an actual client render or shader test.",
+        "custom_reason": "Full-volume species-specific moss/lichen geometry with 32px atlas; no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/moss_block.png actual PNG inspected, SHA-256 computed from decoded bytes; moss_carpet model inspected."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/irish_moss_atlas.png": {
+      "sha256": "f6409745587e2ba36cd71849842be6bd2dae5680ea2e022268d60078745d83d7",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/moss_block",
+          "minecraft": "1.21.1",
+          "sha256": "ff2be8de2198aa42ce405734b69e69a2c220cd6996e2e170f29e4f5a8f649eb1"
+        },
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual 32x32 opaque atlas at native scale and voxel-model raster views from opposite corners inspected. Compared version-pinned vanilla moss_block pixels and moss_carpet parent reference. Burgundy layered marine branching lobes of uneven height. The original carpet is one unit thick with visible side faces; 22 full-volume elements replace the former zero-thickness planes. No vanilla pixels copied.",
+      "findings": {
+        "silhouette": "Burgundy layered marine branching lobes of uneven height.",
+        "cluster_structure": "Contiguous low carpet and individually shaped branch groups connected to its surface.",
+        "micro_contrast": "Clustered neighboring six-color values; lighter frond tips and darker side ramp.",
+        "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
+        "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
+        "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
+        "variant_identity": "The red-purple palette and twelve-unit maximum height separate the marine alga from all terrestrial green and brown species.",
+        "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
+        "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/moss_block",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native carpet thickness and clustered palette transitions, opaque faces with independent atlas regions.",
+        "reference_limit": "Vanilla moss carpet has no raised branches; all additional geometry and texture are original.",
+        "native_view": "Burgundy layered marine branching lobes of uneven height.",
+        "context_type": "model_uv",
+        "context_view": "Exact occupied-voxel geometry and atlas-sampled visible faces statically rasterized from two opposite corners and inspected; connectedness validated. 22 elements, maximum height 12/16. Not an actual client render or shader test.",
+        "custom_reason": "Full-volume species-specific moss/lichen geometry with 32px atlas; no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/moss_block.png actual PNG inspected, SHA-256 computed from decoded bytes; moss_carpet model inspected."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_moss_broadleaf.png": {
+      "sha256": "c557b6f6a08bf71cdd38137e9e4fd0dd1e26a53e8eb9b93103e40e690a40d81a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/oak_log",
+          "minecraft": "1.21.1",
+          "sha256": "060c93128fb65aa350a84e4b6576e616c47d40211bbe537cfe923a81d072e30c"
+        }
+      ],
+      "comparison": "Actual 16px transparent overlay viewed in nearest-neighbor 3x3 tiled sheet on approximate host colors. Irregular long green clusters leave strips of native bark visible. Native host bark remains a separate texture; no vanilla source pixels copied.",
+      "findings": {
+        "silhouette": "Irregular long green clusters leave strips of native bark visible.",
+        "cluster_structure": "Unequal contiguous patches taper at their margins.",
+        "micro_contrast": "Neighboring green shades and restrained highlights preserve host contrast.",
+        "light_and_volume": "Darker patch perimeter and lighter inner growth.",
+        "material_continuity": "Transparent gaps preserve the original wood color and grain.",
+        "edge_variation": "Broken boundaries interrupt the patch rhythm.",
+        "variant_identity": "A diagonal chain of larger green groups differentiates this broadleaf treatment from the narrower conifer pattern.",
+        "vanilla_comparison": "Compared native bark scale and lichen-like cutout behavior; distinct original overlay.",
+        "functional_material_cues": "Superficial moss cover leaves the host grain and exposed log end intact."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/oak_log",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Preserve the native bark scale and avoid covering its entire face.",
+        "reference_limit": "Overlay is not the host bark texture; compare actual bark through transparent areas.",
+        "native_view": "Irregular long green clusters leave strips of native bark visible.",
+        "context_type": "tile_3x3",
+        "context_view": "Actual 3x3 nearest-neighbor overlay tiles examined on approximated bark-color grounds, not an actual game-client render. Model review/client lighting NOT_RUN.",
+        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/oak_log.png; actual PNG reopened alongside the four original transparent overlays. Reference SHA-256 retained from the established repository atlas; no direct vanilla pixel reuse."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_moss_dark.png": {
+      "sha256": "ce0214642a52550b95be464a7ec168f9fa5372819a46c9748381d053726059c3",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/oak_log",
+          "minecraft": "1.21.1",
+          "sha256": "060c93128fb65aa350a84e4b6576e616c47d40211bbe537cfe923a81d072e30c"
+        }
+      ],
+      "comparison": "Actual 16px transparent overlay viewed in nearest-neighbor 3x3 tiled sheet on approximate host colors. Dark subdued green patches retain the dark host bark as the dominant surface. Native host bark remains a separate texture; no vanilla source pixels copied.",
+      "findings": {
+        "silhouette": "Dark subdued green patches retain the dark host bark as the dominant surface.",
+        "cluster_structure": "Unequal contiguous patches taper at their margins.",
+        "micro_contrast": "Neighboring green shades and restrained highlights preserve host contrast.",
+        "light_and_volume": "Darker patch perimeter and lighter inner growth.",
+        "material_continuity": "Transparent gaps preserve the original wood color and grain.",
+        "edge_variation": "Broken boundaries interrupt the patch rhythm.",
+        "variant_identity": "The darkest palette has restrained olive highlights and open regions that retain dark host bark.",
+        "vanilla_comparison": "Compared native bark scale and lichen-like cutout behavior; distinct original overlay.",
+        "functional_material_cues": "Superficial moss cover leaves the host grain and exposed log end intact."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/oak_log",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Preserve the native bark scale and avoid covering its entire face.",
+        "reference_limit": "Overlay is not the host bark texture; compare actual bark through transparent areas.",
+        "native_view": "Dark subdued green patches retain the dark host bark as the dominant surface.",
+        "context_type": "tile_3x3",
+        "context_view": "Actual 3x3 nearest-neighbor overlay tiles examined on approximated bark-color grounds, not an actual game-client render. Model review/client lighting NOT_RUN.",
+        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/oak_log.png; actual PNG reopened alongside the four original transparent overlays. Reference SHA-256 retained from the established repository atlas; no direct vanilla pixel reuse."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_moss_birch.png": {
+      "sha256": "76f59a61bbc300cd9afe5c046152e9921f5d0ecc1aa22c90047e331cb886277c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/oak_log",
+          "minecraft": "1.21.1",
+          "sha256": "060c93128fb65aa350a84e4b6576e616c47d40211bbe537cfe923a81d072e30c"
+        }
+      ],
+      "comparison": "Actual 16px transparent overlay viewed in nearest-neighbor 3x3 tiled sheet on approximate host colors. Brighter asymmetric green patches contrast with pale native bark. Native host bark remains a separate texture; no vanilla source pixels copied.",
+      "findings": {
+        "silhouette": "Brighter asymmetric green patches contrast with pale native bark.",
+        "cluster_structure": "Unequal contiguous patches taper at their margins.",
+        "micro_contrast": "Neighboring green shades and restrained highlights preserve host contrast.",
+        "light_and_volume": "Darker patch perimeter and lighter inner growth.",
+        "material_continuity": "Transparent gaps preserve the original wood color and grain.",
+        "edge_variation": "Broken boundaries interrupt the patch rhythm.",
+        "variant_identity": "The lightest overlay palette of the four contains clustered yellow-green highlights against transparent margins.",
+        "vanilla_comparison": "Compared native bark scale and lichen-like cutout behavior; distinct original overlay.",
+        "functional_material_cues": "Superficial moss cover leaves the host grain and exposed log end intact."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/oak_log",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Preserve the native bark scale and avoid covering its entire face.",
+        "reference_limit": "Overlay is not the host bark texture; compare actual bark through transparent areas.",
+        "native_view": "Brighter asymmetric green patches contrast with pale native bark.",
+        "context_type": "tile_3x3",
+        "context_view": "Actual 3x3 nearest-neighbor overlay tiles examined on approximated bark-color grounds, not an actual game-client render. Model review/client lighting NOT_RUN.",
+        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/oak_log.png; actual PNG reopened alongside the four original transparent overlays. Reference SHA-256 retained from the established repository atlas; no direct vanilla pixel reuse."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_moss_conifer.png": {
+      "sha256": "8972920bfcd99df258039220ef8941441228a8d6be327ee99ac137ac9b09b74b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/oak_log",
+          "minecraft": "1.21.1",
+          "sha256": "060c93128fb65aa350a84e4b6576e616c47d40211bbe537cfe923a81d072e30c"
+        }
+      ],
+      "comparison": "Actual 16px transparent overlay viewed in nearest-neighbor 3x3 tiled sheet on approximate host colors. Cool green narrow patches follow the host bark's long furrows. Native host bark remains a separate texture; no vanilla source pixels copied.",
+      "findings": {
+        "silhouette": "Cool green narrow patches follow the host bark's long furrows.",
+        "cluster_structure": "Unequal contiguous patches taper at their margins.",
+        "micro_contrast": "Neighboring green shades and restrained highlights preserve host contrast.",
+        "light_and_volume": "Darker patch perimeter and lighter inner growth.",
+        "material_continuity": "Transparent gaps preserve the original wood color and grain.",
+        "edge_variation": "Broken boundaries interrupt the patch rhythm.",
+        "variant_identity": "The cool muted green ramp and narrow separated patches fit darker conifer bark without obscuring it.",
+        "vanilla_comparison": "Compared native bark scale and lichen-like cutout behavior; distinct original overlay.",
+        "functional_material_cues": "Superficial moss cover leaves the host grain and exposed log end intact."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/oak_log",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Preserve the native bark scale and avoid covering its entire face.",
+        "reference_limit": "Overlay is not the host bark texture; compare actual bark through transparent areas.",
+        "native_view": "Cool green narrow patches follow the host bark's long furrows.",
+        "context_type": "tile_3x3",
+        "context_view": "Actual 3x3 nearest-neighbor overlay tiles examined on approximated bark-color grounds, not an actual game-client render. Model review/client lighting NOT_RUN.",
+        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/oak_log.png; actual PNG reopened alongside the four original transparent overlays. Reference SHA-256 retained from the established repository atlas; no direct vanilla pixel reuse."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/climbing_ivy.png": {
+      "sha256": "fd8b1ba00504fd57e06ea769cd26066d9e14b4c75757488f99fe7af1a3d80dec",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Dark climbing woody stem with offset lobed leaves. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Dark climbing woody stem with offset lobed leaves.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "A single irregular central woody line with several offset lobed leaves contrasts with the two long stems of woodland vine.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Dark climbing woody stem with offset lobed leaves.",
+        "context_type": "placed_cutout",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/woodland_vine.png": {
+      "sha256": "e5a0f8afb9ab0d0be9a54f19f9e7c01b7ed53b29475b48278b3449a69f8c671f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Two winding brown stems and sparse warm-green leaf groups. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Two winding brown stems and sparse warm-green leaf groups.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "Two slender undulating vertical stems and smaller sparse leaf groups distinguish the vine from the denser ivy.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Two winding brown stems and sparse warm-green leaf groups.",
+        "context_type": "placed_cutout",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/stinging_nettle.png": {
+      "sha256": "4e7ed0032ed146e22ec50a74403db4ed72e97e4e19ed8a2352a0b68e14a429b2",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Upright green stem with paired serrated leaf groups and light tips. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Upright green stem with paired serrated leaf groups and light tips.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "A tall single green stalk with paired leaves and pointed light pixels differs from the branched brown thorn scrub.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Upright green stem with paired serrated leaf groups and light tips.",
+        "context_type": "placed_cutout",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_thistle.png": {
+      "sha256": "8ee5097d5c1cf7547547b4cefd5ef0c1055d77ec23e20b23491d4adfbb88bd1f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/fern",
+          "minecraft": "1.21.1",
+          "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Spiny green foliage and a mauve composite flower head. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Spiny green foliage and a mauve composite flower head.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "The mauve flower at the top makes the thistle identifiable apart from the two nonflowering prickly plants.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/fern",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Spiny green foliage and a mauve composite flower head.",
+        "context_type": "placed_cutout",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/thorn_scrub.png": {
+      "sha256": "02f014b6f663007aa850d10452c84f3cc44ffe543296ac961b0015596c6ab587",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/sweet_berry_bush_stage3",
+          "minecraft": "1.21.1",
+          "sha256": "d7d9bf83464ef649e52c8658e15b080f1abb36928ecdbaf2306a292b5bda5cb1"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Forked brown stems with pale thorns and separated leaf clusters. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Forked brown stems with pale thorns and separated leaf clusters.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "The wide forked brown structure and small pale pointed spurs distinguish scrub from the mostly green upright nettle.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/sweet_berry_bush_stage3",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Forked brown stems with pale thorns and separated leaf clusters.",
+        "context_type": "placed_cutout",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/needle_litter.png": {
+      "sha256": "9109aac2df7110e6396d2ef04d8ee2321de416ebb57205536edf4f6d04e6d2c4",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/pink_petals",
+          "minecraft": "1.21.1",
+          "sha256": "2ea08d4b868a8d59a7e1b7393fc5ffed49905235da6d176867a59e2070c55400"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Scattered ochre and brown slender needles crossing at different angles. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Scattered ochre and brown slender needles crossing at different angles.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "Long narrow ochre slivers remain individually readable rather than resembling broad decomposing leaf pieces.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/pink_petals",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Scattered ochre and brown slender needles crossing at different angles.",
+        "context_type": "tile_3x3",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_litter.png": {
+      "sha256": "9d60b70ce8190101dc4a0a994b8c074ba099da35b8d4ed5ac4c55a8a0c18117b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/pink_petals",
+          "minecraft": "1.21.1",
+          "sha256": "2ea08d4b868a8d59a7e1b7393fc5ffed49905235da6d176867a59e2070c55400"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Broken irregular umber bark fragments with dark grain and warm exposed edges. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Broken irregular umber bark fragments with dark grain and warm exposed edges.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "Chunky angular brown pieces with light exposed edges distinguish woody debris from thin needles.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/pink_petals",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Broken irregular umber bark fragments with dark grain and warm exposed edges.",
+        "context_type": "tile_3x3",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/damp_leaf_litter.png": {
+      "sha256": "add203d97648483ad7e27c196b7e9dd8b6e00a75eb69a8a855fac6ca5c7f5bb8",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/pink_petals",
+          "minecraft": "1.21.1",
+          "sha256": "2ea08d4b868a8d59a7e1b7393fc5ffed49905235da6d176867a59e2070c55400"
+        }
+      ],
+      "comparison": "Actual original 16px sprite and target-version vanilla fern, sweet berry bush and petal comparator viewed. Uneven olive-brown broad leaf pieces with dark vein strokes. Native-scale pixel groups with transparent openings; not copied source pixels. The sprite family sheet was viewed on representative bark and green ground colors.",
+      "findings": {
+        "silhouette": "Uneven olive-brown broad leaf pieces with dark vein strokes.",
+        "cluster_structure": "Connected plant stems or separated organic fragments form non-uniform clusters.",
+        "micro_contrast": "Neighboring restrained palette steps distinguish shaded stems and brighter leaf or fragment edges.",
+        "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
+        "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
+        "edge_variation": "Asymmetric edges and clear gaps between groups.",
+        "variant_identity": "Broad muted olive-brown fragments and vein lines distinguish damp leaves from the linear needle debris.",
+        "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
+        "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/pink_petals",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native pixel scale, intentional transparent holes and small contiguous color clusters.",
+        "reference_limit": "Reference establishes scale and foliage/debris role, not the exact species shape.",
+        "native_view": "Uneven olive-brown broad leaf pieces with dark vein strokes.",
+        "context_type": "tile_3x3",
+        "context_view": "Original sprite family sheet inspected at nearest-neighbor enlargement against representative ground/bark colors; model geometry and rotations reviewed as source, client renderer and actual in-world lighting NOT_RUN.",
+        "custom_reason": "Species-specific vine, thorn plant or forest debris cutout with no exact vanilla species role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets target reference PNG inspected; checksum from established repository reference review."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_calendula.png": {
+      "sha256": "c6ef2b949540c1bedcb043facdf8f44f57e5c9c41e5453d1cb19f41f5b574b16",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/dandelion",
+          "minecraft": "1.21.1",
+          "sha256": "b8e2897e3dfecc1c863a861dd6b92b66987f33770054c2179c15b5c2abbc0e51"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Unlike vanilla dandelion, the main flower is broad orange and has a smaller side bloom. A large orange flower and smaller offset blossom crown a bent green stalk.",
+      "findings": {
+        "silhouette": "A large orange flower and smaller offset blossom crown a bent green stalk.",
+        "cluster_structure": "Two flower disks of unequal size, with a warm central ring and separate green leaf clusters.",
+        "micro_contrast": "Yellow-orange petal tips surround a deeper rust center.",
+        "light_and_volume": "The bright upper petals sit over a darker lower ring, with leaf highlights on one side.",
+        "material_continuity": "Orange bloom and dark green stem meet at a small distinct joint.",
+        "edge_variation": "The larger bloom has stepped petal edges; two leaves interrupt the narrow stem.",
+        "variant_identity": "The plant is identifiable by orange heads even next to the two new botanical species.",
+        "vanilla_comparison": "Unlike vanilla dandelion, the main flower is broad orange and has a smaller side bloom.",
+        "functional_material_cues": "Flower heads identify the harvested aerial parts rather than an edible root."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/dandelion",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. Two flower disks of unequal size, with a warm central ring and separate green leaf clusters.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Unlike vanilla dandelion, the main flower is broad orange and has a smaller side bloom.",
+        "native_view": "Candidate actual sprite: A large orange flower and smaller offset blossom crown a bent green stalk. Yellow-orange petal tips surround a deeper rust center.",
+        "context_type": "placed_cutout",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. The plant is identifiable by orange heads even next to the two new botanical species. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/dandelion.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_marshmallow.png": {
+      "sha256": "e0306f6a40e5640c55316fe893ffb03a998d6eb2ebbe1faaaa8302f9e26eb7f3",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/allium",
+          "minecraft": "1.21.1",
+          "sha256": "e821156d752c1cde84a71db59cdd25c308747c607c0759b72ba36a68e959ab7d"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Allium gives flower scale but the marshmallow has broad gray-green leaves and pale separate blossoms. A tall branching stalk with two pale pink flower groups and broad leaves.",
+      "findings": {
+        "silhouette": "A tall branching stalk with two pale pink flower groups and broad leaves.",
+        "cluster_structure": "Pink flowers form separate clusters above staggered leaves and a dark continuous stem.",
+        "micro_contrast": "Soft cream-pink centers contrast with muted purple-pink margins.",
+        "light_and_volume": "Light petal patches sit above darker flower centers; leaf faces alternate olive tones.",
+        "material_continuity": "The stalk joins the flowers and leaves rather than floating blossoms.",
+        "edge_variation": "Broad stepped leaves and uneven flower outlines leave negative space.",
+        "variant_identity": "The plant is identifiable by pale pink blossoms with broad leaves even next to the two new botanical species.",
+        "vanilla_comparison": "Allium gives flower scale but the marshmallow has broad gray-green leaves and pale separate blossoms.",
+        "functional_material_cues": "The large leaves and pale flowers distinguish the root-bearing marsh plant."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/allium",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. Pink flowers form separate clusters above staggered leaves and a dark continuous stem.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Allium gives flower scale but the marshmallow has broad gray-green leaves and pale separate blossoms.",
+        "native_view": "Candidate actual sprite: A tall branching stalk with two pale pink flower groups and broad leaves. Soft cream-pink centers contrast with muted purple-pink margins.",
+        "context_type": "placed_cutout",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. The plant is identifiable by pale pink blossoms with broad leaves even next to the two new botanical species. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/allium.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/wild_flax.png": {
+      "sha256": "47037c635358eae822f9f11049c292f0c2d91d40418dd872e003b1f6430af0bb",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/cornflower",
+          "minecraft": "1.21.1",
+          "sha256": "df8624ca57077469654576faab3424aceb0bdc512102ec2056a17a0ff890c52d"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Cornflower gives small blue flower scale; flax has several slender stems rather than a single large head. Three thin upright stalks end in small blue blooms.",
+      "findings": {
+        "silhouette": "Three thin upright stalks end in small blue blooms.",
+        "cluster_structure": "Separate three-pixel blooms connect to narrow green stems and short leaf strokes.",
+        "micro_contrast": "Pale blue center pixels contrast with darker blue outer petals.",
+        "light_and_volume": "A lighter stem runs beside two darker stems to suggest depth.",
+        "material_continuity": "Blue flower and green stem meet directly at the tip of each stem.",
+        "edge_variation": "Stems branch at different heights, leaving open gaps between flowers.",
+        "variant_identity": "The plant is identifiable by slender multiple blue-flowered stalks even next to the two new botanical species.",
+        "vanilla_comparison": "Cornflower gives small blue flower scale; flax has several slender stems rather than a single large head.",
+        "functional_material_cues": "Long stalks visually indicate fiber-bearing material."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/cornflower",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. Separate three-pixel blooms connect to narrow green stems and short leaf strokes.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Cornflower gives small blue flower scale; flax has several slender stems rather than a single large head.",
+        "native_view": "Candidate actual sprite: Three thin upright stalks end in small blue blooms. Pale blue center pixels contrast with darker blue outer petals.",
+        "context_type": "placed_cutout",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. The plant is identifiable by slender multiple blue-flowered stalks even next to the two new botanical species. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/cornflower.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/marshmallow_root.png": {
+      "sha256": "962a9657d35fce99f0cbf2057e32820ae992eef21847fde6aebf4a488a4b0d0b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/stick",
+          "minecraft": "1.21.1",
+          "sha256": "2b5a6b7202fcd3a45663ccf249fe87de076e8c735e0b6ab8a3bf2a812332b4ff"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. The narrow woody stick provides a scale reference, but the root is broad and tapered. A thick tapering tan taproot with three thin lateral roots.",
+      "findings": {
+        "silhouette": "A thick tapering tan taproot with three thin lateral roots.",
+        "cluster_structure": "A connected central root narrows into distinct angled rootlets.",
+        "micro_contrast": "Pale exposed inner fibers sit against medium-brown exterior edges.",
+        "light_and_volume": "A light vertical core and darker right margin give the root body volume.",
+        "material_continuity": "Rootlets share the same warm earth palette as the main taproot.",
+        "edge_variation": "The tips fork asymmetrically and thin to a single pixel.",
+        "variant_identity": "In the reviewed icon family marshmallow root has a different contour and material from the other botanical resources.",
+        "vanilla_comparison": "The narrow woody stick provides a scale reference, but the root is broad and tapered.",
+        "functional_material_cues": "The thick storage root and branching rootlets identify the harvested underground material."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/stick",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. A connected central root narrows into distinct angled rootlets.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. The narrow woody stick provides a scale reference, but the root is broad and tapered.",
+        "native_view": "Candidate actual sprite: A thick tapering tan taproot with three thin lateral roots. Pale exposed inner fibers sit against medium-brown exterior edges.",
+        "context_type": "icon_family",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. In the reviewed icon family marshmallow root has a different contour and material from the other botanical resources. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/item/stick.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/flax_stalk.png": {
+      "sha256": "6eca2ab4f0104e8f09ea8b00a64c0754d90f62603b5a1840793f91f38426c658",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Wheat provides a harvest-bundle scale, but flax lacks a heavy cereal ear. A diagonal bundle of straight straw-colored stems with a small top cluster.",
+      "findings": {
+        "silhouette": "A diagonal bundle of straight straw-colored stems with a small top cluster.",
+        "cluster_structure": "Five closely parallel stalks spread into offset tips and a lower binding.",
+        "micro_contrast": "Olive tan lines alternate with pale straw highlights.",
+        "light_and_volume": "Darker lower strokes contrast with brighter exposed stem lengths.",
+        "material_continuity": "The dry stalks have muted green-tan coloration throughout.",
+        "edge_variation": "Ends fan outward, unlike a single straight stick.",
+        "variant_identity": "In the reviewed icon family flax stalk has a different contour and material from the other botanical resources.",
+        "vanilla_comparison": "Wheat provides a harvest-bundle scale, but flax lacks a heavy cereal ear.",
+        "functional_material_cues": "The long stiff stems are raw material before extracting fiber."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/wheat",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. Five closely parallel stalks spread into offset tips and a lower binding.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Wheat provides a harvest-bundle scale, but flax lacks a heavy cereal ear.",
+        "native_view": "Candidate actual sprite: A diagonal bundle of straight straw-colored stems with a small top cluster. Olive tan lines alternate with pale straw highlights.",
+        "context_type": "icon_family",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. In the reviewed icon family flax stalk has a different contour and material from the other botanical resources. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/item/wheat.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/flax_fiber.png": {
+      "sha256": "cd57470a1ba583f6563e20ed9f910a261785d4246857864054096dbd78390a4b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Wheat is the natural material scale reference, but the fiber has no kernels and a softer outline. A pale gathered bundle of loosened fibers with trailing strands.",
+      "findings": {
+        "silhouette": "A pale gathered bundle of loosened fibers with trailing strands.",
+        "cluster_structure": "Curving strands gather into a dark central tie and separate near the ends.",
+        "micro_contrast": "Cream and light ochre fibers stand out against the brown binding.",
+        "light_and_volume": "Bright inner strands and darker crossing lines distinguish loose fiber layers.",
+        "material_continuity": "Fibers retain a pale flax color, with no green leaves or seed heads.",
+        "edge_variation": "Several separated ends break the outer diagonal contour.",
+        "variant_identity": "In the reviewed icon family flax fiber has a different contour and material from the other botanical resources.",
+        "vanilla_comparison": "Wheat is the natural material scale reference, but the fiber has no kernels and a softer outline.",
+        "functional_material_cues": "The loose pale strands distinguish processed fiber from intact stalks."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/wheat",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. Curving strands gather into a dark central tie and separate near the ends.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Wheat is the natural material scale reference, but the fiber has no kernels and a softer outline.",
+        "native_view": "Candidate actual sprite: A pale gathered bundle of loosened fibers with trailing strands. Cream and light ochre fibers stand out against the brown binding.",
+        "context_type": "icon_family",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. In the reviewed icon family flax fiber has a different contour and material from the other botanical resources. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/item/wheat.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/willow_bark.png": {
+      "sha256": "f5f20ee0411339791a50d31a7d7fbd0b8024174b0bcdfc8f884da66168e2d7a4",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/stick",
+          "minecraft": "1.21.1",
+          "sha256": "2b5a6b7202fcd3a45663ccf249fe87de076e8c735e0b6ab8a3bf2a812332b4ff"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Stick provides the wood-material and inventory scale but bark is split into flat pieces. Two overlapping irregular strips of bark, one wider than the other.",
+      "findings": {
+        "silhouette": "Two overlapping irregular strips of bark, one wider than the other.",
+        "cluster_structure": "A broad split piece and a narrower second strip contain longitudinal marks.",
+        "micro_contrast": "Tan exposed edges are contrasted by darker olive-brown grooves.",
+        "light_and_volume": "Highlights along the inner face and recessed seams distinguish curled strips.",
+        "material_continuity": "Both pieces share the muted woody color of willow.",
+        "edge_variation": "Broken tapered ends and unequal widths prevent a rectangular silhouette.",
+        "variant_identity": "In the reviewed icon family willow bark has a different contour and material from the other botanical resources.",
+        "vanilla_comparison": "Stick provides the wood-material and inventory scale but bark is split into flat pieces.",
+        "functional_material_cues": "Long fibers and curled edges identify removable bark rather than a complete log."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/stick",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. A broad split piece and a narrower second strip contain longitudinal marks.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Stick provides the wood-material and inventory scale but bark is split into flat pieces.",
+        "native_view": "Candidate actual sprite: Two overlapping irregular strips of bark, one wider than the other. Tan exposed edges are contrasted by darker olive-brown grooves.",
+        "context_type": "icon_family",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. In the reviewed icon family willow bark has a different contour and material from the other botanical resources. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/item/stick.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/pine_resin.png": {
+      "sha256": "c61eda31f52f47eef7ac4ca993d893eba8ccacadc8fdb2b85991bd29da546c74",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/clay_ball",
+          "minecraft": "1.21.1",
+          "sha256": "99d84ef4b14b2fd33474162cce7ed2493ed396bd7d2493385573baa794d18178"
+        }
+      ],
+      "comparison": "Actual target-version comparator and authored 16px candidate opened and reviewed. Clay ball provides a small gathered lump scale, but resin uses a translucent-looking amber highlight instead of matte gray. An amber teardrop beside a small separate rounded resin lump.",
+      "findings": {
+        "silhouette": "An amber teardrop beside a small separate rounded resin lump.",
+        "cluster_structure": "A tapered drop widens to a connected body and a second small droplet.",
+        "micro_contrast": "Golden yellow glints are set against warm dark amber margins.",
+        "light_and_volume": "Bright upper-left patches and a darker rounded base give a thick resin appearance.",
+        "material_continuity": "Both droplets use a consistent amber-orange ramp.",
+        "edge_variation": "The pointed top and small off-axis lump give an irregular silhouette.",
+        "variant_identity": "In the reviewed icon family pine resin has a different contour and material from the other botanical resources.",
+        "vanilla_comparison": "Clay ball provides a small gathered lump scale, but resin uses a translucent-looking amber highlight instead of matte gray.",
+        "functional_material_cues": "The warm teardrop and glints distinguish viscous pine resin from wood or stone."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/clay_ball",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16px scale and coherent material palette. A tapered drop widens to a connected body and a second small droplet.",
+        "reference_limit": "The comparator provides the same small object/plant role, not the exact botanical species or shape. Clay ball provides a small gathered lump scale, but resin uses a translucent-looking amber highlight instead of matte gray.",
+        "native_view": "Candidate actual sprite: An amber teardrop beside a small separate rounded resin lump. Golden yellow glints are set against warm dark amber margins.",
+        "context_type": "icon_family",
+        "context_view": "Eight actual original PNG sprites were viewed as a nearest-neighbor family sheet on representative green ground and neutral inventory backgrounds. In the reviewed icon family pine resin has a different contour and material from the other botanical resources. Model and client renderer not verified in-game.",
+        "custom_reason": "The botanical species or raw botanical material has no exact role rule in the current atlas; this is a specific native-scale comparison.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/item/clay_ball.png; actual PNG displayed and SHA-256 calculated from decoded bytes."
+      }
     }
   },
   "review_status": "1.2.5 RC1: 118 previously reviewed textures unchanged; seven new original fruit item PNGs individually reviewed in native/enlarged icon family and static hanging-model context. Art Review Lock, Build Hub, natural generation and graphical client verification pending.",

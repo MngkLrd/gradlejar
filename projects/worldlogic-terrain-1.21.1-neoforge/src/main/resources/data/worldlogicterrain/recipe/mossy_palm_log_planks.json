@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "worldlogicterrain:mossy_palm_log"
+    }
+  ],
+  "result": {
+    "id": "worldlogicterrain:palm_planks",
+    "count": 4
+  }
+}

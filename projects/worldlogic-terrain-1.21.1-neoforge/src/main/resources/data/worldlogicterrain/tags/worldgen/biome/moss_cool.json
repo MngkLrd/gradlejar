@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#worldlogicterrain:cool_woodland",
+    "#worldlogicterrain:cool_field",
+    "#worldlogicterrain:season_arctic",
+    "#worldlogicterrain:season_alpine",
+    "#worldlogicterrain:heather"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "type": "worldlogicterrain:fungal_colony",
+  "config": {
+    "species": "porcini"
+  }
+}

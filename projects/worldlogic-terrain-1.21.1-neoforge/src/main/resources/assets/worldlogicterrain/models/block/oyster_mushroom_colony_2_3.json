@@ -1,0 +1,269 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "plant": "worldlogicterrain:block/oyster_mushroom",
+    "particle": "#plant"
+  },
+  "elements": [
+    {
+      "from": [
+        1.76,
+        0,
+        5
+      ],
+      "to": [
+        6.24,
+        4.48,
+        5
+      ],
+      "rotation": {
+        "origin": [
+          4,
+          0,
+          5
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        1.76,
+        0,
+        5
+      ],
+      "to": [
+        6.24,
+        4.48,
+        5
+      ],
+      "rotation": {
+        "origin": [
+          4,
+          0,
+          5
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        9.47,
+        0,
+        5.5
+      ],
+      "to": [
+        13.53,
+        4.06,
+        5.5
+      ],
+      "rotation": {
+        "origin": [
+          11.5,
+          0,
+          5.5
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        9.47,
+        0,
+        5.5
+      ],
+      "to": [
+        13.53,
+        4.06,
+        5.5
+      ],
+      "rotation": {
+        "origin": [
+          11.5,
+          0,
+          5.5
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        5.76,
+        0,
+        12
+      ],
+      "to": [
+        10.24,
+        4.48,
+        12
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          12
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        5.76,
+        0,
+        12
+      ],
+      "to": [
+        10.24,
+        4.48,
+        12
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          12
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        }
+      }
+    }
+  ]
+}

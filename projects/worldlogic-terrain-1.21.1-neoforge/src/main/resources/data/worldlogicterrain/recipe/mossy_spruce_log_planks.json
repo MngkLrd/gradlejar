@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "worldlogicterrain:mossy_spruce_log"
+    }
+  ],
+  "result": {
+    "id": "minecraft:spruce_planks",
+    "count": 4
+  }
+}
