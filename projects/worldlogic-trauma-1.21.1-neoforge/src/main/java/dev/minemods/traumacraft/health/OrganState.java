@@ -48,6 +48,7 @@ public final class OrganState {
           *(.6f+.4f*digestiveFunction());
     }
     public boolean brainDestroyed(){return integrity(Organ.BRAIN)<=0;}
+    void destroyBrainByTrauma(){integrity[Organ.BRAIN.ordinal()]=0;}
     private void injure(Organ organ,float fraction,float bloodRate){
         int i=organ.ordinal();
         integrity[i]=clamp(integrity[i]-fraction,0,1);

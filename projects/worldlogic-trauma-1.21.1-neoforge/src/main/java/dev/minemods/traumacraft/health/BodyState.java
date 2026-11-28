@@ -9,7 +9,17 @@ public final class BodyState {
     public OrganState organs(){return organs;}
     public boolean hasAnyBleeding(){return hasBleeding()||organs.hasInternalBleeding();}
     public void impact(BodyPart part,float points,WoundKind kind){impact(part,points,kind,null);}
-    public void impact(BodyPart part,float points,WoundKind kind,OrganState.Organ target){wound(part,points,kind);if(organs.impact(part,points,kind,target))dirty=true;}
+    public void impact(BodyPart part,float points,WoundKind kind,OrganState.Organ target){
+        if(!Float.isFinite(points)||points<=0)return;
+        float previous=health(part);
+        wound(part,points,kind);
+        if(organs.impact(part,points,kind,target))dirty=true;
+        // A series of sub-threshold mechanical hits can still destroy the head.
+        // Our anatomical model treats terminal mechanical head destruction as fatal brain trauma.
+        if(part==BodyPart.HEAD&&previous>0&&health(part)<=0&&kind!=null&&kind!=WoundKind.BURN&&kind!=WoundKind.FROSTBITE){
+            organs.destroyBrainByTrauma();dirty=true;
+        }
+    }
     public void physiologySecond(boolean breathing,boolean resting,float nutrition){physiologySecond(breathing,resting,nutrition,1);}
     public void physiologySecond(boolean breathing,boolean resting,float repair,float circulation){
         var before=organs.save();float loss=organs.second(bloodFraction(),breathing,resting&&!hasBleeding(),repair,circulation,pain()/100f);loseBlood(loss);

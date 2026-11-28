@@ -975,6 +975,20 @@
           "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
         }
       ]
+    },
+    {
+      "id": "tr-terminal-brain",
+      "kind": "mechanic",
+      "subject": "Seven subthreshold mechanical head hits destroy head and brain, fatal marks agree; brain activity zero for death snapshots and old archives without rewriting tissue integrity or falsely marking blood loss/native death as brain injury",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+        }
+      ]
     }
   ]
 }

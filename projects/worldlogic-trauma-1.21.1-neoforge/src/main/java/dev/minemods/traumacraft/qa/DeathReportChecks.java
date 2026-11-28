@@ -14,6 +14,13 @@ public final class DeathReportChecks {
         var fall=p.damageSources().fall();var kill=p.damageSources().genericKill();
         try{
             b.reset();DeathReports.clear(p);
+            for(int i=0;i<6;i++)b.impact(BodyPart.HEAD,5,WoundKind.CONTUSION,OrganState.Organ.BRAIN);
+            require(b.health(BodyPart.HEAD)==5&&b.organs().integrity(OrganState.Organ.BRAIN)==1&&!b.vitalDestroyed(),"sub-threshold head hits still nonfatal before zero");
+            b.impact(BodyPart.HEAD,5,WoundKind.CONTUSION,OrganState.Organ.BRAIN);
+            require(b.health(BodyPart.HEAD)==0&&b.organs().brainDestroyed(),"cumulative head destruction injures brain");
+            var head=DeathReport.capture(b,Cause.DIRECT_TRAUMA,Origin.ATTACK,"mob");
+            require(head.brainFunction()==0&&head.organIntegrity(OrganState.Organ.BRAIN)==0&&head.critical(BodyPart.HEAD)&&head.critical(OrganState.Organ.BRAIN),"fatal head and brain damage report");
+            b.reset();
             TraumaEvents.applyDamage(p,b,fall,100);
             require(b.vitalDestroyed(),"fall fixture lethal");
             DeathReports.hit(p,b,fall,false);
@@ -26,10 +33,12 @@ public final class DeathReportChecks {
             DeathReports.collapse(p,b,Cause.EXTERNAL_BLEEDING);
             var external=DeathReports.consume(p,b,kill);
             require(external.cause()==Cause.EXTERNAL_BLEEDING&&external.origin()==Origin.SYSTEMIC&&external.bleeding(BodyPart.LEFT_ARM)&&external.criticalRegions()==0&&external.body().bloodMl()==800,"external bleed no invented lethal zone");
+            require(external.brainFunction()==0&&external.organIntegrity(OrganState.Organ.BRAIN)==1&&!external.critical(OrganState.Organ.BRAIN),"blood loss stops brain function without fabricated tissue damage");
             b.reset();b.impact(BodyPart.STOMACH,48,WoundKind.LACERATION,OrganState.Organ.LIVER);b.loseBlood(4200);
             DeathReports.collapse(p,b,Cause.INTERNAL_BLEEDING);
             var internal=DeathReports.consume(p,b,kill);
             require(internal.cause()==Cause.INTERNAL_BLEEDING&&internal.bleeding(OrganState.Organ.LIVER)&&!internal.bleeding(OrganState.Organ.HEART)&&internal.criticalOrgans()==0,"internal bleeding source distinguished");
+            require(internal.brainFunction()==0&&internal.organIntegrity(OrganState.Organ.BRAIN)==1&&!internal.critical(OrganState.Organ.BRAIN),"internal loss brain activity zero but not causal injury");
             b.reset();for(int i=0;i<180&&!b.vitalDestroyed();i++)b.physiologySecond(false,false,1);
             require(b.organs().brainDestroyed()&&b.health(BodyPart.HEAD)==BodyPart.HEAD.maximum,"hypoxic death without skull damage");
             DeathReports.collapse(p,b,Cause.HYPOXIA);
@@ -44,6 +53,7 @@ public final class DeathReportChecks {
             b.reset();b.damage(BodyPart.HEAD,35);DeathReports.hit(p,b,fall,false);
             var nativeKill=DeathReports.consume(p,b,kill);
             require(nativeKill.cause()==Cause.VANILLA&&nativeKill.origin()==Origin.COMMAND&&nativeKill.criticalRegions()==0,"unrelated command kill not attributed to pending fall");
+            require(nativeKill.brainFunction()==0&&nativeKill.organIntegrity(OrganState.Organ.BRAIN)==1,"engine death reports stopped brain activity without artificial damage");
             b.reset();b.damage(BodyPart.HEAD,35);DeathReports.hit(p,b,fall,false);DeathReports.collapse(p,b,null);
             require(DeathReports.consume(p,b,kill).origin()==Origin.FALL,"engine collapse retains direct fatal hit context");
             b.reset();DeathReports.hit(p,b,fall,false);
@@ -65,6 +75,7 @@ public final class DeathReportChecks {
             DeathReports.remember(p,archived);b.reset();DeathReports.resetHistory(p);
             var restored=DeathReports.last(p).orElseThrow();
             require(restored.history().equals(archived.history())&&restored.critical(BodyPart.HEAD)&&restored.body().hp()[0]==0&&b.health(BodyPart.HEAD)==35,"archive independent of new body");
+            require(restored.brainFunction()==0&&restored.organIntegrity(OrganState.Organ.BRAIN)==1,"older captured head injury remains evidence; function zero after archive roundtrip");
             var archiveBuffer=new RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),p.registryAccess());
             try{DeathReportPacket.CODEC.encode(archiveBuffer,new DeathReportPacket(restored,true));var decoded=DeathReportPacket.CODEC.decode(archiveBuffer);require(decoded.archived()&&decoded.report().history().equals(restored.history()),"archive flag and history packet");}finally{archiveBuffer.release();}
             p.getPersistentData().putByteArray("traumacraft_last_death_v1",new byte[]{1,2});

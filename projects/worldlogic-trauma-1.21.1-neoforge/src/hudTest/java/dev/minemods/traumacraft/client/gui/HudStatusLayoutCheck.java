@@ -134,6 +134,7 @@ public final class HudStatusLayoutCheck {
         for(int w:new int[]{300,320,330,480,640,960})for(int h:new int[]{174,202,240,270,480}){
             var l=DeathReportLayout.of(w,h);
             require(l.x()>0&&l.y()>0&&l.x()+l.width()<w&&l.y()+l.height()<h,"death report margins");
+            require(l.width()<=560&&l.height()<=278,"compact report does not fill screen with empty area");
             require(l.bodyX()+48*l.scale()<l.regionX()&&l.regionX()<l.regionRight()&&l.regionRight()<l.organX(),"death columns");
             require(l.bodyY()+82*l.scale()<=l.footerY()&&l.rowTop()+7*l.regionRow()<=l.footerY()&&l.rowTop()+9*l.organRow()<=l.footerY(),"all death rows visible");
             require(l.organRow()>=9&&l.buttonY()>=l.footerY()+11&&l.buttonY()+18<=l.y()+l.height()&&l.buttonX()+116<=l.x()+l.width(),"death exit and labels");

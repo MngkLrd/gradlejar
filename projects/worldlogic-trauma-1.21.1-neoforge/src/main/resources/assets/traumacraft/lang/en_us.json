@@ -220,5 +220,8 @@
   "death.traumacraft.material.held_item": "Held item at impact: %s",
   "death.traumacraft.material_values": "%s kg | %s m³ | %s kg/m³",
   "death.traumacraft.material_nominal": "Core nominal object properties (%s), not impact mass",
-  "death.traumacraft.surface_response": "Material: %s | estimated stopping distance: %s m"
+  "death.traumacraft.surface_response": "Material: %s | estimated stopping distance: %s m",
+  "death.traumacraft.brain_function": "Brain (function)",
+  "death.traumacraft.brain_activity_stopped": "Brain function: 0% (death)",
+  "death.traumacraft.legend_zero": "Black: zero / inactive"
 }

@@ -16,6 +16,7 @@ import java.util.Locale;
 public final class TraumaDeathScreen extends Screen {
     private static final ResourceLocation BODY=ResourceLocation.fromNamespaceAndPath("traumacraft","textures/gui/trauma/body.png");
     private static final int TEXT=0xFF333333,FATAL=0xFFC52F31,BLEED=0xFFAA652D;
+    private static final int[] STATUS_TEXT={0xFF365929,0xFF705419,0xFF754719,0xFF8C302C,0xFF29272C};
     private static final int[] PALETTE={0xFF729954,0xFFC5A35B,0xFFCE965B,0xFFC66553,0xFF29272C};
     private final DeathScreen original;
     private final DeathReport report;
@@ -43,7 +44,7 @@ public final class TraumaDeathScreen extends Screen {
     private static Component origin(DeathReport.Origin o){return t("origin."+o.name().toLowerCase(Locale.ROOT));}
     private static Component organName(OrganState.Organ o){return Component.translatable("organ.traumacraft."+o.name().toLowerCase(Locale.ROOT));}
     private float hp(BodyPart p){return report.body().hp()[p.ordinal()];}
-    private float integrity(OrganState.Organ o){return report.body().clinical().integrity()[o.ordinal()];}
+    private float integrity(OrganState.Organ o){return report.organIntegrity(o);}
     private int palette(BodyPart p){int i=p.ordinal();return AnatomyLayout.palette(hp(p)/p.maximum,report.body().bleeding()[i]>0,report.body().fracture()[i]);}
     private Component criticalNames(){
         List<String> names=new ArrayList<>();
@@ -114,7 +115,7 @@ public final class TraumaDeathScreen extends Screen {
         g.fill(x+2,y,r-2,b,0xFF343434);g.fill(x,y+2,r,b-2,0xFF343434);
         g.fill(x+2,y+1,r-2,b-1,0xFFE9E9E9);g.fill(x+3,y+3,r-3,b-3,0xFFC6C6C6);
         g.fill(r-3,y+3,r-2,b-3,0xFF555555);g.fill(x+3,b-3,r-2,b-2,0xFF555555);
-        g.drawCenteredString(font,title,x+l.width()/2,y+5,0xFF9B2529);
+        g.drawString(font,title,x+(l.width()-font.width(title))/2,y+5,0xFF9B2529,false);
         var reason=Component.translatable("death.traumacraft.reason",cause(report.cause()));
         if(bloodCause(report.cause()))reason.append(" | ").append(Component.translatable("screen.traumacraft.blood_volume",Math.round(report.body().bloodMl())+"/5000 ml"));
         if(report.cause()==Cause.HYPOXIA)reason.append(" | ").append(Component.translatable("screen.traumacraft.oxygen",Math.round(report.body().clinical().oxygen()*100)+"%"));
@@ -139,25 +140,27 @@ public final class TraumaDeathScreen extends Screen {
         }
         for(var o:OrganState.Organ.values()){
             int yy=l.rowTop()+o.ordinal()*l.organRow(),rx=l.organRight();
-            float f=integrity(o);boolean critical=report.critical(o),bleed=report.bleeding(o);
+            boolean brain=o==OrganState.Organ.BRAIN;
+            float f=brain?report.brainFunction():integrity(o);boolean critical=report.critical(o),bleed=report.bleeding(o);
             int k=f<=0?4:f<.2f?3:f<.5f?2:f<.99f?1:0;
             if(selectedOrgan==o)g.fill(l.organX()-4,yy,rx+1,yy+l.organRow(),0x30666666);
             if(critical||bleed)g.fill(l.organX()-4,yy,l.organX()-2,yy+Math.min(8,l.organRow()),critical?FATAL:BLEED);
             String value=Math.round(f*100)+"%";
-            label(g,organName(o),l.organX(),yy,rx-l.organX()-font.width(value)-4,critical?FATAL:TEXT);
-            g.drawString(font,value,rx-font.width(value),yy,critical?FATAL:PALETTE[k],false);
+            label(g,brain?t("brain_function"):organName(o),l.organX(),yy,rx-l.organX()-font.width(value)-4,critical?FATAL:TEXT);
+            g.drawString(font,value,rx-font.width(value),yy,critical?FATAL:STATUS_TEXT[k],false);
             if(l.organRow()>=13)bar(g,l.organX(),yy+9,rx,f,PALETTE[k]);
         }
         int fy=l.footerY();
         g.fill(x+5,fy-2,r-5,fy-1,0xFF888888);
         label(g,t("legend_fatal"),x+7,fy,l.width()/3-10,FATAL);
         label(g,t("legend_bleeding"),x+l.width()/3,fy,l.width()/3-7,BLEED);
-        label(g,t("legend_destroyed"),x+l.width()*2/3,fy,l.width()/3-7,TEXT);
+        label(g,t("legend_zero"),x+l.width()*2/3,fy,l.width()/3-7,TEXT);
         renderReportButtons(g,mx,my,delta);
         List<Component> tip=new ArrayList<>();
         if(selectedOrgan!=null){
             var o=selectedOrgan;tip.add(organName(o));
             tip.add(Component.translatable("screen.traumacraft.integrity",Math.round(integrity(o)*100)+"%"));
+            if(o==OrganState.Organ.BRAIN)tip.add(t("brain_activity_stopped"));
             if(report.critical(o))tip.add(t("fatal_injury"));
             if(integrity(o)<=0)tip.add(t("destroyed"));
             if(report.bleeding(o)){

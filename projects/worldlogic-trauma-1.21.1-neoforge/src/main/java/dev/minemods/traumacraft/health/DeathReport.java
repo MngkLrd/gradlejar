@@ -11,6 +11,11 @@ public record DeathReport(Cause cause,Origin origin,String sourceId,int critical
     public DeathReport withMaterial(java.util.Optional<ImpactMaterial> observation){return new DeathReport(cause,origin,sourceId,criticalRegions,criticalOrgans,bleedingRegions,bleedingOrgans,body,history,observation);}
     public enum Cause { DIRECT_TRAUMA, VITAL_DESTRUCTION, EXTERNAL_BLEEDING, INTERNAL_BLEEDING, BLOOD_LOSS, HYPOXIA, VANILLA }
     public enum Origin { FALL, EXPLOSION, FIRE, PROJECTILE, ATTACK, FREEZE, DROWNING, VOID, COMMAND, STARVATION, SUFFOCATION, MAGIC, LIGHTNING, OTHER, SYSTEMIC }
+    /** Every report denotes confirmed death, including old archives. Brain activity is zero,
+     * but frozen tissue integrity remains evidence and must not be rewritten into an invented injury.
+     */
+    public float brainFunction(){return 0f;}
+    public float organIntegrity(OrganState.Organ organ){return body.clinical().integrity()[organ.ordinal()];}
     public boolean critical(BodyPart p){return (criticalRegions&(1<<p.ordinal()))!=0;}
     public boolean critical(OrganState.Organ o){return (criticalOrgans&(1<<o.ordinal()))!=0;}
     public boolean bleeding(BodyPart p){return (bleedingRegions&(1<<p.ordinal()))!=0;}

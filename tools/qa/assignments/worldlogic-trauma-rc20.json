@@ -1077,5 +1077,13 @@
       "expected": "Only backdrop blurred; report panel, anatomy, text, history and widgets crisp; normal input and navigation"
     },
     "server": "Existing scenario unchanged; run full regression with pinned Core 1.2.1 diagnostic candidate. No API/gameplay/texture changes."
+  },
+  "version_0_8_12": {
+    "version": "0.8.12",
+    "scope": "Fatal cumulative mechanical head damage destroys brain; death report always shows brain function zero, tooltip preserves tissue integrity and causal markers. Compact report bounds, darker numeric contrast and unshadowed title. Full native visual language coordinated with Core #253, no new texture or separate style framework.",
+    "server": "traumaqa deathreport: 6 nonfatal subthreshold hits, 7th fatal head/brain, blood loss/native deaths preserve organ structure, archive roundtrip; existing regressions",
+    "static_gui": "checkHudStatusLayout: compact bounded layouts, no second blur",
+    "client": "NOT_RUN: actual GUI screenshots and Core 1.3.0 shared rail integration; current pinned Core 1.2.1 diagnostic candidate remains unchanged",
+    "remaining": "Full redesign deferred to shared Core style; no new API or packet format; no claim that brain tissue always physically destroyed."
   }
 }
